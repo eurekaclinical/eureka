@@ -17,9 +17,9 @@
 
 	<modules>
 		<module>eureka-common</module>
-		<module>eureka-frontend</module>
-		<module>eureka-middleware</module>
-		<module>eureka-backend</module>
+		<module>eureka-webapp</module>
+		<module>eureka-services</module>
+		<module>eureka-protempa-etl</module>
 	</modules>
 
 	<!-- define the package versions for various project we will use -->
