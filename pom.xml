@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-		 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-		 xmlns:schemaLocation="http://maven.apache.org/POM/4.0.0
-							   http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>edu.emory.cci.aiw.cvrg</groupId>
@@ -37,7 +35,7 @@
 	</properties>
 
 	<!-- make sure our code complies with Java 1.6 specifications, and define 
-		 the name of the WAR file to create -->
+		the name of the WAR file to create -->
 	<build>
 		<pluginManagement>
 			<plugins>
@@ -167,12 +165,12 @@
 			<url>http://developer.ja-sig.org/maven2</url>
 		</repository>
 		<!-- <repository> <id>jboss</id> <name>JBoss Repository</name> <layout>default</layout> 
-			 <url>http://repository.jboss.org/nexus/content/groups/public-jboss/</url> 
-			 </repository> -->
+			<url>http://repository.jboss.org/nexus/content/groups/public-jboss/</url> 
+			</repository> -->
 	</repositories>
 
 	<!-- define any additional repositories needed to fetch the plugins we are 
-		 using -->
+		using -->
 	<pluginRepositories>
 		<pluginRepository>
 			<id>m2.java.net</id>
