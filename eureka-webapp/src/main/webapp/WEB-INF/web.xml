@@ -33,17 +33,16 @@
 	-->
 
 	<!-- UNCOMMENT THESE FILTERS AND THEIR MAPPINGS TO ENABLE AUTHENTICATION VIA CAS -->
-	<!--
 	<filter>
 		<filter-name>CAS Authentication Filter</filter-name>
 		<filter-class>org.jasig.cas.client.authentication.AuthenticationFilter</filter-class>
 		<init-param>
 			<param-name>casServerLoginUrl</param-name>
-			<param-value>https://aiwdev04.cci.emory.edu:8443/cas-server/login</param-value>
+			<param-value>https://eureka.cci.emory.edu/cas/login</param-value>
 		</init-param>
 		<init-param>
 			<param-name>serverName</param-name>
-			<param-value>https://aiwdev04.cci.emory.edu:8443</param-value>
+			<param-value>https://eureka.cci.emory.edu</param-value>
 		</init-param>
 		<init-param>
 			<param-name>renew</param-name>
@@ -63,19 +62,19 @@
 		</init-param>
 		<init-param>
 			<param-name>proxyCallbackUrl</param-name>
-			<param-value>https://aiwdev04.cci.emory.edu:8443/cvrg-middleware/proxyCallback</param-value>
+			<param-value>https://eureka.cci.emory.edu/eureka-webapp/proxyCallback</param-value>
 		</init-param>
 		<init-param>
 			<param-name>proxyReceptorUrl</param-name>
-			<param-value>/cvrg-middleware/proxyCallback</param-value>
+			<param-value>/eureka-webapp/proxyCallback</param-value>
 		</init-param>
 		<init-param>
 			<param-name>casServerUrlPrefix</param-name>
-			<param-value>https://aiwdev04.cci.emory.edu:8443/cas-server/</param-value>
+			<param-value>https://eureka.cci.emory.edu/cas/</param-value>
 		</init-param>
 		<init-param>
 			<param-name>serverName</param-name>
-			<param-value>https://aiwdev04.cci.emory.edu:8443</param-value>
+			<param-value>https://eureka.cci.emory.edu</param-value>
 		</init-param>
 		<init-param>
 			<param-name>redirectAfterValidation</param-name>
@@ -94,6 +93,7 @@
 		<filter-name>CAS Assertion Thread Local Filter</filter-name>
 		<filter-class>org.jasig.cas.client.util.AssertionThreadLocalFilter</filter-class>
 	</filter>
+	<!--
 	<filter>
 		<filter-name>Guice Filter</filter-name>
 		<filter-class>com.google.inject.servlet.GuiceFilter</filter-class>
@@ -101,27 +101,27 @@
 	-->
 
 	<!-- UNCOMMENT FILTER MAPPINGS TO ACTIVATE AUTHENTICATION VIA CAS -->
-	<!--
 	<filter-mapping>
 		<filter-name>CAS Proxy Filter</filter-name>
 		<url-pattern>/proxyCallback</url-pattern>
 	</filter-mapping>
 	<filter-mapping>
 		<filter-name>CAS Proxy Filter</filter-name>
-		<url-pattern>/api/*</url-pattern>
+		<url-pattern>/protected/*</url-pattern>
 	</filter-mapping>
 	<filter-mapping>
 		<filter-name>CAS Authentication Filter</filter-name>
-		<url-pattern>/api/*</url-pattern>
+		<url-pattern>/protected/*</url-pattern>
 	</filter-mapping>
 	<filter-mapping>
 		<filter-name>CAS HttpServletRequest Wrapper Filter</filter-name>
-		<url-pattern>/api/*</url-pattern>
+		<url-pattern>/protected/*</url-pattern>
 	</filter-mapping>
 	<filter-mapping>
 		<filter-name>CAS Assertion Thread Local Filter</filter-name>
-		<url-pattern>/api/*</url-pattern>
+		<url-pattern>/protected/*</url-pattern>
 	</filter-mapping>
+	<!--
 	<filter-mapping>
 		<filter-name>Guice Filter</filter-name>
 		<url-pattern>/api/*</url-pattern>
