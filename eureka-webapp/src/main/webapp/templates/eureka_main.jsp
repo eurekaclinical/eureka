@@ -53,7 +53,7 @@ ul.nav a { zoom: 1; }
       <img src="${pageContext.request.contextPath}/images/help_icon.gif" alt="Help" width="30" height="30" align="absmiddle" />
       <li><a href="help.html">Help</a></li>
             <img src="${pageContext.request.contextPath}/images/admin_icon.gif" alt="Administration" width="30" height="30" align="absmiddle" />
-      <li><a href="admin.html">Administration</a></li>
+      <li><a href="${pageContext.request.contextPath}/protected/admin.jsp">Administration</a></li>
       <img style="padding-left:375px" src="${pageContext.request.contextPath}/images/login_icon.gif" alt="Login" align="absmiddle" />
       <li><a href="${pageContext.request.contextPath}/protected/login">Login</a></li>    
 	  <c:if test="${pageContext.request.remoteUser != null}">
