@@ -4,7 +4,7 @@
 
 <template:insert template="/templates/eureka_main.jsp">
 
-	<template:content>
+	<template:content name="content">
 	<script type="text/javascript">
 
 	$(document).ready(function() {
