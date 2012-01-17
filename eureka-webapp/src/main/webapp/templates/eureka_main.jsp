@@ -16,7 +16,7 @@ ul.nav a { zoom: 1; }
 #submit { border:none;}
 </style>
 <![endif]-->
-<link href="css/styles.css" rel="stylesheet" type="text/css" />
+<link href="${pageContext.request.contextPath}/css/styles.css" rel="stylesheet" type="text/css" />
 <link rel="SHORTCUT ICON" href="favicon.ico">
 <meta name="Description" content="A Clinical Analysis Tool for biomedical informatics and data" />
 </head>
@@ -38,32 +38,34 @@ ul.nav a { zoom: 1; }
 <br />
     </div>
   <div class="header">
-    <span><a href="index.html"><img src="images/tag_line.gif" alt="Data Analysis Tool" width="238" align="absmiddle" /></a></span></div>
+    <span><a href="index.html"><img src="${pageContext.request.contextPath}/images/tag_line.gif" alt="Data Analysis Tool" width="238" align="absmiddle" /></a></span></div>
  </div>
 
  <div>    
   <ul class="nav">
-      <li><a href="about.html"><img src="images/about_icon.gif" alt="About" width="30" height="30" align="absmiddle" />About</a></li>
-      <img src="images/reg_icon.gif" alt="Register" width="30" height="30" align="absmiddle" />
+      <li><a href="about.html"><img src="${pageContext.request.contextPath}/images/about_icon.gif" alt="About" width="30" height="30" align="absmiddle" />About</a></li>
+      <img src="${pageContext.request.contextPath}/images/reg_icon.gif" alt="Register" width="30" height="30" align="absmiddle" />
       <li><a href="register.jsp">Register</a></li>
-      <img src="images/acct_icon.gif" alt="Account" width="30" height="30" align="absmiddle" />
+      <img src="${pageContext.request.contextPath}/images/acct_icon.gif" alt="Account" width="30" height="30" align="absmiddle" />
       <li><a href="acct.html">Account</a></li>
-      <img src="images/contact_icon.gif" alt="Contact" width="30" height="30" align="absmiddle" />
+      <img src="${pageContext.request.contextPath}/images/contact_icon.gif" alt="Contact" width="30" height="30" align="absmiddle" />
       <li><a href="contact.html">Contact</a></li>
-      <img src="images/help_icon.gif" alt="Help" width="30" height="30" align="absmiddle" />
+      <img src="${pageContext.request.contextPath}/images/help_icon.gif" alt="Help" width="30" height="30" align="absmiddle" />
       <li><a href="help.html">Help</a></li>
-            <img src="images/admin_icon.gif" alt="Administration" width="30" height="30" align="absmiddle" />
+            <img src="${pageContext.request.contextPath}/images/admin_icon.gif" alt="Administration" width="30" height="30" align="absmiddle" />
       <li><a href="admin.html">Administration</a></li>
-      <img style="padding-left:475px" src="images/i2b2_icon.gif" alt="i2b2" width="30" height="30" align="absmiddle" />
-      <li><a href="i2b2workbench.exe">i2b2</a></li>
-         <img src="images/rsch_icon.gif" alt="Upload Data" width="30" height="30" align="absmiddle" />
-      <li><a href="Tool.html">Upload Data</a></li>
+	  <c:if test="${pageContext.request.remoteUser}">
+      	  <img style="padding-left:475px" src="images/i2b2_icon.gif" alt="i2b2" width="30" height="30" align="absmiddle" />
+	      <li><a href="i2b2workbench.exe">i2b2</a></li>
+	         <img src="${pageContext.request.contextPath}/images/rsch_icon.gif" alt="Upload Data" width="30" height="30" align="absmiddle" />
+	      <li><a href="Tool.html">Upload Data</a></li>
+      </c:if>
     </ul>
   </div>
 
   <div class="sidebar1">
 
-    <img src="images/analytics.jpg" />
+    <img src="${pageContext.request.contextPath}/images/analytics.jpg" />
 
  <br />
   <br />
