@@ -25,7 +25,7 @@ ul.nav a { zoom: 1; }
 
 <div class="container">
 <div>
-    <div id="login">
+<!--    <div id="login">
 	   <label>User Name
 	   <input id="login_field" type="text" name="textfield" />
 	   </label>
@@ -36,7 +36,7 @@ ul.nav a { zoom: 1; }
  <br />
  	<span class="sub_text"><a href="forgot_password.html">Login Help</a></span>
 <br />
-    </div>
+    </div>-->
   <div class="header">
     <span><a href="index.html"><img src="${pageContext.request.contextPath}/images/tag_line.gif" alt="Data Analysis Tool" width="238" align="absmiddle" /></a></span></div>
  </div>
@@ -57,7 +57,7 @@ ul.nav a { zoom: 1; }
 	  <c:if test="${pageContext.request.remoteUser}">
       	  <img style="padding-left:475px" src="images/i2b2_icon.gif" alt="i2b2" width="30" height="30" align="absmiddle" />
 	      <li><a href="i2b2workbench.exe">i2b2</a></li>
-	         <img src="${pageContext.request.contextPath}/images/rsch_icon.gif" alt="Upload Data" width="30" height="30" align="absmiddle" />
+	      ï¿½ï¿½ï¿½<img src="${pageContext.request.contextPath}/images/rsch_icon.gif" alt="Upload Data" width="30" height="30" align="absmiddle" />
 	      <li><a href="Tool.html">Upload Data</a></li>
       </c:if>
     </ul>
