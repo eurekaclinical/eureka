@@ -56,7 +56,7 @@ ul.nav a { zoom: 1; }
       <li><a href="admin.html">Administration</a></li>
       <img style="padding-left:375px" src="${pageContext.request.contextPath}/images/login_icon.gif" alt="Login" align="absmiddle" />
       <li><a href="${pageContext.request.contextPath}/protected/login">Login</a></li>    
-	  <c:if test="${pageContext.request.remoteUser}">
+	  <c:if test="${pageContext.request.remoteUser != null}">
       	  <img style="padding-left:475px" src="${pageContext.request.contextPath}/images/i2b2_icon.gif" alt="i2b2" width="30" height="30" align="absmiddle" />
 	      <li><a href="i2b2workbench.exe">i2b2</a></li>
 	      <img src="${pageContext.request.contextPath}/images/rsch_icon.gif" alt="Upload Data" width="30" height="30" align="absmiddle" />
