@@ -31,6 +31,16 @@
 		<url-pattern>/api/*</url-pattern>
 	</servlet-mapping>
 	-->
+	
+	<servlet>
+		<servlet-name>Login</servlet-name>
+		<servlet-class>edu.emory.cci.aiw.cvrg.eureka.servlet.LoginServlet</servlet-class>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>Login</servlet-name>
+		<url-pattern>/protected/login</url-pattern>
+	</servlet-mapping>
 
 	<!-- UNCOMMENT THESE FILTERS AND THEIR MAPPINGS TO ENABLE AUTHENTICATION VIA CAS -->
 	<filter>
