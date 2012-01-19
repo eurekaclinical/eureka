@@ -4,6 +4,10 @@
 
 <template:insert template="/templates/eureka_main.jsp">
 
+	<template:content name="sidebar">
+		<img src="${pageContext.request.contextPath}/images/bioinformatics.jpg" />
+	</template:content>
+
 	<template:content name="content">
 
 		<div class="content">
@@ -91,7 +95,8 @@
 
 		<div class="sub-content">
 			<h3>Please wait while your project is being uploaded.....</h3>
-			<img src="${pageContext.request.contextPath}/images/e-ani.gif" hspace="450" align="middle" />
+			<img src="${pageContext.request.contextPath}/images/e-ani.gif"
+				hspace="450" align="middle" />
 		</div>
 	</template:content>
 </template:insert>

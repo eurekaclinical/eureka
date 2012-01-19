@@ -76,12 +76,9 @@ ul.nav a { zoom: 1; }
   </div>
 
   <div class="sidebar1">
-
-    <img src="${pageContext.request.contextPath}/images/analytics.jpg" />
-
- <br />
-  <br />
+	<template:get name="sidebar" />
   </div>
+
   <div class="content">
 		<template:get name="content" />
   </div>

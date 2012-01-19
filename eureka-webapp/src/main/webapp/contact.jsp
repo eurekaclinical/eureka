@@ -4,6 +4,10 @@
 
 <template:insert template="/templates/eureka_main.jsp">
 
+	<template:content name="sidebar">
+		    <img src="${pageContext.request.contextPath}/images/clinical_research.jpg" />
+	</template:content>
+	
 	<template:content name="content">
 		<div class="content">
 			<h3>Contact Information</h3>
