@@ -10,7 +10,6 @@
 
 	<template:content name="content">
 
-		<div class="content">
 			<h3>Upload Data</h3>
 			<form id="form" name="form1" method="post" action="">
 				<table>
@@ -89,7 +88,6 @@
 					<input type="reset" name="input2" id="button" value="Browse" />
 				</div>
 			</form>
-		</div>
 	</template:content>
 	<template:content name="subcontent">
 

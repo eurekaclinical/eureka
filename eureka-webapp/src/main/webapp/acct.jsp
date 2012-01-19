@@ -10,7 +10,6 @@
 
 	<template:content name="content">
 
-		<div class="content">
 			<h3>Account</h3>
 			<div class="pad pad_top">
 				<table>
@@ -43,7 +42,7 @@
 					</tr>
 
 				</table>
-			</div>
+
 			<div class=" fltrt margin">
 				<a href="edit_acct.html"><img src="images/edit_btn.gif"
 					width="33" height="19" alt="Edit" /></a>
