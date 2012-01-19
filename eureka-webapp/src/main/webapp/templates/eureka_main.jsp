@@ -38,7 +38,7 @@ ul.nav a { zoom: 1; }
 <br />
     </div>-->
   <div class="header">
-    <span><a href="index.html"><img src="${pageContext.request.contextPath}/images/tag_line.gif" alt="Data Analysis Tool" width="238" align="absmiddle" /></a></span></div>
+    <span><a href="${pageContext.request.contextPath}"><img src="${pageContext.request.contextPath}/images/tag_line.gif" alt="Data Analysis Tool" width="238" align="absmiddle" /></a></span></div>
  </div>
 
  <div>    
@@ -46,14 +46,25 @@ ul.nav a { zoom: 1; }
       <li><a href="${pageContext.request.contextPath}/about.jsp"><img src="${pageContext.request.contextPath}/images/about_icon.gif" alt="About" width="30" height="30" align="absmiddle" />About</a></li>
       <img src="${pageContext.request.contextPath}/images/reg_icon.gif" alt="Register" width="30" height="30" align="absmiddle" />
       <li><a href="${pageContext.request.contextPath}/register.jsp">Register</a></li>
-      <img src="${pageContext.request.contextPath}/images/acct_icon.gif" alt="Account" width="30" height="30" align="absmiddle" />
-      <li><a href="${pageContext.request.contextPath}/acct.jsp">Account</a></li>
+     
+      <c:choose>
+        <c:when test="${pageContext.request.remoteUser != null}">
+          <img src="${pageContext.request.contextPath}/images/acct_icon.gif" alt="Account" width="30" height="30" align="absmiddle" />
+          <li><a href="${pageContext.request.contextPath}/acct.jsp">Account</a></li>
+        </c:when>
+      </c:choose>
+     
       <img src="${pageContext.request.contextPath}/images/contact_icon.gif" alt="Contact" width="30" height="30" align="absmiddle" />
       <li><a href="${pageContext.request.contextPath}/contact.jsp">Contact</a></li>
       <img src="${pageContext.request.contextPath}/images/help_icon.gif" alt="Help" width="30" height="30" align="absmiddle" />
       <li><a href="${pageContext.request.contextPath}/help.jsp">Help</a></li>
-      <img src="${pageContext.request.contextPath}/images/admin_icon.gif" alt="Administration" width="30" height="30" align="absmiddle" />
-      <li><a href="${pageContext.request.contextPath}/protected/admin.jsp">Administration</a></li>
+      
+      <c:choose>
+        <c:when test="${pageContext.request.remoteUser != null }">
+          <img src="${pageContext.request.contextPath}/images/admin_icon.gif" alt="Administration" width="30" height="30" align="absmiddle" />
+          <li><a href="${pageContext.request.contextPath}/protected/admin.jsp">Administration</a></li>
+	  </c:when>
+	  </c:choose>
 	  
 	  <c:choose>
 	  	
