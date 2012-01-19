@@ -86,23 +86,21 @@ Re-Enter Password:
 	</template:content>
 	
 	<template:content name="subcontent">
-		<div class="sub-content">
-			<div id="release_notes">
-				<h3>
-					<img src="${pageContext.request.contextPath}/images/rss.png"
-						border="0" /> Related News <a href="xml/rss_news.xml" class="rss"></a>
-				</h3>
-				<script language="JavaScript"
-					src="http://feed2js.org//feed2js.php?src=http%3A%2F%2Fwhsc.emory.edu%2Fhome%2Fnews%2Freleases%2Fresearch.rss&chan=y&num=4&desc=1&utf=y"
-					charset="UTF-8" type="text/javascript"></script>
+		<div id="release_notes">
+			<h3>
+				<img src="${pageContext.request.contextPath}/images/rss.png"
+					border="0" /> Related News <a href="xml/rss_news.xml" class="rss"></a>
+			</h3>
+			<script language="JavaScript"
+				src="http://feed2js.org//feed2js.php?src=http%3A%2F%2Fwhsc.emory.edu%2Fhome%2Fnews%2Freleases%2Fresearch.rss&chan=y&num=4&desc=1&utf=y"
+				charset="UTF-8" type="text/javascript"></script>
 
-				<noscript>
-					<a style="padding-left: 35px"
-						href="http://feed2js.org//feed2js.php?src=http%3A%2F%2Fwhsc.emory.edu%2Fhome%2Fnews%2Freleases%2Fresearch.rss&chan=y&num=4&desc=200>1&utf=y&html=y">View
-						RSS feed</a>
-				</noscript>
+			<noscript>
+				<a style="padding-left: 35px"
+					href="http://feed2js.org//feed2js.php?src=http%3A%2F%2Fwhsc.emory.edu%2Fhome%2Fnews%2Freleases%2Fresearch.rss&chan=y&num=4&desc=200>1&utf=y&html=y">View
+					RSS feed</a>
+			</noscript>
 
-			</div>
 		</div>
 	</template:content>
 </template:insert>
