@@ -43,15 +43,15 @@ ul.nav a { zoom: 1; }
 
  <div>    
   <ul class="nav">
-      <li><a href="about.html"><img src="${pageContext.request.contextPath}/images/about_icon.gif" alt="About" width="30" height="30" align="absmiddle" />About</a></li>
+      <li><a href="${pageContext.request.contextPath}/about.jsp"><img src="${pageContext.request.contextPath}/images/about_icon.gif" alt="About" width="30" height="30" align="absmiddle" />About</a></li>
       <img src="${pageContext.request.contextPath}/images/reg_icon.gif" alt="Register" width="30" height="30" align="absmiddle" />
-      <li><a href="register.jsp">Register</a></li>
+      <li><a href="${pageContext.request.contextPath}/register.jsp">Register</a></li>
       <img src="${pageContext.request.contextPath}/images/acct_icon.gif" alt="Account" width="30" height="30" align="absmiddle" />
-      <li><a href="acct.html">Account</a></li>
+      <li><a href="${pageContext.request.contextPath}/acct.jsp">Account</a></li>
       <img src="${pageContext.request.contextPath}/images/contact_icon.gif" alt="Contact" width="30" height="30" align="absmiddle" />
-      <li><a href="contact.html">Contact</a></li>
+      <li><a href="${pageContext.request.contextPath}/contact.jsp">Contact</a></li>
       <img src="${pageContext.request.contextPath}/images/help_icon.gif" alt="Help" width="30" height="30" align="absmiddle" />
-      <li><a href="help.html">Help</a></li>
+      <li><a href="${pageContext.request.contextPath}/help.jsp">Help</a></li>
       <img src="${pageContext.request.contextPath}/images/admin_icon.gif" alt="Administration" width="30" height="30" align="absmiddle" />
       <li><a href="${pageContext.request.contextPath}/protected/admin.jsp">Administration</a></li>
 	  
