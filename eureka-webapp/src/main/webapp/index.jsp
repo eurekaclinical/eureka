@@ -19,7 +19,7 @@
 			clinical researchers to use existing clinical data for discovery
 			research.<br />
 		</p>
-		<p>This tool enhances  medical research via technology by making
+		<p>This tool enhances medical research via technology by making
 			it possible to collect, weed through, and analyze widespread data on
 			patient treatments and outcomes. It involves the collection,
 			management, analysis, and integration of data in biomedicine and can
