@@ -58,8 +58,8 @@ ul.nav a { zoom: 1; }
 	  <c:choose>
 	  	
 	  	<c:when test="${pageContext.request.remoteUser != null}">
-	  	  <li>Welcome ${pageContext.request.remoteUser} | <a href="${pageContext.request.contextPath}/logout">Logout</a></li>
-      	  <img style="padding-left:475px" src="${pageContext.request.contextPath}/images/i2b2_icon.gif" alt="i2b2" width="30" height="30" align="absmiddle" />
+	  	  <li style="padding-left:475px">Welcome ${pageContext.request.remoteUser} | <a href="${pageContext.request.contextPath}/logout">Logout</a></li>
+      	  <img src="${pageContext.request.contextPath}/images/i2b2_icon.gif" alt="i2b2" width="30" height="30" align="absmiddle" />
 	      <li><a href="i2b2workbench.exe">i2b2</a></li>
 	      <img src="${pageContext.request.contextPath}/images/rsch_icon.gif" alt="Upload Data" width="30" height="30" align="absmiddle" />
 	      <li><a href="Tool.html">Upload Data</a></li>
