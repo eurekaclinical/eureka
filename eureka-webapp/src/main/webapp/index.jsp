@@ -5,7 +5,7 @@
 <template:insert template="/templates/eureka_main.jsp">
 
 	<template:content name="sidebar">
-		<img src="${pageContext.request.contextPath}/images/analytics.jpg" />
+		<img src="${pageContext.request.contextPath}/images/infra3.jpg" />
 	</template:content>
 
 

@@ -13,7 +13,7 @@
 			<h3>Account</h3>
 			<div class="pad pad_top">
 				<table>
-					<tr class="grey">
+					<tr>
 						<td width="124">Name:</td>
 						<td colspan="4">&nbsp;</td>
 					</tr>

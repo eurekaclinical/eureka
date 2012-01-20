@@ -69,17 +69,19 @@ ul.nav a { zoom: 1; }
 	  <c:choose>
 	  	
 	  	<c:when test="${pageContext.request.remoteUser != null}">
-	  	  <li style="padding-left:325px">Welcome ${pageContext.request.remoteUser} | <a href="${pageContext.request.contextPath}/logout">Logout</a></li>
+        <div class="fltrt">
+	  	  <li>Welcome ${pageContext.request.remoteUser} | <a href="${pageContext.request.contextPath}/logout">Logout</a></li>
       	  <img src="${pageContext.request.contextPath}/images/i2b2_icon.gif" alt="i2b2" width="30" height="30" align="absmiddle" />
 	      <li><a href="https://www.i2b2.org/">i2b2</a></li>
 	      <img src="${pageContext.request.contextPath}/images/rsch_icon.gif" alt="Upload Data" width="30" height="30" align="absmiddle" />
 	      <li><a href="${pageContext.request.contextPath}/tool.jsp">Upload Data</a></li>
-	  	
+	  	</div>
 	  	</c:when>
 	  	
 	  	<c:otherwise>
-	      <img style="padding-left:375px" src="${pageContext.request.contextPath}/images/login_icon.gif" alt="Login" align="absmiddle" />
-	      <li><a href="${pageContext.request.contextPath}/protected/login">Login</a></li>    
+        <div class="fltrt">
+	      <img src="${pageContext.request.contextPath}/images/login_icon.gif" alt="Login" align="absmiddle" />
+	      <li><a href="${pageContext.request.contextPath}/protected/login">Login</a></li>    	</div>
 	  	
 	  	</c:otherwise>
 	  </c:choose>

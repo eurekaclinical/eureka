@@ -22,7 +22,8 @@ ul.nav a, ul.nav a:visited {
 	text-decoration: none;
 	color: #036;
 	padding-right:10px;
-	font-weight:bold;
+	font-weight: 800;
+	font-size:9px;
 }
 ul.nav a:hover, ul.nav a:active, ul.nav a:focus {
 	color: #999999;
@@ -139,11 +140,6 @@ a:visited {
 	display:block;
 	padding:0 60px 10px 60px;
 }	
-label {
-	color:#fff;
-	font-weight:bold;
-	padding-left:5px;
-}
 
 #submit {
 	font-size:10px;
