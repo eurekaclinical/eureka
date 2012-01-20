@@ -10,7 +10,7 @@
 	
 	<template:content name="content">
 		<h3>Help</h3>
-		<p>
+		<p class="pad_top">
 			<strong>Limitations</strong><br /> The application currently has
 			little in the way of security built-in. It only supports one user at
 			a time. In order to make the VM runnable on a wide range of

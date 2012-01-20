@@ -11,18 +11,25 @@
 
 	<template:content name="content">
 		<h3>Contact Information</h3>
-		<div class="pad pad_btm">
+
+        <div class="pad pad_btm fltlft">
 			<p>
 			<h4 class="large pad_top">Center for Comprehensive Informatics</h4>
+            </p>
 			<p>
 				<strong>Emory University</strong><br /> Psychology Building, Suite
 				566<br /> 36 Eagle Row<br /> Atlanta, GA, 30322
+                
 			</p>
 
 			<p>
 				<a href="mailto:admin@emory.edu"><strong>admin@emory.edu</strong></a>
 			</p>
-		</div>
+          </div>
+          <div class="fltrt margin">
+           <img src="images/map.jpg" width="321" height="244" alt="map" />
+          </div>
+
 	</template:content>
 	<template:content name="subcontent">
 		<div id="release_notes">

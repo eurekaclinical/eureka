@@ -48,15 +48,17 @@
 </script>
     <h3>Register</h3>
 <form id="form2" action="form_action.asp" method="get">
-  <p>First Name : 
+First Name : 
     <input name="fname" type="text" id="first_name" class="register_field" />
     
   <br />
   <br />
 Last Name: 
 <input id="last_name" class="register_field" type="text" name="lname" />
-  </p>
-  <p>Organization : 
+
+  <br />
+  <br />
+Organization : 
     
     <input id="organization" class="register_field" type="text" name="org" />
     <br />
@@ -79,7 +81,6 @@ Re-Enter Password:
 <br />
     <br />
     <input id="button" type="submit" value="Submit"/>
-  </p>
 </form>
 
 

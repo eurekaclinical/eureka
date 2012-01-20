@@ -10,7 +10,7 @@
 
 	<template:content name="content">
 		<h3>About</h3>
-		<p>Eureka! is a product of the Center for Comprehensive
+		<p class="pad_top"><strong>Eureka!</strong> is a product of the Center for Comprehensive
 			Informatics (CCI) at Emory University in collaboration with John
 			Hopkins University. The tool is a collaborative team-science project
 			between software system researchers and scientific research groups.
@@ -20,12 +20,11 @@
 			and processes that will enable clinical researchers to use existing
 			clinical data for discovery research.</p>
 		<p>
-			Eureka! is the Data Analysis Tool for biomedical informatics and
-			data. This application provides a method to extract, transform and
+			<strong>Eureka!</strong> is the Data Analysis Tool for biomedical informatics 			and data. This application provides a method to extract, transform and
 			load a clinical dataset and conforms it to a defined structure that
 			loads into an instance of i2b2. <br />
 		</p>
-		<p>This tool enhances  medical research via technology by making
+		<p>This tool enhances medical research via technology by making
 			it possible to collect, weed through, and analyze widespread data on
 			patient treatments and outcomes. It involves the collection,
 			management, analysis, and integration of data in biomedicine and can
