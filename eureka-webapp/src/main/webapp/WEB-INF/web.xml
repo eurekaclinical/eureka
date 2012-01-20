@@ -12,6 +12,12 @@
 		UNCOMMENT THE FOLLOWING (AND COMMENT OUT GUICE RELATED LISTENER AND FILTERS, 
 		IF YOU WANT TO USE JUST JERSEY, WITHOUT GUICE
 	-->
+
+	<!-- Enable the CAS Single Sign Out feature -->
+	<listener>
+		<listener-class>org.jasig.cas.client.session.SingleSignOutHttpSessionListener</listener-class>
+	</listener>
+
 	<!--
 	<servlet>
 		<servlet-name>Jersey Web Application</servlet-name>
@@ -37,12 +43,25 @@
 		<servlet-class>edu.emory.cci.aiw.cvrg.eureka.servlet.LoginServlet</servlet-class>
 		<load-on-startup>1</load-on-startup>
 	</servlet>
+	<servlet>
+		<servlet-name>Logout</servlet-name>
+		<servlet-class>edu.emory.cci.aiw.cvrg.eureka.servlet.LogoutServlet</servlet-class>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
 	<servlet-mapping>
 		<servlet-name>Login</servlet-name>
 		<url-pattern>/protected/login</url-pattern>
 	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>Logout</servlet-name>
+		<url-pattern>/logout</url-pattern>
+	</servlet-mapping>
 
 	<!-- UNCOMMENT THESE FILTERS AND THEIR MAPPINGS TO ENABLE AUTHENTICATION VIA CAS -->
+	<filter>
+		<filter-name>CAS Single Sign Out Filter</filter-name>
+		<filter-class>org.jasig.cas.client.session.SingleSignOutFilter</filter-class>
+	</filter>
 	<filter>
 		<filter-name>CAS Authentication Filter</filter-name>
 		<filter-class>org.jasig.cas.client.authentication.AuthenticationFilter</filter-class>
@@ -111,6 +130,10 @@
 	-->
 
 	<!-- UNCOMMENT FILTER MAPPINGS TO ACTIVATE AUTHENTICATION VIA CAS -->
+	<filter-mapping>
+		<filter-name>CAS Single Sign Out Filter</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
 	<filter-mapping>
 		<filter-name>CAS Proxy Filter</filter-name>
 		<url-pattern>/proxyCallback</url-pattern>
