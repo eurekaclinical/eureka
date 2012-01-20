@@ -156,7 +156,6 @@ a:visited {
 	margin-bottom:58px;
 }
 table {
-	background:#eef3f9;
 	min-width:680px;
 	align:center;
 	margin: 10px;
@@ -166,8 +165,6 @@ table {
 }
 table, td
 {
-    border-color: #eef3f9;
-    border-style: solid;
 	border-width: 1px;
 }
 td
