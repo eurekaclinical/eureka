@@ -67,8 +67,8 @@ Email Address:
       <input id="email_address" class="register_field" type="text" name="org" />
        <br />
     <br />
-User Name (email): 
-<input id="user_name" class="register_field" type="text" name="UserName" />
+    Confirm Email: 
+    <input id="user_name" class="register_field" type="text" name="UserName" />
     
     <br />
     <br />
@@ -78,6 +78,9 @@ Password:
 <br />
 Re-Enter Password: 
 <input id="re-enter_password" class="register_field" type="text" name="Password" />
+<br />
+    <input type="checkbox" name="checkbox" id="checkbox" />
+    <label for="checkbox">Click here to join our mailing list</label>
 <br />
     <br />
     <input id="button" type="submit" value="Submit"/>
