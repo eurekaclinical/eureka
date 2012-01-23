@@ -23,11 +23,12 @@
     <form id="form" name="form1" method="post" action="">
       <table>
       <tr class="grey">
-        <td width="170">User Name</td>
-        <td width="94">Last Login</td>
-        <td width="199">Role</td>
-        <td width="61">Jobs</td>
-        <td width="60">Errors</td>
+        <td width="162">User Name</td>
+        <td width="68">Last Login</td>
+        <td width="136">Role</td>
+        <td width="196">Email</td>
+        <td width="200">Organization</td>
+        <td width="100">Status</td>
       </tr>
       <c:forEach items="${users}" var="user">
       	<tr>
@@ -41,7 +42,8 @@
       		
       		</td>
       		
-      		<td>4</td><td>5</td>
+      		<td>&nbsp;</td><td>&nbsp;</td>
+      		<td>Acive</td>
       	</tr>
       </c:forEach>
     </table>
