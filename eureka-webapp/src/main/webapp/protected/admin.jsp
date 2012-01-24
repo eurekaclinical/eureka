@@ -24,15 +24,15 @@
       <table>
       <tr class="grey">
         <td width="162">User Name</td>
-        <td width="68">Last Login</td>
-        <td width="136">Role</td>
-        <td width="196">Email</td>
-        <td width="200">Organization</td>
+        <td width="83">Last Login</td>
+        <td width="121">Role</td>
+        <td width="217">Email</td>
+        <td width="179">Organization</td>
         <td width="100">Status</td>
       </tr>
       <c:forEach items="${users}" var="user">
       	<tr>
-      		<td>${user.email}</td><td>1</td>
+      		<td>${user.email}</td><td>&nbsp;</td>
       		<td>
       			<select>
 				    <c:forEach var="role" items="${roles}">
@@ -43,7 +43,7 @@
       		</td>
       		
       		<td>&nbsp;</td><td>&nbsp;</td>
-      		<td>Acive</td>
+      		<td>&nbsp;</td>
       	</tr>
       </c:forEach>
     </table>
