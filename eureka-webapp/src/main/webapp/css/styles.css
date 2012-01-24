@@ -174,8 +174,8 @@ td
     border-width: 1px 0 0 0;
     background-color: #fff;
 }
-.grey {
-	background:#c8d1de;
+.bold {
+	font-weight:bold;
 }
 
 #form {

@@ -22,7 +22,7 @@
     
     <form id="form" name="form1" method="post" action="">
       <table>
-      <tr class="grey">
+      <tr class="bold">
         <td width="162">User Name</td>
         <td width="83">Last Login</td>
         <td width="121">Role</td>
