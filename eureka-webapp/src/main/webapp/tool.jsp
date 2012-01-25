@@ -91,7 +91,7 @@
 	</template:content>
 	<template:content name="subcontent">
 
-		<div class="sub-content">
+		<div>
 			<h3>Please wait while your project is being uploaded.....</h3>
 			<img src="${pageContext.request.contextPath}/images/e-ani.gif"
 				hspace="450" align="middle" />

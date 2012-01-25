@@ -18,7 +18,7 @@ ul.nav a { zoom: 1; }
 <![endif]-->
 <link href="${pageContext.request.contextPath}/css/styles.css" rel="stylesheet" type="text/css" />
 <link rel="SHORTCUT ICON" href="favicon.ico">
-<meta name="Description" content="A Clinical Analysis Tool for biomedical informatics and data" />
+<meta name="Description" content="A Clinical Analysis Tool for Biomedical Informatics and Data" />
 </head>
 
 <body>
