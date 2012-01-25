@@ -2,17 +2,15 @@ package edu.emory.cci.aiw.cvrg.eureka.services.resource;
 
 import java.util.List;
 
+import javax.ws.rs.core.MediaType;
+
 import junit.framework.Assert;
 
 import org.junit.Test;
 
-import com.google.inject.servlet.GuiceFilter;
 import com.sun.jersey.api.client.GenericType;
 import com.sun.jersey.api.client.WebResource;
-import com.sun.jersey.test.framework.JerseyTest;
-import com.sun.jersey.test.framework.WebAppDescriptor;
 
-import edu.emory.cci.aiw.cvrg.eureka.services.config.ContextTestListener;
 import edu.emory.cci.aiw.cvrg.eureka.services.entity.Role;
 
 /**
@@ -21,16 +19,13 @@ import edu.emory.cci.aiw.cvrg.eureka.services.entity.Role;
  * @author hrathod
  * 
  */
-public class RoleResourceTest extends JerseyTest {
+public class RoleResourceTest extends AbstractResourceTest {
 
 	/**
-	 * Default constructor, simply call super().
+	 * Simply call super()
 	 */
 	public RoleResourceTest() {
-		super((new WebAppDescriptor.Builder())
-				.contextListenerClass(ContextTestListener.class)
-				.filterClass(GuiceFilter.class).contextPath("/")
-				.servletPath("/").build());
+		super();
 	}
 
 	/**
@@ -39,10 +34,11 @@ public class RoleResourceTest extends JerseyTest {
 	@Test
 	public void testRoleList() {
 		WebResource webResource = this.resource();
-		List<Role> roles = webResource.path("/api/role/list").get(
-				new GenericType<List<Role>>() {
+		List<Role> roles = webResource.path("/api/role/list")
+				.accept(MediaType.APPLICATION_JSON)
+				.get(new GenericType<List<Role>>() {
 					// Nothing to implement, used to hold returned data.
 				});
-		Assert.assertEquals(0, roles.size());
+		Assert.assertEquals(2, roles.size());
 	}
 }
