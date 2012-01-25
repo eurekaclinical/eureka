@@ -52,36 +52,37 @@ First Name :
     <input name="fname" type="text" id="first_name" class="register_field" />
     
   <br />
-  <br />
+
 Last Name: 
 <input id="last_name" class="register_field" type="text" name="lname" />
 
   <br />
-  <br />
+
 Organization : 
     
     <input id="organization" class="register_field" type="text" name="org" />
     <br />
-    <br />
+
 Email Address: 
       <input id="email_address" class="register_field" type="text" name="org" />
        <br />
-    <br />
     Confirm Email: 
     <input id="user_name" class="register_field" type="text" name="UserName" />
     
     <br />
-    <br />
+
 Password: 
 <input id="password" class="register_field" type="text" name="Password" />
 <br />
-<br />
+
 Re-Enter Password: 
 <input id="re-enter_password" class="register_field" type="text" name="Password" />
+<br />
 <br />
 	<span class="small_text">* Passwords must be at least 8  characters and contain at least one letter and digit
     <br />
     * Disclaimer: Loading real patient data into the system is strictly prohibited.<br />
+    <br />
     <input type="checkbox" name="checkbox" id="checkbox" />
     <label for="checkbox">Click here to join our mailing list</label></span>
    &nbsp;<input id="button" type="submit" value="Submit"/>
