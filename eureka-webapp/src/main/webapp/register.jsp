@@ -79,12 +79,11 @@ Password:
 Re-Enter Password: 
 <input id="re-enter_password" class="register_field" type="text" name="Password" />
 <br />
-	* Passwords must be at least 8  characters and contain at least one letter and digit
+	<span class="small_text">* Passwords must be at least 8  characters and contain at least one letter and digit
     <br />
-    * Disclaimer: Loading real patient data into the system is strictly prohibited.  By registering with this website you confirm that you are solely responsible for any PHI thereof.
-    <br />
+    * Disclaimer: Loading real patient data into the system is strictly prohibited.<br />
     <input type="checkbox" name="checkbox" id="checkbox" />
-    <label for="checkbox">Click here to join our mailing list</label>
+    <label for="checkbox">Click here to join our mailing list</label></span>
    &nbsp;<input id="button" type="submit" value="Submit"/>
 </form>
 

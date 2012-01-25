@@ -240,3 +240,6 @@ td
 	width:450px;
 	float:left;
 }
+.small_text {
+	font-size:9px;
+}
