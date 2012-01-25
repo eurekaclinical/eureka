@@ -10,9 +10,7 @@
 <title>Eureka! Clinical Analytics</title>
 
 <!--[if IE 7]>
-	body {
-	background:#ffffff;
-}
+
 <![endif]-->
 <link href="${pageContext.request.contextPath}/css/styles.css" rel="stylesheet" type="text/css" />
 <link rel="SHORTCUT ICON" href="favicon.ico">

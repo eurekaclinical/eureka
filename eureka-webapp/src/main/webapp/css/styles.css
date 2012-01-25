@@ -65,9 +65,9 @@ a:visited {
 	width: 100%;
 	max-width: 1260px;
 	min-width: 600px;
-	background-color:#FFF;
 	margin: 0 auto;
 	border: 1px solid #036;
+	background:#FFFFFF;
 }
 
 .header {
@@ -96,7 +96,6 @@ a:visited {
 .nav {
 	padding-left:10px;
 	height:30px;
-	width:100%;
 	background-image:url(../images/header_bg.png);
 	border-bottom:1px solid #369;
 }

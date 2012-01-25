@@ -4,7 +4,7 @@
 
 <template:insert template="/templates/eureka_main.jsp">
 
-<div style="background:#FFF">
+<div>
 	
 	<template:content name="sidebar">
 		<img src="${pageContext.request.contextPath}/images/informatics.jpg" />
