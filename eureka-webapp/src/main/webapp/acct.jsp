@@ -43,7 +43,7 @@
 
 				</table>
 
-			<div class=" fltrt margin">
+			<div class="fltrt margin">
 				<a href="edit_acct.html"><img src="images/edit_btn.gif"
 					width="33" height="19" alt="Edit" /></a>
 			</div>
@@ -51,7 +51,7 @@
 		</div>
 	</template:content>
 	<template:content name="subcontent">
-		<div class="sub-content">
+		<div>
 			<div id="release_notes">
 				<h3>
 					<img src="${pageContext.request.contextPath}/images/rss.png"

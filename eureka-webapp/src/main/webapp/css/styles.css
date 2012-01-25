@@ -166,6 +166,8 @@ table {
 table, td
 {
 	border-width: 1px;
+	border-style: solid;
+	border-color:#eff0f3;
 }
 td
 {

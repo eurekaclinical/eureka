@@ -53,7 +53,7 @@
 	</template:content>
 
 <template:content name="subcontent">
-		<div class="sub-content">
+		<div>
 			<div id="release_notes">
 				<h3>
 					<img src="${pageContext.request.contextPath}/images/rss.png"
