@@ -10,11 +10,9 @@
 <title>Eureka! Clinical Analytics</title>
 
 <!--[if IE 7]>
-<style>
-.content { margin-right: -1px; }
-ul.nav a { zoom: 1; }
-#submit { border:none;}
-</style>
+	body {
+	background:#ffffff;
+}
 <![endif]-->
 <link href="${pageContext.request.contextPath}/css/styles.css" rel="stylesheet" type="text/css" />
 <link rel="SHORTCUT ICON" href="favicon.ico">
@@ -25,7 +23,7 @@ ul.nav a { zoom: 1; }
 
 <div class="container">
 <div>
-<!--    <div id="login">
+<!--<div id="login">
 	   <label>User Name
 	   <input id="login_field" type="text" name="textfield" />
 	   </label>
@@ -37,9 +35,9 @@ ul.nav a { zoom: 1; }
  	<span class="sub_text"><a href="forgot_password.html">Login Help</a></span>
 <br />
     </div>-->
-  <div class="header">
+<div class="header">
     <span><a href="${pageContext.request.contextPath}"><img src="${pageContext.request.contextPath}/images/tag_line.gif" alt="Data Analysis Tool" width="238" align="absmiddle" /></a></span></div>
- </div>
+</div>
 
  <div>    
   <ul class="nav">
@@ -69,19 +67,19 @@ ul.nav a { zoom: 1; }
 	  <c:choose>
 	  	
 	  	<c:when test="${pageContext.request.remoteUser != null}">
-        <div class="fltrt">
+<div class="fltrt">
 	  	  <li>Welcome ${pageContext.request.remoteUser} | <a href="${pageContext.request.contextPath}/logout">Logout</a></li>
       	  <img src="${pageContext.request.contextPath}/images/i2b2_icon.gif" alt="i2b2" width="30" height="30" align="absmiddle" />
 	      <li><a href="https://www.i2b2.org/">i2b2</a></li>
 	      <img src="${pageContext.request.contextPath}/images/rsch_icon.gif" alt="Upload Data" width="30" height="30" align="absmiddle" />
 	      <li><a href="${pageContext.request.contextPath}/tool.jsp">Upload Data</a></li>
-	  	</div>
+</div>
 	  	</c:when>
 	  	
 	  	<c:otherwise>
-        <div class="fltrt">
+<div class="fltrt">
 	      <img src="${pageContext.request.contextPath}/images/login_icon.gif" alt="Login" align="absmiddle" />
-	      <li><a href="${pageContext.request.contextPath}/protected/login">Login</a></li>    	</div>
+	      <li><a href="${pageContext.request.contextPath}/protected/login">Login</a></li>   </div>
 	  	
 	  	</c:otherwise>
 	  </c:choose>
@@ -102,7 +100,7 @@ ul.nav a { zoom: 1; }
   
   <div class="footer">
     <p>Copyright 2011 . CCI . Center for Comprehensive Informatics  </p>
-    <!-- end .footer --></div>
+  </div>
   <!-- end .container --></div>
 </body>
 </html>

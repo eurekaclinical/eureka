@@ -3,7 +3,7 @@
 
 
 <template:insert template="/templates/eureka_main.jsp">
-
+<div style="background:#FFF">
 	<template:content name="sidebar">
 		    <img src="${pageContext.request.contextPath}/images/bioinformatics.jpg" />
 	</template:content>
@@ -72,3 +72,4 @@
 	</template:content>
 
 </template:insert>
+</div>
