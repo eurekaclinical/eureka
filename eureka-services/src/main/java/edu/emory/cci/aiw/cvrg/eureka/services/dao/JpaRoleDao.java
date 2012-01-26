@@ -48,4 +48,11 @@ public class JpaRoleDao implements RoleDao {
 		return (Role) query.getSingleResult();
 	}
 
+	@Override
+	public void save(Role role) {
+		this.entityManager.getTransaction().begin();
+		this.entityManager.persist(role);
+		this.entityManager.getTransaction().commit();
+	}
+
 }

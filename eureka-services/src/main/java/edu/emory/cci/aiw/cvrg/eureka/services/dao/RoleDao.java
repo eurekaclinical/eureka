@@ -27,4 +27,11 @@ public interface RoleDao {
 	 * @return A {@link Role} object with a name matching the given name.
 	 */
 	Role getRoleByName(String name);
+
+	/**
+	 * Persist the given role object to the data store.
+	 * 
+	 * @param role The role to be persisted.
+	 */
+	void save(Role role);
 }
