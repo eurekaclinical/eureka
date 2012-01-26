@@ -10,8 +10,9 @@
 <title>Eureka! Clinical Analytics</title>
 
 <!--[if IE 7]>
-
+<link href="${pageContext.request.contextPath}/css/ie7.css" rel="stylesheet" type="text/css">
 <![endif]-->
+
 <link href="${pageContext.request.contextPath}/css/styles.css" rel="stylesheet" type="text/css" />
 <link rel="SHORTCUT ICON" href="favicon.ico">
 <meta name="Description" content="A Clinical Analysis Tool for Biomedical Informatics and Data" />
