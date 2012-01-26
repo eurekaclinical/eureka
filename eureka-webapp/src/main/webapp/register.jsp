@@ -4,8 +4,6 @@
 
 <template:insert template="/templates/eureka_main.jsp">
 
-<div>
-	
 	<template:content name="sidebar">
 		<img src="${pageContext.request.contextPath}/images/informatics.jpg" />
 	</template:content>
@@ -110,4 +108,3 @@ Re-Enter Password:
 		</div>
 	</template:content>
 </template:insert>
-</div>

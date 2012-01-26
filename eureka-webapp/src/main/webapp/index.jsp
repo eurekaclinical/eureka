@@ -1,9 +1,8 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="/WEB-INF/tlds/template.tld" prefix="template"%>
 
-
 <template:insert template="/templates/eureka_main.jsp">
-<div>
+
 	<template:content name="sidebar">
 		<img src="${pageContext.request.contextPath}/images/infra3.jpg" />
 	</template:content>
@@ -37,7 +36,6 @@
 
 	</template:content>
 	<template:content name="subcontent">
-
 		<h3>Release Notes</h3>
 		<div class="release_notes sub_width">
 			<p>12.05.2011 : Login Process Underway</p>
@@ -58,4 +56,3 @@
 	</template:content>
 
 </template:insert>
-</div>

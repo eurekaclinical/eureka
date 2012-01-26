@@ -3,7 +3,7 @@
 
 
 <template:insert template="/templates/eureka_main.jsp">
-<div>
+
 	<template:content name="sidebar">
 		    <img src="${pageContext.request.contextPath}/images/data_analysis.jpg" />
 	</template:content>
@@ -74,4 +74,3 @@
 	</template:content>
 
 </template:insert>
-</div>
