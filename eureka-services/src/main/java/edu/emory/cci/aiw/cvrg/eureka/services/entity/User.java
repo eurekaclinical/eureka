@@ -1,5 +1,6 @@
 package edu.emory.cci.aiw.cvrg.eureka.services.entity;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -59,6 +60,10 @@ public class User implements CycleRecoverable {
 	 * The user's password.
 	 */
 	private String password;
+	/**
+	 * The last log-in date for the user.
+	 */
+	private Date lastLogin;
 	/**
 	 * A list of roles assigned to the user.
 	 */
@@ -217,6 +222,24 @@ public class User implements CycleRecoverable {
 	 */
 	public void setPassword(final String inPassword) {
 		this.password = inPassword;
+	}
+
+	/**
+	 * Get the last log-in date for the user.
+	 * 
+	 * @return The user's last log-in date.
+	 */
+	public Date getLastLogin() {
+		return this.lastLogin;
+	}
+
+	/**
+	 * Set the user's last log-in date.
+	 * 
+	 * @param inLastLogin The last log-in date for the user.
+	 */
+	public void setLastLogin(final Date inLastLogin) {
+		this.lastLogin = inLastLogin;
 	}
 
 	/**
