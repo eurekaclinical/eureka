@@ -8,10 +8,82 @@
 	<version>1.0.0-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<name>Eureka</name>
+	<description>The Eureka Project</description>
+	<url>http://eureka.cci.emory.edu/dev/</url>
 
 	<scm>
 		<connection>scm:svn:svn://scm.cci.emory.edu/svn/aiw/trunk/cvrg/eureka</connection>
+		<url>https://scm.cci.emory.edu/svn/aiw/trunk/cvrg/eureka</url>
 	</scm>
+
+	<issueManagement>
+		<system>JIRA</system>
+		<url>http://scm.cci.emory.edu/jira/</url>
+	</issueManagement>
+
+	<distributionManagement>
+		<site>
+			<id>eureka.cci.emory.edu</id>
+			<url>scp://eureka.cci.emory.edu/var/www/html/dev</url>
+		</site>
+	</distributionManagement>
+
+	<developers>
+		<developer>
+			<id>arpost</id>
+			<name>Andrew Post</name>
+			<email>arpost@emory.edu</email>
+			<roles>
+				<role>Faculty Project Lead</role>
+			</roles>
+			<organization>Center for Comprehensive Informatics, Emory University</organization>
+		</developer>
+		<developer>
+			<id>hrathod</id>
+			<name>Himanshu Rathod</name>
+			<email>Himanshu.Rathod@emory.edu</email>
+			<roles>
+				<role>Software Developer</role>
+			</roles>
+			<organization>Center for Comprehensive Informatics, Emory University</organization>
+		</developer>
+		<developer>
+			<id>sagravat</id>
+			<name>Sanjay Agravat</name>
+			<email>sagrava@emory.edu</email>
+			<roles>
+				<role>Software Developer</role>
+			</roles>
+			<organization>Center for Comprehensive Informatics, Emory University</organization>
+		</developer>
+		<developer>
+			<id>gsmilto</id>
+			<name>Geoff Milton</name>
+			<email>gsmilto@emory.edu</email>
+			<roles>
+				<role>Software Developer</role>
+			</roles>
+			<organization>Center for Comprehensive Informatics, Emory University</organization>
+		</developer>
+		<developer>
+			<id>ssturm2</id>
+			<name>Zanna Sturm</name>
+			<email>ssturm2@emory.edu</email>
+			<roles>
+				<role>User Interface Designer</role>
+			</roles>
+			<organization>Center for Comprehensive Informatics, Emory University</organization>
+		</developer>
+		<developer>
+			<id>richard.willard</id>
+			<name>Richie Willard</name>
+			<email>richard.willard@emoryhealthcare.org</email>
+			<roles>
+				<role>Project Manager</role>
+			</roles>
+			<organization>Center for Comprehensive Informatics, Emory University</organization>
+		</developer>
+	</developers>
 
 	<modules>
 		<module>eureka-common</module>
@@ -64,8 +136,74 @@
 					<artifactId>tomcat7-maven-plugin</artifactId>
 					<version>2.0-SNAPSHOT</version>
 				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-site-plugin</artifactId>
+					<version>3.0</version>
+					<dependencies>
+						<dependency>
+							<groupId>org.apache.maven.wagon</groupId>
+							<artifactId>wagon-ssh</artifactId>
+							<version>2.2</version>
+						</dependency>
+					</dependencies>
+					<configuration>
+						<reportPlugins>
+							<plugin>
+								<groupId>org.apache.maven.plugins</groupId>
+								<artifactId>maven-project-info-reports-plugin</artifactId>
+								<version>2.4</version>
+							</plugin>
+							<plugin>
+								<groupId>org.apache.maven.plugins</groupId>
+								<artifactId>maven-javadoc-plugin</artifactId>
+								<version>2.7</version>
+							</plugin>
+							<plugin>
+								<groupId>org.apache.maven.plugins</groupId>
+								<artifactId>maven-jxr-plugin</artifactId>
+								<version>2.1</version>
+								<configuration>
+									<aggregate>true</aggregate>
+								</configuration>
+							</plugin>
+							<plugin>
+								<groupId>org.apache.maven.plugins</groupId>
+								<artifactId>maven-surefire-report-plugin</artifactId>
+								<version>2.6</version>
+							</plugin>
+							<plugin>
+								<groupId>org.codehaus.mojo</groupId>
+								<artifactId>cobertura-maven-plugin</artifactId>
+								<version>2.4</version>
+								<configuration>
+									<formats>
+										<format>xml</format>
+										<format>html</format>
+									</formats>
+								</configuration>
+							</plugin>
+							<plugin>
+								<groupId>org.apache.maven.plugins</groupId>
+								<artifactId>maven-checkstyle-plugin</artifactId>
+								<version>2.6</version>
+							</plugin>
+						</reportPlugins>
+					</configuration>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-project-info-reports-plugin</artifactId>
+					<version>2.4</version>
+				</plugin>
 			</plugins>
 		</pluginManagement>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-site-plugin</artifactId>
+			</plugin>
+		</plugins>
 	</build>
 
 	<!-- define our dependencies -->
