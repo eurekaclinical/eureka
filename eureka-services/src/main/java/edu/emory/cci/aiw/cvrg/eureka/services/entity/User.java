@@ -32,6 +32,14 @@ public class User implements CycleRecoverable {
 	@GeneratedValue
 	private Long id;
 	/**
+	 * Is the user activate?
+	 */
+	private Boolean active;
+	/**
+	 * Is the user verified?
+	 */
+	private Boolean verified;
+	/**
 	 * The user's first name.
 	 */
 	private String firstName;
@@ -81,8 +89,44 @@ public class User implements CycleRecoverable {
 	 * 
 	 * @param inId A {@link Long} representing the user's unique identifier.
 	 */
-	public void setId(Long inId) {
+	public void setId(final Long inId) {
 		this.id = inId;
+	}
+
+	/**
+	 * Get whether the user is active or not.
+	 * 
+	 * @return True if the user is active, false otherwise.
+	 */
+	public Boolean isActive() {
+		return this.active;
+	}
+
+	/**
+	 * Set whether the user is active or not.
+	 * 
+	 * @param inActive True if the user should be active, false otherwise.
+	 */
+	public void setActive(final Boolean inActive) {
+		this.active = inActive;
+	}
+
+	/**
+	 * Get whether the user has been verified.
+	 * 
+	 * @return True if the user has been verified, false otherwise.
+	 */
+	public Boolean isVerified() {
+		return this.verified;
+	}
+
+	/**
+	 * Set whether the user has been verified.
+	 * 
+	 * @param inVerified True if the user has been verified, false otherwise.
+	 */
+	public void setVerified(final Boolean inVerified) {
+		this.verified = inVerified;
 	}
 
 	/**
@@ -99,7 +143,7 @@ public class User implements CycleRecoverable {
 	 * 
 	 * @param inFirstName A String containing the user's first name.
 	 */
-	public void setFirstName(String inFirstName) {
+	public void setFirstName(final String inFirstName) {
 		this.firstName = inFirstName;
 	}
 
@@ -117,7 +161,7 @@ public class User implements CycleRecoverable {
 	 * 
 	 * @param inLastName A String containing the user's last name.
 	 */
-	public void setLastName(String inLastName) {
+	public void setLastName(final String inLastName) {
 		this.lastName = inLastName;
 	}
 
@@ -135,7 +179,7 @@ public class User implements CycleRecoverable {
 	 * 
 	 * @param inEmail A String containing the user's email address.
 	 */
-	public void setEmail(String inEmail) {
+	public void setEmail(final String inEmail) {
 		this.email = inEmail;
 	}
 
@@ -153,7 +197,7 @@ public class User implements CycleRecoverable {
 	 * 
 	 * @param inOrganization A String containing the user's organization.
 	 */
-	public void setOrganization(String inOrganization) {
+	public void setOrganization(final String inOrganization) {
 		this.organization = inOrganization;
 	}
 
@@ -171,7 +215,7 @@ public class User implements CycleRecoverable {
 	 * 
 	 * @param inPassword A String containing the user's password.
 	 */
-	public void setPassword(String inPassword) {
+	public void setPassword(final String inPassword) {
 		this.password = inPassword;
 	}
 
@@ -189,12 +233,12 @@ public class User implements CycleRecoverable {
 	 * 
 	 * @param inRoles A Set of roles to be assigned to the user.
 	 */
-	public void setRoles(List<Role> inRoles) {
+	public void setRoles(final List<Role> inRoles) {
 		this.roles = inRoles;
 	}
 
 	@Override
-	public Object onCycleDetected(Context context) {
+	public Object onCycleDetected(final Context context) {
 		return null;
 	}
 
