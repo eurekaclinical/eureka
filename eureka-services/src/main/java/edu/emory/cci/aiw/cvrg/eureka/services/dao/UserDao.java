@@ -18,7 +18,7 @@ public interface UserDao {
 	 * 
 	 * @param u The user to be persisted.
 	 */
-	public void save(User u);
+	void save(User u);
 
 	/**
 	 * Get all the users in the data store.
@@ -33,7 +33,7 @@ public interface UserDao {
 	 * @param id The unique identifier to search for.
 	 * @return The user who has a unique identifier match the one given.
 	 */
-	public User get(Long id);
+	User get(Long id);
 
 	/**
 	 * Remove a given user from the data store.
@@ -41,5 +41,5 @@ public interface UserDao {
 	 * @param id The unique identifier of the user to be removed.
 	 * @return The user, which has now been removed from the data store.
 	 */
-	public User delete(Long id);
+	User delete(Long id);
 }
