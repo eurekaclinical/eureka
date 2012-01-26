@@ -64,6 +64,8 @@ public class Bootstrap {
 	 */
 	void addDefaultUsers() {
 		User user = new User();
+		user.setActive(Boolean.TRUE);
+		user.setVerified(Boolean.TRUE);
 		user.setEmail("test.user@emory.edu");
 		user.setFirstName("Test");
 		user.setLastName("User");
