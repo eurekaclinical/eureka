@@ -1,5 +1,8 @@
 package edu.emory.cci.aiw.cvrg.eureka.services.config;
 
+import java.util.Calendar;
+import java.util.List;
+
 import javax.persistence.EntityManager;
 
 import com.google.inject.Inject;
@@ -63,6 +66,9 @@ public class Bootstrap {
 	 * Add the default users to the data store.
 	 */
 	void addDefaultUsers() {
+		List<Role> roles = this.entityManager.createQuery(
+				"select r from Role r where r.defaultRole = true", Role.class)
+				.getResultList();
 		User user = new User();
 		user.setActive(Boolean.TRUE);
 		user.setVerified(Boolean.TRUE);
@@ -71,6 +77,8 @@ public class Bootstrap {
 		user.setLastName("User");
 		user.setOrganization("Emory University");
 		user.setPassword("testpassword");
+		user.setLastLogin(Calendar.getInstance().getTime());
+		user.setRoles(roles);
 
 		this.entityManager.getTransaction().begin();
 		this.entityManager.persist(user);
