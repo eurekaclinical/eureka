@@ -35,11 +35,11 @@ public class User implements CycleRecoverable {
 	/**
 	 * Is the user activate?
 	 */
-	private Boolean active;
+	private boolean active;
 	/**
 	 * Is the user verified?
 	 */
-	private Boolean verified;
+	private boolean verified;
 	/**
 	 * The user's first name.
 	 */
@@ -103,7 +103,7 @@ public class User implements CycleRecoverable {
 	 * 
 	 * @return True if the user is active, false otherwise.
 	 */
-	public Boolean isActive() {
+	public boolean isActive() {
 		return this.active;
 	}
 
@@ -112,7 +112,7 @@ public class User implements CycleRecoverable {
 	 * 
 	 * @param inActive True if the user should be active, false otherwise.
 	 */
-	public void setActive(final Boolean inActive) {
+	public void setActive(final boolean inActive) {
 		this.active = inActive;
 	}
 
@@ -121,7 +121,7 @@ public class User implements CycleRecoverable {
 	 * 
 	 * @return True if the user has been verified, false otherwise.
 	 */
-	public Boolean isVerified() {
+	public boolean isVerified() {
 		return this.verified;
 	}
 
@@ -130,7 +130,7 @@ public class User implements CycleRecoverable {
 	 * 
 	 * @param inVerified True if the user has been verified, false otherwise.
 	 */
-	public void setVerified(final Boolean inVerified) {
+	public void setVerified(final boolean inVerified) {
 		this.verified = inVerified;
 	}
 

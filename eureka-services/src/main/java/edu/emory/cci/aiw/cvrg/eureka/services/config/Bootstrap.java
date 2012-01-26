@@ -92,8 +92,8 @@ public class Bootstrap {
 		System.out.println("DEFAULT ROLES: " + defaultRoles.size());
 		List<User> users = new ArrayList<User>();
 		User user = new User();
-		user.setActive(Boolean.TRUE);
-		user.setVerified(Boolean.TRUE);
+		user.setActive(true);
+		user.setVerified(true);
 		user.setEmail("test.user@emory.edu");
 		user.setFirstName("Test");
 		user.setLastName("User");

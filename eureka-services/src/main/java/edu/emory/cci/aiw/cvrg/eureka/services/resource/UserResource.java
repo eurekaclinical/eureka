@@ -107,8 +107,8 @@ public class UserResource {
 			User user = new User();
 			// TODO: Change these to false, when the verification and activation
 			// steps are completed.
-			user.setActive(Boolean.TRUE);
-			user.setVerified(Boolean.TRUE);
+			user.setActive(true);
+			user.setVerified(true);
 			user.setEmail(userRequest.getEmail());
 			user.setFirstName(userRequest.getFirstName());
 			user.setLastName(userRequest.getLastName());
@@ -147,7 +147,7 @@ public class UserResource {
 
 		if (id != null) {
 			User user = this.userDao.get(id);
-			user.setVerified(Boolean.TRUE);
+			user.setVerified(true);
 			this.userDao.save(user);
 		}
 
@@ -177,7 +177,7 @@ public class UserResource {
 
 		if (id != null) {
 			User user = this.userDao.get(id);
-			user.setActive(Boolean.TRUE);
+			user.setActive(true);
 			this.userDao.save(user);
 		}
 
