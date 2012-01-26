@@ -7,7 +7,7 @@ import javax.persistence.Query;
 
 import com.google.inject.Inject;
 
-import edu.emory.cci.aiw.cvrg.eureka.services.entity.Role;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.Role;
 
 /**
  * A {@link RoleDao} implementation, backed by JPA entities and queries.

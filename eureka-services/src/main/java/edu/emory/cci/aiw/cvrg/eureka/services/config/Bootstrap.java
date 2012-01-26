@@ -6,10 +6,10 @@ import java.util.List;
 
 import com.google.inject.Inject;
 
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.Role;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.User;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.RoleDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.UserDao;
-import edu.emory.cci.aiw.cvrg.eureka.services.entity.Role;
-import edu.emory.cci.aiw.cvrg.eureka.services.entity.User;
 
 /**
  * To be used for Demo purposes only. Bootstraps the data store with some test

@@ -13,9 +13,9 @@ import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.persist.PersistService;
 
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.User;
 import edu.emory.cci.aiw.cvrg.eureka.services.config.AppTestModule;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.UserDao;
-import edu.emory.cci.aiw.cvrg.eureka.services.entity.User;
 
 /**
  * Test case for the User data access object.

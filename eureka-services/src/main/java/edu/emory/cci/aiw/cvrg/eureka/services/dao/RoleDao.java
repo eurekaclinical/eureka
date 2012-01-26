@@ -2,7 +2,7 @@ package edu.emory.cci.aiw.cvrg.eureka.services.dao;
 
 import java.util.List;
 
-import edu.emory.cci.aiw.cvrg.eureka.services.entity.Role;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.Role;
 
 /**
  * A data access object interface for working with {@link Role} objects in the

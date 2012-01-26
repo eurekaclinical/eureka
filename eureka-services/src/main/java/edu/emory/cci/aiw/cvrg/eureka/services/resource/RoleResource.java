@@ -9,8 +9,8 @@ import javax.ws.rs.core.MediaType;
 
 import com.google.inject.Inject;
 
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.Role;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.RoleDao;
-import edu.emory.cci.aiw.cvrg.eureka.services.entity.Role;
 
 /**
  * A RESTful end-point for working with {@link Role} objects.

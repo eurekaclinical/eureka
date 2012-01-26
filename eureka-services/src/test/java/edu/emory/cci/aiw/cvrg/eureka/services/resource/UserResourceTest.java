@@ -13,7 +13,7 @@ import com.sun.jersey.api.client.ClientResponse.Status;
 import com.sun.jersey.api.client.GenericType;
 import com.sun.jersey.api.client.WebResource;
 
-import edu.emory.cci.aiw.cvrg.eureka.services.entity.User;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.User;
 
 /**
  * Test cases related to the {@link UserResource} class.

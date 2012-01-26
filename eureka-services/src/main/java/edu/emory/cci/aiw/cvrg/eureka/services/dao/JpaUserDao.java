@@ -8,7 +8,7 @@ import javax.persistence.Query;
 import com.google.inject.Inject;
 import com.google.inject.persist.Transactional;
 
-import edu.emory.cci.aiw.cvrg.eureka.services.entity.User;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.User;
 
 /**
  * An implementation of the {@link UserDao} interface, backed by JPA entities

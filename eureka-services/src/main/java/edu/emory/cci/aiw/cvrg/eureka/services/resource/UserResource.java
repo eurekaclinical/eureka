@@ -18,11 +18,11 @@ import javax.ws.rs.core.Response;
 import com.google.inject.Inject;
 import com.sun.jersey.api.client.ClientResponse.Status;
 
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.Role;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.User;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.UserRequest;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.RoleDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.UserDao;
-import edu.emory.cci.aiw.cvrg.eureka.services.entity.Role;
-import edu.emory.cci.aiw.cvrg.eureka.services.entity.User;
-import edu.emory.cci.aiw.cvrg.eureka.services.entity.UserRequest;
 
 /**
  * RESTful end-point for {@link User} related methods.

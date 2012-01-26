@@ -11,7 +11,7 @@ import org.junit.Test;
 import com.sun.jersey.api.client.GenericType;
 import com.sun.jersey.api.client.WebResource;
 
-import edu.emory.cci.aiw.cvrg.eureka.services.entity.Role;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.Role;
 
 /**
  * Tests for the {@link RoleResource} class.
