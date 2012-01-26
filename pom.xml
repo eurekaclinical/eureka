@@ -27,6 +27,14 @@
 			<url>scp://eureka.cci.emory.edu/var/www/html/dev</url>
 		</site>
 	</distributionManagement>
+	
+	<licenses>
+		<license>
+			<name>Apache License, Version 2.0</name>
+			<url>http://www.apache.org/licenses/LICENSE-2.0.html</url>
+			<distribution>manual</distribution>
+		</license>
+	</licenses>
 
 	<developers>
 		<developer>
@@ -110,6 +118,7 @@
 		<jsp-api-version>2.0</jsp-api-version>
 		<java-mail-version>1.4</java-mail-version>
 		<jaxb-version>2.2.4-1</jaxb-version>
+		<eureka-common-version>1.0.0-SNAPSHOT</eureka-common-version>
 	</properties>
 
 	<!-- make sure our code complies with Java 1.6 specifications, and define 
@@ -322,6 +331,11 @@
 				<groupId>com.sun.xml.bind</groupId>
 				<artifactId>jaxb-impl</artifactId>
 				<version>${jaxb-version}</version>
+			</dependency>
+			<dependency>
+				<groupId>edu.emory.cci.aiw.cvrg</groupId>
+				<artifactId>eureka-common</artifactId>
+				<version>${eureka-common-version}</version>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
