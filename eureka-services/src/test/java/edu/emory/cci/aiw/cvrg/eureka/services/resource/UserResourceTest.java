@@ -60,7 +60,8 @@ public class UserResourceTest extends AbstractResourceTest {
 	/**
 	 * Helper method to get a list of users from the resource.
 	 * 
-	 * @return
+	 * @return A list of {@link User} objects, fetched from the
+	 *         {@link UserResource} service.
 	 */
 	private List<User> getUserList() {
 		WebResource webResource = this.resource();
