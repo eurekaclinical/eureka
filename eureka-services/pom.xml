@@ -108,6 +108,10 @@
 			<groupId>com.sun.xml.bind</groupId>
 			<artifactId>jaxb-impl</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>edu.emory.cci.aiw.cvrg</groupId>
+			<artifactId>eureka-common</artifactId>
+		</dependency>
 	</dependencies>
 
 </project>

@@ -102,10 +102,14 @@
 		<dependency>
 			<groupId>jstl</groupId>
 			<artifactId>jstl</artifactId>
-		</dependency>		
+		</dependency>
 		<dependency>
 			<groupId>javax.servlet</groupId>
 			<artifactId>jsp-api</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>edu.emory.cci.aiw.cvrg</groupId>
+			<artifactId>eureka-common</artifactId>
 		</dependency>
 	</dependencies>
 
