@@ -8,6 +8,8 @@ import junit.framework.Assert;
 
 import org.junit.Test;
 
+import com.sun.jersey.api.client.ClientResponse;
+import com.sun.jersey.api.client.ClientResponse.Status;
 import com.sun.jersey.api.client.GenericType;
 import com.sun.jersey.api.client.WebResource;
 
@@ -32,14 +34,42 @@ public class UserResourceTest extends AbstractResourceTest {
 	 * Test that proper number of users are returned from the resource.
 	 */
 	@Test
-	public void testRoleList() {
+	public void testUserList() {
+		List<User> users = getUserList();
+		Assert.assertEquals(1, users.size());
+	}
+
+	/**
+	 * Test that an activation put request sent to the resource returns a proper
+	 * OK response.
+	 */
+	@Test
+	public void testUserActivation() {
+		List<User> users = getUserList();
+		Assert.assertTrue(users.size() > 0);
+
+		User user = users.get(0);
+		Long id = user.getId();
+		WebResource webResource = this.resource();
+		ClientResponse response = webResource.path(
+				"/api/user/activate/" + String.valueOf(id.longValue())).put(
+				ClientResponse.class);
+		Assert.assertTrue(response.getClientResponseStatus() == Status.OK);
+	}
+
+	/**
+	 * Helper method to get a list of users from the resource.
+	 * 
+	 * @return
+	 */
+	private List<User> getUserList() {
 		WebResource webResource = this.resource();
 		List<User> users = webResource.path("/api/user/list")
 				.accept(MediaType.APPLICATION_JSON)
 				.get(new GenericType<List<User>>() {
 					// Nothing to implement, used to hold returned data.
 				});
-		Assert.assertEquals(1, users.size());
+		return users;
 	}
 
 }
