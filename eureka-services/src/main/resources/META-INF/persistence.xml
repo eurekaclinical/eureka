@@ -3,8 +3,8 @@
 	xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd"
 	version="2.0">
 	<persistence-unit name="sample-jpa-unit">
-		<class>edu.emory.cci.aiw.cvrg.eureka.services.entity.User</class>
-		<class>edu.emory.cci.aiw.cvrg.eureka.services.entity.Role</class>
+		<class>edu.emory.cci.aiw.cvrg.eureka.common.entity.User</class>
+		<class>edu.emory.cci.aiw.cvrg.eureka.common.entity.Role</class>
 		<properties>
 			<!-- Disable the second-level cache -->
 			<property name="hibernate.cache.provider_class" value="org.hibernate.cache.NoCacheProvider" />
