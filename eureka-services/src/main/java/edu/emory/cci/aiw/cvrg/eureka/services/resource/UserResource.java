@@ -8,6 +8,7 @@ import javax.servlet.ServletException;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -104,6 +105,10 @@ public class UserResource {
 		Response response = null;
 		if (validateUserRequest(userRequest)) {
 			User user = new User();
+			// TODO: Change these to false, when the verification and activation
+			// steps are completed.
+			user.setActive(Boolean.TRUE);
+			user.setVerified(Boolean.TRUE);
 			user.setEmail(userRequest.getEmail());
 			user.setFirstName(userRequest.getFirstName());
 			user.setLastName(userRequest.getLastName());
@@ -116,6 +121,66 @@ public class UserResource {
 			response = Response.status(Status.BAD_REQUEST)
 					.entity("Invalid user request.").build();
 		}
+		return response;
+	}
+
+	/**
+	 * Mark a user as verified.
+	 * 
+	 * @param inId The unique identifier for the user to be verified.
+	 * @return An HTTP OK response if the user is modified, or a server error if
+	 *         the user can not be modified properly.
+	 */
+	@Path("/verify/{id}")
+	@PUT
+	public Response verifyUser(@PathParam("id") final String inId) {
+		Response response = Response.ok().build();
+		Long id = null;
+
+		// try to convert the ID string to a numeric value.
+		try {
+			id = Long.valueOf(inId);
+		} catch (NumberFormatException nfe) {
+			response = Response.status(Status.BAD_REQUEST).entity("Invalid ID")
+					.build();
+		}
+
+		if (id != null) {
+			User user = this.userDao.get(id);
+			user.setVerified(Boolean.TRUE);
+			this.userDao.save(user);
+		}
+
+		return response;
+	}
+
+	/**
+	 * Mark a user as active.
+	 * 
+	 * @param inId the unique identifier of the user to be made active.
+	 * @return An HTTP OK response if the modification is completed normall, or
+	 *         a server error if the user cannot be modified properly.
+	 */
+	@Path("/activate/{id}")
+	@PUT
+	public Response activateUser(@PathParam("id") final String inId) {
+		Response response = Response.ok().build();
+		Long id = null;
+
+		// try to convert the ID string to a numeric value.
+		try {
+			id = Long.valueOf(inId);
+		} catch (NumberFormatException nfe) {
+			response = Response.status(Status.BAD_REQUEST).entity("Invalid ID")
+					.build();
+		}
+
+		if (id != null) {
+			User user = this.userDao.get(id);
+			user.setActive(Boolean.TRUE);
+			this.userDao.save(user);
+		}
+
 		return response;
 	}
 
