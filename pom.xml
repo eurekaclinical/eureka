@@ -27,7 +27,7 @@
 			<url>scp://eureka.cci.emory.edu/var/www/html/dev</url>
 		</site>
 	</distributionManagement>
-	
+
 	<licenses>
 		<license>
 			<name>Apache License, Version 2.0</name>
@@ -119,6 +119,7 @@
 		<java-mail-version>1.4</java-mail-version>
 		<jaxb-version>2.2.4-1</jaxb-version>
 		<eureka-common-version>1.0.0-SNAPSHOT</eureka-common-version>
+		<protempa-version>2.0-SNAPSHOT</protempa-version>
 	</properties>
 
 	<!-- make sure our code complies with Java 1.6 specifications, and define 
@@ -336,6 +337,11 @@
 				<groupId>edu.emory.cci.aiw.cvrg</groupId>
 				<artifactId>eureka-common</artifactId>
 				<version>${eureka-common-version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.protempa</groupId>
+				<artifactId>protempa-framework</artifactId>
+				<version>${protempa-version}</version>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
