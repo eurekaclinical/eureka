@@ -46,7 +46,7 @@ public class RoleResource {
 	 * @throws ServletException Thrown if the identification number string can
 	 *             not be properly converted to a {@link Long}.
 	 */
-	@Path("{id}")
+	@Path("/{id}")
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public Role getRole(@PathParam("id") String inId) throws ServletException {
