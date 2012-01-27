@@ -21,17 +21,20 @@ public class EditUserWorker implements ServletWorker {
 	
 	public void execute(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
+
+		String eurekaServicesUrl = req.getServletContext().getInitParameter("eureka-services-url");
+
+		
 		String id = req.getParameter("id");
 		Client c = Client.create();
 		
 		
-		// TODO: change hardcoding to init param in web.xml
-		WebResource webResource = c.resource("http://localhost:8181/eureka-services");
+		WebResource webResource = c.resource(eurekaServicesUrl);
 		User user = webResource.path("/api/user/"+id)
 				.accept(MediaType.APPLICATION_JSON)
 				.get(User.class);
 		
-		webResource = c.resource("http://localhost:8181/eureka-services");
+		webResource = c.resource(eurekaServicesUrl);
 		List<Role> roles = webResource.path("/api/role/list")
 				.accept(MediaType.APPLICATION_JSON)
 				.get(new GenericType<List<Role>>() {

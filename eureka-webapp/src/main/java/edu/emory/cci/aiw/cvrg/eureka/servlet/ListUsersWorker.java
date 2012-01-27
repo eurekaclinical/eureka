@@ -19,9 +19,12 @@ public class ListUsersWorker implements ServletWorker {
 
 	public void execute(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
+
+		String eurekaServicesUrl = req.getServletContext().getInitParameter("eureka-services-url");
+
+		
 		Client c = Client.create();
-		// TODO: change hardcoding to init param in web.xml
-		WebResource webResource = c.resource("http://localhost:8181/eureka-services");
+		WebResource webResource = c.resource(eurekaServicesUrl);
 		List<User> users = webResource.path("/api/user/list")
 				.accept(MediaType.APPLICATION_JSON)
 				.get(new GenericType<List<User>>() {
