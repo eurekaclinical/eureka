@@ -12,7 +12,6 @@ import javax.ws.rs.core.MediaType;
 import com.google.inject.Inject;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.Role;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.User;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.RoleDao;
 
 /**
@@ -61,7 +60,7 @@ public class RoleResource {
 		}
 		return role;
 	}
-	
+
 	/**
 	 * Get a list of all the roles available in the system.
 	 * 
