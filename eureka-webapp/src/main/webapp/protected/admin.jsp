@@ -1,4 +1,5 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <%@ taglib uri="/WEB-INF/tlds/template.tld" prefix="template" %>
 
 
@@ -30,20 +31,29 @@
         <td width="179">Organization</td>
         <td width="100">Status</td>
       </tr>
-      <c:forEach items="${users}" var="user">
+       <c:forEach items="${users}" var="user">
       	<tr>
-      		<td>${user.email}</td><td>&nbsp;</td>
+      		<td><a href="${pageContext.request.contextPath}/protected/edit_user?id=${user.id}">${user.firstName} ${user.lastName}</a></td>
       		<td>
-      			<select>
-				    <c:forEach var="role" items="${roles}">
-				     <option>${role.role}</option>
-				    </c:forEach>
-				</select>
-      		
+      			<fmt:formatDate value="${user.lastLogin}" type="date" pattern="dd/mm/yyyy" /> 
       		</td>
-      		
-      		<td>&nbsp;</td><td>&nbsp;</td>
-      		<td>&nbsp;</td>
+      		<td>
+			    <c:forEach var="role" items="${user.roles}">
+			    ${role.name} 
+			    </c:forEach>      		
+      		</td>
+      		<td>${user.email}</td>
+      		<td>${user.organization}</td>
+      		<td>
+      		<c:choose>
+   			<c:when test="${user.active == true}">
+   				Active
+   			</c:when>
+   			<c:otherwise>
+   				Verified
+   			</c:otherwise>
+   			</c:choose>
+   			</td>
       	</tr>
       </c:forEach>
     </table>
