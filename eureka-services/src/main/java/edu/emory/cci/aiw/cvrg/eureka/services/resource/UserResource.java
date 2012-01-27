@@ -125,6 +125,33 @@ public class UserResource {
 	}
 
 	/**
+	 * Put an updated user to the system.
+	 * 
+	 * @param user Object containing all the information about the user
+	 *            to add.
+	 * @return A "Created" response with a link to the user page if successful. 
+	 *         
+	 */
+	@Path("/put")
+	@POST
+	@Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
+	@Produces(MediaType.TEXT_PLAIN)
+	public Response putUser(final User user) {
+		Response response = null;
+		User updateUser = this.userDao.get(user.getId());
+		List<Role> roles = user.getRoles();
+		List<Role> updatedRoles = new ArrayList<Role>();
+		for (Role r : roles) {
+			Role updatedRole = this.roleDao.getRoleById(r.getId());
+			updatedRoles.add(updatedRole);
+		}
+		
+		updateUser.setRoles(updatedRoles);
+		this.userDao.save(updateUser);
+		response = Response.created(URI.create("/" + updateUser.getId())).build();
+		return response;
+	}
+	/**
 	 * Mark a user as verified.
 	 * 
 	 * @param inId The unique identifier for the user to be verified.
@@ -214,6 +241,7 @@ public class UserResource {
 		return result;
 	}
 
+	
 	/**
 	 * Get a set of default roles to be added to a newly created user.
 	 * 

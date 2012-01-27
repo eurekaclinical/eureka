@@ -47,6 +47,11 @@ public class JpaRoleDao implements RoleDao {
 				.setParameter(1, name);
 		return (Role) query.getSingleResult();
 	}
+	
+	@Override
+	public Role getRoleById(Long id) {
+		return entityManager.find(Role.class, id);
+	}
 
 	@Override
 	public void save(Role role) {
