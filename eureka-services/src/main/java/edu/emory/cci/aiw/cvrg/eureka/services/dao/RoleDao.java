@@ -27,11 +27,11 @@ public interface RoleDao {
 	 * @return A {@link Role} object with a name matching the given name.
 	 */
 	Role getRoleByName(String name);
-	
+
 	/**
 	 * Get a role, given the name of that role.
 	 * 
-	 * @param name The name of the role to search for.
+	 * @param id The unique identifier of the role to search for.
 	 * @return A {@link Role} object with a name matching the given name.
 	 */
 	Role getRoleById(Long id);
