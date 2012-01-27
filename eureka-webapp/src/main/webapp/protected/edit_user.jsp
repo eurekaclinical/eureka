@@ -12,13 +12,13 @@
 
 			<h3>Edit User</h3>
 			<div class="pad pad_top">
-				<form action="save_user" method="GET">
+				<form action="user" method="GET">
 				<table>
 					<tr>
 						<td width="124">Name:</td>
 						<td colspan="4">${user.firstName} ${user.lastName}
 								<input type="hidden" name="id" value="${user.id}" />
-						
+								<input type="hidden" name="action" value="save" />
 						</td>
 					</tr>
 					<tr>

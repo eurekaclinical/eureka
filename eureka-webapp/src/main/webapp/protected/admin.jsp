@@ -33,7 +33,7 @@
       </tr>
        <c:forEach items="${users}" var="user">
       	<tr>
-      		<td><a href="${pageContext.request.contextPath}/protected/edit_user?id=${user.id}">${user.firstName} ${user.lastName}</a></td>
+      		<td><a href="${pageContext.request.contextPath}/protected/user?id=${user.id}&action=edit">${user.firstName} ${user.lastName}</a></td>
       		<td>
       			<fmt:formatDate value="${user.lastLogin}" type="date" pattern="dd/mm/yyyy" /> 
       		</td>
