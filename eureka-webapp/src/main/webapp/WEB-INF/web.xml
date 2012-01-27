@@ -17,7 +17,10 @@
 	<listener>
 		<listener-class>org.jasig.cas.client.session.SingleSignOutHttpSessionListener</listener-class>
 	</listener>
-
+	<context-param>
+		<param-name>eureka-services-url</param-name>
+		<param-value>http://localhost:8181/eureka-services</param-value>
+	</context-param>
 	<!--
 	<servlet>
 		<servlet-name>Jersey Web Application</servlet-name>
@@ -155,7 +158,7 @@
 	</filter-mapping>
 	<filter-mapping>
 		<filter-name>CAS Authentication Filter</filter-name>
-		<url-pattern>/protected1/*</url-pattern>
+		<url-pattern>/protected/*</url-pattern>
 	</filter-mapping>
 	<filter-mapping>
 		<filter-name>CAS HttpServletRequest Wrapper Filter</filter-name>
