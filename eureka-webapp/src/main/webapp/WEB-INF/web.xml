@@ -49,33 +49,16 @@
 		<load-on-startup>1</load-on-startup>
 	</servlet>
 	<servlet>
-		<servlet-name>ListUsers</servlet-name>
-		<servlet-class>edu.emory.cci.aiw.cvrg.eureka.servlet.ListUsersServlet</servlet-class>
+		<servlet-name>UserManager</servlet-name>
+		<servlet-class>edu.emory.cci.aiw.cvrg.eureka.servlet.UserManager</servlet-class>
 		<load-on-startup>1</load-on-startup>
 	</servlet>
-	<servlet>
-		<servlet-name>EditUser</servlet-name>
-		<servlet-class>edu.emory.cci.aiw.cvrg.eureka.servlet.EditUserServlet</servlet-class>
-		<load-on-startup>1</load-on-startup>
-	</servlet>
-	<servlet>
-		<servlet-name>SaveUser</servlet-name>
-		<servlet-class>edu.emory.cci.aiw.cvrg.eureka.servlet.SaveUserServlet</servlet-class>
-		<load-on-startup>1</load-on-startup>
-	</servlet>
+	
 	<servlet-mapping>
-		<servlet-name>SaveUser</servlet-name>
-		<url-pattern>/protected/save_user</url-pattern>
+		<servlet-name>UserManager</servlet-name>
+		<url-pattern>/protected/user</url-pattern>
 	</servlet-mapping>
 
-	<servlet-mapping>
-		<servlet-name>ListUsers</servlet-name>
-		<url-pattern>/protected/admin</url-pattern>
-	</servlet-mapping>
-	<servlet-mapping>
-		<servlet-name>EditUser</servlet-name>
-		<url-pattern>/protected/edit_user</url-pattern>
-	</servlet-mapping>
 	<servlet-mapping>
 		<servlet-name>Login</servlet-name>
 		<url-pattern>/protected/login</url-pattern>
