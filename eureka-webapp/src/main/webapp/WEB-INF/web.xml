@@ -19,7 +19,7 @@
 	</listener>
 	<context-param>
 		<param-name>eureka-services-url</param-name>
-		<param-value>http://localhost:8181/eureka-services</param-value>
+		<param-value>https://eureka.cci.emory.edu/eureka-services</param-value>
 	</context-param>
 	<!--
 	<servlet>
