@@ -133,7 +133,7 @@ public class UserResource {
 	 *         
 	 */
 	@Path("/put")
-	@POST
+	@PUT
 	@Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
 	@Produces(MediaType.TEXT_PLAIN)
 	public Response putUser(final User user) {
