@@ -28,7 +28,7 @@ public class SaveUserWorker extends AbstractWorker {
 		String id = req.getParameter("id");
 		Client c = Client.create();
 		System.out.println("id = " + id);
-		// TODO: change hardcoding to init param in web.xml
+		
 		WebResource webResource = c.resource(eurekaServicesUrl);
 		User user = webResource.path("/api/user/"+id)
 				.accept(MediaType.APPLICATION_JSON)
@@ -43,7 +43,7 @@ public class SaveUserWorker extends AbstractWorker {
 			System.out.println("role = " + roleId);
 		}
 		user.setRoles(userRoles);
-		webResource = c.resource("http://localhost:8181/eureka-services");
+		webResource = c.resource(eurekaServicesUrl);
 		ClientResponse response = webResource.path("/api/user/put")
 				.type(MediaType.APPLICATION_JSON)
 				.post(ClientResponse.class, user);
