@@ -17,12 +17,13 @@ import com.sun.jersey.api.client.WebResource;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.Role;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.User;
 
-public class SaveUserWorker implements ServletWorker {
+public class SaveUserWorker extends AbstractWorker {
 
+	@Override
 	public void execute(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
 		
-		String eurekaServicesUrl = req.getServletContext().getInitParameter("eureka-services-url");
+		String eurekaServicesUrl = req.getSession().getServletContext().getInitParameter("eureka-services-url");
 		
 		String id = req.getParameter("id");
 		Client c = Client.create();
