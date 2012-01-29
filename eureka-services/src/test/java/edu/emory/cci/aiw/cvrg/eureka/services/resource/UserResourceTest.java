@@ -14,6 +14,7 @@ import com.sun.jersey.api.client.GenericType;
 import com.sun.jersey.api.client.WebResource;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.User;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.UserRequest;
 
 /**
  * Test cases related to the {@link UserResource} class.
@@ -54,7 +55,9 @@ public class UserResourceTest extends AbstractResourceTest {
 		ClientResponse response = webResource.path(
 				"/api/user/activate/" + String.valueOf(id.longValue())).put(
 				ClientResponse.class);
+
 		Assert.assertTrue(response.getClientResponseStatus() == Status.OK);
+
 	}
 
 	/**
@@ -72,5 +75,40 @@ public class UserResourceTest extends AbstractResourceTest {
 				});
 		return users;
 	}
+	
+	/**
+	 * Test that a new user request sent to the resource returns a proper
+	 * OK response.
+	 */
+	@Test
+	public void testUserRequest() {
+		WebResource webResource = this.resource();
+
+		String email 		= "test@emory.edu";
+		String verifyEmail 	= "test@emory.edu";
+		String firstName 	= "Joe";
+		String lastName 	= "Schmoe";
+		String organziation ="Emory University";
+		String password 	= "password";
+		String verifyPassword = "password";
+
+		UserRequest userRequest = new UserRequest();
+
+		userRequest.setFirstName(firstName);
+		userRequest.setLastName(lastName);
+		userRequest.setEmail(email);
+		userRequest.setVerifyEmail(verifyEmail);
+		userRequest.setOrganization(organziation);
+		userRequest.setPassword(password);
+		userRequest.setVerifyPassword(verifyPassword);
+		
+		ClientResponse response = webResource.path("/api/user/add")
+				.accept(MediaType.APPLICATION_JSON)
+				.post(ClientResponse.class, userRequest);
+
+		Assert.assertTrue(response.getClientResponseStatus() == Status.OK);
+
+	}
+
 
 }
