@@ -52,15 +52,16 @@
 		<load-on-startup>1</load-on-startup>
 	</servlet>
 	<servlet>
+		<servlet-name>RegisterUser</servlet-name>
+		<servlet-class>edu.emory.cci.aiw.cvrg.eureka.servlet.RegisterUserServlet</servlet-class>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+	<servlet>
 		<servlet-name>UserManager</servlet-name>
 		<servlet-class>edu.emory.cci.aiw.cvrg.eureka.servlet.UserManager</servlet-class>
 		<load-on-startup>1</load-on-startup>
 	</servlet>
 	
-	<servlet-mapping>
-		<servlet-name>UserManager</servlet-name>
-		<url-pattern>/protected/user</url-pattern>
-	</servlet-mapping>
 
 	<servlet-mapping>
 		<servlet-name>Login</servlet-name>
@@ -69,6 +70,14 @@
 	<servlet-mapping>
 		<servlet-name>Logout</servlet-name>
 		<url-pattern>/logout</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>RegisterUser</servlet-name>
+		<url-pattern>/register</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>UserManager</servlet-name>
+		<url-pattern>/protected/user</url-pattern>
 	</servlet-mapping>
 
 	<!-- UNCOMMENT THESE FILTERS AND THEIR MAPPINGS TO ENABLE AUTHENTICATION VIA CAS -->

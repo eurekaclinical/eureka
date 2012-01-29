@@ -33,7 +33,22 @@
       </tr>
        <c:forEach items="${users}" var="user">
       	<tr>
-      		<td><a href="${pageContext.request.contextPath}/protected/user?id=${user.id}&action=edit">${user.firstName} ${user.lastName}</a></td>
+      		<td>
+      			<c:set var="is_admin" value="false" />
+      			<c:forEach var="role" items="${user.roles}">
+      				<c:if test="${role.name == 'admin'}">
+				      	<c:set var="is_admin" value="true" />      				
+      				</c:if>      				
+      			</c:forEach>      			
+      			  <c:choose>
+				      <c:when test="${is_admin == true}">
+				      	<img src="${pageContext.request.contextPath}/images/Role_Admin.gif"/>
+				      </c:when> 
+      			  	  <c:otherwise>
+				      	<img src="${pageContext.request.contextPath}/images/Role_Researcher.gif"/>      			  	  	
+      			  	  </c:otherwise>
+      			  </c:choose>
+      			<a href="${pageContext.request.contextPath}/protected/user?id=${user.id}&action=edit">${user.firstName} ${user.lastName}</a></td>
       		<td>
       			<fmt:formatDate value="${user.lastLogin}" type="date" pattern="dd/mm/yyyy" /> 
       		</td>
@@ -50,14 +65,17 @@
    				Active
    			</c:when>
    			<c:otherwise>
-   				Verified
+   				Inactive
    			</c:otherwise>
    			</c:choose>
    			</td>
       	</tr>
       </c:forEach>
     </table>
-    <div class="pad_top" align="right"><input type="reset" name="Edit User" id="button" class="margin" value="Edit User"/></div>
+<!--     
+ We aren't using the edit button
+ <div class="pad_top" align="right"><input type="reset" name="Edit User" id="button" class="margin" value="Edit User"/></div>
+-->
  </form>
 
 	</template:content>

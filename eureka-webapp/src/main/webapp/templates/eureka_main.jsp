@@ -14,8 +14,13 @@
 <![endif]-->
 
 <link href="${pageContext.request.contextPath}/css/styles.css" rel="stylesheet" type="text/css" />
+<script src="${pageContext.request.contextPath}/js/jquery-1.7.1.min.js"></script>
+<script src="${pageContext.request.contextPath}/js/jquery.validate.js"></script>
+<script src="${pageContext.request.contextPath}/js/eureka.js"></script>
 <link rel="SHORTCUT ICON" href="favicon.ico">
 <meta name="Description" content="A Clinical Analysis Tool for Biomedical Informatics and Data" />
+
+
 </head>
 
 <body>

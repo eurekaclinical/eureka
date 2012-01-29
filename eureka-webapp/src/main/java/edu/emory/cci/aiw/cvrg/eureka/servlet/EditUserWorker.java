@@ -28,8 +28,7 @@ public class EditUserWorker extends AbstractWorker {
 					.getInitParameter("eureka-services-url");
 
 			String id = req.getParameter("id");
-			Client c;
-			c = this.getClient();
+			Client c = this.getClient();
 
 			WebResource webResource = c.resource(eurekaServicesUrl);
 			User user = webResource.path("/api/user/" + id)

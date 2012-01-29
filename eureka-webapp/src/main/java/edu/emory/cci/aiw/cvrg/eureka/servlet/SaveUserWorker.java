@@ -26,6 +26,16 @@ public class SaveUserWorker extends AbstractWorker {
 		String eurekaServicesUrl = req.getSession().getServletContext().getInitParameter("eureka-services-url");
 		
 		String id = req.getParameter("id");
+		String activeStatus = req.getParameter("active");
+		System.out.println("activeStatus: " + activeStatus);
+		boolean isActivated = false;
+		
+		if (activeStatus != null) {
+			
+				isActivated = true;
+			
+		}
+		System.out.println("active status: " + isActivated);
 		Client c = Client.create();
 		System.out.println("id = " + id);
 		
@@ -43,10 +53,11 @@ public class SaveUserWorker extends AbstractWorker {
 			System.out.println("role = " + roleId);
 		}
 		user.setRoles(userRoles);
+		user.setActive(isActivated);
 		webResource = c.resource(eurekaServicesUrl);
 		ClientResponse response = webResource.path("/api/user/put")
 				.type(MediaType.APPLICATION_JSON)
-				.post(ClientResponse.class, user);
+				.put(ClientResponse.class, user);
 		System.out.println("response = " + response.getStatus());
 
 		resp.sendRedirect(req.getContextPath() + "/protected/user?action=list");

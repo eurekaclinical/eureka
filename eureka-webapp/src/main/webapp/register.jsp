@@ -45,38 +45,46 @@
 
 </script>
     <h3>Register</h3>
-<form id="form2" action="form_action.asp" method="get">
-First Name : 
-    <input name="fname" type="text" id="first_name" class="register_field" />
-    
-  <br />
+<form id="signupForm" action="register" method="get">
 
-Last Name: 
-<input id="last_name" class="register_field" type="text" name="lname" />
+	  		  <table>
+	  		  <tr>
+	  		  	<td class="label"><label id="lfirstname" for="firstName">First Name</label></td>
+	  		  	<td class="field"><input id="firstName" name="firstName" type="text" value="" maxlength="100" /></td>
+	  		  	<td class="status"></td>
+	  		  </tr>
+	  		  <tr>
+	  			<td class="label"><label id="llastname" for="lastName">Last Name</label></td>
+	  			<td class="field"><input id="lastName" name="lastName" type="text" value="" maxlength="100" /></td>
+	  			<td class="status"></td>
+	  		  </tr>
+	  		  <tr>
+	  			<td class="label"><label id="lemail" for="organization">Organization</label></td>
+	  			<td class="field"><input id="organization" name="organization" type="text" value="" maxlength="150" /></td>
+	  			<td class="status"></td>
+	  		  </tr>
+	  		  <tr>
+	  			<td class="label"><label id="lemail" for="email">Email Address</label></td>
+	  			<td class="field"><input id="email" name="email" type="text" value="" maxlength="150" /></td>
+	  			<td class="status"></td>
+	  		  </tr>	  		  
+	  		  <tr>
+	  			<td class="label"><label id="lemail" for="verifyEmail">Verify Email Address</label></td>
+	  			<td class="field"><input id="verifyEmail" name="verifyEmail" type="text" value="" maxlength="150" /></td>
+	  			<td class="status"></td>
+	  		  </tr>
+	  		  <tr>
+	  			<td class="label"><label id="lpassword" for="password">Password</label></td>
+	  			<td class="field"><input id="password" name="password" type="password" maxlength="50" value="" /></td>
+	  			<td class="status"></td>
+	  		  </tr>
+	  		  <tr>
+	  			<td class="label"><label id="lpassword_confirm" for="verifyPassword">Confirm Password</label></td>
+	  			<td class="field"><input id="verifyPassword" name="verifyPassword" type="password" maxlength="50" value="" /></td>
+	  			<td class="status"></td>
+	  		  </tr>
+  			</table>
 
-  <br />
-
-Organization : 
-    
-    <input id="organization" class="register_field" type="text" name="org" />
-    <br />
-
-Email Address: 
-      <input id="email_address" class="register_field" type="text" name="org" />
-       <br />
-    Confirm Email: 
-    <input id="user_name" class="register_field" type="text" name="UserName" />
-    
-    <br />
-
-Password: 
-<input id="password" class="register_field" type="text" name="Password" />
-<br />
-
-Re-Enter Password: 
-<input id="re-enter_password" class="register_field" type="text" name="Password" />
-<br />
-<br />
 	<span class="small_text">* Passwords must be at least 8  characters and contain at least one letter and digit
     <br />
     * Disclaimer: Loading real patient data into the system is strictly prohibited.<br />

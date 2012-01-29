@@ -36,11 +36,7 @@ public class UserManager extends HttpServlet {
 			
 		} else if (action.equals("save")) {
 			worker = new SaveUserWorker();
-			worker.execute(req, resp);
-			
-		} else if (action.equals("register")) {
-			worker = new RegisterUserWorker();
-			worker.execute(req, resp);
+			worker.execute(req, resp);			
 			
 		} else {
 			

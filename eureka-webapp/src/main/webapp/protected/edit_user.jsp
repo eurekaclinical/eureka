@@ -3,7 +3,8 @@
 
 
 <template:insert template="/templates/eureka_main.jsp">
-
+	
+	
 	<template:content name="sidebar">
 		    <img src="${pageContext.request.contextPath}/images/bioinformatics.jpg" />
 	</template:content>
@@ -12,7 +13,7 @@
 
 			<h3>Edit User</h3>
 			<div class="pad pad_top">
-				<form action="user" method="GET">
+				<form action="user" method="GET" id="editUserForm">
 				<table>
 					<tr>
 						<td width="124">Name:</td>
@@ -44,15 +45,43 @@
 				    			</c:forEach> 
 								<c:choose>
 									<c:when test="${hasRole == 1}">
-										<input type="checkbox" name="role" value="${role.id}" checked/> ${role.name}<br />
+										<input type="checkbox" name="role" id="role" value="${role.id}" checked/>${role.name}<span class="status"></span><br />
 									</c:when>
 									<c:otherwise>
-										<input type="checkbox" name="role" value="${role.id}" /> ${role.name}<br />
+										<input type="checkbox" name="role" id="role" value="${role.id}" />${role.name}<span class="status"></span><br />
 									
 									</c:otherwise>
 								</c:choose>
 
-							</c:forEach>							
+							</c:forEach>						
+						</td>
+					</tr>
+					<tr>
+						<td>Activated</td>
+						<td colspan="4">
+								<c:choose>
+									<c:when test="${user.active == true}">
+										<input type="checkbox" name="active" id="active"  checked/><span class="status"></span><br />
+									</c:when>
+									<c:otherwise>
+										<input type="checkbox" name="active" id="active" /><span class="status"></span><br />
+									
+									</c:otherwise>
+								</c:choose>
+						</td>
+					</tr>
+					
+					<tr>
+						<td>Verification Status:</td>
+						<td colspan="4">
+								<c:choose>
+									<c:when test="${user.verified == true}">
+										Verified<span class="status"></span><br />
+									</c:when>
+									<c:otherwise>
+										Un-verified<span class="status"></span><br />									
+									</c:otherwise>
+								</c:choose>
 						</td>
 					</tr>
 
