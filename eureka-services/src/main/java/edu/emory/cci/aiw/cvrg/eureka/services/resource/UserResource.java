@@ -147,6 +147,8 @@ public class UserResource {
 		}
 		
 		updateUser.setRoles(updatedRoles);
+		updateUser.setActive(user.isActive());
+		
 		this.userDao.save(updateUser);
 		response = Response.created(URI.create("/" + updateUser.getId())).build();
 		return response;
