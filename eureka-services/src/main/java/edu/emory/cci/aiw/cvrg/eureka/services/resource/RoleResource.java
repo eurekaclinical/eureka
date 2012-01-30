@@ -51,7 +51,6 @@ public class RoleResource {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Role getRole(@PathParam("id") String inId) throws ServletException {
 		Role role;
-		System.out.println("get role, id: " + inId);
 		try {
 			Long id = Long.valueOf(inId);
 			role = this.roleDao.getRoleById(id);
