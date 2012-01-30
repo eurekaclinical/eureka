@@ -94,6 +94,10 @@ public class FileResource {
 			throw new ServletException(nfe);
 		}
 
-		return this.fileDao.get(id);
+		FileUpload fileUpload = this.fileDao.get(id);
+		if (fileUpload == null) {
+			throw new ServletException("Invalid ID");
+		}
+		return fileUpload;
 	}
 }
