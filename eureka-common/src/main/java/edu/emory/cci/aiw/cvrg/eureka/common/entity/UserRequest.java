@@ -52,6 +52,13 @@ public class UserRequest {
 	private String verifyPassword;
 
 	/**
+	 * Default constructor, calls super()
+	 */
+	public UserRequest() {
+		super();
+	}
+
+	/**
 	 * Get the request's unique identifier.
 	 * 
 	 * @return The request's unique identifier.
