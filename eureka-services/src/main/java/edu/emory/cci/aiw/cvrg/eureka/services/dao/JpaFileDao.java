@@ -37,10 +37,9 @@ public class JpaFileDao implements FileDao {
 
 	@Override
 	public FileUpload get(Long inId) {
-		FileUpload fileUpload = this.entityManager
+		return this.entityManager
 				.createQuery("select FileUpload f from f where f.id = ?1",
 						FileUpload.class).setParameter(1, inId)
 				.getSingleResult();
-		return fileUpload;
 	}
 }
