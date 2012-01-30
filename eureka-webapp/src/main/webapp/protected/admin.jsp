@@ -35,19 +35,33 @@
       	<tr>
       		<td>
       			<c:set var="is_admin" value="false" />
+      			<c:set var="is_inactive" value="false" />
       			<c:forEach var="role" items="${user.roles}">
       				<c:if test="${role.name == 'admin'}">
 				      	<c:set var="is_admin" value="true" />      				
       				</c:if>      				
-      			</c:forEach>      			
-      			  <c:choose>
-				      <c:when test="${is_admin == true}">
-				      	<img src="${pageContext.request.contextPath}/images/Role_Admin.gif"/>
-				      </c:when> 
-      			  	  <c:otherwise>
-				      	<img src="${pageContext.request.contextPath}/images/Role_Researcher.gif"/>      			  	  	
-      			  	  </c:otherwise>
+      			</c:forEach>      		
+      			<c:if test="${user.active == false}">
+	      			<c:set var="is_inactive" value="true" />      				
+      			</c:if>	
+      			<c:choose>
+      				<c:when test="${is_inactive == true}">
+					      	<img src="${pageContext.request.contextPath}/images/New_User.gif"/>      				
+      				</c:when>
+      				
+      				<c:otherwise>
+	      			  <c:choose>
+					      <c:when test="${is_admin == true}">
+					      	<img src="${pageContext.request.contextPath}/images/Role_Admin.gif"/>
+					      </c:when> 
+	      			  	  <c:otherwise>
+					      	<img src="${pageContext.request.contextPath}/images/Role_Researcher.gif"/>      			  	  	
+	      			  	  </c:otherwise>
       			  </c:choose>
+      				
+      				</c:otherwise>
+      			</c:choose>
+      			
       			<a href="${pageContext.request.contextPath}/protected/user?id=${user.id}&action=edit">${user.firstName} ${user.lastName}</a></td>
       		<td>
       			<fmt:formatDate value="${user.lastLogin}" type="date" pattern="dd/mm/yyyy" /> 
