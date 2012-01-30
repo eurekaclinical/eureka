@@ -36,7 +36,7 @@ public class RegisterUserServlet extends HttpServlet {
 
 		Client c;
 		try {
-			c = getClient();
+			c = this.getClient();
 
 			String eurekaServicesUrl = req.getSession().getServletContext()
 					.getInitParameter("eureka-services-url");
@@ -74,7 +74,7 @@ public class RegisterUserServlet extends HttpServlet {
 		}
 	}
 
-	static Client getClient() throws KeyManagementException,
+	private Client getClient() throws KeyManagementException,
 			NoSuchAlgorithmException {
 		TrustManager trustManager = new X509TrustManager() {
 
