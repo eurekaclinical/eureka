@@ -1,5 +1,6 @@
 package edu.emory.cci.aiw.cvrg.eureka.services.resource;
 
+import java.net.URI;
 import java.util.List;
 
 import javax.ws.rs.core.MediaType;
@@ -75,21 +76,21 @@ public class UserResourceTest extends AbstractResourceTest {
 				});
 		return users;
 	}
-	
+
 	/**
-	 * Test that a new user request sent to the resource returns a proper
-	 * OK response.
+	 * Test that a new user request sent to the resource returns a proper OK
+	 * response.
 	 */
 	@Test
 	public void testUserRequest() {
 		WebResource webResource = this.resource();
 
-		String email 		= "test@emory.edu";
-		String verifyEmail 	= "test@emory.edu";
-		String firstName 	= "Joe";
-		String lastName 	= "Schmoe";
-		String organziation ="Emory University";
-		String password 	= "password";
+		String email = "test@emory.edu";
+		String verifyEmail = "test@emory.edu";
+		String firstName = "Joe";
+		String lastName = "Schmoe";
+		String organziation = "Emory University";
+		String password = "password";
 		String verifyPassword = "password";
 
 		UserRequest userRequest = new UserRequest();
@@ -101,14 +102,15 @@ public class UserResourceTest extends AbstractResourceTest {
 		userRequest.setOrganization(organziation);
 		userRequest.setPassword(password);
 		userRequest.setVerifyPassword(verifyPassword);
-		
+
 		ClientResponse response = webResource.path("/api/user/add")
-				.accept(MediaType.APPLICATION_JSON)
+				.accept(MediaType.TEXT_PLAIN)
 				.post(ClientResponse.class, userRequest);
 
-		Assert.assertTrue(response.getClientResponseStatus() == Status.OK);
+		URI uri = response.getLocation();
+		System.out.println("RESOURCE URL: " + uri);
+		Assert.assertTrue(response.getClientResponseStatus() == Status.CREATED);
 
 	}
-
 
 }
