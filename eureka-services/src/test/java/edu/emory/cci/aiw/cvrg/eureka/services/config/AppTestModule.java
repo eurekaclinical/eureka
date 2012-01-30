@@ -3,6 +3,8 @@ package edu.emory.cci.aiw.cvrg.eureka.services.config;
 import com.google.inject.AbstractModule;
 import com.google.inject.persist.jpa.JpaPersistModule;
 
+import edu.emory.cci.aiw.cvrg.eureka.services.dao.FileDao;
+import edu.emory.cci.aiw.cvrg.eureka.services.dao.JpaFileDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.JpaRoleDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.JpaUserDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.RoleDao;
@@ -23,6 +25,7 @@ public class AppTestModule extends AbstractModule {
 
 		bind(UserDao.class).to(JpaUserDao.class);
 		bind(RoleDao.class).to(JpaRoleDao.class);
+		bind(FileDao.class).to(JpaFileDao.class);
 
 	}
 
