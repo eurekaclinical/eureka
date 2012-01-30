@@ -6,6 +6,7 @@ import java.util.List;
 
 import com.google.inject.Inject;
 
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.FileUpload;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.Role;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.User;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.RoleDao;
@@ -68,6 +69,7 @@ public class Bootstrap {
 	 * Add the default users to the data store.
 	 */
 	void addDefaultUsers() {
+		List<FileUpload> fileUploads = createFileUploads();
 		List<Role> defaultRoles = new ArrayList<Role>();
 		for (Role role : this.roleDao.getRoles()) {
 			if (role.isDefaultRole() == Boolean.TRUE) {
@@ -75,7 +77,7 @@ public class Bootstrap {
 			}
 		}
 
-		for (User user : Bootstrap.createUsers(defaultRoles)) {
+		for (User user : Bootstrap.createUsers(defaultRoles, fileUploads)) {
 			this.userDao.save(user);
 		}
 	}
@@ -85,10 +87,12 @@ public class Bootstrap {
 	 * 
 	 * @param defaultRoles The default roles to be assigned to each newly
 	 *            created user.
+	 * @param fileUploads The file uploads to attach to the user.
 	 * 
 	 * @return List of users to be added.
 	 */
-	private static List<User> createUsers(final List<Role> defaultRoles) {
+	private static List<User> createUsers(final List<Role> defaultRoles,
+			final List<FileUpload> fileUploads) {
 		List<User> users = new ArrayList<User>();
 		User user = new User();
 		user.setActive(true);
@@ -100,8 +104,22 @@ public class Bootstrap {
 		user.setPassword("testpassword");
 		user.setLastLogin(Calendar.getInstance().getTime());
 		user.setRoles(defaultRoles);
+		user.setFileUploads(fileUploads);
 		users.add(user);
 		return users;
+	}
+
+	/**
+	 * Create the file uploads for the user
+	 * 
+	 * @return The list of file uploads
+	 */
+	private static List<FileUpload> createFileUploads() {
+		List<FileUpload> fileUploads = new ArrayList<FileUpload>();
+		FileUpload fileUpload = new FileUpload();
+		fileUpload.setLocation("/tmp/foo");
+		fileUploads.add(fileUpload);
+		return fileUploads;
 	}
 
 	/**
