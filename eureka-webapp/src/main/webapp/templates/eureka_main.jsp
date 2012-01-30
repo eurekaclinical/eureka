@@ -11,6 +11,12 @@
 
 <!--[if IE 7]>
 <link href="${pageContext.request.contextPath}/css/ie7.css" rel="stylesheet" type="text/css">
+<style>
+body {margin-left:100px;}
+.content { margin-right: -1px; }
+ul.nav a { zoom: 1; }
+#submit { border:none;}
+</style>
 <![endif]-->
 
 <link href="${pageContext.request.contextPath}/css/styles.css" rel="stylesheet" type="text/css" />
