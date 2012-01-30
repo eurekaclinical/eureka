@@ -11,7 +11,6 @@ import org.junit.Test;
 
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.ClientResponse.Status;
-import com.sun.jersey.api.client.GenericType;
 import com.sun.jersey.api.client.WebResource;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.User;
@@ -59,22 +58,6 @@ public class UserResourceTest extends AbstractResourceTest {
 
 		Assert.assertTrue(response.getClientResponseStatus() == Status.OK);
 
-	}
-
-	/**
-	 * Helper method to get a list of users from the resource.
-	 * 
-	 * @return A list of {@link User} objects, fetched from the
-	 *         {@link UserResource} service.
-	 */
-	private List<User> getUserList() {
-		WebResource webResource = this.resource();
-		List<User> users = webResource.path("/api/user/list")
-				.accept(MediaType.APPLICATION_JSON)
-				.get(new GenericType<List<User>>() {
-					// Nothing to implement, used to hold returned data.
-				});
-		return users;
 	}
 
 	/**
