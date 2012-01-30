@@ -10,6 +10,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlRootElement;
 
@@ -72,6 +73,11 @@ public class User implements CycleRecoverable {
 			joinColumns = { @JoinColumn(name = "userId") },
 			inverseJoinColumns = { @JoinColumn(name = "roleId") })
 	private List<Role> roles;
+	/**
+	 * The file uploads belonging to the user.
+	 */
+	@OneToMany(cascade = CascadeType.ALL, targetEntity = FileUpload.class)
+	private List<FileUpload> fileUploads;
 
 	/**
 	 * Create an empty User object.
@@ -258,6 +264,24 @@ public class User implements CycleRecoverable {
 	 */
 	public void setRoles(final List<Role> inRoles) {
 		this.roles = inRoles;
+	}
+
+	/**
+	 * Get the list of files uploaded by the user.
+	 * 
+	 * @return The list of files uploaded by the user.
+	 */
+	public List<FileUpload> getFileUploads() {
+		return this.fileUploads;
+	}
+
+	/**
+	 * Set the list of files uploaded by the user.
+	 * 
+	 * @param inFileUploads The list of files uploaded by the user.
+	 */
+	public void setFileUploads(List<FileUpload> inFileUploads) {
+		this.fileUploads = inFileUploads;
 	}
 
 	@Override
