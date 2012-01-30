@@ -89,7 +89,6 @@ public class Bootstrap {
 	 * @return List of users to be added.
 	 */
 	private static List<User> createUsers(final List<Role> defaultRoles) {
-		System.out.println("DEFAULT ROLES: " + defaultRoles.size());
 		List<User> users = new ArrayList<User>();
 		User user = new User();
 		user.setActive(true);
