@@ -14,10 +14,11 @@ import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.GenericType;
 import com.sun.jersey.api.client.WebResource;
 
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.CommUtils;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.Role;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.User;
 
-public class EditUserWorker extends AbstractWorker {
+public class EditUserWorker implements ServletWorker {
 
 	@Override
 	public void execute(HttpServletRequest req, HttpServletResponse resp)
@@ -28,7 +29,7 @@ public class EditUserWorker extends AbstractWorker {
 					.getInitParameter("eureka-services-url");
 
 			String id = req.getParameter("id");
-			Client c = this.getClient();
+			Client c = CommUtils.getClient();
 
 			WebResource webResource = c.resource(eurekaServicesUrl);
 			User user = webResource.path("/api/user/" + id)

@@ -16,9 +16,10 @@ import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.GenericType;
 import com.sun.jersey.api.client.WebResource;
 
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.CommUtils;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.User;
 
-public class ListUsersWorker extends AbstractWorker {
+public class ListUsersWorker implements ServletWorker {
 
 	@Override
 	public void execute(HttpServletRequest req, HttpServletResponse resp)
@@ -27,22 +28,24 @@ public class ListUsersWorker extends AbstractWorker {
 		String eurekaServicesUrl = req.getSession().getServletContext()
 				.getInitParameter("eureka-services-url");
 		try {
-			Client client = this.getClient();
+			Client client = CommUtils.getClient();
 			WebResource webResource = client.resource(eurekaServicesUrl);
 			List<User> users = webResource.path("/api/user/list")
 					.accept(MediaType.APPLICATION_JSON)
 					.get(new GenericType<List<User>>() {
 						// Nothing to implement, used to hold returned data.
 					});
-			
+
 			// Set sort order to show the inactive users first.
 			Collections.sort(users, new Comparator<User>() {
 				public int compare(User user1, User user2) {
 					int u1 = 0;
 					int u2 = 0;
-					if (user1.isActive()) u1 = 1;
-					if (user2.isActive()) u2 = 1;
-					
+					if (user1.isActive())
+						u1 = 1;
+					if (user2.isActive())
+						u2 = 1;
+
 					return u1 - u2;
 				}
 			});

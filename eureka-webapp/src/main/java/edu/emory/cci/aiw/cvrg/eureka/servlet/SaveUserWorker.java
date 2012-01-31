@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.core.MediaType;
@@ -16,10 +15,11 @@ import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
 
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.CommUtils;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.Role;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.User;
 
-public class SaveUserWorker extends AbstractWorker {
+public class SaveUserWorker implements ServletWorker {
 
 	@Override
 	public void execute(HttpServletRequest req, HttpServletResponse resp)
@@ -41,7 +41,7 @@ public class SaveUserWorker extends AbstractWorker {
 		System.out.println("active status: " + isActivated);
 		Client c;
 		try {
-			c = this.getClient();
+			c = CommUtils.getClient();
 			System.out.println("id = " + id);
 
 			WebResource webResource = c.resource(eurekaServicesUrl);
