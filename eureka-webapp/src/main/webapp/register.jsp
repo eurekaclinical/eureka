@@ -85,15 +85,14 @@
 	  		  </tr>
   			</table>
 
-	<span class="small_text">* Passwords must be at least 8 characters and contain at least one letter and digit
+	<div class="small_text">* Passwords must be at least 8 characters and contain at least one letter and digit
     <br />
     * Disclaimer: Loading real patient data into the system is strictly prohibited.<br />
     <br />
     <input type="checkbox" name="checkbox" id="checkbox" />
-    <label for="checkbox">Click here to join our mailing list</label></span>
-   &nbsp;<input id="button" type="submit" value="Submit"/>
+    <label for="checkbox">Click here to join our mailing list</label>
+   &nbsp;<input id="button" type="submit" value="Submit"/></div>
 </form>
-
 
 	</template:content>
 	

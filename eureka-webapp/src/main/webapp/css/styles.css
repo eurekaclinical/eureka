@@ -200,7 +200,6 @@ td
 }
 #signupForm {
 	text-align:right;
-	padding-right:275px;
 }
 .status {
 	margin:0;
@@ -261,4 +260,5 @@ td
 }
 .small_text {
 	font-size:9px;
+	padding-right:275px;
 }
