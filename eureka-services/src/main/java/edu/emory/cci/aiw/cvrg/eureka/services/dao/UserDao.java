@@ -36,6 +36,14 @@ public interface UserDao {
 	User get(Long id);
 
 	/**
+	 * Get a user object, given the user name.
+	 * 
+	 * @param name The name of the user to retrieve.
+	 * @return The user object that corresponds to the given user name.
+	 */
+	User get(String name);
+
+	/**
 	 * Remove a given user from the data store.
 	 * 
 	 * @param id The unique identifier of the user to be removed.

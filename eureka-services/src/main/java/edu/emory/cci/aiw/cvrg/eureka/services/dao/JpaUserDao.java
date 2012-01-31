@@ -46,8 +46,7 @@ public class JpaUserDao implements UserDao {
 	public List<User> getUsers() {
 		final Query query = this.entityManager.createQuery(
 				"select u from User u", User.class);
-		final List<User> resultList = query.getResultList();
-		return resultList;
+		return query.getResultList();
 	}
 
 	@Override
@@ -55,6 +54,14 @@ public class JpaUserDao implements UserDao {
 		final Query query = this.entityManager.createQuery(
 				"select u from User u where u.id = ?1", User.class)
 				.setParameter(1, id);
+		return (User) query.getSingleResult();
+	}
+
+	@Override
+	public User get(String name) {
+		final Query query = this.entityManager.createQuery(
+				"select u from u where u.name = ?1", User.class).setParameter(
+				1, name);
 		return (User) query.getSingleResult();
 	}
 
