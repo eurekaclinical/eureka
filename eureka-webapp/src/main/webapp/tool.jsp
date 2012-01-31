@@ -85,8 +85,12 @@
 				</table>
 				<div align="right">
 					<input type="reset" name="input2" id="button" value="Browse" />
+                    <br/>
+                    <br/>
+                    <a href="#">Download Sample Spreadsheet</a>
 				</div>
 			</form>
+            
 	</template:content>
 	<template:content name="subcontent">
 
