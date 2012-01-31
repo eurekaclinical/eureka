@@ -9,11 +9,10 @@
 
 <title>Eureka! Clinical Analytics</title>
 
-<!--[if IE 7]>
+<!--[if lte IE 7]>
 <link href="${pageContext.request.contextPath}/css/ie7.css" rel="stylesheet" type="text/css">
 <style>
-body {margin-left:100px;}
-.content { margin-right: -1px; }
+.container { width:1024px; margin: 0 auto;}
 ul.nav a { zoom: 1; }
 #submit { border:none;}
 </style>

@@ -47,45 +47,45 @@
     <h3>Register</h3>
 <form id="signupForm" action="register" method="get">
 
-	  		  <table>
+	  		  <table class="white">
 	  		  <tr>
-	  		  	<td class="label"><label id="lfirstname" for="firstName">First Name</label></td>
-	  		  	<td class="field"><input id="firstName" name="firstName" type="text" value="" maxlength="100" /></td>
-	  		  	<td class="status"></td>
+	  		  	<td class="label white"><label id="lfirstname" for="firstName">First Name</label></td>
+	  		  	<td class="field white"><input id="firstName" name="firstName" type="text" value="" class="register_field" /></td>
+	  		  	<td class="status white"></td>
 	  		  </tr>
 	  		  <tr>
-	  			<td class="label"><label id="llastname" for="lastName">Last Name</label></td>
-	  			<td class="field"><input id="lastName" name="lastName" type="text" value="" maxlength="100" /></td>
-	  			<td class="status"></td>
+	  			<td class="label white"><label id="llastname" for="lastName">Last Name</label></td>
+	  			<td class="field white"><input id="lastName" name="lastName" type="text" value="" class="register_field" /></td>
+	  			<td class="status white"></td>
 	  		  </tr>
 	  		  <tr>
-	  			<td class="label"><label id="lemail" for="organization">Organization</label></td>
-	  			<td class="field"><input id="organization" name="organization" type="text" value="" maxlength="150" /></td>
-	  			<td class="status"></td>
+	  			<td class="label white"><label id="lemail" for="organization">Organization</label></td>
+	  			<td class="field white"><input id="organization" name="organization" type="text" value="" class="register_field" /></td>
+	  			<td class="status white"></td>
 	  		  </tr>
 	  		  <tr>
-	  			<td class="label"><label id="lemail" for="email">Email Address</label></td>
-	  			<td class="field"><input id="email" name="email" type="text" value="" maxlength="150" /></td>
-	  			<td class="status"></td>
+	  			<td class="label white"><label id="lemail" for="email">Email Address</label></td>
+	  			<td class="field white"><input id="email" name="email" type="text" value="" class="register_field" /></td>
+	  			<td class="status white"></td>
 	  		  </tr>	  		  
 	  		  <tr>
-	  			<td class="label"><label id="lemail" for="verifyEmail">Verify Email Address</label></td>
-	  			<td class="field"><input id="verifyEmail" name="verifyEmail" type="text" value="" maxlength="150" /></td>
-	  			<td class="status"></td>
+	  			<td class="label white"><label id="lemail" for="verifyEmail">Verify Email Address</label></td>
+	  			<td class="field white"><input id="verifyEmail" name="verifyEmail" type="text" value="" class="register_field" /></td>
+	  			<td class="status white"></td>
 	  		  </tr>
 	  		  <tr>
-	  			<td class="label"><label id="lpassword" for="password">Password</label></td>
-	  			<td class="field"><input id="password" name="password" type="password" maxlength="50" value="" /></td>
-	  			<td class="status"></td>
+	  			<td class="label white"><label id="lpassword" for="password">Password</label></td>
+	  			<td class="field white"><input id="password" name="password" type="password" class="register_field" value="" /></td>
+	  			<td class="status white"></td>
 	  		  </tr>
 	  		  <tr>
-	  			<td class="label"><label id="lpassword_confirm" for="verifyPassword">Confirm Password</label></td>
-	  			<td class="field"><input id="verifyPassword" name="verifyPassword" type="password" maxlength="50" value="" /></td>
-	  			<td class="status"></td>
+	  			<td class="label white"><label id="lpassword_confirm" for="verifyPassword">Confirm Password</label></td>
+	  			<td class="field white"><input id="verifyPassword" name="verifyPassword" type="password" class="register_field" value="" /></td>
+	  			<td class="status white"></td>
 	  		  </tr>
   			</table>
 
-	<span class="small_text">* Passwords must be at least 8  characters and contain at least one letter and digit
+	<span class="small_text">* Passwords must be at least 8 characters and contain at least one letter and digit
     <br />
     * Disclaimer: Loading real patient data into the system is strictly prohibited.<br />
     <br />

@@ -173,6 +173,14 @@ table, td
 	border-style: solid;
 	border-color:#eff0f3;
 }
+
+table, .white
+{
+	border-width: 1px;
+	border-style: solid;
+	border-color:#fff;
+}
+
 td
 {
     margin: 0;
@@ -192,12 +200,16 @@ td
 }
 #signupForm {
 	text-align:right;
-	padding-right:130px;
+	padding-right:250px;
+}
+.status {
+	margin:0;
+	width:200px;
 }
 
 .register_field {
 	width:350px;
-	margin:5px;
+	float:left;
 }
 .footer {
 	padding: 10px 0;
