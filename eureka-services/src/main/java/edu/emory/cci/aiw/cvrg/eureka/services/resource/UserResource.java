@@ -105,10 +105,6 @@ public class UserResource {
 		Response response = null;
 		if (validateUserRequest(userRequest)) {
 			User user = new User();
-			// TODO: Change these to false, when the verification and activation
-			// steps are completed.
-			user.setActive(true);
-			user.setVerified(true);
 			user.setEmail(userRequest.getEmail());
 			user.setFirstName(userRequest.getFirstName());
 			user.setLastName(userRequest.getLastName());
@@ -127,10 +123,9 @@ public class UserResource {
 	/**
 	 * Put an updated user to the system.
 	 * 
-	 * @param user Object containing all the information about the user
-	 *            to add.
-	 * @return A "Created" response with a link to the user page if successful. 
-	 *         
+	 * @param user Object containing all the information about the user to add.
+	 * @return A "Created" response with a link to the user page if successful.
+	 * 
 	 */
 	@Path("/put")
 	@PUT
@@ -145,14 +140,20 @@ public class UserResource {
 			Role updatedRole = this.roleDao.getRoleById(r.getId());
 			updatedRoles.add(updatedRole);
 		}
-		
+
 		updateUser.setRoles(updatedRoles);
 		updateUser.setActive(user.isActive());
-		
-		this.userDao.save(updateUser);
-		response = Response.created(URI.create("/" + updateUser.getId())).build();
+
+		if (UserResource.validateUpdatedUser(updateUser)) {
+			this.userDao.save(updateUser);
+			response = Response.created(URI.create("/" + updateUser.getId()))
+					.build();
+		} else {
+			response = Response.notModified("Invalid user").build();
+		}
 		return response;
 	}
+
 	/**
 	 * Mark a user as verified.
 	 * 
@@ -243,7 +244,20 @@ public class UserResource {
 		return result;
 	}
 
-	
+	/**
+	 * Validate that a user being updated does not violate any rules.
+	 * 
+	 * @param user The user to be validate.
+	 * @return True if the user is valid, false otherwise.
+	 */
+	private static boolean validateUpdatedUser(User user) {
+		boolean result = true;
+		if (user.isSuperUser() && !user.isActive()) {
+			result = false;
+		}
+		return result;
+	}
+
 	/**
 	 * Get a set of default roles to be added to a newly created user.
 	 * 
