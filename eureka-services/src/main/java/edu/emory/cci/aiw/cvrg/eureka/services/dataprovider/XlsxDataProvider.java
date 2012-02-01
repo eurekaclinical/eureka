@@ -13,6 +13,8 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.FileUpload;
+
 /**
  * An implementation of the {@link DataProvider} interface, using an Excel
  * workbook as the data source.
@@ -30,7 +32,7 @@ public class XlsxDataProvider implements DataProvider {
 	/**
 	 * The data file used as the data store.
 	 */
-	private final DataFile dataFile;
+	private final FileUpload dataFile;
 	/**
 	 * Holds the workbook associated with the data file.
 	 */
@@ -79,7 +81,7 @@ public class XlsxDataProvider implements DataProvider {
 	 * @throws DataProviderException Thrown when the workbook can not be
 	 *             accessed, or parsed correctly.
 	 */
-	public XlsxDataProvider(DataFile inDataFile) throws DataProviderException {
+	public XlsxDataProvider(FileUpload inDataFile) throws DataProviderException {
 		this.dataFile = inDataFile;
 		try {
 			this.workbook = new XSSFWorkbook(this.dataFile.getLocation());
