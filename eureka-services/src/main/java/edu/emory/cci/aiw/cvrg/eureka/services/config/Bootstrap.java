@@ -97,8 +97,9 @@ public class Bootstrap {
 		User user = new User();
 		user.setActive(true);
 		user.setVerified(true);
-		user.setEmail("test.user@emory.edu");
-		user.setFirstName("Test");
+		user.setSuperUser(true);
+		user.setEmail("super.user@emory.edu");
+		user.setFirstName("Super");
 		user.setLastName("User");
 		user.setOrganization("Emory University");
 		user.setPassword("testpassword");
