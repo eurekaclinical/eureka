@@ -21,7 +21,7 @@ public class AppTestModule extends AbstractModule {
 	@Override
 	protected void configure() {
 
-		install(new JpaPersistModule("sample-jpa-unit"));
+		install(new JpaPersistModule("services-jpa-unit"));
 
 		bind(UserDao.class).to(JpaUserDao.class);
 		bind(RoleDao.class).to(JpaRoleDao.class);
