@@ -29,9 +29,9 @@ import edu.emory.cci.aiw.cvrg.eureka.services.dao.UserDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dataprovider.DataProvider;
 import edu.emory.cci.aiw.cvrg.eureka.services.dataprovider.DataProviderException;
 import edu.emory.cci.aiw.cvrg.eureka.services.dataprovider.XlsxDataProvider;
+import edu.emory.cci.aiw.cvrg.eureka.services.datavalidator.DataValidator;
+import edu.emory.cci.aiw.cvrg.eureka.services.datavalidator.ValidationEvent;
 import edu.emory.cci.aiw.cvrg.eureka.services.job.JobCollection;
-import edu.emory.cci.awi.cvrg.eureka.services.datavalidator.DataValidator;
-import edu.emory.cci.awi.cvrg.eureka.services.datavalidator.ValidationEvent;
 
 /**
  * REST operations related to jobs submitted by the user.
