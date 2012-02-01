@@ -83,11 +83,11 @@
 						<td>&nbsp;</td>
 					</tr>
 				</table>
-				<div align="right">
+                <div align="right">
+                 <a href="docs/sample.xlsx">Download Sample Spreadsheet</a>
+                 <br/>
+                 <br/>
 					<input type="reset" name="input2" id="button" value="Browse" />
-                    <br/>
-                    <br/>
-                    <a href="docs/sample.xlsx">Download Sample Spreadsheet</a>
 				</div>
 			</form>
             
