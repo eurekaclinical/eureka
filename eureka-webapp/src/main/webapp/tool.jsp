@@ -87,7 +87,7 @@
 					<input type="reset" name="input2" id="button" value="Browse" />
                     <br/>
                     <br/>
-                    <a href="#">Download Sample Spreadsheet</a>
+                    <a href="docs/sample.xlsx">Download Sample Spreadsheet</a>
 				</div>
 			</form>
             
