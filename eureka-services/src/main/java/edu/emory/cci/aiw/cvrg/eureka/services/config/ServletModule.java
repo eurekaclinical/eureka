@@ -21,7 +21,7 @@ public class ServletModule extends JerseyServletModule {
 	@Override
 	protected void configureServlets() {
 
-		install(new JpaPersistModule("sample-jpa-unit"));
+		install(new JpaPersistModule("services-jpa-unit"));
 		// filter("/api/*").through(PersistFilter.class);
 
 		Map<String, String> params = new HashMap<String, String>();
