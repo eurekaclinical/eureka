@@ -119,7 +119,7 @@
 		<jsp-api-version>2.0</jsp-api-version>
 		<java-mail-version>1.4</java-mail-version>
 		<jaxb-version>2.2.4-1</jaxb-version>
-		<eureka-common-version>1.0.0-SNAPSHOT</eureka-common-version>
+		<eureka-version>1.0.0-SNAPSHOT</eureka-version>
 		<protempa-version>2.0-SNAPSHOT</protempa-version>
 	</properties>
 
@@ -337,7 +337,25 @@
 			<dependency>
 				<groupId>edu.emory.cci.aiw.cvrg</groupId>
 				<artifactId>eureka-common</artifactId>
-				<version>${eureka-common-version}</version>
+				<version>${eureka-version}</version>
+			</dependency>
+			<dependency>
+				<groupId>edu.emory.cci.aiw.cvrg</groupId>
+				<artifactId>eureka-services</artifactId>
+				<type>war</type>
+				<version>${eureka-version}</version>
+			</dependency>
+			<dependency>
+				<groupId>edu.emory.cci.aiw.cvrg</groupId>
+				<artifactId>eureka-webapp</artifactId>
+				<type>war</type>
+				<version>${eureka-version}</version>
+			</dependency>
+			<dependency>
+				<groupId>edu.emory.cci.aiw.cvrg</groupId>
+				<artifactId>eureka-protempa-etl</artifactId>
+				<type>war</type>
+				<version>${eureka-version}</version>
 			</dependency>
 			<dependency>
 				<groupId>org.protempa</groupId>
