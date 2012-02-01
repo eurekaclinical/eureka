@@ -27,7 +27,7 @@ public class SampleServletModule extends JerseyServletModule {
         bind(InjectedMessage.class).to(InjectedMessageImpl.class);
         bind(UserDao.class).to(UserDaoImpl.class);
 
-        install(new JpaPersistModule("sample-jpa-unit"));
+        install(new JpaPersistModule("backend-jpa-unit"));
         filter("/api/*").through(PersistFilter.class);
 
         Map<String, String> params = new HashMap<String, String>();
