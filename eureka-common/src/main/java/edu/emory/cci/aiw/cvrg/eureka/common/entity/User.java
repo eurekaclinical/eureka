@@ -12,6 +12,8 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import com.sun.xml.bind.CycleRecoverable;
@@ -68,6 +70,7 @@ public class User implements CycleRecoverable {
 	/**
 	 * The last log-in date for the user.
 	 */
+	@Temporal(TemporalType.TIMESTAMP)
 	private Date lastLogin;
 	/**
 	 * A list of roles assigned to the user.
