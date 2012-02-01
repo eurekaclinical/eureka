@@ -2,8 +2,9 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd"
 	version="2.0">
-	<persistence-unit name="sample-jpa-unit"
+	<persistence-unit name="services-jpa-unit"
 		transaction-type="RESOURCE_LOCAL">
+		<provider>org.hibernate.ejb.HibernatePersistence</provider>
 		<class>edu.emory.cci.aiw.cvrg.eureka.common.entity.User</class>
 		<class>edu.emory.cci.aiw.cvrg.eureka.common.entity.Role</class>
 		<class>edu.emory.cci.aiw.cvrg.eureka.common.entity.FileUpload</class>
@@ -15,7 +16,7 @@
 			<!-- Disable the second-level cache -->
 			<property name="hibernate.cache.provider_class" value="org.hibernate.cache.NoCacheProvider" />
 			<property name="hibernate.connection.driver_class" value="org.h2.Driver" />
-			<property name="hibernate.connection.url" value="jdbc:h2:mem:test" />
+			<property name="hibernate.connection.url" value="jdbc:h2:mem:services-test" />
 			<property name="hibernate.connection.username" value="sa" />
 			<property name="hibernate.connection.password" value="" />
 			<property name="hibernate.connection.pool_size" value="1" />
@@ -29,6 +30,7 @@
 	</persistence-unit>
 	<persistence-unit name="backend-jpa-unit"
 		transaction-type="RESOURCE_LOCAL">
+		<provider>org.hibernate.ejb.HibernatePersistence</provider>
 		<class>edu.emory.cci.aiw.cvrg.eureka.common.entity.Job</class>
 		<class>edu.emory.cci.aiw.cvrg.eureka.common.entity.JobEvent</class>
 		<class>edu.emory.cci.aiw.cvrg.eureka.common.entity.Configuration</class>
@@ -36,7 +38,7 @@
 			<!-- Disable the second-level cache -->
 			<property name="hibernate.cache.provider_class" value="org.hibernate.cache.NoCacheProvider" />
 			<property name="hibernate.connection.driver_class" value="org.h2.Driver" />
-			<property name="hibernate.connection.url" value="jdbc:h2:mem:test" />
+			<property name="hibernate.connection.url" value="jdbc:h2:mem:backend-test" />
 			<property name="hibernate.connection.username" value="sa" />
 			<property name="hibernate.connection.password" value="" />
 			<property name="hibernate.connection.pool_size" value="1" />
