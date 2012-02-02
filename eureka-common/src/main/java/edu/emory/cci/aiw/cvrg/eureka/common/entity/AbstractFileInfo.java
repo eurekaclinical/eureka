@@ -137,4 +137,13 @@ public class AbstractFileInfo {
 	public void setFileUpload(FileUpload inFileUpload) {
 		this.fileUpload = inFileUpload;
 	}
+
+	@Override
+	public String toString() {
+		StringBuilder sBuilder = new StringBuilder();
+		sBuilder.append(this.getType()).append("|")
+				.append(this.getLineNumber()).append("|")
+				.append(this.getText());
+		return sBuilder.toString();
+	}
 }
