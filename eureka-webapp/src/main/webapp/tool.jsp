@@ -10,7 +10,7 @@
 	<template:content name="content">
 
 			<h3>Upload Data</h3>
-			<form id="form" name="form1" method="post" action="">
+			<form id="form" name="form1" method="post" action="${pageContext.request.contextPath}/upload" ENCTYPE="multipart/form-data">
 				<table>
 					<tr class="grey">
 						<td width="231">Document Name</td>
@@ -83,11 +83,12 @@
 						<td>&nbsp;</td>
 					</tr>
 				</table>
-                <div align="right">
-                 <a href="docs/sample.xlsx">Download Sample Spreadsheet</a>
-                 <br/>
-                 <br/>
-					<input type="reset" name="input2" id="button" value="Browse" />
+				<div align="right">
+					<input type="file" name="uploadFileName" id="button" value="Browse" />
+					<INPUT TYPE='submit' VALUE='upload'>
+                    <br/>
+                    <br/>
+                    <a href="docs/sample.xlsx">Download Sample Spreadsheet</a>
 				</div>
 			</form>
             

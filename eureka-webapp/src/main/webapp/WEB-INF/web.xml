@@ -42,6 +42,14 @@
 	-->
 	
 	<servlet>
+		<servlet-name>CommonsFileUploadServlet</servlet-name>
+		<servlet-class>edu.emory.cci.aiw.cvrg.eureka.servlet.CommonsFileUploadServlet</servlet-class>
+		<init-param>
+			<param-name>dest_dir</param-name>
+			<param-value>/Users/sagrava/upload_files</param-value>
+		</init-param>
+	</servlet>	
+	<servlet>
 		<servlet-name>Login</servlet-name>
 		<servlet-class>edu.emory.cci.aiw.cvrg.eureka.servlet.LoginServlet</servlet-class>
 		<load-on-startup>1</load-on-startup>
@@ -64,6 +72,10 @@
 	
 
 	<servlet-mapping>
+		<servlet-name>CommonsFileUploadServlet</servlet-name>
+		<url-pattern>/upload</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
 		<servlet-name>Login</servlet-name>
 		<url-pattern>/protected/login</url-pattern>
 	</servlet-mapping>
@@ -79,6 +91,7 @@
 		<servlet-name>UserManager</servlet-name>
 		<url-pattern>/protected/user</url-pattern>
 	</servlet-mapping>
+	
 
 	<!-- UNCOMMENT THESE FILTERS AND THEIR MAPPINGS TO ENABLE AUTHENTICATION VIA CAS -->
 	<filter>
