@@ -75,16 +75,37 @@ public class UserResource {
 	 * @throws ServletException Thrown if the identification number string can
 	 *             not be properly converted to a {@link Long}.
 	 */
-	@Path("{id}")
+	@Path("/byid/{id}")
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	public User getUser(@PathParam("id") String inId) throws ServletException {
+	public User getUserById(@PathParam("id") String inId)
+			throws ServletException {
 		User user;
 		try {
 			Long id = Long.valueOf(inId);
 			user = this.userDao.get(id);
 		} catch (NumberFormatException nfe) {
 			throw new ServletException(nfe);
+		}
+		return user;
+	}
+
+	/**
+	 * Get a user using the username.
+	 * 
+	 * @param inName The of the user to fetch.
+	 * @return The user corresponding to the given name.
+	 * @throws ServletException Thrown if the given name does not match any user
+	 *             in the system.
+	 */
+	@Path("/byname/{name}")
+	@GET
+	@Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
+	public User getUserByName(@PathParam("name") String inName)
+			throws ServletException {
+		User user = this.userDao.get(inName);
+		if (user == null) {
+			throw new ServletException("Invalid user name");
 		}
 		return user;
 	}
