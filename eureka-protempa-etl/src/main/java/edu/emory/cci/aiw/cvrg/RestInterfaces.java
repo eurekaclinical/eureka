@@ -1,13 +1,17 @@
 package edu.emory.cci.aiw.cvrg;
 
+import java.util.ArrayList;
+
 import javax.ws.rs.Consumes;
-import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.Configuration;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.Job;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.JobEvent;
 
 @Path("/job")
 public class RestInterfaces {
@@ -23,79 +27,47 @@ public class RestInterfaces {
 	//	
 	//	these are the clients of the singleton ProtempaDeviceManager.
 	//	
-	//	
-
-	public Object queueJob (Job job) {
-
-		return null;
-	}
-
-	public Object getJob (long jobId) {
-
-		return null;
-	}
-
-	public Object getAllJobsByUser (long userId) {
-
-		return null;
-	}
-
-	public Object getAllJobs() {
-
-		return null;
-	}
-
-	public Object killJob (long jobId) {
-
-		return null;
-	}
-
-	public Object killAllJobsByUser (long userId) {
-
-		return null;
-	}
-
-	public Object killAllJobs() {
-
-		return null;
-	}
-
-
-
-
+	//	tomcat:run
 
     @GET
     @Path("status/{jobId}")
     @Produces("application/json")
-    public Job getJobStatus (@PathParam("jobId") String jobId) {
+    public Job getJob (@PathParam("jobId") String jobId) {
 
+    	//	cast String to long.
+    	//	return Job object from 
     	return null;
     }
 
+    @POST
+    @Path("submit/{conf}")
+    @Consumes("application/json")
+    @Produces("application/json")
+    public Job startJob (@PathParam("jobId") Job job) {
+
+    	//	create Job from Configuration.
+    	//	the Job parameter has no assigned jobId yet...  so persist it
+
+    	job.setJobEvents (new ArrayList<JobEvent>());
+    	JobEvent je = new JobEvent();
+    	je.setTimeStamp (new java.sql.Date (System.currentTimeMillis()));
+    	je.setState ("CREATED");
+    	job.addJobEvent (je);
+    	//	persist
+    	ProtempaDeviceManager pdm = ProtempaDeviceManager.getInstance();
+    	pdm.qJob (job);
+    	//	job is owned by the backend persistenceManager
+    	return job;
+    }
 
     @POST
-    @Path("status/{jobId}")
+    @Path("submit/{conf}")
     @Consumes("application/json")
-    public void getJobStatus (@PathParam("jobId") Job jobId) {
-
-
-    }
-    
-    
-    
-    @GET
-    @Path("/jobstatus/{userId}")
     @Produces("application/json")
-    public String getJobStatusByUser (@PathParam("userId") String userId) {
+    public void submitConfiguration (@PathParam("jobId") Configuration conf) {
 
-    	return "a collection of Job objects for this userId, else err";
-    }
-
-    @DELETE
-    @Path("/jobAction/{jobId}")
-    @Produces("application/json")
-    public String deleteJob (@PathParam("jobId") String jobId) {
-
-    	return "";
+    	//	create Configuration
+    	//	save Configuration
+    	ProtempaDeviceManager pdm = ProtempaDeviceManager.getInstance();
     }
 }

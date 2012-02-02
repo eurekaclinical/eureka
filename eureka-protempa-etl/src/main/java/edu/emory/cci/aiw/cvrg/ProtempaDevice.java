@@ -1,12 +1,20 @@
 package edu.emory.cci.aiw.cvrg;
 
 import org.protempa.Protempa;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.Job;
+//import edu.emory.cci.registry.CardiovascularRegistryETL;
 
 
 public class ProtempaDevice extends Thread {
 
 	private Job job;
 	private Protempa protempa;
+	//
+	//	IMPORTANT:
+	//	the synchObj is locked by the internal thread in ProtempaDeviceManager
+	//	that calls load()
+	//	and is locked by the runnable inside this ProtempaDevice instance.
+	//
 	private final Object synchObj = new Object();
 	private volatile boolean busy = false;
 
@@ -26,11 +34,12 @@ public class ProtempaDevice extends Thread {
 	}
 
 
-	public ProtempaDevice() {
+	ProtempaDevice() {
 
+		//	create a Protempa
 	}
 
-	boolean dropOffJob (Job job) {
+	boolean load (Job job) {
 
 		synchronized (synchObj) {
 
@@ -38,7 +47,6 @@ public class ProtempaDevice extends Thread {
 
 				return false;
 			}
-
 			if (protempa == null) {
 
 				setUncaughtExceptionHandler (new UEH (this));
@@ -48,11 +56,6 @@ public class ProtempaDevice extends Thread {
 			synchObj.notifyAll();	//	there should only ever be one thread wait()ing, but still...
 			return true;
 		}
-	}
-
-	Job getJob() {
-
-		return this.job;
 	}
 
 	void kill() {
@@ -65,20 +68,26 @@ public class ProtempaDevice extends Thread {
 
 		synchronized (synchObj) {
 
-			while ( ! isAlive()) {
+			while (isAlive()) {
 
 				try {
 
 					synchObj.wait();
-//						protempa.execute (query, resultsHandler);
+					Long confId = job.getConfigurationId();
+					//	etc...
+					//
+					//	CardiovascularRegistryETL.main (new String[] {"them parameters here"});
+					//
+					//  jobEvent.state = ...
 				}
 				catch (InterruptedException ie) {
 
+					//  jobEvent.state
 					return;
 				}
 				catch (Exception e) {
 
-					//job.pushState (e.getStackTrace());
+					//  jobEvent.state
 					return;
 				}
 				finally {
@@ -108,7 +117,7 @@ public class ProtempaDevice extends Thread {
 			pd.start();
 			System.out.println ("started");
 			System.out.flush();
-			pd.dropOffJob (new Job());
+			pd.load (new Job());
 			Thread.sleep (4096L);
 			pd.interrupt();
 			Thread.sleep (4096L);

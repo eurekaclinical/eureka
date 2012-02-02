@@ -6,6 +6,9 @@ import java.util.List;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.Job;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.JobEvent;
+
 //	this is a singleton that should be bound to the equivalent of an
 //	application-scope context variable.  this is written with the
 //	assumption that there is only one instance in the entire distributed
@@ -24,27 +27,59 @@ import javax.servlet.ServletContextListener;
 
 public class ProtempaDeviceManager implements ServletContextListener {
 
+	//
+	//	IMPORTANT:
+	//	jobQ is a synch point. it is locked by a Request thread or by
+	//	the JobLoader thread (internal to this singleton).
+	//
+	private List<Job> jobQ = new ArrayList<Job> (1<<4);
 	private List<ProtempaDevice> devices = new ArrayList<ProtempaDevice> (1<<4);
-	private volatile boolean alive = false;
+
+	private static volatile ProtempaDeviceManager ME = null;
+
+	private class JobLoader implements Runnable {
+
+		public void run() {
+
+			while (true) {
+
+				try {
+
+					Thread.sleep (10000L);
+					synchronized (jobQ) {
+
+						//	resolve q & devices
+						for (ProtempaDevice proD : devices) {
+
+							//
+						}
+
+						boolean success = devices.get(0).load (null);
+					}
+				}
+				catch (Exception e) {
+
+				}
+			}
+		}
+	}
 
 
-	ProtempaDeviceManager() {
+	private ProtempaDeviceManager() {
 
 		init();
 	}
 
 	//	lifecycle
-
 	public void contextInitialized (ServletContextEvent sce) {
 
-		//	add proper reference to config file.
 	}
 
 	public void contextDestroyed (ServletContextEvent sce) {
 
-		//	add proper reference to config file.
 		this.shutdown();
 	}
+
 
 	void init() {
 
@@ -59,6 +94,8 @@ public class ProtempaDeviceManager implements ServletContextListener {
 
 	void shutdown() {
 
+		//	interrupt loader, then
+
 		for (int i=0 ; i<8 ; i++) {
 
 			devices.get(i).kill();
@@ -71,41 +108,49 @@ public class ProtempaDeviceManager implements ServletContextListener {
 	////////////////////////////////////////////////////////////////////////////////
 	////////////////////////////////////////////////////////////////////////////////
 
-	long queueJob (Job job) {
+	static ProtempaDeviceManager getInstance() {
 
-		//	if alive, transactionally place in Job/JobEvent tables.
-		//	
-		//
-		//
-		//
-		return -1L;
+		if (ME != null) {
+
+			return ME;
+		}
+		else {
+
+			synchronized (ProtempaDeviceManager.class) {
+
+				if (ME == null) {
+
+					ME = new ProtempaDeviceManager();
+				}
+				return ME;
+			}
+		}
+	}
+
+	private Job getOldestReadyJob() {
+
+		synchronized (jobQ) {	// at the service of the JobLoader ONLY
+
+			for (Job j : jobQ) {
+
+			}
+		}
+		return null;
+	}
+	
+	boolean qJob (Job job) {
+
+		synchronized (jobQ) {
+
+			jobQ.add (job);
+		}
+		return true;
 	}
 
 	boolean killJob (long jobId) {
 
 		//	interrupt the Thread.
 		//	create new ProtempaDevice.
-
-		ProtempaDevice pd = null;
-		synchronized (devices) {
-
-			for (int i=0 ; i<8 ; i++) {
-
-				pd = devices.get(i);
-				if (pd.getJob() == null) {
-
-					continue;
-				}
-				if (pd.getJob().getId() == jobId) {
-
-					pd.kill();
-					pd = new ProtempaDevice();
-					pd.start();
-					devices.set (i , pd);
-					return true;
-				}
-			}
-			return false;
-		}
+		return false;
 	}
 }
