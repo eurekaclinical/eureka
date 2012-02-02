@@ -33,6 +33,18 @@ public class FileUpload {
 	 */
 	private String location;
 	/**
+	 * Has the file upload been validated?
+	 */
+	private boolean validated;
+	/**
+	 * Has the file been processed?
+	 */
+	private boolean processed;
+	/**
+	 * Are we done with the file?
+	 */
+	private boolean completed;
+	/**
 	 * The user to which this upload belongs
 	 */
 	@ManyToOne(cascade = CascadeType.ALL, targetEntity = User.class)
@@ -82,6 +94,48 @@ public class FileUpload {
 	 */
 	public void setLocation(String inLocation) {
 		this.location = inLocation;
+	}
+
+	/**
+	 * @return the validated
+	 */
+	public boolean isValidated() {
+		return this.validated;
+	}
+
+	/**
+	 * @param inValidated the validated to set
+	 */
+	public void setValidated(boolean inValidated) {
+		this.validated = inValidated;
+	}
+
+	/**
+	 * @return the processed
+	 */
+	public boolean isProcessed() {
+		return this.processed;
+	}
+
+	/**
+	 * @param inProcessed the processed to set
+	 */
+	public void setProcessed(boolean inProcessed) {
+		this.processed = inProcessed;
+	}
+
+	/**
+	 * @return the completed
+	 */
+	public boolean isCompleted() {
+		return this.completed;
+	}
+
+	/**
+	 * @param inCompleted the completed to set
+	 */
+	public void setCompleted(boolean inCompleted) {
+		this.completed = inCompleted;
 	}
 
 	/**
