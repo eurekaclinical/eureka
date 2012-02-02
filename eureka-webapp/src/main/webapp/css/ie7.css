@@ -96,7 +96,7 @@ a:visited {
 	height:30px;
 	background-image:url(../images/header_bg.png);
 	border-bottom:1px solid #369;
-	width: auto;
+	width: inherit;
 }
 
 .sidebar1 {
@@ -250,7 +250,7 @@ td
 	padding-top:26px;
 }
 .sub_width {
-	width:450px;
+	width:375px;
 	float:left;
 }
 .small_text {

@@ -87,7 +87,7 @@ ul.nav a { zoom: 1; }
 	  	
 	  	<c:otherwise>
 <div class="fltrt">
-	      <img src="${pageContext.request.contextPath}/images/login_icon.gif" alt="Login" align="absmiddle" />
+	      <img src="${pageContext.request.contextPath}/images/login_icon.gif" alt="Login" width="30" height="30" align="absmiddle" />
 	      <li><a href="${pageContext.request.contextPath}/protected/login">Login</a></li>   </div>
 	  	
 	  	</c:otherwise>

@@ -10,8 +10,10 @@
 	<template:content name="content">
 
 			<h3>Upload Data</h3>
-			<form id="form" name="form1" method="post" action="${pageContext.request.contextPath}/upload" ENCTYPE="multipart/form-data">
-				<table>
+
+			<form id="form" name="form1" class="pad_top" method="post" action="${pageContext.request.contextPath}/upload" ENCTYPE="multipart/form-data">
+			
+                <table>
 					<tr class="grey">
 						<td width="231">Document Name</td>
 						<td width="89">Date</td>
@@ -20,61 +22,8 @@
 						<td width="51">Errors</td>
 					</tr>
 					<tr>
-						<td>&nbsp;</td>
-						<td>&nbsp;</td>
-						<td>&nbsp;</td>
-						<td>&nbsp;</td>
-						<td>&nbsp;</td>
-					</tr>
-					<tr>
-						<td>&nbsp;</td>
-						<td>&nbsp;</td>
-						<td>&nbsp;</td>
-						<td>&nbsp;</td>
-						<td>&nbsp;</td>
-					</tr>
-					<tr>
-						<td>&nbsp;</td>
-						<td>&nbsp;</td>
-						<td>&nbsp;</td>
-						<td>&nbsp;</td>
-						<td>&nbsp;</td>
-					</tr>
-					<tr>
-						<td height="31">&nbsp;</td>
-						<td>&nbsp;</td>
-						<td>&nbsp;</td>
-						<td>&nbsp;</td>
-						<td>&nbsp;</td>
-					</tr>
-					<tr>
-						<td>&nbsp;</td>
-						<td>&nbsp;</td>
-						<td>&nbsp;</td>
-						<td>&nbsp;</td>
-						<td>&nbsp;</td>
-					</tr>
-					<tr>
-						<td>&nbsp;</td>
-						<td>&nbsp;</td>
-						<td>&nbsp;</td>
-						<td>&nbsp;</td>
-						<td>&nbsp;</td>
-					</tr>
-					<tr>
-						<td>&nbsp;</td>
-						<td>&nbsp;</td>
-						<td>&nbsp;</td>
-						<td>&nbsp;</td>
-						<td>&nbsp;</td>
-					</tr>
-					<tr>
-						<td>&nbsp;</td>
-						<td>&nbsp;</td>
-						<td>&nbsp;</td>
-						<td>&nbsp;</td>
-						<td>&nbsp;</td>
-					</tr>
+					  <td colspan="5">&nbsp;</td>
+				  </tr>
 					<tr>
 						<td>&nbsp;</td>
 						<td>&nbsp;</td>
@@ -83,16 +32,19 @@
 						<td>&nbsp;</td>
 					</tr>
 				</table>
-				<div align="right">
+      
+				<div class="pad_top" align="right">
+          			<br/>
+                    <br/>
 					<input type="file" name="uploadFileName" id="button" value="Browse" />
-					<INPUT TYPE='submit' VALUE='upload'>
+					<input type="submit" id="button" value="Upload">
                     <br/>
                     <br/>
                     <a href="docs/sample.xlsx">Download Sample Spreadsheet</a>
 				</div>
 			</form>
-            
-	</template:content>
+      
+  </template:content>
 	<template:content name="subcontent">
 
 		<div>

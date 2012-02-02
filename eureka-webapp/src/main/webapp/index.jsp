@@ -30,13 +30,22 @@
 		</p>
 		<p>
 			Currently, the method for uploading data is to use an excel
-			spreadsheet.<br /> <br /> Begin your research by clicking on the <em>Upload
+			spreadsheet.<br /> <br /> 
+			You must first register in order to use this tool. An email will be sent from the administrator once you have been set-up in the system. Once notified, login to the site and begin your research by clicking on the <em>Upload
 				Data</em> link.
 		</p>
 
 	</template:content>
 	<template:content name="subcontent">
 		<h3>Release Notes</h3>
+		<div class="release_notes sub_width">
+			<p>01.05.2012 : eureka.cci.emory.edu established</p>
+			<p>01.09.2012 : Front-end/Back-end combined</p>
+			<p>01.20.2012 : Login Procedure in place</p>
+			<p>01.27.2012 : Admin/Edit Users Implemented</p>
+            <p>01.29.2012 : Backend Installations on server</p>
+			<p>02.03.2012 : Upload Data Functionality</p>
+		</div>
 		<div class="release_notes sub_width">
 			<p>12.05.2011 : Login Process Underway</p>
 			<p>12.02.2011 : Core UI Design Prototype Created</p>
