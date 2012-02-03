@@ -42,6 +42,10 @@ public class Configuration {
 	 */
 	private Integer protempaPort;
 	/**
+	 * The Protempa input data source data base name.
+	 */
+	private String protempaDatabaseName;
+	/**
 	 * The Protempa input data source user name.
 	 */
 	private String protempaSchema;
@@ -163,6 +167,20 @@ public class Configuration {
 	 */
 	public void setProtempaPort(Integer inProtempaPort) {
 		this.protempaPort = inProtempaPort;
+	}
+
+	/**
+	 * @return the protempaDatabaseName
+	 */
+	public String getProtempaDatabaseName() {
+		return this.protempaDatabaseName;
+	}
+
+	/**
+	 * @param inProtempaDatabaseName the protempaDatabaseName to set
+	 */
+	public void setProtempaDatabaseName(String inProtempaDatabaseName) {
+		this.protempaDatabaseName = inProtempaDatabaseName;
 	}
 
 	/**
