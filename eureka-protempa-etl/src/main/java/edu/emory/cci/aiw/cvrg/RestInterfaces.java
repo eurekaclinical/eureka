@@ -52,7 +52,7 @@ public class RestInterfaces {
     	JobEvent je = new JobEvent();
     	je.setTimeStamp (new java.sql.Date (System.currentTimeMillis()));
     	je.setState ("CREATED");
-    	job.addJobEvent (je);
+    	//job.addJobEvent (je);
     	//	persist
     	ProtempaDeviceManager pdm = ProtempaDeviceManager.getInstance();
     	pdm.qJob (job);
