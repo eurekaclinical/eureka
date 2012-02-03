@@ -115,7 +115,7 @@ public class XlsxDataProvider implements DataProvider {
 	}
 
 	@Override
-	public List<CPT> getCpts() {
+	public List<CPT> getCptCodes() {
 		if (this.cpts == null) {
 			this.cpts = this.readCpts();
 		}

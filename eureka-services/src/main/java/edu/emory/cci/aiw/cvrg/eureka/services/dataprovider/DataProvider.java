@@ -36,7 +36,7 @@ public interface DataProvider {
 	 * 
 	 * @return A list of {@link CPT} objects.
 	 */
-	public List<CPT> getCpts();
+	public List<CPT> getCptCodes();
 
 	/**
 	 * Get a list of ICD9 Diagnostic codes from the data.
