@@ -165,7 +165,7 @@ public class UserResource {
 		updateUser.setRoles(updatedRoles);
 		updateUser.setActive(user.isActive());
 
-		if (UserResource.validateUpdatedUser(updateUser)) {
+		if (this.validateUpdatedUser(updateUser)) {
 			this.userDao.save(updateUser);
 			response = Response.created(URI.create("/" + updateUser.getId()))
 					.build();
@@ -271,10 +271,17 @@ public class UserResource {
 	 * @param user The user to be validate.
 	 * @return True if the user is valid, false otherwise.
 	 */
-	private static boolean validateUpdatedUser(User user) {
+	private boolean validateUpdatedUser(User user) {
 		boolean result = true;
-		if (user.isSuperUser() && !user.isActive()) {
-			result = false;
+		// a super user can not be de-activated or stripped of admin rights
+		if (user.isSuperUser()) {
+			if (user.isActive() == false) {
+				result = false;
+			}
+			Role adminRole = this.roleDao.getRoleByName("admin");
+			if (!user.getRoles().contains(adminRole)) {
+				result = false;
+			}
 		}
 		return result;
 	}
