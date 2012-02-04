@@ -54,7 +54,7 @@ public class ConfigListener extends GuiceServletContextListener {
 	public void contextInitialized(ServletContextEvent inServletContextEvent) {
 		super.contextInitialized(inServletContextEvent);
 		String backendUrl = inServletContextEvent.getServletContext()
-				.getInitParameter("backend-url");
+				.getInitParameter("backend-update-url");
 		try {
 			this.jobUpdateThread = new JobUpdateThread(backendUrl);
 			this.jobUpdateThread.setDaemon(true);
