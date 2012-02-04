@@ -54,7 +54,7 @@ public class JobSubmissionThread extends Thread {
 	 */
 	private final String jobUrl;
 	/**
-	 * The current user.s
+	 * The current user
 	 */
 	private final User user;
 	/**
@@ -72,19 +72,18 @@ public class JobSubmissionThread extends Thread {
 	 * @param inConfUrl The URL used to find the user's configuration
 	 *            information.
 	 * @param inJobUrl The URL used to submit a new job to the back end.
-	 * @param inUser The current user.
 	 * @throws NoSuchAlgorithmException Thrown by the secure restful client.
 	 * @throws KeyManagementException Thrown by the secure restful client.
 	 */
 	public JobSubmissionThread(FileUpload inFileUpload, FileDao inFileDao,
-			String inConfUrl, String inJobUrl, User inUser)
-			throws KeyManagementException, NoSuchAlgorithmException {
+			String inConfUrl, String inJobUrl) throws KeyManagementException,
+			NoSuchAlgorithmException {
 		super();
 		this.fileUpload = inFileUpload;
 		this.fileDao = inFileDao;
 		this.configurationUrl = inConfUrl;
 		this.jobUrl = inJobUrl;
-		this.user = inUser;
+		this.user = this.fileUpload.getUser();
 		this.getUserConfiguration();
 	}
 
