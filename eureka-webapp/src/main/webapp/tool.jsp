@@ -21,16 +21,25 @@
 						<td width="104">Upload Time</td>
 						<td width="51">Errors</td>
 					</tr>
-					<tr>
-					  <td colspan="5">&nbsp;</td>
-				  </tr>
-					<tr>
-						<td>&nbsp;</td>
-						<td>&nbsp;</td>
-						<td>&nbsp;</td>
-						<td>&nbsp;</td>
-						<td>&nbsp;</td>
-					</tr>
+			       <c:forEach items="${jobs}" var="jobs">
+			      	<tr>
+			      		<td>
+				  			${job.configurationId}
+				  		</td>
+			      		<td>
+				  			&nbsp;
+				  		</td>
+			      		<td>
+				  			&nbsp;
+				  		</td>
+			      		<td>
+				  			&nbsp;
+				  		</td>
+			      		<td>
+				  			&nbsp;
+				  		</td>
+				  	</tr>
+				  	</c:forEach>
 				</table>
       
 				<div class="pad_top" align="right">

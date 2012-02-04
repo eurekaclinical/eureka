@@ -19,7 +19,10 @@
 	</listener>
 	<context-param>
 		<param-name>eureka-services-url</param-name>
+		<param-value>http://eureka.cci.emory.edu/eureka-services</param-value>
+		<!--  
 		<param-value>https://eureka.cci.emory.edu/eureka-services</param-value>
+		-->
 	</context-param>
 	<!--
 	<servlet>
@@ -65,6 +68,11 @@
 		<load-on-startup>1</load-on-startup>
 	</servlet>
 	<servlet>
+		<servlet-name>JobList</servlet-name>
+		<servlet-class>edu.emory.cci.aiw.cvrg.eureka.servlet.JobListServlet</servlet-class>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+	<servlet>
 		<servlet-name>UserManager</servlet-name>
 		<servlet-class>edu.emory.cci.aiw.cvrg.eureka.servlet.UserManager</servlet-class>
 		<load-on-startup>1</load-on-startup>
@@ -86,6 +94,10 @@
 	<servlet-mapping>
 		<servlet-name>RegisterUser</servlet-name>
 		<url-pattern>/register</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>JobList</servlet-name>
+		<url-pattern>/jobs</url-pattern>
 	</servlet-mapping>
 	<servlet-mapping>
 		<servlet-name>UserManager</servlet-name>

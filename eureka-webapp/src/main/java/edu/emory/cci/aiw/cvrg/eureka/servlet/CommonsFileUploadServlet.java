@@ -14,7 +14,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
@@ -23,9 +22,9 @@ import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
-import com.sun.jersey.api.client.ClientResponse.Status;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.CommUtils;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.JobInfo;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.FileUpload;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.User;
  
@@ -112,14 +111,14 @@ public class CommonsFileUploadServlet extends HttpServlet {
 					File file = new File(destinationDir,""+user.getId());
 					item.write(file);
 					
-					
 					FileUpload fileUpload = new FileUpload();
 					Client c = CommUtils.getClient();
 					fileUpload.setLocation(DESTINATION_DIR_PATH + "/" + user.getId());
 					fileUpload.setUser(user);
+					JobInfo jobInfo = new JobInfo(fileUpload);
 
 					WebResource webResource = c.resource(eurekaServicesUrl);;
-					ClientResponse clientResponse = webResource.path("/api/file/upload").post(
+					ClientResponse clientResponse = webResource.path("/api/job/add").post(
 							ClientResponse.class, fileUpload);
 					System.out.println(clientResponse.getClientResponseStatus());
 				}

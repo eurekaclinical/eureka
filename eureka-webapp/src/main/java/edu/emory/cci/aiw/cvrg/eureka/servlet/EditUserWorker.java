@@ -32,7 +32,7 @@ public class EditUserWorker implements ServletWorker {
 			Client c = CommUtils.getClient();
 
 			WebResource webResource = c.resource(eurekaServicesUrl);
-			User user = webResource.path("/api/user/" + id)
+			User user = webResource.path("/api/user/byid/" + id)
 					.accept(MediaType.APPLICATION_JSON).get(User.class);
 
 			webResource = c.resource(eurekaServicesUrl);
