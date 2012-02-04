@@ -26,10 +26,17 @@ abstract class AbstractResourceTest extends JerseyTest {
 	 * against.
 	 */
 	AbstractResourceTest() {
-		super((new WebAppDescriptor.Builder())
-				.contextListenerClass(ContextTestListener.class)
-				.filterClass(GuiceFilter.class).contextPath("/")
-				.servletPath("/").build());
+		super(
+				(new WebAppDescriptor.Builder())
+						.contextParam("backend-config-url",
+								"https://eureka.cci.emory.edu/eureka-protempa-etl/api/config/get")
+						.contextParam("backend-submission-url",
+								"https://eureka.cci.emory.edu/eureka-protempa-etl/api/job/add")
+						.contextParam("backend-update-url",
+								"https://eureka.cci.emory.edu/eureka-protempa-etl/api/job/status")
+						.contextListenerClass(ContextTestListener.class)
+						.filterClass(GuiceFilter.class).contextPath("/")
+						.servletPath("/").build());
 	}
 
 	/**
