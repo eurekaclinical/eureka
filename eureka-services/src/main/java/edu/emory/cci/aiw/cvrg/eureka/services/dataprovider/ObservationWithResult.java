@@ -9,28 +9,24 @@ package edu.emory.cci.aiw.cvrg.eureka.services.dataprovider;
  */
 public abstract class ObservationWithResult extends Observation {
 	/**
-	 * The results of the lab test, held as a String.
+	 * The results of the observation, held as a String.
 	 */
 	private String resultAsStr;
 	/**
-	 * The results of the lab test, held as a number.
+	 * The results of the observation, held as a number.
 	 */
 	private Double resultAsNum;
 	/**
-	 * The type of the lab performed.
-	 */
-	private int type;
-	/**
-	 * The units used to measure the results of the lab test.
+	 * The units used to measure the results.
 	 */
 	private String units;
 	/**
-	 * Any flags resulting from the results of the lab test.
+	 * Any flags resulting from the results.
 	 */
 	private String flag;
 
 	/**
-	 * Get the results of the lab test as a string.
+	 * Get the results as a string.
 	 * 
 	 * @return the results of the lab test as a string.
 	 */
@@ -39,7 +35,7 @@ public abstract class ObservationWithResult extends Observation {
 	}
 
 	/**
-	 * Set the results of the lab test, as a string.
+	 * Set the results as a string.
 	 * 
 	 * @param inResultAsStr the results, as a string.
 	 */
@@ -48,72 +44,54 @@ public abstract class ObservationWithResult extends Observation {
 	}
 
 	/**
-	 * Get the results of the lab test, as a number.
+	 * Get the results as a number.
 	 * 
-	 * @return The results of the lab test, as a number.
+	 * @return The results as a number.
 	 */
 	public Double getResultAsNum() {
 		return this.resultAsNum;
 	}
 
 	/**
-	 * Set the results of the lab test, as a number
+	 * Set the results as a number
 	 * 
-	 * @param inResultAsNum The results of the lab test, as a number.
+	 * @param inResultAsNum The results as a number.
 	 */
 	public void setResultAsNum(Double inResultAsNum) {
 		this.resultAsNum = inResultAsNum;
 	}
 
 	/**
-	 * Get the type of the lab test.
+	 * Get the units used to measure the results.
 	 * 
-	 * @return The type of the lab test.
-	 */
-	public int getType() {
-		return this.type;
-	}
-
-	/**
-	 * Set the type of the lab test.
-	 * 
-	 * @param inTypeype The type of the lab test.
-	 */
-	public void setType(int inTypeype) {
-		this.type = inTypeype;
-	}
-
-	/**
-	 * Get the units used to measure the lab test results.
-	 * 
-	 * @return The units units to measure the lab test results.
+	 * @return The units units to measure the results.
 	 */
 	public String getUnits() {
 		return this.units;
 	}
 
 	/**
-	 * Set the units used to measure the lab test results.
+	 * Set the units used to measure the results.
 	 * 
-	 * @param inUnits The units units to measure the lab test results.
+	 * @param inUnits The units units to measure the results.
 	 */
 	public void setUnits(String inUnits) {
 		this.units = inUnits;
 	}
 
 	/**
-	 * Get the flag for the lab test.
+	 * Get the flag for the result.
 	 * 
-	 * @return The flag for the lab test.
+	 * @return The flag for the result.
 	 */
 	public String getFlag() {
 		return this.flag;
 	}
 
 	/**
-	 * Set the flag for the lab test.
+	 * Set the flag for the result.
 	 * 
-	 * @param inFlag The flat for the lab test.
+	 * @param inFlag The flag for the result.
 	 */
 	public void setFlag(String inFlag) {
 		this.flag = inFlag;
