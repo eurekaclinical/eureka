@@ -1,5 +1,6 @@
 package edu.emory.cci.aiw.cvrg.eureka.common.entity;
 
+import java.sql.Date;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -32,6 +33,10 @@ public class FileUpload {
 	 * The on-disk location of the uploaded file.
 	 */
 	private String location;
+	/**
+	 * The timestamp of the initial upload.
+	 */
+	private Date timestamp;
 	/**
 	 * Has the file upload been validated?
 	 */
@@ -94,6 +99,20 @@ public class FileUpload {
 	 */
 	public void setLocation(String inLocation) {
 		this.location = inLocation;
+	}
+
+	/**
+	 * @return the timestamp
+	 */
+	public Date getTimestamp() {
+		return this.timestamp;
+	}
+
+	/**
+	 * @param inTimestamp the timestamp to set
+	 */
+	public void setTimestamp(Date inTimestamp) {
+		this.timestamp = inTimestamp;
 	}
 
 	/**

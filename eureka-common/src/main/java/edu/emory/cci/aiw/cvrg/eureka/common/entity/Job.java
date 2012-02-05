@@ -1,5 +1,6 @@
 package edu.emory.cci.aiw.cvrg.eureka.common.entity;
 
+import java.sql.Date;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -27,6 +28,10 @@ public class Job {
 	@Id
 	@GeneratedValue
 	private Long id;
+	/**
+	 * The initial timestamp when the job was started.
+	 */
+	private Date timestamp;
 	/**
 	 * The unique identifier of the configuration to use for this job.
 	 */
@@ -57,6 +62,20 @@ public class Job {
 	 */
 	public void setId(Long inId) {
 		this.id = inId;
+	}
+
+	/**
+	 * @return the timestamp
+	 */
+	public Date getTimestamp() {
+		return this.timestamp;
+	}
+
+	/**
+	 * @param inTimestamp the timestamp to set
+	 */
+	public void setTimestamp(Date inTimestamp) {
+		this.timestamp = inTimestamp;
 	}
 
 	/**
