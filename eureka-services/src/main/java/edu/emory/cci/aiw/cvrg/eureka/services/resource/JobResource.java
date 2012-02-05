@@ -2,7 +2,6 @@ package edu.emory.cci.aiw.cvrg.eureka.services.resource;
 
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
-import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,11 +11,11 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.SecurityContext;
 
 import com.google.inject.Inject;
 import com.sun.jersey.api.client.ClientResponse.Status;
@@ -99,27 +98,20 @@ public class JobResource {
 	}
 
 	/**
-	 * Get a list of jobs associated with the logged-in user.
+	 * Get a list of jobs associated with user referred to by the given unique
+	 * identifier.
 	 * 
-	 * @param securityContext The context that provides the user principal
-	 *            currently logged in.
+	 * @param inId The unique identifier for the user.
 	 * 
 	 * @return A list of {@link Job} objects associated with the user.
 	 * @throws ServletException Thrown if the user ID is not valid
 	 */
-	@Path("/list")
+	@Path("/list/{id}")
 	@GET
 	@Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
-	public List<Job> getJobsByUser(@Context SecurityContext securityContext)
+	public List<Job> getJobsByUser(@PathParam("id") final String inId)
 			throws ServletException {
-
-		Principal userPrincipal = securityContext.getUserPrincipal();
-		if (userPrincipal == null) {
-			throw new ServletException("Bad User ID");
-		}
-
-		String name = userPrincipal.getName();
-		User user = this.userDao.get(name);
+		User user = this.userDao.get(inId);
 		List<Job> allJobs = JobCollection.getJobs();
 		List<Job> result = new ArrayList<Job>();
 		for (Job job : allJobs) {
@@ -127,7 +119,6 @@ public class JobResource {
 				result.add(job);
 			}
 		}
-
 		return result;
 	}
 }
