@@ -58,7 +58,7 @@ public class JobInfo {
 	 * @param inFileUpload
 	 * @param inJob
 	 */
-	private JobInfo(FileUpload inFileUpload, Job inJob) {
+	public JobInfo(FileUpload inFileUpload, Job inJob) {
 		this.job = inJob;
 		this.fileUpload = inFileUpload;
 	}
@@ -83,12 +83,14 @@ public class JobInfo {
 		// we do this in descending order
 		if (this.job != null) {
 			JobEvent event = this.getLatestJobEvent();
-			if (event.getState() == "complete") {
+			if (event.getState().equals("complete")) {
 				step = 10;
-			} else if (event.getState() == "xxx") {
+			} else if (event.getState().equals("ZZZZ")) {
 				step = 9;
+			} else if (event.getState().equals("STARTED")) {
+				step = 4;
 			}
-		} else {
+		} else if (this.fileUpload != null) {
 			if (this.fileUpload.isCompleted()) {
 				step = 3;
 			} else if (this.fileUpload.isProcessed()) {
