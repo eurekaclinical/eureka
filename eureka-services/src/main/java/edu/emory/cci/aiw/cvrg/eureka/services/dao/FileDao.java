@@ -1,5 +1,7 @@
 package edu.emory.cci.aiw.cvrg.eureka.services.dao;
 
+import java.util.List;
+
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.FileUpload;
 
 /**
@@ -27,4 +29,14 @@ public interface FileDao {
 	 *         code otherwise.
 	 */
 	public FileUpload get(Long inId);
+
+	/**
+	 * Get all the file uploads for the user corresponding to the given unique
+	 * identifier.
+	 * 
+	 * @param userId The unique identifier for the user.
+	 * 
+	 * @return A list of jobs corresponding to the user.
+	 */
+	public List<FileUpload> getByUserId(Long userId);
 }

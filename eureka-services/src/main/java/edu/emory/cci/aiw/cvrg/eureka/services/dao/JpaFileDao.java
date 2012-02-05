@@ -1,5 +1,7 @@
 package edu.emory.cci.aiw.cvrg.eureka.services.dao;
 
+import java.util.List;
+
 import javax.persistence.EntityManager;
 
 import com.google.inject.Inject;
@@ -41,5 +43,14 @@ public class JpaFileDao implements FileDao {
 				.createQuery("select FileUpload f from f where f.id = ?1",
 						FileUpload.class).setParameter(1, inId)
 				.getSingleResult();
+	}
+
+	@Override
+	public List<FileUpload> getByUserId(Long userId) {
+		return this.entityManager
+				.createQuery(
+						"select FileUpload f from f where f.user.id  = ?1",
+						FileUpload.class).setParameter(1, userId)
+				.getResultList();
 	}
 }
