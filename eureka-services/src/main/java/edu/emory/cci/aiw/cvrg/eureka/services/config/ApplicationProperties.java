@@ -43,7 +43,6 @@ public class ApplicationProperties {
 		this.properties = new Properties();
 		try {
 			this.properties.load(inputStream);
-			this.properties.list(System.out);
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
