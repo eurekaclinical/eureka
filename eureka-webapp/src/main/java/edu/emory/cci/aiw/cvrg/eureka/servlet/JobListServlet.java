@@ -29,7 +29,7 @@ public class JobListServlet extends HttpServlet {
 		try {
 			Client client = CommUtils.getClient();
 			WebResource webResource = client.resource(eurekaServicesUrl);
-			List<Job> jobs = webResource.path("/api/job/list")
+			List<Job> jobs = webResource.path("/api/job/list/"+req.getUserPrincipal().getName())
 					.accept(MediaType.APPLICATION_JSON)
 					.get(new GenericType<List<Job>>() {
 						// Nothing to implement, used to hold returned data.

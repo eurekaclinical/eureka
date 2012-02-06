@@ -115,7 +115,6 @@ public class CommonsFileUploadServlet extends HttpServlet {
 					Client c = CommUtils.getClient();
 					fileUpload.setLocation(DESTINATION_DIR_PATH + "/" + user.getId());
 					fileUpload.setUser(user);
-					JobInfo jobInfo = new JobInfo(fileUpload);
 
 					WebResource webResource = c.resource(eurekaServicesUrl);;
 					ClientResponse clientResponse = webResource.path("/api/job/add").post(
@@ -124,7 +123,7 @@ public class CommonsFileUploadServlet extends HttpServlet {
 				}
 				
 			
-				response.sendRedirect(request.getContextPath() + "/tools.jsp");
+				response.sendRedirect(request.getContextPath() + "/jobs");
 			}
 		}catch(FileUploadException ex) {
 			log("Error encountered while parsing the request",ex);

@@ -60,7 +60,7 @@ public class JpaUserDao implements UserDao {
 	@Override
 	public User get(String name) {
 		final Query query = this.entityManager.createQuery(
-				"select u from u where u.name = ?1", User.class).setParameter(
+				"select u from u where u.email = ?1", User.class).setParameter(
 				1, name);
 		return (User) query.getSingleResult();
 	}
