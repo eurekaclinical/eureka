@@ -25,10 +25,6 @@ import edu.emory.cci.aiw.cvrg.eureka.services.job.JobCollection;
 public class JobUpdateThread extends Thread {
 
 	/**
-	 * The relative URL of the job status query.
-	 */
-	private static final String JOB_STATUS = "/job/status";
-	/**
 	 * The back-end URL needed to make the REST calls for job updates.
 	 */
 	private final String backendUrl;
@@ -60,9 +56,8 @@ public class JobUpdateThread extends Thread {
 	public void run() {
 		while (this.keepRunning) {
 			try {
-				String statuUrl = JOB_STATUS;
 				List<Job> updatedJobs = this.client.resource(this.backendUrl)
-						.path(statuUrl).accept(MediaType.APPLICATION_JSON)
+						.accept(MediaType.APPLICATION_JSON)
 						.get(new GenericType<List<Job>>() {
 							// nothing to implement
 						});
