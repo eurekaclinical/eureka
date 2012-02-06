@@ -1,14 +1,16 @@
-package edu.emory.cci.aiw.cvrg;
+package edu.emory.cci.aiw.cvrg.eureka.backend.resource;
 
-import org.protempa.Protempa;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.Job;
-//import edu.emory.cci.registry.CardiovascularRegistryETL;
+//import edu.emory.cci.aiw.cvrg.eureka.common.entity.JobEvent;
+import edu.emory.cci.registry.CardiovascularRegistryETL;
 
 
 public class ProtempaDevice extends Thread {
 
 	private Job job;
-	private Protempa protempa;
+//	private Protempa protempa;
+	private CardiovascularRegistryETL etl = new CardiovascularRegistryETL();
+
 	//
 	//	IMPORTANT:
 	//	the synchObj is locked by the internal thread in ProtempaDeviceManager
@@ -41,16 +43,18 @@ public class ProtempaDevice extends Thread {
 
 	boolean load (Job job) {
 
+    	System.out.println ("ETL: load ol");
 		synchronized (synchObj) {
 
-			if (busy || ! isAlive()) {
-
-				return false;
-			}
-			if (protempa == null) {
-
-				setUncaughtExceptionHandler (new UEH (this));
-			}
+	    	System.out.println ("ETL: load il");
+//			if (busy || ! isAlive()) {
+//
+//				return false;
+//			}
+//			if (protempa == null) {
+//
+//				setUncaughtExceptionHandler (new UEH (this));
+//			}
 			busy = true;
 			this.job = job;
 			synchObj.notifyAll();	//	there should only ever be one thread wait()ing, but still...
@@ -68,26 +72,45 @@ public class ProtempaDevice extends Thread {
 
 		synchronized (synchObj) {
 
-			while (isAlive()) {
+			while (true) {
+//			while (isAlive()) {
 
 				try {
 
+			    	System.out.println ("ETL: protempa.wait");
 					synchObj.wait();
-					Long confId = job.getConfigurationId();
+			    	System.out.println ("ETL: protempa.go");
+//			    	JobEvent je = new JobEvent();
+//			    	je.setState("RUNNING");
+//			    	job.getJobEvents().add (je);
+//					Long confId = job.getConfigurationId();
+					
 					//	etc...
 					//
-					//	CardiovascularRegistryETL.main (new String[] {"them parameters here"});
+					etl.main (new String[] {"them parameters here"});
+//			    	je = new JobEvent();
+//			    	je.setState("FINISHED");
+//			    	job.getJobEvents().add (je);
 					//
 					//  jobEvent.state = ...
 				}
 				catch (InterruptedException ie) {
 
 					//  jobEvent.state
+			    	System.out.println ("ETL: runner exc " + ie);
+//			    	JobEvent je = new JobEvent();
+//			    	je.setState("EXCEPTION");
+//			    	job.getJobEvents().add (je);
 					return;
 				}
 				catch (Exception e) {
 
 					//  jobEvent.state
+					e.printStackTrace();
+			    	System.out.println ("ETL: runner exc " + e);
+//			    	JobEvent je = new JobEvent();
+//			    	je.setState("EXCEPTION");
+//			    	job.getJobEvents().add (je);
 					return;
 				}
 				finally {

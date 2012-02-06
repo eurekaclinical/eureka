@@ -1,13 +1,14 @@
-package edu.emory.cci.aiw.cvrg;
+package edu.emory.cci.aiw.cvrg.eureka.backend.resource;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.Job;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.JobEvent;
+//import edu.emory.cci.aiw.cvrg.eureka.common.entity.JobEvent;
 
 //	this is a singleton that should be bound to the equivalent of an
 //	application-scope context variable.  this is written with the
@@ -34,6 +35,7 @@ public class ProtempaDeviceManager implements ServletContextListener {
 	//
 	private List<Job> jobQ = new ArrayList<Job> (1<<4);
 	private List<ProtempaDevice> devices = new ArrayList<ProtempaDevice> (1<<4);
+	public Job job;
 
 	private static volatile ProtempaDeviceManager ME = null;
 
@@ -45,28 +47,36 @@ public class ProtempaDeviceManager implements ServletContextListener {
 
 				try {
 
+			    	System.out.println ("ETL: JobLoader loop");
 					Thread.sleep (10000L);
 					synchronized (jobQ) {
 
-						//	resolve q & devices
-						for (ProtempaDevice proD : devices) {
+//						for (ProtempaDevice proD : devices) {
+//
+//							
+//						}
+						Iterator<Job> itr = jobQ.iterator();
+						while (itr.hasNext()) {
 
-							//
+					    	System.out.println ("ETL: match job to protempa");
+							Job x = itr.next();
+							devices.get(0).load (x);
+							itr.remove();
 						}
-
-						boolean success = devices.get(0).load (null);
 					}
 				}
 				catch (Exception e) {
 
+			    	System.out.println ("ETL: JobLoader exception " + e);
+					e.printStackTrace();
 				}
 			}
 		}
 	}
 
-
 	private ProtempaDeviceManager() {
 
+    	System.out.println ("ETL: new ProtempaDeviceManager");
 		init();
 	}
 
@@ -85,11 +95,17 @@ public class ProtempaDeviceManager implements ServletContextListener {
 
 		for (int i=0 ; i<8 ; i++) {
 
+	    	System.out.println ("ETL: create new ProtempaDevice");
 			ProtempaDevice pd = new ProtempaDevice();
 			pd.setDaemon (true);
+			pd.setName ("ProtempaDevice-" + i);
 			pd.start();
 			devices.add (pd);
 		}
+		Thread t = new Thread (new JobLoader());
+		t.setDaemon (true);
+		t.setName ("ETL-JobLoader");
+		t.start();
 	}
 
 	void shutdown() {
@@ -110,6 +126,7 @@ public class ProtempaDeviceManager implements ServletContextListener {
 
 	static ProtempaDeviceManager getInstance() {
 
+    	System.out.println ("ETL:getInstance");
 		if (ME != null) {
 
 			return ME;
@@ -140,8 +157,10 @@ public class ProtempaDeviceManager implements ServletContextListener {
 	
 	boolean qJob (Job job) {
 
+    	System.out.println ("ETL: qJob ol");
 		synchronized (jobQ) {
 
+	    	System.out.println ("ETL: qJob il");
 			jobQ.add (job);
 		}
 		return true;
