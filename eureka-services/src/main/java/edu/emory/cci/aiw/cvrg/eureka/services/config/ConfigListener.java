@@ -26,23 +26,22 @@ public class ConfigListener extends GuiceServletContextListener {
 	 * A thread that updates the status of all jobs.
 	 */
 	private JobUpdateThread jobUpdateThread;
+	/**
+	 * Make sure we always use the same injector
+	 */
+	private Injector injector = null;
+	/**
+	 * The persistence service for the application.
+	 */
+	private PersistService persistService = null;
 
 	@Override
-	protected Injector getInjector() {
-		Injector injector = Guice.createInjector(new ServletModule(),
-				new AppModule());
-
-		// Start the persist service, so we can bootstrap the data. If
-		// bootstrapping is not needed, it is better to enable the
-		// PersisteFilter in the ServletModule class.
-		PersistService persistService = injector
-				.getInstance(PersistService.class);
-		persistService.start();
-
-		Bootstrap bootstrap = injector.getInstance(Bootstrap.class);
-		bootstrap.configure();
-
-		return injector;
+	synchronized protected Injector getInjector() {
+		if (this.injector == null) {
+			this.injector = Guice.createInjector(new ServletModule(),
+					new AppModule());
+		}
+		return this.injector;
 	}
 
 	/*
@@ -53,10 +52,16 @@ public class ConfigListener extends GuiceServletContextListener {
 	@Override
 	public void contextInitialized(ServletContextEvent inServletContextEvent) {
 		super.contextInitialized(inServletContextEvent);
-		String backendUrl = inServletContextEvent.getServletContext()
-				.getInitParameter("backend-update-url");
+		this.persistService = this.getInjector().getInstance(
+				PersistService.class);
+		this.persistService.start();
+		Bootstrap bootstrap = this.getInjector().getInstance(Bootstrap.class);
+		bootstrap.configure();
 		try {
-			this.jobUpdateThread = new JobUpdateThread(backendUrl);
+			ApplicationProperties applicationProperties = this.getInjector()
+					.getInstance(ApplicationProperties.class);
+			this.jobUpdateThread = new JobUpdateThread(
+					applicationProperties.getBackendUpdateUrl());
 			this.jobUpdateThread.setDaemon(true);
 			this.jobUpdateThread.start();
 		} catch (KeyManagementException e) {
@@ -74,6 +79,7 @@ public class ConfigListener extends GuiceServletContextListener {
 	@Override
 	public void contextDestroyed(ServletContextEvent inServletContextEvent) {
 		super.contextDestroyed(inServletContextEvent);
+		this.persistService.stop();
 		this.jobUpdateThread.setKeepRunning(false);
 		this.jobUpdateThread.interrupt();
 		try {
