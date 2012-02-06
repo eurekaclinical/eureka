@@ -103,14 +103,10 @@
 			<groupId>edu.emory.cci.aiw.cvrg</groupId>
 			<artifactId>eureka-common</artifactId>
 		</dependency>
-        <dependency>
-            <groupId>edu.emory.cci</groupId>
-            <artifactId>registry</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.oracle</groupId>
-            <artifactId>ojdbc6</artifactId>
-        </dependency>
+		<dependency>
+			<groupId>edu.emory.cci</groupId>
+			<artifactId>registry</artifactId>
+		</dependency>
 	</dependencies>
 
 </project>
