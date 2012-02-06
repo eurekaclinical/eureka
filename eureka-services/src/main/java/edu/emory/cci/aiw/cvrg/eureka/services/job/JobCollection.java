@@ -1,5 +1,6 @@
 package edu.emory.cci.aiw.cvrg.eureka.services.job;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.Job;
@@ -15,7 +16,7 @@ public class JobCollection {
 	/**
 	 * A current list of jobs.
 	 */
-	private static List<Job> jobs;
+	private static List<Job> jobs = new ArrayList<Job>();
 
 	/**
 	 * Set/update the list of jobs.
