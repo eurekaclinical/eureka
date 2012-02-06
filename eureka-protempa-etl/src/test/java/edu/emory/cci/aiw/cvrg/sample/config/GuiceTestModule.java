@@ -19,7 +19,7 @@ public class GuiceTestModule extends AbstractModule {
     @Override
     protected void configure() {
 
-        install(new JpaPersistModule("sample-jpa-unit"));
+        install(new JpaPersistModule("backend-jpa-unit"));
 
         bind(InjectedMessage.class).to(InjectedTestMessage.class);
         bind(UserDao.class).to(UserDaoImpl.class);
