@@ -94,29 +94,23 @@ public class CommonsFileUploadServlet extends HttpServlet {
 						", File Name = "+item.getName()+
 						", Content type = "+item.getContentType()+
 						", File Size = "+item.getSize());
+
+					Client c = CommUtils.getClient();
+					WebResource webResource = c.resource(eurekaServicesUrl);;
+					User user = webResource.path("/api/user/byname/super.user@emory.edu").get(
+							User.class);
+
 					/*
 					 * Write file to the ultimate location.
 					 */
-					Principal principal = request.getUserPrincipal(); 
-					User user = (User)principal;
-					// TODO: remove hardcoding after eureka server is brought back
-					// up and testing can be completed
-					if (user == null) {
-						user = new User();
-						user.setId(3L);
-						user.setFirstName("Test");
-						user.setLastName("name");
-						user.setEmail("test@emory.edu");
-					}
 					File file = new File(destinationDir,""+user.getId());
 					item.write(file);
+
 					
 					FileUpload fileUpload = new FileUpload();
-					Client c = CommUtils.getClient();
 					fileUpload.setLocation(DESTINATION_DIR_PATH + "/" + user.getId());
 					fileUpload.setUser(user);
 
-					WebResource webResource = c.resource(eurekaServicesUrl);;
 					ClientResponse clientResponse = webResource.path("/api/job/add").post(
 							ClientResponse.class, fileUpload);
 					System.out.println(clientResponse.getClientResponseStatus());
