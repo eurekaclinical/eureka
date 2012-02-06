@@ -123,6 +123,7 @@
 		<commons-fileupload-version>1.2.2</commons-fileupload-version>
 		<eureka-version>1.0.0-SNAPSHOT</eureka-version>
 		<protempa-version>2.0-SNAPSHOT</protempa-version>
+		<registry-version>1.0-SNAPSHOT</registry-version>
 	</properties>
 
 	<!-- make sure our code complies with Java 1.6 specifications, and define 
@@ -298,6 +299,7 @@
 				<groupId>com.h2database</groupId>
 				<artifactId>h2</artifactId>
 				<version>${h2-version}</version>
+				<scope>test</scope>
 			</dependency>
 			<dependency>
 				<groupId>javax.servlet</groupId>
@@ -373,6 +375,11 @@
 				<groupId>org.protempa</groupId>
 				<artifactId>protempa-framework</artifactId>
 				<version>${protempa-version}</version>
+			</dependency>
+			<dependency>
+				<groupId>edu.emory.cci</groupId>
+				<artifactId>registry</artifactId>
+				<version>${registry-version}</version>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
