@@ -3,6 +3,7 @@ package edu.emory.cci.aiw.cvrg.eureka.services.resource;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.servlet.ServletContext;
@@ -20,6 +21,7 @@ import javax.ws.rs.core.Response;
 import com.google.inject.Inject;
 import com.sun.jersey.api.client.ClientResponse.Status;
 
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.JobInfo;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.FileUpload;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.Job;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.User;
@@ -120,5 +122,58 @@ public class JobResource {
 			}
 		}
 		return result;
+	}
+
+	/**
+	 * Get the status of a job process for the given user.s
+	 * 
+	 * @param inId The unique identifier of the user to query for.
+	 * @return A {@link JobInfo} object containing the status information.
+	 * @throws ServletException Thrown if there are errors converting the input
+	 *             string to a valid user ID.
+	 */
+	@Path("/status/{id}")
+	@GET
+	@Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
+	public JobInfo getStatus(@PathParam("id") final String inId)
+			throws ServletException {
+
+		Job latestJob = null;
+		FileUpload latestFileUpload = null;
+		Long userId;
+		try {
+			userId = Long.valueOf(inId);
+		} catch (NumberFormatException nfe) {
+			throw new ServletException(nfe);
+		}
+
+		List<Job> userJobs = this.getJobsByUser(inId);
+		if (userJobs.size() > 0) {
+			Date latestDate = null;
+			for (Job job : userJobs) {
+				if (latestJob == null) {
+					latestJob = job;
+				} else {
+					if (job.getTimestamp().after(latestDate)) {
+						latestJob = job;
+					}
+				}
+			}
+		} else {
+			Date latestDate = null;
+			List<FileUpload> fileUploads = this.fileDao.getByUserId(userId);
+			for (FileUpload fileUpload : fileUploads) {
+				if (latestFileUpload == null) {
+					latestFileUpload = fileUpload;
+					latestDate = fileUpload.getTimestamp();
+				} else {
+					if (fileUpload.getTimestamp().after(latestDate)) {
+						latestFileUpload = fileUpload;
+					}
+				}
+			}
+		}
+
+		return new JobInfo(latestFileUpload, latestJob);
 	}
 }
