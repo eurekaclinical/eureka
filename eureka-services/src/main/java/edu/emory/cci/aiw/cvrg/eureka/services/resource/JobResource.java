@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -14,7 +13,6 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
-import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
@@ -25,6 +23,7 @@ import edu.emory.cci.aiw.cvrg.eureka.common.comm.JobInfo;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.FileUpload;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.Job;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.User;
+import edu.emory.cci.aiw.cvrg.eureka.services.config.ApplicationProperties;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.FileDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.UserDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.job.JobCollection;
@@ -49,6 +48,10 @@ public class JobResource {
 	 * store.
 	 */
 	private final FileDao fileDao;
+	/**
+	 * Application's configuration properties holder.
+	 */
+	private final ApplicationProperties applicationProperties;
 
 	/**
 	 * Construct a new job resource with the given job update thread.
@@ -57,33 +60,37 @@ public class JobResource {
 	 *            users.
 	 * @param inFileDao The data access object used to fetch and store
 	 *            information about uploaded files.
+	 * @param inApplicationProperties The configuration object holding all the
+	 *            appliction's defined properties.
 	 */
 	@Inject
-	public JobResource(UserDao inUserDao, FileDao inFileDao) {
+	public JobResource(UserDao inUserDao, FileDao inFileDao,
+			ApplicationProperties inApplicationProperties) {
 		this.userDao = inUserDao;
 		this.fileDao = inFileDao;
+		this.applicationProperties = inApplicationProperties;
 	}
 
 	/**
 	 * Create a new job (by uploading a new file)
 	 * 
 	 * @param fileUpload The file upload to add.
-	 * @param servletContext The servlet context, used for fetching context
-	 *            parameters out of the web.xml configuration file.
+	 * 
 	 * @return A {@link Status#OK} if the file is successfully added,
 	 *         {@link Status#BAD_REQUEST} if there are errors.
-	 * @throws ServletException
+	 * @throws ServletException Thrown when the secure client used to connect to
+	 *             the back end services can not be initialized or set up
+	 *             properly.
 	 */
 	@Path("/add")
 	@POST
 	@Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
 	@Produces(MediaType.TEXT_PLAIN)
-	public Response uploadFile(FileUpload fileUpload,
-			@Context ServletContext servletContext) throws ServletException {
-		String configUrl = servletContext
-				.getInitParameter("backend-config-url");
-		String jobSubmitUrl = servletContext
-				.getInitParameter("backend-submission-url");
+	public Response uploadFile(FileUpload fileUpload) throws ServletException {
+		String configUrl = this.applicationProperties.getBackendConfigUrl();
+		String jobSubmitUrl = this.applicationProperties.getBackendSubmitUrl();
+
+		System.out.println("BLAH: " + this.applicationProperties == null);
 
 		configUrl += "/" + fileUpload.getUser().getId();
 
