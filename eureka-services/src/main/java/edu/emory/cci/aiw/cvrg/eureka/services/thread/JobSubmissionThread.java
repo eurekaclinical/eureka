@@ -107,22 +107,26 @@ public class JobSubmissionThread extends Thread {
 						this.fileUpload.setCompleted(true);
 						this.fileDao.save(this.fileUpload);
 					} else {
-						this.setCompleteWithValidationError("Job could not be submitted properly");
+						this.setCompleteWithError("Job could not be submitted properly");
 					}
 				} else {
-					this.setCompleteWithValidationError("Data could not be processed");
+					this.setCompleteWithError("Data could not be processed");
 				}
 			} else {
-				this.setCompleteWithValidationError("Invalid data file");
+				this.setCompleteWithError("Invalid data file");
 			}
 		} catch (DataProviderException e) {
-			this.setCompleteWithValidationError(e.getMessage());
+			e.printStackTrace();
+			this.setCompleteWithError(e.getMessage());
 		} catch (KeyManagementException e) {
-			this.setCompleteWithValidationError(e.getMessage());
+			e.printStackTrace();
+			this.setCompleteWithError(e.getMessage());
 		} catch (NoSuchAlgorithmException e) {
-			this.setCompleteWithValidationError(e.getMessage());
+			e.printStackTrace();
+			this.setCompleteWithError(e.getMessage());
 		} catch (SQLException e) {
-			this.setCompleteWithValidationError(e.getMessage());
+			e.printStackTrace();
+			this.setCompleteWithError(e.getMessage());
 		}
 	}
 
@@ -219,19 +223,21 @@ public class JobSubmissionThread extends Thread {
 	private boolean submitJob() throws KeyManagementException,
 			NoSuchAlgorithmException {
 		boolean result;
-		Client client = CommUtils.getClient();
-		WebResource resource = client.resource(this.jobUrl);
-		Job job = new Job();
-		job.setConfigurationId(this.configuration.getId());
-		job.setUserId(this.user.getId());
-		Job resultJob = resource.accept(MediaType.APPLICATION_JSON).post(
-				Job.class, job);
-		JobEvent event = resultJob.getJobEvents().get(0);
-		if (event.getState().equals("STARTED")) {
-			result = true;
-		} else {
-			result = false;
-		}
+		// TODO: Revert to real code when the job sumission URL is available
+		result = true;
+//		Client client = CommUtils.getClient();
+//		WebResource resource = client.resource(this.jobUrl);
+//		Job job = new Job();
+//		job.setConfigurationId(this.configuration.getId());
+//		job.setUserId(this.user.getId());
+//		Job resultJob = resource.accept(MediaType.APPLICATION_JSON).post(
+//				Job.class, job);
+//		JobEvent event = resultJob.getJobEvents().get(0);
+//		if (event.getState().equals("STARTED")) {
+//			result = true;
+//		} else {
+//			result = false;
+//		}
 		return result;
 	}
 
@@ -243,10 +249,18 @@ public class JobSubmissionThread extends Thread {
 	 */
 	private void getUserConfiguration() throws KeyManagementException,
 			NoSuchAlgorithmException {
-		Client client = CommUtils.getClient();
-		WebResource resource = client.resource(this.configurationUrl);
-		this.configuration = resource.accept(MediaType.APPLICATION_JSON).get(
-				Configuration.class);
+		// TODO: Revert to non-fake configuration
+		// Client client = CommUtils.getClient();
+		// WebResource resource = client.resource(this.configurationUrl);
+		// this.configuration = resource.accept(MediaType.APPLICATION_JSON).get(
+		// Configuration.class);
+		Configuration fakeConfiguration = new Configuration();
+		fakeConfiguration.setProtempaDatabaseName("XE");
+		fakeConfiguration.setProtempaHost("adrastea.cci.emory.edu");
+		fakeConfiguration.setProtempaPort(Integer.valueOf(1521));
+		fakeConfiguration.setProtempaSchema("protempatest");
+		fakeConfiguration.setProtempaPass("protempatest");
+		this.configuration = fakeConfiguration;
 	}
 
 	/**
@@ -255,15 +269,14 @@ public class JobSubmissionThread extends Thread {
 	 * 
 	 * @param message The error message.
 	 */
-	private void setCompleteWithValidationError(String message) {
-		List<FileError> errors = new ArrayList<FileError>();
+	private void setCompleteWithError(String message) {
 		FileError error = new FileError();
 		error.setType("job processing");
 		error.setText(message);
 		error.setLineNumber(Long.valueOf(0));
 		error.setFileUpload(this.fileUpload);
-		errors.add(error);
-		this.fileUpload.setErrors(errors);
+
+		this.fileUpload.addError(error);
 		this.fileUpload.setCompleted(true);
 		this.fileDao.save(this.fileUpload);
 	}
