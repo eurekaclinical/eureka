@@ -129,6 +129,10 @@ public class DataInserter {
 				counter = 0;
 			}
 		}
+		preparedStatement.executeBatch();
+		this.connection.commit();
+		preparedStatement.clearBatch();
+		preparedStatement.close();
 	}
 
 	/**
@@ -163,6 +167,10 @@ public class DataInserter {
 				counter = 0;
 			}
 		}
+		preparedStatement.executeBatch();
+		this.connection.commit();
+		preparedStatement.clearBatch();
+		preparedStatement.close();
 	}
 
 	/**
@@ -175,7 +183,7 @@ public class DataInserter {
 	public void insertProviders(List<Provider> providers) throws SQLException {
 		int counter = 0;
 		PreparedStatement preparedStatement = this.connection
-				.prepareStatement("insert into provider values (?,?,?");
+				.prepareStatement("insert into provider values (?,?,?)");
 		for (Provider provider : providers) {
 			preparedStatement.setLong(1, provider.getId().longValue());
 			preparedStatement.setString(2, provider.getFirstName());
@@ -190,6 +198,10 @@ public class DataInserter {
 				counter = 0;
 			}
 		}
+		preparedStatement.executeBatch();
+		this.connection.commit();
+		preparedStatement.clearBatch();
+		preparedStatement.close();
 	}
 
 	/**
@@ -247,7 +259,7 @@ public class DataInserter {
 	 * @throws SQLException Thrown if there are any JDBC errors.
 	 */
 	public void insertLabs(List<Lab> labs) throws SQLException {
-		this.insertObservationsWithResult(labs, "lab_event");
+		this.insertObservationsWithResult(labs, "labs_event");
 	}
 
 	/**
@@ -294,6 +306,10 @@ public class DataInserter {
 				counter = 0;
 			}
 		}
+		preparedStatement.executeBatch();
+		this.connection.commit();
+		preparedStatement.clearBatch();
+		preparedStatement.close();
 	}
 
 	/**
@@ -310,7 +326,7 @@ public class DataInserter {
 		int counter = 0;
 		StringBuilder sqlbBuilder = new StringBuilder();
 		sqlbBuilder.append("insert into ").append(table)
-				.append(" values (?,?,?,?)");
+				.append(" values (?,?,?,?,?,?,?,?)");
 		PreparedStatement preparedStatement = this.connection
 				.prepareStatement(sqlbBuilder.toString());
 		for (ObservationWithResult observation : observations) {
@@ -335,6 +351,10 @@ public class DataInserter {
 				counter = 0;
 			}
 		}
+		preparedStatement.executeBatch();
+		this.connection.commit();
+		preparedStatement.clearBatch();
+		preparedStatement.close();
 	}
 
 }
