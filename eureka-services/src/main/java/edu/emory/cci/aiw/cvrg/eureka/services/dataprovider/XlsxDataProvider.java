@@ -285,7 +285,7 @@ public class XlsxDataProvider implements DataProvider {
 	 * @return A list of {@link Icd9Procedure} objects.
 	 */
 	private List<Icd9Procedure> readIcd9Procedures() {
-		XSSFSheet sheet = this.workbook.getSheet("eICDP");
+		XSSFSheet sheet = this.workbook.getSheet("eICD9P");
 		List<Icd9Procedure> result = new ArrayList<Icd9Procedure>();
 		for (Iterator<Row> rows = sheet.rowIterator(); rows.hasNext();) {
 			Row row = rows.next();
@@ -420,7 +420,7 @@ public class XlsxDataProvider implements DataProvider {
 	 * Read a numerical value as a Long type from the given cell.
 	 * 
 	 * @param cell The cell to read the value from.
-	 * @return A Long containg the cell's value, if valid, null otherwise.
+	 * @return A Long containing the cell's value, if valid, null otherwise.
 	 */
 	private static Long readLongValue(Cell cell) {
 		Long result;
@@ -428,8 +428,8 @@ public class XlsxDataProvider implements DataProvider {
 			result = null;
 		} else {
 			if (cell.getCellType() == Cell.CELL_TYPE_NUMERIC) {
-				double value = cell.getNumericCellValue();
-				result = new Long(String.valueOf(value));
+				Double value = new Double(cell.getNumericCellValue());
+				result = new Long(value.longValue());
 			} else {
 				result = null;
 			}
