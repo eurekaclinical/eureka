@@ -74,7 +74,7 @@ public class JobResource {
 	/**
 	 * Create a new job (by uploading a new file)
 	 * 
-	 * @param fileUpload The file upload to add.
+	 * @param inFileUpload The file upload to add.
 	 * 
 	 * @return A {@link Status#OK} if the file is successfully added,
 	 *         {@link Status#BAD_REQUEST} if there are errors.
@@ -86,9 +86,14 @@ public class JobResource {
 	@POST
 	@Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
 	@Produces(MediaType.TEXT_PLAIN)
-	public Response uploadFile(FileUpload fileUpload) throws ServletException {
+	public Response uploadFile(FileUpload inFileUpload) throws ServletException {
 		String configUrl = this.applicationProperties.getBackendConfigUrl();
 		String jobSubmitUrl = this.applicationProperties.getBackendSubmitUrl();
+
+		FileUpload fileUpload = inFileUpload;
+		Long userId = inFileUpload.getUser().getId();
+		fileUpload.setUser(this.userDao.get(userId));
+		this.fileDao.save(fileUpload);
 
 		configUrl += "/" + fileUpload.getUser().getId();
 
