@@ -5,6 +5,7 @@ import java.util.List;
 import javax.persistence.EntityManager;
 
 import com.google.inject.Inject;
+import com.google.inject.persist.Transactional;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.FileUpload;
 
@@ -33,6 +34,7 @@ public class JpaFileDao implements FileDao {
 	}
 
 	@Override
+	@Transactional
 	public void save(FileUpload fileUpload) {
 		this.entityManager.persist(fileUpload);
 	}

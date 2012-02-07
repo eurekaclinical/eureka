@@ -6,6 +6,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.Query;
 
 import com.google.inject.Inject;
+import com.google.inject.persist.Transactional;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.Role;
 
@@ -54,6 +55,7 @@ public class JpaRoleDao implements RoleDao {
 	}
 
 	@Override
+	@Transactional
 	public void save(Role role) {
 		this.entityManager.persist(role);
 	}
