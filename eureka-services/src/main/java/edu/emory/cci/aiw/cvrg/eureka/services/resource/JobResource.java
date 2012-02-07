@@ -90,8 +90,6 @@ public class JobResource {
 		String configUrl = this.applicationProperties.getBackendConfigUrl();
 		String jobSubmitUrl = this.applicationProperties.getBackendSubmitUrl();
 
-		System.out.println("BLAH: " + this.applicationProperties == null);
-
 		configUrl += "/" + fileUpload.getUser().getId();
 
 		try {
