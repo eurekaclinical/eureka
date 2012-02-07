@@ -51,9 +51,12 @@ ul.nav a { zoom: 1; }
  <div>    
   <ul class="nav">
       <li><a href="${pageContext.request.contextPath}/about.jsp"><img src="${pageContext.request.contextPath}/images/about_icon.gif" alt="About" width="30" height="30" align="absmiddle" />About</a></li>
-      <img src="${pageContext.request.contextPath}/images/reg_icon.gif" alt="Register" width="30" height="30" align="absmiddle" />
-      <li><a href="${pageContext.request.contextPath}/register.jsp">Register</a></li>
-     
+      <c:choose>
+        <c:when test="${pageContext.request.remoteUser == null}">
+          <img src="${pageContext.request.contextPath}/images/reg_icon.gif" alt="Register" width="30" height="30" align="absmiddle" />
+          <li><a href="${pageContext.request.contextPath}/register.jsp">Register</a></li>
+        </c:when>
+      </c:choose>
       <c:choose>
         <c:when test="${pageContext.request.remoteUser != null}">
           <img src="${pageContext.request.contextPath}/images/acct_icon.gif" alt="Account" width="30" height="30" align="absmiddle" />
