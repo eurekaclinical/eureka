@@ -1,5 +1,6 @@
 package edu.emory.cci.aiw.cvrg.eureka.common.entity;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -79,12 +80,13 @@ public class User implements CycleRecoverable {
 	@JoinTable(name = "user_role",
 			joinColumns = { @JoinColumn(name = "userId") },
 			inverseJoinColumns = { @JoinColumn(name = "roleId") })
-	private List<Role> roles;
+	private List<Role> roles = new ArrayList<Role>();
 	/**
 	 * The file uploads belonging to the user.
 	 */
-	@OneToMany(cascade = CascadeType.ALL, targetEntity = FileUpload.class)
-	private List<FileUpload> fileUploads;
+	@OneToMany(cascade = CascadeType.ALL, targetEntity = FileUpload.class,
+			mappedBy = "user")
+	private List<FileUpload> fileUploads = new ArrayList<FileUpload>();
 
 	/**
 	 * Create an empty User object.
@@ -303,6 +305,20 @@ public class User implements CycleRecoverable {
 	 */
 	public void setFileUploads(List<FileUpload> inFileUploads) {
 		this.fileUploads = inFileUploads;
+	}
+
+	/**
+	 * Add a new file upload for the user.
+	 * 
+	 * @param fileUpload The file upload to add to the list of file uploads for
+	 *            the user.
+	 */
+	public void addFileUpload(FileUpload fileUpload) {
+		User user = fileUpload.getUser();
+		if (user != null && user.getId() != this.getId()) {
+			fileUpload.setUser(this);
+		}
+		this.fileUploads.add(fileUpload);
 	}
 
 	@Override

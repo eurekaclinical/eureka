@@ -7,6 +7,7 @@ import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
@@ -53,16 +54,19 @@ public class FileUpload {
 	 * The user to which this upload belongs
 	 */
 	@ManyToOne(cascade = CascadeType.ALL, targetEntity = User.class)
+	@JoinColumn(name = "user_id")
 	private User user;
 	/**
 	 * Contains a list of errors found in the file.
 	 */
-	@OneToMany(cascade = CascadeType.ALL, targetEntity = FileError.class)
+	@OneToMany(cascade = CascadeType.ALL, targetEntity = FileError.class,
+			mappedBy = "fileUpload")
 	List<FileError> errors;
 	/**
 	 * Contains a list of warnings found in the file.
 	 */
-	@OneToMany(cascade = CascadeType.ALL, targetEntity = FileWarning.class)
+	@OneToMany(cascade = CascadeType.ALL, targetEntity = FileWarning.class,
+			mappedBy = "fileUpload")
 	List<FileWarning> warnings;
 
 	/**
