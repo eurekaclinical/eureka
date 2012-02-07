@@ -22,4 +22,12 @@ public class FileError extends AbstractFileInfo {
 		super();
 	}
 
+	@Override
+	public void setFileUpload(FileUpload inFileUpload) {
+		this.fileUpload = inFileUpload;
+		if (!this.getFileUpload().getErrors().contains(this)) {
+			this.getFileUpload().addError(this);
+		}
+	}
+
 }

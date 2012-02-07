@@ -1,5 +1,6 @@
 package edu.emory.cci.aiw.cvrg.eureka.common.entity;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -14,7 +15,7 @@ import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
- * Hold information about a uer's file upload.
+ * Hold information about a user's file upload.
  * 
  * @author hrathod
  * 
@@ -61,13 +62,13 @@ public class FileUpload {
 	 */
 	@OneToMany(cascade = CascadeType.ALL, targetEntity = FileError.class,
 			mappedBy = "fileUpload")
-	List<FileError> errors;
+	List<FileError> errors = new ArrayList<FileError>();
 	/**
 	 * Contains a list of warnings found in the file.
 	 */
 	@OneToMany(cascade = CascadeType.ALL, targetEntity = FileWarning.class,
 			mappedBy = "fileUpload")
-	List<FileWarning> warnings;
+	List<FileWarning> warnings = new ArrayList<FileWarning>();
 
 	/**
 	 * Get the unique identifier for the file upload.
@@ -177,6 +178,9 @@ public class FileUpload {
 	 */
 	public void setUser(User inUser) {
 		this.user = inUser;
+		if (!this.user.getFileUploads().contains(this)) {
+			this.user.addFileUpload(this);
+		}
 	}
 
 	/**
@@ -198,6 +202,19 @@ public class FileUpload {
 	}
 
 	/**
+	 * Add an error to the list of errors for the file upload.
+	 * 
+	 * @param error The error to add.
+	 */
+	public void addError(FileError error) {
+		FileUpload fileUpload = error.getFileUpload();
+		if (fileUpload == null || fileUpload.getId() != this.getId()) {
+			error.setFileUpload(this);
+		}
+		this.errors.add(error);
+	}
+
+	/**
 	 * Get the list of warnings associated with the file upload.
 	 * 
 	 * @return The list of warnings associated with the file upload.
@@ -213,6 +230,19 @@ public class FileUpload {
 	 */
 	public void setWarnings(List<FileWarning> inWarnings) {
 		this.warnings = inWarnings;
+	}
+
+	/**
+	 * Add a new warning to the file upload.
+	 * 
+	 * @param warning The warning to add.
+	 */
+	public void addWarning(FileWarning warning) {
+		FileUpload fileUpload = warning.getFileUpload();
+		if (fileUpload == null || fileUpload.getId() != this.getId()) {
+			warning.setFileUpload(this);
+		}
+		this.warnings.add(warning);
 	}
 
 	/**

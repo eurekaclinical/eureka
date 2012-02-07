@@ -20,4 +20,12 @@ public class FileWarning extends AbstractFileInfo {
 	public FileWarning() {
 		super();
 	}
+
+	@Override
+	public void setFileUpload(FileUpload inFileUpload) {
+		this.fileUpload = inFileUpload;
+		if (!this.getFileUpload().getWarnings().contains(this)) {
+			this.getFileUpload().addWarning(this);
+		}
+	}
 }

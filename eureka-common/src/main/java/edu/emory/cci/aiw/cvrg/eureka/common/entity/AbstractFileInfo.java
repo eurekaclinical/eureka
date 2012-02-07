@@ -15,7 +15,7 @@ import javax.persistence.MappedSuperclass;
  * 
  */
 @MappedSuperclass
-public class AbstractFileInfo {
+abstract public class AbstractFileInfo {
 
 	/**
 	 * The unique identifier for the file information.
@@ -40,7 +40,7 @@ public class AbstractFileInfo {
 	 */
 	@ManyToOne(cascade = CascadeType.ALL, targetEntity = FileUpload.class)
 	@JoinColumn(name = "fileupload_id")
-	private FileUpload fileUpload;
+	protected FileUpload fileUpload;
 
 	/**
 	 * Simple constructor, call super();
@@ -136,9 +136,7 @@ public class AbstractFileInfo {
 	 * @param inFileUpload THe file upload with which the information is
 	 *            associated.
 	 */
-	public void setFileUpload(FileUpload inFileUpload) {
-		this.fileUpload = inFileUpload;
-	}
+	abstract public void setFileUpload(FileUpload inFileUpload);
 
 	@Override
 	public String toString() {
