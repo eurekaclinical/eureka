@@ -9,6 +9,7 @@ import com.google.inject.Inject;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.FileUpload;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.Role;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.User;
+import edu.emory.cci.aiw.cvrg.eureka.services.dao.FileDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.RoleDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.UserDao;
 
@@ -30,6 +31,10 @@ public class Bootstrap {
 	 * The user DAO class.
 	 */
 	private final UserDao userDao;
+	/**
+	 * The file upload DAO class.
+	 */
+	private final FileDao fileDao;
 
 	/**
 	 * Create a Bootstrap class with an EntityManager.
@@ -38,13 +43,17 @@ public class Bootstrap {
 	 *            objects in the data store.
 	 * @param inUserDao The data access object to be used to work with role
 	 *            objects in the data store.
+	 * @param inFileDao The data access object to be used to work with file
+	 *            upload objects in the data store.
 	 * 
 	 * @param inEntityManager
 	 */
 	@Inject
-	Bootstrap(final RoleDao inRoleDao, final UserDao inUserDao) {
+	Bootstrap(final RoleDao inRoleDao, final UserDao inUserDao,
+			final FileDao inFileDao) {
 		this.roleDao = inRoleDao;
 		this.userDao = inUserDao;
+		this.fileDao = inFileDao;
 	}
 
 	/**
@@ -54,12 +63,13 @@ public class Bootstrap {
 	void configure() {
 		addDefaultRoles();
 		addDefaultUsers();
+		addDefaultFileUploads();
 	}
 
 	/**
 	 * Add the default roles to the data store.
 	 */
-	void addDefaultRoles() {
+	private void addDefaultRoles() {
 		for (Role role : Bootstrap.createRoles()) {
 			this.roleDao.save(role);
 		}
@@ -68,8 +78,7 @@ public class Bootstrap {
 	/**
 	 * Add the default users to the data store.
 	 */
-	void addDefaultUsers() {
-		List<FileUpload> fileUploads = createFileUploads();
+	private void addDefaultUsers() {
 		List<Role> defaultRoles = new ArrayList<Role>();
 		for (Role role : this.roleDao.getRoles()) {
 			if (role.isDefaultRole() == Boolean.TRUE) {
@@ -77,9 +86,24 @@ public class Bootstrap {
 			}
 		}
 
-		for (User user : Bootstrap.createUsers(defaultRoles, fileUploads)) {
+		for (User user : Bootstrap.createUsers(defaultRoles)) {
 			this.userDao.save(user);
 		}
+	}
+
+	/**
+	 * Add the default file uploads to the data store, using the first user
+	 * found.
+	 */
+	private void addDefaultFileUploads() {
+		List<User> users = this.userDao.getUsers();
+		User user = users.get(0);
+		FileUpload fileUpload = new FileUpload();
+		fileUpload.setLocation("/tmp/foo");
+		fileUpload.setUser(user);
+		user.addFileUpload(fileUpload);
+		this.userDao.save(user);
+		this.fileDao.save(fileUpload);
 	}
 
 	/**
@@ -91,8 +115,7 @@ public class Bootstrap {
 	 * 
 	 * @return List of users to be added.
 	 */
-	private static List<User> createUsers(final List<Role> defaultRoles,
-			final List<FileUpload> fileUploads) {
+	private static List<User> createUsers(final List<Role> defaultRoles) {
 		List<User> users = new ArrayList<User>();
 		User user = new User();
 		user.setActive(true);
@@ -105,22 +128,8 @@ public class Bootstrap {
 		user.setPassword("testpassword");
 		user.setLastLogin(Calendar.getInstance().getTime());
 		user.setRoles(defaultRoles);
-		user.setFileUploads(fileUploads);
 		users.add(user);
 		return users;
-	}
-
-	/**
-	 * Create the file uploads for the user
-	 * 
-	 * @return The list of file uploads
-	 */
-	private static List<FileUpload> createFileUploads() {
-		List<FileUpload> fileUploads = new ArrayList<FileUpload>();
-		FileUpload fileUpload = new FileUpload();
-		fileUpload.setLocation("/tmp/foo");
-		fileUploads.add(fileUpload);
-		return fileUploads;
 	}
 
 	/**
