@@ -14,6 +14,8 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import com.sun.xml.bind.CycleRecoverable;
+
 /**
  * Hold information about a user's file upload.
  * 
@@ -23,7 +25,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 @Entity
 @Table(name = "file_uploads")
-public class FileUpload {
+public class FileUpload implements CycleRecoverable {
 
 	/**
 	 * The unique identifier for the file upload.
@@ -199,6 +201,12 @@ public class FileUpload {
 	 */
 	public void setErrors(List<FileError> inErrors) {
 		this.errors = inErrors;
+		for (FileError error : inErrors) {
+			FileUpload fileUpload = error.getFileUpload();
+			if (fileUpload == null || fileUpload.getId() != this.getId()) {
+				error.setFileUpload(this);
+			}
+		}
 	}
 
 	/**
@@ -230,6 +238,12 @@ public class FileUpload {
 	 */
 	public void setWarnings(List<FileWarning> inWarnings) {
 		this.warnings = inWarnings;
+		for (FileWarning warning : inWarnings) {
+			FileUpload fileUpload = warning.getFileUpload();
+			if (fileUpload == null || fileUpload.getId() != this.getId()) {
+				warning.setFileUpload(this);
+			}
+		}
 	}
 
 	/**
@@ -261,5 +275,16 @@ public class FileUpload {
 	 */
 	public boolean containsWarnings() {
 		return this.warnings.size() > 0;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.sun.xml.bind.CycleRecoverable#onCycleDetected(com.sun.xml.bind.
+	 * CycleRecoverable.Context)
+	 */
+	@Override
+	public Object onCycleDetected(Context inContext) {
+		return null;
 	}
 }
