@@ -40,7 +40,7 @@ public class JpaFileDao implements FileDao {
 	@Override
 	public FileUpload get(Long inId) {
 		return this.entityManager
-				.createQuery("select FileUpload f from f where f.id = ?1",
+				.createQuery("select f from FileUpload f where f.id = ?1",
 						FileUpload.class).setParameter(1, inId)
 				.getSingleResult();
 	}
@@ -49,7 +49,7 @@ public class JpaFileDao implements FileDao {
 	public List<FileUpload> getByUserId(Long userId) {
 		return this.entityManager
 				.createQuery(
-						"select FileUpload f from f where f.user.id  = ?1",
+						"select f from FileUpload f where f.user.id  = ?1",
 						FileUpload.class).setParameter(1, userId)
 				.getResultList();
 	}
