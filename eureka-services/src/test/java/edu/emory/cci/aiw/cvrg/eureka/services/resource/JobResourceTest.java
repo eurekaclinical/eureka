@@ -18,12 +18,18 @@ public class JobResourceTest extends AbstractResourceTest {
 		// TODO: activate this test when the back-end URLs are available.
 		// WebResource resource = this.resource();
 		// FileUpload fileUpload = new FileUpload();
-		// fileUpload.setLocation("/tmp/foo");
-		// User user = new User();
-		// user.setId(Long.valueOf(1));
+		// fileUpload.setLocation("/home/hrathod/Eureka_Presentation/sample.xlsx");
+		// List<User> users = this.getUserList();
+		// User user = users.get(0);
 		// fileUpload.setUser(user);
 		// ClientResponse response = resource.path("/api/job/add").post(
 		// ClientResponse.class, fileUpload);
+		// System.out.println(response.getClientResponseStatus());
+		// Client client = Client.create();
+		// WebResource resource = client
+		// .resource("http://localhost:8080/eureka-services/api/job/add");
+		// ClientResponse response = resource.post(ClientResponse.class,
+		// fileUpload);
 		// System.out.println(response.getClientResponseStatus());
 	}
 }
