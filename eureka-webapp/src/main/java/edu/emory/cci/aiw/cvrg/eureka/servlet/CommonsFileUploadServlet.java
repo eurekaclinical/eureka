@@ -51,8 +51,10 @@ public class CommonsFileUploadServlet extends HttpServlet {
 		if(!tmpDir.isDirectory()) {
 			throw new ServletException(TMP_DIR_PATH + " is not a directory");
 		}
-		//String realPath = getServletContext().getRealPath(DESTINATION_DIR_PATH);
-		destinationDir = new File(DESTINATION_DIR_PATH);
+		String realPath = getServletContext().getRealPath("/")+DESTINATION_DIR_PATH;
+		
+		System.out.println(realPath);
+		destinationDir = new File(realPath);
 		if(!destinationDir.isDirectory()) {
 			throw new ServletException(DESTINATION_DIR_PATH+" is not a directory");
 		}

@@ -4,6 +4,18 @@
 
 <template:insert template="/templates/eureka_main.jsp">
 	<template:content name="sidebar">
+	    <script type="text/javascript"> 
+		    (function poll(){
+		        setTimeout(function(){
+		            $.ajax({ url: "jobpoll", success: function(data){
+		            //Update your dashboard gauge
+		            alert(data);
+		            //Setup the next poll recursively
+		            poll();
+		        }, dataType: "text"});
+		       }, 5000);
+		    })();
+		</script> 
 		<img src="${pageContext.request.contextPath}/images/bioinformatics.jpg" />
 	</template:content>
 
