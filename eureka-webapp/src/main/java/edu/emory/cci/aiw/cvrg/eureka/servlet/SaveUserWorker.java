@@ -45,7 +45,7 @@ public class SaveUserWorker implements ServletWorker {
 			System.out.println("id = " + id);
 
 			WebResource webResource = c.resource(eurekaServicesUrl);
-			User user = webResource.path("/api/user/" + id)
+			User user = webResource.path("/api/user/byid/" + id)
 					.accept(MediaType.APPLICATION_JSON).get(User.class);
 			String[] roles = req.getParameterValues("role");
 			List<Role> userRoles = new ArrayList<Role>();
