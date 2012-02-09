@@ -13,9 +13,9 @@
 		<p class="pad_top">
 			Welcome to Eureka! The Clinical Analysis Tool for biomedical
 			informatics and data. This application provides a method to extract,
-			transform and load a clinical dataset and conforms it to a defined
-			structure that loads into an instance of i2b2 that will enable
-			clinical researchers to use existing clinical data for discovery
+			transform and load a clinical dataset and conform it to a defined
+			structure that loads into an instance of i2b2. By using this tool,
+			clinical researchers can use existing clinical data for discovery
 			research.<br />
 		</p>
 		<p>This tool enhances medical research via technology by making
@@ -24,13 +24,10 @@
 			management, analysis, and integration of data in biomedicine and can
 			be used for research and healthcare delivery.</p>
 		<p>
-			The application has an Administration tab where virtual machines can
-			be assigned and configured to a clinical database. <br />This
-			mechanism is available to administrators only.
-		</p>
+			The application has an Administration tab where  administrators can assign roles and in the future, will be able to link up Eureka! to unique data bases and clouds for virtual implementation</p>
 		<p>
 			Currently, the method for uploading data is to use an excel
-			spreadsheet.<br /> <br /> 
+			spreadsheet. A sample spreadsheet of psuedo patient data is provided for demo purposes.<br /> <br /> 
 			You must first register in order to use this tool. An email will be sent from the administrator once you have been set-up in the system. Once notified, login to the site and begin your research by clicking on the <em>Upload
 				Data</em> link.
 		</p>
