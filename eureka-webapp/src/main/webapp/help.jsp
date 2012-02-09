@@ -11,15 +11,15 @@
 	<template:content name="content">
 		<h3>Help</h3>
 		<p class="pad_top">
-			<strong>Limitations</strong><br /> The application currently has
-			little in the way of security built-in. It only supports one user at
-			a time. In order to make the VM runnable on a wide range of
+			<strong>Limitations</strong><br />
+			 The application currently has
+			little in the way of security built-in.  In order to make the VM runnable on a wide range of
 			computers, we have limited the default amount of RAM and disk space
 			that is allocated to the VM. Instability can occur if your computer
 			is hibernated while the VM is running, thus it is recommended that
 			you shut down the VM (using VMWare Player, Workstation or Fusion's
 			menu commands) beforehand.
-		</p>
+	   </p>
 		<p>
 			<strong>Troubleshooting</strong><br /> The Administration tab exists
 			to provide some measure of control to restart components of the
@@ -33,10 +33,11 @@
 			service may take some time.
 		</p>
 		<p>
-			<strong>Feedback and Bug Reports</strong><br /> As this is a
+			<strong>Feedback and Bug Reports</strong><br /> 
+			As this is a
 			technology preview, it is possible that something will go wrong.
 			Please contact the developer team with feedback and issues.
-			<a href="mailto:admin@emory.edu">admin@emory.edu</a>
+			<a href="mailto:admin@emory.edu">aiwsupport@emory.edu</a>
 		</p>
 	</template:content>
 	<template:content name="subcontent">

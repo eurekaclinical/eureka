@@ -16,7 +16,7 @@
 			transform and load a clinical dataset and conform it to a defined
 			structure that loads into an instance of i2b2. By using this tool,
 			clinical researchers can use existing clinical data for discovery
-			research.<br />
+			research.
 		</p>
 		<p>This tool enhances medical research via technology by making
 			it possible to collect, weed through, and analyze widespread data on
