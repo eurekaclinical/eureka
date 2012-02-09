@@ -1,8 +1,11 @@
 package edu.emory.cci.aiw.cvrg.eureka.backend.resource;
 
 import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -13,7 +16,7 @@ import javax.ws.rs.Produces;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.Configuration;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.Job;
-//import edu.emory.cci.aiw.cvrg.eureka.common.entity.JobEvent;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.JobEvent;
 
 @Path("/job")
 public class RestInterfaces {
@@ -36,10 +39,30 @@ public class RestInterfaces {
     @Consumes("application/json")
     public String getJobbbb (@PathParam("jobId") Job job) {
 
+//    	try {
+//
+//    		
+//    		DriverManager.setLogWriter (new java.io.PrintWriter (System.out));
+//    		Connection cn = DriverManager.getConnection ("jdbc:oracle:thin:@adrastea.cci.emory.edu:1521:XE" , "cvrg" , "cvrg");
+//    		Statement st = cn.createStatement();
+//    		ResultSet rs = st.executeQuery ("select * from dual");
+//    		while (rs.next()) {
+//
+//    			System.out.println ("ORA: " + rs.getObject(1));
+//    			System.out.flush();
+//    		}
+//    		rs.close();
+//    		st.close();
+//    		cn.close();
+//    	}
+//    	catch (Exception e) {
+//
+//    		e.printStackTrace();
+//    	}
     	//	cast String to long.
     	//	return Job object from 
     	System.out.println ("ETL:getJob");
-//    	Job j = new Job();
+    	Job j = new Job();
 //    	j.setId (2L);
 //    	JobEvent je = new JobEvent();
 //    	je.setId(0L);
@@ -49,10 +72,10 @@ public class RestInterfaces {
 //    		j.setJobEvents(new ArrayList<JobEvent>());
 //    	}
 //    	j.getJobEvents().add (je);
-//    	ProtempaDeviceManager.getInstance().qJob (j);
+    	ProtempaDeviceManager.getInstance().qJob (j);
 //    	ProtempaDeviceManager.getInstance().job = j;
-		invokeProcessAndReturn (new String[] {"/etc/init.d/protempa" , "start" , "s"});
-    	truncateI2B2();
+//		invokeProcessAndReturn (new String[] {"/etc/init.d/protempa" , "start" , "s"});
+//    	truncateI2B2();
     	return "right";
     }
 
@@ -63,7 +86,7 @@ public class RestInterfaces {
 		try {
 
 			Class.forName ("oracle.jdbc.driver.OracleDriver");
-			cn = java.sql.DriverManager.getConnection ("jdbc:oracle:thin:@the_db:1521/XE" , "i2b2metadata" , "i2b2metadata");
+			cn = java.sql.DriverManager.getConnection ("jdbc:oracle:thin:@adrastea.cci.emory.edu:1521/XE" , "i2b2metadata" , "i2b2metadata");
 			st = cn.createStatement();
 			st.executeQuery ("truncate table cardiovascularregistry");
 			cn.commit();
@@ -104,6 +127,24 @@ public class RestInterfaces {
 	}
 
 
+	
+	
+	
+	//	STATUS:
+	//
+	//		get job by id
+	//
+	//		getJobs using filter:
+	//
+	//			userID
+	//			status
+	//			date range
+	//
+
+	
+	
+	
+	
 //    @GET
 //    @Path("status")
 //    @Produces("application/json")
