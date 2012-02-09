@@ -15,7 +15,7 @@
 				<table>
 					<tr>
 						<td width="124">Name:</td>
-						<td colspan="4">&nbsp;</td>
+						<td width="465" colspan="4">&nbsp;</td>
 					</tr>
 					<tr>
 						<td>Organization:</td>
@@ -23,17 +23,6 @@
 					</tr>
 					<tr>
 						<td>Email:</td>
-						<td colspan="4">&nbsp;</td>
-					</tr>
-					<tr>
-						<td>&nbsp;</td>
-						<td width="143">&nbsp;</td>
-						<td width="189">&nbsp;</td>
-						<td width="66">&nbsp;</td>
-						<td width="67">&nbsp;</td>
-					</tr>
-					<tr>
-						<td>User Name:</td>
 						<td colspan="4">&nbsp;</td>
 					</tr>
 					<tr>
