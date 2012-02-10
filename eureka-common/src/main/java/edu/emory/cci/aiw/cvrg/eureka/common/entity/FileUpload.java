@@ -12,6 +12,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import com.sun.xml.bind.CycleRecoverable;
@@ -40,6 +42,7 @@ public class FileUpload implements CycleRecoverable {
 	/**
 	 * The timestamp of the initial upload.
 	 */
+	@Temporal(TemporalType.TIMESTAMP)
 	private Date timestamp;
 	/**
 	 * Has the file upload been validated?

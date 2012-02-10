@@ -8,6 +8,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -43,6 +45,7 @@ public class JobEvent {
 	/**
 	 * The time stamp for the event.
 	 */
+	@Temporal(TemporalType.TIMESTAMP)
 	private Date timeStamp;
 	/**
 	 * The message generated for the event.

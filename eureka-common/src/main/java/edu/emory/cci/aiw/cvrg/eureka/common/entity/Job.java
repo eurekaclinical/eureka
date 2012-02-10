@@ -9,6 +9,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -31,6 +33,7 @@ public class Job {
 	/**
 	 * The initial timestamp when the job was started.
 	 */
+	@Temporal(TemporalType.TIMESTAMP)
 	private Date timestamp;
 	/**
 	 * The unique identifier of the configuration to use for this job.
