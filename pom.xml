@@ -124,6 +124,7 @@
 		<eureka-version>1.0.0-SNAPSHOT</eureka-version>
 		<protempa-version>2.0-SNAPSHOT</protempa-version>
 		<registry-version>1.0-SNAPSHOT</registry-version>
+		<oracle-version>[11.2.0.2.0,)</oracle-version>
 	</properties>
 
 	<!-- make sure our code complies with Java 1.6 specifications, and define 
@@ -380,6 +381,12 @@
 				<groupId>edu.emory.cci</groupId>
 				<artifactId>registry</artifactId>
 				<version>${registry-version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.oracle</groupId>
+				<artifactId>ojdbc6</artifactId>
+				<version>${oracle-version}</version>
+				<scope>provided</scope>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
