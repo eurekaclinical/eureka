@@ -123,7 +123,13 @@ public class JobResource {
 	@Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
 	public List<Job> getJobsByUser(@PathParam("id") final String inId)
 			throws ServletException {
-		User user = this.userDao.get(inId);
+		Long userId;
+		try {
+			userId = Long.valueOf(inId);
+		} catch (NumberFormatException nfe) {
+			throw new ServletException(nfe);
+		}
+		User user = this.userDao.get(userId);
 		List<Job> allJobs = JobCollection.getJobs();
 		List<Job> result = new ArrayList<Job>();
 		for (Job job : allJobs) {
@@ -135,7 +141,7 @@ public class JobResource {
 	}
 
 	/**
-	 * Get the status of a job process for the given user.s
+	 * Get the status of a job process for the given user.
 	 * 
 	 * @param inId The unique identifier of the user to query for.
 	 * @return A {@link JobInfo} object containing the status information.
@@ -184,6 +190,9 @@ public class JobResource {
 			}
 		}
 
-		return new JobInfo(latestFileUpload, latestJob);
+		JobInfo jobInfo = new JobInfo();
+		jobInfo.setFileUpload(latestFileUpload);
+		jobInfo.setJob(latestJob);
+		return jobInfo;
 	}
 }

@@ -1,7 +1,7 @@
 package edu.emory.cci.aiw.cvrg.eureka.common.comm;
 
-import java.util.Date;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.xml.bind.annotation.XmlRootElement;
@@ -27,41 +27,12 @@ public class JobInfo {
 	/**
 	 * The file upload for the job being processed.
 	 */
-	private final FileUpload fileUpload;
+	private FileUpload fileUpload;
 	/**
 	 * The actual running job, if the file upload/validation/processing is
 	 * complete.
 	 */
-	private final Job job;
-
-	/**
-	 * Instantiate with a FileUpload object, and a null job.
-	 * 
-	 * @param inFileUpload
-	 */
-	public JobInfo(FileUpload inFileUpload) {
-		this(inFileUpload, null);
-	}
-
-	/**
-	 * Instantiate with a Job object, and a null file upload.
-	 * 
-	 * @param inJob
-	 */
-	public JobInfo(Job inJob) {
-		this(null, inJob);
-	}
-
-	/**
-	 * Instantiate with both the given file upload and the given job.
-	 * 
-	 * @param inFileUpload
-	 * @param inJob
-	 */
-	public JobInfo(FileUpload inFileUpload, Job inJob) {
-		this.job = inJob;
-		this.fileUpload = inFileUpload;
-	}
+	private Job job;
 
 	/**
 	 * Get the total number of steps in the process.
@@ -165,5 +136,33 @@ public class JobInfo {
 			}
 		}
 		return maxEvent;
+	}
+
+	/**
+	 * @return the fileUpload
+	 */
+	public FileUpload getFileUpload() {
+		return this.fileUpload;
+	}
+
+	/**
+	 * @param inFileUpload the fileUpload to set
+	 */
+	public void setFileUpload(FileUpload inFileUpload) {
+		this.fileUpload = inFileUpload;
+	}
+
+	/**
+	 * @return the job
+	 */
+	public Job getJob() {
+		return this.job;
+	}
+
+	/**
+	 * @param inJob the job to set
+	 */
+	public void setJob(Job inJob) {
+		this.job = inJob;
 	}
 }

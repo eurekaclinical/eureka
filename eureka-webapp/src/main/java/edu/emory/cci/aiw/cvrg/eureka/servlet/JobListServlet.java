@@ -17,6 +17,7 @@ import com.sun.jersey.api.client.WebResource;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.CommUtils;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.Job;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.User;
 
 public class JobListServlet extends HttpServlet {
 
@@ -29,7 +30,10 @@ public class JobListServlet extends HttpServlet {
 		try {
 			Client client = CommUtils.getClient();
 			WebResource webResource = client.resource(eurekaServicesUrl);
-			List<Job> jobs = webResource.path("/api/job/list/super.user@emory.edu")
+			User user = webResource
+					.path("/api/user/byname/super.user@emory.edu")
+					.accept(MediaType.APPLICATION_JSON).get(User.class);
+			List<Job> jobs = webResource.path("/api/job/list/" + user.getId())
 					.accept(MediaType.APPLICATION_JSON)
 					.get(new GenericType<List<Job>>() {
 						// Nothing to implement, used to hold returned data.
