@@ -70,7 +70,7 @@ public class CommonsFileUploadServlet extends HttpServlet {
 		/*
 		 *Set the size threshold, above which content will be stored on disk.
 		 */
-		fileItemFactory.setSizeThreshold(1*1024*1024); //1 MB
+		fileItemFactory.setSizeThreshold(5*1024*1024); //5 MB
 		/*
 		 * Set the temporary directory to store the uploaded files of size above threshold.
 		 */
@@ -110,7 +110,8 @@ public class CommonsFileUploadServlet extends HttpServlet {
 
 					
 					FileUpload fileUpload = new FileUpload();
-					fileUpload.setLocation(DESTINATION_DIR_PATH + "/" + user.getId());
+					fileUpload.setLocation(getServletContext().getRealPath("/") + 
+							DESTINATION_DIR_PATH + "/" + user.getId());
 					fileUpload.setUser(user);
 
 					ClientResponse clientResponse = webResource.path("/api/job/add").post(

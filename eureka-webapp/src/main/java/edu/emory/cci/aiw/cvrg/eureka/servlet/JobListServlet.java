@@ -33,7 +33,7 @@ public class JobListServlet extends HttpServlet {
 			User user = webResource
 					.path("/api/user/byname/super.user@emory.edu")
 					.accept(MediaType.APPLICATION_JSON).get(User.class);
-			List<Job> jobs = webResource.path("/api/job/list/" + user.getId())
+			List<Job> jobs = webResource.path("/api/job/list/" + user.getEmail())
 					.accept(MediaType.APPLICATION_JSON)
 					.get(new GenericType<List<Job>>() {
 						// Nothing to implement, used to hold returned data.
