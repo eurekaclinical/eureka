@@ -16,8 +16,6 @@ import edu.emory.cci.aiw.cvrg.eureka.common.entity.Configuration;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.FileError;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.FileUpload;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.FileWarning;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.Job;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.JobEvent;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.User;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.FileDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dataprovider.DataProvider;
@@ -174,9 +172,9 @@ public class JobSubmissionThread extends Thread {
 					warning.setFileUpload(this.fileUpload);
 					warnings.add(warning);
 				}
-				this.fileUpload.setErrors(errors);
-				this.fileUpload.setWarnings(warnings);
 			}
+			this.fileUpload.setErrors(errors);
+			this.fileUpload.setWarnings(warnings);
 		}
 		if (this.fileUpload.containsErrors()) {
 			result = false;
@@ -223,21 +221,21 @@ public class JobSubmissionThread extends Thread {
 	private boolean submitJob() throws KeyManagementException,
 			NoSuchAlgorithmException {
 		boolean result;
-		// TODO: Revert to real code when the job sumission URL is available
+		// TODO: Revert to real code when the job submission URL is available
 		result = true;
-//		Client client = CommUtils.getClient();
-//		WebResource resource = client.resource(this.jobUrl);
-//		Job job = new Job();
-//		job.setConfigurationId(this.configuration.getId());
-//		job.setUserId(this.user.getId());
-//		Job resultJob = resource.accept(MediaType.APPLICATION_JSON).post(
-//				Job.class, job);
-//		JobEvent event = resultJob.getJobEvents().get(0);
-//		if (event.getState().equals("STARTED")) {
-//			result = true;
-//		} else {
-//			result = false;
-//		}
+		// Client client = CommUtils.getClient();
+		// WebResource resource = client.resource(this.jobUrl);
+		// Job job = new Job();
+		// job.setConfigurationId(this.configuration.getId());
+		// job.setUserId(this.user.getId());
+		// Job resultJob = resource.accept(MediaType.APPLICATION_JSON).post(
+		// Job.class, job);
+		// JobEvent event = resultJob.getJobEvents().get(0);
+		// if (event.getState().equals("STARTED")) {
+		// result = true;
+		// } else {
+		// result = false;
+		// }
 		return result;
 	}
 
@@ -249,18 +247,10 @@ public class JobSubmissionThread extends Thread {
 	 */
 	private void getUserConfiguration() throws KeyManagementException,
 			NoSuchAlgorithmException {
-		// TODO: Revert to non-fake configuration
-		// Client client = CommUtils.getClient();
-		// WebResource resource = client.resource(this.configurationUrl);
-		// this.configuration = resource.accept(MediaType.APPLICATION_JSON).get(
-		// Configuration.class);
-		Configuration fakeConfiguration = new Configuration();
-		fakeConfiguration.setProtempaDatabaseName("XE");
-		fakeConfiguration.setProtempaHost("adrastea.cci.emory.edu");
-		fakeConfiguration.setProtempaPort(Integer.valueOf(1521));
-		fakeConfiguration.setProtempaSchema("protempatest");
-		fakeConfiguration.setProtempaPass("protempatest");
-		this.configuration = fakeConfiguration;
+		Client client = CommUtils.getClient();
+		WebResource resource = client.resource(this.configurationUrl);
+		this.configuration = resource.accept(MediaType.APPLICATION_JSON).get(
+				Configuration.class);
 	}
 
 	/**
