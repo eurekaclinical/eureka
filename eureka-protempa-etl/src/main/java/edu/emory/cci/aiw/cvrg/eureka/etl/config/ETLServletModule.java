@@ -27,13 +27,13 @@ public class ETLServletModule extends JerseyServletModule {
     	bind (JobDao.class).to(JpaJobDao.class);
     	bind (ConfDao.class).to(JpaConfDao.class);
 
-        install(new JpaPersistModule("backend-jpa-unit"));
+        install(new JpaPersistModule("backend-jpa-unit"));        
 
-        filter("/api/*").through(PersistFilter.class);
+//        filter("/api/*").through(PersistFilter.class);
 
         Map<String, String> params = new HashMap<String, String>();
         params.put(PackagesResourceConfig.PROPERTY_PACKAGES,
-                "edu.emory.cci.aiw.cvrg.eureka.backend.resource");
+                "edu.emory.cci.aiw.cvrg.eureka.etl.resource");
         params.put(PackagesResourceConfig.PROPERTY_RESOURCE_FILTER_FACTORIES,
                 RolesAllowedResourceFilterFactory.class.getName());
 

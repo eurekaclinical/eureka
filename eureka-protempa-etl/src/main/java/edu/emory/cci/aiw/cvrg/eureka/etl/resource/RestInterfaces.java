@@ -1,5 +1,6 @@
 package edu.emory.cci.aiw.cvrg.eureka.etl.resource;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -18,6 +19,7 @@ import com.google.inject.Inject;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.Configuration;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.Job;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.JobEvent;
 import edu.emory.cci.aiw.cvrg.eureka.etl.dao.ConfDao;
 import edu.emory.cci.aiw.cvrg.eureka.etl.dao.JobDao;
 
@@ -45,11 +47,11 @@ public class RestInterfaces {
 
 	@GET
 	@Path("test")
-	@Consumes("application/json")
-	public String getJobbbb(Job job) {
+	public String getJobbbb() {
 
 		System.out.println("ETL:getJob");
 		Job j = new Job();
+		j.setJobEvents(new ArrayList<JobEvent>());
 		this.protempaDeviceManager.qJob(j);
 		return "right";
 	}
