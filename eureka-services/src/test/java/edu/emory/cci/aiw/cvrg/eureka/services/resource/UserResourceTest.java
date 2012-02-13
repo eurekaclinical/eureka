@@ -96,4 +96,20 @@ public class UserResourceTest extends AbstractResourceTest {
 
 	}
 
+	/**
+	 * Test the password changing functionality.
+	 */
+	@Test
+	public void testPasswordChange() {
+		WebResource resource = this.resource();
+		List<User> users = this.getUserList();
+		User user = users.get(0);
+		ClientResponse response = resource
+				.path("/api/user/passwd/" + user.getId())
+				.queryParam("oldPassword", "testpassword")
+				.queryParam("newPassword", "newpassword")
+				.get(ClientResponse.class);
+		Assert.assertEquals(Status.OK, response.getClientResponseStatus());
+	}
+
 }

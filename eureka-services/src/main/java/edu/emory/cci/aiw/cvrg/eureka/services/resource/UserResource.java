@@ -12,6 +12,7 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
@@ -137,6 +138,41 @@ public class UserResource {
 		} else {
 			response = Response.status(Status.BAD_REQUEST)
 					.entity("Invalid user request.").build();
+		}
+		return response;
+	}
+
+	/**
+	 * Change a user's password.
+	 * 
+	 * @param inId The unique identifier for the user.
+	 * @param oldPassword The old password for the user.
+	 * @param newPassword The new password for the user.
+	 * @return {@link Status#OK} if the password update is successful,
+	 *         {@link Status#BAD_REQUEST} if the current password does not
+	 *         match, or if the user does not exist.
+	 */
+	@Path("/passwd/{id}")
+	@GET
+	public Response changePassword(@PathParam("id") final String inId,
+			@QueryParam("oldPassword") final String oldPassword,
+			@QueryParam("newPassword") final String newPassword) {
+
+		Response response;
+		try {
+			Long userId = Long.valueOf(inId);
+			User user = this.userDao.get(userId);
+			if (user.getPassword().equals(oldPassword)) {
+				user.setPassword(newPassword);
+				this.userDao.save(user);
+				response = Response.ok().build();
+			} else {
+				response = Response.status(Status.BAD_REQUEST)
+						.entity("Password mismatch").build();
+			}
+		} catch (NumberFormatException nfe) {
+			response = Response.status(Status.BAD_REQUEST)
+					.entity("Invalid User ID").build();
 		}
 		return response;
 	}
