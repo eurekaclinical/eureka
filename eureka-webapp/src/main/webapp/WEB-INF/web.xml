@@ -75,8 +75,13 @@
 		<load-on-startup>1</load-on-startup>
 	</servlet>
 	<servlet>
-		<servlet-name>UserManager</servlet-name>
-		<servlet-class>edu.emory.cci.aiw.cvrg.eureka.servlet.UserManager</servlet-class>
+		<servlet-name>AdminManagerServlet</servlet-name>
+		<servlet-class>edu.emory.cci.aiw.cvrg.eureka.servlet.AdminManagerServlet</servlet-class>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+	<servlet>
+		<servlet-name>UserAcctManagerServlet</servlet-name>
+		<servlet-class>edu.emory.cci.aiw.cvrg.eureka.servlet.UserAcctManagerServlet</servlet-class>
 		<load-on-startup>1</load-on-startup>
 	</servlet>
 	
@@ -106,8 +111,12 @@
 		<url-pattern>/jobs</url-pattern>
 	</servlet-mapping>
 	<servlet-mapping>
-		<servlet-name>UserManager</servlet-name>
-		<url-pattern>/protected/user</url-pattern>
+		<servlet-name>AdminManagerServlet</servlet-name>
+		<url-pattern>/protected/admin</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>UserAcctManagerServlet</servlet-name>
+		<url-pattern>/protected/user_acct</url-pattern>
 	</servlet-mapping>
 	
 
