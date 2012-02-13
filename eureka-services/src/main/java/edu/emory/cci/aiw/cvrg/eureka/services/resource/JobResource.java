@@ -17,9 +17,13 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import com.google.inject.Inject;
+import com.sun.jersey.api.client.Client;
+import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.ClientResponse.Status;
 
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.CommUtils;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.JobInfo;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.Configuration;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.FileUpload;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.Job;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.User;
@@ -87,19 +91,45 @@ public class JobResource {
 	@Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
 	@Produces(MediaType.TEXT_PLAIN)
 	public Response uploadFile(FileUpload inFileUpload) throws ServletException {
-		String configUrl = this.applicationProperties.getBackendConfigUrl();
-		String jobSubmitUrl = this.applicationProperties.getBackendSubmitUrl();
+		String confGetUrl = this.applicationProperties.getEtlConfGetUrl();
+		String jobSubmitUrl = this.applicationProperties.getEtlJobSubmitUrl();
+		String confSumbitUrl = this.applicationProperties.getEtlConfSubmitUrl();
 
 		FileUpload fileUpload = inFileUpload;
 		Long userId = inFileUpload.getUser().getId();
 		fileUpload.setUser(this.userDao.get(userId));
 		this.fileDao.save(fileUpload);
 
-		configUrl += "/" + fileUpload.getUser().getId();
+		confGetUrl += "/" + fileUpload.getUser().getId();
+
+		// TODO: REMOVE THIS FAKE CONFIGURATION ONCE WE HAVE A REAL
+		// CONFIGURATION OBJECT IN THE DATABASE.
+		// push the configuration to the backend, to make sure it's available
+		// when we send a job.
+		try {
+			Configuration fakeConfiguration = new Configuration();
+			fakeConfiguration.setProtempaDatabaseName("XE");
+			fakeConfiguration.setProtempaHost("adrastea.cci.emory.edu");
+			fakeConfiguration.setProtempaPort(Integer.valueOf(1521));
+			fakeConfiguration.setProtempaSchema("cvrg");
+			fakeConfiguration.setProtempaPass("cvrg");
+			fakeConfiguration.setUserId(userId);
+
+			Client client = CommUtils.getClient();
+			ClientResponse response = client.resource(confSumbitUrl)
+					.accept(MediaType.APPLICATION_JSON)
+					.post(ClientResponse.class, fakeConfiguration);
+			System.out.println("CONFIGURATION SUBMISSION: "
+					+ response.getClientResponseStatus());
+		} catch (KeyManagementException e1) {
+			throw new ServletException(e1);
+		} catch (NoSuchAlgorithmException e1) {
+			throw new ServletException(e1);
+		}
 
 		try {
 			JobSubmissionThread jobSubmissionThread = new JobSubmissionThread(
-					fileUpload, this.fileDao, configUrl, jobSubmitUrl);
+					fileUpload, this.fileDao, confGetUrl, jobSubmitUrl);
 			jobSubmissionThread.start();
 		} catch (KeyManagementException e) {
 			throw new ServletException(e);
