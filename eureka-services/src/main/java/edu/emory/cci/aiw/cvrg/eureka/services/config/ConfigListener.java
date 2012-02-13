@@ -29,7 +29,8 @@ public class ConfigListener extends GuiceServletContextListener {
 	/**
 	 * Make sure we always use the same injector
 	 */
-	private Injector injector = null;
+	private final Injector injector = Guice.createInjector(new ServletModule(),
+			new AppModule());
 	/**
 	 * The persistence service for the application.
 	 */
@@ -37,10 +38,6 @@ public class ConfigListener extends GuiceServletContextListener {
 
 	@Override
 	synchronized protected Injector getInjector() {
-		if (this.injector == null) {
-			this.injector = Guice.createInjector(new ServletModule(),
-					new AppModule());
-		}
 		return this.injector;
 	}
 
