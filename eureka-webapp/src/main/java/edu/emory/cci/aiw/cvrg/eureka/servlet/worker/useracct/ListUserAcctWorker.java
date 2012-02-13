@@ -1,4 +1,4 @@
-package edu.emory.cci.aiw.cvrg.eureka.servlet;
+package edu.emory.cci.aiw.cvrg.eureka.servlet.worker.useracct;
 
 import java.io.IOException;
 import java.security.KeyManagementException;
@@ -18,8 +18,9 @@ import com.sun.jersey.api.client.WebResource;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.CommUtils;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.User;
+import edu.emory.cci.aiw.cvrg.eureka.servlet.worker.ServletWorker;
 
-public class ListUsersWorker implements ServletWorker {
+public class ListUserAcctWorker implements ServletWorker {
 
 	@Override
 	public void execute(HttpServletRequest req, HttpServletResponse resp)
@@ -30,27 +31,12 @@ public class ListUsersWorker implements ServletWorker {
 		try {
 			Client client = CommUtils.getClient();
 			WebResource webResource = client.resource(eurekaServicesUrl);
-			List<User> users = webResource.path("/api/user/list")
-					.accept(MediaType.APPLICATION_JSON)
-					.get(new GenericType<List<User>>() {
-						// Nothing to implement, used to hold returned data.
-					});
+			User user = webResource
+					.path("/api/user/byname/super.user@emory.edu")
+					.accept(MediaType.APPLICATION_JSON).get(User.class);
 
-			// Set sort order to show the inactive users first.
-			Collections.sort(users, new Comparator<User>() {
-				public int compare(User user1, User user2) {
-					int u1 = 0;
-					int u2 = 0;
-					if (user1.isActive())
-						u1 = 1;
-					if (user2.isActive())
-						u2 = 1;
-
-					return u1 - u2;
-				}
-			});
-			req.setAttribute("users", users);
-			req.getRequestDispatcher("/protected/admin.jsp").forward(req, resp);
+			req.setAttribute("user", user);
+			req.getRequestDispatcher("/acct.jsp").forward(req, resp);
 		} catch (NoSuchAlgorithmException nsae) {
 			throw new ServletException(nsae);
 		} catch (KeyManagementException kme) {

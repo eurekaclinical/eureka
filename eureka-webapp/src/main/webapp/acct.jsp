@@ -11,31 +11,59 @@
 	<template:content name="content">
 
 			<h3>Account</h3>
+            <form action="${pageContext.request.contextPath}/protected/user_acct?action=save">
 			<div class="pad pad_top">
-				<table>
+				<table id="userAcctTable">
 					<tr>
 						<td width="124">Name:</td>
-						<td width="465" colspan="4">&nbsp;</td>
+						<td width="465" colspan="4">${user.firstName} ${user.lastName}</td>
 					</tr>
 					<tr>
 						<td>Organization:</td>
-						<td colspan="4">&nbsp;</td>
+						<td colspan="4">${user.organization}</td>
 					</tr>
 					<tr>
 						<td>Email:</td>
-						<td colspan="4">&nbsp;</td>
+						<td colspan="4">${user.email}</td>
 					</tr>
 					<tr>
 						<td>Password:</td>
-						<td colspan="4">&nbsp;</td>
+						<td colspan="4"><input type="password" value="${user.password}" disabled="disabled"/></td>
 					</tr>
-
 				</table>
 
-			<div class="fltrt margin">
-				<a href="edit_acct.html"><img src="images/edit_btn.gif"
-					width="33" height="19" alt="Edit" /></a>
-			</div>
+				<div class="fltrt margin">
+                    <!--
+					<a href="edit_acct.html"><img src="${pageContext.request.contextPath}/images/edit_btn.gif"
+                        width="33" height="19" alt="Change Password" id="editAcctBtn"/></a>
+                    -->
+					<img src="${pageContext.request.contextPath}/images/edit_btn.gif"
+                        width="33" height="19" alt="Change Password" id="editAcctBtn"/>
+				</div>
+				
+				<table id="newPasswordTable">
+					<tr>
+						<td>Old Password:</td>
+						<td colspan="4"><input type="password" name="oldPassword"/></td>
+					</tr>
+					<tr>
+						<td>New Password:</td>
+						<td colspan="4"><input type="password" name="newPassword"/></td>
+					</tr>
+					<tr>
+						<td>Re-enter New Password:</td>
+						<td colspan="4"><input type="password" name="verifyPassword"/></td>
+					</tr>
+				</table>
+
+				<div class="fltrt margin">
+                    <input type="submit" value="Save" id="saveAcctBtn" />
+				</div>
+                <input type="hidden" name="id" value="${user.id}" />
+                <input type="hidden" name="action" value="save" />
+            </form>
+
+
 
 		</div>
 	</template:content>

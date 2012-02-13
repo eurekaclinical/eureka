@@ -92,6 +92,14 @@ $(document).ready(function() {
 		}
 	});
 	
+	$('#newPasswordTable').hide();
+	$('#saveAcctBtn').hide();
+	
+	$('#editAcctBtn').click(function(){
+	     $('#newPasswordTable').show();
+	     $('#editAcctBtn').hide();
+	     $('#saveAcctBtn').show();
+    });
 
 });
 	

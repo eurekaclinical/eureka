@@ -16,8 +16,12 @@ import com.sun.jersey.api.client.WebResource;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.Role;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.User;
+import edu.emory.cci.aiw.cvrg.eureka.servlet.worker.ServletWorker;
+import edu.emory.cci.aiw.cvrg.eureka.servlet.worker.admin.EditUserWorker;
+import edu.emory.cci.aiw.cvrg.eureka.servlet.worker.admin.ListUsersWorker;
+import edu.emory.cci.aiw.cvrg.eureka.servlet.worker.admin.SaveUserWorker;
 
-public class UserManager extends HttpServlet {
+public class AdminManagerServlet extends HttpServlet {
 
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp)

@@ -1,4 +1,4 @@
-package edu.emory.cci.aiw.cvrg.eureka.servlet;
+package edu.emory.cci.aiw.cvrg.eureka.servlet.worker.admin;
 
 import java.io.IOException;
 import java.security.KeyManagementException;
@@ -17,6 +17,7 @@ import com.sun.jersey.api.client.WebResource;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.CommUtils;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.Role;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.User;
+import edu.emory.cci.aiw.cvrg.eureka.servlet.worker.ServletWorker;
 
 public class EditUserWorker implements ServletWorker {
 

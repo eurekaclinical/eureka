@@ -61,7 +61,7 @@ ul.nav a { zoom: 1; }
       <c:choose>
         <c:when test="${pageContext.request.remoteUser != null}">
           <img src="${pageContext.request.contextPath}/images/acct_icon.gif" alt="Account" width="30" height="30" align="absmiddle" />
-          <li><a href="${pageContext.request.contextPath}/acct.jsp">Account</a></li>
+          <li><a href="${pageContext.request.contextPath}/user_acct?action=list">Account</a></li>
         </c:when>
       </c:choose>
      
@@ -73,7 +73,7 @@ ul.nav a { zoom: 1; }
       <c:choose>
         <c:when test="${pageContext.request.remoteUser != null }">
           <img src="${pageContext.request.contextPath}/images/admin_icon.gif" alt="Administration" width="30" height="30" align="absmiddle" />
-          <li><a href="${pageContext.request.contextPath}/protected/user?action=list">Administration</a></li>
+          <li><a href="${pageContext.request.contextPath}/protected/admin?action=list">Administration</a></li>
 	  </c:when>
 	  </c:choose>
 	  
