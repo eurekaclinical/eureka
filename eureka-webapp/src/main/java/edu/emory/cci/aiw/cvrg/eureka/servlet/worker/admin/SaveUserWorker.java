@@ -30,9 +30,16 @@ public class SaveUserWorker implements ServletWorker {
 				.getInitParameter("eureka-services-url");
 
 		String id = req.getParameter("id");
-		String oldPassword = req.getParameter("oldPassword");
-		String newPassword = req.getParameter("newPassword");
-		String verifyPassword = req.getParameter("verifyPassword");
+		String activeStatus = req.getParameter("active");
+		System.out.println("activeStatus: " + activeStatus);
+		boolean isActivated = false;
+
+		if (activeStatus != null) {
+
+			isActivated = true;
+
+		}
+		System.out.println("active status: " + isActivated);
 		Client c;
 		try {
 			c = CommUtils.getClient();
@@ -41,7 +48,16 @@ public class SaveUserWorker implements ServletWorker {
 			WebResource webResource = c.resource(eurekaServicesUrl);
 			User user = webResource.path("/api/user/byid/" + id)
 					.accept(MediaType.APPLICATION_JSON).get(User.class);
-			
+			String[] roles = req.getParameterValues("role");
+			List<Role> userRoles = new ArrayList<Role>();
+			for (String roleId : roles) {
+				Role role = webResource.path("/api/role/" + roleId)
+						.accept(MediaType.APPLICATION_JSON).get(Role.class);
+				userRoles.add(role);
+				System.out.println("role = " + roleId);
+			}
+			user.setRoles(userRoles);
+			user.setActive(isActivated);
 			webResource = c.resource(eurekaServicesUrl);
 			ClientResponse response = webResource.path("/api/user/put")
 					.type(MediaType.APPLICATION_JSON)
@@ -55,6 +71,6 @@ public class SaveUserWorker implements ServletWorker {
 			e.printStackTrace();
 		}
 
-		resp.sendRedirect(req.getContextPath() + "/protected/user?action=list");
+		resp.sendRedirect(req.getContextPath() + "/protected/admin?action=list");
 	}
 }

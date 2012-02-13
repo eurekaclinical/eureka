@@ -62,7 +62,7 @@
       				</c:otherwise>
       			</c:choose>
       			
-      			<a href="${pageContext.request.contextPath}/protected/user?id=${user.id}&action=edit">${user.firstName} ${user.lastName}</a></td>
+      			<a href="${pageContext.request.contextPath}/protected/admin?id=${user.id}&action=edit">${user.firstName} ${user.lastName}</a></td>
       		<td>
       			<fmt:formatDate value="${user.lastLogin}" type="date" pattern="dd/mm/yyyy" /> 
       		</td>

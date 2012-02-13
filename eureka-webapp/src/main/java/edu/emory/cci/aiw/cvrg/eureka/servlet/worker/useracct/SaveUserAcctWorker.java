@@ -30,16 +30,10 @@ public class SaveUserAcctWorker implements ServletWorker {
 				.getInitParameter("eureka-services-url");
 
 		String id = req.getParameter("id");
-		String activeStatus = req.getParameter("active");
-		System.out.println("activeStatus: " + activeStatus);
-		boolean isActivated = false;
-
-		if (activeStatus != null) {
-
-			isActivated = true;
-
-		}
-		System.out.println("active status: " + isActivated);
+		String oldPassword = req.getParameter("oldPassword");
+		String newPassword = req.getParameter("newPassword");
+		String verifyPassword = req.getParameter("verifyPassword");
+		
 		Client c;
 		try {
 			c = CommUtils.getClient();
@@ -48,21 +42,7 @@ public class SaveUserAcctWorker implements ServletWorker {
 			WebResource webResource = c.resource(eurekaServicesUrl);
 			User user = webResource.path("/api/user/byid/" + id)
 					.accept(MediaType.APPLICATION_JSON).get(User.class);
-			String[] roles = req.getParameterValues("role");
-			List<Role> userRoles = new ArrayList<Role>();
-			for (String roleId : roles) {
-				Role role = webResource.path("/api/role/" + roleId)
-						.accept(MediaType.APPLICATION_JSON).get(Role.class);
-				userRoles.add(role);
-				System.out.println("role = " + roleId);
-			}
-			user.setRoles(userRoles);
-			user.setActive(isActivated);
-			webResource = c.resource(eurekaServicesUrl);
-			ClientResponse response = webResource.path("/api/user/put")
-					.type(MediaType.APPLICATION_JSON)
-					.put(ClientResponse.class, user);
-			System.out.println("response = " + response.getStatus());
+
 		} catch (KeyManagementException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -71,6 +51,6 @@ public class SaveUserAcctWorker implements ServletWorker {
 			e.printStackTrace();
 		}
 
-		resp.sendRedirect(req.getContextPath() + "/protected/user?action=list");
+		resp.sendRedirect(req.getContextPath() + "/protected/user_acct?action=list");
 	}
 }

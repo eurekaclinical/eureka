@@ -13,7 +13,7 @@
 
 			<h3>Edit User</h3>
 			<div class="pad pad_top">
-				<form action="user" method="GET" id="editUserForm">
+				<form action="admin" method="GET" id="editUserForm">
 				<table>
 					<tr>
 						<td width="124">Name:</td>
