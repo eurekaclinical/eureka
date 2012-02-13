@@ -61,7 +61,7 @@ public class ConfigListener extends GuiceServletContextListener {
 			ApplicationProperties applicationProperties = this.getInjector()
 					.getInstance(ApplicationProperties.class);
 			this.jobUpdateThread = new JobUpdateThread(
-					applicationProperties.getBackendUpdateUrl());
+					applicationProperties.getEtlJobUpdateUrl());
 			this.jobUpdateThread.setDaemon(true);
 			this.jobUpdateThread.start();
 		} catch (KeyManagementException e) {

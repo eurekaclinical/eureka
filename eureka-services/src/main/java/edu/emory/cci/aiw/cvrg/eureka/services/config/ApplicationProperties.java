@@ -60,9 +60,19 @@ public class ApplicationProperties {
 	 * 
 	 * @return A string containing the back-end's configuration end-point URL.
 	 */
-	public String getBackendConfigUrl() {
+	public String getEtlConfGetUrl() {
+		return this.properties.getProperty("eureka.services.etl.conf.get.url");
+	}
+
+	/**
+	 * Get the URL to submit a new configuration item to the ETL backend
+	 * service.
+	 * 
+	 * @return A string containing the back-end's configuration submission URL.
+	 */
+	public String getEtlConfSubmitUrl() {
 		return this.properties
-				.getProperty("eureka.services.backend.config.url");
+				.getProperty("eureka.services.etl.conf.submit.url");
 	}
 
 	/**
@@ -70,9 +80,9 @@ public class ApplicationProperties {
 	 * 
 	 * @return A string containing the back-end's job submission end-point.
 	 */
-	public String getBackendSubmitUrl() {
+	public String getEtlJobSubmitUrl() {
 		return this.properties
-				.getProperty("eureka.services.backend.submit.url");
+				.getProperty("eureka.services.etl.job.submit.url");
 	}
 
 	/**
@@ -82,8 +92,8 @@ public class ApplicationProperties {
 	 * @return A string containing the back-end's job status update information
 	 *         end-point.
 	 */
-	public String getBackendUpdateUrl() {
+	public String getEtlJobUpdateUrl() {
 		return this.properties
-				.getProperty("eureka.services.backend.update.url");
+				.getProperty("eureka.services.etl.job.update.url");
 	}
 }
