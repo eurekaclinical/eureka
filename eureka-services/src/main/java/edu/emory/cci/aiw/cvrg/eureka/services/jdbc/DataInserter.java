@@ -5,6 +5,7 @@ import java.sql.Date;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
@@ -34,10 +35,6 @@ public class DataInserter {
 	 * The user's configuration, used to get database connection information.
 	 */
 	private final Configuration configuration;
-	/**
-	 * A connection to the target database.
-	 */
-	private Connection connection;
 
 	/**
 	 * Build a new object with the given configuration.
@@ -49,7 +46,6 @@ public class DataInserter {
 	public DataInserter(Configuration inConfiguration) throws SQLException {
 		super();
 		this.configuration = inConfiguration;
-		this.getConnection();
 		this.truncateTables();
 	}
 
@@ -57,18 +53,19 @@ public class DataInserter {
 	 * Get a connection to the target database using the current user's
 	 * configuration.
 	 * 
+	 * @return A connection to the target database.
+	 * 
 	 * @throws SQLException Thrown if there are any JDBC errors.
 	 */
-	private void getConnection() throws SQLException {
-		Configuration userConfiguration = this.configuration;
+	private Connection getConnection() throws SQLException {
 		StringBuilder connectString = new StringBuilder();
 		connectString.append("jdbc:oracle:thin:@")
-				.append(userConfiguration.getProtempaHost()).append(":")
-				.append(userConfiguration.getProtempaPort()).append("/")
-				.append(userConfiguration.getProtempaDatabaseName());
-		this.connection = DriverManager.getConnection(connectString.toString(),
-				userConfiguration.getProtempaSchema(),
-				userConfiguration.getProtempaPass());
+				.append(this.configuration.getProtempaHost()).append(":")
+				.append(this.configuration.getProtempaPort()).append("/")
+				.append(this.configuration.getProtempaDatabaseName());
+		return DriverManager.getConnection(connectString.toString(),
+				this.configuration.getProtempaSchema(),
+				this.configuration.getProtempaPass());
 	}
 
 	/**
@@ -77,7 +74,8 @@ public class DataInserter {
 	 * @throws SQLException Thrown if there are any JDBC errors.
 	 */
 	private void truncateTables() throws SQLException {
-		List<String> sqlStatements = new ArrayList<String>();
+		final Connection connection = this.getConnection();
+		final List<String> sqlStatements = new ArrayList<String>();
 		sqlStatements.add("truncate table patient");
 		sqlStatements.add("truncate table encounter");
 		sqlStatements.add("truncate table provider");
@@ -89,9 +87,12 @@ public class DataInserter {
 		sqlStatements.add("truncate table vitals_event");
 
 		for (String sql : sqlStatements) {
-			this.connection.createStatement().executeUpdate(sql);
+			Statement statement = connection.createStatement();
+			statement.executeUpdate(sql);
+			statement.close();
 		}
-		this.connection.commit();
+		connection.commit();
+
 	}
 
 	/**
@@ -102,7 +103,8 @@ public class DataInserter {
 	 */
 	public void insertPatients(List<Patient> patients) throws SQLException {
 		int counter = 0;
-		PreparedStatement preparedStatement = this.connection
+		final Connection connection = this.getConnection();
+		PreparedStatement preparedStatement = connection
 				.prepareStatement("insert into patient values (?,?,?,?,?,?,?,?)");
 		for (Patient patient : patients) {
 			Date dateOfBirth;
@@ -124,15 +126,16 @@ public class DataInserter {
 			counter++;
 			if (counter >= 128) {
 				preparedStatement.executeBatch();
-				this.connection.commit();
+				connection.commit();
 				preparedStatement.clearBatch();
 				counter = 0;
 			}
 		}
 		preparedStatement.executeBatch();
-		this.connection.commit();
+		connection.commit();
 		preparedStatement.clearBatch();
 		preparedStatement.close();
+		connection.close();
 	}
 
 	/**
@@ -145,7 +148,8 @@ public class DataInserter {
 	public void insertEncounters(List<Encounter> encounters)
 			throws SQLException {
 		int counter = 0;
-		PreparedStatement preparedStatement = this.connection
+		final Connection connection = this.getConnection();
+		PreparedStatement preparedStatement = connection
 				.prepareStatement("insert into encounter values (?,?,?,?,?,?,?)");
 		for (Encounter encounter : encounters) {
 			preparedStatement.setLong(1, encounter.getId().longValue());
@@ -162,15 +166,16 @@ public class DataInserter {
 			counter++;
 			if (counter >= 128) {
 				preparedStatement.executeBatch();
-				this.connection.commit();
+				connection.commit();
 				preparedStatement.clearBatch();
 				counter = 0;
 			}
 		}
 		preparedStatement.executeBatch();
-		this.connection.commit();
+		connection.commit();
 		preparedStatement.clearBatch();
 		preparedStatement.close();
+		connection.close();
 	}
 
 	/**
@@ -182,7 +187,8 @@ public class DataInserter {
 	 */
 	public void insertProviders(List<Provider> providers) throws SQLException {
 		int counter = 0;
-		PreparedStatement preparedStatement = this.connection
+		final Connection connection = this.getConnection();
+		PreparedStatement preparedStatement = connection
 				.prepareStatement("insert into provider values (?,?,?)");
 		for (Provider provider : providers) {
 			preparedStatement.setLong(1, provider.getId().longValue());
@@ -193,15 +199,16 @@ public class DataInserter {
 			counter++;
 			if (counter >= 128) {
 				preparedStatement.executeBatch();
-				this.connection.commit();
+				connection.commit();
 				preparedStatement.clearBatch();
 				counter = 0;
 			}
 		}
 		preparedStatement.executeBatch();
-		this.connection.commit();
+		connection.commit();
 		preparedStatement.clearBatch();
 		preparedStatement.close();
+		connection.close();
 	}
 
 	/**
@@ -287,7 +294,8 @@ public class DataInserter {
 		StringBuilder sqlbBuilder = new StringBuilder();
 		sqlbBuilder.append("insert into ").append(table)
 				.append(" values (?,?,?,?)");
-		PreparedStatement preparedStatement = this.connection
+		final Connection connection = this.getConnection();
+		PreparedStatement preparedStatement = connection
 				.prepareStatement(sqlbBuilder.toString());
 		for (Observation observation : observations) {
 			preparedStatement.setString(1, observation.getId());
@@ -301,15 +309,16 @@ public class DataInserter {
 			counter++;
 			if (counter >= 128) {
 				preparedStatement.executeBatch();
-				this.connection.commit();
+				connection.commit();
 				preparedStatement.clearBatch();
 				counter = 0;
 			}
 		}
 		preparedStatement.executeBatch();
-		this.connection.commit();
+		connection.commit();
 		preparedStatement.clearBatch();
 		preparedStatement.close();
+		connection.close();
 	}
 
 	/**
@@ -327,7 +336,8 @@ public class DataInserter {
 		StringBuilder sqlbBuilder = new StringBuilder();
 		sqlbBuilder.append("insert into ").append(table)
 				.append(" values (?,?,?,?,?,?,?,?)");
-		PreparedStatement preparedStatement = this.connection
+		final Connection connection = this.getConnection();
+		PreparedStatement preparedStatement = connection
 				.prepareStatement(sqlbBuilder.toString());
 		for (ObservationWithResult observation : observations) {
 			preparedStatement.setString(1, observation.getId());
@@ -346,15 +356,16 @@ public class DataInserter {
 			counter++;
 			if (counter >= 128) {
 				preparedStatement.executeBatch();
-				this.connection.commit();
+				connection.commit();
 				preparedStatement.clearBatch();
 				counter = 0;
 			}
 		}
 		preparedStatement.executeBatch();
-		this.connection.commit();
+		connection.commit();
 		preparedStatement.clearBatch();
 		preparedStatement.close();
+		connection.close();
 	}
 
 }
