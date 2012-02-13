@@ -291,12 +291,12 @@ public class DataInserter {
 	private void insertObservations(List<? extends Observation> observations,
 			String table) throws SQLException {
 		int counter = 0;
-		StringBuilder sqlbBuilder = new StringBuilder();
-		sqlbBuilder.append("insert into ").append(table)
+		StringBuilder sqlBuilder = new StringBuilder();
+		sqlBuilder.append("insert into ").append(table)
 				.append(" values (?,?,?,?)");
 		final Connection connection = this.getConnection();
 		PreparedStatement preparedStatement = connection
-				.prepareStatement(sqlbBuilder.toString());
+				.prepareStatement(sqlBuilder.toString());
 		for (Observation observation : observations) {
 			preparedStatement.setString(1, observation.getId());
 			preparedStatement.setLong(2, observation.getEncounterId()
@@ -333,12 +333,12 @@ public class DataInserter {
 			List<? extends ObservationWithResult> observations, String table)
 			throws SQLException {
 		int counter = 0;
-		StringBuilder sqlbBuilder = new StringBuilder();
-		sqlbBuilder.append("insert into ").append(table)
+		StringBuilder sqlBuilder = new StringBuilder();
+		sqlBuilder.append("insert into ").append(table)
 				.append(" values (?,?,?,?,?,?,?,?)");
 		final Connection connection = this.getConnection();
 		PreparedStatement preparedStatement = connection
-				.prepareStatement(sqlbBuilder.toString());
+				.prepareStatement(sqlBuilder.toString());
 		for (ObservationWithResult observation : observations) {
 			preparedStatement.setString(1, observation.getId());
 			preparedStatement.setLong(2, observation.getEncounterId()
