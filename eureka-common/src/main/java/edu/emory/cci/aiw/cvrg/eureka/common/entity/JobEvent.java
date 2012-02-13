@@ -135,5 +135,4 @@ public class JobEvent {
 	public void setMessage(String inMessage) {
 		this.message = inMessage;
 	}
-
 }

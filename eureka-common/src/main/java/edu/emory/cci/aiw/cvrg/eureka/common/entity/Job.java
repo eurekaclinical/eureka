@@ -1,7 +1,9 @@
 package edu.emory.cci.aiw.cvrg.eureka.common.entity;
 
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
+import java.util.TreeSet;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -24,6 +26,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @Entity
 @Table(name = "jobs")
 public class Job {
+
 	/**
 	 * The unique identifier for the job request.
 	 */
@@ -48,6 +51,21 @@ public class Job {
 	 */
 	@OneToMany(cascade = CascadeType.ALL, targetEntity = JobEvent.class)
 	private List<JobEvent> jobEvents;
+
+	private static class JobEventComparator implements Comparator<JobEvent> {
+
+		public int compare (JobEvent a , JobEvent b) {
+
+			return 0;
+		}
+
+		public boolean equals (Object obj) {
+
+			return false;
+		}
+	}
+
+	private static JobEventComparator JOB_EVENT_COMPARATOR = new JobEventComparator();
 
 	/**
 	 * Get the unique identifier for the job request.
@@ -131,5 +149,43 @@ public class Job {
 	 */
 	public void setJobEvents(List<JobEvent> inJobEvents) {
 		this.jobEvents = inJobEvents;
+	}
+
+
+
+
+
+	public String getCurrentState() {
+
+		JobEvent jev = getSortedEvents().last();
+		return (jev == null) ? "" : jev.getState();
+	}
+
+	public void setNewState (String state , String message , String[] stackTrace) {
+
+		JobEvent jev = new JobEvent();
+		jev.setTimeStamp (new Date (System.currentTimeMillis()));
+		jev.setState (state);
+		jev.setMessage (message);
+		jev.setExceptionStackTrace (stackTrace);
+		jev.setJob (this);
+		this.jobEvents.add (jev);
+	}
+
+	public Date getCreationTime() {
+
+		JobEvent jev = getSortedEvents().first();
+		return (jev == null) ? null : jev.getTimeStamp();
+	}
+
+	private TreeSet<JobEvent> getSortedEvents() {
+
+		if (this.jobEvents == null || this.jobEvents.size() == 0) {
+
+			return new TreeSet<JobEvent>();
+		}
+		TreeSet<JobEvent> ts = new TreeSet<JobEvent> (JOB_EVENT_COMPARATOR);
+		ts.addAll (this.jobEvents);
+		return ts;
 	}
 }
