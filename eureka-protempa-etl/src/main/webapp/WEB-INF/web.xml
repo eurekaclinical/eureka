@@ -5,7 +5,7 @@
 
 	<!-- THIS LISTENER CONFIGURES THE GUICE INJECTION -->
 	<listener>
-        <listener-class>edu.emory.cci.aiw.cvrg.eureka.backend.config.BackEndContextListener</listener-class>
+        <listener-class>edu.emory.cci.aiw.cvrg.eureka.etl.config.BackEndContextListener</listener-class>
 	</listener>
 
 	<!-- 
