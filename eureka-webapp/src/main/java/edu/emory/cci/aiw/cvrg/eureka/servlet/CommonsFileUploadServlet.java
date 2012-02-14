@@ -120,7 +120,7 @@ public class CommonsFileUploadServlet extends HttpServlet {
 				}
 				
 			
-				response.sendRedirect(request.getContextPath() + "/jobs");
+				response.sendRedirect(request.getContextPath() + "/protected/jobs");
 			}
 		}catch(FileUploadException ex) {
 			log("Error encountered while parsing the request",ex);
