@@ -22,7 +22,6 @@ ul.nav a { zoom: 1; }
 <script src="${pageContext.request.contextPath}/js/jquery-1.7.1.min.js"></script>
 <script src="${pageContext.request.contextPath}/js/jquery.validate.js"></script>
 <script src="${pageContext.request.contextPath}/js/eureka.js"></script>
-<script src="${pageContext.request.contextPath}/js/pollingWithTimeouts.js"></script>
 <link rel="SHORTCUT ICON" href="favicon.ico">
 <meta name="Description" content="A Clinical Analysis Tool for Biomedical Informatics and Data" />
 

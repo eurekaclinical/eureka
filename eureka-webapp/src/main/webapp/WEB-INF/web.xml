@@ -108,7 +108,7 @@
 	</servlet-mapping>
 	<servlet-mapping>
 		<servlet-name>JobList</servlet-name>
-		<url-pattern>/jobs</url-pattern>
+		<url-pattern>/protected/jobs</url-pattern>
 	</servlet-mapping>
 	<servlet-mapping>
 		<servlet-name>AdminManagerServlet</servlet-name>
