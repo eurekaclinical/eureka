@@ -16,6 +16,7 @@ import edu.emory.cci.aiw.cvrg.eureka.common.entity.Configuration;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.FileError;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.FileUpload;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.FileWarning;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.Job;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.User;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.FileDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dataprovider.DataProvider;
@@ -221,21 +222,18 @@ public class JobSubmissionThread extends Thread {
 	private boolean submitJob() throws KeyManagementException,
 			NoSuchAlgorithmException {
 		boolean result;
-		// TODO: Revert to real code when the job submission URL is available
-		result = true;
-		// Client client = CommUtils.getClient();
-		// WebResource resource = client.resource(this.jobUrl);
-		// Job job = new Job();
-		// job.setConfigurationId(this.configuration.getId());
-		// job.setUserId(this.user.getId());
-		// Job resultJob = resource.accept(MediaType.APPLICATION_JSON).post(
-		// Job.class, job);
-		// JobEvent event = resultJob.getJobEvents().get(0);
-		// if (event.getState().equals("STARTED")) {
-		// result = true;
-		// } else {
-		// result = false;
-		// }
+		Client client = CommUtils.getClient();
+		WebResource resource = client.resource(this.jobUrl);
+		Job job = new Job();
+		job.setConfigurationId(this.configuration.getId());
+		job.setUserId(this.user.getId());
+		Job resultJob = resource.accept(MediaType.APPLICATION_JSON).post(
+				Job.class, job);
+		if (resultJob.getCurrentState().equals("CREATED")) {
+			result = true;
+		} else {
+			result = false;
+		}
 		return result;
 	}
 
