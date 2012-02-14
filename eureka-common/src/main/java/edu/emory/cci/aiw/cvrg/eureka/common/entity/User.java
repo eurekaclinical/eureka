@@ -17,6 +17,9 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import org.codehaus.jackson.annotate.JsonBackReference;
+import org.codehaus.jackson.annotate.JsonManagedReference;
+
 import com.sun.xml.bind.CycleRecoverable;
 
 /**
@@ -294,6 +297,7 @@ public class User implements CycleRecoverable {
 	 * 
 	 * @return The list of files uploaded by the user.
 	 */
+	@JsonBackReference("user-fileuploads")
 	public List<FileUpload> getFileUploads() {
 		return this.fileUploads;
 	}
