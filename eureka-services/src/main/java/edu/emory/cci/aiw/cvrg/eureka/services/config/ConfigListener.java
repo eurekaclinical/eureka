@@ -53,7 +53,13 @@ public class ConfigListener extends GuiceServletContextListener {
 				PersistService.class);
 		this.persistService.start();
 		Bootstrap bootstrap = this.getInjector().getInstance(Bootstrap.class);
-		bootstrap.configure();
+		try {
+			bootstrap.configure();
+		} catch (KeyManagementException e1) {
+			e1.printStackTrace();
+		} catch (NoSuchAlgorithmException e1) {
+			e1.printStackTrace();
+		}
 		try {
 			ApplicationProperties applicationProperties = this.getInjector()
 					.getInstance(ApplicationProperties.class);
