@@ -89,7 +89,6 @@ public class JobResource {
 	@Path("/add")
 	@POST
 	@Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
-	@Produces(MediaType.TEXT_PLAIN)
 	public Response uploadFile(FileUpload inFileUpload) throws ServletException {
 		String confGetUrl = this.applicationProperties.getEtlConfGetUrl();
 		String jobSubmitUrl = this.applicationProperties.getEtlJobSubmitUrl();
@@ -107,20 +106,28 @@ public class JobResource {
 		// push the configuration to the backend, to make sure it's available
 		// when we send a job.
 		try {
-			Configuration fakeConfiguration = new Configuration();
-			fakeConfiguration.setProtempaDatabaseName("XE");
-			fakeConfiguration.setProtempaHost("adrastea.cci.emory.edu");
-			fakeConfiguration.setProtempaPort(Integer.valueOf(1521));
-			fakeConfiguration.setProtempaSchema("cvrg");
-			fakeConfiguration.setProtempaPass("cvrg");
-			fakeConfiguration.setUserId(userId);
-
 			Client client = CommUtils.getClient();
-			ClientResponse response = client.resource(confSumbitUrl)
+
+			Configuration realConfiguration = client
+					.resource(confGetUrl + "/" + userId)
 					.accept(MediaType.APPLICATION_JSON)
-					.post(ClientResponse.class, fakeConfiguration);
-			System.out.println("CONFIGURATION SUBMISSION: "
-					+ response.getClientResponseStatus());
+					.get(Configuration.class);
+
+			if (realConfiguration == null) {
+				Configuration fakeConfiguration = new Configuration();
+				fakeConfiguration.setProtempaDatabaseName("XE");
+				fakeConfiguration.setProtempaHost("adrastea.cci.emory.edu");
+				fakeConfiguration.setProtempaPort(Integer.valueOf(1521));
+				fakeConfiguration.setProtempaSchema("cvrg");
+				fakeConfiguration.setProtempaPass("cvrg");
+				fakeConfiguration.setUserId(userId);
+
+				ClientResponse response = client.resource(confSumbitUrl)
+						.type(MediaType.APPLICATION_JSON)
+						.post(ClientResponse.class, fakeConfiguration);
+				System.out.println("CONFIGURATION SUBMISSION: "
+						+ response.getClientResponseStatus());
+			}
 		} catch (KeyManagementException e1) {
 			throw new ServletException(e1);
 		} catch (NoSuchAlgorithmException e1) {
