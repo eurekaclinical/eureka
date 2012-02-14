@@ -99,8 +99,6 @@ public class JobResource {
 		fileUpload.setUser(this.userDao.get(userId));
 		this.fileDao.save(fileUpload);
 
-		confGetUrl += "/" + fileUpload.getUser().getId();
-
 		// TODO: REMOVE THIS FAKE CONFIGURATION ONCE WE HAVE A REAL
 		// CONFIGURATION OBJECT IN THE DATABASE.
 		// push the configuration to the backend, to make sure it's available
