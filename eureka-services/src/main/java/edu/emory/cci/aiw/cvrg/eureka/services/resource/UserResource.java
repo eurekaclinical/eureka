@@ -88,16 +88,8 @@ public class UserResource {
 	@Path("/byid/{id}")
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	public User getUserById(@PathParam("id") String inId)
-			throws ServletException {
-		User user;
-		try {
-			Long id = Long.valueOf(inId);
-			user = this.userDao.get(id);
-		} catch (NumberFormatException nfe) {
-			throw new ServletException(nfe);
-		}
-		return user;
+	public User getUserById(@PathParam("id") long inId) throws ServletException {
+		return this.userDao.get(Long.valueOf(inId));
 	}
 
 	/**
@@ -113,11 +105,7 @@ public class UserResource {
 	@Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
 	public User getUserByName(@PathParam("name") String inName)
 			throws ServletException {
-		User user = this.userDao.get(inName);
-		if (user == null) {
-			throw new ServletException("Invalid user name");
-		}
-		return user;
+		return this.userDao.get(inName);
 	}
 
 	/**
@@ -169,25 +157,19 @@ public class UserResource {
 	 */
 	@Path("/passwd/{id}")
 	@GET
-	public Response changePassword(@PathParam("id") final String inId,
+	public Response changePassword(@PathParam("id") final Long inId,
 			@QueryParam("oldPassword") final String oldPassword,
 			@QueryParam("newPassword") final String newPassword) {
 
 		Response response;
-		try {
-			Long userId = Long.valueOf(inId);
-			User user = this.userDao.get(userId);
-			if (user.getPassword().equals(oldPassword)) {
-				user.setPassword(newPassword);
-				this.userDao.save(user);
-				response = Response.ok().build();
-			} else {
-				response = Response.status(Status.BAD_REQUEST)
-						.entity("Password mismatch").build();
-			}
-		} catch (NumberFormatException nfe) {
+		User user = this.userDao.get(inId);
+		if (user.getPassword().equals(oldPassword)) {
+			user.setPassword(newPassword);
+			this.userDao.save(user);
+			response = Response.ok().build();
+		} else {
 			response = Response.status(Status.BAD_REQUEST)
-					.entity("Invalid User ID").build();
+					.entity("Password mismatch").build();
 		}
 		return response;
 	}
@@ -235,24 +217,15 @@ public class UserResource {
 	 */
 	@Path("/verify/{id}")
 	@PUT
-	public Response verifyUser(@PathParam("id") final String inId) {
+	public Response verifyUser(@PathParam("id") final Long inId) {
 		Response response = Response.ok().build();
-		Long id = null;
-
-		// try to convert the ID string to a numeric value.
-		try {
-			id = Long.valueOf(inId);
-		} catch (NumberFormatException nfe) {
-			response = Response.status(Status.BAD_REQUEST).entity("Invalid ID")
-					.build();
-		}
-
-		if (id != null) {
-			User user = this.userDao.get(id);
+		User user = this.userDao.get(inId);
+		if (user != null) {
 			user.setVerified(true);
 			this.userDao.save(user);
+		} else {
+			response = Response.notModified("Invalid user").build();
 		}
-
 		return response;
 	}
 
@@ -265,24 +238,16 @@ public class UserResource {
 	 */
 	@Path("/activate/{id}")
 	@PUT
-	public Response activateUser(@PathParam("id") final String inId) {
+	public Response activateUser(@PathParam("id") final Long inId) {
 		Response response = Response.ok().build();
-		Long id = null;
-
-		// try to convert the ID string to a numeric value.
-		try {
-			id = Long.valueOf(inId);
-		} catch (NumberFormatException nfe) {
+		User user = this.userDao.get(inId);
+		if (user != null) {
+			user.setActive(true);
+			this.userDao.save(user);
+		} else {
 			response = Response.status(Status.BAD_REQUEST).entity("Invalid ID")
 					.build();
 		}
-
-		if (id != null) {
-			User user = this.userDao.get(id);
-			user.setActive(true);
-			this.userDao.save(user);
-		}
-
 		return response;
 	}
 
