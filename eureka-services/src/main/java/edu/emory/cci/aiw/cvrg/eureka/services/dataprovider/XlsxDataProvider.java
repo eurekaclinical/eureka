@@ -85,8 +85,29 @@ public class XlsxDataProvider implements DataProvider {
 		this.dataFile = inDataFile;
 		try {
 			this.workbook = new XSSFWorkbook(this.dataFile.getLocation());
+			this.validateWorksheets();
 		} catch (IOException ioe) {
 			throw new DataProviderException(ioe);
+		}
+	}
+
+	/**
+	 * Make sure that all the necessary worksheets are present in the given
+	 * workbook.
+	 * 
+	 * @throws DataProviderException Thrown if there are missing worksheets in
+	 *             the given workbook.
+	 */
+	private void validateWorksheets() throws DataProviderException {
+		String[] sheetNames = new String[] { "patient", "provider",
+				"encounter", "eCPT", "eICD9D", "eICD9P", "eMEDS", "eLABS",
+				"eVITALS" };
+		for (String sheetName : sheetNames) {
+			XSSFSheet sheet = this.workbook.getSheet(sheetName);
+			if (sheet == null) {
+				throw new DataProviderException("Missing worksheet: "
+						+ sheetName);
+			}
 		}
 	}
 
