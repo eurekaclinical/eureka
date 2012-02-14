@@ -115,16 +115,12 @@ public class JobSubmissionThread extends Thread {
 				this.setCompleteWithError("Invalid data file");
 			}
 		} catch (DataProviderException e) {
-			e.printStackTrace();
 			this.setCompleteWithError(e.getMessage());
 		} catch (KeyManagementException e) {
-			e.printStackTrace();
 			this.setCompleteWithError(e.getMessage());
 		} catch (NoSuchAlgorithmException e) {
-			e.printStackTrace();
 			this.setCompleteWithError(e.getMessage());
 		} catch (SQLException e) {
-			e.printStackTrace();
 			this.setCompleteWithError(e.getMessage());
 		}
 	}
