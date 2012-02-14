@@ -8,6 +8,8 @@ import edu.emory.cci.aiw.cvrg.eureka.services.dao.JpaRoleDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.JpaUserDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.RoleDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.UserDao;
+import edu.emory.cci.aiw.cvrg.eureka.services.email.EmailSender;
+import edu.emory.cci.aiw.cvrg.eureka.services.email.EmailSenderImpl;
 
 /**
  * Configure all the non-web related binding for Guice.
@@ -22,6 +24,7 @@ public class AppModule extends AbstractModule {
 		bind(UserDao.class).to(JpaUserDao.class);
 		bind(RoleDao.class).to(JpaRoleDao.class);
 		bind(FileDao.class).to(JpaFileDao.class);
+		bind(EmailSender.class).to(EmailSenderImpl.class);
 	}
 
 }
