@@ -18,12 +18,8 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
 import com.google.inject.Inject;
-import com.sun.jersey.api.client.Client;
-import com.sun.jersey.api.client.ClientResponse;
 
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.CommUtils;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.JobInfo;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.Configuration;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.FileUpload;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.Job;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.User;
@@ -92,49 +88,16 @@ public class JobResource {
 	public Response uploadFile(FileUpload inFileUpload) throws ServletException {
 		String confGetUrl = this.applicationProperties.getEtlConfGetUrl();
 		String jobSubmitUrl = this.applicationProperties.getEtlJobSubmitUrl();
-		String confSumbitUrl = this.applicationProperties.getEtlConfSubmitUrl();
 
 		FileUpload fileUpload = inFileUpload;
 		Long userId = inFileUpload.getUser().getId();
 		fileUpload.setUser(this.userDao.get(userId));
 		this.fileDao.save(fileUpload);
 
-		// TODO: REMOVE THIS FAKE CONFIGURATION ONCE WE HAVE A REAL
-		// CONFIGURATION OBJECT IN THE DATABASE.
-		// push the configuration to the backend, to make sure it's available
-		// when we send a job.
-		try {
-			Client client = CommUtils.getClient();
-
-			Configuration realConfiguration = client
-					.resource(confGetUrl + "/" + userId)
-					.accept(MediaType.APPLICATION_JSON)
-					.get(Configuration.class);
-
-			if (realConfiguration == null) {
-				Configuration fakeConfiguration = new Configuration();
-				fakeConfiguration.setProtempaDatabaseName("XE");
-				fakeConfiguration.setProtempaHost("adrastea.cci.emory.edu");
-				fakeConfiguration.setProtempaPort(Integer.valueOf(1521));
-				fakeConfiguration.setProtempaSchema("cvrg");
-				fakeConfiguration.setProtempaPass("cvrg");
-				fakeConfiguration.setUserId(userId);
-
-				ClientResponse response = client.resource(confSumbitUrl)
-						.type(MediaType.APPLICATION_JSON)
-						.post(ClientResponse.class, fakeConfiguration);
-				System.out.println("CONFIGURATION SUBMISSION: "
-						+ response.getClientResponseStatus());
-			}
-		} catch (KeyManagementException e1) {
-			throw new ServletException(e1);
-		} catch (NoSuchAlgorithmException e1) {
-			throw new ServletException(e1);
-		}
-
 		try {
 			JobSubmissionThread jobSubmissionThread = new JobSubmissionThread(
-					fileUpload, this.fileDao, confGetUrl, jobSubmitUrl);
+					fileUpload, this.fileDao, confGetUrl + "/" + userId,
+					jobSubmitUrl);
 			jobSubmissionThread.start();
 		} catch (KeyManagementException e) {
 			throw new ServletException(e);
