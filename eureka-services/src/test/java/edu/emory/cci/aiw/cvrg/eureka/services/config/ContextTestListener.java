@@ -27,8 +27,8 @@ public class ContextTestListener extends GuiceServletContextListener {
 	@Override
 	synchronized protected Injector getInjector() {
 		if (this.injector == null) {
-			this.injector = Guice.createInjector(new ServletModule(),
-					new AppModule());
+			this.injector = Guice.createInjector(new ServletTestModule(),
+					new AppTestModule());
 		}
 		return this.injector;
 	}

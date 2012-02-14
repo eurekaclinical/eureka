@@ -9,6 +9,8 @@ import edu.emory.cci.aiw.cvrg.eureka.services.dao.JpaRoleDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.JpaUserDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.RoleDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.UserDao;
+import edu.emory.cci.aiw.cvrg.eureka.services.email.EmailSender;
+import edu.emory.cci.aiw.cvrg.eureka.services.email.MockEmailSender;
 
 /**
  * Configure Guice for non-web application testing.
@@ -26,6 +28,7 @@ public class AppTestModule extends AbstractModule {
 		bind(UserDao.class).to(JpaUserDao.class);
 		bind(RoleDao.class).to(JpaRoleDao.class);
 		bind(FileDao.class).to(JpaFileDao.class);
+		bind(EmailSender.class).to(MockEmailSender.class);
 
 	}
 
