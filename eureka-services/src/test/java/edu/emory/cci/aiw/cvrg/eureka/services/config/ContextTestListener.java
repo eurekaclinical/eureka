@@ -1,5 +1,8 @@
 package edu.emory.cci.aiw.cvrg.eureka.services.config;
 
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
+
 import javax.servlet.ServletContextEvent;
 
 import com.google.inject.Guice;
@@ -44,8 +47,14 @@ public class ContextTestListener extends GuiceServletContextListener {
 		this.persistService = this.getInjector().getInstance(
 				PersistService.class);
 		this.persistService.start();
-		Bootstrap bootstrap = this.getInjector().getInstance(Bootstrap.class);
-		bootstrap.configure();
+		Setup setup = this.getInjector().getInstance(Setup.class);
+		try {
+			setup.configure();
+		} catch (KeyManagementException e) {
+			e.printStackTrace();
+		} catch (NoSuchAlgorithmException e) {
+			e.printStackTrace();
+		}
 	}
 
 	/*
