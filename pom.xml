@@ -322,6 +322,7 @@
 				<groupId>javax.mail</groupId>
 				<artifactId>mail</artifactId>
 				<version>${java-mail-version}</version>
+				<scope>provided</scope>
 			</dependency>
 			<dependency>
 				<groupId>jstl</groupId>
