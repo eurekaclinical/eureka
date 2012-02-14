@@ -85,7 +85,7 @@ ul.nav a { zoom: 1; }
       	  <img src="${pageContext.request.contextPath}/images/i2b2_icon.gif" alt="i2b2" width="30" height="30" align="absmiddle" />
 	      <li><a href="https://www.i2b2.org/">i2b2</a></li>
 	      <img src="${pageContext.request.contextPath}/images/rsch_icon.gif" alt="Upload Data" width="30" height="30" align="absmiddle" />
-	      <li><a href="${pageContext.request.contextPath}/jobs">Upload Data</a></li>
+	      <li><a href="${pageContext.request.contextPath}/protected/jobs">Upload Data</a></li>
 </div>
 	  	</c:when>
 	  	
