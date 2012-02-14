@@ -4,6 +4,7 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.mail.MessagingException;
 import javax.servlet.ServletException;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -24,6 +25,7 @@ import edu.emory.cci.aiw.cvrg.eureka.common.entity.User;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.UserRequest;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.RoleDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.UserDao;
+import edu.emory.cci.aiw.cvrg.eureka.services.email.EmailSender;
 
 /**
  * RESTful end-point for {@link User} related methods.
@@ -43,17 +45,24 @@ public class UserResource {
 	 * Data access object to work with Role objects.
 	 */
 	private final RoleDao roleDao;
+	/**
+	 * Used to send emails to the user when needed.
+	 */
+	private final EmailSender emailSender;
 
 	/**
 	 * Create a UserResource object with a User DAO and a Role DAO.
 	 * 
 	 * @param inUserDao DAO used to access {@link User} related functionality.
 	 * @param inRoleDao DAO used to access {@link Role} related functionality.
+	 * @param inEmailSender Used to send emails to the user when necessary.
 	 */
 	@Inject
-	public UserResource(UserDao inUserDao, RoleDao inRoleDao) {
+	public UserResource(UserDao inUserDao, RoleDao inRoleDao,
+			EmailSender inEmailSender) {
 		this.userDao = inUserDao;
 		this.roleDao = inRoleDao;
+		this.emailSender = inEmailSender;
 	}
 
 	/**
@@ -134,6 +143,12 @@ public class UserResource {
 			user.setPassword(userRequest.getPassword());
 			user.setRoles(this.getDefaultRoles());
 			this.userDao.save(user);
+			try {
+				this.emailSender.sendMessage(user.getEmail());
+			} catch (MessagingException e) {
+				System.out.println("ERROR SENDING EMAIL: " + e.getMessage());
+				e.printStackTrace();
+			}
 			response = Response.created(URI.create("/" + user.getId())).build();
 		} else {
 			response = Response.status(Status.BAD_REQUEST)
