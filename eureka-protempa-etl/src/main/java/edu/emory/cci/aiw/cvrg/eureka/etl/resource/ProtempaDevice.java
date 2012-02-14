@@ -78,7 +78,7 @@ public class ProtempaDevice extends Thread {
 				}
 				catch (InterruptedException ie) {
 
-			    	System.out.println ("ETL: runner exc " + ie);
+			    	System.out.println ("ETL: runner exception " + ie);
 			    	this.failure = true;
 			    	if (myJob != null) {
 
@@ -89,7 +89,7 @@ public class ProtempaDevice extends Thread {
 				}
 				catch (Exception e) {
 
-			    	System.out.println ("ETL: runner exc " + e);
+			    	System.out.println ("ETL: runner exception " + e);
 			    	this.failure = true;
 			    	if (myJob != null) {
 
@@ -120,7 +120,7 @@ public class ProtempaDevice extends Thread {
 
 		return this.job;
 	}
-	
+
 	protected void tagJob (Thread thread , Throwable t) {
 
 		Job myJob = this.job;

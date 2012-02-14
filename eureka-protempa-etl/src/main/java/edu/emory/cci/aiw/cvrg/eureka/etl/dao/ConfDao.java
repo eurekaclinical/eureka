@@ -8,5 +8,5 @@ import edu.emory.cci.aiw.cvrg.eureka.common.entity.Configuration;
 public interface ConfDao {
 
 	public void save (Configuration conf);
-	public Configuration get (Long id);
+	public Configuration get (Long userId);
 }

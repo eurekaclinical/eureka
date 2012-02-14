@@ -29,6 +29,7 @@ public class ProtempaDeviceManager implements ServletContextListener {
 	//	jobQ is a synch point. it is locked by a Request thread or by
 	//	the JobLoader thread (internal to this singleton).
 	//
+
 	private List<Job> jobQ = new ArrayList<Job> (1<<4);
 	private List<ProtempaDevice> devices = new ArrayList<ProtempaDevice>(4);
 	private final JobDao jobDao;
@@ -43,11 +44,11 @@ public class ProtempaDeviceManager implements ServletContextListener {
 				try {
 
 			    	System.out.println ("ETL: JobLoader loop");
-					Thread.sleep (10000L);
+					Thread.sleep (16000L);
 					synchronized (jobQ) {
 
-						//	load zero or one ProtempaDevice per sleep cycle
-						//
+						//	load zero or one ProtempaDevice per sleep cycle. there
+						//	is a race condition in Protempa concerning System.Properties use.
 						for (ProtempaDevice protempaDevice : devices) {
 
 							if ( ! protempaDevice.isBusy() && ! protempaDevice.hasFailed()) {
@@ -59,7 +60,7 @@ public class ProtempaDeviceManager implements ServletContextListener {
 									//	recovered from a failed ProtempaDevice.
 									protempaDevice.load (j);
 								}
-								return;
+								break;
 							}
 						}
 						for (int i=0 ; i<devices.size() ; i++) {
@@ -95,18 +96,17 @@ public class ProtempaDeviceManager implements ServletContextListener {
 
 		private Job getNextJob() {
 
+			//	synchronized jobQ access via client context.
+			//	don't use without synch'ing on jobQ.
 			Job ret = null;
-			synchronized (jobQ) {
+			Iterator<Job> itr = jobQ.iterator();
+			while (itr.hasNext()) {
 
-				Iterator<Job> itr = jobQ.iterator();
-				while (itr.hasNext()) {
+				ret = itr.next();
+				itr.remove();
+				if (ret != null) {
 
-					ret = itr.next();
-					itr.remove();
-					if (ret != null) {
-
-						return ret;
-					}
+					return ret;
 				}
 			}
 			return ret;

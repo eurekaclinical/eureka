@@ -1,7 +1,5 @@
 package edu.emory.cci.aiw.cvrg.eureka.etl.dao;
 
-import java.util.List;
-
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 
@@ -24,11 +22,11 @@ public class JpaConfDao implements ConfDao {
 		this.entityManager.persist(conf);
 	}
 
-	public Configuration get(Long id) {
+	public Configuration get(Long userId) {
+
 		Query query = this.entityManager.createQuery(
-				"select c from Configuration c where c.id = ?1",
-				Configuration.class).setParameter(1, id);
-		List<Configuration> resultList = query.getResultList();
-		return resultList.get(0);
+				"select c from Configuration c where c.userId = ?1",
+				Configuration.class).setParameter(1, userId);
+		return (Configuration)query.getSingleResult();
 	}
 }

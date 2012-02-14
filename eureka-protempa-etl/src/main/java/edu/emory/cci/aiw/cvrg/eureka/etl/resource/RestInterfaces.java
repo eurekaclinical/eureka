@@ -49,7 +49,7 @@ public class RestInterfaces {
 	@Path("test")
 	public String getJobbbb() {
 
-		System.out.println("ETL:getJob");
+		System.out.println ("ETL:getJob");
 		Job j = new Job();
 		j.setJobEvents(new ArrayList<JobEvent>());
 		this.protempaDeviceManager.qJob(j);
