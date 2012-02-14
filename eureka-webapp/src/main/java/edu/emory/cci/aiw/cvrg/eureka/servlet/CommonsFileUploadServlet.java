@@ -3,8 +3,6 @@ package edu.emory.cci.aiw.cvrg.eureka.servlet;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.security.Principal;
 import java.util.Iterator;
 import java.util.List;
 
@@ -24,7 +22,6 @@ import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.CommUtils;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.JobInfo;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.FileUpload;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.User;
  
@@ -62,7 +59,6 @@ public class CommonsFileUploadServlet extends HttpServlet {
 	}
  
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-	    PrintWriter out = response.getWriter();
  
 		DiskFileItemFactory  fileItemFactory = new DiskFileItemFactory ();
 		String eurekaServicesUrl = request.getSession().getServletContext()
@@ -89,10 +85,10 @@ public class CommonsFileUploadServlet extends HttpServlet {
 				 * Handle Form Fields.
 				 */
 				if(item.isFormField()) {
-					out.println("File Name = "+item.getFieldName()+", Value = "+item.getString());
+					System.out.println("File Name = "+item.getFieldName()+", Value = "+item.getString());
 				} else {
 					//Handle Uploaded files.
-					out.println("Field Name = "+item.getFieldName()+
+					System.out.println("Field Name = "+item.getFieldName()+
 						", File Name = "+item.getName()+
 						", Content type = "+item.getContentType()+
 						", File Size = "+item.getSize());
