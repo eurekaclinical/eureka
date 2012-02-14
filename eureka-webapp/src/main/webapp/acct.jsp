@@ -57,7 +57,7 @@
 				</table>
 
 				<div class="fltrt margin">
-                    <input type="submit" value="Save" id="saveAcctBtn" />
+                    <input type="submit" value="Save" id="saveAcctBtn" class="button" />
 				</div>
                 <input type="hidden" name="id" value="${user.id}" />
                 <input type="hidden" name="action" value="save" />
