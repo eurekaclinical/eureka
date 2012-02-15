@@ -177,6 +177,7 @@ public class Job {
 	public void setNewState (String state , String message , String[] stackTrace) {
 
 		JobEvent jev = new JobEvent();
+		jev.setJob(this);
 		jev.setTimeStamp (new Date (System.currentTimeMillis()));
 		jev.setState (state);
 		jev.setMessage (message);
