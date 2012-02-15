@@ -15,37 +15,37 @@
 
 	  		  <table class="white">
 	  		  <tr>
-	  		  	<td class="label white"><label id="lfirstname" for="firstName">First Name</label></td>
+	  		  	<td class=" white"><label id="lfirstname" for="firstName">First Name</label></td>
 	  		  	<td class="field white"><input id="firstName" name="firstName" type="text"  class="register_field" value="" /></td>
 	  		  	<td class="status white"></td>
 	  		  </tr>
 	  		  <tr>
-	  			<td class="label white"><label id="llastname" for="lastName">Last Name</label></td>
+	  			<td class=" white"><label id="llastname" for="lastName">Last Name</label></td>
 	  			<td class="field white"><input id="lastName" name="lastName" type="text" class="register_field" value=""/></td>
 	  			<td class="status white"></td>
 	  		  </tr>
 	  		  <tr>
-	  			<td class="label white"><label id="lemail" for="organization">Organization</label></td>
+	  			<td class=" white"><label id="lemail" for="organization">Organization</label></td>
 	  			<td class="field white"><input id="organization" name="organization" type="text"  class="register_field" value="" /></td>
 	  			<td class="status white"></td>
 	  		  </tr>
 	  		  <tr>
-	  			<td class="label white"><label id="lemail" for="email">Email Address</label></td>
+	  			<td class=" white"><label id="lemail" for="email">Email Address</label></td>
 	  			<td class="field white"><input id="email" name="email" type="text"  class="register_field" value="" /></td>
 	  			<td class="status white"></td>
 	  		  </tr>	  		  
 	  		  <tr>
-	  			<td class="label white"><label id="lemail" for="verifyEmail">Verify Email Address</label></td>
+	  			<td class=" white"><label id="lemail" for="verifyEmail">Verify Email Address</label></td>
 	  			<td class="field white"><input id="verifyEmail" name="verifyEmail" type="text"  class="register_field" value="" /></td>
 	  			<td class="status white"></td>
 	  		  </tr>
 	  		  <tr>
-	  			<td class="label white"><label id="lpassword" for="password">Password</label></td>
+	  			<td class=" white"><label id="lpassword" for="password">Password</label></td>
 	  			<td class="field white"><input id="password" name="password" type="password" class="register_field" value="" /></td>
 	  			<td class="status white"></td>
 	  		  </tr>
 	  		  <tr>
-	  			<td class="label white"><label id="lpassword_confirm" for="verifyPassword">Confirm Password</label></td>
+	  			<td class=" white"><label id="lpassword_confirm" for="verifyPassword">Confirm Password</label></td>
 	  			<td class="field white"><input id="verifyPassword" name="verifyPassword" type="password" class="register_field" value="" /></td>
 	  			<td class="status white"></td>
 	  		  </tr>
@@ -55,9 +55,11 @@
     <br />
     * Disclaimer: Loading real patient data into the system is strictly prohibited.<br />
     <br />
-    <input type="checkbox" name="checkbox" id="checkbox" />
+    <input type="checkbox" name="checkbox" id="checkbox" style="padding:0px" />
     <label for="checkbox">Click here to join our mailing list</label>
-   &nbsp;<input id="button" type="submit" value="Submit"/></div>
+   &nbsp;
+    <button type="submit" class="btn btn-primary submit">Submit</button>
+   </div>
 </form>
 	<div id="registrationComplete">
 		<h2>Your request has been successfully submitted. You will be notified once your account is activated.</h2>

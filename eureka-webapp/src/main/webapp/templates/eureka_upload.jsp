@@ -38,6 +38,7 @@ ul.nav a { zoom: 1; }
 <script src="${pageContext.request.contextPath}/js/jquery.validate.js"></script>
 <script src="${pageContext.request.contextPath}/js/eureka.js"></script>
 
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
 <!-- The jQuery UI widget factory, can be omitted if jQuery UI is already included -->
 <script src="${pageContext.request.contextPath}/js/vendor/jquery.ui.widget.js"></script>
 <!-- The Templates plugin is included to render the upload/download listings -->
@@ -138,11 +139,8 @@ ul.nav a { zoom: 1; }
     </ul>
   </div>
 
-  <div class="sidebar1">
-	<template:get name="sidebar" />
-  </div>
 
-  <div class="content">
+  <div class="content-upload">
 		<template:get name="content" />
   </div>
   
