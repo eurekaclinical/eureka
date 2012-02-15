@@ -12,6 +12,9 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import org.codehaus.jackson.annotate.JsonBackReference;
+import org.codehaus.jackson.annotate.JsonManagedReference;
+
 /**
  * An event associated with a job.
  * 
@@ -69,9 +72,10 @@ public class JobEvent {
 	/**
 	 * @return the job
 	 */
+	@JsonBackReference("job-event")
 	public Job getJob() {
 		return this.job;
-	}
+	}	
 
 	/**
 	 * @param inJob the job to set

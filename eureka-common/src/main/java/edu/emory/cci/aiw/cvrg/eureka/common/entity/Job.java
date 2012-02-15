@@ -16,6 +16,8 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import org.codehaus.jackson.annotate.JsonManagedReference;
+
 /**
  * Holds information about a job that is sent from the services layer to the
  * back-end layer.
@@ -153,6 +155,7 @@ public class Job {
 	/**
 	 * @return the jobEvents
 	 */
+	@JsonManagedReference("job-event")
 	public List<JobEvent> getJobEvents() {
 		return this.jobEvents;
 	}
