@@ -223,8 +223,8 @@ public class JobSubmissionThread extends Thread {
 		Job job = new Job();
 		job.setConfigurationId(this.configuration.getId());
 		job.setUserId(this.user.getId());
-		Job resultJob = resource.accept(MediaType.APPLICATION_JSON).post(
-				Job.class, job);
+		Job resultJob = resource.type(MediaType.APPLICATION_JSON)
+				.accept(MediaType.APPLICATION_JSON).post(Job.class, job);
 		if (resultJob.getCurrentState().equals("CREATED")) {
 			result = true;
 		} else {
