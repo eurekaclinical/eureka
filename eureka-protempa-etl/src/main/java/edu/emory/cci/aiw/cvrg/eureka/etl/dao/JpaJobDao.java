@@ -24,6 +24,12 @@ public class JpaJobDao implements JobDao {
 	@Transactional
 	public void save(Job job) {
 		this.entityManager.persist(job);
+		this.entityManager.flush();
+	}
+
+	@Transactional
+	public void merge(Job job) {
+		this.entityManager.merge(job);
 	}
 
 	public Job get(Long id) {
