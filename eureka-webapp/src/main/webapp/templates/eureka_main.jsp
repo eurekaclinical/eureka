@@ -18,19 +18,6 @@ ul.nav a { zoom: 1; }
 </style>
 <![endif]-->
 
-<!-- Bootstrap CSS Toolkit styles -->
-<link rel="stylesheet" href="http://blueimp.github.com/cdn/css/bootstrap.min.css">
-<style>body{padding-top:60px;}</style>
-<!-- Bootstrap styles for responsive website layout, supporting different screen sizes -->
-<link rel="stylesheet" href="http://blueimp.github.com/cdn/css/bootstrap-responsive.min.css">
-<!-- Bootstrap CSS fixes for IE6 -->
-<!--[if lt IE 7]><link rel="stylesheet" href="http://blueimp.github.com/cdn/css/bootstrap-ie6.min.css"><![endif]-->
-<!-- Bootstrap Image Gallery styles -->
-<link rel="stylesheet" href="http://blueimp.github.com/Bootstrap-Image-Gallery/css/bootstrap-image-gallery.min.css">
-<!-- CSS to style the file input field as button and adjust the Bootstrap progress bars -->
-<link rel="stylesheet" href="${pageContext.request.contextPath}/css/jquery.fileupload-ui.css">
-<!-- Shim to make HTML5 elements usable in older Internet Explorer versions -->
-<!--[if lt IE 9]><script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
 
 
 <link href="${pageContext.request.contextPath}/css/styles.css" rel="stylesheet" type="text/css" />
@@ -38,29 +25,6 @@ ul.nav a { zoom: 1; }
 <script src="${pageContext.request.contextPath}/js/jquery.validate.js"></script>
 <script src="${pageContext.request.contextPath}/js/eureka.js"></script>
 
-<!-- The jQuery UI widget factory, can be omitted if jQuery UI is already included -->
-<script src="${pageContext.request.contextPath}/js/vendor/jquery.ui.widget.js"></script>
-<!-- The Templates plugin is included to render the upload/download listings -->
-<script src="http://blueimp.github.com/JavaScript-Templates/tmpl.min.js"></script>
-<!-- The Load Image plugin is included for the preview images and image resizing functionality -->
-<script src="http://blueimp.github.com/JavaScript-Load-Image/load-image.min.js"></script>
-<!-- The Canvas to Blob plugin is included for image resizing functionality -->
-<script src="http://blueimp.github.com/JavaScript-Canvas-to-Blob/canvas-to-blob.min.js"></script>
-<!-- Bootstrap JS and Bootstrap Image Gallery are not required, but included for the demo -->
-<script src="http://blueimp.github.com/cdn/js/bootstrap.min.js"></script>
-<script src="http://blueimp.github.com/Bootstrap-Image-Gallery/js/bootstrap-image-gallery.min.js"></script>
-<!-- The Iframe Transport is required for browsers without support for XHR file uploads -->
-<script src="${pageContext.request.contextPath}/js/jquery.iframe-transport.js"></script>
-<!-- The basic File Upload plugin -->
-<script src="${pageContext.request.contextPath}/js/jquery.fileupload.js"></script>
-<!-- The File Upload image processing plugin -->
-<script src="${pageContext.request.contextPath}/js/jquery.fileupload-ip.js"></script>
-<!-- The File Upload user interface plugin -->
-<script src="${pageContext.request.contextPath}/js/jquery.fileupload-ui.js"></script>
-<!-- The main application script -->
-<script src="${pageContext.request.contextPath}/js/main.js"></script>
-<!-- The XDomainRequest Transport is included for cross-domain file deletion for IE8+ -->
-<!--[if gte IE 8]><script src="${pageContext.request.contextPath}/js/cors/jquery.xdr-transport.js"></script><![endif]-->
 
 <link rel="SHORTCUT ICON" href="favicon.ico">
 <meta name="Description" content="A Clinical Analysis Tool for Biomedical Informatics and Data" />

@@ -9,10 +9,6 @@ body {
 	color: #000;
 }
 
-input {
-	padding: 2px;
-	margin-bottom: 0px;
-}
 ul {
 	padding: 0;
 	margin: 0;
@@ -22,14 +18,14 @@ li {
 	display: inline;
 }
 
-ul.navbarli a, ul.navbarli a:visited {
+ul.nav a, ul.nav a:visited {
 	text-decoration: none;
 	color: #036;
 	padding-right:10px;
 	font-weight: 800;
 	font-size:9px;
 }
-ul.navbarli a:hover, ul.navbarli a:active, ul.navbarli a:focus {
+ul.nav a:hover, ul.nav a:active, ul.nav a:focus {
 	color: #999999;
 }
 h1, h2, h3, h4, h5, h6, p {
@@ -97,7 +93,7 @@ a:visited {
 	height:11px;
 	}
 	
-.navbarli {
+.nav {
 	padding-left:10px;
 	height:30px;
 	background-image:url(../images/header_bg.png);
@@ -122,15 +118,6 @@ a:visited {
 	padding: 20px 0;
 	width: 60.4%;
 	float: right;
-	margin: 5px 0 5px 5px;
-	border: 1px solid #CCC;
-	background-color:#FFF;
-	height:330px;
-}
-
-.content-upload {
-	padding: 20px 0;
-	width: 99%;
 	margin: 5px 0 5px 5px;
 	border: 1px solid #CCC;
 	background-color:#FFF;
@@ -201,7 +188,7 @@ table, .white
 td
 {
     margin: 0;
-    padding: 2px;
+    padding: 4px;
     border-width: 1px 0 0 0;
     background-color: #fff;
 }
