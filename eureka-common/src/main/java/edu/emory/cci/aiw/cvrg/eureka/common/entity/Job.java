@@ -57,12 +57,24 @@ public class Job {
 
 		public int compare (JobEvent a , JobEvent b) {
 
-			return 0;
+			if (a.getId()==null && b.getId()==null) {
+
+				return 0;
+			}
+			if (a.getId()==null) {
+
+				return 1;
+			}
+			if (b.getId()==null) {
+
+				return -1;
+			}
+			return a.getId().compareTo(b.getId());
 		}
 
 		public boolean equals (Object obj) {
 
-			return false;
+			return this.equals(obj);
 		}
 	}
 
