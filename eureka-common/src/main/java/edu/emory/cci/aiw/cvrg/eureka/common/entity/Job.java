@@ -1,5 +1,6 @@
 package edu.emory.cci.aiw.cvrg.eureka.common.entity;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
@@ -50,7 +51,7 @@ public class Job {
 	 * The events generated for the job.
 	 */
 	@OneToMany(cascade = CascadeType.ALL, targetEntity = JobEvent.class)
-	private List<JobEvent> jobEvents;
+	private List<JobEvent> jobEvents = new ArrayList<JobEvent>();;
 
 	private static class JobEventComparator implements Comparator<JobEvent> {
 
