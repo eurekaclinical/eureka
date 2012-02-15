@@ -56,7 +56,7 @@
     * Disclaimer: Loading real patient data into the system is strictly prohibited.<br />
     <br />
     <input type="checkbox" name="checkbox" id="checkbox" style="padding:0px" />
-    <label for="checkbox">Click here to join our mailing list</label>
+    <label for="checkbox" style="display: inline">Click here to join our mailing list</label>
    &nbsp;
     <button type="submit" class="btn btn-primary submit">Submit</button>
    </div>
