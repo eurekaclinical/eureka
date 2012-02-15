@@ -49,7 +49,7 @@ public class RestInterfaces {
 	@Path("test")
 	public String getJobbbb() {
 
-		System.out.println ("ETL:getJob");
+		System.out.println("ETL:getJob");
 		Job j = new Job();
 		j.setJobEvents(new ArrayList<JobEvent>());
 		this.protempaDeviceManager.qJob(j);
@@ -82,34 +82,14 @@ public class RestInterfaces {
 	@GET
 	@Path("status")
 	@Produces("application/json")
-	public List<Job> getJob(@QueryParam("jobId") String jobId,
-			@QueryParam("userId") String userId,
+	public List<Job> getJob(@QueryParam("jobId") Long jobId,
+			@QueryParam("userId") Long userId,
 			@QueryParam("status") String status,
 			@QueryParam("intervalBegin") Date intervalBegin,
 			@QueryParam("intervalEnd") Date intervalEnd,
 			@Context HttpServletRequest req) {
 
-		Long _jobId = null;
-		Long _userId = null;
-
-		try {
-
-			_jobId = Long.parseLong(jobId);
-		} catch (NumberFormatException ignore) {
-
-		} catch (NullPointerException ignore) {
-
-		}
-		try {
-
-			_userId = Long.parseLong(userId);
-		} catch (NumberFormatException ignore) {
-
-		} catch (NullPointerException ignore) {
-
-		}
-
-		JobFilter jobFilter = new JobFilter(_jobId, _userId, status,
+		JobFilter jobFilter = new JobFilter(jobId, userId, status,
 				intervalBegin, intervalEnd);
 		return this.jobDao.get(jobFilter);
 	}
@@ -122,23 +102,18 @@ public class RestInterfaces {
 	@Path("getConf/{userId}")
 	@Consumes("application/json")
 	@Produces("application/json")
-	public Configuration getConfByUserId(@PathParam("userId") String userId) {
-
-		Configuration ret = null;
-		Long _userId = null;
-		try {
-
-			_userId = Long.parseLong(userId);
-		} catch (NumberFormatException nfe) {
-
-			return null;
-		} catch (NullPointerException npe) {
-
-			return null;
-		}
-
-		ret = this.confDao.get(_userId);
-		return ret;
+	public Configuration getConfByUserId(@PathParam("userId") Long userId) {
+		// return this.confDao.get(userId);
+		// TODO: GET RID OF THIS FAKE CONFIGURATION WHEN REAL CONFIGURATIONS
+		// ARE AVAILABLE
+		Configuration fakeConfiguration = new Configuration();
+		fakeConfiguration.setProtempaDatabaseName("XE");
+		fakeConfiguration.setProtempaHost("adrastea.cci.emory.edu");
+		fakeConfiguration.setProtempaPort(Integer.valueOf(1521));
+		fakeConfiguration.setProtempaSchema("cvrg");
+		fakeConfiguration.setProtempaPass("cvrg");
+		fakeConfiguration.setUserId(userId);
+		return fakeConfiguration;
 	}
 
 	@POST
