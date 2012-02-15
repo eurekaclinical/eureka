@@ -88,7 +88,9 @@
 				</table>
 
 			<div class="fltrt margin">
-				<input type="submit" value="Save"/>
+				<button class="btn btn-primary">
+                    Save
+                </button>
 			</div>
 			</form>
 
