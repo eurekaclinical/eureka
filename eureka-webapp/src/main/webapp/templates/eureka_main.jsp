@@ -53,7 +53,7 @@ ul.nav a { zoom: 1; }
 </div>
 
  <div>    
-  <ul class="navbarli">
+  <ul class="nav">
       <li><a href="${pageContext.request.contextPath}/about.jsp"><img src="${pageContext.request.contextPath}/images/about_icon.gif" alt="About" width="30" height="30" align="absmiddle" />About</a></li>
       <c:choose>
         <c:when test="${pageContext.request.remoteUser == null}">
