@@ -9,78 +9,44 @@
 	</template:content>
 	
 	<template:content name="content">
-	<script type="text/javascript">
 
-	$(document).ready(function() {
-		
-		$('#form2').submit(function() {
-			  var fname = $('#fname').val(data.firstName);
-			  var lname = $('#lname').val(data.lastName);
-			  var org 	= $('#org').val(data.organization);
-			  var email = $('#email').val(data.email);
-			  var pwd1  = $('#password1').val(data.password);
-			  var pwd2  = $('#password2').val(data.password);
-			  var json_obj = 
-			  	{ 
-					  "first_name": fname, 
-					  "last_name": 	lname, 
-					  "email": 		email, 
-					  "organization": org
-				};
-			  
-			$.ajax({
-				  type: "POST",
-				  data: json_obj,
-				  url: '/eureka/api/user/0',
-				  dataType: 'json',
-				  success: function(data) {
-					  console.log(data);
-				  }
-				});
-
-		});
-		
-	
-	});
-
-</script>
-    <h3>Register</h3>
-<form id="signupForm" action="register" method="get">
+    <h3 id="registerHeading">Register</h3>
+<form id="signupForm" action="#" method="post">
 
 	  		  <table class="white">
 	  		  <tr>
 	  		  	<td class="label white"><label id="lfirstname" for="firstName">First Name</label></td>
-	  		  	<td class="field white"><input id="firstName" name="firstName" type="text" value="" class="register_field" /></td>
+	  		  	<td class="field white"><input id="firstName" name="firstName" type="text"  class="register_field" value="Test" /></td>
 	  		  	<td class="status white"></td>
 	  		  </tr>
 	  		  <tr>
 	  			<td class="label white"><label id="llastname" for="lastName">Last Name</label></td>
-	  			<td class="field white"><input id="lastName" name="lastName" type="text" value="" class="register_field" /></td>
+	  			<td class="field white"><input id="lastName" name="lastName" type="text" class="register_field" value="User"/></td>
 	  			<td class="status white"></td>
 	  		  </tr>
 	  		  <tr>
 	  			<td class="label white"><label id="lemail" for="organization">Organization</label></td>
-	  			<td class="field white"><input id="organization" name="organization" type="text" value="" class="register_field" /></td>
+	  			<td class="field white"><input id="organization" name="organization" type="text"  class="register_field" value="Emory" /></td>
 	  			<td class="status white"></td>
 	  		  </tr>
 	  		  <tr>
 	  			<td class="label white"><label id="lemail" for="email">Email Address</label></td>
-	  			<td class="field white"><input id="email" name="email" type="text" value="" class="register_field" /></td>
+	  			<td class="field white"><input id="email" name="email" type="text"  class="register_field" value="a@bc.com" /></td>
 	  			<td class="status white"></td>
 	  		  </tr>	  		  
 	  		  <tr>
 	  			<td class="label white"><label id="lemail" for="verifyEmail">Verify Email Address</label></td>
-	  			<td class="field white"><input id="verifyEmail" name="verifyEmail" type="text" value="" class="register_field" /></td>
+	  			<td class="field white"><input id="verifyEmail" name="verifyEmail" type="text"  class="register_field" value="a@bc.com" /></td>
 	  			<td class="status white"></td>
 	  		  </tr>
 	  		  <tr>
 	  			<td class="label white"><label id="lpassword" for="password">Password</label></td>
-	  			<td class="field white"><input id="password" name="password" type="password" class="register_field" value="" /></td>
+	  			<td class="field white"><input id="password" name="password" type="password" class="register_field" value="test1234" /></td>
 	  			<td class="status white"></td>
 	  		  </tr>
 	  		  <tr>
 	  			<td class="label white"><label id="lpassword_confirm" for="verifyPassword">Confirm Password</label></td>
-	  			<td class="field white"><input id="verifyPassword" name="verifyPassword" type="password" class="register_field" value="" /></td>
+	  			<td class="field white"><input id="verifyPassword" name="verifyPassword" type="password" class="register_field" value="test1234" /></td>
 	  			<td class="status white"></td>
 	  		  </tr>
   			</table>
@@ -93,7 +59,9 @@
     <label for="checkbox">Click here to join our mailing list</label>
    &nbsp;<input id="button" type="submit" value="Submit"/></div>
 </form>
-
+	<div id="registrationComplete">
+		<h2>Your request has been successfully submitted. You will be notified once your account is activated.</h2>
+	</div>
 	</template:content>
 	
 	<template:content name="subcontent">

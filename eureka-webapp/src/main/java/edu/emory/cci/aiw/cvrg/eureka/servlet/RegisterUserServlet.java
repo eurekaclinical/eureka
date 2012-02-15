@@ -31,6 +31,12 @@ import edu.emory.cci.aiw.cvrg.eureka.common.entity.UserRequest;
 public class RegisterUserServlet extends HttpServlet {
 
 	@Override
+	protected void doPost(HttpServletRequest req, HttpServletResponse resp)
+			throws ServletException, IOException {
+		doGet(req, resp);
+	}
+	
+	@Override
 	public void doGet(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
 
@@ -63,9 +69,10 @@ public class RegisterUserServlet extends HttpServlet {
 			ClientResponse response = webResource.path("/api/user/add")
 					.accept(MediaType.TEXT_PLAIN)
 					.post(ClientResponse.class, userRequest);
+			
+			System.out.println("Registered: " + firstName + " " + lastName);
 
-
-			resp.sendRedirect(req.getContextPath());
+			
 
 		} catch (KeyManagementException e) {
 			e.printStackTrace();

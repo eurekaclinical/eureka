@@ -94,12 +94,43 @@ $(document).ready(function() {
 	
 	$('#newPasswordTable').hide();
 	$('#saveAcctBtn').hide();
+	$('#registrationComplete').hide();
 	
 	$('#editAcctBtn').click(function(){
 	     $('#newPasswordTable').show();
 	     $('#editAcctBtn').hide();
 	     $('#saveAcctBtn').show();
     });
+	
+	 $("#signupForm").submit(function() {
+		var firstName = $('#firstName').val();
+		var lastName  = $('#lastName').val(); 
+		var organization = $('#organization').val();
+		var password = $('#password').val();
+		var verifyPassword = $('#verifyPassword').val();
+		var  email = $('#email').val();
+		var verifyEmail = $('#verifyEmail').val();
+
+        var dataString = 'firstName='+ firstName+ '&lastName=' + lastName + '&organization=' + organization + 		
+                            '&password=' + password+ '&verifyPassword=' + verifyPassword + 
+                            '&email=' + email + '&verifyEmail=' + verifyEmail;		
+		$.ajax({
+              type: 'POST',
+              url: 'register',
+              data: dataString,
+              success: function() {
+                  $('#signupForm').hide();
+                  $('#registerHeading').hide();
+                  $('#registrationComplete').show();
+			  }
+			});
+
+        return false;
+		
+
+	 });
+	
+	
 
 });
 	
