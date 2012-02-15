@@ -5,6 +5,9 @@ import java.security.NoSuchAlgorithmException;
 
 import javax.servlet.ServletContextEvent;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.persist.PersistService;
@@ -37,9 +40,15 @@ public class ConfigListener extends GuiceServletContextListener {
 	private PersistService persistService = null;
 
 	@Override
-	synchronized protected Injector getInjector() {
+	protected Injector getInjector() {
 		return this.injector;
 	}
+
+	/**
+	 * The class level logger.
+	 */
+	private static final Logger LOGGER = LoggerFactory
+			.getLogger(ConfigListener.class);
 
 	/*
 	 * @see
@@ -56,9 +65,9 @@ public class ConfigListener extends GuiceServletContextListener {
 		try {
 			bootstrap.configure();
 		} catch (KeyManagementException e1) {
-			e1.printStackTrace();
+			LOGGER.error(e1.getMessage(), e1);
 		} catch (NoSuchAlgorithmException e1) {
-			e1.printStackTrace();
+			LOGGER.error(e1.getMessage(), e1);
 		}
 		try {
 			ApplicationProperties applicationProperties = this.getInjector()
@@ -68,9 +77,9 @@ public class ConfigListener extends GuiceServletContextListener {
 			this.jobUpdateThread.setDaemon(true);
 			this.jobUpdateThread.start();
 		} catch (KeyManagementException e) {
-			e.printStackTrace();
+			LOGGER.error(e.getMessage(), e);
 		} catch (NoSuchAlgorithmException e) {
-			e.printStackTrace();
+			LOGGER.error(e.getMessage(), e);
 		}
 	}
 
@@ -88,8 +97,7 @@ public class ConfigListener extends GuiceServletContextListener {
 		try {
 			this.jobUpdateThread.join(20000);
 		} catch (InterruptedException e) {
-			// do nothing, we're about to shut down.
-			e.printStackTrace();
+			LOGGER.error(e.getMessage(), e);
 		}
 	}
 }
