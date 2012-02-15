@@ -17,6 +17,9 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.google.inject.Inject;
 import com.sun.jersey.api.client.ClientResponse.Status;
 
@@ -36,6 +39,11 @@ import edu.emory.cci.aiw.cvrg.eureka.services.email.EmailSender;
 @Path("/user")
 public class UserResource {
 
+	/**
+	 * The class logger.
+	 */
+	private static final Logger LOGGER = LoggerFactory
+			.getLogger(UserResource.class);
 	/**
 	 * Data access object to work with User objects.
 	 */
@@ -74,6 +82,7 @@ public class UserResource {
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public List<User> getUsers() {
+		LOGGER.debug("Returning list of users");
 		return this.userDao.getUsers();
 	}
 
@@ -130,8 +139,10 @@ public class UserResource {
 			user.setOrganization(userRequest.getOrganization());
 			user.setPassword(userRequest.getPassword());
 			user.setRoles(this.getDefaultRoles());
+			LOGGER.debug("Saving new user {0}", user.getEmail());
 			this.userDao.save(user);
 			try {
+				LOGGER.debug("Sending email to {0}", user.getEmail());
 				this.emailSender.sendMessage(user.getEmail());
 			} catch (MessagingException e) {
 				System.out.println("ERROR SENDING EMAIL: " + e.getMessage());
