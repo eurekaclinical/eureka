@@ -18,6 +18,8 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 import org.codehaus.jackson.annotate.JsonManagedReference;
 
+import com.sun.xml.bind.CycleRecoverable;
+
 /**
  * Holds information about a job that is sent from the services layer to the
  * back-end layer.
@@ -28,7 +30,7 @@ import org.codehaus.jackson.annotate.JsonManagedReference;
 @XmlRootElement
 @Entity
 @Table(name = "jobs")
-public class Job {
+public class Job implements CycleRecoverable {
 
 	/**
 	 * The unique identifier for the job request.
@@ -57,24 +59,24 @@ public class Job {
 
 	private static class JobEventComparator implements Comparator<JobEvent> {
 
-		public int compare (JobEvent a , JobEvent b) {
+		public int compare(JobEvent a, JobEvent b) {
 
-			if (a.getId()==null && b.getId()==null) {
+			if (a.getId() == null && b.getId() == null) {
 
 				return 0;
 			}
-			if (a.getId()==null) {
+			if (a.getId() == null) {
 
 				return 1;
 			}
-			if (b.getId()==null) {
+			if (b.getId() == null) {
 
 				return -1;
 			}
 			return a.getId().compareTo(b.getId());
 		}
 
-		public boolean equals (Object obj) {
+		public boolean equals(Object obj) {
 
 			return this.equals(obj);
 		}
@@ -167,26 +169,22 @@ public class Job {
 		this.jobEvents = inJobEvents;
 	}
 
-
-
-
-
 	public String getCurrentState() {
 
 		JobEvent jev = getSortedEvents().last();
 		return (jev == null) ? "" : jev.getState();
 	}
 
-	public void setNewState (String state , String message , String[] stackTrace) {
+	public void setNewState(String state, String message, String[] stackTrace) {
 
 		JobEvent jev = new JobEvent();
 		jev.setJob(this);
-		jev.setTimeStamp (new Date (System.currentTimeMillis()));
-		jev.setState (state);
-		jev.setMessage (message);
-		jev.setExceptionStackTrace (stackTrace);
-		jev.setJob (this);
-		this.jobEvents.add (jev);
+		jev.setTimeStamp(new Date(System.currentTimeMillis()));
+		jev.setState(state);
+		jev.setMessage(message);
+		jev.setExceptionStackTrace(stackTrace);
+		jev.setJob(this);
+		this.jobEvents.add(jev);
 	}
 
 	public Date getCreationTime() {
@@ -201,8 +199,18 @@ public class Job {
 
 			return new TreeSet<JobEvent>();
 		}
-		TreeSet<JobEvent> ts = new TreeSet<JobEvent> (JOB_EVENT_COMPARATOR);
-		ts.addAll (this.jobEvents);
+		TreeSet<JobEvent> ts = new TreeSet<JobEvent>(JOB_EVENT_COMPARATOR);
+		ts.addAll(this.jobEvents);
 		return ts;
 	}
+
+	/* (non-Javadoc)
+	 * @see com.sun.xml.bind.CycleRecoverable#onCycleDetected(com.sun.xml.bind.CycleRecoverable.Context)
+	 */
+	@Override
+	public Object onCycleDetected(Context inContext) {
+		return null;
+	}
+	
+	
 }

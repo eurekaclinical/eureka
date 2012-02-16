@@ -13,7 +13,8 @@ import javax.persistence.TemporalType;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import org.codehaus.jackson.annotate.JsonBackReference;
-import org.codehaus.jackson.annotate.JsonManagedReference;
+
+import com.sun.xml.bind.CycleRecoverable;
 
 /**
  * An event associated with a job.
@@ -24,7 +25,7 @@ import org.codehaus.jackson.annotate.JsonManagedReference;
 @XmlRootElement
 @Entity
 @Table(name = "job_events")
-public class JobEvent {
+public class JobEvent implements CycleRecoverable {
 
 	/**
 	 * The unique identifier for the job event.
@@ -75,7 +76,7 @@ public class JobEvent {
 	@JsonBackReference("job-event")
 	public Job getJob() {
 		return this.job;
-	}	
+	}
 
 	/**
 	 * @param inJob the job to set
@@ -138,5 +139,16 @@ public class JobEvent {
 	 */
 	public void setMessage(String inMessage) {
 		this.message = inMessage;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.sun.xml.bind.CycleRecoverable#onCycleDetected(com.sun.xml.bind.
+	 * CycleRecoverable.Context)
+	 */
+	@Override
+	public Object onCycleDetected(Context inContext) {
+		return null;
 	}
 }
