@@ -8,6 +8,10 @@ import java.util.List;
 
 import javax.ws.rs.core.MediaType;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.google.inject.Inject;
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.WebResource;
 
@@ -17,7 +21,7 @@ import edu.emory.cci.aiw.cvrg.eureka.common.entity.FileError;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.FileUpload;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.FileWarning;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.Job;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.User;
+import edu.emory.cci.aiw.cvrg.eureka.services.config.ApplicationProperties;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.FileDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dataprovider.DataProvider;
 import edu.emory.cci.aiw.cvrg.eureka.services.dataprovider.DataProviderException;
@@ -36,54 +40,58 @@ import edu.emory.cci.aiw.cvrg.eureka.services.jdbc.DataInserter;
 public class JobSubmissionThread extends Thread {
 
 	/**
-	 * The file upload to process.
-	 */
-	private final FileUpload fileUpload;
-	/**
 	 * The data access object used to update status information about the job.
 	 */
 	private final FileDao fileDao;
 	/**
-	 * The URL used to get the user's configuration (used for data base login
-	 * information).
+	 * The application level configuration.
 	 */
-	private final String configurationUrl;
+	private final ApplicationProperties applicationProperties;
 	/**
-	 * The URL used to submit the job.
+	 * The unique identifier for the file upload to process.
 	 */
-	private final String jobUrl;
+	private Long fileUploadId;
 	/**
-	 * The current user
+	 * The file upload to process.
 	 */
-	private final User user;
+	private FileUpload fileUpload;
 	/**
 	 * The current user's configuration.
 	 */
 	private Configuration configuration;
 
 	/**
+	 * The class level logger.
+	 */
+	private static final Logger LOGGER = LoggerFactory
+			.getLogger(JobSubmissionThread.class);
+
+	/**
 	 * Construct an instance with the given file upload, DAO, and related
 	 * information.
 	 * 
-	 * @param inFileUpload The file to process.
 	 * @param inFileDao The DAO used to update status information about the file
 	 *            upload.
-	 * @param inConfUrl The URL used to find the user's configuration
-	 *            information.
-	 * @param inJobUrl The URL used to submit a new job to the back end.
+	 * @param inApplicationProperties Application level configuration object,
+	 *            used to fetch relevant URLs needed to communicate with the ETL
+	 *            layer.
 	 * @throws NoSuchAlgorithmException Thrown by the secure restful client.
 	 * @throws KeyManagementException Thrown by the secure restful client.
 	 */
-	public JobSubmissionThread(FileUpload inFileUpload, FileDao inFileDao,
-			String inConfUrl, String inJobUrl) throws KeyManagementException,
-			NoSuchAlgorithmException {
+	@Inject
+	public JobSubmissionThread(FileDao inFileDao,
+			ApplicationProperties inApplicationProperties)
+			throws KeyManagementException, NoSuchAlgorithmException {
 		super();
-		this.fileUpload = inFileUpload;
 		this.fileDao = inFileDao;
-		this.configurationUrl = inConfUrl;
-		this.jobUrl = inJobUrl;
-		this.user = this.fileUpload.getUser();
-		this.getUserConfiguration();
+		this.applicationProperties = inApplicationProperties;
+	}
+
+	/**
+	 * @param inFileUploadId the fileUploadId to set
+	 */
+	public void setFileUploadId(Long inFileUploadId) {
+		this.fileUploadId = inFileUploadId;
 	}
 
 	/*
@@ -91,37 +99,52 @@ public class JobSubmissionThread extends Thread {
 	 */
 	@Override
 	public void run() {
-		try {
-			// first we make sure that the file is validated
-			DataProvider dataProvider = new XlsxDataProvider(this.fileUpload);
-			if (this.validateUpload(dataProvider)) {
-				this.fileUpload.setValidated(true);
-				this.fileDao.save(this.fileUpload);
-				// then we make sure the file is processed
-				if (this.processUpload(dataProvider)) {
-					this.fileUpload.setProcessed(true);
+		this.fileUpload = this.fileDao.get(this.fileUploadId);
+		if (this.fileUpload != null) {
+			try {
+				// first we make sure that the file is validated
+				DataProvider dataProvider = new XlsxDataProvider(
+						this.fileUpload);
+				if (this.validateUpload(dataProvider)) {
+					LOGGER.debug("Data file validated");
+					this.fileUpload.setValidated(true);
 					this.fileDao.save(this.fileUpload);
-					// finally, we submit the job
-					if (this.submitJob()) {
-						this.fileUpload.setCompleted(true);
+					// then we make sure the file is processed
+					if (this.processUpload(dataProvider)) {
+						LOGGER.debug("Data file processed");
+						this.fileUpload.setProcessed(true);
 						this.fileDao.save(this.fileUpload);
+						// finally, we submit the job
+						if (this.submitJob()) {
+							LOGGER.debug("Job submitted");
+							this.fileUpload.setCompleted(true);
+							this.fileDao.save(this.fileUpload);
+						} else {
+							this.setCompleteWithError("Job could not be submitted properly");
+						}
 					} else {
-						this.setCompleteWithError("Job could not be submitted properly");
+						this.setCompleteWithError("Data could not be processed");
 					}
 				} else {
-					this.setCompleteWithError("Data could not be processed");
+					this.setCompleteWithError("Invalid data file");
 				}
-			} else {
-				this.setCompleteWithError("Invalid data file");
+			} catch (DataProviderException e) {
+				LOGGER.error(e.getMessage(), e);
+				this.setCompleteWithError(e.getMessage());
+			} catch (KeyManagementException e) {
+				LOGGER.error(e.getMessage(), e);
+				this.setCompleteWithError(e.getMessage());
+			} catch (NoSuchAlgorithmException e) {
+				LOGGER.error(e.getMessage(), e);
+				this.setCompleteWithError(e.getMessage());
+			} catch (SQLException e) {
+				LOGGER.error(e.getMessage(), e);
+				this.setCompleteWithError(e.getMessage());
 			}
-		} catch (DataProviderException e) {
-			this.setCompleteWithError(e.getMessage());
-		} catch (KeyManagementException e) {
-			this.setCompleteWithError(e.getMessage());
-		} catch (NoSuchAlgorithmException e) {
-			this.setCompleteWithError(e.getMessage());
-		} catch (SQLException e) {
-			this.setCompleteWithError(e.getMessage());
+		} else {
+			LOGGER.error("run() called before setting a file upload");
+			throw new IllegalStateException(
+					"run() called before setting a file upload");
 		}
 	}
 
@@ -151,8 +174,6 @@ public class JobSubmissionThread extends Thread {
 		// if the validation caused any errors/warnings, we insert them into
 		// our file upload object, and amend our response.
 		if (events.size() > 0) {
-			List<FileError> errors = new ArrayList<FileError>();
-			List<FileWarning> warnings = new ArrayList<FileWarning>();
 			for (ValidationEvent event : events) {
 				if (event.isFatal()) {
 					FileError error = new FileError();
@@ -160,18 +181,16 @@ public class JobSubmissionThread extends Thread {
 					error.setText(event.getMessage());
 					error.setType(event.getType());
 					error.setFileUpload(this.fileUpload);
-					errors.add(error);
+					this.fileUpload.addError(error);
 				} else {
 					FileWarning warning = new FileWarning();
 					warning.setLineNumber(event.getLine());
 					warning.setText(event.getMessage());
 					warning.setType(event.getType());
 					warning.setFileUpload(this.fileUpload);
-					warnings.add(warning);
+					this.fileUpload.addWarning(warning);
 				}
 			}
-			this.fileUpload.setErrors(errors);
-			this.fileUpload.setWarnings(warnings);
 		}
 		if (this.fileUpload.containsErrors()) {
 			result = false;
@@ -194,7 +213,8 @@ public class JobSubmissionThread extends Thread {
 			throws KeyManagementException, NoSuchAlgorithmException,
 			SQLException {
 		boolean result = true;
-		DataInserter dataInserter = new DataInserter(this.configuration);
+		DataInserter dataInserter = new DataInserter(
+				this.getUserConfiguration());
 		dataInserter.insertPatients(dataProvider.getPatients());
 		dataInserter.insertEncounters(dataProvider.getEncounters());
 		dataInserter.insertProviders(dataProvider.getProviders());
@@ -219,10 +239,11 @@ public class JobSubmissionThread extends Thread {
 			NoSuchAlgorithmException {
 		boolean result;
 		Client client = CommUtils.getClient();
-		WebResource resource = client.resource(this.jobUrl);
+		WebResource resource = client.resource(this.applicationProperties
+				.getEtlJobSubmitUrl());
 		Job job = new Job();
-		job.setConfigurationId(this.configuration.getId());
-		job.setUserId(this.user.getId());
+		job.setConfigurationId(this.getUserConfiguration().getId());
+		job.setUserId(this.fileUpload.getUser().getId());
 		Job resultJob = resource.type(MediaType.APPLICATION_JSON)
 				.accept(MediaType.APPLICATION_JSON).post(Job.class, job);
 		if (resultJob.getCurrentState().equals("CREATED")) {
@@ -236,15 +257,23 @@ public class JobSubmissionThread extends Thread {
 	/**
 	 * Get the configuration associated with the current user.
 	 * 
+	 * @return The user configuration.
+	 * 
 	 * @throws KeyManagementException
 	 * @throws NoSuchAlgorithmException
 	 */
-	private void getUserConfiguration() throws KeyManagementException,
+	private Configuration getUserConfiguration() throws KeyManagementException,
 			NoSuchAlgorithmException {
-		Client client = CommUtils.getClient();
-		WebResource resource = client.resource(this.configurationUrl);
-		this.configuration = resource.accept(MediaType.APPLICATION_JSON).get(
-				Configuration.class);
+		if (this.configuration == null) {
+			Client client = CommUtils.getClient();
+			WebResource resource = client.resource(this.applicationProperties
+					.getEtlConfGetUrl()
+					+ "/"
+					+ this.fileUpload.getUser().getId());
+			this.configuration = resource.accept(MediaType.APPLICATION_JSON)
+					.get(Configuration.class);
+		}
+		return this.configuration;
 	}
 
 	/**
@@ -262,6 +291,7 @@ public class JobSubmissionThread extends Thread {
 
 		this.fileUpload.addError(error);
 		this.fileUpload.setCompleted(true);
+
 		this.fileDao.save(this.fileUpload);
 	}
 
