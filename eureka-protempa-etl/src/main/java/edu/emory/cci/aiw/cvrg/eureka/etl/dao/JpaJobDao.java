@@ -30,7 +30,7 @@ public class JpaJobDao implements JobDao {
 	/**
 	 * Construct instance with the given EntityManager provider.
 	 * 
-	 * @param inEMProvider
+	 * @param inEMProvider The entity manager provider.
 	 */
 	@Inject
 	public JpaJobDao(Provider<EntityManager> inEMProvider) {
@@ -57,8 +57,7 @@ public class JpaJobDao implements JobDao {
 		Query query = this.getEntityManager()
 				.createQuery("select j from Job j where j.id = ?1", Job.class)
 				.setParameter(1, id);
-		List<Job> resultList = query.getResultList();
-		return resultList.get(0);
+		return (Job)query.getSingleResult();
 	}
 
 	@Override
