@@ -11,7 +11,7 @@
 	<template:content name="content">
 
 			<h3>Account</h3>
-            <form action="${pageContext.request.contextPath}/protected/user_acct?action=save">
+            <form id="userAcctForm" action="#" method="post">
 			<div class="pad pad_top">
 				<table id="userAcctTable">
 					<tr>
@@ -42,27 +42,36 @@
 				</div>
 				
 				<table id="newPasswordTable">
+				
+					
 					<tr>
-						<td>Old Password:</td>
-						<td colspan="4"><input type="password" name="oldPassword"/></td>
+						<td class=" white"><label id="lemail" for="email">Old Password:</label></td>
+	  					<td class="field white"><input type="password" name="oldPassword" id="oldPassword" /></td>
+	  					<td class="status white"></td>					
+					<tr>
+						<td class=" white"><label id="lemail" for="email">New Password:</label></td>
+	  					<td class="field white"><input type="password" name="newPassword" id="newPassword" /></td>
+	  					<td class="status white"></td>					
 					</tr>
 					<tr>
-						<td>New Password:</td>
-						<td colspan="4"><input type="password" name="newPassword"/></td>
-					</tr>
-					<tr>
-						<td>Re-enter New Password:</td>
-						<td colspan="4"><input type="password" name="verifyPassword"/></td>
+						<td class=" white"><label id="lemail" for="email">Re-enter New Password</label></td>
+	  					<td class="field white"><input type="password" name="verifyPassword" id="verifyPassword" /></td>
+	  					<td class="status white"></td>					
 					</tr>
 				</table>
 
 				<div class="fltrt margin">
                     <input type="submit" value="Save" id="saveAcctBtn" class="button" />
 				</div>
-                <input type="hidden" name="id" value="${user.id}" />
+                <input type="hidden" name="id" id="id" value="${user.id}" />
                 <input type="hidden" name="action" value="save" />
             </form>
-
+			<div id="passwordChangeComplete">
+				<h2>Your password has been successfully changed.</h2>
+			</div>
+			<div id="passwordChangeFailure">
+				<h2>There was an error changing your password.  The old password did not match with our system.</h2>
+			</div>
 
 
 		</div>

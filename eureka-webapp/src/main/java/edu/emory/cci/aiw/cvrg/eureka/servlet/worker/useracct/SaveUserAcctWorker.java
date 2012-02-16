@@ -3,25 +3,25 @@ package edu.emory.cci.aiw.cvrg.eureka.servlet.worker.useracct;
 import java.io.IOException;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.ws.rs.core.MediaType;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.CommUtils;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.Role;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.User;
 import edu.emory.cci.aiw.cvrg.eureka.servlet.worker.ServletWorker;
 
 public class SaveUserAcctWorker implements ServletWorker {
-
+	
+	private static Logger LOGGER = LoggerFactory.getLogger(SaveUserAcctWorker.class);
+	
 	@Override
 	public void execute(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
@@ -32,17 +32,35 @@ public class SaveUserAcctWorker implements ServletWorker {
 		String id = req.getParameter("id");
 		String oldPassword = req.getParameter("oldPassword");
 		String newPassword = req.getParameter("newPassword");
+		
+		// TODO: validate verifyPassword equals newPassword
 		String verifyPassword = req.getParameter("verifyPassword");
 		
 		Client c;
 		try {
 			c = CommUtils.getClient();
-			System.out.println("id = " + id);
+			LOGGER.debug("id = " + id);
+			LOGGER.debug("old = " + oldPassword);
+			LOGGER.debug("new = " + newPassword);
 
 			WebResource webResource = c.resource(eurekaServicesUrl);
-			User user = webResource.path("/api/user/byid/" + id)
-					.accept(MediaType.APPLICATION_JSON).get(User.class);
-
+			
+			ClientResponse response = webResource
+					.path("/api/user/passwd/" + id)
+					.queryParam("oldPassword", oldPassword)
+					.queryParam("newPassword", newPassword)
+					.get(ClientResponse.class);
+			
+			LOGGER.debug("status = " + response.getClientResponseStatus().getStatusCode());
+			
+			resp.setContentType("text/html");
+			if (response.getClientResponseStatus().getStatusCode() == resp.SC_OK) {
+				resp.setStatus(resp.SC_OK);				
+			} else {
+				resp.setStatus(resp.SC_BAD_REQUEST);								
+			}
+			resp.getWriter().write(response.getClientResponseStatus().getStatusCode());
+			resp.getWriter().close();
 		} catch (KeyManagementException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -51,6 +69,6 @@ public class SaveUserAcctWorker implements ServletWorker {
 			e.printStackTrace();
 		}
 
-		resp.sendRedirect(req.getContextPath() + "/protected/user_acct?action=list");
+		//resp.sendRedirect(req.getContextPath() + "/protected/user_acct?action=list");
 	}
 }

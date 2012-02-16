@@ -14,6 +14,13 @@ import edu.emory.cci.aiw.cvrg.eureka.servlet.worker.useracct.SaveUserAcctWorker;
 public class UserAcctManagerServlet extends HttpServlet {
 
 	@Override
+	protected void doPost(HttpServletRequest req, HttpServletResponse resp)
+			throws ServletException, IOException {
+
+		doGet(req, resp);
+	}
+	
+	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
 		
