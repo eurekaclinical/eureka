@@ -66,20 +66,12 @@ public class DataValidator {
 	/**
 	 * Holds all the warning/error messages from the validation.
 	 */
-	final private List<ValidationEvent> validationEvents;
+	final private List<ValidationEvent> validationEvents = new ArrayList<ValidationEvent>();
 	/**
 	 * Holds the unique identifiers for all the observations, for duplication
 	 * checking.
 	 */
-	final private Set<String> observationIds;
-
-	/**
-	 * default constructor, sets up private variables.
-	 */
-	public DataValidator() {
-		this.validationEvents = new ArrayList<ValidationEvent>();
-		this.observationIds = new HashSet<String>();
-	}
+	final private Set<String> observationIds = new HashSet<String>();
 
 	/**
 	 * Set the list of patients to validate.
@@ -265,7 +257,8 @@ public class DataValidator {
 		long counter = 1;
 		String type = "icd9procedure";
 		for (Icd9Procedure procedure : this.icd9Procedures) {
-			this.validateId(procedure.getId(), counter, type, "bad procedre id");
+			this.validateId(procedure.getId(), counter, type,
+					"bad procedure id");
 			this.validateId(procedure.getEncounterId(), counter, type,
 					"bad encounter id");
 			this.checkDuplicateStringIds(counter, type, this.observationIds,
@@ -467,6 +460,7 @@ public class DataValidator {
 			event.setLine(Long.valueOf(line));
 			event.setType(type);
 			event.setMessage("orphaned record");
+			this.getValidationEvents().add(event);
 		}
 	}
 
