@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.persist.PersistService;
+import com.google.inject.persist.jpa.JpaPersistModule;
 import com.google.inject.servlet.GuiceServletContextListener;
 
 import edu.emory.cci.aiw.cvrg.eureka.services.thread.JobUpdateThread;
@@ -33,7 +34,7 @@ public class ConfigListener extends GuiceServletContextListener {
 	 * Make sure we always use the same injector
 	 */
 	private final Injector injector = Guice.createInjector(new ServletModule(),
-			new AppModule());
+			new AppModule(),new JpaPersistModule("services-jpa-unit"));
 	/**
 	 * The persistence service for the application.
 	 */
