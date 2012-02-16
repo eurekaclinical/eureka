@@ -1,7 +1,5 @@
 package edu.emory.cci.aiw.cvrg.eureka.services.resource;
 
-import java.security.KeyManagementException;
-import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -23,7 +21,6 @@ import edu.emory.cci.aiw.cvrg.eureka.common.comm.JobInfo;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.FileUpload;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.Job;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.User;
-import edu.emory.cci.aiw.cvrg.eureka.services.config.ApplicationProperties;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.FileDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.UserDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.job.JobCollection;
@@ -49,9 +46,9 @@ public class JobResource {
 	 */
 	private final FileDao fileDao;
 	/**
-	 * Application's configuration properties holder.
+	 * The thread used to run the data processing and job submission tasks.
 	 */
-	private final ApplicationProperties applicationProperties;
+	private final JobSubmissionThread jobSubmissionThread;
 
 	/**
 	 * Construct a new job resource with the given job update thread.
@@ -60,15 +57,15 @@ public class JobResource {
 	 *            users.
 	 * @param inFileDao The data access object used to fetch and store
 	 *            information about uploaded files.
-	 * @param inApplicationProperties The configuration object holding all the
-	 *            appliction's defined properties.
+	 * @param inJobSubmissionThread The job submission thread to be used to
+	 *            process incoming data and submit jobs to the ETL layer.
 	 */
 	@Inject
 	public JobResource(UserDao inUserDao, FileDao inFileDao,
-			ApplicationProperties inApplicationProperties) {
+			JobSubmissionThread inJobSubmissionThread) {
 		this.userDao = inUserDao;
 		this.fileDao = inFileDao;
-		this.applicationProperties = inApplicationProperties;
+		this.jobSubmissionThread = inJobSubmissionThread;
 	}
 
 	/**
@@ -86,24 +83,14 @@ public class JobResource {
 	@POST
 	@Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
 	public Response uploadFile(FileUpload inFileUpload) throws ServletException {
-		String confGetUrl = this.applicationProperties.getEtlConfGetUrl();
-		String jobSubmitUrl = this.applicationProperties.getEtlJobSubmitUrl();
 
 		FileUpload fileUpload = inFileUpload;
 		Long userId = inFileUpload.getUser().getId();
 		fileUpload.setUser(this.userDao.get(userId));
 		this.fileDao.save(fileUpload);
+		this.jobSubmissionThread.setFileUploadId(fileUpload.getId());
+		this.jobSubmissionThread.start();
 
-		try {
-			JobSubmissionThread jobSubmissionThread = new JobSubmissionThread(
-					fileUpload, this.fileDao, confGetUrl + "/" + userId,
-					jobSubmitUrl);
-			jobSubmissionThread.start();
-		} catch (KeyManagementException e) {
-			throw new ServletException(e);
-		} catch (NoSuchAlgorithmException e) {
-			throw new ServletException(e);
-		}
 		return Response.ok().build();
 	}
 
@@ -111,7 +98,7 @@ public class JobResource {
 	 * Get a list of jobs associated with user referred to by the given unique
 	 * identifier.
 	 * 
-	 * @param inId The unique identifier for the user.
+	 * @param userId The unique identifier for the user.
 	 * 
 	 * @return A list of {@link Job} objects associated with the user.
 	 * @throws ServletException Thrown if the user ID is not valid
@@ -119,14 +106,8 @@ public class JobResource {
 	@Path("/list/{id}")
 	@GET
 	@Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
-	public List<Job> getJobsByUser(@PathParam("id") final String inId)
+	public List<Job> getJobsByUser(@PathParam("id") final Long userId)
 			throws ServletException {
-		Long userId;
-		try {
-			userId = Long.valueOf(inId);
-		} catch (NumberFormatException nfe) {
-			throw new ServletException(nfe);
-		}
 		User user = this.userDao.get(userId);
 		List<Job> allJobs = JobCollection.getJobs();
 		List<Job> result = new ArrayList<Job>();
@@ -141,7 +122,7 @@ public class JobResource {
 	/**
 	 * Get the status of a job process for the given user.
 	 * 
-	 * @param inId The unique identifier of the user to query for.
+	 * @param userId The unique identifier of the user to query for.
 	 * @return A {@link JobInfo} object containing the status information.
 	 * @throws ServletException Thrown if there are errors converting the input
 	 *             string to a valid user ID.
@@ -149,19 +130,13 @@ public class JobResource {
 	@Path("/status/{id}")
 	@GET
 	@Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
-	public JobInfo getStatus(@PathParam("id") final String inId)
+	public JobInfo getStatus(@PathParam("id") final Long userId)
 			throws ServletException {
 
 		Job latestJob = null;
 		FileUpload latestFileUpload = null;
-		Long userId;
-		try {
-			userId = Long.valueOf(inId);
-		} catch (NumberFormatException nfe) {
-			throw new ServletException(nfe);
-		}
 
-		List<Job> userJobs = this.getJobsByUser(inId);
+		List<Job> userJobs = this.getJobsByUser(userId);
 		if (userJobs.size() > 0) {
 			Date latestDate = null;
 			for (Job job : userJobs) {
