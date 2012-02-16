@@ -7,6 +7,9 @@ import java.util.List;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -17,6 +20,9 @@ import edu.emory.cci.aiw.cvrg.eureka.common.entity.Job;
 //	application-scope context variable.  this is written with the
 //	assumption that there is only one instance in the entire distributed
 //	application of this singleton.
+//
+//	if the application context gets evicted, all current processing
+//	crashes.
 //
 //	this object should be the server only to the REST connection methods
 //	in the servlet equivalent.
@@ -30,10 +36,12 @@ public class ProtempaDeviceManager implements ServletContextListener {
 	//	the JobLoader thread (internal to this singleton).
 	//
 
+	private static final int qLen = 4;
 	private List<Job> jobQ = new ArrayList<Job> (1<<4);
-	private List<ProtempaDevice> devices = new ArrayList<ProtempaDevice>(4);
+	private List<ProtempaDevice> devices = new ArrayList<ProtempaDevice>(qLen);
 	private final JobDao jobDao;
 	private Thread jobLoaderThread;
+	private static final Logger LOGGER = LoggerFactory.getLogger(ProtempaDeviceManager.class);
 
 	private class JobLoader implements Runnable {
 
@@ -43,7 +51,7 @@ public class ProtempaDeviceManager implements ServletContextListener {
 
 				try {
 
-			    	System.out.println ("ETL: JobLoader loop");
+					LOGGER.debug("JobLoader event loop sleep");
 					Thread.sleep (16000L);
 					synchronized (jobQ) {
 
@@ -58,6 +66,7 @@ public class ProtempaDeviceManager implements ServletContextListener {
 
 									//	this is the last i'll ever see of the job, unless it is
 									//	recovered from a failed ProtempaDevice.
+									LOGGER.debug("JobLoader found a job to do {0}" , j.getId());
 									protempaDevice.load (j);
 								}
 								break;
@@ -68,6 +77,7 @@ public class ProtempaDeviceManager implements ServletContextListener {
 							ProtempaDevice protempaDevice = devices.get(i);
 							if (protempaDevice.hasFailed()) {
 
+								LOGGER.debug("JobLoader found a broken ProtempaDevice. Replacing it with a new one.");
 								ProtempaDevice pd = new ProtempaDevice (jobDao);
 								pd.setDaemon (true);
 								pd.setName ("ProtempaDevice-" + i);
@@ -75,20 +85,25 @@ public class ProtempaDeviceManager implements ServletContextListener {
 
 								ProtempaDevice broken = devices.set (i , pd);
 								Job unknownStateJob = broken.getJob();
-								unknownStateJob.setNewState ("FAILED" , "job recovered from a broken protempa" , null);
-								jobDao.save (unknownStateJob);
+								if (unknownStateJob != null) {
+
+									LOGGER.debug("JobLoader recovered a job from a broken ProtempaDevice.");
+									Job nJob = jobDao.get (unknownStateJob.getId());
+									nJob.setNewState ("FAILED" , "job recovered from a broken protempa" , null);
+									jobDao.save (nJob);
+								}
 							}
 						}
 					}
 				}
 				catch (InterruptedException ie) {
 
+					LOGGER.debug("JobLoader interrupted.");
 					return;
 				}
 				catch (Exception e) {
 
-			    	System.out.println ("ETL: JobLoader exception " + e);
-					e.printStackTrace();
+					LOGGER.debug("JobLoader exception. " + e.getMessage());
 					return;
 				}
 			}
@@ -98,18 +113,14 @@ public class ProtempaDeviceManager implements ServletContextListener {
 
 			//	synchronized jobQ access via client context.
 			//	don't use without synch'ing on jobQ.
-			Job ret = null;
 			Iterator<Job> itr = jobQ.iterator();
 			while (itr.hasNext()) {
 
-				ret = itr.next();
+				Job j = itr.next();
 				itr.remove();
-				if (ret != null) {
-
-					return ret;
-				}
+				return j;
 			}
-			return ret;
+			return null;
 		}
 	}
 
@@ -117,7 +128,7 @@ public class ProtempaDeviceManager implements ServletContextListener {
 	@Inject
 	public ProtempaDeviceManager (JobDao jobDao) {
 
-    	System.out.println ("ETL: new ProtempaDeviceManager");
+		LOGGER.debug("ProtempaDeviceManager Singleton created.");
     	this.jobDao = jobDao;
 		init();
 	}
@@ -129,14 +140,14 @@ public class ProtempaDeviceManager implements ServletContextListener {
 
 	public void contextDestroyed (ServletContextEvent sce) {
 
+		//	nothing is calling contextDestroyed currently
 		this.shutdown();
 	}
 
 	private void init() {
 
-		for (int i=0 ; i<4 ; i++) {
+		for (int i=0 ; i<qLen ; i++) {
 
-	    	System.out.println ("ETL: create new ProtempaDevice");
 			ProtempaDevice pd = new ProtempaDevice (jobDao);
 			pd.setDaemon (true);
 			pd.setName ("ProtempaDevice-" + i);
@@ -153,9 +164,20 @@ public class ProtempaDeviceManager implements ServletContextListener {
 	private void shutdown() {
 
 		jobLoaderThread.interrupt();
-		for (int i=0 ; i<8 ; i++) {
+		for (int i=0 ; i<qLen ; i++) {
 
-			devices.get(i).interrupt();
+			try {
+
+				devices.get(i).interrupt();
+				//	consider if there be jobs running and what to do.
+				//	also, if protempa is doing io on an uniterruptable
+				//	channel then this will hang. then the behaviour comes
+				//	down to whether the thread invoking this shutdown() is
+				//	a daemon thread.
+			}
+			catch (Exception ignore) {
+
+			}
 		}
 	}
 
@@ -165,10 +187,9 @@ public class ProtempaDeviceManager implements ServletContextListener {
 
 	void qJob (Job job) {
 
-    	System.out.println ("ETL: qJob ol");
 		synchronized (jobQ) {
 
-	    	System.out.println ("ETL: qJob il");
+			LOGGER.debug("ProtempaDeviceManager qJob {0}" , job.getId());
 			jobQ.add (job);
 		}
 	}

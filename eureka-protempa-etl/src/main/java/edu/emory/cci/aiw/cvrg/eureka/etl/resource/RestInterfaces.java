@@ -1,6 +1,5 @@
 package edu.emory.cci.aiw.cvrg.eureka.etl.resource;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -15,11 +14,13 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.google.inject.Inject;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.Configuration;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.Job;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.JobEvent;
 import edu.emory.cci.aiw.cvrg.eureka.etl.dao.ConfDao;
 import edu.emory.cci.aiw.cvrg.eureka.etl.dao.JobDao;
 
@@ -35,6 +36,8 @@ public class RestInterfaces {
 	private final JobDao jobDao;
 	private final ConfDao confDao;
 	private final ProtempaDeviceManager protempaDeviceManager;
+	private static final Logger LOGGER = LoggerFactory.getLogger(RestInterfaces.class);
+
 
 	@Inject
 	public RestInterfaces(JobDao jobDao, ConfDao confDao,
@@ -43,18 +46,19 @@ public class RestInterfaces {
 		this.jobDao = jobDao;
 		this.confDao = confDao;
 		this.protempaDeviceManager = protempaDeviceManager;
+		LOGGER.debug("Instantiate RestInterfaces");
 	}
 
-	@GET
-	@Path("test")
-	public String getJobbbb() {
-
-		System.out.println("ETL:getJob");
-		Job j = new Job();
-		j.setJobEvents(new ArrayList<JobEvent>());
-		this.protempaDeviceManager.qJob(j);
-		return "right";
-	}
+//	@GET
+//	@Path("test")
+//	public String getJobbbb() {
+//
+//		System.out.println("ETL:getJob");
+//		Job j = new Job();
+//		j.setJobEvents(new ArrayList<JobEvent>());
+//		this.protempaDeviceManager.qJob(j);
+//		return "right";
+//	}
 
 	//
 	// Job submit
@@ -68,7 +72,9 @@ public class RestInterfaces {
 
 		// create Job from Configuration.
 		// the Job parameter has no assigned jobId yet... so persist it
+
 		this.jobDao.save(job);
+		LOGGER.debug("Request to start new Job {0}", job.getId());
 		job.setNewState("CREATED", null, null);
 		this.jobDao.save(job);
 		this.protempaDeviceManager.qJob(job);
@@ -89,8 +95,8 @@ public class RestInterfaces {
 			@QueryParam("intervalEnd") Date intervalEnd,
 			@Context HttpServletRequest req) {
 
-		JobFilter jobFilter = new JobFilter(jobId, userId, status,
-				intervalBegin, intervalEnd);
+		LOGGER.debug("Request for job status");
+		JobFilter jobFilter = new JobFilter(jobId, userId, status, intervalBegin, intervalEnd);
 		return this.jobDao.get(jobFilter);
 	}
 
@@ -120,7 +126,9 @@ public class RestInterfaces {
 	@Path("submitConf")
 	@Consumes("application/json")
 	public Response submitConfiguration(Configuration conf) {
+
 		this.confDao.save(conf);
+		LOGGER.debug("Request to save Configuration");
 		return Response.ok().build();
 	}
 }

@@ -1,5 +1,8 @@
 package edu.emory.cci.aiw.cvrg.eureka.etl.resource;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import edu.emory.cci.aiw.cvrg.eureka.etl.dao.JobDao;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.Job;
 import edu.emory.cci.registry.CardiovascularRegistryETL;
@@ -19,6 +22,7 @@ public class ProtempaDevice extends Thread {
 	private volatile boolean busy = false;
 	private volatile boolean failure = false;
 	private final JobDao jobDao;
+	private static final Logger LOGGER = LoggerFactory.getLogger(ProtempaDevice.class);
 
 	private class UEH implements Thread.UncaughtExceptionHandler {
 
@@ -43,14 +47,20 @@ public class ProtempaDevice extends Thread {
 
 	void load (Job job) {
 
-    	System.out.println ("ETL: load ol");
 		synchronized (synchObj) {
 
-	    	System.out.println ("ETL: load il");
+			LOGGER.debug("ProtempaDevice loaded with Job {0}" , job.getId());
 			busy = true;
 			this.job = job;
 			synchObj.notifyAll();	//	there should only ever be one thread wait()ing, but still...
 		}
+	}
+
+	@Override
+	public void interrupt() {
+
+		super.interrupt();
+		// etl.clearProtempa();
 	}
 
 	@Override
@@ -63,23 +73,21 @@ public class ProtempaDevice extends Thread {
 				Job myJob = null;
 				try {
 
-			    	System.out.println ("ETL: protempa.wait");
+					LOGGER.debug("{0} wait." , Thread.currentThread().getName());
 					synchObj.wait();
-//					myJob = this.job;
 					myJob = this.jobDao.get(this.job.getId());
-			    	System.out.println ("ETL: protempa.go");
-
+					LOGGER.debug("{0} just got a job, id= {1}" , Thread.currentThread().getName() , myJob.getId());
 			    	myJob.setNewState ("PROCESSING" , null , null);
 			    	this.jobDao.save (myJob);
 
-			    	etl.main (new String[] {"them parameters here"});
+			    	etl.main (new String[] {"them parameters here from the Job.confThing"});
 
 			    	myJob.setNewState ("DONE" , null , null);
 			    	this.jobDao.save (myJob);
 				}
 				catch (InterruptedException ie) {
 
-			    	System.out.println ("ETL: runner exception " + ie);
+					LOGGER.debug("{0} interrupted and finished." , Thread.currentThread().getName());
 			    	this.failure = true;
 			    	if (myJob != null) {
 
@@ -90,7 +98,7 @@ public class ProtempaDevice extends Thread {
 				}
 				catch (Exception e) {
 
-			    	System.out.println ("ETL: runner exception " + e);
+					LOGGER.debug("{0} unknown exception and finished. {1}" , Thread.currentThread().getName() , e.getMessage());
 			    	this.failure = true;
 			    	if (myJob != null) {
 
