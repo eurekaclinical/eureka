@@ -16,8 +16,9 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.xml.bind.annotation.XmlRootElement;
 
-import org.codehaus.jackson.annotate.JsonBackReference;
 import org.codehaus.jackson.annotate.JsonManagedReference;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.sun.xml.bind.CycleRecoverable;
 
@@ -32,6 +33,11 @@ import com.sun.xml.bind.CycleRecoverable;
 @Table(name = "file_uploads")
 public class FileUpload implements CycleRecoverable {
 
+	/**
+	 * The class level logger.
+	 */
+	private static final Logger LOGGER = LoggerFactory
+			.getLogger(FileUpload.class);
 	/**
 	 * The unique identifier for the file upload.
 	 */
@@ -206,15 +212,15 @@ public class FileUpload implements CycleRecoverable {
 	 * 
 	 * @param inErrors The list of errors associated with the file upload.
 	 */
-	public void setErrors(List<FileError> inErrors) {
-		this.errors = inErrors;
-		for (FileError error : inErrors) {
-			FileUpload fileUpload = error.getFileUpload();
-			if (fileUpload == null || fileUpload.getId() != this.getId()) {
-				error.setFileUpload(this);
-			}
-		}
-	}
+	// public void setErrors(List<FileError> inErrors) {
+	// this.errors = inErrors;
+	// for (FileError error : inErrors) {
+	// FileUpload fileUpload = error.getFileUpload();
+	// if (fileUpload == null || fileUpload.getId() != this.getId()) {
+	// error.setFileUpload(this);
+	// }
+	// }
+	// }
 
 	/**
 	 * Add an error to the list of errors for the file upload.
@@ -226,6 +232,7 @@ public class FileUpload implements CycleRecoverable {
 		if (fileUpload == null || fileUpload.getId() != this.getId()) {
 			error.setFileUpload(this);
 		}
+		LOGGER.debug("Adding error: {}", error.getText());
 		this.errors.add(error);
 	}
 
@@ -243,15 +250,15 @@ public class FileUpload implements CycleRecoverable {
 	 * 
 	 * @param inWarnings The list of warnings associated with the file upload.
 	 */
-	public void setWarnings(List<FileWarning> inWarnings) {
-		this.warnings = inWarnings;
-		for (FileWarning warning : inWarnings) {
-			FileUpload fileUpload = warning.getFileUpload();
-			if (fileUpload == null || fileUpload.getId() != this.getId()) {
-				warning.setFileUpload(this);
-			}
-		}
-	}
+	// public void setWarnings(List<FileWarning> inWarnings) {
+	// this.warnings = inWarnings;
+	// for (FileWarning warning : inWarnings) {
+	// FileUpload fileUpload = warning.getFileUpload();
+	// if (fileUpload == null || fileUpload.getId() != this.getId()) {
+	// warning.setFileUpload(this);
+	// }
+	// }
+	// }
 
 	/**
 	 * Add a new warning to the file upload.
@@ -294,4 +301,24 @@ public class FileUpload implements CycleRecoverable {
 	public Object onCycleDetected(Context inContext) {
 		return null;
 	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("FileUpload [id=").append(this.id).append(", location=")
+				.append(this.location).append(", userId=")
+				.append(this.user.getId()).append(", timestamp=")
+				.append(this.timestamp).append(", validated=")
+				.append(this.validated).append(", processed=")
+				.append(this.processed).append(", completed=")
+				.append(this.completed).append(", errors=").append(this.errors)
+				.append(", warnings=").append(this.warnings).append("]");
+		return builder.toString();
+	}
+
 }
