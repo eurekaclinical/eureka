@@ -7,42 +7,64 @@ import javax.persistence.EntityManager;
 import javax.persistence.Query;
 
 import com.google.inject.Inject;
+import com.google.inject.Provider;
 import com.google.inject.persist.Transactional;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.Job;
 import edu.emory.cci.aiw.cvrg.eureka.etl.resource.JobFilter;
 
+/**
+ * Implements the {@link JobDao} interface, with the use of JPA entity managers.
+ * 
+ * @author gmilton
+ * @author hrathod
+ * 
+ */
 public class JpaJobDao implements JobDao {
 
-	private final EntityManager entityManager;
+	/**
+	 * The provider for the entity managers used within the DAO.
+	 */
+	private final Provider<EntityManager> emProvider;
 
+	/**
+	 * Construct instance with the given EntityManager provider.
+	 * 
+	 * @param inEMProvider
+	 */
 	@Inject
-	public JpaJobDao(EntityManager manager) {
-		this.entityManager = manager;
+	public JpaJobDao(Provider<EntityManager> inEMProvider) {
+		this.emProvider = inEMProvider;
 	}
 
+	/**
+	 * Get an entity manager to use.
+	 * 
+	 * @return
+	 */
+	private EntityManager getEntityManager() {
+		return this.emProvider.get();
+	}
+
+	@Override
 	@Transactional
 	public void save(Job job) {
-		this.entityManager.persist(job);
-		this.entityManager.flush();
+		this.getEntityManager().persist(job);
 	}
 
-	@Transactional
-	public void merge(Job job) {
-		this.entityManager.merge(job);
-	}
-
+	@Override
 	public Job get(Long id) {
-		Query query = this.entityManager.createQuery(
-				"select j from Job j where j.id = ?1", Job.class).setParameter(
-				1, id);
+		Query query = this.getEntityManager()
+				.createQuery("select j from Job j where j.id = ?1", Job.class)
+				.setParameter(1, id);
 		List<Job> resultList = query.getResultList();
 		return resultList.get(0);
 	}
 
+	@Override
 	public List<Job> get(JobFilter jobFilter) {
-		Query query = this.entityManager.createQuery("select j from Job j",
-				Job.class);
+		Query query = this.getEntityManager().createQuery(
+				"select j from Job j", Job.class);
 		List<Job> resultList = query.getResultList();
 		List<Job> ret = new ArrayList<Job>(resultList.size());
 
