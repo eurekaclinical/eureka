@@ -6,14 +6,8 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-import javax.ws.rs.core.MediaType;
-
 import com.google.inject.Inject;
-import com.sun.jersey.api.client.Client;
-import com.sun.jersey.api.client.ClientResponse;
 
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.CommUtils;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.Configuration;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.FileUpload;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.Role;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.User;
@@ -21,6 +15,13 @@ import edu.emory.cci.aiw.cvrg.eureka.services.dao.FileDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.RoleDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.UserDao;
 
+/**
+ * Sets up the environment for testing, by bootstrapping the data store with
+ * certain items to test against.
+ * 
+ * @author hrathod
+ * 
+ */
 public class Setup {
 
 	/**
@@ -35,10 +36,6 @@ public class Setup {
 	 * The file upload DAO class.
 	 */
 	private final FileDao fileDao;
-	/**
-	 * The application level configuration object.
-	 */
-	private final ApplicationProperties applicationProperties;
 
 	/**
 	 * Create a Bootstrap class with an EntityManager.
@@ -49,59 +46,30 @@ public class Setup {
 	 *            objects in the data store.
 	 * @param inFileDao The data access object to be used to work with file
 	 *            upload objects in the data store.
-	 * @param inApplicationProperties The access used to get the application
-	 *            configuration properties.
 	 * 
 	 * @param inEntityManager
 	 */
 	@Inject
 	Setup(final RoleDao inRoleDao, final UserDao inUserDao,
-			final FileDao inFileDao,
-			ApplicationProperties inApplicationProperties) {
+			final FileDao inFileDao) {
 		this.roleDao = inRoleDao;
 		this.userDao = inUserDao;
 		this.fileDao = inFileDao;
-		this.applicationProperties = inApplicationProperties;
 	}
 
 	/**
 	 * The work method of the class, adds some roles and users to the data
 	 * store.
-	 * @throws NoSuchAlgorithmException Thrown when the configuration can not be sent to the ETL backend properly.
-	 * @throws KeyManagementException Thrown when the configuration can not be sent to the ETL backend properly.
+	 * 
+	 * @throws NoSuchAlgorithmException Thrown when the configuration can not be
+	 *             sent to the ETL backend properly.
+	 * @throws KeyManagementException Thrown when the configuration can not be
+	 *             sent to the ETL backend properly.
 	 */
 	void configure() throws KeyManagementException, NoSuchAlgorithmException {
 		addDefaultRoles();
 		addDefaultUsers();
 		addDefaultFileUploads();
-	}
-
-	/**
-	 * Bootstrap the back-end with a fake configuration.
-	 * 
-	 * @throws NoSuchAlgorithmException Thrown when the client can not be
-	 *             created properly.
-	 * @throws KeyManagementException Thrown whent the client can not be created
-	 *             properly.
-	 */
-	private void sendConfiguration() throws KeyManagementException,
-			NoSuchAlgorithmException {
-		Client client = CommUtils.getClient();
-		User user = this.userDao.getUsers().get(0);
-		Configuration fakeConfiguration = new Configuration();
-		fakeConfiguration.setProtempaDatabaseName("XE");
-		fakeConfiguration.setProtempaHost("adrastea.cci.emory.edu");
-		fakeConfiguration.setProtempaPort(Integer.valueOf(1521));
-		fakeConfiguration.setProtempaSchema("cvrg");
-		fakeConfiguration.setProtempaPass("cvrg");
-		fakeConfiguration.setUserId(user.getId());
-
-		ClientResponse response = client
-				.resource(this.applicationProperties.getEtlConfSubmitUrl())
-				.type(MediaType.APPLICATION_JSON)
-				.post(ClientResponse.class, fakeConfiguration);
-		System.out.println("CONFIGURATION SUBMISSION: "
-				+ response.getClientResponseStatus());
 	}
 
 	/**
