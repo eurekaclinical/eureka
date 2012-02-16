@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.mail.MessagingException;
-import javax.servlet.ServletException;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -91,14 +90,12 @@ public class UserResource {
 	 * 
 	 * @param inId The identification number for the user to fetch.
 	 * @return The user referenced by the identification number.
-	 * @throws ServletException Thrown if the identification number string can
-	 *             not be properly converted to a {@link Long}.
 	 */
 	@Path("/byid/{id}")
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public User getUserById(@PathParam("id") Long inId) {
-		LOGGER.debug("Returning user for ID: {}",inId);
+		LOGGER.debug("Returning user for ID: {}", inId);
 		return this.userDao.get(inId);
 	}
 
@@ -107,8 +104,6 @@ public class UserResource {
 	 * 
 	 * @param inName The of the user to fetch.
 	 * @return The user corresponding to the given name.
-	 * @throws ServletException Thrown if the given name does not match any user
-	 *             in the system.
 	 */
 	@Path("/byname/{name}")
 	@GET
