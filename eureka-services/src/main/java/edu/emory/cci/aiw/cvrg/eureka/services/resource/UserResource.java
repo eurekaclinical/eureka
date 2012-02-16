@@ -97,8 +97,9 @@ public class UserResource {
 	@Path("/byid/{id}")
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	public User getUserById(@PathParam("id") long inId) throws ServletException {
-		return this.userDao.get(Long.valueOf(inId));
+	public User getUserById(@PathParam("id") Long inId) {
+		LOGGER.debug("Returning user for ID: {}",inId);
+		return this.userDao.get(inId);
 	}
 
 	/**
@@ -112,8 +113,8 @@ public class UserResource {
 	@Path("/byname/{name}")
 	@GET
 	@Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
-	public User getUserByName(@PathParam("name") String inName)
-			throws ServletException {
+	public User getUserByName(@PathParam("name") String inName) {
+		LOGGER.debug("Returning user for name: {}", inName);
 		return this.userDao.get(inName);
 	}
 
@@ -145,8 +146,7 @@ public class UserResource {
 				LOGGER.debug("Sending email to {0}", user.getEmail());
 				this.emailSender.sendMessage(user.getEmail());
 			} catch (MessagingException e) {
-				System.out.println("ERROR SENDING EMAIL: " + e.getMessage());
-				e.printStackTrace();
+				LOGGER.error("Error sending email to {0}", user.getEmail(), e);
 			}
 			response = Response.created(URI.create("/" + user.getId())).build();
 		} else {
