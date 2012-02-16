@@ -65,7 +65,8 @@ public class ProtempaDevice extends Thread {
 
 			    	System.out.println ("ETL: protempa.wait");
 					synchObj.wait();
-					myJob = this.job;
+//					myJob = this.job;
+					myJob = this.jobDao.get(this.job.getId());
 			    	System.out.println ("ETL: protempa.go");
 
 			    	myJob.setNewState ("PROCESSING" , null , null);
