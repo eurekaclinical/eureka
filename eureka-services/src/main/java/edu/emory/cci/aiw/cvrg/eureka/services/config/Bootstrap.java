@@ -14,6 +14,7 @@ import edu.emory.cci.aiw.cvrg.eureka.common.entity.User;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.FileDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.RoleDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.UserDao;
+import edu.emory.cci.aiw.cvrg.eureka.services.util.StringUtil;
 
 /**
  * To be used for Demo purposes only. Bootstraps the data store with some test
@@ -86,8 +87,10 @@ public class Bootstrap {
 
 	/**
 	 * Add the default users to the data store.
+	 * 
+	 * @throws NoSuchAlgorithmException Propagated from createUsers().
 	 */
-	private void addDefaultUsers() {
+	private void addDefaultUsers() throws NoSuchAlgorithmException {
 		List<Role> defaultRoles = new ArrayList<Role>();
 		for (Role role : this.roleDao.getRoles()) {
 			if (role.isDefaultRole() == Boolean.TRUE) {
@@ -123,8 +126,11 @@ public class Bootstrap {
 	 * @param fileUploads The file uploads to attach to the user.
 	 * 
 	 * @return List of users to be added.
+	 * @throws NoSuchAlgorithmException If the password can not be hashed
+	 *             properly.
 	 */
-	private static List<User> createUsers(final List<Role> defaultRoles) {
+	private static List<User> createUsers(final List<Role> defaultRoles)
+			throws NoSuchAlgorithmException {
 		List<User> users = new ArrayList<User>();
 		User user = new User();
 		user.setActive(true);
@@ -134,7 +140,7 @@ public class Bootstrap {
 		user.setFirstName("Super");
 		user.setLastName("User");
 		user.setOrganization("Emory University");
-		user.setPassword("testpassword");
+		user.setPassword(StringUtil.md5("testpassword"));
 		user.setLastLogin(Calendar.getInstance().getTime());
 		user.setRoles(defaultRoles);
 		users.add(user);
