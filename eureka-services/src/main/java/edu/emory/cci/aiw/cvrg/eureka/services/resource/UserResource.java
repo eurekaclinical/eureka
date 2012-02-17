@@ -135,7 +135,9 @@ public class UserResource {
 
 		try {
 			String temp = StringUtil.md5(userRequest.getPassword());
+			String temp2 = StringUtil.md5(userRequest.getVerifyPassword());
 			userRequest.setPassword(temp);
+			userRequest.setVerifyPassword(temp2);
 		} catch (NoSuchAlgorithmException e1) {
 			LOGGER.error(e1.getMessage(), e1);
 			throw new ServletException(e1);
