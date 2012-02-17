@@ -3,7 +3,6 @@ package edu.emory.cci.aiw.cvrg.eureka.services.thread;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.ws.rs.core.MediaType;
