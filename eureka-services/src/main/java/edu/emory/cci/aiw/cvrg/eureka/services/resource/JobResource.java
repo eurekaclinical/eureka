@@ -15,6 +15,9 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.google.inject.Inject;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.JobInfo;
@@ -35,6 +38,11 @@ import edu.emory.cci.aiw.cvrg.eureka.services.thread.JobSubmissionThread;
 @Path("/job")
 public class JobResource {
 
+	/**
+	 * The class level logger.
+	 */
+	private static final Logger LOGGER = LoggerFactory
+			.getLogger(JobResource.class);
 	/**
 	 * The User data access object to retrieve information about the current
 	 * user.
@@ -83,7 +91,7 @@ public class JobResource {
 	@POST
 	@Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
 	public Response uploadFile(FileUpload inFileUpload) throws ServletException {
-
+		LOGGER.debug("Got file upload: {}", inFileUpload);
 		FileUpload fileUpload = inFileUpload;
 		Long userId = inFileUpload.getUser().getId();
 		fileUpload.setUser(this.userDao.get(userId));
