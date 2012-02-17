@@ -91,7 +91,6 @@ public class UserResourceTest extends AbstractResourceTest {
 				.post(ClientResponse.class, userRequest);
 
 		URI uri = response.getLocation();
-		System.out.println("RESOURCE URL: " + uri);
 		Assert.assertTrue(response.getClientResponseStatus() == Status.CREATED);
 
 	}
