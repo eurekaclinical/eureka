@@ -8,6 +8,7 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
+import org.apache.poi.openxml4j.exceptions.InvalidOperationException;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
@@ -88,6 +89,8 @@ public class XlsxDataProvider implements DataProvider {
 			this.validateWorksheets();
 		} catch (IOException ioe) {
 			throw new DataProviderException(ioe);
+		} catch (InvalidOperationException ioe) {
+			throw new DataProviderException("Invalid XLSX file.");
 		}
 	}
 
