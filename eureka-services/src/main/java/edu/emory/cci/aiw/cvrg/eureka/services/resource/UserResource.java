@@ -1,10 +1,12 @@
 package edu.emory.cci.aiw.cvrg.eureka.services.resource;
 
 import java.net.URI;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.mail.MessagingException;
+import javax.servlet.ServletException;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -28,6 +30,7 @@ import edu.emory.cci.aiw.cvrg.eureka.common.entity.UserRequest;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.RoleDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.UserDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.email.EmailSender;
+import edu.emory.cci.aiw.cvrg.eureka.services.util.StringUtil;
 
 /**
  * RESTful end-point for {@link User} related methods.
@@ -120,12 +123,24 @@ public class UserResource {
 	 *            to add.
 	 * @return A "Bad Request" error if the user does not pass validation, a
 	 *         "Created" response with a link to the user page if successful.
+	 * @throws ServletException Thrown when a password can not be properly
+	 *             hashed.
 	 */
 	@Path("/add")
 	@POST
 	@Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
 	@Produces(MediaType.TEXT_PLAIN)
-	public Response addUser(final UserRequest userRequest) {
+	public Response addUser(final UserRequest userRequest)
+			throws ServletException {
+
+		try {
+			String temp = StringUtil.md5(userRequest.getPassword());
+			userRequest.setPassword(temp);
+		} catch (NoSuchAlgorithmException e1) {
+			LOGGER.error(e1.getMessage(), e1);
+			throw new ServletException(e1);
+		}
+
 		Response response = null;
 		if (validateUserRequest(userRequest)) {
 			User user = new User();
@@ -133,18 +148,19 @@ public class UserResource {
 			user.setFirstName(userRequest.getFirstName());
 			user.setLastName(userRequest.getLastName());
 			user.setOrganization(userRequest.getOrganization());
-			user.setPassword(userRequest.getPassword());
 			user.setRoles(this.getDefaultRoles());
-			LOGGER.debug("Saving new user {0}", user.getEmail());
+			user.setPassword(userRequest.getPassword());
+			LOGGER.debug("Saving new user {}", user.getEmail());
 			this.userDao.save(user);
 			try {
-				LOGGER.debug("Sending email to {0}", user.getEmail());
+				LOGGER.debug("Sending email to {}", user.getEmail());
 				this.emailSender.sendMessage(user.getEmail());
 			} catch (MessagingException e) {
-				LOGGER.error("Error sending email to {0}", user.getEmail(), e);
+				LOGGER.error("Error sending email to {}", user.getEmail(), e);
 			}
 			response = Response.created(URI.create("/" + user.getId())).build();
 		} else {
+			LOGGER.info("Invalid new user request: {}", userRequest);
 			response = Response.status(Status.BAD_REQUEST)
 					.entity("Invalid user request.").build();
 		}
@@ -160,17 +176,29 @@ public class UserResource {
 	 * @return {@link Status#OK} if the password update is successful,
 	 *         {@link Status#BAD_REQUEST} if the current password does not
 	 *         match, or if the user does not exist.
+	 * @throws ServletException Thrown when a password cannot be properly
+	 *             hashed.
 	 */
 	@Path("/passwd/{id}")
 	@GET
 	public Response changePassword(@PathParam("id") final Long inId,
 			@QueryParam("oldPassword") final String oldPassword,
-			@QueryParam("newPassword") final String newPassword) {
+			@QueryParam("newPassword") final String newPassword)
+			throws ServletException {
 
 		Response response;
 		User user = this.userDao.get(inId);
-		if (user.getPassword().equals(oldPassword)) {
-			user.setPassword(newPassword);
+		String oldPasswordHash;
+		String newPasswordHash;
+		try {
+			oldPasswordHash = StringUtil.md5(oldPassword);
+			newPasswordHash = StringUtil.md5(newPassword);
+		} catch (NoSuchAlgorithmException e) {
+			LOGGER.error(e.getMessage(), e);
+			throw new ServletException(e);
+		}
+		if (user.getPassword().equals(oldPasswordHash)) {
+			user.setPassword(newPasswordHash);
 			this.userDao.save(user);
 			response = Response.ok().build();
 		} else {
