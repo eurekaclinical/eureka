@@ -201,4 +201,21 @@ public class UserRequest {
 	public void setVerifyPassword(String inVerifyPassword) {
 		this.verifyPassword = inVerifyPassword;
 	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("UserRequest [id=").append(this.id)
+				.append(", firstName=").append(this.firstName)
+				.append(", lastName=").append(this.lastName).append(", email=")
+				.append(this.email).append(", verifyEmail=")
+				.append(this.verifyEmail).append(", organization=")
+				.append(this.organization).append(", password=")
+				.append(this.password).append(", verifyPassword=")
+				.append(this.verifyPassword).append("]");
+		return builder.toString();
+	}
 }
