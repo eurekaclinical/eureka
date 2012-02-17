@@ -12,7 +12,7 @@
 	<template:content name="content">
 		<h3>Contact Information</h3>
 
-        <div class="pad pad_btm fltlft">
+        <div class="pad_btm fltlft">
 			<p>
 			<h4 class="large pad_top">Center for Comprehensive Informatics</h4>
             </p>
@@ -26,8 +26,8 @@
 				<a href="mailto:admin@emory.edu"><strong>admin@emory.edu</strong></a>
 			</p>
           </div>
-          <div class="fltrt margin">
-           <img src="images/map.jpg" width="321" height="244" alt="map" />
+          <div class="fltlft margin">
+           <img class="pad_top" src="images/map.jpg" alt="map" />
           </div>
 
 	</template:content>

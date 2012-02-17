@@ -37,8 +37,8 @@
 					<a href="edit_acct.html"><img src="${pageContext.request.contextPath}/images/edit_btn.gif"
                         width="33" height="19" alt="Change Password" id="editAcctBtn"/></a>
                     -->
-					<img src="${pageContext.request.contextPath}/images/edit_btn.gif"
-                        width="33" height="19" alt="Change Password" id="editAcctBtn"/>
+					<img src="${pageContext.request.contextPath}/images/chg_pswd_btn.gif"
+                        alt="Change Password" id="editAcctBtn"/>
 				</div>
 				
 				<table id="newPasswordTable">

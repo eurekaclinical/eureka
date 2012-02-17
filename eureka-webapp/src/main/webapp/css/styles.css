@@ -55,16 +55,26 @@ a img {
 
 a:link {
 	color:#234979;
-	text-decoration: none;
+	text-decoration: underline;
 }
 a:visited {
 	color: #4E5869;
 }
+#login {
+	background: #24497a;
+	float: right;
+	width:410px;
+	height:15px;
+	padding-top:20px;
+	text-align:left;
+}
+#login_field {
+	width:100px;
+	height:11px;
+	}
 
 .container {
 	width: 100%;
-	max-width: 1260px;
-	min-width: 600px;
 	margin: 0 auto;
 	border: 1px solid #036;
 	background:#FFFFFF;
@@ -80,18 +90,6 @@ a:visited {
 .header img {
 	border: none;
 }
-#login {
-	background: #24497a;
-	float: right;
-	width:410px;
-	height:15px;
-	padding-top:20px;
-	text-align:left;
-}
-#login_field {
-	width:100px;
-	height:11px;
-	}
 	
 .nav {
 	padding-left:10px;
@@ -122,6 +120,7 @@ a:visited {
 	border: 1px solid #CCC;
 	background-color:#FFF;
 	height:330px;
+	position:absolute;
 }
 
 .sub-content {
@@ -164,7 +163,7 @@ a:visited {
 	margin-bottom:58px;
 }
 table {
-	min-width:680px;
+	width: inherit;
 	align:center;
 	margin: 10px;
     border-spacing: 0;
