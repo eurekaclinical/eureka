@@ -12,6 +12,8 @@ import org.slf4j.LoggerFactory;
 
 import com.google.inject.Inject;
 import com.sun.jersey.api.client.Client;
+import com.sun.jersey.api.client.ClientResponse;
+import com.sun.jersey.api.client.ClientResponse.Status;
 import com.sun.jersey.api.client.WebResource;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.CommUtils;
@@ -264,13 +266,38 @@ public class JobSubmissionThread extends Thread {
 	private Configuration getUserConfiguration() throws KeyManagementException,
 			NoSuchAlgorithmException {
 		if (this.configuration == null) {
+			Configuration result = null;
+			ClientResponse response = null;
 			Client client = CommUtils.getClient();
 			WebResource resource = client.resource(this.applicationProperties
 					.getEtlConfGetUrl()
 					+ "/"
 					+ this.fileUpload.getUser().getId());
-			this.configuration = resource.accept(MediaType.APPLICATION_JSON)
-					.get(Configuration.class);
+			response = resource.accept(MediaType.APPLICATION_JSON).get(
+					ClientResponse.class);
+			// TODO: REMOVE THIS AFTER THE REAL CONFIGURATION DATABASE IS SET
+			// UP.
+			if (response.getClientResponseStatus() == Status.OK) {
+				result = response.getEntity(Configuration.class);
+			} else {
+				// send a fake configuration over.
+				Configuration fakeConf = new Configuration();
+				fakeConf.setUserId(this.fileUpload.getUser().getId());
+				fakeConf.setProtempaHost("adrastea.cci.emory.edu");
+				fakeConf.setProtempaPort(Integer.valueOf(1591));
+				fakeConf.setProtempaDatabaseName("cvrg");
+				fakeConf.setProtempaSchema("cvrg");
+				fakeConf.setProtempaPass("cvrg");
+				WebResource webResource = client
+						.resource(this.applicationProperties
+								.getEtlConfSubmitUrl());
+				response = webResource.type(MediaType.APPLICATION_JSON).post(
+						ClientResponse.class, fakeConf);
+				LOGGER.debug("Configuration send result: {}",
+						response.getClientResponseStatus());
+				result = fakeConf;
+			}
+			this.configuration = result;
 		}
 		return this.configuration;
 	}
