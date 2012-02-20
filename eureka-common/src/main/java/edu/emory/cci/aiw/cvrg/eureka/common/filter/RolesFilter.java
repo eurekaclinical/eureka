@@ -74,8 +74,8 @@ public class RolesFilter implements Filter {
 			FilterChain inChain) throws IOException, ServletException {
 		HttpServletRequest servletRequest = (HttpServletRequest) inRequest;
 		Principal principal = servletRequest.getUserPrincipal();
-		Set<String> roles = new HashSet<String>();
 		if (principal != null) {
+			Set<String> roles = new HashSet<String>();
 			String name = principal.getName();
 			try {
 				Connection connection = this.dataSource.getConnection();
@@ -98,10 +98,12 @@ public class RolesFilter implements Filter {
 				LOGGER.error(e.getMessage(), e);
 				throw new ServletException(e);
 			}
+			HttpServletRequest wrappedRequest = new RolesRequestWrapper(
+					servletRequest, principal, roles);
+			inChain.doFilter(wrappedRequest, inResponse);
+		} else {
+			inChain.doFilter(inRequest, inResponse);
 		}
-		HttpServletRequest wrappedRequest = new RolesRequestWrapper(
-				servletRequest, principal, roles);
-		inChain.doFilter(wrappedRequest, inResponse);
 	}
 
 	@Override
