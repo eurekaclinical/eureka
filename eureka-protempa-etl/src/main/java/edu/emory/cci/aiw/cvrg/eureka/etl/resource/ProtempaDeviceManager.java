@@ -13,7 +13,9 @@ import org.slf4j.LoggerFactory;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
+import edu.emory.cci.aiw.cvrg.eureka.etl.dao.ConfDao;
 import edu.emory.cci.aiw.cvrg.eureka.etl.dao.JobDao;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.Configuration;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.Job;
 
 //	this is a singleton that should be bound to the equivalent of an
@@ -40,6 +42,7 @@ public class ProtempaDeviceManager implements ServletContextListener {
 	private List<Job> jobQ = new ArrayList<Job> (1<<4);
 	private List<ProtempaDevice> devices = new ArrayList<ProtempaDevice>(qLen);
 	private final JobDao jobDao;
+	private final ConfDao confDao;
 	private Thread jobLoaderThread;
 	private static final Logger LOGGER = LoggerFactory.getLogger(ProtempaDeviceManager.class);
 
@@ -78,7 +81,7 @@ public class ProtempaDeviceManager implements ServletContextListener {
 							if (protempaDevice.hasFailed()) {
 
 								LOGGER.debug("JobLoader found a broken ProtempaDevice. Replacing it with a new one.");
-								ProtempaDevice pd = new ProtempaDevice (jobDao);
+								ProtempaDevice pd = new ProtempaDevice (jobDao , confDao);
 								pd.setDaemon (true);
 								pd.setName ("ProtempaDevice-" + i);
 								pd.start();
@@ -126,10 +129,11 @@ public class ProtempaDeviceManager implements ServletContextListener {
 
 
 	@Inject
-	public ProtempaDeviceManager (JobDao jobDao) {
+	public ProtempaDeviceManager (JobDao jobDao , ConfDao confDao) {
 
 		LOGGER.debug("ProtempaDeviceManager Singleton created.");
     	this.jobDao = jobDao;
+    	this.confDao = confDao;
 		init();
 	}
 
@@ -148,7 +152,7 @@ public class ProtempaDeviceManager implements ServletContextListener {
 
 		for (int i=0 ; i<qLen ; i++) {
 
-			ProtempaDevice pd = new ProtempaDevice (jobDao);
+			ProtempaDevice pd = new ProtempaDevice (jobDao , confDao);
 			pd.setDaemon (true);
 			pd.setName ("ProtempaDevice-" + i);
 			pd.start();

@@ -3,7 +3,9 @@ package edu.emory.cci.aiw.cvrg.eureka.etl.resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import edu.emory.cci.aiw.cvrg.eureka.etl.dao.ConfDao;
 import edu.emory.cci.aiw.cvrg.eureka.etl.dao.JobDao;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.Configuration;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.Job;
 import edu.emory.cci.registry.CardiovascularRegistryETL;
 
@@ -21,6 +23,7 @@ public class ProtempaDevice extends Thread {
 	private final Object synchObj = new Object();
 	private volatile boolean busy = false;
 	private volatile boolean failure = false;
+	private final ConfDao confDao;
 	private final JobDao jobDao;
 	private static final Logger LOGGER = LoggerFactory.getLogger(ProtempaDevice.class);
 
@@ -40,9 +43,10 @@ public class ProtempaDevice extends Thread {
 	}
 
 
-	public ProtempaDevice (JobDao jobDao) {
+	public ProtempaDevice (JobDao jobDao , ConfDao confDao) {
 
 		this.jobDao = jobDao;
+		this.confDao = confDao;
 	}
 
 	void load (Job job) {
@@ -80,7 +84,8 @@ public class ProtempaDevice extends Thread {
 			    	myJob.setNewState ("PROCESSING" , null , null);
 			    	this.jobDao.save (myJob);
 
-			    	etl.main (new String[] {"them parameters here from the Job.confThing"});
+			    	Configuration conf = confDao.get(myJob.getUserId());
+			    	etl.runProtempa (conf.getProtempaSchema());
 
 			    	myJob.setNewState ("DONE" , null , null);
 			    	this.jobDao.save (myJob);
