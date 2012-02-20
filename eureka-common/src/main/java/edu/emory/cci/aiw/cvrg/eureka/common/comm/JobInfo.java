@@ -1,7 +1,6 @@
 package edu.emory.cci.aiw.cvrg.eureka.common.comm;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import javax.xml.bind.annotation.XmlRootElement;
@@ -23,7 +22,7 @@ public class JobInfo {
 	/**
 	 * The total number of steps in the process.
 	 */
-	private final int TOTAL_STEPS = 1;
+	private final int TOTAL_STEPS = 6;
 	/**
 	 * The file upload for the job being processed.
 	 */
@@ -49,16 +48,17 @@ public class JobInfo {
 	 * @return The process step that the job is currently on.
 	 */
 	public int getCurrentStep() {
-		// TODO: GET THE ACTUAL STEP NUBERS AND JOB STATUS STRINGS.
 		int step = 0;
 		// we do this in descending order
 		if (this.job != null) {
-			JobEvent event = this.getLatestJobEvent();
-			if (event.getState().equals("complete")) {
-				step = 10;
-			} else if (event.getState().equals("ZZZZ")) {
-				step = 9;
-			} else if (event.getState().equals("STARTED")) {
+			String currentState = this.job.getCurrentState();
+			if (currentState.equals("DONE") || currentState.equals("FAILED")
+					|| currentState.equals("EXCEPTION")
+					|| currentState.equals("INTERRUPTED")) {
+				step = 6;
+			} else if (currentState.equals("PROCESSING")) {
+				step = 5;
+			} else if (currentState.equals("CREATED")) {
 				step = 4;
 			}
 		} else if (this.fileUpload != null) {
@@ -116,26 +116,6 @@ public class JobInfo {
 			messages.add(event.getMessage());
 		}
 		return messages;
-	}
-
-	/**
-	 * Get the latest known event for the job.
-	 * 
-	 * @return The latest known event.
-	 */
-	private JobEvent getLatestJobEvent() {
-		Date currentMaxDate = null;
-		JobEvent maxEvent = null;
-		for (JobEvent event : this.job.getJobEvents()) {
-			if (maxEvent == null) {
-				maxEvent = event;
-			} else {
-				if (event.getTimeStamp().after(currentMaxDate)) {
-					maxEvent = event;
-				}
-			}
-		}
-		return maxEvent;
 	}
 
 	/**
