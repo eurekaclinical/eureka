@@ -94,7 +94,7 @@ public class JobInfo {
 	 * 
 	 * @return The list of messages.
 	 */
-	public List<String> getFileUploadMessages() {
+	private List<String> getFileUploadMessages() {
 		List<String> messsages = new ArrayList<String>();
 		for (FileWarning fileWarning : this.fileUpload.getWarnings()) {
 			messsages.add(fileWarning.toString());
@@ -110,7 +110,7 @@ public class JobInfo {
 	 * 
 	 * @return The list of messages.
 	 */
-	public List<String> getJobMessages() {
+	private List<String> getJobMessages() {
 		List<String> messages = new ArrayList<String>();
 		for (JobEvent event : this.job.getJobEvents()) {
 			messages.add(event.getMessage());
