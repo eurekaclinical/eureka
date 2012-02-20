@@ -4,18 +4,19 @@
 
 <template:insert template="/templates/eureka_main.jsp">
 	    <script type="text/javascript"> 
-		/*    
+		
 	    (function poll(){
 		        setTimeout(function(){
-		            $.ajax({ url: "jobpoll", success: function(data){
+		            $.ajax({ url: "${pageContext.request.contextPath}/jobpoll", success: function(data){
 		            //Update your dashboard gauge
-		            alert(data);
+		            $('#status').text("[debug] "+data);
+
 		            //Setup the next poll recursively
 		            poll();
 		        }, dataType: "text"});
 		       }, 5000);
 		    })();
-		*/
+		
 		</script> 
   
 	<template:content name="sidebar">
@@ -32,10 +33,29 @@
 					<tr class="grey">
 						<td width="231">Document Name</td>
 						<td width="89">Date</td>
-						<td width="152">Successfully Uploaded</td>
+						<td width="152">Status</td>
 						<td width="104">Upload Time</td>
 						<td width="51">Errors</td>
 					</tr>
+					<tr>
+			      		<td>
+				  			&nbsp;
+				  		</td>
+			      		<td>
+				  			&nbsp;
+				  		</td>
+			      		<td>
+				  			<div id="status"></div>
+				  		</td>
+			      		<td>
+				  			&nbsp;
+				  		</td>
+			      		<td>
+				  			&nbsp;
+				  		</td>
+				  	</tr>
+					
+					<!--  
 			       <c:forEach items="${jobs}" var="jobs">
 			      	<tr>
 			      		<td>
@@ -55,6 +75,7 @@
 				  		</td>
 				  	</tr>
 				  	</c:forEach>
+				  	-->
 				</table>
       
 				<div class="pad_top" align="right">
@@ -64,7 +85,7 @@
 					<input type="submit" id="button" value="Upload">
                     <br/>
                     <br/>
-                    <a href="docs/sample.xlsx">Download Sample Spreadsheet</a>
+                    <a href="${pageContext.request.contextPath}/docs/sample.xlsx">Download Sample Spreadsheet</a>
 				</div>
 			</form>
 
