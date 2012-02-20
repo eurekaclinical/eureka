@@ -85,7 +85,8 @@ public class ProtempaDevice extends Thread {
 			    	this.jobDao.save (myJob);
 
 			    	Configuration conf = confDao.get(myJob.getUserId());
-			    	etl.runProtempa (conf.getProtempaSchema());
+			    	etl.runProtempa ("cvrg");
+//			    	etl.runProtempa (conf.getProtempaSchema());
 
 			    	myJob.setNewState ("DONE" , null , null);
 			    	this.jobDao.save (myJob);
