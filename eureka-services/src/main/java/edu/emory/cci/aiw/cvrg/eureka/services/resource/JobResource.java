@@ -95,6 +95,7 @@ public class JobResource {
 		FileUpload fileUpload = inFileUpload;
 		Long userId = inFileUpload.getUser().getId();
 		fileUpload.setUser(this.userDao.get(userId));
+		fileUpload.setTimestamp(new Date());
 		this.fileDao.save(fileUpload);
 		this.jobSubmissionThread.setFileUploadId(fileUpload.getId());
 		this.jobSubmissionThread.start();
