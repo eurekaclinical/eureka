@@ -19,7 +19,7 @@
 	</listener>
 	<context-param>
 		<param-name>eureka-services-url</param-name>
-		<param-value>https://eureka.cci.emory.edu/eureka-services</param-value>
+		<param-value>https://eureka.cci.emory.edu:8080/eureka-services</param-value>
 	</context-param>
 	<!--
 	<servlet>
@@ -185,7 +185,32 @@
 		<filter-name>CAS Assertion Thread Local Filter</filter-name>
 		<filter-class>org.jasig.cas.client.util.AssertionThreadLocalFilter</filter-class>
 	</filter>
+
+    <filter>
+        <filter-name>Roles Filter</filter-name>
+        <filter-class>edu.emory.cci.aiw.cvrg.eureka.common.filter.RolesFilter</filter-class>
+        <init-param>
+            <!-- Which data source to use for querying role information -->
+            <param-name>datasource</param-name>
+            <param-value>java:comp/env/jdbc/EurekaService</param-value>
+        </init-param>
+        <init-param>
+            <!-- The SQL used to fetch role information, the ? will be replaced with the Principal's name, using a preparedstatement.setString(1, xxx) -->
+            <param-name>sql</param-name>
+            <param-value>select a.name as role from roles a, user_role b, users c where a.id=b.roleid and b.userid=c.id and c.email=?</param-value>
+        </init-param>
+        <init-param>
+            <!-- Column name in the result set that should be used to get role names -->
+            <param-name>rolecolumn</param-name>
+            <param-value>role</param-value>
+        </init-param>
+    </filter>
+	<filter-mapping>
+		<filter-name>Roles Filter</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
 	<!--
+
 	<filter>
 		<filter-name>Guice Filter</filter-name>
 		<filter-class>com.google.inject.servlet.GuiceFilter</filter-class>
@@ -193,6 +218,7 @@
 	-->
 
 	<!-- UNCOMMENT FILTER MAPPINGS TO ACTIVATE AUTHENTICATION VIA CAS -->
+	 
 	<filter-mapping>
 		<filter-name>CAS Single Sign Out Filter</filter-name>
 		<url-pattern>/*</url-pattern>
@@ -217,6 +243,8 @@
 		<filter-name>CAS Assertion Thread Local Filter</filter-name>
 		<url-pattern>/*</url-pattern>
 	</filter-mapping>
+	
+	
 	<!--
 	<filter-mapping>
 		<filter-name>Guice Filter</filter-name>
