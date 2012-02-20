@@ -3,9 +3,9 @@ package edu.emory.cci.aiw.cvrg.eureka.common.filter;
 import java.io.IOException;
 import java.security.Principal;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -59,7 +59,7 @@ public class RolesFilter implements Filter {
 		LOGGER.debug("Got column name {}", this.colName);
 
 		String sourceName = inFilterConfig.getInitParameter("datasource");
-		LOGGER.debug("Using datasource {}",sourceName);
+		LOGGER.debug("Using datasource {}", sourceName);
 		try {
 			Context context = new InitialContext();
 			this.dataSource = (DataSource) context.lookup(sourceName);
@@ -77,19 +77,19 @@ public class RolesFilter implements Filter {
 		Set<String> roles = new HashSet<String>();
 		if (principal != null) {
 			String name = principal.getName();
-			String querySql = this.sql.replaceAll("{}", name);
-			LOGGER.debug("Using query string {}", querySql);
 			try {
 				Connection connection = this.dataSource.getConnection();
-				Statement statement = connection.createStatement();
-				ResultSet resultSet = statement.executeQuery(querySql);
+				PreparedStatement preparedStatement = connection
+						.prepareStatement(this.sql);
+				preparedStatement.setString(1, name);
+				ResultSet resultSet = preparedStatement.executeQuery();
 				while (resultSet.next()) {
 					String role = resultSet.getString(this.colName);
 					LOGGER.debug("Assigning role {}", role);
 					roles.add(role);
 				}
 				resultSet.close();
-				statement.close();
+				preparedStatement.close();
 				connection.close();
 			} catch (SQLException e) {
 				LOGGER.error(e.getMessage(), e);
