@@ -6,6 +6,9 @@ import java.util.List;
 
 import javax.ws.rs.core.MediaType;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.google.inject.Singleton;
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.GenericType;
@@ -24,6 +27,11 @@ import edu.emory.cci.aiw.cvrg.eureka.services.job.JobCollection;
 @Singleton
 public class JobUpdateThread extends Thread {
 
+	/**
+	 * The class level logger.
+	 */
+	private static final Logger LOGGER = LoggerFactory
+			.getLogger(JobUpdateThread.class);
 	/**
 	 * The back-end URL needed to make the REST calls for job updates.
 	 */
@@ -50,6 +58,7 @@ public class JobUpdateThread extends Thread {
 			NoSuchAlgorithmException {
 		this.backendUrl = inBackendUrl;
 		this.client = CommUtils.getClient();
+		this.keepRunning = true;
 	}
 
 	@Override
@@ -61,6 +70,9 @@ public class JobUpdateThread extends Thread {
 						.get(new GenericType<List<Job>>() {
 							// nothing to implement
 						});
+				for (Job job : updatedJobs) {
+					LOGGER.debug("Updated job: {}",job.toString());
+				}
 				JobCollection.setJobs(updatedJobs);
 				Thread.sleep(10000);
 			} catch (InterruptedException ie) {
