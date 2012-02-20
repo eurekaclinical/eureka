@@ -110,16 +110,16 @@ public class RestInterfaces {
 	@Produces("application/json")
 	public Configuration getConfByUserId(@PathParam("userId") Long userId) {
 
-		Configuration conf;
+		Configuration conf = null;
 		try {
-			
+
 			conf = this.confDao.get(userId);
-			return conf;
 		}
 		catch (Exception e) {
 
-			return null;
 		}
+		return conf;
+
 		// TODO: GET RID OF THIS FAKE CONFIGURATION WHEN REAL CONFIGURATIONS
 		// ARE AVAILABLE
 //		Configuration fakeConfiguration = new Configuration();

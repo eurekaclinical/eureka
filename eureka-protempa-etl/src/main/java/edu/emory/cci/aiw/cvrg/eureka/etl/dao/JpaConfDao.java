@@ -24,9 +24,16 @@ public class JpaConfDao implements ConfDao {
 
 	public Configuration get(Long userId) {
 
-		Query query = this.entityManager.createQuery(
+		try {
+
+			Query query = this.entityManager.createQuery(
 				"select c from Configuration c where c.userId = ?1",
 				Configuration.class).setParameter(1, userId);
-		return (Configuration)query.getSingleResult();
+			return (Configuration)query.getSingleResult();
+		}
+		catch (Exception e) {
+
+			return null;
+		}
 	}
 }
