@@ -8,10 +8,8 @@ import java.util.List;
 
 import com.google.inject.Inject;
 
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.FileUpload;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.Role;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.User;
-import edu.emory.cci.aiw.cvrg.eureka.services.dao.FileDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.RoleDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.UserDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.util.StringUtil;
@@ -34,10 +32,6 @@ public class Bootstrap {
 	 * The user DAO class.
 	 */
 	private final UserDao userDao;
-	/**
-	 * The file upload DAO class.
-	 */
-	private final FileDao fileDao;
 
 	/**
 	 * Create a Bootstrap class with an EntityManager.
@@ -54,11 +48,9 @@ public class Bootstrap {
 	 * @param inEntityManager
 	 */
 	@Inject
-	Bootstrap(final RoleDao inRoleDao, final UserDao inUserDao,
-			final FileDao inFileDao) {
+	Bootstrap(final RoleDao inRoleDao, final UserDao inUserDao) {
 		this.roleDao = inRoleDao;
 		this.userDao = inUserDao;
-		this.fileDao = inFileDao;
 	}
 
 	/**
@@ -73,7 +65,6 @@ public class Bootstrap {
 	void configure() throws KeyManagementException, NoSuchAlgorithmException {
 		addDefaultRoles();
 		addDefaultUsers();
-		addDefaultFileUploads();
 	}
 
 	/**
@@ -101,21 +92,6 @@ public class Bootstrap {
 		for (User user : Bootstrap.createUsers(defaultRoles)) {
 			this.userDao.save(user);
 		}
-	}
-
-	/**
-	 * Add the default file uploads to the data store, using the first user
-	 * found.
-	 */
-	private void addDefaultFileUploads() {
-		List<User> users = this.userDao.getUsers();
-		User user = users.get(0);
-		FileUpload fileUpload = new FileUpload();
-		fileUpload.setLocation("/tmp/foo");
-		fileUpload.setUser(user);
-		user.addFileUpload(fileUpload);
-		this.userDao.save(user);
-		this.fileDao.save(fileUpload);
 	}
 
 	/**
