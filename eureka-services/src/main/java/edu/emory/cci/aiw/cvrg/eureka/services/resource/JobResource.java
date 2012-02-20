@@ -157,14 +157,13 @@ public class JobResource {
 				}
 			}
 		} else {
-			Date latestDate = null;
 			List<FileUpload> fileUploads = this.fileDao.getByUserId(userId);
 			for (FileUpload fileUpload : fileUploads) {
 				if (latestFileUpload == null) {
 					latestFileUpload = fileUpload;
-					latestDate = fileUpload.getTimestamp();
 				} else {
-					if (fileUpload.getTimestamp().after(latestDate)) {
+					if (fileUpload.getTimestamp().after(
+							latestFileUpload.getTimestamp())) {
 						latestFileUpload = fileUpload;
 					}
 				}
