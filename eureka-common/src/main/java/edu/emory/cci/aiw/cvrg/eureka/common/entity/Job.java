@@ -204,13 +204,31 @@ public class Job implements CycleRecoverable {
 		return ts;
 	}
 
-	/* (non-Javadoc)
-	 * @see com.sun.xml.bind.CycleRecoverable#onCycleDetected(com.sun.xml.bind.CycleRecoverable.Context)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.sun.xml.bind.CycleRecoverable#onCycleDetected(com.sun.xml.bind.
+	 * CycleRecoverable.Context)
 	 */
 	@Override
 	public Object onCycleDetected(Context inContext) {
 		return null;
 	}
-	
-	
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("Job [id=").append(this.id).append(", timestamp=")
+				.append(this.timestamp).append(", configurationId=")
+				.append(this.configurationId).append(", userId=")
+				.append(this.userId).append(", jobEvents=")
+				.append(this.jobEvents).append("]");
+		return builder.toString();
+	}
+
 }
