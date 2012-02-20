@@ -85,8 +85,11 @@ public class RolesFilter implements Filter {
 				ResultSet resultSet = preparedStatement.executeQuery();
 				while (resultSet.next()) {
 					String role = resultSet.getString(this.colName);
-					LOGGER.debug("Assigning role {}", role);
-					roles.add(role);
+					if (role != null) {
+						String authority = "ROLE_" + role.toUpperCase();
+						LOGGER.debug("Assigning role {}", authority);
+						roles.add(authority);
+					}
 				}
 				resultSet.close();
 				preparedStatement.close();
