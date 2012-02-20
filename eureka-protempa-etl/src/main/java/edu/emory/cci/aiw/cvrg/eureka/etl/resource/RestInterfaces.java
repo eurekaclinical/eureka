@@ -109,17 +109,27 @@ public class RestInterfaces {
 	@Consumes("application/json")
 	@Produces("application/json")
 	public Configuration getConfByUserId(@PathParam("userId") Long userId) {
-		// return this.confDao.get(userId);
+
+		Configuration conf;
+		try {
+			
+			conf = this.confDao.get(userId);
+			return conf;
+		}
+		catch (Exception e) {
+
+			return null;
+		}
 		// TODO: GET RID OF THIS FAKE CONFIGURATION WHEN REAL CONFIGURATIONS
 		// ARE AVAILABLE
-		Configuration fakeConfiguration = new Configuration();
-		fakeConfiguration.setProtempaDatabaseName("XE");
-		fakeConfiguration.setProtempaHost("adrastea.cci.emory.edu");
-		fakeConfiguration.setProtempaPort(Integer.valueOf(1521));
-		fakeConfiguration.setProtempaSchema("cvrg");
-		fakeConfiguration.setProtempaPass("cvrg");
-		fakeConfiguration.setUserId(userId);
-		return fakeConfiguration;
+//		Configuration fakeConfiguration = new Configuration();
+//		fakeConfiguration.setProtempaDatabaseName("XE");
+//		fakeConfiguration.setProtempaHost("adrastea.cci.emory.edu");
+//		fakeConfiguration.setProtempaPort(Integer.valueOf(1521));
+//		fakeConfiguration.setProtempaSchema("cvrg");
+//		fakeConfiguration.setProtempaPass("cvrg");
+//		fakeConfiguration.setUserId(userId);
+//		return fakeConfiguration;
 	}
 
 	@POST

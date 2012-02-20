@@ -53,7 +53,7 @@ public class ProtempaDevice extends Thread {
 
 		synchronized (synchObj) {
 
-			LOGGER.debug("ProtempaDevice loaded with Job {0}" , job.getId());
+			LOGGER.debug("ProtempaDevice loaded with Job {1}" , job.getId());
 			busy = true;
 			this.job = job;
 			synchObj.notifyAll();	//	there should only ever be one thread wait()ing, but still...
@@ -77,14 +77,14 @@ public class ProtempaDevice extends Thread {
 				Job myJob = null;
 				try {
 
-					LOGGER.debug("{0} wait." , Thread.currentThread().getName());
+					LOGGER.debug("{1} wait." , Thread.currentThread().getName());
 					synchObj.wait();
 					myJob = this.jobDao.get(this.job.getId());
-					LOGGER.debug("{0} just got a job, id= {1}" , Thread.currentThread().getName() , myJob.getId());
+					LOGGER.debug("{1} just got a job, id= {2}" , Thread.currentThread().getName() , myJob.getId());
 			    	myJob.setNewState ("PROCESSING" , null , null);
 			    	this.jobDao.save (myJob);
 
-			    	Configuration conf = confDao.get(myJob.getUserId());
+//			    	Configuration conf = confDao.get(myJob.getUserId());
 			    	etl.runProtempa ("cvrg");
 //			    	etl.runProtempa (conf.getProtempaSchema());
 
@@ -93,7 +93,7 @@ public class ProtempaDevice extends Thread {
 				}
 				catch (InterruptedException ie) {
 
-					LOGGER.debug("{0} interrupted and finished." , Thread.currentThread().getName());
+					LOGGER.debug("{1} interrupted and finished." , Thread.currentThread().getName());
 			    	this.failure = true;
 			    	if (myJob != null) {
 
@@ -104,7 +104,8 @@ public class ProtempaDevice extends Thread {
 				}
 				catch (Exception e) {
 
-					LOGGER.debug("{0} unknown exception and finished. {1}" , Thread.currentThread().getName() , e.getMessage());
+					e.printStackTrace();
+					LOGGER.debug("{1} unknown exception and finished. {2}" , Thread.currentThread().getName() , e.getMessage());
 			    	this.failure = true;
 			    	if (myJob != null) {
 
