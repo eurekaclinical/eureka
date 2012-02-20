@@ -284,7 +284,7 @@ public class JobSubmissionThread extends Thread {
 				Configuration fakeConf = new Configuration();
 				fakeConf.setUserId(this.fileUpload.getUser().getId());
 				fakeConf.setProtempaHost("adrastea.cci.emory.edu");
-				fakeConf.setProtempaPort(Integer.valueOf(1591));
+				fakeConf.setProtempaPort(Integer.valueOf(1521));
 				fakeConf.setProtempaDatabaseName("cvrg");
 				fakeConf.setProtempaSchema("cvrg");
 				fakeConf.setProtempaPass("cvrg");
