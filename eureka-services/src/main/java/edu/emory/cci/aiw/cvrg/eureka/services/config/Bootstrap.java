@@ -89,7 +89,7 @@ public class Bootstrap {
 			}
 		}
 
-		for (User user : Bootstrap.createUsers(defaultRoles)) {
+		for (User user : this.createUsers(defaultRoles)) {
 			this.userDao.save(user);
 		}
 	}
@@ -105,21 +105,52 @@ public class Bootstrap {
 	 * @throws NoSuchAlgorithmException If the password can not be hashed
 	 *             properly.
 	 */
-	private static List<User> createUsers(final List<Role> defaultRoles)
+	private List<User> createUsers(final List<Role> defaultRoles)
 			throws NoSuchAlgorithmException {
 		List<User> users = new ArrayList<User>();
-		User user = new User();
-		user.setActive(true);
-		user.setVerified(true);
-		user.setSuperUser(true);
-		user.setEmail("super.user@emory.edu");
-		user.setFirstName("Super");
-		user.setLastName("User");
-		user.setOrganization("Emory University");
-		user.setPassword(StringUtil.md5("testpassword"));
-		user.setLastLogin(Calendar.getInstance().getTime());
-		user.setRoles(defaultRoles);
-		users.add(user);
+
+		List<Role> adminRoles = new ArrayList<Role>(defaultRoles);
+		adminRoles.add(this.roleDao.getRoleByName("admin"));
+		
+		List<Role> superRoles = new ArrayList<Role>(adminRoles);
+		superRoles.add(this.roleDao.getRoleByName("superuser"));
+
+		User regularUser = new User();
+		regularUser.setActive(true);
+		regularUser.setVerified(true);
+		regularUser.setEmail("user@emory.edu");
+		regularUser.setFirstName("Regular");
+		regularUser.setLastName("User");
+		regularUser.setOrganization("Emory University");
+		regularUser.setPassword(StringUtil.md5("testpassword"));
+		regularUser.setLastLogin(Calendar.getInstance().getTime());
+		regularUser.setRoles(defaultRoles);
+
+		User adminUser = new User();
+		adminUser.setActive(true);
+		adminUser.setVerified(true);
+		adminUser.setEmail("admin.user@emory.edu");
+		adminUser.setFirstName("Admin");
+		adminUser.setLastName("User");
+		adminUser.setOrganization("Emory University");
+		adminUser.setPassword(StringUtil.md5("testpassword"));
+		adminUser.setLastLogin(Calendar.getInstance().getTime());
+		adminUser.setRoles(adminRoles);
+		
+		User superUser = new User();
+		superUser.setActive(true);
+		superUser.setVerified(true);
+		superUser.setEmail("super.user@emory.edu");
+		superUser.setFirstName("Super");
+		superUser.setLastName("User");
+		superUser.setOrganization("Emory University");
+		superUser.setPassword(StringUtil.md5("testpassword"));
+		superUser.setLastLogin(Calendar.getInstance().getTime());
+		superUser.setRoles(superRoles);
+
+		users.add(regularUser);
+		users.add(adminUser);
+		users.add(superUser);
 		return users;
 	}
 
@@ -138,9 +169,14 @@ public class Bootstrap {
 		Role role2 = new Role();
 		role2.setDefaultRole(Boolean.FALSE);
 		role2.setName("admin");
+		
+		Role role3 = new Role();
+		role3.setDefaultRole(Boolean.FALSE);
+		role3.setName("superuser");
 
 		roles.add(role1);
 		roles.add(role2);
+		roles.add(role3);
 		return roles;
 	}
 }
