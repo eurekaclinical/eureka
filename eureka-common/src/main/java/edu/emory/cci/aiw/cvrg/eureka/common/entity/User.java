@@ -47,10 +47,6 @@ public class User implements CycleRecoverable {
 	 */
 	private boolean verified;
 	/**
-	 * Is this user a super user?
-	 */
-	private boolean superUser;
-	/**
 	 * The user's first name.
 	 */
 	private String firstName;
@@ -149,20 +145,6 @@ public class User implements CycleRecoverable {
 	 */
 	public void setVerified(final boolean inVerified) {
 		this.verified = inVerified;
-	}
-
-	/**
-	 * @return the superUser
-	 */
-	public boolean isSuperUser() {
-		return this.superUser;
-	}
-
-	/**
-	 * @param inSuperUser the superUser to set
-	 */
-	public void setSuperUser(boolean inSuperUser) {
-		this.superUser = inSuperUser;
 	}
 
 	/**
