@@ -154,7 +154,7 @@ $(document).ready(function() {
 	 
 	 
 	 if ($("#userAcctForm").length > 0){
-			var signupFormValidator = $("#userAcctForm").validate({
+			var userFormValidator = $("#userAcctForm").validate({
 				rules: {
 					oldPassword: {
 						required: true,
@@ -215,26 +215,27 @@ $(document).ready(function() {
 	        				 '&newPassword=' + newPassword + 
 	        				 '&verifyPassword=' + verifyPassword;  
 	        
-	        if (signupFormValidator.valid()) {                   		
+	        if (userFormValidator.valid()) {                   		
 				$.ajax({
 		              type: 'POST',
 		              url: 'user_acct',
 		              data: dataString,
 		              statusCode: {
 		            	    404: function() {
-		            	      alert('page not found');
+		            	      
 		            	      
 		            	    },
 		            	    200: function() {
-			            	      alert('success');
+			            	     
 			            	      $('#passwordChangeComplete').show();
+			            	      $('#saveAcctBtn').hide();
 			            	    },
 			            	405: function() {
-				            	  alert('error');
+				            	  
 				            	  $('#passwordChangeFailure').show();
 				            },
 				            400: function() {
-	                            alert('error');
+	                            
 	                            $('#passwordChangeFailure').show();
 				            }
 	
@@ -246,8 +247,25 @@ $(document).ready(function() {
             return false;
 	 });
 	 
-	
-	
+	 if ($("#status").length > 0){
+		 
+		 
+			 $('input:file').change(
+					 function(){
+						 if ($(this).val()) {
+							 $('input:submit').attr('disabled',false);
+							 // or, as has been pointed out elsewhere:
+							 // $('input:submit').removeAttr('disabled'); 
+						 } 
+					 }
+					 );
+		 
+		 
+		 $("#uploadForm").submit(function(){ 
+			 $("input[type=submit]", this).attr('disabled', true); 
+		 });
+		 
+	 }
 	
 
 });
