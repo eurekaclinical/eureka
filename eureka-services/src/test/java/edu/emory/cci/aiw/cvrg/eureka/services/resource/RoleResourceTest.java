@@ -39,6 +39,6 @@ public class RoleResourceTest extends AbstractResourceTest {
 				.get(new GenericType<List<Role>>() {
 					// Nothing to implement, used to hold returned data.
 				});
-		Assert.assertEquals(2, roles.size());
+		Assert.assertEquals(3, roles.size());
 	}
 }
