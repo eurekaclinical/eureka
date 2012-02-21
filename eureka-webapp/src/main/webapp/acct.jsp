@@ -45,8 +45,6 @@
 				
 					
 					<tr>
-						<td class=" white"><label id="lemail" for="email">Old Password:</label></td>
-	  					<td class="field white"><input type="password" name="oldPassword" id="oldPassword" /></td>
 	  					<td class="status white"></td>					
 					<tr>
 						<td class=" white"><label id="lemail" for="email">New Password:</label></td>
