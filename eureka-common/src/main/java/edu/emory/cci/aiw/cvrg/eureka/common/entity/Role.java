@@ -11,6 +11,7 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 import com.sun.xml.bind.CycleRecoverable;
 
@@ -115,6 +116,7 @@ public class Role implements CycleRecoverable {
 	 * 
 	 * @return A Set of {@link User} objects.
 	 */
+	@XmlTransient
 	public List<User> getUsers() {
 		return this.users;
 	}
