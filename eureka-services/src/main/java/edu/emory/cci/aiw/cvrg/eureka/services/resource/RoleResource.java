@@ -49,15 +49,8 @@ public class RoleResource {
 	@Path("/{id}")
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	public Role getRole(@PathParam("id") String inId) throws ServletException {
-		Role role;
-		try {
-			Long id = Long.valueOf(inId);
-			role = this.roleDao.getRoleById(id);
-		} catch (NumberFormatException nfe) {
-			throw new ServletException(nfe);
-		}
-		return role;
+	public Role getRole(@PathParam("id") Long inId) throws ServletException {
+		return this.roleDao.getRoleById(inId);
 	}
 
 	/**
@@ -69,7 +62,6 @@ public class RoleResource {
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("/list")
 	public List<Role> getRoles() {
-		List<Role> roles = this.roleDao.getRoles();
-		return roles;
+		return this.roleDao.getRoles();
 	}
 }
