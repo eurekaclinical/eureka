@@ -9,11 +9,18 @@
 		        setTimeout(function(){
 		            $.ajax({ url: "${pageContext.request.contextPath}/jobpoll", success: function(data){
 		            //Update your dashboard gauge
-		            $('#status').text("[debug] "+data);
+		            if (data['currentStep'] != undefined) {
+                    	
+		            	$('#status').text(data['currentStep'] + " out of " + data['totalSteps']);
+		            	$('#uploadTime').text(data['job']['creationTime']);
+
+                    } else {
+                            
+                    }
 
 		            //Setup the next poll recursively
 		            poll();
-		        }, dataType: "text"});
+		        }, dataType: "json"});
 		       }, 5000);
 		    })();
 		
@@ -27,7 +34,7 @@
 
 			<h3>Upload Data</h3>
 
-			<form id="form" name="form1" class="pad_top" method="post" action="${pageContext.request.contextPath}/upload" ENCTYPE="multipart/form-data">
+			<form id="uploadForm" name="uploadForm" class="pad_top" method="post" action="${pageContext.request.contextPath}/upload" ENCTYPE="multipart/form-data">
 			
                 <table>
 					<tr class="grey">
@@ -82,7 +89,7 @@
           			<br/>
                     <br/>
 					<input type="file" name="uploadFileName" id="button" value="Browse" />
-					<input type="submit" id="button" value="Upload">
+					<input type="submit" id="button" value="Upload" disabled>
                     <br/>
                     <br/>
                     <a href="${pageContext.request.contextPath}/docs/sample.xlsx">Download Sample Spreadsheet</a>
