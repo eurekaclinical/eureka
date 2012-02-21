@@ -134,6 +134,7 @@ a:visited {
 #release_notes {
 	padding-top:15px;
 	float: left;
+	min-height:250px;
 }
 
 #release_notes .rss-items li {
@@ -214,6 +215,7 @@ td
 	font-size:9px;
 	border-top:1px solid #369;
 	color:#fff;
+	min-width:1200px;
 }
 
 .fltrt {
@@ -243,6 +245,9 @@ td
 }
 .pad {
 	padding-left:50px;
+}
+.pad_rt {
+		padding-right:220px;
 }
 .pad_btm {
 	padding-bottom:100px;

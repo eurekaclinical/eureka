@@ -10,31 +10,17 @@
 
 	<template:content name="content">
 		<h3>Overview</h3>
-		<p class="pad_top">
-			Welcome to Eureka! The Clinical Analysis Tool for biomedical
-			informatics and data. This application provides a method to extract,
-			transform and load a clinical dataset and conform it to a defined
-			structure that loads into an instance of i2b2. By using this tool,
-			clinical researchers can use existing clinical data for discovery
-			research.
-		</p>
-		<p>This tool enhances medical research via technology by making
-			it possible to collect, weed through, and analyze widespread data on
-			patient treatments and outcomes. It involves the collection,
-			management, analysis, and integration of data in biomedicine and can
-			be used for research and healthcare delivery.</p>
-		<p>
-			The application has an Administration tab where  administrators can assign roles and in the future, will be able to link up Eureka! to unique data bases and clouds for virtual implementation</p>
-		<p>
-			Currently, the method for uploading data is to use an excel
-			spreadsheet. A sample spreadsheet of psuedo patient data is provided for demo purposes.<br /> <br /> 
-			You must first register in order to use this tool. An email will be sent from the administrator once you have been set-up in the system. Once notified, login to the site and begin your research by clicking on the <em>Upload
-				Data</em> link.
-		</p>
-
+      <p style="font-size:11px;">Welcome to the Eureka! Clinical Analytics demonstration website. This   site provides researchers with an easy way to load clinical datasets   into their own instance of <a href="http://www.i2b2.org" rel="nofollow">i2b2<img src="https://web.cci.emory.edu/confluence/images/icons/linkext7.gif" alt="" height="7" border="0" width="7" align="absmiddle" /></a>, a clinical database query tool, on the cloud. This site is a project of the <a href="http://cci.emory.edu" rel="nofollow">Emory Center for Comprehensive Informatics<img src="https://web.cci.emory.edu/confluence/images/icons/linkext7.gif" alt="" height="7" border="0" width="7" align="absmiddle" /></a> and is sponsored by the <a href="http://www.cvrgrid.org" rel="nofollow">CardioVascular Research Grid (CVRG)<img src="https://web.cci.emory.edu/confluence/images/icons/linkext7.gif" alt="" height="7" border="0" width="7" align="absmiddle" /></a>, an <a href="http://www.nhlbi.nih.gov/" rel="nofollow">NHLBI<img src="https://web.cci.emory.edu/confluence/images/icons/linkext7.gif" alt="" height="7" border="0" width="7" align="absmiddle" /></a> grant for creating informatics infrastructure in support of cardiovascular research.</p>
+      <p style="font-size:11px;">To get started, click on the Register link. You will soon receive an   account and can begin uploading data. Click on the Help link to learn   more.</p>
+        <p><strong>NOTE: This is a demonstration website and is NOT suitable for use   with sensitive data including patient data that contains identifiers. We   will soon make available a version of this web application for cloud   deployment that is suitable for use with identified patient data. Stay   tuned!</strong></p>
+      <p style="font-size:11px;">The website's source code is available as open source under the   Apache 2 license. Please contact the developers through the email   address on the site's Contact page for a copy.</p>
+        <p class="small_text">&nbsp;</p>
+        <p class="small_text">The software powering this site has been supported in part by <a href="http://www.emoryhealthcare.org" rel="nofollow">Emory Healthcare<img src="https://web.cci.emory.edu/confluence/images/icons/linkext7.gif" alt="" height="7" border="0" width="7" align="absmiddle" /></a>; <a href="http://winshipcancer.emory.edu" rel="nofollow">Emory Winship Cancer Institute<img src="https://web.cci.emory.edu/confluence/images/icons/linkext7.gif" alt="" height="7" border="0" width="7" align="absmiddle" /></a>;   NHLBI grant R24 HL085343; PHS Grant UL1 RR025008, KL2 RR025009 and TL1   RR025010 from the CTSA program, NIH, NCRR; NIH/ARRA grant   325011.300001.80022; and M01 RR-00039 from the GCRC program, NIH, NCRR.	</p>
 	</template:content>
 	<template:content name="subcontent">
-		<h3>Release Notes</h3>
+	  </template:content>
+	<template:content name="subcontent">
+	  <h3>Release Notes</h3>
 		<div class="release_notes sub_width">
 			<p>01.05.2012 : eureka.cci.emory.edu established</p>
 			<p>01.09.2012 : Front-end/Back-end combined</p>

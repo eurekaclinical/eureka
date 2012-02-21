@@ -51,10 +51,10 @@
 	  			<td class="status white"></td>
 	  		  </tr>
   			</table>
-	<div class="small_text pad">*Passwords must be at least 8 characters and contain at least one letter and digit
-
-    <br />
-    <input type="checkbox" name="checkbox" id="checkbox" style="padding:0px" />
+	<div class="small_text pad_rt">*Passwords must be at least 8 characters and contain at least one letter & digit
+	<br/><input type="checkbox" name="checkbox" id="checkbox" style="padding:0px" />
+    <label for="checkbox" style="display: inline"><a href="end_user.jsp">End User Agreement</a></label>
+    &nbsp;&nbsp;<input type="checkbox" name="checkbox" id="checkbox" style="padding:0px" />
     <label for="checkbox" style="display: inline">Click here to join our mailing list</label>
    &nbsp;
     <button id="submit" type="submit" class="btn btn-primary submit">Submit</button>
