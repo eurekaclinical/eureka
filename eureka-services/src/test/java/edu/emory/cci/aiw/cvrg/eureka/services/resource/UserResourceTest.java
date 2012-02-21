@@ -37,7 +37,7 @@ public class UserResourceTest extends AbstractResourceTest {
 	@Test
 	public void testUserList() {
 		List<User> users = getUserList();
-		Assert.assertEquals(1, users.size());
+		Assert.assertEquals(3, users.size());
 	}
 
 	/**
