@@ -320,18 +320,26 @@ public class UserResource {
 	/**
 	 * Validate that a user being updated does not violate any rules.
 	 * 
-	 * @param user The user to be validate.
+	 * @param updatedUser The user to be validate.
 	 * @return True if the user is valid, false otherwise.
 	 */
-	private boolean validateUpdatedUser(User user) {
+	private boolean validateUpdatedUser(User updatedUser) {
 		boolean result = true;
-		// a super user can not be de-activated or stripped of admin rights
-		if (user.isSuperUser()) {
-			if (user.isActive() == false) {
+		
+		// get the user as they currently exist in the data store.
+		User currentUser = this.userDao.get(updatedUser.getId());
+		List<Role> currentRoles = currentUser.getRoles();
+
+		// the roles to check
+		Role superUserRole = this.roleDao.getRoleByName("superuser");
+		Role adminRole = this.roleDao.getRoleByName("admin");
+		
+		// a super user can not be stripped of admin rights, or be de-activated.
+		if (currentRoles.contains(superUserRole)) {
+			if (updatedUser.isActive() == false) {
 				result = false;
 			}
-			Role adminRole = this.roleDao.getRoleByName("admin");
-			if (!user.getRoles().contains(adminRole)) {
+			if (updatedUser.getRoles().contains(adminRole) == false) {
 				result = false;
 			}
 		}
