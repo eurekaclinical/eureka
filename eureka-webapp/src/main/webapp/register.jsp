@@ -11,6 +11,7 @@
 	<template:content name="content">
 
     <h3 id="registerHeading">Register</h3>
+    <p><span>* Disclaimer: Loading real patient data into the system is strictly prohibited.</span></p>
 <form id="signupForm" action="#" method="post">
 
 	  		  <table class="white">
@@ -53,7 +54,6 @@
 
 	<div class="small_text">* Passwords must be at least 8 characters and contain at least one letter and digit
     <br />
-    * Disclaimer: Loading real patient data into the system is strictly prohibited.<br />
     <br />
     <input type="checkbox" name="checkbox" id="checkbox" style="padding:0px" />
     <label for="checkbox" style="display: inline">Click here to join our mailing list</label>
