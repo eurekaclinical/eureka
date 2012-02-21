@@ -11,6 +11,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.core.MediaType;
 
+import org.codehaus.jackson.map.ObjectMapper;
+
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.WebResource;
 
@@ -27,7 +29,7 @@ public class JobPollServlet extends HttpServlet {
 		String eurekaServicesUrl = req.getSession().getServletContext()
 				.getInitParameter("eureka-services-url");
 
-		resp.setContentType("application/text");
+		resp.setContentType("application/json");
 
 		try {
 			Client client = CommUtils.getClient();
@@ -39,13 +41,24 @@ public class JobPollServlet extends HttpServlet {
 					.path("/api/job/status/" + user.getId())
 					.accept(MediaType.APPLICATION_JSON).get(JobInfo.class);
 
-			String message = "status: " + jobInfo.getCurrentStep();
-			System.out.println(message);
-			resp.setContentLength(message.length());
-			PrintWriter out = resp.getWriter();
-			out.println(message);
-			out.close();
-			out.flush();
+			String message = "" + jobInfo.getCurrentStep();
+			if (jobInfo.getCurrentStep() == 0) {
+				String emptyJson = "{}";
+				resp.setContentLength(emptyJson.length());
+				PrintWriter out = resp.getWriter();
+				out.println(emptyJson);
+				out.close();
+				out.flush();
+			} else {
+				ObjectMapper mapper = new ObjectMapper();				
+				
+				resp.setContentLength(mapper.writeValueAsString(jobInfo).length());
+				PrintWriter out = resp.getWriter();
+				out.println(mapper.writeValueAsString(jobInfo));
+				out.close();
+				out.flush();
+				
+			}
 
 		} catch (NoSuchAlgorithmException nsae) {
 			throw new ServletException(nsae);
