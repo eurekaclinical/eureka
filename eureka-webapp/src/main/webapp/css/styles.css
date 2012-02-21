@@ -135,11 +135,12 @@ a:visited {
 #release_notes {
 	padding-top:15px;
 	float: left;
+	min-height:250px;
 }
 
 #release_notes .rss-items li {
 	display:block;
-	padding:0 60px 10px 30px;
+	padding:0 40px 10px 25px;
 }	
 
 #submit {
@@ -222,6 +223,7 @@ td
 	font-size:9px;
 	border-top:1px solid #369;
 	color:#fff;
+	min-width:1200px;
 }
 
 .fltrt {
@@ -259,10 +261,10 @@ td
 	padding-top:20px;
 }
 .sub_width {
-	width:375px;
+	width:auto;
 	float:left;
 }
 .small_text {
 	font-size:9px;
-	padding-right:275px;
+	padding-right:200px;
 }

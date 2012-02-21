@@ -11,8 +11,8 @@
 	<template:content name="content">
 
     <h3 id="registerHeading">Register</h3>
-    <p><span>* Disclaimer: Loading real patient data into the system is strictly prohibited.</span></p>
-<form id="signupForm" action="#" method="post">
+    <p><span class="pad">*Disclaimer: Loading real patient data into the system is strictly prohibited. </span></p>
+<form id="signupForm" action="#" method="post" class="pad">
 
 	  		  <table class="white">
 	  		  <tr>
@@ -51,15 +51,15 @@
 	  			<td class="status white"></td>
 	  		  </tr>
   			</table>
+	<div class="small_text pad">*Passwords must be at least 8 characters and contain at least one letter and digit
 
-	<div class="small_text">* Passwords must be at least 8 characters and contain at least one letter and digit
-    <br />
     <br />
     <input type="checkbox" name="checkbox" id="checkbox" style="padding:0px" />
     <label for="checkbox" style="display: inline">Click here to join our mailing list</label>
    &nbsp;
-    <button type="submit" class="btn btn-primary submit">Submit</button>
-   </div>
+    <button id="submit" type="submit" class="btn btn-primary submit">Submit</button>
+    <br />
+    </div>
 </form>
 	<div id="registrationComplete">
 		<h2>Your request has been successfully submitted. You will be notified once your account is activated.</h2>

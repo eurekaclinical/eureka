@@ -52,8 +52,8 @@
 			<p>11.15.2011 : Data Analysis Tool Named Eureka!</p>
 		</div>
 		<div class="release_notes sub_width">
-			<p>11.14.2011 : CVRG Data Analysis Tool Lands a New Name</p>
-			<p>11.01.2011 : CVRG Data Analysis Tool Demo VM Launched</p>
+			<p>11.14.2011 : Data Analysis Tool Lands a New Name</p>
+			<p>11.01.2011 : Data Analysis Tool Demo VM Launched</p>
 			<p>11.01.2011 : Data Architecture Defined</p>
 			<p>11.01.2011 : CVRG Data Dctionary Defined</p>
 			<p>11.01.2011 : User Stories</p>
