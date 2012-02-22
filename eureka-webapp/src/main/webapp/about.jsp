@@ -10,34 +10,36 @@
 
 	<template:content name="content">
 		<h3>About</h3>
-		<p class="pad_top"><strong>Eureka!</strong> is a product of the Center for Comprehensive
-			Informatics (CCI) at Emory University in collaboration with John
-			Hopkins University. The tool is a collaborative team-science project
-			between software system researchers and scientific research groups.
-			The purpose of this project is to employ complementary types of
-			information sources and large volumes of data to perform detailed
-			studies of mechanisms underlying physical and biological functions
-			and processes that will enable clinical researchers to use existing
-			clinical data for discovery research.</p>
-		<p>
-			<strong>Eureka!</strong> is the Data Analysis Tool for biomedical informatics 			and data. This application provides a method to extract, transform and
-			load a clinical dataset and conforms it to a defined structure that
-			loads into an instance of i2b2. <br />
-		</p>
-		<p>This tool enhances medical research via technology by making
-			it possible to collect, weed through, and analyze widespread data on
-			patient treatments and outcomes. It involves the collection,
-			management, analysis, and integration of data in biomedicine and can
-			be used for research and healthcare delivery.</p>
-		<p>
-			The application has an Administration tab where virtual machines can
-			be assigned and configured to a clinical database. Currently, the
-			method for uploading data is to use an excel spreadsheet.<br /> <br />
-			Begin your research by clicking on the <em>Upload Data</em> link.
-		</p>
+		<div style="overflow:scroll; height:320px">
+        <p>Eureka! Clinical Analytics is a project of the <a href="http://cci.emory.edu" rel="nofollow">Emory Center for Comprehensive Informatics<img src="https://web.cci.emory.edu/confluence/images/icons/linkext7.gif" alt="" height="7" border="0" width="7" align="absmiddle" /></a>. It was conceived as part of the vision of the <a href="http://www.cvrgrid.org" rel="nofollow">CardioVascular Research Grid (CVRG)<img src="https://web.cci.emory.edu/confluence/images/icons/linkext7.gif" alt="" height="7" border="0" width="7" align="absmiddle" /></a> to create tools that enable researchers to analyze and manipulate their biomedical research data in the cloud.</p>
+        <h5>What does it do?</h5>
+        <p>It can load your research project's clinical data into your own cloud-based instance of <a href="http://www.i2b2.org" rel="nofollow">i2b2<img src="https://web.cci.emory.edu/confluence/images/icons/linkext7.gif" alt="" height="7" border="0" width="7" align="absmiddle" /></a>,   where you and your colleagues can ask questions about the data,   summarize data and download subsets of their data for your research. You   provide an Excel spreadsheet that meets certain criteria, and the   software takes care of the rest. While its functionality is targeted to   clinical datasets in cardiovascular disease research, it supports   loading a wide variety of clinical data types into i2b2.</p>
+        <h5>Can I load data with identifiers in it?</h5>
+        <p>No, this is a demonstration website only. Please see the End-user   agreement when you register for an account on the website for details.</p>
+        <h5>What do you mean I can't load data with identifiers on it?</h5>
+        <p>We are just getting started. We plan to leverage a cloud-based service like <a href="http://aws.amazon.com/ec2/" rel="nofollow">Amazon EC2<img src="https://web.cci.emory.edu/confluence/images/icons/linkext7.gif" alt="" height="7" border="0" width="7" align="absmiddle" /></a> to enable you to create your own running instance of the website for   your lab or research project. There, within the terms of use of the   cloud service and your institution's policies, you will be able to load a   wider variety of research datasets onto your own instance of the   website. We also are creating powerful tools for you to connect the   software to existing research databases and data warehouses at your   institution. Of course, you also will be able to install the software   locally on your or your institution's own infrastructure.</p>
+        <h5>What is going on behind the scenes?</h5>
+      <p>Eureka! Clinical Analytics is a front-end user interface for the <a href="http://cci.emory.edu/cms/projects/aiw.html" rel="nofollow">Analytic Information Warehouse (AIW)<img src="https://web.cci.emory.edu/confluence/images/icons/linkext7.gif" alt="" height="7" border="0" width="7" align="absmiddle" /></a> software system. The AIW is being developed at <a href="http://www.emory.edu" rel="nofollow">Emory University<img src="https://web.cci.emory.edu/confluence/images/icons/linkext7.gif" alt="" height="7" border="0" width="7" align="absmiddle" /></a> to provide analytics infrastructure for clinical research and   healthcare quality assessment and performance improvement. We are using   it to develop predictive models of readmission within 30 days and find   &quot;hot spots&quot; in readmissions in Emory Healthcare's patient populations.   The AIW software is itself based on <a href="http://www.ncbi.nlm.nih.gov/pmc/articles/PMC1975802/" rel="nofollow">Protempa<img src="https://web.cci.emory.edu/confluence/images/icons/linkext7.gif" alt="" height="7" border="0" width="7" align="absmiddle" /></a>,   a software system for finding temporal patterns in clinical datasets.   Loading data into i2b2 is just one of the AIW's features. Future   releases of Eureka! will, over time, will add user interfaces for the   AIW's entire feature set.</p>
+        <h5>May I see the source code?</h5>
+        <p>Yes! The software is available as open source under the <a href="http://www.apache.org/licenses/LICENSE-2.0" rel="nofollow">Apache 2 license<img src="https://web.cci.emory.edu/confluence/images/icons/linkext7.gif" alt="" height="7" border="0" width="7" align="absmiddle" /></a>. Send an e-mail to the e-mail address on the Contact page to request a copy.</p>
+        <h5>Where can I get more information?</h5>
+        <p>Check out the CVRG wiki page for PROTEMPA/Analytic Information Warehouse/i2b2 at <a href="http://www.cvrgrid.org/cvrg-tool-demonstrations" rel="nofollow">http://www.cvrgrid.org/cvrg-tool-demonstrations<img src="https://web.cci.emory.edu/confluence/images/icons/linkext7.gif" alt="" height="7" border="0" width="7" align="absmiddle" /></a>.</p>
+        <h5>The Eureka! Clinical Analytics Team</h5>
+        <p>Andrew Post, MD, PhD - Eureka! lead and CVRG co-investigator<br />
+          Joel Saltz, MD, PhD - CVRG Emory site PI<br />
+          Tahsin Kurc, PhD - CVRG co-investigator<br />
+          Ashish Sharma, PhD - CVRG co-investigator<br />
+          Richard Willard – Eureka! project manager<br />
+          Himanshu Rathod – Lead software engineer<br />
+          Sanjay Agravat, MS – Software engineer<br />
+          Geoff Milton, MS – Software engineer<br />
+          Suzanne Sturm – Web designer	</p>
+          </div>
 	</template:content>
 	<template:content name="subcontent">
-		<div id="release_notes">
+	  </template:content>
+	<template:content name="subcontent">
+	  <div id="release_notes">
 			<h3>
 				<img src="${pageContext.request.contextPath}/images/rss.png"
 					border="0" /> Related News <a href="xml/rss_news.xml" class="rss"></a>
