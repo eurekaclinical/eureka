@@ -120,6 +120,8 @@ a:visited {
 	border: 1px solid #CCC;
 	background-color:#FFF;
 	height:330px;
+	position:absolute;
+	overflow: auto;
 }
 
 .sub-content {
