@@ -1,6 +1,6 @@
 package edu.emory.cci.aiw.cvrg.eureka.services.email;
 
-import javax.mail.MessagingException;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.User;
 
 /**
  * A mock implementation of the EmailSender interface that does nothing.
@@ -11,7 +11,7 @@ import javax.mail.MessagingException;
 public class MockEmailSender implements EmailSender {
 
 	@Override
-	public void sendMessage(String inUser) throws MessagingException {
+	public void sendMessage(User inUser) throws EmailException {
 		// do nothing, we don't want any emails to actually be sent out.
 	}
 
