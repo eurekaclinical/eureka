@@ -4,6 +4,7 @@ import java.net.URI;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import javax.mail.MessagingException;
 import javax.servlet.ServletException;
@@ -152,6 +153,7 @@ public class UserResource {
 			user.setOrganization(userRequest.getOrganization());
 			user.setRoles(this.getDefaultRoles());
 			user.setPassword(userRequest.getPassword());
+			user.setVerificationCode(UUID.randomUUID().toString());
 			LOGGER.debug("Saving new user {}", user.getEmail());
 			this.userDao.save(user);
 			try {
@@ -247,15 +249,15 @@ public class UserResource {
 	/**
 	 * Mark a user as verified.
 	 * 
-	 * @param inId The unique identifier for the user to be verified.
+	 * @param code The verification code to match against users.
 	 * @return An HTTP OK response if the user is modified, or a server error if
 	 *         the user can not be modified properly.
 	 */
-	@Path("/verify/{id}")
+	@Path("/verify/{code}")
 	@PUT
-	public Response verifyUser(@PathParam("id") final Long inId) {
+	public Response verifyUser(@PathParam("code") final String code) {
 		Response response = Response.ok().build();
-		User user = this.userDao.get(inId);
+		User user = this.userDao.getByVerificationCode(code);
 		if (user != null) {
 			user.setVerified(true);
 			this.userDao.save(user);
