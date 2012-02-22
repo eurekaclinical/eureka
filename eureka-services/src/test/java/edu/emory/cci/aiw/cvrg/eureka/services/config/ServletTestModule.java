@@ -20,13 +20,8 @@ public class ServletTestModule extends JerseyServletModule {
 	@Override
 	protected void configureServlets() {
 
-		// See the Bootstrap class for the persistence service startup.
-		// The was required because the persistence service needs to be
-		// started early in order to preload data for tests.
-		// install(new JpaPersistModule("sample-jpa-unit"));
-		// filter("/api/*").through(PersistFilter.class);
-
 		Map<String, String> params = new HashMap<String, String>();
+		params.put("com.sun.jersey.api.json.POJOMappingFeature", "true");
 		params.put(PackagesResourceConfig.PROPERTY_PACKAGES,
 				"edu.emory.cci.aiw.cvrg.eureka.services.resource");
 		params.put(ResourceConfig.PROPERTY_RESOURCE_FILTER_FACTORIES,
