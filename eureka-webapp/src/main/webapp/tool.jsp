@@ -45,20 +45,20 @@
 						<td width="51">Errors</td>
 					</tr>
 					<tr>
-			      		<td>
-				  			&nbsp;
+			      		<td>&nbsp;
+				  			
 				  		</td>
-			      		<td>
-				  			&nbsp;
+			      		<td>&nbsp;
+				  			
 				  		</td>
 			      		<td>
 				  			<div id="status"></div>
 				  		</td>
-			      		<td>
-				  			&nbsp;
+			      		<td>&nbsp;
+				  			
 				  		</td>
-			      		<td>
-				  			&nbsp;
+			      		<td>&nbsp;
+				  			
 				  		</td>
 				  	</tr>
 					
@@ -85,7 +85,7 @@
 				  	-->
 				</table>
       
-				<div class="pad_top" align="right">
+				<div class="pad_rt pad_top" align="right">
           			<br/>
                     <br/>
 					<input type="file" name="uploadFileName" id="button" value="Browse" />
