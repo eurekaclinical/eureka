@@ -34,6 +34,14 @@ public interface UserDao {
 	 * @return The user who has a unique identifier match the one given.
 	 */
 	User get(Long id);
+	
+	/**
+	 * Get a user by the verification code.
+	 * 
+	 * @param code The verification code to search for.
+	 * @return The user who has the given verification code, or null.
+	 */
+	User getByVerificationCode(String code);
 
 	/**
 	 * Get a user object, given the user name.
@@ -42,12 +50,4 @@ public interface UserDao {
 	 * @return The user object that corresponds to the given user name.
 	 */
 	User get(String name);
-
-	/**
-	 * Remove a given user from the data store.
-	 * 
-	 * @param id The unique identifier of the user to be removed.
-	 * @return The user, which has now been removed from the data store.
-	 */
-	User delete(Long id);
 }
