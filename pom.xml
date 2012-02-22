@@ -125,6 +125,7 @@
 		<protempa-version>2.0-SNAPSHOT</protempa-version>
 		<registry-version>1.0-SNAPSHOT</registry-version>
 		<oracle-version>[11.2.0.2.0,)</oracle-version>
+		<freemarker-version>2.3.9</freemarker-version>
 	</properties>
 
 	<!-- make sure our code complies with Java 1.6 specifications, and define 
@@ -388,6 +389,11 @@
 				<artifactId>ojdbc6</artifactId>
 				<version>${oracle-version}</version>
 				<scope>provided</scope>
+			</dependency>
+			<dependency>
+				<groupId>freemarker</groupId>
+				<artifactId>freemarker</artifactId>
+				<version>${freemarker-version}</version>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
