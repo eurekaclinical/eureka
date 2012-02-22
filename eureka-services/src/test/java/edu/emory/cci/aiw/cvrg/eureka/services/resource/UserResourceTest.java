@@ -1,6 +1,5 @@
 package edu.emory.cci.aiw.cvrg.eureka.services.resource;
 
-import java.net.URI;
 import java.util.List;
 
 import javax.ws.rs.core.MediaType;
@@ -90,7 +89,6 @@ public class UserResourceTest extends AbstractResourceTest {
 				.accept(MediaType.TEXT_PLAIN)
 				.post(ClientResponse.class, userRequest);
 
-		URI uri = response.getLocation();
 		Assert.assertTrue(response.getClientResponseStatus() == Status.CREATED);
 
 	}
