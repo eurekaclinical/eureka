@@ -10,6 +10,8 @@ import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.User;
+
 /**
  * Send emails to users when a notable event regarding the user occurs in the
  * system.
@@ -34,19 +36,28 @@ public class EmailSenderImpl implements EmailSender {
 		this.session = (Session) envCtx.lookup("mail/Session");
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.emory.cci.aiw.cvrg.eureka.services.email.EmailSenderIF#sendMessage(java.lang.String)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * edu.emory.cci.aiw.cvrg.eureka.services.email.EmailSenderIF#sendMessage
+	 * (java.lang.String)
 	 */
 	@Override
-	public void sendMessage(final String user) throws MessagingException {
-		MimeMessage message = new MimeMessage(this.session);
-		// message subject
-		message.setSubject("Eureka TESTING!");
-		// message body
-		message.setContent("Hi, you have registered with Eureka!", "text/plain");
-		message.addRecipient(Message.RecipientType.TO,
-				new InternetAddress(user));
-		Transport.send(message);
+	public void sendMessage(final User user) throws EmailException {
+		try {
+			MimeMessage message = new MimeMessage(this.session);
+			// message subject
+			message.setSubject("Eureka TESTING!");
+			// message body
+			message.setContent("Hi, you have registered with Eureka!",
+					"text/plain");
+			message.addRecipient(Message.RecipientType.TO, new InternetAddress(
+					user.getEmail()));
+			Transport.send(message);
+		} catch (MessagingException me) {
+			throw new EmailException(me);
+		}
 	}
 
 }
