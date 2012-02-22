@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import javax.mail.MessagingException;
 import javax.servlet.ServletException;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -30,6 +29,7 @@ import edu.emory.cci.aiw.cvrg.eureka.common.entity.User;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.UserRequest;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.RoleDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.UserDao;
+import edu.emory.cci.aiw.cvrg.eureka.services.email.EmailException;
 import edu.emory.cci.aiw.cvrg.eureka.services.email.EmailSender;
 import edu.emory.cci.aiw.cvrg.eureka.services.util.StringUtil;
 
@@ -158,8 +158,8 @@ public class UserResource {
 			this.userDao.save(user);
 			try {
 				LOGGER.debug("Sending email to {}", user.getEmail());
-				this.emailSender.sendMessage(user.getEmail());
-			} catch (MessagingException e) {
+				this.emailSender.sendMessage(user);
+			} catch (EmailException e) {
 				LOGGER.error("Error sending email to {}", user.getEmail(), e);
 			}
 			response = Response.created(URI.create("/" + user.getId())).build();
@@ -327,7 +327,7 @@ public class UserResource {
 	 */
 	private boolean validateUpdatedUser(User updatedUser) {
 		boolean result = true;
-		
+
 		// get the user as they currently exist in the data store.
 		User currentUser = this.userDao.get(updatedUser.getId());
 		List<Role> currentRoles = currentUser.getRoles();
@@ -335,7 +335,7 @@ public class UserResource {
 		// the roles to check
 		Role superUserRole = this.roleDao.getRoleByName("superuser");
 		Role adminRole = this.roleDao.getRoleByName("admin");
-		
+
 		// a super user can not be stripped of admin rights, or be de-activated.
 		if (currentRoles.contains(superUserRole)) {
 			if (updatedUser.isActive() == false) {
