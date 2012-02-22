@@ -68,6 +68,10 @@ public class User implements CycleRecoverable {
 	 */
 	private String password;
 	/**
+	 * The user's verification code;
+	 */
+	private String verificationCode;
+	/**
 	 * The last log-in date for the user.
 	 */
 	@Temporal(TemporalType.TIMESTAMP)
@@ -236,6 +240,20 @@ public class User implements CycleRecoverable {
 	 */
 	public void setPassword(final String inPassword) {
 		this.password = inPassword;
+	}
+
+	/**
+	 * @return the verificationCode
+	 */
+	public String getVerificationCode() {
+		return this.verificationCode;
+	}
+
+	/**
+	 * @param inVerificationCode the verificationCode to set
+	 */
+	public void setVerificationCode(String inVerificationCode) {
+		this.verificationCode = inVerificationCode;
 	}
 
 	/**
