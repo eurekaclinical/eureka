@@ -7,8 +7,13 @@ import javax.ws.rs.core.MediaType;
 import com.google.inject.servlet.GuiceFilter;
 import com.sun.jersey.api.client.GenericType;
 import com.sun.jersey.api.client.WebResource;
+import com.sun.jersey.api.client.config.ClientConfig;
+import com.sun.jersey.api.client.config.DefaultClientConfig;
+import com.sun.jersey.api.json.JSONConfiguration;
+import com.sun.jersey.test.framework.AppDescriptor;
 import com.sun.jersey.test.framework.JerseyTest;
 import com.sun.jersey.test.framework.WebAppDescriptor;
+import com.sun.jersey.test.framework.WebAppDescriptor.Builder;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.User;
 import edu.emory.cci.aiw.cvrg.eureka.services.config.ContextTestListener;
@@ -26,11 +31,26 @@ abstract class AbstractResourceTest extends JerseyTest {
 	 * against.
 	 */
 	AbstractResourceTest() {
-		super(
-				(new WebAppDescriptor.Builder())
-						.contextListenerClass(ContextTestListener.class)
-						.filterClass(GuiceFilter.class).contextPath("/")
-						.servletPath("/").build());
+		super();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.sun.jersey.test.framework.JerseyTest#configure()
+	 */
+	@Override
+	protected AppDescriptor configure() {
+		ClientConfig clientConfig = new DefaultClientConfig();
+		clientConfig.getFeatures().put(JSONConfiguration.FEATURE_POJO_MAPPING,
+				Boolean.TRUE);
+
+		Builder descriptorBuilder = new WebAppDescriptor.Builder();
+		descriptorBuilder.contextListenerClass(ContextTestListener.class)
+				.filterClass(GuiceFilter.class).contextPath("/")
+				.servletPath("/").clientConfig(clientConfig);
+
+		return descriptorBuilder.build();
 	}
 
 	/**
