@@ -97,6 +97,7 @@ a:visited {
 	background-image:url(../images/header_bg.png);
 	border-bottom:1px solid #369;
 	width: inherit;
+	overflow:hidden;
 }
 
 .sidebar1 {
@@ -263,4 +264,5 @@ td
 }
 .small_text {
 	font-size:9px;
+	font-style: italic;
 }
