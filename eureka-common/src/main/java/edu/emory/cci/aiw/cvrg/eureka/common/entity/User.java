@@ -18,6 +18,7 @@ import javax.persistence.TemporalType;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import org.codehaus.jackson.annotate.JsonBackReference;
+import org.codehaus.jackson.annotate.JsonManagedReference;
 
 import com.sun.xml.bind.CycleRecoverable;
 
@@ -260,6 +261,7 @@ public class User implements CycleRecoverable {
 	 * 
 	 * @return A list of {@link Role} objects.
 	 */
+	@JsonManagedReference("users-roles")
 	public List<Role> getRoles() {
 		return this.roles;
 	}
