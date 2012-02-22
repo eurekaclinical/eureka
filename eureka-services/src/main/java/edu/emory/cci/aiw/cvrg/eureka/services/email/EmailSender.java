@@ -1,6 +1,6 @@
 package edu.emory.cci.aiw.cvrg.eureka.services.email;
 
-import javax.mail.MessagingException;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.User;
 
 /**
  * An interface that defines how emails can be sent out from the application.
@@ -16,10 +16,9 @@ public interface EmailSender {
 	 * 
 	 * TODO: Remove this method and replace with more appropriate methods.
 	 * 
-	 * @param user
-	 * @throws MessagingException
+	 * @param user To whom the email should be sent.
+	 * @throws EmailException If the email can not be sent for any reason.
 	 */
-	public abstract void sendMessage(final String user)
-			throws MessagingException;
+	public abstract void sendMessage(final User user) throws EmailException;
 
 }
