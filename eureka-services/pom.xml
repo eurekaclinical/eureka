@@ -122,6 +122,10 @@
 			<groupId>javax.mail</groupId>
 			<artifactId>mail</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>freemarker</groupId>
+			<artifactId>freemarker</artifactId>
+		</dependency>
 	</dependencies>
 
 </project>
