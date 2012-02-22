@@ -12,6 +12,7 @@ import javax.net.ssl.X509TrustManager;
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.config.ClientConfig;
 import com.sun.jersey.api.client.config.DefaultClientConfig;
+import com.sun.jersey.api.json.JSONConfiguration;
 import com.sun.jersey.client.urlconnection.HTTPSProperties;
 
 /**
@@ -55,6 +56,8 @@ public class CommUtils {
 			}
 		};
 		ClientConfig clientConfig = new DefaultClientConfig();
+		clientConfig.getFeatures().put(JSONConfiguration.FEATURE_POJO_MAPPING,
+				Boolean.TRUE);
 		SSLContext sslContext = SSLContext.getInstance("SSLv3");
 		sslContext.init(null, new TrustManager[] { trustManager }, null);
 		clientConfig.getProperties().put(
