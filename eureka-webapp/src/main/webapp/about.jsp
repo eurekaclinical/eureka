@@ -10,7 +10,7 @@
 
 	<template:content name="content">
 		<h3>About</h3>
-		<div style="overflow:scroll; height:320px">
+		<div>
         <p>Eureka! Clinical Analytics is a project of the <a href="http://cci.emory.edu" rel="nofollow">Emory Center for Comprehensive Informatics<img src="https://web.cci.emory.edu/confluence/images/icons/linkext7.gif" alt="" height="7" border="0" width="7" align="absmiddle" /></a>. It was conceived as part of the vision of the <a href="http://www.cvrgrid.org" rel="nofollow">CardioVascular Research Grid (CVRG)<img src="https://web.cci.emory.edu/confluence/images/icons/linkext7.gif" alt="" height="7" border="0" width="7" align="absmiddle" /></a> to create tools that enable researchers to analyze and manipulate their biomedical research data in the cloud.</p>
         <h5>What does it do?</h5>
         <p>It can load your research project's clinical data into your own cloud-based instance of <a href="http://www.i2b2.org" rel="nofollow">i2b2<img src="https://web.cci.emory.edu/confluence/images/icons/linkext7.gif" alt="" height="7" border="0" width="7" align="absmiddle" /></a>,   where you and your colleagues can ask questions about the data,   summarize data and download subsets of their data for your research. You   provide an Excel spreadsheet that meets certain criteria, and the   software takes care of the rest. While its functionality is targeted to   clinical datasets in cardiovascular disease research, it supports   loading a wide variety of clinical data types into i2b2.</p>
