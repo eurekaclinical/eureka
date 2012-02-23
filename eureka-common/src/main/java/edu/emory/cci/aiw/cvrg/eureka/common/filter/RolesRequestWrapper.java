@@ -6,6 +6,9 @@ import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * Wraps an HttpServletRequest object, so that roles for the principal can be
  * implemented.
@@ -16,6 +19,12 @@ import javax.servlet.http.HttpServletRequestWrapper;
 public class RolesRequestWrapper extends HttpServletRequestWrapper {
 
 	/**
+	 * The class level logger.
+	 */
+	private static final Logger LOGGER = LoggerFactory
+			.getLogger(RolesRequestWrapper.class);
+	
+	/**
 	 * The original principal.
 	 */
 	private final Principal principal;
@@ -23,6 +32,9 @@ public class RolesRequestWrapper extends HttpServletRequestWrapper {
 	 * The roles assigned to the principal;
 	 */
 	private final Set<String> roles;
+	
+
+
 	/**
 	 * The original request.
 	 */
@@ -77,5 +89,10 @@ public class RolesRequestWrapper extends HttpServletRequestWrapper {
 		}
 		return result;
 	}
+	
+	public Set<String> getRoles() {
+		return roles;
+	}
+
 
 }
