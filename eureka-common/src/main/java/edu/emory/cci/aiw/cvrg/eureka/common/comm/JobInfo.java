@@ -24,7 +24,7 @@ public class JobInfo {
 	/**
 	 * The total number of steps in the process.
 	 */
-	public static final int TOTAL_STEPS = 6;
+	private int totalSteps = 6;
 	/**
 	 * The file upload for the job being processed.
 	 */
@@ -65,6 +65,20 @@ public class JobInfo {
 			}
 		}
 		return step;
+	}
+
+	/**
+	 * @return the totalSteps
+	 */
+	public int getTotalSteps() {
+		return this.totalSteps;
+	}
+
+	/**
+	 * @param inTotalSteps the totalSteps to set
+	 */
+	public void setTotalSteps(int inTotalSteps) {
+		this.totalSteps = inTotalSteps;
 	}
 
 	/**
