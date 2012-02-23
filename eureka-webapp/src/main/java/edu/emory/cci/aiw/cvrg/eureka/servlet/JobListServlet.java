@@ -3,6 +3,7 @@ package edu.emory.cci.aiw.cvrg.eureka.servlet;
 import java.io.IOException;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
+import java.security.Principal;
 import java.util.List;
 
 import javax.servlet.ServletException;
@@ -29,9 +30,11 @@ public class JobListServlet extends HttpServlet {
 				.getInitParameter("eureka-services-url");
 		try {
 			Client client = CommUtils.getClient();
+			Principal principal = req.getUserPrincipal();
+			String userName = principal.getName();
+					
 			WebResource webResource = client.resource(eurekaServicesUrl);
-			User user = webResource
-					.path("/api/user/byname/super.user@emory.edu")
+			User user = webResource.path("/api/user/byname/"+userName)
 					.accept(MediaType.APPLICATION_JSON).get(User.class);
 			List<Job> jobs = webResource.path("/api/job/list/" + user.getId())
 					.accept(MediaType.APPLICATION_JSON)

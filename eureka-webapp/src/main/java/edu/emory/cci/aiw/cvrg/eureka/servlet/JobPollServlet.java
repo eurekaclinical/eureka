@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
+import java.security.Principal;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -33,8 +34,11 @@ public class JobPollServlet extends HttpServlet {
 
 		try {
 			Client client = CommUtils.getClient();
+			Principal principal = req.getUserPrincipal();
+			String userName = principal.getName();
+					
 			WebResource webResource = client.resource(eurekaServicesUrl);
-			User user = webResource.path("/api/user/byname/super.user@emory.edu")
+			User user = webResource.path("/api/user/byname/"+userName)
 					.accept(MediaType.APPLICATION_JSON).get(User.class);
 
 			JobInfo jobInfo = webResource
