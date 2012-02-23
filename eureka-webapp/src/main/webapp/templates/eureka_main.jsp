@@ -1,5 +1,6 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="/WEB-INF/tlds/template.tld" prefix="template" %>
+<%@ taglib uri="/WEB-INF/tlds/function.tld" prefix="myfn" %>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -73,11 +74,13 @@ ul.nav a { zoom: 1; }
       <img src="${pageContext.request.contextPath}/images/help_icon.gif" alt="Help" width="30" height="30" align="absmiddle" />
       <li><a href="${pageContext.request.contextPath}/help.jsp">Help</a></li>
       
-      <c:if test="${requestScope.isUserInRole['ROLES_ADMIN'] == true}">
+ 	<c:if test="${pageContext.request.remoteUser != null}">
+ 	
+ 		<c:if test="${myfn:contains(pageContext.request.roles, 'ROLE_ADMIN')}">
                   <img src="${pageContext.request.contextPath}/images/admin_icon.gif" alt="Administration" width="30" height="30" align="absmiddle" />
                   <li><a href="${pageContext.request.contextPath}/protected/admin?action=list">Administration</a></li>    
-      </c:if>
-	  
+        </c:if>
+ 	  </c:if>
 	  <c:choose>
 	  	
 	  	<c:when test="${pageContext.request.remoteUser != null}">
