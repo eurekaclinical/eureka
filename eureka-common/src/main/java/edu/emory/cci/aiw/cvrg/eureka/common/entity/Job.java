@@ -16,6 +16,7 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.annotate.JsonManagedReference;
 
 import com.sun.xml.bind.CycleRecoverable;
@@ -169,6 +170,7 @@ public class Job implements CycleRecoverable {
 		this.jobEvents = inJobEvents;
 	}
 
+	@JsonIgnore
 	public String getCurrentState() {
 
 		JobEvent jev = getSortedEvents().last();
@@ -187,12 +189,14 @@ public class Job implements CycleRecoverable {
 		this.jobEvents.add(jev);
 	}
 
+	@JsonIgnore
 	public Date getCreationTime() {
 
 		JobEvent jev = getSortedEvents().first();
 		return (jev == null) ? null : jev.getTimeStamp();
 	}
 
+	@JsonIgnore
 	private TreeSet<JobEvent> getSortedEvents() {
 
 		if (this.jobEvents == null || this.jobEvents.size() == 0) {
