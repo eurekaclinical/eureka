@@ -70,10 +70,14 @@ public class JobUpdateThread extends Thread {
 						.get(new GenericType<List<Job>>() {
 							// nothing to implement
 						});
-				for (Job job : updatedJobs) {
-					LOGGER.debug("Updated job: {}",job.toString());
+				if (updatedJobs != null) {
+					for (Job job : updatedJobs) {
+						LOGGER.debug("Updated job: {}", job.toString());
+					}
+					JobCollection.setJobs(updatedJobs);
+				} else {
+					LOGGER.debug("Job update thread received null");
 				}
-				JobCollection.setJobs(updatedJobs);
 				Thread.sleep(10000);
 			} catch (InterruptedException ie) {
 				// do nothing, we just try again.
