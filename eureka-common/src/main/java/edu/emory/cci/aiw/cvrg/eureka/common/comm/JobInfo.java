@@ -5,6 +5,8 @@ import java.util.List;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
+import org.codehaus.jackson.annotate.JsonIgnore;
+
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.FileError;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.FileUpload;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.FileWarning;
@@ -79,6 +81,7 @@ public class JobInfo {
 	 * 
 	 * @return The list of messages for the job.
 	 */
+	@JsonIgnore
 	public List<String> getMessages() {
 		List<String> messages;
 		if (this.fileUpload == null) {
@@ -96,11 +99,13 @@ public class JobInfo {
 	 */
 	private List<String> getFileUploadMessages() {
 		List<String> messsages = new ArrayList<String>();
-		for (FileWarning fileWarning : this.fileUpload.getWarnings()) {
-			messsages.add(fileWarning.toString());
-		}
-		for (FileError error : this.fileUpload.getErrors()) {
-			messsages.add(error.toString());
+		if (this.fileUpload != null) {
+			for (FileWarning fileWarning : this.fileUpload.getWarnings()) {
+				messsages.add(fileWarning.toString());
+			}
+			for (FileError error : this.fileUpload.getErrors()) {
+				messsages.add(error.toString());
+			}
 		}
 		return messsages;
 	}
@@ -112,8 +117,10 @@ public class JobInfo {
 	 */
 	private List<String> getJobMessages() {
 		List<String> messages = new ArrayList<String>();
-		for (JobEvent event : this.job.getJobEvents()) {
-			messages.add(event.getMessage());
+		if (this.job != null) {
+			for (JobEvent event : this.job.getJobEvents()) {
+				messages.add(event.getMessage());
+			}
 		}
 		return messages;
 	}
