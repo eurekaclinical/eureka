@@ -24,7 +24,7 @@ public class JobInfo {
 	/**
 	 * The total number of steps in the process.
 	 */
-	private final int TOTAL_STEPS = 6;
+	public static final int TOTAL_STEPS = 6;
 	/**
 	 * The file upload for the job being processed.
 	 */
@@ -36,19 +36,11 @@ public class JobInfo {
 	private Job job;
 
 	/**
-	 * Get the total number of steps in the process.
-	 * 
-	 * @return The total number of steps in the process.
-	 */
-	public int getTotalSteps() {
-		return this.TOTAL_STEPS;
-	}
-
-	/**
 	 * Get the processing step for the file upload or job.
 	 * 
 	 * @return The process step that the job is currently on.
 	 */
+	@JsonIgnore
 	public int getCurrentStep() {
 		int step = 0;
 		// we do this in descending order
