@@ -32,6 +32,7 @@ public class ETLServletModule extends JerseyServletModule {
 //        filter("/api/*").through(PersistFilter.class);
 
         Map<String, String> params = new HashMap<String, String>();
+		params.put("com.sun.jersey.api.json.POJOMappingFeature", "true");
         params.put(PackagesResourceConfig.PROPERTY_PACKAGES,
                 "edu.emory.cci.aiw.cvrg.eureka.etl.resource");
         params.put(PackagesResourceConfig.PROPERTY_RESOURCE_FILTER_FACTORIES,
