@@ -3,6 +3,7 @@ package edu.emory.cci.aiw.cvrg.eureka.servlet.worker.useracct;
 import java.io.IOException;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
+import java.security.Principal;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -31,8 +32,11 @@ public class ListUserAcctWorker implements ServletWorker {
 		try {
 			Client client = CommUtils.getClient();
 			WebResource webResource = client.resource(eurekaServicesUrl);
+			Principal principal = req.getUserPrincipal();
+			String userName = principal.getName();
+
 			User user = webResource
-					.path("/api/user/byname/super.user@emory.edu")
+					.path("/api/user/byname/"+userName)
 					.accept(MediaType.APPLICATION_JSON).get(User.class);
 
 			req.setAttribute("user", user);
