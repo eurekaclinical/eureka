@@ -67,6 +67,7 @@ public class ProtempaDevice extends Thread {
 		// etl.clearProtempa();
 	}
 
+	private static int ctr = 0;
 	@Override
 	public void run() {
 
@@ -85,7 +86,16 @@ public class ProtempaDevice extends Thread {
 			    	this.jobDao.save (myJob);
 
 //			    	Configuration conf = confDao.get(myJob.getUserId());
-			    	etl.runProtempa ("cvrg");
+//			    	etl.runProtempa ("cvrg");
+			    	if (ctr == 0) {
+
+			    		ctr++;
+				    	etl.runProtempa ("cvrg");
+			    	}
+			    	else if (ctr == 1) {
+
+				    	etl.runProtempa ("3");
+			    	}
 //			    	etl.runProtempa (conf.getProtempaSchema());
 
 			    	myJob.setNewState ("DONE" , null , null);

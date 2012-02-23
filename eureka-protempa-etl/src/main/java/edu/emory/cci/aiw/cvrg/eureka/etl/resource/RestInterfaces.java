@@ -49,16 +49,28 @@ public class RestInterfaces {
 		LOGGER.debug("Instantiate RestInterfaces");
 	}
 
-//	@GET
-//	@Path("test")
-//	public String getJobbbb() {
-//
-//		System.out.println("ETL:getJob");
-//		Job j = new Job();
-//		j.setJobEvents(new ArrayList<JobEvent>());
-//		this.protempaDeviceManager.qJob(j);
-//		return "right";
-//	}
+	@GET
+	@Path("test")
+	public String getJobbbb() {
+
+		Job job = new Job();
+
+		this.jobDao.save(job);
+		LOGGER.debug("Request to start new Job {0}", job.getId());
+		job.setNewState("CREATED", null, null);
+		this.jobDao.save(job);
+		this.protempaDeviceManager.qJob(job);
+
+		Job boj = new Job();
+
+		this.jobDao.save(boj);
+		LOGGER.debug("Request to start new Job {0}", boj.getId());
+		boj.setNewState("CREATED", null, null);
+		this.jobDao.save(boj);
+		this.protempaDeviceManager.qJob(boj);
+
+		return "right";
+	}
 
 	//
 	// Job submit
