@@ -55,7 +55,7 @@ public class Job implements CycleRecoverable {
 	 * The events generated for the job.
 	 */
 	@OneToMany(cascade = CascadeType.ALL, targetEntity = JobEvent.class)
-	private List<JobEvent> jobEvents = new ArrayList<JobEvent>();;
+	private List<JobEvent> jobEvents = new ArrayList<JobEvent>();
 
 	private static class JobEventComparator implements Comparator<JobEvent> {
 
