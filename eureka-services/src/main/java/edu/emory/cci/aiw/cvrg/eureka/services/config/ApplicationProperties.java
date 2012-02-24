@@ -4,6 +4,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.google.inject.Singleton;
 
 /**
@@ -15,6 +18,12 @@ import com.google.inject.Singleton;
  */
 @Singleton
 public class ApplicationProperties {
+
+	/**
+	 * The class level logger.
+	 */
+	private static final Logger LOGGER = LoggerFactory
+			.getLogger(ApplicationProperties.class);
 	/**
 	 * Name of the properties file that is required for application
 	 * configuration.
@@ -95,5 +104,106 @@ public class ApplicationProperties {
 	public String getEtlJobUpdateUrl() {
 		return this.properties
 				.getProperty("eureka.services.etl.job.update.url");
+	}
+
+	/**
+	 * Get the size of the job executor thread pool.
+	 * 
+	 * @return The size of the job executor thread pool from the configuration
+	 *         file, or 5 as the default if no value can be determined.
+	 */
+	public int getJobPoolSize() {
+		return this.getIntValue("eureka.services.jobpool.size", 5);
+	}
+
+	/**
+	 * Get the number of hours to keep a user registration without verification,
+	 * before deleting it from the database.
+	 * 
+	 * @return The number of hours listed in the configuration, and 24 if the
+	 *         configuration is not found.
+	 */
+	public int getRegistrationTimeout() {
+		return this.getIntValue("eureka.services.registration.timeout", 24);
+	}
+
+	/**
+	 * Get the verification base URL, to be used in sending a verification email
+	 * to the user.
+	 * 
+	 * @return The verification base URL, as found in the application
+	 *         configuration file.
+	 */
+	public String getVerificationUrl() {
+		return this.properties.getProperty("eureka.services.email.verify.url");
+	}
+
+	/**
+	 * Get the verification email subject line.
+	 * 
+	 * @return The subject for the verification email.
+	 */
+	public String getVerificationEmailSubject() {
+		return this.properties
+				.getProperty("eureka.services.email.verify.subject");
+	}
+
+	/**
+	 * Get the activation email subject line.
+	 * 
+	 * @return The subject for the activation email.
+	 */
+	public String getActivationEmailSubject() {
+		return this.properties
+				.getProperty("eureka.services.email.activation.subject");
+	}
+
+	/**
+	 * Get the base URL for the application front-end.
+	 * 
+	 * @return The base URL.
+	 */
+	public String getApplicationUrl() {
+		return this.properties.getProperty("eureka.services.url");
+	}
+
+	/**
+	 * Get the support email address for the application.
+	 * 
+	 * @return The support email address.
+	 */
+	public String getSupportEmail() {
+		return this.properties.getProperty("eureka.services.support.email");
+	}
+
+	/**
+	 * Get the password change email subject line.
+	 * 
+	 * @return The email subject line.
+	 */
+	public String getPasswordChangeEmailSubject() {
+		return this.properties
+				.getProperty("eureka.services.email.password.subject");
+	}
+
+	/**
+	 * Utility method to get an int from the properties file.
+	 * 
+	 * @param propertyName The name of the property.
+	 * @param defaultValue The default value to return, if the property is not
+	 *            found, or is malformed.
+	 * @return The property value, as an int.
+	 */
+	public int getIntValue(final String propertyName, int defaultValue) {
+		int result;
+		String property = this.properties.getProperty(propertyName);
+		try {
+			result = Integer.parseInt(property);
+		} catch (NumberFormatException e) {
+			LOGGER.warn("Invalid integer property in configuration: {}",
+					propertyName);
+			result = defaultValue;
+		}
+		return result;
 	}
 }
