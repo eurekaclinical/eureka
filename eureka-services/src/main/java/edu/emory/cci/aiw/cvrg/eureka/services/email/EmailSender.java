@@ -11,14 +11,33 @@ import edu.emory.cci.aiw.cvrg.eureka.common.entity.User;
 public interface EmailSender {
 
 	/**
-	 * Send a message to the user. This is a test method so far, needs to be
-	 * separated out into various methods to send different types of messages.
-	 * 
-	 * TODO: Remove this method and replace with more appropriate methods.
+	 * Send a verification email to the user. The verification email contains a
+	 * link which the user can click to verify their registration with the
+	 * application.
 	 * 
 	 * @param user To whom the email should be sent.
 	 * @throws EmailException If the email can not be sent for any reason.
 	 */
-	public abstract void sendMessage(final User user) throws EmailException;
+	public void sendVerificationMessage(User user) throws EmailException;
+
+	/**
+	 * Send an activation email to the user. The activation email is sent after
+	 * the user has verified their identity, and as the system administrator is
+	 * activating the account for use.
+	 * 
+	 * @param user To whom the email should be sent.
+	 * @throws EmailException Thrown if the email can not be sent for any
+	 *             reason.
+	 */
+	public void sendActivationMessage(User user) throws EmailException;
+
+	/**
+	 * Send a password change email to the user. The password change email is
+	 * sent any time a user changes their password.
+	 * 
+	 * @param user To whom the email should be sent.
+	 * @throws EmailException Thrown if the email can not be properly sent.
+	 */
+	public void sendPasswordChangeMessage(User user) throws EmailException;
 
 }
