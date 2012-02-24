@@ -61,11 +61,8 @@ public class JobPollServlet extends HttpServlet {
 				jobStatus.setCurrentStep(jobInfo.getCurrentStep());
 				jobStatus.setTotalSteps(jobInfo.getTotalSteps());
 				Date uploadTime = jobInfo.getJob().getTimestamp();
-				if (uploadTime != null) {
-					SimpleDateFormat formatter = 
-							new SimpleDateFormat("MM/dd/yy");
-					jobStatus.setUploadTime(formatter.format(uploadTime));
-				}
+				jobStatus.setUploadTime(uploadTime);
+
 				ObjectMapper mapper = new ObjectMapper();				
 				resp.setContentLength(mapper.writeValueAsString(jobStatus).length());
 				PrintWriter out = resp.getWriter();
