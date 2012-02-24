@@ -27,7 +27,8 @@ import edu.emory.cci.aiw.cvrg.eureka.common.entity.User;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.FileDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.UserDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.job.JobCollection;
-import edu.emory.cci.aiw.cvrg.eureka.services.thread.JobSubmissionThread;
+import edu.emory.cci.aiw.cvrg.eureka.services.thread.JobExecutor;
+import edu.emory.cci.aiw.cvrg.eureka.services.thread.JobTask;
 
 /**
  * REST operations related to jobs submitted by the user.
@@ -54,9 +55,13 @@ public class JobResource {
 	 */
 	private final FileDao fileDao;
 	/**
-	 * The thread used to run the data processing and job submission tasks.
+	 * The runnable used to run the data processing and job submission tasks.
 	 */
-	private final JobSubmissionThread jobSubmissionThread;
+	private final JobTask jobTask;
+	/**
+	 * The executor service used to run the job tasks.
+	 */
+	private final JobExecutor jobExecutor;
 
 	/**
 	 * Construct a new job resource with the given job update thread.
@@ -65,15 +70,17 @@ public class JobResource {
 	 *            users.
 	 * @param inFileDao The data access object used to fetch and store
 	 *            information about uploaded files.
-	 * @param inJobSubmissionThread The job submission thread to be used to
-	 *            process incoming data and submit jobs to the ETL layer.
+	 * @param inJobTask The job submission runnable to be used to process
+	 *            incoming data and submit jobs to the ETL layer.
+	 * @param inJobExecutor The executor service used to run the job tasks.
 	 */
 	@Inject
-	public JobResource(UserDao inUserDao, FileDao inFileDao,
-			JobSubmissionThread inJobSubmissionThread) {
+	public JobResource(UserDao inUserDao, FileDao inFileDao, JobTask inJobTask,
+			JobExecutor inJobExecutor) {
 		this.userDao = inUserDao;
 		this.fileDao = inFileDao;
-		this.jobSubmissionThread = inJobSubmissionThread;
+		this.jobTask = inJobTask;
+		this.jobExecutor = inJobExecutor;
 	}
 
 	/**
@@ -97,8 +104,8 @@ public class JobResource {
 		fileUpload.setUser(this.userDao.get(userId));
 		fileUpload.setTimestamp(new Date());
 		this.fileDao.save(fileUpload);
-		this.jobSubmissionThread.setFileUploadId(fileUpload.getId());
-		this.jobSubmissionThread.start();
+		this.jobTask.setFileUploadId(fileUpload.getId());
+		this.jobExecutor.queueJob(this.jobTask);
 
 		return Response.ok().build();
 	}
