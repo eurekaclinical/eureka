@@ -5,6 +5,8 @@ import java.io.PrintWriter;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.security.Principal;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -19,6 +21,7 @@ import com.sun.jersey.api.client.WebResource;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.CommUtils;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.JobInfo;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.JobStatus;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.User;
 
 public class JobPollServlet extends HttpServlet {
@@ -45,7 +48,7 @@ public class JobPollServlet extends HttpServlet {
 					.path("/api/job/status/" + user.getId())
 					.accept(MediaType.APPLICATION_JSON).get(JobInfo.class);
 
-			String message = "" + jobInfo.getCurrentStep();
+			
 			if (jobInfo.getCurrentStep() == 0) {
 				String emptyJson = "{}";
 				resp.setContentLength(emptyJson.length());
@@ -54,11 +57,19 @@ public class JobPollServlet extends HttpServlet {
 				out.close();
 				out.flush();
 			} else {
+				JobStatus jobStatus = new JobStatus();
+				jobStatus.setCurrentStep(jobInfo.getCurrentStep());
+				jobStatus.setTotalSteps(jobInfo.getTotalSteps());
+				Date uploadTime = jobInfo.getJob().getTimestamp();
+				if (uploadTime != null) {
+					SimpleDateFormat formatter = 
+							new SimpleDateFormat("MM/dd/yy");
+					jobStatus.setUploadTime(formatter.format(uploadTime));
+				}
 				ObjectMapper mapper = new ObjectMapper();				
-				
-				resp.setContentLength(mapper.writeValueAsString(jobInfo).length());
+				resp.setContentLength(mapper.writeValueAsString(jobStatus).length());
 				PrintWriter out = resp.getWriter();
-				out.println(mapper.writeValueAsString(jobInfo));
+				out.println(mapper.writeValueAsString(jobStatus));
 				out.close();
 				out.flush();
 				
