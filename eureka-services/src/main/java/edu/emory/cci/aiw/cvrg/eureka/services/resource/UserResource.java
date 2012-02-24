@@ -158,7 +158,7 @@ public class UserResource {
 			this.userDao.save(user);
 			try {
 				LOGGER.debug("Sending email to {}", user.getEmail());
-				this.emailSender.sendMessage(user);
+				this.emailSender.sendVerificationMessage(user);
 			} catch (EmailException e) {
 				LOGGER.error("Error sending email to {}", user.getEmail(), e);
 			}
