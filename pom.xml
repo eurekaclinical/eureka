@@ -395,6 +395,11 @@
 				<artifactId>freemarker</artifactId>
 				<version>${freemarker-version}</version>
 			</dependency>
+			<dependency>
+				<groupId>com.google.inject.extensions</groupId>
+				<artifactId>guice-jndi</artifactId>
+				<version>${guice-version}</version>
+			</dependency>
 		</dependencies>
 	</dependencyManagement>
 
