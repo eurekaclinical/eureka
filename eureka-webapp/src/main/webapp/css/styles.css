@@ -134,12 +134,13 @@ a:visited {
 	margin: 0 5px 5px 5px;
 	border: 1px solid #CCC;
 	background-color:#FFF;
+	height:200px;
 }
 
 #release_notes {
 	padding-top:15px;
 	float: left;
-	min-height:250px;
+	overflow:hidden;
 
 }
 
