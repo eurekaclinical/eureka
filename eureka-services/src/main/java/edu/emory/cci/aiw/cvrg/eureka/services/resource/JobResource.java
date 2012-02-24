@@ -154,12 +154,11 @@ public class JobResource {
 
 		List<Job> userJobs = this.getJobsByUser(userId);
 		if (userJobs.size() > 0) {
-			Date latestDate = null;
 			for (Job job : userJobs) {
 				if (latestJob == null) {
 					latestJob = job;
 				} else {
-					if (job.getTimestamp().after(latestDate)) {
+					if (job.getTimestamp().after(latestJob.getTimestamp())) {
 						latestJob = job;
 					}
 				}
