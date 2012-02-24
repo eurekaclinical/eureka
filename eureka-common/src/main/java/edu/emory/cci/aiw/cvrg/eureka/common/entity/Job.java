@@ -43,7 +43,7 @@ public class Job implements CycleRecoverable {
 	 * The initial timestamp when the job was started.
 	 */
 	@Temporal(TemporalType.TIMESTAMP)
-	private Date timestamp;
+	private Date timestamp = new Date();
 	/**
 	 * The unique identifier of the configuration to use for this job.
 	 */
