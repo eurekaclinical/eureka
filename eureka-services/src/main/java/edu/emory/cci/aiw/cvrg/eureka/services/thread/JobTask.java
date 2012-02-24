@@ -64,7 +64,7 @@ public class JobTask implements Runnable {
 	 * The class level logger.
 	 */
 	private static final Logger LOGGER = LoggerFactory
-			.getLogger(JobSubmissionThread.class);
+			.getLogger(JobTask.class);
 
 	/**
 	 * Construct an instance with the given file upload, DAO, and related
