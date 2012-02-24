@@ -1,6 +1,9 @@
 package edu.emory.cci.aiw.cvrg.eureka.services.config;
 
+import javax.mail.Session;
+
 import com.google.inject.AbstractModule;
+import com.google.inject.jndi.JndiIntegration;
 
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.FileDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.JpaFileDao;
@@ -25,6 +28,9 @@ public class AppModule extends AbstractModule {
 		bind(RoleDao.class).to(JpaRoleDao.class);
 		bind(FileDao.class).to(JpaFileDao.class);
 		bind(EmailSender.class).to(FreeMarkerEmailSender.class);
+		bind(Session.class).toProvider(
+				JndiIntegration.fromJndi(Session.class,
+						"java:comp/env/mail/Session"));
 	}
 
 }
