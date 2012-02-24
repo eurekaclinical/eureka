@@ -112,12 +112,6 @@
 			<groupId>edu.emory.cci.aiw.cvrg</groupId>
 			<artifactId>eureka-common</artifactId>
 		</dependency>
-<!--
-		<dependency>
-			<groupId>com.oracle</groupId>
-			<artifactId>ojdbc6</artifactId>
-		</dependency>
--->
 		<dependency>
 			<groupId>javax.mail</groupId>
 			<artifactId>mail</artifactId>
@@ -125,6 +119,10 @@
 		<dependency>
 			<groupId>freemarker</groupId>
 			<artifactId>freemarker</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.google.inject.extensions</groupId>
+			<artifactId>guice-jndi</artifactId>
 		</dependency>
 	</dependencies>
 
