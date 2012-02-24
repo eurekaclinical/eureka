@@ -16,8 +16,10 @@
   <p>You agree to   absolve us of all responsibility legal or otherwise if federal, state or   local laws, your institution's policies, or applicable data use   agreements are violated by your loading data onto this site.</p>
   <p>This is beta-quality software. There exists the possibility that data   that you upload to this site could accidentally be exposed, deleted or   corrupted. You agree to absolve us of any responsibility legal or   otherwise for damage caused by the exposure, deletion or corruption of   data that you upload to this site. </p>
   <p>Please do provide feedback to the   developers using the email address on the site's Contact page if you   discover these or any other bugs in the software.</p>
-  <div class="small_text pad"><br />
-    </div>
+  <p class="fltlft">
+    <input type="button" onClick="parent.location='register.jsp'" value='Back' id="submit">
+
+    </p>
 
 	</template:content>
 	

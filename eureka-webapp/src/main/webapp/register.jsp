@@ -62,7 +62,7 @@
     </div>
 </form>
 	<div id="registrationComplete">
-		<h2>Your request has been successfully submitted. You will be notified once your account is activated.</h2>
+		<p><h2>Your request has been successfully submitted. You will be notified once your account is activated.</h2></p>
 	</div>
 	</template:content>
 	
