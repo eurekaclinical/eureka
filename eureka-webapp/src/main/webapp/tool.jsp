@@ -12,7 +12,7 @@
 		            if (data['currentStep'] != undefined) {
                     	
 		            	$('#status').text(data['currentStep'] + " out of " + data['totalSteps']);
-		            	$('#uploadTime').text(data['job']['creationTime']);
+		            	$('#uploadTime').text(data['uploadTime']);
 
                     } else {
                             
