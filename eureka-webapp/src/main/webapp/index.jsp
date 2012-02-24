@@ -37,7 +37,7 @@
 			<p>11.18.2011 : Business Requirements Published</p>
 			<p>11.15.2011 : Data Analysis Tool Named Eureka!</p>
 		</div>
-		<div class="release_notes sub_width" style="position: absolute; top: 560px; left: 694px;">
+		<div class="release_notes sub_width" style="position: absolute; top: 560px; left: 715px;">
 			<p>11.14.2011 : Data Analysis Tool Lands a New Name</p>
 			<p>11.01.2011 : Data Analysis Tool Demo VM Launched</p>
 			<p>11.01.2011 : Data Architecture Defined</p>
