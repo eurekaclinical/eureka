@@ -63,6 +63,9 @@ $(document).ready(function() {
 					email: true,
 					equalTo: "#email"
 				},
+				agreement: {
+					required: true
+				}
 			},
 			messages: {
 				firstName: "Enter your firstname",
@@ -85,8 +88,11 @@ $(document).ready(function() {
 					required: "Please enter a valid email address",
 					minlength: "Please enter a valid email address",
 					equalTo: "Enter the same email as above"					
-				}
-			},
+				},
+                agreement: {
+                    required: "Please check the agreement checkbox"
+			    }
+            },
 			// the errorPlacement has to take the table layout into account
 			errorPlacement: function(error, element) {
 				if ( element.is(":radio") )
@@ -125,27 +131,29 @@ $(document).ready(function() {
     });
 	
 	 $("#signupForm").submit(function() {
-		var firstName = $('#firstName').val();
-		var lastName  = $('#lastName').val(); 
-		var organization = $('#organization').val();
-		var password = $('#password').val();
-		var verifyPassword = $('#verifyPassword').val();
-		var  email = $('#email').val();
-		var verifyEmail = $('#verifyEmail').val();
-
-        var dataString = 'firstName='+ firstName+ '&lastName=' + lastName + '&organization=' + organization + 		
-                            '&password=' + password+ '&verifyPassword=' + verifyPassword + 
-                            '&email=' + email + '&verifyEmail=' + verifyEmail;		
-		$.ajax({
-              type: 'POST',
-              url: 'register',
-              data: dataString,
-              success: function() {
-                  $('#signupForm').hide();
-                  $('#registerHeading').hide();
-                  $('#registrationComplete').show();
-			  }
-			});
+		if (signupFormValidator.valid()) {
+			var firstName = $('#firstName').val();
+			var lastName  = $('#lastName').val(); 
+			var organization = $('#organization').val();
+			var password = $('#password').val();
+			var verifyPassword = $('#verifyPassword').val();
+			var  email = $('#email').val();
+			var verifyEmail = $('#verifyEmail').val();
+	
+	        var dataString = 'firstName='+ firstName+ '&lastName=' + lastName + '&organization=' + organization + 		
+	                            '&password=' + password+ '&verifyPassword=' + verifyPassword + 
+	                            '&email=' + email + '&verifyEmail=' + verifyEmail;		
+			$.ajax({
+	              type: 'POST',
+	              url: 'register',
+	              data: dataString,
+	              success: function() {
+	                  $('#signupForm').hide();
+	                  $('#registerHeading').hide();
+	                  $('#registrationComplete').show();
+				  }
+				});
+		}
 
         return false;
 		
