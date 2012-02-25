@@ -25,7 +25,7 @@
       <table>
       <tr class="bold">
         <td width="162">User Name</td>
-        <td width="83">Login</td>
+        <td width="83">Last Login</td>
         <td width="121">Role</td>
         <td width="217">Email</td>
         <td width="179">Organization</td>
@@ -64,7 +64,7 @@
       			
       			<a href="${pageContext.request.contextPath}/protected/admin?id=${user.id}&action=edit">${user.firstName} ${user.lastName}</a></td>
       		<td>
-      			<fmt:formatDate value="${user.lastLogin}" type="date" pattern="dd/mm/yyyy" /> 
+      			<fmt:formatDate value="${user.lastLogin}" type="both" dateStyle="short" timeStyle="short" /> 
       		</td>
       		<td>
 			    <c:forEach var="role" items="${user.roles}">
