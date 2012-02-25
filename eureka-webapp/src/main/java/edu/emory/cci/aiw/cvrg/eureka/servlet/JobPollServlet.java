@@ -47,7 +47,7 @@ public class JobPollServlet extends HttpServlet {
 			JobInfo jobInfo = webResource
 					.path("/api/job/status/" + user.getId())
 					.accept(MediaType.APPLICATION_JSON).get(JobInfo.class);
-
+			
 			
 			if (jobInfo.getCurrentStep() == 0) {
 				String emptyJson = "{}";
@@ -60,7 +60,15 @@ public class JobPollServlet extends HttpServlet {
 				JobStatus jobStatus = new JobStatus();
 				jobStatus.setCurrentStep(jobInfo.getCurrentStep());
 				jobStatus.setTotalSteps(jobInfo.getTotalSteps());
-				Date uploadTime = jobInfo.getJob().getTimestamp();
+				jobStatus.setMessages(jobInfo.getMessages());
+				
+				Date uploadTime = new Date();
+				
+				if (jobInfo.getCurrentStep() < 4 && jobInfo.getFileUpload().getTimestamp() != null)
+					uploadTime = jobInfo.getFileUpload().getTimestamp();
+				else if (jobInfo.getCurrentStep() >= 4  && jobInfo.getJob().getTimestamp() != null) {
+					uploadTime = jobInfo.getJob().getTimestamp();
+				}
 				jobStatus.setUploadTime(uploadTime);
 
 				ObjectMapper mapper = new ObjectMapper();				

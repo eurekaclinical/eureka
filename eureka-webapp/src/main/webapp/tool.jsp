@@ -8,14 +8,27 @@
 	    (function poll(){
 		        setTimeout(function(){
 		            $.ajax({ url: "${pageContext.request.contextPath}/jobpoll", success: function(data){
-		            //Update your dashboard gauge
+		            
 		            if (data['currentStep'] != undefined) {
                     	
-		            	$('#status').text(data['currentStep'] + " out of " + data['totalSteps']);
-		            	$('#uploadTime').text(data['uploadTime']);
-
+	                    if ($('#status').val() == '6') {
+	                            $('#status').text(data['currentStep'] + " out of " + data['totalSteps']);
+	                    } else {
+	                            $('#status').text('Complete');
+	
+	                    }
+	
+			            var d = new Date(data['uploadTime']);
+			            var dateStr = d.getMonth() + "/" + d.getDate() + "/" + d.getFullYear() + " " + d.toLocaleTimeString();
+			            	
+			            $('#statusDate').text(dateStr);
+                        if (data['messages'][0] == null) {
+                            $('#messages').text('No errors reported');
+                        } else {
+                            $('#messages').text(data['messages'][0]);
+                        }  
                     } else {
-                            
+                    	$('#status').text('No jobs have been submitted.')
                     }
 
 		            //Setup the next poll recursively
@@ -37,52 +50,23 @@
 			<form id="uploadForm" name="uploadForm" class="pad_top" method="post" action="${pageContext.request.contextPath}/upload" ENCTYPE="multipart/form-data">
 			
                 <table>
-					<tr class="grey">
-						<td width="231">Document Name</td>
-						<td width="89">Date</td>
-						<td width="152">Status</td>
-						<td width="104">Upload Time</td>
-						<td width="51">Errors</td>
-					</tr>
-					<tr>
-			      		<td>&nbsp;
-				  			
-				  		</td>
-			      		<td>&nbsp;
-				  			
-				  		</td>
-			      		<td>
-				  			<div id="status"></div>
-				  		</td>
-			      		<td>&nbsp;
-				  			
-				  		</td>
-			      		<td>&nbsp;
-				  			
-				  		</td>
-				  	</tr>
-					
-					<!--  
-			       <c:forEach items="${jobs}" var="jobs">
-			      	<tr>
-			      		<td>
-				  			${job.configurationId}
-				  		</td>
-			      		<td>
-				  			&nbsp;
-				  		</td>
-			      		<td>
-				  			&nbsp;
-				  		</td>
-			      		<td>
-				  			&nbsp;
-				  		</td>
-			      		<td>
-				  			&nbsp;
-				  		</td>
-				  	</tr>
-				  	</c:forEach>
-				  	-->
+                     <tr class="grey">
+                             <td width="152">Job Status</td>
+                             <td width="104">Status Date</td>
+                             <td width="51">Errors</td>
+                     </tr>
+                     <tr>
+                     <td>
+                                     <div id="status"></div>
+                             </td>
+                     <td>            <div id="statusDate"></div>
+
+                             </td>
+                     <td>            <div id="messages"></div>
+
+                             </td>
+                     </tr>
+
 				</table>
       
 				<div class="pad_rt pad_top" align="right">
@@ -100,10 +84,11 @@
   </template:content>
 	<template:content name="subcontent">
 
-		<div>
+		<div id="jobUpload">
 			<h3>Please wait while your project is being uploaded.....</h3>
 			<img src="${pageContext.request.contextPath}/images/e-ani.gif"
 				hspace="450" align="middle" />
 		</div>
+		<div id="uploadOutput"></div>
 	</template:content>
 </template:insert>

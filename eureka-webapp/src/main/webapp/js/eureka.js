@@ -122,6 +122,7 @@ $(document).ready(function() {
 	$('#registrationComplete').hide();
 	$('#passwordChangeComplete').hide();
 	$('#passwordChangeFailure').hide();
+	$('#jobUpload').hide();
 	
 	
 	$('#editAcctBtn').click(function(){
@@ -270,10 +271,14 @@ $(document).ready(function() {
 		 
 		 
 		 $("#uploadForm").submit(function(){ 
+			 $('#jobUpload').show();
 			 $("input[type=submit]", this).attr('disabled', true); 
 		 });
 		 
 	 }
+	 
+
+
 	
 
 });

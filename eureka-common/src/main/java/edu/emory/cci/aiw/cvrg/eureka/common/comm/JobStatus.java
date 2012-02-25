@@ -1,6 +1,7 @@
 package edu.emory.cci.aiw.cvrg.eureka.common.comm;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * A communication bean to transfer information about a job status.
@@ -21,9 +22,14 @@ public class JobStatus {
 	private int totalSteps;
 	
 	/**
-	 * The date of the document upload in string format.
+	 * The date of the document upload.
 	 */
 	private Date uploadTime;
+	
+	/**
+	 * A list of messages about the file or job processing status.
+	 */
+	private List<String> messages;
 	
 	public int getCurrentStep() {
 		return currentStep;
@@ -42,6 +48,12 @@ public class JobStatus {
 	}
 	public void setUploadTime(Date uploadTime) {
 		this.uploadTime = uploadTime;
+	}
+	public List<String> getMessages() {
+		return messages;
+	}
+	public void setMessages(List<String> messages) {
+		this.messages = messages;
 	}
 	
 }
