@@ -51,7 +51,6 @@ public class UserResource {
 	 * Data access object to work with User objects.
 	 */
 	private final UserDao userDao;
-
 	/**
 	 * Data access object to work with Role objects.
 	 */
@@ -60,6 +59,11 @@ public class UserResource {
 	 * Used to send emails to the user when needed.
 	 */
 	private final EmailSender emailSender;
+	/**
+	 * And validation errors that we may have encountered while validating a new
+	 * user request, or a user update.
+	 */
+	private String validationError;
 
 	/**
 	 * Create a UserResource object with a User DAO and a Role DAO.
@@ -164,9 +168,10 @@ public class UserResource {
 			}
 			response = Response.created(URI.create("/" + user.getId())).build();
 		} else {
-			LOGGER.info("Invalid new user request: {}", userRequest);
+			LOGGER.info("Invalid new user request: {1}, reason {2}",
+					userRequest, this.validationError);
 			response = Response.status(Status.BAD_REQUEST)
-					.entity("Invalid user request.").build();
+					.entity(this.validationError).build();
 		}
 		return response;
 	}
@@ -241,7 +246,7 @@ public class UserResource {
 			response = Response.created(URI.create("/" + updateUser.getId()))
 					.build();
 		} else {
-			response = Response.notModified("Invalid user").build();
+			response = Response.notModified(this.validationError).build();
 		}
 		return response;
 	}
@@ -308,6 +313,7 @@ public class UserResource {
 					|| (userRequest.getVerifyEmail() == null)
 					|| (!userRequest.getEmail().equals(
 							userRequest.getVerifyEmail()))) {
+				this.validationError = "Mismatched usernames";
 				result = false;
 			}
 
@@ -316,9 +322,11 @@ public class UserResource {
 					|| (userRequest.getVerifyPassword() == null)
 					|| (!userRequest.getPassword().equals(
 							userRequest.getVerifyPassword()))) {
+				this.validationError = "Mismatched passwords";
 				result = false;
 			}
 		} else {
+			this.validationError = "Username already exists";
 			result = false;
 		}
 
@@ -345,9 +353,11 @@ public class UserResource {
 		// a super user can not be stripped of admin rights, or be de-activated.
 		if (currentRoles.contains(superUserRole)) {
 			if (updatedUser.isActive() == false) {
+				this.validationError = "Superuser can not be de-activated";
 				result = false;
 			}
 			if (updatedUser.getRoles().contains(adminRole) == false) {
+				this.validationError = "Superuser can not lose admin rights";
 				result = false;
 			}
 		}
