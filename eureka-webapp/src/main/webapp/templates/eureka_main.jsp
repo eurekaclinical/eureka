@@ -121,7 +121,7 @@ ul.nav a { zoom: 1; }
   </div>
   
   <div class="footer">
-    <p>Copyright (c)2012 Emory University -- All  Rights Reserved</p>
+    <p>Copyright &copy; 2012 Emory University -- All  Rights Reserved</p>
   </div>
   <!-- end .container --></div>
 </body>
