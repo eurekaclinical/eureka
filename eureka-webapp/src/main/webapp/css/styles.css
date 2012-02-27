@@ -277,3 +277,6 @@ td
 	font-size:9px;
 	font-style: italic;
 }
+.help {
+	overflow:auto;
+}
