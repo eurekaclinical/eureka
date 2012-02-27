@@ -62,14 +62,15 @@ public class JobPollServlet extends HttpServlet {
 				jobStatus.setTotalSteps(jobInfo.getTotalSteps());
 				jobStatus.setMessages(jobInfo.getMessages());
 				
-				Date uploadTime = new Date();
-				
-				if (jobInfo.getCurrentStep() < 4 && jobInfo.getFileUpload().getTimestamp() != null)
-					uploadTime = jobInfo.getFileUpload().getTimestamp();
-				else if (jobInfo.getCurrentStep() >= 4  && jobInfo.getJob().getTimestamp() != null) {
-					uploadTime = jobInfo.getJob().getTimestamp();
-				}
-				jobStatus.setUploadTime(uploadTime);
+//				Date uploadTime = new Date();
+//				
+//				if (jobInfo.getCurrentStep() < 4 && jobInfo.getFileUpload().getTimestamp() != null)
+//					uploadTime = jobInfo.getFileUpload().getTimestamp();
+//				else if (jobInfo.getCurrentStep() >= 4  && jobInfo.getJob().getTimestamp() != null) {
+//					uploadTime = jobInfo.getJob().getTimestamp();
+//				}
+//				jobStatus.setUploadTime(uploadTime);
+				jobStatus.setUploadTime(jobInfo.getTimestamp());
 
 				ObjectMapper mapper = new ObjectMapper();				
 				resp.setContentLength(mapper.writeValueAsString(jobStatus).length());
