@@ -54,31 +54,24 @@
 
 		<h3>Upload Data</h3>
 
-		<form id="uploadForm" name="uploadForm" class="pad_top" method="post"
-			action="${pageContext.request.contextPath}/upload"
-			ENCTYPE="multipart/form-data">
 
-			<table>
-				<tr class="grey">
-					<td width="152">Job Status</td>
-					<td width="104">Status Date</td>
-					<td width="51">Errors</td>
-				</tr>
-				<tr>
-					<td>
-						<div id="status"></div>
-					</td>
-					<td>
-						<div id="statusDate"></div>
+			<form id="uploadForm" name="uploadForm" class="pad_top fltlft" method="post" action="${pageContext.request.contextPath}/upload" ENCTYPE="multipart/form-data">
+			
+                <table>
+                     <tr>
+                             <td width="152">Job Status</td>
+                             <td width="104">Status Date</td>
+                             <td width="51">Errors</td>
+                     </tr>
+                     <tr>
+                     <td>
+                                     <div id="status"></div>
+                             </td>
+                     <td>            <div id="statusDate"></div>
 
-					</td>
-					<td>
-						<div id="messages"></div>
+				</table>
+     
 
-					</td>
-				</tr>
-
-			</table>
 
 			<div class="pad_rt pad_top" align="right">
 				<br /> <br /> <input type="file" name="uploadFileName" id="button"
