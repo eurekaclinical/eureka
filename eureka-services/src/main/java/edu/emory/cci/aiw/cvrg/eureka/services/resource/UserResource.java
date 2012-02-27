@@ -297,22 +297,28 @@ public class UserResource {
 	 * @param userRequest The {@link UserRequest} object to validate.
 	 * @return True if the request is valid, and false otherwise.
 	 */
-	private static boolean validateUserRequest(UserRequest userRequest) {
+	private boolean validateUserRequest(UserRequest userRequest) {
 		boolean result = true;
 
-		// make sure the email addresses are not null, and match each other
-		if ((userRequest.getEmail() == null)
-				|| (userRequest.getVerifyEmail() == null)
-				|| (!userRequest.getEmail()
-						.equals(userRequest.getVerifyEmail()))) {
-			result = false;
-		}
+		// make sure a user with the same email address does not exist.
+		User user = this.userDao.get(userRequest.getEmail());
+		if (user == null) {
+			// make sure the email addresses are not null, and match each other
+			if ((userRequest.getEmail() == null)
+					|| (userRequest.getVerifyEmail() == null)
+					|| (!userRequest.getEmail().equals(
+							userRequest.getVerifyEmail()))) {
+				result = false;
+			}
 
-		// make sure the passwords are not null, and match each other
-		if ((userRequest.getPassword() == null)
-				|| (userRequest.getVerifyPassword() == null)
-				|| (!userRequest.getPassword().equals(
-						userRequest.getVerifyPassword()))) {
+			// make sure the passwords are not null, and match each other
+			if ((userRequest.getPassword() == null)
+					|| (userRequest.getVerifyPassword() == null)
+					|| (!userRequest.getPassword().equals(
+							userRequest.getVerifyPassword()))) {
+				result = false;
+			}
+		} else {
 			result = false;
 		}
 
