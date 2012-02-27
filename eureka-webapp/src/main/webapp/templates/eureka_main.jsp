@@ -89,7 +89,7 @@ ul.nav a { zoom: 1; }
 	  <c:choose>
 	  	
 	  	<c:when test="${pageContext.request.remoteUser != null}">
-<div class="fltrt">
+<div style="float:right;" class="fltrt">
 	  	  <li>Welcome ${pageContext.request.remoteUser} | <a href="${pageContext.request.contextPath}/logout">Logout</a></li>
       	  <img src="${pageContext.request.contextPath}/images/i2b2_icon.gif" alt="i2b2" width="30" height="30" align="absmiddle" />
 	      <li><a href="https://eureka.cci.emory.edu/i2b2/" target="_blank">i2b2</a></li>
