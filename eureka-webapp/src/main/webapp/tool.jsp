@@ -26,14 +26,15 @@
 									+ d.toLocaleTimeString();
 
 							$('#statusDate').text(dateStr);
-							//if (data['messages'][0] == null) {
-							//$('#messages').text('No errors reported');
-							//} else {
-							//$('#messages').text(data['messages'][0]);
-							//}
-							$('#messages').text(data['messages'].join(","));
+							if (data['messages'][0] == null) {
+								$('#messages').text('No errors reported');
+							} else {
+								$('#messages').text(data['messages'][0]);
+							}
 						} else {
 							$('#status').text('No jobs have been submitted.');
+							$('#statusDate').empty();
+							$('#messages').empty();
 						}
 
 						//Setup the next poll recursively
