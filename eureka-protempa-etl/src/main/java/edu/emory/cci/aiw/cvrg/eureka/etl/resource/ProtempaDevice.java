@@ -12,7 +12,7 @@ import edu.emory.cci.registry.CardiovascularRegistryETL;
 
 public class ProtempaDevice extends Thread {
 
-	private Job job;
+	private Long jobId;
 	private CardiovascularRegistryETL etl = new CardiovascularRegistryETL();
 	//
 	//	IMPORTANT:
@@ -49,13 +49,13 @@ public class ProtempaDevice extends Thread {
 		this.confDao = confDao;
 	}
 
-	void load (Job job) {
+	void load (Long inJobId) {
 
 		synchronized (synchObj) {
 
-			LOGGER.debug("ProtempaDevice loaded with Job {1}" , job.getId());
+			LOGGER.debug("ProtempaDevice loaded with Job {}" , inJobId);
 			busy = true;
-			this.job = job;
+			this.jobId = inJobId;
 			synchObj.notifyAll();	//	there should only ever be one thread wait()ing, but still...
 		}
 	}
@@ -78,11 +78,12 @@ public class ProtempaDevice extends Thread {
 				Job myJob = null;
 				try {
 
-					LOGGER.debug("{1} wait." , Thread.currentThread().getName());
+					LOGGER.debug("{} wait." , Thread.currentThread().getName());
 					synchObj.wait();
-					myJob = this.jobDao.get(this.job.getId());
-					LOGGER.debug("{1} just got a job, id= {2}" , Thread.currentThread().getName() , myJob.getId());
+					myJob = this.jobDao.get(this.jobId);
+					LOGGER.debug("{} just got a job, id={}" , Thread.currentThread().getName() , myJob.toString());
 			    	myJob.setNewState ("PROCESSING" , null , null);
+			    	LOGGER.debug("About to save job: {}", myJob.toString());
 			    	this.jobDao.save (myJob);
 
 			    	Long userId = myJob.getUserId();
@@ -106,7 +107,7 @@ public class ProtempaDevice extends Thread {
 				}
 				catch (InterruptedException ie) {
 
-					LOGGER.debug("{1} interrupted and finished." , Thread.currentThread().getName());
+					LOGGER.debug("{} interrupted and finished." , Thread.currentThread().getName());
 			    	this.failure = true;
 			    	if (myJob != null) {
 
@@ -118,7 +119,7 @@ public class ProtempaDevice extends Thread {
 				catch (Exception e) {
 
 					e.printStackTrace();
-					LOGGER.debug("{1} unknown exception and finished. {2}" , Thread.currentThread().getName() , e.getMessage());
+					LOGGER.debug("{} unknown exception and finished. {}" , Thread.currentThread().getName() , e.getMessage());
 			    	this.failure = true;
 			    	if (myJob != null) {
 
@@ -147,12 +148,12 @@ public class ProtempaDevice extends Thread {
 
 	Job getJob() {
 
-		return this.job;
+		return this.jobDao.get(this.jobId);
 	}
 
 	protected void tagJob (Thread thread , Throwable t) {
 
-		Job myJob = this.job;
+		Job myJob = this.jobDao.get(this.jobId);
 		if (myJob != null) {
 
 			//	recordException
