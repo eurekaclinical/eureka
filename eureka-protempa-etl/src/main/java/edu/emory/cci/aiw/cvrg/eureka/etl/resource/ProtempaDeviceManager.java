@@ -70,7 +70,7 @@ public class ProtempaDeviceManager implements ServletContextListener {
 									//	this is the last i'll ever see of the job, unless it is
 									//	recovered from a failed ProtempaDevice.
 									LOGGER.debug("JobLoader found a job to do {0} " , j.getId());
-									protempaDevice.load (j);
+									protempaDevice.load (j.getId());
 								}
 								break;
 							}
