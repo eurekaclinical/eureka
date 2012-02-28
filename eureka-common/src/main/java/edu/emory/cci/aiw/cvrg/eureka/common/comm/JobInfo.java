@@ -1,6 +1,7 @@
 package edu.emory.cci.aiw.cvrg.eureka.common.comm;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.xml.bind.annotation.XmlRootElement;
@@ -24,7 +25,7 @@ public class JobInfo {
 	/**
 	 * The total number of steps in the process.
 	 */
-	private int totalSteps = 6;
+	private int totalSteps = 7;
 	/**
 	 * The file upload for the job being processed.
 	 */
@@ -43,28 +44,85 @@ public class JobInfo {
 	@JsonIgnore
 	public int getCurrentStep() {
 		int step = 0;
-		// we do this in descending order
-		if (this.job != null) {
+		boolean activeJob = this.isJobActive();
+		boolean activeUpload = this.isUploadActive();
+
+		if (activeUpload) {
+			if (this.fileUpload.isCompleted()) {
+				step = 4;
+			} else if (this.fileUpload.isProcessed()) {
+				step = 3;
+			} else if (this.fileUpload.isValidated()) {
+				step = 2;
+			} else {
+				step = 1;
+			}
+		} else if (activeJob) {
 			String currentState = this.job.getCurrentState();
 			if (currentState.equals("DONE") || currentState.equals("FAILED")
 					|| currentState.equals("EXCEPTION")
 					|| currentState.equals("INTERRUPTED")) {
-				step = 6;
+				step = 7;
 			} else if (currentState.equals("PROCESSING")) {
-				step = 5;
+				step = 6;
 			} else if (currentState.equals("CREATED")) {
-				step = 4;
-			}
-		} else if (this.fileUpload != null) {
-			if (this.fileUpload.isCompleted()) {
-				step = 3;
-			} else if (this.fileUpload.isProcessed()) {
-				step = 2;
-			} else if (this.fileUpload.isValidated()) {
-				step = 1;
+				step = 5;
 			}
 		}
+
 		return step;
+	}
+
+	/**
+	 * Find out whether the job contained in this job information object is
+	 * currently active or not.
+	 * 
+	 * @return True, if the job is active and false otherwise.
+	 */
+	@JsonIgnore
+	private boolean isJobActive() {
+		boolean result;
+		if (this.job == null) {
+			result = false;
+		} else {
+			String state = this.job.getCurrentState();
+			result = (state.equals("CREATED") || state.equals("PROCESSING"));
+		}
+		return result;
+	}
+
+	/**
+	 * Find out whether the file upload contained in this job information object
+	 * is currently active or not.
+	 * 
+	 * @return True if the file upload is active, false otherwise.
+	 */
+	private boolean isUploadActive() {
+		boolean result;
+		if (this.fileUpload == null) {
+			result = false;
+		} else {
+			result = (this.fileUpload.isCompleted() == false);
+		}
+		return result;
+	}
+
+	/**
+	 * Get the timestamp of the latest update for a file job.
+	 * 
+	 * @return The latest timestamp for the job.
+	 */
+	@JsonIgnore
+	public Date getTimestamp() {
+		Date result;
+		if (this.job != null) {
+			result = this.job.getTimestamp();
+		} else if (this.fileUpload != null) {
+			result = this.fileUpload.getTimestamp();
+		} else {
+			result = null;
+		}
+		return result;
 	}
 
 	/**
@@ -89,11 +147,12 @@ public class JobInfo {
 	 */
 	@JsonIgnore
 	public List<String> getMessages() {
-		List<String> messages;
-		if (this.fileUpload == null) {
-			messages = this.getJobMessages();
-		} else {
-			messages = this.getFileUploadMessages();
+		List<String> messages = new ArrayList<String>();
+		if (this.fileUpload != null) {
+			messages.addAll(this.getFileUploadMessages());
+		}
+		if (this.job != null) {
+			messages.addAll(this.getJobMessages());
 		}
 		return messages;
 	}
@@ -125,7 +184,12 @@ public class JobInfo {
 		List<String> messages = new ArrayList<String>();
 		if (this.job != null) {
 			for (JobEvent event : this.job.getJobEvents()) {
-				messages.add(event.getMessage());
+				String message = event.getMessage();
+				if (message == null) {
+					messages.add("Job " + event.getState());
+				} else {
+					messages.add(event.getMessage());
+				}
 			}
 		}
 		return messages;
