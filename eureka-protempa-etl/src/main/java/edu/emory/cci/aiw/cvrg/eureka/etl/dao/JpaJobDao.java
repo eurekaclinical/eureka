@@ -15,7 +15,6 @@ import com.google.inject.persist.Transactional;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.Job;
 import edu.emory.cci.aiw.cvrg.eureka.etl.resource.JobFilter;
-import edu.emory.cci.aiw.cvrg.eureka.etl.resource.ProtempaDevice;
 
 /**
  * Implements the {@link JobDao} interface, with the use of JPA entity managers.
@@ -31,7 +30,8 @@ public class JpaJobDao implements JobDao {
 	 * The provider for the entity managers used within the DAO.
 	 */
 	private final Provider<EntityManager> emProvider;
-	private static final Logger LOGGER = LoggerFactory.getLogger(JpaJobDao.class);
+	private static final Logger LOGGER = LoggerFactory
+			.getLogger(JpaJobDao.class);
 
 	/**
 	 * Construct instance with the given EntityManager provider.
@@ -55,7 +55,15 @@ public class JpaJobDao implements JobDao {
 	@Override
 	@Transactional
 	public void save(Job job) {
-		this.getEntityManager().persist(job);
+		LOGGER.debug("Persisting job: {}", job);
+		EntityManager entityManager = this.getEntityManager();
+		entityManager.persist(job);
+		entityManager.flush();
+	}
+	
+	@Override
+	public void refresh (Job job) {
+		this.getEntityManager().refresh(job);
 	}
 
 	@Override
@@ -63,12 +71,12 @@ public class JpaJobDao implements JobDao {
 
 		try {
 
-			Query query = this.getEntityManager()
-				.createQuery("select j from Job j where j.id = ?1", Job.class)
-				.setParameter(1, id);
-			return (Job)query.getSingleResult();
-		}
-		catch (Exception e) {
+			Query query = this
+					.getEntityManager()
+					.createQuery("select j from Job j where j.id = ?1",
+							Job.class).setParameter(1, id);
+			return (Job) query.getSingleResult();
+		} catch (Exception e) {
 
 			LOGGER.debug("JobDao exception " + e.getMessage());
 		}
@@ -81,7 +89,8 @@ public class JpaJobDao implements JobDao {
 		List<Job> ret = new ArrayList<Job>();
 		try {
 
-			Query query = this.getEntityManager().createQuery("select j from Job j", Job.class);
+			Query query = this.getEntityManager().createQuery(
+					"select j from Job j", Job.class);
 			List<Job> resultList = query.getResultList();
 
 			for (Job candidate : resultList) {
@@ -89,8 +98,7 @@ public class JpaJobDao implements JobDao {
 					ret.add(candidate);
 				}
 			}
-		}
-		catch (Exception e) {
+		} catch (Exception e) {
 
 			LOGGER.debug("JobDao exception " + e.getMessage());
 		}
