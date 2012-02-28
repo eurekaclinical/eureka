@@ -8,6 +8,7 @@ import java.util.TreeSet;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
@@ -55,7 +56,8 @@ public class Job implements CycleRecoverable {
 	/**
 	 * The events generated for the job.
 	 */
-	@OneToMany(cascade = CascadeType.ALL, targetEntity = JobEvent.class)
+	@OneToMany(cascade = CascadeType.ALL, targetEntity = JobEvent.class,
+			fetch = FetchType.EAGER)
 	private List<JobEvent> jobEvents = new ArrayList<JobEvent>();
 
 	private static class JobEventComparator implements Comparator<JobEvent> {
@@ -81,6 +83,7 @@ public class Job implements CycleRecoverable {
 
 			return this.equals(obj);
 		}
+
 	}
 
 	private static JobEventComparator JOB_EVENT_COMPARATOR = new JobEventComparator();
@@ -181,11 +184,10 @@ public class Job implements CycleRecoverable {
 
 		JobEvent jev = new JobEvent();
 		jev.setJob(this);
-		jev.setTimeStamp(new Date(System.currentTimeMillis()));
+		jev.setTimeStamp(new Date());
 		jev.setState(state);
 		jev.setMessage(message);
 		jev.setExceptionStackTrace(stackTrace);
-		jev.setJob(this);
 		this.jobEvents.add(jev);
 	}
 
