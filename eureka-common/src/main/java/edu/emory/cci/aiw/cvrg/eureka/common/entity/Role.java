@@ -136,4 +136,15 @@ public class Role implements CycleRecoverable {
 		return null;
 	}
 
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("Role [id=").append(this.id).append(", name=")
+				.append(this.name).append(", defaultRole=")
+				.append(this.defaultRole).append("]");
+		return builder.toString();
+	}
 }

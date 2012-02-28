@@ -331,4 +331,23 @@ public class User implements CycleRecoverable {
 		return null;
 	}
 
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("User [id=").append(this.id).append(", active=")
+				.append(this.active).append(", verified=")
+				.append(this.verified).append(", firstName=")
+				.append(this.firstName).append(", lastName=")
+				.append(this.lastName).append(", email=").append(this.email)
+				.append(", organization=").append(this.organization)
+				.append(", password=").append(this.password)
+				.append(", verificationCode=").append(this.verificationCode)
+				.append(", lastLogin=").append(this.lastLogin)
+				.append(", roles=").append(this.roles).append(", fileUploads=")
+				.append(this.fileUploads).append("]");
+		return builder.toString();
+	}
 }
