@@ -148,6 +148,7 @@ a:visited {
 #release_notes .rss-items li {
 	display:block;
 	padding:0 40px 10px 25px;
+	overflow:hidden;
 }	
 
 #submit {
