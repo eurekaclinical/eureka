@@ -10,4 +10,5 @@ public interface JobDao {
 	public void save (Job job);
 	public Job get (Long id);
 	public List<Job> get (JobFilter jobFilter);
+	void refresh(Job inJob);
 }
