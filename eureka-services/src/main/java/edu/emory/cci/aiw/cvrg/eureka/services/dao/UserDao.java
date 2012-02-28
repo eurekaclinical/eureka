@@ -34,7 +34,7 @@ public interface UserDao {
 	 * @return The user who has a unique identifier match the one given.
 	 */
 	User get(Long id);
-	
+
 	/**
 	 * Get a user by the verification code.
 	 * 
@@ -50,4 +50,11 @@ public interface UserDao {
 	 * @return The user object that corresponds to the given user name.
 	 */
 	User get(String name);
+
+	/**
+	 * Refresh the give user from the database.
+	 * 
+	 * @param user The user to refresh.
+	 */
+	void refresh(User user);
 }
