@@ -89,8 +89,12 @@ public class UserResource {
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public List<User> getUsers() {
+		List<User> users = this.userDao.getUsers();
+		for (User user : users) {
+			this.userDao.refresh(user);
+		}
 		LOGGER.debug("Returning list of users");
-		return this.userDao.getUsers();
+		return users;
 	}
 
 	/**
@@ -103,8 +107,10 @@ public class UserResource {
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public User getUserById(@PathParam("id") Long inId) {
-		LOGGER.debug("Returning user for ID: {}", inId);
-		return this.userDao.get(inId);
+		User user = this.userDao.get(inId);
+		this.userDao.refresh(user);
+		LOGGER.debug("Returning user for ID {}: {}", inId, user);
+		return user;
 	}
 
 	/**
@@ -117,8 +123,10 @@ public class UserResource {
 	@GET
 	@Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
 	public User getUserByName(@PathParam("name") String inName) {
-		LOGGER.debug("Returning user for name: {}", inName);
-		return this.userDao.get(inName);
+		User user = this.userDao.get(inName);
+		this.userDao.refresh(user);
+		LOGGER.debug("Returning user for name {}: {}", inName, user);
+		return user;
 	}
 
 	/**
@@ -229,8 +237,10 @@ public class UserResource {
 	@Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
 	@Produces(MediaType.TEXT_PLAIN)
 	public Response putUser(final User user) {
+		LOGGER.debug("Received updated user: {}", user);
 		Response response = null;
 		User updateUser = this.userDao.get(user.getId());
+		this.userDao.refresh(updateUser);
 		List<Role> roles = user.getRoles();
 		List<Role> updatedRoles = new ArrayList<Role>();
 		for (Role r : roles) {
@@ -240,8 +250,10 @@ public class UserResource {
 
 		updateUser.setRoles(updatedRoles);
 		updateUser.setActive(user.isActive());
+		updateUser.setLastLogin(user.getLastLogin());
 
 		if (this.validateUpdatedUser(updateUser)) {
+			LOGGER.debug("Saving updated user: {}", updateUser);
 			this.userDao.save(updateUser);
 			response = Response.created(URI.create("/" + updateUser.getId()))
 					.build();
