@@ -36,8 +36,8 @@ public class RestInterfaces {
 	private final JobDao jobDao;
 	private final ConfDao confDao;
 	private final ProtempaDeviceManager protempaDeviceManager;
-	private static final Logger LOGGER = LoggerFactory.getLogger(RestInterfaces.class);
-
+	private static final Logger LOGGER = LoggerFactory
+			.getLogger(RestInterfaces.class);
 
 	@Inject
 	public RestInterfaces(JobDao jobDao, ConfDao confDao,
@@ -108,8 +108,15 @@ public class RestInterfaces {
 			@Context HttpServletRequest req) {
 
 		LOGGER.debug("Request for job status");
-		JobFilter jobFilter = new JobFilter(jobId, userId, status, intervalBegin, intervalEnd);
-		return this.jobDao.get(jobFilter);
+		JobFilter jobFilter = new JobFilter(jobId, userId, status,
+				intervalBegin, intervalEnd);
+		List<Job> jobs = this.jobDao.get(jobFilter);
+		for (Job job : jobs) {
+			this.jobDao.refresh(job);
+			LOGGER.debug("Returning job {} with status {}", job.getId(),
+					job.getCurrentState());
+		}
+		return jobs;
 	}
 
 	//
@@ -126,22 +133,10 @@ public class RestInterfaces {
 		try {
 
 			conf = this.confDao.get(userId);
-		}
-		catch (Exception e) {
+		} catch (Exception e) {
 
 		}
 		return conf;
-
-		// TODO: GET RID OF THIS FAKE CONFIGURATION WHEN REAL CONFIGURATIONS
-		// ARE AVAILABLE
-//		Configuration fakeConfiguration = new Configuration();
-//		fakeConfiguration.setProtempaDatabaseName("XE");
-//		fakeConfiguration.setProtempaHost("adrastea.cci.emory.edu");
-//		fakeConfiguration.setProtempaPort(Integer.valueOf(1521));
-//		fakeConfiguration.setProtempaSchema("cvrg");
-//		fakeConfiguration.setProtempaPass("cvrg");
-//		fakeConfiguration.setUserId(userId);
-//		return fakeConfiguration;
 	}
 
 	@POST
