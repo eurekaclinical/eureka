@@ -23,7 +23,7 @@
 			</p>
 
 			<p>
-				<a href="mailto:admin@emory.edu"><strong>admin@emory.edu</strong></a>
+				<a href="mailto:aiwhelp@emory.edu"><strong>aiwhelp@emory.edu</strong></a>
 			</p>
           </div>
           <div class="fltlft margin">

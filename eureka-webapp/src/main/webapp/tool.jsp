@@ -56,7 +56,7 @@
 		<h3>Upload Data</h3>
 
 
-		<form id="uploadForm" name="uploadForm" class="pad_top fltlft"
+		<form id="uploadForm" name="uploadForm" class="pad_top pad"
 			method="post" action="${pageContext.request.contextPath}/upload"
 			ENCTYPE="multipart/form-data">
 
