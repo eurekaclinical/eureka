@@ -180,6 +180,9 @@ public class JobResource {
 		JobInfo jobInfo = new JobInfo();
 		jobInfo.setFileUpload(latestFileUpload);
 		jobInfo.setJob(latestJob);
+		LOGGER.debug("Returning job status: {}/{}",
+				new Integer[] { Integer.valueOf(jobInfo.getCurrentStep()),
+						Integer.valueOf(jobInfo.getTotalSteps()) });
 		return jobInfo;
 	}
 }
