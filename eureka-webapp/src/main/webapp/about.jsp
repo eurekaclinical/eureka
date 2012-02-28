@@ -29,11 +29,11 @@
           Joel Saltz, MD, PhD - CVRG Emory site PI<br />
           Tahsin Kurc, PhD - CVRG co-investigator<br />
           Ashish Sharma, PhD - CVRG co-investigator<br />
-          Richard Willard – Eureka! project manager<br />
-          Himanshu Rathod – Lead software engineer<br />
-          Sanjay Agravat, MS – Software engineer<br />
-          Geoff Milton, MS – Software engineer<br />
-          Suzanne Sturm – Web designer	</p>
+          Richard Willard - Eureka! project manager<br />
+          Himanshu Rathod - Lead software engineer<br />
+          Sanjay Agravat, MS - Software engineer<br />
+          Geoff Milton, MS - Software engineer<br />
+          Suzanne Sturm - Web designer	</p>
           </div>
 	</template:content>
 	<template:content name="subcontent">
