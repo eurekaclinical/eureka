@@ -43,33 +43,76 @@ public class JobInfo {
 	 */
 	@JsonIgnore
 	public int getCurrentStep() {
-		int step = 0;
+		int step;
 		boolean activeJob = this.isJobActive();
 		boolean activeUpload = this.isUploadActive();
 
 		if (activeUpload) {
-			if (this.fileUpload.isCompleted()) {
-				step = 4;
-			} else if (this.fileUpload.isProcessed()) {
-				step = 3;
-			} else if (this.fileUpload.isValidated()) {
-				step = 2;
-			} else {
-				step = 1;
-			}
+			// first, we look for an active upload, and return its status.
+			step = this.getUploadStep();
 		} else if (activeJob) {
-			String currentState = this.job.getCurrentState();
-			if (currentState.equals("DONE") || currentState.equals("FAILED")
-					|| currentState.equals("EXCEPTION")
-					|| currentState.equals("INTERRUPTED")) {
-				step = 7;
-			} else if (currentState.equals("PROCESSING")) {
-				step = 6;
-			} else if (currentState.equals("CREATED")) {
-				step = 5;
+			// else, we look for an active job, and return its status.
+			step = this.getJobStep();
+		} else {
+			// if nothing is active, then find the later of the upload or the
+			// job, and return that item's status.
+			if (this.job != null && this.fileUpload != null) {
+				if (this.job.getTimestamp().after(
+						this.fileUpload.getTimestamp())) {
+					step = this.getJobStep();
+				} else {
+					step = this.getUploadStep();
+				}
+			} else if (this.job != null) {
+				step = this.getJobStep();
+			} else if (this.fileUpload != null) {
+				step = this.getUploadStep();
+			} else {
+				step = 0;
 			}
 		}
 
+		return step;
+	}
+
+	/**
+	 * Return the current status of the job.
+	 * 
+	 * @return The current step.
+	 */
+	@JsonIgnore
+	private int getJobStep() {
+		int step = 0;
+		String currentState = this.job.getCurrentState();
+		if (currentState.equals("DONE") || currentState.equals("FAILED")
+				|| currentState.equals("EXCEPTION")
+				|| currentState.equals("INTERRUPTED")) {
+			step = 7;
+		} else if (currentState.equals("PROCESSING")) {
+			step = 6;
+		} else if (currentState.equals("CREATED")) {
+			step = 5;
+		}
+		return step;
+	}
+
+	/**
+	 * Return the current status of the upload.
+	 * 
+	 * @return The current step.
+	 */
+	@JsonIgnore
+	private int getUploadStep() {
+		int step = 0;
+		if (this.fileUpload.isCompleted()) {
+			step = 4;
+		} else if (this.fileUpload.isProcessed()) {
+			step = 3;
+		} else if (this.fileUpload.isValidated()) {
+			step = 2;
+		} else {
+			step = 1;
+		}
 		return step;
 	}
 
@@ -181,14 +224,12 @@ public class JobInfo {
 	 * @return The list of messages.
 	 */
 	private List<String> getJobMessages() {
-		List<String> messages = new ArrayList<String>();
+		final List<String> messages = new ArrayList<String>();
 		if (this.job != null) {
 			for (JobEvent event : this.job.getJobEvents()) {
-				String message = event.getMessage();
-				if (message == null) {
-					messages.add("Job " + event.getState());
-				} else {
-					messages.add(event.getMessage());
+				final String message = event.getMessage();
+				if (message != null) {
+					messages.add(message);
 				}
 			}
 		}
