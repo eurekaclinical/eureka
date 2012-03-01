@@ -91,14 +91,17 @@
 								</c:choose>
 						</td>
 					</tr>
-
-				</table>
-
-			<div class="fltrt margin">
-				<button class="btn btn-primary">
+					<tr>
+					  <td>&nbsp;</td>
+					  <td colspan="4">
+                      				<button class="btn btn-primary fltrt">
                     Save
                 </button>
-			</div>
+                </td>
+				  </tr>
+
+				</table>
+		
 			</form>
 
 		</div>
