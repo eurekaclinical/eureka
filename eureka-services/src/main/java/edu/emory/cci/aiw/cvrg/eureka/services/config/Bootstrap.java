@@ -3,7 +3,7 @@ package edu.emory.cci.aiw.cvrg.eureka.services.config;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
-import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import com.google.inject.Inject;
@@ -107,11 +107,15 @@ public class Bootstrap {
 	 */
 	private List<User> createUsers(final List<Role> defaultRoles)
 			throws NoSuchAlgorithmException {
+
+		String password = StringUtil.md5("testpassword");
+		String organization = "Emory University";
+		Date lastLogin = new Date();
 		List<User> users = new ArrayList<User>();
 
 		List<Role> adminRoles = new ArrayList<Role>(defaultRoles);
 		adminRoles.add(this.roleDao.getRoleByName("admin"));
-		
+
 		List<Role> superRoles = new ArrayList<Role>(adminRoles);
 		superRoles.add(this.roleDao.getRoleByName("superuser"));
 
@@ -121,9 +125,9 @@ public class Bootstrap {
 		regularUser.setEmail("user@emory.edu");
 		regularUser.setFirstName("Regular");
 		regularUser.setLastName("User");
-		regularUser.setOrganization("Emory University");
-		regularUser.setPassword(StringUtil.md5("testpassword"));
-		regularUser.setLastLogin(Calendar.getInstance().getTime());
+		regularUser.setOrganization(organization);
+		regularUser.setPassword(password);
+		regularUser.setLastLogin(lastLogin);
 		regularUser.setRoles(defaultRoles);
 
 		User adminUser = new User();
@@ -132,20 +136,20 @@ public class Bootstrap {
 		adminUser.setEmail("admin.user@emory.edu");
 		adminUser.setFirstName("Admin");
 		adminUser.setLastName("User");
-		adminUser.setOrganization("Emory University");
-		adminUser.setPassword(StringUtil.md5("testpassword"));
-		adminUser.setLastLogin(Calendar.getInstance().getTime());
+		adminUser.setOrganization(organization);
+		adminUser.setPassword(password);
+		adminUser.setLastLogin(lastLogin);
 		adminUser.setRoles(adminRoles);
-		
+
 		User superUser = new User();
 		superUser.setActive(true);
 		superUser.setVerified(true);
 		superUser.setEmail("super.user@emory.edu");
 		superUser.setFirstName("Super");
 		superUser.setLastName("User");
-		superUser.setOrganization("Emory University");
-		superUser.setPassword(StringUtil.md5("testpassword"));
-		superUser.setLastLogin(Calendar.getInstance().getTime());
+		superUser.setOrganization(organization);
+		superUser.setPassword(password);
+		superUser.setLastLogin(lastLogin);
 		superUser.setRoles(superRoles);
 
 		users.add(regularUser);
@@ -169,7 +173,7 @@ public class Bootstrap {
 		Role role2 = new Role();
 		role2.setDefaultRole(Boolean.FALSE);
 		role2.setName("admin");
-		
+
 		Role role3 = new Role();
 		role3.setDefaultRole(Boolean.FALSE);
 		role3.setName("superuser");
