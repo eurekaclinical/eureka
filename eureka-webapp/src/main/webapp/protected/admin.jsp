@@ -21,12 +21,12 @@
     <h3>Administration </h3>
 
     
-    <form id="form" name="form1" method="post" action="">
+    <form id="form" name="form1" method="post" action="" class="pad_top pad">
       <table>
       <tr class="bold">
-        <td width="162">User Name</td>
+        <td width="300">User Name</td>
         <td width="83">Last Login</td>
-        <td width="121">Role</td>
+        <td width="300">Role</td>
         <td width="217">Email</td>
         <td width="179">Organization</td>
         <td width="100">Status</td>
