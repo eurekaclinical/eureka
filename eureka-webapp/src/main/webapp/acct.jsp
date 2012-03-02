@@ -89,19 +89,9 @@
 					<img src="${pageContext.request.contextPath}/images/rss.png"
 						border="0" /> Related News <a href="xml/rss_news.xml" class="rss"></a>
 				</h3>
-<!-- start sw-rss-feed code --> 
-<script type="text/javascript"> 
-<!-- 
-rssfeed_url = new Array(); 
-rssfeed_url[0]="http://whsc.emory.edu/home/news/releases/index.rss&num=3";  
-rssfeed_title="on"; 
-rssfeed_item_title_length="50"; 
-rssfeed_item_date="off"; 
-rssfeed_item_description="on"; 
-rssfeed_item_description_length="120"; 
-//--> 
-</script> 
-
+				<script language="JavaScript"
+					src="http://feed2js.org//feed2js.php?src=http%3A%2F%2Fwhsc.emory.edu%2Fhome%2Fnews%2Freleases%2Fresearch.rss&chan=y&num=4&desc=1&utf=y"
+					charset="UTF-8" type="text/javascript"></script>
 
 				<noscript>
 					<a style="padding-left: 35px"
