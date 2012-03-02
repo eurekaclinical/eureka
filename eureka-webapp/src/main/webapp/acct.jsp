@@ -30,16 +30,20 @@
 						<td>Password:</td>
 						<td colspan="4"><input type="password" value="${user.password}" disabled="disabled"/></td>
 					</tr>
-				</table>
-
-				<div class="fltrt margin">
-                    <!--
+					<tr>
+					  <td>&nbsp;</td>
+					  <td colspan="4">
+                                          <!--
 					<a href="edit_acct.html"><img src="${pageContext.request.contextPath}/images/edit_btn.gif"
                         width="33" height="19" alt="Change Password" id="editAcctBtn"/></a>
                     -->
-					<img src="${pageContext.request.contextPath}/images/chg_pswd_btn.gif"
+					<img class="fltrt" src="${pageContext.request.contextPath}/images/chg_pswd_btn.gif"
                         alt="Change Password" id="editAcctBtn"/>
-				</div>
+                      </td>
+				  </tr>
+				</table>
+
+			
 				
 				<table id="newPasswordTable">
 				
@@ -56,11 +60,15 @@
 	  					<td class="field white"><input type="password" name="verifyPassword" id="verifyPassword" /></td>
 	  					<td class="status white"></td>					
 					</tr>
+					<tr>
+					  <td class=" white">&nbsp;</td>
+					  <td class="field white fltrt">
+					    <input type="submit" value="Save" id="saveAcctBtn" class="button" />
+					</td>
+					  <td class="status white">&nbsp;</td>
+				  </tr>
 				</table>
 
-				<div class="fltrt margin">
-                    <input type="submit" value="Save" id="saveAcctBtn" class="button" />
-				</div>
                 <input type="hidden" name="id" id="id" value="${user.id}" />
                 <input type="hidden" name="action" value="save" />
             </form>
