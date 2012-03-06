@@ -33,7 +33,7 @@ public interface UserDao {
 	 * @param id The unique identifier to search for.
 	 * @return The user who has a unique identifier match the one given.
 	 */
-	User get(Long id);
+	User getById(Long id);
 
 	/**
 	 * Get a user by the verification code.
@@ -49,7 +49,7 @@ public interface UserDao {
 	 * @param name The name of the user to retrieve.
 	 * @return The user object that corresponds to the given user name.
 	 */
-	User get(String name);
+	User getByName(String name);
 
 	/**
 	 * Refresh the give user from the database.
