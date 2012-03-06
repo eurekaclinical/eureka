@@ -77,12 +77,12 @@ public class JpaUserDao implements UserDao {
 	}
 
 	@Override
-	public User get(Long id) {
+	public User getById(Long id) {
 		return this.getEntityManager().find(User.class, id);
 	}
 
 	@Override
-	public User get(String name) {
+	public User getByName(String name) {
 		final Query query = this
 				.getEntityManager()
 				.createQuery("select u from User u where u.email = ?1",
