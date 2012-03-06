@@ -1,76 +1,53 @@
 package edu.emory.cci.aiw.cvrg.eureka.services.dataprovider;
 
 /**
- * A person related to an encounter; for example, a patient or a provider.
+ * A person related to an encounter, such as a provider or a patient.
  * 
  * @author hrathod
  * 
  */
-public abstract class Person {
-	/**
-	 * The unique identifier for the person.
-	 */
-	private Long id;
-	/**
-	 * Person's first name.
-	 */
-	private String firstName;
-	/**
-	 * Person's last name.
-	 */
-	private String lastName;
+public interface Person {
 
 	/**
 	 * Get the person's unique identifier.
 	 * 
 	 * @return The person's unique identifier.
 	 */
-	public Long getId() {
-		return this.id;
-	}
+	public abstract Long getId();
 
 	/**
 	 * Set the person's unique identifier.
 	 * 
 	 * @param inId The person's unique identifier.
 	 */
-	public void setId(Long inId) {
-		this.id = inId;
-	}
+	public abstract void setId(Long inId);
 
 	/**
 	 * Get the person's first name.
 	 * 
 	 * @return The person's first name.
 	 */
-	public String getFirstName() {
-		return this.firstName;
-	}
+	public abstract String getFirstName();
 
 	/**
 	 * Set the person's first name.
 	 * 
 	 * @param inFirstName The person's first name.
 	 */
-	public void setFirstName(String inFirstName) {
-		this.firstName = inFirstName;
-	}
+	public abstract void setFirstName(String inFirstName);
 
 	/**
 	 * Get the person's last name.
 	 * 
 	 * @return The person's last name.
 	 */
-	public String getLastName() {
-		return this.lastName;
-	}
+	public abstract String getLastName();
 
 	/**
 	 * Set the person's last name.
 	 * 
 	 * @param inLastName The person's last name.
 	 */
-	public void setLastName(String inLastName) {
-		this.lastName = inLastName;
-	}
+	public abstract void setLastName(String inLastName);
+
 }

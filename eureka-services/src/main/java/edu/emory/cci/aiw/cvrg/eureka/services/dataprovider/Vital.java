@@ -6,6 +6,6 @@ package edu.emory.cci.aiw.cvrg.eureka.services.dataprovider;
  * @author hrathod
  * 
  */
-public class Vital extends ObservationWithResult {
+public class Vital extends ObservationWithResultImpl {
 	// no additional fields needed, yet.
 }

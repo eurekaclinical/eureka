@@ -6,6 +6,6 @@ package edu.emory.cci.aiw.cvrg.eureka.services.dataprovider;
  * @author hrathod
  * 
  */
-public class Icd9Diagnosis extends Observation {
+public class Icd9Diagnosis extends ObservationImpl {
 	// no new fields to add, yet.
 }

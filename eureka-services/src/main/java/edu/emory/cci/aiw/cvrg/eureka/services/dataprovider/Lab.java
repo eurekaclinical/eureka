@@ -6,6 +6,6 @@ package edu.emory.cci.aiw.cvrg.eureka.services.dataprovider;
  * @author hrathod
  * 
  */
-public class Lab extends ObservationWithResult {
+public class Lab extends ObservationWithResultImpl {
 	// no additional fields needed, yet.
 }

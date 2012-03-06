@@ -8,7 +8,7 @@ import java.util.Date;
  * @author hrathod
  * 
  */
-public class Patient extends Person {
+public class Patient extends PersonImpl {
 	/**
 	 * Patient's date of birth.
 	 */

@@ -6,6 +6,6 @@ package edu.emory.cci.aiw.cvrg.eureka.services.dataprovider;
  * @author hrathod
  * 
  */
-public class Medication extends Observation {
+public class Medication extends ObservationImpl {
 	// No new fields to add, yet.
 }

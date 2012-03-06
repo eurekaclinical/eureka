@@ -30,11 +30,7 @@ public class XlsxDataProvider implements DataProvider {
 	 */
 	static final SimpleDateFormat SDF = new SimpleDateFormat(
 			"yyyy.MM.dd HH:mm:ss");
-	/**
-	 * The data file used as the data store.
-	 */
-	private final FileUpload dataFile;
-	/**
+    /**
 	 * Holds the workbook associated with the data file.
 	 */
 	private final XSSFWorkbook workbook;
@@ -83,9 +79,8 @@ public class XlsxDataProvider implements DataProvider {
 	 *             accessed, or parsed correctly.
 	 */
 	public XlsxDataProvider(FileUpload inDataFile) throws DataProviderException {
-		this.dataFile = inDataFile;
 		try {
-			this.workbook = new XSSFWorkbook(this.dataFile.getLocation());
+			this.workbook = new XSSFWorkbook(inDataFile.getLocation());
 			this.validateWorksheets();
 		} catch (IOException ioe) {
 			throw new DataProviderException(ioe);
@@ -492,7 +487,7 @@ public class XlsxDataProvider implements DataProvider {
 		} else {
 			if (cell.getCellType() == Cell.CELL_TYPE_NUMERIC) {
 				double value = cell.getNumericCellValue();
-				result = new Double(value);
+				result = Double.valueOf(value);
 			} else {
 				result = null;
 			}

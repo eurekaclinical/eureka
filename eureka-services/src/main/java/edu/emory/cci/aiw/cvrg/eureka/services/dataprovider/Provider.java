@@ -6,6 +6,6 @@ package edu.emory.cci.aiw.cvrg.eureka.services.dataprovider;
  * @author hrathod
  * 
  */
-public class Provider extends Person {
+public class Provider extends PersonImpl {
 	// no additional fields, yet.
 }
