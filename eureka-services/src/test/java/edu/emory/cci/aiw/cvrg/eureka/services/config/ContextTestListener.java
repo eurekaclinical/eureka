@@ -21,18 +21,15 @@ public class ContextTestListener extends GuiceServletContextListener {
 	/**
 	 * Make sure we always use the same injector
 	 */
-	private Injector injector = null;
+	private final Injector injector = Guice.createInjector(new ServletTestModule(),
+			new AppTestModule());
 	/**
 	 * The persistence service for the application.
 	 */
 	private PersistService persistService = null;
 
 	@Override
-	synchronized protected Injector getInjector() {
-		if (this.injector == null) {
-			this.injector = Guice.createInjector(new ServletTestModule(),
-					new AppTestModule());
-		}
+	protected Injector getInjector() {
 		return this.injector;
 	}
 
