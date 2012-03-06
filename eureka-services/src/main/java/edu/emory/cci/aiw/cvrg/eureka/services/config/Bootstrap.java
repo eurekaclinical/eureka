@@ -40,12 +40,6 @@ public class Bootstrap {
 	 *            objects in the data store.
 	 * @param inUserDao The data access object to be used to work with role
 	 *            objects in the data store.
-	 * @param inFileDao The data access object to be used to work with file
-	 *            upload objects in the data store.
-	 * @param inApplicationProperties The access used to get the application
-	 *            configuration properties.
-	 * 
-	 * @param inEntityManager
 	 */
 	@Inject
 	Bootstrap(final RoleDao inRoleDao, final UserDao inUserDao) {
@@ -84,7 +78,7 @@ public class Bootstrap {
 	private void addDefaultUsers() throws NoSuchAlgorithmException {
 		List<Role> defaultRoles = new ArrayList<Role>();
 		for (Role role : this.roleDao.getRoles()) {
-			if (role.isDefaultRole() == Boolean.TRUE) {
+			if (Boolean.TRUE.equals(role.isDefaultRole())) {
 				defaultRoles.add(role);
 			}
 		}
@@ -99,8 +93,6 @@ public class Bootstrap {
 	 * 
 	 * @param defaultRoles The default roles to be assigned to each newly
 	 *            created user.
-	 * @param fileUploads The file uploads to attach to the user.
-	 * 
 	 * @return List of users to be added.
 	 * @throws NoSuchAlgorithmException If the password can not be hashed
 	 *             properly.
