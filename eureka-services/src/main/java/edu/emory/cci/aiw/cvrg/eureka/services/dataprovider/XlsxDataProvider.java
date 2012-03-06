@@ -471,7 +471,7 @@ public class XlsxDataProvider implements DataProvider {
 		} else {
 			if (cell.getCellType() == Cell.CELL_TYPE_NUMERIC) {
 				Double value = new Double(cell.getNumericCellValue());
-				result = new Long(value.longValue());
+				result = Long.valueOf(value.longValue());
 			} else {
 				result = null;
 			}
