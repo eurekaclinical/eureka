@@ -23,7 +23,7 @@ public class JobExecutor {
 	/**
 	 * Create a new JobExecutor with the given application properties.
 	 * 
-	 * @param properties
+	 * @param properties The application level configuration object.
 	 */
 	@Inject
 	public JobExecutor(final ApplicationProperties properties) {
@@ -37,6 +37,6 @@ public class JobExecutor {
 	 * @param task The task to queue up.
 	 */
 	public void queueJob(final JobTask task) {
-		this.service.submit(task);
+		this.service.execute(task);
 	}
 }
