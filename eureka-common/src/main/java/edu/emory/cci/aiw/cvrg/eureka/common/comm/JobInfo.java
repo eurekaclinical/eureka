@@ -44,34 +44,17 @@ public class JobInfo {
 	@JsonIgnore
 	public int getCurrentStep() {
 		int step;
-		boolean activeJob = this.isJobActive();
-		boolean activeUpload = this.isUploadActive();
-
-		if (activeUpload) {
-			// first, we look for an active upload, and return its status.
-			step = this.getUploadStep();
-		} else if (activeJob) {
-			// else, we look for an active job, and return its status.
-			step = this.getJobStep();
+		if (this.job == null && this.fileUpload == null) {
+			step = 0;
 		} else {
-			// if nothing is active, then find the later of the upload or the
-			// job, and return that item's status.
-			if (this.job != null && this.fileUpload != null) {
-				if (this.job.getTimestamp().after(
-						this.fileUpload.getTimestamp())) {
-					step = this.getJobStep();
-				} else {
-					step = this.getUploadStep();
-				}
-			} else if (this.job != null) {
-				step = this.getJobStep();
-			} else if (this.fileUpload != null) {
+			if (this.isUploadActive()) {
 				step = this.getUploadStep();
+			} else if (this.isJobActive()) {
+				step = this.getJobStep();
 			} else {
-				step = 0;
+				step = this.totalSteps;
 			}
 		}
-
 		return step;
 	}
 
@@ -145,7 +128,7 @@ public class JobInfo {
 		if (this.fileUpload == null) {
 			result = false;
 		} else {
-			result = (this.fileUpload.isCompleted() == false);
+			result = !this.fileUpload.isCompleted();
 		}
 		return result;
 	}
