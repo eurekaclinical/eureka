@@ -31,8 +31,10 @@ public class CommUtils {
 	 * certificate is available for the machine).
 	 * 
 	 * @return A Jersey client capable of making SSL requests.
-	 * @throws KeyManagementException
-	 * @throws NoSuchAlgorithmException
+	 * @throws KeyManagementException Thrown when the rest client can not be
+	 *             configured for SSL correctly.
+	 * @throws NoSuchAlgorithmException Thrown when the rest client can not be
+	 *             configured for SSL correctly.
 	 */
 	public static Client getClient() throws KeyManagementException,
 			NoSuchAlgorithmException {
