@@ -194,7 +194,7 @@ public class ApplicationProperties {
 	 *            found, or is malformed.
 	 * @return The property value, as an int.
 	 */
-	public int getIntValue(final String propertyName, int defaultValue) {
+	private int getIntValue(final String propertyName, int defaultValue) {
 		int result;
 		String property = this.properties.getProperty(propertyName);
 		try {
