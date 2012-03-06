@@ -203,6 +203,7 @@ public class FileUpload implements CycleRecoverable {
 	 * 
 	 * @return The list of errors associated with the file upload.
 	 */
+	@JsonManagedReference("fileupload-messages")
 	public List<FileError> getErrors() {
 		return this.errors;
 	}
@@ -212,15 +213,15 @@ public class FileUpload implements CycleRecoverable {
 	 * 
 	 * @param inErrors The list of errors associated with the file upload.
 	 */
-	// public void setErrors(List<FileError> inErrors) {
-	// this.errors = inErrors;
-	// for (FileError error : inErrors) {
-	// FileUpload fileUpload = error.getFileUpload();
-	// if (fileUpload == null || fileUpload.getId() != this.getId()) {
-	// error.setFileUpload(this);
-	// }
-	// }
-	// }
+	 public void setErrors(List<FileError> inErrors) {
+	 this.errors = inErrors;
+	 for (FileError error : inErrors) {
+	 FileUpload fileUpload = error.getFileUpload();
+	 if (fileUpload == null || fileUpload.getId() != this.getId()) {
+	 error.setFileUpload(this);
+	 }
+	 }
+	 }
 
 	/**
 	 * Add an error to the list of errors for the file upload.
@@ -241,6 +242,7 @@ public class FileUpload implements CycleRecoverable {
 	 * 
 	 * @return The list of warnings associated with the file upload.
 	 */
+	@JsonManagedReference("fileupload-messages")
 	public List<FileWarning> getWarnings() {
 		return this.warnings;
 	}
@@ -250,15 +252,15 @@ public class FileUpload implements CycleRecoverable {
 	 * 
 	 * @param inWarnings The list of warnings associated with the file upload.
 	 */
-	// public void setWarnings(List<FileWarning> inWarnings) {
-	// this.warnings = inWarnings;
-	// for (FileWarning warning : inWarnings) {
-	// FileUpload fileUpload = warning.getFileUpload();
-	// if (fileUpload == null || fileUpload.getId() != this.getId()) {
-	// warning.setFileUpload(this);
-	// }
-	// }
-	// }
+	 public void setWarnings(List<FileWarning> inWarnings) {
+	 this.warnings = inWarnings;
+	 for (FileWarning warning : inWarnings) {
+	 FileUpload fileUpload = warning.getFileUpload();
+	 if (fileUpload == null || fileUpload.getId() != this.getId()) {
+	 warning.setFileUpload(this);
+	 }
+	 }
+	 }
 
 	/**
 	 * Add a new warning to the file upload.

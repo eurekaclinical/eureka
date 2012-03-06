@@ -7,6 +7,10 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.MappedSuperclass;
 
+import org.codehaus.jackson.annotate.JsonBackReference;
+
+import com.sun.xml.bind.CycleRecoverable;
+
 /**
  * An abstract base class to hold information found about an uploaded file
  * during the validation process.
@@ -15,7 +19,7 @@ import javax.persistence.MappedSuperclass;
  * 
  */
 @MappedSuperclass
-abstract public class AbstractFileInfo {
+abstract public class AbstractFileInfo implements CycleRecoverable {
 
 	/**
 	 * The unique identifier for the file information.
@@ -126,6 +130,7 @@ abstract public class AbstractFileInfo {
 	 * 
 	 * @return The file upload with which the information is associated.
 	 */
+	@JsonBackReference("fileupload-messages")
 	public FileUpload getFileUpload() {
 		return this.fileUpload;
 	}
@@ -137,6 +142,17 @@ abstract public class AbstractFileInfo {
 	 *            associated.
 	 */
 	abstract public void setFileUpload(FileUpload inFileUpload);
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.sun.xml.bind.CycleRecoverable#onCycleDetected(com.sun.xml.bind.
+	 * CycleRecoverable.Context)
+	 */
+	@Override
+	public Object onCycleDetected(Context inContext) {
+		return null;
+	}
 
 	@Override
 	public String toString() {
