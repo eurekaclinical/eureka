@@ -15,7 +15,7 @@ import com.sun.jersey.guice.spi.container.servlet.GuiceContainer;
  * @author hrathod
  * 
  */
-public class ServletModule extends JerseyServletModule {
+class ServletModule extends JerseyServletModule {
 
 	@Override
 	protected void configureServlets() {
