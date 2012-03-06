@@ -1,6 +1,5 @@
 package edu.emory.cci.aiw.cvrg.eureka.services.config;
 
-import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 
 import javax.servlet.ServletContextEvent;
@@ -21,8 +20,8 @@ public class ContextTestListener extends GuiceServletContextListener {
 	/**
 	 * Make sure we always use the same injector
 	 */
-	private final Injector injector = Guice.createInjector(new ServletTestModule(),
-			new AppTestModule());
+	private final Injector injector = Guice.createInjector(
+			new ServletTestModule(), new AppTestModule());
 	/**
 	 * The persistence service for the application.
 	 */
@@ -47,8 +46,6 @@ public class ContextTestListener extends GuiceServletContextListener {
 		Setup setup = this.getInjector().getInstance(Setup.class);
 		try {
 			setup.configure();
-		} catch (KeyManagementException e) {
-			e.printStackTrace();
 		} catch (NoSuchAlgorithmException e) {
 			e.printStackTrace();
 		}
