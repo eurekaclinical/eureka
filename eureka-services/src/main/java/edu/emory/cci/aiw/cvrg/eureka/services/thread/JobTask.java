@@ -63,8 +63,7 @@ public class JobTask implements Runnable {
 	/**
 	 * The class level logger.
 	 */
-	private static final Logger LOGGER = LoggerFactory
-			.getLogger(JobTask.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(JobTask.class);
 
 	/**
 	 * Construct an instance with the given file upload, DAO, and related
@@ -143,8 +142,6 @@ public class JobTask implements Runnable {
 			}
 		} else {
 			LOGGER.error("run() called before setting a file upload");
-			throw new IllegalStateException(
-					"run() called before setting a file upload");
 		}
 	}
 
@@ -158,7 +155,6 @@ public class JobTask implements Runnable {
 	 */
 	private boolean validateUpload(DataProvider dataProvider)
 			throws DataProviderException {
-		boolean result = true;
 		DataValidator dataValidator = new DataValidator();
 		dataValidator.setPatients(dataProvider.getPatients())
 				.setEncounters(dataProvider.getEncounters())
@@ -192,10 +188,7 @@ public class JobTask implements Runnable {
 				}
 			}
 		}
-		if (this.fileUpload.containsErrors()) {
-			result = false;
-		}
-		return result;
+		return (this.fileUpload.containsErrors() == false);
 	}
 
 	/**
@@ -237,7 +230,6 @@ public class JobTask implements Runnable {
 	 */
 	private boolean submitJob() throws KeyManagementException,
 			NoSuchAlgorithmException {
-		boolean result;
 		Client client = CommUtils.getClient();
 		WebResource resource = client.resource(this.applicationProperties
 				.getEtlJobSubmitUrl());
@@ -246,12 +238,7 @@ public class JobTask implements Runnable {
 		job.setUserId(this.fileUpload.getUser().getId());
 		Job resultJob = resource.type(MediaType.APPLICATION_JSON)
 				.accept(MediaType.APPLICATION_JSON).post(Job.class, job);
-		if (resultJob.getCurrentState().equals("CREATED")) {
-			result = true;
-		} else {
-			result = false;
-		}
-		return result;
+		return resultJob.getCurrentState().equals("CREATED");
 	}
 
 	/**
@@ -259,19 +246,21 @@ public class JobTask implements Runnable {
 	 * 
 	 * @return The user configuration.
 	 * 
-	 * @throws KeyManagementException
-	 * @throws NoSuchAlgorithmException
+	 * @throws KeyManagementException Thrown if an SSL enabled rest client can
+	 *             not be created properly.
+	 * @throws NoSuchAlgorithmException Thrown if an SSL enabled rest client can
+	 *             not be created properly.
 	 */
 	private Configuration getUserConfiguration() throws KeyManagementException,
 			NoSuchAlgorithmException {
 		if (this.configuration == null) {
 			Configuration result = null;
 			ClientResponse response = null;
+			WebResource resource;
 			Client client = CommUtils.getClient();
-			WebResource resource = client.resource(this.applicationProperties
-					.getEtlConfGetUrl()
-					+ "/"
-					+ this.fileUpload.getUser().getId());
+			Long userId = this.fileUpload.getUser().getId();
+			resource = client.resource(this.applicationProperties
+					.getEtlConfGetUrl() + "/" + userId);
 			response = resource.accept(MediaType.APPLICATION_JSON).get(
 					ClientResponse.class);
 			// TODO: REMOVE THIS AFTER THE REAL CONFIGURATION DATABASE IS SET
@@ -281,20 +270,27 @@ public class JobTask implements Runnable {
 			} else {
 				// send a fake configuration over.
 				Configuration fakeConf = new Configuration();
-				fakeConf.setUserId(this.fileUpload.getUser().getId());
+				fakeConf.setUserId(userId);
 				fakeConf.setProtempaHost("adrastea.cci.emory.edu");
 				fakeConf.setProtempaPort(Integer.valueOf(1521));
 				fakeConf.setProtempaDatabaseName("XE");
-				fakeConf.setProtempaSchema("cvrg");
-				fakeConf.setProtempaPass("cvrg");
-				WebResource webResource = client
-						.resource(this.applicationProperties
-								.getEtlConfSubmitUrl());
-				response = webResource.type(MediaType.APPLICATION_JSON).post(
+				fakeConf.setProtempaSchema("cvrg_user_" + userId);
+				fakeConf.setProtempaPass("cvrg_pass_" + userId);
+				resource = client.resource(this.applicationProperties
+						.getEtlConfSubmitUrl());
+				response = resource.type(MediaType.APPLICATION_JSON).post(
 						ClientResponse.class, fakeConf);
 				LOGGER.debug("Configuration send result: {}",
 						response.getClientResponseStatus());
 				result = fakeConf;
+
+				resource = client.resource(this.applicationProperties
+						.getEtlConfGetUrl() + "/" + userId);
+				response = resource.accept(MediaType.APPLICATION_JSON).get(
+						ClientResponse.class);
+				if (response.getClientResponseStatus() == Status.OK) {
+					result = response.getEntity(Configuration.class);
+				}
 			}
 			this.configuration = result;
 		}
