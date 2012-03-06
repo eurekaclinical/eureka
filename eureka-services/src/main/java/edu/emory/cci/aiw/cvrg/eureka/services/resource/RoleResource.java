@@ -2,7 +2,6 @@ package edu.emory.cci.aiw.cvrg.eureka.services.resource;
 
 import java.util.List;
 
-import javax.servlet.ServletException;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -43,13 +42,11 @@ public class RoleResource {
 	 * 
 	 * @param inId The identification number for the role to fetch.
 	 * @return The role referenced by the identification number.
-	 * @throws ServletException Thrown if the identification number string can
-	 *             not be properly converted to a {@link Long}.
 	 */
 	@Path("/{id}")
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	public Role getRole(@PathParam("id") Long inId) throws ServletException {
+	public Role getRole(@PathParam("id") Long inId) {
 		return this.roleDao.getRoleById(inId);
 	}
 
