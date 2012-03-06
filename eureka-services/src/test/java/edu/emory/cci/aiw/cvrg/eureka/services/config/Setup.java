@@ -47,8 +47,6 @@ public class Setup {
 	 *            objects in the data store.
 	 * @param inFileDao The data access object to be used to work with file
 	 *            upload objects in the data store.
-	 * 
-	 * @param inEntityManager
 	 */
 	@Inject
 	Setup(final RoleDao inRoleDao, final UserDao inUserDao,
@@ -91,7 +89,7 @@ public class Setup {
 	private void addDefaultUsers() throws NoSuchAlgorithmException {
 		List<Role> defaultRoles = new ArrayList<Role>();
 		for (Role role : this.roleDao.getRoles()) {
-			if (role.isDefaultRole() == Boolean.TRUE) {
+			if (Boolean.TRUE.equals(role.isDefaultRole())) {
 				defaultRoles.add(role);
 			}
 		}
@@ -121,8 +119,6 @@ public class Setup {
 	 * 
 	 * @param defaultRoles The default roles to be assigned to each newly
 	 *            created user.
-	 * @param fileUploads The file uploads to attach to the user.
-	 * 
 	 * @return List of users to be added.
 	 * @throws NoSuchAlgorithmException Thrown when a password can not be hashed
 	 *             properly.
@@ -133,7 +129,7 @@ public class Setup {
 
 		List<Role> adminRoles = new ArrayList<Role>(defaultRoles);
 		adminRoles.add(this.roleDao.getRoleByName("admin"));
-		
+
 		List<Role> superRoles = new ArrayList<Role>(adminRoles);
 		superRoles.add(this.roleDao.getRoleByName("superuser"));
 
@@ -158,7 +154,7 @@ public class Setup {
 		adminUser.setPassword(StringUtil.md5("testpassword"));
 		adminUser.setLastLogin(Calendar.getInstance().getTime());
 		adminUser.setRoles(adminRoles);
-		
+
 		User superUser = new User();
 		superUser.setActive(true);
 		superUser.setVerified(true);
@@ -191,7 +187,7 @@ public class Setup {
 		Role role2 = new Role();
 		role2.setDefaultRole(Boolean.FALSE);
 		role2.setName("admin");
-		
+
 		Role role3 = new Role();
 		role3.setDefaultRole(Boolean.FALSE);
 		role3.setName("superuser");
