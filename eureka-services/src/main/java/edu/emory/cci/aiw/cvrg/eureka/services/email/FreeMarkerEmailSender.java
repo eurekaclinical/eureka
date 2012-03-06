@@ -49,14 +49,11 @@ public class FreeMarkerEmailSender implements EmailSender {
 	 * 
 	 * @param inApplicationProperties The application configuration object.
 	 * @param inSession The mail session to use when sending a message.
-	 * 
-	 * @throws EmailException Thrown when the mail session can not be fetched
-	 *             properly from the JNDI context.
 	 */
 	@Inject
 	public FreeMarkerEmailSender(
 			final ApplicationProperties inApplicationProperties,
-			final Session inSession) throws EmailException {
+			final Session inSession) {
 		this.applicationProperties = inApplicationProperties;
 		this.session = inSession;
 		this.configuration = new Configuration();
