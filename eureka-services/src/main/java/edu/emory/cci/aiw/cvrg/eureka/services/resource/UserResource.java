@@ -384,7 +384,7 @@ public class UserResource {
 	private List<Role> getDefaultRoles() {
 		List<Role> defaultRoles = new ArrayList<Role>();
 		for (Role role : this.roleDao.getRoles()) {
-			if (role.isDefaultRole() == Boolean.TRUE) {
+			if (Boolean.TRUE.equals(role.isDefaultRole())) {
 				defaultRoles.add(role);
 			}
 		}
