@@ -25,6 +25,13 @@ import com.sun.jersey.client.urlconnection.HTTPSProperties;
 public class CommUtils {
 
 	/**
+	 * A private default constructor, to disallow instantiation of this class.
+	 */
+	private CommUtils() {
+		// do not allow instantiation of this class.
+	}
+
+	/**
 	 * Get a Jersey client capable of making HTTPS requests. NOTE: This method
 	 * returns a client with a trust manager that trusts all certificates. This
 	 * is very bad form. This should be removed as soon as possible (when a real
