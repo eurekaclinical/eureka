@@ -93,9 +93,9 @@ public class JobUpdateThread extends Thread {
 	}
 
 	/**
-	 * @param inKeepRunning the keepRunning to set
+     * Tell the update thread to stop running.
 	 */
-	public void setKeepRunning(boolean inKeepRunning) {
-		this.keepRunning = inKeepRunning;
+	public void unsetKeepRunning() {
+		this.keepRunning = false;
 	}
 }
