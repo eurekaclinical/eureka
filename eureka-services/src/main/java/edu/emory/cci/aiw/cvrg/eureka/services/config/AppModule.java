@@ -22,7 +22,7 @@ import edu.emory.cci.aiw.cvrg.eureka.services.email.FreeMarkerEmailSender;
  * @author hrathod
  * 
  */
-public class AppModule extends AbstractModule {
+class AppModule extends AbstractModule {
 
 	@Override
 	protected void configure() {
