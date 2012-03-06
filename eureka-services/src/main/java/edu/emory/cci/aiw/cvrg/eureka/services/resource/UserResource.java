@@ -107,7 +107,7 @@ public class UserResource {
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public User getUserById(@PathParam("id") Long inId) {
-		User user = this.userDao.get(inId);
+		User user = this.userDao.getById(inId);
 		this.userDao.refresh(user);
 		LOGGER.debug("Returning user for ID {}: {}", inId, user);
 		return user;
@@ -123,7 +123,7 @@ public class UserResource {
 	@GET
 	@Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
 	public User getUserByName(@PathParam("name") String inName) {
-		User user = this.userDao.get(inName);
+		User user = this.userDao.getByName(inName);
 		this.userDao.refresh(user);
 		LOGGER.debug("Returning user for name {}: {}", inName, user);
 		return user;
@@ -156,7 +156,7 @@ public class UserResource {
 			throw new ServletException(e1);
 		}
 
-		Response response = null;
+		Response response;
 		if (validateUserRequest(userRequest)) {
 			User user = new User();
 			user.setEmail(userRequest.getEmail());
@@ -204,7 +204,7 @@ public class UserResource {
 			throws ServletException {
 
 		Response response;
-		User user = this.userDao.get(inId);
+		User user = this.userDao.getById(inId);
 		String oldPasswordHash;
 		String newPasswordHash;
 		try {
@@ -238,8 +238,8 @@ public class UserResource {
 	@Produces(MediaType.TEXT_PLAIN)
 	public Response putUser(final User user) {
 		LOGGER.debug("Received updated user: {}", user);
-		Response response = null;
-		User updateUser = this.userDao.get(user.getId());
+		Response response;
+		User updateUser = this.userDao.getById(user.getId());
 		this.userDao.refresh(updateUser);
 		List<Role> roles = user.getRoles();
 		List<Role> updatedRoles = new ArrayList<Role>();
@@ -295,7 +295,7 @@ public class UserResource {
 	@PUT
 	public Response activateUser(@PathParam("id") final Long inId) {
 		Response response = Response.ok().build();
-		User user = this.userDao.get(inId);
+		User user = this.userDao.getById(inId);
 		if (user != null) {
 			user.setActive(true);
 			this.userDao.save(user);
@@ -318,7 +318,7 @@ public class UserResource {
 		boolean result = true;
 
 		// make sure a user with the same email address does not exist.
-		User user = this.userDao.get(userRequest.getEmail());
+		User user = this.userDao.getByName(userRequest.getEmail());
 		if (user == null) {
 			// make sure the email addresses are not null, and match each other
 			if ((userRequest.getEmail() == null)
@@ -355,7 +355,7 @@ public class UserResource {
 		boolean result = true;
 
 		// get the user as they currently exist in the data store.
-		User currentUser = this.userDao.get(updatedUser.getId());
+		User currentUser = this.userDao.getById(updatedUser.getId());
 		List<Role> currentRoles = currentUser.getRoles();
 
 		// the roles to check
@@ -364,11 +364,11 @@ public class UserResource {
 
 		// a super user can not be stripped of admin rights, or be de-activated.
 		if (currentRoles.contains(superUserRole)) {
-			if (updatedUser.isActive() == false) {
+			if (!updatedUser.isActive()) {
 				this.validationError = "Superuser can not be de-activated";
 				result = false;
 			}
-			if (updatedUser.getRoles().contains(adminRole) == false) {
+			if (!updatedUser.getRoles().contains(adminRole)) {
 				this.validationError = "Superuser can not lose admin rights";
 				result = false;
 			}
