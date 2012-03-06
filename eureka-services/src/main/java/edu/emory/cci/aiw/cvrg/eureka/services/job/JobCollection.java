@@ -16,7 +16,7 @@ public class JobCollection {
 	/**
 	 * A current list of jobs.
 	 */
-	private static List<Job> jobs = new ArrayList<Job>();
+	private static List<Job> JOBS = new ArrayList<Job>();
 
 	/**
 	 * Sets/updates the list of jobs.
@@ -25,7 +25,7 @@ public class JobCollection {
 	 */
 	public static void setJobs(List<Job> inJobs) {
 		synchronized (JobCollection.class) {
-			JobCollection.jobs = inJobs;
+			JobCollection.JOBS = inJobs;
 		}
 	}
 
@@ -35,7 +35,7 @@ public class JobCollection {
 	 * @return A list of jobs.
 	 */
 	public static List<Job> getJobs() {
-		return JobCollection.jobs;
+		return JobCollection.JOBS;
 	}
 
 }
