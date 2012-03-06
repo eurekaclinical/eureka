@@ -1,6 +1,5 @@
 package edu.emory.cci.aiw.cvrg.eureka.services.config;
 
-import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Date;
@@ -22,7 +21,7 @@ import edu.emory.cci.aiw.cvrg.eureka.services.util.StringUtil;
  * @author hrathod
  * 
  */
-public class Bootstrap {
+class Bootstrap {
 
 	/**
 	 * The role DAO class.
@@ -53,10 +52,8 @@ public class Bootstrap {
 	 * 
 	 * @throws NoSuchAlgorithmException Thrown when the configuration can not be
 	 *             sent to the ETL backend properly.
-	 * @throws KeyManagementException Thrown when the configuration can not be
-	 *             sent to the ETL backend properly.
 	 */
-	void configure() throws KeyManagementException, NoSuchAlgorithmException {
+	void configure() throws NoSuchAlgorithmException {
 		addDefaultRoles();
 		addDefaultUsers();
 	}
