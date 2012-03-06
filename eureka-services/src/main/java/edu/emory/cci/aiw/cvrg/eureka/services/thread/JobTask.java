@@ -74,13 +74,10 @@ public class JobTask implements Runnable {
 	 * @param inApplicationProperties Application level configuration object,
 	 *            used to fetch relevant URLs needed to communicate with the ETL
 	 *            layer.
-	 * @throws NoSuchAlgorithmException Thrown by the secure restful client.
-	 * @throws KeyManagementException Thrown by the secure restful client.
 	 */
 	@Inject
 	public JobTask(FileDao inFileDao,
-			ApplicationProperties inApplicationProperties)
-			throws KeyManagementException, NoSuchAlgorithmException {
+			ApplicationProperties inApplicationProperties) {
 		super();
 		this.fileDao = inFileDao;
 		this.applicationProperties = inApplicationProperties;
@@ -150,11 +147,8 @@ public class JobTask implements Runnable {
 	 * 
 	 * @param dataProvider Used to fetch the data to validate.
 	 * @return True if the data is valid, false otherwise.
-	 * @throws DataProviderException Thrown by the data provider if the data can
-	 *             not be fetched properly.
 	 */
-	private boolean validateUpload(DataProvider dataProvider)
-			throws DataProviderException {
+	private boolean validateUpload(DataProvider dataProvider) {
 		DataValidator dataValidator = new DataValidator();
 		dataValidator.setPatients(dataProvider.getPatients())
 				.setEncounters(dataProvider.getEncounters())
@@ -188,7 +182,7 @@ public class JobTask implements Runnable {
 				}
 			}
 		}
-		return (this.fileUpload.containsErrors() == false);
+		return !this.fileUpload.containsErrors();
 	}
 
 	/**
@@ -254,8 +248,8 @@ public class JobTask implements Runnable {
 	private Configuration getUserConfiguration() throws KeyManagementException,
 			NoSuchAlgorithmException {
 		if (this.configuration == null) {
-			Configuration result = null;
-			ClientResponse response = null;
+			Configuration result;
+			ClientResponse response;
 			WebResource resource;
 			Client client = CommUtils.getClient();
 			Long userId = this.fileUpload.getUser().getId();
