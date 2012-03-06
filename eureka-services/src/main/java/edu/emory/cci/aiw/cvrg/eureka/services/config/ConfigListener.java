@@ -65,8 +65,6 @@ public class ConfigListener extends GuiceServletContextListener {
 		Bootstrap bootstrap = this.getInjector().getInstance(Bootstrap.class);
 		try {
 			bootstrap.configure();
-		} catch (KeyManagementException e1) {
-			LOGGER.error(e1.getMessage(), e1);
 		} catch (NoSuchAlgorithmException e1) {
 			LOGGER.error(e1.getMessage(), e1);
 		}
@@ -93,7 +91,7 @@ public class ConfigListener extends GuiceServletContextListener {
 	public void contextDestroyed(ServletContextEvent inServletContextEvent) {
 		super.contextDestroyed(inServletContextEvent);
 		this.persistService.stop();
-		this.jobUpdateThread.setKeepRunning(false);
+		this.jobUpdateThread.unsetKeepRunning();
 		this.jobUpdateThread.interrupt();
 		try {
 			this.jobUpdateThread.join(20000);
