@@ -19,12 +19,12 @@ public class JobCollection {
 	private static List<Job> jobs = new ArrayList<Job>();
 
 	/**
-	 * Set/update the list of jobs.
+	 * Sets/updates the list of jobs.
 	 * 
-	 * @param inJobs
+	 * @param inJobs List of jobs to be held by the collection.
 	 */
 	public static void setJobs(List<Job> inJobs) {
-		synchronized (JobCollection.jobs) {
+		synchronized (JobCollection.class) {
 			JobCollection.jobs = inJobs;
 		}
 	}
