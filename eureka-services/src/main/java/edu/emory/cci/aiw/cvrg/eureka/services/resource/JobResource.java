@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import javax.servlet.ServletException;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -90,18 +89,15 @@ public class JobResource {
 	 * 
 	 * @return A {@link Status#OK} if the file is successfully added,
 	 *         {@link Status#BAD_REQUEST} if there are errors.
-	 * @throws ServletException Thrown when the secure client used to connect to
-	 *             the back end services can not be initialized or set up
-	 *             properly.
 	 */
 	@Path("/add")
 	@POST
 	@Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
-	public Response uploadFile(FileUpload inFileUpload) throws ServletException {
+	public Response uploadFile(FileUpload inFileUpload) {
 		LOGGER.debug("Got file upload: {}", inFileUpload);
 		FileUpload fileUpload = inFileUpload;
 		Long userId = inFileUpload.getUser().getId();
-		fileUpload.setUser(this.userDao.get(userId));
+		fileUpload.setUser(this.userDao.getById(userId));
 		fileUpload.setTimestamp(new Date());
 		this.fileDao.save(fileUpload);
 		this.jobTask.setFileUploadId(fileUpload.getId());
@@ -117,14 +113,12 @@ public class JobResource {
 	 * @param userId The unique identifier for the user.
 	 * 
 	 * @return A list of {@link Job} objects associated with the user.
-	 * @throws ServletException Thrown if the user ID is not valid
 	 */
 	@Path("/list/{id}")
 	@GET
 	@Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
-	public List<Job> getJobsByUser(@PathParam("id") final Long userId)
-			throws ServletException {
-		User user = this.userDao.get(userId);
+	public List<Job> getJobsByUser(@PathParam("id") final Long userId) {
+		User user = this.userDao.getById(userId);
 		List<Job> allJobs = JobCollection.getJobs();
 		List<Job> result = new ArrayList<Job>();
 		for (Job job : allJobs) {
@@ -140,14 +134,11 @@ public class JobResource {
 	 * 
 	 * @param userId The unique identifier of the user to query for.
 	 * @return A {@link JobInfo} object containing the status information.
-	 * @throws ServletException Thrown if there are errors converting the input
-	 *             string to a valid user ID.
 	 */
 	@Path("/status/{id}")
 	@GET
 	@Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
-	public JobInfo getStatus(@PathParam("id") final Long userId)
-			throws ServletException {
+	public JobInfo getStatus(@PathParam("id") final Long userId) {
 
 		Job latestJob = null;
 		FileUpload latestFileUpload = null;
