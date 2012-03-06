@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
+import javax.persistence.NonUniqueResultException;
 import javax.persistence.Query;
 
 import org.slf4j.Logger;
@@ -60,47 +62,41 @@ public class JpaJobDao implements JobDao {
 		entityManager.persist(job);
 		entityManager.flush();
 	}
-	
+
 	@Override
-	public void refresh (Job job) {
+	public void refresh(Job job) {
 		this.getEntityManager().refresh(job);
 	}
 
 	@Override
 	public Job get(Long id) {
-
+		Job job = null;
 		try {
-
 			Query query = this
 					.getEntityManager()
 					.createQuery("select j from Job j where j.id = ?1",
 							Job.class).setParameter(1, id);
-			return (Job) query.getSingleResult();
-		} catch (Exception e) {
-
-			LOGGER.debug("JobDao exception " + e.getMessage());
+			job = (Job) query.getSingleResult();
+		} catch (NoResultException nre) {
+			LOGGER.error(nre.getMessage(), nre);
+		} catch (NonUniqueResultException nure) {
+			LOGGER.error(nure.getMessage(), nure);
 		}
-		return null;
+		return job;
 	}
 
 	@Override
 	public List<Job> get(JobFilter jobFilter) {
 
 		List<Job> ret = new ArrayList<Job>();
-		try {
+		Query query = this.getEntityManager().createQuery(
+				"select j from Job j", Job.class);
+		List<Job> resultList = query.getResultList();
 
-			Query query = this.getEntityManager().createQuery(
-					"select j from Job j", Job.class);
-			List<Job> resultList = query.getResultList();
-
-			for (Job candidate : resultList) {
-				if (jobFilter.evaluate(candidate)) {
-					ret.add(candidate);
-				}
+		for (Job candidate : resultList) {
+			if (jobFilter.evaluate(candidate)) {
+				ret.add(candidate);
 			}
-		} catch (Exception e) {
-
-			LOGGER.debug("JobDao exception " + e.getMessage());
 		}
 		return ret;
 	}
