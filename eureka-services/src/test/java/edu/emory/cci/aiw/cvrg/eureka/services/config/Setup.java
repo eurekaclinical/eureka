@@ -1,6 +1,5 @@
 package edu.emory.cci.aiw.cvrg.eureka.services.config;
 
-import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -23,7 +22,7 @@ import edu.emory.cci.aiw.cvrg.eureka.services.util.StringUtil;
  * @author hrathod
  * 
  */
-public class Setup {
+class Setup {
 
 	/**
 	 * The role DAO class.
@@ -62,10 +61,8 @@ public class Setup {
 	 * 
 	 * @throws NoSuchAlgorithmException Thrown when the configuration can not be
 	 *             sent to the ETL backend properly.
-	 * @throws KeyManagementException Thrown when the configuration can not be
-	 *             sent to the ETL backend properly.
 	 */
-	void configure() throws KeyManagementException, NoSuchAlgorithmException {
+	void configure() throws NoSuchAlgorithmException {
 		addDefaultRoles();
 		addDefaultUsers();
 		addDefaultFileUploads();
