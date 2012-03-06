@@ -320,7 +320,7 @@ public class User implements CycleRecoverable {
 	 */
 	public void addFileUpload(FileUpload fileUpload) {
 		User user = fileUpload.getUser();
-		if (user == null || user.getId() != this.getId()) {
+		if (user == null || !user.getId().equals(this.getId())) {
 			fileUpload.setUser(this);
 		}
 		this.fileUploads.add(fileUpload);
@@ -331,7 +331,9 @@ public class User implements CycleRecoverable {
 		return null;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Object#toString()
 	 */
 	@Override
