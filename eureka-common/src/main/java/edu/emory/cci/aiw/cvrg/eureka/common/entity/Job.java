@@ -1,5 +1,6 @@
 package edu.emory.cci.aiw.cvrg.eureka.common.entity;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Date;
@@ -60,30 +61,23 @@ public class Job implements CycleRecoverable {
 			fetch = FetchType.EAGER)
 	private List<JobEvent> jobEvents = new ArrayList<JobEvent>();
 
-	private static class JobEventComparator implements Comparator<JobEvent> {
+	private static class JobEventComparator implements Comparator<JobEvent>, Serializable {
 
+		private static final long serialVersionUID = -1597150892714722679L;
+
+		@Override
 		public int compare(JobEvent a, JobEvent b) {
-
-			if (a.getId() == null && b.getId() == null) {
-
+			if (a.getTimeStamp() == null && b.getTimeStamp() == null) {
 				return 0;
 			}
-			if (a.getId() == null) {
-
+			if (a.getTimeStamp() == null) {
 				return 1;
 			}
-			if (b.getId() == null) {
-
+			if (b.getTimeStamp() == null) {
 				return -1;
 			}
-			return a.getId().compareTo(b.getId());
+			return a.getTimeStamp().compareTo(b.getTimeStamp());
 		}
-
-		public boolean equals(Object obj) {
-
-			return this.equals(obj);
-		}
-
 	}
 
 	private static JobEventComparator JOB_EVENT_COMPARATOR = new JobEventComparator();
