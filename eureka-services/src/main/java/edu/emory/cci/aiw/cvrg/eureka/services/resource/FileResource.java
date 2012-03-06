@@ -66,12 +66,11 @@ public class FileResource {
 	@Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
 	@Produces(MediaType.TEXT_PLAIN)
 	public Response uploadFile(FileUpload fileUpload) {
-		User user = this.userDao.get(fileUpload.getUser().getId());
+		User user = this.userDao.getById(fileUpload.getUser().getId());
 		fileUpload.setUser(user);
 		this.fileDao.save(fileUpload);
-		Response response = Response.created(
-				URI.create("/" + fileUpload.getId())).build();
-		return response;
+        return Response.created(
+                URI.create("/" + fileUpload.getId())).build();
 	}
 
 	/**
