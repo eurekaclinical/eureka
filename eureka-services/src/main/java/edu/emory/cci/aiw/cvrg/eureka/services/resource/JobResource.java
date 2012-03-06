@@ -128,7 +128,7 @@ public class JobResource {
 		List<Job> allJobs = JobCollection.getJobs();
 		List<Job> result = new ArrayList<Job>();
 		for (Job job : allJobs) {
-			if (job.getUserId() == user.getId()) {
+			if (job.getUserId().equals(user.getId())) {
 				result.add(job);
 			}
 		}
@@ -180,8 +180,10 @@ public class JobResource {
 		JobInfo jobInfo = new JobInfo();
 		jobInfo.setFileUpload(latestFileUpload);
 		jobInfo.setJob(latestJob);
-		LOGGER.debug("Returning job status: {}/{}",
-				new Integer[] { Integer.valueOf(jobInfo.getCurrentStep()),
+		LOGGER.debug(
+				"Returning job status for user id {}: {}/{}",
+				new Object[] { userId,
+						Integer.valueOf(jobInfo.getCurrentStep()),
 						Integer.valueOf(jobInfo.getTotalSteps()) });
 		return jobInfo;
 	}
