@@ -176,8 +176,8 @@ public class UserResource {
 			}
 			response = Response.created(URI.create("/" + user.getId())).build();
 		} else {
-			LOGGER.info("Invalid new user request: {1}, reason {2}",
-					userRequest, this.validationError);
+			LOGGER.info("Invalid new user request: {}, reason {}", userRequest,
+					this.validationError);
 			response = Response.status(Status.BAD_REQUEST)
 					.entity(this.validationError).build();
 		}
@@ -217,6 +217,11 @@ public class UserResource {
 		if (user.getPassword().equals(oldPasswordHash)) {
 			user.setPassword(newPasswordHash);
 			this.userDao.save(user);
+			try {
+				this.emailSender.sendPasswordChangeMessage(user);
+			} catch (EmailException ee) {
+				LOGGER.error(ee.getMessage(), ee);
+			}
 			response = Response.ok().build();
 		} else {
 			response = Response.status(Status.BAD_REQUEST)
@@ -228,7 +233,8 @@ public class UserResource {
 	/**
 	 * Put an updated user to the system.
 	 * 
-	 * @param user Object containing all the information about the user to add.
+	 * @param inUser Object containing all the information about the user to
+	 *            add.
 	 * @return A "Created" response with a link to the user page if successful.
 	 * 
 	 */
@@ -236,26 +242,36 @@ public class UserResource {
 	@PUT
 	@Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
 	@Produces(MediaType.TEXT_PLAIN)
-	public Response putUser(final User user) {
-		LOGGER.debug("Received updated user: {}", user);
+	public Response putUser(final User inUser) {
+		LOGGER.debug("Received updated user: {}", inUser);
 		Response response;
-		User updateUser = this.userDao.getById(user.getId());
-		this.userDao.refresh(updateUser);
-		List<Role> roles = user.getRoles();
+		User currentUser = this.userDao.getById(inUser.getId());
+		this.userDao.refresh(currentUser);
+		List<Role> roles = inUser.getRoles();
 		List<Role> updatedRoles = new ArrayList<Role>();
 		for (Role r : roles) {
 			Role updatedRole = this.roleDao.getRoleById(r.getId());
 			updatedRoles.add(updatedRole);
 		}
 
-		updateUser.setRoles(updatedRoles);
-		updateUser.setActive(user.isActive());
-		updateUser.setLastLogin(user.getLastLogin());
+		currentUser.setRoles(updatedRoles);
+		currentUser.setActive(inUser.isActive());
+		currentUser.setLastLogin(inUser.getLastLogin());
 
-		if (this.validateUpdatedUser(updateUser)) {
-			LOGGER.debug("Saving updated user: {}", updateUser);
-			this.userDao.save(updateUser);
-			response = Response.created(URI.create("/" + updateUser.getId()))
+		if (this.validateUpdatedUser(currentUser)) {
+			LOGGER.debug("Saving updated user: {}", currentUser);
+			this.userDao.save(currentUser);
+
+			boolean activation = (!currentUser.isActive())
+					&& (inUser.isActive());
+			if (activation) {
+				try {
+					this.emailSender.sendActivationMessage(currentUser);
+				} catch (EmailException ee) {
+					LOGGER.error(ee.getMessage(), ee);
+				}
+			}
+			response = Response.created(URI.create("/" + currentUser.getId()))
 					.build();
 		} else {
 			response = Response.notModified(this.validationError).build();
