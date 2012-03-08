@@ -61,12 +61,11 @@ abstract class AbstractResourceTest extends JerseyTest {
 	 */
 	protected List<User> getUserList() {
 		WebResource webResource = this.resource();
-		List<User> users = webResource.path("/api/user/list")
-				.accept(MediaType.APPLICATION_JSON)
-				.get(new GenericType<List<User>>() {
-					// Nothing to implement, used to hold returned data.
-				});
-		return users;
+        return webResource.path("/api/user/list")
+                .accept(MediaType.APPLICATION_JSON)
+                .get(new GenericType<List<User>>() {
+                    // Nothing to implement, used to hold returned data.
+                });
 	}
 
 }
