@@ -2,6 +2,9 @@ package edu.emory.cci.aiw.cvrg.eureka.services.config;
 
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 import javax.servlet.ServletContextEvent;
 
@@ -14,7 +17,7 @@ import com.google.inject.persist.PersistService;
 import com.google.inject.persist.jpa.JpaPersistModule;
 import com.google.inject.servlet.GuiceServletContextListener;
 
-import edu.emory.cci.aiw.cvrg.eureka.services.thread.JobUpdateThread;
+import edu.emory.cci.aiw.cvrg.eureka.services.thread.JobUpdateTask;
 
 /**
  * Set up the Guice dependency injection engine. Uses two modules:
@@ -27,14 +30,15 @@ import edu.emory.cci.aiw.cvrg.eureka.services.thread.JobUpdateThread;
 public class ConfigListener extends GuiceServletContextListener {
 
 	/**
-	 * A thread that updates the status of all jobs.
+	 * A timer scheduler to run the job update task.
 	 */
-	private JobUpdateThread jobUpdateThread;
+	ScheduledExecutorService executorService = Executors
+			.newSingleThreadScheduledExecutor();
 	/**
 	 * Make sure we always use the same injector
 	 */
 	private final Injector injector = Guice.createInjector(new ServletModule(),
-			new AppModule(),new JpaPersistModule("services-jpa-unit"));
+			new AppModule(), new JpaPersistModule("services-jpa-unit"));
 	/**
 	 * The persistence service for the application.
 	 */
@@ -71,10 +75,10 @@ public class ConfigListener extends GuiceServletContextListener {
 		try {
 			ApplicationProperties applicationProperties = this.getInjector()
 					.getInstance(ApplicationProperties.class);
-			this.jobUpdateThread = new JobUpdateThread(
+			JobUpdateTask jobUpdateTask = new JobUpdateTask(
 					applicationProperties.getEtlJobUpdateUrl());
-			this.jobUpdateThread.setDaemon(true);
-			this.jobUpdateThread.start();
+			this.executorService.scheduleWithFixedDelay(jobUpdateTask, 0, 10,
+					TimeUnit.SECONDS);
 		} catch (KeyManagementException e) {
 			LOGGER.error(e.getMessage(), e);
 		} catch (NoSuchAlgorithmException e) {
@@ -91,10 +95,9 @@ public class ConfigListener extends GuiceServletContextListener {
 	public void contextDestroyed(ServletContextEvent inServletContextEvent) {
 		super.contextDestroyed(inServletContextEvent);
 		this.persistService.stop();
-		this.jobUpdateThread.unsetKeepRunning();
-		this.jobUpdateThread.interrupt();
+		this.executorService.shutdown();
 		try {
-			this.jobUpdateThread.join(20000);
+			this.executorService.awaitTermination(10, TimeUnit.SECONDS);
 		} catch (InterruptedException e) {
 			LOGGER.error(e.getMessage(), e);
 		}
