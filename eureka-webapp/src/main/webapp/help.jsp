@@ -12,7 +12,7 @@
     <div class="help">
 		<h3>Help</h3>
 		<p>This help page provides a basic overview of the functionality of Eureka! Clinical Analytics.<br />
-	    click <a href="docs/demo.swf" target="_self">here</a> for a demo of how to use this site </p>
+	    click <a href="docs/demo.htm" target="_blank">here</a> for a demo of how to use this site </p>
         <h5>Browser Compatibility</h5>
         <p>We have made a great deal of effort to support recent versions of   major browsers (Firefox, Safari, Chrome and Internet Explorer), though   we have not tested every version. We have tested on Mac OS X (Snow   Leopard and Lion), Windows 7 and the Ubuntu and Mint Linux   distributions. Firefox and Internet Explorer have received the most   testing. If you encounter an issue while using your favorite browser, we   encourage you to try Firefox or Internet Explorer instead. Please   report the issue using the email address in the Contact page.</p>
         <h5>First Time</h5>
