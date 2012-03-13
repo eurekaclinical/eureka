@@ -84,8 +84,6 @@
 		<servlet-class>edu.emory.cci.aiw.cvrg.eureka.servlet.UserAcctManagerServlet</servlet-class>
 		<load-on-startup>1</load-on-startup>
 	</servlet>
-	
-
 	<servlet-mapping>
 		<servlet-name>CommonsFileUploadServlet</servlet-name>
 		<url-pattern>/upload</url-pattern>
@@ -104,7 +102,7 @@
 	</servlet-mapping>
 	<servlet-mapping>
 		<servlet-name>JobPoll</servlet-name>
-		<url-pattern>/jobpoll</url-pattern>
+		<url-pattern>/protected/jobpoll</url-pattern>
 	</servlet-mapping>
 	<servlet-mapping>
 		<servlet-name>JobList</servlet-name>
@@ -118,7 +116,6 @@
 		<servlet-name>UserAcctManagerServlet</servlet-name>
 		<url-pattern>/protected/user_acct</url-pattern>
 	</servlet-mapping>
-	
 
 	<!-- UNCOMMENT THESE FILTERS AND THEIR MAPPINGS TO ENABLE AUTHENTICATION VIA CAS -->
 	<filter>
@@ -205,6 +202,21 @@
             <param-value>role</param-value>
         </init-param>
     </filter>
+       <filter>
+        <filter-name>Authorization Filter</filter-name>
+        <filter-class>edu.emory.cci.aiw.cvrg.eureka.servlet.filter.AuthorizationFilter</filter-class>
+        <init-param>
+            <!-- Which URIs are under authorization role -->
+            <param-name>URIs</param-name>
+            <param-value>/protected/admin</param-value>
+        </init-param>
+        <init-param>
+            <!-- Name of the page mapped to roles that can access the page -->
+            <param-name>/protected/admin</param-name>
+            <param-value>ROLE_ADMIN,ROLE_SUPERUSER</param-value>
+        </init-param>
+        
+    </filter>
 	<!--
 
 	<filter>
@@ -239,11 +251,14 @@
 		<filter-name>CAS Assertion Thread Local Filter</filter-name>
 		<url-pattern>/*</url-pattern>
 	</filter-mapping>
-		<filter-mapping>
+	<filter-mapping>
 		<filter-name>Roles Filter</filter-name>
 		<url-pattern>/*</url-pattern>
 	</filter-mapping>
-	
+	<filter-mapping>
+		<filter-name>Authorization Filter</filter-name>
+		<url-pattern>/protected/*</url-pattern>
+	</filter-mapping>	
 	<!--
 	<filter-mapping>
 		<filter-name>Guice Filter</filter-name>
