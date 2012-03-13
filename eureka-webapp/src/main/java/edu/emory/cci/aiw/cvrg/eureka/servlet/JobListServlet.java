@@ -43,7 +43,7 @@ public class JobListServlet extends HttpServlet {
 					});
 
 			req.setAttribute("jobs", jobs);
-			req.getRequestDispatcher("/tool.jsp").forward(req, resp);
+			req.getRequestDispatcher("/protected/tool.jsp").forward(req, resp);
 		} catch (NoSuchAlgorithmException nsae) {
 			throw new ServletException(nsae);
 		} catch (KeyManagementException kme) {
