@@ -51,6 +51,9 @@
 	  			<td class="status white"></td>
 	  		  </tr>
   			</table>
+  	    <div id="passwordChangeFailure">
+        	<h3 id="passwordErrorMessage"></h3>
+    	</div>
 	<div class="small_text pad" style="float:left">
     <p>*Passwords must be at least 8 characters and contain at least one letter & digit
 	<br/>

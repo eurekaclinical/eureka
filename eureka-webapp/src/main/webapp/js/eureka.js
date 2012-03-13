@@ -148,11 +148,19 @@ $(document).ready(function() {
 	              type: 'POST',
 	              url: 'register',
 	              data: dataString,
-	              success: function() {
-	                  $('#signupForm').hide();
-	                  $('#registerHeading').hide();
-	                  $('#registrationComplete').show();
-				  }
+                  success: function() {
+                      $('#passwordChangeFailure').hide();
+                      $('#signupForm').hide();
+                      $('#registerHeading').hide();
+                      $('#registrationComplete').show();
+
+                  }, error: function(xhr, err) {
+
+                      $('#passwordChangeFailure').show();
+                      $('#passwordErrorMessage').text(xhr.responseText)
+
+                  } 
+
 				});
 		}
 
@@ -277,6 +285,59 @@ $(document).ready(function() {
 		 
 	 }
 	 
+	 if ($("#jobUpload").length > 0){
+		poll();
+
+		(function pollStatus() {
+			setTimeout(function() {
+			  poll();
+			  pollStatus();	
+			}, 5000);
+		})();
+
+     }
+
+
+     function poll() {
+
+				$.ajax({
+					url : "jobpoll",
+					success : function(data) {
+
+						if (data['currentStep'] != undefined) {
+							if (data['currentStep'] < data['totalSteps']) {
+								$('#status').text(
+										data['currentStep'] + " out of "
+												+ data['totalSteps']);
+			                    $('#jobUpload').show();
+							} else {
+								$('#status').text('Complete');
+			                    			$('#jobUpload').hide();
+
+							}
+
+							var d = new Date(data['uploadTime']);
+							var dateStr = d.getMonth() + "/" + d.getDate()
+									+ "/" + d.getFullYear() + " "
+									+ d.toLocaleTimeString();
+
+							$('#statusDate').text(dateStr);
+							if (data['messages'][0] == null) {
+								$('#messages').text('No errors reported');
+							} else {
+								$('#messages').text(data['messages'][0]);
+							}
+						} else {
+							$('#status').text('No jobs have been submitted.');
+							$('#statusDate').empty();
+							$('#messages').empty();
+						}
+
+					},
+					dataType : "json"
+				});
+
+     }
 
 
 	

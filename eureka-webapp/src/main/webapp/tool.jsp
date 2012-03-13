@@ -3,48 +3,6 @@
 
 
 <template:insert template="/templates/eureka_main.jsp">
-	<script type="text/javascript">
-		(function poll() {
-			setTimeout(function() {
-				$.ajax({
-					url : "${pageContext.request.contextPath}/jobpoll",
-					success : function(data) {
-
-						if (data['currentStep'] != undefined) {
-							if (data['currentStep'] < data['totalSteps']) {
-								$('#status').text(
-										data['currentStep'] + " out of "
-												+ data['totalSteps']);
-							} else {
-								$('#status').text('Complete');
-
-							}
-
-							var d = new Date(data['uploadTime']);
-							var dateStr = d.getMonth() + "/" + d.getDate()
-									+ "/" + d.getFullYear() + " "
-									+ d.toLocaleTimeString();
-
-							$('#statusDate').text(dateStr);
-							if (data['messages'][0] == null) {
-								$('#messages').text('No errors reported');
-							} else {
-								$('#messages').text(data['messages'][0]);
-							}
-						} else {
-							$('#status').text('No jobs have been submitted.');
-							$('#statusDate').empty();
-							$('#messages').empty();
-						}
-
-						//Setup the next poll recursively
-						poll();
-					},
-					dataType : "json"
-				});
-			}, 5000);
-		})();
-	</script>
 
 	<template:content name="sidebar">
 		<img
