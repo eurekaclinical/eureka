@@ -102,7 +102,8 @@ public class JobTask implements Runnable {
 				DataProvider dataProvider = new XlsxDataProvider(
 						this.fileUpload);
 				if (this.validateUpload(dataProvider)) {
-					LOGGER.debug("Data file validated");
+					LOGGER.debug("Data file validated: {}",
+							this.fileUpload.getLocation());
 					this.fileUpload.setValidated(true);
 					this.fileDao.save(this.fileUpload);
 					// then we make sure the file is processed
@@ -257,6 +258,8 @@ public class JobTask implements Runnable {
 					.getEtlConfGetUrl() + "/" + userId);
 			response = resource.accept(MediaType.APPLICATION_JSON).get(
 					ClientResponse.class);
+			LOGGER.debug("Configuration get response: {}",
+					response.getClientResponseStatus());
 			// TODO: REMOVE THIS AFTER THE REAL CONFIGURATION DATABASE IS SET
 			// UP.
 			if (response.getClientResponseStatus() == Status.OK) {
@@ -265,11 +268,11 @@ public class JobTask implements Runnable {
 				// send a fake configuration over.
 				Configuration fakeConf = new Configuration();
 				fakeConf.setUserId(userId);
-				fakeConf.setProtempaHost("adrastea.cci.emory.edu");
+				fakeConf.setProtempaHost("cvrgdev0.cci.emory.edu");
 				fakeConf.setProtempaPort(Integer.valueOf(1521));
-				fakeConf.setProtempaDatabaseName("XE");
-				fakeConf.setProtempaSchema("cvrg_user_" + userId);
-				fakeConf.setProtempaPass("cvrg_pass_" + userId);
+				fakeConf.setProtempaDatabaseName("cvrgdev");
+				fakeConf.setProtempaSchema("protempa_user_" + userId);
+				fakeConf.setProtempaPass("NOT_USED_" + userId);
 				resource = client.resource(this.applicationProperties
 						.getEtlConfSubmitUrl());
 				response = resource.type(MediaType.APPLICATION_JSON).post(
