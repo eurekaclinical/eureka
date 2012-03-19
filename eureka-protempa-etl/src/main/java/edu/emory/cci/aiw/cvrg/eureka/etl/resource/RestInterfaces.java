@@ -12,6 +12,7 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import org.slf4j.Logger;
@@ -51,7 +52,7 @@ public class RestInterfaces {
 
 	@GET
 	@Path("test")
-	public String getJobbbb() {
+	public String getJob() {
 
 		Job job = new Job();
 
@@ -78,16 +79,11 @@ public class RestInterfaces {
 
 	@POST
 	@Path("submitJob")
-	@Consumes("application/json")
-	@Produces("application/json")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
 	public Job startJob(Job job) {
-
-		// create Job from Configuration.
-		// the Job parameter has no assigned jobId yet... so persist it
-
-		this.jobDao.save(job);
-		LOGGER.debug("Request to start new Job {0}", job.getId());
 		job.setNewState("CREATED", null, null);
+		LOGGER.debug("Request to start new Job {}", job.getId());
 		this.jobDao.save(job);
 		this.protempaDeviceManager.qJob(job);
 		return job;
@@ -99,7 +95,7 @@ public class RestInterfaces {
 
 	@GET
 	@Path("status")
-	@Produces("application/json")
+	@Produces(MediaType.APPLICATION_JSON)
 	public List<Job> getJob(@QueryParam("jobId") Long jobId,
 			@QueryParam("userId") Long userId,
 			@QueryParam("status") String status,
@@ -125,25 +121,16 @@ public class RestInterfaces {
 
 	@GET
 	@Path("getConf/{userId}")
-	@Consumes("application/json")
-	@Produces("application/json")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
 	public Configuration getConfByUserId(@PathParam("userId") Long userId) {
-
-		Configuration conf = null;
-		try {
-
-			conf = this.confDao.get(userId);
-		} catch (Exception e) {
-
-		}
-		return conf;
+		return this.confDao.get(userId);
 	}
 
 	@POST
 	@Path("submitConf")
-	@Consumes("application/json")
+	@Consumes(MediaType.APPLICATION_JSON)
 	public Response submitConfiguration(Configuration conf) {
-
 		this.confDao.save(conf);
 		LOGGER.debug("Request to save Configuration");
 		return Response.ok().build();
