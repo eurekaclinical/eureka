@@ -13,6 +13,8 @@ import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.FileUpload;
 
@@ -28,9 +30,18 @@ public class XlsxDataProvider implements DataProvider {
 	/**
 	 * The standard date format for data held in the workbook.
 	 */
-	static final SimpleDateFormat SDF = new SimpleDateFormat(
-			"yyyy.MM.dd HH:mm:ss");
-    /**
+	private static ThreadLocal<SimpleDateFormat> dateFormat = new ThreadLocal<SimpleDateFormat>() {
+		@Override
+		protected SimpleDateFormat initialValue() {
+			return new SimpleDateFormat("yyyy.MM.dd HH:mm:ss");
+		}
+	};
+	/**
+	 * The class level logger.
+	 */
+	private static final Logger LOGGER = LoggerFactory
+			.getLogger(XlsxDataProvider.class);
+	/**
 	 * Holds the workbook associated with the data file.
 	 */
 	private final XSSFWorkbook workbook;
@@ -80,7 +91,10 @@ public class XlsxDataProvider implements DataProvider {
 	 */
 	public XlsxDataProvider(FileUpload inDataFile) throws DataProviderException {
 		try {
+			LOGGER.debug("Creating workbook from {}", inDataFile.getLocation());
 			this.workbook = new XSSFWorkbook(inDataFile.getLocation());
+			LOGGER.debug("Workbook: {}",
+					Integer.valueOf(this.workbook.hashCode()));
 			this.validateWorksheets();
 		} catch (IOException ioe) {
 			throw new DataProviderException(ioe);
@@ -242,6 +256,7 @@ public class XlsxDataProvider implements DataProvider {
 		XSSFSheet sheet = this.workbook.getSheet("encounter");
 		List<Encounter> result = new ArrayList<Encounter>();
 		Iterator<Row> rows = sheet.rowIterator();
+		LOGGER.debug("Encounter iterator: {}", Integer.valueOf(rows.hashCode()));
 		rows.next(); // skip header row
 		while (rows.hasNext()) {
 			Row row = rows.next();
@@ -425,7 +440,7 @@ public class XlsxDataProvider implements DataProvider {
 			result = null;
 		} else {
 			try {
-				result = SDF.parse(value);
+				result = dateFormat.get().parse(value);
 			} catch (ParseException e) {
 				result = null;
 			}
