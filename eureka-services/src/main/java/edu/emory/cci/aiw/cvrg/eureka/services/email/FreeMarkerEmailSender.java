@@ -129,7 +129,6 @@ public class FreeMarkerEmailSender implements EmailSender {
 		}
 
 		String content = stringWriter.toString();
-		System.out.println(content);
 		MimeMessage message = new MimeMessage(this.session);
 		try {
 			message.setSubject(subject);
