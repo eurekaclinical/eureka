@@ -107,7 +107,6 @@ class Bootstrap {
 
 		List<Role> superRoles = new ArrayList<Role>(adminRoles);
 		superRoles.add(this.roleDao.getRoleByName("superuser"));
-
 		User regularUser = new User();
 		regularUser.setActive(true);
 		regularUser.setVerified(true);
@@ -118,7 +117,8 @@ class Bootstrap {
 		regularUser.setPassword(password);
 		regularUser.setLastLogin(lastLogin);
 		regularUser.setRoles(defaultRoles);
-
+		users.add(regularUser);
+		
 		User adminUser = new User();
 		adminUser.setActive(true);
 		adminUser.setVerified(true);
@@ -129,7 +129,8 @@ class Bootstrap {
 		adminUser.setPassword(password);
 		adminUser.setLastLogin(lastLogin);
 		adminUser.setRoles(adminRoles);
-
+		users.add(adminUser);
+		
 		User superUser = new User();
 		superUser.setActive(true);
 		superUser.setVerified(true);
@@ -140,10 +141,22 @@ class Bootstrap {
 		superUser.setPassword(password);
 		superUser.setLastLogin(lastLogin);
 		superUser.setRoles(superRoles);
-
-		users.add(regularUser);
-		users.add(adminUser);
 		users.add(superUser);
+		
+		for (int i = 1; i <= 3; i++) {
+			User user = new User();
+			user.setActive(true);
+			user.setVerified(true);
+			user.setFirstName("User_" + i);
+			user.setLastName("User");
+			user.setOrganization(organization);
+			user.setPassword(password);
+			user.setLastLogin(lastLogin);
+			user.setEmail("user" + i + "@emory.edu");
+			user.setRoles(superRoles);
+			users.add(user);
+		}
+
 		return users;
 	}
 
