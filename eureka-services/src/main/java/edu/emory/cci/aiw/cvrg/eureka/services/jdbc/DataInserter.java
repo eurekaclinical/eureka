@@ -92,7 +92,7 @@ public class DataInserter {
 			statement.close();
 		}
 		connection.commit();
-
+		connection.close();
 	}
 
 	/**
