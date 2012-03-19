@@ -7,11 +7,13 @@ import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -37,7 +39,9 @@ public class User implements CycleRecoverable {
 	 * The user's unique identifier.
 	 */
 	@Id
-	@GeneratedValue
+	@SequenceGenerator(name = "USER_SEQ_GENERATOR", sequenceName = "USER_SEQ")
+	@GeneratedValue(strategy = GenerationType.SEQUENCE,
+			generator = "USER_SEQ_GENERATOR")
 	private Long id;
 	/**
 	 * Is the user activate?
