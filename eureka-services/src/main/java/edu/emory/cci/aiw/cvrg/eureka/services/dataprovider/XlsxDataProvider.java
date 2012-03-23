@@ -1,6 +1,7 @@
 package edu.emory.cci.aiw.cvrg.eureka.services.dataprovider;
 
 import java.io.IOException;
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -30,7 +31,7 @@ public class XlsxDataProvider implements DataProvider {
 	/**
 	 * The standard date format for data held in the workbook.
 	 */
-	private static ThreadLocal<SimpleDateFormat> dateFormat = new ThreadLocal<SimpleDateFormat>() {
+	private static ThreadLocal<DateFormat> dateFormat = new ThreadLocal<DateFormat>() {
 		@Override
 		protected SimpleDateFormat initialValue() {
 			return new SimpleDateFormat("yyyy.MM.dd HH:mm:ss");
