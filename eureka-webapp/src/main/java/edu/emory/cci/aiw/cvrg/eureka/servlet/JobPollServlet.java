@@ -5,8 +5,6 @@ import java.io.PrintWriter;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.security.Principal;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -26,66 +24,68 @@ import edu.emory.cci.aiw.cvrg.eureka.common.entity.User;
 
 public class JobPollServlet extends HttpServlet {
 
-	@Override
-	public void doGet(HttpServletRequest req, HttpServletResponse resp)
-			throws ServletException, IOException {
+    @Override
+    public void doGet(HttpServletRequest req, HttpServletResponse resp)
+            throws ServletException, IOException {
 
-		String eurekaServicesUrl = req.getSession().getServletContext()
-				.getInitParameter("eureka-services-url");
+        String eurekaServicesUrl = req.getSession().getServletContext()
+                .getInitParameter("eureka-services-url");
 
-		resp.setContentType("application/json");
+        resp.setContentType("application/json");
 
-		try {
-			Client client = CommUtils.getClient();
-			Principal principal = req.getUserPrincipal();
-			String userName = principal.getName();
-					
-			WebResource webResource = client.resource(eurekaServicesUrl);
-			User user = webResource.path("/api/user/byname/"+userName)
-					.accept(MediaType.APPLICATION_JSON).get(User.class);
+        try {
+            Client client = CommUtils.getClient();
+            Principal principal = req.getUserPrincipal();
+            String userName = principal.getName();
 
-			JobInfo jobInfo = webResource
-					.path("/api/job/status/" + user.getId())
-					.accept(MediaType.APPLICATION_JSON).get(JobInfo.class);
-			
-			
-			if (jobInfo.getCurrentStep() == 0) {
-				String emptyJson = "{}";
-				resp.setContentLength(emptyJson.length());
-				PrintWriter out = resp.getWriter();
-				out.println(emptyJson);
-				out.close();
-				out.flush();
-			} else {
-				JobStatus jobStatus = new JobStatus();
-				jobStatus.setCurrentStep(jobInfo.getCurrentStep());
-				jobStatus.setTotalSteps(jobInfo.getTotalSteps());
-				jobStatus.setMessages(jobInfo.getMessages());
-				
-//				Date uploadTime = new Date();
-//				
-//				if (jobInfo.getCurrentStep() < 4 && jobInfo.getFileUpload().getTimestamp() != null)
-//					uploadTime = jobInfo.getFileUpload().getTimestamp();
-//				else if (jobInfo.getCurrentStep() >= 4  && jobInfo.getJob().getTimestamp() != null) {
-//					uploadTime = jobInfo.getJob().getTimestamp();
-//				}
-//				jobStatus.setUploadTime(uploadTime);
-				jobStatus.setUploadTime(jobInfo.getTimestamp());
+            WebResource webResource = client.resource(eurekaServicesUrl);
+            User user = webResource.path("/api/user/byname/" + userName)
+                    .accept(MediaType.APPLICATION_JSON).get(User.class);
 
-				ObjectMapper mapper = new ObjectMapper();				
-				resp.setContentLength(mapper.writeValueAsString(jobStatus).length());
-				PrintWriter out = resp.getWriter();
-				out.println(mapper.writeValueAsString(jobStatus));
-				out.close();
-				out.flush();
-				
-			}
+            JobInfo jobInfo = webResource
+                    .path("/api/job/status/" + user.getId())
+                    .accept(MediaType.APPLICATION_JSON).get(JobInfo.class);
 
-		} catch (NoSuchAlgorithmException nsae) {
-			throw new ServletException(nsae);
-		} catch (KeyManagementException kme) {
-			throw new ServletException(kme);
-		}
+            if (jobInfo.getCurrentStep() == 0) {
+                String emptyJson = "{}";
+                resp.setContentLength(emptyJson.length());
+                PrintWriter out = resp.getWriter();
+                out.println(emptyJson);
+                out.close();
+                out.flush();
+            } else {
+                JobStatus jobStatus = new JobStatus();
+                jobStatus.setCurrentStep(jobInfo.getCurrentStep());
+                jobStatus.setTotalSteps(jobInfo.getTotalSteps());
+                jobStatus.setMessages(jobInfo.getMessages());
 
-	}
+                // Date uploadTime = new Date();
+                //
+                // if (jobInfo.getCurrentStep() < 4 &&
+                // jobInfo.getFileUpload().getTimestamp() != null)
+                // uploadTime = jobInfo.getFileUpload().getTimestamp();
+                // else if (jobInfo.getCurrentStep() >= 4 &&
+                // jobInfo.getJob().getTimestamp() != null) {
+                // uploadTime = jobInfo.getJob().getTimestamp();
+                // }
+                // jobStatus.setUploadTime(uploadTime);
+                jobStatus.setUploadTime(jobInfo.getTimestamp());
+
+                ObjectMapper mapper = new ObjectMapper();
+                resp.setContentLength(mapper.writeValueAsString(jobStatus)
+                        .length());
+                PrintWriter out = resp.getWriter();
+                out.println(mapper.writeValueAsString(jobStatus));
+                out.close();
+                out.flush();
+
+            }
+
+        } catch (NoSuchAlgorithmException nsae) {
+            throw new ServletException(nsae);
+        } catch (KeyManagementException kme) {
+            throw new ServletException(kme);
+        }
+
+    }
 }
