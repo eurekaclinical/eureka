@@ -84,16 +84,9 @@ public class FileResource {
 	@Path("/{id}")
 	@GET
 	@Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
-	public FileUpload getFile(@PathParam("id") final String inId)
+	public FileUpload getFile(@PathParam("id") final Long inId)
 			throws ServletException {
-		Long id;
-		try {
-			id = Long.valueOf(inId);
-		} catch (NumberFormatException nfe) {
-			throw new ServletException(nfe);
-		}
-
-		FileUpload fileUpload = this.fileDao.get(id);
+		FileUpload fileUpload = this.fileDao.get(inId);
 		if (fileUpload == null) {
 			throw new ServletException("Invalid ID");
 		}
