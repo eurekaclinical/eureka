@@ -84,6 +84,15 @@
 		<servlet-class>edu.emory.cci.aiw.cvrg.eureka.servlet.UserAcctManagerServlet</servlet-class>
 		<load-on-startup>1</load-on-startup>
 	</servlet>
+	<servlet>
+		<servlet-name>VerifyUserServlet</servlet-name>
+		<servlet-class>edu.emory.cci.aiw.cvrg.eureka.servlet.VerifyUserServlet</servlet-class>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>VerifyUserServlet</servlet-name>
+		<url-pattern>/verify</url-pattern>
+	</servlet-mapping>	
 	<servlet-mapping>
 		<servlet-name>CommonsFileUploadServlet</servlet-name>
 		<url-pattern>/upload</url-pattern>
