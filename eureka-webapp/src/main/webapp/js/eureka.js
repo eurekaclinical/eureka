@@ -38,13 +38,21 @@ $(document).ready(function() {
 	}
 	
 	if ($("#signupForm").length > 0){
+        $.validator.addMethod("passwordCheck",
+                function(value, element) {
+                    return value.length>= 8 && /[0-9]+/.test(value) && /[a-zA-Z]+/.test(value);
+                },
+                "Please enter at least 8 characters with at least 1 digit."
+        );
+
 		var signupFormValidator = $("#signupForm").validate({
 			rules: {
 				firstName: "required",
 				lastName: "required",
 				password: {
 					required: true,
-					minlength: 8
+					minlength: 8,
+					passwordCheck: true
 				},
 				organization: {
 					required: true
@@ -73,11 +81,11 @@ $(document).ready(function() {
 				organization: "Enter your organization",
 				password: {
 					required: "Provide a password",
-					rangelength: jQuery.format("Enter at least {0} characters")
+					rangelength: jQuery.format("Please enter at least {0} characters")
 				},
 				verifyPassword: {
 					required: "Repeat your password",
-					minlength: jQuery.format("Enter at least {0} characters"),
+					minlength: jQuery.format("Please enter at least {0} characters"),
 					equalTo: "Enter the same password as above"
 				},
 				email: {
