@@ -1,5 +1,6 @@
 package edu.emory.cci.aiw.cvrg.eureka.services.dao;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -115,5 +116,28 @@ public class JpaUserDao implements UserDao {
 					inCode);
 		}
 		return user;
+	}
+
+	@Override
+	public User updateLastLogin(String name, Date inLastLogin) {
+		final Query query = this
+				.getEntityManager()
+				.createQuery("select u from User u where u.email = ?1",
+						User.class).setParameter(1, name);
+		User user = null;
+		try {
+			
+			user = (User) query.getSingleResult();
+			user.setLastLogin(inLastLogin);
+			this.getEntityManager().merge(user);
+			this.getEntityManager().getTransaction().commit();
+			
+		} catch (NoResultException nre) {
+			LOGGER.warn("No result found for user name: {}", name);
+		} catch (NonUniqueResultException nure) {
+			LOGGER.warn("Multiple results found for user name: {}", name);
+		}
+		return user;
+
 	}
 }
