@@ -14,7 +14,7 @@
 				${error}			
 			</c:when>
 			<c:otherwise>
-				<h3>Your registration is now verified.  You may log into Eureka! now.</h3>
+				<h3>Your registration is now verified. Your account will be activated within the next 3 business days. You will be notified by e-mail when activation has occurred. If you do not receive any e-mail, please contact us at <a href="mailto:aiwhelp@emory.edu">aiwhelp@emory.edu</a>.</h3>
 			
 			</c:otherwise>
 		</c:choose>
