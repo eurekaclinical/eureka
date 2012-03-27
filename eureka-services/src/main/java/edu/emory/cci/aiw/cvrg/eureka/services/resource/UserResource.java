@@ -1,9 +1,10 @@
 package edu.emory.cci.aiw.cvrg.eureka.services.resource;
 
+import java.math.BigInteger;
 import java.net.URI;
 import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -48,6 +49,10 @@ public class UserResource {
 	 */
 	private static final Logger LOGGER = LoggerFactory
 			.getLogger(UserResource.class);
+	/**
+	 * A secure random number generator to be used to create passwords.
+	 */
+	private static final SecureRandom RANDOM = new SecureRandom();
 	/**
 	 * Data access object to work with User objects.
 	 */
@@ -319,6 +324,50 @@ public class UserResource {
 		} else {
 			response = Response.status(Status.BAD_REQUEST).entity("Invalid ID")
 					.build();
+		}
+		return response;
+	}
+
+	/**
+	 * Reset the given user's password. The password is randomly generated.
+	 * 
+	 * @param inUsername The username for the user whose password should be
+	 *            reset.
+	 * @return A {@link Status#OK} if the password is reset and email sent,
+	 *         {@link Status#NOT_MODIFIED} if the user can not be found.
+	 * @throws ServletException Thrown if errors occur when resetting the
+	 *             password, or sending an email to the user informing them of
+	 *             the reset.
+	 */
+	@Path("/pwreset/{username}")
+	@GET
+	public Response resetPassword(@PathParam("username") final String inUsername)
+			throws ServletException {
+		Response response;
+		User user = this.userDao.getByName(inUsername);
+		if (user == null) {
+			response = Response.notModified()
+					.entity("No such user: " + inUsername).build();
+		} else {
+			final int length = 15 + RANDOM.nextInt(10);
+			String password = new BigInteger(130, RANDOM).toString(32)
+					.substring(0, length);
+			String passwordHash;
+			try {
+				passwordHash = StringUtil.md5(password);
+			} catch (NoSuchAlgorithmException e) {
+				LOGGER.error(e.getMessage(), e);
+				throw new ServletException(e);
+			}
+			user.setPassword(passwordHash);
+			this.userDao.save(user);
+			try {
+				this.emailSender.sendPasswordResetMessage(user, password);
+			} catch (EmailException e) {
+				LOGGER.error(e.getMessage(), e);
+				throw new ServletException(e);
+			}
+			response = Response.ok().build();
 		}
 		return response;
 	}
