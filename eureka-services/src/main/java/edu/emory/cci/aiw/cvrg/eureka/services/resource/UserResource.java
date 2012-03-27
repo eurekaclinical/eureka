@@ -324,27 +324,6 @@ public class UserResource {
 	}
 
 	/**
-	 * Updates a users last login date
-	 * 
-	 * @param name The name of the user.
-	 * @param lastLoginDate The date the user last logged in
-	 * @return An HTTP OK response if the user is modified, or a server error if
-	 *         the user can not be modified properly.
-	 */
-	@Path("/login/{name}/{date}")
-	@PUT
-	public Response updateLastLogin(@PathParam("name") final String name,
-			@PathParam("date") final Date lastLoginDate) {
-		
-		Response response = Response.ok().build();
-		User updatedUser = this.userDao.updateLastLogin(name, lastLoginDate);
-		if (updatedUser == null) {
-			response = Response.notModified("Invalid user").build();
-		}
-		return response;
-	}
-	
-	/**
 	 * Validate a {@link UserRequest} object. Two rules are implemented: 1) The
 	 * email addresses in the two email fields must match, and 2) The passwords
 	 * in the two password fields must match.
