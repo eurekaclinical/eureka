@@ -1,6 +1,5 @@
 package edu.emory.cci.aiw.cvrg.eureka.services.dao;
 
-import java.util.Date;
 import java.util.List;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.User;
@@ -51,15 +50,6 @@ public interface UserDao {
 	 * @return The user object that corresponds to the given user name.
 	 */
 	User getByName(String name);
-
-	/**
-	 * Updates the last login date for the user.
-	 * 
-	 * @param name The name of the user to update
-	 * @param date The date the user last logged in.
-	 * @return The user object that corresponds to the given user name.
-	 */
-	User updateLastLogin(String name, Date date);
 
 	/**
 	 * Refresh the give user from the database.
