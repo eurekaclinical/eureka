@@ -1,10 +1,4 @@
-package edu.emory.cci.aiw.cvrg.eureka.common.entity;
-
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
-import javax.xml.bind.annotation.XmlRootElement;
+package edu.emory.cci.aiw.cvrg.eureka.common.comm;
 
 /**
  * A bean holding information about a user's registration request.
@@ -12,15 +6,10 @@ import javax.xml.bind.annotation.XmlRootElement;
  * @author hrathod
  * 
  */
-@XmlRootElement
-@Entity
-@Table(name = "user_requests")
 public class UserRequest {
 	/**
 	 * The request's unique identifier.
 	 */
-	@Id
-	@GeneratedValue
 	private Long id;
 	/**
 	 * The user's first name.
@@ -202,7 +191,9 @@ public class UserRequest {
 		this.verifyPassword = inVerifyPassword;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Object#toString()
 	 */
 	@Override
