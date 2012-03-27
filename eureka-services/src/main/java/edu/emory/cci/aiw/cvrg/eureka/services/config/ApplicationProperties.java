@@ -186,6 +186,11 @@ public class ApplicationProperties {
 				.getProperty("eureka.services.email.password.subject");
 	}
 
+	public String getPasswordResetEmailSubject() {
+		return this.properties
+				.getProperty("eureka.services.email.reset.subject");
+	}
+
 	/**
 	 * Utility method to get an int from the properties file.
 	 * 
