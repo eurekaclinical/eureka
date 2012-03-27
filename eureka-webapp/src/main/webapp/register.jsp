@@ -52,7 +52,7 @@
 	  		  </tr>
   			</table>
   	    <div id="passwordChangeFailure">
-        	<h3 id="passwordErrorMessage"></h3>
+        	<p style="text-align:left; padding-left:150px; font-weight:bold; color:#990000;" id="passwordErrorMessage"></p>
     	</div>
 	<div class="small_text pad" style="float:left">
     <p>*Passwords must be at least 8 characters and contain at least one letter & digit
@@ -70,12 +70,12 @@
     </p>
     </div>
 </form>
-	<div id="registrationComplete">
+	<div id="registrationComplete" style="text-align:left; padding-left:150px; font-weight:bold;">
 		<p>
         </br> 
-        <h3>Your request has been successfully submitted.
+        <p> Your request has been successfully submitted.
         </br> You will be notified once your account is activated.
-        </h3></p>
+        </p>
 	</div>
 	</template:content>
 	
