@@ -2,10 +2,12 @@ package edu.emory.cci.aiw.cvrg.eureka.common.entity;
 
 import javax.persistence.CascadeType;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.MappedSuperclass;
+import javax.persistence.SequenceGenerator;
 
 import org.codehaus.jackson.annotate.JsonBackReference;
 
@@ -25,7 +27,10 @@ abstract public class AbstractFileInfo implements CycleRecoverable {
 	 * The unique identifier for the file information.
 	 */
 	@Id
-	@GeneratedValue
+	@SequenceGenerator(name = "FILEINFO_SEQ_GENERATOR",
+			sequenceName = "FILEINFO_SEQ")
+	@GeneratedValue(strategy = GenerationType.SEQUENCE,
+			generator = "FILEINFO_SEQ_GENERATOR")
 	private Long id;
 	/**
 	 * The line number where the information occurred.

@@ -2,7 +2,9 @@ package edu.emory.cci.aiw.cvrg.eureka.common.entity;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlRootElement;
 
@@ -23,7 +25,10 @@ public class Configuration {
 	 * The unique identifier for the configuration.
 	 */
 	@Id
-	@GeneratedValue
+	@SequenceGenerator(name = "CONFIG_SEQ_GENERATOR",
+			sequenceName = "CONFIG_SEQ")
+	@GeneratedValue(strategy = GenerationType.SEQUENCE,
+			generator = "CONFIG_SEQ_GENERATOR")
 	private Long id;
 	/**
 	 * The unique identifier for the owner of this configuration.

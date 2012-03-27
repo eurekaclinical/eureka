@@ -7,10 +7,12 @@ import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -42,7 +44,9 @@ public class FileUpload implements CycleRecoverable {
 	 * The unique identifier for the file upload.
 	 */
 	@Id
-	@GeneratedValue
+	@SequenceGenerator(name = "FILE_SEQ_GENERATOR", sequenceName = "FILE_SEQ")
+	@GeneratedValue(strategy = GenerationType.SEQUENCE,
+			generator = "FILE_SEQ_GENERATOR")
 	private Long id;
 	/**
 	 * The on-disk location of the uploaded file.

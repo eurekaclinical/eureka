@@ -1,13 +1,14 @@
 package edu.emory.cci.aiw.cvrg.eureka.common.entity;
 
-import java.util.Arrays;
 import java.util.Date;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -32,7 +33,10 @@ public class JobEvent implements CycleRecoverable {
 	 * The unique identifier for the job event.
 	 */
 	@Id
-	@GeneratedValue
+	@SequenceGenerator(name = "JOBEVENT_SEQ_GENERATOR",
+			sequenceName = "JOBEVENT_SEQ")
+	@GeneratedValue(strategy = GenerationType.SEQUENCE,
+			generator = "JOBEVENT_SEQ_GENERATOR")
 	private Long id;
 	/**
 	 * The job for which the event was generated.
@@ -158,16 +162,16 @@ public class JobEvent implements CycleRecoverable {
 	 * 
 	 * @see java.lang.Object#toString()
 	 */
-//	@Override
-//	public String toString() {
-//		StringBuilder builder = new StringBuilder();
-//		builder.append("JobEvent [id=").append(this.id).append(", job=")
-//				.append(this.job.getId()).append(", state=").append(this.state)
-//				.append(", exceptionStackTrace=")
-//				.append(Arrays.toString(this.exceptionStackTrace))
-//				.append(", timeStamp=").append(this.timeStamp)
-//				.append(", message=").append(this.message).append("]");
-//		return builder.toString();
-//	}
+	// @Override
+	// public String toString() {
+	// StringBuilder builder = new StringBuilder();
+	// builder.append("JobEvent [id=").append(this.id).append(", job=")
+	// .append(this.job.getId()).append(", state=").append(this.state)
+	// .append(", exceptionStackTrace=")
+	// .append(Arrays.toString(this.exceptionStackTrace))
+	// .append(", timeStamp=").append(this.timeStamp)
+	// .append(", message=").append(this.message).append("]");
+	// return builder.toString();
+	// }
 
 }

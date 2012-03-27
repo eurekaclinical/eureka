@@ -11,8 +11,10 @@ import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -39,7 +41,9 @@ public class Job implements CycleRecoverable {
 	 * The unique identifier for the job request.
 	 */
 	@Id
-	@GeneratedValue
+	@SequenceGenerator(name = "JOB_SEQ_GENERATOR", sequenceName = "JOB_SEQ")
+	@GeneratedValue(strategy = GenerationType.SEQUENCE,
+			generator = "JOB_SEQ_GENERATOR")
 	private Long id;
 	/**
 	 * The initial timestamp when the job was started.

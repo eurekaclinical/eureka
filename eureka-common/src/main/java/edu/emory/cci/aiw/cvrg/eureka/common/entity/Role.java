@@ -5,10 +5,12 @@ import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlRootElement;
 
@@ -31,7 +33,9 @@ public class Role implements CycleRecoverable {
 	 * The role's unique identifier.
 	 */
 	@Id
-	@GeneratedValue
+	@SequenceGenerator(name = "ROLE_SEQ_GENERATOR", sequenceName = "ROLE_SEQ")
+	@GeneratedValue(strategy = GenerationType.SEQUENCE,
+			generator = "ROLE_SEQ_GENERATOR")
 	private Long id;
 	/**
 	 * The role's name.
@@ -136,7 +140,9 @@ public class Role implements CycleRecoverable {
 		return null;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Object#toString()
 	 */
 	@Override
