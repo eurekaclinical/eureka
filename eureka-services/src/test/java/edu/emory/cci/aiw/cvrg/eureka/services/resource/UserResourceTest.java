@@ -12,8 +12,8 @@ import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.ClientResponse.Status;
 import com.sun.jersey.api.client.WebResource;
 
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.UserRequest;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.User;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.UserRequest;
 
 /**
  * Test cases related to the {@link UserResource} class.
@@ -86,7 +86,7 @@ public class UserResourceTest extends AbstractResourceTest {
 		userRequest.setVerifyPassword(verifyPassword);
 
 		ClientResponse response = webResource.path("/api/user/add")
-				.accept(MediaType.TEXT_PLAIN)
+				.type(MediaType.APPLICATION_JSON).accept(MediaType.TEXT_PLAIN)
 				.post(ClientResponse.class, userRequest);
 
 		Assert.assertTrue(response.getClientResponseStatus() == Status.CREATED);
