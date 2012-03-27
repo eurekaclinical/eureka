@@ -90,7 +90,7 @@ public class DdlGenerator {
 	 * @param args Command line arguments to the application. <b>Note:</b> these
 	 *            arguments are currently not utilized.
 	 */
-	public static void main(String[] args) throws Exception {
+	public static void main(String[] args) {
 		generateServiceDdl();
 		generateBackendDdl();
 	}
