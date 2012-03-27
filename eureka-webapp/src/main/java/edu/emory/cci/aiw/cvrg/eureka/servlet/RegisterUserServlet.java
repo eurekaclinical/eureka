@@ -25,7 +25,7 @@ import com.sun.jersey.api.client.config.ClientConfig;
 import com.sun.jersey.api.client.config.DefaultClientConfig;
 import com.sun.jersey.client.urlconnection.HTTPSProperties;
 
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.UserRequest;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.UserRequest;
 
 public class RegisterUserServlet extends HttpServlet {
 
