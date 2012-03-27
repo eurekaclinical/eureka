@@ -25,8 +25,6 @@ import com.sun.jersey.api.client.config.ClientConfig;
 import com.sun.jersey.api.client.config.DefaultClientConfig;
 import com.sun.jersey.client.urlconnection.HTTPSProperties;
 
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.UserRequest;
-
 public class VerifyUserServlet extends HttpServlet {
 
 	private static Logger LOGGER = LoggerFactory.getLogger(VerifyUserServlet.class);
