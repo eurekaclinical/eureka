@@ -57,7 +57,7 @@ public interface UserDao {
 	 * 
 	 * @param name The name of the user to update
 	 * @param date The date the user last logged in.
-	 * @return
+	 * @return The user object that corresponds to the given user name.
 	 */
 	User updateLastLogin(String name, Date date);
 
@@ -67,5 +67,5 @@ public interface UserDao {
 	 * @param user The user to refresh.
 	 */
 	void refresh(User user);
-	
+
 }
