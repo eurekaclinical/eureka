@@ -14,11 +14,16 @@ import javax.ws.rs.core.MediaType;
 
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
+import com.sun.jersey.api.client.ClientResponse.Status;
 import com.sun.jersey.api.client.WebResource;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.CommUtils;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.User;
 
 public class LoginServlet extends HttpServlet {
+
+	private static final String GET_BY_NAME_URL = "/api/user/byname/";
+	private static final String PUT_USER_URL = "/api/user/put";
 
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
@@ -34,11 +39,18 @@ public class LoginServlet extends HttpServlet {
 			String userName = principal.getName();
 
 			WebResource webResource = client.resource(eurekaServicesUrl);
-			// TODO: not currently handling invalid response.
-			ClientResponse response = webResource.path("/api/user/login/" 
-										+ userName+"/"+ new Date())
-					.accept(MediaType.APPLICATION_JSON).get(ClientResponse.class);
-
+			User user = webResource.path(GET_BY_NAME_URL + userName)
+					.accept(MediaType.APPLICATION_JSON).get(User.class);
+			user.setLastLogin(new Date());
+			ClientResponse response = webResource.path(PUT_USER_URL)
+					.type(MediaType.APPLICATION_JSON)
+					.accept(MediaType.APPLICATION_JSON)
+					.put(ClientResponse.class, user);
+			if (response.getClientResponseStatus() != Status.OK) {
+				throw new ServletException(
+						"Could not update user, got response "
+								+ response.getClientResponseStatus().toString());
+			}
 		} catch (KeyManagementException kme) {
 			throw new ServletException(kme);
 
