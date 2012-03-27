@@ -38,4 +38,16 @@ public class MockEmailSender implements EmailSender {
 		// do nothing, we don't want any emails to actually be sent out.
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see edu.emory.cci.aiw.cvrg.eureka.services.email.EmailSender#
+	 * sendPasswordResetMessage
+	 * (edu.emory.cci.aiw.cvrg.eureka.common.entity.User, java.lang.String)
+	 */
+	@Override
+	public void sendPasswordResetMessage(User inUser, String inNewPassword)
+			throws EmailException {
+		// do nothing, we don't want any emails to actually be sent out.
+	}
 }
