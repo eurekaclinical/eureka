@@ -40,4 +40,15 @@ public interface EmailSender {
 	 */
 	public void sendPasswordChangeMessage(User user) throws EmailException;
 
+	/**
+	 * Send a password reset email to the user. The password reset email is sent
+	 * when a user forgets his or her password, and asks the system to reset it.
+	 * 
+	 * @param user The user who is requesting the password reset.
+	 * @param newPassword The new password, before hashing.
+	 * @throws EmailException Thrown if the email can not be sent for any
+	 *             reason.
+	 */
+	public void sendPasswordResetMessage(User user, String newPassword)
+			throws EmailException;
 }

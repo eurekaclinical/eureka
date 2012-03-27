@@ -101,9 +101,47 @@ public class FreeMarkerEmailSender implements EmailSender {
 				this.applicationProperties.getPasswordChangeEmailSubject());
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see edu.emory.cci.aiw.cvrg.eureka.services.email.EmailSender#
+	 * sendPasswordResetMessage
+	 * (edu.emory.cci.aiw.cvrg.eureka.common.entity.User, java.lang.String)
+	 */
+	@Override
+	public void sendPasswordResetMessage(User inUser, String inNewPassword)
+			throws EmailException {
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("plainTextPassword", inNewPassword);
+		sendMessage(inUser, "password_reset.ftl",
+				this.applicationProperties.getPasswordResetEmailSubject());
+	}
+
 	/**
-	 * Send an email to the given use, using contents generated from the given
-	 * template.
+	 * Send an email to the given user with the given subject line, using
+	 * contents generated from the given template.
+	 * 
+	 * @param inUser The user to whom the message should be sent.
+	 * @param templateName The name of the template used to generate the
+	 *            contents of the email.
+	 * @param subject The subject for the email being sent.
+	 * @param params The parameters to be used to substitute values in the email
+	 *            template.
+	 * @throws EmailException Thrown if there are any errors in generating
+	 *             content from the template, composing the email, or sending
+	 *             the email.
+	 */
+	private void sendMessage(final User inUser, final String templateName,
+			final String subject, Map<String, Object> params)
+			throws EmailException {
+		params.put("user", inUser);
+		params.put("config", this.applicationProperties);
+		sendMessage(templateName, subject, inUser.getEmail(), params);
+	}
+
+	/**
+	 * Send an email to the given user with the given subject line, using
+	 * contents generated from the given template.
 	 * 
 	 * @param inUser The user to whom the message should be sent.
 	 * @param templateName The name of the template used to generate the
@@ -116,8 +154,26 @@ public class FreeMarkerEmailSender implements EmailSender {
 	private void sendMessage(final User inUser, final String templateName,
 			final String subject) throws EmailException {
 		Map<String, Object> params = new HashMap<String, Object>();
-		params.put("user", inUser);
-		params.put("config", this.applicationProperties);
+		sendMessage(inUser, templateName, subject, params);
+	}
+
+	/**
+	 * Send an email to the given email address with the given subject line,
+	 * using contents generated from the given template and parameters.
+	 * 
+	 * @param templateName The name of the template used to generate the
+	 *            contents of the email.
+	 * @param subject The subject for the email being sent.
+	 * @param emailAddress Sends the email to this address.
+	 * @param params The template is merged with these parameters to generate
+	 *            the content of the email.
+	 * @throws EmailException Thrown if there are any errors in generating
+	 *             content from the template, composing the email, or sending
+	 *             the email.
+	 */
+	private void sendMessage(final String templateName, final String subject,
+			final String emailAddress, final Map<String, Object> params)
+			throws EmailException {
 		Writer stringWriter = new StringWriter();
 		try {
 			Template template = this.configuration.getTemplate(templateName);
@@ -134,7 +190,7 @@ public class FreeMarkerEmailSender implements EmailSender {
 			message.setSubject(subject);
 			message.setContent(content, "text/plain");
 			message.addRecipient(Message.RecipientType.TO, new InternetAddress(
-					inUser.getEmail()));
+					emailAddress));
 			Transport.send(message);
 		} catch (AddressException e) {
 			throw new EmailException(e);
