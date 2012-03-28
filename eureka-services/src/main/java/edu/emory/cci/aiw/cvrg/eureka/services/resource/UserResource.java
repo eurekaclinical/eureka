@@ -253,6 +253,8 @@ public class UserResource {
 		Response response;
 		User currentUser = this.userDao.getById(inUser.getId());
 		this.userDao.refresh(currentUser);
+		boolean activation = (!currentUser.isActive())
+				&& (inUser.isActive());
 		List<Role> roles = inUser.getRoles();
 		List<Role> updatedRoles = new ArrayList<Role>();
 		for (Role r : roles) {
@@ -268,8 +270,6 @@ public class UserResource {
 			LOGGER.debug("Saving updated user: {}", currentUser);
 			this.userDao.save(currentUser);
 
-			boolean activation = (!currentUser.isActive())
-					&& (inUser.isActive());
 			if (activation) {
 				try {
 					this.emailSender.sendActivationMessage(currentUser);
