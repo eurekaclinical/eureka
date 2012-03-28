@@ -20,9 +20,9 @@
 
 			<table>
 				<tr>
-					<td width="152">Job Status</td>
-					<td width="104">Status Date</td>
-					<td width="51">Errors</td>
+					<td width="252">Job Status</td>
+					<td width="204">Status Date</td>
+					<td width="151">Errors</td>
 				</tr>
 				<tr>
 					<td>
