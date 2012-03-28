@@ -172,7 +172,7 @@ a:visited {
 	margin-bottom:58px;
 }
 table {
-	width:650px;
+	width:inherit;
 	align:center;
 	margin: 10px;
     border-spacing: 0;

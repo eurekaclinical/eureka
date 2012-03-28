@@ -17,16 +17,16 @@
 				<table id="userAcctTable">
 					<tr>
 						<td width="124">Name:</td>
-						<td width="465" colspan="4">${user.firstName}
+						<td width="465" colspan="3">${user.firstName}
 							${user.lastName}</td>
 					</tr>
 					<tr>
 						<td>Organization:</td>
-						<td colspan="4">${user.organization}</td>
+						<td colspan="3">${user.organization}</td>
 					</tr>
 					<tr>
 						<td>Email:</td>
-						<td colspan="4">${user.email}</td>
+						<td colspan="3">${user.email}</td>
 					</tr>
 					<!--  
 					<tr>
@@ -37,7 +37,7 @@
 					-->
 					<tr>
 						<td>&nbsp;</td>
-						<td colspan="4">
+						<td colspan="3">
 							<!--
 					<a href="edit_acct.html"><img src="${pageContext.request.contextPath}/images/edit_btn.gif"
                         width="33" height="19" alt="Change Password" id="editAcctBtn"/></a>
