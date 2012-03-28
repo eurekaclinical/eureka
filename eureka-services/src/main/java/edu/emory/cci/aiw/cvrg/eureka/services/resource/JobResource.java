@@ -157,6 +157,7 @@ public class JobResource {
 		} else {
 			List<FileUpload> fileUploads = this.fileDao.getByUserId(userId);
 			for (FileUpload fileUpload : fileUploads) {
+				this.fileDao.refresh(fileUpload);
 				if (latestFileUpload == null) {
 					latestFileUpload = fileUpload;
 				} else {
