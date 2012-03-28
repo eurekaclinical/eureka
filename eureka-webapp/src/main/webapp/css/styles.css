@@ -134,7 +134,7 @@ a:visited {
 	margin: 0 5px 5px 5px;
 	border: 1px solid #CCC;
 	background-color:#FFF;
-	height:196px;
+	height:190px;
 	overflow:hidden;
 }
 
@@ -282,4 +282,7 @@ td
 }
 .help {
 	overflow:auto;
+}
+.shift_left{
+	padding-left:-50px;
 }
