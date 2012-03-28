@@ -25,6 +25,7 @@ import com.sun.jersey.api.client.config.ClientConfig;
 import com.sun.jersey.api.client.config.DefaultClientConfig;
 import com.sun.jersey.client.urlconnection.HTTPSProperties;
 
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.CommUtils;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.UserRequest;
 
 public class RegisterUserServlet extends HttpServlet {
@@ -43,7 +44,7 @@ public class RegisterUserServlet extends HttpServlet {
 
 		Client c;
 		try {
-			c = this.getClient();
+			c = CommUtils.getClient();
 
 			String eurekaServicesUrl = req.getSession().getServletContext()
 					.getInitParameter("eureka-services-url");
@@ -92,35 +93,5 @@ public class RegisterUserServlet extends HttpServlet {
 		} catch (NoSuchAlgorithmException e) {
 			e.printStackTrace();
 		}
-	}
-
-	private Client getClient() throws KeyManagementException,
-			NoSuchAlgorithmException {
-		TrustManager trustManager = new X509TrustManager() {
-
-			@Override
-			public X509Certificate[] getAcceptedIssuers() {
-				return null;
-			}
-
-			@Override
-			public void checkServerTrusted(X509Certificate[] inArg0,
-					String inArg1) throws CertificateException {
-				// nothing todo
-			}
-
-			@Override
-			public void checkClientTrusted(X509Certificate[] inArg0,
-					String inArg1) throws CertificateException {
-				// nothing to do
-			}
-		};
-		ClientConfig clientConfig = new DefaultClientConfig();
-		SSLContext sslContext = SSLContext.getInstance("SSLv3");
-		sslContext.init(null, new TrustManager[] { trustManager }, null);
-		clientConfig.getProperties().put(
-				HTTPSProperties.PROPERTY_HTTPS_PROPERTIES,
-				new HTTPSProperties(null, sslContext));
-		return new Client().create(clientConfig);
 	}
 }
