@@ -101,40 +101,28 @@ public class JobTask implements Runnable {
 				// first we make sure that the file is validated
 				DataProvider dataProvider = new XlsxDataProvider(
 						this.fileUpload);
-				if (this.validateUpload(dataProvider)) {
-					LOGGER.debug("Data file validated: {}",
-							this.fileUpload.getLocation());
-					this.fileUpload.setValidated(true);
-					this.fileDao.save(this.fileUpload);
-					// then we make sure the file is processed
-					if (this.processUpload(dataProvider)) {
-						LOGGER.debug("Data file processed");
-						this.fileUpload.setProcessed(true);
-						this.fileDao.save(this.fileUpload);
-						// finally, we submit the job
-						if (this.submitJob()) {
-							LOGGER.debug("Job submitted");
-							this.fileUpload.setCompleted(true);
-							this.fileDao.save(this.fileUpload);
-						} else {
-							this.setCompleteWithError("Job could not be submitted properly");
-						}
-					} else {
-						this.setCompleteWithError("Data could not be processed");
-					}
-				} else {
-					this.setCompleteWithError("Invalid data file");
-				}
+				this.validateUpload(dataProvider);
+				LOGGER.debug("Data file validated: {}",
+						this.fileUpload.getLocation());
+				this.fileUpload.setValidated(true);
+				this.fileDao.save(this.fileUpload);
+
+				// then we make sure the file is processed
+				this.processUpload(dataProvider);
+				LOGGER.debug("Data file processed");
+				this.fileUpload.setProcessed(true);
+				this.fileDao.save(this.fileUpload);
+
+				// finally, we submit the job
+				this.submitJob();
+				LOGGER.debug("Job submitted");
+				this.fileUpload.setCompleted(true);
+				this.fileDao.save(this.fileUpload);
+
 			} catch (DataProviderException e) {
 				LOGGER.error(e.getMessage(), e);
 				this.setCompleteWithError(e.getMessage());
-			} catch (KeyManagementException e) {
-				LOGGER.error(e.getMessage(), e);
-				this.setCompleteWithError(e.getMessage());
-			} catch (NoSuchAlgorithmException e) {
-				LOGGER.error(e.getMessage(), e);
-				this.setCompleteWithError(e.getMessage());
-			} catch (SQLException e) {
+			} catch (TaskException e) {
 				LOGGER.error(e.getMessage(), e);
 				this.setCompleteWithError(e.getMessage());
 			}
@@ -147,9 +135,10 @@ public class JobTask implements Runnable {
 	 * Validate the data provided by the given data provider.
 	 * 
 	 * @param dataProvider Used to fetch the data to validate.
-	 * @return True if the data is valid, false otherwise.
+	 * @throws TaskException Thrown if there are any errors while validating the
+	 *             data.
 	 */
-	private boolean validateUpload(DataProvider dataProvider) {
+	private void validateUpload(DataProvider dataProvider) throws TaskException {
 		DataValidator dataValidator = new DataValidator();
 		dataValidator.setPatients(dataProvider.getPatients())
 				.setEncounters(dataProvider.getEncounters())
@@ -183,57 +172,81 @@ public class JobTask implements Runnable {
 				}
 			}
 		}
-		return !this.fileUpload.containsErrors();
+		if (this.fileUpload.containsErrors()) {
+			throw new TaskException("Invalid date file.");
+		}
 	}
 
 	/**
 	 * Process the uploaded file into the data base, to be used by Protempa.
 	 * 
 	 * @param dataProvider The data provider to get the data from.
-	 * @return True if the data is successfully processed into the database,
-	 *         false otherwise.
-	 * @throws KeyManagementException thrown by the secure restful client.
-	 * @throws NoSuchAlgorithmException thrown by the secure restful client
-	 * @throws SQLException Thrown by JDBC if any of the insert queries can not
-	 *             be completed successfully.
+	 * @throws TaskException Thrown if there are errors while fetching the user
+	 *             configuration, or while inserting data into the data source.
 	 */
-	private boolean processUpload(DataProvider dataProvider)
-			throws KeyManagementException, NoSuchAlgorithmException,
-			SQLException {
-		boolean result = true;
-		DataInserter dataInserter = new DataInserter(
-				this.getUserConfiguration());
-		dataInserter.insertPatients(dataProvider.getPatients());
-		dataInserter.insertEncounters(dataProvider.getEncounters());
-		dataInserter.insertProviders(dataProvider.getProviders());
-		dataInserter.insertCptCodes(dataProvider.getCptCodes());
-		dataInserter.insertIcd9Diagnoses(dataProvider.getIcd9Diagnoses());
-		dataInserter.insertIcd9Procedures(dataProvider.getIcd9Procedures());
-		dataInserter.insertLabs(dataProvider.getLabs());
-		dataInserter.insertMedications(dataProvider.getMedications());
-		dataInserter.insertVitals(dataProvider.getVitals());
-		return result;
+	private void processUpload(DataProvider dataProvider) throws TaskException {
+		Configuration conf;
+		try {
+			conf = this.getUserConfiguration();
+		} catch (KeyManagementException e) {
+			throw new TaskException(e);
+		} catch (NoSuchAlgorithmException e) {
+			throw new TaskException(e);
+		}
+
+		if (conf != null) {
+			try {
+				DataInserter dataInserter = new DataInserter(conf);
+				dataInserter.insertPatients(dataProvider.getPatients());
+				dataInserter.insertEncounters(dataProvider.getEncounters());
+				dataInserter.insertProviders(dataProvider.getProviders());
+				dataInserter.insertCptCodes(dataProvider.getCptCodes());
+				dataInserter.insertIcd9Diagnoses(dataProvider
+						.getIcd9Diagnoses());
+				dataInserter.insertIcd9Procedures(dataProvider
+						.getIcd9Procedures());
+				dataInserter.insertLabs(dataProvider.getLabs());
+				dataInserter.insertMedications(dataProvider.getMedications());
+				dataInserter.insertVitals(dataProvider.getVitals());
+			} catch (SQLException e) {
+				throw new TaskException(e);
+			}
+		} else {
+			throw new TaskException("Received null configuration!");
+		}
 	}
 
 	/**
 	 * Submit a new job to the back-end after validating and processing the file
 	 * upload.
 	 * 
-	 * @return True if the job is submitted successfully, false otherwise.
-	 * @throws KeyManagementException Thrown by the secure client.
-	 * @throws NoSuchAlgorithmException Thrown by the secure client.
+	 * @throws TaskException Thrown if there are any errors in submitting the
+	 *             job to the ETL layer.
+	 * 
 	 */
-	private boolean submitJob() throws KeyManagementException,
-			NoSuchAlgorithmException {
-		Client client = CommUtils.getClient();
+	private void submitJob() throws TaskException {
+		Client client;
+		Configuration conf;
+		try {
+			client = CommUtils.getClient();
+			conf = this.getUserConfiguration();
+		} catch (KeyManagementException e) {
+			throw new TaskException(e);
+		} catch (NoSuchAlgorithmException e) {
+			throw new TaskException(e);
+		}
+
 		WebResource resource = client.resource(this.applicationProperties
 				.getEtlJobSubmitUrl());
 		Job job = new Job();
-		job.setConfigurationId(this.getUserConfiguration().getId());
+		job.setConfigurationId(conf.getId());
 		job.setUserId(this.fileUpload.getUser().getId());
 		Job resultJob = resource.type(MediaType.APPLICATION_JSON)
 				.accept(MediaType.APPLICATION_JSON).post(Job.class, job);
-		return resultJob.getCurrentState().equals("CREATED");
+
+		if (!resultJob.getCurrentState().equals("CREATED")) {
+			throw new TaskException("Error starting job in ETL layer!");
+		}
 	}
 
 	/**
@@ -260,34 +273,10 @@ public class JobTask implements Runnable {
 					ClientResponse.class);
 			LOGGER.debug("Configuration get response: {}",
 					response.getClientResponseStatus());
-			// TODO: REMOVE THIS AFTER THE REAL CONFIGURATION DATABASE IS SET
-			// UP.
 			if (response.getClientResponseStatus() == Status.OK) {
 				result = response.getEntity(Configuration.class);
 			} else {
-				// send a fake configuration over.
-				Configuration fakeConf = new Configuration();
-				fakeConf.setUserId(userId);
-				fakeConf.setProtempaHost("cvrgdev0.cci.emory.edu");
-				fakeConf.setProtempaPort(Integer.valueOf(1521));
-				fakeConf.setProtempaDatabaseName("cvrgdev");
-				fakeConf.setProtempaSchema("protempa_user_" + userId);
-				fakeConf.setProtempaPass("NOT_USED_" + userId);
-				resource = client.resource(this.applicationProperties
-						.getEtlConfSubmitUrl());
-				response = resource.type(MediaType.APPLICATION_JSON).post(
-						ClientResponse.class, fakeConf);
-				LOGGER.debug("Configuration send result: {}",
-						response.getClientResponseStatus());
-				result = fakeConf;
-
-				resource = client.resource(this.applicationProperties
-						.getEtlConfGetUrl() + "/" + userId);
-				response = resource.accept(MediaType.APPLICATION_JSON).get(
-						ClientResponse.class);
-				if (response.getClientResponseStatus() == Status.OK) {
-					result = response.getEntity(Configuration.class);
-				}
+				result = null;
 			}
 			this.configuration = result;
 		}
