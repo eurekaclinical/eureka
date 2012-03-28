@@ -316,11 +316,13 @@ $(document).ready(function() {
 
 						if (data['currentStep'] != undefined) {
 							if (data['currentStep'] < data['totalSteps']) {
+								$('#uploadButton').attr('disabled', true);
 								$('#status').text(
 										data['currentStep'] + " out of "
 												+ data['totalSteps']);
 			                    $('#jobUpload').show();
 							} else {
+								$('#uploadButton').attr('disabled', false);
 								$('#status').text('Complete');
 			                    			$('#jobUpload').hide();
 
@@ -338,6 +340,7 @@ $(document).ready(function() {
 								$('#messages').text(data['messages'][0]);
 							}
 						} else {
+							$('#uploadButton').attr('disabled', false);
 							$('#status').text('No jobs have been submitted.');
 							$('#statusDate').empty();
 							$('#messages').empty();
