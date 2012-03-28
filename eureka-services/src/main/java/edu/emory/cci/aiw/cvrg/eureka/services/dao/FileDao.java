@@ -31,6 +31,13 @@ public interface FileDao {
 	public FileUpload get(Long inId);
 
 	/**
+	 * Refreshes the given file upload object from the database.
+	 * 
+	 * @param fileUpload The object to refresh from the data base.
+	 */
+	public void refresh(FileUpload fileUpload);
+
+	/**
 	 * Get all the file uploads for the user corresponding to the given unique
 	 * identifier.
 	 * 

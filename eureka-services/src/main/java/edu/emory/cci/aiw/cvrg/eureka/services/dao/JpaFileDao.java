@@ -48,7 +48,14 @@ public class JpaFileDao implements FileDao {
 	@Override
 	@Transactional
 	public void save(FileUpload fileUpload) {
-		getEntityManager().persist(fileUpload);
+		EntityManager entityManager = this.getEntityManager();
+		entityManager.persist(fileUpload);
+		entityManager.flush();
+	}
+	
+	@Override
+	public void refresh(FileUpload inFileUpload) {
+		this.getEntityManager().refresh(inFileUpload);
 	}
 
 	@Override
