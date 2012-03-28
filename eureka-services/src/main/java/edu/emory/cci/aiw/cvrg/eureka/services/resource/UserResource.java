@@ -277,8 +277,7 @@ public class UserResource {
 					LOGGER.error(ee.getMessage(), ee);
 				}
 			}
-			response = Response.created(URI.create("/" + currentUser.getId()))
-					.build();
+			response = Response.ok().build();
 		} else {
 			response = Response.notModified(this.validationError).build();
 		}
