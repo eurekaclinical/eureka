@@ -40,7 +40,7 @@
 
 
 			<div class="pad_rt pad_top" align="right">
-				<br /> <br /> <input type="file" name="uploadFileName" id="uploadButton"
+				<br /> <br /> <input type="file" name="uploadFileName" id="browseButton"
 					value="Browse" /> <input type="submit" id="button" value="Upload"
 					disabled> <br /> <br /> <a
 					href="${pageContext.request.contextPath}/docs/sample.xlsx">Download
