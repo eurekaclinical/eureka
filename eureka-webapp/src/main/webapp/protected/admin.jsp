@@ -85,6 +85,11 @@
    			</td>
       	</tr>
       </c:forEach>
+      <tr>
+      <td colspan="6">
+      *Click on a users name to edit their role and/or information
+      </td>
+      </tr>
     </table>
 <!--     
  We aren't using the edit button

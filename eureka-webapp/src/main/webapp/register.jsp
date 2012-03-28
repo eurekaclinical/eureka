@@ -11,7 +11,7 @@
 	<template:content name="content">
 
     <h3 id="registerHeading">Register</h3>
-    <p><span class="pad">*Disclaimer: Loading real patient data into the system is strictly prohibited. </span></p>
+    <p><span class="pad"><b>*Disclaimer: Loading real patient data into the system is strictly prohibited.</b> </span></p>
 <form id="signupForm" action="#" method="post" class="pad">
 
 	  		  <table class="white">
@@ -59,13 +59,10 @@
 	<br/>
 	<input type="checkbox" name="agreement" id="agreement" style="padding:0px" />
     <label for="checkbox" style="display: inline">
-    	<a href="end_user.jsp">End User Agreement</a>
+    	<a style="pad" href="end_user.jsp">End User Agreement</a>
     </label>
-    &nbsp;&nbsp;
-    <input type="checkbox" name="checkbox" id="checkbox" style="padding:0px" />
-    <label for="checkbox" style="display: inline">Click here to join our mailing list</label>
-   &nbsp;
-    <button id="submit" type="submit" class="btn btn-primary submit">Submit</button>
+    &nbsp;&nbsp;&nbsp;
+<button id="submit" type="submit" class="btn btn-primary submit">Submit</button>
     <br />
     </p>
     </div>
