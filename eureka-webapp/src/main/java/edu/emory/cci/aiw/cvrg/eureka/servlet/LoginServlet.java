@@ -44,7 +44,7 @@ public class LoginServlet extends HttpServlet {
 			user.setLastLogin(new Date());
 			ClientResponse response = webResource.path(PUT_USER_URL)
 					.type(MediaType.APPLICATION_JSON)
-					.accept(MediaType.APPLICATION_JSON)
+					.accept(MediaType.TEXT_PLAIN)
 					.put(ClientResponse.class, user);
 			if (response.getClientResponseStatus() != Status.OK) {
 				throw new ServletException(
