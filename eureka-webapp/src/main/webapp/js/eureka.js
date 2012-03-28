@@ -10,6 +10,12 @@ $(document).ready(function() {
 	    emptyResult: 'Empty file upload result'
 	};
 	
+    $.validator.addMethod("passwordCheck",
+            function(value, element) {
+                return value.length>= 8 && /[0-9]+/.test(value) && /[a-zA-Z]+/.test(value);
+            },
+            "Please enter at least 8 characters with at least 1 digit."
+    );
 	
 	if ($("#editUserForm").length > 0){
 		var editUserFormValidator = $("#editUserForm").validate({
@@ -38,12 +44,7 @@ $(document).ready(function() {
 	}
 	
 	if ($("#signupForm").length > 0){
-        $.validator.addMethod("passwordCheck",
-                function(value, element) {
-                    return value.length>= 8 && /[0-9]+/.test(value) && /[a-zA-Z]+/.test(value);
-                },
-                "Please enter at least 8 characters with at least 1 digit."
-        );
+
 
 		var signupFormValidator = $("#signupForm").validate({
 			rules: {
@@ -187,7 +188,8 @@ $(document).ready(function() {
 					},
 					newPassword: {
 						required: true,
-						minlength: 8
+						minlength: 8,
+						passwordCheck: true
 					},
 					verifyPassword: {
 						required: true,
@@ -196,14 +198,14 @@ $(document).ready(function() {
 					}
 				},
 				messages: {
-					oldPassword: "Enter your old password",
+					oldPassword: "Please enter your old password",
 					newPassword: {
 						required: "Provide a password",
-						rangelength: jQuery.format("Enter at least {0} characters")
+						rangelength: jQuery.format("Please enter at least {0} characters")
 					},
 					verifyPassword: {
 						required: "Repeat your password",
-						minlength: jQuery.format("Enter at least {0} characters"),
+						minlength: jQuery.format("Please enter at least {0} characters"),
 						equalTo: "Enter the same password as above"
 					}
 				},
