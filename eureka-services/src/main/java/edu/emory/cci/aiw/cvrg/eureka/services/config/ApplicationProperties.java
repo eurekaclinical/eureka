@@ -186,6 +186,11 @@ public class ApplicationProperties {
 				.getProperty("eureka.services.email.password.subject");
 	}
 
+	/**
+	 * Gets the subject line for a password reset email.
+	 * 
+	 * @return The subject line.
+	 */
 	public String getPasswordResetEmailSubject() {
 		return this.properties
 				.getProperty("eureka.services.email.reset.subject");
