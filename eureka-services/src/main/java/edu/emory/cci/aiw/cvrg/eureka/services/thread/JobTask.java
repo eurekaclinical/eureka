@@ -173,7 +173,7 @@ public class JobTask implements Runnable {
 			}
 		}
 		if (this.fileUpload.containsErrors()) {
-			throw new TaskException("Invalid date file.");
+			throw new TaskException("Invalid data file.");
 		}
 	}
 
