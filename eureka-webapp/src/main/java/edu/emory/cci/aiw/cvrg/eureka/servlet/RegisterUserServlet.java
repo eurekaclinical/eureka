@@ -68,6 +68,7 @@ public class RegisterUserServlet extends HttpServlet {
 			userRequest.setPassword(password);
 
 			ClientResponse response = webResource.path("/api/user/add")
+					.type(MediaType.APPLICATION_JSON)
 					.accept(MediaType.TEXT_PLAIN)
 					.post(ClientResponse.class, userRequest);
 			
