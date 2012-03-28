@@ -84,6 +84,7 @@ public class AuthorizationFilter implements Filter {
 						LOGGER.debug("uriRole: {}, uriRole: {}", reqUri, userRole);
 						if (userRole.equals(uriRole)) {
 							inChain.doFilter(inRequest, inResponse);
+                            return;
 						}
 					}
 				}
