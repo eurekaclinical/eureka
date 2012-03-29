@@ -270,9 +270,17 @@ td
 	font-size:9px;
 	font-style: italic;
 }
-.error {
-	color:#990000;
+.shift_left{
+	text-align:left;
+}
+td .error {
+	color:#F00;
 }
 .success {
 	color:#0C0;
+}
+.pw_fail {
+	text-align:left; 
+	padding-left:150px; 
+	font-weight:bold; 
 }

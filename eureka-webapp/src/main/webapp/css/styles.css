@@ -284,11 +284,16 @@ td
 	overflow:auto;
 }
 .shift_left{
-	padding-left:-50px;
+	text-align:left;
 }
-.error {
-	color:#990000;
+td .error {
+	color: #F00;
 }
 .success {
 	color:#0C0;
+}
+.pw_fail {
+	text-align:left; 
+	padding-left:150px; 
+	font-weight:bold; 
 }
