@@ -286,3 +286,9 @@ td
 .shift_left{
 	padding-left:-50px;
 }
+.error {
+	color:#990000;
+}
+.success {
+	color:#0C0;
+}

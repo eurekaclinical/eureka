@@ -270,3 +270,9 @@ td
 	font-size:9px;
 	font-style: italic;
 }
+.error {
+	color:#990000;
+}
+.success {
+	color:#0C0;
+}
