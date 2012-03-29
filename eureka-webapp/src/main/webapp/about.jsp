@@ -44,7 +44,7 @@
 				<img src="${pageContext.request.contextPath}/images/rss.png"
 					border="0" /> Related News <a href="xml/rss_news.xml" class="rss"></a>
 			</h3>
-<script language="JavaScript" src="http://feed2js.org//feed2js.php?src=http%3A%2F%2Fwww.emory.edu%2Fhome%2Fnews%2Freleases%2Fresearch.xml&chan=title&num=3&desc=1&utf=y"  charset="UTF-8" type="text/javascript"></script>
+<script language="JavaScript" src="http://feed2js.org//feed2js.php?src=http%3A%2F%2Fwww.emory.edu%2Fhome%2Fnews%2Freleases%2Fresearch.xml&chan=title&num=3&desc=1&utf=n"  charset="UTF-8" type="text/javascript"></script>
 
 <noscript>
 <a href="http://feed2js.org//feed2js.php?src=http%3A%2F%2Fwww.emory.edu%2Fhome%2Fnews%2Freleases%2Fresearch.xml&chan=title&num=3&desc=1&utf=y&html=y">View RSS feed</a>
