@@ -119,8 +119,15 @@ ul.nav a { zoom: 1; }
    <div class="sub-content">
 		<template:get name="subcontent" />
         <!--[if lte IE 9]>
-
-<div class="release_notes sub_width" style="position: absolute; top: 590px; left: 10px; background-color:#fff; overflow: hidden;">
+      		<div class="release_notes sub_width" style="position: absolute; top: 570px; left: 10px; background-color:#fff;">
+			<p>03.31.2012 : Eureka! Release</p>
+            <p>03.15.2012 : QA Analysis</p>
+			<p>03.03.2012 : Protempa Code Reviewed</p>
+			<p>02.20.2012 : Multiple User Testing</p>
+			<p>02.12.2012 : Integration of i2b2</p>
+            <p>02.05.2012 : Email Functionality Set-up</p>
+		</div>
+		<div class="release_notes sub_width" style="position: absolute; top: 570px; left: 280px; background-color:#fff;">
 			<p>01.05.2012 : eureka.cci.emory.edu established</p>
 			<p>01.09.2012 : Front-end/Back-end Combined</p>
 			<p>01.20.2012 : Login Procedure in Place</p>
@@ -128,7 +135,7 @@ ul.nav a { zoom: 1; }
             <p>01.29.2012 : Backend Installations on Server</p>
 			<p>02.03.2012 : Upload Data Functionality</p>
 		</div>
-		<div class="release_notes sub_width" style="position: absolute; top: 590px; left: 355px; background-color:#fff; overflow: hidden;">
+		<div class="release_notes sub_width" style="position: absolute; top: 570px; left: 600px; background-color:#fff;">
 			<p>12.05.2011 : Login Process Underway</p>
 			<p>12.02.2011 : Core UI Design Prototype Created</p>
 			<p>11.29.2011 : Technology Recommendations</p>
@@ -136,7 +143,7 @@ ul.nav a { zoom: 1; }
 			<p>11.18.2011 : Business Requirements Published</p>
 			<p>11.15.2011 : Data Analysis Tool Named Eureka!</p>
 		</div>
-		<div class="release_notes sub_width" style="position: absolute; top: 590px; left: 715px; background-color:#fff; overflow: hidden;">
+		<div class="release_notes sub_width" style="position: absolute; top: 570px; left:920px; background-color:#fff;">
 			<p>11.14.2011 : Data Analysis Tool Lands a New Name</p>
 			<p>11.01.2011 : Data Analysis Tool Demo VM Launched</p>
 			<p>11.01.2011 : Data Architecture Defined</p>
