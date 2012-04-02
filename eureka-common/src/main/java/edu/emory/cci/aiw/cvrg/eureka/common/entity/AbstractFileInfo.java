@@ -28,7 +28,7 @@ abstract public class AbstractFileInfo implements CycleRecoverable {
 	 */
 	@Id
 	@SequenceGenerator(name = "FILEINFO_SEQ_GENERATOR",
-			sequenceName = "FILEINFO_SEQ")
+			sequenceName = "FILEINFO_SEQ", allocationSize = 1)
 	@GeneratedValue(strategy = GenerationType.SEQUENCE,
 			generator = "FILEINFO_SEQ_GENERATOR")
 	private Long id;

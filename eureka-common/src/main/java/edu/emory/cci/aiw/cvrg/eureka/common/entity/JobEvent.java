@@ -35,7 +35,7 @@ public class JobEvent implements CycleRecoverable {
 	 */
 	@Id
 	@SequenceGenerator(name = "JOBEVENT_SEQ_GENERATOR",
-			sequenceName = "JOBEVENT_SEQ")
+			sequenceName = "JOBEVENT_SEQ", allocationSize = 1)
 	@GeneratedValue(strategy = GenerationType.SEQUENCE,
 			generator = "JOBEVENT_SEQ_GENERATOR")
 	private Long id;

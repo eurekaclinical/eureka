@@ -41,7 +41,8 @@ public class Job implements CycleRecoverable {
 	 * The unique identifier for the job request.
 	 */
 	@Id
-	@SequenceGenerator(name = "JOB_SEQ_GENERATOR", sequenceName = "JOB_SEQ")
+	@SequenceGenerator(name = "JOB_SEQ_GENERATOR", sequenceName = "JOB_SEQ",
+			allocationSize = 1)
 	@GeneratedValue(strategy = GenerationType.SEQUENCE,
 			generator = "JOB_SEQ_GENERATOR")
 	private Long id;
@@ -65,7 +66,8 @@ public class Job implements CycleRecoverable {
 			fetch = FetchType.EAGER, mappedBy = "job")
 	private List<JobEvent> jobEvents = new ArrayList<JobEvent>();
 
-	private static class JobEventComparator implements Comparator<JobEvent>, Serializable {
+	private static class JobEventComparator implements Comparator<JobEvent>,
+			Serializable {
 
 		private static final long serialVersionUID = -1597150892714722679L;
 

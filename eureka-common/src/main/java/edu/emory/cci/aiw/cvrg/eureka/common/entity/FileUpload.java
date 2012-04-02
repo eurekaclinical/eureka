@@ -44,7 +44,8 @@ public class FileUpload implements CycleRecoverable {
 	 * The unique identifier for the file upload.
 	 */
 	@Id
-	@SequenceGenerator(name = "FILE_SEQ_GENERATOR", sequenceName = "FILE_SEQ")
+	@SequenceGenerator(name = "FILE_SEQ_GENERATOR", sequenceName = "FILE_SEQ",
+			allocationSize = 1)
 	@GeneratedValue(strategy = GenerationType.SEQUENCE,
 			generator = "FILE_SEQ_GENERATOR")
 	private Long id;

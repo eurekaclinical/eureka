@@ -39,7 +39,8 @@ public class User implements CycleRecoverable {
 	 * The user's unique identifier.
 	 */
 	@Id
-	@SequenceGenerator(name = "USER_SEQ_GENERATOR", sequenceName = "USER_SEQ")
+	@SequenceGenerator(name = "USER_SEQ_GENERATOR", sequenceName = "USER_SEQ",
+			allocationSize = 1)
 	@GeneratedValue(strategy = GenerationType.SEQUENCE,
 			generator = "USER_SEQ_GENERATOR")
 	private Long id;

@@ -33,7 +33,8 @@ public class Role implements CycleRecoverable {
 	 * The role's unique identifier.
 	 */
 	@Id
-	@SequenceGenerator(name = "ROLE_SEQ_GENERATOR", sequenceName = "ROLE_SEQ")
+	@SequenceGenerator(name = "ROLE_SEQ_GENERATOR", sequenceName = "ROLE_SEQ",
+			allocationSize = 1)
 	@GeneratedValue(strategy = GenerationType.SEQUENCE,
 			generator = "ROLE_SEQ_GENERATOR")
 	private Long id;

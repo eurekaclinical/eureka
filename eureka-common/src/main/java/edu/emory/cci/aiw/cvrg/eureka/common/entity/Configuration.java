@@ -26,7 +26,7 @@ public class Configuration {
 	 */
 	@Id
 	@SequenceGenerator(name = "CONFIG_SEQ_GENERATOR",
-			sequenceName = "CONFIG_SEQ")
+			sequenceName = "CONFIG_SEQ", allocationSize = 1)
 	@GeneratedValue(strategy = GenerationType.SEQUENCE,
 			generator = "CONFIG_SEQ_GENERATOR")
 	private Long id;
