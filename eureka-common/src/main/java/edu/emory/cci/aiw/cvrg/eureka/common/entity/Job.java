@@ -62,7 +62,7 @@ public class Job implements CycleRecoverable {
 	 * The events generated for the job.
 	 */
 	@OneToMany(cascade = CascadeType.ALL, targetEntity = JobEvent.class,
-			fetch = FetchType.EAGER)
+			fetch = FetchType.EAGER, mappedBy = "job")
 	private List<JobEvent> jobEvents = new ArrayList<JobEvent>();
 
 	private static class JobEventComparator implements Comparator<JobEvent>, Serializable {
