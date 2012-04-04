@@ -3,6 +3,7 @@ package edu.emory.cci.aiw.cvrg.eureka.services.thread;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
+import java.util.Date;
 import java.util.List;
 
 import javax.ws.rs.core.MediaType;
@@ -105,18 +106,21 @@ public class JobTask implements Runnable {
 				LOGGER.debug("Data file validated: {}",
 						this.fileUpload.getLocation());
 				this.fileUpload.setValidated(true);
+				this.fileUpload.setTimestamp(new Date());
 				this.fileDao.save(this.fileUpload);
 
 				// then we make sure the file is processed
 				this.processUpload(dataProvider);
 				LOGGER.debug("Data file processed");
 				this.fileUpload.setProcessed(true);
+				this.fileUpload.setTimestamp(new Date());
 				this.fileDao.save(this.fileUpload);
 
 				// finally, we submit the job
 				this.submitJob();
 				LOGGER.debug("Job submitted");
 				this.fileUpload.setCompleted(true);
+				this.fileUpload.setTimestamp(new Date());
 				this.fileDao.save(this.fileUpload);
 
 			} catch (DataProviderException e) {
@@ -296,8 +300,10 @@ public class JobTask implements Runnable {
 		error.setLineNumber(Long.valueOf(0));
 		error.setFileUpload(this.fileUpload);
 
+
 		this.fileUpload.addError(error);
 		this.fileUpload.setCompleted(true);
+		this.fileUpload.setTimestamp(new Date());
 
 		this.fileDao.save(this.fileUpload);
 	}
