@@ -57,7 +57,5 @@
 			<img src="${pageContext.request.contextPath}/images/e-ani.gif"
 				hspace="450" align="middle" />
 		</div>
-		<div id="uploadOutput">
-        <h3> Upload Output</h3></div>
 	</template:content>
 </template:insert>
