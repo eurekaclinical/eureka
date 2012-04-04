@@ -174,12 +174,39 @@ public class JobInfo {
 	@JsonIgnore
 	public Date getTimestamp() {
 		Date result;
-		if (this.job != null) {
+		if (this.job == null && this.fileUpload == null) {
+			// we have neither an upload nor a job
+			LOGGER.debug("job and file upload are null");
+			result = new Date();
+		} else if (this.job != null && this.fileUpload == null) {
+			// we have a job, but no upload
+			LOGGER.debug("job is not null, file upload is null");
 			result = this.job.getTimestamp();
-		} else if (this.fileUpload != null) {
+		} else if (this.fileUpload != null && this.job == null) {
+			// we have an upload, but no job
+			LOGGER.debug("job is null, file upload is not null");
 			result = this.fileUpload.getTimestamp();
+		} else if (this.isUploadActive() || this.isJobActive()) {
+			// we have either an active upload or an active job
+			LOGGER.debug("job or file upload is active");
+			if (this.isUploadActive()) {
+				LOGGER.debug("upload is active");
+				result = this.fileUpload.getTimestamp();
+			} else {
+				LOGGER.debug("job is active");
+				result = this.job.getTimestamp();
+			}
 		} else {
-			result = null;
+			// we have both an inactive job, and an inactive upload, so we just
+			// return the later of the two
+			LOGGER.debug("job and file upload are inactive");
+			if (this.fileUpload.getTimestamp().after(this.job.getTimestamp())) {
+				LOGGER.debug("file upload is later than job");
+				result = this.fileUpload.getTimestamp();
+			} else {
+				LOGGER.debug("job is later than file upload");
+				result = this.job.getTimestamp();
+			}
 		}
 		return result;
 	}
