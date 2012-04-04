@@ -182,12 +182,14 @@ public class Job implements CycleRecoverable {
 
 	public void setNewState(String state, String message, String[] stackTrace) {
 
+		final Date date = new Date();
 		JobEvent jev = new JobEvent();
 		jev.setJob(this);
-		jev.setTimeStamp(new Date());
+		jev.setTimeStamp(date);
 		jev.setState(state);
 		jev.setMessage(message);
 		jev.setExceptionStackTrace(stackTrace);
+		this.setTimestamp(date);
 		this.jobEvents.add(jev);
 	}
 
