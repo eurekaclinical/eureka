@@ -61,7 +61,7 @@ public class VerifyUserServlet extends HttpServlet {
 
 			ClientResponse response = webResource
 					.path("/api/user/verify/" + code)
-					.accept(MediaType.TEXT_PLAIN).post(ClientResponse.class);
+					.accept(MediaType.TEXT_PLAIN).put(ClientResponse.class);
 
 			int status = response.getClientResponseStatus().getStatusCode();
 			if (status >= HttpServletResponse.SC_BAD_REQUEST) {
