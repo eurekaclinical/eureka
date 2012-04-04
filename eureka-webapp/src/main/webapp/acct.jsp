@@ -12,7 +12,9 @@
 	<template:content name="content">
 
 		<h3>Account</h3>
+		<%--
 		<form id="userAcctForm" action="#" method="post">
+		--%>
 			<div class="pad pad_top">
 				<table id="userAcctTable">
 					<tr>
@@ -41,15 +43,18 @@
 							<!--
 					<a href="edit_acct.html"><img src="${pageContext.request.contextPath}/images/edit_btn.gif"
                         width="33" height="19" alt="Change Password" id="editAcctBtn"/></a>
-                    --> <img class="fltrt"
+                    -->
+                    <%--
+                    <img class="fltrt"
 							src="${pageContext.request.contextPath}/images/chg_pswd_btn.gif"
 							alt="Change Password" id="editAcctBtn" />
+					--%>
 						</td>
 					</tr>
 				</table>
 
 
-
+<%--
 				<table id="newPasswordTable">
 
 
@@ -96,7 +101,7 @@
 			<h2>There was an error changing your password. The old password
 				did not match with our system.</h2>
 		</div>
-
+--%>
 
 		</div>
 	</template:content>
