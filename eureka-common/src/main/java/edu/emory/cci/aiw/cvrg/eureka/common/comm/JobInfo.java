@@ -7,6 +7,8 @@ import java.util.List;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.FileError;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.FileUpload;
@@ -22,6 +24,11 @@ import edu.emory.cci.aiw.cvrg.eureka.common.entity.JobEvent;
  */
 @XmlRootElement
 public class JobInfo {
+
+	/**
+	 * The class level logger.
+	 */
+	private static final Logger LOGGER = LoggerFactory.getLogger(JobInfo.class);
 	/**
 	 * The total number of steps in the process.
 	 */
@@ -47,26 +54,35 @@ public class JobInfo {
 
 		if (this.job == null && this.fileUpload == null) {
 			// we have neither an upload nor a job
+			LOGGER.debug("job and file upload are null");
 			step = 0;
 		} else if (this.job != null && this.fileUpload == null) {
 			// we have a job, but no upload
+			LOGGER.debug("job is not null, file upload is null");
 			step = this.getJobStep();
 		} else if (this.fileUpload != null && this.job == null) {
 			// we have an upload, but no job
+			LOGGER.debug("job is null, file upload is not null");
 			step = this.getUploadStep();
 		} else if (this.isUploadActive() || this.isJobActive()) {
 			// we have either an active upload or an active job
+			LOGGER.debug("job or file upload is active");
 			if (this.isUploadActive()) {
+				LOGGER.debug("upload is active");
 				step = this.getUploadStep();
 			} else {
+				LOGGER.debug("job is active");
 				step = this.getJobStep();
 			}
 		} else {
 			// we have both an inactive job, and an inactive upload, so we just
 			// return the later of the two
+			LOGGER.debug("job and file upload are inactive");
 			if (this.fileUpload.getTimestamp().after(this.job.getTimestamp())) {
+				LOGGER.debug("file upload is later than job");
 				step = this.getUploadStep();
 			} else {
+				LOGGER.debug("job is later than file upload");
 				step = this.getJobStep();
 			}
 		}
