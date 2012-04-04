@@ -154,8 +154,9 @@ public class JobResource {
 					}
 				}
 			}
-		} else {
-			List<FileUpload> fileUploads = this.fileDao.getByUserId(userId);
+		}
+		List<FileUpload> fileUploads = this.fileDao.getByUserId(userId);
+		if (fileUploads.size() > 0) {
 			for (FileUpload fileUpload : fileUploads) {
 				this.fileDao.refresh(fileUpload);
 				if (latestFileUpload == null) {
