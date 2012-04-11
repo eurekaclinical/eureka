@@ -29,11 +29,14 @@ import edu.emory.cci.aiw.cvrg.eureka.etl.resource.JobFilter;
 public class JpaJobDao implements JobDao {
 
 	/**
+	 * The class level logger.
+	 */
+	private static final Logger LOGGER = LoggerFactory
+			.getLogger(JpaJobDao.class);
+	/**
 	 * The provider for the entity managers used within the DAO.
 	 */
 	private final Provider<EntityManager> emProvider;
-	private static final Logger LOGGER = LoggerFactory
-			.getLogger(JpaJobDao.class);
 
 	/**
 	 * Construct instance with the given EntityManager provider.
@@ -48,7 +51,7 @@ public class JpaJobDao implements JobDao {
 	/**
 	 * Get an entity manager to use.
 	 * 
-	 * @return
+	 * @return A new entity manager.
 	 */
 	private EntityManager getEntityManager() {
 		return this.emProvider.get();

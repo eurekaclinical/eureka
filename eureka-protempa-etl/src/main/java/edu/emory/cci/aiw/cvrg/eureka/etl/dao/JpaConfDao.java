@@ -13,6 +13,12 @@ import com.google.inject.persist.Transactional;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.Configuration;
 
+/**
+ * Implementation of the {@link ConfDao} interface, based on JPA.
+ * 
+ * @author hrathod
+ * 
+ */
 public class JpaConfDao implements ConfDao {
 
 	/**
@@ -20,18 +26,29 @@ public class JpaConfDao implements ConfDao {
 	 */
 	private static final Logger LOGGER = LoggerFactory
 			.getLogger(JpaConfDao.class);
+	/**
+	 * The entity manager used to interact with the data store.
+	 */
 	private final EntityManager entityManager;
 
+	/**
+	 * Creates an object using the given entity manager.
+	 * 
+	 * @param manager The entity manager to use for interaction with the data
+	 *            store.
+	 */
 	@Inject
 	public JpaConfDao(EntityManager manager) {
 		this.entityManager = manager;
 	}
 
+	@Override
 	@Transactional
 	public void save(Configuration conf) {
 		this.entityManager.persist(conf);
 	}
 
+	@Override
 	public Configuration get(Long userId) {
 		Configuration configuration;
 		try {
