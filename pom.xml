@@ -126,6 +126,7 @@
 		<registry-version>1.0-SNAPSHOT</registry-version>
 		<oracle-version>[11.2.0.2.0,)</oracle-version>
 		<freemarker-version>2.3.9</freemarker-version>
+		<jpamodelgen-version>1.2.0.Final</jpamodelgen-version>
 	</properties>
 
 	<!-- make sure our code complies with Java 1.6 specifications, and define 
@@ -399,6 +400,11 @@
 				<groupId>com.google.inject.extensions</groupId>
 				<artifactId>guice-jndi</artifactId>
 				<version>${guice-version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.hibernate</groupId>
+				<artifactId>hibernate-jpamodelgen</artifactId>
+				<version>${jpamodelgen-version}</version>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
