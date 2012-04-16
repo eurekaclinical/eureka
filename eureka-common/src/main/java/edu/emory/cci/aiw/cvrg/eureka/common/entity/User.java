@@ -26,9 +26,9 @@ import com.sun.xml.bind.CycleRecoverable;
 
 /**
  * A bean class to hold information about users in the system.
- * 
+ *
  * @author hrathod
- * 
+ *
  */
 @Entity
 @XmlRootElement
@@ -105,7 +105,7 @@ public class User implements CycleRecoverable {
 
 	/**
 	 * Get the user's unique identifier.
-	 * 
+	 *
 	 * @return A {@link Long} representing the user's unique identifier.
 	 */
 	public Long getId() {
@@ -114,7 +114,7 @@ public class User implements CycleRecoverable {
 
 	/**
 	 * Set the uesr's unique identifier.
-	 * 
+	 *
 	 * @param inId A {@link Long} representing the user's unique identifier.
 	 */
 	public void setId(final Long inId) {
@@ -123,7 +123,7 @@ public class User implements CycleRecoverable {
 
 	/**
 	 * Get whether the user is active or not.
-	 * 
+	 *
 	 * @return True if the user is active, false otherwise.
 	 */
 	public boolean isActive() {
@@ -132,7 +132,7 @@ public class User implements CycleRecoverable {
 
 	/**
 	 * Set whether the user is active or not.
-	 * 
+	 *
 	 * @param inActive True if the user should be active, false otherwise.
 	 */
 	public void setActive(final boolean inActive) {
@@ -141,7 +141,7 @@ public class User implements CycleRecoverable {
 
 	/**
 	 * Get whether the user has been verified.
-	 * 
+	 *
 	 * @return True if the user has been verified, false otherwise.
 	 */
 	public boolean isVerified() {
@@ -150,7 +150,7 @@ public class User implements CycleRecoverable {
 
 	/**
 	 * Set whether the user has been verified.
-	 * 
+	 *
 	 * @param inVerified True if the user has been verified, false otherwise.
 	 */
 	public void setVerified(final boolean inVerified) {
@@ -159,7 +159,7 @@ public class User implements CycleRecoverable {
 
 	/**
 	 * Get the user's first name.
-	 * 
+	 *
 	 * @return A String containing the user's first name.
 	 */
 	public String getFirstName() {
@@ -168,7 +168,7 @@ public class User implements CycleRecoverable {
 
 	/**
 	 * Set the user's first name.
-	 * 
+	 *
 	 * @param inFirstName A String containing the user's first name.
 	 */
 	public void setFirstName(final String inFirstName) {
@@ -177,7 +177,7 @@ public class User implements CycleRecoverable {
 
 	/**
 	 * Get the user's last name.
-	 * 
+	 *
 	 * @return A String containing the user's last name.
 	 */
 	public String getLastName() {
@@ -186,7 +186,7 @@ public class User implements CycleRecoverable {
 
 	/**
 	 * Set the user's last name.
-	 * 
+	 *
 	 * @param inLastName A String containing the user's last name.
 	 */
 	public void setLastName(final String inLastName) {
@@ -195,7 +195,7 @@ public class User implements CycleRecoverable {
 
 	/**
 	 * Get the user's email address.
-	 * 
+	 *
 	 * @return A String containing the user's email address.
 	 */
 	public String getEmail() {
@@ -204,7 +204,7 @@ public class User implements CycleRecoverable {
 
 	/**
 	 * Set the user's email address.
-	 * 
+	 *
 	 * @param inEmail A String containing the user's email address.
 	 */
 	public void setEmail(final String inEmail) {
@@ -213,7 +213,7 @@ public class User implements CycleRecoverable {
 
 	/**
 	 * Get the user's organization.
-	 * 
+	 *
 	 * @return A String containing the user's organization.
 	 */
 	public String getOrganization() {
@@ -222,7 +222,7 @@ public class User implements CycleRecoverable {
 
 	/**
 	 * Set the user's organization.
-	 * 
+	 *
 	 * @param inOrganization A String containing the user's organization.
 	 */
 	public void setOrganization(final String inOrganization) {
@@ -231,7 +231,7 @@ public class User implements CycleRecoverable {
 
 	/**
 	 * Get the user's password
-	 * 
+	 *
 	 * @return A String containing the user's password.
 	 */
 	public String getPassword() {
@@ -240,7 +240,7 @@ public class User implements CycleRecoverable {
 
 	/**
 	 * Set the user's password.
-	 * 
+	 *
 	 * @param inPassword A String containing the user's password.
 	 */
 	public void setPassword(final String inPassword) {
@@ -263,25 +263,25 @@ public class User implements CycleRecoverable {
 
 	/**
 	 * Get the last log-in date for the user.
-	 * 
+	 *
 	 * @return The user's last log-in date.
 	 */
 	public Date getLastLogin() {
-		return this.lastLogin;
+		return new Date(this.lastLogin.getTime());
 	}
 
 	/**
 	 * Set the user's last log-in date.
-	 * 
+	 *
 	 * @param inLastLogin The last log-in date for the user.
 	 */
 	public void setLastLogin(final Date inLastLogin) {
-		this.lastLogin = inLastLogin;
+		this.lastLogin = new Date(inLastLogin.getTime());
 	}
 
 	/**
 	 * Get all the roles assigned to the user.
-	 * 
+	 *
 	 * @return A list of {@link Role} objects.
 	 */
 	@JsonManagedReference("users-roles")
@@ -291,7 +291,7 @@ public class User implements CycleRecoverable {
 
 	/**
 	 * Set the roles assigned to the current user.
-	 * 
+	 *
 	 * @param inRoles A Set of roles to be assigned to the user.
 	 */
 	public void setRoles(final List<Role> inRoles) {
@@ -300,7 +300,7 @@ public class User implements CycleRecoverable {
 
 	/**
 	 * Get the list of files uploaded by the user.
-	 * 
+	 *
 	 * @return The list of files uploaded by the user.
 	 */
 	@JsonBackReference("user-fileuploads")
@@ -310,7 +310,7 @@ public class User implements CycleRecoverable {
 
 	/**
 	 * Set the list of files uploaded by the user.
-	 * 
+	 *
 	 * @param inFileUploads The list of files uploaded by the user.
 	 */
 	public void setFileUploads(List<FileUpload> inFileUploads) {
@@ -319,7 +319,7 @@ public class User implements CycleRecoverable {
 
 	/**
 	 * Add a new file upload for the user.
-	 * 
+	 *
 	 * @param fileUpload The file upload to add to the list of file uploads for
 	 *            the user.
 	 */
@@ -338,7 +338,7 @@ public class User implements CycleRecoverable {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see java.lang.Object#toString()
 	 */
 	@Override

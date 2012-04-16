@@ -21,9 +21,9 @@ import com.sun.xml.bind.CycleRecoverable;
 
 /**
  * An event associated with a job.
- * 
+ *
  * @author hrathod
- * 
+ *
  */
 @XmlRootElement
 @Entity
@@ -124,14 +124,14 @@ public class JobEvent implements CycleRecoverable {
 	 * @return the timeStamp
 	 */
 	public Date getTimeStamp() {
-		return this.timeStamp;
+		return new Date(this.timeStamp.getTime());
 	}
 
 	/**
 	 * @param inTimeStamp the timeStamp to set
 	 */
 	public void setTimeStamp(Date inTimeStamp) {
-		this.timeStamp = inTimeStamp;
+		this.timeStamp = new Date(inTimeStamp.getTime());
 	}
 
 	/**
@@ -150,7 +150,7 @@ public class JobEvent implements CycleRecoverable {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.sun.xml.bind.CycleRecoverable#onCycleDetected(com.sun.xml.bind.
 	 * CycleRecoverable.Context)
 	 */
@@ -161,7 +161,7 @@ public class JobEvent implements CycleRecoverable {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see java.lang.Object#toString()
 	 */
 	// @Override

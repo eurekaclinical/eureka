@@ -28,9 +28,9 @@ import com.sun.xml.bind.CycleRecoverable;
 /**
  * Holds information about a job that is sent from the services layer to the
  * back-end layer.
- * 
+ *
  * @author hrathod
- * 
+ *
  */
 @XmlRootElement
 @Entity
@@ -90,7 +90,7 @@ public class Job implements CycleRecoverable {
 
 	/**
 	 * Get the unique identifier for the job request.
-	 * 
+	 *
 	 * @return The unique identifier for the job request.
 	 */
 	public Long getId() {
@@ -99,7 +99,7 @@ public class Job implements CycleRecoverable {
 
 	/**
 	 * Set the unique identifier for the job request.
-	 * 
+	 *
 	 * @param inId The unique identifier for the job request.
 	 */
 	public void setId(Long inId) {
@@ -110,20 +110,20 @@ public class Job implements CycleRecoverable {
 	 * @return the timestamp
 	 */
 	public Date getTimestamp() {
-		return this.timestamp;
+		return new Date(this.timestamp.getTime());
 	}
 
 	/**
 	 * @param inTimestamp the timestamp to set
 	 */
 	public void setTimestamp(Date inTimestamp) {
-		this.timestamp = inTimestamp;
+		this.timestamp = new Date(inTimestamp.getTime());
 	}
 
 	/**
 	 * Get the unique identifier of the configuration to be used for the job
 	 * request.
-	 * 
+	 *
 	 * @return The unique identifier of the configuration.
 	 */
 	public Long getConfigurationId() {
@@ -133,7 +133,7 @@ public class Job implements CycleRecoverable {
 	/**
 	 * Set the unique identifier of the configuration to be used for the job
 	 * request.
-	 * 
+	 *
 	 * @param inConfigurationId The unique identifier of the configuration.
 	 */
 	public void setConfigurationId(Long inConfigurationId) {
@@ -142,7 +142,7 @@ public class Job implements CycleRecoverable {
 
 	/**
 	 * Get the unique identifier for the user who submitted the request.
-	 * 
+	 *
 	 * @return The unique identifier for the user.
 	 */
 	public Long getUserId() {
@@ -151,7 +151,7 @@ public class Job implements CycleRecoverable {
 
 	/**
 	 * Set the unique identifier for the user who submitted the request.
-	 * 
+	 *
 	 * @param inUserId The unique identifier for the user.
 	 */
 	public void setUserId(Long inUserId) {
@@ -214,7 +214,7 @@ public class Job implements CycleRecoverable {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.sun.xml.bind.CycleRecoverable#onCycleDetected(com.sun.xml.bind.
 	 * CycleRecoverable.Context)
 	 */
@@ -225,7 +225,7 @@ public class Job implements CycleRecoverable {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see java.lang.Object#toString()
 	 */
 	@Override

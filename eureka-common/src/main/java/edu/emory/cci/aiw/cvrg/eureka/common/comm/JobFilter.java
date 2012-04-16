@@ -19,8 +19,8 @@ public class JobFilter {
 		this.jobId = jobId;
 		this.userId = userId;
 		this.state = state;
-		this.from = from;
-		this.to = to;
+		this.from = (null == from) ? null : new Date(from.getTime());
+		this.to = (null == to) ? null : new Date(to.getTime());
 
 		byte b = 0;
 		b |= (jobId != null) ? 1 : 0;
@@ -56,14 +56,14 @@ public class JobFilter {
 	 * @return the from
 	 */
 	public Date getFrom() {
-		return this.from;
+		return new Date(this.from.getTime());
 	}
 
 	/**
 	 * @return the to
 	 */
 	public Date getTo() {
-		return this.to;
+		return new Date(this.to.getTime());
 	}
 
 	/**

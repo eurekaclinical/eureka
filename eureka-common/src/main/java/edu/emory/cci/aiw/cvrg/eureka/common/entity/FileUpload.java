@@ -26,9 +26,9 @@ import com.sun.xml.bind.CycleRecoverable;
 
 /**
  * Hold information about a user's file upload.
- * 
+ *
  * @author hrathod
- * 
+ *
  */
 @XmlRootElement
 @Entity
@@ -91,7 +91,7 @@ public class FileUpload implements CycleRecoverable {
 
 	/**
 	 * Get the unique identifier for the file upload.
-	 * 
+	 *
 	 * @return The unique identifier for the file upload.
 	 */
 	public Long getId() {
@@ -100,7 +100,7 @@ public class FileUpload implements CycleRecoverable {
 
 	/**
 	 * Set the unique identifier for the file upload.
-	 * 
+	 *
 	 * @param inId The unique identifier for the file upload.
 	 */
 	public void setId(Long inId) {
@@ -109,7 +109,7 @@ public class FileUpload implements CycleRecoverable {
 
 	/**
 	 * Get the on-disk location of the file upload.
-	 * 
+	 *
 	 * @return The on-disk location of the file upload.
 	 */
 	public String getLocation() {
@@ -118,7 +118,7 @@ public class FileUpload implements CycleRecoverable {
 
 	/**
 	 * Set the on-desk location of the file upload.
-	 * 
+	 *
 	 * @param inLocation The on-disk location of the file upload.
 	 */
 	public void setLocation(String inLocation) {
@@ -129,14 +129,14 @@ public class FileUpload implements CycleRecoverable {
 	 * @return the timestamp
 	 */
 	public Date getTimestamp() {
-		return this.timestamp;
+		return new Date(this.timestamp.getTime());
 	}
 
 	/**
 	 * @param inTimestamp the timestamp to set
 	 */
 	public void setTimestamp(Date inTimestamp) {
-		this.timestamp = inTimestamp;
+		this.timestamp = new Date(inTimestamp.getTime());
 	}
 
 	/**
@@ -183,7 +183,7 @@ public class FileUpload implements CycleRecoverable {
 
 	/**
 	 * Get the user to which the file upload belongs.
-	 * 
+	 *
 	 * @return The user to which the file upload belongs.
 	 */
 	@JsonManagedReference("user-fileuploads")
@@ -193,7 +193,7 @@ public class FileUpload implements CycleRecoverable {
 
 	/**
 	 * Set the user to which the file upload belongs.
-	 * 
+	 *
 	 * @param inUser The user to which the file upload belongs.
 	 */
 	public void setUser(User inUser) {
@@ -205,7 +205,7 @@ public class FileUpload implements CycleRecoverable {
 
 	/**
 	 * Get the list of errors associated with the file upload.
-	 * 
+	 *
 	 * @return The list of errors associated with the file upload.
 	 */
 	@JsonManagedReference("fileupload-messages")
@@ -215,7 +215,7 @@ public class FileUpload implements CycleRecoverable {
 
 	/**
 	 * Set the list of errors associated with the file upload.
-	 * 
+	 *
 	 * @param inErrors The list of errors associated with the file upload.
 	 */
 	public void setErrors(List<FileError> inErrors) {
@@ -230,7 +230,7 @@ public class FileUpload implements CycleRecoverable {
 
 	/**
 	 * Add an error to the list of errors for the file upload.
-	 * 
+	 *
 	 * @param error The error to add.
 	 */
 	public void addError(FileError error) {
@@ -244,7 +244,7 @@ public class FileUpload implements CycleRecoverable {
 
 	/**
 	 * Get the list of warnings associated with the file upload.
-	 * 
+	 *
 	 * @return The list of warnings associated with the file upload.
 	 */
 	@JsonManagedReference("fileupload-messages")
@@ -254,7 +254,7 @@ public class FileUpload implements CycleRecoverable {
 
 	/**
 	 * Set the list of warnings associated with the file upload.
-	 * 
+	 *
 	 * @param inWarnings The list of warnings associated with the file upload.
 	 */
 	public void setWarnings(List<FileWarning> inWarnings) {
@@ -269,7 +269,7 @@ public class FileUpload implements CycleRecoverable {
 
 	/**
 	 * Add a new warning to the file upload.
-	 * 
+	 *
 	 * @param warning The warning to add.
 	 */
 	public void addWarning(FileWarning warning) {
@@ -282,7 +282,7 @@ public class FileUpload implements CycleRecoverable {
 
 	/**
 	 * Find out whether the file upload contains any errors.
-	 * 
+	 *
 	 * @return True if there are any errors, false otherwise.
 	 */
 	public boolean containsErrors() {
@@ -291,7 +291,7 @@ public class FileUpload implements CycleRecoverable {
 
 	/**
 	 * Find out whether the file upload contains any warnings.
-	 * 
+	 *
 	 * @return True if there are any warnings, false otherwise.
 	 */
 	public boolean containsWarnings() {
@@ -300,7 +300,7 @@ public class FileUpload implements CycleRecoverable {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.sun.xml.bind.CycleRecoverable#onCycleDetected(com.sun.xml.bind.
 	 * CycleRecoverable.Context)
 	 */
@@ -311,7 +311,7 @@ public class FileUpload implements CycleRecoverable {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see java.lang.Object#toString()
 	 */
 	@Override
