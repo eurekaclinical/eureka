@@ -28,19 +28,17 @@ import edu.emory.cci.aiw.cvrg.eureka.common.entity.Job_;
 
 /**
  * Implements the {@link JobDao} interface, with the use of JPA entity managers.
- * 
+ *
  * @author gmilton
  * @author hrathod
- * 
+ *
  */
-
 public class JpaJobDao implements JobDao {
 
 	/**
 	 * The class level logger.
 	 */
-	private static final Logger LOGGER = LoggerFactory
-			.getLogger(JpaJobDao.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(JpaJobDao.class);
 	/**
 	 * The provider for the entity managers used within the DAO.
 	 */
@@ -48,7 +46,7 @@ public class JpaJobDao implements JobDao {
 
 	/**
 	 * Construct instance with the given EntityManager provider.
-	 * 
+	 *
 	 * @param inEMProvider The entity manager provider.
 	 */
 	@Inject
@@ -58,7 +56,7 @@ public class JpaJobDao implements JobDao {
 
 	/**
 	 * Get an entity manager to use.
-	 * 
+	 *
 	 * @return A new entity manager.
 	 */
 	private EntityManager getEntityManager() {
@@ -81,19 +79,7 @@ public class JpaJobDao implements JobDao {
 
 	@Override
 	public Job get(Long id) {
-		Job job = null;
-		try {
-			Query query = this
-					.getEntityManager()
-					.createQuery("select j from Job j where j.id = ?1",
-							Job.class).setParameter(1, id);
-			job = (Job) query.getSingleResult();
-		} catch (NoResultException nre) {
-			LOGGER.error(nre.getMessage(), nre);
-		} catch (NonUniqueResultException nure) {
-			LOGGER.error(nure.getMessage(), nure);
-		}
-		return job;
+		return this.getEntityManager().find(Job.class, id);
 	}
 
 	@Override
@@ -114,11 +100,11 @@ public class JpaJobDao implements JobDao {
 		}
 		if (jobFilter.getFrom() != null) {
 			predicates.add(builder.greaterThanOrEqualTo(
-					root.<Date> get(Job_.timestamp), jobFilter.getFrom()));
+					root.<Date>get(Job_.timestamp), jobFilter.getFrom()));
 		}
 		if (jobFilter.getTo() != null) {
 			predicates.add(builder.lessThanOrEqualTo(
-					root.<Date> get(Job_.timestamp), jobFilter.getTo()));
+					root.<Date>get(Job_.timestamp), jobFilter.getTo()));
 		}
 		if (jobFilter.getState() != null) {
 			predicates.add(builder.equal(

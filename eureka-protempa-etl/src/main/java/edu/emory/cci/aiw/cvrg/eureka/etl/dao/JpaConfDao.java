@@ -4,6 +4,10 @@ import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.NonUniqueResultException;
 import javax.persistence.Query;
+import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,20 +16,20 @@ import com.google.inject.Inject;
 import com.google.inject.persist.Transactional;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.Configuration;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.Configuration_;
 
 /**
  * Implementation of the {@link ConfDao} interface, based on JPA.
- * 
+ *
  * @author hrathod
- * 
+ *
  */
 public class JpaConfDao implements ConfDao {
 
 	/**
 	 * The class level logger.
 	 */
-	private static final Logger LOGGER = LoggerFactory
-			.getLogger(JpaConfDao.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(JpaConfDao.class);
 	/**
 	 * The entity manager used to interact with the data store.
 	 */
@@ -33,9 +37,9 @@ public class JpaConfDao implements ConfDao {
 
 	/**
 	 * Creates an object using the given entity manager.
-	 * 
+	 *
 	 * @param manager The entity manager to use for interaction with the data
-	 *            store.
+	 * store.
 	 */
 	@Inject
 	public JpaConfDao(EntityManager manager) {
@@ -50,18 +54,18 @@ public class JpaConfDao implements ConfDao {
 
 	@Override
 	public Configuration get(Long userId) {
-		Configuration configuration;
+		Configuration configuration = null;
 		try {
-			Query query = this.entityManager.createQuery(
-					"select c from Configuration c where c.userId = ?1",
-					Configuration.class).setParameter(1, userId);
+			CriteriaBuilder builder = this.entityManager.getCriteriaBuilder();
+			CriteriaQuery<Configuration> criteriaQuery = builder.createQuery(Configuration.class);
+			Root<Configuration> root = criteriaQuery.from(Configuration.class);
+			TypedQuery<Configuration> query = this.entityManager.createQuery(criteriaQuery.
+					where(builder.equal(root.get(Configuration_.userId), userId)));
 			configuration = (Configuration) query.getSingleResult();
 		} catch (NoResultException nre) {
 			LOGGER.error(nre.getMessage(), nre);
-			configuration = null;
 		} catch (NonUniqueResultException nure) {
 			LOGGER.error(nure.getMessage(), nure);
-			configuration = null;
 		}
 		return configuration;
 	}
