@@ -3,18 +3,26 @@ package edu.emory.cci.aiw.cvrg.eureka.services.dao;
 import java.util.List;
 
 import javax.persistence.EntityManager;
+import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Path;
+import javax.persistence.criteria.Root;
 
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.persist.Transactional;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.FileUpload;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.FileUpload_;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.User;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.User_;
 
 /**
  * An implementation of {@link FileDao} interface using JPA entities.
- * 
+ *
  * @author hrathod
- * 
+ *
  */
 public class JpaFileDao implements FileDao {
 
@@ -25,10 +33,10 @@ public class JpaFileDao implements FileDao {
 
 	/**
 	 * Construct an object with the given entity manager.
-	 * 
+	 *
 	 * @param inEMProvider The entity manager provider used to fetch an entity
-	 *            manager to work with the data store.
-	 * 
+	 * manager to work with the data store.
+	 *
 	 */
 	@Inject
 	public JpaFileDao(Provider<EntityManager> inEMProvider) {
@@ -37,7 +45,7 @@ public class JpaFileDao implements FileDao {
 
 	/**
 	 * Get an entity manager.
-	 * 
+	 *
 	 * @return An entity manager.
 	 */
 	private EntityManager getEntityManager() {
@@ -52,7 +60,7 @@ public class JpaFileDao implements FileDao {
 		entityManager.persist(fileUpload);
 		entityManager.flush();
 	}
-	
+
 	@Override
 	public void refresh(FileUpload inFileUpload) {
 		this.getEntityManager().refresh(inFileUpload);
@@ -60,18 +68,18 @@ public class JpaFileDao implements FileDao {
 
 	@Override
 	public FileUpload get(Long inId) {
-		return getEntityManager()
-				.createQuery("select f from FileUpload f where f.id = ?1",
-						FileUpload.class).setParameter(1, inId)
-				.getSingleResult();
+		return this.getEntityManager().find(FileUpload.class, inId);
 	}
 
 	@Override
 	public List<FileUpload> getByUserId(Long userId) {
-		return getEntityManager()
-				.createQuery(
-						"select f from FileUpload f where f.user.id  = ?1",
-						FileUpload.class).setParameter(1, userId)
-				.getResultList();
+		FileUpload fileUpload = null;
+		EntityManager entityManager = this.getEntityManager();
+		CriteriaBuilder builder = entityManager.getCriteriaBuilder();
+		CriteriaQuery<FileUpload> criteriaQuery = builder.createQuery(FileUpload.class);
+		Root<FileUpload> root = criteriaQuery.from(FileUpload.class);
+		TypedQuery<FileUpload> query = entityManager.createQuery(criteriaQuery.
+				where(builder.equal(root.get(FileUpload_.user).get(User_.id), userId)));
+		return query.getResultList();
 	}
 }

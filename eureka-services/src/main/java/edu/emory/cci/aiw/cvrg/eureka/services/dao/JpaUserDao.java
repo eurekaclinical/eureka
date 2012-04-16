@@ -5,7 +5,10 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.NonUniqueResultException;
-import javax.persistence.Query;
+import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,21 +18,21 @@ import com.google.inject.Provider;
 import com.google.inject.persist.Transactional;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.User;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.User_;
 
 /**
  * An implementation of the {@link UserDao} interface, backed by JPA entities
  * and queries.
- * 
+ *
  * @author hrathod
- * 
+ *
  */
 public class JpaUserDao implements UserDao {
 
 	/**
 	 * The class level logger.
 	 */
-	private static final Logger LOGGER = LoggerFactory
-			.getLogger(JpaUserDao.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(JpaUserDao.class);
 	/**
 	 * The provider used to fetch the entity manager to communicate with the
 	 * data store.
@@ -38,9 +41,9 @@ public class JpaUserDao implements UserDao {
 
 	/**
 	 * Create an object with the give entity manager.
-	 * 
+	 *
 	 * @param inEMProvider The entity manager to be used for communication with
-	 *            the data store.
+	 * the data store.
 	 */
 	@Inject
 	public JpaUserDao(Provider<EntityManager> inEMProvider) {
@@ -49,7 +52,7 @@ public class JpaUserDao implements UserDao {
 
 	/**
 	 * Get the entity manager used to communicate with the data store.
-	 * 
+	 *
 	 * @return The entity manager.
 	 */
 	private EntityManager getEntityManager() {
@@ -71,9 +74,13 @@ public class JpaUserDao implements UserDao {
 
 	@Override
 	public List<User> getUsers() {
-		final Query query = this.getEntityManager().createQuery(
-				"select u from User u", User.class);
-		return query.getResultList();
+		EntityManager entityManager = this.getEntityManager();
+		CriteriaBuilder builder = entityManager.getCriteriaBuilder();
+		CriteriaQuery<User> criteriaQuery = builder.createQuery(User.class);
+		Root<User> root = criteriaQuery.from(User.class);
+		TypedQuery<User> typedQuery = entityManager.createQuery(criteriaQuery.
+				select(root));
+		return typedQuery.getResultList();
 	}
 
 	@Override
@@ -83,13 +90,15 @@ public class JpaUserDao implements UserDao {
 
 	@Override
 	public User getByName(String name) {
-		final Query query = this
-				.getEntityManager()
-				.createQuery("select u from User u where u.email = ?1",
-						User.class).setParameter(1, name);
 		User user = null;
 		try {
-			user = (User) query.getSingleResult();
+			EntityManager entityManager = this.getEntityManager();
+			CriteriaBuilder builder = entityManager.getCriteriaBuilder();
+			CriteriaQuery<User> criteriaQuery = builder.createQuery(User.class);
+			Root<User> root = criteriaQuery.from(User.class);
+			TypedQuery<User> typedQuery = entityManager.createQuery(criteriaQuery.
+					where(builder.equal(root.get(User_.email), name)));
+			return typedQuery.getSingleResult();
 		} catch (NoResultException nre) {
 			LOGGER.warn("No result found for user name: {}", name);
 		} catch (NonUniqueResultException nure) {
@@ -100,14 +109,15 @@ public class JpaUserDao implements UserDao {
 
 	@Override
 	public User getByVerificationCode(String inCode) {
-		final Query query = this
-				.getEntityManager()
-				.createQuery(
-						"select u from User u where u.verificationCode = ?1",
-						User.class).setParameter(1, inCode);
 		User user = null;
 		try {
-			user = (User) query.getSingleResult();
+			EntityManager entityManager = this.getEntityManager();
+			CriteriaBuilder builder = entityManager.getCriteriaBuilder();
+			CriteriaQuery<User> criteriaQuery = builder.createQuery(User.class);
+			Root<User> root = criteriaQuery.from(User.class);
+			criteriaQuery.where(builder.equal(root.get(User_.verificationCode), inCode));
+			TypedQuery<User> typedQuery = entityManager.createQuery(criteriaQuery);
+			return typedQuery.getSingleResult();
 		} catch (NoResultException nre) {
 			LOGGER.warn("No result found for verification code: {}", inCode);
 		} catch (NonUniqueResultException nure) {
