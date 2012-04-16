@@ -6,6 +6,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -27,17 +28,16 @@ import org.slf4j.LoggerFactory;
 /**
  * A filter to fetch roles from a database, and assign them to the current
  * principal.
- * 
+ *
  * @author hrathod
- * 
+ *
  */
 public class RolesFilter implements Filter {
 
 	/**
 	 * The class level logger.
 	 */
-	private static final Logger LOGGER = LoggerFactory
-			.getLogger(RolesFilter.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(RolesFilter.class);
 	/**
 	 * The datasource used to fetch the roles data.
 	 */
@@ -77,12 +77,14 @@ public class RolesFilter implements Filter {
 		if (principal != null) {
 			Set<String> roles = new HashSet<String>();
 			String name = principal.getName();
+			Connection connection = null;
+			PreparedStatement preparedStatement = null;
+			ResultSet resultSet = null;
 			try {
-				Connection connection = this.dataSource.getConnection();
-				PreparedStatement preparedStatement = connection
-						.prepareStatement(this.sql);
+				connection = this.dataSource.getConnection();
+				preparedStatement = connection.prepareStatement(this.sql);
 				preparedStatement.setString(1, name);
-				ResultSet resultSet = preparedStatement.executeQuery();
+				resultSet = preparedStatement.executeQuery();
 				while (resultSet.next()) {
 					String role = resultSet.getString(this.colName);
 					if (role != null) {
@@ -91,12 +93,11 @@ public class RolesFilter implements Filter {
 						roles.add(authority);
 					}
 				}
-				resultSet.close();
-				preparedStatement.close();
-				connection.close();
 			} catch (SQLException e) {
 				LOGGER.error(e.getMessage(), e);
 				throw new ServletException(e);
+			} finally {
+				this.close(resultSet, preparedStatement, connection);
 			}
 			HttpServletRequest wrappedRequest = new RolesRequestWrapper(
 					servletRequest, principal, roles);
@@ -106,11 +107,43 @@ public class RolesFilter implements Filter {
 		}
 	}
 
+	/**
+	 * Properly close the give ResultSet, Statement, and Connection.
+	 *
+	 * @param resultSet The result set to dispose of.
+	 * @param statement The statement to dispose of.
+	 * @param connection The connection to dispose of.
+	 */
+	private void close(ResultSet resultSet, Statement statement, Connection connection) {
+		if (resultSet != null) {
+			try {
+				resultSet.close();
+			} catch (SQLException sqle) {
+				LOGGER.error(sqle.getMessage(), sqle);
+			}
+		}
+
+		if (statement != null) {
+			try {
+				statement.close();
+			} catch (SQLException sqle) {
+				LOGGER.error(sqle.getMessage(), sqle);
+			}
+		}
+
+		if (connection != null) {
+			try {
+				connection.close();
+			} catch (SQLException sqle) {
+				LOGGER.error(sqle.getMessage(), sqle);
+			}
+		}
+	}
+
 	@Override
 	public void destroy() {
 		this.dataSource = null;
 		this.colName = null;
 		this.sql = null;
 	}
-
 }
