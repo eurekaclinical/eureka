@@ -4,9 +4,9 @@ import java.util.Date;
 
 /**
  * Holds information about a patient.
- * 
+ *
  * @author hrathod
- * 
+ *
  */
 public class Patient extends PersonImpl {
 	/**
@@ -32,25 +32,25 @@ public class Patient extends PersonImpl {
 
 	/**
 	 * Get the patient's date of birth.
-	 * 
+	 *
 	 * @return The patient's date of birth.
 	 */
 	public Date getDateOfBirth() {
-		return this.dateOfBirth;
+		return new Date(this.dateOfBirth.getTime());
 	}
 
 	/**
 	 * Set the patient's date of birth.
-	 * 
+	 *
 	 * @param inDateOfBirth The patient's date of birth.
 	 */
 	public void setDateOfBirth(Date inDateOfBirth) {
-		this.dateOfBirth = inDateOfBirth;
+		this.dateOfBirth = new Date(inDateOfBirth.getTime());
 	}
 
 	/**
 	 * Get the language spoken by the patient.
-	 * 
+	 *
 	 * @return The language spoken by the patient.
 	 */
 	public String getLanguage() {
@@ -59,7 +59,7 @@ public class Patient extends PersonImpl {
 
 	/**
 	 * Set the language spoken by the patient.
-	 * 
+	 *
 	 * @param inLlanguage The language spoken by the patient.
 	 */
 	public void setLanguage(String inLlanguage) {
@@ -68,7 +68,7 @@ public class Patient extends PersonImpl {
 
 	/**
 	 * Get the patient's marital status.
-	 * 
+	 *
 	 * @return The patient's marital status.
 	 */
 	public String getMaritalStatus() {
@@ -77,7 +77,7 @@ public class Patient extends PersonImpl {
 
 	/**
 	 * Set the patient's marital status.
-	 * 
+	 *
 	 * @param inMaritalStatus The patient's marital status.
 	 */
 	public void setMaritalStatus(String inMaritalStatus) {
@@ -86,7 +86,7 @@ public class Patient extends PersonImpl {
 
 	/**
 	 * Get the patient's race.
-	 * 
+	 *
 	 * @return The patient's race.
 	 */
 	public String getRace() {
@@ -95,7 +95,7 @@ public class Patient extends PersonImpl {
 
 	/**
 	 * Set the patient's race.
-	 * 
+	 *
 	 * @param inRace The patient's race.
 	 */
 	public void setRace(String inRace) {
@@ -104,7 +104,7 @@ public class Patient extends PersonImpl {
 
 	/**
 	 * Get the patient's gender.
-	 * 
+	 *
 	 * @return The patient's gender.
 	 */
 	public String getGender() {
@@ -113,7 +113,7 @@ public class Patient extends PersonImpl {
 
 	/**
 	 * Set the patient's gender.
-	 * 
+	 *
 	 * @param inGender The patient's gender.
 	 */
 	public void setGender(String inGender) {
