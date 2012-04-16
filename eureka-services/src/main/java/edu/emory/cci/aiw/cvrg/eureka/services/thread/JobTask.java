@@ -2,7 +2,6 @@ package edu.emory.cci.aiw.cvrg.eureka.services.thread;
 
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
-import java.sql.SQLException;
 import java.util.Date;
 import java.util.List;
 
@@ -31,15 +30,17 @@ import edu.emory.cci.aiw.cvrg.eureka.services.dataprovider.XlsxDataProvider;
 import edu.emory.cci.aiw.cvrg.eureka.services.datavalidator.DataValidator;
 import edu.emory.cci.aiw.cvrg.eureka.services.datavalidator.ValidationEvent;
 import edu.emory.cci.aiw.cvrg.eureka.services.jdbc.DataInserter;
+import edu.emory.cci.aiw.cvrg.eureka.services.jdbc.DataInserterException;
 
 /**
  * Create a new task to perform validation on an uploaded file, and submit a job
  * to the ETL layer.
- * 
+ *
  * @author hrathod
- * 
+ *
  */
 public class JobTask implements Runnable {
+
 	/**
 	 * The data access object used to update status information about the job.
 	 */
@@ -60,7 +61,6 @@ public class JobTask implements Runnable {
 	 * The current user's configuration.
 	 */
 	private Configuration configuration;
-
 	/**
 	 * The class level logger.
 	 */
@@ -69,12 +69,12 @@ public class JobTask implements Runnable {
 	/**
 	 * Construct an instance with the given file upload, DAO, and related
 	 * information.
-	 * 
-	 * @param inFileDao The DAO used to update status information about the file
-	 *            upload.
+	 *
+	 * @param inFileDao               The DAO used to update status information
+	 *                                   about the file upload.
 	 * @param inApplicationProperties Application level configuration object,
-	 *            used to fetch relevant URLs needed to communicate with the ETL
-	 *            layer.
+	 *                                   used to fetch relevant URLs needed to
+	 *                                   communicate with the ETL layer.
 	 */
 	@Inject
 	public JobTask(FileDao inFileDao,
@@ -137,22 +137,20 @@ public class JobTask implements Runnable {
 
 	/**
 	 * Validate the data provided by the given data provider.
-	 * 
+	 *
 	 * @param dataProvider Used to fetch the data to validate.
 	 * @throws TaskException Thrown if there are any errors while validating the
-	 *             data.
+	 *                          data.
 	 */
 	private void validateUpload(DataProvider dataProvider) throws TaskException {
 		DataValidator dataValidator = new DataValidator();
-		dataValidator.setPatients(dataProvider.getPatients())
-				.setEncounters(dataProvider.getEncounters())
-				.setProviders(dataProvider.getProviders())
-				.setCpts(dataProvider.getCptCodes())
-				.setIcd9Procedures(dataProvider.getIcd9Procedures())
-				.setIcd9Diagnoses(dataProvider.getIcd9Diagnoses())
-				.setMedications(dataProvider.getMedications())
-				.setLabs(dataProvider.getLabs())
-				.setVitals(dataProvider.getVitals()).validate();
+		dataValidator.setPatients(dataProvider.getPatients()).setEncounters(dataProvider.
+				getEncounters()).setProviders(dataProvider.getProviders()).
+				setCpts(dataProvider.getCptCodes()).setIcd9Procedures(dataProvider.
+				getIcd9Procedures()).setIcd9Diagnoses(dataProvider.
+				getIcd9Diagnoses()).setMedications(dataProvider.getMedications()).
+				setLabs(dataProvider.getLabs()).setVitals(dataProvider.getVitals()).
+				validate();
 		List<ValidationEvent> events = dataValidator.getValidationEvents();
 
 		// if the validation caused any errors/warnings, we insert them into
@@ -183,10 +181,11 @@ public class JobTask implements Runnable {
 
 	/**
 	 * Process the uploaded file into the data base, to be used by Protempa.
-	 * 
+	 *
 	 * @param dataProvider The data provider to get the data from.
 	 * @throws TaskException Thrown if there are errors while fetching the user
-	 *             configuration, or while inserting data into the data source.
+	 *                          configuration, or while inserting data into the
+	 *                          data source.
 	 */
 	private void processUpload(DataProvider dataProvider) throws TaskException {
 		Configuration conf;
@@ -205,14 +204,12 @@ public class JobTask implements Runnable {
 				dataInserter.insertEncounters(dataProvider.getEncounters());
 				dataInserter.insertProviders(dataProvider.getProviders());
 				dataInserter.insertCptCodes(dataProvider.getCptCodes());
-				dataInserter.insertIcd9Diagnoses(dataProvider
-						.getIcd9Diagnoses());
-				dataInserter.insertIcd9Procedures(dataProvider
-						.getIcd9Procedures());
+				dataInserter.insertIcd9Diagnoses(dataProvider.getIcd9Diagnoses());
+				dataInserter.insertIcd9Procedures(dataProvider.getIcd9Procedures());
 				dataInserter.insertLabs(dataProvider.getLabs());
 				dataInserter.insertMedications(dataProvider.getMedications());
 				dataInserter.insertVitals(dataProvider.getVitals());
-			} catch (SQLException e) {
+			} catch (DataInserterException e) {
 				throw new TaskException(e);
 			}
 		} else {
@@ -223,10 +220,10 @@ public class JobTask implements Runnable {
 	/**
 	 * Submit a new job to the back-end after validating and processing the file
 	 * upload.
-	 * 
+	 *
 	 * @throws TaskException Thrown if there are any errors in submitting the
-	 *             job to the ETL layer.
-	 * 
+	 *                          job to the ETL layer.
+	 *
 	 */
 	private void submitJob() throws TaskException {
 		Client client;
@@ -240,13 +237,13 @@ public class JobTask implements Runnable {
 			throw new TaskException(e);
 		}
 
-		WebResource resource = client.resource(this.applicationProperties
-				.getEtlJobSubmitUrl());
+		WebResource resource = client.resource(this.applicationProperties.
+				getEtlJobSubmitUrl());
 		Job job = new Job();
 		job.setConfigurationId(conf.getId());
 		job.setUserId(this.fileUpload.getUser().getId());
-		Job resultJob = resource.type(MediaType.APPLICATION_JSON)
-				.accept(MediaType.APPLICATION_JSON).post(Job.class, job);
+		Job resultJob = resource.type(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON).
+				post(Job.class, job);
 
 		if (!resultJob.getCurrentState().equals("CREATED")) {
 			throw new TaskException("Error starting job in ETL layer!");
@@ -255,13 +252,13 @@ public class JobTask implements Runnable {
 
 	/**
 	 * Get the configuration associated with the current user.
-	 * 
+	 *
 	 * @return The user configuration.
-	 * 
-	 * @throws KeyManagementException Thrown if an SSL enabled rest client can
-	 *             not be created properly.
+	 *
+	 * @throws KeyManagementException   Thrown if an SSL enabled rest client can
+	 *                                     not be created properly.
 	 * @throws NoSuchAlgorithmException Thrown if an SSL enabled rest client can
-	 *             not be created properly.
+	 *                                     not be created properly.
 	 */
 	private Configuration getUserConfiguration() throws KeyManagementException,
 			NoSuchAlgorithmException {
@@ -271,8 +268,8 @@ public class JobTask implements Runnable {
 			WebResource resource;
 			Client client = CommUtils.getClient();
 			Long userId = this.fileUpload.getUser().getId();
-			resource = client.resource(this.applicationProperties
-					.getEtlConfGetUrl() + "/" + userId);
+			resource = client.resource(this.applicationProperties.
+					getEtlConfGetUrl() + "/" + userId);
 			response = resource.accept(MediaType.APPLICATION_JSON).get(
 					ClientResponse.class);
 			LOGGER.debug("Configuration get response: {}",
@@ -290,7 +287,7 @@ public class JobTask implements Runnable {
 	/**
 	 * Set the completed flag on the current file upload, with the given error
 	 * message.
-	 * 
+	 *
 	 * @param message The error message.
 	 */
 	private void setCompleteWithError(String message) {
