@@ -61,7 +61,7 @@ public class JpaConfDao implements ConfDao {
 			Root<Configuration> root = criteriaQuery.from(Configuration.class);
 			TypedQuery<Configuration> query = this.entityManager.createQuery(criteriaQuery.
 					where(builder.equal(root.get(Configuration_.userId), userId)));
-			configuration = (Configuration) query.getSingleResult();
+			configuration = query.getSingleResult();
 		} catch (NoResultException nre) {
 			LOGGER.error(nre.getMessage(), nre);
 		} catch (NonUniqueResultException nure) {
