@@ -4,9 +4,9 @@ import java.util.Date;
 
 /**
  * Hold information about a patient's encounter.
- * 
+ *
  * @author hrathod
- * 
+ *
  */
 public class Encounter {
 	/**
@@ -40,7 +40,7 @@ public class Encounter {
 
 	/**
 	 * Get the encounter's unique identifier.
-	 * 
+	 *
 	 * @return The encounter's unique identifier.
 	 */
 	public Long getId() {
@@ -49,7 +49,7 @@ public class Encounter {
 
 	/**
 	 * Set the encounter's unique identifier.
-	 * 
+	 *
 	 * @param inId The encounter's unique identifier.
 	 */
 	public void setId(Long inId) {
@@ -58,7 +58,7 @@ public class Encounter {
 
 	/**
 	 * Get the unique identifier for the patient associated with this encounter.
-	 * 
+	 *
 	 * @return The unique identifier of the patient associated with this
 	 *         encounter.
 	 */
@@ -68,7 +68,7 @@ public class Encounter {
 
 	/**
 	 * Set the unique identifier for the patient associated with this encounter.
-	 * 
+	 *
 	 * @param inPatientId The unique identifier for the patient associated with
 	 *            this encounter.
 	 */
@@ -79,7 +79,7 @@ public class Encounter {
 	/**
 	 * Get the unique identifier for the provider associated with this
 	 * encounter.
-	 * 
+	 *
 	 * @return The provider's unique identifier
 	 */
 	public Long getProviderId() {
@@ -89,7 +89,7 @@ public class Encounter {
 	/**
 	 * Set the unique identifier for the provider associated with this
 	 * encounter.
-	 * 
+	 *
 	 * @param inProviderId The provider's unique identifier.
 	 */
 	public void setProviderId(Long inProviderId) {
@@ -98,43 +98,43 @@ public class Encounter {
 
 	/**
 	 * Get the encounter's start date.
-	 * 
+	 *
 	 * @return The encounter's start date.
 	 */
 	public Date getStart() {
-		return this.start;
+		return new Date(this.start.getTime());
 	}
 
 	/**
 	 * Set the encounter's start date.
-	 * 
-	 * @param instart The encounter's start date.
+	 *
+	 * @param inStart The encounter's start date.
 	 */
-	public void setStart(Date instart) {
-		this.start = instart;
+	public void setStart(Date inStart) {
+		this.start = new Date(inStart.getTime());
 	}
 
 	/**
 	 * Get the encounter's end date.
-	 * 
+	 *
 	 * @return The encounter's end date.
 	 */
 	public Date getEnd() {
-		return this.end;
+		return new Date(this.end.getTime());
 	}
 
 	/**
 	 * Set the encounter's end date.
-	 * 
+	 *
 	 * @param inEnd The encounter's end date.
 	 */
 	public void setEnd(Date inEnd) {
-		this.end = inEnd;
+		this.end = new Date(inEnd.getTime());
 	}
 
 	/**
 	 * Get the encounter's type.
-	 * 
+	 *
 	 * @return The encounter's type.
 	 */
 	public String getType() {
@@ -143,7 +143,7 @@ public class Encounter {
 
 	/**
 	 * Set the encounter's type.
-	 * 
+	 *
 	 * @param inType The encounter's type.
 	 */
 	public void setType(String inType) {
@@ -152,7 +152,7 @@ public class Encounter {
 
 	/**
 	 * Get the encounter's discharge disposition.
-	 * 
+	 *
 	 * @return The encounter's discharge disposition.
 	 */
 	public String getDischargeDisposition() {
@@ -161,7 +161,7 @@ public class Encounter {
 
 	/**
 	 * Set the encounter's discharge disposition.
-	 * 
+	 *
 	 * @param inDischargeDisposition The encounter's discharge disposition.
 	 */
 	public void setDischargeDisposition(String inDischargeDisposition) {
