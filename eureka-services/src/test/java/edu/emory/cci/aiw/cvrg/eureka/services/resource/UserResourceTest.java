@@ -17,9 +17,9 @@ import edu.emory.cci.aiw.cvrg.eureka.common.entity.User;
 
 /**
  * Test cases related to the {@link UserResource} class.
- * 
+ *
  * @author hrathod
- * 
+ *
  */
 public class UserResourceTest extends AbstractResourceTest {
 
@@ -35,7 +35,7 @@ public class UserResourceTest extends AbstractResourceTest {
 	 */
 	@Test
 	public void testUserList() {
-		List<User> users = getUserList();
+		List<User> users = this.getUserList();
 		Assert.assertEquals(3, users.size());
 	}
 
@@ -109,4 +109,15 @@ public class UserResourceTest extends AbstractResourceTest {
 		Assert.assertEquals(Status.OK, response.getClientResponseStatus());
 	}
 
+	@Test
+	public void testFindByName() {
+		WebResource resource = this.resource();
+		List<User> users = this.getUserList();
+		User user = users.get(0);
+		ClientResponse response = resource.path("/api/user/byname/" + user.getEmail()).accept(MediaType.APPLICATION_JSON).get(ClientResponse.class);
+		Assert.assertEquals(Status.OK, response.getClientResponseStatus());
+
+		User responseUser = response.getEntity(User.class);
+		Assert.assertEquals(user.getEmail(), responseUser.getEmail());
+	}
 }
