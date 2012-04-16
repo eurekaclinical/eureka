@@ -20,6 +20,7 @@ import org.slf4j.LoggerFactory;
 
 import com.google.inject.Inject;
 
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.JobFilter;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.Configuration;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.Job;
 import edu.emory.cci.aiw.cvrg.eureka.etl.dao.ConfDao;
