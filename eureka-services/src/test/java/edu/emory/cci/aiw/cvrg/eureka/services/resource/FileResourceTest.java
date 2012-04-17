@@ -1,5 +1,6 @@
 package edu.emory.cci.aiw.cvrg.eureka.services.resource;
 
+import java.util.Date;
 import java.util.List;
 
 import junit.framework.Assert;
@@ -16,9 +17,9 @@ import edu.emory.cci.aiw.cvrg.eureka.common.entity.User;
 
 /**
  * Tests related to the file upload resource.
- * 
+ *
  * @author hrathod
- * 
+ *
  */
 public class FileResourceTest extends AbstractResourceTest {
 
@@ -40,9 +41,11 @@ public class FileResourceTest extends AbstractResourceTest {
 		FileUpload fileUpload = new FileUpload();
 		fileUpload.setLocation("/tmp/foo");
 		fileUpload.setUser(user);
+		fileUpload.setTimestamp(new Date());
 
-		WebResource resource = this.resource();
-		ClientResponse response = resource.path("/api/file/upload").post(
+		final WebResource resource = this.resource();
+		final WebResource path = resource.path("/api/file/upload");
+		ClientResponse response = path.post(
 				ClientResponse.class, fileUpload);
 		Assert.assertEquals(Status.CREATED, response.getClientResponseStatus());
 	}
