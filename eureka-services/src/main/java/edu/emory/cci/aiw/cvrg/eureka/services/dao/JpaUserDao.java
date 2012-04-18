@@ -69,7 +69,9 @@ public class JpaUserDao implements UserDao {
 
 	@Override
 	public void refresh(User user) {
-		this.getEntityManager().refresh(user);
+		if (user != null) {
+			this.getEntityManager().refresh(user);
+		}
 	}
 
 	@Override
