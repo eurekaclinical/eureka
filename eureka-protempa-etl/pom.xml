@@ -104,6 +104,11 @@
 			<artifactId>eureka-common</artifactId>
 		</dependency>
 		<dependency>
+			<groupId>edu.emory.cci.aiw.cvrg</groupId>
+			<artifactId>eureka-common</artifactId>
+			<type>test-jar</type>
+		</dependency>
+		<dependency>
 			<groupId>edu.emory.cci</groupId>
 			<artifactId>registry</artifactId>
 		</dependency>
