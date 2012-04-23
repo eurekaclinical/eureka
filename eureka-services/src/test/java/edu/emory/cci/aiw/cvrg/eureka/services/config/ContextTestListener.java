@@ -1,5 +1,6 @@
 package edu.emory.cci.aiw.cvrg.eureka.services.config;
 
+import edu.emory.cci.aiw.cvrg.eureka.services.test.Setup;
 import java.security.NoSuchAlgorithmException;
 
 import javax.servlet.ServletContextEvent;
@@ -14,20 +15,20 @@ import com.google.inject.servlet.GuiceServletContextListener;
 
 /**
  * Create a Guice injector for testing.
- * 
+ *
  * @author hrathod
- * 
+ *
  */
 public class ContextTestListener extends GuiceServletContextListener {
 
-	
+
 	/**
 	 * The class level logger.
 	 */
 	private static final Logger LOGGER = LoggerFactory
 			.getLogger(ContextTestListener.class);
 	/**
-	 * Make sure we always use the same injector
+	 * Make sure we always use the same injector.
 	 */
 	private final Injector injector = Guice.createInjector(
 			new ServletTestModule(), new AppTestModule());
@@ -52,12 +53,6 @@ public class ContextTestListener extends GuiceServletContextListener {
 		this.persistService = this.getInjector().getInstance(
 				PersistService.class);
 		this.persistService.start();
-		Setup setup = this.getInjector().getInstance(Setup.class);
-		try {
-			setup.configure();
-		} catch (NoSuchAlgorithmException e) {
-			LOGGER.error(e.getMessage(), e);
-		}
 	}
 
 	/*

@@ -4,11 +4,11 @@ import org.junit.Test;
 
 /**
  * Test cases for the job resource.
- * 
+ *
  * @author hrathod
- * 
+ *
  */
-public class JobResourceTest extends AbstractResourceTest {
+public class JobResourceTest extends AbstractServiceResourceTest {
 
 	/**
 	 * A test to check whether submitting a job via the JobResource class works.

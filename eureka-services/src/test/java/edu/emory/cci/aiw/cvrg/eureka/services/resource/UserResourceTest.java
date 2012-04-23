@@ -21,10 +21,10 @@ import edu.emory.cci.aiw.cvrg.eureka.common.entity.User;
  * @author hrathod
  *
  */
-public class UserResourceTest extends AbstractResourceTest {
+public class UserResourceTest extends AbstractServiceResourceTest {
 
 	/**
-	 * Simply call super();
+	 * Simply call super().
 	 */
 	public UserResourceTest() {
 		super();
@@ -89,7 +89,7 @@ public class UserResourceTest extends AbstractResourceTest {
 				.type(MediaType.APPLICATION_JSON).accept(MediaType.TEXT_PLAIN)
 				.post(ClientResponse.class, userRequest);
 
-		Assert.assertTrue(response.getClientResponseStatus() == Status.CREATED);
+		Assert.assertEquals(Status.CREATED, response.getClientResponseStatus());
 
 	}
 
@@ -109,6 +109,9 @@ public class UserResourceTest extends AbstractResourceTest {
 		Assert.assertEquals(Status.OK, response.getClientResponseStatus());
 	}
 
+	/**
+	 * Test the "find user by name" functionality in UserResource.
+	 */
 	@Test
 	public void testFindByName() {
 		WebResource resource = this.resource();

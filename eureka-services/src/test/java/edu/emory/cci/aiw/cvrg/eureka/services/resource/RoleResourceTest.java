@@ -15,14 +15,14 @@ import edu.emory.cci.aiw.cvrg.eureka.common.entity.Role;
 
 /**
  * Tests for the {@link RoleResource} class.
- * 
+ *
  * @author hrathod
- * 
+ *
  */
-public class RoleResourceTest extends AbstractResourceTest {
+public class RoleResourceTest extends AbstractServiceResourceTest {
 
 	/**
-	 * Simply call super()
+	 * Simply call super().
 	 */
 	public RoleResourceTest() {
 		super();
@@ -32,7 +32,7 @@ public class RoleResourceTest extends AbstractResourceTest {
 	 * Test that proper number of roles are returned from the resource.
 	 */
 	@Test
-	public void testRoleList() {
+	public final void testRoleList() {
 		WebResource webResource = this.resource();
 		List<Role> roles = webResource.path("/api/role/list")
 				.accept(MediaType.APPLICATION_JSON)

@@ -21,7 +21,7 @@ import edu.emory.cci.aiw.cvrg.eureka.common.entity.User;
  * @author hrathod
  *
  */
-public class FileResourceTest extends AbstractResourceTest {
+public class FileResourceTest extends AbstractServiceResourceTest {
 
 	/**
 	 * Construct the object with the given file data access object.
@@ -35,7 +35,7 @@ public class FileResourceTest extends AbstractResourceTest {
 	 * Test if the file upload functionality works.
 	 */
 	@Test
-	public void testFileUpload() {
+	public final void testFileUpload() {
 		List<User> users = this.getUserList();
 		User user = users.get(0);
 		FileUpload fileUpload = new FileUpload();
