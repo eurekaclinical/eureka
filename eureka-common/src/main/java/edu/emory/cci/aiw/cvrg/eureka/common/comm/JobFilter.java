@@ -1,96 +1,147 @@
 package edu.emory.cci.aiw.cvrg.eureka.common.comm;
 
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.Job;
-
+/**
+ * A communication class used by the service layer to send filter criteria to
+ * the ETL layer for job status retrieval tasks.
+ *
+ * @author hrathod
+ */
 public class JobFilter {
 
+	/**
+	 * The unique identifier for the job to retrieve.
+	 */
 	private final Long jobId;
+	/**
+	 * The unique identifier for a user to whom the jobs should belong.
+	 */
 	private final Long userId;
+	/**
+	 * The state in which the jobs should be when retrieved.
+	 */
 	private final String state;
+	/**
+	 * Find jobs with timestamp after this time.
+	 */
 	private final Date from;
+	/**
+	 * Find jobs with timestamp before this time.
+	 */
 	private final Date to;
 
-	private final byte score;
+	/**
+	 * Create an instance with the given parameters. Null parameters are
+	 * allowed. The inFrom and inTo parameters can be used to create date range
+	 * to search between.
+	 *
+	 * @param inJobId Search for a specific job using a unique identifier.
+	 * @param inUserId Search for all jobs belonging to a specific user.
+	 * @param inState Search for all jobs in a given state.
+	 * @param inFrom Search for all jobs with a timestamp after the given time.
+	 * @param inTo Search for all jobs with a timestamp before the given time.
+	 */
+	public JobFilter(final Long inJobId, final Long inUserId,
+			final String inState, final Date inFrom,
+			final Date inTo) {
 
-	public JobFilter(Long jobId, Long userId, String state, Date from, Date to) {
+		this.jobId = inJobId;
+		this.userId = inUserId;
+		this.state = inState;
+		this.from = (null == inFrom) ? null : new Date(inFrom.getTime());
+		this.to = (null == inTo) ? null : new Date(inTo.getTime());
+	}
 
-		this.jobId = jobId;
-		this.userId = userId;
-		this.state = state;
-		this.from = (null == from) ? null : new Date(from.getTime());
-		this.to = (null == to) ? null : new Date(to.getTime());
-
-		byte b = 0;
-		b |= (jobId != null) ? 1 : 0;
-		b |= (userId != null) ? 2 : 0;
-		b |= (state != null) ? 4 : 0;
-		b |= (from != null) ? 8 : 0;
-		b |= (to != null) ? 16 : 0;
-		score = b;
+	/**
+	 * Creates a filter by parsing the given string for the needed values. The
+	 * string should be in a pipe-delimited format, with an equal sign
+	 * separating the key and value. For example,
+	 * "jobId=1|userId=1|state=STARTED|from=123456|to=123456".
+	 *
+	 * @param queryString
+	 */
+	public JobFilter(String queryString) {
+		Map<String, String> params = new HashMap<String, String>();
+		String[] parts = queryString.split("|");
+		for (String part : parts) {
+			String[] data = part.split("=");
+			if (data.length > 1 && data[0] != null && data[1] != null) {
+				params.put(data[0], data[1]);
+			}
+		}
+		this.jobId = params.get("jobId") == null ? null : Long.valueOf(params.
+				get("jobId"));
+		this.userId = params.get("userId") == null ? null : Long.valueOf(params.
+				get("userId"));
+		this.state = params.get("state");
+		this.from = params.get("from") == null ? null : new Date(Long.valueOf(params.
+				get("from")));
+		this.to = params.get("to") == null ? null : new Date(Long.valueOf(params.
+				get("to")));
 	}
 
 	/**
 	 * @return the jobId
 	 */
-	public Long getJobId() {
+	public final Long getJobId() {
 		return this.jobId;
 	}
 
 	/**
 	 * @return the userId
 	 */
-	public Long getUserId() {
+	public final Long getUserId() {
 		return this.userId;
 	}
 
 	/**
 	 * @return the state
 	 */
-	public String getState() {
+	public final String getState() {
 		return this.state;
 	}
 
 	/**
 	 * @return the from
 	 */
-	public Date getFrom() {
-		return new Date(this.from.getTime());
+	public final Date getFrom() {
+		return this.from == null ? null : new Date(this.from.getTime());
 	}
 
 	/**
 	 * @return the to
 	 */
-	public Date getTo() {
-		return new Date(this.to.getTime());
+	public final Date getTo() {
+		return this.to == null ? null : new Date(this.to.getTime());
 	}
 
 	/**
-	 * @return the score
+	 * Convert the filter object into a string appropriate to be passed as a
+	 * request parameter. This string representation can then be parsed by the
+	 * String value constructor on the server side.
+	 *
+	 * @return A string representation of the filter.
 	 */
-	public byte getScore() {
-		return this.score;
-	}
-
-	public boolean evaluate(Job j) {
-
-		if (score == 0) {
-
-			return true;
+	public final String toQueryParam() {
+		StringBuilder builder = new StringBuilder();
+		if (this.jobId != null) {
+			builder.append("jobId=").append(this.jobId);
 		}
-
-		byte result = 0;
-		result |= (((score & 1) != 0) && this.jobId.equals(j.getId())) ? 1 : 0;
-		result |= (((score & 2) != 0) && this.userId.equals(j.getUserId())) ? 2
-				: 0;
-		result |= (((score & 4) != 0) && this.state.equals(j.getCurrentState())) ? 4
-				: 0;
-		result |= (((score & 8) != 0) && this.from.getTime() <= j
-				.getCreationTime().getTime()) ? 8 : 0;
-		result |= (((score & 16) != 0) && this.to.getTime() >= j
-				.getCreationTime().getTime()) ? 16 : 0;
-
-		return result == score;
+		if (this.userId != null) {
+			builder.append("|userId=").append(userId);
+		}
+		if (this.state != null) {
+			builder.append("|state=").append(state);
+		}
+		if (this.from != null) {
+			builder.append("|from=").append(from.getTime());
+		}
+		if (this.to != null) {
+			builder.append("|to=").append(to.getTime());
+		}
+		return builder.toString();
 	}
 }
