@@ -59,21 +59,22 @@ public class FileUpload implements CycleRecoverable {
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date timestamp;
 	/**
-	 * Has the file upload been validated?
+	 * Has the file upload been validated?.
 	 */
 	private boolean validated;
 	/**
-	 * Has the file been processed?
+	 * Has the file been processed?.
 	 */
 	private boolean processed;
 	/**
-	 * Are we done with the file?
+	 * Are we done with the file?.
 	 */
 	private boolean completed;
 	/**
-	 * The user to which this upload belongs
+	 * The user to which this upload belongs.
 	 */
-	@ManyToOne(cascade = CascadeType.ALL, targetEntity = User.class)
+	@ManyToOne(cascade = {CascadeType.MERGE, CascadeType.REFRESH, CascadeType.PERSIST},
+			   targetEntity = User.class)
 	@JoinColumn(name = "user_id")
 	private User user;
 	/**
@@ -81,13 +82,13 @@ public class FileUpload implements CycleRecoverable {
 	 */
 	@OneToMany(cascade = CascadeType.ALL, targetEntity = FileError.class,
 			mappedBy = "fileUpload")
-	List<FileError> errors = new ArrayList<FileError>();
+	private List<FileError> errors = new ArrayList<FileError>();
 	/**
 	 * Contains a list of warnings found in the file.
 	 */
 	@OneToMany(cascade = CascadeType.ALL, targetEntity = FileWarning.class,
 			mappedBy = "fileUpload")
-	List<FileWarning> warnings = new ArrayList<FileWarning>();
+	private List<FileWarning> warnings = new ArrayList<FileWarning>();
 
 	/**
 	 * Get the unique identifier for the file upload.
@@ -198,7 +199,7 @@ public class FileUpload implements CycleRecoverable {
 	 */
 	public void setUser(User inUser) {
 		this.user = inUser;
-		if (!this.user.getFileUploads().contains(this)) {
+		if ((inUser != null) && !this.user.getFileUploads().contains(this)) {
 			this.user.addFileUpload(this);
 		}
 	}
