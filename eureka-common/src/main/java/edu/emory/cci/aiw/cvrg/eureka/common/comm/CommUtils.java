@@ -18,11 +18,11 @@ import com.sun.jersey.client.urlconnection.HTTPSProperties;
 /**
  * Utility methods related to dealing with communication between different
  * layers of the application.
- * 
+ *
  * @author hrathod
- * 
+ *
  */
-public class CommUtils {
+public final class CommUtils {
 
 	/**
 	 * A private default constructor, to disallow instantiation of this class.
@@ -36,7 +36,7 @@ public class CommUtils {
 	 * returns a client with a trust manager that trusts all certificates. This
 	 * is very bad form. This should be removed as soon as possible (when a real
 	 * certificate is available for the machine).
-	 * 
+	 *
 	 * @return A Jersey client capable of making SSL requests.
 	 * @throws KeyManagementException Thrown when the rest client can not be
 	 *             configured for SSL correctly.
