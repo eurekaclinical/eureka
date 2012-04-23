@@ -20,9 +20,9 @@ import com.sun.xml.bind.CycleRecoverable;
 
 /**
  * A bean class to hold information related to roles in the system.
- * 
+ *
  * @author hrathod
- * 
+ *
  */
 @Entity
 @XmlRootElement
@@ -45,7 +45,8 @@ public class Role implements CycleRecoverable {
 	/**
 	 * A set of users to have this role assigned.
 	 */
-	@ManyToMany(cascade = CascadeType.ALL, targetEntity = User.class)
+	@ManyToMany(cascade = {CascadeType.MERGE, CascadeType.REFRESH, CascadeType.PERSIST},
+				targetEntity = User.class)
 	@JoinTable(name = "user_role",
 			joinColumns = { @JoinColumn(name = "roleId") },
 			inverseJoinColumns = { @JoinColumn(name = "userId") })
@@ -64,7 +65,7 @@ public class Role implements CycleRecoverable {
 
 	/**
 	 * Get the role's identification number.
-	 * 
+	 *
 	 * @return A {@link Long} representing the role's id.
 	 */
 	public Long getId() {
@@ -73,7 +74,7 @@ public class Role implements CycleRecoverable {
 
 	/**
 	 * Set the role's identification number.
-	 * 
+	 *
 	 * @param inId The number representing the role's id.
 	 */
 	public void setId(Long inId) {
@@ -82,7 +83,7 @@ public class Role implements CycleRecoverable {
 
 	/**
 	 * Get the role's name.
-	 * 
+	 *
 	 * @return A String containing the role's name.
 	 */
 	public String getName() {
@@ -91,7 +92,7 @@ public class Role implements CycleRecoverable {
 
 	/**
 	 * Set the role's name.
-	 * 
+	 *
 	 * @param inName A string containing the role's name.
 	 */
 	public void setName(String inName) {
@@ -100,7 +101,7 @@ public class Role implements CycleRecoverable {
 
 	/**
 	 * Is this role a default role?
-	 * 
+	 *
 	 * @return True if the role is a default role, false otherwise.
 	 */
 	public Boolean isDefaultRole() {
@@ -109,7 +110,7 @@ public class Role implements CycleRecoverable {
 
 	/**
 	 * Set the role's default flag.
-	 * 
+	 *
 	 * @param inDefaultRole True or False, True indicating a default role, False
 	 *            indicating a non-default role.
 	 */
@@ -119,7 +120,7 @@ public class Role implements CycleRecoverable {
 
 	/**
 	 * Get all the users who have the current role assigned.
-	 * 
+	 *
 	 * @return A Set of {@link User} objects.
 	 */
 	@JsonBackReference("users-roles")
@@ -129,7 +130,7 @@ public class Role implements CycleRecoverable {
 
 	/**
 	 * Set the users who have the current role assigned to them.
-	 * 
+	 *
 	 * @param inUsers A Set of {@link User} objects.
 	 */
 	public void setUsers(List<User> inUsers) {
@@ -143,7 +144,7 @@ public class Role implements CycleRecoverable {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see java.lang.Object#toString()
 	 */
 	@Override

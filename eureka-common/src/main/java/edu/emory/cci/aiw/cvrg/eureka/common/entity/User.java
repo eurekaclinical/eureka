@@ -84,7 +84,8 @@ public class User implements CycleRecoverable {
 	/**
 	 * A list of roles assigned to the user.
 	 */
-	@ManyToMany(cascade = CascadeType.ALL, targetEntity = Role.class)
+	@ManyToMany(cascade = {CascadeType.REFRESH, CascadeType.MERGE},
+				targetEntity = Role.class)
 	@JoinTable(name = "user_role",
 			joinColumns = { @JoinColumn(name = "userId") },
 			inverseJoinColumns = { @JoinColumn(name = "roleId") })
