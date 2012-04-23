@@ -29,6 +29,11 @@ public interface JobDao {
 	 */
 	public Job get(Long id);
 
+    /**
+     * Get a list of all jobs.
+     */
+    public List<Job> getAll();
+
 	/**
 	 * Gets a list of jobs that meet the given filter criteria.
 	 *

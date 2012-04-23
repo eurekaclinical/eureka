@@ -5,9 +5,6 @@ import java.util.Date;
 import java.util.List;
 
 import javax.persistence.EntityManager;
-import javax.persistence.NoResultException;
-import javax.persistence.NonUniqueResultException;
-import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -50,7 +47,7 @@ public class JpaJobDao implements JobDao {
 	 * @param inEMProvider The entity manager provider.
 	 */
 	@Inject
-	public JpaJobDao(Provider<EntityManager> inEMProvider) {
+	public JpaJobDao(final Provider<EntityManager> inEMProvider) {
 		this.emProvider = inEMProvider;
 	}
 
@@ -65,7 +62,7 @@ public class JpaJobDao implements JobDao {
 
 	@Override
 	@Transactional
-	public void save(Job job) {
+	public void save(final Job job) {
 		LOGGER.debug("Persisting job: {}", job);
 		EntityManager entityManager = this.getEntityManager();
 		entityManager.persist(job);
@@ -73,17 +70,27 @@ public class JpaJobDao implements JobDao {
 	}
 
 	@Override
-	public void refresh(Job job) {
+	public void refresh(final Job job) {
 		this.getEntityManager().refresh(job);
 	}
 
 	@Override
-	public Job get(Long id) {
+	public Job get(final Long id) {
 		return this.getEntityManager().find(Job.class, id);
 	}
 
 	@Override
-	public List<Job> get(JobFilter jobFilter) {
+	public List<Job> getAll() {
+		EntityManager entityManager = this.getEntityManager();
+		CriteriaBuilder builder = entityManager.getCriteriaBuilder();
+		CriteriaQuery<Job> criteriaQuery = builder.createQuery(Job.class);
+		criteriaQuery.from(Job.class);
+		TypedQuery<Job> query = entityManager.createQuery(criteriaQuery);
+		return query.getResultList();
+	}
+
+	@Override
+	public List<Job> get(final JobFilter jobFilter) {
 		EntityManager entityManager = this.getEntityManager();
 		CriteriaBuilder builder = entityManager.getCriteriaBuilder();
 		CriteriaQuery<Job> query = builder.createQuery(Job.class);
