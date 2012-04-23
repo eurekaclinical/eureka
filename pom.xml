@@ -129,7 +129,7 @@
 		<jpamodelgen-version>1.2.0.Final</jpamodelgen-version>
 	</properties>
 
-	<!-- make sure our code complies with Java 1.6 specifications, and define 
+	<!-- make sure our code complies with Java 1.6 specifications, and define
 		the name of the WAR file to create -->
 	<build>
 		<pluginManagement>
@@ -142,6 +142,18 @@
 						<source>1.6</source>
 						<target>1.6</target>
 					</configuration>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-jar-plugin</artifactId>
+					<version>2.4</version>
+					<executions>
+						<execution>
+							<goals>
+								<goal>test-jar</goal>
+							</goals>
+						</execution>
+					</executions>
 				</plugin>
 				<plugin>
 					<groupId>org.codehaus.mojo</groupId>
@@ -359,6 +371,13 @@
 			</dependency>
 			<dependency>
 				<groupId>edu.emory.cci.aiw.cvrg</groupId>
+				<artifactId>eureka-common</artifactId>
+				<version>${eureka-version}</version>
+				<scope>test</scope>
+				<type>test-jar</type>
+			</dependency>
+			<dependency>
+				<groupId>edu.emory.cci.aiw.cvrg</groupId>
 				<artifactId>eureka-services</artifactId>
 				<type>war</type>
 				<version>${eureka-version}</version>
@@ -422,12 +441,12 @@
 			<name>JA-SIG Maven2 Repository</name>
 			<url>http://developer.ja-sig.org/maven2</url>
 		</repository>
-		<!-- <repository> <id>jboss</id> <name>JBoss Repository</name> <layout>default</layout> 
-			<url>http://repository.jboss.org/nexus/content/groups/public-jboss/</url> 
+		<!-- <repository> <id>jboss</id> <name>JBoss Repository</name> <layout>default</layout>
+			<url>http://repository.jboss.org/nexus/content/groups/public-jboss/</url>
 			</repository> -->
 	</repositories>
 
-	<!-- define any additional repositories needed to fetch the plugins we are 
+	<!-- define any additional repositories needed to fetch the plugins we are
 		using -->
 	<pluginRepositories>
 		<pluginRepository>
