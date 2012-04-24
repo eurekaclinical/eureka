@@ -7,6 +7,7 @@ import junit.framework.Assert;
 import org.junit.Test;
 
 import com.google.inject.Module;
+
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.User;
 import edu.emory.cci.aiw.cvrg.eureka.common.test.AbstractTest;
 import edu.emory.cci.aiw.cvrg.eureka.common.test.TestDataProvider;
@@ -26,9 +27,9 @@ public class UserDaoTest extends AbstractTest {
 	 * should match the number of users seeded in the class constructor.
 	 */
 	@Test
-	public final void testDao() {
+	public void testDao() {
 		UserDao dao = this.getInstance(UserDao.class);
-		List<User> users = dao.getUsers();
+		List<User> users = dao.getAll();
 		Assert.assertEquals(3, users.size());
 	}
 
@@ -40,6 +41,15 @@ public class UserDaoTest extends AbstractTest {
 	@Override
 	protected Module[] getModules() {
 		return new Module[] { new AppTestModule() };
+	}
+
+	@Test
+	public void testGetByName () {
+		UserDao dao = this.getInstance(UserDao.class);
+		List<User> users = dao.getAll();
+		User user = users.get(0);
+		User testUser = dao.getByName(user.getEmail());
+		Assert.assertEquals(user.getEmail(), testUser.getEmail());
 	}
 
 }

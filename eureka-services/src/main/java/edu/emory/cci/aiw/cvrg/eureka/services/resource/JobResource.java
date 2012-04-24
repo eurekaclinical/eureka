@@ -12,7 +12,6 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.Status;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,9 +30,9 @@ import edu.emory.cci.aiw.cvrg.eureka.services.thread.JobTask;
 
 /**
  * REST operations related to jobs submitted by the user.
- * 
+ *
  * @author hrathod
- * 
+ *
  */
 @Path("/job")
 public class JobResource {
@@ -64,7 +63,7 @@ public class JobResource {
 
 	/**
 	 * Construct a new job resource with the given job update thread.
-	 * 
+	 *
 	 * @param inUserDao The data access object used to fetch information about
 	 *            users.
 	 * @param inFileDao The data access object used to fetch and store
@@ -83,10 +82,10 @@ public class JobResource {
 	}
 
 	/**
-	 * Create a new job (by uploading a new file)
-	 * 
+	 * Create a new job (by uploading a new file).
+	 *
 	 * @param inFileUpload The file upload to add.
-	 * 
+	 *
 	 * @return A {@link Status#OK} if the file is successfully added,
 	 *         {@link Status#BAD_REQUEST} if there are errors.
 	 */
@@ -97,9 +96,9 @@ public class JobResource {
 		LOGGER.debug("Got file upload: {}", inFileUpload);
 		FileUpload fileUpload = inFileUpload;
 		Long userId = inFileUpload.getUser().getId();
-		fileUpload.setUser(this.userDao.getById(userId));
+		fileUpload.setUser(this.userDao.retrieve(userId));
 		fileUpload.setTimestamp(new Date());
-		this.fileDao.save(fileUpload);
+		this.fileDao.create(fileUpload);
 		this.jobTask.setFileUploadId(fileUpload.getId());
 		this.jobExecutor.queueJob(this.jobTask);
 
@@ -109,16 +108,16 @@ public class JobResource {
 	/**
 	 * Get a list of jobs associated with user referred to by the given unique
 	 * identifier.
-	 * 
+	 *
 	 * @param userId The unique identifier for the user.
-	 * 
+	 *
 	 * @return A list of {@link Job} objects associated with the user.
 	 */
 	@Path("/list/{id}")
 	@GET
 	@Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
 	public List<Job> getJobsByUser(@PathParam("id") final Long userId) {
-		User user = this.userDao.getById(userId);
+		User user = this.userDao.retrieve(userId);
 		List<Job> allJobs = JobCollection.getJobs();
 		List<Job> result = new ArrayList<Job>();
 		for (Job job : allJobs) {
@@ -131,7 +130,7 @@ public class JobResource {
 
 	/**
 	 * Get the status of a job process for the given user.
-	 * 
+	 *
 	 * @param userId The unique identifier of the user to query for.
 	 * @return A {@link JobInfo} object containing the status information.
 	 */

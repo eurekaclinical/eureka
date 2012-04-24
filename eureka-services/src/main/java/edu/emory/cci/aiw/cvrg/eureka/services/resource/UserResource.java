@@ -37,9 +37,9 @@ import edu.emory.cci.aiw.cvrg.eureka.services.util.StringUtil;
 
 /**
  * RESTful end-point for {@link User} related methods.
- * 
+ *
  * @author hrathod
- * 
+ *
  */
 @Path("/user")
 public class UserResource {
@@ -47,8 +47,8 @@ public class UserResource {
 	/**
 	 * The class logger.
 	 */
-	private static final Logger LOGGER = LoggerFactory
-			.getLogger(UserResource.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(
+			UserResource.class);
 	/**
 	 * A secure random number generator to be used to create passwords.
 	 */
@@ -73,7 +73,7 @@ public class UserResource {
 
 	/**
 	 * Create a UserResource object with a User DAO and a Role DAO.
-	 * 
+	 *
 	 * @param inUserDao DAO used to access {@link User} related functionality.
 	 * @param inRoleDao DAO used to access {@link Role} related functionality.
 	 * @param inEmailSender Used to send emails to the user when necessary.
@@ -88,14 +88,14 @@ public class UserResource {
 
 	/**
 	 * Get a list of all users in the system.
-	 * 
+	 *
 	 * @return A list of {@link User} objects.
 	 */
 	@Path("/list")
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public List<User> getUsers() {
-		List<User> users = this.userDao.getUsers();
+		List<User> users = this.userDao.getAll();
 		for (User user : users) {
 			this.userDao.refresh(user);
 		}
@@ -105,7 +105,7 @@ public class UserResource {
 
 	/**
 	 * Get a user by the user's identification number.
-	 * 
+	 *
 	 * @param inId The identification number for the user to fetch.
 	 * @return The user referenced by the identification number.
 	 */
@@ -113,7 +113,7 @@ public class UserResource {
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public User getUserById(@PathParam("id") Long inId) {
-		User user = this.userDao.getById(inId);
+		User user = this.userDao.retrieve(inId);
 		this.userDao.refresh(user);
 		LOGGER.debug("Returning user for ID {}: {}", inId, user);
 		return user;
@@ -121,33 +121,35 @@ public class UserResource {
 
 	/**
 	 * Get a user using the username.
-	 * 
+	 *
 	 * @param inName The of the user to fetch.
 	 * @return The user corresponding to the given name.
 	 */
 	@Path("/byname/{name}")
 	@GET
-	@Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
+	@Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
 	public User getUserByName(@PathParam("name") String inName) {
 		User user = this.userDao.getByName(inName);
-		this.userDao.refresh(user);
+		if (user != null) {
+			this.userDao.refresh(user);
+		}
 		LOGGER.debug("Returning user for name {}: {}", inName, user);
 		return user;
 	}
 
 	/**
 	 * Add a new user to the system.
-	 * 
+	 *
 	 * @param userRequest Object containing all the information about the user
-	 *            to add.
+	 * to add.
 	 * @return A "Bad Request" error if the user does not pass validation, a
-	 *         "Created" response with a link to the user page if successful.
+	 * "Created" response with a link to the user page if successful.
 	 * @throws ServletException Thrown when a password can not be properly
-	 *             hashed.
+	 * hashed.
 	 */
 	@Path("/add")
 	@POST
-	@Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
+	@Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
 	@Produces(MediaType.TEXT_PLAIN)
 	public Response addUser(final UserRequest userRequest)
 			throws ServletException {
@@ -173,7 +175,7 @@ public class UserResource {
 			user.setPassword(userRequest.getPassword());
 			user.setVerificationCode(UUID.randomUUID().toString());
 			LOGGER.debug("Saving new user {}", user.getEmail());
-			this.userDao.save(user);
+			this.userDao.create(user);
 			try {
 				LOGGER.debug("Sending email to {}", user.getEmail());
 				this.emailSender.sendVerificationMessage(user);
@@ -184,23 +186,23 @@ public class UserResource {
 		} else {
 			LOGGER.info("Invalid new user request: {}, reason {}", userRequest,
 					this.validationError);
-			response = Response.status(Status.BAD_REQUEST)
-					.entity(this.validationError).build();
+			response = Response.status(Status.BAD_REQUEST).entity(
+					this.validationError).build();
 		}
 		return response;
 	}
 
 	/**
 	 * Change a user's password.
-	 * 
+	 *
 	 * @param inId The unique identifier for the user.
 	 * @param oldPassword The old password for the user.
 	 * @param newPassword The new password for the user.
 	 * @return {@link Status#OK} if the password update is successful,
-	 *         {@link Status#BAD_REQUEST} if the current password does not
-	 *         match, or if the user does not exist.
+	 *         {@link Status#BAD_REQUEST} if the current password does not match, or if
+	 * the user does not exist.
 	 * @throws ServletException Thrown when a password cannot be properly
-	 *             hashed.
+	 * hashed.
 	 */
 	@Path("/passwd/{id}")
 	@GET
@@ -210,7 +212,7 @@ public class UserResource {
 			throws ServletException {
 
 		Response response;
-		User user = this.userDao.getById(inId);
+		User user = this.userDao.retrieve(inId);
 		String oldPasswordHash;
 		String newPasswordHash;
 		try {
@@ -222,7 +224,7 @@ public class UserResource {
 		}
 		if (user.getPassword().equals(oldPasswordHash)) {
 			user.setPassword(newPasswordHash);
-			this.userDao.save(user);
+			this.userDao.update(user);
 			try {
 				this.emailSender.sendPasswordChangeMessage(user);
 			} catch (EmailException ee) {
@@ -230,35 +232,35 @@ public class UserResource {
 			}
 			response = Response.ok().build();
 		} else {
-			response = Response.status(Status.BAD_REQUEST)
-					.entity("Password mismatch").build();
+			response = Response.status(Status.BAD_REQUEST).entity(
+					"Password mismatch").build();
 		}
 		return response;
 	}
 
 	/**
 	 * Put an updated user to the system.
-	 * 
+	 *
 	 * @param inUser Object containing all the information about the user to
-	 *            add.
+	 * add.
 	 * @return A "Created" response with a link to the user page if successful.
-	 * 
+	 *
 	 */
 	@Path("/put")
 	@PUT
-	@Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
+	@Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
 	@Produces(MediaType.TEXT_PLAIN)
 	public Response putUser(final User inUser) {
 		LOGGER.debug("Received updated user: {}", inUser);
 		Response response;
-		User currentUser = this.userDao.getById(inUser.getId());
+		User currentUser = this.userDao.retrieve(inUser.getId());
 		this.userDao.refresh(currentUser);
 		boolean activation = (!currentUser.isActive())
 				&& (inUser.isActive());
 		List<Role> roles = inUser.getRoles();
 		List<Role> updatedRoles = new ArrayList<Role>();
 		for (Role r : roles) {
-			Role updatedRole = this.roleDao.getRoleById(r.getId());
+			Role updatedRole = this.roleDao.retrieve(r.getId());
 			updatedRoles.add(updatedRole);
 		}
 
@@ -268,7 +270,7 @@ public class UserResource {
 
 		if (this.validateUpdatedUser(currentUser)) {
 			LOGGER.debug("Saving updated user: {}", currentUser);
-			this.userDao.save(currentUser);
+			this.userDao.update(currentUser);
 
 			if (activation) {
 				try {
@@ -286,10 +288,10 @@ public class UserResource {
 
 	/**
 	 * Mark a user as verified.
-	 * 
+	 *
 	 * @param code The verification code to match against users.
 	 * @return An HTTP OK response if the user is modified, or a server error if
-	 *         the user can not be modified properly.
+	 * the user can not be modified properly.
 	 */
 	@Path("/verify/{code}")
 	@PUT
@@ -298,7 +300,7 @@ public class UserResource {
 		User user = this.userDao.getByVerificationCode(code);
 		if (user != null) {
 			user.setVerified(true);
-			this.userDao.save(user);
+			this.userDao.update(user);
 		} else {
 			response = Response.notModified("Invalid user").build();
 		}
@@ -307,36 +309,35 @@ public class UserResource {
 
 	/**
 	 * Mark a user as active.
-	 * 
+	 *
 	 * @param inId the unique identifier of the user to be made active.
 	 * @return An HTTP OK response if the modification is completed normall, or
-	 *         a server error if the user cannot be modified properly.
+	 * a server error if the user cannot be modified properly.
 	 */
 	@Path("/activate/{id}")
 	@PUT
 	public Response activateUser(@PathParam("id") final Long inId) {
 		Response response = Response.ok().build();
-		User user = this.userDao.getById(inId);
+		User user = this.userDao.retrieve(inId);
 		if (user != null) {
 			user.setActive(true);
-			this.userDao.save(user);
+			this.userDao.update(user);
 		} else {
-			response = Response.status(Status.BAD_REQUEST).entity("Invalid ID")
-					.build();
+			response = Response.status(Status.BAD_REQUEST).entity("Invalid ID").
+					build();
 		}
 		return response;
 	}
 
 	/**
 	 * Reset the given user's password. The password is randomly generated.
-	 * 
+	 *
 	 * @param inUsername The username for the user whose password should be
-	 *            reset.
+	 * reset.
 	 * @return A {@link Status#OK} if the password is reset and email sent,
 	 *         {@link Status#NOT_MODIFIED} if the user can not be found.
 	 * @throws ServletException Thrown if errors occur when resetting the
-	 *             password, or sending an email to the user informing them of
-	 *             the reset.
+	 * password, or sending an email to the user informing them of the reset.
 	 */
 	@Path("/pwreset/{username}")
 	@GET
@@ -345,12 +346,12 @@ public class UserResource {
 		Response response;
 		User user = this.userDao.getByName(inUsername);
 		if (user == null) {
-			response = Response.notModified()
-					.entity("No such user: " + inUsername).build();
+			response = Response.notModified().entity(
+					"No such user: " + inUsername).build();
 		} else {
 			final int length = 15 + RANDOM.nextInt(10);
-			String password = new BigInteger(130, RANDOM).toString(32)
-					.substring(0, length);
+			String password = new BigInteger(130, RANDOM).toString(32).substring(
+					0, length);
 			String passwordHash;
 			try {
 				passwordHash = StringUtil.md5(password);
@@ -359,7 +360,7 @@ public class UserResource {
 				throw new ServletException(e);
 			}
 			user.setPassword(passwordHash);
-			this.userDao.save(user);
+			this.userDao.update(user);
 			try {
 				this.emailSender.sendPasswordResetMessage(user, password);
 			} catch (EmailException e) {
@@ -375,7 +376,7 @@ public class UserResource {
 	 * Validate a {@link UserRequest} object. Two rules are implemented: 1) The
 	 * email addresses in the two email fields must match, and 2) The passwords
 	 * in the two password fields must match.
-	 * 
+	 *
 	 * @param userRequest The {@link UserRequest} object to validate.
 	 * @return True if the request is valid, and false otherwise.
 	 */
@@ -389,7 +390,7 @@ public class UserResource {
 			if ((userRequest.getEmail() == null)
 					|| (userRequest.getVerifyEmail() == null)
 					|| (!userRequest.getEmail().equals(
-							userRequest.getVerifyEmail()))) {
+					userRequest.getVerifyEmail()))) {
 				this.validationError = "Mismatched usernames";
 				result = false;
 			}
@@ -398,7 +399,7 @@ public class UserResource {
 			if ((userRequest.getPassword() == null)
 					|| (userRequest.getVerifyPassword() == null)
 					|| (!userRequest.getPassword().equals(
-							userRequest.getVerifyPassword()))) {
+					userRequest.getVerifyPassword()))) {
 				this.validationError = "Mismatched passwords";
 				result = false;
 			}
@@ -412,7 +413,7 @@ public class UserResource {
 
 	/**
 	 * Validate that a user being updated does not violate any rules.
-	 * 
+	 *
 	 * @param updatedUser The user to be validate.
 	 * @return True if the user is valid, false otherwise.
 	 */
@@ -420,7 +421,7 @@ public class UserResource {
 		boolean result = true;
 
 		// get the user as they currently exist in the data store.
-		User currentUser = this.userDao.getById(updatedUser.getId());
+		User currentUser = this.userDao.retrieve(updatedUser.getId());
 		List<Role> currentRoles = currentUser.getRoles();
 
 		// the roles to check
@@ -443,12 +444,12 @@ public class UserResource {
 
 	/**
 	 * Get a set of default roles to be added to a newly created user.
-	 * 
+	 *
 	 * @return A list of default roles.
 	 */
 	private List<Role> getDefaultRoles() {
 		List<Role> defaultRoles = new ArrayList<Role>();
-		for (Role role : this.roleDao.getRoles()) {
+		for (Role role : this.roleDao.getAll()) {
 			if (Boolean.TRUE.equals(role.isDefaultRole())) {
 				defaultRoles.add(role);
 			}

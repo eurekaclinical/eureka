@@ -17,9 +17,9 @@ import edu.emory.cci.aiw.cvrg.eureka.services.util.StringUtil;
  * To be used for Demo purposes only. Bootstraps the data store with some test
  * items so the integration between the web application and the services layer
  * can be tested more fully.
- * 
+ *
  * @author hrathod
- * 
+ *
  */
 class Bootstrap {
 
@@ -34,7 +34,7 @@ class Bootstrap {
 
 	/**
 	 * Create a Bootstrap class with an EntityManager.
-	 * 
+	 *
 	 * @param inRoleDao The data access object to be used to work with user
 	 *            objects in the data store.
 	 * @param inUserDao The data access object to be used to work with role
@@ -49,7 +49,7 @@ class Bootstrap {
 	/**
 	 * The work method of the class, adds some roles and users to the data
 	 * store.
-	 * 
+	 *
 	 * @throws NoSuchAlgorithmException Thrown when the configuration can not be
 	 *             sent to the ETL backend properly.
 	 */
@@ -63,31 +63,31 @@ class Bootstrap {
 	 */
 	private void addDefaultRoles() {
 		for (Role role : Bootstrap.createRoles()) {
-			this.roleDao.save(role);
+			this.roleDao.create(role);
 		}
 	}
 
 	/**
 	 * Add the default users to the data store.
-	 * 
+	 *
 	 * @throws NoSuchAlgorithmException Propagated from createUsers().
 	 */
 	private void addDefaultUsers() throws NoSuchAlgorithmException {
 		List<Role> defaultRoles = new ArrayList<Role>();
-		for (Role role : this.roleDao.getRoles()) {
+		for (Role role : this.roleDao.getAll()) {
 			if (Boolean.TRUE.equals(role.isDefaultRole())) {
 				defaultRoles.add(role);
 			}
 		}
 
 		for (User user : this.createUsers(defaultRoles)) {
-			this.userDao.save(user);
+			this.userDao.create(user);
 		}
 	}
 
 	/**
 	 * Create the users to be added to the data store.
-	 * 
+	 *
 	 * @param defaultRoles The default roles to be assigned to each newly
 	 *            created user.
 	 * @return List of users to be added.
@@ -118,7 +118,7 @@ class Bootstrap {
 		regularUser.setLastLogin(lastLogin);
 		regularUser.setRoles(defaultRoles);
 		users.add(regularUser);
-		
+
 		User adminUser = new User();
 		adminUser.setActive(true);
 		adminUser.setVerified(true);
@@ -130,7 +130,7 @@ class Bootstrap {
 		adminUser.setLastLogin(lastLogin);
 		adminUser.setRoles(adminRoles);
 		users.add(adminUser);
-		
+
 		User superUser = new User();
 		superUser.setActive(true);
 		superUser.setVerified(true);
@@ -142,7 +142,7 @@ class Bootstrap {
 		superUser.setLastLogin(lastLogin);
 		superUser.setRoles(superRoles);
 		users.add(superUser);
-		
+
 		for (int i = 1; i <= 3; i++) {
 			User user = new User();
 			user.setActive(true);
@@ -162,7 +162,7 @@ class Bootstrap {
 
 	/**
 	 * Create the roles to be added to the data store.
-	 * 
+	 *
 	 * @return List of roles to be added.
 	 */
 	private static List<Role> createRoles() {

@@ -2,7 +2,6 @@ package edu.emory.cci.aiw.cvrg.eureka.services.test;
 
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -13,7 +12,6 @@ import javax.persistence.criteria.CriteriaQuery;
 
 import com.google.inject.Inject;
 import com.google.inject.Provider;
-import com.sun.media.imageioimpl.plugins.tiff.TIFFAttrInfo;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.FileUpload;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.Role;

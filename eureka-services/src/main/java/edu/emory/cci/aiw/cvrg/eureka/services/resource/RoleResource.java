@@ -15,9 +15,9 @@ import edu.emory.cci.aiw.cvrg.eureka.services.dao.RoleDao;
 
 /**
  * A RESTful end-point for working with {@link Role} objects.
- * 
+ *
  * @author hrathod
- * 
+ *
  */
 @Path("/role")
 public class RoleResource {
@@ -28,7 +28,7 @@ public class RoleResource {
 
 	/**
 	 * Create a RoleResource object with the given {@link RoleDao}
-	 * 
+	 *
 	 * @param inRoleDao The RoleDao object used to work with role objects in the
 	 *            data store.
 	 */
@@ -39,7 +39,7 @@ public class RoleResource {
 
 	/**
 	 * Get a role by the role's identification number.
-	 * 
+	 *
 	 * @param inId The identification number for the role to fetch.
 	 * @return The role referenced by the identification number.
 	 */
@@ -47,18 +47,18 @@ public class RoleResource {
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public Role getRole(@PathParam("id") Long inId) {
-		return this.roleDao.getRoleById(inId);
+		return this.roleDao.retrieve(inId);
 	}
 
 	/**
 	 * Get a list of all the roles available in the system.
-	 * 
+	 *
 	 * @return A list of {@link Role} objects.
 	 */
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("/list")
 	public List<Role> getRoles() {
-		return this.roleDao.getRoles();
+		return this.roleDao.getAll();
 	}
 }

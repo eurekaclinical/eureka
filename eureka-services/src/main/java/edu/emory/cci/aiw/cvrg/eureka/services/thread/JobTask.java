@@ -96,7 +96,7 @@ public class JobTask implements Runnable {
 	 */
 	@Override
 	public void run() {
-		this.fileUpload = this.fileDao.get(this.fileUploadId);
+		this.fileUpload = this.fileDao.retrieve(this.fileUploadId);
 		if (this.fileUpload != null) {
 			try {
 				// first we make sure that the file is validated
@@ -107,21 +107,21 @@ public class JobTask implements Runnable {
 						this.fileUpload.getLocation());
 				this.fileUpload.setValidated(true);
 				this.fileUpload.setTimestamp(new Date());
-				this.fileDao.save(this.fileUpload);
+				this.fileDao.update(this.fileUpload);
 
 				// then we make sure the file is processed
 				this.processUpload(dataProvider);
 				LOGGER.debug("Data file processed");
 				this.fileUpload.setProcessed(true);
 				this.fileUpload.setTimestamp(new Date());
-				this.fileDao.save(this.fileUpload);
+				this.fileDao.update(this.fileUpload);
 
 				// finally, we submit the job
 				this.submitJob();
 				LOGGER.debug("Job submitted");
 				this.fileUpload.setCompleted(true);
 				this.fileUpload.setTimestamp(new Date());
-				this.fileDao.save(this.fileUpload);
+				this.fileDao.update(this.fileUpload);
 
 			} catch (DataProviderException e) {
 				LOGGER.error(e.getMessage(), e);
@@ -302,6 +302,6 @@ public class JobTask implements Runnable {
 		this.fileUpload.setCompleted(true);
 		this.fileUpload.setTimestamp(new Date());
 
-		this.fileDao.save(this.fileUpload);
+		this.fileDao.update(this.fileUpload);
 	}
 }

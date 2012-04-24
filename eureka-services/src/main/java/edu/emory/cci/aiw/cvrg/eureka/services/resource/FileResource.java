@@ -22,9 +22,9 @@ import edu.emory.cci.aiw.cvrg.eureka.services.dao.UserDao;
 
 /**
  * Operations related to a data file (upload, status, etc)
- * 
+ *
  * @author hrathod
- * 
+ *
  */
 @Path("/file")
 public class FileResource {
@@ -42,7 +42,7 @@ public class FileResource {
 
 	/**
 	 * Create an object with the give data access object.
-	 * 
+	 *
 	 * @param inFileDao The data access object used to communicate with
 	 *            {@link FileDao} objects in the data store.
 	 * @param inUserDao The data access object used to fetch information about
@@ -56,7 +56,7 @@ public class FileResource {
 
 	/**
 	 * Add a new uploaded file.
-	 * 
+	 *
 	 * @param fileUpload The file upload to add.
 	 * @return A {@link Status#CREATED} if the file is successfully added,
 	 *         {@link Status#BAD_REQUEST} if there are errors.
@@ -66,16 +66,16 @@ public class FileResource {
 	@Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
 	@Produces(MediaType.TEXT_PLAIN)
 	public Response uploadFile(FileUpload fileUpload) {
-		User user = this.userDao.getById(fileUpload.getUser().getId());
+		User user = this.userDao.retrieve(fileUpload.getUser().getId());
 		fileUpload.setUser(user);
-		this.fileDao.save(fileUpload);
+		this.fileDao.create(fileUpload);
         return Response.created(
                 URI.create("/" + fileUpload.getId())).build();
 	}
 
 	/**
 	 * Get an uploaded file referred to by the given unique identifier.
-	 * 
+	 *
 	 * @param inId The unique identifier for the file to be fetched.
 	 * @return The uploaded file information
 	 * @throws ServletException Thrown if the given unique identifier is
@@ -86,7 +86,7 @@ public class FileResource {
 	@Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
 	public FileUpload getFile(@PathParam("id") final Long inId)
 			throws ServletException {
-		FileUpload fileUpload = this.fileDao.get(inId);
+		FileUpload fileUpload = this.fileDao.retrieve(inId);
 		if (fileUpload == null) {
 			throw new ServletException("Invalid ID");
 		}
