@@ -91,9 +91,9 @@ public class ProtempaDeviceManager implements ServletContextListener {
 								if (unknownStateJob != null) {
 
 									LOGGER.debug("JobLoader recovered a job from a broken ProtempaDevice.");
-									Job nJob = jobDao.get (unknownStateJob.getId());
+									Job nJob = jobDao.retrieve(unknownStateJob.getId());
 									nJob.setNewState ("FAILED" , "job recovered from a broken protempa" , null);
-									jobDao.save (nJob);
+									jobDao.update (nJob);
 								}
 							}
 						}

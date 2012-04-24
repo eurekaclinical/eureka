@@ -80,11 +80,11 @@ public class ProtempaDevice extends Thread {
 
 					LOGGER.debug("{} wait." , Thread.currentThread().getName());
 					synchObj.wait();
-					myJob = this.jobDao.get(this.jobId);
+					myJob = this.jobDao.retrieve(this.jobId);
 					LOGGER.debug("{} just got a job, id={}" , Thread.currentThread().getName() , myJob.toString());
 			    	myJob.setNewState ("PROCESSING" , null , null);
 			    	LOGGER.debug("About to save job: {}", myJob.toString());
-			    	this.jobDao.save (myJob);
+			    	this.jobDao.update (myJob);
 
 			    	Long userId = myJob.getUserId();
 			    	etl.runProtempa ("user" + userId);
@@ -103,7 +103,7 @@ public class ProtempaDevice extends Thread {
 //			    	etl.runProtempa (conf.getProtempaSchema());
 
 			    	myJob.setNewState ("DONE" , null , null);
-			    	this.jobDao.save (myJob);
+			    	this.jobDao.update (myJob);
 				}
 				catch (InterruptedException ie) {
 
@@ -112,7 +112,7 @@ public class ProtempaDevice extends Thread {
 			    	if (myJob != null) {
 
 			    		myJob.setNewState ("INTERRUPTED" , null , null);
-			    		this.jobDao.save (myJob);
+			    		this.jobDao.update (myJob);
 			    	}
 					return;
 				}
@@ -124,7 +124,7 @@ public class ProtempaDevice extends Thread {
 			    	if (myJob != null) {
 
 			    		myJob.setNewState ("EXCEPTION" , null , null);
-			    		this.jobDao.save (myJob);
+			    		this.jobDao.update (myJob);
 			    	}
 					return;
 				}
@@ -148,12 +148,12 @@ public class ProtempaDevice extends Thread {
 
 	Job getJob() {
 
-		return this.jobDao.get(this.jobId);
+		return this.jobDao.retrieve(this.jobId);
 	}
 
 	protected void tagJob (Thread thread , Throwable t) {
 
-		Job myJob = this.jobDao.get(this.jobId);
+		Job myJob = this.jobDao.retrieve(this.jobId);
 		if (myJob != null) {
 
 			//	recordException

@@ -16,9 +16,9 @@ import org.slf4j.LoggerFactory;
 
 import com.google.inject.Inject;
 import com.google.inject.Provider;
-import com.google.inject.persist.Transactional;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.JobFilter;
+import edu.emory.cci.aiw.cvrg.eureka.common.dao.GenericDao;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.Job;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.JobEvent_;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.Job_;
@@ -30,16 +30,12 @@ import edu.emory.cci.aiw.cvrg.eureka.common.entity.Job_;
  * @author hrathod
  *
  */
-public class JpaJobDao implements JobDao {
+public class JpaJobDao extends GenericDao<Job, Long> implements JobDao {
 
 	/**
 	 * The class level logger.
 	 */
 	private static final Logger LOGGER = LoggerFactory.getLogger(JpaJobDao.class);
-	/**
-	 * The provider for the entity managers used within the DAO.
-	 */
-	private final Provider<EntityManager> emProvider;
 
 	/**
 	 * Construct instance with the given EntityManager provider.
@@ -48,45 +44,7 @@ public class JpaJobDao implements JobDao {
 	 */
 	@Inject
 	public JpaJobDao(final Provider<EntityManager> inEMProvider) {
-		this.emProvider = inEMProvider;
-	}
-
-	/**
-	 * Get an entity manager to use.
-	 *
-	 * @return A new entity manager.
-	 */
-	private EntityManager getEntityManager() {
-		return this.emProvider.get();
-	}
-
-	@Override
-	@Transactional
-	public void save(final Job job) {
-		LOGGER.debug("Persisting job: {}", job);
-		EntityManager entityManager = this.getEntityManager();
-		entityManager.persist(job);
-		entityManager.flush();
-	}
-
-	@Override
-	public void refresh(final Job job) {
-		this.getEntityManager().refresh(job);
-	}
-
-	@Override
-	public Job get(final Long id) {
-		return this.getEntityManager().find(Job.class, id);
-	}
-
-	@Override
-	public List<Job> getAll() {
-		EntityManager entityManager = this.getEntityManager();
-		CriteriaBuilder builder = entityManager.getCriteriaBuilder();
-		CriteriaQuery<Job> criteriaQuery = builder.createQuery(Job.class);
-		criteriaQuery.from(Job.class);
-		TypedQuery<Job> query = entityManager.createQuery(criteriaQuery);
-		return query.getResultList();
+		super(Job.class, inEMProvider);
 	}
 
 	@Override

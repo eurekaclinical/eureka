@@ -54,18 +54,18 @@ public class RestInterfaces {
 
 		Job job = new Job();
 
-		this.jobDao.save(job);
+		this.jobDao.create (job);
 		LOGGER.debug("Request to start new Job {0}", job.getId());
 		job.setNewState("CREATED", null, null);
-		this.jobDao.save(job);
+		this.jobDao.update(job);
 		this.protempaDeviceManager.qJob(job);
 
 		Job boj = new Job();
 
-		this.jobDao.save(boj);
+		this.jobDao.create(boj);
 		LOGGER.debug("Request to start new Job {0}", boj.getId());
 		boj.setNewState("CREATED", null, null);
-		this.jobDao.save(boj);
+		this.jobDao.update(boj);
 		this.protempaDeviceManager.qJob(boj);
 
 		return "right";
@@ -89,7 +89,7 @@ public class RestInterfaces {
 	public Job startJob(Job job) {
 		job.setNewState("CREATED", null, null);
 		LOGGER.debug("Request to start new Job {}", job.getId());
-		this.jobDao.save(job);
+		this.jobDao.create(job);
 		this.protempaDeviceManager.qJob(job);
 		return job;
 	}
@@ -122,14 +122,14 @@ public class RestInterfaces {
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public Configuration getConfByUserId(@PathParam("userId") Long userId) {
-		return this.confDao.get(userId);
+		return this.confDao.retrieve(userId);
 	}
 
 	@POST
 	@Path("submitConf")
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response submitConfiguration(Configuration conf) {
-		this.confDao.save(conf);
+		this.confDao.create(conf);
 		LOGGER.debug("Request to save Configuration");
 		return Response.ok().build();
 	}
