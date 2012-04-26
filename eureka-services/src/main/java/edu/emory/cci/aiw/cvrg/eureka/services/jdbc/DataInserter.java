@@ -48,7 +48,7 @@ public class DataInserter {
 	 *
 	 * @param inConfiguration The configuration to use for database connection
 	 * information.
-	 * @throws SQLException Thrown if there are any JDBC errors.
+	 * @throws DataInserterException Thrown if there are any JDBC errors.
 	 */
 	public DataInserter(Configuration inConfiguration) throws DataInserterException {
 		super();
@@ -78,7 +78,7 @@ public class DataInserter {
 	/**
 	 * Truncate all the tables that we will be inserting into later.
 	 *
-	 * @throws SQLException Thrown if there are any JDBC errors.
+	 * @throws DataInserterException Thrown if there are any JDBC errors.
 	 */
 	private void truncateTables() throws DataInserterException {
 		Connection connection = null;
@@ -113,7 +113,7 @@ public class DataInserter {
 	 * Insert a list of patients to the data base using the given connection.
 	 *
 	 * @param patients The list of patients to insert.
-	 * @throws SQLException Thrown if there are any JDBC errors.
+	 * @throws DataInserterException Thrown if there are any JDBC errors.
 	 */
 	public void insertPatients(List<Patient> patients) throws DataInserterException {
 		Connection connection = null;
@@ -163,7 +163,7 @@ public class DataInserter {
 	 * connection.
 	 *
 	 * @param encounters The list of encounters to insert.
-	 * @throws SQLException Thrown if there are any JDBC errors.
+	 * @throws DataInserterException Thrown if there are any JDBC errors.
 	 */
 	public void insertEncounters(List<Encounter> encounters)
 			throws DataInserterException {
@@ -210,7 +210,7 @@ public class DataInserter {
 	 * connection.
 	 *
 	 * @param providers The list of providers to insert.
-	 * @throws SQLException Thrown if there are any JDBC errors.
+	 * @throws DataInserterException Thrown if there are any JDBC errors.
 	 */
 	public void insertProviders(List<Provider> providers) throws DataInserterException {
 		int counter = 0;
@@ -249,7 +249,7 @@ public class DataInserter {
 	 * connection.
 	 *
 	 * @param cptCodes The list of CPT codes to insert.
-	 * @throws SQLException Thrown if there are any JDBC errors.
+	 * @throws DataInserterException Thrown if there are any JDBC errors.
 	 */
 	public void insertCptCodes(List<CPT> cptCodes) throws DataInserterException {
 		this.insertObservations(cptCodes, "cpt_event");
@@ -260,7 +260,7 @@ public class DataInserter {
 	 * the given connection.
 	 *
 	 * @param diagnoses The list of diagnosis codes to insert.
-	 * @throws SQLException Thrown if there are any JDBC errors.
+	 * @throws DataInserterException Thrown if there are any JDBC errors.
 	 */
 	public void insertIcd9Diagnoses(List<Icd9Diagnosis> diagnoses)
 			throws DataInserterException {
@@ -272,7 +272,7 @@ public class DataInserter {
 	 * the given connection.
 	 *
 	 * @param procedures The list of procedure codes to insert.
-	 * @throws SQLException Thrown if there are any JDBC errors.
+	 * @throws DataInserterException Thrown if there are any JDBC errors.
 	 */
 	public void insertIcd9Procedures(List<Icd9Procedure> procedures)
 			throws DataInserterException {
@@ -284,7 +284,7 @@ public class DataInserter {
 	 * connection.
 	 *
 	 * @param medications The list of medications to insert.
-	 * @throws SQLException Thrown if there are any JDBC errors.
+	 * @throws DataInserterException Thrown if there are any JDBC errors.
 	 */
 	public void insertMedications(List<Medication> medications)
 			throws DataInserterException {
@@ -296,7 +296,7 @@ public class DataInserter {
 	 * connection.
 	 *
 	 * @param labs The list of lab results to insert.
-	 * @throws SQLException Thrown if there are any JDBC errors.
+	 * @throws DataInserterException Thrown if there are any JDBC errors.
 	 */
 	public void insertLabs(List<Lab> labs) throws DataInserterException {
 		this.insertObservationsWithResult(labs, "labs_event");
@@ -307,7 +307,7 @@ public class DataInserter {
 	 * connection.
 	 *
 	 * @param vitals The list of vitals to insert.
-	 * @throws SQLException Thrown if there are any JDBC errors.
+	 * @throws DataInserterException Thrown if there are any JDBC errors.
 	 */
 	public void insertVitals(List<Vital> vitals) throws DataInserterException {
 		this.insertObservationsWithResult(vitals, "vitals_event");
@@ -319,7 +319,7 @@ public class DataInserter {
 	 *
 	 * @param observations The list of observations to insert.
 	 * @param table The table in which the observations should be inserted.
-	 * @throws SQLException Thrown if there are any JDBC errors.
+	 * @throws DataInserterException Thrown if there are any JDBC errors.
 	 */
 	private void insertObservations(List<? extends Observation> observations,
 			String table) throws DataInserterException {
@@ -365,7 +365,7 @@ public class DataInserter {
 	 *
 	 * @param observations The observations to insert.
 	 * @param table The table in which the observations should be inserted.
-	 * @throws SQLException Thrown if there are any JDBC errors.
+	 * @throws DataInserterException Thrown if there are any JDBC errors.
 	 */
 	private void insertObservationsWithResult(
 			List<? extends ObservationWithResult> observations, String table)
@@ -411,6 +411,12 @@ public class DataInserter {
 		}
 	}
 
+	/**
+	 * Close the given Statement and Connection objects properly.  Any
+	 * exceptions caught while cleaning up are logged, but not re-thrown.
+	 * @param statement The statement object to clean up.
+	 * @param connection The connection to clean up.
+	 */
 	private void close(Statement statement, Connection connection) {
 		if (statement != null) {
 			try {
