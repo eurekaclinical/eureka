@@ -1,30 +1,23 @@
 package edu.emory.cci.aiw.cvrg.eureka.services.dao;
 
-import java.util.List;
-
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.User;
+import edu.emory.cci.aiw.cvrg.eureka.services.test.AbstractServiceTest;
 import junit.framework.Assert;
-
 import org.junit.Test;
 
-import com.google.inject.Module;
-
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.User;
-import edu.emory.cci.aiw.cvrg.eureka.common.test.AbstractTest;
-import edu.emory.cci.aiw.cvrg.eureka.common.test.TestDataProvider;
-import edu.emory.cci.aiw.cvrg.eureka.services.config.AppTestModule;
-import edu.emory.cci.aiw.cvrg.eureka.services.test.Setup;
+import java.util.List;
 
 /**
  * Test case for the User data access object.
  *
  * @author hrathod
- *
  */
-public class UserDaoTest extends AbstractTest {
+public class UserDaoTest extends AbstractServiceTest {
 
 	/**
-	 * Test the number of objects returned by the data access object. The number
-	 * should match the number of users seeded in the class constructor.
+	 * Test the number of objects returned by the data access object. The number should match the number of users
+	 * seeded in
+	 * the class constructor.
 	 */
 	@Test
 	public void testDao() {
@@ -33,18 +26,11 @@ public class UserDaoTest extends AbstractTest {
 		Assert.assertEquals(3, users.size());
 	}
 
-	@Override
-	protected Class<? extends TestDataProvider> getDataProvider() {
-		return Setup.class;
-	}
-
-	@Override
-	protected Module[] getModules() {
-		return new Module[] { new AppTestModule() };
-	}
-
+	/**
+	 * Tests the ability to get a User by their email address from the DAO.
+	 */
 	@Test
-	public void testGetByName () {
+	public void testGetByName() {
 		UserDao dao = this.getInstance(UserDao.class);
 		List<User> users = dao.getAll();
 		User user = users.get(0);

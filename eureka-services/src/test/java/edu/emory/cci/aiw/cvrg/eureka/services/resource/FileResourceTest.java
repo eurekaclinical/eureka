@@ -3,17 +3,15 @@ package edu.emory.cci.aiw.cvrg.eureka.services.resource;
 import java.util.Date;
 import java.util.List;
 
-import junit.framework.Assert;
-
 import org.junit.Test;
 
-import com.google.inject.Inject;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.ClientResponse.Status;
 import com.sun.jersey.api.client.WebResource;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.FileUpload;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.User;
+import junit.framework.Assert;
 
 /**
  * Tests related to the file upload resource.
@@ -22,14 +20,6 @@ import edu.emory.cci.aiw.cvrg.eureka.common.entity.User;
  *
  */
 public class FileResourceTest extends AbstractServiceResourceTest {
-
-	/**
-	 * Construct the object with the given file data access object.
-	 */
-	@Inject
-	public FileResourceTest() {
-		super();
-	}
 
 	/**
 	 * Test if the file upload functionality works.
