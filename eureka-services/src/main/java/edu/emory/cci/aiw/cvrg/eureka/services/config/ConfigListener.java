@@ -32,7 +32,7 @@ public class ConfigListener extends GuiceServletContextListener {
 	/**
 	 * A timer scheduler to run the job update task.
 	 */
-	ScheduledExecutorService executorService = Executors
+	private final ScheduledExecutorService executorService = Executors
 			.newSingleThreadScheduledExecutor();
 	/**
 	 * Make sure we always use the same injector
