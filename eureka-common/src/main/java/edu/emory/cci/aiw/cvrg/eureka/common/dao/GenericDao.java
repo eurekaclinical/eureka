@@ -18,12 +18,10 @@ import org.slf4j.LoggerFactory;
 import com.google.inject.Provider;
 import com.google.inject.persist.Transactional;
 
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.User;
-
 /**
- *
- * @param <T>
- * @param <PK>
+ * Implements the {@link Dao} interface in a generic way.
+ * @param <T> The type of the entity.
+ * @param <PK> The type of the unique identifier for the entity.
  * @author hrathod
  */
 public class GenericDao<T, PK> implements Dao<T, PK> {
@@ -102,10 +100,18 @@ public class GenericDao<T, PK> implements Dao<T, PK> {
 		return typedQuery.getResultList();
 	}
 
+	/**
+	 * Provides a convenient way for subclasses to implement simple queries
+	 * that compare an attribute of the entity to a target value.
+	 * @param attribute The attribute of the entity to compare.
+	 * @param value The target value of the given attribute.
+	 * @param <Y> The type of the attribute and target value.
+	 * @return A single result that matches the given criteria.
+	 */
 	protected <Y> T getUniqueByAttribute(SingularAttribute<T, Y> attribute,
 			Y value) {
 		TypedQuery<T> query = this.createTypedQuery(attribute, value);
-		T result = null;
+		T result;
 		try {
 			result = query.getSingleResult();
 		} catch (NonUniqueResultException nure) {
@@ -118,6 +124,14 @@ public class GenericDao<T, PK> implements Dao<T, PK> {
 		return result;
 	}
 
+	/**
+	 * Creates a typed query based on the attribute given and the target value
+	 * for that attribute.
+	 * @param attribute The attribute to compare.
+	 * @param value The target value for the given attribute.
+	 * @param <Y> The type of the target attribute and target value.
+	 * @return A typed query that contains the given criteria.
+	 */
 	private <Y> TypedQuery<T> createTypedQuery(SingularAttribute<T, Y> attribute,
 			Y value) {
 		EntityManager entityManager = this.getEntityManager();
@@ -125,18 +139,32 @@ public class GenericDao<T, PK> implements Dao<T, PK> {
 		CriteriaQuery<T> criteriaQuery = builder.createQuery(this.entityClass);
 		Root<T> root = criteriaQuery.from(this.entityClass);
 		Path<Y> path = root.get(attribute);
+		return entityManager.createQuery(criteriaQuery.where(
+				builder.equal(path, value)));
+	}
+
+	/**
+	 * Get a list of entities whose path value is the same as the given
+	 * target value.  The path is provided by the QueryPathProvider, and is
+	 * followed through to get the resulting value.  That resulting value is
+	 * compared to the given target value in the query.
+	 * @param provider Provides the path from the entity to the target
+	 *                 attribute/column.
+	 * @param value The target value to compare with the resulting attribute
+	 *              value.
+	 * @param <Y> The type of the target value and resulting attribute/column
+	 *           value.
+	 * @return A list of entities that match the given criteria.
+	 */
+	protected <Y> List<T> getListByAttribute(QueryPathProvider<T,Y> provider, Y value) {
+		EntityManager entityManager = this.getEntityManager();
+		CriteriaBuilder builder = entityManager.getCriteriaBuilder();
+		CriteriaQuery<T> criteriaQuery = builder.createQuery(this.entityClass);
+		Root<T> root = criteriaQuery.from(this.entityClass);
+		Path<Y> path = provider.getPath(root, builder);
 		TypedQuery<T> typedQuery = entityManager.createQuery(criteriaQuery.where(
 				builder.equal(path, value)));
-		return typedQuery;
-
-//		EntityManager entityManager = this.getEntityManager();
-//		CriteriaBuilder builder = entityManager.getCriteriaBuilder();
-//		CriteriaQuery<User> criteriaQuery = builder.createQuery(User.class);
-//		Root<User> root = criteriaQuery.from(User.class);
-//		Path<String> path = root.get(User_.email);
-//		TypedQuery<User> typedQuery = entityManager.createQuery(criteriaQuery.
-//				where(builder.equal(path, name)));
-//		return typedQuery.getSingleResult();
+		return typedQuery.getResultList();
 	}
 
 	/**
@@ -147,5 +175,17 @@ public class GenericDao<T, PK> implements Dao<T, PK> {
 	 */
 	protected final EntityManager getEntityManager() {
 		return this.managerProvider.get();
+	}
+
+	/**
+	 * Provides an interface for the subclasses to easily perform queries
+	 * without having to deal with a lot of boiler-plate code.  The subclasses
+	 * can simply provide the path to a value and the target value using this
+	 * interface, and have this superclass perform the query.
+	 * @param <E> The entity type.
+	 * @param <P> The target value and target column type.
+	 */
+	protected static interface QueryPathProvider<E,P> {
+		Path<P> getPath(Root<E> root, CriteriaBuilder builder);
 	}
 }
