@@ -61,7 +61,7 @@ public class JobFilter {
 	 * separating the key and value. For example,
 	 * "jobId=1|userId=1|state=STARTED|from=123456|to=123456".
 	 *
-	 * @param queryString
+	 * @param queryString Parse the filter from this given string.
 	 */
 	public JobFilter(String queryString) {
 		Map<String, String> params = new HashMap<String, String>();
