@@ -186,6 +186,12 @@ public class GenericDao<T, PK> implements Dao<T, PK> {
 	 * @param <P> The target value and target column type.
 	 */
 	protected static interface QueryPathProvider<E,P> {
+		/**
+		 * Provides a path from the entity to the target attribute.
+		 * @param root The query root, used to build the path.
+		 * @param builder The criteria builder for the query.
+		 * @return The path from the entity to the target attribute.
+		 */
 		Path<P> getPath(Root<E> root, CriteriaBuilder builder);
 	}
 }
