@@ -2,8 +2,6 @@ package edu.emory.cci.aiw.cvrg.eureka.common.dao;
 
 import java.util.List;
 
-import javax.persistence.criteria.Path;
-
 /**
  *
  * @param <T>
