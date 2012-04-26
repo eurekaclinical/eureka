@@ -13,11 +13,10 @@ import org.slf4j.LoggerFactory;
 /**
  * Generates the SQL statements needed to create the tables used to persist the
  * model for the application.
- * 
+ *
  * @author hrathod
- * 
  */
-public class DdlGenerator {
+public final class DdlGenerator {
 
 	/**
 	 * The class level logger.
@@ -27,14 +26,23 @@ public class DdlGenerator {
 	/**
 	 * The dialect to produce the SQL for.
 	 */
-	private static final String DIALECT = "org.hibernate.dialect.Oracle10gDialect";
+	private static final String DIALECT =
+			"org.hibernate.dialect" + ".Oracle10gDialect";
+
+	/**
+	 * Prevent the utility class from being instantiated.
+	 */
+	private DdlGenerator() {
+		// prevent instantiation.
+	}
 
 	/**
 	 * Given a list of classes annotated with the {@link Entity} annotation, a
 	 * Hibernate database dialect, and an output file name, generates the SQL
-	 * needed to persist the given entities to a database and writes the SQL out
-	 * to the given file.
-	 * 
+	 * needed to persist the given entities to a database and writes the
+	 * SQL out to
+	 * the given file.
+	 *
 	 * @param classes A list of classes to generate SQL for.
 	 * @param outFile The location of the output file.
 	 */
@@ -60,54 +68,61 @@ public class DdlGenerator {
 
 	/**
 	 * Generate the SQL for entities used in ETL layer classes.
-	 * 
+	 *
 	 * @param outputFile The location of file where the SQL should be written.
 	 */
 	private static void generateBackendDdl(final String outputFile) {
 		final List<Class<?>> backendClasses = new ArrayList<Class<?>>();
 		backendClasses
-				.add(edu.emory.cci.aiw.cvrg.eureka.common.entity.Configuration.class);
-		backendClasses
-				.add(edu.emory.cci.aiw.cvrg.eureka.common.entity.Job.class);
-		backendClasses
-				.add(edu.emory.cci.aiw.cvrg.eureka.common.entity.JobEvent.class);
+				.add(edu.emory.cci.aiw.cvrg.eureka.common.entity
+						.Configuration.class);
+		backendClasses.add(edu.emory.cci.aiw.cvrg.eureka.common.entity.Job
+				.class);
+		backendClasses.add(edu.emory.cci.aiw.cvrg.eureka.common.entity
+				.JobEvent
+				.class);
 		generate(backendClasses, outputFile);
 	}
 
 	/**
 	 * Generate the SQL for entities used in service layer classes.
-	 * 
+	 *
 	 * @param outputFile The location of file where the SQL should be written.
 	 */
 	private static void generateServiceDdl(final String outputFile) {
 		final List<Class<?>> serviceClasses = new ArrayList<Class<?>>();
+		serviceClasses.add(edu.emory.cci.aiw.cvrg.eureka.common.entity.User
+				.class);
 		serviceClasses
-				.add(edu.emory.cci.aiw.cvrg.eureka.common.entity.User.class);
+				.add(edu.emory.cci.aiw.cvrg.eureka.common.entity.FileUpload
+						.class);
+		serviceClasses.add(edu.emory.cci.aiw.cvrg.eureka.common.entity
+				.FileError
+				.class);
 		serviceClasses
-				.add(edu.emory.cci.aiw.cvrg.eureka.common.entity.FileUpload.class);
+				.add(edu.emory.cci.aiw.cvrg.eureka.common.entity
+						.FileWarning.class);
+		serviceClasses.add(edu.emory.cci.aiw.cvrg.eureka.common.entity.Role
+				.class);
 		serviceClasses
-				.add(edu.emory.cci.aiw.cvrg.eureka.common.entity.FileError.class);
-		serviceClasses
-				.add(edu.emory.cci.aiw.cvrg.eureka.common.entity.FileWarning.class);
-		serviceClasses
-				.add(edu.emory.cci.aiw.cvrg.eureka.common.entity.Role.class);
-		serviceClasses
-				.add(edu.emory.cci.aiw.cvrg.eureka.common.entity.AbstractFileInfo.class);
+				.add(edu.emory.cci.aiw.cvrg.eureka.common.entity
+						.AbstractFileInfo.class);
 
 		generate(serviceClasses, outputFile);
 	}
 
 	/**
-	 * @param args Command line arguments to the application. <b>Note:</b> these
-	 *            arguments are currently not utilized. The first param is the
-	 *            file where the service layer DDL should go, and the second
-	 *            parameter is where the ETL layer DDL should go.
+	 * @param args The first param is the file where the service layer DDL
+	 *                should
+	 *             go, and the second parameter is where the ETL layer DDL
+	 *             should
+	 *             go.
 	 */
 	public static void main(String[] args) {
 		if (args.length < 2) {
-			System.err.println("Please provide two parameters, first for "
-					+ "the service layer file and the second for "
-					+ "the ETL layer file.");
+			System.err.println("Please provide two parameters, " +
+					"first for the service layer file and the second " +
+					"for the ETL layer file.");
 		} else {
 			generateServiceDdl(args[0]);
 			generateBackendDdl(args[1]);
