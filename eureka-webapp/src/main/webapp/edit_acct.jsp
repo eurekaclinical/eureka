@@ -7,22 +7,7 @@
 	<template:content name="content">
 	<script type="text/javascript">
 
-	$(document).ready(function() {
-		$.ajax({
-			  url: '/eureka/api/users/'+ $.getUrlVar('id'),
-			  dataType: 'json',
-			  success: function(data) {
-				  console.log(data);
-				  $('#fname').val(data.firstName);
-				  $('#lname').val(data.lastName);
-				  $('#org').val(data.organization);
-				  $('#email').val(data.email);
-				  $('#password1').val(data.password);
-				  $('#password2').val(data.password);
-			  }
-			});
-	
-	});
+
 
 </script>
     <h3>Edit Account</h3>
@@ -42,12 +27,17 @@
 	       <input id="email" type="text" name="email" />
 	       <br />
 	       <br />
+	       Old Password:
+	       <input id="oldPassword" type="password" name="oldPassword" />
+
+	       <br />
+	       <br />
 	       Password:
-	       <input id="password1" type="password" name="Password1" />
+	       <input id="newPassword" type="password" name="Password1" />
 	       <br />
 	       <br />
 	       Re-Enter Password:
-	       <input id="password2" type="password" name="Password2" />
+	       <input id="verifyPassword" type="password" name="Password2" />
 	       <br />
 	       <br />
 	       <input id="button" type="submit" value="Submit" />
