@@ -33,15 +33,17 @@ public class SaveUserAcctWorker implements ServletWorker {
 		String oldPassword = req.getParameter("oldPassword");
 		String newPassword = req.getParameter("newPassword");
 		
-		// TODO: validate verifyPassword equals newPassword
+		// validate verifyPassword equals newPassword
 		String verifyPassword = req.getParameter("verifyPassword");
-		
+		if (!verifyPassword.equals(newPassword)) {
+			resp.setContentType("text/html");
+			resp.setStatus(resp.SC_BAD_REQUEST);
+			resp.getWriter().close();
+			return;
+		}
 		Client c;
 		try {
 			c = CommUtils.getClient();
-			LOGGER.debug("id = " + id);
-			LOGGER.debug("old = " + oldPassword);
-			LOGGER.debug("new = " + newPassword);
 
 			WebResource webResource = c.resource(eurekaServicesUrl);
 			
