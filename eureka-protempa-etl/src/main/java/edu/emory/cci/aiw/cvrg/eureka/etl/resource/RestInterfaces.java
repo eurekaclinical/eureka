@@ -122,7 +122,8 @@ public class RestInterfaces {
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public Configuration getConfByUserId(@PathParam("userId") Long userId) {
-		return this.confDao.retrieve(userId);
+		LOGGER.debug("Configuration request for user {}", userId);
+		return this.confDao.getByUserId(userId);
 	}
 
 	@POST

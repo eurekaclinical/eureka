@@ -7,6 +7,7 @@ import com.google.inject.Provider;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.dao.GenericDao;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.Configuration;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.Configuration_;
 
 /**
  * Implementation of the {@link ConfDao} interface, based on JPA.
@@ -26,5 +27,10 @@ public class JpaConfDao extends GenericDao<Configuration, Long> implements
 	@Inject
 	public JpaConfDao(Provider<EntityManager> provider) {
 		super(Configuration.class, provider);
+	}
+
+	@Override
+	public Configuration getByUserId(Long userId) {
+		return getUniqueByAttribute(Configuration_.userId, userId);
 	}
 }
