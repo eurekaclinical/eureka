@@ -14,15 +14,16 @@ import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.GenericType;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.CommUtils;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.JobFilter;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.Job;
 import edu.emory.cci.aiw.cvrg.eureka.services.job.JobCollection;
 
 /**
  * A thread started at startup time to monitor the status of jobs that have been
  * submitted to the back-end.
- * 
+ *
  * @author hrathod
- * 
+ *
  */
 @Singleton
 public class JobUpdateTask implements Runnable {
@@ -43,7 +44,7 @@ public class JobUpdateTask implements Runnable {
 
 	/**
 	 * Create a job update thread using the given backend url.
-	 * 
+	 *
 	 * @param inBackendUrl The backend url used to make the update calls.
 	 * @throws NoSuchAlgorithmException Thrown when the secure client can not be
 	 *             created properly.
@@ -58,8 +59,13 @@ public class JobUpdateTask implements Runnable {
 
 	@Override
 	public void run() {
+		JobFilter filter = new JobFilter(null, null,
+				null, null, null);
 		List<Job> updatedJobs = this.client.resource(this.backendUrl)
+				.queryParam(
+				"filter", filter.toQueryParam())
 				.accept(MediaType.APPLICATION_JSON)
+				.type(MediaType.APPLICATION_JSON)
 				.get(new GenericType<List<Job>>() {
 					// nothing to implement
 				});
