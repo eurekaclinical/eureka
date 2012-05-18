@@ -130,7 +130,11 @@ public class FileUpload implements CycleRecoverable {
 	 * @return the timestamp
 	 */
 	public Date getTimestamp() {
-		return new Date(this.timestamp.getTime());
+		Date result = null;
+		if (this.timestamp != null) {
+			result = new Date(this.timestamp.getTime());
+		}
+		return result;
 	}
 
 	/**
