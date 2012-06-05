@@ -7,13 +7,13 @@ import edu.emory.cci.aiw.cvrg.eureka.etl.dao.ConfDao;
 import edu.emory.cci.aiw.cvrg.eureka.etl.dao.JobDao;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.Configuration;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.Job;
-import edu.emory.cci.registry.CardiovascularRegistryETL;
+import edu.emory.cci.aiw.cvrg.eureka.etl.ETL;
 
 
 public class ProtempaDevice extends Thread {
 
 	private Long jobId;
-	private CardiovascularRegistryETL etl = new CardiovascularRegistryETL();
+	private ETL etl = new ETL();
 	//
 	//	IMPORTANT:
 	//	the synchObj is locked by the internal thread in ProtempaDeviceManager

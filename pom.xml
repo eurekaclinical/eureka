@@ -123,7 +123,7 @@
 		<commons-fileupload-version>1.2.2</commons-fileupload-version>
 		<eureka-version>1.0.0-SNAPSHOT</eureka-version>
 		<protempa-version>2.0-SNAPSHOT</protempa-version>
-		<registry-version>1.0-SNAPSHOT</registry-version>
+		<aiw-i2b2-etl-version>1.0-SNAPSHOT</aiw-i2b2-etl-version>
 		<oracle-version>[11.2.0.2.0,)</oracle-version>
 		<freemarker-version>2.3.9</freemarker-version>
 		<jpamodelgen-version>1.2.0.Final</jpamodelgen-version>
@@ -406,8 +406,8 @@
 			</dependency>
 			<dependency>
 				<groupId>edu.emory.cci</groupId>
-				<artifactId>registry</artifactId>
-				<version>${registry-version}</version>
+				<artifactId>aiw-i2b2-etl</artifactId>
+				<version>${aiw-i2b2-etl-version}</version>
 			</dependency>
 			<dependency>
 				<groupId>com.oracle</groupId>
