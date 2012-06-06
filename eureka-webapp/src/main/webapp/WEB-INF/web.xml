@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- This web.xml file is not required when using Servlet 3.0 container, 
+<!-- This web.xml file is not required when using Servlet 3.0 container,
      see implementation details http://jersey.java.net/nonav/documentation/latest/jax-rs.html#d4e194 -->
 <web-app xmlns="http://java.sun.com/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.5" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
 
 	<!-- THIS LISTENER CONFIGURES THE GUICE INJECTION -->
-	<!-- 
+	<!--
 	<listener>
 		<listener-class>edu.emory.cci.aiw.cvrg.sample.config.SampleListener</listener-class>
 	</listener>
 
-		UNCOMMENT THE FOLLOWING (AND COMMENT OUT GUICE RELATED LISTENER AND FILTERS, 
+		UNCOMMENT THE FOLLOWING (AND COMMENT OUT GUICE RELATED LISTENER AND FILTERS,
 		IF YOU WANT TO USE JUST JERSEY, WITHOUT GUICE
 	-->
 
@@ -19,7 +19,7 @@
 	</listener>
 	<context-param>
 		<param-name>eureka-services-url</param-name>
-		<param-value>https://eureka.cci.emory.edu/eureka-services</param-value>
+		<param-value>http://localhost:8080/eureka-services</param-value>
 	</context-param>
 	<!--
 	<servlet>
@@ -40,7 +40,7 @@
 		<url-pattern>/api/*</url-pattern>
 	</servlet-mapping>
 	-->
-	
+
 	<servlet>
 		<servlet-name>CommonsFileUploadServlet</servlet-name>
 		<servlet-class>edu.emory.cci.aiw.cvrg.eureka.servlet.CommonsFileUploadServlet</servlet-class>
@@ -48,7 +48,7 @@
 			<param-name>dest_dir</param-name>
 			<param-value>uploads</param-value>
 		</init-param>
-	</servlet>	
+	</servlet>
 	<servlet>
 		<servlet-name>Login</servlet-name>
 		<servlet-class>edu.emory.cci.aiw.cvrg.eureka.servlet.LoginServlet</servlet-class>
@@ -92,7 +92,7 @@
 	<servlet-mapping>
 		<servlet-name>VerifyUserServlet</servlet-name>
 		<url-pattern>/verify</url-pattern>
-	</servlet-mapping>	
+	</servlet-mapping>
 	<servlet-mapping>
 		<servlet-name>CommonsFileUploadServlet</servlet-name>
 		<url-pattern>/upload</url-pattern>
@@ -136,11 +136,11 @@
 		<filter-class>org.jasig.cas.client.authentication.AuthenticationFilter</filter-class>
 		<init-param>
 			<param-name>casServerLoginUrl</param-name>
-			<param-value>https://eureka.cci.emory.edu/cas/login</param-value>
+			<param-value>/cas/login</param-value>
 		</init-param>
 		<init-param>
 			<param-name>serverName</param-name>
-			<param-value>https://eureka.cci.emory.edu</param-value>
+			<param-value>https://ec2-23-20-235-68.compute-1.amazonaws.com</param-value>
 		</init-param>
 		<init-param>
 			<param-name>renew</param-name>
@@ -160,19 +160,19 @@
 		</init-param>
 		<init-param>
 			<param-name>proxyCallbackUrl</param-name>
-			<param-value>https://eureka.cci.emory.edu/eureka-webapp/proxyCallback</param-value>
+			<param-value>https://ec2-23-20-235-68.compute-1.amazonaws.com/proxyCallback</param-value>
 		</init-param>
 		<init-param>
 			<param-name>proxyReceptorUrl</param-name>
-			<param-value>/eureka-webapp/proxyCallback</param-value>
+			<param-value>/proxyCallback</param-value>
 		</init-param>
 		<init-param>
 			<param-name>casServerUrlPrefix</param-name>
-			<param-value>https://eureka.cci.emory.edu/cas/</param-value>
+			<param-value>https://ec2-23-20-235-68.compute-1.amazonaws.com/cas/</param-value>
 		</init-param>
 		<init-param>
 			<param-name>serverName</param-name>
-			<param-value>https://eureka.cci.emory.edu</param-value>
+			<param-value>https://ec2-23-20-235-68.compute-1.amazonaws.com</param-value>
 		</init-param>
 		<init-param>
 			<param-name>redirectAfterValidation</param-name>
@@ -224,7 +224,7 @@
             <param-name>/protected/admin</param-name>
             <param-value>ROLE_ADMIN,ROLE_SUPERUSER</param-value>
         </init-param>
-        
+
     </filter>
 	<!--
 
@@ -235,7 +235,7 @@
 	-->
 
 	<!-- UNCOMMENT FILTER MAPPINGS TO ACTIVATE AUTHENTICATION VIA CAS -->
-	 
+
 	<filter-mapping>
 		<filter-name>CAS Single Sign Out Filter</filter-name>
 		<url-pattern>/*</url-pattern>
@@ -267,7 +267,7 @@
 	<filter-mapping>
 		<filter-name>Authorization Filter</filter-name>
 		<url-pattern>/protected/*</url-pattern>
-	</filter-mapping>	
+	</filter-mapping>
 	<!--
 	<filter-mapping>
 		<filter-name>Guice Filter</filter-name>
