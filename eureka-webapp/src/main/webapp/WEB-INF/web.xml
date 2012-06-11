@@ -3,43 +3,10 @@
      see implementation details http://jersey.java.net/nonav/documentation/latest/jax-rs.html#d4e194 -->
 <web-app xmlns="http://java.sun.com/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.5" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
 
-	<!-- THIS LISTENER CONFIGURES THE GUICE INJECTION -->
-	<!--
-	<listener>
-		<listener-class>edu.emory.cci.aiw.cvrg.sample.config.SampleListener</listener-class>
-	</listener>
-
-		UNCOMMENT THE FOLLOWING (AND COMMENT OUT GUICE RELATED LISTENER AND FILTERS,
-		IF YOU WANT TO USE JUST JERSEY, WITHOUT GUICE
-	-->
-
-	<!-- Enable the CAS Single Sign Out feature -->
-	<listener>
-		<listener-class>org.jasig.cas.client.session.SingleSignOutHttpSessionListener</listener-class>
-	</listener>
 	<context-param>
 		<param-name>eureka-services-url</param-name>
 		<param-value>http://localhost:8080/eureka-services</param-value>
 	</context-param>
-	<!--
-	<servlet>
-		<servlet-name>Jersey Web Application</servlet-name>
-		<servlet-class>com.sun.jersey.spi.container.servlet.ServletContainer</servlet-class>
-		<init-param>
-			<param-name>com.sun.jersey.config.property.packages</param-name>
-			<param-value>edu.emory.cci.cvrg.middleware.resource</param-value>
-		</init-param>
-		<init-param>
-			<param-name>com.sun.jersey.spi.container.ResourceFilters</param-name>
-			<param-value>com.sun.jersey.api.container.filter.RolesAllowedResourceFilterFactory</param-value>
-		</init-param>
-		<load-on-startup>1</load-on-startup>
-	</servlet>
-	<servlet-mapping>
-		<servlet-name>Jersey Web Application</servlet-name>
-		<url-pattern>/api/*</url-pattern>
-	</servlet-mapping>
-	-->
 
 	<servlet>
 		<servlet-name>CommonsFileUploadServlet</servlet-name>
@@ -126,152 +93,31 @@
 		<url-pattern>/protected/user_acct</url-pattern>
 	</servlet-mapping>
 
-	<!-- UNCOMMENT THESE FILTERS AND THEIR MAPPINGS TO ENABLE AUTHENTICATION VIA CAS -->
-	<filter>
-		<filter-name>CAS Single Sign Out Filter</filter-name>
-		<filter-class>org.jasig.cas.client.session.SingleSignOutFilter</filter-class>
-	</filter>
-	<filter>
-		<filter-name>CAS Authentication Filter</filter-name>
-		<filter-class>org.jasig.cas.client.authentication.AuthenticationFilter</filter-class>
-		<init-param>
-			<param-name>casServerLoginUrl</param-name>
-			<param-value>/cas/login</param-value>
-		</init-param>
-		<init-param>
-			<param-name>serverName</param-name>
-			<param-value>https://ec2-23-20-235-68.compute-1.amazonaws.com</param-value>
-		</init-param>
-		<init-param>
-			<param-name>renew</param-name>
-			<param-value>false</param-value>
-		</init-param>
-		<init-param>
-			<param-name>gateway</param-name>
-			<param-value>false</param-value>
-		</init-param>
-	</filter>
-	<filter>
-		<filter-name>CAS Proxy Filter</filter-name>
-		<filter-class>org.jasig.cas.client.validation.Cas20ProxyReceivingTicketValidationFilter</filter-class>
-		<init-param>
-			<param-name>acceptAnyProxy</param-name>
-			<param-value>true</param-value>
-		</init-param>
-		<init-param>
-			<param-name>proxyCallbackUrl</param-name>
-			<param-value>https://ec2-23-20-235-68.compute-1.amazonaws.com/proxyCallback</param-value>
-		</init-param>
-		<init-param>
-			<param-name>proxyReceptorUrl</param-name>
-			<param-value>/proxyCallback</param-value>
-		</init-param>
-		<init-param>
-			<param-name>casServerUrlPrefix</param-name>
-			<param-value>https://ec2-23-20-235-68.compute-1.amazonaws.com/cas/</param-value>
-		</init-param>
-		<init-param>
-			<param-name>serverName</param-name>
-			<param-value>https://ec2-23-20-235-68.compute-1.amazonaws.com</param-value>
-		</init-param>
-		<init-param>
-			<param-name>redirectAfterValidation</param-name>
-			<param-value>true</param-value>
-		</init-param>
-	</filter>
-	<filter>
-		<filter-name>CAS HttpServletRequest Wrapper Filter</filter-name>
-		<filter-class>org.jasig.cas.client.util.HttpServletRequestWrapperFilter</filter-class>
-		<init-param>
-			<param-name>roleAttribute</param-name>
-			<param-value>authorities</param-value>
-		</init-param>
-	</filter>
-	<filter>
-		<filter-name>CAS Assertion Thread Local Filter</filter-name>
-		<filter-class>org.jasig.cas.client.util.AssertionThreadLocalFilter</filter-class>
-	</filter>
+	<login-config>
+		<auth-method>FORM</auth-method>
+		<realm-name>Eureka</realm-name>
+		<form-login-config>
+			<form-login-page>/login.jsp</form-login-page>
+			<form-error-page>/error.jsp</form-error-page>
+		</form-login-config>
+	</login-config>
 
-    <filter>
-        <filter-name>Roles Filter</filter-name>
-        <filter-class>edu.emory.cci.aiw.cvrg.eureka.common.filter.RolesFilter</filter-class>
-        <init-param>
-            <!-- Which data source to use for querying role information -->
-            <param-name>datasource</param-name>
-            <param-value>java:comp/env/jdbc/EurekaService</param-value>
-        </init-param>
-        <init-param>
-            <!-- The SQL used to fetch role information, the ? will be replaced with the Principal's name, using a preparedstatement.setString(1, xxx) -->
-            <param-name>sql</param-name>
-            <param-value>select a.name as role from roles a, user_role b, users c where a.id=b.roleid and b.userid=c.id and c.email=?</param-value>
-        </init-param>
-        <init-param>
-            <!-- Column name in the result set that should be used to get role names -->
-            <param-name>rolecolumn</param-name>
-            <param-value>role</param-value>
-        </init-param>
-    </filter>
-       <filter>
-        <filter-name>Authorization Filter</filter-name>
-        <filter-class>edu.emory.cci.aiw.cvrg.eureka.servlet.filter.AuthorizationFilter</filter-class>
-        <init-param>
-            <!-- Which URIs are under authorization role -->
-            <param-name>URIs</param-name>
-            <param-value>/protected/admin</param-value>
-        </init-param>
-        <init-param>
-            <!-- Name of the page mapped to roles that can access the page -->
-            <param-name>/protected/admin</param-name>
-            <param-value>ROLE_ADMIN,ROLE_SUPERUSER</param-value>
-        </init-param>
+	<security-constraint>
+		<web-resource-collection>
+			<web-resource-name>Eureka! Protected Area</web-resource-name>
+			<url-pattern>/protected/*</url-pattern>
+		</web-resource-collection>
+		<auth-constraint>
+			<role-name>ROLE_RESEARCHER</role-name>
+			<role-name>ROLE_ADMIN</role-name>
+		</auth-constraint>
+	</security-constraint>
 
-    </filter>
-	<!--
+	<security-role>
+		<role-name>ROLE_RESEARCHER</role-name>
+	</security-role>
+	<security-role>
+		<role-name>ROLE_ADMIN</role-name>
+	</security-role>
 
-	<filter>
-		<filter-name>Guice Filter</filter-name>
-		<filter-class>com.google.inject.servlet.GuiceFilter</filter-class>
-	</filter>
-	-->
-
-	<!-- UNCOMMENT FILTER MAPPINGS TO ACTIVATE AUTHENTICATION VIA CAS -->
-
-	<filter-mapping>
-		<filter-name>CAS Single Sign Out Filter</filter-name>
-		<url-pattern>/*</url-pattern>
-	</filter-mapping>
-	<filter-mapping>
-		<filter-name>CAS Proxy Filter</filter-name>
-		<url-pattern>/proxyCallback</url-pattern>
-	</filter-mapping>
-	<filter-mapping>
-		<filter-name>CAS Proxy Filter</filter-name>
-		<url-pattern>/*</url-pattern>
-	</filter-mapping>
-	<filter-mapping>
-		<filter-name>CAS Authentication Filter</filter-name>
-		<url-pattern>/protected/*</url-pattern>
-	</filter-mapping>
-	<filter-mapping>
-		<filter-name>CAS HttpServletRequest Wrapper Filter</filter-name>
-		<url-pattern>/*</url-pattern>
-	</filter-mapping>
-	<filter-mapping>
-		<filter-name>CAS Assertion Thread Local Filter</filter-name>
-		<url-pattern>/*</url-pattern>
-	</filter-mapping>
-	<filter-mapping>
-		<filter-name>Roles Filter</filter-name>
-		<url-pattern>/*</url-pattern>
-	</filter-mapping>
-	<filter-mapping>
-		<filter-name>Authorization Filter</filter-name>
-		<url-pattern>/protected/*</url-pattern>
-	</filter-mapping>
-	<!--
-	<filter-mapping>
-		<filter-name>Guice Filter</filter-name>
-		<url-pattern>/api/*</url-pattern>
-	</filter-mapping>
-	-->
 </web-app>
