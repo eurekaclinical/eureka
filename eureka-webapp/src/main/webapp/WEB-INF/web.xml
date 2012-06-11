@@ -98,7 +98,7 @@
 		<realm-name>Eureka</realm-name>
 		<form-login-config>
 			<form-login-page>/login.jsp</form-login-page>
-			<form-error-page>/error.jsp</form-error-page>
+			<form-error-page>/login-error.jsp</form-error-page>
 		</form-login-config>
 	</login-config>
 
