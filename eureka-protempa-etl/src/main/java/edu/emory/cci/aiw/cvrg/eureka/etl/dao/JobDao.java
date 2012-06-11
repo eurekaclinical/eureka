@@ -21,6 +21,6 @@ public interface JobDao extends Dao<Job, Long> {
 	 * @param jobFilter The filter criteria.
 	 * @return A list of jobs that meet the filter criteria.
 	 */
-	public List<Job> get(JobFilter jobFilter);
+	public List<Job> getWithFilter(JobFilter jobFilter);
 
 }

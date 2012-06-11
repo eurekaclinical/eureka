@@ -104,7 +104,7 @@ public class RestInterfaces {
 	public List<Job> getJob(@QueryParam("filter") JobFilter inFilter) {
 
 		LOGGER.debug("Request for job status");
-		List<Job> jobs = this.jobDao.get(inFilter);
+		List<Job> jobs = this.jobDao.getWithFilter(inFilter);
 		for (Job job : jobs) {
 			this.jobDao.refresh(job);
 			LOGGER.debug("Returning job {} with status {}", job.getId(),

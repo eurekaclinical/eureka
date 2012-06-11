@@ -48,7 +48,7 @@ public class JpaJobDao extends GenericDao<Job, Long> implements JobDao {
 	}
 
 	@Override
-	public List<Job> get(final JobFilter jobFilter) {
+	public List<Job> getWithFilter(final JobFilter jobFilter) {
 		EntityManager entityManager = this.getEntityManager();
 		CriteriaBuilder builder = entityManager.getCriteriaBuilder();
 		CriteriaQuery<Job> query = builder.createQuery(Job.class);
