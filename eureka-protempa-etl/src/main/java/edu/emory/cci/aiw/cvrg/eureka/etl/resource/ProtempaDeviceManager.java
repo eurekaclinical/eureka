@@ -39,7 +39,7 @@ public class ProtempaDeviceManager implements ServletContextListener {
 	//
 
 	private static final int qLen = 4;
-	private List<Job> jobQ = new ArrayList<Job> (1<<4);
+	private final List<Job> jobQ = new ArrayList<Job> (1<<4);
 	private List<ProtempaDevice> devices = new ArrayList<ProtempaDevice>(qLen);
 	private final JobDao jobDao;
 	private final ConfDao confDao;
