@@ -54,6 +54,10 @@ public class JobFilter {
 		this.from = (null == inFrom) ? null : new Date(inFrom.getTime());
 		this.to = (null == inTo) ? null : new Date(inTo.getTime());
 	}
+	
+	/**
+	 * Creates an empty JobFilter object.
+	 */
 
 	/**
 	 * Creates a filter by parsing the given string for the needed values. The
