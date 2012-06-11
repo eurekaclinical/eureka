@@ -12,8 +12,6 @@ import com.sun.research.ws.wadl.Request;
 
 public class LogoutServlet extends HttpServlet {
 
-	private static final String CAS_LOCATION = "https://eureka.cci.emory.edu/cas/logout";
-
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
@@ -21,6 +19,6 @@ public class LogoutServlet extends HttpServlet {
 		if (session != null) {
 			session.invalidate();
 		}
-		resp.sendRedirect(CAS_LOCATION);
+		req.getRequestDispatcher("/logout.jsp").forward(req, resp);
 	}
 }
