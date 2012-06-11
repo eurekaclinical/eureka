@@ -58,7 +58,7 @@ ul.nav a { zoom: 1; }
     <span><a href="${pageContext.request.contextPath}/"><img src="${pageContext.request.contextPath}/images/tag_line.gif" alt="Data Analysis Tool" width="238" align="absmiddle" /></a></span>
 </div>
 
- <div>    
+ <div>
   <ul class="nav">
       <li><a href="${pageContext.request.contextPath}/about.jsp"><img src="${pageContext.request.contextPath}/images/about_icon.gif" alt="About" width="30" height="30" align="absmiddle" />About</a></li>
       <c:choose>
@@ -73,21 +73,21 @@ ul.nav a { zoom: 1; }
           <li><a href="${pageContext.request.contextPath}/protected/user_acct?action=list">Account</a></li>
         </c:when>
       </c:choose>
-     
+
       <img src="${pageContext.request.contextPath}/images/contact_icon.gif" alt="Contact" width="30" height="30" align="absmiddle" />
       <li><a href="${pageContext.request.contextPath}/contact.jsp">Contact</a></li>
       <img src="${pageContext.request.contextPath}/images/help_icon.gif" alt="Help" width="30" height="30" align="absmiddle" />
       <li><a href="${pageContext.request.contextPath}/help.jsp">Help</a></li>
-      
+
  	<c:if test="${pageContext.request.remoteUser != null}">
- 	
- 		<c:if test="${myfn:contains(pageContext.request.roles, 'ROLE_ADMIN')}">
+
+ 		<c:if test="${myfn:isUserInRole(pageContext.request, 'ROLE_ADMIN')}">
                   <img src="${pageContext.request.contextPath}/images/admin_icon.gif" alt="Administration" width="30" height="30" align="absmiddle" />
-                  <li><a href="${pageContext.request.contextPath}/protected/admin?action=list">Administration</a></li>    
+                  <li><a href="${pageContext.request.contextPath}/protected/admin?action=list">Administration</a></li>
         </c:if>
  	  </c:if>
 	  <c:choose>
-	  	
+
 	  	<c:when test="${pageContext.request.remoteUser != null}">
 <div style="float:right;" class="fltrt">
 	  	  <li>Welcome ${pageContext.request.remoteUser} | <a href="${pageContext.request.contextPath}/logout">Logout</a></li>
@@ -97,12 +97,12 @@ ul.nav a { zoom: 1; }
 	      <li><a href="${pageContext.request.contextPath}/protected/jobs">Upload Data</a></li>
 </div>
 	  	</c:when>
-	  	
+
 	  	<c:otherwise>
 <div class="fltrt">
 	      <img src="${pageContext.request.contextPath}/images/login_icon.gif" alt="Login" width="30" height="30" align="absmiddle" />
 	      <li><a href="${pageContext.request.contextPath}/protected/login">Login</a></li>   </div>
-	  	
+
 	  	</c:otherwise>
 	  </c:choose>
     </ul>
@@ -115,7 +115,7 @@ ul.nav a { zoom: 1; }
   <div class="content">
 		<template:get name="content" />
   </div>
-  
+
    <div class="sub-content">
 		<template:get name="subcontent" />
         <!--[if lte IE 9]>
@@ -153,7 +153,7 @@ ul.nav a { zoom: 1; }
 		</div>
 <![endif]-->
   </div>
-  
+
   <div class="footer">
     <p>Copyright &copy; 2012 Emory University -- All  Rights Reserved</p>
   </div>
