@@ -23,9 +23,9 @@ import edu.emory.cci.aiw.cvrg.eureka.services.thread.JobUpdateTask;
  * Set up the Guice dependency injection engine. Uses two modules:
  * {@link ServletModule} for web related configuration, and {@link AppModule}
  * for non-web related configuration.
- * 
+ *
  * @author hrathod
- * 
+ *
  */
 public class ConfigListener extends GuiceServletContextListener {
 
@@ -73,8 +73,8 @@ public class ConfigListener extends GuiceServletContextListener {
 //			LOGGER.error(e1.getMessage(), e1);
 //		}
 		try {
-			ApplicationProperties applicationProperties = this.getInjector()
-					.getInstance(ApplicationProperties.class);
+			ServiceProperties applicationProperties = this.getInjector()
+					.getInstance(ServiceProperties.class);
 			JobUpdateTask jobUpdateTask = new JobUpdateTask(
 					applicationProperties.getEtlJobUpdateUrl());
 			this.executorService.scheduleWithFixedDelay(jobUpdateTask, 0, 10,

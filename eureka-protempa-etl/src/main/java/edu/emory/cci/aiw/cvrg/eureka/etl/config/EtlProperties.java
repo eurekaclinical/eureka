@@ -13,12 +13,12 @@ import org.slf4j.LoggerFactory;
  * @author hrathod
  *
  */
-public class ApplicationProperties {
+public class EtlProperties {
 
 	/**
 	 * The class level logger.
 	 */
-	private static final Logger LOGGER = LoggerFactory.getLogger(ApplicationProperties.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(EtlProperties.class);
 	/**
 	 * Name of the properties file that is required for application
 	 * configuration.
@@ -34,7 +34,7 @@ public class ApplicationProperties {
 	 * No-arg constructor, looks for the application configuration file and
 	 * loads up the properties.
 	 */
-	public ApplicationProperties() {
+	public EtlProperties() {
 		InputStream inputStream = this.getClass().getResourceAsStream(
 				PROPERTIES_FILE);
 
