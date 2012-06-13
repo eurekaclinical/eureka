@@ -22,7 +22,7 @@ import edu.emory.cci.aiw.cvrg.eureka.common.entity.FileError;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.FileUpload;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.FileWarning;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.Job;
-import edu.emory.cci.aiw.cvrg.eureka.services.config.ApplicationProperties;
+import edu.emory.cci.aiw.cvrg.eureka.services.config.ServiceProperties;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.FileDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dataprovider.DataProvider;
 import edu.emory.cci.aiw.cvrg.eureka.services.dataprovider.DataProviderException;
@@ -48,7 +48,7 @@ public class JobTask implements Runnable {
 	/**
 	 * The application level configuration.
 	 */
-	private final ApplicationProperties applicationProperties;
+	private final ServiceProperties serviceProperties;
 	/**
 	 * The unique identifier for the file upload to process.
 	 */
@@ -72,16 +72,16 @@ public class JobTask implements Runnable {
 	 *
 	 * @param inFileDao               The DAO used to update status information
 	 *                                   about the file upload.
-	 * @param inApplicationProperties Application level configuration object,
+	 * @param inServiceProperties Application level configuration object,
 	 *                                   used to fetch relevant URLs needed to
 	 *                                   communicate with the ETL layer.
 	 */
 	@Inject
 	public JobTask(FileDao inFileDao,
-			ApplicationProperties inApplicationProperties) {
+			ServiceProperties inServiceProperties) {
 		super();
 		this.fileDao = inFileDao;
-		this.applicationProperties = inApplicationProperties;
+		this.serviceProperties = inServiceProperties;
 	}
 
 	/**
@@ -237,7 +237,7 @@ public class JobTask implements Runnable {
 			throw new TaskException(e);
 		}
 
-		WebResource resource = client.resource(this.applicationProperties.
+		WebResource resource = client.resource(this.serviceProperties.
 				getEtlJobSubmitUrl());
 		Job job = new Job();
 		job.setConfigurationId(conf.getId());
@@ -268,7 +268,7 @@ public class JobTask implements Runnable {
 			WebResource resource;
 			Client client = CommUtils.getClient();
 			Long userId = this.fileUpload.getUser().getId();
-			resource = client.resource(this.applicationProperties.
+			resource = client.resource(this.serviceProperties.
 					getEtlConfGetUrl() + "/" + userId);
 			response = resource.accept(MediaType.APPLICATION_JSON).get(
 					ClientResponse.class);
