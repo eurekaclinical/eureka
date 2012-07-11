@@ -40,9 +40,9 @@ public class User implements CycleRecoverable {
 	 */
 	@Id
 	@SequenceGenerator(name = "USER_SEQ_GENERATOR", sequenceName = "USER_SEQ",
-			allocationSize = 1)
+					   allocationSize = 1)
 	@GeneratedValue(strategy = GenerationType.SEQUENCE,
-			generator = "USER_SEQ_GENERATOR")
+					generator = "USER_SEQ_GENERATOR")
 	private Long id;
 	/**
 	 * Is the user activate?
@@ -87,15 +87,23 @@ public class User implements CycleRecoverable {
 	@ManyToMany(cascade = {CascadeType.REFRESH, CascadeType.MERGE},
 				targetEntity = Role.class)
 	@JoinTable(name = "user_role",
-			joinColumns = { @JoinColumn(name = "userId") },
-			inverseJoinColumns = { @JoinColumn(name = "roleId") })
+			   joinColumns = {
+		@JoinColumn(name = "userId")},
+			   inverseJoinColumns = {
+		@JoinColumn(name = "roleId")})
 	private List<Role> roles = new ArrayList<Role>();
 	/**
 	 * The file uploads belonging to the user.
 	 */
 	@OneToMany(cascade = CascadeType.ALL, targetEntity = FileUpload.class,
-			mappedBy = "user")
+			   mappedBy = "user")
 	private List<FileUpload> fileUploads = new ArrayList<FileUpload>();
+	/**
+	 * A list of all propositions created by the user.
+	 */
+	@OneToMany(cascade = CascadeType.ALL, targetEntity = Proposition.class,
+			   mappedBy = "user")
+	private List<Proposition> propositions = new ArrayList<Proposition>();
 
 	/**
 	 * Create an empty User object.
@@ -322,7 +330,7 @@ public class User implements CycleRecoverable {
 	 * Add a new file upload for the user.
 	 *
 	 * @param fileUpload The file upload to add to the list of file uploads for
-	 *            the user.
+	 * the user.
 	 */
 	public void addFileUpload(FileUpload fileUpload) {
 		User user = fileUpload.getUser();
@@ -330,6 +338,38 @@ public class User implements CycleRecoverable {
 			fileUpload.setUser(this);
 		}
 		this.fileUploads.add(fileUpload);
+	}
+
+	/**
+	 * Gets the list of propositions for the user.
+	 *
+	 * @return The list of propositions for the user.
+	 */
+	public List<Proposition> getPropositions() {
+		return propositions;
+	}
+
+	/**
+	 * Sets the list of propositions for the user.
+	 *
+	 * @param inPropositions The list of propositions for the user.
+	 */
+	public void setPropositions(List<Proposition> inPropositions) {
+		this.propositions = inPropositions;
+	}
+
+	/**
+	 * Adds a new proposition to the existing list of propositions for the user.
+	 *
+	 * @param inProposition The proposition to add to the list of propositions
+	 * for the user.
+	 */
+	public void addProposition(Proposition inProposition) {
+		User user = inProposition.getUser();
+		if (user == null || !user.getId().equals(this.getId())) {
+			inProposition.setUser(this);
+		}
+		this.propositions.add(inProposition);
 	}
 
 	@Override
@@ -345,17 +385,17 @@ public class User implements CycleRecoverable {
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
-		builder.append("User [id=").append(this.id).append(", active=")
-				.append(this.active).append(", verified=")
-				.append(this.verified).append(", firstName=")
-				.append(this.firstName).append(", lastName=")
-				.append(this.lastName).append(", email=").append(this.email)
-				.append(", organization=").append(this.organization)
-				.append(", password=").append(this.password)
-				.append(", verificationCode=").append(this.verificationCode)
-				.append(", lastLogin=").append(this.lastLogin)
-				.append(", roles=").append(this.roles).append(", fileUploads=")
-				.append(this.fileUploads).append("]");
+		builder.append("User [id=").append(this.id).append(", active=").append(
+				this.active).append(", verified=").append(this.verified).append(
+				", firstName=").append(this.firstName).append(", lastName=").
+				append(this.lastName).append(", email=").append(this.email).
+				append(", organization=").append(this.organization).append(
+				", password=").append(this.password).append(
+				", verificationCode=").append(this.verificationCode).append(
+				", lastLogin=").append(this.lastLogin).append(", roles=").append(
+				this.roles).append(", fileUploads=").append(this.fileUploads).
+				append(", propositions=").append(this.propositions).
+				append("]");
 		return builder.toString();
 	}
 }

@@ -1,6 +1,7 @@
 package edu.emory.cci.aiw.cvrg.eureka.services.test;
 
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -14,6 +15,7 @@ import com.google.inject.Inject;
 import com.google.inject.Provider;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.FileUpload;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.Proposition;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.Role;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.User;
 import edu.emory.cci.aiw.cvrg.eureka.common.test.TestDataException;
@@ -38,6 +40,7 @@ public class Setup implements TestDataProvider {
 	private User researcherUser;
 	private User adminUser;
 	private User superUser;
+	private Proposition proposition;
 
 	/**
 	 * Create a Bootstrap class with an EntityManager.
@@ -74,7 +77,7 @@ public class Setup implements TestDataProvider {
 		this.superUser = null;
 	}
 
-	private <T> void remove (Class<T> className) {
+	private <T> void remove(Class<T> className) {
 		EntityManager entityManager = this.getEntityManager();
 		CriteriaBuilder builder = entityManager.getCriteriaBuilder();
 		CriteriaQuery<T> criteriaQuery = builder.createQuery(className);
@@ -110,6 +113,12 @@ public class Setup implements TestDataProvider {
 			TestDataException {
 		EntityManager entityManager = this.getEntityManager();
 		User user = new User();
+		Proposition proposition = new Proposition();
+		proposition.setAbbrevDisplayName("test");
+		proposition.setDisplayName("test proposition");
+		proposition.setType("TEST-TYPE");
+		List<Proposition> propositions = new ArrayList<Proposition>();
+		propositions.add(proposition);
 		try {
 			user.setActive(true);
 			user.setVerified(true);
@@ -120,6 +129,7 @@ public class Setup implements TestDataProvider {
 			user.setPassword(StringUtil.md5(PASSWORD));
 			user.setLastLogin(new Date());
 			user.setRoles(Arrays.asList(roles));
+			user.addProposition(proposition);
 		} catch (NoSuchAlgorithmException nsaex) {
 			throw new TestDataException(nsaex);
 		}

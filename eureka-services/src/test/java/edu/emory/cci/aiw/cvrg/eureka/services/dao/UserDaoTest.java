@@ -1,11 +1,13 @@
 package edu.emory.cci.aiw.cvrg.eureka.services.dao;
 
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.User;
-import edu.emory.cci.aiw.cvrg.eureka.services.test.AbstractServiceTest;
-import junit.framework.Assert;
+import java.util.List;
+
 import org.junit.Test;
 
-import java.util.List;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.User;
+import edu.emory.cci.aiw.cvrg.eureka.services.test.AbstractServiceTest;
+
+import junit.framework.Assert;
 
 /**
  * Test case for the User data access object.
