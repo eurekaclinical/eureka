@@ -21,6 +21,7 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import org.codehaus.jackson.annotate.JsonBackReference;
 import com.sun.xml.bind.CycleRecoverable;
 
 /**
@@ -147,6 +148,7 @@ public class Proposition implements CycleRecoverable, Serializable {
 	 *
 	 * @return The user to which this proposition belongs.
 	 */
+	@JsonBackReference("user-propositions")
 	public User getUser() {
 		return user;
 	}

@@ -345,6 +345,7 @@ public class User implements CycleRecoverable {
 	 *
 	 * @return The list of propositions for the user.
 	 */
+	@JsonManagedReference("user-propositions")
 	public List<Proposition> getPropositions() {
 		return propositions;
 	}
