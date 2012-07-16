@@ -27,7 +27,7 @@ public final class DdlGenerator {
 	 * The dialect to produce the SQL for.
 	 */
 	private static final String DIALECT =
-			"org.hibernate.dialect" + ".Oracle10gDialect";
+			"org.hibernate.dialect.Oracle10gDialect";
 
 	/**
 	 * Prevent the utility class from being instantiated.
@@ -107,16 +107,16 @@ public final class DdlGenerator {
 		serviceClasses
 				.add(edu.emory.cci.aiw.cvrg.eureka.common.entity
 						.AbstractFileInfo.class);
-
+		serviceClasses.add(edu.emory.cci.aiw.cvrg.eureka.common.entity
+						.Proposition.class);
+		serviceClasses.add(edu.emory.cci.aiw.cvrg.eureka.common.entity
+						.TemporalPattern.class);
 		generate(serviceClasses, outputFile);
 	}
 
 	/**
 	 * @param args The first param is the file where the service layer DDL
-	 *                should
-	 *             go, and the second parameter is where the ETL layer DDL
-	 *             should
-	 *             go.
+	 * should go, and the second parameter is where the ETL layer DDL should go.
 	 */
 	public static void main(String[] args) {
 		if (args.length < 2) {
