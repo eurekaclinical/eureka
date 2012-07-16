@@ -30,7 +30,7 @@ public class TemporalPattern implements CycleRecoverable, Serializable {
 	 * The unique identifier for the temporal pattern.
 	 */
 	@Id
-	@SequenceGenerator(name = "TEMP_PAT_GEN", sequenceName = "temp_pat_seq",
+	@SequenceGenerator(name = "TEMP_PAT_GEN", sequenceName = "TEMP_PAT_SEQ",
 					   allocationSize = 1)
 	@GeneratedValue(generator = "TEMP_PAT_GEN",
 					strategy = GenerationType.SEQUENCE)
