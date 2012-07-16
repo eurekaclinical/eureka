@@ -48,24 +48,24 @@ public class Proposition implements CycleRecoverable, Serializable {
 	/**
 	 * The user to which this proposition belongs.
 	 */
-	@ManyToOne(
-	cascade = {CascadeType.MERGE, CascadeType.REFRESH, CascadeType.PERSIST},
+	@ManyToOne(cascade = {CascadeType.MERGE, CascadeType.REFRESH,
+		CascadeType.PERSIST},
 			   targetEntity = User.class)
 	@JoinColumn(name = "user_id")
 	private User user;
 	/**
 	 * The propositions that the current proposition is abstracted from.
 	 */
-	@ManyToMany(
-	cascade = {CascadeType.MERGE, CascadeType.REFRESH, CascadeType.PERSIST})
+	@ManyToMany(cascade = {CascadeType.MERGE, CascadeType.REFRESH,
+		CascadeType.PERSIST})
 	@JoinTable(name = "abstracted_from", joinColumns = {
 		@JoinColumn(name = "target_proposition_id")})
 	private List<Proposition> abstractedFrom;
 	/**
 	 * The "children" of of this proposition.
 	 */
-	@ManyToMany(
-	cascade = {CascadeType.MERGE, CascadeType.REFRESH, CascadeType.PERSIST})
+	@ManyToMany(cascade = {CascadeType.MERGE, CascadeType.REFRESH,
+		CascadeType.PERSIST})
 	@JoinTable(name = "inverse_is_a", joinColumns = {
 		@JoinColumn(name = "target_proposition_id")})
 	private List<Proposition> inverseIsA;
@@ -182,6 +182,7 @@ public class Proposition implements CycleRecoverable, Serializable {
 
 	/**
 	 * Gets the list of
+	 *
 	 * @return
 	 */
 	public List<Proposition> getInverseIsA() {
@@ -221,5 +222,14 @@ public class Proposition implements CycleRecoverable, Serializable {
 	@Override
 	public Object onCycleDetected(Context context) {
 		return null;
+	}
+
+	@Override
+	public String toString() {
+		return "Proposition{" + "id=" + id + ", user=" + user.getEmail()
+				+ ", abstractedFrom=" + abstractedFrom + ", inverseIsA="
+				+ inverseIsA + ", temporalPattern=" + temporalPattern
+				+ ", displayName=" + displayName + ", abbrevDisplayName="
+				+ abbrevDisplayName + ", type=" + type + '}';
 	}
 }
