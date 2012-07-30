@@ -15,7 +15,9 @@ import com.google.inject.Inject;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.PropositionWrapper;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.Proposition;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.User;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.PropositionDao;
+import edu.emory.cci.aiw.cvrg.eureka.services.dao.UserDao;
 
 /**
  * REST Web Service
@@ -25,23 +27,36 @@ import edu.emory.cci.aiw.cvrg.eureka.services.dao.PropositionDao;
 @Path("/proposition")
 public class PropositionResource {
 
-	private final PropositionDao dao;
+	private final PropositionDao propositionDao;
+	private final UserDao userDao;
 
 	/**
 	 * Creates a new instance of PropositionResource
 	 */
 	@Inject
-	public PropositionResource(PropositionDao inDao) {
-		this.dao = inDao;
+	public PropositionResource(PropositionDao inPropositionDao,
+			UserDao inUserDao) {
+		this.propositionDao = inPropositionDao;
+		this.userDao = inUserDao;
 	}
 
 	@GET
+	@Path("/user/{id}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public List<Proposition> getPropositionsByUser(
+			@PathParam("id") Long inUserId) {
+		User user = this.userDao.retrieve(inUserId);
+		return user.getPropositions();
+	}
+
+	@GET
+	@Path("/{id}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public PropositionWrapper getProposition(@PathParam("id") String inId) {
 		PropositionWrapper wrapper = null;
 		try {
 			Long id = Long.valueOf(inId);
-			Proposition proposition = this.dao.retrieve(id);
+			Proposition proposition = this.propositionDao.retrieve(id);
 			if (proposition != null) {
 				wrapper = wrap(proposition);
 			}
@@ -58,13 +73,13 @@ public class PropositionResource {
 	@PUT
 	@Consumes(MediaType.APPLICATION_JSON)
 	public void updateProposition(PropositionWrapper inWrapper) {
-		this.dao.update(unwrap(inWrapper));
+		this.propositionDao.update(unwrap(inWrapper));
 	}
 
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	public void insertProposition(PropositionWrapper inWrapper) {
-		this.dao.create(unwrap(inWrapper));
+		this.propositionDao.create(unwrap(inWrapper));
 	}
 
 	private List<String> extractIds(List<Proposition> inPropositions) {
@@ -78,15 +93,18 @@ public class PropositionResource {
 	private Proposition unwrap(PropositionWrapper inWrapper) {
 		Proposition proposition;
 		if (inWrapper.getId() != null) {
-			proposition = this.dao.retrieve(Long.valueOf(inWrapper.getId()));
+			proposition = this.propositionDao.retrieve(Long.valueOf(inWrapper.
+					getId()));
 		} else {
 			proposition = new Proposition();
+			proposition.setUser(this.userDao.retrieve(inWrapper.getUserId()));
 		}
 		proposition.setAbbrevDisplayName(inWrapper.getAbbrevDisplayName());
 		proposition.setDisplayName(inWrapper.getDisplayName());
 		List<Proposition> targetPropositions = new ArrayList<Proposition>();
 		for (String id : inWrapper.getTargets()) {
-			targetPropositions.add(this.dao.retrieve(Long.valueOf(id)));
+			targetPropositions.add(
+					this.propositionDao.retrieve(Long.valueOf(id)));
 		}
 		if (inWrapper.getType() == PropositionWrapper.Type.AND) {
 			proposition.setAbstractedFrom(targetPropositions);
