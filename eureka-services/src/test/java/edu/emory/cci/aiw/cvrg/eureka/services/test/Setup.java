@@ -116,7 +116,6 @@ public class Setup implements TestDataProvider {
 		Proposition proposition = new Proposition();
 		proposition.setAbbrevDisplayName("test");
 		proposition.setDisplayName("test proposition");
-		proposition.setType("TEST-TYPE");
 		List<Proposition> propositions = new ArrayList<Proposition>();
 		propositions.add(proposition);
 		try {

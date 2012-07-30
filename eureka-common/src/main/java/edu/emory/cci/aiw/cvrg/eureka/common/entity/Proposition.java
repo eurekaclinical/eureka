@@ -84,10 +84,6 @@ public class Proposition implements CycleRecoverable, Serializable {
 	 * The abbreviated display name for the proposition.
 	 */
 	private String abbrevDisplayName;
-	/**
-	 * The proposition type.
-	 */
-	private String type;
 
 	/**
 	 * Gets the abbreviated display name of the proposition.
@@ -123,24 +119,6 @@ public class Proposition implements CycleRecoverable, Serializable {
 	 */
 	public void setDisplayName(String inDisplayName) {
 		this.displayName = inDisplayName;
-	}
-
-	/**
-	 * Gets the proposition type.
-	 *
-	 * @return The proposition type.
-	 */
-	public String getType() {
-		return type;
-	}
-
-	/**
-	 * Sets the proposition type.
-	 *
-	 * @param inType The proposition type.
-	 */
-	public void setType(String inType) {
-		this.type = inType;
 	}
 
 	/**
@@ -232,6 +210,6 @@ public class Proposition implements CycleRecoverable, Serializable {
 				+ ", abstractedFrom=" + abstractedFrom + ", inverseIsA="
 				+ inverseIsA + ", temporalPattern=" + temporalPattern
 				+ ", displayName=" + displayName + ", abbrevDisplayName="
-				+ abbrevDisplayName + ", type=" + type + '}';
+				+ abbrevDisplayName + '}';
 	}
 }
