@@ -30,7 +30,7 @@ ul.nav a { zoom: 1; }
 <!--  -->
 <link href="${pageContext.request.contextPath}/css/ui-lightness/jquery-ui-1.8.21.custom.css"
 	rel="stylesheet" type="text/css" />
-<link href="${pageContext.request.contextPath}/css/styles2.css"
+<link href="${pageContext.request.contextPath}/css/editor.css"
 	rel="stylesheet" type="text/css" />
 <link href="${pageContext.request.contextPath}/css/buttons.css"
 	rel="stylesheet" type="text/css" />
@@ -38,8 +38,6 @@ ul.nav a { zoom: 1; }
 <link href="${pageContext.request.contextPath}/css/jstree.css"
 	rel="stylesheet" type="text/css" />
 
-<link href="${pageContext.request.contextPath}/css/jquery.treeview.css"
-	rel="stylesheet" type="text/css" />
 
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery-1.7.1.min.js"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery-ui-1.8.20.custom.min.js"></script>
@@ -48,9 +46,6 @@ ul.nav a { zoom: 1; }
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/editor.js"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery.smartWizard-2.0.js"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery.cookie.js"></script>
-
-<script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery.treeview.js"></script>
-<script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery.treeview.async.js"></script>
 
 <link type="text/css" rel="stylesheet" href="${pageContext.request.contextPath}/css/smart-wizard/smart_wizard_vertical.css" />
 <link type="text/css" rel="stylesheet" href="${pageContext.request.contextPath}/css/smart-wizard/demo_style.css" />
