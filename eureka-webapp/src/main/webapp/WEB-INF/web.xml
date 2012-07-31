@@ -56,6 +56,12 @@
 		<servlet-class>edu.emory.cci.aiw.cvrg.eureka.servlet.VerifyUserServlet</servlet-class>
 		<load-on-startup>1</load-on-startup>
 	</servlet>
+	<servlet>
+		<servlet-name>JsonServlet</servlet-name>
+		<servlet-class>edu.emory.cci.aiw.cvrg.eureka.servlet.JsonServlet</servlet-class>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+
 	<servlet-mapping>
 		<servlet-name>VerifyUserServlet</servlet-name>
 		<url-pattern>/verify</url-pattern>
@@ -92,7 +98,11 @@
 		<servlet-name>UserAcctManagerServlet</servlet-name>
 		<url-pattern>/protected/user_acct</url-pattern>
 	</servlet-mapping>
-
+	<servlet-mapping>
+		<servlet-name>JsonServlet</servlet-name>
+		<url-pattern>/json</url-pattern>
+	</servlet-mapping>
+  
 	<login-config>
 		<auth-method>FORM</auth-method>
 		<realm-name>Eureka</realm-name>
