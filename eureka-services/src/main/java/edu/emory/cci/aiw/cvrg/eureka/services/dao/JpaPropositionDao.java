@@ -7,6 +7,7 @@ import com.google.inject.Provider;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.dao.GenericDao;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.Proposition;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.Proposition_;
 
 /**
  * An implementation of the {@link PropositionDao} interface, backed by JPA
@@ -24,5 +25,10 @@ public class JpaPropositionDao extends GenericDao<Proposition, Long> implements
 	@Inject
 	public JpaPropositionDao (Provider<EntityManager> inProvider) {
 		super(Proposition.class, inProvider);
+	}
+
+	@Override
+	public Proposition getByKey(String inKey) {
+		return this.getUniqueByAttribute(Proposition_.key,inKey);
 	}
 }
