@@ -127,6 +127,7 @@ public class PropositionResource {
 				p.setKey(key);
 				p.setInSystem(true);
 			}
+			targets.add(p);
 		}
 
 		if (inWrapper.getType() == PropositionWrapper.Type.AND) {
