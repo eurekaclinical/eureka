@@ -21,6 +21,7 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.PropositionWrapper;
 import org.codehaus.jackson.annotate.JsonBackReference;
 import com.sun.xml.bind.CycleRecoverable;
 
@@ -77,6 +78,11 @@ public class Proposition implements CycleRecoverable, Serializable {
 	@JoinColumn(name = "proposition_id")
 	private TemporalPattern temporalPattern;
 	/**
+	 * If proposition is system-level, this key identifies the
+	 * proposition in the system ontology
+	 */
+	private String key;
+	/**
 	 * The display name for the proposition.
 	 */
 	private String displayName;
@@ -84,6 +90,10 @@ public class Proposition implements CycleRecoverable, Serializable {
 	 * The abbreviated display name for the proposition.
 	 */
 	private String abbrevDisplayName;
+	/**
+	 * Is the proposition a system level proposition?
+	 */
+	private boolean inSystem;
 
 	/**
 	 * Gets the abbreviated display name of the proposition.
@@ -197,6 +207,39 @@ public class Proposition implements CycleRecoverable, Serializable {
 	 */
 	public void setId(Long inId) {
 		this.id = inId;
+	}
+
+	/**
+	 * Is the proposition a system level element?
+	 * @return True if system level, false otherwise.
+	 */
+	public boolean isInSystem() {
+		return inSystem;
+	}
+
+	/**
+	 * Sets whether the proposition is a system level element.
+	 * @param inSystem The value of the inSystem property to set.
+	 */
+	public void setInSystem(boolean inSystem) {
+		this.inSystem = inSystem;
+	}
+
+	/**
+	 * Gets the key for the proposition.
+	 * @return Null if the proposition is not system level, id in the system
+	 * ontology otherwise.
+	 */
+	public String getKey() {
+		return key;
+	}
+
+	/**
+	 * Sets the key for the proposition.
+	 * @param inKey The id of the proposition in the system ontology.
+	 */
+	public void setKey(String inKey) {
+		key = inKey;
 	}
 
 	@Override

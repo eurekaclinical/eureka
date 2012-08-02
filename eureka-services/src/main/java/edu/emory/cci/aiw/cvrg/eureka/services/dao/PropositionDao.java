@@ -14,4 +14,5 @@ import edu.emory.cci.aiw.cvrg.eureka.common.entity.Proposition;
  * @author hrathod
  */
 public interface PropositionDao extends Dao<Proposition, Long> {
+	public Proposition getByKey(String inKey);
 }

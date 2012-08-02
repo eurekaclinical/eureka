@@ -3,21 +3,21 @@ package edu.emory.cci.aiw.cvrg.eureka.common.comm;
 import java.util.List;
 
 /**
- *
  * @author hrathod
  */
 public class PropositionWrapper {
 
-	public enum Type {
+	public enum Type {AND, OR}
 
-		AND, OR
-	};
 	private String id;
+	private String key;
 	private Long userId;
 	private String abbrevDisplayName;
 	private String displayName;
 	private Type type;
-	private List<String> targets;
+	private boolean inSystem;
+	private List<Long> userTargets;
+	private List<String> systemTargets;
 
 	public String getId() {
 		return id;
@@ -25,6 +25,14 @@ public class PropositionWrapper {
 
 	public void setId(String id) {
 		this.id = id;
+	}
+
+	public String getKey() {
+		return key;
+	}
+
+	public void setKey(String inKey) {
+		key = inKey;
 	}
 
 	public Long getUserId() {
@@ -51,12 +59,12 @@ public class PropositionWrapper {
 		this.displayName = displayName;
 	}
 
-	public List<String> getTargets() {
-		return targets;
+	public List<Long> getUserTargets() {
+		return userTargets;
 	}
 
-	public void setTargets(List<String> targets) {
-		this.targets = targets;
+	public void setUserTargets(List<Long> userTargets) {
+		this.userTargets = userTargets;
 	}
 
 	public Type getType() {
@@ -65,5 +73,21 @@ public class PropositionWrapper {
 
 	public void setType(Type type) {
 		this.type = type;
+	}
+
+	public boolean isInSystem() {
+		return inSystem;
+	}
+
+	public void setInSystem(boolean inSystem) {
+		this.inSystem = inSystem;
+	}
+
+	public List<String> getSystemTargets() {
+		return systemTargets;
+	}
+
+	public void setSystemTargets(List<String> systemTargets) {
+		this.systemTargets = systemTargets;
 	}
 }
