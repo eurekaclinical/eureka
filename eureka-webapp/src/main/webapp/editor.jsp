@@ -66,9 +66,9 @@
                     <p>
                     <select id="type">
                         <option value="">--SELECT--</option>
-                        <option value="Category">Category</option>
-                        <option value="Temporal">Temporal</option>
-                        <option value="Workflow">Workflow</option>
+                        <option value="OR">Category</option>
+                        <option value="AND">Temporal</option>
+                       
 
                     </select>
                     </p>
@@ -103,28 +103,10 @@
 										            <li><a href="#second">User Defined</a></li>
 										        </ul>
 										        <div id="first">
-										        	<!--
-											        <div id="tab1" >
-														<ul>
-															<li id="phtml_1"><a href="#">System Element 1</a>
-																<ul>
-																	<li id="phtml_2"><a href="#">SysChild element 1</a></li>
-																	<li id="phtml_3"><a href="#">SysChild element 2</a></li>
-																</ul></li>
-															<li id="phtml_4"><a href="#">System Element 2</a></li>
-														</ul>
-													</div>
-													-->
-													<ul id="tab1"></ul>
+                                                    <div id="systemTree"></div>
 										        </div>
 										        <div id="second">
-											        <div id="tab2">
-														<ul>
-                                                            <li id="phtml_1"><a href="#">User Defined Concept 1</a></li>
-															<li id="phtml_4"><a href="#">User Defined Concept 2</a></li>
-														</ul>
-													</div>
-										        
+                                                    <div id="tab2"></div>
 										        </div>							        
 								    </div>
 										

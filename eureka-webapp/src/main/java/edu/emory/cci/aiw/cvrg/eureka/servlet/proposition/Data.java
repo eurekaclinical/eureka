@@ -1,4 +1,4 @@
-package edu.emory.cci.aiw.cvrg.eureka.servlet;
+package edu.emory.cci.aiw.cvrg.eureka.servlet.proposition;
 
 import java.util.ArrayList;
 import java.util.HashMap;
