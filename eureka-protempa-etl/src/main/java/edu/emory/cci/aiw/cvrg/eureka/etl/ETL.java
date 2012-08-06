@@ -2,12 +2,15 @@ package edu.emory.cci.aiw.cvrg.eureka.etl;
 
 
 import edu.emory.cci.aiw.i2b2etl.I2B2QueryResultsHandler;
+import java.io.File;
 import org.protempa.*;
 import org.protempa.backend.BackendInitializationException;
 import org.protempa.backend.BackendNewInstanceException;
 import org.protempa.backend.BackendProviderSpecLoaderException;
+import org.protempa.backend.Configurations;
 import org.protempa.backend.ConfigurationsLoadException;
 import org.protempa.backend.InvalidConfigurationException;
+import org.protempa.bconfigs.commons.INICommonsConfigurations;
 import org.protempa.query.DefaultQueryBuilder;
 import org.protempa.query.Query;
 import org.protempa.query.QueryBuildException;
@@ -34,6 +37,9 @@ public class ETL {
         "LAB:LabTest",
         "CPTCode"
     };
+    
+    private static final File DEFAULT_CONF_DIR = new File("/opt/cvrg_users");
+    
     private KnowledgeSource knowledgeSource = null;
 
     public void runProtempa(String userName) throws FinderException,
@@ -41,18 +47,10 @@ public class ETL {
             BackendProviderSpecLoaderException, InvalidConfigurationException,
             ProtempaStartupException, BackendInitializationException,
             BackendNewInstanceException {
-        String confXML = "/opt/cvrg_users/" + userName + "/conf.xml";
-
-        /*
-         * We synchronize this because getNewProtempa uses the user.home
-         * property to decide where to look for configuration files. If another
-         * thread changes user.home, we're screwed.
-         */
-        Protempa protempa;
-        synchronized (getClass()) {
-            System.setProperty("user.home", "/opt/cvrg_users/" + userName);
-            protempa = getNewProtempa("erat-diagnoses-direct");
-        }
+        File userDir = new File(DEFAULT_CONF_DIR, userName);
+        File confXML = new File(userDir, "conf.xml");
+        
+        Protempa protempa = getNewProtempa(userDir, "erat-diagnoses-direct");
 
         try {
             DefaultQueryBuilder q = new DefaultQueryBuilder();
@@ -65,20 +63,25 @@ public class ETL {
         }
     }
 
-    private Protempa getNewProtempa(String fileName) throws
+    private Protempa getNewProtempa(File userDir, String configId) throws
             ConfigurationsLoadException, BackendProviderSpecLoaderException,
             InvalidConfigurationException, ProtempaStartupException,
             BackendInitializationException, BackendNewInstanceException {
         
         Protempa protempa;
-        SourceFactory sf = new SourceFactory(fileName);
+        Configurations configurations = new INICommonsConfigurations(userDir);
+        SourceFactory sf = new SourceFactory(configurations, configId);
         if (knowledgeSource == null) {
-
-            protempa = new Protempa(sf.newDataSourceInstance(), sf.newKnowledgeSourceInstance(), sf.newAlgorithmSourceInstance(), sf.newTermSourceInstance());
+            protempa = new Protempa(sf.newDataSourceInstance(), 
+                    sf.newKnowledgeSourceInstance(), 
+                    sf.newAlgorithmSourceInstance(), 
+                    sf.newTermSourceInstance());
             knowledgeSource = protempa.getKnowledgeSource();
         } else {
-
-            protempa = new Protempa(sf.newDataSourceInstance(), knowledgeSource, sf.newAlgorithmSourceInstance(), sf.newTermSourceInstance());
+            protempa = new Protempa(sf.newDataSourceInstance(), 
+                    knowledgeSource, 
+                    sf.newAlgorithmSourceInstance(), 
+                    sf.newTermSourceInstance());
         }
         return protempa;
     }
