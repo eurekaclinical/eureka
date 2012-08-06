@@ -1,10 +1,7 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package edu.emory.cci.aiw.cvrg.eureka.common.entity;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -21,7 +18,6 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlRootElement;
 
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.PropositionWrapper;
 import org.codehaus.jackson.annotate.JsonBackReference;
 import com.sun.xml.bind.CycleRecoverable;
 
@@ -94,6 +90,14 @@ public class Proposition implements CycleRecoverable, Serializable {
 	 * Is the proposition a system level proposition?
 	 */
 	private boolean inSystem;
+	/**
+	 * The date the proposition was created.
+	 */
+	private Date created;
+	/**
+	 * The date the proposition was last modified.
+	 */
+	private Date lastModified;
 
 	/**
 	 * Gets the abbreviated display name of the proposition.
@@ -240,6 +244,38 @@ public class Proposition implements CycleRecoverable, Serializable {
 	 */
 	public void setKey(String inKey) {
 		key = inKey;
+	}
+
+	/**
+	 * Gets the creation date.
+	 * @return The creation date.
+	 */
+	public Date getCreated() {
+		return created;
+	}
+
+	/**
+	 * Sets the creation time.
+	 * @param inCreated The creation time.
+	 */
+	public void setCreated(Date inCreated) {
+		created = inCreated;
+	}
+
+	/**
+	 * Gets the last modification time.
+	 * @return The last modification time.
+	 */
+	public Date getLastModified() {
+		return lastModified;
+	}
+
+	/**
+	 * Sets the last modification time.
+	 * @param inLastModified The last modification time.
+	 */
+	public void setLastModified(Date inLastModified) {
+		lastModified = inLastModified;
 	}
 
 	@Override

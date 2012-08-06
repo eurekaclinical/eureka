@@ -1,5 +1,6 @@
 package edu.emory.cci.aiw.cvrg.eureka.common.comm;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -18,6 +19,8 @@ public class PropositionWrapper {
 	private boolean inSystem;
 	private List<Long> userTargets;
 	private List<String> systemTargets;
+	private Date created;
+	private Date lastModified;
 
 	public String getId() {
 		return id;
@@ -89,5 +92,21 @@ public class PropositionWrapper {
 
 	public void setSystemTargets(List<String> systemTargets) {
 		this.systemTargets = systemTargets;
+	}
+
+	public Date getCreated() {
+		return created;
+	}
+
+	public void setCreated(Date inCreated) {
+		created = inCreated;
+	}
+
+	public Date getLastModified() {
+		return lastModified;
+	}
+
+	public void setLastModified(Date inLastModified) {
+		lastModified = inLastModified;
 	}
 }
