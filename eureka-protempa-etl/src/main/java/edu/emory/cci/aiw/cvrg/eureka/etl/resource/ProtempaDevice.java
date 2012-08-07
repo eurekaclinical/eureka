@@ -9,154 +9,111 @@ import edu.emory.cci.aiw.cvrg.eureka.common.entity.Configuration;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.Job;
 import edu.emory.cci.aiw.cvrg.eureka.etl.ETL;
 
-
 public class ProtempaDevice extends Thread {
 
-	private Long jobId;
-	private ETL etl = new ETL();
-	//
-	//	IMPORTANT:
-	//	the synchObj is locked by the internal thread in ProtempaDeviceManager
-	//	that calls load()
-	//	and is locked by the runnable inside this ProtempaDevice instance.
-	//
-	private final Object synchObj = new Object();
-	private volatile boolean busy = false;
-	private volatile boolean failure = false;
-	private final ConfDao confDao;
-	private final JobDao jobDao;
-	private static final Logger LOGGER = LoggerFactory.getLogger(ProtempaDevice.class);
+    private Long jobId;
+    private ETL runner = new ETL();
+    //
+    //	IMPORTANT:
+    //	the synchObj is locked by the internal thread in ProtempaDeviceManager
+    //	that calls load()
+    //	and is locked by the runnable inside this ProtempaDevice instance.
+    //
+    private final Object synchObj = new Object();
+    private volatile boolean busy = false;
+    private volatile boolean failure = false;
+    private final JobDao jobDao;
+    private static final Logger LOGGER = LoggerFactory.getLogger(ProtempaDevice.class);
 
-	private class UEH implements Thread.UncaughtExceptionHandler {
+    public ProtempaDevice(JobDao jobDao) {
+        this.jobDao = jobDao;
+    }
 
-		ProtempaDevice pd = null;
+    void load(Long inJobId) {
 
-		public UEH (ProtempaDevice pd) {
+        synchronized (synchObj) {
 
-			this.pd = pd;
-		}
+            LOGGER.debug("ProtempaDevice loaded with Job {}", inJobId);
+            busy = true;
+            this.jobId = inJobId;
+            synchObj.notifyAll();	//	there should only ever be one thread wait()ing, but still...
+        }
+    }
 
-		public void uncaughtException (Thread thread , Throwable t) {
+    @Override
+    public void run() {
 
-			pd.tagJob (thread , t);
-		}
-	}
+        synchronized (synchObj) {
+            try {
+                while (true) {
+                    Job myJob = null;
+                    try {
 
+                        LOGGER.debug("{} wait.", Thread.currentThread().getName());
+                        synchObj.wait();
+                        myJob = this.jobDao.retrieve(this.jobId);
+                        LOGGER.debug("{} just got a job, id={}", Thread.currentThread().getName(), myJob.toString());
+                        myJob.setNewState("PROCESSING", null, null);
+                        LOGGER.debug("About to save job: {}", myJob.toString());
+                        this.jobDao.update(myJob);
 
-	public ProtempaDevice (JobDao jobDao , ConfDao confDao) {
+                        Long configId = myJob.getConfigurationId();
+                        runner.run("config" + configId);
 
-		this.jobDao = jobDao;
-		this.confDao = confDao;
-	}
+                        myJob.setNewState("DONE", null, null);
+                        this.jobDao.update(myJob);
+                    } catch (InterruptedException ie) {
 
-	void load (Long inJobId) {
+                        LOGGER.debug("{} interrupted and finished.", Thread.currentThread().getName());
+                        this.failure = true;
+                        if (myJob != null) {
 
-		synchronized (synchObj) {
+                            myJob.setNewState("INTERRUPTED", null, null);
+                            this.jobDao.update(myJob);
+                        }
+                        return;
+                    } catch (Exception e) {
 
-			LOGGER.debug("ProtempaDevice loaded with Job {}" , inJobId);
-			busy = true;
-			this.jobId = inJobId;
-			synchObj.notifyAll();	//	there should only ever be one thread wait()ing, but still...
-		}
-	}
+                        e.printStackTrace();
+                        LOGGER.debug("{} unknown exception and finished. {}", Thread.currentThread().getName(), e.getMessage());
+                        this.failure = true;
+                        if (myJob != null) {
 
-	@Override
-	public void interrupt() {
+                            myJob.setNewState("EXCEPTION", null, null);
+                            this.jobDao.update(myJob);
+                        }
+                        return;
+                    } finally {
 
-		super.interrupt();
-		// etl.clearProtempa();
-	}
+                        busy = false;
+                    }
+                }
+            } finally {
+                this.runner.close();
+            }
+        }
+    }
 
-	private static int ctr = 0;
-	@Override
-	public void run() {
+    boolean isBusy() {
 
-		synchronized (synchObj) {
+        return this.busy;
+    }
 
-			while (true) {
+    boolean hasFailed() {
 
-				Job myJob = null;
-				try {
+        return this.failure;
+    }
 
-					LOGGER.debug("{} wait." , Thread.currentThread().getName());
-					synchObj.wait();
-					myJob = this.jobDao.retrieve(this.jobId);
-					LOGGER.debug("{} just got a job, id={}" , Thread.currentThread().getName() , myJob.toString());
-			    	myJob.setNewState ("PROCESSING" , null , null);
-			    	LOGGER.debug("About to save job: {}", myJob.toString());
-			    	this.jobDao.update (myJob);
+    Job getJob() {
 
-			    	Long userId = myJob.getUserId();
-			    	etl.runProtempa ("user" + userId);
+        return this.jobDao.retrieve(this.jobId);
+    }
 
-//			    	Configuration conf = confDao.get(myJob.getUserId());
-//			    	etl.runProtempa ("cvrg");
-//			    	if (ctr == 0) {
-//
-//			    		ctr++;
-//				    	etl.runProtempa ("cvrg");
-//			    	}
-//			    	else if (ctr == 1) {
-//
-//				    	etl.runProtempa ("3");
-//			    	}
-//			    	etl.runProtempa (conf.getProtempaSchema());
+    protected void tagJob(Thread thread, Throwable t) {
 
-			    	myJob.setNewState ("DONE" , null , null);
-			    	this.jobDao.update (myJob);
-				}
-				catch (InterruptedException ie) {
-
-					LOGGER.debug("{} interrupted and finished." , Thread.currentThread().getName());
-			    	this.failure = true;
-			    	if (myJob != null) {
-
-			    		myJob.setNewState ("INTERRUPTED" , null , null);
-			    		this.jobDao.update (myJob);
-			    	}
-					return;
-				}
-				catch (Exception e) {
-
-					e.printStackTrace();
-					LOGGER.debug("{} unknown exception and finished. {}" , Thread.currentThread().getName() , e.getMessage());
-			    	this.failure = true;
-			    	if (myJob != null) {
-
-			    		myJob.setNewState ("EXCEPTION" , null , null);
-			    		this.jobDao.update (myJob);
-			    	}
-					return;
-				}
-				finally {
-
-					busy = false;
-				}
-			}
-		}
-	}
-
-	boolean isBusy() {
-
-		return this.busy;
-	}
-
-	boolean hasFailed() {
-
-		return this.failure;
-	}
-
-	Job getJob() {
-
-		return this.jobDao.retrieve(this.jobId);
-	}
-
-	protected void tagJob (Thread thread , Throwable t) {
-
-		Job myJob = this.jobDao.retrieve(this.jobId);
-		if (myJob != null) {
-
-			//	recordException
-		}
-	}
+        Job myJob = this.jobDao.retrieve(this.jobId);
+        if (myJob != null) {
+            //	recordException
+        }
+    }
 }

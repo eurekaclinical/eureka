@@ -26,112 +26,108 @@ import edu.emory.cci.aiw.cvrg.eureka.etl.dao.JobDao;
 @Path("/job")
 public class RestInterfaces {
 
-	// the methods here act as the service() method does in a servlet.
-	//
-	// these are the clients of the singleton ProtempaDeviceManager.
-	//
-	// tomcat:run
+    // the methods here act as the service() method does in a servlet.
+    //
+    // these are the clients of the singleton ProtempaDeviceManager.
+    //
+    // tomcat:run
+    private final JobDao jobDao;
+    private final ConfDao confDao;
+    private final ProtempaDeviceManager protempaDeviceManager;
+    private static final Logger LOGGER = LoggerFactory
+            .getLogger(RestInterfaces.class);
 
-	private final JobDao jobDao;
-	private final ConfDao confDao;
-	private final ProtempaDeviceManager protempaDeviceManager;
-	private static final Logger LOGGER = LoggerFactory
-			.getLogger(RestInterfaces.class);
+    @Inject
+    public RestInterfaces(JobDao jobDao, ConfDao confDao,
+            ProtempaDeviceManager protempaDeviceManager) {
 
-	@Inject
-	public RestInterfaces(JobDao jobDao, ConfDao confDao,
-			ProtempaDeviceManager protempaDeviceManager) {
+        this.jobDao = jobDao;
+        this.confDao = confDao;
+        this.protempaDeviceManager = protempaDeviceManager;
+        LOGGER.debug("Instantiate RestInterfaces");
+    }
 
-		this.jobDao = jobDao;
-		this.confDao = confDao;
-		this.protempaDeviceManager = protempaDeviceManager;
-		LOGGER.debug("Instantiate RestInterfaces");
-	}
+    @GET
+    @Path("test")
+    public String getJob() {
 
-	@GET
-	@Path("test")
-	public String getJob() {
+        Job job = new Job();
 
-		Job job = new Job();
+        this.jobDao.create(job);
+        LOGGER.debug("Request to start new Job {0}", job.getId());
+        job.setNewState("CREATED", null, null);
+        this.jobDao.update(job);
+        this.protempaDeviceManager.qJob(job);
 
-		this.jobDao.create (job);
-		LOGGER.debug("Request to start new Job {0}", job.getId());
-		job.setNewState("CREATED", null, null);
-		this.jobDao.update(job);
-		this.protempaDeviceManager.qJob(job);
+        Job boj = new Job();
 
-		Job boj = new Job();
+        this.jobDao.create(boj);
+        LOGGER.debug("Request to start new Job {0}", boj.getId());
+        boj.setNewState("CREATED", null, null);
+        this.jobDao.update(boj);
+        this.protempaDeviceManager.qJob(boj);
 
-		this.jobDao.create(boj);
-		LOGGER.debug("Request to start new Job {0}", boj.getId());
-		boj.setNewState("CREATED", null, null);
-		this.jobDao.update(boj);
-		this.protempaDeviceManager.qJob(boj);
-
-		return "right";
-	}
+        return "right";
+    }
 
     @GET
     @Path("/list")
     @Produces(MediaType.APPLICATION_JSON)
-    public List<Job> getAll () {
+    public List<Job> getAll() {
         return this.jobDao.getAll();
     }
 
-	//
-	// Job submit
-	//
+    //
+    // Job submit
+    //
+    @POST
+    @Path("submitJob")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Job startJob(Job job) {
+        job.setNewState("CREATED", null, null);
+        LOGGER.debug("Request to start new Job {}", job.getId());
+        this.jobDao.create(job);
+        this.protempaDeviceManager.qJob(job);
+        return job;
+    }
 
-	@POST
-	@Path("submitJob")
-	@Consumes(MediaType.APPLICATION_JSON)
-	@Produces(MediaType.APPLICATION_JSON)
-	public Job startJob(Job job) {
-		job.setNewState("CREATED", null, null);
-		LOGGER.debug("Request to start new Job {}", job.getId());
-		this.jobDao.create(job);
-		this.protempaDeviceManager.qJob(job);
-		return job;
-	}
+    //
+    // Job status
+    //
+    @GET
+    @Path("status")
+    @Produces(MediaType.APPLICATION_JSON)
+    public List<Job> getJob(@QueryParam("filter") JobFilter inFilter) {
 
-	//
-	// Job status
-	//
+        LOGGER.debug("Request for job status");
+        List<Job> jobs = this.jobDao.getWithFilter(inFilter);
+        for (Job job : jobs) {
+            this.jobDao.refresh(job);
+            LOGGER.debug("Returning job {} with status {}", job.getId(),
+                    job.getCurrentState());
+        }
+        return jobs;
+    }
 
-	@GET
-	@Path("status")
-	@Produces(MediaType.APPLICATION_JSON)
-	public List<Job> getJob(@QueryParam("filter") JobFilter inFilter) {
+    //
+    // Configuration
+    //
+    @GET
+    @Path("getConf/{userId}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Configuration getConfByUserId(@PathParam("userId") Long userId) {
+        LOGGER.debug("Configuration request for user {}", userId);
+        return this.confDao.getByUserId(userId);
+    }
 
-		LOGGER.debug("Request for job status");
-		List<Job> jobs = this.jobDao.getWithFilter(inFilter);
-		for (Job job : jobs) {
-			this.jobDao.refresh(job);
-			LOGGER.debug("Returning job {} with status {}", job.getId(),
-					job.getCurrentState());
-		}
-		return jobs;
-	}
-
-	//
-	// Configuration
-	//
-
-	@GET
-	@Path("getConf/{userId}")
-	@Consumes(MediaType.APPLICATION_JSON)
-	@Produces(MediaType.APPLICATION_JSON)
-	public Configuration getConfByUserId(@PathParam("userId") Long userId) {
-		LOGGER.debug("Configuration request for user {}", userId);
-		return this.confDao.getByUserId(userId);
-	}
-
-	@POST
-	@Path("submitConf")
-	@Consumes(MediaType.APPLICATION_JSON)
-	public Response submitConfiguration(Configuration conf) {
-		this.confDao.create(conf);
-		LOGGER.debug("Request to save Configuration");
-		return Response.ok().build();
-	}
+    @POST
+    @Path("submitConf")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response submitConfiguration(Configuration conf) {
+        this.confDao.create(conf);
+        LOGGER.debug("Request to save Configuration");
+        return Response.ok().build();
+    }
 }
