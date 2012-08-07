@@ -1,6 +1,7 @@
 package edu.emory.cci.aiw.cvrg.eureka.services.resource;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -88,14 +89,20 @@ public class PropositionResource {
 	@Path("/user/update")
 	@Consumes(MediaType.APPLICATION_JSON)
 	public void updateProposition(PropositionWrapper inWrapper) {
-		this.propositionDao.update(unwrap(inWrapper));
+		Proposition proposition = unwrap(inWrapper);
+		proposition.setLastModified(new Date());
+		this.propositionDao.update(proposition);
 	}
 
 	@POST
 	@Path("/user/create")
 	@Consumes(MediaType.APPLICATION_JSON)
 	public void insertProposition(PropositionWrapper inWrapper) {
-		this.propositionDao.create(unwrap(inWrapper));
+		Proposition proposition = unwrap(inWrapper);
+		Date now = new Date();
+		proposition.setCreated(now);
+		proposition.setLastModified(now);
+		this.propositionDao.create(proposition);
 	}
 
 	private Proposition fetchSystemProposition(String inId) {
