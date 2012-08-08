@@ -6,6 +6,6 @@ import org.protempa.AlgorithmSource;
  *
  * @author Andrew Post
  */
-public interface PreventCloseAlgorithmSource extends AlgorithmSource, ReallyCloseable {
+interface PreventCloseAlgorithmSource extends AlgorithmSource, ReallyCloseable {
     
 }

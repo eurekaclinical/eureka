@@ -6,5 +6,5 @@ import org.protempa.KnowledgeSource;
  *
  * @author Andrew Post
  */
-public interface PreventCloseKnowledgeSource extends KnowledgeSource, ReallyCloseable {
+interface PreventCloseKnowledgeSource extends KnowledgeSource, ReallyCloseable {
 }

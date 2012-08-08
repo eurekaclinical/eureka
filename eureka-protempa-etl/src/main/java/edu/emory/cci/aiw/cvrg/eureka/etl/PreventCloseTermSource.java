@@ -6,6 +6,6 @@ import org.protempa.TermSource;
  *
  * @author Andrew Post
  */
-public interface PreventCloseTermSource extends TermSource, ReallyCloseable {
+interface PreventCloseTermSource extends TermSource, ReallyCloseable {
     
 }

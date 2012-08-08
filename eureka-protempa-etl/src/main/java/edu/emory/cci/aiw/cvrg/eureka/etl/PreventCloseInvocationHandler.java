@@ -23,8 +23,12 @@ final class PreventCloseInvocationHandler implements InvocationHandler {
     @Override
     public Object invoke(Object proxy, Method method, Object[] args) 
             throws Throwable {
-        if (method.getName().equals("close")) {
-            return false;
+        String methodName = method.getName();
+        if (methodName.equals("close")) {
+            return null;
+        } else if (methodName.equals("reallyClose")) {
+            this.proxied.close();
+            return null;
         }
         return method.invoke(this.proxied, args);
     }
