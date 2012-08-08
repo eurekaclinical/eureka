@@ -142,6 +142,7 @@
 		<oracle-version>[11.2.0.2.0,)</oracle-version>
 		<freemarker-version>2.3.9</freemarker-version>
 		<jpamodelgen-version>1.2.0.Final</jpamodelgen-version>
+		<mysql-version>5.1.18</mysql-version>
 	</properties>
 
 	<!-- make sure our code complies with Java 1.6 specifications, and define
@@ -420,25 +421,21 @@
 				<groupId>org.protempa</groupId>
 				<artifactId>protempa-bconfigs-commons-ini</artifactId>
 				<version>${protempa-version}</version>
-				<scope>compile</scope>
 			</dependency>
 			<dependency>
 				<groupId>org.protempa</groupId>
 				<artifactId>protempa-ksb-protege</artifactId>
 				<version>${protempa-version}</version>
-				<scope>runtime</scope>
 			</dependency>
 			<dependency>
 				<groupId>org.protempa</groupId>
 				<artifactId>protempa-tsb-umls</artifactId>
 				<version>${protempa-version}</version>
-				<scope>runtime</scope>
 			</dependency>
 			<dependency>
 				<groupId>org.protempa</groupId>
 				<artifactId>protempa-dsb-relationaldb</artifactId>
 				<version>${protempa-version}</version>
-				<scope>runtime</scope>
 			</dependency>
 			<dependency>
 				<groupId>edu.emory.cci</groupId>
@@ -465,6 +462,12 @@
 				<groupId>org.hibernate</groupId>
 				<artifactId>hibernate-jpamodelgen</artifactId>
 				<version>${jpamodelgen-version}</version>
+			</dependency>
+			<dependency>
+				<groupId>mysql</groupId>
+				<artifactId>mysql-connector-java</artifactId>
+				<version>${mysql-version}</version>
+				<scope>test</scope>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
