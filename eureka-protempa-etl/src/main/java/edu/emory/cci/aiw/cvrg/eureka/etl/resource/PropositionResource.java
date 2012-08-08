@@ -59,10 +59,12 @@ public class PropositionResource {
 			sf = new SourceFactory(configurations, "erat-diagnoses-direct");
 			KnowledgeSource knowledgeSource = sf.newKnowledgeSourceInstance();
 			PropositionDefinition definition =
-					knowledgeSource.readPropositionDefinition("ICD9:250");
-			WrapperVisitor visitor = new WrapperVisitor();
-			definition.accept(visitor);
-			wrapper = visitor.getWrapper();
+					knowledgeSource.readPropositionDefinition(inKey);
+			if (definition != null) {
+				WrapperVisitor visitor = new WrapperVisitor();
+				definition.accept(visitor);
+				wrapper = visitor.getWrapper();
+			}
 		} catch (BackendProviderSpecLoaderException e) {
 			LOGGER.error(e.getMessage(), e);
 		} catch (InvalidConfigurationException e) {
