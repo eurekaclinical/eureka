@@ -31,22 +31,7 @@ import org.protempa.query.handler.QueryResultsHandler;
  * @author Andrew Post
  */
 public class ETL {
-
-    private static final String[] PROP_IDS = {
-        "Patient",
-        "PatientAll",
-        "Encounter",
-        "AttendingPhysician",
-        "ProcedureCode",
-        "LaboratoryTest",
-        "Procedure",
-        "VitalSign",
-        "ICD9:Procedures",
-        "ICD9:Diagnoses",
-        "MED:medications",
-        "LAB:LabTest",
-        "CPTCode"
-    };
+    
     private static final File EUREKA_CONFIG_DIR = new File("/etc/eureka");
     private final File configDefaultsDirectory;
     private final File configDirectory;
@@ -71,7 +56,6 @@ public class ETL {
 
         try {
             DefaultQueryBuilder q = new DefaultQueryBuilder();
-            q.setPropositionIds(PROP_IDS);
             Query query = protempa.buildQuery(q);
             File i2b2Config =
                     new File(this.configDirectory, configId + ".xml");
