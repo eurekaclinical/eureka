@@ -55,6 +55,25 @@ public class ServiceProperties extends ApplicationProperties {
 	}
 
 	/**
+	 * Gets the URL to access the back-end's proposition retrieval end-point.
+	 *
+	 * @return A string containing the back-end's proposition retrieval
+	 * end-point.
+	 */
+	public String getEtlPropositionGetUrl() {
+		return this.getValue("eureka.services.etl.proposition.list.url");
+	}
+
+	/**
+	 * Gets the URL to access a list of root level elements from the back-end.
+	 * @return A string containing the back-end's proposition retrieval
+	 * end-point.
+	 */
+	public String getEtlPropositionListUrl () {
+		return this.getValue("eureka.services.etl.proposition.get.url");
+	}
+
+	/**
 	 * Get the size of the job executor thread pool.
 	 *
 	 * @return The size of the job executor thread pool from the configuration
