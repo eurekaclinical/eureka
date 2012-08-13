@@ -128,8 +128,9 @@ public class PropositionResource {
 		@Override
 		public void visit(EventDefinition def) {
 			getCommonInfo(def);
-			this.wrapper.setType(PropositionWrapper.Type.AND);
-			this.wrapper.setSystemTargets(Arrays.asList(def.getChildren()));
+			this.getWrapper().setType(PropositionWrapper.Type.OR);
+			this.getWrapper()
+			    .setSystemTargets(Arrays.asList(def.getChildren()));
 		}
 
 		@Override
