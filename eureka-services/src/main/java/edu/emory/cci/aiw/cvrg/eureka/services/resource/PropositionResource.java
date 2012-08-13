@@ -1,8 +1,11 @@
 package edu.emory.cci.aiw.cvrg.eureka.services.resource;
 
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -13,9 +16,13 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
 import com.google.inject.Inject;
+import com.sun.jersey.api.client.Client;
+import com.sun.jersey.api.client.WebResource;
 
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.CommUtils;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.PropositionWrapper;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.Proposition;
+import edu.emory.cci.aiw.cvrg.eureka.services.config.ServiceProperties;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.PropositionDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.UserDao;
 
@@ -29,24 +36,26 @@ public class PropositionResource {
 
 	private final PropositionDao propositionDao;
 	private final UserDao userDao;
+	private final ServiceProperties applicationProperties;
 
 	/**
 	 * Creates a new instance of PropositionResource
 	 */
 	@Inject
 	public PropositionResource(PropositionDao inPropositionDao,
-			UserDao inUserDao) {
+			UserDao inUserDao, ServiceProperties inApplicationProperties) {
 		this.propositionDao = inPropositionDao;
 		this.userDao = inUserDao;
+		this.applicationProperties = inApplicationProperties;
 	}
 
 	@GET
 	@Path("/system/list")
 	@Produces(MediaType.APPLICATION_JSON)
 	public List<PropositionWrapper> getSystemPropositions() {
-		// TODO: Call the ETL REST endpoint to get the real list of  root level elements here.
-		List<PropositionWrapper> wrappers = new ArrayList<PropositionWrapper>();
-		wrappers.add(wrap(this.fetchSystemProposition("test-key")));
+		List<PropositionWrapper> wrappers = new
+				ArrayList<PropositionWrapper>();
+		wrappers.add(wrap(this.fetchSystemProposition("ICD9:ICD9")));
 		return wrappers;
 	}
 
@@ -56,7 +65,6 @@ public class PropositionResource {
 	public PropositionWrapper getSystemProposition(
 			@PathParam("propKey") String inKey) {
 		return wrap(fetchSystemProposition(inKey));
-
 	}
 
 	@GET
@@ -73,11 +81,12 @@ public class PropositionResource {
 	public PropositionWrapper getUserProposition(
 			@PathParam("propId") Long inPropositionId) {
 		PropositionWrapper wrapper = null;
-		Proposition proposition = this.propositionDao.retrieve(inPropositionId);
+		Proposition proposition = this.propositionDao.retrieve
+				(inPropositionId);
 		if (proposition != null) {
 			if (proposition.isInSystem()) {
-				wrapper =
-						wrap(this.fetchSystemProposition(proposition.getKey()));
+				wrapper = wrap(this.fetchSystemProposition(proposition
+						.getKey()));
 			} else {
 				wrapper = wrap(proposition);
 			}
@@ -106,9 +115,26 @@ public class PropositionResource {
 	}
 
 	private Proposition fetchSystemProposition(String inId) {
-		// TODO:  Call the ETL REST endpoint to get the proposition.
-		Proposition proposition = new Proposition();
-		proposition.setAbbrevDisplayName(inId);
+
+		PropositionWrapper wrapper = null;
+		Proposition proposition = null;
+
+		try {
+			Client client = CommUtils.getClient();
+			WebResource resource = client.resource(applicationProperties
+					.getEtlPropositionGetUrl());
+			wrapper = resource.path(inId).accept(MediaType.APPLICATION_JSON)
+			                  .get(PropositionWrapper.class);
+		} catch (KeyManagementException e) {
+			e.printStackTrace();
+		} catch (NoSuchAlgorithmException e) {
+			e.printStackTrace();
+		}
+
+		if (wrapper != null) {
+			proposition = unwrap(wrapper);
+		}
+
 		return proposition;
 	}
 
@@ -139,7 +165,7 @@ public class PropositionResource {
 
 		if (inWrapper.getType() == PropositionWrapper.Type.AND) {
 			proposition.setAbstractedFrom(targets);
-		} else{
+		} else {
 			proposition.setInverseIsA(targets);
 		}
 
