@@ -43,16 +43,18 @@ public class PropositionResource {
 	private static final Logger LOGGER =
 			LoggerFactory.getLogger(PropositionResource.class);
 	private static final String CONF_DIR = "/opt/cvrg_users";
-	private static final String USER_NAME = "user1";
+	private static final String USER_PREFIX = "user";
 
 	@GET
-	@Path("/{key}")
+	@Path("/{userId}/{key}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public PropositionWrapper getProposition(@PathParam("key") String inKey) {
+	public PropositionWrapper getProposition(
+			@PathParam("userId") String userId,
+			@PathParam("key") String inKey) {
 		SourceFactory sf;
 		PropositionWrapper wrapper = null;
 		try {
-			File userDir = new File(CONF_DIR, USER_NAME);
+			File userDir = new File(CONF_DIR, USER_PREFIX + userId);
 			File confDir = new File(userDir, ".protempa-configs");
 			Configurations configurations =
 					new INICommonsConfigurations(confDir);
@@ -93,15 +95,14 @@ public class PropositionResource {
 		private void getCommonInfo(PropositionDefinition inDefinition) {
 			this.wrapper.setKey(inDefinition.getId());
 			this.wrapper.setInSystem(true);
-			this.wrapper.setAbbrevDisplayName(
-					inDefinition.getAbbreviatedDisplayName());
+			this.wrapper.setAbbrevDisplayName(inDefinition
+					.getAbbreviatedDisplayName());
 			this.wrapper.setDisplayName(inDefinition.getDisplayName());
 		}
 
 		@Override
-		public void visit(
-				Collection<? extends PropositionDefinition>
-						propositionDefinitions) {
+		public void visit(Collection<? extends PropositionDefinition>
+				propositionDefinitions) {
 			for (PropositionDefinition definition : propositionDefinitions) {
 				definition.accept(this);
 			}
@@ -129,8 +130,8 @@ public class PropositionResource {
 		public void visit(EventDefinition def) {
 			getCommonInfo(def);
 			this.getWrapper().setType(PropositionWrapper.Type.OR);
-			this.getWrapper()
-			    .setSystemTargets(Arrays.asList(def.getChildren()));
+			this.getWrapper().setSystemTargets(Arrays.asList(def
+					.getChildren()));
 		}
 
 		@Override

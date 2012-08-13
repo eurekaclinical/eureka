@@ -43,28 +43,32 @@ public class PropositionResource {
 	 */
 	@Inject
 	public PropositionResource(PropositionDao inPropositionDao,
-			UserDao inUserDao, ServiceProperties inApplicationProperties) {
+			UserDao inUserDao,
+			ServiceProperties inApplicationProperties) {
 		this.propositionDao = inPropositionDao;
 		this.userDao = inUserDao;
 		this.applicationProperties = inApplicationProperties;
 	}
 
 	@GET
-	@Path("/system/list")
+	@Path("/system/{userId}/list")
 	@Produces(MediaType.APPLICATION_JSON)
-	public List<PropositionWrapper> getSystemPropositions() {
+	public List<PropositionWrapper> getSystemPropositions(
+			@PathParam("userId") String inUserId) {
 		List<PropositionWrapper> wrappers = new
 				ArrayList<PropositionWrapper>();
-		wrappers.add(wrap(this.fetchSystemProposition("ICD9:ICD9")));
+		wrappers.add(wrap(this.fetchSystemProposition(inUserId,
+				"ICD9:ICD9")));
 		return wrappers;
 	}
 
 	@GET
-	@Path("/system/{propKey}")
+	@Path("/system/{userId}/{propKey}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public PropositionWrapper getSystemProposition(
+			@PathParam("userId") String inUserId,
 			@PathParam("propKey") String inKey) {
-		return wrap(fetchSystemProposition(inKey));
+		return wrap(fetchSystemProposition(inUserId, inKey));
 	}
 
 	@GET
@@ -85,8 +89,11 @@ public class PropositionResource {
 				(inPropositionId);
 		if (proposition != null) {
 			if (proposition.isInSystem()) {
-				wrapper = wrap(this.fetchSystemProposition(proposition
-						.getKey()));
+				String id = String.valueOf(
+						proposition.getUser().getId().longValue());
+				Proposition systemProposition =
+						this.fetchSystemProposition(id, proposition.getKey());
+				wrapper = wrap(systemProposition);
 			} else {
 				wrapper = wrap(proposition);
 			}
@@ -114,17 +121,19 @@ public class PropositionResource {
 		this.propositionDao.create(proposition);
 	}
 
-	private Proposition fetchSystemProposition(String inId) {
+	private Proposition fetchSystemProposition(String inUserId,
+			String inKey) {
 
 		PropositionWrapper wrapper = null;
 		Proposition proposition = null;
 
 		try {
+			String path = "/" + inUserId + "/" + inKey;
 			Client client = CommUtils.getClient();
-			WebResource resource = client.resource(applicationProperties
-					.getEtlPropositionGetUrl());
-			wrapper = resource.path(inId).accept(MediaType.APPLICATION_JSON)
-			                  .get(PropositionWrapper.class);
+			WebResource resource = client.resource(
+					applicationProperties.getEtlPropositionGetUrl());
+			wrapper = resource.path(path).accept(MediaType.APPLICATION_JSON)
+					.get(PropositionWrapper.class);
 		} catch (KeyManagementException e) {
 			e.printStackTrace();
 		} catch (NoSuchAlgorithmException e) {
