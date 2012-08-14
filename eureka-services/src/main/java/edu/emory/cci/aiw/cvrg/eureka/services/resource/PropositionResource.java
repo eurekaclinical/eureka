@@ -120,20 +120,30 @@ public class PropositionResource {
 	@Path("/user/update")
 	@Consumes(MediaType.APPLICATION_JSON)
 	public void updateProposition(PropositionWrapper inWrapper) {
-		Proposition proposition = unwrap(inWrapper);
-		proposition.setLastModified(new Date());
-		this.propositionDao.update(proposition);
+		if (inWrapper.getUserId() != null) {
+			Proposition proposition = unwrap(inWrapper);
+			proposition.setLastModified(new Date());
+			this.propositionDao.update(proposition);
+		} else {
+			throw new IllegalArgumentException(
+					"The user ID must be filled in.");
+		}
 	}
 
 	@POST
 	@Path("/user/create")
 	@Consumes(MediaType.APPLICATION_JSON)
 	public void insertProposition(PropositionWrapper inWrapper) {
-		Proposition proposition = unwrap(inWrapper);
-		Date now = new Date();
-		proposition.setCreated(now);
-		proposition.setLastModified(now);
-		this.propositionDao.create(proposition);
+		if (inWrapper.getUserId() != null) {
+			Proposition proposition = unwrap(inWrapper);
+			Date now = new Date();
+			proposition.setCreated(now);
+			proposition.setLastModified(now);
+			this.propositionDao.create(proposition);
+		} else {
+			throw new IllegalArgumentException(
+					"The user ID must be filled in.");
+		}
 	}
 
 	private Proposition fetchSystemProposition(String inUserId,
