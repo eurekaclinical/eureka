@@ -85,15 +85,23 @@ $(document).ready(function(){
     	var propositions = [];
     	var type = $('#type').val();
     	var element_name = $('#element_name').val();
+    	var element_desc = $('#element_description').val();
        $('#sortable li').each( function () {
             console.log(this.id);
-            var namespaceStr = this.textContent.split("-")[0];
+            var namespaceStr = '';//this.textContent.split("-")[0];
+            if ($('#systemTree #'+this.id).length > 0) {
+            	namespaceStr = 'system';
+            	
+            } else {
+            	namespaceStr = 'user';
+            }
             var obj = {id: this.id, type: namespaceStr};
             propositions.push(obj);
         });
        $.ajax({
            type: "POST",
            url: "http://localhost:8080/eureka-webapp/saveprop?name="+element_name+
+           			"&description="+element_desc +
            			"&type="+type+
            			"&proposition="+JSON.stringify(propositions),
            contentType: "application/json; charset=utf-8",
@@ -119,12 +127,15 @@ $(document).ready(function(){
     	// validate step 1
     	if(step == 1){
 		  var element_name = $('#element_name').val();
+		  var element_desc = $('#element_description').val();
 		  
-		  if(!element_name && element_name.length <= 0){
+		  if((!element_name && element_name.length <= 0) ||
+				  (!element_desc && element_desc.length <= 0)){
 			  isStepValid = false; 
-			  $('#wizard').smartWizard('showMessage','Please enter an element name and click next.');
+			  $('#wizard').smartWizard('showMessage','Please enter an element name and description and click next.');
 			  $('#wizard').smartWizard('setError',{stepnum:step,iserror:true});         
-		  }else{
+		  }
+		  else{
 			  $('#wizard').smartWizard('hideMessage','');
 			  $('#wizard').smartWizard('setError',{stepnum:step,iserror:false});
 		  }
@@ -182,7 +193,8 @@ function initTrees() {
 				    var type = $('#type').val();
 				    $('<li/>', {
 					    id: data.o[0].id,
-					    text: data.o[0].parentNode.parentNode.id + "-" + data.o[0].children[1].childNodes[1].textContent
+					   // text: data.o[0].parentNode.parentNode.id + "-" + data.o[0].children[1].childNodes[1].textContent
+						text:  data.o[0].children[1].childNodes[1].textContent
 				    }).appendTo('#sortable');
 		
 				}
@@ -223,13 +235,14 @@ function initTrees() {
 	function loadChild(parentNodeId, id) {
 	    $.ajax({
 	           type: "POST",
-	           url: "http://localhost:8080/eureka-webapp/systemlist?id="+id,
+	           url: "http://localhost:8080/eureka-webapp/propdetail?propId="+id,
 	           contentType: "application/json; charset=utf-8",
 	           //data: "{'id':" + id + "}",
 	           dataType: "json",
 	           success: function(data) {
-	               var childData = data[0];
-	               addNode(parentNodeId, id, childData.data, childData["attr"].id, false);    
+	               var childData = data;
+                   console.log(childData)
+	               //addNode(parentNodeId, id, childData.data, childData["attr"].id, false);    
 	           }
 	       });
 	

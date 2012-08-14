@@ -85,7 +85,7 @@ public class SavePropositionServlet extends HttpServlet {
 				System.out.println(userProposition.getId());
 				LOGGER.debug(userProposition.getId());
 				
-				if (userProposition.getType().equals("systemTree")) {
+				if (userProposition.getType().equals("system")) {
 					//pw.setInSystem(true);
 					systemTargets.add(userProposition.getId());			
 				} else {

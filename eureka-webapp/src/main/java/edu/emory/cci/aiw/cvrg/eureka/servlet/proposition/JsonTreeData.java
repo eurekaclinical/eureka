@@ -7,29 +7,30 @@ import java.util.Map;
 
 
 
-public class Data {
+public class JsonTreeData {
 	
-	private List<Data> children = new ArrayList<Data>();	
+	private List<JsonTreeData> children = new ArrayList<JsonTreeData>();	
 	private Map<String,String> attr = new HashMap<String, String>();
 	private String id;
 	private String data;
-
-	public List<Data> getChildren() {
+	private String type;
+	
+	public List<JsonTreeData> getChildren() {
 		return children;
 	}
 
-	public void setChildren(List<Data> nodes) {
+	public void setChildren(List<JsonTreeData> nodes) {
 		this.children = nodes;
 	}
 	
-	public void addNodes(Data ...thechildren) {
-		for (Data t : thechildren) {
+	public void addNodes(JsonTreeData ...thechildren) {
+		for (JsonTreeData t : thechildren) {
 			children.add(t);	
 		}
 	}
 
 	public String getId() {
-		return id;
+		return attr.get("id");
 	}
 
 	public void setId(String id) {
@@ -55,6 +56,14 @@ public class Data {
 	
 	public void setKeyVal(String key, String val) {
 		attr.put(key, val);
+	}
+
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
 	}
 	
 }

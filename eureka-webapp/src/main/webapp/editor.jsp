@@ -57,7 +57,26 @@
   			</ul>
   			<div id="step-1">	
             	<h2 class="StepTitle">Create a New Derived Element</h2>
-				<label>Enter Name for New Derived Element:</label><input type="text" id="element_name" width="100"/>
+            	<table>
+            		<tr>
+            			<td>
+            				<label>Name:</label>
+            			</td>
+            			<td>
+            				<input type="text" id="element_name" width="100"/>
+            			</td>
+            		</tr>
+            		<tr>
+            			<td>
+            				<label>Description:</label>
+            			</td>
+            			<td>
+            				<input type="text" id="element_description" width="100"/>
+            			</td>
+            		</tr>
+            		
+            	</table>
+			
         	</div>
   			<div id="step-2">	
             	<h2 class="StepTitle">Select Type of Element to create</h2>

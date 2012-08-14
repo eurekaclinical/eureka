@@ -66,11 +66,17 @@
 		<servlet-class>edu.emory.cci.aiw.cvrg.eureka.servlet.proposition.SavePropositionServlet</servlet-class>
 		<load-on-startup>1</load-on-startup>
 	</servlet>
-		<servlet>
+	<servlet>
 		<servlet-name>UserPropositionListServlet</servlet-name>
 		<servlet-class>edu.emory.cci.aiw.cvrg.eureka.servlet.proposition.UserPropositionListServlet</servlet-class>
 		<load-on-startup>1</load-on-startup>
 	</servlet>
+	<servlet>
+		<servlet-name>PropositionDetailServlet</servlet-name>
+		<servlet-class>edu.emory.cci.aiw.cvrg.eureka.servlet.proposition.PropositionDetailServlet</servlet-class>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+
 	<servlet-mapping>
 		<servlet-name>VerifyUserServlet</servlet-name>
 		<url-pattern>/verify</url-pattern>
@@ -119,7 +125,11 @@
 		<servlet-name>UserPropositionListServlet</servlet-name>
 		<url-pattern>/userproplist</url-pattern>
 	</servlet-mapping>
-     
+ 	<servlet-mapping>
+		<servlet-name>PropositionDetailServlet</servlet-name>
+		<url-pattern>/propdetail</url-pattern>
+	</servlet-mapping>
+	    
 	<login-config>
 		<auth-method>FORM</auth-method>
 		<realm-name>Eureka</realm-name>

@@ -33,8 +33,8 @@ public class SystemPropositionListServlet extends HttpServlet {
 
 	
 
-	private Data createData(String data, String id) {
-		Data d = new Data();
+	private JsonTreeData createData(String data, String id) {
+		JsonTreeData d = new JsonTreeData();
 		d.setData(data);
 		d.setKeyVal("id", id);
 		
@@ -52,7 +52,7 @@ public class SystemPropositionListServlet extends HttpServlet {
 			throws ServletException, IOException {
 
 		LOGGER.debug("doGet");
-		List<Data> l = new ArrayList<Data>();
+		List<JsonTreeData> l = new ArrayList<JsonTreeData>();
 		String eurekaServicesUrl = req.getSession().getServletContext()
 				.getInitParameter("eureka-services-url");
 		try {
@@ -70,7 +70,7 @@ public class SystemPropositionListServlet extends HttpServlet {
 						// Nothing to implement, used to hold returned data.
 					});
 			for (PropositionWrapper proposition : props) {
-				Data d = createData(proposition.getAbbrevDisplayName(), proposition.getAbbrevDisplayName());
+				JsonTreeData d = createData(proposition.getAbbrevDisplayName(), proposition.getAbbrevDisplayName());
 				l.add(d);
 			}
 			LOGGER.debug("executed resource get");
