@@ -15,6 +15,9 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.google.inject.Inject;
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.WebResource;
@@ -39,6 +42,12 @@ public class PropositionResource {
 	private final ServiceProperties applicationProperties;
 
 	/**
+	 * The class level logger.
+	 */
+	private static final Logger LOGGER = LoggerFactory
+			.getLogger(PropositionResource.class);
+	
+	/**
 	 * Creates a new instance of PropositionResource
 	 */
 	@Inject
@@ -58,7 +67,13 @@ public class PropositionResource {
 		List<PropositionWrapper> wrappers = new
 				ArrayList<PropositionWrapper>();
 		wrappers.add(wrap(this.fetchSystemProposition(inUserId,
-				"ICD9:ICD9")));
+				"ICD9:Procedures")));
+		wrappers.add(wrap(this.fetchSystemProposition(inUserId,
+				"ICD9:Diagnoses")));
+		wrappers.add(wrap(this.fetchSystemProposition(inUserId,
+				"ICD9:E-codes")));
+		wrappers.add(wrap(this.fetchSystemProposition(inUserId,
+				"ICD9:V-codes")));
 		return wrappers;
 	}
 
@@ -158,11 +173,14 @@ public class PropositionResource {
 			proposition = new Proposition();
 		}
 
-		for (Long id : inWrapper.getUserTargets()) {
-			targets.add(this.propositionDao.retrieve(id));
+		if (inWrapper.getUserTargets() != null) {
+			for (Long id : inWrapper.getUserTargets()) {
+				targets.add(this.propositionDao.retrieve(id));
+			}			
 		}
 
 		for (String key : inWrapper.getSystemTargets()) {
+			LOGGER.debug("getting proposition for key {}", key);
 			Proposition p = this.propositionDao.getByKey(key);
 			if (p == null) {
 				p = new Proposition();
@@ -182,7 +200,10 @@ public class PropositionResource {
 		proposition.setAbbrevDisplayName(inWrapper.getAbbrevDisplayName());
 		proposition.setDisplayName(inWrapper.getDisplayName());
 		proposition.setInSystem(inWrapper.isInSystem());
-		proposition.setUser(this.userDao.retrieve(inWrapper.getUserId()));
+
+		if (inWrapper.getUserId() != null) {
+			proposition.setUser(this.userDao.retrieve(inWrapper.getUserId()));			
+		}
 		return proposition;
 	}
 
