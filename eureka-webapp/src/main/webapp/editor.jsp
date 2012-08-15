@@ -39,16 +39,9 @@
                    Select Elements<br />
                    <small>Select Elements from Ontology</small>
                 </span>
-            </a></li>
+            </a>
   				<li><a href="#step-4">
                 <label class="stepNumber">4</label>
-                <span class="stepDesc">
-                   View New Element<br />
-                   <small>Visualize Element</small>
-                </span>                   
-             </a></li>
-  				<li><a href="#step-5">
-                <label class="stepNumber">5</label>
                 <span class="stepDesc">
                    Save<br />
                    <small>Save Element to Database</small>
@@ -173,10 +166,6 @@
          
         </div>                      
   		<div id="step-4">
-            <h2 class="StepTitle">Visualize New Element</h2>	
-           	<div id="holder"></div>             				          
-        </div>
-  		<div id="step-5">
             <h2 class="StepTitle">Save Element to Database</h2>	
             <p>
             	Save the new element to the Database as a User Defined Element.
@@ -199,86 +188,3 @@
 	</template:content>
 
 </template:insert>
-
-
-
-
-
-
-
-			
-
-			
-			<!-- 
-				<h2>Create New Derived Element</h2>
-
-				<table>
-					<tbody>
-						<tr>
-							<td>
-								Element Search: <input type="text"></input>
-							</td>
-						</tr>
-						<tr>
-							<td valign="top">
-								    <div class="tabs">
-								        <ul class="tabNavigation">
-								            <li><a href="#first">System</a></li>
-								            <li><a href="#second">User Defined</a></li>
-								        </ul>
-								        <div id="first">
-									        <div id="tab1" >
-												<ul>
-													<li id="phtml_1"><a href="#">System node 1</a>
-														<ul>
-															<li id="phtml_2"><a href="#">SysChild node 1</a></li>
-															<li id="phtml_3"><a href="#">SysChild node 2</a></li>
-														</ul></li>
-													<li id="phtml_4"><a href="#">System node 2</a></li>
-												</ul>
-											</div>
-								        </div>
-								        <div id="second">
-									        <div id="tab2">
-												<ul>
-													<li id="phtml_1"><a href="#">User node 1</a>
-														<ul>
-															<li id="phtml_2"><a href="#">UserChild node 1</a></li>
-															<li id="phtml_3"><a href="#">UserChild node 2</a></li>
-														</ul></li>
-													<li id="phtml_4"><a href="#">User node 2</a></li>
-												</ul>
-											</div>
-								        
-								        </div>							        
-							    	</div>
-							
-							</td>
-							<td>
-							<div id="tree-drop" 
-								class="jstree-drop"
-								style="float: left; 
-								width: 950px;
-								clear: both; 
-								border: 3px solid gray; 
-								background: #C3D9FF; color: green; 
-								height: 480px; line-height: 20px; 
-								text-align: center; font-size: 14px;">
-								
-									<ul id="sortable">
-		
-									</ul>
-							
-								<div id="holder"></div>
-							</div>
-							
-							</td>
-						</tr>
-					</tbody>
-				</table>
-				 -->
-				
-
-	
-
-						

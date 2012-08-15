@@ -72,8 +72,18 @@
 		<load-on-startup>1</load-on-startup>
 	</servlet>
 	<servlet>
-		<servlet-name>PropositionDetailServlet</servlet-name>
-		<servlet-class>edu.emory.cci.aiw.cvrg.eureka.servlet.proposition.PropositionDetailServlet</servlet-class>
+		<servlet-name>EditorHomeServlet</servlet-name>
+		<servlet-class>edu.emory.cci.aiw.cvrg.eureka.servlet.proposition.EditorHomeServlet</servlet-class>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+	<servlet>
+		<servlet-name>ListSystemPropositionChildrenServlet</servlet-name>
+		<servlet-class>edu.emory.cci.aiw.cvrg.eureka.servlet.proposition.ListSystemPropositionChildrenServlet</servlet-class>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+	<servlet>
+		<servlet-name>ListUserDefinedPropositionChildrenServlet</servlet-name>
+		<servlet-class>edu.emory.cci.aiw.cvrg.eureka.servlet.proposition.ListUserDefinedPropositionChildrenServlet</servlet-class>
 		<load-on-startup>1</load-on-startup>
 	</servlet>
 
@@ -126,9 +136,18 @@
 		<url-pattern>/userproplist</url-pattern>
 	</servlet-mapping>
  	<servlet-mapping>
-		<servlet-name>PropositionDetailServlet</servlet-name>
-		<url-pattern>/propdetail</url-pattern>
+		<servlet-name>ListSystemPropositionChildrenServlet</servlet-name>
+		<url-pattern>/syspropchildren</url-pattern>
 	</servlet-mapping>
+ 	<servlet-mapping>
+		<servlet-name>ListUserDefinedPropositionChildrenServlet</servlet-name>
+		<url-pattern>/userpropchildren</url-pattern>
+	</servlet-mapping>
+ 	<servlet-mapping>
+		<servlet-name>EditorHomeServlet</servlet-name>
+		<url-pattern>/editorhome</url-pattern>
+	</servlet-mapping>
+
 	    
 	<login-config>
 		<auth-method>FORM</auth-method>

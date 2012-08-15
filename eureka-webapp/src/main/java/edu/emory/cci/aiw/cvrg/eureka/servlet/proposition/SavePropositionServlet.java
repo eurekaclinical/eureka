@@ -49,6 +49,7 @@ public class SavePropositionServlet extends HttpServlet {
 		String id = req.getParameter("proposition");
 		String type = req.getParameter("type");
 		String name = req.getParameter("name");
+		String description = req.getParameter("description");
 		
 		String eurekaServicesUrl = req.getSession().getServletContext()
 				.getInitParameter("eureka-services-url");
@@ -95,18 +96,20 @@ public class SavePropositionServlet extends HttpServlet {
 			}
 			pw.setSystemTargets(systemTargets);
 			pw.setUserTargets(userTargets);
+			pw.setAbbrevDisplayName(name);
+			pw.setDisplayName(description);
 		
 			Client client = CommUtils.getClient();
-//			Principal principal = req.getUserPrincipal();
-//			String userName = principal.getName();
+			Principal principal = req.getUserPrincipal();
+			String userName = principal.getName();
 					
 			
 			//LOGGER.debug("got username {}", userName);
 			WebResource webResource = client.resource(eurekaServicesUrl);
-//			User user = webResource.path("/api/proposition")
-//					.accept(MediaType.APPLICATION_JSON).get(User.class);
-
-			pw.setUserId(1L);
+			User user = webResource.path("/api/user/byname/" + userName)
+					.accept(MediaType.APPLICATION_JSON).get(User.class);
+			
+			pw.setUserId(user.getId());
 			
 			
 			webResource.path("/api/proposition/user/create")
@@ -115,7 +118,7 @@ public class SavePropositionServlet extends HttpServlet {
 						.post(ClientResponse.class, pw);
 
 			
-			List<Proposition> propositions = webResource.path("/api/proposition/user/list/1" )
+			List<Proposition> propositions = webResource.path("/api/proposition/user/list/" + user.getId() )
 					.accept(MediaType.APPLICATION_JSON)
 					.get(new GenericType<List<Proposition>>() {
 						// Nothing to implement, used to hold returned data.

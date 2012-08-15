@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,7 +24,7 @@ import com.sun.jersey.api.client.WebResource;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.CommUtils;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.PropositionWrapper;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.Proposition;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.User;
 
 
 public class SystemPropositionListServlet extends HttpServlet {
@@ -57,20 +58,20 @@ public class SystemPropositionListServlet extends HttpServlet {
 				.getInitParameter("eureka-services-url");
 		try {
 			Client client = CommUtils.getClient();
-			//Principal principal = req.getUserPrincipal();
-			//String userName = principal.getName();
+			Principal principal = req.getUserPrincipal();
+			String userName = principal.getName();
 					
-			//LOGGER.debug("got username {}", userName);
+			LOGGER.debug("got username {}", userName);
 			WebResource webResource = client.resource(eurekaServicesUrl);
-//			User user = webResource.path("/api/proposition")
-//					.accept(MediaType.APPLICATION_JSON).get(User.class);
-			List<PropositionWrapper> props = webResource.path("/api/proposition/system/list")// + user.getId())
-					.accept(MediaType.APPLICATION_JSON)
+			User user = webResource.path("/api/user/byname/" + userName)
+					.accept(MediaType.APPLICATION_JSON).get(User.class);
+			
+			List<PropositionWrapper> props = webResource.path("/api/proposition/system/" + user.getId() + "/list")
 					.get(new GenericType<List<PropositionWrapper>>() {
 						// Nothing to implement, used to hold returned data.
 					});
 			for (PropositionWrapper proposition : props) {
-				JsonTreeData d = createData(proposition.getAbbrevDisplayName(), proposition.getAbbrevDisplayName());
+				JsonTreeData d = createData(proposition.getKey(), proposition.getKey());
 				l.add(d);
 			}
 			LOGGER.debug("executed resource get");

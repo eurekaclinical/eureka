@@ -5,6 +5,7 @@ import java.io.PrintWriter;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.security.Principal;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,10 +29,10 @@ import edu.emory.cci.aiw.cvrg.eureka.common.entity.Proposition;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.User;
 
 
-public class UserPropositionListServlet extends HttpServlet {
+public class EditorHomeServlet extends HttpServlet {
 
 	private static final Logger LOGGER = LoggerFactory
-			.getLogger(UserPropositionListServlet.class);
+			.getLogger(EditorHomeServlet.class);
 
 	
 
@@ -72,16 +73,17 @@ public class UserPropositionListServlet extends HttpServlet {
 					.get(new GenericType<List<Proposition>>() {
 						// Nothing to implement, used to hold returned data.
 					});
+			SimpleDateFormat df = new SimpleDateFormat("MM/dd/yyyy");
 			for (Proposition proposition : props) {
 				JsonTreeData d = createData(proposition.getAbbrevDisplayName(), String.valueOf(proposition.getId()));
+				d.setKeyVal("abbrevDisplay", proposition.getAbbrevDisplayName());
+				d.setKeyVal("displayName", 	proposition.getDisplayName());
+				d.setKeyVal("created", 		df.format(proposition.getCreated()));
+				d.setKeyVal("lastModified", df.format(proposition.getLastModified()));
 				l.add(d);
 				System.out.println("Added user prop: " + d.getData());
 			}
-			LOGGER.debug("executed resource get");
-			for (Proposition p : props) {
-				LOGGER.debug("id = {}, name = {}", p.getId(), p.getDisplayName());
-				System.out.printf("id = %d, name = %s", p.getId(), p.getDisplayName());
-			}
+
 		} catch (NoSuchAlgorithmException nsae) {
 			throw new ServletException(nsae);
 		} catch (KeyManagementException kme) {
@@ -91,9 +93,7 @@ public class UserPropositionListServlet extends HttpServlet {
 			
 
 		
-		ObjectMapper mapper = new ObjectMapper();
-		resp.setContentType("application/json");
-		PrintWriter out = resp.getWriter();
-		mapper.writeValue(out, l);
+		req.setAttribute("props", l);
+		req.getRequestDispatcher("/editor_home.jsp").forward(req, resp);
 	}
 }

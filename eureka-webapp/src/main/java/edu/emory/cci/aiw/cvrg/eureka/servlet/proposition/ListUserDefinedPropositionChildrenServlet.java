@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,12 +26,13 @@ import com.sun.jersey.api.client.WebResource;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.CommUtils;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.PropositionWrapper;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.Proposition;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.User;
 
 
-public class PropositionDetailServlet extends HttpServlet {
+public class ListUserDefinedPropositionChildrenServlet extends HttpServlet {
 
 	private static final Logger LOGGER = LoggerFactory
-			.getLogger(PropositionDetailServlet.class);
+			.getLogger(ListUserDefinedPropositionChildrenServlet.class);
 
 	private WebResource webResource;
 
@@ -72,30 +74,20 @@ public class PropositionDetailServlet extends HttpServlet {
 		doGet(req, resp);
 	}
 	
-	private void getAllSystemData(JsonTreeData d) {
-		
-		PropositionWrapper propWrapper = webResource.path("/api/proposition/system/"+ d.getId())
-				.accept(MediaType.APPLICATION_JSON)
-				.get(PropositionWrapper.class);
-		
-		for (String sysTarget : propWrapper.getSystemTargets()) {
-			JsonTreeData newData = createData(sysTarget, sysTarget);
-			newData.setType("system");
-			d.addNodes(newData);
-			getAllSystemData(newData);
-		}		
-		
-	}
+
 
 	private void getAllData(JsonTreeData d) {
 		
+		
+
 		PropositionWrapper propWrapper = webResource.path("/api/proposition/user/get/"+ d.getId())
 				.accept(MediaType.APPLICATION_JSON)
 				.get(PropositionWrapper.class);
-		
+		LOGGER.debug("got propWrapper {}", propWrapper.getId());
 		for (String sysTarget : propWrapper.getSystemTargets()) {
 			JsonTreeData newData = createData(sysTarget, sysTarget);
 			newData.setType("system");
+			LOGGER.debug("add sysTarget {}", sysTarget);
 			d.addNodes(newData);
 		}		
 		
@@ -108,6 +100,7 @@ public class PropositionDetailServlet extends HttpServlet {
 			JsonTreeData newData = createData(propUserWrapper.getAbbrevDisplayName(), propUserWrapper.getId());
 			getAllData(newData);
 			newData.setType("user");
+			LOGGER.debug("add user defined {}", propUserWrapper.getId());
 			d.addNodes(newData);
 			
 		}
@@ -119,19 +112,31 @@ public class PropositionDetailServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
 
+		
+		Client client = null;
+		try {
+			client = CommUtils.getClient();
+		} catch (KeyManagementException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (NoSuchAlgorithmException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	
 		List<JsonTreeData> l = new ArrayList<JsonTreeData>();
 		String propId = req.getParameter("propId");
 	
-
-		PropositionWrapper propWrapper = webResource.path("/api/proposition/user/get/"+ propId)
-				.accept(MediaType.APPLICATION_JSON)
-				.get(PropositionWrapper.class);
+		//"/system/{userId}/{propKey}"
+//		PropositionWrapper propWrapper = 
+//				webResource.path("/api/proposition/system/"+ user.getId() + "/" + propId)
+//				.accept(MediaType.APPLICATION_JSON)
+//				.get(PropositionWrapper.class);
 		
-		JsonTreeData d = createData(propWrapper.getAbbrevDisplayName(), propWrapper.getId());
-		d.setType("user");
-		getAllData(d);
+		JsonTreeData newData = createData(propId, propId);
+		getAllData(newData);
+		l.add(newData);	
 		
-		l.add(d);
 		
 		ObjectMapper mapper = new ObjectMapper();
 		resp.setContentType("application/json");
