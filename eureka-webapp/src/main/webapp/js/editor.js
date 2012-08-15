@@ -89,7 +89,7 @@ $(document).ready(function(){
        $('#sortable li').each( function () {
             console.log(this.id);
             var namespaceStr = '';//this.textContent.split("-")[0];
-            if ($('#systemTree #'+this.id).length > 0) {
+            if ($('#systemTree [id="'+this.id + '"]').length > 0) {
             	namespaceStr = 'system';
             	
             } else {
@@ -100,7 +100,7 @@ $(document).ready(function(){
         });
        $.ajax({
            type: "POST",
-           url: "http://localhost:8080/eureka-webapp/saveprop?name="+element_name+
+           url: "/saveprop?name="+element_name+
            			"&description="+element_desc +
            			"&type="+type+
            			"&proposition="+JSON.stringify(propositions),
@@ -113,7 +113,7 @@ $(document).ready(function(){
                }                                     
             },
            success: function(data) {
-                  window.location.href="http://localhost:8080/eureka-webapp/editor.jsp";       
+                  window.location.href="/editorhome";       
            }
        });
 
@@ -156,7 +156,7 @@ $(document).ready(function(){
     		
     	} else if (step == 3) {
 
-        } else if (step == 5) {
+        } else if (step == 4) {
 
 
         }
@@ -185,7 +185,7 @@ function initTrees() {
 	
    $("#systemTree").jstree({
 		"json_data" : {
-		    "ajax" : { "url" : "http://localhost:8080/eureka-webapp/systemlist?id=root" }
+		    "ajax" : { "url" : "/systemlist?id=root" }
 		},
 		"dnd" : {
 			"drop_finish" : function(data) {
@@ -222,7 +222,9 @@ function initTrees() {
 	{
 	    if(data.rslt.obj[0].id !== undefined)
 	    {
-	        loadChild(data.rslt.obj[0].id);
+	    	if ($("[id='"+data.rslt.obj[0].id+ "']")[0].children.length < 3) {
+	    		loadChild(data.rslt.obj[0].id);
+	    	}
 	    }
 	    else
 	    {
@@ -232,21 +234,44 @@ function initTrees() {
 	});
 
 
-	function loadChild(parentNodeId, id) {
+	function loadChild(id) {
 	    $.ajax({
 	           type: "POST",
-	           url: "http://localhost:8080/eureka-webapp/propdetail?propId="+id,
+	           url: "/syspropchildren?propId="+id,
 	           contentType: "application/json; charset=utf-8",
 	           //data: "{'id':" + id + "}",
 	           dataType: "json",
 	           success: function(data) {
 	               var childData = data;
-                   console.log(childData)
-	               //addNode(parentNodeId, id, childData.data, childData["attr"].id, false);    
+                   console.log(childData);
+                   for (var i = 0; i < childData.length; i++) {
+                	   addNode("systemTree", id, childData[i].data, childData[i]["attr"].id, false);    
+                	   
+                   }
 	           }
 	       });
 	
 	}
+	
+	function loadUserDefinedProps(id) {
+	    $.ajax({
+	           type: "POST",
+	           url: "/userpropchildren?propId="+id,
+	           contentType: "application/json; charset=utf-8",
+	           //data: "{'id':" + id + "}",
+	           dataType: "json",
+	           success: function(data) {
+	               var childData = data;
+                   console.log(childData);
+//                   for (var i = 0; i < childData.length; i++) {
+//                	   addNode("systemTree", id, childData[i].data, childData[i]["attr"].id, false);    
+//                	   
+//                   }
+	           }
+	       });
+	
+	}
+
 
 	function addNode(rootNodeId, localParentId,nodeName,nodeId,hasChildren) {
 
@@ -260,7 +285,7 @@ function initTrees() {
 	        /// If it has children we load the node a little differently
 	        /// give it a different image, theme and make it clickable
 	
-	        $("#" +rootNodeId).jstree("create_node", $("#"+localParentId), "inside",  { "data" : nodeName ,"state" : "closed","attr" : { "id" : nodeId,"rel":"children"}},null, true);
+	        $("#" +rootNodeId).jstree("create_node", $("[id='"+localParentId+"']"), "inside",  { "data" : nodeName ,"state" : "closed","attr" : { "id" : nodeId,"rel":"children"}},null, true);
 	
 	
 	    } else {
@@ -268,7 +293,7 @@ function initTrees() {
 	        // Nodes with no trees cannot be opened and
 	        // have a different image
 	
-	        $("#" + rootNodeId).jstree("create_node", $("#"+localParentId), "inside",  { "data" : nodeName ,"state" : "leaf","attr" : { "id" : nodeId,"rel":"noChildren"}},null, true);
+	        $("#" + rootNodeId).jstree("create_node", $("[id='"+localParentId+ "']"), "inside",  { "data" : nodeName ,"state" : "leaf","attr" : { "id" : nodeId,"rel":"noChildren"}},null, true);
 	
 	    }
 
@@ -279,7 +304,7 @@ function initTrees() {
 	
 	$("#tab2").jstree({
 		"json_data" : {
-		    "ajax" : { "url" : "http://localhost:8080/eureka-webapp/userproplist?id=root" }
+		    "ajax" : { "url" : "/userproplist?id=root" }
 		},
 		"dnd" : {
 			"drop_finish" : function(data) {
@@ -316,7 +341,9 @@ function initTrees() {
 	{
 	    if(data.rslt.obj[0].id !== undefined)
 	    {
-	        loadChild("tab2", data.rslt.obj[0].id);
+	    	if ($("[id='"+data.rslt.obj[0].id+ "']")[0].children.length < 3) {
+	    		loadUserDefinedProps(data.rslt.obj[0].id);
+	    	}
 	    }
 	    else
 	    {
