@@ -92,10 +92,8 @@ public class PropositionResource {
 			return this.wrapper;
 		}
 
-		private void getInfo(PropositionDefinition inDefinition,
-				PropositionWrapper.Type type) {
+		private void getInfo(PropositionDefinition inDefinition) {
 			this.wrapper.setKey(inDefinition.getId());
-			this.wrapper.setType(type);
 			this.wrapper.setInSystem(true);
 			this.wrapper.setAbbrevDisplayName(
 					inDefinition.getAbbreviatedDisplayName());
@@ -114,37 +112,37 @@ public class PropositionResource {
 
 		@Override
 		public void visit(LowLevelAbstractionDefinition def) {
-			this.getInfo(def, PropositionWrapper.Type.AND);
+			this.getInfo(def);
 		}
 
 		@Override
 		public void visit(HighLevelAbstractionDefinition def) {
-			this.getInfo(def, PropositionWrapper.Type.AND);
+			this.getInfo(def);
 		}
 
 		@Override
 		public void visit(SliceDefinition def) {
-			this.getInfo(def, PropositionWrapper.Type.AND);
+			this.getInfo(def);
 		}
 
 		@Override
 		public void visit(EventDefinition def) {
-			this.getInfo(def, PropositionWrapper.Type.OR);
+			this.getInfo(def);
 		}
 
 		@Override
 		public void visit(PrimitiveParameterDefinition def) {
-			this.getInfo(def, PropositionWrapper.Type.OR);
+			this.getInfo(def);
 		}
 
 		@Override
 		public void visit(ConstantDefinition def) {
-			this.getInfo(def, PropositionWrapper.Type.OR);
+			this.getInfo(def);
 		}
 
 		@Override
 		public void visit(PairDefinition def) {
-			this.getInfo(def, PropositionWrapper.Type.AND);
+			this.getInfo(def);
 		}
 	}
 }
