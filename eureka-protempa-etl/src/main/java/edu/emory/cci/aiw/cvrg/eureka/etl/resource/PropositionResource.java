@@ -48,8 +48,8 @@ public class PropositionResource {
 	@GET
 	@Path("/{userId}/{key}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public PropositionWrapper getProposition(
-			@PathParam("userId") String userId,
+	public PropositionWrapper getProposition(@PathParam("userId") String
+			userId,
 			@PathParam("key") String inKey) {
 		SourceFactory sf;
 		PropositionWrapper wrapper = null;
@@ -92,64 +92,59 @@ public class PropositionResource {
 			return this.wrapper;
 		}
 
-		private void getCommonInfo(PropositionDefinition inDefinition) {
+		private void getInfo(PropositionDefinition inDefinition,
+				PropositionWrapper.Type type) {
 			this.wrapper.setKey(inDefinition.getId());
+			this.wrapper.setType(type);
 			this.wrapper.setInSystem(true);
-			this.wrapper.setAbbrevDisplayName(inDefinition
-					.getAbbreviatedDisplayName());
+			this.wrapper.setAbbrevDisplayName(
+					inDefinition.getAbbreviatedDisplayName());
 			this.wrapper.setDisplayName(inDefinition.getDisplayName());
+			this.wrapper.setSystemTargets(
+					Arrays.asList(inDefinition.getChildren()));
 		}
 
 		@Override
 		public void visit(Collection<? extends PropositionDefinition>
 				propositionDefinitions) {
-			for (PropositionDefinition definition : propositionDefinitions) {
-				definition.accept(this);
-			}
+			// This class does not handle a list of propositions, yet.
+			throw new UnsupportedOperationException(
+					"PropositionDefinition lists are not supported, yet.");
 		}
 
 		@Override
 		public void visit(LowLevelAbstractionDefinition def) {
-			//To change body of implemented methods use File | Settings |
-			// File Templates.
+			this.getInfo(def, PropositionWrapper.Type.AND);
 		}
 
 		@Override
 		public void visit(HighLevelAbstractionDefinition def) {
-			//To change body of implemented methods use File | Settings |
-			// File Templates.
+			this.getInfo(def, PropositionWrapper.Type.AND);
 		}
 
 		@Override
 		public void visit(SliceDefinition def) {
-			//To change body of implemented methods use File | Settings |
-			// File Templates.
+			this.getInfo(def, PropositionWrapper.Type.AND);
 		}
 
 		@Override
 		public void visit(EventDefinition def) {
-			getCommonInfo(def);
-			this.getWrapper().setType(PropositionWrapper.Type.OR);
-			this.getWrapper().setSystemTargets(Arrays.asList(def
-					.getChildren()));
+			this.getInfo(def, PropositionWrapper.Type.OR);
 		}
 
 		@Override
 		public void visit(PrimitiveParameterDefinition def) {
-			//To change body of implemented methods use File | Settings |
-			// File Templates.
+			this.getInfo(def, PropositionWrapper.Type.OR);
 		}
 
 		@Override
 		public void visit(ConstantDefinition def) {
-			//To change body of implemented methods use File | Settings |
-			// File Templates.
+			this.getInfo(def, PropositionWrapper.Type.OR);
 		}
 
 		@Override
 		public void visit(PairDefinition def) {
-			//To change body of implemented methods use File | Settings |
-			// File Templates.
+			this.getInfo(def, PropositionWrapper.Type.AND);
 		}
 	}
 }
