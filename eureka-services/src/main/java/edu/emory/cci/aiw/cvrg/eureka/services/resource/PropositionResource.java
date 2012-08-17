@@ -44,9 +44,9 @@ public class PropositionResource {
 	/**
 	 * The class level logger.
 	 */
-	private static final Logger LOGGER = LoggerFactory
-			.getLogger(PropositionResource.class);
-	
+	private static final Logger LOGGER =
+			LoggerFactory.getLogger(PropositionResource.class);
+
 	/**
 	 * Creates a new instance of PropositionResource
 	 */
@@ -66,14 +66,16 @@ public class PropositionResource {
 			@PathParam("userId") String inUserId) {
 		List<PropositionWrapper> wrappers = new
 				ArrayList<PropositionWrapper>();
-		wrappers.add(wrap(this.fetchSystemProposition(inUserId,
-				"ICD9:Procedures")));
-		wrappers.add(wrap(this.fetchSystemProposition(inUserId,
-				"ICD9:Diagnoses")));
-		wrappers.add(wrap(this.fetchSystemProposition(inUserId,
-				"ICD9:E-codes")));
-		wrappers.add(wrap(this.fetchSystemProposition(inUserId,
-				"ICD9:V-codes")));
+		wrappers.add(
+				wrap(this.fetchSystemProposition(inUserId,
+						"ICD9:Procedures")));
+		wrappers.add(
+				wrap(this.fetchSystemProposition(inUserId,
+						"ICD9:Diagnoses")));
+		wrappers.add(
+				wrap(this.fetchSystemProposition(inUserId, "ICD9:E-codes")));
+		wrappers.add(
+				wrap(this.fetchSystemProposition(inUserId, "ICD9:V-codes")));
 		return wrappers;
 	}
 
@@ -91,7 +93,7 @@ public class PropositionResource {
 	@Produces(MediaType.APPLICATION_JSON)
 	public List<Proposition> getUserPropositions(
 			@PathParam("userId") Long inUserId) {
-		return this.userDao.retrieve(inUserId).getPropositions();
+		return this.propositionDao.getByUserId(inUserId);
 	}
 
 	@GET
@@ -120,13 +122,14 @@ public class PropositionResource {
 	@Path("/user/update")
 	@Consumes(MediaType.APPLICATION_JSON)
 	public void updateProposition(PropositionWrapper inWrapper) {
-		if (inWrapper.getUserId() != null) {
+		if (inWrapper.getUserId() != null && inWrapper.getId() != null) {
 			Proposition proposition = unwrap(inWrapper);
 			proposition.setLastModified(new Date());
 			this.propositionDao.update(proposition);
 		} else {
 			throw new IllegalArgumentException(
-					"The user ID must be filled in.");
+					"Both the user ID and the proposition ID must be "
+							+ "provided.");
 		}
 	}
 
@@ -134,7 +137,7 @@ public class PropositionResource {
 	@Path("/user/create")
 	@Consumes(MediaType.APPLICATION_JSON)
 	public void insertProposition(PropositionWrapper inWrapper) {
-		if (inWrapper.getUserId() != null) {
+		if (inWrapper.getUserId() != null && inWrapper.getId() != null) {
 			Proposition proposition = unwrap(inWrapper);
 			Date now = new Date();
 			proposition.setCreated(now);
@@ -142,7 +145,8 @@ public class PropositionResource {
 			this.propositionDao.create(proposition);
 		} else {
 			throw new IllegalArgumentException(
-					"The user ID must be filled in.");
+					"Both the user ID and the proposition ID must be "
+							+ "provided.");
 		}
 	}
 
@@ -186,7 +190,7 @@ public class PropositionResource {
 		if (inWrapper.getUserTargets() != null) {
 			for (Long id : inWrapper.getUserTargets()) {
 				targets.add(this.propositionDao.retrieve(id));
-			}			
+			}
 		}
 
 		for (String key : inWrapper.getSystemTargets()) {
@@ -212,7 +216,7 @@ public class PropositionResource {
 		proposition.setInSystem(inWrapper.isInSystem());
 
 		if (inWrapper.getUserId() != null) {
-			proposition.setUser(this.userDao.retrieve(inWrapper.getUserId()));			
+			proposition.setUser(this.userDao.retrieve(inWrapper.getUserId()));
 		}
 		return proposition;
 	}
