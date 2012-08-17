@@ -61,15 +61,6 @@ public class ServiceProperties extends ApplicationProperties {
 	 * end-point.
 	 */
 	public String getEtlPropositionGetUrl() {
-		return this.getValue("eureka.services.etl.proposition.list.url");
-	}
-
-	/**
-	 * Gets the URL to access a list of root level elements from the back-end.
-	 * @return A string containing the back-end's proposition retrieval
-	 * end-point.
-	 */
-	public String getEtlPropositionListUrl () {
 		return this.getValue("eureka.services.etl.proposition.get.url");
 	}
 
