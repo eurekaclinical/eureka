@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.List;
 
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,6 +18,8 @@ import com.sun.jersey.api.client.ClientResponse.Status;
 import com.sun.jersey.api.client.WebResource;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.CommUtils;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.JobRequest;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.PropositionWrapper;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.Configuration;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.FileError;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.FileUpload;
@@ -62,6 +65,10 @@ public class JobTask implements Runnable {
 	 */
 	private Configuration configuration;
 	/**
+	 * The propositions belonging to the user.
+	 */
+	private List<PropositionWrapper> propositionWrappers;
+	/**
 	 * The class level logger.
 	 */
 	private static final Logger LOGGER = LoggerFactory.getLogger(JobTask.class);
@@ -89,6 +96,14 @@ public class JobTask implements Runnable {
 	 */
 	public void setFileUploadId(Long inFileUploadId) {
 		this.fileUploadId = inFileUploadId;
+	}
+
+	/**
+	 * Sets the propositions to add to the task.
+	 * @param inWrappers The list of propositions to add to the task.
+	 */
+	public void setPropositionWrappers (List<PropositionWrapper> inWrappers) {
+		this.propositionWrappers = inWrappers;
 	}
 
 	/*
@@ -237,16 +252,22 @@ public class JobTask implements Runnable {
 			throw new TaskException(e);
 		}
 
-		WebResource resource = client.resource(this.serviceProperties.
-				getEtlJobSubmitUrl());
+		JobRequest jobRequest = new JobRequest();
 		Job job = new Job();
 		job.setConfigurationId(conf.getId());
 		job.setUserId(this.fileUpload.getUser().getId());
-		Job resultJob = resource.type(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON).
-				post(Job.class, job);
+		jobRequest.setJob(job);
+		jobRequest.setPropositionWrappers(this.propositionWrappers);
 
-		if (!resultJob.getCurrentState().equals("CREATED")) {
-			throw new TaskException("Error starting job in ETL layer!");
+		WebResource resource = client.resource(this.serviceProperties.
+				getEtlJobSubmitUrl());
+		ClientResponse response = resource.type(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON).
+				post(ClientResponse.class, jobRequest);
+
+		if (! Status.CREATED.equals(response.getClientResponseStatus())) {
+			LOGGER.error("Job was not submitted successfully to ETL layer.");
+		} else {
+			LOGGER.info("Job successfully submitted.");
 		}
 	}
 

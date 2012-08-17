@@ -86,8 +86,8 @@ public class JobResource {
 	 *
 	 * @param inFileUpload The file upload to add.
 	 *
-	 * @return A {@link Status#OK} if the file is successfully added,
-	 *         {@link Status#BAD_REQUEST} if there are errors.
+	 * @return A {@link Response.Status#OK} if the file is successfully added,
+	 *         {@link Response.Status#BAD_REQUEST} if there are errors.
 	 */
 	@Path("/add")
 	@POST
