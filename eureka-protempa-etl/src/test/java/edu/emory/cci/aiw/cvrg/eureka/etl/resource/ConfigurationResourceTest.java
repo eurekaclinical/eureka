@@ -24,7 +24,7 @@ public class ConfigurationResourceTest extends AbstractEtlResourceTest {
 	@Test
 	public void testConfigurationList() {
 		WebResource resource = this.resource();
-		Configuration configuration = resource.path("/api/job/getConf/1").accept(
+		Configuration configuration = resource.path("/api/configuration/get/1").accept(
 				MediaType.APPLICATION_JSON).get(Configuration.class);
 		Assert.assertNotNull(configuration);
 	}
