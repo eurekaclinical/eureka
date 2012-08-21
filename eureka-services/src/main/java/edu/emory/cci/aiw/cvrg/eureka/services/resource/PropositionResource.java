@@ -91,9 +91,13 @@ public class PropositionResource {
 	@GET
 	@Path("/user/list/{userId}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public List<Proposition> getUserPropositions(
+	public List<PropositionWrapper> getUserPropositions(
 			@PathParam("userId") Long inUserId) {
-		return this.propositionDao.getByUserId(inUserId);
+		List<PropositionWrapper> result = new ArrayList<PropositionWrapper>();
+		for (Proposition p: this.propositionDao.getByUserId(inUserId)) {
+			result.add(this.wrap(p));
+		}
+		return result;
 	}
 
 	@GET
