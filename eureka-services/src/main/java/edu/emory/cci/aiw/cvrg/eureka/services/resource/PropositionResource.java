@@ -94,7 +94,7 @@ public class PropositionResource {
 	public List<PropositionWrapper> getUserPropositions(
 			@PathParam("userId") Long inUserId) {
 		List<PropositionWrapper> result = new ArrayList<PropositionWrapper>();
-		for (Proposition p: this.propositionDao.getByUserId(inUserId)) {
+		for (Proposition p : this.propositionDao.getByUserId(inUserId)) {
 			result.add(this.wrap(p));
 		}
 		return result;
@@ -141,16 +141,14 @@ public class PropositionResource {
 	@Path("/user/create")
 	@Consumes(MediaType.APPLICATION_JSON)
 	public void insertProposition(PropositionWrapper inWrapper) {
-		if (inWrapper.getUserId() != null && inWrapper.getId() != null) {
+		if (inWrapper.getUserId() != null) {
 			Proposition proposition = unwrap(inWrapper);
 			Date now = new Date();
 			proposition.setCreated(now);
 			proposition.setLastModified(now);
 			this.propositionDao.create(proposition);
 		} else {
-			throw new IllegalArgumentException(
-					"Both the user ID and the proposition ID must be "
-							+ "provided.");
+			throw new IllegalArgumentException("User ID must be provided.");
 		}
 	}
 
