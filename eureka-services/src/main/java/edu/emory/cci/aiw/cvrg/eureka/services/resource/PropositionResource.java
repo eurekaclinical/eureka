@@ -14,6 +14,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -98,6 +99,15 @@ public class PropositionResource {
 			result.add(this.wrap(p));
 		}
 		return result;
+	}
+	
+	@POST
+	@Path("/user/validate/{userId}")
+	public Response validateProposition (@PathParam("userId") Long inUserId, 
+			PropositionWrapper inWrapper) {
+		Response response;
+		response = Response.ok().build();
+		return response;
 	}
 
 	@GET
