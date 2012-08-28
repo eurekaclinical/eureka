@@ -25,7 +25,7 @@ import com.sun.jersey.api.client.WebResource;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.CommUtils;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.PropositionWrapper;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.Proposition;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.PropositionWrapper.Type;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.User;
 
 
@@ -36,13 +36,35 @@ public class EditorHomeServlet extends HttpServlet {
 
 	
 
-	private JsonTreeData createData(String data, String id) {
+	private JsonTreeData createData(String id, String data) {
 		JsonTreeData d = new JsonTreeData();
 		d.setData(data);
 		d.setKeyVal("id", id);
 		
 		return d;
 	}
+
+    private String getDisplayName(PropositionWrapper p) {
+        String displayName = "";
+
+        if (p.getAbbrevDisplayName() != null && !p.getAbbrevDisplayName().equals("")) {
+
+            displayName = p.getAbbrevDisplayName() + "(" + p.getKey() + ")";
+
+        } else if (p.getDisplayName() != null && !p.getDisplayName().equals("")) {
+
+            displayName = p.getDisplayName() + "(" + p.getKey() + ")";
+
+        } else {
+
+            displayName = p.getKey();
+
+        }
+
+        return displayName;
+    }
+
+
 	
 
 	@Override
@@ -54,7 +76,6 @@ public class EditorHomeServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
 
-		LOGGER.debug("doGet");
 		List<JsonTreeData> l = new ArrayList<JsonTreeData>();
 		String eurekaServicesUrl = req.getSession().getServletContext()
 				.getInitParameter("eureka-services-url");
@@ -68,20 +89,35 @@ public class EditorHomeServlet extends HttpServlet {
 			User user = webResource.path("/api/user/byname/" + userName)
 					.accept(MediaType.APPLICATION_JSON).get(User.class);
 			
-			List<Proposition> props = webResource.path("/api/proposition/user/list/"+ user.getId())
+			List<PropositionWrapper> props = webResource.path("/api/proposition/user/list/"+ user.getId())
 					.accept(MediaType.APPLICATION_JSON)
-					.get(new GenericType<List<Proposition>>() {
+					.get(new GenericType<List<PropositionWrapper>>() {
 						// Nothing to implement, used to hold returned data.
 					});
 			SimpleDateFormat df = new SimpleDateFormat("MM/dd/yyyy");
-			for (Proposition proposition : props) {
-				JsonTreeData d = createData(proposition.getAbbrevDisplayName(), String.valueOf(proposition.getId()));
+			for (PropositionWrapper proposition : props) {
+				JsonTreeData d = 
+                    createData(proposition.getId(), this.getDisplayName(proposition));
+
 				d.setKeyVal("abbrevDisplay", proposition.getAbbrevDisplayName());
 				d.setKeyVal("displayName", 	proposition.getDisplayName());
-				d.setKeyVal("created", 		df.format(proposition.getCreated()));
-				d.setKeyVal("lastModified", df.format(proposition.getLastModified()));
+                if (proposition.getType() == Type.AND) {
+
+				    d.setKeyVal("type", 	    "Temporal");
+
+                } else if (proposition.getType() == Type.OR) {
+
+				    d.setKeyVal("type", 	    "Categorical");
+
+                }
+                if (proposition.getCreated() != null) {
+				    d.setKeyVal("created", 		df.format(proposition.getCreated()));
+                }
+                if (proposition.getLastModified() != null) {
+				    d.setKeyVal("lastModified", df.format(proposition.getLastModified()));
+                }
 				l.add(d);
-				System.out.println("Added user prop: " + d.getData());
+				LOGGER.debug("Added user prop: " + d.getData());
 			}
 
 		} catch (NoSuchAlgorithmException nsae) {

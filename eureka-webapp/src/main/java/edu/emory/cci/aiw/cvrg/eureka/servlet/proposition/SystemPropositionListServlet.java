@@ -34,13 +34,33 @@ public class SystemPropositionListServlet extends HttpServlet {
 
 	
 
-	private JsonTreeData createData(String data, String id) {
+	private JsonTreeData createData(String id, String data) {
 		JsonTreeData d = new JsonTreeData();
 		d.setData(data);
 		d.setKeyVal("id", id);
 		
 		return d;
 	}
+
+    private String getDisplayName(PropositionWrapper p) {
+        String displayName = "";
+
+        if (p.getAbbrevDisplayName() != null && !p.getAbbrevDisplayName().equals("")) {
+
+            displayName = p.getAbbrevDisplayName() + "(" + p.getKey() + ")";
+
+        } else if (p.getDisplayName() != null && !p.getDisplayName().equals("")) {
+
+            displayName = p.getDisplayName() + "(" + p.getKey() + ")";
+
+        } else {
+
+            displayName = p.getKey();
+
+        }
+
+        return displayName;
+    }
 	
 
 	@Override
@@ -71,7 +91,7 @@ public class SystemPropositionListServlet extends HttpServlet {
 						// Nothing to implement, used to hold returned data.
 					});
 			for (PropositionWrapper proposition : props) {
-				JsonTreeData d = createData(proposition.getKey(), proposition.getKey());
+				JsonTreeData d = createData(proposition.getKey(), this.getDisplayName(proposition));
 				l.add(d);
 			}
 			LOGGER.debug("executed resource get");

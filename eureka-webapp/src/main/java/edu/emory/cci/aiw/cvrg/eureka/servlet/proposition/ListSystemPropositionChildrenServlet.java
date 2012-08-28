@@ -36,6 +36,26 @@ public class ListSystemPropositionChildrenServlet extends HttpServlet {
 
 	private WebResource webResource;
 
+    private String getDisplayName(PropositionWrapper p) {
+        String displayName = "";
+
+        if (p.getAbbrevDisplayName() != null && !p.getAbbrevDisplayName().equals("")) {
+
+            displayName = p.getAbbrevDisplayName() + "(" + p.getKey() + ")";
+
+        } else if (p.getDisplayName() != null && !p.getDisplayName().equals("")) {
+
+            displayName = p.getDisplayName() + "(" + p.getKey() + ")";
+
+        } else {
+
+            displayName = p.getKey();
+
+        }
+
+        return displayName;
+    }
+
 
 	@Override
 	public void init(ServletConfig config) throws ServletException {
@@ -60,7 +80,7 @@ public class ListSystemPropositionChildrenServlet extends HttpServlet {
 
 	}
 	
-	private JsonTreeData createData(String data, String id) {
+	private JsonTreeData createData(String id, String data) {
 		JsonTreeData d = new JsonTreeData();
 		d.setData(data);
 		d.setKeyVal("id", id);
