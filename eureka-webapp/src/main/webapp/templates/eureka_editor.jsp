@@ -61,6 +61,38 @@ ul.nav a { zoom: 1; }
           display: list-item;
 		}
 	#sortable li span { position: absolute; margin-left: -1.3em; }
+
+#elements
+{
+font-family:"Trebuchet MS", Arial, Helvetica, sans-serif;
+width:100%;
+border-collapse:collapse;
+}
+#elements td, #elements th 
+{
+font-size:1em;
+border:1px solid #24497A;
+padding:3px 7px 2px 7px;
+}
+#elements th 
+{
+font-size:1.1em;
+text-align:left;
+padding-top:5px;
+/*padding-bottom:4px;*/
+background-color:#24497A;
+color:#ffffff;
+}
+#elements tr.alt td 
+{
+color:#000000;
+background-color:#EAF2D3;
+}
+#elements tr td.bottom
+{
+    border-top: 2px solid;
+}
+
 </style>
 
 

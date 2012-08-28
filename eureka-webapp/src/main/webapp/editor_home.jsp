@@ -11,15 +11,20 @@
 
 	<template:content name="content">
 
-         <table align="center" border="0" cellpadding="0" cellspacing="0">
+        <table>
+            <tr>
+				<td colspan="5" class="bottom"><a href="${pageContext.request.contextPath}/editor.jsp">Create New Element</a></td>
+            </tr>   
+        </table>
+         <table align="center" id="elements">
                          <tr>
-                                 <td>id</td><td>abbrev. display name</td><td>display name</td><td>created</td><td>last modified</td>
+                                 <th>Name</th><th>Description</th><th>Type</th><th>Created Date</th><th>Last Modified</th>
                          </tr>
                          <c:forEach items="${props}" var="prop">
                                  <tr>
-                                         <td>${prop.id}</td>
                                          <td>${prop.attr['abbrevDisplay']}</td>
                                          <td>${prop.attr['displayName']}</td>
+                                         <td>${prop.attr['type']}</td>
                                          <td>${prop.attr['created']}</td>
                                          <td>${prop.attr['lastModified']}</td>
                                  </tr>
@@ -27,7 +32,6 @@
                          </c:forEach>
          </table>
 		
-		<a href="${pageContext.request.contextPath}/editor.jsp">Create New Element</a>
 
 	</template:content>
 	<template:content name="subcontent">

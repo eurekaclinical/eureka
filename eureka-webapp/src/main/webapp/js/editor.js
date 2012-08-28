@@ -1,8 +1,6 @@
 $("#sortable").sortable();
 $("#sortable").disableSelection();
 
-$("#sortable2").sortable();
-$("#sortable2").disableSelection();
 var numItems = 0;
 
 var el;
@@ -24,7 +22,7 @@ $(document).ready(function(){
       return validateSteps(step_num);
     }
 
-    $('.stepContainer').height('462px');
+    //$('.stepContainer').height('462px');
 
     $('#expand').click( function() {
         $('#steps').hide();
@@ -182,6 +180,20 @@ $(document).ready(function(){
 });
 
 function initTrees() {
+    /*
+    $('#tree-drop').hover(
+        function() {
+            console.log("in");
+        },
+        function() {
+            console.log("out");
+            $('#tree-drop')[0].style["background"] = "lightblue";
+            $('#sortable')[0].style["background"]  = "lightblue";
+            $('#label-info')[0].hidden = false;
+        }
+     
+    );
+    */
 	
    $("#systemTree").jstree({
 		"json_data" : {
@@ -189,11 +201,13 @@ function initTrees() {
 		},
 		"dnd" : {
 			"drop_finish" : function(data) {
-				if (data.e.currentTarget.id == 'tree-drop') {
+                if (data.e.currentTarget.id == 'tree-drop' || data.e.currentTarget.id == 'label-info') {
+                    var target = $('#tree-drop')[0]; 
+                    target.style["background"] = "lightblue";
+                    $('#label-info')[0].hidden = false;
 				    var type = $('#type').val();
 				    $('<li/>', {
 					    id: data.o[0].id,
-					   // text: data.o[0].parentNode.parentNode.id + "-" + data.o[0].children[1].childNodes[1].textContent
 						text:  data.o[0].children[1].childNodes[1].textContent
 				    }).appendTo('#sortable');
 		
@@ -215,7 +229,15 @@ function initTrees() {
 			},
 			"drag_finish" : function(data) {
 				alert("DRAG OK");
-			}
+			}/*
+            , 
+            "drop_check" : function(data) {
+                data.r[0].style["background"] = "#8CC63F";
+                $('#sortable')[0].style["background"] = "#8CC63F";
+                $('#label-info')[0].hidden = true; 
+
+            }
+            */
 	},
 	"plugins" : [ "themes", "json_data", "ui", "dnd" ]
 	}).bind("select_node.jstree", function(e, data)
@@ -308,7 +330,10 @@ function initTrees() {
 		},
 		"dnd" : {
 			"drop_finish" : function(data) {
-				if (data.e.currentTarget.id == 'tree-drop') {
+                if (data.e.currentTarget.id == 'tree-drop' || data.e.currentTarget.id == 'label-info') {
+                    var target = $('#tree-drop')[0]; 
+                    target.style["background"] = "lightblue";
+
 				    var type = $('#type').val();
 				    
 				    $('<li/>', {

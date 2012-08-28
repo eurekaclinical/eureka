@@ -141,13 +141,16 @@
 																class="jstree-drop"
 																style="float: left; 																				
 																border: 3px solid gray; 
+                                                                width: 180px;
+                                                                height: 200px; 
 																background: #C3D9FF; color: green;"
 																>
 																
-																<ul id="sortable" style="width: 180px; height: 150px" >
+																<ul id="sortable" style="width: 100% height: 100% >
 									
 																</ul>
                                                                 <div id="holder" style="width: 550px; height: 350px" ></div>
+                                                                <div id="label-info" class="jstree-drop" style="width: 75px; height: 50px; margin: auto; bottom:100px; position: relative" ><center>Drop Here</center></div>
 																
 																
 															</div>

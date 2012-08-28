@@ -143,8 +143,8 @@
 }
 .swMain ul.anchor li a.selected{
   color:#F8F8F8;
-  background: #EA8511;  /* EA8511 */
-  border: 1px solid #EA8511;
+  background: #24497A;  /* EA8511 */
+  border: 1px solid #24497A;
   cursor:text;
   -moz-box-shadow: 1px 5px 10px #888;
   -webkit-box-shadow: 1px 5px 10px #888;
@@ -152,7 +152,7 @@
 }
 .swMain ul.anchor li a.selected:hover {
   color:#F8F8F8;  
-  background: #EA8511;  
+  background: #24497A;  
 }
 
 .swMain ul.anchor li a.done { 
@@ -252,7 +252,7 @@
   width:430px;
 }
 .txtBox:focus {
-  border:1px solid #EA8511;
+  border:1px solid #24497A;
 }
 
 .swMain .loader {
@@ -303,6 +303,6 @@
   text-decoration: none;
 }
 .swMain .msgBox .close:hover{
-  color: #EA8511;
-  border: 1px solid #EA8511;  
+  color: #24497A;
+  border: 1px solid #24497A;  
 }
