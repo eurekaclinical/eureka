@@ -7,6 +7,7 @@ import java.util.Date;
 import java.util.List;
 
 import javax.persistence.EntityManager;
+import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -27,7 +28,6 @@ import edu.emory.cci.aiw.cvrg.eureka.services.util.StringUtil;
  * certain items to test against.
  *
  * @author hrathod
- *
  */
 public class Setup implements TestDataProvider {
 
@@ -40,7 +40,7 @@ public class Setup implements TestDataProvider {
 	private User researcherUser;
 	private User adminUser;
 	private User superUser;
-	private Proposition proposition;
+	private List<Proposition> propositions;
 
 	/**
 	 * Create a Bootstrap class with an EntityManager.
@@ -62,11 +62,15 @@ public class Setup implements TestDataProvider {
 		this.researcherUser = this.createResearcherUser();
 		this.adminUser = this.createAdminUser();
 		this.superUser = this.createSuperUser();
+		this.propositions =
+				this.createPropositions(this.researcherUser, this.adminUser,
+						this.superUser);
 	}
 
 	@Override
 	public void tearDown() throws TestDataException {
 		this.remove(FileUpload.class);
+		this.remove(Proposition.class);
 		this.remove(User.class);
 		this.remove(Role.class);
 		this.researcherRole = null;
@@ -75,6 +79,7 @@ public class Setup implements TestDataProvider {
 		this.researcherUser = null;
 		this.adminUser = null;
 		this.superUser = null;
+		this.propositions = null;
 	}
 
 	private <T> void remove(Class<T> className) {
@@ -93,31 +98,45 @@ public class Setup implements TestDataProvider {
 		entityManager.getTransaction().commit();
 	}
 
+	private List<Proposition> createPropositions(User... users) {
+		List<Proposition> propositions =
+				new ArrayList<Proposition>(users.length);
+		EntityManager entityManager = this.getEntityManager();
+		entityManager.getTransaction().begin();
+		for (User u : users) {
+			Proposition proposition = new Proposition();
+			proposition.setAbbrevDisplayName("test");
+			proposition.setDisplayName("Test Proposition");
+			proposition.setUser(u);
+			entityManager.persist(proposition);
+			propositions.add(proposition);
+		}
+		entityManager.getTransaction().commit();
+		return propositions;
+	}
+
 	private User createResearcherUser() throws TestDataException {
 		return this.createAndPersistUser("user@emory.edu", "Regular", "User",
 				null, this.researcherRole);
 	}
 
 	private User createAdminUser() throws TestDataException {
-		return this.createAndPersistUser("admin.user@emory.edu", "Admin", "User",
-				null, this.researcherRole, this.adminRole);
+		return this.createAndPersistUser("admin.user@emory.edu", "Admin",
+				"User", null, this.researcherRole, this.adminRole);
 	}
 
 	private User createSuperUser() throws TestDataException {
-		return this.createAndPersistUser("super.user@emory.edu", "Super", "User",
-				null, this.researcherRole, this.adminRole, this.superRole);
+		return this.createAndPersistUser("super.user@emory.edu", "Super",
+				"User", null, this.researcherRole, this.adminRole,
+				this.superRole);
 	}
 
 	private User createAndPersistUser(String email, String firstName,
-			String lastName, FileUpload upload, Role... roles) throws
+	                                  String lastName, FileUpload upload,
+	                                  Role... roles) throws
 			TestDataException {
 		EntityManager entityManager = this.getEntityManager();
 		User user = new User();
-		Proposition proposition = new Proposition();
-		proposition.setAbbrevDisplayName("test");
-		proposition.setDisplayName("test proposition");
-		List<Proposition> propositions = new ArrayList<Proposition>();
-		propositions.add(proposition);
 		try {
 			user.setActive(true);
 			user.setVerified(true);
@@ -128,7 +147,6 @@ public class Setup implements TestDataProvider {
 			user.setPassword(StringUtil.md5(PASSWORD));
 			user.setLastLogin(new Date());
 			user.setRoles(Arrays.asList(roles));
-			user.addProposition(proposition);
 		} catch (NoSuchAlgorithmException nsaex) {
 			throw new TestDataException(nsaex);
 		}
