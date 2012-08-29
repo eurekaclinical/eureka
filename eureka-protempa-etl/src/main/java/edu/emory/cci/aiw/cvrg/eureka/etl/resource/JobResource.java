@@ -28,20 +28,20 @@ import edu.emory.cci.aiw.cvrg.eureka.common.comm.PropositionWrapper;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.Job;
 import edu.emory.cci.aiw.cvrg.eureka.etl.dao.ConfDao;
 import edu.emory.cci.aiw.cvrg.eureka.etl.dao.JobDao;
+import edu.emory.cci.aiw.cvrg.eureka.etl.validator.PropositionValidator;
+import edu.emory.cci.aiw.cvrg.eureka.etl.validator
+		.PropositionValidatorException;
 
 @Path("/job")
 public class JobResource {
 	private static final Logger LOGGER =
 			LoggerFactory.getLogger(JobResource.class);
 	private final JobDao jobDao;
-	private final ConfDao confDao;
 	private final ProtempaDeviceManager protempaDeviceManager;
 
 	@Inject
 	public JobResource(JobDao inJobDao,
-			ConfDao inConfDao,
-			ProtempaDeviceManager inProtempaDeviceManager) {
-		this.confDao = inConfDao;
+	                   ProtempaDeviceManager inProtempaDeviceManager) {
 		this.jobDao = inJobDao;
 		this.protempaDeviceManager = inProtempaDeviceManager;
 	}
@@ -65,15 +65,34 @@ public class JobResource {
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response startJob(JobRequest inJobRequest) {
+		Response response;
 		Job job = inJobRequest.getJob();
-		List<PropositionDefinition> definitions =
-				this.unwrapAll(inJobRequest.getPropositionWrappers());
-		LOGGER.debug("Created {} definitions", definitions.size());
-		job.setNewState("CREATED", null, null);
-		LOGGER.debug("Request to start new Job {}", job.getId());
-		this.jobDao.create(job);
-		this.protempaDeviceManager.qJob(job);
-		return Response.created(URI.create("/" + job.getId())).build();
+		List<PropositionWrapper> wrappers =
+				inJobRequest.getPropositionWrappers();
+		PropositionValidator validator =
+				new PropositionValidator(wrappers, job.getUserId());
+		boolean valid;
+		try {
+			valid = validator.validate();
+		} catch (PropositionValidatorException e) {
+			valid = false;
+		}
+
+		if (valid) {
+			List<PropositionDefinition> definitions = this.unwrapAll
+					(wrappers);
+			LOGGER.debug("Created {} definitions", definitions.size());
+			job.setNewState("CREATED", null, null);
+			LOGGER.debug("Request to start new Job {}", job.getId());
+			this.jobDao.create(job);
+			this.protempaDeviceManager.qJob(job);
+			response = Response.created(URI.create("/" + job.getId()))
+					.build();
+		} else {
+			response = Response.status(Response.Status.BAD_REQUEST).entity(
+					validator.getMessages()).build();
+		}
+		return response;
 	}
 
 	@GET
@@ -91,9 +110,10 @@ public class JobResource {
 		return jobs;
 	}
 
-	private List<PropositionDefinition> unwrapAll (List<PropositionWrapper> inWrappers) {
-		List<PropositionDefinition> definitions = new ArrayList
-				<PropositionDefinition>(inWrappers.size());
+	private List<PropositionDefinition> unwrapAll(
+			List<PropositionWrapper> inWrappers) {
+		List<PropositionDefinition> definitions =
+				new ArrayList<PropositionDefinition>(inWrappers.size());
 		for (PropositionWrapper wrapper : inWrappers) {
 			definitions.add(unwrap(wrapper));
 		}
@@ -124,7 +144,7 @@ public class JobResource {
 	}
 
 	private String[] getTargets(List<String> systemTargets,
-			List<Long> userTargets) {
+	                            List<Long> userTargets) {
 		int size = systemTargets.size() + userTargets.size();
 		String[] result = new String[size];
 		int counter = 0;

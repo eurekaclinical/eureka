@@ -33,6 +33,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.PropositionWrapper;
+import edu.emory.cci.aiw.cvrg.eureka.etl.ksb.PropositionFinder;
+import edu.emory.cci.aiw.cvrg.eureka.etl.ksb.PropositionFinderException;
 
 /**
  * @author hrathod
@@ -42,42 +44,22 @@ public class PropositionResource {
 
 	private static final Logger LOGGER =
 			LoggerFactory.getLogger(PropositionResource.class);
-	private static final String CONF_DIR = "/opt/cvrg_users";
-	private static final String USER_PREFIX = "user";
 
 	@GET
 	@Path("/{userId}/{key}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public PropositionWrapper getProposition(@PathParam("userId") String
-			userId,
+	public PropositionWrapper getProposition(
+			@PathParam("userId") String inUserId,
 			@PathParam("key") String inKey) {
-		SourceFactory sf;
+
 		PropositionWrapper wrapper = null;
 		try {
-			File userDir = new File(CONF_DIR, USER_PREFIX + userId);
-			File confDir = new File(userDir, ".protempa-configs");
-			Configurations configurations =
-					new INICommonsConfigurations(confDir);
-			sf = new SourceFactory(configurations, "erat-diagnoses-direct");
-			KnowledgeSource knowledgeSource = sf.newKnowledgeSourceInstance();
 			PropositionDefinition definition =
-					knowledgeSource.readPropositionDefinition(inKey);
-			if (definition != null) {
-				WrapperVisitor visitor = new WrapperVisitor();
-				definition.accept(visitor);
-				wrapper = visitor.getWrapper();
-			}
-		} catch (BackendProviderSpecLoaderException e) {
-			LOGGER.error(e.getMessage(), e);
-		} catch (InvalidConfigurationException e) {
-			LOGGER.error(e.getMessage(), e);
-		} catch (ConfigurationsLoadException e) {
-			LOGGER.error(e.getMessage(), e);
-		} catch (BackendNewInstanceException e) {
-			LOGGER.error(e.getMessage(), e);
-		} catch (BackendInitializationException e) {
-			LOGGER.error(e.getMessage(), e);
-		} catch (KnowledgeSourceReadException e) {
+					PropositionFinder.find(inKey, inUserId);
+			WrapperVisitor visitor = new WrapperVisitor();
+			definition.accept(visitor);
+			wrapper = visitor.getWrapper();
+		} catch (PropositionFinderException e) {
 			LOGGER.error(e.getMessage(), e);
 		}
 		return wrapper;
