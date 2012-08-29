@@ -101,9 +101,9 @@ public class User implements CycleRecoverable {
 	/**
 	 * A list of all propositions created by the user.
 	 */
-	@OneToMany(cascade = CascadeType.ALL, targetEntity = Proposition.class,
-			   mappedBy = "user")
-	private List<Proposition> propositions = new ArrayList<Proposition>();
+//	@OneToMany(cascade = CascadeType.ALL, targetEntity = Proposition.class,
+//			   mappedBy = "user")
+//	private List<Proposition> propositions = new ArrayList<Proposition>();
 
 	/**
 	 * Create an empty User object.
@@ -340,38 +340,38 @@ public class User implements CycleRecoverable {
 		this.fileUploads.add(fileUpload);
 	}
 
-	/**
-	 * Gets the list of propositions for the user.
-	 *
-	 * @return The list of propositions for the user.
-	 */
-	@JsonManagedReference("user-propositions")
-	public List<Proposition> getPropositions() {
-		return propositions;
-	}
+//	/**
+//	 * Gets the list of propositions for the user.
+//	 *
+//	 * @return The list of propositions for the user.
+//	 */
+//	@JsonManagedReference("user-propositions")
+//	public List<Proposition> getPropositions() {
+//		return propositions;
+//	}
 
-	/**
-	 * Sets the list of propositions for the user.
-	 *
-	 * @param inPropositions The list of propositions for the user.
-	 */
-	public void setPropositions(List<Proposition> inPropositions) {
-		this.propositions = inPropositions;
-	}
-
-	/**
-	 * Adds a new proposition to the existing list of propositions for the user.
-	 *
-	 * @param inProposition The proposition to add to the list of propositions
-	 * for the user.
-	 */
-	public void addProposition(Proposition inProposition) {
-		User user = inProposition.getUser();
-		if (user == null || !user.getId().equals(this.getId())) {
-			inProposition.setUser(this);
-		}
-		this.propositions.add(inProposition);
-	}
+//	/**
+//	 * Sets the list of propositions for the user.
+//	 *
+//	 * @param inPropositions The list of propositions for the user.
+//	 */
+//	public void setPropositions(List<Proposition> inPropositions) {
+//		this.propositions = inPropositions;
+//	}
+//
+//	/**
+//	 * Adds a new proposition to the existing list of propositions for the user.
+//	 *
+//	 * @param inProposition The proposition to add to the list of propositions
+//	 * for the user.
+//	 */
+//	public void addProposition(Proposition inProposition) {
+//		User user = inProposition.getUser();
+//		if (user == null || !user.getId().equals(this.getId())) {
+//			inProposition.setUser(this);
+//		}
+//		this.propositions.add(inProposition);
+//	}
 
 	@Override
 	public Object onCycleDetected(final Context context) {
@@ -395,7 +395,7 @@ public class User implements CycleRecoverable {
 				", verificationCode=").append(this.verificationCode).append(
 				", lastLogin=").append(this.lastLogin).append(", roles=").append(
 				this.roles).append(", fileUploads=").append(this.fileUploads).
-				append(", propositions=").append(this.propositions).
+//				append(", propositions=").append(this.propositions).
 				append("]");
 		return builder.toString();
 	}
