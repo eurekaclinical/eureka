@@ -18,20 +18,16 @@ import edu.emory.cci.aiw.cvrg.eureka.common.comm.PropositionWrapper;
 import edu.emory.cci.aiw.cvrg.eureka.etl.ksb.PropositionFinder;
 import edu.emory.cci.aiw.cvrg.eureka.etl.ksb.PropositionFinderException;
 
-public class PropositionValidator {
-
-	private final PropositionWrapper targetWrapper;
-	private final List<PropositionWrapper> wrappers;
-	private final String userId;
-	private final List<String> messages;
+public class PropositionValidatorImpl implements PropositionValidator {
 
 	private enum PropositionType {
+
 		HIGH_LEVEL_ABSTRACTION, SLICE, EVENT, PRIMITIVE_PARAMETER,
 		CONSTANT, PAIR, LOW_LEVEL_ABSTRACTION, INVALID
 	}
 
 	private static class ValidatorVisitor
-			implements PropositionDefinitionVisitor {
+		implements PropositionDefinitionVisitor {
 
 		private PropositionType type;
 
@@ -44,11 +40,10 @@ public class PropositionValidator {
 		}
 
 		@Override
-		public void visit(
-				Collection<? extends PropositionDefinition>
-						propositionDefinitions) {
+		public void visit(Collection<? extends PropositionDefinition>
+			propositionDefinitions) {
 			throw new UnsupportedOperationException(
-					"Visiting a collection is not supported.");
+				"Visiting a collection is not supported.");
 		}
 
 		@Override
@@ -87,44 +82,34 @@ public class PropositionValidator {
 		}
 	}
 
-	public PropositionValidator(List<PropositionWrapper> inWrappers,
-	                            Long inUserId) {
-		this(null, inWrappers, inUserId);
-	}
+	private PropositionWrapper targetProposition;
+	private List<PropositionWrapper> propositions;
+	private Long userId;
+	private final List<String> messages;
 
-	public PropositionValidator(PropositionWrapper inTargetWrapper,
-	                            List<PropositionWrapper> inWrappers,
-	                            Long inUserId) {
-		this(inTargetWrapper, inWrappers, String.valueOf(inUserId.longValue
-				()));
-	}
-
-	public PropositionValidator(PropositionWrapper inTargetWrapper,
-	                            List<PropositionWrapper> inWrappers,
-	                            String inUserId) {
-		this.targetWrapper = inTargetWrapper;
-		this.wrappers = inWrappers;
-		this.userId = inUserId;
+	public PropositionValidatorImpl() {
 		this.messages = new ArrayList<String>();
+		this.propositions = new ArrayList<PropositionWrapper>();
 	}
 
+	@Override
 	public boolean validate() throws PropositionValidatorException {
 		boolean result = true;
-		if (this.targetWrapper == null) {
-			for (PropositionWrapper wrapper : this.wrappers) {
+		if (this.targetProposition == null) {
+			for (PropositionWrapper wrapper : this.propositions) {
 				if (!this.validateSingle(wrapper)) {
 					result = false;
 					break;
 				}
 			}
 		} else {
-			result = this.validateSingle(this.targetWrapper);
+			result = this.validateSingle(this.targetProposition);
 		}
 		return result;
 	}
 
-	public boolean validateSingle(PropositionWrapper inWrapper)
-			throws PropositionValidatorException {
+	private boolean validateSingle(PropositionWrapper inWrapper)
+		throws PropositionValidatorException {
 
 		boolean result;
 		List<String> systemTargets = inWrapper.getSystemTargets();
@@ -141,8 +126,7 @@ public class PropositionValidator {
 			try {
 				for (String systemTarget : systemTargets) {
 					types.add(this.getSystemPropositionType(
-							PropositionFinder.find(systemTarget,
-									this.userId)));
+						PropositionFinder.find(systemTarget, this.userId)));
 				}
 			} catch (PropositionFinderException e) {
 				throw new PropositionValidatorException(e);
@@ -151,7 +135,7 @@ public class PropositionValidator {
 
 		if (types.contains(PropositionType.INVALID)) {
 			this.addMessage("Proposition " + inWrapper.getAbbrevDisplayName()
-					+ "has invalid definition.");
+				+ "has invalid definition.");
 			result = false;
 		} else {
 			result = this.isSame(types);
@@ -159,9 +143,9 @@ public class PropositionValidator {
 		return result;
 	}
 
-	private PropositionType getSystemPropositionType(
-			PropositionDefinition inDefinition)
-			throws PropositionValidatorException {
+	private PropositionType getSystemPropositionType(PropositionDefinition
+		inDefinition)
+		throws PropositionValidatorException {
 		PropositionType result;
 		ValidatorVisitor visitor = new ValidatorVisitor();
 		inDefinition.accept(visitor);
@@ -170,7 +154,7 @@ public class PropositionValidator {
 	}
 
 	private PropositionType getUserPropositionType(Long inTarget)
-			throws PropositionValidatorException {
+		throws PropositionValidatorException {
 
 		PropositionType result = PropositionType.INVALID;
 		List<PropositionType> childTypes = new ArrayList<PropositionType>();
@@ -183,7 +167,7 @@ public class PropositionValidator {
 		try {
 			for (String systemTarget : wrapper.getSystemTargets()) {
 				childTypes.add(this.getSystemPropositionType(
-						PropositionFinder.find(systemTarget, this.userId)));
+					PropositionFinder.find(systemTarget, this.userId)));
 			}
 		} catch (PropositionFinderException e) {
 			throw new PropositionValidatorException(e);
@@ -209,7 +193,7 @@ public class PropositionValidator {
 
 	private PropositionWrapper findById(String inId) {
 		PropositionWrapper result = null;
-		for (PropositionWrapper wrapper : this.wrappers) {
+		for (PropositionWrapper wrapper : this.propositions) {
 			if (wrapper.getId().equals(inId)) {
 				result = wrapper;
 				break;
@@ -232,10 +216,35 @@ public class PropositionValidator {
 		return result;
 	}
 
+	public PropositionWrapper getTargetProposition() {
+		return this.targetProposition;
+	}
+
+	public void setTargetProposition(PropositionWrapper inTargetProposition) {
+		this.targetProposition = inTargetProposition;
+	}
+
+	public List<PropositionWrapper> getPropositions() {
+		return this.propositions;
+	}
+
+	public void setPropositions(List<PropositionWrapper> inPropositions) {
+		this.propositions = inPropositions;
+	}
+
+	public Long getUserId() {
+		return this.userId;
+	}
+
+	public void setUserId(Long inUserId) {
+		this.userId = inUserId;
+	}
+
 	private void addMessage(String inMessage) {
 		this.messages.add(inMessage);
 	}
 
+	@Override
 	public List<String> getMessages() {
 		return this.messages;
 	}

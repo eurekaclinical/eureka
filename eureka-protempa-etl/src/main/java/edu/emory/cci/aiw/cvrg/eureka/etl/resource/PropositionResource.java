@@ -1,40 +1,38 @@
 package edu.emory.cci.aiw.cvrg.eureka.etl.resource;
 
-import java.io.File;
 import java.util.Arrays;
 import java.util.Collection;
 
+import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
 import org.protempa.ConstantDefinition;
 import org.protempa.EventDefinition;
 import org.protempa.HighLevelAbstractionDefinition;
-import org.protempa.KnowledgeSource;
-import org.protempa.KnowledgeSourceReadException;
 import org.protempa.LowLevelAbstractionDefinition;
 import org.protempa.PairDefinition;
 import org.protempa.PrimitiveParameterDefinition;
 import org.protempa.PropositionDefinition;
 import org.protempa.PropositionDefinitionVisitor;
 import org.protempa.SliceDefinition;
-import org.protempa.SourceFactory;
-import org.protempa.backend.BackendInitializationException;
-import org.protempa.backend.BackendNewInstanceException;
-import org.protempa.backend.BackendProviderSpecLoaderException;
-import org.protempa.backend.Configurations;
-import org.protempa.backend.ConfigurationsLoadException;
-import org.protempa.backend.InvalidConfigurationException;
-import org.protempa.bconfigs.commons.INICommonsConfigurations;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.inject.Inject;
+
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.PropositionWrapper;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.ValidationRequest;
 import edu.emory.cci.aiw.cvrg.eureka.etl.ksb.PropositionFinder;
 import edu.emory.cci.aiw.cvrg.eureka.etl.ksb.PropositionFinderException;
+import edu.emory.cci.aiw.cvrg.eureka.etl.validator.PropositionValidator;
+import edu.emory.cci.aiw.cvrg.eureka.etl.validator
+	.PropositionValidatorException;
 
 /**
  * @author hrathod
@@ -43,19 +41,51 @@ import edu.emory.cci.aiw.cvrg.eureka.etl.ksb.PropositionFinderException;
 public class PropositionResource {
 
 	private static final Logger LOGGER =
-			LoggerFactory.getLogger(PropositionResource.class);
+		LoggerFactory.getLogger(PropositionResource.class);
+
+	private final PropositionValidator propositionValidator;
+
+	@Inject
+	public PropositionResource (PropositionValidator inValidator) {
+		this.propositionValidator = inValidator;
+	}
+
+	@POST
+	@Path("/validate")
+	@Consumes(MediaType.APPLICATION_JSON)
+	public Response validatePropositions(ValidationRequest inRequest) {
+
+		boolean result;
+		try {
+			propositionValidator.setUserId(inRequest.getUserId());
+			propositionValidator.setPropositions(inRequest.getPropositions());
+			propositionValidator.setTargetProposition(inRequest.getTargetProposition());
+			result = propositionValidator.validate();
+		} catch (PropositionValidatorException e) {
+			LOGGER.error(e.getMessage(), e);
+			result = false;
+		}
+
+		Response response;
+		if (result) {
+			response = Response.ok().build();
+		} else {
+			response = Response.status(Response.Status.NOT_ACCEPTABLE).entity
+				(propositionValidator.getMessages()).build();
+		}
+		return response;
+	}
 
 	@GET
 	@Path("/{userId}/{key}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public PropositionWrapper getProposition(
-			@PathParam("userId") String inUserId,
-			@PathParam("key") String inKey) {
+	public PropositionWrapper getProposition(@PathParam(
+		"userId") Long inUserId, @PathParam("key") String inKey) {
 
 		PropositionWrapper wrapper = null;
 		try {
 			PropositionDefinition definition =
-					PropositionFinder.find(inKey, inUserId);
+				PropositionFinder.find(inKey, inUserId);
 			WrapperVisitor visitor = new WrapperVisitor();
 			definition.accept(visitor);
 			wrapper = visitor.getWrapper();
@@ -66,7 +96,7 @@ public class PropositionResource {
 	}
 
 	private static class WrapperVisitor
-			implements PropositionDefinitionVisitor {
+		implements PropositionDefinitionVisitor {
 
 		PropositionWrapper wrapper = new PropositionWrapper();
 
@@ -78,18 +108,18 @@ public class PropositionResource {
 			this.wrapper.setKey(inDefinition.getId());
 			this.wrapper.setInSystem(true);
 			this.wrapper.setAbbrevDisplayName(
-					inDefinition.getAbbreviatedDisplayName());
+				inDefinition.getAbbreviatedDisplayName());
 			this.wrapper.setDisplayName(inDefinition.getDisplayName());
 			this.wrapper.setSystemTargets(
-					Arrays.asList(inDefinition.getChildren()));
+				Arrays.asList(inDefinition.getChildren()));
 		}
 
 		@Override
 		public void visit(Collection<? extends PropositionDefinition>
-				propositionDefinitions) {
+			propositionDefinitions) {
 			// This class does not handle a list of propositions, yet.
 			throw new UnsupportedOperationException(
-					"PropositionDefinition lists are not supported, yet.");
+				"PropositionDefinition " + "lists are not supported, yet.");
 		}
 
 		@Override

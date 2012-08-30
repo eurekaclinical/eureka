@@ -26,24 +26,25 @@ import edu.emory.cci.aiw.cvrg.eureka.common.comm.JobFilter;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.JobRequest;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.PropositionWrapper;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.Job;
-import edu.emory.cci.aiw.cvrg.eureka.etl.dao.ConfDao;
 import edu.emory.cci.aiw.cvrg.eureka.etl.dao.JobDao;
 import edu.emory.cci.aiw.cvrg.eureka.etl.validator.PropositionValidator;
 import edu.emory.cci.aiw.cvrg.eureka.etl.validator
-		.PropositionValidatorException;
+	.PropositionValidatorException;
 
 @Path("/job")
 public class JobResource {
 	private static final Logger LOGGER =
-			LoggerFactory.getLogger(JobResource.class);
+		LoggerFactory.getLogger(JobResource.class);
 	private final JobDao jobDao;
 	private final ProtempaDeviceManager protempaDeviceManager;
+	private final PropositionValidator propositionValidator;
 
 	@Inject
-	public JobResource(JobDao inJobDao,
-	                   ProtempaDeviceManager inProtempaDeviceManager) {
+	public JobResource(JobDao inJobDao, ProtempaDeviceManager
+		inProtempaDeviceManager, PropositionValidator inValidator) {
 		this.jobDao = inJobDao;
 		this.protempaDeviceManager = inProtempaDeviceManager;
+		this.propositionValidator = inValidator;
 	}
 
 	@GET
@@ -68,29 +69,29 @@ public class JobResource {
 		Response response;
 		Job job = inJobRequest.getJob();
 		List<PropositionWrapper> wrappers =
-				inJobRequest.getPropositionWrappers();
-		PropositionValidator validator =
-				new PropositionValidator(wrappers, job.getUserId());
+			inJobRequest.getPropositionWrappers();
+		propositionValidator.setUserId(job.getUserId());
+		propositionValidator.setPropositions(wrappers);
 		boolean valid;
 		try {
-			valid = validator.validate();
+			valid = propositionValidator.validate();
 		} catch (PropositionValidatorException e) {
 			valid = false;
 		}
 
 		if (valid) {
 			List<PropositionDefinition> definitions = this.unwrapAll
-					(wrappers);
+				(wrappers);
 			LOGGER.debug("Created {} definitions", definitions.size());
 			job.setNewState("CREATED", null, null);
 			LOGGER.debug("Request to start new Job {}", job.getId());
 			this.jobDao.create(job);
 			this.protempaDeviceManager.qJob(job);
 			response = Response.created(URI.create("/" + job.getId()))
-					.build();
+				.build();
 		} else {
 			response = Response.status(Response.Status.BAD_REQUEST).entity(
-					validator.getMessages()).build();
+				propositionValidator.getMessages()).build();
 		}
 		return response;
 	}
@@ -105,15 +106,15 @@ public class JobResource {
 		for (Job job : jobs) {
 			this.jobDao.refresh(job);
 			LOGGER.debug("Returning job {} with status {}", job.getId(),
-					job.getCurrentState());
+				job.getCurrentState());
 		}
 		return jobs;
 	}
 
-	private List<PropositionDefinition> unwrapAll(
-			List<PropositionWrapper> inWrappers) {
+	private List<PropositionDefinition> unwrapAll(List<PropositionWrapper>
+		inWrappers) {
 		List<PropositionDefinition> definitions =
-				new ArrayList<PropositionDefinition>(inWrappers.size());
+			new ArrayList<PropositionDefinition>(inWrappers.size());
 		for (PropositionWrapper wrapper : inWrappers) {
 			definitions.add(unwrap(wrapper));
 		}
@@ -123,11 +124,11 @@ public class JobResource {
 	private PropositionDefinition unwrap(PropositionWrapper inWrapper) {
 		PropositionDefinition definition;
 		String[] allTargets = getTargets(inWrapper.getSystemTargets(),
-				inWrapper.getUserTargets());
+			inWrapper.getUserTargets());
 
 		if (inWrapper.getType() == PropositionWrapper.Type.AND) {
 			HighLevelAbstractionDefinition d =
-					new HighLevelAbstractionDefinition(inWrapper.getId());
+				new HighLevelAbstractionDefinition(inWrapper.getId());
 			d.setAbbreviatedDisplayName(inWrapper.getAbbrevDisplayName());
 			d.setDisplayName(inWrapper.getDisplayName());
 			d.setInverseIsA(allTargets);
@@ -144,7 +145,7 @@ public class JobResource {
 	}
 
 	private String[] getTargets(List<String> systemTargets,
-	                            List<Long> userTargets) {
+		List<Long> userTargets) {
 		int size = systemTargets.size() + userTargets.size();
 		String[] result = new String[size];
 		int counter = 0;

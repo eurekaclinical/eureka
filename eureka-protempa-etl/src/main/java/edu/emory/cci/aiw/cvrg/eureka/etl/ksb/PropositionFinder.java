@@ -23,11 +23,12 @@ public class PropositionFinder {
 	private static final String CONF_DIR = "/opt/cvrg_users";
 	private static final String USER_PREFIX = "user";
 
-	public static PropositionDefinition find(String inKey, String inUserId)
+	public static PropositionDefinition find(String inKey, Long inUserId)
 			throws PropositionFinderException {
 		PropositionDefinition definition = null;
 		try {
-			File userDir = new File(CONF_DIR, USER_PREFIX + inUserId);
+			String idStr = String.valueOf(inUserId.longValue());
+			File userDir = new File(CONF_DIR, USER_PREFIX + idStr);
 			File confDir = new File(userDir, ".protempa-configs");
 			Configurations configurations =
 					new INICommonsConfigurations(confDir);
