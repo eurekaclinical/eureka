@@ -6,6 +6,7 @@ import java.util.List;
 import org.junit.Test;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.PropositionWrapper;
+import edu.stanford.smi.protege.util.Assert;
 
 import static org.junit.Assert.assertTrue;
 
@@ -16,9 +17,8 @@ public class PropositionValidatorTest {
 	@Test
 	public void testNoPropositions() {
 		List<PropositionWrapper> wrappers = new
-				ArrayList<PropositionWrapper>();
-		PropositionValidatorImpl validator =
-				new PropositionValidatorImpl();
+			ArrayList<PropositionWrapper>();
+		PropositionValidatorImpl validator = new PropositionValidatorImpl();
 		validator.setPropositions(wrappers);
 		validator.setUserId(USER_ID);
 
@@ -36,13 +36,12 @@ public class PropositionValidatorTest {
 	@Test
 	public void testSinglePropositionNoDef() {
 		List<PropositionWrapper> wrappers = new
-				ArrayList<PropositionWrapper>();
+			ArrayList<PropositionWrapper>();
 		PropositionWrapper wrapper = new PropositionWrapper();
 		wrapper.setAbbrevDisplayName("Test");
 		wrapper.setDisplayName("Wrapper for unit tests.");
 		wrappers.add(wrapper);
-		PropositionValidatorImpl validator =
-				new PropositionValidatorImpl();
+		PropositionValidatorImpl validator = new PropositionValidatorImpl();
 		validator.setUserId(USER_ID);
 		validator.setPropositions(wrappers);
 
@@ -54,6 +53,43 @@ public class PropositionValidatorTest {
 			actual = false;
 		}
 		assertTrue(actual);
+	}
+
+	@Test
+	public void testCycleDetection() {
+		PropositionWrapper wrapper1 = new PropositionWrapper();
+		PropositionWrapper wrapper2 = new PropositionWrapper();
+
+		List<Long> targets1 = new ArrayList<Long>();
+		targets1.add(2L);
+
+		List<Long> targets2 = new ArrayList<Long>();
+		targets2.add(1L);
+
+		wrapper1.setId(1L);
+		wrapper1.setAbbrevDisplayName("test-prop-1");
+		wrapper1.setUserTargets(targets1);
+
+		wrapper2.setId(2L);
+		wrapper2.setAbbrevDisplayName("test-prop-2");
+		wrapper2.setUserTargets(targets2);
+
+		List<PropositionWrapper> propositions = new ArrayList
+			<PropositionWrapper>();
+		propositions.add(wrapper1);
+		propositions.add(wrapper2);
+
+		PropositionValidator validator = new PropositionValidatorImpl();
+		validator.setUserId(USER_ID);
+		validator.setPropositions(propositions);
+		boolean result;
+		try {
+			result = validator.validate();
+		} catch (PropositionValidatorException e) {
+			result = false;
+		}
+
+		Assert.assertFalse(result);
 	}
 
 }

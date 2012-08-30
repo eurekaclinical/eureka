@@ -65,6 +65,15 @@ public class ServiceProperties extends ApplicationProperties {
 	}
 
 	/**
+	 * Gets the URL to access the validation end-point for the ETL layer.
+	 *
+	 * @return A string representing the URL of the validation end-point.
+	 */
+	public String getEtlPropositionValidationUrl() {
+		return this.getValue("eureka.services.etl.proposition.validation.url");
+	}
+
+	/**
 	 * Get the size of the job executor thread pool.
 	 *
 	 * @return The size of the job executor thread pool from the configuration

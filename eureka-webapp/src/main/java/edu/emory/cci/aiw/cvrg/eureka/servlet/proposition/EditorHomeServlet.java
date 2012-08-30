@@ -1,7 +1,6 @@
 package edu.emory.cci.aiw.cvrg.eureka.servlet.proposition;
 
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.security.Principal;
@@ -15,7 +14,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.core.MediaType;
 
-import org.codehaus.jackson.map.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -34,13 +32,13 @@ public class EditorHomeServlet extends HttpServlet {
 	private static final Logger LOGGER = LoggerFactory
 			.getLogger(EditorHomeServlet.class);
 
-	
+
 
 	private JsonTreeData createData(String id, String data) {
 		JsonTreeData d = new JsonTreeData();
 		d.setData(data);
 		d.setKeyVal("id", id);
-		
+
 		return d;
 	}
 
@@ -65,7 +63,7 @@ public class EditorHomeServlet extends HttpServlet {
     }
 
 
-	
+
 
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp)
@@ -83,12 +81,12 @@ public class EditorHomeServlet extends HttpServlet {
 			Client client = CommUtils.getClient();
 			Principal principal = req.getUserPrincipal();
 			String userName = principal.getName();
-					
+
 			LOGGER.debug("got username {}", userName);
 			WebResource webResource = client.resource(eurekaServicesUrl);
 			User user = webResource.path("/api/user/byname/" + userName)
 					.accept(MediaType.APPLICATION_JSON).get(User.class);
-			
+
 			List<PropositionWrapper> props = webResource.path("/api/proposition/user/list/"+ user.getId())
 					.accept(MediaType.APPLICATION_JSON)
 					.get(new GenericType<List<PropositionWrapper>>() {
@@ -96,8 +94,10 @@ public class EditorHomeServlet extends HttpServlet {
 					});
 			SimpleDateFormat df = new SimpleDateFormat("MM/dd/yyyy");
 			for (PropositionWrapper proposition : props) {
-				JsonTreeData d = 
-                    createData(proposition.getId(), this.getDisplayName(proposition));
+				JsonTreeData d =
+                    createData(String.valueOf(proposition.getId().longValue()
+                    ),
+	                    this.getDisplayName(proposition));
 
 				d.setKeyVal("abbrevDisplay", proposition.getAbbrevDisplayName());
 				d.setKeyVal("displayName", 	proposition.getDisplayName());
@@ -124,11 +124,11 @@ public class EditorHomeServlet extends HttpServlet {
 			throw new ServletException(nsae);
 		} catch (KeyManagementException kme) {
 			throw new ServletException(kme);
-		}		
-		
-			
+		}
 
-		
+
+
+
 		req.setAttribute("props", l);
 		req.getRequestDispatcher("/editor_home.jsp").forward(req, resp);
 	}

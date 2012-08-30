@@ -10,7 +10,7 @@ public class PropositionWrapper {
 
 	public enum Type {AND, OR}
 
-	private String id;
+	private Long id;
 	private String key;
 	private Long userId;
 	private String abbrevDisplayName;
@@ -22,11 +22,11 @@ public class PropositionWrapper {
 	private Date created;
 	private Date lastModified;
 
-	public String getId() {
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(String id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 

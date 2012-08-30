@@ -20,12 +20,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.sun.jersey.api.client.Client;
-import com.sun.jersey.api.client.GenericType;
 import com.sun.jersey.api.client.WebResource;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.CommUtils;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.PropositionWrapper;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.Proposition;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.User;
 
 
@@ -63,10 +61,10 @@ public class ListSystemPropositionChildrenServlet extends HttpServlet {
 		super.init(config);
 		String eurekaServicesUrl = config.getServletContext()
 				.getInitParameter("eureka-services-url");
-		
+
 		Client client;
 		try {
-		
+
 			client = CommUtils.getClient();
 			this.webResource = client.resource(eurekaServicesUrl);
 
@@ -79,70 +77,72 @@ public class ListSystemPropositionChildrenServlet extends HttpServlet {
 		}
 
 	}
-	
+
 	private JsonTreeData createData(String id, String data) {
 		JsonTreeData d = new JsonTreeData();
 		d.setData(data);
 		d.setKeyVal("id", id);
-		
+
 		return d;
 	}
-	
+
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
 		doGet(req, resp);
 	}
-	
+
 	private void getAllSystemData(JsonTreeData d, User user) {
-		
+
 		PropositionWrapper propWrapper = webResource.path("/api/proposition/system/" + user.getId() + "/"+ d.getId())
 				.accept(MediaType.APPLICATION_JSON)
 				.get(PropositionWrapper.class);
-		
+
 		for (String sysTarget : propWrapper.getSystemTargets()) {
 			JsonTreeData newData = createData(sysTarget, sysTarget);
 			newData.setType("system");
 			d.addNodes(newData);
-		}		
-		
+		}
+
 	}
 
 	private void getAllData(JsonTreeData d) {
-		
-		
+
+
 
 		PropositionWrapper propWrapper = webResource.path("/api/proposition/user/get/"+ d.getId())
 				.accept(MediaType.APPLICATION_JSON)
 				.get(PropositionWrapper.class);
-		
+
 		for (String sysTarget : propWrapper.getSystemTargets()) {
 			JsonTreeData newData = createData(sysTarget, sysTarget);
 			newData.setType("system");
 			d.addNodes(newData);
-		}		
-		
+		}
+
 		for (Long userTarget : propWrapper.getUserTargets()) {
-			PropositionWrapper propUserWrapper = 
+			PropositionWrapper propUserWrapper =
 					webResource.path("/api/proposition/user/get/"+ userTarget)
 					.accept(MediaType.APPLICATION_JSON)
 					.get(PropositionWrapper.class);
-			
-			JsonTreeData newData = createData(propUserWrapper.getAbbrevDisplayName(), propUserWrapper.getId());
+
+			JsonTreeData newData = createData(propUserWrapper
+				.getAbbrevDisplayName(), String.valueOf(propUserWrapper.getId
+				().longValue()));
 			getAllData(newData);
 			newData.setType("user");
 			d.addNodes(newData);
-			
+
 		}
-		
+
 	}
 
-	
+
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
 
-		
+
 		Client client = null;
 		try {
 			client = CommUtils.getClient();
@@ -157,30 +157,30 @@ public class ListSystemPropositionChildrenServlet extends HttpServlet {
 		String userName = principal.getName();
 		String eurekaServicesUrl = req.getSession().getServletContext()
 				.getInitParameter("eureka-services-url");
-				
+
 		LOGGER.debug("got username {}", userName);
 		WebResource webResource = client.resource(eurekaServicesUrl);
 		User user = webResource.path("/api/user/byname/" + userName)
 				.accept(MediaType.APPLICATION_JSON).get(User.class);
 
-		
+
 		List<JsonTreeData> l = new ArrayList<JsonTreeData>();
 		String propId = req.getParameter("propId");
-	
+
 		//"/system/{userId}/{propKey}"
-		PropositionWrapper propWrapper = 
+		PropositionWrapper propWrapper =
 				webResource.path("/api/proposition/system/"+ user.getId() + "/" + propId)
 				.accept(MediaType.APPLICATION_JSON)
 				.get(PropositionWrapper.class);
-		
+
 		for (String sysTarget : propWrapper.getSystemTargets()) {
 			JsonTreeData newData = createData(sysTarget, sysTarget);
 			newData.setType("system");
 			l.add(newData);
 		}
-		
-		
-		
+
+
+
 		ObjectMapper mapper = new ObjectMapper();
 		resp.setContentType("application/json");
 		PrintWriter out = resp.getWriter();

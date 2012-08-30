@@ -126,15 +126,16 @@ public class JobResource {
 		String[] allTargets = getTargets(inWrapper.getSystemTargets(),
 			inWrapper.getUserTargets());
 
+		String idStr = String.valueOf(inWrapper.getId().longValue());
 		if (inWrapper.getType() == PropositionWrapper.Type.AND) {
 			HighLevelAbstractionDefinition d =
-				new HighLevelAbstractionDefinition(inWrapper.getId());
+				new HighLevelAbstractionDefinition(idStr);
 			d.setAbbreviatedDisplayName(inWrapper.getAbbrevDisplayName());
 			d.setDisplayName(inWrapper.getDisplayName());
 			d.setInverseIsA(allTargets);
 			definition = d;
 		} else {
-			EventDefinition e = new EventDefinition(inWrapper.getId());
+			EventDefinition e = new EventDefinition(idStr);
 			e.setAbbreviatedDisplayName(inWrapper.getAbbrevDisplayName());
 			e.setDisplayName(inWrapper.getDisplayName());
 			e.setInverseIsA(allTargets);

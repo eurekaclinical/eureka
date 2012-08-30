@@ -21,10 +21,12 @@ import org.slf4j.LoggerFactory;
 
 import com.google.inject.Inject;
 import com.sun.jersey.api.client.Client;
+import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.CommUtils;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.PropositionWrapper;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.ValidationRequest;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.Proposition;
 import edu.emory.cci.aiw.cvrg.eureka.services.config.ServiceProperties;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.PropositionDao;
@@ -46,15 +48,14 @@ public class PropositionResource {
 	 * The class level logger.
 	 */
 	private static final Logger LOGGER =
-			LoggerFactory.getLogger(PropositionResource.class);
+		LoggerFactory.getLogger(PropositionResource.class);
 
 	/**
 	 * Creates a new instance of PropositionResource
 	 */
 	@Inject
 	public PropositionResource(PropositionDao inPropositionDao,
-			UserDao inUserDao,
-			ServiceProperties inApplicationProperties) {
+		UserDao inUserDao, ServiceProperties inApplicationProperties) {
 		this.propositionDao = inPropositionDao;
 		this.userDao = inUserDao;
 		this.applicationProperties = inApplicationProperties;
@@ -63,68 +64,93 @@ public class PropositionResource {
 	@GET
 	@Path("/system/{userId}/list")
 	@Produces(MediaType.APPLICATION_JSON)
-	public List<PropositionWrapper> getSystemPropositions(
-			@PathParam("userId") String inUserId) {
+	public List<PropositionWrapper> getSystemPropositions(@PathParam(
+		"userId") String inUserId) {
 		List<PropositionWrapper> wrappers = new
-				ArrayList<PropositionWrapper>();
-		wrappers.add(
-				wrap(this.fetchSystemProposition(inUserId,
-						"ICD9:Procedures")));
-		wrappers.add(
-				wrap(this.fetchSystemProposition(inUserId,
-						"ICD9:Diagnoses")));
-		wrappers.add(
-				wrap(this.fetchSystemProposition(inUserId, "ICD9:E-codes")));
-		wrappers.add(
-				wrap(this.fetchSystemProposition(inUserId, "ICD9:V-codes")));
+			ArrayList<PropositionWrapper>();
+		wrappers.add(this.fetchSystemProposition(inUserId,
+			"ICD9:Procedures"));
+		wrappers.add(this.fetchSystemProposition(inUserId, "ICD9:Diagnoses"));
+		wrappers.add(this.fetchSystemProposition(inUserId, "ICD9:E-codes"));
+		wrappers.add(this.fetchSystemProposition(inUserId, "ICD9:V-codes"));
 		return wrappers;
 	}
 
 	@GET
 	@Path("/system/{userId}/{propKey}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public PropositionWrapper getSystemProposition(
-			@PathParam("userId") String inUserId,
-			@PathParam("propKey") String inKey) {
-		return wrap(fetchSystemProposition(inUserId, inKey));
+	public PropositionWrapper getSystemProposition(@PathParam(
+		"userId") String inUserId, @PathParam("propKey") String inKey) {
+		return fetchSystemProposition(inUserId, inKey);
 	}
 
 	@GET
 	@Path("/user/list/{userId}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public List<PropositionWrapper> getUserPropositions(
-			@PathParam("userId") Long inUserId) {
+	public List<PropositionWrapper> getUserPropositions(@PathParam(
+		"userId") Long inUserId) {
 		List<PropositionWrapper> result = new ArrayList<PropositionWrapper>();
 		for (Proposition p : this.propositionDao.getByUserId(inUserId)) {
 			result.add(this.wrap(p));
 		}
 		return result;
 	}
-	
+
 	@POST
 	@Path("/user/validate/{userId}")
-	public Response validateProposition (@PathParam("userId") Long inUserId, 
-			PropositionWrapper inWrapper) {
-		Response response;
-		response = Response.ok().build();
-		return response;
+	public Response validateProposition(@PathParam(
+		"userId") Long inUserId, PropositionWrapper inWrapper) {
+		Response result;
+		List<Proposition> propositions =
+			this.propositionDao.getByUserId(inUserId);
+		List<PropositionWrapper> wrappers = new
+			ArrayList<PropositionWrapper>();
+
+		for (Proposition proposition : propositions) {
+			wrappers.add(this.wrap(proposition));
+		}
+
+		ValidationRequest validationRequest = new ValidationRequest();
+		validationRequest.setUserId(inUserId);
+		validationRequest.setPropositions(wrappers);
+		validationRequest.setTargetProposition(inWrapper);
+
+		try {
+			Client client = CommUtils.getClient();
+			WebResource resource =
+				client.resource(this.applicationProperties
+					.getEtlPropositionValidationUrl());
+			ClientResponse response =
+				resource.type(MediaType.APPLICATION_JSON).post
+					(ClientResponse.class, validationRequest);
+			result =
+				Response.status(response.getClientResponseStatus()
+					.getStatusCode()).build();
+		} catch (KeyManagementException e) {
+			LOGGER.error(e.getMessage(), e);
+			result = Response.serverError().build();
+		} catch (NoSuchAlgorithmException e) {
+			LOGGER.error(e.getMessage(), e);
+			result = Response.serverError().build();
+		}
+
+		return result;
 	}
 
 	@GET
 	@Path("/user/get/{propId}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public PropositionWrapper getUserProposition(
-			@PathParam("propId") Long inPropositionId) {
+	public PropositionWrapper getUserProposition(@PathParam(
+		"propId") Long inPropositionId) {
 		PropositionWrapper wrapper = null;
 		Proposition proposition = this.propositionDao.retrieve
-				(inPropositionId);
+			(inPropositionId);
 		if (proposition != null) {
 			if (proposition.isInSystem()) {
-				String id = String.valueOf(
-						proposition.getUser().getId().longValue());
-				Proposition systemProposition =
-						this.fetchSystemProposition(id, proposition.getKey());
-				wrapper = wrap(systemProposition);
+				String id =
+					String.valueOf(proposition.getUser().getId().longValue());
+				wrapper = this.fetchSystemProposition(id,
+					proposition.getKey());
 			} else {
 				wrapper = wrap(proposition);
 			}
@@ -141,9 +167,8 @@ public class PropositionResource {
 			proposition.setLastModified(new Date());
 			this.propositionDao.update(proposition);
 		} else {
-			throw new IllegalArgumentException(
-					"Both the user ID and the proposition ID must be "
-							+ "provided.");
+			throw new IllegalArgumentException("Both the user ID and the " +
+				"proposition ID must be " + "provided.");
 		}
 	}
 
@@ -162,30 +187,27 @@ public class PropositionResource {
 		}
 	}
 
-	private Proposition fetchSystemProposition(String inUserId,
-			String inKey) {
+	private PropositionWrapper fetchSystemProposition(String inUserId,
+		String inKey) {
 
 		PropositionWrapper wrapper = null;
-		Proposition proposition = null;
 
 		try {
 			String path = "/" + inUserId + "/" + inKey;
 			Client client = CommUtils.getClient();
-			WebResource resource = client.resource(
-					applicationProperties.getEtlPropositionGetUrl());
-			wrapper = resource.path(path).accept(MediaType.APPLICATION_JSON)
-					.get(PropositionWrapper.class);
+			WebResource resource =
+				client.resource(applicationProperties
+					.getEtlPropositionGetUrl());
+			wrapper =
+				resource.path(path).accept(MediaType.APPLICATION_JSON).get
+					(PropositionWrapper.class);
 		} catch (KeyManagementException e) {
 			e.printStackTrace();
 		} catch (NoSuchAlgorithmException e) {
 			e.printStackTrace();
 		}
 
-		if (wrapper != null) {
-			proposition = unwrap(wrapper);
-		}
-
-		return proposition;
+		return wrapper;
 	}
 
 	private Proposition unwrap(PropositionWrapper inWrapper) {
@@ -234,9 +256,9 @@ public class PropositionResource {
 	}
 
 	private PropositionWrapper.Type getType(Proposition inProposition) {
-		if ((inProposition.getTemporalPattern() != null) || (
-				(inProposition.getAbstractedFrom() != null) && (!inProposition
-						.getAbstractedFrom().isEmpty()))) {
+		if ((inProposition.getTemporalPattern() != null) || ((inProposition
+			.getAbstractedFrom() != null) && (!inProposition
+			.getAbstractedFrom().isEmpty()))) {
 			return PropositionWrapper.Type.AND;
 		} else {
 			return PropositionWrapper.Type.OR;
@@ -245,7 +267,7 @@ public class PropositionResource {
 	}
 
 	private List<Proposition> getTargets(Proposition inProposition,
-			PropositionWrapper.Type inType) {
+		PropositionWrapper.Type inType) {
 		List<Proposition> propositions;
 		List<Proposition> targets;
 
@@ -280,7 +302,7 @@ public class PropositionResource {
 		}
 
 		if (inProposition.getId() != null) {
-			wrapper.setId(String.valueOf(inProposition.getId()));
+			wrapper.setId(inProposition.getId());
 		}
 
 		if (inProposition.getUser() != null) {

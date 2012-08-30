@@ -3,6 +3,7 @@ package edu.emory.cci.aiw.cvrg.eureka.etl.validator;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Stack;
 
 import org.protempa.ConstantDefinition;
 import org.protempa.EventDefinition;
@@ -26,8 +27,8 @@ public class PropositionValidatorImpl implements PropositionValidator {
 		CONSTANT, PAIR, LOW_LEVEL_ABSTRACTION, INVALID
 	}
 
-	private static class ValidatorVisitor
-		implements PropositionDefinitionVisitor {
+	private static class ValidatorVisitor implements
+		PropositionDefinitionVisitor {
 
 		private PropositionType type;
 
@@ -42,8 +43,8 @@ public class PropositionValidatorImpl implements PropositionValidator {
 		@Override
 		public void visit(Collection<? extends PropositionDefinition>
 			propositionDefinitions) {
-			throw new UnsupportedOperationException(
-				"Visiting a collection is not supported.");
+			throw new UnsupportedOperationException("Visiting a collection " +
+				"is not supported.");
 		}
 
 		@Override
@@ -112,35 +113,68 @@ public class PropositionValidatorImpl implements PropositionValidator {
 		throws PropositionValidatorException {
 
 		boolean result;
-		List<String> systemTargets = inWrapper.getSystemTargets();
-		List<Long> userTargets = inWrapper.getUserTargets();
-		List<PropositionType> types = new ArrayList<PropositionType>();
+		boolean cycle = this.detectCycle(inWrapper, new Stack<Long>());
 
-		if (userTargets != null) {
-			for (Long userTarget : userTargets) {
-				types.add(this.getUserPropositionType(userTarget));
-			}
-		}
-
-		if (systemTargets != null) {
-			try {
-				for (String systemTarget : systemTargets) {
-					types.add(this.getSystemPropositionType(
-						PropositionFinder.find(systemTarget, this.userId)));
-				}
-			} catch (PropositionFinderException e) {
-				throw new PropositionValidatorException(e);
-			}
-		}
-
-		if (types.contains(PropositionType.INVALID)) {
-			this.addMessage("Proposition " + inWrapper.getAbbrevDisplayName()
-				+ "has invalid definition.");
+		if (cycle) {
+			this.addMessage("Cycle detected in definition of " + inWrapper
+				.getAbbrevDisplayName());
 			result = false;
 		} else {
-			result = this.isSame(types);
+			List<String> systemTargets = inWrapper.getSystemTargets();
+			List<Long> userTargets = inWrapper.getUserTargets();
+			List<PropositionType> types = new ArrayList<PropositionType>();
+
+			if (userTargets != null) {
+				for (Long userTarget : userTargets) {
+					types.add(this.getUserPropositionType(userTarget));
+				}
+			}
+
+			if (systemTargets != null) {
+				try {
+					for (String systemTarget : systemTargets) {
+						types.add(this.getSystemPropositionType
+							(PropositionFinder.find(systemTarget,
+								this.userId)));
+					}
+				} catch (PropositionFinderException e) {
+					throw new PropositionValidatorException(e);
+				}
+			}
+
+			if (types.contains(PropositionType.INVALID)) {
+				this.addMessage("Proposition " + inWrapper
+					.getAbbrevDisplayName() + "has invalid definition.");
+				result = false;
+			} else {
+				result = this.isSame(types);
+			}
 		}
 		return result;
+	}
+
+	private boolean detectCycle(PropositionWrapper inWrapper,
+		Stack<Long> inSeen) {
+		boolean cycle = false;
+
+		if (inSeen.contains(inWrapper.getId())) {
+			cycle = true;
+		} else {
+			if (inWrapper.getUserTargets() != null) {
+				inSeen.push(inWrapper.getId());
+				for (Long id : inWrapper.getUserTargets()) {
+					PropositionWrapper target = this.findById(id);
+					cycle = detectCycle(target, inSeen);
+					if (cycle) {
+						break;
+					}
+				}
+				inSeen.pop();
+			} else {
+				cycle = false;
+			}
+		}
+		return cycle;
 	}
 
 	private PropositionType getSystemPropositionType(PropositionDefinition
@@ -166,8 +200,8 @@ public class PropositionValidatorImpl implements PropositionValidator {
 
 		try {
 			for (String systemTarget : wrapper.getSystemTargets()) {
-				childTypes.add(this.getSystemPropositionType(
-					PropositionFinder.find(systemTarget, this.userId)));
+				childTypes.add(this.getSystemPropositionType
+					(PropositionFinder.find(systemTarget, this.userId)));
 			}
 		} catch (PropositionFinderException e) {
 			throw new PropositionValidatorException(e);
@@ -188,10 +222,6 @@ public class PropositionValidatorImpl implements PropositionValidator {
 	}
 
 	private PropositionWrapper findById(Long inId) {
-		return findById(String.valueOf(inId.longValue()));
-	}
-
-	private PropositionWrapper findById(String inId) {
 		PropositionWrapper result = null;
 		for (PropositionWrapper wrapper : this.propositions) {
 			if (wrapper.getId().equals(inId)) {
