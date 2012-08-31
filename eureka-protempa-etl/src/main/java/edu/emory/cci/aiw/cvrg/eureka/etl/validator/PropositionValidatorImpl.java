@@ -44,7 +44,7 @@ public class PropositionValidatorImpl implements PropositionValidator {
 		public void visit(Collection<? extends PropositionDefinition>
 			propositionDefinitions) {
 			throw new UnsupportedOperationException("Visiting a collection " +
-				"is not supported.");
+				"" + "is not supported.");
 		}
 
 		@Override
@@ -96,15 +96,21 @@ public class PropositionValidatorImpl implements PropositionValidator {
 	@Override
 	public boolean validate() throws PropositionValidatorException {
 		boolean result = true;
-		if (this.targetProposition == null) {
-			for (PropositionWrapper wrapper : this.propositions) {
-				if (!this.validateSingle(wrapper)) {
-					result = false;
-					break;
-				}
-			}
+
+		if (detectNullId()) {
+			this.addMessage("Found proposition with NULL id");
+			result = false;
 		} else {
-			result = this.validateSingle(this.targetProposition);
+			if (this.targetProposition == null) {
+				for (PropositionWrapper wrapper : this.propositions) {
+					if (!this.validateSingle(wrapper)) {
+						result = false;
+						break;
+					}
+				}
+			} else {
+				result = this.validateSingle(this.targetProposition);
+			}
 		}
 		return result;
 	}
@@ -113,11 +119,11 @@ public class PropositionValidatorImpl implements PropositionValidator {
 		throws PropositionValidatorException {
 
 		boolean result;
-		boolean cycle = this.detectCycle(inWrapper, new Stack<Long>());
+		Stack<Long> cycleStack = new Stack<Long>();
+		boolean cycle = this.detectCycle(inWrapper, cycleStack);
 
 		if (cycle) {
-			this.addMessage("Cycle detected in definition of " + inWrapper
-				.getAbbrevDisplayName());
+			this.addMessage(this.createCycleMessage(inWrapper, cycleStack));
 			result = false;
 		} else {
 			List<String> systemTargets = inWrapper.getSystemTargets();
@@ -153,12 +159,38 @@ public class PropositionValidatorImpl implements PropositionValidator {
 		return result;
 	}
 
+	private String createCycleMessage(PropositionWrapper inWrapper,
+		Stack<Long> cycleStack) {
+		StringBuilder builder = new StringBuilder();
+		while (!cycleStack.isEmpty()) {
+			Long id = cycleStack.pop();
+			PropositionWrapper wrapper = id == null ? null : this.findById
+				(id);
+			if (wrapper != null) {
+				builder.append(" ").append(wrapper.getAbbrevDisplayName())
+					.append(" ");
+			}
+		}
+		return "Cycle detected in definition of " + inWrapper
+			.getAbbrevDisplayName() + " [" + builder.toString() + "]";
+	}
+
 	private boolean detectCycle(PropositionWrapper inWrapper,
-		Stack<Long> inSeen) {
+		Stack<Long> inSeen) throws PropositionValidatorException {
+
 		boolean cycle = false;
+
+		if (inWrapper.getId() == null && inWrapper != this
+			.targetProposition) {
+			throw new PropositionValidatorException("Proposition " + inWrapper
+				.getAbbrevDisplayName() + " is not the target proposition " +
+				"and does not have an ID.");
+		}
 
 		if (inSeen.contains(inWrapper.getId())) {
 			cycle = true;
+			// do this for the error stack
+			inSeen.push(inWrapper.getId());
 		} else {
 			if (inWrapper.getUserTargets() != null) {
 				inSeen.push(inWrapper.getId());
@@ -169,12 +201,24 @@ public class PropositionValidatorImpl implements PropositionValidator {
 						break;
 					}
 				}
-				inSeen.pop();
+				if (!cycle) {
+					inSeen.pop();
+				}
 			} else {
 				cycle = false;
 			}
 		}
 		return cycle;
+	}
+
+	private boolean detectNullId() {
+		boolean result = false;
+		for (PropositionWrapper wrapper : this.propositions) {
+			if (wrapper.getId() == null) {
+				result = true;
+			}
+		}
+		return result;
 	}
 
 	private PropositionType getSystemPropositionType(PropositionDefinition
@@ -224,7 +268,7 @@ public class PropositionValidatorImpl implements PropositionValidator {
 	private PropositionWrapper findById(Long inId) {
 		PropositionWrapper result = null;
 		for (PropositionWrapper wrapper : this.propositions) {
-			if (wrapper.getId().equals(inId)) {
+			if (inId.equals(wrapper.getId())) {
 				result = wrapper;
 				break;
 			}

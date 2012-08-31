@@ -59,20 +59,29 @@ public class PropositionValidatorTest {
 	public void testCycleDetection() {
 		PropositionWrapper wrapper1 = new PropositionWrapper();
 		PropositionWrapper wrapper2 = new PropositionWrapper();
+		PropositionWrapper wrapper3 = new PropositionWrapper();
+
+		wrapper1.setId(Long.valueOf(1L));
+		wrapper1.setAbbrevDisplayName("test-prop-1");
+
+		wrapper2.setId(Long.valueOf(2L));
+		wrapper2.setAbbrevDisplayName("test-prop-2");
+
+		wrapper3.setId(null);
+		wrapper3.setAbbrevDisplayName("test-prop-3");
 
 		List<Long> targets1 = new ArrayList<Long>();
-		targets1.add(2L);
-
-		List<Long> targets2 = new ArrayList<Long>();
-		targets2.add(1L);
-
-		wrapper1.setId(1L);
-		wrapper1.setAbbrevDisplayName("test-prop-1");
+		targets1.add(Long.valueOf(2L));
 		wrapper1.setUserTargets(targets1);
 
-		wrapper2.setId(2L);
-		wrapper2.setAbbrevDisplayName("test-prop-2");
+		List<Long> targets2 = new ArrayList<Long>();
+		targets2.add(Long.valueOf(1L));
 		wrapper2.setUserTargets(targets2);
+
+		List<Long> targets3 = new ArrayList<Long>();
+		targets3.add(Long.valueOf(1L));
+//		targets3.add(Long.valueOf(2L));
+		wrapper3.setUserTargets(targets3);
 
 		List<PropositionWrapper> propositions = new ArrayList
 			<PropositionWrapper>();
@@ -82,6 +91,7 @@ public class PropositionValidatorTest {
 		PropositionValidator validator = new PropositionValidatorImpl();
 		validator.setUserId(USER_ID);
 		validator.setPropositions(propositions);
+		validator.setTargetProposition(wrapper3);
 		boolean result;
 		try {
 			result = validator.validate();
