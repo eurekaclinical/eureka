@@ -151,6 +151,8 @@ public class PropositionResource {
 					String.valueOf(proposition.getUser().getId().longValue());
 				wrapper = this.fetchSystemProposition(id,
 					proposition.getKey());
+				wrapper.setCreated(proposition.getCreated());
+				wrapper.setLastModified(proposition.getLastModified());
 			} else {
 				wrapper = wrap(proposition);
 			}
