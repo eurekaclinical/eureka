@@ -297,3 +297,7 @@ td .error {
 	padding-left:150px; 
 	font-weight:bold; 
 }
+
+.action_link {
+    margin: 10px;
+}

@@ -29,6 +29,7 @@ ul.nav a { zoom: 1; }
 <link href="${pageContext.request.contextPath}/css/styles.css" rel="stylesheet" type="text/css" />
 <script src="${pageContext.request.contextPath}/js/jquery-1.7.1.min.js"></script>
 <script src="${pageContext.request.contextPath}/js/jquery.validate.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery.jstree.js"></script>
 <script src="${pageContext.request.contextPath}/js/eureka.js"></script>
 
 
@@ -91,7 +92,7 @@ ul.nav a { zoom: 1; }
 	  	<c:when test="${pageContext.request.remoteUser != null}">
 <div style="float:right;" class="fltrt">
 	  	  <li>Welcome ${pageContext.request.remoteUser} | <a href="${pageContext.request.contextPath}/logout">Logout</a></li>
-      	  <li><a href="${pageContext.request.contextPath}/editorhome">Editor</a></li>
+      	  <li><a href="${pageContext.request.contextPath}/protected/editorhome">Editor</a></li>
       	  <img src="${pageContext.request.contextPath}/images/i2b2_icon.gif" alt="i2b2" width="30" height="30" align="absmiddle" />
 	      <li><a href="https://eureka.cci.emory.edu/i2b2/" target="_blank">i2b2</a></li>
 	      <img src="${pageContext.request.contextPath}/images/rsch_icon.gif" alt="Upload Data" width="30" height="30" align="absmiddle" />

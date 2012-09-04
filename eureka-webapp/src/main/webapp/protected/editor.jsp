@@ -76,13 +76,8 @@
                     <p><br/></p>
                     <center>
                     <p>
-                    <select id="type">
-                        <option value="">--SELECT--</option>
-                        <option value="OR">Category</option>
-                        <option value="AND">Temporal</option>
-                       
-
-                    </select>
+                        <input type="radio" name="type" value="OR"/>Categorical 
+                        <input type="radio" name="type" value="AND"/>Temporal
                     </p>
                     <p id="type_description"></p>
                     </center>

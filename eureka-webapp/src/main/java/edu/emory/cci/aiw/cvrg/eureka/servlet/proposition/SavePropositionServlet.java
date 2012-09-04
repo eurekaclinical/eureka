@@ -67,6 +67,14 @@ public class SavePropositionServlet extends HttpServlet {
 		try {
 
 			
+			Client client = CommUtils.getClient();
+			Principal principal = req.getUserPrincipal();
+			String userName = principal.getName();
+			
+			WebResource webResource = client.resource(eurekaServicesUrl);
+			User user = webResource.path("/api/user/byname/" + userName)
+					.accept(MediaType.APPLICATION_JSON).get(User.class);
+			
 			
 			PropositionWrapper pw = new PropositionWrapper();
 	
@@ -78,8 +86,8 @@ public class SavePropositionServlet extends HttpServlet {
 				
 			}
 	
-			List<String> systemTargets = new ArrayList<String>();
-			List<Long> userTargets = new ArrayList<Long>();
+			List<String> systemTargets  = new ArrayList<String>();
+			List<Long> userTargets      = new ArrayList<Long>();
 			pw.setInSystem(false);
 			
 			for (UserProposition userProposition : props) {
@@ -87,30 +95,32 @@ public class SavePropositionServlet extends HttpServlet {
 				LOGGER.debug(userProposition.getId());
 				
 				if (userProposition.getType().equals("system")) {
-					//pw.setInSystem(true);
 					systemTargets.add(userProposition.getId());			
 				} else {
 					userTargets.add(Long.valueOf(userProposition.getId()));
 				}
 				
 			}
+		
 			pw.setSystemTargets(systemTargets);
 			pw.setUserTargets(userTargets);
 			pw.setAbbrevDisplayName(name);
 			pw.setDisplayName(description);
-		
-			Client client = CommUtils.getClient();
-			Principal principal = req.getUserPrincipal();
-			String userName = principal.getName();
-					
-			
-			//LOGGER.debug("got username {}", userName);
-			WebResource webResource = client.resource(eurekaServicesUrl);
-			User user = webResource.path("/api/user/byname/" + userName)
-					.accept(MediaType.APPLICATION_JSON).get(User.class);
-			
 			pw.setUserId(user.getId());
+
+            ClientResponse response = 
+                        webResource.path("/api/proposition/user/validate/" + user.getId())
+                            .type(MediaType.APPLICATION_JSON)
+                                .post(ClientResponse.class, pw);
 			
+            int status = response.getClientResponseStatus().getStatusCode();
+            if (status != HttpServletResponse.SC_OK) {
+
+                String msg = response.getEntity(String.class);
+                req.setAttribute("error", msg);
+                LOGGER.debug("Error: {}", msg);
+            }
+
 			
 			webResource.path("/api/proposition/user/create")
 				.type(MediaType.APPLICATION_JSON)
@@ -118,15 +128,6 @@ public class SavePropositionServlet extends HttpServlet {
 						.post(ClientResponse.class, pw);
 
 			
-			List<Proposition> propositions = webResource.path("/api/proposition/user/list/" + user.getId() )
-					.accept(MediaType.APPLICATION_JSON)
-					.get(new GenericType<List<Proposition>>() {
-						// Nothing to implement, used to hold returned data.
-					});
-			System.out.println(propositions.size());
-			for (Proposition proposition : propositions) {
-				System.out.println("got user prop: " + proposition.getId());
-			}
 			
 		} catch (KeyManagementException e) {
 			// TODO Auto-generated catch block

@@ -2,7 +2,7 @@
 <%@ taglib uri="/WEB-INF/tlds/template.tld" prefix="template"%>
 
 
-<template:insert template="/templates/eureka_editor.jsp">
+<template:insert template="/templates/eureka_main.jsp">
 
 	<template:content name="sidebar">
 		<img
@@ -11,18 +11,16 @@
 
 	<template:content name="content">
 
-        <table>
-            <tr>
-				<td colspan="5" class="bottom"><a href="${pageContext.request.contextPath}/editor.jsp">Create New Element</a></td>
-            </tr>   
-        </table>
-         <table align="center" id="elements">
-                         <tr>
+		 <div class="action_link">   
+            <a href="${pageContext.request.contextPath}/protected/editor.jsp">Create New Element</a>
+         </div>
+         <table align="center" id="elements1" style="width: 100%">
+                         <tr class="bold">
                                  <th>Name</th><th>Description</th><th>Type</th><th>Created Date</th><th>Last Modified</th>
                          </tr>
                          <c:forEach items="${props}" var="prop">
                                  <tr>
-                                         <td>${prop.attr['abbrevDisplay']}</td>
+                                         <td><a href="#" onmouseover="showPopup(event)" id="${prop.attr['id']}">${prop.attr['abbrevDisplay']}</a></td>
                                          <td>${prop.attr['displayName']}</td>
                                          <td>${prop.attr['type']}</td>
                                          <td>${prop.attr['created']}</td>

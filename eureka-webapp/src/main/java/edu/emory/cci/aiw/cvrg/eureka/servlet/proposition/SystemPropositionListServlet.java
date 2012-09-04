@@ -95,9 +95,6 @@ public class SystemPropositionListServlet extends HttpServlet {
 				l.add(d);
 			}
 			LOGGER.debug("executed resource get");
-			for (PropositionWrapper p : props) {
-				LOGGER.debug("id = {}, name = {}", p.getId(), p.getDisplayName());
-			}
 		} catch (NoSuchAlgorithmException nsae) {
 			throw new ServletException(nsae);
 		} catch (KeyManagementException kme) {

@@ -42,6 +42,27 @@ public class UserPropositionListServlet extends HttpServlet {
 		
 		return d;
 	}
+
+    private String getDisplayName(PropositionWrapper p) {
+        String displayName = "";
+
+        if (p.getAbbrevDisplayName() != null && !p.getAbbrevDisplayName().equals("")) {
+
+            displayName = p.getAbbrevDisplayName() + "(" + p.getKey() + ")";
+
+        } else if (p.getDisplayName() != null && !p.getDisplayName().equals("")) {
+
+            displayName = p.getDisplayName() + "(" + p.getKey() + ")";
+
+        } else {
+
+            displayName = p.getKey();
+
+        }
+
+        return displayName;
+    }
+
 	
 
 	@Override
@@ -67,21 +88,17 @@ public class UserPropositionListServlet extends HttpServlet {
 			User user = webResource.path("/api/user/byname/" + userName)
 					.accept(MediaType.APPLICATION_JSON).get(User.class);
 			
-			List<Proposition> props = webResource.path("/api/proposition/user/list/"+ user.getId())
+			List<PropositionWrapper> props = webResource.path("/api/proposition/user/list/"+ user.getId())
 					.accept(MediaType.APPLICATION_JSON)
-					.get(new GenericType<List<Proposition>>() {
+					.get(new GenericType<List<PropositionWrapper>>() {
 						// Nothing to implement, used to hold returned data.
 					});
-			for (Proposition proposition : props) {
-				JsonTreeData d = createData(proposition.getAbbrevDisplayName(), String.valueOf(proposition.getId()));
+			for (PropositionWrapper proposition : props) {
+				JsonTreeData d = createData(proposition.getAbbrevDisplayName(), this.getDisplayName(proposition));
 				l.add(d);
-				System.out.println("Added user prop: " + d.getData());
+				LOGGER.debug("Added user prop: " + d.getData());
 			}
 			LOGGER.debug("executed resource get");
-			for (Proposition p : props) {
-				LOGGER.debug("id = {}, name = {}", p.getId(), p.getDisplayName());
-				System.out.printf("id = %d, name = %s", p.getId(), p.getDisplayName());
-			}
 		} catch (NoSuchAlgorithmException nsae) {
 			throw new ServletException(nsae);
 		} catch (KeyManagementException kme) {

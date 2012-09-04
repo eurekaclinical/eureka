@@ -129,7 +129,7 @@
 	</servlet-mapping>
 	<servlet-mapping>
 		<servlet-name>SavePropositionServlet</servlet-name>
-		<url-pattern>/saveprop</url-pattern>
+		<url-pattern>/protected/saveprop</url-pattern>
 	</servlet-mapping>
 	<servlet-mapping>
 		<servlet-name>UserPropositionListServlet</servlet-name>
@@ -145,7 +145,7 @@
 	</servlet-mapping>
  	<servlet-mapping>
 		<servlet-name>EditorHomeServlet</servlet-name>
-		<url-pattern>/editorhome</url-pattern>
+		<url-pattern>/protected/editorhome</url-pattern>
 	</servlet-mapping>
 
 	    

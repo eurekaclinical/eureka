@@ -94,23 +94,20 @@ public class EditorHomeServlet extends HttpServlet {
 					});
 			SimpleDateFormat df = new SimpleDateFormat("MM/dd/yyyy");
 			for (PropositionWrapper proposition : props) {
-				JsonTreeData d =
-                    createData(String.valueOf(proposition.getId().longValue()
-                    ),
-	                    this.getDisplayName(proposition));
+				JsonTreeData d = 
+                    createData(String.valueOf(proposition.getId()), this.getDisplayName(proposition));
 
 				d.setKeyVal("abbrevDisplay", proposition.getAbbrevDisplayName());
 				d.setKeyVal("displayName", 	proposition.getDisplayName());
+
                 if (proposition.getType() == Type.AND) {
-
 				    d.setKeyVal("type", 	    "Temporal");
-
                 } else if (proposition.getType() == Type.OR) {
-
 				    d.setKeyVal("type", 	    "Categorical");
-
                 }
+
                 if (proposition.getCreated() != null) {
+                    LOGGER.debug("created date: " + df.format(proposition.getCreated()));
 				    d.setKeyVal("created", 		df.format(proposition.getCreated()));
                 }
                 if (proposition.getLastModified() != null) {
@@ -130,6 +127,6 @@ public class EditorHomeServlet extends HttpServlet {
 
 
 		req.setAttribute("props", l);
-		req.getRequestDispatcher("/editor_home.jsp").forward(req, resp);
+		req.getRequestDispatcher("/protected/editor_home.jsp").forward(req, resp);
 	}
 }

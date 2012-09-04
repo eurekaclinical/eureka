@@ -49,29 +49,28 @@ $(document).ready(function(){
         //$('#content').height('900px');
     });
 
-    var type = $('#type').val();
+    //var type = $('#type').val();
+    var type = $("input:radio[name='type']:checked").val();
     if (type != undefined && type.length > 0) {
         gettypedescription();
 
     }
-    $('#type').change(function() {
+    $("input:radio[name='type']").click(function() {
         gettypedescription();
      });
     
     function gettypedescription() {
-        var type = $('#type').val();
+        var type = $("input:radio[name='type']:checked").val();
 
-        if (type == 'Category') {
+        if (type == 'OR') {
 			  $("#type_description").html("Concept is composed of 1 or more elements");
             
-        } else if (type == 'Temporal'){
+        } else if (type == 'AND'){
 			  $("#type_description").html("Concept is composed of all elements");
 
 
-        } else if (type == 'Workflow') { 
-			  $("#type_description").html("New Workflow based on System and User-defined types.");
-
-        } else {
+        } 
+        else {
 
 			  $("#type_description").html("");
 
@@ -81,7 +80,7 @@ $(document).ready(function(){
     function onFinishCallback(){
      //if(validateAllSteps()){
     	var propositions = [];
-    	var type = $('#type').val();
+    	var type = $("input:radio[name='type']:checked").val();
     	var element_name = $('#element_name').val();
     	var element_desc = $('#element_description').val();
        $('#sortable li').each( function () {
@@ -98,7 +97,7 @@ $(document).ready(function(){
         });
        $.ajax({
            type: "POST",
-           url: "/saveprop?name="+element_name+
+           url: "/protected/saveprop?name="+element_name+
            			"&description="+element_desc +
            			"&type="+type+
            			"&proposition="+JSON.stringify(propositions),
@@ -111,7 +110,7 @@ $(document).ready(function(){
                }                                     
             },
            success: function(data) {
-                  window.location.href="/editorhome";       
+                  window.location.href="/protected/editorhome";       
            }
        });
 
@@ -338,7 +337,7 @@ function initTrees() {
 				    
 				    $('<li/>', {
 					    id: data.o[0].id,
-					    text: data.o[0].parentNode.parentNode.id + "-" + data.o[0].children[1].childNodes[1].textContent
+					    text: data.o[0].children[1].childNodes[1].textContent
 				    }).appendTo('#sortable');
 		
 				}

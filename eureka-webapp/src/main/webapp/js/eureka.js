@@ -357,3 +357,28 @@ $(document).ready(function() {
 
 });
 	
+
+function showPopup(event) {
+
+    console.log(event.pageX);
+    $('<div class="tooltip"><div id="tree"></div></div>').appendTo('body');
+
+    positionTooltip(event);
+
+    $("#tree").jstree({
+        "json_data" : {
+            "ajax" : { "url" : "/userpropchildren?propId=" + event.target.id}
+        },
+    "plugins" : [ "themes", "json_data", "ui" ]
+    });
+
+
+
+}
+
+function positionTooltip(event){
+    var tPosX = event.pageX + 20;
+    var tPosY = event.pageY - 20;
+    $('div.tooltip').css({'position': 'absolute', 'top': tPosY, 'left': tPosX});
+};
+
