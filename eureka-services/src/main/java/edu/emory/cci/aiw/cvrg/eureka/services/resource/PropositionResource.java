@@ -318,6 +318,8 @@ public class PropositionResource {
 		wrapper.setKey(inProposition.getKey());
 		wrapper.setSystemTargets(systemTargets);
 		wrapper.setUserTargets(userTargets);
+		wrapper.setCreated(inProposition.getCreated());
+		wrapper.setLastModified(inProposition.getLastModified());
 
 		return wrapper;
 	}
