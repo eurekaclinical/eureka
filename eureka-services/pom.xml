@@ -13,7 +13,7 @@
 		<artifactId>eureka</artifactId>
 		<version>1.0.0-SNAPSHOT</version>
 	</parent>
-        
+
         <properties>
                 <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         </properties>
@@ -132,6 +132,11 @@
 		<dependency>
 			<groupId>com.google.inject.extensions</groupId>
 			<artifactId>guice-jndi</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>net.sf.ehcache</groupId>
+			<artifactId>ehcache</artifactId>
+			<type>pom</type>
 		</dependency>
 	</dependencies>
 
