@@ -38,6 +38,7 @@ public class PropositionValidatorTest {
 		List<PropositionWrapper> wrappers = new
 			ArrayList<PropositionWrapper>();
 		PropositionWrapper wrapper = new PropositionWrapper();
+		wrapper.setId(1L);
 		wrapper.setAbbrevDisplayName("Test");
 		wrapper.setDisplayName("Wrapper for unit tests.");
 		wrappers.add(wrapper);
