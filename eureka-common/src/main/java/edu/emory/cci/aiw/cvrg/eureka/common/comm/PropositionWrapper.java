@@ -1,12 +1,13 @@
 package edu.emory.cci.aiw.cvrg.eureka.common.comm;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
 /**
  * @author hrathod
  */
-public class PropositionWrapper {
+public class PropositionWrapper implements Serializable {
 
 	public enum Type {AND, OR}
 
