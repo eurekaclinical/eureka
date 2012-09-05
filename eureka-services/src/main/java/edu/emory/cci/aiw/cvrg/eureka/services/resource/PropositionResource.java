@@ -31,6 +31,7 @@ import edu.emory.cci.aiw.cvrg.eureka.common.entity.Proposition;
 import edu.emory.cci.aiw.cvrg.eureka.services.config.ServiceProperties;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.PropositionDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.UserDao;
+import edu.emory.cci.aiw.cvrg.eureka.services.finder.SystemPropositionFinder;
 
 /**
  * REST Web Service
@@ -43,6 +44,7 @@ public class PropositionResource {
 	private final PropositionDao propositionDao;
 	private final UserDao userDao;
 	private final ServiceProperties applicationProperties;
+	private final SystemPropositionFinder systemPropositionFinder;
 
 	/**
 	 * The class level logger.
@@ -55,17 +57,19 @@ public class PropositionResource {
 	 */
 	@Inject
 	public PropositionResource(PropositionDao inPropositionDao,
-		UserDao inUserDao, ServiceProperties inApplicationProperties) {
+		UserDao inUserDao, ServiceProperties inApplicationProperties,
+		SystemPropositionFinder inFinder) {
 		this.propositionDao = inPropositionDao;
 		this.userDao = inUserDao;
 		this.applicationProperties = inApplicationProperties;
+		this.systemPropositionFinder = inFinder;
 	}
 
 	@GET
 	@Path("/system/{userId}/list")
 	@Produces(MediaType.APPLICATION_JSON)
 	public List<PropositionWrapper> getSystemPropositions(@PathParam(
-		"userId") String inUserId) {
+		"userId") Long inUserId) {
 		List<PropositionWrapper> wrappers = new
 			ArrayList<PropositionWrapper>();
 		wrappers.add(this.fetchSystemProposition(inUserId,
@@ -80,7 +84,7 @@ public class PropositionResource {
 	@Path("/system/{userId}/{propKey}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public PropositionWrapper getSystemProposition(@PathParam(
-		"userId") String inUserId, @PathParam("propKey") String inKey) {
+		"userId") Long inUserId, @PathParam("propKey") String inKey) {
 		return fetchSystemProposition(inUserId, inKey);
 	}
 
@@ -147,10 +151,9 @@ public class PropositionResource {
 			(inPropositionId);
 		if (proposition != null) {
 			if (proposition.isInSystem()) {
-				String id =
-					String.valueOf(proposition.getUser().getId().longValue());
-				wrapper = this.fetchSystemProposition(id,
-					proposition.getKey());
+				wrapper =
+					this.fetchSystemProposition(proposition.getUser().getId
+						(), proposition.getKey());
 				wrapper.setCreated(proposition.getCreated());
 				wrapper.setLastModified(proposition.getLastModified());
 			} else {
@@ -189,36 +192,41 @@ public class PropositionResource {
 		}
 	}
 
-	private PropositionWrapper fetchSystemProposition(String inUserId,
+	private PropositionWrapper fetchSystemProposition(Long inUserId,
 		String inKey) {
-
-		PropositionWrapper wrapper = null;
-
-		try {
-			String path = "/" + inUserId + "/" + inKey;
-			Client client = CommUtils.getClient();
-			WebResource resource =
-				client.resource(applicationProperties
-					.getEtlPropositionGetUrl());
-			wrapper =
-				resource.path(path).accept(MediaType.APPLICATION_JSON).get
-					(PropositionWrapper.class);
-		} catch (KeyManagementException e) {
-			e.printStackTrace();
-		} catch (NoSuchAlgorithmException e) {
-			e.printStackTrace();
-		}
-
-		return wrapper;
+		return this.systemPropositionFinder.find(inUserId, inKey);
 	}
+
+	//	private PropositionWrapper fetchSystemProposition(String inUserId,
+	//		String inKey) {
+	//
+	//		PropositionWrapper wrapper = null;
+	//
+	//		try {
+	//			String path = "/" + inUserId + "/" + inKey;
+	//			Client client = CommUtils.getClient();
+	//			WebResource resource =
+	//				client.resource(applicationProperties
+	//					.getEtlPropositionGetUrl());
+	//			wrapper =
+	//				resource.path(path).accept(MediaType.APPLICATION_JSON).get
+	//					(PropositionWrapper.class);
+	//		} catch (KeyManagementException e) {
+	//			e.printStackTrace();
+	//		} catch (NoSuchAlgorithmException e) {
+	//			e.printStackTrace();
+	//		}
+	//
+	//		return wrapper;
+	//	}
 
 	private Proposition unwrap(PropositionWrapper inWrapper) {
 		Proposition proposition;
 		List<Proposition> targets = new ArrayList<Proposition>();
 
 		if (inWrapper.getId() != null) {
-			Long id = Long.valueOf(inWrapper.getId());
-			proposition = this.propositionDao.retrieve(id);
+			proposition =
+				this.propositionDao.retrieve(inWrapper.getId());
 		} else {
 			proposition = new Proposition();
 		}
