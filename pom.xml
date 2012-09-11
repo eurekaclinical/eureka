@@ -499,14 +499,6 @@
 			<url>http://download.java.net/maven/2</url>
 			<layout>default</layout>
 		</repository>
-		<repository>
-			<id>jasig-repository</id>
-			<name>JA-SIG Maven2 Repository</name>
-			<url>http://developer.ja-sig.org/maven2</url>
-		</repository>
-		<!-- <repository> <id>jboss</id> <name>JBoss Repository</name> <layout>default</layout>
-			<url>http://repository.jboss.org/nexus/content/groups/public-jboss/</url>
-			</repository> -->
 	</repositories>
 
 	<!-- define any additional repositories needed to fetch the plugins we are
