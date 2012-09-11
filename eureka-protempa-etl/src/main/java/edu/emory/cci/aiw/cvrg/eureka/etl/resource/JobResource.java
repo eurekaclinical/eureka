@@ -27,23 +27,23 @@ import edu.emory.cci.aiw.cvrg.eureka.common.comm.JobRequest;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.PropositionWrapper;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.Job;
 import edu.emory.cci.aiw.cvrg.eureka.etl.dao.JobDao;
+import edu.emory.cci.aiw.cvrg.eureka.etl.job.TaskManager;
 import edu.emory.cci.aiw.cvrg.eureka.etl.validator.PropositionValidator;
-import edu.emory.cci.aiw.cvrg.eureka.etl.validator
-	.PropositionValidatorException;
+import edu.emory.cci.aiw.cvrg.eureka.etl.validator.PropositionValidatorException;
 
 @Path("/job")
 public class JobResource {
 	private static final Logger LOGGER =
 		LoggerFactory.getLogger(JobResource.class);
 	private final JobDao jobDao;
-	private final ProtempaDeviceManager protempaDeviceManager;
 	private final PropositionValidator propositionValidator;
+	private final TaskManager taskManager;
 
 	@Inject
-	public JobResource(JobDao inJobDao, ProtempaDeviceManager
-		inProtempaDeviceManager, PropositionValidator inValidator) {
+	public JobResource(JobDao inJobDao, TaskManager inTaskManager, PropositionValidator
+		inValidator) {
 		this.jobDao = inJobDao;
-		this.protempaDeviceManager = inProtempaDeviceManager;
+		this.taskManager = inTaskManager;
 		this.propositionValidator = inValidator;
 	}
 
@@ -86,7 +86,7 @@ public class JobResource {
 			job.setNewState("CREATED", null, null);
 			LOGGER.debug("Request to start new Job {}", job.getId());
 			this.jobDao.create(job);
-			this.protempaDeviceManager.qJob(job);
+			this.taskManager.queueTask(job.getId(), definitions);
 			response = Response.created(URI.create("/" + job.getId()))
 				.build();
 		} else {

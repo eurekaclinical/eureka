@@ -1,4 +1,4 @@
-package edu.emory.cci.aiw.cvrg.eureka.etl;
+package edu.emory.cci.aiw.cvrg.eureka.etl.job;
 
 /**
  *

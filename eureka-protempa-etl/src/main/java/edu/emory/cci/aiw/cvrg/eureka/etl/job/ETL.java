@@ -1,9 +1,18 @@
-package edu.emory.cci.aiw.cvrg.eureka.etl;
+package edu.emory.cci.aiw.cvrg.eureka.etl.job;
 
-import edu.emory.cci.aiw.i2b2etl.I2B2QueryResultsHandler;
 import java.io.File;
 import java.lang.reflect.Proxy;
-import org.protempa.*;
+
+import org.protempa.AlgorithmSource;
+import org.protempa.DataSource;
+import org.protempa.FinderException;
+import org.protempa.KnowledgeSource;
+import org.protempa.PropositionDefinition;
+import org.protempa.Protempa;
+import org.protempa.ProtempaStartupException;
+import org.protempa.Source;
+import org.protempa.SourceFactory;
+import org.protempa.TermSource;
 import org.protempa.backend.BackendInitializationException;
 import org.protempa.backend.BackendNewInstanceException;
 import org.protempa.backend.BackendProviderSpecLoaderException;
@@ -15,6 +24,8 @@ import org.protempa.query.DefaultQueryBuilder;
 import org.protempa.query.Query;
 import org.protempa.query.QueryBuildException;
 import org.protempa.query.handler.QueryResultsHandler;
+
+import edu.emory.cci.aiw.i2b2etl.I2B2QueryResultsHandler;
 
 /**
  * This class actually runs Protempa.
@@ -31,7 +42,7 @@ import org.protempa.query.handler.QueryResultsHandler;
  * @author Andrew Post
  */
 public class ETL {
-    
+
     private static final File EUREKA_CONFIG_DIR = new File("/etc/eureka");
     private final File configDefaultsDirectory;
     private final File configDirectory;
@@ -46,7 +57,8 @@ public class ETL {
                 new File(EUREKA_CONFIG_DIR, "etlconfigdefaults");
     }
 
-    public void run(String configId) throws FinderException,
+    public void run(String configId, PropositionDefinition[] inPropositionDefinitions) throws
+	    FinderException,
             QueryBuildException, ConfigurationsLoadException,
             BackendProviderSpecLoaderException, InvalidConfigurationException,
             ProtempaStartupException, BackendInitializationException,
@@ -56,6 +68,7 @@ public class ETL {
 
         try {
             DefaultQueryBuilder q = new DefaultQueryBuilder();
+	        q.setPropositionDefinitions(inPropositionDefinitions);
             Query query = protempa.buildQuery(q);
             File i2b2Config =
                     new File(this.configDirectory, configId + ".xml");
@@ -85,8 +98,8 @@ public class ETL {
         KnowledgeSource ks = sf.newKnowledgeSourceInstance();
         if (ks.getBackends().length == 0) {
             if (this.knowledgeSource == null) {
-                this.knowledgeSource = 
-                        createProxy(PreventCloseKnowledgeSource.class, 
+                this.knowledgeSource =
+                        createProxy(PreventCloseKnowledgeSource.class,
                         defaultsSF.newKnowledgeSourceInstance());
             }
             ks = this.knowledgeSource;
@@ -95,8 +108,8 @@ public class ETL {
         DataSource ds = sf.newDataSourceInstance();
         if (ds.getBackends().length == 0) {
             if (this.dataSource == null) {
-                this.dataSource = 
-                        createProxy(PreventCloseDataSource.class, 
+                this.dataSource =
+                        createProxy(PreventCloseDataSource.class,
                         defaultsSF.newDataSourceInstance());
             }
             ds = this.dataSource;
@@ -105,8 +118,8 @@ public class ETL {
         AlgorithmSource as = sf.newAlgorithmSourceInstance();
         if (as.getBackends().length == 0) {
             if (this.algorithmSource == null) {
-                this.algorithmSource = 
-                        createProxy(PreventCloseAlgorithmSource.class, 
+                this.algorithmSource =
+                        createProxy(PreventCloseAlgorithmSource.class,
                         defaultsSF.newAlgorithmSourceInstance());
             }
             as = this.algorithmSource;
@@ -115,7 +128,7 @@ public class ETL {
         TermSource ts = sf.newTermSourceInstance();
         if (ts.getBackends().length == 0) {
             if (this.termSource == null) {
-                this.termSource = createProxy(PreventCloseTermSource.class, 
+                this.termSource = createProxy(PreventCloseTermSource.class,
                         defaultsSF.newTermSourceInstance());
             }
             ts = this.termSource;
@@ -138,8 +151,8 @@ public class ETL {
             this.termSource.reallyClose();
         }
     }
-    
-    private static <E extends Source<?,?,?>> E createProxy(Class<E> clz, 
+
+    private static <E extends Source<?,?,?>> E createProxy(Class<E> clz,
             Source<?, ?, ?> proxied) {
         return clz.cast(Proxy.newProxyInstance(clz.getClassLoader(),
                 new Class[] {clz},
