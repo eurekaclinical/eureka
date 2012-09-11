@@ -125,8 +125,9 @@ public class ListSystemPropositionChildrenServlet extends HttpServlet {
 					webResource.path("/api/proposition/user/get/"+ userTarget)
 					.accept(MediaType.APPLICATION_JSON)
 					.get(PropositionWrapper.class);
-			
-			JsonTreeData newData = createData(propUserWrapper.getId(), this.getDisplayName(propUserWrapper));
+
+			JsonTreeData newData = createData(String.valueOf(propUserWrapper
+				.getId()), this.getDisplayName(propUserWrapper));
 			getAllData(newData);
 			newData.setType("user");
 			d.addNodes(newData);
@@ -172,7 +173,7 @@ public class ListSystemPropositionChildrenServlet extends HttpServlet {
 				.get(PropositionWrapper.class);
 
 		for (String sysTarget : propWrapper.getSystemTargets()) {
-		    PropositionWrapper propWrapperChild = 
+		    PropositionWrapper propWrapperChild =
 				webResource.path("/api/proposition/system/"+ user.getId() + "/" + sysTarget)
 				.accept(MediaType.APPLICATION_JSON)
 				.get(PropositionWrapper.class);
