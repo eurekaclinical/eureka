@@ -1,5 +1,18 @@
 $(document).ready(function() {
 
+     $('#tree').hover(
+        function() { $.data(this, 'hover', true); },
+        function() { $.data(this, 'hover', false); }
+    ).data('hover', false);
+    $('#tooltip').hover(
+        function() { $.data(this, 'hover', true); },
+        function() { $.data(this, 'hover', false); }
+    ).data('hover', false);
+
+    $('div.tooltip').mouseout( function() {
+        if ($('#tree').data('hover') == false && $('#tooltip').data('hover') == false)
+            $('div.tooltip').hide();
+    }); 
 	
 	var fileUploadErrors = {
 	    maxFileSize: 'File is too big',
@@ -361,7 +374,7 @@ $(document).ready(function() {
 function showPopup(event) {
 
     console.log(event.pageX);
-    $('<div class="tooltip"><div id="tree"></div></div>').appendTo('body');
+    //$('<div class="tooltip"><div id="tree"></div></div>').appendTo('body');
 
     positionTooltip(event);
 
@@ -372,13 +385,21 @@ function showPopup(event) {
     "plugins" : [ "themes", "json_data", "ui" ]
     });
 
+    $('div.tooltip').show();
 
 
 }
 
 function positionTooltip(event){
     var tPosX = event.pageX + 20;
-    var tPosY = event.pageY - 20;
-    $('div.tooltip').css({'position': 'absolute', 'top': tPosY, 'left': tPosX});
-};
-
+    var tPosY = event.pageY - 150;
+    $('div.tooltip').css({
+        'position': 'absolute',
+        'top': tPosY,
+        'left': tPosX,
+        'width': '200px',
+        'height': '200px',
+        'border':'1px solid black',
+        'backgroundColor':'#FFFFEE',
+    });
+}; 

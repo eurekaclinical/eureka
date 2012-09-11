@@ -155,7 +155,7 @@ background-color:#EAF2D3;
 	  	<c:when test="${pageContext.request.remoteUser != null}">
 <div style="float:right;" class="fltrt">
 	  	  <li>Welcome ${pageContext.request.remoteUser} | <a href="${pageContext.request.contextPath}/logout">Logout</a></li>
-      	   <li><a href="${pageContext.request.contextPath}/editorhome">Editor</a></li>
+      	   <li><a href="${pageContext.request.contextPath}/protected/editorhome">Editor</a></li>
       	  <img src="${pageContext.request.contextPath}/images/i2b2_icon.gif" alt="i2b2" width="30" height="30" align="absmiddle" />
 	      <li><a href="https://eureka.cci.emory.edu/i2b2/" target="_blank">i2b2</a></li>
 	      <img src="${pageContext.request.contextPath}/images/rsch_icon.gif" alt="Upload Data" width="30" height="30" align="absmiddle" />

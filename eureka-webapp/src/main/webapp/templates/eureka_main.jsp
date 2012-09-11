@@ -31,6 +31,8 @@ ul.nav a { zoom: 1; }
 <script src="${pageContext.request.contextPath}/js/jquery.validate.js"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery.jstree.js"></script>
 <script src="${pageContext.request.contextPath}/js/eureka.js"></script>
+<link href="${pageContext.request.contextPath}/themes/default/style.css" rel="stylesheet" type="text/css" />
+
 
 
 <link rel="SHORTCUT ICON" href="favicon.ico">
