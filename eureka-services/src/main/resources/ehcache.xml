@@ -3,7 +3,7 @@
          xsi:noNamespaceSchemaLocation="http://ehcache.org/ehcache.xsd"
          updateCheck="false">
 
-	<diskStore path="java.io.tmpdir/EhCacheSpringExample1"/>
+	<diskStore path="java.io.tmpdir/eureka"/>
 
 	<defaultCache eternal="false" maxElementsInMemory="1000"
 	              overflowToDisk="false" diskPersistent="false"
@@ -12,7 +12,7 @@
 	              statistics="true"/>
 
 	<cache name="systemPropositions" eternal="false"
-	       maxElementsInMemory="100" overflowToDisk="false"
+	       maxElementsInMemory="1000" overflowToDisk="false"
 	       diskPersistent="false"
 	       timeToIdleSeconds="0" timeToLiveSeconds="300"
 	       memoryStoreEvictionPolicy="LRU" statistics="true"/>
