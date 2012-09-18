@@ -32,6 +32,26 @@ public class ListUserDefinedPropositionChildrenServlet extends HttpServlet {
 
 	private WebResource webResource;
 
+    private String getDisplayName(PropositionWrapper p) {
+        String displayName = "";
+
+        if (p.getAbbrevDisplayName() != null && !p.getAbbrevDisplayName().equals("")) {
+
+            displayName = p.getAbbrevDisplayName(); 
+
+        } else if (p.getDisplayName() != null && !p.getDisplayName().equals("")) {
+
+            displayName = p.getDisplayName();
+
+        } else {
+
+            displayName = p.getKey();
+
+        }
+
+        return displayName;
+    }
+
 
 	@Override
 	public void init(ServletConfig config) throws ServletException {
@@ -131,7 +151,11 @@ public class ListUserDefinedPropositionChildrenServlet extends HttpServlet {
 //				.accept(MediaType.APPLICATION_JSON)
 //				.get(PropositionWrapper.class);
 
-		JsonTreeData newData = createData(propId, propId);
+		PropositionWrapper propWrapper = webResource.path("/api/proposition/user/get/"+ propId)
+				.accept(MediaType.APPLICATION_JSON)
+				.get(PropositionWrapper.class);
+
+		JsonTreeData newData = createData(this.getDisplayName(propWrapper), propId);
 		getAllData(newData);
 		l.add(newData);
 
