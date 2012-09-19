@@ -88,6 +88,19 @@ public class PropositionResource {
 		return fetchSystemProposition(inUserId, inKey);
 	}
 
+	@POST
+	@Path("/system/{userId}/batch")
+	@Produces(MediaType.APPLICATION_JSON)
+	public List<PropositionWrapper> batchSystemPropositions(@PathParam
+		("userId") Long inUserId, List<String> inIdList) {
+		List<PropositionWrapper> wrappers = new ArrayList<PropositionWrapper>
+			(inIdList.size());
+		for (String id : inIdList) {
+			wrappers.add(this.fetchSystemProposition(inUserId, id));
+		}
+		return wrappers;
+	}
+
 	@GET
 	@Path("/user/list/{userId}")
 	@Produces(MediaType.APPLICATION_JSON)
@@ -173,7 +186,7 @@ public class PropositionResource {
 			this.propositionDao.update(proposition);
 		} else {
 			throw new IllegalArgumentException("Both the user ID and the " +
-				"proposition ID must be " + "provided.");
+				"proposition ID must be provided.");
 		}
 	}
 
@@ -196,29 +209,6 @@ public class PropositionResource {
 		String inKey) {
 		return this.systemPropositionFinder.find(inUserId, inKey);
 	}
-
-	//	private PropositionWrapper fetchSystemProposition(String inUserId,
-	//		String inKey) {
-	//
-	//		PropositionWrapper wrapper = null;
-	//
-	//		try {
-	//			String path = "/" + inUserId + "/" + inKey;
-	//			Client client = CommUtils.getClient();
-	//			WebResource resource =
-	//				client.resource(applicationProperties
-	//					.getEtlPropositionGetUrl());
-	//			wrapper =
-	//				resource.path(path).accept(MediaType.APPLICATION_JSON).get
-	//					(PropositionWrapper.class);
-	//		} catch (KeyManagementException e) {
-	//			e.printStackTrace();
-	//		} catch (NoSuchAlgorithmException e) {
-	//			e.printStackTrace();
-	//		}
-	//
-	//		return wrapper;
-	//	}
 
 	private Proposition unwrap(PropositionWrapper inWrapper) {
 		Proposition proposition;
