@@ -23,10 +23,12 @@ import edu.emory.cci.aiw.cvrg.eureka.common.entity.FileUpload;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.Job;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.User;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.FileDao;
+import edu.emory.cci.aiw.cvrg.eureka.services.dao.PropositionDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.UserDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.job.JobCollection;
 import edu.emory.cci.aiw.cvrg.eureka.services.thread.JobExecutor;
 import edu.emory.cci.aiw.cvrg.eureka.services.thread.JobTask;
+import edu.emory.cci.aiw.cvrg.eureka.services.util.PropositionUtil;
 
 /**
  * REST operations related to jobs submitted by the user.
@@ -53,6 +55,11 @@ public class JobResource {
 	 */
 	private final FileDao fileDao;
 	/**
+	 * Used to fetch the user's Propositions, to be sent to the ETL layer
+	 * when submitting a new job request.
+	 */
+	private final PropositionDao propositionDao;
+	/**
 	 * The runnable used to run the data processing and job submission tasks.
 	 */
 	private final JobTask jobTask;
@@ -73,10 +80,12 @@ public class JobResource {
 	 * @param inJobExecutor The executor service used to run the job tasks.
 	 */
 	@Inject
-	public JobResource(UserDao inUserDao, FileDao inFileDao, JobTask inJobTask,
+	public JobResource(UserDao inUserDao, FileDao inFileDao,
+		PropositionDao inPropositionDao, JobTask inJobTask,
 			JobExecutor inJobExecutor) {
 		this.userDao = inUserDao;
 		this.fileDao = inFileDao;
+		this.propositionDao = inPropositionDao;
 		this.jobTask = inJobTask;
 		this.jobExecutor = inJobExecutor;
 	}
@@ -100,6 +109,8 @@ public class JobResource {
 		fileUpload.setTimestamp(new Date());
 		this.fileDao.create(fileUpload);
 		this.jobTask.setFileUploadId(fileUpload.getId());
+		this.jobTask.setPropositionWrappers(PropositionUtil.wrapAll(this
+			.propositionDao.getByUserId(userId)));
 		this.jobExecutor.queueJob(this.jobTask);
 
 		return Response.ok().build();
