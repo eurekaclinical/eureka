@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.List;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -44,6 +45,7 @@ public class Proposition implements CycleRecoverable, Serializable {
 	/**
 	 * The user to which this proposition belongs.
 	 */
+	@Column(name = "user_id")
 	private Long userId;
 	/**
 	 * The propositions that the current proposition is abstracted from.
