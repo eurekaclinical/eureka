@@ -32,6 +32,7 @@ import edu.emory.cci.aiw.cvrg.eureka.services.config.ServiceProperties;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.PropositionDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.UserDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.finder.SystemPropositionFinder;
+import edu.emory.cci.aiw.cvrg.eureka.services.util.PropositionUtil;
 
 /**
  * REST Web Service
@@ -108,7 +109,7 @@ public class PropositionResource {
 		"userId") Long inUserId) {
 		List<PropositionWrapper> result = new ArrayList<PropositionWrapper>();
 		for (Proposition p : this.propositionDao.getByUserId(inUserId)) {
-			result.add(this.wrap(p, false));
+			result.add(PropositionUtil.wrap(p, false));
 		}
 		return result;
 	}
@@ -124,7 +125,7 @@ public class PropositionResource {
 			ArrayList<PropositionWrapper>();
 
 		for (Proposition proposition : propositions) {
-			wrappers.add(this.wrap(proposition, false));
+			wrappers.add(PropositionUtil.wrap(proposition, false));
 		}
 
 		ValidationRequest validationRequest = new ValidationRequest();
@@ -169,7 +170,7 @@ public class PropositionResource {
 				wrapper.setCreated(proposition.getCreated());
 				wrapper.setLastModified(proposition.getLastModified());
 			} else {
-				wrapper = wrap(proposition, false);
+				wrapper = PropositionUtil.wrap(proposition, false);
 			}
 		}
 		return wrapper;
@@ -180,7 +181,7 @@ public class PropositionResource {
 	@Consumes(MediaType.APPLICATION_JSON)
 	public void updateProposition(PropositionWrapper inWrapper) {
 		if (inWrapper.getUserId() != null && inWrapper.getId() != null) {
-			Proposition proposition = unwrap(inWrapper);
+			Proposition proposition = PropositionUtil.unwrap(inWrapper, this.propositionDao);
 			proposition.setLastModified(new Date());
 			this.propositionDao.update(proposition);
 		} else {
@@ -194,7 +195,7 @@ public class PropositionResource {
 	@Consumes(MediaType.APPLICATION_JSON)
 	public void insertProposition(PropositionWrapper inWrapper) {
 		if (inWrapper.getUserId() != null) {
-			Proposition proposition = unwrap(inWrapper);
+			Proposition proposition = PropositionUtil.unwrap(inWrapper, this.propositionDao);
 			Date now = new Date();
 			proposition.setCreated(now);
 			proposition.setLastModified(now);
@@ -209,115 +210,5 @@ public class PropositionResource {
 		return this.systemPropositionFinder.find(inUserId, inKey);
 	}
 
-	private Proposition unwrap(PropositionWrapper inWrapper) {
-		Proposition proposition;
-		List<Proposition> targets = new ArrayList<Proposition>();
 
-		if (inWrapper.getId() != null) {
-			proposition = this.propositionDao.retrieve(inWrapper.getId());
-		} else {
-			proposition = new Proposition();
-		}
-
-		if (inWrapper.getChildren() != null) {
-			for (PropositionWrapper child : inWrapper.getChildren()) {
-				if (child.isInSystem()) {
-					Proposition p = this.propositionDao.getByKey(child.getKey
-						());
-					if (p == null) {
-						p = new Proposition();
-						p.setKey(child.getKey());
-						p.setInSystem(true);
-					}
-					targets.add(p);
-				} else {
-					targets.add(this.propositionDao.retrieve(child.getId()));
-				}
-			}
-		}
-
-		if (inWrapper.getType() == PropositionWrapper.Type.AND) {
-			proposition.setAbstractedFrom(targets);
-		} else {
-			proposition.setInverseIsA(targets);
-		}
-
-		proposition.setKey(inWrapper.getKey());
-		proposition.setAbbrevDisplayName(inWrapper.getAbbrevDisplayName());
-		proposition.setDisplayName(inWrapper.getDisplayName());
-		proposition.setInSystem(inWrapper.isInSystem());
-
-		if (inWrapper.getUserId() != null) {
-			proposition.setUserId(inWrapper.getUserId());
-		}
-		return proposition;
-	}
-
-	private PropositionWrapper.Type getType(Proposition inProposition) {
-		if ((inProposition.getTemporalPattern() != null) || ((inProposition
-			.getAbstractedFrom() != null) && (!inProposition
-			.getAbstractedFrom().isEmpty()))) {
-			return PropositionWrapper.Type.AND;
-		} else {
-			return PropositionWrapper.Type.OR;
-		}
-
-	}
-
-	private List<Proposition> getTargets(Proposition inProposition,
-		PropositionWrapper.Type inType) {
-		List<Proposition> propositions;
-		List<Proposition> targets;
-
-		if (inType == PropositionWrapper.Type.AND) {
-			targets = inProposition.getAbstractedFrom();
-		} else {
-			targets = inProposition.getInverseIsA();
-		}
-
-		if (targets == null) {
-			propositions = new ArrayList<Proposition>();
-		} else {
-			propositions = targets;
-		}
-
-		return propositions;
-	}
-
-	private PropositionWrapper wrap(Proposition inProposition,
-		boolean summarize) {
-
-		PropositionWrapper wrapper = new PropositionWrapper();
-		PropositionWrapper.Type type = this.getType(inProposition);
-
-		if (!summarize) {
-			List<PropositionWrapper> children = new ArrayList
-				<PropositionWrapper>();
-			wrapper.setSummarized(false);
-			for (Proposition target : this.getTargets(inProposition, type)) {
-				children.add(this.wrap(target, true));
-			}
-			wrapper.setChildren(children);
-		} else {
-			wrapper.setSummarized(true);
-		}
-
-		if (inProposition.getId() != null) {
-			wrapper.setId(inProposition.getId());
-		}
-
-		if (inProposition.getUserId() != null) {
-			wrapper.setUserId(inProposition.getUserId());
-		}
-
-		wrapper.setInSystem(inProposition.isInSystem());
-		wrapper.setType(type);
-		wrapper.setAbbrevDisplayName(inProposition.getAbbrevDisplayName());
-		wrapper.setDisplayName(inProposition.getDisplayName());
-		wrapper.setKey(inProposition.getKey());
-		wrapper.setCreated(inProposition.getCreated());
-		wrapper.setLastModified(inProposition.getLastModified());
-
-		return wrapper;
-	}
 }
