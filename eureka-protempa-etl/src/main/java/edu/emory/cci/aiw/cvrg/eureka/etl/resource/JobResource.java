@@ -29,7 +29,8 @@ import edu.emory.cci.aiw.cvrg.eureka.common.entity.Job;
 import edu.emory.cci.aiw.cvrg.eureka.etl.dao.JobDao;
 import edu.emory.cci.aiw.cvrg.eureka.etl.job.TaskManager;
 import edu.emory.cci.aiw.cvrg.eureka.etl.validator.PropositionValidator;
-import edu.emory.cci.aiw.cvrg.eureka.etl.validator.PropositionValidatorException;
+import edu.emory.cci.aiw.cvrg.eureka.etl.validator
+	.PropositionValidatorException;
 
 @Path("/job")
 public class JobResource {
@@ -40,8 +41,8 @@ public class JobResource {
 	private final TaskManager taskManager;
 
 	@Inject
-	public JobResource(JobDao inJobDao, TaskManager inTaskManager, PropositionValidator
-		inValidator) {
+	public JobResource(JobDao inJobDao, TaskManager inTaskManager,
+		PropositionValidator inValidator) {
 		this.jobDao = inJobDao;
 		this.taskManager = inTaskManager;
 		this.propositionValidator = inValidator;
@@ -90,8 +91,9 @@ public class JobResource {
 			response = Response.created(URI.create("/" + job.getId()))
 				.build();
 		} else {
-			response = Response.status(Response.Status.BAD_REQUEST).entity(
-				propositionValidator.getMessages()).build();
+			response =
+				Response.status(Response.Status.BAD_REQUEST).entity
+					(propositionValidator.getMessages()).build();
 		}
 		return response;
 	}
@@ -114,9 +116,11 @@ public class JobResource {
 	private List<PropositionDefinition> unwrapAll(List<PropositionWrapper>
 		inWrappers) {
 		List<PropositionDefinition> definitions =
-			new ArrayList<PropositionDefinition>(inWrappers.size());
-		for (PropositionWrapper wrapper : inWrappers) {
-			definitions.add(unwrap(wrapper));
+			new ArrayList<PropositionDefinition>();
+		if (inWrappers != null) {
+			for (PropositionWrapper wrapper : inWrappers) {
+				definitions.add(unwrap(wrapper));
+			}
 		}
 		return definitions;
 	}
