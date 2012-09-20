@@ -64,25 +64,27 @@ public class PropositionValidatorTest {
 
 		wrapper1.setId(Long.valueOf(1L));
 		wrapper1.setAbbrevDisplayName("test-prop-1");
+		wrapper1.setInSystem(false);
 
 		wrapper2.setId(Long.valueOf(2L));
 		wrapper2.setAbbrevDisplayName("test-prop-2");
+		wrapper2.setInSystem(false);
 
 		wrapper3.setId(null);
 		wrapper3.setAbbrevDisplayName("test-prop-3");
+		wrapper3.setInSystem(false);
 
-		List<Long> targets1 = new ArrayList<Long>();
-		targets1.add(Long.valueOf(2L));
-		wrapper1.setUserTargets(targets1);
+		List<PropositionWrapper> targets1 = new ArrayList<PropositionWrapper>();
+		targets1.add(wrapper2);
+		wrapper1.setChildren(targets1);
 
-		List<Long> targets2 = new ArrayList<Long>();
-		targets2.add(Long.valueOf(1L));
-		wrapper2.setUserTargets(targets2);
+		List<PropositionWrapper> targets2 = new ArrayList<PropositionWrapper>();
+		targets2.add(wrapper1);
+		wrapper2.setChildren(targets2);
 
-		List<Long> targets3 = new ArrayList<Long>();
-		targets3.add(Long.valueOf(1L));
-//		targets3.add(Long.valueOf(2L));
-		wrapper3.setUserTargets(targets3);
+		List<PropositionWrapper> targets3 = new ArrayList<PropositionWrapper>();
+		targets3.add(wrapper1);
+		wrapper3.setChildren(targets3);
 
 		List<PropositionWrapper> propositions = new ArrayList
 			<PropositionWrapper>();

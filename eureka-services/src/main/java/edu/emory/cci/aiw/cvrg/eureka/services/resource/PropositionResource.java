@@ -93,8 +93,8 @@ public class PropositionResource {
 	@Produces(MediaType.APPLICATION_JSON)
 	public List<PropositionWrapper> batchSystemPropositions(@PathParam
 		("userId") Long inUserId, List<String> inIdList) {
-		List<PropositionWrapper> wrappers = new ArrayList<PropositionWrapper>
-			(inIdList.size());
+		List<PropositionWrapper> wrappers =
+			new ArrayList<PropositionWrapper>(inIdList.size());
 		for (String id : inIdList) {
 			wrappers.add(this.fetchSystemProposition(inUserId, id));
 		}
@@ -108,7 +108,7 @@ public class PropositionResource {
 		"userId") Long inUserId) {
 		List<PropositionWrapper> result = new ArrayList<PropositionWrapper>();
 		for (Proposition p : this.propositionDao.getByUserId(inUserId)) {
-			result.add(this.wrap(p));
+			result.add(this.wrap(p, false));
 		}
 		return result;
 	}
@@ -124,7 +124,7 @@ public class PropositionResource {
 			ArrayList<PropositionWrapper>();
 
 		for (Proposition proposition : propositions) {
-			wrappers.add(this.wrap(proposition));
+			wrappers.add(this.wrap(proposition, false));
 		}
 
 		ValidationRequest validationRequest = new ValidationRequest();
@@ -165,12 +165,11 @@ public class PropositionResource {
 		if (proposition != null) {
 			if (proposition.isInSystem()) {
 				wrapper =
-					this.fetchSystemProposition(proposition.getUser().getId
-						(), proposition.getKey());
+					this.fetchSystemProposition(proposition.getUserId(), proposition.getKey());
 				wrapper.setCreated(proposition.getCreated());
 				wrapper.setLastModified(proposition.getLastModified());
 			} else {
-				wrapper = wrap(proposition);
+				wrapper = wrap(proposition, false);
 			}
 		}
 		return wrapper;
@@ -185,8 +184,8 @@ public class PropositionResource {
 			proposition.setLastModified(new Date());
 			this.propositionDao.update(proposition);
 		} else {
-			throw new IllegalArgumentException("Both the user ID and the " +
-				"proposition ID must be provided.");
+			throw new IllegalArgumentException("Both the user ID and the "
+				+ "proposition ID must be provided.");
 		}
 	}
 
@@ -215,27 +214,26 @@ public class PropositionResource {
 		List<Proposition> targets = new ArrayList<Proposition>();
 
 		if (inWrapper.getId() != null) {
-			proposition =
-				this.propositionDao.retrieve(inWrapper.getId());
+			proposition = this.propositionDao.retrieve(inWrapper.getId());
 		} else {
 			proposition = new Proposition();
 		}
 
-		if (inWrapper.getUserTargets() != null) {
-			for (Long id : inWrapper.getUserTargets()) {
-				targets.add(this.propositionDao.retrieve(id));
+		if (inWrapper.getChildren() != null) {
+			for (PropositionWrapper child : inWrapper.getChildren()) {
+				if (child.isInSystem()) {
+					Proposition p = this.propositionDao.getByKey(child.getKey
+						());
+					if (p == null) {
+						p = new Proposition();
+						p.setKey(child.getKey());
+						p.setInSystem(true);
+					}
+					targets.add(p);
+				} else {
+					targets.add(this.propositionDao.retrieve(child.getId()));
+				}
 			}
-		}
-
-		for (String key : inWrapper.getSystemTargets()) {
-			LOGGER.debug("getting proposition for key {}", key);
-			Proposition p = this.propositionDao.getByKey(key);
-			if (p == null) {
-				p = new Proposition();
-				p.setKey(key);
-				p.setInSystem(true);
-			}
-			targets.add(p);
 		}
 
 		if (inWrapper.getType() == PropositionWrapper.Type.AND) {
@@ -250,7 +248,7 @@ public class PropositionResource {
 		proposition.setInSystem(inWrapper.isInSystem());
 
 		if (inWrapper.getUserId() != null) {
-			proposition.setUser(this.userDao.retrieve(inWrapper.getUserId()));
+			proposition.setUserId(inWrapper.getUserId());
 		}
 		return proposition;
 	}
@@ -286,27 +284,30 @@ public class PropositionResource {
 		return propositions;
 	}
 
-	private PropositionWrapper wrap(Proposition inProposition) {
+	private PropositionWrapper wrap(Proposition inProposition,
+		boolean summarize) {
 
 		PropositionWrapper wrapper = new PropositionWrapper();
 		PropositionWrapper.Type type = this.getType(inProposition);
-		List<String> systemTargets = new ArrayList<String>();
-		List<Long> userTargets = new ArrayList<Long>();
 
-		for (Proposition target : this.getTargets(inProposition, type)) {
-			if (target.isInSystem()) {
-				systemTargets.add(target.getKey());
-			} else {
-				userTargets.add(target.getId());
+		if (!summarize) {
+			List<PropositionWrapper> children = new ArrayList
+				<PropositionWrapper>();
+			wrapper.setSummarized(false);
+			for (Proposition target : this.getTargets(inProposition, type)) {
+				children.add(this.wrap(target, true));
 			}
+			wrapper.setChildren(children);
+		} else {
+			wrapper.setSummarized(true);
 		}
 
 		if (inProposition.getId() != null) {
 			wrapper.setId(inProposition.getId());
 		}
 
-		if (inProposition.getUser() != null) {
-			wrapper.setUserId(inProposition.getUser().getId());
+		if (inProposition.getUserId() != null) {
+			wrapper.setUserId(inProposition.getUserId());
 		}
 
 		wrapper.setInSystem(inProposition.isInSystem());
@@ -314,8 +315,6 @@ public class PropositionResource {
 		wrapper.setAbbrevDisplayName(inProposition.getAbbrevDisplayName());
 		wrapper.setDisplayName(inProposition.getDisplayName());
 		wrapper.setKey(inProposition.getKey());
-		wrapper.setSystemTargets(systemTargets);
-		wrapper.setUserTargets(userTargets);
 		wrapper.setCreated(inProposition.getCreated());
 		wrapper.setLastModified(inProposition.getLastModified());
 

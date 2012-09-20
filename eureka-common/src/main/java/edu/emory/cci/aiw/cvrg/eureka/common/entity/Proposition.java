@@ -12,13 +12,11 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlRootElement;
 
-import org.codehaus.jackson.annotate.JsonBackReference;
 import com.sun.xml.bind.CycleRecoverable;
 
 /**
@@ -46,11 +44,7 @@ public class Proposition implements CycleRecoverable, Serializable {
 	/**
 	 * The user to which this proposition belongs.
 	 */
-	@ManyToOne(cascade = {CascadeType.MERGE, CascadeType.REFRESH,
-		CascadeType.PERSIST},
-			   targetEntity = User.class)
-	@JoinColumn(name = "user_id")
-	private User user;
+	private Long userId;
 	/**
 	 * The propositions that the current proposition is abstracted from.
 	 */
@@ -140,18 +134,17 @@ public class Proposition implements CycleRecoverable, Serializable {
 	 *
 	 * @return The user to which this proposition belongs.
 	 */
-	@JsonBackReference("user-propositions")
-	public User getUser() {
-		return user;
+	public Long getUserId() {
+		return this.userId;
 	}
 
 	/**
 	 * Sets the user to which this proposition belongs.
 	 *
-	 * @param inUser The user to which this proposition belongs.
+	 * @param inUserId The user to which this proposition belongs.
 	 */
-	public void setUser(User inUser) {
-		this.user = inUser;
+	public void setUserId(Long inUserId) {
+		this.userId = inUserId;
 	}
 
 	/**
@@ -285,7 +278,7 @@ public class Proposition implements CycleRecoverable, Serializable {
 
 	@Override
 	public String toString() {
-		return "Proposition{" + "id=" + id + ", user=" + user.getEmail()
+		return "Proposition{" + "id=" + id + ", user=" + userId
 				+ ", abstractedFrom=" + abstractedFrom + ", inverseIsA="
 				+ inverseIsA + ", temporalPattern=" + temporalPattern
 				+ ", displayName=" + displayName + ", abbrevDisplayName="

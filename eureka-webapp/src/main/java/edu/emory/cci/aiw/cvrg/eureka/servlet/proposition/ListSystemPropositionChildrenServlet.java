@@ -98,10 +98,13 @@ public class ListSystemPropositionChildrenServlet extends HttpServlet {
 				.accept(MediaType.APPLICATION_JSON)
 				.get(PropositionWrapper.class);
 
-		for (String sysTarget : propWrapper.getSystemTargets()) {
-			JsonTreeData newData = createData(sysTarget, sysTarget);
-			newData.setType("system");
-			d.addNodes(newData);
+		for (PropositionWrapper child : propWrapper.getChildren()) {
+			if (child.isInSystem()) {
+				String sysTarget = child.getKey();
+				JsonTreeData newData = createData(sysTarget, sysTarget);
+				newData.setType("system");
+				d.addNodes(newData);
+			}
 		}
 
 	}
@@ -114,25 +117,27 @@ public class ListSystemPropositionChildrenServlet extends HttpServlet {
 				.accept(MediaType.APPLICATION_JSON)
 				.get(PropositionWrapper.class);
 
-		for (String sysTarget : propWrapper.getSystemTargets()) {
-			JsonTreeData newData = createData(sysTarget, sysTarget);
-			newData.setType("system");
-			d.addNodes(newData);
-		}
-
-		for (Long userTarget : propWrapper.getUserTargets()) {
-			PropositionWrapper propUserWrapper =
+		for (PropositionWrapper child : propWrapper.getChildren()) {
+			if (child.isInSystem()) {
+				String sysTarget = child.getKey();
+				JsonTreeData newData = createData(sysTarget, sysTarget);
+				newData.setType("system");
+				d.addNodes(newData);
+			} else {
+				String userTarget = String.valueOf(child.getId().longValue());
+				PropositionWrapper propUserWrapper =
 					webResource.path("/api/proposition/user/get/"+ userTarget)
-					.accept(MediaType.APPLICATION_JSON)
-					.get(PropositionWrapper.class);
+						.accept(MediaType.APPLICATION_JSON)
+						.get(PropositionWrapper.class);
 
-			JsonTreeData newData = createData(String.valueOf(propUserWrapper
-				.getId()), this.getDisplayName(propUserWrapper));
-			getAllData(newData);
-			newData.setType("user");
-			d.addNodes(newData);
-
+				JsonTreeData newData = createData(String.valueOf(propUserWrapper
+					.getId()), this.getDisplayName(propUserWrapper));
+				getAllData(newData);
+				newData.setType("user");
+				d.addNodes(newData);
+			}
 		}
+
 
 	}
 
@@ -172,14 +177,17 @@ public class ListSystemPropositionChildrenServlet extends HttpServlet {
 				.accept(MediaType.APPLICATION_JSON)
 				.get(PropositionWrapper.class);
 
-		for (String sysTarget : propWrapper.getSystemTargets()) {
-		    PropositionWrapper propWrapperChild =
-				webResource.path("/api/proposition/system/"+ user.getId() + "/" + sysTarget)
-				.accept(MediaType.APPLICATION_JSON)
-				.get(PropositionWrapper.class);
-			JsonTreeData newData = createData(sysTarget, this.getDisplayName(propWrapperChild));
-			newData.setType("system");
-			l.add(newData);
+		for (PropositionWrapper child : propWrapper.getChildren()) {
+			if (child.isInSystem()) {
+				String sysTarget = child.getKey();
+		        PropositionWrapper propWrapperChild =
+					webResource.path("/api/proposition/system/"+ user.getId() + "/" + sysTarget)
+					.accept(MediaType.APPLICATION_JSON)
+					.get(PropositionWrapper.class);
+				JsonTreeData newData = createData(sysTarget, this.getDisplayName(propWrapperChild));
+				newData.setType("system");
+				l.add(newData);
+			}
 		}
 
 

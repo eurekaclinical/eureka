@@ -98,12 +98,6 @@ public class User implements CycleRecoverable {
 	@OneToMany(cascade = CascadeType.ALL, targetEntity = FileUpload.class,
 			   mappedBy = "user")
 	private List<FileUpload> fileUploads = new ArrayList<FileUpload>();
-	/**
-	 * A list of all propositions created by the user.
-	 */
-//	@OneToMany(cascade = CascadeType.ALL, targetEntity = Proposition.class,
-//			   mappedBy = "user")
-//	private List<Proposition> propositions = new ArrayList<Proposition>();
 
 	/**
 	 * Create an empty User object.

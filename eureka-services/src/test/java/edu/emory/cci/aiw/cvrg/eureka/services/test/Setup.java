@@ -7,7 +7,6 @@ import java.util.Date;
 import java.util.List;
 
 import javax.persistence.EntityManager;
-import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -107,7 +106,7 @@ public class Setup implements TestDataProvider {
 			Proposition proposition = new Proposition();
 			proposition.setAbbrevDisplayName("test");
 			proposition.setDisplayName("Test Proposition");
-			proposition.setUser(u);
+			proposition.setUserId(u.getId());
 			entityManager.persist(proposition);
 			propositions.add(proposition);
 		}

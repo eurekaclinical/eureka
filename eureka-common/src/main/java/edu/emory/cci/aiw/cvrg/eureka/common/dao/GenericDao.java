@@ -124,6 +124,12 @@ public class GenericDao<T, PK> implements Dao<T, PK> {
 		return result;
 	}
 
+	protected <Y> List<T> getListByAttribute(SingularAttribute<T,
+		Y> attribute, Y value) {
+		TypedQuery<T> query = this.createTypedQuery(attribute, value);
+		return query.getResultList();
+	}
+
 	/**
 	 * Creates a typed query based on the attribute given and the target value
 	 * for that attribute.

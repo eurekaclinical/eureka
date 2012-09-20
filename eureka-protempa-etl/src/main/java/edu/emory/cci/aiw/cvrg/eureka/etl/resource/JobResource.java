@@ -123,8 +123,7 @@ public class JobResource {
 
 	private PropositionDefinition unwrap(PropositionWrapper inWrapper) {
 		PropositionDefinition definition;
-		String[] allTargets = getTargets(inWrapper.getSystemTargets(),
-			inWrapper.getUserTargets());
+		String[] allTargets = getTargets(inWrapper.getChildren());
 
 		String idStr = String.valueOf(inWrapper.getId().longValue());
 		if (inWrapper.getType() == PropositionWrapper.Type.AND) {
@@ -145,16 +144,18 @@ public class JobResource {
 		return definition;
 	}
 
-	private String[] getTargets(List<String> systemTargets,
-		List<Long> userTargets) {
-		int size = systemTargets.size() + userTargets.size();
+	private String[] getTargets(List<PropositionWrapper> children) {
+		int size = children.size();
 		String[] result = new String[size];
 		int counter = 0;
-		for (String s : systemTargets) {
-			result[counter++] = s;
-		}
-		for (Long l : userTargets) {
-			result[counter++] = String.valueOf(l.longValue());
+		for (PropositionWrapper wrapper : children) {
+			String id;
+			if (wrapper.isInSystem()) {
+				id = wrapper.getKey();
+			} else {
+				id = String.valueOf(wrapper.getId().longValue());
+			}
+			result[counter++] = id;
 		}
 		return result;
 	}

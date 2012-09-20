@@ -20,13 +20,11 @@ import org.slf4j.LoggerFactory;
 
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
-import com.sun.jersey.api.client.GenericType;
 import com.sun.jersey.api.client.WebResource;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.CommUtils;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.PropositionWrapper;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.PropositionWrapper.Type;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.Proposition;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.User;
 
 public class SavePropositionServlet extends HttpServlet {
@@ -50,10 +48,10 @@ public class SavePropositionServlet extends HttpServlet {
 		String type = req.getParameter("type");
 		String name = req.getParameter("name");
 		String description = req.getParameter("description");
-		
+
 		String eurekaServicesUrl = req.getSession().getServletContext()
 				.getInitParameter("eureka-services-url");
-		
+
 		ObjectMapper mapper = new ObjectMapper();
 		List<UserProposition> props = null;
 		try {
@@ -63,56 +61,60 @@ public class SavePropositionServlet extends HttpServlet {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+
 		try {
 
-			
+
 			Client client = CommUtils.getClient();
 			Principal principal = req.getUserPrincipal();
 			String userName = principal.getName();
-			
+
 			WebResource webResource = client.resource(eurekaServicesUrl);
 			User user = webResource.path("/api/user/byname/" + userName)
 					.accept(MediaType.APPLICATION_JSON).get(User.class);
-			
-			
+
+
 			PropositionWrapper pw = new PropositionWrapper();
-	
+
 			pw.setAbbrevDisplayName(name);
 			if (type.equals("AND")) {
 				pw.setType(Type.AND);
 			} else {
 				pw.setType(Type.OR);
-				
+
 			}
-	
-			List<String> systemTargets  = new ArrayList<String>();
-			List<Long> userTargets      = new ArrayList<Long>();
+
+//			List<String> systemTargets  = new ArrayList<String>();
+//			List<Long> userTargets      = new ArrayList<Long>();
+			List<PropositionWrapper> children = new ArrayList
+				<PropositionWrapper>(props.size());
 			pw.setInSystem(false);
-			
+
 			for (UserProposition userProposition : props) {
 				System.out.println(userProposition.getId());
 				LOGGER.debug(userProposition.getId());
-				
+
+				PropositionWrapper child = new PropositionWrapper();
+				child.setSummarized(true);
 				if (userProposition.getType().equals("system")) {
-					systemTargets.add(userProposition.getId());			
+					child.setInSystem(true);
+					child.setKey(userProposition.getId());
 				} else {
-					userTargets.add(Long.valueOf(userProposition.getId()));
+					child.setId(Long.valueOf(userProposition.getId()));
 				}
-				
+
 			}
-		
-			pw.setSystemTargets(systemTargets);
-			pw.setUserTargets(userTargets);
+
+			pw.setChildren(children);
 			pw.setAbbrevDisplayName(name);
 			pw.setDisplayName(description);
 			pw.setUserId(user.getId());
 
-            ClientResponse response = 
+            ClientResponse response =
                         webResource.path("/api/proposition/user/validate/" + user.getId())
                             .type(MediaType.APPLICATION_JSON)
                                 .post(ClientResponse.class, pw);
-			
+
             int status = response.getClientResponseStatus().getStatusCode();
             if (status != HttpServletResponse.SC_OK) {
 
@@ -121,14 +123,14 @@ public class SavePropositionServlet extends HttpServlet {
                 LOGGER.debug("Error: {}", msg);
             }
 
-			
+
 			webResource.path("/api/proposition/user/create")
 				.type(MediaType.APPLICATION_JSON)
 					.accept(MediaType.TEXT_PLAIN)
 						.post(ClientResponse.class, pw);
 
-			
-			
+
+
 		} catch (KeyManagementException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -136,7 +138,7 @@ public class SavePropositionServlet extends HttpServlet {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+
 		LOGGER.debug(id);
 		System.out.println(id);
 

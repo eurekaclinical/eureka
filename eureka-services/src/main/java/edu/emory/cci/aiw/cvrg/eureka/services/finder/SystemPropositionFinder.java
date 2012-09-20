@@ -1,5 +1,6 @@
 package edu.emory.cci.aiw.cvrg.eureka.services.finder;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.google.inject.Inject;
@@ -23,7 +24,13 @@ public class SystemPropositionFinder extends AbstractPropositionFinder<Long,
 
 	@Override
 	protected List<String> getPrefetchKeys(PropositionWrapper inWrapper) {
-		return inWrapper.getSystemTargets();
+		List<String> keys = new ArrayList<String>();
+		for (PropositionWrapper child : inWrapper.getChildren()) {
+			if (child.isInSystem()) {
+				keys.add(child.getKey());
+			}
+		}
+		return keys;
 	}
 
 	@Override

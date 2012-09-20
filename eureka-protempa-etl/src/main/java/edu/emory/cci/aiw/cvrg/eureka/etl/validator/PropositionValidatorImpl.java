@@ -97,19 +97,27 @@ public class PropositionValidatorImpl implements PropositionValidator {
 	public boolean validate() throws PropositionValidatorException {
 		boolean result = true;
 
-		if (detectNullId()) {
-			this.addMessage("Found proposition with NULL id");
-			result = false;
+		if (this.propositions == null) {
+			if (this.targetProposition != null) {
+				this.addMessage("Target proposition found, " +
+					"" + "but no accompanying propositions found.");
+				result = false;
+			}
 		} else {
-			if (this.targetProposition == null) {
-				for (PropositionWrapper wrapper : this.propositions) {
-					if (!this.validateSingle(wrapper)) {
-						result = false;
-						break;
-					}
-				}
+			if (detectNullId()) {
+				this.addMessage("Found proposition with NULL id");
+				result = false;
 			} else {
-				result = this.validateSingle(this.targetProposition);
+				if (this.targetProposition == null) {
+					for (PropositionWrapper wrapper : this.propositions) {
+						if (!this.validateSingle(wrapper)) {
+							result = false;
+							break;
+						}
+					}
+				} else {
+					result = this.validateSingle(this.targetProposition);
+				}
 			}
 		}
 		return result;
@@ -125,29 +133,21 @@ public class PropositionValidatorImpl implements PropositionValidator {
 		if (cycle) {
 			this.addMessage(this.createCycleMessage(inWrapper, cycleStack));
 			result = false;
-		} else {
-			List<String> systemTargets = inWrapper.getSystemTargets();
-			List<Long> userTargets = inWrapper.getUserTargets();
+		} else if (inWrapper.getChildren() != null) {
 			List<PropositionType> types = new ArrayList<PropositionType>();
-
-			if (userTargets != null) {
-				for (Long userTarget : userTargets) {
-					types.add(this.getUserPropositionType(userTarget));
-				}
-			}
-
-			if (systemTargets != null) {
-				try {
-					for (String systemTarget : systemTargets) {
+			for (PropositionWrapper child : inWrapper.getChildren()) {
+				if (child.isInSystem()) {
+					try {
 						types.add(this.getSystemPropositionType
-							(PropositionFinder.find(systemTarget,
+							(PropositionFinder.find(child.getKey(),
 								this.userId)));
+					} catch (PropositionFinderException e) {
+						throw new PropositionValidatorException(e);
 					}
-				} catch (PropositionFinderException e) {
-					throw new PropositionValidatorException(e);
+				} else {
+					types.add(this.getUserPropositionType(child.getId()));
 				}
 			}
-
 			if (types.contains(PropositionType.INVALID)) {
 				this.addMessage("Proposition " + inWrapper
 					.getAbbrevDisplayName() + "has invalid definition.");
@@ -155,7 +155,10 @@ public class PropositionValidatorImpl implements PropositionValidator {
 			} else {
 				result = this.isSame(types);
 			}
+		} else {
+			result = true;
 		}
+
 		return result;
 	}
 
@@ -176,37 +179,38 @@ public class PropositionValidatorImpl implements PropositionValidator {
 	}
 
 	private boolean detectCycle(PropositionWrapper inWrapper,
-		Stack<Long> inSeen) throws PropositionValidatorException {
+		Stack<Long> inSeen)
+		throws PropositionValidatorException {
 
 		boolean cycle = false;
 
 		if (inWrapper.getId() == null && inWrapper != this
 			.targetProposition) {
-			throw new PropositionValidatorException("Proposition " + inWrapper
-				.getAbbrevDisplayName() + " is not the target proposition " +
-				"and does not have an ID.");
+			throw new PropositionValidatorException("Proposition " +
+				inWrapper.getAbbrevDisplayName() + " is not the target " +
+				"proposition and does not have an ID.");
 		}
 
 		if (inSeen.contains(inWrapper.getId())) {
 			cycle = true;
 			// do this for the error stack
 			inSeen.push(inWrapper.getId());
-		} else {
-			if (inWrapper.getUserTargets() != null) {
-				inSeen.push(inWrapper.getId());
-				for (Long id : inWrapper.getUserTargets()) {
-					PropositionWrapper target = this.findById(id);
+		} else if (inWrapper.getChildren() != null) {
+			inSeen.push(inWrapper.getId());
+			for (PropositionWrapper child : inWrapper.getChildren()) {
+				if (!child.isInSystem()) {
+					PropositionWrapper target = this.findById(child.getId());
 					cycle = detectCycle(target, inSeen);
 					if (cycle) {
 						break;
 					}
 				}
-				if (!cycle) {
-					inSeen.pop();
-				}
-			} else {
-				cycle = false;
 			}
+			if (!cycle) {
+				inSeen.pop();
+			}
+		} else {
+			cycle = false;
 		}
 		return cycle;
 	}
@@ -238,17 +242,18 @@ public class PropositionValidatorImpl implements PropositionValidator {
 		List<PropositionType> childTypes = new ArrayList<PropositionType>();
 		PropositionWrapper wrapper = this.findById(inTarget);
 
-		for (Long userTarget : wrapper.getUserTargets()) {
-			childTypes.add(this.getUserPropositionType(userTarget));
-		}
-
-		try {
-			for (String systemTarget : wrapper.getSystemTargets()) {
-				childTypes.add(this.getSystemPropositionType
-					(PropositionFinder.find(systemTarget, this.userId)));
+		for (PropositionWrapper child : wrapper.getChildren()) {
+			if (child.isInSystem()) {
+				try {
+					childTypes.add(this.getSystemPropositionType
+						(PropositionFinder.find(child.getKey(),
+							this.userId)));
+				} catch (PropositionFinderException e) {
+					throw new PropositionValidatorException(e);
+				}
+			} else {
+				childTypes.add(this.getUserPropositionType(child.getId()));
 			}
-		} catch (PropositionFinderException e) {
-			throw new PropositionValidatorException(e);
 		}
 
 		if (this.isSame(childTypes)) {

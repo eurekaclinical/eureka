@@ -25,7 +25,7 @@ public class PropositionDaoTest extends AbstractServiceTest {
 		Assert.assertEquals(3, propositions.size());
 
 		for (Proposition proposition : propositions) {
-			System.out.println(proposition.getUser());
+			System.out.println(proposition.getUserId());
 		}
 	}
 }

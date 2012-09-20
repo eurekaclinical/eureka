@@ -18,10 +18,12 @@ public class PropositionWrapper implements Serializable {
 	private String displayName;
 	private Type type;
 	private boolean inSystem;
-	private List<Long> userTargets;
-	private List<String> systemTargets;
+	private List<PropositionWrapper> children;
+//	private List<PropositionWrapper> userTargets;
+//	private List<String> systemTargets;
 	private Date created;
 	private Date lastModified;
+	private boolean summarized;
 
 	public Long getId() {
 		return id;
@@ -63,13 +65,13 @@ public class PropositionWrapper implements Serializable {
 		this.displayName = displayName;
 	}
 
-	public List<Long> getUserTargets() {
-		return userTargets;
-	}
-
-	public void setUserTargets(List<Long> userTargets) {
-		this.userTargets = userTargets;
-	}
+//	public List<Long> getUserTargets() {
+//		return userTargets;
+//	}
+//
+//	public void setUserTargets(List<Long> userTargets) {
+//		this.userTargets = userTargets;
+//	}
 
 	public Type getType() {
 		return type;
@@ -87,13 +89,13 @@ public class PropositionWrapper implements Serializable {
 		this.inSystem = inSystem;
 	}
 
-	public List<String> getSystemTargets() {
-		return systemTargets;
-	}
-
-	public void setSystemTargets(List<String> systemTargets) {
-		this.systemTargets = systemTargets;
-	}
+//	public List<String> getSystemTargets() {
+//		return systemTargets;
+//	}
+//
+//	public void setSystemTargets(List<String> systemTargets) {
+//		this.systemTargets = systemTargets;
+//	}
 
 	public Date getCreated() {
 		return created;
@@ -109,5 +111,21 @@ public class PropositionWrapper implements Serializable {
 
 	public void setLastModified(Date inLastModified) {
 		lastModified = inLastModified;
+	}
+
+	public boolean isSummarized() {
+		return summarized;
+	}
+
+	public void setSummarized(boolean inSummarized) {
+		summarized = inSummarized;
+	}
+
+	public List<PropositionWrapper> getChildren() {
+		return children;
+	}
+
+	public void setChildren(List<PropositionWrapper> inChildren) {
+		children = inChildren;
 	}
 }
