@@ -89,7 +89,9 @@ public class ConfigListener extends GuiceServletContextListener {
 	@Override
 	public void contextDestroyed(ServletContextEvent inServletContextEvent) {
 		super.contextDestroyed(inServletContextEvent);
-		this.persistService.stop();
+		if (this.persistService != null) {
+			this.persistService.stop();
+		}
 		this.executorService.shutdown();
 		try {
 			this.executorService.awaitTermination(10, TimeUnit.SECONDS);
