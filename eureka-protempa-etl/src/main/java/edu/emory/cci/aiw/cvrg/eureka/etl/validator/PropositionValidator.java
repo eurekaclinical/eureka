@@ -7,6 +7,7 @@ package edu.emory.cci.aiw.cvrg.eureka.etl.validator;
 import java.util.List;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.PropositionWrapper;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.Configuration;
 
 /**
  *
@@ -14,7 +15,7 @@ import edu.emory.cci.aiw.cvrg.eureka.common.comm.PropositionWrapper;
  */
 public interface PropositionValidator {
 
-	void setUserId(Long inUserId);
+	void setConfiguration(Configuration inConfiguration);
 
 	void setTargetProposition(PropositionWrapper inWrapper);
 

@@ -16,6 +16,7 @@ import org.protempa.PropositionDefinitionVisitor;
 import org.protempa.SliceDefinition;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.PropositionWrapper;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.Configuration;
 import edu.emory.cci.aiw.cvrg.eureka.etl.ksb.PropositionFinder;
 import edu.emory.cci.aiw.cvrg.eureka.etl.ksb.PropositionFinderException;
 
@@ -85,7 +86,7 @@ public class PropositionValidatorImpl implements PropositionValidator {
 
 	private PropositionWrapper targetProposition;
 	private List<PropositionWrapper> propositions;
-	private Long userId;
+	private Configuration configuration;
 	private final List<String> messages;
 
 	public PropositionValidatorImpl() {
@@ -140,7 +141,7 @@ public class PropositionValidatorImpl implements PropositionValidator {
 					try {
 						types.add(this.getSystemPropositionType
 							(PropositionFinder.find(child.getKey(),
-								this.userId)));
+								this.configuration)));
 					} catch (PropositionFinderException e) {
 						throw new PropositionValidatorException(e);
 					}
@@ -247,7 +248,7 @@ public class PropositionValidatorImpl implements PropositionValidator {
 				try {
 					childTypes.add(this.getSystemPropositionType
 						(PropositionFinder.find(child.getKey(),
-							this.userId)));
+							this.configuration)));
 				} catch (PropositionFinderException e) {
 					throw new PropositionValidatorException(e);
 				}
@@ -311,12 +312,12 @@ public class PropositionValidatorImpl implements PropositionValidator {
 		this.propositions = inPropositions;
 	}
 
-	public Long getUserId() {
-		return this.userId;
+	public Configuration getConfiguration() {
+		return configuration;
 	}
 
-	public void setUserId(Long inUserId) {
-		this.userId = inUserId;
+	public void setConfiguration(Configuration inConfiguration) {
+		configuration = inConfiguration;
 	}
 
 	private void addMessage(String inMessage) {

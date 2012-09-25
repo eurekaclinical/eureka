@@ -154,7 +154,7 @@ public class EurekaDataSourceBackend extends RelationalDbDataSourceBackend {
                                                                 "MARITAL_STATUS",
                                                                 ColumnSpec.Constraint.EQUAL_TO,
                                                                 this.mapper
-                                                                        .propertyNameOrPropIdToSqlCodeArray("marital_status_08172012.txt"),
+                                                                        .propertyNameOrPropIdToSqlCodeArray("marital_status_08172011.txt"),
                                                                 true), ValueType.NOMINALVALUE),
                                                 new PropertySpec(
                                                         "language",

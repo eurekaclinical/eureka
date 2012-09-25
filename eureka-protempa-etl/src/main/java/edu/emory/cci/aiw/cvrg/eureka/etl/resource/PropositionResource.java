@@ -20,6 +20,8 @@ import com.google.inject.Inject;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.PropositionWrapper;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.ValidationRequest;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.Configuration;
+import edu.emory.cci.aiw.cvrg.eureka.etl.dao.ConfDao;
 import edu.emory.cci.aiw.cvrg.eureka.etl.ksb.PropositionFinder;
 import edu.emory.cci.aiw.cvrg.eureka.etl.ksb.PropositionFinderException;
 import edu.emory.cci.aiw.cvrg.eureka.etl.validator.PropositionValidator;
@@ -35,10 +37,12 @@ public class PropositionResource {
 		LoggerFactory.getLogger(PropositionResource.class);
 
 	private final PropositionValidator propositionValidator;
+	private final ConfDao confDao;
 
 	@Inject
-	public PropositionResource(PropositionValidator inValidator) {
+	public PropositionResource(PropositionValidator inValidator, ConfDao inConfDao) {
 		this.propositionValidator = inValidator;
+		this.confDao = inConfDao;
 	}
 
 	@POST
@@ -47,8 +51,11 @@ public class PropositionResource {
 	public Response validatePropositions(ValidationRequest inRequest) {
 
 		boolean result;
+		Configuration configuration = this.confDao.getByUserId(inRequest
+			.getUserId());
+
 		try {
-			propositionValidator.setUserId(inRequest.getUserId());
+			propositionValidator.setConfiguration(configuration);
 			propositionValidator.setPropositions(inRequest.getPropositions());
 			propositionValidator.setTargetProposition(inRequest
 				.getTargetProposition());
@@ -77,9 +84,10 @@ public class PropositionResource {
 
 		PropositionWrapper wrapper = null;
 		try {
+			Configuration configuration = this.confDao.getByUserId(inUserId);
 			PropositionDefinition definition =
-				PropositionFinder.find(inKey, inUserId);
-			wrapper = this.getInfo(definition, inUserId, false);
+				PropositionFinder.find(inKey, configuration);
+			wrapper = this.getInfo(definition, configuration, false);
 		} catch (PropositionFinderException e) {
 			LOGGER.error(e.getMessage(), e);
 		}
@@ -87,7 +95,7 @@ public class PropositionResource {
 	}
 
 	private PropositionWrapper getInfo(PropositionDefinition inDefinition,
-		Long inUserId, boolean summarize)
+		Configuration configuration, boolean summarize)
 		throws PropositionFinderException {
 		PropositionWrapper wrapper = new PropositionWrapper();
 		wrapper.setKey(inDefinition.getId());
@@ -103,7 +111,7 @@ public class PropositionResource {
 					().length);
 			for (String key : inDefinition.getChildren()) {
 				children.add(this.getInfo(PropositionFinder.find(key,
-					inUserId), inUserId, true));
+					configuration), configuration, true));
 			}
 			wrapper.setChildren(children);
 		}

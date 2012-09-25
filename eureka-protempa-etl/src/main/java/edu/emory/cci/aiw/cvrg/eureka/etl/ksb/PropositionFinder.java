@@ -16,25 +16,28 @@ import org.protempa.bconfigs.commons.INICommonsConfigurations;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.Configuration;
+
 public class PropositionFinder {
 
 	private static final Logger LOGGER =
 			LoggerFactory.getLogger(PropositionFinder.class);
-	private static final String CONF_DIR = "/opt/cvrg_users";
-	private static final String USER_PREFIX = "user";
+	private static final File CONF_DIR = new File("/etc/eureka/etlconfig");
+	private static final String CONF_PREFIX = "config";
 
-	public static PropositionDefinition find(String inKey, Long inUserId)
+	public static PropositionDefinition find(String inKey,
+		Configuration inConfiguration)
 			throws PropositionFinderException {
+		Long confId = inConfiguration.getId();
 		PropositionDefinition definition = null;
 		try {
-			String idStr = String.valueOf(inUserId.longValue());
-			File userDir = new File(CONF_DIR, USER_PREFIX + idStr);
-			File confDir = new File(userDir, ".protempa-configs");
+			String idStr = String.valueOf(confId.longValue());
+			String confFileName = CONF_PREFIX + idStr + ".ini";
 			Configurations configurations =
-					new INICommonsConfigurations(confDir);
+					new INICommonsConfigurations(CONF_DIR);
 			SourceFactory sf =
 					new SourceFactory(configurations,
-							"erat-diagnoses-direct");
+							confFileName);
 			KnowledgeSource knowledgeSource = sf.newKnowledgeSourceInstance();
 			definition = knowledgeSource.readPropositionDefinition(inKey);
 		} catch (BackendProviderSpecLoaderException e) {

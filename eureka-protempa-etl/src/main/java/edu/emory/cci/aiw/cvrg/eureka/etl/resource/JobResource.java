@@ -25,7 +25,9 @@ import com.google.inject.Inject;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.JobFilter;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.JobRequest;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.PropositionWrapper;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.Configuration;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.Job;
+import edu.emory.cci.aiw.cvrg.eureka.etl.dao.ConfDao;
 import edu.emory.cci.aiw.cvrg.eureka.etl.dao.JobDao;
 import edu.emory.cci.aiw.cvrg.eureka.etl.job.TaskManager;
 import edu.emory.cci.aiw.cvrg.eureka.etl.validator.PropositionValidator;
@@ -39,13 +41,15 @@ public class JobResource {
 	private final JobDao jobDao;
 	private final PropositionValidator propositionValidator;
 	private final TaskManager taskManager;
+	private final ConfDao confDao;
 
 	@Inject
 	public JobResource(JobDao inJobDao, TaskManager inTaskManager,
-		PropositionValidator inValidator) {
+		PropositionValidator inValidator, ConfDao inConfDao) {
 		this.jobDao = inJobDao;
 		this.taskManager = inTaskManager;
 		this.propositionValidator = inValidator;
+		this.confDao = inConfDao;
 	}
 
 	@GET
@@ -71,12 +75,15 @@ public class JobResource {
 		Job job = inJobRequest.getJob();
 		List<PropositionWrapper> wrappers =
 			inJobRequest.getPropositionWrappers();
-		propositionValidator.setUserId(job.getUserId());
+		Configuration configuration = this.confDao.getByUserId(job.getUserId
+			());
+		propositionValidator.setConfiguration(configuration);
 		propositionValidator.setPropositions(wrappers);
 		boolean valid;
 		try {
 			valid = propositionValidator.validate();
 		} catch (PropositionValidatorException e) {
+			LOGGER.error(e.getMessage(),e);
 			valid = false;
 		}
 
@@ -91,6 +98,11 @@ public class JobResource {
 			response = Response.created(URI.create("/" + job.getId()))
 				.build();
 		} else {
+			job.setNewState("FAILED",null,null);
+			this.jobDao.create(job);
+			for (String message : propositionValidator.getMessages()) {
+				LOGGER.error(message);
+			}
 			response =
 				Response.status(Response.Status.BAD_REQUEST).entity
 					(propositionValidator.getMessages()).build();

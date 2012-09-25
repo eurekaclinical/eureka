@@ -29,8 +29,7 @@ public class Setup implements TestDataProvider {
 	/**
 	 * Sets up necessary data for testing.
 	 *
-	 * @param inJobDao DAO to store Job information.
-	 * @param inConfDao DAO to store Configuration information.
+	 * @param inManagerProvider the entity manager provider.
 	 */
 	@Inject
 	public Setup(Provider<EntityManager> inManagerProvider) {
