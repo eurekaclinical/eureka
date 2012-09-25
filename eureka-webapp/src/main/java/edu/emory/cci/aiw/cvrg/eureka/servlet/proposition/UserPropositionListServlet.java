@@ -35,10 +35,10 @@ public class UserPropositionListServlet extends HttpServlet {
 
 	
 
-	private JsonTreeData createData(String data, String id) {
+	private JsonTreeData createData(PropositionWrapper proposition) {
 		JsonTreeData d = new JsonTreeData();
-		d.setData(data);
-		d.setKeyVal("id", id);
+		d.setData(proposition.getAbbrevDisplayName());
+		d.setKeyVal("id", String.valueOf(proposition.getId()));
 		
 		return d;
 	}
@@ -94,7 +94,7 @@ public class UserPropositionListServlet extends HttpServlet {
 						// Nothing to implement, used to hold returned data.
 					});
 			for (PropositionWrapper proposition : props) {
-				JsonTreeData d = createData(proposition.getAbbrevDisplayName(), this.getDisplayName(proposition));
+				JsonTreeData d = createData(proposition); 
 				l.add(d);
 				LOGGER.debug("Added user prop: " + d.getData());
 			}

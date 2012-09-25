@@ -78,10 +78,11 @@ public class ListSystemPropositionChildrenServlet extends HttpServlet {
 
 	}
 
-	private JsonTreeData createData(String id, String data) {
+	//private JsonTreeData createData(String id, String data) {
+	private JsonTreeData createData(PropositionWrapper pw) {
 		JsonTreeData d = new JsonTreeData();
-		d.setData(data);
-		d.setKeyVal("id", id);
+		d.setData(this.getDisplayName(pw));
+		d.setKeyVal("id", pw.getKey());
 
 		return d;
 	}
@@ -90,32 +91,6 @@ public class ListSystemPropositionChildrenServlet extends HttpServlet {
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
 		doGet(req, resp);
-	}
-
-	private void getAllSystemData(JsonTreeData d, User user) {
-
-		PropositionWrapper propWrapper = webResource.path("/api/proposition/system/" + user.getId() + "/"+ d.getId())
-				.accept(MediaType.APPLICATION_JSON)
-				.get(PropositionWrapper.class);
-
-		for (PropositionWrapper propSystemWrapper : propWrapper.getChildren()) {
-            if (propSystemWrapper.isInSystem()) {
-
-			    JsonTreeData newData = createData(propSystemWrapper.getKey(), propSystemWrapper.getKey()); 
-			    newData.setType("system");
-			    d.addNodes(newData);
-
-            }
-		}
-        /*
-		for (String sysTarget : propWrapper.getSystemTargets()) {
-			JsonTreeData newData = createData(sysTarget, sysTarget);
-			newData.setType("system");
-			d.addNodes(newData);
-		}
-        */
-
-
 	}
 
 
@@ -158,7 +133,7 @@ public class ListSystemPropositionChildrenServlet extends HttpServlet {
 		for (PropositionWrapper propChild : propWrapper.getChildren()) {
             if (propChild.isInSystem()) {
 
-			    JsonTreeData newData = createData(propChild.getKey(), this.getDisplayName(propChild));
+			    JsonTreeData newData = createData(propChild);
 			    newData.setType("system");
 			    l.add(newData);
 

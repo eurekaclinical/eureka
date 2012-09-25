@@ -4,6 +4,7 @@ $("#sortable").disableSelection();
 var numItems = 0;
 
 var el;
+var dropBoxMaxTextWidth = 275;
 
 $(document).ready(function(){
 	
@@ -187,7 +188,10 @@ function initTrees() {
 		},
 		"dnd" : {
 			"drop_finish" : function(data) {
-                if (data.e.currentTarget.id == 'tree-drop' || data.e.currentTarget.id == 'label-info') {
+                if (idIsNotInList(data.o[0].id)  &&
+                        data.e.currentTarget.id == 'tree-drop' || data.e.currentTarget.id == 'label-info') {
+
+                    $('#label-info').hide();
                     var target = $('#tree-drop')[0]; 
                     target.style["background"] = "lightblue";
                     $('#label-info')[0].hidden = false;
@@ -197,6 +201,34 @@ function initTrees() {
 						text:  data.o[0].children[1].childNodes[1].textContent
 				    }).appendTo('#sortable');
 		
+                    var txt = $('#sortable li:last').text();
+    
+                    var width = txt.length * 7;
+                    if (width > dropBoxMaxTextWidth) {
+                        dropBoxMaxTextWidth = width;
+                        $('#sortable').width(dropBoxMaxTextWidth);
+                    }
+
+                    $('#sortable li:last').mouseover(function () {
+
+                            $(this).css({cursor:"pointer", backgroundColor:"#24497A"});
+                    });     
+                    $('#sortable li:last').mouseout(function () {
+
+                            $(this).css({cursor:"pointer", backgroundColor:"lightblue"});
+                    });     
+
+                    // function to enable removal of list item once it is clicked
+                    $('#sortable li:last').click(function onItemClick() {
+                        $(this).animate( { backgroundColor: "#CCC", color: "#333" }, 500);
+                        alert("Removed Selection: "+this.innerHTML);
+                        $(this).remove();
+                        if ($('#sortable li').length == 0) {
+                            $('#sortable').width(275);
+                            dropBoxMaxTextWidth = 275;
+                        }
+
+                    });
 				}
 		
 				numItems++;
@@ -297,7 +329,7 @@ function initTrees() {
 	
 	
 	
-	$("#tab2").jstree({
+	$("#userTree").jstree({
 		"json_data" : {
 		    "ajax" : { "url" : "/userproplist?id=root" }
 		},
@@ -306,6 +338,7 @@ function initTrees() {
                 if (idIsNotInList(data.o[0].id)  &&
                         data.e.currentTarget.id == 'tree-drop' || data.e.currentTarget.id == 'label-info') {
                       
+                    $('#label-info').hide();
                     
                     var target = $('#tree-drop')[0]; 
                     target.style["background"] = "lightblue";
@@ -317,19 +350,33 @@ function initTrees() {
 					    text: data.o[0].children[1].childNodes[1].textContent
 				    }).appendTo('#sortable');
 
-                    $('#sortable li:last').mouseover(function onItemOver() {
+                    var txt = $('#sortable li:last').text();
+   
+                    var width = txt.length * 7;
+                    if (width > dropBoxMaxTextWidth) {
+                        dropBoxMaxTextWidth = width;
+                        $('#sortable').width(dropBoxMaxTextWidth);
+                    }
 
-                        $(this).mouseover(function onItemOver()
-                        {
-                            $(this).css("cursor","pointer");
-                        });
-                    });     
+                    $('#sortable li:last').mouseover(function () {
+
+                            $(this).css({cursor:"pointer", backgroundColor:"#24497A"});
+                    });
+                    $('#sortable li:last').mouseout(function () {
+
+                            $(this).css({cursor:"pointer", backgroundColor:"lightblue"});
+                    });
+
 
                     // function to enable removal of list item once it is clicked
                     $('#sortable li:last').click(function onItemClick() {
                         $(this).animate( { backgroundColor: "#CCC", color: "#333" }, 500);
                         alert("Removed Selection: "+this.innerHTML);
-                        $(this).remove()            ;
+                        $(this).remove();
+                        if ($('#sortable li').length == 0) {
+                            $('#sortable').width(275);
+                            dropBoxMaxTextWidth = 275;
+                        }
 
                     });
 
@@ -376,7 +423,6 @@ function initTrees() {
 
 function idIsNotInList(id) {
 
-   alert(id); 
     
     var retVal = true;
     $('#sortable li').each( function() {
