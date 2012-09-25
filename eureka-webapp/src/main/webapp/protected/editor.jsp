@@ -56,7 +56,7 @@
             				<label>Name:</label>
             			</td>
             			<td>
-            				<input type="text" id="element_name" width="100"/>
+            				<input type="text" id="element_name" style="width:250px"/>
             			</td>
             		</tr>
             		<tr>
