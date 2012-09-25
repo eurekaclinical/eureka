@@ -60,11 +60,11 @@
             			</td>
             		</tr>
             		<tr>
-            			<td>
+            			<td valign="top">
             				<label>Description:</label>
             			</td>
-            			<td>
-            				<input type="text" id="element_description" width="100"/>
+            			<td valign="top">
+            				<textarea id="element_description" ></textarea>
             			</td>
             		</tr>
             		
@@ -133,19 +133,13 @@
 			            							<tr>
 			            								<td>
 							            					<div id="tree-drop" 
-																class="jstree-drop"
-																style="float: left; 																				
-																border: 3px solid gray; 
-                                                                width: 180px;
-                                                                height: 200px; 
-																background: #C3D9FF; color: green;"
-																>
+																class="jstree-drop">
 																
 																<ul id="sortable" style="width: 100% height: 100% >
 									
 																</ul>
                                                                 <div id="holder" style="width: 550px; height: 350px" ></div>
-                                                                <div id="label-info" class="jstree-drop" style="width: 75px; height: 50px; margin: auto; bottom:100px; position: relative" ><center>Drop Here</center></div>
+                                                                <div id="label-info" class="jstree-drop" ><center>Drop Here</center></div>
 																
 																
 															</div>

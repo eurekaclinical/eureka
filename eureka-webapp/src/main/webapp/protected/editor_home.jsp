@@ -15,7 +15,7 @@
             <a href="${pageContext.request.contextPath}/protected/editor.jsp">Create New Element</a>
          </div>
 
-         <div class="tooltip" id="tooltip"><div id="tree"></div></div>'
+         <div class="tooltip" id="tooltip"><div id="tree"></div></div>
 
          <table align="center" id="elements1" style="width: 100%">
                          <tr class="bold">

@@ -350,5 +350,25 @@ div.tabs > div h2 {
 .editor_menu {
 	margin-bottom: 10px;
 }
+
+#element_description {
+    width: 500px;
+    height: 100px;
 }
 
+#tree-drop {
+    float: left;                                                                                 
+    border: 3px solid gray; 
+    width: 180px;
+    height: 200px; 
+    background: #C3D9FF; color: green;
+
+}
+
+#label-info {
+    width: 75px; 
+    height: 50px; 
+    margin: auto; 
+    bottom:100px; 
+    position: relative;
+}

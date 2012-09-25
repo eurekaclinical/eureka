@@ -98,16 +98,46 @@ public class ListUserDefinedPropositionChildrenServlet extends HttpServlet {
 				.get(PropositionWrapper.class);
 		LOGGER.debug("got propWrapper {}", propWrapper.getId());
 
-		for (PropositionWrapper child : propWrapper.getChildren()) {
-			if (child.isInSystem()) {
-				String sysTarget = child.getKey();
-				JsonTreeData newData = createData(sysTarget, sysTarget);
-				newData.setType("system");
-				LOGGER.debug("add sysTarget {}", sysTarget);
-				d.addNodes(newData);
-			} else {
-				Long userTarget = child.getId();
-				PropositionWrapper propUserWrapper =
+        /*
+		for (String sysTarget : propWrapper.getSystemTargets()) {
+			JsonTreeData newData = createData(sysTarget, sysTarget);
+			newData.setType("system");
+			LOGGER.debug("add sysTarget {}", sysTarget);
+			d.addNodes(newData);
+		}
+        */
+		for (PropositionWrapper pw : propWrapper.getChildren()) {
+            if (pw.isInSystem()) {
+
+			    JsonTreeData newData = createData(pw.getKey(), pw.getKey());
+			    newData.setType("system");
+			    LOGGER.debug("add sysTarget {}", pw.getKey());
+			    d.addNodes(newData);
+
+            }
+		}
+
+
+		for (PropositionWrapper propUserWrapper : propWrapper.getChildren()) {
+            if (!propUserWrapper.isInSystem()) {
+
+			    //JsonTreeData newData = createData(pw.getKey(), pw.getKey());
+			    //newData.setType("system");
+			    //LOGGER.debug("add sysTarget {}", pw.getKey());
+			    //d.addNodes(newData);
+
+			    JsonTreeData newData = createData(propUserWrapper
+			    	.getAbbrevDisplayName(), String.valueOf(propUserWrapper.getId
+			    	().longValue()));
+			    getAllData(newData);
+			    newData.setType("user");
+			    LOGGER.debug("add user defined {}", propUserWrapper.getId());
+			    d.addNodes(newData);
+            }
+		}
+        /*
+		for (Long userTarget : propWrapper.getUserTargets()) {
+			PropositionWrapper propUserWrapper =
 					webResource.path("/api/proposition/user/get/"+ userTarget)
 						.accept(MediaType.APPLICATION_JSON)
 						.get(PropositionWrapper.class);
@@ -121,6 +151,8 @@ public class ListUserDefinedPropositionChildrenServlet extends HttpServlet {
 				d.addNodes(newData);
 			}
 		}
+        */
+
 	}
 
 

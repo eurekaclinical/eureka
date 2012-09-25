@@ -104,8 +104,11 @@ public class SavePropositionServlet extends HttpServlet {
 				}
 
 			}
-
-			pw.setChildren(children);
+		
+    
+            // SBA
+			//pw.setSystemTargets(systemTargets);
+			//pw.setUserTargets(userTargets);
 			pw.setAbbrevDisplayName(name);
 			pw.setDisplayName(description);
 			pw.setUserId(user.getId());
