@@ -25,7 +25,8 @@ import edu.emory.cci.aiw.cvrg.eureka.etl.dao.ConfDao;
 import edu.emory.cci.aiw.cvrg.eureka.etl.ksb.PropositionFinder;
 import edu.emory.cci.aiw.cvrg.eureka.etl.ksb.PropositionFinderException;
 import edu.emory.cci.aiw.cvrg.eureka.etl.validator.PropositionValidator;
-import edu.emory.cci.aiw.cvrg.eureka.etl.validator.PropositionValidatorException;
+import edu.emory.cci.aiw.cvrg.eureka.etl.validator
+	.PropositionValidatorException;
 
 /**
  * @author hrathod
@@ -33,14 +34,15 @@ import edu.emory.cci.aiw.cvrg.eureka.etl.validator.PropositionValidatorException
 @Path("/proposition")
 public class PropositionResource {
 
-	private static final Logger LOGGER =
-		LoggerFactory.getLogger(PropositionResource.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger
+		(PropositionResource.class);
 
 	private final PropositionValidator propositionValidator;
 	private final ConfDao confDao;
 
 	@Inject
-	public PropositionResource(PropositionValidator inValidator, ConfDao inConfDao) {
+	public PropositionResource(PropositionValidator inValidator,
+		ConfDao inConfDao) {
 		this.propositionValidator = inValidator;
 		this.confDao = inConfDao;
 	}
@@ -51,14 +53,14 @@ public class PropositionResource {
 	public Response validatePropositions(ValidationRequest inRequest) {
 
 		boolean result;
-		Configuration configuration = this.confDao.getByUserId(inRequest
-			.getUserId());
+		Configuration configuration = this.confDao.getByUserId(
+			inRequest.getUserId());
 
 		try {
 			propositionValidator.setConfiguration(configuration);
 			propositionValidator.setPropositions(inRequest.getPropositions());
-			propositionValidator.setTargetProposition(inRequest
-				.getTargetProposition());
+			propositionValidator.setTargetProposition(
+				inRequest.getTargetProposition());
 			result = propositionValidator.validate();
 		} catch (PropositionValidatorException e) {
 			LOGGER.error(e.getMessage(), e);
@@ -69,9 +71,8 @@ public class PropositionResource {
 		if (result) {
 			response = Response.ok().build();
 		} else {
-			response =
-				Response.status(Response.Status.NOT_ACCEPTABLE).entity
-					(propositionValidator.getMessages()).build();
+			response = Response.status(Response.Status.NOT_ACCEPTABLE)
+				.entity(propositionValidator.getMessages()).build();
 		}
 		return response;
 	}
@@ -85,8 +86,8 @@ public class PropositionResource {
 		PropositionWrapper wrapper = null;
 		try {
 			Configuration configuration = this.confDao.getByUserId(inUserId);
-			PropositionDefinition definition =
-				PropositionFinder.find(inKey, configuration);
+			PropositionDefinition definition = PropositionFinder.find
+				(inKey, configuration);
 			wrapper = this.getInfo(definition, configuration, false);
 		} catch (PropositionFinderException e) {
 			LOGGER.error(e.getMessage(), e);
@@ -95,23 +96,29 @@ public class PropositionResource {
 	}
 
 	private PropositionWrapper getInfo(PropositionDefinition inDefinition,
-		Configuration configuration, boolean summarize)
-		throws PropositionFinderException {
+		Configuration configuration, boolean summarize) throws
+		PropositionFinderException {
+
 		PropositionWrapper wrapper = new PropositionWrapper();
+
+
 		wrapper.setKey(inDefinition.getId());
 		wrapper.setInSystem(true);
-		wrapper.setAbbrevDisplayName(inDefinition.getAbbreviatedDisplayName
-			());
+		wrapper.setAbbrevDisplayName(
+			inDefinition.getAbbreviatedDisplayName());
 		wrapper.setDisplayName(inDefinition.getDisplayName());
 		wrapper.setSummarized(summarize);
+		wrapper.setParent(inDefinition.getChildren().length > 0);
 
 		if (!summarize) {
-			List<PropositionWrapper> children =
-				new ArrayList<PropositionWrapper>(inDefinition.getChildren
-					().length);
+			List<PropositionWrapper> children = new
+				ArrayList<PropositionWrapper>(
+				inDefinition.getChildren().length);
 			for (String key : inDefinition.getChildren()) {
-				children.add(this.getInfo(PropositionFinder.find(key,
-					configuration), configuration, true));
+				children.add(
+					this.getInfo(
+						PropositionFinder.find(
+							key, configuration), configuration, true));
 			}
 			wrapper.setChildren(children);
 		}
