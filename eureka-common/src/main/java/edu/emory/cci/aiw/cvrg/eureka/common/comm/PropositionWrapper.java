@@ -24,6 +24,7 @@ public class PropositionWrapper implements Serializable {
 	private Date created;
 	private Date lastModified;
 	private boolean summarized;
+	private boolean parent;
 
 	public Long getId() {
 		return id;
@@ -127,5 +128,13 @@ public class PropositionWrapper implements Serializable {
 
 	public void setChildren(List<PropositionWrapper> inChildren) {
 		children = inChildren;
+	}
+
+	public boolean isParent() {
+		return parent;
+	}
+
+	public void setParent(boolean inParent) {
+		parent = inParent;
 	}
 }

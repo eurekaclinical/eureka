@@ -9,7 +9,7 @@ import edu.emory.cci.aiw.cvrg.eureka.services.dao.PropositionDao;
 
 public final class PropositionUtil {
 
-	private PropositionUtil () {
+	private PropositionUtil() {
 		// do not allow instantiation.
 	}
 
@@ -49,18 +49,16 @@ public final class PropositionUtil {
 
 		PropositionWrapper wrapper = new PropositionWrapper();
 		PropositionWrapper.Type type = PropositionUtil.getType(inProposition);
+		List<Proposition> targets = PropositionUtil.getTargets(inProposition,
+			type);
 
 		if (!summarize) {
-			List<PropositionWrapper> children =
-				new ArrayList<PropositionWrapper>();
-			wrapper.setSummarized(false);
-			for (Proposition target : PropositionUtil.getTargets
-				(inProposition, type)) {
+		List<PropositionWrapper> children = new
+			ArrayList<PropositionWrapper>();
+			for (Proposition target : targets) {
 				children.add(PropositionUtil.wrap(target, true));
 			}
 			wrapper.setChildren(children);
-		} else {
-			wrapper.setSummarized(true);
 		}
 
 		if (inProposition.getId() != null) {
@@ -71,6 +69,8 @@ public final class PropositionUtil {
 			wrapper.setUserId(inProposition.getUserId());
 		}
 
+		wrapper.setParent(targets.size() > 0);
+		wrapper.setSummarized(summarize);
 		wrapper.setInSystem(inProposition.isInSystem());
 		wrapper.setType(type);
 		wrapper.setAbbrevDisplayName(inProposition.getAbbrevDisplayName());
@@ -82,10 +82,10 @@ public final class PropositionUtil {
 		return wrapper;
 	}
 
-	public static List<PropositionWrapper> wrapAll (List<Proposition>
+	public static List<PropositionWrapper> wrapAll(List<Proposition>
 		inPropositions) {
-		List<PropositionWrapper> wrappers = new ArrayList<PropositionWrapper>
-			(inPropositions.size());
+		List<PropositionWrapper> wrappers = new
+			ArrayList<PropositionWrapper>(inPropositions.size());
 		for (Proposition proposition : inPropositions) {
 			wrappers.add(PropositionUtil.wrap(proposition, false));
 		}
@@ -107,8 +107,7 @@ public final class PropositionUtil {
 		if (inWrapper.getChildren() != null) {
 			for (PropositionWrapper child : inWrapper.getChildren()) {
 				if (child.isInSystem()) {
-					Proposition p = inPropositionDao.getByKey(child.getKey
-						());
+					Proposition p = inPropositionDao.getByKey(child.getKey());
 					if (p == null) {
 						p = new Proposition();
 						p.setKey(child.getKey());
