@@ -1,3 +1,5 @@
+var lastRowId = 0;
+
 $(document).ready(function() {
 
      $('#tree').hover(
@@ -371,21 +373,43 @@ $(document).ready(function() {
 });
 	
 
-function showPopup(event) {
+function clearHover() {
+    console.log("clearHover");
+    $('.rowdata td').css('background', 'white');
+    $('div.tooltip').hide();
+    lastRowId = -99;
+}
+function removePopup(event, id) {
+    //var rowId = event.target.parentNode.id;
+    //console.log("removePopup: " + rowId + ", " + lastRowId);
+    //if (rowId != lastRowId) {
+     //   $('#'+rowId + " td").css("background", "white");
+      //  $('div.tooltip').hide();
+    //}
+}
 
-    console.log(event.pageX);
+function showPopup(event, id) {
+
     //$('<div class="tooltip"><div id="tree"></div></div>').appendTo('body');
+    var rowId = event.target.parentNode.id;
+    console.log("showPopup: " + rowId + ", " + lastRowId);
+    if (rowId != lastRowId) {
+        $('div.tooltip').hide();
+        $(".rowdata td").css("background", "white");
+        lastRowId = rowId;
+        $('#'+rowId + " td").css("background", "yellow");
+    
+        positionTooltip(event);
+    
+        $("#tree").jstree({
+            "json_data" : {
+                "ajax" : { "url" : "/userpropchildren?propId=" + id}
+            },
+        "plugins" : [ "themes", "json_data", "ui" ]
+        });
 
-    positionTooltip(event);
-
-    $("#tree").jstree({
-        "json_data" : {
-            "ajax" : { "url" : "/userpropchildren?propId=" + event.target.id}
-        },
-    "plugins" : [ "themes", "json_data", "ui" ]
-    });
-
-    $('div.tooltip').show();
+        $('div.tooltip').show();
+    }
 
 
 }

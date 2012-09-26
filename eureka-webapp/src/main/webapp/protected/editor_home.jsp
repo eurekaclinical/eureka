@@ -17,13 +17,15 @@
 
          <div class="tooltip" id="tooltip"><div id="tree"></div></div>
 
-         <table align="center" id="elements1" style="width: 100%">
-                         <tr class="bold">
+                <table align="center" id="elements1" style="width: 100%">
+                         <tr class="bold" onmouseover="clearHover()">
                                  <th>Name</th><th>Description</th><th>Type</th><th>Created Date</th><th>Last Modified</th>
                          </tr>
                          <c:forEach items="${props}" var="prop">
-                                 <tr>
-                                         <td><a href="#" onmouseover="showPopup(event)" id="${prop.attr['id']}">${prop.attr['abbrevDisplay']}</a></td>
+                                 <tr class="rowdata" id="${prop.attr['id']}" 
+                                    onmouseover="showPopup(event, ${prop.attr['id']})" 
+                                    onmouseout="removePopup(event, ${prop.attr['id']})">
+                                         <td>${prop.attr['abbrevDisplay']}</td>
                                          <td>${prop.attr['displayName']}</td>
                                          <td>${prop.attr['type']}</td>
                                          <td>${prop.attr['created']}</td>
@@ -31,7 +33,7 @@
                                  </tr>
 
                          </c:forEach>
-         </table>
+                </table>
 		
 
 	</template:content>

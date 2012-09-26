@@ -102,6 +102,7 @@ public class SavePropositionServlet extends HttpServlet {
 				} else {
 					child.setId(Long.valueOf(userProposition.getId()));
 				}
+                children.add(child);
 
 			}
 		
@@ -109,6 +110,7 @@ public class SavePropositionServlet extends HttpServlet {
             // SBA
 			//pw.setSystemTargets(systemTargets);
 			//pw.setUserTargets(userTargets);
+			pw.setChildren(children);
 			pw.setAbbrevDisplayName(name);
 			pw.setDisplayName(description);
 			pw.setUserId(user.getId());
