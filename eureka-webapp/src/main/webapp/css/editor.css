@@ -361,7 +361,7 @@ div.tabs > div h2 {
     overflow: auto;
     border: 3px solid gray;
     width: 285px;
-    height: 262px;
+    height: 263px;
     background: #C3D9FF; 
     color: green;
 
@@ -369,7 +369,7 @@ div.tabs > div h2 {
 
 #sortable {
     overflow: auto;
-    width: 275px;
+    width: 285px;
     height: 202px;
     list-style-type: none;
     margin: 0;

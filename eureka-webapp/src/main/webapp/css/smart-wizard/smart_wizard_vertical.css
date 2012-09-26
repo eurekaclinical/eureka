@@ -40,7 +40,7 @@
   background-color:#F8F8F8;  
   height:350px;
   text-align:left;
-  overflow:auto;    
+  overflow:hidden;    
   z-index:88; 
   -webkit-border-radius: 5px;
   -moz-border-radius  : 5px;
