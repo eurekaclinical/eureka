@@ -7,6 +7,7 @@ import java.util.Date;
 import java.util.List;
 
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
@@ -50,8 +51,8 @@ public class PropositionResource {
 	/**
 	 * The class level logger.
 	 */
-	private static final Logger LOGGER =
-		LoggerFactory.getLogger(PropositionResource.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger
+		(PropositionResource.class);
 
 	/**
 	 * Creates a new instance of PropositionResource
@@ -73,8 +74,9 @@ public class PropositionResource {
 		"userId") Long inUserId) {
 		List<PropositionWrapper> wrappers = new
 			ArrayList<PropositionWrapper>();
-		wrappers.add(this.fetchSystemProposition(inUserId,
-			"ICD9:Procedures"));
+		wrappers.add(
+			this.fetchSystemProposition(
+				inUserId, "ICD9:Procedures"));
 		wrappers.add(this.fetchSystemProposition(inUserId, "ICD9:Diagnoses"));
 		wrappers.add(this.fetchSystemProposition(inUserId, "ICD9:E-codes"));
 		wrappers.add(this.fetchSystemProposition(inUserId, "ICD9:V-codes"));
@@ -94,8 +96,8 @@ public class PropositionResource {
 	@Produces(MediaType.APPLICATION_JSON)
 	public List<PropositionWrapper> batchSystemPropositions(@PathParam
 		("userId") Long inUserId, List<String> inIdList) {
-		List<PropositionWrapper> wrappers =
-			new ArrayList<PropositionWrapper>(inIdList.size());
+		List<PropositionWrapper> wrappers = new
+			ArrayList<PropositionWrapper>(inIdList.size());
 		for (String id : inIdList) {
 			wrappers.add(this.fetchSystemProposition(inUserId, id));
 		}
@@ -119,8 +121,8 @@ public class PropositionResource {
 	public Response validateProposition(@PathParam(
 		"userId") Long inUserId, PropositionWrapper inWrapper) {
 		Response result;
-		List<Proposition> propositions =
-			this.propositionDao.getByUserId(inUserId);
+		List<Proposition> propositions = this.propositionDao.getByUserId
+			(inUserId);
 		List<PropositionWrapper> wrappers = new
 			ArrayList<PropositionWrapper>();
 
@@ -135,15 +137,13 @@ public class PropositionResource {
 
 		try {
 			Client client = CommUtils.getClient();
-			WebResource resource =
-				client.resource(this.applicationProperties
-					.getEtlPropositionValidationUrl());
-			ClientResponse response =
-				resource.type(MediaType.APPLICATION_JSON).post
-					(ClientResponse.class, validationRequest);
-			result =
-				Response.status(response.getClientResponseStatus()
-					.getStatusCode()).build();
+			WebResource resource = client.resource(
+				this.applicationProperties.getEtlPropositionValidationUrl());
+			ClientResponse response = resource.type(
+				MediaType.APPLICATION_JSON).post(
+				ClientResponse.class, validationRequest);
+			result = Response.status(
+				response.getClientResponseStatus().getStatusCode()).build();
 		} catch (KeyManagementException e) {
 			LOGGER.error(e.getMessage(), e);
 			result = Response.serverError().build();
@@ -165,8 +165,8 @@ public class PropositionResource {
 			(inPropositionId);
 		if (proposition != null) {
 			if (proposition.isInSystem()) {
-				wrapper =
-					this.fetchSystemProposition(proposition.getUserId(), proposition.getKey());
+				wrapper = this.fetchSystemProposition(
+					proposition.getUserId(), proposition.getKey());
 				wrapper.setCreated(proposition.getCreated());
 				wrapper.setLastModified(proposition.getLastModified());
 			} else {
@@ -176,17 +176,71 @@ public class PropositionResource {
 		return wrapper;
 	}
 
+	@DELETE
+	@Path("/user/delete/{prodId}")
+	public Response deleteUserPropositions(@PathParam("propId") Long
+		inPropositionId) {
+		// the response to return;
+		Response response = Response.ok().build();
+
+		// fetch the proposition for the given ID
+		Proposition target = this.propositionDao.retrieve(inPropositionId);
+		if (target == null) {
+			// if the target is not found, return a NOT_FOUND response
+			response = Response.status(Response.Status.NOT_FOUND).build();
+		} else {
+			// now get the rest of the propositions for the user
+			List<Proposition> others = this.propositionDao.getByUserId(
+				target.getUserId());
+
+			// now loop through and make sure that the given proposition is
+			// not used in the definition of any of the other propositions.
+			boolean error = false;
+			for (Proposition proposition : others) {
+				if (proposition.getId().equals(target.getUserId())) {
+					continue;
+				} else {
+					List<Proposition> targets = new ArrayList<Proposition>();
+					if (proposition.getAbstractedFrom() != null) {
+						targets.addAll(proposition.getAbstractedFrom());
+					}
+					if (proposition.getInverseIsA() != null) {
+						targets.addAll(proposition.getInverseIsA());
+					}
+					for (Proposition p : targets) {
+						if (p.getId().equals(target.getId())) {
+							response = Response.notModified(
+								p.getAbbrevDisplayName() + " contains a " +
+									"reference to " + target
+									.getAbbrevDisplayName()).build();
+							break;
+						}
+					}
+				}
+				if (error) {
+					break;
+				}
+			}
+			if (! error) {
+				this.propositionDao.remove(target);
+			}
+		}
+		return response;
+	}
+
 	@PUT
 	@Path("/user/update")
 	@Consumes(MediaType.APPLICATION_JSON)
 	public void updateProposition(PropositionWrapper inWrapper) {
 		if (inWrapper.getUserId() != null && inWrapper.getId() != null) {
-			Proposition proposition = PropositionUtil.unwrap(inWrapper, this.propositionDao);
+			Proposition proposition = PropositionUtil.unwrap(
+				inWrapper, this.propositionDao);
 			proposition.setLastModified(new Date());
 			this.propositionDao.update(proposition);
 		} else {
-			throw new IllegalArgumentException("Both the user ID and the "
-				+ "proposition ID must be provided.");
+			throw new IllegalArgumentException(
+				"Both the user ID and the " + "proposition ID must be " +
+					"provided.");
 		}
 	}
 
@@ -195,7 +249,8 @@ public class PropositionResource {
 	@Consumes(MediaType.APPLICATION_JSON)
 	public void insertProposition(PropositionWrapper inWrapper) {
 		if (inWrapper.getUserId() != null) {
-			Proposition proposition = PropositionUtil.unwrap(inWrapper, this.propositionDao);
+			Proposition proposition = PropositionUtil.unwrap(
+				inWrapper, this.propositionDao);
 			Date now = new Date();
 			proposition.setCreated(now);
 			proposition.setLastModified(now);
@@ -209,6 +264,5 @@ public class PropositionResource {
 		String inKey) {
 		return this.systemPropositionFinder.find(inUserId, inKey);
 	}
-
 
 }
