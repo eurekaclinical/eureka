@@ -10,6 +10,7 @@ import com.google.inject.Module;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.PropositionWrapper;
 import edu.emory.cci.aiw.cvrg.eureka.common.test.AbstractTest;
 import edu.emory.cci.aiw.cvrg.eureka.common.test.TestDataProvider;
+import edu.emory.cci.aiw.cvrg.eureka.etl.config.AppTestModule;
 import edu.emory.cci.aiw.cvrg.eureka.etl.dao.ConfDao;
 import edu.emory.cci.aiw.cvrg.eureka.etl.test.Setup;
 import edu.stanford.smi.protege.util.Assert;
@@ -27,8 +28,7 @@ public class PropositionValidatorTest extends AbstractTest {
 
 	@Override
 	protected Module[] getModules() {
-		return new Module[0];  //To change body of implemented methods use
-		// File | Settings | File Templates.
+		return new Module[] {new AppTestModule()};
 	}
 
 	@Test
