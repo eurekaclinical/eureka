@@ -177,9 +177,11 @@ public class PropositionResource {
 	}
 
 	@DELETE
-	@Path("/user/delete/{prodId}")
-	public Response deleteUserPropositions(@PathParam("propId") Long
+	@Path("/user/delete/{userId}/{prodId}")
+	public Response deleteUserPropositions(@PathParam("userId")
+		Long inUserId, @PathParam("propId") Long
 		inPropositionId) {
+
 		// the response to return;
 		Response response = Response.ok().build();
 
@@ -188,6 +190,11 @@ public class PropositionResource {
 		if (target == null) {
 			// if the target is not found, return a NOT_FOUND response
 			response = Response.status(Response.Status.NOT_FOUND).build();
+		} else if (! target.getUserId().equals(inUserId)) {
+			// if the user ID is not a match with the one passed in,
+			// return error
+			response = Response.notModified("User ID " + inUserId + " did not" +
+				" match the owner ID " + target.getUserId()).build();
 		} else {
 			// now get the rest of the propositions for the user
 			List<Proposition> others = this.propositionDao.getByUserId(
