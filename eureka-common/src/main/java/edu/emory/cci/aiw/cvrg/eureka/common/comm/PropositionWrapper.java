@@ -2,6 +2,7 @@ package edu.emory.cci.aiw.cvrg.eureka.common.comm;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -25,6 +26,10 @@ public class PropositionWrapper implements Serializable {
 	private Date lastModified;
 	private boolean summarized;
 	private boolean parent;
+
+    public PropositionWrapper() {
+        children = new ArrayList<PropositionWrapper>();
+    }
 
 	public Long getId() {
 		return id;
