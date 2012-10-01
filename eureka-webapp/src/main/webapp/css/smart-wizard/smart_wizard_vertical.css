@@ -44,7 +44,7 @@
   z-index:88; 
   -webkit-border-radius: 5px;
   -moz-border-radius  : 5px;
-  width:720px;
+  width:710px;
   clear:both;
 }
 
@@ -58,8 +58,8 @@
   color:              #5A5655;   
   background-color:   #F8F8F8;
   height:40px;
-/*  width:730px; 
-  float:right; */  
+  width:100%; 
+  float:right;   
   text-align:left;
   overflow:auto;    
   z-index:88; 

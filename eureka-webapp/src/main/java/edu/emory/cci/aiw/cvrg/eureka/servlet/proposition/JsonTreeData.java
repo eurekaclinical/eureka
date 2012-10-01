@@ -14,6 +14,7 @@ public class JsonTreeData {
 	private String id;
 	private String data;
 	private String type;
+    private String state;
 	
 	public List<JsonTreeData> getChildren() {
 		return children;
@@ -66,4 +67,12 @@ public class JsonTreeData {
 		this.type = type;
 	}
 	
+    
+    public void setState(String state) {
+        this.state = state;
+    }
+
+    public String getState() {
+        return this.state;
+    }
 }

@@ -395,3 +395,13 @@ div.tabs > div h2 {
   width: 380px;
 }
 
+.delete {
+	background-image:url(../images/trash-can-delete.png);
+    background-repeat: no-repeat;
+    background-position: left top;
+    background-size: 16px 16px;
+    display: inline-block;
+    height: 16px;
+    width: 16px;
+}
+    

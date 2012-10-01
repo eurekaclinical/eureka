@@ -12,19 +12,24 @@
 	<template:content name="content">
 
 		 <div class="action_link">   
-            <a href="${pageContext.request.contextPath}/protected/editor.jsp">Create New Element</a>
+            <a href="${pageContext.request.contextPath}/protected/editor.jsp" class="create"></a>
+            <a href="${pageContext.request.contextPath}/protected/editor.jsp" style="text-decoration:none">Create New Element</a>
          </div>
 
          <div class="tooltip" id="tooltip"><div id="tree"></div></div>
 
                 <table align="center" id="elements1" style="width: 100%">
-                         <tr class="bold" onmouseover="clearHover()">
-                                 <th>Name</th><th>Description</th><th>Type</th><th>Created Date</th><th>Last Modified</th>
+                         <tr class="bold" >
+                                 <th>Action</th><th>Name</th><th>Description</th><th>Type</th><th>Created Date</th><th>Last Modified</th>
                          </tr>
                          <c:forEach items="${props}" var="prop">
-                                 <tr class="rowdata" id="${prop.attr['id']}" 
-                                    onmouseover="showPopup(event, ${prop.attr['id']})" 
-                                    onmouseout="removePopup(event, ${prop.attr['id']})">
+                
+                                <tr>
+                                         <td>
+                                            <a href="#" onclick="showPopup(event, ${prop.attr['id']})" class="view"></a>
+                                            <a href="#" onclick="edit(${prop.attr['id']})" class="edit"></a>
+                                            <a href="#" onclick="deleteElement(event, ${prop.attr['id']})" class="delete"></a>
+                                        </td>
                                          <td>${prop.attr['abbrevDisplay']}</td>
                                          <td>${prop.attr['displayName']}</td>
                                          <td>${prop.attr['type']}</td>

@@ -1,4 +1,3 @@
-var lastRowId = 0;
 
 $(document).ready(function() {
 
@@ -373,43 +372,47 @@ $(document).ready(function() {
 });
 	
 
-function clearHover() {
-    console.log("clearHover");
-    $('.rowdata td').css('background', 'white');
-    $('div.tooltip').hide();
-    lastRowId = -99;
-}
-function removePopup(event, id) {
-    //var rowId = event.target.parentNode.id;
-    //console.log("removePopup: " + rowId + ", " + lastRowId);
-    //if (rowId != lastRowId) {
-     //   $('#'+rowId + " td").css("background", "white");
-      //  $('div.tooltip').hide();
-    //}
-}
 
-function showPopup(event, id) {
+function showPopup(event, rowId) {
 
     //$('<div class="tooltip"><div id="tree"></div></div>').appendTo('body');
-    var rowId = event.target.parentNode.id;
-    console.log("showPopup: " + rowId + ", " + lastRowId);
-    if (rowId != lastRowId) {
-        $('div.tooltip').hide();
-        $(".rowdata td").css("background", "white");
-        lastRowId = rowId;
-        $('#'+rowId + " td").css("background", "yellow");
-    
-        positionTooltip(event);
-    
-        $("#tree").jstree({
-            "json_data" : {
-                "ajax" : { "url" : "/userpropchildren?propId=" + id}
-            },
-        "plugins" : [ "themes", "json_data", "ui" ]
-        });
+    //var rowId = event.target.parentNode.id;
+    $('div.tooltip').hide();
+    $(".rowdata td").css("background", "white");
+    $('#'+rowId + " td").css("background", "yellow");
+   
+    positionTooltip(event);
+  
+    $("#tree").jstree({
+        "json_data" : {
+            "ajax" : { "url" : "/userpropchildren?propId=" + rowId}
+        },
+    "plugins" : [ "themes", "json_data", "ui" ]
+    });
 
-        $('div.tooltip').show();
-    }
+    $('div.tooltip').show();
+
+
+}
+
+function deleteElement(event, rowId) {
+
+   
+    $.ajax({
+	    type: 'POST',
+	    url: 'deleteprop?id='+rowId,
+        success: function(data) {
+            window.location.href="/protected/editorhome";
+
+
+        }, error: function(data, statusCode) {
+            alert(data.statusText);
+
+
+        } 
+
+	});
+  
 
 
 }

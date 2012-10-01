@@ -9,11 +9,36 @@ var dropBoxMaxTextWidth = 275;
 $(document).ready(function(){
 	
 	$('#wizard').smartWizard({'labelFinish': 'Save', onLeaveStep:leaveAStepCallback, onFinish:onFinishCallback});
+
+    var $dialog = $('<div></div>')
+        .html('<p>' +
+'For Categorical:<br/>' +
+'Drag and Drop an element from the System or User-Defined element explorer' +
+'to the canvas to make it a member of the category.' +
+               '</p>' +
+                '<p>' +
+'For Temporal:<br/>' +
+'Drag and Drop an element from the System or User-Defined element explorer' +
+'to the canvas to make it a part of the temporal pattern. Current behavior' +
+'is to infer the pattern when all of the listed elements are present in any' +
+'temporal order.' +
+                '</p>' 
+)
+        .dialog({
+            autoOpen: false,
+            title: 'Help Instructions'
+        });
+
+    $('#help_select').click( function() {
+        $dialog.dialog('open');
+    });
     
     $('#sortable').show();
     $('#holder').hide();
     $('#expand_div').hide();
     $('#collapse_div').hide();
+
+
     $('#dialog').hide();
 
     function leaveAStepCallback(obj){
@@ -21,64 +46,8 @@ $(document).ready(function(){
       return validateSteps(step_num);
     }
 
-    //$('.stepContainer').height('462px');
-
-
-
-
-    $('#expand').click( function() {
-        $('#steps').hide();
-        $('#expand_div').hide();
-        $('#collapse_div').show();
-        $('.stepContainer').width('1180px');
-        $('.stepContainer').height('800px');
-        $('.msg_content').width('1100px');
-        $('.msg_content').height('800px');
-        $('#holder').width('900px');
-        $('#holder').height('700px');
-        $('#content').height('900px');
-    });
-    $('#collapse').click( function() {
-        $('#steps').show();
-        $('#expand_div').show();
-        $('#collapse_div').hide();
-        $('.stepContainer').height('462px');
-        $('.stepContainer').width('732px');
-        $('.msg_content').width('720px');
-        $('.msg_content').height('450px');
-        $('#holder').width('550px');
-        $('#holder').height('350px');
-        //$('#content').height('900px');
-    });
-
-    //var type = $('#type').val();
     var type = $("input:radio[name='type']:checked").val();
-    if (type != undefined && type.length > 0) {
-        gettypedescription();
-
-    }
-    $("input:radio[name='type']").click(function() {
-        gettypedescription();
-     });
     
-    function gettypedescription() {
-        var type = $("input:radio[name='type']:checked").val();
-
-        if (type == 'OR') {
-			  $("#type_description").html("Concept is composed of 1 or more elements");
-            
-        } else if (type == 'AND'){
-			  $("#type_description").html("Concept is composed of all elements");
-
-
-        } 
-        else {
-
-			  $("#type_description").html("");
-
-        }
-
-    }
     function onFinishCallback(){
      //if(validateAllSteps()){
     	var propositions = [];
@@ -139,21 +108,28 @@ $(document).ready(function(){
 			  $('#wizard').smartWizard('setError',{stepnum:step,iserror:false});
 		  }
     	} else if (step == 2) {
-			  var str = $('#type').val();
-			  //$("h3:last").html(str);
-              if (str == 'Workflow') {
-                    $('#sortable').hide();
-                    $('#holder').show();
-                    $('#expand_div').show();
-              } else {
-                    $('#sortable').show();
-                    $('#holder').hide();
-                    $('#expand_div').hide();
-
-
+                var type = $("input:radio[name='type']:checked").val();
+              if (type == undefined || type == "") {
+			    isStepValid = false; 
+			    $('#wizard').smartWizard('showMessage','Please select a type of element to create.');
+			    $('#wizard').smartWizard('setError',{stepnum:step,iserror:true});         
               }
+              else{
+                $('#wizard').smartWizard('hideMessage','');
+                $('#wizard').smartWizard('setError',{stepnum:step,iserror:false});
+              }
+
     		
     	} else if (step == 3) {
+              if ($('#sortable').children().length == 0) {
+			    isStepValid = false; 
+			    $('#wizard').smartWizard('showMessage','Please select an element from the ontology explorer.');
+			    $('#wizard').smartWizard('setError',{stepnum:step,iserror:true});         
+              }
+              else{
+                $('#wizard').smartWizard('hideMessage','');
+                $('#wizard').smartWizard('setError',{stepnum:step,iserror:false});
+              }
 
         } else if (step == 4) {
 
@@ -184,7 +160,15 @@ function initTrees() {
 	
    $("#systemTree").jstree({
 		"json_data" : {
-		    "ajax" : { "url" : "/systemlist?id=root" }
+		    "ajax" : { 
+                "url" : "/systemlist" ,
+                "data": function(n) {
+                    return {
+                        id : n.attr ? n.attr("id") : "root" 
+                    };
+                }
+
+             }
 		},
 		"dnd" : {
 			"drop_finish" : function(data) {
@@ -196,11 +180,11 @@ function initTrees() {
                     target.style["background"] = "lightblue";
                     $('#label-info')[0].hidden = false;
 				    var type = $('#type').val();
-				    $('<li/>', {
-					    id: data.o[0].id,
-						text:  data.o[0].children[1].childNodes[1].textContent
-				    }).appendTo('#sortable');
-		
+                    var X = $("<span/>", { class: "delete" });
+                    var txt = $("<span/>", { text : data.o[0].children[1].childNodes[1].textContent });
+                    
+                    $('<li/>', { id: data.o[0].id}).append(X, txt).appendTo('#sortable');
+                
                     var txt = $('#sortable li:last').text();
     
                     var width = txt.length * 7;
@@ -211,22 +195,35 @@ function initTrees() {
 
                     $('#sortable li:last').mouseover(function () {
 
-                            $(this).css({cursor:"pointer", backgroundColor:"#24497A"});
+                            $(this.children[0]).css({cursor:"pointer", backgroundColor:"#24497A"});
                     });     
                     $('#sortable li:last').mouseout(function () {
 
-                            $(this).css({cursor:"pointer", backgroundColor:"lightblue"});
+                            $(this.children[0]).css({cursor:"pointer", backgroundColor:"lightblue"});
                     });     
 
                     // function to enable removal of list item once it is clicked
-                    $('#sortable li:last').click(function onItemClick() {
-                        $(this).animate( { backgroundColor: "#CCC", color: "#333" }, 500);
-                        alert("Removed Selection: "+this.innerHTML);
-                        $(this).remove();
-                        if ($('#sortable li').length == 0) {
-                            $('#sortable').width(275);
-                            dropBoxMaxTextWidth = 275;
-                        }
+                    $($('#sortable li:last')[0].children[0]).click(function onItemClick() {
+                        $(this.parent).animate( { backgroundColor: "#CCC", color: "#333" }, 500);
+                            $("#dialog").dialog({
+                                buttons : {
+                                    "Confirm" : function() {
+                                        $($('#sortable li:last')[0].children[0].parentNode).remove();
+                                        $(this).dialog("close");
+                                        if ($('#sortable li').length == 0) {
+                                            $('#sortable').width(275);
+                                            dropBoxMaxTextWidth = 275;
+                                        }
+                                    },
+                                    "Cancel" : function() {
+                                        $(this).dialog("close");
+                                    }
+                                }
+                            });
+                        $("#dialog").html(this.parentNode.children[1].innerHTML);
+                        $("#dialog").dialog("open");
+                        
+                        //alert("Removed Selection: "+this.parentNode.children[1].innerHTML);
 
                     });
 				}
@@ -250,13 +247,15 @@ function initTrees() {
 			}
 	},
 	"plugins" : [ "themes", "json_data", "ui", "dnd" ]
-	}).bind("select_node.jstree", function(e, data)
+    }).bind("open_node.jstree", function(e, data)
 	{
 	    if(data.rslt.obj[0].id !== undefined)
 	    {
-	    	if ($("[id='"+data.rslt.obj[0].id+ "']")[0].children.length < 3) {
-	    		loadChild(data.rslt.obj[0].id);
-	    	}
+	    	//loadChild(data.rslt.obj[0].id);
+
+	    	//if ($("[id='"+data.rslt.obj[0].id+ "']")[0].children.length < 3) {
+	    	//	loadChild(data.rslt.obj[0].id);
+	    	//}
 	    }
 	    else
 	    {
@@ -284,6 +283,7 @@ function initTrees() {
 	       });
 	
 	}
+
 	
 	function loadUserDefinedProps(id) {
 	    $.ajax({
@@ -345,10 +345,11 @@ function initTrees() {
 
 				    var type = $('#type').val();
 				    
-				    $('<li/>', {
-					    id: data.o[0].id,
-					    text: data.o[0].children[1].childNodes[1].textContent
-				    }).appendTo('#sortable');
+                    var X = $("<span/>", { class: "delete" });
+                    var txt = $("<span/>", { text : data.o[0].children[1].childNodes[1].textContent });
+                    
+                    $('<li/>', { id: data.o[0].id}).append(X, txt).appendTo('#sortable');
+                
 
                     var txt = $('#sortable li:last').text();
    
@@ -358,28 +359,40 @@ function initTrees() {
                         $('#sortable').width(dropBoxMaxTextWidth);
                     }
 
+
                     $('#sortable li:last').mouseover(function () {
 
-                            $(this).css({cursor:"pointer", backgroundColor:"#24497A"});
-                    });
+                            $(this.children[0]).css({cursor:"pointer", backgroundColor:"#24497A"});
+                    });     
                     $('#sortable li:last').mouseout(function () {
 
-                            $(this).css({cursor:"pointer", backgroundColor:"lightblue"});
-                    });
-
+                            $(this.children[0]).css({cursor:"pointer", backgroundColor:"lightblue"});
+                    });     
 
                     // function to enable removal of list item once it is clicked
-                    $('#sortable li:last').click(function onItemClick() {
-                        $(this).animate( { backgroundColor: "#CCC", color: "#333" }, 500);
-                        alert("Removed Selection: "+this.innerHTML);
-                        $(this).remove();
-                        if ($('#sortable li').length == 0) {
-                            $('#sortable').width(275);
-                            dropBoxMaxTextWidth = 275;
-                        }
+                    $($('#sortable li:last')[0].children[0]).click(function onItemClick() {
+                        $(this.parent).animate( { backgroundColor: "#CCC", color: "#333" }, 500);
+                            $("#dialog").dialog({
+                                buttons : {
+                                    "Confirm" : function() {
+                                        $($('#sortable li:last')[0].children[0].parentNode).remove();
+                                        $(this).dialog("close");
+                                        if ($('#sortable li').length == 0) {
+                                            $('#sortable').width(275);
+                                            dropBoxMaxTextWidth = 275;
+                                        }
+                                    },
+                                    "Cancel" : function() {
+                                        $(this).dialog("close");
+                                    }
+                                }
+                            });
+                        $("#dialog").html(this.parentNode.children[1].innerHTML);
+                        $("#dialog").dialog("open");
+                        
+                        //alert("Removed Selection: "+this.parentNode.children[1].innerHTML);
 
                     });
-
 		
 				numItems++;
             }
@@ -421,6 +434,9 @@ function initTrees() {
 	        
 }
 
+function showHelp() {
+
+}
 function idIsNotInList(id) {
 
     

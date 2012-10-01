@@ -298,3 +298,43 @@ td .error {
 .action_link {
     margin: 10px;
 }
+
+.delete {
+    background-image:url(../images/trash-can-delete.png);
+    background-repeat: no-repeat;
+    background-position: left top;
+    background-size: 16px 16px;
+    display: inline-block;
+    height: 16px;
+    width: 16px;
+}
+   
+.edit {
+    background-image:url(../images/edit_pencil.gif);
+    background-repeat: no-repeat;
+    background-position: left top;
+    background-size: 16px 16px;
+    display: inline-block;
+    height: 16px;
+    width: 16px;
+}
+
+.view {
+    background-image:url(../images/view_icon.jpg);
+    background-repeat: no-repeat;
+    background-position: left top;
+    background-size: 16px 16px;
+    display: inline-block;
+    height: 16px;
+    width: 16px;
+}
+
+.create {
+    background-image:url(../images/create_icon.gif);
+    background-repeat: no-repeat;
+    background-position: left top;
+    background-size: 14px 14px;
+    display: inline-block;
+    height: 12px;
+    width: 14px;
+}

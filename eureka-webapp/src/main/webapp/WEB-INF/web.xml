@@ -67,6 +67,11 @@
 		<load-on-startup>1</load-on-startup>
 	</servlet>
 	<servlet>
+		<servlet-name>DeletePropositionServlet</servlet-name>
+		<servlet-class>edu.emory.cci.aiw.cvrg.eureka.servlet.proposition.DeletePropositionServlet</servlet-class>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+	<servlet>
 		<servlet-name>UserPropositionListServlet</servlet-name>
 		<servlet-class>edu.emory.cci.aiw.cvrg.eureka.servlet.proposition.UserPropositionListServlet</servlet-class>
 		<load-on-startup>1</load-on-startup>
@@ -130,6 +135,10 @@
 	<servlet-mapping>
 		<servlet-name>SavePropositionServlet</servlet-name>
 		<url-pattern>/protected/saveprop</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>DeletePropositionServlet</servlet-name>
+		<url-pattern>/protected/deleteprop</url-pattern>
 	</servlet-mapping>
 	<servlet-mapping>
 		<servlet-name>UserPropositionListServlet</servlet-name>

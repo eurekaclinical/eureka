@@ -14,7 +14,7 @@
 			<table align="center" border="0" cellpadding="0" cellspacing="0">
 <tr><td> 
 <!-- Tabs -->
-        <div id="dialog" title="Create Workflow">
+        <div id="dialog" title="Confirm Remove Selected Element">
 
         </div>
   		<div id="wizard" class="swMain">
@@ -74,33 +74,26 @@
   			<div id="step-2">	
             	<h2 class="StepTitle">Select Type of Element to create</h2>
                     <p><br/></p>
-                    <center>
-                    <p>
-                        <input type="radio" name="type" value="OR"/>Categorical 
-                        <input type="radio" name="type" value="AND"/>Temporal
-                    </p>
-                    <p id="type_description"></p>
-                    </center>
+                    <table id="select_element_table" width="100%">
+                        <tr>
+                            <td width="100px" style="display: inline-block"><input type="radio" id="type" name="type" value="OR"/>Categorical</td>
+                            <td>For defining a significant category of codes or clinical
+events or observations.</td>
+                        </tr>
+                        <tr>
+                            <td width="100px" style="display: inline-block">
+                                <input type="radio" name="type" id="type" value="AND"/>Temporal</td>
+                            <td>For defining a disease, finding or patient care process to be
+reflected by codes,clinical events and/or observations in a specified frequency, sequential or other temporal patterns.</td>
+                        </tr>
+                    </table>
         	</div>
   			<div id="step-3">
-            <h2 class="StepTitle">Select Elements from Ontology Explorer</h2>	
-            <div>
-                <div style="float: left">
-                <p>
-                    Drag and Drop an element from the System or User-Defined element explorer to the canvas.
-                </p>
-                </div>
-                <div style="float: right; padding-right:5px" id="expand_div">
-                    <a href="javascript:void(0)" alt="Expand Screen" id="expand"><img src="${pageContext.request.contextPath}/images/fullscreen.png" /></a>
-
-                </div>
-                <div style="float: right; padding-right:5px" id="collapse_div">
-                    <a href="javascript:void(0)" alt="Expand Screen" id="collapse"><img src="${pageContext.request.contextPath}/images/fullscreen_exit.png" /></a>
-
-                </div>
-
-            </div>
+            <h2 class="StepTitle"><span>Select Elements from Ontology Explorer</span><span style="font-size: 10px; float:right"><a href="#" id="help_select">Help</a></span></h2>	
             
+                    <p>
+                    &nbsp;
+                    </p>
             			<table style="width: 650px; " id="element_tree_table">
             				<tr>
             					<td  valign="top" width="25%">

@@ -34,10 +34,16 @@ public class SystemPropositionListServlet extends HttpServlet {
 
 	
 
-	private JsonTreeData createData(String id, String data) {
+	private JsonTreeData createData(PropositionWrapper proposition) {
 		JsonTreeData d = new JsonTreeData();
-		d.setData(data);
-		d.setKeyVal("id", id);
+		d.setData(this.getDisplayName(proposition));
+		d.setKeyVal("id", proposition.getKey());
+
+        // SBA - not implemented for for sub-children so I need to set it manually for now.
+        //if (proposition.isParent() || proposition.getChildren().size() > 0) {
+		    //d.setKeyVal("class", "jstree-closed");
+        //} 
+		d.setKeyVal("class", "jstree-closed");
 		
 		return d;
 	}
@@ -85,15 +91,40 @@ public class SystemPropositionListServlet extends HttpServlet {
 			WebResource webResource = client.resource(eurekaServicesUrl);
 			User user = webResource.path("/api/user/byname/" + userName)
 					.accept(MediaType.APPLICATION_JSON).get(User.class);
+
+            String propId = req.getParameter("id");
+
+            if (propId.equals("root")) {
+			    List<PropositionWrapper> props = webResource.path("/api/proposition/system/" + user.getId() + "/list")
+					    .get(new GenericType<List<PropositionWrapper>>() {
+						    // Nothing to implement, used to hold returned data.
+					    });
+			    for (PropositionWrapper proposition : props) {
+				    JsonTreeData d = createData(proposition);
+				    l.add(d);
+			    }
+
+            } else {
+
+		        PropositionWrapper propWrapper =
+				        webResource.path("/api/proposition/system/"+ user.getId() + "/" + propId)
+				        .accept(MediaType.APPLICATION_JSON)
+				        .get(PropositionWrapper.class);
+        
+		        for (PropositionWrapper propChild : propWrapper.getChildren()) {
+                    if (propChild.isInSystem()) {
+
+			            JsonTreeData newData = createData(propChild);
+			            newData.setType("system");
+			            l.add(newData);
+
+
+                    }
+
+                }
+
+            }
 			
-			List<PropositionWrapper> props = webResource.path("/api/proposition/system/" + user.getId() + "/list")
-					.get(new GenericType<List<PropositionWrapper>>() {
-						// Nothing to implement, used to hold returned data.
-					});
-			for (PropositionWrapper proposition : props) {
-				JsonTreeData d = createData(proposition.getKey(), this.getDisplayName(proposition));
-				l.add(d);
-			}
 			LOGGER.debug("executed resource get");
 		} catch (NoSuchAlgorithmException nsae) {
 			throw new ServletException(nsae);
@@ -102,35 +133,6 @@ public class SystemPropositionListServlet extends HttpServlet {
 		}		
 		
 			
-		/*
-		String id = req.getParameter("id");
-		
-		if (id.equals("root")) {
-			
-			Data d1 = createData("Child 1","199.1");
-			Data d2 = createData("Child 2", "200.1");
-			Data d3 = createData("Sub Child 1", "300");
-			Data d4 = createData("Sub Child 2", "400");
-			List<Data> l = new ArrayList<Data>();
-			d2.addNodes(d3, d4);
-			l.add(d1); l.add(d2);
-			ObjectMapper mapper = new ObjectMapper();
-			resp.setContentType("application/json");
-			PrintWriter out = resp.getWriter();
-			mapper.writeValue(out, l);
-		} else {
-			Data d1 = createData("Lazy Loaded Child","11");
-			List<Data> l = new ArrayList<Data>();
-			l.add(d1); 
-			ObjectMapper mapper = new ObjectMapper();
-			
-			resp.setContentType("application/json");
-			PrintWriter out = resp.getWriter();
-			mapper.writeValue(out, l);
-			
-		}
-		*/
-		
 		ObjectMapper mapper = new ObjectMapper();
 		resp.setContentType("application/json");
 		PrintWriter out = resp.getWriter();

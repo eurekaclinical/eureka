@@ -83,6 +83,11 @@ public class ListSystemPropositionChildrenServlet extends HttpServlet {
 		JsonTreeData d = new JsonTreeData();
 		d.setData(this.getDisplayName(pw));
 		d.setKeyVal("id", pw.getKey());
+        LOGGER.info("key: " + pw.getKey());
+        if (pw.getChildren() != null && (pw.isParent() || pw.getChildren().size() > 0)) {
+            d.setKeyVal("class", "jstree-closed");
+            System.out.println("key: " + pw.getKey());
+        }
 
 		return d;
 	}

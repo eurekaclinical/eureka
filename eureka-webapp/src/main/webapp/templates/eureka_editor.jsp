@@ -28,6 +28,7 @@ ul.nav a { zoom: 1; }
 
 
 <!--  -->
+<link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.1/themes/base/jquery-ui.css" type="text/css" rel="stylesheet"/>
 <link href="${pageContext.request.contextPath}/css/ui-lightness/jquery-ui-1.8.21.custom.css"
 	rel="stylesheet" type="text/css" />
 <link href="${pageContext.request.contextPath}/css/editor.css"
@@ -40,7 +41,7 @@ ul.nav a { zoom: 1; }
 
 
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery-1.7.1.min.js"></script>
-<script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery-ui-1.8.20.custom.min.js"></script>
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.1/jquery-ui.min.js"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery.jstree.js"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/raphael.js"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/editor.js"></script>
@@ -60,7 +61,6 @@ ul.nav a { zoom: 1; }
 		/*font-size: 1.4em; height: 18px; */
           display: list-item;
 		}
-	#sortable li span { position: absolute; margin-left: -1.3em; }
 
 #elements
 {
