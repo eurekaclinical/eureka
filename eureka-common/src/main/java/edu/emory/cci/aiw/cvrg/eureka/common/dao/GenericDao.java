@@ -69,11 +69,13 @@ public class GenericDao<T, PK> implements Dao<T, PK> {
 	}
 
 	@Override
+	@Transactional
 	public T update(T entity) {
 		return this.create(entity);
 	}
 
 	@Override
+	@Transactional
 	public T remove(T entity) {
 		EntityManager entityManager = this.getEntityManager();
 		if (entityManager.contains(entity)) {
