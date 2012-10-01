@@ -345,7 +345,7 @@ $(document).ready(function() {
 							}
 
 							var d = new Date(data['uploadTime']);
-							var dateStr = d.getMonth() + "/" + d.getDate()
+							var dateStr = (d.getMonth()+1) + "/" + d.getDate()
 									+ "/" + d.getFullYear() + " "
 									+ d.toLocaleTimeString();
 
