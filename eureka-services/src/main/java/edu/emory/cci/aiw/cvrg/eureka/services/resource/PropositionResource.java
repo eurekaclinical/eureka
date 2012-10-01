@@ -177,7 +177,7 @@ public class PropositionResource {
 	}
 
 	@DELETE
-	@Path("/user/delete/{userId}/{prodId}")
+	@Path("/user/delete/{userId}/{propId}")
 	public Response deleteUserPropositions(@PathParam("userId")
 		Long inUserId, @PathParam("propId") Long
 		inPropositionId) {
