@@ -5,20 +5,24 @@
 <template:insert template="/templates/eureka_main.jsp">
 
 	<template:content name="sidebar">
-		<img
-			src="${pageContext.request.contextPath}/images/bioinformatics.jpg" />
+         <div class="tooltip" id="tooltip" style="text-align: left">
+                <div id="tree" style="height: 255px;
+                                        overflow: auto;
+                                        width: 380px">
+                </div>
+        </div>
 	</template:content>
 
 	<template:content name="content">
 
+        <div id="dialog" title="Confirm Remove Selected Element"></div>
 		 <div class="action_link">   
             <a href="${pageContext.request.contextPath}/protected/editor.jsp" class="create"></a>
             <a href="${pageContext.request.contextPath}/protected/editor.jsp" style="text-decoration:none">Create New Element</a>
          </div>
 
-         <div class="tooltip" id="tooltip"><div id="tree"></div></div>
 
-                <table align="center" id="elements1" style="width: 100%">
+                <table align="center" id="elements1" style="width: 98%">
                          <tr class="bold" >
                                  <th>Action</th><th>Name</th><th>Description</th><th>Type</th><th>Created Date</th><th>Last Modified</th>
                          </tr>

@@ -26,9 +26,11 @@ ul.nav a { zoom: 1; }
 
 
 
+<link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.1/themes/base/jquery-ui.css" type="text/css" rel="stylesheet"/>
 <link href="${pageContext.request.contextPath}/css/styles.css" rel="stylesheet" type="text/css" />
 <script src="${pageContext.request.contextPath}/js/jquery-1.7.1.min.js"></script>
 <script src="${pageContext.request.contextPath}/js/jquery.validate.js"></script>
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.1/jquery-ui.min.js"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery.jstree.js"></script>
 <script src="${pageContext.request.contextPath}/js/eureka.js"></script>
 <link href="${pageContext.request.contextPath}/themes/default/style.css" rel="stylesheet" type="text/css" />

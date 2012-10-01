@@ -1,6 +1,7 @@
 
 $(document).ready(function() {
 
+    /*
      $('#tree').hover(
         function() { $.data(this, 'hover', true); },
         function() { $.data(this, 'hover', false); }
@@ -14,6 +15,7 @@ $(document).ready(function() {
         if ($('#tree').data('hover') == false && $('#tooltip').data('hover') == false)
             $('div.tooltip').hide();
     }); 
+    */
 	
 	var fileUploadErrors = {
 	    maxFileSize: 'File is too big',
@@ -381,7 +383,7 @@ function showPopup(event, rowId) {
     $(".rowdata td").css("background", "white");
     $('#'+rowId + " td").css("background", "yellow");
    
-    positionTooltip(event);
+    //positionTooltip(event);
   
     $("#tree").jstree({
         "json_data" : {
@@ -397,21 +399,35 @@ function showPopup(event, rowId) {
 
 function deleteElement(event, rowId) {
 
+     $("#dialog").dialog({
+            buttons : {
+                "Confirm" : function() {
+                    $.ajax({
+	                    type: 'POST',
+	                    url: 'deleteprop?id='+rowId,
+                        success: function(data) {
+                            $(this).dialog("close");
+                            window.location.href="/protected/editorhome";
+                    
+                    
+                        }, error: function(data, statusCode) {
+                            $(this).dialog("close");
+                            alert(data.statusText);
+                    
+                    
+                        } 
+                
+    	            });
+                },
+                "Cancel" : function() {
+                    $(this).dialog("close");
+                }
+            }
+        });
+    $("#dialog").html("Confirm Deletion");
+    $("#dialog").dialog("open");
+
    
-    $.ajax({
-	    type: 'POST',
-	    url: 'deleteprop?id='+rowId,
-        success: function(data) {
-            window.location.href="/protected/editorhome";
-
-
-        }, error: function(data, statusCode) {
-            alert(data.statusText);
-
-
-        } 
-
-	});
   
 
 
