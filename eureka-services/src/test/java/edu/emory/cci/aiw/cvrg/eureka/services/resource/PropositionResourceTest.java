@@ -41,5 +41,9 @@ public class PropositionResourceTest extends AbstractServiceResourceTest {
 			).delete(ClientResponse.class);
 		Assert.assertEquals(response.getClientResponseStatus(),
 			ClientResponse.Status.OK);
+
+		List<PropositionWrapper> afterDelete = this.getUserPropositions
+			(USER_ID);
+		Assert.assertEquals(wrappers.size() - 1, afterDelete.size());
 	}
 }
