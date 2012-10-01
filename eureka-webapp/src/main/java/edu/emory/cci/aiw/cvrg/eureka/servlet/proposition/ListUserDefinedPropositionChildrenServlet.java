@@ -98,14 +98,6 @@ public class ListUserDefinedPropositionChildrenServlet extends HttpServlet {
 				.get(PropositionWrapper.class);
 		LOGGER.debug("got propWrapper {}", propWrapper.getId());
 
-        /*
-		for (String sysTarget : propWrapper.getSystemTargets()) {
-			JsonTreeData newData = createData(sysTarget, sysTarget);
-			newData.setType("system");
-			LOGGER.debug("add sysTarget {}", sysTarget);
-			d.addNodes(newData);
-		}
-        */
 		for (PropositionWrapper pw : propWrapper.getChildren()) {
             if (pw.isInSystem()) {
 
@@ -121,11 +113,6 @@ public class ListUserDefinedPropositionChildrenServlet extends HttpServlet {
 		for (PropositionWrapper propUserWrapper : propWrapper.getChildren()) {
             if (!propUserWrapper.isInSystem()) {
 
-			    //JsonTreeData newData = createData(pw.getKey(), pw.getKey());
-			    //newData.setType("system");
-			    //LOGGER.debug("add sysTarget {}", pw.getKey());
-			    //d.addNodes(newData);
-
 			    JsonTreeData newData = createData(propUserWrapper
 			    	.getAbbrevDisplayName(), String.valueOf(propUserWrapper.getId
 			    	().longValue()));
@@ -135,23 +122,6 @@ public class ListUserDefinedPropositionChildrenServlet extends HttpServlet {
 			    d.addNodes(newData);
             }
 		}
-        /*
-		for (Long userTarget : propWrapper.getUserTargets()) {
-			PropositionWrapper propUserWrapper =
-					webResource.path("/api/proposition/user/get/"+ userTarget)
-						.accept(MediaType.APPLICATION_JSON)
-						.get(PropositionWrapper.class);
-
-				JsonTreeData newData = createData(propUserWrapper
-					.getAbbrevDisplayName(), String.valueOf(propUserWrapper.getId
-					().longValue()));
-				getAllData(newData);
-				newData.setType("user");
-				LOGGER.debug("add user defined {}", propUserWrapper.getId());
-				d.addNodes(newData);
-			}
-		}
-        */
 
 	}
 
@@ -175,11 +145,6 @@ public class ListUserDefinedPropositionChildrenServlet extends HttpServlet {
 		List<JsonTreeData> l = new ArrayList<JsonTreeData>();
 		String propId = req.getParameter("propId");
 
-		//"/system/{userId}/{propKey}"
-//		PropositionWrapper propWrapper =
-//				webResource.path("/api/proposition/system/"+ user.getId() + "/" + propId)
-//				.accept(MediaType.APPLICATION_JSON)
-//				.get(PropositionWrapper.class);
 
 		PropositionWrapper propWrapper = webResource.path("/api/proposition/user/get/"+ propId)
 				.accept(MediaType.APPLICATION_JSON)

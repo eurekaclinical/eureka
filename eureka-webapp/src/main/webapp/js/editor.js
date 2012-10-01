@@ -38,6 +38,7 @@ $(document).ready(function(){
     $('#expand_div').hide();
     $('#collapse_div').hide();
 
+    initDropTargetList();
 
     $('#dialog').hide();
 
@@ -54,6 +55,7 @@ $(document).ready(function(){
     	var type = $("input:radio[name='type']:checked").val();
     	var element_name = $('#element_name').val();
     	var element_desc = $('#element_description').val();
+    	var propId = $('#propId').val();
        $('#sortable li').each( function () {
             console.log(this.id);
             var namespaceStr = '';//this.textContent.split("-")[0];
@@ -68,7 +70,8 @@ $(document).ready(function(){
         });
        $.ajax({
            type: "POST",
-           url: "/protected/saveprop?name="+element_name+
+           url: "/protected/saveprop?id="+propId +
+                    "&name="+element_name+
            			"&description="+element_desc +
            			"&type="+type+
            			"&proposition="+JSON.stringify(propositions),
@@ -453,3 +456,43 @@ function idIsNotInList(id) {
 
 }
 
+function initDropTargetList() {
+
+    $('#sortable li').each( function () {
+
+          $(this).mouseover(function () {
+
+                  $(this.children[0]).css({cursor:"pointer", backgroundColor:"#24497A"});
+          });     
+          $(this).mouseout(function () {
+
+                  $(this.children[0]).css({cursor:"pointer", backgroundColor:"lightblue"});
+          });     
+
+          // function to enable removal of list item once it is clicked
+          $($(this)[0].children[0]).click(function onItemClick() {
+              $(this.parent).animate( { backgroundColor: "#CCC", color: "#333" }, 500);
+                  $("#dialog").dialog({
+                      buttons : {
+                          "Confirm" : function() {
+                              $($('#sortable li:last')[0].children[0].parentNode).remove();
+                              $(this).dialog("close");
+                              if ($('#sortable li').length == 0) {
+                                  $('#sortable').width(275);
+                                  dropBoxMaxTextWidth = 275;
+                              }
+                          },
+                          "Cancel" : function() {
+                              $(this).dialog("close");
+                          }
+                      }
+                  });
+              $("#dialog").html(this.parentNode.children[1].innerHTML);
+              $("#dialog").dialog("open");
+              
+              //alert("Removed Selection: "+this.parentNode.children[1].innerHTML);
+
+          });
+
+    });
+}

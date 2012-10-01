@@ -44,7 +44,8 @@ public class SavePropositionServlet extends HttpServlet {
 			throws ServletException, IOException {
 
 		LOGGER.debug("SavePropositionServlet");
-		String id = req.getParameter("proposition");
+		String id = req.getParameter("id");
+		String propositions = req.getParameter("proposition");
 		String type = req.getParameter("type");
 		String name = req.getParameter("name");
 		String description = req.getParameter("description");
@@ -55,7 +56,7 @@ public class SavePropositionServlet extends HttpServlet {
 		ObjectMapper mapper = new ObjectMapper();
 		List<UserProposition> props = null;
 		try {
-			props = mapper.readValue(id,
+			props = mapper.readValue(propositions,
 					new TypeReference<List<UserProposition>>() {
 					});
 		} catch (Exception e) {
@@ -84,10 +85,9 @@ public class SavePropositionServlet extends HttpServlet {
 
 			}
 
-//			List<String> systemTargets  = new ArrayList<String>();
-//			List<Long> userTargets      = new ArrayList<Long>();
-			List<PropositionWrapper> children = new ArrayList
-				<PropositionWrapper>(props.size());
+			List<PropositionWrapper> children = 
+                    new ArrayList<PropositionWrapper>(props.size());
+				
 			pw.setInSystem(false);
 
 			for (UserProposition userProposition : props) {
@@ -107,9 +107,6 @@ public class SavePropositionServlet extends HttpServlet {
 			}
 		
     
-            // SBA
-			//pw.setSystemTargets(systemTargets);
-			//pw.setUserTargets(userTargets);
 			pw.setChildren(children);
 			pw.setAbbrevDisplayName(name);
 			pw.setDisplayName(description);
@@ -129,11 +126,19 @@ public class SavePropositionServlet extends HttpServlet {
             }
 
 
-			webResource.path("/api/proposition/user/create")
-				.type(MediaType.APPLICATION_JSON)
-					.accept(MediaType.TEXT_PLAIN)
-						.post(ClientResponse.class, pw);
+            if (id != null && !id.equals("")) {
+                pw.setId(Long.valueOf(id));
+			    webResource.path("/api/proposition/user/update")
+			    	.type(MediaType.APPLICATION_JSON)
+			    		.accept(MediaType.TEXT_PLAIN)
+			    			.put(ClientResponse.class, pw);
 
+            } else {
+			    webResource.path("/api/proposition/user/create")
+			    	.type(MediaType.APPLICATION_JSON)
+			    		.accept(MediaType.TEXT_PLAIN)
+			    			.post(ClientResponse.class, pw);
+            }
 
 
 		} catch (KeyManagementException e) {
@@ -144,8 +149,6 @@ public class SavePropositionServlet extends HttpServlet {
 			e.printStackTrace();
 		}
 
-		LOGGER.debug(id);
-		System.out.println(id);
 
 	}
 }

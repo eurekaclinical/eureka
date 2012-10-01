@@ -91,6 +91,11 @@
 		<servlet-class>edu.emory.cci.aiw.cvrg.eureka.servlet.proposition.ListUserDefinedPropositionChildrenServlet</servlet-class>
 		<load-on-startup>1</load-on-startup>
 	</servlet>
+	<servlet>
+		<servlet-name>EditPropositionServlet</servlet-name>
+		<servlet-class>edu.emory.cci.aiw.cvrg.eureka.servlet.proposition.EditPropositionServlet</servlet-class>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
 
 	<servlet-mapping>
 		<servlet-name>VerifyUserServlet</servlet-name>
@@ -128,6 +133,7 @@
 		<servlet-name>UserAcctManagerServlet</servlet-name>
 		<url-pattern>/protected/user_acct</url-pattern>
 	</servlet-mapping>
+
 	<servlet-mapping>
 		<servlet-name>SystemPropositionListServlet</servlet-name>
 		<url-pattern>/systemlist</url-pattern>
@@ -155,6 +161,10 @@
  	<servlet-mapping>
 		<servlet-name>EditorHomeServlet</servlet-name>
 		<url-pattern>/protected/editorhome</url-pattern>
+	</servlet-mapping>
+ 	<servlet-mapping>
+		<servlet-name>EditPropositionServlet</servlet-name>
+		<url-pattern>/protected/editprop</url-pattern>
 	</servlet-mapping>
 
 	    
