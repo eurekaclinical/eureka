@@ -83,6 +83,7 @@ public class GenericDao<T, PK> implements Dao<T, PK> {
 		} else {
 			entityManager.remove(entityManager.merge(entity));
 		}
+		entityManager.flush();
 		return entity;
 	}
 
