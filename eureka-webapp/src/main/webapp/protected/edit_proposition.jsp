@@ -22,15 +22,15 @@
   				<li><a href="#step-1">
                 <label class="stepNumber">1</label>
                 <span class="stepDesc">
-                   Create Element<br />
-                   <small>Create a New Derived Element or Workflow</small>
+                   Update Element<br />
+                   <small>Update an Existing Derived Element</small>
                 </span>
             </a></li>
   				<li><a href="#step-2">
                 <label class="stepNumber">2</label>
                 <span class="stepDesc">
                    Select Type<br />
-                   <small>Select Type of Element to create</small>
+                   <small>Select Type of Element</small>
                 </span>
             </a></li>
   				<li><a href="#step-3">
@@ -49,7 +49,7 @@
             </a></li>
   			</ul>
   			<div id="step-1">	
-            	<h2 class="StepTitle">Create a New Derived Element</h2>
+            	<h2 class="StepTitle">Update an Existing Derived Element</h2>
             	<table>
             		<tr>
             			<td>
