@@ -23,7 +23,7 @@
                 <label class="stepNumber">1</label>
                 <span class="stepDesc">
                    Create Element<br />
-                   <small>Create a New Derived Element or Workflow</small>
+                   <small>Create a New Derived Element</small>
                 </span>
             </a></li>
   				<li><a href="#step-2">
