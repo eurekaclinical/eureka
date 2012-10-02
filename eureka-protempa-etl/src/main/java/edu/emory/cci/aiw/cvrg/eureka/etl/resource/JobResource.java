@@ -33,6 +33,7 @@ import edu.emory.cci.aiw.cvrg.eureka.etl.job.TaskManager;
 import edu.emory.cci.aiw.cvrg.eureka.etl.validator.PropositionValidator;
 import edu.emory.cci.aiw.cvrg.eureka.etl.validator
 	.PropositionValidatorException;
+import org.protempa.ExtendedPropositionDefinition;
 
 @Path("/job")
 public class JobResource {
@@ -147,7 +148,9 @@ public class JobResource {
 				new HighLevelAbstractionDefinition(idStr);
 			d.setAbbreviatedDisplayName(inWrapper.getAbbrevDisplayName());
 			d.setDisplayName(inWrapper.getDisplayName());
-			d.setInverseIsA(allTargets);
+                        for (String target : allTargets) {
+                            d.add(new ExtendedPropositionDefinition(target));
+                        }
 			definition = d;
 		} else {
 			EventDefinition e = new EventDefinition(idStr);
