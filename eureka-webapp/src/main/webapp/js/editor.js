@@ -56,6 +56,7 @@ $(document).ready(function(){
     	var element_name = $('#element_name').val();
     	var element_desc = $('#element_description').val();
     	var propId = $('#propId').val();
+        propId = (typeof(propId) === 'undefined' ? "" : propId);
        $('#sortable li').each( function () {
             console.log(this.id);
             var namespaceStr = '';//this.textContent.split("-")[0];
@@ -490,7 +491,6 @@ function initDropTargetList() {
               $("#dialog").html(this.parentNode.children[1].innerHTML);
               $("#dialog").dialog("open");
               
-              //alert("Removed Selection: "+this.parentNode.children[1].innerHTML);
 
           });
 
