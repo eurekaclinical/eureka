@@ -31,7 +31,6 @@ import edu.emory.cci.aiw.cvrg.eureka.common.comm.ValidationRequest;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.Proposition;
 import edu.emory.cci.aiw.cvrg.eureka.services.config.ServiceProperties;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.PropositionDao;
-import edu.emory.cci.aiw.cvrg.eureka.services.dao.UserDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.finder.SystemPropositionFinder;
 import edu.emory.cci.aiw.cvrg.eureka.services.util.PropositionUtil;
 
@@ -44,7 +43,6 @@ import edu.emory.cci.aiw.cvrg.eureka.services.util.PropositionUtil;
 public class PropositionResource {
 
 	private final PropositionDao propositionDao;
-	private final UserDao userDao;
 	private final ServiceProperties applicationProperties;
 	private final SystemPropositionFinder systemPropositionFinder;
 
@@ -59,10 +57,9 @@ public class PropositionResource {
 	 */
 	@Inject
 	public PropositionResource(PropositionDao inPropositionDao,
-		UserDao inUserDao, ServiceProperties inApplicationProperties,
-		SystemPropositionFinder inFinder) {
+		ServiceProperties inApplicationProperties, SystemPropositionFinder
+		inFinder) {
 		this.propositionDao = inPropositionDao;
-		this.userDao = inUserDao;
 		this.applicationProperties = inApplicationProperties;
 		this.systemPropositionFinder = inFinder;
 	}
@@ -111,6 +108,7 @@ public class PropositionResource {
 		"userId") Long inUserId) {
 		List<PropositionWrapper> result = new ArrayList<PropositionWrapper>();
 		for (Proposition p : this.propositionDao.getByUserId(inUserId)) {
+			this.propositionDao.refresh(p);
 			result.add(PropositionUtil.wrap(p, false));
 		}
 		return result;
@@ -163,6 +161,7 @@ public class PropositionResource {
 		PropositionWrapper wrapper = null;
 		Proposition proposition = this.propositionDao.retrieve
 			(inPropositionId);
+		this.propositionDao.refresh(proposition);
 		if (proposition != null) {
 			if (proposition.isInSystem()) {
 				wrapper = this.fetchSystemProposition(
@@ -248,8 +247,7 @@ public class PropositionResource {
 			this.propositionDao.update(proposition);
 		} else {
 			throw new IllegalArgumentException(
-				"Both the user ID and the " + "proposition ID must be " +
-					"provided.");
+				"Both the user ID and the proposition ID must be provided.");
 		}
 	}
 
