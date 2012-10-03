@@ -6,7 +6,8 @@
 
 	<template:content name="sidebar">
          <div class="tooltip" id="tooltip" style="text-align: left">
-                <div id="tree" style="height: 255px;
+                <div id="tree" style="background-color: #ffffff;
+                                        height: 255px;
                                         overflow: auto;
                                         width: 380px">
                 </div>
