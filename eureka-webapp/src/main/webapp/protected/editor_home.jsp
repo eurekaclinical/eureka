@@ -22,19 +22,19 @@
          </div>
 
 
-                <table align="center" id="elements1" style="width: 98%">
+                <table align="center" id="elements" style="width: 98%">
                          <tr class="bold" >
                                  <th>Action</th><th>Name</th><th>Description</th><th>Type</th><th>Created Date</th><th>Last Modified</th>
                          </tr>
                          <c:forEach items="${props}" var="prop">
                 
                                 <tr>
-                                         <td>
+                                         <td style="width:60px">
                                             <a href="#" onclick="showPopup(event, ${prop.attr['id']})" class="view"></a>
                                             <a href="${pageContext.request.contextPath}/protected/editprop?id=${prop.attr['id']}" class="edit"></a>
                                             <a href="#" onclick="deleteElement(event, ${prop.attr['id']})" class="delete"></a>
                                         </td>
-                                         <td>${prop.attr['abbrevDisplay']}</td>
+                                         <td style="width: 100px">${prop.attr['abbrevDisplay']}</td>
                                          <td>${prop.attr['displayName']}</td>
                                          <td>${prop.attr['type']}</td>
                                          <td>${prop.attr['created']}</td>

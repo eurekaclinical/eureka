@@ -188,7 +188,9 @@
                     var curStep = steps.eq(curStepIdx);
                     if(stepIdx != curStepIdx){
                       if($.isFunction(options.onLeaveStep)) {
-                        if(!options.onLeaveStep.call(this,$(curStep))){
+                        //if(!options.onLeaveStep.call(this,$(curStep))){
+                        if(!options.onLeaveStep.call(this,$(curStep),$(selStep))){
+
                           return false;
                         }
                       }

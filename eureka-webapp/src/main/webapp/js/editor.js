@@ -42,9 +42,16 @@ $(document).ready(function(){
 
     $('#dialog').hide();
 
-    function leaveAStepCallback(obj){
-      var step_num= obj.attr('rel');
-      return validateSteps(step_num);
+    function leaveAStepCallback(from, to){
+      var step_num_from = from.attr('rel');
+      var step_num_to = to.attr('rel');
+      if (step_num_to < step_num_from) {
+
+        return true;
+      } else {
+        return validateSteps(step_num_from);
+
+      }
     }
 
     var type = $("input:radio[name='type']:checked").val();

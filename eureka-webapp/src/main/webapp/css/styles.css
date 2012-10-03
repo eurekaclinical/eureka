@@ -338,3 +338,8 @@ td .error {
     height: 12px;
     width: 14px;
 }
+
+#elements {
+
+    overflow: hidden;
+}
