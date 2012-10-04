@@ -57,6 +57,6 @@ public class LoginServlet extends HttpServlet {
 		} catch (NoSuchAlgorithmException nsae) {
 			throw new ServletException(nsae);
 		}
-		req.getRequestDispatcher("/index.jsp").forward(req, resp);
+                resp.sendRedirect(req.getContextPath() + "/index.jsp");
 	}
 }
