@@ -10,6 +10,8 @@ import com.google.inject.Injector;
 import com.google.inject.persist.PersistService;
 import com.google.inject.servlet.GuiceServletContextListener;
 
+import edu.emory.cci.aiw.cvrg.eureka.etl.job.TaskManager;
+
 /**
  *
  * @author hrathod
@@ -44,5 +46,7 @@ public class ContextTestListener extends GuiceServletContextListener {
 		if (this.persistService != null) {
 			this.persistService.stop();
 		}
+		TaskManager taskManager = this.injector.getInstance(TaskManager.class);
+		taskManager.shutdown();
 	}
 }
