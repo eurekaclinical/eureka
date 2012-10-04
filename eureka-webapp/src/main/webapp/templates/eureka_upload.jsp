@@ -63,7 +63,7 @@ ul.nav a { zoom: 1; }
 <!-- The XDomainRequest Transport is included for cross-domain file deletion for IE8+ -->
 <!--[if gte IE 8]><script src="${pageContext.request.contextPath}/js/cors/jquery.xdr-transport.js"></script><![endif]-->
 
-<link rel="SHORTCUT ICON" href="favicon.ico">
+<link rel="SHORTCUT ICON" href="${pageContext.request.contextPath}/favicon.ico">
 <meta name="Description" content="A Clinical Analysis Tool for Biomedical Informatics and Data" />
 
 

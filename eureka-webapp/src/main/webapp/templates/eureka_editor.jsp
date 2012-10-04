@@ -96,7 +96,7 @@ background-color:#EAF2D3;
 </style>
 
 
-<link rel="SHORTCUT ICON" href="favicon.ico">
+<link rel="SHORTCUT ICON" href="${pageContext.request.contextPath}/favicon.ico">
 <meta name="Description" content="A Clinical Analysis Tool for Biomedical Informatics and Data" />
 
 
