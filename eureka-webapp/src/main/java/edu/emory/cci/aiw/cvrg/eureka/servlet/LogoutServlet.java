@@ -18,6 +18,11 @@ public class LogoutServlet extends HttpServlet {
 		if (session != null) {
 			session.invalidate();
 		}
+                /*
+                 * We need to redirect here rather than forward so that 
+                 * logout.jsp gets a request object without a user. Otherwise,
+                 * the button bar will think we're still logged in.
+                 */
                 resp.sendRedirect(req.getContextPath() + "/logout.jsp");
 	}
 }
