@@ -32,7 +32,7 @@
 				<br>
 				<br>
 				<span class="sub_text">
-					<a href="/forgot_password.jsp">Login Help</a>
+					<a href="${pageContext.request.contextPath}/forgot_password.jsp">Login Help</a>
 				</span>
 			</div>
 		</form>
