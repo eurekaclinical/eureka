@@ -9,10 +9,11 @@
 
 	<template:content name="content">
 		<h3>Login</h3>
-		<div>
-			There was an error.  Please verify your email address and password, and try again.
-		</div>
+		
 		<form method="POST" action="j_security_check" style="width: 80%; text-align: right">
+                        <div>
+                            The e-mail address and password you entered does not match our records.
+                        </div>
 			<p>
 				Enter your e-mail address and password.
 			</p>
@@ -35,7 +36,7 @@
 				<br>
 				<br>
 				<span class="sub_text">
-					<a href="forgot_password.jsp">Login Help</a>
+					<a href="${pageContext.request.contextPath}/forgot_password.jsp">Login Help</a>
 				</span>
 			</div>
 		</form>
