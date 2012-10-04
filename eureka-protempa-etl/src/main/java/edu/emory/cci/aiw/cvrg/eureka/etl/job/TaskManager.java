@@ -27,4 +27,12 @@ public class TaskManager {
 		task.setPropositionDefinitions(inPropositionDefinitions);
 		this.executorService.execute(task);
 	}
+
+	public void shutdown () {
+		this.executorService.shutdown();
+	}
+
+	public void shutdownNow () {
+		this.executorService.shutdownNow();
+	}
 }
