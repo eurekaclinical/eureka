@@ -58,6 +58,7 @@ public class Task implements Runnable {
 					.size()];
 			this.getPropositionDefinitions().toArray(propositionArray);
 			this.etl.run("config" + configId, propositionArray);
+			this.etl.close();
 		} catch (EtlException e) {
 			handleError(myJob, e);
 		}
