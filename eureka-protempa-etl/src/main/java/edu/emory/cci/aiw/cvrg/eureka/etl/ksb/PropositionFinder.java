@@ -24,22 +24,20 @@ public class PropositionFinder {
 			LoggerFactory.getLogger(PropositionFinder.class);
 	private static final File CONF_DIR = new File("/etc/eureka/etlconfig");
 	private static final String CONF_PREFIX = "config";
+	private final KnowledgeSource knowledgeSource;
 
-	public static PropositionDefinition find(String inKey,
-		Configuration inConfiguration)
-			throws PropositionFinderException {
+	public PropositionFinder (Configuration inConfiguration) throws
+		PropositionFinderException {
 		Long confId = inConfiguration.getId();
-		PropositionDefinition definition = null;
 		try {
 			String idStr = String.valueOf(confId.longValue());
 			String confFileName = CONF_PREFIX + idStr + ".ini";
 			Configurations configurations =
-					new INICommonsConfigurations(CONF_DIR);
+				new INICommonsConfigurations(CONF_DIR);
 			SourceFactory sf =
-					new SourceFactory(configurations,
-							confFileName);
-			KnowledgeSource knowledgeSource = sf.newKnowledgeSourceInstance();
-			definition = knowledgeSource.readPropositionDefinition(inKey);
+				new SourceFactory(configurations,
+					confFileName);
+			this.knowledgeSource = sf.newKnowledgeSourceInstance();
 		} catch (BackendProviderSpecLoaderException e) {
 			throw new PropositionFinderException(e);
 		} catch (InvalidConfigurationException e) {
@@ -50,6 +48,14 @@ public class PropositionFinder {
 			throw new PropositionFinderException(e);
 		} catch (BackendInitializationException e) {
 			throw new PropositionFinderException(e);
+		}
+	}
+
+	public PropositionDefinition find(String inKey)
+			throws PropositionFinderException {
+		PropositionDefinition definition = null;
+		try {
+			definition = this.knowledgeSource.readPropositionDefinition(inKey);
 		} catch (KnowledgeSourceReadException e) {
 			throw new PropositionFinderException(e);
 		}

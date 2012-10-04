@@ -44,8 +44,9 @@ public class PropositionValidatorImpl implements PropositionValidator {
 		@Override
 		public void visit(Collection<? extends PropositionDefinition>
 			propositionDefinitions) {
-			throw new UnsupportedOperationException("Visiting a collection " +
-				"" + "is not supported.");
+			throw new UnsupportedOperationException(
+				"Visiting a collection " +
+					"" + "is not supported.");
 		}
 
 		@Override
@@ -100,8 +101,9 @@ public class PropositionValidatorImpl implements PropositionValidator {
 
 		if (this.propositions == null) {
 			if (this.targetProposition != null) {
-				this.addMessage("Target proposition found, " +
-					"" + "but no accompanying propositions found.");
+				this.addMessage(
+					"Target proposition found, " +
+						"" + "but no accompanying propositions found.");
 				result = false;
 			}
 		} else {
@@ -124,8 +126,8 @@ public class PropositionValidatorImpl implements PropositionValidator {
 		return result;
 	}
 
-	private boolean validateSingle(PropositionWrapper inWrapper)
-		throws PropositionValidatorException {
+	private boolean validateSingle(PropositionWrapper inWrapper) throws
+		PropositionValidatorException {
 
 		boolean result;
 		Stack<Long> cycleStack = new Stack<Long>();
@@ -136,22 +138,29 @@ public class PropositionValidatorImpl implements PropositionValidator {
 			result = false;
 		} else if (inWrapper.getChildren() != null) {
 			List<PropositionType> types = new ArrayList<PropositionType>();
-			for (PropositionWrapper child : inWrapper.getChildren()) {
-				if (child.isInSystem()) {
-					try {
-						types.add(this.getSystemPropositionType
-							(PropositionFinder.find(child.getKey(),
-								this.configuration)));
-					} catch (PropositionFinderException e) {
-						throw new PropositionValidatorException(e);
+			try {
+				PropositionFinder propositionFinder = new PropositionFinder(
+					this.configuration);
+				for (PropositionWrapper child : inWrapper.getChildren()) {
+					if (child.isInSystem()) {
+						try {
+							types.add(
+								this.getSystemPropositionType
+									(propositionFinder.find(child.getKey())));
+						} catch (PropositionFinderException e) {
+							throw new PropositionValidatorException(e);
+						}
+					} else {
+						types.add(this.getUserPropositionType(child.getId()));
 					}
-				} else {
-					types.add(this.getUserPropositionType(child.getId()));
 				}
+			} catch (PropositionFinderException e) {
+				throw new PropositionValidatorException(e);
 			}
 			if (types.contains(PropositionType.INVALID)) {
-				this.addMessage("Proposition " + inWrapper
-					.getAbbrevDisplayName() + "has invalid definition.");
+				this.addMessage(
+					"Proposition " + inWrapper.getAbbrevDisplayName() +
+						"has invalid definition.");
 				result = false;
 			} else {
 				result = this.isSame(types);
@@ -180,16 +189,16 @@ public class PropositionValidatorImpl implements PropositionValidator {
 	}
 
 	private boolean detectCycle(PropositionWrapper inWrapper,
-		Stack<Long> inSeen)
-		throws PropositionValidatorException {
+		Stack<Long> inSeen) throws PropositionValidatorException {
 
 		boolean cycle = false;
 
 		if (inWrapper.getId() == null && inWrapper != this
 			.targetProposition) {
-			throw new PropositionValidatorException("Proposition " +
-				inWrapper.getAbbrevDisplayName() + " is not the target " +
-				"proposition and does not have an ID.");
+			throw new PropositionValidatorException(
+				"Proposition " +
+					inWrapper.getAbbrevDisplayName() + " is not the target " +
+					"proposition and does not have an ID.");
 		}
 
 		if (inSeen.contains(inWrapper.getId())) {
@@ -227,8 +236,7 @@ public class PropositionValidatorImpl implements PropositionValidator {
 	}
 
 	private PropositionType getSystemPropositionType(PropositionDefinition
-		inDefinition)
-		throws PropositionValidatorException {
+		inDefinition) throws PropositionValidatorException {
 		PropositionType result;
 		ValidatorVisitor visitor = new ValidatorVisitor();
 		inDefinition.accept(visitor);
@@ -236,25 +244,33 @@ public class PropositionValidatorImpl implements PropositionValidator {
 		return result;
 	}
 
-	private PropositionType getUserPropositionType(Long inTarget)
-		throws PropositionValidatorException {
+	private PropositionType getUserPropositionType(Long inTarget) throws
+		PropositionValidatorException {
 
 		PropositionType result = PropositionType.INVALID;
 		List<PropositionType> childTypes = new ArrayList<PropositionType>();
 		PropositionWrapper wrapper = this.findById(inTarget);
 
-		for (PropositionWrapper child : wrapper.getChildren()) {
-			if (child.isInSystem()) {
-				try {
-					childTypes.add(this.getSystemPropositionType
-						(PropositionFinder.find(child.getKey(),
-							this.configuration)));
-				} catch (PropositionFinderException e) {
-					throw new PropositionValidatorException(e);
+		try {
+			PropositionFinder propositionFinder = new PropositionFinder(
+				this.configuration);
+			for (PropositionWrapper child : wrapper.getChildren()) {
+				if (child.isInSystem()) {
+					try {
+						childTypes.add(
+							this.getSystemPropositionType(
+								propositionFinder.find(
+									child.getKey())));
+					} catch (PropositionFinderException e) {
+						throw new PropositionValidatorException(e);
+					}
+				} else {
+					childTypes.add(this.getUserPropositionType(child.getId
+						()));
 				}
-			} else {
-				childTypes.add(this.getUserPropositionType(child.getId()));
 			}
+		} catch (PropositionFinderException e) {
+			throw new PropositionValidatorException(e);
 		}
 
 		if (this.isSame(childTypes)) {

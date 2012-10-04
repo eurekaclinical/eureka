@@ -86,9 +86,10 @@ public class PropositionResource {
 		PropositionWrapper wrapper = null;
 		try {
 			Configuration configuration = this.confDao.getByUserId(inUserId);
-			PropositionDefinition definition = PropositionFinder.find
-				(inKey, configuration);
-			wrapper = this.getInfo(definition, configuration, false);
+		PropositionFinder propositionFinder = new PropositionFinder(configuration);
+			PropositionDefinition definition = propositionFinder.find
+				(inKey);
+			wrapper = this.getInfo(definition, false, propositionFinder);
 		} catch (PropositionFinderException e) {
 			LOGGER.error(e.getMessage(), e);
 		}
@@ -96,12 +97,11 @@ public class PropositionResource {
 	}
 
 	private PropositionWrapper getInfo(PropositionDefinition inDefinition,
-		Configuration configuration, boolean summarize) throws
+		boolean summarize, PropositionFinder inPropositionFinder)
+		throws
 		PropositionFinderException {
 
 		PropositionWrapper wrapper = new PropositionWrapper();
-
-
 		wrapper.setKey(inDefinition.getId());
 		wrapper.setInSystem(true);
 		wrapper.setAbbrevDisplayName(
@@ -117,8 +117,8 @@ public class PropositionResource {
 			for (String key : inDefinition.getChildren()) {
 				children.add(
 					this.getInfo(
-						PropositionFinder.find(
-							key, configuration), configuration, true));
+						inPropositionFinder.find(
+							key), true, inPropositionFinder));
 			}
 			wrapper.setChildren(children);
 		}
