@@ -267,10 +267,15 @@ public class User implements CycleRecoverable {
 	/**
 	 * Get the last log-in date for the user.
 	 *
-	 * @return The user's last log-in date.
+	 * @return The user's last log-in date, or <code>null</code> if the
+         * user has never logged in.
 	 */
 	public Date getLastLogin() {
+            if (this.lastLogin != null) {
 		return new Date(this.lastLogin.getTime());
+            } else {
+                return null;
+            }
 	}
 
 	/**
@@ -279,7 +284,11 @@ public class User implements CycleRecoverable {
 	 * @param inLastLogin The last log-in date for the user.
 	 */
 	public void setLastLogin(final Date inLastLogin) {
+            if (inLastLogin != null) {
 		this.lastLogin = new Date(inLastLogin.getTime());
+            } else {
+                this.lastLogin = null;
+            }
 	}
 
 	/**
