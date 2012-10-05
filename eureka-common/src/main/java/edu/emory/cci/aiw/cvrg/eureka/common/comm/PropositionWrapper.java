@@ -142,4 +142,22 @@ public class PropositionWrapper implements Serializable {
 	public void setParent(boolean inParent) {
 		parent = inParent;
 	}
+
+	@Override
+	public String toString() {
+		return "PropositionWrapper{" +
+			"id=" + id +
+			", key='" + key + '\'' +
+			", userId=" + userId +
+			", abbrevDisplayName='" + abbrevDisplayName + '\'' +
+			", displayName='" + displayName + '\'' +
+			", type=" + type +
+			", inSystem=" + inSystem +
+			", children=" + children.size() +
+			", created=" + created +
+			", lastModified=" + lastModified +
+			", summarized=" + summarized +
+			", parent=" + parent +
+			'}';
+	}
 }
