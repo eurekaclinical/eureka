@@ -25,8 +25,7 @@ import edu.emory.cci.aiw.cvrg.eureka.etl.dao.ConfDao;
 import edu.emory.cci.aiw.cvrg.eureka.etl.ksb.PropositionFinder;
 import edu.emory.cci.aiw.cvrg.eureka.etl.ksb.PropositionFinderException;
 import edu.emory.cci.aiw.cvrg.eureka.etl.validator.PropositionValidator;
-import edu.emory.cci.aiw.cvrg.eureka.etl.validator
-	.PropositionValidatorException;
+import edu.emory.cci.aiw.cvrg.eureka.etl.validator.PropositionValidatorException;
 
 /**
  * @author hrathod
@@ -34,15 +33,13 @@ import edu.emory.cci.aiw.cvrg.eureka.etl.validator
 @Path("/proposition")
 public class PropositionResource {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger
-		(PropositionResource.class);
-
+	private static final Logger LOGGER = LoggerFactory.getLogger(PropositionResource.class);
 	private final PropositionValidator propositionValidator;
 	private final ConfDao confDao;
 
 	@Inject
 	public PropositionResource(PropositionValidator inValidator,
-		ConfDao inConfDao) {
+			ConfDao inConfDao) {
 		this.propositionValidator = inValidator;
 		this.confDao = inConfDao;
 	}
@@ -54,17 +51,22 @@ public class PropositionResource {
 
 		boolean result;
 		Configuration configuration = this.confDao.getByUserId(
-			inRequest.getUserId());
-
-		try {
-			propositionValidator.setConfiguration(configuration);
-			propositionValidator.setPropositions(inRequest.getPropositions());
-			propositionValidator.setTargetProposition(
-				inRequest.getTargetProposition());
-			result = propositionValidator.validate();
-		} catch (PropositionValidatorException e) {
-			LOGGER.error(e.getMessage(), e);
+				inRequest.getUserId());
+		if (configuration != null) {
+			try {
+				propositionValidator.setConfiguration(configuration);
+				propositionValidator.setPropositions(inRequest.getPropositions());
+				propositionValidator.setTargetProposition(
+						inRequest.getTargetProposition());
+				result = propositionValidator.validate();
+			} catch (PropositionValidatorException e) {
+				LOGGER.error(e.getMessage(), e);
+				result = false;
+			}
+		} else {
 			result = false;
+			LOGGER.error("No Protempa configuration found for user "
+					+ inRequest.getUserId());
 		}
 
 		Response response;
@@ -72,7 +74,7 @@ public class PropositionResource {
 			response = Response.ok().build();
 		} else {
 			response = Response.status(Response.Status.NOT_ACCEPTABLE)
-				.entity(propositionValidator.getMessages()).build();
+					.entity(propositionValidator.getMessages()).build();
 		}
 		return response;
 	}
@@ -86,10 +88,20 @@ public class PropositionResource {
 		PropositionWrapper wrapper = null;
 		try {
 			Configuration configuration = this.confDao.getByUserId(inUserId);
-		PropositionFinder propositionFinder = new PropositionFinder(configuration);
-			PropositionDefinition definition = propositionFinder.find
-				(inKey);
-			wrapper = this.getInfo(definition, false, propositionFinder);
+			if (configuration != null) {
+				PropositionFinder propositionFinder =
+						new PropositionFinder(configuration);
+				PropositionDefinition definition =
+						propositionFinder.find(inKey);
+				if (definition != null) {
+					wrapper = this.getInfo(definition, false, propositionFinder);
+				} else {
+					LOGGER.info("No proposition with id " + inKey);
+				}
+			} else {
+				LOGGER.error("No Protempa configuration found for user "
+						+ inUserId);
+			}
 		} catch (PropositionFinderException e) {
 			LOGGER.error(e.getMessage(), e);
 		}
@@ -97,28 +109,27 @@ public class PropositionResource {
 	}
 
 	private PropositionWrapper getInfo(PropositionDefinition inDefinition,
-		boolean summarize, PropositionFinder inPropositionFinder)
-		throws
-		PropositionFinderException {
+			boolean summarize, PropositionFinder inPropositionFinder)
+			throws
+			PropositionFinderException {
 
 		PropositionWrapper wrapper = new PropositionWrapper();
 		wrapper.setKey(inDefinition.getId());
 		wrapper.setInSystem(true);
 		wrapper.setAbbrevDisplayName(
-			inDefinition.getAbbreviatedDisplayName());
+				inDefinition.getAbbreviatedDisplayName());
 		wrapper.setDisplayName(inDefinition.getDisplayName());
 		wrapper.setSummarized(summarize);
 		wrapper.setParent(inDefinition.getChildren().length > 0);
 
 		if (!summarize) {
-			List<PropositionWrapper> children = new
-				ArrayList<PropositionWrapper>(
-				inDefinition.getChildren().length);
+			List<PropositionWrapper> children = new ArrayList<PropositionWrapper>(
+					inDefinition.getChildren().length);
 			for (String key : inDefinition.getChildren()) {
 				children.add(
-					this.getInfo(
+						this.getInfo(
 						inPropositionFinder.find(
-							key), true, inPropositionFinder));
+						key), true, inPropositionFinder));
 			}
 			wrapper.setChildren(children);
 		}
