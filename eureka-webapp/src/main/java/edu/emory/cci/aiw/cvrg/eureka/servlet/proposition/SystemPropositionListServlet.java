@@ -93,6 +93,10 @@ public class SystemPropositionListServlet extends HttpServlet {
 					.accept(MediaType.APPLICATION_JSON).get(User.class);
 
             String propId = req.getParameter("id");
+			
+			if (propId == null) {
+				throw new ServletException("Invalid parameter id: " + propId);
+			}
 
             if (propId.equals("root")) {
 			    List<PropositionWrapper> props = webResource.path("/api/proposition/system/" + user.getId() + "/list")
