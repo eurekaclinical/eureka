@@ -122,8 +122,10 @@ public final class PropositionUtil {
 
 		if (inWrapper.getType() == PropositionWrapper.Type.AND) {
 			proposition.setAbstractedFrom(targets);
+			proposition.setInverseIsA(new ArrayList<Proposition>());
 		} else {
 			proposition.setInverseIsA(targets);
+			proposition.setAbstractedFrom(new ArrayList<Proposition>());
 		}
 
 		proposition.setKey(inWrapper.getKey());
