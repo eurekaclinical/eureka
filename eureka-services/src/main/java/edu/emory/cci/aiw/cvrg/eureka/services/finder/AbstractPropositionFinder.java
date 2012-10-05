@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.PropositionWrapper;
 
 import net.sf.ehcache.Cache;
+import net.sf.ehcache.CacheManager;
 import net.sf.ehcache.Element;
 
 public abstract class AbstractPropositionFinder<U, K> {
@@ -41,6 +42,11 @@ public abstract class AbstractPropositionFinder<U, K> {
 		return wrapper;
 	}
 
+	public void shutdown () {
+		this.getCacheManager().removalAll();
+		this.getCacheManager().shutdown();
+	}
+
 	private void prefetch(U inUserId, PropositionWrapper inWrapper) {
 		final Cache cache = this.getCache();
 		for (K key : this.getPrefetchKeys(inWrapper)) {
@@ -54,6 +60,8 @@ public abstract class AbstractPropositionFinder<U, K> {
 			}
 		}
 	}
+
+	abstract protected CacheManager getCacheManager();
 
 	abstract protected List<K> getPrefetchKeys(PropositionWrapper inWrapper);
 

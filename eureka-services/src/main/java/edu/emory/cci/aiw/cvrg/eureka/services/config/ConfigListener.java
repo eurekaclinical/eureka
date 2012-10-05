@@ -17,6 +17,7 @@ import com.google.inject.persist.PersistService;
 import com.google.inject.persist.jpa.JpaPersistModule;
 import com.google.inject.servlet.GuiceServletContextListener;
 
+import edu.emory.cci.aiw.cvrg.eureka.services.finder.SystemPropositionFinder;
 import edu.emory.cci.aiw.cvrg.eureka.services.thread.JobUpdateTask;
 
 /**
@@ -98,5 +99,9 @@ public class ConfigListener extends GuiceServletContextListener {
 		} catch (InterruptedException e) {
 			LOGGER.error(e.getMessage(), e);
 		}
+
+		SystemPropositionFinder finder = this.getInjector().getInstance
+			(SystemPropositionFinder.class);
+		finder.shutdown();
 	}
 }
