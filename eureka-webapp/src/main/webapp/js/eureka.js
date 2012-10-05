@@ -374,7 +374,7 @@ $(document).ready(function() {
 });
 	
 
-
+// Creates a popup containing a summary of a derived data element.
 function showPopup(event, rowId) {
 
     //$('<div class="tooltip"><div id="tree"></div></div>').appendTo('body');
@@ -387,7 +387,7 @@ function showPopup(event, rowId) {
   
     $("#tree").jstree({
         "json_data" : {
-            "ajax" : { "url" : "/userpropchildren?propId=" + rowId}
+            "ajax" : { "url" : "userpropchildren?propId=" + rowId}
         },
     "plugins" : [ "themes", "json_data", "ui" ]
     });
@@ -407,7 +407,7 @@ function deleteElement(event, rowId) {
 	                    url: 'deleteprop?id='+rowId,
                         success: function(data) {
                             $(this).dialog("close");
-                            window.location.href="/protected/editorhome";
+                            window.location.href="editorhome";
                     
                     
                         }, error: function(data, statusCode) {

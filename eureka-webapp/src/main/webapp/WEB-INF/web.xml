@@ -136,7 +136,7 @@
 
 	<servlet-mapping>
 		<servlet-name>SystemPropositionListServlet</servlet-name>
-		<url-pattern>/systemlist</url-pattern>
+		<url-pattern>/protected/systemlist</url-pattern>
 	</servlet-mapping>
 	<servlet-mapping>
 		<servlet-name>SavePropositionServlet</servlet-name>
@@ -148,15 +148,15 @@
 	</servlet-mapping>
 	<servlet-mapping>
 		<servlet-name>UserPropositionListServlet</servlet-name>
-		<url-pattern>/userproplist</url-pattern>
+		<url-pattern>/protected/userproplist</url-pattern>
 	</servlet-mapping>
  	<servlet-mapping>
 		<servlet-name>ListSystemPropositionChildrenServlet</servlet-name>
-		<url-pattern>/syspropchildren</url-pattern>
+		<url-pattern>/protected/syspropchildren</url-pattern>
 	</servlet-mapping>
  	<servlet-mapping>
 		<servlet-name>ListUserDefinedPropositionChildrenServlet</servlet-name>
-		<url-pattern>/userpropchildren</url-pattern>
+		<url-pattern>/protected/userpropchildren</url-pattern>
 	</servlet-mapping>
  	<servlet-mapping>
 		<servlet-name>EditorHomeServlet</servlet-name>

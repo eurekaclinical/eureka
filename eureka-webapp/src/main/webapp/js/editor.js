@@ -78,7 +78,7 @@ $(document).ready(function(){
         });
        $.ajax({
            type: "POST",
-           url: "/protected/saveprop?id="+propId +
+           url: "saveprop?id="+propId +
                     "&name="+element_name+
            			"&description="+element_desc +
            			"&type="+type+
@@ -92,7 +92,7 @@ $(document).ready(function(){
                }                                     
             },
            success: function(data) {
-                  window.location.href="/protected/editorhome";       
+                  window.location.href="editorhome";       
            }
        });
 
@@ -172,7 +172,7 @@ function initTrees() {
    $("#systemTree").jstree({
 		"json_data" : {
 		    "ajax" : { 
-                "url" : "/systemlist" ,
+                "url" : "systemlist" ,
                 "data": function(n) {
                     return {
                         id : n.attr ? n.attr("id") : "root" 
@@ -279,7 +279,7 @@ function initTrees() {
 	function loadChild(id) {
 	    $.ajax({
 	           type: "POST",
-	           url: "/syspropchildren?propId="+id,
+	           url: "syspropchildren?propId="+id,
 	           contentType: "application/json; charset=utf-8",
 	           //data: "{'id':" + id + "}",
 	           dataType: "json",
@@ -299,7 +299,7 @@ function initTrees() {
 	function loadUserDefinedProps(id) {
 	    $.ajax({
 	           type: "POST",
-	           url: "/userpropchildren?propId="+id,
+	           url: "userpropchildren?propId="+id,
 	           contentType: "application/json; charset=utf-8",
 	           //data: "{'id':" + id + "}",
 	           dataType: "json",
@@ -342,7 +342,7 @@ function initTrees() {
 	
 	$("#userTree").jstree({
 		"json_data" : {
-		    "ajax" : { "url" : "/userproplist?id=root" }
+		    "ajax" : { "url" : "userproplist?id=root" }
 		},
 		"dnd" : {
 			"drop_finish" : function(data) {
