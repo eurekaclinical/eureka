@@ -1,0 +1,7 @@
+<Context>
+    <WatchedResource>WEB-INF/web.xml</WatchedResource>
+    <Realm className="org.apache.catalina.realm.JAASRealm"
+        appName="Eureka"
+        userClassNames="edu.emory.cci.aiw.cvrg.jaas.UserPrincipal"
+        roleClassNames="edu.emory.cci.aiw.cvrg.jaas.RolePrincipal"/>
+</Context>
