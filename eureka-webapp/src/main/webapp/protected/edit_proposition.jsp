@@ -134,10 +134,22 @@ reflected by codes,clinical events and/or observations in a specified frequency,
 																
 																<ul id="sortable" style="width: 100% height: 100%" >
                                                                     <c:forEach var="child" items="${proposition.children}">
-                                                                        <li id="${child.id}">
-                                                                            <span class="delete" style="cursor: pointer; background-color: lightblue;"></span>
-                                                                            <span>${child.key} ${child.displayName} ${child.abbrevDisplayName}</span>
-                                                                        </li>
+                                                                        <c:choose>
+                                                                            <c:when test="${empty child.key}">
+                                                                                    <li id="${child.id}" data-type="user">
+                                                                                        <span class="delete" style="cursor: pointer; background-color: lightblue;"></span>
+                                                                                        <span>${child.abbrevDisplayName}</span>
+                                                                                    </li>
+                                                                            </c:when>
+                                                                            <c:otherwise>
+                                                                                    <li id="${child.key}" data-type="system">
+                                                                                        <span class="delete" style="cursor: pointer; background-color: lightblue;"></span>
+                                                                                        <span>${child.key} ${child.displayName} ${child.abbrevDisplayName}</span>
+                                                                                    </li>
+
+                                                                            </c:otherwise>
+
+                                                                        </c:choose>
                                                                     </c:forEach>
 									
 																</ul>

@@ -67,7 +67,7 @@ $(document).ready(function(){
        $('#sortable li').each( function () {
             console.log(this.id);
             var namespaceStr = '';//this.textContent.split("-")[0];
-            if ($('#systemTree [id="'+this.id + '"]').length > 0) {
+            if ($('#systemTree [id="'+this.id + '"]').length > 0 || $(this).data('type') == "system") {
             	namespaceStr = 'system';
             	
             } else {
@@ -194,7 +194,7 @@ function initTrees() {
                     var X = $("<span/>", { class: "delete" });
                     var txt = $("<span/>", { text : data.o[0].children[1].childNodes[1].textContent });
                     
-                    $('<li/>', { id: data.o[0].id}).append(X, txt).appendTo('#sortable');
+                    $('<li/>', { id: data.o[0].id, "data-type": "system"}).append(X, txt).appendTo('#sortable');
                 
                     var txt = $('#sortable li:last').text();
     
@@ -359,7 +359,7 @@ function initTrees() {
                     var X = $("<span/>", { class: "delete" });
                     var txt = $("<span/>", { text : data.o[0].children[1].childNodes[1].textContent });
                     
-                    $('<li/>', { id: data.o[0].id}).append(X, txt).appendTo('#sortable');
+                    $('<li/>', { id: data.o[0].id, "data-type": "user"}).append(X, txt).appendTo('#sortable');
                 
 
                     var txt = $('#sortable li:last').text();
