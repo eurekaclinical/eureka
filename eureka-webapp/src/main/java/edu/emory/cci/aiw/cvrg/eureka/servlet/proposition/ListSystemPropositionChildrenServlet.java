@@ -25,6 +25,7 @@ import com.sun.jersey.api.client.WebResource;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.CommUtils;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.PropositionWrapper;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.User;
+import javax.ws.rs.core.UriBuilder;
 
 
 public class ListSystemPropositionChildrenServlet extends HttpServlet {
@@ -130,8 +131,14 @@ public class ListSystemPropositionChildrenServlet extends HttpServlet {
 		String propId = req.getParameter("propId");
 
 		//"/system/{userId}/{propKey}"
+		String path = UriBuilder.fromPath("/")
+				.segment("api")
+				.segment("proposition")
+				.segment("system")
+				.segment("" + user.getId())
+				.segment(propId).build().toString();
 		PropositionWrapper propWrapper =
-				webResource.path("/api/proposition/system/"+ user.getId() + "/" + propId)
+				webResource.path(path)
 				.accept(MediaType.APPLICATION_JSON)
 				.get(PropositionWrapper.class);
 

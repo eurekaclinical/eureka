@@ -7,11 +7,15 @@ import javax.ws.rs.core.MediaType;
 
 import com.google.inject.Inject;
 import com.sun.jersey.api.client.Client;
+import com.sun.jersey.api.client.ClientResponse;
+import com.sun.jersey.api.client.UniformInterfaceException;
 import com.sun.jersey.api.client.WebResource;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.CommUtils;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.PropositionWrapper;
 import edu.emory.cci.aiw.cvrg.eureka.services.config.ServiceProperties;
+import java.net.URI;
+import javax.ws.rs.core.UriBuilder;
 
 public class SystemPropositionRetriever implements PropositionRetriever<Long,
 	String> {
@@ -28,7 +32,8 @@ public class SystemPropositionRetriever implements PropositionRetriever<Long,
 		PropositionWrapper wrapper = null;
 
 		try {
-			String path = "/" + inUserId + "/" + inKey;
+			String path = 
+					UriBuilder.fromUri("/").segment("" + inUserId, inKey).build().toString();
 			Client client = CommUtils.getClient();
 			WebResource resource =
 				client.resource(this.applicationProperties

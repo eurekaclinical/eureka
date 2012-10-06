@@ -21,6 +21,7 @@ import com.google.inject.Inject;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.PropositionWrapper;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.ValidationRequest;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.Configuration;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.HttpStatusException;
 import edu.emory.cci.aiw.cvrg.eureka.etl.dao.ConfDao;
 import edu.emory.cci.aiw.cvrg.eureka.etl.ksb.PropositionFinder;
 import edu.emory.cci.aiw.cvrg.eureka.etl.ksb.PropositionFinderException;
@@ -94,16 +95,20 @@ public class PropositionResource {
 				PropositionDefinition definition =
 						propositionFinder.find(inKey);
 				if (definition != null) {
-					wrapper = this.getInfo(definition, false, propositionFinder);
+					wrapper = this.getInfo(definition, false, 
+							propositionFinder);
 				} else {
-					LOGGER.info("No proposition with id " + inKey);
+					throw new HttpStatusException(Response.Status.NOT_FOUND, 
+							"No proposition with id " + inKey);
 				}
 			} else {
-				LOGGER.error("No Protempa configuration found for user "
-						+ inUserId);
+				throw new HttpStatusException(Response.Status.NOT_FOUND,
+						"No Protempa configuration found for user " + 
+							inUserId);
 			}
 		} catch (PropositionFinderException e) {
-			LOGGER.error(e.getMessage(), e);
+			throw new HttpStatusException(
+					Response.Status.INTERNAL_SERVER_ERROR, e);
 		}
 		return wrapper;
 	}
@@ -125,7 +130,7 @@ public class PropositionResource {
 		if (!summarize) {
 			List<PropositionWrapper> children = new ArrayList<PropositionWrapper>(
 					inDefinition.getChildren().length);
-			for (String key : inDefinition.getChildren()) {
+			for (String key : inDefinition.getInverseIsA()) {
 				children.add(
 						this.getInfo(
 						inPropositionFinder.find(
