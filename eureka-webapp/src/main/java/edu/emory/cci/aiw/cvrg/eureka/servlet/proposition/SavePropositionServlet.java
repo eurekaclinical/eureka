@@ -77,6 +77,10 @@ public class SavePropositionServlet extends HttpServlet {
 
 			PropositionWrapper pw = new PropositionWrapper();
 
+			if (id != null && !id.equals("")) {
+				pw.setId(Long.valueOf(id));
+			}
+
 			pw.setAbbrevDisplayName(name);
 			if (type.equals("AND")) {
 				pw.setType(Type.AND);
@@ -85,9 +89,9 @@ public class SavePropositionServlet extends HttpServlet {
 
 			}
 
-			List<PropositionWrapper> children = 
+			List<PropositionWrapper> children =
                     new ArrayList<PropositionWrapper>(props.size());
-				
+
 			pw.setInSystem(false);
 
 			for (UserProposition userProposition : props) {
@@ -105,8 +109,8 @@ public class SavePropositionServlet extends HttpServlet {
                 children.add(child);
 
 			}
-		
-    
+
+
 			pw.setChildren(children);
 			pw.setAbbrevDisplayName(name);
 			pw.setDisplayName(description);
@@ -126,8 +130,7 @@ public class SavePropositionServlet extends HttpServlet {
             }
 
 
-            if (id != null && !id.equals("")) {
-                pw.setId(Long.valueOf(id));
+            if (pw.getId() != null) {
 			    webResource.path("/api/proposition/user/update")
 			    	.type(MediaType.APPLICATION_JSON)
 			    		.accept(MediaType.TEXT_PLAIN)
