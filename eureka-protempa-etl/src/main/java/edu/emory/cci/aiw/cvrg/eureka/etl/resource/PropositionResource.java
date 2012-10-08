@@ -21,7 +21,7 @@ import com.google.inject.Inject;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.PropositionWrapper;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.ValidationRequest;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.Configuration;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.HttpStatusException;
+import edu.emory.cci.aiw.cvrg.eureka.common.exception.HttpStatusException;
 import edu.emory.cci.aiw.cvrg.eureka.etl.dao.ConfDao;
 import edu.emory.cci.aiw.cvrg.eureka.etl.ksb.PropositionFinder;
 import edu.emory.cci.aiw.cvrg.eureka.etl.ksb.PropositionFinderException;
@@ -95,15 +95,15 @@ public class PropositionResource {
 				PropositionDefinition definition =
 						propositionFinder.find(inKey);
 				if (definition != null) {
-					wrapper = this.getInfo(definition, false, 
+					wrapper = this.getInfo(definition, false,
 							propositionFinder);
 				} else {
-					throw new HttpStatusException(Response.Status.NOT_FOUND, 
+					throw new HttpStatusException(Response.Status.NOT_FOUND,
 							"No proposition with id " + inKey);
 				}
 			} else {
 				throw new HttpStatusException(Response.Status.NOT_FOUND,
-						"No Protempa configuration found for user " + 
+						"No Protempa configuration found for user " +
 							inUserId);
 			}
 		} catch (PropositionFinderException e) {

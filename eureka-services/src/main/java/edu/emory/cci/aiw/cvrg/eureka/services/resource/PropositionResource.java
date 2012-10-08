@@ -29,16 +29,15 @@ import com.sun.jersey.api.client.WebResource;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.CommUtils;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.PropositionWrapper;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.ValidationRequest;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.HttpStatusException;
+import edu.emory.cci.aiw.cvrg.eureka.common.exception.HttpStatusException;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.Proposition;
 import edu.emory.cci.aiw.cvrg.eureka.services.config.ServiceProperties;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.PropositionDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.finder.SystemPropositionFinder;
 import edu.emory.cci.aiw.cvrg.eureka.services.util.PropositionUtil;
-import java.io.BufferedReader;
+
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+
 import org.arp.javautil.io.IOUtil;
 import org.arp.javautil.io.WithBufferedReader;
 
@@ -92,7 +91,7 @@ public class PropositionResource {
 									Response.Status.INTERNAL_SERVER_ERROR, e);
 						} else {
 							LOGGER.warn(
-									"Invalid proposition id specified in system propositions list: " + 
+									"Invalid proposition id specified in system propositions list: " +
 									trimmedLine);
 						}
 					}
