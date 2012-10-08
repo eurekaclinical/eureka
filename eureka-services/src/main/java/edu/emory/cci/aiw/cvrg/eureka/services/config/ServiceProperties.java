@@ -1,5 +1,8 @@
 package edu.emory.cci.aiw.cvrg.eureka.services.config;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.google.inject.Singleton;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.props.ApplicationProperties;
@@ -160,5 +163,15 @@ public class ServiceProperties extends ApplicationProperties {
 	 */
 	public String getPasswordResetEmailSubject() {
 		return this.getValue("eureka.services.email.reset.subject");
+	}
+
+	/**
+	 * Gets the default list of system propositions for the application.
+	 *
+	 * @return The default list of system propositions.
+	 */
+	public List<String> getDefaultSystemPropositions () {
+		return this.getStringListValue("eureka.services.defaultprops",
+			new ArrayList<String>());
 	}
 }

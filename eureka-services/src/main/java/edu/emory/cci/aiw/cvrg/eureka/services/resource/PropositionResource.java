@@ -29,17 +29,12 @@ import com.sun.jersey.api.client.WebResource;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.CommUtils;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.PropositionWrapper;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.ValidationRequest;
-import edu.emory.cci.aiw.cvrg.eureka.common.exception.HttpStatusException;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.Proposition;
+import edu.emory.cci.aiw.cvrg.eureka.common.exception.HttpStatusException;
 import edu.emory.cci.aiw.cvrg.eureka.services.config.ServiceProperties;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.PropositionDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.finder.SystemPropositionFinder;
 import edu.emory.cci.aiw.cvrg.eureka.services.util.PropositionUtil;
-
-import java.io.IOException;
-
-import org.arp.javautil.io.IOUtil;
-import org.arp.javautil.io.WithBufferedReader;
 
 /**
  * REST Web Service
@@ -73,18 +68,16 @@ public class PropositionResource {
 	@Produces(MediaType.APPLICATION_JSON)
 	public List<PropositionWrapper> getSystemPropositions(@PathParam(
 		"userId") Long inUserId) {
+
 		List<PropositionWrapper> wrappers =
 				new ArrayList<PropositionWrapper>();
 
-		try {
-			List<String> lines = IOUtil.readResourceAsLines(
-					getClass(), "/defaultSystemPropositions");
-			for (String line : lines) {
-				String trimmedLine = line.trim();
-				if (trimmedLine.length() > 0) {
+			List<String> propNames = this.applicationProperties
+				.getDefaultSystemPropositions();
+			for (String name : propNames) {
 					try {
 						wrappers.add(
-								fetchSystemProposition(inUserId, trimmedLine));
+								fetchSystemProposition(inUserId, name));
 					} catch (UniformInterfaceException e) {
 						if (e.getResponse().getStatus() != 404) {
 							throw new HttpStatusException(
@@ -92,16 +85,10 @@ public class PropositionResource {
 						} else {
 							LOGGER.warn(
 									"Invalid proposition id specified in system propositions list: " +
-									trimmedLine);
+									name);
 						}
-					}
 				}
 			}
-		} catch (IOException ioe) {
-			LOGGER.error(
-					"Error getting proposition list for user " + inUserId,
-					ioe);
-		}
 
 		return wrappers;
 	}

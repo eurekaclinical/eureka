@@ -8,8 +8,9 @@ import java.io.InputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
-import java.util.logging.Level;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -176,6 +177,34 @@ public abstract class ApplicationProperties {
 			value = defaultValue;
 		}
 		return value;
+	}
+
+	/**
+	 * Reads in a property value as a whitespace-delimited list of items.
+	 *
+	 * @param inPropertyName The name of the property to read.
+	 * @param defaultValue The value to return if the property is not found.
+	 * @return A list containing the items in the value.
+	 */
+	protected List<String> getStringListValue(final String inPropertyName,
+		List<String> defaultValue) {
+
+		List<String> result;
+		if (this.properties.containsKey(inPropertyName)) {
+			String value = this.properties.getProperty(inPropertyName);
+			String[] temp = value.split("\\s+");
+			result = new ArrayList<String>(temp.length);
+			for (String s : temp) {
+				String trimmed = s.trim();
+				if (trimmed.length() > 0) {
+					result.add(s.trim());
+				}
+			}
+		} else {
+			LOGGER.warn("Property not found in configuration: {}", inPropertyName);
+			result = defaultValue;
+		}
+		return result;
 	}
 
 	/**
