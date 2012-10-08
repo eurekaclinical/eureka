@@ -14,6 +14,8 @@ import org.protempa.PrimitiveParameterDefinition;
 import org.protempa.PropositionDefinition;
 import org.protempa.PropositionDefinitionVisitor;
 import org.protempa.SliceDefinition;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.PropositionWrapper;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.Configuration;
@@ -85,6 +87,8 @@ public class PropositionValidatorImpl implements PropositionValidator {
 		}
 	}
 
+	private static final Logger LOGGER = LoggerFactory.getLogger
+		(PropositionValidatorImpl.class);
 	private PropositionWrapper targetProposition;
 	private List<PropositionWrapper> propositions;
 	private Configuration configuration;
@@ -99,30 +103,24 @@ public class PropositionValidatorImpl implements PropositionValidator {
 	public boolean validate() throws PropositionValidatorException {
 		boolean result = true;
 
-		if (this.propositions == null) {
-			if (this.targetProposition != null) {
-				this.addMessage(
-					"Target proposition found, " +
-						"" + "but no accompanying propositions found.");
-				result = false;
-			}
-		} else {
+		if (this.targetProposition != null) {
+			LOGGER.debug("Checking proposition {}", this.targetProposition);
+			this.validateSingle(this.targetProposition);
+		} else if (this.propositions != null) {
 			if (detectNullId()) {
 				this.addMessage("Found proposition with NULL id");
 				result = false;
 			} else {
-				if (this.targetProposition == null) {
-					for (PropositionWrapper wrapper : this.propositions) {
-						if (!this.validateSingle(wrapper)) {
-							result = false;
-							break;
-						}
+				for (PropositionWrapper wrapper : this.propositions) {
+					LOGGER.debug("Checking proposition {}", wrapper);
+					if (! this.validateSingle(wrapper)) {
+						result = false;
+						break;
 					}
-				} else {
-					result = this.validateSingle(this.targetProposition);
 				}
 			}
 		}
+
 		return result;
 	}
 
@@ -208,6 +206,7 @@ public class PropositionValidatorImpl implements PropositionValidator {
 		} else if (inWrapper.getChildren() != null) {
 			inSeen.push(inWrapper.getId());
 			for (PropositionWrapper child : inWrapper.getChildren()) {
+				LOGGER.debug("CHILD: {}", child);
 				if (!child.isInSystem()) {
 					PropositionWrapper target = this.findById(child.getId());
 					cycle = detectCycle(target, inSeen);
@@ -288,6 +287,7 @@ public class PropositionValidatorImpl implements PropositionValidator {
 	}
 
 	private PropositionWrapper findById(Long inId) {
+		LOGGER.debug("Looking for proposition id {}", inId);
 		PropositionWrapper result = null;
 		for (PropositionWrapper wrapper : this.propositions) {
 			if (inId.equals(wrapper.getId())) {
@@ -295,6 +295,7 @@ public class PropositionValidatorImpl implements PropositionValidator {
 				break;
 			}
 		}
+		LOGGER.debug("Returning proposition {}", result);
 		return result;
 	}
 
