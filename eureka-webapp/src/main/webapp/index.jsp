@@ -22,39 +22,18 @@
 	<template:content name="subcontent">
 	  <h3>Release Notes</h3>
       		<div class="release_notes sub_width" style="position: absolute; top: 570px; left: 10px; background-color:#fff;">
-			<p>04.05.2012 : Eureka! Release</p>
-<%--
-            <p>03.15.2012 : QA Analysis</p>
-			<p>03.03.2012 : Protempa Code Reviewed</p>
-			<p>02.20.2012 : Multiple User Testing</p>
-			<p>02.12.2012 : Integration of i2b2</p>
-            <p>02.05.2012 : Email Functionality Set-up</p>
---%>
+				<p>04.05.2012 : Eureka! Release</p>
+				<p>10.11.2012 : Eureka! now has support for user-defined derived data elements.  Click the &quot;Editor&quot; link after logging in.</p>
 		</div>
 <%--
 		<div class="release_notes sub_width" style="position: absolute; top: 570px; left: 280px; background-color:#fff;">
-			<p>01.05.2012 : eureka.cci.emory.edu established</p>
-			<p>01.09.2012 : Front-end/Back-end Combined</p>
-			<p>01.20.2012 : Login Procedure in Place</p>
-			<p>01.27.2012 : Admin/Edit Users Implemented</p>
-            <p>01.29.2012 : Backend Installations on Server</p>
-			<p>02.03.2012 : Upload Data Functionality</p>
+			<p></p>
 		</div>
 		<div class="release_notes sub_width" style="position: absolute; top: 570px; left: 600px; background-color:#fff;">
-			<p>12.05.2011 : Login Process Underway</p>
-			<p>12.02.2011 : Core UI Design Prototype Created</p>
-			<p>11.29.2011 : Technology Recommendations</p>
-			<p>11.28.2011 : High level Requirements Published</p>
-			<p>11.18.2011 : Business Requirements Published</p>
-			<p>11.15.2011 : Data Analysis Tool Named Eureka!</p>
+			<p></p>
 		</div>
 		<div class="release_notes sub_width" style="position: absolute; top: 570px; left:920px; background-color:#fff;">
-			<p>11.14.2011 : Data Analysis Tool Lands a New Name</p>
-			<p>11.01.2011 : Data Analysis Tool Demo VM Launched</p>
-			<p>11.01.2011 : Data Architecture Defined</p>
-			<p>11.01.2011 : CVRG Data Dictionary Defined</p>
-			<p>11.01.2011 : User Stories</p>
-			<p>10.20.2011 : Demo VM Available for Testing</p>
+			<p></p>
 		</div>
 --%>
 	</template:content>
