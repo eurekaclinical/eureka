@@ -31,9 +31,9 @@
                 
                                 <tr>
                                          <td style="width:60px">
-                                            <a href="#" onclick="showPopup(event, ${prop.attr['id']})" class="view"></a>
-                                            <a href="${pageContext.request.contextPath}/protected/editprop?id=${prop.attr['id']}" class="edit"></a>
-                                            <a href="#" onclick="deleteElement(event, ${prop.attr['id']})" class="delete"></a>
+                                            <a href="#" onclick="showPopup(event, ${prop.attr['id']})" class="view" title="View"></a>
+                                            <a href="${pageContext.request.contextPath}/protected/editprop?id=${prop.attr['id']}" class="edit" title="Edit"></a>
+                                            <a href="#" onclick="deleteElement(event, ${prop.attr['id']})" class="delete" title="Delete"></a>
                                         </td>
                                          <td style="width: 100px">${prop.attr['abbrevDisplay']}</td>
                                          <td>${prop.attr['displayName']}</td>
