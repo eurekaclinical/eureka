@@ -475,6 +475,11 @@
 				<type>war</type>
 				<version>${eureka-version}</version>
 			</dependency>
+                        <dependency>
+				<groupId>org.protempa</groupId>
+				<artifactId>protempa-framework</artifactId>
+				<version>${protempa-version}</version>
+			</dependency>
 			<dependency>
 				<groupId>org.protempa</groupId>
 				<artifactId>protempa-bconfigs-commons-ini</artifactId>

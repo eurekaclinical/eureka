@@ -119,6 +119,10 @@
 			<groupId>org.protempa</groupId>
 			<artifactId>protempa-dsb-relationaldb</artifactId>
 		</dependency>
+                <dependency>
+			<groupId>org.protempa</groupId>
+			<artifactId>protempa-framework</artifactId>
+		</dependency>
 		<dependency>
 			<groupId>mysql</groupId>
 			<artifactId>mysql-connector-java</artifactId>
