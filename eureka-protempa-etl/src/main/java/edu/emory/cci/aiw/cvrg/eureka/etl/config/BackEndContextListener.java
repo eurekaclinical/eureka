@@ -7,12 +7,14 @@ import com.google.inject.Injector;
 import com.google.inject.persist.PersistService;
 import com.google.inject.servlet.GuiceServletContextListener;
 
+import edu.emory.cci.aiw.cvrg.eureka.etl.job.TaskManager;
+
 /**
  * Loaded up on application initialization, sets up the application with Guice
  * injector and any other bootup processes.
- * 
+ *
  * @author hrathod
- * 
+ *
  */
 public class BackEndContextListener extends GuiceServletContextListener {
 
@@ -35,7 +37,12 @@ public class BackEndContextListener extends GuiceServletContextListener {
 	@Override
 	public void contextDestroyed(ServletContextEvent servletContextEvent) {
 		super.contextDestroyed(servletContextEvent);
-		this.ps.stop();
+		if (this.ps != null) {
+			this.ps.stop();
+		}
+		TaskManager taskManager = this.getInjector().getInstance(TaskManager
+			.class);
+		taskManager.shutdown();
 	}
 
 	@Override
