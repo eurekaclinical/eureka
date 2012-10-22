@@ -25,9 +25,19 @@
 
 	<distributionManagement>
 		<site>
-			<id>eureka.cci.emory.edu</id>
-			<url>scp://eureka.cci.emory.edu/var/www/html/dev</url>
+			<id>eureka-dev.cci.emory.edu</id>
+			<url>scp://eureka-dev.cci.emory.edu/var/www/html/dev</url>
 		</site>
+		<repository>
+			<id>aiw.internal.repo</id>
+			<name>AIW Internal Repo</name>
+			<url>http://maven.cci.emory.edu:8081/nexus/content/repositories/aiw/</url>
+		</repository>
+		<snapshotRepository>
+			<id>aiw.snapshots.internal.repo</id>
+			<name>AIW Internal Snapshots Repo</name>
+			<url>http://maven.cci.emory.edu:8081/nexus/content/repositories/aiw-snapshots/</url>
+		</snapshotRepository>
 	</distributionManagement>
 
 	<licenses>
@@ -181,7 +191,7 @@
 		<commons-io-version>2.1</commons-io-version>
 		<commons-fileupload-version>1.2.2</commons-fileupload-version>
 		<eureka-version>1.6-SNAPSHOT</eureka-version>
-		<protempa-version>2.0</protempa-version>
+		<protempa-version>2.0.1-SNAPSHOT</protempa-version>
 		<aiw-i2b2-etl-version>1.0.1</aiw-i2b2-etl-version>
 		<oracle-version>[11.2.0.2.0,)</oracle-version>
 		<freemarker-version>2.3.9</freemarker-version>
@@ -196,11 +206,7 @@
 	<build>
 		<pluginManagement>
 			<plugins>
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-assembly-plugin</artifactId>
-					<version>2.3</version>
-				</plugin>
+				
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-compiler-plugin</artifactId>
@@ -209,6 +215,26 @@
 						<source>1.6</source>
 						<target>1.6</target>
 					</configuration>
+				</plugin>
+				<plugin>
+					<groupId>org.jasig.maven</groupId>
+					<artifactId>maven-notice-plugin</artifactId>
+					<version>1.0.5</version>
+					<configuration>
+						<noticeTemplate>etc/NOTICE.template</noticeTemplate>
+						<licenseMapping>
+							<param>etc/license-mappings.xml</param>
+						</licenseMapping>
+					</configuration>
+					<executions>
+						<execution>	
+							<id>checkontest</id>
+							<goals>
+								<goal>check</goal>
+							</goals>
+							<phase>test</phase>
+						</execution>
+					</executions>
 				</plugin>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
@@ -304,14 +330,83 @@
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-site-plugin</artifactId>
+				<artifactId>maven-assembly-plugin</artifactId>
+				<version>2.3</version>
+				<inherited>false</inherited>
+				<configuration>
+					<descriptors>
+						<descriptor>assembly.xml</descriptor>
+					</descriptors>
+				</configuration>
+				<executions>
+					<execution>
+						<phase>package</phase>
+						<goals>
+							<goal>single</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>appassembler-maven-plugin</artifactId>
+				<version>1.3</version>
+				<configuration>
+					<!--  extra JVM args are set in profiles - see below -->
+					<!-- <extraJvmArguments>-Xmx8G</extraJvmArguments> -->
+					<repositoryLayout>flat</repositoryLayout>
+					<repositoryName>lib</repositoryName>
+					<installArtifacts>false</installArtifacts>
+					<programs/>
+				</configuration>
+				<executions>
+					<execution>
+						<phase>package</phase>
+						<goals>
+							<goal>assemble</goal>
+						</goals>
+					</execution>
+				</executions>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-assembly-plugin</artifactId>
+				<artifactId>maven-site-plugin</artifactId>
+			</plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>license-maven-plugin</artifactId>
+				<version>1.0</version>
 				<configuration>
-					<descriptor>assembly/src.xml</descriptor>
+					<licenseName>apache_v2</licenseName>
+					<verbose>false</verbose>
+					<organizationName>Emory University</organizationName>
+					<inceptionYear>2012</inceptionYear>
+					<canUpdateDescription>false</canUpdateDescription>
+					<roots>
+						<root>src/main</root>
+						<root>src/test/java/</root>
+					</roots>
+					<extraExtensions>
+						<!-- .xsd files are not supported by default -->
+						<!-- but should be commented in XML style -->
+						<xsd>xml</xsd>
+					</extraExtensions>
+					<excludes>
+						<exclude>**/*.htm</exclude>
+						<exclude>**/*.html</exclude>
+						<exclude>**/*.js</exclude>
+						<exclude>**/*.css</exclude>
+					</excludes>
 				</configuration>
+				<executions>
+					<execution>
+						<id>first</id>
+						<goals>
+							<goal>update-file-header</goal>
+						</goals>
+						<phase>process-sources</phase>
+					</execution>
+				</executions>
 			</plugin>
 		</plugins>
 	</build>
@@ -475,7 +570,7 @@
 				<type>war</type>
 				<version>${eureka-version}</version>
 			</dependency>
-                        <dependency>
+			<dependency>
 				<groupId>org.protempa</groupId>
 				<artifactId>protempa-framework</artifactId>
 				<version>${protempa-version}</version>

@@ -1,3 +1,4 @@
+/* Eureka WebApp. Copyright (C) 2012 Emory University. Licensed under http://www.apache.org/licenses/LICENSE-2.0. */
 
 $(document).ready(function() {
 
