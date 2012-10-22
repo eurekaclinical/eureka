@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<license-lookup xmlns="https://source.jasig.org/schemas/maven-notice-plugin/license-lookup" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="https://source.jasig.org/schemas/maven-notice-plugin/license-lookup https://source.jasig.org/schemas/maven-notice-plugin/license-lookup/license-lookup-v1.0.xsd">
+    <artifact>
+        <groupId>antlr</groupId>
+        <artifactId>antlr</artifactId>
+        <version>2.7.6</version>
+        <license>BSD License</license>
+    </artifact>
+    <artifact>
+        <groupId>asm</groupId>
+        <artifactId>asm</artifactId>
+        <version>3.1</version>
+        <license>Apache License, Version 2.0</license>
+    </artifact>
+    <artifact>
+        <groupId>com.oracle</groupId>
+        <artifactId>ojdbc6</artifactId>
+        <version>11.2.0.3</version>
+        <license>Oracle Technology Network Development and Distribution License Agreement</license>
+    </artifact>
+    <artifact>
+        <groupId>com.sleepycat</groupId>
+        <artifactId>je</artifactId>
+        <version>4.1.10</version>
+        <license>Open Source License for Oracle Berkeley DB Java Edition</license>
+    </artifact>
+    <artifact>
+        <groupId>commons-beanutils</groupId>
+        <artifactId>commons-beanutils</artifactId>
+        <version>1.7.0</version>
+        <license>Apache License, Version 2.0</license>
+    </artifact>
+    <artifact>
+        <groupId>commons-collections</groupId>
+        <artifactId>commons-collections</artifactId>
+        <version>3.1</version>
+        <license>Apache License, Version 2.0</license>
+    </artifact>
+    <artifact>
+        <groupId>dom4j</groupId>
+        <artifactId>dom4j</artifactId>
+        <version>1.6.1</version>
+        <license>BSD License</license>
+    </artifact>
+    <artifact>
+        <groupId>edu.stanford</groupId>
+        <artifactId>protege</artifactId>
+        <version>3.4.7</version>
+        <license>Mozilla Public License</license>
+    </artifact>
+    <artifact>
+        <groupId>javax.annotation</groupId>
+        <artifactId>jsr250-api</artifactId>
+        <version>1.0</version>
+        <license>
+            Commons Development and Distribution License, Version 1.0
+        </license>
+    </artifact>
+    <artifact>
+        <groupId>javax.servlet</groupId>
+        <artifactId>jsp-api</artifactId>
+        <version>2.0</version>
+        <license>
+            Commons Development and Distribution License, Version 1.0
+        </license>
+    </artifact>
+    <artifact>
+        <groupId>javax.servlet</groupId>
+        <artifactId>servlet-api</artifactId>
+        <version>2.5</version>
+        <license>
+            Commons Development and Distribution License, Version 1.0
+        </license>
+    </artifact>
+    <artifact>
+        <groupId>javax.transaction</groupId>
+        <artifactId>jta</artifactId>
+        <version>1.1</version>
+        <license>
+            Commons Development and Distribution License, Version 1.0
+        </license>
+    </artifact>
+    <artifact>
+        <groupId>jstl</groupId>
+        <artifactId>jstl</artifactId>
+        <version>1.2</version>
+        <license>
+            Commons Development and Distribution License, Version 1.0
+        </license>
+    </artifact>
+    <artifact>
+        <groupId>net.sf.ehcache</groupId>
+        <artifactId>ehcache-terracotta</artifactId>
+        <version>2.6.0</version>
+        <license>Apache License, Version 2.0</license>
+    </artifact>
+    <artifact>
+        <groupId>org.codehaus.jettison</groupId>
+        <artifactId>jettison</artifactId>
+        <version>1.1</version>
+        <license>Apache License, Version 2.0</license>
+    </artifact>
+    <artifact>
+        <groupId>org.drools</groupId>
+        <artifactId>drools-core</artifactId>
+        <version>4.0.7</version>
+        <license>Apache License, Version 2.0</license>
+    </artifact>
+    <artifact>
+        <groupId>org.hibernate.javax.persistence</groupId>
+        <artifactId>hibernate-jpa-2.0-api</artifactId>
+        <version>1.0.1.Final</version>
+        <license>Sun Binary Code License</license>
+    </artifact>
+    <artifact>
+        <groupId>org.terracotta</groupId>
+        <artifactId>terracotta-toolkit-1.6-runtime</artifactId>
+        <version>5.0.0</version>
+        <license>Apache License, Version 2.0</license>
+    </artifact>
+    <artifact>
+        <groupId>umlsquery</groupId>
+        <artifactId>umls-query</artifactId>
+        <version>1.0</version>
+        <license>Apache License, Version 2.0</license>
+    </artifact>
+</license-lookup>

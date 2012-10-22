@@ -1,0 +1,52 @@
+Copyright 2012 Emory University
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+ 
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+This project includes:
+  AntLR under BSD License
+  AOP alliance under Public Domain
+  ASM Core under Apache License, Version 2.0
+  Code Generation Library under ASF 2.0
+  commons-collections under Apache License, Version 2.0
+  Data Mapper for Jackson under The Apache Software License, Version 2.0
+  dom4j under BSD License
+  Eureka Common under Apache License, Version 2.0
+  Eureka EAR under Apache License, Version 2.0
+  Eureka Protempa ETL under Apache License, Version 2.0
+  Eureka Services under Apache License, Version 2.0
+  Eureka WebApp under Apache License, Version 2.0
+  Google Guice - Core Library under The Apache Software License, Version 2.0
+  Google Guice - Extensions - Persist under The Apache Software License, Version 2.0
+  Hibernate Commons Annotations under GNU LESSER GENERAL PUBLIC LICENSE
+  Hibernate Core under GNU Lesser General Public License
+  Hibernate Entity Manager under GNU Lesser General Public License
+  Hibernate JPA 2 Metamodel Generator under Apache License, Version 2.0
+  Jackson under The Apache Software License, Version 2.0
+  Java Transaction API under Commons Development and Distribution License, Version 1.0
+  JavaBeans Activation Framework (JAF) under Common Development and Distribution License (CDDL) v1.0
+  Javassist under LGPL 2.1
+  javax.inject under The Apache Software License, Version 2.0
+  JAX-RS provider for JSON content type under The Apache Software License, Version 2.0 or GNU Lesser General Public License (LGPL), Version 2.1
+  JAXB API bundle for GlassFish V3 under CDDL 1.1 or GPL2 w/ CPE
+  JAXB RI under CDDL 1.1 or GPL2 w/ CPE
+  jersey-client under CDDL 1.1 or GPL2 w/ CPE
+  jersey-core under CDDL 1.1 or GPL2 w/ CPE
+  jersey-json under CDDL 1.1 or GPL2 w/ CPE
+  Jettison under Apache License, Version 2.0
+  JPA 2.0 API under Sun Binary Code License
+  SLF4J API Module under MIT License
+  SLF4J JDK14 Binding under MIT License
+  StAX API under The Apache Software License, Version 2.0
+  Streaming API for XML under GNU General Public Library or COMMON DEVELOPMENT AND DISTRIBUTION LICENSE (CDDL) Version 1.0
+  Xml Compatibility extensions for Jackson under The Apache Software License, Version 2.0 or GNU Lesser General Public License (LGPL), Version 2.1
+
