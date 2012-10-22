@@ -11,21 +11,26 @@
   
        http://www.apache.org/licenses/LICENSE-2.0
   
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-  #L%
-  -->
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+#L%
+-->
 
 <!-- This web.xml file is not required when using Servlet 3.0 container,
-     see implementation details http://jersey.java.net/nonav/documentation/latest/jax-rs.html#d4e194 -->
+see implementation details http://jersey.java.net/nonav/documentation/latest/jax-rs.html#d4e194 -->
 <web-app xmlns="http://java.sun.com/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.5" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
 
 	<context-param>
 		<param-name>eureka-services-url</param-name>
 		<param-value>http://localhost:8080/eureka-services</param-value>
+	</context-param>
+	<context-param>
+		<param-name>eureka-dev-site-url</param-name>
+		<param-value>${eureka.dev.site.url}</param-value>
+		<description>Is populated with the site URL from the maven pom.xml from which Eureka! was compiled. The developer documention URL on the Eureka! index page is constructed by appending '/dev' to this URL.</description>
 	</context-param>
 
 	<servlet>
@@ -170,19 +175,19 @@
 		<servlet-name>UserPropositionListServlet</servlet-name>
 		<url-pattern>/protected/userproplist</url-pattern>
 	</servlet-mapping>
- 	<servlet-mapping>
+	<servlet-mapping>
 		<servlet-name>ListSystemPropositionChildrenServlet</servlet-name>
 		<url-pattern>/protected/syspropchildren</url-pattern>
 	</servlet-mapping>
- 	<servlet-mapping>
+	<servlet-mapping>
 		<servlet-name>ListUserDefinedPropositionChildrenServlet</servlet-name>
 		<url-pattern>/protected/userpropchildren</url-pattern>
 	</servlet-mapping>
- 	<servlet-mapping>
+	<servlet-mapping>
 		<servlet-name>EditorHomeServlet</servlet-name>
 		<url-pattern>/protected/editorhome</url-pattern>
 	</servlet-mapping>
- 	<servlet-mapping>
+	<servlet-mapping>
 		<servlet-name>EditPropositionServlet</servlet-name>
 		<url-pattern>/protected/editprop</url-pattern>
 	</servlet-mapping>
