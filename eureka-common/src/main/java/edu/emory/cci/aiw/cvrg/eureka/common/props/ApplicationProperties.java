@@ -21,7 +21,6 @@ package edu.emory.cci.aiw.cvrg.eureka.common.props;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
@@ -50,10 +49,17 @@ public abstract class ApplicationProperties {
 	 */
 	private static final String PROPERTY_NAME = "eureka.config";
 	/**
+	 * If the configuration file is not specified by the user, search
+	 * this default location.
+	 */
+	private static final String DEFAULT_UNIX_LOCATION = "/etc/eureka";
+	private static final String DEFAULT_WIN_LOCATION = "C:\\Program " +
+		"Files\\eureka";
+	/**
 	 * Name of the properties file that is required for application
 	 * configuration.
 	 */
-	private static final String PROPERTIES_FILE = "/eureka.properties";
+	private static final String PROPERTIES_FILE = "/application.properties";
 	/**
 	 * Holds an instance of the properties object which contains all the
 	 * application configuration properties.
@@ -68,48 +74,73 @@ public abstract class ApplicationProperties {
 	 * load a default configuration from the class-path.
 	 */
 	public ApplicationProperties() {
-		String configFile = System.getProperty(PROPERTY_NAME);
+		String userConfig = System.getProperty(PROPERTY_NAME);
+		String defaultConfig = this.getDefaultLocation() + PROPERTIES_FILE;
+		String fallbackConfig = this.getFallBackConfig();
 		Properties temp = null;
-		try {
-			if (configFile != null) {
-				temp = this.load(configFile);
-			} else {
+		String[] files = {userConfig, defaultConfig, fallbackConfig};
+
+		for (int i = 0; i < files.length; i++) {
+			String file = files[i];
+			if (file != null) {
+				LOGGER.info("Trying to load configuration from {}", file);
 				try {
-					temp = this.loadDefault();
-				} catch (URISyntaxException ex) {
-					LOGGER.error(ex.getMessage(), ex);
-					throw new RuntimeException(
-							"Could not load default application configuration file");
-				}
-				if (temp == null) {
-					throw new RuntimeException(
-							"Could not load default application configuration file");
+					temp = this.load(file);
+					LOGGER.info("Successfully loaded configuration from {}",
+						file);
+				} catch (IOException e) {
+					LOGGER.warn("Failed to load configuration from file {}",
+						file, e);
 				}
 			}
-		} catch (FileNotFoundException ex) {
-			LOGGER.error(ex.getMessage(), ex);
-			throw new RuntimeException(
-					"Could not load configuration file " + configFile, ex);
-		} catch (IOException ex) {
-			LOGGER.error(ex.getMessage(), ex);
-			throw new RuntimeException(
-					"Could not load configuration file " + configFile, ex);
+			if(temp != null) {
+				break;
+			}
+		}
+
+		if (temp == null) {
+			throw new RuntimeException("No application configuration found.");
 		}
 		this.properties = temp;
 	}
 
 	/**
-	 * Loads the application configuration file from the default location.
+	 * Gets the default location of configuration file,
+	 * based on the operating system.
 	 *
-	 * @return Properties object containing application properties.
-	 * @throws IOException Thrown when the file can not be properly read.
-	 * @throws URISyntaxException Thrown if the URL returned by the
-	 * getClass().getResource() call can not be properly converted to a URI.F
+	 * @return A String containing the default configuration location.
 	 */
-	private Properties loadDefault() throws IOException, URISyntaxException {
-		URL fileUrl = this.getClass().getResource(PROPERTIES_FILE);
-		URI fileUri = fileUrl.toURI();
-		return this.load(fileUri.getPath());
+	private String getDefaultLocation () {
+		String os = System.getProperty("os.name");
+		String path;
+		if (os.toLowerCase().contains("windows")) {
+			path = DEFAULT_WIN_LOCATION;
+		} else {
+			path = DEFAULT_UNIX_LOCATION;
+		}
+		return path;
+	}
+
+	/**
+	 * Gets the location of the fallback configuration file,
+	 * in case the user specified location and the default location do not
+	 * contain a configuration file.
+	 *
+	 * @return The location of the fallback configuration,
+	 * or null if the fallback configuration file can  not be found.
+	 */
+	private String getFallBackConfig () {
+		String path = null;
+		try {
+			URL fileUrl = this.getClass().getResource(PROPERTIES_FILE);
+			if (fileUrl != null) {
+				URI fileUri = fileUrl.toURI();
+				path = fileUri.getPath();
+			}
+		} catch (URISyntaxException e) {
+			LOGGER.error("Could not location fallback configuration.", e);
+		}
+		return path;
 	}
 
 	/**
@@ -118,11 +149,9 @@ public abstract class ApplicationProperties {
 	 *
 	 * @param inFileName The absolute path to the configuration file.
 	 * @return Properties object containing the application properties.
-	 * @throws FileNotFoundException Thrown if the named file can not be found.
 	 * @throws IOException Thrown if the named filed can not be properly read.
 	 */
-	private Properties load(String inFileName) throws FileNotFoundException,
-			IOException {
+	private Properties load(String inFileName) throws IOException {
 		return load(new File(inFileName));
 	}
 
@@ -132,12 +161,10 @@ public abstract class ApplicationProperties {
 	 *
 	 * @param inFile The File object pointing to a configuration file.
 	 * @return Properties object containing the application properties.
-	 * @throws FileNotFoundException Thrown if the given File points to a
 	 * location that does not exist.
 	 * @throws IOException Thrown if the named file can not be properly read.
 	 */
-	private Properties load(File inFile) throws FileNotFoundException,
-			IOException {
+	private Properties load(File inFile) throws IOException {
 		InputStream inputStream = new FileInputStream(inFile);
 		Properties props;
 		try {
