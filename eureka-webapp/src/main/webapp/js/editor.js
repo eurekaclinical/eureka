@@ -105,7 +105,31 @@ $(document).ready(function(){
     function validateSteps(step){
     	var isStepValid = true;
     	// validate step 1
-    	if(step == 1){
+      if (step == 1) {
+                var type = $("input:radio[name='type']:checked").val();
+              if (type == undefined || type == "") {
+			    isStepValid = false; 
+			    $('#wizard').smartWizard('showMessage','Please select a type of element to create.');
+			    $('#wizard').smartWizard('setError',{stepnum:step,iserror:true});         
+              }
+              else{
+                $('#wizard').smartWizard('hideMessage','');
+                $('#wizard').smartWizard('setError',{stepnum:step,iserror:false});
+              }
+
+    		
+    	} else if (step == 2) {
+              if ($('#sortable').children().length == 0) {
+			    isStepValid = false; 
+			    $('#wizard').smartWizard('showMessage','Please select an element from the ontology explorer.');
+			    $('#wizard').smartWizard('setError',{stepnum:step,iserror:true});         
+              }
+              else{
+                $('#wizard').smartWizard('hideMessage','');
+                $('#wizard').smartWizard('setError',{stepnum:step,iserror:false});
+              }
+
+        } else if(step == 3) {
 		  var element_name = $('#element_name').val();
 		  var element_desc = $('#element_description').val();
 		  
@@ -119,31 +143,8 @@ $(document).ready(function(){
 			  $('#wizard').smartWizard('hideMessage','');
 			  $('#wizard').smartWizard('setError',{stepnum:step,iserror:false});
 		  }
-    	} else if (step == 2) {
-                var type = $("input:radio[name='type']:checked").val();
-              if (type == undefined || type == "") {
-			    isStepValid = false; 
-			    $('#wizard').smartWizard('showMessage','Please select a type of element to create.');
-			    $('#wizard').smartWizard('setError',{stepnum:step,iserror:true});         
-              }
-              else{
-                $('#wizard').smartWizard('hideMessage','');
-                $('#wizard').smartWizard('setError',{stepnum:step,iserror:false});
-              }
-
-    		
-    	} else if (step == 3) {
-              if ($('#sortable').children().length == 0) {
-			    isStepValid = false; 
-			    $('#wizard').smartWizard('showMessage','Please select an element from the ontology explorer.');
-			    $('#wizard').smartWizard('setError',{stepnum:step,iserror:true});         
-              }
-              else{
-                $('#wizard').smartWizard('hideMessage','');
-                $('#wizard').smartWizard('setError',{stepnum:step,iserror:false});
-              }
-
-        } else if (step == 4) {
+    	}
+      else if (step == 4) {
 
 
         }

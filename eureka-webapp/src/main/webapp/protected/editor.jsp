@@ -41,6 +41,20 @@
                             <li><a href="#step-1">
                                     <label class="stepNumber">1</label>
                                     <span class="stepDesc">
+                                        Select Type<br />
+                                        <small>Select Type of Element</small>
+                                    </span>
+                                </a></li>
+                            <li><a href="#step-2">
+                                    <label class="stepNumber">2</label>
+                                    <span class="stepDesc">
+                                        Select Elements<br />
+                                        <small>Select Elements from Ontology</small>
+                                    </span>
+                                </a>
+                            <li><a href="#step-3">
+                                    <label class="stepNumber">3</label>
+                                    <span class="stepDesc">
                                         <c:choose>
                                             <c:when test="${not empty proposition}">
                                                 Update Element<br />
@@ -53,20 +67,6 @@
                                         </c:choose>
                                     </span>
                                 </a></li>
-                            <li><a href="#step-2">
-                                    <label class="stepNumber">2</label>
-                                    <span class="stepDesc">
-                                        Select Type<br />
-                                        <small>Select Type of Element</small>
-                                    </span>
-                                </a></li>
-                            <li><a href="#step-3">
-                                    <label class="stepNumber">3</label>
-                                    <span class="stepDesc">
-                                        Select Elements<br />
-                                        <small>Select Elements from Ontology</small>
-                                    </span>
-                                </a>
                             <li><a href="#step-4">
                                     <label class="stepNumber">4</label>
                                     <span class="stepDesc">
@@ -76,46 +76,6 @@
                                 </a></li>
                         </ul>
                         <div id="step-1">	
-                            <h2 class="StepTitle">
-                                <c:choose>
-                                    <c:when test="${not empty proposition}">
-                                        Update an Existing Derived Element
-                                    </c:when>
-                                    <c:otherwise>
-                                        Create a New Derived Element
-                                    </c:otherwise>
-                                </c:choose>
-                            </h2>
-                            <table>
-                                <tr>
-                                    <td>
-                                        <label>Name:</label>
-                                    </td>
-                                    <td>
-                                        <c:choose>
-                                            <c:when test="${not empty proposition}">
-                                                <input type="hidden" id="propId" value="${proposition.id}" />
-                                                <input type="text" id="element_name" style="width:250px" value="${proposition.abbrevDisplayName}" />
-                                            </c:when>
-                                            <c:otherwise>
-                                                <input type="text" id="element_name" style="width:250px"/>
-                                            </c:otherwise>
-                                        </c:choose>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td valign="top">
-                                        <label>Description:</label>
-                                    </td>
-                                    <td valign="top">
-                                        <textarea id="element_description" ><c:if test="${not empty proposition}">${proposition.displayName}</c:if></textarea>
-                                    </td>
-                                </tr>
-
-                            </table>
-
-                        </div>
-                        <div id="step-2">	
                             <h2 class="StepTitle">Select Type of Element</h2>
                             <p><br/></p>
                             <table id="select_element_table" width="100%">
@@ -133,7 +93,7 @@
                                 </tr>
                             </table>
                         </div>
-                        <div id="step-3">
+                        <div id="step-2">
                             <h2 class="StepTitle"><span>Select Elements from Ontology Explorer</span><span style="font-size: 10px; float:right"><a href="#" id="help_select">Help</a></span></h2>	
 
                             <p>
@@ -212,6 +172,46 @@
 
 
                         </div>                      
+                        <div id="step-3">	
+                            <h2 class="StepTitle">
+                                <c:choose>
+                                    <c:when test="${not empty proposition}">
+                                        Update an Existing Derived Element
+                                    </c:when>
+                                    <c:otherwise>
+                                        Create a New Derived Element
+                                    </c:otherwise>
+                                </c:choose>
+                            </h2>
+                            <table>
+                                <tr>
+                                    <td>
+                                        <label>Name:</label>
+                                    </td>
+                                    <td>
+                                        <c:choose>
+                                            <c:when test="${not empty proposition}">
+                                                <input type="hidden" id="propId" value="${proposition.id}" />
+                                                <input type="text" id="element_name" style="width:250px" value="${proposition.abbrevDisplayName}" />
+                                            </c:when>
+                                            <c:otherwise>
+                                                <input type="text" id="element_name" style="width:250px"/>
+                                            </c:otherwise>
+                                        </c:choose>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td valign="top">
+                                        <label>Description:</label>
+                                    </td>
+                                    <td valign="top">
+                                        <textarea id="element_description" ><c:if test="${not empty proposition}">${proposition.displayName}</c:if></textarea>
+                                    </td>
+                                </tr>
+
+                            </table>
+
+                        </div>
                         <div id="step-4">
                             <h2 class="StepTitle">Save Element to Database</h2>	
                             <p>
