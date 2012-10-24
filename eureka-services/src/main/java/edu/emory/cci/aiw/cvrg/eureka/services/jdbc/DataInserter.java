@@ -40,7 +40,8 @@ import edu.emory.cci.aiw.cvrg.eureka.services.dataprovider.Icd9Procedure;
 import edu.emory.cci.aiw.cvrg.eureka.services.dataprovider.Lab;
 import edu.emory.cci.aiw.cvrg.eureka.services.dataprovider.Medication;
 import edu.emory.cci.aiw.cvrg.eureka.services.dataprovider.Observation;
-import edu.emory.cci.aiw.cvrg.eureka.services.dataprovider.ObservationWithResult;
+import edu.emory.cci.aiw.cvrg.eureka.services.dataprovider
+	.ObservationWithResult;
 import edu.emory.cci.aiw.cvrg.eureka.services.dataprovider.Patient;
 import edu.emory.cci.aiw.cvrg.eureka.services.dataprovider.Provider;
 import edu.emory.cci.aiw.cvrg.eureka.services.dataprovider.Vital;
@@ -49,14 +50,14 @@ import edu.emory.cci.aiw.cvrg.eureka.services.dataprovider.Vital;
  * Inserts data into a Protempa database.
  *
  * @author hrathod
- *
  */
 public class DataInserter {
 
 	/**
 	 * Class level logger.
 	 */
-	private static final Logger LOGGER = LoggerFactory.getLogger(DataInserter.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger
+		(DataInserter.class);
 	/**
 	 * The user's configuration, used to get database connection information.
 	 */
@@ -69,7 +70,8 @@ public class DataInserter {
 	 * information.
 	 * @throws DataInserterException Thrown if there are any JDBC errors.
 	 */
-	public DataInserter(Configuration inConfiguration) throws DataInserterException {
+	public DataInserter(Configuration inConfiguration) throws
+		DataInserterException {
 		super();
 		this.configuration = inConfiguration;
 		this.truncateTables();
@@ -80,18 +82,12 @@ public class DataInserter {
 	 * configuration.
 	 *
 	 * @return A connection to the target database.
-	 *
 	 * @throws SQLException Thrown if there are any JDBC errors.
 	 */
 	private Connection getConnection() throws SQLException {
-		StringBuilder connectString = new StringBuilder();
-		connectString.append("jdbc:oracle:thin:@").append(this.configuration.
-				getProtempaHost()).append(":").append(this.configuration.
-				getProtempaPort()).append("/").append(this.configuration.
-				getProtempaDatabaseName());
-		return DriverManager.getConnection(connectString.toString(),
-				this.configuration.getProtempaSchema(),
-				this.configuration.getProtempaPass());
+		return DriverManager.getConnection(
+			this.configuration.getProtempaJdbcUrl(), this.configuration
+			.getProtempaSchema(), this.configuration.getProtempaPassword());
 	}
 
 	/**
@@ -134,19 +130,22 @@ public class DataInserter {
 	 * @param patients The list of patients to insert.
 	 * @throws DataInserterException Thrown if there are any JDBC errors.
 	 */
-	public void insertPatients(List<Patient> patients) throws DataInserterException {
+	public void insertPatients(List<Patient> patients) throws
+		DataInserterException {
 		Connection connection = null;
 		PreparedStatement preparedStatement = null;
 		try {
 			int counter = 0;
 			connection = this.getConnection();
-			preparedStatement = connection.prepareStatement("insert into patient values (?,?,?,?,?,?,?,?)");
+			preparedStatement = connection.prepareStatement(
+				"insert into " + "patient values (?,?,?,?,?,?,?,?)");
 			for (Patient patient : patients) {
 				Date dateOfBirth;
 				if (patient.getDateOfBirth() == null) {
 					dateOfBirth = null;
 				} else {
-					dateOfBirth = new Date(patient.getDateOfBirth().getTime());
+					dateOfBirth = new Date(
+						patient.getDateOfBirth().getTime());
 				}
 				preparedStatement.setLong(1, patient.getId().longValue());
 				preparedStatement.setString(2, patient.getFirstName());
@@ -178,32 +177,41 @@ public class DataInserter {
 	}
 
 	/**
-	 * Insert the given list of encounters to a target database using the given
+	 * Insert the given list of encounters to a target database using the
+	 * given
 	 * connection.
 	 *
 	 * @param encounters The list of encounters to insert.
 	 * @throws DataInserterException Thrown if there are any JDBC errors.
 	 */
-	public void insertEncounters(List<Encounter> encounters)
-			throws DataInserterException {
+	public void insertEncounters(List<Encounter> encounters) throws
+		DataInserterException {
 		int counter = 0;
 		Connection connection = null;
 		PreparedStatement preparedStatement = null;
 
 		try {
 			connection = this.getConnection();
-			preparedStatement = connection.prepareStatement("insert into encounter values (?,?,?,?,?,?,?)");
+			preparedStatement = connection.prepareStatement(
+				"insert into " + "encounter values (?,?,?,?,?,?,?)");
 			for (Encounter encounter : encounters) {
 				preparedStatement.setLong(1, encounter.getId().longValue());
-				preparedStatement.setLong(2, encounter.getPatientId().longValue());
-				preparedStatement.setLong(3, encounter.getProviderId().longValue());
-				preparedStatement.setTimestamp(4, new Timestamp(encounter.
+				preparedStatement.setLong(
+					2, encounter.getPatientId().longValue());
+				preparedStatement.setLong(
+					3, encounter.getProviderId().longValue());
+				preparedStatement.setTimestamp(
+					4, new Timestamp(
+					encounter.
 						getStart().
 						getTime()));
-				preparedStatement.setTimestamp(5, new Timestamp(encounter.getEnd().
+				preparedStatement.setTimestamp(
+					5, new Timestamp(
+					encounter.getEnd().
 						getTime()));
 				preparedStatement.setString(6, encounter.getType());
-				preparedStatement.setString(7, encounter.getDischargeDisposition());
+				preparedStatement.setString(
+					7, encounter.getDischargeDisposition());
 				preparedStatement.addBatch();
 
 				counter++;
@@ -231,13 +239,15 @@ public class DataInserter {
 	 * @param providers The list of providers to insert.
 	 * @throws DataInserterException Thrown if there are any JDBC errors.
 	 */
-	public void insertProviders(List<Provider> providers) throws DataInserterException {
+	public void insertProviders(List<Provider> providers) throws
+		DataInserterException {
 		int counter = 0;
 		Connection connection = null;
 		PreparedStatement preparedStatement = null;
 		try {
 			connection = this.getConnection();
-			preparedStatement = connection.prepareStatement("insert into provider values (?,?,?)");
+			preparedStatement = connection.prepareStatement(
+				"insert into " + "provider values (?,?,?)");
 			for (Provider provider : providers) {
 				preparedStatement.setLong(1, provider.getId().longValue());
 				preparedStatement.setString(2, provider.getFirstName());
@@ -270,48 +280,53 @@ public class DataInserter {
 	 * @param cptCodes The list of CPT codes to insert.
 	 * @throws DataInserterException Thrown if there are any JDBC errors.
 	 */
-	public void insertCptCodes(List<CPT> cptCodes) throws DataInserterException {
+	public void insertCptCodes(List<CPT> cptCodes) throws
+		DataInserterException {
 		this.insertObservations(cptCodes, "cpt_event");
 	}
 
 	/**
-	 * Insert the given list of ICD9 diagnosis codes to a target database using
+	 * Insert the given list of ICD9 diagnosis codes to a target database
+	 * using
 	 * the given connection.
 	 *
 	 * @param diagnoses The list of diagnosis codes to insert.
 	 * @throws DataInserterException Thrown if there are any JDBC errors.
 	 */
-	public void insertIcd9Diagnoses(List<Icd9Diagnosis> diagnoses)
-			throws DataInserterException {
+	public void insertIcd9Diagnoses(List<Icd9Diagnosis> diagnoses) throws
+		DataInserterException {
 		this.insertObservations(diagnoses, "icd9d_event");
 	}
 
 	/**
-	 * Insert the given list of ICD9 procedure codes to a target database using
+	 * Insert the given list of ICD9 procedure codes to a target database
+	 * using
 	 * the given connection.
 	 *
 	 * @param procedures The list of procedure codes to insert.
 	 * @throws DataInserterException Thrown if there are any JDBC errors.
 	 */
-	public void insertIcd9Procedures(List<Icd9Procedure> procedures)
-			throws DataInserterException {
+	public void insertIcd9Procedures(List<Icd9Procedure> procedures) throws
+		DataInserterException {
 		this.insertObservations(procedures, "icd9p_event");
 	}
 
 	/**
-	 * Insert the given list of medications to a target database using the given
+	 * Insert the given list of medications to a target database using the
+	 * given
 	 * connection.
 	 *
 	 * @param medications The list of medications to insert.
 	 * @throws DataInserterException Thrown if there are any JDBC errors.
 	 */
-	public void insertMedications(List<Medication> medications)
-			throws DataInserterException {
+	public void insertMedications(List<Medication> medications) throws
+		DataInserterException {
 		this.insertObservations(medications, "meds_event");
 	}
 
 	/**
-	 * Insert the given list of lab results to a target database using the given
+	 * Insert the given list of lab results to a target database using the
+	 * given
 	 * connection.
 	 *
 	 * @param labs The list of lab results to insert.
@@ -322,39 +337,47 @@ public class DataInserter {
 	}
 
 	/**
-	 * Insert the given list of vital signs to a target database using the given
+	 * Insert the given list of vital signs to a target database using the
+	 * given
 	 * connection.
 	 *
 	 * @param vitals The list of vitals to insert.
 	 * @throws DataInserterException Thrown if there are any JDBC errors.
 	 */
-	public void insertVitals(List<Vital> vitals) throws DataInserterException {
+	public void insertVitals(List<Vital> vitals) throws
+		DataInserterException {
 		this.insertObservationsWithResult(vitals, "vitals_event");
 	}
 
 	/**
-	 * Add the given list of observation objects to a target database using the
+	 * Add the given list of observation objects to a target database using
+	 * the
 	 * given connection.
 	 *
 	 * @param observations The list of observations to insert.
 	 * @param table The table in which the observations should be inserted.
 	 * @throws DataInserterException Thrown if there are any JDBC errors.
 	 */
-	private void insertObservations(List<? extends Observation> observations,
-			String table) throws DataInserterException {
+	private void insertObservations(List<? extends Observation>
+		observations, String table) throws DataInserterException {
 		int counter = 0;
 		StringBuilder sqlBuilder = new StringBuilder();
-		sqlBuilder.append("insert into ").append(table).append(" values (?,?,?,?)");
+		sqlBuilder.append("insert into ").append(table).append(
+			" values (?," + "?,?,?)");
 		Connection connection = null;
 		PreparedStatement preparedStatement = null;
 		try {
 			connection = this.getConnection();
-			preparedStatement = connection.prepareStatement(sqlBuilder.toString());
+			preparedStatement = connection.prepareStatement(
+				sqlBuilder.toString());
 			for (Observation observation : observations) {
 				preparedStatement.setString(1, observation.getId());
-				preparedStatement.setLong(2, observation.getEncounterId().
-						longValue());
-				preparedStatement.setTimestamp(3, new Timestamp(observation.
+				preparedStatement.setLong(
+					2, observation.getEncounterId().
+					longValue());
+				preparedStatement.setTimestamp(
+					3, new Timestamp(
+					observation.
 						getTimestamp().getTime()));
 				preparedStatement.setString(4, observation.getEntityId());
 				preparedStatement.addBatch();
@@ -386,27 +409,33 @@ public class DataInserter {
 	 * @param table The table in which the observations should be inserted.
 	 * @throws DataInserterException Thrown if there are any JDBC errors.
 	 */
-	private void insertObservationsWithResult(
-			List<? extends ObservationWithResult> observations, String table)
-			throws DataInserterException {
+	private void insertObservationsWithResult(List<? extends
+		ObservationWithResult> observations, String table) throws
+		DataInserterException {
 		int counter = 0;
 		StringBuilder sqlBuilder = new StringBuilder();
-		sqlBuilder.append("insert into ").append(table).append(" values (?,?,?,?,?,?,?,?)");
+		sqlBuilder.append("insert into ").append(table).append(
+			" values (?," + "?,?,?,?,?,?,?)");
 		Connection connection = null;
 		PreparedStatement preparedStatement = null;
 		try {
 			connection = this.getConnection();
-			preparedStatement = connection.prepareStatement(sqlBuilder.toString());
+			preparedStatement = connection.prepareStatement(
+				sqlBuilder.toString());
 			for (ObservationWithResult observation : observations) {
 				preparedStatement.setString(1, observation.getId());
-				preparedStatement.setLong(2, observation.getEncounterId().
-						longValue());
-				preparedStatement.setTimestamp(3, new Timestamp(observation.
+				preparedStatement.setLong(
+					2, observation.getEncounterId().
+					longValue());
+				preparedStatement.setTimestamp(
+					3, new Timestamp(
+					observation.
 						getTimestamp().getTime()));
 				preparedStatement.setString(4, observation.getEntityId());
 				preparedStatement.setString(5, observation.getResultAsStr());
-				preparedStatement.setDouble(6, observation.getResultAsNum().
-						doubleValue());
+				preparedStatement.setDouble(
+					6, observation.getResultAsNum().
+					doubleValue());
 				preparedStatement.setString(7, observation.getUnits());
 				preparedStatement.setString(8, observation.getFlag());
 				preparedStatement.addBatch();
@@ -433,6 +462,7 @@ public class DataInserter {
 	/**
 	 * Close the given Statement and Connection objects properly.  Any
 	 * exceptions caught while cleaning up are logged, but not re-thrown.
+	 *
 	 * @param statement The statement object to clean up.
 	 * @param connection The connection to clean up.
 	 */
