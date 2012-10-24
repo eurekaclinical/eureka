@@ -47,7 +47,7 @@ public abstract class ApplicationProperties {
 	/**
 	 * Name of the system property that points to the configuration file.
 	 */
-	private static final String PROPERTY_NAME = "eureka.config";
+	private static final String PROPERTY_NAME = "eureka.config.file";
 	/**
 	 * If the configuration file is not specified by the user, search
 	 * this default location.
@@ -191,6 +191,17 @@ public abstract class ApplicationProperties {
 		Properties props = new Properties();
 		props.load(inStream);
 		return props;
+	}
+
+	/**
+	 * Gets the user-configured directory where the INI configuration files for
+	 * Protempa are located.
+	 *
+	 * @return A string containing the path to the directory containing Protempa
+	 * INI configuration files.
+	 */
+	public String getConfigDir() {
+		return this.getValue("eureka.etl.config.dir");
 	}
 
 	/**
