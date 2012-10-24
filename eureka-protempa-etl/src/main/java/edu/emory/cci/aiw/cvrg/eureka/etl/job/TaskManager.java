@@ -29,15 +29,19 @@ import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
 
+import edu.emory.cci.aiw.cvrg.eureka.etl.config.EtlProperties;
+
 @Singleton
 public class TaskManager {
-	private final ExecutorService executorService = Executors
-		.newFixedThreadPool(4);
+	private final ExecutorService executorService;
 	private final Provider<Task> taskProvider;
 
 	@Inject
-	public TaskManager (Provider<Task> inTaskProvider) {
+	public TaskManager (Provider<Task> inTaskProvider,
+		EtlProperties inEtlProperties) {
+		final int poolSize = inEtlProperties.getTaskThreadPoolSize();
 		this.taskProvider = inTaskProvider;
+		this.executorService = Executors.newFixedThreadPool(poolSize);
 	}
 
 	public void queueTask (Long inJobId, List<PropositionDefinition> inPropositionDefinitions) {
