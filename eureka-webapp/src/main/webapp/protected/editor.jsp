@@ -16,7 +16,7 @@
   See the License for the specific language governing permissions and
   limitations under the License.
   #L%
-  --%>
+--%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <%@ taglib uri="/WEB-INF/tlds/template.tld" prefix="template"%>
@@ -58,11 +58,11 @@
                                     <span class="stepDesc">
                                         <c:choose>
                                             <c:when test="${not empty proposition}">
-                                                Update Element Name<br />
+                                                Update Name<br />
                                                 <small>Update the Element's Name</small>
                                             </c:when>
                                             <c:otherwise>
-                                                Select Element Name<br />
+                                                Select Name<br />
                                                 <small>Select a Name for the Element</small>
                                             </c:otherwise>
                                         </c:choose>
@@ -82,11 +82,11 @@
                             <table id="select_element_table">
 								<c:set var="types" value="OR,AND,sequence,frequency,valuethreshold" />
 								<c:forTokens items="${types}" var="myType" delims="," varStatus="status">
-										<tr>
-											<td class="firstCol">
-												<input type="radio" id="type" name="type" value="${myType}" <c:if test="${not empty proposition and proposition.type == '${myType}'}">CHECKED</c:if>/><fmt:message key="dataelementtype.${myType}.displayName" /></td>
-											<td class="secondCol"><fmt:message key="dataelementtype.${myType}.description" /></td>
-										</tr>
+									<tr>
+										<td class="firstCol">
+											<input type="radio" id="type" name="type" value="${myType}" <c:if test="${not empty proposition and proposition.type == '${myType}'}">CHECKED</c:if>/><fmt:message key="dataelementtype.${myType}.displayName" /></td>
+										<td class="secondCol"><fmt:message key="dataelementtype.${myType}.description" /></td>
+									</tr>
 								</c:forTokens>
                             </table>
                         </div>
@@ -197,9 +197,169 @@
 													<table id="sequencedefinition">
 														<tr>
 															<td>
-																<div>
-																	<p>Sequence Definition</p>
-																</div>
+																<table>
+																	<tr>
+																		<td>
+																			Data Element: 
+																		</td>
+																		<td>
+																			<div id="sequenceMainDataElementTreeDrop" class="treeDrop jstree-drop"></span>
+																		</td>
+																	</tr>
+																	<tr>
+																		<td>
+																			with value
+																		</td>
+																		<td>
+																			<select name="mainDataElementValue"></select>
+																		</td>
+																	</tr>
+																	<tr>
+																		<td>
+																			<label><input type="checkbox" name="mainDataElementSpecifyDuration">with duration</label>
+																		</td>
+																		<td>
+																			<table>
+																				<tr>
+																					<td>
+																						at least
+																					</td>
+																					<td>
+																						<input type="text" class="durationField" name="mainDataElementMinDurationValue"/>
+																					</td>
+																					<td>
+																						<select name="mainDataElementMinDurationUnits"></select>
+																					</td>
+																				</tr>
+																				<tr>
+																					<td>
+																						at most
+																					</td>
+																					<td>
+																						<input type="text" class="durationField" name="mainDataElementMaxDurationValue"/>
+																					</td>
+																					<td>
+																						<select name="mainDataElementMaxDurationUnits"></select>
+																					</td>
+																				</tr>
+																			</table>
+																		</td>
+																	</tr>
+																	<tr>
+																		<td>
+																			<label><input type="checkbox" name="mainDataElementSpecifyProperty"/>with property value</label>
+																		</td>
+																		<td>
+																			<select name="mainDataElementPropertyName"></select> <input type="text" class="propertyValueField" name="mainDataElementPropertyValue"/>
+																		</td>
+																	</tr>
+																</table>
+															</td>
+														</tr>
+														<tr>
+															<td class="relDataElement">
+																<table>
+																	<tr>
+																		<td></td>
+																		<td colspan="5">
+																			<div class="action_link">   
+																				<a href="#" class="create"></a>
+																				<a href="#" style="text-decoration:none">Add to sequence</a>
+																			</div>
+																		</td>
+																	</tr>
+																	<c:choose>
+																		<c:when test="${false}">
+																			<%-- Populate the first related data element, if editing an existing derived element with a first related data element. --%>
+																		</c:when>
+																		<c:otherwise>
+																			<%-- For creating a new data element. --%>
+																			<tr>
+																				<td>Related Data Element 1:</td>
+																				<td>
+																					<table>
+																						<tr>
+																							<td colspan="2"><div id="sequenceRelDataElementTreeDrop1" class="treeDrop jstree-drop" /></td>
+																						</tr>
+																						<tr>
+																							<td>with value</td>
+																							<td><select name="sequenceRelDataElementValue1"></select></td>
+																						</tr>
+																						<tr>
+																							<td>
+																								<label><input type="checkbox" name="sequenceRelDataElementSpecifyDuration1"/>with duration</label>
+																							</td>
+																							<td>
+																								<table>
+																									<tr>
+																										<td>
+																											at least
+																										</td>
+																										<td>
+																											<input type="text" class="durationField" name="sequenceRelDataElementMinDurationValue1"/>
+																										</td>
+																										<td>
+																											<select name="sequenceRelDataElementMinDurationUnits1"></select>
+																										</td>
+																									</tr>
+																									<tr>
+																										<td>
+																											at most
+																										</td>
+																										<td>
+																											<input type="text" class="durationField" name="sequenceRelDataElementMaxDurationValue1"/>
+																										</td>
+																										<td>
+																											<select name="sequenceRelDataElementMaxDurationUnits1"></select>
+																										</td>
+																									</tr>
+																								</table>
+																							</td>
+																						</tr>
+																						<tr>
+																							<td>
+																								<label><input type="checkbox" name="sequenceRelDataElementSpecifyProperty1"/>with property value</label>
+																							</td>
+																							<td>
+																								<select name="sequenceRelDataElementPropertyName1"></select> <input type="text" class="propertyValueField" name="sequenceRelDataElementPropertyValue1"/>
+																							</td>
+																						</tr>
+																					</table>
+																				</td>
+																				<td><select name="sequenceRelDataElementTemporalRelation"></select></td>
+																				<td><select name="sequenceRelDataElementRhs"></select></td>
+																				<td>by</td>
+																				<td>
+																					<table>
+																						<tr>
+																							<td>
+																								at least
+																							</td>
+																							<td>
+																								<input type="text" class="distanceField" name="sequenceRhsDataElementMinDistanceValue1"/>
+																							</td>
+																							<td>
+																								<select name="sequenceRhsDataElementMinDistanceUnits1"></select>
+																							</td>
+																						</tr>
+																						<tr>
+																							<td>
+																								at most
+																							</td>
+																							<td>
+																								<input type="text" class="distanceField" name="sequenceRhsDataElementMaxDistanceValue1"/>
+																							</td>
+																							<td>
+																								<select name="sequenceRhsDataElementMaxDistanceUnits1"></select>
+																							</td>
+																						</tr>
+																					</table>
+																				</td>
+																			</tr>
+																		</c:otherwise>
+																		<%-- print second, third, etc. related data element. --%>
+																	</c:choose>
+																</table>
 															</td>
 														</tr>
 													</table>
@@ -264,26 +424,26 @@
                                     </td>
                                     <td valign="top">
                                         <textarea id="element_description" ><c:if test="${not empty proposition}">${proposition.displayName}</c:if></textarea>
-                                    </td>
-                                </tr>
+										</td>
+									</tr>
 
-                            </table>
+								</table>
 
-                        </div>
-                        <div id="step-4">
-                            <h2 class="StepTitle">Save Element to Database</h2>	
-                            <p>
-                                Save the new element to the Database as a User Defined Element.
-                            </p>
-                        </div>
-                    </div>
+							</div>
+							<div id="step-4">
+								<h2 class="StepTitle">Save Element to Database</h2>	
+								<p>
+									Save the new element to the Database as a User Defined Element.
+								</p>
+							</div>
+						</div>
 
-                    <!-- End SmartWizard Content -->  		
+						<!-- End SmartWizard Content -->  		
 
-                </td></tr>
-        </table>   
+					</td></tr>
+			</table>   
 
-    </div>
+		</div>
 </template:content>
 <template:content name="subcontent">
 

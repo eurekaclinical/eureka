@@ -8,9 +8,9 @@ body {
 }
 
 .content {
-	padding: 10px 0;
+	/*padding: 10px 0;*/
 	width: 98%;	
-	height: 600px;
+	height: 500px;
 }
 
 table, td {
@@ -91,10 +91,6 @@ UL.tabNavigation LI A:focus {
 	outline: 0;
 }
 
-#element_tree_table {
-	width: 650px;
-}
-
 div.tabs > div {
 	padding: 5px;
 	margin-top: 3px;
@@ -108,12 +104,12 @@ div.tabs > div h2 {
 #systemTree {
 	overflow: auto;
 	height: 255px;
-	width: 380px;
+	width: 300px;
 }
 #userTree {
 	overflow: auto;
 	height: 255px;
-	width: 380px;
+	width: 300px;
 }
 
 /* Data element drop target styling. */
@@ -136,3 +132,19 @@ div.tabs > div h2 {
     color: green;
 }
 
+input.durationField {
+	width: 4em;
+}
+
+input.distanceField {
+	width: 4em;
+}
+
+input.propertyValueField {
+	width: 10em;
+}
+
+td.relDataElement {
+	border-color: black;
+	border-width: 1px;
+}
