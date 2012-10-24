@@ -18,6 +18,7 @@
   #L%
   --%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <%@ taglib uri="/WEB-INF/tlds/template.tld" prefix="template"%>
 
 
@@ -52,17 +53,17 @@
                                         <small>Select Elements from Ontology</small>
                                     </span>
                                 </a>
-                            <li><a href="#step-3">
+							<li><a href="#step-3">
                                     <label class="stepNumber">3</label>
                                     <span class="stepDesc">
                                         <c:choose>
                                             <c:when test="${not empty proposition}">
-                                                Update Element<br />
-                                                <small>Update an Existing Derived Element</small>
+                                                Update Element Name<br />
+                                                <small>Update the Element's Name</small>
                                             </c:when>
                                             <c:otherwise>
-                                                Create Element<br />
-                                                <small>Create a New Derived Element</small>
+                                                Select Element Name<br />
+                                                <small>Select a Name for the Element</small>
                                             </c:otherwise>
                                         </c:choose>
                                     </span>
@@ -75,22 +76,18 @@
                                     </span>                   
                                 </a></li>
                         </ul>
-                        <div id="step-1">	
+						<div id="step-1">	
                             <h2 class="StepTitle">Select Type of Element</h2>
                             <p><br/></p>
-                            <table id="select_element_table" width="100%">
-                                <tr>
-                                    <td width="100px" style="display: inline-block">
-                                        <input type="radio" id="type" name="type" value="OR" <c:if test="${not empty proposition and proposition.type == 'OR'}">CHECKED</c:if>/>Categorical</td>
-                                    <td>For defining a significant category of codes or clinical
-                                        events or observations.</td>
-                                </tr>
-                                <tr>
-                                    <td width="100px" style="display: inline-block">
-                                        <input type="radio" name="type" id="type" value="AND" <c:if test="${not empty proposition and proposition.type == 'AND'}">CHECKED</c:if>/>Temporal</td>
-                                    <td>For defining a disease, finding or patient care process to be
-                                        reflected by codes,clinical events and/or observations in a specified frequency, sequential or other temporal patterns.</td>
-                                </tr>
+                            <table id="select_element_table">
+								<c:set var="types" value="OR,AND,sequence,frequency,valuethreshold" />
+								<c:forTokens items="${types}" var="myType" delims="," varStatus="status">
+										<tr>
+											<td class="firstCol">
+												<input type="radio" id="type" name="type" value="${myType}" <c:if test="${not empty proposition and proposition.type == '${myType}'}">CHECKED</c:if>/><fmt:message key="dataelementtype.${myType}.displayName" /></td>
+											<td class="secondCol"><fmt:message key="dataelementtype.${myType}.description" /></td>
+										</tr>
+								</c:forTokens>
                             </table>
                         </div>
                         <div id="step-2">
@@ -99,10 +96,10 @@
                             <p>
                                 &nbsp;
                             </p>
-                            <table style="width: 650px; " id="element_tree_table">
+                            <table id="element_tree_table">
                                 <tr>
                                     <td  valign="top" width="25%">
-                                        <div class="tabs" style="float: left;" >
+                                        <div class="tabs">
                                             <ul class="tabNavigation">
                                                 <li><a href="#first">System</a></li>
                                                 <li><a href="#second">User Defined</a></li>
@@ -117,7 +114,7 @@
 
                                     </td>
 
-                                    <td valign="top">
+                                    <td valign="top"><!-- step content -->
 
                                         <table>
                                             <tr>
@@ -127,7 +124,7 @@
                                             </tr>
                                             <tr>
                                                 <td>
-                                                    <table>
+                                                    <table id="categoricaldefinition">
                                                         <tr>
                                                             <td>
                                                                 <div id="tree-drop" 
@@ -162,24 +159,85 @@
                                                             </td>
                                                         </tr>
                                                     </table>
+													<table id="temporaldefinition"> <!-- DEPRECATED -->
+                                                        <tr>
+                                                            <td>
+                                                                <div id="tree-drop" 
+                                                                     class="jstree-drop">
 
+                                                                    <ul id="sortable" style="width: 100% height: 100% >
+                                                                        <c:if test="${not empty proposition}">
+                                                                            <c:forEach var="child" items="${proposition.children}">
+                                                                                <c:choose>
+                                                                                    <c:when test="${empty child.key}">
+                                                                                        <li id="${child.id}" data-type="user">
+                                                                                        <span class="delete" style="cursor: pointer; background-color: lightblue;"></span>
+                                                                                        <span>${child.abbrevDisplayName}</span>
+                                                                                        </li>
+                                                                                    </c:when>
+                                                                                    <c:otherwise>
+                                                                                        <li id="${child.key}" data-type="system">
+                                                                                            <span class="delete" style="cursor: pointer; background-color: lightblue;"></span>
+                                                                                            <span>${child.key} ${child.displayName} ${child.abbrevDisplayName}</span>
+                                                                                        </li>
+                                                                                    </c:otherwise>
+                                                                                </c:choose>
+                                                                            </c:forEach>
+                                                                        </c:if>
+                                                                    </ul>
+                                                                    <div id="holder" style="width: 550px; height: 350px" ></div>
+                                                                    <div id="label-info" class="jstree-drop" ><center>Drop Here</center></div>
+
+
+                                                                </div>
+
+                                                            </td>
+                                                        </tr>
+                                                    </table>
+													<table id="sequencedefinition">
+														<tr>
+															<td>
+																<div>
+																	<p>Sequence Definition</p>
+																</div>
+															</td>
+														</tr>
+													</table>
+													<table id="frequencydefinition">
+														<tr>
+															<td>
+																<div>
+																	<p>Frequency Definition</p>
+																</div>
+															</td>
+														</tr>
+													</table>
+													<table id="valuethresholddefinition">
+														<tr>
+															<td>
+																<div>
+																	<p>Value Threshold Definition</p>
+																</div>
+															</td>
+														</tr>
+													</table>
                                                 </td>
                                             </tr>
                                         </table>
-                                    </td>
+                                    </td><!-- end step content -->
                                 </tr>            			
                             </table>
 
 
-                        </div>                      
-                        <div id="step-3">	
+                        </div>     
+						<div id="step-3">	
                             <h2 class="StepTitle">
                                 <c:choose>
                                     <c:when test="${not empty proposition}">
-                                        Update an Existing Derived Element
+                                        Update the Derived Element's Name
                                     </c:when>
                                     <c:otherwise>
-                                        Create a New Derived Element
+                                        Select a Name for the Derived Element
                                     </c:otherwise>
                                 </c:choose>
                             </h2>

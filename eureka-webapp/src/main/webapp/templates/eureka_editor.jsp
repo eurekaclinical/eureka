@@ -42,7 +42,6 @@ response.setDateHeader ("Expires", 0); //prevents caching at the proxy server
 <style>
 .container { width:1024px; margin: 0 auto;}
 ul.nav a { zoom: 1; }
-#submit { border:none;}
 </style>
 <![endif]-->
 
@@ -128,18 +127,7 @@ background-color:#EAF2D3;
 
 <div class="container">
 <div>
-<!--<div id="login">
-	   <label>User Name
-	   <input id="login_field" type="text" name="textfield" />
-	   </label>
-	   	   <label>Password
-	   <input id="login_field" type="text" name="textfield" />
-	   </label>
- 	       <input id="submit" type="submit" name="Submit" value="Log In" />
- <br />
- 	<span class="sub_text"><a href="forgot_password.html">Login Help</a></span>
-<br />
-    </div>-->
+
 <div class="header">
     <span><a href="${pageContext.request.contextPath}/"><img src="${pageContext.request.contextPath}/images/tag_line.gif" alt="Data Analysis Tool" width="238" align="absmiddle" /></a></span>
 </div>
@@ -175,7 +163,7 @@ background-color:#EAF2D3;
 	  <c:choose>
 	  	
 	  	<c:when test="${pageContext.request.remoteUser != null}">
-<div style="float:right;" class="fltrt">
+<div class="fltrt">
 	  	  <li>Welcome ${pageContext.request.remoteUser} | <a href="${pageContext.request.contextPath}/logout">Logout</a></li>
       	   <li><a href="${pageContext.request.contextPath}/protected/editorhome">Editor</a></li>
       	  <img src="${pageContext.request.contextPath}/images/i2b2_icon.gif" alt="i2b2" width="30" height="30" align="absmiddle" />

@@ -113,7 +113,7 @@ ul.nav a { zoom: 1; }
 	  <c:choose>
 
 	  	<c:when test="${pageContext.request.remoteUser != null}">
-<div style="float:right;" class="fltrt">
+<div class="fltrt">
 	  	  <li>Welcome ${pageContext.request.remoteUser} | <a href="${pageContext.request.contextPath}/logout">Logout</a></li>
       	  <li><a href="${pageContext.request.contextPath}/protected/editorhome">Editor</a></li>
       	  <img src="${pageContext.request.contextPath}/images/i2b2_icon.gif" alt="i2b2" width="30" height="30" align="absmiddle" />

@@ -32,6 +32,11 @@ see implementation details http://jersey.java.net/nonav/documentation/latest/jax
 		<param-value>${eureka.dev.site.url}</param-value>
 		<description>Is populated with the site URL from the maven pom.xml from which Eureka! was compiled. The developer documention URL on the Eureka! index page is constructed by appending '/dev' to this URL.</description>
 	</context-param>
+	<context-param>
+		<param-name>javax.servlet.jsp.jstl.fmt.localizationContext</param-name>
+		<param-value>Messages</param-value>
+		<description>Various string messages.</description>
+	</context-param>
 
 	<servlet>
 		<servlet-name>CommonsFileUploadServlet</servlet-name>
