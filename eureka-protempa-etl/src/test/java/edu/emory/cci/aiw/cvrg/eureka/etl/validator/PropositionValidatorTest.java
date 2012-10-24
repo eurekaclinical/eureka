@@ -51,9 +51,10 @@ public class PropositionValidatorTest extends AbstractTest {
 //	@Test
 	public void testNoPropositions() {
 		ConfDao confDao = this.getInstance(ConfDao.class);
+		PropositionValidator validator = this.getInstance
+			(PropositionValidator.class);
 		List<PropositionWrapper> wrappers = new
 			ArrayList<PropositionWrapper>();
-		PropositionValidatorImpl validator = new PropositionValidatorImpl();
 		validator.setPropositions(wrappers);
 		validator.setConfiguration(confDao.getByUserId(USER_ID));
 
@@ -71,6 +72,8 @@ public class PropositionValidatorTest extends AbstractTest {
 //	@Test
 	public void testSinglePropositionNoDef() {
 		ConfDao confDao = this.getInstance(ConfDao.class);
+		PropositionValidator validator = this.getInstance
+			(PropositionValidator.class);
 		List<PropositionWrapper> wrappers = new
 			ArrayList<PropositionWrapper>();
 		PropositionWrapper wrapper = new PropositionWrapper();
@@ -78,7 +81,6 @@ public class PropositionValidatorTest extends AbstractTest {
 		wrapper.setAbbrevDisplayName("Test");
 		wrapper.setDisplayName("Wrapper for unit tests.");
 		wrappers.add(wrapper);
-		PropositionValidatorImpl validator = new PropositionValidatorImpl();
 		validator.setConfiguration(confDao.getByUserId(USER_ID));
 		validator.setPropositions(wrappers);
 
@@ -101,6 +103,8 @@ public class PropositionValidatorTest extends AbstractTest {
 	public void testCycleDetection() {
 
 		ConfDao confDao = this.getInstance(ConfDao.class);
+		PropositionValidator validator = this.getInstance
+			(PropositionValidator.class);
 
 		PropositionWrapper wrapper1 = new PropositionWrapper();
 		PropositionWrapper wrapper2 = new PropositionWrapper();
@@ -135,7 +139,6 @@ public class PropositionValidatorTest extends AbstractTest {
 		propositions.add(wrapper1);
 		propositions.add(wrapper2);
 
-		PropositionValidator validator = new PropositionValidatorImpl();
 		validator.setConfiguration(confDao.getByUserId(USER_ID));
 		validator.setPropositions(propositions);
 		validator.setTargetProposition(wrapper3);
