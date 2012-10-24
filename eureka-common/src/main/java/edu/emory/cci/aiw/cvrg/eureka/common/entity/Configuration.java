@@ -31,9 +31,9 @@ import javax.xml.bind.annotation.XmlRootElement;
  * The configuration for a Protempa run, including the input data store
  * information, the output i2b2 data store information, ontology information,
  * and other related items.
- * 
+ *
  * @author hrathod
- * 
+ *
  */
 @XmlRootElement
 @Entity
@@ -58,33 +58,21 @@ public class Configuration {
 	 */
 	private String ontology;
 	/**
-	 * The Protempa input data source host name.
+	 * The JDBC connect string for the Protempa database.
 	 */
-	private String protempaHost;
+	private String protempaJdbcUrl;
 	/**
-	 * The Protempa input data source port number.
-	 */
-	private Integer protempaPort;
-	/**
-	 * The Protempa input data source data base name.
-	 */
-	private String protempaDatabaseName;
-	/**
-	 * The Protempa input data source user name.
+	 * The schema to insert Protempa source data into.
 	 */
 	private String protempaSchema;
 	/**
-	 * The Protempa input data source password.
+	 * The password to log into the Protempa source data schema.
 	 */
-	private String protempaPass;
+	private String protempaPassword;
 	/**
-	 * The i2b2 data source host name.
+	 * The JDBC connect string for the i2b2 database.
 	 */
-	private String i2b2Host;
-	/**
-	 * The i2b2 data source port number.
-	 */
-	private Integer i2b2Port;
+	private String i2b2JdbcUrl;
 	/**
 	 * The i2b2 meta data schema name.
 	 */
@@ -92,7 +80,7 @@ public class Configuration {
 	/**
 	 * The i2b2 meta data schema password.
 	 */
-	private String i2b2MetaPass;
+	private String i2b2MetaPassword;
 	/**
 	 * The i2b2 data schema name.
 	 */
@@ -100,11 +88,11 @@ public class Configuration {
 	/**
 	 * The i2b2 data schema password.
 	 */
-	private String i2b2DataPass;
+	private String i2b2DataPassword;
 
 	/**
 	 * Get the unique identifier for the configuration.
-	 * 
+	 *
 	 * @return The unique identifier for the configuration.
 	 */
 	public Long getId() {
@@ -113,7 +101,7 @@ public class Configuration {
 
 	/**
 	 * Set the unique identifier for the configuration.
-	 * 
+	 *
 	 * @param inId The unique identifier for the configuration.
 	 */
 	public void setId(Long inId) {
@@ -122,7 +110,7 @@ public class Configuration {
 
 	/**
 	 * Get the unique identifier for the owner of the configuration.
-	 * 
+	 *
 	 * @return The unique identifier for the owner of the configuration.
 	 */
 	public Long getUserId() {
@@ -131,7 +119,7 @@ public class Configuration {
 
 	/**
 	 * Set the unique identifier for the owner of the configuration.
-	 * 
+	 *
 	 * @param inUserId The unique identifier for the owner of the configuration.
 	 */
 	public void setUserId(Long inUserId) {
@@ -140,7 +128,7 @@ public class Configuration {
 
 	/**
 	 * Get the name of the ontology to be used for the configuration.
-	 * 
+	 *
 	 * @return The name of the ontology to be used for the configuration.
 	 */
 	public String getOntology() {
@@ -149,7 +137,7 @@ public class Configuration {
 
 	/**
 	 * Set the name of the ontology to be used for the configuration.
-	 * 
+	 *
 	 * @param inOntology The name of the ontology to be used for the
 	 *            configuration.
 	 */
@@ -158,58 +146,24 @@ public class Configuration {
 	}
 
 	/**
-	 * Get the Protempa data source host name.
-	 * 
-	 * @return The Protempa data source host name.
+	 * Gets the Protempa data source JDBC connect string.
+	 * @return The connect string for Protempa source data.
 	 */
-	public String getProtempaHost() {
-		return this.protempaHost;
+	public String getProtempaJdbcUrl() {
+		return protempaJdbcUrl;
 	}
 
 	/**
-	 * Set the Protempa data source host name.
-	 * 
-	 * @param inProtempaHost The Protempa data source host name.
+	 * Sets the Protempa source data JDBC connect string.
+	 * @param inProtempaJdbcUrl The connect string.
 	 */
-	public void setProtempaHost(String inProtempaHost) {
-		this.protempaHost = inProtempaHost;
-	}
-
-	/**
-	 * Get the Protempa data source port number.
-	 * 
-	 * @return The Protempa data source port number.
-	 */
-	public Integer getProtempaPort() {
-		return this.protempaPort;
-	}
-
-	/**
-	 * Set the Protempa data source port number.
-	 * 
-	 * @param inProtempaPort The Protempa data source port number.
-	 */
-	public void setProtempaPort(Integer inProtempaPort) {
-		this.protempaPort = inProtempaPort;
-	}
-
-	/**
-	 * @return the protempaDatabaseName
-	 */
-	public String getProtempaDatabaseName() {
-		return this.protempaDatabaseName;
-	}
-
-	/**
-	 * @param inProtempaDatabaseName the protempaDatabaseName to set
-	 */
-	public void setProtempaDatabaseName(String inProtempaDatabaseName) {
-		this.protempaDatabaseName = inProtempaDatabaseName;
+	public void setProtempaJdbcUrl(String inProtempaJdbcUrl) {
+		protempaJdbcUrl = inProtempaJdbcUrl;
 	}
 
 	/**
 	 * Get the Protempa data source schema name.
-	 * 
+	 *
 	 * @return The Protempa data source schema name.
 	 */
 	public String getProtempaSchema() {
@@ -218,7 +172,7 @@ public class Configuration {
 
 	/**
 	 * Set the Protempa data source schema name.
-	 * 
+	 *
 	 * @param inProtempaSchema The Protempa data source schema name.
 	 */
 	public void setProtempaSchema(String inProtempaSchema) {
@@ -227,61 +181,41 @@ public class Configuration {
 
 	/**
 	 * Get the Protempa data source password.
-	 * 
+	 *
 	 * @return The Protempa data source password.
 	 */
-	public String getProtempaPass() {
-		return this.protempaPass;
+	public String getProtempaPassword() {
+		return this.protempaPassword;
 	}
 
 	/**
 	 * Set the Protempa data source password.
-	 * 
-	 * @param inProtempaPass The Protempa data source password.
+	 *
+	 * @param inProtempaPassword The Protempa data source password.
 	 */
-	public void setProtempaPass(String inProtempaPass) {
-		this.protempaPass = inProtempaPass;
+	public void setProtempaPassword(String inProtempaPassword) {
+		this.protempaPassword = inProtempaPassword;
 	}
 
 	/**
-	 * Get the host name of the i2b2 data store.
-	 * 
-	 * @return The host name of the i2b2 data store.
+	 * Gets the i2b2 database connect string.
+	 * @return The connect string.
 	 */
-	public String getI2b2Host() {
-		return this.i2b2Host;
+	public String getI2b2JdbcUrl() {
+		return i2b2JdbcUrl;
 	}
 
 	/**
-	 * Set the host name of the i2b2 data store.
-	 * 
-	 * @param inI2b2Host The host name of the i2b2 data store.
+	 * Sets the i2b2 database connect string.
+	 * @param inI2b2JdbcUrl The database connect string.
 	 */
-	public void setI2b2Host(String inI2b2Host) {
-		this.i2b2Host = inI2b2Host;
-	}
-
-	/**
-	 * Get the port number for the i2b2 data source.
-	 * 
-	 * @return The port number for the i2b2 data source.
-	 */
-	public Integer getI2b2Port() {
-		return this.i2b2Port;
-	}
-
-	/**
-	 * Set the port number for the i2b2 data source.
-	 * 
-	 * @param inI2b2Port The port number for the i2b2 data source.
-	 */
-	public void setI2b2Port(Integer inI2b2Port) {
-		this.i2b2Port = inI2b2Port;
+	public void setI2b2JdbcUrl(String inI2b2JdbcUrl) {
+		i2b2JdbcUrl = inI2b2JdbcUrl;
 	}
 
 	/**
 	 * Get the i2b2 meta data schema name.
-	 * 
+	 *
 	 * @return The i2b2 meta data schema name.
 	 */
 	public String getI2b2MetaSchema() {
@@ -290,7 +224,7 @@ public class Configuration {
 
 	/**
 	 * Set the i2b2 meta data schema name.
-	 * 
+	 *
 	 * @param inI2b2MetaSchema The i2b2 meta data schema name.
 	 */
 	public void setI2b2MetaSchema(String inI2b2MetaSchema) {
@@ -299,25 +233,25 @@ public class Configuration {
 
 	/**
 	 * Get the i2b2 meta data schema password.
-	 * 
+	 *
 	 * @return The i2b2 meta data schema password.
 	 */
-	public String getI2b2MetaPass() {
-		return this.i2b2MetaPass;
+	public String getI2b2MetaPassword() {
+		return this.i2b2MetaPassword;
 	}
 
 	/**
 	 * Set the i2b2 meta data schema password.
-	 * 
-	 * @param inI2b2MetaPass The i2b2 meta data schema password.
+	 *
+	 * @param inI2b2MetaPassword The i2b2 meta data schema password.
 	 */
-	public void setI2b2MetaPass(String inI2b2MetaPass) {
-		this.i2b2MetaPass = inI2b2MetaPass;
+	public void setI2b2MetaPassword(String inI2b2MetaPassword) {
+		this.i2b2MetaPassword = inI2b2MetaPassword;
 	}
 
 	/**
 	 * Get the i2b2 data schema name.
-	 * 
+	 *
 	 * @return The i2b2 data schema name.
 	 */
 	public String getI2b2DataSchema() {
@@ -326,7 +260,7 @@ public class Configuration {
 
 	/**
 	 * Set the i2b2 data schema name.
-	 * 
+	 *
 	 * @param inI2b2DataSchema The i2b2 data schema name.
 	 */
 	public void setI2b2DataSchema(String inI2b2DataSchema) {
@@ -335,19 +269,19 @@ public class Configuration {
 
 	/**
 	 * Get the i2b2 data schema password.
-	 * 
+	 *
 	 * @return The i2b2 data schema password.
 	 */
-	public String getI2b2DataPass() {
-		return this.i2b2DataPass;
+	public String getI2b2DataPassword() {
+		return this.i2b2DataPassword;
 	}
 
 	/**
 	 * Set the i2b2 data schema password.
-	 * 
-	 * @param inI2b2DataPass The i2b2 data schema password.
+	 *
+	 * @param inI2b2DataPassword The i2b2 data schema password.
 	 */
-	public void setI2b2DataPass(String inI2b2DataPass) {
-		this.i2b2DataPass = inI2b2DataPass;
+	public void setI2b2DataPassword(String inI2b2DataPassword) {
+		this.i2b2DataPassword = inI2b2DataPassword;
 	}
 }
