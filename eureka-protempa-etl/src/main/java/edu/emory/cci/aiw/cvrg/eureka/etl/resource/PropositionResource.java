@@ -41,6 +41,7 @@ import edu.emory.cci.aiw.cvrg.eureka.common.comm.PropositionWrapper;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.ValidationRequest;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.Configuration;
 import edu.emory.cci.aiw.cvrg.eureka.common.exception.HttpStatusException;
+import edu.emory.cci.aiw.cvrg.eureka.etl.config.EtlProperties;
 import edu.emory.cci.aiw.cvrg.eureka.etl.dao.ConfDao;
 import edu.emory.cci.aiw.cvrg.eureka.etl.ksb.PropositionFinder;
 import edu.emory.cci.aiw.cvrg.eureka.etl.ksb.PropositionFinderException;
@@ -56,12 +57,14 @@ public class PropositionResource {
 	private static final Logger LOGGER = LoggerFactory.getLogger(PropositionResource.class);
 	private final PropositionValidator propositionValidator;
 	private final ConfDao confDao;
+	private final EtlProperties etlProperties;
 
 	@Inject
 	public PropositionResource(PropositionValidator inValidator,
-			ConfDao inConfDao) {
+			ConfDao inConfDao, EtlProperties inEtlProperties) {
 		this.propositionValidator = inValidator;
 		this.confDao = inConfDao;
+		this.etlProperties = inEtlProperties;
 	}
 
 	@POST
@@ -110,7 +113,8 @@ public class PropositionResource {
 			Configuration configuration = this.confDao.getByUserId(inUserId);
 			if (configuration != null) {
 				PropositionFinder propositionFinder =
-						new PropositionFinder(configuration);
+						new PropositionFinder(configuration,
+							this.etlProperties.getConfigDir());
 				PropositionDefinition definition =
 						propositionFinder.find(inKey);
 				if (definition != null) {
