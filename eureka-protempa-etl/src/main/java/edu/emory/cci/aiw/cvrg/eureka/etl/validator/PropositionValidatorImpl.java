@@ -36,8 +36,11 @@ import org.protempa.SliceDefinition;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.inject.Inject;
+
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.PropositionWrapper;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.Configuration;
+import edu.emory.cci.aiw.cvrg.eureka.etl.config.EtlProperties;
 import edu.emory.cci.aiw.cvrg.eureka.etl.ksb.PropositionFinder;
 import edu.emory.cci.aiw.cvrg.eureka.etl.ksb.PropositionFinderException;
 
@@ -112,10 +115,13 @@ public class PropositionValidatorImpl implements PropositionValidator {
 	private List<PropositionWrapper> propositions;
 	private Configuration configuration;
 	private final List<String> messages;
+	private final EtlProperties etlProperties;
 
-	public PropositionValidatorImpl() {
+	@Inject
+	public PropositionValidatorImpl(EtlProperties inEtlProperties) {
 		this.messages = new ArrayList<String>();
 		this.propositions = new ArrayList<PropositionWrapper>();
+		this.etlProperties = inEtlProperties;
 	}
 
 	@Override
@@ -157,7 +163,7 @@ public class PropositionValidatorImpl implements PropositionValidator {
 			List<PropositionType> types = new ArrayList<PropositionType>();
 			try {
 				PropositionFinder propositionFinder = new PropositionFinder(
-					this.configuration);
+					this.configuration, this.etlProperties.getConfigDir());
 				for (PropositionWrapper child : inWrapper.getChildren()) {
 					if (child.isInSystem()) {
 						try {
@@ -271,7 +277,7 @@ public class PropositionValidatorImpl implements PropositionValidator {
 
 		try {
 			PropositionFinder propositionFinder = new PropositionFinder(
-				this.configuration);
+				this.configuration, this.etlProperties.getConfigDir());
 			for (PropositionWrapper child : wrapper.getChildren()) {
 				if (child.isInSystem()) {
 					try {
