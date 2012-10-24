@@ -44,6 +44,9 @@ import org.protempa.query.Query;
 import org.protempa.query.QueryBuildException;
 import org.protempa.query.handler.QueryResultsHandler;
 
+import com.google.inject.Inject;
+
+import edu.emory.cci.aiw.cvrg.eureka.etl.config.EtlProperties;
 import edu.emory.cci.aiw.i2b2etl.I2B2QueryResultsHandler;
 
 /**
@@ -62,139 +65,139 @@ import edu.emory.cci.aiw.i2b2etl.I2B2QueryResultsHandler;
  */
 public class ETL {
 
-    private static final File EUREKA_CONFIG_DIR = new File("/etc/eureka");
-    private final File configDefaultsDirectory;
-    private final File configDirectory;
-    private PreventCloseKnowledgeSource knowledgeSource;
-    private PreventCloseDataSource dataSource;
-    private PreventCloseAlgorithmSource algorithmSource;
-    private PreventCloseTermSource termSource;
+	private final File configDefaultsDirectory;
+	private final File configDirectory;
+	private PreventCloseKnowledgeSource knowledgeSource;
+	private PreventCloseDataSource dataSource;
+	private PreventCloseAlgorithmSource algorithmSource;
+	private PreventCloseTermSource termSource;
 
-    public ETL() {
-        this.configDirectory = new File(EUREKA_CONFIG_DIR, "etlconfig");
-        this.configDefaultsDirectory =
-                new File(EUREKA_CONFIG_DIR, "etlconfigdefaults");
-    }
+	@Inject
+	public ETL(EtlProperties inEtlProperties) {
+		final String configDir = inEtlProperties.getConfigDir();
+		this.configDirectory = new File(configDir, "etlconfig");
+		this.configDefaultsDirectory = new File(configDir,
+			"etlconfigdefaults");
+	}
 
-    public void run(String configId, PropositionDefinition[] inPropositionDefinitions)
-            throws EtlException {
-        Protempa protempa = null;
+	public void run(String configId, PropositionDefinition[]
+		inPropositionDefinitions) throws EtlException {
+		Protempa protempa = null;
 
-        try {
-            protempa = getNewProtempa(configId + ".ini");
-            DefaultQueryBuilder q = new DefaultQueryBuilder();
-            q.setPropositionDefinitions(inPropositionDefinitions);
-            Query query = protempa.buildQuery(q);
-            File i2b2Config = new File(this.configDirectory,
-                    configId + ".xml");
-            QueryResultsHandler qrh = new I2B2QueryResultsHandler(i2b2Config);
-            protempa.execute(query, qrh);
-        } catch (InvalidConfigurationException e) {
-            throw new EtlException(e);
-        } catch (QueryBuildException e) {
-            throw new EtlException(e);
-        } catch (BackendProviderSpecLoaderException e) {
-            throw new EtlException(e);
-        } catch (ConfigurationsLoadException e) {
-            throw new EtlException(e);
-        } catch (FinderException e) {
-            throw new EtlException(e);
-        } catch (BackendInitializationException e) {
-            throw new EtlException(e);
-        } catch (ProtempaStartupException e) {
-            throw new EtlException(e);
-        } catch (BackendNewInstanceException e) {
-            throw new EtlException(e);
-        } finally {
-            if (protempa != null) {
-                protempa.close();
-            }
-        }
-    }
+		try {
+			protempa = getNewProtempa(configId + ".ini");
+			DefaultQueryBuilder q = new DefaultQueryBuilder();
+			q.setPropositionDefinitions(inPropositionDefinitions);
+			Query query = protempa.buildQuery(q);
+			File i2b2Config = new File(
+				this.configDirectory, configId + ".xml");
+			QueryResultsHandler qrh = new I2B2QueryResultsHandler(i2b2Config);
+			protempa.execute(query, qrh);
+		} catch (InvalidConfigurationException e) {
+			throw new EtlException(e);
+		} catch (QueryBuildException e) {
+			throw new EtlException(e);
+		} catch (BackendProviderSpecLoaderException e) {
+			throw new EtlException(e);
+		} catch (ConfigurationsLoadException e) {
+			throw new EtlException(e);
+		} catch (FinderException e) {
+			throw new EtlException(e);
+		} catch (BackendInitializationException e) {
+			throw new EtlException(e);
+		} catch (ProtempaStartupException e) {
+			throw new EtlException(e);
+		} catch (BackendNewInstanceException e) {
+			throw new EtlException(e);
+		} finally {
+			if (protempa != null) {
+				protempa.close();
+			}
+		}
+	}
 
-    private Protempa getNewProtempa(String configFilename)
-            throws ConfigurationsLoadException,
-            BackendProviderSpecLoaderException, InvalidConfigurationException,
-            ProtempaStartupException, BackendInitializationException,
-            BackendNewInstanceException {
-        KnowledgeSource ks;
-        SourceFactory defaultsSF = null;
-        if (this.configDefaultsDirectory.exists()) {
-            File defaultConfFile = new File(this.configDefaultsDirectory,
-                    "defaults.ini");
-            if (defaultConfFile.exists()) {
-                Configurations defaultConfigs =
-                        new INICommonsConfigurations(
-                        this.configDefaultsDirectory);
-                defaultsSF =
-                        new SourceFactory(defaultConfigs, "defaults.ini");
-            }
-        }
-        Configurations configurations =
-                new INICommonsConfigurations(this.configDirectory);
-        SourceFactory sf = new SourceFactory(configurations, configFilename);
+	private Protempa getNewProtempa(String configFilename) throws
+		ConfigurationsLoadException, BackendProviderSpecLoaderException,
+		InvalidConfigurationException, ProtempaStartupException,
+		BackendInitializationException, BackendNewInstanceException {
+		KnowledgeSource ks;
+		SourceFactory defaultsSF = null;
+		if (this.configDefaultsDirectory.exists()) {
+			File defaultConfFile = new File(
+				this.configDefaultsDirectory, "defaults.ini");
+			if (defaultConfFile.exists()) {
+				Configurations defaultConfigs = new INICommonsConfigurations(
+					this.configDefaultsDirectory);
+				defaultsSF = new SourceFactory(defaultConfigs,
+					"defaults.ini");
+			}
+		}
+		Configurations configurations = new INICommonsConfigurations(this
+			.configDirectory);
+		SourceFactory sf = new SourceFactory(configurations, configFilename);
 
-        ks = sf.newKnowledgeSourceInstance();
-        if (ks.getBackends().length == 0) {
-            if (this.knowledgeSource == null && defaultsSF != null) {
-                this.knowledgeSource =
-                        createProxy(PreventCloseKnowledgeSource.class,
-                        defaultsSF.newKnowledgeSourceInstance());
-            }
-            ks = this.knowledgeSource;
-        }
+		ks = sf.newKnowledgeSourceInstance();
+		if (ks.getBackends().length == 0) {
+			if (this.knowledgeSource == null && defaultsSF != null) {
+				this.knowledgeSource = createProxy(
+					PreventCloseKnowledgeSource.class,
+					defaultsSF.newKnowledgeSourceInstance());
+			}
+			ks = this.knowledgeSource;
+		}
 
-        DataSource ds = sf.newDataSourceInstance();
-        if (ds.getBackends().length == 0) {
-            if (this.dataSource == null && defaultsSF != null) {
-                this.dataSource =
-                        createProxy(PreventCloseDataSource.class,
-                        defaultsSF.newDataSourceInstance());
-            }
-            ds = this.dataSource;
-        }
+		DataSource ds = sf.newDataSourceInstance();
+		if (ds.getBackends().length == 0) {
+			if (this.dataSource == null && defaultsSF != null) {
+				this.dataSource = createProxy(
+					PreventCloseDataSource.class,
+					defaultsSF.newDataSourceInstance());
+			}
+			ds = this.dataSource;
+		}
 
-        AlgorithmSource as = sf.newAlgorithmSourceInstance();
-        if (as.getBackends().length == 0) {
-            if (this.algorithmSource == null && defaultsSF != null) {
-                this.algorithmSource =
-                        createProxy(PreventCloseAlgorithmSource.class,
-                        defaultsSF.newAlgorithmSourceInstance());
-            }
-            as = this.algorithmSource;
-        }
+		AlgorithmSource as = sf.newAlgorithmSourceInstance();
+		if (as.getBackends().length == 0) {
+			if (this.algorithmSource == null && defaultsSF != null) {
+				this.algorithmSource = createProxy(
+					PreventCloseAlgorithmSource.class,
+					defaultsSF.newAlgorithmSourceInstance());
+			}
+			as = this.algorithmSource;
+		}
 
-        TermSource ts = sf.newTermSourceInstance();
-        if (ts.getBackends().length == 0) {
-            if (this.termSource == null && defaultsSF != null) {
-                this.termSource =
-                        createProxy(PreventCloseTermSource.class,
-                        defaultsSF.newTermSourceInstance());
-            }
-            ts = this.termSource;
-        }
+		TermSource ts = sf.newTermSourceInstance();
+		if (ts.getBackends().length == 0) {
+			if (this.termSource == null && defaultsSF != null) {
+				this.termSource = createProxy(
+					PreventCloseTermSource.class,
+					defaultsSF.newTermSourceInstance());
+			}
+			ts = this.termSource;
+		}
 
-        return new Protempa(ds, ks, as, ts);
-    }
+		return new Protempa(ds, ks, as, ts);
+	}
 
-    public void close() {
-        if (this.knowledgeSource != null) {
-            this.knowledgeSource.reallyClose();
-        }
-        if (this.dataSource != null) {
-            this.dataSource.reallyClose();
-        }
-        if (this.algorithmSource != null) {
-            this.algorithmSource.reallyClose();
-        }
-        if (this.termSource != null) {
-            this.termSource.reallyClose();
-        }
-    }
+	public void close() {
+		if (this.knowledgeSource != null) {
+			this.knowledgeSource.reallyClose();
+		}
+		if (this.dataSource != null) {
+			this.dataSource.reallyClose();
+		}
+		if (this.algorithmSource != null) {
+			this.algorithmSource.reallyClose();
+		}
+		if (this.termSource != null) {
+			this.termSource.reallyClose();
+		}
+	}
 
-    private static <E extends Source<?, ?, ?>> E createProxy(Class<E> clz,
-            Source<?, ?, ?> proxied) {
-        return clz.cast(Proxy.newProxyInstance(clz.getClassLoader(),
-                new Class[]{clz}, new PreventCloseInvocationHandler(proxied)));
-    }
+	private static <E extends Source<?, ?, ?>> E createProxy(Class<E> clz,
+		Source<?, ?, ?> proxied) {
+		return clz.cast(
+			Proxy.newProxyInstance(
+				clz.getClassLoader(), new Class[]{clz}, new PreventCloseInvocationHandler(proxied)));
+	}
 }
