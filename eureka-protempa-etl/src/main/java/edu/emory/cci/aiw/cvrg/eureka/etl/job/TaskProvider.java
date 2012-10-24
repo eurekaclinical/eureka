@@ -22,19 +22,22 @@ package edu.emory.cci.aiw.cvrg.eureka.etl.job;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 
+import edu.emory.cci.aiw.cvrg.eureka.etl.config.EtlProperties;
 import edu.emory.cci.aiw.cvrg.eureka.etl.dao.JobDao;
 
 public class TaskProvider implements Provider<Task> {
 
 	private final JobDao jobDao;
+	private final EtlProperties etlProperties;
 
 	@Inject
-	public TaskProvider (JobDao inJobDao) {
+	public TaskProvider (JobDao inJobDao, EtlProperties inEtlProperties) {
 		this.jobDao = inJobDao;
+		this.etlProperties = inEtlProperties;
 	}
 
 	@Override
 	public Task get() {
-		return new Task(this.jobDao, new ETL());
+		return new Task(this.jobDao, new ETL(this.etlProperties));
 	}
 }
