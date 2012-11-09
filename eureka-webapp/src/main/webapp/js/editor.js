@@ -269,9 +269,6 @@ function initTrees() {
 								buttons : {
 									"Confirm": function() {
 										$(toRemove).remove();
-										console.log("Removing");
-										console.log(toRemove);
-										console.log("Removing proposition: " + $(toRemove).attr('name'));
 										delete possiblePropositions[$(toRemove).attr('name')];
 										setPropositionSelects();
 										if ($(sortable).find('li').length == 0) {
@@ -300,7 +297,6 @@ function initTrees() {
 					sortable.append(newItem);
 
 					possiblePropositions[propositionId] = propositionDesc;
-					console.log(possiblePropositions);
 					setPropositionSelects();
 				}
 			},
