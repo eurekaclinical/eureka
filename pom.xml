@@ -360,13 +360,11 @@
 					</execution>
 				</executions>
 			</plugin>
-			<plugin>
+			<!--<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>appassembler-maven-plugin</artifactId>
 				<version>1.3</version>
 				<configuration>
-					<!--  extra JVM args are set in profiles - see below -->
-					<!-- <extraJvmArguments>-Xmx8G</extraJvmArguments> -->
 					<repositoryLayout>flat</repositoryLayout>
 					<repositoryName>lib</repositoryName>
 					<installArtifacts>false</installArtifacts>
@@ -380,7 +378,7 @@
 						</goals>
 					</execution>
 				</executions>
-			</plugin>
+			</plugin>-->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-site-plugin</artifactId>
