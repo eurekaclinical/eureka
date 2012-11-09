@@ -1,21 +1,21 @@
 /* Eureka WebApp. Copyright (C) 2012 Emory University. Licensed under http://www.apache.org/licenses/LICENSE-2.0. */
-$("#sortable").sortable();
-$("#sortable").disableSelection();
 
-var numItems = 0;
+$("ul.sortable").sortable();
+$("ul.sortable").disableSelection();
 
-var el;
 var dropBoxMaxTextWidth = 275;
 
+var possiblePropositions = {};
+
 $(document).ready(function(){
-	
+
 	$('#wizard').smartWizard({
-		'labelFinish': 'Save', 
-		onLeaveStep:leaveAStepCallback, 
+		'labelFinish': 'Save',
+		onLeaveStep:leaveAStepCallback,
 		onFinish:onFinishCallback
 	});
 
-	var $dialog = $('<div></div>')
+	var dialog = $('<div></div>')
 	.html('<p>' +
 		'For Categorical:<br/>' +
 		'Drag and Drop an element from the System or User-Defined element explorer' +
@@ -27,7 +27,7 @@ $(document).ready(function(){
 		'to the canvas to make it a part of the temporal pattern. Current behavior' +
 		'is to infer the pattern when all of the listed elements are present in any' +
 		'temporal order.' +
-		'</p>' 
+		'</p>'
 		)
 	.dialog({
 		autoOpen: false,
@@ -35,11 +35,9 @@ $(document).ready(function(){
 	});
 
 	$('#help_select').click( function() {
-		$dialog.dialog('open');
+		dialog.dialog('open');
 	});
-    
-	$('#sortable').show();
-	$('#holder').hide();
+
 	$('#expand_div').hide();
 	$('#collapse_div').hide();
 
@@ -49,31 +47,21 @@ $(document).ready(function(){
 	$('#frequencydefinition').hide();
 	$('#valuethresholddefinition').hide();
 
-	initDropTargetList();
-
-	$('#dialog').hide();
-
 	function leaveAStepCallback(from, to){
 		var result;
 		var step_num_from = from.attr('rel');
 		var step_num_to = to.attr('rel');
-		
+
 		if (step_num_to < step_num_from) {
 			result = true;
 		} else {
 			result = validateSteps(step_num_from);
 		}
-		
+
 		if (result) {
 			if (step_num_to == 2) {
 				var type = $("input:radio[name='type']:checked").val();
-				if (type == 'OR') {
-					$('#categoricaldefinition').show();
-				} else if (type == 'AND') {
-					$('#temporaldefinition').show();
-				} else {
-					$('#' + type + 'definition').show();
-				}
+				$('#' + type + 'definition').show();
 			} else {
 				$('#categoricaldefinition').hide();
 				$('#temporaldefinition').hide();
@@ -82,12 +70,10 @@ $(document).ready(function(){
 				$('#valuethresholddefinition').hide();
 			}
 		}
-		
+
 		return result;
 	}
 
-	var type = $("input:radio[name='type']:checked").val();
-    
 	function onFinishCallback(){
 		//if(validateAllSteps()){
 		var propositions = [];
@@ -96,17 +82,16 @@ $(document).ready(function(){
 		var element_desc = $('#element_description').val();
 		var propId = $('#propId').val();
 		propId = (typeof(propId) === 'undefined' ? "" : propId);
-		$('#sortable li').each( function () {
-			console.log(this.id);
+		$('#' + type + 'definition ul.sortable li').each( function () {
 			var namespaceStr = '';//this.textContent.split("-")[0];
 			if ($('#systemTree [id="'+this.id + '"]').length > 0 || $(this).data('type') == "system") {
 				namespaceStr = 'system';
-            	
+
 			} else {
 				namespaceStr = 'user';
 			}
 			var obj = {
-				id: this.id, 
+				id: this.id,
 				type: namespaceStr
 			};
 			propositions.push(obj);
@@ -124,17 +109,17 @@ $(document).ready(function(){
 			beforeSend: function(x) {
 				if (x && x.overrideMimeType) {
 					x.overrideMimeType("application/j-son;charset=UTF-8");
-				}                                     
+				}
 			},
 			success: function(data) {
-				window.location.href="editorhome";       
+				window.location.href="editorhome";
 			}
 		});
 
 	//$('form').submit();
 	//}
 	}
-    
+
 
 	function validateSteps(step){
 		var isStepValid = true;
@@ -142,12 +127,12 @@ $(document).ready(function(){
 		if (step == 1) {
 			var type = $("input:radio[name='type']:checked").val();
 			if (type == undefined || type == "") {
-				isStepValid = false; 
+				isStepValid = false;
 				$('#wizard').smartWizard('showMessage','Please select a type of element to create.');
 				$('#wizard').smartWizard('setError',{
 					stepnum:step,
 					iserror:true
-				});         
+				});
 			}
 			else{
 				$('#wizard').smartWizard('hideMessage','');
@@ -157,15 +142,16 @@ $(document).ready(function(){
 				});
 			}
 
-    		
+
 		} else if (step == 2) {
-			if ($('#sortable').children().length == 0) {
-				isStepValid = false; 
+			var type = $("input:radio[name='type']:checked").val();
+			if ($('#' + type + 'definition ul.sortable').children().length == 0) {
+				isStepValid = false;
 				$('#wizard').smartWizard('showMessage','Please select an element from the ontology explorer.');
 				$('#wizard').smartWizard('setError',{
 					stepnum:step,
 					iserror:true
-				});         
+				});
 			}
 			else{
 				$('#wizard').smartWizard('hideMessage','');
@@ -178,15 +164,15 @@ $(document).ready(function(){
 		} else if(step == 3) {
 			var element_name = $('#element_name').val();
 			var element_desc = $('#element_description').val();
-		  
+
 			if((!element_name && element_name.length <= 0) ||
 				(!element_desc && element_desc.length <= 0)){
-				isStepValid = false; 
+				isStepValid = false;
 				$('#wizard').smartWizard('showMessage','Please enter an element name and description and click next.');
 				$('#wizard').smartWizard('setError',{
 					stepnum:step,
 					iserror:true
-				});         
+				});
 			}
 			else{
 				$('#wizard').smartWizard('hideMessage','');
@@ -200,14 +186,14 @@ $(document).ready(function(){
 
 
 		}
-    	
+
 		return isStepValid;
 	}
-  
-	
+
+
 	var tabContainers = $('div.tabs > div');
 	tabContainers.hide().filter(':first').show();
-    
+
 	$('div.tabs ul.tabNavigation a').click(function () {
 		tabContainers.hide();
 		tabContainers.filter(this.hash).show();
@@ -215,21 +201,33 @@ $(document).ready(function(){
 		$(this).addClass('selected');
 		return false;
 	}).filter(':first').click();
-		    
+
 	initTrees();
 
+	var addToSequence = $('a#add-to-sequence');
+	addToSequence.click(function (e) {
+		var from = $('table.sequence-relation').filter(':last').clone();
+		var to = $('td.sequence-relations-container');
+		var currentCount = parseInt(from.find('span.count').text());
+		var treeDropId = to.find('div.tree-drop-single')[0].id;
+		var parts = treeDropId.split('-');
+		parts[parts.length - 1]++;
+		from.find('div.tree-drop-single')[0].id = parts.join('-');
+		from.find('span.count').text(currentCount + 1);
+		to.append(from);
+	});
 
 });
 
 function initTrees() {
-	
+
 	$("#systemTree").jstree({
 		"json_data" : {
-			"ajax" : { 
+			"ajax" : {
 				"url" : "systemlist" ,
 				"data": function(n) {
 					return {
-						id : n.attr ? n.attr("id") : "root" 
+						id : n.attr ? n.attr("id") : "root"
 					};
 				}
 
@@ -237,81 +235,63 @@ function initTrees() {
 		},
 		"dnd" : {
 			"drop_finish" : function(data) {
-				if (idIsNotInList(data.o[0].id)  &&
-					data.e.currentTarget.id == 'tree-drop' || data.e.currentTarget.id == 'label-info') {
+				var target = data.e.currentTarget;
+				if (idIsNotInList(data.o[0].id)) {
 
-					$('#label-info').hide();
-					var target = $('#tree-drop')[0]; 
-					target.style["background"] = "lightblue";
-					$('#label-info')[0].hidden = false;
-					var type = $('#type').val();
+					var infoLabel = $(target).find('div.label-info');
+					infoLabel.hide();
+
 					var X = $("<span/>", {
-						class: "delete"
-					});
-					var txt = $("<span/>", {
-						text : data.o[0].children[1].childNodes[1].textContent
-					});
-                    
-					$('<li/>', {
-						id: data.o[0].id, 
-						"data-type": "system"
-					}).append(X, txt).appendTo('#sortable');
-                
-					var txt = $('#sortable li:last').text();
-    
-					var width = txt.length * 7;
-					if (width > dropBoxMaxTextWidth) {
-						dropBoxMaxTextWidth = width;
-						$('#sortable').width(dropBoxMaxTextWidth);
-					}
-
-					$('#sortable li:last').mouseover(function () {
-
-						$(this.children[0]).css({
-							cursor:"pointer", 
-							backgroundColor:"#24497A"
-						});
-					});     
-					$('#sortable li:last').mouseout(function () {
-
-						$(this.children[0]).css({
-							cursor:"pointer", 
-							backgroundColor:"lightblue"
-						});
-					});     
-
-					// function to enable removal of list item once it is clicked
-					$($('#sortable li:last')[0].children[0]).click(function onItemClick() {
-						$(this.parent).animate( {
-							backgroundColor: "#CCC", 
-							color: "#333"
-						}, 500);
-						$("#dialog").dialog({
-							buttons : {
-								"Confirm" : function() {
-									$($('#sortable li:last')[0].children[0].parentNode).remove();
-									$(this).dialog("close");
-									if ($('#sortable li').length == 0) {
-										$('#sortable').width(275);
-										dropBoxMaxTextWidth = 275;
+						class: "delete",
+						click: function (){
+							var toRemove = $(this).parent();
+							var dialog = $('<div></div>');
+							$(dialog).dialog({
+								title: 'Confirm removal of selected element',
+								buttons : {
+									"Confirm": function() {
+										$(toRemove).remove();
+										if ($(sortable).find('li').length == 0) {
+											infoLabel.show();
+										}
+										$(this).dialog("close");
+										$(this).remove();
+									},
+									"Cancel": function() {
+										$(this).dialog("close");
+										$(this).remove();
 									}
-								},
-								"Cancel" : function() {
-									$(this).dialog("close");
 								}
-							}
-						});
-						$("#dialog").html(this.parentNode.children[1].innerHTML);
-						$("#dialog").dialog("open");
-                        
-					//alert("Removed Selection: "+this.parentNode.children[1].innerHTML);
+							});
+							$(dialog).html(this.parentNode.children[1].innerHTML);
+							$(dialog).dialog("open");
+						}
+					});
 
+					var propositionId = data.o[0].id;
+					var propositionDesc = data.o[0].children[1].childNodes[1].textContent;
+					var txt = $("<span/>", {
+						text : propositionDesc
+					});
+					var sortable = $(target).find('ul.sortable');
+					var newItem = $('<li/>', {
+						id: propositionId,
+						"data-type": "system"
+					});
+
+					newItem.append(X);
+					newItem.append(txt);
+					sortable.append(newItem);
+					possiblePropositions[propositionId] = propositionDesc;
+					console.log(possiblePropositions);
+					var selects = $('select').filter('[name="propositionSelect"]');
+					$(selects).each( function (i, sel) {
+						$(sel).empty();
+						$.each(possiblePropositions, function (key, val) {
+							$(sel).append($('<option></option>').attr('value', key).text(val));
+						});
 					});
 				}
-		
-				numItems++;
-	
-			
 			},
 			"drag_check" : function(data) {
 				if (data.r.attr("id") == "phtml_1") {
@@ -355,17 +335,16 @@ function initTrees() {
 			dataType: "json",
 			success: function(data) {
 				var childData = data;
-				console.log(childData);
 				for (var i = 0; i < childData.length; i++) {
-					addNode("systemTree", id, childData[i].data, childData[i]["attr"].id, false);    
-                	   
+					addNode("systemTree", id, childData[i].data, childData[i]["attr"].id, false);
+
 				}
 			}
 		});
-	
+
 	}
 
-	
+
 	function loadUserDefinedProps(id) {
 		$.ajax({
 			type: "POST",
@@ -377,7 +356,7 @@ function initTrees() {
 				var childData = data;
 			}
 		});
-	
+
 	}
 
 
@@ -389,10 +368,10 @@ function initTrees() {
 		//
 		////////////////////////////////////////////
 		if(hasChildren) {
-	
+
 			/// If it has children we load the node a little differently
 			/// give it a different image, theme and make it clickable
-	
+
 			$("#" +rootNodeId).jstree("create_node", $("[id='"+localParentId+"']"), "inside",  {
 				"data" : nodeName ,
 				"state" : "closed",
@@ -401,13 +380,13 @@ function initTrees() {
 					"rel":"children"
 				}
 			},null, true);
-	
-	
+
+
 		} else {
-	
+
 			// Nodes with no trees cannot be opened and
 			// have a different image
-	
+
 			$("#" + rootNodeId).jstree("create_node", $("[id='"+localParentId+ "']"), "inside",  {
 				"data" : nodeName ,
 				"state" : "leaf",
@@ -416,14 +395,14 @@ function initTrees() {
 					"rel":"noChildren"
 				}
 			},null, true);
-	
+
 		}
 
 	}
-	
-	
-	
-	
+
+
+
+
 	$("#userTree").jstree({
 		"json_data" : {
 			"ajax" : {
@@ -434,29 +413,29 @@ function initTrees() {
 			"drop_finish" : function(data) {
 				if (idIsNotInList(data.o[0].id)  &&
 					data.e.currentTarget.id == 'tree-drop' || data.e.currentTarget.id == 'label-info') {
-                      
+
 					$('#label-info').hide();
-                    
-					var target = $('#tree-drop')[0]; 
+
+					var target = $('#tree-drop')[0];
 					target.style["background"] = "lightblue";
 
 					var type = $('#type').val();
-				    
+
 					var X = $("<span/>", {
 						class: "delete"
 					});
 					var txt = $("<span/>", {
 						text : data.o[0].children[1].childNodes[1].textContent
 					});
-                    
+
 					$('<li/>', {
-						id: data.o[0].id, 
+						id: data.o[0].id,
 						"data-type": "user"
 					}).append(X, txt).appendTo('#sortable');
-                
+
 
 					var txt = $('#sortable li:last').text();
-   
+
 					var width = txt.length * 7;
 					if (width > dropBoxMaxTextWidth) {
 						dropBoxMaxTextWidth = width;
@@ -467,22 +446,22 @@ function initTrees() {
 					$('#sortable li:last').mouseover(function () {
 
 						$(this.children[0]).css({
-							cursor:"pointer", 
+							cursor:"pointer",
 							backgroundColor:"#24497A"
 						});
-					});     
+					});
 					$('#sortable li:last').mouseout(function () {
 
 						$(this.children[0]).css({
-							cursor:"pointer", 
+							cursor:"pointer",
 							backgroundColor:"lightblue"
 						});
-					});     
+					});
 
 					// function to enable removal of list item once it is clicked
 					$($('#sortable li:last')[0].children[0]).click(function onItemClick() {
 						$(this.parent).animate( {
-							backgroundColor: "#CCC", 
+							backgroundColor: "#CCC",
 							color: "#333"
 						}, 500);
 						$("#dialog").dialog({
@@ -502,15 +481,11 @@ function initTrees() {
 						});
 						$("#dialog").html(this.parentNode.children[1].innerHTML);
 						$("#dialog").dialog("open");
-                        
+
 					//alert("Removed Selection: "+this.parentNode.children[1].innerHTML);
 
 					});
-		
-					numItems++;
 				}
-	
-			
 			},
 			"drag_check" : function(data) {
 				if (data.r.attr("id") == "phtml_1") {
@@ -544,7 +519,7 @@ function initTrees() {
 	});
 
 
-	        
+
 }
 
 function showHelp() {
@@ -552,7 +527,7 @@ function showHelp() {
 }
 function idIsNotInList(id) {
 
-    
+
 	var retVal = true;
 	$('#sortable li').each( function() {
 		if (id == this.id) {
@@ -561,56 +536,7 @@ function idIsNotInList(id) {
 
 	});
 	return retVal;
-    
 
 
-}
 
-function initDropTargetList() {
-
-	$('#sortable li').each( function () {
-
-		$(this).mouseover(function () {
-
-			$(this.children[0]).css({
-				cursor:"pointer", 
-				backgroundColor:"#24497A"
-			});
-		});     
-		$(this).mouseout(function () {
-
-			$(this.children[0]).css({
-				cursor:"pointer", 
-				backgroundColor:"lightblue"
-			});
-		});     
-
-		// function to enable removal of list item once it is clicked
-		$($(this)[0].children[0]).click(function onItemClick() {
-			$(this.parent).animate( {
-				backgroundColor: "#CCC", 
-				color: "#333"
-			}, 500);
-			$("#dialog").dialog({
-				buttons : {
-					"Confirm" : function() {
-						$($('#sortable li:last')[0].children[0].parentNode).remove();
-						$(this).dialog("close");
-						if ($('#sortable li').length == 0) {
-							$('#sortable').width(275);
-							dropBoxMaxTextWidth = 275;
-						}
-					},
-					"Cancel" : function() {
-						$(this).dialog("close");
-					}
-				}
-			});
-			$("#dialog").html(this.parentNode.children[1].innerHTML);
-			$("#dialog").dialog("open");
-              
-
-		});
-
-	});
 }

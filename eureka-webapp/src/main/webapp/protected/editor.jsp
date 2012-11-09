@@ -7,9 +7,9 @@
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
   You may obtain a copy of the License at
-  
+
        http://www.apache.org/licenses/LICENSE-2.0
-  
+
   Unless required by applicable law or agreed to in writing, software
   distributed under the License is distributed on an "AS IS" BASIS,
   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -32,11 +32,9 @@
     <template:content name="content">
 
         <table align="center" border="0" cellpadding="0" cellspacing="0">
-            <tr><td> 
+            <tr><td>
                     <!-- Tabs -->
-                    <div id="dialog" title="Confirm Remove Selected Element">
-
-                    </div>
+                    <div id="dialog" title="Confirm Remove Selected Element"></div>
                     <div id="wizard" class="swMain">
                         <ul id="steps">
                             <li><a href="#step-1">
@@ -50,7 +48,8 @@
                                     <label class="stepNumber">2</label>
                                     <span class="stepDesc">
                                         Select Elements<br />
-                                        <small>Select Elements from Ontology</small>
+                                        <small>Select Elements<br />from
+                                        Ontology</small>
                                     </span>
                                 </a>
 							<li><a href="#step-3">
@@ -59,11 +58,13 @@
                                         <c:choose>
                                             <c:when test="${not empty proposition}">
                                                 Update Name<br />
-                                                <small>Update the Element's Name</small>
+                                                <small>Update the
+                                                Element&apos;s Name</small>
                                             </c:when>
                                             <c:otherwise>
                                                 Select Name<br />
-                                                <small>Select a Name for the Element</small>
+                                                <small>Select a Name<br />for
+                                                the Element</small>
                                             </c:otherwise>
                                         </c:choose>
                                     </span>
@@ -73,14 +74,14 @@
                                     <span class="stepDesc">
                                         Save<br />
                                         <small>Save Element to Database</small>
-                                    </span>                   
+                                    </span>
                                 </a></li>
                         </ul>
-						<div id="step-1">	
+						<div id="step-1">
                             <h2 class="StepTitle">Select Type of Element</h2>
                             <p><br/></p>
                             <table id="select_element_table">
-								<c:set var="types" value="OR,AND,sequence,frequency,valuethreshold" />
+								<c:set var="types" value="categorical,temporal,sequence,frequency,valuethreshold" />
 								<c:forTokens items="${types}" var="myType" delims="," varStatus="status">
 									<tr>
 										<td class="firstCol">
@@ -91,7 +92,7 @@
                             </table>
                         </div>
                         <div id="step-2">
-                            <h2 class="StepTitle"><span>Select Elements from Ontology Explorer</span><span style="font-size: 10px; float:right"><a href="#" id="help_select">Help</a></span></h2>	
+                            <h2 class="StepTitle"><span>Select Elements from Ontology Explorer</span><span style="font-size: 10px; float:right"><a href="#" id="help_select">Help</a></span></h2>
 
                             <p>
                                 &nbsp;
@@ -109,28 +110,22 @@
                                             </div>
                                             <div id="second">
                                                 <div id="userTree"></div>
-                                            </div>							        
+                                            </div>
                                         </div>
 
                                     </td>
 
                                     <td valign="top"><!-- step content -->
-
+                                    <div style="height: 290px; overflow:auto; padding-left: 20px;">
                                         <table>
-                                            <tr>
-                                                <td colspan="2">
-                                                    <h3 style="width: 300px"></h3>
-                                                </td>
-                                            </tr>
                                             <tr>
                                                 <td>
                                                     <table id="categoricaldefinition">
                                                         <tr>
                                                             <td>
-                                                                <div id="tree-drop" 
-                                                                     class="jstree-drop">
-
-                                                                    <ul id="sortable" style="width: 100% height: 100% >
+                                                                <div id="tree-drop-categorical" class="tree-drop jstree-drop">
+                                                                    <div class="label-info jstree-drop" ><center>Drop Here</center></div>
+                                                                    <ul class="sortable" style="width: 100% height: 100%">
                                                                         <c:if test="${not empty proposition}">
                                                                             <c:forEach var="child" items="${proposition.children}">
                                                                                 <c:choose>
@@ -150,22 +145,16 @@
                                                                             </c:forEach>
                                                                         </c:if>
                                                                     </ul>
-                                                                    <div id="holder" style="width: 550px; height: 350px" ></div>
-                                                                    <div id="label-info" class="jstree-drop" ><center>Drop Here</center></div>
-
-
                                                                 </div>
-
                                                             </td>
-                                                        </tr>
+							  </tr>
                                                     </table>
-													<table id="temporaldefinition"> <!-- DEPRECATED -->
+                                                    <table id="temporaldefinition"> <!-- DEPRECATED -->
                                                         <tr>
                                                             <td>
-                                                                <div id="tree-drop" 
-                                                                     class="jstree-drop">
-
-                                                                    <ul id="sortable" style="width: 100% height: 100% >
+                                                                <div id="tree-drop-temporal" class="tree-drop jstree-drop">
+                                                                    <div class="label-info jstree-drop" ><center>Drop Here</center></div>
+                                                                    <ul class="sortable" style="width: 100% height: 100%">
                                                                         <c:if test="${not empty proposition}">
                                                                             <c:forEach var="child" items="${proposition.children}">
                                                                                 <c:choose>
@@ -185,12 +174,7 @@
                                                                             </c:forEach>
                                                                         </c:if>
                                                                     </ul>
-                                                                    <div id="holder" style="width: 550px; height: 350px" ></div>
-                                                                    <div id="label-info" class="jstree-drop" ><center>Drop Here</center></div>
-
-
                                                                 </div>
-
                                                             </td>
                                                         </tr>
                                                     </table>
@@ -200,10 +184,32 @@
 																<table>
 																	<tr>
 																		<td>
-																			Data Element: 
+																			Data Element:
 																		</td>
 																		<td>
-																			<div id="sequenceMainDataElementTreeDrop" class="treeDrop jstree-drop"></span>
+																			<div id="tree-drop-sequence" class="tree-drop-single jstree-drop">
+																				<div class="label-info jstree-drop" ><center>Drop Here</center></div>
+																				<ul class="sortable" style="width: 100% height: 100%">
+																				<c:if test="${not empty proposition}">
+																				<c:forEach var="child" items="${proposition.children}">
+																					<c:choose>
+																						<c:when test="${empty child.key}">
+																							<li id="${child.id}" data-type="user">
+																							<span class="delete" style="cursor: pointer; background-color: lightblue;"></span>
+																							<span>${child.abbrevDisplayName}</span>
+																							</li>
+																						</c:when>
+																						<c:otherwise>
+																							<li id="${child.key}" data-type="system">
+																								<span class="delete" style="cursor: pointer; background-color: lightblue;"></span>
+																								<span>${child.key} ${child.displayName} ${child.abbrevDisplayName}</span>
+																							</li>
+																						</c:otherwise>
+																					</c:choose>
+																				</c:forEach>
+																				</c:if>
+																				</ul>
+																			</div>
 																		</td>
 																	</tr>
 																	<tr>
@@ -228,7 +234,11 @@
 																						<input type="text" class="durationField" name="mainDataElementMinDurationValue"/>
 																					</td>
 																					<td>
-																						<select name="mainDataElementMinDurationUnits"></select>
+																						<select name="mainDataElementMinDurationUnits">
+																							<option value="minutes">Minutes</option>
+																							<option value="hours">Hours</option>
+																							<option value="days" selected="selected">Days</option>
+																						</select>
 																					</td>
 																				</tr>
 																				<tr>
@@ -239,7 +249,11 @@
 																						<input type="text" class="durationField" name="mainDataElementMaxDurationValue"/>
 																					</td>
 																					<td>
-																						<select name="mainDataElementMaxDurationUnits"></select>
+																						<select name="mainDataElementMaxDurationUnits">
+																							<option value="minutes">Minutes</option>
+																							<option value="hours">Hours</option>
+																							<option value="days" selected="selected">Days</option>
+																						</select>
 																					</td>
 																				</tr>
 																			</table>
@@ -250,24 +264,16 @@
 																			<label><input type="checkbox" name="mainDataElementSpecifyProperty"/>with property value</label>
 																		</td>
 																		<td>
-																			<select name="mainDataElementPropertyName"></select> <input type="text" class="propertyValueField" name="mainDataElementPropertyValue"/>
+																		  <select name="mainDataElementPropertyName"></select>
+																		  <input type="text" class="propertyValueField" name="mainDataElementPropertyValue"/>
 																		</td>
 																	</tr>
 																</table>
 															</td>
 														</tr>
 														<tr>
-															<td class="relDataElement">
-																<table>
-																	<tr>
-																		<td></td>
-																		<td colspan="5">
-																			<div class="action_link">   
-																				<a href="#" class="create"></a>
-																				<a href="#" style="text-decoration:none">Add to sequence</a>
-																			</div>
-																		</td>
-																	</tr>
+															<td class="sequence-relations-container">
+																<table class="sequence-relation" style="margin-top: 10px">
 																	<c:choose>
 																		<c:when test="${false}">
 																			<%-- Populate the first related data element, if editing an existing derived element with a first related data element. --%>
@@ -275,91 +281,91 @@
 																		<c:otherwise>
 																			<%-- For creating a new data element. --%>
 																			<tr>
-																				<td>Related Data Element 1:</td>
-																				<td>
-																					<table>
-																						<tr>
-																							<td colspan="2"><div id="sequenceRelDataElementTreeDrop1" class="treeDrop jstree-drop" /></td>
-																						</tr>
-																						<tr>
-																							<td>with value</td>
-																							<td><select name="sequenceRelDataElementValue1"></select></td>
-																						</tr>
-																						<tr>
-																							<td>
-																								<label><input type="checkbox" name="sequenceRelDataElementSpecifyDuration1"/>with duration</label>
-																							</td>
-																							<td>
-																								<table>
-																									<tr>
-																										<td>
-																											at least
-																										</td>
-																										<td>
-																											<input type="text" class="durationField" name="sequenceRelDataElementMinDurationValue1"/>
-																										</td>
-																										<td>
-																											<select name="sequenceRelDataElementMinDurationUnits1"></select>
-																										</td>
-																									</tr>
-																									<tr>
-																										<td>
-																											at most
-																										</td>
-																										<td>
-																											<input type="text" class="durationField" name="sequenceRelDataElementMaxDurationValue1"/>
-																										</td>
-																										<td>
-																											<select name="sequenceRelDataElementMaxDurationUnits1"></select>
-																										</td>
-																									</tr>
-																								</table>
-																							</td>
-																						</tr>
-																						<tr>
-																							<td>
-																								<label><input type="checkbox" name="sequenceRelDataElementSpecifyProperty1"/>with property value</label>
-																							</td>
-																							<td>
-																								<select name="sequenceRelDataElementPropertyName1"></select> <input type="text" class="propertyValueField" name="sequenceRelDataElementPropertyValue1"/>
-																							</td>
-																						</tr>
-																					</table>
+																				<td>Related Data Element <span class="count">1</span>:</td>
+																				<td colspan="5">
+																					<div class="tree-drop-single jstree-drop">
+																						<div class="label-info jstree-drop"><center>Drop Here</center></div>
+																						<ul class="sortable" style="width: 100% height: 100%"></ul>
+																					</div>
 																				</td>
-																				<td><select name="sequenceRelDataElementTemporalRelation"></select></td>
-																				<td><select name="sequenceRelDataElementRhs"></select></td>
-																				<td>by</td>
+																			</tr>
+																			<tr>
+																				<td>with value</td>
+																				<td colspan="5"><select name="sequenceRelDataElementValue1"></select></td>
+																			</tr>
+																			<tr>
 																				<td>
-																					<table>
-																						<tr>
-																							<td>
-																								at least
-																							</td>
-																							<td>
-																								<input type="text" class="distanceField" name="sequenceRhsDataElementMinDistanceValue1"/>
-																							</td>
-																							<td>
-																								<select name="sequenceRhsDataElementMinDistanceUnits1"></select>
-																							</td>
-																						</tr>
-																						<tr>
-																							<td>
-																								at most
-																							</td>
-																							<td>
-																								<input type="text" class="distanceField" name="sequenceRhsDataElementMaxDistanceValue1"/>
-																							</td>
-																							<td>
-																								<select name="sequenceRhsDataElementMaxDistanceUnits1"></select>
-																							</td>
-																						</tr>
-																					</table>
+																					<label><input type="checkbox" name="sequenceRelDataElementSpecifyDuration1"/>with duration</label>
+																				</td>
+																				<td>
+																				  at least
+																					<input type="text" class="durationField" name="sequenceRelDataElementMinDurationValue1"/>
+																					<select name="sequenceRelDataElementMinDurationUnits1">
+																							<option value="minutes">Minutes</option>
+																							<option value="hours">Hours</option>
+																							<option value="days" selected="selected">Days</option>
+																					</select>
+																					<br />
+																					at most
+																					<input type="text" class="durationField" name="sequenceRelDataElementMaxDurationValue1"/>
+																					<select name="sequenceRelDataElementMaxDurationUnits1">
+																							<option value="minutes">Minutes</option>
+																							<option value="hours">Hours</option>
+																							<option value="days" selected="selected">Days</option>
+																					</select>
+																				      </td>
+																				      <td>
+																					<select name="sequenceRelDataElementTemporalRelation">
+																						<option>Before</option>
+																						<option>After</option>
+																					</select>
+																				      </td>
+																				      <td>
+																								<select name="propositionSelect"></select>
+																				      </td>
+																				      <td>
+																					by
+																				      </td>
+																				      <td>
+																					at least
+																					<input type="text" class="distanceField" name="sequenceRhsDataElementMinDistanceValue1"/>
+																					<select name="sequenceRhsDataElementMinDistanceUnits1">
+																							<option value="minutes">Minutes</option>
+																							<option value="hours">Hours</option>
+																							<option value="days" selected="selected">Days</option>
+																					</select>
+																					<br />
+																					at most
+																					<input type="text" class="distanceField" name="sequenceRhsDataElementMaxDistanceValue1"/>
+																					<select name="sequenceRhsDataElementMaxDistanceUnits1">
+																							<option value="minutes">Minutes</option>
+																							<option value="hours">Hours</option>
+																							<option value="days" selected="selected">Days</option>
+																					</select>
+																				      </td>
+																			      </tr>
+																			      <tr>
+																				<td>
+																				  <input type="checkbox" name="sequenceRelDataElementSpecifyProperty1"/>
+																				  <label>with property value</label>
+																				</td>
+																				<td colspan="5">
+																				  <select name="sequenceRelDataElementPropertyName1"></select>
+																				  <input type="text" class="propertyValueField" name="sequenceRelDataElementPropertyValue1"/>
 																				</td>
 																			</tr>
 																		</c:otherwise>
 																		<%-- print second, third, etc. related data element. --%>
 																	</c:choose>
 																</table>
+															</td>
+														</tr>
+														<tr>
+															<td colspan="6" style="text-align: center">
+																<div class="action_link">
+																	<a href="#" class="create"></a>
+																	<a id="add-to-sequence" href="#" style="text-decoration:none">Add to sequence</a>
+																</div>
 															</td>
 														</tr>
 													</table>
@@ -384,13 +390,13 @@
                                                 </td>
                                             </tr>
                                         </table>
-                                    </td><!-- end step content -->
-                                </tr>            			
+                                    </div></td><!-- end step content -->
+                                </tr>
                             </table>
 
 
-                        </div>     
-						<div id="step-3">	
+                        </div>
+						<div id="step-3">
                             <h2 class="StepTitle">
                                 <c:choose>
                                     <c:when test="${not empty proposition}">
@@ -431,17 +437,17 @@
 
 							</div>
 							<div id="step-4">
-								<h2 class="StepTitle">Save Element to Database</h2>	
+								<h2 class="StepTitle">Save Element to Database</h2>
 								<p>
 									Save the new element to the Database as a User Defined Element.
 								</p>
 							</div>
 						</div>
 
-						<!-- End SmartWizard Content -->  		
+						<!-- End SmartWizard Content -->
 
 					</td></tr>
-			</table>   
+			</table>
 
 		</div>
 </template:content>
