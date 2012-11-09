@@ -5,7 +5,18 @@ $("ul.sortable").disableSelection();
 
 var dropBoxMaxTextWidth = 275;
 
-var possiblePropositions = {};
+var possiblePropositions = new Object();
+
+
+function setPropositionSelects () {
+	var selects = $('select').filter('[name="propositionSelect"]');
+	$(selects).each( function (i, sel) {
+		$(sel).empty();
+		$.each(possiblePropositions, function (key, val) {
+			$(sel).append($('<option></option>').attr('value', key).text(val));
+		});
+	});
+}
 
 $(document).ready(function(){
 
@@ -190,7 +201,6 @@ $(document).ready(function(){
 		return isStepValid;
 	}
 
-
 	var tabContainers = $('div.tabs > div');
 	tabContainers.hide().filter(':first').show();
 
@@ -204,8 +214,7 @@ $(document).ready(function(){
 
 	initTrees();
 
-	var addToSequence = $('a#add-to-sequence');
-	addToSequence.click(function (e) {
+	$('a#add-to-sequence').click(function (e) {
 		var from = $('table.sequence-relation').filter(':last').clone();
 		var to = $('td.sequence-relations-container');
 		var currentCount = parseInt(from.find('span.count').text());
@@ -238,19 +247,33 @@ function initTrees() {
 				var target = data.e.currentTarget;
 				if (idIsNotInList(data.o[0].id)) {
 
+					var propositionId = data.o[0].id;
+					var propositionDesc = data.o[0].children[1].childNodes[1].textContent;
+
 					var infoLabel = $(target).find('div.label-info');
 					infoLabel.hide();
 
+					var sortable = $(target).find('ul.sortable');
+					var newItem = $('<li/>', {
+						name: propositionId,
+						"data-type": "system"
+					});
+
 					var X = $("<span/>", {
 						class: "delete",
-						click: function (){
-							var toRemove = $(this).parent();
+						click: function () {
+							var toRemove = $(this).parent()[0];
 							var dialog = $('<div></div>');
 							$(dialog).dialog({
 								title: 'Confirm removal of selected element',
 								buttons : {
 									"Confirm": function() {
 										$(toRemove).remove();
+										console.log("Removing");
+										console.log(toRemove);
+										console.log("Removing proposition: " + $(toRemove).attr('name'));
+										delete possiblePropositions[$(toRemove).attr('name')];
+										setPropositionSelects();
 										if ($(sortable).find('li').length == 0) {
 											infoLabel.show();
 										}
@@ -268,29 +291,17 @@ function initTrees() {
 						}
 					});
 
-					var propositionId = data.o[0].id;
-					var propositionDesc = data.o[0].children[1].childNodes[1].textContent;
 					var txt = $("<span/>", {
 						text : propositionDesc
-					});
-					var sortable = $(target).find('ul.sortable');
-					var newItem = $('<li/>', {
-						id: propositionId,
-						"data-type": "system"
 					});
 
 					newItem.append(X);
 					newItem.append(txt);
 					sortable.append(newItem);
+
 					possiblePropositions[propositionId] = propositionDesc;
 					console.log(possiblePropositions);
-					var selects = $('select').filter('[name="propositionSelect"]');
-					$(selects).each( function (i, sel) {
-						$(sel).empty();
-						$.each(possiblePropositions, function (key, val) {
-							$(sel).append($('<option></option>').attr('value', key).text(val));
-						});
-					});
+					setPropositionSelects();
 				}
 			},
 			"drag_check" : function(data) {
