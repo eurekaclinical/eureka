@@ -12,10 +12,10 @@
 		<artifactId>eureka</artifactId>
 		<version>1.6-SNAPSHOT</version>
 	</parent>
-        
-        <properties>
-                <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        </properties>
+
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	</properties>
 
 	<build>
 		<finalName>eureka-common</finalName>
