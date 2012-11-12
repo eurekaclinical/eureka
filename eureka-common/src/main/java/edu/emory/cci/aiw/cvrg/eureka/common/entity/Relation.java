@@ -42,25 +42,25 @@ public class Relation {
 
 	private Long rhsExtendedProposition;
 
-	private Long minf1s2;
+	private Integer minf1s2;
 
 	@OneToOne
 	@JoinColumn(referencedColumnName = "id")
 	private TimeUnit minf1s2TimeUnit;
 
-	private Long maxf1s2;
+	private Integer maxf1s2;
 
 	@OneToOne
 	@JoinColumn(referencedColumnName = "id")
 	private TimeUnit maxf1s2TimeUnit;
 
-	private Long mins1f2;
+	private Integer mins1f2;
 
 	@OneToOne
 	@JoinColumn(referencedColumnName = "id")
 	TimeUnit mins1f2TimeUnit;
 
-	private Long maxs1f2;
+	private Integer maxs1f2;
 
 	@OneToOne
 	@JoinColumn(referencedColumnName = "id")
@@ -90,11 +90,11 @@ public class Relation {
 		rhsExtendedProposition = inRhsExtendedProposition;
 	}
 
-	public Long getMinf1s2() {
+	public Integer getMinf1s2() {
 		return minf1s2;
 	}
 
-	public void setMinf1s2(Long inMinf1s2) {
+	public void setMinf1s2(Integer inMinf1s2) {
 		minf1s2 = inMinf1s2;
 	}
 
@@ -106,11 +106,11 @@ public class Relation {
 		minf1s2TimeUnit = inMinf1s2TimeUnit;
 	}
 
-	public Long getMaxf1s2() {
+	public Integer getMaxf1s2() {
 		return maxf1s2;
 	}
 
-	public void setMaxf1s2(Long inMaxf1s2) {
+	public void setMaxf1s2(Integer inMaxf1s2) {
 		maxf1s2 = inMaxf1s2;
 	}
 
@@ -122,11 +122,11 @@ public class Relation {
 		maxf1s2TimeUnit = inMaxf1s2TimeUnit;
 	}
 
-	public Long getMins1f2() {
+	public Integer getMins1f2() {
 		return mins1f2;
 	}
 
-	public void setMins1f2(Long inMins1f2) {
+	public void setMins1f2(Integer inMins1f2) {
 		mins1f2 = inMins1f2;
 	}
 
@@ -138,11 +138,11 @@ public class Relation {
 		mins1f2TimeUnit = inMins1f2TimeUnit;
 	}
 
-	public Long getMaxs1f2() {
+	public Integer getMaxs1f2() {
 		return maxs1f2;
 	}
 
-	public void setMaxs1f2(Long inMaxs1f2) {
+	public void setMaxs1f2(Integer inMaxs1f2) {
 		maxs1f2 = inMaxs1f2;
 	}
 
