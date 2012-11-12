@@ -10,7 +10,7 @@
 	<packaging>pom</packaging>
 	<name>Eureka</name>
 	<description>The Eureka Project</description>
-	<url>http://eureka.cci.emory.edu/</url>
+	<url>http://aiw.sourceforge.net</url>
 
 	<!-- define the package versions for various project we will use -->
 	<properties>
@@ -42,9 +42,7 @@
 		<mysql-version>5.1.18</mysql-version>
 		<ehcache-version>2.6.0</ehcache-version>
 		<tomcat-plugin-version>1.1</tomcat-plugin-version>
-		<eureka.dev.site.url>http://eureka-dev.cci.emory.edu/dev</eureka.dev.site.url>
-		<eureka.dev.site.id>eureka-dev.cci.emory.edu</eureka.dev.site.id>
-		<eureka.dev.site.deploy.url>scp://eureka-dev.cci.emory.edu/var/www/html/dev</eureka.dev.site.deploy.url>
+		<eureka.dev.site.url>http://aiw.sourceforge.net/dev/${project.build.finalName}</eureka.dev.site.url>
 	</properties>
 
 	<scm>
@@ -60,8 +58,8 @@
 
 	<distributionManagement>
 		<site>
-			<id>${eureka.dev.site.id}</id>
-			<url>${eureka.dev.site.deploy.url}</url>
+			<id>aiw.sourceforge.net</id>
+			<url>scp://shell.sourceforge.net/home/project-web/aiw/htdocs/dev/${project.build.finalName}</url>
 		</site>
 		<repository>
 			<id>aiw.internal.repo</id>
@@ -736,14 +734,6 @@
 					</plugin>
 				</plugins>
 			</build>
-		</profile>
-		<profile>
-			<id>eureka-deploy-site-prd</id>
-			<properties>
-				<eureka.dev.site.url>http://eureka.cci.emory.edu/dev</eureka.dev.site.url>
-				<eureka.dev.site.id>eureka.cci.emory.edu</eureka.dev.site.id>
-				<eureka.dev.site.deploy.url>scp://eureka.cci.emory.edu/var/www/html/dev</eureka.dev.site.deploy.url>
-			</properties>
 		</profile>
 	</profiles>
 </project>
