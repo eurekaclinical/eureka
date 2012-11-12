@@ -23,6 +23,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
@@ -37,6 +38,18 @@ public class ExtendedProposition {
 	@GeneratedValue(strategy = GenerationType.TABLE)
 	private Long Id;
 
+	private Integer minDuration;
+
+	@OneToOne
+	@JoinColumn(referencedColumnName = "id")
+	private TimeUnit minDurationTimeUnit;
+
+	private Integer maxDuration;
+
+	@OneToOne
+	@JoinColumn(referencedColumnName = "id")
+	private TimeUnit maxDurationTimeUnit;
+
 	@OneToOne
 	private PropertyConstraint propertyConstraint;
 
@@ -48,12 +61,43 @@ public class ExtendedProposition {
 		Id = inId;
 	}
 
+	public Integer getMinDuration() {
+		return minDuration;
+	}
+
+	public void setMinDuration(Integer minDuration) {
+		this.minDuration = minDuration;
+	}
+
+	public TimeUnit getMinDurationTimeUnit() {
+		return minDurationTimeUnit;
+	}
+
+	public void setMinDurationTimeUnit(TimeUnit minDurationTimeUnit) {
+		this.minDurationTimeUnit = minDurationTimeUnit;
+	}
+
+	public Integer getMaxDuration() {
+		return maxDuration;
+	}
+
+	public void setMaxDuration(Integer maxDuration) {
+		this.maxDuration = maxDuration;
+	}
+
+	public TimeUnit getMaxDurationTimeUnit() {
+		return maxDurationTimeUnit;
+	}
+
+	public void setMaxDurationTimeUnit(TimeUnit maxDurationTimeUnit) {
+		this.maxDurationTimeUnit = maxDurationTimeUnit;
+	}
+
 	public PropertyConstraint getPropertyConstraint() {
 		return propertyConstraint;
 	}
 
-	public void setPropertyConstraint(PropertyConstraint
-		inPropertyConstraint) {
+	public void setPropertyConstraint(PropertyConstraint inPropertyConstraint) {
 		propertyConstraint = inPropertyConstraint;
 	}
 }
