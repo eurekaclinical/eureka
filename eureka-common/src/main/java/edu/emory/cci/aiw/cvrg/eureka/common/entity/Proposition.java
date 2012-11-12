@@ -29,6 +29,8 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
@@ -47,6 +49,7 @@ import com.sun.xml.bind.CycleRecoverable;
 @XmlRootElement
 @Entity
 @Table(name = "propositions")
+@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 public class Proposition implements CycleRecoverable, Serializable {
 
 	/**

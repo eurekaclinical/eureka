@@ -47,6 +47,8 @@ public final class DdlGenerator {
 	 */
 	private static final String DIALECT =
 			"org.hibernate.dialect.Oracle10gDialect";
+//	private static final String DIALECT =
+//		"org.hibernate.dialect.H2Dialect";
 
 	/**
 	 * Prevent the utility class from being instantiated.
@@ -130,6 +132,18 @@ public final class DdlGenerator {
 						.Proposition.class);
 		serviceClasses.add(edu.emory.cci.aiw.cvrg.eureka.common.entity
 						.TemporalPattern.class);
+		serviceClasses.add(edu.emory.cci.aiw.cvrg.eureka.common.entity
+			.HighLevelAbstraction.class);
+		serviceClasses.add(edu.emory.cci.aiw.cvrg.eureka.common.entity
+			.Relation.class);
+		serviceClasses.add(edu.emory.cci.aiw.cvrg.eureka.common.entity
+			.TimeUnit.class);
+		serviceClasses.add(edu.emory.cci.aiw.cvrg.eureka.common.entity
+			.ExtendedProposition.class);
+		serviceClasses.add(edu.emory.cci.aiw.cvrg.eureka.common.entity
+			.PropertyConstraint.class);
+		serviceClasses.add(edu.emory.cci.aiw.cvrg.eureka.common.entity
+			.ValueComparator.class);
 		generate(serviceClasses, outputFile);
 	}
 
