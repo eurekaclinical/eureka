@@ -12,9 +12,10 @@
 		<artifactId>eureka</artifactId>
 		<version>1.6-SNAPSHOT</version>
 	</parent>
-        
+
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<tomcat.port>8080</tomcat.port>
 	</properties>
 
 	<build>
@@ -29,16 +30,118 @@
 				<artifactId>versions-maven-plugin</artifactId>
 			</plugin>
 			<plugin>
-				<groupId>org.apache.tomcat.maven</groupId>
-				<artifactId>tomcat7-maven-plugin</artifactId>
-			</plugin>
-			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-war-plugin</artifactId>
 				<version>2.3</version>
 				<configuration>
 					<filteringDeploymentDescriptors>true</filteringDeploymentDescriptors>
 				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-resources-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>copy-tomcat-configs</id>
+						<phase>compile</phase>
+						<goals>
+							<goal>copy-resources</goal>
+						</goals>
+						<configuration>
+							<outputDirectory>${project.build.directory}/tomcat-config</outputDirectory>
+							<resources>
+								<resource>
+									<directory>src/main/resources/tomcat-server-config</directory>
+									<filtering>true</filtering>
+									<includes>
+										<include>context.xml</include>
+										<include>jaas.config</include>
+										<include>logging.properties</include>
+									</includes>
+								</resource>
+							</resources>
+						</configuration>
+					</execution>
+					<execution>
+						<id>copy-eureka-configs</id>
+						<phase>compile</phase>
+						<goals>
+							<goal>copy-resources</goal>
+						</goals>
+						<configuration>
+							<outputDirectory>${project.build.directory}/eureka-config</outputDirectory>
+							<resources>
+								<resource>
+									<directory>src/main/resources/tomcat-eureka-config</directory>
+									<filtering>true</filtering>
+									<excludes>
+										<exclude>**/*.h2.*</exclude>
+									</excludes>
+								</resource>
+								<resource>
+									<directory>src/main/resources/tomcat-eureka-config</directory>
+									<filtering>false</filtering>
+									<includes>
+										<include>**/*.h2.*</include>
+									</includes>
+								</resource>
+							</resources>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.tomcat.maven</groupId>
+				<artifactId>tomcat7-maven-plugin</artifactId>
+				<configuration>
+					<port>${tomcat.port}</port>
+					<additionalConfigFilesDir>${project.build.directory}/tomcat-config</additionalConfigFilesDir>
+					<systemProperties>
+						<java.security.auth.login.config>${catalina.home}/conf/jaas.config</java.security.auth.login.config>
+						<org.apache.tomcat.util.buf.UDecoder.ALLOW_ENCODED_SLASH>true</org.apache.tomcat.util.buf.UDecoder.ALLOW_ENCODED_SLASH>
+						<eureka.config.file>${project.build.directory}/eureka-config/eureka/application.properties</eureka.config.file>
+					</systemProperties>
+					<webapps>
+						<webapp>
+							<groupId>edu.emory.cci.aiw.cvrg</groupId>
+							<artifactId>eureka-services</artifactId>
+							<version>${eureka-version}</version>
+							<type>war</type>
+							<asWebapp>true</asWebapp>
+						</webapp>
+						<webapp>
+							<groupId>edu.emory.cci.aiw.cvrg</groupId>
+							<artifactId>eureka-protempa-etl</artifactId>
+							<version>${eureka-version}</version>
+							<type>war</type>
+							<asWebapp>true</asWebapp>
+						</webapp>
+					</webapps>
+					<addContextWarDependencies>true</addContextWarDependencies>
+					<addWarDependenciesInClassloader>true</addWarDependenciesInClassloader>
+				</configuration>
+				<dependencies>
+					<dependency>
+						<groupId>com.h2database</groupId>
+						<artifactId>h2</artifactId>
+						<version>${h2-version}</version>
+					</dependency>
+					<dependency>
+						<groupId>mysql</groupId>
+						<artifactId>mysql-connector-java</artifactId>
+						<version>${mysql-version}</version>
+					</dependency>
+					<dependency>
+						<groupId>edu.emory.cci.aiw.cvrg.eureka</groupId>
+						<artifactId>jaas-login-module</artifactId>
+						<version>1.0.2-SNAPSHOT</version>
+					</dependency>
+					<dependency>
+						<groupId>javax.mail</groupId>
+						<artifactId>mail</artifactId>
+						<version>${java-mail-version}</version>
+					</dependency>
+				</dependencies>
 			</plugin>
 		</plugins>
 	</build>
@@ -124,8 +227,6 @@
 			<groupId>commons-fileupload</groupId>
 			<artifactId>commons-fileupload</artifactId>
 		</dependency>
-
 	</dependencies>
-
 </project>
 
