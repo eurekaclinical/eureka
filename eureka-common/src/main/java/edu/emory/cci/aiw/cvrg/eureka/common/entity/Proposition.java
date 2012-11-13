@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -21,20 +21,13 @@ package edu.emory.cci.aiw.cvrg.eureka.common.entity;
 
 import java.io.Serializable;
 import java.util.Date;
-import java.util.List;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
-import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -69,28 +62,6 @@ public class Proposition implements CycleRecoverable, Serializable {
 	 */
 	@Column(name = "user_id")
 	private Long userId;
-	/**
-	 * The propositions that the current proposition is abstracted from.
-	 */
-	@ManyToMany(cascade = {CascadeType.MERGE, CascadeType.REFRESH,
-		CascadeType.PERSIST})
-	@JoinTable(name = "abstracted_from", joinColumns = {
-		@JoinColumn(name = "target_proposition_id")})
-	private List<Proposition> abstractedFrom;
-	/**
-	 * The "children" of of this proposition.
-	 */
-	@ManyToMany(cascade = {CascadeType.MERGE, CascadeType.REFRESH,
-		CascadeType.PERSIST})
-	@JoinTable(name = "inverse_is_a", joinColumns = {
-		@JoinColumn(name = "target_proposition_id")})
-	private List<Proposition> inverseIsA;
-	/**
-	 * The temporal pattern related to the proposition.
-	 */
-	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	@JoinColumn(name = "proposition_id")
-	private TemporalPattern temporalPattern;
 	/**
 	 * If proposition is system-level, this key identifies the
 	 * proposition in the system ontology
@@ -169,47 +140,6 @@ public class Proposition implements CycleRecoverable, Serializable {
 	 */
 	public void setUserId(Long inUserId) {
 		this.userId = inUserId;
-	}
-
-	/**
-	 * Gets the list of propositions the current proposition is abstracted from.
-	 *
-	 * @return The list of propositions the current proposition is abstracted
-	 * from.
-	 */
-	public List<Proposition> getAbstractedFrom() {
-		return abstractedFrom;
-	}
-
-	/**
-	 * Sets the list of propositions the current proposition is abstracted from.
-	 *
-	 * @param abstractedFrom The list of propositions the current proposition is
-	 * abstracted from.
-	 */
-	public void setAbstractedFrom(List<Proposition> abstractedFrom) {
-		this.abstractedFrom = abstractedFrom;
-	}
-
-	/**
-	 * Gets the list of
-	 *
-	 * @return
-	 */
-	public List<Proposition> getInverseIsA() {
-		return inverseIsA;
-	}
-
-	public void setInverseIsA(List<Proposition> inverseIsA) {
-		this.inverseIsA = inverseIsA;
-	}
-
-	public TemporalPattern getTemporalPattern() {
-		return temporalPattern;
-	}
-
-	public void setTemporalPattern(TemporalPattern temporalPattern) {
-		this.temporalPattern = temporalPattern;
 	}
 
 	/**
@@ -303,8 +233,6 @@ public class Proposition implements CycleRecoverable, Serializable {
 	@Override
 	public String toString() {
 		return "Proposition{" + "id=" + id + ", user=" + userId
-				+ ", abstractedFrom=" + abstractedFrom + ", inverseIsA="
-				+ inverseIsA + ", temporalPattern=" + temporalPattern
 				+ ", displayName=" + displayName + ", abbrevDisplayName="
 				+ abbrevDisplayName + '}';
 	}

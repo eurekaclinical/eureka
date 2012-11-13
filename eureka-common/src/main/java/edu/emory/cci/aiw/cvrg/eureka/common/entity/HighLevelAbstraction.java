@@ -24,6 +24,8 @@ import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
@@ -40,6 +42,16 @@ public class HighLevelAbstraction extends Proposition {
 	@JoinColumn(name = "highLevelAbstractionId")
 	private List<Relation> relations;
 
+	/**
+	 * The propositions that the current proposition is abstracted from.
+	 */
+	@ManyToMany(cascade = {CascadeType.MERGE, CascadeType.REFRESH,
+		CascadeType.PERSIST})
+	@JoinTable(name = "abstracted_from", joinColumns = {
+		@JoinColumn(name = "target_proposition_id")})
+	private List<Proposition> abstractedFrom;
+
+
 	public List<Relation> getRelations() {
 		return relations;
 	}
@@ -48,4 +60,23 @@ public class HighLevelAbstraction extends Proposition {
 		relations = inRelations;
 	}
 
+	/**
+	 * Gets the list of propositions the current proposition is abstracted from.
+	 *
+	 * @return The list of propositions the current proposition is abstracted
+	 * from.
+	 */
+	public List<Proposition> getAbstractedFrom() {
+		return abstractedFrom;
+	}
+
+	/**
+	 * Sets the list of propositions the current proposition is abstracted from.
+	 *
+	 * @param abstractedFrom The list of propositions the current proposition is
+	 * abstracted from.
+	 */
+	public void setAbstractedFrom(List<Proposition> abstractedFrom) {
+		this.abstractedFrom = abstractedFrom;
+	}
 }
