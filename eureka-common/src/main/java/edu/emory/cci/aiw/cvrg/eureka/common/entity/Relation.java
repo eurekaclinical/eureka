@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -38,9 +38,11 @@ public class Relation {
 	@GeneratedValue(strategy = GenerationType.TABLE)
 	private Long id;
 
-	private Long lhsExtendedProposition;
+	@OneToOne
+	private ExtendedProposition lhsExtendedProposition;
 
-	private Long rhsExtendedProposition;
+	@OneToOne
+	private ExtendedProposition rhsExtendedProposition;
 
 	private Integer minf1s2;
 
@@ -74,19 +76,21 @@ public class Relation {
 		id = inId;
 	}
 
-	public Long getLhsExtendedProposition() {
+	public ExtendedProposition getLhsExtendedProposition() {
 		return lhsExtendedProposition;
 	}
 
-	public void setLhsExtendedProposition(Long inLhsExtendedProposition) {
+	public void setLhsExtendedProposition(ExtendedProposition
+		inLhsExtendedProposition) {
 		lhsExtendedProposition = inLhsExtendedProposition;
 	}
 
-	public Long getRhsExtendedProposition() {
+	public ExtendedProposition getRhsExtendedProposition() {
 		return rhsExtendedProposition;
 	}
 
-	public void setRhsExtendedProposition(Long inRhsExtendedProposition) {
+	public void setRhsExtendedProposition(ExtendedProposition
+		inRhsExtendedProposition) {
 		rhsExtendedProposition = inRhsExtendedProposition;
 	}
 
