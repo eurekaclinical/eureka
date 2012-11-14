@@ -6,8 +6,8 @@ import java.util.List;
 import java.util.Map;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.Sequence;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.Sequence.DataElement;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.Sequence.RelatedDataElement;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.Sequence.DataElementField;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.Sequence.RelatedDataElementField;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.Sequence.RelationOperator;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.ExtendedProposition;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.HighLevelAbstraction;
@@ -18,8 +18,12 @@ import edu.emory.cci.aiw.cvrg.eureka.common.entity.TimeUnit;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.ValueComparator;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.PropositionDao;
 
+/**
+ * Translates from sequences (UI data element) to high-level abstractions.
+ * Creates extended propositions and relations as needed.
+ */
 public class SequenceTranslator implements
-        PropositionTranslator<HighLevelAbstraction, Sequence> {
+        PropositionTranslator<Sequence, HighLevelAbstraction> {
 
 	private Map<Long, ExtendedProposition> extendedProps;
 	private final PropositionDao dao;
@@ -32,16 +36,18 @@ public class SequenceTranslator implements
 	@Override
 	public HighLevelAbstraction translate(Sequence element) {
 		HighLevelAbstraction result = new HighLevelAbstraction();
+		PropositionTranslatorUtil.populateCommonFields(result, element);
 
 		List<Proposition> abstractedFrom = new ArrayList<Proposition>();
 		createExtendedProposition(element.getPrimaryDataElement());
-		for (RelatedDataElement rde : element.getRelatedDataElements()) {
-			createExtendedProposition(rde.getDataElement());
-			abstractedFrom.add(dao.retrieve(rde.getDataElement().getDataElement()));
+		for (RelatedDataElementField rde : element.getRelatedDataElements()) {
+			createExtendedProposition(rde.getDataElementField());
+			abstractedFrom.add(dao.retrieve(rde.getDataElementField()
+			        .getDataElement()));
 		}
 		result.setAbstractedFrom(abstractedFrom);
 		List<Relation> relations = new ArrayList<Relation>();
-		for (RelatedDataElement rde : element.getRelatedDataElements()) {
+		for (RelatedDataElementField rde : element.getRelatedDataElements()) {
 			relations.add(createRelation(rde));
 		}
 		result.setRelations(relations);
@@ -49,7 +55,7 @@ public class SequenceTranslator implements
 		return result;
 	}
 
-	private void createExtendedProposition(DataElement dataElement) {
+	private void createExtendedProposition(DataElementField dataElement) {
 		if (!this.extendedProps.containsKey(dataElement.getDataElement())) {
 			ExtendedProposition ep = new ExtendedProposition();
 			ep.setId(dataElement.getDataElement());
@@ -70,12 +76,14 @@ public class SequenceTranslator implements
 		}
 	}
 
-	private Relation createRelation(RelatedDataElement relatedDataElementField) {
+	private Relation createRelation(
+	        RelatedDataElementField relatedDataElementField) {
 		Relation rel = new Relation();
 
-		ExtendedProposition dataElement = this.extendedProps.get(relatedDataElementField.getDataElement());
+		ExtendedProposition dataElement = this.extendedProps
+		        .get(relatedDataElementField.getDataElementField());
 		ExtendedProposition relatedDataElement = this.extendedProps
-		        .get(relatedDataElementField.getRhsDataElement());
+		        .get(relatedDataElementField.getSequentialDataElement());
 
 		rel.setMinf1s2(relatedDataElementField.getRelationMinCount());
 		TimeUnit minTimeUnit = new TimeUnit();
