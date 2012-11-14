@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
+ * 
  *      http://www.apache.org/licenses/LICENSE-2.0
- *
+ * 
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -45,6 +45,8 @@ import com.sun.xml.bind.CycleRecoverable;
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 public class Proposition implements CycleRecoverable, Serializable {
 
+	public enum SystemType {CONSTANT, EVENT, PRIMITIVE_PARAMETER,
+		LOW_LEVEL_ABSTRACTION, HIGH_LEVEL_ABSTRACTION};
 	/**
 	 * Needed for the Serializable implementation.
 	 */
@@ -87,6 +89,10 @@ public class Proposition implements CycleRecoverable, Serializable {
 	 * The date the proposition was last modified.
 	 */
 	private Date lastModified;
+	/**
+	 * The system type, if this is a system level element.
+	 */
+	private SystemType systemType;
 
 	/**
 	 * Gets the abbreviated display name of the proposition.
@@ -228,6 +234,14 @@ public class Proposition implements CycleRecoverable, Serializable {
 	@Override
 	public Object onCycleDetected(Context context) {
 		return null;
+	}
+
+	public SystemType getSystemType() {
+		return systemType;
+	}
+
+	public void setSystemType(SystemType inSystemType) {
+		systemType = inSystemType;
 	}
 
 	@Override
