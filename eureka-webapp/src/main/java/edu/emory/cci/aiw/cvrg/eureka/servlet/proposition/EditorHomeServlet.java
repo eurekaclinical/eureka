@@ -45,13 +45,10 @@ import edu.emory.cci.aiw.cvrg.eureka.common.comm.PropositionWrapper;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.PropositionWrapper.Type;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.User;
 
-
 public class EditorHomeServlet extends HttpServlet {
 
 	private static final Logger LOGGER = LoggerFactory
-			.getLogger(EditorHomeServlet.class);
-
-
+	        .getLogger(EditorHomeServlet.class);
 
 	private JsonTreeData createData(String id, String data) {
 		JsonTreeData d = new JsonTreeData();
@@ -61,41 +58,40 @@ public class EditorHomeServlet extends HttpServlet {
 		return d;
 	}
 
-    private String getDisplayName(PropositionWrapper p) {
-        String displayName = "";
+	private String getDisplayName(PropositionWrapper p) {
+		String displayName = "";
 
-        if (p.getAbbrevDisplayName() != null && !p.getAbbrevDisplayName().equals("")) {
+		if (p.getAbbrevDisplayName() != null
+		        && !p.getAbbrevDisplayName().equals("")) {
 
-            displayName = p.getAbbrevDisplayName() + "(" + p.getKey() + ")";
+			displayName = p.getAbbrevDisplayName() + "(" + p.getKey() + ")";
 
-        } else if (p.getDisplayName() != null && !p.getDisplayName().equals("")) {
+		} else if (p.getDisplayName() != null && !p.getDisplayName().equals("")) {
 
-            displayName = p.getDisplayName() + "(" + p.getKey() + ")";
+			displayName = p.getDisplayName() + "(" + p.getKey() + ")";
 
-        } else {
+		} else {
 
-            displayName = p.getKey();
+			displayName = p.getKey();
 
-        }
+		}
 
-        return displayName;
-    }
-
-
-
+		return displayName;
+	}
 
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp)
-			throws ServletException, IOException {
+	        throws ServletException, IOException {
 		doGet(req, resp);
 	}
+
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
-			throws ServletException, IOException {
+	        throws ServletException, IOException {
 
 		List<JsonTreeData> l = new ArrayList<JsonTreeData>();
 		String eurekaServicesUrl = req.getSession().getServletContext()
-				.getInitParameter("eureka-services-url");
+		        .getInitParameter("eureka-services-url");
 		try {
 			Client client = CommUtils.getClient();
 			Principal principal = req.getUserPrincipal();
@@ -104,34 +100,42 @@ public class EditorHomeServlet extends HttpServlet {
 			LOGGER.debug("got username {}", userName);
 			WebResource webResource = client.resource(eurekaServicesUrl);
 			User user = webResource.path("/api/user/byname/" + userName)
-					.accept(MediaType.APPLICATION_JSON).get(User.class);
+			        .accept(MediaType.APPLICATION_JSON).get(User.class);
 
-			List<PropositionWrapper> props = webResource.path("/api/proposition/user/list/"+ user.getId())
-					.accept(MediaType.APPLICATION_JSON)
-					.get(new GenericType<List<PropositionWrapper>>() {
-						// Nothing to implement, used to hold returned data.
-					});
+			List<PropositionWrapper> props = webResource
+			        .path("/api/proposition/user/list/" + user.getId())
+			        .accept(MediaType.APPLICATION_JSON)
+			        .get(new GenericType<List<PropositionWrapper>>() {
+				        // Nothing to implement, used to hold returned data.
+			        });
 			SimpleDateFormat df = new SimpleDateFormat("MM/dd/yyyy");
 			for (PropositionWrapper proposition : props) {
-				JsonTreeData d = 
-                    createData(String.valueOf(proposition.getId()), this.getDisplayName(proposition));
+				JsonTreeData d = createData(
+				        String.valueOf(proposition.getId()),
+				        this.getDisplayName(proposition));
 
 				d.setKeyVal("abbrevDisplay", proposition.getAbbrevDisplayName());
-				d.setKeyVal("displayName", 	proposition.getDisplayName());
+				d.setKeyVal("displayName", proposition.getDisplayName());
 
-                if (proposition.getType() == Type.AND) {
-				    d.setKeyVal("type", 	    "Temporal");
-                } else if (proposition.getType() == Type.OR) {
-				    d.setKeyVal("type", 	    "Categorical");
-                }
+				if (proposition.getType() == Type.CATEGORIZATION) {
+					d.setKeyVal("type", "Categorical");
+				} else if (proposition.getType() == Type.SEQUENCE) {
+					d.setKeyVal("type", "Sequence");
+				} else if (proposition.getType() == Type.FREQUENCY) {
+					d.setKeyVal("type", "Frequency");
+				} else if (proposition.getType() == Type.VALUE_THRESHOLD) {
+					d.setKeyVal("type", "Value Threshold");
+				}
 
-                if (proposition.getCreated() != null) {
-                    LOGGER.debug("created date: " + df.format(proposition.getCreated()));
-				    d.setKeyVal("created", 		df.format(proposition.getCreated()));
-                }
-                if (proposition.getLastModified() != null) {
-				    d.setKeyVal("lastModified", df.format(proposition.getLastModified()));
-                }
+				if (proposition.getCreated() != null) {
+					LOGGER.debug("created date: "
+					        + df.format(proposition.getCreated()));
+					d.setKeyVal("created", df.format(proposition.getCreated()));
+				}
+				if (proposition.getLastModified() != null) {
+					d.setKeyVal("lastModified",
+					        df.format(proposition.getLastModified()));
+				}
 				l.add(d);
 				LOGGER.debug("Added user prop: " + d.getData());
 			}
@@ -142,10 +146,8 @@ public class EditorHomeServlet extends HttpServlet {
 			throw new ServletException(kme);
 		}
 
-
-
-
 		req.setAttribute("props", l);
-		req.getRequestDispatcher("/protected/editor_home.jsp").forward(req, resp);
+		req.getRequestDispatcher("/protected/editor_home.jsp").forward(req,
+		        resp);
 	}
 }
