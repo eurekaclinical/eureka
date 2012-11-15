@@ -22,9 +22,13 @@ package edu.emory.cci.aiw.cvrg.eureka.etl.validator;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.protempa.EventDefinition;
+import org.protempa.PropositionDefinition;
+import org.protempa.proposition.DerivedSourceId;
+import org.protempa.proposition.SourceId;
+
 import com.google.inject.Module;
 
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.PropositionWrapper;
 import edu.emory.cci.aiw.cvrg.eureka.common.test.AbstractTest;
 import edu.emory.cci.aiw.cvrg.eureka.common.test.TestDataProvider;
 import edu.emory.cci.aiw.cvrg.eureka.etl.config.AppTestModule;
@@ -53,8 +57,8 @@ public class PropositionValidatorTest extends AbstractTest {
 		ConfDao confDao = this.getInstance(ConfDao.class);
 		PropositionValidator validator = this.getInstance
 			(PropositionValidator.class);
-		List<PropositionWrapper> wrappers = new
-			ArrayList<PropositionWrapper>();
+		List<PropositionDefinition> wrappers = new
+			ArrayList<PropositionDefinition>();
 		validator.setPropositions(wrappers);
 		validator.setConfiguration(confDao.getByUserId(USER_ID));
 
@@ -72,17 +76,14 @@ public class PropositionValidatorTest extends AbstractTest {
 //	@Test
 	public void testSinglePropositionNoDef() {
 		ConfDao confDao = this.getInstance(ConfDao.class);
-		PropositionValidator validator = this.getInstance
-			(PropositionValidator.class);
-		List<PropositionWrapper> wrappers = new
-			ArrayList<PropositionWrapper>();
-		PropositionWrapper wrapper = new PropositionWrapper();
-		wrapper.setId(1L);
-		wrapper.setAbbrevDisplayName("Test");
-		wrapper.setDisplayName("Wrapper for unit tests.");
-		wrappers.add(wrapper);
+		PropositionValidator validator = this.getInstance(PropositionValidator.class);
+		List<PropositionDefinition> definitions = new
+			ArrayList<PropositionDefinition>();
+		SourceId sourceId = DerivedSourceId.getInstance();
+		EventDefinition event = new EventDefinition("TestEvent");
+		definitions.add(event);
 		validator.setConfiguration(confDao.getByUserId(USER_ID));
-		validator.setPropositions(wrappers);
+		validator.setPropositions(definitions);
 
 		boolean actual;
 		try {
@@ -106,42 +107,22 @@ public class PropositionValidatorTest extends AbstractTest {
 		PropositionValidator validator = this.getInstance
 			(PropositionValidator.class);
 
-		PropositionWrapper wrapper1 = new PropositionWrapper();
-		PropositionWrapper wrapper2 = new PropositionWrapper();
-		PropositionWrapper wrapper3 = new PropositionWrapper();
+		EventDefinition def1 = new EventDefinition("TestEvent1");
+		EventDefinition def2 = new EventDefinition("TestEvent2");
+		EventDefinition def3 = new EventDefinition("TestEvent3");
 
-		wrapper1.setId(Long.valueOf(1L));
-		wrapper1.setAbbrevDisplayName("test-prop-1");
-		wrapper1.setInSystem(false);
+		def1.setInverseIsA(def2.getId());
+		def2.setInverseIsA(def1.getId());
+		def3.setInverseIsA(def1.getId());
 
-		wrapper2.setId(Long.valueOf(2L));
-		wrapper2.setAbbrevDisplayName("test-prop-2");
-		wrapper2.setInSystem(false);
-
-		wrapper3.setId(null);
-		wrapper3.setAbbrevDisplayName("test-prop-3");
-		wrapper3.setInSystem(false);
-
-		List<PropositionWrapper> targets1 = new ArrayList<PropositionWrapper>();
-		targets1.add(wrapper2);
-		wrapper1.setChildren(targets1);
-
-		List<PropositionWrapper> targets2 = new ArrayList<PropositionWrapper>();
-		targets2.add(wrapper1);
-		wrapper2.setChildren(targets2);
-
-		List<PropositionWrapper> targets3 = new ArrayList<PropositionWrapper>();
-		targets3.add(wrapper1);
-		wrapper3.setChildren(targets3);
-
-		List<PropositionWrapper> propositions = new ArrayList
-			<PropositionWrapper>();
-		propositions.add(wrapper1);
-		propositions.add(wrapper2);
+		List<PropositionDefinition> propositions = new ArrayList
+			<PropositionDefinition>();
+		propositions.add(def1);
+		propositions.add(def2);
 
 		validator.setConfiguration(confDao.getByUserId(USER_ID));
 		validator.setPropositions(propositions);
-		validator.setTargetProposition(wrapper3);
+		validator.setTargetProposition(def3);
 		boolean result;
 		try {
 			result = validator.validate();
