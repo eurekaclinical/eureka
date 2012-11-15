@@ -29,6 +29,7 @@ import edu.emory.cci.aiw.cvrg.eureka.common.entity.Proposition;
 class PropositionTranslatorUtil {
 
 	private PropositionTranslatorUtil() {
+		// prevents instantiation
 	}
 
 	/**
@@ -40,7 +41,7 @@ class PropositionTranslatorUtil {
 	 * @param dataElement
 	 *            the {@link DataElement} to get the data from
 	 */
-	static <P extends Proposition> void populateCommonFields(P proposition,
+	static void populateCommonFields(Proposition proposition,
 	        DataElement dataElement) {
 		proposition.setId(dataElement.getId());
 		proposition.setKey(dataElement.getKey());
