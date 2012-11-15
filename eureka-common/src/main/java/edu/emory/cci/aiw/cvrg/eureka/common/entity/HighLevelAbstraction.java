@@ -79,4 +79,9 @@ public class HighLevelAbstraction extends Proposition {
 	public void setAbstractedFrom(List<Proposition> abstractedFrom) {
 		this.abstractedFrom = abstractedFrom;
 	}
+
+	@Override
+    public void accept(PropositionEntityVisitor visitor) {
+		visitor.visit(this);
+    }
 }
