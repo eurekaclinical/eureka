@@ -33,7 +33,9 @@ import javax.persistence.criteria.CriteriaQuery;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.Categorization;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.FileUpload;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.HighLevelAbstraction;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.Proposition;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.Role;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.User;
@@ -122,12 +124,19 @@ public class Setup implements TestDataProvider {
 		EntityManager entityManager = this.getEntityManager();
 		entityManager.getTransaction().begin();
 		for (User u : users) {
-			Proposition proposition = new Proposition();
-			proposition.setAbbrevDisplayName("test");
-			proposition.setDisplayName("Test Proposition");
-			proposition.setUserId(u.getId());
-			entityManager.persist(proposition);
-			propositions.add(proposition);
+			Proposition proposition1 = new Categorization();
+			proposition1.setAbbrevDisplayName("test");
+			proposition1.setDisplayName("Test Proposition");
+			proposition1.setUserId(u.getId());
+			entityManager.persist(proposition1);
+			propositions.add(proposition1);
+
+			Proposition proposition2 = new HighLevelAbstraction();
+			proposition2.setAbbrevDisplayName("test");
+			proposition2.setDisplayName("Test Proposition");
+			proposition2.setUserId(u.getId());
+			entityManager.persist(proposition2);
+			propositions.add(proposition2);
 		}
 		entityManager.getTransaction().commit();
 		return propositions;
