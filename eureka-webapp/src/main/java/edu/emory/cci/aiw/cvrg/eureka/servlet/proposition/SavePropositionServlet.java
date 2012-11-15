@@ -49,18 +49,17 @@ import edu.emory.cci.aiw.cvrg.eureka.common.entity.User;
 public class SavePropositionServlet extends HttpServlet {
 
 	private static final Logger LOGGER = LoggerFactory
-			.getLogger(SavePropositionServlet.class);
-
+	        .getLogger(SavePropositionServlet.class);
 
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp)
-			throws ServletException, IOException {
+	        throws ServletException, IOException {
 		doGet(req, resp);
 	}
 
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
-			throws ServletException, IOException {
+	        throws ServletException, IOException {
 
 		LOGGER.debug("SavePropositionServlet");
 		String id = req.getParameter("id");
@@ -70,20 +69,19 @@ public class SavePropositionServlet extends HttpServlet {
 		String description = req.getParameter("description");
 
 		String eurekaServicesUrl = req.getSession().getServletContext()
-				.getInitParameter("eureka-services-url");
+		        .getInitParameter("eureka-services-url");
 
 		ObjectMapper mapper = new ObjectMapper();
 		List<UserProposition> props = null;
 		try {
 			props = mapper.readValue(propositions,
-					new TypeReference<List<UserProposition>>() {
-					});
+			        new TypeReference<List<UserProposition>>() {
+			        });
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
 		try {
-
 
 			Client client = CommUtils.getClient();
 			Principal principal = req.getUserPrincipal();
@@ -91,8 +89,7 @@ public class SavePropositionServlet extends HttpServlet {
 
 			WebResource webResource = client.resource(eurekaServicesUrl);
 			User user = webResource.path("/api/user/byname/" + userName)
-					.accept(MediaType.APPLICATION_JSON).get(User.class);
-
+			        .accept(MediaType.APPLICATION_JSON).get(User.class);
 
 			PropositionWrapper pw = new PropositionWrapper();
 
@@ -101,15 +98,18 @@ public class SavePropositionServlet extends HttpServlet {
 			}
 
 			pw.setAbbrevDisplayName(name);
-			if (type.equals("AND")) {
-				pw.setType(Type.AND);
+			if (type.equals("CATEGORIZATION")) {
+				pw.setType(Type.CATEGORIZATION);
+			} else if (type.equals("SEQUENCE")) {
+				pw.setType(Type.SEQUENCE);
+			} else if (type.equals("FREQUENCY")) {
+				pw.setType(Type.FREQUENCY);
 			} else {
-				pw.setType(Type.OR);
-
+				pw.setType(Type.VALUE_THRESHOLD);
 			}
 
-			List<PropositionWrapper> children =
-                    new ArrayList<PropositionWrapper>(props.size());
+			List<PropositionWrapper> children = new ArrayList<PropositionWrapper>(
+			        props.size());
 
 			pw.setInSystem(false);
 
@@ -125,43 +125,40 @@ public class SavePropositionServlet extends HttpServlet {
 				} else {
 					child.setId(Long.valueOf(userProposition.getId()));
 				}
-                children.add(child);
+				children.add(child);
 
 			}
-
 
 			pw.setChildren(children);
 			pw.setAbbrevDisplayName(name);
 			pw.setDisplayName(description);
 			pw.setUserId(user.getId());
 
-            ClientResponse response =
-                        webResource.path("/api/proposition/user/validate/" + user.getId())
-                            .type(MediaType.APPLICATION_JSON)
-                                .post(ClientResponse.class, pw);
+			ClientResponse response = webResource
+			        .path("/api/proposition/user/validate/" + user.getId())
+			        .type(MediaType.APPLICATION_JSON)
+			        .post(ClientResponse.class, pw);
 
-            int status = response.getClientResponseStatus().getStatusCode();
-            if (status != HttpServletResponse.SC_OK) {
+			int status = response.getClientResponseStatus().getStatusCode();
+			if (status != HttpServletResponse.SC_OK) {
 
-                String msg = response.getEntity(String.class);
-                req.setAttribute("error", msg);
-                LOGGER.debug("Error: {}", msg);
-            }
+				String msg = response.getEntity(String.class);
+				req.setAttribute("error", msg);
+				LOGGER.debug("Error: {}", msg);
+			}
 
+			if (pw.getId() != null) {
+				webResource.path("/api/proposition/user/update")
+				        .type(MediaType.APPLICATION_JSON)
+				        .accept(MediaType.TEXT_PLAIN)
+				        .put(ClientResponse.class, pw);
 
-            if (pw.getId() != null) {
-			    webResource.path("/api/proposition/user/update")
-			    	.type(MediaType.APPLICATION_JSON)
-			    		.accept(MediaType.TEXT_PLAIN)
-			    			.put(ClientResponse.class, pw);
-
-            } else {
-			    webResource.path("/api/proposition/user/create")
-			    	.type(MediaType.APPLICATION_JSON)
-			    		.accept(MediaType.TEXT_PLAIN)
-			    			.post(ClientResponse.class, pw);
-            }
-
+			} else {
+				webResource.path("/api/proposition/user/create")
+				        .type(MediaType.APPLICATION_JSON)
+				        .accept(MediaType.TEXT_PLAIN)
+				        .post(ClientResponse.class, pw);
+			}
 
 		} catch (KeyManagementException e) {
 			// TODO Auto-generated catch block
@@ -170,7 +167,6 @@ public class SavePropositionServlet extends HttpServlet {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-
 
 	}
 }
