@@ -19,9 +19,6 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.etl.resource;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -37,7 +34,6 @@ import org.slf4j.LoggerFactory;
 
 import com.google.inject.Inject;
 
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.PropositionWrapper;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.ValidationRequest;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.Configuration;
 import edu.emory.cci.aiw.cvrg.eureka.common.exception.HttpStatusException;
@@ -54,14 +50,15 @@ import edu.emory.cci.aiw.cvrg.eureka.etl.validator.PropositionValidatorException
 @Path("/proposition")
 public class PropositionResource {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(PropositionResource.class);
+	private static final Logger LOGGER = LoggerFactory
+	        .getLogger(PropositionResource.class);
 	private final PropositionValidator propositionValidator;
 	private final ConfDao confDao;
 	private final EtlProperties etlProperties;
 
 	@Inject
 	public PropositionResource(PropositionValidator inValidator,
-			ConfDao inConfDao, EtlProperties inEtlProperties) {
+	        ConfDao inConfDao, EtlProperties inEtlProperties) {
 		this.propositionValidator = inValidator;
 		this.confDao = inConfDao;
 		this.etlProperties = inEtlProperties;
@@ -73,14 +70,15 @@ public class PropositionResource {
 	public Response validatePropositions(ValidationRequest inRequest) {
 
 		boolean result;
-		Configuration configuration = this.confDao.getByUserId(
-				inRequest.getUserId());
+		Configuration configuration = this.confDao.getByUserId(inRequest
+		        .getUserId());
 		if (configuration != null) {
 			try {
 				propositionValidator.setConfiguration(configuration);
-				propositionValidator.setPropositions(inRequest.getPropositions());
-				propositionValidator.setTargetProposition(
-						inRequest.getTargetProposition());
+				propositionValidator.setPropositions(inRequest
+				        .getPropositions());
+				propositionValidator.setTargetProposition(inRequest
+				        .getTargetProposition());
 				result = propositionValidator.validate();
 			} catch (PropositionValidatorException e) {
 				LOGGER.error(e.getMessage(), e);
@@ -89,7 +87,7 @@ public class PropositionResource {
 		} else {
 			result = false;
 			LOGGER.error("No Protempa configuration found for user "
-					+ inRequest.getUserId());
+			        + inRequest.getUserId());
 		}
 
 		Response response;
@@ -97,7 +95,7 @@ public class PropositionResource {
 			response = Response.ok().build();
 		} else {
 			response = Response.status(Response.Status.NOT_ACCEPTABLE)
-					.entity(propositionValidator.getMessages()).build();
+			        .entity(propositionValidator.getMessages()).build();
 		}
 		return response;
 	}
@@ -105,62 +103,28 @@ public class PropositionResource {
 	@GET
 	@Path("/{userId}/{key}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public PropositionWrapper getProposition(@PathParam(
-		"userId") Long inUserId, @PathParam("key") String inKey) {
-
-		PropositionWrapper wrapper = null;
+	public PropositionDefinition getProposition(
+	        @PathParam("userId") Long inUserId, @PathParam("key") String inKey) {
 		try {
 			Configuration configuration = this.confDao.getByUserId(inUserId);
 			if (configuration != null) {
-				PropositionFinder propositionFinder =
-						new PropositionFinder(configuration,
-							this.etlProperties.getConfigDir());
-				PropositionDefinition definition =
-						propositionFinder.find(inKey);
+				PropositionFinder propositionFinder = new PropositionFinder(
+				        configuration, this.etlProperties.getConfigDir());
+				PropositionDefinition definition = propositionFinder
+				        .find(inKey);
 				if (definition != null) {
-					wrapper = this.getInfo(definition, false,
-							propositionFinder);
+					return definition;
 				} else {
 					throw new HttpStatusException(Response.Status.NOT_FOUND,
-							"No proposition with id " + inKey);
+					        "No proposition with id " + inKey);
 				}
 			} else {
 				throw new HttpStatusException(Response.Status.NOT_FOUND,
-						"No Protempa configuration found for user " +
-							inUserId);
+				        "No Protempa configuration found for user " + inUserId);
 			}
 		} catch (PropositionFinderException e) {
 			throw new HttpStatusException(
-					Response.Status.INTERNAL_SERVER_ERROR, e);
+			        Response.Status.INTERNAL_SERVER_ERROR, e);
 		}
-		return wrapper;
-	}
-
-	private PropositionWrapper getInfo(PropositionDefinition inDefinition,
-			boolean summarize, PropositionFinder inPropositionFinder)
-			throws
-			PropositionFinderException {
-
-		PropositionWrapper wrapper = new PropositionWrapper();
-		wrapper.setKey(inDefinition.getId());
-		wrapper.setInSystem(true);
-		wrapper.setAbbrevDisplayName(
-				inDefinition.getAbbreviatedDisplayName());
-		wrapper.setDisplayName(inDefinition.getDisplayName());
-		wrapper.setSummarized(summarize);
-		wrapper.setParent(inDefinition.getChildren().length > 0);
-
-		if (!summarize) {
-			List<PropositionWrapper> children = new ArrayList<PropositionWrapper>(
-					inDefinition.getChildren().length);
-			for (String key : inDefinition.getInverseIsA()) {
-				children.add(
-						this.getInfo(
-						inPropositionFinder.find(
-						key), true, inPropositionFinder));
-			}
-			wrapper.setChildren(children);
-		}
-		return wrapper;
 	}
 }
