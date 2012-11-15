@@ -25,8 +25,8 @@ import java.util.Date;
 import java.util.List;
 
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
 
+import org.protempa.PropositionDefinition;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -38,7 +38,6 @@ import com.sun.jersey.api.client.WebResource;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.CommUtils;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.JobRequest;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.PropositionWrapper;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.Configuration;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.FileError;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.FileUpload;
@@ -86,7 +85,11 @@ public class JobTask implements Runnable {
 	/**
 	 * The propositions belonging to the user.
 	 */
-	private List<PropositionWrapper> propositionWrappers;
+	private List<PropositionDefinition> propositions;
+	/**
+	 * The user-created propositions.
+	 */
+	private List<PropositionDefinition> userPropositions;
 	/**
 	 * The class level logger.
 	 */
@@ -119,10 +122,18 @@ public class JobTask implements Runnable {
 
 	/**
 	 * Sets the propositions to add to the task.
-	 * @param inWrappers The list of propositions to add to the task.
+	 * @param inPropositions The list of propositions to add to the task.
 	 */
-	public void setPropositionWrappers (List<PropositionWrapper> inWrappers) {
-		this.propositionWrappers = inWrappers;
+	public void setPropositions (List<PropositionDefinition> inPropositions) {
+		this.propositions = inPropositions;
+	}
+	
+	/**
+	 * Sets the user-created propositions to add to the task.
+	 * @param inPropositions The list of user-created propositions to add to the task
+	 */
+	public void setUserPropositions(List<PropositionDefinition> inPropositions) {
+		this.userPropositions = inPropositions;
 	}
 
 	/*
@@ -276,7 +287,8 @@ public class JobTask implements Runnable {
 		job.setConfigurationId(conf.getId());
 		job.setUserId(this.fileUpload.getUser().getId());
 		jobRequest.setJob(job);
-		jobRequest.setPropositionWrappers(this.propositionWrappers);
+		jobRequest.setPropositions(this.propositions);
+		jobRequest.setUserPropositions(this.userPropositions);
 
 		WebResource resource = client.resource(this.serviceProperties.
 				getEtlJobSubmitUrl());
@@ -289,7 +301,7 @@ public class JobTask implements Runnable {
 			LOGGER.info("Job successfully submitted.");
 		}
 	}
-
+	
 	/**
 	 * Get the configuration associated with the current user.
 	 *
