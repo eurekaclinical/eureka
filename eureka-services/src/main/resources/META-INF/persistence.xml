@@ -38,6 +38,7 @@
 		<class>edu.emory.cci.aiw.cvrg.eureka.common.entity.TemporalPattern</class>
 		<class>edu.emory.cci.aiw.cvrg.eureka.common.entity.Relation</class>
 		<class>edu.emory.cci.aiw.cvrg.eureka.common.entity.HighLevelAbstraction</class>
+		<class>edu.emory.cci.aiw.cvrg.eureka.common.entity.Categorization</class>
 		<class>edu.emory.cci.aiw.cvrg.eureka.common.entity.ExtendedProposition</class>
 		<class>edu.emory.cci.aiw.cvrg.eureka.common.entity.PropertyConstraint</class>
 		<class>edu.emory.cci.aiw.cvrg.eureka.common.entity.ValueComparator</class>
