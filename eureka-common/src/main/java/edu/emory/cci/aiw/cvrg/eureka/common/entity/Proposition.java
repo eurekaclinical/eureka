@@ -36,17 +36,16 @@ import com.sun.xml.bind.CycleRecoverable;
 
 /**
  * Holds information about a user-defined ontological concept.
- *
+ * 
  * @author hrathod
  */
 @XmlRootElement
 @Entity
 @Table(name = "propositions")
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
-public class Proposition implements CycleRecoverable, Serializable {
+public abstract class Proposition implements CycleRecoverable,
+        PropositionEntityVisitable, Serializable {
 
-	public enum SystemType {CONSTANT, EVENT, PRIMITIVE_PARAMETER,
-		LOW_LEVEL_ABSTRACTION, HIGH_LEVEL_ABSTRACTION};
 	/**
 	 * Needed for the Serializable implementation.
 	 */
@@ -55,8 +54,7 @@ public class Proposition implements CycleRecoverable, Serializable {
 	 * The unique identifier for the Proposition.
 	 */
 	@Id
-	@SequenceGenerator(name = "PROP_SEQ_GENERATOR", sequenceName = "PROP_SEQ",
-					   allocationSize = 1)
+	@SequenceGenerator(name = "PROP_SEQ_GENERATOR", sequenceName = "PROP_SEQ", allocationSize = 1)
 	@GeneratedValue(generator = "PROP_SEQ_GENERATOR")
 	private Long id;
 	/**
@@ -65,8 +63,8 @@ public class Proposition implements CycleRecoverable, Serializable {
 	@Column(name = "user_id")
 	private Long userId;
 	/**
-	 * If proposition is system-level, this key identifies the
-	 * proposition in the system ontology
+	 * If proposition is system-level, this key identifies the proposition in
+	 * the system ontology
 	 */
 	private String key;
 	/**
@@ -89,14 +87,10 @@ public class Proposition implements CycleRecoverable, Serializable {
 	 * The date the proposition was last modified.
 	 */
 	private Date lastModified;
-	/**
-	 * The system type, if this is a system level element.
-	 */
-	private SystemType systemType;
 
 	/**
 	 * Gets the abbreviated display name of the proposition.
-	 *
+	 * 
 	 * @return The abbreviated display name of the proposition.
 	 */
 	public String getAbbrevDisplayName() {
@@ -105,8 +99,9 @@ public class Proposition implements CycleRecoverable, Serializable {
 
 	/**
 	 * Sets the abbreviated display name.
-	 *
-	 * @param inAbbrevDisplayName The abbreviated display name to set.
+	 * 
+	 * @param inAbbrevDisplayName
+	 *            The abbreviated display name to set.
 	 */
 	public void setAbbrevDisplayName(String inAbbrevDisplayName) {
 		this.abbrevDisplayName = inAbbrevDisplayName;
@@ -114,7 +109,7 @@ public class Proposition implements CycleRecoverable, Serializable {
 
 	/**
 	 * Gets the display name of the proposition.
-	 *
+	 * 
 	 * @return The display name of the proposition.
 	 */
 	public String getDisplayName() {
@@ -123,8 +118,9 @@ public class Proposition implements CycleRecoverable, Serializable {
 
 	/**
 	 * Sets the display name of the proposition.
-	 *
-	 * @param inDisplayName The display name of the proposition.
+	 * 
+	 * @param inDisplayName
+	 *            The display name of the proposition.
 	 */
 	public void setDisplayName(String inDisplayName) {
 		this.displayName = inDisplayName;
@@ -132,7 +128,7 @@ public class Proposition implements CycleRecoverable, Serializable {
 
 	/**
 	 * Gets the user to which this proposition belongs.
-	 *
+	 * 
 	 * @return The user to which this proposition belongs.
 	 */
 	public Long getUserId() {
@@ -141,8 +137,9 @@ public class Proposition implements CycleRecoverable, Serializable {
 
 	/**
 	 * Sets the user to which this proposition belongs.
-	 *
-	 * @param inUserId The user to which this proposition belongs.
+	 * 
+	 * @param inUserId
+	 *            The user to which this proposition belongs.
 	 */
 	public void setUserId(Long inUserId) {
 		this.userId = inUserId;
@@ -150,7 +147,7 @@ public class Proposition implements CycleRecoverable, Serializable {
 
 	/**
 	 * Gets the unique identifier for the proposition.
-	 *
+	 * 
 	 * @return The unique identifier for the proposition.
 	 */
 	public Long getId() {
@@ -159,8 +156,9 @@ public class Proposition implements CycleRecoverable, Serializable {
 
 	/**
 	 * Sets the unique identifier for the proposition.
-	 *
-	 * @param inId The unique identifier for the proposition.
+	 * 
+	 * @param inId
+	 *            The unique identifier for the proposition.
 	 */
 	public void setId(Long inId) {
 		this.id = inId;
@@ -168,6 +166,7 @@ public class Proposition implements CycleRecoverable, Serializable {
 
 	/**
 	 * Is the proposition a system level element?
+	 * 
 	 * @return True if system level, false otherwise.
 	 */
 	public boolean isInSystem() {
@@ -176,7 +175,9 @@ public class Proposition implements CycleRecoverable, Serializable {
 
 	/**
 	 * Sets whether the proposition is a system level element.
-	 * @param inSystem The value of the inSystem property to set.
+	 * 
+	 * @param inSystem
+	 *            The value of the inSystem property to set.
 	 */
 	public void setInSystem(boolean inSystem) {
 		this.inSystem = inSystem;
@@ -184,8 +185,9 @@ public class Proposition implements CycleRecoverable, Serializable {
 
 	/**
 	 * Gets the key for the proposition.
+	 * 
 	 * @return Null if the proposition is not system level, id in the system
-	 * ontology otherwise.
+	 *         ontology otherwise.
 	 */
 	public String getKey() {
 		return key;
@@ -193,7 +195,9 @@ public class Proposition implements CycleRecoverable, Serializable {
 
 	/**
 	 * Sets the key for the proposition.
-	 * @param inKey The id of the proposition in the system ontology.
+	 * 
+	 * @param inKey
+	 *            The id of the proposition in the system ontology.
 	 */
 	public void setKey(String inKey) {
 		key = inKey;
@@ -201,6 +205,7 @@ public class Proposition implements CycleRecoverable, Serializable {
 
 	/**
 	 * Gets the creation date.
+	 * 
 	 * @return The creation date.
 	 */
 	public Date getCreated() {
@@ -209,7 +214,9 @@ public class Proposition implements CycleRecoverable, Serializable {
 
 	/**
 	 * Sets the creation time.
-	 * @param inCreated The creation time.
+	 * 
+	 * @param inCreated
+	 *            The creation time.
 	 */
 	public void setCreated(Date inCreated) {
 		created = inCreated;
@@ -217,6 +224,7 @@ public class Proposition implements CycleRecoverable, Serializable {
 
 	/**
 	 * Gets the last modification time.
+	 * 
 	 * @return The last modification time.
 	 */
 	public Date getLastModified() {
@@ -225,7 +233,9 @@ public class Proposition implements CycleRecoverable, Serializable {
 
 	/**
 	 * Sets the last modification time.
-	 * @param inLastModified The last modification time.
+	 * 
+	 * @param inLastModified
+	 *            The last modification time.
 	 */
 	public void setLastModified(Date inLastModified) {
 		lastModified = inLastModified;
@@ -236,18 +246,10 @@ public class Proposition implements CycleRecoverable, Serializable {
 		return null;
 	}
 
-	public SystemType getSystemType() {
-		return systemType;
-	}
-
-	public void setSystemType(SystemType inSystemType) {
-		systemType = inSystemType;
-	}
-
 	@Override
 	public String toString() {
 		return "Proposition{" + "id=" + id + ", user=" + userId
-				+ ", displayName=" + displayName + ", abbrevDisplayName="
-				+ abbrevDisplayName + '}';
+		        + ", displayName=" + displayName + ", abbrevDisplayName="
+		        + abbrevDisplayName + '}';
 	}
 }
