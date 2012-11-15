@@ -21,10 +21,12 @@ package edu.emory.cci.aiw.cvrg.eureka.common.comm;
 
 import java.util.List;
 
+import org.protempa.PropositionDefinition;
+
 public class ValidationRequest {
 	private Long userId;
-	private PropositionWrapper targetProposition;
-	private List<PropositionWrapper> propositions;
+	private PropositionDefinition targetProposition;
+	private List<PropositionDefinition> propositions;
 
 	public Long getUserId() {
 		return userId;
@@ -34,19 +36,19 @@ public class ValidationRequest {
 		userId = inUserId;
 	}
 
-	public PropositionWrapper getTargetProposition() {
+	public PropositionDefinition getTargetProposition() {
 		return targetProposition;
 	}
 
-	public void setTargetProposition(PropositionWrapper inTargetProposition) {
+	public void setTargetProposition(PropositionDefinition inTargetProposition) {
 		targetProposition = inTargetProposition;
 	}
 
-	public List<PropositionWrapper> getPropositions() {
+	public List<PropositionDefinition> getPropositions() {
 		return propositions;
 	}
 
-	public void setPropositions(List<PropositionWrapper> inPropositions) {
+	public void setPropositions(List<PropositionDefinition> inPropositions) {
 		propositions = inPropositions;
 	}
 }
