@@ -32,6 +32,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import org.protempa.PropositionDefinition;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -40,6 +41,7 @@ import com.google.inject.Inject;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.JobInfo;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.FileUpload;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.Job;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.Proposition;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.User;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.FileDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.PropositionDao;
@@ -128,11 +130,30 @@ public class JobResource {
 		fileUpload.setTimestamp(new Date());
 		this.fileDao.create(fileUpload);
 		this.jobTask.setFileUploadId(fileUpload.getId());
-		this.jobTask.setPropositionWrappers(PropositionUtil.wrapAll(this
-			.propositionDao.getByUserId(userId)));
+		List<List<PropositionDefinition>> propDefs = filterUserPropositions(propositionDao.getByUserId(userId));
+		this.jobTask.setPropositions(propDefs.get(0));
+		this.jobTask.setUserPropositions(propDefs.get(1));
 		this.jobExecutor.queueJob(this.jobTask);
 
 		return Response.ok().build();
+	}
+	
+	private List<List<PropositionDefinition>> filterUserPropositions(List<Proposition> propositions) {
+		final List<PropositionDefinition> allProps = new ArrayList<PropositionDefinition>();
+		final List<PropositionDefinition> userProps = new ArrayList<PropositionDefinition>();
+		
+		for (Proposition p : propositions) {
+			PropositionDefinition propDef = PropositionUtil.pack(p);
+			allProps.add(propDef);
+			if (!p.isInSystem()) {
+				userProps.add(propDef);
+			}
+		}
+		
+		List<List<PropositionDefinition>> result = new ArrayList<List<PropositionDefinition>>();
+		result.add(allProps);
+		result.add(userProps);
+		return result;
 	}
 
 	/**
