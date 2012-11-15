@@ -22,37 +22,34 @@ package edu.emory.cci.aiw.cvrg.eureka.services.util;
 import java.util.ArrayList;
 import java.util.List;
 
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.PropositionWrapper;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.Proposition;
-import edu.emory.cci.aiw.cvrg.eureka.services.dao.PropositionDao;
+import org.protempa.PropositionDefinition;
 
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.PropositionWrapper;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.Categorization;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.HighLevelAbstraction;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.Proposition;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.PropositionChildrenVisitor;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.PropositionTypeVisitor;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.SystemProposition;
+import edu.emory.cci.aiw.cvrg.eureka.services.dao.PropositionDao;
+import edu.emory.cci.aiw.cvrg.eureka.services.packaging.PropositionDefinitionPackagerVisitor;
+
+/**
+ * Provides common utility functions operating on {@link Proposition}s.
+ */
 public final class PropositionUtil {
 
 	private PropositionUtil() {
 		// do not allow instantiation.
 	}
 
-	private static PropositionWrapper.Type getType(Proposition
-		inProposition) {
-		if ((inProposition.getTemporalPattern() != null) || ((inProposition
-			.getAbstractedFrom() != null) && (!inProposition
-			.getAbstractedFrom().isEmpty()))) {
-			return PropositionWrapper.Type.AND;
-		} else {
-			return PropositionWrapper.Type.OR;
-		}
-	}
-
-	private static List<Proposition> getTargets(Proposition inProposition,
-		PropositionWrapper.Type inType) {
+	private static List<Proposition> getTargets(Proposition inProposition) {
 		List<Proposition> propositions;
 		List<Proposition> targets;
 
-		if (inType == PropositionWrapper.Type.AND) {
-			targets = inProposition.getAbstractedFrom();
-		} else {
-			targets = inProposition.getInverseIsA();
-		}
+		PropositionChildrenVisitor visitor = new PropositionChildrenVisitor();
+		inProposition.accept(visitor);
+		targets = visitor.getChildren();
 
 		if (targets == null) {
 			propositions = new ArrayList<Proposition>();
@@ -64,16 +61,13 @@ public final class PropositionUtil {
 	}
 
 	public static PropositionWrapper wrap(Proposition inProposition,
-		boolean summarize) {
+	        boolean summarize) {
 
 		PropositionWrapper wrapper = new PropositionWrapper();
-		PropositionWrapper.Type type = PropositionUtil.getType(inProposition);
-		List<Proposition> targets = PropositionUtil.getTargets(inProposition,
-			type);
+		List<Proposition> targets = PropositionUtil.getTargets(inProposition);
 
 		if (!summarize) {
-		List<PropositionWrapper> children = new
-			ArrayList<PropositionWrapper>();
+			List<PropositionWrapper> children = new ArrayList<PropositionWrapper>();
 			for (Proposition target : targets) {
 				children.add(PropositionUtil.wrap(target, true));
 			}
@@ -91,20 +85,23 @@ public final class PropositionUtil {
 		wrapper.setParent(targets.size() > 0);
 		wrapper.setSummarized(summarize);
 		wrapper.setInSystem(inProposition.isInSystem());
-		wrapper.setType(type);
 		wrapper.setAbbrevDisplayName(inProposition.getAbbrevDisplayName());
 		wrapper.setDisplayName(inProposition.getDisplayName());
 		wrapper.setKey(inProposition.getKey());
 		wrapper.setCreated(inProposition.getCreated());
 		wrapper.setLastModified(inProposition.getLastModified());
+		
+		PropositionTypeVisitor visitor = new PropositionTypeVisitor();
+		inProposition.accept(visitor);
+		wrapper.setType(visitor.getType());
 
 		return wrapper;
 	}
 
-	public static List<PropositionWrapper> wrapAll(List<Proposition>
-		inPropositions) {
-		List<PropositionWrapper> wrappers = new
-			ArrayList<PropositionWrapper>(inPropositions.size());
+	public static List<PropositionWrapper> wrapAll(
+	        List<Proposition> inPropositions) {
+		List<PropositionWrapper> wrappers = new ArrayList<PropositionWrapper>(
+		        inPropositions.size());
 		for (Proposition proposition : inPropositions) {
 			wrappers.add(PropositionUtil.wrap(proposition, false));
 		}
@@ -112,49 +109,92 @@ public final class PropositionUtil {
 	}
 
 	public static Proposition unwrap(PropositionWrapper inWrapper,
-		PropositionDao inPropositionDao) {
+			PropositionDao inPropositionDao) {
 
-		Proposition proposition;
-		List<Proposition> targets = new ArrayList<Proposition>();
+			Proposition proposition;
+			PropositionTypeVisitor visitor = new PropositionTypeVisitor();
+			List<Proposition> targets = new ArrayList<Proposition>();
 
-		if (inWrapper.getId() != null) {
-			proposition = inPropositionDao.retrieve(inWrapper.getId());
-		} else {
-			proposition = new Proposition();
-		}
-
-		if (inWrapper.getChildren() != null) {
-			for (PropositionWrapper child : inWrapper.getChildren()) {
-				if (child.isInSystem()) {
-					Proposition p = inPropositionDao.getByKey(child.getKey());
-					if (p == null) {
-						p = new Proposition();
-						p.setKey(child.getKey());
-						p.setInSystem(true);
-					}
-					targets.add(p);
-				} else {
-					targets.add(inPropositionDao.retrieve(child.getId()));
+			if (inWrapper.getId() != null) {
+				proposition = inPropositionDao.retrieve(inWrapper.getId());
+			} else {
+				switch (inWrapper.getType()) {
+					case CATEGORIZATION:
+						proposition = new Categorization();
+						break;
+					case SEQUENCE:
+						proposition = new HighLevelAbstraction();
+						break;
+					default:
+						throw new UnsupportedOperationException("Only categorization and sequence are currently supported");
 				}
 			}
+
+			if (inWrapper.getChildren() != null) {
+				for (PropositionWrapper child : inWrapper.getChildren()) {
+					if (child.isInSystem()) {
+						Proposition p = inPropositionDao.getByKey(child.getKey());
+						if (p == null) {
+							p = new SystemProposition();
+							p.setKey(child.getKey());
+							p.setInSystem(true);
+						}
+						targets.add(p);
+					} else {
+						targets.add(inPropositionDao.retrieve(child.getId()));
+					}
+				}
+			}
+
+			if (inWrapper.getType() == PropositionWrapper.Type.SEQUENCE) {
+				((HighLevelAbstraction) proposition).setAbstractedFrom(targets);
+			} else if (inWrapper.getType() == PropositionWrapper.Type.CATEGORIZATION) {
+				((Categorization) proposition).setInverseIsA(targets);
+			}
+
+			proposition.setKey(inWrapper.getKey());
+			proposition.setAbbrevDisplayName(inWrapper.getAbbrevDisplayName());
+			proposition.setDisplayName(inWrapper.getDisplayName());
+			proposition.setInSystem(inWrapper.isInSystem());
+
+			if (inWrapper.getUserId() != null) {
+				proposition.setUserId(inWrapper.getUserId());
+			}
+			return proposition;
+		}
+	
+	/**
+	 * Converts a proposition entity into an equivalent proposition definition
+	 * understood by Protempa.
+	 * 
+	 * @param inProposition
+	 *            the {@link Proposition} to convert
+	 * @return a {@link PropositionDefinition} corresponding to the given
+	 *         proposition entity
+	 */
+	public static PropositionDefinition pack(Proposition inProposition) {
+		PropositionDefinitionPackagerVisitor visitor = new PropositionDefinitionPackagerVisitor();
+		inProposition.accept(visitor);
+		return visitor.getPropositionDefinition();
+	}
+
+	/**
+	 * Converts a list of proposition entities into equivalent proposition
+	 * definitions by repeatedly calling {@link #pack(Proposition)}.
+	 * 
+	 * @param inPropositions
+	 *            a {@link List} of {@link Proposition}s to convert
+	 * @return a {@link List} of {@link PropositionDefinition}s corresponding to
+	 *         the given proposition entities
+	 */
+	public static List<PropositionDefinition> packAll(
+	        List<Proposition> inPropositions) {
+		List<PropositionDefinition> result = new ArrayList<PropositionDefinition>();
+
+		for (Proposition p : inPropositions) {
+			result.add(pack(p));
 		}
 
-		if (inWrapper.getType() == PropositionWrapper.Type.AND) {
-			proposition.setAbstractedFrom(targets);
-			proposition.setInverseIsA(new ArrayList<Proposition>());
-		} else {
-			proposition.setInverseIsA(targets);
-			proposition.setAbstractedFrom(new ArrayList<Proposition>());
-		}
-
-		proposition.setKey(inWrapper.getKey());
-		proposition.setAbbrevDisplayName(inWrapper.getAbbrevDisplayName());
-		proposition.setDisplayName(inWrapper.getDisplayName());
-		proposition.setInSystem(inWrapper.isInSystem());
-
-		if (inWrapper.getUserId() != null) {
-			proposition.setUserId(inWrapper.getUserId());
-		}
-		return proposition;
+		return result;
 	}
 }
