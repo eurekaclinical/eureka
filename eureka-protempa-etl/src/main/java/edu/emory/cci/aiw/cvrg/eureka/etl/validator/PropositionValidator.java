@@ -25,7 +25,8 @@ package edu.emory.cci.aiw.cvrg.eureka.etl.validator;
 
 import java.util.List;
 
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.PropositionWrapper;
+import org.protempa.PropositionDefinition;
+
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.Configuration;
 
 /**
@@ -36,9 +37,11 @@ public interface PropositionValidator {
 
 	void setConfiguration(Configuration inConfiguration);
 
-	void setTargetProposition(PropositionWrapper inWrapper);
+	void setTargetProposition(PropositionDefinition inProposition);
 
-	void setPropositions (List<PropositionWrapper> inWrappers);
+	void setPropositions(List<PropositionDefinition> inPropositions);
+	
+	void setUserPropositions(List<PropositionDefinition> inUserPropositions);
 
 	boolean validate() throws PropositionValidatorException;
 
