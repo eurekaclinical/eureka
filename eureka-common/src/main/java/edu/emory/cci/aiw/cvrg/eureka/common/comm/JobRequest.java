@@ -21,12 +21,15 @@ package edu.emory.cci.aiw.cvrg.eureka.common.comm;
 
 import java.util.List;
 
+import org.protempa.PropositionDefinition;
+
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.Job;
 
 public class JobRequest {
 
 	private Job job;
-	private List<PropositionWrapper> propositionWrappers;
+	private List<PropositionDefinition> propositions;
+	private List<PropositionDefinition> userPropositions;
 
 	public Job getJob() {
 		return job;
@@ -36,12 +39,19 @@ public class JobRequest {
 		job = inJob;
 	}
 
-	public List<PropositionWrapper> getPropositionWrappers() {
-		return propositionWrappers;
+	public List<PropositionDefinition> getPropositions() {
+		return propositions;
 	}
 
-	public void setPropositionWrappers(List<PropositionWrapper>
-			inPropositionWrappers) {
-		propositionWrappers = inPropositionWrappers;
+	public void setPropositions(List<PropositionDefinition> inPropositions) {
+		propositions = inPropositions;
+	}
+
+	public List<PropositionDefinition> getUserPropositions() {
+		return userPropositions;
+	}
+
+	public void setUserPropositions(List<PropositionDefinition> userPropositions) {
+		this.userPropositions = userPropositions;
 	}
 }
