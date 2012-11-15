@@ -31,7 +31,7 @@ import java.util.List;
  */
 public class PropositionWrapper implements Serializable {
 
-	public enum Type {AND, OR}
+	public enum Type { CATEGORIZATION, SEQUENCE, FREQUENCY, VALUE_THRESHOLD, SYSTEM }
 
 	private Long id;
 	private String key;
