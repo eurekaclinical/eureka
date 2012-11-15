@@ -24,8 +24,12 @@ import java.util.List;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.CategoricalElement;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.DataElement;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.PropositionWrapper;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.Categorization;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.Proposition;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.PropositionTypeVisitor;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.Categorization.CategorizationType;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.SystemProposition;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.PropositionDao;
 
 /**
@@ -46,13 +50,54 @@ final class CategorizationTranslator implements
 		Categorization result = new Categorization();
 		PropositionTranslatorUtil.populateCommonFields(result, element);
 
+		PropositionTypeVisitor visitor = new PropositionTypeVisitor();
+		CategorizationType type = CategorizationType.UNKNOWN;
 		List<Proposition> inverseIsA = new ArrayList<Proposition>();
 		for (DataElement de : element.getChildren()) {
-			inverseIsA.add(dao.retrieve(de.getId()));
+			Proposition child = dao.retrieve(de.getId());
+			inverseIsA.add(child);
+			child.accept(visitor);
+			CategorizationType childType = checkType(child, visitor.getType());
+			if (type == CategorizationType.UNKNOWN) {
+				type = childType;
+			} else if (childType != type) {
+				type = CategorizationType.MIXED;
+			}
+
 		}
 		result.setInverseIsA(inverseIsA);
+		result.setCategorizationType(type);
 
 		return result;
 	}
 
+	private CategorizationType checkType(Proposition child,
+	        PropositionWrapper.Type type) {
+		switch (type) {
+			case CATEGORIZATION:
+				return ((Categorization) child).getCategorizationType();
+			case SEQUENCE:
+				// fall through
+			case FREQUENCY:
+				// fall through
+			case VALUE_THRESHOLD:
+				return CategorizationType.ABSTRACTION;
+			case SYSTEM:
+				switch (((SystemProposition) child).getSystemType()) {
+					case CONSTANT:
+						return CategorizationType.CONSTANT;
+					case EVENT:
+						return CategorizationType.EVENT;
+					case PRIMITIVE_PARAMETER:
+						return CategorizationType.PRIMITIVE_PARAMETER;
+					case HIGH_LEVEL_ABSTRACTION:
+						// fall through
+					case LOW_LEVEL_ABSTRACTION:
+						// fall through
+					case SLICE_ABSTRACTION:
+						return CategorizationType.ABSTRACTION;
+				}
+		}
+		return CategorizationType.UNKNOWN;
+	}
 }
