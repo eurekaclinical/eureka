@@ -48,12 +48,11 @@ public class PropositionValidatorImpl implements PropositionValidator {
 
 	private enum PropositionType {
 
-		HIGH_LEVEL_ABSTRACTION, SLICE, EVENT, PRIMITIVE_PARAMETER,
-		CONSTANT, PAIR, LOW_LEVEL_ABSTRACTION, INVALID
+		HIGH_LEVEL_ABSTRACTION, SLICE, EVENT, PRIMITIVE_PARAMETER, CONSTANT, PAIR, LOW_LEVEL_ABSTRACTION, INVALID
 	}
 
 	private static class ValidatorVisitor implements
-		PropositionDefinitionVisitor {
+	        PropositionDefinitionVisitor {
 
 		private PropositionType type;
 
@@ -66,11 +65,10 @@ public class PropositionValidatorImpl implements PropositionValidator {
 		}
 
 		@Override
-		public void visit(Collection<? extends PropositionDefinition>
-			propositionDefinitions) {
-			throw new UnsupportedOperationException(
-				"Visiting a collection " +
-					"" + "is not supported.");
+		public void visit(
+		        Collection<? extends PropositionDefinition> propositionDefinitions) {
+			throw new UnsupportedOperationException("Visiting a collection "
+			        + "" + "is not supported.");
 		}
 
 		@Override
@@ -109,10 +107,11 @@ public class PropositionValidatorImpl implements PropositionValidator {
 		}
 	}
 
-	private static final Logger LOGGER = LoggerFactory.getLogger
-		(PropositionValidatorImpl.class);
-	private PropositionWrapper targetProposition;
-	private List<PropositionWrapper> propositions;
+	private static final Logger LOGGER = LoggerFactory
+	        .getLogger(PropositionValidatorImpl.class);
+	private PropositionDefinition targetProposition;
+	private List<PropositionDefinition> propositions;
+	private List<PropositionDefinition> userPropositions;
 	private Configuration configuration;
 	private final List<String> messages;
 	private final EtlProperties etlProperties;
@@ -120,7 +119,7 @@ public class PropositionValidatorImpl implements PropositionValidator {
 	@Inject
 	public PropositionValidatorImpl(EtlProperties inEtlProperties) {
 		this.messages = new ArrayList<String>();
-		this.propositions = new ArrayList<PropositionWrapper>();
+		this.propositions = new ArrayList<PropositionDefinition>();
 		this.etlProperties = inEtlProperties;
 	}
 
@@ -136,9 +135,9 @@ public class PropositionValidatorImpl implements PropositionValidator {
 				this.addMessage("Found proposition with NULL id");
 				result = false;
 			} else {
-				for (PropositionWrapper wrapper : this.propositions) {
-					LOGGER.debug("Checking proposition {}", wrapper);
-					if (! this.validateSingle(wrapper)) {
+				for (PropositionDefinition propDef : this.propositions) {
+					LOGGER.debug("Checking proposition {}", propDef);
+					if (!this.validateSingle(propDef)) {
 						result = false;
 						break;
 					}
@@ -149,41 +148,41 @@ public class PropositionValidatorImpl implements PropositionValidator {
 		return result;
 	}
 
-	private boolean validateSingle(PropositionWrapper inWrapper) throws
-		PropositionValidatorException {
+	private boolean validateSingle(PropositionDefinition inProposition)
+	        throws PropositionValidatorException {
 
 		boolean result;
-		Stack<Long> cycleStack = new Stack<Long>();
-		boolean cycle = this.detectCycle(inWrapper, cycleStack);
+		Stack<String> cycleStack = new Stack<String>();
+		boolean cycle = this.detectCycle(inProposition, cycleStack);
 
 		if (cycle) {
-			this.addMessage(this.createCycleMessage(inWrapper, cycleStack));
+			this.addMessage(this.createCycleMessage(inProposition, cycleStack));
 			result = false;
-		} else if (inWrapper.getChildren() != null) {
+		} else if (inProposition.getChildren() != null) {
 			List<PropositionType> types = new ArrayList<PropositionType>();
 			try {
 				PropositionFinder propositionFinder = new PropositionFinder(
-					this.configuration, this.etlProperties.getConfigDir());
-				for (PropositionWrapper child : inWrapper.getChildren()) {
-					if (child.isInSystem()) {
+				        this.configuration, this.etlProperties.getConfigDir());
+				for (String child : inProposition.getChildren()) {
+					if (isSystemProp(child)) {
 						try {
-							types.add(
-								this.getSystemPropositionType
-									(propositionFinder.find(child.getKey())));
+							types.add(this
+							        .getSystemPropositionType(propositionFinder
+							                .find(child)));
 						} catch (PropositionFinderException e) {
 							throw new PropositionValidatorException(e);
 						}
 					} else {
-						types.add(this.getUserPropositionType(child.getId()));
+						types.add(this.getUserPropositionType(child));
 					}
 				}
 			} catch (PropositionFinderException e) {
 				throw new PropositionValidatorException(e);
 			}
 			if (types.contains(PropositionType.INVALID)) {
-				this.addMessage(
-					"Proposition " + inWrapper.getAbbrevDisplayName() +
-						"has invalid definition.");
+				this.addMessage("Proposition "
+				        + inProposition.getAbbreviatedDisplayName()
+				        + "has invalid definition.");
 				result = false;
 			} else {
 				result = this.isSame(types);
@@ -195,45 +194,46 @@ public class PropositionValidatorImpl implements PropositionValidator {
 		return result;
 	}
 
-	private String createCycleMessage(PropositionWrapper inWrapper,
-		Stack<Long> cycleStack) {
+	private String createCycleMessage(PropositionDefinition inPropDef,
+	        Stack<String> cycleStack) {
 		StringBuilder builder = new StringBuilder();
 		while (!cycleStack.isEmpty()) {
-			Long id = cycleStack.pop();
-			PropositionWrapper wrapper = id == null ? null : this.findById
-				(id);
-			if (wrapper != null) {
-				builder.append(" ").append(wrapper.getAbbrevDisplayName())
-					.append(" ");
+			String id = cycleStack.pop();
+			PropositionDefinition propDef = id == null ? null : this
+			        .findById(id);
+			if (propDef != null) {
+				builder.append(" ").append(propDef.getAbbreviatedDisplayName())
+				        .append(" ");
 			}
 		}
-		return "Cycle detected in definition of " + inWrapper
-			.getAbbrevDisplayName() + " [" + builder.toString() + "]";
+		return "Cycle detected in definition of "
+		        + inPropDef.getAbbreviatedDisplayName() + " ["
+		        + builder.toString() + "]";
 	}
 
-	private boolean detectCycle(PropositionWrapper inWrapper,
-		Stack<Long> inSeen) throws PropositionValidatorException {
+	private boolean detectCycle(PropositionDefinition inProposition,
+	        Stack<String> inSeen) throws PropositionValidatorException {
 
 		boolean cycle = false;
 
-		if (inWrapper.getId() == null && inWrapper != this
-			.targetProposition) {
-			throw new PropositionValidatorException(
-				"Proposition " +
-					inWrapper.getAbbrevDisplayName() + " is not the target " +
-					"proposition and does not have an ID.");
+		if (inProposition.getId() == null
+		        && inProposition != this.targetProposition) {
+			throw new PropositionValidatorException("Proposition "
+			        + inProposition.getAbbreviatedDisplayName()
+			        + " is not the target "
+			        + "proposition and does not have an ID.");
 		}
 
-		if (inSeen.contains(inWrapper.getId())) {
+		if (inSeen.contains(inProposition.getId())) {
 			cycle = true;
 			// do this for the error stack
-			inSeen.push(inWrapper.getId());
-		} else if (inWrapper.getChildren() != null) {
-			inSeen.push(inWrapper.getId());
-			for (PropositionWrapper child : inWrapper.getChildren()) {
+			inSeen.push(inProposition.getId());
+		} else if (inProposition.getChildren() != null) {
+			inSeen.push(inProposition.getId());
+			for (String child : inProposition.getChildren()) {
 				LOGGER.debug("CHILD: {}", child);
-				if (!child.isInSystem()) {
-					PropositionWrapper target = this.findById(child.getId());
+				if (!isSystemProp(child)) {
+					PropositionDefinition target = this.findById(child);
 					cycle = detectCycle(target, inSeen);
 					if (cycle) {
 						break;
@@ -249,18 +249,28 @@ public class PropositionValidatorImpl implements PropositionValidator {
 		return cycle;
 	}
 
+	private boolean isSystemProp(String inPropDefId) {
+		for (PropositionDefinition propDef : this.userPropositions) {
+			if (inPropDefId.equals(propDef.getId())) {
+				return false;
+			}
+		}
+		return true;
+	}
+
 	private boolean detectNullId() {
 		boolean result = false;
-		for (PropositionWrapper wrapper : this.propositions) {
-			if (wrapper.getId() == null) {
+		for (PropositionDefinition propDef : this.propositions) {
+			if (propDef.getId() == null) {
 				result = true;
 			}
 		}
 		return result;
 	}
 
-	private PropositionType getSystemPropositionType(PropositionDefinition
-		inDefinition) throws PropositionValidatorException {
+	private PropositionType getSystemPropositionType(
+	        PropositionDefinition inDefinition)
+	        throws PropositionValidatorException {
 		PropositionType result;
 		ValidatorVisitor visitor = new ValidatorVisitor();
 		inDefinition.accept(visitor);
@@ -268,38 +278,38 @@ public class PropositionValidatorImpl implements PropositionValidator {
 		return result;
 	}
 
-	private PropositionType getUserPropositionType(Long inTarget) throws
-		PropositionValidatorException {
+	private PropositionType getUserPropositionType(String inTarget)
+	        throws PropositionValidatorException {
 
 		PropositionType result = PropositionType.INVALID;
 		List<PropositionType> childTypes = new ArrayList<PropositionType>();
-		PropositionWrapper wrapper = this.findById(inTarget);
+		PropositionDefinition propDef = this.findById(inTarget);
 
 		try {
 			PropositionFinder propositionFinder = new PropositionFinder(
-				this.configuration, this.etlProperties.getConfigDir());
-			for (PropositionWrapper child : wrapper.getChildren()) {
-				if (child.isInSystem()) {
+			        this.configuration, this.etlProperties.getConfigDir());
+			for (String child : propDef.getChildren()) {
+				if (isSystemProp(child)) {
 					try {
-						childTypes.add(
-							this.getSystemPropositionType(
-								propositionFinder.find(
-									child.getKey())));
+						childTypes.add(this
+						        .getSystemPropositionType(propositionFinder
+						                .find(child)));
 					} catch (PropositionFinderException e) {
 						throw new PropositionValidatorException(e);
 					}
 				} else {
-					childTypes.add(this.getUserPropositionType(child.getId
-						()));
+					childTypes.add(this.getUserPropositionType(child));
 				}
 			}
 		} catch (PropositionFinderException e) {
 			throw new PropositionValidatorException(e);
 		}
 
+		ValidatorVisitor vv = new ValidatorVisitor();
+		propDef.accept(vv);
 		if (this.isSame(childTypes)) {
 			if (childTypes.isEmpty()) {
-				if (wrapper.getType() == PropositionWrapper.Type.AND) {
+				if (vv.getType() == PropositionType.HIGH_LEVEL_ABSTRACTION) {
 					result = PropositionType.HIGH_LEVEL_ABSTRACTION;
 				} else {
 					result = PropositionType.EVENT;
@@ -311,12 +321,12 @@ public class PropositionValidatorImpl implements PropositionValidator {
 		return result;
 	}
 
-	private PropositionWrapper findById(Long inId) {
+	private PropositionDefinition findById(String inId) {
 		LOGGER.debug("Looking for proposition id {}", inId);
-		PropositionWrapper result = null;
-		for (PropositionWrapper wrapper : this.propositions) {
-			if (inId.equals(wrapper.getId())) {
-				result = wrapper;
+		PropositionDefinition result = null;
+		for (PropositionDefinition propDef : this.propositions) {
+			if (inId.equals(propDef.getId())) {
+				result = propDef;
 				break;
 			}
 		}
@@ -338,20 +348,29 @@ public class PropositionValidatorImpl implements PropositionValidator {
 		return result;
 	}
 
-	public PropositionWrapper getTargetProposition() {
+	public PropositionDefinition getTargetProposition() {
 		return this.targetProposition;
 	}
 
-	public void setTargetProposition(PropositionWrapper inTargetProposition) {
+	public void setTargetProposition(PropositionDefinition inTargetProposition) {
 		this.targetProposition = inTargetProposition;
 	}
 
-	public List<PropositionWrapper> getPropositions() {
+	public List<PropositionDefinition> getPropositions() {
 		return this.propositions;
 	}
 
-	public void setPropositions(List<PropositionWrapper> inPropositions) {
+	public void setPropositions(List<PropositionDefinition> inPropositions) {
 		this.propositions = inPropositions;
+	}
+
+	public List<PropositionDefinition> getUserPropositions() {
+		return this.userPropositions;
+	}
+
+	public void setUserPropositions(
+	        List<PropositionDefinition> inUserPropositions) {
+		this.userPropositions = inUserPropositions;
 	}
 
 	public Configuration getConfiguration() {
