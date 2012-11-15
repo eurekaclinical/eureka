@@ -34,15 +34,20 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "categorizations")
 public class Categorization extends Proposition {
+
+	public enum CategorizationType {
+		CONSTANT, EVENT, PRIMITIVE_PARAMETER, ABSTRACTION, MIXED, UNKNOWN
+	}
+
 	/**
 	 * The "children" of of this proposition.
 	 */
-	@ManyToMany(cascade = {
-		CascadeType.MERGE, CascadeType.REFRESH,
-		CascadeType.PERSIST})
-	@JoinTable(name = "inverse_is_a", joinColumns = {
-		@JoinColumn(name = "target_proposition_id")})
+	@ManyToMany(cascade = { CascadeType.MERGE, CascadeType.REFRESH,
+	        CascadeType.PERSIST })
+	@JoinTable(name = "inverse_is_a", joinColumns = { @JoinColumn(name = "target_proposition_id") })
 	private List<Proposition> inverseIsA;
+
+	private CategorizationType categorizationType;
 
 	public List<Proposition> getInverseIsA() {
 		return inverseIsA;
@@ -50,6 +55,19 @@ public class Categorization extends Proposition {
 
 	public void setInverseIsA(List<Proposition> inverseIsA) {
 		this.inverseIsA = inverseIsA;
+	}
+
+	public CategorizationType getCategorizationType() {
+		return categorizationType;
+	}
+
+	public void setCategorizationType(CategorizationType categorizationType) {
+		this.categorizationType = categorizationType;
+	}
+
+	@Override
+	public void accept(PropositionEntityVisitor visitor) {
+		visitor.visit(this);
 	}
 
 }
