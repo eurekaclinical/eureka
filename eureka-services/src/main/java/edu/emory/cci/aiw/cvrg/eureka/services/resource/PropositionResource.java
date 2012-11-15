@@ -36,6 +36,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import org.protempa.PropositionDefinition;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -49,6 +50,7 @@ import edu.emory.cci.aiw.cvrg.eureka.common.comm.CommUtils;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.PropositionWrapper;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.ValidationRequest;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.Proposition;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.PropositionChildrenVisitor;
 import edu.emory.cci.aiw.cvrg.eureka.common.exception.HttpStatusException;
 import edu.emory.cci.aiw.cvrg.eureka.services.config.ServiceProperties;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.PropositionDao;
@@ -150,16 +152,17 @@ public class PropositionResource {
 		"userId") Long inUserId, PropositionWrapper inWrapper) {
 		Response result;
 		List<Proposition> propositions = this.propositionDao.getByUserId(inUserId);
-		List<PropositionWrapper> wrappers = new ArrayList<PropositionWrapper>();
+		Proposition targetProposition = this.propositionDao.getByKey(inWrapper.getKey());
+		List<PropositionDefinition> propDefs = new ArrayList<PropositionDefinition>();
 
 		for (Proposition proposition : propositions) {
-			wrappers.add(PropositionUtil.wrap(proposition, false));
+			propDefs.add(PropositionUtil.pack(proposition));
 		}
 
 		ValidationRequest validationRequest = new ValidationRequest();
 		validationRequest.setUserId(inUserId);
-		validationRequest.setPropositions(wrappers);
-		validationRequest.setTargetProposition(inWrapper);
+		validationRequest.setPropositions(propDefs);
+		validationRequest.setTargetProposition(PropositionUtil.pack(targetProposition));
 
 		try {
 			Client client = CommUtils.getClient();
@@ -232,13 +235,10 @@ public class PropositionResource {
 				if (proposition.getId().equals(target.getId())) {
 					continue;
 				} else {
-					List<Proposition> children = new ArrayList<Proposition>();
-					if (proposition.getAbstractedFrom() != null) {
-						children.addAll(proposition.getAbstractedFrom());
-					}
-					if (proposition.getInverseIsA() != null) {
-						children.addAll(proposition.getInverseIsA());
-					}
+					PropositionChildrenVisitor visitor = new PropositionChildrenVisitor();
+					proposition.accept(visitor);
+					List<Proposition> children = visitor.getChildren();
+
 					for (Proposition p : children) {
 						if (p.getId().equals(target.getId())) {
 							response = Response.status(
