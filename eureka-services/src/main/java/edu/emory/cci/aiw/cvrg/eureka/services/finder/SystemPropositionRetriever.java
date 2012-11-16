@@ -36,36 +36,37 @@ import edu.emory.cci.aiw.cvrg.eureka.services.config.ServiceProperties;
 import java.net.URI;
 import javax.ws.rs.core.UriBuilder;
 
-public class SystemPropositionRetriever implements PropositionRetriever<Long,
-	String> {
+import org.protempa.PropositionDefinition;
+import org.slf4j.LoggerFactory;
+
+public class SystemPropositionRetriever implements
+        PropositionRetriever<Long, String> {
 
 	private final ServiceProperties applicationProperties;
 
 	@Inject
-	public SystemPropositionRetriever (ServiceProperties inProperties) {
+	public SystemPropositionRetriever(ServiceProperties inProperties) {
 		this.applicationProperties = inProperties;
 	}
 
 	@Override
-	public PropositionWrapper retrieve(Long inUserId, String inKey) {
-		PropositionWrapper wrapper = null;
+	public PropositionDefinition retrieve(Long inUserId, String inKey) {
+		PropositionDefinition propDef = null;
 
 		try {
-			String path = 
-					UriBuilder.fromUri("/").segment("" + inUserId, inKey).build().toString();
+			String path = UriBuilder.fromUri("/").segment("" + inUserId, inKey)
+			        .build().toString();
 			Client client = CommUtils.getClient();
-			WebResource resource =
-				client.resource(this.applicationProperties
-					.getEtlPropositionGetUrl());
-			wrapper =
-				resource.path(path).accept(MediaType.APPLICATION_JSON).get
-					(PropositionWrapper.class);
+			WebResource resource = client.resource(this.applicationProperties
+			        .getEtlPropositionGetUrl());
+			propDef = resource.path(path).accept(MediaType.APPLICATION_JSON)
+			        .get(PropositionDefinition.class);
 		} catch (KeyManagementException e) {
 			e.printStackTrace();
 		} catch (NoSuchAlgorithmException e) {
 			e.printStackTrace();
 		}
 
-		return wrapper;
+		return propDef;
 	}
 }

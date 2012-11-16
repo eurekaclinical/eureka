@@ -22,13 +22,16 @@ package edu.emory.cci.aiw.cvrg.eureka.services.finder;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.sf.ehcache.Cache;
+import net.sf.ehcache.CacheManager;
+
+import org.arp.javautil.arrays.Arrays;
+import org.protempa.PropositionDefinition;
+
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.PropositionWrapper;
-
-import net.sf.ehcache.Cache;
-import net.sf.ehcache.CacheManager;
 
 @Singleton
 public class SystemPropositionFinder extends AbstractPropositionFinder<Long,
@@ -46,13 +49,15 @@ public class SystemPropositionFinder extends AbstractPropositionFinder<Long,
 	}
 
 	@Override
-	protected List<String> getPrefetchKeys(PropositionWrapper inWrapper) {
+	protected List<String> getPrefetchKeys(PropositionDefinition inProposition) {
 		List<String> keys = new ArrayList<String>();
-		for (PropositionWrapper child : inWrapper.getChildren()) {
-			if (child.isInSystem()) {
-				keys.add(child.getKey());
-			}
-		}
+		
+		keys.addAll(Arrays.<String> asList(inProposition.getInverseIsA()));
+//		for (String child : inProposition.getInverseIsA()) {
+//			if (child.isInSystem()) {
+//				keys.add(child.getKey());
+//			}
+//		}
 		return keys;
 	}
 

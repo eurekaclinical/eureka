@@ -23,14 +23,15 @@ import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import net.sf.ehcache.Cache;
+import net.sf.ehcache.CacheManager;
+import net.sf.ehcache.Element;
+
+import org.protempa.PropositionDefinition;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.PropositionWrapper;
-
-import net.sf.ehcache.Cache;
-import net.sf.ehcache.CacheManager;
-import net.sf.ehcache.Element;
 
 public abstract class AbstractPropositionFinder<U, K> {
 
@@ -45,20 +46,20 @@ public abstract class AbstractPropositionFinder<U, K> {
 		this.retriever = inRetriever;
 	}
 
-	public PropositionWrapper find(U inUserId, K inKey) {
+	public PropositionDefinition find(U inUserId, K inKey) {
 		LOGGER.debug("Finding {} for user {}", inUserId, inKey);
 		Cache cache = this.getCache();
 		Element element = cache.get(inKey);
 		if (element == null) {
-			PropositionWrapper wrapper =
+			PropositionDefinition propDef =
 				this.retriever.retrieve(inUserId, inKey);
-			element = new Element(inKey, wrapper);
+			element = new Element(inKey, propDef);
 			cache.put(element);
 		}
 
-		PropositionWrapper wrapper = (PropositionWrapper) element.getValue();
-		this.prefetch(inUserId, wrapper);
-		return wrapper;
+		PropositionDefinition propDef = (PropositionDefinition) element.getValue();
+		this.prefetch(inUserId, propDef);
+		return propDef;
 	}
 
 	public void shutdown () {
@@ -66,9 +67,9 @@ public abstract class AbstractPropositionFinder<U, K> {
 		this.getCacheManager().shutdown();
 	}
 
-	private void prefetch(U inUserId, PropositionWrapper inWrapper) {
+	private void prefetch(U inUserId, PropositionDefinition inProposition) {
 		final Cache cache = this.getCache();
-		for (K key : this.getPrefetchKeys(inWrapper)) {
+		for (K key : this.getPrefetchKeys(inProposition)) {
 			Element element = cache.get(key);
 			if (element == null) {
 				LOGGER.debug("Prefetching {}", key);
@@ -82,7 +83,7 @@ public abstract class AbstractPropositionFinder<U, K> {
 
 	abstract protected CacheManager getCacheManager();
 
-	abstract protected List<K> getPrefetchKeys(PropositionWrapper inWrapper);
+	abstract protected List<K> getPrefetchKeys(PropositionDefinition inWrapper);
 
 	abstract protected Cache getCache();
 

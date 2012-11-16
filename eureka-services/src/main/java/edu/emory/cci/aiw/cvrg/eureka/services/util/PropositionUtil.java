@@ -32,6 +32,7 @@ import edu.emory.cci.aiw.cvrg.eureka.common.entity.PropositionChildrenVisitor;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.PropositionTypeVisitor;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.SystemProposition;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.PropositionDao;
+import edu.emory.cci.aiw.cvrg.eureka.services.finder.SystemPropositionFinder;
 import edu.emory.cci.aiw.cvrg.eureka.services.packaging.PropositionDefinitionPackagerVisitor;
 
 /**
@@ -90,7 +91,7 @@ public final class PropositionUtil {
 		wrapper.setKey(inProposition.getKey());
 		wrapper.setCreated(inProposition.getCreated());
 		wrapper.setLastModified(inProposition.getLastModified());
-		
+
 		PropositionTypeVisitor visitor = new PropositionTypeVisitor();
 		inProposition.accept(visitor);
 		wrapper.setType(visitor.getType());
@@ -108,61 +109,88 @@ public final class PropositionUtil {
 		return wrappers;
 	}
 
-	public static Proposition unwrap(PropositionWrapper inWrapper,
-			PropositionDao inPropositionDao) {
+	/**
+	 * Wraps a proposition definition into a proposition wrapper. 
+	 */
+	public static PropositionWrapper wrap(PropositionDefinition inDefinition,
+	        boolean summarize, Long inUserId,
+	        SystemPropositionFinder inPropositionFinder) {
+		PropositionWrapper wrapper = new PropositionWrapper();
+		wrapper.setKey(inDefinition.getId());
+		wrapper.setInSystem(true);
+		wrapper.setAbbrevDisplayName(inDefinition.getAbbreviatedDisplayName());
+		wrapper.setDisplayName(inDefinition.getDisplayName());
+		wrapper.setSummarized(summarize);
+		wrapper.setParent(inDefinition.getChildren().length > 0);
 
-			Proposition proposition;
-			PropositionTypeVisitor visitor = new PropositionTypeVisitor();
-			List<Proposition> targets = new ArrayList<Proposition>();
-
-			if (inWrapper.getId() != null) {
-				proposition = inPropositionDao.retrieve(inWrapper.getId());
-			} else {
-				switch (inWrapper.getType()) {
-					case CATEGORIZATION:
-						proposition = new Categorization();
-						break;
-					case SEQUENCE:
-						proposition = new HighLevelAbstraction();
-						break;
-					default:
-						throw new UnsupportedOperationException("Only categorization and sequence are currently supported");
-				}
+		if (!summarize) {
+			List<PropositionWrapper> children = new ArrayList<PropositionWrapper>();
+			for (String key : inDefinition.getChildren()) {
+				children.add(wrap(inPropositionFinder.find(inUserId, key),
+				        true, inUserId, inPropositionFinder));
 			}
-
-			if (inWrapper.getChildren() != null) {
-				for (PropositionWrapper child : inWrapper.getChildren()) {
-					if (child.isInSystem()) {
-						Proposition p = inPropositionDao.getByKey(child.getKey());
-						if (p == null) {
-							p = new SystemProposition();
-							p.setKey(child.getKey());
-							p.setInSystem(true);
-						}
-						targets.add(p);
-					} else {
-						targets.add(inPropositionDao.retrieve(child.getId()));
-					}
-				}
-			}
-
-			if (inWrapper.getType() == PropositionWrapper.Type.SEQUENCE) {
-				((HighLevelAbstraction) proposition).setAbstractedFrom(targets);
-			} else if (inWrapper.getType() == PropositionWrapper.Type.CATEGORIZATION) {
-				((Categorization) proposition).setInverseIsA(targets);
-			}
-
-			proposition.setKey(inWrapper.getKey());
-			proposition.setAbbrevDisplayName(inWrapper.getAbbrevDisplayName());
-			proposition.setDisplayName(inWrapper.getDisplayName());
-			proposition.setInSystem(inWrapper.isInSystem());
-
-			if (inWrapper.getUserId() != null) {
-				proposition.setUserId(inWrapper.getUserId());
-			}
-			return proposition;
+			wrapper.setChildren(children);
 		}
-	
+
+		return wrapper;
+	}
+
+	public static Proposition unwrap(PropositionWrapper inWrapper,
+	        PropositionDao inPropositionDao) {
+
+		Proposition proposition;
+		PropositionTypeVisitor visitor = new PropositionTypeVisitor();
+		List<Proposition> targets = new ArrayList<Proposition>();
+
+		if (inWrapper.getId() != null) {
+			proposition = inPropositionDao.retrieve(inWrapper.getId());
+		} else {
+			switch (inWrapper.getType()) {
+				case CATEGORIZATION:
+					proposition = new Categorization();
+					break;
+				case SEQUENCE:
+					proposition = new HighLevelAbstraction();
+					break;
+				default:
+					throw new UnsupportedOperationException(
+					        "Only categorization and sequence are currently supported");
+			}
+		}
+
+		if (inWrapper.getChildren() != null) {
+			for (PropositionWrapper child : inWrapper.getChildren()) {
+				if (child.isInSystem()) {
+					Proposition p = inPropositionDao.getByKey(child.getKey());
+					if (p == null) {
+						p = new SystemProposition();
+						p.setKey(child.getKey());
+						p.setInSystem(true);
+					}
+					targets.add(p);
+				} else {
+					targets.add(inPropositionDao.retrieve(child.getId()));
+				}
+			}
+		}
+
+		if (inWrapper.getType() == PropositionWrapper.Type.SEQUENCE) {
+			((HighLevelAbstraction) proposition).setAbstractedFrom(targets);
+		} else if (inWrapper.getType() == PropositionWrapper.Type.CATEGORIZATION) {
+			((Categorization) proposition).setInverseIsA(targets);
+		}
+
+		proposition.setKey(inWrapper.getKey());
+		proposition.setAbbrevDisplayName(inWrapper.getAbbrevDisplayName());
+		proposition.setDisplayName(inWrapper.getDisplayName());
+		proposition.setInSystem(inWrapper.isInSystem());
+
+		if (inWrapper.getUserId() != null) {
+			proposition.setUserId(inWrapper.getUserId());
+		}
+		return proposition;
+	}
+
 	/**
 	 * Converts a proposition entity into an equivalent proposition definition
 	 * understood by Protempa.
