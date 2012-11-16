@@ -34,6 +34,8 @@ import com.sun.jersey.api.client.config.DefaultClientConfig;
 import com.sun.jersey.api.json.JSONConfiguration;
 import com.sun.jersey.client.urlconnection.HTTPSProperties;
 
+import edu.emory.cci.aiw.cvrg.eureka.common.json.ObjectMapperProvider;
+
 /**
  * Utility methods related to dealing with communication between different
  * layers of the application.
@@ -91,6 +93,7 @@ public final class CommUtils {
 		clientConfig.getProperties().put(
 				HTTPSProperties.PROPERTY_HTTPS_PROPERTIES,
 				new HTTPSProperties(null, sslContext));
+		clientConfig.getClasses().add(ObjectMapperProvider.class);
 		return Client.create(clientConfig);
 	}
 
