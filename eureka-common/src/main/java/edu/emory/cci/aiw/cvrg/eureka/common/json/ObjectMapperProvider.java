@@ -30,16 +30,21 @@ import org.protempa.DefaultSourceId;
 import org.protempa.EventDefinition;
 import org.protempa.ExtendedPropositionDefinition;
 import org.protempa.HighLevelAbstractionDefinition;
+import org.protempa.LowLevelAbstractionDefinition;
+import org.protempa.NotRecordedSourceId;
+import org.protempa.PairDefinition;
 import org.protempa.PrimitiveParameterDefinition;
 import org.protempa.PropertyDefinition;
 import org.protempa.PropositionDefinition;
 import org.protempa.ReferenceDefinition;
+import org.protempa.SliceDefinition;
 import org.protempa.SourceId;
 import org.protempa.TemporalExtendedParameterDefinition;
 import org.protempa.TemporalExtendedPropositionDefinition;
 import org.protempa.proposition.interval.Relation;
 import org.protempa.proposition.value.AbsoluteTimeUnit;
 import org.protempa.proposition.value.NominalValue;
+import org.protempa.proposition.value.NumberValue;
 import org.protempa.proposition.value.Unit;
 import org.protempa.proposition.value.Value;
 
@@ -73,12 +78,16 @@ public class ObjectMapperProvider implements ContextResolver<ObjectMapper> {
 				context.setMixInAnnotations(SourceId.class, SourceIdMixin.class);
 				context.setMixInAnnotations(DefaultSourceId.class,
 				        DefaultSourceIdMixin.class);
+				context.setMixInAnnotations(NotRecordedSourceId.class,
+				        NotRecordedSourceIdMixin.class);
 				context.setMixInAnnotations(Unit.class, UnitMixin.class);
 				context.setMixInAnnotations(AbsoluteTimeUnit.class,
 				        AbsoluteTimeUnitMixin.class);
 				context.setMixInAnnotations(Value.class, ValueMixin.class);
 				context.setMixInAnnotations(NominalValue.class,
 				        NominalValueMixin.class);
+				context.setMixInAnnotations(NumberValue.class,
+				        NumberValueMixin.class);
 				context.setMixInAnnotations(Relation.class, RelationMixin.class);
 				context.setMixInAnnotations(ConstantDefinition.class,
 				        ConstantMixin.class);
@@ -98,6 +107,24 @@ public class ObjectMapperProvider implements ContextResolver<ObjectMapper> {
 		        new HighLevelAbstractionJsonSerializer());
 		module.addDeserializer(HighLevelAbstractionDefinition.class,
 		        new HighLevelAbstractionJsonDeserializer());
+
+		// low-level abstractions also require custom serialization
+		module.addSerializer(LowLevelAbstractionDefinition.class,
+		        new LowLevelAbstractionJsonSerializer());
+		module.addDeserializer(LowLevelAbstractionDefinition.class,
+		        new LowLevelAbstractionJsonDeserializer());
+
+		// pair abstractions also require custom serialization
+		module.addSerializer(PairDefinition.class,
+		        new PairAbstractionJsonSerializer());
+		module.addDeserializer(PairDefinition.class,
+		        new PairAbstractionJsonDeserializer());
+
+		// slice abstractions also require custom serialization
+		module.addSerializer(SliceDefinition.class,
+		        new SliceAbstractionJsonSerializer());
+		module.addDeserializer(SliceDefinition.class,
+		        new SliceAbstractionJsonDeserializer());
 
 		this.mapper.registerModule(module);
 	}

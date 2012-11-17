@@ -20,51 +20,37 @@
 package edu.emory.cci.aiw.cvrg.eureka.common.json;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.Set;
 
-import org.codehaus.jackson.JsonLocation;
 import org.codehaus.jackson.JsonParseException;
 import org.codehaus.jackson.JsonParser;
 import org.codehaus.jackson.JsonProcessingException;
 import org.codehaus.jackson.JsonToken;
 import org.codehaus.jackson.map.DeserializationContext;
 import org.codehaus.jackson.map.JsonDeserializer;
-import org.protempa.GapFunction;
-import org.protempa.HighLevelAbstractionDefinition;
-import org.protempa.Offsets;
-import org.protempa.PropertyDefinition;
-import org.protempa.ReferenceDefinition;
-import org.protempa.SimpleGapFunction;
+import org.protempa.PairDefinition;
+import org.protempa.SliceDefinition;
 import org.protempa.SourceId;
-import org.protempa.TemporalExtendedPropositionDefinition;
-import org.protempa.proposition.interval.Relation;
 
-public final class HighLevelAbstractionJsonDeserializer extends
-        JsonDeserializer<HighLevelAbstractionDefinition> {
+public final class SliceAbstractionJsonDeserializer extends
+        JsonDeserializer<SliceDefinition> {
 
 	private JsonParser parser;
 
 	@Override
-	public HighLevelAbstractionDefinition deserialize(JsonParser jp,
+	public SliceDefinition deserialize(JsonParser jp,
 	        DeserializationContext ctxt) throws IOException,
 	        JsonProcessingException {
 		this.parser = jp;
 
 		if (this.parser.getCurrentToken() == JsonToken.START_OBJECT) {
-			nextToken(); // should be the id field
+			nextToken(); // should be the id
 		}
 
 		checkField("id");
-		// now we can construct the HLA
-		HighLevelAbstractionDefinition value = new HighLevelAbstractionDefinition(
-		        this.parser.getText());
+		// now we can construct the slice definition
+		SliceDefinition value = new SliceDefinition(this.parser.getText());
 		value.setInDataSource(false);
-		value.setSolid(true);
-		value.setConcatenable(true);
-		value.setGapFunction(new SimpleGapFunction());
 
 		nextToken();
 		checkField("displayName");
@@ -73,45 +59,40 @@ public final class HighLevelAbstractionJsonDeserializer extends
 		nextToken();
 		checkField("abbreviatedDisplayName");
 		value.setAbbreviatedDisplayName(this.parser.getText());
-		
+
 		nextToken();
 		checkField("description");
 		value.setDescription(this.parser.getText());
-		
+
 		nextToken();
 		checkField("inverseIsA");
 		value.setInverseIsA(this.parser.readValueAs(String[].class));
-		
+
+		nextToken();
+		checkField("abstractedFrom");
+		Set<String> abstractedFrom = (Set<String>) this.parser
+		        .readValueAs(Set.class);
+		for (String af : abstractedFrom) {
+			value.addAbstractedFrom(af);
+		}
+
 		nextToken();
 		checkField("sourceId");
 		SourceId sourceId = this.parser.readValueAs(SourceId.class);
 		value.setSourceId(sourceId);
-
+		
 		nextToken();
-		checkField("defPairs");
-
+		checkField("minIndex");
+		value.setMinIndex(this.parser.getIntValue());
+		
 		nextToken();
-		while (parser.getCurrentToken() != JsonToken.END_OBJECT) {
-			checkField("lhs");
-			TemporalExtendedPropositionDefinition lhs = this.parser
-			        .readValueAs(TemporalExtendedPropositionDefinition.class);
-
-			nextToken();
-			checkField("rhs");
-			TemporalExtendedPropositionDefinition rhs = this.parser
-			        .readValueAs(TemporalExtendedPropositionDefinition.class);
-
-			nextToken();
-			checkField("rel");
-			Relation rel = this.parser.readValueAs(Relation.class);
-
-			value.add(lhs);
-			value.add(rhs);
-			value.setRelation(lhs, rhs, rel);
-
-			nextToken();
-		}
-
+		checkField("maxIndex");
+		value.setMaxIndex(this.parser.getIntValue());
+		
+		nextToken();
+		checkField("mergedInterval");
+		value.setMergedInterval(this.parser.getBooleanValue());
+		
 		return value;
 	}
 

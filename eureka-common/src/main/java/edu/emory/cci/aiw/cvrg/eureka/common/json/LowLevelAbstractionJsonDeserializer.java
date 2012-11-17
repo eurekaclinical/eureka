@@ -20,35 +20,27 @@
 package edu.emory.cci.aiw.cvrg.eureka.common.json;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.Set;
 
-import org.codehaus.jackson.JsonLocation;
 import org.codehaus.jackson.JsonParseException;
 import org.codehaus.jackson.JsonParser;
 import org.codehaus.jackson.JsonProcessingException;
 import org.codehaus.jackson.JsonToken;
 import org.codehaus.jackson.map.DeserializationContext;
 import org.codehaus.jackson.map.JsonDeserializer;
-import org.protempa.GapFunction;
-import org.protempa.HighLevelAbstractionDefinition;
-import org.protempa.Offsets;
-import org.protempa.PropertyDefinition;
-import org.protempa.ReferenceDefinition;
-import org.protempa.SimpleGapFunction;
+import org.protempa.LowLevelAbstractionDefinition;
+import org.protempa.LowLevelAbstractionValueDefinition;
 import org.protempa.SourceId;
-import org.protempa.TemporalExtendedPropositionDefinition;
-import org.protempa.proposition.interval.Relation;
+import org.protempa.proposition.value.Value;
+import org.protempa.proposition.value.ValueComparator;
 
-public final class HighLevelAbstractionJsonDeserializer extends
-        JsonDeserializer<HighLevelAbstractionDefinition> {
+public final class LowLevelAbstractionJsonDeserializer extends
+        JsonDeserializer<LowLevelAbstractionDefinition> {
 
 	private JsonParser parser;
 
 	@Override
-	public HighLevelAbstractionDefinition deserialize(JsonParser jp,
+	public LowLevelAbstractionDefinition deserialize(JsonParser jp,
 	        DeserializationContext ctxt) throws IOException,
 	        JsonProcessingException {
 		this.parser = jp;
@@ -56,15 +48,11 @@ public final class HighLevelAbstractionJsonDeserializer extends
 		if (this.parser.getCurrentToken() == JsonToken.START_OBJECT) {
 			nextToken(); // should be the id field
 		}
-
 		checkField("id");
-		// now we can construct the HLA
-		HighLevelAbstractionDefinition value = new HighLevelAbstractionDefinition(
+		// now we can construct the LLA
+		LowLevelAbstractionDefinition value = new LowLevelAbstractionDefinition(
 		        this.parser.getText());
 		value.setInDataSource(false);
-		value.setSolid(true);
-		value.setConcatenable(true);
-		value.setGapFunction(new SimpleGapFunction());
 
 		nextToken();
 		checkField("displayName");
@@ -73,7 +61,7 @@ public final class HighLevelAbstractionJsonDeserializer extends
 		nextToken();
 		checkField("abbreviatedDisplayName");
 		value.setAbbreviatedDisplayName(this.parser.getText());
-		
+
 		nextToken();
 		checkField("description");
 		value.setDescription(this.parser.getText());
@@ -83,31 +71,58 @@ public final class HighLevelAbstractionJsonDeserializer extends
 		value.setInverseIsA(this.parser.readValueAs(String[].class));
 		
 		nextToken();
+		checkField("abstractedFrom");
+		Set<String> abstractedFrom = (Set<String>) this.parser.readValueAs(Set.class);
+		for (String af : abstractedFrom) {
+			value.addPrimitiveParameterId(af);
+		}
+
+		nextToken();
 		checkField("sourceId");
 		SourceId sourceId = this.parser.readValueAs(SourceId.class);
 		value.setSourceId(sourceId);
+		
+		nextToken();
+		checkField("algorithm");
+		value.setAlgorithmId(this.parser.getText());
 
 		nextToken();
-		checkField("defPairs");
+		checkField("valueDefinitions");
 
 		nextToken();
 		while (parser.getCurrentToken() != JsonToken.END_OBJECT) {
-			checkField("lhs");
-			TemporalExtendedPropositionDefinition lhs = this.parser
-			        .readValueAs(TemporalExtendedPropositionDefinition.class);
+			checkField("id");
+			LowLevelAbstractionValueDefinition valDef = new LowLevelAbstractionValueDefinition(
+			        value, this.parser.getText());
+			value.addValueDefinition(valDef);
 
 			nextToken();
-			checkField("rhs");
-			TemporalExtendedPropositionDefinition rhs = this.parser
-			        .readValueAs(TemporalExtendedPropositionDefinition.class);
+			checkField("params");
 
 			nextToken();
-			checkField("rel");
-			Relation rel = this.parser.readValueAs(Relation.class);
+			while (parser.getCurrentToken() != JsonToken.END_ARRAY) {
+				nextToken();
+				checkField("name");
+				String name = this.parser.getText();
 
-			value.add(lhs);
-			value.add(rhs);
-			value.setRelation(lhs, rhs, rel);
+				nextToken();
+				checkField("value");
+				Value val = this.parser.readValueAs(Value.class);
+
+				nextToken();
+				checkField("comp");
+				String compStr = this.parser.getText();
+				if (compStr != null && !compStr.isEmpty()
+				        && !compStr.equals("null")) {
+					ValueComparator comp = ValueComparator.valueOf(compStr);
+
+					valDef.setParameterValue(name, val);
+					valDef.setParameterComp(name, comp);
+				}
+
+				nextToken();
+				nextToken();
+			}
 
 			nextToken();
 		}
@@ -134,8 +149,10 @@ public final class HighLevelAbstractionJsonDeserializer extends
 	}
 
 	private void fail(String property) throws JsonProcessingException {
-		throw new JsonParseException(property
-		        + " not found in expected location",
+		throw new JsonParseException("\"" + property + "\""
+		        + " not found in expected location. Found \""
+		        + this.parser.getCurrentToken() + "\" instead",
 		        this.parser.getCurrentLocation());
 	}
+
 }

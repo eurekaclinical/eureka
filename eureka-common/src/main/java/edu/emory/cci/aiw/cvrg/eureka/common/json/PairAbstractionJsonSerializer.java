@@ -20,30 +20,23 @@
 package edu.emory.cci.aiw.cvrg.eureka.common.json;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 import org.codehaus.jackson.JsonGenerator;
 import org.codehaus.jackson.JsonProcessingException;
 import org.codehaus.jackson.map.JsonSerializer;
 import org.codehaus.jackson.map.SerializerProvider;
-import org.protempa.HighLevelAbstractionDefinition;
-import org.protempa.TemporalExtendedPropositionDefinition;
-import org.protempa.proposition.interval.Relation;
+import org.protempa.PairDefinition;
 
-public final class HighLevelAbstractionJsonSerializer extends
-        JsonSerializer<HighLevelAbstractionDefinition> {
+public final class PairAbstractionJsonSerializer extends
+        JsonSerializer<PairDefinition> {
 
 	@Override
-	public void serialize(HighLevelAbstractionDefinition value,
-	        JsonGenerator jgen, SerializerProvider provider) throws IOException,
+	public void serialize(PairDefinition value, JsonGenerator jgen,
+	        SerializerProvider provider) throws IOException,
 	        JsonProcessingException {
-
-		// start HLA
+		// start pair
 		jgen.writeStartObject();
-
-		// write out all the gettable fields
+		
 		provider.defaultSerializeField("@class", value.getClass(), jgen);
 		provider.defaultSerializeField("id", value.getId(), jgen);
 		provider.defaultSerializeField("displayName", value.getDisplayName(), jgen);
@@ -51,32 +44,13 @@ public final class HighLevelAbstractionJsonSerializer extends
 		provider.defaultSerializeField("description", value.getDescription(), jgen);
 		provider.defaultSerializeField("inverseIsA", value.getInverseIsA(), jgen);
 		provider.defaultSerializeField("sourceId", value.getSourceId(), jgen);
-
-		// special case for handling extended propositions and relations, which
-		// are not directly gettable
-		Map<List<TemporalExtendedPropositionDefinition>, Relation> defPairs = new HashMap<List<TemporalExtendedPropositionDefinition>, Relation>();
-		for (List<TemporalExtendedPropositionDefinition> epdPair : value
-		        .getTemporalExtendedPropositionDefinitionPairs()) {
-			Relation r = value.getRelation(epdPair);
-			defPairs.put(epdPair, r);
-		}
-
-		// start relation map
-		jgen.writeFieldName("defPairs");
-		jgen.writeStartObject();
-		for (Map.Entry<List<TemporalExtendedPropositionDefinition>, Relation> e : defPairs
-		        .entrySet()) {
-			jgen.writeFieldName("lhs");
-			provider.defaultSerializeValue(e.getKey().get(0), jgen);
-			jgen.writeFieldName("rhs");
-			provider.defaultSerializeValue(e.getKey().get(1), jgen);
-			jgen.writeFieldName("rel");
-			provider.defaultSerializeValue(e.getValue(), jgen);
-		}
-		jgen.writeEndObject();
-		// end relation map
-
-		// end HLA
+		
+		provider.defaultSerializeField("secondRequired", value.isSecondRequired(), jgen);
+		provider.defaultSerializeField("lhs", value.getLeftHandProposition(), jgen);
+		provider.defaultSerializeField("rhs", value.getRightHandProposition(), jgen);
+		provider.defaultSerializeField("rel", value.getRelation(), jgen);
+		
+		// end pair
 		jgen.writeEndObject();
 	}
 
