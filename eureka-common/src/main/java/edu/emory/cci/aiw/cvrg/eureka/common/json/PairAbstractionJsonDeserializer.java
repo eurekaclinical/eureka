@@ -29,6 +29,8 @@ import org.codehaus.jackson.map.DeserializationContext;
 import org.codehaus.jackson.map.JsonDeserializer;
 import org.protempa.Offsets;
 import org.protempa.PairDefinition;
+import org.protempa.PropertyDefinition;
+import org.protempa.ReferenceDefinition;
 import org.protempa.SourceId;
 import org.protempa.TemporalExtendedPropositionDefinition;
 import org.protempa.proposition.interval.Relation;
@@ -37,21 +39,21 @@ public final class PairAbstractionJsonDeserializer extends
         JsonDeserializer<PairDefinition> {
 
 	private JsonParser parser;
-	
+
 	@Override
 	public PairDefinition deserialize(JsonParser jp, DeserializationContext ctxt)
 	        throws IOException, JsonProcessingException {
 		this.parser = jp;
-		
+
 		if (this.parser.getCurrentToken() == JsonToken.START_OBJECT) {
 			nextToken(); // should be the id
 		}
-		
+
 		checkField("id");
 		// now we can construct the pair definition
 		PairDefinition value = new PairDefinition(this.parser.getText());
 		value.setInDataSource(false);
-		
+
 		nextToken();
 		checkField("displayName");
 		value.setDisplayName(this.parser.getText());
@@ -59,36 +61,60 @@ public final class PairAbstractionJsonDeserializer extends
 		nextToken();
 		checkField("abbreviatedDisplayName");
 		value.setAbbreviatedDisplayName(this.parser.getText());
-		
+
 		nextToken();
 		checkField("description");
 		value.setDescription(this.parser.getText());
-		
+
 		nextToken();
 		checkField("inverseIsA");
 		value.setInverseIsA(this.parser.readValueAs(String[].class));
 
 		nextToken();
+		checkField("properties");
+		value.setPropertyDefinitions(this.parser
+		        .readValueAs(PropertyDefinition[].class));
+
+		nextToken();
+		checkField("references");
+		value.setReferenceDefinitions(this.parser
+		        .readValueAs(ReferenceDefinition[].class));
+
+		nextToken();
+		checkField("solid");
+		value.setSolid(this.parser.getBooleanValue());
+
+		nextToken();
+		checkField("concatenable");
+		value.setConcatenable(this.parser.getBooleanValue());
+
+		nextToken();
 		checkField("sourceId");
 		SourceId sourceId = this.parser.readValueAs(SourceId.class);
 		value.setSourceId(sourceId);
-		
+
 		nextToken();
 		checkField("secondRequired");
 		value.setSecondRequired(this.parser.getBooleanValue());
-		
+
+		nextToken();
+		checkField("temporalOffset");
+		value.setTemporalOffset(this.parser.readValueAs(Offsets.class));
+
 		nextToken();
 		checkField("lhs");
-		value.setLeftHandProposition(this.parser.readValueAs(TemporalExtendedPropositionDefinition.class));
-		
+		value.setLeftHandProposition(this.parser
+		        .readValueAs(TemporalExtendedPropositionDefinition.class));
+
 		nextToken();
 		checkField("rhs");
-		value.setRightHandProposition(this.parser.readValueAs(TemporalExtendedPropositionDefinition.class));
-		
+		value.setRightHandProposition(this.parser
+		        .readValueAs(TemporalExtendedPropositionDefinition.class));
+
 		nextToken();
 		checkField("rel");
 		value.setRelation(this.parser.readValueAs(Relation.class));
-		
+
 		return value;
 	}
 

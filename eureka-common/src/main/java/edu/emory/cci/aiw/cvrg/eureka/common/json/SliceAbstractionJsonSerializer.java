@@ -36,20 +36,31 @@ public final class SliceAbstractionJsonSerializer extends
 	        JsonProcessingException {
 		// start slice
 		jgen.writeStartObject();
-		
+
 		provider.defaultSerializeField("@class", value.getClass(), jgen);
 		provider.defaultSerializeField("id", value.getId(), jgen);
-		provider.defaultSerializeField("displayName", value.getDisplayName(), jgen);
-		provider.defaultSerializeField("abbreviatedDisplayName", value.getAbbreviatedDisplayName(), jgen);
-		provider.defaultSerializeField("description", value.getDescription(), jgen);
-		provider.defaultSerializeField("inverseIsA", value.getInverseIsA(), jgen);
-		provider.defaultSerializeField("abstractedFrom", value.getAbstractedFrom(), jgen);
+		provider.defaultSerializeField("displayName", value.getDisplayName(),
+		        jgen);
+		provider.defaultSerializeField("abbreviatedDisplayName",
+		        value.getAbbreviatedDisplayName(), jgen);
+		provider.defaultSerializeField("description", value.getDescription(),
+		        jgen);
+		provider.defaultSerializeField("inverseIsA", value.getInverseIsA(),
+		        jgen);
+		provider.defaultSerializeField("abstractedFrom",
+		        value.getAbstractedFrom(), jgen);
+		provider.defaultSerializeField("properties",
+		        value.getPropertyDefinitions(), jgen);
+		provider.defaultSerializeField("references",
+		        value.getReferenceDefinitions(), jgen);
+		provider.defaultSerializeField("inDataSource", value.getInDataSource(), jgen);
 		provider.defaultSerializeField("sourceId", value.getSourceId(), jgen);
 
 		provider.defaultSerializeField("minIndex", value.getMinIndex(), jgen);
 		provider.defaultSerializeField("maxIndex", value.getMaxIndex(), jgen);
-		provider.defaultSerializeField("mergedInterval", value.isMergedInterval(), jgen);
-		
+		provider.defaultSerializeField("mergedInterval",
+		        value.isMergedInterval(), jgen);
+
 		// end slice
 		jgen.writeEndObject();
 	}

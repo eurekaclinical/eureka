@@ -28,7 +28,8 @@ import org.codehaus.jackson.JsonProcessingException;
 import org.codehaus.jackson.JsonToken;
 import org.codehaus.jackson.map.DeserializationContext;
 import org.codehaus.jackson.map.JsonDeserializer;
-import org.protempa.PairDefinition;
+import org.protempa.PropertyDefinition;
+import org.protempa.ReferenceDefinition;
 import org.protempa.SliceDefinition;
 import org.protempa.SourceId;
 
@@ -75,6 +76,18 @@ public final class SliceAbstractionJsonDeserializer extends
 		for (String af : abstractedFrom) {
 			value.addAbstractedFrom(af);
 		}
+		
+		nextToken();
+		checkField("properties");
+		value.setPropertyDefinitions(this.parser.readValueAs(PropertyDefinition[].class));
+		
+		nextToken();
+		checkField("references");
+		value.setReferenceDefinitions(this.parser.readValueAs(ReferenceDefinition[].class));
+		
+		nextToken();
+		checkField("inDataSource");
+		value.setInDataSource(this.parser.getBooleanValue());
 
 		nextToken();
 		checkField("sourceId");

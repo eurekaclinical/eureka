@@ -28,11 +28,17 @@ import org.codehaus.jackson.JsonProcessingException;
 import org.codehaus.jackson.JsonToken;
 import org.codehaus.jackson.map.DeserializationContext;
 import org.codehaus.jackson.map.JsonDeserializer;
+import org.protempa.GapFunction;
 import org.protempa.LowLevelAbstractionDefinition;
 import org.protempa.LowLevelAbstractionValueDefinition;
+import org.protempa.PropertyDefinition;
+import org.protempa.ReferenceDefinition;
+import org.protempa.SlidingWindowWidthMode;
 import org.protempa.SourceId;
+import org.protempa.proposition.value.Unit;
 import org.protempa.proposition.value.Value;
 import org.protempa.proposition.value.ValueComparator;
+import org.protempa.proposition.value.ValueType;
 
 public final class LowLevelAbstractionJsonDeserializer extends
         JsonDeserializer<LowLevelAbstractionDefinition> {
@@ -65,26 +71,115 @@ public final class LowLevelAbstractionJsonDeserializer extends
 		nextToken();
 		checkField("description");
 		value.setDescription(this.parser.getText());
-		
+
 		nextToken();
 		checkField("inverseIsA");
 		value.setInverseIsA(this.parser.readValueAs(String[].class));
-		
+
 		nextToken();
 		checkField("abstractedFrom");
-		Set<String> abstractedFrom = (Set<String>) this.parser.readValueAs(Set.class);
+		@SuppressWarnings("unchecked")
+		// abstractedFrom is always a set of strings
+		Set<String> abstractedFrom = (Set<String>) this.parser
+		        .readValueAs(Set.class);
 		for (String af : abstractedFrom) {
 			value.addPrimitiveParameterId(af);
 		}
 
 		nextToken();
+		checkField("properties");
+		value.setPropertyDefinitions(this.parser
+		        .readValueAs(PropertyDefinition[].class));
+
+		nextToken();
+		checkField("references");
+		value.setReferenceDefinitions(this.parser
+		        .readValueAs(ReferenceDefinition[].class));
+
+		nextToken();
 		checkField("sourceId");
 		SourceId sourceId = this.parser.readValueAs(SourceId.class);
 		value.setSourceId(sourceId);
+
+		nextToken();
+		checkField("concatenable");
+		value.setConcatenable(this.parser.getBooleanValue());
+
+		nextToken();
+		checkField("inDataSource");
+		value.setInDataSource(this.parser.getBooleanValue());
+
+		nextToken();
+		checkField("gapFunction");
+		value.setGapFunction(this.parser.readValueAs(GapFunction.class));
+		
+		nextToken();
+		checkField("minimumDuration");
+		value.setMinimumDuration(this.parser.getIntValue());
+		
+		nextToken();
+		checkField("minimumDurationUnits");
+		value.setMinimumDurationUnits(this.parser.readValueAs(Unit.class));
+		
+		nextToken();
+		checkField("maximumDuration");
+		value.setMaximumDuration(this.parser.getIntValue());
+		
+		nextToken();
+		checkField("maximumDurationUnits");
+		value.setMaximumDurationUnits(this.parser.readValueAs(Unit.class));
 		
 		nextToken();
 		checkField("algorithm");
 		value.setAlgorithmId(this.parser.getText());
+		
+		nextToken();
+		checkField("valueType");
+		value.setValueType(this.parser.readValueAs(ValueType.class));
+		
+		nextToken();
+		checkField("skipStart");
+		value.setSkipStart(this.parser.getIntValue());
+		
+		nextToken();
+		checkField("skipEnd");
+		value.setSkipEnd(this.parser.getIntValue());
+		
+		nextToken();
+		checkField("skip");
+		value.setSkip(this.parser.getIntValue());
+		
+		nextToken();
+		checkField("maxOverlapping");
+		value.setMaxOverlapping(this.parser.getIntValue());
+		
+		nextToken();
+		checkField("slidingWindowWidthMode");
+		value.setSlidingWindowWidthMode(this.parser.readValueAs(SlidingWindowWidthMode.class));
+		
+		nextToken();
+		checkField("maximumNumberOfValues");
+		value.setMaximumNumberOfValues(this.parser.getIntValue());
+		
+		nextToken();
+		checkField("minimumNumberOfValues");
+		value.setMinimumNumberOfValues(this.parser.getIntValue());
+		
+		nextToken();
+		checkField("minGapBetweenValues");
+		value.setMinimumGapBetweenValues(this.parser.getIntValue());
+		
+		nextToken();
+		checkField("minGapBetweenValuesUnits");
+		value.setMinimumGapBetweenValuesUnits(this.parser.readValueAs(Unit.class));
+		
+		nextToken();
+		checkField("maxGapBetweenValues");
+		value.setMaximumGapBetweenValues(this.parser.getIntValue());
+		
+		nextToken();
+		checkField("maxGapBetweenValuesUnits");
+		value.setMaximumGapBetweenValuesUnits(this.parser.readValueAs(Unit.class));
 
 		nextToken();
 		checkField("valueDefinitions");
@@ -94,7 +189,6 @@ public final class LowLevelAbstractionJsonDeserializer extends
 			checkField("id");
 			LowLevelAbstractionValueDefinition valDef = new LowLevelAbstractionValueDefinition(
 			        value, this.parser.getText());
-			value.addValueDefinition(valDef);
 
 			nextToken();
 			checkField("params");

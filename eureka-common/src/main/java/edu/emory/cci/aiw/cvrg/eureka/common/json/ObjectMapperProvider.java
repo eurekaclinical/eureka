@@ -29,9 +29,12 @@ import org.protempa.ConstantDefinition;
 import org.protempa.DefaultSourceId;
 import org.protempa.EventDefinition;
 import org.protempa.ExtendedPropositionDefinition;
+import org.protempa.GapFunction;
 import org.protempa.HighLevelAbstractionDefinition;
+import org.protempa.IntervalSide;
 import org.protempa.LowLevelAbstractionDefinition;
 import org.protempa.NotRecordedSourceId;
+import org.protempa.Offsets;
 import org.protempa.PairDefinition;
 import org.protempa.PrimitiveParameterDefinition;
 import org.protempa.PropertyDefinition;
@@ -89,6 +92,8 @@ public class ObjectMapperProvider implements ContextResolver<ObjectMapper> {
 				context.setMixInAnnotations(NumberValue.class,
 				        NumberValueMixin.class);
 				context.setMixInAnnotations(Relation.class, RelationMixin.class);
+				context.setMixInAnnotations(GapFunction.class,
+				        GapFunctionMixin.class);
 				context.setMixInAnnotations(ConstantDefinition.class,
 				        ConstantMixin.class);
 				context.setMixInAnnotations(EventDefinition.class,
@@ -125,6 +130,11 @@ public class ObjectMapperProvider implements ContextResolver<ObjectMapper> {
 		        new SliceAbstractionJsonSerializer());
 		module.addDeserializer(SliceDefinition.class,
 		        new SliceAbstractionJsonDeserializer());
+
+		module.addSerializer(IntervalSide.class,
+		        new IntervalSideJsonSerializer());
+		module.addDeserializer(IntervalSide.class,
+		        new IntervalSideJsonDeserializer());
 
 		this.mapper.registerModule(module);
 	}

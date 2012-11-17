@@ -33,33 +33,56 @@ public final class LowLevelAbstractionJsonSerializer extends
 
 	@Override
 	public void serialize(LowLevelAbstractionDefinition value,
-	        JsonGenerator jgen, SerializerProvider p)
+	        JsonGenerator jgen, SerializerProvider provider)
 	        throws IOException, JsonProcessingException {
 		// start LLA
 		jgen.writeStartObject();
 		
 		// general proposition definition stuff
-		p.defaultSerializeField("@class", value.getClass(), jgen);
-		p.defaultSerializeField("id", value.getId(), jgen);
-		p.defaultSerializeField("displayName", value.getDisplayName(), jgen);
-		p.defaultSerializeField("abbreviatedDisplayName", value.getAbbreviatedDisplayName(), jgen);
-		p.defaultSerializeField("description", value.getDescription(), jgen);
-		p.defaultSerializeField("inverseIsA", value.getInverseIsA(), jgen);
-		p.defaultSerializeField("abstractedFrom", value.getAbstractedFrom(), jgen);
-		p.defaultSerializeField("sourceId", value.getSourceId(), jgen);
-		p.defaultSerializeField("algorithm", value.getAlgorithmId(), jgen);
+		provider.defaultSerializeField("@class", value.getClass(), jgen);
+		provider.defaultSerializeField("id", value.getId(), jgen);
+		provider.defaultSerializeField("displayName", value.getDisplayName(), jgen);
+		provider.defaultSerializeField("abbreviatedDisplayName", value.getAbbreviatedDisplayName(), jgen);
+		provider.defaultSerializeField("description", value.getDescription(), jgen);
+		provider.defaultSerializeField("inverseIsA", value.getInverseIsA(), jgen);
+		provider.defaultSerializeField("abstractedFrom", value.getAbstractedFrom(), jgen);
+		provider.defaultSerializeField("properties", value.getPropertyDefinitions(), jgen);
+		provider.defaultSerializeField("references", value.getReferenceDefinitions(), jgen);
+		provider.defaultSerializeField("sourceId", value.getSourceId(), jgen);
+		provider.defaultSerializeField("concatenable", value.isConcatenable(), jgen);
+		provider.defaultSerializeField("inDataSource", value.getInDataSource(), jgen);
+		
+		provider.defaultSerializeField("gapFunction", value.getGapFunction(), jgen);
+		provider.defaultSerializeField("minimumDuration", value.getMinimumDuration(), jgen);
+		provider.defaultSerializeField("minimumDurationUnits", value.getMinimumDurationUnits(), jgen);
+		provider.defaultSerializeField("maximumDuration", value.getMaximumDuration(), jgen);
+		provider.defaultSerializeField("maximumDurationUnits", value.getMaximumDurationUnits(), jgen);
+		provider.defaultSerializeField("algorithm", value.getAlgorithmId(), jgen);
+		provider.defaultSerializeField("valueType", value.getValueType(), jgen);
+		provider.defaultSerializeField("skipStart", value.getSkipStart(), jgen);
+		provider.defaultSerializeField("skipEnd", value.getSkipEnd(), jgen);
+		provider.defaultSerializeField("skip", value.getSkip(), jgen);
+		provider.defaultSerializeField("maxOverlapping", value.getMaxOverlapping(), jgen);
+		provider.defaultSerializeField("slidingWindowWidthMode", value.getSlidingWindowWidthMode(), jgen);
+		provider.defaultSerializeField("maximumNumberOfValues", value.getMaximumNumberOfValues(), jgen);
+		provider.defaultSerializeField("minimumNumberOfValues", value.getMinimumNumberOfValues(), jgen);
+		provider.defaultSerializeField("minGapBetweenValues", value.getMinimumGapBetweenValues(), jgen);
+		provider.defaultSerializeField("minGapBetweenValuesUnits", value.getMinimumGapBetweenValuesUnits(), jgen);
+		provider.defaultSerializeField("maxGapBetweenValues", value.getMaximumGapBetweenValues(), jgen);
+		provider.defaultSerializeField("maxGapBetweenValuesUnits", value.getMaximumGapBetweenValuesUnits(), jgen);
+		
 		
 		// value definitions
 		jgen.writeFieldName("valueDefinitions");
 		jgen.writeStartObject();
 		for (LowLevelAbstractionValueDefinition valDef : value.getValueDefinitions()) {
-			p.defaultSerializeField("id", valDef.getId(), jgen);
+			provider.defaultSerializeField("id", valDef.getId(), jgen);
 			jgen.writeArrayFieldStart("params");
 			for (String paramName : valDef.getParameters()) {
 				jgen.writeStartObject();
-				p.defaultSerializeField("name", paramName, jgen);
-				p.defaultSerializeField("value", valDef.getParameterValue(paramName), jgen);
-				p.defaultSerializeField("comp", valDef.getParameterComp(paramName), jgen);
+				provider.defaultSerializeField("name", paramName, jgen);
+				provider.defaultSerializeField("value", valDef.getParameterValue(paramName), jgen);
+				provider.defaultSerializeField("comp", valDef.getParameterComp(paramName), jgen);
 				jgen.writeEndObject();
 			}
 			jgen.writeEndArray();

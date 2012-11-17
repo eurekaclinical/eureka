@@ -43,9 +43,14 @@ public final class PairAbstractionJsonSerializer extends
 		provider.defaultSerializeField("abbreviatedDisplayName", value.getAbbreviatedDisplayName(), jgen);
 		provider.defaultSerializeField("description", value.getDescription(), jgen);
 		provider.defaultSerializeField("inverseIsA", value.getInverseIsA(), jgen);
+		provider.defaultSerializeField("properties", value.getPropertyDefinitions(), jgen);
+		provider.defaultSerializeField("references", value.getReferenceDefinitions(), jgen);
+		provider.defaultSerializeField("solid", value.isSolid(), jgen);
+		provider.defaultSerializeField("concatenable", value.isConcatenable(), jgen);
 		provider.defaultSerializeField("sourceId", value.getSourceId(), jgen);
 		
 		provider.defaultSerializeField("secondRequired", value.isSecondRequired(), jgen);
+		provider.defaultSerializeField("temporalOffset", value.getTemporalOffset(), jgen);
 		provider.defaultSerializeField("lhs", value.getLeftHandProposition(), jgen);
 		provider.defaultSerializeField("rhs", value.getRightHandProposition(), jgen);
 		provider.defaultSerializeField("rel", value.getRelation(), jgen);

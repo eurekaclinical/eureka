@@ -20,12 +20,7 @@
 package edu.emory.cci.aiw.cvrg.eureka.common.json;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
-import org.codehaus.jackson.JsonLocation;
 import org.codehaus.jackson.JsonParseException;
 import org.codehaus.jackson.JsonParser;
 import org.codehaus.jackson.JsonProcessingException;
@@ -83,10 +78,38 @@ public final class HighLevelAbstractionJsonDeserializer extends
 		value.setInverseIsA(this.parser.readValueAs(String[].class));
 		
 		nextToken();
+		checkField("properties");
+		value.setPropertyDefinitions(this.parser.readValueAs(PropertyDefinition[].class));
+		
+		nextToken();
+		checkField("references");
+		value.setReferenceDefinitions(this.parser.readValueAs(ReferenceDefinition[].class));
+		
+		nextToken();
+		checkField("solid");
+		value.setSolid(this.parser.getBooleanValue());
+		
+		nextToken();
+		checkField("concatenable");
+		value.setConcatenable(this.parser.getBooleanValue());
+		
+		nextToken();
+		checkField("inDataSource");
+		value.setInDataSource(this.parser.getBooleanValue());
+		
+		nextToken();
 		checkField("sourceId");
 		SourceId sourceId = this.parser.readValueAs(SourceId.class);
 		value.setSourceId(sourceId);
 
+		nextToken();
+		checkField("temporalOffset");
+		value.setTemporalOffset(this.parser.readValueAs(Offsets.class));
+		
+		nextToken();
+		checkField("gapFunction");
+		value.setGapFunction(this.parser.readValueAs(GapFunction.class));
+		
 		nextToken();
 		checkField("defPairs");
 

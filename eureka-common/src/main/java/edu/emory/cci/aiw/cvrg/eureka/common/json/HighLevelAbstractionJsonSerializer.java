@@ -50,7 +50,15 @@ public final class HighLevelAbstractionJsonSerializer extends
 		provider.defaultSerializeField("abbreviatedDisplayName", value.getAbbreviatedDisplayName(), jgen);
 		provider.defaultSerializeField("description", value.getDescription(), jgen);
 		provider.defaultSerializeField("inverseIsA", value.getInverseIsA(), jgen);
+		provider.defaultSerializeField("properties", value.getPropertyDefinitions(), jgen);
+		provider.defaultSerializeField("references", value.getReferenceDefinitions(), jgen);
+		provider.defaultSerializeField("solid", value.isSolid(), jgen);
+		provider.defaultSerializeField("concatenable", value.isConcatenable(), jgen);
+		provider.defaultSerializeField("inDataSource", value.getInDataSource(), jgen);
 		provider.defaultSerializeField("sourceId", value.getSourceId(), jgen);
+		
+		provider.defaultSerializeField("temporalOffset", value.getTemporalOffset(), jgen);
+		provider.defaultSerializeField("gapFunction", value.getGapFunction(), jgen);
 
 		// special case for handling extended propositions and relations, which
 		// are not directly gettable
