@@ -20,8 +20,6 @@
 package edu.emory.cci.aiw.cvrg.eureka.servlet;
 
 import java.io.IOException;
-import java.security.KeyManagementException;
-import java.security.NoSuchAlgorithmException;
 import java.security.Principal;
 import java.util.Date;
 
@@ -52,30 +50,23 @@ public class LoginServlet extends HttpServlet {
 				.getInitParameter("eureka-services-url");
 
 		Client client;
-		try {
-			client = CommUtils.getClient();
-			Principal principal = req.getUserPrincipal();
-			String userName = principal.getName();
+		client = CommUtils.getClient();
+		Principal principal = req.getUserPrincipal();
+		String userName = principal.getName();
 
-			WebResource webResource = client.resource(eurekaServicesUrl);
-			User user = webResource.path(GET_BY_NAME_URL + userName)
-					.accept(MediaType.APPLICATION_JSON).get(User.class);
-			user.setLastLogin(new Date());
-			ClientResponse response = webResource.path(PUT_USER_URL)
-					.type(MediaType.APPLICATION_JSON)
-					.accept(MediaType.TEXT_PLAIN)
-					.put(ClientResponse.class, user);
-			if (response.getClientResponseStatus() != Status.OK) {
-				throw new ServletException(
-						"Could not update user, got response "
-								+ response.getClientResponseStatus().toString());
-			}
-		} catch (KeyManagementException kme) {
-			throw new ServletException(kme);
-
-		} catch (NoSuchAlgorithmException nsae) {
-			throw new ServletException(nsae);
+		WebResource webResource = client.resource(eurekaServicesUrl);
+		User user = webResource.path(GET_BY_NAME_URL + userName)
+				.accept(MediaType.APPLICATION_JSON).get(User.class);
+		user.setLastLogin(new Date());
+		ClientResponse response = webResource.path(PUT_USER_URL)
+				.type(MediaType.APPLICATION_JSON)
+				.accept(MediaType.TEXT_PLAIN)
+				.put(ClientResponse.class, user);
+		if (response.getClientResponseStatus() != Status.OK) {
+			throw new ServletException(
+					"Could not update user, got response "
+							+ response.getClientResponseStatus().toString());
 		}
-                resp.sendRedirect(req.getContextPath() + "/index.jsp");
+		resp.sendRedirect(req.getContextPath() + "/index.jsp");
 	}
 }

@@ -20,8 +20,6 @@
 package edu.emory.cci.aiw.cvrg.eureka.servlet;
 
 import java.io.IOException;
-import java.security.KeyManagementException;
-import java.security.NoSuchAlgorithmException;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -40,10 +38,10 @@ import edu.emory.cci.aiw.cvrg.eureka.common.comm.CommUtils;
 
 /**
  * Servlet to handle user verification requests.
- * 
+ *
  * @author sagrava
  * @author hrathod
- * 
+ *
  */
 public class VerifyUserServlet extends HttpServlet {
 
@@ -68,34 +66,28 @@ public class VerifyUserServlet extends HttpServlet {
 			throws ServletException, IOException {
 
 		Client c;
-		try {
-			c = CommUtils.getClient();
+		c = CommUtils.getClient();
 
-			String eurekaServicesUrl = req.getSession().getServletContext()
-					.getInitParameter("eureka-services-url");
+		String eurekaServicesUrl = req.getSession().getServletContext()
+				.getInitParameter("eureka-services-url");
 
-			WebResource webResource = c.resource(eurekaServicesUrl);
+		WebResource webResource = c.resource(eurekaServicesUrl);
 
-			String code = req.getParameter("code");
+		String code = req.getParameter("code");
 
-			ClientResponse response = webResource
-					.path("/api/user/verify/" + code)
-					.accept(MediaType.TEXT_PLAIN).put(ClientResponse.class);
+		ClientResponse response = webResource
+				.path("/api/user/verify/" + code)
+				.accept(MediaType.TEXT_PLAIN).put(ClientResponse.class);
 
-			int status = response.getClientResponseStatus().getStatusCode();
-			if (status >= HttpServletResponse.SC_BAD_REQUEST) {
+		int status = response.getClientResponseStatus().getStatusCode();
+		if (status >= HttpServletResponse.SC_BAD_REQUEST) {
 
-				String msg = response.getEntity(String.class);
-				req.setAttribute("error", msg);
-				LOGGER.debug("Error: {}", msg);
-			}
-			req.getRequestDispatcher("/registration_info.jsp").forward(req,
-					resp);
-
-		} catch (KeyManagementException e) {
-			e.printStackTrace();
-		} catch (NoSuchAlgorithmException e) {
-			e.printStackTrace();
+			String msg = response.getEntity(String.class);
+			req.setAttribute("error", msg);
+			LOGGER.debug("Error: {}", msg);
 		}
+		req.getRequestDispatcher("/registration_info.jsp").forward(req,
+				resp);
+
 	}
 }

@@ -21,8 +21,6 @@ package edu.emory.cci.aiw.cvrg.eureka.servlet;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.security.KeyManagementException;
-import java.security.NoSuchAlgorithmException;
 import java.security.Principal;
 
 import javax.servlet.ServletException;
@@ -52,59 +50,52 @@ public class JobPollServlet extends HttpServlet {
 
         resp.setContentType("application/json");
 
-        try {
-            Client client = CommUtils.getClient();
-            Principal principal = req.getUserPrincipal();
-            String userName = principal.getName();
+	    Client client = CommUtils.getClient();
+	    Principal principal = req.getUserPrincipal();
+	    String userName = principal.getName();
 
-            WebResource webResource = client.resource(eurekaServicesUrl);
-            User user = webResource.path("/api/user/byname/" + userName)
-                    .accept(MediaType.APPLICATION_JSON).get(User.class);
+	    WebResource webResource = client.resource(eurekaServicesUrl);
+	    User user = webResource.path("/api/user/byname/" + userName)
+	            .accept(MediaType.APPLICATION_JSON).get(User.class);
 
-            JobInfo jobInfo = webResource
-                    .path("/api/job/status/" + user.getId())
-                    .accept(MediaType.APPLICATION_JSON).get(JobInfo.class);
+	    JobInfo jobInfo = webResource
+	            .path("/api/job/status/" + user.getId())
+	            .accept(MediaType.APPLICATION_JSON).get(JobInfo.class);
 
-            if (jobInfo.getCurrentStep() == 0) {
-                String emptyJson = "{}";
-                resp.setContentLength(emptyJson.length());
-                PrintWriter out = resp.getWriter();
-                out.println(emptyJson);
-                out.close();
-                out.flush();
-            } else {
-                JobStatus jobStatus = new JobStatus();
-                jobStatus.setCurrentStep(jobInfo.getCurrentStep());
-                jobStatus.setTotalSteps(jobInfo.getTotalSteps());
-                jobStatus.setMessages(jobInfo.getMessages());
+	    if (jobInfo.getCurrentStep() == 0) {
+	        String emptyJson = "{}";
+	        resp.setContentLength(emptyJson.length());
+	        PrintWriter out = resp.getWriter();
+	        out.println(emptyJson);
+	        out.close();
+	        out.flush();
+	    } else {
+	        JobStatus jobStatus = new JobStatus();
+	        jobStatus.setCurrentStep(jobInfo.getCurrentStep());
+	        jobStatus.setTotalSteps(jobInfo.getTotalSteps());
+	        jobStatus.setMessages(jobInfo.getMessages());
 
-                // Date uploadTime = new Date();
-                //
-                // if (jobInfo.getCurrentStep() < 4 &&
-                // jobInfo.getFileUpload().getTimestamp() != null)
-                // uploadTime = jobInfo.getFileUpload().getTimestamp();
-                // else if (jobInfo.getCurrentStep() >= 4 &&
-                // jobInfo.getJob().getTimestamp() != null) {
-                // uploadTime = jobInfo.getJob().getTimestamp();
-                // }
-                // jobStatus.setUploadTime(uploadTime);
-                jobStatus.setUploadTime(jobInfo.getTimestamp());
+	        // Date uploadTime = new Date();
+	        //
+	        // if (jobInfo.getCurrentStep() < 4 &&
+	        // jobInfo.getFileUpload().getTimestamp() != null)
+	        // uploadTime = jobInfo.getFileUpload().getTimestamp();
+	        // else if (jobInfo.getCurrentStep() >= 4 &&
+	        // jobInfo.getJob().getTimestamp() != null) {
+	        // uploadTime = jobInfo.getJob().getTimestamp();
+	        // }
+	        // jobStatus.setUploadTime(uploadTime);
+	        jobStatus.setUploadTime(jobInfo.getTimestamp());
 
-                ObjectMapper mapper = new ObjectMapper();
-                resp.setContentLength(mapper.writeValueAsString(jobStatus)
-                        .length());
-                PrintWriter out = resp.getWriter();
-                out.println(mapper.writeValueAsString(jobStatus));
-                out.close();
-                out.flush();
+	        ObjectMapper mapper = new ObjectMapper();
+	        resp.setContentLength(mapper.writeValueAsString(jobStatus)
+	                .length());
+	        PrintWriter out = resp.getWriter();
+	        out.println(mapper.writeValueAsString(jobStatus));
+	        out.close();
+	        out.flush();
 
-            }
-
-        } catch (NoSuchAlgorithmException nsae) {
-            throw new ServletException(nsae);
-        } catch (KeyManagementException kme) {
-            throw new ServletException(kme);
-        }
+	    }
 
     }
 }

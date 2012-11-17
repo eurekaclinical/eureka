@@ -20,8 +20,6 @@
 package edu.emory.cci.aiw.cvrg.eureka.servlet.worker.useracct;
 
 import java.io.IOException;
-import java.security.KeyManagementException;
-import java.security.NoSuchAlgorithmException;
 import java.security.Principal;
 
 import javax.servlet.ServletException;
@@ -44,22 +42,16 @@ public class ListUserAcctWorker implements ServletWorker {
 
 		String eurekaServicesUrl = req.getSession().getServletContext()
 				.getInitParameter("eureka-services-url");
-		try {
-			Client client = CommUtils.getClient();
-			WebResource webResource = client.resource(eurekaServicesUrl);
-			Principal principal = req.getUserPrincipal();
-			String userName = principal.getName();
+		Client client = CommUtils.getClient();
+		WebResource webResource = client.resource(eurekaServicesUrl);
+		Principal principal = req.getUserPrincipal();
+		String userName = principal.getName();
 
-			User user = webResource
-					.path("/api/user/byname/"+userName)
-					.accept(MediaType.APPLICATION_JSON).get(User.class);
+		User user = webResource
+				.path("/api/user/byname/"+userName)
+				.accept(MediaType.APPLICATION_JSON).get(User.class);
 
-			req.setAttribute("user", user);
-			req.getRequestDispatcher("/acct.jsp").forward(req, resp);
-		} catch (NoSuchAlgorithmException nsae) {
-			throw new ServletException(nsae);
-		} catch (KeyManagementException kme) {
-			throw new ServletException(kme);
-		}
+		req.setAttribute("user", user);
+		req.getRequestDispatcher("/acct.jsp").forward(req, resp);
 	}
 }

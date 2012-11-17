@@ -20,8 +20,6 @@
 package edu.emory.cci.aiw.cvrg.eureka.servlet.worker.admin;
 
 import java.io.IOException;
-import java.security.KeyManagementException;
-import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -60,35 +58,27 @@ public class SaveUserWorker implements ServletWorker {
 		}
 		System.out.println("active status: " + isActivated);
 		Client c;
-		try {
-			c = CommUtils.getClient();
-			System.out.println("id = " + id);
+		c = CommUtils.getClient();
+		System.out.println("id = " + id);
 
-			WebResource webResource = c.resource(eurekaServicesUrl);
-			User user = webResource.path("/api/user/byid/" + id)
-					.accept(MediaType.APPLICATION_JSON).get(User.class);
-			String[] roles = req.getParameterValues("role");
-			List<Role> userRoles = new ArrayList<Role>();
-			for (String roleId : roles) {
-				Role role = webResource.path("/api/role/" + roleId)
-						.accept(MediaType.APPLICATION_JSON).get(Role.class);
-				userRoles.add(role);
-				System.out.println("role = " + roleId);
-			}
-			user.setRoles(userRoles);
-			user.setActive(isActivated);
-			webResource = c.resource(eurekaServicesUrl);
-			ClientResponse response = webResource.path("/api/user/put")
-					.type(MediaType.APPLICATION_JSON)
-					.put(ClientResponse.class, user);
-			System.out.println("response = " + response.getStatus());
-		} catch (KeyManagementException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (NoSuchAlgorithmException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		WebResource webResource = c.resource(eurekaServicesUrl);
+		User user = webResource.path("/api/user/byid/" + id)
+				.accept(MediaType.APPLICATION_JSON).get(User.class);
+		String[] roles = req.getParameterValues("role");
+		List<Role> userRoles = new ArrayList<Role>();
+		for (String roleId : roles) {
+			Role role = webResource.path("/api/role/" + roleId)
+					.accept(MediaType.APPLICATION_JSON).get(Role.class);
+			userRoles.add(role);
+			System.out.println("role = " + roleId);
 		}
+		user.setRoles(userRoles);
+		user.setActive(isActivated);
+		webResource = c.resource(eurekaServicesUrl);
+		ClientResponse response = webResource.path("/api/user/put")
+				.type(MediaType.APPLICATION_JSON)
+				.put(ClientResponse.class, user);
+		System.out.println("response = " + response.getStatus());
 
 		resp.sendRedirect(req.getContextPath() + "/protected/admin?action=list");
 	}
