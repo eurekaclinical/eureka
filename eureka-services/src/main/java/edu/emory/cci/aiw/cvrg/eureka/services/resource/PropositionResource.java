@@ -19,9 +19,8 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.services.resource;
 
-import java.security.KeyManagementException;
-import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
@@ -36,7 +35,15 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import org.protempa.ConstantDefinition;
+import org.protempa.EventDefinition;
+import org.protempa.HighLevelAbstractionDefinition;
+import org.protempa.LowLevelAbstractionDefinition;
+import org.protempa.PairDefinition;
+import org.protempa.PrimitiveParameterDefinition;
 import org.protempa.PropositionDefinition;
+import org.protempa.PropositionDefinitionVisitor;
+import org.protempa.SliceDefinition;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -48,18 +55,22 @@ import com.sun.jersey.api.client.WebResource;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.CommUtils;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.PropositionWrapper;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.Sequence;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.ValidationRequest;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.HighLevelAbstraction;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.Proposition;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.PropositionChildrenVisitor;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.SystemProposition;
 import edu.emory.cci.aiw.cvrg.eureka.common.exception.HttpStatusException;
 import edu.emory.cci.aiw.cvrg.eureka.services.config.ServiceProperties;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.PropositionDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.finder.SystemPropositionFinder;
+import edu.emory.cci.aiw.cvrg.eureka.services.translation.SequenceTranslator;
 import edu.emory.cci.aiw.cvrg.eureka.services.util.PropositionUtil;
 
 /**
  * REST Web Service
- * 
+ *
  * @author hrathod
  */
 @Path("/proposition")
@@ -71,16 +82,16 @@ public class PropositionResource {
 	/**
 	 * The class level logger.
 	 */
-	private static final Logger LOGGER = LoggerFactory
-	        .getLogger(PropositionResource.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger
+		(PropositionResource.class);
 
 	/**
 	 * Creates a new instance of PropositionResource
 	 */
 	@Inject
 	public PropositionResource(PropositionDao inPropositionDao,
-	        ServiceProperties inApplicationProperties,
-	        SystemPropositionFinder inFinder) {
+		ServiceProperties inApplicationProperties, SystemPropositionFinder
+		inFinder) {
 		this.propositionDao = inPropositionDao;
 		this.applicationProperties = inApplicationProperties;
 		this.systemPropositionFinder = inFinder;
@@ -89,23 +100,25 @@ public class PropositionResource {
 	@GET
 	@Path("/system/{userId}/list")
 	@Produces(MediaType.APPLICATION_JSON)
-	public List<PropositionWrapper> getSystemPropositions(
-	        @PathParam("userId") Long inUserId) {
+	public List<PropositionWrapper> getSystemPropositions(@PathParam
+		("userId") Long inUserId) {
 
-		List<PropositionWrapper> wrappers = new ArrayList<PropositionWrapper>();
+		List<PropositionWrapper> wrappers = new
+			ArrayList<PropositionWrapper>();
 
 		List<String> propNames = this.applicationProperties
-		        .getDefaultSystemPropositions();
+			.getDefaultSystemPropositions();
 		for (String name : propNames) {
 			try {
 				wrappers.add(fetchSystemProposition(inUserId, name));
 			} catch (UniformInterfaceException e) {
 				if (e.getResponse().getStatus() != 404) {
 					throw new HttpStatusException(
-					        Response.Status.INTERNAL_SERVER_ERROR, e);
+						Response.Status.INTERNAL_SERVER_ERROR, e);
 				} else {
-					LOGGER.warn("Invalid proposition id specified in system propositions list: "
-					        + name);
+					LOGGER.warn(
+						"Invalid proposition id specified in system " +
+							"propositions list: " + name);
 				}
 			}
 		}
@@ -116,19 +129,18 @@ public class PropositionResource {
 	@GET
 	@Path("/system/{userId}/{propKey}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public PropositionWrapper getSystemProposition(
-	        @PathParam("userId") Long inUserId,
-	        @PathParam("propKey") String inKey) {
+	public PropositionWrapper getSystemProposition(@PathParam("userId")
+	Long inUserId, @PathParam("propKey") String inKey) {
 		return fetchSystemProposition(inUserId, inKey);
 	}
 
 	@POST
 	@Path("/system/{userId}/batch")
 	@Produces(MediaType.APPLICATION_JSON)
-	public List<PropositionWrapper> batchSystemPropositions(
-	        @PathParam("userId") Long inUserId, List<String> inIdList) {
+	public List<PropositionWrapper> batchSystemPropositions(@PathParam
+		("userId") Long inUserId, List<String> inIdList) {
 		List<PropositionWrapper> wrappers = new ArrayList<PropositionWrapper>(
-		        inIdList.size());
+			inIdList.size());
 		for (String id : inIdList) {
 			wrappers.add(this.fetchSystemProposition(inUserId, id));
 		}
@@ -138,8 +150,8 @@ public class PropositionResource {
 	@GET
 	@Path("/user/list/{userId}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public List<PropositionWrapper> getUserPropositions(
-	        @PathParam("userId") Long inUserId) {
+	public List<PropositionWrapper> getUserPropositions(@PathParam
+		("userId") Long inUserId) {
 		List<PropositionWrapper> result = new ArrayList<PropositionWrapper>();
 		for (Proposition p : this.propositionDao.getByUserId(inUserId)) {
 			this.propositionDao.refresh(p);
@@ -151,13 +163,14 @@ public class PropositionResource {
 	@POST
 	@Path("/user/validate/{userId}")
 	public Response validateProposition(@PathParam("userId") Long inUserId,
-	        PropositionWrapper inWrapper) {
+		PropositionWrapper inWrapper) {
 		Response result;
-		List<Proposition> propositions = this.propositionDao
-		        .getByUserId(inUserId);
-		Proposition targetProposition = this.propositionDao.getByKey(inWrapper
-		        .getKey());
-		List<PropositionDefinition> propDefs = new ArrayList<PropositionDefinition>();
+		List<Proposition> propositions = this.propositionDao.getByUserId
+			(inUserId);
+		Proposition targetProposition = this.propositionDao.getByUserAndKey
+			(inUserId,inWrapper.getKey());
+		List<PropositionDefinition> propDefs = new
+			ArrayList<PropositionDefinition>();
 
 		for (Proposition proposition : propositions) {
 			propDefs.add(PropositionUtil.pack(proposition));
@@ -166,24 +179,17 @@ public class PropositionResource {
 		ValidationRequest validationRequest = new ValidationRequest();
 		validationRequest.setUserId(inUserId);
 		validationRequest.setPropositions(propDefs);
-		validationRequest.setTargetProposition(PropositionUtil
-		        .pack(targetProposition));
+		validationRequest.setTargetProposition(
+			PropositionUtil.pack(targetProposition));
 
-		try {
-			Client client = CommUtils.getClient();
-			WebResource resource = client.resource(this.applicationProperties
-			        .getEtlPropositionValidationUrl());
-			ClientResponse response = resource.type(MediaType.APPLICATION_JSON)
-			        .post(ClientResponse.class, validationRequest);
-			result = Response.status(
-			        response.getClientResponseStatus().getStatusCode()).build();
-		} catch (KeyManagementException e) {
-			LOGGER.error(e.getMessage(), e);
-			result = Response.serverError().build();
-		} catch (NoSuchAlgorithmException e) {
-			LOGGER.error(e.getMessage(), e);
-			result = Response.serverError().build();
-		}
+		Client client = CommUtils.getClient();
+		WebResource resource = client.resource(
+			this.applicationProperties.getEtlPropositionValidationUrl());
+		ClientResponse response = resource.type(
+			MediaType.APPLICATION_JSON).post(
+			ClientResponse.class, validationRequest);
+		result = Response.status(
+			response.getClientResponseStatus().getStatusCode()).build();
 
 		return result;
 	}
@@ -191,15 +197,16 @@ public class PropositionResource {
 	@GET
 	@Path("/user/get/{propId}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public PropositionWrapper getUserProposition(
-	        @PathParam("propId") Long inPropositionId) {
+	public PropositionWrapper getUserProposition(@PathParam("propId") Long
+		inPropositionId) {
 		PropositionWrapper wrapper = null;
-		Proposition proposition = this.propositionDao.retrieve(inPropositionId);
+		Proposition proposition = this.propositionDao.retrieve
+			(inPropositionId);
 		this.propositionDao.refresh(proposition);
 		if (proposition != null) {
 			if (proposition.isInSystem()) {
 				wrapper = this.fetchSystemProposition(
-				        proposition.getUserId(), proposition.getKey());
+					proposition.getUserId(), proposition.getKey());
 				wrapper.setCreated(proposition.getCreated());
 				wrapper.setLastModified(proposition.getLastModified());
 			} else {
@@ -211,8 +218,8 @@ public class PropositionResource {
 
 	@DELETE
 	@Path("/user/delete/{userId}/{propId}")
-	public Response deleteUserPropositions(@PathParam("userId") Long inUserId,
-	        @PathParam("propId") Long inPropositionId) {
+	public Response deleteUserPropositions(@PathParam("userId") Long
+		inUserId, @PathParam("propId") Long inPropositionId) {
 
 		// the response to return;
 		Response response = Response.ok().build();
@@ -226,12 +233,12 @@ public class PropositionResource {
 			// if the user ID is not a match with the one passed in,
 			// return error
 			response = Response.notModified(
-			        "User ID " + inUserId + " did not" + " match the owner ID "
-			                + target.getUserId()).build();
+				"User ID " + inUserId + " did not" + " match the owner ID "
+					+ target.getUserId()).build();
 		} else {
 			// now get the rest of the propositions for the user
-			List<Proposition> others = this.propositionDao.getByUserId(target
-			        .getUserId());
+			List<Proposition> others = this.propositionDao.getByUserId(
+				target.getUserId());
 
 			// now loop through and make sure that the given proposition is
 			// not used in the definition of any of the other propositions.
@@ -240,18 +247,18 @@ public class PropositionResource {
 				if (proposition.getId().equals(target.getId())) {
 					continue;
 				} else {
-					PropositionChildrenVisitor visitor = new PropositionChildrenVisitor();
+					PropositionChildrenVisitor visitor = new
+						PropositionChildrenVisitor();
 					proposition.accept(visitor);
 					List<Proposition> children = visitor.getChildren();
 
 					for (Proposition p : children) {
 						if (p.getId().equals(target.getId())) {
-							response = Response
-							        .status(Response.Status.PRECONDITION_FAILED)
-							        .entity(p.getAbbrevDisplayName()
-							                + " contains a " + "reference to "
-							                + target.getAbbrevDisplayName())
-							        .build();
+							response = Response.status(
+								Response.Status.PRECONDITION_FAILED).entity(
+								p.getAbbrevDisplayName() + " " +
+									"contains a " + "reference to " +
+									target.getAbbrevDisplayName()).build();
 							error = true;
 							break;
 						}
@@ -273,36 +280,126 @@ public class PropositionResource {
 	@Consumes(MediaType.APPLICATION_JSON)
 	public void updateProposition(PropositionWrapper inWrapper) {
 		if (inWrapper.getUserId() != null && inWrapper.getId() != null) {
-			Proposition proposition = PropositionUtil.unwrap(inWrapper,
-			        this.propositionDao);
+			Proposition proposition = PropositionUtil.unwrap(
+				inWrapper, inWrapper.getUserId(), this.propositionDao);
 			proposition.setLastModified(new Date());
 			this.propositionDao.update(proposition);
 		} else {
 			throw new IllegalArgumentException(
-			        "Both the user ID and the proposition ID must be provided.");
+				"Both the user ID and the proposition ID must be provided.");
 		}
 	}
 
 	@POST
-	@Path("/user/create")
+	@Path("/user/create/sequence")
 	@Consumes(MediaType.APPLICATION_JSON)
-	public void insertProposition(PropositionWrapper inWrapper) {
-		if (inWrapper.getUserId() != null) {
-			Proposition proposition = PropositionUtil.unwrap(inWrapper,
-			        this.propositionDao);
+	public void insertProposition(Sequence inSequence) {
+		if (inSequence.getUserId() != null) {
+			// create any necessary system level elements, if needed
+			String primaryKey = inSequence.getPrimaryDataElement()
+				.getDataElementKey();
+			createIfNeeded(inSequence.getUserId(), primaryKey);
+			for (Sequence.RelatedDataElementField relatedDataElementField :
+				inSequence.getRelatedDataElements()) {
+				String relatedKey = relatedDataElementField
+					.getDataElementField().getDataElementKey();
+				createIfNeeded(inSequence.getUserId(), relatedKey);
+			}
+
+			SequenceTranslator translator = new SequenceTranslator(inSequence
+				.getUserId(),this.propositionDao);
+			HighLevelAbstraction abstraction = translator.translate
+				(inSequence);
 			Date now = new Date();
-			proposition.setCreated(now);
-			proposition.setLastModified(now);
-			this.propositionDao.create(proposition);
+			abstraction.setCreated(now);
+			abstraction.setLastModified(now);
+			abstraction.setKey(abstraction.getAbbrevDisplayName());
+			this.propositionDao.create(abstraction);
 		} else {
 			throw new IllegalArgumentException("User ID must be provided.");
 		}
 	}
 
+	private void createIfNeeded(Long userId, String key) {
+		Proposition proposition = this.propositionDao.getByUserAndKey(
+			userId, key);
+		if (proposition == null) {
+			PropositionDefinition definition = this.systemPropositionFinder
+				.find(userId, key);
+			SystemProposition systemProposition = new SystemProposition();
+			Date now = new Date();
+			systemProposition.setCreated(now);
+			systemProposition.setAbbrevDisplayName(definition.getAbbreviatedDisplayName());
+			systemProposition.setDisplayName(definition.getDisplayName());
+			systemProposition.setInSystem(Boolean.TRUE);
+			systemProposition.setKey(key);
+			systemProposition.setUserId(userId);
+			systemProposition.setLastModified(now);
+
+			SystemTypeVisitor visitor = new SystemTypeVisitor();
+			definition.accept(visitor);
+			systemProposition.setSystemType(visitor.getSystemType());
+			this.propositionDao.create(systemProposition);
+		}
+	}
+
 	private PropositionWrapper fetchSystemProposition(Long inUserId,
-	        String inKey) {
+		String inKey) {
 		return PropositionUtil.wrap(
-		        systemPropositionFinder.find(inUserId, inKey), false, inUserId,
-		        this.systemPropositionFinder);
+			systemPropositionFinder.find(inUserId, inKey), false, inUserId, this.systemPropositionFinder);
+	}
+
+	private static class SystemTypeVisitor implements
+		PropositionDefinitionVisitor {
+
+		private SystemProposition.SystemType type = null;
+
+		public SystemProposition.SystemType getSystemType () {
+			return this.type;
+		}
+
+		@Override
+		public void visit(Collection<? extends PropositionDefinition>
+			inPropositionDefinitions) {
+			throw new UnsupportedOperationException("Not implemented.");
+		}
+
+		@Override
+		public void visit(LowLevelAbstractionDefinition
+			inLowLevelAbstractionDefinition) {
+			this.type = SystemProposition.SystemType.LOW_LEVEL_ABSTRACTION;
+		}
+
+		@Override
+		public void visit(HighLevelAbstractionDefinition
+			inHighLevelAbstractionDefinition) {
+			this.type = SystemProposition.SystemType.HIGH_LEVEL_ABSTRACTION;
+		}
+
+		@Override
+		public void visit(SliceDefinition inSliceDefinition) {
+			this.type = SystemProposition.SystemType.SLICE_ABSTRACTION;
+		}
+
+		@Override
+		public void visit(EventDefinition inDefinition) {
+			this.type = SystemProposition.SystemType.EVENT;
+		}
+
+		@Override
+		public void visit(PrimitiveParameterDefinition
+			inPrimitiveParameterDefinition) {
+			this.type = SystemProposition.SystemType.PRIMITIVE_PARAMETER;
+		}
+
+		@Override
+		public void visit(ConstantDefinition inConstantDefinition) {
+			this.type = SystemProposition.SystemType.CONSTANT;
+		}
+
+		@Override
+		public void visit(PairDefinition inPairDefinition) {
+			throw new UnsupportedOperationException("Not implemented.");
+		}
 	}
 }

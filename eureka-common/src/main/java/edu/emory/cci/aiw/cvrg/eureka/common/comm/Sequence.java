@@ -54,7 +54,7 @@ public final class Sequence extends DataElement {
     public static class RelatedDataElementField {
         private DataElementField dataElementField;
         private RelationOperator relationOperator;
-        private Long sequentialDataElement;
+        private String sequentialDataElement;
         private Integer relationMinCount;
         private String relationMinUnits;
         private Integer relationMaxCount;
@@ -76,11 +76,11 @@ public final class Sequence extends DataElement {
             this.relationOperator = relationOperator;
         }
 
-        public Long getSequentialDataElement() {
+        public String getSequentialDataElement() {
             return sequentialDataElement;
         }
 
-        public void setSequentialDataElement(Long rhsDataElement) {
+        public void setSequentialDataElement(String rhsDataElement) {
             this.sequentialDataElement = rhsDataElement;
         }
 
@@ -118,7 +118,7 @@ public final class Sequence extends DataElement {
     }
 
     public static class DataElementField {
-        private Long dataElement;
+        private String dataElementKey;
         private String withValue;
         private Boolean hasDuration;
         private Integer minDuration;
@@ -129,12 +129,12 @@ public final class Sequence extends DataElement {
         private String property;
         private String propertyValue;
 
-        public Long getDataElement() {
-            return dataElement;
+        public String getDataElementKey() {
+            return dataElementKey;
         }
 
-        public void setDataElement(Long dataElement) {
-            this.dataElement = dataElement;
+        public void setDataElementKey(String dataElement) {
+            this.dataElementKey = dataElement;
         }
 
         public String getWithValue() {

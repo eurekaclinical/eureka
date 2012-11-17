@@ -110,7 +110,7 @@ public final class PropositionUtil {
 	}
 
 	/**
-	 * Wraps a proposition definition into a proposition wrapper. 
+	 * Wraps a proposition definition into a proposition wrapper.
 	 */
 	public static PropositionWrapper wrap(PropositionDefinition inDefinition,
 	        boolean summarize, Long inUserId,
@@ -135,7 +135,7 @@ public final class PropositionUtil {
 		return wrapper;
 	}
 
-	public static Proposition unwrap(PropositionWrapper inWrapper,
+	public static Proposition unwrap(PropositionWrapper inWrapper, Long userId,
 	        PropositionDao inPropositionDao) {
 
 		Proposition proposition;
@@ -161,7 +161,8 @@ public final class PropositionUtil {
 		if (inWrapper.getChildren() != null) {
 			for (PropositionWrapper child : inWrapper.getChildren()) {
 				if (child.isInSystem()) {
-					Proposition p = inPropositionDao.getByKey(child.getKey());
+					Proposition p = inPropositionDao.getByUserAndKey(userId,
+						child.getKey());
 					if (p == null) {
 						p = new SystemProposition();
 						p.setKey(child.getKey());
@@ -194,7 +195,7 @@ public final class PropositionUtil {
 	/**
 	 * Converts a proposition entity into an equivalent proposition definition
 	 * understood by Protempa.
-	 * 
+	 *
 	 * @param inProposition
 	 *            the {@link Proposition} to convert
 	 * @return a {@link PropositionDefinition} corresponding to the given
@@ -209,7 +210,7 @@ public final class PropositionUtil {
 	/**
 	 * Converts a list of proposition entities into equivalent proposition
 	 * definitions by repeatedly calling {@link #pack(Proposition)}.
-	 * 
+	 *
 	 * @param inPropositions
 	 *            a {@link List} of {@link Proposition}s to convert
 	 * @return a {@link List} of {@link PropositionDefinition}s corresponding to

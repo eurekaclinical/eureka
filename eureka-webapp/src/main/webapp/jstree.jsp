@@ -31,25 +31,6 @@
             $(document).ready(function(){
                 $("#treeViewDiv").jstree({
                     "json_data" : {
-                        /*
-                        "data":[
-                            {
-                                "data" : "Search engines",
-                                "children" :[
-                                             {"data":"Yahoo", "metadata":{"href":"http://www.yahoo.com"}},
-                                             {"data":"Bing", "metadata":{"href":"http://www.bing.com"}},
-                                             {"data":"Google", "children":[{"data":"Youtube", "metadata":{"href":"http://youtube.com"}},{"data":"Gmail", "metadata":{"href":"http://www.gmail.com"}},{"data":"Orkut","metadata":{"href":"http://www.orkut.com"}}], "metadata" : {"href":"http://youtube.com"}}
-                                            ]
-                            },
-                            {
-                                "data" : "Networking sites",
-                                "children" :[
-                                    {"data":"Facebook", "metadata":{"href":"http://www.fb.com"}},
-                                    {"data":"Twitter", "metadata":{"href":"http://twitter.com"}}
-                                ]
-                            }
-                        ]
-                        */
                         "ajax" : { "url" : "http://localhost:8080/eureka-webapp/json?id=root" }
                     },
                     "plugins" : [ "themes", "json_data", "ui" ]

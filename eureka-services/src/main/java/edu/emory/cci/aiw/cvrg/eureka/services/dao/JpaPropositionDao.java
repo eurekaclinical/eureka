@@ -22,6 +22,16 @@ package edu.emory.cci.aiw.cvrg.eureka.services.dao;
 import java.util.List;
 
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
+import javax.persistence.NonUniqueResultException;
+import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.google.inject.Inject;
 import com.google.inject.Provider;
@@ -39,6 +49,9 @@ import edu.emory.cci.aiw.cvrg.eureka.common.entity.Proposition_;
 public class JpaPropositionDao extends GenericDao<Proposition, Long>
 		implements PropositionDao {
 
+	private static Logger LOGGER = LoggerFactory.getLogger(JpaPropositionDao
+		.class);
+
 	/**
 	 * Create an object with the given entity manager provider.
 	 *
@@ -50,8 +63,32 @@ public class JpaPropositionDao extends GenericDao<Proposition, Long>
 	}
 
 	@Override
-	public Proposition getByKey(String inKey) {
-		return this.getUniqueByAttribute(Proposition_.key, inKey);
+	public Proposition getByUserAndKey(Long inUserId, String inKey) {
+		Proposition result;
+		EntityManager entityManager = this.getEntityManager();
+		CriteriaBuilder builder = entityManager.getCriteriaBuilder();
+		CriteriaQuery<Proposition> criteriaQuery = builder.createQuery(
+			Proposition
+				.class);
+		Root<Proposition> root = criteriaQuery.from(Proposition.class);
+		Predicate userPredicate = builder.equal(
+			root.get(
+				Proposition_.userId), inUserId);
+		Predicate keyPredicate = builder.equal(root.get(Proposition_.key),
+			inKey);
+		TypedQuery<Proposition> typedQuery = entityManager.createQuery(
+			criteriaQuery.where(
+				builder.and(userPredicate, keyPredicate)));
+		try {
+			result = typedQuery.getSingleResult();
+		} catch (NonUniqueResultException nure) {
+			LOGGER.error("Result not unique.", nure);
+			result = null;
+		} catch (NoResultException nre) {
+			LOGGER.error("Result not existant.", nre);
+			result = null;
+		}
+		return result;
 	}
 
 	@Override

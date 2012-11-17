@@ -19,25 +19,17 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.services.finder;
 
-import java.security.KeyManagementException;
-import java.security.NoSuchAlgorithmException;
-
 import javax.ws.rs.core.MediaType;
-
-import com.google.inject.Inject;
-import com.sun.jersey.api.client.Client;
-import com.sun.jersey.api.client.ClientResponse;
-import com.sun.jersey.api.client.UniformInterfaceException;
-import com.sun.jersey.api.client.WebResource;
-
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.CommUtils;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.PropositionWrapper;
-import edu.emory.cci.aiw.cvrg.eureka.services.config.ServiceProperties;
-import java.net.URI;
 import javax.ws.rs.core.UriBuilder;
 
 import org.protempa.PropositionDefinition;
-import org.slf4j.LoggerFactory;
+
+import com.google.inject.Inject;
+import com.sun.jersey.api.client.Client;
+import com.sun.jersey.api.client.WebResource;
+
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.CommUtils;
+import edu.emory.cci.aiw.cvrg.eureka.services.config.ServiceProperties;
 
 public class SystemPropositionRetriever implements
         PropositionRetriever<Long, String> {
@@ -53,19 +45,13 @@ public class SystemPropositionRetriever implements
 	public PropositionDefinition retrieve(Long inUserId, String inKey) {
 		PropositionDefinition propDef = null;
 
-		try {
-			String path = UriBuilder.fromUri("/").segment("" + inUserId, inKey)
-			        .build().toString();
-			Client client = CommUtils.getClient();
-			WebResource resource = client.resource(this.applicationProperties
-			        .getEtlPropositionGetUrl());
-			propDef = resource.path(path).accept(MediaType.APPLICATION_JSON)
-			        .get(PropositionDefinition.class);
-		} catch (KeyManagementException e) {
-			e.printStackTrace();
-		} catch (NoSuchAlgorithmException e) {
-			e.printStackTrace();
-		}
+		String path = UriBuilder.fromUri("/").segment("" + inUserId, inKey)
+		        .build().toString();
+		Client client = CommUtils.getClient();
+		WebResource resource = client.resource(this.applicationProperties
+		        .getEtlPropositionGetUrl());
+		propDef = resource.path(path).accept(MediaType.APPLICATION_JSON)
+		        .get(PropositionDefinition.class);
 
 		return propDef;
 	}

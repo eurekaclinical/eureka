@@ -22,7 +22,6 @@ package edu.emory.cci.aiw.cvrg.eureka.common.entity;
 import java.io.Serializable;
 import java.util.Date;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -30,18 +29,20 @@ import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import com.sun.xml.bind.CycleRecoverable;
 
 /**
  * Holds information about a user-defined ontological concept.
- * 
+ *
  * @author hrathod
  */
 @XmlRootElement
 @Entity
-@Table(name = "propositions")
+@Table(name = "propositions", uniqueConstraints = @UniqueConstraint
+	(columnNames = {"abbrevDisplayName", "userId"}))
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 public abstract class Proposition implements CycleRecoverable,
         PropositionEntityVisitable, Serializable {
@@ -60,7 +61,6 @@ public abstract class Proposition implements CycleRecoverable,
 	/**
 	 * The user to which this proposition belongs.
 	 */
-	@Column(name = "user_id")
 	private Long userId;
 	/**
 	 * If proposition is system-level, this key identifies the proposition in
@@ -90,7 +90,7 @@ public abstract class Proposition implements CycleRecoverable,
 
 	/**
 	 * Gets the abbreviated display name of the proposition.
-	 * 
+	 *
 	 * @return The abbreviated display name of the proposition.
 	 */
 	public String getAbbrevDisplayName() {
@@ -99,7 +99,7 @@ public abstract class Proposition implements CycleRecoverable,
 
 	/**
 	 * Sets the abbreviated display name.
-	 * 
+	 *
 	 * @param inAbbrevDisplayName
 	 *            The abbreviated display name to set.
 	 */
@@ -109,7 +109,7 @@ public abstract class Proposition implements CycleRecoverable,
 
 	/**
 	 * Gets the display name of the proposition.
-	 * 
+	 *
 	 * @return The display name of the proposition.
 	 */
 	public String getDisplayName() {
@@ -118,7 +118,7 @@ public abstract class Proposition implements CycleRecoverable,
 
 	/**
 	 * Sets the display name of the proposition.
-	 * 
+	 *
 	 * @param inDisplayName
 	 *            The display name of the proposition.
 	 */
@@ -128,7 +128,7 @@ public abstract class Proposition implements CycleRecoverable,
 
 	/**
 	 * Gets the user to which this proposition belongs.
-	 * 
+	 *
 	 * @return The user to which this proposition belongs.
 	 */
 	public Long getUserId() {
@@ -137,7 +137,7 @@ public abstract class Proposition implements CycleRecoverable,
 
 	/**
 	 * Sets the user to which this proposition belongs.
-	 * 
+	 *
 	 * @param inUserId
 	 *            The user to which this proposition belongs.
 	 */
@@ -147,7 +147,7 @@ public abstract class Proposition implements CycleRecoverable,
 
 	/**
 	 * Gets the unique identifier for the proposition.
-	 * 
+	 *
 	 * @return The unique identifier for the proposition.
 	 */
 	public Long getId() {
@@ -156,7 +156,7 @@ public abstract class Proposition implements CycleRecoverable,
 
 	/**
 	 * Sets the unique identifier for the proposition.
-	 * 
+	 *
 	 * @param inId
 	 *            The unique identifier for the proposition.
 	 */
@@ -166,7 +166,7 @@ public abstract class Proposition implements CycleRecoverable,
 
 	/**
 	 * Is the proposition a system level element?
-	 * 
+	 *
 	 * @return True if system level, false otherwise.
 	 */
 	public boolean isInSystem() {
@@ -175,7 +175,7 @@ public abstract class Proposition implements CycleRecoverable,
 
 	/**
 	 * Sets whether the proposition is a system level element.
-	 * 
+	 *
 	 * @param inSystem
 	 *            The value of the inSystem property to set.
 	 */
@@ -185,7 +185,7 @@ public abstract class Proposition implements CycleRecoverable,
 
 	/**
 	 * Gets the key for the proposition.
-	 * 
+	 *
 	 * @return Null if the proposition is not system level, id in the system
 	 *         ontology otherwise.
 	 */
@@ -195,7 +195,7 @@ public abstract class Proposition implements CycleRecoverable,
 
 	/**
 	 * Sets the key for the proposition.
-	 * 
+	 *
 	 * @param inKey
 	 *            The id of the proposition in the system ontology.
 	 */
@@ -205,7 +205,7 @@ public abstract class Proposition implements CycleRecoverable,
 
 	/**
 	 * Gets the creation date.
-	 * 
+	 *
 	 * @return The creation date.
 	 */
 	public Date getCreated() {
@@ -214,7 +214,7 @@ public abstract class Proposition implements CycleRecoverable,
 
 	/**
 	 * Sets the creation time.
-	 * 
+	 *
 	 * @param inCreated
 	 *            The creation time.
 	 */
@@ -224,7 +224,7 @@ public abstract class Proposition implements CycleRecoverable,
 
 	/**
 	 * Gets the last modification time.
-	 * 
+	 *
 	 * @return The last modification time.
 	 */
 	public Date getLastModified() {
@@ -233,7 +233,7 @@ public abstract class Proposition implements CycleRecoverable,
 
 	/**
 	 * Sets the last modification time.
-	 * 
+	 *
 	 * @param inLastModified
 	 *            The last modification time.
 	 */

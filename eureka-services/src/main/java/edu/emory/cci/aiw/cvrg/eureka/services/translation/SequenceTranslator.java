@@ -44,12 +44,14 @@ import edu.emory.cci.aiw.cvrg.eureka.services.dao.PropositionDao;
 public class SequenceTranslator implements
         PropositionTranslator<Sequence, HighLevelAbstraction> {
 
-	private Map<Long, ExtendedProposition> extendedProps;
+	private Map<String, ExtendedProposition> extendedProps;
 	private final PropositionDao dao;
+	private final Long userId;
 
-	public SequenceTranslator(PropositionDao dao) {
+	public SequenceTranslator(Long inUserId, PropositionDao dao) {
+		this.userId = inUserId;
 		this.dao = dao;
-		this.extendedProps = new HashMap<Long, ExtendedProposition>();
+		this.extendedProps = new HashMap<String, ExtendedProposition>();
 	}
 
 	@Override
@@ -61,8 +63,8 @@ public class SequenceTranslator implements
 		createExtendedProposition(element.getPrimaryDataElement());
 		for (RelatedDataElementField rde : element.getRelatedDataElements()) {
 			createExtendedProposition(rde.getDataElementField());
-			abstractedFrom.add(dao.retrieve(rde.getDataElementField()
-			        .getDataElement()));
+			abstractedFrom.add(dao.getByUserAndKey(this.userId,
+				rde.getDataElementField().getDataElementKey()));
 		}
 		result.setAbstractedFrom(abstractedFrom);
 		List<Relation> relations = new ArrayList<Relation>();
@@ -74,10 +76,17 @@ public class SequenceTranslator implements
 		return result;
 	}
 
+	private Proposition getOrCreateProposition (String key) {
+		Proposition proposition = this.dao.getByUserAndKey(this.userId, key);
+		if (proposition == null) {
+		}
+		return proposition;
+	}
+
 	private void createExtendedProposition(DataElementField dataElement) {
-		if (!this.extendedProps.containsKey(dataElement.getDataElement())) {
+		if (!this.extendedProps.containsKey(dataElement.getDataElementKey())) {
 			ExtendedProposition ep = new ExtendedProposition();
-			ep.setId(dataElement.getDataElement());
+			ep.setId(dataElement.getDataElementKey());
 			if (dataElement.getHasDuration()) {
 				ep.setMinDuration(dataElement.getMinDuration());
 				ep.setMaxDuration(dataElement.getMaxDuration());

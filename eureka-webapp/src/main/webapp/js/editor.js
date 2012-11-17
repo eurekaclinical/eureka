@@ -4,16 +4,110 @@ $("ul.sortable").sortable();
 $("ul.sortable").disableSelection();
 
 var dropBoxMaxTextWidth = 275;
-
 var possiblePropositions = new Object();
+var saveFuncs = {
+	'sequence': saveSequence,
+	'categorical': saveCategorical
+};
+
+function postProposition (postUrl, postData, successFunc) {
+	$.ajax({
+		type: "POST",
+		url: postUrl,
+		contentType: "application/json; charset=utf-8",
+		data: JSON.stringify(postData),
+		dataType: "json",
+		success: successFunc
+	});
+}
+
+
+function collectSequenceDataElement (elem) {
+	// var type = $mainProposition.data('type');
+	var $mainProposition = $(elem).find('ul[data-type="main"]').find('li').first();
+	return {
+		'dataElementKey': $mainProposition.data('key'),
+		'withValue': $(elem).find('select[name="mainDataElementValue"]').val(),
+		'hasDuration': $(elem).find('input[name="mainDataElementSpecifyDuration"]').val(),
+		'minDuration': $(elem).find('input[name="mainDataElementMinDurationValue"]').val(),
+		'minDurationUnits': $(elem).find('select[name="mainDataElementMinDurationUnits"]').val(),
+		'maxDuration': $(elem).find('input[name="mainDataElementMaxDurationValue"]').val(),
+		'maxDurationUnits': $(elem).find('select[name="mainDataElementMaxDurationUnits"]').val(),
+		'hasPropertyConstraint': $(elem).find('input[name="mainDataElementSpecifyProperty"]').val(),
+		'property': $(elem).find('select[name="mainDataElementPropertyName"]').val(),
+		'propertyValue': $(elem).find('input[name="mainDataElementPropertyValue"]').val()
+	}
+}
+
+function collectSequenceRelations ($relationElems) {
+	//relation['propositionType'] = $proposition.data('type');
+	var relations = new Array();
+	$relationElems.each(function (i,r) {
+		var $proposition = $(r).find('ul.sortable').find('li').first();
+		relations.push({
+			'dataElementField': {
+				'dataElementKey': $proposition.data('key'),
+				'withValue': $(r).find('select[name="sequenceRelDataElementValue"]').val(),
+				'hasDuration': $(r).find('input[name="sequenceRelDataElementSpecifyDuration"]').val(),
+				'minDuration': $(r).find('input[name="sequenceRelDataElementMinDurationValue"]').val(),
+				'minDurationUnits':  $(r).find('select[name="sequenceRelDataElementMinDurationUnits"]').val(),
+				'maxDuration': $(r).find('input[name="sequenceRelDataElementMaxDurationValue"]').val(),
+				'maxDurationUnits':  $(r).find('select[name="sequenceRelDataElementMaxDurationUnits"]').val(),
+				'hasPropertyConstraint': $(r).find('input[name="sequenceRelDataElementSpecifyProperty"]').val(),
+				'property': $(r).find('select[name="sequenceRelDataElementPropertyName"]').val(),
+				'propertyValue': $(r).find('input[name="sequenceRelDataElementPropertyValue"]').val()
+			},
+			'relationOperator': $(r).find('select[name="sequenceRelDataElementTemporalRelation"]').val(),
+			'sequentialDataElement': $(r).find('select[name="propositionSelect"]').val(),
+			'relationMinCount': $(r).find('input[name="sequenceRhsDataElementMinDistanceValue"]').val(),
+			'relationMinUnits': $(r).find('select[name="sequenceRhsDataElementMinDistanceUnits"]').val(),
+			'relationMaxCount': $(r).find('input[name="sequenceRhsDataElementMaxDistanceValue"]').val(),
+			'relationMaxUnits': $(r).find('select[name="sequenceRhsDataElementMaxDistanceUnits"]').val()
+		});
+	});
+	return relations;
+}
+
+function saveSequence (elem) {
+	var sequence = new Object();
+	var $relationElems = $(elem).find('.sequence-relations-container').find('.sequence-relation');
+
+	sequence.abbrevDisplayName = $('input#propAbbrevDisplayName').val();
+	sequence.displayName = $('textarea#propDisplayName').val();
+	sequence.primaryDataElement = collectSequenceDataElement(elem);
+	sequence.relatedDataElements = collectSequenceRelations($relationElems);
+
+	postProposition('savesequence', sequence, function (data) {window.location.href = 'editorhome'});
+}
+
+function saveCategorical (elem) {
+	console.log('SAVING CATEGORIZATION');
+	var categorization = new Object();
+	var $propositions = $(elem).find('ul.sortable').find('li');
+	categorization.abbrevDisplayName = $('input#propAbbrevDisplayName').val();
+	categorization.displayName = $('textarea#propDisplayName').val();
+	
+}
 
 
 function setPropositionSelects () {
 	var selects = $('select').filter('[name="propositionSelect"]');
 	$(selects).each( function (i, sel) {
+		var items = $(sel).closest('.drop-parent').find('li');
 		$(sel).empty();
 		$.each(possiblePropositions, function (key, val) {
-			$(sel).append($('<option></option>').attr('value', key).text(val));
+			var add = true;
+			$(items).each( function (i, item) {
+				if ($(item).data('id') == key) {
+					add = false;
+					return false;
+				} else {
+					return true;
+				}
+			});
+			if (add) {
+				$(sel).append($('<option></option>').attr('value', key).text(val));
+			}
 		});
 	});
 }
@@ -89,46 +183,12 @@ $(document).ready(function(){
 		//if(validateAllSteps()){
 		var propositions = [];
 		var type = $("input:radio[name='type']:checked").val();
-		var element_name = $('#element_name').val();
-		var element_desc = $('#element_description').val();
+		var abbrevDisplayName = $('#propAbbrevDisplayName').val();
+		var displayName = $('#propDisplayName').val();
 		var propId = $('#propId').val();
+
 		propId = (typeof(propId) === 'undefined' ? "" : propId);
-		$('#' + type + 'definition ul.sortable li').each( function () {
-			var namespaceStr = '';//this.textContent.split("-")[0];
-			if ($('#systemTree [id="'+this.id + '"]').length > 0 || $(this).data('type') == "system") {
-				namespaceStr = 'system';
-
-			} else {
-				namespaceStr = 'user';
-			}
-			var obj = {
-				id: this.id,
-				type: namespaceStr
-			};
-			propositions.push(obj);
-		});
-		$.ajax({
-			type: "POST",
-			url: "saveprop?id="+propId +
-			"&name="+element_name+
-			"&description="+element_desc +
-			"&type="+type+
-			"&proposition="+JSON.stringify(propositions),
-			contentType: "application/json; charset=utf-8",
-			data: JSON.stringify(propositions),
-			dataType: "json",
-			beforeSend: function(x) {
-				if (x && x.overrideMimeType) {
-					x.overrideMimeType("application/j-son;charset=UTF-8");
-				}
-			},
-			success: function(data) {
-				window.location.href="editorhome";
-			}
-		});
-
-	//$('form').submit();
-	//}
+		saveFuncs[type]($('#' + type + 'definition'));
 	}
 
 
@@ -173,11 +233,11 @@ $(document).ready(function(){
 			}
 
 		} else if(step == 3) {
-			var element_name = $('#element_name').val();
-			var element_desc = $('#element_description').val();
+			var propAbbrevDisplayName = $('#propAbbrevDisplayName').val();
+			var propDisplayName= $('#propDisplayName').val();
 
-			if((!element_name && element_name.length <= 0) ||
-				(!element_desc && element_desc.length <= 0)){
+			if((!propAbbrevDisplayName && propAbbrevDisplayName.length <= 0) ||
+				(!propDisplayName && propDisplayName.length <= 0)){
 				isStepValid = false;
 				$('#wizard').smartWizard('showMessage','Please enter an element name and description and click next.');
 				$('#wizard').smartWizard('setError',{
@@ -194,8 +254,6 @@ $(document).ready(function(){
 			}
 		}
 		else if (step == 4) {
-
-
 		}
 
 		return isStepValid;
@@ -215,15 +273,13 @@ $(document).ready(function(){
 	initTrees();
 
 	$('a#add-to-sequence').click(function (e) {
-		var from = $('table.sequence-relation').filter(':last').clone();
-		var to = $('td.sequence-relations-container');
-		var currentCount = parseInt(from.find('span.count').text());
-		var treeDropId = to.find('div.tree-drop-single')[0].id;
-		var parts = treeDropId.split('-');
-		parts[parts.length - 1]++;
-		from.find('div.tree-drop-single')[0].id = parts.join('-');
-		from.find('span.count').text(currentCount + 1);
-		to.append(from);
+		var total = $('table.sequence-relation').length;
+		var data = $('table.sequence-relation').filter(':last').clone();
+		var appendTo = $('td.sequence-relations-container');
+		data.find('ul.sortable').empty();
+		data.find('span.count').text(total + 1);
+		appendTo.append(data);
+		setPropositionSelects();
 	});
 
 });
@@ -245,7 +301,7 @@ function initTrees() {
 		"dnd" : {
 			"drop_finish" : function(data) {
 				var target = data.e.currentTarget;
-				if (idIsNotInList(data.o[0].id)) {
+				if (idIsNotInList(target, data.o[0].id)) {
 
 					var propositionId = data.o[0].id;
 					var propositionDesc = data.o[0].children[1].childNodes[1].textContent;
@@ -254,9 +310,9 @@ function initTrees() {
 					infoLabel.hide();
 
 					var sortable = $(target).find('ul.sortable');
-					var newItem = $('<li/>', {
-						name: propositionId,
-						"data-type": "system"
+					var newItem = $('<li></li>', {
+						"data-type": "system",
+						"data-key": data.o[0].id
 					});
 
 					var X = $("<span/>", {
@@ -269,7 +325,7 @@ function initTrees() {
 								buttons : {
 									"Confirm": function() {
 										$(toRemove).remove();
-										delete possiblePropositions[$(toRemove).attr('name')];
+										delete possiblePropositions[$(toRemove).data('id')];
 										setPropositionSelects();
 										if ($(sortable).find('li').length == 0) {
 											infoLabel.show();
@@ -317,98 +373,10 @@ function initTrees() {
 		"plugins" : [ "themes", "json_data", "ui", "dnd" ]
 	}).bind("open_node.jstree", function(e, data)
 	{
-		if(data.rslt.obj[0].id !== undefined)
-		{
-		//loadChild(data.rslt.obj[0].id);
-
-		//if ($("[id='"+data.rslt.obj[0].id+ "']")[0].children.length < 3) {
-		//	loadChild(data.rslt.obj[0].id);
-		//}
-		}
-		else
-		{
+		if(data.rslt.obj[0].id == undefined) {
 			alert("No href defined for this element");
 		}
-
 	});
-
-
-	function loadChild(id) {
-		$.ajax({
-			type: "POST",
-			url: "syspropchildren?propId="+id,
-			contentType: "application/json; charset=utf-8",
-			//data: "{'id':" + id + "}",
-			dataType: "json",
-			success: function(data) {
-				var childData = data;
-				for (var i = 0; i < childData.length; i++) {
-					addNode("systemTree", id, childData[i].data, childData[i]["attr"].id, false);
-
-				}
-			}
-		});
-
-	}
-
-
-	function loadUserDefinedProps(id) {
-		$.ajax({
-			type: "POST",
-			url: "userpropchildren?propId="+id,
-			contentType: "application/json; charset=utf-8",
-			//data: "{'id':" + id + "}",
-			dataType: "json",
-			success: function(data) {
-				var childData = data;
-			}
-		});
-
-	}
-
-
-	function addNode(rootNodeId, localParentId,nodeName,nodeId,hasChildren) {
-
-		////////////////////////////////////////////
-		//
-		// Create a new node on the tree
-		//
-		////////////////////////////////////////////
-		if(hasChildren) {
-
-			/// If it has children we load the node a little differently
-			/// give it a different image, theme and make it clickable
-
-			$("#" +rootNodeId).jstree("create_node", $("[id='"+localParentId+"']"), "inside",  {
-				"data" : nodeName ,
-				"state" : "closed",
-				"attr" : {
-					"id" : nodeId,
-					"rel":"children"
-				}
-			},null, true);
-
-
-		} else {
-
-			// Nodes with no trees cannot be opened and
-			// have a different image
-
-			$("#" + rootNodeId).jstree("create_node", $("[id='"+localParentId+ "']"), "inside",  {
-				"data" : nodeName ,
-				"state" : "leaf",
-				"attr" : {
-					"id" : nodeId,
-					"rel":"noChildren"
-				}
-			},null, true);
-
-		}
-
-	}
-
-
-
 
 	$("#userTree").jstree({
 		"json_data" : {
@@ -418,8 +386,8 @@ function initTrees() {
 		},
 		"dnd" : {
 			"drop_finish" : function(data) {
-				if (idIsNotInList(data.o[0].id)  &&
-					data.e.currentTarget.id == 'tree-drop' || data.e.currentTarget.id == 'label-info') {
+				var target = data.e.currentTarget;
+				if (idIsNotInList(data.o[0].id)) {
 
 					$('#label-info').hide();
 
@@ -532,18 +500,13 @@ function initTrees() {
 function showHelp() {
 
 }
-function idIsNotInList(id) {
-
-
+function idIsNotInList(target, id) {
 	var retVal = true;
-	$('#sortable li').each( function() {
+	$(target).find('ul.sortable').find('li').each( function() {
 		if (id == this.id) {
 			retVal = false;
 		}
 
 	});
 	return retVal;
-
-
-
 }

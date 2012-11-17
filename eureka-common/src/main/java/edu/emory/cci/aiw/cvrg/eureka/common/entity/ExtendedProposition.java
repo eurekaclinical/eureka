@@ -36,7 +36,7 @@ public class ExtendedProposition {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.TABLE)
-	private Long Id;
+	private String Id;
 
 	private Integer minDuration;
 
@@ -53,11 +53,14 @@ public class ExtendedProposition {
 	@OneToOne
 	private PropertyConstraint propertyConstraint;
 
-	public Long getId() {
+	@OneToOne
+	private Proposition proposition;
+
+	public String getId() {
 		return Id;
 	}
 
-	public void setId(Long inId) {
+	public void setId(String inId) {
 		Id = inId;
 	}
 
@@ -99,5 +102,13 @@ public class ExtendedProposition {
 
 	public void setPropertyConstraint(PropertyConstraint inPropertyConstraint) {
 		propertyConstraint = inPropertyConstraint;
+	}
+
+	public Proposition getProposition() {
+		return proposition;
+	}
+
+	public void setProposition(Proposition inProposition) {
+		proposition = inProposition;
 	}
 }

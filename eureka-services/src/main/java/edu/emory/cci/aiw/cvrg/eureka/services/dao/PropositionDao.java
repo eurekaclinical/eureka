@@ -37,10 +37,11 @@ import edu.emory.cci.aiw.cvrg.eureka.common.entity.Proposition;
 public interface PropositionDao extends Dao<Proposition, Long> {
 	/**
 	 * Gets a proposition based on the "key" attribute.
+	 * @param inUserId The userId to search for in the database.
 	 * @param inKey The key to be searched in the database.
 	 * @return A proposition if found, null otherwise.
 	 */
-	public Proposition getByKey(String inKey);
+	public Proposition getByUserAndKey(Long inUserId, String inKey);
 
 	/**
 	 * Gets a list of propositions for the given user ID.
