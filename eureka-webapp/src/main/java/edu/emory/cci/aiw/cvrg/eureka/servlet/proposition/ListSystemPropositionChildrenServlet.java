@@ -21,8 +21,6 @@ package edu.emory.cci.aiw.cvrg.eureka.servlet.proposition;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.security.KeyManagementException;
-import java.security.NoSuchAlgorithmException;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
@@ -33,6 +31,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.UriBuilder;
 
 import org.codehaus.jackson.map.ObjectMapper;
 import org.slf4j.Logger;
@@ -44,7 +43,6 @@ import com.sun.jersey.api.client.WebResource;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.CommUtils;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.PropositionWrapper;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.User;
-import javax.ws.rs.core.UriBuilder;
 
 
 public class ListSystemPropositionChildrenServlet extends HttpServlet {
@@ -83,18 +81,9 @@ public class ListSystemPropositionChildrenServlet extends HttpServlet {
 				.getInitParameter("eureka-services-url");
 
 		Client client;
-		try {
 
-			client = CommUtils.getClient();
-			this.webResource = client.resource(eurekaServicesUrl);
-
-		} catch (KeyManagementException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (NoSuchAlgorithmException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		client = CommUtils.getClient();
+		this.webResource = client.resource(eurekaServicesUrl);
 
 	}
 
@@ -126,15 +115,7 @@ public class ListSystemPropositionChildrenServlet extends HttpServlet {
 
 
 		Client client = null;
-		try {
-			client = CommUtils.getClient();
-		} catch (KeyManagementException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (NoSuchAlgorithmException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		client = CommUtils.getClient();
 		Principal principal = req.getUserPrincipal();
 		String userName = principal.getName();
 		String eurekaServicesUrl = req.getSession().getServletContext()

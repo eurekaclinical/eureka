@@ -20,8 +20,6 @@
 package edu.emory.cci.aiw.cvrg.eureka.servlet.proposition;
 
 import java.io.IOException;
-import java.security.KeyManagementException;
-import java.security.NoSuchAlgorithmException;
 import java.security.Principal;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -92,58 +90,51 @@ public class EditorHomeServlet extends HttpServlet {
 		List<JsonTreeData> l = new ArrayList<JsonTreeData>();
 		String eurekaServicesUrl = req.getSession().getServletContext()
 		        .getInitParameter("eureka-services-url");
-		try {
-			Client client = CommUtils.getClient();
-			Principal principal = req.getUserPrincipal();
-			String userName = principal.getName();
+		Client client = CommUtils.getClient();
+		Principal principal = req.getUserPrincipal();
+		String userName = principal.getName();
 
-			LOGGER.debug("got username {}", userName);
-			WebResource webResource = client.resource(eurekaServicesUrl);
-			User user = webResource.path("/api/user/byname/" + userName)
-			        .accept(MediaType.APPLICATION_JSON).get(User.class);
+		LOGGER.debug("got username {}", userName);
+		WebResource webResource = client.resource(eurekaServicesUrl);
+		User user = webResource.path("/api/user/byname/" + userName)
+		        .accept(MediaType.APPLICATION_JSON).get(User.class);
 
-			List<PropositionWrapper> props = webResource
-			        .path("/api/proposition/user/list/" + user.getId())
-			        .accept(MediaType.APPLICATION_JSON)
-			        .get(new GenericType<List<PropositionWrapper>>() {
-				        // Nothing to implement, used to hold returned data.
-			        });
-			SimpleDateFormat df = new SimpleDateFormat("MM/dd/yyyy");
-			for (PropositionWrapper proposition : props) {
-				JsonTreeData d = createData(
-				        String.valueOf(proposition.getId()),
-				        this.getDisplayName(proposition));
+		List<PropositionWrapper> props = webResource
+		        .path("/api/proposition/user/list/" + user.getId())
+		        .accept(MediaType.APPLICATION_JSON)
+		        .get(new GenericType<List<PropositionWrapper>>() {
+			        // Nothing to implement, used to hold returned data.
+		        });
+		SimpleDateFormat df = new SimpleDateFormat("MM/dd/yyyy");
+		for (PropositionWrapper proposition : props) {
+			JsonTreeData d = createData(
+			        String.valueOf(proposition.getId()),
+			        this.getDisplayName(proposition));
 
-				d.setKeyVal("abbrevDisplay", proposition.getAbbrevDisplayName());
-				d.setKeyVal("displayName", proposition.getDisplayName());
+			d.setKeyVal("abbrevDisplay", proposition.getAbbrevDisplayName());
+			d.setKeyVal("displayName", proposition.getDisplayName());
 
-				if (proposition.getType() == Type.CATEGORIZATION) {
-					d.setKeyVal("type", "Categorical");
-				} else if (proposition.getType() == Type.SEQUENCE) {
-					d.setKeyVal("type", "Sequence");
-				} else if (proposition.getType() == Type.FREQUENCY) {
-					d.setKeyVal("type", "Frequency");
-				} else if (proposition.getType() == Type.VALUE_THRESHOLD) {
-					d.setKeyVal("type", "Value Threshold");
-				}
-
-				if (proposition.getCreated() != null) {
-					LOGGER.debug("created date: "
-					        + df.format(proposition.getCreated()));
-					d.setKeyVal("created", df.format(proposition.getCreated()));
-				}
-				if (proposition.getLastModified() != null) {
-					d.setKeyVal("lastModified",
-					        df.format(proposition.getLastModified()));
-				}
-				l.add(d);
-				LOGGER.debug("Added user prop: " + d.getData());
+			if (proposition.getType() == Type.CATEGORIZATION) {
+				d.setKeyVal("type", "Categorical");
+			} else if (proposition.getType() == Type.SEQUENCE) {
+				d.setKeyVal("type", "Sequence");
+			} else if (proposition.getType() == Type.FREQUENCY) {
+				d.setKeyVal("type", "Frequency");
+			} else if (proposition.getType() == Type.VALUE_THRESHOLD) {
+				d.setKeyVal("type", "Value Threshold");
 			}
 
-		} catch (NoSuchAlgorithmException nsae) {
-			throw new ServletException(nsae);
-		} catch (KeyManagementException kme) {
-			throw new ServletException(kme);
+			if (proposition.getCreated() != null) {
+				LOGGER.debug("created date: "
+				        + df.format(proposition.getCreated()));
+				d.setKeyVal("created", df.format(proposition.getCreated()));
+			}
+			if (proposition.getLastModified() != null) {
+				d.setKeyVal("lastModified",
+				        df.format(proposition.getLastModified()));
+			}
+			l.add(d);
+			LOGGER.debug("Added user prop: " + d.getData());
 		}
 
 		req.setAttribute("props", l);

@@ -21,8 +21,6 @@ package edu.emory.cci.aiw.cvrg.eureka.servlet.proposition;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.security.KeyManagementException;
-import java.security.NoSuchAlgorithmException;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
@@ -32,6 +30,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.UriBuilder;
 
 import org.codehaus.jackson.map.ObjectMapper;
 import org.slf4j.Logger;
@@ -44,7 +43,6 @@ import com.sun.jersey.api.client.WebResource;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.CommUtils;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.PropositionWrapper;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.User;
-import javax.ws.rs.core.UriBuilder;
 
 
 public class SystemPropositionListServlet extends HttpServlet {
@@ -52,7 +50,7 @@ public class SystemPropositionListServlet extends HttpServlet {
 	private static final Logger LOGGER = LoggerFactory
 			.getLogger(SystemPropositionListServlet.class);
 
-	
+
 
 	private JsonTreeData createData(PropositionWrapper proposition) {
 		JsonTreeData d = new JsonTreeData();
@@ -62,9 +60,9 @@ public class SystemPropositionListServlet extends HttpServlet {
         // SBA - not implemented for for sub-children so I need to set it manually for now.
         //if (proposition.isParent() || proposition.getChildren().size() > 0) {
 		    //d.setKeyVal("class", "jstree-closed");
-        //} 
+        //}
 		d.setKeyVal("class", "jstree-closed");
-		
+
 		return d;
 	}
 
@@ -87,7 +85,7 @@ public class SystemPropositionListServlet extends HttpServlet {
 
         return displayName;
     }
-	
+
 
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp)
@@ -102,66 +100,59 @@ public class SystemPropositionListServlet extends HttpServlet {
 		List<JsonTreeData> l = new ArrayList<JsonTreeData>();
 		String eurekaServicesUrl = req.getSession().getServletContext()
 				.getInitParameter("eureka-services-url");
-		try {
-			Client client = CommUtils.getClient();
-			Principal principal = req.getUserPrincipal();
-			String userName = principal.getName();
-					
-			LOGGER.debug("got username {}", userName);
-			WebResource webResource = client.resource(eurekaServicesUrl);
-			User user = webResource.path("/api/user/byname/" + userName)
-					.accept(MediaType.APPLICATION_JSON).get(User.class);
+		Client client = CommUtils.getClient();
+		Principal principal = req.getUserPrincipal();
+		String userName = principal.getName();
 
-            String propId = req.getParameter("id");
-			
-			if (propId == null) {
-				throw new ServletException("Invalid parameter id: " + propId);
-			}
+		LOGGER.debug("got username {}", userName);
+		WebResource webResource = client.resource(eurekaServicesUrl);
+		User user = webResource.path("/api/user/byname/" + userName)
+				.accept(MediaType.APPLICATION_JSON).get(User.class);
 
-            if (propId.equals("root")) {
-			    List<PropositionWrapper> props = webResource.path("/api/proposition/system/" + user.getId() + "/list")
-					    .get(new GenericType<List<PropositionWrapper>>() {
-						    // Nothing to implement, used to hold returned data.
-					    });
-			    for (PropositionWrapper proposition : props) {
-				    JsonTreeData d = createData(proposition);
-				    l.add(d);
-			    }
+		String propId = req.getParameter("id");
 
-            } else {
-				String path = UriBuilder.fromPath("/")
-						.segment("api")
-						.segment("proposition")
-						.segment("system")
-						.segment("" + user.getId())
-						.segment(propId).build().toString();
-		        PropositionWrapper propWrapper =
-				        webResource.path(path)
-				        .accept(MediaType.APPLICATION_JSON)
-				        .get(PropositionWrapper.class);
-        
-		        for (PropositionWrapper propChild : propWrapper.getChildren()) {
-                    if (propChild.isInSystem()) {
+		if (propId == null) {
+			throw new ServletException("Invalid parameter id: " + propId);
+		}
 
-			            JsonTreeData newData = createData(propChild);
-			            newData.setType("system");
-			            l.add(newData);
+		if (propId.equals("root")) {
+					List<PropositionWrapper> props = webResource.path("/api/proposition/system/" + user.getId() + "/list")
+							.get(new GenericType<List<PropositionWrapper>>() {
+								// Nothing to implement, used to hold returned data.
+							});
+					for (PropositionWrapper proposition : props) {
+						JsonTreeData d = createData(proposition);
+						l.add(d);
+					}
+
+		} else {
+						String path = UriBuilder.fromPath("/")
+								.segment("api")
+								.segment("proposition")
+								.segment("system")
+								.segment("" + user.getId())
+								.segment(propId).build().toString();
+				PropositionWrapper propWrapper =
+						webResource.path(path)
+						.accept(MediaType.APPLICATION_JSON)
+						.get(PropositionWrapper.class);
+
+				for (PropositionWrapper propChild : propWrapper.getChildren()) {
+		        if (propChild.isInSystem()) {
+
+					JsonTreeData newData = createData(propChild);
+					newData.setType("system");
+					l.add(newData);
 
 
-                    }
+		        }
 
-                }
+		    }
 
-            }
-			
-			LOGGER.debug("executed resource get");
-		} catch (NoSuchAlgorithmException nsae) {
-			throw new ServletException(nsae);
-		} catch (KeyManagementException kme) {
-			throw new ServletException(kme);
-		}		
-		
-			
+		}
+
+		LOGGER.debug("executed resource get");
+
 		ObjectMapper mapper = new ObjectMapper();
 		resp.setContentType("application/json");
 		PrintWriter out = resp.getWriter();

@@ -21,8 +21,6 @@ package edu.emory.cci.aiw.cvrg.eureka.servlet.proposition;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.security.KeyManagementException;
-import java.security.NoSuchAlgorithmException;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
@@ -43,7 +41,6 @@ import com.sun.jersey.api.client.WebResource;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.CommUtils;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.PropositionWrapper;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.Proposition;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.User;
 
 
@@ -52,13 +49,13 @@ public class UserPropositionListServlet extends HttpServlet {
 	private static final Logger LOGGER = LoggerFactory
 			.getLogger(UserPropositionListServlet.class);
 
-	
+
 
 	private JsonTreeData createData(PropositionWrapper proposition) {
 		JsonTreeData d = new JsonTreeData();
 		d.setData(proposition.getAbbrevDisplayName());
 		d.setKeyVal("id", String.valueOf(proposition.getId()));
-		
+
 		return d;
 	}
 
@@ -82,7 +79,7 @@ public class UserPropositionListServlet extends HttpServlet {
         return displayName;
     }
 
-	
+
 
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp)
@@ -97,36 +94,27 @@ public class UserPropositionListServlet extends HttpServlet {
 		List<JsonTreeData> l = new ArrayList<JsonTreeData>();
 		String eurekaServicesUrl = req.getSession().getServletContext()
 				.getInitParameter("eureka-services-url");
-		try {
-			Client client = CommUtils.getClient();
-			Principal principal = req.getUserPrincipal();
-			String userName = principal.getName();
-					
-			LOGGER.debug("got username {}", userName);
-			WebResource webResource = client.resource(eurekaServicesUrl);
-			User user = webResource.path("/api/user/byname/" + userName)
-					.accept(MediaType.APPLICATION_JSON).get(User.class);
-			
-			List<PropositionWrapper> props = webResource.path("/api/proposition/user/list/"+ user.getId())
-					.accept(MediaType.APPLICATION_JSON)
-					.get(new GenericType<List<PropositionWrapper>>() {
-						// Nothing to implement, used to hold returned data.
-					});
-			for (PropositionWrapper proposition : props) {
-				JsonTreeData d = createData(proposition); 
-				l.add(d);
-				LOGGER.debug("Added user prop: " + d.getData());
-			}
-			LOGGER.debug("executed resource get");
-		} catch (NoSuchAlgorithmException nsae) {
-			throw new ServletException(nsae);
-		} catch (KeyManagementException kme) {
-			throw new ServletException(kme);
-		}		
-		
-			
+		Client client = CommUtils.getClient();
+		Principal principal = req.getUserPrincipal();
+		String userName = principal.getName();
 
-		
+		LOGGER.debug("got username {}", userName);
+		WebResource webResource = client.resource(eurekaServicesUrl);
+		User user = webResource.path("/api/user/byname/" + userName)
+				.accept(MediaType.APPLICATION_JSON).get(User.class);
+
+		List<PropositionWrapper> props = webResource.path("/api/proposition/user/list/"+ user.getId())
+				.accept(MediaType.APPLICATION_JSON)
+				.get(new GenericType<List<PropositionWrapper>>() {
+					// Nothing to implement, used to hold returned data.
+				});
+		for (PropositionWrapper proposition : props) {
+			JsonTreeData d = createData(proposition);
+			l.add(d);
+			LOGGER.debug("Added user prop: " + d.getData());
+		}
+		LOGGER.debug("executed resource get");
+
 		ObjectMapper mapper = new ObjectMapper();
 		resp.setContentType("application/json");
 		PrintWriter out = resp.getWriter();
