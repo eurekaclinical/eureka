@@ -27,19 +27,32 @@ import edu.emory.cci.aiw.cvrg.eureka.common.entity.Proposition;
  * layer data model.
  * 
  * @param <E>
- *            The data element type to translate from, a subclass of {@link DataElement}..
+ *            The data element type to translate from, a subclass of
+ *            {@link DataElement}..
  * @param <P>
- *            The proposition type to translate to, an implementation of {@link Proposition}.
+ *            The proposition type to translate to, an implementation of
+ *            {@link Proposition}.
  */
-interface PropositionTranslator<E extends DataElement, P extends Proposition> {
+public interface PropositionTranslator<E extends DataElement, P extends Proposition> {
 
 	/**
 	 * Translates the given data element to a proposition understood by the
-	 * services layer data model.
+	 * services layer data model. The inverse of {@link #translateFromProposition(Proposition)}
+	 * .
 	 * 
 	 * @param element
 	 *            the data element to translate from
 	 * @return A {@link Proposition} equivalent to the data element.
 	 */
-	P translate(E element);
+	P translateFromElement(E element);
+
+	/**
+	 * Translates the given proposition entity into a data element understood by
+	 * the webapp layer. The inverse of {@link #translateFromElement(DataElement)}.
+	 * 
+	 * @param proposition
+	 *            the proposition to translate from
+	 * @return A {@link DataElement} equivalent to the proposition.
+	 */
+	E translateFromProposition(P proposition);
 }
