@@ -29,7 +29,6 @@ import com.google.inject.Module;
 import com.google.inject.servlet.GuiceFilter;
 import com.sun.jersey.api.client.GenericType;
 import com.sun.jersey.api.client.WebResource;
-import com.sun.jersey.test.framework.AppDescriptor;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.User;
 import edu.emory.cci.aiw.cvrg.eureka.common.test.AbstractResourceTest;
