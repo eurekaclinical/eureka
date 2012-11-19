@@ -22,18 +22,18 @@ package edu.emory.cci.aiw.cvrg.eureka.services.util;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.protempa.PropertyDefinition;
 import org.protempa.PropositionDefinition;
 
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.PropositionWrapper;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.Categorization;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.HighLevelAbstraction;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.DataElement;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.SystemElement;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.Proposition;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.PropositionChildrenVisitor;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.PropositionTypeVisitor;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.SystemProposition;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.PropositionDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.finder.SystemPropositionFinder;
 import edu.emory.cci.aiw.cvrg.eureka.services.packaging.PropositionDefinitionPackagerVisitor;
+import edu.emory.cci.aiw.cvrg.eureka.services.translation.DataElementTranslatorVisitor;
+import edu.emory.cci.aiw.cvrg.eureka.services.translation.PropositionTranslatorVisitor;
 
 /**
  * Provides common utility functions operating on {@link Proposition}s.
@@ -44,165 +44,68 @@ public final class PropositionUtil {
 		// do not allow instantiation.
 	}
 
-	private static List<Proposition> getTargets(Proposition inProposition) {
-		List<Proposition> propositions;
-		List<Proposition> targets;
-
-		PropositionChildrenVisitor visitor = new PropositionChildrenVisitor();
+	public static DataElement wrap(Proposition inProposition,
+	        PropositionDao inPropositionDao, SystemPropositionFinder inFinder) {
+		PropositionTranslatorVisitor visitor = new PropositionTranslatorVisitor(
+		        inProposition.getUserId(), inPropositionDao, inFinder);
 		inProposition.accept(visitor);
-		targets = visitor.getChildren();
-
-		if (targets == null) {
-			propositions = new ArrayList<Proposition>();
-		} else {
-			propositions = targets;
-		}
-
-		return propositions;
-	}
-
-	public static PropositionWrapper wrap(Proposition inProposition,
-	        boolean summarize) {
-
-		PropositionWrapper wrapper = new PropositionWrapper();
-		List<Proposition> targets = PropositionUtil.getTargets(inProposition);
-
-		if (!summarize) {
-			List<PropositionWrapper> children = new ArrayList<PropositionWrapper>();
-			for (Proposition target : targets) {
-				children.add(PropositionUtil.wrap(target, true));
-			}
-			wrapper.setChildren(children);
-		}
-
-		if (inProposition.getId() != null) {
-			wrapper.setId(inProposition.getId());
-		}
-
-		if (inProposition.getUserId() != null) {
-			wrapper.setUserId(inProposition.getUserId());
-		}
-
-		wrapper.setParent(targets.size() > 0);
-		wrapper.setSummarized(summarize);
-		wrapper.setInSystem(inProposition.isInSystem());
-		wrapper.setAbbrevDisplayName(inProposition.getAbbrevDisplayName());
-		wrapper.setDisplayName(inProposition.getDisplayName());
-		wrapper.setKey(inProposition.getKey());
-		wrapper.setCreated(inProposition.getCreated());
-		wrapper.setLastModified(inProposition.getLastModified());
-
-		PropositionTypeVisitor visitor = new PropositionTypeVisitor();
-		inProposition.accept(visitor);
-		wrapper.setType(visitor.getType());
-
-		return wrapper;
-	}
-
-	public static List<PropositionWrapper> wrapAll(
-	        List<Proposition> inPropositions) {
-		List<PropositionWrapper> wrappers = new ArrayList<PropositionWrapper>(
-		        inPropositions.size());
-		for (Proposition proposition : inPropositions) {
-			wrappers.add(PropositionUtil.wrap(proposition, false));
-		}
-		return wrappers;
+		return visitor.getDataElement();
 	}
 
 	/**
 	 * Wraps a proposition definition into a proposition wrapper.
 	 */
-	public static PropositionWrapper wrap(PropositionDefinition inDefinition,
+	public static SystemElement wrap(PropositionDefinition inDefinition,
 	        boolean summarize, Long inUserId,
 	        SystemPropositionFinder inPropositionFinder) {
-		PropositionWrapper wrapper = new PropositionWrapper();
-		wrapper.setKey(inDefinition.getId());
-		wrapper.setInSystem(true);
-		wrapper.setAbbrevDisplayName(inDefinition.getAbbreviatedDisplayName());
-		wrapper.setDisplayName(inDefinition.getDisplayName());
-		wrapper.setSummarized(summarize);
-		wrapper.setParent(inDefinition.getChildren().length > 0);
+		SystemElement systemElement = new SystemElement();
+		systemElement.setKey(inDefinition.getId());
+		systemElement.setInSystem(true);
+		systemElement.setAbbrevDisplayName(inDefinition
+		        .getAbbreviatedDisplayName());
+		systemElement.setDisplayName(inDefinition.getDisplayName());
+		systemElement.setSummarized(summarize);
+		systemElement.setParent(inDefinition.getChildren().length > 0);
 
 		if (!summarize) {
-			List<PropositionWrapper> children = new ArrayList<PropositionWrapper>();
+			List<SystemElement> children = new ArrayList<SystemElement>();
 			for (String key : inDefinition.getChildren()) {
 				children.add(wrap(inPropositionFinder.find(inUserId, key),
 				        true, inUserId, inPropositionFinder));
 			}
-			wrapper.setChildren(children);
+			systemElement.setChildren(children);
+
+			List<String> properties = new ArrayList<String>();
+			for (PropertyDefinition propertyDef : inDefinition
+			        .getPropertyDefinitions()) {
+				properties.add(propertyDef.getName());
+			}
+			systemElement.setProperties(properties);
 		}
 
-		return wrapper;
+		return systemElement;
 	}
 
-	public static Proposition unwrap(PropositionWrapper inWrapper, Long userId,
-	        PropositionDao inPropositionDao) {
-
-		Proposition proposition;
-		PropositionTypeVisitor visitor = new PropositionTypeVisitor();
-		List<Proposition> targets = new ArrayList<Proposition>();
-
-		if (inWrapper.getId() != null) {
-			proposition = inPropositionDao.retrieve(inWrapper.getId());
-		} else {
-			switch (inWrapper.getType()) {
-				case CATEGORIZATION:
-					proposition = new Categorization();
-					break;
-				case SEQUENCE:
-					proposition = new HighLevelAbstraction();
-					break;
-				default:
-					throw new UnsupportedOperationException(
-					        "Only categorization and sequence are currently supported");
-			}
-		}
-
-		if (inWrapper.getChildren() != null) {
-			for (PropositionWrapper child : inWrapper.getChildren()) {
-				if (child.isInSystem()) {
-					Proposition p = inPropositionDao.getByUserAndKey(userId,
-						child.getKey());
-					if (p == null) {
-						p = new SystemProposition();
-						p.setKey(child.getKey());
-						p.setInSystem(true);
-					}
-					targets.add(p);
-				} else {
-					targets.add(inPropositionDao.retrieve(child.getId()));
-				}
-			}
-		}
-
-		if (inWrapper.getType() == PropositionWrapper.Type.SEQUENCE) {
-			((HighLevelAbstraction) proposition).setAbstractedFrom(targets);
-		} else if (inWrapper.getType() == PropositionWrapper.Type.CATEGORIZATION) {
-			((Categorization) proposition).setInverseIsA(targets);
-		}
-
-		proposition.setKey(inWrapper.getKey());
-		proposition.setAbbrevDisplayName(inWrapper.getAbbrevDisplayName());
-		proposition.setDisplayName(inWrapper.getDisplayName());
-		proposition.setInSystem(inWrapper.isInSystem());
-
-		if (inWrapper.getUserId() != null) {
-			proposition.setUserId(inWrapper.getUserId());
-		}
-		return proposition;
+	public static Proposition unwrap(DataElement inElement, Long inUserId,
+	        PropositionDao inPropositionDao, SystemPropositionFinder inFinder) {
+		DataElementTranslatorVisitor visitor = new DataElementTranslatorVisitor(
+		        inUserId, inPropositionDao, inFinder);
+		inElement.accept(visitor);
+		return visitor.getProposition();
 	}
 
 	/**
 	 * Converts a proposition entity into an equivalent proposition definition
 	 * understood by Protempa.
-	 *
+	 * 
 	 * @param inProposition
 	 *            the {@link Proposition} to convert
 	 * @return a {@link PropositionDefinition} corresponding to the given
 	 *         proposition entity
 	 */
 	public static PropositionDefinition pack(Proposition inProposition) {
-		PropositionDefinitionPackagerVisitor visitor = new PropositionDefinitionPackagerVisitor();
+		PropositionDefinitionPackagerVisitor visitor = new PropositionDefinitionPackagerVisitor(
+		        inProposition.getUserId());
 		inProposition.accept(visitor);
 		return visitor.getPropositionDefinition();
 	}
@@ -210,14 +113,14 @@ public final class PropositionUtil {
 	/**
 	 * Converts a list of proposition entities into equivalent proposition
 	 * definitions by repeatedly calling {@link #pack(Proposition)}.
-	 *
+	 * 
 	 * @param inPropositions
 	 *            a {@link List} of {@link Proposition}s to convert
 	 * @return a {@link List} of {@link PropositionDefinition}s corresponding to
 	 *         the given proposition entities
 	 */
 	public static List<PropositionDefinition> packAll(
-	        List<Proposition> inPropositions) {
+	        List<Proposition> inPropositions, Long inUserId) {
 		List<PropositionDefinition> result = new ArrayList<PropositionDefinition>();
 
 		for (Proposition p : inPropositions) {
