@@ -34,7 +34,6 @@ import org.protempa.HighLevelAbstractionDefinition;
 import org.protempa.IntervalSide;
 import org.protempa.LowLevelAbstractionDefinition;
 import org.protempa.NotRecordedSourceId;
-import org.protempa.Offsets;
 import org.protempa.PairDefinition;
 import org.protempa.PrimitiveParameterDefinition;
 import org.protempa.PropertyDefinition;
@@ -51,9 +50,11 @@ import org.protempa.proposition.value.NumberValue;
 import org.protempa.proposition.value.Unit;
 import org.protempa.proposition.value.Value;
 
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.DataElement;
+
 /**
  * Provides custom JSON serialization/deserialization from proposition
- * definitions.
+ * definitions and other objects.
  */
 @Provider
 public class ObjectMapperProvider implements ContextResolver<ObjectMapper> {
@@ -63,10 +64,12 @@ public class ObjectMapperProvider implements ContextResolver<ObjectMapper> {
 	public ObjectMapperProvider() {
 		this.mapper = new ObjectMapper();
 		SimpleModule module = new SimpleModule(getClass().getName(),
-		        new Version(1, 0, 0, "")) {
+		        new Version(1, 0, 0, "eureka")) {
 			@Override
 			public void setupModule(SetupContext context) {
 				super.setupModule(context);
+				context.setMixInAnnotations(DataElement.class,
+				        DataElementMixin.class);
 				context.setMixInAnnotations(PropositionDefinition.class,
 				        PropositionMixin.class);
 				context.setMixInAnnotations(
