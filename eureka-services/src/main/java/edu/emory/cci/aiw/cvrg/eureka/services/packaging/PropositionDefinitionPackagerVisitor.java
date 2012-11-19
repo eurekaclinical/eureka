@@ -30,14 +30,20 @@ public final class PropositionDefinitionPackagerVisitor implements
         PropositionEntityVisitor {
 
 	private PropositionDefinition propositionDefinition;
+	private final Long userId;
+
+	public PropositionDefinitionPackagerVisitor(Long inUserId) {
+		this.userId = inUserId;
+	}
 
 	public PropositionDefinition getPropositionDefinition() {
 		return propositionDefinition;
 	}
-	
+
 	@Override
 	public void visit(SystemProposition proposition) {
-		
+		this.propositionDefinition = new SystemPropositionPackager(this.userId)
+		        .pack(proposition);
 	}
 
 	@Override
