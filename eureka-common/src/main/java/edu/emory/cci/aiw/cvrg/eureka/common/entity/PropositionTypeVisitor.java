@@ -19,29 +19,29 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.common.entity;
 
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.PropositionWrapper;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.DataElement;
 
 public final class PropositionTypeVisitor implements PropositionEntityVisitor {
 
-	private PropositionWrapper.Type type;
+	private DataElement.Type type;
 	
-	public PropositionWrapper.Type getType() {
+	public DataElement.Type getType() {
 		return type;
 	}
 	
 	@Override
     public void visit(SystemProposition proposition) {
-		this.type = PropositionWrapper.Type.SYSTEM;
+		this.type = DataElement.Type.SYSTEM;
     }
 
 	@Override
 	public void visit(Categorization categorization) {
-		this.type = PropositionWrapper.Type.CATEGORIZATION;
+		this.type = DataElement.Type.CATEGORIZATION;
 	}
 
 	@Override
 	public void visit(HighLevelAbstraction highLevelAbstraction) {
-		this.type = PropositionWrapper.Type.SEQUENCE;
+		this.type = DataElement.Type.SEQUENCE;
 	}
 
 }
