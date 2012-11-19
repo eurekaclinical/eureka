@@ -125,6 +125,7 @@ public class Setup implements TestDataProvider {
 		entityManager.getTransaction().begin();
 		for (User u : users) {
 			Proposition proposition1 = new Categorization();
+			proposition1.setKey("test-cat");
 			proposition1.setAbbrevDisplayName("test");
 			proposition1.setDisplayName("Test Proposition");
 			proposition1.setUserId(u.getId());
@@ -132,6 +133,7 @@ public class Setup implements TestDataProvider {
 			propositions.add(proposition1);
 
 			Proposition proposition2 = new HighLevelAbstraction();
+			proposition2.setKey("test-hla");
 			proposition2.setAbbrevDisplayName("test");
 			proposition2.setDisplayName("Test Proposition");
 			proposition2.setUserId(u.getId());
