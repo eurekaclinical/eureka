@@ -44,6 +44,10 @@ public class Relation {
 	@OneToOne
 	private ExtendedProposition rhsExtendedProposition;
 
+	@OneToOne
+	@JoinColumn(referencedColumnName = "id")
+	private RelationOperator op;
+	
 	private Integer minf1s2;
 
 	@OneToOne
@@ -94,6 +98,14 @@ public class Relation {
 		rhsExtendedProposition = inRhsExtendedProposition;
 	}
 
+	public RelationOperator getOp() {
+		return op;
+	}
+	
+	public void setOp(RelationOperator inOp) {
+		op = inOp;
+	}
+	
 	public Integer getMinf1s2() {
 		return minf1s2;
 	}
