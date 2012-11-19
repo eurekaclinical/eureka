@@ -83,10 +83,17 @@ function saveSequence (elem) {
 function saveCategorical (elem) {
 	console.log('SAVING CATEGORIZATION');
 	var categorization = new Object();
+	var childElements = new Array();
 	var $propositions = $(elem).find('ul.sortable').find('li');
 	categorization.abbrevDisplayName = $('input#propAbbrevDisplayName').val();
 	categorization.displayName = $('textarea#propDisplayName').val();
-	
+	$propositions.each(function (i, p) {
+		var child = {
+		};
+		childElements.push(child);
+	});
+	categorization.children = childElements;
+	postProposition('savecategorical', categorization, function (data) {window.location.href = 'editorhome'});
 }
 
 

@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -21,7 +21,6 @@ package edu.emory.cci.aiw.cvrg.eureka.services.translation;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.DataElement;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.Proposition;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.PropositionTypeVisitor;
 
 /**
  * Contains common utility functions for all implementations of
@@ -29,8 +28,6 @@ import edu.emory.cci.aiw.cvrg.eureka.common.entity.PropositionTypeVisitor;
  */
 class PropositionTranslatorUtil {
 
-	private static PropositionTypeVisitor typeVisitor = new PropositionTypeVisitor();
-	
 	private PropositionTranslatorUtil() {
 		// prevents instantiation
 	}
@@ -38,7 +35,7 @@ class PropositionTranslatorUtil {
 	/**
 	 * Populates the fields common to all propositions based on the given
 	 * proposition.
-	 * 
+	 *
 	 * @param proposition
 	 *            the {@link Proposition} to populate. Modified as a result of
 	 *            calling this method.
@@ -59,7 +56,7 @@ class PropositionTranslatorUtil {
 	/**
 	 * Populates the fields common to all data elements based on the given
 	 * proposition.
-	 * 
+	 *
 	 * @param dataElement
 	 *            the {@link DataElement} to populate. Modified as a result of
 	 *            calling this method.
@@ -75,8 +72,5 @@ class PropositionTranslatorUtil {
 		dataElement.setCreated(proposition.getCreated());
 		dataElement.setLastModified(proposition.getLastModified());
 		dataElement.setUserId(proposition.getUserId());
-		
-		proposition.accept(typeVisitor);
-		dataElement.setType(typeVisitor.getType());
 	}
 }
