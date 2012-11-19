@@ -40,6 +40,7 @@ import com.sun.jersey.api.client.GenericType;
 import com.sun.jersey.api.client.WebResource;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.CommUtils;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.DataElement;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.PropositionWrapper;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.User;
 
@@ -51,7 +52,7 @@ public class UserPropositionListServlet extends HttpServlet {
 
 
 
-	private JsonTreeData createData(PropositionWrapper proposition) {
+	private JsonTreeData createData(DataElement proposition) {
 		JsonTreeData d = new JsonTreeData();
 		d.setData(proposition.getAbbrevDisplayName());
 		d.setKeyVal("id", String.valueOf(proposition.getId()));
@@ -59,7 +60,7 @@ public class UserPropositionListServlet extends HttpServlet {
 		return d;
 	}
 
-    private String getDisplayName(PropositionWrapper p) {
+    private String getDisplayName(DataElement p) {
         String displayName = "";
 
         if (p.getAbbrevDisplayName() != null && !p.getAbbrevDisplayName().equals("")) {
@@ -103,12 +104,12 @@ public class UserPropositionListServlet extends HttpServlet {
 		User user = webResource.path("/api/user/byname/" + userName)
 				.accept(MediaType.APPLICATION_JSON).get(User.class);
 
-		List<PropositionWrapper> props = webResource.path("/api/proposition/user/list/"+ user.getId())
+		List<DataElement> props = webResource.path("/api/proposition/user/list/"+ user.getId())
 				.accept(MediaType.APPLICATION_JSON)
-				.get(new GenericType<List<PropositionWrapper>>() {
+				.get(new GenericType<List<DataElement>>() {
 					// Nothing to implement, used to hold returned data.
 				});
-		for (PropositionWrapper proposition : props) {
+		for (DataElement proposition : props) {
 			JsonTreeData d = createData(proposition);
 			l.add(d);
 			LOGGER.debug("Added user prop: " + d.getData());

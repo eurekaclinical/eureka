@@ -38,44 +38,44 @@ import org.slf4j.LoggerFactory;
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.WebResource;
 
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.CategoricalElement;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.CommUtils;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.PropositionWrapper;
-
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.DataElement;
 
 public class ListUserDefinedPropositionChildrenServlet extends HttpServlet {
 
 	private static final Logger LOGGER = LoggerFactory
-			.getLogger(ListUserDefinedPropositionChildrenServlet.class);
+	        .getLogger(ListUserDefinedPropositionChildrenServlet.class);
 
 	private WebResource webResource;
 
-    private String getDisplayName(PropositionWrapper p) {
-        String displayName = "";
+	private String getDisplayName(DataElement p) {
+		String displayName = "";
 
-        if (p.getAbbrevDisplayName() != null && !p.getAbbrevDisplayName().equals("")) {
+		if (p.getAbbrevDisplayName() != null
+		        && !p.getAbbrevDisplayName().equals("")) {
 
-            displayName = p.getAbbrevDisplayName();
+			displayName = p.getAbbrevDisplayName();
 
-        } else if (p.getDisplayName() != null && !p.getDisplayName().equals("")) {
+		} else if (p.getDisplayName() != null && !p.getDisplayName().equals("")) {
 
-            displayName = p.getDisplayName();
+			displayName = p.getDisplayName();
 
-        } else {
+		} else {
 
-            displayName = p.getKey();
+			displayName = p.getKey();
 
-        }
+		}
 
-        return displayName;
-    }
-
+		return displayName;
+	}
 
 	@Override
 	public void init(ServletConfig config) throws ServletException {
 		// TODO Auto-generated method stub
 		super.init(config);
-		String eurekaServicesUrl = config.getServletContext()
-				.getInitParameter("eureka-services-url");
+		String eurekaServicesUrl = config.getServletContext().getInitParameter(
+		        "eureka-services-url");
 
 		Client client;
 
@@ -94,50 +94,47 @@ public class ListUserDefinedPropositionChildrenServlet extends HttpServlet {
 
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp)
-			throws ServletException, IOException {
+	        throws ServletException, IOException {
 		doGet(req, resp);
 	}
 
-
-
 	private void getAllData(JsonTreeData d) {
-		PropositionWrapper propWrapper = webResource.path("/api/proposition/user/get/"+ d.getId())
-				.accept(MediaType.APPLICATION_JSON)
-				.get(PropositionWrapper.class);
-		LOGGER.debug("got propWrapper {}", propWrapper.getId());
+		DataElement dataElement = webResource
+		        .path("/api/proposition/user/get/" + d.getId())
+		        .accept(MediaType.APPLICATION_JSON).get(DataElement.class);
+		LOGGER.debug("got propWrapper {}", dataElement.getId());
 
-		for (PropositionWrapper pw : propWrapper.getChildren()) {
-            if (pw.isInSystem()) {
+		if (dataElement.getType() == DataElement.Type.CATEGORIZATION) {
+			CategoricalElement ce = (CategoricalElement) dataElement;
+			for (DataElement de : ce.getChildren()) {
+				if (de.isInSystem()) {
 
-			    JsonTreeData newData = createData(pw.getKey(), pw.getKey());
-			    newData.setType("system");
-			    LOGGER.debug("add sysTarget {}", pw.getKey());
-			    d.addNodes(newData);
+					JsonTreeData newData = createData(de.getKey(), de.getKey());
+					newData.setType("system");
+					LOGGER.debug("add sysTarget {}", de.getKey());
+					d.addNodes(newData);
 
-            }
+				}
+			}
+
+			for (DataElement userDataElement : ce.getChildren()) {
+				if (!userDataElement.isInSystem()) {
+
+					JsonTreeData newData = createData(
+					        userDataElement.getAbbrevDisplayName(),
+					        String.valueOf(userDataElement.getId().longValue()));
+					getAllData(newData);
+					newData.setType("user");
+					LOGGER.debug("add user defined {}", userDataElement.getId());
+					d.addNodes(newData);
+				}
+			}
 		}
-
-
-		for (PropositionWrapper propUserWrapper : propWrapper.getChildren()) {
-            if (!propUserWrapper.isInSystem()) {
-
-			    JsonTreeData newData = createData(propUserWrapper
-			    	.getAbbrevDisplayName(), String.valueOf(propUserWrapper.getId
-			    	().longValue()));
-			    getAllData(newData);
-			    newData.setType("user");
-			    LOGGER.debug("add user defined {}", propUserWrapper.getId());
-			    d.addNodes(newData);
-            }
-		}
-
 	}
-
 
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
-			throws ServletException, IOException {
-
+	        throws ServletException, IOException {
 
 		Client client = null;
 		client = CommUtils.getClient();
@@ -145,15 +142,14 @@ public class ListUserDefinedPropositionChildrenServlet extends HttpServlet {
 		List<JsonTreeData> l = new ArrayList<JsonTreeData>();
 		String propId = req.getParameter("propId");
 
+		DataElement dataElement = webResource
+		        .path("/api/proposition/user/get/" + propId)
+		        .accept(MediaType.APPLICATION_JSON).get(DataElement.class);
 
-		PropositionWrapper propWrapper = webResource.path("/api/proposition/user/get/"+ propId)
-				.accept(MediaType.APPLICATION_JSON)
-				.get(PropositionWrapper.class);
-
-		JsonTreeData newData = createData(this.getDisplayName(propWrapper), propId);
+		JsonTreeData newData = createData(this.getDisplayName(dataElement),
+		        propId);
 		getAllData(newData);
 		l.add(newData);
-
 
 		ObjectMapper mapper = new ObjectMapper();
 		resp.setContentType("application/json");

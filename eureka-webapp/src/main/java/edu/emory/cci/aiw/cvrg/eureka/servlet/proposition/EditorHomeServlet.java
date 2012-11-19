@@ -39,7 +39,7 @@ import com.sun.jersey.api.client.GenericType;
 import com.sun.jersey.api.client.WebResource;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.CommUtils;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.PropositionWrapper;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.DataElement;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.PropositionWrapper.Type;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.User;
 
@@ -56,21 +56,21 @@ public class EditorHomeServlet extends HttpServlet {
 		return d;
 	}
 
-	private String getDisplayName(PropositionWrapper p) {
+	private String getDisplayName(DataElement e) {
 		String displayName = "";
 
-		if (p.getAbbrevDisplayName() != null
-		        && !p.getAbbrevDisplayName().equals("")) {
+		if (e.getAbbrevDisplayName() != null
+		        && !e.getAbbrevDisplayName().equals("")) {
 
-			displayName = p.getAbbrevDisplayName() + "(" + p.getKey() + ")";
+			displayName = e.getAbbrevDisplayName() + "(" + e.getKey() + ")";
 
-		} else if (p.getDisplayName() != null && !p.getDisplayName().equals("")) {
+		} else if (e.getDisplayName() != null && !e.getDisplayName().equals("")) {
 
-			displayName = p.getDisplayName() + "(" + p.getKey() + ")";
+			displayName = e.getDisplayName() + "(" + e.getKey() + ")";
 
 		} else {
 
-			displayName = p.getKey();
+			displayName = e.getKey();
 
 		}
 
@@ -99,14 +99,14 @@ public class EditorHomeServlet extends HttpServlet {
 		User user = webResource.path("/api/user/byname/" + userName)
 		        .accept(MediaType.APPLICATION_JSON).get(User.class);
 
-		List<PropositionWrapper> props = webResource
+		List<DataElement> props = webResource
 		        .path("/api/proposition/user/list/" + user.getId())
 		        .accept(MediaType.APPLICATION_JSON)
-		        .get(new GenericType<List<PropositionWrapper>>() {
+		        .get(new GenericType<List<DataElement>>() {
 			        // Nothing to implement, used to hold returned data.
 		        });
 		SimpleDateFormat df = new SimpleDateFormat("MM/dd/yyyy");
-		for (PropositionWrapper proposition : props) {
+		for (DataElement proposition : props) {
 			JsonTreeData d = createData(
 			        String.valueOf(proposition.getId()),
 			        this.getDisplayName(proposition));
@@ -114,13 +114,13 @@ public class EditorHomeServlet extends HttpServlet {
 			d.setKeyVal("abbrevDisplay", proposition.getAbbrevDisplayName());
 			d.setKeyVal("displayName", proposition.getDisplayName());
 
-			if (proposition.getType() == Type.CATEGORIZATION) {
+			if (proposition.getType() == DataElement.Type.CATEGORIZATION) {
 				d.setKeyVal("type", "Categorical");
-			} else if (proposition.getType() == Type.SEQUENCE) {
+			} else if (proposition.getType() == DataElement.Type.SEQUENCE) {
 				d.setKeyVal("type", "Sequence");
-			} else if (proposition.getType() == Type.FREQUENCY) {
+			} else if (proposition.getType() == DataElement.Type.FREQUENCY) {
 				d.setKeyVal("type", "Frequency");
-			} else if (proposition.getType() == Type.VALUE_THRESHOLD) {
+			} else if (proposition.getType() == DataElement.Type.VALUE_THRESHOLD) {
 				d.setKeyVal("type", "Value Threshold");
 			}
 

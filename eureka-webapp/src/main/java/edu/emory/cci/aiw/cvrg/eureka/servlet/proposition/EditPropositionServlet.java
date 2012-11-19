@@ -35,7 +35,7 @@ import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.WebResource;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.CommUtils;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.PropositionWrapper;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.DataElement;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.User;
 
 
@@ -68,11 +68,11 @@ public class EditPropositionServlet extends HttpServlet {
 		User user = webResource.path("/api/user/byname/" + userName)
 				.accept(MediaType.APPLICATION_JSON).get(User.class);
 
-		PropositionWrapper propWrapper = webResource.path("/api/proposition/user/get/"+ propId)
+		DataElement dataElement = webResource.path("/api/proposition/user/get/"+ propId)
 		    .accept(MediaType.APPLICATION_JSON)
-		    .get(PropositionWrapper.class);
+		    .get(DataElement.class);
 
-		req.setAttribute("proposition", propWrapper);
+		req.setAttribute("proposition", dataElement);
 
 		req.getRequestDispatcher("/protected/editor.jsp").forward(req, resp);
 	}

@@ -42,64 +42,64 @@ import com.sun.jersey.api.client.WebResource;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.CommUtils;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.PropositionWrapper;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.SystemElement;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.User;
-
 
 public class SystemPropositionListServlet extends HttpServlet {
 
 	private static final Logger LOGGER = LoggerFactory
-			.getLogger(SystemPropositionListServlet.class);
+	        .getLogger(SystemPropositionListServlet.class);
 
-
-
-	private JsonTreeData createData(PropositionWrapper proposition) {
+	private JsonTreeData createData(SystemElement element) {
 		JsonTreeData d = new JsonTreeData();
-		d.setData(this.getDisplayName(proposition));
-		d.setKeyVal("id", proposition.getKey());
+		d.setData(this.getDisplayName(element));
+		d.setKeyVal("id", element.getKey());
 
-        // SBA - not implemented for for sub-children so I need to set it manually for now.
-        //if (proposition.isParent() || proposition.getChildren().size() > 0) {
-		    //d.setKeyVal("class", "jstree-closed");
-        //}
+		// SBA - not implemented for for sub-children so I need to set it
+		// manually for now.
+		// if (proposition.isParent() || proposition.getChildren().size() > 0) {
+		// d.setKeyVal("class", "jstree-closed");
+		// }
 		d.setKeyVal("class", "jstree-closed");
 
 		return d;
 	}
 
-    private String getDisplayName(PropositionWrapper p) {
-        String displayName = "";
+	private String getDisplayName(SystemElement p) {
+		String displayName = "";
 
-        if (p.getAbbrevDisplayName() != null && !p.getAbbrevDisplayName().equals("")) {
+		if (p.getAbbrevDisplayName() != null
+		        && !p.getAbbrevDisplayName().equals("")) {
 
-            displayName = p.getAbbrevDisplayName() + "(" + p.getKey() + ")";
+			displayName = p.getAbbrevDisplayName() + "(" + p.getKey() + ")";
 
-        } else if (p.getDisplayName() != null && !p.getDisplayName().equals("")) {
+		} else if (p.getDisplayName() != null && !p.getDisplayName().equals("")) {
 
-            displayName = p.getDisplayName() + "(" + p.getKey() + ")";
+			displayName = p.getDisplayName() + "(" + p.getKey() + ")";
 
-        } else {
+		} else {
 
-            displayName = p.getKey();
+			displayName = p.getKey();
 
-        }
+		}
 
-        return displayName;
-    }
-
+		return displayName;
+	}
 
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp)
-			throws ServletException, IOException {
+	        throws ServletException, IOException {
 		doGet(req, resp);
 	}
+
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
-			throws ServletException, IOException {
+	        throws ServletException, IOException {
 
 		LOGGER.debug("doGet");
 		List<JsonTreeData> l = new ArrayList<JsonTreeData>();
 		String eurekaServicesUrl = req.getSession().getServletContext()
-				.getInitParameter("eureka-services-url");
+		        .getInitParameter("eureka-services-url");
 		Client client = CommUtils.getClient();
 		Principal principal = req.getUserPrincipal();
 		String userName = principal.getName();
@@ -107,7 +107,7 @@ public class SystemPropositionListServlet extends HttpServlet {
 		LOGGER.debug("got username {}", userName);
 		WebResource webResource = client.resource(eurekaServicesUrl);
 		User user = webResource.path("/api/user/byname/" + userName)
-				.accept(MediaType.APPLICATION_JSON).get(User.class);
+		        .accept(MediaType.APPLICATION_JSON).get(User.class);
 
 		String propId = req.getParameter("id");
 
@@ -116,39 +116,30 @@ public class SystemPropositionListServlet extends HttpServlet {
 		}
 
 		if (propId.equals("root")) {
-					List<PropositionWrapper> props = webResource.path("/api/proposition/system/" + user.getId() + "/list")
-							.get(new GenericType<List<PropositionWrapper>>() {
-								// Nothing to implement, used to hold returned data.
-							});
-					for (PropositionWrapper proposition : props) {
-						JsonTreeData d = createData(proposition);
-						l.add(d);
-					}
+			List<SystemElement> props = webResource.path(
+			        "/api/proposition/system/" + user.getId() + "/list").get(
+			        new GenericType<List<SystemElement>>() {
+				        // Nothing to implement, used to hold returned data.
+			        });
+			for (SystemElement proposition : props) {
+				JsonTreeData d = createData(proposition);
+				l.add(d);
+			}
 
 		} else {
-						String path = UriBuilder.fromPath("/")
-								.segment("api")
-								.segment("proposition")
-								.segment("system")
-								.segment("" + user.getId())
-								.segment(propId).build().toString();
-				PropositionWrapper propWrapper =
-						webResource.path(path)
-						.accept(MediaType.APPLICATION_JSON)
-						.get(PropositionWrapper.class);
+			String path = UriBuilder.fromPath("/").segment("api")
+			        .segment("proposition").segment("system")
+			        .segment("" + user.getId()).segment(propId).build()
+			        .toString();
+			SystemElement propWrapper = webResource.path(path)
+			        .accept(MediaType.APPLICATION_JSON)
+			        .get(SystemElement.class);
 
-				for (PropositionWrapper propChild : propWrapper.getChildren()) {
-		        if (propChild.isInSystem()) {
-
-					JsonTreeData newData = createData(propChild);
-					newData.setType("system");
-					l.add(newData);
-
-
-		        }
-
-		    }
-
+			for (SystemElement propChild : propWrapper.getChildren()) {
+				JsonTreeData newData = createData(propChild);
+				newData.setType("system");
+				l.add(newData);
+			}
 		}
 
 		LOGGER.debug("executed resource get");

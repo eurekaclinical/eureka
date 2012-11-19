@@ -39,9 +39,12 @@ import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
 
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.CategoricalElement;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.CommUtils;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.PropositionWrapper;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.PropositionWrapper.Type;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.DataElement;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.DataElement.Type;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.Sequence;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.SystemElement;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.User;
 
 public class SavePropositionServlet extends HttpServlet {
@@ -87,53 +90,62 @@ public class SavePropositionServlet extends HttpServlet {
 		User user = webResource.path("/api/user/byname/" + userName)
 		        .accept(MediaType.APPLICATION_JSON).get(User.class);
 
-		PropositionWrapper pw = new PropositionWrapper();
+		DataElement element;
+
+		if (type.equals("CATEGORIZATION")) {
+			List<DataElement> children = new ArrayList<DataElement>(
+			        props.size());
+			element = new CategoricalElement();
+			element.setType(DataElement.Type.CATEGORIZATION);
+			for (UserProposition userProposition : props) {
+				System.out.println(userProposition.getId());
+				LOGGER.debug(userProposition.getId());
+
+				DataElement child;
+				if (userProposition.getType().equals("system")) {
+					child = new SystemElement();
+					child.setInSystem(true);
+					child.setKey(userProposition.getId());
+				} else {
+					if (userProposition.getType().equals("categorical")) {
+						child = new CategoricalElement();
+					} else { // if
+							 // (userProposition.getType().equals("sequence")) {
+						child = new Sequence();
+					}
+					child.setId(Long.valueOf(userProposition.getId()));
+				}
+				child.setSummarized(true);
+				children.add(child);
+
+			}
+			((CategoricalElement) element).setChildren(children);
+
+		} else { // if (type.equals("SEQUENCE")) {
+			element = new Sequence();
+			element.setType(DataElement.Type.SEQUENCE);
+		}
+		// } else if (type.equals("FREQUENCY")) {
+		// pw.setType(DataElement.Type.FREQUENCY);
+		// } else {
+		// pw.setType(DataElement.Type.VALUE_THRESHOLD);
+		// }
 
 		if (id != null && !id.equals("")) {
-			pw.setId(Long.valueOf(id));
+			element.setId(Long.valueOf(id));
 		}
 
-		pw.setAbbrevDisplayName(name);
-		if (type.equals("CATEGORIZATION")) {
-			pw.setType(Type.CATEGORIZATION);
-		} else if (type.equals("SEQUENCE")) {
-			pw.setType(Type.SEQUENCE);
-		} else if (type.equals("FREQUENCY")) {
-			pw.setType(Type.FREQUENCY);
-		} else {
-			pw.setType(Type.VALUE_THRESHOLD);
-		}
+		element.setAbbrevDisplayName(name);
+		element.setInSystem(false);
 
-		List<PropositionWrapper> children = new ArrayList<PropositionWrapper>(
-		        props.size());
-
-		pw.setInSystem(false);
-
-		for (UserProposition userProposition : props) {
-			System.out.println(userProposition.getId());
-			LOGGER.debug(userProposition.getId());
-
-			PropositionWrapper child = new PropositionWrapper();
-			child.setSummarized(true);
-			if (userProposition.getType().equals("system")) {
-				child.setInSystem(true);
-				child.setKey(userProposition.getId());
-			} else {
-				child.setId(Long.valueOf(userProposition.getId()));
-			}
-			children.add(child);
-
-		}
-
-		pw.setChildren(children);
-		pw.setAbbrevDisplayName(name);
-		pw.setDisplayName(description);
-		pw.setUserId(user.getId());
+		element.setAbbrevDisplayName(name);
+		element.setDisplayName(description);
+		element.setUserId(user.getId());
 
 		ClientResponse response = webResource
 		        .path("/api/proposition/user/validate/" + user.getId())
 		        .type(MediaType.APPLICATION_JSON)
-		        .post(ClientResponse.class, pw);
+		        .post(ClientResponse.class, element);
 
 		int status = response.getClientResponseStatus().getStatusCode();
 		if (status != HttpServletResponse.SC_OK) {
@@ -143,17 +155,19 @@ public class SavePropositionServlet extends HttpServlet {
 			LOGGER.debug("Error: {}", msg);
 		}
 
-		if (pw.getId() != null) {
+		if (element.getId() != null) {
 			webResource.path("/api/proposition/user/update")
 			        .type(MediaType.APPLICATION_JSON)
 			        .accept(MediaType.TEXT_PLAIN)
-			        .put(ClientResponse.class, pw);
+			        .put(ClientResponse.class, element);
 
 		} else {
-			webResource.path("/api/proposition/user/create")
-			        .type(MediaType.APPLICATION_JSON)
-			        .accept(MediaType.TEXT_PLAIN)
-			        .post(ClientResponse.class, pw);
+			if (element.getType() == Type.SEQUENCE) {
+				webResource.path("/api/proposition/user/create/sequence")
+				        .type(MediaType.APPLICATION_JSON)
+				        .accept(MediaType.TEXT_PLAIN)
+				        .post(ClientResponse.class, element);
+			}
 		}
 
 	}

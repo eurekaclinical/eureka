@@ -41,136 +41,118 @@ import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.WebResource;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.CommUtils;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.PropositionWrapper;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.DataElement;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.SystemElement;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.User;
-
 
 public class ListSystemPropositionChildrenServlet extends HttpServlet {
 
-	private static final Logger LOGGER = LoggerFactory
-			.getLogger(ListSystemPropositionChildrenServlet.class);
+    private static final Logger LOGGER = LoggerFactory
+            .getLogger(ListSystemPropositionChildrenServlet.class);
 
-	private WebResource webResource;
+    private WebResource webResource;
 
-    private String getDisplayName(PropositionWrapper p) {
+    private String getDisplayName(DataElement e) {
         String displayName = "";
 
-        if (p.getAbbrevDisplayName() != null && !p.getAbbrevDisplayName().equals("")) {
+        if (e.getAbbrevDisplayName() != null
+                && !e.getAbbrevDisplayName().equals("")) {
 
-            displayName = p.getAbbrevDisplayName() + "(" + p.getKey() + ")";
+            displayName = e.getAbbrevDisplayName() + "(" + e.getKey() + ")";
 
-        } else if (p.getDisplayName() != null && !p.getDisplayName().equals("")) {
+        } else if (e.getDisplayName() != null && !e.getDisplayName().equals("")) {
 
-            displayName = p.getDisplayName() + "(" + p.getKey() + ")";
+            displayName = e.getDisplayName() + "(" + e.getKey() + ")";
 
         } else {
 
-            displayName = p.getKey();
+            displayName = e.getKey();
 
         }
 
         return displayName;
     }
 
+    @Override
+    public void init(ServletConfig config) throws ServletException {
+        // TODO Auto-generated method stub
+        super.init(config);
+        String eurekaServicesUrl = config.getServletContext().getInitParameter(
+                "eureka-services-url");
 
-	@Override
-	public void init(ServletConfig config) throws ServletException {
-		// TODO Auto-generated method stub
-		super.init(config);
-		String eurekaServicesUrl = config.getServletContext()
-				.getInitParameter("eureka-services-url");
+        Client client;
 
-		Client client;
+        client = CommUtils.getClient();
+        this.webResource = client.resource(eurekaServicesUrl);
 
-		client = CommUtils.getClient();
-		this.webResource = client.resource(eurekaServicesUrl);
+    }
 
-	}
-
-	//private JsonTreeData createData(String id, String data) {
-	private JsonTreeData createData(PropositionWrapper pw) {
-		JsonTreeData d = new JsonTreeData();
-		d.setData(this.getDisplayName(pw));
-		d.setKeyVal("id", pw.getKey());
-        LOGGER.info("key: " + pw.getKey());
-        if (pw.getChildren() != null && (pw.isParent() || pw.getChildren().size() > 0)) {
-            d.setKeyVal("class", "jstree-closed");
-            System.out.println("key: " + pw.getKey());
+    // private JsonTreeData createData(String id, String data) {
+    private JsonTreeData createData(SystemElement se) {
+        JsonTreeData d = new JsonTreeData();
+        d.setData(this.getDisplayName(se));
+        d.setKeyVal("id", se.getKey());
+        LOGGER.info("key: " + se.getKey());
+        if (se.getChildren() != null && se.getChildren().size() > 0) {
+                d.setKeyVal("class", "jstree-closed");
+            System.out.println("key: " + se.getKey());
         }
 
-		return d;
-	}
+        return d;
+    }
 
-	@Override
-	protected void doPost(HttpServletRequest req, HttpServletResponse resp)
-			throws ServletException, IOException {
-		doGet(req, resp);
-	}
+    @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp)
+            throws ServletException, IOException {
+        doGet(req, resp);
+    }
 
+    @Override
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp)
+            throws ServletException, IOException {
 
+        Client client = null;
+        client = CommUtils.getClient();
+        Principal principal = req.getUserPrincipal();
+        String userName = principal.getName();
+        String eurekaServicesUrl = req.getSession().getServletContext()
+                .getInitParameter("eureka-services-url");
 
-	@Override
-	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
-			throws ServletException, IOException {
+        LOGGER.debug("got username {}", userName);
+        WebResource webResource = client.resource(eurekaServicesUrl);
+        User user = webResource.path("/api/user/byname/" + userName)
+                .accept(MediaType.APPLICATION_JSON).get(User.class);
 
+        List<JsonTreeData> l = new ArrayList<JsonTreeData>();
+        String propId = req.getParameter("propId");
 
-		Client client = null;
-		client = CommUtils.getClient();
-		Principal principal = req.getUserPrincipal();
-		String userName = principal.getName();
-		String eurekaServicesUrl = req.getSession().getServletContext()
-				.getInitParameter("eureka-services-url");
+        // "/system/{userId}/{propKey}"
+        String path = UriBuilder.fromPath("/").segment("api")
+                .segment("proposition").segment("system")
+                .segment("" + user.getId()).segment(propId).build().toString();
+        SystemElement sysElement = webResource.path(path)
+                .accept(MediaType.APPLICATION_JSON)
+                .get(SystemElement.class);
 
-		LOGGER.debug("got username {}", userName);
-		WebResource webResource = client.resource(eurekaServicesUrl);
-		User user = webResource.path("/api/user/byname/" + userName)
-				.accept(MediaType.APPLICATION_JSON).get(User.class);
-
-
-		List<JsonTreeData> l = new ArrayList<JsonTreeData>();
-		String propId = req.getParameter("propId");
-
-		//"/system/{userId}/{propKey}"
-		String path = UriBuilder.fromPath("/")
-				.segment("api")
-				.segment("proposition")
-				.segment("system")
-				.segment("" + user.getId())
-				.segment(propId).build().toString();
-		PropositionWrapper propWrapper =
-				webResource.path(path)
-				.accept(MediaType.APPLICATION_JSON)
-				.get(PropositionWrapper.class);
-
-		for (PropositionWrapper propChild : propWrapper.getChildren()) {
-            if (propChild.isInSystem()) {
-
-			    JsonTreeData newData = createData(propChild);
-			    newData.setType("system");
-			    l.add(newData);
-
-
-            }
-
+        for (SystemElement propChild : sysElement.getChildren()) {
+                JsonTreeData newData = createData(propChild);
+                newData.setType("system");
+                l.add(newData);
         }
 
         /*
-		for (String sysTarget : propWrapper.getSystemTargets()) {
-		    PropositionWrapper propWrapperChild =
-				webResource.path("/api/proposition/system/"+ user.getId() + "/" + sysTarget)
-				.accept(MediaType.APPLICATION_JSON)
-				.get(PropositionWrapper.class);
-			JsonTreeData newData = createData(sysTarget, this.getDisplayName(propWrapperChild));
-			newData.setType("system");
-			l.add(newData);
-		}
-        */
+         * for (String sysTarget : propWrapper.getSystemTargets()) {
+         * PropositionWrapper propWrapperChild =
+         * webResource.path("/api/proposition/system/"+ user.getId() + "/" +
+         * sysTarget) .accept(MediaType.APPLICATION_JSON)
+         * .get(PropositionWrapper.class); JsonTreeData newData =
+         * createData(sysTarget, this.getDisplayName(propWrapperChild));
+         * newData.setType("system"); l.add(newData); }
+         */
 
-
-
-		ObjectMapper mapper = new ObjectMapper();
-		resp.setContentType("application/json");
-		PrintWriter out = resp.getWriter();
-		mapper.writeValue(out, l);
-	}
+        ObjectMapper mapper = new ObjectMapper();
+        resp.setContentType("application/json");
+        PrintWriter out = resp.getWriter();
+        mapper.writeValue(out, l);
+    }
 }
