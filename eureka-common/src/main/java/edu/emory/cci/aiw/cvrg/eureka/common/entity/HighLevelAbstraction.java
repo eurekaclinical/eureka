@@ -27,16 +27,20 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 /**
  * Contains attributes which describe a Protempa high level abstraction.
- *
+ * 
  * @author hrathod
  */
 @Entity
 @Table(name = "high_level_abstractions")
 public class HighLevelAbstraction extends Proposition {
+
+	@OneToOne
+	ExtendedProposition primaryProposition;
 
 	@OneToMany(cascade = CascadeType.ALL)
 	@JoinColumn(name = "highLevelAbstractionId")
@@ -45,12 +49,18 @@ public class HighLevelAbstraction extends Proposition {
 	/**
 	 * The propositions that the current proposition is abstracted from.
 	 */
-	@ManyToMany(cascade = {CascadeType.MERGE, CascadeType.REFRESH,
-		CascadeType.PERSIST})
-	@JoinTable(name = "abstracted_from", joinColumns = {
-		@JoinColumn(name = "target_proposition_id")})
+	@ManyToMany(cascade = { CascadeType.MERGE, CascadeType.REFRESH,
+	        CascadeType.PERSIST })
+	@JoinTable(name = "abstracted_from", joinColumns = { @JoinColumn(name = "target_proposition_id") })
 	private List<Proposition> abstractedFrom;
 
+	public ExtendedProposition getPrimaryProposition() {
+		return primaryProposition;
+	}
+
+	public void setPrimaryProposition(ExtendedProposition inExtendedProposition) {
+		primaryProposition = inExtendedProposition;
+	}
 
 	public List<Relation> getRelations() {
 		return relations;
@@ -62,9 +72,9 @@ public class HighLevelAbstraction extends Proposition {
 
 	/**
 	 * Gets the list of propositions the current proposition is abstracted from.
-	 *
+	 * 
 	 * @return The list of propositions the current proposition is abstracted
-	 * from.
+	 *         from.
 	 */
 	public List<Proposition> getAbstractedFrom() {
 		return abstractedFrom;
@@ -72,16 +82,17 @@ public class HighLevelAbstraction extends Proposition {
 
 	/**
 	 * Sets the list of propositions the current proposition is abstracted from.
-	 *
-	 * @param abstractedFrom The list of propositions the current proposition is
-	 * abstracted from.
+	 * 
+	 * @param abstractedFrom
+	 *            The list of propositions the current proposition is abstracted
+	 *            from.
 	 */
 	public void setAbstractedFrom(List<Proposition> abstractedFrom) {
 		this.abstractedFrom = abstractedFrom;
 	}
 
 	@Override
-    public void accept(PropositionEntityVisitor visitor) {
+	public void accept(PropositionEntityVisitor visitor) {
 		visitor.visit(this);
-    }
+	}
 }
