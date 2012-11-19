@@ -21,6 +21,7 @@ package edu.emory.cci.aiw.cvrg.eureka.services.translation;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.DataElement;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.Proposition;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.PropositionTypeVisitor;
 
 /**
  * Contains common utility functions for all implementations of
@@ -28,12 +29,15 @@ import edu.emory.cci.aiw.cvrg.eureka.common.entity.Proposition;
  */
 class PropositionTranslatorUtil {
 
+	private static PropositionTypeVisitor typeVisitor = new PropositionTypeVisitor();
+	
 	private PropositionTranslatorUtil() {
 		// prevents instantiation
 	}
 
 	/**
-	 * Populates the fields common to all data elements and propositions.
+	 * Populates the fields common to all propositions based on the given
+	 * proposition.
 	 * 
 	 * @param proposition
 	 *            the {@link Proposition} to populate. Modified as a result of
@@ -41,7 +45,7 @@ class PropositionTranslatorUtil {
 	 * @param dataElement
 	 *            the {@link DataElement} to get the data from
 	 */
-	static void populateCommonFields(Proposition proposition,
+	static void populateCommonPropositionFields(Proposition proposition,
 	        DataElement dataElement) {
 		proposition.setId(dataElement.getId());
 		proposition.setKey(dataElement.getKey());
@@ -50,5 +54,29 @@ class PropositionTranslatorUtil {
 		proposition.setCreated(dataElement.getCreated());
 		proposition.setLastModified(dataElement.getLastModified());
 		proposition.setUserId(dataElement.getUserId());
+	}
+
+	/**
+	 * Populates the fields common to all data elements based on the given
+	 * proposition.
+	 * 
+	 * @param dataElement
+	 *            the {@link DataElement} to populate. Modified as a result of
+	 *            calling this method.
+	 * @param proposition
+	 *            the {@link Proposition} to get the data from
+	 */
+	static void populateCommonDataElementFields(DataElement dataElement,
+	        Proposition proposition) {
+		dataElement.setId(proposition.getId());
+		dataElement.setKey(proposition.getKey());
+		dataElement.setDisplayName(proposition.getDisplayName());
+		dataElement.setAbbrevDisplayName(proposition.getAbbrevDisplayName());
+		dataElement.setCreated(proposition.getCreated());
+		dataElement.setLastModified(proposition.getLastModified());
+		dataElement.setUserId(proposition.getUserId());
+		
+		proposition.accept(typeVisitor);
+		dataElement.setType(typeVisitor.getType());
 	}
 }
