@@ -36,6 +36,8 @@ import com.sun.jersey.test.framework.AppDescriptor;
 import com.sun.jersey.test.framework.JerseyTest;
 import com.sun.jersey.test.framework.WebAppDescriptor;
 
+import edu.emory.cci.aiw.cvrg.eureka.common.json.ObjectMapperProvider;
+
 /**
  * Base class for all the Jersey resource related test classes.
  *
@@ -84,6 +86,7 @@ public abstract class AbstractResourceTest extends JerseyTest {
 		ClientConfig clientConfig = new DefaultClientConfig();
 		clientConfig.getFeatures().put(JSONConfiguration.FEATURE_POJO_MAPPING,
 				Boolean.TRUE);
+		clientConfig.getClasses().add(ObjectMapperProvider.class);
 		return (new WebAppDescriptor.Builder()).contextListenerClass(
 				getListener()).filterClass(getFilter()).contextPath(CONTEXT_PATH).
 				servletPath(SERVLET_PATH).clientConfig(clientConfig).build();
