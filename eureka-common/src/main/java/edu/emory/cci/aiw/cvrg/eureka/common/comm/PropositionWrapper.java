@@ -31,7 +31,9 @@ import java.util.List;
  */
 public class PropositionWrapper implements Serializable {
 
-	public enum Type { CATEGORIZATION, SEQUENCE, FREQUENCY, VALUE_THRESHOLD, SYSTEM }
+	public enum Type {
+		CATEGORIZATION, SEQUENCE, FREQUENCY, VALUE_THRESHOLD, SYSTEM
+	}
 
 	private Long id;
 	private String key;
@@ -41,6 +43,7 @@ public class PropositionWrapper implements Serializable {
 	private Type type;
 	private boolean inSystem;
 	private List<PropositionWrapper> children;
+	private List<String> properties;
 	private Date created;
 	private Date lastModified;
 	private boolean summarized;
@@ -49,15 +52,15 @@ public class PropositionWrapper implements Serializable {
 	/**
 	 * Creates the message object.
 	 */
-    public PropositionWrapper() {
-        children = new ArrayList<PropositionWrapper>();
-    }
-	
+	public PropositionWrapper() {
+		children = new ArrayList<PropositionWrapper>();
+	}
+
 	/**
 	 * Returns a user data element definition's id.
 	 * 
 	 * @return a {@link Long}. Will be <code>null</code> for a system data
-	 * element definition.
+	 *         element definition.
 	 */
 	public Long getId() {
 		return id;
@@ -66,7 +69,8 @@ public class PropositionWrapper implements Serializable {
 	/**
 	 * Sets a user data element definition's id.
 	 * 
-	 * @param id a {@link Long}. 
+	 * @param id
+	 *            a {@link Long}.
 	 */
 	public void setId(Long id) {
 		this.id = id;
@@ -76,7 +80,7 @@ public class PropositionWrapper implements Serializable {
 	 * Returns a system data element definition's id string.
 	 * 
 	 * @return a {@link String}. Will be <code>null</code> for a user data
-	 * element definition.
+	 *         element definition.
 	 */
 	public String getKey() {
 		return key;
@@ -85,7 +89,8 @@ public class PropositionWrapper implements Serializable {
 	/**
 	 * Sets a system data element definition's id string.
 	 * 
-	 * @param inKey a {@link String}.
+	 * @param inKey
+	 *            a {@link String}.
 	 */
 	public void setKey(String inKey) {
 		key = inKey;
@@ -103,7 +108,8 @@ public class PropositionWrapper implements Serializable {
 	/**
 	 * Sets a user data element definition's user id.
 	 * 
-	 * @param userId a {@link Long}.
+	 * @param userId
+	 *            a {@link Long}.
 	 */
 	public void setUserId(Long userId) {
 		this.userId = userId;
@@ -113,7 +119,7 @@ public class PropositionWrapper implements Serializable {
 	 * Gets the data element definition's abbreviated display name.
 	 * 
 	 * @return a {@link String}. May be <code>null</code> if no abbreviated
-	 * display name is specified.
+	 *         display name is specified.
 	 */
 	public String getAbbrevDisplayName() {
 		return abbrevDisplayName;
@@ -122,8 +128,9 @@ public class PropositionWrapper implements Serializable {
 	/**
 	 * Sets the data element definition's abbreviated display name.
 	 * 
-	 * @param abbrevDisplayName a {@link String}. Passing in <code>null</code>
-	 * will set the abbreviated display name as unspecified.
+	 * @param abbrevDisplayName
+	 *            a {@link String}. Passing in <code>null</code> will set the
+	 *            abbreviated display name as unspecified.
 	 */
 	public void setAbbrevDisplayName(String abbrevDisplayName) {
 		this.abbrevDisplayName = abbrevDisplayName;
@@ -133,7 +140,7 @@ public class PropositionWrapper implements Serializable {
 	 * Gets the data element definition's display name.
 	 * 
 	 * @return a {@link String}. A value of <code>null</code> means that no
-	 * display name is specified.
+	 *         display name is specified.
 	 */
 	public String getDisplayName() {
 		return displayName;
@@ -142,18 +149,19 @@ public class PropositionWrapper implements Serializable {
 	/**
 	 * Sets the data element definition's display name.
 	 * 
-	 * @param displayName a {@link String}. Passing in <code>null</code> will
-	 * set the abbreviated display name as unspecified.
+	 * @param displayName
+	 *            a {@link String}. Passing in <code>null</code> will set the
+	 *            abbreviated display name as unspecified.
 	 */
 	public void setDisplayName(String displayName) {
 		this.displayName = displayName;
 	}
-	
+
 	/**
 	 * Gets the type of a user data element definition.
 	 * 
 	 * @return a {@link Type}. Will be <code>null</code> if a system data
-	 * element definition.
+	 *         element definition.
 	 */
 	public Type getType() {
 		return type;
@@ -162,30 +170,32 @@ public class PropositionWrapper implements Serializable {
 	/**
 	 * Sets the type of a user data element definition.
 	 * 
-	 * @param type a {@link Type}. Should be <code>null</code> for a system
-	 * data element definition.
+	 * @param type
+	 *            a {@link Type}. Should be <code>null</code> for a system data
+	 *            element definition.
 	 */
 	public void setType(Type type) {
 		this.type = type;
 	}
 
 	/**
-	 * Gets whether this data element definition is a system or user data 
+	 * Gets whether this data element definition is a system or user data
 	 * element definition.
 	 * 
 	 * @return <code>true</code> if a system data element definition,
-	 * <code>false</code> if a user data element definition.
+	 *         <code>false</code> if a user data element definition.
 	 */
 	public boolean isInSystem() {
 		return inSystem;
 	}
 
 	/**
-	 * Sets whether this data element definition is a aystem or user data 
+	 * Sets whether this data element definition is a aystem or user data
 	 * element definition.
 	 * 
-	 * @param inSystem <code>true</code> if a system data element definition,
-	 * <code>false</code> if a user data element definition.
+	 * @param inSystem
+	 *            <code>true</code> if a system data element definition,
+	 *            <code>false</code> if a user data element definition.
 	 */
 	public void setInSystem(boolean inSystem) {
 		this.inSystem = inSystem;
@@ -195,7 +205,7 @@ public class PropositionWrapper implements Serializable {
 	 * Gets the creation date of this data element definition.
 	 * 
 	 * @return the creation {@link Date}, or <code>null</code> if the creation
-	 * date is unspecified.
+	 *         date is unspecified.
 	 */
 	public Date getCreated() {
 		return created;
@@ -204,8 +214,9 @@ public class PropositionWrapper implements Serializable {
 	/**
 	 * Sets the creation date of this data element definition.
 	 * 
-	 * @param inCreated the creation {@link Date}, or <code>null</code> if the 
-	 * creation date is unspecified.
+	 * @param inCreated
+	 *            the creation {@link Date}, or <code>null</code> if the
+	 *            creation date is unspecified.
 	 */
 	public void setCreated(Date inCreated) {
 		created = inCreated;
@@ -215,7 +226,7 @@ public class PropositionWrapper implements Serializable {
 	 * Gets the last modified date of this data element definition.
 	 * 
 	 * @return the last modified {@link Date}, or <code>null</code> if the last
-	 * modified date is unspecified.
+	 *         modified date is unspecified.
 	 */
 	public Date getLastModified() {
 		return lastModified;
@@ -224,8 +235,9 @@ public class PropositionWrapper implements Serializable {
 	/**
 	 * Sets the last modified date of this data element definition.
 	 * 
-	 * @param inLastModified the last modified {@link Date}, or 
-	 * <code>null</code> if the last modified date is unspecified.
+	 * @param inLastModified
+	 *            the last modified {@link Date}, or <code>null</code> if the
+	 *            last modified date is unspecified.
 	 */
 	public void setLastModified(Date inLastModified) {
 		lastModified = inLastModified;
@@ -235,8 +247,8 @@ public class PropositionWrapper implements Serializable {
 	 * Gets whether or not the children of this proposition are included in the
 	 * message.
 	 * 
-	 * @return <code>true</code> if the children of this proposition are 
-	 * included, <code>false</code> otherwise.
+	 * @return <code>true</code> if the children of this proposition are
+	 *         included, <code>false</code> otherwise.
 	 */
 	public boolean isSummarized() {
 		return summarized;
@@ -246,8 +258,9 @@ public class PropositionWrapper implements Serializable {
 	 * Sets whether or not the children of this proposition are included in the
 	 * message.
 	 * 
-	 * @param inSummarized <code>true</code> if the children of this
-	 * proposition are included, <code>false</code> otherwise.
+	 * @param inSummarized
+	 *            <code>true</code> if the children of this proposition are
+	 *            included, <code>false</code> otherwise.
 	 */
 	public void setSummarized(boolean inSummarized) {
 		summarized = inSummarized;
@@ -257,7 +270,7 @@ public class PropositionWrapper implements Serializable {
 	 * Gets this data element definition's children, if any.
 	 * 
 	 * @return a {@link List} of this data element definition's children, if
-	 * any.
+	 *         any.
 	 */
 	public List<PropositionWrapper> getChildren() {
 		return children;
@@ -266,18 +279,38 @@ public class PropositionWrapper implements Serializable {
 	/**
 	 * Sets this data element definition's children.
 	 * 
-	 * @param inChildren a {@link List} of this data element definition's
-	 * children.
+	 * @param inChildren
+	 *            a {@link List} of this data element definition's children.
 	 */
 	public void setChildren(List<PropositionWrapper> inChildren) {
 		children = inChildren;
 	}
 
 	/**
+	 * Gets this data element definition's properties, if any.
+	 * 
+	 * @return a {@link List) of this data element definition's properties, if
+	 *         any
+	 */
+	public List<String> getProperties() {
+		return properties;
+	}
+
+	/**
+	 * Sets this data element definition's properties.
+	 * 
+	 * @param inProperties
+	 *            a {@link List} of this data element definition's properties.
+	 */
+	public void setProperties(List<String> inProperties) {
+		properties = inProperties;
+	}
+
+	/**
 	 * Returns whether this data element definition has children.
 	 * 
 	 * @return <code>true</code> if this data element definition has children,
-	 * <code>false</code> otherwise.
+	 *         <code>false</code> otherwise.
 	 */
 	public boolean isParent() {
 		return parent;
@@ -285,8 +318,10 @@ public class PropositionWrapper implements Serializable {
 
 	/**
 	 * Sets whether this data element definition has children.
-	 * @param inParent <code>true</code> if this data element definition has 
-	 * children, <code>false</code> otherwise.
+	 * 
+	 * @param inParent
+	 *            <code>true</code> if this data element definition has
+	 *            children, <code>false</code> otherwise.
 	 */
 	public void setParent(boolean inParent) {
 		parent = inParent;
@@ -294,23 +329,17 @@ public class PropositionWrapper implements Serializable {
 
 	/**
 	 * Represents field values for debugging purposes.
-	 * @return 
+	 * 
+	 * @return
 	 */
 	@Override
 	public String toString() {
-		return "PropositionWrapper{" +
-			"id=" + id +
-			", key='" + key + '\'' +
-			", userId=" + userId +
-			", abbrevDisplayName='" + abbrevDisplayName + '\'' +
-			", displayName='" + displayName + '\'' +
-			", type=" + type +
-			", inSystem=" + inSystem +
-			", children=" + children.size() +
-			", created=" + created +
-			", lastModified=" + lastModified +
-			", summarized=" + summarized +
-			", parent=" + parent +
-			'}';
+		return "PropositionWrapper{" + "id=" + id + ", key='" + key + '\''
+		        + ", userId=" + userId + ", abbrevDisplayName='"
+		        + abbrevDisplayName + '\'' + ", displayName='" + displayName
+		        + '\'' + ", type=" + type + ", inSystem=" + inSystem
+		        + ", children=" + children.size() + ", created=" + created
+		        + ", lastModified=" + lastModified + ", summarized="
+		        + summarized + ", parent=" + parent + '}';
 	}
 }
