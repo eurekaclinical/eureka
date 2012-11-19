@@ -19,6 +19,8 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.common.comm.clients;
 
+import javax.ws.rs.core.MediaType;
+
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.GenericType;
 
@@ -30,8 +32,7 @@ import edu.emory.cci.aiw.cvrg.eureka.common.entity.User;
  */
 public class ServicesClient extends AbstractClient {
 
-	private static final GenericType<User> UserType = new GenericType<User>
-		() {
+	private static final GenericType<User> UserType = new GenericType<User>() {
 	};
 	private final String servicesUrl;
 
@@ -52,10 +53,12 @@ public class ServicesClient extends AbstractClient {
 
 	public void saveSequence(Sequence inSequence) throws ClientException {
 		final String path = "/user/create/sequence";
-		ClientResponse response = this.getResource().path(path).post
-			(ClientResponse.class, inSequence);
-		if (!response.getClientResponseStatus().equals(
-			ClientResponse.Status.OK)) {
+		ClientResponse response = this.getResource().path(path)
+		        .type(MediaType.APPLICATION_JSON)
+		        .accept(MediaType.TEXT_PLAIN)
+		        .post(ClientResponse.class, inSequence);
+		if (!response.getClientResponseStatus()
+		        .equals(ClientResponse.Status.OK)) {
 			String message = response.getEntity(String.class);
 			throw new ClientException(message);
 		}
