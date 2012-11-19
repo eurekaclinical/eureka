@@ -26,13 +26,18 @@ import java.util.List;
  * Essentially a direct mapping form the categorical element form fields.
  */
 public final class CategoricalElement extends DataElement {
-    private List<DataElement> children;
+	private List<DataElement> children;
 
-    public List<DataElement> getChildren() {
-        return children;
-    }
+	public List<DataElement> getChildren() {
+		return children;
+	}
 
-    public void setChildren(List<DataElement> children) {
-        this.children = children;
-    }
+	public void setChildren(List<DataElement> children) {
+		this.children = children;
+	}
+
+	@Override
+	public void accept(DataElementVisitor visitor) {
+		visitor.visit(this);
+	}
 }
