@@ -72,6 +72,7 @@ function saveSequence (elem) {
 	var sequence = new Object();
 	var $relationElems = $(elem).find('.sequence-relations-container').find('.sequence-relation');
 
+	sequence['@class'] = "edu.emory.cci.aiw.cvrg.eureka.common.comm.Sequence";
 	sequence.abbrevDisplayName = $('input#propAbbrevDisplayName').val();
 	sequence.displayName = $('textarea#propDisplayName').val();
 	sequence.primaryDataElement = collectSequenceDataElement(elem);
@@ -85,6 +86,8 @@ function saveCategorical (elem) {
 	var categorization = new Object();
 	var childElements = new Array();
 	var $propositions = $(elem).find('ul.sortable').find('li');
+
+	categorization['@class'] = "edu.emory.cci.aiw.cvrg.eureka.common.comm.Categorization";
 	categorization.abbrevDisplayName = $('input#propAbbrevDisplayName').val();
 	categorization.displayName = $('textarea#propDisplayName').val();
 	$propositions.each(function (i, p) {
@@ -93,7 +96,9 @@ function saveCategorical (elem) {
 		childElements.push(child);
 	});
 	categorization.children = childElements;
+	categorization.categoricalType = $(childElements[0]).data("subtype");
 	postProposition('savecategorical', categorization, function (data) {window.location.href = 'editorhome'});
+	postProposition("savecategorization", categorization, function (data) {window.location.href = 'editorhome'});
 }
 
 
@@ -318,9 +323,19 @@ function initTrees() {
 
 					var sortable = $(target).find('ul.sortable');
 					var newItem = $('<li></li>', {
-						"data-type": "system",
-						"data-key": data.o[0].id
+						"data-space": $(data.o[0]).data("space"),
+						"data-type": $(data.o[0]).data("type"),
+						"data-key": $(data.o[0]).data("proposition")
 					});
+
+					// check that all types in the categorization are the same
+					if ($(sortable).data("proptype") != "empty") {
+						if ($(sortable).data("proptype") != $(newitem).data("type")) {
+							alert("All elements in a categorization must be of the same type");
+						}
+					} else {
+						$(sortable).data("proptype", $(newitem).data("type"));
+					}
 
 					var X = $("<span/>", {
 						class: "delete",
@@ -362,6 +377,19 @@ function initTrees() {
 					possiblePropositions[propositionId] = propositionDesc;
 					setPropositionSelects();
 				}
+			},
+			"drop_check": function (data) {
+				var target = data.r;
+				var sortable = $(target).find('ul.sortable');
+				var datatype = $(sortable).data("proptype");
+				
+				if (datatype == "empty" || datatype == $(data.o).data("type")) {
+					return true;
+				} else {
+					return false;
+				}
+				
+				
 			},
 			"drag_check" : function(data) {
 				if (data.r.attr("id") == "phtml_1") {
@@ -412,7 +440,8 @@ function initTrees() {
 
 					$('<li/>', {
 						id: data.o[0].id,
-						"data-type": "user"
+						"data-type": $(data.o[0]).data("type"),
+						"data-subtype": $(data.o[0]).data("subtype")
 					}).append(X, txt).appendTo('#sortable');
 
 
