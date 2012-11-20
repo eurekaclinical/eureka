@@ -107,13 +107,13 @@ public class PropositionResource {
 	public List<SystemElement> getSystemPropositions(
 	        @PathParam("userId") Long inUserId) {
 
-		List<SystemElement> wrappers = new ArrayList<SystemElement>();
+		List<SystemElement> elements = new ArrayList<SystemElement>();
 
 		List<String> propNames = this.applicationProperties
 		        .getDefaultSystemPropositions();
 		for (String name : propNames) {
 			try {
-				wrappers.add(fetchSystemProposition(inUserId, name));
+				elements.add(fetchSystemProposition(inUserId, name));
 			} catch (UniformInterfaceException e) {
 				if (e.getResponse().getStatus() != 404) {
 					throw new HttpStatusException(
@@ -125,7 +125,7 @@ public class PropositionResource {
 			}
 		}
 
-		return wrappers;
+		return elements;
 	}
 
 	@GET
