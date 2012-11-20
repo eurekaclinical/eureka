@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
+ * 
  *      http://www.apache.org/licenses/LICENSE-2.0
- *
+ * 
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -21,10 +21,13 @@ package edu.emory.cci.aiw.cvrg.eureka.common.comm;
 
 import java.util.Date;
 
+import org.codehaus.jackson.annotate.JsonTypeInfo;
+
 /**
  * A user-created data element from the UI. Contains fields common to all
  * user-created data elements.
  */
+@JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.PROPERTY, property = "@class")
 public abstract class DataElement implements DataElementVisitable {
 
 	public enum Type {
@@ -42,7 +45,7 @@ public abstract class DataElement implements DataElementVisitable {
 	private boolean summarized;
 	private Type type;
 
-	protected DataElement (Type inType) {
+	protected DataElement(Type inType) {
 		this.type = inType;
 	}
 
@@ -117,8 +120,13 @@ public abstract class DataElement implements DataElementVisitable {
 	public void setSummarized(boolean summarized) {
 		this.summarized = summarized;
 	}
-
+	
 	public Type getType() {
-    	return type;
-    }
+		return type;
+	}
+	
+	protected final void setType(Type type) {
+		// do nothing -- type is invariant in concrete classes
+		// this is just for JSON serialization
+	}
 }
