@@ -68,8 +68,6 @@ public class ObjectMapperProvider implements ContextResolver<ObjectMapper> {
 			@Override
 			public void setupModule(SetupContext context) {
 				super.setupModule(context);
-				context.setMixInAnnotations(DataElement.class,
-				        DataElementMixin.class);
 				context.setMixInAnnotations(PropositionDefinition.class,
 				        PropositionMixin.class);
 				context.setMixInAnnotations(
