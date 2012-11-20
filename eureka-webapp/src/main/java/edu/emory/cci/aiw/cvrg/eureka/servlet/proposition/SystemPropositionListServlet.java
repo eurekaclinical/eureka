@@ -61,6 +61,9 @@ public class SystemPropositionListServlet extends HttpServlet {
 		// d.setKeyVal("class", "jstree-closed");
 		// }
 		d.setKeyVal("class", "jstree-closed");
+		d.setKeyVal("data-space", "system");
+		d.setKeyVal("data-type", element.getSystemType().toString());
+		d.setKeyVal("data-proposition", element.getKey());
 
 		return d;
 	}

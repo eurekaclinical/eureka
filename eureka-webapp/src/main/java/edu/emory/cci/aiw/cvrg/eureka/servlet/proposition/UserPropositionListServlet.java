@@ -39,62 +39,66 @@ import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.GenericType;
 import com.sun.jersey.api.client.WebResource;
 
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.CategoricalElement;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.CommUtils;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.DataElement;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.PropositionWrapper;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.User;
-
 
 public class UserPropositionListServlet extends HttpServlet {
 
 	private static final Logger LOGGER = LoggerFactory
-			.getLogger(UserPropositionListServlet.class);
+	        .getLogger(UserPropositionListServlet.class);
 
-
-
-	private JsonTreeData createData(DataElement proposition) {
+	private JsonTreeData createData(DataElement element) {
 		JsonTreeData d = new JsonTreeData();
-		d.setData(proposition.getAbbrevDisplayName());
-		d.setKeyVal("id", String.valueOf(proposition.getId()));
+		d.setData(element.getAbbrevDisplayName());
+		d.setKeyVal("id", String.valueOf(element.getId()));
+
+		d.setKeyVal("data-space", "user");
+		d.setKeyVal("data-type", element.getType().toString());
+		if (element.getType() == DataElement.Type.CATEGORIZATION) {
+			d.setKeyVal("data-subtype", ((CategoricalElement) element)
+			        .getCategoricalType().toString());
+		}
 
 		return d;
 	}
 
-    private String getDisplayName(DataElement p) {
-        String displayName = "";
+	private String getDisplayName(DataElement p) {
+		String displayName = "";
 
-        if (p.getAbbrevDisplayName() != null && !p.getAbbrevDisplayName().equals("")) {
+		if (p.getAbbrevDisplayName() != null
+		        && !p.getAbbrevDisplayName().equals("")) {
 
-            displayName = p.getAbbrevDisplayName() + "(" + p.getKey() + ")";
+			displayName = p.getAbbrevDisplayName() + "(" + p.getKey() + ")";
 
-        } else if (p.getDisplayName() != null && !p.getDisplayName().equals("")) {
+		} else if (p.getDisplayName() != null && !p.getDisplayName().equals("")) {
 
-            displayName = p.getDisplayName() + "(" + p.getKey() + ")";
+			displayName = p.getDisplayName() + "(" + p.getKey() + ")";
 
-        } else {
+		} else {
 
-            displayName = p.getKey();
+			displayName = p.getKey();
 
-        }
+		}
 
-        return displayName;
-    }
-
-
+		return displayName;
+	}
 
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp)
-			throws ServletException, IOException {
+	        throws ServletException, IOException {
 		doGet(req, resp);
 	}
+
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
-			throws ServletException, IOException {
+	        throws ServletException, IOException {
 
 		LOGGER.debug("doGet");
 		List<JsonTreeData> l = new ArrayList<JsonTreeData>();
 		String eurekaServicesUrl = req.getSession().getServletContext()
-				.getInitParameter("eureka-services-url");
+		        .getInitParameter("eureka-services-url");
 		Client client = CommUtils.getClient();
 		Principal principal = req.getUserPrincipal();
 		String userName = principal.getName();
@@ -102,13 +106,14 @@ public class UserPropositionListServlet extends HttpServlet {
 		LOGGER.debug("got username {}", userName);
 		WebResource webResource = client.resource(eurekaServicesUrl);
 		User user = webResource.path("/api/user/byname/" + userName)
-				.accept(MediaType.APPLICATION_JSON).get(User.class);
+		        .accept(MediaType.APPLICATION_JSON).get(User.class);
 
-		List<DataElement> props = webResource.path("/api/proposition/user/list/"+ user.getId())
-				.accept(MediaType.APPLICATION_JSON)
-				.get(new GenericType<List<DataElement>>() {
-					// Nothing to implement, used to hold returned data.
-				});
+		List<DataElement> props = webResource
+		        .path("/api/proposition/user/list/" + user.getId())
+		        .accept(MediaType.APPLICATION_JSON)
+		        .get(new GenericType<List<DataElement>>() {
+			        // Nothing to implement, used to hold returned data.
+		        });
 		for (DataElement proposition : props) {
 			JsonTreeData d = createData(proposition);
 			l.add(d);
