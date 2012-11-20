@@ -131,6 +131,11 @@ see implementation details http://jersey.java.net/nonav/documentation/latest/jax
 		<servlet-class>edu.emory.cci.aiw.cvrg.eureka.servlet.proposition.SaveSequenceServlet</servlet-class>
 		<load-on-startup>1</load-on-startup>
 	</servlet>
+	<servlet>
+		<servlet-name>SaveCategorizationServlet</servlet-name>
+		<servlet-class>edu.emory.cci.aiw.cvrg.eureka.servlet.proposition.SaveCategorizationServlet</servlet-class>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
 
 	<servlet-mapping>
 		<servlet-name>VerifyUserServlet</servlet-name>
@@ -205,7 +210,10 @@ see implementation details http://jersey.java.net/nonav/documentation/latest/jax
 		<servlet-name>SaveSequenceServlet</servlet-name>
 		<url-pattern>/protected/savesequence</url-pattern>
 	</servlet-mapping>
-
+	<servlet-mapping>
+		<servlet-name>SaveCategorizationServlet</servlet-name>
+		<url-pattern>/protected/savecategorization</url-pattern>
+	</servlet-mapping>
 
 	<login-config>
 		<auth-method>FORM</auth-method>
