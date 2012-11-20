@@ -53,12 +53,13 @@ import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.UniformInterfaceException;
 import com.sun.jersey.api.client.WebResource;
 
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.CategoricalElement;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.CommUtils;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.DataElement;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.PropositionWrapper;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.Sequence;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.SystemElement;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.ValidationRequest;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.Categorization;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.HighLevelAbstraction;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.Proposition;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.PropositionChildrenVisitor;
@@ -68,6 +69,7 @@ import edu.emory.cci.aiw.cvrg.eureka.services.config.ServiceProperties;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.PropositionDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.finder.SystemPropositionFinder;
 import edu.emory.cci.aiw.cvrg.eureka.services.translation.SequenceTranslator;
+import edu.emory.cci.aiw.cvrg.eureka.services.translation.CategorizationTranslator;
 import edu.emory.cci.aiw.cvrg.eureka.services.util.PropositionUtil;
 
 /**
@@ -180,8 +182,8 @@ public class PropositionResource {
 		ValidationRequest validationRequest = new ValidationRequest();
 		validationRequest.setUserId(inUserId);
 		validationRequest.setPropositions(propDefs);
-		validationRequest.setTargetProposition(PropositionUtil.pack(
-		        targetProposition));
+		validationRequest.setTargetProposition(PropositionUtil
+		        .pack(targetProposition));
 
 		Client client = CommUtils.getClient();
 		WebResource resource = client.resource(this.applicationProperties
@@ -281,7 +283,8 @@ public class PropositionResource {
 	public void updateProposition(DataElement inDataElement) {
 		if (inDataElement.getUserId() != null && inDataElement.getId() != null) {
 			Proposition proposition = PropositionUtil.unwrap(inDataElement,
-			        inDataElement.getUserId(), this.propositionDao, this.systemPropositionFinder);
+			        inDataElement.getUserId(), this.propositionDao,
+			        this.systemPropositionFinder);
 			proposition.setLastModified(new Date());
 			this.propositionDao.update(proposition);
 		} else {
@@ -307,7 +310,8 @@ public class PropositionResource {
 			}
 
 			SequenceTranslator translator = new SequenceTranslator(
-			        inSequence.getUserId(), this.propositionDao, this.systemPropositionFinder);
+			        inSequence.getUserId(), this.propositionDao,
+			        this.systemPropositionFinder);
 			HighLevelAbstraction abstraction = translator
 			        .translateFromElement(inSequence);
 			Date now = new Date();
@@ -315,6 +319,27 @@ public class PropositionResource {
 			abstraction.setLastModified(now);
 			abstraction.setKey(abstraction.getAbbrevDisplayName());
 			this.propositionDao.create(abstraction);
+		} else {
+			throw new IllegalArgumentException("User ID must be provided.");
+		}
+	}
+
+	@POST
+	@Path("/user/create/categorization")
+	@Consumes(MediaType.APPLICATION_JSON)
+	public void insertProposition(CategoricalElement inElement) {
+		if (inElement.getUserId() != null) {
+			for (DataElement child : inElement.getChildren()) {
+				createIfNeeded(inElement.getUserId(), child.getKey());
+			}
+			CategorizationTranslator translator = new CategorizationTranslator(
+			        this.propositionDao, this.systemPropositionFinder);
+			Categorization categorization = translator.translateFromElement(inElement);
+			Date now = new Date();
+			categorization.setCreated(now);
+			categorization.setLastModified(now);
+			categorization.setKey(categorization.getAbbrevDisplayName());
+			this.propositionDao.create(categorization);
 		} else {
 			throw new IllegalArgumentException("User ID must be provided.");
 		}
