@@ -25,11 +25,11 @@ import java.util.List;
 import org.protempa.PropositionDefinition;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.CategoricalElement;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.CategoricalElement.CategoricalType;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.DataElement;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.Categorization;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.Categorization.CategorizationType;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.Proposition;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.PropositionTypeVisitor;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.SystemProposition;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.PropositionDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.finder.SystemPropositionFinder;
@@ -38,13 +38,14 @@ import edu.emory.cci.aiw.cvrg.eureka.services.finder.SystemPropositionFinder;
  * Translates categorical data elements (UI element) into categorization
  * propositions.
  */
-final class CategorizationTranslator implements
+public final class CategorizationTranslator implements
         PropositionTranslator<CategoricalElement, Categorization> {
 
 	private final PropositionDao dao;
 	private final SystemPropositionFinder finder;
 
-	public CategorizationTranslator(PropositionDao inDao, SystemPropositionFinder inFinder) {
+	public CategorizationTranslator(PropositionDao inDao,
+	        SystemPropositionFinder inFinder) {
 		this.dao = inDao;
 		this.finder = inFinder;
 	}
@@ -55,31 +56,23 @@ final class CategorizationTranslator implements
 		PropositionTranslatorUtil.populateCommonPropositionFields(result,
 		        element);
 
-		PropositionTypeVisitor visitor = new PropositionTypeVisitor();
-		CategorizationType type = CategorizationType.UNKNOWN;
 		List<Proposition> inverseIsA = new ArrayList<Proposition>();
 		for (DataElement de : element.getChildren()) {
 			Proposition child = getOrCreateProposition(de.getKey(), element);
 			inverseIsA.add(child);
-			child.accept(visitor);
-			CategorizationType childType = checkType(child, visitor.getType());
-			if (type == CategorizationType.UNKNOWN) {
-				type = childType;
-			} else if (childType != type) {
-				type = CategorizationType.MIXED;
-			}
-
 		}
 		result.setInverseIsA(inverseIsA);
-		result.setCategorizationType(type);
+		result.setCategorizationType(checkPropositionType(element));
 
 		return result;
 	}
-	
-	private Proposition getOrCreateProposition(String key, CategoricalElement element) {
+
+	private Proposition getOrCreateProposition(String key,
+	        CategoricalElement element) {
 		Proposition proposition = dao.getByUserAndKey(element.getUserId(), key);
 		if (proposition == null) {
-			PropositionDefinition propDef = finder.find(element.getUserId(), key);
+			PropositionDefinition propDef = finder.find(element.getUserId(),
+			        key);
 			SystemProposition sysProp = new SystemProposition();
 			sysProp.setKey(key);
 			sysProp.setInSystem(true);
@@ -93,48 +86,56 @@ final class CategorizationTranslator implements
 		return proposition;
 	}
 
-	private CategorizationType checkType(Proposition child,
-	        DataElement.Type type) {
-		switch (type) {
-		case CATEGORIZATION:
-			return ((Categorization) child).getCategorizationType();
-		case SEQUENCE:
-			// fall through
-		case FREQUENCY:
-			// fall through
-		case VALUE_THRESHOLD:
-			return CategorizationType.ABSTRACTION;
-		case SYSTEM:
-			switch (((SystemProposition) child).getSystemType()) {
+	private CategorizationType checkPropositionType(CategoricalElement element) {
+		switch (element.getCategoricalType()) {
+			case ABSTRACTION:
+				return CategorizationType.ABSTRACTION;
 			case CONSTANT:
 				return CategorizationType.CONSTANT;
 			case EVENT:
 				return CategorizationType.EVENT;
 			case PRIMITIVE_PARAMETER:
 				return CategorizationType.PRIMITIVE_PARAMETER;
-			case HIGH_LEVEL_ABSTRACTION:
-				// fall through
-			case LOW_LEVEL_ABSTRACTION:
-				// fall through
-			case SLICE_ABSTRACTION:
-				return CategorizationType.ABSTRACTION;
-			}
+			case MIXED:
+				return CategorizationType.MIXED;
+			default:
+				return CategorizationType.UNKNOWN;
 		}
-		return CategorizationType.UNKNOWN;
 	}
 
 	@Override
-	public CategoricalElement translateFromProposition(Categorization proposition) {
+	public CategoricalElement translateFromProposition(
+	        Categorization proposition) {
 		CategoricalElement result = new CategoricalElement();
-		
-		PropositionTranslatorUtil.populateCommonDataElementFields(result, proposition);
-		PropositionTranslatorVisitor visitor = new PropositionTranslatorVisitor(proposition.getUserId(), dao, null);
+
+		PropositionTranslatorUtil.populateCommonDataElementFields(result,
+		        proposition);
+		PropositionTranslatorVisitor visitor = new PropositionTranslatorVisitor(
+		        proposition.getUserId(), dao, null);
 		List<DataElement> children = new ArrayList<DataElement>();
 		for (Proposition p : proposition.getInverseIsA()) {
 			p.accept(visitor);
 			children.add(visitor.getDataElement());
 		}
-		
+		result.setCategoricalType(checkElementType(proposition));
+
 		return result;
+	}
+	
+	private CategoricalType checkElementType(Categorization proposition) {
+		switch (proposition.getCategorizationType()) {
+			case ABSTRACTION:
+				return CategoricalType.ABSTRACTION;
+			case CONSTANT:
+				return CategoricalType.CONSTANT;
+			case EVENT:
+				return CategoricalType.EVENT;
+			case PRIMITIVE_PARAMETER:
+				return CategoricalType.PRIMITIVE_PARAMETER;
+			case MIXED:
+				return CategoricalType.MIXED;
+			default:
+				return CategoricalType.UNKNOWN;
+		}
 	}
 }
