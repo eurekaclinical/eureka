@@ -322,19 +322,16 @@ function initTrees() {
 					infoLabel.hide();
 
 					var sortable = $(target).find('ul.sortable');
-					var newItem = $('<li></li>', {
-						"data-space": $(data.o[0]).data("space"),
-						"data-type": $(data.o[0]).data("type"),
-						"data-key": $(data.o[0]).data("proposition")
-					});
+					var newItem = $('<li></li>').attr("data-space", $(data.o[0]).data("space")).attr("data-type", $(data.o[0]).data("type")).attr("data-key", $(data.o[0]).data("proposition"));
 
 					// check that all types in the categorization are the same
-					if ($(sortable).data("proptype") != "empty") {
-						if ($(sortable).data("proptype") != $(newitem).data("type")) {
-							alert("All elements in a categorization must be of the same type");
+					if ($(sortable).attr("data-proptype") !== "empty") {
+						if ($(sortable).attr("data-proptype") !== $(newItem).attr("data-type")) {
+							return;
 						}
 					} else {
-						$(sortable).data("proptype", $(newitem).data("type"));
+						var tmptype = $(newItem).attr("data-type");
+						$(sortable).attr("data-proptype", tmptype);
 					}
 
 					var X = $("<span/>", {
@@ -378,19 +375,19 @@ function initTrees() {
 					setPropositionSelects();
 				}
 			},
-			"drop_check": function (data) {
-				var target = data.r;
-				var sortable = $(target).find('ul.sortable');
-				var datatype = $(sortable).data("proptype");
-				
-				if (datatype == "empty" || datatype == $(data.o).data("type")) {
-					return true;
-				} else {
-					return false;
-				}
-				
-				
-			},
+//			"drop_check": function (data) {
+//				var target = data.r;
+//				var sortable = $(target).find('ul.sortable');
+//				var datatype = $(sortable).data("proptype");
+//
+//				if (datatype == "empty" || datatype == $(data.o).data("type")) {
+//					return true;
+//				} else {
+//					return false;
+//				}
+//				
+//				
+//			},
 			"drag_check" : function(data) {
 				if (data.r.attr("id") == "phtml_1") {
 					return false;
