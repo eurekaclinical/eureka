@@ -20,15 +20,24 @@
 package edu.emory.cci.aiw.cvrg.eureka.services.util;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
+import org.protempa.ConstantDefinition;
+import org.protempa.EventDefinition;
+import org.protempa.HighLevelAbstractionDefinition;
+import org.protempa.LowLevelAbstractionDefinition;
+import org.protempa.PairDefinition;
+import org.protempa.PrimitiveParameterDefinition;
 import org.protempa.PropertyDefinition;
 import org.protempa.PropositionDefinition;
+import org.protempa.PropositionDefinitionVisitor;
+import org.protempa.SliceDefinition;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.DataElement;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.SystemElement;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.Proposition;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.PropositionChildrenVisitor;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.SystemProposition.SystemType;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.PropositionDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.finder.SystemPropositionFinder;
 import edu.emory.cci.aiw.cvrg.eureka.services.packaging.PropositionDefinitionPackagerVisitor;
@@ -52,6 +61,55 @@ public final class PropositionUtil {
 		return visitor.getDataElement();
 	}
 
+	private static class PropositionDefinitionTypeVisitor implements
+	        PropositionDefinitionVisitor {
+
+		SystemType systemType;
+
+		@Override
+		public void visit(Collection<? extends PropositionDefinition> arg0) {
+			throw new UnsupportedOperationException(
+			        "getting the type of a collection is not supported");
+		}
+
+		@Override
+		public void visit(ConstantDefinition arg0) {
+			systemType = SystemType.CONSTANT;
+		}
+
+		@Override
+		public void visit(EventDefinition arg0) {
+			systemType = SystemType.EVENT;
+		}
+
+		@Override
+		public void visit(HighLevelAbstractionDefinition arg0) {
+			systemType = SystemType.HIGH_LEVEL_ABSTRACTION;
+		}
+
+		@Override
+		public void visit(LowLevelAbstractionDefinition arg0) {
+			systemType = SystemType.LOW_LEVEL_ABSTRACTION;
+		}
+
+		@Override
+		public void visit(PairDefinition arg0) {
+			systemType = SystemType.HIGH_LEVEL_ABSTRACTION;
+		}
+
+		@Override
+		public void visit(PrimitiveParameterDefinition arg0) {
+			systemType = SystemType.PRIMITIVE_PARAMETER;
+		}
+
+		@Override
+		public void visit(SliceDefinition arg0) {
+			systemType = SystemType.SLICE_ABSTRACTION;
+		}
+	}
+
+	private static final PropositionDefinitionTypeVisitor PROP_DEF_TYPE_VISITOR = new PropositionDefinitionTypeVisitor();
+
 	/**
 	 * Wraps a proposition definition into a proposition wrapper.
 	 */
@@ -66,6 +124,8 @@ public final class PropositionUtil {
 		systemElement.setDisplayName(inDefinition.getDisplayName());
 		systemElement.setSummarized(summarize);
 		systemElement.setParent(inDefinition.getChildren().length > 0);
+		inDefinition.accept(PROP_DEF_TYPE_VISITOR);
+		systemElement.setSystemType(PROP_DEF_TYPE_VISITOR.systemType);
 
 		if (!summarize) {
 			List<SystemElement> children = new ArrayList<SystemElement>();
