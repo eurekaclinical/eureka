@@ -129,7 +129,7 @@
 															<td>
 																<div id="tree-drop-categorical" class="tree-drop jstree-drop">
 																	<div class="label-info jstree-drop" ><center>Drop Here</center></div>
-																	<ul class="sortable" style="width: 100% height: 100%">
+																	<ul class="sortable" data-proptype="empty" style="width: 100% height: 100%">
 																		<c:if test="${not empty proposition}">
 																			<c:forEach var="child" items="${proposition.children}">
 																				<c:choose>
