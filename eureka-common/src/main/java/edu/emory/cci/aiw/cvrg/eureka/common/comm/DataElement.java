@@ -21,13 +21,23 @@ package edu.emory.cci.aiw.cvrg.eureka.common.comm;
 
 import java.util.Date;
 
+import org.codehaus.jackson.annotate.JsonIgnore;
+import org.codehaus.jackson.annotate.JsonSubTypes;
+import org.codehaus.jackson.annotate.JsonSubTypes.Type;
 import org.codehaus.jackson.annotate.JsonTypeInfo;
 
 /**
  * A user-created data element from the UI. Contains fields common to all
  * user-created data elements.
  */
-@JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.PROPERTY, property = "@class")
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
+@JsonSubTypes({
+        @JsonSubTypes.Type(value = SystemElement.class, name = "system"),
+        @JsonSubTypes.Type(value = CategoricalElement.class, name = "categorization"),
+        @JsonSubTypes.Type(value = Sequence.class, name = "sequence")
+// @Type(value = Frequence.class, name = "frequency"),
+// @Type(value = ValueThreshold.class, name = "valueThreshold")
+})
 public abstract class DataElement implements DataElementVisitable {
 
 	public enum Type {
@@ -120,13 +130,9 @@ public abstract class DataElement implements DataElementVisitable {
 	public void setSummarized(boolean summarized) {
 		this.summarized = summarized;
 	}
-	
+
+	@JsonIgnore
 	public Type getType() {
 		return type;
-	}
-	
-	protected final void setType(Type type) {
-		// do nothing -- type is invariant in concrete classes
-		// this is just for JSON serialization
 	}
 }
