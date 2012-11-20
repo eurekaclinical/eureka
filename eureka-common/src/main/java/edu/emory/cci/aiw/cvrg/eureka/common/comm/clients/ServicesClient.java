@@ -24,6 +24,7 @@ import javax.ws.rs.core.MediaType;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.GenericType;
 
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.CategoricalElement;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.Sequence;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.User;
 
@@ -54,13 +55,25 @@ public class ServicesClient extends AbstractClient {
 	public void saveSequence(Sequence inSequence) throws ClientException {
 		final String path = "/user/create/sequence";
 		ClientResponse response = this.getResource().path(path)
-		        .type(MediaType.APPLICATION_JSON)
-		        .accept(MediaType.TEXT_PLAIN)
+		        .type(MediaType.APPLICATION_JSON).accept(MediaType.TEXT_PLAIN)
 		        .post(ClientResponse.class, inSequence);
 		if (!response.getClientResponseStatus()
 		        .equals(ClientResponse.Status.OK)) {
 			String message = response.getEntity(String.class);
 			throw new ClientException(message);
 		}
+	}
+
+	public void saveCategoricalElement(CategoricalElement inElement)
+	        throws ClientException {
+		final String path = "/user/create/categorization";
+		ClientResponse response = this.getResource().path(path)
+		        .type(MediaType.APPLICATION_JSON).accept(MediaType.TEXT_PLAIN)
+		        .post(ClientResponse.class, inElement);
+		if (!response.getClientResponseStatus().equals(ClientResponse.Status.OK)) {
+			String message = response.getEntity(String.class);
+			throw new ClientException(message);
+		}
+		
 	}
 }
