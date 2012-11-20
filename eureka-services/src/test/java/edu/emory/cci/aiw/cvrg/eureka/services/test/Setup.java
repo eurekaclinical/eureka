@@ -39,6 +39,7 @@ import edu.emory.cci.aiw.cvrg.eureka.common.entity.HighLevelAbstraction;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.Proposition;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.Role;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.User;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.Categorization.CategorizationType;
 import edu.emory.cci.aiw.cvrg.eureka.common.test.TestDataException;
 import edu.emory.cci.aiw.cvrg.eureka.common.test.TestDataProvider;
 import edu.emory.cci.aiw.cvrg.eureka.services.util.StringUtil;
@@ -124,11 +125,12 @@ public class Setup implements TestDataProvider {
 		EntityManager entityManager = this.getEntityManager();
 		entityManager.getTransaction().begin();
 		for (User u : users) {
-			Proposition proposition1 = new Categorization();
+			Categorization proposition1 = new Categorization();
 			proposition1.setKey("test-cat");
 			proposition1.setAbbrevDisplayName("test");
 			proposition1.setDisplayName("Test Proposition");
 			proposition1.setUserId(u.getId());
+			proposition1.setCategorizationType(CategorizationType.EVENT);
 			entityManager.persist(proposition1);
 			propositions.add(proposition1);
 
