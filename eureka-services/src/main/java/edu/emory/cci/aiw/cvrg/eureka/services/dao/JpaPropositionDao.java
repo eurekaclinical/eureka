@@ -82,10 +82,12 @@ public class JpaPropositionDao extends GenericDao<Proposition, Long>
 		try {
 			result = typedQuery.getSingleResult();
 		} catch (NonUniqueResultException nure) {
-			LOGGER.error("Result not unique.", nure);
+			LOGGER.warn("Result not unique for user id = {} and key = {}",
+				inUserId, inKey);
 			result = null;
 		} catch (NoResultException nre) {
-			LOGGER.error("Result not existant.", nre);
+			LOGGER.warn("Result not existant for user id = {} and key = {}",
+				inUserId, inKey);
 			result = null;
 		}
 		return result;

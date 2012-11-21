@@ -31,15 +31,11 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
-import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.xml.bind.annotation.XmlRootElement;
-
-import org.codehaus.jackson.annotate.JsonBackReference;
-import org.codehaus.jackson.annotate.JsonManagedReference;
 
 import com.sun.xml.bind.CycleRecoverable;
 
@@ -111,12 +107,6 @@ public class User implements CycleRecoverable {
 			   inverseJoinColumns = {
 		@JoinColumn(name = "roleId")})
 	private List<Role> roles = new ArrayList<Role>();
-	/**
-	 * The file uploads belonging to the user.
-	 */
-	@OneToMany(cascade = CascadeType.ALL, targetEntity = FileUpload.class,
-			   mappedBy = "user")
-	private List<FileUpload> fileUploads = new ArrayList<FileUpload>();
 
 	/**
 	 * Create an empty User object.
@@ -315,7 +305,6 @@ public class User implements CycleRecoverable {
 	 *
 	 * @return A list of {@link Role} objects.
 	 */
-	@JsonManagedReference("users-roles")
 	public List<Role> getRoles() {
 		return this.roles;
 	}
@@ -328,72 +317,6 @@ public class User implements CycleRecoverable {
 	public void setRoles(final List<Role> inRoles) {
 		this.roles = inRoles;
 	}
-
-	/**
-	 * Get the list of files uploaded by the user.
-	 *
-	 * @return The list of files uploaded by the user.
-	 */
-	@JsonBackReference("user-fileuploads")
-	public List<FileUpload> getFileUploads() {
-		return this.fileUploads;
-	}
-
-	/**
-	 * Set the list of files uploaded by the user.
-	 *
-	 * @param inFileUploads The list of files uploaded by the user.
-	 */
-	public void setFileUploads(List<FileUpload> inFileUploads) {
-		this.fileUploads = inFileUploads;
-	}
-
-	/**
-	 * Add a new file upload for the user.
-	 *
-	 * @param fileUpload The file upload to add to the list of file uploads for
-	 * the user.
-	 */
-	public void addFileUpload(FileUpload fileUpload) {
-		User user = fileUpload.getUser();
-		if (user == null || !user.getId().equals(this.getId())) {
-			fileUpload.setUser(this);
-		}
-		this.fileUploads.add(fileUpload);
-	}
-
-//	/**
-//	 * Gets the list of propositions for the user.
-//	 *
-//	 * @return The list of propositions for the user.
-//	 */
-//	@JsonManagedReference("user-propositions")
-//	public List<Proposition> getPropositions() {
-//		return propositions;
-//	}
-
-//	/**
-//	 * Sets the list of propositions for the user.
-//	 *
-//	 * @param inPropositions The list of propositions for the user.
-//	 */
-//	public void setPropositions(List<Proposition> inPropositions) {
-//		this.propositions = inPropositions;
-//	}
-//
-//	/**
-//	 * Adds a new proposition to the existing list of propositions for the user.
-//	 *
-//	 * @param inProposition The proposition to add to the list of propositions
-//	 * for the user.
-//	 */
-//	public void addProposition(Proposition inProposition) {
-//		User user = inProposition.getUser();
-//		if (user == null || !user.getId().equals(this.getId())) {
-//			inProposition.setUser(this);
-//		}
-//		this.propositions.add(inProposition);
-//	}
 
 	@Override
 	public Object onCycleDetected(final Context context) {
@@ -416,9 +339,7 @@ public class User implements CycleRecoverable {
 				", password=").append(this.password).append(
 				", verificationCode=").append(this.verificationCode).append(
 				", lastLogin=").append(this.lastLogin).append(", roles=").append(
-				this.roles).append(", fileUploads=").append(this.fileUploads).
-//				append(", propositions=").append(this.propositions).
-				append("]");
+				this.roles).append("]");
 		return builder.toString();
 	}
 }

@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -74,10 +74,12 @@ import edu.emory.cci.aiw.cvrg.eureka.services.util.PropositionUtil;
 
 /**
  * REST Web Service
- * 
+ *
  * @author hrathod
  */
 @Path("/proposition")
+@Consumes(MediaType.APPLICATION_JSON)
+@Produces(MediaType.APPLICATION_JSON)
 public class PropositionResource {
 
 	private final PropositionDao propositionDao;
@@ -103,7 +105,6 @@ public class PropositionResource {
 
 	@GET
 	@Path("/system/{userId}/list")
-	@Produces(MediaType.APPLICATION_JSON)
 	public List<SystemElement> getSystemPropositions(
 	        @PathParam("userId") Long inUserId) {
 
@@ -130,7 +131,6 @@ public class PropositionResource {
 
 	@GET
 	@Path("/system/{userId}/{propKey}")
-	@Produces(MediaType.APPLICATION_JSON)
 	public SystemElement getSystemProposition(
 	        @PathParam("userId") Long inUserId,
 	        @PathParam("propKey") String inKey) {
@@ -139,7 +139,6 @@ public class PropositionResource {
 
 	@POST
 	@Path("/system/{userId}/batch")
-	@Produces(MediaType.APPLICATION_JSON)
 	public List<SystemElement> batchSystemPropositions(
 	        @PathParam("userId") Long inUserId, List<String> inIdList) {
 		List<SystemElement> systemElements = new ArrayList<SystemElement>(
@@ -152,7 +151,6 @@ public class PropositionResource {
 
 	@GET
 	@Path("/user/list/{userId}")
-	@Produces(MediaType.APPLICATION_JSON)
 	public List<DataElement> getUserPropositions(
 	        @PathParam("userId") Long inUserId) {
 		List<DataElement> result = new ArrayList<DataElement>();
@@ -198,7 +196,6 @@ public class PropositionResource {
 
 	@GET
 	@Path("/user/get/{propId}")
-	@Produces(MediaType.APPLICATION_JSON)
 	public DataElement getUserProposition(
 	        @PathParam("propId") Long inPropositionId) {
 		DataElement dataElement = null;
@@ -279,7 +276,6 @@ public class PropositionResource {
 
 	@PUT
 	@Path("/user/update")
-	@Consumes(MediaType.APPLICATION_JSON)
 	public void updateProposition(DataElement inDataElement) {
 		if (inDataElement.getUserId() != null && inDataElement.getId() != null) {
 			Proposition proposition = PropositionUtil.unwrap(inDataElement,
@@ -295,18 +291,17 @@ public class PropositionResource {
 
 	@POST
 	@Path("/user/create/sequence")
-	@Consumes(MediaType.APPLICATION_JSON)
 	public void insertProposition(Sequence inSequence) {
 		if (inSequence.getUserId() != null) {
 			// create any necessary system level elements, if needed
 			String primaryKey = inSequence.getPrimaryDataElement()
 			        .getDataElementKey();
-			createIfNeeded(inSequence.getUserId(), primaryKey);
+			findOrCreate(inSequence.getUserId(), primaryKey);
 			for (Sequence.RelatedDataElementField relatedDataElementField : inSequence
 			        .getRelatedDataElements()) {
 				String relatedKey = relatedDataElementField
 				        .getDataElementField().getDataElementKey();
-				createIfNeeded(inSequence.getUserId(), relatedKey);
+				findOrCreate(inSequence.getUserId(), relatedKey);
 			}
 
 			SequenceTranslator translator = new SequenceTranslator(
@@ -326,26 +321,21 @@ public class PropositionResource {
 
 	@POST
 	@Path("/user/create/categorization")
-	@Consumes(MediaType.APPLICATION_JSON)
 	public void insertProposition(CategoricalElement inElement) {
 		if (inElement.getUserId() != null) {
-			for (DataElement child : inElement.getChildren()) {
-				createIfNeeded(inElement.getUserId(), child.getKey());
-			}
 			CategorizationTranslator translator = new CategorizationTranslator(
 			        this.propositionDao, this.systemPropositionFinder);
 			Categorization categorization = translator.translateFromElement(inElement);
 			Date now = new Date();
 			categorization.setCreated(now);
 			categorization.setLastModified(now);
-			categorization.setKey(categorization.getAbbrevDisplayName());
 			this.propositionDao.create(categorization);
 		} else {
 			throw new IllegalArgumentException("User ID must be provided.");
 		}
 	}
 
-	private void createIfNeeded(Long userId, String key) {
+	private Proposition findOrCreate(Long userId, String key) {
 		Proposition proposition = this.propositionDao.getByUserAndKey(userId,
 		        key);
 		if (proposition == null) {
@@ -366,7 +356,9 @@ public class PropositionResource {
 			definition.accept(visitor);
 			systemProposition.setSystemType(visitor.getSystemType());
 			this.propositionDao.create(systemProposition);
+			proposition = systemProposition;
 		}
+		return proposition;
 	}
 
 	private SystemElement fetchSystemProposition(Long inUserId, String inKey) {

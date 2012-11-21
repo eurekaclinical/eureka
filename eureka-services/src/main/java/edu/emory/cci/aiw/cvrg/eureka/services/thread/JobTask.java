@@ -127,7 +127,7 @@ public class JobTask implements Runnable {
 	public void setPropositions (List<PropositionDefinition> inPropositions) {
 		this.propositions = inPropositions;
 	}
-	
+
 	/**
 	 * Sets the user-created propositions to add to the task.
 	 * @param inPropositions The list of user-created propositions to add to the task
@@ -285,7 +285,7 @@ public class JobTask implements Runnable {
 		JobRequest jobRequest = new JobRequest();
 		Job job = new Job();
 		job.setConfigurationId(conf.getId());
-		job.setUserId(this.fileUpload.getUser().getId());
+		job.setUserId(this.fileUpload.getUserId());
 		jobRequest.setJob(job);
 		jobRequest.setPropositions(this.propositions);
 		jobRequest.setUserPropositions(this.userPropositions);
@@ -301,7 +301,7 @@ public class JobTask implements Runnable {
 			LOGGER.info("Job successfully submitted.");
 		}
 	}
-	
+
 	/**
 	 * Get the configuration associated with the current user.
 	 *
@@ -319,7 +319,7 @@ public class JobTask implements Runnable {
 			ClientResponse response;
 			WebResource resource;
 			Client client = CommUtils.getClient();
-			Long userId = this.fileUpload.getUser().getId();
+			Long userId = this.fileUpload.getUserId();
 			resource = client.resource(this.serviceProperties.
 					getEtlConfGetUrl() + "/" + userId);
 			response = resource.accept(MediaType.APPLICATION_JSON).get(

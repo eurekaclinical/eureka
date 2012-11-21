@@ -24,8 +24,8 @@ import java.util.List;
 import org.junit.Test;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.FileUpload;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.User;
 import edu.emory.cci.aiw.cvrg.eureka.services.test.AbstractServiceTest;
+
 import junit.framework.Assert;
 
 /**
@@ -41,16 +41,12 @@ public class FileDaoTest extends AbstractServiceTest {
 	 */
 	@Test
 	public void testGetByUserId() {
-		UserDao userDao = this.getInstance(UserDao.class);
+		final Long userId = Long.valueOf(1);
+		final int expectedSize = 1;
 		FileDao fileDao = this.getInstance(FileDao.class);
 
-		List<User> users = userDao.getAll();
-		User testUser = users.get(0);
-		List<FileUpload> expectedUploads = testUser.getFileUploads();
+		List<FileUpload> actualUploads = fileDao.getByUserId(userId);
 
-		List<FileUpload> actualUploads = fileDao.getByUserId(testUser.getId
-				());
-
-		Assert.assertEquals(expectedUploads.size(), actualUploads.size());
+		Assert.assertEquals(expectedSize, actualUploads.size());
 	}
 }

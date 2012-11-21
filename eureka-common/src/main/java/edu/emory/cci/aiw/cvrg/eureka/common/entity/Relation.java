@@ -19,6 +19,7 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.common.entity;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -38,37 +39,37 @@ public class Relation {
 	@GeneratedValue(strategy = GenerationType.TABLE)
 	private Long id;
 
-	@OneToOne
+	@OneToOne(cascade = CascadeType.ALL)
 	private ExtendedProposition lhsExtendedProposition;
 
-	@OneToOne
+	@OneToOne(cascade = CascadeType.ALL)
 	private ExtendedProposition rhsExtendedProposition;
 
-	@OneToOne
+	@OneToOne(cascade = CascadeType.PERSIST)
 	@JoinColumn(referencedColumnName = "id")
 	private RelationOperator op;
-	
+
 	private Integer minf1s2;
 
-	@OneToOne
+	@OneToOne(cascade = CascadeType.PERSIST)
 	@JoinColumn(referencedColumnName = "id")
 	private TimeUnit minf1s2TimeUnit;
 
 	private Integer maxf1s2;
 
-	@OneToOne
+	@OneToOne(cascade = CascadeType.PERSIST)
 	@JoinColumn(referencedColumnName = "id")
 	private TimeUnit maxf1s2TimeUnit;
 
 	private Integer mins1f2;
 
-	@OneToOne
+	@OneToOne(cascade = CascadeType.PERSIST)
 	@JoinColumn(referencedColumnName = "id")
 	TimeUnit mins1f2TimeUnit;
 
 	private Integer maxs1f2;
 
-	@OneToOne
+	@OneToOne(cascade = CascadeType.PERSIST)
 	@JoinColumn(referencedColumnName = "id")
 	TimeUnit maxs1f2TimeUnit;
 
@@ -101,11 +102,11 @@ public class Relation {
 	public RelationOperator getOp() {
 		return op;
 	}
-	
+
 	public void setOp(RelationOperator inOp) {
 		op = inOp;
 	}
-	
+
 	public Integer getMinf1s2() {
 		return minf1s2;
 	}

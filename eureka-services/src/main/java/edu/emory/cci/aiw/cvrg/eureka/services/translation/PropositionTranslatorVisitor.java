@@ -50,14 +50,12 @@ public final class PropositionTranslatorVisitor implements
 	public void visit(SystemProposition proposition) {
 		dataElement = new SystemPropositionTranslator(finder)
 		        .translateFromProposition(proposition);
-		;
 	}
 
 	@Override
 	public void visit(Categorization categorization) {
 		dataElement = new CategorizationTranslator(propositionDao, finder)
 		        .translateFromProposition(categorization);
-		;
 	}
 
 	@Override

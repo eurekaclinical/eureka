@@ -45,4 +45,8 @@ public final class SystemProposition extends Proposition {
 		visitor.visit(this);
 	}
 
+	@Override
+	public boolean isInSystem() {
+		return true;
+	}
 }

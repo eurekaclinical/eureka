@@ -22,6 +22,7 @@ package edu.emory.cci.aiw.cvrg.eureka.common.entity;
 import java.io.Serializable;
 import java.util.Date;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -41,8 +42,8 @@ import com.sun.xml.bind.CycleRecoverable;
  */
 @XmlRootElement
 @Entity
-@Table(name = "propositions", uniqueConstraints = @UniqueConstraint
-	(columnNames = {"abbrevDisplayName", "userId"}))
+@Table(name = "propositions", uniqueConstraints = { @UniqueConstraint
+	(columnNames = {"key"}) })
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 public abstract class Proposition implements CycleRecoverable,
         PropositionEntityVisitable, Serializable {
@@ -66,6 +67,7 @@ public abstract class Proposition implements CycleRecoverable,
 	 * If proposition is system-level, this key identifies the proposition in
 	 * the system ontology
 	 */
+	@Column(nullable = false)
 	private String key;
 	/**
 	 * The display name for the proposition.

@@ -34,41 +34,33 @@
 	</template:content>
 
 	<template:content name="content">
-
-        <div id="dialog" title="Confirm Remove Selected Element"></div>
-		 <div class="action_link">   
-            <a href="${pageContext.request.contextPath}/protected/editor.jsp" class="create"></a>
-            <a href="${pageContext.request.contextPath}/protected/editor.jsp" style="text-decoration:none">Create New Element</a>
-         </div>
-
-
-                <table align="center" id="elements" style="width: 98%">
-                         <tr class="bold" >
-                                 <th>Action</th><th>Name</th><th>Description</th><th>Type</th><th>Created Date</th><th>Last Modified</th>
-                         </tr>
-                         <c:forEach items="${props}" var="prop">
-                
-                                <tr>
-                                         <td style="width:60px">
-                                            <a href="#" onclick="showPopup(event, ${prop.attr['id']})" class="view" title="View"></a>
-                                            <a href="${pageContext.request.contextPath}/protected/editprop?id=${prop.attr['id']}" class="edit" title="Edit"></a>
-                                            <a href="#" onclick="deleteElement(event, ${prop.attr['id']})" class="delete" title="Delete"></a>
-                                        </td>
-                                         <td style="width: 100px">${prop.attr['abbrevDisplay']}</td>
-                                         <td>${prop.attr['displayName']}</td>
-                                         <td>${prop.attr['type']}</td>
-                                         <td>${prop.attr['created']}</td>
-                                         <td>${prop.attr['lastModified']}</td>
-                                 </tr>
-
-                         </c:forEach>
-                </table>
-		
-
+		<div id="dialog" title="Confirm Remove Selected Element"></div>
+		<div class="action_link">   
+			<a href="${pageContext.request.contextPath}/protected/editor.jsp" class="create"></a>
+			<a href="${pageContext.request.contextPath}/protected/editor.jsp" style="text-decoration:none">Create New Element</a>
+		</div>
+		<table align="center" id="elements" style="width: 98%">
+			<tr class="bold" >
+				<th>Action</th><th>Name</th><th>Description</th><th>Type</th><th>Created Date</th><th>Last Modified</th>
+			</tr>
+			<c:forEach items="${props}" var="prop">
+			<tr>
+				<td style="width:60px">
+					<a href="#" onclick="showPopup(event, ${prop.attr['id']})" class="view" title="View"></a>
+					<a href="${pageContext.request.contextPath}/protected/editprop?id=${prop.attr['id']}" class="edit" title="Edit"></a>
+					<a href="#" onclick="deleteElement(event, ${prop.attr['id']})" class="delete" title="Delete"></a>
+				</td>
+				<td style="width: 100px">${prop.attr['abbrevDisplay']}</td>
+				<td>${prop.attr['displayName']}</td>
+				<td>${prop.attr['type']}</td>
+				<td>${prop.attr['created']}</td>
+				<td>${prop.attr['lastModified']}</td>
+			</tr>
+			</c:forEach>
+		</table>
 	</template:content>
-	<template:content name="subcontent">
-		
 
+	<template:content name="subcontent">
 			</div>
 		</div>
 	</template:content>

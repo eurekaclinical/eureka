@@ -107,15 +107,15 @@ public class SequenceTranslator implements
 			ExtendedProposition ep = new ExtendedProposition();
 			ep.setProposition(this.dao.getByUserAndKey(userId,
 			        dataElement.getDataElementKey()));
+			// TODO: Fix this to use proper time units in the database
+			TimeUnit timeUnit = new TimeUnit();
+			timeUnit.setName("Days");
+			timeUnit.setDescription("Granularity of Days");
 			if (dataElement.getHasDuration()) {
 				ep.setMinDuration(dataElement.getMinDuration());
-				TimeUnit minDurationUnits = new TimeUnit();
-				minDurationUnits.setName(dataElement.getMinDurationUnits());
-				ep.setMinDurationTimeUnit(minDurationUnits);
+				ep.setMinDurationTimeUnit(timeUnit);
 				ep.setMaxDuration(dataElement.getMaxDuration());
-				TimeUnit maxDurationUnits = new TimeUnit();
-				maxDurationUnits.setName(dataElement.getMaxDurationUnits());
-				ep.setMaxDurationTimeUnit(maxDurationUnits);
+				ep.setMaxDurationTimeUnit(timeUnit);
 			}
 			if (dataElement.getHasPropertyConstraint()) {
 				PropertyConstraint pc = new PropertyConstraint();
@@ -140,14 +140,15 @@ public class SequenceTranslator implements
 		ExtendedProposition relatedDataElement = this.extendedProps
 		        .get(relatedDataElementField.getSequentialDataElement());
 
+		// TODO: Fix this to use proper time units in the database
+		TimeUnit timeUnit = new TimeUnit();
+		timeUnit.setName("Days");
+		timeUnit.setDescription("Granularity of Days");
+
 		rel.setMinf1s2(relatedDataElementField.getRelationMinCount());
-		TimeUnit minTimeUnit = new TimeUnit();
-		minTimeUnit.setName(relatedDataElementField.getRelationMinUnits());
-		rel.setMinf1s2TimeUnit(minTimeUnit);
+		rel.setMinf1s2TimeUnit(timeUnit);
 		rel.setMaxf1s2(relatedDataElementField.getRelationMaxCount());
-		TimeUnit maxTimeUnit = new TimeUnit();
-		maxTimeUnit.setName(relatedDataElementField.getRelationMaxUnits());
-		rel.setMaxf1s2TimeUnit(maxTimeUnit);
+		rel.setMaxf1s2TimeUnit(timeUnit);
 
 		edu.emory.cci.aiw.cvrg.eureka.common.entity.RelationOperator op = new edu.emory.cci.aiw.cvrg.eureka.common.entity.RelationOperator();
 		if (relatedDataElementField.getRelationOperator() == RelationOperator.BEFORE) {

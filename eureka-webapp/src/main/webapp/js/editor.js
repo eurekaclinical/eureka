@@ -72,7 +72,8 @@ function saveSequence (elem) {
 	var sequence = new Object();
 	var $relationElems = $(elem).find('.sequence-relations-container').find('.sequence-relation');
 
-	sequence['@class'] = "edu.emory.cci.aiw.cvrg.eureka.common.comm.Sequence";
+	//sequence['@class'] = "edu.emory.cci.aiw.cvrg.eureka.common.comm.Sequence";
+	sequence.type = 'sequence';
 	sequence.abbrevDisplayName = $('input#propAbbrevDisplayName').val();
 	sequence.displayName = $('textarea#propDisplayName').val();
 	sequence.primaryDataElement = collectSequenceDataElement(elem);
@@ -82,21 +83,36 @@ function saveSequence (elem) {
 }
 
 function saveCategorical (elem) {
-	var categorization = new Object();
-	var childElements = new Array();
 	var $propositions = $(elem).find('ul.sortable').find('li');
-
-	categorization['@class'] = "edu.emory.cci.aiw.cvrg.eureka.common.comm.Categorization";
-	categorization.abbrevDisplayName = $('input#propAbbrevDisplayName').val();
-	categorization.displayName = $('textarea#propDisplayName').val();
+	var childElements = new Array();
 	$propositions.each(function (i, p) {
+		var system = $(p).data('space') === 'system';
 		var child = {
+			'key': $(p).data('key')
 		};
+
+		if ($(p).data('space') === 'system') {
+			child['type'] =  'system';
+		} else {
+			child['type'] =  $(p).data('type');
+			if (child['type'] === 'CATEGORIZATION') {
+				child['categoricalType'] = $(p).data('subtype');
+			}
+		}
+
 		childElements.push(child);
 	});
+
+	var categorization = {
+		//'@class': "edu.emory.cci.aiw.cvrg.eureka.common.comm.Categorization",
+		'type': 'categorization',
+		'abbrevDisplayName': $('input#propAbbrevDisplayName').val(),
+		'displayName': $('textarea#propDisplayName').val(),
+		'categoricalType': $(elem).find('ul.sortable').data('proptype'),
+		'children': childElements
+	}
+
 	categorization.children = childElements;
-	categorization.categoricalType = $(childElements[0]).data("subtype");
-	postProposition('savecategorical', categorization, function (data) {window.location.href = 'editorhome'});
 	postProposition("savecategorization", categorization, function (data) {window.location.href = 'editorhome'});
 }
 
@@ -339,12 +355,13 @@ function initTrees() {
 					var newItem = $('<li></li>')
 						.data("space", $(data.o[0]).data("space"))
 						.data("type", $(data.o[0]).data("type"))
+						.data("subtype", $(data.o[0]).data("subtype") || '')
 						.data("key", $(data.o[0]).data("proposition"));
-
+					
 					// check that all types in the categorization are the same
 					if ($(sortable).data('drop-type') === 'multiple' && $(sortable).data("proptype") !== "empty") {
 						if ($(sortable).data("proptype") !== $(newItem).data("type")) {
-							var $dialog = $('<div>All the children must be of the same type.</div>').dialog({
+							var $dialog = $('<div>All the definition elements must be of the same type.</div>').dialog({
 								'title': 'Definition Criteria',
 								'modal': true,
 								'buttons': {
@@ -358,7 +375,7 @@ function initTrees() {
 						$(sortable).data("proptype", tmptype);
 					}
 
-					var X = $("<span/>", {
+					var X = $("<span></span>", {
 						class: "delete",
 						click: function () {
 							var toRemove = $(this).parent()[0];
@@ -389,7 +406,7 @@ function initTrees() {
 						}
 					});
 
-					var txt = $("<span/>", {
+					var txt = $("<span></span>", {
 						text : propositionDesc
 					});
 
@@ -461,14 +478,14 @@ function initTrees() {
 
 					var type = $('#type').val();
 
-					var X = $("<span/>", {
+					var X = $("<span></span>", {
 						class: "delete"
 					});
-					var txt = $("<span/>", {
+					var txt = $("<span></span>", {
 						text : data.o[0].children[1].childNodes[1].textContent
 					});
 
-					$('<li/>', {
+					$('<li></li>', {
 						id: data.o[0].id,
 						"data-type": $(data.o[0]).data("type"),
 						"data-subtype": $(data.o[0]).data("subtype")

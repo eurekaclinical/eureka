@@ -19,6 +19,7 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.common.entity;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -36,31 +37,31 @@ public class ExtendedProposition {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.TABLE)
-	private String Id;
+	private Long Id;
 
 	private Integer minDuration;
 
-	@OneToOne
+	@OneToOne(cascade = CascadeType.PERSIST)
 	@JoinColumn(referencedColumnName = "id")
 	private TimeUnit minDurationTimeUnit;
 
 	private Integer maxDuration;
 
-	@OneToOne
+	@OneToOne(cascade = CascadeType.PERSIST)
 	@JoinColumn(referencedColumnName = "id")
 	private TimeUnit maxDurationTimeUnit;
 
-	@OneToOne
+	@OneToOne(cascade = CascadeType.PERSIST)
 	private PropertyConstraint propertyConstraint;
 
 	@OneToOne
 	private Proposition proposition;
 
-	public String getId() {
+	public Long getId() {
 		return Id;
 	}
 
-	public void setId(String inId) {
+	public void setId(Long inId) {
 		Id = inId;
 	}
 

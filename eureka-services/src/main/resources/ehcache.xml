@@ -25,14 +25,14 @@
 
 	<diskStore path="java.io.tmpdir/eureka"/>
 
-	<defaultCache eternal="false" maxElementsInMemory="1000"
+	<defaultCache eternal="false" maxElementsInMemory="5000"
 	              overflowToDisk="false" diskPersistent="false"
 	              timeToIdleSeconds="0"
 	              timeToLiveSeconds="6000" memoryStoreEvictionPolicy="LRU"
 	              statistics="true"/>
 
 	<cache name="systemPropositions" eternal="false"
-	       maxElementsInMemory="1000" overflowToDisk="false"
+	       maxElementsInMemory="5000" overflowToDisk="false"
 	       diskPersistent="false"
 	       timeToIdleSeconds="0" timeToLiveSeconds="6000"
 	       memoryStoreEvictionPolicy="LRU" statistics="true"/>

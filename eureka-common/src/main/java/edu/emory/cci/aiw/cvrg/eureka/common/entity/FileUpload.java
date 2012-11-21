@@ -28,8 +28,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
@@ -92,10 +90,7 @@ public class FileUpload implements CycleRecoverable {
 	/**
 	 * The user to which this upload belongs.
 	 */
-	@ManyToOne(cascade = {CascadeType.MERGE, CascadeType.REFRESH, CascadeType.PERSIST},
-			   targetEntity = User.class)
-	@JoinColumn(name = "user_id")
-	private User user;
+	private Long userId;
 	/**
 	 * Contains a list of errors found in the file.
 	 */
@@ -210,21 +205,17 @@ public class FileUpload implements CycleRecoverable {
 	 *
 	 * @return The user to which the file upload belongs.
 	 */
-	@JsonManagedReference("user-fileuploads")
-	public User getUser() {
-		return this.user;
+	public Long getUserId() {
+		return this.userId;
 	}
 
 	/**
 	 * Set the user to which the file upload belongs.
 	 *
-	 * @param inUser The user to which the file upload belongs.
+	 * @param inUserId The user to which the file upload belongs.
 	 */
-	public void setUser(User inUser) {
-		this.user = inUser;
-		if ((inUser != null) && !this.user.getFileUploads().contains(this)) {
-			this.user.addFileUpload(this);
-		}
+	public void setUserId(Long inUserId) {
+		this.userId = inUserId;
 	}
 
 	/**
@@ -343,7 +334,7 @@ public class FileUpload implements CycleRecoverable {
 		StringBuilder builder = new StringBuilder();
 		builder.append("FileUpload [id=").append(this.id).append(", location=")
 				.append(this.location).append(", userId=")
-				.append(this.user.getId()).append(", timestamp=")
+				.append(this.userId).append(", timestamp=")
 				.append(this.timestamp).append(", validated=")
 				.append(this.validated).append(", processed=")
 				.append(this.processed).append(", completed=")

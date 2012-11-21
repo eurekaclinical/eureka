@@ -41,11 +41,13 @@ public class SaveCategorizationServlet extends HttpServlet {
 		ObjectMapper objectMapper = new ObjectMapper();
 		CategoricalElement element = objectMapper.readValue(req.getReader(),
 		        CategoricalElement.class);
-		
+
 		String username = req.getUserPrincipal().getName();
 		String servicesUrl = req.getSession().getServletContext().getInitParameter("eureka-services-url");
 		ServicesClient servicesClient = new ServicesClient(servicesUrl);
 		User user = servicesClient.getUserByName(username);
+		element.setUserId(user.getId());
+
 		try {
 			servicesClient.saveCategoricalElement(element);
 		} catch (ClientException e) {

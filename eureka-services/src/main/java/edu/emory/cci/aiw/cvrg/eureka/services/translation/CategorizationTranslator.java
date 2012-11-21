@@ -25,10 +25,12 @@ import java.util.List;
 import org.protempa.PropositionDefinition;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.CategoricalElement;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.CategoricalElement.CategoricalType;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.CategoricalElement
+	.CategoricalType;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.DataElement;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.Categorization;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.Categorization.CategorizationType;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.Categorization
+	.CategorizationType;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.Proposition;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.SystemProposition;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.PropositionDao;
@@ -39,13 +41,13 @@ import edu.emory.cci.aiw.cvrg.eureka.services.finder.SystemPropositionFinder;
  * propositions.
  */
 public final class CategorizationTranslator implements
-        PropositionTranslator<CategoricalElement, Categorization> {
+	PropositionTranslator<CategoricalElement, Categorization> {
 
 	private final PropositionDao dao;
 	private final SystemPropositionFinder finder;
 
 	public CategorizationTranslator(PropositionDao inDao,
-	        SystemPropositionFinder inFinder) {
+		SystemPropositionFinder inFinder) {
 		this.dao = inDao;
 		this.finder = inFinder;
 	}
@@ -53,8 +55,8 @@ public final class CategorizationTranslator implements
 	@Override
 	public Categorization translateFromElement(CategoricalElement element) {
 		Categorization result = new Categorization();
-		PropositionTranslatorUtil.populateCommonPropositionFields(result,
-		        element);
+		PropositionTranslatorUtil.populateCommonPropositionFields(
+			result, element);
 
 		List<Proposition> inverseIsA = new ArrayList<Proposition>();
 		for (DataElement de : element.getChildren()) {
@@ -62,17 +64,19 @@ public final class CategorizationTranslator implements
 			inverseIsA.add(child);
 		}
 		result.setInverseIsA(inverseIsA);
+		result.setKey(element.getAbbrevDisplayName());
 		result.setCategorizationType(checkPropositionType(element));
 
 		return result;
 	}
 
 	private Proposition getOrCreateProposition(String key,
-	        CategoricalElement element) {
-		Proposition proposition = dao.getByUserAndKey(element.getUserId(), key);
+		CategoricalElement element) {
+		Proposition proposition = this.dao.getByUserAndKey(
+			element.getUserId(), key);
 		if (proposition == null) {
-			PropositionDefinition propDef = finder.find(element.getUserId(),
-			        key);
+			PropositionDefinition propDef = this.finder.find(
+				element.getUserId(), key);
 			SystemProposition sysProp = new SystemProposition();
 			sysProp.setKey(key);
 			sysProp.setInSystem(true);
@@ -81,12 +85,14 @@ public final class CategorizationTranslator implements
 			sysProp.setUserId(element.getUserId());
 			sysProp.setCreated(element.getCreated());
 			sysProp.setLastModified(element.getLastModified());
+			this.dao.create(sysProp);
 			proposition = sysProp;
 		}
 		return proposition;
 	}
 
-	private CategorizationType checkPropositionType(CategoricalElement element) {
+	private CategorizationType checkPropositionType(CategoricalElement
+		element) {
 		switch (element.getCategoricalType()) {
 			case ABSTRACTION:
 				return CategorizationType.ABSTRACTION;
@@ -104,14 +110,15 @@ public final class CategorizationTranslator implements
 	}
 
 	@Override
-	public CategoricalElement translateFromProposition(
-	        Categorization proposition) {
+	public CategoricalElement translateFromProposition(Categorization
+		proposition) {
 		CategoricalElement result = new CategoricalElement();
 
-		PropositionTranslatorUtil.populateCommonDataElementFields(result,
-		        proposition);
-		PropositionTranslatorVisitor visitor = new PropositionTranslatorVisitor(
-		        proposition.getUserId(), dao, null);
+		PropositionTranslatorUtil.populateCommonDataElementFields(
+			result, proposition);
+		PropositionTranslatorVisitor visitor = new
+			PropositionTranslatorVisitor(
+			proposition.getUserId(), dao, this.finder);
 		List<DataElement> children = new ArrayList<DataElement>();
 		for (Proposition p : proposition.getInverseIsA()) {
 			p.accept(visitor);
@@ -121,7 +128,7 @@ public final class CategorizationTranslator implements
 
 		return result;
 	}
-	
+
 	private CategoricalType checkElementType(Categorization proposition) {
 		switch (proposition.getCategorizationType()) {
 			case ABSTRACTION:

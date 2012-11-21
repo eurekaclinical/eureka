@@ -137,10 +137,10 @@ public class GenericDao<T, PK> implements Dao<T, PK> {
 		try {
 			result = query.getSingleResult();
 		} catch (NonUniqueResultException nure) {
-			LOGGER.error("Result not unique.", nure);
+			LOGGER.warn("Result not unique for {} = {}", attribute, value);
 			result = null;
 		} catch (NoResultException nre) {
-			LOGGER.error("Result not existant", nre);
+			LOGGER.error("Result not existant for {} = {}", attribute, value);
 			result = null;
 		}
 		return result;

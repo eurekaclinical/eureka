@@ -15,7 +15,7 @@
 	<!-- define the package versions for various project we will use -->
 	<properties>
 		<junit-version>4.10</junit-version>
-		<jersey-version>1.10</jersey-version>
+		<jersey-version>1.15</jersey-version>
 		<opensaml-version>1.1b</opensaml-version>
 		<cas-version>3.2.1</cas-version>
 		<guice-version>3.0</guice-version>
@@ -207,7 +207,7 @@
 	<build>
 		<pluginManagement>
 			<plugins>
-				
+
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-compiler-plugin</artifactId>
@@ -228,7 +228,7 @@
 						</licenseMapping>
 					</configuration>
 					<executions>
-						<execution>	
+						<execution>
 							<id>checkontest</id>
 							<goals>
 								<goal>check</goal>

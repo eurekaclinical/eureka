@@ -77,6 +77,7 @@ public final class SystemPropositionTranslator implements
 		for (PropertyDefinition property : propDef.getPropertyDefinitions()) {
 			properties.add(property.getName());
 		}
+		element.setInSystem(proposition.isInSystem());
 		element.setProperties(properties);
 		element.setSystemType(proposition.getSystemType());
 

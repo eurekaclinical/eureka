@@ -137,6 +137,8 @@ public final class DdlGenerator {
 		serviceClasses.add(edu.emory.cci.aiw.cvrg.eureka.common.entity
 			.Categorization.class);
 		serviceClasses.add(edu.emory.cci.aiw.cvrg.eureka.common.entity
+			.SystemProposition.class);
+		serviceClasses.add(edu.emory.cci.aiw.cvrg.eureka.common.entity
 			.Relation.class);
 		serviceClasses.add(edu.emory.cci.aiw.cvrg.eureka.common.entity
 			.TimeUnit.class);

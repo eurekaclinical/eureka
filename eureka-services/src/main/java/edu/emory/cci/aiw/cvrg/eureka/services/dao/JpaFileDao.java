@@ -22,9 +22,6 @@ package edu.emory.cci.aiw.cvrg.eureka.services.dao;
 import java.util.List;
 
 import javax.persistence.EntityManager;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.Path;
-import javax.persistence.criteria.Root;
 
 import com.google.inject.Inject;
 import com.google.inject.Provider;
@@ -32,7 +29,6 @@ import com.google.inject.Provider;
 import edu.emory.cci.aiw.cvrg.eureka.common.dao.GenericDao;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.FileUpload;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.FileUpload_;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.User_;
 
 /**
  * An implementation of {@link FileDao} interface using JPA entities.
@@ -61,14 +57,6 @@ public class JpaFileDao extends GenericDao<FileUpload, Long>
 	 */
 	@Override
 	public List<FileUpload> getByUserId(Long userId) {
-		QueryPathProvider<FileUpload, Long> provider = new
-				QueryPathProvider<FileUpload, Long>() {
-			@Override
-			public Path<Long> getPath(Root<FileUpload> root,
-					CriteriaBuilder builder) {
-				return root.get(FileUpload_.user).get(User_.id);
-			}
-		};
-		return this.getListByAttribute(provider, userId);
+		return this.getListByAttribute(FileUpload_.userId, userId);
 	}
 }

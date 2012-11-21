@@ -19,21 +19,13 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.common.entity;
 
-import java.util.List;
-
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlRootElement;
-
-import org.codehaus.jackson.annotate.JsonBackReference;
 
 import com.sun.xml.bind.CycleRecoverable;
 
@@ -61,15 +53,6 @@ public class Role implements CycleRecoverable {
 	 * The role's name.
 	 */
 	private String name;
-	/**
-	 * A set of users to have this role assigned.
-	 */
-	@ManyToMany(cascade = {CascadeType.MERGE, CascadeType.REFRESH, CascadeType.PERSIST},
-				targetEntity = User.class)
-	@JoinTable(name = "user_role",
-			joinColumns = { @JoinColumn(name = "roleId") },
-			inverseJoinColumns = { @JoinColumn(name = "userId") })
-	private List<User> users;
 	/**
 	 * Is this role a default role? Default roles are assigned to all new users.
 	 */
@@ -135,25 +118,6 @@ public class Role implements CycleRecoverable {
 	 */
 	public void setDefaultRole(Boolean inDefaultRole) {
 		this.defaultRole = inDefaultRole;
-	}
-
-	/**
-	 * Get all the users who have the current role assigned.
-	 *
-	 * @return A Set of {@link User} objects.
-	 */
-	@JsonBackReference("users-roles")
-	public List<User> getUsers() {
-		return this.users;
-	}
-
-	/**
-	 * Set the users who have the current role assigned to them.
-	 *
-	 * @param inUsers A Set of {@link User} objects.
-	 */
-	public void setUsers(List<User> inUsers) {
-		this.users = inUsers;
 	}
 
 	@Override

@@ -45,23 +45,23 @@ import com.sun.jersey.api.client.WebResource;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.CommUtils;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.FileUpload;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.User;
- 
- 
+
+
 public class CommonsFileUploadServlet extends HttpServlet {
-	
+
 	/**
 	 * Temp directory to write to if file size is too big.
 	 */
 	private static final String TMP_DIR_PATH = "/tmp";
 	private File tmpDir;
-	
+
 	/**
 	 * Normal directory to save files to.
 	 * TODO: set value
 	 */
 	private static String DESTINATION_DIR_PATH = "";
 	private File destinationDir;
- 
+
 	public void init(ServletConfig config) throws ServletException {
 		super.init(config);
 		DESTINATION_DIR_PATH = config.getInitParameter("dest_dir");
@@ -70,17 +70,17 @@ public class CommonsFileUploadServlet extends HttpServlet {
 			throw new ServletException(TMP_DIR_PATH + " is not a directory");
 		}
 		String realPath = getServletContext().getRealPath("/")+DESTINATION_DIR_PATH;
-		
+
 		System.out.println(realPath);
 		destinationDir = new File(realPath);
 		if(!destinationDir.isDirectory()) {
 			throw new ServletException(DESTINATION_DIR_PATH+" is not a directory");
 		}
- 
+
 	}
- 
+
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
- 
+
 		DiskFileItemFactory  fileItemFactory = new DiskFileItemFactory ();
 		String eurekaServicesUrl = request.getSession().getServletContext()
 				.getInitParameter("eureka-services-url");
@@ -92,7 +92,7 @@ public class CommonsFileUploadServlet extends HttpServlet {
 		 * Set the temporary directory to store the uploaded files of size above threshold.
 		 */
 		fileItemFactory.setRepository(tmpDir);
- 
+
 		ServletFileUpload uploadHandler = new ServletFileUpload(fileItemFactory);
 		try {
 			/*
@@ -117,7 +117,7 @@ public class CommonsFileUploadServlet extends HttpServlet {
 					Client c = CommUtils.getClient();
 					Principal principal = request.getUserPrincipal();
 					String userName = principal.getName();
-							
+
 					WebResource webResource = c.resource(eurekaServicesUrl);
 					User user = webResource.path("/api/user/byname/"+userName)
 							.accept(MediaType.APPLICATION_JSON).get(User.class);
@@ -128,18 +128,18 @@ public class CommonsFileUploadServlet extends HttpServlet {
 					File file = new File(destinationDir,""+user.getId());
 					item.write(file);
 
-					
+
 					FileUpload fileUpload = new FileUpload();
-					fileUpload.setLocation(getServletContext().getRealPath("/") + 
+					fileUpload.setLocation(getServletContext().getRealPath("/") +
 							DESTINATION_DIR_PATH + "/" + user.getId());
-					fileUpload.setUser(user);
+					fileUpload.setUserId(user.getId());
 
 					ClientResponse clientResponse = webResource.path("/api/job/add").post(
 							ClientResponse.class, fileUpload);
 					System.out.println(clientResponse.getClientResponseStatus());
 				}
-				
-			
+
+
 				response.sendRedirect(request.getContextPath() + "/protected/jobs");
 			}
 		}catch(FileUploadException ex) {
@@ -147,7 +147,7 @@ public class CommonsFileUploadServlet extends HttpServlet {
 		} catch(Exception ex) {
 			log("Error encountered while uploading file",ex);
 		}
- 
+
 	}
- 
+
 }

@@ -49,6 +49,7 @@ public class SaveSequenceServlet extends HttpServlet {
 		ServicesClient servicesClient = new ServicesClient(servicesUrl);
 		User user = servicesClient.getUserByName(username);
 		try {
+			sequence.setUserId(user.getId());
 			servicesClient.saveSequence(sequence);
 		} catch (ClientException e) {
 			req.setAttribute("error", e.getMessage());

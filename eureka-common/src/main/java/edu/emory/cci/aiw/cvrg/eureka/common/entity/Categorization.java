@@ -23,7 +23,6 @@ import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
@@ -44,7 +43,7 @@ public class Categorization extends Proposition {
 	 */
 	@ManyToMany(cascade = { CascadeType.MERGE, CascadeType.REFRESH,
 	        CascadeType.PERSIST })
-	@JoinTable(name = "inverse_is_a", joinColumns = { @JoinColumn(name = "target_proposition_id") })
+	@JoinTable(name = "inverse_is_a")
 	private List<Proposition> inverseIsA;
 
 	private CategorizationType categorizationType;

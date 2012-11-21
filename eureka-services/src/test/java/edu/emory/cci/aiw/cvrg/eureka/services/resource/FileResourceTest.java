@@ -49,7 +49,7 @@ public class FileResourceTest extends AbstractServiceResourceTest {
 		User user = users.get(0);
 		FileUpload fileUpload = new FileUpload();
 		fileUpload.setLocation("/tmp/foo");
-		fileUpload.setUser(user);
+		fileUpload.setUserId(user.getId());
 		fileUpload.setTimestamp(new Date());
 
 		final WebResource resource = this.resource();

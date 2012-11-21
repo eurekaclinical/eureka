@@ -124,24 +124,22 @@ public class JobResource {
 	@Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
 	public Response uploadFile(FileUpload inFileUpload) {
 		LOGGER.debug("Got file upload: {}", inFileUpload);
-		FileUpload fileUpload = inFileUpload;
-		Long userId = inFileUpload.getUser().getId();
-		fileUpload.setUser(this.userDao.retrieve(userId));
-		fileUpload.setTimestamp(new Date());
-		this.fileDao.create(fileUpload);
-		this.jobTask.setFileUploadId(fileUpload.getId());
-		List<List<PropositionDefinition>> propDefs = filterUserPropositions(propositionDao.getByUserId(userId));
+		inFileUpload.setTimestamp(new Date());
+		this.fileDao.create(inFileUpload);
+		this.jobTask.setFileUploadId(inFileUpload.getId());
+		List<List<PropositionDefinition>> propDefs = filterUserPropositions
+			(propositionDao.getByUserId(inFileUpload.getUserId()));
 		this.jobTask.setPropositions(propDefs.get(0));
 		this.jobTask.setUserPropositions(propDefs.get(1));
 		this.jobExecutor.queueJob(this.jobTask);
 
 		return Response.ok().build();
 	}
-	
+
 	private List<List<PropositionDefinition>> filterUserPropositions(List<Proposition> propositions) {
 		final List<PropositionDefinition> allProps = new ArrayList<PropositionDefinition>();
 		final List<PropositionDefinition> userProps = new ArrayList<PropositionDefinition>();
-		
+
 		for (Proposition p : propositions) {
 			PropositionDefinition propDef = PropositionUtil.pack(p);
 			allProps.add(propDef);
@@ -149,7 +147,7 @@ public class JobResource {
 				userProps.add(propDef);
 			}
 		}
-		
+
 		List<List<PropositionDefinition>> result = new ArrayList<List<PropositionDefinition>>();
 		result.add(allProps);
 		result.add(userProps);
