@@ -124,12 +124,12 @@
 										<table>
 											<tr>
 												<td>
-													<table id="categoricaldefinition">
+													<table id="categoricaldefinition" data-definition-container="true">
 														<tr>
 															<td>
 																<div id="tree-drop-categorical" class="tree-drop jstree-drop">
-																	<div class="label-info jstree-drop" ><center>Drop Here</center></div>
-																	<ul class="sortable" data-proptype="empty" style="width: 100% height: 100%">
+																	<div class="label-info" ><center>Drop Here</center></div>
+																	<ul class="sortable" data-drop-type="multiple" data-proptype="empty" style="width: 100% height: 100%">
 																		<c:if test="${not empty proposition}">
 																			<c:forEach var="child" items="${proposition.children}">
 																				<c:choose>
@@ -157,7 +157,7 @@
 														<tr>
 															<td>
 																<div id="tree-drop-temporal" class="tree-drop jstree-drop">
-																	<div class="label-info jstree-drop" ><center>Drop Here</center></div>
+																	<div class="label-info" ><center>Drop Here</center></div>
 																	<ul class="sortable" style="width: 100% height: 100%">
 																		<c:if test="${not empty proposition}">
 																			<c:forEach var="child" items="${proposition.children}">
@@ -182,7 +182,7 @@
 															</td>
 														</tr>
 													</table>
-													<table id="sequencedefinition">
+													<table id="sequencedefinition" data-definition-container="true">
 														<tr>
 															<td>
 																<table>
@@ -192,8 +192,8 @@
 																		</td>
 																		<td>
 																			<div class="tree-drop-single jstree-drop">
-																				<div class="label-info jstree-drop" ><center>Drop Here</center></div>
-																				<ul data-type="main" class="sortable" style="width: 100% height: 100%">
+																				<div class="label-info" ><center>Drop Here</center></div>
+																				<ul data-type="main" data-drop-type="single" class="sortable" style="width: 100% height: 100%">
 																				<c:if test="${not empty proposition}">
 																				<c:forEach var="child" items="${proposition.children}">
 																					<c:choose>
@@ -288,7 +288,7 @@
 																				<td>Related Data Element <span class="count">1</span>:</td>
 																				<td colspan="5">
 																					<div class="tree-drop-single jstree-drop">
-																						<div class="label-info jstree-drop"><center>Drop Here</center></div>
+																						<div class="label-info"><center>Drop Here</center></div>
 																						<ul class="sortable" style="width: 100% height: 100%"></ul>
 																					</div>
 																				</td>

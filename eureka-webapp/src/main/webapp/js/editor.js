@@ -82,7 +82,6 @@ function saveSequence (elem) {
 }
 
 function saveCategorical (elem) {
-	console.log('SAVING CATEGORIZATION');
 	var categorization = new Object();
 	var childElements = new Array();
 	var $propositions = $(elem).find('ul.sortable').find('li');
@@ -101,24 +100,39 @@ function saveCategorical (elem) {
 	postProposition("savecategorization", categorization, function (data) {window.location.href = 'editorhome'});
 }
 
+function addPossibleProposition (id, desc) {
+	if (possiblePropositions[id]) {
+		possiblePropositions[id].count++;
+	} else {
+		possiblePropositions[id] = new Object();
+		possiblePropositions[id].count = 1;
+		possiblePropositions[id].desc = desc;
+	}
+}
 
-function setPropositionSelects () {
-	var selects = $('select').filter('[name="propositionSelect"]');
+function removePossibleProposition (id) {
+	if (possiblePropositions[id] && possiblePropositions[id].count > 0) {
+		possiblePropositions[id].count--;
+	}
+}
+
+
+function setPropositionSelects (elem) {
+	var selects = $(elem).find('select').filter('[name="propositionSelect"]');
 	$(selects).each( function (i, sel) {
 		var items = $(sel).closest('.drop-parent').find('li');
 		$(sel).empty();
 		$.each(possiblePropositions, function (key, val) {
-			var add = true;
-			$(items).each( function (i, item) {
-				if ($(item).data('id') == key) {
-					add = false;
-					return false;
-				} else {
-					return true;
+			if (possiblePropositions[key].count > 0) {
+				var add = true;
+				$(items).each( function (i, item) {
+					if ($(item).data('key') == key) {
+						add = false;
+					}
+				});
+				if (add) {
+					$(sel).append($('<option></option>').attr('value', key).text(possiblePropositions[key].desc));
 				}
-			});
-			if (add) {
-				$(sel).append($('<option></option>').attr('value', key).text(val));
 			}
 		});
 	});
@@ -291,7 +305,7 @@ $(document).ready(function(){
 		data.find('ul.sortable').empty();
 		data.find('span.count').text(total + 1);
 		appendTo.append(data);
-		setPropositionSelects();
+		setPropositionSelects($(appendTo).closest('[data-definition-container="true"]'));
 	});
 
 });
@@ -322,16 +336,26 @@ function initTrees() {
 					infoLabel.hide();
 
 					var sortable = $(target).find('ul.sortable');
-					var newItem = $('<li></li>').attr("data-space", $(data.o[0]).data("space")).attr("data-type", $(data.o[0]).data("type")).attr("data-key", $(data.o[0]).data("proposition"));
+					var newItem = $('<li></li>')
+						.data("space", $(data.o[0]).data("space"))
+						.data("type", $(data.o[0]).data("type"))
+						.data("key", $(data.o[0]).data("proposition"));
 
 					// check that all types in the categorization are the same
-					if ($(sortable).attr("data-proptype") !== "empty") {
-						if ($(sortable).attr("data-proptype") !== $(newItem).attr("data-type")) {
+					if ($(sortable).data('drop-type') === 'multiple' && $(sortable).data("proptype") !== "empty") {
+						if ($(sortable).data("proptype") !== $(newItem).data("type")) {
+							var $dialog = $('<div>All the children must be of the same type.</div>').dialog({
+								'title': 'Definition Criteria',
+								'modal': true,
+								'buttons': {
+									'OK': function () { $(this).dialog('close'); $(this).remove();}
+								}
+							});
 							return;
 						}
 					} else {
-						var tmptype = $(newItem).attr("data-type");
-						$(sortable).attr("data-proptype", tmptype);
+						var tmptype = $(newItem).data("type");
+						$(sortable).data("proptype", tmptype);
 					}
 
 					var X = $("<span/>", {
@@ -340,13 +364,15 @@ function initTrees() {
 							var toRemove = $(this).parent()[0];
 							var dialog = $('<div></div>');
 							$(dialog).dialog({
-								title: 'Confirm removal of selected element',
-								buttons : {
+								'title': 'Confirm removal of selected element',
+								'modal': true,
+								'buttons': {
 									"Confirm": function() {
 										$(toRemove).remove();
-										delete possiblePropositions[$(toRemove).data('id')];
-										setPropositionSelects();
+										removePossibleProposition($(toRemove).data('id'));
+										setPropositionSelects($(sortable).closest('[data-definition-container="true"]'));
 										if ($(sortable).find('li').length == 0) {
+											$(sortable).data('proptype','empty');
 											infoLabel.show();
 										}
 										$(this).dialog("close");
@@ -367,12 +393,19 @@ function initTrees() {
 						text : propositionDesc
 					});
 
+					if ($(sortable).data('drop-type') === 'single') {
+						$(sortable).find('li').each(function (i,item) {
+							removePossibleProposition($(item).data('key'));
+							$(item).remove();
+						});
+					}
+
 					newItem.append(X);
 					newItem.append(txt);
 					sortable.append(newItem);
 
-					possiblePropositions[propositionId] = propositionDesc;
-					setPropositionSelects();
+					addPossibleProposition(propositionId, propositionDesc);
+					setPropositionSelects($(sortable).closest('[data-definition-container="true"]'));
 				}
 			},
 //			"drop_check": function (data) {
