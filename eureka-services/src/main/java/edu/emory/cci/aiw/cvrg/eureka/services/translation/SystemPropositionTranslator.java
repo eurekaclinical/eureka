@@ -25,15 +25,18 @@ import java.util.List;
 import org.protempa.PropertyDefinition;
 import org.protempa.PropositionDefinition;
 
+import com.google.inject.Inject;
+
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.SystemElement;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.SystemProposition;
 import edu.emory.cci.aiw.cvrg.eureka.services.finder.SystemPropositionFinder;
 
-public final class SystemPropositionTranslator implements
+public class SystemPropositionTranslator implements
         PropositionTranslator<SystemElement, SystemProposition> {
 
 	private final SystemPropositionFinder finder;
 
+	@Inject
 	public SystemPropositionTranslator(SystemPropositionFinder inFinder) {
 		finder = inFinder;
 	}

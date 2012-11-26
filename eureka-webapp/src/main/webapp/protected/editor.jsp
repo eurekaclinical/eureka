@@ -17,9 +17,10 @@
   limitations under the License.
   #L%
 --%>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
-<%@ taglib uri="/WEB-INF/tlds/template.tld" prefix="template"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
+<%@ taglib uri="/WEB-INF/tlds/template.tld" prefix="template" %>
 
 
 <template:insert template="/templates/eureka_editor.jsp">
@@ -79,11 +80,12 @@
 							<h2 class="StepTitle">Select Type of Element</h2>
 							<p><br/></p>
 							<table id="select_element_table">
-								<c:set var="types" value="categorical,temporal,sequence,frequency,valuethreshold" />
+								<%-- These values come from the DataElement.Type enum --%>
+								<c:set var="types" value="categorization,temporal,sequence,frequency,value_threshold" />
 								<c:forTokens items="${types}" var="myType" delims="," varStatus="status">
 									<tr>
 										<td class="firstCol">
-											<input type="radio" id="type" name="type" value="${myType}" <c:if test="${not empty proposition and proposition.type == '${myType}'}">CHECKED</c:if>/>
+											<input type="radio" id="type" name="type" value="${myType}" <c:if test="${not empty proposition and propositionType == myType}">CHECKED</c:if>/>
 											<fmt:message key="dataelementtype.${myType}.displayName" />
 										</td>
 										<td class="secondCol"><fmt:message key="dataelementtype.${myType}.description" /></td>
@@ -124,29 +126,20 @@
 										<table>
 											<tr>
 												<td>
-													<table id="categoricaldefinition" data-definition-container="true">
+													<table id="categorizationdefinition" data-definition-container="true">
 														<tr>
 															<td>
 																<div id="tree-drop-categorical" class="tree-drop jstree-drop">
 																	<div class="label-info" ><center>Drop Here</center></div>
 																	<ul class="sortable" data-drop-type="multiple" data-proptype="empty" style="width: 100% height: 100%">
-																		<c:if test="${not empty proposition}">
-																			<c:forEach var="child" items="${proposition.children}">
-																				<c:choose>
-																					<c:when test="${empty child.key}">
-																						<li id="${child.id}" data-type="user">
-																							<span class="delete" style="cursor: pointer; background-color: lightblue;"></span>
-																							<span>${child.abbrevDisplayName}</span>
-																						</li>
-																					</c:when>
-																					<c:otherwise>
-																						<li id="${child.key}" data-type="system">
-																							<span class="delete" style="cursor: pointer; background-color: lightblue;"></span>
-																							<span>${child.key} ${child.displayName} ${child.abbrevDisplayName}</span>
-																						</li>
-																					</c:otherwise>
-																				</c:choose>
-																			</c:forEach>
+																		<c:if test="${not empty proposition and propositionType == 'categorization'}">
+																		<c:forEach var="child" items="${proposition.children}">
+																		${child}
+																		<li id="${child.id}" data-type="${proposition.inSystem ? 'sysem' : 'user'}">
+																			<span class="delete" style="cursor: pointer; background-color: lightblue;"></span>
+																			<span>${child.displayName} ${child.abbrevDisplayName}</span>
+																		</li>
+																		</c:forEach>
 																		</c:if>
 																	</ul>
 																</div>
@@ -159,7 +152,7 @@
 																<div id="tree-drop-temporal" class="tree-drop jstree-drop">
 																	<div class="label-info" ><center>Drop Here</center></div>
 																	<ul class="sortable" style="width: 100% height: 100%">
-																		<c:if test="${not empty proposition}">
+																		<c:if test="${not empty proposition and propositionType == 'temporal'}">
 																			<c:forEach var="child" items="${proposition.children}">
 																				<c:choose>
 																					<c:when test="${empty child.key}">
@@ -194,24 +187,12 @@
 																			<div class="tree-drop-single jstree-drop">
 																				<div class="label-info" ><center>Drop Here</center></div>
 																				<ul data-type="main" data-drop-type="single" class="sortable" style="width: 100% height: 100%">
-																				<c:if test="${not empty proposition}">
-																				<c:forEach var="child" items="${proposition.children}">
-																					<c:choose>
-																						<c:when test="${empty child.key}">
-																							<li data-id="${child.id}" data-type="user">
-																								<span class="delete" style="cursor: pointer; background-color: lightblue;"></span>
-																								<span>${child.abbrevDisplayName}</span>
-																							</li>
-																						</c:when>
-																						<c:otherwise>
-																							<li data-id="${child.key}" data-type="system">
-																								<span class="delete" style="cursor: pointer; background-color: lightblue;"></span>
-																								<span>${child.key} ${child.displayName} ${child.abbrevDisplayName}</span>
-																							</li>
-																						</c:otherwise>
-																					</c:choose>
-																				</c:forEach>
-																				</c:if>
+																					<c:if test="${not empty proposition and propositionType == 'sequence'}">
+																					<li data-id=${proposition.primaryDataElement.dataElementKey}" data-type="${proposition.primaryDataElement.inSystem ? 'system' : 'user'}">
+																						<span class="delete" style="cursor: pointer; background-color: lightblue;"></span>
+																						<span>${proposition.primaryDataElement.abbrevDisplayName}</span>
+																					</li>
+																					</c:if>
 																				</ul>
 																			</div>
 																		</td>
@@ -239,9 +220,9 @@
 																					</td>
 																					<td>
 																						<select name="mainDataElementMinDurationUnits">
-																							<option value="minutes">Minutes</option>
-																							<option value="hours">Hours</option>
-																							<option value="days" selected="selected">Days</option>
+																							<c:forEach var="unit" items="${timeUnits}">
+																							<option value="${unit.id}">${unit.name}</option>
+																							</c:forEach>
 																						</select>
 																					</td>
 																				</tr>
@@ -254,9 +235,9 @@
 																					</td>
 																					<td>
 																						<select name="mainDataElementMaxDurationUnits">
-																							<option value="minutes">Minutes</option>
-																							<option value="hours">Hours</option>
-																							<option value="days" selected="selected">Days</option>
+																							<c:forEach var="unit" items="${timeUnits}">
+																							<option value="${unit.id}">${unit.name}</option>
+																							</c:forEach>
 																						</select>
 																					</td>
 																				</tr>
@@ -305,23 +286,24 @@
 																				  at least
 																					<input type="text" class="durationField" name="sequenceRelDataElementMinDurationValue"/>
 																					<select name="sequenceRelDataElementMinDurationUnits">
-																							<option value="minutes">Minutes</option>
-																							<option value="hours">Hours</option>
-																							<option value="days" selected="selected">Days</option>
+																							<c:forEach var="unit" items="${timeUnits}">
+																							<option value="${unit.id}">${unit.name}</option>
+																							</c:forEach>
 																					</select>
 																					<br />
 																					at most
 																					<input type="text" class="durationField" name="sequenceRelDataElementMaxDurationValue"/>
 																					<select name="sequenceRelDataElementMaxDurationUnits">
-																							<option value="minutes">Minutes</option>
-																							<option value="hours">Hours</option>
-																							<option value="days" selected="selected">Days</option>
+																							<c:forEach var="unit" items="${timeUnits}">
+																							<option value="${unit.id}">${unit.name}</option>
+																							</c:forEach>
 																					</select>
 																				</td>
 																				<td>
 																					<select name="sequenceRelDataElementTemporalRelation">
-																						<option value="BEFORE">Before</option>
-																						<option value="AFTER">After</option>
+																						<c:forEach var="op" items="${operators}">
+																						<option value="${op.id}">${op.name}</option>
+																						</c:forEach>
 																					</select>
 																				</td>
 																				<td>
@@ -334,17 +316,17 @@
 																					at least
 																					<input type="text" class="distanceField" name="sequenceRhsDataElementMinDistanceValue"/>
 																					<select name="sequenceRhsDataElementMinDistanceUnits">
-																							<option value="minutes">Minutes</option>
-																							<option value="hours">Hours</option>
-																							<option value="days" selected="selected">Days</option>
+																							<c:forEach var="unit" items="${timeUnits}">
+																							<option value="${unit.id}">${unit.name}</option>
+																							</c:forEach>
 																					</select>
 																					<br />
 																					at most
 																					<input type="text" class="distanceField" name="sequenceRhsDataElementMaxDistanceValue"/>
 																					<select name="sequenceRhsDataElementMaxDistanceUnits">
-																							<option value="minutes">Minutes</option>
-																							<option value="hours">Hours</option>
-																							<option value="days" selected="selected">Days</option>
+																							<c:forEach var="unit" items="${timeUnits}">
+																							<option value="${unit.id}">${unit.name}</option>
+																							</c:forEach>
 																					</select>
 																				</td>
 																			</tr>

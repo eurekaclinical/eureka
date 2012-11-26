@@ -19,48 +19,57 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.services.translation;
 
+import com.google.inject.Inject;
+
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.DataElement;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.Categorization;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.HighLevelAbstraction;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.PropositionEntityVisitor;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.SystemProposition;
-import edu.emory.cci.aiw.cvrg.eureka.services.dao.PropositionDao;
-import edu.emory.cci.aiw.cvrg.eureka.services.finder.SystemPropositionFinder;
 
 public final class PropositionTranslatorVisitor implements
-        PropositionEntityVisitor {
+	PropositionEntityVisitor {
 
+	private final SystemPropositionTranslator systemPropositionTranslator;
+	private final SequenceTranslator sequenceTranslator;
+	private final CategorizationTranslator categorizationTranslator;
 	private DataElement dataElement;
-	private final SystemPropositionFinder finder;
-	private final PropositionDao propositionDao;
-	private final Long userId;
+	private Long userId;
 
-	public PropositionTranslatorVisitor(Long inUserId, PropositionDao inDao,
-	        SystemPropositionFinder inFinder) {
-		userId = inUserId;
-		propositionDao = inDao;
-		finder = inFinder;
+	@Inject
+	public PropositionTranslatorVisitor(SystemPropositionTranslator
+		inSystemPropositionTranslator, SequenceTranslator
+		inSequenceTranslator, CategorizationTranslator
+		inCategorizationTranslator) {
+		this.systemPropositionTranslator = inSystemPropositionTranslator;
+		this.categorizationTranslator = inCategorizationTranslator;
+		this.sequenceTranslator = inSequenceTranslator;
 	}
 
 	public DataElement getDataElement() {
 		return dataElement;
 	}
 
+	public void setUserId(Long inUserId) {
+		this.userId = inUserId;
+	}
+
 	@Override
 	public void visit(SystemProposition proposition) {
-		dataElement = new SystemPropositionTranslator(finder)
-		        .translateFromProposition(proposition);
+		dataElement = this.systemPropositionTranslator.translateFromProposition
+			(proposition);
 	}
 
 	@Override
 	public void visit(Categorization categorization) {
-		dataElement = new CategorizationTranslator(propositionDao, finder)
-		        .translateFromProposition(categorization);
+		dataElement = this.categorizationTranslator.translateFromProposition
+			(categorization);
 	}
 
 	@Override
 	public void visit(HighLevelAbstraction highLevelAbstraction) {
-		dataElement = new SequenceTranslator(userId, propositionDao, finder)
-		        .translateFromProposition(highLevelAbstraction);
+		this.sequenceTranslator.setUserId(this.userId);
+		dataElement = this.sequenceTranslator.translateFromProposition
+			(highLevelAbstraction);
 	}
 }

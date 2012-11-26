@@ -45,10 +45,10 @@ public final class DdlGenerator {
 	/**
 	 * The dialect to produce the SQL for.
 	 */
-	private static final String DIALECT =
-			"org.hibernate.dialect.Oracle10gDialect";
 //	private static final String DIALECT =
-//		"org.hibernate.dialect.H2Dialect";
+//			"org.hibernate.dialect.Oracle10gDialect";
+	private static final String DIALECT =
+		"org.hibernate.dialect.H2Dialect";
 
 	/**
 	 * Prevent the utility class from being instantiated.
@@ -148,6 +148,8 @@ public final class DdlGenerator {
 			.PropertyConstraint.class);
 		serviceClasses.add(edu.emory.cci.aiw.cvrg.eureka.common.entity
 			.ValueComparator.class);
+		serviceClasses.add(edu.emory.cci.aiw.cvrg.eureka.common.entity
+			.RelationOperator.class);
 		generate(serviceClasses, outputFile);
 	}
 

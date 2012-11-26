@@ -26,32 +26,38 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.persistence.TableGenerator;
 
 /**
  * @author hrathod
  */
 @Entity
 @Table(name = "extended_propositions")
+@TableGenerator(name = "EXT_PROP_GENERATOR")
 public class ExtendedProposition {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.TABLE)
+	@SequenceGenerator(name = "EXT_PROP_SEQ_GENERATOR",
+		sequenceName = "EXT_PROP_SEQ", allocationSize = 1, initialValue = 1)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE,
+		generator = "EXT_PROP_SEQ_GENERATOR")
 	private Long Id;
 
 	private Integer minDuration;
 
-	@OneToOne(cascade = CascadeType.PERSIST)
+	@OneToOne
 	@JoinColumn(referencedColumnName = "id")
 	private TimeUnit minDurationTimeUnit;
 
 	private Integer maxDuration;
 
-	@OneToOne(cascade = CascadeType.PERSIST)
+	@OneToOne
 	@JoinColumn(referencedColumnName = "id")
 	private TimeUnit maxDurationTimeUnit;
 
-	@OneToOne(cascade = CascadeType.PERSIST)
+	@OneToOne(cascade = CascadeType.ALL)
 	private PropertyConstraint propertyConstraint;
 
 	@OneToOne

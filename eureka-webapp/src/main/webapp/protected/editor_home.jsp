@@ -36,8 +36,8 @@
 	<template:content name="content">
 		<div id="dialog" title="Confirm Remove Selected Element"></div>
 		<div class="action_link">   
-			<a href="${pageContext.request.contextPath}/protected/editor.jsp" class="create"></a>
-			<a href="${pageContext.request.contextPath}/protected/editor.jsp" style="text-decoration:none">Create New Element</a>
+			<a href="${pageContext.request.contextPath}/protected/editprop" class="create"></a>
+			<a href="${pageContext.request.contextPath}/protected/editprop" style="text-decoration:none">Create New Element</a>
 		</div>
 		<table align="center" id="elements" style="width: 98%">
 			<tr class="bold" >

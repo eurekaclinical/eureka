@@ -34,15 +34,11 @@ import org.protempa.PropositionDefinition;
 import org.protempa.PropositionDefinitionVisitor;
 import org.protempa.SliceDefinition;
 
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.DataElement;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.SystemElement;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.Proposition;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.SystemProposition.SystemType;
-import edu.emory.cci.aiw.cvrg.eureka.services.dao.PropositionDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.finder.SystemPropositionFinder;
 import edu.emory.cci.aiw.cvrg.eureka.services.packaging.PropositionDefinitionPackagerVisitor;
-import edu.emory.cci.aiw.cvrg.eureka.services.translation.DataElementTranslatorVisitor;
-import edu.emory.cci.aiw.cvrg.eureka.services.translation.PropositionTranslatorVisitor;
 
 /**
  * Provides common utility functions operating on {@link Proposition}s.
@@ -53,13 +49,14 @@ public final class PropositionUtil {
 		// do not allow instantiation.
 	}
 
-	public static DataElement wrap(Proposition inProposition,
-	        PropositionDao inPropositionDao, SystemPropositionFinder inFinder) {
-		PropositionTranslatorVisitor visitor = new PropositionTranslatorVisitor(
-		        inProposition.getUserId(), inPropositionDao, inFinder);
-		inProposition.accept(visitor);
-		return visitor.getDataElement();
-	}
+//	public static DataElement wrap(Proposition inProposition,
+//	        PropositionDao inPropositionDao, TimeUnitDao inTimeUnitDao,
+//		SystemPropositionFinder inFinder) {
+//		PropositionTranslatorVisitor visitor = new
+//			PropositionTranslatorVisitor(inProposition.getUserId(), inPropositionDao, inTimeUnitDao, inFinder);
+//		inProposition.accept(visitor);
+//		return visitor.getDataElement();
+//	}
 
 	private static class PropositionDefinitionTypeVisitor implements
 	        PropositionDefinitionVisitor {
@@ -146,18 +143,20 @@ public final class PropositionUtil {
 		return systemElement;
 	}
 
-	public static Proposition unwrap(DataElement inElement, Long inUserId,
-	        PropositionDao inPropositionDao, SystemPropositionFinder inFinder) {
-		DataElementTranslatorVisitor visitor = new DataElementTranslatorVisitor(
-		        inUserId, inPropositionDao, inFinder);
-		inElement.accept(visitor);
-		return visitor.getProposition();
-	}
+//	public static Proposition unwrap(DataElement inElement, Long inUserId,
+//		PropositionDao inPropositionDao, TimeUnitDao inTimeUnitDao,
+//		SystemPropositionFinder inFinder) {
+//
+//		DataElementTranslatorVisitor visitor = new DataElementTranslatorVisitor(
+//		        inUserId, inPropositionDao, inTimeUnitDao, inFinder);
+//		inElement.accept(visitor);
+//		return visitor.getProposition();
+//	}
 
 	/**
 	 * Converts a proposition entity into an equivalent proposition definition
 	 * understood by Protempa.
-	 * 
+	 *
 	 * @param inProposition
 	 *            the {@link Proposition} to convert
 	 * @return a {@link PropositionDefinition} corresponding to the given
@@ -173,7 +172,7 @@ public final class PropositionUtil {
 	/**
 	 * Converts a list of proposition entities into equivalent proposition
 	 * definitions by repeatedly calling {@link #pack(Proposition)}.
-	 * 
+	 *
 	 * @param inPropositions
 	 *            a {@link List} of {@link Proposition}s to convert
 	 * @return a {@link List} of {@link PropositionDefinition}s corresponding to

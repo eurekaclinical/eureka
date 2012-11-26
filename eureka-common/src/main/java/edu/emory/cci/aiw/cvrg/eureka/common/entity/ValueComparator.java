@@ -23,6 +23,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 /**
@@ -33,7 +34,10 @@ import javax.persistence.Table;
 public class ValueComparator {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.TABLE)
+	@SequenceGenerator(name = "COMP_SEQ_GENERATOR",
+		sequenceName = "COMP_SEQ", allocationSize = 1, initialValue = 1)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE,
+		generator = "COMP_SEQ_GENERATOR")
 	private Long id;
 
 	private String name;

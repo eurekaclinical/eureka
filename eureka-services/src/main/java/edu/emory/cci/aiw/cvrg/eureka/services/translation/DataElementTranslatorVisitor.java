@@ -19,48 +19,56 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.services.translation;
 
+import com.google.inject.Inject;
+
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.CategoricalElement;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.DataElementVisitor;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.Sequence;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.SystemElement;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.Proposition;
-import edu.emory.cci.aiw.cvrg.eureka.services.dao.PropositionDao;
-import edu.emory.cci.aiw.cvrg.eureka.services.finder.SystemPropositionFinder;
 
 public final class DataElementTranslatorVisitor implements DataElementVisitor {
 
+	private final SystemPropositionTranslator systemPropositionTranslator;
+	private final SequenceTranslator sequenceTranslator;
+	private final CategorizationTranslator categorizationTranslator;
 	private Proposition proposition;
-	private final Long userId;
-	private final PropositionDao propositionDao;
-	private final SystemPropositionFinder finder;
+	private Long userId;
 
-	public DataElementTranslatorVisitor(Long inUserId,
-	        PropositionDao inPropositionDao, SystemPropositionFinder inFinder) {
-		userId = inUserId;
-		propositionDao = inPropositionDao;
-		finder = inFinder;
+	@Inject
+	public DataElementTranslatorVisitor(SystemPropositionTranslator
+		inSystemPropositionTranslator, SequenceTranslator
+		inSequenceTranslator, CategorizationTranslator
+		inCategorizationTranslator) {
+		this.systemPropositionTranslator = inSystemPropositionTranslator;
+		this.sequenceTranslator = inSequenceTranslator;
+		this.categorizationTranslator = inCategorizationTranslator;
 	}
 
 	public Proposition getProposition() {
 		return proposition;
 	}
 
+	public void setUserId (Long inUserId) {
+		this.userId = inUserId;
+	}
+
 	@Override
 	public void visit(SystemElement systemElement) {
-		proposition = new SystemPropositionTranslator(finder)
-		        .translateFromElement(systemElement);
+		proposition = this.systemPropositionTranslator.translateFromElement
+			(systemElement);
 	}
 
 	@Override
 	public void visit(CategoricalElement categoricalElement) {
-		proposition = new CategorizationTranslator(propositionDao, finder)
-		        .translateFromElement(categoricalElement);
+		proposition = this.categorizationTranslator.translateFromElement
+			(categoricalElement);
 	}
 
 	@Override
 	public void visit(Sequence sequence) {
-		proposition = new SequenceTranslator(userId, propositionDao, finder)
-		        .translateFromElement(sequence);
+		this.sequenceTranslator.setUserId(this.userId);
+		proposition = this.sequenceTranslator.translateFromElement(sequence);
 	}
 
 }

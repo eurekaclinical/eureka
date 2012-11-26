@@ -26,6 +26,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 /**
@@ -36,7 +37,10 @@ import javax.persistence.Table;
 public class Relation {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.TABLE)
+	@SequenceGenerator(name = "RELATION_SEQ_GENERATOR",
+		sequenceName = "RELATION_SEQ", allocationSize = 1, initialValue = 1)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE,
+		generator = "RELATION_SEQ_GENERATOR")
 	private Long id;
 
 	@OneToOne(cascade = CascadeType.ALL)
@@ -45,31 +49,31 @@ public class Relation {
 	@OneToOne(cascade = CascadeType.ALL)
 	private ExtendedProposition rhsExtendedProposition;
 
-	@OneToOne(cascade = CascadeType.PERSIST)
+	@OneToOne
 	@JoinColumn(referencedColumnName = "id")
 	private RelationOperator op;
 
 	private Integer minf1s2;
 
-	@OneToOne(cascade = CascadeType.PERSIST)
+	@OneToOne
 	@JoinColumn(referencedColumnName = "id")
 	private TimeUnit minf1s2TimeUnit;
 
 	private Integer maxf1s2;
 
-	@OneToOne(cascade = CascadeType.PERSIST)
+	@OneToOne
 	@JoinColumn(referencedColumnName = "id")
 	private TimeUnit maxf1s2TimeUnit;
 
 	private Integer mins1f2;
 
-	@OneToOne(cascade = CascadeType.PERSIST)
+	@OneToOne
 	@JoinColumn(referencedColumnName = "id")
 	TimeUnit mins1f2TimeUnit;
 
 	private Integer maxs1f2;
 
-	@OneToOne(cascade = CascadeType.PERSIST)
+	@OneToOne
 	@JoinColumn(referencedColumnName = "id")
 	TimeUnit maxs1f2TimeUnit;
 

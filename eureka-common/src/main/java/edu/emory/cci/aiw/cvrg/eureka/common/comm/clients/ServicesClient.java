@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
+ * 
  *      http://www.apache.org/licenses/LICENSE-2.0
- *
+ * 
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -32,6 +32,8 @@ import com.sun.jersey.api.client.GenericType;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.CategoricalElement;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.DataElement;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.Sequence;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.RelationOperator;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.TimeUnit;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.User;
 
 /**
@@ -46,6 +48,12 @@ public class ServicesClient extends AbstractClient {
 	};
 	private static final GenericType<List<DataElement>> UserPropositionList
 		= new GenericType<List<DataElement>>() {
+	};
+	private static final GenericType<List<TimeUnit>> TimeUnitList = new
+		GenericType<List<TimeUnit>>() {
+	};
+	private static final GenericType<List<RelationOperator>>
+		RelationOperatorList = new GenericType<List<RelationOperator>>() {
 	};
 	private final String servicesUrl;
 
@@ -64,13 +72,13 @@ public class ServicesClient extends AbstractClient {
 		return this.getResource().path(path).get(UserType);
 	}
 
-	private void saveDataElement (String inPath, DataElement inDataElement)
+	private void saveDataElement(String inPath, DataElement inDataElement)
 		throws ClientException {
 		ClientResponse response = this.getResource().path(inPath).type
-			(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON).post
-			(ClientResponse.class, inDataElement);
-		if (!response.getClientResponseStatus().equals(ClientResponse
-			.Status.NO_CONTENT)) {
+			(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON)
+			.post(ClientResponse.class, inDataElement);
+		if (!response.getClientResponseStatus().equals(
+			ClientResponse.Status.NO_CONTENT)) {
 			String message = response.getEntity(String.class);
 			LOGGER.error("Client error while saving element: {}", message);
 			throw new ClientException(message);
@@ -88,9 +96,45 @@ public class ServicesClient extends AbstractClient {
 		this.saveDataElement(path, inElement);
 	}
 
+	public DataElement getUserProposition (Long inId) {
+		final String path = "/api/proposition/user/get/" + inId;
+		return this.getResource().path(path).accept(MediaType
+			.APPLICATION_JSON).get(DataElement.class);
+	}
+
 	public List<DataElement> getUserPropositions(User inUser) {
 		final String path = "/api/proposition/user/list/" + inUser.getId();
+		return this.getResource().path(path).accept(
+			MediaType.APPLICATION_JSON).get(UserPropositionList);
+	}
+
+	public List<TimeUnit> getTimeUnits() {
+		final String path = "/api/timeunit/list";
+		return this.getResource().path(path).accept(
+			MediaType.APPLICATION_JSON).get(TimeUnitList);
+	}
+
+	public TimeUnit getTimeUnit (Long inId) {
+		final String path = "/api/timeunit/" + inId;
 		return this.getResource().path(path).accept(MediaType
-			.APPLICATION_JSON).get(UserPropositionList);
+			.APPLICATION_JSON).get(TimeUnit.class);
+	}
+
+	public List<RelationOperator> getRelationOperators () {
+		final String path = "/api/relationop/list";
+		return this.getResource().path(path).accept(MediaType
+			.APPLICATION_JSON).get(RelationOperatorList);
+	}
+
+	public RelationOperator getRelationOperator (Long inId) {
+		final String path = "/api/relationop/" + inId;
+		return this.getResource().path(path).accept(MediaType
+			.APPLICATION_JSON).get(RelationOperator.class);
+	}
+
+	public RelationOperator getRelationOperatorByName (String inName) {
+		final String path = "/api/relationop/byname/" + inName;
+		return this.getResource().path(path).accept(MediaType
+			.APPLICATION_JSON).get(RelationOperator.class);
 	}
 }

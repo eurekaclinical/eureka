@@ -7,7 +7,7 @@ var dropBoxMaxTextWidth = 275;
 var possiblePropositions = new Object();
 var saveFuncs = {
 	'sequence': saveSequence,
-	'categorical': saveCategorical
+	'categorization': saveCategorical
 };
 
 function postProposition (postUrl, postData, successFunc) {
@@ -71,9 +71,11 @@ function collectSequenceRelations ($relationElems) {
 function saveSequence (elem) {
 	var sequence = new Object();
 	var $relationElems = $(elem).find('.sequence-relations-container').find('.sequence-relation');
+	var propId = $('#propId').val();
 
-	// sequence['@class'] =
-	// "edu.emory.cci.aiw.cvrg.eureka.common.comm.Sequence";
+	if (propId) {
+		sequence.id = propId;
+	}
 	sequence.type = 'sequence';
 	sequence.abbrevDisplayName = $('input#propAbbrevDisplayName').val();
 	sequence.displayName = $('textarea#propDisplayName').val();
@@ -86,6 +88,7 @@ function saveSequence (elem) {
 function saveCategorical (elem) {
 	var $propositions = $(elem).find('ul.sortable').find('li');
 	var childElements = new Array();
+
 	$propositions.each(function (i, p) {
 		var system = $(p).data('space') === 'system';
 		var child = {
@@ -105,12 +108,16 @@ function saveCategorical (elem) {
 	});
 
 	var categorization = {
-		// '@class': "edu.emory.cci.aiw.cvrg.eureka.common.comm.Categorization",
 		'type': 'categorization',
 		'abbrevDisplayName': $('input#propAbbrevDisplayName').val(),
 		'displayName': $('textarea#propDisplayName').val(),
 		'categoricalType': $(elem).find('ul.sortable').data('proptype'),
 		'children': childElements
+	}
+
+	var propId = $('#propId').val();
+	if (propId) {
+		categorization.id = propId;
 	}
 
 	categorization.children = childElements;
@@ -189,7 +196,7 @@ $(document).ready(function(){
 	$('#expand_div').hide();
 	$('#collapse_div').hide();
 
-	$('#categoricaldefinition').hide();
+	$('#categorizationdefinition').hide();
 	$('#temporaldefinition').hide();
 	$('#sequencedefinition').hide();
 	$('#frequencydefinition').hide();
@@ -211,7 +218,7 @@ $(document).ready(function(){
 				var type = $("input:radio[name='type']:checked").val();
 				$('#' + type + 'definition').show();
 			} else {
-				$('#categoricaldefinition').hide();
+				$('#categorizationdefinition').hide();
 				$('#temporaldefinition').hide();
 				$('#sequencedefinition').hide();
 				$('#frequencydefinition').hide();
@@ -228,9 +235,6 @@ $(document).ready(function(){
 		var type = $("input:radio[name='type']:checked").val();
 		var abbrevDisplayName = $('#propAbbrevDisplayName').val();
 		var displayName = $('#propDisplayName').val();
-		var propId = $('#propId').val();
-
-		propId = (typeof(propId) === 'undefined' ? "" : propId);
 		saveFuncs[type]($('#' + type + 'definition'));
 	}
 

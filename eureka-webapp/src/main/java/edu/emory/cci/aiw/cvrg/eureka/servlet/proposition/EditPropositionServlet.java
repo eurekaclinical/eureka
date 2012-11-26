@@ -20,23 +20,20 @@
 package edu.emory.cci.aiw.cvrg.eureka.servlet.proposition;
 
 import java.io.IOException;
-import java.security.Principal;
+import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.ws.rs.core.MediaType;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.sun.jersey.api.client.Client;
-import com.sun.jersey.api.client.WebResource;
-
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.CommUtils;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.DataElement;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.User;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ServicesClient;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.RelationOperator;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.TimeUnit;
 
 
 public class EditPropositionServlet extends HttpServlet {
@@ -60,19 +57,22 @@ public class EditPropositionServlet extends HttpServlet {
 				.getInitParameter("eureka-services-url");
         String propId = req.getParameter("id");
 
-		Client client = CommUtils.getClient();
-		Principal principal = req.getUserPrincipal();
-		String userName = principal.getName();
+		ServicesClient servicesClient = new ServicesClient(eurekaServicesUrl);
 
-		WebResource webResource = client.resource(eurekaServicesUrl);
-		User user = webResource.path("/api/user/byname/" + userName)
-				.accept(MediaType.APPLICATION_JSON).get(User.class);
+		List<TimeUnit> timeUnits = servicesClient.getTimeUnits();
+		req.setAttribute("timeUnits", timeUnits);
 
-		DataElement dataElement = webResource.path("/api/proposition/user/get/"+ propId)
-		    .accept(MediaType.APPLICATION_JSON)
-		    .get(DataElement.class);
+		List<RelationOperator> operators = servicesClient
+			.getRelationOperators();
+		req.setAttribute("operators", operators);
 
-		req.setAttribute("proposition", dataElement);
+		if ((propId != null) && (!propId.equals(""))) {
+			DataElement dataElement = servicesClient.getUserProposition(Long
+				.valueOf(propId));
+			req.setAttribute("proposition", dataElement);
+			req.setAttribute("propositionType", dataElement.getType()
+				.toString().toLowerCase());
+		}
 
 		req.getRequestDispatcher("/protected/editor.jsp").forward(req, resp);
 	}

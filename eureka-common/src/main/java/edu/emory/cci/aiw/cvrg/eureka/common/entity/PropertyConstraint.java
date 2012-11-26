@@ -25,6 +25,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 /**
@@ -35,7 +36,10 @@ import javax.persistence.Table;
 public class PropertyConstraint {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.TABLE)
+	@SequenceGenerator(name = "CONSTRAINT_SEQ_GENERATOR",
+		sequenceName = "CONSTRAINT_SEQ", allocationSize = 1, initialValue = 1)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE,
+		generator = "CONSTRAINT_SEQ_GENERATOR")
 	private Long id;
 
 	private String propertyName;

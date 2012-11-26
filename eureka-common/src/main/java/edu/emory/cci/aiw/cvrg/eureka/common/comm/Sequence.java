@@ -51,18 +51,14 @@ public final class Sequence extends DataElement {
 		this.relatedDataElements = relatedDataElements;
 	}
 
-	public enum RelationOperator {
-		BEFORE, AFTER, INVALID;
-	}
-
 	public static class RelatedDataElementField {
 		private DataElementField dataElementField;
-		private RelationOperator relationOperator;
+		private Long relationOperator;
 		private String sequentialDataElement;
 		private Integer relationMinCount;
-		private String relationMinUnits;
+		private Long relationMinUnits;
 		private Integer relationMaxCount;
-		private String relationMaxUnits;
+		private Long relationMaxUnits;
 
 		public DataElementField getDataElementField() {
 			return dataElementField;
@@ -72,11 +68,11 @@ public final class Sequence extends DataElement {
 			this.dataElementField = dataElement;
 		}
 
-		public RelationOperator getRelationOperator() {
+		public Long getRelationOperator() {
 			return relationOperator;
 		}
 
-		public void setRelationOperator(RelationOperator relationOperator) {
+		public void setRelationOperator(Long relationOperator) {
 			this.relationOperator = relationOperator;
 		}
 
@@ -96,11 +92,11 @@ public final class Sequence extends DataElement {
 			this.relationMinCount = relationMinCount;
 		}
 
-		public String getRelationMinUnits() {
+		public Long getRelationMinUnits() {
 			return relationMinUnits;
 		}
 
-		public void setRelationMinUnits(String relationMinUnits) {
+		public void setRelationMinUnits(Long relationMinUnits) {
 			this.relationMinUnits = relationMinUnits;
 		}
 
@@ -112,11 +108,11 @@ public final class Sequence extends DataElement {
 			this.relationMaxCount = relationMaxCount;
 		}
 
-		public String getRelationMaxUnits() {
+		public Long getRelationMaxUnits() {
 			return relationMaxUnits;
 		}
 
-		public void setRelationMaxUnits(String relationMaxUnits) {
+		public void setRelationMaxUnits(Long relationMaxUnits) {
 			this.relationMaxUnits = relationMaxUnits;
 		}
 	}
@@ -126,9 +122,9 @@ public final class Sequence extends DataElement {
 		private String withValue;
 		private Boolean hasDuration;
 		private Integer minDuration;
-		private String minDurationUnits;
+		private Long minDurationUnits;
 		private Integer maxDuration;
-		private String maxDurationUnits;
+		private Long maxDurationUnits;
 		private Boolean hasPropertyConstraint;
 		private String property;
 		private String propertyValue;
@@ -165,11 +161,11 @@ public final class Sequence extends DataElement {
 			this.minDuration = minDuration;
 		}
 
-		public String getMinDurationUnits() {
+		public Long getMinDurationUnits() {
 			return minDurationUnits;
 		}
 
-		public void setMinDurationUnits(String minDurationUnits) {
+		public void setMinDurationUnits(Long minDurationUnits) {
 			this.minDurationUnits = minDurationUnits;
 		}
 
@@ -181,11 +177,11 @@ public final class Sequence extends DataElement {
 			this.maxDuration = maxDuration;
 		}
 
-		public String getMaxDurationUnits() {
+		public Long getMaxDurationUnits() {
 			return maxDurationUnits;
 		}
 
-		public void setMaxDurationUnits(String maxDurationUnits) {
+		public void setMaxDurationUnits(Long maxDurationUnits) {
 			this.maxDurationUnits = maxDurationUnits;
 		}
 

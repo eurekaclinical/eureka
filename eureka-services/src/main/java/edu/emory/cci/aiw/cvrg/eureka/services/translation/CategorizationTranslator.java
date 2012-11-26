@@ -24,6 +24,8 @@ import java.util.List;
 
 import org.protempa.PropositionDefinition;
 
+import com.google.inject.Inject;
+
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.CategoricalElement;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.CategoricalElement
 	.CategoricalType;
@@ -34,6 +36,7 @@ import edu.emory.cci.aiw.cvrg.eureka.common.entity.Categorization
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.Proposition;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.SystemProposition;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.PropositionDao;
+import edu.emory.cci.aiw.cvrg.eureka.services.dao.TimeUnitDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.finder.SystemPropositionFinder;
 
 /**
@@ -43,13 +46,22 @@ import edu.emory.cci.aiw.cvrg.eureka.services.finder.SystemPropositionFinder;
 public final class CategorizationTranslator implements
 	PropositionTranslator<CategoricalElement, Categorization> {
 
-	private final PropositionDao dao;
+	private final PropositionDao propositionDao;
+	private final TimeUnitDao timeUnitDao;
 	private final SystemPropositionFinder finder;
+	private final SequenceTranslator sequenceTranslator;
+	private final SystemPropositionTranslator systemPropositionTranslator;
 
-	public CategorizationTranslator(PropositionDao inDao,
-		SystemPropositionFinder inFinder) {
-		this.dao = inDao;
+	@Inject
+	public CategorizationTranslator(PropositionDao inInPropositionDao,
+		TimeUnitDao inTimeUnitDao, SystemPropositionFinder inFinder,
+		SequenceTranslator inSequenceTranslator, SystemPropositionTranslator
+		inSystemPropositionTranslator) {
+		this.propositionDao = inInPropositionDao;
+		this.timeUnitDao = inTimeUnitDao;
 		this.finder = inFinder;
+		this.sequenceTranslator = inSequenceTranslator;
+		this.systemPropositionTranslator = inSystemPropositionTranslator;
 	}
 
 	@Override
@@ -72,7 +84,7 @@ public final class CategorizationTranslator implements
 
 	private Proposition getOrCreateProposition(String key,
 		CategoricalElement element) {
-		Proposition proposition = this.dao.getByUserAndKey(
+		Proposition proposition = this.propositionDao.getByUserAndKey(
 			element.getUserId(), key);
 		if (proposition == null) {
 			PropositionDefinition propDef = this.finder.find(
@@ -85,7 +97,7 @@ public final class CategorizationTranslator implements
 			sysProp.setUserId(element.getUserId());
 			sysProp.setCreated(element.getCreated());
 			sysProp.setLastModified(element.getLastModified());
-			this.dao.create(sysProp);
+			this.propositionDao.create(sysProp);
 			proposition = sysProp;
 		}
 		return proposition;
@@ -116,11 +128,11 @@ public final class CategorizationTranslator implements
 
 		PropositionTranslatorUtil.populateCommonDataElementFields(
 			result, proposition);
-		PropositionTranslatorVisitor visitor = new
-			PropositionTranslatorVisitor(
-			proposition.getUserId(), dao, this.finder);
 		List<DataElement> children = new ArrayList<DataElement>();
 		for (Proposition p : proposition.getInverseIsA()) {
+			PropositionTranslatorVisitor visitor = new
+				PropositionTranslatorVisitor(this
+				.systemPropositionTranslator, this.sequenceTranslator, this);
 			p.accept(visitor);
 			children.add(visitor.getDataElement());
 		}
