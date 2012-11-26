@@ -40,7 +40,7 @@ function collectSequenceDataElement (elem) {
 }
 
 function collectSequenceRelations ($relationElems) {
-	//relation['propositionType'] = $proposition.data('type');
+	// relation['propositionType'] = $proposition.data('type');
 	var relations = new Array();
 	$relationElems.each(function (i,r) {
 		var $proposition = $(r).find('ul.sortable').find('li').first();
@@ -72,7 +72,8 @@ function saveSequence (elem) {
 	var sequence = new Object();
 	var $relationElems = $(elem).find('.sequence-relations-container').find('.sequence-relation');
 
-	//sequence['@class'] = "edu.emory.cci.aiw.cvrg.eureka.common.comm.Sequence";
+	// sequence['@class'] =
+	// "edu.emory.cci.aiw.cvrg.eureka.common.comm.Sequence";
 	sequence.type = 'sequence';
 	sequence.abbrevDisplayName = $('input#propAbbrevDisplayName').val();
 	sequence.displayName = $('textarea#propDisplayName').val();
@@ -104,7 +105,7 @@ function saveCategorical (elem) {
 	});
 
 	var categorization = {
-		//'@class': "edu.emory.cci.aiw.cvrg.eureka.common.comm.Categorization",
+		// '@class': "edu.emory.cci.aiw.cvrg.eureka.common.comm.Categorization",
 		'type': 'categorization',
 		'abbrevDisplayName': $('input#propAbbrevDisplayName').val(),
 		'displayName': $('textarea#propDisplayName').val(),
@@ -222,7 +223,7 @@ $(document).ready(function(){
 	}
 
 	function onFinishCallback(){
-		//if(validateAllSteps()){
+		// if(validateAllSteps()){
 		var propositions = [];
 		var type = $("input:radio[name='type']:checked").val();
 		var abbrevDisplayName = $('#propAbbrevDisplayName').val();
@@ -314,6 +315,31 @@ $(document).ready(function(){
 
 	initTrees();
 
+	/**
+	 * Insert search-form
+	 */
+	// This doesn't work yet because we don't load all of the nodes
+//	$('#systemTree').before(
+//			$('<form id="search"><span></span><input type="text" value=""><input type="submit" value="search"><input type="reset" value="X"></form>').
+//			bind({
+//				reset: function(evt){
+//					$('#systemTree').jstree('clear_search');
+//					$('#search span').html('');
+//				},
+//				submit: function(evt){
+//					var searchvalue = $('#search input[type="text"]').val();
+//					if(searchvalue!='') {
+//						$('#systemTree').jstree('search', searchvalue);
+//						$('#search span').html('');
+//					} else {
+//						$('#systemTree').jstree('clear_search');
+//						$('#search span').html('Please enter searchvalue');
+//					}
+//					return false;
+//				}
+//			})
+//	);
+
 	$('a#add-to-sequence').click(function (e) {
 		var total = $('table.sequence-relation').length;
 		var data = $('table.sequence-relation').filter(':last').clone();
@@ -338,6 +364,14 @@ function initTrees() {
 					};
 				}
 
+			}
+		},
+		"crrm" : {
+			// prevent movement and reordering of nodes
+			"move" : {
+				"check_move" : function (m) {
+					return false;
+				}
 			}
 		},
 		"dnd" : {
@@ -425,19 +459,19 @@ function initTrees() {
 					setPropositionSelects($(sortable).closest('[data-definition-container="true"]'));
 				}
 			},
-//			"drop_check": function (data) {
-//				var target = data.r;
-//				var sortable = $(target).find('ul.sortable');
-//				var datatype = $(sortable).data("proptype");
-//
-//				if (datatype == "empty" || datatype == $(data.o).data("type")) {
-//					return true;
-//				} else {
-//					return false;
-//				}
-//				
-//				
-//			},
+			"drop_check": function (data) {
+				var target = data.r;
+				var sortable = $(target).find('ul.sortable');
+				var datatype = $(sortable).data("proptype");
+
+				if (datatype == "empty" || datatype == $(data.o).data("type")) {
+					return true;
+				} else {
+					return false;
+				}
+				
+				
+			},
 			"drag_check" : function(data) {
 				if (data.r.attr("id") == "phtml_1") {
 					return false;
@@ -452,7 +486,11 @@ function initTrees() {
 				alert("DRAG OK");
 			}
 		},
-		"plugins" : [ "themes", "json_data", "ui", "dnd" ]
+		// search disabled until we figure out a way to search for nodes not currently loaded in the tree
+//		"search" : {
+//			"show_only_matches" : true,
+//		},
+		"plugins" : [ "themes", "json_data", "ui", "crrm", "dnd"/*, "search"*/ ]
 	}).bind("open_node.jstree", function(e, data)
 	{
 		if(data.rslt.obj[0].id == undefined) {
@@ -516,7 +554,8 @@ function initTrees() {
 						});
 					});
 
-					// function to enable removal of list item once it is clicked
+					// function to enable removal of list item once it is
+					// clicked
 					$($('#sortable li:last')[0].children[0]).click(function onItemClick() {
 						$(this.parent).animate( {
 							backgroundColor: "#CCC",
@@ -540,7 +579,8 @@ function initTrees() {
 						$("#dialog").html(this.parentNode.children[1].innerHTML);
 						$("#dialog").dialog("open");
 
-					//alert("Removed Selection: "+this.parentNode.children[1].innerHTML);
+					// alert("Removed Selection:
+					// "+this.parentNode.children[1].innerHTML);
 
 					});
 				}
