@@ -9,11 +9,22 @@
 	<version>1.6-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<name>Eureka</name>
-	<description>The Eureka Project</description>
+	<description>Welcome to Eureka! Clinical Analytics! Eureka! is a web application that
+		provides you with an easy way to phenotype a patient population based
+		on their clinical and administrative data, and load those phenotypes
+		and data into your own instance of the i2b2 data warehouse system.
+	</description>
 	<url>http://aiw.sourceforge.net</url>
+
+	<organization>
+		<name>Emory University</name>
+		<url>http://www.emory.edu</url>
+	</organization>
 
 	<!-- define the package versions for various project we will use -->
 	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<currentStableVersion>1.5</currentStableVersion>
 		<junit-version>4.10</junit-version>
 		<jersey-version>1.15</jersey-version>
 		<opensaml-version>1.1b</opensaml-version>
@@ -43,17 +54,21 @@
 		<ehcache-version>2.6.0</ehcache-version>
 		<tomcat-plugin-version>1.1</tomcat-plugin-version>
 		<eureka.dev.site.url>http://aiw.sourceforge.net/dev/${project.build.finalName}</eureka.dev.site.url>
+
+		<!-- properties for site creation -->
+		<javautil-version>2.0.5</javautil-version>
+		<jaas-login-module-version>1.0.1</jaas-login-module-version>
 	</properties>
 
 	<scm>
-		<connection>scm:svn:https://scm.cci.emory.edu/svn/aiw/trunk/cvrg/eureka
-		</connection>
+		<developerConnection>scm:svn:https://scm.cci.emory.edu/svn/aiw/trunk/cvrg/eureka
+		</developerConnection>
 		<url>https://scm.cci.emory.edu/svn/aiw/trunk/cvrg/eureka</url>
 	</scm>
 
 	<issueManagement>
 		<system>JIRA</system>
-		<url>http://scm.cci.emory.edu/jira/</url>
+		<url>http://jira.cci.emory.edu:8080/jira/secure/Dashboard.jspa</url>
 	</issueManagement>
 
 	<distributionManagement>
@@ -648,17 +663,18 @@
 	<!-- define an additional repositories needed to fetch the dependencies. -->
 	<repositories>
 		<repository>
-			<id>m2.java.net</id>
-			<name>Java.net Maven 2 Repository</name>
-			<url>http://download.java.net/maven/2</url>
-			<layout>default</layout>
+			<id>maven.cci</id>
+			<name>CCI Maven Repository</name>
+			<url>http://maven.cci.emory.edu:8081/nexus/content/repositories/public</url>
 		</repository>
 		<repository>
 			<id>aiw.internal.repo</id>
+			<name>AIW Release Repository</name>
 			<url>http://maven.cci.emory.edu:8081/nexus/content/repositories/aiw/</url>
 		</repository>
 		<repository>
 			<id>aiw.snapshots.internal.repo</id>
+			<name>AIW Snapshot Repository</name>
 			<url>http://maven.cci.emory.edu:8081/nexus/content/repositories/aiw-snapshots/</url>
 		</repository>
 	</repositories>
