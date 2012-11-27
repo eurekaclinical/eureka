@@ -4,11 +4,11 @@ University
 
 OVERVIEW
 
-Welcome to Eureka! It provides an easy way to load clinical datasets
-into an instance of i2b2, a clinical database query tool. This project
-is sponsored by the CardioVascular Research Grid (CVRG), an NHLBI
-grant for creating informatics infrastructure in support of
-cardiovascular research.
+Welcome to Eureka! Clinical Analytics! Eureka! is a web application
+that provides you with an easy way to phenotype a patient population
+based on their clinical and administrative data, and load those
+phenotypes and data into your own instance of the i2b2 data warehouse
+system.
 
 This package contains source code only. For binaries, please go to
 http://aiw.sourceforge.net/.
