@@ -144,7 +144,7 @@ public class ServicesClient extends AbstractClient {
 
 	public SystemElement getSystemProposition (Long inUserId,
 		String inPropId) {
-		final String path = "/api/proposition/system/" + inUserId + "" +
+		final String path = "/api/proposition/system/" + inUserId + "/" +
 			inPropId;
 		return this.getResource().path(path).accept(MediaType
 			.APPLICATION_JSON).get(SystemElement.class);
