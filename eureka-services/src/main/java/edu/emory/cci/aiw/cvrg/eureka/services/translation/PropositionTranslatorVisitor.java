@@ -24,7 +24,10 @@ import com.google.inject.Inject;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.DataElement;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.Categorization;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.HighLevelAbstraction;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.LowLevelAbstraction;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.LowLevelAbstraction.CreatedFrom;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.PropositionEntityVisitor;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.SliceAbstraction;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.SystemProposition;
 
 public final class PropositionTranslatorVisitor implements
@@ -33,6 +36,8 @@ public final class PropositionTranslatorVisitor implements
 	private final SystemPropositionTranslator systemPropositionTranslator;
 	private final SequenceTranslator sequenceTranslator;
 	private final CategorizationTranslator categorizationTranslator;
+	private final FrequencySliceTranslator frequencySliceTranslator;
+	private final FrequencyLowLevelAbstractionTranslator frequencyLowLevelAbstractionTranslator;
 	private DataElement dataElement;
 	private Long userId;
 
@@ -40,10 +45,12 @@ public final class PropositionTranslatorVisitor implements
 	public PropositionTranslatorVisitor(SystemPropositionTranslator
 		inSystemPropositionTranslator, SequenceTranslator
 		inSequenceTranslator, CategorizationTranslator
-		inCategorizationTranslator) {
+		inCategorizationTranslator, FrequencySliceTranslator inFrequencySliceTranslator, FrequencyLowLevelAbstractionTranslator inFrequencyLowLevelAbstractionTranslator) {
 		this.systemPropositionTranslator = inSystemPropositionTranslator;
 		this.categorizationTranslator = inCategorizationTranslator;
 		this.sequenceTranslator = inSequenceTranslator;
+		this.frequencySliceTranslator = inFrequencySliceTranslator;
+		this.frequencyLowLevelAbstractionTranslator = inFrequencyLowLevelAbstractionTranslator;
 	}
 
 	public DataElement getDataElement() {
@@ -70,5 +77,26 @@ public final class PropositionTranslatorVisitor implements
 	public void visit(HighLevelAbstraction highLevelAbstraction) {
 		dataElement = this.sequenceTranslator.translateFromProposition
 			(highLevelAbstraction);
+	}
+
+	@Override
+	public void visit(SliceAbstraction sliceAbstraction) {
+		this.frequencySliceTranslator.setUserId(this.userId);
+		dataElement = this.frequencySliceTranslator
+		        .translateFromProposition(sliceAbstraction);
+	}
+
+	@Override
+	public void visit(LowLevelAbstraction lowLevelAbstraction) {
+		if (lowLevelAbstraction.getCreatedFrom() == CreatedFrom.FREQUENCY) {
+			this.frequencyLowLevelAbstractionTranslator.setUserId(this.userId);
+			dataElement = this.frequencyLowLevelAbstractionTranslator
+			        .translateFromProposition(lowLevelAbstraction);
+		} else if (lowLevelAbstraction.getCreatedFrom() == CreatedFrom.VALUE_THRESHOLD) {
+			dataElement = null;
+		} else {
+			throw new IllegalArgumentException(
+			        "Low-level abstractions may only be created from frequency or value threshold data elements");
+		}
 	}
 }
