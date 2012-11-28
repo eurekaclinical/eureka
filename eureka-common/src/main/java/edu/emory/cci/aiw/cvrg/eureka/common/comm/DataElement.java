@@ -23,7 +23,6 @@ import java.util.Date;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.annotate.JsonSubTypes;
-import org.codehaus.jackson.annotate.JsonSubTypes.Type;
 import org.codehaus.jackson.annotate.JsonTypeInfo;
 
 /**
@@ -34,10 +33,9 @@ import org.codehaus.jackson.annotate.JsonTypeInfo;
 @JsonSubTypes({
         @JsonSubTypes.Type(value = SystemElement.class, name = "system"),
         @JsonSubTypes.Type(value = CategoricalElement.class, name = "categorization"),
-        @JsonSubTypes.Type(value = Sequence.class, name = "sequence")
-// @Type(value = Frequence.class, name = "frequency"),
-// @Type(value = ValueThreshold.class, name = "valueThreshold")
-})
+        @JsonSubTypes.Type(value = Sequence.class, name = "sequence"),
+        @JsonSubTypes.Type(value = Frequency.class, name = "frequency"),
+        @JsonSubTypes.Type(value = ValueThreshold.class, name = "valueThreshold") })
 public abstract class DataElement implements DataElementVisitable {
 
 	public enum Type {
