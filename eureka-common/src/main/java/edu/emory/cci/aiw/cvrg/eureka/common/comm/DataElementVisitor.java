@@ -26,4 +26,8 @@ public interface DataElementVisitor {
 	public void visit(CategoricalElement categoricalElement);
 	
 	public void visit(Sequence sequence);
+	
+	public void visit(Frequency frequency);
+	
+	public void visit(ResultThresholds thresholds);
 }
