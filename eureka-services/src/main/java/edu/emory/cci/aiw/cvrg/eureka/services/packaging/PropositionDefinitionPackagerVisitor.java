@@ -23,7 +23,9 @@ import org.protempa.PropositionDefinition;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.Categorization;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.HighLevelAbstraction;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.LowLevelAbstraction;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.PropositionEntityVisitor;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.SliceAbstraction;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.SystemProposition;
 
 public final class PropositionDefinitionPackagerVisitor implements
@@ -57,5 +59,16 @@ public final class PropositionDefinitionPackagerVisitor implements
 		this.propositionDefinition = new HighLevelAbstractionPackager()
 		        .pack(highLevelAbstraction);
 	}
+	
+	@Override
+	public void visit(LowLevelAbstraction lowLevelAbstraction) {
+		// TODO Auto-generated method stub
+		
+	}
 
+	@Override
+	public void visit(SliceAbstraction sliceAbstraction) {
+		// TODO Auto-generated method stub
+
+	}
 }
