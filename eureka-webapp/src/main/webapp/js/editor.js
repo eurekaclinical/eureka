@@ -396,6 +396,7 @@ function initTrees() {
 		"dnd" : {
 			"drop_finish" : function(data) {
 				var target = data.e.currentTarget;
+				var textContent = data.o[0].children[1].childNodes[1].textContent;
 				if (idIsNotInList(target, data.o[0].id)) {
 
 					var infoLabel = $(target).find('div.label-info');
@@ -404,7 +405,7 @@ function initTrees() {
 					var sortable = $(target).find('ul.sortable');
 					var newItem = $('<li></li>')
 						.data("space", $(data.o[0]).data("space"))
-						.data("desc", data.o[0].children[1].childNodes[1].textContent)
+						.data("desc", textContent)
 						.data("type", $(data.o[0]).data("type"))
 						.data("subtype", $(data.o[0]).data("subtype") || '')
 						.data("key", $(data.o[0]).data("proposition"));
@@ -457,7 +458,7 @@ function initTrees() {
 					});
 
 					var txt = $("<span></span>", {
-						text : data.o[0].children[1].childNodes[1].textContent
+						text : textContent
 					});
 
 					if ($(sortable).data('drop-type') === 'single') {

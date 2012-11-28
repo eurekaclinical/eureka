@@ -33,7 +33,6 @@ public final class DataElementTranslatorVisitor implements DataElementVisitor {
 	private final SequenceTranslator sequenceTranslator;
 	private final CategorizationTranslator categorizationTranslator;
 	private Proposition proposition;
-	private Long userId;
 
 	@Inject
 	public DataElementTranslatorVisitor(SystemPropositionTranslator
@@ -47,10 +46,6 @@ public final class DataElementTranslatorVisitor implements DataElementVisitor {
 
 	public Proposition getProposition() {
 		return proposition;
-	}
-
-	public void setUserId (Long inUserId) {
-		this.userId = inUserId;
 	}
 
 	@Override

@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -32,6 +32,7 @@ import com.sun.jersey.api.client.GenericType;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.CategoricalElement;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.DataElement;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.Sequence;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.SystemElement;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.RelationOperator;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.TimeUnit;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.User;
@@ -54,6 +55,9 @@ public class ServicesClient extends AbstractClient {
 	};
 	private static final GenericType<List<RelationOperator>>
 		RelationOperatorList = new GenericType<List<RelationOperator>>() {
+	};
+	private static final GenericType<List<SystemElement>>
+		SystemPropositionList = new GenericType<List<SystemElement>>(){
 	};
 	private final String servicesUrl;
 
@@ -126,10 +130,24 @@ public class ServicesClient extends AbstractClient {
 			.APPLICATION_JSON).get(DataElement.class);
 	}
 
-	public List<DataElement> getUserPropositions(User inUser) {
-		final String path = "/api/proposition/user/list/" + inUser.getId();
+	public List<DataElement> getUserPropositions(Long inUserId) {
+		final String path = "/api/proposition/user/list/" + inUserId;
 		return this.getResource().path(path).accept(
 			MediaType.APPLICATION_JSON).get(UserPropositionList);
+	}
+
+	public List<SystemElement> getSystemPropositions (Long inUserId) {
+		final String path = "/api/proposition/system/" + inUserId + "/list";
+		return this.getResource().path(path).accept(MediaType
+			.APPLICATION_JSON).get(SystemPropositionList);
+	}
+
+	public SystemElement getSystemProposition (Long inUserId,
+		String inPropId) {
+		final String path = "/api/proposition/system/" + inUserId + "" +
+			inPropId;
+		return this.getResource().path(path).accept(MediaType
+			.APPLICATION_JSON).get(SystemElement.class);
 	}
 
 	public List<TimeUnit> getTimeUnits() {
