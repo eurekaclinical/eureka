@@ -42,7 +42,7 @@ import edu.emory.cci.aiw.cvrg.eureka.services.finder.SystemPropositionFinder;
  * propositions.
  */
 public final class CategorizationTranslator implements
-        PropositionTranslator<CategoricalElement, Categorization> {
+		PropositionTranslator<CategoricalElement, Categorization> {
 
 	private final PropositionDao propositionDao;
 	private final TimeUnitDao timeUnitDao;
@@ -52,17 +52,19 @@ public final class CategorizationTranslator implements
 	private final CategorizationTranslator categorizationTranslator;
 	private final FrequencySliceTranslator frequencySliceTranslator;
 	private final FrequencyLowLevelAbstractionTranslator frequencyLowLevelAbstractionTranslator;
+	private final ResultThresholdsTranslator resultThresholdsTranslator;
 
 	@Inject
 	public CategorizationTranslator(
-	        PropositionDao inInPropositionDao,
-	        TimeUnitDao inTimeUnitDao,
-	        SystemPropositionFinder inFinder,
-	        SequenceTranslator inSequenceTranslator,
-	        SystemPropositionTranslator inSystemPropositionTranslator,
-	        CategorizationTranslator inCategorizationTranslator,
-	        FrequencySliceTranslator inFrequencySliceTranslator,
-	        FrequencyLowLevelAbstractionTranslator inFrequencyLowLevelAbstractionTranslator) {
+			PropositionDao inInPropositionDao,
+			TimeUnitDao inTimeUnitDao,
+			SystemPropositionFinder inFinder,
+			SequenceTranslator inSequenceTranslator,
+			SystemPropositionTranslator inSystemPropositionTranslator,
+			CategorizationTranslator inCategorizationTranslator,
+			FrequencySliceTranslator inFrequencySliceTranslator,
+			FrequencyLowLevelAbstractionTranslator inFrequencyLowLevelAbstractionTranslator,
+			ResultThresholdsTranslator inResultThresholdsTranslator) {
 		this.propositionDao = inInPropositionDao;
 		this.timeUnitDao = inTimeUnitDao;
 		this.finder = inFinder;
@@ -71,13 +73,14 @@ public final class CategorizationTranslator implements
 		this.categorizationTranslator = inCategorizationTranslator;
 		this.frequencySliceTranslator = inFrequencySliceTranslator;
 		this.frequencyLowLevelAbstractionTranslator = inFrequencyLowLevelAbstractionTranslator;
+		this.resultThresholdsTranslator = inResultThresholdsTranslator;
 	}
 
 	@Override
 	public Categorization translateFromElement(CategoricalElement element) {
 		Categorization result = new Categorization();
 		PropositionTranslatorUtil.populateCommonPropositionFields(result,
-		        element);
+				element);
 
 		List<Proposition> inverseIsA = new ArrayList<Proposition>();
 		for (DataElement de : element.getChildren()) {
@@ -92,12 +95,12 @@ public final class CategorizationTranslator implements
 	}
 
 	private Proposition getOrCreateProposition(String key,
-	        CategoricalElement element) {
+			CategoricalElement element) {
 		Proposition proposition = this.propositionDao.getByUserAndKey(
-		        element.getUserId(), key);
+				element.getUserId(), key);
 		if (proposition == null) {
 			PropositionDefinition propDef = this.finder.find(
-			        element.getUserId(), key);
+					element.getUserId(), key);
 			SystemProposition sysProp = new SystemProposition();
 			sysProp.setKey(key);
 			sysProp.setInSystem(true);
@@ -113,35 +116,36 @@ public final class CategorizationTranslator implements
 
 	private CategorizationType checkPropositionType(CategoricalElement element) {
 		switch (element.getCategoricalType()) {
-			case ABSTRACTION:
-				return CategorizationType.ABSTRACTION;
-			case CONSTANT:
-				return CategorizationType.CONSTANT;
-			case EVENT:
-				return CategorizationType.EVENT;
-			case PRIMITIVE_PARAMETER:
-				return CategorizationType.PRIMITIVE_PARAMETER;
-			case MIXED:
-				return CategorizationType.MIXED;
-			default:
-				return CategorizationType.UNKNOWN;
+		case ABSTRACTION:
+			return CategorizationType.ABSTRACTION;
+		case CONSTANT:
+			return CategorizationType.CONSTANT;
+		case EVENT:
+			return CategorizationType.EVENT;
+		case PRIMITIVE_PARAMETER:
+			return CategorizationType.PRIMITIVE_PARAMETER;
+		case MIXED:
+			return CategorizationType.MIXED;
+		default:
+			return CategorizationType.UNKNOWN;
 		}
 	}
 
 	@Override
 	public CategoricalElement translateFromProposition(
-	        Categorization proposition) {
+			Categorization proposition) {
 		CategoricalElement result = new CategoricalElement();
 
 		PropositionTranslatorUtil.populateCommonDataElementFields(result,
-		        proposition);
+				proposition);
 		List<DataElement> children = new ArrayList<DataElement>();
 		for (Proposition p : proposition.getInverseIsA()) {
 			PropositionTranslatorVisitor visitor = new PropositionTranslatorVisitor(
-			        this.systemPropositionTranslator, this.sequenceTranslator,
-			        this.categorizationTranslator,
-			        this.frequencySliceTranslator,
-			        this.frequencyLowLevelAbstractionTranslator);
+					this.systemPropositionTranslator, this.sequenceTranslator,
+					this.categorizationTranslator,
+					this.frequencySliceTranslator,
+					this.frequencyLowLevelAbstractionTranslator,
+					this.resultThresholdsTranslator);
 			p.accept(visitor);
 			children.add(visitor.getDataElement());
 		}
@@ -153,18 +157,18 @@ public final class CategorizationTranslator implements
 
 	private CategoricalType checkElementType(Categorization proposition) {
 		switch (proposition.getCategorizationType()) {
-			case ABSTRACTION:
-				return CategoricalType.ABSTRACTION;
-			case CONSTANT:
-				return CategoricalType.CONSTANT;
-			case EVENT:
-				return CategoricalType.EVENT;
-			case PRIMITIVE_PARAMETER:
-				return CategoricalType.PRIMITIVE_PARAMETER;
-			case MIXED:
-				return CategoricalType.MIXED;
-			default:
-				return CategoricalType.UNKNOWN;
+		case ABSTRACTION:
+			return CategoricalType.ABSTRACTION;
+		case CONSTANT:
+			return CategoricalType.CONSTANT;
+		case EVENT:
+			return CategoricalType.EVENT;
+		case PRIMITIVE_PARAMETER:
+			return CategoricalType.PRIMITIVE_PARAMETER;
+		case MIXED:
+			return CategoricalType.MIXED;
+		default:
+			return CategoricalType.UNKNOWN;
 		}
 	}
 }

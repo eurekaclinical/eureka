@@ -36,21 +36,24 @@ public final class DataElementTranslatorVisitor implements DataElementVisitor {
 	private final CategorizationTranslator categorizationTranslator;
 	private final FrequencySliceTranslator frequencySliceTranslator;
 	private final FrequencyLowLevelAbstractionTranslator frequencyLowLevelAbstractionTranslator;
+	private final ResultThresholdsTranslator resultThresholdsTranslator;
 
 	private Proposition proposition;
 
 	@Inject
 	public DataElementTranslatorVisitor(
-	        SystemPropositionTranslator inSystemPropositionTranslator,
-	        SequenceTranslator inSequenceTranslator,
-	        CategorizationTranslator inCategorizationTranslator,
-	        FrequencySliceTranslator inFrequencySliceTranslator,
-	        FrequencyLowLevelAbstractionTranslator inFrequencyLowLevelAbstractionTranslator) {
+			SystemPropositionTranslator inSystemPropositionTranslator,
+			SequenceTranslator inSequenceTranslator,
+			CategorizationTranslator inCategorizationTranslator,
+			FrequencySliceTranslator inFrequencySliceTranslator,
+			FrequencyLowLevelAbstractionTranslator inFrequencyLowLevelAbstractionTranslator,
+			ResultThresholdsTranslator inResultThresholdsTranslator) {
 		this.systemPropositionTranslator = inSystemPropositionTranslator;
 		this.sequenceTranslator = inSequenceTranslator;
 		this.categorizationTranslator = inCategorizationTranslator;
 		this.frequencySliceTranslator = inFrequencySliceTranslator;
 		this.frequencyLowLevelAbstractionTranslator = inFrequencyLowLevelAbstractionTranslator;
+		this.resultThresholdsTranslator = inResultThresholdsTranslator;
 	}
 
 	public Proposition getProposition() {
@@ -60,13 +63,13 @@ public final class DataElementTranslatorVisitor implements DataElementVisitor {
 	@Override
 	public void visit(SystemElement systemElement) {
 		proposition = this.systemPropositionTranslator
-		        .translateFromElement(systemElement);
+				.translateFromElement(systemElement);
 	}
 
 	@Override
 	public void visit(CategoricalElement categoricalElement) {
 		proposition = this.categorizationTranslator
-		        .translateFromElement(categoricalElement);
+				.translateFromElement(categoricalElement);
 	}
 
 	@Override
@@ -78,16 +81,17 @@ public final class DataElementTranslatorVisitor implements DataElementVisitor {
 	public void visit(Frequency frequency) {
 		if (!frequency.getIsConsecutive()) {
 			proposition = this.frequencySliceTranslator
-			        .translateFromElement(frequency);
+					.translateFromElement(frequency);
 		} else {
 			proposition = this.frequencyLowLevelAbstractionTranslator
-			        .translateFromElement(frequency);
+					.translateFromElement(frequency);
 		}
 	}
 
 	@Override
 	public void visit(ResultThresholds thresholds) {
-
+		proposition = this.resultThresholdsTranslator
+				.translateFromElement(thresholds);
 	}
 
 }

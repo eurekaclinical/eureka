@@ -58,20 +58,19 @@ import edu.emory.cci.aiw.cvrg.eureka.common.exception.HttpStatusException;
 import edu.emory.cci.aiw.cvrg.eureka.services.config.ServiceProperties;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.PropositionDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.finder.SystemPropositionFinder;
-import edu.emory.cci.aiw.cvrg.eureka.services.translation
-	.CategorizationTranslator;
-import edu.emory.cci.aiw.cvrg.eureka.services.translation
-	.DataElementTranslatorVisitor;
-import edu.emory.cci.aiw.cvrg.eureka.services.translation
-	.PropositionTranslatorVisitor;
+import edu.emory.cci.aiw.cvrg.eureka.services.translation.CategorizationTranslator;
+import edu.emory.cci.aiw.cvrg.eureka.services.translation.DataElementTranslatorVisitor;
+import edu.emory.cci.aiw.cvrg.eureka.services.translation.FrequencyLowLevelAbstractionTranslator;
+import edu.emory.cci.aiw.cvrg.eureka.services.translation.FrequencySliceTranslator;
+import edu.emory.cci.aiw.cvrg.eureka.services.translation.PropositionTranslatorVisitor;
+import edu.emory.cci.aiw.cvrg.eureka.services.translation.ResultThresholdsTranslator;
 import edu.emory.cci.aiw.cvrg.eureka.services.translation.SequenceTranslator;
-import edu.emory.cci.aiw.cvrg.eureka.services.translation
-	.SystemPropositionTranslator;
+import edu.emory.cci.aiw.cvrg.eureka.services.translation.SystemPropositionTranslator;
 import edu.emory.cci.aiw.cvrg.eureka.services.util.PropositionUtil;
 
 /**
  * REST Web Service
- *
+ * 
  * @author hrathod
  */
 @Path("/proposition")
@@ -82,53 +81,63 @@ public class PropositionResource {
 	/**
 	 * The class level logger.
 	 */
-	private static final Logger LOGGER = LoggerFactory.getLogger
-		(PropositionResource.class);
+	private static final Logger LOGGER = LoggerFactory
+			.getLogger(PropositionResource.class);
 	private final PropositionDao propositionDao;
 	private final ServiceProperties applicationProperties;
 	private final SystemPropositionFinder systemPropositionFinder;
 	private final SequenceTranslator sequenceTranslator;
 	private final CategorizationTranslator categorizationTranslator;
 	private final SystemPropositionTranslator systemPropositionTranslator;
+	private final FrequencySliceTranslator frequencySliceTranslator;
+	private final FrequencyLowLevelAbstractionTranslator frequencyLowLevelAbstractionTranslator;
+	private final ResultThresholdsTranslator resultThresholdsTranslator;
 
 	/**
 	 * Creates a new instance of PropositionResource
 	 */
 	@Inject
-	public PropositionResource(PropositionDao inPropositionDao,
-		ServiceProperties inApplicationProperties, SystemPropositionFinder
-		inFinder, SequenceTranslator inSequenceTranslator,
-		CategorizationTranslator inCategorizationTranslator,
-		SystemPropositionTranslator inSystemPropositionTranslator) {
+	public PropositionResource(
+			PropositionDao inPropositionDao,
+			ServiceProperties inApplicationProperties,
+			SystemPropositionFinder inFinder,
+			SequenceTranslator inSequenceTranslator,
+			CategorizationTranslator inCategorizationTranslator,
+			SystemPropositionTranslator inSystemPropositionTranslator,
+			FrequencySliceTranslator inFrequencySliceTranslator,
+			FrequencyLowLevelAbstractionTranslator inFrequencyLowLevelAbstractionTranslator,
+			ResultThresholdsTranslator inResultThresholdsTranslator) {
 		this.propositionDao = inPropositionDao;
 		this.applicationProperties = inApplicationProperties;
 		this.systemPropositionFinder = inFinder;
 		this.sequenceTranslator = inSequenceTranslator;
 		this.categorizationTranslator = inCategorizationTranslator;
 		this.systemPropositionTranslator = inSystemPropositionTranslator;
+		this.frequencySliceTranslator = inFrequencySliceTranslator;
+		this.frequencyLowLevelAbstractionTranslator = inFrequencyLowLevelAbstractionTranslator;
+		this.resultThresholdsTranslator = inResultThresholdsTranslator;
 	}
 
 	@GET
 	@Path("/system/{userId}/list")
-	public List<SystemElement> getSystemPropositions(@PathParam("userId")
-	Long inUserId) {
+	public List<SystemElement> getSystemPropositions(
+			@PathParam("userId") Long inUserId) {
 
 		List<SystemElement> elements = new ArrayList<SystemElement>();
 
 		List<String> propNames = this.applicationProperties
-			.getDefaultSystemPropositions();
+				.getDefaultSystemPropositions();
 		for (String name : propNames) {
 			try {
 				elements.add(fetchSystemProposition(inUserId, name));
 			} catch (UniformInterfaceException e) {
 				if (e.getResponse().getStatus() != Response.Status.NOT_FOUND
-					.getStatusCode()) {
+						.getStatusCode()) {
 					throw new HttpStatusException(
-						Response.Status.INTERNAL_SERVER_ERROR, e);
+							Response.Status.INTERNAL_SERVER_ERROR, e);
 				} else {
-					LOGGER.warn(
-						"Invalid proposition id specified in system " +
-							"propositions list: " + name);
+					LOGGER.warn("Invalid proposition id specified in system "
+							+ "propositions list: " + name);
 				}
 			}
 		}
@@ -138,17 +147,18 @@ public class PropositionResource {
 
 	@GET
 	@Path("/system/{userId}/{propKey}")
-	public SystemElement getSystemProposition(@PathParam("userId") Long
-		inUserId, @PathParam("propKey") String inKey) {
+	public SystemElement getSystemProposition(
+			@PathParam("userId") Long inUserId,
+			@PathParam("propKey") String inKey) {
 		return fetchSystemProposition(inUserId, inKey);
 	}
 
 	@POST
 	@Path("/system/{userId}/batch")
-	public List<SystemElement> batchSystemPropositions(@PathParam("userId")
-	Long inUserId, List<String> inIdList) {
+	public List<SystemElement> batchSystemPropositions(
+			@PathParam("userId") Long inUserId, List<String> inIdList) {
 		List<SystemElement> systemElements = new ArrayList<SystemElement>(
-			inIdList.size());
+				inIdList.size());
 		for (String id : inIdList) {
 			systemElements.add(this.fetchSystemProposition(inUserId, id));
 		}
@@ -157,15 +167,17 @@ public class PropositionResource {
 
 	@GET
 	@Path("/user/list/{userId}")
-	public List<DataElement> getUserPropositions(@PathParam("userId") Long
-		inUserId) {
+	public List<DataElement> getUserPropositions(
+			@PathParam("userId") Long inUserId) {
 		List<DataElement> result = new ArrayList<DataElement>();
 		for (Proposition p : this.propositionDao.getByUserId(inUserId)) {
 			this.propositionDao.refresh(p);
-			PropositionTranslatorVisitor visitor = new
-				PropositionTranslatorVisitor(
-				this.systemPropositionTranslator, this.sequenceTranslator,
-				this.categorizationTranslator);
+			PropositionTranslatorVisitor visitor = new PropositionTranslatorVisitor(
+					this.systemPropositionTranslator, this.sequenceTranslator,
+					this.categorizationTranslator,
+					this.frequencySliceTranslator,
+					this.frequencyLowLevelAbstractionTranslator,
+					this.resultThresholdsTranslator);
 			p.accept(visitor);
 			DataElement dataElement = visitor.getDataElement();
 			result.add(dataElement);
@@ -176,14 +188,13 @@ public class PropositionResource {
 	@POST
 	@Path("/user/validate/{userId}")
 	public Response validateProposition(@PathParam("userId") Long inUserId,
-		DataElement inDataElement) {
+			DataElement inDataElement) {
 		Response result;
-		List<Proposition> propositions = this.propositionDao.getByUserId
-			(inUserId);
+		List<Proposition> propositions = this.propositionDao
+				.getByUserId(inUserId);
 		Proposition targetProposition = this.propositionDao.getByUserAndKey(
-			inUserId, inDataElement.getKey());
-		List<PropositionDefinition> propDefs = new
-			ArrayList<PropositionDefinition>();
+				inUserId, inDataElement.getKey());
+		List<PropositionDefinition> propDefs = new ArrayList<PropositionDefinition>();
 
 		for (Proposition proposition : propositions) {
 			propDefs.add(PropositionUtil.pack(proposition));
@@ -192,39 +203,40 @@ public class PropositionResource {
 		ValidationRequest validationRequest = new ValidationRequest();
 		validationRequest.setUserId(inUserId);
 		validationRequest.setPropositions(propDefs);
-		validationRequest.setTargetProposition(
-			PropositionUtil.pack(targetProposition));
+		validationRequest.setTargetProposition(PropositionUtil
+				.pack(targetProposition));
 
 		Client client = CommUtils.getClient();
-		WebResource resource = client.resource(
-			this.applicationProperties.getEtlPropositionValidationUrl());
+		WebResource resource = client.resource(this.applicationProperties
+				.getEtlPropositionValidationUrl());
 		ClientResponse response = resource.type(MediaType.APPLICATION_JSON)
-			.post(ClientResponse.class, validationRequest);
+				.post(ClientResponse.class, validationRequest);
 		result = Response.status(
-			response.getClientResponseStatus().getStatusCode()).build();
+				response.getClientResponseStatus().getStatusCode()).build();
 
 		return result;
 	}
 
 	@GET
 	@Path("/user/get/{propId}")
-	public DataElement getUserProposition(@PathParam("propId") Long
-		inPropositionId) {
+	public DataElement getUserProposition(
+			@PathParam("propId") Long inPropositionId) {
 		DataElement dataElement = null;
-		Proposition proposition = this.propositionDao.retrieve
-			(inPropositionId);
+		Proposition proposition = this.propositionDao.retrieve(inPropositionId);
 		this.propositionDao.refresh(proposition);
 		if (proposition != null) {
 			if (proposition.isInSystem()) {
 				dataElement = this.fetchSystemProposition(
-					proposition.getUserId(), proposition.getKey());
+						proposition.getUserId(), proposition.getKey());
 				dataElement.setCreated(proposition.getCreated());
 				dataElement.setLastModified(proposition.getLastModified());
 			} else {
-				PropositionTranslatorVisitor visitor = new
-					PropositionTranslatorVisitor(
-					this.systemPropositionTranslator,
-					this.sequenceTranslator, this.categorizationTranslator);
+				PropositionTranslatorVisitor visitor = new PropositionTranslatorVisitor(
+						this.systemPropositionTranslator,
+						this.sequenceTranslator, this.categorizationTranslator,
+						this.frequencySliceTranslator,
+						this.frequencyLowLevelAbstractionTranslator,
+						this.resultThresholdsTranslator);
 				proposition.accept(visitor);
 				dataElement = visitor.getDataElement();
 			}
@@ -234,8 +246,8 @@ public class PropositionResource {
 
 	@DELETE
 	@Path("/user/delete/{userId}/{propId}")
-	public Response deleteUserPropositions(@PathParam("userId") Long
-		inUserId, @PathParam("propId") Long inPropositionId) {
+	public Response deleteUserPropositions(@PathParam("userId") Long inUserId,
+			@PathParam("propId") Long inPropositionId) {
 
 		// the response to return;
 		Response response = Response.ok().build();
@@ -249,12 +261,12 @@ public class PropositionResource {
 			// if the user ID is not a match with the one passed in,
 			// return error
 			response = Response.notModified(
-				"User ID " + inUserId + " did not" + " match the owner ID "
-					+ target.getUserId()).build();
+					"User ID " + inUserId + " did not" + " match the owner ID "
+							+ target.getUserId()).build();
 		} else {
 			// now get the rest of the propositions for the user
-			List<Proposition> others = this.propositionDao.getByUserId(
-				target.getUserId());
+			List<Proposition> others = this.propositionDao.getByUserId(target
+					.getUserId());
 
 			// now loop through and make sure that the given proposition is
 			// not used in the definition of any of the other propositions.
@@ -263,18 +275,19 @@ public class PropositionResource {
 				if (proposition.getId().equals(target.getId())) {
 					continue;
 				} else {
-					PropositionChildrenVisitor visitor = new
-						PropositionChildrenVisitor();
+					PropositionChildrenVisitor visitor = new PropositionChildrenVisitor();
 					proposition.accept(visitor);
 					List<Proposition> children = visitor.getChildren();
 
 					for (Proposition p : children) {
 						if (p.getId().equals(target.getId())) {
-							response = Response.status(
-								Response.Status.PRECONDITION_FAILED).entity(
-								p.getAbbrevDisplayName() + " " + "contains " +
-									"a " + "reference to " + target
-									.getAbbrevDisplayName()).build();
+							response = Response
+									.status(Response.Status.PRECONDITION_FAILED)
+									.entity(p.getAbbrevDisplayName() + " "
+											+ "contains " + "a "
+											+ "reference to "
+											+ target.getAbbrevDisplayName())
+									.build();
 							error = true;
 							break;
 						}
@@ -294,20 +307,20 @@ public class PropositionResource {
 	@PUT
 	@Path("/user/update")
 	public void updateProposition(DataElement inDataElement) {
-		if (inDataElement.getUserId() != null && inDataElement.getId() !=
-			null) {
-			DataElementTranslatorVisitor visitor = new
-				DataElementTranslatorVisitor(
-				this.systemPropositionTranslator, this.sequenceTranslator,
-				this.categorizationTranslator);
+		if (inDataElement.getUserId() != null && inDataElement.getId() != null) {
+			DataElementTranslatorVisitor visitor = new DataElementTranslatorVisitor(
+					this.systemPropositionTranslator, this.sequenceTranslator,
+					this.categorizationTranslator,
+					this.frequencySliceTranslator,
+					this.frequencyLowLevelAbstractionTranslator,
+					this.resultThresholdsTranslator);
 			inDataElement.accept(visitor);
 			Proposition proposition = visitor.getProposition();
 			proposition.setLastModified(new Date());
 			this.propositionDao.update(proposition);
 		} else {
-			throw new HttpStatusException(
-				Response.Status.PRECONDITION_FAILED, "Both user ID and " +
-				"proposition ID must be provided.");
+			throw new HttpStatusException(Response.Status.PRECONDITION_FAILED,
+					"Both user ID and " + "proposition ID must be provided.");
 		}
 	}
 
@@ -316,15 +329,14 @@ public class PropositionResource {
 	public void insertProposition(Sequence inSequence) {
 		if (inSequence.getUserId() != null) {
 			HighLevelAbstraction abstraction = this.sequenceTranslator
-				.translateFromElement(inSequence);
+					.translateFromElement(inSequence);
 			Date now = new Date();
 			abstraction.setCreated(now);
 			abstraction.setLastModified(now);
 			this.propositionDao.create(abstraction);
 		} else {
-			throw new HttpStatusException(
-				Response.Status.PRECONDITION_FAILED,
-				"User ID must be provided.");
+			throw new HttpStatusException(Response.Status.PRECONDITION_FAILED,
+					"User ID must be provided.");
 		}
 	}
 
@@ -333,14 +345,13 @@ public class PropositionResource {
 	public void updateProposition(Sequence inSequence) {
 		if (inSequence.getId() != null && inSequence.getUserId() != null) {
 			HighLevelAbstraction abstraction = this.sequenceTranslator
-				.translateFromElement(inSequence);
+					.translateFromElement(inSequence);
 			Date now = new Date();
 			abstraction.setLastModified(now);
 			this.propositionDao.update(abstraction);
 		} else {
-			throw new HttpStatusException(
-				Response.Status.PRECONDITION_FAILED,
-				"User ID and proposition ID must be provided.");
+			throw new HttpStatusException(Response.Status.PRECONDITION_FAILED,
+					"User ID and proposition ID must be provided.");
 		}
 	}
 
@@ -349,15 +360,14 @@ public class PropositionResource {
 	public void insertProposition(CategoricalElement inElement) {
 		if (inElement.getUserId() != null) {
 			Categorization categorization = this.categorizationTranslator
-				.translateFromElement(inElement);
+					.translateFromElement(inElement);
 			Date now = new Date();
 			categorization.setCreated(now);
 			categorization.setLastModified(now);
 			this.propositionDao.create(categorization);
 		} else {
-			throw new HttpStatusException(
-				Response.Status.PRECONDITION_FAILED, "User ID must be " +
-				"provided.");
+			throw new HttpStatusException(Response.Status.PRECONDITION_FAILED,
+					"User ID must be " + "provided.");
 		}
 	}
 
@@ -366,20 +376,19 @@ public class PropositionResource {
 	public void updateProposition(CategoricalElement inElement) {
 		if (inElement.getId() != null && inElement.getUserId() != null) {
 			Categorization categorization = this.categorizationTranslator
-				.translateFromElement(inElement);
+					.translateFromElement(inElement);
 			Date now = new Date();
 			categorization.setLastModified(now);
 			this.propositionDao.update(categorization);
 		} else {
-			throw new HttpStatusException(
-				Response.Status.PRECONDITION_FAILED, "Both user ID and " +
-				"proposition ID must be provided.");
+			throw new HttpStatusException(Response.Status.PRECONDITION_FAILED,
+					"Both user ID and " + "proposition ID must be provided.");
 		}
 	}
 
 	private SystemElement fetchSystemProposition(Long inUserId, String inKey) {
 		return PropositionUtil.wrap(
-			systemPropositionFinder.find(inUserId, inKey), false, inUserId,
-			this.systemPropositionFinder);
+				systemPropositionFinder.find(inUserId, inKey), false, inUserId,
+				this.systemPropositionFinder);
 	}
 }

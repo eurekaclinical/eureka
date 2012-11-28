@@ -31,26 +31,31 @@ import edu.emory.cci.aiw.cvrg.eureka.common.entity.SliceAbstraction;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.SystemProposition;
 
 public final class PropositionTranslatorVisitor implements
-	PropositionEntityVisitor {
+		PropositionEntityVisitor {
 
 	private final SystemPropositionTranslator systemPropositionTranslator;
 	private final SequenceTranslator sequenceTranslator;
 	private final CategorizationTranslator categorizationTranslator;
 	private final FrequencySliceTranslator frequencySliceTranslator;
 	private final FrequencyLowLevelAbstractionTranslator frequencyLowLevelAbstractionTranslator;
+	private final ResultThresholdsTranslator resultThresholdsTranslator;
 	private DataElement dataElement;
 	private Long userId;
 
 	@Inject
-	public PropositionTranslatorVisitor(SystemPropositionTranslator
-		inSystemPropositionTranslator, SequenceTranslator
-		inSequenceTranslator, CategorizationTranslator
-		inCategorizationTranslator, FrequencySliceTranslator inFrequencySliceTranslator, FrequencyLowLevelAbstractionTranslator inFrequencyLowLevelAbstractionTranslator) {
+	public PropositionTranslatorVisitor(
+			SystemPropositionTranslator inSystemPropositionTranslator,
+			SequenceTranslator inSequenceTranslator,
+			CategorizationTranslator inCategorizationTranslator,
+			FrequencySliceTranslator inFrequencySliceTranslator,
+			FrequencyLowLevelAbstractionTranslator inFrequencyLowLevelAbstractionTranslator,
+			ResultThresholdsTranslator inResultThresholdsTranslator) {
 		this.systemPropositionTranslator = inSystemPropositionTranslator;
 		this.categorizationTranslator = inCategorizationTranslator;
 		this.sequenceTranslator = inSequenceTranslator;
 		this.frequencySliceTranslator = inFrequencySliceTranslator;
 		this.frequencyLowLevelAbstractionTranslator = inFrequencyLowLevelAbstractionTranslator;
+		this.resultThresholdsTranslator = inResultThresholdsTranslator;
 	}
 
 	public DataElement getDataElement() {
@@ -63,27 +68,27 @@ public final class PropositionTranslatorVisitor implements
 
 	@Override
 	public void visit(SystemProposition proposition) {
-		dataElement = this.systemPropositionTranslator.translateFromProposition
-			(proposition);
+		dataElement = this.systemPropositionTranslator
+				.translateFromProposition(proposition);
 	}
 
 	@Override
 	public void visit(Categorization categorization) {
-		dataElement = this.categorizationTranslator.translateFromProposition
-			(categorization);
+		dataElement = this.categorizationTranslator
+				.translateFromProposition(categorization);
 	}
 
 	@Override
 	public void visit(HighLevelAbstraction highLevelAbstraction) {
-		dataElement = this.sequenceTranslator.translateFromProposition
-			(highLevelAbstraction);
+		dataElement = this.sequenceTranslator
+				.translateFromProposition(highLevelAbstraction);
 	}
 
 	@Override
 	public void visit(SliceAbstraction sliceAbstraction) {
 		this.frequencySliceTranslator.setUserId(this.userId);
 		dataElement = this.frequencySliceTranslator
-		        .translateFromProposition(sliceAbstraction);
+				.translateFromProposition(sliceAbstraction);
 	}
 
 	@Override
@@ -91,12 +96,13 @@ public final class PropositionTranslatorVisitor implements
 		if (lowLevelAbstraction.getCreatedFrom() == CreatedFrom.FREQUENCY) {
 			this.frequencyLowLevelAbstractionTranslator.setUserId(this.userId);
 			dataElement = this.frequencyLowLevelAbstractionTranslator
-			        .translateFromProposition(lowLevelAbstraction);
+					.translateFromProposition(lowLevelAbstraction);
 		} else if (lowLevelAbstraction.getCreatedFrom() == CreatedFrom.VALUE_THRESHOLD) {
-			dataElement = null;
+			dataElement = this.resultThresholdsTranslator
+					.translateFromProposition(lowLevelAbstraction);
 		} else {
 			throw new IllegalArgumentException(
-			        "Low-level abstractions may only be created from frequency or value threshold data elements");
+					"Low-level abstractions may only be created from frequency or value threshold data elements");
 		}
 	}
 }
