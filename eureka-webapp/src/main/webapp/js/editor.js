@@ -7,7 +7,7 @@ var dropBoxMaxTextWidth = 275;
 var possiblePropositions = new Object();
 var saveFuncs = {
 	'sequence': saveSequence,
-	'categorization': saveCategorical
+	'categorization': saveCategorization
 };
 
 function postProposition (postUrl, postData, successFunc) {
@@ -40,30 +40,34 @@ function collectSequenceDataElement (elem) {
 }
 
 function collectSequenceRelations ($relationElems) {
-	// relation['propositionType'] = $proposition.data('type');
 	var relations = new Array();
+
 	$relationElems.each(function (i,r) {
 		var $proposition = $(r).find('ul.sortable').find('li').first();
-		relations.push({
-			'dataElementField': {
-				'dataElementKey': $proposition.data('key'),
-				'withValue': $(r).find('select[name="sequenceRelDataElementValue"]').val(),
-				'hasDuration': $(r).find('input[name="sequenceRelDataElementSpecifyDuration"]').val(),
-				'minDuration': $(r).find('input[name="sequenceRelDataElementMinDurationValue"]').val(),
-				'minDurationUnits':  $(r).find('select[name="sequenceRelDataElementMinDurationUnits"]').val(),
-				'maxDuration': $(r).find('input[name="sequenceRelDataElementMaxDurationValue"]').val(),
-				'maxDurationUnits':  $(r).find('select[name="sequenceRelDataElementMaxDurationUnits"]').val(),
-				'hasPropertyConstraint': $(r).find('input[name="sequenceRelDataElementSpecifyProperty"]').val(),
-				'property': $(r).find('select[name="sequenceRelDataElementPropertyName"]').val(),
-				'propertyValue': $(r).find('input[name="sequenceRelDataElementPropertyValue"]').val()
-			},
-			'relationOperator': $(r).find('select[name="sequenceRelDataElementTemporalRelation"]').val(),
-			'sequentialDataElement': $(r).find('select[name="propositionSelect"]').val(),
-			'relationMinCount': $(r).find('input[name="sequenceRhsDataElementMinDistanceValue"]').val(),
-			'relationMinUnits': $(r).find('select[name="sequenceRhsDataElementMinDistanceUnits"]').val(),
-			'relationMaxCount': $(r).find('input[name="sequenceRhsDataElementMaxDistanceValue"]').val(),
-			'relationMaxUnits': $(r).find('select[name="sequenceRhsDataElementMaxDistanceUnits"]').val()
-		});
+		var key = $proposition.data('key');
+
+		if (key) {
+			relations.push({
+				'dataElementField': {
+					'dataElementKey': $proposition.data('key'),
+					'withValue': $(r).find('select[name="sequenceRelDataElementValue"]').val(),
+					'hasDuration': $(r).find('input[name="sequenceRelDataElementSpecifyDuration"]').val(),
+					'minDuration': $(r).find('input[name="sequenceRelDataElementMinDurationValue"]').val(),
+					'minDurationUnits':  $(r).find('select[name="sequenceRelDataElementMinDurationUnits"]').val(),
+					'maxDuration': $(r).find('input[name="sequenceRelDataElementMaxDurationValue"]').val(),
+					'maxDurationUnits':  $(r).find('select[name="sequenceRelDataElementMaxDurationUnits"]').val(),
+					'hasPropertyConstraint': $(r).find('input[name="sequenceRelDataElementSpecifyProperty"]').val(),
+					'property': $(r).find('select[name="sequenceRelDataElementPropertyName"]').val(),
+					'propertyValue': $(r).find('input[name="sequenceRelDataElementPropertyValue"]').val()
+				},
+				'relationOperator': $(r).find('select[name="sequenceRelDataElementTemporalRelation"]').val(),
+				'sequentialDataElement': $(r).find('select[name="propositionSelect"]').val(),
+				'relationMinCount': $(r).find('input[name="sequenceRhsDataElementMinDistanceValue"]').val(),
+				'relationMinUnits': $(r).find('select[name="sequenceRhsDataElementMinDistanceUnits"]').val(),
+				'relationMaxCount': $(r).find('input[name="sequenceRhsDataElementMaxDistanceValue"]').val(),
+				'relationMaxUnits': $(r).find('select[name="sequenceRhsDataElementMaxDistanceUnits"]').val()
+			});
+		}
 	});
 	return relations;
 }
@@ -85,7 +89,7 @@ function saveSequence (elem) {
 	postProposition('savesequence', sequence, function (data) {window.location.href = 'editorhome'});
 }
 
-function saveCategorical (elem) {
+function saveCategorization (elem) {
 	var $propositions = $(elem).find('ul.sortable').find('li');
 	var childElements = new Array();
 
@@ -95,11 +99,11 @@ function saveCategorical (elem) {
 			'key': $(p).data('key')
 		};
 
-		if ($(p).data('space') === 'system') {
+		if (system) {
 			child['type'] =  'system';
 		} else {
 			child['type'] =  $(p).data('type');
-			if (child['type'] === 'CATEGORIZATION') {
+			if (child['type'] === 'categorization') {
 				child['categoricalType'] = $(p).data('subtype');
 			}
 		}
@@ -120,23 +124,22 @@ function saveCategorical (elem) {
 		categorization.id = propId;
 	}
 
-	categorization.children = childElements;
 	postProposition("savecategorization", categorization, function (data) {window.location.href = 'editorhome'});
 }
 
-function addPossibleProposition (id, desc) {
-	if (possiblePropositions[id]) {
-		possiblePropositions[id].count++;
+function addPossibleProposition (key, desc) {
+	if (possiblePropositions[key]) {
+		possiblePropositions[key].count++;
 	} else {
-		possiblePropositions[id] = new Object();
-		possiblePropositions[id].count = 1;
-		possiblePropositions[id].desc = desc;
+		possiblePropositions[key] = new Object();
+		possiblePropositions[key].count = 1;
+		possiblePropositions[key].desc = desc;
 	}
 }
 
-function removePossibleProposition (id) {
-	if (possiblePropositions[id] && possiblePropositions[id].count > 0) {
-		possiblePropositions[id].count--;
+function removePossibleProposition (key) {
+	if (possiblePropositions[key] && possiblePropositions[key].count > 0) {
+		possiblePropositions[key].count--;
 	}
 }
 
@@ -201,6 +204,18 @@ $(document).ready(function(){
 	$('#sequencedefinition').hide();
 	$('#frequencydefinition').hide();
 	$('#valuethresholddefinition').hide();
+
+	// make sure all the 'drop here' labels are hidden if we are editing
+	// an existing proposition.  Also populate any proposition select
+	// dropdowns if needed.
+	if ($('#propId').val()) {
+		$('div.label-info').hide();
+		$('ul.sortable').find('li').each(function (i, item) {
+			addPossibleProposition($(item).data('key'), $(item).data('key'));
+		});
+		var type = $('input[name="type"]:checked').val();
+		setPropositionSelects($('#' + type + 'definition'));
+	}
 
 	function leaveAStepCallback(from, to){
 		var result;
@@ -383,15 +398,13 @@ function initTrees() {
 				var target = data.e.currentTarget;
 				if (idIsNotInList(target, data.o[0].id)) {
 
-					var propositionId = data.o[0].id;
-					var propositionDesc = data.o[0].children[1].childNodes[1].textContent;
-
 					var infoLabel = $(target).find('div.label-info');
 					infoLabel.hide();
 
 					var sortable = $(target).find('ul.sortable');
 					var newItem = $('<li></li>')
 						.data("space", $(data.o[0]).data("space"))
+						.data("desc", data.o[0].children[1].childNodes[1].textContent)
 						.data("type", $(data.o[0]).data("type"))
 						.data("subtype", $(data.o[0]).data("subtype") || '')
 						.data("key", $(data.o[0]).data("proposition"));
@@ -416,16 +429,15 @@ function initTrees() {
 					var X = $("<span></span>", {
 						class: "delete",
 						click: function () {
-							var toRemove = $(this).parent()[0];
 							var dialog = $('<div></div>');
 							$(dialog).dialog({
 								'title': 'Confirm removal of selected element',
 								'modal': true,
 								'buttons': {
 									"Confirm": function() {
-										$(toRemove).remove();
-										removePossibleProposition($(toRemove).data('id'));
+										removePossibleProposition(newItem.data('key'));
 										setPropositionSelects($(sortable).closest('[data-definition-container="true"]'));
+										newItem.remove();
 										if ($(sortable).find('li').length == 0) {
 											$(sortable).data('proptype','empty');
 											infoLabel.show();
@@ -445,7 +457,7 @@ function initTrees() {
 					});
 
 					var txt = $("<span></span>", {
-						text : propositionDesc
+						text : data.o[0].children[1].childNodes[1].textContent
 					});
 
 					if ($(sortable).data('drop-type') === 'single') {
@@ -459,7 +471,7 @@ function initTrees() {
 					newItem.append(txt);
 					sortable.append(newItem);
 
-					addPossibleProposition(propositionId, propositionDesc);
+					addPossibleProposition(newItem.data('key'), txt.text());
 					setPropositionSelects($(sortable).closest('[data-definition-container="true"]'));
 				}
 			},
@@ -467,14 +479,13 @@ function initTrees() {
 				var target = data.r;
 				var sortable = $(target).find('ul.sortable');
 				var datatype = $(sortable).data("proptype");
+				var droppable = false;
 
-				if (datatype == "empty" || datatype == $(data.o).data("type")) {
-					return true;
-				} else {
-					return false;
+				if (datatype == "empty" || datatype == $(data.o).data("type") || $(sortable).data('drop-type') === 'single') {
+					droppable = true;
 				}
 				
-				
+				return droppable;
 			},
 			"drag_check" : function(data) {
 				if (data.r.attr("id") == "phtml_1") {
@@ -629,8 +640,8 @@ function showHelp() {
 }
 function idIsNotInList(target, id) {
 	var retVal = true;
-	$(target).find('ul.sortable').find('li').each( function() {
-		if (id == this.id) {
+	$(target).find('ul.sortable').find('li').each( function(i, item) {
+		if ($(item).data('key') == id) {
 			retVal = false;
 		}
 

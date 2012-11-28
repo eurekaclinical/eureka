@@ -90,7 +90,10 @@ public class GenericDao<T, PK> implements Dao<T, PK> {
 	@Override
 	@Transactional
 	public T update(T entity) {
-		return this.create(entity);
+		EntityManager entityManager = this.getEntityManager();
+		T result = entityManager.merge(entity);
+		entityManager.flush();
+		return result;
 	}
 
 	@Override

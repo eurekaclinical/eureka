@@ -32,6 +32,7 @@ import edu.emory.cci.aiw.cvrg.eureka.common.comm.Sequence;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.Sequence.DataElementField;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.Sequence
 	.RelatedDataElementField;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.SystemElement;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.ExtendedProposition;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.HighLevelAbstraction;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.PropertyConstraint;
@@ -44,6 +45,7 @@ import edu.emory.cci.aiw.cvrg.eureka.services.dao.PropositionDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.RelationOperatorDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.TimeUnitDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.finder.SystemPropositionFinder;
+import edu.emory.cci.aiw.cvrg.eureka.services.util.PropositionUtil;
 
 /**
  * Translates from sequences (UI data element) to high-level abstractions.
@@ -82,7 +84,8 @@ public class SequenceTranslator implements
 
 		List<Proposition> abstractedFrom = new ArrayList<Proposition>();
 		createExtendedProposition(element.getPrimaryDataElement());
-		result.setPrimaryProposition(extendedProps.get(element.getKey()));
+		result.setPrimaryProposition(extendedProps.get(element
+			.getPrimaryDataElement().getDataElementKey()));
 		for (RelatedDataElementField rde : element.getRelatedDataElements()) {
 			createExtendedProposition(rde.getDataElementField());
 			abstractedFrom.add(getOrCreateProposition(rde.getDataElementField()
@@ -118,9 +121,18 @@ public class SequenceTranslator implements
 	private void createExtendedProposition(DataElementField dataElement) {
 		if (!this.extendedProps.containsKey(dataElement.getDataElementKey())) {
 			ExtendedProposition ep = new ExtendedProposition();
-			ep.setProposition(
-				this.propositionDao.getByUserAndKey(
-					userId, dataElement.getDataElementKey()));
+			Proposition proposition = this.propositionDao.getByUserAndKey(
+				userId, dataElement.getDataElementKey());
+			if (proposition == null) {
+				SystemElement element = PropositionUtil.wrap(
+					this.finder.find(
+						this.userId, dataElement.getDataElementKey()),
+					true, this.userId, this.finder);
+				SystemPropositionTranslator translator = new
+					SystemPropositionTranslator(finder);
+				proposition = translator.translateFromElement(element);
+			}
+			ep.setProposition(proposition);
 			if (dataElement.getHasDuration()) {
 				ep.setMinDuration(dataElement.getMinDuration());
 				ep.setMinDurationTimeUnit(this.timeUnitDao.retrieve
@@ -189,6 +201,7 @@ public class SequenceTranslator implements
 			for (Relation relation : proposition.getRelations()) {
 				relatedFields.add(createRelatedDataElementField(relation));
 			}
+			result.setRelatedDataElements(relatedFields);
 		}
 
 		return result;
@@ -199,7 +212,7 @@ public class SequenceTranslator implements
 		RelatedDataElementField relatedDataElement = new RelatedDataElementField();
 
 		relatedDataElement.setRelationMinCount(relation.getMinf1s2());
-		relatedDataElement.setRelationMaxUnits(relation.getMaxf1s2TimeUnit()
+		relatedDataElement.setRelationMinUnits(relation.getMinf1s2TimeUnit()
 		        .getId());
 		relatedDataElement.setRelationMaxCount(relation.getMaxf1s2());
 		relatedDataElement.setRelationMaxUnits(relation.getMaxf1s2TimeUnit()
@@ -226,6 +239,10 @@ public class SequenceTranslator implements
 	private DataElementField createDataElementField(ExtendedProposition ep) {
 		DataElementField dataElement = new DataElementField();
 		dataElement.setDataElementKey(ep.getProposition().getKey());
+		dataElement.setDataElementAbbrevDisplayName(ep.getProposition()
+			.getAbbrevDisplayName());
+		dataElement.setDataElementDisplayName(ep.getProposition()
+			.getDisplayName());
 		if (ep.getMinDuration() != null) {
 			dataElement.setHasDuration(true);
 			dataElement.setMinDuration(ep.getMinDuration());

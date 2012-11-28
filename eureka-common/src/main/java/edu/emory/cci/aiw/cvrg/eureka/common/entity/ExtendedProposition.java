@@ -60,7 +60,7 @@ public class ExtendedProposition {
 	@OneToOne(cascade = CascadeType.ALL)
 	private PropertyConstraint propertyConstraint;
 
-	@OneToOne
+	@OneToOne(cascade = CascadeType.ALL)
 	private Proposition proposition;
 
 	public Long getId() {

@@ -115,10 +115,25 @@ public final class Sequence extends DataElement {
 		public void setRelationMaxUnits(Long relationMaxUnits) {
 			this.relationMaxUnits = relationMaxUnits;
 		}
+
+		@Override
+		public String toString() {
+			return "RelatedDataElementField{" +
+				"dataElementField=" + dataElementField +
+				", relationOperator=" + relationOperator +
+				", sequentialDataElement='" + sequentialDataElement + '\'' +
+				", relationMinCount=" + relationMinCount +
+				", relationMinUnits=" + relationMinUnits +
+				", relationMaxCount=" + relationMaxCount +
+				", relationMaxUnits=" + relationMaxUnits +
+				'}';
+		}
 	}
 
 	public static class DataElementField {
 		private String dataElementKey;
+		private String dataElementAbbrevDisplayName;
+		private String dataElementDisplayName;
 		private String withValue;
 		private Boolean hasDuration;
 		private Integer minDuration;
@@ -208,6 +223,51 @@ public final class Sequence extends DataElement {
 		public void setPropertyValue(String propertyValue) {
 			this.propertyValue = propertyValue;
 		}
+
+		public String getDataElementAbbrevDisplayName() {
+			return dataElementAbbrevDisplayName;
+		}
+
+		public void setDataElementAbbrevDisplayName(String
+			inDataElementAbbrevDisplayName) {
+			dataElementAbbrevDisplayName = inDataElementAbbrevDisplayName;
+		}
+
+		public String getDataElementDisplayName() {
+			return dataElementDisplayName;
+		}
+
+		public void setDataElementDisplayName(String
+			inDataElementDisplayName) {
+			dataElementDisplayName = inDataElementDisplayName;
+		}
+
+		@Override
+		public String toString() {
+			return "DataElementField{" +
+				"dataElementKey='" + dataElementKey + '\'' +
+				", dataElementAbbrevDisplayName='" +
+				dataElementAbbrevDisplayName + '\'' +
+				", dataElementDisplayName='" + dataElementDisplayName + '\'' +
+				", withValue='" + withValue + '\'' +
+				", hasDuration=" + hasDuration +
+				", minDuration=" + minDuration +
+				", minDurationUnits=" + minDurationUnits +
+				", maxDuration=" + maxDuration +
+				", maxDurationUnits=" + maxDurationUnits +
+				", hasPropertyConstraint=" + hasPropertyConstraint +
+				", property='" + property + '\'' +
+				", propertyValue='" + propertyValue + '\'' +
+				'}';
+		}
+	}
+
+	@Override
+	public String toString() {
+		return "Sequence{" +
+			"primaryDataElement=" + primaryDataElement +
+			", relatedDataElements=" + relatedDataElements +
+			'}';
 	}
 
 	@Override

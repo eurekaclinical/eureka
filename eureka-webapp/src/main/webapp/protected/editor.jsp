@@ -81,11 +81,11 @@
 							<p><br/></p>
 							<table id="select_element_table">
 								<%-- These values come from the DataElement.Type enum --%>
-								<c:set var="types" value="categorization,temporal,sequence,frequency,value_threshold" />
+								<c:set var="types" value="categorization,sequence,frequency,value_threshold" />
 								<c:forTokens items="${types}" var="myType" delims="," varStatus="status">
 									<tr>
 										<td class="firstCol">
-											<input type="radio" id="type" name="type" value="${myType}" <c:if test="${not empty proposition and propositionType == myType}">CHECKED</c:if>/>
+											<input type="radio" id="type" name="type" value="${myType}" <c:if test="${not empty proposition and propositionType == myType}">checked="checked"</c:if>/>
 											<fmt:message key="dataelementtype.${myType}.displayName" />
 										</td>
 										<td class="secondCol"><fmt:message key="dataelementtype.${myType}.description" /></td>
@@ -129,15 +129,14 @@
 													<table id="categorizationdefinition" data-definition-container="true">
 														<tr>
 															<td>
-																<div id="tree-drop-categorical" class="tree-drop jstree-drop">
+																<div class="tree-drop jstree-drop">
 																	<div class="label-info" ><center>Drop Here</center></div>
 																	<ul class="sortable" data-drop-type="multiple" data-proptype="empty" style="width: 100% height: 100%">
 																		<c:if test="${not empty proposition and propositionType == 'categorization'}">
 																		<c:forEach var="child" items="${proposition.children}">
-																		${child}
-																		<li id="${child.id}" data-type="${proposition.inSystem ? 'sysem' : 'user'}">
+																		<li data-key="${child.key}" data-desc="${child.abbrevDisplayName}" data-type="${child.type}" data-space="${proposition.inSystem ? 'sysem' : 'user'}">
 																			<span class="delete" style="cursor: pointer; background-color: lightblue;"></span>
-																			<span>${child.displayName} ${child.abbrevDisplayName}</span>
+																			<span>${child.displayName} ${child.abbrevDisplayName} (${child.key})</span>
 																		</li>
 																		</c:forEach>
 																		</c:if>
@@ -146,35 +145,27 @@
 															</td>
 														</tr>
 													</table>
+													<%--
 													<table id="temporaldefinition"> <!-- DEPRECATED -->
 														<tr>
 															<td>
-																<div id="tree-drop-temporal" class="tree-drop jstree-drop">
+																<div class="tree-drop jstree-drop">
 																	<div class="label-info" ><center>Drop Here</center></div>
 																	<ul class="sortable" style="width: 100% height: 100%">
 																		<c:if test="${not empty proposition and propositionType == 'temporal'}">
-																			<c:forEach var="child" items="${proposition.children}">
-																				<c:choose>
-																					<c:when test="${empty child.key}">
-																						<li id="${child.id}" data-type="user">
-																						<span class="delete" style="cursor: pointer; background-color: lightblue;"></span>
-																						<span>${child.abbrevDisplayName}</span>
-																						</li>
-																					</c:when>
-																					<c:otherwise>
-																						<li id="${child.key}" data-type="system">
-																							<span class="delete" style="cursor: pointer; background-color: lightblue;"></span>
-																							<span>${child.key} ${child.displayName} ${child.abbrevDisplayName}</span>
-																						</li>
-																					</c:otherwise>
-																				</c:choose>
-																			</c:forEach>
+																		<c:forEach var="child" items="${proposition.children}">
+																		<li data-key="${child.key}" data-type="${child.type}" data-space="${proposition.inSystem ? 'sysem' : 'user'}">
+																			<span class="delete" style="cursor: pointer; background-color: lightblue;"></span>
+																			<span>${child.key} ${child.displayName} ${child.abbrevDisplayName}</span>
+																		</li>
+																		</c:forEach>
 																		</c:if>
 																	</ul>
 																</div>
 															</td>
 														</tr>
 													</table>
+													--%>
 													<table id="sequencedefinition" data-definition-container="true">
 														<tr>
 															<td>
@@ -188,9 +179,9 @@
 																				<div class="label-info" ><center>Drop Here</center></div>
 																				<ul data-type="main" data-drop-type="single" class="sortable" style="width: 100% height: 100%">
 																					<c:if test="${not empty proposition and propositionType == 'sequence'}">
-																					<li data-id=${proposition.primaryDataElement.dataElementKey}" data-type="${proposition.primaryDataElement.inSystem ? 'system' : 'user'}">
+																					<li data-key="${proposition.primaryDataElement.dataElementKey}" data-desc="${proposition.primaryDataElement.dataElementAbbrevDisplayName}" data-space="user">
 																						<span class="delete" style="cursor: pointer; background-color: lightblue;"></span>
-																						<span>${proposition.primaryDataElement.abbrevDisplayName}</span>
+																						<span>${proposition.primaryDataElement.dataElementKey} ${proposition.primaryDataElement.dataElementAbbrevDisplayName}</span>
 																					</li>
 																					</c:if>
 																				</ul>
@@ -207,7 +198,7 @@
 																	</tr>
 																	<tr>
 																		<td>
-																			<label><input type="checkbox" value="true" name="mainDataElementSpecifyDuration">with duration</label>
+																			<label><input type="checkbox" value="true" name="mainDataElementSpecifyDuration" <c:if test="${propositionType == 'sequence' and not empty proposition.primaryDataElement.hasDuration}">checked="checked"</c:if> >with duration</label>
 																		</td>
 																		<td>
 																			<table>
@@ -216,12 +207,12 @@
 																						at least
 																					</td>
 																					<td>
-																						<input type="text" class="durationField" name="mainDataElementMinDurationValue"/>
+																						<input type="text" class="durationField" name="mainDataElementMinDurationValue" value="<c:if test="${propositionType == 'sequence'}">${proposition.primaryDataElement.minDuration}</c:if>" />
 																					</td>
 																					<td>
 																						<select name="mainDataElementMinDurationUnits">
 																							<c:forEach var="unit" items="${timeUnits}">
-																							<option value="${unit.id}">${unit.name}</option>
+																							<option value="${unit.id}" <c:if test="${propositionType == 'sequence' and unit.id == proposition.primaryDataElement.minDurationUnits}">selected="selected"</c:if>>${unit.name}</option>
 																							</c:forEach>
 																						</select>
 																					</td>
@@ -231,12 +222,12 @@
 																						at most
 																					</td>
 																					<td>
-																						<input type="text" class="durationField" name="mainDataElementMaxDurationValue"/>
+																						<input type="text" class="durationField" name="mainDataElementMaxDurationValue" value="<c:if test="${propositionType == 'sequence'}">${proposition.primaryDataElement.maxDuration}</c:if>" />
 																					</td>
 																					<td>
 																						<select name="mainDataElementMaxDurationUnits">
 																							<c:forEach var="unit" items="${timeUnits}">
-																							<option value="${unit.id}">${unit.name}</option>
+																							<option value="${unit.id}" <c:if test="${propositionType == 'sequence' and unit.id == proposition.primaryDataElement.maxDurationUnits}">selected="selected"</c:if>>${unit.name}</option>
 																							</c:forEach>
 																						</select>
 																					</td>
@@ -246,7 +237,7 @@
 																	</tr>
 																	<tr>
 																		<td>
-																			<label><input type="checkbox" value="true" name="mainDataElementSpecifyProperty"/>with property value</label>
+																			<label><input type="checkbox" value="true" name="mainDataElementSpecifyProperty" />with property value</label>
 																		</td>
 																		<td>
 																		  <select name="mainDataElementPropertyName"></select>
@@ -260,88 +251,168 @@
 															<td class="sequence-relations-container">
 																<table class="sequence-relation drop-parent" style="margin-top: 10px">
 																	<c:choose>
-																		<c:when test="${false}">
-																			<%-- Populate the first related data element, if editing an existing derived element with a first related data element. --%>
-																		</c:when>
-																		<c:otherwise>
-																			<%-- For creating a new data element. --%>
-																			<tr>
-																				<td>Related Data Element <span class="count">1</span>:</td>
-																				<td colspan="5">
-																					<div class="tree-drop-single jstree-drop">
-																						<div class="label-info"><center>Drop Here</center></div>
-																						<ul class="sortable" style="width: 100% height: 100%"></ul>
-																					</div>
-																				</td>
-																			</tr>
-																			<tr>
-																				<td>with value</td>
-																				<td colspan="5"><select name="sequenceRelDataElementValue"></select></td>
-																			</tr>
-																			<tr>
-																				<td>
-																					<label><input type="checkbox" value="true" name="sequenceRelDataElementSpecifyDuration"/>with duration</label>
-																				</td>
-																				<td>
-																				  at least
-																					<input type="text" class="durationField" name="sequenceRelDataElementMinDurationValue"/>
-																					<select name="sequenceRelDataElementMinDurationUnits">
-																							<c:forEach var="unit" items="${timeUnits}">
-																							<option value="${unit.id}">${unit.name}</option>
-																							</c:forEach>
-																					</select>
-																					<br />
-																					at most
-																					<input type="text" class="durationField" name="sequenceRelDataElementMaxDurationValue"/>
-																					<select name="sequenceRelDataElementMaxDurationUnits">
-																							<c:forEach var="unit" items="${timeUnits}">
-																							<option value="${unit.id}">${unit.name}</option>
-																							</c:forEach>
-																					</select>
-																				</td>
-																				<td>
-																					<select name="sequenceRelDataElementTemporalRelation">
-																						<c:forEach var="op" items="${operators}">
-																						<option value="${op.id}">${op.name}</option>
-																						</c:forEach>
-																					</select>
-																				</td>
-																				<td>
-																					<select name="propositionSelect"></select>
-																				</td>
-																				<td>
-																					by
-																				</td>
-																				<td>
-																					at least
-																					<input type="text" class="distanceField" name="sequenceRhsDataElementMinDistanceValue"/>
-																					<select name="sequenceRhsDataElementMinDistanceUnits">
-																							<c:forEach var="unit" items="${timeUnits}">
-																							<option value="${unit.id}">${unit.name}</option>
-																							</c:forEach>
-																					</select>
-																					<br />
-																					at most
-																					<input type="text" class="distanceField" name="sequenceRhsDataElementMaxDistanceValue"/>
-																					<select name="sequenceRhsDataElementMaxDistanceUnits">
-																							<c:forEach var="unit" items="${timeUnits}">
-																							<option value="${unit.id}">${unit.name}</option>
-																							</c:forEach>
-																					</select>
-																				</td>
-																			</tr>
-																			<tr>
-																				<td>
-																				  <input type="checkbox" value="true" name="sequenceRelDataElementSpecifyProperty"/>
-																				  <label>with property value</label>
-																				</td>
-																				<td colspan="5">
-																				  <select name="sequenceRelDataElementPropertyName"></select>
-																				  <input type="text" class="propertyValueField" name="sequenceRelDataElementPropertyValue"/>
-																				</td>
-																			</tr>
-																		</c:otherwise>
-																		<%-- print second, third, etc. related data element. --%>
+																	<c:when test="${not empty proposition and propositionType == 'sequence' and not empty proposition.relatedDataElements}">
+																	<c:forEach var="relation" items="${proposition.relatedDataElements}" varStatus="status">
+																	<tr>
+																		<td>Related Data Element <span class="count">${status.count}</span>:</td>
+																		<td colspan="5">
+																			<div class="tree-drop-single jstree-drop">
+																				<div class="label-info"><center>Drop Here</center></div>
+																				<ul class="sortable" data-type="related" data-drop-type="single" style="width: 100% height: 100%">
+																					<li data-key="${relation.dataElementField.dataElementKey}" data-desc="${relation.dataElementField.dataElementAbbrevDisplayName}" data-space="user">
+																						<span class="delete" style="cursor: pointer; background-color: lightblue;"></span>
+																						<span>${relation.dataElementField.dataElementKey}</span>
+																					</li>
+																				</ul>
+																			</div>
+																		</td>
+																	</tr>
+																	<tr>
+																		<td>with value</td>
+																		<td colspan="5"><select name="sequenceRelDataElementValue"></select></td>
+																	</tr>
+																	<tr>
+																		<td>
+																			<label><input type="checkbox" value="true" name="sequenceRelDataElementSpecifyDuration" <c:if test="${relation.dataElementField.hasDuration}">checked="checked"</c:if> />with duration</label>
+																		</td>
+																		<td>
+																			at least
+																			<input type="text" class="durationField" name="sequenceRelDataElementMinDurationValue" value="${relation.dataElementField.minDuration}" />
+																			<select name="sequenceRelDataElementMinDurationUnits">
+																					<c:forEach var="unit" items="${timeUnits}">
+																					<option value="${unit.id}" <c:if test="${unit.id == relation.dataElementField.minDurationUnits}">selected="selected"</c:if>>${unit.name}</option>
+																					</c:forEach>
+																			</select>
+																			<br />
+																			at most
+																			<input type="text" class="durationField" name="sequenceRelDataElementMaxDurationValue" value="${relation.dataElementField.maxDuration}" />
+																			<select name="sequenceRelDataElementMaxDurationUnits">
+																					<c:forEach var="unit" items="${timeUnits}">
+																					<option value="${unit.id}" <c:if test="${unit.id == relation.dataElementField.maxDurationUnits}">selected="selected"</c:if>>${unit.name}</option>
+																					</c:forEach>
+																			</select>
+																		</td>
+																		<td>
+																			<select name="sequenceRelDataElementTemporalRelation">
+																				<c:forEach var="op" items="${operators}">
+																				<option value="${op.id}" <c:if test="${op.id == relation.relationOperator}">selected="selected"</c:if>>${op.name}</option>
+																				</c:forEach>
+																			</select>
+																		</td>
+																		<td>
+																			<select name="propositionSelect"></select>
+																		</td>
+																		<td>
+																			by
+																		</td>
+																		<td>
+																			at least
+																			<input type="text" class="distanceField" name="sequenceRhsDataElementMinDistanceValue" value="${relation.relationMinCount}" />
+																			<select name="sequenceRhsDataElementMinDistanceUnits">
+																					<c:forEach var="unit" items="${timeUnits}">
+																					<option value="${unit.id}" <c:if test="${unit.id == relation.relationMinUnits}">selected="selected"</c:if>>${unit.name}</option>
+																					</c:forEach>
+																			</select>
+																			<br />
+																			at most
+																			<input type="text" class="distanceField" name="sequenceRhsDataElementMaxDistanceValue" value="${relation.relationMaxCount}" />
+																			<select name="sequenceRhsDataElementMaxDistanceUnits">
+																					<c:forEach var="unit" items="${timeUnits}">
+																					<option value="${unit.id}" <c:if test="${unit.id == relation.relationMaxUnits}">selected="selected"</c:if>>${unit.name}</option>
+																					</c:forEach>
+																			</select>
+																		</td>
+																	</tr>
+																	<tr>
+																		<td>
+																			<input type="checkbox" value="true" name="sequenceRelDataElementSpecifyProperty"/>
+																			<label>with property value</label>
+																		</td>
+																		<td colspan="5">
+																			<select name="sequenceRelDataElementPropertyName"></select>
+																			<input type="text" class="propertyValueField" name="sequenceRelDataElementPropertyValue"/>
+																		</td>
+																	</tr>
+																	</c:forEach>
+																	</c:when>
+																	<c:otherwise>
+																	<%-- For creating a new data element. --%>
+																	<tr>
+																		<td>Related Data Element <span class="count">1</span>:</td>
+																		<td colspan="5">
+																			<div class="tree-drop-single jstree-drop">
+																				<div class="label-info"><center>Drop Here</center></div>
+																				<ul class="sortable" data-type="related" data-drop-type="single" style="width: 100% height: 100%"></ul>
+																			</div>
+																		</td>
+																	</tr>
+																	<tr>
+																		<td>with value</td>
+																		<td colspan="5"><select name="sequenceRelDataElementValue"></select></td>
+																	</tr>
+																	<tr>
+																		<td>
+																			<label><input type="checkbox" value="true" name="sequenceRelDataElementSpecifyDuration"/>with duration</label>
+																		</td>
+																		<td>
+																			at least
+																			<input type="text" class="durationField" name="sequenceRelDataElementMinDurationValue"/>
+																			<select name="sequenceRelDataElementMinDurationUnits">
+																					<c:forEach var="unit" items="${timeUnits}">
+																					<option value="${unit.id}">${unit.name}</option>
+																					</c:forEach>
+																			</select>
+																			<br />
+																			at most
+																			<input type="text" class="durationField" name="sequenceRelDataElementMaxDurationValue"/>
+																			<select name="sequenceRelDataElementMaxDurationUnits">
+																					<c:forEach var="unit" items="${timeUnits}">
+																					<option value="${unit.id}">${unit.name}</option>
+																					</c:forEach>
+																			</select>
+																		</td>
+																		<td>
+																			<select name="sequenceRelDataElementTemporalRelation">
+																				<c:forEach var="op" items="${operators}">
+																				<option value="${op.id}">${op.name}</option>
+																				</c:forEach>
+																			</select>
+																		</td>
+																		<td>
+																			<select name="propositionSelect"></select>
+																		</td>
+																		<td>
+																			by
+																		</td>
+																		<td>
+																			at least
+																			<input type="text" class="distanceField" name="sequenceRhsDataElementMinDistanceValue"/>
+																			<select name="sequenceRhsDataElementMinDistanceUnits">
+																					<c:forEach var="unit" items="${timeUnits}">
+																					<option value="${unit.id}">${unit.name}</option>
+																					</c:forEach>
+																			</select>
+																			<br />
+																			at most
+																			<input type="text" class="distanceField" name="sequenceRhsDataElementMaxDistanceValue"/>
+																			<select name="sequenceRhsDataElementMaxDistanceUnits">
+																					<c:forEach var="unit" items="${timeUnits}">
+																					<option value="${unit.id}">${unit.name}</option>
+																					</c:forEach>
+																			</select>
+																		</td>
+																	</tr>
+																	<tr>
+																		<td>
+																			<input type="checkbox" value="true" name="sequenceRelDataElementSpecifyProperty"/>
+																			<label>with property value</label>
+																		</td>
+																		<td colspan="5">
+																			<select name="sequenceRelDataElementPropertyName"></select>
+																			<input type="text" class="propertyValueField" name="sequenceRelDataElementPropertyValue"/>
+																		</td>
+																	</tr>
+																	</c:otherwise>
 																	</c:choose>
 																</table>
 															</td>

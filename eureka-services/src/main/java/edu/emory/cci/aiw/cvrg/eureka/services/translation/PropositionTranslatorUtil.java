@@ -45,12 +45,17 @@ class PropositionTranslatorUtil {
 	static void populateCommonPropositionFields(Proposition proposition,
 	        DataElement dataElement) {
 		proposition.setId(dataElement.getId());
-		proposition.setKey(dataElement.getKey());
 		proposition.setDisplayName(dataElement.getDisplayName());
 		proposition.setAbbrevDisplayName(dataElement.getAbbrevDisplayName());
 		proposition.setCreated(dataElement.getCreated());
 		proposition.setLastModified(dataElement.getLastModified());
 		proposition.setUserId(dataElement.getUserId());
+
+		if (dataElement.getKey() != null) {
+			proposition.setKey(dataElement.getKey());
+		} else {
+			proposition.setKey(dataElement.getAbbrevDisplayName());
+		}
 	}
 
 	/**

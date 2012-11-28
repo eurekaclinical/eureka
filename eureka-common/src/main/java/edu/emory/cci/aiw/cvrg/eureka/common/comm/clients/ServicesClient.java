@@ -85,9 +85,27 @@ public class ServicesClient extends AbstractClient {
 		}
 	}
 
+	private void updateDataElement (String inPath, DataElement inDataElement)
+	throws ClientException {
+		ClientResponse response = this.getResource().path(inPath).type
+			(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON)
+			.put(ClientResponse.class, inDataElement);
+		if (!response.getClientResponseStatus().equals(ClientResponse.Status
+			.NO_CONTENT)) {
+			String message = response.getEntity(String.class);
+			LOGGER.error("Client error while updating element: {}", message);
+			throw new ClientException(message);
+		}
+	}
+
 	public void saveSequence(Sequence inSequence) throws ClientException {
 		final String path = "/api/proposition/user/create/sequence";
 		this.saveDataElement(path, inSequence);
+	}
+
+	public void updateSequence(Sequence inSequence) throws ClientException {
+		final String path = "/api/proposition/user/update/sequence";
+		this.updateDataElement(path, inSequence);
 	}
 
 	public void saveCategoricalElement(CategoricalElement inElement) throws

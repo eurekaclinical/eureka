@@ -321,10 +321,22 @@ public class PropositionResource {
 			Date now = new Date();
 			abstraction.setCreated(now);
 			abstraction.setLastModified(now);
-			abstraction.setKey(abstraction.getAbbrevDisplayName());
 			this.propositionDao.create(abstraction);
 		} else {
 			throw new IllegalArgumentException("User ID must be provided.");
+		}
+	}
+
+	@PUT
+	@Path("/user/update/sequence")
+	public void updateProposition (Sequence inSequence) {
+		if (inSequence.getId() != null && inSequence.getUserId() != null) {
+			this.sequenceTranslator.setUserId(inSequence.getUserId());
+			HighLevelAbstraction abstraction = this.sequenceTranslator
+				.translateFromElement(inSequence);
+			Date now = new Date();
+			abstraction.setLastModified(now);
+			this.propositionDao.update(abstraction);
 		}
 	}
 

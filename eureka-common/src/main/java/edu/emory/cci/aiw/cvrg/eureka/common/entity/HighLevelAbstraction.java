@@ -32,14 +32,14 @@ import javax.persistence.Table;
 
 /**
  * Contains attributes which describe a Protempa high level abstraction.
- * 
+ *
  * @author hrathod
  */
 @Entity
 @Table(name = "high_level_abstractions")
 public class HighLevelAbstraction extends Proposition {
 
-	@OneToOne
+	@OneToOne(cascade = CascadeType.ALL)
 	ExtendedProposition primaryProposition;
 
 	@OneToMany(cascade = CascadeType.ALL)
@@ -72,7 +72,7 @@ public class HighLevelAbstraction extends Proposition {
 
 	/**
 	 * Gets the list of propositions the current proposition is abstracted from.
-	 * 
+	 *
 	 * @return The list of propositions the current proposition is abstracted
 	 *         from.
 	 */
@@ -82,7 +82,7 @@ public class HighLevelAbstraction extends Proposition {
 
 	/**
 	 * Sets the list of propositions the current proposition is abstracted from.
-	 * 
+	 *
 	 * @param abstractedFrom
 	 *            The list of propositions the current proposition is abstracted
 	 *            from.

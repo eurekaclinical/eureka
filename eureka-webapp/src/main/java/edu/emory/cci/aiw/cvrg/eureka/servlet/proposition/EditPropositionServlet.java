@@ -69,6 +69,8 @@ public class EditPropositionServlet extends HttpServlet {
 		if ((propId != null) && (!propId.equals(""))) {
 			DataElement dataElement = servicesClient.getUserProposition(Long
 				.valueOf(propId));
+			System.out.println("dataElement.getType() = " + dataElement
+				.getType());
 			req.setAttribute("proposition", dataElement);
 			req.setAttribute("propositionType", dataElement.getType()
 				.toString().toLowerCase());

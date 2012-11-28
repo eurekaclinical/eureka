@@ -97,7 +97,6 @@ public final class CategorizationTranslator implements
 			sysProp.setUserId(element.getUserId());
 			sysProp.setCreated(element.getCreated());
 			sysProp.setLastModified(element.getLastModified());
-			this.propositionDao.create(sysProp);
 			proposition = sysProp;
 		}
 		return proposition;
@@ -136,6 +135,7 @@ public final class CategorizationTranslator implements
 			p.accept(visitor);
 			children.add(visitor.getDataElement());
 		}
+		result.setChildren(children);
 		result.setCategoricalType(checkElementType(proposition));
 
 		return result;
