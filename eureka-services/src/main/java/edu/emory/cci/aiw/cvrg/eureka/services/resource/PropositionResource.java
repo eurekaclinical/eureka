@@ -57,13 +57,16 @@ import edu.emory.cci.aiw.cvrg.eureka.common.entity.PropositionChildrenVisitor;
 import edu.emory.cci.aiw.cvrg.eureka.common.exception.HttpStatusException;
 import edu.emory.cci.aiw.cvrg.eureka.services.config.ServiceProperties;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.PropositionDao;
-import edu.emory.cci.aiw.cvrg.eureka.services.dao.TimeUnitDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.finder.SystemPropositionFinder;
-import edu.emory.cci.aiw.cvrg.eureka.services.translation.CategorizationTranslator;
-import edu.emory.cci.aiw.cvrg.eureka.services.translation.DataElementTranslatorVisitor;
-import edu.emory.cci.aiw.cvrg.eureka.services.translation.PropositionTranslatorVisitor;
+import edu.emory.cci.aiw.cvrg.eureka.services.translation
+	.CategorizationTranslator;
+import edu.emory.cci.aiw.cvrg.eureka.services.translation
+	.DataElementTranslatorVisitor;
+import edu.emory.cci.aiw.cvrg.eureka.services.translation
+	.PropositionTranslatorVisitor;
 import edu.emory.cci.aiw.cvrg.eureka.services.translation.SequenceTranslator;
-import edu.emory.cci.aiw.cvrg.eureka.services.translation.SystemPropositionTranslator;
+import edu.emory.cci.aiw.cvrg.eureka.services.translation
+	.SystemPropositionTranslator;
 import edu.emory.cci.aiw.cvrg.eureka.services.util.PropositionUtil;
 
 /**
@@ -82,7 +85,6 @@ public class PropositionResource {
 	private static final Logger LOGGER = LoggerFactory.getLogger
 		(PropositionResource.class);
 	private final PropositionDao propositionDao;
-	private final TimeUnitDao timeUnitDao;
 	private final ServiceProperties applicationProperties;
 	private final SystemPropositionFinder systemPropositionFinder;
 	private final SequenceTranslator sequenceTranslator;
@@ -94,15 +96,11 @@ public class PropositionResource {
 	 */
 	@Inject
 	public PropositionResource(PropositionDao inPropositionDao,
-		TimeUnitDao inTimeUnitDao, ServiceProperties
-		inApplicationProperties, SystemPropositionFinder inFinder,
-		DataElementTranslatorVisitor inDataElementTranslatorVisitor,
-		PropositionTranslatorVisitor inPropositionTranslatorVisitor,
-		SequenceTranslator inSequenceTranslator, CategorizationTranslator
-		inCategorizationTranslator, SystemPropositionTranslator
-		inSystemPropositionTranslator) {
+		ServiceProperties inApplicationProperties, SystemPropositionFinder
+		inFinder, SequenceTranslator inSequenceTranslator,
+		CategorizationTranslator inCategorizationTranslator,
+		SystemPropositionTranslator inSystemPropositionTranslator) {
 		this.propositionDao = inPropositionDao;
-		this.timeUnitDao = inTimeUnitDao;
 		this.applicationProperties = inApplicationProperties;
 		this.systemPropositionFinder = inFinder;
 		this.sequenceTranslator = inSequenceTranslator;
@@ -123,7 +121,8 @@ public class PropositionResource {
 			try {
 				elements.add(fetchSystemProposition(inUserId, name));
 			} catch (UniformInterfaceException e) {
-				if (e.getResponse().getStatus() != 404) {
+				if (e.getResponse().getStatus() != Response.Status.NOT_FOUND
+					.getStatusCode()) {
 					throw new HttpStatusException(
 						Response.Status.INTERNAL_SERVER_ERROR, e);
 				} else {
@@ -164,8 +163,8 @@ public class PropositionResource {
 		for (Proposition p : this.propositionDao.getByUserId(inUserId)) {
 			this.propositionDao.refresh(p);
 			PropositionTranslatorVisitor visitor = new
-				PropositionTranslatorVisitor(this
-				.systemPropositionTranslator, this.sequenceTranslator,
+				PropositionTranslatorVisitor(
+				this.systemPropositionTranslator, this.sequenceTranslator,
 				this.categorizationTranslator);
 			p.accept(visitor);
 			DataElement dataElement = visitor.getDataElement();
@@ -223,9 +222,9 @@ public class PropositionResource {
 				dataElement.setLastModified(proposition.getLastModified());
 			} else {
 				PropositionTranslatorVisitor visitor = new
-					PropositionTranslatorVisitor(this
-					.systemPropositionTranslator, this.sequenceTranslator,
-					this.categorizationTranslator);
+					PropositionTranslatorVisitor(
+					this.systemPropositionTranslator,
+					this.sequenceTranslator, this.categorizationTranslator);
 				proposition.accept(visitor);
 				dataElement = visitor.getDataElement();
 			}
@@ -298,16 +297,17 @@ public class PropositionResource {
 		if (inDataElement.getUserId() != null && inDataElement.getId() !=
 			null) {
 			DataElementTranslatorVisitor visitor = new
-				DataElementTranslatorVisitor(this
-				.systemPropositionTranslator, this.sequenceTranslator,
+				DataElementTranslatorVisitor(
+				this.systemPropositionTranslator, this.sequenceTranslator,
 				this.categorizationTranslator);
 			inDataElement.accept(visitor);
 			Proposition proposition = visitor.getProposition();
 			proposition.setLastModified(new Date());
 			this.propositionDao.update(proposition);
 		} else {
-			throw new IllegalArgumentException(
-				"Both the user ID and the proposition ID must be provided.");
+			throw new HttpStatusException(
+				Response.Status.PRECONDITION_FAILED, "Both user ID and " +
+				"proposition ID must be provided.");
 		}
 	}
 
@@ -315,7 +315,6 @@ public class PropositionResource {
 	@Path("/user/create/sequence")
 	public void insertProposition(Sequence inSequence) {
 		if (inSequence.getUserId() != null) {
-			this.sequenceTranslator.setUserId(inSequence.getUserId());
 			HighLevelAbstraction abstraction = this.sequenceTranslator
 				.translateFromElement(inSequence);
 			Date now = new Date();
@@ -323,20 +322,25 @@ public class PropositionResource {
 			abstraction.setLastModified(now);
 			this.propositionDao.create(abstraction);
 		} else {
-			throw new IllegalArgumentException("User ID must be provided.");
+			throw new HttpStatusException(
+				Response.Status.PRECONDITION_FAILED,
+				"User ID must be provided.");
 		}
 	}
 
 	@PUT
 	@Path("/user/update/sequence")
-	public void updateProposition (Sequence inSequence) {
+	public void updateProposition(Sequence inSequence) {
 		if (inSequence.getId() != null && inSequence.getUserId() != null) {
-			this.sequenceTranslator.setUserId(inSequence.getUserId());
 			HighLevelAbstraction abstraction = this.sequenceTranslator
 				.translateFromElement(inSequence);
 			Date now = new Date();
 			abstraction.setLastModified(now);
 			this.propositionDao.update(abstraction);
+		} else {
+			throw new HttpStatusException(
+				Response.Status.PRECONDITION_FAILED,
+				"User ID and proposition ID must be provided.");
 		}
 	}
 
@@ -351,70 +355,31 @@ public class PropositionResource {
 			categorization.setLastModified(now);
 			this.propositionDao.create(categorization);
 		} else {
-			throw new IllegalArgumentException("User ID must be provided.");
+			throw new HttpStatusException(
+				Response.Status.PRECONDITION_FAILED, "User ID must be " +
+				"provided.");
 		}
 	}
 
-	private SystemElement fetchSystemProposition(Long inUserId,
-		String inKey) {
+	@PUT
+	@Path("/user/update/categorization")
+	public void updateProposition(CategoricalElement inElement) {
+		if (inElement.getId() != null && inElement.getUserId() != null) {
+			Categorization categorization = this.categorizationTranslator
+				.translateFromElement(inElement);
+			Date now = new Date();
+			categorization.setLastModified(now);
+			this.propositionDao.update(categorization);
+		} else {
+			throw new HttpStatusException(
+				Response.Status.PRECONDITION_FAILED, "Both user ID and " +
+				"proposition ID must be provided.");
+		}
+	}
+
+	private SystemElement fetchSystemProposition(Long inUserId, String inKey) {
 		return PropositionUtil.wrap(
 			systemPropositionFinder.find(inUserId, inKey), false, inUserId,
 			this.systemPropositionFinder);
 	}
-
-	//	private static class SystemTypeVisitor implements
-	//		PropositionDefinitionVisitor {
-	//
-	//		private SystemProposition.SystemType type = null;
-	//
-	//		public SystemProposition.SystemType getSystemType() {
-	//			return this.type;
-	//		}
-	//
-	//		@Override
-	//		public void visit(Collection<? extends PropositionDefinition>
-	//			inPropositionDefinitions) {
-	//			throw new UnsupportedOperationException("Not implemented.");
-	//		}
-	//
-	//		@Override
-	//		public void visit(LowLevelAbstractionDefinition
-	//			inLowLevelAbstractionDefinition) {
-	//			this.type = SystemProposition.SystemType
-	// .LOW_LEVEL_ABSTRACTION;
-	//		}
-	//
-	//		@Override
-	//		public void visit(HighLevelAbstractionDefinition
-	//			inHighLevelAbstractionDefinition) {
-	//			this.type = SystemProposition.SystemType
-	// .HIGH_LEVEL_ABSTRACTION;
-	//		}
-	//
-	//		@Override
-	//		public void visit(SliceDefinition inSliceDefinition) {
-	//			this.type = SystemProposition.SystemType.SLICE_ABSTRACTION;
-	//		}
-	//
-	//		@Override
-	//		public void visit(EventDefinition inDefinition) {
-	//			this.type = SystemProposition.SystemType.EVENT;
-	//		}
-	//
-	//		@Override
-	//		public void visit(PrimitiveParameterDefinition
-	//			inPrimitiveParameterDefinition) {
-	//			this.type = SystemProposition.SystemType.PRIMITIVE_PARAMETER;
-	//		}
-	//
-	//		@Override
-	//		public void visit(ConstantDefinition inConstantDefinition) {
-	//			this.type = SystemProposition.SystemType.CONSTANT;
-	//		}
-	//
-	//		@Override
-	//		public void visit(PairDefinition inPairDefinition) {
-	//			throw new UnsupportedOperationException("Not implemented.");
-	//		}
-	//	}
 }

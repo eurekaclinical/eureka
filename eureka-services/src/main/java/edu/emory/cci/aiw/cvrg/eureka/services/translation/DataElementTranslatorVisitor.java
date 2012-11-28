@@ -67,7 +67,6 @@ public final class DataElementTranslatorVisitor implements DataElementVisitor {
 
 	@Override
 	public void visit(Sequence sequence) {
-		this.sequenceTranslator.setUserId(this.userId);
 		proposition = this.sequenceTranslator.translateFromElement(sequence);
 	}
 

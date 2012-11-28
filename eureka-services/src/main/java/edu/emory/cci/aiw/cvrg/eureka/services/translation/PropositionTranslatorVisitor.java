@@ -68,7 +68,6 @@ public final class PropositionTranslatorVisitor implements
 
 	@Override
 	public void visit(HighLevelAbstraction highLevelAbstraction) {
-		this.sequenceTranslator.setUserId(this.userId);
 		dataElement = this.sequenceTranslator.translateFromProposition
 			(highLevelAbstraction);
 	}

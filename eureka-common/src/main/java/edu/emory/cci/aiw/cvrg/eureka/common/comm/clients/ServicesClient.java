@@ -114,6 +114,12 @@ public class ServicesClient extends AbstractClient {
 		this.saveDataElement(path, inElement);
 	}
 
+	public void updateCategoricalElement(CategoricalElement inElement) throws
+		ClientException {
+		final String path = "/api/proposition/user/update/categorization";
+		this.updateDataElement(path, inElement);
+	}
+
 	public DataElement getUserProposition (Long inId) {
 		final String path = "/api/proposition/user/get/" + inId;
 		return this.getResource().path(path).accept(MediaType

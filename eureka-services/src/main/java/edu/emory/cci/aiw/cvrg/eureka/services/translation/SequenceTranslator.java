@@ -29,7 +29,7 @@ import org.protempa.PropositionDefinition;
 import com.google.inject.Inject;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.Sequence;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.Sequence.DataElementField;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.DataElementField;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.Sequence
 	.RelatedDataElementField;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.SystemElement;
@@ -59,7 +59,6 @@ public class SequenceTranslator implements
 	private final TimeUnitDao timeUnitDao;
 	private final RelationOperatorDao relationOperatorDao;
 	private final SystemPropositionFinder finder;
-	private Long userId;
 
 	@Inject
 	public SequenceTranslator(PropositionDao inInPropositionDao,
@@ -72,10 +71,6 @@ public class SequenceTranslator implements
 		this.extendedProps = new HashMap<String, ExtendedProposition>();
 	}
 
-	public void setUserId (Long inUserId) {
-		this.userId = inUserId;
-	}
-
 	@Override
 	public HighLevelAbstraction translateFromElement(Sequence element) {
 		HighLevelAbstraction result = new HighLevelAbstraction();
@@ -83,11 +78,13 @@ public class SequenceTranslator implements
 		        element);
 
 		List<Proposition> abstractedFrom = new ArrayList<Proposition>();
-		createExtendedProposition(element.getPrimaryDataElement());
+		createExtendedProposition(element.getPrimaryDataElement(),
+			element.getUserId());
 		result.setPrimaryProposition(extendedProps.get(element
 			.getPrimaryDataElement().getDataElementKey()));
 		for (RelatedDataElementField rde : element.getRelatedDataElements()) {
-			createExtendedProposition(rde.getDataElementField());
+			createExtendedProposition(rde.getDataElementField(),
+				element.getUserId());
 			abstractedFrom.add(getOrCreateProposition(rde.getDataElementField()
 			        .getDataElementKey(), element));
 		}
@@ -102,15 +99,17 @@ public class SequenceTranslator implements
 	}
 
 	private Proposition getOrCreateProposition(String key, Sequence element) {
-		Proposition proposition = propositionDao.getByUserAndKey(this.userId, key);
+		Proposition proposition = propositionDao.getByUserAndKey(element
+			.getUserId(),key);
 		if (proposition == null) {
-			PropositionDefinition propDef = finder.find(userId, key);
+			PropositionDefinition propDef = finder.find(element.getUserId(),
+				key);
 			SystemProposition sysProp = new SystemProposition();
 			sysProp.setKey(key);
 			sysProp.setInSystem(true);
 			sysProp.setDisplayName(propDef.getDisplayName());
 			sysProp.setAbbrevDisplayName(propDef.getAbbreviatedDisplayName());
-			sysProp.setUserId(userId);
+			sysProp.setUserId(element.getUserId());
 			sysProp.setCreated(element.getCreated());
 			sysProp.setLastModified(element.getLastModified());
 			proposition = sysProp;
@@ -118,7 +117,8 @@ public class SequenceTranslator implements
 		return proposition;
 	}
 
-	private void createExtendedProposition(DataElementField dataElement) {
+	private void createExtendedProposition(DataElementField dataElement,
+		Long userId) {
 		if (!this.extendedProps.containsKey(dataElement.getDataElementKey())) {
 			ExtendedProposition ep = new ExtendedProposition();
 			Proposition proposition = this.propositionDao.getByUserAndKey(
@@ -126,8 +126,8 @@ public class SequenceTranslator implements
 			if (proposition == null) {
 				SystemElement element = PropositionUtil.wrap(
 					this.finder.find(
-						this.userId, dataElement.getDataElementKey()),
-					true, this.userId, this.finder);
+						userId, dataElement.getDataElementKey()),
+					true, userId, this.finder);
 				SystemPropositionTranslator translator = new
 					SystemPropositionTranslator(finder);
 				proposition = translator.translateFromElement(element);

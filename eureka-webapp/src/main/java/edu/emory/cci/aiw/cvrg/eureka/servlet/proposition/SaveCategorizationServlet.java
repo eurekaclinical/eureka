@@ -49,7 +49,11 @@ public class SaveCategorizationServlet extends HttpServlet {
 		element.setUserId(user.getId());
 
 		try {
-			servicesClient.saveCategoricalElement(element);
+			if (element.getId() == null) {
+				servicesClient.saveCategoricalElement(element);
+			} else {
+				servicesClient.updateCategoricalElement(element);
+			}
 		} catch (ClientException e) {
 			req.setAttribute("error", e.getMessage());
 		}
