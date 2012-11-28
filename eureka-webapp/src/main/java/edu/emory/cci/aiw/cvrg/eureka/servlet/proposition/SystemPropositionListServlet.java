@@ -30,6 +30,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang.StringUtils;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,15 +46,18 @@ public class SystemPropositionListServlet extends HttpServlet {
 
 	private JsonTreeData createData(SystemElement element) {
 		JsonTreeData d = new JsonTreeData();
+		d.setState("closed");
 		d.setData(this.getDisplayName(element));
 		d.setKeyVal("id", element.getKey());
 
+		String properties = StringUtils.join(element.getProperties(), ",");
+		d.setKeyVal("data-properties", properties);
 		// SBA - not implemented for for sub-children so I need to set it
 		// manually for now.
 		// if (proposition.isParent() || proposition.getChildren().size() > 0) {
 		// d.setKeyVal("class", "jstree-closed");
 		// }
-		d.setKeyVal("class", "jstree-closed");
+//		d.setKeyVal("class", "jstree-closed");
 		d.setKeyVal("data-space", "system");
 		d.setKeyVal("data-type", element.getSystemType().toString());
 		d.setKeyVal("data-proposition", element.getKey());

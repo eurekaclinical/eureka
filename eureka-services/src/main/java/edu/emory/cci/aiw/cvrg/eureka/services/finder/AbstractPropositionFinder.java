@@ -56,7 +56,7 @@ public abstract class AbstractPropositionFinder<U, K> {
 		}
 
 		PropositionDefinition propDef = (PropositionDefinition) element.getValue();
-		this.prefetch(inUserId, propDef);
+//		this.prefetch(inUserId, propDef);
 		return propDef;
 	}
 

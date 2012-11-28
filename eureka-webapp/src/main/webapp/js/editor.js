@@ -409,7 +409,13 @@ function initTrees() {
 						.data("type", $(data.o[0]).data("type"))
 						.data("subtype", $(data.o[0]).data("subtype") || '')
 						.data("key", $(data.o[0]).data("proposition"));
-					
+
+					// set the properties in the properties select
+					var properties = $(data.o[0]).data('properties').split(",");
+					$(properties).each(function(i, property) {
+						$('select[name="mainDataElementPropertyName"]').append($('<option></option>').attr('value', property).text(property));
+					});
+
 					// check that all types in the categorization are the same
 					if ($(sortable).data('drop-type') === 'multiple' && $(sortable).data("proptype") !== "empty") {
 						if ($(sortable).data("proptype") !== $(newItem).data("type")) {

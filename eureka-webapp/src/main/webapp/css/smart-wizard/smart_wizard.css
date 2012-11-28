@@ -14,7 +14,8 @@
   border: 0px solid #CCC;
   overflow:visible;
   float:left;
-  width:980px;
+  /* width:980px; */
+	width: 100%;
 }
 .swMain .stepContainer {
   display:block;

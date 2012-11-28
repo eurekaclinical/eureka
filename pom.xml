@@ -44,6 +44,7 @@
 		<jaxb-version>2.2.4-1</jaxb-version>
 		<commons-io-version>2.1</commons-io-version>
 		<commons-fileupload-version>1.2.2</commons-fileupload-version>
+		<commons-lang-version>2.6</commons-lang-version>
 		<eureka-version>1.6-SNAPSHOT</eureka-version>
 		<protempa-version>2.0.2</protempa-version>
 		<aiw-i2b2-etl-version>1.0.2</aiw-i2b2-etl-version>
@@ -563,6 +564,11 @@
 				<groupId>commons-fileupload</groupId>
 				<artifactId>commons-fileupload</artifactId>
 				<version>${commons-fileupload-version}</version>
+			</dependency>
+			<dependency>
+				<groupId>commons-lang</groupId>
+				<artifactId>commons-lang</artifactId>
+				<version>${commons-lang-version}</version>
 			</dependency>
 			<dependency>
 				<groupId>edu.emory.cci.aiw.cvrg</groupId>
