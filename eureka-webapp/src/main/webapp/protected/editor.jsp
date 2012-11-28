@@ -300,7 +300,7 @@
 																			</select>
 																		</td>
 																		<td>
-																			<select name="propositionSelect"></select>
+																			<select name="propositionSelect" style="width: 200px"></select>
 																		</td>
 																		<td>
 																			by
@@ -379,7 +379,7 @@
 																			</select>
 																		</td>
 																		<td>
-																			<select name="propositionSelect"></select>
+																			<select name="propositionSelect" style="width: 200px"></select>
 																		</td>
 																		<td>
 																			by
