@@ -27,12 +27,10 @@ import org.protempa.PropositionDefinition;
 import com.google.inject.Inject;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.CategoricalElement;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.CategoricalElement
-	.CategoricalType;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.CategoricalElement.CategoricalType;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.DataElement;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.Categorization;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.Categorization
-	.CategorizationType;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.Categorization.CategorizationType;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.Proposition;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.SystemProposition;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.PropositionDao;
@@ -44,31 +42,42 @@ import edu.emory.cci.aiw.cvrg.eureka.services.finder.SystemPropositionFinder;
  * propositions.
  */
 public final class CategorizationTranslator implements
-	PropositionTranslator<CategoricalElement, Categorization> {
+        PropositionTranslator<CategoricalElement, Categorization> {
 
 	private final PropositionDao propositionDao;
 	private final TimeUnitDao timeUnitDao;
 	private final SystemPropositionFinder finder;
 	private final SequenceTranslator sequenceTranslator;
 	private final SystemPropositionTranslator systemPropositionTranslator;
+	private final CategorizationTranslator categorizationTranslator;
+	private final FrequencySliceTranslator frequencySliceTranslator;
+	private final FrequencyLowLevelAbstractionTranslator frequencyLowLevelAbstractionTranslator;
 
 	@Inject
-	public CategorizationTranslator(PropositionDao inInPropositionDao,
-		TimeUnitDao inTimeUnitDao, SystemPropositionFinder inFinder,
-		SequenceTranslator inSequenceTranslator, SystemPropositionTranslator
-		inSystemPropositionTranslator) {
+	public CategorizationTranslator(
+	        PropositionDao inInPropositionDao,
+	        TimeUnitDao inTimeUnitDao,
+	        SystemPropositionFinder inFinder,
+	        SequenceTranslator inSequenceTranslator,
+	        SystemPropositionTranslator inSystemPropositionTranslator,
+	        CategorizationTranslator inCategorizationTranslator,
+	        FrequencySliceTranslator inFrequencySliceTranslator,
+	        FrequencyLowLevelAbstractionTranslator inFrequencyLowLevelAbstractionTranslator) {
 		this.propositionDao = inInPropositionDao;
 		this.timeUnitDao = inTimeUnitDao;
 		this.finder = inFinder;
 		this.sequenceTranslator = inSequenceTranslator;
 		this.systemPropositionTranslator = inSystemPropositionTranslator;
+		this.categorizationTranslator = inCategorizationTranslator;
+		this.frequencySliceTranslator = inFrequencySliceTranslator;
+		this.frequencyLowLevelAbstractionTranslator = inFrequencyLowLevelAbstractionTranslator;
 	}
 
 	@Override
 	public Categorization translateFromElement(CategoricalElement element) {
 		Categorization result = new Categorization();
-		PropositionTranslatorUtil.populateCommonPropositionFields(
-			result, element);
+		PropositionTranslatorUtil.populateCommonPropositionFields(result,
+		        element);
 
 		List<Proposition> inverseIsA = new ArrayList<Proposition>();
 		for (DataElement de : element.getChildren()) {
@@ -83,12 +92,12 @@ public final class CategorizationTranslator implements
 	}
 
 	private Proposition getOrCreateProposition(String key,
-		CategoricalElement element) {
+	        CategoricalElement element) {
 		Proposition proposition = this.propositionDao.getByUserAndKey(
-			element.getUserId(), key);
+		        element.getUserId(), key);
 		if (proposition == null) {
 			PropositionDefinition propDef = this.finder.find(
-				element.getUserId(), key);
+			        element.getUserId(), key);
 			SystemProposition sysProp = new SystemProposition();
 			sysProp.setKey(key);
 			sysProp.setInSystem(true);
@@ -102,8 +111,7 @@ public final class CategorizationTranslator implements
 		return proposition;
 	}
 
-	private CategorizationType checkPropositionType(CategoricalElement
-		element) {
+	private CategorizationType checkPropositionType(CategoricalElement element) {
 		switch (element.getCategoricalType()) {
 			case ABSTRACTION:
 				return CategorizationType.ABSTRACTION;
@@ -121,17 +129,19 @@ public final class CategorizationTranslator implements
 	}
 
 	@Override
-	public CategoricalElement translateFromProposition(Categorization
-		proposition) {
+	public CategoricalElement translateFromProposition(
+	        Categorization proposition) {
 		CategoricalElement result = new CategoricalElement();
 
-		PropositionTranslatorUtil.populateCommonDataElementFields(
-			result, proposition);
+		PropositionTranslatorUtil.populateCommonDataElementFields(result,
+		        proposition);
 		List<DataElement> children = new ArrayList<DataElement>();
 		for (Proposition p : proposition.getInverseIsA()) {
-			PropositionTranslatorVisitor visitor = new
-				PropositionTranslatorVisitor(this
-				.systemPropositionTranslator, this.sequenceTranslator, this);
+			PropositionTranslatorVisitor visitor = new PropositionTranslatorVisitor(
+			        this.systemPropositionTranslator, this.sequenceTranslator,
+			        this.categorizationTranslator,
+			        this.frequencySliceTranslator,
+			        this.frequencyLowLevelAbstractionTranslator);
 			p.accept(visitor);
 			children.add(visitor.getDataElement());
 		}
