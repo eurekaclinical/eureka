@@ -95,7 +95,7 @@ public class EditorHomeServlet extends HttpServlet {
 		LOGGER.debug("got username {}", userName);
 		ServicesClient servicesClient = new ServicesClient(eurekaServicesUrl);
 		User user = servicesClient.getUserByName(userName);
-		List<DataElement> props = servicesClient.getUserPropositions(user);
+		List<DataElement> props = servicesClient.getUserPropositions(user.getId());
 		SimpleDateFormat df = new SimpleDateFormat("MM/dd/yyyy");
 		for (DataElement proposition : props) {
 			if (!proposition.isInSystem()) {
