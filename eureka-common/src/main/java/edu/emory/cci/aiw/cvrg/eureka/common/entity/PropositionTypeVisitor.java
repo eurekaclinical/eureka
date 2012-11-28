@@ -20,19 +20,20 @@
 package edu.emory.cci.aiw.cvrg.eureka.common.entity;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.DataElement;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.LowLevelAbstraction.CreatedFrom;
 
 public final class PropositionTypeVisitor implements PropositionEntityVisitor {
 
 	private DataElement.Type type;
-	
+
 	public DataElement.Type getType() {
 		return type;
 	}
-	
+
 	@Override
-    public void visit(SystemProposition proposition) {
+	public void visit(SystemProposition proposition) {
 		this.type = DataElement.Type.SYSTEM;
-    }
+	}
 
 	@Override
 	public void visit(Categorization categorization) {
@@ -44,4 +45,20 @@ public final class PropositionTypeVisitor implements PropositionEntityVisitor {
 		this.type = DataElement.Type.SEQUENCE;
 	}
 
+	@Override
+	public void visit(LowLevelAbstraction lowLevelAbstraction) {
+		if (lowLevelAbstraction.getCreatedFrom() == CreatedFrom.FREQUENCY) {
+			this.type = DataElement.Type.FREQUENCY;
+		} else if (lowLevelAbstraction.getCreatedFrom() == CreatedFrom.VALUE_THRESHOLD) {
+			this.type = DataElement.Type.VALUE_THRESHOLD;
+		} else {
+			throw new IllegalArgumentException(
+			        "Low-level abstractions must be created from FREQUENCY or VALUE_THRESHOLD");
+		}
+	}
+
+	@Override
+	public void visit(SliceAbstraction sliceAbstraction) {
+		this.type = DataElement.Type.FREQUENCY;
+	}
 }

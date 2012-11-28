@@ -26,4 +26,9 @@ public interface PropositionEntityVisitor {
 	public void visit(Categorization categorization);
 	
 	public void visit(HighLevelAbstraction highLevelAbstraction);
+
+	public void visit(LowLevelAbstraction lowLevelAbstraction);
+	
+	public void visit(SliceAbstraction sliceAbstraction);
+	
 }

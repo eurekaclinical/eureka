@@ -20,21 +20,23 @@
 package edu.emory.cci.aiw.cvrg.eureka.common.entity;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
-public final class PropositionChildrenVisitor implements PropositionEntityVisitor {
+public final class PropositionChildrenVisitor implements
+        PropositionEntityVisitor {
 
 	private List<Proposition> children;
-	
+
 	public List<Proposition> getChildren() {
 		return children;
 	}
-	
+
 	@Override
 	public void visit(SystemProposition proposition) {
 		this.children = new ArrayList<Proposition>();
 	}
-	
+
 	@Override
 	public void visit(Categorization categorization) {
 		this.children = categorization.getInverseIsA();
@@ -43,6 +45,17 @@ public final class PropositionChildrenVisitor implements PropositionEntityVisito
 	@Override
 	public void visit(HighLevelAbstraction highLevelAbstraction) {
 		this.children = highLevelAbstraction.getAbstractedFrom();
+	}
+
+	@Override
+	public void visit(LowLevelAbstraction lowLevelAbstraction) {
+		this.children = lowLevelAbstraction.getAbstractedFrom();
+	}
+
+	@Override
+	public void visit(SliceAbstraction sliceAbstraction) {
+		this.children = Collections.singletonList(sliceAbstraction
+		        .getAbstractedFrom());
 	}
 
 }
