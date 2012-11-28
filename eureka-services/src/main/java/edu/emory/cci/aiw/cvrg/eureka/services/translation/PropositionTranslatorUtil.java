@@ -20,7 +20,13 @@
 package edu.emory.cci.aiw.cvrg.eureka.services.translation;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.DataElement;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.DataElementField;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.ExtendedProposition;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.PropertyConstraint;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.Proposition;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.ValueComparator;
+import edu.emory.cci.aiw.cvrg.eureka.services.dao.PropositionDao;
+import edu.emory.cci.aiw.cvrg.eureka.services.dao.TimeUnitDao;
 
 /**
  * Contains common utility functions for all implementations of
@@ -35,7 +41,7 @@ class PropositionTranslatorUtil {
 	/**
 	 * Populates the fields common to all propositions based on the given
 	 * proposition.
-	 *
+	 * 
 	 * @param proposition
 	 *            the {@link Proposition} to populate. Modified as a result of
 	 *            calling this method.
@@ -61,7 +67,7 @@ class PropositionTranslatorUtil {
 	/**
 	 * Populates the fields common to all data elements based on the given
 	 * proposition.
-	 *
+	 * 
 	 * @param dataElement
 	 *            the {@link DataElement} to populate. Modified as a result of
 	 *            calling this method.
@@ -77,5 +83,52 @@ class PropositionTranslatorUtil {
 		dataElement.setCreated(proposition.getCreated());
 		dataElement.setLastModified(proposition.getLastModified());
 		dataElement.setUserId(proposition.getUserId());
+	}
+
+	static ExtendedProposition createExtendedProposition(
+	        DataElementField dataElement, Long userId, PropositionDao propositionDao, TimeUnitDao timeUnitDao) {
+		ExtendedProposition ep = new ExtendedProposition();
+		ep.setProposition(propositionDao.getByUserAndKey(userId,
+		        dataElement.getDataElementKey()));
+		if (dataElement.getHasDuration()) {
+			ep.setMinDuration(dataElement.getMinDuration());
+			ep.setMinDurationTimeUnit(timeUnitDao.retrieve(dataElement.getMinDurationUnits()));
+			ep.setMaxDuration(dataElement.getMaxDuration());
+			ep.setMaxDurationTimeUnit(timeUnitDao.retrieve(dataElement.getMaxDurationUnits()));
+		}
+		if (dataElement.getHasPropertyConstraint()) {
+			PropertyConstraint pc = new PropertyConstraint();
+			pc.setPropertyName(dataElement.getProperty());
+			pc.setValue(dataElement.getPropertyValue());
+			ValueComparator vc = new ValueComparator();
+			vc.setName("EQUAL_TO");
+			ep.setPropertyConstraint(pc);
+		}
+
+		return ep;
+	}
+	
+	static DataElementField createDataElementField(ExtendedProposition ep) {
+		DataElementField dataElement = new DataElementField();
+		dataElement.setDataElementKey(ep.getProposition().getKey());
+		if (ep.getMinDuration() != null) {
+			dataElement.setHasDuration(true);
+			dataElement.setMinDuration(ep.getMinDuration());
+			dataElement.setMinDurationUnits(ep.getMinDurationTimeUnit()
+			        .getId());
+		}
+		if (ep.getMaxDuration() != null) {
+			dataElement.setHasDuration(true);
+			dataElement.setMaxDuration(ep.getMaxDuration());
+			dataElement.setMaxDurationUnits(ep.getMaxDurationTimeUnit()
+			        .getId());
+		}
+		if (ep.getPropertyConstraint() != null) {
+			dataElement.setHasPropertyConstraint(true);
+			dataElement.setProperty(ep.getPropertyConstraint()
+			        .getPropertyName());
+			dataElement.setPropertyValue(ep.getPropertyConstraint().getValue());
+		}
+		return dataElement;
 	}
 }
