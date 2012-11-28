@@ -23,6 +23,8 @@ import com.google.inject.Inject;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.CategoricalElement;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.DataElementVisitor;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.Frequency;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.ResultThresholds;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.Sequence;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.SystemElement;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.Proposition;
@@ -32,16 +34,23 @@ public final class DataElementTranslatorVisitor implements DataElementVisitor {
 	private final SystemPropositionTranslator systemPropositionTranslator;
 	private final SequenceTranslator sequenceTranslator;
 	private final CategorizationTranslator categorizationTranslator;
+	private final FrequencySliceTranslator frequencySliceTranslator;
+	private final FrequencyLowLevelAbstractionTranslator frequencyLowLevelAbstractionTranslator;
+
 	private Proposition proposition;
 
 	@Inject
-	public DataElementTranslatorVisitor(SystemPropositionTranslator
-		inSystemPropositionTranslator, SequenceTranslator
-		inSequenceTranslator, CategorizationTranslator
-		inCategorizationTranslator) {
+	public DataElementTranslatorVisitor(
+	        SystemPropositionTranslator inSystemPropositionTranslator,
+	        SequenceTranslator inSequenceTranslator,
+	        CategorizationTranslator inCategorizationTranslator,
+	        FrequencySliceTranslator inFrequencySliceTranslator,
+	        FrequencyLowLevelAbstractionTranslator inFrequencyLowLevelAbstractionTranslator) {
 		this.systemPropositionTranslator = inSystemPropositionTranslator;
 		this.sequenceTranslator = inSequenceTranslator;
 		this.categorizationTranslator = inCategorizationTranslator;
+		this.frequencySliceTranslator = inFrequencySliceTranslator;
+		this.frequencyLowLevelAbstractionTranslator = inFrequencyLowLevelAbstractionTranslator;
 	}
 
 	public Proposition getProposition() {
@@ -50,19 +59,35 @@ public final class DataElementTranslatorVisitor implements DataElementVisitor {
 
 	@Override
 	public void visit(SystemElement systemElement) {
-		proposition = this.systemPropositionTranslator.translateFromElement
-			(systemElement);
+		proposition = this.systemPropositionTranslator
+		        .translateFromElement(systemElement);
 	}
 
 	@Override
 	public void visit(CategoricalElement categoricalElement) {
-		proposition = this.categorizationTranslator.translateFromElement
-			(categoricalElement);
+		proposition = this.categorizationTranslator
+		        .translateFromElement(categoricalElement);
 	}
 
 	@Override
 	public void visit(Sequence sequence) {
 		proposition = this.sequenceTranslator.translateFromElement(sequence);
+	}
+
+	@Override
+	public void visit(Frequency frequency) {
+		if (!frequency.getIsConsecutive()) {
+			proposition = this.frequencySliceTranslator
+			        .translateFromElement(frequency);
+		} else {
+			proposition = this.frequencyLowLevelAbstractionTranslator
+			        .translateFromElement(frequency);
+		}
+	}
+
+	@Override
+	public void visit(ResultThresholds thresholds) {
+
 	}
 
 }
