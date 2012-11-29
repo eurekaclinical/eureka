@@ -130,6 +130,10 @@
 			<artifactId>ehcache</artifactId>
 			<type>pom</type>
 		</dependency>
+		<dependency>
+				<groupId>org.protempa</groupId>
+				<artifactId>protempa-framework</artifactId>
+		</dependency>
 	</dependencies>
 
 </project>
