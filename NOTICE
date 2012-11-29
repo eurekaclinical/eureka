@@ -20,7 +20,6 @@ This project includes:
   Apache ServiceMix :: Bundles :: xstream under The Apache Software License, Version 2.0
   ASM Core under Apache License, Version 2.0
   Code Generation Library under ASF 2.0
-  com.sleepycat:je under Open Source License for Oracle Berkeley DB Java Edition
   Commons BeanUtils Core under The Apache Software License, Version 2.0
   Commons CLI under The Apache Software License, Version 2.0
   Commons Collections under The Apache Software License, Version 2.0
@@ -71,6 +70,7 @@ This project includes:
   JAX-RS provider for JSON content type under The Apache Software License, Version 2.0 or GNU Lesser General Public License (LGPL), Version 2.1
   JAXB API bundle for GlassFish V3 under CDDL 1.1 or GPL2 w/ CPE
   JAXB RI under CDDL 1.1 or GPL2 w/ CPE
+  je under Sleepycat License
   Jersey Test Framework - Core under CDDL 1.1 or GPL2 w/ CPE
   Jersey Test Framework - Grizzly 2 Module under CDDL 1.1 or GPL2 w/ CPE
   jersey-client under CDDL 1.1 or GPL2 w/ CPE

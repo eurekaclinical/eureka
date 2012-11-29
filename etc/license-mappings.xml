@@ -19,12 +19,6 @@
         <license>Oracle Technology Network Development and Distribution License Agreement</license>
     </artifact>
     <artifact>
-        <groupId>com.sleepycat</groupId>
-        <artifactId>je</artifactId>
-        <version>4.1.10</version>
-        <license>Open Source License for Oracle Berkeley DB Java Edition</license>
-    </artifact>
-    <artifact>
         <groupId>commons-beanutils</groupId>
         <artifactId>commons-beanutils</artifactId>
         <version>1.7.0</version>
