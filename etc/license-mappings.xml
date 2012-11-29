@@ -101,12 +101,6 @@
         <license>Apache License, Version 2.0</license>
     </artifact>
     <artifact>
-        <groupId>org.drools</groupId>
-        <artifactId>drools-core</artifactId>
-        <version>4.0.7</version>
-        <license>Apache License, Version 2.0</license>
-    </artifact>
-    <artifact>
         <groupId>org.hibernate.javax.persistence</groupId>
         <artifactId>hibernate-jpa-2.0-api</artifactId>
         <version>1.0.1.Final</version>
@@ -116,12 +110,6 @@
         <groupId>org.terracotta</groupId>
         <artifactId>terracotta-toolkit-1.6-runtime</artifactId>
         <version>5.0.0</version>
-        <license>Apache License, Version 2.0</license>
-    </artifact>
-    <artifact>
-        <groupId>umlsquery</groupId>
-        <artifactId>umls-query</artifactId>
-        <version>1.0</version>
         <license>Apache License, Version 2.0</license>
     </artifact>
 </license-lookup>

@@ -16,17 +16,22 @@ This project includes:
   AntLR under BSD License
   AOP alliance under Public Domain
   Apache POI under The Apache Software License, Version 2.0
+  Apache ServiceMix :: Bundles :: xstream under The Apache Software License, Version 2.0
   ASM Core under Apache License, Version 2.0
   Code Generation Library under ASF 2.0
-  commons-collections under Apache License, Version 2.0
+  com.sleepycat:je under Open Source License for Oracle Berkeley DB Java Edition
+  Commons CLI under The Apache Software License, Version 2.0
+  Commons Collections under The Apache Software License, Version 2.0
+  Commons IO under The Apache Software License, Version 2.0
+  Commons Lang under The Apache Software License, Version 2.0
   Data Mapper for Jackson under The Apache Software License, Version 2.0
   dom4j under BSD License
+  Drools :: Rete-OO Core under The Apache Software License, Version 2.0
   ehcache under The Apache Software License, Version 2.0 or Terracotta Public License
   Ehcache Core under The Apache Software License, Version 2.0
   Eureka Common under Apache License, Version 2.0
   Eureka Services under Apache License, Version 2.0
   FreeMarker under BSD-style license
-  gmbal-api-only under CDDL+GPL
   Google Guice - Core Library under The Apache Software License, Version 2.0
   Google Guice - Extensions - JNDI under The Apache Software License, Version 2.0
   Google Guice - Extensions - Persist under The Apache Software License, Version 2.0
@@ -48,6 +53,7 @@ This project includes:
   JavaBeans Activation Framework (JAF) under Common Development and Distribution License (CDDL) v1.0
   JavaMail API under Common Development and Distribution License (CDDL) v1.0
   Javassist under LGPL 2.1
+  JavaUtil under Apache License, Version 2.0
   javax.inject under The Apache Software License, Version 2.0
   javax.servlet API v.3.0 under CDDL + GPLv2 with classpath exception
   JAX-RS provider for JSON content type under The Apache Software License, Version 2.0 or GNU Lesser General Public License (LGPL), Version 2.1
@@ -67,9 +73,11 @@ This project includes:
   JPA 2.0 API under Sun Binary Code License
   jsr250-api under Commons Development and Distribution License, Version 1.0
   JUnit under Common Public License Version 1.0
-  management-api under CDDL+GPL
+  kXML 2 is a small XML pull parser based on the common XML pull API under BSD style or Public Domain
+  mvel under The Apache Software License, Version 2.0
   net.sf.ehcache:ehcache-terracotta under Apache License, Version 2.0
   org.terracotta:terracotta-toolkit-1.6-runtime under Apache License, Version 2.0
+  Protempa Framework under Apache License, Version 2.0
   servlet-api under Commons Development and Distribution License, Version 1.0
   SLF4J API Module under MIT License
   SLF4J JDK14 Binding under MIT License
