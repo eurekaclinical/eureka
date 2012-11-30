@@ -136,9 +136,6 @@ public class ListUserDefinedPropositionChildrenServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
 	        throws ServletException, IOException {
 
-		Client client = null;
-		client = CommUtils.getClient();
-
 		List<JsonTreeData> l = new ArrayList<JsonTreeData>();
 		String propId = req.getParameter("propId");
 

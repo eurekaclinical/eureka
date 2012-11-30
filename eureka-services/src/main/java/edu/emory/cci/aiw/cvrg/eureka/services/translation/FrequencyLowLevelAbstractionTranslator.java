@@ -28,22 +28,19 @@ import edu.emory.cci.aiw.cvrg.eureka.common.comm.Frequency;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.LowLevelAbstraction;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.TimeUnit;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.PropositionDao;
-import edu.emory.cci.aiw.cvrg.eureka.services.dao.TimeUnitDao;
 
 public final class FrequencyLowLevelAbstractionTranslator implements
         PropositionTranslator<Frequency, LowLevelAbstraction> {
 
 	private Long userId;
 	private final PropositionDao propositionDao;
-	private final TimeUnitDao timeUnitDao;
 
 	@Inject
 	public FrequencyLowLevelAbstractionTranslator(
-	        PropositionDao inPropositionDao, TimeUnitDao inTimeUnitDao) {
+	        PropositionDao inPropositionDao) {
 		propositionDao = inPropositionDao;
-		timeUnitDao = inTimeUnitDao;
 	}
-	
+
 	public void setUserId(Long inUserId) {
 		this.userId = inUserId;
 	}
@@ -73,18 +70,18 @@ public final class FrequencyLowLevelAbstractionTranslator implements
 	@Override
 	public Frequency translateFromProposition(LowLevelAbstraction proposition) {
 		Frequency result = new Frequency();
-		
+
 		PropositionTranslatorUtil.populateCommonDataElementFields(result, proposition);
 		result.setAtLeast(proposition.getMinValues());
 		result.setWithinAtLeast(proposition.getMinGapValues());
 		result.setWithinAtLeastUnits(proposition.getMinGapValuesUnits().getName());
 		result.setWithinAtMost(proposition.getMaxGapValues());
 		result.setWithinAtMostUnits(proposition.getMaxGapValuesUnits().getName());
-		
+
 		DataElementField dataElement = new DataElementField();
 		dataElement.setDataElementKey(proposition.getAbstractedFrom().get(0).getKey());
 		result.setDataElement(dataElement);
-		
+
 		return result;
 	}
 

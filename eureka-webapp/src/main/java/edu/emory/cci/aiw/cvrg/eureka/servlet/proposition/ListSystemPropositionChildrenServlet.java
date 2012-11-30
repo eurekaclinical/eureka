@@ -50,9 +50,7 @@ public class ListSystemPropositionChildrenServlet extends HttpServlet {
     private static final Logger LOGGER = LoggerFactory
             .getLogger(ListSystemPropositionChildrenServlet.class);
 
-    private WebResource webResource;
-
-    private String getDisplayName(DataElement e) {
+	private String getDisplayName(DataElement e) {
         String displayName = "";
 
         if (e.getAbbrevDisplayName() != null
@@ -83,8 +81,6 @@ public class ListSystemPropositionChildrenServlet extends HttpServlet {
         Client client;
 
         client = CommUtils.getClient();
-        this.webResource = client.resource(eurekaServicesUrl);
-
     }
 
     // private JsonTreeData createData(String id, String data) {

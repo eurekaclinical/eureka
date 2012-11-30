@@ -33,9 +33,6 @@ import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.sun.jersey.api.client.Client;
-
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.CommUtils;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.DataElement;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ServicesClient;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.User;
@@ -88,7 +85,6 @@ public class EditorHomeServlet extends HttpServlet {
 		List<JsonTreeData> l = new ArrayList<JsonTreeData>();
 		String eurekaServicesUrl = req.getSession().getServletContext()
 			.getInitParameter("eureka-services-url");
-		Client client = CommUtils.getClient();
 		Principal principal = req.getUserPrincipal();
 		String userName = principal.getName();
 

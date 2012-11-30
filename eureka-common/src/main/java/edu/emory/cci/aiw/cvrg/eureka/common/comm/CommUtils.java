@@ -19,9 +19,6 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.common.comm;
 
-import java.security.KeyManagementException;
-import java.security.NoSuchAlgorithmException;
-
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.config.ClientConfig;
 import com.sun.jersey.api.client.config.DefaultClientConfig;
@@ -52,10 +49,6 @@ public final class CommUtils {
 	 * certificate is available for the machine).
 	 *
 	 * @return A Jersey client capable of making SSL requests.
-	 * @throws KeyManagementException Thrown when the rest client can not be
-	 *             configured for SSL correctly.
-	 * @throws NoSuchAlgorithmException Thrown when the rest client can not be
-	 *             configured for SSL correctly.
 	 */
 	public static Client getClient() {
 		ClientConfig clientConfig = new DefaultClientConfig();

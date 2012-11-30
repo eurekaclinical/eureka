@@ -28,7 +28,7 @@ public final class SystemProposition extends Proposition {
 
 	public enum SystemType {
 		CONSTANT, EVENT, PRIMITIVE_PARAMETER, LOW_LEVEL_ABSTRACTION, HIGH_LEVEL_ABSTRACTION, SLICE_ABSTRACTION
-	};
+	}
 
 	private SystemType systemType;
 

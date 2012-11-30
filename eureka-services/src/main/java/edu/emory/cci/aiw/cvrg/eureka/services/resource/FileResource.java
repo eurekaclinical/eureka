@@ -35,9 +35,7 @@ import com.google.inject.Inject;
 import com.sun.jersey.api.client.ClientResponse.Status;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.FileUpload;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.User;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.FileDao;
-import edu.emory.cci.aiw.cvrg.eureka.services.dao.UserDao;
 
 /**
  * Operations related to a data file (upload, status, etc)
@@ -55,22 +53,14 @@ public class FileResource {
 	private final FileDao fileDao;
 
 	/**
-	 * The data access object used to work with user objects in the data store.
-	 */
-	private final UserDao userDao;
-
-	/**
 	 * Create an object with the give data access object.
 	 *
 	 * @param inFileDao The data access object used to communicate with
 	 *            {@link FileDao} objects in the data store.
-	 * @param inUserDao The data access object used to fetch information about
-	 *            {@link User} objects in the data store.
 	 */
 	@Inject
-	public FileResource(FileDao inFileDao, UserDao inUserDao) {
+	public FileResource(FileDao inFileDao) {
 		this.fileDao = inFileDao;
-		this.userDao = inUserDao;
 	}
 
 	/**

@@ -20,6 +20,7 @@
 package edu.emory.cci.aiw.cvrg.eureka.servlet.proposition;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -27,14 +28,14 @@ import java.util.Map;
 
 
 public class JsonTreeData {
-	
-	private List<JsonTreeData> children = new ArrayList<JsonTreeData>();	
+
+	private List<JsonTreeData> children = new ArrayList<JsonTreeData>();
 	private Map<String,String> attr = new HashMap<String, String>();
 	private String id;
 	private String data;
 	private String type;
     private String state;
-	
+
 	public List<JsonTreeData> getChildren() {
 		return children;
 	}
@@ -42,11 +43,9 @@ public class JsonTreeData {
 	public void setChildren(List<JsonTreeData> nodes) {
 		this.children = nodes;
 	}
-	
+
 	public void addNodes(JsonTreeData ...thechildren) {
-		for (JsonTreeData t : thechildren) {
-			children.add(t);	
-		}
+		Collections.addAll(this.children, thechildren);
 	}
 
 	public String getId() {
@@ -57,7 +56,7 @@ public class JsonTreeData {
 		this.id = id;
 	}
 
-	
+
 	public String getData() {
 		return data;
 	}
@@ -73,7 +72,7 @@ public class JsonTreeData {
 	public void setAttr(Map<String, String> attr) {
 		this.attr = attr;
 	}
-	
+
 	public void setKeyVal(String key, String val) {
 		attr.put(key, val);
 	}
@@ -85,8 +84,8 @@ public class JsonTreeData {
 	public void setType(String type) {
 		this.type = type;
 	}
-	
-    
+
+
     public void setState(String state) {
         this.state = state;
     }

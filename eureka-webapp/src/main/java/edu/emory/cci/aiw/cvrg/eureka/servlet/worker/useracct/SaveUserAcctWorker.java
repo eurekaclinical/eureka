@@ -54,7 +54,7 @@ public class SaveUserAcctWorker implements ServletWorker {
 		String verifyPassword = req.getParameter("verifyPassword");
 		if (!verifyPassword.equals(newPassword)) {
 			resp.setContentType("text/html");
-			resp.setStatus(resp.SC_BAD_REQUEST);
+			resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 			resp.getWriter().close();
 			return;
 		}
@@ -72,10 +72,10 @@ public class SaveUserAcctWorker implements ServletWorker {
 		LOGGER.debug("status = " + response.getClientResponseStatus().getStatusCode());
 
 		resp.setContentType("text/html");
-		if (response.getClientResponseStatus().getStatusCode() == resp.SC_OK) {
-			resp.setStatus(resp.SC_OK);
+		if (response.getClientResponseStatus().getStatusCode() == HttpServletResponse.SC_OK) {
+			resp.setStatus(HttpServletResponse.SC_OK);
 		} else {
-			resp.setStatus(resp.SC_BAD_REQUEST);
+			resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 		}
 		resp.getWriter().write(response.getClientResponseStatus().getStatusCode());
 		resp.getWriter().close();

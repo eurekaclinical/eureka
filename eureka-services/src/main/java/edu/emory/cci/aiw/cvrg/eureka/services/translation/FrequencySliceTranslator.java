@@ -25,7 +25,6 @@ import edu.emory.cci.aiw.cvrg.eureka.common.comm.Frequency;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.SliceAbstraction;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.PropositionDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.TimeUnitDao;
-import edu.emory.cci.aiw.cvrg.eureka.services.finder.SystemPropositionFinder;
 
 public final class FrequencySliceTranslator implements
         PropositionTranslator<Frequency, SliceAbstraction> {
@@ -33,14 +32,12 @@ public final class FrequencySliceTranslator implements
 	private Long userId;
 	private final PropositionDao propositionDao;
 	private final TimeUnitDao timeUnitDao;
-	private final SystemPropositionFinder finder;
-	
+
 	@Inject
 	public FrequencySliceTranslator(PropositionDao inPropositionDao,
-	        TimeUnitDao inTimeUnitDao, SystemPropositionFinder inFinder) {
+	        TimeUnitDao inTimeUnitDao) {
 		propositionDao = inPropositionDao;
 		timeUnitDao = inTimeUnitDao;
-		finder = inFinder;
 	}
 
 	public void setUserId(Long inUserId) {

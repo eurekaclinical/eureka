@@ -34,7 +34,6 @@ import edu.emory.cci.aiw.cvrg.eureka.common.entity.Categorization.Categorization
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.Proposition;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.SystemProposition;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.PropositionDao;
-import edu.emory.cci.aiw.cvrg.eureka.services.dao.TimeUnitDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.finder.SystemPropositionFinder;
 
 /**
@@ -45,11 +44,9 @@ public final class CategorizationTranslator implements
 		PropositionTranslator<CategoricalElement, Categorization> {
 
 	private final PropositionDao propositionDao;
-	private final TimeUnitDao timeUnitDao;
 	private final SystemPropositionFinder finder;
 	private final SequenceTranslator sequenceTranslator;
 	private final SystemPropositionTranslator systemPropositionTranslator;
-	private final CategorizationTranslator categorizationTranslator;
 	private final FrequencySliceTranslator frequencySliceTranslator;
 	private final FrequencyLowLevelAbstractionTranslator frequencyLowLevelAbstractionTranslator;
 	private final ResultThresholdsTranslator resultThresholdsTranslator;
@@ -57,20 +54,16 @@ public final class CategorizationTranslator implements
 	@Inject
 	public CategorizationTranslator(
 			PropositionDao inInPropositionDao,
-			TimeUnitDao inTimeUnitDao,
 			SystemPropositionFinder inFinder,
 			SequenceTranslator inSequenceTranslator,
 			SystemPropositionTranslator inSystemPropositionTranslator,
-			CategorizationTranslator inCategorizationTranslator,
 			FrequencySliceTranslator inFrequencySliceTranslator,
 			FrequencyLowLevelAbstractionTranslator inFrequencyLowLevelAbstractionTranslator,
 			ResultThresholdsTranslator inResultThresholdsTranslator) {
 		this.propositionDao = inInPropositionDao;
-		this.timeUnitDao = inTimeUnitDao;
 		this.finder = inFinder;
 		this.sequenceTranslator = inSequenceTranslator;
 		this.systemPropositionTranslator = inSystemPropositionTranslator;
-		this.categorizationTranslator = inCategorizationTranslator;
 		this.frequencySliceTranslator = inFrequencySliceTranslator;
 		this.frequencyLowLevelAbstractionTranslator = inFrequencyLowLevelAbstractionTranslator;
 		this.resultThresholdsTranslator = inResultThresholdsTranslator;
@@ -142,7 +135,7 @@ public final class CategorizationTranslator implements
 		for (Proposition p : proposition.getInverseIsA()) {
 			PropositionTranslatorVisitor visitor = new PropositionTranslatorVisitor(
 					this.systemPropositionTranslator, this.sequenceTranslator,
-					this.categorizationTranslator,
+					this,
 					this.frequencySliceTranslator,
 					this.frequencyLowLevelAbstractionTranslator,
 					this.resultThresholdsTranslator);

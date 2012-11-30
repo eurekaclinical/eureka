@@ -134,7 +134,7 @@ public class FreeMarkerEmailSender implements EmailSender {
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("plainTextPassword", inNewPassword);
 		sendMessage(inUser, "password_reset.ftl",
-				this.serviceProperties.getPasswordResetEmailSubject());
+				this.serviceProperties.getPasswordResetEmailSubject(), params);
 	}
 
 	/**

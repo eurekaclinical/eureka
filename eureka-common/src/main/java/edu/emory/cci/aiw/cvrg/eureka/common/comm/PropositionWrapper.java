@@ -26,7 +26,7 @@ import java.util.List;
 
 /**
  * Represents messages containing data element definitions.
- * 
+ *
  * @author hrathod
  */
 public class PropositionWrapper implements Serializable {
@@ -58,7 +58,7 @@ public class PropositionWrapper implements Serializable {
 
 	/**
 	 * Returns a user data element definition's id.
-	 * 
+	 *
 	 * @return a {@link Long}. Will be <code>null</code> for a system data
 	 *         element definition.
 	 */
@@ -68,7 +68,7 @@ public class PropositionWrapper implements Serializable {
 
 	/**
 	 * Sets a user data element definition's id.
-	 * 
+	 *
 	 * @param id
 	 *            a {@link Long}.
 	 */
@@ -78,7 +78,7 @@ public class PropositionWrapper implements Serializable {
 
 	/**
 	 * Returns a system data element definition's id string.
-	 * 
+	 *
 	 * @return a {@link String}. Will be <code>null</code> for a user data
 	 *         element definition.
 	 */
@@ -88,7 +88,7 @@ public class PropositionWrapper implements Serializable {
 
 	/**
 	 * Sets a system data element definition's id string.
-	 * 
+	 *
 	 * @param inKey
 	 *            a {@link String}.
 	 */
@@ -98,7 +98,7 @@ public class PropositionWrapper implements Serializable {
 
 	/**
 	 * Returns a user data element definition's user id.
-	 * 
+	 *
 	 * @return a {@link Long}.
 	 */
 	public Long getUserId() {
@@ -107,7 +107,7 @@ public class PropositionWrapper implements Serializable {
 
 	/**
 	 * Sets a user data element definition's user id.
-	 * 
+	 *
 	 * @param userId
 	 *            a {@link Long}.
 	 */
@@ -117,7 +117,7 @@ public class PropositionWrapper implements Serializable {
 
 	/**
 	 * Gets the data element definition's abbreviated display name.
-	 * 
+	 *
 	 * @return a {@link String}. May be <code>null</code> if no abbreviated
 	 *         display name is specified.
 	 */
@@ -127,7 +127,7 @@ public class PropositionWrapper implements Serializable {
 
 	/**
 	 * Sets the data element definition's abbreviated display name.
-	 * 
+	 *
 	 * @param abbrevDisplayName
 	 *            a {@link String}. Passing in <code>null</code> will set the
 	 *            abbreviated display name as unspecified.
@@ -138,7 +138,7 @@ public class PropositionWrapper implements Serializable {
 
 	/**
 	 * Gets the data element definition's display name.
-	 * 
+	 *
 	 * @return a {@link String}. A value of <code>null</code> means that no
 	 *         display name is specified.
 	 */
@@ -148,7 +148,7 @@ public class PropositionWrapper implements Serializable {
 
 	/**
 	 * Sets the data element definition's display name.
-	 * 
+	 *
 	 * @param displayName
 	 *            a {@link String}. Passing in <code>null</code> will set the
 	 *            abbreviated display name as unspecified.
@@ -159,7 +159,7 @@ public class PropositionWrapper implements Serializable {
 
 	/**
 	 * Gets the type of a user data element definition.
-	 * 
+	 *
 	 * @return a {@link Type}. Will be <code>null</code> if a system data
 	 *         element definition.
 	 */
@@ -169,7 +169,7 @@ public class PropositionWrapper implements Serializable {
 
 	/**
 	 * Sets the type of a user data element definition.
-	 * 
+	 *
 	 * @param type
 	 *            a {@link Type}. Should be <code>null</code> for a system data
 	 *            element definition.
@@ -181,7 +181,7 @@ public class PropositionWrapper implements Serializable {
 	/**
 	 * Gets whether this data element definition is a system or user data
 	 * element definition.
-	 * 
+	 *
 	 * @return <code>true</code> if a system data element definition,
 	 *         <code>false</code> if a user data element definition.
 	 */
@@ -192,7 +192,7 @@ public class PropositionWrapper implements Serializable {
 	/**
 	 * Sets whether this data element definition is a aystem or user data
 	 * element definition.
-	 * 
+	 *
 	 * @param inSystem
 	 *            <code>true</code> if a system data element definition,
 	 *            <code>false</code> if a user data element definition.
@@ -203,7 +203,7 @@ public class PropositionWrapper implements Serializable {
 
 	/**
 	 * Gets the creation date of this data element definition.
-	 * 
+	 *
 	 * @return the creation {@link Date}, or <code>null</code> if the creation
 	 *         date is unspecified.
 	 */
@@ -213,7 +213,7 @@ public class PropositionWrapper implements Serializable {
 
 	/**
 	 * Sets the creation date of this data element definition.
-	 * 
+	 *
 	 * @param inCreated
 	 *            the creation {@link Date}, or <code>null</code> if the
 	 *            creation date is unspecified.
@@ -224,7 +224,7 @@ public class PropositionWrapper implements Serializable {
 
 	/**
 	 * Gets the last modified date of this data element definition.
-	 * 
+	 *
 	 * @return the last modified {@link Date}, or <code>null</code> if the last
 	 *         modified date is unspecified.
 	 */
@@ -234,7 +234,7 @@ public class PropositionWrapper implements Serializable {
 
 	/**
 	 * Sets the last modified date of this data element definition.
-	 * 
+	 *
 	 * @param inLastModified
 	 *            the last modified {@link Date}, or <code>null</code> if the
 	 *            last modified date is unspecified.
@@ -246,7 +246,7 @@ public class PropositionWrapper implements Serializable {
 	/**
 	 * Gets whether or not the children of this proposition are included in the
 	 * message.
-	 * 
+	 *
 	 * @return <code>true</code> if the children of this proposition are
 	 *         included, <code>false</code> otherwise.
 	 */
@@ -257,7 +257,7 @@ public class PropositionWrapper implements Serializable {
 	/**
 	 * Sets whether or not the children of this proposition are included in the
 	 * message.
-	 * 
+	 *
 	 * @param inSummarized
 	 *            <code>true</code> if the children of this proposition are
 	 *            included, <code>false</code> otherwise.
@@ -268,7 +268,7 @@ public class PropositionWrapper implements Serializable {
 
 	/**
 	 * Gets this data element definition's children, if any.
-	 * 
+	 *
 	 * @return a {@link List} of this data element definition's children, if
 	 *         any.
 	 */
@@ -278,7 +278,7 @@ public class PropositionWrapper implements Serializable {
 
 	/**
 	 * Sets this data element definition's children.
-	 * 
+	 *
 	 * @param inChildren
 	 *            a {@link List} of this data element definition's children.
 	 */
@@ -288,7 +288,7 @@ public class PropositionWrapper implements Serializable {
 
 	/**
 	 * Gets this data element definition's properties, if any.
-	 * 
+	 *
 	 * @return a {@link List) of this data element definition's properties, if
 	 *         any
 	 */
@@ -298,7 +298,7 @@ public class PropositionWrapper implements Serializable {
 
 	/**
 	 * Sets this data element definition's properties.
-	 * 
+	 *
 	 * @param inProperties
 	 *            a {@link List} of this data element definition's properties.
 	 */
@@ -308,7 +308,7 @@ public class PropositionWrapper implements Serializable {
 
 	/**
 	 * Returns whether this data element definition has children.
-	 * 
+	 *
 	 * @return <code>true</code> if this data element definition has children,
 	 *         <code>false</code> otherwise.
 	 */
@@ -318,7 +318,7 @@ public class PropositionWrapper implements Serializable {
 
 	/**
 	 * Sets whether this data element definition has children.
-	 * 
+	 *
 	 * @param inParent
 	 *            <code>true</code> if this data element definition has
 	 *            children, <code>false</code> otherwise.
@@ -329,8 +329,8 @@ public class PropositionWrapper implements Serializable {
 
 	/**
 	 * Represents field values for debugging purposes.
-	 * 
-	 * @return
+	 *
+	 * @return A string representing the state of the object.
 	 */
 	@Override
 	public String toString() {
