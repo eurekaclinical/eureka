@@ -19,16 +19,35 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.services.translation;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.ResultThresholds;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.ValueThreshold;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.LowLevelAbstraction;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.SimpleParameterConstraint;
 
 public final class ResultThresholdsTranslator implements
         PropositionTranslator<ResultThresholds, LowLevelAbstraction> {
 
 	@Override
 	public LowLevelAbstraction translateFromElement(ResultThresholds element) {
-		// TODO Auto-generated method stub
-		return null;
+		LowLevelAbstraction result = new LowLevelAbstraction();
+		
+		PropositionTranslatorUtil.populateCommonPropositionFields(result, element);
+		List<SimpleParameterConstraint> spcs = new ArrayList<SimpleParameterConstraint>();
+		for (ValueThreshold vt : element.getValueThresholds()) {
+			spcs.add(buildSimpleParameterConstraint(vt));
+		}
+		result.setSimpleParameterConstraints(spcs);
+		
+		return result;
+	}
+	
+	private SimpleParameterConstraint buildSimpleParameterConstraint(ValueThreshold threshold) {
+		SimpleParameterConstraint result = new SimpleParameterConstraint();
+		
+		return result;
 	}
 
 	@Override
