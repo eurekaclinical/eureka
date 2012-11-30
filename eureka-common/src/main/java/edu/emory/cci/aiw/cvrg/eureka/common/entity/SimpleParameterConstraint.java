@@ -38,13 +38,13 @@ public final class SimpleParameterConstraint {
 	@GeneratedValue(strategy = GenerationType.TABLE)
 	private String id;
 
-	private int minValueThreshold;
+	private Number minValueThreshold;
 
 	@OneToOne
 	@JoinColumn(referencedColumnName = "id")
 	private ValueComparator minValueComp;
 
-	private int maxValueThreshold;
+	private Number maxValueThreshold;
 
 	@OneToOne
 	@JoinColumn(referencedColumnName = "id")
@@ -58,7 +58,7 @@ public final class SimpleParameterConstraint {
 		this.id = id;
 	}
 
-	public int getMinValueThreshold() {
+	public Number getMinValueThreshold() {
 		return minValueThreshold;
 	}
 
@@ -74,7 +74,7 @@ public final class SimpleParameterConstraint {
 		this.minValueComp = minValueComp;
 	}
 
-	public int getMaxValueThreshold() {
+	public Number getMaxValueThreshold() {
 		return maxValueThreshold;
 	}
 

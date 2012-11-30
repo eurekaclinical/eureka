@@ -26,8 +26,8 @@ public final class ValueThreshold {
 	private String dataElementKey;
 	private Long lowerComp;
 	private Long upperComp;
-	private String lowerValue;
-	private String upperValue;
+	private Number lowerValue;
+	private Number upperValue;
 	private String lowerUnits;
 	private String upperUnits;
 	private Boolean isBeforeOrAfter;
@@ -62,19 +62,19 @@ public final class ValueThreshold {
 		this.upperComp = upperComp;
 	}
 
-	public String getLowerValue() {
+	public Number getLowerValue() {
 		return lowerValue;
 	}
 
-	public void setLowerValue(String lowerValue) {
+	public void setLowerValue(Number lowerValue) {
 		this.lowerValue = lowerValue;
 	}
 
-	public String getUpperValue() {
+	public Number getUpperValue() {
 		return upperValue;
 	}
 
-	public void setUpperValue(String upperValue) {
+	public void setUpperValue(Number upperValue) {
 		this.upperValue = upperValue;
 	}
 
