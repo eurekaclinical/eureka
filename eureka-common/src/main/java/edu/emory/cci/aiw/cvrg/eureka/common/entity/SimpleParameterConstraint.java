@@ -39,12 +39,14 @@ public final class SimpleParameterConstraint {
 	private String id;
 
 	private Number minValueThreshold;
-
+	private String minUnits;
+	
 	@OneToOne
 	@JoinColumn(referencedColumnName = "id")
 	private ValueComparator minValueComp;
-
+	
 	private Number maxValueThreshold;
+	private String maxUnits;
 
 	@OneToOne
 	@JoinColumn(referencedColumnName = "id")
@@ -62,8 +64,16 @@ public final class SimpleParameterConstraint {
 		return minValueThreshold;
 	}
 
-	public void setMinValueThreshold(int minValueThreshold) {
+	public void setMinValueThreshold(Number minValueThreshold) {
 		this.minValueThreshold = minValueThreshold;
+	}
+	
+	public String getMinUnits() {
+		return minUnits;
+	}
+	
+	public void setMinUnits(String minUnits) {
+		this.minUnits = minUnits;
 	}
 
 	public ValueComparator getMinValueComp() {
@@ -77,11 +87,19 @@ public final class SimpleParameterConstraint {
 	public Number getMaxValueThreshold() {
 		return maxValueThreshold;
 	}
-
-	public void setMaxValueThreshold(int maxValueThreshold) {
+	
+	public void setMaxValueThreshold(Number maxValueThreshold) {
 		this.maxValueThreshold = maxValueThreshold;
 	}
 
+	public String getMaxUnits() {
+		return maxUnits;
+	}
+	
+	public void setMaxUnits(String maxUnits) {
+		this.maxUnits = maxUnits;
+	}
+	
 	public ValueComparator getMaxValueComp() {
 		return maxValueComp;
 	}
