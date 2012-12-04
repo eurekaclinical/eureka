@@ -58,6 +58,7 @@ public class SystemPropositionListServlet extends HttpServlet {
 		// d.setKeyVal("class", "jstree-closed");
 		// }
 //		d.setKeyVal("class", "jstree-closed");
+		d.setKeyVal("data-key", element.getKey());
 		d.setKeyVal("data-space", "system");
 		d.setKeyVal("data-type", element.getSystemType().toString());
 		d.setKeyVal("data-proposition", element.getKey());
@@ -107,22 +108,22 @@ public class SystemPropositionListServlet extends HttpServlet {
 		ServicesClient servicesClient = new ServicesClient(eurekaServicesUrl);
 		User user = servicesClient.getUserByName(userName);
 
-		String propId = req.getParameter("id");
+		String propKey = req.getParameter("key");
 
-		if (propId == null) {
-			throw new ServletException("Invalid parameter id: " + propId);
+		if (propKey == null) {
+			throw new ServletException("Invalid parameter id: " + propKey);
 		}
 
-		if (propId.equals("root")) {
-			List<SystemElement> props = servicesClient.getSystemPropositions
+		if (propKey.equals("root")) {
+			List<SystemElement> props = servicesClient.getSystemElements
 				(user.getId());
 			for (SystemElement proposition : props) {
 				JsonTreeData d = createData(proposition);
 				l.add(d);
 			}
 		} else {
-			SystemElement element = servicesClient.getSystemProposition(user
-				.getId(), propId);
+			SystemElement element = servicesClient.getSystemElement(user
+				.getId(), propKey);
 			for (SystemElement propChild : element.getChildren()) {
 				JsonTreeData newData = createData(propChild);
 				newData.setType("system");

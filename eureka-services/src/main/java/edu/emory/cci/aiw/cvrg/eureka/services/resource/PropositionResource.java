@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -39,17 +39,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.inject.Inject;
-import com.sun.jersey.api.client.Client;
-import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.UniformInterfaceException;
-import com.sun.jersey.api.client.WebResource;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.CategoricalElement;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.CommUtils;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.DataElement;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.Sequence;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.SystemElement;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.ValidationRequest;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ClientException;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.EtlClient;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.Categorization;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.HighLevelAbstraction;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.Proposition;
@@ -70,7 +68,7 @@ import edu.emory.cci.aiw.cvrg.eureka.services.util.PropositionUtil;
 
 /**
  * REST Web Service
- * 
+ *
  * @author hrathod
  */
 @Path("/proposition")
@@ -187,9 +185,8 @@ public class PropositionResource {
 
 	@POST
 	@Path("/user/validate/{userId}")
-	public Response validateProposition(@PathParam("userId") Long inUserId,
+	public void validateProposition(@PathParam("userId") Long inUserId,
 			DataElement inDataElement) {
-		Response result;
 		List<Proposition> propositions = this.propositionDao
 				.getByUserId(inUserId);
 		Proposition targetProposition = this.propositionDao.getByUserAndKey(
@@ -206,15 +203,15 @@ public class PropositionResource {
 		validationRequest.setTargetProposition(PropositionUtil
 				.pack(targetProposition));
 
-		Client client = CommUtils.getClient();
-		WebResource resource = client.resource(this.applicationProperties
-				.getEtlPropositionValidationUrl());
-		ClientResponse response = resource.type(MediaType.APPLICATION_JSON)
-				.post(ClientResponse.class, validationRequest);
-		result = Response.status(
-				response.getClientResponseStatus().getStatusCode()).build();
-
-		return result;
+		EtlClient etlClient = new EtlClient(this.applicationProperties
+				.getEtlUrl());
+		try {
+			etlClient.validatePropositions(validationRequest);
+		} catch (ClientException e) {
+			LOGGER.error(e.getMessage(), e);
+			throw new HttpStatusException(Response.Status
+					.PRECONDITION_FAILED, e.getMessage());
+		}
 	}
 
 	@GET

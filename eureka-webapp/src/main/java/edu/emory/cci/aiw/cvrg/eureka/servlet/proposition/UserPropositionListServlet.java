@@ -29,19 +29,14 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.ws.rs.core.MediaType;
 
 import org.codehaus.jackson.map.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.sun.jersey.api.client.Client;
-import com.sun.jersey.api.client.GenericType;
-import com.sun.jersey.api.client.WebResource;
-
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.CategoricalElement;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.CommUtils;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.DataElement;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ServicesClient;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.User;
 
 public class UserPropositionListServlet extends HttpServlet {
@@ -54,6 +49,7 @@ public class UserPropositionListServlet extends HttpServlet {
 		d.setData(element.getAbbrevDisplayName());
 		d.setKeyVal("id", String.valueOf(element.getId()));
 
+		d.setKeyVal("data-key", element.getKey());
 		d.setKeyVal("data-space", "user");
 		d.setKeyVal("data-type", element.getType().toString());
 		if (element.getType() == DataElement.Type.CATEGORIZATION) {
@@ -99,25 +95,18 @@ public class UserPropositionListServlet extends HttpServlet {
 		List<JsonTreeData> l = new ArrayList<JsonTreeData>();
 		String eurekaServicesUrl = req.getSession().getServletContext()
 		        .getInitParameter("eureka-services-url");
-		Client client = CommUtils.getClient();
+		ServicesClient servicesClient = new ServicesClient(eurekaServicesUrl);
 		Principal principal = req.getUserPrincipal();
 		String userName = principal.getName();
+		User user = servicesClient.getUserByName(userName);
 
-		LOGGER.debug("got username {}", userName);
-		WebResource webResource = client.resource(eurekaServicesUrl);
-		User user = webResource.path("/api/user/byname/" + userName)
-		        .accept(MediaType.APPLICATION_JSON).get(User.class);
-
-		List<DataElement> props = webResource
-		        .path("/api/proposition/user/list/" + user.getId())
-		        .accept(MediaType.APPLICATION_JSON)
-		        .get(new GenericType<List<DataElement>>() {
-			        // Nothing to implement, used to hold returned data.
-		        });
+		List<DataElement> props = servicesClient.getUserElements(user.getId());
 		for (DataElement proposition : props) {
-			JsonTreeData d = createData(proposition);
-			l.add(d);
-			LOGGER.debug("Added user prop: " + d.getData());
+			if (!proposition.isInSystem()) {
+				JsonTreeData d = createData(proposition);
+				l.add(d);
+				LOGGER.debug("Added user prop: " + d.getData());
+			}
 		}
 		LOGGER.debug("executed resource get");
 

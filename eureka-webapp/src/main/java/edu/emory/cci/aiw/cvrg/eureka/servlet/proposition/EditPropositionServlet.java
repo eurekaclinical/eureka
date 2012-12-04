@@ -20,6 +20,7 @@
 package edu.emory.cci.aiw.cvrg.eureka.servlet.proposition;
 
 import java.io.IOException;
+import java.security.Principal;
 import java.util.List;
 
 import javax.servlet.ServletException;
@@ -34,7 +35,7 @@ import edu.emory.cci.aiw.cvrg.eureka.common.comm.DataElement;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ServicesClient;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.RelationOperator;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.TimeUnit;
-
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.User;
 
 public class EditPropositionServlet extends HttpServlet {
 
@@ -55,20 +56,23 @@ public class EditPropositionServlet extends HttpServlet {
 
 		String eurekaServicesUrl = req.getSession().getServletContext()
 				.getInitParameter("eureka-services-url");
-        String propId = req.getParameter("id");
+        String propKey = req.getParameter("key");
+
+		Principal principal = req.getUserPrincipal();
+		String userName = principal.getName();
 
 		ServicesClient servicesClient = new ServicesClient(eurekaServicesUrl);
-
+		User user = servicesClient.getUserByName(userName);
 		List<TimeUnit> timeUnits = servicesClient.getTimeUnits();
-		req.setAttribute("timeUnits", timeUnits);
-
 		List<RelationOperator> operators = servicesClient
-			.getRelationOperators();
+				.getRelationOperators();
+
+		req.setAttribute("timeUnits", timeUnits);
 		req.setAttribute("operators", operators);
 
-		if ((propId != null) && (!propId.equals(""))) {
-			DataElement dataElement = servicesClient.getUserProposition(Long
-				.valueOf(propId));
+		if ((propKey != null) && (!propKey.equals(""))) {
+			DataElement dataElement = servicesClient.getUserElement
+					(user.getId(), propKey);
 			System.out.println("dataElement.getType() = " + dataElement
 				.getType());
 			req.setAttribute("proposition", dataElement);

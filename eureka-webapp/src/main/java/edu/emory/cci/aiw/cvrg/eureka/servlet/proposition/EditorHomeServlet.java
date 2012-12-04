@@ -42,10 +42,10 @@ public class EditorHomeServlet extends HttpServlet {
 	private static final Logger LOGGER = LoggerFactory.getLogger
 		(EditorHomeServlet.class);
 
-	private JsonTreeData createData(String id, String data) {
+	private JsonTreeData createData(String key, String data) {
 		JsonTreeData d = new JsonTreeData();
 		d.setData(data);
-		d.setKeyVal("id", id);
+		d.setKeyVal("key", key);
 
 		return d;
 	}
@@ -91,12 +91,12 @@ public class EditorHomeServlet extends HttpServlet {
 		LOGGER.debug("got username {}", userName);
 		ServicesClient servicesClient = new ServicesClient(eurekaServicesUrl);
 		User user = servicesClient.getUserByName(userName);
-		List<DataElement> props = servicesClient.getUserPropositions(user.getId());
+		List<DataElement> props = servicesClient.getUserElements(user.getId());
 		SimpleDateFormat df = new SimpleDateFormat("MM/dd/yyyy");
 		for (DataElement proposition : props) {
 			if (!proposition.isInSystem()) {
 				JsonTreeData d = createData(
-					String.valueOf(proposition.getId()),
+					String.valueOf(proposition.getKey()),
 					this.getDisplayName(proposition));
 
 				d.setKeyVal("abbrevDisplay",

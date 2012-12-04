@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -19,25 +19,18 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.services.thread;
 
-import java.security.KeyManagementException;
-import java.security.NoSuchAlgorithmException;
 import java.util.Date;
 import java.util.List;
-
-import javax.ws.rs.core.MediaType;
 
 import org.protempa.PropositionDefinition;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.inject.Inject;
-import com.sun.jersey.api.client.Client;
-import com.sun.jersey.api.client.ClientResponse;
-import com.sun.jersey.api.client.ClientResponse.Status;
-import com.sun.jersey.api.client.WebResource;
 
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.CommUtils;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.JobRequest;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ClientException;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.EtlClient;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.Configuration;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.FileError;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.FileUpload;
@@ -233,15 +226,7 @@ public class JobTask implements Runnable {
 	 *                          data source.
 	 */
 	private void processUpload(DataProvider dataProvider) throws TaskException {
-		Configuration conf;
-		try {
-			conf = this.getUserConfiguration();
-		} catch (KeyManagementException e) {
-			throw new TaskException(e);
-		} catch (NoSuchAlgorithmException e) {
-			throw new TaskException(e);
-		}
-
+		Configuration conf = this.getUserConfiguration();
 		if (conf != null) {
 			try {
 				DataInserter dataInserter = new DataInserter(conf);
@@ -271,17 +256,8 @@ public class JobTask implements Runnable {
 	 *
 	 */
 	private void submitJob() throws TaskException {
-		Client client;
-		Configuration conf;
-		try {
-			client = CommUtils.getClient();
-			conf = this.getUserConfiguration();
-		} catch (KeyManagementException e) {
-			throw new TaskException(e);
-		} catch (NoSuchAlgorithmException e) {
-			throw new TaskException(e);
-		}
 
+		Configuration conf = this.getUserConfiguration();
 		JobRequest jobRequest = new JobRequest();
 		Job job = new Job();
 		job.setConfigurationId(conf.getId());
@@ -290,15 +266,13 @@ public class JobTask implements Runnable {
 		jobRequest.setPropositions(this.propositions);
 		jobRequest.setUserPropositions(this.userPropositions);
 
-		WebResource resource = client.resource(this.serviceProperties.
-				getEtlJobSubmitUrl());
-		ClientResponse response = resource.type(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON).
-				post(ClientResponse.class, jobRequest);
-
-		if (! Status.CREATED.equals(response.getClientResponseStatus())) {
-			LOGGER.error("Job was not submitted successfully to ETL layer.");
-		} else {
-			LOGGER.info("Job successfully submitted.");
+		EtlClient etlClient = new EtlClient(this.serviceProperties.getEtlUrl
+				());
+		try {
+			etlClient.submitJob(jobRequest);
+			LOGGER.info("Job successfully submitted to ETL layer.");
+		} catch (ClientException e) {
+			LOGGER.error(e.getMessage(), e);
 		}
 	}
 
@@ -307,31 +281,17 @@ public class JobTask implements Runnable {
 	 *
 	 * @return The user configuration.
 	 *
-	 * @throws KeyManagementException   Thrown if an SSL enabled rest client can
-	 *                                     not be created properly.
-	 * @throws NoSuchAlgorithmException Thrown if an SSL enabled rest client can
-	 *                                     not be created properly.
 	 */
-	private Configuration getUserConfiguration() throws KeyManagementException,
-			NoSuchAlgorithmException {
+	private Configuration getUserConfiguration() {
 		if (this.configuration == null) {
-			Configuration result;
-			ClientResponse response;
-			WebResource resource;
-			Client client = CommUtils.getClient();
 			Long userId = this.fileUpload.getUserId();
-			resource = client.resource(this.serviceProperties.
-					getEtlConfGetUrl() + "/" + userId);
-			response = resource.accept(MediaType.APPLICATION_JSON).get(
-					ClientResponse.class);
-			LOGGER.debug("Configuration get response: {}",
-					response.getClientResponseStatus());
-			if (response.getClientResponseStatus() == Status.OK) {
-				result = response.getEntity(Configuration.class);
-			} else {
-				result = null;
+			String url = this.serviceProperties.getEtlUrl();
+			EtlClient etlClient = new EtlClient(url);
+			try {
+				this.configuration = etlClient.getConfiguration(userId);
+			} catch (ClientException e) {
+				LOGGER.error(e.getMessage(), e);
 			}
-			this.configuration = result;
 		}
 		return this.configuration;
 	}

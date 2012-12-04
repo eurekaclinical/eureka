@@ -26,16 +26,12 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.ws.rs.core.MediaType;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.sun.jersey.api.client.Client;
-import com.sun.jersey.api.client.ClientResponse;
-import com.sun.jersey.api.client.WebResource;
-
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.CommUtils;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ClientException;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ServicesClient;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.User;
 
 public class DeletePropositionServlet extends HttpServlet {
@@ -55,33 +51,23 @@ public class DeletePropositionServlet extends HttpServlet {
 			throws ServletException, IOException {
 
 		LOGGER.debug("DeletePropositionServlet");
-		String id = req.getParameter("id");
+		String propKey = req.getParameter("key");
 
 		String eurekaServicesUrl = req.getSession().getServletContext()
 				.getInitParameter("eureka-services-url");
-
-		Client client = CommUtils.getClient();
 		Principal principal = req.getUserPrincipal();
 		String userName = principal.getName();
-
-		WebResource webResource = client.resource(eurekaServicesUrl);
-		User user = webResource.path("/api/user/byname/" + userName)
-				.accept(MediaType.APPLICATION_JSON).get(User.class);
+		ServicesClient servicesClient = new ServicesClient(eurekaServicesUrl);
+		User user = servicesClient.getUserByName(userName);
 
 		// user/delete/{userId}/{prodId}
-		ClientResponse response =
-		            webResource.path("/api/proposition/user/delete/" + user.getId() + "/"+id)
-		                .type(MediaType.APPLICATION_JSON)
-		                .accept(MediaType.APPLICATION_JSON)
-		                .delete(ClientResponse.class);
-
-		int status = response.getClientResponseStatus().getStatusCode();
-		System.out.println("status: " + status);
-		System.out.println("/api/proposition/user/delete/" + user.getId() + "/"+id);
-		resp.setContentType("text/html");
-		resp.setStatus(status);
-		if (status != HttpServletResponse.SC_OK) {
+		try {
+			servicesClient.deleteUserElement(user.getId(), propKey);
+		} catch (ClientException e) {
+			resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+			resp.setContentType("text/plain");
+			resp.getWriter().write(e.getMessage());
+			resp.getWriter().flush();
 		}
-
 	}
 }

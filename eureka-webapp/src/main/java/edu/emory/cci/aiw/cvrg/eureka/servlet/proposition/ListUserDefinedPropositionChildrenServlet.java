@@ -21,6 +21,7 @@ package edu.emory.cci.aiw.cvrg.eureka.servlet.proposition;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,25 +30,29 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.ws.rs.core.MediaType;
 
 import org.codehaus.jackson.map.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.sun.jersey.api.client.Client;
-import com.sun.jersey.api.client.WebResource;
-
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.CategoricalElement;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.CommUtils;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.DataElement;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ServicesClient;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.User;
 
 public class ListUserDefinedPropositionChildrenServlet extends HttpServlet {
 
 	private static final Logger LOGGER = LoggerFactory
 	        .getLogger(ListUserDefinedPropositionChildrenServlet.class);
+	private ServicesClient servicesClient;
 
-	private WebResource webResource;
+	@Override
+	public void init(ServletConfig config) throws ServletException {
+		super.init(config);
+		String parameter = config.getServletContext().getInitParameter
+				("eureka-services-url");
+		this.servicesClient = new ServicesClient(parameter);
+	}
 
 	private String getDisplayName(DataElement p) {
 		String displayName = "";
@@ -70,24 +75,12 @@ public class ListUserDefinedPropositionChildrenServlet extends HttpServlet {
 		return displayName;
 	}
 
-	@Override
-	public void init(ServletConfig config) throws ServletException {
-		// TODO Auto-generated method stub
-		super.init(config);
-		String eurekaServicesUrl = config.getServletContext().getInitParameter(
-		        "eureka-services-url");
 
-		Client client;
-
-		client = CommUtils.getClient();
-		this.webResource = client.resource(eurekaServicesUrl);
-
-	}
-
-	private JsonTreeData createData(String data, String id) {
+	private JsonTreeData createData(String data, String key) {
 		JsonTreeData d = new JsonTreeData();
 		d.setData(data);
-		d.setKeyVal("id", id);
+		d.setKeyVal("key", key);
+		d.setKeyVal("data-key", key);
 
 		return d;
 	}
@@ -98,18 +91,17 @@ public class ListUserDefinedPropositionChildrenServlet extends HttpServlet {
 		doGet(req, resp);
 	}
 
-	private void getAllData(JsonTreeData d) {
-		DataElement dataElement = webResource
-		        .path("/api/proposition/user/get/" + d.getId())
-		        .accept(MediaType.APPLICATION_JSON).get(DataElement.class);
-		LOGGER.debug("got propWrapper {}", dataElement.getId());
+	private void getAllData(Long inUserId, JsonTreeData d) {
+		DataElement dataElement = this.servicesClient.getUserElement
+				(inUserId, d.getAttr().get("data-key"));
 
 		if (dataElement.getType() == DataElement.Type.CATEGORIZATION) {
 			CategoricalElement ce = (CategoricalElement) dataElement;
 			for (DataElement de : ce.getChildren()) {
 				if (de.isInSystem()) {
 
-					JsonTreeData newData = createData(de.getKey(), de.getKey());
+					JsonTreeData newData = createData(this.getDisplayName
+							(de),de.getKey());
 					newData.setType("system");
 					LOGGER.debug("add sysTarget {}", de.getKey());
 					d.addNodes(newData);
@@ -122,10 +114,11 @@ public class ListUserDefinedPropositionChildrenServlet extends HttpServlet {
 
 					JsonTreeData newData = createData(
 					        userDataElement.getAbbrevDisplayName(),
-					        String.valueOf(userDataElement.getId().longValue()));
-					getAllData(newData);
+							userDataElement.getKey());
+					getAllData(inUserId, newData);
 					newData.setType("user");
-					LOGGER.debug("add user defined {}", userDataElement.getId());
+					LOGGER.debug("add user defined {}", userDataElement.getKey
+							());
 					d.addNodes(newData);
 				}
 			}
@@ -137,15 +130,17 @@ public class ListUserDefinedPropositionChildrenServlet extends HttpServlet {
 	        throws ServletException, IOException {
 
 		List<JsonTreeData> l = new ArrayList<JsonTreeData>();
-		String propId = req.getParameter("propId");
+		String propKey = req.getParameter("propKey");
 
-		DataElement dataElement = webResource
-		        .path("/api/proposition/user/get/" + propId)
-		        .accept(MediaType.APPLICATION_JSON).get(DataElement.class);
+		Principal principal = req.getUserPrincipal();
+		String userName = principal.getName();
+		User user = this.servicesClient.getUserByName(userName);
+		DataElement dataElement = servicesClient.getUserElement(user.getId(),
+				propKey);
 
 		JsonTreeData newData = createData(this.getDisplayName(dataElement),
-		        propId);
-		getAllData(newData);
+		        propKey);
+		getAllData(user.getId(),newData);
 		l.add(newData);
 
 		ObjectMapper mapper = new ObjectMapper();

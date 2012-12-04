@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -23,17 +23,13 @@ import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
 
-import javax.ws.rs.core.MediaType;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.inject.Singleton;
-import com.sun.jersey.api.client.Client;
-import com.sun.jersey.api.client.GenericType;
 
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.CommUtils;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.JobFilter;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.EtlClient;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.Job;
 import edu.emory.cci.aiw.cvrg.eureka.services.job.JobCollection;
 
@@ -57,37 +53,30 @@ public class JobUpdateTask implements Runnable {
 	 */
 	private final String backendUrl;
 	/**
-	 * The secure Jersey client used to make the REST calls.
+	 * The etlClient used to call into the ETL layer.
 	 */
-	private final Client client;
+	private final EtlClient etlClient;
 
 	/**
 	 * Create a job update thread using the given backend url.
 	 *
 	 * @param inBackendUrl The backend url used to make the update calls.
-	 * @throws NoSuchAlgorithmException Thrown when the secure client can not be
+	 * @throws NoSuchAlgorithmException Thrown when the secure etlClient can not be
 	 *             created properly.
-	 * @throws KeyManagementException Thrown when the secure client can not be
+	 * @throws KeyManagementException Thrown when the secure etlClient can not be
 	 *             create properly.
 	 */
 	public JobUpdateTask(String inBackendUrl) throws KeyManagementException,
 			NoSuchAlgorithmException {
 		this.backendUrl = inBackendUrl;
-		this.client = CommUtils.getClient();
+		this.etlClient = new EtlClient(this.backendUrl);
 	}
 
 	@Override
 	public void run() {
 		JobFilter filter = new JobFilter(null, null,
 				null, null, null);
-		List<Job> updatedJobs = this.client.resource(this.backendUrl)
-				.queryParam(
-				"filter", filter.toQueryParam())
-				.accept(MediaType.APPLICATION_JSON)
-				.type(MediaType.APPLICATION_JSON)
-				.get(new GenericType<List<Job>>() {
-					// nothing to implement
-				});
+		List<Job> updatedJobs = this.etlClient.getJobStatus(filter);
 		if (updatedJobs != null) {
 			JobCollection.setJobs(updatedJobs);
 		} else {

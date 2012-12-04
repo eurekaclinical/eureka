@@ -388,7 +388,7 @@ function showPopup(event, rowId) {
   
     $("#tree").jstree({
         "json_data" : {
-            "ajax" : { "url" : "userpropchildren?propId=" + rowId}
+            "ajax" : { "url" : "userpropchildren?propKey=" + rowId}
         },
     "plugins" : [ "themes", "json_data", "ui" ]
     });

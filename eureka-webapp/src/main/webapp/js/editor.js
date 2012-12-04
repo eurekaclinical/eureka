@@ -10,14 +10,14 @@ var saveFuncs = {
 	'categorization': saveCategorization
 };
 
-function postProposition (postUrl, postData, successFunc) {
+function postProposition (postData, successFunc) {
 	$.ajax({
 		type: "POST",
-		url: postUrl,
+		url: 'saveprop',
 		contentType: "application/json; charset=utf-8",
 		data: JSON.stringify(postData),
 		dataType: "json",
-		success: successFunc
+		success: function (data) {window.location.href = 'editorhome'}
 	});
 }
 
@@ -86,7 +86,7 @@ function saveSequence (elem) {
 	sequence.primaryDataElement = collectSequenceDataElement(elem);
 	sequence.relatedDataElements = collectSequenceRelations($relationElems);
 
-	postProposition('savesequence', sequence, function (data) {window.location.href = 'editorhome'});
+	postProposition(sequence);
 }
 
 function saveCategorization (elem) {
@@ -124,7 +124,7 @@ function saveCategorization (elem) {
 		categorization.id = propId;
 	}
 
-	postProposition("savecategorization", categorization, function (data) {window.location.href = 'editorhome'});
+	postProposition(categorization);
 }
 
 function addPossibleProposition (key, desc) {
@@ -379,7 +379,7 @@ function initTrees() {
 				"url" : "systemlist" ,
 				"data": function(n) {
 					return {
-						id : n.attr ? n.attr("id") : "root"
+						key : n.attr ? n.attr("data-key") : "root"
 					};
 				}
 
@@ -523,7 +523,7 @@ function initTrees() {
 	$("#userTree").jstree({
 		"json_data" : {
 			"ajax" : {
-				"url" : "userproplist?id=root"
+				"url" : "userproplist?key=root"
 			}
 		},
 		"dnd" : {
