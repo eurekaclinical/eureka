@@ -51,14 +51,14 @@ import edu.emory.cci.aiw.cvrg.eureka.etl.validator.PropositionValidatorException
 public class PropositionResource {
 
 	private static final Logger LOGGER = LoggerFactory
-	        .getLogger(PropositionResource.class);
+			.getLogger(PropositionResource.class);
 	private final PropositionValidator propositionValidator;
 	private final ConfDao confDao;
 	private final EtlProperties etlProperties;
 
 	@Inject
 	public PropositionResource(PropositionValidator inValidator,
-	        ConfDao inConfDao, EtlProperties inEtlProperties) {
+			ConfDao inConfDao, EtlProperties inEtlProperties) {
 		this.propositionValidator = inValidator;
 		this.confDao = inConfDao;
 		this.etlProperties = inEtlProperties;
@@ -71,14 +71,14 @@ public class PropositionResource {
 
 		boolean result;
 		Configuration configuration = this.confDao.getByUserId(inRequest
-		        .getUserId());
+				.getUserId());
 		if (configuration != null) {
 			try {
 				propositionValidator.setConfiguration(configuration);
 				propositionValidator.setPropositions(inRequest
-				        .getPropositions());
+						.getPropositions());
 				propositionValidator.setTargetProposition(inRequest
-				        .getTargetProposition());
+						.getTargetProposition());
 				result = propositionValidator.validate();
 			} catch (PropositionValidatorException e) {
 				LOGGER.error(e.getMessage(), e);
@@ -87,7 +87,7 @@ public class PropositionResource {
 		} else {
 			result = false;
 			LOGGER.error("No Protempa configuration found for user "
-			        + inRequest.getUserId());
+					+ inRequest.getUserId());
 		}
 
 		Response response;
@@ -95,7 +95,7 @@ public class PropositionResource {
 			response = Response.ok().build();
 		} else {
 			response = Response.status(Response.Status.NOT_ACCEPTABLE)
-			        .entity(propositionValidator.getMessages()).build();
+					.entity(propositionValidator.getMessages()).build();
 		}
 		return response;
 	}
@@ -104,27 +104,41 @@ public class PropositionResource {
 	@Path("/{userId}/{key}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public PropositionDefinition getProposition(
-	        @PathParam("userId") Long inUserId, @PathParam("key") String inKey) {
+			@PathParam("userId") Long inUserId, 
+			@PathParam("key") String inKey) {
 		try {
 			Configuration configuration = this.confDao.getByUserId(inUserId);
 			if (configuration != null) {
-				PropositionFinder propositionFinder = new PropositionFinder(
-				        configuration, this.etlProperties.getConfigDir());
-				PropositionDefinition definition = propositionFinder
-				        .find(inKey);
-				if (definition != null) {
-					return definition;
+				if (this.etlProperties.getConfigDir() != null) {
+					PropositionFinder propositionFinder = 
+							new PropositionFinder(
+							configuration, this.etlProperties.getConfigDir());
+					PropositionDefinition definition = propositionFinder
+							.find(inKey);
+					if (definition != null) {
+						return definition;
+					} else {
+						throw new HttpStatusException(
+								Response.Status.NOT_FOUND,
+								"No proposition with id " + inKey);
+					}
 				} else {
-					throw new HttpStatusException(Response.Status.NOT_FOUND,
-					        "No proposition with id " + inKey);
+					throw new HttpStatusException(
+							Response.Status.INTERNAL_SERVER_ERROR,
+							"No Protempa configuration directory is " +
+							"specified in application.properties. " +
+							"Proposition finding will not work without it. " +
+							"Please create it and try again.");
 				}
 			} else {
-				throw new HttpStatusException(Response.Status.NOT_FOUND,
-				        "No Protempa configuration found for user " + inUserId);
+				throw new HttpStatusException(
+						Response.Status.INTERNAL_SERVER_ERROR,
+						"No Protempa configuration found for user " + 
+						inUserId);
 			}
 		} catch (PropositionFinderException e) {
 			throw new HttpStatusException(
-			        Response.Status.INTERNAL_SERVER_ERROR, e);
+					Response.Status.INTERNAL_SERVER_ERROR, e);
 		}
 	}
 }

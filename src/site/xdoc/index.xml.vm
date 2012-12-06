@@ -39,22 +39,19 @@
 		</p>
 		<ul>
 			<li>
-				<a href="javautil-${javautil-version}">JavaUtil: A Utility Library for Developing
-					Java Software
-				</a>
+				<a href="../javautil-${javautil-version}">JavaUtil: A Utility Library for Developing
+					Java Software</a>
 			</li>
 			<li>
-				<a href="jaas-login-module-${jaas-login-module-version}">Jaas Login Module: JAAS Support for
-					Eureka! Clinical Analytics
-				</a>
+				<a href="../jaas-login-module-${jaas-login-module-version}">Jaas Login Module: JAAS Support for
+					Eureka! Clinical Analytics</a>
 			</li>
 			<li>
-				<a href="protempa-${protempa-version}">Protempa: A Temporal Query Framework for Clinical Databases</a>
+				<a href="../protempa-${protempa-version}">Protempa: A Temporal Query Framework for Clinical Databases</a>
 			</li>
 			<li>
-				<a href="aiw-i2b2-etl-${aiw-i2b2-etl-version}">AIW i2b2 ETL: A Query Results Handler for
-					Protempa for Loading Data and Abstractions into i2b2
-				</a>
+				<a href="../aiw-i2b2-etl-${aiw-i2b2-etl-version}">AIW i2b2 ETL: A Query Results Handler for
+					Protempa for Loading Data and Abstractions into i2b2</a>
 			</li>
 		</ul>
 
@@ -63,44 +60,27 @@
 		<ul>
 			<li>JavaUtil ${javautil-version} binaries in 
 				<a
-					href="http://maven.cci.emory.edu:8081/nexus/content/repositories/aiw/org/arp/javautil/${javautil-version}/javautil-${javautil-version}-bin.zip">zip
-					file format
-				</a> and 
+					href="http://maven.cci.emory.edu:8081/nexus/content/repositories/aiw/org/arp/javautil/${javautil-version}/javautil-${javautil-version}-bin.zip">zip file format</a> and 
 				<a
-					href="http://maven.cci.emory.edu:8081/nexus/content/repositories/aiw/org/arp/javautil/${javautil-version}/javautil-${javautil-version}-bin.tar.gz">tar.gz
-					format
-				</a>
+					href="http://maven.cci.emory.edu:8081/nexus/content/repositories/aiw/org/arp/javautil/${javautil-version}/javautil-${javautil-version}-bin.tar.gz">tar.gz format</a>
 			</li>
 			<li>JAAS Login Module ${jaas-login-module-version} binaries in 
 				<a
-					href="http://maven.cci.emory.edu:8081/nexus/content/repositories/aiw/edu/emory/cci/aiw/cvrg/eureka/jaas-login-module/${jaas-login-module-version}/jaas-login-module-${jaas-login-module-version}-bin.zip">zi
-					p
-					file format
-				</a> and 
+					href="http://maven.cci.emory.edu:8081/nexus/content/repositories/aiw/edu/emory/cci/aiw/cvrg/eureka/jaas-login-module/${jaas-login-module-version}/jaas-login-module-${jaas-login-module-version}-bin.zip">zip file format</a> and 
 				<a
-					href="http://maven.cci.emory.edu:8081/nexus/content/repositories/aiw/edu/emory/cci/aiw/cvrg/eureka/jaas-login-module/${jaas-login-module-version}/jaas-login-module-${jaas-login-module-version}-bin.tar.gz">tar.gz
-					format
-				</a>
+					href="http://maven.cci.emory.edu:8081/nexus/content/repositories/aiw/edu/emory/cci/aiw/cvrg/eureka/jaas-login-module/${jaas-login-module-version}/jaas-login-module-${jaas-login-module-version}-bin.tar.gz">tar.gz format</a>
 			</li>
 			<li>Protempa ${protempa-version} binaries in 
 				<a
-					href="http://maven.cci.emory.edu:8081/nexus/content/repositories/aiw/org/protempa/protempa-package/${protempa-version}/protempa-package-${protempa-version}-bin.zip">zip
-					file format
-				</a> and 
+					href="http://maven.cci.emory.edu:8081/nexus/content/repositories/aiw/org/protempa/protempa-package/${protempa-version}/protempa-package-${protempa-version}-bin.zip">zip file format</a> and 
 				<a
-					href="http://maven.cci.emory.edu:8081/nexus/content/repositories/aiw/org/protempa/protempa-package/${protempa-version}/protempa-package-${protempa-version}-bin.tar.gz">tar.gz
-					format
-				</a>
+					href="http://maven.cci.emory.edu:8081/nexus/content/repositories/aiw/org/protempa/protempa-package/${protempa-version}/protempa-package-${protempa-version}-bin.tar.gz">tar.gz format</a>
 			</li>
 			<li>AIW i2b2 ETL ${aiw-i2b2-etl-version} binaries in 
 				<a
-					href="http://maven.cci.emory.edu:8081/nexus/content/repositories/aiw/edu/emory/cci/aiw-i2b2-etl/${aiw-i2b2-etl-version}/aiw-i2b2-etl-${aiw-i2b2-etl-version}-bin.zip">zip
-					file format
-				</a> and 
+					href="http://maven.cci.emory.edu:8081/nexus/content/repositories/aiw/edu/emory/cci/aiw-i2b2-etl/${aiw-i2b2-etl-version}/aiw-i2b2-etl-${aiw-i2b2-etl-version}-bin.zip">zip file format</a> and 
 				<a
-					href="http://maven.cci.emory.edu:8081/nexus/content/repositories/aiw/edu/emory/cci/aiw-i2b2-etl/${aiw-i2b2-etl-version}/aiw-i2b2-etl-${aiw-i2b2-etl-version}-bin.tar.gz">tar.gz
-					format
-				</a>
+					href="http://maven.cci.emory.edu:8081/nexus/content/repositories/aiw/edu/emory/cci/aiw-i2b2-etl/${aiw-i2b2-etl-version}/aiw-i2b2-etl-${aiw-i2b2-etl-version}-bin.tar.gz">tar.gz format</a>
 			</li>
 		</ul> 
 
@@ -109,43 +89,27 @@
 		<ul>
 			<li>JavaUtil ${javautil-version} source code in 
 				<a
-					href="http://maven.cci.emory.edu:8081/nexus/content/repositories/aiw/org/arp/javautil/${javautil-version}/javautil-${javautil-version}-src.zip">zip
-					file format
-				</a> and 
+					href="http://maven.cci.emory.edu:8081/nexus/content/repositories/aiw/org/arp/javautil/${javautil-version}/javautil-${javautil-version}-src.zip">zip file format</a> and 
 				<a
-					href="http://maven.cci.emory.edu:8081/nexus/content/repositories/aiw/org/arp/javautil/${javautil-version}/javautil-${javautil-version}-src.tar.gz">tar.gz
-					format
-				</a>
+					href="http://maven.cci.emory.edu:8081/nexus/content/repositories/aiw/org/arp/javautil/${javautil-version}/javautil-${javautil-version}-src.tar.gz">tar.gz format</a>
 			</li>
 			<li>JAAS Login Module ${jaas-login-module-version} binaries in 
 				<a
-					href="http://maven.cci.emory.edu:8081/nexus/content/repositories/aiw/edu/emory/cci/aiw/cvrg/eureka/jaas-login-module/${jaas-login-module-version}/jaas-login-module-${jaas-login-module-version}-src.zip">zip
-					file format
-				</a> and 
+					href="http://maven.cci.emory.edu:8081/nexus/content/repositories/aiw/edu/emory/cci/aiw/cvrg/eureka/jaas-login-module/${jaas-login-module-version}/jaas-login-module-${jaas-login-module-version}-src.zip">zip file format</a> and 
 				<a
-					href="http://maven.cci.emory.edu:8081/nexus/content/repositories/aiw/edu/emory/cci/aiw/cvrg/eureka/jaas-login-module/${jaas-login-module-version}/jaas-login-module-${jaas-login-module-version}-src.tar.gz">tar.gz
-					format
-				</a>
+					href="http://maven.cci.emory.edu:8081/nexus/content/repositories/aiw/edu/emory/cci/aiw/cvrg/eureka/jaas-login-module/${jaas-login-module-version}/jaas-login-module-${jaas-login-module-version}-src.tar.gz">tar.gz format</a>
 			</li>
 			<li>Protempa ${protempa-version} source code in 
 				<a
-					href="http://maven.cci.emory.edu:8081/nexus/content/repositories/aiw/org/protempa/protempa/${protempa-version}/protempa-${protempa-version}-src.zip">zip
-					file format
-				</a> and 
+					href="http://maven.cci.emory.edu:8081/nexus/content/repositories/aiw/org/protempa/protempa/${protempa-version}/protempa-${protempa-version}-src.zip">zip file format</a> and 
 				<a
-					href="http://maven.cci.emory.edu:8081/nexus/content/repositories/aiw/org/protempa/protempa/${protempa-version}/protempa-${protempa-version}-src.tar.gz">tar.gz
-					format
-				</a>
+					href="http://maven.cci.emory.edu:8081/nexus/content/repositories/aiw/org/protempa/protempa/${protempa-version}/protempa-${protempa-version}-src.tar.gz">tar.gz format</a>
 			</li>
 			<li>AIW i2b2 ETL ${aiw-i2b2-etl-version} source code in 
 				<a
-					href="http://maven.cci.emory.edu:8081/nexus/content/repositories/aiw/edu/emory/cci/aiw-i2b2-etl/${aiw-i2b2-etl-version}/aiw-i2b2-etl-${aiw-i2b2-etl-version}-src.zip">zip
-					file format
-				</a> and 
+					href="http://maven.cci.emory.edu:8081/nexus/content/repositories/aiw/edu/emory/cci/aiw-i2b2-etl/${aiw-i2b2-etl-version}/aiw-i2b2-etl-${aiw-i2b2-etl-version}-src.zip">zip file format</a> and 
 				<a
-					href="http://maven.cci.emory.edu:8081/nexus/content/repositories/aiw/edu/emory/cci/aiw-i2b2-etl/${aiw-i2b2-etl-version}/aiw-i2b2-etl-${aiw-i2b2-etl-version}-src.tar.gz">tar.gz
-					format
-				</a>
+					href="http://maven.cci.emory.edu:8081/nexus/content/repositories/aiw/edu/emory/cci/aiw-i2b2-etl/${aiw-i2b2-etl-version}/aiw-i2b2-etl-${aiw-i2b2-etl-version}-src.tar.gz">tar.gz format</a>
 			</li>
 		</ul>
 	</body>

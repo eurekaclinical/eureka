@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
+ * 
  *      http://www.apache.org/licenses/LICENSE-2.0
- *
+ * 
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -68,7 +68,6 @@ public class ConfigListener extends GuiceServletContextListener {
 	protected Injector getInjector() {
 		return this.injector;
 	}
-
 	/**
 	 * The class level logger.
 	 */
@@ -83,12 +82,20 @@ public class ConfigListener extends GuiceServletContextListener {
 	@Override
 	public void contextInitialized(ServletContextEvent inServletContextEvent) {
 		super.contextInitialized(inServletContextEvent);
-		this.persistService = this.getInjector().getInstance(
-				PersistService.class);
+		
+		Injector injector = this.getInjector();
+
+		this.persistService = injector.getInstance(PersistService.class);
 		this.persistService.start();
+		
+		DatabasePopulator populator = new DatabasePopulator(injector);
+		populator.doPopulateIfNeeded();
+		
+		DatabaseMigrator migrator = new DatabaseMigrator(injector);
+		migrator.doMigrateIfNeeded();
 
 		try {
-			ServiceProperties applicationProperties = this.getInjector()
+			ServiceProperties applicationProperties = injector
 					.getInstance(ServiceProperties.class);
 			JobUpdateTask jobUpdateTask = new JobUpdateTask(
 					applicationProperties.getEtlUrl());
@@ -119,8 +126,8 @@ public class ConfigListener extends GuiceServletContextListener {
 			LOGGER.error(e.getMessage(), e);
 		}
 
-		SystemPropositionFinder finder = this.getInjector().getInstance
-			(SystemPropositionFinder.class);
+		SystemPropositionFinder finder = 
+				this.getInjector().getInstance(SystemPropositionFinder.class);
 		finder.shutdown();
 	}
 }

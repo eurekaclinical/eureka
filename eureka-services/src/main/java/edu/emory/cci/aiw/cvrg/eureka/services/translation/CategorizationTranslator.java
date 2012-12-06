@@ -33,6 +33,7 @@ import edu.emory.cci.aiw.cvrg.eureka.common.entity.Categorization;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.Categorization.CategorizationType;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.Proposition;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.SystemProposition;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.SystemProposition.SystemType;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.PropositionDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.finder.SystemPropositionFinder;
 
@@ -109,8 +110,12 @@ public final class CategorizationTranslator implements
 
 	private CategorizationType checkPropositionType(CategoricalElement element) {
 		switch (element.getCategoricalType()) {
-		case ABSTRACTION:
-			return CategorizationType.ABSTRACTION;
+		case LOW_LEVEL_ABSTRACTION:
+			return CategorizationType.LOW_LEVEL_ABSTRACTION;
+		case HIGH_LEVEL_ABSTRACTION:
+			return CategorizationType.HIGH_LEVEL_ABSTRACTION;
+		case SLICE_ABSTRACTION:
+			return CategorizationType.SLICE_ABSTRACTION;
 		case CONSTANT:
 			return CategorizationType.CONSTANT;
 		case EVENT:
@@ -150,8 +155,12 @@ public final class CategorizationTranslator implements
 
 	private CategoricalType checkElementType(Categorization proposition) {
 		switch (proposition.getCategorizationType()) {
-		case ABSTRACTION:
-			return CategoricalType.ABSTRACTION;
+		case LOW_LEVEL_ABSTRACTION:
+			return CategoricalType.LOW_LEVEL_ABSTRACTION;
+		case HIGH_LEVEL_ABSTRACTION:
+			return CategoricalType.HIGH_LEVEL_ABSTRACTION;
+		case SLICE_ABSTRACTION:
+			return CategoricalType.SLICE_ABSTRACTION;
 		case CONSTANT:
 			return CategoricalType.CONSTANT;
 		case EVENT:

@@ -17,24 +17,24 @@
  * limitations under the License.
  * #L%
  */
-package edu.emory.cci.aiw.cvrg.eureka.services.packaging;
+package edu.emory.cci.aiw.cvrg.eureka.services.config;
 
-import org.protempa.LowLevelAbstractionDefinition;
+import com.google.inject.Injector;
 
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.LowLevelAbstraction;
+/**
+ *
+ * @author Andrew Post
+ */
+class DatabaseMigrator {
+	private final Injector injector;
 
-public final class LowLevelAbstractionPackager
-        implements
-        PropositionDefinitionPackager<LowLevelAbstraction, LowLevelAbstractionDefinition> {
-
-	@Override
-	public LowLevelAbstractionDefinition pack(LowLevelAbstraction proposition) {
-		LowLevelAbstractionDefinition result = new LowLevelAbstractionDefinition(
-		        proposition.getId().toString());
-
-		
-		
-		return result;
+	DatabaseMigrator(Injector injector) {
+		assert injector != null : "injector cannot be null";
+		this.injector = injector;
 	}
 
+	void doMigrateIfNeeded() {
+		
+	}
+	
 }

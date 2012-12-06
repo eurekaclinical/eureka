@@ -19,6 +19,7 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.servlet.proposition;
 
+import com.sun.jersey.api.client.UniformInterfaceException;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.security.Principal;
@@ -42,7 +43,7 @@ import edu.emory.cci.aiw.cvrg.eureka.common.entity.User;
 public class SystemPropositionListServlet extends HttpServlet {
 
 	private static final Logger LOGGER = LoggerFactory
-	        .getLogger(SystemPropositionListServlet.class);
+			.getLogger(SystemPropositionListServlet.class);
 
 	private JsonTreeData createData(SystemElement element) {
 		JsonTreeData d = new JsonTreeData();
@@ -70,7 +71,7 @@ public class SystemPropositionListServlet extends HttpServlet {
 		String displayName = "";
 
 		if (p.getAbbrevDisplayName() != null
-		        && !p.getAbbrevDisplayName().equals("")) {
+				&& !p.getAbbrevDisplayName().equals("")) {
 
 			displayName = p.getAbbrevDisplayName() + "(" + p.getKey() + ")";
 
@@ -89,18 +90,18 @@ public class SystemPropositionListServlet extends HttpServlet {
 
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp)
-	        throws ServletException, IOException {
+			throws ServletException, IOException {
 		doGet(req, resp);
 	}
 
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
-	        throws ServletException, IOException {
+			throws ServletException, IOException {
 
 		LOGGER.debug("doGet");
 		List<JsonTreeData> l = new ArrayList<JsonTreeData>();
 		String eurekaServicesUrl = req.getSession().getServletContext()
-		        .getInitParameter("eureka-services-url");
+				.getInitParameter("eureka-services-url");
 		Principal principal = req.getUserPrincipal();
 		String userName = principal.getName();
 		LOGGER.debug("got username {}", userName);
@@ -113,23 +114,27 @@ public class SystemPropositionListServlet extends HttpServlet {
 		if (propKey == null) {
 			throw new ServletException("Invalid parameter id: " + propKey);
 		}
-
-		if (propKey.equals("root")) {
-			List<SystemElement> props = servicesClient.getSystemElements
-				(user.getId());
-			for (SystemElement proposition : props) {
-				JsonTreeData d = createData(proposition);
-				l.add(d);
+		
+		try {
+			if (propKey.equals("root")) {
+				List<SystemElement> props = servicesClient.getSystemElements(user.getId());
+				for (SystemElement proposition : props) {
+					JsonTreeData d = createData(proposition);
+					l.add(d);
+				}
+			} else {
+				SystemElement element = servicesClient.getSystemElement(user
+						.getId(), propKey);
+				for (SystemElement propChild : element.getChildren()) {
+					JsonTreeData newData = createData(propChild);
+					newData.setType("system");
+					l.add(newData);
+				}
 			}
-		} else {
-			SystemElement element = servicesClient.getSystemElement(user
-				.getId(), propKey);
-			for (SystemElement propChild : element.getChildren()) {
-				JsonTreeData newData = createData(propChild);
-				newData.setType("system");
-				l.add(newData);
-			}
+		} catch (UniformInterfaceException e) {
+			throw new ServletException("Error getting proposition list", e);
 		}
+
 
 		LOGGER.debug("executed resource get");
 

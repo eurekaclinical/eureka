@@ -19,13 +19,13 @@
 
     <bannerLeft>
         <name>Eureka! Clinical Analytics</name>
-        <src>/images/eureka-banner-logo.png</src>
-        <href>/.</href>
+        <src>../../images/eureka-banner-logo.png</src>
+        <href>../../.</href>
     </bannerLeft>
     <bannerRight>
         <name>Sponsors</name>
-        <src>/images/eureka-banner-sponsors.png</src>
-        <href>/sponsors.html</href>
+        <src>../../images/eureka-banner-sponsors.png</src>
+        <href>../../sponsors.html</href>
     </bannerRight>
 
 	<body>

@@ -52,7 +52,7 @@ public class PropositionValidatorImpl implements PropositionValidator {
 	}
 
 	private static class ValidatorVisitor implements
-	        PropositionDefinitionVisitor {
+			PropositionDefinitionVisitor {
 
 		private PropositionType type;
 
@@ -66,9 +66,9 @@ public class PropositionValidatorImpl implements PropositionValidator {
 
 		@Override
 		public void visit(
-		        Collection<? extends PropositionDefinition> propositionDefinitions) {
+				Collection<? extends PropositionDefinition> propositionDefinitions) {
 			throw new UnsupportedOperationException("Visiting a collection "
-			        + "" + "is not supported.");
+					+ "" + "is not supported.");
 		}
 
 		@Override
@@ -106,9 +106,8 @@ public class PropositionValidatorImpl implements PropositionValidator {
 			this.setType(PropositionType.PAIR);
 		}
 	}
-
 	private static final Logger LOGGER = LoggerFactory
-	        .getLogger(PropositionValidatorImpl.class);
+			.getLogger(PropositionValidatorImpl.class);
 	private PropositionDefinition targetProposition;
 	private List<PropositionDefinition> propositions;
 	private List<PropositionDefinition> userPropositions;
@@ -149,7 +148,7 @@ public class PropositionValidatorImpl implements PropositionValidator {
 	}
 
 	private boolean validateSingle(PropositionDefinition inProposition)
-	        throws PropositionValidatorException {
+			throws PropositionValidatorException {
 
 		boolean result;
 		Stack<String> cycleStack = new Stack<String>();
@@ -159,16 +158,23 @@ public class PropositionValidatorImpl implements PropositionValidator {
 			this.addMessage(this.createCycleMessage(inProposition, cycleStack));
 			result = false;
 		} else if (inProposition.getChildren() != null) {
+			if (this.etlProperties.getConfigDir() == null) {
+				throw new PropositionValidatorException(
+						"No Protempa configuration directory is "
+						+ "specified in application.properties. "
+						+ "Proposition finding will not work without it. "
+						+ "Please create it and try again.");
+			}
 			List<PropositionType> types = new ArrayList<PropositionType>();
 			try {
 				PropositionFinder propositionFinder = new PropositionFinder(
-				        this.configuration, this.etlProperties.getConfigDir());
+						this.configuration, this.etlProperties.getConfigDir());
 				for (String child : inProposition.getChildren()) {
 					if (isSystemProp(child)) {
 						try {
 							types.add(this
-							        .getSystemPropositionType(propositionFinder
-							                .find(child)));
+									.getSystemPropositionType(propositionFinder
+									.find(child)));
 						} catch (PropositionFinderException e) {
 							throw new PropositionValidatorException(e);
 						}
@@ -181,8 +187,8 @@ public class PropositionValidatorImpl implements PropositionValidator {
 			}
 			if (types.contains(PropositionType.INVALID)) {
 				this.addMessage("Proposition "
-				        + inProposition.getAbbreviatedDisplayName()
-				        + "has invalid definition.");
+						+ inProposition.getAbbreviatedDisplayName()
+						+ "has invalid definition.");
 				result = false;
 			} else {
 				result = this.isSame(types);
@@ -195,33 +201,33 @@ public class PropositionValidatorImpl implements PropositionValidator {
 	}
 
 	private String createCycleMessage(PropositionDefinition inPropDef,
-	        Stack<String> cycleStack) {
+			Stack<String> cycleStack) {
 		StringBuilder builder = new StringBuilder();
 		while (!cycleStack.isEmpty()) {
 			String id = cycleStack.pop();
 			PropositionDefinition propDef = id == null ? null : this
-			        .findById(id);
+					.findById(id);
 			if (propDef != null) {
 				builder.append(" ").append(propDef.getAbbreviatedDisplayName())
-				        .append(" ");
+						.append(" ");
 			}
 		}
 		return "Cycle detected in definition of "
-		        + inPropDef.getAbbreviatedDisplayName() + " ["
-		        + builder.toString() + "]";
+				+ inPropDef.getAbbreviatedDisplayName() + " ["
+				+ builder.toString() + "]";
 	}
 
 	private boolean detectCycle(PropositionDefinition inProposition,
-	        Stack<String> inSeen) throws PropositionValidatorException {
+			Stack<String> inSeen) throws PropositionValidatorException {
 
 		boolean cycle = false;
 
 		if (inProposition.getId() == null
-		        && inProposition != this.targetProposition) {
+				&& inProposition != this.targetProposition) {
 			throw new PropositionValidatorException("Proposition "
-			        + inProposition.getAbbreviatedDisplayName()
-			        + " is not the target "
-			        + "proposition and does not have an ID.");
+					+ inProposition.getAbbreviatedDisplayName()
+					+ " is not the target "
+					+ "proposition and does not have an ID.");
 		}
 
 		if (inSeen.contains(inProposition.getId())) {
@@ -269,8 +275,8 @@ public class PropositionValidatorImpl implements PropositionValidator {
 	}
 
 	private PropositionType getSystemPropositionType(
-	        PropositionDefinition inDefinition)
-	        throws PropositionValidatorException {
+			PropositionDefinition inDefinition)
+			throws PropositionValidatorException {
 		PropositionType result;
 		ValidatorVisitor visitor = new ValidatorVisitor();
 		inDefinition.accept(visitor);
@@ -279,7 +285,15 @@ public class PropositionValidatorImpl implements PropositionValidator {
 	}
 
 	private PropositionType getUserPropositionType(String inTarget)
-	        throws PropositionValidatorException {
+			throws PropositionValidatorException {
+
+		if (this.etlProperties.getConfigDir() == null) {
+			throw new PropositionValidatorException(
+					"No Protempa configuration directory is "
+					+ "specified in application.properties. "
+					+ "Proposition finding will not work without it. "
+					+ "Please create it and try again.");
+		}
 
 		PropositionType result = PropositionType.INVALID;
 		List<PropositionType> childTypes = new ArrayList<PropositionType>();
@@ -287,13 +301,13 @@ public class PropositionValidatorImpl implements PropositionValidator {
 
 		try {
 			PropositionFinder propositionFinder = new PropositionFinder(
-			        this.configuration, this.etlProperties.getConfigDir());
+					this.configuration, this.etlProperties.getConfigDir());
 			for (String child : propDef.getChildren()) {
 				if (isSystemProp(child)) {
 					try {
 						childTypes.add(this
-						        .getSystemPropositionType(propositionFinder
-						                .find(child)));
+								.getSystemPropositionType(propositionFinder
+								.find(child)));
 					} catch (PropositionFinderException e) {
 						throw new PropositionValidatorException(e);
 					}
@@ -369,7 +383,7 @@ public class PropositionValidatorImpl implements PropositionValidator {
 	}
 
 	public void setUserPropositions(
-	        List<PropositionDefinition> inUserPropositions) {
+			List<PropositionDefinition> inUserPropositions) {
 		this.userPropositions = inUserPropositions;
 	}
 

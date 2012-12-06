@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
+ * 
  *      http://www.apache.org/licenses/LICENSE-2.0
- *
+ * 
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -132,7 +132,11 @@ public class PropositionResource {
 				if (e.getResponse().getStatus() != Response.Status.NOT_FOUND
 						.getStatusCode()) {
 					throw new HttpStatusException(
-							Response.Status.INTERNAL_SERVER_ERROR, e);
+							Response.Status.INTERNAL_SERVER_ERROR,
+							"Error getting proposition " + name
+							+ " (message from Protempa ETL backend): "
+							+ e.getMessage(),
+							e);
 				} else {
 					LOGGER.warn("Invalid proposition id specified in system "
 							+ "propositions list: " + name);
@@ -148,7 +152,25 @@ public class PropositionResource {
 	public SystemElement getSystemProposition(
 			@PathParam("userId") Long inUserId,
 			@PathParam("propKey") String inKey) {
-		return fetchSystemProposition(inUserId, inKey);
+		try {
+			return fetchSystemProposition(inUserId, inKey);
+		} catch (UniformInterfaceException e) {
+			if (e.getResponse().getStatus() != Response.Status.NOT_FOUND
+					.getStatusCode()) {
+				throw new HttpStatusException(
+						Response.Status.INTERNAL_SERVER_ERROR,
+						"Error getting proposition " + inKey
+						+ " (message from Protempa ETL backend): "
+						+ e.getMessage(),
+						e);
+			} else {
+				throw new HttpStatusException(
+						Response.Status.NOT_FOUND,
+						"Invalid proposition id specified in system "
+						+ "propositions list: " + inKey,
+						e);
+			}
+		}
 	}
 
 	@POST
@@ -259,7 +281,7 @@ public class PropositionResource {
 			// return error
 			response = Response.notModified(
 					"User ID " + inUserId + " did not" + " match the owner ID "
-							+ target.getUserId()).build();
+					+ target.getUserId()).build();
 		} else {
 			// now get the rest of the propositions for the user
 			List<Proposition> others = this.propositionDao.getByUserId(target
@@ -281,9 +303,9 @@ public class PropositionResource {
 							response = Response
 									.status(Response.Status.PRECONDITION_FAILED)
 									.entity(p.getAbbrevDisplayName() + " "
-											+ "contains " + "a "
-											+ "reference to "
-											+ target.getAbbrevDisplayName())
+									+ "contains " + "a "
+									+ "reference to "
+									+ target.getAbbrevDisplayName())
 									.build();
 							error = true;
 							break;

@@ -26,6 +26,8 @@ import org.protempa.PrimitiveParameterDefinition;
 import org.protempa.PropositionDefinition;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.Categorization;
+import org.protempa.LowLevelAbstractionDefinition;
+import org.protempa.SliceDefinition;
 
 public final class CategorizationPackager implements
         PropositionDefinitionPackager<Categorization, PropositionDefinition> {
@@ -54,13 +56,25 @@ public final class CategorizationPackager implements
 				primParam.setDisplayName(proposition.getDisplayName());
 				primParam.setInverseIsA(inverseIsA);
 				return primParam;
-			case ABSTRACTION:
+			case HIGH_LEVEL_ABSTRACTION:
 				HighLevelAbstractionDefinition hla = new HighLevelAbstractionDefinition(
 				        id);
 				hla.setAbbreviatedDisplayName(proposition.getAbbrevDisplayName());
 				hla.setDisplayName(proposition.getDisplayName());
 				hla.setInverseIsA(inverseIsA);
 				return hla;
+			case SLICE_ABSTRACTION:
+				SliceDefinition sla = new SliceDefinition(id);
+				sla.setAbbreviatedDisplayName(proposition.getAbbrevDisplayName());
+				sla.setDisplayName(proposition.getDisplayName());
+				sla.setInverseIsA(inverseIsA);
+				return sla;
+			case LOW_LEVEL_ABSTRACTION:
+				LowLevelAbstractionDefinition llad = new LowLevelAbstractionDefinition(id);
+				llad.setAbbreviatedDisplayName(proposition.getAbbrevDisplayName());
+				llad.setDisplayName(proposition.getDisplayName());
+				llad.setInverseIsA(inverseIsA);
+				return llad;
 			default:
 				HighLevelAbstractionDefinition defaultDef = new HighLevelAbstractionDefinition(
 				        id);

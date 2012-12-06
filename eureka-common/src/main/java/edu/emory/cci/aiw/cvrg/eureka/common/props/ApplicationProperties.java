@@ -99,7 +99,7 @@ public abstract class ApplicationProperties {
 		}
 
 		if (temp == null) {
-			throw new RuntimeException("No application configuration found.");
+			throw new AssertionError("No application configuration found.");
 		}
 		this.properties = temp;
 	}
@@ -126,8 +126,7 @@ public abstract class ApplicationProperties {
 	 * in case the user specified location and the default location do not
 	 * contain a configuration file.
 	 *
-	 * @return The location of the fallback configuration,
-	 * or null if the fallback configuration file can  not be found.
+	 * @return The location of the fallback configuration, guaranteed not null.
 	 */
 	private String getFallBackConfig () {
 		String path = null;
@@ -136,9 +135,14 @@ public abstract class ApplicationProperties {
 			if (fileUrl != null) {
 				URI fileUri = fileUrl.toURI();
 				path = fileUri.getPath();
+			} else {
+				throw new AssertionError(
+						"Could not locate fallback configuration.");
 			}
 		} catch (URISyntaxException e) {
-			LOGGER.error("Could not location fallback configuration.", e);
+			LOGGER.error("Could not locate fallback configuration.", e);
+			throw new AssertionError(
+						"Could not locate fallback configuration.");
 		}
 		return path;
 	}

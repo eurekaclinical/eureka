@@ -38,6 +38,7 @@ public class RelationOperator {
 	private Long id;
 
 	String name;
+	private String description;
 
 	public Long getId() {
 		return id;
@@ -53,5 +54,13 @@ public class RelationOperator {
 
 	public void setName(String inName) {
 		this.name = inName;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+	
+	public String getDescription() {
+		return this.description;
 	}
 }

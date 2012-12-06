@@ -49,9 +49,9 @@ public class HighLevelAbstraction extends Proposition {
 	/**
 	 * The propositions that the current proposition is abstracted from.
 	 */
-	@ManyToMany(cascade = { CascadeType.MERGE, CascadeType.REFRESH,
+	@OneToMany(cascade = { CascadeType.MERGE, CascadeType.REFRESH,
 	        CascadeType.PERSIST })
-	@JoinTable(name = "abstracted_from", joinColumns = { @JoinColumn(name = "target_proposition_id") })
+	@JoinTable(name = "hla_abstracted_from", joinColumns = { @JoinColumn(name = "target_proposition_id") })
 	private List<Proposition> abstractedFrom;
 
 	public ExtendedProposition getPrimaryProposition() {

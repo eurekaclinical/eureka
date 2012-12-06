@@ -23,8 +23,10 @@ import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 /**
@@ -35,15 +37,15 @@ import javax.persistence.Table;
 public class Categorization extends Proposition {
 
 	public enum CategorizationType {
-		CONSTANT, EVENT, PRIMITIVE_PARAMETER, ABSTRACTION, MIXED, UNKNOWN
+		CONSTANT, EVENT, PRIMITIVE_PARAMETER, LOW_LEVEL_ABSTRACTION, HIGH_LEVEL_ABSTRACTION, SLICE_ABSTRACTION, MIXED, UNKNOWN
 	}
 
 	/**
 	 * The "children" of of this proposition.
 	 */
-	@ManyToMany(cascade = { CascadeType.MERGE, CascadeType.REFRESH,
+	@OneToMany(cascade = { CascadeType.MERGE, CascadeType.REFRESH,
 	        CascadeType.PERSIST })
-	@JoinTable(name = "inverse_is_a")
+	@JoinTable(name = "cat_inverse_is_a", joinColumns = { @JoinColumn(name = "target_proposition_id") })
 	private List<Proposition> inverseIsA;
 
 	private CategorizationType categorizationType;

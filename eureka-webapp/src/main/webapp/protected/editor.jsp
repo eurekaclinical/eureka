@@ -212,7 +212,7 @@
 																					<td>
 																						<select name="mainDataElementMinDurationUnits">
 																							<c:forEach var="unit" items="${timeUnits}">
-																							<option value="${unit.id}" <c:if test="${propositionType == 'sequence' and unit.id == proposition.primaryDataElement.minDurationUnits}">selected="selected"</c:if>>${unit.name}</option>
+																							<option value="${unit.id}" <c:if test="${propositionType == 'sequence' and unit.id == proposition.primaryDataElement.minDurationUnits}">selected="selected"</c:if>>${unit.description}</option>
 																							</c:forEach>
 																						</select>
 																					</td>
@@ -227,7 +227,7 @@
 																					<td>
 																						<select name="mainDataElementMaxDurationUnits">
 																							<c:forEach var="unit" items="${timeUnits}">
-																							<option value="${unit.id}" <c:if test="${propositionType == 'sequence' and unit.id == proposition.primaryDataElement.maxDurationUnits}">selected="selected"</c:if>>${unit.name}</option>
+																							<option value="${unit.id}" <c:if test="${propositionType == 'sequence' and unit.id == proposition.primaryDataElement.maxDurationUnits}">selected="selected"</c:if>>${unit.description}</option>
 																							</c:forEach>
 																						</select>
 																					</td>
@@ -280,7 +280,7 @@
 																			<input type="text" class="durationField" name="sequenceRelDataElementMinDurationValue" value="${relation.dataElementField.minDuration}" />
 																			<select name="sequenceRelDataElementMinDurationUnits">
 																					<c:forEach var="unit" items="${timeUnits}">
-																					<option value="${unit.id}" <c:if test="${unit.id == relation.dataElementField.minDurationUnits}">selected="selected"</c:if>>${unit.name}</option>
+																					<option value="${unit.id}" <c:if test="${unit.id == relation.dataElementField.minDurationUnits}">selected="selected"</c:if>>${unit.description}</option>
 																					</c:forEach>
 																			</select>
 																			<br />
@@ -288,14 +288,14 @@
 																			<input type="text" class="durationField" name="sequenceRelDataElementMaxDurationValue" value="${relation.dataElementField.maxDuration}" />
 																			<select name="sequenceRelDataElementMaxDurationUnits">
 																					<c:forEach var="unit" items="${timeUnits}">
-																					<option value="${unit.id}" <c:if test="${unit.id == relation.dataElementField.maxDurationUnits}">selected="selected"</c:if>>${unit.name}</option>
+																					<option value="${unit.id}" <c:if test="${unit.id == relation.dataElementField.maxDurationUnits}">selected="selected"</c:if>>${unit.description}</option>
 																					</c:forEach>
 																			</select>
 																		</td>
 																		<td>
 																			<select name="sequenceRelDataElementTemporalRelation">
 																				<c:forEach var="op" items="${operators}">
-																				<option value="${op.id}" <c:if test="${op.id == relation.relationOperator}">selected="selected"</c:if>>${op.name}</option>
+																				<option value="${op.id}" <c:if test="${op.id == relation.relationOperator}">selected="selected"</c:if>>${op.description}</option>
 																				</c:forEach>
 																			</select>
 																		</td>
@@ -310,7 +310,7 @@
 																			<input type="text" class="distanceField" name="sequenceRhsDataElementMinDistanceValue" value="${relation.relationMinCount}" />
 																			<select name="sequenceRhsDataElementMinDistanceUnits">
 																					<c:forEach var="unit" items="${timeUnits}">
-																					<option value="${unit.id}" <c:if test="${unit.id == relation.relationMinUnits}">selected="selected"</c:if>>${unit.name}</option>
+																					<option value="${unit.id}" <c:if test="${unit.id == relation.relationMinUnits}">selected="selected"</c:if>>${unit.description}</option>
 																					</c:forEach>
 																			</select>
 																			<br />
@@ -318,7 +318,7 @@
 																			<input type="text" class="distanceField" name="sequenceRhsDataElementMaxDistanceValue" value="${relation.relationMaxCount}" />
 																			<select name="sequenceRhsDataElementMaxDistanceUnits">
 																					<c:forEach var="unit" items="${timeUnits}">
-																					<option value="${unit.id}" <c:if test="${unit.id == relation.relationMaxUnits}">selected="selected"</c:if>>${unit.name}</option>
+																					<option value="${unit.id}" <c:if test="${unit.id == relation.relationMaxUnits}">selected="selected"</c:if>>${unit.description}</option>
 																					</c:forEach>
 																			</select>
 																		</td>
@@ -359,7 +359,7 @@
 																			<input type="text" class="durationField" name="sequenceRelDataElementMinDurationValue"/>
 																			<select name="sequenceRelDataElementMinDurationUnits">
 																					<c:forEach var="unit" items="${timeUnits}">
-																					<option value="${unit.id}">${unit.name}</option>
+																					<option value="${unit.id}">${unit.description}</option>
 																					</c:forEach>
 																			</select>
 																			<br />
@@ -367,14 +367,14 @@
 																			<input type="text" class="durationField" name="sequenceRelDataElementMaxDurationValue"/>
 																			<select name="sequenceRelDataElementMaxDurationUnits">
 																					<c:forEach var="unit" items="${timeUnits}">
-																					<option value="${unit.id}">${unit.name}</option>
+																					<option value="${unit.id}">${unit.description}</option>
 																					</c:forEach>
 																			</select>
 																		</td>
 																		<td>
 																			<select name="sequenceRelDataElementTemporalRelation">
 																				<c:forEach var="op" items="${operators}">
-																				<option value="${op.id}">${op.name}</option>
+																				<option value="${op.id}">${op.description}</option>
 																				</c:forEach>
 																			</select>
 																		</td>
@@ -389,7 +389,7 @@
 																			<input type="text" class="distanceField" name="sequenceRhsDataElementMinDistanceValue"/>
 																			<select name="sequenceRhsDataElementMinDistanceUnits">
 																					<c:forEach var="unit" items="${timeUnits}">
-																					<option value="${unit.id}">${unit.name}</option>
+																					<option value="${unit.id}">${unit.description}</option>
 																					</c:forEach>
 																			</select>
 																			<br />
@@ -397,7 +397,7 @@
 																			<input type="text" class="distanceField" name="sequenceRhsDataElementMaxDistanceValue"/>
 																			<select name="sequenceRhsDataElementMaxDistanceUnits">
 																					<c:forEach var="unit" items="${timeUnits}">
-																					<option value="${unit.id}">${unit.name}</option>
+																					<option value="${unit.id}">${unit.description}</option>
 																					</c:forEach>
 																			</select>
 																		</td>
