@@ -44,7 +44,7 @@ import com.sun.xml.bind.CycleRecoverable;
 @Entity
 @Table(name = "propositions", uniqueConstraints = { @UniqueConstraint
 	(columnNames = {"key", "userId"}) })
-@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
+@Inheritance(strategy = InheritanceType.JOINED)
 public abstract class Proposition implements CycleRecoverable,
         PropositionEntityVisitable, Serializable {
 

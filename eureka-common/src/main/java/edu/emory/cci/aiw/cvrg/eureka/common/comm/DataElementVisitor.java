@@ -19,15 +19,18 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.common.comm;
 
+import edu.emory.cci.aiw.cvrg.eureka.common.exception.DataElementHandlingException;
+
 public interface DataElementVisitor {
 	
-	public void visit(SystemElement systemElement);
+	public void visit(SystemElement systemElement) throws DataElementHandlingException;
 	
-	public void visit(CategoricalElement categoricalElement);
+	public void visit(CategoricalElement categoricalElement) 
+			throws DataElementHandlingException;
 	
-	public void visit(Sequence sequence);
+	public void visit(Sequence sequence) throws DataElementHandlingException;
 	
-	public void visit(Frequency frequency);
+	public void visit(Frequency frequency) throws DataElementHandlingException;
 	
-	public void visit(ResultThresholds thresholds);
+	public void visit(ResultThresholds thresholds) throws DataElementHandlingException;
 }

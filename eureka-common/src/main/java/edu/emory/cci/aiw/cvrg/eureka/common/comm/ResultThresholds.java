@@ -19,6 +19,7 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.common.comm;
 
+import edu.emory.cci.aiw.cvrg.eureka.common.exception.DataElementHandlingException;
 import java.util.List;
 
 public class ResultThresholds extends DataElement {
@@ -60,7 +61,8 @@ public class ResultThresholds extends DataElement {
 	}
 
 	@Override
-	public void accept(DataElementVisitor visitor) {
+	public void accept(DataElementVisitor visitor) 
+			throws DataElementHandlingException{
 		visitor.visit(this);
 	}
 

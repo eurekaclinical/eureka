@@ -22,6 +22,7 @@ package edu.emory.cci.aiw.cvrg.eureka.common.comm;
 import java.util.List;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.SystemProposition.SystemType;
+import edu.emory.cci.aiw.cvrg.eureka.common.exception.DataElementHandlingException;
 
 public final class SystemElement extends DataElement {
 
@@ -72,7 +73,8 @@ public final class SystemElement extends DataElement {
 	}
 
 	@Override
-    public void accept(DataElementVisitor visitor) {
+    public void accept(DataElementVisitor visitor) 
+			throws DataElementHandlingException{
 		visitor.visit(this);
     }
 }

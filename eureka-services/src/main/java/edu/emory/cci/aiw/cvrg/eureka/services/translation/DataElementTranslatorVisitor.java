@@ -28,6 +28,7 @@ import edu.emory.cci.aiw.cvrg.eureka.common.comm.ResultThresholds;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.Sequence;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.SystemElement;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.Proposition;
+import edu.emory.cci.aiw.cvrg.eureka.common.exception.DataElementHandlingException;
 
 public final class DataElementTranslatorVisitor implements DataElementVisitor {
 
@@ -61,24 +62,26 @@ public final class DataElementTranslatorVisitor implements DataElementVisitor {
 	}
 
 	@Override
-	public void visit(SystemElement systemElement) {
+	public void visit(SystemElement systemElement) 
+			throws DataElementHandlingException {
 		proposition = this.systemPropositionTranslator
 				.translateFromElement(systemElement);
 	}
 
 	@Override
-	public void visit(CategoricalElement categoricalElement) {
+	public void visit(CategoricalElement categoricalElement) 
+			throws DataElementHandlingException{
 		proposition = this.categorizationTranslator
 				.translateFromElement(categoricalElement);
 	}
 
 	@Override
-	public void visit(Sequence sequence) {
+	public void visit(Sequence sequence) throws DataElementHandlingException {
 		proposition = this.sequenceTranslator.translateFromElement(sequence);
 	}
 
 	@Override
-	public void visit(Frequency frequency) {
+	public void visit(Frequency frequency) throws DataElementHandlingException {
 		if (!frequency.getIsConsecutive()) {
 			proposition = this.frequencySliceTranslator
 					.translateFromElement(frequency);
@@ -89,7 +92,8 @@ public final class DataElementTranslatorVisitor implements DataElementVisitor {
 	}
 
 	@Override
-	public void visit(ResultThresholds thresholds) {
+	public void visit(ResultThresholds thresholds) 
+			throws DataElementHandlingException {
 		proposition = this.resultThresholdsTranslator
 				.translateFromElement(thresholds);
 	}

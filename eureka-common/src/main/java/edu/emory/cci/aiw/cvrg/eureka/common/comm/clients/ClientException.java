@@ -24,7 +24,20 @@ package edu.emory.cci.aiw.cvrg.eureka.common.comm.clients;
  */
 public class ClientException extends Exception {
 
-	public ClientException (String message) {
-		super(message);
+	public ClientException() {
 	}
+
+	public ClientException(String string) {
+		super(string);
+	}
+
+	public ClientException(String string, Throwable thrwbl) {
+		super(string, thrwbl);
+	}
+
+	public ClientException(Throwable thrwbl) {
+		super(thrwbl);
+	}
+	
+	
 }

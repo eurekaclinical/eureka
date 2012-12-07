@@ -23,8 +23,11 @@ import org.protempa.PropositionDefinition;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.SystemProposition;
 import edu.emory.cci.aiw.cvrg.eureka.services.config.ServiceProperties;
+import edu.emory.cci.aiw.cvrg.eureka.services.finder.PropositionFindException;
 import edu.emory.cci.aiw.cvrg.eureka.services.finder.SystemPropositionFinder;
 import edu.emory.cci.aiw.cvrg.eureka.services.finder.SystemPropositionRetriever;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public final class SystemPropositionPackager implements
         PropositionDefinitionPackager<SystemProposition, PropositionDefinition> {
@@ -39,6 +42,11 @@ public final class SystemPropositionPackager implements
 	public PropositionDefinition pack(SystemProposition proposition) {
 		SystemPropositionFinder finder = new SystemPropositionFinder(
 		        new SystemPropositionRetriever(new ServiceProperties()));
+		try {		
 			return finder.find(this.userId, proposition.getKey());
+		} catch (PropositionFindException ex) {
+			throw new AssertionError("Error retrieving system propositions: " + 
+					ex.getMessage());
+		}
 	}
 }

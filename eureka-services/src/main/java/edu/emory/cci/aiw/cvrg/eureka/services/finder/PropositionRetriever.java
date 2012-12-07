@@ -21,6 +21,25 @@ package edu.emory.cci.aiw.cvrg.eureka.services.finder;
 
 import org.protempa.PropositionDefinition;
 
+/**
+ * Interface for accessing sources of proposition definitions.
+ * 
+ * @author hrathod
+ * @param <U> user id objects.
+ * @param <K> proposition id objects.
+ */
 public interface PropositionRetriever<U, K> {
-	PropositionDefinition retrieve (U inUserId, K inKey);
+	/**
+	 * Retrieves a proposition definition with the specified id and for the
+	 * specified user.
+	 * 
+	 * @param inUserId the user's id.
+	 * @param inKey the proposition id of interest.
+	 * @return the proposition definition of interest, or <code>null</code> if 
+	 * not found.
+	 * 
+	 * @throws PropositionRetrieveException if the retrieval failed.
+	 */
+	PropositionDefinition retrieve (U inUserId, K inKey)
+			throws PropositionFindException;
 }

@@ -37,6 +37,7 @@ import org.protempa.SliceDefinition;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.SystemElement;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.Proposition;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.SystemProposition.SystemType;
+import edu.emory.cci.aiw.cvrg.eureka.services.finder.PropositionFindException;
 import edu.emory.cci.aiw.cvrg.eureka.services.finder.SystemPropositionFinder;
 import edu.emory.cci.aiw.cvrg.eureka.services.packaging.PropositionDefinitionPackagerVisitor;
 
@@ -57,16 +58,15 @@ public final class PropositionUtil {
 //		inProposition.accept(visitor);
 //		return visitor.getDataElement();
 //	}
-
 	private static class PropositionDefinitionTypeVisitor implements
-	        PropositionDefinitionVisitor {
+			PropositionDefinitionVisitor {
 
 		SystemType systemType;
 
 		@Override
 		public void visit(Collection<? extends PropositionDefinition> arg0) {
 			throw new UnsupportedOperationException(
-			        "getting the type of a collection is not supported");
+					"getting the type of a collection is not supported");
 		}
 
 		@Override
@@ -104,20 +104,23 @@ public final class PropositionUtil {
 			systemType = SystemType.SLICE_ABSTRACTION;
 		}
 	}
-
 	private static final PropositionDefinitionTypeVisitor PROP_DEF_TYPE_VISITOR = new PropositionDefinitionTypeVisitor();
 
 	/**
 	 * Wraps a proposition definition into a proposition wrapper.
 	 */
 	public static SystemElement wrap(PropositionDefinition inDefinition,
-	        boolean summarize, Long inUserId,
-	        SystemPropositionFinder inPropositionFinder) {
+			boolean summarize, Long inUserId,
+			SystemPropositionFinder inPropositionFinder)
+			throws PropositionFindException {
+		if (inDefinition == null) {
+			throw new IllegalArgumentException("inDefinition cannot be null");
+		}
 		SystemElement systemElement = new SystemElement();
 		systemElement.setKey(inDefinition.getId());
 		systemElement.setInSystem(true);
 		systemElement.setAbbrevDisplayName(inDefinition
-		        .getAbbreviatedDisplayName());
+				.getAbbreviatedDisplayName());
 		systemElement.setDisplayName(inDefinition.getDisplayName());
 		systemElement.setSummarized(summarize);
 		systemElement.setParent(inDefinition.getChildren().length > 0);
@@ -127,14 +130,22 @@ public final class PropositionUtil {
 		if (!summarize) {
 			List<SystemElement> children = new ArrayList<SystemElement>();
 			for (String key : inDefinition.getChildren()) {
-				children.add(wrap(inPropositionFinder.find(inUserId, key),
-				        true, inUserId, inPropositionFinder));
+				PropositionDefinition pd = 
+						inPropositionFinder.find(inUserId, key);
+				if (pd != null) {
+					children.add(
+							wrap(pd, true, inUserId, inPropositionFinder));
+				} else {
+					throw new PropositionFindException("Could not find child '" 
+							+ key + "' of proposition definition '" 
+							+ inDefinition.getId() + "'");
+				}
 			}
 			systemElement.setChildren(children);
 
 			List<String> properties = new ArrayList<String>();
 			for (PropertyDefinition propertyDef : inDefinition
-			        .getPropertyDefinitions()) {
+					.getPropertyDefinitions()) {
 				properties.add(propertyDef.getName());
 			}
 			systemElement.setProperties(properties);
@@ -152,19 +163,17 @@ public final class PropositionUtil {
 //		inElement.accept(visitor);
 //		return visitor.getProposition();
 //	}
-
 	/**
 	 * Converts a proposition entity into an equivalent proposition definition
 	 * understood by Protempa.
 	 *
-	 * @param inProposition
-	 *            the {@link Proposition} to convert
+	 * @param inProposition the {@link Proposition} to convert
 	 * @return a {@link PropositionDefinition} corresponding to the given
-	 *         proposition entity
+	 * proposition entity
 	 */
 	public static PropositionDefinition pack(Proposition inProposition) {
 		PropositionDefinitionPackagerVisitor visitor = new PropositionDefinitionPackagerVisitor(
-		        inProposition.getUserId());
+				inProposition.getUserId());
 		inProposition.accept(visitor);
 		return visitor.getPropositionDefinition();
 	}
@@ -173,13 +182,12 @@ public final class PropositionUtil {
 	 * Converts a list of proposition entities into equivalent proposition
 	 * definitions by repeatedly calling {@link #pack(Proposition)}.
 	 *
-	 * @param inPropositions
-	 *            a {@link List} of {@link Proposition}s to convert
+	 * @param inPropositions a {@link List} of {@link Proposition}s to convert
 	 * @return a {@link List} of {@link PropositionDefinition}s corresponding to
-	 *         the given proposition entities
+	 * the given proposition entities
 	 */
 	public static List<PropositionDefinition> packAll(
-	        List<Proposition> inPropositions, Long inUserId) {
+			List<Proposition> inPropositions, Long inUserId) {
 		List<PropositionDefinition> result = new ArrayList<PropositionDefinition>();
 
 		for (Proposition p : inPropositions) {

@@ -17,11 +17,27 @@
  * limitations under the License.
  * #L%
  */
-package edu.emory.cci.aiw.cvrg.eureka.common.comm;
+package edu.emory.cci.aiw.cvrg.eureka.common.exception;
 
-import edu.emory.cci.aiw.cvrg.eureka.common.exception.DataElementHandlingException;
+/**
+ *
+ * @author Andrew Post
+ */
+public class DataElementHandlingException extends Exception {
 
-public interface DataElementVisitable {
+	public DataElementHandlingException() {
+	}
 
-	public void accept(DataElementVisitor visitor) throws DataElementHandlingException;
+	public DataElementHandlingException(String string) {
+		super(string);
+	}
+
+	public DataElementHandlingException(String string, Throwable thrwbl) {
+		super(string, thrwbl);
+	}
+
+	public DataElementHandlingException(Throwable thrwbl) {
+		super(thrwbl);
+	}
+	
 }

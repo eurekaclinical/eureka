@@ -39,14 +39,15 @@ import com.google.inject.Inject;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.DataElement;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.Proposition;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.PropositionChildrenVisitor;
+import edu.emory.cci.aiw.cvrg.eureka.common.exception.DataElementHandlingException;
 import edu.emory.cci.aiw.cvrg.eureka.common.exception.HttpStatusException;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.PropositionDao;
-import edu.emory.cci.aiw.cvrg.eureka.services.translation
-		.DataElementTranslatorVisitor;
-import edu.emory.cci.aiw.cvrg.eureka.services.translation
-		.PropositionTranslatorVisitor;
+import edu.emory.cci.aiw.cvrg.eureka.services.translation.DataElementTranslatorVisitor;
+import edu.emory.cci.aiw.cvrg.eureka.services.translation.PropositionTranslatorVisitor;
 
-/**PropositionCh
+/**
+ * PropositionCh
+ *
  * @author hrathod
  */
 @Path("/dataelement")
@@ -60,8 +61,7 @@ public class DataElementResource {
 	private final DataElementTranslatorVisitor dataElementTranslatorVisitor;
 
 	@Inject
-	public DataElementResource(PropositionDao inDao, SystemElementResource
-			inResource, PropositionTranslatorVisitor inPropositionTranslatorVisitor,
+	public DataElementResource(PropositionDao inDao, SystemElementResource inResource, PropositionTranslatorVisitor inPropositionTranslatorVisitor,
 			DataElementTranslatorVisitor inDataElementTranslatorVisitor) {
 		this.propositionDao = inDao;
 		this.systemElementResource = inResource;
@@ -74,14 +74,13 @@ public class DataElementResource {
 	public List<DataElement> getAll(@PathParam("userId") Long inUserId) {
 
 		List<DataElement> result = new ArrayList<DataElement>();
-		List<Proposition> propositions = this.propositionDao.getByUserId
-				(inUserId);
+		List<Proposition> propositions = this.propositionDao.getByUserId(inUserId);
 
 		for (Proposition proposition : propositions) {
 			if (proposition.isInSystem()) {
 				result.add(
 						this.systemElementResource.get(
-								inUserId, proposition.getKey()));
+						inUserId, proposition.getKey()));
 			} else {
 				proposition.accept(this.propositionTranslatorVisitor);
 				result.add(propositionTranslatorVisitor.getDataElement());
@@ -96,8 +95,7 @@ public class DataElementResource {
 	public DataElement get(@PathParam("userId") Long inUserId,
 			@PathParam("key") String inKey) {
 		DataElement result;
-		Proposition proposition = this.propositionDao.getByUserAndKey
-				(inUserId, inKey);
+		Proposition proposition = this.propositionDao.getByUserAndKey(inUserId, inKey);
 		if (proposition == null || proposition.isInSystem()) {
 			result = this.systemElementResource.get(inUserId, inKey);
 		} else {
@@ -111,17 +109,22 @@ public class DataElementResource {
 	public void create(DataElement inElement) {
 		if (inElement.getId() != null) {
 			throw new HttpStatusException(
-					Response.Status.PRECONDITION_FAILED, "Data element to " +
-					"be created should not have an identifier.");
+					Response.Status.PRECONDITION_FAILED, "Data element to "
+					+ "be created should not have an identifier.");
 		}
 
 		if (inElement.getUserId() == null) {
 			throw new HttpStatusException(
-					Response.Status.PRECONDITION_FAILED, "Data element to " +
-					"be created should must have a user identifier.");
+					Response.Status.PRECONDITION_FAILED, "Data element to "
+					+ "be created should must have a user identifier.");
 		}
 
-		inElement.accept(this.dataElementTranslatorVisitor);
+		try {
+			inElement.accept(this.dataElementTranslatorVisitor);
+		} catch (DataElementHandlingException ex) {
+			throw new HttpStatusException(
+					Response.Status.INTERNAL_SERVER_ERROR, ex);
+		}
 		Proposition proposition = this.dataElementTranslatorVisitor
 				.getProposition();
 		Date now = new Date();
@@ -131,20 +134,24 @@ public class DataElementResource {
 	}
 
 	@PUT
-	public void update (DataElement inElement) {
+	public void update(DataElement inElement) {
 		if (inElement.getId() == null) {
-			throw new HttpStatusException(Response.Status
-					.PRECONDITION_FAILED, "Data element to be updated must " +
-					"have a unique identifier.");
+			throw new HttpStatusException(Response.Status.PRECONDITION_FAILED, 
+					"Data element to be updated must "
+					+ "have a unique identifier.");
 		}
 
 		if (inElement.getUserId() == null) {
-			throw new HttpStatusException(Response.Status
-					.PRECONDITION_FAILED, "Data element to be updated must " +
-					"have a user identifier");
+			throw new HttpStatusException(Response.Status.PRECONDITION_FAILED, 
+					"Data element to be updated must "
+					+ "have a user identifier");
 		}
-
-		inElement.accept(this.dataElementTranslatorVisitor);
+		try {
+			inElement.accept(this.dataElementTranslatorVisitor);
+		} catch (DataElementHandlingException ex) {
+			throw new HttpStatusException(
+					Response.Status.INTERNAL_SERVER_ERROR, ex);
+		}
 		Proposition proposition = this.dataElementTranslatorVisitor
 				.getProposition();
 		Date now = new Date();
@@ -154,23 +161,20 @@ public class DataElementResource {
 
 	@DELETE
 	@Path("/{userId}/{key}")
-	public void delete (@PathParam("userId") Long inUserId,
+	public void delete(@PathParam("userId") Long inUserId,
 			@PathParam("key") String inKey) {
-		Proposition proposition = this.propositionDao.getByUserAndKey
-				(inUserId, inKey);
+		Proposition proposition = this.propositionDao.getByUserAndKey(inUserId, inKey);
 		List<Proposition> others = this.propositionDao.getByUserId(inUserId);
 
 		for (Proposition other : others) {
 			if (!other.getId().equals(proposition.getId())) {
-				PropositionChildrenVisitor visitor = new
-						PropositionChildrenVisitor();
+				PropositionChildrenVisitor visitor = new PropositionChildrenVisitor();
 				other.accept(visitor);
 				for (Proposition child : visitor.getChildren()) {
 					if (child.getId().equals(proposition.getId())) {
-						throw new HttpStatusException(Response.Status
-								.PRECONDITION_FAILED, "The data element to be" +
-								" removed is used in the definition of " +
-								other.getAbbrevDisplayName());
+						throw new HttpStatusException(Response.Status.PRECONDITION_FAILED, "The data element to be"
+								+ " removed is used in the definition of "
+								+ other.getAbbrevDisplayName());
 					}
 				}
 			}
@@ -178,10 +182,10 @@ public class DataElementResource {
 
 		this.propositionDao.remove(proposition);
 	}
-/*
-	@Path("/systemelement")
-	public SystemElementResource getSystemElementResource() {
-		return this.systemElementResource;
-	}
-*/
+	/*
+	 @Path("/systemelement")
+	 public SystemElementResource getSystemElementResource() {
+	 return this.systemElementResource;
+	 }
+	 */
 }

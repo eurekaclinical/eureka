@@ -19,6 +19,8 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.common.comm;
 
+import edu.emory.cci.aiw.cvrg.eureka.common.exception.DataElementHandlingException;
+
 public final class Frequency extends DataElement {
 
 	private Integer atLeast;
@@ -99,7 +101,8 @@ public final class Frequency extends DataElement {
 	}
 
 	@Override
-	public void accept(DataElementVisitor visitor) {
+	public void accept(DataElementVisitor visitor) 
+			throws DataElementHandlingException {
 		visitor.visit(this);
 	}
 

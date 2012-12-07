@@ -35,6 +35,9 @@ import edu.emory.cci.aiw.cvrg.eureka.common.comm.JobRequest;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.ValidationRequest;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.Configuration;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.Job;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import javax.ws.rs.core.UriBuilder;
 
 /**
  * @author hrathod
@@ -100,14 +103,28 @@ public class EtlClient extends AbstractClient {
 		}
 	}
 
+	/**
+	 * Gets a proposition definition with a specified id for a specified user.
+	 * 
+	 * @param inUserId the user's id.
+	 * @param inKey the proposition id of interest.
+	 * @return the proposition id, if found, or <code>null</code> if not.
+	 * 
+	 * @throws ClientException if an error occurred looking for the proposition
+	 * definition.
+	 */
 	public PropositionDefinition getPropositionDefinition (Long inUserId,
 			String inKey) throws ClientException {
-		final String path = "/api/proposition/" + inUserId + "/" + inKey;
 		PropositionDefinition result;
 		try {
+			//UriBuilder.fromPath("/").path("api/proposition").fragment("" + inUserId).fragment(inKey).toString();
+			final String path = "/api/proposition/" + inUserId + "/" + 
+					URLEncoder.encode(inKey, "UTF-8");
 			result = this.getResource().path(path).accept(MediaType
 					.APPLICATION_JSON).type(MediaType.APPLICATION_JSON).get
 					(PropositionDefinition.class);
+		} catch (UnsupportedEncodingException ex) {
+			throw new AssertionError("UTF-8 is an unsupported encoding!");
 		} catch (UniformInterfaceException e) {
 			if (!ClientResponse.Status.NOT_FOUND.equals(e.getResponse()
 					.getClientResponseStatus())) {

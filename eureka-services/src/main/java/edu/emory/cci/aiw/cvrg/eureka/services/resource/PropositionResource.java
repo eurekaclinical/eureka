@@ -52,9 +52,11 @@ import edu.emory.cci.aiw.cvrg.eureka.common.entity.Categorization;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.HighLevelAbstraction;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.Proposition;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.PropositionChildrenVisitor;
+import edu.emory.cci.aiw.cvrg.eureka.common.exception.DataElementHandlingException;
 import edu.emory.cci.aiw.cvrg.eureka.common.exception.HttpStatusException;
 import edu.emory.cci.aiw.cvrg.eureka.services.config.ServiceProperties;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.PropositionDao;
+import edu.emory.cci.aiw.cvrg.eureka.services.finder.PropositionFindException;
 import edu.emory.cci.aiw.cvrg.eureka.services.finder.SystemPropositionFinder;
 import edu.emory.cci.aiw.cvrg.eureka.services.translation.CategorizationTranslator;
 import edu.emory.cci.aiw.cvrg.eureka.services.translation.DataElementTranslatorVisitor;
@@ -65,6 +67,7 @@ import edu.emory.cci.aiw.cvrg.eureka.services.translation.ResultThresholdsTransl
 import edu.emory.cci.aiw.cvrg.eureka.services.translation.SequenceTranslator;
 import edu.emory.cci.aiw.cvrg.eureka.services.translation.SystemPropositionTranslator;
 import edu.emory.cci.aiw.cvrg.eureka.services.util.PropositionUtil;
+import java.util.logging.Level;
 
 /**
  * REST Web Service
@@ -127,20 +130,21 @@ public class PropositionResource {
 				.getDefaultSystemPropositions();
 		for (String name : propNames) {
 			try {
-				elements.add(fetchSystemProposition(inUserId, name));
-			} catch (UniformInterfaceException e) {
-				if (e.getResponse().getStatus() != Response.Status.NOT_FOUND
-						.getStatusCode()) {
-					throw new HttpStatusException(
-							Response.Status.INTERNAL_SERVER_ERROR,
-							"Error getting proposition " + name
-							+ " (message from Protempa ETL backend): "
-							+ e.getMessage(),
-							e);
-				} else {
+				SystemElement systemElement = fetchSystemProposition(inUserId, name);
+				if (systemElement == null) {
 					LOGGER.warn("Invalid proposition id specified in system "
 							+ "propositions list: " + name);
+				} else {
+					elements.add(systemElement);
 				}
+			} catch (PropositionFindException e) {
+				throw new HttpStatusException(
+						Response.Status.INTERNAL_SERVER_ERROR,
+						"Error getting proposition " + name
+						+ " (message from Protempa ETL backend): "
+						+ e.getMessage(),
+						e);
+
 			}
 		}
 
@@ -153,23 +157,24 @@ public class PropositionResource {
 			@PathParam("userId") Long inUserId,
 			@PathParam("propKey") String inKey) {
 		try {
-			return fetchSystemProposition(inUserId, inKey);
-		} catch (UniformInterfaceException e) {
-			if (e.getResponse().getStatus() != Response.Status.NOT_FOUND
-					.getStatusCode()) {
-				throw new HttpStatusException(
-						Response.Status.INTERNAL_SERVER_ERROR,
-						"Error getting proposition " + inKey
-						+ " (message from Protempa ETL backend): "
-						+ e.getMessage(),
-						e);
-			} else {
+			SystemElement systemElement = fetchSystemProposition(inUserId, inKey);
+			if (systemElement == null) {
+				LOGGER.warn("Invalid proposition id specified in system "
+						+ "propositions list: " + inKey);
 				throw new HttpStatusException(
 						Response.Status.NOT_FOUND,
 						"Invalid proposition id specified in system "
-						+ "propositions list: " + inKey,
-						e);
+						+ "propositions list: " + inKey);
+			} else {
+				return systemElement;
 			}
+		} catch (PropositionFindException e) {
+			throw new HttpStatusException(
+					Response.Status.INTERNAL_SERVER_ERROR,
+					"Error getting proposition " + inKey
+					+ " (message from Protempa ETL backend): "
+					+ e.getMessage(),
+					e);
 		}
 	}
 
@@ -180,7 +185,12 @@ public class PropositionResource {
 		List<SystemElement> systemElements = new ArrayList<SystemElement>(
 				inIdList.size());
 		for (String id : inIdList) {
-			systemElements.add(this.fetchSystemProposition(inUserId, id));
+			try {
+				systemElements.add(this.fetchSystemProposition(inUserId, id));
+			} catch (PropositionFindException ex) {
+				throw new HttpStatusException(
+						Response.Status.INTERNAL_SERVER_ERROR, ex);
+			}
 		}
 		return systemElements;
 	}
@@ -231,8 +241,7 @@ public class PropositionResource {
 			etlClient.validatePropositions(validationRequest);
 		} catch (ClientException e) {
 			LOGGER.error(e.getMessage(), e);
-			throw new HttpStatusException(Response.Status
-					.PRECONDITION_FAILED, e.getMessage());
+			throw new HttpStatusException(Response.Status.PRECONDITION_FAILED, e.getMessage());
 		}
 	}
 
@@ -245,8 +254,13 @@ public class PropositionResource {
 		this.propositionDao.refresh(proposition);
 		if (proposition != null) {
 			if (proposition.isInSystem()) {
-				dataElement = this.fetchSystemProposition(
-						proposition.getUserId(), proposition.getKey());
+				try {
+					dataElement = this.fetchSystemProposition(
+							proposition.getUserId(), proposition.getKey());
+				} catch (PropositionFindException ex) {
+					throw new HttpStatusException(
+							Response.Status.INTERNAL_SERVER_ERROR, ex);
+				}
 				dataElement.setCreated(proposition.getCreated());
 				dataElement.setLastModified(proposition.getLastModified());
 			} else {
@@ -333,7 +347,12 @@ public class PropositionResource {
 					this.frequencySliceTranslator,
 					this.frequencyLowLevelAbstractionTranslator,
 					this.resultThresholdsTranslator);
-			inDataElement.accept(visitor);
+			try {
+				inDataElement.accept(visitor);
+			} catch (DataElementHandlingException ex) {
+				throw new HttpStatusException(
+						Response.Status.INTERNAL_SERVER_ERROR, ex);
+			}
 			Proposition proposition = visitor.getProposition();
 			proposition.setLastModified(new Date());
 			this.propositionDao.update(proposition);
@@ -347,12 +366,17 @@ public class PropositionResource {
 	@Path("/user/create/sequence")
 	public void insertProposition(Sequence inSequence) {
 		if (inSequence.getUserId() != null) {
-			HighLevelAbstraction abstraction = this.sequenceTranslator
-					.translateFromElement(inSequence);
-			Date now = new Date();
-			abstraction.setCreated(now);
-			abstraction.setLastModified(now);
-			this.propositionDao.create(abstraction);
+			try {
+				HighLevelAbstraction abstraction = this.sequenceTranslator
+						.translateFromElement(inSequence);
+				Date now = new Date();
+				abstraction.setCreated(now);
+				abstraction.setLastModified(now);
+				this.propositionDao.create(abstraction);
+			} catch (DataElementHandlingException ex) {
+				throw new HttpStatusException(
+						Response.Status.INTERNAL_SERVER_ERROR, ex);
+			}
 		} else {
 			throw new HttpStatusException(Response.Status.PRECONDITION_FAILED,
 					"User ID must be provided.");
@@ -363,11 +387,16 @@ public class PropositionResource {
 	@Path("/user/update/sequence")
 	public void updateProposition(Sequence inSequence) {
 		if (inSequence.getId() != null && inSequence.getUserId() != null) {
-			HighLevelAbstraction abstraction = this.sequenceTranslator
-					.translateFromElement(inSequence);
-			Date now = new Date();
-			abstraction.setLastModified(now);
-			this.propositionDao.update(abstraction);
+			try {
+				HighLevelAbstraction abstraction = this.sequenceTranslator
+						.translateFromElement(inSequence);
+				Date now = new Date();
+				abstraction.setLastModified(now);
+				this.propositionDao.update(abstraction);
+			} catch (DataElementHandlingException ex) {
+				throw new HttpStatusException(
+						Response.Status.INTERNAL_SERVER_ERROR, ex);
+			}
 		} else {
 			throw new HttpStatusException(Response.Status.PRECONDITION_FAILED,
 					"User ID and proposition ID must be provided.");
@@ -378,12 +407,17 @@ public class PropositionResource {
 	@Path("/user/create/categorization")
 	public void insertProposition(CategoricalElement inElement) {
 		if (inElement.getUserId() != null) {
-			Categorization categorization = this.categorizationTranslator
-					.translateFromElement(inElement);
-			Date now = new Date();
-			categorization.setCreated(now);
-			categorization.setLastModified(now);
-			this.propositionDao.create(categorization);
+			try {
+				Categorization categorization = this.categorizationTranslator
+						.translateFromElement(inElement);
+				Date now = new Date();
+				categorization.setCreated(now);
+				categorization.setLastModified(now);
+				this.propositionDao.create(categorization);
+			} catch (DataElementHandlingException ex) {
+				throw new HttpStatusException(
+						Response.Status.INTERNAL_SERVER_ERROR, ex);
+			}
 		} else {
 			throw new HttpStatusException(Response.Status.PRECONDITION_FAILED,
 					"User ID must be " + "provided.");
@@ -394,18 +428,23 @@ public class PropositionResource {
 	@Path("/user/update/categorization")
 	public void updateProposition(CategoricalElement inElement) {
 		if (inElement.getId() != null && inElement.getUserId() != null) {
-			Categorization categorization = this.categorizationTranslator
-					.translateFromElement(inElement);
-			Date now = new Date();
-			categorization.setLastModified(now);
-			this.propositionDao.update(categorization);
+			try {
+				Categorization categorization = this.categorizationTranslator
+						.translateFromElement(inElement);
+				Date now = new Date();
+				categorization.setLastModified(now);
+				this.propositionDao.update(categorization);
+			} catch (DataElementHandlingException ex) {
+				throw new HttpStatusException(
+						Response.Status.INTERNAL_SERVER_ERROR, ex);
+			}
 		} else {
 			throw new HttpStatusException(Response.Status.PRECONDITION_FAILED,
 					"Both user ID and " + "proposition ID must be provided.");
 		}
 	}
 
-	private SystemElement fetchSystemProposition(Long inUserId, String inKey) {
+	private SystemElement fetchSystemProposition(Long inUserId, String inKey) throws PropositionFindException {
 		return PropositionUtil.wrap(
 				systemPropositionFinder.find(inUserId, inKey), false, inUserId,
 				this.systemPropositionFinder);

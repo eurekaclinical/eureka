@@ -35,13 +35,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.inject.Inject;
-import com.sun.jersey.api.client.UniformInterfaceException;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.SystemElement;
 import edu.emory.cci.aiw.cvrg.eureka.common.exception.HttpStatusException;
 import edu.emory.cci.aiw.cvrg.eureka.services.config.ServiceProperties;
+import edu.emory.cci.aiw.cvrg.eureka.services.finder.PropositionFindException;
 import edu.emory.cci.aiw.cvrg.eureka.services.finder.SystemPropositionFinder;
 import edu.emory.cci.aiw.cvrg.eureka.services.util.PropositionUtil;
+import java.util.logging.Level;
 
 /**
  * @author hrathod
@@ -51,8 +52,7 @@ import edu.emory.cci.aiw.cvrg.eureka.services.util.PropositionUtil;
 @Consumes(MediaType.APPLICATION_JSON)
 public class SystemElementResource {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger
-			(SystemElementResource.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(SystemElementResource.class);
 	private final SystemPropositionFinder finder;
 	private final ServiceProperties serviceProperties;
 
@@ -72,20 +72,18 @@ public class SystemElementResource {
 			try {
 				PropositionDefinition definition = this.finder.find(
 						inUserId, key);
-				SystemElement element = PropositionUtil.wrap(
-						definition, false, inUserId, this.finder);
-				result.add(element);
-			} catch (UniformInterfaceException e) {
-				Response.Status status = Response.Status.fromStatusCode(
-						e.getResponse().getStatus());
-				if (Response.Status.NOT_FOUND.equals(status)) {
+				if (definition == null) {
 					LOGGER.warn(
-							"Invalid proposition key specified in system " +
-									"propositions list " + key);
+							"Invalid proposition key specified in system "
+							+ "propositions list " + key);
 				} else {
-					throw new HttpStatusException(
-							Response.Status.INTERNAL_SERVER_ERROR, e);
+					SystemElement element = PropositionUtil.wrap(
+							definition, false, inUserId, this.finder);
+					result.add(element);
 				}
+			} catch (PropositionFindException e) {
+				throw new HttpStatusException(
+						Response.Status.INTERNAL_SERVER_ERROR, e);
 			}
 		}
 		return result;
@@ -95,7 +93,17 @@ public class SystemElementResource {
 	@Path("/{userId}/{key}")
 	public SystemElement get(@PathParam("userId") Long inUserId,
 			@PathParam("key") String inKey) {
-		PropositionDefinition definition = this.finder.find(inUserId, inKey);
-		return PropositionUtil.wrap(definition, false, inUserId, this.finder);
+		PropositionDefinition definition;
+		try {
+			definition = this.finder.find(inUserId, inKey);
+			if (definition == null) {
+				throw new HttpStatusException(Response.Status.NOT_FOUND);
+			}
+			return PropositionUtil.wrap(definition, false, inUserId, 
+					this.finder);
+		} catch (PropositionFindException ex) {
+			throw new HttpStatusException(
+						Response.Status.INTERNAL_SERVER_ERROR, ex);
+		}
 	}
 }

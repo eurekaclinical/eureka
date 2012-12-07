@@ -21,6 +21,8 @@ package edu.emory.cci.aiw.cvrg.eureka.services.translation;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.DataElement;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.Proposition;
+import edu.emory.cci.aiw.cvrg.eureka.common.exception.DataElementHandlingException;
+import edu.emory.cci.aiw.cvrg.eureka.services.finder.PropositionFindException;
 
 /**
  * Translates a UI data element into a proposition as understood by the service
@@ -43,8 +45,10 @@ public interface PropositionTranslator<E extends DataElement, P extends Proposit
 	 * @param element
 	 *            the data element to translate from
 	 * @return A {@link Proposition} equivalent to the data element.
+	 * @throws DataElementHandlingException if an error occurred retrieving
+	 * proposition definitions.
 	 */
-	P translateFromElement(E element);
+	P translateFromElement(E element) throws DataElementHandlingException;
 
 	/**
 	 * Translates the given proposition entity into a data element understood by

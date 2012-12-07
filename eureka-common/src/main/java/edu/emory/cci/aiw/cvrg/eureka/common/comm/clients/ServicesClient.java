@@ -39,6 +39,9 @@ import edu.emory.cci.aiw.cvrg.eureka.common.entity.RelationOperator;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.Role;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.TimeUnit;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.User;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.util.logging.Level;
 
 /**
  * @author hrathod
@@ -47,21 +50,17 @@ public class ServicesClient extends AbstractClient {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger
 			(ServicesClient.class);
-	private static final GenericType<List<DataElement>> UserPropositionList
-			= new GenericType<List<DataElement>>() {
+	private static final GenericType<List<DataElement>> UserPropositionList = new GenericType<List<DataElement>>() {
 	};
-	private static final GenericType<List<TimeUnit>> TimeUnitList = new
-			GenericType<List<TimeUnit>>() {
+	private static final GenericType<List<TimeUnit>> TimeUnitList = new GenericType<List<TimeUnit>>() {
 	};
-	private static final GenericType<List<RelationOperator>>
-			RelationOperatorList = new GenericType<List<RelationOperator>>() {
+	private static final GenericType<List<RelationOperator>> RelationOperatorList = new GenericType<List<RelationOperator>>() {
 	};
-	private static final GenericType<List<SystemElement>> SystemElementList
-			= new GenericType<List<SystemElement>>() {
+	private static final GenericType<List<SystemElement>> SystemElementList = new GenericType<List<SystemElement>>() {
 	};
 	private static final GenericType<List<DataElement>> DataElementList =
 			new GenericType<List<DataElement>>() {
-	};
+			};
 	private static final GenericType<List<Role>> RoleList = new GenericType
 			<List<Role>>() {
 	};
@@ -185,8 +184,7 @@ public class ServicesClient extends AbstractClient {
 	public void saveUserElement(DataElement inDataElement)
 			throws ClientException {
 		final String path = "/api/dataelement";
-		ClientResponse response = this.getResource().path(path).type
-				(MediaType.APPLICATION_JSON).accept(
+		ClientResponse response = this.getResource().path(path).type(MediaType.APPLICATION_JSON).accept(
 				MediaType.APPLICATION_JSON).post(
 				ClientResponse.class, inDataElement);
 		if (!response.getClientResponseStatus().equals(
@@ -200,8 +198,7 @@ public class ServicesClient extends AbstractClient {
 	public void updateUserElement(DataElement inDataElement) throws
 			ClientException {
 		final String path = "/api/dataelement";
-		ClientResponse response = this.getResource().path(path).type
-				(MediaType.APPLICATION_JSON).accept(
+		ClientResponse response = this.getResource().path(path).type(MediaType.APPLICATION_JSON).accept(
 				MediaType.APPLICATION_JSON).put(
 				ClientResponse.class, inDataElement);
 		if (!response.getClientResponseStatus().equals(
@@ -228,13 +225,12 @@ public class ServicesClient extends AbstractClient {
 			ClientException {
 		final String path = "/api/dataelement/" + inUserId + "/" + inKey;
 		ClientResponse response = this.getResource().path(path).accept(
-				MediaType.APPLICATION_JSON).type(MediaType
-				.APPLICATION_JSON).delete(ClientResponse.class);
-		if (response.getClientResponseStatus().getStatusCode() !=
-				ClientResponse.Status.NO_CONTENT.getStatusCode()) {
+				MediaType.APPLICATION_JSON).type(MediaType.APPLICATION_JSON).delete(ClientResponse.class);
+		if (response.getClientResponseStatus().getStatusCode()
+				!= ClientResponse.Status.NO_CONTENT.getStatusCode()) {
 			throw new ClientException(
-					"Element " + inKey + "could not be " +
-							"deleted for user " + inUserId);
+					"Element " + inKey + "could not be "
+					+ "deleted for user " + inUserId);
 		}
 	}
 
@@ -245,7 +241,13 @@ public class ServicesClient extends AbstractClient {
 	}
 
 	public SystemElement getSystemElement(Long inUserId, String inKey) {
-		final String path = "/api/systemelements/" + inUserId + "/" + inKey;
+		final String path;
+		try {
+			path = "/api/systemelements/" + inUserId + "/"
+					+ URLEncoder.encode(inKey, "UTF-8");
+		} catch (UnsupportedEncodingException ex) {
+			throw new AssertionError("UTF-8 is an unsupported encoding!");
+		}
 		return this.getResource().path(path).accept(
 				MediaType.APPLICATION_JSON).get(SystemElement.class);
 	}

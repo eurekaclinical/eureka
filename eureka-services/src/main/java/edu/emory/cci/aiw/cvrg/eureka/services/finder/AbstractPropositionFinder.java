@@ -19,6 +19,7 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.services.finder;
 
+import com.sun.jersey.api.client.UniformInterfaceException;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -33,24 +34,35 @@ import net.sf.ehcache.Element;
 
 public abstract class AbstractPropositionFinder<U, K> {
 
-	private static Logger LOGGER = LoggerFactory.getLogger
-		(AbstractPropositionFinder.class);
+	private static Logger LOGGER = LoggerFactory.getLogger(AbstractPropositionFinder.class);
 	private static final ExecutorService executorService =
-		Executors.newSingleThreadExecutor();
+			Executors.newSingleThreadExecutor();
 	private final PropositionRetriever<U, K> retriever;
 
-	protected AbstractPropositionFinder(PropositionRetriever<U,
-		K> inRetriever) {
+	protected AbstractPropositionFinder(PropositionRetriever<U, K> inRetriever) {
 		this.retriever = inRetriever;
 	}
 
-	public PropositionDefinition find(U inUserId, K inKey) {
+	/**
+	 * Retrieves a proposition definition from the {@link PropositionRetriever}
+	 * specified in this object's constructor.
+	 *
+	 * @param inUserId a user id.
+	 * @param inKey a proposition key.
+	 * @return the proposition definition, or <code>null</code> if there is no
+	 * proposition definition with the specified key for the specified user.
+	 *
+	 * @throws UniformInterfaceException if an error occurred looking for the
+	 * proposition definition.
+	 */
+	public PropositionDefinition find(U inUserId, K inKey)
+			throws PropositionFindException {
 		LOGGER.debug("Finding {} for user {}", inUserId, inKey);
 		Cache cache = this.getCache();
 		Element element = cache.get(inKey);
 		if (element == null) {
 			PropositionDefinition propDef =
-				this.retriever.retrieve(inUserId, inKey);
+					this.retriever.retrieve(inUserId, inKey);
 			element = new Element(inKey, propDef);
 			cache.put(element);
 		}
@@ -60,7 +72,7 @@ public abstract class AbstractPropositionFinder<U, K> {
 		return propDef;
 	}
 
-	public void shutdown () {
+	public void shutdown() {
 		this.getCacheManager().removalAll();
 		this.getCacheManager().shutdown();
 	}
@@ -72,7 +84,7 @@ public abstract class AbstractPropositionFinder<U, K> {
 			if (element == null) {
 				LOGGER.debug("Prefetching {}", key);
 				Runnable runnable =
-					new RetrieveRunnable(inUserId, key, cache,
+						new RetrieveRunnable(inUserId, key, cache,
 						this.retriever);
 				executorService.execute(runnable);
 			}
@@ -86,13 +98,14 @@ public abstract class AbstractPropositionFinder<U, K> {
 	abstract protected Cache getCache();
 
 	private class RetrieveRunnable implements Runnable {
+
 		private final U userId;
 		private final K key;
 		private final Cache cache;
 		private final PropositionRetriever<U, K> retriever;
 
 		RetrieveRunnable(U inUserId, K inKey, Cache inCache,
-			PropositionRetriever<U, K> inRetriever) {
+				PropositionRetriever<U, K> inRetriever) {
 			this.userId = inUserId;
 			this.key = inKey;
 			this.cache = inCache;
@@ -101,8 +114,13 @@ public abstract class AbstractPropositionFinder<U, K> {
 
 		@Override
 		public void run() {
-			this.cache.put(new Element(this.key, this.retriever.retrieve
-				(this.userId, this.key)));
+			try {
+				PropositionDefinition pd =
+						this.retriever.retrieve(this.userId, this.key);
+				this.cache.put(new Element(this.key, pd));
+			} catch (PropositionFindException ex) {
+				LOGGER.error("Could not retrieve proposition definition", ex);
+			}
 		}
 	}
 }

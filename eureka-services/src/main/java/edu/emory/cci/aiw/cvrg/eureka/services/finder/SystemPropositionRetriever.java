@@ -29,6 +29,11 @@ import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ClientException;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.EtlClient;
 import edu.emory.cci.aiw.cvrg.eureka.services.config.ServiceProperties;
 
+/**
+ * Retrieves proposition definitions from the ETL layer.
+ * 
+ * @author hrathod
+ */
 public class SystemPropositionRetriever implements PropositionRetriever<Long,
 		String> {
 
@@ -40,11 +45,10 @@ public class SystemPropositionRetriever implements PropositionRetriever<Long,
 	public SystemPropositionRetriever(ServiceProperties inProperties) {
 		this.applicationProperties = inProperties;
 	}
-
+	
 	@Override
-	public PropositionDefinition retrieve(Long inUserId, String inKey) {
-		PropositionDefinition propDef = null;
-
+	public PropositionDefinition retrieve(Long inUserId, String inKey) 
+			throws PropositionFindException {
 		EtlClient etlClient = new EtlClient(
 				this.applicationProperties.getEtlUrl());
 		PropositionDefinition result;
@@ -52,7 +56,9 @@ public class SystemPropositionRetriever implements PropositionRetriever<Long,
 			result = etlClient.getPropositionDefinition(inUserId, inKey);
 		} catch (ClientException e) {
 			LOGGER.error(e.getMessage(), e);
-			result = null;
+			throw new PropositionFindException(
+					"Could not retrieve proposition definition " + inKey + 
+					" for user " + inUserId, e);
 		}
 		return result;
 	}

@@ -1,6 +1,6 @@
 /*
  * #%L
- * Eureka Common
+ * Eureka Services
  * %%
  * Copyright (C) 2012 Emory University
  * %%
@@ -17,11 +17,28 @@
  * limitations under the License.
  * #L%
  */
-package edu.emory.cci.aiw.cvrg.eureka.common.comm;
+package edu.emory.cci.aiw.cvrg.eureka.services.finder;
 
-import edu.emory.cci.aiw.cvrg.eureka.common.exception.DataElementHandlingException;
+/**
+ * Represents errors in retrieving proposition definitions.
+ * 
+ * @author Andrew Post
+ */
+public class PropositionFindException extends Exception {
 
-public interface DataElementVisitable {
+	public PropositionFindException() {
+	}
 
-	public void accept(DataElementVisitor visitor) throws DataElementHandlingException;
+	public PropositionFindException(String string) {
+		super(string);
+	}
+
+	public PropositionFindException(String string, Throwable thrwbl) {
+		super(string, thrwbl);
+	}
+
+	public PropositionFindException(Throwable thrwbl) {
+		super(thrwbl);
+	}
+	
 }

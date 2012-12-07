@@ -29,10 +29,11 @@ import com.google.inject.Inject;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.SystemElement;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.SystemProposition;
+import edu.emory.cci.aiw.cvrg.eureka.services.finder.PropositionFindException;
 import edu.emory.cci.aiw.cvrg.eureka.services.finder.SystemPropositionFinder;
 
 public class SystemPropositionTranslator implements
-        PropositionTranslator<SystemElement, SystemProposition> {
+		PropositionTranslator<SystemElement, SystemProposition> {
 
 	private final SystemPropositionFinder finder;
 
@@ -45,7 +46,7 @@ public class SystemPropositionTranslator implements
 	public SystemProposition translateFromElement(SystemElement element) {
 		SystemProposition proposition = new SystemProposition();
 		PropositionTranslatorUtil.populateCommonPropositionFields(proposition,
-		        element);
+				element);
 		proposition.setSystemType(element.getSystemType());
 		return proposition;
 	}
@@ -53,38 +54,42 @@ public class SystemPropositionTranslator implements
 	@Override
 	public SystemElement translateFromProposition(SystemProposition proposition) {
 		SystemElement element = new SystemElement();
-		PropositionTranslatorUtil.populateCommonDataElementFields(element,
-		        proposition);
-		PropositionDefinition propDef = finder.find(proposition.getUserId(),
-		        proposition.getKey());
-		List<SystemElement> children = new ArrayList<SystemElement>();
-		for (String child : propDef.getInverseIsA()) {
-			PropositionDefinition childDef = finder.find(
-			        proposition.getUserId(), child);
-			SystemElement childElement = new SystemElement();
-			childElement.setKey(child);
-			childElement.setInSystem(true);
-			childElement.setDisplayName(childDef.getDisplayName());
-			childElement.setAbbrevDisplayName(childDef
-			        .getAbbreviatedDisplayName());
-			childElement.setSummarized(true);
-			childElement.setUserId(proposition.getUserId());
-			childElement.setCreated(proposition.getCreated());
-			childElement.setLastModified(proposition.getLastModified());
+		try {
+			PropositionTranslatorUtil.populateCommonDataElementFields(element,
+					proposition);
+			PropositionDefinition propDef = finder.find(proposition.getUserId(),
+					proposition.getKey());
+			List<SystemElement> children = new ArrayList<SystemElement>();
+			for (String child : propDef.getInverseIsA()) {
+				PropositionDefinition childDef = finder.find(
+						proposition.getUserId(), child);
+				SystemElement childElement = new SystemElement();
+				childElement.setKey(child);
+				childElement.setInSystem(true);
+				childElement.setDisplayName(childDef.getDisplayName());
+				childElement.setAbbrevDisplayName(childDef
+						.getAbbreviatedDisplayName());
+				childElement.setSummarized(true);
+				childElement.setUserId(proposition.getUserId());
+				childElement.setCreated(proposition.getCreated());
+				childElement.setLastModified(proposition.getLastModified());
 
-			children.add(childElement);
-		}
-		element.setChildren(children);
+				children.add(childElement);
+			}
+			element.setChildren(children);
 
-		List<String> properties = new ArrayList<String>();
-		for (PropertyDefinition property : propDef.getPropertyDefinitions()) {
-			properties.add(property.getName());
+			List<String> properties = new ArrayList<String>();
+			for (PropertyDefinition property : propDef.getPropertyDefinitions()) {
+				properties.add(property.getName());
+			}
+			element.setInSystem(proposition.isInSystem());
+			element.setProperties(properties);
+			element.setSystemType(proposition.getSystemType());
+		} catch (PropositionFindException ex) {
+			throw new AssertionError(
+					"Error getting proposition definitions: " + ex.getMessage());
 		}
-		element.setInSystem(proposition.isInSystem());
-		element.setProperties(properties);
-		element.setSystemType(proposition.getSystemType());
 
 		return element;
 	}
-
 }

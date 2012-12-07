@@ -33,8 +33,9 @@ import edu.emory.cci.aiw.cvrg.eureka.common.entity.Categorization;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.Categorization.CategorizationType;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.Proposition;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.SystemProposition;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.SystemProposition.SystemType;
+import edu.emory.cci.aiw.cvrg.eureka.common.exception.DataElementHandlingException;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.PropositionDao;
+import edu.emory.cci.aiw.cvrg.eureka.services.finder.PropositionFindException;
 import edu.emory.cci.aiw.cvrg.eureka.services.finder.SystemPropositionFinder;
 
 /**
@@ -71,7 +72,8 @@ public final class CategorizationTranslator implements
 	}
 
 	@Override
-	public Categorization translateFromElement(CategoricalElement element) {
+	public Categorization translateFromElement(CategoricalElement element)
+			throws DataElementHandlingException {
 		Categorization result = new Categorization();
 		PropositionTranslatorUtil.populateCommonPropositionFields(result,
 				element);
@@ -89,43 +91,49 @@ public final class CategorizationTranslator implements
 	}
 
 	private Proposition getOrCreateProposition(String key,
-			CategoricalElement element) {
+			CategoricalElement element) throws DataElementHandlingException {
 		Proposition proposition = this.propositionDao.getByUserAndKey(
 				element.getUserId(), key);
 		if (proposition == null) {
-			PropositionDefinition propDef = this.finder.find(
-					element.getUserId(), key);
-			SystemProposition sysProp = new SystemProposition();
-			sysProp.setKey(key);
-			sysProp.setInSystem(true);
-			sysProp.setDisplayName(propDef.getDisplayName());
-			sysProp.setAbbrevDisplayName(propDef.getAbbreviatedDisplayName());
-			sysProp.setUserId(element.getUserId());
-			sysProp.setCreated(element.getCreated());
-			sysProp.setLastModified(element.getLastModified());
-			proposition = sysProp;
+			try {
+				PropositionDefinition propDef = this.finder.find(
+						element.getUserId(), key);
+				SystemProposition sysProp = new SystemProposition();
+				sysProp.setKey(key);
+				sysProp.setInSystem(true);
+				sysProp.setDisplayName(propDef.getDisplayName());
+				sysProp.setAbbrevDisplayName(propDef.getAbbreviatedDisplayName());
+				sysProp.setUserId(element.getUserId());
+				sysProp.setCreated(element.getCreated());
+				sysProp.setLastModified(element.getLastModified());
+				proposition = sysProp;
+			} catch (PropositionFindException ex) {
+				throw new DataElementHandlingException(
+						"Could not translate categorical element "
+						+ element.getKey(), ex);
+			}
 		}
 		return proposition;
 	}
 
 	private CategorizationType checkPropositionType(CategoricalElement element) {
 		switch (element.getCategoricalType()) {
-		case LOW_LEVEL_ABSTRACTION:
-			return CategorizationType.LOW_LEVEL_ABSTRACTION;
-		case HIGH_LEVEL_ABSTRACTION:
-			return CategorizationType.HIGH_LEVEL_ABSTRACTION;
-		case SLICE_ABSTRACTION:
-			return CategorizationType.SLICE_ABSTRACTION;
-		case CONSTANT:
-			return CategorizationType.CONSTANT;
-		case EVENT:
-			return CategorizationType.EVENT;
-		case PRIMITIVE_PARAMETER:
-			return CategorizationType.PRIMITIVE_PARAMETER;
-		case MIXED:
-			return CategorizationType.MIXED;
-		default:
-			return CategorizationType.UNKNOWN;
+			case LOW_LEVEL_ABSTRACTION:
+				return CategorizationType.LOW_LEVEL_ABSTRACTION;
+			case HIGH_LEVEL_ABSTRACTION:
+				return CategorizationType.HIGH_LEVEL_ABSTRACTION;
+			case SLICE_ABSTRACTION:
+				return CategorizationType.SLICE_ABSTRACTION;
+			case CONSTANT:
+				return CategorizationType.CONSTANT;
+			case EVENT:
+				return CategorizationType.EVENT;
+			case PRIMITIVE_PARAMETER:
+				return CategorizationType.PRIMITIVE_PARAMETER;
+			case MIXED:
+				return CategorizationType.MIXED;
+			default:
+				return CategorizationType.UNKNOWN;
 		}
 	}
 
@@ -155,22 +163,22 @@ public final class CategorizationTranslator implements
 
 	private CategoricalType checkElementType(Categorization proposition) {
 		switch (proposition.getCategorizationType()) {
-		case LOW_LEVEL_ABSTRACTION:
-			return CategoricalType.LOW_LEVEL_ABSTRACTION;
-		case HIGH_LEVEL_ABSTRACTION:
-			return CategoricalType.HIGH_LEVEL_ABSTRACTION;
-		case SLICE_ABSTRACTION:
-			return CategoricalType.SLICE_ABSTRACTION;
-		case CONSTANT:
-			return CategoricalType.CONSTANT;
-		case EVENT:
-			return CategoricalType.EVENT;
-		case PRIMITIVE_PARAMETER:
-			return CategoricalType.PRIMITIVE_PARAMETER;
-		case MIXED:
-			return CategoricalType.MIXED;
-		default:
-			return CategoricalType.UNKNOWN;
+			case LOW_LEVEL_ABSTRACTION:
+				return CategoricalType.LOW_LEVEL_ABSTRACTION;
+			case HIGH_LEVEL_ABSTRACTION:
+				return CategoricalType.HIGH_LEVEL_ABSTRACTION;
+			case SLICE_ABSTRACTION:
+				return CategoricalType.SLICE_ABSTRACTION;
+			case CONSTANT:
+				return CategoricalType.CONSTANT;
+			case EVENT:
+				return CategoricalType.EVENT;
+			case PRIMITIVE_PARAMETER:
+				return CategoricalType.PRIMITIVE_PARAMETER;
+			case MIXED:
+				return CategoricalType.MIXED;
+			default:
+				return CategoricalType.UNKNOWN;
 		}
 	}
 }
