@@ -33,11 +33,13 @@ import edu.emory.cci.aiw.cvrg.eureka.services.dao.JpaRelationOperatorDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.JpaRoleDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.JpaTimeUnitDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.JpaUserDao;
+import edu.emory.cci.aiw.cvrg.eureka.services.dao.JpaValueComparatorDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.PropositionDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.RelationOperatorDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.RoleDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.TimeUnitDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.UserDao;
+import edu.emory.cci.aiw.cvrg.eureka.services.dao.ValueComparatorDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.email.EmailSender;
 import edu.emory.cci.aiw.cvrg.eureka.services.email.FreeMarkerEmailSender;
 
@@ -57,6 +59,7 @@ class AppModule extends AbstractModule {
 		bind(PropositionDao.class).to(JpaPropositionDao.class);
 		bind(TimeUnitDao.class).to(JpaTimeUnitDao.class);
 		bind(RelationOperatorDao.class).to(JpaRelationOperatorDao.class);
+		bind(ValueComparatorDao.class).to(JpaValueComparatorDao.class);
 		bind(EmailSender.class).to(FreeMarkerEmailSender.class);
 		bind(Context.class).to(InitialContext.class);
 		bind(Session.class).toProvider(
