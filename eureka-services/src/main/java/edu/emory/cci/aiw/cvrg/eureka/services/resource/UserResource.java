@@ -20,7 +20,6 @@
 package edu.emory.cci.aiw.cvrg.eureka.services.resource;
 
 import java.math.BigInteger;
-import java.net.URI;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.util.ArrayList;
@@ -48,6 +47,7 @@ import com.sun.jersey.api.client.ClientResponse.Status;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.UserRequest;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.Role;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.User;
+import edu.emory.cci.aiw.cvrg.eureka.common.exception.HttpStatusException;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.RoleDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.UserDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.email.EmailException;
@@ -61,6 +61,8 @@ import edu.emory.cci.aiw.cvrg.eureka.services.util.StringUtil;
  *
  */
 @Path("/user")
+@Produces(MediaType.APPLICATION_JSON)
+@Consumes(MediaType.APPLICATION_JSON)
 public class UserResource {
 
 	/**
@@ -166,11 +168,8 @@ public class UserResource {
 	 * @throws ServletException Thrown when a password can not be properly
 	 * hashed.
 	 */
-	@Path("/add")
 	@POST
-	@Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
-	@Produces(MediaType.TEXT_PLAIN)
-	public Response addUser(final UserRequest userRequest)
+	public void addUser(final UserRequest userRequest)
 			throws ServletException {
 
 		try {
@@ -180,10 +179,10 @@ public class UserResource {
 			userRequest.setVerifyPassword(temp2);
 		} catch (NoSuchAlgorithmException e1) {
 			LOGGER.error(e1.getMessage(), e1);
-			throw new ServletException(e1);
+			throw new HttpStatusException(Response.Status
+					.INTERNAL_SERVER_ERROR, e1);
 		}
 
-		Response response;
 		if (validateUserRequest(userRequest)) {
 			User user = new User();
 			user.setEmail(userRequest.getEmail());
@@ -201,14 +200,12 @@ public class UserResource {
 			} catch (EmailException e) {
 				LOGGER.error("Error sending email to {}", user.getEmail(), e);
 			}
-			response = Response.created(URI.create("/" + user.getId())).build();
 		} else {
 			LOGGER.info("Invalid new user request: {}, reason {}", userRequest,
 					this.validationError);
-			response = Response.status(Status.BAD_REQUEST).entity(
-					this.validationError).build();
+			throw new HttpStatusException(Response.Status
+					.PRECONDITION_FAILED, this.validationError);
 		}
-		return response;
 	}
 
 	/**
@@ -225,12 +222,11 @@ public class UserResource {
 	 */
 	@Path("/passwd/{id}")
 	@GET
-	public Response changePassword(@PathParam("id") final Long inId,
+	public void changePassword(@PathParam("id") final Long inId,
 			@QueryParam("oldPassword") final String oldPassword,
 			@QueryParam("newPassword") final String newPassword)
 			throws ServletException {
 
-		Response response;
 		User user = this.userDao.retrieve(inId);
 		String oldPasswordHash;
 		String newPasswordHash;
@@ -249,12 +245,10 @@ public class UserResource {
 			} catch (EmailException ee) {
 				LOGGER.error(ee.getMessage(), ee);
 			}
-			response = Response.ok().build();
 		} else {
-			response = Response.status(Status.BAD_REQUEST).entity(
-					"Password mismatch").build();
+			throw new HttpStatusException(Response.Status
+					.PRECONDITION_FAILED, "Password mismatch");
 		}
-		return response;
 	}
 
 	/**
@@ -265,10 +259,7 @@ public class UserResource {
 	 * @return A "Created" response with a link to the user page if successful.
 	 *
 	 */
-	@Path("/put")
 	@PUT
-	@Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
-	@Produces(MediaType.TEXT_PLAIN)
 	public Response putUser(final User inUser) {
 		LOGGER.debug("Received updated user: {}", inUser);
 		Response response;
@@ -314,16 +305,14 @@ public class UserResource {
 	 */
 	@Path("/verify/{code}")
 	@PUT
-	public Response verifyUser(@PathParam("code") final String code) {
-		Response response = Response.ok().build();
+	public void verifyUser(@PathParam("code") final String code) {
 		User user = this.userDao.getByVerificationCode(code);
 		if (user != null) {
 			user.setVerified(true);
 			this.userDao.update(user);
 		} else {
-			response = Response.notModified("Invalid user").build();
+			throw new HttpStatusException(Response.Status.NOT_FOUND);
 		}
-		return response;
 	}
 
 	/**

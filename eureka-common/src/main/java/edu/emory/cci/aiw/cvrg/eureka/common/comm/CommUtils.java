@@ -19,13 +19,6 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.common.comm;
 
-import com.sun.jersey.api.client.Client;
-import com.sun.jersey.api.client.config.ClientConfig;
-import com.sun.jersey.api.client.config.DefaultClientConfig;
-import com.sun.jersey.api.json.JSONConfiguration;
-
-import edu.emory.cci.aiw.cvrg.eureka.common.json.ObjectMapperProvider;
-
 /**
  * Utility methods related to dealing with communication between different
  * layers of the application.
@@ -50,12 +43,12 @@ public final class CommUtils {
 	 *
 	 * @return A Jersey client capable of making SSL requests.
 	 */
-	public static Client getClient() {
-		ClientConfig clientConfig = new DefaultClientConfig();
-		clientConfig.getFeatures().put(JSONConfiguration.FEATURE_POJO_MAPPING,
-				Boolean.TRUE);
-		clientConfig.getClasses().add(ObjectMapperProvider.class);
-		return Client.create(clientConfig);
-	}
+//	public static Client getClient() {
+//		ClientConfig clientConfig = new DefaultClientConfig();
+//		clientConfig.getFeatures().put(JSONConfiguration.FEATURE_POJO_MAPPING,
+//				Boolean.TRUE);
+//		clientConfig.getClasses().add(ObjectMapperProvider.class);
+//		return Client.create(clientConfig);
+//	}
 
 }

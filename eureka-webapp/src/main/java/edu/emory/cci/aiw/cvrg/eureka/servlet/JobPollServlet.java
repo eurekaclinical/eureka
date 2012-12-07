@@ -27,16 +27,12 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.ws.rs.core.MediaType;
 
 import org.codehaus.jackson.map.ObjectMapper;
 
-import com.sun.jersey.api.client.Client;
-import com.sun.jersey.api.client.WebResource;
-
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.CommUtils;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.JobInfo;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.JobStatus;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ServicesClient;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.User;
 
 public class JobPollServlet extends HttpServlet {
@@ -50,17 +46,12 @@ public class JobPollServlet extends HttpServlet {
 
         resp.setContentType("application/json");
 
-	    Client client = CommUtils.getClient();
+	    ServicesClient servicesClient = new ServicesClient(eurekaServicesUrl);
+
 	    Principal principal = req.getUserPrincipal();
 	    String userName = principal.getName();
-
-	    WebResource webResource = client.resource(eurekaServicesUrl);
-	    User user = webResource.path("/api/user/byname/" + userName)
-	            .accept(MediaType.APPLICATION_JSON).get(User.class);
-
-	    JobInfo jobInfo = webResource
-	            .path("/api/job/status/" + user.getId())
-	            .accept(MediaType.APPLICATION_JSON).get(JobInfo.class);
+	    User user = servicesClient.getUserByName(userName);
+	    JobInfo jobInfo = servicesClient.getJobInfo(user.getId());
 
 	    if (jobInfo.getCurrentStep() == 0) {
 	        String emptyJson = "{}";

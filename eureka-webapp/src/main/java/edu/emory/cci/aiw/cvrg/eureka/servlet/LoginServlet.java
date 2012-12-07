@@ -27,14 +27,9 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.ws.rs.core.MediaType;
 
-import com.sun.jersey.api.client.Client;
-import com.sun.jersey.api.client.ClientResponse;
-import com.sun.jersey.api.client.ClientResponse.Status;
-import com.sun.jersey.api.client.WebResource;
-
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.CommUtils;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ClientException;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ServicesClient;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.User;
 
 public class LoginServlet extends HttpServlet {
@@ -48,25 +43,19 @@ public class LoginServlet extends HttpServlet {
 
 		String eurekaServicesUrl = req.getSession().getServletContext()
 				.getInitParameter("eureka-services-url");
+		ServicesClient servicesClient = new ServicesClient(eurekaServicesUrl);
 
-		Client client;
-		client = CommUtils.getClient();
 		Principal principal = req.getUserPrincipal();
 		String userName = principal.getName();
+		User user = servicesClient.getUserByName(userName);
 
-		WebResource webResource = client.resource(eurekaServicesUrl);
-		User user = webResource.path(GET_BY_NAME_URL + userName)
-				.accept(MediaType.APPLICATION_JSON).get(User.class);
 		user.setLastLogin(new Date());
-		ClientResponse response = webResource.path(PUT_USER_URL)
-				.type(MediaType.APPLICATION_JSON)
-				.accept(MediaType.TEXT_PLAIN)
-				.put(ClientResponse.class, user);
-		if (response.getClientResponseStatus() != Status.OK) {
-			throw new ServletException(
-					"Could not update user, got response "
-							+ response.getClientResponseStatus().toString());
+		try {
+			servicesClient.updateUser(user);
+		} catch (ClientException e) {
+			throw new ServletException(e.getMessage());
 		}
+
 		resp.sendRedirect(req.getContextPath() + "/index.jsp");
 	}
 }

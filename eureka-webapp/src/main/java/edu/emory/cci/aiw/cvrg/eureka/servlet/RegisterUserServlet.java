@@ -25,17 +25,13 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.ws.rs.core.MediaType;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.sun.jersey.api.client.Client;
-import com.sun.jersey.api.client.ClientResponse;
-import com.sun.jersey.api.client.WebResource;
-
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.CommUtils;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.UserRequest;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ClientException;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ServicesClient;
 
 public class RegisterUserServlet extends HttpServlet {
 
@@ -51,19 +47,15 @@ public class RegisterUserServlet extends HttpServlet {
 	public void doGet(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
 
-		Client c;
-		c = CommUtils.getClient();
-
 		String eurekaServicesUrl = req.getSession().getServletContext()
 				.getInitParameter("eureka-services-url");
-
-		WebResource webResource = c.resource(eurekaServicesUrl);
+		ServicesClient servicesClient = new ServicesClient(eurekaServicesUrl);
 
 		String email 		= req.getParameter("email");
 		String verifyEmail 	= req.getParameter("verifyEmail");
 		String firstName 	= req.getParameter("firstName");
 		String lastName 	= req.getParameter("lastName");
-		String organziation = req.getParameter("organization");
+		String organization = req.getParameter("organization");
 		String password 	= req.getParameter("password");
 		String verifyPassword = req.getParameter("verifyPassword");
 
@@ -72,28 +64,22 @@ public class RegisterUserServlet extends HttpServlet {
 		userRequest.setLastName(lastName);
 		userRequest.setEmail(email);
 		userRequest.setVerifyEmail(verifyEmail);
-		userRequest.setOrganization(organziation);
+		userRequest.setOrganization(organization);
 		userRequest.setVerifyPassword(verifyPassword);
 		userRequest.setPassword(password);
 
-		ClientResponse response = webResource.path("/api/user/add")
-				.type(MediaType.APPLICATION_JSON)
-				.accept(MediaType.TEXT_PLAIN)
-				.post(ClientResponse.class, userRequest);
-
-		int status = response.getClientResponseStatus().getStatusCode();
-		if (status < HttpServletResponse.SC_BAD_REQUEST) {
-			resp.setStatus(status);
+		try {
+			servicesClient.addUser(userRequest);
+			resp.setStatus(HttpServletResponse.SC_OK);
 			resp.getWriter().close();
-		} else {
+		} catch (ClientException e) {
 			resp.setContentType("text/plain");
-			String msg = response.getEntity(String.class);
+			String msg = e.getMessage();
 			LOGGER.debug("Error: {}", msg);
-			resp.setStatus(status);
+			resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 			resp.setContentLength(msg.length());
 			resp.getWriter().write(msg);
-			resp.getWriter().close();
+			resp.getWriter().close();			
 		}
-
 	}
 }

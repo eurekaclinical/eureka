@@ -112,11 +112,6 @@ see implementation details http://jersey.java.net/nonav/documentation/latest/jax
 		<load-on-startup>1</load-on-startup>
 	</servlet>
 	<servlet>
-		<servlet-name>ListSystemPropositionChildrenServlet</servlet-name>
-		<servlet-class>edu.emory.cci.aiw.cvrg.eureka.servlet.proposition.ListSystemPropositionChildrenServlet</servlet-class>
-		<load-on-startup>1</load-on-startup>
-	</servlet>
-	<servlet>
 		<servlet-name>ListUserDefinedPropositionChildrenServlet</servlet-name>
 		<servlet-class>edu.emory.cci.aiw.cvrg.eureka.servlet.proposition.ListUserDefinedPropositionChildrenServlet</servlet-class>
 		<load-on-startup>1</load-on-startup>
@@ -179,10 +174,6 @@ see implementation details http://jersey.java.net/nonav/documentation/latest/jax
 	<servlet-mapping>
 		<servlet-name>UserPropositionListServlet</servlet-name>
 		<url-pattern>/protected/userproplist</url-pattern>
-	</servlet-mapping>
-	<servlet-mapping>
-		<servlet-name>ListSystemPropositionChildrenServlet</servlet-name>
-		<url-pattern>/protected/syspropchildren</url-pattern>
 	</servlet-mapping>
 	<servlet-mapping>
 		<servlet-name>ListUserDefinedPropositionChildrenServlet</servlet-name>

@@ -28,11 +28,8 @@ import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.sun.jersey.api.client.Client;
-import com.sun.jersey.api.client.ClientResponse;
-import com.sun.jersey.api.client.WebResource;
-
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.CommUtils;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ClientException;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ServicesClient;
 import edu.emory.cci.aiw.cvrg.eureka.servlet.worker.ServletWorker;
 
 public class SaveUserAcctWorker implements ServletWorker {
@@ -45,6 +42,7 @@ public class SaveUserAcctWorker implements ServletWorker {
 
 		String eurekaServicesUrl = req.getSession().getServletContext()
 				.getInitParameter("eureka-services-url");
+		ServicesClient servicesClient = new ServicesClient(eurekaServicesUrl);
 
 		String id = req.getParameter("id");
 		String oldPassword = req.getParameter("oldPassword");
@@ -58,28 +56,17 @@ public class SaveUserAcctWorker implements ServletWorker {
 			resp.getWriter().close();
 			return;
 		}
-		Client c;
-		c = CommUtils.getClient();
-
-		WebResource webResource = c.resource(eurekaServicesUrl);
-
-		ClientResponse response = webResource
-				.path("/api/user/passwd/" + id)
-				.queryParam("oldPassword", oldPassword)
-				.queryParam("newPassword", newPassword)
-				.get(ClientResponse.class);
-
-		LOGGER.debug("status = " + response.getClientResponseStatus().getStatusCode());
 
 		resp.setContentType("text/html");
-		if (response.getClientResponseStatus().getStatusCode() == HttpServletResponse.SC_OK) {
+		try {
+			servicesClient.changePassword(Long.valueOf(id), oldPassword, 
+					newPassword);
 			resp.setStatus(HttpServletResponse.SC_OK);
-		} else {
+			resp.getWriter().write(HttpServletResponse.SC_OK);
+		} catch (ClientException e) {
 			resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+			resp.getWriter().write(HttpServletResponse.SC_BAD_REQUEST);
 		}
-		resp.getWriter().write(response.getClientResponseStatus().getStatusCode());
 		resp.getWriter().close();
-
-		//resp.sendRedirect(req.getContextPath() + "/protected/user_acct?action=list");
 	}
 }

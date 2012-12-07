@@ -31,18 +31,13 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.ws.rs.core.MediaType;
 
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 
-import com.sun.jersey.api.client.Client;
-import com.sun.jersey.api.client.ClientResponse;
-import com.sun.jersey.api.client.WebResource;
-
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.CommUtils;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ServicesClient;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.FileUpload;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.User;
 
@@ -114,13 +109,11 @@ public class CommonsFileUploadServlet extends HttpServlet {
 						", Content type = "+item.getContentType()+
 						", File Size = "+item.getSize());
 
-					Client c = CommUtils.getClient();
 					Principal principal = request.getUserPrincipal();
 					String userName = principal.getName();
-
-					WebResource webResource = c.resource(eurekaServicesUrl);
-					User user = webResource.path("/api/user/byname/"+userName)
-							.accept(MediaType.APPLICATION_JSON).get(User.class);
+					ServicesClient servicesClient = new ServicesClient
+							(eurekaServicesUrl);
+					User user = servicesClient.getUserByName(userName);
 
 					/*
 					 * Write file to the ultimate location.
@@ -133,10 +126,8 @@ public class CommonsFileUploadServlet extends HttpServlet {
 					fileUpload.setLocation(getServletContext().getRealPath("/") +
 							DESTINATION_DIR_PATH + "/" + user.getId());
 					fileUpload.setUserId(user.getId());
-
-					ClientResponse clientResponse = webResource.path("/api/job/add").post(
-							ClientResponse.class, fileUpload);
-					System.out.println(clientResponse.getClientResponseStatus());
+					
+					servicesClient.addJob(fileUpload);
 				}
 
 
