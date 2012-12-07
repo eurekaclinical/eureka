@@ -23,9 +23,10 @@ import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
@@ -48,6 +49,7 @@ public class Categorization extends Proposition {
 	@JoinTable(name = "cat_inverse_is_a", joinColumns = { @JoinColumn(name = "target_proposition_id") })
 	private List<Proposition> inverseIsA;
 
+	@Enumerated(EnumType.STRING)
 	private CategorizationType categorizationType;
 
 	public List<Proposition> getInverseIsA() {

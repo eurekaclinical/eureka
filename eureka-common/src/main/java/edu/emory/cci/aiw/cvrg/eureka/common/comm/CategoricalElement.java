@@ -22,6 +22,9 @@ package edu.emory.cci.aiw.cvrg.eureka.common.comm;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+
 /**
  * Container class for the categorical user-created data element from the UI.
  * Essentially a direct mapping form the categorical element form fields.
@@ -34,6 +37,7 @@ public final class CategoricalElement extends DataElement {
 
 	private List<DataElement> children = new ArrayList<DataElement>();
 
+	@Enumerated(EnumType.STRING)
 	private CategoricalType categoricalType;
 
 	public CategoricalElement () {

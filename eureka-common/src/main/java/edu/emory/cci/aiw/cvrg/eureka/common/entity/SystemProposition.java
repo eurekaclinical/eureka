@@ -9,7 +9,7 @@
  * You may obtain a copy of the License at
  * 
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+z * 
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -20,6 +20,8 @@
 package edu.emory.cci.aiw.cvrg.eureka.common.entity;
 
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.Table;
 
 @Entity
@@ -30,6 +32,7 @@ public final class SystemProposition extends Proposition {
 		CONSTANT, EVENT, PRIMITIVE_PARAMETER, LOW_LEVEL_ABSTRACTION, HIGH_LEVEL_ABSTRACTION, SLICE_ABSTRACTION
 	}
 
+	@Enumerated(EnumType.STRING)
 	private SystemType systemType;
 
 	public SystemType getSystemType() {
