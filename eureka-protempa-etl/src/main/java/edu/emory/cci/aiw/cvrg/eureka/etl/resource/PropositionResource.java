@@ -107,7 +107,6 @@ public class PropositionResource {
 			@PathParam("userId") Long inUserId, 
 			@PathParam("key") String inKey) {
 		try {
-			System.err.println("Looking for proposition id " + inKey);
 			Configuration configuration = this.confDao.getByUserId(inUserId);
 			if (configuration != null) {
 				if (this.etlProperties.getConfigDir() != null) {

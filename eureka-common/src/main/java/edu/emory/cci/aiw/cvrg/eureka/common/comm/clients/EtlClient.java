@@ -117,14 +117,18 @@ public class EtlClient extends AbstractClient {
 			String inKey) throws ClientException {
 		PropositionDefinition result;
 		try {
-			//UriBuilder.fromPath("/").path("api/proposition").fragment("" + inUserId).fragment(inKey).toString();
-			final String path = "/api/proposition/" + inUserId + "/" + 
-					URLEncoder.encode(inKey, "UTF-8");
+			/*
+			 * The inKey parameter may contain spaces, slashes and other 
+			 * characters that are not allowed in URLs, so it needs to be
+			 * encoded. We use UriBuilder to guarantee a valid URL. The inKey
+			 * string can't be templated because the slashes won't be encoded!
+			 */
+			String path = UriBuilder.fromPath("/api/proposition/")
+					.segment("{arg1}", inKey)
+					.build(inUserId).toString();
 			result = this.getResource().path(path).accept(MediaType
 					.APPLICATION_JSON).type(MediaType.APPLICATION_JSON).get
 					(PropositionDefinition.class);
-		} catch (UnsupportedEncodingException ex) {
-			throw new AssertionError("UTF-8 is an unsupported encoding!");
 		} catch (UniformInterfaceException e) {
 			if (!ClientResponse.Status.NOT_FOUND.equals(e.getResponse()
 					.getClientResponseStatus())) {

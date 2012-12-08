@@ -42,14 +42,14 @@ import edu.emory.cci.aiw.cvrg.eureka.common.entity.User;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.logging.Level;
+import javax.ws.rs.core.UriBuilder;
 
 /**
  * @author hrathod
  */
 public class ServicesClient extends AbstractClient {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger
-			(ServicesClient.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(ServicesClient.class);
 	private static final GenericType<List<DataElement>> UserPropositionList = new GenericType<List<DataElement>>() {
 	};
 	private static final GenericType<List<TimeUnit>> TimeUnitList = new GenericType<List<TimeUnit>>() {
@@ -61,14 +61,11 @@ public class ServicesClient extends AbstractClient {
 	private static final GenericType<List<DataElement>> DataElementList =
 			new GenericType<List<DataElement>>() {
 			};
-	private static final GenericType<List<Role>> RoleList = new GenericType
-			<List<Role>>() {
+	private static final GenericType<List<Role>> RoleList = new GenericType<List<Role>>() {
 	};
-	private static final GenericType<List<Job>> JobList = new GenericType<List
-			<Job>>() {
+	private static final GenericType<List<Job>> JobList = new GenericType<List<Job>>() {
 	};
-	private static final GenericType<List<User>> UserList = new GenericType
-			<List<User>>() {
+	private static final GenericType<List<User>> UserList = new GenericType<List<User>>() {
 	};
 	private final String servicesUrl;
 
@@ -82,7 +79,7 @@ public class ServicesClient extends AbstractClient {
 		return this.servicesUrl;
 	}
 
-	public List<User> getUsers () {
+	public List<User> getUsers() {
 		final String path = "/api/user/list";
 		return this.getResource().path(path).type(MediaType.APPLICATION_JSON)
 				.accept(MediaType.APPLICATION_JSON).get(UserList);
@@ -90,92 +87,75 @@ public class ServicesClient extends AbstractClient {
 
 	public User getUserByName(String username) {
 		final String path = "/api/user/byname/" + username;
-		return this.getResource().path(path).accept(MediaType
-				.APPLICATION_JSON).get(User.class);
+		return this.getResource().path(path).accept(MediaType.APPLICATION_JSON).get(User.class);
 	}
-	
+
 	public User getUserById(Long inUserId) {
 		final String path = "/api/user/byid/" + inUserId;
-		return this.getResource().path(path).accept(MediaType
-				.APPLICATION_JSON).get(User.class);
+		return this.getResource().path(path).accept(MediaType.APPLICATION_JSON).get(User.class);
 	}
 
-	public void addUser (UserRequest inRequest) throws ClientException {
+	public void addUser(UserRequest inRequest) throws ClientException {
 		final String path = "/api/user";
-		ClientResponse response = this.getResource().path(path).accept
-				(MediaType.APPLICATION_JSON).type(MediaType.APPLICATION_JSON)
+		ClientResponse response = this.getResource().path(path).accept(MediaType.APPLICATION_JSON).type(MediaType.APPLICATION_JSON)
 				.post(ClientResponse.class, inRequest);
-		if (!response.getClientResponseStatus().equals(ClientResponse.Status
-				.NO_CONTENT)) {
+		if (!response.getClientResponseStatus().equals(ClientResponse.Status.NO_CONTENT)) {
 			throw new ClientException(response.getEntity(String.class));
 		}
 	}
-	
-	public void changePassword (Long inUserId, String inOldPass, 
+
+	public void changePassword(Long inUserId, String inOldPass,
 			String inNewPass) throws ClientException {
 		final String path = "/api/user/passwd/" + inUserId;
-		ClientResponse response = this.getResource().path(path).queryParam
-				("oldPassWord", inOldPass).queryParam("newPassword", 
-				inNewPass).type(MediaType.APPLICATION_JSON).accept(MediaType
-				.APPLICATION_JSON).get(ClientResponse.class);
-		if (!response.getClientResponseStatus().equals(ClientResponse.Status
-				.NO_CONTENT)) {
+		ClientResponse response = this.getResource().path(path).queryParam("oldPassWord", inOldPass).queryParam("newPassword",
+				inNewPass).type(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON).get(ClientResponse.class);
+		if (!response.getClientResponseStatus().equals(ClientResponse.Status.NO_CONTENT)) {
 			throw new ClientException(response.getEntity(String.class));
 		}
 	}
 
-	public void updateUser (User inUser) throws ClientException {
+	public void updateUser(User inUser) throws ClientException {
 		final String path = "/api/user";
-		ClientResponse response = this.getResource().path(path).type
-				(MediaType.APPLICATION_JSON).accept(MediaType
-				.APPLICATION_JSON).put(ClientResponse.class, inUser);
-		if (response.getClientResponseStatus().equals(ClientResponse.Status
-				.NOT_MODIFIED)) {
+		ClientResponse response = this.getResource().path(path).type(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON).put(ClientResponse.class, inUser);
+		if (response.getClientResponseStatus().equals(ClientResponse.Status.NOT_MODIFIED)) {
 			throw new ClientException(response.getEntity(String.class));
 		}
-	}
-	
-	public void verifyUser (String inCode) throws ClientException {
-		final String path = "/api/user/verify/" + inCode;
-		ClientResponse response = this.getResource().path(path).type
-				(MediaType.APPLICATION_JSON).accept(MediaType
-				.APPLICATION_JSON).put(ClientResponse.class);
-		if (!response.getClientResponseStatus().equals(ClientResponse.Status
-				.NO_CONTENT)) {
-			throw new ClientException(response.getEntity(String.class));
-		}
-	}
-	
-	public List<Role> getRoles () {
-		final String path = "/api/role/list";
-		return this.getResource().path(path).accept(MediaType
-				.APPLICATION_JSON).get(RoleList);
 	}
 
-	public Role getRole (Long inRoleId) {
+	public void verifyUser(String inCode) throws ClientException {
+		final String path = "/api/user/verify/" + inCode;
+		ClientResponse response = this.getResource().path(path).type(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON).put(ClientResponse.class);
+		if (!response.getClientResponseStatus().equals(ClientResponse.Status.NO_CONTENT)) {
+			throw new ClientException(response.getEntity(String.class));
+		}
+	}
+
+	public List<Role> getRoles() {
+		final String path = "/api/role/list";
+		return this.getResource().path(path).accept(MediaType.APPLICATION_JSON).get(RoleList);
+	}
+
+	public Role getRole(Long inRoleId) {
 		final String path = "/api/role/" + inRoleId;
 		return this.getResource().path(path).type(MediaType.APPLICATION_JSON)
 				.accept(MediaType.APPLICATION_JSON).get(Role.class);
 	}
 
-	public void addJob (FileUpload inUpload) throws ClientException {
+	public void addJob(FileUpload inUpload) throws ClientException {
 		final String path = "/api/job/add";
-		ClientResponse response = this.getResource().type(MediaType
-				.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON).post
-				(ClientResponse.class, inUpload);
-		if (!response.getClientResponseStatus().equals(ClientResponse.Status
-				.OK)) {
+		ClientResponse response = this.getResource().type(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON).post(ClientResponse.class, inUpload);
+		if (!response.getClientResponseStatus().equals(ClientResponse.Status.OK)) {
 			throw new ClientException("Job was not added successfully.");
 		}
 	}
 
-	public List<Job> getJobsByUserId (Long inUserId) {
+	public List<Job> getJobsByUserId(Long inUserId) {
 		final String path = "/api/job/list/" + inUserId;
 		return this.getResource().path(path).type(MediaType.APPLICATION_JSON)
 				.accept(MediaType.APPLICATION_JSON).get(JobList);
 	}
-	
-	public JobInfo getJobInfo (Long inUserId) {
+
+	public JobInfo getJobInfo(Long inUserId) {
 		final String path = "/api/job/status/" + inUserId;
 		return this.getResource().path(path).type(MediaType.APPLICATION_JSON)
 				.accept(MediaType.APPLICATION_JSON).get(JobInfo.class);
@@ -235,19 +215,21 @@ public class ServicesClient extends AbstractClient {
 	}
 
 	public List<SystemElement> getSystemElements(Long inUserId) {
-		final String path = "/api/systemelements/" + inUserId;
+		final String path = "/api/systemelement/" + inUserId;
 		return this.getResource().path(path).accept(
 				MediaType.APPLICATION_JSON).get(SystemElementList);
 	}
 
 	public SystemElement getSystemElement(Long inUserId, String inKey) {
-		final String path;
-		try {
-			path = "/api/systemelements/" + inUserId + "/"
-					+ URLEncoder.encode(inKey, "UTF-8");
-		} catch (UnsupportedEncodingException ex) {
-			throw new AssertionError("UTF-8 is an unsupported encoding!");
-		}
+		/*
+		 * The inKey parameter may contain spaces, slashes and other 
+		 * characters that are not allowed in URLs, so it needs to be
+		 * encoded. We use UriBuilder to guarantee a valid URL. The inKey
+		 * string can't be templated because the slashes won't be encoded!
+		 */
+		String path = UriBuilder.fromPath("/api/systemelement/")
+				.segment("{arg1}", inKey)
+				.build(inUserId).toString();
 		return this.getResource().path(path).accept(
 				MediaType.APPLICATION_JSON).get(SystemElement.class);
 	}
