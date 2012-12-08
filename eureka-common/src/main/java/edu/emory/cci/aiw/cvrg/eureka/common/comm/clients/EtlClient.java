@@ -35,8 +35,6 @@ import edu.emory.cci.aiw.cvrg.eureka.common.comm.JobRequest;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.ValidationRequest;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.Configuration;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.Job;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import javax.ws.rs.core.UriBuilder;
 
 /**

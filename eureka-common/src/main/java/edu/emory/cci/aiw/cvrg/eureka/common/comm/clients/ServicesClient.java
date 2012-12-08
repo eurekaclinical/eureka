@@ -39,9 +39,6 @@ import edu.emory.cci.aiw.cvrg.eureka.common.entity.RelationOperator;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.Role;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.TimeUnit;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.User;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
-import java.util.logging.Level;
 import javax.ws.rs.core.UriBuilder;
 
 /**
