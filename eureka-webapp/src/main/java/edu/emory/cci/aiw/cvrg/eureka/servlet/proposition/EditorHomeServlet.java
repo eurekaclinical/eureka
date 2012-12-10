@@ -96,7 +96,7 @@ public class EditorHomeServlet extends HttpServlet {
 		for (DataElement proposition : props) {
 			if (!proposition.isInSystem()) {
 				JsonTreeData d = createData(
-					String.valueOf(proposition.getKey()),
+					proposition.getKey(),
 					this.getDisplayName(proposition));
 
 				d.setKeyVal("abbrevDisplay",
