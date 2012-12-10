@@ -405,7 +405,7 @@ function deleteElement(event, rowId) {
                 "Confirm" : function() {
                     $.ajax({
 	                    type: 'POST',
-	                    url: 'deleteprop?id='+rowId,
+	                    url: 'deleteprop?key='+rowId,
                         success: function(data) {
                             $(this).dialog("close");
                             window.location.href="editorhome";
