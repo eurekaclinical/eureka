@@ -187,20 +187,55 @@ public class ServicesClient extends AbstractClient {
 	}
 
 	public List<DataElement> getUserElements(Long inUserId) {
+		if (inUserId == null) {
+			throw new IllegalArgumentException("inUserId cannot be null");
+		}
 		final String path = "/api/dataelement/" + inUserId;
 		return this.getResource().path(path).accept(
 				MediaType.APPLICATION_JSON).get(DataElementList);
 	}
 
 	public DataElement getUserElement(Long inUserId, String inKey) {
-		final String path = "/api/dataelement/" + inUserId + "/" + inKey;
+		if (inUserId == null) {
+			throw new IllegalArgumentException("inUserId cannot be null");
+		}
+		if (inKey == null) {
+			throw new IllegalArgumentException("inKey cannot be null");
+		}
+		/*
+		 * The inKey parameter may contain spaces, slashes and other 
+		 * characters that are not allowed in URLs, so it needs to be
+		 * encoded. We use UriBuilder to guarantee a valid URL. The inKey
+		 * string can't be templated because the slashes won't be encoded!
+		 */
+		String path = UriBuilder
+				.fromPath("/api/dataelement/")
+				.segment("{arg1}")
+				.segment(inKey)
+				.build(inUserId).toString();
 		return this.getResource().path(path).accept(
 				MediaType.APPLICATION_JSON).get(DataElement.class);
 	}
 
 	public void deleteUserElement(Long inUserId, String inKey) throws
 			ClientException {
-		final String path = "/api/dataelement/" + inUserId + "/" + inKey;
+		if (inUserId == null) {
+			throw new IllegalArgumentException("inUserId cannot be null");
+		}
+		if (inKey == null) {
+			throw new IllegalArgumentException("inKey cannot be null");
+		}
+		/*
+		 * The inKey parameter may contain spaces, slashes and other 
+		 * characters that are not allowed in URLs, so it needs to be
+		 * encoded. We use UriBuilder to guarantee a valid URL. The inKey
+		 * string can't be templated because the slashes won't be encoded!
+		 */
+		String path = UriBuilder
+				.fromPath("/api/dataelement/")
+				.segment("{arg1}")
+				.segment(inKey)
+				.build(inUserId).toString();
 		ClientResponse response = this.getResource().path(path).accept(
 				MediaType.APPLICATION_JSON).type(MediaType.APPLICATION_JSON).delete(ClientResponse.class);
 		if (response.getClientResponseStatus().getStatusCode()
@@ -212,12 +247,21 @@ public class ServicesClient extends AbstractClient {
 	}
 
 	public List<SystemElement> getSystemElements(Long inUserId) {
+		if (inUserId == null) {
+			throw new IllegalArgumentException("inUserId cannot be null");
+		}
 		final String path = "/api/systemelement/" + inUserId;
 		return this.getResource().path(path).accept(
 				MediaType.APPLICATION_JSON).get(SystemElementList);
 	}
 
 	public SystemElement getSystemElement(Long inUserId, String inKey) {
+		if (inUserId == null) {
+			throw new IllegalArgumentException("inUserId cannot be null");
+		}
+		if (inKey == null) {
+			throw new IllegalArgumentException("inKey cannot be null");
+		}
 		/*
 		 * The inKey parameter may contain spaces, slashes and other 
 		 * characters that are not allowed in URLs, so it needs to be
