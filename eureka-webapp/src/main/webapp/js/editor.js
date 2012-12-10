@@ -7,7 +7,8 @@ var dropBoxMaxTextWidth = 275;
 var possiblePropositions = new Object();
 var saveFuncs = {
 	'sequence': saveSequence,
-	'categorization': saveCategorization
+	'categorization': saveCategorization,
+	'frequency': saveFrequency
 };
 
 function postProposition (postData, successFunc) {
@@ -127,6 +128,36 @@ function saveCategorization (elem) {
 	postProposition(categorization);
 }
 
+function saveFrequency (elem) {
+	var $dataElement = $(elem).find('ul[data-type="main"]').find('li').first();
+	var frequency = {
+		'type': 'frequency',
+		'abbrevDisplayName': $('input#propAbbrevDisplayName').val(),
+		'displayName': $('textarea#propDisplayName').val(),
+		'atLeast': $(elem).find('input[name=freqAtLeastField]').val(),
+		'isConsecutive': $(elem).find('input[name=freqIsConsecutive]').is(':checked'),
+		'dataElement': {
+			'dataElementKey': $dataElement.data('key'),
+			'withValue': $(elem).find('select[name="freqDataElementValue"]').val(),
+			'hasDuration': $(elem).find('input[name="freqDataElementSpecifyDuration"]').val(),
+			'minDuration': $(elem).find('input[name="freqDataElementMinDurationValue"]').val(),
+			'minDurationUnits': $(elem).find('select[name="freqDataElementMinDurationUnits"]').val(),
+			'maxDuration': $(elem).find('input[name="freqDataElementMaxDurationValue"]').val(),
+			'maxDurationUnits': $(elem).find('select[name="freqDataElementMaxDurationUnits"]').val(),
+			'hasPropertyConstraint': $(elem).find('input[name="freqDataElementSpecifyProperty"]').val(),
+			'property': $(elem).find('select[name="freqDataElementPropertyName"]').val(),
+			'propertyValue': $(elem).find('input[name="freqDataElementPropertyValue"]').val()
+		},
+		'isWithin': $(elem).find('input[name=freqIsWithin]').is(':checked'),
+		'withinAtLeast': $(elem).find('input[name=freqWithinAtLeast]').val(),
+		'withinAtLeastUnits': $(elem).find('select[name=freqWithinAtLeastUnits]').val(),
+		'withinAtMost': $(elem).find('input[name=freqWithinAtMost]').val(),
+		'withinAtMostUnits': $(elem).find('select[name=freqWithinAtMostUnits]').val()
+	}
+	
+	postProposition(frequency);
+}
+
 function addPossibleProposition (key, desc) {
 	if (possiblePropositions[key]) {
 		possiblePropositions[key].count++;
@@ -177,19 +208,24 @@ $(document).ready(function(){
 	.html('<p>' +
 		'For Categorical:<br/>' +
 		'Drag and Drop an element from the System or User-Defined element explorer' +
-		'to the canvas to make it a member of the category.' +
+		'to the drop box to make it a member of the category.' +
 		'</p>' +
 		'<p>' +
-		'For Temporal:<br/>' +
-		'Drag and Drop an element from the System or User-Defined element explorer' +
-		'to the canvas to make it a part of the temporal pattern. Current behavior' +
-		'is to infer the pattern when all of the listed elements are present in any' +
-		'temporal order.' +
+		'For Sequence:<br/>' +
+		'Coming soon...' +
+		'</p>' +
+		'<p>' +
+		'For Frequency:<br/>' +
+		'Coming soon...' +
+		'</p>' +
+		'<p>' +
+		'For Value Threshold:<br/>' +
+		'Coming soon...' +
 		'</p>'
 		)
 	.dialog({
 		autoOpen: false,
-		title: 'Help Instructions'
+		title: 'Building New Data Elements Help'
 	});
 
 	$('#help_select').click( function() {
@@ -245,11 +281,7 @@ $(document).ready(function(){
 	}
 
 	function onFinishCallback(){
-		// if(validateAllSteps()){
-		var propositions = [];
 		var type = $("input:radio[name='type']:checked").val();
-		var abbrevDisplayName = $('#propAbbrevDisplayName').val();
-		var displayName = $('#propDisplayName').val();
 		saveFuncs[type]($('#' + type + 'definition'));
 	}
 

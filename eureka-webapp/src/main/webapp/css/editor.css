@@ -153,6 +153,10 @@ input.propertyValueField {
 	width: 10em;
 }
 
+input.frequencyCountField {
+	width: 4em;
+}
+
 td.relDataElement {
 	border-color: black;
 	border-width: 1px;

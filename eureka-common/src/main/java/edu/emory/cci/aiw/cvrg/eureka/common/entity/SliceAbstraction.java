@@ -29,7 +29,7 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "slice_abstractions")
-public final class SliceAbstraction extends Proposition {
+public class SliceAbstraction extends Proposition {
 
 	private Integer minIndex;
 

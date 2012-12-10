@@ -426,16 +426,139 @@
 															</td>
 														</tr>
 													</table>
-													<table id="frequencydefinition">
+													<table id="frequencydefinition" data-definition-container="true">
 														<tr>
 															<td>
-																<div>
-																	<p>Frequency Definition</p>
-																</div>
+																<table>
+																	<tr>
+																		<td>
+																			At least
+																		</td>
+																		<td>
+																			<input type="number" class="frequencyCountField" name="freqAtLeastField" value="<c:if test="${propositionType == 'frequency'}">${proposition.atLeast}</c:if>" />
+																		</td>
+																		<td>
+																			<label><input type="checkbox" value="true" name="freqIsConsecutive" <c:if test="${propositionType == 'frequency' and proposition.isConsecutive}">checked="checked"</c:if> />consecutive</label>
+																		</td>
+																		<td>
+																			<table>
+																				<tr>
+																					<td>
+																						<div class="tree-drop-single jstree-drop">
+																							<div class="label-info" ><center>Drop Here</center></div>
+																							<ul data-type="main" data-drop-type="single" class="sortable" style="width: 100% height: 100%">
+																								<c:if test="${not empty proposition and propositionType == 'frequency'}">
+																								<li data-key="${proposition.dataElement.dataElementKey}" data-desc="${proposition.dataElement.dataElementAbbrevDisplayName}" data-space="user">
+																									<span class="delete" style="cursor: pointer; background-color: lightblue;"></span>
+																									<span>${proposition.dataElement.dataElementKey} ${proposition.dataElement.dataElementAbbrevDisplayName}</span>
+																								</li>
+																								</c:if>
+																							</ul>
+																						</div>
+																					</td>
+																					
+																				</tr>
+																				<tr>
+																					<td>
+																						<table>
+																							<tr>
+																								<td>
+																									with value
+																								</td>
+																								<td>
+																									<select name="freqDataElementValue"></select>
+																								</td>
+																							</tr>
+																							<tr>
+																								<td>
+																									<label><input type="checkbox" value="true" name="freqDataElementSpecifyDuration" <c:if test="${propositionType == 'frequency' and not empty proposition.dataElement.hasDuration}">checked="checked"</c:if> >with duration</label>
+																								</td>
+																								<td>
+																									<table>
+																										<tr>
+																											<td>
+																												at least
+																											</td>
+																											<td>
+																												<input type="text" class="durationField" name="freqDataElementMinDurationValue" value="<c:if test="${propositionType == 'frequency'}">${proposition.dataElement.minDuration}</c:if>" />
+																											</td>
+																											<td>
+																												<select name="freqDataElementMinDurationUnits">
+																													<c:forEach var="unit" items="${timeUnits}">
+																													<option value="${unit.id}" <c:if test="${propositionType == 'frequency' and unit.id == proposition.dataElement.minDurationUnits}">selected="selected"</c:if>>${unit.description}</option>
+																													</c:forEach>
+																												</select>
+																											</td>
+																										</tr>
+																										<tr>
+																											<td>
+																												at most
+																											</td>
+																											<td>
+																												<input type="text" class="durationField" name="freqDataElementMaxDurationValue" value="<c:if test="${propositionType == 'frequency'}">${proposition.dataElement.maxDuration}</c:if>" />
+																											</td>
+																											<td>
+																												<select name="freqDataElementMaxDurationUnits">
+																													<c:forEach var="unit" items="${timeUnits}">
+																													<option value="${unit.id}" <c:if test="${propositionType == 'frequency' and unit.id == proposition.dataElement.maxDurationUnits}">selected="selected"</c:if>>${unit.description}</option>
+																													</c:forEach>
+																												</select>
+																											</td>
+																										</tr>
+																									</table>
+																								</td>
+																							</tr>
+																							<tr>
+																								<td>
+																									<label><input type="checkbox" value="true" name="freqDataElementSpecifyProperty" />with property value</label>
+																								</td>
+																								<td>
+																								  <select name="freqDataElementPropertyName"></select>
+																								  <input type="text" class="propertyValueField" name="freqDataElementPropertyValue"/>
+																								</td>
+																							</tr>
+																						</table>
+																					</td>
+																				</tr>
+																			</table>
+																		</td>
+																		<td>
+																			<table>
+																				<tr>
+																					<td>
+																						<label><input type="checkbox" value="true" name="freqIsWithin" <c:if test="${propositionType == 'frequency' and proposition.isWithin}">checked="checked"</c:if> >within</label>
+																					</td>
+																					<td>
+																						at least
+																						<input type="text" class="distanceField" name="freqWithinAtLeast" value="<c:if test="${propositionType == 'frequency'}">${proposition.dataElement.withinAtLeast}</c:if>" />
+																						<select name="freqWithinAtLeastUnits">
+																								<c:forEach var="unit" items="${timeUnits}">
+																									<option value="${unit.id}" <c:if test="${propositionType == 'frequency' and unit.id == proposition.dataElement.withinAtLeastUnits}">selected="selected"</c:if>>${unit.description}</option>
+																								</c:forEach>
+																						</select>
+																						<br />
+																						at most
+																						<input type="text" class="distanceField" name="freqWithinAtMost" value="<c:if test="${propositionType == 'frequency'}">${proposition.dataElement.withinAtMost}</c:if>"/>
+																						<select name="freqWithinAtMostUnits">
+																								<c:forEach var="unit" items="${timeUnits}">
+																								<option value="${unit.id}" <c:if test="${propositionType == 'frequency' and unit.id == proposition.dataElement.withinAtMostUnits}">selected="selected"</c:if>>${unit.description}</option>
+																								</c:forEach>
+																						</select>
+																					</td>
+																					<td>
+																						of each other
+																					</td>
+																				</tr>
+																			</table>
+																		</td>
+																	</tr>
+																</table>
+																
+																
 															</td>
 														</tr>
 													</table>
-													<table id="valuethresholddefinition">
+													<table id="valuethresholddefinition" data-definition-container="true">
 														<tr>
 															<td>
 																<div>
