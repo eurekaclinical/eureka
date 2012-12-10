@@ -214,14 +214,11 @@ public class UserResource {
 	 * @param inId The unique identifier for the user.
 	 * @param oldPassword The old password for the user.
 	 * @param newPassword The new password for the user.
-	 * @return {@link Status#OK} if the password update is successful,
-	 *         {@link Status#BAD_REQUEST} if the current password does not match, or if
-	 * the user does not exist.
-	 * @throws ServletException Thrown when a password cannot be properly
-	 * hashed.
+	 * @throws HttpStatusException Thrown when a password cannot be properly
+	 * hashed, or the passwords are mismatched.
 	 */
 	@Path("/passwd/{id}")
-	@GET
+	@PUT
 	public void changePassword(@PathParam("id") final Long inId,
 			@QueryParam("oldPassword") final String oldPassword,
 			@QueryParam("newPassword") final String newPassword)
@@ -235,7 +232,8 @@ public class UserResource {
 			newPasswordHash = StringUtil.md5(newPassword);
 		} catch (NoSuchAlgorithmException e) {
 			LOGGER.error(e.getMessage(), e);
-			throw new ServletException(e);
+			throw new HttpStatusException(Response.Status
+					.INTERNAL_SERVER_ERROR,e);
 		}
 		if (user.getPassword().equals(oldPasswordHash)) {
 			user.setPassword(newPasswordHash);

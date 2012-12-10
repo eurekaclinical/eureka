@@ -22,6 +22,7 @@ package edu.emory.cci.aiw.cvrg.eureka.common.comm.clients;
 import java.util.List;
 
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.UriBuilder;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,7 +40,6 @@ import edu.emory.cci.aiw.cvrg.eureka.common.entity.RelationOperator;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.Role;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.TimeUnit;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.User;
-import javax.ws.rs.core.UriBuilder;
 
 /**
  * @author hrathod
@@ -105,7 +105,8 @@ public class ServicesClient extends AbstractClient {
 			String inNewPass) throws ClientException {
 		final String path = "/api/user/passwd/" + inUserId;
 		ClientResponse response = this.getResource().path(path).queryParam("oldPassWord", inOldPass).queryParam("newPassword",
-				inNewPass).type(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON).get(ClientResponse.class);
+				inNewPass).type(MediaType.APPLICATION_JSON).accept(MediaType
+				.APPLICATION_JSON).put(ClientResponse.class);
 		if (!response.getClientResponseStatus().equals(ClientResponse.Status.NO_CONTENT)) {
 			throw new ClientException(response.getEntity(String.class));
 		}
