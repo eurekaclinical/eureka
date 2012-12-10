@@ -28,9 +28,9 @@ public final class Frequency extends DataElement {
 	private DataElementField dataElement;
 	private Boolean isWithin;
 	private Integer withinAtLeast;
-	private String withinAtLeastUnits;
+	private Long withinAtLeastUnits;
 	private Integer withinAtMost;
-	private String withinAtMostUnits;
+	private Long withinAtMostUnits;
 
 	public Frequency() {
 		super(Type.FREQUENCY);
@@ -76,11 +76,11 @@ public final class Frequency extends DataElement {
 		this.withinAtLeast = withinAtLeast;
 	}
 
-	public String getWithinAtLeastUnits() {
+	public Long getWithinAtLeastUnits() {
 		return withinAtLeastUnits;
 	}
 
-	public void setWithinAtLeastUnits(String withinAtLeastUnits) {
+	public void setWithinAtLeastUnits(Long withinAtLeastUnits) {
 		this.withinAtLeastUnits = withinAtLeastUnits;
 	}
 
@@ -92,11 +92,11 @@ public final class Frequency extends DataElement {
 		this.withinAtMost = withinAtMost;
 	}
 
-	public String getWithinAtMostUnits() {
+	public Long getWithinAtMostUnits() {
 		return withinAtMostUnits;
 	}
 
-	public void setWithinAtMostUnits(String withinAtMostUnits) {
+	public void setWithinAtMostUnits(Long withinAtMostUnits) {
 		this.withinAtMostUnits = withinAtMostUnits;
 	}
 

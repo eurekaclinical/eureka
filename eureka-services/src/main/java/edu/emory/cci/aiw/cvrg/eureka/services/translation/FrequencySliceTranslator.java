@@ -28,8 +28,7 @@ import edu.emory.cci.aiw.cvrg.eureka.services.dao.TimeUnitDao;
 
 public final class FrequencySliceTranslator implements
         PropositionTranslator<Frequency, SliceAbstraction> {
-
-	private Long userId;
+	
 	private final PropositionDao propositionDao;
 	private final TimeUnitDao timeUnitDao;
 
@@ -40,10 +39,6 @@ public final class FrequencySliceTranslator implements
 		timeUnitDao = inTimeUnitDao;
 	}
 
-	public void setUserId(Long inUserId) {
-		this.userId = inUserId;
-	}
-
 	@Override
 	public SliceAbstraction translateFromElement(Frequency element) {
 		SliceAbstraction result = new SliceAbstraction();
@@ -52,9 +47,22 @@ public final class FrequencySliceTranslator implements
 		        element);
 		result.setMinIndex(element.getAtLeast());
 		result.setExtendedProposition(PropositionTranslatorUtil
-		        .createExtendedProposition(element.getDataElement(), userId,
-		                propositionDao, timeUnitDao));
+		        .createExtendedProposition(element.getDataElement(), 
+				element.getUserId(),
+		        propositionDao, timeUnitDao));
 		result.setInSystem(false);
+		
+		if (element.getIsWithin()) {
+			result.setWithinAtLeast(element.getWithinAtLeast());
+			result.setWithinAtLeastUnits(this.timeUnitDao.retrieve(element.getWithinAtLeastUnits()));
+			result.setWithinAtMost(element.getWithinAtMost());
+			result.setWithinAtMostUnits(this.timeUnitDao.retrieve(element.getWithinAtMostUnits()));
+		} else {
+			result.setWithinAtLeast(null);
+			result.setWithinAtLeastUnits(this.timeUnitDao.retrieve(element.getWithinAtLeastUnits()));
+			result.setWithinAtMost(null);
+			result.setWithinAtMostUnits(this.timeUnitDao.retrieve(element.getWithinAtMostUnits()));
+		}
 
 		return result;
 	}
@@ -68,6 +76,14 @@ public final class FrequencySliceTranslator implements
 		result.setAtLeast(proposition.getMinIndex());
 		result.setDataElement(PropositionTranslatorUtil
 		        .createDataElementField(proposition.getExtendedProposition()));
+		
+		result.setWithinAtLeast(proposition.getWithinAtLeast());
+		result.setWithinAtLeastUnits(proposition.getWithinAtLeastUnits().getId());
+		result.setWithinAtMost(proposition.getWithinAtMost());
+		result.setWithinAtMostUnits(proposition.getWithinAtMostUnits().getId());
+		if (result.getWithinAtLeast() != null || result.getWithinAtMost() != null) {
+			result.setIsWithin(true);
+		}
 
 		return result;
 	}

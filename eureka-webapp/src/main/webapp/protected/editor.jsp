@@ -471,7 +471,7 @@
 																							</tr>
 																							<tr>
 																								<td>
-																									<label><input type="checkbox" value="true" name="freqDataElementSpecifyDuration" <c:if test="${propositionType == 'frequency' and not empty proposition.dataElement.hasDuration}">checked="checked"</c:if> >with duration</label>
+																									<label><input type="checkbox" value="true" name="freqDataElementSpecifyDuration" <c:if test="${propositionType == 'frequency' and proposition.dataElement.hasDuration}">checked="checked"</c:if> >with duration</label>
 																								</td>
 																								<td>
 																									<table>
@@ -530,18 +530,18 @@
 																					</td>
 																					<td>
 																						at least
-																						<input type="text" class="distanceField" name="freqWithinAtLeast" value="<c:if test="${propositionType == 'frequency'}">${proposition.dataElement.withinAtLeast}</c:if>" />
+																						<input type="text" class="distanceField" name="freqWithinAtLeast" value="<c:if test="${propositionType == 'frequency'}">${proposition.withinAtLeast}</c:if>" />
 																						<select name="freqWithinAtLeastUnits">
 																								<c:forEach var="unit" items="${timeUnits}">
-																									<option value="${unit.id}" <c:if test="${propositionType == 'frequency' and unit.id == proposition.dataElement.withinAtLeastUnits}">selected="selected"</c:if>>${unit.description}</option>
+																									<option value="${unit.id}" <c:if test="${propositionType == 'frequency' and unit.id == proposition.withinAtLeastUnits}">selected="selected"</c:if>>${unit.description}</option>
 																								</c:forEach>
 																						</select>
 																						<br />
 																						at most
-																						<input type="text" class="distanceField" name="freqWithinAtMost" value="<c:if test="${propositionType == 'frequency'}">${proposition.dataElement.withinAtMost}</c:if>"/>
+																						<input type="text" class="distanceField" name="freqWithinAtMost" value="<c:if test="${propositionType == 'frequency'}">${proposition.withinAtMost}</c:if>"/>
 																						<select name="freqWithinAtMostUnits">
 																								<c:forEach var="unit" items="${timeUnits}">
-																								<option value="${unit.id}" <c:if test="${propositionType == 'frequency' and unit.id == proposition.dataElement.withinAtMostUnits}">selected="selected"</c:if>>${unit.description}</option>
+																								<option value="${unit.id}" <c:if test="${propositionType == 'frequency' and unit.id == proposition.withinAtMostUnits}">selected="selected"</c:if>>${unit.description}</option>
 																								</c:forEach>
 																						</select>
 																					</td>

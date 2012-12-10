@@ -40,7 +40,6 @@ public final class PropositionTranslatorVisitor implements
 	private final FrequencyLowLevelAbstractionTranslator frequencyLowLevelAbstractionTranslator;
 	private final ResultThresholdsTranslator resultThresholdsTranslator;
 	private DataElement dataElement;
-	private Long userId;
 
 	@Inject
 	public PropositionTranslatorVisitor(
@@ -60,10 +59,6 @@ public final class PropositionTranslatorVisitor implements
 
 	public DataElement getDataElement() {
 		return dataElement;
-	}
-
-	public void setUserId(Long inUserId) {
-		this.userId = inUserId;
 	}
 
 	@Override
@@ -86,7 +81,6 @@ public final class PropositionTranslatorVisitor implements
 
 	@Override
 	public void visit(SliceAbstraction sliceAbstraction) {
-		this.frequencySliceTranslator.setUserId(this.userId);
 		dataElement = this.frequencySliceTranslator
 				.translateFromProposition(sliceAbstraction);
 	}
@@ -94,7 +88,6 @@ public final class PropositionTranslatorVisitor implements
 	@Override
 	public void visit(LowLevelAbstraction lowLevelAbstraction) {
 		if (lowLevelAbstraction.getCreatedFrom() == CreatedFrom.FREQUENCY) {
-			this.frequencyLowLevelAbstractionTranslator.setUserId(this.userId);
 			dataElement = this.frequencyLowLevelAbstractionTranslator
 					.translateFromProposition(lowLevelAbstraction);
 		} else if (lowLevelAbstraction.getCreatedFrom() == CreatedFrom.VALUE_THRESHOLD) {

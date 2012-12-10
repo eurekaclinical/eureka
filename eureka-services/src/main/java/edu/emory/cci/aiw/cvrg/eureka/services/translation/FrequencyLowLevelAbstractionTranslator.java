@@ -53,13 +53,16 @@ public final class FrequencyLowLevelAbstractionTranslator implements
 		        element);
 		result.setMinValues(element.getAtLeast());
 		result.setMinGapValues(element.getWithinAtLeast());
-		TimeUnit minGapValuesUnits = new TimeUnit();
-		minGapValuesUnits.setName(element.getWithinAtLeastUnits());
-		result.setMinGapValuesUnits(minGapValuesUnits);
+		/*
+		 * See the frequency and sequence code for how to do this correctly.
+		 */
+//		TimeUnit minGapValuesUnits = new TimeUnit();
+//		minGapValuesUnits.setId(element.getWithinAtLeastUnits());
+//		result.setMinGapValuesUnits(minGapValuesUnits);
 		result.setMaxGapValues(element.getWithinAtMost());
-		TimeUnit maxGapValuesUnits = new TimeUnit();
-		maxGapValuesUnits.setName(element.getWithinAtMostUnits());
-		result.setMaxGapValuesUnits(maxGapValuesUnits);
+//		TimeUnit maxGapValuesUnits = new TimeUnit();
+//		maxGapValuesUnits.setId(element.getWithinAtMostUnits());
+//		result.setMaxGapValuesUnits(maxGapValuesUnits);
 
 		result.setAbstractedFrom(Collections.singletonList(propositionDao.getByUserAndKey(
 		        userId, element.getDataElement().getDataElementKey())));
@@ -74,9 +77,9 @@ public final class FrequencyLowLevelAbstractionTranslator implements
 		PropositionTranslatorUtil.populateCommonDataElementFields(result, proposition);
 		result.setAtLeast(proposition.getMinValues());
 		result.setWithinAtLeast(proposition.getMinGapValues());
-		result.setWithinAtLeastUnits(proposition.getMinGapValuesUnits().getName());
+		result.setWithinAtLeastUnits(proposition.getMinGapValuesUnits().getId());
 		result.setWithinAtMost(proposition.getMaxGapValues());
-		result.setWithinAtMostUnits(proposition.getMaxGapValuesUnits().getName());
+		result.setWithinAtMostUnits(proposition.getMaxGapValuesUnits().getId());
 
 		DataElementField dataElement = new DataElementField();
 		dataElement.setDataElementKey(proposition.getAbstractedFrom().get(0).getKey());

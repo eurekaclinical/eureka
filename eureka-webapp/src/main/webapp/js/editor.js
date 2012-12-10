@@ -139,12 +139,12 @@ function saveFrequency (elem) {
 		'dataElement': {
 			'dataElementKey': $dataElement.data('key'),
 			'withValue': $(elem).find('select[name="freqDataElementValue"]').val(),
-			'hasDuration': $(elem).find('input[name="freqDataElementSpecifyDuration"]').val(),
+			'hasDuration': $(elem).find('input[name="freqDataElementSpecifyDuration"]').is(':checked'),
 			'minDuration': $(elem).find('input[name="freqDataElementMinDurationValue"]').val(),
 			'minDurationUnits': $(elem).find('select[name="freqDataElementMinDurationUnits"]').val(),
 			'maxDuration': $(elem).find('input[name="freqDataElementMaxDurationValue"]').val(),
 			'maxDurationUnits': $(elem).find('select[name="freqDataElementMaxDurationUnits"]').val(),
-			'hasPropertyConstraint': $(elem).find('input[name="freqDataElementSpecifyProperty"]').val(),
+			'hasPropertyConstraint': $(elem).find('input[name="freqDataElementSpecifyProperty"]').is(':checked'),
 			'property': $(elem).find('select[name="freqDataElementPropertyName"]').val(),
 			'propertyValue': $(elem).find('input[name="freqDataElementPropertyValue"]').val()
 		},
@@ -153,6 +153,12 @@ function saveFrequency (elem) {
 		'withinAtLeastUnits': $(elem).find('select[name=freqWithinAtLeastUnits]').val(),
 		'withinAtMost': $(elem).find('input[name=freqWithinAtMost]').val(),
 		'withinAtMostUnits': $(elem).find('select[name=freqWithinAtMostUnits]').val()
+	}
+	
+	var propId = $('#propId').val();
+
+	if (propId) {
+		frequency.id = propId;
 	}
 	
 	postProposition(frequency);

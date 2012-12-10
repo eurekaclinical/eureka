@@ -95,6 +95,11 @@ class PropositionTranslatorUtil {
 			ep.setMinDurationTimeUnit(timeUnitDao.retrieve(dataElement.getMinDurationUnits()));
 			ep.setMaxDuration(dataElement.getMaxDuration());
 			ep.setMaxDurationTimeUnit(timeUnitDao.retrieve(dataElement.getMaxDurationUnits()));
+		} else {
+			ep.setMinDuration(null);
+			ep.setMinDurationTimeUnit(timeUnitDao.retrieve(dataElement.getMinDurationUnits()));
+			ep.setMaxDuration(null);
+			ep.setMaxDurationTimeUnit(timeUnitDao.retrieve(dataElement.getMaxDurationUnits()));
 		}
 		if (dataElement.getHasPropertyConstraint()) {
 			PropertyConstraint pc = new PropertyConstraint();
@@ -103,6 +108,8 @@ class PropositionTranslatorUtil {
 			ValueComparator vc = new ValueComparator();
 			vc.setName("EQUAL_TO");
 			ep.setPropertyConstraint(pc);
+		} else {
+			ep.setPropertyConstraint(null);
 		}
 
 		return ep;

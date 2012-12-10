@@ -19,7 +19,10 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.common.entity;
 
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
@@ -28,15 +31,25 @@ import javax.persistence.Table;
  * context of the Eureka! UI.
  */
 @Entity
-@Table(name = "slice_abstractions")
+@Table(name = "frequencies")
 public class SliceAbstraction extends Proposition {
 
+	@Column(nullable = false)
 	private Integer minIndex;
-
+	
+	private Integer withinAtLeast;
+	
 	@OneToOne
-	Proposition abstractedFrom;
-
+	@JoinColumn(referencedColumnName = "id")
+	private TimeUnit withinAtLeastUnits;
+	
+	private Integer withinAtMost;
+	
 	@OneToOne
+	@JoinColumn(referencedColumnName = "id")
+	private TimeUnit withinAtMostUnits;
+
+	@OneToOne(cascade = CascadeType.ALL)
 	ExtendedProposition extendedProposition;
 
 	public Integer getMinIndex() {
@@ -48,11 +61,7 @@ public class SliceAbstraction extends Proposition {
 	}
 
 	public Proposition getAbstractedFrom() {
-		return abstractedFrom;
-	}
-
-	public void setAbstractedFrom(Proposition abstractedFrom) {
-		this.abstractedFrom = abstractedFrom;
+		return extendedProposition != null ? extendedProposition.getProposition() : null;
 	}
 
 	public ExtendedProposition getExtendedProposition() {
@@ -61,6 +70,38 @@ public class SliceAbstraction extends Proposition {
 
 	public void setExtendedProposition(ExtendedProposition extendedProposition) {
 		this.extendedProposition = extendedProposition;
+	}
+	
+	public Integer getWithinAtLeast() {
+		return this.withinAtLeast;
+	}
+	
+	public void setWithinAtLeast(Integer duration) {
+		this.withinAtLeast = duration;
+	}
+
+	public TimeUnit getWithinAtLeastUnits() {
+		return withinAtLeastUnits;
+	}
+
+	public void setWithinAtLeastUnits(TimeUnit withinAtLeastUnits) {
+		this.withinAtLeastUnits = withinAtLeastUnits;
+	}
+	
+	public Integer getWithinAtMost() {
+		return this.withinAtMost;
+	}
+	
+	public void setWithinAtMost(Integer duration) {
+		this.withinAtMost = duration;
+	}
+	
+	public TimeUnit getWithinAtMostUnits() {
+		return withinAtMostUnits;
+	}
+
+	public void setWithinAtMostUnits(TimeUnit withinAtMostUnits) {
+		this.withinAtMostUnits = withinAtMostUnits;
 	}
 
 	@Override
