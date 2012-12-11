@@ -25,11 +25,17 @@ import com.google.inject.persist.jpa.JpaPersistModule;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.FileDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.JpaFileDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.JpaPropositionDao;
+import edu.emory.cci.aiw.cvrg.eureka.services.dao.JpaRelationOperatorDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.JpaRoleDao;
+import edu.emory.cci.aiw.cvrg.eureka.services.dao.JpaTimeUnitDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.JpaUserDao;
+import edu.emory.cci.aiw.cvrg.eureka.services.dao.JpaValueComparatorDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.PropositionDao;
+import edu.emory.cci.aiw.cvrg.eureka.services.dao.RelationOperatorDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.RoleDao;
+import edu.emory.cci.aiw.cvrg.eureka.services.dao.TimeUnitDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.UserDao;
+import edu.emory.cci.aiw.cvrg.eureka.services.dao.ValueComparatorDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.email.EmailSender;
 import edu.emory.cci.aiw.cvrg.eureka.services.email.MockEmailSender;
 
@@ -49,6 +55,9 @@ public class AppTestModule extends AbstractModule {
 		bind(UserDao.class).to(JpaUserDao.class);
 		bind(RoleDao.class).to(JpaRoleDao.class);
 		bind(FileDao.class).to(JpaFileDao.class);
+		bind(TimeUnitDao.class).to(JpaTimeUnitDao.class);
+		bind(ValueComparatorDao.class).to(JpaValueComparatorDao.class);
+		bind(RelationOperatorDao.class).to(JpaRelationOperatorDao.class);
 		bind(PropositionDao.class).to(JpaPropositionDao.class);
 		bind(EmailSender.class).to(MockEmailSender.class);
 
