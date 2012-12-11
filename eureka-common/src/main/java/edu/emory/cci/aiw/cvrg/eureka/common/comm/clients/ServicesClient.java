@@ -106,8 +106,7 @@ public class ServicesClient extends AbstractClient {
 		final String path = "/api/user/passwd/" + inUserId;
 		ClientResponse response = this.getResource().path(path).queryParam
 				("oldPassword", inOldPass).queryParam("newPassword",
-				inNewPass).type(MediaType.APPLICATION_JSON).accept(MediaType
-				.APPLICATION_JSON).put(ClientResponse.class);
+				inNewPass).put(ClientResponse.class);
 		if (!response.getClientResponseStatus().equals(ClientResponse.Status.NO_CONTENT)) {
 			throw new ClientException(response.getEntity(String.class));
 		}
