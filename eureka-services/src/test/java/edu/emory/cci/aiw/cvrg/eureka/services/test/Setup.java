@@ -148,17 +148,17 @@ public class Setup implements TestDataProvider {
 
 	private User createResearcherUser() throws TestDataException {
 		return this.createAndPersistUser("user@emory.edu", "Regular", "User",
-				null, this.researcherRole);
+				createFileUpload(), this.researcherRole);
 	}
 
 	private User createAdminUser() throws TestDataException {
 		return this.createAndPersistUser("admin.user@emory.edu", "Admin",
-				"User", null, this.researcherRole, this.adminRole);
+				"User", createFileUpload(), this.researcherRole, this.adminRole);
 	}
 
 	private User createSuperUser() throws TestDataException {
 		return this.createAndPersistUser("super.user@emory.edu", "Super",
-				"User", null, this.researcherRole, this.adminRole,
+				"User", createFileUpload(), this.researcherRole, this.adminRole,
 				this.superRole);
 	}
 
@@ -185,7 +185,20 @@ public class Setup implements TestDataProvider {
 		entityManager.persist(user);
 		entityManager.flush();
 		entityManager.getTransaction().commit();
+		
+		entityManager.getTransaction().begin();
+		upload.setUserId(user.getId());
+		entityManager.persist(upload);
+		entityManager.flush();
+		entityManager.getTransaction().commit();
 		return user;
+	}
+	
+	private FileUpload createFileUpload () {
+		FileUpload fileUpload = new FileUpload();
+		fileUpload.setLocation("test_location");
+		fileUpload.setTimestamp(new Date());
+		return fileUpload;
 	}
 
 	private Role createResearcherRole() {
