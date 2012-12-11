@@ -37,6 +37,8 @@ import edu.emory.cci.aiw.cvrg.eureka.common.entity.Configuration;
 import edu.emory.cci.aiw.cvrg.eureka.etl.dao.ConfDao;
 
 @Path("/configuration")
+@Produces(MediaType.APPLICATION_JSON)
+@Consumes(MediaType.APPLICATION_JSON)
 public class ConfigurationResource {
 
 	private static final Logger LOGGER =
@@ -50,8 +52,6 @@ public class ConfigurationResource {
 
 	@GET
 	@Path("/get/{userId}")
-	@Consumes(MediaType.APPLICATION_JSON)
-	@Produces(MediaType.APPLICATION_JSON)
 	public Configuration getConfByUserId(@PathParam("userId") Long userId) {
 		LOGGER.debug("Configuration request for user {}", userId);
 		return this.confDao.getByUserId(userId);
@@ -59,7 +59,6 @@ public class ConfigurationResource {
 
 	@POST
 	@Path("/submit")
-	@Consumes(MediaType.APPLICATION_JSON)
 	public Response submitConfiguration(Configuration conf) {
 		this.confDao.create(conf);
 		LOGGER.debug("Request to save Configuration");
