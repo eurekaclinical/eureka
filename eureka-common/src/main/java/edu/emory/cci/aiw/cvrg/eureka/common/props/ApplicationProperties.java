@@ -89,8 +89,8 @@ public abstract class ApplicationProperties {
 					LOGGER.info("Successfully loaded configuration from {}",
 						file);
 				} catch (IOException e) {
-					LOGGER.warn("Failed to load configuration from file {}",
-						file, e);
+					LOGGER.warn("Failed to load configuration from file {}: " +
+							"{}", file, e.getMessage());
 				}
 			}
 			if(temp != null) {
