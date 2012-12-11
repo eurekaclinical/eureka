@@ -104,7 +104,8 @@ public class ServicesClient extends AbstractClient {
 	public void changePassword(Long inUserId, String inOldPass,
 			String inNewPass) throws ClientException {
 		final String path = "/api/user/passwd/" + inUserId;
-		ClientResponse response = this.getResource().path(path).queryParam("oldPassWord", inOldPass).queryParam("newPassword",
+		ClientResponse response = this.getResource().path(path).queryParam
+				("oldPassword", inOldPass).queryParam("newPassword",
 				inNewPass).type(MediaType.APPLICATION_JSON).accept(MediaType
 				.APPLICATION_JSON).put(ClientResponse.class);
 		if (!response.getClientResponseStatus().equals(ClientResponse.Status.NO_CONTENT)) {
