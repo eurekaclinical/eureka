@@ -23,8 +23,6 @@ import java.util.List;
 
 import javax.ws.rs.core.MediaType;
 
-import junit.framework.Assert;
-
 import org.junit.Test;
 
 import com.sun.jersey.api.client.ClientResponse;
@@ -33,6 +31,8 @@ import com.sun.jersey.api.client.WebResource;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.UserRequest;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.User;
+
+import junit.framework.Assert;
 
 /**
  * Test cases related to the {@link UserResource} class.
@@ -56,6 +56,12 @@ public class UserResourceTest extends AbstractServiceResourceTest {
 	public void testUserList() {
 		List<User> users = this.getUserList();
 		Assert.assertEquals(3, users.size());
+	}
+	
+	@Test
+	public void getOptions () {
+		System.out.println(
+				this.resource().path("/api/user/list").options(String.class));
 	}
 
 	/**
@@ -90,7 +96,7 @@ public class UserResourceTest extends AbstractServiceResourceTest {
 		String verifyEmail = "test@emory.edu";
 		String firstName = "Joe";
 		String lastName = "Schmoe";
-		String organziation = "Emory University";
+		String organization = "Emory University";
 		String password = "password";
 		String verifyPassword = "password";
 
@@ -100,15 +106,15 @@ public class UserResourceTest extends AbstractServiceResourceTest {
 		userRequest.setLastName(lastName);
 		userRequest.setEmail(email);
 		userRequest.setVerifyEmail(verifyEmail);
-		userRequest.setOrganization(organziation);
+		userRequest.setOrganization(organization);
 		userRequest.setPassword(password);
 		userRequest.setVerifyPassword(verifyPassword);
 
-		ClientResponse response = webResource.path("/api/user/add")
-				.type(MediaType.APPLICATION_JSON).accept(MediaType.TEXT_PLAIN)
+		ClientResponse response = webResource.path("/api/user")
+				.type(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON)
 				.post(ClientResponse.class, userRequest);
 
-		Assert.assertEquals(Status.CREATED, response.getClientResponseStatus());
+		Assert.assertEquals(Status.NO_CONTENT, response.getClientResponseStatus());
 
 	}
 
@@ -124,8 +130,8 @@ public class UserResourceTest extends AbstractServiceResourceTest {
 				.path("/api/user/passwd/" + user.getId())
 				.queryParam("oldPassword", "testpassword")
 				.queryParam("newPassword", "newpassword")
-				.get(ClientResponse.class);
-		Assert.assertEquals(Status.OK, response.getClientResponseStatus());
+				.put(ClientResponse.class);
+		Assert.assertEquals(Status.NO_CONTENT, response.getClientResponseStatus());
 	}
 
 	/**
