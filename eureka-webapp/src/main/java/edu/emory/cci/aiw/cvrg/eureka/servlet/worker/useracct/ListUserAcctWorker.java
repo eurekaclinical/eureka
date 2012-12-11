@@ -44,6 +44,6 @@ public class ListUserAcctWorker implements ServletWorker {
 		User user = servicesClient.getUserByName(userName);
 
 		req.setAttribute("user", user);
-		req.getRequestDispatcher("/acct.jsp").forward(req, resp);
+		req.getRequestDispatcher("/protected/acct.jsp").forward(req, resp);
 	}
 }
