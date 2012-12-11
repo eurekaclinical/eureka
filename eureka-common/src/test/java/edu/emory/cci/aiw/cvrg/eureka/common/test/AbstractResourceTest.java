@@ -51,14 +51,6 @@ public abstract class AbstractResourceTest extends JerseyTest {
 	private static final Logger LOGGER = LoggerFactory.getLogger(
 			AbstractResourceTest.class);
 	/**
-	 * The context path for the test.
-	 */
-	private static final String CONTEXT_PATH = "/";
-	/**
-	 * The servlet path for the test.
-	 */
-	private static final String SERVLET_PATH = "/";
-	/**
 	 * An instance of Guice Injector, used to create other necessary objects for
 	 * the test.
 	 */
@@ -87,9 +79,11 @@ public abstract class AbstractResourceTest extends JerseyTest {
 		clientConfig.getFeatures().put(JSONConfiguration.FEATURE_POJO_MAPPING,
 				Boolean.TRUE);
 		clientConfig.getClasses().add(ObjectMapperProvider.class);
-		return (new WebAppDescriptor.Builder()).contextListenerClass(
-				getListener()).filterClass(getFilter()).contextPath(CONTEXT_PATH).
-				servletPath(SERVLET_PATH).clientConfig(clientConfig).build();
+		return (new WebAppDescriptor.Builder())
+				.contextListenerClass(getListener())
+				.filterClass(getFilter())
+				.clientConfig(clientConfig)
+				.build();
 	}
 
 	/**
