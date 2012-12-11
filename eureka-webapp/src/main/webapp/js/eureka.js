@@ -156,6 +156,13 @@ $(document).ready(function() {
 	     $('#editAcctBtn').hide();
 	     $('#saveAcctBtn').show();
     });
+
+	$('#ChangePasswordbtn').click(function(e){
+			e.preventDefault();
+	     $('#newPasswordTable').show();
+	     $('#editAcctBtn').hide();
+	     $('#saveAcctBtn').show();
+    });
 	
 	 $("#signupForm").submit(function() {
 		if (signupFormValidator.valid()) {
