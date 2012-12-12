@@ -49,6 +49,8 @@ import edu.emory.cci.aiw.cvrg.eureka.etl.validator.PropositionValidator;
 import edu.emory.cci.aiw.cvrg.eureka.etl.validator.PropositionValidatorException;
 
 @Path("/job")
+@Produces(MediaType.APPLICATION_JSON)
+@Consumes(MediaType.APPLICATION_JSON)
 public class JobResource {
 	private static final Logger LOGGER = LoggerFactory
 	        .getLogger(JobResource.class);
@@ -68,22 +70,18 @@ public class JobResource {
 
 	@GET
 	@Path("/list")
-	@Produces(MediaType.APPLICATION_JSON)
 	public List<Job> getAll() {
 		return this.jobDao.getAll();
 	}
 
 	@GET
 	@Path("/{jobId}")
-	@Produces(MediaType.APPLICATION_JSON)
 	public Job getJob(@PathParam("jobId") Long inJobId) {
 		return this.jobDao.retrieve(inJobId);
 	}
 
 	@POST
 	@Path("/submit")
-	@Consumes(MediaType.APPLICATION_JSON)
-	@Produces(MediaType.APPLICATION_JSON)
 	public Response startJob(JobRequest inJobRequest) {
 		Response response;
 		Job job = inJobRequest.getJob();
@@ -121,7 +119,6 @@ public class JobResource {
 
 	@GET
 	@Path("/status")
-	@Produces(MediaType.APPLICATION_JSON)
 	public List<Job> getJobStatus(@QueryParam("filter") JobFilter inFilter) {
 
 		LOGGER.debug("Request for job status");
