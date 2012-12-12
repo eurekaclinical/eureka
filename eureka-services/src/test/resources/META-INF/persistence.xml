@@ -4,24 +4,26 @@
 	version="2.0">
 	<persistence-unit name="services-jpa-unit"
 		transaction-type="RESOURCE_LOCAL">
-		<class>edu.emory.cci.aiw.cvrg.eureka.common.entity.User</class>
-		<class>edu.emory.cci.aiw.cvrg.eureka.common.entity.Role</class>
-		<class>edu.emory.cci.aiw.cvrg.eureka.common.entity.FileUpload</class>
 		<class>edu.emory.cci.aiw.cvrg.eureka.common.entity.AbstractFileInfo</class>
-		<class>edu.emory.cci.aiw.cvrg.eureka.common.entity.FileWarning</class>
-		<class>edu.emory.cci.aiw.cvrg.eureka.common.entity.FileError</class>
-		<class>edu.emory.cci.aiw.cvrg.eureka.common.entity.Proposition</class>
-		<class>edu.emory.cci.aiw.cvrg.eureka.common.entity.TemporalPattern</class>
-		<class>edu.emory.cci.aiw.cvrg.eureka.common.entity.Relation</class>
-		<class>edu.emory.cci.aiw.cvrg.eureka.common.entity.HighLevelAbstraction</class>
 		<class>edu.emory.cci.aiw.cvrg.eureka.common.entity.Categorization</class>
-		<class>edu.emory.cci.aiw.cvrg.eureka.common.entity.SystemProposition</class>
 		<class>edu.emory.cci.aiw.cvrg.eureka.common.entity.ExtendedProposition</class>
-		<class>edu.emory.cci.aiw.cvrg.eureka.common.entity.SliceAbstraction</class>
+		<class>edu.emory.cci.aiw.cvrg.eureka.common.entity.FileError</class>
+		<class>edu.emory.cci.aiw.cvrg.eureka.common.entity.FileUpload</class>
+		<class>edu.emory.cci.aiw.cvrg.eureka.common.entity.FileWarning</class>
+		<class>edu.emory.cci.aiw.cvrg.eureka.common.entity.HighLevelAbstraction</class>
+		<class>edu.emory.cci.aiw.cvrg.eureka.common.entity.LowLevelAbstraction</class>
 		<class>edu.emory.cci.aiw.cvrg.eureka.common.entity.PropertyConstraint</class>
-		<class>edu.emory.cci.aiw.cvrg.eureka.common.entity.ValueComparator</class>
-		<class>edu.emory.cci.aiw.cvrg.eureka.common.entity.TimeUnit</class>
+		<class>edu.emory.cci.aiw.cvrg.eureka.common.entity.Proposition</class>
+		<class>edu.emory.cci.aiw.cvrg.eureka.common.entity.Relation</class>
 		<class>edu.emory.cci.aiw.cvrg.eureka.common.entity.RelationOperator</class>
+		<class>edu.emory.cci.aiw.cvrg.eureka.common.entity.Role</class>
+		<class>edu.emory.cci.aiw.cvrg.eureka.common.entity.SimpleParameterConstraint</class>
+		<class>edu.emory.cci.aiw.cvrg.eureka.common.entity.SliceAbstraction</class>
+		<class>edu.emory.cci.aiw.cvrg.eureka.common.entity.SystemProposition</class>
+		<class>edu.emory.cci.aiw.cvrg.eureka.common.entity.TemporalPattern</class>
+		<class>edu.emory.cci.aiw.cvrg.eureka.common.entity.TimeUnit</class>
+		<class>edu.emory.cci.aiw.cvrg.eureka.common.entity.User</class>
+		<class>edu.emory.cci.aiw.cvrg.eureka.common.entity.ValueComparator</class>
 
 		<properties>
 			<!-- Disable the second-level cache -->
