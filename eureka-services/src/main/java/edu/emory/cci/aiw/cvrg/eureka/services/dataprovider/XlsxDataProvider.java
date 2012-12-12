@@ -144,7 +144,7 @@ public class XlsxDataProvider implements DataProvider {
 	}
 
 	@Override
-	public List<Patient> getPatients() {
+	public List<Patient> getPatients() throws DataProviderException {
 		if (this.patients == null) {
 			this.patients = this.readPatients();
 		}
@@ -152,7 +152,7 @@ public class XlsxDataProvider implements DataProvider {
 	}
 
 	@Override
-	public List<Provider> getProviders() {
+	public List<Provider> getProviders() throws DataProviderException {
 		if (this.providers == null) {
 			this.providers = this.readProviders();
 		}
@@ -160,7 +160,7 @@ public class XlsxDataProvider implements DataProvider {
 	}
 
 	@Override
-	public List<Encounter> getEncounters() {
+	public List<Encounter> getEncounters() throws DataProviderException {
 		if (this.encounters == null) {
 			this.encounters = this.readEncounters();
 		}
@@ -168,7 +168,7 @@ public class XlsxDataProvider implements DataProvider {
 	}
 
 	@Override
-	public List<CPT> getCptCodes() {
+	public List<CPT> getCptCodes() throws DataProviderException {
 		if (this.cpts == null) {
 			this.cpts = this.readCpts();
 		}
@@ -176,7 +176,7 @@ public class XlsxDataProvider implements DataProvider {
 	}
 
 	@Override
-	public List<Icd9Diagnosis> getIcd9Diagnoses() {
+	public List<Icd9Diagnosis> getIcd9Diagnoses() throws DataProviderException {
 		if (this.icd9Diagnoses == null) {
 			this.icd9Diagnoses = this.readIcd9Diagnoses();
 		}
@@ -184,7 +184,7 @@ public class XlsxDataProvider implements DataProvider {
 	}
 
 	@Override
-	public List<Icd9Procedure> getIcd9Procedures() {
+	public List<Icd9Procedure> getIcd9Procedures() throws DataProviderException {
 		if (this.icd9Procedures == null) {
 			this.icd9Procedures = this.readIcd9Procedures();
 		}
@@ -192,7 +192,7 @@ public class XlsxDataProvider implements DataProvider {
 	}
 
 	@Override
-	public List<Medication> getMedications() {
+	public List<Medication> getMedications() throws DataProviderException {
 		if (this.medications == null) {
 			this.medications = this.readMedications();
 		}
@@ -200,7 +200,7 @@ public class XlsxDataProvider implements DataProvider {
 	}
 
 	@Override
-	public List<Lab> getLabs() {
+	public List<Lab> getLabs() throws DataProviderException {
 		if (this.labs == null) {
 			this.labs = this.readLabs();
 		}
@@ -208,7 +208,7 @@ public class XlsxDataProvider implements DataProvider {
 	}
 
 	@Override
-	public List<Vital> getVitals() {
+	public List<Vital> getVitals() throws DataProviderException {
 		if (this.vitals == null) {
 			this.vitals = this.readVitals();
 		}
@@ -220,7 +220,7 @@ public class XlsxDataProvider implements DataProvider {
 	 * 
 	 * @return A list of {@link Patient} objects.
 	 */
-	private List<Patient> readPatients() {
+	private List<Patient> readPatients() throws DataProviderException {
 		XSSFSheet sheet = this.workbook.getSheet("patient");
 		List<Patient> result = new ArrayList<Patient>();
 		Iterator<Row> rows = sheet.rowIterator();
@@ -272,7 +272,7 @@ public class XlsxDataProvider implements DataProvider {
 	 * 
 	 * @return A list of {@link Encounter} objects.
 	 */
-	private List<Encounter> readEncounters() {
+	private List<Encounter> readEncounters() throws DataProviderException {
 		XSSFSheet sheet = this.workbook.getSheet("encounter");
 		List<Encounter> result = new ArrayList<Encounter>();
 		Iterator<Row> rows = sheet.rowIterator();
@@ -301,7 +301,7 @@ public class XlsxDataProvider implements DataProvider {
 	 * 
 	 * @return A list of {@link CPT} objects.
 	 */
-	private List<CPT> readCpts() {
+	private List<CPT> readCpts() throws DataProviderException {
 		XSSFSheet sheet = this.workbook.getSheet("eCPT");
 		List<CPT> result = new ArrayList<CPT>();
 		Iterator<Row> rows = sheet.rowIterator();
@@ -323,7 +323,7 @@ public class XlsxDataProvider implements DataProvider {
 	 * 
 	 * @return A list of {@link Icd9Diagnosis} objects.
 	 */
-	private List<Icd9Diagnosis> readIcd9Diagnoses() {
+	private List<Icd9Diagnosis> readIcd9Diagnoses() throws DataProviderException {
 		XSSFSheet sheet = this.workbook.getSheet("eICD9D");
 		List<Icd9Diagnosis> result = new ArrayList<Icd9Diagnosis>();
 		Iterator<Row> rows = sheet.rowIterator();
@@ -348,7 +348,7 @@ public class XlsxDataProvider implements DataProvider {
 	 * 
 	 * @return A list of {@link Icd9Procedure} objects.
 	 */
-	private List<Icd9Procedure> readIcd9Procedures() {
+	private List<Icd9Procedure> readIcd9Procedures() throws DataProviderException {
 		XSSFSheet sheet = this.workbook.getSheet("eICD9P");
 		List<Icd9Procedure> result = new ArrayList<Icd9Procedure>();
 		Iterator<Row> rows = sheet.rowIterator();
@@ -373,7 +373,7 @@ public class XlsxDataProvider implements DataProvider {
 	 * 
 	 * @return A list of {@link Medication} objects.
 	 */
-	private List<Medication> readMedications() {
+	private List<Medication> readMedications() throws DataProviderException {
 		XSSFSheet sheet = this.workbook.getSheet("eMEDS");
 		List<Medication> result = new ArrayList<Medication>();
 		Iterator<Row> rows = sheet.rowIterator();
@@ -398,7 +398,7 @@ public class XlsxDataProvider implements DataProvider {
 	 * 
 	 * @return A list of {@link Lab} objects.
 	 */
-	private List<Lab> readLabs() {
+	private List<Lab> readLabs() throws DataProviderException {
 		XSSFSheet sheet = this.workbook.getSheet("eLABS");
 		List<Lab> result = new ArrayList<Lab>();
 		Iterator<Row> rows = sheet.rowIterator();
@@ -424,7 +424,7 @@ public class XlsxDataProvider implements DataProvider {
 	 * 
 	 * @return A list of {@link Vital} objects.
 	 */
-	private List<Vital> readVitals() {
+	private List<Vital> readVitals() throws DataProviderException {
 		XSSFSheet sheet = this.workbook.getSheet("eVITALS");
 		List<Vital> result = new ArrayList<Vital>();
 		Iterator<Row> rows = sheet.rowIterator();
@@ -453,7 +453,7 @@ public class XlsxDataProvider implements DataProvider {
 	 * @param cell The cell to read the value from.
 	 * @return The date in the cell, if valid, null otherwise.
 	 */
-	private static Date readDateValue(Cell cell) {
+	private static Date readDateValue(Cell cell) throws DataProviderException {
 		Date result;
 		String value = XlsxDataProvider.readStringValue(cell);
 		if (value == null) {
@@ -462,7 +462,7 @@ public class XlsxDataProvider implements DataProvider {
 			try {
 				result = dateFormat.get().parse(value);
 			} catch (ParseException e) {
-				result = null;
+				throw new DataProviderException(e);
 			}
 		}
 		return result;

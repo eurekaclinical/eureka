@@ -182,13 +182,17 @@ public class JobTask implements Runnable {
 	 */
 	private void validateUpload(DataProvider dataProvider) throws TaskException {
 		DataValidator dataValidator = new DataValidator();
-		dataValidator.setPatients(dataProvider.getPatients()).setEncounters(dataProvider.
-				getEncounters()).setProviders(dataProvider.getProviders()).
-				setCpts(dataProvider.getCptCodes()).setIcd9Procedures(dataProvider.
-				getIcd9Procedures()).setIcd9Diagnoses(dataProvider.
-				getIcd9Diagnoses()).setMedications(dataProvider.getMedications()).
-				setLabs(dataProvider.getLabs()).setVitals(dataProvider.getVitals()).
-				validate();
+		try {
+			dataValidator.setPatients(dataProvider.getPatients()).setEncounters(dataProvider.
+					getEncounters()).setProviders(dataProvider.getProviders()).
+					setCpts(dataProvider.getCptCodes()).setIcd9Procedures(dataProvider.
+					getIcd9Procedures()).setIcd9Diagnoses(dataProvider.
+					getIcd9Diagnoses()).setMedications(dataProvider.getMedications()).
+					setLabs(dataProvider.getLabs()).setVitals(dataProvider.getVitals()).
+					validate();
+		} catch (DataProviderException e) {
+			throw new TaskException(e);
+		}
 		List<ValidationEvent> events = dataValidator.getValidationEvents();
 
 		// if the validation caused any errors/warnings, we insert them into
@@ -240,6 +244,8 @@ public class JobTask implements Runnable {
 				dataInserter.insertMedications(dataProvider.getMedications());
 				dataInserter.insertVitals(dataProvider.getVitals());
 			} catch (DataInserterException e) {
+				throw new TaskException(e);
+			} catch (DataProviderException e) {
 				throw new TaskException(e);
 			}
 		} else {

@@ -34,61 +34,61 @@ public interface DataProvider {
 	 * 
 	 * @return A list of {@link Patient} objects.
 	 */
-	public List<Patient> getPatients();
+	public List<Patient> getPatients() throws DataProviderException;
 
 	/**
 	 * Get a list of providers from the data.
 	 * 
 	 * @return A list of {@link Provider} objects.
 	 */
-	public List<Provider> getProviders();
+	public List<Provider> getProviders() throws DataProviderException;
 
 	/**
 	 * Get a list of encounters from the data.
 	 * 
 	 * @return A list of {@link Encounter} objects.
 	 */
-	public List<Encounter> getEncounters();
+	public List<Encounter> getEncounters() throws DataProviderException;
 
 	/**
 	 * Get a list of CPT codes from the data.
 	 * 
 	 * @return A list of {@link CPT} objects.
 	 */
-	public List<CPT> getCptCodes();
+	public List<CPT> getCptCodes() throws DataProviderException;
 
 	/**
 	 * Get a list of ICD9 Diagnostic codes from the data.
 	 * 
 	 * @return A list of {@link Icd9Diagnosis} objects.
 	 */
-	public List<Icd9Diagnosis> getIcd9Diagnoses();
+	public List<Icd9Diagnosis> getIcd9Diagnoses() throws DataProviderException;
 
 	/**
 	 * Get a list of ICD9 Procedure codes from the data.
 	 * 
 	 * @return A list of {@link Icd9Procedure} objects.
 	 */
-	public List<Icd9Procedure> getIcd9Procedures();
+	public List<Icd9Procedure> getIcd9Procedures() throws DataProviderException;
 
 	/**
 	 * Get a list of medication from the data.
 	 * 
 	 * @return A list of {@link Medication} objects.
 	 */
-	public List<Medication> getMedications();
+	public List<Medication> getMedications() throws DataProviderException;
 
 	/**
 	 * Get a list of lab results from the data.
 	 * 
 	 * @return A list of {@link Lab} objects.
 	 */
-	public List<Lab> getLabs();
+	public List<Lab> getLabs() throws DataProviderException;
 
 	/**
 	 * Get a list of vitals from the data.
 	 * 
 	 * @return A list of {@link Vital} objects.
 	 */
-	public List<Vital> getVitals();
+	public List<Vital> getVitals() throws DataProviderException;
 }
