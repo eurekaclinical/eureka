@@ -27,6 +27,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 /**
@@ -46,12 +47,16 @@ public final class LowLevelAbstraction extends Proposition {
 	 * Minimum allowed time gap between values
 	 */
 	private Integer minGapValues;
+	@OneToOne
+	@JoinColumn(referencedColumnName = "id")
 	private TimeUnit minGapValuesUnits;
 
 	/*
 	 * Maximum allowed time gap between values
 	 */
 	private Integer maxGapValues;
+	@OneToOne
+	@JoinColumn(referencedColumnName = "id")
 	private TimeUnit maxGapValuesUnits;
 	
 	/*
