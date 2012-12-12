@@ -449,10 +449,12 @@ function initTrees() {
 						.data("key", $(data.o[0]).data("proposition"));
 
 					// set the properties in the properties select
-					var properties = $(data.o[0]).data('properties').split(",");
-					$(properties).each(function(i, property) {
-						$('select[name="mainDataElementPropertyName"]').append($('<option></option>').attr('value', property).text(property));
-					});
+					if ($(target).data('set-properties')) {
+						var properties = $(data.o[0]).data('properties').split(",");
+						$(properties).each(function(i, property) {
+							$('select[name="mainDataElementPropertyName"]').append($('<option></option>').attr('value', property).text(property));
+						});
+					}
 
 					// check that all types in the categorization are the same
 					if ($(sortable).data('drop-type') === 'multiple' && $(sortable).data("proptype") !== "empty") {
@@ -487,6 +489,12 @@ function initTrees() {
 											$(sortable).data('proptype','empty');
 											infoLabel.show();
 										}
+
+										// remove the properties from the drop down
+										if ($(target).data('set-properties')) {
+											$('select[name="mainDataElementPropertyName"]').empty();
+										}
+
 										$(this).dialog("close");
 										$(this).remove();
 									},

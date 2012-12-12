@@ -175,7 +175,7 @@
 																			Data Element:
 																		</td>
 																		<td>
-																			<div class="tree-drop-single jstree-drop">
+																			<div class="tree-drop-single jstree-drop" data-set-properties="true">
 																				<div class="label-info" ><center>Drop Here</center></div>
 																				<ul data-type="main" data-drop-type="single" class="sortable" style="width: 100% height: 100%">
 																					<c:if test="${not empty proposition and propositionType == 'sequence'}">
