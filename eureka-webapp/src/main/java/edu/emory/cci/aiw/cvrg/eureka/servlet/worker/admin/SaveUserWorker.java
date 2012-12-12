@@ -45,7 +45,6 @@ public class SaveUserWorker implements ServletWorker {
 
 		String id = req.getParameter("id");
 		String activeStatus = req.getParameter("active");
-		System.out.println("activeStatus: " + activeStatus);
 		boolean isActivated = false;
 
 		if (activeStatus != null) {
@@ -53,8 +52,6 @@ public class SaveUserWorker implements ServletWorker {
 			isActivated = true;
 
 		}
-		System.out.println("active status: " + isActivated);
-		System.out.println("id = " + id);
 
 		User user = servicesClient.getUserById(Long.valueOf(id));
 		String[] roles = req.getParameterValues("role");
@@ -62,7 +59,6 @@ public class SaveUserWorker implements ServletWorker {
 		for (String roleId : roles) {
 			Role role = servicesClient.getRole(Long.valueOf(roleId));
 			userRoles.add(role);
-			System.out.println("role = " + roleId);
 		}
 		user.setRoles(userRoles);
 		user.setActive(isActivated);
