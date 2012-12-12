@@ -29,12 +29,12 @@ function collectSequenceDataElement (elem) {
 	return {
 		'dataElementKey': $mainProposition.data('key'),
 		'withValue': $(elem).find('select[name="mainDataElementValue"]').val(),
-		'hasDuration': $(elem).find('input[name="mainDataElementSpecifyDuration"]').val(),
+		'hasDuration': $(elem).find('input[name="mainDataElementSpecifyDuration"]').is(':checked'),
 		'minDuration': $(elem).find('input[name="mainDataElementMinDurationValue"]').val(),
 		'minDurationUnits': $(elem).find('select[name="mainDataElementMinDurationUnits"]').val(),
 		'maxDuration': $(elem).find('input[name="mainDataElementMaxDurationValue"]').val(),
 		'maxDurationUnits': $(elem).find('select[name="mainDataElementMaxDurationUnits"]').val(),
-		'hasPropertyConstraint': $(elem).find('input[name="mainDataElementSpecifyProperty"]').val(),
+		'hasPropertyConstraint': $(elem).find('input[name="mainDataElementSpecifyProperty"]').is(':checked'),
 		'property': $(elem).find('select[name="mainDataElementPropertyName"]').val(),
 		'propertyValue': $(elem).find('input[name="mainDataElementPropertyValue"]').val()
 	}
@@ -52,12 +52,12 @@ function collectSequenceRelations ($relationElems) {
 				'dataElementField': {
 					'dataElementKey': $proposition.data('key'),
 					'withValue': $(r).find('select[name="sequenceRelDataElementValue"]').val(),
-					'hasDuration': $(r).find('input[name="sequenceRelDataElementSpecifyDuration"]').val(),
+					'hasDuration': $(r).find('input[name="sequenceRelDataElementSpecifyDuration"]').is(':checked'),
 					'minDuration': $(r).find('input[name="sequenceRelDataElementMinDurationValue"]').val(),
 					'minDurationUnits':  $(r).find('select[name="sequenceRelDataElementMinDurationUnits"]').val(),
 					'maxDuration': $(r).find('input[name="sequenceRelDataElementMaxDurationValue"]').val(),
 					'maxDurationUnits':  $(r).find('select[name="sequenceRelDataElementMaxDurationUnits"]').val(),
-					'hasPropertyConstraint': $(r).find('input[name="sequenceRelDataElementSpecifyProperty"]').val(),
+					'hasPropertyConstraint': $(r).find('input[name="sequenceRelDataElementSpecifyProperty"]').is(':checked'),
 					'property': $(r).find('select[name="sequenceRelDataElementPropertyName"]').val(),
 					'propertyValue': $(r).find('input[name="sequenceRelDataElementPropertyValue"]').val()
 				},
