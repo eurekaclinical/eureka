@@ -264,6 +264,11 @@ $(document).ready(function(){
 		setPropositionSelects($('#' + type + 'definition'));
 	}
 
+	// make any deletable items actually delete
+	$('ul.sortable').find('li').find('span.delete').each(function(i,item) {
+		$(item).click(function () {$(item).closest('li').remove();});
+	});
+
 	function leaveAStepCallback(from, to){
 		var result;
 		var step_num_from = from.attr('rel');
