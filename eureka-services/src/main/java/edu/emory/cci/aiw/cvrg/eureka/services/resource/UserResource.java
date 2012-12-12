@@ -410,7 +410,7 @@ public class UserResource {
 				result = false;
 			}
 		} else {
-			this.validationError = "Username already exists";
+			this.validationError = "Email address already exists";
 			result = false;
 		}
 
