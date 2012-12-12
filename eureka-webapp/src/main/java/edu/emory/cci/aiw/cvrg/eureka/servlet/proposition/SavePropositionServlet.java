@@ -48,9 +48,6 @@ public class SavePropositionServlet extends HttpServlet {
 		DataElement dataElement = objectMapper.readValue(req.getReader(),
 				DataElement.class);
 
-		System.out.println("dataElement.getType() = " + dataElement.getType
-				());
-
 		String username = req.getUserPrincipal().getName();
 		String servicesUrl = req.getSession().getServletContext()
 				.getInitParameter("eureka-services-url");
@@ -64,7 +61,6 @@ public class SavePropositionServlet extends HttpServlet {
 				servicesClient.updateUserElement(dataElement);
 			}
 		} catch (ClientException e) {
-			System.out.println(e.getMessage());
 			req.setAttribute("error", e.getMessage());
 		}
 	}
