@@ -22,7 +22,7 @@ package edu.emory.cci.aiw.cvrg.eureka.common.comm.clients;
 import java.util.List;
 
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriBuilder;
 
 import org.protempa.PropositionDefinition;
 
@@ -35,7 +35,6 @@ import edu.emory.cci.aiw.cvrg.eureka.common.comm.JobRequest;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.ValidationRequest;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.Configuration;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.Job;
-import javax.ws.rs.core.UriBuilder;
 
 /**
  * @author hrathod
@@ -77,14 +76,14 @@ public class EtlClient extends AbstractClient {
 				MediaType.APPLICATION_JSON).post(
 				ClientResponse.class, inJobRequest);
 		if (!response.getClientResponseStatus().equals(
-				Response.Status.CREATED)) {
+				ClientResponse.Status.CREATED)) {
 			throw new ClientException(response.getEntity(String.class));
 		}
 	}
 
 	public List<Job> getJobStatus(JobFilter inFilter) {
 		final String path = "/api/job/status";
-		return this.getResource().queryParam(
+		return this.getResource().path(path).queryParam(
 				"filter", inFilter.toQueryParam()).accept(
 				MediaType.APPLICATION_JSON).type(
 				MediaType.APPLICATION_JSON).get(JobListType);
@@ -96,7 +95,7 @@ public class EtlClient extends AbstractClient {
 		ClientResponse response = this.getResource().path(path).accept
 				(MediaType.APPLICATION_JSON).type(MediaType
 				.APPLICATION_JSON).post(ClientResponse.class, inRequest);
-		if (!response.getClientResponseStatus().equals(Response.Status.OK)) {
+		if (!response.getClientResponseStatus().equals(ClientResponse.Status.OK)) {
 			throw new ClientException(response.getEntity(String.class));
 		}
 	}
