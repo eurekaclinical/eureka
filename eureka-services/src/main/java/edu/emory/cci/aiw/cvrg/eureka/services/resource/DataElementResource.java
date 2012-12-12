@@ -154,8 +154,19 @@ public class DataElementResource {
 		}
 		Proposition proposition = this.dataElementTranslatorVisitor
 				.getProposition();
+		Proposition oldProposition = this.propositionDao.getByUserAndKey
+				(proposition.getUserId(), proposition.getKey());
+
+		if (oldProposition == null) {
+			throw new HttpStatusException(Response.Status.NOT_FOUND, 
+					"Proposition " + proposition.getKey() + " for user " + 
+					proposition.getUserId() + " was not found.");
+		}
+
 		Date now = new Date();
 		proposition.setLastModified(now);
+		proposition.setCreated(oldProposition.getCreated());
+		proposition.setId(oldProposition.getId());
 		this.propositionDao.update(proposition);
 	}
 
