@@ -77,6 +77,7 @@ public class DataElementResource {
 		List<Proposition> propositions = this.propositionDao.getByUserId(inUserId);
 
 		for (Proposition proposition : propositions) {
+			this.propositionDao.refresh(proposition);
 			if (proposition.isInSystem()) {
 				result.add(
 						this.systemElementResource.get(
@@ -154,13 +155,17 @@ public class DataElementResource {
 		}
 		Proposition proposition = this.dataElementTranslatorVisitor
 				.getProposition();
-		Proposition oldProposition = this.propositionDao.getByUserAndKey
-				(proposition.getUserId(), proposition.getKey());
+		Proposition oldProposition = this.propositionDao.retrieve(inElement
+				.getId());
 
 		if (oldProposition == null) {
 			throw new HttpStatusException(Response.Status.NOT_FOUND, 
-					"Proposition " + proposition.getKey() + " for user " + 
-					proposition.getUserId() + " was not found.");
+					"Proposition with ID " + inElement.getId() + " was not " +
+					"found.");
+		} else if (oldProposition.getUserId() != inElement.getUserId()) {
+			throw new HttpStatusException(Response.Status.NOT_FOUND,
+					"Proposition with ID " + inElement.getId() + " did not " +
+							"have the same owner, " + inElement.getUserId());
 		}
 
 		Date now = new Date();

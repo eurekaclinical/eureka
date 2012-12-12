@@ -84,7 +84,6 @@ public final class CategorizationTranslator implements
 			inverseIsA.add(child);
 		}
 		result.setInverseIsA(inverseIsA);
-		result.setKey(element.getAbbrevDisplayName());
 		result.setCategorizationType(checkPropositionType(element));
 
 		return result;

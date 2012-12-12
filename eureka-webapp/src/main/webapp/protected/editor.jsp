@@ -134,7 +134,7 @@
 																	<ul class="sortable" data-drop-type="multiple" data-proptype="empty" style="width: 100% height: 100%">
 																		<c:if test="${not empty proposition and propositionType == 'categorization'}">
 																		<c:forEach var="child" items="${proposition.children}">
-																		<li data-key="${child.key}" data-desc="${child.abbrevDisplayName}" data-type="${child.type}" data-space="${proposition.inSystem ? 'sysem' : 'user'}">
+																		<li data-key="${child.key}" data-desc="${child.abbrevDisplayName}" data-type="${child.type}" data-subtype="${child.type == 'CATEGORIZATION' ? child.categoricalType : ''}" data-space="${proposition.inSystem ? 'system' : 'user'}">
 																			<span class="delete" style="cursor: pointer; background-color: lightblue;"></span>
 																			<span>${child.displayName} ${child.abbrevDisplayName} (${child.key})</span>
 																		</li>
@@ -596,6 +596,8 @@
 										<c:choose>
 											<c:when test="${not empty proposition}">
 												<input type="hidden" id="propId" value="${proposition.id}" />
+												<input type="hidden" id="propType" value="${propositionType}" />
+												<input type="hidden" id="propSubType" value="${propositionType == 'categorization' ? proposition.categoricalType : ''}" />
 												<input type="text" id="propAbbrevDisplayName" style="width:250px" value="${proposition.abbrevDisplayName}" />
 											</c:when>
 											<c:otherwise>

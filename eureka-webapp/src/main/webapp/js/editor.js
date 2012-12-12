@@ -103,8 +103,8 @@ function saveCategorization (elem) {
 		if (system) {
 			child['type'] =  'system';
 		} else {
-			child['type'] =  $(p).data('type');
-			if (child['type'] === 'categorization') {
+			child['type'] =  $(p).data('type').toLowerCase();
+			if (child['type'] === 'CATEGORIZATION') {
 				child['categoricalType'] = $(p).data('subtype');
 			}
 		}
@@ -112,11 +112,16 @@ function saveCategorization (elem) {
 		childElements.push(child);
 	});
 
+	var categoricalType = $(elem).find('ul.sortable').data('proptype');
+	if (categoricalType == 'empty') {
+		categoricalType = $('#propSubType').val();
+	}
+
 	var categorization = {
 		'type': 'categorization',
 		'abbrevDisplayName': $('input#propAbbrevDisplayName').val(),
 		'displayName': $('textarea#propDisplayName').val(),
-		'categoricalType': $(elem).find('ul.sortable').data('proptype'),
+		'categoricalType': categoricalType,
 		'children': childElements
 	}
 
