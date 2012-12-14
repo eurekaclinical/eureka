@@ -22,6 +22,7 @@ package edu.emory.cci.aiw.cvrg.eureka.etl.validator;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.junit.Test;
 import org.protempa.EventDefinition;
 import org.protempa.PropositionDefinition;
 import org.protempa.proposition.DerivedSourceId;
@@ -100,8 +101,8 @@ public class PropositionValidatorTest extends AbstractTest {
 		assertTrue(actual);
 	}
 
-//	@Test
-	public void testCycleDetection() {
+	@Test
+	public void testCycleDetection() throws PropositionValidatorException {
 
 		ConfDao confDao = this.getInstance(ConfDao.class);
 		PropositionValidator validator = this.getInstance
@@ -121,15 +122,11 @@ public class PropositionValidatorTest extends AbstractTest {
 		propositions.add(def2);
 
 		validator.setConfiguration(confDao.getByUserId(USER_ID));
-		validator.setPropositions(propositions);
+		validator.setUserPropositions(propositions);
 		validator.setTargetProposition(def3);
 		boolean result;
-		try {
-			result = validator.validate();
-		} catch (PropositionValidatorException e) {
-			result = false;
-		}
-
+		result = validator.validate();
+	
 		Assert.assertFalse(result);
 	}
 

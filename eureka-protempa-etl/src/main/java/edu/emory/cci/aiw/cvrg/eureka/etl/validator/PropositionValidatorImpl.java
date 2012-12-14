@@ -38,7 +38,6 @@ import org.slf4j.LoggerFactory;
 
 import com.google.inject.Inject;
 
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.PropositionWrapper;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.Configuration;
 import edu.emory.cci.aiw.cvrg.eureka.etl.config.EtlProperties;
 import edu.emory.cci.aiw.cvrg.eureka.etl.ksb.PropositionFinder;
@@ -120,6 +119,7 @@ public class PropositionValidatorImpl implements PropositionValidator {
 		this.messages = new ArrayList<String>();
 		this.propositions = new ArrayList<PropositionDefinition>();
 		this.etlProperties = inEtlProperties;
+		this.userPropositions = new ArrayList<PropositionDefinition>();
 	}
 
 	@Override
@@ -128,7 +128,7 @@ public class PropositionValidatorImpl implements PropositionValidator {
 
 		if (this.targetProposition != null) {
 			LOGGER.debug("Checking proposition {}", this.targetProposition);
-			this.validateSingle(this.targetProposition);
+			result = this.validateSingle(this.targetProposition);
 		} else if (this.propositions != null) {
 			if (detectNullId()) {
 				this.addMessage("Found proposition with NULL id");
@@ -208,12 +208,13 @@ public class PropositionValidatorImpl implements PropositionValidator {
 			PropositionDefinition propDef = id == null ? null : this
 					.findById(id);
 			if (propDef != null) {
-				builder.append(" ").append(propDef.getAbbreviatedDisplayName())
-						.append(" ");
+				builder.append(" ").append(propDef.getId()).append("(")
+						.append(propDef.getAbbreviatedDisplayName()).append
+						(")").append(" ");
 			}
 		}
 		return "Cycle detected in definition of "
-				+ inPropDef.getAbbreviatedDisplayName() + " ["
+				+ inPropDef.getId() + " ["
 				+ builder.toString() + "]";
 	}
 
@@ -338,7 +339,11 @@ public class PropositionValidatorImpl implements PropositionValidator {
 	private PropositionDefinition findById(String inId) {
 		LOGGER.debug("Looking for proposition id {}", inId);
 		PropositionDefinition result = null;
-		for (PropositionDefinition propDef : this.propositions) {
+		List<PropositionDefinition> allProps = new ArrayList
+				<PropositionDefinition>();
+		allProps.addAll(this.userPropositions);
+		allProps.addAll(this.propositions);
+		for (PropositionDefinition propDef : allProps) {
 			if (inId.equals(propDef.getId())) {
 				result = propDef;
 				break;
