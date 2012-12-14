@@ -25,8 +25,6 @@ import java.util.List;
 import org.junit.Test;
 import org.protempa.EventDefinition;
 import org.protempa.PropositionDefinition;
-import org.protempa.proposition.DerivedSourceId;
-import org.protempa.proposition.SourceId;
 
 import com.google.inject.Module;
 
@@ -53,14 +51,14 @@ public class PropositionValidatorTest extends AbstractTest {
 		return new Module[] {new AppTestModule()};
 	}
 
-//	@Test
+	@Test
 	public void testNoPropositions() {
 		ConfDao confDao = this.getInstance(ConfDao.class);
 		PropositionValidator validator = this.getInstance
 			(PropositionValidator.class);
 		List<PropositionDefinition> wrappers = new
 			ArrayList<PropositionDefinition>();
-		validator.setPropositions(wrappers);
+		validator.setUserPropositions(wrappers);
 		validator.setConfiguration(confDao.getByUserId(USER_ID));
 
 		boolean actual;
@@ -74,17 +72,16 @@ public class PropositionValidatorTest extends AbstractTest {
 		assertTrue(actual);
 	}
 
-//	@Test
+	@Test
 	public void testSinglePropositionNoDef() {
 		ConfDao confDao = this.getInstance(ConfDao.class);
 		PropositionValidator validator = this.getInstance(PropositionValidator.class);
 		List<PropositionDefinition> definitions = new
 			ArrayList<PropositionDefinition>();
-		SourceId sourceId = DerivedSourceId.getInstance();
 		EventDefinition event = new EventDefinition("TestEvent");
 		definitions.add(event);
 		validator.setConfiguration(confDao.getByUserId(USER_ID));
-		validator.setPropositions(definitions);
+		validator.setUserPropositions(definitions);
 
 		boolean actual;
 		try {
