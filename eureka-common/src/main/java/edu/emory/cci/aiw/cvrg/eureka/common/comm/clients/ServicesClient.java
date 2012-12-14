@@ -34,7 +34,7 @@ import edu.emory.cci.aiw.cvrg.eureka.common.comm.DataElement;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.JobInfo;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.SystemElement;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.UserRequest;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.FileUpload;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.FileUpload;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.Job;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.RelationOperator;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.Role;
@@ -141,9 +141,9 @@ public class ServicesClient extends AbstractClient {
 
 	public void addJob(FileUpload inUpload) throws ClientException {
 		final String path = "/api/job/add";
-		ClientResponse response = this.getResource().type(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON).post(ClientResponse.class, inUpload);
+		ClientResponse response = this.getResource().path(path).type(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON).post(ClientResponse.class, inUpload);
 		if (!response.getClientResponseStatus().equals(ClientResponse.Status.OK)) {
-			throw new ClientException("Job was not added successfully.");
+			throw new ClientException(response.getEntity(String.class));
 		}
 	}
 

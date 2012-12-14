@@ -42,7 +42,7 @@ import org.slf4j.LoggerFactory;
 import com.sun.xml.bind.CycleRecoverable;
 
 /**
- * Hold information about a user's file upload.
+ * Store information about a user's file upload.
  *
  * @author hrathod
  *
@@ -62,9 +62,9 @@ public class FileUpload implements CycleRecoverable {
 	 */
 	@Id
 	@SequenceGenerator(name = "FILE_SEQ_GENERATOR", sequenceName = "FILE_SEQ",
-			allocationSize = 1)
+	allocationSize = 1)
 	@GeneratedValue(strategy = GenerationType.SEQUENCE,
-			generator = "FILE_SEQ_GENERATOR")
+	generator = "FILE_SEQ_GENERATOR")
 	private Long id;
 	/**
 	 * The on-disk location of the uploaded file.
@@ -95,13 +95,13 @@ public class FileUpload implements CycleRecoverable {
 	 * Contains a list of errors found in the file.
 	 */
 	@OneToMany(cascade = CascadeType.ALL, targetEntity = FileError.class,
-			mappedBy = "fileUpload")
+	mappedBy = "fileUpload")
 	private List<FileError> errors = new ArrayList<FileError>();
 	/**
 	 * Contains a list of warnings found in the file.
 	 */
 	@OneToMany(cascade = CascadeType.ALL, targetEntity = FileWarning.class,
-			mappedBy = "fileUpload")
+	mappedBy = "fileUpload")
 	private List<FileWarning> warnings = new ArrayList<FileWarning>();
 
 	/**
@@ -144,18 +144,14 @@ public class FileUpload implements CycleRecoverable {
 	 * @return the timestamp
 	 */
 	public Date getTimestamp() {
-		Date result = null;
-		if (this.timestamp != null) {
-			result = new Date(this.timestamp.getTime());
-		}
-		return result;
+		return this.timestamp;
 	}
 
 	/**
 	 * @param inTimestamp the timestamp to set
 	 */
 	public void setTimestamp(Date inTimestamp) {
-		this.timestamp = new Date(inTimestamp.getTime());
+		this.timestamp = inTimestamp;
 	}
 
 	/**
@@ -342,5 +338,4 @@ public class FileUpload implements CycleRecoverable {
 				.append(", warnings=").append(this.warnings).append("]");
 		return builder.toString();
 	}
-
 }

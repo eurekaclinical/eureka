@@ -20,6 +20,7 @@
 package edu.emory.cci.aiw.cvrg.eureka.servlet;
 
 
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ClientException;
 import java.io.File;
 import java.io.IOException;
 import java.security.Principal;
@@ -38,7 +39,7 @@ import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ServicesClient;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.FileUpload;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.FileUpload;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.User;
 
 
@@ -57,6 +58,7 @@ public class CommonsFileUploadServlet extends HttpServlet {
 	private static String DESTINATION_DIR_PATH = "";
 	private File destinationDir;
 
+	@Override
 	public void init(ServletConfig config) throws ServletException {
 		super.init(config);
 		DESTINATION_DIR_PATH = config.getInitParameter("dest_dir");
@@ -74,6 +76,7 @@ public class CommonsFileUploadServlet extends HttpServlet {
 
 	}
 
+	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
 		DiskFileItemFactory  fileItemFactory = new DiskFileItemFactory ();
@@ -101,10 +104,10 @@ public class CommonsFileUploadServlet extends HttpServlet {
 				 * Handle Form Fields.
 				 */
 				if(item.isFormField()) {
-					System.out.println("File Name = "+item.getFieldName()+", Value = "+item.getString());
+					log("File Name = "+item.getFieldName()+", Value = "+item.getString());
 				} else {
 					//Handle Uploaded files.
-					System.out.println("Field Name = "+item.getFieldName()+
+					log("Field Name = "+item.getFieldName()+
 						", File Name = "+item.getName()+
 						", Content type = "+item.getContentType()+
 						", File Size = "+item.getSize());
@@ -133,10 +136,12 @@ public class CommonsFileUploadServlet extends HttpServlet {
 
 				response.sendRedirect(request.getContextPath() + "/protected/jobs");
 			}
-		}catch(FileUploadException ex) {
-			log("Error encountered while parsing the request",ex);
-		} catch(Exception ex) {
-			log("Error encountered while uploading file",ex);
+		} catch (ClientException ex) {
+			throw new ServletException("Error encountered calling add job service", ex);
+		} catch(FileUploadException ex) {
+			throw new ServletException("Error encountered while parsing the job upload request",ex);
+		} catch(Exception ex) { //item.write, a third party library, throws Exception...
+			throw new ServletException("Error encountered while writing the uploaded file", ex);
 		}
 
 	}

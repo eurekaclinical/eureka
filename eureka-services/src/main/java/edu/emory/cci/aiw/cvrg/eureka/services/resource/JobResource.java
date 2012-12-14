@@ -122,13 +122,16 @@ public class JobResource {
 	@Path("/add")
 	@POST
 	@Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
-	public Response uploadFile(FileUpload inFileUpload) {
+	public Response uploadFile(edu.emory.cci.aiw.cvrg.eureka.common.comm.FileUpload inFileUpload) {
 		LOGGER.debug("Got file upload: {}", inFileUpload);
-		inFileUpload.setTimestamp(new Date());
-		this.fileDao.create(inFileUpload);
-		this.jobTask.setFileUploadId(inFileUpload.getId());
+		FileUpload fileUpload = new FileUpload();
+		fileUpload.setTimestamp(new Date());
+		fileUpload.setUserId(inFileUpload.getUserId());
+		fileUpload.setLocation(inFileUpload.getLocation());
+		this.fileDao.create(fileUpload);
+		this.jobTask.setFileUploadId(fileUpload.getId());
 		List<List<PropositionDefinition>> propDefs = filterUserPropositions
-			(propositionDao.getByUserId(inFileUpload.getUserId()));
+			(propositionDao.getByUserId(fileUpload.getUserId()));
 		this.jobTask.setPropositions(propDefs.get(0));
 		this.jobTask.setUserPropositions(propDefs.get(1));
 		this.jobExecutor.queueJob(this.jobTask);

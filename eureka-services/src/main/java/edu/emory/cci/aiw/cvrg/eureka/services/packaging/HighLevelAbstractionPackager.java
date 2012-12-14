@@ -76,7 +76,7 @@ final class HighLevelAbstractionPackager
 	}
 
 	private static AbsoluteTimeUnit unit(TimeUnit unit) {
-		return AbsoluteTimeUnit.nameToUnit(unit.getName());
+		return unit != null ? AbsoluteTimeUnit.nameToUnit(unit.getName()) : null;
 	}
 
 	private org.protempa.proposition.interval.Relation buildRelation(
