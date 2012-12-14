@@ -207,6 +207,48 @@ function setPropositionSelects (elem) {
 	});
 }
 
+function attachDeleteAction (elem) {
+	$(elem).each(function(i, item) {
+		$(item).click(function () {
+			var $toRemove = $(item).closest('li');
+			var $sortable = $toRemove.closest('ul.sortable');
+			var $infoLabel = $sortable.siblings('div.label-info');
+			var $target = $sortable.parent();
+			var dialog = $('<div></div>');
+			$(dialog).dialog({
+				'title': 'Confirm removal of selected element',
+				'modal': true,
+				'buttons': {
+					"Confirm": function() {
+						removePossibleProposition($toRemove.data('key'));
+						setPropositionSelects($sortable.closest('[data-definition-container="true"]'));
+						$toRemove.remove();
+						if ($sortable.find('li').length == 0) {
+							$sortable.data('proptype','empty');
+							$infoLabel.show();
+						}
+
+						// remove the properties from the drop down
+						if ($target.data('set-properties')) {
+							$('select[name="mainDataElementPropertyName"]').empty();
+						}
+
+						$(this).dialog("close");
+						$(this).remove();
+					},
+					"Cancel": function() {
+						$(this).dialog("close");
+						$(this).remove();
+					}
+				}
+			});
+			$(dialog).html($toRemove.text());
+			$(dialog).dialog("open");
+		});
+	});
+}
+
+
 $(document).ready(function(){
 
 	$('#wizard').smartWizard({
@@ -266,7 +308,7 @@ $(document).ready(function(){
 
 	// make any deletable items actually delete
 	$('ul.sortable').find('li').find('span.delete').each(function(i,item) {
-		$(item).click(function () {$(item).closest('li').remove();});
+		attachDeleteAction(item);
 	});
 
 	function leaveAStepCallback(from, to){
@@ -483,41 +525,8 @@ function initTrees() {
 						$(sortable).data("proptype", tmptype);
 					}
 
-					var X = $("<span></span>", {
-						class: "delete",
-						click: function () {
-							var dialog = $('<div></div>');
-							$(dialog).dialog({
-								'title': 'Confirm removal of selected element',
-								'modal': true,
-								'buttons': {
-									"Confirm": function() {
-										removePossibleProposition(newItem.data('key'));
-										setPropositionSelects($(sortable).closest('[data-definition-container="true"]'));
-										newItem.remove();
-										if ($(sortable).find('li').length == 0) {
-											$(sortable).data('proptype','empty');
-											infoLabel.show();
-										}
-
-										// remove the properties from the drop down
-										if ($(target).data('set-properties')) {
-											$('select[name="mainDataElementPropertyName"]').empty();
-										}
-
-										$(this).dialog("close");
-										$(this).remove();
-									},
-									"Cancel": function() {
-										$(this).dialog("close");
-										$(this).remove();
-									}
-								}
-							});
-							$(dialog).html(this.parentNode.children[1].innerHTML);
-							$(dialog).dialog("open");
-						}
-					});
+					var X = $("<span></span>", {class: "delete"});
+					attachDeleteAction(X);
 
 					var txt = $("<span></span>", {
 						text : textContent
