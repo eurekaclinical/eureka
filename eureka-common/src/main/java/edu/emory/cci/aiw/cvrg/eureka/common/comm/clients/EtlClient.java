@@ -51,7 +51,7 @@ public class EtlClient extends AbstractClient {
 	}
 
 	@Override
-	String getResourceUrl() {
+	protected String getResourceUrl() {
 		return this.resourceUrl;
 	}
 
