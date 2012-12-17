@@ -202,4 +202,40 @@ public class ServiceProperties extends ApplicationProperties {
 		return this.getStringListValue("eureka.services.defaultprops",
 			new ArrayList<String>());
 	}
+	
+	/**
+	 * Gets the  i2b2 admin username from application.properties.
+	 *
+	 * @return admin username.
+	 */
+	public String getI2b2AdminUser () {
+		return this.getValue("eureka.services.i2b2.adminuser");
+	}
+	
+	/**
+	 * Gets the  i2b2 admin password from application.properties.
+	 *
+	 * @return admin password
+	 */
+	public String getI2b2AdminPassword () {
+		return this.getValue("eureka.services.i2b2.adminpassword");
+	}
+	
+	/**
+	 * Gets the i2b2 rest URL from application.properties.
+	 *
+	 * @return URL.
+	 */
+	public String getI2b2URL () {
+		return this.getValue("eureka.services.i2b2.url");
+	}
+	
+	/**
+	 * Gets the i2b2 domain from application.properties.
+	 *
+	 * @return domain name.
+	 */
+	public String getI2b2Domain () {
+		return this.getValue("eureka.services.i2b2.domain");
+	}
 }
