@@ -47,5 +47,5 @@ public abstract class AbstractClient {
 		return this.getRestClient().resource(this.getResourceUrl());
 	}
 
-	abstract String getResourceUrl();
+	protected abstract String getResourceUrl();
 }
