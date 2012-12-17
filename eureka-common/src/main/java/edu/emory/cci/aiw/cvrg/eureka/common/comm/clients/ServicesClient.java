@@ -72,7 +72,7 @@ public class ServicesClient extends AbstractClient {
 	}
 
 	@Override
-	String getResourceUrl() {
+	protected String getResourceUrl() {
 		return this.servicesUrl;
 	}
 
