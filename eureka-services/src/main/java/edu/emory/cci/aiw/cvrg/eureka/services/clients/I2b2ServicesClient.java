@@ -91,7 +91,7 @@ public class  I2b2ServicesClient extends AbstractClient{
 			//	setFMConfigs();
 			
 				setFMConfigs();
-				Template tpl = cfg.getTemplate("ChangePassword.ftl");
+				Template tpl = cfg.getTemplate("changePassword.ftl");
 				StringWriter writer = new StringWriter();
 
 				DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
@@ -160,11 +160,11 @@ public class  I2b2ServicesClient extends AbstractClient{
 								NodeList nList = doc.getElementsByTagName("status");
 								Element el = (Element)nList.item(0);
 
-								if(el.getAttribute("type")=="ERROR")
+								if(el.getAttribute("type").equals("ERROR"))
 								{
 									LOGGER.error(el.getNodeValue());
 									throw new HttpStatusException(Response.Status
-											.PRECONDITION_FAILED,el.getNodeValue());
+											.INTERNAL_SERVER_ERROR,el.getNodeValue());
 								}
 								
 								
