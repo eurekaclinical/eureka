@@ -229,9 +229,9 @@ function attachDeleteAction (elem) {
 						}
 
 						// remove the properties from the drop down
-						if ($target.data('set-properties')) {
-							$('select[name="mainDataElementPropertyName"]').empty();
-						}
+						$('select[data-properties-provider=' + $target.attr('id') + ']').each(function (i, item) {
+							$(item).empty();
+						});
 
 						$(this).dialog("close");
 						$(this).remove();
@@ -451,10 +451,13 @@ $(document).ready(function(){
 
 	$('a#add-to-sequence').click(function (e) {
 		var total = $('table.sequence-relation').length;
+		var newCount = total + 1;
 		var data = $('table.sequence-relation').filter(':last').clone();
 		var appendTo = $('td.sequence-relations-container');
 		data.find('ul.sortable').empty();
-		data.find('span.count').text(total + 1);
+		data.find('span.count').text(newCount);
+		data.find('div.jstree-drop').attr('id','relatedDataElement' + newCount);
+		data.find('select[name="sequenceRelDataElementPropertyName"]').attr('data-properties-provider','relatedDataElement' + newCount);
 		appendTo.append(data);
 		setPropositionSelects($(appendTo).closest('[data-definition-container="true"]'));
 	});
@@ -501,12 +504,13 @@ function initTrees() {
 						.data("key", $(data.o[0]).data("proposition"));
 
 					// set the properties in the properties select
-					if ($(target).data('set-properties')) {
-						var properties = $(data.o[0]).data('properties').split(",");
-						$(properties).each(function(i, property) {
-							$('select[name="mainDataElementPropertyName"]').append($('<option></option>').attr('value', property).text(property));
+					var properties = $(data.o[0]).data('properties').split(",");
+					$('select[data-properties-provider=' + $(target).attr('id') + ']').each(function (i, item) {
+						$(item).empty();
+						$(properties).each(function (j, property) {
+							$(item).append($('<option></option>').attr('value', property).text(property));
 						});
-					}
+					});
 
 					// check that all types in the categorization are the same
 					if ($(sortable).data('drop-type') === 'multiple' && $(sortable).data("proptype") !== "empty") {

@@ -175,7 +175,7 @@
 																			Data Element:
 																		</td>
 																		<td>
-																			<div class="tree-drop-single jstree-drop" data-set-properties="true">
+																			<div id="mainDataElement" class="tree-drop-single jstree-drop">
 																				<div class="label-info" ><center>Drop Here</center></div>
 																				<ul data-type="main" data-drop-type="single" class="sortable" style="width: 100% height: 100%">
 																					<c:if test="${not empty proposition and propositionType == 'sequence'}">
@@ -198,7 +198,7 @@
 																	</tr>
 																	<tr>
 																		<td>
-																			<label><input type="checkbox" value="true" name="mainDataElementSpecifyDuration" <c:if test="${propositionType == 'sequence' and not empty proposition.primaryDataElement.hasDuration}">checked="checked"</c:if> >with duration</label>
+																			<label><input type="checkbox" value="true" name="mainDataElementSpecifyDuration" <c:if test="${propositionType == 'sequence' and proposition.primaryDataElement.hasDuration}">checked="checked"</c:if> >with duration</label>
 																		</td>
 																		<td>
 																			<table>
@@ -237,11 +237,15 @@
 																	</tr>
 																	<tr>
 																		<td>
-																			<label><input type="checkbox" value="true" name="mainDataElementSpecifyProperty" />with property value</label>
+																			<label><input type="checkbox" value="true" name="mainDataElementSpecifyProperty" <c:if test="${proposition.primaryDataElement.hasPropertyConstraint}">checked="checked"</c:if>/>with property value</label>
 																		</td>
 																		<td>
-																		  <select name="mainDataElementPropertyName"></select>
-																		  <input type="text" class="propertyValueField" name="mainDataElementPropertyValue"/>
+																			<select name="mainDataElementPropertyName" data-properties-provider="mainDataElement">
+																				<c:if test="${not empty proposition.primaryDataElement.property}">
+																				<option value="${proposition.primaryDataElement.property}">${proposition.primaryDataElement.property}</option>
+																				</c:if>
+																			</select>
+																			<input type="text" class="propertyValueField" name="mainDataElementPropertyValue" value="<c:if test="${not empty proposition.primaryDataElement.propertyValue}">${proposition.primaryDataElement.propertyValue}</c:if>"/>
 																		</td>
 																	</tr>
 																</table>
@@ -256,7 +260,7 @@
 																	<tr>
 																		<td>Related Data Element <span class="count">${status.count}</span>:</td>
 																		<td colspan="5">
-																			<div class="tree-drop-single jstree-drop">
+																			<div id="relatedDataElement${status.count}" class="tree-drop-single jstree-drop">
 																				<div class="label-info"><center>Drop Here</center></div>
 																				<ul class="sortable" data-type="related" data-drop-type="single" style="width: 100% height: 100%">
 																					<li data-key="${relation.dataElementField.dataElementKey}" data-desc="${relation.dataElementField.dataElementAbbrevDisplayName}" data-space="user">
@@ -325,12 +329,16 @@
 																	</tr>
 																	<tr>
 																		<td>
-																			<input type="checkbox" value="true" name="sequenceRelDataElementSpecifyProperty"/>
+																			<input type="checkbox" value="true" name="sequenceRelDataElementSpecifyProperty" <c:if test="${relation.dataElementField.hasPropertyConstraint}">checked="checked"</c:if>/>
 																			<label>with property value</label>
 																		</td>
 																		<td colspan="5">
-																			<select name="sequenceRelDataElementPropertyName"></select>
-																			<input type="text" class="propertyValueField" name="sequenceRelDataElementPropertyValue"/>
+																			<select name="sequenceRelDataElementPropertyName" data-properties-provider="relatedDataElement${status.count}">
+																				<c:if test="${not empty relation.dataElementField.property}">
+																				<option value="${relation.dataElementField.property}">${relation.dataElementField.property}<option>
+																				</c:if>
+																			</select>
+																			<input type="text" class="propertyValueField" name="sequenceRelDataElementPropertyValue" value="<c:if test="${not empty relation.dataElementField.propertyValue}">${relation.dataElementField.propertyValue}</c:if>"/>
 																		</td>
 																	</tr>
 																	</c:forEach>
@@ -340,7 +348,7 @@
 																	<tr>
 																		<td>Related Data Element <span class="count">1</span>:</td>
 																		<td colspan="5">
-																			<div class="tree-drop-single jstree-drop">
+																			<div id="relatedDataElement1" class="tree-drop-single jstree-drop">
 																				<div class="label-info"><center>Drop Here</center></div>
 																				<ul class="sortable" data-type="related" data-drop-type="single" style="width: 100% height: 100%"></ul>
 																			</div>
@@ -408,7 +416,7 @@
 																			<label>with property value</label>
 																		</td>
 																		<td colspan="5">
-																			<select name="sequenceRelDataElementPropertyName"></select>
+																			<select name="sequenceRelDataElementPropertyName" data-properties-provider="relatedDataElement1"></select>
 																			<input type="text" class="propertyValueField" name="sequenceRelDataElementPropertyValue"/>
 																		</td>
 																	</tr>
@@ -444,7 +452,7 @@
 																			<table>
 																				<tr>
 																					<td>
-																						<div class="tree-drop-single jstree-drop">
+																						<div id="freqMainDataElement" class="tree-drop-single jstree-drop">
 																							<div class="label-info" ><center>Drop Here</center></div>
 																							<ul data-type="main" data-drop-type="single" class="sortable" style="width: 100% height: 100%">
 																								<c:if test="${not empty proposition and propositionType == 'frequency'}">
@@ -513,7 +521,7 @@
 																									<label><input type="checkbox" value="true" name="freqDataElementSpecifyProperty" />with property value</label>
 																								</td>
 																								<td>
-																								  <select name="freqDataElementPropertyName"></select>
+																								  <select name="freqDataElementPropertyName" data-properties-provider="freqMainDataElement"></select>
 																								  <input type="text" class="propertyValueField" name="freqDataElementPropertyValue"/>
 																								</td>
 																							</tr>
