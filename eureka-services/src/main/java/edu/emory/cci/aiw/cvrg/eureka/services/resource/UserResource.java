@@ -48,6 +48,8 @@ import edu.emory.cci.aiw.cvrg.eureka.common.comm.UserRequest;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.Role;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.User;
 import edu.emory.cci.aiw.cvrg.eureka.common.exception.HttpStatusException;
+import edu.emory.cci.aiw.cvrg.eureka.services.clients.I2b2ServicesClient;
+import edu.emory.cci.aiw.cvrg.eureka.services.config.ServiceProperties;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.RoleDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.UserDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.email.EmailException;
@@ -70,6 +72,14 @@ public class UserResource {
 	 */
 	private static final Logger LOGGER = LoggerFactory.getLogger(
 			UserResource.class);
+	
+	/*service properties for values from application.properties
+	 * 
+	 * @updated akalsan
+	 * 
+	 * */
+	private final ServiceProperties serviceProperties=new ServiceProperties();
+	
 	/**
 	 * A secure random number generator to be used to create passwords.
 	 */
@@ -216,6 +226,8 @@ public class UserResource {
 	 * @param newPassword The new password for the user.
 	 * @throws HttpStatusException Thrown when a password cannot be properly
 	 * hashed, or the passwords are mismatched.
+	 * 
+	 *  @updated akalsan
 	 */
 	@Path("/passwd/{id}")
 	@PUT
@@ -225,8 +237,8 @@ public class UserResource {
 			throws ServletException {
 
 		User user = this.userDao.retrieve(inId);
-		String oldPasswordHash;
-		String newPasswordHash;
+		String oldPasswordHash=null;
+		String newPasswordHash=null;
 		try {
 			oldPasswordHash = StringUtil.md5(oldPassword);
 			newPasswordHash = StringUtil.md5(newPassword);
@@ -237,10 +249,14 @@ public class UserResource {
 		}
 		if (user.getPassword().equals(oldPasswordHash)) {
 			user.setPassword(newPasswordHash);
+			
+			I2b2ServicesClient i2b2Client = new I2b2ServicesClient(serviceProperties.getI2b2URL()) ;	
+			i2b2Client.changePassword(user.getEmail(),newPassword.toString());
+			
 			this.userDao.update(user);
-			try {
-				this.emailSender.sendPasswordChangeMessage(user);
-			} catch (EmailException ee) {
+				try {
+					this.emailSender.sendPasswordChangeMessage(user);
+				} catch (EmailException ee) {
 				LOGGER.error(ee.getMessage(), ee);
 			}
 		} else {
