@@ -210,20 +210,7 @@
 
 		<div id="passwordChangeComplete">
 
-			<h2>Your password has been successfully changed.</h2>
-
 		</div>
-
-		<div id="passwordChangeFailure">
-
-			<h2>There was an error changing your password. The old password
-
-				did not match with our system.</h2>
-
-		</div>
-
-
-
 		</div>
 
 	</template:content>
