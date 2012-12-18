@@ -28,6 +28,8 @@ import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.sun.jersey.api.client.ClientResponse;
+
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ClientException;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ServicesClient;
 import edu.emory.cci.aiw.cvrg.eureka.servlet.worker.ServletWorker;
@@ -59,14 +61,34 @@ public class SaveUserAcctWorker implements ServletWorker {
 
 		resp.setContentType("text/html");
 		try {
-			servicesClient.changePassword(Long.valueOf(id), oldPassword, 
+			 servicesClient.changePassword(Long.valueOf(id), oldPassword, 
 					newPassword);
 			resp.setStatus(HttpServletResponse.SC_OK);
 			resp.getWriter().write(HttpServletResponse.SC_OK);
 		} catch (ClientException e) {
-			resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-			resp.getWriter().write(HttpServletResponse.SC_BAD_REQUEST);
+			
+			if(e.getMessage().equals(ClientResponse.Status.PRECONDITION_FAILED.toString()))
+			{
+				
+				resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+				//resp.getWriter().write(e.getMessage());
+				resp.getWriter().write(HttpServletResponse.SC_BAD_REQUEST);
+			}
+			
+			else if (e.getMessage().equals(ClientResponse.Status.INTERNAL_SERVER_ERROR.toString()))
+				{
+					resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+					//resp.getWriter().write(e.getMessage());
+					resp.getWriter().write(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+				}
+			else
+			{
+				resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+				//resp.getWriter().write(e.getMessage());
+				resp.getWriter().write(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+			}
 		}
+		
 		resp.getWriter().close();
 	}
 }
