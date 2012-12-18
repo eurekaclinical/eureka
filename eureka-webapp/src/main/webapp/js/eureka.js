@@ -147,7 +147,6 @@ $(document).ready(function() {
 	$('#saveAcctBtn').hide();
 	$('#registrationComplete').hide();
 	$('#passwordChangeComplete').hide();
-	$('#passwordChangeFailure').hide();
 	$('#jobUpload').hide();
 	
 	
@@ -163,6 +162,13 @@ $(document).ready(function() {
 	     $('#editAcctBtn').hide();
 	     $('#saveAcctBtn').show();
     });
+	
+	$('#ChangePasswordbtn').click(function(){
+	     $('#newPasswordTable').show();
+	     $('#editAcctBtn').hide();
+	     $('#saveAcctBtn').show();
+	     return false;
+  });
 	
 	 $("#signupForm").submit(function() {
 		if (signupFormValidator.valid()) {
@@ -207,8 +213,7 @@ $(document).ready(function() {
 			var userFormValidator = $("#userAcctForm").validate({
 				rules: {
 					oldPassword: {
-						required: true,
-						minlength: 8
+						required: true
 					},
 					newPassword: {
 						required: true,
@@ -279,18 +284,34 @@ $(document).ready(function() {
 		            	    200: function() {
 			            	     
 			            	      $('#passwordChangeComplete').show();
+			            	      $('#passwordChangeComplete').text("Password has been changed.");
+			            	      $('#passwordChangeComplete').css({
+			            	    	  'font-weight' : 'bold',
+			            	    	  'font-size': 20
+			            	      });
 			            	      $('#saveAcctBtn').hide();
 			            	    },
 			            	405: function() {
 				            	  
-				            	  $('#passwordChangeFailure').show();
+				            	//  $('#passwordChangeFailure').show();
+				            },
+				            500: function() {
+				            	$('#passwordChangeComplete').show();
+				            	 $('#passwordChangeComplete').text("Error while changing password. Please contact the administrator.");
+				            	 $('#passwordChangeComplete').css({
+			            	    	  'font-weight' : 'bold',
+			            	    	  'font-size': 20
+			            	      });
 				            },
 				            400: function() {
-	                            
-	                            $('#passwordChangeFailure').show();
+				            	$('#passwordChangeComplete').show();
+				            	 $('#passwordChangeComplete').text("Error while changing password. Old password does not match the new password.");
+				            	 $('#passwordChangeComplete').css({
+			            	    	  'font-weight' : 'bold',
+			            	    	  'font-size': 20
+			            	      });
+	                         //  $('#passwordChangeFailure').show();
 				            }
-	
-	
 		              }
 				});
 	        }
