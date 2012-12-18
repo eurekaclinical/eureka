@@ -139,11 +139,6 @@ public class  I2b2ServicesClient extends AbstractClient{
 				LOGGER.error(ex.getMessage(), ex);
 				throw new AssertionError("TemplateException in i2b2ServicesClient.changePassword"); 
 			}
-			catch(Exception ex)
-			{
-				LOGGER.error(ex.getMessage(), ex);
-				throw new AssertionError(""); 
-			}
 			
 			
 		}
@@ -162,7 +157,7 @@ public class  I2b2ServicesClient extends AbstractClient{
 
 								if(el.getAttribute("type").equals("ERROR"))
 								{
-									LOGGER.error(el.getNodeValue());
+									LOGGER.error(el.getTextContent());
 									throw new HttpStatusException(Response.Status
 											.INTERNAL_SERVER_ERROR,el.getNodeValue());
 								}
