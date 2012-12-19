@@ -287,7 +287,7 @@ $(document).ready(function() {
 			            	      $('#passwordChangeComplete').text("Password has been changed.");
 			            	      $('#passwordChangeComplete').css({
 			            	    	  'font-weight' : 'bold',
-			            	    	  'font-size': 20
+			            	    	  'font-size': 16
 			            	      });
 			            	      $('#saveAcctBtn').hide();
 			            	    },
@@ -300,7 +300,7 @@ $(document).ready(function() {
 				            	 $('#passwordChangeComplete').text("Error while changing password. Please contact the administrator.");
 				            	 $('#passwordChangeComplete').css({
 			            	    	  'font-weight' : 'bold',
-			            	    	  'font-size': 20
+			            	    	  'font-size': 16
 			            	      });
 				            },
 				            400: function() {
@@ -308,7 +308,7 @@ $(document).ready(function() {
 				            	 $('#passwordChangeComplete').text("Error while changing password. Old password does not match the new password.");
 				            	 $('#passwordChangeComplete').css({
 			            	    	  'font-weight' : 'bold',
-			            	    	  'font-size': 20
+			            	    	  'font-size': 16
 			            	      });
 	                         //  $('#passwordChangeFailure').show();
 				            }
