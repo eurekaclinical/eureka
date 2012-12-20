@@ -20,9 +20,6 @@
 package edu.emory.cci.aiw.cvrg.eureka.services.clients;
 
 
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.AbstractClient;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ClientException;
-
 import java.io.IOException;
 import java.io.StringReader;
 import java.io.StringWriter;
@@ -46,50 +43,44 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
-import com.google.inject.Inject;
-import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
-import com.sun.jersey.api.client.WebResource;
 import com.sun.jersey.api.client.ClientResponse.Status;
 
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.CommUtils;
-import edu.emory.cci.aiw.cvrg.eureka.common.ddl.DdlGenerator;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.User;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.AbstractClient;
 import edu.emory.cci.aiw.cvrg.eureka.common.exception.HttpStatusException;
 import edu.emory.cci.aiw.cvrg.eureka.services.config.ServiceProperties;
+
 import freemarker.template.Configuration;
 import freemarker.template.DefaultObjectWrapper;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
 
-public class  I2b2ServicesClient extends AbstractClient{
+public class  I2b2RestClient extends AbstractClient implements I2b2Client {
 
-	private final String i2b2Url;
-	
 	private  Configuration cfg;
 	
 	private static final Logger LOGGER = LoggerFactory
-	.getLogger(I2b2ServicesClient.class);
+	.getLogger(I2b2RestClient.class);
 	
 	private final ServiceProperties serviceProperties;
 	
 	
-	public I2b2ServicesClient(String inI2b2Url) {
+	public I2b2RestClient(ServiceProperties inProperties) {
 		super();
-		this.i2b2Url =  inI2b2Url;
 		this.serviceProperties = new ServiceProperties();
 	}
 	
+	@Override
 	 protected String getResourceUrl()
 	 {
-		 return this.i2b2Url;
+		 return this.serviceProperties.getI2b2URL();
 	 }
+	
+	@Override
 	 public void changePassword(String email, String passwd) throws HttpStatusException {
 			 
 			try
 			{
-			//	setFMConfigs();
-			
 				setFMConfigs();
 				Template tpl = cfg.getTemplate("changePassword.ftl");
 				StringWriter writer = new StringWriter();
@@ -139,6 +130,11 @@ public class  I2b2ServicesClient extends AbstractClient{
 				LOGGER.error(ex.getMessage(), ex);
 				throw new AssertionError("TemplateException in i2b2ServicesClient.changePassword"); 
 			}
+			catch(Exception ex)
+			{
+				LOGGER.error(ex.getMessage(), ex);
+				throw new AssertionError(""); 
+			}
 			
 			
 		}
@@ -157,7 +153,7 @@ public class  I2b2ServicesClient extends AbstractClient{
 
 								if(el.getAttribute("type").equals("ERROR"))
 								{
-									LOGGER.error(el.getTextContent());
+									LOGGER.error(el.getNodeValue());
 									throw new HttpStatusException(Response.Status
 											.INTERNAL_SERVER_ERROR,el.getNodeValue());
 								}
