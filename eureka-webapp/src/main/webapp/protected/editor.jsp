@@ -237,15 +237,15 @@
 																	</tr>
 																	<tr>
 																		<td>
-																			<label><input type="checkbox" value="true" name="mainDataElementSpecifyProperty" <c:if test="${proposition.primaryDataElement.hasPropertyConstraint}">checked="checked"</c:if>/>with property value</label>
+																			<label><input type="checkbox" value="true" name="mainDataElementSpecifyProperty" <c:if test="${propositionType == 'sequence' and proposition.primaryDataElement.hasPropertyConstraint}">checked="checked"</c:if>/>with property value</label>
 																		</td>
 																		<td>
 																			<select name="mainDataElementPropertyName" data-properties-provider="mainDataElement">
-																				<c:if test="${not empty proposition.primaryDataElement.property}">
+																				<c:if test="${propositionType == 'sequence' and not empty proposition.primaryDataElement.property}">
 																				<option value="${proposition.primaryDataElement.property}">${proposition.primaryDataElement.property}</option>
 																				</c:if>
 																			</select>
-																			<input type="text" class="propertyValueField" name="mainDataElementPropertyValue" value="<c:if test="${not empty proposition.primaryDataElement.propertyValue}">${proposition.primaryDataElement.propertyValue}</c:if>"/>
+																			<input type="text" class="propertyValueField" name="mainDataElementPropertyValue" value="<c:if test="${propositionType == 'sequence' and not empty proposition.primaryDataElement.propertyValue}">${proposition.primaryDataElement.propertyValue}</c:if>"/>
 																		</td>
 																	</tr>
 																</table>
