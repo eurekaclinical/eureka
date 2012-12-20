@@ -22,6 +22,8 @@ package edu.emory.cci.aiw.cvrg.eureka.services.config;
 import com.google.inject.AbstractModule;
 import com.google.inject.persist.jpa.JpaPersistModule;
 
+import edu.emory.cci.aiw.cvrg.eureka.services.clients.I2b2Client;
+import edu.emory.cci.aiw.cvrg.eureka.services.clients.MockI2b2Client;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.FileDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.JpaFileDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.JpaPropositionDao;
@@ -60,7 +62,7 @@ public class AppTestModule extends AbstractModule {
 		bind(RelationOperatorDao.class).to(JpaRelationOperatorDao.class);
 		bind(PropositionDao.class).to(JpaPropositionDao.class);
 		bind(EmailSender.class).to(MockEmailSender.class);
-
+		bind(I2b2Client.class).to(MockI2b2Client.class);
 	}
 
 }
