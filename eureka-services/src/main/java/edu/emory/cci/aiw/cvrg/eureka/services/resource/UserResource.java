@@ -48,7 +48,7 @@ import edu.emory.cci.aiw.cvrg.eureka.common.comm.UserRequest;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.Role;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.User;
 import edu.emory.cci.aiw.cvrg.eureka.common.exception.HttpStatusException;
-import edu.emory.cci.aiw.cvrg.eureka.services.clients.I2b2ServicesClient;
+import edu.emory.cci.aiw.cvrg.eureka.services.clients.I2b2Client;
 import edu.emory.cci.aiw.cvrg.eureka.services.config.ServiceProperties;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.RoleDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.UserDao;
@@ -97,6 +97,10 @@ public class UserResource {
 	 */
 	private final EmailSender emailSender;
 	/**
+	 * An i2b2 client to change the password remotely.
+	 */
+	private final I2b2Client i2b2Client;
+	/**
 	 * And validation errors that we may have encountered while validating a new
 	 * user request, or a user update.
 	 */
@@ -111,10 +115,11 @@ public class UserResource {
 	 */
 	@Inject
 	public UserResource(UserDao inUserDao, RoleDao inRoleDao,
-			EmailSender inEmailSender) {
+			EmailSender inEmailSender, I2b2Client inClient) {
 		this.userDao = inUserDao;
 		this.roleDao = inRoleDao;
 		this.emailSender = inEmailSender;
+		this.i2b2Client = inClient;
 	}
 
 	/**
@@ -250,8 +255,8 @@ public class UserResource {
 		if (user.getPassword().equals(oldPasswordHash)) {
 			user.setPassword(newPasswordHash);
 			
-			I2b2ServicesClient i2b2Client = new I2b2ServicesClient(serviceProperties.getI2b2URL()) ;	
-			i2b2Client.changePassword(user.getEmail(),newPassword.toString());
+			this.i2b2Client.changePassword(user.getEmail(),newPassword.toString
+					());
 			
 			this.userDao.update(user);
 				try {
