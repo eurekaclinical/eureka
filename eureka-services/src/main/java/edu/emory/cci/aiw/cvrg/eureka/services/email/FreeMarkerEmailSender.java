@@ -37,11 +37,14 @@ import com.google.inject.Inject;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.User;
 import edu.emory.cci.aiw.cvrg.eureka.services.config.ServiceProperties;
+import edu.emory.cci.aiw.cvrg.eureka.services.util.PublicUrlGenerator;
 
 import freemarker.template.Configuration;
 import freemarker.template.DefaultObjectWrapper;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
+import javax.servlet.http.HttpServletRequest;
+import javax.ws.rs.core.Context;
 
 /**
  * Implements the EmailSender interface with FreeMarker templates.
@@ -63,9 +66,15 @@ public class FreeMarkerEmailSender implements EmailSender {
 	 * The application configuration properties.
 	 */
 	private final ServiceProperties serviceProperties;
+	
+	/**
+	 * The request object.
+	 */
+	private final HttpServletRequest request;
 
 	/**
-	 * Default constructor, creates a FreeMarker configuration object.
+	 * Default constructor, creates a FreeMarker configuration object. Should
+	 * be called in the context of a request.
 	 *
 	 * @param inServiceProperties The application configuration object.
 	 * @param inSession The mail session to use when sending a message.
@@ -73,61 +82,47 @@ public class FreeMarkerEmailSender implements EmailSender {
 	@Inject
 	public FreeMarkerEmailSender(
 			final ServiceProperties inServiceProperties,
-			final Session inSession) {
+			final Session inSession,
+			@Context HttpServletRequest request) {
 		this.serviceProperties = inServiceProperties;
 		this.session = inSession;
 		this.configuration = new Configuration();
 		this.configuration.setClassForTemplateLoading(this.getClass(),
 				"/templates/");
 		this.configuration.setObjectWrapper(new DefaultObjectWrapper());
+		this.request = request;
 	}
-
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see
-	 * edu.emory.cci.aiw.cvrg.eureka.services.email.EmailSender#sendMessage(
-	 * java.lang.String)
+	
+	/**
+	 * Sends a verification email.
+	 * @param inUser
+	 * @throws EmailException 
 	 */
 	@Override
-	public void sendVerificationMessage(final User inUser)
+	public void sendVerificationMessage(final User inUser) 
 			throws EmailException {
+		Map<String, Object> params = new HashMap<String, Object>();
+		String verificationUrl = this.serviceProperties.getVerificationUrl(this.request);
+		params.put("verificationUrl", verificationUrl);
 		sendMessage(inUser, "verification.ftl",
-				this.serviceProperties.getVerificationEmailSubject());
+				this.serviceProperties.getVerificationEmailSubject(), params);
 	}
-
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see edu.emory.cci.aiw.cvrg.eureka.services.email.EmailSender#
-	 * sendActivationMessage(edu.emory.cci.aiw.cvrg.eureka.common.entity.User)
-	 */
+	
 	@Override
 	public void sendActivationMessage(final User inUser) throws EmailException {
+		Map<String, Object> params = new HashMap<String, Object>();
+		String applicationUrl = this.serviceProperties.getApplicationUrl(this.request);
+		params.put("applicationUrl", applicationUrl);
 		sendMessage(inUser, "activation.ftl",
-				this.serviceProperties.getActivationEmailSubject());
+				this.serviceProperties.getActivationEmailSubject(), params);
 	}
-
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see edu.emory.cci.aiw.cvrg.eureka.services.email.EmailSender#
-	 * sendPasswordChangeMessage
-	 * (edu.emory.cci.aiw.cvrg.eureka.common.entity.User)
-	 */
+	
 	@Override
 	public void sendPasswordChangeMessage(User inUser) throws EmailException {
 		sendMessage(inUser, "password.ftl",
 				this.serviceProperties.getPasswordChangeEmailSubject());
 	}
-
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see edu.emory.cci.aiw.cvrg.eureka.services.email.EmailSender#
-	 * sendPasswordResetMessage
-	 * (edu.emory.cci.aiw.cvrg.eureka.common.entity.User, java.lang.String)
-	 */
+	
 	@Override
 	public void sendPasswordResetMessage(User inUser, String inNewPassword)
 			throws EmailException {
@@ -171,7 +166,8 @@ public class FreeMarkerEmailSender implements EmailSender {
 	 *             content from the template, composing the email, or sending
 	 *             the email.
 	 */
-	private void sendMessage(final User inUser, final String templateName,
+	private void sendMessage(final User inUser, 
+			final String templateName,
 			final String subject) throws EmailException {
 		Map<String, Object> params = new HashMap<String, Object>();
 		sendMessage(inUser, templateName, subject, params);
@@ -207,10 +203,26 @@ public class FreeMarkerEmailSender implements EmailSender {
 		String content = stringWriter.toString();
 		MimeMessage message = new MimeMessage(this.session);
 		try {
+			InternetAddress fromEmailAddress = null;
+			String fromEmailAddressStr = 
+					this.serviceProperties.getFromEmailAddress();
+			if (fromEmailAddressStr != null) {
+				fromEmailAddress = new InternetAddress(fromEmailAddressStr);
+			}
+			if (fromEmailAddress == null) {
+				fromEmailAddress = 
+						InternetAddress.getLocalAddress(this.session);
+			}
+			if (fromEmailAddress == null) {
+				fromEmailAddress = new InternetAddress("no-reply@" + 
+						PublicUrlGenerator.generate(this.request));
+			}
+			message.setFrom(fromEmailAddress);
 			message.setSubject(subject);
 			message.setContent(content, "text/plain");
 			message.addRecipient(Message.RecipientType.TO, new InternetAddress(
 					emailAddress));
+			message.setSender(fromEmailAddress);
 			Transport.send(message);
 		} catch (AddressException e) {
 			throw new EmailException(e);
@@ -218,4 +230,21 @@ public class FreeMarkerEmailSender implements EmailSender {
 			throw new EmailException(e);
 		}
 	}
+	
+//	private void responseUrl() {
+//		if (result == null) {
+//			try {
+//				result = InetAddress.getLocalHost().getHostName();
+//			} catch (UnknownHostException ex) {
+//				LOGGER.warn("Eureka! could not determine the server's " +
+//						"hostname. Falling back to http://localhost");
+//				result = "http://localhost";
+//			}
+//		}
+//		int port = this.servletRequest.getServerPort();
+//		if (port != 80) {
+//			result += ":" + port;
+//		}
+//		return result;
+//	}
 }

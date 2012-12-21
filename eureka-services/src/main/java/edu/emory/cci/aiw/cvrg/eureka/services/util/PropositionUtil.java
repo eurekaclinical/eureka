@@ -40,6 +40,7 @@ import edu.emory.cci.aiw.cvrg.eureka.common.entity.SystemProposition.SystemType;
 import edu.emory.cci.aiw.cvrg.eureka.services.finder.PropositionFindException;
 import edu.emory.cci.aiw.cvrg.eureka.services.finder.SystemPropositionFinder;
 import edu.emory.cci.aiw.cvrg.eureka.services.packaging.PropositionDefinitionPackagerVisitor;
+import org.protempa.CompoundLowLevelAbstractionDefinition;
 
 /**
  * Provides common utility functions operating on {@link Proposition}s.
@@ -103,6 +104,13 @@ public final class PropositionUtil {
 		public void visit(SliceDefinition arg0) {
 			systemType = SystemType.SLICE_ABSTRACTION;
 		}
+
+		@Override
+		public void visit(CompoundLowLevelAbstractionDefinition def) {
+			throw new UnsupportedOperationException("Not supported yet.");
+		}
+		
+		
 	}
 	private static final PropositionDefinitionTypeVisitor PROP_DEF_TYPE_VISITOR = new PropositionDefinitionTypeVisitor();
 

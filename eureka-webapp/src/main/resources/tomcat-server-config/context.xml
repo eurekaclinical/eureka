@@ -65,10 +65,13 @@
 		initialSize="1" maxActive="3" maxIdle="3" minIdle="1"
 		maxWait="-1"/>
 	<!-- Change the mail.smtp.host attribute below to an appropriate value -->
-	<Resource name="mail/Session" auth="Container"
+	<!--<Resource name="mail/Session" auth="Container"
 		type="javax.mail.Session"
 		mail.smtp.host="smtp.example.com"
-		mail.from="Eureka! DEV Admin &lt;no-reply@eureka-dev.cci.emory.edu&gt;" />
+		mail.from="Eureka! DEV Admin &lt;no-reply@eureka-dev.cci.emory.edu&gt;" />-->
+	<Resource name="mail/Session" auth="Container"
+		type="javax.mail.Session"
+		mail.smtp.host="smtp.example.com" />
 	<Realm className="org.apache.catalina.realm.JAASRealm"
 		appName="Eureka"
 		userClassNames="edu.emory.cci.aiw.cvrg.jaas.UserPrincipal"

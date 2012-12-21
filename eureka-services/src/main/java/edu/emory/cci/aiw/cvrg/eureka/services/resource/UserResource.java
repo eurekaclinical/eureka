@@ -55,6 +55,8 @@ import edu.emory.cci.aiw.cvrg.eureka.services.dao.UserDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.email.EmailException;
 import edu.emory.cci.aiw.cvrg.eureka.services.email.EmailSender;
 import edu.emory.cci.aiw.cvrg.eureka.services.util.StringUtil;
+import javax.servlet.http.HttpServletRequest;
+import javax.ws.rs.core.Context;
 
 /**
  * RESTful end-point for {@link User} related methods.
@@ -72,13 +74,6 @@ public class UserResource {
 	 */
 	private static final Logger LOGGER = LoggerFactory.getLogger(
 			UserResource.class);
-	
-	/*service properties for values from application.properties
-	 * 
-	 * @updated akalsan
-	 * 
-	 * */
-	private final ServiceProperties serviceProperties=new ServiceProperties();
 	
 	/**
 	 * A secure random number generator to be used to create passwords.
@@ -184,9 +179,7 @@ public class UserResource {
 	 * hashed.
 	 */
 	@POST
-	public void addUser(final UserRequest userRequest)
-			throws ServletException {
-
+	public void addUser(final UserRequest userRequest) {
 		try {
 			String temp = StringUtil.md5(userRequest.getPassword());
 			String temp2 = StringUtil.md5(userRequest.getVerifyPassword());
@@ -194,8 +187,7 @@ public class UserResource {
 			userRequest.setVerifyPassword(temp2);
 		} catch (NoSuchAlgorithmException e1) {
 			LOGGER.error(e1.getMessage(), e1);
-			throw new HttpStatusException(Response.Status
-					.INTERNAL_SERVER_ERROR, e1);
+			throw new HttpStatusException(Response.Status.INTERNAL_SERVER_ERROR, e1);
 		}
 
 		if (validateUserRequest(userRequest)) {
@@ -218,8 +210,8 @@ public class UserResource {
 		} else {
 			LOGGER.info("Invalid new user request: {}, reason {}", userRequest,
 					this.validationError);
-			throw new HttpStatusException(Response.Status
-					.PRECONDITION_FAILED, this.validationError);
+			throw new HttpStatusException(Response.Status.PRECONDITION_FAILED, 
+					this.validationError);
 		}
 	}
 
@@ -231,42 +223,41 @@ public class UserResource {
 	 * @param newPassword The new password for the user.
 	 * @throws HttpStatusException Thrown when a password cannot be properly
 	 * hashed, or the passwords are mismatched.
-	 * 
-	 *  @updated akalsan
+	 *
+	 * @updated akalsan
 	 */
 	@Path("/passwd/{id}")
 	@PUT
 	public void changePassword(@PathParam("id") final Long inId,
 			@QueryParam("oldPassword") final String oldPassword,
-			@QueryParam("newPassword") final String newPassword)
-			throws ServletException {
-
+			@QueryParam("newPassword") final String newPassword) {
+		
 		User user = this.userDao.retrieve(inId);
-		String oldPasswordHash=null;
-		String newPasswordHash=null;
+		String oldPasswordHash = null;
+		String newPasswordHash = null;
 		try {
 			oldPasswordHash = StringUtil.md5(oldPassword);
 			newPasswordHash = StringUtil.md5(newPassword);
 		} catch (NoSuchAlgorithmException e) {
 			LOGGER.error(e.getMessage(), e);
-			throw new HttpStatusException(Response.Status
-					.INTERNAL_SERVER_ERROR,e);
+			throw new HttpStatusException(
+					Response.Status.INTERNAL_SERVER_ERROR, e);
 		}
 		if (user.getPassword().equals(oldPasswordHash)) {
 			user.setPassword(newPasswordHash);
-			
-			this.i2b2Client.changePassword(user.getEmail(),newPassword.toString
-					());
-			
+
+			this.i2b2Client.changePassword(user.getEmail(), 
+					newPassword.toString());
+
 			this.userDao.update(user);
-				try {
-					this.emailSender.sendPasswordChangeMessage(user);
-				} catch (EmailException ee) {
+			try {
+				this.emailSender.sendPasswordChangeMessage(user);
+			} catch (EmailException ee) {
 				LOGGER.error(ee.getMessage(), ee);
 			}
 		} else {
-			throw new HttpStatusException(Response.Status
-					.PRECONDITION_FAILED, "Password mismatch");
+			throw new HttpStatusException(Response.Status.PRECONDITION_FAILED, 
+					"Password mismatch");
 		}
 	}
 
@@ -362,7 +353,7 @@ public class UserResource {
 	 * @param inUsername The username for the user whose password should be
 	 * reset.
 	 * @return A {@link Status#OK} if the password is reset and email sent,
-	 *         {@link Status#NOT_MODIFIED} if the user can not be found.
+	 * {@link Status#NOT_MODIFIED} if the user can not be found.
 	 * @throws ServletException Thrown if errors occur when resetting the
 	 * password, or sending an email to the user informing them of the reset.
 	 */

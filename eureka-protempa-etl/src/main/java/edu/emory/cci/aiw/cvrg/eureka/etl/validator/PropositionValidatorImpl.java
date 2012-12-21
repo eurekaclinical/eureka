@@ -42,6 +42,7 @@ import edu.emory.cci.aiw.cvrg.eureka.common.entity.Configuration;
 import edu.emory.cci.aiw.cvrg.eureka.etl.config.EtlProperties;
 import edu.emory.cci.aiw.cvrg.eureka.etl.ksb.PropositionFinder;
 import edu.emory.cci.aiw.cvrg.eureka.etl.ksb.PropositionFinderException;
+import org.protempa.CompoundLowLevelAbstractionDefinition;
 
 public class PropositionValidatorImpl implements PropositionValidator {
 
@@ -103,6 +104,11 @@ public class PropositionValidatorImpl implements PropositionValidator {
 		@Override
 		public void visit(PairDefinition def) {
 			this.setType(PropositionType.PAIR);
+		}
+
+		@Override
+		public void visit(CompoundLowLevelAbstractionDefinition def) {
+			throw new UnsupportedOperationException("Not supported yet.");
 		}
 	}
 	private static final Logger LOGGER = LoggerFactory

@@ -25,9 +25,13 @@ import java.util.List;
 import com.google.inject.Singleton;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.props.ApplicationProperties;
+import edu.emory.cci.aiw.cvrg.eureka.services.util.PublicUrlGenerator;
+import javax.servlet.http.HttpServletRequest;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
- * Looks up the application properties file (eureka-services.properties) and
+ * Looks up the application properties file (application.properties) and
  * presents the values contained in the file to the rest of the application.
  *
  * @author hrathod
@@ -37,71 +41,18 @@ import edu.emory.cci.aiw.cvrg.eureka.common.props.ApplicationProperties;
 public class ServiceProperties extends ApplicationProperties {
 
 	/**
-	 * Get the URL to access the back-end's configuration information for a
-	 * user.
-	 *
-	 * @return A string containing the back-end's configuration end-point URL.
+	 * The class level logger.
 	 */
-	public String getEtlConfGetUrl() {
-		return this.getValue("eureka.services.etl.conf.get.url");
-	}
+	private static final Logger LOGGER = LoggerFactory.getLogger(
+			ServiceProperties.class);
 
 	/**
 	 * Get the URL for the eureka-protempa-etl application.
 	 *
 	 * @return A string containing the base URL for the ETL layer.
 	 */
-	public String getEtlUrl () {
+	public String getEtlUrl() {
 		return this.getValue("eureka.etl.url");
-	}
-
-	/**
-	 * Get the URL to submit a new configuration item to the ETL backend
-	 * service.
-	 *
-	 * @return A string containing the back-end's configuration submission URL.
-	 */
-	public String getEtlConfSubmitUrl() {
-		return this.getValue("eureka.services.etl.conf.submit.url");
-	}
-
-	/**
-	 * Get the URL to access the back-end's job submission end-point.
-	 *
-	 * @return A string containing the back-end's job submission end-point.
-	 */
-	public String getEtlJobSubmitUrl() {
-		return this.getValue("eureka.services.etl.job.submit.url");
-	}
-
-	/**
-	 * Get the URL to access the back-end's job status update information
-	 * end-point.
-	 *
-	 * @return A string containing the back-end's job status update information
-	 * end-point.
-	 */
-	public String getEtlJobUpdateUrl() {
-		return this.getValue("eureka.services.etl.job.update.url");
-	}
-
-	/**
-	 * Gets the URL to access the back-end's proposition retrieval end-point.
-	 *
-	 * @return A string containing the back-end's proposition retrieval
-	 * end-point.
-	 */
-	public String getEtlPropositionGetUrl() {
-		return this.getValue("eureka.services.etl.proposition.get.url");
-	}
-
-	/**
-	 * Gets the URL to access the validation end-point for the ETL layer.
-	 *
-	 * @return A string representing the URL of the validation end-point.
-	 */
-	public String getEtlPropositionValidationUrl() {
-		return this.getValue("eureka.services.etl.proposition.validation.url");
 	}
 
 	/**
@@ -124,16 +75,14 @@ public class ServiceProperties extends ApplicationProperties {
 	public int getRegistrationTimeout() {
 		return this.getIntValue("eureka.services.registration.timeout", 24);
 	}
-
+	
 	/**
-	 * Get the verification base URL, to be used in sending a verification email
-	 * to the user.
-	 *
-	 * @return The verification base URL, as found in the application
-	 * configuration file.
+	 * Get email address in the From header.
+	 * 
+	 * @return an email address.
 	 */
-	public String getVerificationUrl() {
-		return this.getValue("eureka.services.email.verify.url");
+	public String getFromEmailAddress() {
+		return this.getValue("eureka.services.email.from");
 	}
 
 	/**
@@ -155,14 +104,56 @@ public class ServiceProperties extends ApplicationProperties {
 		return this.getValue(
 				"eureka.services.email.activation.subject");
 	}
-
+	
 	/**
-	 * Get the base URL for the application front-end.
+	 * Get the base URL for the application front-end for external users.
+	 * 
+	 * @param request the HTTP request, which will be used to generate a
+	 * URL to the website if none of the properties files
+	 * contain an application URL property.
 	 *
 	 * @return The base URL.
 	 */
-	public String getApplicationUrl() {
-		return this.getValue("eureka.services.url");
+	public String getApplicationUrl(HttpServletRequest request) {
+		String result = this.getValue("eureka.webapp.url");
+		if (result == null) {
+			result = PublicUrlGenerator.generate(request);
+		}
+		return result;
+	}
+
+	/**
+	 * Get the base URL for the services layer for external users.
+	 * 
+	 * @param request the HTTP request, which will be used to generate a
+	 * services layer URL from server information if none of the properties 
+	 * files contain an services layer URL property.
+	 *
+	 * @return The base URL.
+	 */
+	public String getServicesUrl(HttpServletRequest request) {
+		String servicesUrl = this.getValue("eureka.services.url");
+		if (servicesUrl == null) {
+			servicesUrl = PublicUrlGenerator.generate(request);
+			servicesUrl += (servicesUrl.endsWith("/") ? "" : "/") + "eureka-services";
+		}
+		return servicesUrl;
+	}
+
+	/**
+	 * Get the verification base URL, to be used in sending a verification email
+	 * to the user.
+	 * 
+	 * @param request the HTTP request, which will be used to generate a
+	 * verification URL from server information if none of the properties files
+	 * contain an services layer URL property.
+	 *
+	 * @return The verification base URL, as found in the application
+	 * configuration file.
+	 */
+	public String getVerificationUrl(HttpServletRequest request) {
+		String verUrl = this.getServicesUrl(request);
+		return verUrl + (verUrl.endsWith("/") ? "" : "/") + "verify?code=";
 	}
 
 	/**
@@ -198,44 +189,44 @@ public class ServiceProperties extends ApplicationProperties {
 	 *
 	 * @return The default list of system propositions.
 	 */
-	public List<String> getDefaultSystemPropositions () {
+	public List<String> getDefaultSystemPropositions() {
 		return this.getStringListValue("eureka.services.defaultprops",
-			new ArrayList<String>());
+				new ArrayList<String>());
 	}
-	
+
 	/**
-	 * Gets the  i2b2 admin username from application.properties.
+	 * Gets the i2b2 admin username from application.properties.
 	 *
 	 * @return admin username.
 	 */
-	public String getI2b2AdminUser () {
+	public String getI2b2AdminUser() {
 		return this.getValue("eureka.services.i2b2.adminuser");
 	}
-	
+
 	/**
-	 * Gets the  i2b2 admin password from application.properties.
+	 * Gets the i2b2 admin password from application.properties.
 	 *
 	 * @return admin password
 	 */
-	public String getI2b2AdminPassword () {
+	public String getI2b2AdminPassword() {
 		return this.getValue("eureka.services.i2b2.adminpassword");
 	}
-	
+
 	/**
 	 * Gets the i2b2 rest URL from application.properties.
 	 *
 	 * @return URL.
 	 */
-	public String getI2b2URL () {
+	public String getI2b2URL() {
 		return this.getValue("eureka.services.i2b2.url");
 	}
-	
+
 	/**
 	 * Gets the i2b2 domain from application.properties.
 	 *
 	 * @return domain name.
 	 */
-	public String getI2b2Domain () {
+	public String getI2b2Domain() {
 		return this.getValue("eureka.services.i2b2.domain");
 	}
 }

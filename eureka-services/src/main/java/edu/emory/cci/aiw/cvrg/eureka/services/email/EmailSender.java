@@ -20,6 +20,7 @@
 package edu.emory.cci.aiw.cvrg.eureka.services.email;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.User;
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * An interface that defines how emails can be sent out from the application.

@@ -21,6 +21,7 @@ package edu.emory.cci.aiw.cvrg.eureka.common.props;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
@@ -29,6 +30,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
+import java.util.logging.Level;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -49,12 +51,12 @@ public abstract class ApplicationProperties {
 	 */
 	private static final String PROPERTY_NAME = "eureka.config.file";
 	/**
-	 * If the configuration file is not specified by the user, search
-	 * this default location.
+	 * If the configuration file is not specified by the user, search this
+	 * default location.
 	 */
 	private static final String DEFAULT_UNIX_LOCATION = "/etc/eureka";
-	private static final String DEFAULT_WIN_LOCATION = "C:\\Program " +
-		"Files\\eureka";
+	private static final String DEFAULT_WIN_LOCATION = "C:\\Program "
+			+ "Files\\eureka";
 	/**
 	 * Name of the properties file that is required for application
 	 * configuration.
@@ -67,50 +69,80 @@ public abstract class ApplicationProperties {
 	private final Properties properties;
 
 	/**
-	 * Loads the application configuration. First test to see if the system
-	 * property for a configuration file is set, and use the value of that
-	 * property. If the system property is not null and the named file can not
-	 * be loaded, reports and error. If the system property is null, attempts to
-	 * load a default configuration from the class-path.
+	 * Loads the application configuration.
+	 *
+	 * There are three potential sources of application configuration. The
+	 * fallback configuration should always be there. The default configuration
+	 * file is created by the application's administrator and overrides the
+	 * fallback configuration for each configuration property that is specified.
+	 * It is searched for in the
+	 * <code>/etc/eureka</code> directory for Unix/Linux/Mac installations, and
+	 * <code>C:\Program Files\eureka</code> for Windows installations. It is
+	 * optional, though highly recommended. Finally, the pathname of a
+	 * configuration file may be specified in the
+	 * <code>eureka.config.file</code> system property, the property values in
+	 * which override those in the default configuration above.
 	 */
 	public ApplicationProperties() {
 		String userConfig = System.getProperty(PROPERTY_NAME);
 		String defaultConfig = this.getDefaultLocation() + PROPERTIES_FILE;
 		String fallbackConfig = this.getFallBackConfig();
 		Properties temp = null;
-		String[] files = {userConfig, defaultConfig, fallbackConfig};
 
-		for (int i = 0; i < files.length; i++) {
-			String file = files[i];
-			if (file != null) {
-				LOGGER.info("Trying to load configuration from {}", file);
-				try {
-					temp = this.load(file);
-					LOGGER.info("Successfully loaded configuration from {}",
-						file);
-				} catch (IOException e) {
-					LOGGER.warn("Failed to load configuration from file {}: " +
-							"{}", file, e.getMessage());
-				}
-			}
-			if(temp != null) {
-				break;
-			}
+		try {
+			temp = this.load(fallbackConfig, null);
+		} catch (IOException ex) {
+			throw new AssertionError("Fallback configuration not found: "
+					+ ex.getMessage());
 		}
 
-		if (temp == null) {
-			throw new AssertionError("No application configuration found.");
+		LOGGER.info("Trying to load default configuration from {}",
+				defaultConfig);
+		try {
+			temp = this.load(defaultConfig, temp);
+			LOGGER.info("Successfully loaded configuration from {}",
+					defaultConfig);
+		} catch (FileNotFoundException ex) {
+			if (userConfig != null) {
+				LOGGER.info("No default configuration file found at {}.",
+						defaultConfig);
+			} else {
+				LOGGER.warn("No default configuration file found at {}. "
+						+ "Unless you specify a configuration file with the "
+						+ "{} property, built-in defaults will be used, some "
+						+ "of which are unlikely to be what you want.",
+						defaultConfig, PROPERTY_NAME);
+			}
+		} catch (IOException ioe) {
+			LOGGER.warn("Failed to load configuration from file {}: "
+					+ "{}", defaultConfig, ioe.getMessage());
 		}
+
+		if (userConfig != null) {
+			LOGGER.info("Trying to load user configuration from {}",
+					defaultConfig);
+			try {
+				temp = this.load(userConfig, temp);
+			} catch (IOException ex) {
+				LOGGER.warn("Failed to load configuration from file {}: "
+						+ "{}", userConfig, ex.getMessage());
+			}
+		} else {
+			LOGGER.debug("User configuration property {} not specified",
+					PROPERTY_NAME);
+		}
+
+
 		this.properties = temp;
 	}
 
 	/**
-	 * Gets the default location of configuration file,
-	 * based on the operating system.
+	 * Gets the default location of configuration file, based on the operating
+	 * system.
 	 *
 	 * @return A String containing the default configuration location.
 	 */
-	private String getDefaultLocation () {
+	private static String getDefaultLocation() {
 		String os = System.getProperty("os.name");
 		String path;
 		if (os.toLowerCase().contains("windows")) {
@@ -122,13 +154,13 @@ public abstract class ApplicationProperties {
 	}
 
 	/**
-	 * Gets the location of the fallback configuration file,
-	 * in case the user specified location and the default location do not
-	 * contain a configuration file.
+	 * Gets the location of the fallback configuration file, in case the user
+	 * specified location and the default location do not contain a
+	 * configuration file.
 	 *
 	 * @return The location of the fallback configuration, guaranteed not null.
 	 */
-	private String getFallBackConfig () {
+	private String getFallBackConfig() {
 		String path = null;
 		try {
 			URL fileUrl = this.getClass().getResource(PROPERTIES_FILE);
@@ -142,7 +174,7 @@ public abstract class ApplicationProperties {
 		} catch (URISyntaxException e) {
 			LOGGER.error("Could not locate fallback configuration.", e);
 			throw new AssertionError(
-						"Could not locate fallback configuration.");
+					"Could not locate fallback configuration.");
 		}
 		return path;
 	}
@@ -152,11 +184,12 @@ public abstract class ApplicationProperties {
 	 * name. The filename should be an absolute path to the configuration file.
 	 *
 	 * @param inFileName The absolute path to the configuration file.
+	 * @param defaults the default values for the properties.
 	 * @return Properties object containing the application properties.
 	 * @throws IOException Thrown if the named filed can not be properly read.
 	 */
-	private Properties load(String inFileName) throws IOException {
-		return load(new File(inFileName));
+	private Properties load(String inFileName, Properties defaults) throws IOException {
+		return load(new File(inFileName), defaults);
 	}
 
 	/**
@@ -164,15 +197,16 @@ public abstract class ApplicationProperties {
 	 * object should point to a file with an absolute path.
 	 *
 	 * @param inFile The File object pointing to a configuration file.
-	 * @return Properties object containing the application properties.
-	 * location that does not exist.
+	 * @param defaults the default values for the properties.
+	 * @return Properties object containing the application properties. location
+	 * that does not exist.
 	 * @throws IOException Thrown if the named file can not be properly read.
 	 */
-	private Properties load(File inFile) throws IOException {
+	private Properties load(File inFile, Properties defaults) throws IOException {
 		InputStream inputStream = new FileInputStream(inFile);
 		Properties props;
 		try {
-			props = load(inputStream);
+			props = load(inputStream, defaults);
 		} finally {
 			try {
 				inputStream.close();
@@ -188,11 +222,12 @@ public abstract class ApplicationProperties {
 	 *
 	 * @param inStream InputStream containing the application configuration
 	 * data.
+	 * @param defaults the default values for the properties.
 	 * @return Properties object containing the application properties.
 	 * @throws IOException Thrown if the InputStream can not be properly read.
 	 */
-	private Properties load(InputStream inStream) throws IOException {
-		Properties props = new Properties();
+	private Properties load(InputStream inStream, Properties defaults) throws IOException {
+		Properties props = new Properties(defaults);
 		props.load(inStream);
 		return props;
 	}
@@ -205,7 +240,7 @@ public abstract class ApplicationProperties {
 	 * INI configuration files.
 	 */
 	public String getConfigDir() {
-		return this.getValue("eureka.etl.config.dir");
+		return getDefaultLocation();
 	}
 
 	/**
@@ -216,9 +251,15 @@ public abstract class ApplicationProperties {
 	 * if the property name does not exist.
 	 */
 	protected String getValue(final String propertyName) {
-		return this.getValue(propertyName, null);
+		/*
+		 * Don't use this.properties.containsKey(). It doesn't work with the
+		 * built-in default value mechanism. Also, the semantics of a
+		 * Properties list are such that a null property value is the same
+		 * as never specified in the list.
+		 */
+		return this.properties.getProperty(propertyName);
 	}
-
+	
 	/**
 	 * Returns the String value of the given property name, or the given default
 	 * if the given property name does not exist.
@@ -230,11 +271,10 @@ public abstract class ApplicationProperties {
 	 * default value.
 	 */
 	protected String getValue(final String propertyName, String defaultValue) {
-		String value;
-		if (this.properties.containsKey(propertyName)) {
-			value = this.properties.getProperty(propertyName);
-		} else {
-			LOGGER.warn("Property not found in configuration: {}", propertyName);
+		String value = getValue(propertyName);
+		if (value == null) {
+			LOGGER.warn("Property not found in configuration: {}", 
+					propertyName);
 			value = defaultValue;
 		}
 		return value;
@@ -244,15 +284,14 @@ public abstract class ApplicationProperties {
 	 * Reads in a property value as a whitespace-delimited list of items.
 	 *
 	 * @param inPropertyName The name of the property to read.
-	 * @param defaultValue The value to return if the property is not found.
-	 * @return A list containing the items in the value.
+	 * @return A list containing the items in the value, or <code>null</code>
+	 * if the property is not found.
 	 */
-	protected List<String> getStringListValue(final String inPropertyName,
-		List<String> defaultValue) {
+	protected List<String> getStringListValue(final String inPropertyName) {
 
 		List<String> result;
-		if (this.properties.containsKey(inPropertyName)) {
-			String value = this.properties.getProperty(inPropertyName);
+		String value = this.properties.getProperty(inPropertyName);
+		if (value != null) {
 			String[] temp = value.split("\\s+");
 			result = new ArrayList<String>(temp.length);
 			for (String s : temp) {
@@ -262,7 +301,25 @@ public abstract class ApplicationProperties {
 				}
 			}
 		} else {
-			LOGGER.warn("Property not found in configuration: {}", inPropertyName);
+			result = null;
+		}
+		return result;
+	}
+	
+	/**
+	 * Reads in a property value as a whitespace-delimited list of items.
+	 *
+	 * @param inPropertyName The name of the property to read.
+	 * @param defaultValue The value to return if the property is not found.
+	 * @return A list containing the items in the value.
+	 */
+	protected List<String> getStringListValue(final String inPropertyName,
+			List<String> defaultValue) {
+
+		List<String> result = getStringListValue(inPropertyName);
+		if (result == null) {
+			LOGGER.warn("Property not found in configuration: {}", 
+					inPropertyName);
 			result = defaultValue;
 		}
 		return result;
