@@ -464,6 +464,75 @@ $(document).ready(function(){
 
 });
 
+function dropFinishCallback (data) {
+	var target = data.e.currentTarget;
+	var textContent = data.o[0].children[1].childNodes[1].textContent;
+
+	if (idIsNotInList(target, data.o[0].id)) {
+
+		var infoLabel = $(target).find('div.label-info');
+		infoLabel.hide();
+
+		var sortable = $(target).find('ul.sortable');
+		var newItem = $('<li></li>')
+			.data("space", $(data.o[0]).data("space"))
+			.data("desc", textContent)
+			.data("type", $(data.o[0]).data("type"))
+			.data("subtype", $(data.o[0]).data("subtype") || '')
+			.data("key", $(data.o[0]).data("proposition") || $(data.o[0]).data('key'));
+
+		// set the properties in the properties select
+		if ($(data.o[0]).data('properties')) {
+			var properties = $(data.o[0]).data('properties').split(",");
+			$('select[data-properties-provider=' + $(target).attr('id') + ']').each(function (i, item) {
+				$(item).empty();
+				$(properties).each(function (j, property) {
+					$(item).append($('<option></option>').attr('value', property).text(property));
+				});
+			});
+		}
+
+		// check that all types in the categorization are the same
+		if ($(sortable).data('drop-type') === 'multiple' && $(sortable).data("proptype") !== "empty") {
+			if ($(sortable).data("proptype") !== $(newItem).data("type")) {
+				var $dialog = $('<div>All the definition elements must be of the same type.</div>').dialog({
+					'title': 'Definition Criteria',
+					'modal': true,
+					'buttons': {
+						'OK': function () { $(this).dialog('close'); $(this).remove();}
+					}
+				});
+				return;
+			}
+		} else {
+			var tmptype = $(newItem).data("type");
+			$(sortable).data("proptype", tmptype);
+		}
+
+		var X = $("<span></span>", {class: "delete"});
+		attachDeleteAction(X);
+
+		var txt = $("<span></span>", {
+			text : textContent
+		});
+
+		if ($(sortable).data('drop-type') === 'single') {
+			$(sortable).find('li').each(function (i,item) {
+				removePossibleProposition($(item).data('key'));
+				$(item).remove();
+			});
+		}
+
+		newItem.append(X);
+		newItem.append(txt);
+		sortable.append(newItem);
+
+		addPossibleProposition(newItem.data('key'), txt.text());
+		setPropositionSelects($(sortable).closest('[data-definition-container="true"]'));
+	}
+}
+
+
 function initTrees() {
 
 	$("#systemTree").jstree({
@@ -487,70 +556,7 @@ function initTrees() {
 			}
 		},
 		"dnd" : {
-			"drop_finish" : function(data) {
-				var target = data.e.currentTarget;
-				var textContent = data.o[0].children[1].childNodes[1].textContent;
-				if (idIsNotInList(target, data.o[0].id)) {
-
-					var infoLabel = $(target).find('div.label-info');
-					infoLabel.hide();
-
-					var sortable = $(target).find('ul.sortable');
-					var newItem = $('<li></li>')
-						.data("space", $(data.o[0]).data("space"))
-						.data("desc", textContent)
-						.data("type", $(data.o[0]).data("type"))
-						.data("subtype", $(data.o[0]).data("subtype") || '')
-						.data("key", $(data.o[0]).data("proposition"));
-
-					// set the properties in the properties select
-					var properties = $(data.o[0]).data('properties').split(",");
-					$('select[data-properties-provider=' + $(target).attr('id') + ']').each(function (i, item) {
-						$(item).empty();
-						$(properties).each(function (j, property) {
-							$(item).append($('<option></option>').attr('value', property).text(property));
-						});
-					});
-
-					// check that all types in the categorization are the same
-					if ($(sortable).data('drop-type') === 'multiple' && $(sortable).data("proptype") !== "empty") {
-						if ($(sortable).data("proptype") !== $(newItem).data("type")) {
-							var $dialog = $('<div>All the definition elements must be of the same type.</div>').dialog({
-								'title': 'Definition Criteria',
-								'modal': true,
-								'buttons': {
-									'OK': function () { $(this).dialog('close'); $(this).remove();}
-								}
-							});
-							return;
-						}
-					} else {
-						var tmptype = $(newItem).data("type");
-						$(sortable).data("proptype", tmptype);
-					}
-
-					var X = $("<span></span>", {class: "delete"});
-					attachDeleteAction(X);
-
-					var txt = $("<span></span>", {
-						text : textContent
-					});
-
-					if ($(sortable).data('drop-type') === 'single') {
-						$(sortable).find('li').each(function (i,item) {
-							removePossibleProposition($(item).data('key'));
-							$(item).remove();
-						});
-					}
-
-					newItem.append(X);
-					newItem.append(txt);
-					sortable.append(newItem);
-
-					addPossibleProposition(newItem.data('key'), txt.text());
-					setPropositionSelects($(sortable).closest('[data-definition-container="true"]'));
-				}
-			},
+			"drop_finish": dropFinishCallback,
 			"drop_check": function (data) {
 				var target = data.r;
 				var sortable = $(target).find('ul.sortable');
@@ -562,7 +568,9 @@ function initTrees() {
 				}
 				
 				return droppable;
-			},
+			}
+			/*
+			,
 			"drag_check" : function(data) {
 				if (data.r.attr("id") == "phtml_1") {
 					return false;
@@ -572,22 +580,24 @@ function initTrees() {
 					before : false,
 					inside : true
 				};
-			},
-			"drag_finish" : function(data) {
-				alert("DRAG OK");
 			}
+			*/
 		},
 		// search disabled until we figure out a way to search for nodes not currently loaded in the tree
 //		"search" : {
 //			"show_only_matches" : true,
 //		},
 		"plugins" : [ "themes", "json_data", "ui", "crrm", "dnd"/*, "search"*/ ]
-	}).bind("open_node.jstree", function(e, data)
+	})
+	/*
+	.bind("open_node.jstree", function(e, data)
 	{
 		if(data.rslt.obj[0].id == undefined) {
 			alert("No href defined for this element");
 		}
-	});
+	})
+	*/
+	;
 
 	$("#userTree").jstree({
 		"json_data" : {
@@ -596,86 +606,9 @@ function initTrees() {
 			}
 		},
 		"dnd" : {
-			"drop_finish" : function(data) {
-				var target = data.e.currentTarget;
-				if (idIsNotInList(data.o[0].id)) {
-
-					$('#label-info').hide();
-
-					var target = $('#tree-drop')[0];
-					target.style["background"] = "lightblue";
-
-					var type = $('#type').val();
-
-					var X = $("<span></span>", {
-						class: "delete"
-					});
-					var txt = $("<span></span>", {
-						text : data.o[0].children[1].childNodes[1].textContent
-					});
-
-					$('<li></li>', {
-						id: data.o[0].id,
-						"data-type": $(data.o[0]).data("type"),
-						"data-subtype": $(data.o[0]).data("subtype")
-					}).append(X, txt).appendTo('#sortable');
-
-
-					var txt = $('#sortable li:last').text();
-
-					var width = txt.length * 7;
-					if (width > dropBoxMaxTextWidth) {
-						dropBoxMaxTextWidth = width;
-						$('#sortable').width(dropBoxMaxTextWidth);
-					}
-
-
-					$('#sortable li:last').mouseover(function () {
-
-						$(this.children[0]).css({
-							cursor:"pointer",
-							backgroundColor:"#24497A"
-						});
-					});
-					$('#sortable li:last').mouseout(function () {
-
-						$(this.children[0]).css({
-							cursor:"pointer",
-							backgroundColor:"lightblue"
-						});
-					});
-
-					// function to enable removal of list item once it is
-					// clicked
-					$($('#sortable li:last')[0].children[0]).click(function onItemClick() {
-						$(this.parent).animate( {
-							backgroundColor: "#CCC",
-							color: "#333"
-						}, 500);
-						$("#dialog").dialog({
-							buttons : {
-								"Confirm" : function() {
-									$($('#sortable li:last')[0].children[0].parentNode).remove();
-									$(this).dialog("close");
-									if ($('#sortable li').length == 0) {
-										$('#sortable').width(275);
-										dropBoxMaxTextWidth = 275;
-									}
-								},
-								"Cancel" : function() {
-									$(this).dialog("close");
-								}
-							}
-						});
-						$("#dialog").html(this.parentNode.children[1].innerHTML);
-						$("#dialog").dialog("open");
-
-					// alert("Removed Selection:
-					// "+this.parentNode.children[1].innerHTML);
-
-					});
-				}
-			},
+			"drop_finish" : dropFinishCallback
+		/*
+		,
 			"drag_check" : function(data) {
 				if (data.r.attr("id") == "phtml_1") {
 					return false;
@@ -685,13 +618,13 @@ function initTrees() {
 					before : false,
 					inside : true
 				};
-			},
-			"drag_finish" : function(data) {
-				alert("DRAG OK");
 			}
+			*/
 		},
 		"plugins" : [ "themes", "json_data", "ui", "dnd" ]
-	}).bind("select_node.jstree", function(e, data)
+	})
+	/*
+	.bind("select_node.jstree", function(e, data)
 	{
 		if(data.rslt.obj[0].id !== undefined)
 		{
@@ -705,7 +638,9 @@ function initTrees() {
 		}
 
 
-	});
+	})
+	*/
+	;
 
 
 
