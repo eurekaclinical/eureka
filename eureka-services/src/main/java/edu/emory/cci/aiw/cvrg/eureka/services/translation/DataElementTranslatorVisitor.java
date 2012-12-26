@@ -21,15 +21,12 @@ package edu.emory.cci.aiw.cvrg.eureka.services.translation;
 
 import com.google.inject.Inject;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.CategoricalElement;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.DataElement;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.DataElementVisitor;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.Frequency;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.ResultThresholds;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.Sequence;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.SystemElement;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.Proposition;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.PropositionTypeVisitor;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.SystemProposition;
 import edu.emory.cci.aiw.cvrg.eureka.common.exception.DataElementHandlingException;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.PropositionDao;
 
@@ -101,35 +98,9 @@ public final class DataElementTranslatorVisitor implements DataElementVisitor {
 
 	@Override
 	public void visit(Frequency frequency) throws DataElementHandlingException {
-		if (frequency.getDataElement().getWithValue() != null) {
-			Proposition proposition = propositionDao.getByUserAndKey(userId,
-					frequency.getDataElement().getDataElementKey());
-			PropositionTypeVisitor propositionTypeVisitor = new
-					PropositionTypeVisitor();
-			if (proposition != null) {
-				proposition.accept(propositionTypeVisitor);
-				if (propositionTypeVisitor.getType() == DataElement.Type
-						.SYSTEM) {
-					SystemProposition sysProp = (SystemProposition)
-							proposition;
-					if (sysProp.getSystemType() ==
-							SystemProposition.SystemType
-									.LOW_LEVEL_ABSTRACTION) {
-						proposition = this
-								.frequencyHighLevelAbstractionTranslator
-								.translateFromElement(frequency);
-					} else if (sysProp.getSystemType() ==
-							SystemProposition.SystemType
-									.COMPOUND_LOW_LEVEL_ABSTRACTION) {
-
-					} else {
-						throw new IllegalStateException("Frequencies " +
-								"specifying values can only apply to " +
-								"low-level abstraction or compound low-level " +
-								"abstraction");
-					}
-				}
-			}
+		if (frequency.getIsConsecutive()) {
+			proposition = this.frequencyHighLevelAbstractionTranslator
+					.translateFromElement(frequency);
 		} else {
 			proposition = this.frequencySliceTranslator
 					.translateFromElement(frequency);
