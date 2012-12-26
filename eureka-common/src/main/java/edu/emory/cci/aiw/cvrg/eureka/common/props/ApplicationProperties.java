@@ -30,7 +30,6 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
-import java.util.logging.Level;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -120,7 +119,7 @@ public abstract class ApplicationProperties {
 
 		if (userConfig != null) {
 			LOGGER.info("Trying to load user configuration from {}",
-					defaultConfig);
+					userConfig);
 			try {
 				temp = this.load(userConfig, temp);
 			} catch (IOException ex) {
@@ -240,7 +239,7 @@ public abstract class ApplicationProperties {
 	 * INI configuration files.
 	 */
 	public String getConfigDir() {
-		return getDefaultLocation();
+		return this.getValue("eureka.etl.config.dir",getDefaultLocation());
 	}
 
 	/**
