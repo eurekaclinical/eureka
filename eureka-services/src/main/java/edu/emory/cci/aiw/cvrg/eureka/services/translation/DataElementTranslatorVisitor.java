@@ -20,45 +20,64 @@
 package edu.emory.cci.aiw.cvrg.eureka.services.translation;
 
 import com.google.inject.Inject;
-
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.CategoricalElement;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.DataElement;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.DataElementVisitor;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.Frequency;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.ResultThresholds;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.Sequence;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.SystemElement;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.Proposition;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.PropositionTypeVisitor;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.SystemProposition;
 import edu.emory.cci.aiw.cvrg.eureka.common.exception.DataElementHandlingException;
+import edu.emory.cci.aiw.cvrg.eureka.services.dao.PropositionDao;
 
 public final class DataElementTranslatorVisitor implements DataElementVisitor {
+
+	private final PropositionDao propositionDao;
 
 	private final SystemPropositionTranslator systemPropositionTranslator;
 	private final SequenceTranslator sequenceTranslator;
 	private final CategorizationTranslator categorizationTranslator;
 	private final FrequencySliceTranslator frequencySliceTranslator;
-	private final FrequencyLowLevelAbstractionTranslator frequencyLowLevelAbstractionTranslator;
-	private final ResultThresholdsTranslator resultThresholdsTranslator;
+	private final FrequencyHighLevelAbstractionTranslator frequencyHighLevelAbstractionTranslator;
+	private final ResultThresholdsLowLevelAbstractionTranslator
+			resultThresholdsLowLevelAbstractionTranslator;
+	private final ResultThresholdsCompoundLowLevelAbstractionTranslator resultThresholdsCompoundLowLevelAbstractionTranslator;
 
 	private Proposition proposition;
+	private Long userId;
 
 	@Inject
-	public DataElementTranslatorVisitor(
+	public DataElementTranslatorVisitor(PropositionDao inPropositionDao,
 			SystemPropositionTranslator inSystemPropositionTranslator,
 			SequenceTranslator inSequenceTranslator,
 			CategorizationTranslator inCategorizationTranslator,
 			FrequencySliceTranslator inFrequencySliceTranslator,
-			FrequencyLowLevelAbstractionTranslator inFrequencyLowLevelAbstractionTranslator,
-			ResultThresholdsTranslator inResultThresholdsTranslator) {
+			FrequencyHighLevelAbstractionTranslator inFrequencyHighLevelAbstractionTranslator,
+			ResultThresholdsLowLevelAbstractionTranslator
+					inResultThresholdsLowLevelAbstractionTranslator,
+			ResultThresholdsCompoundLowLevelAbstractionTranslator
+					inResultThresholdsCompoundLowLevelAbstractionTranslator) {
+		this.propositionDao = inPropositionDao;
 		this.systemPropositionTranslator = inSystemPropositionTranslator;
 		this.sequenceTranslator = inSequenceTranslator;
 		this.categorizationTranslator = inCategorizationTranslator;
 		this.frequencySliceTranslator = inFrequencySliceTranslator;
-		this.frequencyLowLevelAbstractionTranslator = inFrequencyLowLevelAbstractionTranslator;
-		this.resultThresholdsTranslator = inResultThresholdsTranslator;
+		this.frequencyHighLevelAbstractionTranslator = inFrequencyHighLevelAbstractionTranslator;
+		this.resultThresholdsLowLevelAbstractionTranslator =
+				inResultThresholdsLowLevelAbstractionTranslator;
+		this.resultThresholdsCompoundLowLevelAbstractionTranslator =
+				inResultThresholdsCompoundLowLevelAbstractionTranslator;
 	}
 
 	public Proposition getProposition() {
 		return proposition;
+	}
+
+	public void setUserId(Long inUserId) {
+		userId = inUserId;
 	}
 
 	@Override
@@ -82,11 +101,37 @@ public final class DataElementTranslatorVisitor implements DataElementVisitor {
 
 	@Override
 	public void visit(Frequency frequency) throws DataElementHandlingException {
-		if (!frequency.getIsConsecutive()) {
-			proposition = this.frequencySliceTranslator
-					.translateFromElement(frequency);
+		if (frequency.getDataElement().getWithValue() != null) {
+			Proposition proposition = propositionDao.getByUserAndKey(userId,
+					frequency.getDataElement().getDataElementKey());
+			PropositionTypeVisitor propositionTypeVisitor = new
+					PropositionTypeVisitor();
+			if (proposition != null) {
+				proposition.accept(propositionTypeVisitor);
+				if (propositionTypeVisitor.getType() == DataElement.Type
+						.SYSTEM) {
+					SystemProposition sysProp = (SystemProposition)
+							proposition;
+					if (sysProp.getSystemType() ==
+							SystemProposition.SystemType
+									.LOW_LEVEL_ABSTRACTION) {
+						proposition = this
+								.frequencyHighLevelAbstractionTranslator
+								.translateFromElement(frequency);
+					} else if (sysProp.getSystemType() ==
+							SystemProposition.SystemType
+									.COMPOUND_LOW_LEVEL_ABSTRACTION) {
+
+					} else {
+						throw new IllegalStateException("Frequencies " +
+								"specifying values can only apply to " +
+								"low-level abstraction or compound low-level " +
+								"abstraction");
+					}
+				}
+			}
 		} else {
-			proposition = this.frequencyLowLevelAbstractionTranslator
+			proposition = this.frequencySliceTranslator
 					.translateFromElement(frequency);
 		}
 	}
@@ -94,8 +139,14 @@ public final class DataElementTranslatorVisitor implements DataElementVisitor {
 	@Override
 	public void visit(ResultThresholds thresholds) 
 			throws DataElementHandlingException {
-		proposition = this.resultThresholdsTranslator
-				.translateFromElement(thresholds);
+		if (thresholds.getValueThresholds().size() > 1) {
+			proposition = this
+					.resultThresholdsCompoundLowLevelAbstractionTranslator
+					.translateFromElement(thresholds);
+		} else {
+			proposition = this.resultThresholdsLowLevelAbstractionTranslator
+					.translateFromElement(thresholds);
+		}
 	}
 
 }
