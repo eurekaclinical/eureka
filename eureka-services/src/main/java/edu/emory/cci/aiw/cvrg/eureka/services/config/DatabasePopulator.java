@@ -24,17 +24,22 @@ import com.google.inject.Provider;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.RelationOperator;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.Role;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.User;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.ValueComparator;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.ValueDefinitionMatchOperator;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.RelationOperatorDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.RoleDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.TimeUnitDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.UserDao;
+import edu.emory.cci.aiw.cvrg.eureka.services.dao.ValueComparatorDao;
+import edu.emory.cci.aiw.cvrg.eureka.services.dao.ValueDefinitionMatchOperatorDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.util.StringUtil;
+import org.protempa.proposition.value.AbsoluteTimeUnit;
+
+import javax.persistence.EntityManager;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
-import javax.persistence.EntityManager;
-import org.protempa.proposition.value.AbsoluteTimeUnit;
 
 /**
  * Performs first-time populating of Eureka's database tables. It also tries to
@@ -55,6 +60,8 @@ class DatabasePopulator {
 		populateDefaultRolesAndUserIfNeeded();
 		populateTimeUnitsIfNeeded();
 		populateRelationOperatorsIfNeeded();
+		populateValueComparatorsIfNeeded();
+		populateValueDefinitionMatchOperatorsIfNeeded();
 	}
 
 	private void populateTimeUnitsIfNeeded() {
@@ -114,11 +121,11 @@ class DatabasePopulator {
 			} catch (NoSuchAlgorithmException ex) {
 				throw new AssertionError(
 						"Could not hash default superuser password: "
-						+ ex.getMessage());
+								+ ex.getMessage());
 			}
 			superuser.setRoles(
 					Arrays.asList(
-					new Role[]{researcherRole, adminRole, superuserRole}));
+							new Role[]{researcherRole, adminRole, superuserRole}));
 			userDao.create(superuser);
 		}
 
@@ -126,13 +133,62 @@ class DatabasePopulator {
 	}
 
 	private static void createTimeUnitIfNeeded(Set<String> namesSet,
-			TimeUnitDao timeUnitDao, String name, String desc) {
+											   TimeUnitDao timeUnitDao, String name, String desc) {
 		if (!namesSet.contains(name)) {
 			edu.emory.cci.aiw.cvrg.eureka.common.entity.TimeUnit timeUnit =
 					new edu.emory.cci.aiw.cvrg.eureka.common.entity.TimeUnit();
 			timeUnit.setName(name);
 			timeUnit.setDescription(desc);
 			timeUnitDao.create(timeUnit);
+		}
+	}
+
+	private void populateValueComparatorsIfNeeded() {
+		ValueComparatorDao vcDao = this.injector.getInstance
+				(ValueComparatorDao.class);
+		Set<String> namesSet = new HashSet<String>();
+		for (ValueComparator vc : vcDao.getAll()) {
+			namesSet.add(vc.getName());
+		}
+		createValueComparatorIfNeeded(namesSet, vcDao, "=", "equals");
+		createValueComparatorIfNeeded(namesSet, vcDao, "not=", "not equals");
+		createValueComparatorIfNeeded(namesSet, vcDao, ">", "greater than");
+		createValueComparatorIfNeeded(namesSet, vcDao, ">=",
+				"greater than or equal to");
+		createValueComparatorIfNeeded(namesSet, vcDao, "<", "less than");
+		createValueComparatorIfNeeded(namesSet, vcDao, "<=",
+				"less than or equal to");
+
+		ValueComparator eq = vcDao.getByName("=");
+		ValueComparator ne = vcDao.getByName("not=");
+		eq.setComplement(ne);
+		ne.setComplement(eq);
+		vcDao.update(eq);
+		vcDao.update(ne);
+
+		ValueComparator gt = vcDao.getByName(">");
+		ValueComparator lte = vcDao.getByName("<=");
+		gt.setComplement(lte);
+		lte.setComplement(gt);
+		vcDao.update(gt);
+		vcDao.update(lte);
+
+		ValueComparator lt = vcDao.getByName("<");
+		ValueComparator gte = vcDao.getByName(">=");
+		lt.setComplement(gte);
+		gte.setComplement(lt);
+		vcDao.update(lt);
+		vcDao.update(gte);
+	}
+
+	private static void createValueComparatorIfNeeded(Set<String> namesSet,
+													  ValueComparatorDao
+															  valueComparatorDao, String name, String desc) {
+		if (!namesSet.contains(name)) {
+			ValueComparator valueComparator = new ValueComparator();
+			valueComparator.setName(name);
+			valueComparator.setDescription(desc);
+			valueComparatorDao.create(valueComparator);
 		}
 	}
 
@@ -147,7 +203,7 @@ class DatabasePopulator {
 	}
 
 	private void populateRelationOperatorsIfNeeded() {
-		RelationOperatorDao relOpDao = 
+		RelationOperatorDao relOpDao =
 				this.injector.getInstance(RelationOperatorDao.class);
 		createRelationOperatorIfNeeded(relOpDao, "before", "before");
 		createRelationOperatorIfNeeded(relOpDao, "after", "after");
@@ -161,6 +217,25 @@ class DatabasePopulator {
 			relOp.setName(name);
 			relOp.setDescription(desc);
 			relOpDao.create(relOp);
+		}
+	}
+
+	private void populateValueDefinitionMatchOperatorsIfNeeded() {
+		ValueDefinitionMatchOperatorDao dao = this.injector.getInstance
+				(ValueDefinitionMatchOperatorDao.class);
+		createValueDefinitionMatchOperatorIfNeeded(dao, "any", "any");
+		createValueDefinitionMatchOperatorIfNeeded(dao, "all", "all");
+	}
+
+	private static void createValueDefinitionMatchOperatorIfNeeded
+			(ValueDefinitionMatchOperatorDao valDefMatchOpDao, String name,
+			 String desc) {
+		ValueDefinitionMatchOperator op = valDefMatchOpDao.getByName(name);
+		if (op == null) {
+			op = new ValueDefinitionMatchOperator();
+			op.setName(name);
+			op.setDescription(desc);
+			valDefMatchOpDao.create(op);
 		}
 	}
 }
