@@ -34,12 +34,13 @@ import com.google.inject.Inject;
 import com.google.inject.Provider;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.Categorization;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.Categorization.CategorizationType;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.FileUpload;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.HighLevelAbstraction;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.LowLevelAbstraction;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.Proposition;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.Role;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.User;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.Categorization.CategorizationType;
 import edu.emory.cci.aiw.cvrg.eureka.common.test.TestDataException;
 import edu.emory.cci.aiw.cvrg.eureka.common.test.TestDataProvider;
 import edu.emory.cci.aiw.cvrg.eureka.services.util.StringUtil;
@@ -124,6 +125,7 @@ public class Setup implements TestDataProvider {
 				new ArrayList<Proposition>(users.length);
 		EntityManager entityManager = this.getEntityManager();
 		entityManager.getTransaction().begin();
+		Date now = new Date();
 		for (User u : users) {
 			Categorization proposition1 = new Categorization();
 			proposition1.setKey("test-cat");
@@ -131,14 +133,28 @@ public class Setup implements TestDataProvider {
 			proposition1.setDisplayName("Test Proposition");
 			proposition1.setUserId(u.getId());
 			proposition1.setCategorizationType(CategorizationType.EVENT);
+			proposition1.setCreated(now);
 			entityManager.persist(proposition1);
 			propositions.add(proposition1);
 
-			Proposition proposition2 = new HighLevelAbstraction();
+			LowLevelAbstraction lowLevelAbstraction = new LowLevelAbstraction
+					();
+			lowLevelAbstraction.setAbbrevDisplayName("test-low-level");
+			lowLevelAbstraction.setKey("test-low-level");
+			lowLevelAbstraction.setCreated(now);
+			lowLevelAbstraction.setCreatedFrom(LowLevelAbstraction
+					.CreatedFrom.FREQUENCY);
+			List<Proposition> abstractedFrom = new ArrayList<Proposition>();
+			abstractedFrom.add(lowLevelAbstraction);
+
+			HighLevelAbstraction proposition2 = new HighLevelAbstraction();
 			proposition2.setKey("test-hla");
 			proposition2.setAbbrevDisplayName("test");
 			proposition2.setDisplayName("Test Proposition");
 			proposition2.setUserId(u.getId());
+			proposition2.setCreatedFrom(HighLevelAbstraction.CreatedFrom
+					.FREQUENCY);
+			proposition2.setAbstractedFrom(abstractedFrom);
 			entityManager.persist(proposition2);
 			propositions.add(proposition2);
 		}

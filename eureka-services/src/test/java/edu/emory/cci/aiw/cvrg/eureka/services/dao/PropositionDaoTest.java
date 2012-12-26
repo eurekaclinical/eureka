@@ -41,6 +41,6 @@ public class PropositionDaoTest extends AbstractServiceTest {
 	public void testDao() {
 		PropositionDao dao = this.getInstance(PropositionDao.class);
 		List<Proposition> propositions = dao.getAll();
-		Assert.assertEquals(6, propositions.size());
+		Assert.assertEquals(9, propositions.size());
 	}
 }
