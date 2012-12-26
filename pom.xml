@@ -14,7 +14,7 @@
 		on their clinical and administrative data, and load those phenotypes
 		and data into your own instance of the i2b2 data warehouse system.
 	</description>
-	<url>http://aiw.sourceforge.net</url>
+	<url>http://aiw.sourceforge.net/dev/eureka-${project.version}</url>
 
 	<organization>
 		<name>Emory University</name>
@@ -54,7 +54,6 @@
 		<mysql-version>5.1.18</mysql-version>
 		<ehcache-version>2.6.0</ehcache-version>
 		<tomcat-plugin-version>1.1</tomcat-plugin-version>
-		<eureka.dev.site.url>http://aiw.sourceforge.net/dev/${project.build.finalName}</eureka.dev.site.url>
 
 		<!-- properties for site creation -->
 		<javautil-version>2.0.5</javautil-version>
@@ -75,17 +74,17 @@
 	<distributionManagement>
 		<site>
 			<id>aiw.sourceforge.net</id>
-			<url>scp://shell.sourceforge.net/home/project-web/aiw/htdocs/dev/${project.build.finalName}</url>
+			<url>scp://shell.sourceforge.net/home/project-web/aiw/htdocs/dev/eureka-${project.version}</url>
 		</site>
 		<repository>
-			<id>aiw.internal.repo</id>
-			<name>AIW Internal Repo</name>
-			<url>http://maven.cci.emory.edu:8081/nexus/content/repositories/aiw/</url>
+			<id>aiw.repo</id>
+			<name>AIW Repo</name>
+			<url>http://maven.cci.emory.edu/nexus/content/repositories/aiw/</url>
 		</repository>
 		<snapshotRepository>
-			<id>aiw.snapshots.internal.repo</id>
-			<name>AIW Internal Snapshots Repo</name>
-			<url>http://maven.cci.emory.edu:8081/nexus/content/repositories/aiw-snapshots/</url>
+			<id>aiw.snapshots.repo</id>
+			<name>AIW Snapshots Repo</name>
+			<url>http://maven.cci.emory.edu/nexus/content/repositories/aiw-snapshots/</url>
 		</snapshotRepository>
 	</distributionManagement>
 
@@ -671,12 +670,12 @@
 		<repository>
 			<id>maven.cci</id>
 			<name>CCI Maven Repository</name>
-			<url>http://maven.cci.emory.edu:8081/nexus/content/repositories/public</url>
+			<url>http://maven.cci.emory.edu/nexus/content/repositories/public</url>
 		</repository>
 		<repository>
-			<id>aiw.internal.repo</id>
+			<id>aiw.repo</id>
 			<name>AIW Release Repository</name>
-			<url>http://maven.cci.emory.edu:8081/nexus/content/repositories/aiw/</url>
+			<url>http://maven.cci.emory.edu/nexus/content/repositories/aiw/</url>
 		</repository>
 	</repositories>
 
