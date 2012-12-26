@@ -19,10 +19,12 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.common.entity;
 
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
@@ -35,14 +37,17 @@ public class ValueComparator {
 
 	@Id
 	@SequenceGenerator(name = "COMP_SEQ_GENERATOR",
-		sequenceName = "COMP_SEQ", allocationSize = 1, initialValue = 1)
+			sequenceName = "COMP_SEQ", allocationSize = 1, initialValue = 1)
 	@GeneratedValue(strategy = GenerationType.SEQUENCE,
-		generator = "COMP_SEQ_GENERATOR")
+			generator = "COMP_SEQ_GENERATOR")
 	private Long id;
 
 	private String name;
 
 	private String description;
+
+	@OneToOne
+	private ValueComparator complement;
 
 	public Long getId() {
 		return id;
@@ -66,5 +71,13 @@ public class ValueComparator {
 
 	public void setDescription(String inDescription) {
 		description = inDescription;
+	}
+
+	public ValueComparator getComplement() {
+		return complement;
+	}
+
+	public void setComplement(ValueComparator inComplement) {
+		complement = inComplement;
 	}
 }
