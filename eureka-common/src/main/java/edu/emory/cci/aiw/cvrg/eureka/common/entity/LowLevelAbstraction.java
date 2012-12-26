@@ -19,16 +19,14 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.common.entity;
 
-import java.util.List;
-
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
-import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import java.util.List;
 
 /**
  * Contains attributes which describe a Protempa low-level abstraction in the
@@ -42,11 +40,12 @@ public final class LowLevelAbstraction extends Proposition {
 	 * Minimum number of values to match
 	 */
 	private Integer minValues;
-	
+
 	/*
 	 * Minimum allowed time gap between values
 	 */
 	private Integer minGapValues;
+
 	@OneToOne
 	@JoinColumn(referencedColumnName = "id")
 	private TimeUnit minGapValuesUnits;
@@ -55,24 +54,29 @@ public final class LowLevelAbstraction extends Proposition {
 	 * Maximum allowed time gap between values
 	 */
 	private Integer maxGapValues;
+
 	@OneToOne
 	@JoinColumn(referencedColumnName = "id")
 	private TimeUnit maxGapValuesUnits;
-	
+
 	/*
 	 * The propositions that this low-level abstraction is abstracted from.
 	 */
-	@ManyToMany(cascade = { CascadeType.MERGE, CascadeType.REFRESH,
-	        CascadeType.PERSIST })
-	@JoinTable(name = "abstracted_from", joinColumns = { @JoinColumn(name = "target_proposition_id") })
+	@ManyToMany(cascade = {CascadeType.MERGE, CascadeType.REFRESH,
+			CascadeType.PERSIST})
+	@JoinTable(name = "abstracted_from", joinColumns = {@JoinColumn(name = "target_proposition_id")})
 	private List<Proposition> abstractedFrom;
 
 	/*
 	 * The allowed values of the low-level abstraction
 	 */
-	@OneToMany(cascade = CascadeType.ALL)
-	@JoinColumn(name = "lowLevelAbstractionId")
-	private List<SimpleParameterConstraint> simpleParameterConstraints;
+	@OneToOne
+	@JoinColumn(name = "userConstraint", referencedColumnName = "id")
+	private SimpleParameterConstraint userConstraint;
+
+	@OneToOne
+	@JoinColumn(name = "complementConstraint", referencedColumnName = "id")
+	private SimpleParameterConstraint complementConstraint;
 
 	public enum CreatedFrom {
 		FREQUENCY, VALUE_THRESHOLD
@@ -80,15 +84,14 @@ public final class LowLevelAbstraction extends Proposition {
 
 	private CreatedFrom createdFrom;
 
-	
 	public Integer getMinValues() {
 		return minValues;
 	}
-	
+
 	public void setMinValues(Integer minValues) {
 		this.minValues = minValues;
 	}
-	
+
 	public Integer getMinGapValues() {
 		return minGapValues;
 	}
@@ -129,13 +132,22 @@ public final class LowLevelAbstraction extends Proposition {
 		this.abstractedFrom = abstractedFrom;
 	}
 
-	public List<SimpleParameterConstraint> getSimpleParameterConstraints() {
-		return simpleParameterConstraints;
+	public SimpleParameterConstraint getUserConstraint() {
+		return userConstraint;
 	}
 
-	public void setSimpleParameterConstraints(
-	        List<SimpleParameterConstraint> simpleParameterConstraints) {
-		this.simpleParameterConstraints = simpleParameterConstraints;
+	public void setUserConstraint(
+			SimpleParameterConstraint userConstraint) {
+		this.userConstraint = userConstraint;
+	}
+
+	public SimpleParameterConstraint getComplementConstraint() {
+		return complementConstraint;
+	}
+
+	public void setComplementConstraint(SimpleParameterConstraint
+												complementConstraint) {
+		this.complementConstraint = complementConstraint;
 	}
 
 	public CreatedFrom getCreatedFrom() {
