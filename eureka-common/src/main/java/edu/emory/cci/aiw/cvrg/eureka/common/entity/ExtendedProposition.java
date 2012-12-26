@@ -63,6 +63,8 @@ public class ExtendedProposition {
 	@OneToOne(cascade = CascadeType.ALL)
 	private Proposition proposition;
 
+	String value;
+
 	public Long getId() {
 		return Id;
 	}
@@ -117,5 +119,13 @@ public class ExtendedProposition {
 
 	public void setProposition(Proposition inProposition) {
 		proposition = inProposition;
+	}
+
+	public String getValue() {
+		return value;
+	}
+
+	public void setValue(String value) {
+		this.value = value;
 	}
 }
