@@ -20,7 +20,6 @@
 package edu.emory.cci.aiw.cvrg.eureka.common.entity;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.DataElement;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.LowLevelAbstraction.CreatedFrom;
 
 public final class PropositionTypeVisitor implements PropositionEntityVisitor {
 
@@ -42,19 +41,26 @@ public final class PropositionTypeVisitor implements PropositionEntityVisitor {
 
 	@Override
 	public void visit(HighLevelAbstraction highLevelAbstraction) {
-		this.type = DataElement.Type.SEQUENCE;
+		if (highLevelAbstraction.getCreatedFrom() == HighLevelAbstraction
+				.CreatedFrom.SEQUENCE) {
+			this.type = DataElement.Type.SEQUENCE;
+		} else if (highLevelAbstraction.getCreatedFrom() ==
+				HighLevelAbstraction.CreatedFrom.FREQUENCY) {
+			this.type = DataElement.Type.FREQUENCY;
+		} else {
+			throw new IllegalStateException("HighLevelAbstraction must be " +
+					"created from sequence or frequency");
+		}
 	}
 
 	@Override
 	public void visit(LowLevelAbstraction lowLevelAbstraction) {
-		if (lowLevelAbstraction.getCreatedFrom() == CreatedFrom.FREQUENCY) {
-			this.type = DataElement.Type.FREQUENCY;
-		} else if (lowLevelAbstraction.getCreatedFrom() == CreatedFrom.VALUE_THRESHOLD) {
-			this.type = DataElement.Type.VALUE_THRESHOLD;
-		} else {
-			throw new IllegalArgumentException(
-			        "Low-level abstractions must be created from FREQUENCY or VALUE_THRESHOLD");
-		}
+		this.type = DataElement.Type.VALUE_THRESHOLD;
+	}
+
+	@Override
+	public void visit(CompoundLowLevelAbstraction compoundLowLevelAbstraction) {
+		this.type = DataElement.Type.VALUE_THRESHOLD;
 	}
 
 	@Override
