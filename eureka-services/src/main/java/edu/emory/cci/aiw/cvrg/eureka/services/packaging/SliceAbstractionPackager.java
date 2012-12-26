@@ -19,9 +19,9 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.services.packaging;
 
-import org.protempa.SliceDefinition;
-
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.SliceAbstraction;
+import org.protempa.MinMaxGapFunction;
+import org.protempa.SliceDefinition;
 
 public final class SliceAbstractionPackager implements
         PropositionDefinitionPackager<SliceAbstraction, SliceDefinition> {
@@ -32,6 +32,13 @@ public final class SliceAbstractionPackager implements
 		
 		result.setMinIndex(proposition.getMinIndex());
 		result.addAbstractedFrom(proposition.getAbstractedFrom().getKey());
+		result.setGapFunction(new MinMaxGapFunction(proposition
+				.getWithinAtLeast(), PropositionDefinitionPackagerUtil.unit
+				(proposition.getWithinAtLeastUnits()),
+						proposition.getWithinAtMost(),
+				PropositionDefinitionPackagerUtil.unit(proposition
+						.getWithinAtMostUnits())));
+
 		
 		return result;
 	}
