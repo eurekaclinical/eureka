@@ -27,8 +27,6 @@
 		<currentStableVersion>1.5</currentStableVersion>
 		<junit-version>4.10</junit-version>
 		<jersey-version>1.16</jersey-version>
-		<opensaml-version>1.1b</opensaml-version>
-		<cas-version>3.2.1</cas-version>
 		<guice-version>3.0</guice-version>
 		<annotation-version>1.0</annotation-version>
 		<hibernate-version>3.6.8.Final</hibernate-version>
@@ -48,7 +46,7 @@
 		<eureka-version>1.6-SNAPSHOT</eureka-version>
 		<protempa-version>2.0.3-SNAPSHOT</protempa-version>
 		<aiw-i2b2-etl-version>1.0.2</aiw-i2b2-etl-version>
-		<oracle-version>[11.2.0.2.0,)</oracle-version>
+		<oracle-version>11.2.0.3</oracle-version>
 		<freemarker-version>2.3.9</freemarker-version>
 		<jpamodelgen-version>1.2.0.Final</jpamodelgen-version>
 		<mysql-version>5.1.18</mysql-version>
@@ -491,16 +489,6 @@
 				<version>${annotation-version}</version>
 			</dependency>
 			<dependency>
-				<groupId>org.jasig.cas.client</groupId>
-				<artifactId>cas-client-core</artifactId>
-				<version>${cas-version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.opensaml</groupId>
-				<artifactId>opensaml</artifactId>
-				<version>${opensaml-version}</version>
-			</dependency>
-			<dependency>
 				<groupId>org.hibernate.javax.persistence</groupId>
 				<artifactId>hibernate-jpa-2.0-api</artifactId>
 				<version>${hibernate-persistence-version}</version>
@@ -681,27 +669,6 @@
 
 	<!-- define any additional repositories needed to fetch the plugins we are
 	using -->
-	<pluginRepositories>
-		<pluginRepository>
-			<id>m2.java.net</id>
-			<name>Java.net Maven 2 Repository</name>
-			<url>http://download.java.net/maven/2</url>
-			<layout>default</layout>
-		</pluginRepository>
-		<pluginRepository>
-			<id>apache.snapshots</id>
-			<name>Apache Snapshots</name>
-			<url>http://repository.apache.org/content/groups/snapshots-group/
-			</url>
-			<layout>default</layout>
-			<releases>
-				<enabled>false</enabled>
-			</releases>
-			<snapshots>
-				<enabled>true</enabled>
-			</snapshots>
-		</pluginRepository>
-	</pluginRepositories>
 	<profiles>
 		<profile>
 			<id>eureka-tomcat-local</id>
