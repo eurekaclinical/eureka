@@ -20,12 +20,11 @@
 package edu.emory.cci.aiw.cvrg.eureka.services.translation;
 
 import com.google.inject.Inject;
-
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.DataElement;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.Categorization;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.CompoundLowLevelAbstraction;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.HighLevelAbstraction;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.LowLevelAbstraction;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.LowLevelAbstraction.CreatedFrom;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.PropositionEntityVisitor;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.SliceAbstraction;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.SystemProposition;
@@ -37,8 +36,11 @@ public final class PropositionTranslatorVisitor implements
 	private final SequenceTranslator sequenceTranslator;
 	private final CategorizationTranslator categorizationTranslator;
 	private final FrequencySliceTranslator frequencySliceTranslator;
-	private final FrequencyLowLevelAbstractionTranslator frequencyLowLevelAbstractionTranslator;
-	private final ResultThresholdsTranslator resultThresholdsTranslator;
+	private final FrequencyHighLevelAbstractionTranslator frequencyHighLevelAbstractionTranslator;
+	private final ResultThresholdsLowLevelAbstractionTranslator
+			resultThresholdsLowLevelAbstractionTranslator;
+	private final ResultThresholdsCompoundLowLevelAbstractionTranslator
+			resultThresholdsCompoundLowLevelAbstractionTranslator;
 	private DataElement dataElement;
 
 	@Inject
@@ -47,14 +49,20 @@ public final class PropositionTranslatorVisitor implements
 			SequenceTranslator inSequenceTranslator,
 			CategorizationTranslator inCategorizationTranslator,
 			FrequencySliceTranslator inFrequencySliceTranslator,
-			FrequencyLowLevelAbstractionTranslator inFrequencyLowLevelAbstractionTranslator,
-			ResultThresholdsTranslator inResultThresholdsTranslator) {
+			FrequencyHighLevelAbstractionTranslator inFrequencyHighLevelAbstractionTranslator,
+			ResultThresholdsLowLevelAbstractionTranslator
+					inResultThresholdsLowLevelAbstractionTranslator,
+			ResultThresholdsCompoundLowLevelAbstractionTranslator
+					inResultThresholdsCompoundLowLevelAbstractionTranslator) {
 		this.systemPropositionTranslator = inSystemPropositionTranslator;
 		this.categorizationTranslator = inCategorizationTranslator;
 		this.sequenceTranslator = inSequenceTranslator;
 		this.frequencySliceTranslator = inFrequencySliceTranslator;
-		this.frequencyLowLevelAbstractionTranslator = inFrequencyLowLevelAbstractionTranslator;
-		this.resultThresholdsTranslator = inResultThresholdsTranslator;
+		this.frequencyHighLevelAbstractionTranslator = inFrequencyHighLevelAbstractionTranslator;
+		this.resultThresholdsLowLevelAbstractionTranslator =
+				inResultThresholdsLowLevelAbstractionTranslator;
+		this.resultThresholdsCompoundLowLevelAbstractionTranslator =
+				inResultThresholdsCompoundLowLevelAbstractionTranslator;
 	}
 
 	public DataElement getDataElement() {
@@ -75,8 +83,18 @@ public final class PropositionTranslatorVisitor implements
 
 	@Override
 	public void visit(HighLevelAbstraction highLevelAbstraction) {
+		if (highLevelAbstraction.getCreatedFrom() == HighLevelAbstraction
+				.CreatedFrom.SEQUENCE) {
 		dataElement = this.sequenceTranslator
 				.translateFromProposition(highLevelAbstraction);
+		} else if (highLevelAbstraction.getCreatedFrom() ==
+				HighLevelAbstraction.CreatedFrom.FREQUENCY) {
+			dataElement = this.frequencyHighLevelAbstractionTranslator
+					.translateFromProposition(highLevelAbstraction);
+		} else {
+			throw new IllegalStateException("HighLevelAbstraction can only be" +
+					" created from sequence or frequency");
+		}
 	}
 
 	@Override
@@ -87,15 +105,15 @@ public final class PropositionTranslatorVisitor implements
 
 	@Override
 	public void visit(LowLevelAbstraction lowLevelAbstraction) {
-		if (lowLevelAbstraction.getCreatedFrom() == CreatedFrom.FREQUENCY) {
-			dataElement = this.frequencyLowLevelAbstractionTranslator
-					.translateFromProposition(lowLevelAbstraction);
-		} else if (lowLevelAbstraction.getCreatedFrom() == CreatedFrom.VALUE_THRESHOLD) {
-			dataElement = this.resultThresholdsTranslator
-					.translateFromProposition(lowLevelAbstraction);
-		} else {
-			throw new IllegalArgumentException(
-					"Low-level abstractions may only be created from frequency or value threshold data elements");
-		}
+		dataElement = this.resultThresholdsLowLevelAbstractionTranslator
+				.translateFromProposition(lowLevelAbstraction);
+	}
+
+	@Override
+	public void visit(CompoundLowLevelAbstraction compoundLowLevelAbstraction) {
+		dataElement = this
+				.resultThresholdsCompoundLowLevelAbstractionTranslator
+				.translateFromProposition(compoundLowLevelAbstraction);
+
 	}
 }
