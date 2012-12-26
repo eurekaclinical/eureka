@@ -30,6 +30,7 @@
 	-->
 		<class>edu.emory.cci.aiw.cvrg.eureka.common.entity.AbstractFileInfo</class>
 		<class>edu.emory.cci.aiw.cvrg.eureka.common.entity.Categorization</class>
+        <class>edu.emory.cci.aiw.cvrg.eureka.common.entity.CompoundLowLevelAbstraction</class>
 		<class>edu.emory.cci.aiw.cvrg.eureka.common.entity.ExtendedProposition</class>
 		<class>edu.emory.cci.aiw.cvrg.eureka.common.entity.FileError</class>
 		<class>edu.emory.cci.aiw.cvrg.eureka.common.entity.FileUpload</class>
@@ -48,6 +49,7 @@
 		<class>edu.emory.cci.aiw.cvrg.eureka.common.entity.TimeUnit</class>
 		<class>edu.emory.cci.aiw.cvrg.eureka.common.entity.User</class>
 		<class>edu.emory.cci.aiw.cvrg.eureka.common.entity.ValueComparator</class>
+        <class>edu.emory.cci.aiw.cvrg.eureka.common.entity.ValueDefinitionMatchOperator</class>
 <!--
 		<properties>
 			<property name="javax.persistence.jdbc.driver" value="oracle.jdbc.OracleDriver"/>
