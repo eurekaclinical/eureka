@@ -19,17 +19,9 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.services.translation;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.protempa.PropositionDefinition;
-
 import com.google.inject.Inject;
-
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.Sequence;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.DataElementField;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.Sequence;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.Sequence.RelatedDataElementField;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.SystemElement;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.ExtendedProposition;
@@ -47,6 +39,12 @@ import edu.emory.cci.aiw.cvrg.eureka.services.dao.TimeUnitDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.finder.PropositionFindException;
 import edu.emory.cci.aiw.cvrg.eureka.services.finder.SystemPropositionFinder;
 import edu.emory.cci.aiw.cvrg.eureka.services.util.PropositionUtil;
+import org.protempa.PropositionDefinition;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Translates from sequences (UI data element) to high-level abstractions.
@@ -78,6 +76,7 @@ public class SequenceTranslator implements
 		HighLevelAbstraction result = new HighLevelAbstraction();
 		PropositionTranslatorUtil.populateCommonPropositionFields(result,
 				element);
+		result.setCreatedFrom(HighLevelAbstraction.CreatedFrom.SEQUENCE);
 
 		List<Proposition> abstractedFrom = new ArrayList<Proposition>();
 		createExtendedProposition(element.getPrimaryDataElement(),
