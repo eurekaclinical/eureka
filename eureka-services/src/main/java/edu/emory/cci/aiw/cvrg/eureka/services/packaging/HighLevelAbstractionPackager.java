@@ -19,17 +19,16 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.services.packaging;
 
-import org.protempa.HighLevelAbstractionDefinition;
-import org.protempa.PropertyConstraint;
-import org.protempa.TemporalExtendedPropositionDefinition;
-import org.protempa.proposition.value.AbsoluteTimeUnit;
-import org.protempa.proposition.value.ValueComparator;
-import org.protempa.proposition.value.ValueType;
-
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.ExtendedProposition;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.HighLevelAbstraction;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.Relation;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.TimeUnit;
+import org.protempa.HighLevelAbstractionDefinition;
+import org.protempa.PropertyConstraint;
+import org.protempa.TemporalExtendedPropositionDefinition;
+import org.protempa.proposition.value.ValueComparator;
+import org.protempa.proposition.value.ValueType;
+
+import static edu.emory.cci.aiw.cvrg.eureka.services.packaging.PropositionDefinitionPackagerUtil.unit;
 
 final class HighLevelAbstractionPackager
         implements
@@ -73,10 +72,6 @@ final class HighLevelAbstractionPackager
 		tepd.setMaxLengthUnit(unit(ep.getMaxDurationTimeUnit()));
 
 		return tepd;
-	}
-
-	private static AbsoluteTimeUnit unit(TimeUnit unit) {
-		return unit != null ? AbsoluteTimeUnit.nameToUnit(unit.getName()) : null;
 	}
 
 	private org.protempa.proposition.interval.Relation buildRelation(
