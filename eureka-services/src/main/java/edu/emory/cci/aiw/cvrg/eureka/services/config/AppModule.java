@@ -22,7 +22,7 @@ package edu.emory.cci.aiw.cvrg.eureka.services.config;
 import com.google.inject.AbstractModule;
 import com.google.inject.jndi.JndiIntegration;
 import edu.emory.cci.aiw.cvrg.eureka.services.clients.I2b2Client;
-import edu.emory.cci.aiw.cvrg.eureka.services.clients.I2b2ClientProvider;
+import edu.emory.cci.aiw.cvrg.eureka.services.clients.I2b2RestClient;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.FileDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.JpaFileDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.JpaPropositionDao;
@@ -66,7 +66,7 @@ class AppModule extends AbstractModule {
 		bind(ValueDefinitionMatchOperatorDao.class).to
 				(JpaValueDefinitionMatchOperatorDao.class);
 		bind(EmailSender.class).to(FreeMarkerEmailSender.class);
-		bind(I2b2Client.class).toProvider(I2b2ClientProvider.class);
+		bind(I2b2Client.class).to(I2b2RestClient.class);
 		bind(Context.class).to(InitialContext.class);
 		bind(Session.class).toProvider(
 				JndiIntegration.fromJndi(Session.class,

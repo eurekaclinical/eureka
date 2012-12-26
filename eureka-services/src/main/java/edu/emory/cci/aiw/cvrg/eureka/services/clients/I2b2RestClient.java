@@ -42,6 +42,7 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
+import com.google.inject.Inject;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.ClientResponse.Status;
 
@@ -61,9 +62,10 @@ public class I2b2RestClient extends AbstractClient implements I2b2Client {
 			.getLogger(I2b2RestClient.class);
 	private final ServiceProperties serviceProperties;
 
+	@Inject
 	public I2b2RestClient(ServiceProperties inProperties) {
 		super();
-		this.serviceProperties = new ServiceProperties();
+		this.serviceProperties = inProperties;
 	}
 
 	@Override
