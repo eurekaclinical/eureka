@@ -19,8 +19,6 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.common.entity;
 
-import java.util.List;
-
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
@@ -28,6 +26,7 @@ import javax.persistence.JoinTable;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import java.util.List;
 
 /**
  * Contains attributes which describe a Protempa high level abstraction.
@@ -52,6 +51,12 @@ public class HighLevelAbstraction extends Proposition {
 	        CascadeType.PERSIST })
 	@JoinTable(name = "hla_abstracted_from", joinColumns = { @JoinColumn(name = "target_proposition_id") })
 	private List<Proposition> abstractedFrom;
+
+	public enum CreatedFrom {
+		SEQUENCE, FREQUENCY
+	}
+
+	private CreatedFrom createdFrom;
 
 	public ExtendedProposition getPrimaryProposition() {
 		return primaryProposition;
@@ -88,6 +93,14 @@ public class HighLevelAbstraction extends Proposition {
 	 */
 	public void setAbstractedFrom(List<Proposition> abstractedFrom) {
 		this.abstractedFrom = abstractedFrom;
+	}
+
+	public CreatedFrom getCreatedFrom() {
+		return createdFrom;
+	}
+
+	public void setCreatedFrom(CreatedFrom createdFrom) {
+		this.createdFrom = createdFrom;
 	}
 
 	@Override
