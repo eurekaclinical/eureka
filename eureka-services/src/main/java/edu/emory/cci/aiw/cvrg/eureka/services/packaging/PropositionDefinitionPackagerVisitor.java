@@ -19,6 +19,7 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.services.packaging;
 
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.CompoundLowLevelAbstraction;
 import org.protempa.PropositionDefinition;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.Categorization;
@@ -62,13 +63,20 @@ public final class PropositionDefinitionPackagerVisitor implements
 	
 	@Override
 	public void visit(LowLevelAbstraction lowLevelAbstraction) {
-		// TODO Auto-generated method stub
+		this.propositionDefinition = new LowLevelAbstractionPackager().pack
+				(lowLevelAbstraction);
 		
 	}
 
 	@Override
-	public void visit(SliceAbstraction sliceAbstraction) {
-		// TODO Auto-generated method stub
+	public void visit(CompoundLowLevelAbstraction compoundLowLevelAbstraction) {
+		this.propositionDefinition = new CompoundLowLevelAbstractionPackager
+				().pack(compoundLowLevelAbstraction);
+	}
 
+	@Override
+	public void visit(SliceAbstraction sliceAbstraction) {
+		this.propositionDefinition = new SliceAbstractionPackager().pack
+				(sliceAbstraction);
 	}
 }
