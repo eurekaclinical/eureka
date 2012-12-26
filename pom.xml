@@ -46,7 +46,7 @@
 		<commons-fileupload-version>1.2.2</commons-fileupload-version>
 		<commons-lang-version>2.6</commons-lang-version>
 		<eureka-version>1.6-SNAPSHOT</eureka-version>
-		<protempa-version>2.0.2</protempa-version>
+		<protempa-version>2.0.3-SNAPSHOT</protempa-version>
 		<aiw-i2b2-etl-version>1.0.2</aiw-i2b2-etl-version>
 		<oracle-version>[11.2.0.2.0,)</oracle-version>
 		<freemarker-version>2.3.9</freemarker-version>
