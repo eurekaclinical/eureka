@@ -19,13 +19,7 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.services.translation;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.protempa.PropositionDefinition;
-
 import com.google.inject.Inject;
-
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.CategoricalElement;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.CategoricalElement.CategoricalType;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.DataElement;
@@ -37,6 +31,10 @@ import edu.emory.cci.aiw.cvrg.eureka.common.exception.DataElementHandlingExcepti
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.PropositionDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.finder.PropositionFindException;
 import edu.emory.cci.aiw.cvrg.eureka.services.finder.SystemPropositionFinder;
+import org.protempa.PropositionDefinition;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Translates categorical data elements (UI element) into categorization
@@ -50,8 +48,10 @@ public final class CategorizationTranslator implements
 	private final SequenceTranslator sequenceTranslator;
 	private final SystemPropositionTranslator systemPropositionTranslator;
 	private final FrequencySliceTranslator frequencySliceTranslator;
-	private final FrequencyLowLevelAbstractionTranslator frequencyLowLevelAbstractionTranslator;
-	private final ResultThresholdsTranslator resultThresholdsTranslator;
+	private final FrequencyHighLevelAbstractionTranslator frequencyHighLevelAbstractionTranslator;
+	private final ResultThresholdsLowLevelAbstractionTranslator
+			resultThresholdsLowLevelAbstractionTranslator;
+	private final ResultThresholdsCompoundLowLevelAbstractionTranslator resultThresholdsCompoundLowLevelAbstractionTranslator;
 
 	@Inject
 	public CategorizationTranslator(
@@ -60,15 +60,20 @@ public final class CategorizationTranslator implements
 			SequenceTranslator inSequenceTranslator,
 			SystemPropositionTranslator inSystemPropositionTranslator,
 			FrequencySliceTranslator inFrequencySliceTranslator,
-			FrequencyLowLevelAbstractionTranslator inFrequencyLowLevelAbstractionTranslator,
-			ResultThresholdsTranslator inResultThresholdsTranslator) {
+			FrequencyHighLevelAbstractionTranslator inFrequencyHighLevelAbstractionTranslator,
+			ResultThresholdsLowLevelAbstractionTranslator
+					inResultThresholdsLowLevelAbstractionTranslator,
+			ResultThresholdsCompoundLowLevelAbstractionTranslator
+					inResultThresholdsCompoundLowLevelAbstractionTranslator) {
 		this.propositionDao = inInPropositionDao;
 		this.finder = inFinder;
 		this.sequenceTranslator = inSequenceTranslator;
 		this.systemPropositionTranslator = inSystemPropositionTranslator;
 		this.frequencySliceTranslator = inFrequencySliceTranslator;
-		this.frequencyLowLevelAbstractionTranslator = inFrequencyLowLevelAbstractionTranslator;
-		this.resultThresholdsTranslator = inResultThresholdsTranslator;
+		this.frequencyHighLevelAbstractionTranslator = inFrequencyHighLevelAbstractionTranslator;
+		this.resultThresholdsLowLevelAbstractionTranslator =
+				inResultThresholdsLowLevelAbstractionTranslator;
+		this.resultThresholdsCompoundLowLevelAbstractionTranslator = inResultThresholdsCompoundLowLevelAbstractionTranslator;
 	}
 
 	@Override
@@ -149,8 +154,9 @@ public final class CategorizationTranslator implements
 					this.systemPropositionTranslator, this.sequenceTranslator,
 					this,
 					this.frequencySliceTranslator,
-					this.frequencyLowLevelAbstractionTranslator,
-					this.resultThresholdsTranslator);
+					this.frequencyHighLevelAbstractionTranslator,
+					this.resultThresholdsLowLevelAbstractionTranslator,
+					this.resultThresholdsCompoundLowLevelAbstractionTranslator);
 			p.accept(visitor);
 			children.add(visitor.getDataElement());
 		}
