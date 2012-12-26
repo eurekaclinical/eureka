@@ -19,13 +19,8 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.services.config;
 
-import javax.mail.Session;
-import javax.naming.Context;
-import javax.naming.InitialContext;
-
 import com.google.inject.AbstractModule;
 import com.google.inject.jndi.JndiIntegration;
-
 import edu.emory.cci.aiw.cvrg.eureka.services.clients.I2b2Client;
 import edu.emory.cci.aiw.cvrg.eureka.services.clients.I2b2ClientProvider;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.FileDao;
@@ -36,14 +31,20 @@ import edu.emory.cci.aiw.cvrg.eureka.services.dao.JpaRoleDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.JpaTimeUnitDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.JpaUserDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.JpaValueComparatorDao;
+import edu.emory.cci.aiw.cvrg.eureka.services.dao.JpaValueDefinitionMatchOperatorDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.PropositionDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.RelationOperatorDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.RoleDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.TimeUnitDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.UserDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.ValueComparatorDao;
+import edu.emory.cci.aiw.cvrg.eureka.services.dao.ValueDefinitionMatchOperatorDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.email.EmailSender;
 import edu.emory.cci.aiw.cvrg.eureka.services.email.FreeMarkerEmailSender;
+
+import javax.mail.Session;
+import javax.naming.Context;
+import javax.naming.InitialContext;
 
 /**
  * Configure all the non-web related binding for Guice.
@@ -62,6 +63,8 @@ class AppModule extends AbstractModule {
 		bind(TimeUnitDao.class).to(JpaTimeUnitDao.class);
 		bind(RelationOperatorDao.class).to(JpaRelationOperatorDao.class);
 		bind(ValueComparatorDao.class).to(JpaValueComparatorDao.class);
+		bind(ValueDefinitionMatchOperatorDao.class).to
+				(JpaValueDefinitionMatchOperatorDao.class);
 		bind(EmailSender.class).to(FreeMarkerEmailSender.class);
 		bind(I2b2Client.class).toProvider(I2b2ClientProvider.class);
 		bind(Context.class).to(InitialContext.class);
