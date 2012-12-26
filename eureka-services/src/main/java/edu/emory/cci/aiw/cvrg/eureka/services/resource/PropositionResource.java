@@ -19,33 +19,8 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.services.resource;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
-import javax.ws.rs.Consumes;
-import javax.ws.rs.DELETE;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-
-import org.protempa.PropositionDefinition;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.google.inject.Inject;
-import com.sun.jersey.api.client.UniformInterfaceException;
-
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.CategoricalElement;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.DataElement;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.Sequence;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.SystemElement;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.ValidationRequest;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.*;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ClientException;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.EtlClient;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.Categorization;
@@ -58,16 +33,18 @@ import edu.emory.cci.aiw.cvrg.eureka.services.config.ServiceProperties;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.PropositionDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.finder.PropositionFindException;
 import edu.emory.cci.aiw.cvrg.eureka.services.finder.SystemPropositionFinder;
-import edu.emory.cci.aiw.cvrg.eureka.services.translation.CategorizationTranslator;
-import edu.emory.cci.aiw.cvrg.eureka.services.translation.DataElementTranslatorVisitor;
-import edu.emory.cci.aiw.cvrg.eureka.services.translation.FrequencyLowLevelAbstractionTranslator;
-import edu.emory.cci.aiw.cvrg.eureka.services.translation.FrequencySliceTranslator;
-import edu.emory.cci.aiw.cvrg.eureka.services.translation.PropositionTranslatorVisitor;
-import edu.emory.cci.aiw.cvrg.eureka.services.translation.ResultThresholdsTranslator;
-import edu.emory.cci.aiw.cvrg.eureka.services.translation.SequenceTranslator;
-import edu.emory.cci.aiw.cvrg.eureka.services.translation.SystemPropositionTranslator;
+import edu.emory.cci.aiw.cvrg.eureka.services.translation.*;
 import edu.emory.cci.aiw.cvrg.eureka.services.util.PropositionUtil;
-import java.util.logging.Level;
+import org.protempa.PropositionDefinition;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.ws.rs.*;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 /**
  * REST Web Service
@@ -91,8 +68,10 @@ public class PropositionResource {
 	private final CategorizationTranslator categorizationTranslator;
 	private final SystemPropositionTranslator systemPropositionTranslator;
 	private final FrequencySliceTranslator frequencySliceTranslator;
-	private final FrequencyLowLevelAbstractionTranslator frequencyLowLevelAbstractionTranslator;
-	private final ResultThresholdsTranslator resultThresholdsTranslator;
+	private final FrequencyHighLevelAbstractionTranslator frequencyHighLevelAbstractionTranslator;
+	private final ResultThresholdsLowLevelAbstractionTranslator
+			resultThresholdsLowLevelAbstractionTranslator;
+	private final ResultThresholdsCompoundLowLevelAbstractionTranslator resultThresholdsCompoundLowLevelAbstractionTranslator;
 
 	/**
 	 * Creates a new instance of PropositionResource
@@ -106,8 +85,10 @@ public class PropositionResource {
 			CategorizationTranslator inCategorizationTranslator,
 			SystemPropositionTranslator inSystemPropositionTranslator,
 			FrequencySliceTranslator inFrequencySliceTranslator,
-			FrequencyLowLevelAbstractionTranslator inFrequencyLowLevelAbstractionTranslator,
-			ResultThresholdsTranslator inResultThresholdsTranslator) {
+			FrequencyHighLevelAbstractionTranslator inFrequencyHighLevelAbstractionTranslator,
+			ResultThresholdsLowLevelAbstractionTranslator
+					inResultThresholdsLowLevelAbstractionTranslator,
+			ResultThresholdsCompoundLowLevelAbstractionTranslator inResultThresholdsCompoundLowLevelAbstractionTranslator) {
 		this.propositionDao = inPropositionDao;
 		this.applicationProperties = inApplicationProperties;
 		this.systemPropositionFinder = inFinder;
@@ -115,8 +96,11 @@ public class PropositionResource {
 		this.categorizationTranslator = inCategorizationTranslator;
 		this.systemPropositionTranslator = inSystemPropositionTranslator;
 		this.frequencySliceTranslator = inFrequencySliceTranslator;
-		this.frequencyLowLevelAbstractionTranslator = inFrequencyLowLevelAbstractionTranslator;
-		this.resultThresholdsTranslator = inResultThresholdsTranslator;
+		this.frequencyHighLevelAbstractionTranslator = inFrequencyHighLevelAbstractionTranslator;
+		this.resultThresholdsLowLevelAbstractionTranslator =
+				inResultThresholdsLowLevelAbstractionTranslator;
+		this.resultThresholdsCompoundLowLevelAbstractionTranslator =
+				inResultThresholdsCompoundLowLevelAbstractionTranslator;
 	}
 
 	@GET
@@ -141,8 +125,8 @@ public class PropositionResource {
 				throw new HttpStatusException(
 						Response.Status.INTERNAL_SERVER_ERROR,
 						"Error getting proposition " + name
-						+ " (message from Protempa ETL backend): "
-						+ e.getMessage(),
+								+ " (message from Protempa ETL backend): "
+								+ e.getMessage(),
 						e);
 
 			}
@@ -164,7 +148,7 @@ public class PropositionResource {
 				throw new HttpStatusException(
 						Response.Status.NOT_FOUND,
 						"Invalid proposition id specified in system "
-						+ "propositions list: " + inKey);
+								+ "propositions list: " + inKey);
 			} else {
 				return systemElement;
 			}
@@ -172,8 +156,8 @@ public class PropositionResource {
 			throw new HttpStatusException(
 					Response.Status.INTERNAL_SERVER_ERROR,
 					"Error getting proposition " + inKey
-					+ " (message from Protempa ETL backend): "
-					+ e.getMessage(),
+							+ " (message from Protempa ETL backend): "
+							+ e.getMessage(),
 					e);
 		}
 	}
@@ -206,8 +190,9 @@ public class PropositionResource {
 					this.systemPropositionTranslator, this.sequenceTranslator,
 					this.categorizationTranslator,
 					this.frequencySliceTranslator,
-					this.frequencyLowLevelAbstractionTranslator,
-					this.resultThresholdsTranslator);
+					this.frequencyHighLevelAbstractionTranslator,
+					this.resultThresholdsLowLevelAbstractionTranslator,
+					this.resultThresholdsCompoundLowLevelAbstractionTranslator);
 			p.accept(visitor);
 			DataElement dataElement = visitor.getDataElement();
 			result.add(dataElement);
@@ -218,7 +203,7 @@ public class PropositionResource {
 	@POST
 	@Path("/user/validate/{userId}")
 	public void validateProposition(@PathParam("userId") Long inUserId,
-			DataElement inDataElement) {
+									DataElement inDataElement) {
 		List<Proposition> propositions = this.propositionDao
 				.getByUserId(inUserId);
 		Proposition targetProposition = this.propositionDao.getByUserAndKey(
@@ -268,8 +253,9 @@ public class PropositionResource {
 						this.systemPropositionTranslator,
 						this.sequenceTranslator, this.categorizationTranslator,
 						this.frequencySliceTranslator,
-						this.frequencyLowLevelAbstractionTranslator,
-						this.resultThresholdsTranslator);
+						this.frequencyHighLevelAbstractionTranslator,
+						this.resultThresholdsLowLevelAbstractionTranslator,
+						this.resultThresholdsCompoundLowLevelAbstractionTranslator);
 				proposition.accept(visitor);
 				dataElement = visitor.getDataElement();
 			}
@@ -280,7 +266,7 @@ public class PropositionResource {
 	@DELETE
 	@Path("/user/delete/{userId}/{propId}")
 	public Response deleteUserPropositions(@PathParam("userId") Long inUserId,
-			@PathParam("propId") Long inPropositionId) {
+										   @PathParam("propId") Long inPropositionId) {
 
 		// the response to return;
 		Response response = Response.ok().build();
@@ -295,7 +281,7 @@ public class PropositionResource {
 			// return error
 			response = Response.notModified(
 					"User ID " + inUserId + " did not" + " match the owner ID "
-					+ target.getUserId()).build();
+							+ target.getUserId()).build();
 		} else {
 			// now get the rest of the propositions for the user
 			List<Proposition> others = this.propositionDao.getByUserId(target
@@ -310,16 +296,17 @@ public class PropositionResource {
 				} else {
 					PropositionChildrenVisitor visitor = new PropositionChildrenVisitor();
 					proposition.accept(visitor);
-					List<Proposition> children = visitor.getChildren();
+					List<? extends Proposition> children = visitor.getChildren
+							();
 
 					for (Proposition p : children) {
 						if (p.getId().equals(target.getId())) {
 							response = Response
 									.status(Response.Status.PRECONDITION_FAILED)
 									.entity(p.getAbbrevDisplayName() + " "
-									+ "contains " + "a "
-									+ "reference to "
-									+ target.getAbbrevDisplayName())
+											+ "contains " + "a "
+											+ "reference to "
+											+ target.getAbbrevDisplayName())
 									.build();
 							error = true;
 							break;
@@ -342,11 +329,15 @@ public class PropositionResource {
 	public void updateProposition(DataElement inDataElement) {
 		if (inDataElement.getUserId() != null && inDataElement.getId() != null) {
 			DataElementTranslatorVisitor visitor = new DataElementTranslatorVisitor(
-					this.systemPropositionTranslator, this.sequenceTranslator,
+					this.propositionDao,
+					this.systemPropositionTranslator,
+					this.sequenceTranslator,
 					this.categorizationTranslator,
 					this.frequencySliceTranslator,
-					this.frequencyLowLevelAbstractionTranslator,
-					this.resultThresholdsTranslator);
+					this.frequencyHighLevelAbstractionTranslator,
+					this.resultThresholdsLowLevelAbstractionTranslator,
+					this.resultThresholdsCompoundLowLevelAbstractionTranslator);
+			visitor.setUserId(inDataElement.getUserId());
 			try {
 				inDataElement.accept(visitor);
 			} catch (DataElementHandlingException ex) {
@@ -444,7 +435,8 @@ public class PropositionResource {
 		}
 	}
 
-	private SystemElement fetchSystemProposition(Long inUserId, String inKey) throws PropositionFindException {
+	private SystemElement fetchSystemProposition(Long inUserId,
+												 String inKey) throws PropositionFindException {
 		return PropositionUtil.wrap(
 				systemPropositionFinder.find(inUserId, inKey), false, inUserId,
 				this.systemPropositionFinder);
