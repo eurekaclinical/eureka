@@ -26,9 +26,9 @@ import java.util.List;
 public final class PropositionChildrenVisitor implements
         PropositionEntityVisitor {
 
-	private List<Proposition> children;
+	private List<? extends Proposition> children;
 
-	public List<Proposition> getChildren() {
+	public List<? extends Proposition> getChildren() {
 		return children;
 	}
 
@@ -50,6 +50,11 @@ public final class PropositionChildrenVisitor implements
 	@Override
 	public void visit(LowLevelAbstraction lowLevelAbstraction) {
 		this.children = lowLevelAbstraction.getAbstractedFrom();
+	}
+
+	@Override
+	public void visit(CompoundLowLevelAbstraction compoundLowLevelAbstraction) {
+		this.children = compoundLowLevelAbstraction.getAbstractedFrom();
 	}
 
 	@Override
