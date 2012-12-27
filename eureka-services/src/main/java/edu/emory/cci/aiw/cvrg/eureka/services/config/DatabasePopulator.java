@@ -118,8 +118,7 @@ class DatabasePopulator {
 								+ ex.getMessage());
 			}
 			superuser.setRoles(
-					Arrays.asList(
-							new Role[]{researcherRole, adminRole, superuserRole}));
+					Arrays.asList(researcherRole, adminRole, superuserRole));
 			userDao.create(superuser);
 		}
 	}
