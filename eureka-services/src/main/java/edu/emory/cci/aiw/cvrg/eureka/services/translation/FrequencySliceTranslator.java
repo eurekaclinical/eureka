@@ -19,24 +19,36 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.services.translation;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.google.inject.Inject;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.Frequency;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.SliceAbstraction;
+import edu.emory.cci.aiw.cvrg.eureka.common.exception
+		.DataElementHandlingException;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.PropositionDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.TimeUnitDao;
+import edu.emory.cci.aiw.cvrg.eureka.services.finder.PropositionFindException;
+import edu.emory.cci.aiw.cvrg.eureka.services.finder.SystemPropositionFinder;
 
 public final class FrequencySliceTranslator implements
         PropositionTranslator<Frequency, SliceAbstraction> {
 	
+	private static final Logger LOGGER = LoggerFactory.getLogger
+			(FrequencySliceTranslator.class);
+	
 	private final PropositionDao propositionDao;
 	private final TimeUnitDao timeUnitDao;
+	private final SystemPropositionFinder systemPropositionFinder;
 
 	@Inject
 	public FrequencySliceTranslator(PropositionDao inPropositionDao,
-	        TimeUnitDao inTimeUnitDao) {
-		propositionDao = inPropositionDao;
-		timeUnitDao = inTimeUnitDao;
+	        TimeUnitDao inTimeUnitDao, SystemPropositionFinder inFinder) {
+		this.propositionDao = inPropositionDao;
+		this.timeUnitDao = inTimeUnitDao;
+		this.systemPropositionFinder = inFinder;
 	}
 
 	@Override
@@ -46,10 +58,20 @@ public final class FrequencySliceTranslator implements
 		PropositionTranslatorUtil.populateCommonPropositionFields(result,
 		        element);
 		result.setMinIndex(element.getAtLeast());
-		result.setExtendedProposition(PropositionTranslatorUtil
-		        .createExtendedProposition(element.getDataElement(), 
-				element.getUserId(),
-		        propositionDao, timeUnitDao));
+		try {
+			result.setExtendedProposition(PropositionTranslatorUtil
+			        .createExtendedProposition(
+					        element.getDataElement(), element.getUserId(), 
+					        propositionDao, timeUnitDao, 
+					        this.systemPropositionFinder));
+		} catch (PropositionFindException e) {
+			LOGGER.error(e.getMessage(), e);
+			throw new IllegalArgumentException("Frequency contains an " +
+					"unknown data element", e);
+		} catch (DataElementHandlingException e) {
+			LOGGER.error(e.getMessage(), e);
+			throw new IllegalArgumentException(e);
+		}
 		result.setInSystem(false);
 		
 		if (element.getIsWithin()) {

@@ -19,14 +19,22 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.services.translation;
 
+import org.protempa.PropositionDefinition;
+
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.DataElement;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.DataElementField;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.SystemElement;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.ExtendedProposition;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.PropertyConstraint;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.Proposition;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.ValueComparator;
+import edu.emory.cci.aiw.cvrg.eureka.common.exception
+		.DataElementHandlingException;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.PropositionDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.TimeUnitDao;
+import edu.emory.cci.aiw.cvrg.eureka.services.finder.PropositionFindException;
+import edu.emory.cci.aiw.cvrg.eureka.services.finder.SystemPropositionFinder;
+import edu.emory.cci.aiw.cvrg.eureka.services.util.PropositionUtil;
 
 /**
  * Contains common utility functions for all implementations of
@@ -86,10 +94,25 @@ class PropositionTranslatorUtil {
 	}
 
 	static ExtendedProposition createExtendedProposition(
-	        DataElementField dataElement, Long userId, PropositionDao propositionDao, TimeUnitDao timeUnitDao) {
+	        DataElementField dataElement, Long userId, 
+			PropositionDao propositionDao, TimeUnitDao timeUnitDao, 
+			SystemPropositionFinder inFinder) throws 
+			PropositionFindException, DataElementHandlingException {
+
 		ExtendedProposition ep = new ExtendedProposition();
-		ep.setProposition(propositionDao.getByUserAndKey(userId,
-		        dataElement.getDataElementKey()));
+		Proposition proposition = propositionDao.getByUserAndKey(
+				userId, dataElement.getDataElementKey());
+		if (proposition == null) {
+			PropositionDefinition definition = inFinder.find(userId, 
+					dataElement.getDataElementKey
+					());
+			SystemElement element = PropositionUtil.wrap(definition, false, 
+					userId, inFinder);
+			SystemPropositionTranslator translator = new 
+					SystemPropositionTranslator(inFinder);
+			proposition = translator.translateFromElement(element);
+		}
+		ep.setProposition(proposition);
 		if (dataElement.getHasDuration()) {
 			ep.setMinDuration(dataElement.getMinDuration());
 			ep.setMinDurationTimeUnit(timeUnitDao.retrieve(dataElement.getMinDurationUnits()));
