@@ -170,10 +170,6 @@ public class UserResource {
 	 *
 	 * @param userRequest Object containing all the information about the user
 	 * to add.
-	 * @return A "Bad Request" error if the user does not pass validation, a
-	 * "Created" response with a link to the user page if successful.
-	 * @throws ServletException Thrown when a password can not be properly
-	 * hashed.
 	 */
 	@POST
 	public void addUser(final UserRequest userRequest) {
@@ -221,7 +217,6 @@ public class UserResource {
 	 * @throws HttpStatusException Thrown when a password cannot be properly
 	 * hashed, or the passwords are mismatched.
 	 *
-	 * @updated akalsan
 	 */
 	@Path("/passwd/{id}")
 	@PUT
@@ -230,8 +225,8 @@ public class UserResource {
 			@QueryParam("newPassword") final String newPassword) {
 		
 		User user = this.userDao.retrieve(inId);
-		String oldPasswordHash = null;
-		String newPasswordHash = null;
+		String oldPasswordHash;
+		String newPasswordHash;
 		try {
 			oldPasswordHash = StringUtil.md5(oldPassword);
 			newPasswordHash = StringUtil.md5(newPassword);
@@ -306,8 +301,6 @@ public class UserResource {
 	 * Mark a user as verified.
 	 *
 	 * @param code The verification code to match against users.
-	 * @return An HTTP OK response if the user is modified, or a server error if
-	 * the user can not be modified properly.
 	 */
 	@Path("/verify/{code}")
 	@PUT
