@@ -162,7 +162,7 @@ public class DataElementResource {
 			throw new HttpStatusException(Response.Status.NOT_FOUND, 
 					"Proposition with ID " + inElement.getId() + " was not " +
 					"found.");
-		} else if (oldProposition.getUserId() != inElement.getUserId()) {
+		} else if (oldProposition.getUserId().equals(inElement.getUserId())) {
 			throw new HttpStatusException(Response.Status.NOT_FOUND,
 					"Proposition with ID " + inElement.getId() + " did not " +
 							"have the same owner, " + inElement.getUserId());
