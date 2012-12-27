@@ -19,19 +19,23 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.services.translation;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 import com.google.inject.Inject;
+
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.ResultThresholds;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.ValueThreshold;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.LowLevelAbstraction;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.Proposition;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.SimpleParameterConstraint;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.ValueComparator;
-import edu.emory.cci.aiw.cvrg.eureka.common.exception.DataElementHandlingException;
+import edu.emory.cci.aiw.cvrg.eureka.common.exception
+		.DataElementHandlingException;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.PropositionDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.TimeUnitDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.ValueComparatorDao;
-
-import java.util.Collections;
 
 /**
  *
@@ -92,8 +96,9 @@ public class ResultThresholdsLowLevelAbstractionTranslator implements
 			userConstraint.setMinValueComp(lowerComp);
 			userConstraint.setMinUnits(threshold.getLowerUnits());
 
-			complementConstraint.setMaxValueThreshold(threshold.getLowerValue());
-			complementConstraint.setMaxValueComp(lowerComp.getComplement());
+			complementConstraint.setMinValueThreshold(threshold.getLowerValue
+					());
+			complementConstraint.setMinValueComp(lowerComp.getComplement());
 			complementConstraint.setMinUnits(threshold.getLowerUnits());
 		}
 
@@ -118,6 +123,33 @@ public class ResultThresholdsLowLevelAbstractionTranslator implements
 		@Override
 		public ResultThresholds translateFromProposition (LowLevelAbstraction
 		proposition){
-			return null;  //To change body of implemented methods use File | Settings | File Templates.
+			ValueThreshold threshold = new ValueThreshold();
+			List<ValueThreshold> thresholds = new ArrayList<ValueThreshold>();
+			SimpleParameterConstraint userConstraint = proposition
+					.getUserConstraint();
+			if (userConstraint != null) {
+				if (userConstraint.getMaxValueThreshold() !=
+						null) {
+					threshold.setUpperValue(userConstraint
+							.getMaxValueThreshold());
+					threshold.setUpperUnits(userConstraint.getMaxUnits());
+					threshold.setUpperComp(userConstraint.getMaxValueComp()
+							.getId());
+				}
+				if (userConstraint.getMinValueThreshold() != null) {
+					threshold.setLowerValue(userConstraint
+							.getMinValueThreshold());
+					threshold.setLowerUnits(userConstraint.getMinUnits());
+					threshold.setLowerComp(userConstraint.getMinValueComp()
+							.getId());
+				}
+			}
+			thresholds.add(threshold);
+
+			ResultThresholds result = new ResultThresholds();
+			PropositionTranslatorUtil.populateCommonDataElementFields(result,
+					proposition);
+			result.setValueThresholds(thresholds);
+			return result;
 		}
 	}

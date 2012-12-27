@@ -19,13 +19,13 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.services.packaging;
 
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.CompoundLowLevelAbstraction;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.LowLevelAbstraction;
 import org.protempa.CompoundLowLevelAbstractionDefinition;
 import org.protempa.MinMaxGapFunction;
 
-import static edu.emory.cci.aiw.cvrg.eureka.services.packaging
-		.PropositionDefinitionPackagerUtil.unit;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.CompoundLowLevelAbstraction;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.LowLevelAbstraction;
+
+import static edu.emory.cci.aiw.cvrg.eureka.services.packaging.PropositionDefinitionPackagerUtil.unit;
 
 /**
  *
@@ -57,10 +57,10 @@ public class CompoundLowLevelAbstractionPackager implements
 		for (LowLevelAbstraction lla : proposition.getAbstractedFrom()) {
 			result.addValueClassification(proposition
 					.getUserValueDefinitionName(), lla.getKey(),
-					lla.getUserConstraint().getId());
+					lla.getUserConstraint().getName());
 			result.addValueClassification(proposition
 					.getComplementValueDefinitionName(), lla.getKey(),
-					lla.getComplementConstraint().getId());
+					lla.getComplementConstraint().getName());
 		}
 
 		result.setGapFunction(new MinMaxGapFunction(proposition

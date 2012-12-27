@@ -19,8 +19,32 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.services.resource;
 
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+
+import org.protempa.PropositionDefinition;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.google.inject.Inject;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.*;
+
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.CategoricalElement;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.DataElement;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.Sequence;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.SystemElement;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.ValidationRequest;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ClientException;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.EtlClient;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.Categorization;
@@ -33,18 +57,16 @@ import edu.emory.cci.aiw.cvrg.eureka.services.config.ServiceProperties;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.PropositionDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.finder.PropositionFindException;
 import edu.emory.cci.aiw.cvrg.eureka.services.finder.SystemPropositionFinder;
-import edu.emory.cci.aiw.cvrg.eureka.services.translation.*;
+import edu.emory.cci.aiw.cvrg.eureka.services.translation.CategorizationTranslator;
+import edu.emory.cci.aiw.cvrg.eureka.services.translation.DataElementTranslatorVisitor;
+import edu.emory.cci.aiw.cvrg.eureka.services.translation.FrequencyHighLevelAbstractionTranslator;
+import edu.emory.cci.aiw.cvrg.eureka.services.translation.FrequencySliceTranslator;
+import edu.emory.cci.aiw.cvrg.eureka.services.translation.PropositionTranslatorVisitor;
+import edu.emory.cci.aiw.cvrg.eureka.services.translation.ResultThresholdsCompoundLowLevelAbstractionTranslator;
+import edu.emory.cci.aiw.cvrg.eureka.services.translation.ResultThresholdsLowLevelAbstractionTranslator;
+import edu.emory.cci.aiw.cvrg.eureka.services.translation.SequenceTranslator;
+import edu.emory.cci.aiw.cvrg.eureka.services.translation.SystemPropositionTranslator;
 import edu.emory.cci.aiw.cvrg.eureka.services.util.PropositionUtil;
-import org.protempa.PropositionDefinition;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import javax.ws.rs.*;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
 
 /**
  * REST Web Service
@@ -186,13 +208,8 @@ public class PropositionResource {
 		List<DataElement> result = new ArrayList<DataElement>();
 		for (Proposition p : this.propositionDao.getByUserId(inUserId)) {
 			this.propositionDao.refresh(p);
-			PropositionTranslatorVisitor visitor = new PropositionTranslatorVisitor(
-					this.systemPropositionTranslator, this.sequenceTranslator,
-					this.categorizationTranslator,
-					this.frequencySliceTranslator,
-					this.frequencyHighLevelAbstractionTranslator,
-					this.resultThresholdsLowLevelAbstractionTranslator,
-					this.resultThresholdsCompoundLowLevelAbstractionTranslator);
+			PropositionTranslatorVisitor visitor = 
+					getPropositionTranslatorVisitor();
 			p.accept(visitor);
 			DataElement dataElement = visitor.getDataElement();
 			result.add(dataElement);
@@ -249,18 +266,23 @@ public class PropositionResource {
 				dataElement.setCreated(proposition.getCreated());
 				dataElement.setLastModified(proposition.getLastModified());
 			} else {
-				PropositionTranslatorVisitor visitor = new PropositionTranslatorVisitor(
-						this.systemPropositionTranslator,
-						this.sequenceTranslator, this.categorizationTranslator,
-						this.frequencySliceTranslator,
-						this.frequencyHighLevelAbstractionTranslator,
-						this.resultThresholdsLowLevelAbstractionTranslator,
-						this.resultThresholdsCompoundLowLevelAbstractionTranslator);
+				PropositionTranslatorVisitor visitor = 
+						getPropositionTranslatorVisitor();
 				proposition.accept(visitor);
 				dataElement = visitor.getDataElement();
 			}
 		}
 		return dataElement;
+	}
+
+	private PropositionTranslatorVisitor getPropositionTranslatorVisitor() {
+		return new PropositionTranslatorVisitor(
+							this.systemPropositionTranslator,
+							this.sequenceTranslator, this.categorizationTranslator,
+							this.frequencySliceTranslator,
+							this.frequencyHighLevelAbstractionTranslator,
+							this.resultThresholdsLowLevelAbstractionTranslator,
+							this.resultThresholdsCompoundLowLevelAbstractionTranslator);
 	}
 
 	@DELETE
@@ -328,16 +350,9 @@ public class PropositionResource {
 	@Path("/user/update")
 	public void updateProposition(DataElement inDataElement) {
 		if (inDataElement.getUserId() != null && inDataElement.getId() != null) {
-			DataElementTranslatorVisitor visitor = new DataElementTranslatorVisitor(
-					this.propositionDao,
-					this.systemPropositionTranslator,
-					this.sequenceTranslator,
-					this.categorizationTranslator,
-					this.frequencySliceTranslator,
-					this.frequencyHighLevelAbstractionTranslator,
-					this.resultThresholdsLowLevelAbstractionTranslator,
-					this.resultThresholdsCompoundLowLevelAbstractionTranslator);
-			visitor.setUserId(inDataElement.getUserId());
+			
+			DataElementTranslatorVisitor visitor = 
+					getDataElementTranslatorVisitor();
 			try {
 				inDataElement.accept(visitor);
 			} catch (DataElementHandlingException ex) {
@@ -351,6 +366,17 @@ public class PropositionResource {
 			throw new HttpStatusException(Response.Status.PRECONDITION_FAILED,
 					"Both user ID and " + "proposition ID must be provided.");
 		}
+	}
+
+	private DataElementTranslatorVisitor getDataElementTranslatorVisitor() {
+		return new DataElementTranslatorVisitor(
+						this.systemPropositionTranslator,
+						this.sequenceTranslator,
+						this.categorizationTranslator,
+						this.frequencySliceTranslator,
+						this.frequencyHighLevelAbstractionTranslator,
+						this.resultThresholdsLowLevelAbstractionTranslator,
+						this.resultThresholdsCompoundLowLevelAbstractionTranslator);
 	}
 
 	@POST

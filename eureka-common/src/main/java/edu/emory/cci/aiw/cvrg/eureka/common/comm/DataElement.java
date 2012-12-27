@@ -35,7 +35,7 @@ import org.codehaus.jackson.annotate.JsonTypeInfo;
         @JsonSubTypes.Type(value = CategoricalElement.class, name = "categorization"),
         @JsonSubTypes.Type(value = Sequence.class, name = "sequence"),
         @JsonSubTypes.Type(value = Frequency.class, name = "frequency"),
-        @JsonSubTypes.Type(value = ValueThreshold.class, name = "valueThreshold") })
+        @JsonSubTypes.Type(value = ResultThresholds.class, name = "resultThresholds") })
 public abstract class DataElement implements DataElementVisitable {
 
 	public enum Type {

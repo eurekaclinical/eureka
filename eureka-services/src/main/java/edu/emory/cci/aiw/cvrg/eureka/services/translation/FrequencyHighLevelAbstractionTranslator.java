@@ -19,7 +19,12 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.services.translation;
 
+import java.util.Calendar;
+import java.util.Collections;
+import java.util.Date;
+
 import com.google.inject.Inject;
+
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.DataElementField;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.Frequency;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.Categorization;
@@ -35,10 +40,6 @@ import edu.emory.cci.aiw.cvrg.eureka.common.entity.SystemProposition;
 import edu.emory.cci.aiw.cvrg.eureka.common.exception.DataElementHandlingException;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.PropositionDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.TimeUnitDao;
-
-import java.util.Calendar;
-import java.util.Collections;
-import java.util.Date;
 
 public final class FrequencyHighLevelAbstractionTranslator implements
 		PropositionTranslator<Frequency, HighLevelAbstraction> {
@@ -68,8 +69,8 @@ public final class FrequencyHighLevelAbstractionTranslator implements
 				element);
 		result.setCreatedFrom(HighLevelAbstraction.CreatedFrom.FREQUENCY);
 
-		Proposition abstractedFrom = propositionDao.getByUserAndKey(userId,
-				element.getDataElement().getDataElementKey());
+		Proposition abstractedFrom = propositionDao.getByUserAndKey(element
+				.getUserId(), element.getDataElement().getDataElementKey());
 
 		IntermediateAbstractionGenerator iag = new
 				IntermediateAbstractionGenerator(element);

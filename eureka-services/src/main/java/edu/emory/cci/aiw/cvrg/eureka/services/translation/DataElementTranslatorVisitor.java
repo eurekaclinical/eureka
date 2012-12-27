@@ -20,6 +20,7 @@
 package edu.emory.cci.aiw.cvrg.eureka.services.translation;
 
 import com.google.inject.Inject;
+
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.CategoricalElement;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.DataElementVisitor;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.Frequency;
@@ -28,11 +29,8 @@ import edu.emory.cci.aiw.cvrg.eureka.common.comm.Sequence;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.SystemElement;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.Proposition;
 import edu.emory.cci.aiw.cvrg.eureka.common.exception.DataElementHandlingException;
-import edu.emory.cci.aiw.cvrg.eureka.services.dao.PropositionDao;
 
 public final class DataElementTranslatorVisitor implements DataElementVisitor {
-
-	private final PropositionDao propositionDao;
 
 	private final SystemPropositionTranslator systemPropositionTranslator;
 	private final SequenceTranslator sequenceTranslator;
@@ -44,10 +42,9 @@ public final class DataElementTranslatorVisitor implements DataElementVisitor {
 	private final ResultThresholdsCompoundLowLevelAbstractionTranslator resultThresholdsCompoundLowLevelAbstractionTranslator;
 
 	private Proposition proposition;
-	private Long userId;
 
 	@Inject
-	public DataElementTranslatorVisitor(PropositionDao inPropositionDao,
+	public DataElementTranslatorVisitor(
 			SystemPropositionTranslator inSystemPropositionTranslator,
 			SequenceTranslator inSequenceTranslator,
 			CategorizationTranslator inCategorizationTranslator,
@@ -57,7 +54,6 @@ public final class DataElementTranslatorVisitor implements DataElementVisitor {
 					inResultThresholdsLowLevelAbstractionTranslator,
 			ResultThresholdsCompoundLowLevelAbstractionTranslator
 					inResultThresholdsCompoundLowLevelAbstractionTranslator) {
-		this.propositionDao = inPropositionDao;
 		this.systemPropositionTranslator = inSystemPropositionTranslator;
 		this.sequenceTranslator = inSequenceTranslator;
 		this.categorizationTranslator = inCategorizationTranslator;
@@ -71,10 +67,6 @@ public final class DataElementTranslatorVisitor implements DataElementVisitor {
 
 	public Proposition getProposition() {
 		return proposition;
-	}
-
-	public void setUserId(Long inUserId) {
-		userId = inUserId;
 	}
 
 	@Override

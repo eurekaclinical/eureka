@@ -72,11 +72,11 @@ public final class LowLevelAbstraction extends Proposition {
 	/*
 	 * The allowed values of the low-level abstraction
 	 */
-	@OneToOne
+	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "userConstraint", referencedColumnName = "id")
 	private SimpleParameterConstraint userConstraint;
 
-	@OneToOne
+	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "complementConstraint", referencedColumnName = "id")
 	private SimpleParameterConstraint complementConstraint;
 

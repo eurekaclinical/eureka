@@ -19,12 +19,13 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.common.comm;
 
-import edu.emory.cci.aiw.cvrg.eureka.common.exception.DataElementHandlingException;
 import java.util.List;
+
+import edu.emory.cci.aiw.cvrg.eureka.common.exception.DataElementHandlingException;
 
 public class ResultThresholds extends DataElement {
 
-	private static enum ThresholdsOperator {
+	public static enum ThresholdsOperator {
 		ALL, ANY
 	}
 

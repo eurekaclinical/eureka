@@ -21,10 +21,10 @@ package edu.emory.cci.aiw.cvrg.eureka.common.entity;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 /**
@@ -35,11 +35,15 @@ import javax.persistence.Table;
 public final class SimpleParameterConstraint {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.TABLE)
-	private String id;
+	@SequenceGenerator(sequenceName = "CONSTRAINT_SEQ", 
+			name = "CONSTRAINT_SEQ_GENERATOR", allocationSize = 1, 
+			initialValue = 1)
+	@GeneratedValue(generator = "CONSTRAINT_SEQ_GENERATOR")
+	private Long id;
 
 	private Number minValueThreshold;
 	private String minUnits;
+	private String name;
 	
 	@OneToOne
 	@JoinColumn(referencedColumnName = "id")
@@ -52,12 +56,20 @@ public final class SimpleParameterConstraint {
 	@JoinColumn(referencedColumnName = "id")
 	private ValueComparator maxValueComp;
 
-	public String getId() {
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(String id) {
+	public void setId(Long id) {
 		this.id = id;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String inName) {
+		name = inName;
 	}
 
 	public Number getMinValueThreshold() {
