@@ -40,7 +40,7 @@ public class FileUpload {
 	/**
 	 * Set the on-desk location of the file upload.
 	 *
-	 * @param inLocation The on-disk location of the file upload.
+	 * @param location The on-disk location of the file upload.
 	 */
 	public void setLocation(String location) {
 		this.location = location;
@@ -58,7 +58,7 @@ public class FileUpload {
 	/**
 	 * Set the user to which the file upload belongs.
 	 *
-	 * @param inUserId The user to which the file upload belongs.
+	 * @param userId The user to which the file upload belongs.
 	 */
 	public void setUserId(Long userId) {
 		this.userId = userId;

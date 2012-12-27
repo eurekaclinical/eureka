@@ -32,6 +32,8 @@ import javax.mail.Transport;
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
+import javax.servlet.http.HttpServletRequest;
+import javax.ws.rs.core.Context;
 
 import com.google.inject.Inject;
 
@@ -43,8 +45,6 @@ import freemarker.template.Configuration;
 import freemarker.template.DefaultObjectWrapper;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
-import javax.servlet.http.HttpServletRequest;
-import javax.ws.rs.core.Context;
 
 /**
  * Implements the EmailSender interface with FreeMarker templates.
@@ -95,7 +95,7 @@ public class FreeMarkerEmailSender implements EmailSender {
 	
 	/**
 	 * Sends a verification email.
-	 * @param inUser
+	 * @param inUser The user to verify.
 	 * @throws EmailException 
 	 */
 	@Override

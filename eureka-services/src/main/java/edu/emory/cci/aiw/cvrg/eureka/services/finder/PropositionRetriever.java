@@ -37,8 +37,6 @@ public interface PropositionRetriever<U, K> {
 	 * @param inKey the proposition id of interest.
 	 * @return the proposition definition of interest, or <code>null</code> if 
 	 * not found.
-	 * 
-	 * @throws PropositionRetrieveException if the retrieval failed.
 	 */
 	PropositionDefinition retrieve (U inUserId, K inKey)
 			throws PropositionFindException;
