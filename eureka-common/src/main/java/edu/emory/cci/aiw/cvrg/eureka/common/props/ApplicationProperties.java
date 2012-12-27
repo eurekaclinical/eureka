@@ -84,7 +84,7 @@ public abstract class ApplicationProperties {
 	 */
 	public ApplicationProperties() {
 		String userConfig = System.getProperty(PROPERTY_NAME);
-		String defaultConfig = this.getDefaultLocation() + PROPERTIES_FILE;
+		String defaultConfig = getDefaultLocation() + PROPERTIES_FILE;
 		String fallbackConfig = this.getFallBackConfig();
 		Properties temp = null;
 
