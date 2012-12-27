@@ -52,7 +52,7 @@ public class SystemPropositionRetriever implements PropositionRetriever<Long,
 		EtlClient etlClient = new EtlClient(
 				this.applicationProperties.getEtlUrl());
 		PropositionDefinition result;
-		try {;
+		try {
 			result = etlClient.getPropositionDefinition(inUserId, inKey);
 		} catch (ClientException e) {
 			LOGGER.error(e.getMessage(), e);
