@@ -23,6 +23,7 @@ import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
@@ -39,13 +40,13 @@ public class SliceAbstraction extends Proposition {
 	
 	private Integer withinAtLeast;
 	
-	@OneToOne
+	@ManyToOne
 	@JoinColumn(referencedColumnName = "id")
 	private TimeUnit withinAtLeastUnits;
 	
 	private Integer withinAtMost;
 	
-	@OneToOne
+	@ManyToOne
 	@JoinColumn(referencedColumnName = "id")
 	private TimeUnit withinAtMostUnits;
 

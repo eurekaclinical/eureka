@@ -25,6 +25,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
@@ -55,27 +56,27 @@ public class Relation {
 
 	private Integer minf1s2;
 
-	@OneToOne
+	@ManyToOne
 	@JoinColumn(referencedColumnName = "id")
 	private TimeUnit minf1s2TimeUnit;
 
 	private Integer maxf1s2;
 
-	@OneToOne
+	@ManyToOne
 	@JoinColumn(referencedColumnName = "id")
 	private TimeUnit maxf1s2TimeUnit;
 
 	private Integer mins1f2;
 
-	@OneToOne
+	@ManyToOne
 	@JoinColumn(referencedColumnName = "id")
-	TimeUnit mins1f2TimeUnit;
+	private TimeUnit mins1f2TimeUnit;
 
 	private Integer maxs1f2;
 
-	@OneToOne
+	@ManyToOne
 	@JoinColumn(referencedColumnName = "id")
-	TimeUnit maxs1f2TimeUnit;
+	private TimeUnit maxs1f2TimeUnit;
 
 	public Long getId() {
 		return id;

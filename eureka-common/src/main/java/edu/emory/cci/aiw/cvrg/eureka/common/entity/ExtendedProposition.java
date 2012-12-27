@@ -25,6 +25,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
@@ -47,13 +48,13 @@ public class ExtendedProposition {
 
 	private Integer minDuration;
 
-	@OneToOne
+	@ManyToOne
 	@JoinColumn(referencedColumnName = "id")
 	private TimeUnit minDurationTimeUnit;
 
 	private Integer maxDuration;
 
-	@OneToOne
+	@ManyToOne
 	@JoinColumn(referencedColumnName = "id")
 	private TimeUnit maxDurationTimeUnit;
 

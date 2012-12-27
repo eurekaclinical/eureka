@@ -19,14 +19,16 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.common.entity;
 
+import java.util.List;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
-import java.util.List;
 
 /**
  * Contains attributes which describe a Protempa low-level abstraction in the
@@ -46,7 +48,7 @@ public final class LowLevelAbstraction extends Proposition {
 	 */
 	private Integer minGapValues;
 
-	@OneToOne
+	@ManyToOne
 	@JoinColumn(referencedColumnName = "id")
 	private TimeUnit minGapValuesUnits;
 
@@ -55,7 +57,7 @@ public final class LowLevelAbstraction extends Proposition {
 	 */
 	private Integer maxGapValues;
 
-	@OneToOne
+	@ManyToOne
 	@JoinColumn(referencedColumnName = "id")
 	private TimeUnit maxGapValuesUnits;
 
