@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import org.protempa.CompoundLowLevelAbstractionDefinition;
 import org.protempa.ConstantDefinition;
 import org.protempa.EventDefinition;
 import org.protempa.HighLevelAbstractionDefinition;
@@ -40,7 +41,6 @@ import edu.emory.cci.aiw.cvrg.eureka.common.entity.SystemProposition.SystemType;
 import edu.emory.cci.aiw.cvrg.eureka.services.finder.PropositionFindException;
 import edu.emory.cci.aiw.cvrg.eureka.services.finder.SystemPropositionFinder;
 import edu.emory.cci.aiw.cvrg.eureka.services.packaging.PropositionDefinitionPackagerVisitor;
-import org.protempa.CompoundLowLevelAbstractionDefinition;
 
 /**
  * Provides common utility functions operating on {@link Proposition}s.
@@ -62,7 +62,7 @@ public final class PropositionUtil {
 	private static class PropositionDefinitionTypeVisitor implements
 			PropositionDefinitionVisitor {
 
-		SystemType systemType;
+		private SystemType systemType;
 
 		@Override
 		public void visit(Collection<? extends PropositionDefinition> arg0) {

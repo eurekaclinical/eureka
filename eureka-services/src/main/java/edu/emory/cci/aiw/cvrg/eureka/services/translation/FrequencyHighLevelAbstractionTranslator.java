@@ -105,8 +105,8 @@ public final class FrequencyHighLevelAbstractionTranslator implements
 	private final class IntermediateAbstractionGenerator implements
 			PropositionEntityVisitor {
 
-		final Frequency element;
-		Proposition intermediateAbstraction;
+		private final Frequency element;
+		private Proposition intermediateAbstraction;
 
 		public IntermediateAbstractionGenerator(Frequency inElement) {
 			element = inElement;

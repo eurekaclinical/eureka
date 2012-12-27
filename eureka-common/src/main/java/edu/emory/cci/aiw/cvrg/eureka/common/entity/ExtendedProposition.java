@@ -64,7 +64,7 @@ public class ExtendedProposition {
 	@OneToOne(cascade = CascadeType.ALL)
 	private Proposition proposition;
 
-	String value;
+	private String value;
 
 	public Long getId() {
 		return Id;

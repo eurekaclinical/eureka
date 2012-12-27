@@ -37,7 +37,7 @@ public class RelationOperator {
 		generator = "RELATION_OP_SEQ_GENERATOR")
 	private Long id;
 
-	String name;
+	private String name;
 	private String description;
 
 	public Long getId() {

@@ -51,7 +51,7 @@ public class SliceAbstraction extends Proposition {
 	private TimeUnit withinAtMostUnits;
 
 	@OneToOne(cascade = CascadeType.ALL)
-	ExtendedProposition extendedProposition;
+	private ExtendedProposition extendedProposition;
 
 	public Integer getMinIndex() {
 		return minIndex;

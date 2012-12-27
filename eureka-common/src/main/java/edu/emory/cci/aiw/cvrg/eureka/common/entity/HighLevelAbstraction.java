@@ -19,6 +19,8 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.common.entity;
 
+import java.util.List;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
@@ -26,7 +28,6 @@ import javax.persistence.JoinTable;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
-import java.util.List;
 
 /**
  * Contains attributes which describe a Protempa high level abstraction.
@@ -38,7 +39,7 @@ import java.util.List;
 public class HighLevelAbstraction extends Proposition {
 
 	@OneToOne(cascade = CascadeType.ALL)
-	ExtendedProposition primaryProposition;
+	private ExtendedProposition primaryProposition;
 
 	@OneToMany(cascade = CascadeType.ALL)
 	@JoinColumn(name = "highLevelAbstractionId")
