@@ -88,10 +88,12 @@ public class ConfigListener extends GuiceServletContextListener {
 		this.persistService = injector.getInstance(PersistService.class);
 		this.persistService.start();
 		
-		DatabasePopulator populator = new DatabasePopulator(injector);
+		DatabasePopulator populator = injector.getInstance(DatabasePopulator
+				.class);
 		populator.doPopulateIfNeeded();
 		
-		DatabaseMigrator migrator = new DatabaseMigrator(injector);
+		DatabaseMigrator migrator = injector.getInstance(DatabaseMigrator
+				.class);
 		migrator.doMigrateIfNeeded();
 
 		try {

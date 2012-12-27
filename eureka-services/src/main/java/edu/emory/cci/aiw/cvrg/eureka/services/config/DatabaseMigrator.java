@@ -19,18 +19,16 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.services.config;
 
-import com.google.inject.Injector;
+import com.google.inject.Inject;
 
 /**
  *
  * @author Andrew Post
  */
 class DatabaseMigrator {
-	private final Injector injector;
 
-	DatabaseMigrator(Injector injector) {
-		assert injector != null : "injector cannot be null";
-		this.injector = injector;
+	@Inject
+	DatabaseMigrator() {
 	}
 
 	void doMigrateIfNeeded() {

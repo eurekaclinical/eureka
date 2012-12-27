@@ -19,10 +19,18 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.services.config;
 
-import com.google.inject.Injector;
-import com.google.inject.Provider;
+import java.security.NoSuchAlgorithmException;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
+
+import javax.inject.Inject;
+
+import org.protempa.proposition.value.AbsoluteTimeUnit;
+
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.RelationOperator;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.Role;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.TimeUnit;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.User;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.ValueComparator;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.ValueDefinitionMatchOperator;
@@ -33,13 +41,6 @@ import edu.emory.cci.aiw.cvrg.eureka.services.dao.UserDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.ValueComparatorDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.ValueDefinitionMatchOperatorDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.util.StringUtil;
-import org.protempa.proposition.value.AbsoluteTimeUnit;
-
-import javax.persistence.EntityManager;
-import java.security.NoSuchAlgorithmException;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
 
 /**
  * Performs first-time populating of Eureka's database tables. It also tries to
@@ -48,12 +49,26 @@ import java.util.Set;
  * @author Andrew Post
  */
 class DatabasePopulator {
+	
+	private final TimeUnitDao timeUnitDao;
+	private final RoleDao roleDao;
+	private final UserDao userDao;
+	private final ValueComparatorDao valueComparatorDao;
+	private final RelationOperatorDao relationOperatorDao;
+	private final ValueDefinitionMatchOperatorDao 
+			valueDefinitionMatchOperatorDao;
 
-	private final Injector injector;
-
-	DatabasePopulator(Injector injector) {
-		assert injector != null : "injector cannot be null";
-		this.injector = injector;
+	@Inject
+	DatabasePopulator(TimeUnitDao inTimeUnitDao, RoleDao inRoleDao, 
+			UserDao inUserDao, ValueComparatorDao inValueComparatorDao, 
+			RelationOperatorDao inRelationOperatorDao,
+			ValueDefinitionMatchOperatorDao inMatchOperatorDao) {
+		this.timeUnitDao = inTimeUnitDao;
+		this.roleDao = inRoleDao;
+		this.userDao = inUserDao;
+		this.valueComparatorDao = inValueComparatorDao;
+		this.relationOperatorDao = inRelationOperatorDao;
+		this.valueDefinitionMatchOperatorDao = inMatchOperatorDao;
 	}
 
 	void doPopulateIfNeeded() {
@@ -65,49 +80,28 @@ class DatabasePopulator {
 	}
 
 	private void populateTimeUnitsIfNeeded() {
-		Provider<EntityManager> emProvider =
-				this.injector.getProvider(EntityManager.class);
-		EntityManager entityManager = emProvider.get();
-
-		entityManager.getTransaction().begin();
-		TimeUnitDao timeUnitDao = this.injector.getInstance(TimeUnitDao.class);
 		Set<String> namesSet = new HashSet<String>();
-		for (edu.emory.cci.aiw.cvrg.eureka.common.entity.TimeUnit timeUnit :
-				timeUnitDao.getAll()) {
+		for (TimeUnit timeUnit : this.timeUnitDao.getAll()) {
 			namesSet.add(timeUnit.getName());
 		}
-		createTimeUnitIfNeeded(namesSet,
-				timeUnitDao,
-				AbsoluteTimeUnit.DAY.getName(),
-				AbsoluteTimeUnit.DAY.getPluralName());
-		createTimeUnitIfNeeded(namesSet,
-				timeUnitDao,
-				AbsoluteTimeUnit.HOUR.getName(),
+		this.createTimeUnitIfNeeded(
+				namesSet, AbsoluteTimeUnit.DAY.getName(), AbsoluteTimeUnit.DAY
+				.getPluralName());
+		this.createTimeUnitIfNeeded(
+				namesSet, AbsoluteTimeUnit.HOUR.getName(), 
 				AbsoluteTimeUnit.HOUR.getPluralName());
-		createTimeUnitIfNeeded(namesSet,
-				timeUnitDao,
-				AbsoluteTimeUnit.MINUTE.getName(),
+		this.createTimeUnitIfNeeded(
+				namesSet, AbsoluteTimeUnit.MINUTE.getName(), 
 				AbsoluteTimeUnit.MINUTE.getPluralName());
-
-		entityManager.getTransaction().commit();
 	}
 
 	private void populateDefaultRolesAndUserIfNeeded() {
-		Provider<EntityManager> emProvider =
-				this.injector.getProvider(EntityManager.class);
-		EntityManager entityManager = emProvider.get();
-
-		entityManager.getTransaction().begin();
-
-		RoleDao roleDao = this.injector.getInstance(RoleDao.class);
-		Role researcherRole = createOrGetRole(roleDao, "researcher");
-		Role adminRole = createOrGetRole(roleDao, "admin");
-		Role superuserRole = createOrGetRole(roleDao, "superuser");
-
-		UserDao userDao = this.injector.getInstance(UserDao.class);
+		Role researcherRole = this.createOrGetRole("researcher");
+		Role adminRole = this.createOrGetRole("admin");
+		Role superuserRole = this.createOrGetRole("superuser");
 
 		String superuserEmail = "super.user@emory.edu";
-		User superuser = userDao.getByName(superuserEmail);
+		User superuser = this.userDao.getByName(superuserEmail);
 		if (superuser == null) {
 			superuser = new User();
 			superuser.setActive(true);
@@ -128,114 +122,103 @@ class DatabasePopulator {
 							new Role[]{researcherRole, adminRole, superuserRole}));
 			userDao.create(superuser);
 		}
-
-		entityManager.getTransaction().commit();
 	}
 
-	private static void createTimeUnitIfNeeded(Set<String> namesSet,
-											   TimeUnitDao timeUnitDao, String name, String desc) {
+	private void createTimeUnitIfNeeded(Set<String> namesSet, String name, 
+			String desc) {
 		if (!namesSet.contains(name)) {
-			edu.emory.cci.aiw.cvrg.eureka.common.entity.TimeUnit timeUnit =
-					new edu.emory.cci.aiw.cvrg.eureka.common.entity.TimeUnit();
+			TimeUnit timeUnit =	new TimeUnit();
 			timeUnit.setName(name);
 			timeUnit.setDescription(desc);
-			timeUnitDao.create(timeUnit);
+			this.timeUnitDao.create(timeUnit);
 		}
 	}
 
 	private void populateValueComparatorsIfNeeded() {
-		ValueComparatorDao vcDao = this.injector.getInstance
-				(ValueComparatorDao.class);
 		Set<String> namesSet = new HashSet<String>();
-		for (ValueComparator vc : vcDao.getAll()) {
+		for (ValueComparator vc : this.valueComparatorDao.getAll()) {
 			namesSet.add(vc.getName());
 		}
-		createValueComparatorIfNeeded(namesSet, vcDao, "=", "equals");
-		createValueComparatorIfNeeded(namesSet, vcDao, "not=", "not equals");
-		createValueComparatorIfNeeded(namesSet, vcDao, ">", "greater than");
-		createValueComparatorIfNeeded(namesSet, vcDao, ">=",
+		this.createValueComparatorIfNeeded(namesSet, "=", "equals");
+		this.createValueComparatorIfNeeded(namesSet, "not=", "not equals");
+		this.createValueComparatorIfNeeded(namesSet, ">", "greater than");
+		this.createValueComparatorIfNeeded(namesSet, ">=",
 				"greater than or equal to");
-		createValueComparatorIfNeeded(namesSet, vcDao, "<", "less than");
-		createValueComparatorIfNeeded(namesSet, vcDao, "<=",
+		this.createValueComparatorIfNeeded(namesSet, "<", "less than");
+		this.createValueComparatorIfNeeded(namesSet, "<=",
 				"less than or equal to");
 
-		ValueComparator eq = vcDao.getByName("=");
-		ValueComparator ne = vcDao.getByName("not=");
+		ValueComparator eq = this.valueComparatorDao.getByName("=");
+		ValueComparator ne = this.valueComparatorDao.getByName("not=");
 		eq.setComplement(ne);
 		ne.setComplement(eq);
-		vcDao.update(eq);
-		vcDao.update(ne);
+		this.valueComparatorDao.update(eq);
+		this.valueComparatorDao.update(ne);
 
-		ValueComparator gt = vcDao.getByName(">");
-		ValueComparator lte = vcDao.getByName("<=");
+		ValueComparator gt = this.valueComparatorDao.getByName(">");
+		ValueComparator lte = this.valueComparatorDao.getByName("<=");
 		gt.setComplement(lte);
 		lte.setComplement(gt);
-		vcDao.update(gt);
-		vcDao.update(lte);
+		this.valueComparatorDao.update(gt);
+		this.valueComparatorDao.update(lte);
 
-		ValueComparator lt = vcDao.getByName("<");
-		ValueComparator gte = vcDao.getByName(">=");
+		ValueComparator lt = this.valueComparatorDao.getByName("<");
+		ValueComparator gte = this.valueComparatorDao.getByName(">=");
 		lt.setComplement(gte);
 		gte.setComplement(lt);
-		vcDao.update(lt);
-		vcDao.update(gte);
+		this.valueComparatorDao.update(lt);
+		this.valueComparatorDao.update(gte);
 	}
 
-	private static void createValueComparatorIfNeeded(Set<String> namesSet,
-													  ValueComparatorDao
-															  valueComparatorDao, String name, String desc) {
+	private void createValueComparatorIfNeeded(Set<String> namesSet, 
+			String name, String desc) {
 		if (!namesSet.contains(name)) {
 			ValueComparator valueComparator = new ValueComparator();
 			valueComparator.setName(name);
 			valueComparator.setDescription(desc);
-			valueComparatorDao.create(valueComparator);
+			this.valueComparatorDao.create(valueComparator);
 		}
 	}
 
-	private static Role createOrGetRole(RoleDao roleDao, String name) {
-		Role role = roleDao.getRoleByName(name);
+	private Role createOrGetRole(String name) {
+		Role role = this.roleDao.getRoleByName(name);
 		if (role == null) {
 			role = new Role();
 			role.setName(name);
-			roleDao.create(role);
+			this.roleDao.create(role);
 		}
 		return role;
 	}
 
 	private void populateRelationOperatorsIfNeeded() {
-		RelationOperatorDao relOpDao =
-				this.injector.getInstance(RelationOperatorDao.class);
-		createRelationOperatorIfNeeded(relOpDao, "before", "before");
-		createRelationOperatorIfNeeded(relOpDao, "after", "after");
+		this.createRelationOperatorIfNeeded("before", "before");
+		this.createRelationOperatorIfNeeded("after", "after");
 	}
 
-	private static void createRelationOperatorIfNeeded(
-			RelationOperatorDao relOpDao, String name, String desc) {
-		RelationOperator relOp = relOpDao.getByName(name);
+	private void createRelationOperatorIfNeeded(String name, String desc) {
+		RelationOperator relOp = this.relationOperatorDao.getByName(name);
 		if (relOp == null) {
 			relOp = new RelationOperator();
 			relOp.setName(name);
 			relOp.setDescription(desc);
-			relOpDao.create(relOp);
+			this.relationOperatorDao.create(relOp);
 		}
 	}
 
 	private void populateValueDefinitionMatchOperatorsIfNeeded() {
-		ValueDefinitionMatchOperatorDao dao = this.injector.getInstance
-				(ValueDefinitionMatchOperatorDao.class);
-		createValueDefinitionMatchOperatorIfNeeded(dao, "any", "any");
-		createValueDefinitionMatchOperatorIfNeeded(dao, "all", "all");
+		createValueDefinitionMatchOperatorIfNeeded("any", "any");
+		createValueDefinitionMatchOperatorIfNeeded("all", "all");
 	}
 
-	private static void createValueDefinitionMatchOperatorIfNeeded
-			(ValueDefinitionMatchOperatorDao valDefMatchOpDao, String name,
-			 String desc) {
-		ValueDefinitionMatchOperator op = valDefMatchOpDao.getByName(name);
+	private void createValueDefinitionMatchOperatorIfNeeded(String name, 
+			String desc) {
+		ValueDefinitionMatchOperator op = this
+				.valueDefinitionMatchOperatorDao.getByName(name);
 		if (op == null) {
 			op = new ValueDefinitionMatchOperator();
 			op.setName(name);
 			op.setDescription(desc);
-			valDefMatchOpDao.create(op);
+			this.valueDefinitionMatchOperatorDao.create(op);
 		}
 	}
 }
