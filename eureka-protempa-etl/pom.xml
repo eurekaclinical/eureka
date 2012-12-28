@@ -6,6 +6,12 @@
 	<artifactId>eureka-protempa-etl</artifactId>
 	<packaging>war</packaging>
 	<name>Eureka Protempa ETL</name>
+	<description>Eureka Protempa ETL is the backend data processing layer of
+		Eureka! Clinical Analytics. It performs clinical phenotyping using the
+		Protempa software framework. It currently loads data and found
+		phenotypes into an i2b2 project, though ultimately it will support 
+		other export formats.
+	</description>
 
 	<parent>
 		<groupId>edu.emory.cci.aiw.cvrg</groupId>

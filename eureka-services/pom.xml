@@ -6,7 +6,8 @@
 	<artifactId>eureka-services</artifactId>
 	<packaging>war</packaging>
 	<name>Eureka Services</name>
-	<description>Eureka Project Services Layer</description>
+	<description>Eureka Services is the middle services
+		layer of the Eureka! Clinical Analytics application.</description>
 
 	<parent>
 		<groupId>edu.emory.cci.aiw.cvrg</groupId>

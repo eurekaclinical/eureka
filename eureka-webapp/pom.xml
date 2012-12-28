@@ -6,6 +6,9 @@
 	<artifactId>eureka-webapp</artifactId>
 	<packaging>war</packaging>
 	<name>Eureka WebApp</name>
+	<description>Eureka WebApp is the implementation of Eureka! Clinical 
+		Analytics' web user interface.
+	</description>
 
 	<parent>
 		<groupId>edu.emory.cci.aiw.cvrg</groupId>
