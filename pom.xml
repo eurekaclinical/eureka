@@ -45,7 +45,7 @@
 		<commons-lang-version>2.6</commons-lang-version>
 		<eureka-version>1.6-SNAPSHOT</eureka-version>
 		<protempa-version>2.0.3-SNAPSHOT</protempa-version>
-		<aiw-i2b2-etl-version>1.0.2</aiw-i2b2-etl-version>
+		<aiw-i2b2-etl-version>1.0.3-SNAPSHOT</aiw-i2b2-etl-version>
 		<oracle-version>11.2.0.3</oracle-version>
 		<freemarker-version>2.3.9</freemarker-version>
 		<jpamodelgen-version>1.2.0.Final</jpamodelgen-version>
@@ -55,7 +55,8 @@
 
 		<!-- properties for site creation -->
 		<javautil-version>2.0.6-SNAPSHOT</javautil-version>
-		<jaas-login-module-version>1.0.1</jaas-login-module-version>
+		<jaas-login-module-version>1.0.2-SNAPSHOT</jaas-login-module-version>
+		<jaas-login-module-repo>aiw-snapshots</jaas-login-module-repo>
 	</properties>
 
 	<scm>
@@ -75,12 +76,12 @@
 			<url>scp://shell.sourceforge.net/home/project-web/aiw/htdocs/dev/eureka-${project.version}</url>
 		</site>
 		<repository>
-			<id>aiw.repo</id>
+			<id>aiw</id>
 			<name>AIW Repo</name>
 			<url>http://maven.cci.emory.edu/nexus/content/repositories/aiw/</url>
 		</repository>
 		<snapshotRepository>
-			<id>aiw.snapshots.repo</id>
+			<id>aiw-snapshots</id>
 			<name>AIW Snapshots Repo</name>
 			<url>http://maven.cci.emory.edu/nexus/content/repositories/aiw-snapshots/</url>
 		</snapshotRepository>
@@ -667,7 +668,7 @@
 			<url>http://maven.cci.emory.edu/nexus/content/repositories/public</url>
 		</repository>
 		<repository>
-			<id>aiw.repo</id>
+			<id>aiw</id>
 			<name>AIW Release Repository</name>
 			<url>http://maven.cci.emory.edu/nexus/content/repositories/aiw/</url>
 		</repository>

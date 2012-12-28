@@ -20,15 +20,16 @@
 		</p>
 
 		<p>Eureka! Clinical Analytics is developed and maintained by the
-		<a href="http://cci.emory.edu">Emory Center for Comprehensive Informatics</a>.</p>
+		<a href="http://cci.emory.edu">Emory Center for Comprehensive Informatics</a>.
+		</p>
 
 		<h2>Source Code</h2>
 		<p>Source code for the current release (version ${currentStableVersion}) 
 			is available from our 
 			<a href="http://aiw.sourceforge.net">Sourceforge website</a>. You 
 			can also download the 
-			<a href="http://maven.cci.emory.edu:8081/nexus/service/local/artifact/maven/redirect?r=aiw-snapshots&amp;g=edu.emory.cci.aiw.cvrg&amp;a=eureka&amp;v=LATEST&amp;c=src&amp;e=zip">latest snapshot</a> from our 
-			<a href="http://maven.cci.emory.edu:8081/nexus">Maven repository</a>.
+			<a href="http://maven.cci.emory.edu/nexus/service/local/artifact/maven/redirect?r=aiw-snapshots&amp;g=edu.emory.cci.aiw.cvrg&amp;a=eureka&amp;v=LATEST&amp;c=src&amp;e=zip">latest snapshot</a> from our 
+			<a href="http://maven.cci.emory.edu/nexus">Maven repository</a>.
 		</p>
 
 		<h2>Related Packages</h2>
@@ -52,64 +53,6 @@
 			<li>
 				<a href="../aiw-i2b2-etl-${aiw-i2b2-etl-version}">AIW i2b2 ETL: A Query Results Handler for
 					Protempa for Loading Data and Abstractions into i2b2</a>
-			</li>
-		</ul>
-
-		<p>Links to binaries are below:</p>
-
-		<ul>
-			<li>JavaUtil ${javautil-version} binaries in 
-				<a
-					href="http://maven.cci.emory.edu:8081/nexus/content/repositories/aiw/org/arp/javautil/${javautil-version}/javautil-${javautil-version}-bin.zip">zip file format</a> and 
-				<a
-					href="http://maven.cci.emory.edu:8081/nexus/content/repositories/aiw/org/arp/javautil/${javautil-version}/javautil-${javautil-version}-bin.tar.gz">tar.gz format</a>
-			</li>
-			<li>JAAS Login Module ${jaas-login-module-version} binaries in 
-				<a
-					href="http://maven.cci.emory.edu:8081/nexus/content/repositories/aiw/edu/emory/cci/aiw/cvrg/eureka/jaas-login-module/${jaas-login-module-version}/jaas-login-module-${jaas-login-module-version}-bin.zip">zip file format</a> and 
-				<a
-					href="http://maven.cci.emory.edu:8081/nexus/content/repositories/aiw/edu/emory/cci/aiw/cvrg/eureka/jaas-login-module/${jaas-login-module-version}/jaas-login-module-${jaas-login-module-version}-bin.tar.gz">tar.gz format</a>
-			</li>
-			<li>Protempa ${protempa-version} binaries in 
-				<a
-					href="http://maven.cci.emory.edu:8081/nexus/content/repositories/aiw/org/protempa/protempa-package/${protempa-version}/protempa-package-${protempa-version}-bin.zip">zip file format</a> and 
-				<a
-					href="http://maven.cci.emory.edu:8081/nexus/content/repositories/aiw/org/protempa/protempa-package/${protempa-version}/protempa-package-${protempa-version}-bin.tar.gz">tar.gz format</a>
-			</li>
-			<li>AIW i2b2 ETL ${aiw-i2b2-etl-version} binaries in 
-				<a
-					href="http://maven.cci.emory.edu:8081/nexus/content/repositories/aiw/edu/emory/cci/aiw-i2b2-etl/${aiw-i2b2-etl-version}/aiw-i2b2-etl-${aiw-i2b2-etl-version}-bin.zip">zip file format</a> and 
-				<a
-					href="http://maven.cci.emory.edu:8081/nexus/content/repositories/aiw/edu/emory/cci/aiw-i2b2-etl/${aiw-i2b2-etl-version}/aiw-i2b2-etl-${aiw-i2b2-etl-version}-bin.tar.gz">tar.gz format</a>
-			</li>
-		</ul> 
-
-		<p>Links to source code are below:</p>
-
-		<ul>
-			<li>JavaUtil ${javautil-version} source code in 
-				<a
-					href="http://maven.cci.emory.edu:8081/nexus/content/repositories/aiw/org/arp/javautil/${javautil-version}/javautil-${javautil-version}-src.zip">zip file format</a> and 
-				<a
-					href="http://maven.cci.emory.edu:8081/nexus/content/repositories/aiw/org/arp/javautil/${javautil-version}/javautil-${javautil-version}-src.tar.gz">tar.gz format</a>
-			</li>
-			<li>JAAS Login Module ${jaas-login-module-version} binaries in 
-				<a
-					href="http://maven.cci.emory.edu:8081/nexus/content/repositories/aiw/edu/emory/cci/aiw/cvrg/eureka/jaas-login-module/${jaas-login-module-version}/jaas-login-module-${jaas-login-module-version}-src.zip">zip file format</a> and 
-				<a
-					href="http://maven.cci.emory.edu:8081/nexus/content/repositories/aiw/edu/emory/cci/aiw/cvrg/eureka/jaas-login-module/${jaas-login-module-version}/jaas-login-module-${jaas-login-module-version}-src.tar.gz">tar.gz format</a>
-			</li>
-			<li>Protempa ${protempa-version} source code in 
-				<a
-					href="http://maven.cci.emory.edu:8081/nexus/content/repositories/aiw/org/protempa/protempa/${protempa-version}/protempa-${protempa-version}-src.zip">zip file format</a> and 
-				<a
-					href="http://maven.cci.emory.edu:8081/nexus/content/repositories/aiw/org/protempa/protempa/${protempa-version}/protempa-${protempa-version}-src.tar.gz">tar.gz format</a>
-			</li>
-			<li>AIW i2b2 ETL ${aiw-i2b2-etl-version} source code in 
-				<a
-					href="http://maven.cci.emory.edu:8081/nexus/content/repositories/aiw/edu/emory/cci/aiw-i2b2-etl/${aiw-i2b2-etl-version}/aiw-i2b2-etl-${aiw-i2b2-etl-version}-src.zip">zip file format</a> and 
-				<a
-					href="http://maven.cci.emory.edu:8081/nexus/content/repositories/aiw/edu/emory/cci/aiw-i2b2-etl/${aiw-i2b2-etl-version}/aiw-i2b2-etl-${aiw-i2b2-etl-version}-src.tar.gz">tar.gz format</a>
 			</li>
 		</ul>
 	</body>
