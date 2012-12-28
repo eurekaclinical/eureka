@@ -18,7 +18,7 @@
 	
     <bannerRight>
         <name>Emory University Center for Comprehensive Informatics</name>
-        <src>../../images/cci-logo.gif</src>
+        <src>../../../images/cci-logo.gif</src>
         <href>http://cci.emory.edu</href>
     </bannerRight>
 
