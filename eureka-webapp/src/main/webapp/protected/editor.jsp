@@ -568,10 +568,117 @@
 													</table>
 													<table id="valuethresholddefinition" data-definition-container="true">
 														<tr>
-															<td>
-																<div>
-																	<p>Value Threshold Definition</p>
+															<td colspan="2">
+																Value name:
+																<input type="text" name="thresholdValueName"/>
+															</td>
+														</tr>
+														<tr>
+															<td style="text-align: left">
+																<div class="action_link">
+																	<a href="#" class="create"></a>
+																	<a id="add-threshold" href="#" style="text-decoration:none">Add threshold</a>
 																</div>
+															</td>
+															<td style="text-align: left">
+																Value thresholds:
+																<select name="thresholdType">
+																	<option value="all">All</option>
+																	<option value="any">Any</option>
+																</select>
+															</td>
+														</tr>
+														<tr>
+															<td colspan="2">
+																<table>
+																	<c:choose>
+																	<c:when test="${not empty proposition and propositionType == 'valuethreshold' and not empty proposition.thresholds}">
+																	<c:forEach var="threshold" items="${proposition.thresholds}" varStatus="status">
+																	
+																	</c:forEach>
+																	</c:when>
+																	<c:otherwise>
+																	<tr>
+																		<td>
+																			<div id="threshold1" class="tree-drop-single jstree-drop">
+																				<div class="label-info" ><center>Drop Here</center></div>
+																				<ul data-type="threshold1" data-drop-type="single" class="sortable" style="width: 100% height: 100%">
+																				</ul>
+																			</div>
+																		</td>
+																		<td>
+																			<table>
+																				<tr>
+																					<td>
+																						Lower threshold
+																						<select name="threshold1LowerComp">
+																							<option value="ge">&gt;=</option>
+																							<option value="g">&gt;</option>
+																							<option value="eq">=</option>
+																							<option value="l">&lt;</option>
+																							<option value="le">&lt;=</option>
+																						</select>
+																					</td>
+																					<td>
+																						<input type="text" name="threshold1LowerVal"/>
+																					</td>
+																				</tr>
+																				<tr>
+																					<td>
+																						Upper threshold
+																						<select name="threshold1UpperComp">
+																							<option value="ge">&gt;=</option>
+																							<option value="g">&gt;</option>
+																							<option value="eq">=</option>
+																							<option value="l">&lt;</option>
+																							<option value="le">&lt;=</option>
+																						</select>
+																					</td>
+																					<td>
+																						<input type="text" name="threshold1UpperVal"/>
+																					</td>
+																				</tr>
+																			</table>
+																		</td>
+																		<td>
+																			<input type="checkbox" value="true" name="threshold1DataElementTemporalRelationCB"/>
+																			<select name="threshold1DataElementTemporalRelation">
+																				<c:forEach var="op" items="${operators}">
+																				<option value="${op.id}" <c:if test="${op.id == relation.relationOperator}">selected="selected"</c:if>>${op.description}</option>
+																				</c:forEach>
+																			</select>
+																			by
+																		</td>
+																		<td>
+																			<table>
+																				<tr>
+																					<td>
+																						at least
+																						<input type="text" class="distanceField" name="threshold1WithinAtLeast" value=""/>
+																						<select name="threshold1WithinAtLeastUnits">
+																								<c:forEach var="unit" items="${timeUnits}">
+																									<option value="${unit.id}">${unit.description}</option>
+																								</c:forEach>
+																						</select>
+																						<br />
+																						at most
+																						<input type="text" class="distanceField" name="threshold1WithinAtMost" value=""/>
+																						<select name="threshold1WithinAtMostUnits">
+																								<c:forEach var="unit" items="${timeUnits}">
+																									<option value="${unit.id}">${unit.description}</option>
+																								</c:forEach>
+																						</select>
+																					</td>
+																					<td>
+																						of each other
+																					</td>
+																				</tr>
+																			</table>
+																		</td>
+																	</tr>
+																	</c:otherwise>
+																	</c:choose>
+																</table>
 															</td>
 														</tr>
 													</table>
