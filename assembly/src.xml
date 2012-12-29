@@ -18,6 +18,9 @@
 				<exclude>${project.basedir}/*.iml</exclude>
 				<exclude>**/.idea</exclude>
 				<exclude>**/*.iml</exclude>
+				<exclude>**/nbactions.xml</exclude>
+				<exclude>**/nb-configuration.xml</exclude>
+				<exclude>**/.DS_Store</exclude>
 			</excludes>
 		</fileSet>
 	</fileSets>
