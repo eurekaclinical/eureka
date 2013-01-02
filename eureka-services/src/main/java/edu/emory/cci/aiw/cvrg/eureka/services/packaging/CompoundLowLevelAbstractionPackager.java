@@ -22,8 +22,8 @@ package edu.emory.cci.aiw.cvrg.eureka.services.packaging;
 import org.protempa.CompoundLowLevelAbstractionDefinition;
 import org.protempa.MinMaxGapFunction;
 
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.CompoundLowLevelAbstraction;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.LowLevelAbstraction;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.CompoundValueThreshold;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.ValueThresholdEntity;
 
 import static edu.emory.cci.aiw.cvrg.eureka.services.packaging.PropositionDefinitionPackagerUtil.unit;
 
@@ -31,22 +31,22 @@ import static edu.emory.cci.aiw.cvrg.eureka.services.packaging.PropositionDefini
  *
  */
 public class CompoundLowLevelAbstractionPackager implements
-		PropositionDefinitionPackager<CompoundLowLevelAbstraction,
+		PropositionDefinitionPackager<CompoundValueThreshold,
 				CompoundLowLevelAbstractionDefinition> {
 
 	@Override
 	public CompoundLowLevelAbstractionDefinition pack(
-			CompoundLowLevelAbstraction proposition) {
+			CompoundValueThreshold proposition) {
 		CompoundLowLevelAbstractionDefinition result = new
 				CompoundLowLevelAbstractionDefinition(proposition.getKey());
 
 		result.setMinimumNumberOfValues(proposition.getMinimumNumberOfValues());
-		if (proposition.getValueDefinitionMatchOperator().getName()
+		if (proposition.getThresholdsOperator().getName()
 				.equalsIgnoreCase("any")) {
 				result.setValueDefinitionMatchOperator
 						(CompoundLowLevelAbstractionDefinition
 								.ValueDefinitionMatchOperator.ANY);
-		} else if (proposition.getValueDefinitionMatchOperator().getName()
+		} else if (proposition.getThresholdsOperator().getName()
 				.equalsIgnoreCase("all")) {
 				result.setValueDefinitionMatchOperator(CompoundLowLevelAbstractionDefinition.ValueDefinitionMatchOperator.ALL);
 		} else {
@@ -54,7 +54,7 @@ public class CompoundLowLevelAbstractionPackager implements
 						" can only be ANY or ALL");
 		}
 
-		for (LowLevelAbstraction lla : proposition.getAbstractedFrom()) {
+		for (ValueThresholdEntity lla : proposition.getAbstractedFrom()) {
 			result.addValueClassification(proposition
 					.getUserValueDefinitionName(), lla.getKey(),
 					lla.getUserConstraint().getName());

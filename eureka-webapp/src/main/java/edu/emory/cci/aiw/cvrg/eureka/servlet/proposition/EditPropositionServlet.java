@@ -28,22 +28,17 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.DataElement;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ServicesClient;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.RelationOperator;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.TimeUnit;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.User;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.ValueComparator;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.ThresholdsOperator;
+import java.util.ArrayList;
 
 public class EditPropositionServlet extends HttpServlet {
-
-	private static final Logger LOGGER = LoggerFactory
-			.getLogger(EditorHomeServlet.class);
-
-
-
 
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp)
@@ -66,9 +61,35 @@ public class EditPropositionServlet extends HttpServlet {
 		List<TimeUnit> timeUnits = servicesClient.getTimeUnits();
 		List<RelationOperator> operators = servicesClient
 				.getRelationOperators();
+		List<ThresholdsOperator> thresholdOps = 
+				servicesClient.getThresholdsOperators();
+		
+		List<ValueComparator> valueComparators = 
+				servicesClient.getValueComparatorsAsc();
+		List<ValueComparator> valueCompsUpper = new ArrayList<ValueComparator>();
+		List<ValueComparator> valueCompsLower = new ArrayList<ValueComparator>();
+		for (ValueComparator vc : valueComparators) {
+			switch (vc.getThreshold()) {
+				case BOTH:
+					valueCompsUpper.add(vc);
+					valueCompsLower.add(vc);
+					break;
+				case UPPER_ONLY:
+					valueCompsUpper.add(vc);
+					break;
+				case LOWER_ONLY:
+					valueCompsLower.add(vc);
+					break;
+				default:
+					throw new AssertionError("Invalid side: " + vc.getThreshold());
+			}
+		}
 
 		req.setAttribute("timeUnits", timeUnits);
 		req.setAttribute("operators", operators);
+		req.setAttribute("thresholdsOperators", thresholdOps);
+		req.setAttribute("valueComparatorsUpper", valueCompsUpper);
+		req.setAttribute("valueComparatorsLower", valueCompsLower);
 
 		if ((propKey != null) && (!propKey.equals(""))) {
 			DataElement dataElement = servicesClient.getUserElement

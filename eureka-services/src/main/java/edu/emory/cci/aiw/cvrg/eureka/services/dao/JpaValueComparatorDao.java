@@ -24,6 +24,7 @@ import com.google.inject.Provider;
 import edu.emory.cci.aiw.cvrg.eureka.common.dao.GenericDao;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.ValueComparator;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.ValueComparator_;
+import java.util.List;
 
 import javax.persistence.EntityManager;
 
@@ -37,6 +38,13 @@ public class JpaValueComparatorDao extends GenericDao<ValueComparator, Long> imp
 
 	@Override
 	public ValueComparator getByName(String inName) {
-		return this.getUniqueByAttribute(ValueComparator_.name, inName);
+		return getUniqueByAttribute(ValueComparator_.name, inName);
 	}
+
+	@Override
+	public List<ValueComparator> getAllAsc() {
+		return getListAsc(ValueComparator_.rank);
+	}
+	
+	
 }

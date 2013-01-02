@@ -36,6 +36,7 @@ import org.slf4j.LoggerFactory;
 
 import com.google.inject.Provider;
 import com.google.inject.persist.Transactional;
+import javax.persistence.criteria.Predicate;
 
 /**
  * Implements the {@link Dao} interface in a generic way.
@@ -44,6 +45,15 @@ import com.google.inject.persist.Transactional;
  * @author hrathod
  */
 public class GenericDao<T, PK> implements Dao<T, PK> {
+	
+	public enum SqlComparator {
+		LESS_THAN_OR_EQUAL_TO,
+		LESS_THAN,
+		EQUAL_TO,
+		NOT_EQUAL_TO,
+		GREATER_THAN,
+		GREATER_THAN_OR_EQUAL_TO
+	}
 
 	/**
 	 * The class level logger.
@@ -124,6 +134,15 @@ public class GenericDao<T, PK> implements Dao<T, PK> {
 		TypedQuery<T> typedQuery = entityManager.createQuery(criteriaQuery);
 		return typedQuery.getResultList();
 	}
+	
+	protected List<T> getListAsc(SingularAttribute<T, ?> attribute) {
+		EntityManager entityManager = this.getEntityManager();
+		CriteriaBuilder builder = entityManager.getCriteriaBuilder();
+		CriteriaQuery<T> criteriaQuery = builder.createQuery(this.entityClass);
+		Root<T> root = criteriaQuery.from(this.entityClass);
+		criteriaQuery.orderBy(builder.asc(root.get(attribute)));
+		return entityManager.createQuery(criteriaQuery).getResultList();
+	}
 
 	/**
 	 * Provides a convenient way for subclasses to implement simple queries
@@ -148,10 +167,19 @@ public class GenericDao<T, PK> implements Dao<T, PK> {
 		}
 		return result;
 	}
-
+	
 	protected <Y> List<T> getListByAttribute(SingularAttribute<T,
 		Y> attribute, Y value) {
 		TypedQuery<T> query = this.createTypedQuery(attribute, value);
+		return query.getResultList();
+	}
+	
+	protected <Y extends Number> List<T> getListByAttribute(
+			SingularAttribute<T,Y> attribute, 
+			SqlComparator comparator, 
+			Y value) {
+		TypedQuery<T> query = this.createTypedQuery(
+				attribute, comparator, value);
 		return query.getResultList();
 	}
 
@@ -170,6 +198,42 @@ public class GenericDao<T, PK> implements Dao<T, PK> {
 		CriteriaQuery<T> criteriaQuery = builder.createQuery(this.entityClass);
 		Root<T> root = criteriaQuery.from(this.entityClass);
 		Path<Y> path = root.get(attribute);
+		return entityManager.createQuery(criteriaQuery.where(
+				builder.equal(path, value)));
+	}
+	
+	private <Y extends Number> TypedQuery<T> createTypedQuery(
+			SingularAttribute<T, Y> attribute,
+			SqlComparator comparator, Y value) {
+		EntityManager entityManager = this.getEntityManager();
+		CriteriaBuilder builder = entityManager.getCriteriaBuilder();
+		CriteriaQuery<T> criteriaQuery = builder.createQuery(this.entityClass);
+		Root<T> root = criteriaQuery.from(this.entityClass);
+		Path<Y> path = root.get(attribute);
+		Predicate pred;
+		switch(comparator) {
+			case LESS_THAN:
+				pred = builder.lt(path, value);
+				break;
+			case LESS_THAN_OR_EQUAL_TO:
+				pred = builder.le(path, value);
+				break;
+			case EQUAL_TO:
+				pred = builder.equal(path, value);
+				break;
+			case NOT_EQUAL_TO:
+				pred = builder.notEqual(path, value);
+				break;
+			case GREATER_THAN_OR_EQUAL_TO:
+				pred = builder.ge(path, value);
+				break;
+			case GREATER_THAN:
+				pred = builder.gt(path, value);
+				break;
+			default:
+				throw new AssertionError("Invalid SQLComparator: " + 
+						comparator);
+		}
 		return entityManager.createQuery(criteriaQuery.where(
 				builder.equal(path, value)));
 	}

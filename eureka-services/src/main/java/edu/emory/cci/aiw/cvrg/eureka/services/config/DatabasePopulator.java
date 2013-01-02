@@ -33,14 +33,16 @@ import edu.emory.cci.aiw.cvrg.eureka.common.entity.Role;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.TimeUnit;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.User;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.ValueComparator;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.ValueDefinitionMatchOperator;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.ThresholdsOperator;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.RelationOperatorDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.RoleDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.TimeUnitDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.UserDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.ValueComparatorDao;
-import edu.emory.cci.aiw.cvrg.eureka.services.dao.ValueDefinitionMatchOperatorDao;
+import edu.emory.cci.aiw.cvrg.eureka.services.dao.ThresholdsOperatorDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.util.StringUtil;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Performs first-time populating of Eureka's database tables. It also tries to
@@ -55,20 +57,20 @@ class DatabasePopulator {
 	private final UserDao userDao;
 	private final ValueComparatorDao valueComparatorDao;
 	private final RelationOperatorDao relationOperatorDao;
-	private final ValueDefinitionMatchOperatorDao 
-			valueDefinitionMatchOperatorDao;
+	private final ThresholdsOperatorDao 
+			thresholdOperatorDao;
 
 	@Inject
 	DatabasePopulator(TimeUnitDao inTimeUnitDao, RoleDao inRoleDao, 
 			UserDao inUserDao, ValueComparatorDao inValueComparatorDao, 
 			RelationOperatorDao inRelationOperatorDao,
-			ValueDefinitionMatchOperatorDao inMatchOperatorDao) {
+			ThresholdsOperatorDao inMatchOperatorDao) {
 		this.timeUnitDao = inTimeUnitDao;
 		this.roleDao = inRoleDao;
 		this.userDao = inUserDao;
 		this.valueComparatorDao = inValueComparatorDao;
 		this.relationOperatorDao = inRelationOperatorDao;
-		this.valueDefinitionMatchOperatorDao = inMatchOperatorDao;
+		this.thresholdOperatorDao = inMatchOperatorDao;
 	}
 
 	void doPopulateIfNeeded() {
@@ -76,7 +78,7 @@ class DatabasePopulator {
 		populateTimeUnitsIfNeeded();
 		populateRelationOperatorsIfNeeded();
 		populateValueComparatorsIfNeeded();
-		populateValueDefinitionMatchOperatorsIfNeeded();
+		populateThresholdOperatorsIfNeeded();
 	}
 
 	private void populateTimeUnitsIfNeeded() {
@@ -132,50 +134,75 @@ class DatabasePopulator {
 			this.timeUnitDao.create(timeUnit);
 		}
 	}
+	
+	private static class ValueComparatorHolder {
+		final ValueComparator valueComparator;
+		final String complementName;
+		final boolean requiresComplement;
 
-	private void populateValueComparatorsIfNeeded() {
-		Set<String> namesSet = new HashSet<String>();
-		for (ValueComparator vc : this.valueComparatorDao.getAll()) {
-			namesSet.add(vc.getName());
+		public ValueComparatorHolder(ValueComparator valueComparator, String complementName, boolean requiresComplement) {
+			this.valueComparator = valueComparator;
+			this.complementName = complementName;
+			this.requiresComplement = requiresComplement;
 		}
-		this.createValueComparatorIfNeeded(namesSet, "=", "equals");
-		this.createValueComparatorIfNeeded(namesSet, "not=", "not equals");
-		this.createValueComparatorIfNeeded(namesSet, ">", "greater than");
-		this.createValueComparatorIfNeeded(namesSet, ">=",
-				"greater than or equal to");
-		this.createValueComparatorIfNeeded(namesSet, "<", "less than");
-		this.createValueComparatorIfNeeded(namesSet, "<=",
-				"less than or equal to");
-
-		ValueComparator eq = this.valueComparatorDao.getByName("=");
-		ValueComparator ne = this.valueComparatorDao.getByName("not=");
-		eq.setComplement(ne);
-		ne.setComplement(eq);
-		this.valueComparatorDao.update(eq);
-		this.valueComparatorDao.update(ne);
-
-		ValueComparator gt = this.valueComparatorDao.getByName(">");
-		ValueComparator lte = this.valueComparatorDao.getByName("<=");
-		gt.setComplement(lte);
-		lte.setComplement(gt);
-		this.valueComparatorDao.update(gt);
-		this.valueComparatorDao.update(lte);
-
-		ValueComparator lt = this.valueComparatorDao.getByName("<");
-		ValueComparator gte = this.valueComparatorDao.getByName(">=");
-		lt.setComplement(gte);
-		gte.setComplement(lt);
-		this.valueComparatorDao.update(lt);
-		this.valueComparatorDao.update(gte);
+		
+		
 	}
 
-	private void createValueComparatorIfNeeded(Set<String> namesSet, 
-			String name, String desc) {
-		if (!namesSet.contains(name)) {
+	private void populateValueComparatorsIfNeeded() {
+		Map<String, ValueComparatorHolder> vcMap = 
+				new HashMap<String, ValueComparatorHolder>();
+		for (ValueComparator vc : this.valueComparatorDao.getAll()) {
+			vcMap.put(vc.getName(), 
+					new ValueComparatorHolder(vc, 
+					vc.getComplement().getName(), false));
+		}
+		this.createValueComparatorIfNeeded(vcMap, "=", "equals", 
+				ValueComparator.Threshold.BOTH,
+				Long.valueOf(3), "not=");
+		this.createValueComparatorIfNeeded(vcMap, "not=", "not equals", 
+				ValueComparator.Threshold.BOTH,
+				Long.valueOf(4), "=");
+		this.createValueComparatorIfNeeded(vcMap, ">", "greater than", 
+				ValueComparator.Threshold.UPPER_ONLY,
+				Long.valueOf(5), "<=");
+		this.createValueComparatorIfNeeded(vcMap, ">=",
+				"greater than or equal to", 
+				ValueComparator.Threshold.UPPER_ONLY,
+				Long.valueOf(6), "<");
+		this.createValueComparatorIfNeeded(vcMap, "<", "less than", 
+				ValueComparator.Threshold.LOWER_ONLY, 
+				Long.valueOf(1), ">=");
+		this.createValueComparatorIfNeeded(vcMap, "<=",
+				"less than or equal to", 
+				ValueComparator.Threshold.LOWER_ONLY,
+				Long.valueOf(2), ">");
+		
+		for (ValueComparatorHolder vc : vcMap.values()) {
+			ValueComparator valueComparator = vc.valueComparator;
+			if (vc.requiresComplement) {
+				valueComparator.setComplement(
+						vcMap.get(vc.complementName).valueComparator);
+			}
+			this.valueComparatorDao.update(valueComparator);
+		}
+	}
+
+	private void createValueComparatorIfNeeded(
+			Map<String, ValueComparatorHolder> vcMap, 
+			String name, String desc, 
+			ValueComparator.Threshold side, Long rank, String complementName) {
+		ValueComparatorHolder vc = vcMap.get(name);
+		if (vc == null) {
 			ValueComparator valueComparator = new ValueComparator();
 			valueComparator.setName(name);
 			valueComparator.setDescription(desc);
+			valueComparator.setThreshold(side);
+			valueComparator.setRank(rank);
 			this.valueComparatorDao.create(valueComparator);
+			vcMap.put(name, 
+					new ValueComparatorHolder(valueComparator, complementName, 
+					true));
 		}
 	}
 
@@ -204,20 +231,19 @@ class DatabasePopulator {
 		}
 	}
 
-	private void populateValueDefinitionMatchOperatorsIfNeeded() {
-		createValueDefinitionMatchOperatorIfNeeded("any", "any");
-		createValueDefinitionMatchOperatorIfNeeded("all", "all");
+	private void populateThresholdOperatorsIfNeeded() {
+		createThresholdOperatorIfNeeded("any", "any");
+		createThresholdOperatorIfNeeded("all", "all");
 	}
 
-	private void createValueDefinitionMatchOperatorIfNeeded(String name, 
+	private void createThresholdOperatorIfNeeded(String name, 
 			String desc) {
-		ValueDefinitionMatchOperator op = this
-				.valueDefinitionMatchOperatorDao.getByName(name);
+		ThresholdsOperator op = this.thresholdOperatorDao.getByName(name);
 		if (op == null) {
-			op = new ValueDefinitionMatchOperator();
+			op = new ThresholdsOperator();
 			op.setName(name);
 			op.setDescription(desc);
-			this.valueDefinitionMatchOperatorDao.create(op);
+			this.thresholdOperatorDao.create(op);
 		}
 	}
 }

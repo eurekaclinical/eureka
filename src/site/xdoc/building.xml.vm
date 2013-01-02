@@ -90,6 +90,12 @@
 				<h4>Undeploy from Tomcat</h4>
 				<source>mvn tomcat:undeploy -Peureka-tomcat-{local|dev|prd}</source>
 			</subsection>
+			<subsection name="Run Eureka! in embedded tomcat server">
+				<p>This is for testing purposes during software development
+					only. After building Eureka!, run:
+				</p>
+				<source>mvn tomcat:run</source>
+			</subsection>
         </section>
     </body>
 </document>

@@ -21,10 +21,10 @@ package edu.emory.cci.aiw.cvrg.eureka.services.translation;
 
 import com.google.inject.Inject;
 
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.CategoricalElement;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.Category;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.DataElementVisitor;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.Frequency;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.ResultThresholds;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.ValueThresholds;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.Sequence;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.SystemElement;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.Proposition;
@@ -77,7 +77,7 @@ public final class DataElementTranslatorVisitor implements DataElementVisitor {
 	}
 
 	@Override
-	public void visit(CategoricalElement categoricalElement) 
+	public void visit(Category categoricalElement) 
 			throws DataElementHandlingException{
 		proposition = this.categorizationTranslator
 				.translateFromElement(categoricalElement);
@@ -100,7 +100,7 @@ public final class DataElementTranslatorVisitor implements DataElementVisitor {
 	}
 
 	@Override
-	public void visit(ResultThresholds thresholds) 
+	public void visit(ValueThresholds thresholds) 
 			throws DataElementHandlingException {
 		if (thresholds.getValueThresholds().size() > 1) {
 			proposition = this

@@ -22,26 +22,25 @@ package edu.emory.cci.aiw.cvrg.eureka.services.dao;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import edu.emory.cci.aiw.cvrg.eureka.common.dao.GenericDao;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.ValueDefinitionMatchOperator;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.ValueDefinitionMatchOperator_;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.ThresholdsOperator;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.ThresholdsOperator_;
 
 import javax.persistence.EntityManager;
 
 /**
  *
  */
-public class JpaValueDefinitionMatchOperatorDao extends
-		GenericDao<ValueDefinitionMatchOperator, Long> implements ValueDefinitionMatchOperatorDao {
+public class JpaThresholdsOperatorDao extends
+		GenericDao<ThresholdsOperator, Long> implements ThresholdsOperatorDao {
 
 	@Inject
-	protected JpaValueDefinitionMatchOperatorDao(Provider<EntityManager>
+	protected JpaThresholdsOperatorDao(Provider<EntityManager>
 															 inManagerProvider) {
-		super(ValueDefinitionMatchOperator.class, inManagerProvider);
+		super(ThresholdsOperator.class, inManagerProvider);
 	}
 
 	@Override
-	public ValueDefinitionMatchOperator getByName(String inName) {
-		return this.getUniqueByAttribute(ValueDefinitionMatchOperator_.name,
-				inName);
+	public ThresholdsOperator getByName(String inName) {
+		return this.getUniqueByAttribute(ThresholdsOperator_.name, inName);
 	}
 }

@@ -37,9 +37,10 @@ import edu.emory.cci.aiw.cvrg.eureka.common.entity.Categorization;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.Categorization.CategorizationType;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.FileUpload;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.HighLevelAbstraction;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.LowLevelAbstraction;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.ValueThresholdEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.Proposition;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.Role;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.ThresholdsOperator;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.User;
 import edu.emory.cci.aiw.cvrg.eureka.common.test.TestDataException;
 import edu.emory.cci.aiw.cvrg.eureka.common.test.TestDataProvider;
@@ -137,12 +138,12 @@ public class Setup implements TestDataProvider {
 			entityManager.persist(proposition1);
 			propositions.add(proposition1);
 
-			LowLevelAbstraction lowLevelAbstraction = new LowLevelAbstraction
+			ValueThresholdEntity lowLevelAbstraction = new ValueThresholdEntity
 					();
 			lowLevelAbstraction.setAbbrevDisplayName("test-low-level");
 			lowLevelAbstraction.setKey("test-low-level");
 			lowLevelAbstraction.setCreated(now);
-			lowLevelAbstraction.setCreatedFrom(LowLevelAbstraction
+			lowLevelAbstraction.setCreatedFrom(ValueThresholdEntity
 					.CreatedFrom.FREQUENCY);
 			List<Proposition> abstractedFrom = new ArrayList<Proposition>();
 			abstractedFrom.add(lowLevelAbstraction);

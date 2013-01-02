@@ -23,17 +23,13 @@ import java.util.List;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.exception.DataElementHandlingException;
 
-public class ResultThresholds extends DataElement {
-
-	public static enum ThresholdsOperator {
-		ALL, ANY
-	}
+public class ValueThresholds extends DataElement {
 
 	private String name;
-	private ThresholdsOperator thresholdsOperator;
+	private Long thresholdsOperator;
 	private List<ValueThreshold> valueThresholds;
 
-	public ResultThresholds() {
+	public ValueThresholds() {
 		super(Type.VALUE_THRESHOLD);
 	}
 
@@ -45,11 +41,11 @@ public class ResultThresholds extends DataElement {
 		this.name = name;
 	}
 
-	public ThresholdsOperator getThresholdsOperator() {
+	public Long getThresholdsOperator() {
 		return thresholdsOperator;
 	}
 
-	public void setThresholdsOperator(ThresholdsOperator thresholdsOperator) {
+	public void setThresholdsOperator(Long thresholdsOperator) {
 		this.thresholdsOperator = thresholdsOperator;
 	}
 

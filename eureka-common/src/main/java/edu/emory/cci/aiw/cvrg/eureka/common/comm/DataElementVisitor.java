@@ -25,12 +25,12 @@ public interface DataElementVisitor {
 	
 	public void visit(SystemElement systemElement) throws DataElementHandlingException;
 	
-	public void visit(CategoricalElement categoricalElement) 
+	public void visit(Category categoricalElement) 
 			throws DataElementHandlingException;
 	
 	public void visit(Sequence sequence) throws DataElementHandlingException;
 	
 	public void visit(Frequency frequency) throws DataElementHandlingException;
 	
-	public void visit(ResultThresholds thresholds) throws DataElementHandlingException;
+	public void visit(ValueThresholds thresholds) throws DataElementHandlingException;
 }

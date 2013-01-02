@@ -20,18 +20,18 @@
 package edu.emory.cci.aiw.cvrg.eureka.services.dao;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.dao.Dao;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.ValueDefinitionMatchOperator;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.ThresholdsOperator;
 
 /**
  *
  */
-public interface ValueDefinitionMatchOperatorDao  extends
-		Dao<ValueDefinitionMatchOperator, Long> {
+public interface ThresholdsOperatorDao  extends
+		Dao<ThresholdsOperator, Long> {
 	/**
 	 * Gets a value definition match operator based on the name attribute.
 	 * @param inName the name to search for in the database
 	 * @return a {@link ValueDefinitionMatchOperator} with the given name if
 	 * found, null otherwise
 	 */
-	public ValueDefinitionMatchOperator getByName(String inName);
+	public ThresholdsOperator getByName(String inName);
 }

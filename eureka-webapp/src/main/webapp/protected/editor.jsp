@@ -81,7 +81,7 @@
 							<p><br/></p>
 							<table id="select_element_table">
 								<%-- These values come from the DataElement.Type enum --%>
-								<c:set var="types" value="categorization,sequence,frequency,value_threshold" />
+								<c:set var="types" value="categorization,sequence,frequency,valuethreshold" />
 								<c:forTokens items="${types}" var="myType" delims="," varStatus="status">
 									<tr>
 										<td class="firstCol">
@@ -179,7 +179,7 @@
 																				<div class="label-info" ><center>Drop Here</center></div>
 																				<ul data-type="main" data-drop-type="single" class="sortable" style="width: 100% height: 100%">
 																					<c:if test="${not empty proposition and propositionType == 'sequence'}">
-																					<li data-key="${proposition.primaryDataElement.dataElementKey}" data-desc="${proposition.primaryDataElement.dataElementAbbrevDisplayName}" data-space="user">
+																					<li data-key="${proposition.primaryDataElement.dataElementKey}" data-desc="${proposition.primaryDataElement.dataElementAbbrevDisplayName}" data-space="${proposition.primaryDataElement.inSystem ? 'system' : 'user'}">
 																						<span class="delete" style="cursor: pointer; background-color: lightblue;"></span>
 																						<span>${proposition.primaryDataElement.dataElementKey} ${proposition.primaryDataElement.dataElementAbbrevDisplayName}</span>
 																					</li>
@@ -263,7 +263,7 @@
 																			<div id="relatedDataElement${status.count}" class="tree-drop-single jstree-drop">
 																				<div class="label-info"><center>Drop Here</center></div>
 																				<ul class="sortable" data-type="related" data-drop-type="single" style="width: 100% height: 100%">
-																					<li data-key="${relation.dataElementField.dataElementKey}" data-desc="${relation.dataElementField.dataElementAbbrevDisplayName}" data-space="user">
+																					<li data-key="${relation.dataElementField.dataElementKey}" data-desc="${relation.dataElementField.dataElementAbbrevDisplayName}" data-space="${relation.dataElementField.inSystem ? 'system' : 'user'}">
 																						<span class="delete" style="cursor: pointer; background-color: lightblue;"></span>
 																						<span>${relation.dataElementField.dataElementKey}</span>
 																					</li>
@@ -456,7 +456,7 @@
 																							<div class="label-info" ><center>Drop Here</center></div>
 																							<ul data-type="main" data-drop-type="single" class="sortable" style="width: 100% height: 100%">
 																								<c:if test="${not empty proposition and propositionType == 'frequency'}">
-																								<li data-key="${proposition.dataElement.dataElementKey}" data-desc="${proposition.dataElement.dataElementAbbrevDisplayName}" data-space="user">
+																								<li data-key="${proposition.dataElement.dataElementKey}" data-desc="${proposition.dataElement.dataElementAbbrevDisplayName}" data-space="${proposition.dataElement.inSystem ? 'system' : 'user'}">
 																									<span class="delete" style="cursor: pointer; background-color: lightblue;"></span>
 																									<span>${proposition.dataElement.dataElementKey} ${proposition.dataElement.dataElementAbbrevDisplayName}</span>
 																								</li>
@@ -570,7 +570,7 @@
 														<tr>
 															<td colspan="2">
 																Value name:
-																<input type="text" name="thresholdValueName"/>
+																<input type="text" name="valueThresholdValueName"/>
 															</td>
 														</tr>
 														<tr>
@@ -582,25 +582,115 @@
 															</td>
 															<td style="text-align: left">
 																Value thresholds:
-																<select name="thresholdType">
-																	<option value="all">All</option>
-																	<option value="any">Any</option>
+																<select name="valueThresholdType">
+																	<c:forEach var="operator" items="${thresholdsOperators}">
+																	<option value="${operator.id}">${operator.description}</option>
+																	</c:forEach>
 																</select>
 															</td>
 														</tr>
 														<tr>
 															<td colspan="2">
-																<table>
+																<table class="value-thresholds-container">
 																	<c:choose>
 																	<c:when test="${not empty proposition and propositionType == 'valuethreshold' and not empty proposition.thresholds}">
 																	<c:forEach var="threshold" items="${proposition.thresholds}" varStatus="status">
-																	
+																	<tr class="value-threshold">
+																		<td>
+																			<div id="thresholdedDataElement${status}" class="tree-drop-single jstree-drop thresholdedDataElement">
+																				<div class="label-info" ><center>Drop Here</center></div>
+																				<ul data-type="threshold1" data-drop-type="single" class="sortable" style="width: 100% height: 100%">
+																					<li data-key="${threshold.dataElement.dataElementKey}" data-desc="${threshold.dataElement.dataElementAbbrevDisplayName}" data-space="${threshold.dataElement.inSystem ? 'system' : 'user'}">
+																						<span class="delete" style="cursor: pointer; background-color: lightblue;"></span>
+																						<span>${threshold.dataElement.dataElementKey} ${threshold.dataElement.dataElementAbbrevDisplayName}</span>
+																					</li>
+																				</ul>
+																			</div>
+																		</td>
+																		<td>
+																			<table>
+																				<tr>
+																					<td>
+																						Lower threshold
+																						<select name="thresholdLowerComp">
+																							<c:forEach var="valComp" items="${valueComparatorsLower}">
+																							<option value="${valComp.id}" <c:if test="${propositionType == 'valuethreshold' and valComp.id == threshold.lowerComp}">selected="selected"</c:if>>${valComp.name}</option>
+																							</c:forEach>
+																						</select>
+																					</td>
+																					<td>
+																						<input type="text" name="thresholdLowerVal" value="<c:if test="${propositionType == 'valuethreshold'}">${threshold.lowerValue}</c:if>"/>
+																					</td>
+																				</tr>
+																				<tr>
+																					<td>
+																						Upper threshold
+																						<select name="thresholdUpperComp">
+																							<c:forEach var="valComp" items="${valueComparatorsUpper}">
+																							<option value="${valComp.id}" <c:if test="${propositionType == 'valuethreshold' and valComp.id == threshold.upperComp}">selected="selected"</c:if>>${valComp.name}</option>
+																							</c:forEach>
+																						</select>
+																					</td>
+																					<td>
+																						<input type="text" name="thresholdUpperVal" value="<c:if test="${propositionType == 'valuethreshold'}">${threshold.upperValue}</c:if>"/>
+																					</td>
+																				</tr>
+																			</table>
+																		</td>
+																		<td>
+																			<input type="checkbox" value="true" name="thresholdDataElementTemporalRelationCB" <c:if test="${propositionType == 'valuethreshold' and threshold.isBeforeOrAfter}">checked="true"</c:if>/>
+																			<select name="thresholdDataElementTemporalRelation">
+																				<c:forEach var="op" items="${operators}">
+																				<option value="${op.id}" <c:if test="${propositionType == 'valuethreshold' and op.id == threshold.relationOperator}">selected="selected"</c:if>>${op.description}</option>
+																				</c:forEach>
+																			</select>
+																		</td>
+																		<td>
+																			<ul class="sortable" data-drop-type="multiple" data-proptype="empty" style="width: 100% height: 100%">
+																				<c:if test="${not empty proposition and propositionType == 'valuethreshold'}">
+																				<c:forEach var="relatedDataElementKey" items="${threshold.relatedDataElementKeys}">
+																				<li data-key="${relatedDataElementKey}" data-desc="${child.abbrevDisplayName}" data-type="${child.type}" data-subtype="${child.type == 'CATEGORIZATION' ? child.categoricalType : ''}" data-space="${threshold.inSystem ? 'system' : 'user'}">
+																					<span class="delete" style="cursor: pointer; background-color: lightblue;"></span>
+																					<span>${child.displayName} ${child.abbrevDisplayName} (${child.key})</span>
+																				</li>
+																				</c:forEach>
+																				</c:if>
+																			</ul>
+																			by
+																		</td>
+																		<td>
+																			<table>
+																				<tr>
+																					<td>
+																						at least
+																						<input type="text" class="distanceField" name="thresholdWithinAtLeast" value="<c:if test="${propositionType == 'valuethreshold'}">${threshold.atLeastCount}</c:if>"/>
+																						<select name="thresholdWithinAtLeastUnits">
+																								<c:forEach var="unit" items="${timeUnits}">
+																									<option value="${unit.id}" <c:if test="${propositionType == 'valuethreshold' and unit.id == threshold.atLeastTimeUnit}">selected="selected"</c:if>>${unit.description}</option>
+																								</c:forEach>
+																						</select>
+																						<br />
+																						at most
+																						<input type="text" class="distanceField" name="thresholdWithinAtMost" value="<c:if test="${propositionType == 'valuethreshold'}">${threshold.atMostCount}</c:if>"/>
+																						<select name="thresholdWithinAtMostUnits">
+																								<c:forEach var="unit" items="${timeUnits}">
+																									<option value="${unit.id}" <c:if test="${propositionType == 'valuethreshold' and unit.id == threshold.atMostTimeUnit}">selected="selected"</c:if>>${unit.description}</option>
+																								</c:forEach>
+																						</select>
+																					</td>
+																					<td>
+																						of each other
+																					</td>
+																				</tr>
+																			</table>
+																		</td>
+																	</tr>
 																	</c:forEach>
 																	</c:when>
 																	<c:otherwise>
-																	<tr>
+																	<tr class="value-threshold">
 																		<td>
-																			<div id="threshold1" class="tree-drop-single jstree-drop">
+																			<div id="thresholdedDataElement1" class="tree-drop-single jstree-drop thresholdedDataElement">
 																				<div class="label-info" ><center>Drop Here</center></div>
 																				<ul data-type="threshold1" data-drop-type="single" class="sortable" style="width: 100% height: 100%">
 																				</ul>
@@ -611,42 +701,42 @@
 																				<tr>
 																					<td>
 																						Lower threshold
-																						<select name="threshold1LowerComp">
-																							<option value="ge">&gt;=</option>
-																							<option value="g">&gt;</option>
-																							<option value="eq">=</option>
-																							<option value="l">&lt;</option>
-																							<option value="le">&lt;=</option>
+																						<select name="thresholdLowerComp">
+																							<c:forEach var="valComp" items="${valueComparatorsLower}">
+																							<option value="${valComp.id}">${valComp.name}</option>
+																							</c:forEach>
 																						</select>
 																					</td>
 																					<td>
-																						<input type="text" name="threshold1LowerVal"/>
+																						<input type="text" name="thresholdLowerVal"/>
 																					</td>
 																				</tr>
 																				<tr>
 																					<td>
 																						Upper threshold
-																						<select name="threshold1UpperComp">
-																							<option value="ge">&gt;=</option>
-																							<option value="g">&gt;</option>
-																							<option value="eq">=</option>
-																							<option value="l">&lt;</option>
-																							<option value="le">&lt;=</option>
+																						<select name="thresholdUpperComp">
+																							<c:forEach var="valComp" items="${valueComparatorsUpper}">
+																							<option value="${valComp.id}">${valComp.name}</option>
+																							</c:forEach>
 																						</select>
 																					</td>
 																					<td>
-																						<input type="text" name="threshold1UpperVal"/>
+																						<input type="text" name="thresholdUpperVal"/>
 																					</td>
 																				</tr>
 																			</table>
 																		</td>
 																		<td>
-																			<input type="checkbox" value="true" name="threshold1DataElementTemporalRelationCB"/>
-																			<select name="threshold1DataElementTemporalRelation">
+																			<input type="checkbox" value="true" name="thresholdDataElementTemporalRelationCB"/>
+																			<select name="thresholdDataElementTemporalRelation">
 																				<c:forEach var="op" items="${operators}">
-																				<option value="${op.id}" <c:if test="${op.id == relation.relationOperator}">selected="selected"</c:if>>${op.description}</option>
+																				<option value="${op.id}">${op.description}</option>
 																				</c:forEach>
 																			</select>
+																		</td>
+																		<td>
+																			<ul class="sortable" data-drop-type="multiple" data-proptype="empty" style="width: 100% height: 100%">
+																			</ul>
 																			by
 																		</td>
 																		<td>
@@ -654,16 +744,16 @@
 																				<tr>
 																					<td>
 																						at least
-																						<input type="text" class="distanceField" name="threshold1WithinAtLeast" value=""/>
-																						<select name="threshold1WithinAtLeastUnits">
+																						<input type="text" class="distanceField" name="thresholdWithinAtLeast" value=""/>
+																						<select name="thresholdWithinAtLeastUnits">
 																								<c:forEach var="unit" items="${timeUnits}">
 																									<option value="${unit.id}">${unit.description}</option>
 																								</c:forEach>
 																						</select>
 																						<br />
 																						at most
-																						<input type="text" class="distanceField" name="threshold1WithinAtMost" value=""/>
-																						<select name="threshold1WithinAtMostUnits">
+																						<input type="text" class="distanceField" name="thresholdWithinAtMost" value=""/>
+																						<select name="thresholdWithinAtMostUnits">
 																								<c:forEach var="unit" items="${timeUnits}">
 																									<option value="${unit.id}">${unit.description}</option>
 																								</c:forEach>

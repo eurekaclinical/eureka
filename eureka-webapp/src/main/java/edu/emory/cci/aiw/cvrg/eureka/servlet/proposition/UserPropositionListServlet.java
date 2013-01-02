@@ -34,7 +34,7 @@ import org.codehaus.jackson.map.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.CategoricalElement;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.Category;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.DataElement;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ServicesClient;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.User;
@@ -53,7 +53,7 @@ public class UserPropositionListServlet extends HttpServlet {
 		d.setKeyVal("data-space", "user");
 		d.setKeyVal("data-type", element.getType().toString());
 		if (element.getType() == DataElement.Type.CATEGORIZATION) {
-			d.setKeyVal("data-subtype", ((CategoricalElement) element)
+			d.setKeyVal("data-subtype", ((Category) element)
 			        .getCategoricalType().toString());
 		}
 

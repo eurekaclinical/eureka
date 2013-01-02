@@ -40,6 +40,8 @@ import edu.emory.cci.aiw.cvrg.eureka.common.entity.RelationOperator;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.Role;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.TimeUnit;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.User;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.ValueComparator;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.ThresholdsOperator;
 
 /**
  * @author hrathod
@@ -52,6 +54,10 @@ public class ServicesClient extends AbstractClient {
 	private static final GenericType<List<TimeUnit>> TimeUnitList = new GenericType<List<TimeUnit>>() {
 	};
 	private static final GenericType<List<RelationOperator>> RelationOperatorList = new GenericType<List<RelationOperator>>() {
+	};
+	private static final GenericType<List<ThresholdsOperator>> ThresholdsOperatorList = new GenericType<List<ThresholdsOperator>>() {	
+	};
+	private static final GenericType<List<ValueComparator>> ValueComparatorList = new GenericType<List<ValueComparator>>() {	
 	};
 	private static final GenericType<List<SystemElement>> SystemElementList = new GenericType<List<SystemElement>>() {
 	};
@@ -301,8 +307,59 @@ public class ServicesClient extends AbstractClient {
 	}
 
 	public RelationOperator getRelationOperatorByName(String inName) {
-		final String path = "/api/relationop/byname/" + inName;
+		final String path = UriBuilder.fromPath("/api/relationop/byname/")
+				.segment(inName)
+				.build().toString();
 		return this.getResource().path(path).accept(
 				MediaType.APPLICATION_JSON).get(RelationOperator.class);
+	}
+
+	public List<ThresholdsOperator> getThresholdsOperators() {
+		final String path = "/api/thresholdsop/list";
+		return this.getResource().path(path).accept(
+				MediaType.APPLICATION_JSON).get(ThresholdsOperatorList);
+	}
+	
+	public ThresholdsOperator getThresholdsOperator(Long inId) {
+		final String path = "/api/thresholdsop/" + inId;
+		return this.getResource().path(path).accept(
+				MediaType.APPLICATION_JSON).get(
+				ThresholdsOperator.class);
+	}
+	
+	public ThresholdsOperator getThresholdsOperatorByName(
+			String inName) {
+		final String path = UriBuilder.fromPath("/api/thresholdsop/byname/")
+				.segment(inName)
+				.build().toString();
+		return this.getResource().path(path).accept(
+				MediaType.APPLICATION_JSON).get(
+				ThresholdsOperator.class); 
+	}
+
+	public List<ValueComparator> getValueComparators() {
+		final String path = "/api/valuecomps/list";
+		return this.getResource().path(path).accept(
+				MediaType.APPLICATION_JSON).get(ValueComparatorList);
+	}
+	
+	public List<ValueComparator> getValueComparatorsAsc() {
+		final String path = "/api/valuecomps/listasc";
+		return this.getResource().path(path).accept(
+				MediaType.APPLICATION_JSON).get(ValueComparatorList);
+	}
+	
+	public ValueComparator getValueComparator(Long inId) {
+		final String path = "/api/valuecomps/" + inId;
+		return this.getResource().path(path).accept(
+				MediaType.APPLICATION_JSON).get(ValueComparator.class);
+	}
+	
+	public ValueComparator getValueComparatorByName(String inName) {
+		final String path = UriBuilder.fromPath("/api/valuecomps/byname/")
+				.segment(inName)
+				.build().toString();
+		return this.getResource().path(path).accept(
+				MediaType.APPLICATION_JSON).get(ValueComparator.class);
 	}
 }

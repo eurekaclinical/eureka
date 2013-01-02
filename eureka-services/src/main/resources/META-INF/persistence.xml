@@ -30,13 +30,13 @@
 	-->
 		<class>edu.emory.cci.aiw.cvrg.eureka.common.entity.AbstractFileInfo</class>
 		<class>edu.emory.cci.aiw.cvrg.eureka.common.entity.Categorization</class>
-        <class>edu.emory.cci.aiw.cvrg.eureka.common.entity.CompoundLowLevelAbstraction</class>
+        <class>edu.emory.cci.aiw.cvrg.eureka.common.entity.CompoundValueThreshold</class>
 		<class>edu.emory.cci.aiw.cvrg.eureka.common.entity.ExtendedProposition</class>
 		<class>edu.emory.cci.aiw.cvrg.eureka.common.entity.FileError</class>
 		<class>edu.emory.cci.aiw.cvrg.eureka.common.entity.FileUpload</class>
 		<class>edu.emory.cci.aiw.cvrg.eureka.common.entity.FileWarning</class>
 		<class>edu.emory.cci.aiw.cvrg.eureka.common.entity.HighLevelAbstraction</class>
-		<class>edu.emory.cci.aiw.cvrg.eureka.common.entity.LowLevelAbstraction</class>
+		<class>edu.emory.cci.aiw.cvrg.eureka.common.entity.ValueThresholdEntity</class>
 		<class>edu.emory.cci.aiw.cvrg.eureka.common.entity.PropertyConstraint</class>
 		<class>edu.emory.cci.aiw.cvrg.eureka.common.entity.Proposition</class>
 		<class>edu.emory.cci.aiw.cvrg.eureka.common.entity.Relation</class>
@@ -49,7 +49,7 @@
 		<class>edu.emory.cci.aiw.cvrg.eureka.common.entity.TimeUnit</class>
 		<class>edu.emory.cci.aiw.cvrg.eureka.common.entity.User</class>
 		<class>edu.emory.cci.aiw.cvrg.eureka.common.entity.ValueComparator</class>
-        <class>edu.emory.cci.aiw.cvrg.eureka.common.entity.ValueDefinitionMatchOperator</class>
+        <class>edu.emory.cci.aiw.cvrg.eureka.common.entity.ThresholdsOperator</class>
 <!--
 		<properties>
 			<property name="javax.persistence.jdbc.driver" value="oracle.jdbc.OracleDriver"/>

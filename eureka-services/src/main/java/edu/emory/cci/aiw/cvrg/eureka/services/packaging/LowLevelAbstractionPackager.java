@@ -19,7 +19,7 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.services.packaging;
 
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.LowLevelAbstraction;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.ValueThresholdEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.Proposition;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.SimpleParameterConstraint;
 import org.protempa.LowLevelAbstractionDefinition;
@@ -31,13 +31,13 @@ import static edu.emory.cci.aiw.cvrg.eureka.services.packaging.PropositionDefini
 
 public final class LowLevelAbstractionPackager
         implements
-        PropositionDefinitionPackager<LowLevelAbstraction, LowLevelAbstractionDefinition> {
+        PropositionDefinitionPackager<ValueThresholdEntity, LowLevelAbstractionDefinition> {
 
 	static final String COMPLEMENT_SUFFIX = "_COMPLEMENT";
 
 
 	@Override
-	public LowLevelAbstractionDefinition pack(LowLevelAbstraction proposition) {
+	public LowLevelAbstractionDefinition pack(ValueThresholdEntity proposition) {
 		LowLevelAbstractionDefinition result = new LowLevelAbstractionDefinition(
 		        proposition.getId().toString());
 

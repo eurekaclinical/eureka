@@ -32,7 +32,7 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "simple_parameter_constraints")
-public final class SimpleParameterConstraint {
+public class SimpleParameterConstraint {
 
 	@Id
 	@SequenceGenerator(sequenceName = "CONSTRAINT_SEQ", 

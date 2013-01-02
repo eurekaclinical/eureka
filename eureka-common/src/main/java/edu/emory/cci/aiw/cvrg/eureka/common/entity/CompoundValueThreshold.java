@@ -22,6 +22,7 @@ package edu.emory.cci.aiw.cvrg.eureka.common.entity;
 import java.util.List;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
@@ -34,20 +35,21 @@ import javax.persistence.Table;
  * Contains attributes which describe a Protempa compound low-level abstraction in the context of the Eureka! UI
  */
 @Entity
-@Table(name = "compound_low_level_abstractions")
-public final class CompoundLowLevelAbstraction extends Proposition {
-
+@Table(name = "compound_value_threshold")
+public class CompoundValueThreshold extends Proposition {
+	
+	
 	private Integer minimumNumberOfValues;
 	private Integer minimumGapBetweenValues;
 
 	@ManyToOne
-	@JoinColumn(referencedColumnName = "id")
+	@JoinColumn(name = "minGapBtwValuesUnits_id", referencedColumnName = "id")
 	private TimeUnit minimumGapBetweenValuesUnits;
 
 	private Integer maximumGapBetweenValues;
 
 	@ManyToOne
-	@JoinColumn(referencedColumnName = "id")
+	@JoinColumn(name = "maxGapBtwValuesUnits_id", referencedColumnName = "id")
 	private TimeUnit maximumGapBetweenValuesUnits;
 
 	private String userValueDefinitionName;
@@ -55,7 +57,7 @@ public final class CompoundLowLevelAbstraction extends Proposition {
 
 	@OneToOne
 	@JoinColumn(referencedColumnName = "id")
-	private ValueDefinitionMatchOperator valueDefinitionMatchOperator;
+	private ThresholdsOperator thresholdsOperator;
 
 	public enum CreatedFrom {
 		FREQUENCY, RESULTS_THRESHOLD
@@ -67,7 +69,7 @@ public final class CompoundLowLevelAbstraction extends Proposition {
 			CascadeType.PERSIST})
 	@JoinTable(name = "abstracted_from", joinColumns = {@JoinColumn(name =
 			"target_proposition_id")})
-	private List<LowLevelAbstraction> abstractedFrom;
+	private List<ValueThresholdEntity> abstractedFrom;
 
 	public Integer getMinimumNumberOfValues() {
 		return minimumNumberOfValues;
@@ -127,12 +129,12 @@ public final class CompoundLowLevelAbstraction extends Proposition {
 			String complementValueDefinitionName) {
 		this.complementValueDefinitionName = complementValueDefinitionName;
 	}
-	public ValueDefinitionMatchOperator getValueDefinitionMatchOperator() {
-		return valueDefinitionMatchOperator;
+	public ThresholdsOperator getThresholdsOperator() {
+		return thresholdsOperator;
 	}
 
-	public void setValueDefinitionMatchOperator(ValueDefinitionMatchOperator valueDefinitionMatchOperator) {
-		this.valueDefinitionMatchOperator = valueDefinitionMatchOperator;
+	public void setThresholdsOperator(ThresholdsOperator thresholdsOperator) {
+		this.thresholdsOperator = thresholdsOperator;
 	}
 
 	public CreatedFrom getCreatedFrom() {
@@ -143,11 +145,11 @@ public final class CompoundLowLevelAbstraction extends Proposition {
 		this.createdFrom = createdFrom;
 	}
 
-	public List<LowLevelAbstraction> getAbstractedFrom() {
+	public List<ValueThresholdEntity> getAbstractedFrom() {
 		return abstractedFrom;
 	}
 
-	public void setAbstractedFrom(List<LowLevelAbstraction> abstractedFrom) {
+	public void setAbstractedFrom(List<ValueThresholdEntity> abstractedFrom) {
 		this.abstractedFrom = abstractedFrom;
 	}
 

@@ -23,7 +23,7 @@ import java.util.List;
 
 public final class ValueThreshold {
 
-	private String dataElementKey;
+	private ShortDataElementField dataElement;
 	private Long lowerComp;
 	private Long upperComp;
 	private Number lowerValue;
@@ -32,18 +32,18 @@ public final class ValueThreshold {
 	private String upperUnits;
 	private Boolean isBeforeOrAfter;
 	private Long relationOperator;
-	private List<String> relatedDataElementKeys;
+	private List<DataElement> relatedDataElements;
 	private Integer atLeastCount;
 	private Long atLeastTimeUnit;
 	private Integer atMostCount;
 	private Long atMostTimeUnit;
 
-	public String getDataElementKey() {
-		return dataElementKey;
+	public ShortDataElementField getDataElement() {
+		return dataElement;
 	}
 
-	public void setDataElementKey(String dataElementKey) {
-		this.dataElementKey = dataElementKey;
+	public void setDataElement(ShortDataElementField dataElement) {
+		this.dataElement = dataElement;
 	}
 
 	public Long getLowerComp() {
@@ -110,12 +110,12 @@ public final class ValueThreshold {
 		this.relationOperator = relationOperator;
 	}
 
-	public List<String> getRelatedDataElementKeys() {
-		return relatedDataElementKeys;
+	public List<DataElement> getRelatedDataElements() {
+		return relatedDataElements;
 	}
 
-	public void setRelatedDataElementKeys(List<String> relatedDataElementKeys) {
-		this.relatedDataElementKeys = relatedDataElementKeys;
+	public void setRelatedDataElements(List<DataElement> relatedDataElements) {
+		this.relatedDataElements = relatedDataElements;
 	}
 
 	public Integer getAtLeastCount() {

@@ -35,7 +35,7 @@ import org.codehaus.jackson.map.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.CategoricalElement;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.Category;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.DataElement;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ServicesClient;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.User;
@@ -96,7 +96,7 @@ public class ListUserDefinedPropositionChildrenServlet extends HttpServlet {
 				(inUserId, d.getAttr().get("data-key"));
 
 		if (dataElement.getType() == DataElement.Type.CATEGORIZATION) {
-			CategoricalElement ce = (CategoricalElement) dataElement;
+			Category ce = (Category) dataElement;
 			for (DataElement de : ce.getChildren()) {
 				if (de.isInSystem()) {
 

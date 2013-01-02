@@ -20,8 +20,8 @@
 package edu.emory.cci.aiw.cvrg.eureka.services.translation;
 
 import com.google.inject.Inject;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.CategoricalElement;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.CategoricalElement.CategoricalType;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.Category;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.Category.CategoricalType;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.DataElement;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.Categorization;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.Categorization.CategorizationType;
@@ -41,7 +41,7 @@ import java.util.List;
  * propositions.
  */
 public final class CategorizationTranslator implements
-		PropositionTranslator<CategoricalElement, Categorization> {
+		PropositionTranslator<Category, Categorization> {
 
 	private final PropositionDao propositionDao;
 	private final SystemPropositionFinder finder;
@@ -77,7 +77,7 @@ public final class CategorizationTranslator implements
 	}
 
 	@Override
-	public Categorization translateFromElement(CategoricalElement element)
+	public Categorization translateFromElement(Category element)
 			throws DataElementHandlingException {
 		Categorization result = new Categorization();
 		PropositionTranslatorUtil.populateCommonPropositionFields(result,
@@ -95,7 +95,7 @@ public final class CategorizationTranslator implements
 	}
 
 	private Proposition getOrCreateProposition(String key,
-			CategoricalElement element) throws DataElementHandlingException {
+			Category element) throws DataElementHandlingException {
 		Proposition proposition = this.propositionDao.getByUserAndKey(
 				element.getUserId(), key);
 		if (proposition == null) {
@@ -120,7 +120,7 @@ public final class CategorizationTranslator implements
 		return proposition;
 	}
 
-	private CategorizationType checkPropositionType(CategoricalElement element) {
+	private CategorizationType checkPropositionType(Category element) {
 		switch (element.getCategoricalType()) {
 			case LOW_LEVEL_ABSTRACTION:
 				return CategorizationType.LOW_LEVEL_ABSTRACTION;
@@ -142,9 +142,9 @@ public final class CategorizationTranslator implements
 	}
 
 	@Override
-	public CategoricalElement translateFromProposition(
+	public Category translateFromProposition(
 			Categorization proposition) {
-		CategoricalElement result = new CategoricalElement();
+		Category result = new Category();
 
 		PropositionTranslatorUtil.populateCommonDataElementFields(result,
 				proposition);

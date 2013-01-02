@@ -40,7 +40,7 @@ import org.slf4j.LoggerFactory;
 
 import com.google.inject.Inject;
 
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.CategoricalElement;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.Category;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.DataElement;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.Sequence;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.SystemElement;
@@ -422,7 +422,7 @@ public class PropositionResource {
 
 	@POST
 	@Path("/user/create/categorization")
-	public void insertProposition(CategoricalElement inElement) {
+	public void insertProposition(Category inElement) {
 		if (inElement.getUserId() != null) {
 			try {
 				Categorization categorization = this.categorizationTranslator
@@ -443,7 +443,7 @@ public class PropositionResource {
 
 	@PUT
 	@Path("/user/update/categorization")
-	public void updateProposition(CategoricalElement inElement) {
+	public void updateProposition(Category inElement) {
 		if (inElement.getId() != null && inElement.getUserId() != null) {
 			try {
 				Categorization categorization = this.categorizationTranslator

@@ -20,10 +20,12 @@
 package edu.emory.cci.aiw.cvrg.eureka.common.comm;
 
 import java.io.IOException;
+import org.apache.commons.lang.builder.ToStringBuilder;
 import org.codehaus.jackson.JsonGenerator;
 import org.codehaus.jackson.JsonParser;
 import org.codehaus.jackson.JsonProcessingException;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
+import org.codehaus.jackson.annotate.JsonTypeInfo;
 import org.codehaus.jackson.map.DeserializationContext;
 import org.codehaus.jackson.map.JsonDeserializer;
 import org.codehaus.jackson.map.JsonSerializer;
@@ -32,11 +34,10 @@ import org.codehaus.jackson.map.annotate.JsonDeserialize;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 
 /**
- * @author mmansour
- * @author hrathod
- */
+ * @author Andrew Post
+*/
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class DataElementField {
+public class ShortDataElementField {
 	
 	public enum Type {
 		CATEGORIZATION, SEQUENCE, FREQUENCY, VALUE_THRESHOLD, SYSTEM
@@ -66,20 +67,9 @@ public class DataElementField {
 		}
 		
 	}
-	
-	
 	private String dataElementKey;
 	private String dataElementAbbrevDisplayName;
 	private String dataElementDisplayName;
-	private String withValue;
-	private Boolean hasDuration;
-	private Integer minDuration;
-	private Long minDurationUnits;
-	private Integer maxDuration;
-	private Long maxDurationUnits;
-	private Boolean hasPropertyConstraint;
-	private String property;
-	private String propertyValue;
 	
 	@JsonSerialize(using = TypeSerializer.class)
 	@JsonDeserialize(using = TypeDeserializer.class)
@@ -93,83 +83,12 @@ public class DataElementField {
 		this.dataElementKey = dataElement;
 	}
 
-	public String getWithValue() {
-		return withValue;
-	}
-
-	public void setWithValue(String withValue) {
-		this.withValue = withValue;
-	}
-
-	public Boolean getHasDuration() {
-		return hasDuration;
-	}
-
-	public void setHasDuration(Boolean hasDuration) {
-		this.hasDuration = hasDuration;
-	}
-
-	public Integer getMinDuration() {
-		return minDuration;
-	}
-
-	public void setMinDuration(Integer minDuration) {
-		this.minDuration = minDuration;
-	}
-
-	public Long getMinDurationUnits() {
-		return minDurationUnits;
-	}
-
-	public void setMinDurationUnits(Long minDurationUnits) {
-		this.minDurationUnits = minDurationUnits;
-	}
-
-	public Integer getMaxDuration() {
-		return maxDuration;
-	}
-
-	public void setMaxDuration(Integer maxDuration) {
-		this.maxDuration = maxDuration;
-	}
-
-	public Long getMaxDurationUnits() {
-		return maxDurationUnits;
-	}
-
-	public void setMaxDurationUnits(Long maxDurationUnits) {
-		this.maxDurationUnits = maxDurationUnits;
-	}
-
-	public Boolean getHasPropertyConstraint() {
-		return hasPropertyConstraint;
-	}
-
-	public void setHasPropertyConstraint(Boolean hasPropertyConstraint) {
-		this.hasPropertyConstraint = hasPropertyConstraint;
-	}
-
-	public String getProperty() {
-		return property;
-	}
-
-	public void setProperty(String property) {
-		this.property = property;
-	}
-
-	public String getPropertyValue() {
-		return propertyValue;
-	}
-
-	public void setPropertyValue(String propertyValue) {
-		this.propertyValue = propertyValue;
-	}
-
 	public String getDataElementAbbrevDisplayName() {
 		return dataElementAbbrevDisplayName;
 	}
 
-	public void setDataElementAbbrevDisplayName(String inDataElementAbbrevDisplayName) {
+	public void setDataElementAbbrevDisplayName(String
+		inDataElementAbbrevDisplayName) {
 		dataElementAbbrevDisplayName = inDataElementAbbrevDisplayName;
 	}
 
@@ -177,7 +96,8 @@ public class DataElementField {
 		return dataElementDisplayName;
 	}
 
-	public void setDataElementDisplayName(String inDataElementDisplayName) {
+	public void setDataElementDisplayName(String
+		inDataElementDisplayName) {
 		dataElementDisplayName = inDataElementDisplayName;
 	}
 
@@ -188,27 +108,13 @@ public class DataElementField {
 	public void setType(Type type) {
 		this.type = type;
 	}
-
+	
 	public boolean isInSystem() {
 		return this.type == Type.SYSTEM;
 	}
 
 	@Override
 	public String toString() {
-		return "DataElementField{"
-				+ "dataElementKey='" + dataElementKey + '\''
-				+ ", dataElementAbbrevDisplayName='"
-				+ dataElementAbbrevDisplayName + '\''
-				+ ", dataElementDisplayName='" + dataElementDisplayName + '\''
-				+ ", withValue='" + withValue + '\''
-				+ ", hasDuration=" + hasDuration
-				+ ", minDuration=" + minDuration
-				+ ", minDurationUnits=" + minDurationUnits
-				+ ", maxDuration=" + maxDuration
-				+ ", maxDurationUnits=" + maxDurationUnits
-				+ ", hasPropertyConstraint=" + hasPropertyConstraint
-				+ ", property='" + property + '\''
-				+ ", propertyValue='" + propertyValue + '\''
-				+ '}';
+		return ToStringBuilder.reflectionToString(this);
 	}
 }

@@ -35,8 +35,8 @@ import javax.persistence.Table;
  * context of the Eureka! UI.
  */
 @Entity
-@Table(name = "low_level_abstractions")
-public final class LowLevelAbstraction extends Proposition {
+@Table(name = "value_thresholds")
+public class ValueThresholdEntity extends Proposition {
 
 	/*
 	 * Minimum number of values to match

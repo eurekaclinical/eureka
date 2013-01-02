@@ -31,14 +31,14 @@ import edu.emory.cci.aiw.cvrg.eureka.services.dao.JpaRoleDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.JpaTimeUnitDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.JpaUserDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.JpaValueComparatorDao;
-import edu.emory.cci.aiw.cvrg.eureka.services.dao.JpaValueDefinitionMatchOperatorDao;
+import edu.emory.cci.aiw.cvrg.eureka.services.dao.JpaThresholdsOperatorDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.PropositionDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.RelationOperatorDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.RoleDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.TimeUnitDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.UserDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.ValueComparatorDao;
-import edu.emory.cci.aiw.cvrg.eureka.services.dao.ValueDefinitionMatchOperatorDao;
+import edu.emory.cci.aiw.cvrg.eureka.services.dao.ThresholdsOperatorDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.email.EmailSender;
 import edu.emory.cci.aiw.cvrg.eureka.services.email.FreeMarkerEmailSender;
 
@@ -63,8 +63,9 @@ class AppModule extends AbstractModule {
 		bind(TimeUnitDao.class).to(JpaTimeUnitDao.class);
 		bind(RelationOperatorDao.class).to(JpaRelationOperatorDao.class);
 		bind(ValueComparatorDao.class).to(JpaValueComparatorDao.class);
-		bind(ValueDefinitionMatchOperatorDao.class).to
-				(JpaValueDefinitionMatchOperatorDao.class);
+		bind(ThresholdsOperatorDao.class).to(JpaThresholdsOperatorDao.class);
+		bind(ThresholdsOperatorDao.class).to
+				(JpaThresholdsOperatorDao.class);
 		bind(EmailSender.class).to(FreeMarkerEmailSender.class);
 		bind(I2b2Client.class).to(I2b2RestClient.class);
 		bind(Context.class).to(InitialContext.class);

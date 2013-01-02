@@ -20,13 +20,18 @@
 package edu.emory.cci.aiw.cvrg.eureka.common.entity;
 
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import org.apache.commons.lang.builder.ToStringBuilder;
+import org.codehaus.jackson.annotate.JsonIgnore;
 
 /**
  * @author hrathod
@@ -34,6 +39,12 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "value_comparators")
 public class ValueComparator {
+	
+	public static enum Threshold {
+		LOWER_ONLY,
+		BOTH,
+		UPPER_ONLY
+	}
 
 	@Id
 	@SequenceGenerator(name = "COMP_SEQ_GENERATOR",
@@ -42,11 +53,20 @@ public class ValueComparator {
 			generator = "COMP_SEQ_GENERATOR")
 	private Long id;
 
+	@Column(nullable = false)
 	private String name;
 
 	private String description;
+	
+	@Enumerated(EnumType.STRING)
+	@Column(nullable = false)
+	private Threshold threshold;
+	
+	@Column(nullable = false)
+	private Long rank;
 
 	@OneToOne
+	@JsonIgnore // Needed due to infinite recursion without it. Maybe there's another way?
 	private ValueComparator complement;
 
 	public Long getId() {
@@ -76,8 +96,29 @@ public class ValueComparator {
 	public ValueComparator getComplement() {
 		return complement;
 	}
-
+	
 	public void setComplement(ValueComparator inComplement) {
 		complement = inComplement;
+	}
+	
+	public Threshold getThreshold() {
+		return threshold;
+	}
+	
+	public void setThreshold(Threshold threshold) {
+		this.threshold = threshold;
+	}
+
+	public Long getRank() {
+		return rank;
+	}
+
+	public void setRank(Long rank) {
+		this.rank = rank;
+	}
+	
+	@Override
+	public String toString() {
+		return ToStringBuilder.reflectionToString(this);
 	}
 }

@@ -32,10 +32,10 @@ import org.codehaus.jackson.annotate.JsonTypeInfo;
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
 @JsonSubTypes({
         @JsonSubTypes.Type(value = SystemElement.class, name = "system"),
-        @JsonSubTypes.Type(value = CategoricalElement.class, name = "categorization"),
+        @JsonSubTypes.Type(value = Category.class, name = "categorization"),
         @JsonSubTypes.Type(value = Sequence.class, name = "sequence"),
         @JsonSubTypes.Type(value = Frequency.class, name = "frequency"),
-        @JsonSubTypes.Type(value = ResultThresholds.class, name = "resultThresholds") })
+        @JsonSubTypes.Type(value = ValueThresholds.class, name = "resultThresholds") })
 public abstract class DataElement implements DataElementVisitable {
 
 	public enum Type {

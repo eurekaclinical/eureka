@@ -54,12 +54,12 @@ public final class PropositionTypeVisitor implements PropositionEntityVisitor {
 	}
 
 	@Override
-	public void visit(LowLevelAbstraction lowLevelAbstraction) {
+	public void visit(ValueThresholdEntity lowLevelAbstraction) {
 		this.type = DataElement.Type.VALUE_THRESHOLD;
 	}
 
 	@Override
-	public void visit(CompoundLowLevelAbstraction compoundLowLevelAbstraction) {
+	public void visit(CompoundValueThreshold compoundLowLevelAbstraction) {
 		this.type = DataElement.Type.VALUE_THRESHOLD;
 	}
 

@@ -22,9 +22,9 @@ package edu.emory.cci.aiw.cvrg.eureka.services.translation;
 import com.google.inject.Inject;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.DataElement;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.Categorization;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.CompoundLowLevelAbstraction;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.CompoundValueThreshold;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.HighLevelAbstraction;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.LowLevelAbstraction;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.ValueThresholdEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.PropositionEntityVisitor;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.SliceAbstraction;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.SystemProposition;
@@ -104,13 +104,13 @@ public final class PropositionTranslatorVisitor implements
 	}
 
 	@Override
-	public void visit(LowLevelAbstraction lowLevelAbstraction) {
+	public void visit(ValueThresholdEntity valueThreshold) {
 		dataElement = this.resultThresholdsLowLevelAbstractionTranslator
-				.translateFromProposition(lowLevelAbstraction);
+				.translateFromProposition(valueThreshold);
 	}
 
 	@Override
-	public void visit(CompoundLowLevelAbstraction compoundLowLevelAbstraction) {
+	public void visit(CompoundValueThreshold compoundLowLevelAbstraction) {
 		dataElement = this
 				.resultThresholdsCompoundLowLevelAbstractionTranslator
 				.translateFromProposition(compoundLowLevelAbstraction);

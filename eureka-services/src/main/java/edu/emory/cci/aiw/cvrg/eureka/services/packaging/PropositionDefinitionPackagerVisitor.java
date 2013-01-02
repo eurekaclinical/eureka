@@ -19,12 +19,12 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.services.packaging;
 
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.CompoundLowLevelAbstraction;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.CompoundValueThreshold;
 import org.protempa.PropositionDefinition;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.Categorization;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.HighLevelAbstraction;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.LowLevelAbstraction;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.ValueThresholdEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.PropositionEntityVisitor;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.SliceAbstraction;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.SystemProposition;
@@ -62,14 +62,14 @@ public final class PropositionDefinitionPackagerVisitor implements
 	}
 	
 	@Override
-	public void visit(LowLevelAbstraction lowLevelAbstraction) {
+	public void visit(ValueThresholdEntity lowLevelAbstraction) {
 		this.propositionDefinition = new LowLevelAbstractionPackager().pack
 				(lowLevelAbstraction);
 		
 	}
 
 	@Override
-	public void visit(CompoundLowLevelAbstraction compoundLowLevelAbstraction) {
+	public void visit(CompoundValueThreshold compoundLowLevelAbstraction) {
 		this.propositionDefinition = new CompoundLowLevelAbstractionPackager
 				().pack(compoundLowLevelAbstraction);
 	}

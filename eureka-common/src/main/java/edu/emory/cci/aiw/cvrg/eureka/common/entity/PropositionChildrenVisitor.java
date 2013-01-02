@@ -48,12 +48,12 @@ public final class PropositionChildrenVisitor implements
 	}
 
 	@Override
-	public void visit(LowLevelAbstraction lowLevelAbstraction) {
+	public void visit(ValueThresholdEntity lowLevelAbstraction) {
 		this.children = lowLevelAbstraction.getAbstractedFrom();
 	}
 
 	@Override
-	public void visit(CompoundLowLevelAbstraction compoundLowLevelAbstraction) {
+	public void visit(CompoundValueThreshold compoundLowLevelAbstraction) {
 		this.children = compoundLowLevelAbstraction.getAbstractedFrom();
 	}
 

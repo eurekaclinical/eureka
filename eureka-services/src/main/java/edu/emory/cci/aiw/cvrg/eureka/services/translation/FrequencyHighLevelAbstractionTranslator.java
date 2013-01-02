@@ -28,10 +28,10 @@ import com.google.inject.Inject;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.DataElementField;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.Frequency;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.Categorization;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.CompoundLowLevelAbstraction;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.CompoundValueThreshold;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.ExtendedProposition;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.HighLevelAbstraction;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.LowLevelAbstraction;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.ValueThresholdEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.Proposition;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.PropositionEntityVisitor;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.Relation;
@@ -142,8 +142,8 @@ public final class FrequencyHighLevelAbstractionTranslator implements
 
 		@Override
 		public void visit
-				(LowLevelAbstraction original) {
-			LowLevelAbstraction result = new LowLevelAbstraction();
+				(ValueThresholdEntity original) {
+			ValueThresholdEntity result = new ValueThresholdEntity();
 
 			result.setUserId(original.getUserId());
 			result.setInSystem(false);
@@ -152,7 +152,7 @@ public final class FrequencyHighLevelAbstractionTranslator implements
 			result.setAbstractedFrom(original.getAbstractedFrom());
 			result.setUserConstraint(original.getUserConstraint());
 			result.setComplementConstraint(original.getComplementConstraint());
-			result.setCreatedFrom(LowLevelAbstraction.CreatedFrom.FREQUENCY);
+			result.setCreatedFrom(ValueThresholdEntity.CreatedFrom.FREQUENCY);
 
 			Date now = Calendar.getInstance().getTime();
 			result.setCreated(now);
@@ -179,8 +179,8 @@ public final class FrequencyHighLevelAbstractionTranslator implements
 
 		@Override
 		public void visit(
-				CompoundLowLevelAbstraction original) {
-			CompoundLowLevelAbstraction result = new CompoundLowLevelAbstraction();
+				CompoundValueThreshold original) {
+			CompoundValueThreshold result = new CompoundValueThreshold();
 
 			result.setUserId(original.getUserId());
 			result.setInSystem(false);
@@ -189,7 +189,7 @@ public final class FrequencyHighLevelAbstractionTranslator implements
 			result.setAbstractedFrom(original.getAbstractedFrom());
 			result.setUserValueDefinitionName(original.getUserValueDefinitionName());
 			result.setComplementValueDefinitionName(original.getComplementValueDefinitionName());
-			result.setCreatedFrom(CompoundLowLevelAbstraction.CreatedFrom.FREQUENCY);
+			result.setCreatedFrom(CompoundValueThreshold.CreatedFrom.FREQUENCY);
 
 			Date now = Calendar.getInstance().getTime();
 			result.setCreated(now);

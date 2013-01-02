@@ -30,15 +30,15 @@ import javax.persistence.Table;
 *
 */
 @Entity
-@Table(name = "value_def_match_op")
-public class ValueDefinitionMatchOperator {
+@Table(name = "thresholds_op")
+public class ThresholdsOperator {
 
 	@Id
-	@SequenceGenerator(name = "VALUE_DEF_MATCH_OP_SEQ_GENERATOR",
-			sequenceName =  "VALUE_DEF_MATCH_OP_SEQ", allocationSize = 1,
+	@SequenceGenerator(name = "THRESHOLDS_OP_SEQ_GENERATOR",
+			sequenceName =  "THRESHOLDS_OP_SEQ", allocationSize = 1,
 			initialValue = 1)
 	@GeneratedValue(strategy = GenerationType.SEQUENCE,
-			generator = "VALUE_DEF_MATCH_OP_SEQ_GENERATOR")
+			generator = "THRESHOLDS_OP_SEQ_GENERATOR")
 	private Long id;
 
 	private String name;

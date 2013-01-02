@@ -8,7 +8,8 @@ var possiblePropositions = new Object();
 var saveFuncs = {
 	'sequence': saveSequence,
 	'categorization': saveCategorization,
-	'frequency': saveFrequency
+	'frequency': saveFrequency,
+	'valuethreshold': saveValueThreshold
 };
 
 function postProposition (postData, successFunc) {
@@ -18,7 +19,9 @@ function postProposition (postData, successFunc) {
 		contentType: "application/json; charset=utf-8",
 		data: JSON.stringify(postData),
 		dataType: "json",
-		success: function (data) {window.location.href = 'editorhome'}
+		success: function (data) {
+			window.location.href = 'editorhome'
+		}
 	});
 }
 
@@ -90,27 +93,69 @@ function saveSequence (elem) {
 	postProposition(sequence);
 }
 
-function saveCategorization (elem) {
-	var $propositions = $(elem).find('ul.sortable').find('li');
-	var childElements = new Array();
+function saveValueThreshold (elem) {
+	var valueThreshold = new Object();
+	
+	var $valueThresholds = $(elem).find('.value-thresholds-container').find('.value-threshold');
+	
+	var propId = $('#propId').val();
+	if (propId) {
+		valueThreshold.id = propId;
+	}
+	valueThreshold.type = 'resultThresholds';
+	valueThreshold.abbrevDisplayName = $('input#propAbbrevDisplayName').val();
+	valueThreshold.displayName = $('textarea#propDisplayName').val();
+	valueThreshold.name = $(elem).find('input[name="valueThresholdValueName"]').val();
+	valueThreshold.thresholdsOperator = $(elem).find('select[name="valueThresholdType"]').val();
+	valueThreshold.valueThresholds = collectValueThresholds($valueThresholds);
 
-	$propositions.each(function (i, p) {
-		var system = $(p).data('space') === 'system';
-		var child = {
-			'key': $(p).data('key')
-		};
+	postProposition(valueThreshold);
+}
 
-		if (system) {
-			child['type'] =  'system';
-		} else {
-			child['type'] =  $(p).data('type').toLowerCase();
-			if (child['type'] === 'CATEGORIZATION') {
-				child['categoricalType'] = $(p).data('subtype');
-			}
-		}
+function collectValueThresholds ($valueThresholds) {
+	var valueThresholdsArr = new Array();
+	
+	
+	$valueThresholds.each(function (i,r) {
+		var thresholdedDataEltFromDropBox = 
+			$(r).find('ul.sortable').find('li').first();
+		var thresholdedDataElement = collectDataElement(thresholdedDataEltFromDropBox);
+		
+		var $relatedDataElements = $(r).find('ul.sortable').find('li');
 
-		childElements.push(child);
+		valueThresholdsArr.push({
+			'dataElement': thresholdedDataElement,
+			'lowerComp': $(r).find('select[name="thresholdLowerComp"]').val(),
+			'lowerValue': $(r).find('input[name="thresholdLowerVal"]').val(),
+			'lowerUnits': null, //placeholder
+			'upperComp': $(r).find('select[name="thresholdUpperComp"]').val(),
+			'upperValue': $(r).find('input[name="thresholdUpperVal"]').val(),
+			'upperUnits': null, //placeholder
+			'isBeforeOrAfter': $(r).find('select[name="thresholdDataElementTemporalRelationCB"]').is(":checked"),
+			'relationOperator': $(r).find('select[name="thresholdDataElementTemporalRelation"]').val(),
+			'relatedDataElements': collectRelatedDataElementKeys($relatedDataElements),
+			'atLeastCount': $(r).find('input[name="thresholdWithinAtLeast"]').val(),
+			'atLeastTimeUnit': $(r).find('select[name="thresholdWithinAtLeastUnits"]').val(),
+			'atMostCount': $(r).find('input[name="thresholdWithinAtMost"]').val(),
+			'atMostTimeUnit': $(r).find('select[name="thresholdWithinAtMostUnits"]').val()
+			});
 	});
+	return valueThresholdsArr;
+}
+
+function collectRelatedDataElementKeys($relatedDataElements) {
+	var keys = new Array();
+	
+	$relatedDataElements.each(function (i, p) {
+		keys.push($(p).data('key'));
+	});
+	
+	return keys;
+}
+
+function saveCategorization (elem) {
+	var $memberDataElements = $(elem).find('ul.sortable').find('li');
+	var childElements = collectDataElements($memberDataElements);
 
 	var categoricalType = $(elem).find('ul.sortable').data('proptype');
 	if (categoricalType == 'empty') {
@@ -131,6 +176,34 @@ function saveCategorization (elem) {
 	}
 
 	postProposition(categorization);
+}
+
+function collectDataElements($dataElementsFromDropBox) {
+	var childElements = new Array();
+
+	$dataElementsFromDropBox.each(function (i, p) {
+		childElements.push(collectDataElement(p));
+	});
+	
+	return childElements;
+}
+
+function collectDataElement(dataElementFromDropBox) {
+	var system = $(dataElementFromDropBox).data('space') === 'system';
+	var child = {
+		'key': $(dataElementFromDropBox).data('key')
+	};
+
+	if (system) {
+		child['type'] =  'system';
+	} else {
+		child['type'] =  $(dataElementFromDropBox).data('type').toLowerCase();
+		if (child['type'] === 'categorization') {
+			child['categoricalType'] = 
+				$(dataElementFromDropBox).data('subtype');
+		}
+	}
+	return child;
 }
 
 function saveFrequency (elem) {
@@ -428,26 +501,26 @@ $(document).ready(function(){
 	 * Insert search-form
 	 */
 	// This doesn't work yet because we don't load all of the nodes
-//	$('#systemTree').before(
-//			$('<form id="search"><span></span><input type="text" value=""><input type="submit" value="search"><input type="reset" value="X"></form>').
-//			bind({
-//				reset: function(evt){
-//					$('#systemTree').jstree('clear_search');
-//					$('#search span').html('');
-//				},
-//				submit: function(evt){
-//					var searchvalue = $('#search input[type="text"]').val();
-//					if(searchvalue!='') {
-//						$('#systemTree').jstree('search', searchvalue);
-//						$('#search span').html('');
-//					} else {
-//						$('#systemTree').jstree('clear_search');
-//						$('#search span').html('Please enter searchvalue');
-//					}
-//					return false;
-//				}
-//			})
-//	);
+	//	$('#systemTree').before(
+	//			$('<form id="search"><span></span><input type="text" value=""><input type="submit" value="search"><input type="reset" value="X"></form>').
+	//			bind({
+	//				reset: function(evt){
+	//					$('#systemTree').jstree('clear_search');
+	//					$('#search span').html('');
+	//				},
+	//				submit: function(evt){
+	//					var searchvalue = $('#search input[type="text"]').val();
+	//					if(searchvalue!='') {
+	//						$('#systemTree').jstree('search', searchvalue);
+	//						$('#search span').html('');
+	//					} else {
+	//						$('#systemTree').jstree('clear_search');
+	//						$('#search span').html('Please enter searchvalue');
+	//					}
+	//					return false;
+	//				}
+	//			})
+	//	);
 
 	$('a#add-to-sequence').click(function (e) {
 		var total = $('table.sequence-relation').length;
@@ -456,10 +529,20 @@ $(document).ready(function(){
 		var appendTo = $('td.sequence-relations-container');
 		data.find('ul.sortable').empty();
 		data.find('span.count').text(newCount);
-		data.find('div.jstree-drop').attr('id','relatedDataElement' + newCount);
+		data.find('div.thresholdedDataElement').attr('id','thresholdedDataElement' + newCount);
 		data.find('select[name="sequenceRelDataElementPropertyName"]').attr('data-properties-provider','relatedDataElement' + newCount);
 		appendTo.append(data);
 		setPropositionSelects($(appendTo).closest('[data-definition-container="true"]'));
+	});
+	
+	$('a#add-threshold').click(function (e) {
+		var total = $('tr.value-threshold').length;
+		var newCount  = total + 1;
+		var data = $('tr.value-threshold').filter(':last').clone();
+		var appendTo = $('table.value-thresholds-container');
+		data.find('ul.sortable').empty();
+		data.find('div.jstree-drop').attr('id', 'threshold' + newCount);
+		appendTo.append(data);
 	});
 
 });
@@ -475,11 +558,11 @@ function dropFinishCallback (data) {
 
 		var sortable = $(target).find('ul.sortable');
 		var newItem = $('<li></li>')
-			.data("space", $(data.o[0]).data("space"))
-			.data("desc", textContent)
-			.data("type", $(data.o[0]).data("type"))
-			.data("subtype", $(data.o[0]).data("subtype") || '')
-			.data("key", $(data.o[0]).data("proposition") || $(data.o[0]).data('key'));
+		.data("space", $(data.o[0]).data("space"))
+		.data("desc", textContent)
+		.data("type", $(data.o[0]).data("type"))
+		.data("subtype", $(data.o[0]).data("subtype") || '')
+		.data("key", $(data.o[0]).data("proposition") || $(data.o[0]).data('key'));
 
 		// set the properties in the properties select
 		if ($(data.o[0]).data('properties')) {
@@ -499,7 +582,10 @@ function dropFinishCallback (data) {
 					'title': 'Definition Criteria',
 					'modal': true,
 					'buttons': {
-						'OK': function () { $(this).dialog('close'); $(this).remove();}
+						'OK': function () {
+							$(this).dialog('close');
+							$(this).remove();
+						}
 					}
 				});
 				return;
@@ -509,7 +595,9 @@ function dropFinishCallback (data) {
 			$(sortable).data("proptype", tmptype);
 		}
 
-		var X = $("<span></span>", {class: "delete"});
+		var X = $("<span></span>", {
+			class: "delete"
+		});
 		attachDeleteAction(X);
 
 		var txt = $("<span></span>", {
@@ -569,7 +657,7 @@ function initTrees() {
 				
 				return droppable;
 			}
-			/*
+		/*
 			,
 			"drag_check" : function(data) {
 				if (data.r.attr("id") == "phtml_1") {
@@ -584,9 +672,9 @@ function initTrees() {
 			*/
 		},
 		// search disabled until we figure out a way to search for nodes not currently loaded in the tree
-//		"search" : {
-//			"show_only_matches" : true,
-//		},
+		//		"search" : {
+		//			"show_only_matches" : true,
+		//		},
 		"plugins" : [ "themes", "json_data", "ui", "crrm", "dnd"/*, "search"*/ ]
 	})
 	/*
@@ -623,7 +711,7 @@ function initTrees() {
 		},
 		"plugins" : [ "themes", "json_data", "ui", "dnd" ]
 	})
-	/*
+/*
 	.bind("select_node.jstree", function(e, data)
 	{
 		if(data.rslt.obj[0].id !== undefined)
@@ -640,7 +728,7 @@ function initTrees() {
 
 	})
 	*/
-	;
+;
 
 
 

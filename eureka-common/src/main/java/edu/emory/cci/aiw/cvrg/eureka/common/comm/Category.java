@@ -30,10 +30,11 @@ import javax.persistence.Enumerated;
  * Container class for the categorical user-created data element from the UI.
  * Essentially a direct mapping form the categorical element form fields.
  */
-public final class CategoricalElement extends DataElement {
+public final class Category extends DataElement {
 
 	public enum CategoricalType {
-		CONSTANT, EVENT, PRIMITIVE_PARAMETER, LOW_LEVEL_ABSTRACTION, HIGH_LEVEL_ABSTRACTION, SLICE_ABSTRACTION, MIXED, UNKNOWN
+		CONSTANT, EVENT, PRIMITIVE_PARAMETER, LOW_LEVEL_ABSTRACTION, 
+		HIGH_LEVEL_ABSTRACTION, SLICE_ABSTRACTION, MIXED, UNKNOWN
 	}
 
 	private List<DataElement> children = new ArrayList<DataElement>();
@@ -41,7 +42,7 @@ public final class CategoricalElement extends DataElement {
 	@Enumerated(EnumType.STRING)
 	private CategoricalType categoricalType;
 
-	public CategoricalElement () {
+	public Category () {
 		super(DataElement.Type.CATEGORIZATION);
 	}
 

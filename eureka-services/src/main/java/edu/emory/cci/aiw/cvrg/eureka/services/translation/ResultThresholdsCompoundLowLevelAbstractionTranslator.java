@@ -20,11 +20,11 @@
 package edu.emory.cci.aiw.cvrg.eureka.services.translation;
 
 import com.google.inject.Inject;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.ResultThresholds;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.ValueThresholds;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.ValueThreshold;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.CompoundLowLevelAbstraction;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.CompoundLowLevelAbstraction.CreatedFrom;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.LowLevelAbstraction;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.CompoundValueThreshold;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.CompoundValueThreshold.CreatedFrom;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.ValueThresholdEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.exception.DataElementHandlingException;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.PropositionDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.TimeUnitDao;
@@ -37,7 +37,7 @@ import java.util.Date;
 import java.util.List;
 
 public final class ResultThresholdsCompoundLowLevelAbstractionTranslator implements
-		PropositionTranslator<ResultThresholds, CompoundLowLevelAbstraction> {
+		PropositionTranslator<ValueThresholds, CompoundValueThreshold> {
 
 	private static final String SYNTH_LLA_SUFFIX = "_CLASSIFICATION";
 	public static final String COMP_DEF_SUFFIX = "_COMP";
@@ -63,15 +63,16 @@ public final class ResultThresholdsCompoundLowLevelAbstractionTranslator impleme
 	}
 
 	@Override
-	public CompoundLowLevelAbstraction translateFromElement(ResultThresholds
+	public CompoundValueThreshold translateFromElement(ValueThresholds
 																	element)
 			throws DataElementHandlingException {
-		CompoundLowLevelAbstraction result = new CompoundLowLevelAbstraction();
+		CompoundValueThreshold result = new CompoundValueThreshold();
 		result.setInSystem(false);
 
 		PropositionTranslatorUtil.populateCommonPropositionFields(result,
 				element);
-		List<LowLevelAbstraction> abstractedFrom = new ArrayList<LowLevelAbstraction>();
+		List<ValueThresholdEntity> abstractedFrom = 
+				new ArrayList<ValueThresholdEntity>();
 
 		result.setUserValueDefinitionName(element.getName());
 		result.setComplementValueDefinitionName(element.getName() +
@@ -87,21 +88,21 @@ public final class ResultThresholdsCompoundLowLevelAbstractionTranslator impleme
 		return result;
 	}
 
-	private LowLevelAbstraction createIntermediateAbstraction
+	private ValueThresholdEntity createIntermediateAbstraction
 			(ValueThreshold threshold) throws DataElementHandlingException {
-		LowLevelAbstraction result = new LowLevelAbstraction();
+		ValueThresholdEntity result = new ValueThresholdEntity();
 		Date now = Calendar.getInstance().getTime();
-		result.setDisplayName(threshold.getDataElementKey() + SYNTH_LLA_SUFFIX);
+		result.setDisplayName(threshold.getDataElement().getDataElementKey() + SYNTH_LLA_SUFFIX);
 		result.setAbbrevDisplayName(result.getDisplayName());
 		result.setCreated(now);
 		result.setLastModified(now);
 		result.setUserId(userId);
 		result.setKey(result.getDisplayName());
-		result.setCreatedFrom(LowLevelAbstraction.CreatedFrom.VALUE_THRESHOLD);
+		result.setCreatedFrom(ValueThresholdEntity.CreatedFrom.VALUE_THRESHOLD);
 
 		result.setAbstractedFrom(Collections.singletonList(propositionDao.getByUserAndKey
 				(userId,
-						threshold.getDataElementKey())));
+						threshold.getDataElement().getDataElementKey())));
 
 		ResultThresholdsLowLevelAbstractionTranslator.createAndSetConstraints
 				(result, threshold, valueCompDao);
@@ -114,8 +115,8 @@ public final class ResultThresholdsCompoundLowLevelAbstractionTranslator impleme
 
 
 	@Override
-	public ResultThresholds translateFromProposition(
-			CompoundLowLevelAbstraction proposition) {
+	public ValueThresholds translateFromProposition(
+			CompoundValueThreshold proposition) {
 		// TODO Auto-generated method stub
 		return null;
 	}
