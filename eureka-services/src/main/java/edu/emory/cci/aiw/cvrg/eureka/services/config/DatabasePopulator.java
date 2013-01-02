@@ -164,18 +164,18 @@ class DatabasePopulator {
 				ValueComparator.Threshold.BOTH,
 				Long.valueOf(4), "=");
 		this.createValueComparatorIfNeeded(vcMap, ">", "greater than", 
-				ValueComparator.Threshold.UPPER_ONLY,
+				ValueComparator.Threshold.LOWER_ONLY,
 				Long.valueOf(5), "<=");
 		this.createValueComparatorIfNeeded(vcMap, ">=",
 				"greater than or equal to", 
-				ValueComparator.Threshold.UPPER_ONLY,
+				ValueComparator.Threshold.LOWER_ONLY,
 				Long.valueOf(6), "<");
 		this.createValueComparatorIfNeeded(vcMap, "<", "less than", 
-				ValueComparator.Threshold.LOWER_ONLY, 
+				ValueComparator.Threshold.UPPER_ONLY, 
 				Long.valueOf(1), ">=");
 		this.createValueComparatorIfNeeded(vcMap, "<=",
 				"less than or equal to", 
-				ValueComparator.Threshold.LOWER_ONLY,
+				ValueComparator.Threshold.UPPER_ONLY,
 				Long.valueOf(2), ">");
 		
 		for (ValueComparatorHolder vc : vcMap.values()) {
