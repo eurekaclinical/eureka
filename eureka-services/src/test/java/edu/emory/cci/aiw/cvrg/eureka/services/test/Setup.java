@@ -64,6 +64,7 @@ public class Setup implements TestDataProvider {
 	private User adminUser;
 	private User superUser;
 	private List<Proposition> propositions;
+	private List<ThresholdsOperator> thresholdsOperators;
 
 	/**
 	 * Create a Bootstrap class with an EntityManager.
@@ -88,6 +89,7 @@ public class Setup implements TestDataProvider {
 		this.propositions =
 				this.createPropositions(this.researcherUser, this.adminUser,
 						this.superUser);
+		this.thresholdsOperators = this.createThresholdOps();
 	}
 
 	@Override
@@ -96,6 +98,7 @@ public class Setup implements TestDataProvider {
 		this.remove(Proposition.class);
 		this.remove(User.class);
 		this.remove(Role.class);
+		this.remove(ThresholdsOperator.class);
 		this.researcherRole = null;
 		this.adminRole = null;
 		this.superRole = null;
@@ -103,6 +106,7 @@ public class Setup implements TestDataProvider {
 		this.adminUser = null;
 		this.superUser = null;
 		this.propositions = null;
+		this.thresholdsOperators = null;
 	}
 
 	private <T> void remove(Class<T> className) {
@@ -119,6 +123,21 @@ public class Setup implements TestDataProvider {
 		}
 		entityManager.flush();
 		entityManager.getTransaction().commit();
+	}
+	
+	private List<ThresholdsOperator> createThresholdOps () {
+		EntityManager entityManager = this.getEntityManager();
+		List<ThresholdsOperator> result = new ArrayList<ThresholdsOperator>();
+		ThresholdsOperator any = new ThresholdsOperator();
+		any.setDescription("ANY");
+		any.setName("any");
+
+		entityManager.getTransaction().begin();
+		entityManager.persist(any);
+		entityManager.flush();
+		entityManager.getTransaction().commit();
+
+		return result;
 	}
 
 	private List<Proposition> createPropositions(User... users) {
