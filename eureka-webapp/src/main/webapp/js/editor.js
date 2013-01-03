@@ -11,6 +11,22 @@ var saveFuncs = {
 	'frequency': saveFrequency,
 	'value_threshold': saveValueThreshold
 };
+var dndActions = {
+	'frequency': enableFrequencyFields
+};
+var deleteActions = {
+	'frequency': disableFrequencyFields
+};
+
+function enableFrequencyFields(dropped) {
+	if ($(dropped).data('type') == 'VALUE_THRESHOLD') {
+		$('#valueThresholdConsecutiveLabel').css('visibility','visible');
+	}
+}
+
+function disableFrequencyFields() {
+	$('#valueThresholdConsecutiveLabel').css('visibility','hidden');
+}
 
 function postProposition (postData, successFunc) {
 	$.ajax({
@@ -189,16 +205,17 @@ function collectDataElements($dataElementsFromDropBox) {
 }
 
 function collectDataElement(dataElementFromDropBox) {
-	var system = $(dataElementFromDropBox).data('space') === 'system';
+	var system = $(dataElementFromDropBox).data('space') === 'system'
+		|| $(dataElementFromDropBox).data('space') === 'SYSTEM';
 	var child = {
 		'key': $(dataElementFromDropBox).data('key')
 	};
 
 	if (system) {
-		child['type'] =  'system';
+		child['type'] =  'SYSTEM';
 	} else {
-		child['type'] =  $(dataElementFromDropBox).data('type').toLowerCase();
-		if (child['type'] === 'categorization') {
+		child['type'] =  $(dataElementFromDropBox).data('type'); //.toLowerCase();
+		if (child['type'] === 'CATEGORIZATION') {
 			child['categoricalType'] = 
 			$(dataElementFromDropBox).data('subtype');
 		}
@@ -305,6 +322,12 @@ function attachDeleteAction (elem) {
 						$('select[data-properties-provider=' + $target.attr('id') + ']').each(function (i, item) {
 							$(item).empty();
 						});
+
+						// perform any additional delete actions
+						var type = $("input:radio[name='type']:checked").val();
+						if (deleteActions[type]) {
+							deleteActions[type]();
+						}
 
 						$(this).dialog("close");
 						$(this).remove();
@@ -617,6 +640,12 @@ function dropFinishCallback (data) {
 
 		addPossibleProposition(newItem.data('key'), txt.text());
 		setPropositionSelects($(sortable).closest('[data-definition-container="true"]'));
+
+		// finally, call any actions specific to the type of proposition being entered/edited
+		var propType = $("input:radio[name='type']:checked").val();
+		if (dndActions[propType]) {
+			dndActions[propType](data.o[0]);
+		}
 	}
 }
 
