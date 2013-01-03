@@ -102,7 +102,7 @@ function saveValueThreshold (elem) {
 	if (propId) {
 		valueThreshold.id = propId;
 	}
-	valueThreshold.type = 'resultThresholds';
+	valueThreshold.type = 'valuethreshold';
 	valueThreshold.abbrevDisplayName = $('input#propAbbrevDisplayName').val();
 	valueThreshold.displayName = $('textarea#propDisplayName').val();
 	valueThreshold.name = $(elem).find('input[name="valueThresholdValueName"]').val();
@@ -118,7 +118,7 @@ function collectValueThresholds ($valueThresholds) {
 	
 	$valueThresholds.each(function (i,r) {
 		var thresholdedDataEltFromDropBox = 
-			$(r).find('ul.sortable').find('li').first();
+		$(r).find('ul.sortable').find('li').first();
 		var thresholdedDataElement = collectDataElement(thresholdedDataEltFromDropBox);
 		
 		var $relatedDataElements = $(r).find('ul.sortable').find('li');
@@ -138,7 +138,7 @@ function collectValueThresholds ($valueThresholds) {
 			'atLeastTimeUnit': $(r).find('select[name="thresholdWithinAtLeastUnits"]').val(),
 			'atMostCount': $(r).find('input[name="thresholdWithinAtMost"]').val(),
 			'atMostTimeUnit': $(r).find('select[name="thresholdWithinAtMostUnits"]').val()
-			});
+		});
 	});
 	return valueThresholdsArr;
 }
@@ -200,7 +200,7 @@ function collectDataElement(dataElementFromDropBox) {
 		child['type'] =  $(dataElementFromDropBox).data('type').toLowerCase();
 		if (child['type'] === 'categorization') {
 			child['categoricalType'] = 
-				$(dataElementFromDropBox).data('subtype');
+			$(dataElementFromDropBox).data('subtype');
 		}
 	}
 	return child;

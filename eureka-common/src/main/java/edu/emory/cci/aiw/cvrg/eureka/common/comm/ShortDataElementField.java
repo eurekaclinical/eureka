@@ -22,10 +22,11 @@ package edu.emory.cci.aiw.cvrg.eureka.common.comm;
 import java.io.IOException;
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.codehaus.jackson.JsonGenerator;
+import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.JsonParser;
 import org.codehaus.jackson.JsonProcessingException;
+import org.codehaus.jackson.ObjectCodec;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
-import org.codehaus.jackson.annotate.JsonTypeInfo;
 import org.codehaus.jackson.map.DeserializationContext;
 import org.codehaus.jackson.map.JsonDeserializer;
 import org.codehaus.jackson.map.JsonSerializer;
@@ -35,11 +36,12 @@ import org.codehaus.jackson.map.annotate.JsonSerialize;
 
 /**
  * @author Andrew Post
-*/
+ */
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ShortDataElementField {
-	
+
 	public enum Type {
+
 		CATEGORIZATION, SEQUENCE, FREQUENCY, VALUE_THRESHOLD, SYSTEM
 	}
 
@@ -56,21 +58,25 @@ public class ShortDataElementField {
 			generator.writeEndObject();
 		}
 	}
-	
+
 	public static class TypeDeserializer extends JsonDeserializer<Type> {
 
 		@Override
-		public Type deserialize(JsonParser jp, DeserializationContext dc) 
+		public Type deserialize(JsonParser jp, DeserializationContext dc)
 				throws IOException, JsonProcessingException {
-			String text = jp.getText().toUpperCase();
-			return Type.valueOf(text);
+			ObjectCodec oc = jp.getCodec();
+			JsonNode node = oc.readTree(jp);
+			String text = node.getTextValue();
+			if (text != null) {
+				return Type.valueOf(text.toUpperCase());
+			} else {
+				return null;
+			}
 		}
-		
 	}
 	private String dataElementKey;
 	private String dataElementAbbrevDisplayName;
 	private String dataElementDisplayName;
-	
 	@JsonSerialize(using = TypeSerializer.class)
 	@JsonDeserialize(using = TypeDeserializer.class)
 	private Type type;
@@ -87,8 +93,7 @@ public class ShortDataElementField {
 		return dataElementAbbrevDisplayName;
 	}
 
-	public void setDataElementAbbrevDisplayName(String
-		inDataElementAbbrevDisplayName) {
+	public void setDataElementAbbrevDisplayName(String inDataElementAbbrevDisplayName) {
 		dataElementAbbrevDisplayName = inDataElementAbbrevDisplayName;
 	}
 
@@ -96,8 +101,7 @@ public class ShortDataElementField {
 		return dataElementDisplayName;
 	}
 
-	public void setDataElementDisplayName(String
-		inDataElementDisplayName) {
+	public void setDataElementDisplayName(String inDataElementDisplayName) {
 		dataElementDisplayName = inDataElementDisplayName;
 	}
 
@@ -108,7 +112,7 @@ public class ShortDataElementField {
 	public void setType(Type type) {
 		this.type = type;
 	}
-	
+
 	public boolean isInSystem() {
 		return this.type == Type.SYSTEM;
 	}

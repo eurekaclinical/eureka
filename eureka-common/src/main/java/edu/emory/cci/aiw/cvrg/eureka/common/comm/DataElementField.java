@@ -21,8 +21,10 @@ package edu.emory.cci.aiw.cvrg.eureka.common.comm;
 
 import java.io.IOException;
 import org.codehaus.jackson.JsonGenerator;
+import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.JsonParser;
 import org.codehaus.jackson.JsonProcessingException;
+import org.codehaus.jackson.ObjectCodec;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.map.DeserializationContext;
 import org.codehaus.jackson.map.JsonDeserializer;
@@ -37,8 +39,9 @@ import org.codehaus.jackson.map.annotate.JsonSerialize;
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class DataElementField {
-	
+
 	public enum Type {
+
 		CATEGORIZATION, SEQUENCE, FREQUENCY, VALUE_THRESHOLD, SYSTEM
 	}
 
@@ -55,19 +58,22 @@ public class DataElementField {
 			generator.writeEndObject();
 		}
 	}
-	
+
 	public static class TypeDeserializer extends JsonDeserializer<Type> {
 
 		@Override
-		public Type deserialize(JsonParser jp, DeserializationContext dc) 
+		public Type deserialize(JsonParser jp, DeserializationContext dc)
 				throws IOException, JsonProcessingException {
-			String text = jp.getText().toUpperCase();
-			return Type.valueOf(text);
+			ObjectCodec oc = jp.getCodec();
+			JsonNode node = oc.readTree(jp);
+			String text = node.getTextValue();
+			if (text != null) {
+				return Type.valueOf(text.toUpperCase());
+			} else {
+				return null;
+			}
 		}
-		
 	}
-	
-	
 	private String dataElementKey;
 	private String dataElementAbbrevDisplayName;
 	private String dataElementDisplayName;
@@ -80,7 +86,6 @@ public class DataElementField {
 	private Boolean hasPropertyConstraint;
 	private String property;
 	private String propertyValue;
-	
 	@JsonSerialize(using = TypeSerializer.class)
 	@JsonDeserialize(using = TypeDeserializer.class)
 	private Type type;
