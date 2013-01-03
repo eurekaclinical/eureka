@@ -9,7 +9,7 @@ var saveFuncs = {
 	'sequence': saveSequence,
 	'categorization': saveCategorization,
 	'frequency': saveFrequency,
-	'valuethreshold': saveValueThreshold
+	'value_threshold': saveValueThreshold
 };
 
 function postProposition (postData, successFunc) {
@@ -102,7 +102,7 @@ function saveValueThreshold (elem) {
 	if (propId) {
 		valueThreshold.id = propId;
 	}
-	valueThreshold.type = 'valuethreshold';
+	valueThreshold.type = 'value_threshold';
 	valueThreshold.abbrevDisplayName = $('input#propAbbrevDisplayName').val();
 	valueThreshold.displayName = $('textarea#propDisplayName').val();
 	valueThreshold.name = $(elem).find('input[name="valueThresholdValueName"]').val();
@@ -365,7 +365,7 @@ $(document).ready(function(){
 	$('#temporaldefinition').hide();
 	$('#sequencedefinition').hide();
 	$('#frequencydefinition').hide();
-	$('#valuethresholddefinition').hide();
+	$('#value_thresholddefinition').hide();
 
 	// make sure all the 'drop here' labels are hidden if we are editing
 	// an existing proposition.  Also populate any proposition select
@@ -404,7 +404,7 @@ $(document).ready(function(){
 				$('#temporaldefinition').hide();
 				$('#sequencedefinition').hide();
 				$('#frequencydefinition').hide();
-				$('#valuethresholddefinition').hide();
+				$('#value_thresholddefinition').hide();
 			}
 		}
 
