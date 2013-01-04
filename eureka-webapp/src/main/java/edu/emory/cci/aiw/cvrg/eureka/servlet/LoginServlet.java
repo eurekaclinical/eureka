@@ -34,9 +34,6 @@ import edu.emory.cci.aiw.cvrg.eureka.common.entity.User;
 
 public class LoginServlet extends HttpServlet {
 
-	private static final String GET_BY_NAME_URL = "/api/user/byname/";
-	private static final String PUT_USER_URL = "/api/user/put";
-
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
