@@ -602,7 +602,7 @@
 																				<ul data-type="threshold1" data-drop-type="single" class="sortable" style="width: 100% height: 100%">
 																					<li data-key="${threshold.dataElement.dataElementKey}" data-desc="${threshold.dataElement.dataElementAbbrevDisplayName}" data-space="${threshold.dataElement.inSystem ? 'system' : 'user'}">
 																						<span class="delete" style="cursor: pointer; background-color: lightblue;"></span>
-																						<span>${threshold.dataElement.dataElementKey} ${threshold.dataElement.dataElementAbbrevDisplayName}</span>
+																						<span>${threshold.dataElement.dataElementAbbrevDisplayName}(${threshold.dataElement.dataElementKey})</span>
 																					</li>
 																				</ul>
 																			</div>
