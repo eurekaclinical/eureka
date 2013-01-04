@@ -135,7 +135,7 @@ function collectValueThresholds ($valueThresholds) {
 	$valueThresholds.each(function (i,r) {
 		var thresholdedDataEltFromDropBox = 
 		$(r).find('ul.sortable').find('li').first();
-		var thresholdedDataElement = collectDataElement(thresholdedDataEltFromDropBox);
+		var thresholdedDataElement = collectShortDataElement(thresholdedDataEltFromDropBox);
 		
 		var $relatedDataElements = $(r).find('ul.sortable').find('li');
 
@@ -157,6 +157,24 @@ function collectValueThresholds ($valueThresholds) {
 		});
 	});
 	return valueThresholdsArr;
+}
+
+function collectShortDataElement(dataElementFromDropBox) {
+	var system = $(dataElementFromDropBox).data('space') === 'system'
+		|| $(dataElementFromDropBox).data('space') === 'SYSTEM';
+	var child = {
+		'dataElementKey': $(dataElementFromDropBox).data('key')	
+	};
+	
+	if (system) {
+		child['type'] = 'SYSTEM';
+	} else {
+		child['type'] = $(dataElementFromDropBox).data('type');
+		if (child['type'] === 'CATEGORIZATION') {
+			child['categoricalType'] = $(dataElementFromDropBox).data('subtype');
+		}
+	}
+	return child;
 }
 
 function collectRelatedDataElementKeys($relatedDataElements) {
