@@ -285,7 +285,7 @@ function setPropositionSelects (elem) {
 			if (possiblePropositions[key].count > 0) {
 				var add = true;
 				$(items).each( function (i, item) {
-					if ($(item).data('key') == key) {
+					if ($(item).data('key') == key && possiblePropositions[key].count < 2) {
 						add = false;
 					}
 				});
