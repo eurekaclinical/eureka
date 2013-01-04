@@ -67,6 +67,7 @@ public class ResultThresholdsLowLevelAbstractionTranslator implements
 
 		PropositionTranslatorUtil.populateCommonPropositionFields(result,
 				element);
+		result.setName(element.getName());
 		// low-level abstractions created from results thresholds are based on
 		// only one element
 		ValueThreshold threshold = element.getValueThresholds().get(0);
@@ -154,6 +155,7 @@ public class ResultThresholdsLowLevelAbstractionTranslator implements
 		ValueThresholds result = new ValueThresholds();
 		PropositionTranslatorUtil.populateCommonDataElementFields(result,
 				valThresholdEntity);
+		result.setName(valThresholdEntity.getName());
 		result.setValueThresholds(thresholds);
 		return result;
 	}

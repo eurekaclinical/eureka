@@ -37,6 +37,8 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "value_thresholds")
 public class ValueThresholdEntity extends Proposition {
+	
+	private String name;
 
 	/*
 	 * Minimum number of values to match
@@ -85,6 +87,14 @@ public class ValueThresholdEntity extends Proposition {
 	}
 
 	private CreatedFrom createdFrom;
+	
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String inName) {
+		name = inName;
+	}
 
 	public Integer getMinValues() {
 		return minValues;

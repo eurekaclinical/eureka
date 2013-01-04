@@ -56,11 +56,11 @@ public class CompoundLowLevelAbstractionPackager implements
 
 		for (ValueThresholdEntity lla : proposition.getAbstractedFrom()) {
 			result.addValueClassification(proposition
-					.getUserValueDefinitionName(), lla.getKey(),
-					lla.getUserConstraint().getName());
+					.getUserValueDefinitionName(), lla.getKey(), lla.getName());
 			result.addValueClassification(proposition
 					.getComplementValueDefinitionName(), lla.getKey(),
-					lla.getComplementConstraint().getName());
+					lla.getName() + 
+					LowLevelAbstractionPackager.COMPLEMENT_SUFFIX);
 		}
 
 		result.setGapFunction(new MinMaxGapFunction(proposition

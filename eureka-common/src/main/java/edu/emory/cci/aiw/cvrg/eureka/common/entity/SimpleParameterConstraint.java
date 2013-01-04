@@ -43,7 +43,6 @@ public class SimpleParameterConstraint {
 
 	private Number minValueThreshold;
 	private String minUnits;
-	private String name;
 	
 	@OneToOne
 	@JoinColumn(referencedColumnName = "id")
@@ -62,14 +61,6 @@ public class SimpleParameterConstraint {
 
 	public void setId(Long id) {
 		this.id = id;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String inName) {
-		name = inName;
 	}
 
 	public Number getMinValueThreshold() {
