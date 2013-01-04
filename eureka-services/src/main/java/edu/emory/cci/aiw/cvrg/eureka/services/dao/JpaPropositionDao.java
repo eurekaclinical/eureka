@@ -90,6 +90,9 @@ public class JpaPropositionDao extends GenericDao<Proposition, Long>
 				inUserId, inKey);
 			result = null;
 		}
+		if (result != null) {
+			this.refresh(result);
+		}
 		return result;
 	}
 
