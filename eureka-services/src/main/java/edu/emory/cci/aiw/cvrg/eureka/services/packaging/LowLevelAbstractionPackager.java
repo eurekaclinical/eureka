@@ -41,9 +41,7 @@ public final class LowLevelAbstractionPackager
 		LowLevelAbstractionDefinition result = new LowLevelAbstractionDefinition(
 		        proposition.getId().toString());
 
-		for (Proposition p : proposition.getAbstractedFrom()) {
-			result.addPrimitiveParameterId(p.getKey());
-		}
+		result.addPrimitiveParameterId(proposition.getAbstractedFrom().getKey());
 
 		constraintToValueDefinition(proposition.getKey(),
 				proposition.getUserConstraint(), result);
