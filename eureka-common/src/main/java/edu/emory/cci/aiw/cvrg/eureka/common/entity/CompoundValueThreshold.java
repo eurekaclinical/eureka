@@ -67,7 +67,7 @@ public class CompoundValueThreshold extends Proposition {
 
 	@ManyToMany(cascade = {CascadeType.MERGE, CascadeType.REFRESH,
 			CascadeType.PERSIST})
-	@JoinTable(name = "abstracted_from", joinColumns = {@JoinColumn(name =
+	@JoinTable(name = "cvt_abstracted_from", joinColumns = {@JoinColumn(name =
 			"target_proposition_id")})
 	private List<ValueThresholdEntity> abstractedFrom;
 
