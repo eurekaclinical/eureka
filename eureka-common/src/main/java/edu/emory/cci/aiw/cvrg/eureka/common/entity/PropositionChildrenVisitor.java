@@ -49,7 +49,7 @@ public final class PropositionChildrenVisitor implements
 
 	@Override
 	public void visit(ValueThresholdEntity lowLevelAbstraction) {
-		this.children = lowLevelAbstraction.getAbstractedFrom();
+		this.children = Collections.singletonList(lowLevelAbstraction.getAbstractedFrom());
 	}
 
 	@Override
