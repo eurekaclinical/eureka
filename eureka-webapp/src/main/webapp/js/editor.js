@@ -6,16 +6,16 @@ $("ul.sortable").disableSelection();
 var dropBoxMaxTextWidth = 275;
 var possiblePropositions = new Object();
 var saveFuncs = {
-	'sequence': saveSequence,
-	'categorization': saveCategorization,
-	'frequency': saveFrequency,
-	'value_threshold': saveValueThreshold
+	'SEQUENCE': saveSequence,
+	'CATEGORIZATION': saveCategorization,
+	'FREQUENCY': saveFrequency,
+	'VALUE_THRESHOLD': saveValueThreshold
 };
 var dndActions = {
-	'frequency': enableFrequencyFields
+	'FREQUENCY': enableFrequencyFields
 };
 var deleteActions = {
-	'frequency': disableFrequencyFields
+	'FREQUENCY': disableFrequencyFields
 };
 
 function enableFrequencyFields(dropped) {
@@ -384,11 +384,11 @@ $(document).ready(function(){
 	$('#expand_div').hide();
 	$('#collapse_div').hide();
 
-	$('#categorizationdefinition').hide();
+	$('#CATEGORIZATIONdefinition').hide();
 	$('#temporaldefinition').hide();
-	$('#sequencedefinition').hide();
-	$('#frequencydefinition').hide();
-	$('#value_thresholddefinition').hide();
+	$('#SEQUENCEdefinition').hide();
+	$('#FREQUENCYdefinition').hide();
+	$('#VALUE_THRESHOLDdefinition').hide();
 
 	// make sure all the 'drop here' labels are hidden if we are editing
 	// an existing proposition.  Also populate any proposition select
@@ -423,11 +423,11 @@ $(document).ready(function(){
 				var type = $("input:radio[name='type']:checked").val();
 				$('#' + type + 'definition').show();
 			} else {
-				$('#categorizationdefinition').hide();
+				$('#CATEGORIZATIONdefinition').hide();
 				$('#temporaldefinition').hide();
-				$('#sequencedefinition').hide();
-				$('#frequencydefinition').hide();
-				$('#value_thresholddefinition').hide();
+				$('#SEQUENCEdefinition').hide();
+				$('#FREQUENCYdefinition').hide();
+				$('#VALUE_THRESHOLDdefinition').hide();
 			}
 		}
 

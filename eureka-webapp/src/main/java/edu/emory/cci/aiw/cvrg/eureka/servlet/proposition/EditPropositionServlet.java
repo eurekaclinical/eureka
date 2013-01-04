@@ -81,7 +81,7 @@ public class EditPropositionServlet extends HttpServlet {
 					valueCompsLower.add(vc);
 					break;
 				default:
-					throw new AssertionError("Invalid side: " + vc.getThreshold());
+					throw new AssertionError("Invalid threshold: " + vc.getThreshold());
 			}
 		}
 
@@ -95,8 +95,8 @@ public class EditPropositionServlet extends HttpServlet {
 			DataElement dataElement = servicesClient.getUserElement
 					(user.getId(), propKey);
 			req.setAttribute("proposition", dataElement);
-			req.setAttribute("propositionType", dataElement.getType()
-				.toString().toLowerCase());
+			req.setAttribute("propositionType", 
+					dataElement.getType().toString());
 		}
 
 		req.getRequestDispatcher("/protected/editor.jsp").forward(req, resp);

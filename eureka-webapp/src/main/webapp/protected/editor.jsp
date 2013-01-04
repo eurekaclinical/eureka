@@ -81,7 +81,7 @@
 							<p><br/></p>
 							<table id="select_element_table">
 								<%-- These values come from the DataElement.Type enum --%>
-								<c:set var="types" value="categorization,sequence,frequency,value_threshold" />
+								<c:set var="types" value="CATEGORIZATION,SEQUENCE,FREQUENCY,VALUE_THRESHOLD" />
 								<c:forTokens items="${types}" var="myType" delims="," varStatus="status">
 									<tr>
 										<td class="firstCol">
@@ -126,7 +126,7 @@
 										<table>
 											<tr>
 												<td>
-													<table id="categorizationdefinition" data-definition-container="true">
+													<table id="CATEGORIZATIONdefinition" data-definition-container="true">
 														<tr>
 															<td>
 																<div class="tree-drop jstree-drop">
@@ -146,7 +146,7 @@
 														</tr>
 													</table>
 													<%--
-													<table id="temporaldefinition"> <!-- DEPRECATED -->
+													<table id="TEMPORALdefinition"> <!-- DEPRECATED -->
 														<tr>
 															<td>
 																<div class="tree-drop jstree-drop">
@@ -166,7 +166,7 @@
 														</tr>
 													</table>
 													--%>
-													<table id="sequencedefinition" data-definition-container="true">
+													<table id="SEQUENCEdefinition" data-definition-container="true">
 														<tr>
 															<td>
 																<table>
@@ -434,7 +434,7 @@
 															</td>
 														</tr>
 													</table>
-													<table id="frequencydefinition" data-definition-container="true">
+													<table id="FREQUENCYdefinition" data-definition-container="true">
 														<tr>
 															<td>
 																<table>
@@ -566,7 +566,7 @@
 															</td>
 														</tr>
 													</table>
-													<table id="value_thresholddefinition" data-definition-container="true">
+													<table id="VALUE_THRESHOLDdefinition" data-definition-container="true">
 														<tr>
 															<td colspan="2">
 																Value name:
@@ -648,7 +648,7 @@
 																		<td>
 																			<ul class="sortable" data-drop-type="multiple" data-proptype="empty" style="width: 100% height: 100%">
 																				<c:if test="${not empty proposition and propositionType == 'VALUE_THRESHOLD'}">
-																				<c:forEach var="relatedDataElement" items="${threshold.dataElement}">
+																				<c:forEach var="relatedDataElement" items="${threshold.relatedDataElements}">
 																				<li data-key="${relatedDataElement.key}" data-desc="${child.abbrevDisplayName}" data-type="${child.type}" data-subtype="${child.type == 'CATEGORIZATION' ? child.categoricalType : ''}" data-space="${threshold.inSystem ? 'system' : 'user'}">
 																					<span class="delete" style="cursor: pointer; background-color: lightblue;"></span>
 																					<span>${child.displayName} ${child.abbrevDisplayName} (${child.key})</span>
