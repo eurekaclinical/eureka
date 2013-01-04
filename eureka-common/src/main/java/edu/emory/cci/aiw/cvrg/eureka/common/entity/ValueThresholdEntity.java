@@ -19,13 +19,10 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.common.entity;
 
-import java.util.List;
-
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
@@ -37,7 +34,7 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "value_thresholds")
 public class ValueThresholdEntity extends Proposition {
-	
+
 	private String name;
 
 	/*
@@ -66,10 +63,10 @@ public class ValueThresholdEntity extends Proposition {
 	/*
 	 * The propositions that this low-level abstraction is abstracted from.
 	 */
-	@ManyToMany(cascade = {CascadeType.MERGE, CascadeType.REFRESH,
-			CascadeType.PERSIST})
-	@JoinTable(name = "abstracted_from", joinColumns = {@JoinColumn(name = "target_proposition_id")})
-	private List<Proposition> abstractedFrom;
+	@ManyToOne(cascade = { CascadeType.MERGE, CascadeType.REFRESH,
+	        CascadeType.PERSIST })
+	@JoinTable(name = "abstracted_from", joinColumns = { @JoinColumn(name = "target_proposition_id") })
+	private Proposition abstractedFrom;
 
 	/*
 	 * The allowed values of the low-level abstraction
@@ -87,7 +84,7 @@ public class ValueThresholdEntity extends Proposition {
 	}
 
 	private CreatedFrom createdFrom;
-	
+
 	public String getName() {
 		return name;
 	}
@@ -136,11 +133,11 @@ public class ValueThresholdEntity extends Proposition {
 		this.maxGapValuesUnits = maxGapValuesUnits;
 	}
 
-	public List<Proposition> getAbstractedFrom() {
+	public Proposition getAbstractedFrom() {
 		return abstractedFrom;
 	}
 
-	public void setAbstractedFrom(List<Proposition> abstractedFrom) {
+	public void setAbstractedFrom(Proposition abstractedFrom) {
 		this.abstractedFrom = abstractedFrom;
 	}
 
@@ -148,8 +145,7 @@ public class ValueThresholdEntity extends Proposition {
 		return userConstraint;
 	}
 
-	public void setUserConstraint(
-			SimpleParameterConstraint userConstraint) {
+	public void setUserConstraint(SimpleParameterConstraint userConstraint) {
 		this.userConstraint = userConstraint;
 	}
 
@@ -157,8 +153,8 @@ public class ValueThresholdEntity extends Proposition {
 		return complementConstraint;
 	}
 
-	public void setComplementConstraint(SimpleParameterConstraint
-												complementConstraint) {
+	public void setComplementConstraint(
+	        SimpleParameterConstraint complementConstraint) {
 		this.complementConstraint = complementConstraint;
 	}
 
