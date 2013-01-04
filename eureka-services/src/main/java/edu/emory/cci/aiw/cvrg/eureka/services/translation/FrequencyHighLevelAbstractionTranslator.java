@@ -171,8 +171,8 @@ public final class FrequencyHighLevelAbstractionTranslator implements
 					result.setMaxGapValuesUnits(timeUnitDao.retrieve(element.getWithinAtMostUnits()));
 				}
 			}
-			result.setAbstractedFrom(Collections.singletonList(propositionDao.getByUserAndKey(
-					userId, element.getDataElement().getDataElementKey())));
+			result.setAbstractedFrom(propositionDao.getByUserAndKey(
+					userId, element.getDataElement().getDataElementKey()));
 
 			this.intermediateAbstraction = result;
 		}
