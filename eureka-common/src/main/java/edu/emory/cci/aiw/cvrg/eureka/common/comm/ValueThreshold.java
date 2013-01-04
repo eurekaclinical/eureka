@@ -23,17 +23,12 @@ import java.io.IOException;
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.apache.commons.lang.StringUtils;
-import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.JsonParser;
 import org.codehaus.jackson.JsonProcessingException;
-import org.codehaus.jackson.ObjectCodec;
 import org.codehaus.jackson.map.DeserializationContext;
 import org.codehaus.jackson.map.JsonDeserializer;
 import org.codehaus.jackson.map.JsonMappingException;
-import org.codehaus.jackson.map.JsonSerializer;
 import org.codehaus.jackson.map.annotate.JsonDeserialize;
 
 public final class ValueThreshold {
@@ -46,10 +41,8 @@ public final class ValueThreshold {
 		@Override
 		public Number deserialize(JsonParser jp, DeserializationContext dc)
 				throws IOException, JsonProcessingException {
-			ObjectCodec oc = jp.getCodec();
-			JsonNode node = oc.readTree(jp);
-			String text = node.getTextValue();
-			String strippedText = StringUtils.stripToNull(text);
+			System.err.println("NumberSerializer: " + jp.getText());
+			String strippedText = StringUtils.trimToNull(jp.getText());
 			if (strippedText == null) {
 				return null;
 			} else {

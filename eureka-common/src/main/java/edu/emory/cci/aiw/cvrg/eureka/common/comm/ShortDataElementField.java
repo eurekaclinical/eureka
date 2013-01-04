@@ -44,41 +44,11 @@ public class ShortDataElementField {
 
 		CATEGORIZATION, SEQUENCE, FREQUENCY, VALUE_THRESHOLD, SYSTEM
 	}
-
-	public static class TypeSerializer extends JsonSerializer<Type> {
-
-		@Override
-		public void serialize(Type value, JsonGenerator generator,
-				SerializerProvider provider) throws IOException,
-				JsonProcessingException {
-
-			generator.writeStartObject();
-			generator.writeFieldName("name");
-			generator.writeString(value.name().toLowerCase());
-			generator.writeEndObject();
-		}
-	}
-
-	public static class TypeDeserializer extends JsonDeserializer<Type> {
-
-		@Override
-		public Type deserialize(JsonParser jp, DeserializationContext dc)
-				throws IOException, JsonProcessingException {
-			ObjectCodec oc = jp.getCodec();
-			JsonNode node = oc.readTree(jp);
-			String text = node.getTextValue();
-			if (text != null) {
-				return Type.valueOf(text.toUpperCase());
-			} else {
-				return null;
-			}
-		}
-	}
+	
 	private String dataElementKey;
 	private String dataElementAbbrevDisplayName;
 	private String dataElementDisplayName;
-	@JsonSerialize(using = TypeSerializer.class)
-	@JsonDeserialize(using = TypeDeserializer.class)
+	
 	private Type type;
 
 	public String getDataElementKey() {

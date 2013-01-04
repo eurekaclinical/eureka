@@ -132,7 +132,7 @@
 																<div class="tree-drop jstree-drop">
 																	<div class="label-info" ><center>Drop Here</center></div>
 																	<ul class="sortable" data-drop-type="multiple" data-proptype="empty" style="width: 100% height: 100%">
-																		<c:if test="${not empty proposition and propositionType == 'categorization'}">
+																		<c:if test="${not empty proposition and propositionType == 'CATEGORIZATION'}">
 																		<c:forEach var="child" items="${proposition.children}">
 																		<li data-key="${child.key}" data-desc="${child.abbrevDisplayName}" data-type="${child.type}" data-subtype="${child.type == 'CATEGORIZATION' ? child.categoricalType : ''}" data-space="${proposition.inSystem ? 'system' : 'user'}">
 																			<span class="delete" style="cursor: pointer; background-color: lightblue;"></span>
@@ -152,7 +152,7 @@
 																<div class="tree-drop jstree-drop">
 																	<div class="label-info" ><center>Drop Here</center></div>
 																	<ul class="sortable" style="width: 100% height: 100%">
-																		<c:if test="${not empty proposition and propositionType == 'temporal'}">
+																		<c:if test="${not empty proposition and propositionType == 'TEMPORAL'}">
 																		<c:forEach var="child" items="${proposition.children}">
 																		<li data-key="${child.key}" data-type="${child.type}" data-space="${proposition.inSystem ? 'sysem' : 'user'}">
 																			<span class="delete" style="cursor: pointer; background-color: lightblue;"></span>
@@ -178,7 +178,7 @@
 																			<div id="mainDataElement" class="tree-drop-single jstree-drop">
 																				<div class="label-info" ><center>Drop Here</center></div>
 																				<ul data-type="main" data-drop-type="single" class="sortable" style="width: 100% height: 100%">
-																					<c:if test="${not empty proposition and propositionType == 'sequence'}">
+																					<c:if test="${not empty proposition and propositionType == 'SEQUENCE'}">
 																					<li data-key="${proposition.primaryDataElement.dataElementKey}" data-desc="${proposition.primaryDataElement.dataElementAbbrevDisplayName}" data-space="${proposition.primaryDataElement.inSystem ? 'system' : 'user'}">
 																						<span class="delete" style="cursor: pointer; background-color: lightblue;"></span>
 																						<span>${proposition.primaryDataElement.dataElementKey} ${proposition.primaryDataElement.dataElementAbbrevDisplayName}</span>
@@ -198,7 +198,7 @@
 																	</tr>
 																	<tr>
 																		<td>
-																			<label><input type="checkbox" value="true" name="mainDataElementSpecifyDuration" <c:if test="${propositionType == 'sequence' and proposition.primaryDataElement.hasDuration}">checked="checked"</c:if> >with duration</label>
+																			<label><input type="checkbox" value="true" name="mainDataElementSpecifyDuration" <c:if test="${propositionType == 'SEQUENCE' and proposition.primaryDataElement.hasDuration}">checked="checked"</c:if> >with duration</label>
 																		</td>
 																		<td>
 																			<table>
@@ -207,12 +207,12 @@
 																						at least
 																					</td>
 																					<td>
-																						<input type="text" class="durationField" name="mainDataElementMinDurationValue" value="<c:if test="${propositionType == 'sequence'}">${proposition.primaryDataElement.minDuration}</c:if>" />
+																						<input type="text" class="durationField" name="mainDataElementMinDurationValue" value="<c:if test="${propositionType == 'SEQUENCE'}">${proposition.primaryDataElement.minDuration}</c:if>" />
 																					</td>
 																					<td>
 																						<select name="mainDataElementMinDurationUnits">
 																							<c:forEach var="unit" items="${timeUnits}">
-																							<option value="${unit.id}" <c:if test="${propositionType == 'sequence' and unit.id == proposition.primaryDataElement.minDurationUnits}">selected="selected"</c:if>>${unit.description}</option>
+																							<option value="${unit.id}" <c:if test="${propositionType == 'SEQUENCE' and unit.id == proposition.primaryDataElement.minDurationUnits}">selected="selected"</c:if>>${unit.description}</option>
 																							</c:forEach>
 																						</select>
 																					</td>
@@ -222,12 +222,12 @@
 																						at most
 																					</td>
 																					<td>
-																						<input type="text" class="durationField" name="mainDataElementMaxDurationValue" value="<c:if test="${propositionType == 'sequence'}">${proposition.primaryDataElement.maxDuration}</c:if>" />
+																						<input type="text" class="durationField" name="mainDataElementMaxDurationValue" value="<c:if test="${propositionType == 'SEQUENCE'}">${proposition.primaryDataElement.maxDuration}</c:if>" />
 																					</td>
 																					<td>
 																						<select name="mainDataElementMaxDurationUnits">
 																							<c:forEach var="unit" items="${timeUnits}">
-																							<option value="${unit.id}" <c:if test="${propositionType == 'sequence' and unit.id == proposition.primaryDataElement.maxDurationUnits}">selected="selected"</c:if>>${unit.description}</option>
+																							<option value="${unit.id}" <c:if test="${propositionType == 'SEQUENCE' and unit.id == proposition.primaryDataElement.maxDurationUnits}">selected="selected"</c:if>>${unit.description}</option>
 																							</c:forEach>
 																						</select>
 																					</td>
@@ -237,15 +237,15 @@
 																	</tr>
 																	<tr>
 																		<td>
-																			<label><input type="checkbox" value="true" name="mainDataElementSpecifyProperty" <c:if test="${propositionType == 'sequence' and proposition.primaryDataElement.hasPropertyConstraint}">checked="checked"</c:if>/>with property value</label>
+																			<label><input type="checkbox" value="true" name="mainDataElementSpecifyProperty" <c:if test="${propositionType == 'SEQUENCE' and proposition.primaryDataElement.hasPropertyConstraint}">checked="checked"</c:if>/>with property value</label>
 																		</td>
 																		<td>
 																			<select name="mainDataElementPropertyName" data-properties-provider="mainDataElement">
-																				<c:if test="${propositionType == 'sequence' and not empty proposition.primaryDataElement.property}">
+																				<c:if test="${propositionType == 'SEQUENCE' and not empty proposition.primaryDataElement.property}">
 																				<option value="${proposition.primaryDataElement.property}">${proposition.primaryDataElement.property}</option>
 																				</c:if>
 																			</select>
-																			<input type="text" class="propertyValueField" name="mainDataElementPropertyValue" value="<c:if test="${propositionType == 'sequence' and not empty proposition.primaryDataElement.propertyValue}">${proposition.primaryDataElement.propertyValue}</c:if>"/>
+																			<input type="text" class="propertyValueField" name="mainDataElementPropertyValue" value="<c:if test="${propositionType == 'SEQUENCE' and not empty proposition.primaryDataElement.propertyValue}">${proposition.primaryDataElement.propertyValue}</c:if>"/>
 																		</td>
 																	</tr>
 																</table>
@@ -255,7 +255,7 @@
 															<td class="sequence-relations-container">
 																<table class="sequence-relation drop-parent" style="margin-top: 10px">
 																	<c:choose>
-																	<c:when test="${not empty proposition and propositionType == 'sequence' and not empty proposition.relatedDataElements}">
+																	<c:when test="${not empty proposition and propositionType == 'SEQUENCE' and not empty proposition.relatedDataElements}">
 																	<c:forEach var="relation" items="${proposition.relatedDataElements}" varStatus="status">
 																	<tr>
 																		<td>Related Data Element <span class="count">${status.count}</span>:</td>
@@ -443,10 +443,10 @@
 																			At least
 																		</td>
 																		<td>
-																			<input type="number" class="frequencyCountField" name="freqAtLeastField" value="<c:if test="${propositionType == 'frequency'}">${proposition.atLeast}</c:if>" />
+																			<input type="number" class="frequencyCountField" name="freqAtLeastField" value="<c:if test="${propositionType == 'FREQUENCY'}">${proposition.atLeast}</c:if>" />
 																		</td>
 																		<td>
-																			<label id="valueThresholdConsecutiveLabel" style="visibility:hidden"><input type="checkbox" value="true" name="freqIsConsecutive" <c:if test="${propositionType == 'frequency' and proposition.isConsecutive}">checked="checked"</c:if> />consecutive</label>
+																			<label id="valueThresholdConsecutiveLabel" style="visibility:hidden"><input type="checkbox" value="true" name="freqIsConsecutive" <c:if test="${propositionType == 'FREQUENCY' and proposition.isConsecutive}">checked="checked"</c:if> />consecutive</label>
 																		</td>
 																		<td>
 																			<table>
@@ -455,7 +455,7 @@
 																						<div id="freqMainDataElement" class="tree-drop-single jstree-drop">
 																							<div class="label-info" ><center>Drop Here</center></div>
 																							<ul data-type="main" data-drop-type="single" class="sortable" style="width: 100% height: 100%">
-																								<c:if test="${not empty proposition and propositionType == 'frequency'}">
+																								<c:if test="${not empty proposition and propositionType == 'FREQUENCY'}">
 																								<li data-key="${proposition.dataElement.dataElementKey}" data-desc="${proposition.dataElement.dataElementAbbrevDisplayName}" data-space="${proposition.dataElement.inSystem ? 'system' : 'user'}">
 																									<span class="delete" style="cursor: pointer; background-color: lightblue;"></span>
 																									<span>${proposition.dataElement.dataElementKey} ${proposition.dataElement.dataElementAbbrevDisplayName}</span>
@@ -479,7 +479,7 @@
 																							</tr>
 																							<tr>
 																								<td>
-																									<label><input type="checkbox" value="true" name="freqDataElementSpecifyDuration" <c:if test="${propositionType == 'frequency' and proposition.dataElement.hasDuration}">checked="checked"</c:if> >with duration</label>
+																									<label><input type="checkbox" value="true" name="freqDataElementSpecifyDuration" <c:if test="${propositionType == 'FREQUENCY' and proposition.dataElement.hasDuration}">checked="checked"</c:if> >with duration</label>
 																								</td>
 																								<td>
 																									<table>
@@ -488,12 +488,12 @@
 																												at least
 																											</td>
 																											<td>
-																												<input type="text" class="durationField" name="freqDataElementMinDurationValue" value="<c:if test="${propositionType == 'frequency'}">${proposition.dataElement.minDuration}</c:if>" />
+																												<input type="text" class="durationField" name="freqDataElementMinDurationValue" value="<c:if test="${propositionType == 'FREQUENCY'}">${proposition.dataElement.minDuration}</c:if>" />
 																											</td>
 																											<td>
 																												<select name="freqDataElementMinDurationUnits">
 																													<c:forEach var="unit" items="${timeUnits}">
-																													<option value="${unit.id}" <c:if test="${propositionType == 'frequency' and unit.id == proposition.dataElement.minDurationUnits}">selected="selected"</c:if>>${unit.description}</option>
+																													<option value="${unit.id}" <c:if test="${propositionType == 'FREQUENCY' and unit.id == proposition.dataElement.minDurationUnits}">selected="selected"</c:if>>${unit.description}</option>
 																													</c:forEach>
 																												</select>
 																											</td>
@@ -503,12 +503,12 @@
 																												at most
 																											</td>
 																											<td>
-																												<input type="text" class="durationField" name="freqDataElementMaxDurationValue" value="<c:if test="${propositionType == 'frequency'}">${proposition.dataElement.maxDuration}</c:if>" />
+																												<input type="text" class="durationField" name="freqDataElementMaxDurationValue" value="<c:if test="${propositionType == 'FREQUENCY'}">${proposition.dataElement.maxDuration}</c:if>" />
 																											</td>
 																											<td>
 																												<select name="freqDataElementMaxDurationUnits">
 																													<c:forEach var="unit" items="${timeUnits}">
-																													<option value="${unit.id}" <c:if test="${propositionType == 'frequency' and unit.id == proposition.dataElement.maxDurationUnits}">selected="selected"</c:if>>${unit.description}</option>
+																													<option value="${unit.id}" <c:if test="${propositionType == 'FREQUENCY' and unit.id == proposition.dataElement.maxDurationUnits}">selected="selected"</c:if>>${unit.description}</option>
 																													</c:forEach>
 																												</select>
 																											</td>
@@ -534,22 +534,22 @@
 																			<table>
 																				<tr>
 																					<td>
-																						<label><input type="checkbox" value="true" name="freqIsWithin" <c:if test="${propositionType == 'frequency' and proposition.isWithin}">checked="checked"</c:if> >within</label>
+																						<label><input type="checkbox" value="true" name="freqIsWithin" <c:if test="${propositionType == 'FREQUENCY' and proposition.isWithin}">checked="checked"</c:if> >within</label>
 																					</td>
 																					<td>
 																						at least
-																						<input type="text" class="distanceField" name="freqWithinAtLeast" value="<c:if test="${propositionType == 'frequency'}">${proposition.withinAtLeast}</c:if>" />
+																						<input type="text" class="distanceField" name="freqWithinAtLeast" value="<c:if test="${propositionType == 'FREQUENCY'}">${proposition.withinAtLeast}</c:if>" />
 																						<select name="freqWithinAtLeastUnits">
 																								<c:forEach var="unit" items="${timeUnits}">
-																									<option value="${unit.id}" <c:if test="${propositionType == 'frequency' and unit.id == proposition.withinAtLeastUnits}">selected="selected"</c:if>>${unit.description}</option>
+																									<option value="${unit.id}" <c:if test="${propositionType == 'FREQUENCY' and unit.id == proposition.withinAtLeastUnits}">selected="selected"</c:if>>${unit.description}</option>
 																								</c:forEach>
 																						</select>
 																						<br />
 																						at most
-																						<input type="text" class="distanceField" name="freqWithinAtMost" value="<c:if test="${propositionType == 'frequency'}">${proposition.withinAtMost}</c:if>"/>
+																						<input type="text" class="distanceField" name="freqWithinAtMost" value="<c:if test="${propositionType == 'FREQUENCY'}">${proposition.withinAtMost}</c:if>"/>
 																						<select name="freqWithinAtMostUnits">
 																								<c:forEach var="unit" items="${timeUnits}">
-																								<option value="${unit.id}" <c:if test="${propositionType == 'frequency' and unit.id == proposition.withinAtMostUnits}">selected="selected"</c:if>>${unit.description}</option>
+																								<option value="${unit.id}" <c:if test="${propositionType == 'FREQUENCY' and unit.id == proposition.withinAtMostUnits}">selected="selected"</c:if>>${unit.description}</option>
 																								</c:forEach>
 																						</select>
 																					</td>
@@ -570,7 +570,7 @@
 														<tr>
 															<td colspan="2">
 																Value name:
-																<input type="text" name="valueThresholdValueName" value="<c:if test="${propositionType == 'value_threshold' and not empty proposition.name}">${proposition.name}</c:if>"/>
+																<input type="text" name="valueThresholdValueName" value="<c:if test="${propositionType == 'VALUE_THRESHOLD' and not empty proposition.name}">${proposition.name}</c:if>"/>
 															</td>
 														</tr>
 														<tr>
@@ -593,7 +593,7 @@
 															<td colspan="2">
 																<table class="value-thresholds-container">
 																	<c:choose>
-																	<c:when test="${not empty proposition and propositionType == 'value_threshold' and not empty proposition.valueThresholds}">
+																	<c:when test="${not empty proposition and propositionType == 'VALUE_THRESHOLD' and not empty proposition.valueThresholds}">
 																	<c:forEach var="threshold" items="${proposition.valueThresholds}" varStatus="status">
 																	<tr class="value-threshold">
 																		<td>
@@ -614,12 +614,12 @@
 																						Lower threshold
 																						<select name="thresholdLowerComp">
 																							<c:forEach var="valComp" items="${valueComparatorsLower}">
-																							<option value="${valComp.id}" <c:if test="${propositionType == 'value_threshold' and valComp.id == threshold.lowerComp}">selected="selected"</c:if>>${valComp.name}</option>
+																							<option value="${valComp.id}" <c:if test="${propositionType == 'VALUE_THRESHOLD' and valComp.id == threshold.lowerComp}">selected="selected"</c:if>>${valComp.name}</option>
 																							</c:forEach>
 																						</select>
 																					</td>
 																					<td>
-																						<input type="text" name="thresholdLowerVal" value="<c:if test="${propositionType == 'value_threshold'}">${threshold.lowerValue}</c:if>"/>
+																						<input type="text" name="thresholdLowerVal" value="<c:if test="${propositionType == 'VALUE_THRESHOLD'}">${threshold.lowerValue}</c:if>"/>
 																					</td>
 																				</tr>
 																				<tr>
@@ -627,27 +627,27 @@
 																						Upper threshold
 																						<select name="thresholdUpperComp">
 																							<c:forEach var="valComp" items="${valueComparatorsUpper}">
-																							<option value="${valComp.id}" <c:if test="${propositionType == 'value_threshold' and valComp.id == threshold.upperComp}">selected="selected"</c:if>>${valComp.name}</option>
+																							<option value="${valComp.id}" <c:if test="${propositionType == 'VALUE_THRESHOLD' and valComp.id == threshold.upperComp}">selected="selected"</c:if>>${valComp.name}</option>
 																							</c:forEach>
 																						</select>
 																					</td>
 																					<td>
-																						<input type="text" name="thresholdUpperVal" value="<c:if test="${propositionType == 'value_threshold'}">${threshold.upperValue}</c:if>"/>
+																						<input type="text" name="thresholdUpperVal" value="<c:if test="${propositionType == 'VALUE_THRESHOLD'}">${threshold.upperValue}</c:if>"/>
 																					</td>
 																				</tr>
 																			</table>
 																		</td>
 																		<td>
-																			<input type="checkbox" value="true" name="thresholdDataElementTemporalRelationCB" <c:if test="${propositionType == 'value_threshold' and threshold.isBeforeOrAfter}">checked="true"</c:if>/>
+																			<input type="checkbox" value="true" name="thresholdDataElementTemporalRelationCB" <c:if test="${propositionType == 'VALUE_THRESHOLD' and threshold.isBeforeOrAfter}">checked="true"</c:if>/>
 																			<select name="thresholdDataElementTemporalRelation">
 																				<c:forEach var="op" items="${operators}">
-																				<option value="${op.id}" <c:if test="${propositionType == 'value_threshold' and op.id == threshold.relationOperator}">selected="selected"</c:if>>${op.description}</option>
+																				<option value="${op.id}" <c:if test="${propositionType == 'VALUE_THRESHOLD' and op.id == threshold.relationOperator}">selected="selected"</c:if>>${op.description}</option>
 																				</c:forEach>
 																			</select>
 																		</td>
 																		<td>
 																			<ul class="sortable" data-drop-type="multiple" data-proptype="empty" style="width: 100% height: 100%">
-																				<c:if test="${not empty proposition and propositionType == 'value_threshold'}">
+																				<c:if test="${not empty proposition and propositionType == 'VALUE_THRESHOLD'}">
 																				<c:forEach var="relatedDataElement" items="${threshold.dataElement}">
 																				<li data-key="${relatedDataElement.key}" data-desc="${child.abbrevDisplayName}" data-type="${child.type}" data-subtype="${child.type == 'CATEGORIZATION' ? child.categoricalType : ''}" data-space="${threshold.inSystem ? 'system' : 'user'}">
 																					<span class="delete" style="cursor: pointer; background-color: lightblue;"></span>
@@ -663,18 +663,18 @@
 																				<tr>
 																					<td>
 																						at least
-																						<input type="text" class="distanceField" name="thresholdWithinAtLeast" value="<c:if test="${propositionType == 'value_threshold'}">${threshold.atLeastCount}</c:if>"/>
+																						<input type="text" class="distanceField" name="thresholdWithinAtLeast" value="<c:if test="${propositionType == 'VALUE_THRESHOLD'}">${threshold.atLeastCount}</c:if>"/>
 																						<select name="thresholdWithinAtLeastUnits">
 																								<c:forEach var="unit" items="${timeUnits}">
-																									<option value="${unit.id}" <c:if test="${propositionType == 'value_threshold' and unit.id == threshold.atLeastTimeUnit}">selected="selected"</c:if>>${unit.description}</option>
+																									<option value="${unit.id}" <c:if test="${propositionType == 'VALUE_THRESHOLD' and unit.id == threshold.atLeastTimeUnit}">selected="selected"</c:if>>${unit.description}</option>
 																								</c:forEach>
 																						</select>
 																						<br />
 																						at most
-																						<input type="text" class="distanceField" name="thresholdWithinAtMost" value="<c:if test="${propositionType == 'value_threshold'}">${threshold.atMostCount}</c:if>"/>
+																						<input type="text" class="distanceField" name="thresholdWithinAtMost" value="<c:if test="${propositionType == 'VALUE_THRESHOLD'}">${threshold.atMostCount}</c:if>"/>
 																						<select name="thresholdWithinAtMostUnits">
 																								<c:forEach var="unit" items="${timeUnits}">
-																									<option value="${unit.id}" <c:if test="${propositionType == 'value_threshold' and unit.id == threshold.atMostTimeUnit}">selected="selected"</c:if>>${unit.description}</option>
+																									<option value="${unit.id}" <c:if test="${propositionType == 'VALUE_THRESHOLD' and unit.id == threshold.atMostTimeUnit}">selected="selected"</c:if>>${unit.description}</option>
 																								</c:forEach>
 																						</select>
 																					</td>
@@ -802,7 +802,7 @@
 											<c:when test="${not empty proposition}">
 												<input type="hidden" id="propId" value="${proposition.id}" />
 												<input type="hidden" id="propType" value="${propositionType}" />
-												<input type="hidden" id="propSubType" value="${propositionType == 'categorization' ? proposition.categoricalType : ''}" />
+												<input type="hidden" id="propSubType" value="${propositionType == 'CATEGORIZATION' ? proposition.categoricalType : ''}" />
 												<input type="text" id="propAbbrevDisplayName" style="width:250px" value="${proposition.abbrevDisplayName}" />
 											</c:when>
 											<c:otherwise>

@@ -100,7 +100,7 @@ function saveSequence (elem) {
 	if (propId) {
 		sequence.id = propId;
 	}
-	sequence.type = 'sequence';
+	sequence.type = 'SEQUENCE';
 	sequence.abbrevDisplayName = $('input#propAbbrevDisplayName').val();
 	sequence.displayName = $('textarea#propDisplayName').val();
 	sequence.primaryDataElement = collectSequenceDataElement(elem);
@@ -118,7 +118,7 @@ function saveValueThreshold (elem) {
 	if (propId) {
 		valueThreshold.id = propId;
 	}
-	valueThreshold.type = 'value_threshold';
+	valueThreshold.type = 'VALUE_THRESHOLD';
 	valueThreshold.abbrevDisplayName = $('input#propAbbrevDisplayName').val();
 	valueThreshold.displayName = $('textarea#propDisplayName').val();
 	valueThreshold.name = $(elem).find('input[name="valueThresholdValueName"]').val();
@@ -179,7 +179,7 @@ function saveCategorization (elem) {
 	}
 
 	var categorization = {
-		'type': 'categorization',
+		'type': 'CATEGORIZATION',
 		'abbrevDisplayName': $('input#propAbbrevDisplayName').val(),
 		'displayName': $('textarea#propDisplayName').val(),
 		'categoricalType': categoricalType,
@@ -226,7 +226,7 @@ function collectDataElement(dataElementFromDropBox) {
 function saveFrequency (elem) {
 	var $dataElement = $(elem).find('ul[data-type="main"]').find('li').first();
 	var frequency = {
-		'type': 'frequency',
+		'type': 'FREQUENCY',
 		'abbrevDisplayName': $('input#propAbbrevDisplayName').val(),
 		'displayName': $('textarea#propDisplayName').val(),
 		'atLeast': $(elem).find('input[name=freqAtLeastField]').val(),
