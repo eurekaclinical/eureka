@@ -75,7 +75,7 @@ public class ResultThresholdsLowLevelAbstractionTranslator implements
 
 		Proposition abstractedFrom = propositionDao.getByUserAndKey(userId,
 				threshold.getDataElement().getDataElementKey());
-		result.setAbstractedFrom(Collections.singletonList(abstractedFrom));
+		result.setAbstractedFrom(abstractedFrom);
 		result.setCreatedFrom(ValueThresholdEntity.CreatedFrom.VALUE_THRESHOLD);
 
 		return result;
