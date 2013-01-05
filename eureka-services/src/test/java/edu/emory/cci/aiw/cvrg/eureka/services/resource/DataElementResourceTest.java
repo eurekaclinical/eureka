@@ -25,19 +25,24 @@ import java.util.List;
 
 import javax.ws.rs.core.MediaType;
 
+import junit.framework.Assert;
+
 import org.junit.Test;
 
+import com.google.inject.Inject;
 import com.sun.jersey.api.client.ClientResponse;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.DataElementField;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.Frequency;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.ShortDataElementField;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.ValueThresholds;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.ValueThreshold;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.User;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.ValueThresholds;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.Proposition;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.SystemProposition;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.ThresholdsOperator;
-
-import junit.framework.Assert;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.User;
+import edu.emory.cci.aiw.cvrg.eureka.services.dao.JpaPropositionDao;
+import edu.emory.cci.aiw.cvrg.eureka.services.dao.PropositionDao;
 
 /**
  * @author hrathod
@@ -54,6 +59,18 @@ public class DataElementResourceTest extends AbstractServiceResourceTest {
 		encounter.setDataElementKey("Encounter");
 		encounter.setDataElementDisplayName("Encounter");
 		encounter.setDataElementAbbrevDisplayName("Encounter");
+		
+		Proposition encSysProp = new SystemProposition();
+		encSysProp.setUserId(user.getId());
+		encSysProp.setInSystem(true);
+		encSysProp.setKey("Encounter");
+		encSysProp.setDisplayName("Encounter");
+		encSysProp.setAbbrevDisplayName("Encounter");
+		encSysProp.setCreated(new Date());
+		encSysProp.setLastModified(new Date());
+		
+		PropositionDao propositionDao = this.getInstance(PropositionDao.class);
+		propositionDao.create(encSysProp);
 
 		ValueThreshold value = new ValueThreshold();
 		List<ValueThreshold> values = new ArrayList<ValueThreshold>();
