@@ -37,6 +37,7 @@ import edu.emory.cci.aiw.cvrg.eureka.common.entity.Categorization;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.Categorization.CategorizationType;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.FileUpload;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.HighLevelAbstraction;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.SystemProposition;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.ValueThresholdEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.Proposition;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.Role;
@@ -147,6 +148,16 @@ public class Setup implements TestDataProvider {
 		entityManager.getTransaction().begin();
 		Date now = new Date();
 		for (User u : users) {
+			Proposition encSysProp = new SystemProposition();
+			encSysProp.setUserId(u.getId());
+			encSysProp.setInSystem(true);
+			encSysProp.setKey("Encounter");
+			encSysProp.setDisplayName("Encounter");
+			encSysProp.setAbbrevDisplayName("Encounter");
+			encSysProp.setCreated(now);
+			encSysProp.setLastModified(now);
+			entityManager.persist(encSysProp);
+
 			Categorization proposition1 = new Categorization();
 			proposition1.setKey("test-cat");
 			proposition1.setAbbrevDisplayName("test");
