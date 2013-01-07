@@ -1,10 +1,56 @@
 /* Eureka WebApp. Copyright (C) 2012 Emory University. Licensed under http://www.apache.org/licenses/LICENSE-2.0. */
 
+// Starting to "namespace" some functions to reduce clutter in the global namespace
+var eureka = new Object();
+eureka.util = new Object();
+eureka.util.objSize = function (obj) {
+	var size = 0;
+	for (key in obj) {
+		if (obj.hasOwnProperty(key)) {
+			size++;
+		}
+	}
+	return size;
+};
+eureka.util.getIn = function (obj, path) {
+	var current = obj;
+	for (var i = 0; i < path.length; i++) {
+		current  = current[path[i]];
+		if (!current) {
+			break;
+		}
+	}
+	return current;
+};
+eureka.util.setIn = function (obj, path, value) {
+	var current = obj;
+	for (var i = 0; i < path.length - 1; i++) {
+		var tmp = current[path[i]];
+		if (!tmp) {
+			tmp = new Object();
+			current[path[i]] = tmp;
+		}
+		current = tmp;
+	}
+	current[path[path.length - 1]] = value;
+};
+eureka.util.removeIn = function (obj, path) {
+	var current = obj;
+	for (var i = 0; i < path.length - 1; i++) {
+		current = current[path[i]];
+		if (current == null) {
+			break;
+		}
+	}
+	delete current[path[path.length - 1]];
+};
+// END "namespacing"
+
 $("ul.sortable").sortable();
 $("ul.sortable").disableSelection();
 
 var dropBoxMaxTextWidth = 275;
-var possiblePropositions = new Object();
+var droppedElements  = new Object();
 var saveFuncs = {
 	'SEQUENCE': saveSequence,
 	'CATEGORIZATION': saveCategorization,
@@ -28,6 +74,67 @@ function disableFrequencyFields() {
 	$('#valueThresholdConsecutiveLabel').css('visibility','hidden');
 }
 
+function addDroppedElement(propType, dropped, dropTarget) {
+	var elementKey = $(dropped).data('key');
+	var sourceId = $(dropTarget).data('count');
+	var sourcePath = [propType, elementKey, 'sources', sourceId];
+	var defPath = [propType, elementKey, 'definition'];
+	var definition = eureka.util.getIn(droppedElements, defPath);
+
+	eureka.util.setIn(droppedElements, sourcePath, dropTarget);
+	if (!definition) {
+		var properties = ['key', 'desc', 'type', 'subtype', 'space'];
+		definition = new Object();
+		$.each(properties, function(i, property) {
+			definition[property] = $(dropped).data(property);
+		});
+		eureka.util.setIn(droppedElements, defPath, definition);
+	}
+
+	var allSourcesPath = [propType, elementKey, 'sources'];
+	var allSources = eureka.util.getIn(droppedElements, allSourcesPath);
+	var size = eureka.util.objSize(allSources);
+	if (size > 1) {
+		for (key in allSources) {
+			if (allSources.hasOwnProperty(key)) {
+				var source = allSources[key];
+				var items = $(source).find('li');
+				$(items).each(function (i, item) {
+					var span = $(item).find('span.desc');
+					var newText = $(dropped).data('desc') + ' [' + $(source).data('count') + ']';
+					$(span).text(newText);
+				});
+			}
+		}
+	}
+}
+
+function removeDroppedElement(propType, removed, removeTarget) {
+	var elementKey = $(removed).data('key');
+	var sourceId = $(removeTarget).data('count');
+	var path = [propType, elementKey, 'sources', sourceId];
+	eureka.util.removeIn(droppedElements, path);
+
+	var defPath = [propType, elementKey, 'definition'];
+	var definition = eureka.util.getIn(droppedElements, defPath);
+	var allSourcesPath = [propType, elementKey, 'sources'];
+	var allSources = eureka.util.getIn(droppedElements, allSourcesPath);
+	var size = eureka.util.objSize(allSources);
+	if (size <= 1) {
+		for (key in allSources) {
+			if (allSources.hasOwnProperty(key)) {
+				var source = allSources[key];
+				var items = $(source).find('li');
+				$(items).each(function (i, item) {
+					var span = $(item).find('span.desc');
+					var newText = $(removed).data('desc');
+					$(span).text(newText);
+				});
+			}
+		}
+	}
+}
+
 function postProposition (postData, successFunc) {
 	$.ajax({
 		type: "POST",
@@ -40,7 +147,6 @@ function postProposition (postData, successFunc) {
 		}
 	});
 }
-
 
 function collectSequenceDataElement (elem) {
 	// var type = $mainProposition.data('type');
@@ -63,8 +169,14 @@ function collectSequenceRelations ($relationElems) {
 	var relations = new Array();
 
 	$relationElems.each(function (i,r) {
-		var $proposition = $(r).find('ul.sortable').find('li').first();
+		var $sortable = $(r).find('ul.sortable');
+		var $proposition = $sortable.find('li').first();
+		var id = $sortable.data('count');
 		var key = $proposition.data('key');
+		var sequentialValue = $(r).find('select[name="propositionSelect"]').val();
+		var sequentialData = sequentialValue.split('__');
+		var sequentialDataElement = sequentialData[0];
+		var sequentialDataElementSource = sequentialData[1];
 
 		if (key) {
 			relations.push({
@@ -80,8 +192,10 @@ function collectSequenceRelations ($relationElems) {
 					'property': $(r).find('select[name="sequenceRelDataElementPropertyName"]').val(),
 					'propertyValue': $(r).find('input[name="sequenceRelDataElementPropertyValue"]').val()
 				},
+				'id': id,
 				'relationOperator': $(r).find('select[name="sequenceRelDataElementTemporalRelation"]').val(),
-				'sequentialDataElement': $(r).find('select[name="propositionSelect"]').val(),
+				'sequentialDataElement': sequentialDataElement,
+				'sequentialDataElementSource': sequentialDataElementSource,
 				'relationMinCount': $(r).find('input[name="sequenceRhsDataElementMinDistanceValue"]').val(),
 				'relationMinUnits': $(r).find('select[name="sequenceRhsDataElementMinDistanceUnits"]').val(),
 				'relationMaxCount': $(r).find('input[name="sequenceRhsDataElementMaxDistanceValue"]').val(),
@@ -277,40 +391,34 @@ function saveFrequency (elem) {
 	postProposition(frequency);
 }
 
-function addPossibleProposition (key, desc) {
-	if (possiblePropositions[key]) {
-		possiblePropositions[key].count++;
-	} else {
-		possiblePropositions[key] = new Object();
-		possiblePropositions[key].count = 1;
-		possiblePropositions[key].desc = desc;
-	}
-}
-
-function removePossibleProposition (key) {
-	if (possiblePropositions[key] && possiblePropositions[key].count > 0) {
-		possiblePropositions[key].count--;
-	}
-}
-
-
 function setPropositionSelects (elem) {
-	var selects = $(elem).find('select').filter('[name="propositionSelect"]');
-	$(selects).each( function (i, sel) {
-		var items = $(sel).closest('.drop-parent').find('li');
+	var type = $("input:radio[name='type']:checked").val();
+	var droppedElems = droppedElements[type];
+	var selects = $(elem).find('select[name="propositionSelect"]');
+	$(selects).each(function (i, sel) {
+		var $sortable = $(sel).closest('.drop-parent').find('ul.sortable');
 		$(sel).empty();
-		$.each(possiblePropositions, function (key, val) {
-			if (possiblePropositions[key].count > 0) {
-				var add = true;
-				$(items).each( function (i, item) {
-					if ($(item).data('key') == key && possiblePropositions[key].count < 2) {
-						add = false;
+		$.each(droppedElems, function(elemKey, elemValue) {
+			var sources = droppedElems[elemKey]['sources'];
+			$.each(sources, function(sourceKey, sourceValue) {
+				var $items = $(sourceValue).find('li');
+				var selectedItem;
+				$items.each(function(i, item) {
+					if ($(item).data('key') == elemKey) {
+						selectedItem = item;
+					}
+					if (selectedItem && $sortable.data('count') != $(sourceValue).data('count')) {
+						var sourceId = $(sourceValue).data('count');
+						var value = $(selectedItem).data('key') + '__' + sourceId;
+						var desc = $(selectedItem).data('desc');
+						if (eureka.util.objSize(sources) > 1) {
+							desc += ' [' + sourceKey + ']';
+						}
+						var opt = $('<option></option>', {'value': value}).text(desc);
+						$(sel).append(opt);
 					}
 				});
-				if (add) {
-					$(sel).append($('<option></option>').attr('value', key).text(possiblePropositions[key].desc));
-				}
-			}
+			});
 		});
 	});
 }
@@ -328,7 +436,8 @@ function attachDeleteAction (elem) {
 				'modal': true,
 				'buttons': {
 					"Confirm": function() {
-						removePossibleProposition($toRemove.data('key'));
+						var type = $("input:radio[name='type']:checked").val();
+						removeDroppedElement(type, $toRemove,$sortable);
 						setPropositionSelects($sortable.closest('[data-definition-container="true"]'));
 						$toRemove.remove();
 						if ($sortable.find('li').length == 0) {
@@ -342,7 +451,6 @@ function attachDeleteAction (elem) {
 						});
 
 						// perform any additional delete actions
-						var type = $("input:radio[name='type']:checked").val();
 						if (deleteActions[type]) {
 							deleteActions[type]();
 						}
@@ -412,12 +520,17 @@ $(document).ready(function(){
 	// an existing proposition.  Also populate any proposition select
 	// dropdowns if needed.
 	if ($('#propId').val()) {
+		var propType = $('input[name="type"]:checked').val();
+		var $def = $('#' + propType + 'definition');
+		var $sortables = $def.find('ul.sortable');
+
 		$('div.label-info').hide();
-		$('ul.sortable').find('li').each(function (i, item) {
-			addPossibleProposition($(item).data('key'), $(item).data('key'));
+		$sortables.each(function (i, list) {
+			$(list).find('li').each(function (j, item) {
+				addDroppedElement(propType, item, $(list));
+			});
 		});
-		var type = $('input[name="type"]:checked').val();
-		setPropositionSelects($('#' + type + 'definition'));
+		setPropositionSelects($def);
 	}
 
 	// make any deletable items actually delete
@@ -463,7 +576,7 @@ $(document).ready(function(){
 		// validate step 1
 		if (step == 1) {
 			var type = $("input:radio[name='type']:checked").val();
-			if (type == undefined || type == "") {
+			if (type == null || type == "") {
 				isStepValid = false;
 				$('#wizard').smartWizard('showMessage','Please select a type of element to create.');
 				$('#wizard').smartWizard('setError',{
@@ -568,7 +681,9 @@ $(document).ready(function(){
 		var newCount = total + 1;
 		var data = $('table.sequence-relation').filter(':last').clone();
 		var appendTo = $('td.sequence-relations-container');
-		data.find('ul.sortable').empty();
+		var sortable = data.find('ul.sortable');
+		sortable.empty();
+		sortable.attr('data-count', newCount + 1);
 		data.find('span.count').text(newCount);
 		data.find('div.thresholdedDataElement').attr('id','thresholdedDataElement' + newCount);
 		data.find('select[name="sequenceRelDataElementPropertyName"]').attr('data-properties-provider','relatedDataElement' + newCount);
@@ -589,6 +704,7 @@ $(document).ready(function(){
 });
 
 function dropFinishCallback (data) {
+	var propType = $("input:radio[name='type']:checked").val();
 	var target = data.e.currentTarget;
 	var textContent = data.o[0].children[1].childNodes[1].textContent;
 
@@ -599,11 +715,11 @@ function dropFinishCallback (data) {
 
 		var sortable = $(target).find('ul.sortable');
 		var newItem = $('<li></li>')
-		.data("space", $(data.o[0]).data("space"))
-		.data("desc", textContent)
-		.data("type", $(data.o[0]).data("type"))
-		.data("subtype", $(data.o[0]).data("subtype") || '')
-		.data("key", $(data.o[0]).data("proposition") || $(data.o[0]).data('key'));
+		.attr("data-space", $(data.o[0]).data("space"))
+		.attr("data-desc", textContent)
+		.attr("data-type", $(data.o[0]).data("type"))
+		.attr("data-subtype", $(data.o[0]).data("subtype") || '')
+		.attr('data-key', $(data.o[0]).data("proposition") || $(data.o[0]).data('key'));
 
 		// set the properties in the properties select
 		if ($(data.o[0]).data('properties')) {
@@ -633,7 +749,7 @@ function dropFinishCallback (data) {
 			}
 		} else {
 			var tmptype = $(newItem).data("type");
-			$(sortable).data("proptype", tmptype);
+			$(sortable).attr("data-proptype", tmptype);
 		}
 
 		var X = $("<span></span>", {
@@ -642,12 +758,13 @@ function dropFinishCallback (data) {
 		attachDeleteAction(X);
 
 		var txt = $("<span></span>", {
-			text : textContent
+			'class': 'desc',
+			'text': textContent
 		});
 
 		if ($(sortable).data('drop-type') === 'single') {
 			$(sortable).find('li').each(function (i,item) {
-				removePossibleProposition($(item).data('key'));
+				$(item).find('span.delete').click();
 				$(item).remove();
 			});
 		}
@@ -656,11 +773,11 @@ function dropFinishCallback (data) {
 		newItem.append(txt);
 		sortable.append(newItem);
 
-		addPossibleProposition(newItem.data('key'), txt.text());
+		// add the newly dropped element to the set of dropped elements
+		addDroppedElement(propType, newItem, sortable);
 		setPropositionSelects($(sortable).closest('[data-definition-container="true"]'));
 
 		// finally, call any actions specific to the type of proposition being entered/edited
-		var propType = $("input:radio[name='type']:checked").val();
 		if (dndActions[propType]) {
 			dndActions[propType](data.o[0]);
 		}

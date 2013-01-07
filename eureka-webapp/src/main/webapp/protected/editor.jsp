@@ -177,11 +177,11 @@
 																		<td>
 																			<div id="mainDataElement" class="tree-drop-single jstree-drop">
 																				<div class="label-info" ><center>Drop Here</center></div>
-																				<ul data-type="main" data-drop-type="single" class="sortable" style="width: 100% height: 100%">
+																				<ul data-type="main" data-drop-type="single" data-count="1" class="sortable" style="width: 100% height: 100%">
 																					<c:if test="${not empty proposition and propositionType == 'SEQUENCE'}">
-																					<li data-key="${proposition.primaryDataElement.dataElementKey}" data-desc="${proposition.primaryDataElement.dataElementAbbrevDisplayName}" data-space="${proposition.primaryDataElement.inSystem ? 'system' : 'user'}">
+																					<li data-key="${proposition.primaryDataElement.dataElementKey}" data-desc="${proposition.primaryDataElement.dataElementAbbrevDisplayName} (${proposition.primaryDataElement.dataElementKey})" data-space="${proposition.primaryDataElement.inSystem ? 'system' : 'user'}">
 																						<span class="delete" style="cursor: pointer; background-color: lightblue;"></span>
-																						<span>${proposition.primaryDataElement.dataElementKey} ${proposition.primaryDataElement.dataElementAbbrevDisplayName}</span>
+																						<span>${proposition.primaryDataElement.dataElementAbbrevDisplayName} (${proposition.primaryDataElement.dataElementKey})</span>
 																					</li>
 																					</c:if>
 																				</ul>
@@ -262,10 +262,10 @@
 																		<td colspan="5">
 																			<div id="relatedDataElement${status.count}" class="tree-drop-single jstree-drop">
 																				<div class="label-info"><center>Drop Here</center></div>
-																				<ul class="sortable" data-type="related" data-drop-type="single" style="width: 100% height: 100%">
-																					<li data-key="${relation.dataElementField.dataElementKey}" data-desc="${relation.dataElementField.dataElementAbbrevDisplayName}" data-space="${relation.dataElementField.inSystem ? 'system' : 'user'}">
+																				<ul class="sortable" data-type="related" data-drop-type="single" data-count="${status.count + 1}" style="width: 100% height: 100%">
+																					<li data-key="${relation.dataElementField.dataElementKey}" data-desc="${relation.dataElementField.dataElementAbbrevDisplayName} (${relation.dataElementField.dataElementKey})" data-space="${relation.dataElementField.inSystem ? 'system' : 'user'}">
 																						<span class="delete" style="cursor: pointer; background-color: lightblue;"></span>
-																						<span>${relation.dataElementField.dataElementKey}</span>
+																						<span>${relation.dataElementField.dataElementAbbrevDisplayName} (${relation.dataElementField.dataElementKey})</span>
 																					</li>
 																				</ul>
 																			</div>
@@ -350,7 +350,7 @@
 																		<td colspan="5">
 																			<div id="relatedDataElement1" class="tree-drop-single jstree-drop">
 																				<div class="label-info"><center>Drop Here</center></div>
-																				<ul class="sortable" data-type="related" data-drop-type="single" style="width: 100% height: 100%"></ul>
+																				<ul class="sortable" data-type="related" data-drop-type="single" data-count="2" style="width: 100% height: 100%"></ul>
 																			</div>
 																		</td>
 																	</tr>
