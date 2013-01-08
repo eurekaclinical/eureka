@@ -37,13 +37,13 @@ import com.sun.xml.bind.CycleRecoverable;
 
 /**
  * Holds information about a user-defined ontological concept.
- *
+ * 
  * @author hrathod
  */
 @XmlRootElement
 @Entity
-@Table(name = "propositions", uniqueConstraints = { @UniqueConstraint
-	(columnNames = {"key", "userId"}) })
+@Table(name = "propositions", uniqueConstraints = { @UniqueConstraint(columnNames = {
+        "key", "userId" }) })
 @Inheritance(strategy = InheritanceType.JOINED)
 public abstract class Proposition implements CycleRecoverable,
         PropositionEntityVisitable, Serializable {
@@ -89,10 +89,20 @@ public abstract class Proposition implements CycleRecoverable,
 	 * The date the proposition was last modified.
 	 */
 	private Date lastModified;
+	/**
+	 * True if this proposition is used only as a building block for another
+	 * proposition and ultimately should not show up in i2b2 as a queryable
+	 * concept.
+	 */
+	private boolean helperProposition;
 
+	protected Proposition() {
+		helperProposition = false;
+	}
+	
 	/**
 	 * Gets the abbreviated display name of the proposition.
-	 *
+	 * 
 	 * @return The abbreviated display name of the proposition.
 	 */
 	public String getAbbrevDisplayName() {
@@ -101,7 +111,7 @@ public abstract class Proposition implements CycleRecoverable,
 
 	/**
 	 * Sets the abbreviated display name.
-	 *
+	 * 
 	 * @param inAbbrevDisplayName
 	 *            The abbreviated display name to set.
 	 */
@@ -111,7 +121,7 @@ public abstract class Proposition implements CycleRecoverable,
 
 	/**
 	 * Gets the display name of the proposition.
-	 *
+	 * 
 	 * @return The display name of the proposition.
 	 */
 	public String getDisplayName() {
@@ -120,7 +130,7 @@ public abstract class Proposition implements CycleRecoverable,
 
 	/**
 	 * Sets the display name of the proposition.
-	 *
+	 * 
 	 * @param inDisplayName
 	 *            The display name of the proposition.
 	 */
@@ -130,7 +140,7 @@ public abstract class Proposition implements CycleRecoverable,
 
 	/**
 	 * Gets the user to which this proposition belongs.
-	 *
+	 * 
 	 * @return The user to which this proposition belongs.
 	 */
 	public Long getUserId() {
@@ -139,7 +149,7 @@ public abstract class Proposition implements CycleRecoverable,
 
 	/**
 	 * Sets the user to which this proposition belongs.
-	 *
+	 * 
 	 * @param inUserId
 	 *            The user to which this proposition belongs.
 	 */
@@ -149,7 +159,7 @@ public abstract class Proposition implements CycleRecoverable,
 
 	/**
 	 * Gets the unique identifier for the proposition.
-	 *
+	 * 
 	 * @return The unique identifier for the proposition.
 	 */
 	public Long getId() {
@@ -158,7 +168,7 @@ public abstract class Proposition implements CycleRecoverable,
 
 	/**
 	 * Sets the unique identifier for the proposition.
-	 *
+	 * 
 	 * @param inId
 	 *            The unique identifier for the proposition.
 	 */
@@ -168,7 +178,7 @@ public abstract class Proposition implements CycleRecoverable,
 
 	/**
 	 * Is the proposition a system level element?
-	 *
+	 * 
 	 * @return True if system level, false otherwise.
 	 */
 	public boolean isInSystem() {
@@ -177,7 +187,7 @@ public abstract class Proposition implements CycleRecoverable,
 
 	/**
 	 * Sets whether the proposition is a system level element.
-	 *
+	 * 
 	 * @param inSystem
 	 *            The value of the inSystem property to set.
 	 */
@@ -187,7 +197,7 @@ public abstract class Proposition implements CycleRecoverable,
 
 	/**
 	 * Gets the key for the proposition.
-	 *
+	 * 
 	 * @return Null if the proposition is not system level, id in the system
 	 *         ontology otherwise.
 	 */
@@ -197,7 +207,7 @@ public abstract class Proposition implements CycleRecoverable,
 
 	/**
 	 * Sets the key for the proposition.
-	 *
+	 * 
 	 * @param inKey
 	 *            The id of the proposition in the system ontology.
 	 */
@@ -207,7 +217,7 @@ public abstract class Proposition implements CycleRecoverable,
 
 	/**
 	 * Gets the creation date.
-	 *
+	 * 
 	 * @return The creation date.
 	 */
 	public Date getCreated() {
@@ -216,7 +226,7 @@ public abstract class Proposition implements CycleRecoverable,
 
 	/**
 	 * Sets the creation time.
-	 *
+	 * 
 	 * @param inCreated
 	 *            The creation time.
 	 */
@@ -226,7 +236,7 @@ public abstract class Proposition implements CycleRecoverable,
 
 	/**
 	 * Gets the last modification time.
-	 *
+	 * 
 	 * @return The last modification time.
 	 */
 	public Date getLastModified() {
@@ -235,12 +245,33 @@ public abstract class Proposition implements CycleRecoverable,
 
 	/**
 	 * Sets the last modification time.
-	 *
+	 * 
 	 * @param inLastModified
 	 *            The last modification time.
 	 */
 	public void setLastModified(Date inLastModified) {
 		lastModified = inLastModified;
+	}
+
+	/**
+	 * Is the proposition just a building block of another proposition?
+	 * 
+	 * @return Whether this proposition is used only as a building block in
+	 *         another proposition
+	 */
+	public boolean isHelperProposition() {
+		return helperProposition;
+	}
+
+	/**
+	 * Sets whether this proposition is just a building block of another
+	 * proposition
+	 * 
+	 * @param inHelperProposition
+	 *            the value of the helperProposition field to set
+	 */
+	public void setHelperProposition(boolean inHelperProposition) {
+		helperProposition = inHelperProposition;
 	}
 
 	@Override
