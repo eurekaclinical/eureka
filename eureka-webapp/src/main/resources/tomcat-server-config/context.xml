@@ -51,7 +51,6 @@
     <!--
     <Valve className="org.apache.catalina.valves.CometConnectionManagerValve" />
     -->
-<!--
 	<Resource name="jdbc/EurekaService" auth="Container"
 		type="javax.sql.DataSource" driverClassName="org.h2.Driver"
 		factory="org.apache.tomcat.jdbc.pool.DataSourceFactory"
@@ -64,20 +63,7 @@
 		url="jdbc:h2:file:${project.build.directory}/eureka-config/data/eureka-backend-db"
 		initialSize="1" maxActive="3" maxIdle="3" minIdle="1"
 		maxWait="-1"/>
--->
-	<Resource name="jdbc/EurekaService" auth="Container"
-	          type="javax.sql.DataSource" driverClassName="org.h2.Driver"
-	          factory="org.apache.tomcat.jdbc.pool.DataSourceFactory"
-	          url="jdbc:h2:mem:eureka-services-db"
-	          initialSize="1" maxActive="3" maxIdle="1" minIdle="1"
-	          maxWait="-1"/>
-	<Resource name="jdbc/EurekaBackend" auth="Container"
-	          type="javax.sql.DataSource" driverClassName="org.h2.Driver"
-	          factory="org.apache.tomcat.jdbc.pool.DataSourceFactory"
-	          url="jdbc:h2:mem:eureka-backend-db"
-	          initialSize="1" maxActive="3" maxIdle="3" minIdle="1"
-	          maxWait="-1"/>
-	-->	<!-- Change the mail.smtp.host attribute below to an appropriate value -->
+	<!-- Change the mail.smtp.host attribute below to an appropriate value -->
 	<!--<Resource name="mail/Session" auth="Container"
 		type="javax.mail.Session"
 		mail.smtp.host="smtp.example.com"
