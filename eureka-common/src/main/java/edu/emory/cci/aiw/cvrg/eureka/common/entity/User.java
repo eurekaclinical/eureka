@@ -97,6 +97,11 @@ public class User implements CycleRecoverable {
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date lastLogin;
 	/**
+	 * The password expiration date.
+	 */
+	@Temporal(TemporalType.TIMESTAMP)
+	private Date passwordExpiration;
+	/**
 	 * A list of roles assigned to the user.
 	 */
 	@ManyToMany(cascade = {CascadeType.REFRESH, CascadeType.MERGE},
@@ -298,6 +303,22 @@ public class User implements CycleRecoverable {
             } else {
                 this.lastLogin = null;
             }
+	}
+
+	/**
+	 * Get the user's password expiration date.
+	 * @return The user's password expiration date.
+	 */
+	public Date getPasswordExpiration() {
+		return passwordExpiration;
+	}
+
+	/**
+	 * Set the user's password expiration date.
+	 * @param inPasswordExpiration The user's password expiration date.
+	 */
+	public void setPasswordExpiration(Date inPasswordExpiration) {
+		passwordExpiration = inPasswordExpiration;
 	}
 
 	/**

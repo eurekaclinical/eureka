@@ -37,6 +37,26 @@ see implementation details http://jersey.java.net/nonav/documentation/latest/jax
 		<param-value>Messages</param-value>
 		<description>Various string messages.</description>
 	</context-param>
+	
+	<filter>
+		<filter-name>PasswordExpiredFilter</filter-name>
+		<filter-class>
+			edu.emory.cci.aiw.cvrg.eureka.servlet.filter.PasswordExpiredFilter
+		</filter-class>
+		<init-param>
+			<param-name>redirect-url</param-name>
+			<param-value>/protected/user_acct</param-value>
+		</init-param>
+		<init-param>
+			<param-name>save-url</param-name>
+			<param-value>/protected/user_acct</param-value>
+		</init-param>
+	</filter>
+	
+	<filter-mapping>
+		<filter-name>PasswordExpiredFilter</filter-name>
+		<url-pattern>/protected/*</url-pattern>
+	</filter-mapping>
 
 	<servlet>
 		<servlet-name>CommonsFileUploadServlet</servlet-name>

@@ -26,11 +26,17 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import edu.emory.cci.aiw.cvrg.eureka.servlet.worker.ServletWorker;
 import edu.emory.cci.aiw.cvrg.eureka.servlet.worker.useracct.ListUserAcctWorker;
 import edu.emory.cci.aiw.cvrg.eureka.servlet.worker.useracct.SaveUserAcctWorker;
 
 public class UserAcctManagerServlet extends HttpServlet {
+
+	private static final Logger LOGGER = LoggerFactory.getLogger
+			(UserAcctManagerServlet.class);
 
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp)
@@ -44,18 +50,15 @@ public class UserAcctManagerServlet extends HttpServlet {
 			throws ServletException, IOException {
 		
 		String action = req.getParameter("action");
-		ServletWorker worker = null;
+		ServletWorker worker;
 
-		if (action.equals("list")) {
-			worker = new ListUserAcctWorker();
-			worker.execute(req, resp);
-		} 
-		else if (action.equals("save")) {
+		if (action != null && action.equals("save")) {
+			LOGGER.info("Saving user");
 			worker = new SaveUserAcctWorker();
-			worker.execute(req, resp);			
-			
 		} else {
-			
+			LOGGER.info("Listing user");
+			worker = new ListUserAcctWorker();
 		}
+		worker.execute(req, resp);
 	}
 }
