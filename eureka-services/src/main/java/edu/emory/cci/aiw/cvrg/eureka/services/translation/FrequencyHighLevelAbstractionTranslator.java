@@ -19,9 +19,11 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.services.translation;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
+import java.util.List;
 
 import com.google.inject.Inject;
 
@@ -31,18 +33,18 @@ import edu.emory.cci.aiw.cvrg.eureka.common.entity.Categorization;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.CompoundValueThreshold;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.ExtendedProposition;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.HighLevelAbstraction;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.ValueThresholdEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.Proposition;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.PropositionEntityVisitor;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.Relation;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.SliceAbstraction;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.SystemProposition;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.ValueThresholdEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.exception.DataElementHandlingException;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.PropositionDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.TimeUnitDao;
 
 public final class FrequencyHighLevelAbstractionTranslator implements
-		PropositionTranslator<Frequency, HighLevelAbstraction> {
+        PropositionTranslator<Frequency, HighLevelAbstraction> {
 
 	private static final String INTERMEDIATE_SUFFIX = "_FREQUENCY";
 
@@ -52,7 +54,7 @@ public final class FrequencyHighLevelAbstractionTranslator implements
 
 	@Inject
 	public FrequencyHighLevelAbstractionTranslator(
-			PropositionDao inPropositionDao, TimeUnitDao inTimeUnitDao) {
+	        PropositionDao inPropositionDao, TimeUnitDao inTimeUnitDao) {
 		propositionDao = inPropositionDao;
 		timeUnitDao = inTimeUnitDao;
 	}
@@ -63,20 +65,21 @@ public final class FrequencyHighLevelAbstractionTranslator implements
 
 	@Override
 	public HighLevelAbstraction translateFromElement(Frequency element)
-			throws DataElementHandlingException {
+	        throws DataElementHandlingException {
 		HighLevelAbstraction result = new HighLevelAbstraction();
 		PropositionTranslatorUtil.populateCommonPropositionFields(result,
-				element);
+		        element);
 		result.setCreatedFrom(HighLevelAbstraction.CreatedFrom.FREQUENCY);
 
 		Proposition abstractedFrom = propositionDao.getByUserAndKey(element
-				.getUserId(), element.getDataElement().getDataElementKey());
+		        .getUserId(), element.getDataElement().getDataElementKey());
 
-		IntermediateAbstractionGenerator iag = new
-				IntermediateAbstractionGenerator(element);
+		IntermediateAbstractionGenerator iag = new IntermediateAbstractionGenerator(
+		        element);
 		abstractedFrom.accept(iag);
-		result.setRelations(Collections.singletonList(relationFromEP
-				(epFromAbstraction(iag.getIntermediateAbstraction(), element))));
+		result.setRelations(Collections
+		        .singletonList(relationFromEP(epFromAbstraction(
+		                iag.getIntermediateAbstraction(), element))));
 		result.setAbstractedFrom(Collections.singletonList(abstractedFrom));
 
 		return result;
@@ -91,9 +94,8 @@ public final class FrequencyHighLevelAbstractionTranslator implements
 		return result;
 	}
 
-	private ExtendedProposition epFromAbstraction(Proposition
-														  abstraction,
-												  Frequency element) {
+	private ExtendedProposition epFromAbstraction(Proposition abstraction,
+	        Frequency element) {
 		ExtendedProposition result = new ExtendedProposition();
 
 		result.setProposition(abstraction);
@@ -103,7 +105,7 @@ public final class FrequencyHighLevelAbstractionTranslator implements
 	}
 
 	private final class IntermediateAbstractionGenerator implements
-			PropositionEntityVisitor {
+	        PropositionEntityVisitor {
 
 		private final Frequency element;
 		private Proposition intermediateAbstraction;
@@ -118,41 +120,42 @@ public final class FrequencyHighLevelAbstractionTranslator implements
 
 		@Override
 		public void visit(SystemProposition proposition) {
-			throw new UnsupportedOperationException("SystemProposition not " +
-					"supported");
+			throw new UnsupportedOperationException("SystemProposition not "
+			        + "supported");
 		}
 
 		@Override
 		public void visit(Categorization categorization) {
-			throw new UnsupportedOperationException("Categorization not " +
-					"supported");
+			throw new UnsupportedOperationException("Categorization not "
+			        + "supported");
 		}
 
 		@Override
 		public void visit(HighLevelAbstraction highLevelAbstraction) {
-			throw new UnsupportedOperationException("HighLevelAbstraction not" +
-					" supported");
+			throw new UnsupportedOperationException("HighLevelAbstraction not"
+			        + " supported");
 		}
 
 		@Override
 		public void visit(SliceAbstraction sliceAbstraction) {
-			throw new UnsupportedOperationException("SliceAbstraction not " +
-					"supported");
+			throw new UnsupportedOperationException("SliceAbstraction not "
+			        + "supported");
 		}
 
 		@Override
-		public void visit
-				(ValueThresholdEntity original) {
+		public void visit(ValueThresholdEntity original) {
 			ValueThresholdEntity result = new ValueThresholdEntity();
 
 			result.setUserId(original.getUserId());
 			result.setInSystem(false);
 			result.setKey(original.getKey() + INTERMEDIATE_SUFFIX);
-			result.setDisplayName(original.getDisplayName() + INTERMEDIATE_SUFFIX);
+			result.setDisplayName(original.getDisplayName()
+			        + INTERMEDIATE_SUFFIX);
 			result.setAbstractedFrom(original.getAbstractedFrom());
 			result.setUserConstraint(original.getUserConstraint());
 			result.setComplementConstraint(original.getComplementConstraint());
 			result.setCreatedFrom(ValueThresholdEntity.CreatedFrom.FREQUENCY);
+			result.setHelperProposition(true);
 
 			Date now = Calendar.getInstance().getTime();
 			result.setCreated(now);
@@ -160,55 +163,64 @@ public final class FrequencyHighLevelAbstractionTranslator implements
 
 			result.setMinValues(element.getAtLeast());
 			if (element.getIsWithin()) {
-				if (element.getWithinAtLeast() != null && element
-						.getWithinAtLeastUnits() != null) {
+				if (element.getWithinAtLeast() != null
+				        && element.getWithinAtLeastUnits() != null) {
 					result.setMinGapValues(element.getWithinAtLeast());
-					result.setMinGapValuesUnits(timeUnitDao.retrieve(element.getWithinAtLeastUnits()));
+					result.setMinGapValuesUnits(timeUnitDao.retrieve(element
+					        .getWithinAtLeastUnits()));
 				}
-				if (element.getWithinAtMost() != null && element
-						.getWithinAtMostUnits() != null) {
+				if (element.getWithinAtMost() != null
+				        && element.getWithinAtMostUnits() != null) {
 					result.setMaxGapValues(element.getWithinAtMost());
-					result.setMaxGapValuesUnits(timeUnitDao.retrieve(element.getWithinAtMostUnits()));
+					result.setMaxGapValuesUnits(timeUnitDao.retrieve(element
+					        .getWithinAtMostUnits()));
 				}
 			}
-			result.setAbstractedFrom(propositionDao.getByUserAndKey(
-					userId, element.getDataElement().getDataElementKey()));
+			result.setAbstractedFrom(propositionDao.getByUserAndKey(userId,
+			        element.getDataElement().getDataElementKey()));
 
 			this.intermediateAbstraction = result;
 		}
 
 		@Override
-		public void visit(
-				CompoundValueThreshold original) {
+		public void visit(CompoundValueThreshold original) {
 			CompoundValueThreshold result = new CompoundValueThreshold();
 
 			result.setUserId(original.getUserId());
 			result.setInSystem(false);
 			result.setKey(original.getKey() + INTERMEDIATE_SUFFIX);
-			result.setDisplayName(original.getDisplayName() + INTERMEDIATE_SUFFIX);
-			result.setAbstractedFrom(original.getAbstractedFrom());
-			result.setUserValueDefinitionName(original.getUserValueDefinitionName());
-			result.setComplementValueDefinitionName(original.getComplementValueDefinitionName());
+			result.setDisplayName(original.getDisplayName()
+			        + INTERMEDIATE_SUFFIX);
+			List<ValueThresholdEntity> copyOfAbstractedFrom = new ArrayList<ValueThresholdEntity>(
+			        original.getAbstractedFrom());
+			result.setAbstractedFrom(copyOfAbstractedFrom);
+			result.setUserValueDefinitionName(original
+			        .getUserValueDefinitionName());
+			result.setComplementValueDefinitionName(original
+			        .getComplementValueDefinitionName());
 			result.setCreatedFrom(CompoundValueThreshold.CreatedFrom.FREQUENCY);
+			result.setHelperProposition(true);
 
 			Date now = Calendar.getInstance().getTime();
 			result.setCreated(now);
 			result.setLastModified(now);
-
+			result.setThresholdsOperator(original.getThresholdsOperator());
+			
 			result.setMinimumNumberOfValues(element.getAtLeast());
 
 			if (element.getIsWithin()) {
-				if (element.getWithinAtLeast() != null && element
-						.getWithinAtLeastUnits() != null) {
-					result.setMinimumGapBetweenValues(element.getWithinAtLeast());
+				if (element.getWithinAtLeast() != null
+				        && element.getWithinAtLeastUnits() != null) {
+					result.setMinimumGapBetweenValues(element
+					        .getWithinAtLeast());
 					result.setMinimumGapBetweenValuesUnits(timeUnitDao
-							.retrieve(element.getWithinAtLeastUnits()));
+					        .retrieve(element.getWithinAtLeastUnits()));
 				}
-				if (element.getWithinAtMost() != null && element
-						.getWithinAtMostUnits() != null) {
+				if (element.getWithinAtMost() != null
+				        && element.getWithinAtMostUnits() != null) {
 					result.setMaximumGapBetweenValues(element.getWithinAtMost());
 					result.setMaximumGapBetweenValuesUnits(timeUnitDao
-							.retrieve(element.getWithinAtMostUnits()));
+					        .retrieve(element.getWithinAtMostUnits()));
 				}
 			}
 
@@ -217,19 +229,20 @@ public final class FrequencyHighLevelAbstractionTranslator implements
 	}
 
 	@Override
-	public Frequency translateFromProposition(HighLevelAbstraction
-													  proposition) {
+	public Frequency translateFromProposition(HighLevelAbstraction proposition) {
 		Frequency result = new Frequency();
 
-		PropositionTranslatorUtil.populateCommonDataElementFields(result, proposition);
-//		result.setAtLeast(proposition.getMinValues());
-//		result.setWithinAtLeast(proposition.getMinGapValues());
-//		result.setWithinAtLeastUnits(proposition.getMinGapValuesUnits().getId());
-//		result.setWithinAtMost(proposition.getMaxGapValues());
-//		result.setWithinAtMostUnits(proposition.getMaxGapValuesUnits().getId());
+		PropositionTranslatorUtil.populateCommonDataElementFields(result,
+		        proposition);
+		// result.setAtLeast(proposition.getMinValues());
+		// result.setWithinAtLeast(proposition.getMinGapValues());
+		// result.setWithinAtLeastUnits(proposition.getMinGapValuesUnits().getId());
+		// result.setWithinAtMost(proposition.getMaxGapValues());
+		// result.setWithinAtMostUnits(proposition.getMaxGapValuesUnits().getId());
 
 		DataElementField dataElement = new DataElementField();
-		dataElement.setDataElementKey(proposition.getAbstractedFrom().get(0).getKey());
+		dataElement.setDataElementKey(proposition.getAbstractedFrom().get(0)
+		        .getKey());
 		result.setDataElement(dataElement);
 
 		return result;
