@@ -21,7 +21,10 @@ package edu.emory.cci.aiw.cvrg.eureka.services.config;
 
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
+import java.util.Calendar;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 import javax.inject.Inject;
@@ -30,19 +33,17 @@ import org.protempa.proposition.value.AbsoluteTimeUnit;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.RelationOperator;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.Role;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.ThresholdsOperator;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.TimeUnit;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.User;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.ValueComparator;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.ThresholdsOperator;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.RelationOperatorDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.RoleDao;
+import edu.emory.cci.aiw.cvrg.eureka.services.dao.ThresholdsOperatorDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.TimeUnitDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.UserDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.ValueComparatorDao;
-import edu.emory.cci.aiw.cvrg.eureka.services.dao.ThresholdsOperatorDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.util.StringUtil;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Performs first-time populating of Eureka's database tables. It also tries to
@@ -112,6 +113,7 @@ class DatabasePopulator {
 			superuser.setLastName("User");
 			superuser.setOrganization("N/A");
 			superuser.setVerified(true);
+			superuser.setPasswordExpiration(Calendar.getInstance().getTime());
 			try {
 				superuser.setPassword(StringUtil.md5("defaultpassword"));
 			} catch (NoSuchAlgorithmException ex) {
