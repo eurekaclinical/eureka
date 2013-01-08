@@ -259,6 +259,37 @@ $(document).ready(function() {
 			});
 		 
 	 }
+	 
+	 $("#ResetPsdForm").submit(function(){
+		 var email = $('#email').val();
+		 var dataString = 'email='+ email;
+		 $.ajax({
+             type: 'POST',
+             url: 'forgot_password',
+             data: dataString,
+             success: function() {
+             $('#passwordresetComplete').show();
+             $('#passwordresetComplete').text("Password has been reset.");
+   	      $('#passwordresetComplete').css({
+   	    	  'font-weight' : 'bold',
+   	    	  'font-size': 16
+   	      });
+   	      $('#saveAcctBtn').hide();
+
+         }, error: function(xhr, status, error) {
+
+             $('#passwordresetComplete').show();
+             $('#passwordresetComplete').text(xhr.responseText);
+             $('#passwordresetComplete').css({
+   	    	  'font-weight' : 'bold',
+   	    	  'font-size': 16
+   	      });
+
+         } 
+		});
+		 return false;
+	 });
+	 
 	 $("#userAcctForm").submit(function(){
 			var oldPassword = $('#oldPassword').val();
 			var newPassword = $('#newPassword').val();
@@ -272,47 +303,30 @@ $(document).ready(function() {
 	        				 '&verifyPassword=' + verifyPassword;  
 	        
 	        if (userFormValidator.valid()) {                   		
-				$.ajax({
-		              type: 'POST',
-		              url: 'user_acct',
-		              data: dataString,
-		              statusCode: {
-		            	    404: function() {
-		            	      
-		            	      
-		            	    },
-		            	    200: function() {
-			            	     
-			            	      $('#passwordChangeComplete').show();
-			            	      $('#passwordChangeComplete').text("Password has been changed.");
-			            	      $('#passwordChangeComplete').css({
-			            	    	  'font-weight' : 'bold',
-			            	    	  'font-size': 16
-			            	      });
-			            	      $('#saveAcctBtn').hide();
-			            	    },
-			            	405: function() {
-				            	  
-				            	//  $('#passwordChangeFailure').show();
-				            },
-				            500: function() {
-				            	$('#passwordChangeComplete').show();
-				            	 $('#passwordChangeComplete').text("Error while changing password. Please contact the administrator.");
-				            	 $('#passwordChangeComplete').css({
-			            	    	  'font-weight' : 'bold',
-			            	    	  'font-size': 16
-			            	      });
-				            },
-				            400: function() {
-				            	$('#passwordChangeComplete').show();
-				            	 $('#passwordChangeComplete').text("Error while changing password. Old password does not match the new password.");
-				            	 $('#passwordChangeComplete').css({
-			            	    	  'font-weight' : 'bold',
-			            	    	  'font-size': 16
-			            	      });
-	                         //  $('#passwordChangeFailure').show();
-				            }
-		              }
+		              $.ajax({
+			              type: 'POST',
+			              url: 'user_acct',
+			              data: dataString,
+			              success: function() {
+		                      $('#passwordChangeComplete').show();
+		                      $('#passwordChangeComplete').text("Password has been changed.");
+		            	      $('#passwordChangeComplete').css({
+		            	    	  'font-weight' : 'bold',
+		            	    	  'font-size': 16
+		            	      });
+		            	      $('#saveAcctBtn').hide();
+
+		                  }, 
+		                  error: function(xhr, status, error) {
+
+		                      $('#passwordChangeComplete').show();
+		                      $('#passwordChangeComplete').text(xhr.responseText);
+		                      $('#passwordChangeComplete').css({
+		            	    	  'font-weight' : 'bold',
+		            	    	  'font-size': 16
+		            	      });
+
+		                  } 
 				});
 	        }
 

@@ -61,28 +61,26 @@ public class SaveUserAcctWorker implements ServletWorker {
 
 		resp.setContentType("text/html");
 		try {
-			servicesClient.changePassword(Long.valueOf(id), oldPassword,
+			 servicesClient.changePassword(Long.valueOf(id), oldPassword, 
 					newPassword);
 			resp.setStatus(HttpServletResponse.SC_OK);
 			resp.getWriter().write(HttpServletResponse.SC_OK);
 		} catch (ClientException e) {
-			LOGGER.error("Change password failed for user {}: {}", id, 
-					e.getMessage());
-			if (e.getMessage().equals(ClientResponse.Status.PRECONDITION_FAILED.toString())) {
+			resp.setContentType("text/plain");
+			String[] splitMessage = e.getMessage().split(":");
+			if(splitMessage[0].equals(ClientResponse.Status.PRECONDITION_FAILED.toString()))
+			{
 				resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-				//resp.getWriter().write(e.getMessage());
-				resp.getWriter().write(HttpServletResponse.SC_BAD_REQUEST);
-			} else if (e.getMessage().equals(ClientResponse.Status.INTERNAL_SERVER_ERROR.toString())) {
-				resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-				//resp.getWriter().write(e.getMessage());
-				resp.getWriter().write(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-			} else {
-				resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-				//resp.getWriter().write(e.getMessage());
-				resp.getWriter().write(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+				resp.getWriter().write(splitMessage[1]);
 			}
+			
+			else 
+				{
+					resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+					resp.getWriter().write(splitMessage[2]);
+				}
 		}
-
+		
 		resp.getWriter().close();
 	}
 }

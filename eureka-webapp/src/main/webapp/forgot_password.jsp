@@ -30,17 +30,28 @@
 
 	<template:content name="content">
 		<h3>Forgot Password</h3>
-
+<form id="ResetPsdForm" action="#" method="post">
         <div class="pad_btm fltlft">
 			<p><br /> 
 			  Having trouble logging in?
 			<p>Remember that your user name is your email address you used when you registered.<br />
-            If you cannot remember your password, please send an email to the address below and the administrator will reset it for you.            
+            If you cannot remember your password, please enter your email address.            
 <p>
-		  <a href="mailto:aiwhelp@emory.edu"><strong>aiwhelp@emory.edu</strong></a>
+		<div>
+ 			<table class="white">
+	  		  <tr>
+	  		  	<td class=" white"><label id="lemail" for="email">Email Address</label></td>
+	  		  	<td class="field white"><input id="email" name="email" type="text"  class="email" value="" /></td>
+	  		  	<td class="status white shift_left error"></td>
+	  		  </tr>
+	  		  </table>
+			 &nbsp;&nbsp;&nbsp;
+			<button id="submit" type="submit" class="btn btn-primary submit">Reset Password</button>
+			</div>
 		</p>
-<p>You will receive an email confirming when your password  is reset. </p>
+		<div id="passwordresetComplete"></div>
           </div>
+          </form>
 	</template:content>
 	<template:content name="subcontent">
 		<div id="release_notes">
