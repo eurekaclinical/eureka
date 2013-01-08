@@ -114,10 +114,22 @@ public class ServicesClient extends AbstractClient {
 				("oldPassword", inOldPass).queryParam("newPassword",
 				inNewPass).put(ClientResponse.class);
 		if (!response.getClientResponseStatus().equals(ClientResponse.Status.NO_CONTENT)) {
-			throw new ClientException(response.getEntity(String.class));
+			String message = response.getEntity(String.class);
+			LOGGER.error("Client error while saving element: {}", message);
+			throw new ClientException(response.getClientResponseStatus().toString()+":"+message);
 		}
 	}
 
+	public void resetPassword(String email) throws ClientException {
+		final String path = "/api/user/pwreset/" + email;
+		ClientResponse response = this.getResource().path(path).put(ClientResponse.class);
+		if (!response.getClientResponseStatus().equals(ClientResponse.Status.NO_CONTENT)) {
+			String message = response.getEntity(String.class);
+			LOGGER.error("Client error while saving element: {}", message);
+			throw new ClientException(message);
+		}
+	}
+	
 	public void updateUser(User inUser) throws ClientException {
 		final String path = "/api/user";
 		ClientResponse response = this.getResource().path(path).type(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON).put(ClientResponse.class, inUser);
