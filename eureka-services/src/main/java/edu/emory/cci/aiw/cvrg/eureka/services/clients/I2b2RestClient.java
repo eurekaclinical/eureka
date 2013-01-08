@@ -122,15 +122,18 @@ public class I2b2RestClient extends AbstractClient implements I2b2Client {
 			if (status == Status.OK.getStatusCode()) {
 				parseResponseXML(xmloutput);
 			} else {
+				LOGGER.error(xmloutput);
 				throw new HttpStatusException(
 						Response.Status.INTERNAL_SERVER_ERROR,
-						"i2b2 service failed: " + xmloutput);
+						"Error while changing password. Please contact the administrator. ");
 			}
 		} catch (IOException ex) {
+			LOGGER.error(ex.getMessage(), ex);
 			throw new AssertionError(
 					"IOException in i2b2ServicesClient.changePassword: " + 
 					ex.getMessage());
 		} catch (TemplateException ex) {
+			LOGGER.error(ex.getMessage(), ex);
 			throw new AssertionError(
 					"TemplateException in i2b2ServicesClient.changePassword: " 
 					+ ex.getMessage());
@@ -153,7 +156,7 @@ public class I2b2RestClient extends AbstractClient implements I2b2Client {
 
 			if (el.getAttribute("type").equals("ERROR")) {
 				LOGGER.error(el.getNodeValue());
-				throw new HttpStatusException(Response.Status.INTERNAL_SERVER_ERROR, el.getNodeValue());
+				throw new HttpStatusException(Response.Status.INTERNAL_SERVER_ERROR, "Error while changing password. Please contact the administrator.");
 			}
 
 

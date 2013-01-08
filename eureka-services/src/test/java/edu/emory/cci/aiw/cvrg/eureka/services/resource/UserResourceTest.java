@@ -133,6 +133,17 @@ public class UserResourceTest extends AbstractServiceResourceTest {
 				.put(ClientResponse.class);
 		Assert.assertEquals(Status.NO_CONTENT, response.getClientResponseStatus());
 	}
+	
+	@Test
+	public void testResetPassword() {
+		WebResource resource = this.resource();
+		List<User> users = this.getUserList();
+		User user = users.get(0);
+		ClientResponse response = resource
+				.path("/api/user/pwreset/" + user.getEmail())
+				.put(ClientResponse.class);
+		Assert.assertEquals(Status.NO_CONTENT, response.getClientResponseStatus());
+	}
 
 	/**
 	 * Test the "find user by name" functionality in UserResource.

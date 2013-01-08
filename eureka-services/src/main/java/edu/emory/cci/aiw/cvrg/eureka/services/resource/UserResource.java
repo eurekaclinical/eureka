@@ -230,26 +230,32 @@ public class UserResource {
 		try {
 			oldPasswordHash = StringUtil.md5(oldPassword);
 			newPasswordHash = StringUtil.md5(newPassword);
-		} catch (NoSuchAlgorithmException e) {
+			} catch (NoSuchAlgorithmException e) 
+			{
 			LOGGER.error(e.getMessage(), e);
 			throw new HttpStatusException(
-					Response.Status.INTERNAL_SERVER_ERROR, e);
-		}
-		if (user.getPassword().equals(oldPasswordHash)) {
-			user.setPassword(newPasswordHash);
-
-			this.i2b2Client.changePassword(user.getEmail(), newPassword);
-
-			this.userDao.update(user);
-			try {
-				this.emailSender.sendPasswordChangeMessage(user);
-			} catch (EmailException ee) {
-				LOGGER.error(ee.getMessage(), ee);
+					Response.Status.INTERNAL_SERVER_ERROR, "Error while changing password. Please contact the administrator.");
 			}
-		} else {
-			throw new HttpStatusException(Response.Status.PRECONDITION_FAILED, 
-					"Password mismatch");
-		}
+			if (user.getPassword().equals(oldPasswordHash)) 
+			{
+				user.setPassword(newPasswordHash);
+
+				this.i2b2Client.changePassword(user.getEmail(), newPassword);
+
+				this.userDao.update(user);
+				try
+				{
+					this.emailSender.sendPasswordChangeMessage(user);
+				} catch (EmailException ee)
+				{
+					LOGGER.error(ee.getMessage(), ee);
+				}
+			} 
+			else 
+			{
+				throw new HttpStatusException(Response.Status.PRECONDITION_FAILED, 
+					"Error while changing password. Old password is incorrect.");
+			}
 	}
 
 	/**
@@ -343,13 +349,13 @@ public class UserResource {
 	 * reset.
 	 * @return A {@link Status#OK} if the password is reset and email sent,
 	 * {@link Status#NOT_MODIFIED} if the user can not be found.
-	 * @throws ServletException Thrown if errors occur when resetting the
+	 * @throws HttpStatusException Thrown if errors occur when resetting the
 	 * password, or sending an email to the user informing them of the reset.
 	 */
 	@Path("/pwreset/{username}")
-	@GET
-	public Response resetPassword(@PathParam("username") final String inUsername)
-			throws ServletException {
+	@PUT
+	public void resetPassword(@PathParam("username") final String inUsername)
+			{
 		Response response;
 		User user = this.userDao.getByName(inUsername);
 		if (user == null) {
@@ -364,19 +370,23 @@ public class UserResource {
 				passwordHash = StringUtil.md5(password);
 			} catch (NoSuchAlgorithmException e) {
 				LOGGER.error(e.getMessage(), e);
-				throw new ServletException(e);
+				throw new HttpStatusException(
+						Response.Status.INTERNAL_SERVER_ERROR, "Error while changing password. Please contact the administrator.");
 			}
 			user.setPassword(passwordHash);
+			
+			this.i2b2Client.changePassword(user.getEmail(), password);
+			
 			this.userDao.update(user);
 			try {
 				this.emailSender.sendPasswordResetMessage(user, password);
 			} catch (EmailException e) {
 				LOGGER.error(e.getMessage(), e);
-				throw new ServletException(e);
+				
 			}
-			response = Response.ok().build();
+			
 		}
-		return response;
+		
 	}
 
 	/**
