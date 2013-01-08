@@ -40,6 +40,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.sun.xml.bind.CycleRecoverable;
+import javax.persistence.Column;
 
 /**
  * Store information about a user's file upload.
@@ -69,27 +70,33 @@ public class FileUpload implements CycleRecoverable {
 	/**
 	 * The on-disk location of the uploaded file.
 	 */
+	@Column(nullable = false)
 	private String location;
 	/**
 	 * The timestamp of the initial upload.
 	 */
+	@Column(nullable = false)
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date timestamp;
 	/**
 	 * Has the file upload been validated?.
 	 */
+	@Column(nullable = false)
 	private boolean validated;
 	/**
 	 * Has the file been processed?.
 	 */
+	@Column(nullable = false)
 	private boolean processed;
 	/**
 	 * Are we done with the file?.
 	 */
+	@Column(nullable = false)
 	private boolean completed;
 	/**
 	 * The user to which this upload belongs.
 	 */
+	@Column(nullable = false)
 	private Long userId;
 	/**
 	 * Contains a list of errors found in the file.

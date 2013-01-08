@@ -43,6 +43,7 @@ import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.annotate.JsonManagedReference;
 
 import com.sun.xml.bind.CycleRecoverable;
+import javax.persistence.Column;
 
 /**
  * Holds information about a job that is sent from the services layer to the
@@ -73,10 +74,12 @@ public class Job implements CycleRecoverable {
 	/**
 	 * The unique identifier of the configuration to use for this job.
 	 */
+	@Column(nullable = false)
 	private Long configurationId;
 	/**
 	 * The unique identifier of the user submitting the job request.
 	 */
+	@Column(nullable = false)
 	private Long userId;
 	/**
 	 * The events generated for the job.

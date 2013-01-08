@@ -19,6 +19,7 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.common.entity;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -42,8 +43,9 @@ public class PropertyConstraint {
 		generator = "CONSTRAINT_SEQ_GENERATOR")
 	private Long id;
 
+	@Column(nullable = false)
 	private String propertyName;
-
+	
 	private String value;
 
 	@OneToOne

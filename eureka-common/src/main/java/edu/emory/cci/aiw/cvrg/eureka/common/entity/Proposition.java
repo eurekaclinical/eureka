@@ -34,6 +34,8 @@ import javax.persistence.UniqueConstraint;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import com.sun.xml.bind.CycleRecoverable;
+import javax.persistence.Temporal;
+import org.apache.commons.lang.builder.ToStringBuilder;
 
 /**
  * Holds information about a user-defined ontological concept.
@@ -62,6 +64,7 @@ public abstract class Proposition implements CycleRecoverable,
 	/**
 	 * The user to which this proposition belongs.
 	 */
+	/*@Column(nullable = false)*/
 	private Long userId;
 	/**
 	 * If proposition is system-level, this key identifies the proposition in
@@ -84,10 +87,13 @@ public abstract class Proposition implements CycleRecoverable,
 	/**
 	 * The date the proposition was created.
 	 */
+	/*@Column(nullable = false)*/
+	@Temporal(javax.persistence.TemporalType.TIMESTAMP)
 	private Date created;
 	/**
 	 * The date the proposition was last modified.
 	 */
+	@Temporal(javax.persistence.TemporalType.TIMESTAMP)
 	private Date lastModified;
 	/**
 	 * True if this proposition is used only as a building block for another
@@ -281,8 +287,6 @@ public abstract class Proposition implements CycleRecoverable,
 
 	@Override
 	public String toString() {
-		return "Proposition{" + "id=" + id + ", user=" + userId
-		        + ", displayName=" + displayName + ", abbrevDisplayName="
-		        + abbrevDisplayName + '}';
+		return ToStringBuilder.reflectionToString(this);
 	}
 }

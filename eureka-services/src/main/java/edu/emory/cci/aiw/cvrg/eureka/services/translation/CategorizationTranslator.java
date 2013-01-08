@@ -26,12 +26,9 @@ import edu.emory.cci.aiw.cvrg.eureka.common.comm.DataElement;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.Categorization;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.Categorization.CategorizationType;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.Proposition;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.SystemProposition;
 import edu.emory.cci.aiw.cvrg.eureka.common.exception.DataElementHandlingException;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.PropositionDao;
-import edu.emory.cci.aiw.cvrg.eureka.services.finder.PropositionFindException;
 import edu.emory.cci.aiw.cvrg.eureka.services.finder.SystemPropositionFinder;
-import org.protempa.PropositionDefinition;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -85,39 +82,24 @@ public final class CategorizationTranslator implements
 
 		List<Proposition> inverseIsA = new ArrayList<Proposition>();
 		for (DataElement de : element.getChildren()) {
-			Proposition child = getOrCreateProposition(de.getKey(), element);
-			inverseIsA.add(child);
+			//Proposition child = getOrCreateProposition(de.getKey(), element);
+			DataElementTranslatorVisitor visitor = 
+					new DataElementTranslatorVisitor(
+					this.systemPropositionTranslator, this.sequenceTranslator,
+					this,
+					this.frequencySliceTranslator,
+					this.frequencyHighLevelAbstractionTranslator,
+					this.resultThresholdsLowLevelAbstractionTranslator,
+					this.resultThresholdsCompoundLowLevelAbstractionTranslator);
+			de.accept(visitor);
+			inverseIsA.add(visitor.getProposition());
 		}
 		result.setInverseIsA(inverseIsA);
 		result.setCategorizationType(checkPropositionType(element));
+		
+		System.err.println("Got category for persistence: " + result);
 
 		return result;
-	}
-
-	private Proposition getOrCreateProposition(String key,
-			Category element) throws DataElementHandlingException {
-		Proposition proposition = this.propositionDao.getByUserAndKey(
-				element.getUserId(), key);
-		if (proposition == null) {
-			try {
-				PropositionDefinition propDef = this.finder.find(
-						element.getUserId(), key);
-				SystemProposition sysProp = new SystemProposition();
-				sysProp.setKey(key);
-				sysProp.setInSystem(true);
-				sysProp.setDisplayName(propDef.getDisplayName());
-				sysProp.setAbbrevDisplayName(propDef.getAbbreviatedDisplayName());
-				sysProp.setUserId(element.getUserId());
-				sysProp.setCreated(element.getCreated());
-				sysProp.setLastModified(element.getLastModified());
-				proposition = sysProp;
-			} catch (PropositionFindException ex) {
-				throw new DataElementHandlingException(
-						"Could not translate categorical element "
-						+ element.getKey(), ex);
-			}
-		}
-		return proposition;
 	}
 
 	private CategorizationType checkPropositionType(Category element) {

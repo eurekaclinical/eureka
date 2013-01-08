@@ -107,12 +107,11 @@ public final class PropositionUtil {
 
 		@Override
 		public void visit(CompoundLowLevelAbstractionDefinition def) {
-			throw new UnsupportedOperationException("Not supported yet.");
+			systemType = SystemType.COMPOUND_LOW_LEVEL_ABSTRACTION;
 		}
 		
 		
 	}
-	private static final PropositionDefinitionTypeVisitor PROP_DEF_TYPE_VISITOR = new PropositionDefinitionTypeVisitor();
 
 	/**
 	 * Wraps a proposition definition into a proposition wrapper.
@@ -132,8 +131,10 @@ public final class PropositionUtil {
 		systemElement.setDisplayName(inDefinition.getDisplayName());
 		systemElement.setSummarized(summarize);
 		systemElement.setParent(inDefinition.getChildren().length > 0);
-		inDefinition.accept(PROP_DEF_TYPE_VISITOR);
-		systemElement.setSystemType(PROP_DEF_TYPE_VISITOR.systemType);
+		PropositionDefinitionTypeVisitor propDefTypeVisitor = 
+				new PropositionDefinitionTypeVisitor();
+		inDefinition.accept(propDefTypeVisitor);
+		systemElement.setSystemType(propDefTypeVisitor.systemType);
 
 		if (!summarize) {
 			List<SystemElement> children = new ArrayList<SystemElement>();

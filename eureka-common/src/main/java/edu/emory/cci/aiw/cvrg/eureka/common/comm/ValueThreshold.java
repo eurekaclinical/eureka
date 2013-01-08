@@ -24,6 +24,7 @@ import java.text.NumberFormat;
 import java.text.ParseException;
 import java.util.List;
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.builder.ToStringBuilder;
 import org.codehaus.jackson.JsonParser;
 import org.codehaus.jackson.JsonProcessingException;
 import org.codehaus.jackson.map.DeserializationContext;
@@ -41,7 +42,6 @@ public final class ValueThreshold {
 		@Override
 		public Number deserialize(JsonParser jp, DeserializationContext dc)
 				throws IOException, JsonProcessingException {
-			System.err.println("NumberSerializer: " + jp.getText());
 			String strippedText = StringUtils.trimToNull(jp.getText());
 			if (strippedText == null) {
 				return null;
@@ -186,5 +186,10 @@ public final class ValueThreshold {
 
 	public void setAtMostTimeUnit(Long atMostTimeUnit) {
 		this.atMostTimeUnit = atMostTimeUnit;
+	}
+	
+	@Override
+	public String toString() {
+		return ToStringBuilder.reflectionToString(this);
 	}
 }

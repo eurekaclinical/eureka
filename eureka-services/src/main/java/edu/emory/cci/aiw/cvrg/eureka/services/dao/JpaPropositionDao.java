@@ -86,12 +86,19 @@ public class JpaPropositionDao extends GenericDao<Proposition, Long>
 				inUserId, inKey);
 			result = null;
 		} catch (NoResultException nre) {
-			LOGGER.warn("Result not existant for user id = {} and key = {}",
+			LOGGER.warn("Result not existent for user id = {} and key = {}",
 				inUserId, inKey);
 			result = null;
 		}
 		if (result != null) {
 			this.refresh(result);
+		}
+		try {
+			if (result == null) {
+				throw new AssertionError("in getByUserAndKey for inUserId=" + inUserId + " and inKey=" + inKey);
+			}
+		} catch (Error e) {
+			e.printStackTrace();
 		}
 		return result;
 	}

@@ -45,9 +45,11 @@ public class Relation {
 	private Long id;
 
 	@OneToOne(cascade = CascadeType.ALL)
+	@JoinColumn(nullable = false)
 	private ExtendedProposition lhsExtendedProposition;
 
 	@OneToOne(cascade = CascadeType.ALL)
+	@JoinColumn(nullable = false)
 	private ExtendedProposition rhsExtendedProposition;
 
 	@OneToOne

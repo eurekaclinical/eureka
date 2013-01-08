@@ -20,7 +20,6 @@
 package edu.emory.cci.aiw.cvrg.eureka.services.translation;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -34,6 +33,7 @@ import edu.emory.cci.aiw.cvrg.eureka.common.entity.CompoundValueThreshold;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.CompoundValueThreshold.CreatedFrom;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.Proposition;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.SimpleParameterConstraint;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.ThresholdsOperator;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.ValueThresholdEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.exception.DataElementHandlingException;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.PropositionDao;
@@ -105,7 +105,7 @@ public final class ResultThresholdsCompoundLowLevelAbstractionTranslator
 	private ValueThresholdEntity createIntermediateAbstraction(
 	        ValueThreshold threshold) throws DataElementHandlingException {
 		ValueThresholdEntity result = new ValueThresholdEntity();
-		Date now = Calendar.getInstance().getTime();
+		Date now = new Date();
 		result.setDisplayName(threshold.getDataElement().getDataElementKey()
 		        + SYNTH_LLA_SUFFIX);
 		result.setAbbrevDisplayName(result.getDisplayName());
@@ -113,7 +113,10 @@ public final class ResultThresholdsCompoundLowLevelAbstractionTranslator
 		result.setLastModified(now);
 		result.setUserId(userId);
 		result.setKey(result.getDisplayName());
-		result.setCreatedFrom(ValueThresholdEntity.CreatedFrom.VALUE_THRESHOLD);
+		result.setCreatedFrom(
+				ValueThresholdEntity.CreatedFrom.VALUE_THRESHOLD);
+		result.setThresholdsOperator(thresholdsOperatorDao.getByName("any"));
+		result.setName(result.getKey());
 
 		Proposition abstractedFrom = propositionDao.getByUserAndKey(userId,
 		        threshold.getDataElement().getDataElementKey());

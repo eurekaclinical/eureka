@@ -19,6 +19,7 @@ z *
  */
 package edu.emory.cci.aiw.cvrg.eureka.common.entity;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -26,7 +27,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "system_proposition")
-public final class SystemProposition extends Proposition {
+public class SystemProposition extends Proposition {
 
 	public enum SystemType {
 		CONSTANT, EVENT, PRIMITIVE_PARAMETER, LOW_LEVEL_ABSTRACTION,
@@ -35,6 +36,7 @@ public final class SystemProposition extends Proposition {
 	}
 
 	@Enumerated(EnumType.STRING)
+	/*@Column(nullable = false)*/
 	private SystemType systemType;
 
 	public SystemType getSystemType() {

@@ -41,11 +41,16 @@ import edu.emory.cci.aiw.cvrg.eureka.common.entity.SystemProposition;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.ValueThresholdEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.Proposition;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.Role;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.SimpleParameterConstraint;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.SystemProposition;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.ThresholdsOperator;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.ThresholdsOperator_;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.User;
 import edu.emory.cci.aiw.cvrg.eureka.common.test.TestDataException;
 import edu.emory.cci.aiw.cvrg.eureka.common.test.TestDataProvider;
 import edu.emory.cci.aiw.cvrg.eureka.services.util.StringUtil;
+import javax.persistence.criteria.Path;
+import javax.persistence.criteria.Root;
 
 /**
  * Sets up the environment for testing, by bootstrapping the data store with
@@ -65,7 +70,6 @@ public class Setup implements TestDataProvider {
 	private User adminUser;
 	private User superUser;
 	private List<Proposition> propositions;
-	private List<ThresholdsOperator> thresholdsOperators;
 
 	/**
 	 * Create a Bootstrap class with an EntityManager.
@@ -88,18 +92,16 @@ public class Setup implements TestDataProvider {
 		this.adminUser = this.createAdminUser();
 		this.superUser = this.createSuperUser();
 		this.propositions =
-				this.createPropositions(this.researcherUser, this.adminUser,
+				this.createDataElements(this.researcherUser, this.adminUser,
 						this.superUser);
-		this.thresholdsOperators = this.createThresholdOps();
 	}
 
 	@Override
 	public void tearDown() throws TestDataException {
 		this.remove(FileUpload.class);
-		this.remove(Proposition.class);
+		this.removeDataElements();
 		this.remove(User.class);
 		this.remove(Role.class);
-		this.remove(ThresholdsOperator.class);
 		this.researcherRole = null;
 		this.adminRole = null;
 		this.superRole = null;
@@ -107,7 +109,6 @@ public class Setup implements TestDataProvider {
 		this.adminUser = null;
 		this.superUser = null;
 		this.propositions = null;
-		this.thresholdsOperators = null;
 	}
 
 	private <T> void remove(Class<T> className) {
@@ -117,47 +118,54 @@ public class Setup implements TestDataProvider {
 		criteriaQuery.from(className);
 		TypedQuery<T> query = entityManager.createQuery(criteriaQuery);
 		List<T> entities = query.getResultList();
-
+		System.out.println("Deleting " + className.getName() + "; count: " + 
+				entities.size());
 		entityManager.getTransaction().begin();
+		int i = 1;
 		for (T t : entities) {
+			System.out.println("on " + i++ + "; " + t);
+			entityManager.flush();
 			entityManager.remove(t);
 		}
-		entityManager.flush();
 		entityManager.getTransaction().commit();
 	}
 	
-	private List<ThresholdsOperator> createThresholdOps () {
+	private void removeDataElements() {
 		EntityManager entityManager = this.getEntityManager();
-		List<ThresholdsOperator> result = new ArrayList<ThresholdsOperator>();
+		for (Proposition proposition : this.propositions) {
+			System.out.println("Deleting data element " + proposition);
+			entityManager.getTransaction().begin();
+			entityManager.remove(proposition);
+			entityManager.getTransaction().commit();
+		}
+		
+		CriteriaBuilder builder = entityManager.getCriteriaBuilder();
+		CriteriaQuery<ThresholdsOperator> criteriaQuery = builder.createQuery(ThresholdsOperator.class);
+		Root<ThresholdsOperator> root = criteriaQuery.from(ThresholdsOperator.class);
+		Path<String> path = root.get(ThresholdsOperator_.name);
+		ThresholdsOperator op = entityManager.createQuery(criteriaQuery.where(
+				builder.equal(path, "any"))).getSingleResult();
+		entityManager.getTransaction().begin();
+		entityManager.remove(op);
+		entityManager.getTransaction().commit();
+	}
+
+	private List<Proposition> createDataElements(User... users) {
+		System.out.println("Creating data elements...");
+		List<Proposition> dataElements =
+				new ArrayList<Proposition>(users.length);
+		EntityManager entityManager = this.getEntityManager();
+		Date now = new Date();
 		ThresholdsOperator any = new ThresholdsOperator();
 		any.setDescription("ANY");
 		any.setName("any");
-
 		entityManager.getTransaction().begin();
 		entityManager.persist(any);
-		entityManager.flush();
 		entityManager.getTransaction().commit();
-
-		return result;
-	}
-
-	private List<Proposition> createPropositions(User... users) {
-		List<Proposition> propositions =
-				new ArrayList<Proposition>(users.length);
-		EntityManager entityManager = this.getEntityManager();
-		entityManager.getTransaction().begin();
-		Date now = new Date();
+		
 		for (User u : users) {
-			Proposition encSysProp = new SystemProposition();
-			encSysProp.setUserId(u.getId());
-			encSysProp.setInSystem(true);
-			encSysProp.setKey("Encounter");
-			encSysProp.setDisplayName("Encounter");
-			encSysProp.setAbbrevDisplayName("Encounter");
-			encSysProp.setCreated(now);
-			encSysProp.setLastModified(now);
-			entityManager.persist(encSysProp);
-
+			entityManager.getTransaction().begin();
+			System.out.println("Loading user " + u.getEmail());
 			Categorization proposition1 = new Categorization();
 			proposition1.setKey("test-cat");
 			proposition1.setAbbrevDisplayName("test");
@@ -166,31 +174,36 @@ public class Setup implements TestDataProvider {
 			proposition1.setCategorizationType(CategorizationType.EVENT);
 			proposition1.setCreated(now);
 			entityManager.persist(proposition1);
-			propositions.add(proposition1);
+			dataElements.add(proposition1);
+			
+			SystemProposition sysProp = new SystemProposition();
+			sysProp.setUserId(u.getId());
+			sysProp.setSystemType(SystemProposition.SystemType.PRIMITIVE_PARAMETER);
+			sysProp.setInSystem(true);
+			sysProp.setKey("test-prim-param");
+			sysProp.setCreated(now);
 
 			ValueThresholdEntity lowLevelAbstraction = new ValueThresholdEntity
 					();
 			lowLevelAbstraction.setAbbrevDisplayName("test-low-level");
 			lowLevelAbstraction.setKey("test-low-level");
+			lowLevelAbstraction.setName("test-low-level-name");
 			lowLevelAbstraction.setCreated(now);
 			lowLevelAbstraction.setCreatedFrom(ValueThresholdEntity
 					.CreatedFrom.FREQUENCY);
-			List<Proposition> abstractedFrom = new ArrayList<Proposition>();
-			abstractedFrom.add(lowLevelAbstraction);
-
-			HighLevelAbstraction proposition2 = new HighLevelAbstraction();
-			proposition2.setKey("test-hla");
-			proposition2.setAbbrevDisplayName("test");
-			proposition2.setDisplayName("Test Proposition");
-			proposition2.setUserId(u.getId());
-			proposition2.setCreatedFrom(HighLevelAbstraction.CreatedFrom
-					.FREQUENCY);
-			proposition2.setAbstractedFrom(abstractedFrom);
-			entityManager.persist(proposition2);
-			propositions.add(proposition2);
+			lowLevelAbstraction.setMinValues(Integer.valueOf(3));
+			lowLevelAbstraction.setUserConstraint(new SimpleParameterConstraint());
+			lowLevelAbstraction.setComplementConstraint(new SimpleParameterConstraint());
+			lowLevelAbstraction.setThresholdsOperator(any);
+			lowLevelAbstraction.setUserId(u.getId());
+			lowLevelAbstraction.setAbstractedFrom(sysProp);
+			entityManager.persist(lowLevelAbstraction);
+			dataElements.add(lowLevelAbstraction);
+			entityManager.getTransaction().commit();
 		}
-		entityManager.getTransaction().commit();
-		return propositions;
+		
+		System.err.println("Done creating data elements!");
+		return dataElements;
 	}
 
 	private User createResearcherUser() throws TestDataException {

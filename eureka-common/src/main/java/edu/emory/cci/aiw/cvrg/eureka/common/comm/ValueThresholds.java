@@ -22,6 +22,7 @@ package edu.emory.cci.aiw.cvrg.eureka.common.comm;
 import java.util.List;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.exception.DataElementHandlingException;
+import org.apache.commons.lang.builder.ToStringBuilder;
 
 public class ValueThresholds extends DataElement {
 
@@ -61,6 +62,11 @@ public class ValueThresholds extends DataElement {
 	public void accept(DataElementVisitor visitor) 
 			throws DataElementHandlingException{
 		visitor.visit(this);
+	}
+	
+	@Override
+	public String toString() {
+		return ToStringBuilder.reflectionToString(this);
 	}
 
 }

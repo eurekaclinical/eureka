@@ -20,6 +20,7 @@
 package edu.emory.cci.aiw.cvrg.eureka.common.comm;
 
 import java.util.Date;
+import org.apache.commons.lang.builder.ToStringBuilder;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.annotate.JsonSubTypes;
@@ -133,5 +134,10 @@ public abstract class DataElement implements DataElementVisitable {
 	@JsonIgnore
 	public Type getType() {
 		return type;
+	}
+	
+	@Override
+	public String toString() {
+		return ToStringBuilder.reflectionToString(this);
 	}
 }

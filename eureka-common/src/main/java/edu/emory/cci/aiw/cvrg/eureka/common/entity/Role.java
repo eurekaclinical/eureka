@@ -28,6 +28,7 @@ import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import com.sun.xml.bind.CycleRecoverable;
+import javax.persistence.Column;
 
 /**
  * A bean class to hold information related to roles in the system.
@@ -52,11 +53,12 @@ public class Role implements CycleRecoverable {
 	/**
 	 * The role's name.
 	 */
+	@Column(unique = true, nullable = false)
 	private String name;
 	/**
 	 * Is this role a default role? Default roles are assigned to all new users.
 	 */
-	private Boolean defaultRole;
+	private boolean defaultRole;
 
 	/**
 	 * Create an empty role.
@@ -106,7 +108,7 @@ public class Role implements CycleRecoverable {
 	 *
 	 * @return True if the role is a default role, false otherwise.
 	 */
-	public Boolean isDefaultRole() {
+	public boolean isDefaultRole() {
 		return this.defaultRole;
 	}
 
@@ -116,7 +118,7 @@ public class Role implements CycleRecoverable {
 	 * @param inDefaultRole True or False, True indicating a default role, False
 	 *            indicating a non-default role.
 	 */
-	public void setDefaultRole(Boolean inDefaultRole) {
+	public void setDefaultRole(boolean inDefaultRole) {
 		this.defaultRole = inDefaultRole;
 	}
 

@@ -38,6 +38,7 @@ import javax.persistence.TemporalType;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import com.sun.xml.bind.CycleRecoverable;
+import javax.persistence.Column;
 
 /**
  * A bean class to hold information about users in the system.
@@ -60,7 +61,7 @@ public class User implements CycleRecoverable {
 					generator = "USER_SEQ_GENERATOR")
 	private Long id;
 	/**
-	 * Is the user activate?
+	 * Is the user activated?
 	 */
 	private boolean active;
 	/**
@@ -78,6 +79,7 @@ public class User implements CycleRecoverable {
 	/**
 	 * The user's email address.
 	 */
+	@Column(unique = true, nullable = false)
 	private String email;
 	/**
 	 * The user's organization.
@@ -86,6 +88,7 @@ public class User implements CycleRecoverable {
 	/**
 	 * The user's password.
 	 */
+	@Column(nullable = false)
 	private String password;
 	/**
 	 * The user's verification code;

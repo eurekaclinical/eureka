@@ -19,6 +19,7 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.common.entity;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -40,6 +41,7 @@ public class TimeUnit {
 		generator = "TIME_SEQ_GENERATOR")
 	private Long id;
 
+	@Column(unique=true, nullable=false)
 	private String name;
 
 	private String description;

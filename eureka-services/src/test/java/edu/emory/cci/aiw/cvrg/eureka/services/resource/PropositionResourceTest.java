@@ -30,8 +30,12 @@ import org.junit.Test;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.GenericType;
 import com.sun.jersey.api.client.WebResource;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.Category;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.DataElement;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.DataElementField;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.Frequency;
+import java.util.Date;
 
 public class PropositionResourceTest extends AbstractServiceResourceTest {
 
@@ -53,16 +57,54 @@ public class PropositionResourceTest extends AbstractServiceResourceTest {
 
 	@Test
 	public void deletePropositionTest() {
-		List<DataElement> elements = this.getUserPropositions(USER_ID);
-		DataElement target = elements.get(0);
+		
+		DataElementField dataElementField = new DataElementField();
+		dataElementField.setDataElementKey("test-low-level");
+		dataElementField.setType(DataElementField.Type.VALUE_THRESHOLD);
+
+		Frequency frequency = new Frequency();
+		frequency.setKey("testThreshold-frequency");
+		frequency.setUserId(USER_ID);
+		frequency.setDisplayName("testThreshold-frequency");
+		frequency.setAbbrevDisplayName("testThreshold-frequency");
+		frequency.setInSystem(false);
+		frequency.setCreated(new Date());
+		frequency.setAtLeast(5);
+		frequency.setIsConsecutive(Boolean.TRUE);
+		frequency.setIsWithin(Boolean.TRUE);
+		frequency.setWithinAtLeast(30);
+		frequency.setWithinAtLeastUnits(Long.valueOf(1));
+		frequency.setWithinAtMost(60);
+		frequency.setWithinAtMostUnits(Long.valueOf(1));
+		frequency.setDataElement(dataElementField);
+		
+		ClientResponse response2 = this.resource().path("/api/dataelement")
+				.type(
+				MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON)
+				.post(ClientResponse.class, frequency);
+		
+		Assert.assertEquals(
+				ClientResponse.Status.NO_CONTENT,
+				response2.getClientResponseStatus());
+		
+		Frequency freqResponse = this.resource().path("/api/dataelement/" + USER_ID + "/" + frequency.getKey())
+				.type(MediaType.APPLICATION_JSON)
+				.accept(MediaType.APPLICATION_JSON)
+				.get(Frequency.class);
+		
+		Assert.assertNotNull(freqResponse);
+		
+		List<DataElement> beforeDelete = this.getUserPropositions(USER_ID);
+		
 		ClientResponse response = this
 		        .resource()
 		        .path("/api/proposition/user/delete/" + USER_ID + "/"
-		                + target.getId()).delete(ClientResponse.class);
+		                + freqResponse.getId()).delete(ClientResponse.class);
 		Assert.assertEquals(response.getClientResponseStatus(),
 		        ClientResponse.Status.OK);
 
 		List<DataElement> afterDelete = this.getUserPropositions(USER_ID);
-		Assert.assertEquals(elements.size() - 1, afterDelete.size());
+		
+		Assert.assertEquals(beforeDelete.size() - 2, afterDelete.size());
 	}
 }

@@ -20,7 +20,6 @@
 package edu.emory.cci.aiw.cvrg.eureka.services.translation;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -36,6 +35,7 @@ import edu.emory.cci.aiw.cvrg.eureka.common.entity.HighLevelAbstraction;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.Proposition;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.PropositionEntityVisitor;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.Relation;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.SimpleParameterConstraint;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.SliceAbstraction;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.SystemProposition;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.ValueThresholdEntity;
@@ -152,12 +152,15 @@ public final class FrequencyHighLevelAbstractionTranslator implements
 			result.setDisplayName(original.getDisplayName()
 			        + INTERMEDIATE_SUFFIX);
 			result.setAbstractedFrom(original.getAbstractedFrom());
-			result.setUserConstraint(original.getUserConstraint());
-			result.setComplementConstraint(original.getComplementConstraint());
+			result.setUserConstraint(SimpleParameterConstraint.newInstance(original.getUserConstraint()));
+			result.setComplementConstraint(SimpleParameterConstraint.newInstance(original.getComplementConstraint()));
 			result.setCreatedFrom(ValueThresholdEntity.CreatedFrom.FREQUENCY);
-			result.setHelperProposition(true);
+			result.setThresholdsOperator(original.getThresholdsOperator());
+			result.setName(original.getName());
+			result.setThresholdsOperator(original.getThresholdsOperator());
+			result.setName(original.getName());
 
-			Date now = Calendar.getInstance().getTime();
+			Date now = new Date();
 			result.setCreated(now);
 			result.setLastModified(now);
 
@@ -176,8 +179,9 @@ public final class FrequencyHighLevelAbstractionTranslator implements
 					        .getWithinAtMostUnits()));
 				}
 			}
-			result.setAbstractedFrom(propositionDao.getByUserAndKey(userId,
-			        element.getDataElement().getDataElementKey()));
+			result.setAbstractedFrom(propositionDao.getByUserAndKey(
+					original.getUserId(), 
+					element.getDataElement().getDataElementKey()));
 
 			this.intermediateAbstraction = result;
 		}
@@ -199,9 +203,8 @@ public final class FrequencyHighLevelAbstractionTranslator implements
 			result.setComplementValueDefinitionName(original
 			        .getComplementValueDefinitionName());
 			result.setCreatedFrom(CompoundValueThreshold.CreatedFrom.FREQUENCY);
-			result.setHelperProposition(true);
 
-			Date now = Calendar.getInstance().getTime();
+			Date now = new Date();
 			result.setCreated(now);
 			result.setLastModified(now);
 			result.setThresholdsOperator(original.getThresholdsOperator());

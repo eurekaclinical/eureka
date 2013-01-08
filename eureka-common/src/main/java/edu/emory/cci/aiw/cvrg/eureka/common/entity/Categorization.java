@@ -22,6 +22,7 @@ package edu.emory.cci.aiw.cvrg.eureka.common.entity;
 import java.util.List;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -29,6 +30,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import org.apache.commons.lang.builder.ToStringBuilder;
 
 /**
  * @author hrathod
@@ -52,6 +54,7 @@ public class Categorization extends Proposition {
 	private List<Proposition> inverseIsA;
 
 	@Enumerated(EnumType.STRING)
+	@Column(nullable = false)
 	private CategorizationType categorizationType;
 
 	public List<Proposition> getInverseIsA() {
@@ -73,6 +76,11 @@ public class Categorization extends Proposition {
 	@Override
 	public void accept(PropositionEntityVisitor visitor) {
 		visitor.visit(this);
+	}
+	
+	@Override
+	public String toString() {
+		return ToStringBuilder.reflectionToString(this);
 	}
 
 }

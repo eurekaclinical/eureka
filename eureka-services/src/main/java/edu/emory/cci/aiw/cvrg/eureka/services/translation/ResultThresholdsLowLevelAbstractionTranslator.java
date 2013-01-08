@@ -35,6 +35,7 @@ import edu.emory.cci.aiw.cvrg.eureka.common.entity.SimpleParameterConstraint;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.ValueComparator;
 import edu.emory.cci.aiw.cvrg.eureka.common.exception.DataElementHandlingException;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.PropositionDao;
+import edu.emory.cci.aiw.cvrg.eureka.services.dao.ThresholdsOperatorDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.TimeUnitDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.ValueComparatorDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.finder.PropositionFindException;
@@ -45,22 +46,25 @@ import edu.emory.cci.aiw.cvrg.eureka.services.util.PropositionUtil;
  *
  */
 public class ResultThresholdsLowLevelAbstractionTranslator implements
-        PropositionTranslator<ValueThresholds, ValueThresholdEntity> {
+		PropositionTranslator<ValueThresholds, ValueThresholdEntity> {
 
 	private Long userId;
 	private final PropositionDao propositionDao;
 	private final TimeUnitDao timeUnitDao;
 	private final ValueComparatorDao valueCompDao;
+	private final ThresholdsOperatorDao thresholdsOpDao;
 	private final SystemPropositionFinder finder;
 
 	@Inject
 	public ResultThresholdsLowLevelAbstractionTranslator(
-	        PropositionDao inPropositionDao, TimeUnitDao inTimeUnitDao,
-	        ValueComparatorDao inValueComparatorDao,
-	        SystemPropositionFinder inFinder) {
+			PropositionDao inPropositionDao, TimeUnitDao inTimeUnitDao,
+			ValueComparatorDao inValueComparatorDao,
+			ThresholdsOperatorDao thresholdsOperatorDao,
+			SystemPropositionFinder inFinder) {
 		propositionDao = inPropositionDao;
 		timeUnitDao = inTimeUnitDao;
 		valueCompDao = inValueComparatorDao;
+		thresholdsOpDao = thresholdsOperatorDao;
 		finder = inFinder;
 	}
 
@@ -70,73 +74,95 @@ public class ResultThresholdsLowLevelAbstractionTranslator implements
 
 	@Override
 	public ValueThresholdEntity translateFromElement(ValueThresholds element)
-	        throws DataElementHandlingException {
+			throws DataElementHandlingException {
+		if (element == null) {
+			throw new IllegalArgumentException("element cannot be null");
+		}
+		
 		ValueThresholdEntity result = new ValueThresholdEntity();
 		result.setInSystem(false);
+		result.setMinValues(Integer.valueOf(1));
 
 		PropositionTranslatorUtil.populateCommonPropositionFields(result,
-		        element);
-		result.setName(element.getName());
+				element);
+		String elementName = element.getName();
+		if (elementName != null) {
+			result.setName(elementName);
+		} else {
+			throw new DataElementHandlingException(
+					"Could not translate data element "
+					+ element.getKey()
+					+ ": no name was specified");
+		}
 		// low-level abstractions created from results thresholds are based on
 		// only one element
 		ValueThreshold threshold = element.getValueThresholds().get(0);
 		createAndSetConstraints(result, threshold, valueCompDao);
 
-		int all = this.propositionDao.getAll().size();
 		Proposition abstractedFrom = propositionDao.getByUserAndKey(element.getUserId(),
-		        threshold.getDataElement().getDataElementKey());
+				threshold.getDataElement().getDataElementKey());
+		System.err.println("abstractedFrom: " + abstractedFrom);
 		if (abstractedFrom == null) {
 			try {
 				SystemElement sysElement = PropositionUtil.wrap(this.finder
-				        .find(element.getUserId(), threshold.getDataElement()
-				                .getDataElementKey()), true, element
-				        .getUserId(), this.finder);
+						.find(element.getUserId(), threshold.getDataElement()
+						.getDataElementKey()), true, element
+						.getUserId(), this.finder);
 				SystemPropositionTranslator translator = new SystemPropositionTranslator(finder);
 				abstractedFrom = translator.translateFromElement(sysElement);
 			} catch (PropositionFindException ex) {
 				throw new DataElementHandlingException(
-				        "Could not translate data element "
-				                + threshold.getDataElement()
-				                        .getDataElementKey(), ex);
+						"Could not translate data element "
+						+ element.getKey(), ex);
 			}
 		}
 		result.setAbstractedFrom(abstractedFrom);
+		Long thresholdsOpId = element.getThresholdsOperator();
+		if (thresholdsOpId != null) {
+			result.setThresholdsOperator(
+					thresholdsOpDao.retrieve(thresholdsOpId));
+		} else {
+			throw new DataElementHandlingException(
+					"Could not translate data element "
+					+ element.getKey()
+					+ ": no thresholds operator was specified");
+		}
 		result.setCreatedFrom(ValueThresholdEntity.CreatedFrom.VALUE_THRESHOLD);
 
 		return result;
 	}
 
 	static void createAndSetConstraints(ValueThresholdEntity abstraction,
-	        ValueThreshold threshold, ValueComparatorDao valueCompDao) {
+			ValueThreshold threshold, ValueComparatorDao valueCompDao) {
 		SimpleParameterConstraint userConstraint = new SimpleParameterConstraint();
 		SimpleParameterConstraint complementConstraint = new SimpleParameterConstraint();
 
 		if (threshold.getLowerValue() != null
-		        && threshold.getLowerComp() != null) {
+				&& threshold.getLowerComp() != null) {
 			ValueComparator lowerComp = valueCompDao.retrieve(threshold
-			        .getLowerComp());
+					.getLowerComp());
 
 			userConstraint.setMinValueThreshold(threshold.getLowerValue());
 			userConstraint.setMinValueComp(lowerComp);
 			userConstraint.setMinUnits(threshold.getLowerUnits());
 
 			complementConstraint
-			        .setMinValueThreshold(threshold.getLowerValue());
+					.setMinValueThreshold(threshold.getLowerValue());
 			complementConstraint.setMinValueComp(lowerComp.getComplement());
 			complementConstraint.setMinUnits(threshold.getLowerUnits());
 		}
 
 		if (threshold.getUpperValue() != null
-		        && threshold.getUpperComp() != null) {
+				&& threshold.getUpperComp() != null) {
 			ValueComparator upperComp = valueCompDao.retrieve(threshold
-			        .getUpperComp());
+					.getUpperComp());
 
 			userConstraint.setMaxValueThreshold(threshold.getUpperValue());
 			userConstraint.setMaxValueComp(upperComp);
 			userConstraint.setMaxUnits(threshold.getUpperUnits());
 
 			complementConstraint
-			        .setMaxValueThreshold(threshold.getUpperValue());
+					.setMaxValueThreshold(threshold.getUpperValue());
 			complementConstraint.setMaxValueComp(upperComp.getComplement());
 			complementConstraint.setMaxUnits(threshold.getUpperUnits());
 
@@ -147,40 +173,42 @@ public class ResultThresholdsLowLevelAbstractionTranslator implements
 
 	@Override
 	public ValueThresholds translateFromProposition(
-	        ValueThresholdEntity valThresholdEntity) {
+			ValueThresholdEntity valThresholdEntity) {
 		ValueThreshold threshold = new ValueThreshold();
 		ShortDataElementField de = new ShortDataElementField();
 		de.setDataElementKey(valThresholdEntity.getAbstractedFrom().getKey());
 		de.setDataElementDisplayName(valThresholdEntity.getAbstractedFrom()
-		        .getDisplayName());
+				.getDisplayName());
 		de.setDataElementAbbrevDisplayName(valThresholdEntity
-		        .getAbstractedFrom().getAbbrevDisplayName());
+				.getAbstractedFrom().getAbbrevDisplayName());
 		threshold.setDataElement(de);
 		List<ValueThreshold> thresholds = new ArrayList<ValueThreshold>();
 		SimpleParameterConstraint userConstraint = valThresholdEntity
-		        .getUserConstraint();
+				.getUserConstraint();
 		if (userConstraint != null) {
 			if (userConstraint.getMaxValueThreshold() != null
-			        && userConstraint.getMaxValueComp() != null) {
+					&& userConstraint.getMaxValueComp() != null) {
 				threshold.setUpperValue(userConstraint.getMaxValueThreshold());
 				// threshold.setUpperUnits(userConstraint.getMaxUnits());
 				threshold
-				        .setUpperComp(userConstraint.getMaxValueComp().getId());
+						.setUpperComp(userConstraint.getMaxValueComp().getId());
 			}
 			if (userConstraint.getMinValueThreshold() != null
-			        && userConstraint.getMinValueComp() != null) {
+					&& userConstraint.getMinValueComp() != null) {
 				threshold.setLowerValue(userConstraint.getMinValueThreshold());
 				// threshold.setLowerUnits(userConstraint.getMinUnits());
 				threshold
-				        .setLowerComp(userConstraint.getMinValueComp().getId());
+						.setLowerComp(userConstraint.getMinValueComp().getId());
 			}
 		}
 		thresholds.add(threshold);
 
 		ValueThresholds result = new ValueThresholds();
 		PropositionTranslatorUtil.populateCommonDataElementFields(result,
-		        valThresholdEntity);
+				valThresholdEntity);
 		result.setName(valThresholdEntity.getName());
+		result.setThresholdsOperator(
+				valThresholdEntity.getThresholdsOperator().getId());
 		result.setValueThresholds(thresholds);
 		return result;
 	}

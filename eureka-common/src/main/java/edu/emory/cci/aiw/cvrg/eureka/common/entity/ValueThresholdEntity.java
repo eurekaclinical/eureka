@@ -20,12 +20,14 @@
 package edu.emory.cci.aiw.cvrg.eureka.common.entity;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import org.apache.commons.lang.builder.ToStringBuilder;
 
 /**
  * Contains attributes which describe a Protempa low-level abstraction in the
@@ -35,11 +37,13 @@ import javax.persistence.Table;
 @Table(name = "value_thresholds")
 public class ValueThresholdEntity extends Proposition {
 
+	@Column(nullable = false)
 	private String name;
 
 	/*
 	 * Minimum number of values to match
 	 */
+	@Column(nullable = false)
 	private Integer minValues;
 
 	/*
@@ -64,7 +68,7 @@ public class ValueThresholdEntity extends Proposition {
 	 * The propositions that this low-level abstraction is abstracted from.
 	 */
 	@ManyToOne(cascade = { CascadeType.MERGE, CascadeType.REFRESH,
-	        CascadeType.PERSIST })
+	        CascadeType.PERSIST }, optional = false)
 	@JoinTable(name = "abstracted_from", joinColumns = { @JoinColumn(name = "target_proposition_id") })
 	private Proposition abstractedFrom;
 
@@ -72,17 +76,22 @@ public class ValueThresholdEntity extends Proposition {
 	 * The allowed values of the low-level abstraction
 	 */
 	@OneToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name = "userConstraint", referencedColumnName = "id")
+	@JoinColumn(name = "userConstraint", referencedColumnName = "id", nullable = false)
 	private SimpleParameterConstraint userConstraint;
 
 	@OneToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name = "complementConstraint", referencedColumnName = "id")
+	@JoinColumn(name = "complementConstraint", referencedColumnName = "id", nullable = false)
 	private SimpleParameterConstraint complementConstraint;
+	
+	@OneToOne
+	@JoinColumn(name = "thresholdsOp", referencedColumnName = "id", nullable = false)
+	private ThresholdsOperator thresholdsOperator;
 
 	public enum CreatedFrom {
 		FREQUENCY, VALUE_THRESHOLD
 	}
 
+	@Column(nullable = false)
 	private CreatedFrom createdFrom;
 
 	public String getName() {
@@ -158,6 +167,14 @@ public class ValueThresholdEntity extends Proposition {
 		this.complementConstraint = complementConstraint;
 	}
 
+	public ThresholdsOperator getThresholdsOperator() {
+		return thresholdsOperator;
+	}
+
+	public void setThresholdsOperator(ThresholdsOperator thresholdsOp) {
+		this.thresholdsOperator = thresholdsOp;
+	}
+
 	public CreatedFrom getCreatedFrom() {
 		return createdFrom;
 	}
@@ -169,6 +186,11 @@ public class ValueThresholdEntity extends Proposition {
 	@Override
 	public void accept(PropositionEntityVisitor visitor) {
 		visitor.visit(this);
+	}
+	
+	@Override
+	public String toString() {
+		return ToStringBuilder.reflectionToString(this);
 	}
 
 }

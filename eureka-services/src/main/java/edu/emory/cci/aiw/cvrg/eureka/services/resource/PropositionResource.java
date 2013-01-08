@@ -91,8 +91,7 @@ public class PropositionResource {
 	private final SystemPropositionTranslator systemPropositionTranslator;
 	private final FrequencySliceTranslator frequencySliceTranslator;
 	private final FrequencyHighLevelAbstractionTranslator frequencyHighLevelAbstractionTranslator;
-	private final ResultThresholdsLowLevelAbstractionTranslator
-			resultThresholdsLowLevelAbstractionTranslator;
+	private final ResultThresholdsLowLevelAbstractionTranslator resultThresholdsLowLevelAbstractionTranslator;
 	private final ResultThresholdsCompoundLowLevelAbstractionTranslator resultThresholdsCompoundLowLevelAbstractionTranslator;
 
 	/**
@@ -108,8 +107,7 @@ public class PropositionResource {
 			SystemPropositionTranslator inSystemPropositionTranslator,
 			FrequencySliceTranslator inFrequencySliceTranslator,
 			FrequencyHighLevelAbstractionTranslator inFrequencyHighLevelAbstractionTranslator,
-			ResultThresholdsLowLevelAbstractionTranslator
-					inResultThresholdsLowLevelAbstractionTranslator,
+			ResultThresholdsLowLevelAbstractionTranslator inResultThresholdsLowLevelAbstractionTranslator,
 			ResultThresholdsCompoundLowLevelAbstractionTranslator inResultThresholdsCompoundLowLevelAbstractionTranslator) {
 		this.propositionDao = inPropositionDao;
 		this.applicationProperties = inApplicationProperties;
@@ -147,8 +145,8 @@ public class PropositionResource {
 				throw new HttpStatusException(
 						Response.Status.INTERNAL_SERVER_ERROR,
 						"Error getting proposition " + name
-								+ " (message from Protempa ETL backend): "
-								+ e.getMessage(),
+						+ " (message from Protempa ETL backend): "
+						+ e.getMessage(),
 						e);
 
 			}
@@ -170,7 +168,7 @@ public class PropositionResource {
 				throw new HttpStatusException(
 						Response.Status.NOT_FOUND,
 						"Invalid proposition id specified in system "
-								+ "propositions list: " + inKey);
+						+ "propositions list: " + inKey);
 			} else {
 				return systemElement;
 			}
@@ -178,8 +176,8 @@ public class PropositionResource {
 			throw new HttpStatusException(
 					Response.Status.INTERNAL_SERVER_ERROR,
 					"Error getting proposition " + inKey
-							+ " (message from Protempa ETL backend): "
-							+ e.getMessage(),
+					+ " (message from Protempa ETL backend): "
+					+ e.getMessage(),
 					e);
 		}
 	}
@@ -208,11 +206,13 @@ public class PropositionResource {
 		List<DataElement> result = new ArrayList<DataElement>();
 		for (Proposition p : this.propositionDao.getByUserId(inUserId)) {
 			this.propositionDao.refresh(p);
-			PropositionTranslatorVisitor visitor = 
-					getPropositionTranslatorVisitor();
-			p.accept(visitor);
-			DataElement dataElement = visitor.getDataElement();
-			result.add(dataElement);
+			if (!p.isInSystem()) {
+				PropositionTranslatorVisitor visitor =
+						getPropositionTranslatorVisitor();
+				p.accept(visitor);
+				DataElement dataElement = visitor.getDataElement();
+				result.add(dataElement);
+			}
 		}
 		return result;
 	}
@@ -220,7 +220,7 @@ public class PropositionResource {
 	@POST
 	@Path("/user/validate/{userId}")
 	public void validateProposition(@PathParam("userId") Long inUserId,
-									DataElement inDataElement) {
+			DataElement inDataElement) {
 		List<Proposition> propositions = this.propositionDao
 				.getByUserId(inUserId);
 		Proposition targetProposition = this.propositionDao.getByUserAndKey(
@@ -266,7 +266,7 @@ public class PropositionResource {
 				dataElement.setCreated(proposition.getCreated());
 				dataElement.setLastModified(proposition.getLastModified());
 			} else {
-				PropositionTranslatorVisitor visitor = 
+				PropositionTranslatorVisitor visitor =
 						getPropositionTranslatorVisitor();
 				proposition.accept(visitor);
 				dataElement = visitor.getDataElement();
@@ -277,18 +277,18 @@ public class PropositionResource {
 
 	private PropositionTranslatorVisitor getPropositionTranslatorVisitor() {
 		return new PropositionTranslatorVisitor(
-							this.systemPropositionTranslator,
-							this.sequenceTranslator, this.categorizationTranslator,
-							this.frequencySliceTranslator,
-							this.frequencyHighLevelAbstractionTranslator,
-							this.resultThresholdsLowLevelAbstractionTranslator,
-							this.resultThresholdsCompoundLowLevelAbstractionTranslator);
+				this.systemPropositionTranslator,
+				this.sequenceTranslator, this.categorizationTranslator,
+				this.frequencySliceTranslator,
+				this.frequencyHighLevelAbstractionTranslator,
+				this.resultThresholdsLowLevelAbstractionTranslator,
+				this.resultThresholdsCompoundLowLevelAbstractionTranslator);
 	}
 
 	@DELETE
 	@Path("/user/delete/{userId}/{propId}")
 	public Response deleteUserPropositions(@PathParam("userId") Long inUserId,
-										   @PathParam("propId") Long inPropositionId) {
+			@PathParam("propId") Long inPropositionId) {
 
 		// the response to return;
 		Response response = Response.ok().build();
@@ -303,7 +303,7 @@ public class PropositionResource {
 			// return error
 			response = Response.notModified(
 					"User ID " + inUserId + " did not" + " match the owner ID "
-							+ target.getUserId()).build();
+					+ target.getUserId()).build();
 		} else {
 			// now get the rest of the propositions for the user
 			List<Proposition> others = this.propositionDao.getByUserId(target
@@ -318,17 +318,16 @@ public class PropositionResource {
 				} else {
 					PropositionChildrenVisitor visitor = new PropositionChildrenVisitor();
 					proposition.accept(visitor);
-					List<? extends Proposition> children = visitor.getChildren
-							();
+					List<? extends Proposition> children = visitor.getChildren();
 
 					for (Proposition p : children) {
 						if (p.getId().equals(target.getId())) {
 							response = Response
 									.status(Response.Status.PRECONDITION_FAILED)
 									.entity(p.getAbbrevDisplayName() + " "
-											+ "contains " + "a "
-											+ "reference to "
-											+ target.getAbbrevDisplayName())
+									+ "contains " + "a "
+									+ "reference to "
+									+ target.getAbbrevDisplayName())
 									.build();
 							error = true;
 							break;
@@ -350,8 +349,8 @@ public class PropositionResource {
 	@Path("/user/update")
 	public void updateProposition(DataElement inDataElement) {
 		if (inDataElement.getUserId() != null && inDataElement.getId() != null) {
-			
-			DataElementTranslatorVisitor visitor = 
+
+			DataElementTranslatorVisitor visitor =
 					getDataElementTranslatorVisitor();
 			try {
 				inDataElement.accept(visitor);
@@ -370,13 +369,13 @@ public class PropositionResource {
 
 	private DataElementTranslatorVisitor getDataElementTranslatorVisitor() {
 		return new DataElementTranslatorVisitor(
-						this.systemPropositionTranslator,
-						this.sequenceTranslator,
-						this.categorizationTranslator,
-						this.frequencySliceTranslator,
-						this.frequencyHighLevelAbstractionTranslator,
-						this.resultThresholdsLowLevelAbstractionTranslator,
-						this.resultThresholdsCompoundLowLevelAbstractionTranslator);
+				this.systemPropositionTranslator,
+				this.sequenceTranslator,
+				this.categorizationTranslator,
+				this.frequencySliceTranslator,
+				this.frequencyHighLevelAbstractionTranslator,
+				this.resultThresholdsLowLevelAbstractionTranslator,
+				this.resultThresholdsCompoundLowLevelAbstractionTranslator);
 	}
 
 	@POST
@@ -462,7 +461,7 @@ public class PropositionResource {
 	}
 
 	private SystemElement fetchSystemProposition(Long inUserId,
-												 String inKey) throws PropositionFindException {
+			String inKey) throws PropositionFindException {
 		return PropositionUtil.wrap(
 				systemPropositionFinder.find(inUserId, inKey), false, inUserId,
 				this.systemPropositionFinder);

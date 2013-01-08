@@ -31,6 +31,7 @@ import edu.emory.cci.aiw.cvrg.eureka.common.comm.SystemElement;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.SystemProposition;
 import edu.emory.cci.aiw.cvrg.eureka.services.finder.PropositionFindException;
 import edu.emory.cci.aiw.cvrg.eureka.services.finder.SystemPropositionFinder;
+import edu.emory.cci.aiw.cvrg.eureka.services.util.PropositionUtil;
 
 public class SystemPropositionTranslator implements
 		PropositionTranslator<SystemElement, SystemProposition> {
@@ -63,16 +64,9 @@ public class SystemPropositionTranslator implements
 			for (String child : propDef.getInverseIsA()) {
 				PropositionDefinition childDef = finder.find(
 						proposition.getUserId(), child);
-				SystemElement childElement = new SystemElement();
-				childElement.setKey(child);
-				childElement.setInSystem(true);
-				childElement.setDisplayName(childDef.getDisplayName());
-				childElement.setAbbrevDisplayName(childDef
-						.getAbbreviatedDisplayName());
-				childElement.setSummarized(true);
-				childElement.setUserId(proposition.getUserId());
-				childElement.setCreated(proposition.getCreated());
-				childElement.setLastModified(proposition.getLastModified());
+				SystemElement childElement = 
+						PropositionUtil.wrap(childDef, true, 
+							proposition.getUserId(), finder);
 
 				children.add(childElement);
 			}

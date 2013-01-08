@@ -37,6 +37,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 import org.codehaus.jackson.annotate.JsonBackReference;
 
 import com.sun.xml.bind.CycleRecoverable;
+import javax.persistence.Column;
 
 /**
  * An event associated with a job.
@@ -67,6 +68,7 @@ public class JobEvent implements CycleRecoverable {
 	/**
 	 * The state of the event.
 	 */
+	@Column(nullable = false)
 	private String state;
 	/**
 	 * The exception stack trace
@@ -76,6 +78,7 @@ public class JobEvent implements CycleRecoverable {
 	 * The time stamp for the event.
 	 */
 	@Temporal(TemporalType.TIMESTAMP)
+	@Column(nullable = false)
 	private Date timeStamp;
 	/**
 	 * The message generated for the event.

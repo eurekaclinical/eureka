@@ -53,7 +53,7 @@ public class ValueComparator {
 			generator = "COMP_SEQ_GENERATOR")
 	private Long id;
 
-	@Column(nullable = false)
+	@Column(unique = true, nullable = false)
 	private String name;
 
 	private String description;
@@ -62,7 +62,7 @@ public class ValueComparator {
 	@Column(nullable = false)
 	private Threshold threshold;
 	
-	@Column(nullable = false)
+	@Column(unique = true, nullable = false)
 	private Long rank;
 
 	@OneToOne

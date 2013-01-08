@@ -26,6 +26,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import org.apache.commons.lang.builder.ToStringBuilder;
 
 /**
  * Represents a Protempa allowed value for a {@link LowLevelAbstraction}
@@ -33,6 +34,17 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "simple_parameter_constraints")
 public class SimpleParameterConstraint {
+	
+	public static SimpleParameterConstraint newInstance(SimpleParameterConstraint origUserConstraint) {
+		SimpleParameterConstraint userConstraint = new SimpleParameterConstraint();
+		userConstraint.setMaxUnits(origUserConstraint.getMaxUnits());
+		userConstraint.setMaxValueComp(origUserConstraint.getMaxValueComp());
+		userConstraint.setMaxValueThreshold(origUserConstraint.getMaxValueThreshold());
+		userConstraint.setMinUnits(origUserConstraint.getMinUnits());
+		userConstraint.setMinValueComp(origUserConstraint.getMinValueComp());
+		userConstraint.setMinValueThreshold(origUserConstraint.getMinValueThreshold());
+		return userConstraint;
+	}
 
 	@Id
 	@SequenceGenerator(sequenceName = "CONSTRAINT_SEQ", 
@@ -111,4 +123,8 @@ public class SimpleParameterConstraint {
 		this.maxValueComp = maxValueComp;
 	}
 
+	@Override
+	public String toString() {
+		return ToStringBuilder.reflectionToString(this);
+	}
 }

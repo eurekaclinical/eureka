@@ -52,17 +52,19 @@ public class CompoundValueThreshold extends Proposition {
 	@JoinColumn(name = "maxGapBtwValuesUnits_id", referencedColumnName = "id")
 	private TimeUnit maximumGapBetweenValuesUnits;
 
+	@Column(nullable = false)
 	private String userValueDefinitionName;
 	private String complementValueDefinitionName;
 
 	@OneToOne
-	@JoinColumn(referencedColumnName = "id")
+	@JoinColumn(referencedColumnName = "id", nullable = false)
 	private ThresholdsOperator thresholdsOperator;
 
 	public enum CreatedFrom {
 		FREQUENCY, RESULTS_THRESHOLD
 	}
 
+	@Column(nullable = false)
 	private CreatedFrom createdFrom;
 
 	@ManyToMany(cascade = {CascadeType.MERGE, CascadeType.REFRESH,

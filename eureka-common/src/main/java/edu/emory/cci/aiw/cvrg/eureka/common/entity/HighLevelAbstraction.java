@@ -22,6 +22,7 @@ package edu.emory.cci.aiw.cvrg.eureka.common.entity;
 import java.util.List;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
@@ -51,13 +52,15 @@ public class HighLevelAbstraction extends Proposition {
 	 */
 	@ManyToMany(cascade = { CascadeType.MERGE, CascadeType.REFRESH,
 	        CascadeType.PERSIST })
-	@JoinTable(name = "hla_abstracted_from", joinColumns = { @JoinColumn(name = "target_proposition_id") })
+	@JoinTable(name = "hla_abstracted_from", 
+			joinColumns = { @JoinColumn(name = "target_proposition_id") })
 	private List<Proposition> abstractedFrom;
 
 	public enum CreatedFrom {
 		SEQUENCE, FREQUENCY
 	}
 
+	@Column(nullable = false)
 	private CreatedFrom createdFrom;
 
 	public ExtendedProposition getPrimaryProposition() {

@@ -19,11 +19,9 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.services.resource;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import javax.ws.rs.core.MediaType;
 
 import org.junit.Test;
 
@@ -31,13 +29,9 @@ import com.sun.jersey.api.client.ClientResponse;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.DataElementField;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.Frequency;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.ShortDataElementField;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.ValueThreshold;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.ValueThresholds;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.ThresholdsOperator;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.User;
-
-import junit.framework.Assert;
+import javax.ws.rs.core.MediaType;
+import org.junit.Assert;
 
 /**
  * @author hrathod
@@ -48,57 +42,13 @@ public class DataElementResourceTest extends AbstractServiceResourceTest {
 	public void testConsecutiveFrequency() {
 		List<User> users = this.getUserList();
 		User user = users.get(0);
-		
-		ShortDataElementField encounter = new ShortDataElementField();
-		encounter.setType(ShortDataElementField.Type.SYSTEM);
-		encounter.setDataElementKey("Encounter");
-		encounter.setDataElementDisplayName("Encounter");
-		encounter.setDataElementAbbrevDisplayName("Encounter");
-
-		ValueThreshold value = new ValueThreshold();
-		List<ValueThreshold> values = new ArrayList<ValueThreshold>();
-		value.setDataElement(encounter);
-		value.setUpperValue(5);
-		value.setUpperUnits("days");
-		values.add(value);
-
-		ThresholdsOperator thresholdsOp =
-				this.resource().path("/api/thresholdsop/byname/any").accept(
-				MediaType.APPLICATION_JSON).get(
-				ThresholdsOperator.class);
-
-		ValueThresholds thresholds = new ValueThresholds();
-		thresholds.setName("testThreshold-threshold");
-		thresholds.setThresholdsOperator(thresholdsOp.getId());
-		thresholds.setAbbrevDisplayName("testThreshold-threshold");
-		thresholds.setKey("testThreshold-threshold");
-		thresholds.setCreated(new Date());
-		thresholds.setInSystem(false);
-		thresholds.setDisplayName("testThreshold-threshold");
-		thresholds.setUserId(user.getId());
-		thresholds.setValueThresholds(values);
-
-		ClientResponse response1 = this.resource().path("/api/dataelement")
-				.type(MediaType.APPLICATION_JSON).accept(
-				MediaType.APPLICATION_JSON).post(
-				ClientResponse.class, thresholds);
-		Assert.assertEquals(
-				ClientResponse.Status.NO_CONTENT,
-				response1.getClientResponseStatus());
-
-		ValueThresholds testThreshold = this.resource().path(
-				"/api/dataelement/" + user.getId() + "/" + thresholds.getKey()).accept(MediaType.APPLICATION_JSON).get(ValueThresholds.class);
-		Assert.assertNotNull(testThreshold);
 
 		DataElementField dataElementField = new DataElementField();
-		dataElementField.setDataElementAbbrevDisplayName(
-				thresholds.getAbbrevDisplayName());
-		dataElementField.setDataElementDisplayName(
-				thresholds.getDisplayName());
-		dataElementField.setDataElementKey(thresholds.getKey());
+		dataElementField.setDataElementKey("test-low-level");
 		dataElementField.setType(DataElementField.Type.VALUE_THRESHOLD);
 
 		Frequency frequency = new Frequency();
+		frequency.setKey("testThreshold-frequency");
 		frequency.setUserId(user.getId());
 		frequency.setDisplayName("testThreshold-frequency");
 		frequency.setAbbrevDisplayName("testThreshold-frequency");
@@ -121,5 +71,11 @@ public class DataElementResourceTest extends AbstractServiceResourceTest {
 		Assert.assertEquals(
 				ClientResponse.Status.NO_CONTENT,
 				response2.getClientResponseStatus());
+		
+		ClientResponse response3 = this.resource().path("/api/dataelement/" + user.getId() + "/" + frequency.getKey()).type(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON).delete(ClientResponse.class);
+		
+		Assert.assertEquals(
+				ClientResponse.Status.NO_CONTENT,
+				response3.getClientResponseStatus());
 	}
 }

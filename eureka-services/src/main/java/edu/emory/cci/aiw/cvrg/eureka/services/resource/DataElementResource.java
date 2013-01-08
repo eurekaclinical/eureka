@@ -131,6 +131,7 @@ public class DataElementResource {
 		Date now = new Date();
 		proposition.setCreated(now);
 		proposition.setLastModified(now);
+		
 		this.propositionDao.create(proposition);
 	}
 
@@ -180,6 +181,10 @@ public class DataElementResource {
 	public void delete(@PathParam("userId") Long inUserId,
 			@PathParam("key") String inKey) {
 		Proposition proposition = this.propositionDao.getByUserAndKey(inUserId, inKey);
+		if (proposition == null) {
+			throw new HttpStatusException(Response.Status.NOT_FOUND, 
+					"No data element with userId=" + inUserId + " and key=" + inKey);
+		}
 		List<Proposition> others = this.propositionDao.getByUserId(inUserId);
 
 		for (Proposition other : others) {
