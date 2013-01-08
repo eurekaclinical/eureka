@@ -19,8 +19,9 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.common.comm;
 
-import edu.emory.cci.aiw.cvrg.eureka.common.exception.DataElementHandlingException;
 import java.util.List;
+
+import edu.emory.cci.aiw.cvrg.eureka.common.exception.DataElementHandlingException;
 
 /**
  * Container class for the sequence user-created data element from the UI.
@@ -56,6 +57,7 @@ public final class Sequence extends DataElement {
 		private DataElementField dataElementField;
 		private Long relationOperator;
 		private String sequentialDataElement;
+		private Long sequentialDataElementSource;
 		private Integer relationMinCount;
 		private Long relationMinUnits;
 		private Integer relationMaxCount;
@@ -87,6 +89,15 @@ public final class Sequence extends DataElement {
 
 		public Integer getRelationMinCount() {
 			return relationMinCount;
+		}
+
+		public Long getSequentialDataElementSource() {
+			return sequentialDataElementSource;
+		}
+
+		public void setSequentialDataElementSource(Long 
+				inSequentialDataElementSource) {
+			sequentialDataElementSource = inSequentialDataElementSource;
 		}
 
 		public void setRelationMinCount(Integer relationMinCount) {

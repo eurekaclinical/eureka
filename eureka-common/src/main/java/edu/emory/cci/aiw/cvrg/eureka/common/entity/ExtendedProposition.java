@@ -44,7 +44,7 @@ public class ExtendedProposition {
 		sequenceName = "EXT_PROP_SEQ", allocationSize = 1, initialValue = 1)
 	@GeneratedValue(strategy = GenerationType.SEQUENCE,
 		generator = "EXT_PROP_SEQ_GENERATOR")
-	private Long Id;
+	private Long id;
 
 	private Integer minDuration;
 
@@ -61,17 +61,17 @@ public class ExtendedProposition {
 	@OneToOne(cascade = CascadeType.ALL)
 	private PropertyConstraint propertyConstraint;
 
-	@OneToOne(cascade = CascadeType.ALL)
+	@ManyToOne(cascade = CascadeType.ALL)
 	private Proposition proposition;
 
 	private String value;
 
 	public Long getId() {
-		return Id;
+		return id;
 	}
 
 	public void setId(Long inId) {
-		Id = inId;
+		id = inId;
 	}
 
 	public Integer getMinDuration() {

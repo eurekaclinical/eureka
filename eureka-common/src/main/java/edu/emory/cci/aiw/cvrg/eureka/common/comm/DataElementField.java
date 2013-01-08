@@ -32,7 +32,8 @@ public class DataElementField {
 
 		CATEGORIZATION, SEQUENCE, FREQUENCY, VALUE_THRESHOLD, SYSTEM
 	}
-	
+
+	private Long id;
 	private String dataElementKey;
 	private String dataElementAbbrevDisplayName;
 	private String dataElementDisplayName;
@@ -46,6 +47,14 @@ public class DataElementField {
 	private String property;
 	private String propertyValue;
 	private Type type;
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long inId) {
+		id = inId;
+	}
 
 	public String getDataElementKey() {
 		return dataElementKey;

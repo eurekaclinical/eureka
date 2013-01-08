@@ -19,7 +19,15 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.services.translation;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.protempa.PropositionDefinition;
+
 import com.google.inject.Inject;
+
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.DataElementField;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.Sequence;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.Sequence.RelatedDataElementField;
@@ -30,7 +38,6 @@ import edu.emory.cci.aiw.cvrg.eureka.common.entity.PropertyConstraint;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.Proposition;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.Relation;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.RelationOperator;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.SystemProposition;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.ValueComparator;
 import edu.emory.cci.aiw.cvrg.eureka.common.exception.DataElementHandlingException;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.PropositionDao;
@@ -39,12 +46,6 @@ import edu.emory.cci.aiw.cvrg.eureka.services.dao.TimeUnitDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.finder.PropositionFindException;
 import edu.emory.cci.aiw.cvrg.eureka.services.finder.SystemPropositionFinder;
 import edu.emory.cci.aiw.cvrg.eureka.services.util.PropositionUtil;
-import org.protempa.PropositionDefinition;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 /**
  * Translates from sequences (UI data element) to high-level abstractions.
@@ -53,21 +54,26 @@ import java.util.Map;
 public class SequenceTranslator implements
 		PropositionTranslator<Sequence, HighLevelAbstraction> {
 
-	private Map<String, ExtendedProposition> extendedProps;
+	private Map<Long, ExtendedProposition> extendedProps;
+	private final Map<String, Proposition> propositions;
 	private final PropositionDao propositionDao;
 	private final TimeUnitDao timeUnitDao;
 	private final RelationOperatorDao relationOperatorDao;
 	private final SystemPropositionFinder finder;
+	private final SystemPropositionTranslator systemPropositionTranslator;
 
 	@Inject
 	public SequenceTranslator(PropositionDao inInPropositionDao,
 			TimeUnitDao inTimeUnitDao, RelationOperatorDao inRelationOperatorDao,
-			SystemPropositionFinder inFinder) {
+			SystemPropositionFinder inFinder, SystemPropositionTranslator 
+			inTranslator) {
 		this.propositionDao = inInPropositionDao;
 		this.timeUnitDao = inTimeUnitDao;
 		this.relationOperatorDao = inRelationOperatorDao;
 		this.finder = inFinder;
-		this.extendedProps = new HashMap<String, ExtendedProposition>();
+		this.systemPropositionTranslator = inTranslator;
+		this.extendedProps = new HashMap<Long, ExtendedProposition>();
+		this.propositions = new HashMap<String, Proposition>();
 	}
 
 	@Override
@@ -82,7 +88,7 @@ public class SequenceTranslator implements
 		createExtendedProposition(element.getPrimaryDataElement(),
 				element.getUserId());
 		result.setPrimaryProposition(extendedProps.get(element
-				.getPrimaryDataElement().getDataElementKey()));
+				.getPrimaryDataElement().getId()));
 		for (RelatedDataElementField rde : element.getRelatedDataElements()) {
 			createExtendedProposition(rde.getDataElementField(),
 					element.getUserId());
@@ -101,21 +107,32 @@ public class SequenceTranslator implements
 
 	private Proposition getOrCreateProposition(String key, Sequence element)
 			throws DataElementHandlingException {
-		Proposition proposition = propositionDao.getByUserAndKey(element
+
+		Proposition proposition = null;
+
+		// first see if we already have the proposition
+		if (this.propositions.containsKey(key)) {
+			proposition = this.propositions.get(key);
+		}
+
+		// next we try to fetch it from the database
+		if (proposition == null) {
+			proposition = propositionDao.getByUserAndKey(element
 				.getUserId(), key);
+			this.propositions.put(key, proposition);
+		}
+
+		// finally, we try to fetch it from the ontology
 		if (proposition == null) {
 			try {
 				PropositionDefinition propDef = finder.find(element.getUserId(),
 						key);
-				SystemProposition sysProp = new SystemProposition();
-				sysProp.setKey(key);
-				sysProp.setInSystem(true);
-				sysProp.setDisplayName(propDef.getDisplayName());
-				sysProp.setAbbrevDisplayName(propDef.getAbbreviatedDisplayName());
-				sysProp.setUserId(element.getUserId());
-				sysProp.setCreated(element.getCreated());
-				sysProp.setLastModified(element.getLastModified());
-				proposition = sysProp;
+				SystemElement systemElement = PropositionUtil.wrap(
+						propDef, false, element.getUserId(), this.finder);
+				proposition = this
+						.systemPropositionTranslator.translateFromElement
+								(systemElement);
+				this.propositions.put(key, proposition);
 			} catch (PropositionFindException ex) {
 				throw new DataElementHandlingException(
 						"Could not translate sequence " + element.getKey(),
@@ -127,7 +144,7 @@ public class SequenceTranslator implements
 
 	private void createExtendedProposition(DataElementField dataElement,
 			Long userId) throws DataElementHandlingException {
-		if (!this.extendedProps.containsKey(dataElement.getDataElementKey())) {
+		if (!this.extendedProps.containsKey(dataElement.getId())) {
 			ExtendedProposition ep = new ExtendedProposition();
 			Proposition proposition = this.propositionDao.getByUserAndKey(
 					userId, dataElement.getDataElementKey());
@@ -161,7 +178,7 @@ public class SequenceTranslator implements
 				ep.setPropertyConstraint(pc);
 			}
 
-			this.extendedProps.put(dataElement.getDataElementKey(), ep);
+			this.extendedProps.put(dataElement.getId(), ep);
 		}
 	}
 
@@ -171,9 +188,9 @@ public class SequenceTranslator implements
 
 		ExtendedProposition dataElement = this.extendedProps
 				.get(relatedDataElementField.getDataElementField()
-				.getDataElementKey());
+				.getId());
 		ExtendedProposition relatedDataElement = this.extendedProps
-				.get(relatedDataElementField.getSequentialDataElement());
+				.get(relatedDataElementField.getSequentialDataElementSource());
 
 		RelationOperator relationOperator = this.relationOperatorDao.retrieve(relatedDataElementField.getRelationOperator());
 

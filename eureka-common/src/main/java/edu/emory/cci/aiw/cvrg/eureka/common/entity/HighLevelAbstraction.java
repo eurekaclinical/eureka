@@ -25,6 +25,7 @@ import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
@@ -48,7 +49,7 @@ public class HighLevelAbstraction extends Proposition {
 	/**
 	 * The propositions that the current proposition is abstracted from.
 	 */
-	@OneToMany(cascade = { CascadeType.MERGE, CascadeType.REFRESH,
+	@ManyToMany(cascade = { CascadeType.MERGE, CascadeType.REFRESH,
 	        CascadeType.PERSIST })
 	@JoinTable(name = "hla_abstracted_from", joinColumns = { @JoinColumn(name = "target_proposition_id") })
 	private List<Proposition> abstractedFrom;

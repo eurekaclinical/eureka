@@ -181,7 +181,7 @@
 																					<c:if test="${not empty proposition and propositionType == 'SEQUENCE'}">
 																					<li data-key="${proposition.primaryDataElement.dataElementKey}" data-desc="${proposition.primaryDataElement.dataElementAbbrevDisplayName} (${proposition.primaryDataElement.dataElementKey})" data-space="${proposition.primaryDataElement.inSystem ? 'system' : 'user'}">
 																						<span class="delete" style="cursor: pointer; background-color: lightblue;"></span>
-																						<span>${proposition.primaryDataElement.dataElementAbbrevDisplayName} (${proposition.primaryDataElement.dataElementKey})</span>
+																						<span class="desc">${proposition.primaryDataElement.dataElementAbbrevDisplayName} (${proposition.primaryDataElement.dataElementKey})</span>
 																					</li>
 																					</c:if>
 																				</ul>
@@ -265,7 +265,7 @@
 																				<ul class="sortable" data-type="related" data-drop-type="single" data-count="${status.count + 1}" style="width: 100% height: 100%">
 																					<li data-key="${relation.dataElementField.dataElementKey}" data-desc="${relation.dataElementField.dataElementAbbrevDisplayName} (${relation.dataElementField.dataElementKey})" data-space="${relation.dataElementField.inSystem ? 'system' : 'user'}">
 																						<span class="delete" style="cursor: pointer; background-color: lightblue;"></span>
-																						<span>${relation.dataElementField.dataElementAbbrevDisplayName} (${relation.dataElementField.dataElementKey})</span>
+																						<span class="desc">${relation.dataElementField.dataElementAbbrevDisplayName} (${relation.dataElementField.dataElementKey})</span>
 																					</li>
 																				</ul>
 																			</div>

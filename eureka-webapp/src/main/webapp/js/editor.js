@@ -150,8 +150,10 @@ function postProposition (postData, successFunc) {
 
 function collectSequenceDataElement (elem) {
 	// var type = $mainProposition.data('type');
-	var $mainProposition = $(elem).find('ul[data-type="main"]').find('li').first();
+	var $sortable = $(elem).find('ul.sortable[data-type="main"]');
+	var $mainProposition = $sortable.find('li').first();
 	return {
+		'id': $sortable.data('count'),
 		'dataElementKey': $mainProposition.data('key'),
 		'withValue': $(elem).find('select[name="mainDataElementValue"]').val(),
 		'hasDuration': $(elem).find('input[name="mainDataElementSpecifyDuration"]').is(':checked'),
@@ -181,6 +183,7 @@ function collectSequenceRelations ($relationElems) {
 		if (key) {
 			relations.push({
 				'dataElementField': {
+					'id': id,
 					'dataElementKey': $proposition.data('key'),
 					'withValue': $(r).find('select[name="sequenceRelDataElementValue"]').val(),
 					'hasDuration': $(r).find('input[name="sequenceRelDataElementSpecifyDuration"]').is(':checked'),
@@ -192,7 +195,6 @@ function collectSequenceRelations ($relationElems) {
 					'property': $(r).find('select[name="sequenceRelDataElementPropertyName"]').val(),
 					'propertyValue': $(r).find('input[name="sequenceRelDataElementPropertyValue"]').val()
 				},
-				'id': id,
 				'relationOperator': $(r).find('select[name="sequenceRelDataElementTemporalRelation"]').val(),
 				'sequentialDataElement': sequentialDataElement,
 				'sequentialDataElementSource': sequentialDataElementSource,
