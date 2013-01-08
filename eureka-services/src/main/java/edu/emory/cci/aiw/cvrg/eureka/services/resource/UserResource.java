@@ -23,10 +23,11 @@ import java.math.BigInteger;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
-import javax.servlet.ServletException;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -59,7 +60,6 @@ import edu.emory.cci.aiw.cvrg.eureka.services.util.StringUtil;
  * RESTful end-point for {@link User} related methods.
  *
  * @author hrathod
- *
  */
 @Path("/user")
 @Produces(MediaType.APPLICATION_JSON)
@@ -71,7 +71,7 @@ public class UserResource {
 	 */
 	private static final Logger LOGGER = LoggerFactory.getLogger(
 			UserResource.class);
-	
+
 	/**
 	 * A secure random number generator to be used to create passwords.
 	 */
@@ -93,7 +93,8 @@ public class UserResource {
 	 */
 	private final I2b2Client i2b2Client;
 	/**
-	 * And validation errors that we may have encountered while validating a new
+	 * And validation errors that we may have encountered while validating a
+	 * new
 	 * user request, or a user update.
 	 */
 	private String validationError;
@@ -106,7 +107,7 @@ public class UserResource {
 	 * @param inEmailSender Used to send emails to the user when necessary.
 	 */
 	@Inject
-	public UserResource(UserDao inUserDao, RoleDao inRoleDao,
+	public UserResource(UserDao inUserDao, RoleDao inRoleDao, 
 			EmailSender inEmailSender, I2b2Client inClient) {
 		this.userDao = inUserDao;
 		this.roleDao = inRoleDao;
@@ -180,7 +181,8 @@ public class UserResource {
 			userRequest.setVerifyPassword(temp2);
 		} catch (NoSuchAlgorithmException e1) {
 			LOGGER.error(e1.getMessage(), e1);
-			throw new HttpStatusException(Response.Status.INTERNAL_SERVER_ERROR, e1);
+			throw new HttpStatusException(Response.Status
+					.INTERNAL_SERVER_ERROR, e1);
 		}
 
 		if (validateUserRequest(userRequest)) {
@@ -201,10 +203,11 @@ public class UserResource {
 				LOGGER.error("Error sending email to {}", user.getEmail(), e);
 			}
 		} else {
-			LOGGER.info("Invalid new user request: {}, reason {}", userRequest,
+			LOGGER.info(
+					"Invalid new user request: {}, reason {}", userRequest, 
 					this.validationError);
-			throw new HttpStatusException(Response.Status.PRECONDITION_FAILED, 
-					this.validationError);
+			throw new HttpStatusException(
+					Response.Status.PRECONDITION_FAILED, this.validationError);
 		}
 	}
 
@@ -216,46 +219,42 @@ public class UserResource {
 	 * @param newPassword The new password for the user.
 	 * @throws HttpStatusException Thrown when a password cannot be properly
 	 * hashed, or the passwords are mismatched.
-	 *
 	 */
 	@Path("/passwd/{id}")
 	@PUT
-	public void changePassword(@PathParam("id") final Long inId,
-			@QueryParam("oldPassword") final String oldPassword,
+	public void changePassword(@PathParam("id") final Long inId, 
+			@QueryParam("oldPassword") final String oldPassword, 
 			@QueryParam("newPassword") final String newPassword) {
-		
+
 		User user = this.userDao.retrieve(inId);
 		String oldPasswordHash;
 		String newPasswordHash;
 		try {
 			oldPasswordHash = StringUtil.md5(oldPassword);
 			newPasswordHash = StringUtil.md5(newPassword);
-			} catch (NoSuchAlgorithmException e) 
-			{
+		} catch (NoSuchAlgorithmException e) {
 			LOGGER.error(e.getMessage(), e);
 			throw new HttpStatusException(
-					Response.Status.INTERNAL_SERVER_ERROR, "Error while changing password. Please contact the administrator.");
-			}
-			if (user.getPassword().equals(oldPasswordHash)) 
-			{
-				user.setPassword(newPasswordHash);
+					Response.Status.INTERNAL_SERVER_ERROR, 
+					"Error while changing password. Please contact the " +
+							"administrator.");
+		}
+		if (user.getPassword().equals(oldPasswordHash)) {
+			user.setPassword(newPasswordHash);
+			user.setPasswordExpiration(this.getExpirationDate());
+			this.i2b2Client.changePassword(user.getEmail(), newPassword);
+			this.userDao.update(user);
 
-				this.i2b2Client.changePassword(user.getEmail(), newPassword);
-
-				this.userDao.update(user);
-				try
-				{
-					this.emailSender.sendPasswordChangeMessage(user);
-				} catch (EmailException ee)
-				{
-					LOGGER.error(ee.getMessage(), ee);
-				}
-			} 
-			else 
-			{
-				throw new HttpStatusException(Response.Status.PRECONDITION_FAILED, 
-					"Error while changing password. Old password is incorrect.");
+			try {
+				this.emailSender.sendPasswordChangeMessage(user);
+			} catch (EmailException ee) {
+				LOGGER.error(ee.getMessage(), ee);
 			}
+		} else {
+			throw new HttpStatusException(
+					Response.Status.PRECONDITION_FAILED, "Error while changing" +
+					" password. Old password is incorrect.");
+		}
 	}
 
 	/**
@@ -264,7 +263,6 @@ public class UserResource {
 	 * @param inUser Object containing all the information about the user to
 	 * add.
 	 * @return A "Created" response with a link to the user page if successful.
-	 *
 	 */
 	@PUT
 	public Response putUser(final User inUser) {
@@ -272,8 +270,7 @@ public class UserResource {
 		Response response;
 		User currentUser = this.userDao.retrieve(inUser.getId());
 		this.userDao.refresh(currentUser);
-		boolean activation = (!currentUser.isActive())
-				&& (inUser.isActive());
+		boolean activation = (!currentUser.isActive()) && (inUser.isActive());
 		List<Role> roles = inUser.getRoles();
 		List<Role> updatedRoles = new ArrayList<Role>();
 		for (Role r : roles) {
@@ -325,7 +322,7 @@ public class UserResource {
 	 *
 	 * @param inId the unique identifier of the user to be made active.
 	 * @return An HTTP OK response if the modification is completed normall, or
-	 * a server error if the user cannot be modified properly.
+	 *         a server error if the user cannot be modified properly.
 	 */
 	@Path("/activate/{id}")
 	@PUT
@@ -334,9 +331,11 @@ public class UserResource {
 		User user = this.userDao.retrieve(inId);
 		if (user != null) {
 			user.setActive(true);
+			user.setPasswordExpiration(this.getExpirationDate());
 			this.userDao.update(user);
 		} else {
-			response = Response.status(Status.BAD_REQUEST).entity("Invalid ID").
+			response = Response.status(Status.BAD_REQUEST).entity("Invalid " +
+					"ID").
 					build();
 		}
 		return response;
@@ -348,45 +347,45 @@ public class UserResource {
 	 * @param inUsername The username for the user whose password should be
 	 * reset.
 	 * @return A {@link Status#OK} if the password is reset and email sent,
-	 * {@link Status#NOT_MODIFIED} if the user can not be found.
+	 *         {@link Status#NOT_MODIFIED} if the user can not be found.
 	 * @throws HttpStatusException Thrown if errors occur when resetting the
 	 * password, or sending an email to the user informing them of the reset.
 	 */
 	@Path("/pwreset/{username}")
 	@PUT
-	public void resetPassword(@PathParam("username") final String inUsername)
-			{
-		Response response;
+	public void resetPassword(@PathParam("username") final String inUsername) {
 		User user = this.userDao.getByName(inUsername);
 		if (user == null) {
-			response = Response.notModified().entity(
-					"No such user: " + inUsername).build();
+			throw new HttpStatusException(Response.Status.NOT_FOUND, 
+					"User " + inUsername + " not found");
 		} else {
 			final int length = 15 + RANDOM.nextInt(10);
-			String password = new BigInteger(130, RANDOM).toString(32).substring(
-					0, length);
+			String password = new BigInteger(130, RANDOM).toString(32)
+					.substring(
+							0, length);
 			String passwordHash;
 			try {
 				passwordHash = StringUtil.md5(password);
 			} catch (NoSuchAlgorithmException e) {
 				LOGGER.error(e.getMessage(), e);
 				throw new HttpStatusException(
-						Response.Status.INTERNAL_SERVER_ERROR, "Error while changing password. Please contact the administrator.");
+						Response.Status.INTERNAL_SERVER_ERROR, 
+						"Error while changing password. Please contact the " +
+								"administrator.");
 			}
+
 			user.setPassword(passwordHash);
-			
+			user.setPasswordExpiration(Calendar.getInstance().getTime());
 			this.i2b2Client.changePassword(user.getEmail(), password);
-			
 			this.userDao.update(user);
 			try {
 				this.emailSender.sendPasswordResetMessage(user, password);
 			} catch (EmailException e) {
 				LOGGER.error(e.getMessage(), e);
-				
 			}
-			
+
 		}
-		
+
 	}
 
 	/**
@@ -404,18 +403,18 @@ public class UserResource {
 		User user = this.userDao.getByName(userRequest.getEmail());
 		if (user == null) {
 			// make sure the email addresses are not null, and match each other
-			if ((userRequest.getEmail() == null)
-					|| (userRequest.getVerifyEmail() == null)
-					|| (!userRequest.getEmail().equals(
-					userRequest.getVerifyEmail()))) {
+			if ((userRequest.getEmail() == null) || (userRequest
+					.getVerifyEmail() == null) || (!userRequest.getEmail()
+					.equals(
+							userRequest.getVerifyEmail()))) {
 				this.validationError = "Mismatched usernames";
 				result = false;
 			}
 
 			// make sure the passwords are not null, and match each other
-			if ((userRequest.getPassword() == null)
-					|| (userRequest.getVerifyPassword() == null)
-					|| (!userRequest.getPassword().equals(
+			if ((userRequest.getPassword() == null) || (userRequest
+					.getVerifyPassword() == null) || (!userRequest.getPassword
+					().equals(
 					userRequest.getVerifyPassword()))) {
 				this.validationError = "Mismatched passwords";
 				result = false;
@@ -445,7 +444,8 @@ public class UserResource {
 		Role superUserRole = this.roleDao.getRoleByName("superuser");
 		Role adminRole = this.roleDao.getRoleByName("admin");
 
-		// a super user can not be stripped of admin rights, or be de-activated.
+		// a super user can not be stripped of admin rights, 
+		// or be de-activated.
 		if (currentRoles.contains(superUserRole)) {
 			if (!updatedUser.isActive()) {
 				this.validationError = "Superuser can not be de-activated";
@@ -472,5 +472,11 @@ public class UserResource {
 			}
 		}
 		return defaultRoles;
+	}
+
+	private Date getExpirationDate() {
+		Calendar calendar = Calendar.getInstance();
+		calendar.add(Calendar.DATE, 90);
+		return calendar.getTime();
 	}
 }
