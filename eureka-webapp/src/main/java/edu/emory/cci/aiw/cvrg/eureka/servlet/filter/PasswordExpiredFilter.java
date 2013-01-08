@@ -63,8 +63,8 @@ public class PasswordExpiredFilter implements Filter {
 		if (this.saveUrl == null) {
 			throw new ServletException("Parameter save-url must be set");
 		}
-		LOGGER.info("redirect-url: {}", this.redirectUrl);
-		LOGGER.info("save-url: {}", this.saveUrl);
+		LOGGER.debug("redirect-url: {}", this.redirectUrl);
+		LOGGER.debug("save-url: {}", this.saveUrl);
 	}
 
 	@Override
@@ -77,12 +77,12 @@ public class PasswordExpiredFilter implements Filter {
 					response;
 			Principal principal = servletRequest.getUserPrincipal();
 			if (principal != null) {
-				LOGGER.info("username: {}", principal.getName());
+				LOGGER.debug("username: {}", principal.getName());
 				User user = this.servicesClient.getUserByName(principal
 						.getName());
 				Date now = Calendar.getInstance().getTime();
 				Date expiration = user.getPasswordExpiration();
-				LOGGER.info("expiration date: {}", user.getPasswordExpiration
+				LOGGER.debug("expiration date: {}", user.getPasswordExpiration
 						());
 				if (expiration != null && now.after(expiration)) {
 					String targetUrl = servletRequest.getRequestURI();
@@ -90,9 +90,9 @@ public class PasswordExpiredFilter implements Filter {
 							+ this.redirectUrl;
 					String fullSaveUrl = servletRequest.getContextPath() + 
 							this.saveUrl;
-					LOGGER.info("fullRedirectUrl: {}", fullRedirectUrl);
-					LOGGER.info("fullSaveUrl: {}", fullSaveUrl);
-					LOGGER.info("targetUrl: {}", targetUrl);
+					LOGGER.debug("fullRedirectUrl: {}", fullRedirectUrl);
+					LOGGER.debug("fullSaveUrl: {}", fullSaveUrl);
+					LOGGER.debug("targetUrl: {}", targetUrl);
 					if (!targetUrl.equals(fullRedirectUrl) && !targetUrl
 							.equals(fullSaveUrl)) {
 						servletResponse.sendRedirect(fullRedirectUrl);
