@@ -304,7 +304,7 @@
 																			</select>
 																		</td>
 																		<td>
-																			<select name="propositionSelect" style="width: 200px"></select>
+																			<select name="propositionSelect" style="width: 200px" data-sourceid="${relation.sequentialDataElementSource}"></select>
 																		</td>
 																		<td>
 																			by

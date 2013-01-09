@@ -126,8 +126,8 @@ public class SequenceTranslator implements
 		if (proposition == null) {
 			try {
 				PropositionDefinition propDef = finder.find(userId, key);
-				proposition = PropositionUtil.toSystemProposition(propDef, 
-						userId);
+				proposition = PropositionUtil.toSystemProposition(
+						propDef, userId);
 				this.propositions.put(key, proposition);
 			} catch (PropositionFindException ex) {
 				throw new DataElementHandlingException(
@@ -147,7 +147,7 @@ public class SequenceTranslator implements
 				try {
 				SystemElement element = PropositionUtil.toSystemElement(
 						this.finder.find(
-						userId, dataElement.getDataElementKey()),
+								userId, dataElement.getDataElementKey()), 
 						true, userId, this.finder);
 				SystemPropositionTranslator translator = new SystemPropositionTranslator(finder);
 				proposition = translator.translateFromElement(element);
@@ -216,10 +216,32 @@ public class SequenceTranslator implements
 			// identify the primary data element
 			result.setPrimaryDataElement(createDataElementField(proposition
 					.getPrimaryProposition()));
+			
+			// determine the correct source for each sequential data element
+			Map<Long, Long> sequentialSources = new HashMap<Long, Long>();
+			for (Relation relation : proposition.getRelations()) {
+				Long epId = relation.getRhsExtendedProposition().getId();
+				Long pId = proposition.getPrimaryProposition().getId();
+				if (pId.equals(epId)) {
+					sequentialSources.put(epId, pId);
+				} else {
+					for (Relation src : proposition.getRelations()) {
+						Long srcId = src.getLhsExtendedProposition().getId();
+						if (srcId.equals(epId)) {
+							sequentialSources.put(epId, srcId);
+							break;
+						}
+					}
+				}
+			}
 
 			List<RelatedDataElementField> relatedFields = new ArrayList<Sequence.RelatedDataElementField>();
 			for (Relation relation : proposition.getRelations()) {
-				relatedFields.add(createRelatedDataElementField(relation));
+				RelatedDataElementField field = createRelatedDataElementField
+						(relation);
+				field.setSequentialDataElementSource(sequentialSources.get
+						(relation.getRhsExtendedProposition().getId()));
+				relatedFields.add(field);
 			}
 			result.setRelatedDataElements(relatedFields);
 		}

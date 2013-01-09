@@ -399,6 +399,8 @@ function setPropositionSelects (elem) {
 	var selects = $(elem).find('select[name="propositionSelect"]');
 	$(selects).each(function (i, sel) {
 		var $sortable = $(sel).closest('.drop-parent').find('ul.sortable');
+		var originalSource = $(sel).data('sourceid');
+		$(sel).attr('data-sourceid','');
 		$(sel).empty();
 		$.each(droppedElems, function(elemKey, elemValue) {
 			var sources = droppedElems[elemKey]['sources'];
@@ -417,6 +419,10 @@ function setPropositionSelects (elem) {
 							desc += ' [' + sourceKey + ']';
 						}
 						var opt = $('<option></option>', {'value': value}).text(desc);
+						console.log(value + ' == ' + $(selectedItem).data('key') + '__' + originalSource);
+						if (value == $(selectedItem).data('key') + '__' + originalSource) {
+							opt.attr('selected','selected');
+						}
 						$(sel).append(opt);
 					}
 				});
