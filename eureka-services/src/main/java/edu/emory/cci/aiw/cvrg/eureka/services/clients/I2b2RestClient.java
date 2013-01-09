@@ -143,8 +143,7 @@ public class I2b2RestClient extends AbstractClient implements I2b2Client {
 	}
 
 	private void parseResponseXML(String xmlResponse) throws HttpStatusException {
-		// TODO Auto-generated method stub
-
+		
 		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 		DocumentBuilder db;
 		Document doc;
@@ -155,7 +154,7 @@ public class I2b2RestClient extends AbstractClient implements I2b2Client {
 			Element el = (Element) nList.item(0);
 
 			if (el.getAttribute("type").equals("ERROR")) {
-				LOGGER.error(el.getNodeValue());
+				LOGGER.error(xmlResponse);
 				throw new HttpStatusException(Response.Status.INTERNAL_SERVER_ERROR, "Error while changing password. Please contact the administrator.");
 			}
 

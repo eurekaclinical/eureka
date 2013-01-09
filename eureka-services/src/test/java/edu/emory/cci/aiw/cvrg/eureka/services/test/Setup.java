@@ -36,8 +36,6 @@ import com.google.inject.Provider;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.Categorization;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.Categorization.CategorizationType;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.FileUpload;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.HighLevelAbstraction;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.SystemProposition;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.ValueThresholdEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.Proposition;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.Role;
@@ -191,7 +189,7 @@ public class Setup implements TestDataProvider {
 			lowLevelAbstraction.setCreated(now);
 			lowLevelAbstraction.setCreatedFrom(ValueThresholdEntity
 					.CreatedFrom.FREQUENCY);
-			lowLevelAbstraction.setMinValues(Integer.valueOf(3));
+			lowLevelAbstraction.setMinValues(3);
 			lowLevelAbstraction.setUserConstraint(new SimpleParameterConstraint());
 			lowLevelAbstraction.setComplementConstraint(new SimpleParameterConstraint());
 			lowLevelAbstraction.setThresholdsOperator(any);

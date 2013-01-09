@@ -41,10 +41,9 @@ public class ValueThresholdEntity extends Proposition {
 	private String name;
 
 	/*
-	 * Minimum number of values to match
+	 * Minimum number of values to match. Default value is 1.
 	 */
-	@Column(nullable = false)
-	private Integer minValues;
+	private int minValues = 1;
 
 	/*
 	 * Minimum allowed time gap between values
@@ -102,11 +101,11 @@ public class ValueThresholdEntity extends Proposition {
 		name = inName;
 	}
 
-	public Integer getMinValues() {
+	public int getMinValues() {
 		return minValues;
 	}
-
-	public void setMinValues(Integer minValues) {
+	
+	public void setMinValues(int minValues) {
 		this.minValues = minValues;
 	}
 
