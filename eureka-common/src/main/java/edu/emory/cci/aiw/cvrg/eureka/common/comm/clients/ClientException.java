@@ -19,25 +19,34 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.common.comm.clients;
 
+import com.sun.jersey.api.client.ClientResponse.Status;
+
 /**
  * @author hrathod
  */
 public class ClientException extends Exception {
+	private final Status responseStatus;
 
-	public ClientException() {
+	public ClientException(Status responseStatus) {
+		this.responseStatus = responseStatus;
 	}
 
-	public ClientException(String string) {
+	public ClientException(Status responseStatus, String string) {
 		super(string);
+		this.responseStatus = responseStatus;
 	}
 
-	public ClientException(String string, Throwable thrwbl) {
+	public ClientException(Status responseStatus, String string, Throwable thrwbl) {
 		super(string, thrwbl);
+		this.responseStatus = responseStatus;
 	}
 
-	public ClientException(Throwable thrwbl) {
+	public ClientException(Status responseStatus, Throwable thrwbl) {
 		super(thrwbl);
+		this.responseStatus = responseStatus;
 	}
-	
-	
+
+	public Status getResponseStatus() {
+		return responseStatus;
+	}
 }

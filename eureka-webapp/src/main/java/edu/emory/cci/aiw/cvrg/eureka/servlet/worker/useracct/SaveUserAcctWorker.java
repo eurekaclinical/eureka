@@ -61,26 +61,20 @@ public class SaveUserAcctWorker implements ServletWorker {
 
 		resp.setContentType("text/html");
 		try {
-			 servicesClient.changePassword(Long.valueOf(id), oldPassword, 
+			servicesClient.changePassword(Long.valueOf(id), oldPassword,
 					newPassword);
 			resp.setStatus(HttpServletResponse.SC_OK);
 			resp.getWriter().write(HttpServletResponse.SC_OK);
 		} catch (ClientException e) {
 			resp.setContentType("text/plain");
-			String[] splitMessage = e.getMessage().split(":");
-			if(splitMessage[0].equals(ClientResponse.Status.PRECONDITION_FAILED.toString()))
-			{
+			if (ClientResponse.Status.PRECONDITION_FAILED.equals(e.getResponseStatus())) {
 				resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-				resp.getWriter().write(splitMessage[1]);
+			} else {
+				resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 			}
-			
-			else 
-				{
-					resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-					resp.getWriter().write(splitMessage[2]);
-				}
+			resp.getWriter().write(e.getMessage());
 		}
-		
+
 		resp.getWriter().close();
 	}
 }

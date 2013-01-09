@@ -20,24 +20,14 @@
 package edu.emory.cci.aiw.cvrg.eureka.services.util;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
-import org.protempa.CompoundLowLevelAbstractionDefinition;
-import org.protempa.ConstantDefinition;
-import org.protempa.EventDefinition;
-import org.protempa.HighLevelAbstractionDefinition;
-import org.protempa.LowLevelAbstractionDefinition;
-import org.protempa.PairDefinition;
-import org.protempa.PrimitiveParameterDefinition;
 import org.protempa.PropertyDefinition;
 import org.protempa.PropositionDefinition;
-import org.protempa.PropositionDefinitionVisitor;
-import org.protempa.SliceDefinition;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.SystemElement;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.Proposition;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.SystemProposition.SystemType;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.SystemProposition;
 import edu.emory.cci.aiw.cvrg.eureka.services.finder.PropositionFindException;
 import edu.emory.cci.aiw.cvrg.eureka.services.finder.SystemPropositionFinder;
 import edu.emory.cci.aiw.cvrg.eureka.services.packaging.PropositionDefinitionPackagerVisitor;
@@ -51,72 +41,28 @@ public final class PropositionUtil {
 		// do not allow instantiation.
 	}
 
-//	public static DataElement wrap(Proposition inProposition,
-//	        PropositionDao inPropositionDao, TimeUnitDao inTimeUnitDao,
-//		SystemPropositionFinder inFinder) {
-//		PropositionTranslatorVisitor visitor = new
-//			PropositionTranslatorVisitor(inProposition.getUserId(), inPropositionDao, inTimeUnitDao, inFinder);
-//		inProposition.accept(visitor);
-//		return visitor.getDataElement();
-//	}
-	private static class PropositionDefinitionTypeVisitor implements
-			PropositionDefinitionVisitor {
-
-		private SystemType systemType;
-
-		@Override
-		public void visit(Collection<? extends PropositionDefinition> arg0) {
-			throw new UnsupportedOperationException(
-					"getting the type of a collection is not supported");
+	public static SystemProposition toSystemProposition(PropositionDefinition inDefinition,
+			Long inUserId) {
+		if (inDefinition == null) {
+			throw new IllegalArgumentException("inDefinition cannot be null");
 		}
-
-		@Override
-		public void visit(ConstantDefinition arg0) {
-			systemType = SystemType.CONSTANT;
-		}
-
-		@Override
-		public void visit(EventDefinition arg0) {
-			systemType = SystemType.EVENT;
-		}
-
-		@Override
-		public void visit(HighLevelAbstractionDefinition arg0) {
-			systemType = SystemType.HIGH_LEVEL_ABSTRACTION;
-		}
-
-		@Override
-		public void visit(LowLevelAbstractionDefinition arg0) {
-			systemType = SystemType.LOW_LEVEL_ABSTRACTION;
-		}
-
-		@Override
-		public void visit(PairDefinition arg0) {
-			systemType = SystemType.HIGH_LEVEL_ABSTRACTION;
-		}
-
-		@Override
-		public void visit(PrimitiveParameterDefinition arg0) {
-			systemType = SystemType.PRIMITIVE_PARAMETER;
-		}
-
-		@Override
-		public void visit(SliceDefinition arg0) {
-			systemType = SystemType.SLICE_ABSTRACTION;
-		}
-
-		@Override
-		public void visit(CompoundLowLevelAbstractionDefinition def) {
-			systemType = SystemType.COMPOUND_LOW_LEVEL_ABSTRACTION;
-		}
-		
-		
+		SystemProposition sysProp = new SystemProposition();
+		sysProp.setKey(inDefinition.getId());
+		sysProp.setInSystem(true);
+		sysProp.setDisplayName(inDefinition.getDisplayName());
+		sysProp.setAbbrevDisplayName(inDefinition.getAbbreviatedDisplayName());
+		sysProp.setUserId(inUserId);
+		PropositionDefinitionTypeVisitor propDefTypeVisitor =
+				new PropositionDefinitionTypeVisitor();
+		inDefinition.accept(propDefTypeVisitor);
+		sysProp.setSystemType(propDefTypeVisitor.getSystemType());
+		return sysProp;
 	}
 
 	/**
 	 * Wraps a proposition definition into a proposition wrapper.
 	 */
-	public static SystemElement wrap(PropositionDefinition inDefinition,
+	public static SystemElement toSystemElement(PropositionDefinition inDefinition,
 			boolean summarize, Long inUserId,
 			SystemPropositionFinder inPropositionFinder)
 			throws PropositionFindException {
@@ -131,22 +77,22 @@ public final class PropositionUtil {
 		systemElement.setDisplayName(inDefinition.getDisplayName());
 		systemElement.setSummarized(summarize);
 		systemElement.setParent(inDefinition.getChildren().length > 0);
-		PropositionDefinitionTypeVisitor propDefTypeVisitor = 
+		PropositionDefinitionTypeVisitor propDefTypeVisitor =
 				new PropositionDefinitionTypeVisitor();
 		inDefinition.accept(propDefTypeVisitor);
-		systemElement.setSystemType(propDefTypeVisitor.systemType);
+		systemElement.setSystemType(propDefTypeVisitor.getSystemType());
 
 		if (!summarize) {
 			List<SystemElement> children = new ArrayList<SystemElement>();
 			for (String key : inDefinition.getChildren()) {
-				PropositionDefinition pd = 
+				PropositionDefinition pd =
 						inPropositionFinder.find(inUserId, key);
 				if (pd != null) {
 					children.add(
-							wrap(pd, true, inUserId, inPropositionFinder));
+							toSystemElement(pd, true, inUserId, inPropositionFinder));
 				} else {
-					throw new PropositionFindException("Could not find child '" 
-							+ key + "' of proposition definition '" 
+					throw new PropositionFindException("Could not find child '"
+							+ key + "' of proposition definition '"
 							+ inDefinition.getId() + "'");
 				}
 			}
@@ -162,16 +108,7 @@ public final class PropositionUtil {
 
 		return systemElement;
 	}
-
-//	public static Proposition unwrap(DataElement inElement, Long inUserId,
-//		PropositionDao inPropositionDao, TimeUnitDao inTimeUnitDao,
-//		SystemPropositionFinder inFinder) {
-//
-//		DataElementTranslatorVisitor visitor = new DataElementTranslatorVisitor(
-//		        inUserId, inPropositionDao, inTimeUnitDao, inFinder);
-//		inElement.accept(visitor);
-//		return visitor.getProposition();
-//	}
+	
 	/**
 	 * Converts a proposition entity into an equivalent proposition definition
 	 * understood by Protempa.
@@ -181,7 +118,8 @@ public final class PropositionUtil {
 	 * proposition entity
 	 */
 	public static PropositionDefinition pack(Proposition inProposition) {
-		PropositionDefinitionPackagerVisitor visitor = new PropositionDefinitionPackagerVisitor(
+		PropositionDefinitionPackagerVisitor visitor = 
+				new PropositionDefinitionPackagerVisitor(
 				inProposition.getUserId());
 		inProposition.accept(visitor);
 		return visitor.getPropositionDefinition();
@@ -197,7 +135,8 @@ public final class PropositionUtil {
 	 */
 	public static List<PropositionDefinition> packAll(
 			List<Proposition> inPropositions, Long inUserId) {
-		List<PropositionDefinition> result = new ArrayList<PropositionDefinition>();
+		List<PropositionDefinition> result = 
+				new ArrayList<PropositionDefinition>();
 
 		for (Proposition p : inPropositions) {
 			result.add(pack(p));

@@ -65,7 +65,7 @@ public class SystemPropositionTranslator implements
 				PropositionDefinition childDef = finder.find(
 						proposition.getUserId(), child);
 				SystemElement childElement = 
-						PropositionUtil.wrap(childDef, true, 
+						PropositionUtil.toSystemElement(childDef, true, 
 							proposition.getUserId(), finder);
 
 				children.add(childElement);
@@ -76,7 +76,6 @@ public class SystemPropositionTranslator implements
 			for (PropertyDefinition property : propDef.getPropertyDefinitions()) {
 				properties.add(property.getName());
 			}
-			element.setInSystem(proposition.isInSystem());
 			element.setProperties(properties);
 			element.setSystemType(proposition.getSystemType());
 		} catch (PropositionFindException ex) {

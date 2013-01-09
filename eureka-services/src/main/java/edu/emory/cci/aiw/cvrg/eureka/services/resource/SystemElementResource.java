@@ -76,7 +76,7 @@ public class SystemElementResource {
 							"Invalid proposition key specified in system "
 							+ "propositions list " + key);
 				} else {
-					SystemElement element = PropositionUtil.wrap(
+					SystemElement element = PropositionUtil.toSystemElement(
 							definition, false, inUserId, this.finder);
 					result.add(element);
 				}
@@ -98,7 +98,7 @@ public class SystemElementResource {
 			if (definition == null) {
 				throw new HttpStatusException(Response.Status.NOT_FOUND);
 			}
-			return PropositionUtil.wrap(definition, false, inUserId, 
+			return PropositionUtil.toSystemElement(definition, false, inUserId, 
 					this.finder);
 		} catch (PropositionFindException ex) {
 			throw new HttpStatusException(

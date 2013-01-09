@@ -84,27 +84,36 @@ public class ServicesClient extends AbstractClient {
 
 	public List<User> getUsers() {
 		final String path = "/api/user/list";
-		return this.getResource().path(path).type(MediaType.APPLICATION_JSON)
+		return this.getResource()
+				.path(path)
+				.type(MediaType.APPLICATION_JSON)
 				.accept(MediaType.APPLICATION_JSON).get(UserList);
 	}
 
 	public User getUserByName(String username) {
 		final String path = "/api/user/byname/" + username;
-		return this.getResource().path(path).accept(MediaType.APPLICATION_JSON).get(User.class);
+		return this.getResource()
+				.path(path)
+				.accept(MediaType.APPLICATION_JSON)
+				.get(User.class);
 	}
 
 	public User getUserById(Long inUserId) {
 		final String path = "/api/user/byid/" + inUserId;
-		return this.getResource().path(path).accept(MediaType.APPLICATION_JSON).get(User.class);
+		return this.getResource()
+				.path(path)
+				.accept(MediaType.APPLICATION_JSON)
+				.get(User.class);
 	}
 
 	public void addUser(UserRequest inRequest) throws ClientException {
 		final String path = "/api/user";
-		ClientResponse response = this.getResource().path(path).accept(MediaType.APPLICATION_JSON).type(MediaType.APPLICATION_JSON)
+		ClientResponse response = this.getResource()
+				.path(path)
+				.accept(MediaType.APPLICATION_JSON)
+				.type(MediaType.APPLICATION_JSON)
 				.post(ClientResponse.class, inRequest);
-		if (!response.getClientResponseStatus().equals(ClientResponse.Status.NO_CONTENT)) {
-			throw new ClientException(response.getEntity(String.class));
-		}
+		errorIfStatusNotEqualTo(response, ClientResponse.Status.NO_CONTENT);
 	}
 
 	public void changePassword(Long inUserId, String inOldPass,
@@ -113,96 +122,102 @@ public class ServicesClient extends AbstractClient {
 		ClientResponse response = this.getResource().path(path).queryParam
 				("oldPassword", inOldPass).queryParam("newPassword",
 				inNewPass).put(ClientResponse.class);
-		if (!response.getClientResponseStatus().equals(ClientResponse.Status.NO_CONTENT)) {
-			String message = response.getEntity(String.class);
-			LOGGER.error("Client error while saving element: {}", message);
-			throw new ClientException(response.getClientResponseStatus().toString()+":"+message);
-		}
+		errorIfStatusNotEqualTo(response, ClientResponse.Status.NO_CONTENT);
 	}
 
 	public void resetPassword(String email) throws ClientException {
 		final String path = "/api/user/pwreset/" + email;
-		ClientResponse response = this.getResource().path(path).put(ClientResponse.class);
-		if (!response.getClientResponseStatus().equals(ClientResponse.Status.NO_CONTENT)) {
-			String message = response.getEntity(String.class);
-			LOGGER.error("Client error while saving element: {}", message);
-			throw new ClientException(message);
-		}
+		ClientResponse response = this.getResource()
+				.path(path)
+				.put(ClientResponse.class);
+		errorIfStatusNotEqualTo(response, ClientResponse.Status.NO_CONTENT);
 	}
 	
 	public void updateUser(User inUser) throws ClientException {
 		final String path = "/api/user";
-		ClientResponse response = this.getResource().path(path).type(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON).put(ClientResponse.class, inUser);
-		if (response.getClientResponseStatus().equals(ClientResponse.Status.NOT_MODIFIED)) {
-			throw new ClientException(response.getEntity(String.class));
-		}
+		ClientResponse response = this.getResource()
+				.path(path)
+				.type(MediaType.APPLICATION_JSON)
+				.accept(MediaType.APPLICATION_JSON)
+				.put(ClientResponse.class, inUser);
+		errorIfStatusEqualTo(response, ClientResponse.Status.NOT_MODIFIED);
 	}
 
 	public void verifyUser(String inCode) throws ClientException {
 		final String path = "/api/user/verify/" + inCode;
-		ClientResponse response = this.getResource().path(path).type(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON).put(ClientResponse.class);
-		if (!response.getClientResponseStatus().equals(ClientResponse.Status.NO_CONTENT)) {
-			throw new ClientException(response.getEntity(String.class));
-		}
+		ClientResponse response = this.getResource()
+				.path(path)
+				.type(MediaType.APPLICATION_JSON)
+				.accept(MediaType.APPLICATION_JSON)
+				.put(ClientResponse.class);
+		errorIfStatusNotEqualTo(response, ClientResponse.Status.NO_CONTENT);
 	}
 
 	public List<Role> getRoles() {
 		final String path = "/api/role/list";
-		return this.getResource().path(path).accept(MediaType.APPLICATION_JSON).get(RoleList);
+		return this.getResource()
+				.path(path)
+				.accept(MediaType.APPLICATION_JSON)
+				.get(RoleList);
 	}
 
 	public Role getRole(Long inRoleId) {
 		final String path = "/api/role/" + inRoleId;
-		return this.getResource().path(path).type(MediaType.APPLICATION_JSON)
-				.accept(MediaType.APPLICATION_JSON).get(Role.class);
+		return this.getResource()
+				.path(path)
+				.type(MediaType.APPLICATION_JSON)
+				.accept(MediaType.APPLICATION_JSON)
+				.get(Role.class);
 	}
 
 	public void addJob(FileUpload inUpload) throws ClientException {
 		final String path = "/api/job/add";
-		ClientResponse response = this.getResource().path(path).type(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON).post(ClientResponse.class, inUpload);
-		if (!response.getClientResponseStatus().equals(ClientResponse.Status.OK)) {
-			throw new ClientException(response.getEntity(String.class));
-		}
+		ClientResponse response = this.getResource()
+				.path(path)
+				.type(MediaType.APPLICATION_JSON)
+				.accept(MediaType.APPLICATION_JSON)
+				.post(ClientResponse.class, inUpload);
+		errorIfStatusNotEqualTo(response, ClientResponse.Status.OK);
 	}
 
 	public List<Job> getJobsByUserId(Long inUserId) {
 		final String path = "/api/job/list/" + inUserId;
-		return this.getResource().path(path).type(MediaType.APPLICATION_JSON)
-				.accept(MediaType.APPLICATION_JSON).get(JobList);
+		return this.getResource()
+				.path(path)
+				.type(MediaType.APPLICATION_JSON)
+				.accept(MediaType.APPLICATION_JSON)
+				.get(JobList);
 	}
 
 	public JobInfo getJobInfo(Long inUserId) {
 		final String path = "/api/job/status/" + inUserId;
-		return this.getResource().path(path).type(MediaType.APPLICATION_JSON)
-				.accept(MediaType.APPLICATION_JSON).get(JobInfo.class);
+		return this.getResource()
+				.path(path)
+				.type(MediaType.APPLICATION_JSON)
+				.accept(MediaType.APPLICATION_JSON)
+				.get(JobInfo.class);
 	}
 
 	public void saveUserElement(DataElement inDataElement)
 			throws ClientException {
 		final String path = "/api/dataelement";
-		ClientResponse response = this.getResource().path(path).type(MediaType.APPLICATION_JSON).accept(
-				MediaType.APPLICATION_JSON).post(
-				ClientResponse.class, inDataElement);
-		if (!response.getClientResponseStatus().equals(
-				ClientResponse.Status.NO_CONTENT)) {
-			String message = response.getEntity(String.class);
-			LOGGER.error("Client error while saving element: {}", message);
-			throw new ClientException(message);
-		}
+		ClientResponse response = this.getResource()
+				.path(path)
+				.type(MediaType.APPLICATION_JSON)
+				.accept(MediaType.APPLICATION_JSON)
+				.post(ClientResponse.class, inDataElement);
+		errorIfStatusNotEqualTo(response, ClientResponse.Status.NO_CONTENT);
 	}
 
 	public void updateUserElement(DataElement inDataElement) throws
 			ClientException {
 		final String path = "/api/dataelement";
-		ClientResponse response = this.getResource().path(path).type(MediaType.APPLICATION_JSON).accept(
-				MediaType.APPLICATION_JSON).put(
-				ClientResponse.class, inDataElement);
-		if (!response.getClientResponseStatus().equals(
-				ClientResponse.Status.NO_CONTENT)) {
-			String message = response.getEntity(String.class);
-			LOGGER.error("Client error while updating element: {}", message);
-			throw new ClientException(message);
-		}
+		ClientResponse response = this.getResource()
+				.path(path)
+				.type(MediaType.APPLICATION_JSON)
+				.accept(MediaType.APPLICATION_JSON)
+				.put(ClientResponse.class, inDataElement);
+		errorIfStatusNotEqualTo(response, ClientResponse.Status.NO_CONTENT);
 	}
 
 	public List<DataElement> getUserElements(Long inUserId) {
@@ -210,8 +225,10 @@ public class ServicesClient extends AbstractClient {
 			throw new IllegalArgumentException("inUserId cannot be null");
 		}
 		final String path = "/api/dataelement/" + inUserId;
-		return this.getResource().path(path).accept(
-				MediaType.APPLICATION_JSON).get(DataElementList);
+		return this.getResource()
+				.path(path)
+				.accept(MediaType.APPLICATION_JSON)
+				.get(DataElementList);
 	}
 
 	public DataElement getUserElement(Long inUserId, String inKey) {
@@ -232,8 +249,10 @@ public class ServicesClient extends AbstractClient {
 				.segment("{arg1}")
 				.segment(inKey)
 				.build(inUserId).toString();
-		return this.getResource().path(path).accept(
-				MediaType.APPLICATION_JSON).get(DataElement.class);
+		return this.getResource()
+				.path(path)
+				.accept(MediaType.APPLICATION_JSON)
+				.get(DataElement.class);
 	}
 
 	public void deleteUserElement(Long inUserId, String inKey) throws
@@ -255,14 +274,12 @@ public class ServicesClient extends AbstractClient {
 				.segment("{arg1}")
 				.segment(inKey)
 				.build(inUserId).toString();
-		ClientResponse response = this.getResource().path(path).accept(
-				MediaType.APPLICATION_JSON).type(MediaType.APPLICATION_JSON).delete(ClientResponse.class);
-		if (response.getClientResponseStatus().getStatusCode()
-				!= ClientResponse.Status.NO_CONTENT.getStatusCode()) {
-			throw new ClientException(
-					"Element " + inKey + "could not be "
-					+ "deleted for user " + inUserId);
-		}
+		ClientResponse response = this.getResource()
+				.path(path)
+				.accept(MediaType.APPLICATION_JSON)
+				.type(MediaType.APPLICATION_JSON)
+				.delete(ClientResponse.class);
+		errorIfStatusNotEqualTo(response, ClientResponse.Status.NO_CONTENT);
 	}
 
 	public List<SystemElement> getSystemElements(Long inUserId) {

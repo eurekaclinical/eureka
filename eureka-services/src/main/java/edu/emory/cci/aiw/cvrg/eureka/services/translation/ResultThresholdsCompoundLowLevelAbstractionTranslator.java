@@ -122,7 +122,7 @@ public final class ResultThresholdsCompoundLowLevelAbstractionTranslator
 		        threshold.getDataElement().getDataElementKey());
 		if (abstractedFrom == null) {
 			try {
-				SystemElement element = PropositionUtil.wrap(
+				SystemElement element = PropositionUtil.toSystemElement(
 				        this.finder.find(userId, threshold.getDataElement()
 				                .getDataElementKey()), true, userId,
 				        this.finder);

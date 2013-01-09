@@ -20,13 +20,11 @@
 package edu.emory.cci.aiw.cvrg.eureka.services.translation;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import com.google.inject.Inject;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.ShortDataElementField;
 
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.SystemElement;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.ValueThresholds;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.ValueThreshold;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.ValueThresholdEntity;
@@ -41,6 +39,7 @@ import edu.emory.cci.aiw.cvrg.eureka.services.dao.ValueComparatorDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.finder.PropositionFindException;
 import edu.emory.cci.aiw.cvrg.eureka.services.finder.SystemPropositionFinder;
 import edu.emory.cci.aiw.cvrg.eureka.services.util.PropositionUtil;
+import org.protempa.PropositionDefinition;
 
 /**
  *
@@ -81,7 +80,6 @@ public class ResultThresholdsLowLevelAbstractionTranslator implements
 		
 		ValueThresholdEntity result = new ValueThresholdEntity();
 		result.setInSystem(false);
-		result.setMinValues(Integer.valueOf(1));
 
 		PropositionTranslatorUtil.populateCommonPropositionFields(result,
 				element);
@@ -101,15 +99,13 @@ public class ResultThresholdsLowLevelAbstractionTranslator implements
 
 		Proposition abstractedFrom = propositionDao.getByUserAndKey(element.getUserId(),
 				threshold.getDataElement().getDataElementKey());
-		System.err.println("abstractedFrom: " + abstractedFrom);
 		if (abstractedFrom == null) {
 			try {
-				SystemElement sysElement = PropositionUtil.wrap(this.finder
+				PropositionDefinition propDef = this.finder
 						.find(element.getUserId(), threshold.getDataElement()
-						.getDataElementKey()), true, element
-						.getUserId(), this.finder);
-				SystemPropositionTranslator translator = new SystemPropositionTranslator(finder);
-				abstractedFrom = translator.translateFromElement(sysElement);
+						.getDataElementKey());
+				abstractedFrom = PropositionUtil.toSystemProposition(propDef, element
+						.getUserId());
 			} catch (PropositionFindException ex) {
 				throw new DataElementHandlingException(
 						"Could not translate data element "

@@ -462,7 +462,7 @@ public class PropositionResource {
 
 	private SystemElement fetchSystemProposition(Long inUserId,
 			String inKey) throws PropositionFindException {
-		return PropositionUtil.wrap(
+		return PropositionUtil.toSystemElement(
 				systemPropositionFinder.find(inUserId, inKey), false, inUserId,
 				this.systemPropositionFinder);
 	}

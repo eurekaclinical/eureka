@@ -64,40 +64,40 @@ public class EtlClient extends AbstractClient {
 					MediaType.APPLICATION_JSON).type(
 					MediaType.APPLICATION_JSON).get(Configuration.class);
 		} catch (UniformInterfaceException e) {
-			throw new ClientException(e.getMessage());
+			throw new ClientException(e.getResponse().getClientResponseStatus(), e.getMessage());
 		}
 		return result;
 	}
 
 	public void submitJob(JobRequest inJobRequest) throws ClientException {
 		final String path = "/api/job/submit";
-		ClientResponse response = this.getResource().path(path).type
-				(MediaType.APPLICATION_JSON).accept(
-				MediaType.APPLICATION_JSON).post(
-				ClientResponse.class, inJobRequest);
-		if (!response.getClientResponseStatus().equals(
-				ClientResponse.Status.CREATED)) {
-			throw new ClientException(response.getEntity(String.class));
-		}
+		ClientResponse response = this.getResource()
+				.path(path)
+				.type(MediaType.APPLICATION_JSON)
+				.accept(MediaType.APPLICATION_JSON)
+				.post(ClientResponse.class, inJobRequest);
+		errorIfStatusNotEqualTo(response, ClientResponse.Status.CREATED);
 	}
 
 	public List<Job> getJobStatus(JobFilter inFilter) {
 		final String path = "/api/job/status";
-		return this.getResource().path(path).queryParam(
-				"filter", inFilter.toQueryParam()).accept(
-				MediaType.APPLICATION_JSON).type(
-				MediaType.APPLICATION_JSON).get(JobListType);
+		return this.getResource()
+				.path(path)
+				.queryParam("filter", inFilter.toQueryParam())
+				.accept(MediaType.APPLICATION_JSON)
+				.type(MediaType.APPLICATION_JSON)
+				.get(JobListType);
 	}
 
 	public void validatePropositions(ValidationRequest inRequest) throws
 			ClientException {
 		final String path = "/api/validate";
-		ClientResponse response = this.getResource().path(path).accept
-				(MediaType.APPLICATION_JSON).type(MediaType
-				.APPLICATION_JSON).post(ClientResponse.class, inRequest);
-		if (!response.getClientResponseStatus().equals(ClientResponse.Status.OK)) {
-			throw new ClientException(response.getEntity(String.class));
-		}
+		ClientResponse response = this.getResource()
+				.path(path)
+				.accept(MediaType.APPLICATION_JSON)
+				.type(MediaType.APPLICATION_JSON)
+				.post(ClientResponse.class, inRequest);
+		errorIfStatusNotEqualTo(response, ClientResponse.Status.OK);
 	}
 
 	/**
@@ -123,13 +123,17 @@ public class EtlClient extends AbstractClient {
 			String path = UriBuilder.fromPath("/api/proposition/")
 					.segment("{arg1}", inKey)
 					.build(inUserId).toString();
-			result = this.getResource().path(path).accept(MediaType
-					.APPLICATION_JSON).type(MediaType.APPLICATION_JSON).get
-					(PropositionDefinition.class);
+			result = this.getResource()
+					.path(path)
+					.accept(MediaType.APPLICATION_JSON)
+					.type(MediaType.APPLICATION_JSON)
+					.get(PropositionDefinition.class);
 		} catch (UniformInterfaceException e) {
-			if (!ClientResponse.Status.NOT_FOUND.equals(e.getResponse()
-					.getClientResponseStatus())) {
-				throw new ClientException(e.getMessage());
+			ClientResponse.Status clientResponseStatus = 
+					e.getResponse().getClientResponseStatus();
+			if (!ClientResponse.Status.NOT_FOUND.equals(clientResponseStatus)) {
+				throw new ClientException(clientResponseStatus, 
+						e.getMessage());
 			} else {
 				result = null;
 			}

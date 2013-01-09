@@ -92,8 +92,9 @@ public class SequenceTranslator implements
 		for (RelatedDataElementField rde : element.getRelatedDataElements()) {
 			createExtendedProposition(rde.getDataElementField(),
 					element.getUserId());
-			abstractedFrom.add(getOrCreateProposition(rde.getDataElementField()
-					.getDataElementKey(), element));
+			abstractedFrom.add(getOrCreateProposition(element.getUserId(), 
+					rde.getDataElementField()
+					.getDataElementKey()));
 		}
 		result.setAbstractedFrom(abstractedFrom);
 		List<Relation> relations = new ArrayList<Relation>();
@@ -105,7 +106,7 @@ public class SequenceTranslator implements
 		return result;
 	}
 
-	private Proposition getOrCreateProposition(String key, Sequence element)
+	private Proposition getOrCreateProposition(Long userId, String key)
 			throws DataElementHandlingException {
 
 		Proposition proposition = null;
@@ -117,26 +118,20 @@ public class SequenceTranslator implements
 
 		// next we try to fetch it from the database
 		if (proposition == null) {
-			proposition = propositionDao.getByUserAndKey(element
-				.getUserId(), key);
+			proposition = propositionDao.getByUserAndKey(userId, key);
 			this.propositions.put(key, proposition);
 		}
 
 		// finally, we try to fetch it from the ontology
 		if (proposition == null) {
 			try {
-				PropositionDefinition propDef = finder.find(element.getUserId(),
-						key);
-				SystemElement systemElement = PropositionUtil.wrap(
-						propDef, false, element.getUserId(), this.finder);
-				proposition = this
-						.systemPropositionTranslator.translateFromElement
-								(systemElement);
+				PropositionDefinition propDef = finder.find(userId, key);
+				proposition = PropositionUtil.toSystemProposition(propDef, 
+						userId);
 				this.propositions.put(key, proposition);
 			} catch (PropositionFindException ex) {
 				throw new DataElementHandlingException(
-						"Could not translate sequence " + element.getKey(),
-						ex);
+						"Could not translate child " + key, ex);
 			}
 		}
 		return proposition;
@@ -150,7 +145,7 @@ public class SequenceTranslator implements
 					userId, dataElement.getDataElementKey());
 			if (proposition == null) {
 				try {
-				SystemElement element = PropositionUtil.wrap(
+				SystemElement element = PropositionUtil.toSystemElement(
 						this.finder.find(
 						userId, dataElement.getDataElementKey()),
 						true, userId, this.finder);

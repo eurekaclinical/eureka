@@ -20,6 +20,7 @@
 package edu.emory.cci.aiw.cvrg.eureka.common.comm.clients;
 
 import com.sun.jersey.api.client.Client;
+import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
 import com.sun.jersey.api.client.config.ClientConfig;
 import com.sun.jersey.api.client.config.DefaultClientConfig;
@@ -48,4 +49,25 @@ public abstract class AbstractClient {
 	}
 
 	protected abstract String getResourceUrl();
+	
+	protected void errorIfStatusEqualTo(ClientResponse response, 
+			ClientResponse.Status status) throws ClientException {
+		errorIf(response, status, true);
+	}
+	
+	protected void errorIfStatusNotEqualTo(ClientResponse response, 
+			ClientResponse.Status status) throws ClientException {
+		errorIf(response, status, false);
+	}
+	
+	private void errorIf(ClientResponse response, 
+			ClientResponse.Status status, boolean bool) 
+			throws ClientException {
+		ClientResponse.Status clientResponseStatus = 
+				response.getClientResponseStatus();
+		if (clientResponseStatus.equals(status) == bool) {
+			throw new ClientException(clientResponseStatus, 
+					response.getEntity(String.class));
+		}
+	}
 }

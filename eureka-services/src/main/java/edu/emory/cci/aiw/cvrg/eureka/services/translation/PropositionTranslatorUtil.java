@@ -91,6 +91,7 @@ class PropositionTranslatorUtil {
 		dataElement.setCreated(proposition.getCreated());
 		dataElement.setLastModified(proposition.getLastModified());
 		dataElement.setUserId(proposition.getUserId());
+		dataElement.setInSystem(proposition.isInSystem());
 	}
 
 	static ExtendedProposition createExtendedProposition(
@@ -106,7 +107,7 @@ class PropositionTranslatorUtil {
 			PropositionDefinition definition = inFinder.find(userId, 
 					dataElement.getDataElementKey
 					());
-			SystemElement element = PropositionUtil.wrap(definition, false, 
+			SystemElement element = PropositionUtil.toSystemElement(definition, false, 
 					userId, inFinder);
 			SystemPropositionTranslator translator = new 
 					SystemPropositionTranslator(inFinder);

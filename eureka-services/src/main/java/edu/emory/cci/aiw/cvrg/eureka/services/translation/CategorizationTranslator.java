@@ -26,12 +26,17 @@ import edu.emory.cci.aiw.cvrg.eureka.common.comm.DataElement;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.Categorization;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.Categorization.CategorizationType;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.Proposition;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.SystemProposition;
 import edu.emory.cci.aiw.cvrg.eureka.common.exception.DataElementHandlingException;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.PropositionDao;
+import edu.emory.cci.aiw.cvrg.eureka.services.finder.PropositionFindException;
 import edu.emory.cci.aiw.cvrg.eureka.services.finder.SystemPropositionFinder;
+import edu.emory.cci.aiw.cvrg.eureka.services.util.PropositionDefinitionTypeVisitor;
+import edu.emory.cci.aiw.cvrg.eureka.services.util.PropositionUtil;
 
 import java.util.ArrayList;
 import java.util.List;
+import org.protempa.PropositionDefinition;
 
 /**
  * Translates categorical data elements (UI element) into categorization
@@ -40,15 +45,14 @@ import java.util.List;
 public final class CategorizationTranslator implements
 		PropositionTranslator<Category, Categorization> {
 
-	private final PropositionDao propositionDao;
-	private final SystemPropositionFinder finder;
 	private final SequenceTranslator sequenceTranslator;
 	private final SystemPropositionTranslator systemPropositionTranslator;
 	private final FrequencySliceTranslator frequencySliceTranslator;
 	private final FrequencyHighLevelAbstractionTranslator frequencyHighLevelAbstractionTranslator;
-	private final ResultThresholdsLowLevelAbstractionTranslator
-			resultThresholdsLowLevelAbstractionTranslator;
+	private final ResultThresholdsLowLevelAbstractionTranslator resultThresholdsLowLevelAbstractionTranslator;
 	private final ResultThresholdsCompoundLowLevelAbstractionTranslator resultThresholdsCompoundLowLevelAbstractionTranslator;
+	private final SystemPropositionFinder finder;
+	private final PropositionDao propositionDao;
 
 	@Inject
 	public CategorizationTranslator(
@@ -58,10 +62,8 @@ public final class CategorizationTranslator implements
 			SystemPropositionTranslator inSystemPropositionTranslator,
 			FrequencySliceTranslator inFrequencySliceTranslator,
 			FrequencyHighLevelAbstractionTranslator inFrequencyHighLevelAbstractionTranslator,
-			ResultThresholdsLowLevelAbstractionTranslator
-					inResultThresholdsLowLevelAbstractionTranslator,
-			ResultThresholdsCompoundLowLevelAbstractionTranslator
-					inResultThresholdsCompoundLowLevelAbstractionTranslator) {
+			ResultThresholdsLowLevelAbstractionTranslator inResultThresholdsLowLevelAbstractionTranslator,
+			ResultThresholdsCompoundLowLevelAbstractionTranslator inResultThresholdsCompoundLowLevelAbstractionTranslator) {
 		this.propositionDao = inInPropositionDao;
 		this.finder = inFinder;
 		this.sequenceTranslator = inSequenceTranslator;
@@ -82,24 +84,38 @@ public final class CategorizationTranslator implements
 
 		List<Proposition> inverseIsA = new ArrayList<Proposition>();
 		for (DataElement de : element.getChildren()) {
-			//Proposition child = getOrCreateProposition(de.getKey(), element);
-			DataElementTranslatorVisitor visitor = 
-					new DataElementTranslatorVisitor(
-					this.systemPropositionTranslator, this.sequenceTranslator,
-					this,
-					this.frequencySliceTranslator,
-					this.frequencyHighLevelAbstractionTranslator,
-					this.resultThresholdsLowLevelAbstractionTranslator,
-					this.resultThresholdsCompoundLowLevelAbstractionTranslator);
-			de.accept(visitor);
-			inverseIsA.add(visitor.getProposition());
+			Proposition proposition =
+					this.propositionDao.getByUserAndKey(de.getUserId(),
+					de.getKey());
+			if (proposition == null) {
+				proposition = getOrCreateProposition(de.getUserId(), de.getKey());
+			}
+			inverseIsA.add(proposition);
 		}
 		result.setInverseIsA(inverseIsA);
 		result.setCategorizationType(checkPropositionType(element));
-		
+
 		System.err.println("Got category for persistence: " + result);
 
 		return result;
+	}
+
+	private Proposition getOrCreateProposition(Long userId, String key) 
+			throws DataElementHandlingException {
+		Proposition proposition = this.propositionDao.getByUserAndKey(
+				userId, key);
+		if (proposition == null) {
+			try {
+				PropositionDefinition propDef = this.finder.find(
+						userId, key);
+				proposition = PropositionUtil.toSystemProposition(propDef, 
+						userId);
+			} catch (PropositionFindException ex) {
+				throw new DataElementHandlingException(
+						"Could not translate element " + key, ex);
+			}
+		}
+		return proposition;
 	}
 
 	private CategorizationType checkPropositionType(Category element) {

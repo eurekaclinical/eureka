@@ -42,21 +42,29 @@ import edu.emory.cci.aiw.cvrg.eureka.common.entity.ValueThresholdEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.exception.DataElementHandlingException;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.PropositionDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.TimeUnitDao;
+import edu.emory.cci.aiw.cvrg.eureka.services.finder.PropositionFindException;
+import edu.emory.cci.aiw.cvrg.eureka.services.finder.SystemPropositionFinder;
+import edu.emory.cci.aiw.cvrg.eureka.services.util.PropositionUtil;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import org.protempa.PropositionDefinition;
 
 public final class FrequencyHighLevelAbstractionTranslator implements
-        PropositionTranslator<Frequency, HighLevelAbstraction> {
+		PropositionTranslator<Frequency, HighLevelAbstraction> {
 
 	private static final String INTERMEDIATE_SUFFIX = "_FREQUENCY";
-
 	private final PropositionDao propositionDao;
 	private final TimeUnitDao timeUnitDao;
 	private Long userId;
+	private final SystemPropositionFinder finder;
 
 	@Inject
 	public FrequencyHighLevelAbstractionTranslator(
-	        PropositionDao inPropositionDao, TimeUnitDao inTimeUnitDao) {
+			SystemPropositionFinder inFinder,
+			PropositionDao inPropositionDao, TimeUnitDao inTimeUnitDao) {
 		propositionDao = inPropositionDao;
 		timeUnitDao = inTimeUnitDao;
+		finder = inFinder;
 	}
 
 	public void setUserId(Long inUserId) {
@@ -65,21 +73,35 @@ public final class FrequencyHighLevelAbstractionTranslator implements
 
 	@Override
 	public HighLevelAbstraction translateFromElement(Frequency element)
-	        throws DataElementHandlingException {
+			throws DataElementHandlingException {
 		HighLevelAbstraction result = new HighLevelAbstraction();
 		PropositionTranslatorUtil.populateCommonPropositionFields(result,
-		        element);
+				element);
 		result.setCreatedFrom(HighLevelAbstraction.CreatedFrom.FREQUENCY);
 
 		Proposition abstractedFrom = propositionDao.getByUserAndKey(element
-		        .getUserId(), element.getDataElement().getDataElementKey());
+				.getUserId(), element.getDataElement().getDataElementKey());
+		if (abstractedFrom == null) {
+			try {
+				PropositionDefinition propDef = this.finder
+						.find(element.getUserId(),
+						element.getDataElement().getDataElementKey());
+				abstractedFrom =
+						PropositionUtil.toSystemProposition(propDef,
+						element.getUserId());
+			} catch (PropositionFindException ex) {
+				throw new DataElementHandlingException(
+						"Could not translate data element "
+						+ element.getKey(), ex);
+			}
+		}
 
 		IntermediateAbstractionGenerator iag = new IntermediateAbstractionGenerator(
-		        element);
+				element);
 		abstractedFrom.accept(iag);
 		result.setRelations(Collections
-		        .singletonList(relationFromEP(epFromAbstraction(
-		                iag.getIntermediateAbstraction(), element))));
+				.singletonList(relationFromEP(epFromAbstraction(
+				iag.getIntermediateAbstraction(), element))));
 		result.setAbstractedFrom(Collections.singletonList(abstractedFrom));
 
 		return result;
@@ -95,7 +117,7 @@ public final class FrequencyHighLevelAbstractionTranslator implements
 	}
 
 	private ExtendedProposition epFromAbstraction(Proposition abstraction,
-	        Frequency element) {
+			Frequency element) {
 		ExtendedProposition result = new ExtendedProposition();
 
 		result.setProposition(abstraction);
@@ -105,7 +127,7 @@ public final class FrequencyHighLevelAbstractionTranslator implements
 	}
 
 	private final class IntermediateAbstractionGenerator implements
-	        PropositionEntityVisitor {
+			PropositionEntityVisitor {
 
 		private final Frequency element;
 		private Proposition intermediateAbstraction;
@@ -121,25 +143,25 @@ public final class FrequencyHighLevelAbstractionTranslator implements
 		@Override
 		public void visit(SystemProposition proposition) {
 			throw new UnsupportedOperationException("SystemProposition not "
-			        + "supported");
+					+ "supported");
 		}
 
 		@Override
 		public void visit(Categorization categorization) {
 			throw new UnsupportedOperationException("Categorization not "
-			        + "supported");
+					+ "supported");
 		}
 
 		@Override
 		public void visit(HighLevelAbstraction highLevelAbstraction) {
 			throw new UnsupportedOperationException("HighLevelAbstraction not"
-			        + " supported");
+					+ " supported");
 		}
 
 		@Override
 		public void visit(SliceAbstraction sliceAbstraction) {
 			throw new UnsupportedOperationException("SliceAbstraction not "
-			        + "supported");
+					+ "supported");
 		}
 
 		@Override
@@ -150,7 +172,7 @@ public final class FrequencyHighLevelAbstractionTranslator implements
 			result.setInSystem(false);
 			result.setKey(original.getKey() + INTERMEDIATE_SUFFIX);
 			result.setDisplayName(original.getDisplayName()
-			        + INTERMEDIATE_SUFFIX);
+					+ INTERMEDIATE_SUFFIX);
 			result.setAbstractedFrom(original.getAbstractedFrom());
 			result.setUserConstraint(SimpleParameterConstraint.newInstance(original.getUserConstraint()));
 			result.setComplementConstraint(SimpleParameterConstraint.newInstance(original.getComplementConstraint()));
@@ -167,20 +189,20 @@ public final class FrequencyHighLevelAbstractionTranslator implements
 			result.setMinValues(element.getAtLeast());
 			if (element.getIsWithin()) {
 				if (element.getWithinAtLeast() != null
-				        && element.getWithinAtLeastUnits() != null) {
+						&& element.getWithinAtLeastUnits() != null) {
 					result.setMinGapValues(element.getWithinAtLeast());
 					result.setMinGapValuesUnits(timeUnitDao.retrieve(element
-					        .getWithinAtLeastUnits()));
+							.getWithinAtLeastUnits()));
 				}
 				if (element.getWithinAtMost() != null
-				        && element.getWithinAtMostUnits() != null) {
+						&& element.getWithinAtMostUnits() != null) {
 					result.setMaxGapValues(element.getWithinAtMost());
 					result.setMaxGapValuesUnits(timeUnitDao.retrieve(element
-					        .getWithinAtMostUnits()));
+							.getWithinAtMostUnits()));
 				}
 			}
 			result.setAbstractedFrom(propositionDao.getByUserAndKey(
-					original.getUserId(), 
+					original.getUserId(),
 					element.getDataElement().getDataElementKey()));
 
 			this.intermediateAbstraction = result;
@@ -194,36 +216,36 @@ public final class FrequencyHighLevelAbstractionTranslator implements
 			result.setInSystem(false);
 			result.setKey(original.getKey() + INTERMEDIATE_SUFFIX);
 			result.setDisplayName(original.getDisplayName()
-			        + INTERMEDIATE_SUFFIX);
+					+ INTERMEDIATE_SUFFIX);
 			List<ValueThresholdEntity> copyOfAbstractedFrom = new ArrayList<ValueThresholdEntity>(
-			        original.getAbstractedFrom());
+					original.getAbstractedFrom());
 			result.setAbstractedFrom(copyOfAbstractedFrom);
 			result.setUserValueDefinitionName(original
-			        .getUserValueDefinitionName());
+					.getUserValueDefinitionName());
 			result.setComplementValueDefinitionName(original
-			        .getComplementValueDefinitionName());
+					.getComplementValueDefinitionName());
 			result.setCreatedFrom(CompoundValueThreshold.CreatedFrom.FREQUENCY);
 
 			Date now = new Date();
 			result.setCreated(now);
 			result.setLastModified(now);
 			result.setThresholdsOperator(original.getThresholdsOperator());
-			
+
 			result.setMinimumNumberOfValues(element.getAtLeast());
 
 			if (element.getIsWithin()) {
 				if (element.getWithinAtLeast() != null
-				        && element.getWithinAtLeastUnits() != null) {
+						&& element.getWithinAtLeastUnits() != null) {
 					result.setMinimumGapBetweenValues(element
-					        .getWithinAtLeast());
+							.getWithinAtLeast());
 					result.setMinimumGapBetweenValuesUnits(timeUnitDao
-					        .retrieve(element.getWithinAtLeastUnits()));
+							.retrieve(element.getWithinAtLeastUnits()));
 				}
 				if (element.getWithinAtMost() != null
-				        && element.getWithinAtMostUnits() != null) {
+						&& element.getWithinAtMostUnits() != null) {
 					result.setMaximumGapBetweenValues(element.getWithinAtMost());
 					result.setMaximumGapBetweenValuesUnits(timeUnitDao
-					        .retrieve(element.getWithinAtMostUnits()));
+							.retrieve(element.getWithinAtMostUnits()));
 				}
 			}
 
@@ -236,7 +258,7 @@ public final class FrequencyHighLevelAbstractionTranslator implements
 		Frequency result = new Frequency();
 
 		PropositionTranslatorUtil.populateCommonDataElementFields(result,
-		        proposition);
+				proposition);
 		// result.setAtLeast(proposition.getMinValues());
 		// result.setWithinAtLeast(proposition.getMinGapValues());
 		// result.setWithinAtLeastUnits(proposition.getMinGapValuesUnits().getId());
@@ -245,10 +267,9 @@ public final class FrequencyHighLevelAbstractionTranslator implements
 
 		DataElementField dataElement = new DataElementField();
 		dataElement.setDataElementKey(proposition.getAbstractedFrom().get(0)
-		        .getKey());
+				.getKey());
 		result.setDataElement(dataElement);
 
 		return result;
 	}
-
 }

@@ -29,6 +29,7 @@ import edu.emory.cci.aiw.cvrg.eureka.common.comm.Sequence;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.SystemElement;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.Proposition;
 import edu.emory.cci.aiw.cvrg.eureka.common.exception.DataElementHandlingException;
+import edu.emory.cci.aiw.cvrg.eureka.services.dao.PropositionDao;
 
 public final class DataElementTranslatorVisitor implements DataElementVisitor {
 
@@ -40,7 +41,7 @@ public final class DataElementTranslatorVisitor implements DataElementVisitor {
 	private final ResultThresholdsLowLevelAbstractionTranslator
 			resultThresholdsLowLevelAbstractionTranslator;
 	private final ResultThresholdsCompoundLowLevelAbstractionTranslator resultThresholdsCompoundLowLevelAbstractionTranslator;
-
+	
 	private Proposition proposition;
 
 	@Inject
