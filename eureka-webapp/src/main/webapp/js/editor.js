@@ -419,7 +419,6 @@ function setPropositionSelects (elem) {
 							desc += ' [' + sourceKey + ']';
 						}
 						var opt = $('<option></option>', {'value': value}).text(desc);
-						console.log(value + ' == ' + $(selectedItem).data('key') + '__' + originalSource);
 						if (value == $(selectedItem).data('key') + '__' + originalSource) {
 							opt.attr('selected','selected');
 						}
