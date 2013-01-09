@@ -79,16 +79,15 @@ public final class FrequencyHighLevelAbstractionTranslator implements
 				element);
 		result.setCreatedFrom(HighLevelAbstraction.CreatedFrom.FREQUENCY);
 
-		Proposition abstractedFrom = propositionDao.getByUserAndKey(element
-				.getUserId(), element.getDataElement().getDataElementKey());
+		Long userId = element.getUserId();
+		String key = element.getDataElement().getDataElementKey();
+		Proposition abstractedFrom = 
+				propositionDao.getByUserAndKey(userId, key);
 		if (abstractedFrom == null) {
 			try {
-				PropositionDefinition propDef = this.finder
-						.find(element.getUserId(),
-						element.getDataElement().getDataElementKey());
+				PropositionDefinition propDef = this.finder.find(userId, key);
 				abstractedFrom =
-						PropositionUtil.toSystemProposition(propDef,
-						element.getUserId());
+						PropositionUtil.toSystemProposition(propDef, userId);
 			} catch (PropositionFindException ex) {
 				throw new DataElementHandlingException(
 						"Could not translate data element "

@@ -79,6 +79,7 @@ public class ResultThresholdsLowLevelAbstractionTranslator implements
 		}
 		
 		ValueThresholdEntity result = new ValueThresholdEntity();
+		
 		result.setInSystem(false);
 
 		PropositionTranslatorUtil.populateCommonPropositionFields(result,
@@ -97,7 +98,8 @@ public class ResultThresholdsLowLevelAbstractionTranslator implements
 		ValueThreshold threshold = element.getValueThresholds().get(0);
 		createAndSetConstraints(result, threshold, valueCompDao);
 
-		Proposition abstractedFrom = propositionDao.getByUserAndKey(element.getUserId(),
+		Proposition abstractedFrom = 
+				propositionDao.getByUserAndKey(element.getUserId(),
 				threshold.getDataElement().getDataElementKey());
 		if (abstractedFrom == null) {
 			try {
@@ -130,8 +132,10 @@ public class ResultThresholdsLowLevelAbstractionTranslator implements
 
 	static void createAndSetConstraints(ValueThresholdEntity abstraction,
 			ValueThreshold threshold, ValueComparatorDao valueCompDao) {
-		SimpleParameterConstraint userConstraint = new SimpleParameterConstraint();
-		SimpleParameterConstraint complementConstraint = new SimpleParameterConstraint();
+		SimpleParameterConstraint userConstraint = 
+				new SimpleParameterConstraint();
+		SimpleParameterConstraint complementConstraint = 
+				new SimpleParameterConstraint();
 
 		if (threshold.getLowerValue() != null
 				&& threshold.getLowerComp() != null) {

@@ -105,13 +105,9 @@ class PropositionTranslatorUtil {
 				userId, dataElement.getDataElementKey());
 		if (proposition == null) {
 			PropositionDefinition definition = inFinder.find(userId, 
-					dataElement.getDataElementKey
-					());
-			SystemElement element = PropositionUtil.toSystemElement(definition, false, 
-					userId, inFinder);
-			SystemPropositionTranslator translator = new 
-					SystemPropositionTranslator(inFinder);
-			proposition = translator.translateFromElement(element);
+					dataElement.getDataElementKey());
+			proposition = PropositionUtil.toSystemProposition(definition, 
+						userId);
 		}
 		ep.setProposition(proposition);
 		if (dataElement.getHasDuration()) {
@@ -130,7 +126,7 @@ class PropositionTranslatorUtil {
 			pc.setPropertyName(dataElement.getProperty());
 			pc.setValue(dataElement.getPropertyValue());
 			ValueComparator vc = new ValueComparator();
-			vc.setName("EQUAL_TO");
+			vc.setName("=");
 			ep.setPropertyConstraint(pc);
 		} else {
 			ep.setPropertyConstraint(null);

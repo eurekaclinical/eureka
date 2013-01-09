@@ -46,6 +46,8 @@ import edu.emory.cci.aiw.cvrg.eureka.services.dao.TimeUnitDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.finder.PropositionFindException;
 import edu.emory.cci.aiw.cvrg.eureka.services.finder.SystemPropositionFinder;
 import edu.emory.cci.aiw.cvrg.eureka.services.util.PropositionUtil;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Translates from sequences (UI data element) to high-level abstractions.
@@ -79,24 +81,30 @@ public class SequenceTranslator implements
 	@Override
 	public HighLevelAbstraction translateFromElement(Sequence element)
 			throws DataElementHandlingException {
+		if (element == null) {
+			throw new IllegalArgumentException("element cannot be null");
+		}
+		Long userId = element.getUserId();
 		HighLevelAbstraction result = new HighLevelAbstraction();
 		PropositionTranslatorUtil.populateCommonPropositionFields(result,
 				element);
 		result.setCreatedFrom(HighLevelAbstraction.CreatedFrom.SEQUENCE);
-
-		List<Proposition> abstractedFrom = new ArrayList<Proposition>();
-		createExtendedProposition(element.getPrimaryDataElement(),
-				element.getUserId());
-		result.setPrimaryProposition(extendedProps.get(element
-				.getPrimaryDataElement().getId()));
+		
+		ExtendedProposition ep = 
+				createExtendedProposition(element.getPrimaryDataElement(), 
+				userId);
+		result.setPrimaryProposition(ep);
+		
 		for (RelatedDataElementField rde : element.getRelatedDataElements()) {
-			createExtendedProposition(rde.getDataElementField(),
-					element.getUserId());
-			abstractedFrom.add(getOrCreateProposition(element.getUserId(), 
-					rde.getDataElementField()
-					.getDataElementKey()));
+			createExtendedProposition(rde.getDataElementField(), userId);
+		}
+		
+		List<Proposition> abstractedFrom = new ArrayList<Proposition>();
+		for (ExtendedProposition extendedProp : this.extendedProps.values()) {
+			abstractedFrom.add(extendedProp.getProposition());
 		}
 		result.setAbstractedFrom(abstractedFrom);
+		
 		List<Relation> relations = new ArrayList<Relation>();
 		for (RelatedDataElementField rde : element.getRelatedDataElements()) {
 			relations.add(createRelation(rde));
@@ -137,44 +145,40 @@ public class SequenceTranslator implements
 		return proposition;
 	}
 
-	private void createExtendedProposition(DataElementField dataElement,
-			Long userId) throws DataElementHandlingException {
-		if (!this.extendedProps.containsKey(dataElement.getId())) {
+	private ExtendedProposition createExtendedProposition(
+			DataElementField dataElement, Long userId) 
+			throws DataElementHandlingException {
+		ExtendedProposition result = 
+				this.extendedProps.get(dataElement.getId());
+		if (result == null) {
 			ExtendedProposition ep = new ExtendedProposition();
-			Proposition proposition = this.propositionDao.getByUserAndKey(
-					userId, dataElement.getDataElementKey());
-			if (proposition == null) {
-				try {
-				SystemElement element = PropositionUtil.toSystemElement(
-						this.finder.find(
-								userId, dataElement.getDataElementKey()), 
-						true, userId, this.finder);
-				SystemPropositionTranslator translator = new SystemPropositionTranslator(finder);
-				proposition = translator.translateFromElement(element);
-				} catch (PropositionFindException ex) {
-					throw new DataElementHandlingException(
-							"Could not translate data element " + 
-							dataElement.getDataElementKey(), ex);
-				}
-			}
+			Proposition proposition = 
+					getOrCreateProposition(userId, 
+					dataElement.getDataElementKey());
 			ep.setProposition(proposition);
 			if (dataElement.getHasDuration()) {
 				ep.setMinDuration(dataElement.getMinDuration());
-				ep.setMinDurationTimeUnit(this.timeUnitDao.retrieve(dataElement.getMinDurationUnits()));
+				ep.setMinDurationTimeUnit(
+						this.timeUnitDao.retrieve(
+						dataElement.getMinDurationUnits()));
 				ep.setMaxDuration(dataElement.getMaxDuration());
-				ep.setMaxDurationTimeUnit(this.timeUnitDao.retrieve(dataElement.getMaxDurationUnits()));
+				ep.setMaxDurationTimeUnit(
+						this.timeUnitDao.retrieve(
+						dataElement.getMaxDurationUnits()));
 			}
 			if (dataElement.getHasPropertyConstraint()) {
 				PropertyConstraint pc = new PropertyConstraint();
 				pc.setPropertyName(dataElement.getProperty());
 				pc.setValue(dataElement.getPropertyValue());
 				ValueComparator vc = new ValueComparator();
-				vc.setName("EQUAL_TO");
+				vc.setName("=");
 				ep.setPropertyConstraint(pc);
 			}
 
 			this.extendedProps.put(dataElement.getId(), ep);
+			result = ep;
 		}
+		return result;
 	}
 
 	private Relation createRelation(
