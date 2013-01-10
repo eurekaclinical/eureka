@@ -37,6 +37,7 @@ import edu.emory.cci.aiw.cvrg.eureka.services.dao.ThresholdsOperatorDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.TimeUnitDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.ValueComparatorDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.finder.SystemPropositionFinder;
+import javax.ws.rs.core.Response;
 
 /**
  *
@@ -82,9 +83,10 @@ public class ResultThresholdsLowLevelAbstractionTranslator implements
 			result.setName(elementName);
 		} else {
 			throw new DataElementHandlingException(
+					Response.Status.PRECONDITION_FAILED,
 					"Could not translate data element "
 					+ element.getKey()
-					+ ": no name was specified");
+					+ ": no threshold name was specified");
 		}
 		// low-level abstractions created from results thresholds are based on
 		// only one element
@@ -101,6 +103,7 @@ public class ResultThresholdsLowLevelAbstractionTranslator implements
 					thresholdsOpDao.retrieve(thresholdsOpId));
 		} else {
 			throw new DataElementHandlingException(
+					Response.Status.PRECONDITION_FAILED,
 					"Could not translate data element "
 					+ element.getKey()
 					+ ": no thresholds operator was specified");

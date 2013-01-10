@@ -34,6 +34,7 @@ import javax.persistence.UniqueConstraint;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import com.sun.xml.bind.CycleRecoverable;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.Categorization.CategorizationType;
 import javax.persistence.Temporal;
 import org.apache.commons.lang.builder.ToStringBuilder;
 
@@ -101,9 +102,15 @@ public abstract class Proposition implements CycleRecoverable,
 	 * concept.
 	 */
 	private boolean helperProposition;
-
+	private final CategorizationType categorizationType;
+	
 	protected Proposition() {
-		helperProposition = false;
+		this(null);
+	}
+
+	protected Proposition(CategorizationType categorizationType) {
+		this.helperProposition = false;
+		this.categorizationType = categorizationType;
 	}
 	
 	/**
@@ -283,6 +290,10 @@ public abstract class Proposition implements CycleRecoverable,
 	@Override
 	public Object onCycleDetected(Context context) {
 		return null;
+	}
+	
+	public CategorizationType categorizationType() {
+		return this.categorizationType;
 	}
 
 	@Override

@@ -56,6 +56,10 @@ public class Categorization extends Proposition {
 	@Enumerated(EnumType.STRING)
 	@Column(nullable = false)
 	private CategorizationType categorizationType;
+	
+	public Categorization() {
+		super(CategorizationType.EVENT);
+	}
 
 	public List<Proposition> getInverseIsA() {
 		return inverseIsA;

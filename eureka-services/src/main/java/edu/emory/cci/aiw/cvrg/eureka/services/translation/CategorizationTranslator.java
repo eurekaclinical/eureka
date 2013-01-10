@@ -31,7 +31,10 @@ import edu.emory.cci.aiw.cvrg.eureka.services.dao.PropositionDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.finder.SystemPropositionFinder;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import javax.ws.rs.core.Response;
 
 /**
  * Translates categorical data elements (UI element) into categorization
@@ -58,58 +61,66 @@ public final class CategorizationTranslator implements
 			FrequencyHighLevelAbstractionTranslator inFrequencyHighLevelAbstractionTranslator,
 			ResultThresholdsLowLevelAbstractionTranslator inResultThresholdsLowLevelAbstractionTranslator,
 			ResultThresholdsCompoundLowLevelAbstractionTranslator inResultThresholdsCompoundLowLevelAbstractionTranslator) {
-		this.translatorSupport = 
+		this.translatorSupport =
 				new TranslatorSupport(inPropositionDao, inFinder);
 		this.sequenceTranslator = inSequenceTranslator;
 		this.systemPropositionTranslator = inSystemPropositionTranslator;
 		this.frequencySliceTranslator = inFrequencySliceTranslator;
-		this.frequencyHighLevelAbstractionTranslator = 
+		this.frequencyHighLevelAbstractionTranslator =
 				inFrequencyHighLevelAbstractionTranslator;
 		this.resultThresholdsLowLevelAbstractionTranslator =
 				inResultThresholdsLowLevelAbstractionTranslator;
-		this.resultThresholdsCompoundLowLevelAbstractionTranslator = 
+		this.resultThresholdsCompoundLowLevelAbstractionTranslator =
 				inResultThresholdsCompoundLowLevelAbstractionTranslator;
 	}
 
 	@Override
 	public Categorization translateFromElement(Category element)
 			throws DataElementHandlingException {
-		Categorization result = 
-				this.translatorSupport.getUserEntityInstance(element, 
+		Categorization result =
+				this.translatorSupport.getUserEntityInstance(element,
 				Categorization.class);
 
 		List<Proposition> inverseIsA = new ArrayList<Proposition>();
-		for (DataElement de : element.getChildren()) {
-			Proposition proposition = 
-					this.translatorSupport.getSystemEntityInstance(
-					element.getUserId(), de.getKey());
-			inverseIsA.add(proposition);
+		if (element.getChildren() != null) {
+			for (DataElement de : element.getChildren()) {
+				Proposition proposition =
+						this.translatorSupport.getSystemEntityInstance(
+						element.getUserId(), de.getKey());
+				inverseIsA.add(proposition);
+			}
 		}
 		result.setInverseIsA(inverseIsA);
-		result.setCategorizationType(checkPropositionType(element));
+		result.setCategorizationType(checkPropositionType(element, inverseIsA));
 
 		return result;
 	}
 
-	private CategorizationType checkPropositionType(Category element) {
-		switch (element.getCategoricalType()) {
-			case LOW_LEVEL_ABSTRACTION:
-				return CategorizationType.LOW_LEVEL_ABSTRACTION;
-			case HIGH_LEVEL_ABSTRACTION:
-				return CategorizationType.HIGH_LEVEL_ABSTRACTION;
-			case SLICE_ABSTRACTION:
-				return CategorizationType.SLICE_ABSTRACTION;
-			case CONSTANT:
-				return CategorizationType.CONSTANT;
-			case EVENT:
-				return CategorizationType.EVENT;
-			case PRIMITIVE_PARAMETER:
-				return CategorizationType.PRIMITIVE_PARAMETER;
-			case MIXED:
-				return CategorizationType.MIXED;
-			default:
-				return CategorizationType.UNKNOWN;
+	private CategorizationType checkPropositionType(Category element,
+			List<Proposition> inverseIsA)
+			throws DataElementHandlingException {
+		if (inverseIsA.isEmpty()) {
+			throw new DataElementHandlingException(
+					Response.Status.PRECONDITION_FAILED, "Category "
+					+ element.getKey()
+					+ " is invalid because it has no children");
 		}
+		Set<CategorizationType> categorizationTypes =
+				new HashSet<CategorizationType>();
+		for (Proposition dataElement : inverseIsA) {
+			CategorizationType ct = dataElement.categorizationType();//extractType(dataElement);
+			if (categorizationTypes.isEmpty()) {
+				categorizationTypes.add(ct);
+			}
+		}
+		if (categorizationTypes.size() > 1) {
+			throw new DataElementHandlingException(
+					Response.Status.PRECONDITION_FAILED, "Category "
+					+ element.getKey()
+					+ " has children with inconsistent types: "
+					+ categorizationTypes);
+		}
+		return categorizationTypes.iterator().next();
 	}
 
 	@Override
@@ -151,10 +162,9 @@ public final class CategorizationTranslator implements
 				return CategoricalType.EVENT;
 			case PRIMITIVE_PARAMETER:
 				return CategoricalType.PRIMITIVE_PARAMETER;
-			case MIXED:
-				return CategoricalType.MIXED;
 			default:
-				return CategoricalType.UNKNOWN;
+				throw new AssertionError("Invalid category type: "
+						+ proposition.getCategorizationType());
 		}
 	}
 }

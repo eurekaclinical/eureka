@@ -19,25 +19,41 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.common.exception;
 
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
+
 /**
  *
  * @author Andrew Post
  */
 public class DataElementHandlingException extends Exception {
 
-	public DataElementHandlingException() {
+	private Response.Status status;
+
+	public DataElementHandlingException(Response.Status status) {
+		this.status = status;
 	}
 
-	public DataElementHandlingException(String string) {
+	public DataElementHandlingException(Response.Status status, String string) {
 		super(string);
+		this.status = status;
 	}
 
-	public DataElementHandlingException(String string, Throwable thrwbl) {
+	public DataElementHandlingException(Response.Status status, String string, Throwable thrwbl) {
 		super(string, thrwbl);
+		this.status = status;
 	}
 
-	public DataElementHandlingException(Throwable thrwbl) {
+	public DataElementHandlingException(Response.Status status, Throwable thrwbl) {
 		super(thrwbl);
+		this.status = status;
 	}
-	
+
+	public Status getStatus() {
+		if (status == null) {
+			return Response.Status.INTERNAL_SERVER_ERROR;
+		} else {
+			return status;
+		}
+	}
 }

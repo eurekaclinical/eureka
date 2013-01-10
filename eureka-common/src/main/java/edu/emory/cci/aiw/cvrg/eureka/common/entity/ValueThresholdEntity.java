@@ -19,6 +19,7 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.common.entity;
 
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.Categorization.CategorizationType;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -92,6 +93,10 @@ public class ValueThresholdEntity extends Proposition {
 
 	@Column(nullable = false)
 	private CreatedFrom createdFrom;
+	
+	public ValueThresholdEntity() {
+		super(CategorizationType.LOW_LEVEL_ABSTRACTION);
+	}
 
 	public String getName() {
 		return name;

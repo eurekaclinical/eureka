@@ -117,14 +117,13 @@ public class DataElementResource {
 		if (inElement.getUserId() == null) {
 			throw new HttpStatusException(
 					Response.Status.PRECONDITION_FAILED, "Data element to "
-					+ "be created should must have a user identifier.");
+					+ "be created should have a user identifier.");
 		}
 
 		try {
 			inElement.accept(this.dataElementTranslatorVisitor);
 		} catch (DataElementHandlingException ex) {
-			throw new HttpStatusException(
-					Response.Status.INTERNAL_SERVER_ERROR, ex);
+			throw new HttpStatusException(ex.getStatus(), ex);
 		}
 		Proposition proposition = this.dataElementTranslatorVisitor
 				.getProposition();

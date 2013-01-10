@@ -23,6 +23,7 @@ import java.util.List;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.SystemProposition.SystemType;
 import edu.emory.cci.aiw.cvrg.eureka.common.exception.DataElementHandlingException;
+import org.apache.commons.lang.builder.ToStringBuilder;
 
 public final class SystemElement extends DataElement {
 
@@ -77,4 +78,9 @@ public final class SystemElement extends DataElement {
 			throws DataElementHandlingException{
 		visitor.visit(this);
     }
+	
+	@Override
+	public String toString() {
+		return ToStringBuilder.reflectionToString(this);
+	}
 }

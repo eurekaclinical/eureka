@@ -67,7 +67,7 @@ class PropositionTranslatorUtil {
 			pc.setValue(dataElement.getPropertyValue());
 			ValueComparator valComp = valCompDao.getByName("=");
 			if (valComp == null) {
-				throw new DataElementHandlingException("Invalid value comparator: =");
+				throw new AssertionError("Invalid value comparator: =");
 			}
 			pc.setValueComparator(valComp);
 			ep.setPropertyConstraint(pc);

@@ -19,6 +19,7 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.common.entity;
 
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.Categorization.CategorizationType;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -62,6 +63,10 @@ public class HighLevelAbstraction extends Proposition {
 
 	@Column(nullable = false)
 	private CreatedFrom createdFrom;
+	
+	public HighLevelAbstraction() {
+		super(CategorizationType.HIGH_LEVEL_ABSTRACTION);
+	}
 
 	public ExtendedProposition getPrimaryProposition() {
 		return primaryProposition;

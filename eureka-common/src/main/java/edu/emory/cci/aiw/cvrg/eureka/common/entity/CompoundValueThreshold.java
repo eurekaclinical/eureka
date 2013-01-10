@@ -19,6 +19,7 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.common.entity;
 
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.Categorization.CategorizationType;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -72,6 +73,10 @@ public class CompoundValueThreshold extends Proposition {
 	@JoinTable(name = "cvt_abstracted_from", joinColumns = {@JoinColumn(name =
 			"target_proposition_id")})
 	private List<ValueThresholdEntity> abstractedFrom;
+	
+	public CompoundValueThreshold() {
+		super(CategorizationType.LOW_LEVEL_ABSTRACTION);
+	}
 
 	public Integer getMinimumNumberOfValues() {
 		return minimumNumberOfValues;

@@ -19,6 +19,7 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.common.entity;
 
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.Categorization.CategorizationType;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -52,6 +53,10 @@ public class SliceAbstraction extends Proposition {
 
 	@OneToOne(cascade = CascadeType.ALL)
 	private ExtendedProposition extendedProposition;
+	
+	public SliceAbstraction() {
+		super(CategorizationType.SLICE_ABSTRACTION);
+	}
 
 	public Integer getMinIndex() {
 		return minIndex;

@@ -33,6 +33,7 @@ import edu.emory.cci.aiw.cvrg.eureka.services.dao.TimeUnitDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.ValueComparatorDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.finder.PropositionFindException;
 import edu.emory.cci.aiw.cvrg.eureka.services.finder.SystemPropositionFinder;
+import javax.ws.rs.core.Response;
 
 public final class FrequencySliceTranslator implements
         PropositionTranslator<Frequency, SliceAbstraction> {
@@ -70,8 +71,9 @@ public final class FrequencySliceTranslator implements
 					        timeUnitDao, translatorSupport,
 							valueComparatorDao));
 		} catch (PropositionFindException e) {
-			throw new DataElementHandlingException("Frequency contains an " +
-					"unknown data element", e);
+			throw new DataElementHandlingException(
+					Response.Status.PRECONDITION_FAILED, 
+					"Frequency contains an unknown data element", e);
 		}
 		result.setInSystem(false);
 		

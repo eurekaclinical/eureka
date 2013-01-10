@@ -9,7 +9,7 @@
  * You may obtain a copy of the License at
  * 
  *      http://www.apache.org/licenses/LICENSE-2.0
-z * 
+ z * 
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -19,6 +19,7 @@ z *
  */
 package edu.emory.cci.aiw.cvrg.eureka.common.entity;
 
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.Categorization.CategorizationType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -30,13 +31,13 @@ import javax.persistence.Table;
 public class SystemProposition extends Proposition {
 
 	public enum SystemType {
+
 		CONSTANT, EVENT, PRIMITIVE_PARAMETER, LOW_LEVEL_ABSTRACTION,
 		COMPOUND_LOW_LEVEL_ABSTRACTION, HIGH_LEVEL_ABSTRACTION,
 		SLICE_ABSTRACTION
 	}
-
 	@Enumerated(EnumType.STRING)
-	/*@Column(nullable = false)*/
+	@Column(nullable = false)
 	private SystemType systemType;
 
 	public SystemType getSystemType() {
@@ -55,5 +56,30 @@ public class SystemProposition extends Proposition {
 	@Override
 	public boolean isInSystem() {
 		return true;
+	}
+
+	@Override
+	public CategorizationType categorizationType() {
+		if (systemType != null) {
+			switch (systemType) {
+				case HIGH_LEVEL_ABSTRACTION:
+					return CategorizationType.HIGH_LEVEL_ABSTRACTION;
+				case CONSTANT:
+					return CategorizationType.CONSTANT;
+				case EVENT:
+					return CategorizationType.EVENT;
+				case PRIMITIVE_PARAMETER:
+					return CategorizationType.PRIMITIVE_PARAMETER;
+				case LOW_LEVEL_ABSTRACTION:
+					return CategorizationType.LOW_LEVEL_ABSTRACTION;
+				case SLICE_ABSTRACTION:
+					return CategorizationType.SLICE_ABSTRACTION;
+				default:
+					throw new AssertionError(
+							"Invalid system type: " + systemType);
+			}
+		} else {
+			return null;
+		}
 	}
 }
