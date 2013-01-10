@@ -24,30 +24,23 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.protempa.PropositionDefinition;
 
 import com.google.inject.Inject;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.DataElementField;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.Sequence;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.Sequence.RelatedDataElementField;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.SystemElement;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.ExtendedProposition;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.HighLevelAbstraction;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.PropertyConstraint;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.Proposition;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.Relation;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.RelationOperator;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.ValueComparator;
 import edu.emory.cci.aiw.cvrg.eureka.common.exception.DataElementHandlingException;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.PropositionDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.RelationOperatorDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.TimeUnitDao;
-import edu.emory.cci.aiw.cvrg.eureka.services.finder.PropositionFindException;
+import edu.emory.cci.aiw.cvrg.eureka.services.dao.ValueComparatorDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.finder.SystemPropositionFinder;
-import edu.emory.cci.aiw.cvrg.eureka.services.util.PropositionUtil;
-import java.util.HashSet;
-import java.util.Set;
 
 /**
  * Translates from sequences (UI data element) to high-level abstractions.
@@ -58,24 +51,23 @@ public class SequenceTranslator implements
 
 	private Map<Long, ExtendedProposition> extendedProps;
 	private final Map<String, Proposition> propositions;
-	private final PropositionDao propositionDao;
 	private final TimeUnitDao timeUnitDao;
 	private final RelationOperatorDao relationOperatorDao;
-	private final SystemPropositionFinder finder;
-	private final SystemPropositionTranslator systemPropositionTranslator;
+	private final TranslatorSupport translatorSupport;
+	private final ValueComparatorDao valueComparatorDao;
 
 	@Inject
-	public SequenceTranslator(PropositionDao inInPropositionDao,
+	public SequenceTranslator(PropositionDao inPropositionDao,
 			TimeUnitDao inTimeUnitDao, RelationOperatorDao inRelationOperatorDao,
-			SystemPropositionFinder inFinder, SystemPropositionTranslator 
-			inTranslator) {
-		this.propositionDao = inInPropositionDao;
+			SystemPropositionFinder inFinder,
+			ValueComparatorDao inValueComparatorDao) {
+		this.translatorSupport =
+				new TranslatorSupport(inPropositionDao, inFinder);
 		this.timeUnitDao = inTimeUnitDao;
 		this.relationOperatorDao = inRelationOperatorDao;
-		this.finder = inFinder;
-		this.systemPropositionTranslator = inTranslator;
 		this.extendedProps = new HashMap<Long, ExtendedProposition>();
 		this.propositions = new HashMap<String, Proposition>();
+		this.valueComparatorDao = inValueComparatorDao;
 	}
 
 	@Override
@@ -85,31 +77,71 @@ public class SequenceTranslator implements
 			throw new IllegalArgumentException("element cannot be null");
 		}
 		Long userId = element.getUserId();
-		HighLevelAbstraction result = new HighLevelAbstraction();
-		PropositionTranslatorUtil.populateCommonPropositionFields(result,
-				element);
+		HighLevelAbstraction result =
+				this.translatorSupport.getUserEntityInstance(element,
+				HighLevelAbstraction.class);
 		result.setCreatedFrom(HighLevelAbstraction.CreatedFrom.SEQUENCE);
-		
-		ExtendedProposition ep = 
-				createExtendedProposition(element.getPrimaryDataElement(), 
-				userId);
+
+		ExtendedProposition ep =
+				createExtendedProposition(result.getPrimaryProposition(),
+				element.getPrimaryDataElement(), userId);
 		result.setPrimaryProposition(ep);
-		
-		for (RelatedDataElementField rde : element.getRelatedDataElements()) {
-			createExtendedProposition(rde.getDataElementField(), userId);
+
+		List<Relation> relations = result.getRelations();
+		if (relations == null) {
+			relations = new ArrayList<Relation>();
+			result.setRelations(relations);
 		}
-		
+
+		int i = 0;
+		for (RelatedDataElementField rde : element.getRelatedDataElements()) {
+			ExtendedProposition lhsEP;
+			ExtendedProposition rhsEP;
+			Relation relation;
+			if (relations.size() > i) {
+				relation = relations.get(i);
+				lhsEP = relation.getLhsExtendedProposition();
+				rhsEP = relation.getRhsExtendedProposition();
+			} else {
+				relation = new Relation();
+				lhsEP = null;
+				rhsEP = null;
+				relations.add(relation);
+			}
+			
+			lhsEP = createExtendedProposition(lhsEP,
+					rde.getDataElementField(), userId);
+			rhsEP = createExtendedProposition(rhsEP,
+					rde.getDataElementField(), userId);
+			
+			RelationOperator relationOperator = 
+					this.relationOperatorDao.retrieve(
+					rde.getRelationOperator());
+
+			relation.setMinf1s2(rde.getRelationMinCount());
+			relation.setMinf1s2TimeUnit(
+					this.timeUnitDao.retrieve(rde.getRelationMinUnits()));
+			relation.setMaxf1s2(rde.getRelationMaxCount());
+			relation.setMaxf1s2TimeUnit(
+					this.timeUnitDao.retrieve(rde.getRelationMaxUnits()));
+			relation.setOp(relationOperator);
+
+			if (relationOperator.getName().equalsIgnoreCase("before")) {
+				relation.setLhsExtendedProposition(lhsEP);
+				relation.setRhsExtendedProposition(rhsEP);
+			} else if (relationOperator.getName().equalsIgnoreCase("after")) {
+				relation.setLhsExtendedProposition(rhsEP);
+				relation.setRhsExtendedProposition(lhsEP);
+			}
+			
+			i++;
+		}
+
 		List<Proposition> abstractedFrom = new ArrayList<Proposition>();
 		for (ExtendedProposition extendedProp : this.extendedProps.values()) {
 			abstractedFrom.add(extendedProp.getProposition());
 		}
 		result.setAbstractedFrom(abstractedFrom);
-		
-		List<Relation> relations = new ArrayList<Relation>();
-		for (RelatedDataElementField rde : element.getRelatedDataElements()) {
-			relations.add(createRelation(rde));
-		}
-		result.setRelations(relations);
 
 		return result;
 	}
@@ -126,88 +158,34 @@ public class SequenceTranslator implements
 
 		// next we try to fetch it from the database
 		if (proposition == null) {
-			proposition = propositionDao.getByUserAndKey(userId, key);
-			this.propositions.put(key, proposition);
+			proposition =
+					this.translatorSupport.getSystemEntityInstance(userId, key);
 		}
 
-		// finally, we try to fetch it from the ontology
-		if (proposition == null) {
-			try {
-				PropositionDefinition propDef = finder.find(userId, key);
-				proposition = PropositionUtil.toSystemProposition(
-						propDef, userId);
-				this.propositions.put(key, proposition);
-			} catch (PropositionFindException ex) {
-				throw new DataElementHandlingException(
-						"Could not translate child " + key, ex);
-			}
-		}
 		return proposition;
 	}
 
 	private ExtendedProposition createExtendedProposition(
-			DataElementField dataElement, Long userId) 
+			ExtendedProposition origExtendedProposition,
+			DataElementField dataElement, Long userId)
 			throws DataElementHandlingException {
-		ExtendedProposition result = 
+		ExtendedProposition result =
 				this.extendedProps.get(dataElement.getId());
 		if (result == null) {
-			ExtendedProposition ep = new ExtendedProposition();
-			Proposition proposition = 
-					getOrCreateProposition(userId, 
+			ExtendedProposition ep = origExtendedProposition;
+			if (origExtendedProposition == null) {
+				ep = new ExtendedProposition();
+			}
+			Proposition proposition =
+					getOrCreateProposition(userId,
 					dataElement.getDataElementKey());
-			ep.setProposition(proposition);
-			if (dataElement.getHasDuration()) {
-				ep.setMinDuration(dataElement.getMinDuration());
-				ep.setMinDurationTimeUnit(
-						this.timeUnitDao.retrieve(
-						dataElement.getMinDurationUnits()));
-				ep.setMaxDuration(dataElement.getMaxDuration());
-				ep.setMaxDurationTimeUnit(
-						this.timeUnitDao.retrieve(
-						dataElement.getMaxDurationUnits()));
-			}
-			if (dataElement.getHasPropertyConstraint()) {
-				PropertyConstraint pc = new PropertyConstraint();
-				pc.setPropertyName(dataElement.getProperty());
-				pc.setValue(dataElement.getPropertyValue());
-				ValueComparator vc = new ValueComparator();
-				vc.setName("=");
-				ep.setPropertyConstraint(pc);
-			}
+			PropositionTranslatorUtil.populateExtendedProposition(ep,
+					proposition, dataElement, timeUnitDao, valueComparatorDao);
 
 			this.extendedProps.put(dataElement.getId(), ep);
 			result = ep;
 		}
 		return result;
-	}
-
-	private Relation createRelation(
-			RelatedDataElementField relatedDataElementField) {
-		Relation rel = new Relation();
-
-		ExtendedProposition dataElement = this.extendedProps
-				.get(relatedDataElementField.getDataElementField()
-				.getId());
-		ExtendedProposition relatedDataElement = this.extendedProps
-				.get(relatedDataElementField.getSequentialDataElementSource());
-
-		RelationOperator relationOperator = this.relationOperatorDao.retrieve(relatedDataElementField.getRelationOperator());
-
-		rel.setMinf1s2(relatedDataElementField.getRelationMinCount());
-		rel.setMinf1s2TimeUnit(this.timeUnitDao.retrieve(relatedDataElementField.getRelationMinUnits()));
-		rel.setMaxf1s2(relatedDataElementField.getRelationMaxCount());
-		rel.setMaxf1s2TimeUnit(this.timeUnitDao.retrieve(relatedDataElementField.getRelationMaxUnits()));
-		rel.setOp(relationOperator);
-
-		if (relationOperator.getName().equalsIgnoreCase("before")) {
-			rel.setLhsExtendedProposition(dataElement);
-			rel.setRhsExtendedProposition(relatedDataElement);
-		} else if (relationOperator.getName().equalsIgnoreCase("after")) {
-			rel.setLhsExtendedProposition(relatedDataElement);
-			rel.setRhsExtendedProposition(dataElement);
-		}
-
-		return rel;
 	}
 
 	@Override
@@ -220,7 +198,7 @@ public class SequenceTranslator implements
 			// identify the primary data element
 			result.setPrimaryDataElement(createDataElementField(proposition
 					.getPrimaryProposition()));
-			
+
 			// determine the correct source for each sequential data element
 			Map<Long, Long> sequentialSources = new HashMap<Long, Long>();
 			for (Relation relation : proposition.getRelations()) {
@@ -239,12 +217,14 @@ public class SequenceTranslator implements
 				}
 			}
 
-			List<RelatedDataElementField> relatedFields = new ArrayList<Sequence.RelatedDataElementField>();
+			List<RelatedDataElementField> relatedFields = 
+					new ArrayList<Sequence.RelatedDataElementField>();
 			for (Relation relation : proposition.getRelations()) {
-				RelatedDataElementField field = createRelatedDataElementField
-						(relation);
-				field.setSequentialDataElementSource(sequentialSources.get
-						(relation.getRhsExtendedProposition().getId()));
+				RelatedDataElementField field = 
+						createRelatedDataElementField(relation);
+				field.setSequentialDataElementSource(
+						sequentialSources.get(
+						relation.getRhsExtendedProposition().getId()));
 				relatedFields.add(field);
 			}
 			result.setRelatedDataElements(relatedFields);
@@ -255,7 +235,8 @@ public class SequenceTranslator implements
 
 	private RelatedDataElementField createRelatedDataElementField(
 			Relation relation) {
-		RelatedDataElementField relatedDataElement = new RelatedDataElementField();
+		RelatedDataElementField relatedDataElement = 
+				new RelatedDataElementField();
 
 		relatedDataElement.setRelationMinCount(relation.getMinf1s2());
 		relatedDataElement.setRelationMinUnits(relation.getMinf1s2TimeUnit()

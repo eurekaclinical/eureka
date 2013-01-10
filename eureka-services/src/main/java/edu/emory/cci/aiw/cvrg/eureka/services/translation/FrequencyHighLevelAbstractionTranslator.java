@@ -42,12 +42,7 @@ import edu.emory.cci.aiw.cvrg.eureka.common.entity.ValueThresholdEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.exception.DataElementHandlingException;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.PropositionDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.TimeUnitDao;
-import edu.emory.cci.aiw.cvrg.eureka.services.finder.PropositionFindException;
 import edu.emory.cci.aiw.cvrg.eureka.services.finder.SystemPropositionFinder;
-import edu.emory.cci.aiw.cvrg.eureka.services.util.PropositionUtil;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import org.protempa.PropositionDefinition;
 
 public final class FrequencyHighLevelAbstractionTranslator implements
 		PropositionTranslator<Frequency, HighLevelAbstraction> {
@@ -55,8 +50,7 @@ public final class FrequencyHighLevelAbstractionTranslator implements
 	private static final String INTERMEDIATE_SUFFIX = "_FREQUENCY";
 	private final PropositionDao propositionDao;
 	private final TimeUnitDao timeUnitDao;
-	private Long userId;
-	private final SystemPropositionFinder finder;
+	private final TranslatorSupport translatorSupport;
 
 	@Inject
 	public FrequencyHighLevelAbstractionTranslator(
@@ -64,39 +58,24 @@ public final class FrequencyHighLevelAbstractionTranslator implements
 			PropositionDao inPropositionDao, TimeUnitDao inTimeUnitDao) {
 		propositionDao = inPropositionDao;
 		timeUnitDao = inTimeUnitDao;
-		finder = inFinder;
-	}
-
-	public void setUserId(Long inUserId) {
-		this.userId = inUserId;
+		translatorSupport = new TranslatorSupport(inPropositionDao, inFinder);
 	}
 
 	@Override
 	public HighLevelAbstraction translateFromElement(Frequency element)
 			throws DataElementHandlingException {
-		HighLevelAbstraction result = new HighLevelAbstraction();
-		PropositionTranslatorUtil.populateCommonPropositionFields(result,
-				element);
+		HighLevelAbstraction result = 
+				this.translatorSupport.getUserEntityInstance(element, 
+				HighLevelAbstraction.class);
 		result.setCreatedFrom(HighLevelAbstraction.CreatedFrom.FREQUENCY);
 
-		Long userId = element.getUserId();
-		String key = element.getDataElement().getDataElementKey();
 		Proposition abstractedFrom = 
-				propositionDao.getByUserAndKey(userId, key);
-		if (abstractedFrom == null) {
-			try {
-				PropositionDefinition propDef = this.finder.find(userId, key);
-				abstractedFrom =
-						PropositionUtil.toSystemProposition(propDef, userId);
-			} catch (PropositionFindException ex) {
-				throw new DataElementHandlingException(
-						"Could not translate data element "
-						+ element.getKey(), ex);
-			}
-		}
+				this.translatorSupport.getSystemEntityInstance(
+				element.getUserId(), 
+				element.getDataElement().getDataElementKey());
 
-		IntermediateAbstractionGenerator iag = new IntermediateAbstractionGenerator(
-				element);
+		IntermediateAbstractionGenerator iag = 
+				new IntermediateAbstractionGenerator(element);
 		abstractedFrom.accept(iag);
 		result.setRelations(Collections
 				.singletonList(relationFromEP(epFromAbstraction(
@@ -176,8 +155,6 @@ public final class FrequencyHighLevelAbstractionTranslator implements
 			result.setUserConstraint(SimpleParameterConstraint.newInstance(original.getUserConstraint()));
 			result.setComplementConstraint(SimpleParameterConstraint.newInstance(original.getComplementConstraint()));
 			result.setCreatedFrom(ValueThresholdEntity.CreatedFrom.FREQUENCY);
-			result.setThresholdsOperator(original.getThresholdsOperator());
-			result.setName(original.getName());
 			result.setThresholdsOperator(original.getThresholdsOperator());
 			result.setName(original.getName());
 

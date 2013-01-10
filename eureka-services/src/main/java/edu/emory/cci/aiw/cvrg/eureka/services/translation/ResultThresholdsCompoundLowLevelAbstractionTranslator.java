@@ -26,23 +26,19 @@ import java.util.List;
 import com.google.inject.Inject;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.ShortDataElementField;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.SystemElement;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.ValueThreshold;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.ValueThresholds;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.CompoundValueThreshold;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.CompoundValueThreshold.CreatedFrom;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.Proposition;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.SimpleParameterConstraint;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.ThresholdsOperator;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.ValueThresholdEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.exception.DataElementHandlingException;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.PropositionDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.ThresholdsOperatorDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.TimeUnitDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.ValueComparatorDao;
-import edu.emory.cci.aiw.cvrg.eureka.services.finder.PropositionFindException;
 import edu.emory.cci.aiw.cvrg.eureka.services.finder.SystemPropositionFinder;
-import edu.emory.cci.aiw.cvrg.eureka.services.util.PropositionUtil;
 
 public final class ResultThresholdsCompoundLowLevelAbstractionTranslator
         implements
@@ -52,11 +48,11 @@ public final class ResultThresholdsCompoundLowLevelAbstractionTranslator
 	public static final String COMP_DEF_SUFFIX = "_COMP";
 
 	private Long userId;
+	private final TranslatorSupport translatorSupport;
 	private final PropositionDao propositionDao;
 	private final TimeUnitDao timeUnitDao;
 	private final ValueComparatorDao valueCompDao;
 	private final ThresholdsOperatorDao thresholdsOperatorDao;
-	private final SystemPropositionFinder finder;
 
 	@Inject
 	public ResultThresholdsCompoundLowLevelAbstractionTranslator(
@@ -64,12 +60,11 @@ public final class ResultThresholdsCompoundLowLevelAbstractionTranslator
 	        ValueComparatorDao inValueComparatorDao,
 	        ThresholdsOperatorDao inThresholdsOperatorDao,
 	        SystemPropositionFinder inFinder) {
-
+		translatorSupport = new TranslatorSupport(inPropositionDao, inFinder);
 		propositionDao = inPropositionDao;
 		timeUnitDao = inTimeUnitDao;
 		valueCompDao = inValueComparatorDao;
 		thresholdsOperatorDao = inThresholdsOperatorDao;
-		finder = inFinder;
 	}
 
 	public void setUserId(Long inUserId) {
@@ -79,12 +74,12 @@ public final class ResultThresholdsCompoundLowLevelAbstractionTranslator
 	@Override
 	public CompoundValueThreshold translateFromElement(ValueThresholds element)
 	        throws DataElementHandlingException {
-		CompoundValueThreshold result = new CompoundValueThreshold();
-		result.setInSystem(false);
-
-		PropositionTranslatorUtil.populateCommonPropositionFields(result,
-		        element);
-		List<ValueThresholdEntity> abstractedFrom = new ArrayList<ValueThresholdEntity>();
+		CompoundValueThreshold result = 
+				translatorSupport.getUserEntityInstance(element, 
+				CompoundValueThreshold.class);
+		
+		List<ValueThresholdEntity> abstractedFrom = 
+				new ArrayList<ValueThresholdEntity>();
 
 		result.setUserValueDefinitionName(element.getName());
 		result.setComplementValueDefinitionName(element.getName()
@@ -93,7 +88,7 @@ public final class ResultThresholdsCompoundLowLevelAbstractionTranslator
 		result.setThresholdsOperator(thresholdsOperatorDao.retrieve(element
 		        .getThresholdsOperator()));
 		for (ValueThreshold vt : element.getValueThresholds()) {
-			abstractedFrom.add(createIntermediateAbstraction(vt));
+			abstractedFrom.add(createIntermediateAbstraction(element.getUserId(), vt));
 		}
 
 		result.setAbstractedFrom(abstractedFrom);
@@ -103,7 +98,8 @@ public final class ResultThresholdsCompoundLowLevelAbstractionTranslator
 	}
 
 	private ValueThresholdEntity createIntermediateAbstraction(
-	        ValueThreshold threshold) throws DataElementHandlingException {
+	        Long userId, ValueThreshold threshold) 
+			throws DataElementHandlingException {
 		ValueThresholdEntity result = new ValueThresholdEntity();
 		Date now = new Date();
 		result.setDisplayName(threshold.getDataElement().getDataElementKey()
@@ -118,23 +114,9 @@ public final class ResultThresholdsCompoundLowLevelAbstractionTranslator
 		result.setThresholdsOperator(thresholdsOperatorDao.getByName("any"));
 		result.setName(result.getKey());
 
-		Proposition abstractedFrom = propositionDao.getByUserAndKey(userId,
-		        threshold.getDataElement().getDataElementKey());
-		if (abstractedFrom == null) {
-			try {
-				SystemElement element = PropositionUtil.toSystemElement(
-				        this.finder.find(userId, threshold.getDataElement()
-				                .getDataElementKey()), true, userId,
-				        this.finder);
-				SystemPropositionTranslator translator = new SystemPropositionTranslator(finder);
-				abstractedFrom = translator.translateFromElement(element);
-			} catch (PropositionFindException ex) {
-				throw new DataElementHandlingException(
-				        "Could not translate data element "
-				                + threshold.getDataElement()
-				                        .getDataElementKey(), ex);
-			}
-		}
+		Proposition abstractedFrom = 
+				translatorSupport.getSystemEntityInstance(userId, 
+				threshold.getDataElement().getDataElementKey());
 
 		result.setAbstractedFrom(abstractedFrom);
 

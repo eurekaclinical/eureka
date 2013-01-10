@@ -36,11 +36,7 @@ import edu.emory.cci.aiw.cvrg.eureka.services.dao.PropositionDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.ThresholdsOperatorDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.TimeUnitDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.ValueComparatorDao;
-import edu.emory.cci.aiw.cvrg.eureka.services.finder.PropositionFindException;
 import edu.emory.cci.aiw.cvrg.eureka.services.finder.SystemPropositionFinder;
-import edu.emory.cci.aiw.cvrg.eureka.services.util.PropositionUtil;
-import java.util.Date;
-import org.protempa.PropositionDefinition;
 
 /**
  *
@@ -49,11 +45,10 @@ public class ResultThresholdsLowLevelAbstractionTranslator implements
 		PropositionTranslator<ValueThresholds, ValueThresholdEntity> {
 
 	private Long userId;
-	private final PropositionDao propositionDao;
+	private final TranslatorSupport translatorSupport;
 	private final TimeUnitDao timeUnitDao;
 	private final ValueComparatorDao valueCompDao;
 	private final ThresholdsOperatorDao thresholdsOpDao;
-	private final SystemPropositionFinder finder;
 
 	@Inject
 	public ResultThresholdsLowLevelAbstractionTranslator(
@@ -61,11 +56,10 @@ public class ResultThresholdsLowLevelAbstractionTranslator implements
 			ValueComparatorDao inValueComparatorDao,
 			ThresholdsOperatorDao thresholdsOperatorDao,
 			SystemPropositionFinder inFinder) {
-		propositionDao = inPropositionDao;
+		translatorSupport = new TranslatorSupport(inPropositionDao, inFinder);
 		timeUnitDao = inTimeUnitDao;
 		valueCompDao = inValueComparatorDao;
 		thresholdsOpDao = thresholdsOperatorDao;
-		finder = inFinder;
 	}
 
 	public void setUserId(Long inUserId) {
@@ -79,37 +73,17 @@ public class ResultThresholdsLowLevelAbstractionTranslator implements
 			throw new IllegalArgumentException("element cannot be null");
 		}
 		
-		String key;
-		if (element.getKey() != null) {
-			key = element.getKey();
-		} else {
-			key = element.getAbbrevDisplayName();
-		}
+		ValueThresholdEntity result = 
+				translatorSupport.getUserEntityInstance(element, 
+				ValueThresholdEntity.class);
 		
-		Date now = new Date();
-
-		ValueThresholdEntity result;
-		Proposition oldEntity = propositionDao.getByUserAndKey(
-				element.getUserId(), key);
-		if (oldEntity instanceof ValueThresholdEntity) {
-			result = (ValueThresholdEntity) oldEntity;
-		} else {
-			result = new ValueThresholdEntity();
-			result.setCreated(now);
-		}
-
-		result.setInSystem(false);
-		result.setLastModified(now);
-
-		PropositionTranslatorUtil.populateCommonPropositionFields(result,
-				element);
 		String elementName = element.getName();
 		if (elementName != null) {
 			result.setName(elementName);
 		} else {
 			throw new DataElementHandlingException(
 					"Could not translate data element "
-					+ key
+					+ element.getKey()
 					+ ": no name was specified");
 		}
 		// low-level abstractions created from results thresholds are based on
@@ -117,22 +91,9 @@ public class ResultThresholdsLowLevelAbstractionTranslator implements
 		ValueThreshold threshold = element.getValueThresholds().get(0);
 		createAndSetConstraints(result, threshold, valueCompDao);
 
-		Proposition abstractedFrom =
-				propositionDao.getByUserAndKey(element.getUserId(),
+		Proposition abstractedFrom = 
+				translatorSupport.getSystemEntityInstance(element.getUserId(), 
 				threshold.getDataElement().getDataElementKey());
-		if (abstractedFrom == null) {
-			try {
-				PropositionDefinition propDef = this.finder
-						.find(element.getUserId(), threshold.getDataElement()
-						.getDataElementKey());
-				abstractedFrom = PropositionUtil.toSystemProposition(propDef, element
-						.getUserId());
-			} catch (PropositionFindException ex) {
-				throw new DataElementHandlingException(
-						"Could not translate data element "
-						+ key, ex);
-			}
-		}
 		result.setAbstractedFrom(abstractedFrom);
 		Long thresholdsOpId = element.getThresholdsOperator();
 		if (thresholdsOpId != null) {
@@ -141,10 +102,11 @@ public class ResultThresholdsLowLevelAbstractionTranslator implements
 		} else {
 			throw new DataElementHandlingException(
 					"Could not translate data element "
-					+ key
+					+ element.getKey()
 					+ ": no thresholds operator was specified");
 		}
-		result.setCreatedFrom(ValueThresholdEntity.CreatedFrom.VALUE_THRESHOLD);
+		result.setCreatedFrom(
+				ValueThresholdEntity.CreatedFrom.VALUE_THRESHOLD);
 
 		return result;
 	}

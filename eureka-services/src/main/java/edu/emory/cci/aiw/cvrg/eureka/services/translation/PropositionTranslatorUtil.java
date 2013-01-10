@@ -19,28 +19,62 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.services.translation;
 
-import org.protempa.PropositionDefinition;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.DataElement;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.DataElementField;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.SystemElement;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.ExtendedProposition;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.PropertyConstraint;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.Proposition;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.ValueComparator;
 import edu.emory.cci.aiw.cvrg.eureka.common.exception
 		.DataElementHandlingException;
-import edu.emory.cci.aiw.cvrg.eureka.services.dao.PropositionDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.TimeUnitDao;
+import edu.emory.cci.aiw.cvrg.eureka.services.dao.ValueComparatorDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.finder.PropositionFindException;
-import edu.emory.cci.aiw.cvrg.eureka.services.finder.SystemPropositionFinder;
-import edu.emory.cci.aiw.cvrg.eureka.services.util.PropositionUtil;
 
 /**
  * Contains common utility functions for all implementations of
  * {@link PropositionTranslator}.
  */
 class PropositionTranslatorUtil {
+
+	static void populateExtendedProposition(ExtendedProposition ep, 
+			Proposition proposition, DataElementField dataElement, 
+			TimeUnitDao timeUnitDao, ValueComparatorDao valCompDao) 
+			throws DataElementHandlingException {
+		ep.setProposition(proposition);
+		if (dataElement.getHasDuration()) {
+			ep.setMinDuration(dataElement.getMinDuration());
+			ep.setMinDurationTimeUnit(timeUnitDao.retrieve(
+					dataElement.getMinDurationUnits()));
+			ep.setMaxDuration(dataElement.getMaxDuration());
+			ep.setMaxDurationTimeUnit(timeUnitDao.retrieve(
+					dataElement.getMaxDurationUnits()));
+		} else {
+			ep.setMinDuration(null);
+			ep.setMinDurationTimeUnit(timeUnitDao.retrieve(
+					dataElement.getMinDurationUnits()));
+			ep.setMaxDuration(null);
+			ep.setMaxDurationTimeUnit(timeUnitDao.retrieve(
+					dataElement.getMaxDurationUnits()));
+		}
+		if (dataElement.getHasPropertyConstraint()) {
+			PropertyConstraint pc = ep.getPropertyConstraint();
+			if (pc == null) {
+				pc = new PropertyConstraint();
+			}
+			pc.setPropertyName(dataElement.getProperty());
+			pc.setValue(dataElement.getPropertyValue());
+			ValueComparator valComp = valCompDao.getByName("=");
+			if (valComp == null) {
+				throw new DataElementHandlingException("Invalid value comparator: =");
+			}
+			pc.setValueComparator(valComp);
+			ep.setPropertyConstraint(pc);
+		} else {
+			ep.setPropertyConstraint(null);
+		}
+	}
 
 	private PropositionTranslatorUtil() {
 		// prevents instantiation
@@ -94,43 +128,22 @@ class PropositionTranslatorUtil {
 		dataElement.setInSystem(proposition.isInSystem());
 	}
 
-	static ExtendedProposition createExtendedProposition(
+	static ExtendedProposition createOrUpdateExtendedProposition(
+			ExtendedProposition origEP,
 	        DataElementField dataElement, Long userId, 
-			PropositionDao propositionDao, TimeUnitDao timeUnitDao, 
-			SystemPropositionFinder inFinder) throws 
+			TimeUnitDao timeUnitDao, 
+			TranslatorSupport translatorSupport,
+			ValueComparatorDao valCompDao) throws 
 			PropositionFindException, DataElementHandlingException {
 
-		ExtendedProposition ep = new ExtendedProposition();
-		Proposition proposition = propositionDao.getByUserAndKey(
-				userId, dataElement.getDataElementKey());
-		if (proposition == null) {
-			PropositionDefinition definition = inFinder.find(userId, 
-					dataElement.getDataElementKey());
-			proposition = PropositionUtil.toSystemProposition(definition, 
-						userId);
+		ExtendedProposition ep = origEP;
+		if (ep == null) {
+			ep = new ExtendedProposition();
 		}
-		ep.setProposition(proposition);
-		if (dataElement.getHasDuration()) {
-			ep.setMinDuration(dataElement.getMinDuration());
-			ep.setMinDurationTimeUnit(timeUnitDao.retrieve(dataElement.getMinDurationUnits()));
-			ep.setMaxDuration(dataElement.getMaxDuration());
-			ep.setMaxDurationTimeUnit(timeUnitDao.retrieve(dataElement.getMaxDurationUnits()));
-		} else {
-			ep.setMinDuration(null);
-			ep.setMinDurationTimeUnit(timeUnitDao.retrieve(dataElement.getMinDurationUnits()));
-			ep.setMaxDuration(null);
-			ep.setMaxDurationTimeUnit(timeUnitDao.retrieve(dataElement.getMaxDurationUnits()));
-		}
-		if (dataElement.getHasPropertyConstraint()) {
-			PropertyConstraint pc = new PropertyConstraint();
-			pc.setPropertyName(dataElement.getProperty());
-			pc.setValue(dataElement.getPropertyValue());
-			ValueComparator vc = new ValueComparator();
-			vc.setName("=");
-			ep.setPropertyConstraint(pc);
-		} else {
-			ep.setPropertyConstraint(null);
-		}
+		Proposition proposition = 
+				translatorSupport.getSystemEntityInstance(userId, 
+				dataElement.getDataElementKey());
+		populateExtendedProposition(ep, proposition, dataElement, timeUnitDao, valCompDao);
 
 		return ep;
 	}
