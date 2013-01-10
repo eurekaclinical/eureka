@@ -61,8 +61,8 @@ class PropositionTranslatorUtil {
 		proposition.setId(dataElement.getId());
 		proposition.setDisplayName(dataElement.getDisplayName());
 		proposition.setAbbrevDisplayName(dataElement.getAbbrevDisplayName());
-		proposition.setCreated(dataElement.getCreated());
-		proposition.setLastModified(dataElement.getLastModified());
+		//proposition.setCreated(dataElement.getCreated());
+		//proposition.setLastModified(dataElement.getLastModified());
 		proposition.setUserId(dataElement.getUserId());
 
 		if (dataElement.getKey() != null) {

@@ -95,8 +95,6 @@ public final class CategorizationTranslator implements
 		result.setInverseIsA(inverseIsA);
 		result.setCategorizationType(checkPropositionType(element));
 
-		System.err.println("Got category for persistence: " + result);
-
 		return result;
 	}
 

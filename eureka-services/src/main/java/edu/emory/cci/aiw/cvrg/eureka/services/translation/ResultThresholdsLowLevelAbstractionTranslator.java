@@ -39,6 +39,7 @@ import edu.emory.cci.aiw.cvrg.eureka.services.dao.ValueComparatorDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.finder.PropositionFindException;
 import edu.emory.cci.aiw.cvrg.eureka.services.finder.SystemPropositionFinder;
 import edu.emory.cci.aiw.cvrg.eureka.services.util.PropositionUtil;
+import java.util.Date;
 import org.protempa.PropositionDefinition;
 
 /**
@@ -78,9 +79,27 @@ public class ResultThresholdsLowLevelAbstractionTranslator implements
 			throw new IllegalArgumentException("element cannot be null");
 		}
 		
-		ValueThresholdEntity result = new ValueThresholdEntity();
+		String key;
+		if (element.getKey() != null) {
+			key = element.getKey();
+		} else {
+			key = element.getAbbrevDisplayName();
+		}
 		
+		Date now = new Date();
+
+		ValueThresholdEntity result;
+		Proposition oldEntity = propositionDao.getByUserAndKey(
+				element.getUserId(), key);
+		if (oldEntity instanceof ValueThresholdEntity) {
+			result = (ValueThresholdEntity) oldEntity;
+		} else {
+			result = new ValueThresholdEntity();
+			result.setCreated(now);
+		}
+
 		result.setInSystem(false);
+		result.setLastModified(now);
 
 		PropositionTranslatorUtil.populateCommonPropositionFields(result,
 				element);
@@ -90,7 +109,7 @@ public class ResultThresholdsLowLevelAbstractionTranslator implements
 		} else {
 			throw new DataElementHandlingException(
 					"Could not translate data element "
-					+ element.getKey()
+					+ key
 					+ ": no name was specified");
 		}
 		// low-level abstractions created from results thresholds are based on
@@ -98,7 +117,7 @@ public class ResultThresholdsLowLevelAbstractionTranslator implements
 		ValueThreshold threshold = element.getValueThresholds().get(0);
 		createAndSetConstraints(result, threshold, valueCompDao);
 
-		Proposition abstractedFrom = 
+		Proposition abstractedFrom =
 				propositionDao.getByUserAndKey(element.getUserId(),
 				threshold.getDataElement().getDataElementKey());
 		if (abstractedFrom == null) {
@@ -111,7 +130,7 @@ public class ResultThresholdsLowLevelAbstractionTranslator implements
 			} catch (PropositionFindException ex) {
 				throw new DataElementHandlingException(
 						"Could not translate data element "
-						+ element.getKey(), ex);
+						+ key, ex);
 			}
 		}
 		result.setAbstractedFrom(abstractedFrom);
@@ -122,7 +141,7 @@ public class ResultThresholdsLowLevelAbstractionTranslator implements
 		} else {
 			throw new DataElementHandlingException(
 					"Could not translate data element "
-					+ element.getKey()
+					+ key
 					+ ": no thresholds operator was specified");
 		}
 		result.setCreatedFrom(ValueThresholdEntity.CreatedFrom.VALUE_THRESHOLD);
@@ -132,10 +151,25 @@ public class ResultThresholdsLowLevelAbstractionTranslator implements
 
 	static void createAndSetConstraints(ValueThresholdEntity abstraction,
 			ValueThreshold threshold, ValueComparatorDao valueCompDao) {
-		SimpleParameterConstraint userConstraint = 
-				new SimpleParameterConstraint();
-		SimpleParameterConstraint complementConstraint = 
-				new SimpleParameterConstraint();
+		SimpleParameterConstraint userConstraint;
+		SimpleParameterConstraint oldUserConstraint = 
+				abstraction.getUserConstraint();
+		if (oldUserConstraint != null) {
+			userConstraint = oldUserConstraint;
+		} else {
+			userConstraint = new SimpleParameterConstraint();
+			abstraction.setUserConstraint(userConstraint);
+		}
+		
+		SimpleParameterConstraint complementConstraint;
+		SimpleParameterConstraint oldComplementConstraint = 
+				abstraction.getComplementConstraint();
+		if (oldUserConstraint != null) {
+			complementConstraint = oldComplementConstraint;
+		} else {
+			complementConstraint = new SimpleParameterConstraint();
+			abstraction.setComplementConstraint(complementConstraint);
+		}
 
 		if (threshold.getLowerValue() != null
 				&& threshold.getLowerComp() != null) {
@@ -167,8 +201,6 @@ public class ResultThresholdsLowLevelAbstractionTranslator implements
 			complementConstraint.setMaxUnits(threshold.getUpperUnits());
 
 		}
-		abstraction.setUserConstraint(userConstraint);
-		abstraction.setComplementConstraint(complementConstraint);
 	}
 
 	@Override
