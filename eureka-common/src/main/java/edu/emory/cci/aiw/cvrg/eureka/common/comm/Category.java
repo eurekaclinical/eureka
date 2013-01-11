@@ -34,7 +34,8 @@ public final class Category extends DataElement {
 
 	public enum CategoricalType {
 		CONSTANT, EVENT, PRIMITIVE_PARAMETER, LOW_LEVEL_ABSTRACTION, 
-		HIGH_LEVEL_ABSTRACTION, SLICE_ABSTRACTION, MIXED, UNKNOWN
+		COMPOUND_LOW_LEVEL_ABSTRACTION, HIGH_LEVEL_ABSTRACTION, SLICE_ABSTRACTION,
+		MIXED, UNKNOWN
 	}
 
 	private List<DataElement> children = new ArrayList<DataElement>();
