@@ -37,7 +37,7 @@ final class HighLevelAbstractionPackager
 	@Override
 	public HighLevelAbstractionDefinition pack(HighLevelAbstraction proposition) {
 		HighLevelAbstractionDefinition result = new HighLevelAbstractionDefinition(
-		        proposition.getId().toString());
+		        proposition.getKey());
 
 		for (Relation rel : proposition.getRelations()) {
 			TemporalExtendedPropositionDefinition tepdLhs = buildExtendedProposition(rel
