@@ -28,7 +28,7 @@ public final class SliceAbstractionPackager implements
 
 	@Override
 	public SliceDefinition pack(SliceAbstraction proposition) {
-		SliceDefinition result = new SliceDefinition(proposition.getId().toString());
+		SliceDefinition result = new SliceDefinition(proposition.getKey());
 		
 		result.setMinIndex(proposition.getMinIndex());
 		result.addAbstractedFrom(proposition.getAbstractedFrom().getKey());
