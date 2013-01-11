@@ -468,6 +468,7 @@
 																				</tr>
 																				<tr>
 																					<td>
+																						<%--
 																						<table>
 																							<tr>
 																								<td>
@@ -526,6 +527,7 @@
 																								</td>
 																							</tr>
 																						</table>
+																						--%>
 																					</td>
 																				</tr>
 																			</table>
@@ -561,18 +563,18 @@
 																		</td>
 																	</tr>
 																</table>
-																
-																
 															</td>
 														</tr>
 													</table>
 													<table id="VALUE_THRESHOLDdefinition" data-definition-container="true">
+														<%--
 														<tr>
 															<td colspan="2">
 																Value name:
 																<input type="text" name="valueThresholdValueName" value="<c:if test="${propositionType == 'VALUE_THRESHOLD' and not empty proposition.name}">${proposition.name}</c:if>"/>
 															</td>
 														</tr>
+														--%>
 														<tr>
 															<td style="text-align: left">
 																<div class="action_link">
@@ -645,6 +647,7 @@
 																				</c:forEach>
 																			</select>
 																		</td>
+																		<%--
 																		<td>
 																			<ul class="sortable" data-drop-type="multiple" data-proptype="empty" style="width: 100% height: 100%">
 																				<c:if test="${not empty proposition and propositionType == 'VALUE_THRESHOLD'}">
@@ -684,6 +687,7 @@
 																				</tr>
 																			</table>
 																		</td>
+																		--%>
 																	</tr>
 																	</c:forEach>
 																	</c:when>
@@ -726,6 +730,7 @@
 																				</tr>
 																			</table>
 																		</td>
+																		<%--
 																		<td>
 																			<input type="checkbox" value="true" name="thresholdDataElementTemporalRelationCB"/>
 																			<select name="thresholdDataElementTemporalRelation">
@@ -736,6 +741,7 @@
 																		</td>
 																		<td>
 																			<ul class="sortable" data-drop-type="multiple" data-proptype="empty" style="width: 100% height: 100%">
+																				<li>blah</li>
 																			</ul>
 																			by
 																		</td>
@@ -765,6 +771,7 @@
 																				</tr>
 																			</table>
 																		</td>
+																		--%>
 																	</tr>
 																	</c:otherwise>
 																	</c:choose>
