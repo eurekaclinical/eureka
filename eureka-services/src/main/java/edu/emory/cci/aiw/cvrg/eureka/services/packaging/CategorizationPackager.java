@@ -19,6 +19,7 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.services.packaging;
 
+import org.protempa.CompoundLowLevelAbstractionDefinition;
 import org.protempa.ConstantDefinition;
 import org.protempa.EventDefinition;
 import org.protempa.HighLevelAbstractionDefinition;
@@ -34,7 +35,7 @@ public final class CategorizationPackager implements
 
 	@Override
 	public PropositionDefinition pack(Categorization proposition) {
-		String id = proposition.getId().toString();
+		String id = proposition.getKey();
 		String[] inverseIsA = inverseIsA(proposition);
 		switch (proposition.getCategorizationType()) {
 			case EVENT:
@@ -75,6 +76,12 @@ public final class CategorizationPackager implements
 				llad.setDisplayName(proposition.getDisplayName());
 				llad.setInverseIsA(inverseIsA);
 				return llad;
+			case COMPOUND_LOW_LEVEL_ABSTRACTION:
+				CompoundLowLevelAbstractionDefinition cllad = new CompoundLowLevelAbstractionDefinition(id);
+				cllad.setAbbreviatedDisplayName(proposition.getAbbrevDisplayName());
+				cllad.setDisplayName(proposition.getDisplayName());
+				cllad.setInverseIsA(inverseIsA);
+				return cllad;
 			default:
 				HighLevelAbstractionDefinition defaultDef = new HighLevelAbstractionDefinition(
 				        id);
