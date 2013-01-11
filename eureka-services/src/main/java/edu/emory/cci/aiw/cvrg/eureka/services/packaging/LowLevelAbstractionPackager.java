@@ -35,52 +35,48 @@ public final class LowLevelAbstractionPackager
 
 	static final String COMPLEMENT_SUFFIX = "_COMPLEMENT";
 
-
 	@Override
 	public LowLevelAbstractionDefinition pack(ValueThresholdEntity proposition) {
 		LowLevelAbstractionDefinition result = new LowLevelAbstractionDefinition(
-		        proposition.getId().toString());
+		        proposition.getKey());
 
+		result.setAlgorithmId("stateDetector");
 		result.addPrimitiveParameterId(proposition.getAbstractedFrom().getKey());
 
-		constraintToValueDefinition(proposition.getKey(),
-				proposition.getUserConstraint(), result);
-		constraintToValueDefinition(proposition.getKey() + COMPLEMENT_SUFFIX,
-				proposition.getComplementConstraint(), result);
+		constraintToValueDefinition(proposition.getName(),
+		        proposition.getUserConstraint(), result);
+		constraintToValueDefinition(proposition.getName() + COMPLEMENT_SUFFIX,
+		        proposition.getComplementConstraint(), result);
 
 		result.setMinimumNumberOfValues(proposition.getMinValues());
 		result.setMinimumGapBetweenValues(proposition.getMinGapValues());
 		result.setMinimumGapBetweenValuesUnits(unit(proposition
-				.getMinGapValuesUnits()));
+		        .getMinGapValuesUnits()));
 		result.setMaximumGapBetweenValues(proposition.getMaxGapValues());
-		result.setMinimumGapBetweenValuesUnits(unit(proposition
-				.getMaxGapValuesUnits()));
+		result.setMaximumGapBetweenValuesUnits(unit(proposition
+		        .getMaxGapValuesUnits()));
 
 		return result;
 	}
 
-	private static void
-			constraintToValueDefinition(String name,
-												SimpleParameterConstraint
-												constraint,
-										LowLevelAbstractionDefinition def) {
-		LowLevelAbstractionValueDefinition valueDef = new
-				LowLevelAbstractionValueDefinition(def, name);
-		if (constraint.getMinValueThreshold() != null && constraint
-				.getMinValueComp() != null) {
-			valueDef.setParameterValue("minThreshold",
-					NumberValue.getInstance(constraint.getMinValueThreshold()
-							.longValue()));
-			valueDef.setParameterComp("minThreshold", ValueComparator.parse
-					(constraint.getMinValueComp().getName()));
+	private void constraintToValueDefinition(String name,
+	        SimpleParameterConstraint constraint,
+	        LowLevelAbstractionDefinition def) {
+		LowLevelAbstractionValueDefinition valueDef = new LowLevelAbstractionValueDefinition(
+		        def, name);
+		if (constraint.getMinValueThreshold() != null
+		        && constraint.getMinValueComp() != null) {
+			valueDef.setParameterValue("minThreshold", NumberValue
+			        .getInstance(constraint.getMinValueThreshold().longValue()));
+			valueDef.setParameterComp("minThreshold", ValueComparator
+			        .parse(constraint.getMinValueComp().getName()));
 		}
-		if (constraint.getMaxValueThreshold() != null && constraint
-				.getMaxValueComp() != null) {
-			valueDef.setParameterValue("maxThreshold",
-					NumberValue.getInstance(constraint.getMaxValueThreshold()
-							.longValue()));
-			valueDef.setParameterComp("maxThreshold", ValueComparator.parse
-					(constraint.getMaxValueComp().getName()));
+		if (constraint.getMaxValueThreshold() != null
+		        && constraint.getMaxValueComp() != null) {
+			valueDef.setParameterValue("maxThreshold", NumberValue
+			        .getInstance(constraint.getMaxValueThreshold().longValue()));
+			valueDef.setParameterComp("maxThreshold", ValueComparator
+			        .parse(constraint.getMaxValueComp().getName()));
 		}
 	}
 
