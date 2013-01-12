@@ -24,10 +24,11 @@ import org.protempa.MinMaxGapFunction;
 import org.protempa.SliceDefinition;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.ExtendedProposition;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.SliceAbstraction;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.FrequencyEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.SystemProposition;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.TimeUnit;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.SystemProposition.SystemType;
+import edu.emory.cci.aiw.cvrg.eureka.services.transformation.SliceAbstractionPackager;
 
 import static org.junit.Assert.assertEquals;
 
@@ -48,10 +49,10 @@ public class SliceAbstractionPackagerTest {
 		TimeUnit dayUnit = new TimeUnit();
 		dayUnit.setName("day");
 		
-		SliceAbstraction sa = new SliceAbstraction();
+		FrequencyEntity sa = new FrequencyEntity();
 		sa.setId(2L);
 		sa.setKey("test-slice-key");
-		sa.setMinIndex(3);
+		sa.setAtLeastCount(3);
 		sa.setWithinAtLeast(1);
 		sa.setWithinAtLeastUnits(dayUnit);
 		sa.setWithinAtMost(90);

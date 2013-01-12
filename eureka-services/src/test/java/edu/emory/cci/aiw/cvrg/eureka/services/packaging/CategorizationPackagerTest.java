@@ -27,7 +27,6 @@ import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.protempa.CompoundLowLevelAbstractionDefinition;
 import org.protempa.ConstantDefinition;
 import org.protempa.EventDefinition;
 import org.protempa.HighLevelAbstractionDefinition;
@@ -36,15 +35,15 @@ import org.protempa.PrimitiveParameterDefinition;
 import org.protempa.PropositionDefinition;
 import org.protempa.SliceDefinition;
 
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.Categorization;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.Categorization.CategorizationType;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.CompoundValueThreshold;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.HighLevelAbstraction;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.Proposition;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.SliceAbstraction;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.CategoryEntity;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.CategoryEntity.CategorizationType;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.DataElementEntity;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.FrequencyEntity;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.SequenceEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.SystemProposition;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.SystemProposition.SystemType;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.ValueThresholdEntity;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.ValueThresholdGroupEntity;
+import edu.emory.cci.aiw.cvrg.eureka.services.transformation.CategorizationPackager;
 
 public class CategorizationPackagerTest {
 
@@ -70,13 +69,13 @@ public class CategorizationPackagerTest {
 		event2.setInSystem(true);
 		event2.setSystemType(SystemType.EVENT);
 
-		Categorization eventCat1 = new Categorization();
+		CategoryEntity eventCat1 = new CategoryEntity();
 		eventCat1.setId(3L);
 		eventCat1.setKey("test-event-cat1");
 		eventCat1.setDisplayName("test-event-cat1-display");
 		eventCat1.setAbbrevDisplayName("test-event-cat1-abbrev");
 		eventCat1.setCategorizationType(CategorizationType.EVENT);
-		List<Proposition> iia1 = new ArrayList<Proposition>();
+		List<DataElementEntity> iia1 = new ArrayList<DataElementEntity>();
 		iia1.add(event1);
 		iia1.add(event2);
 		eventCat1.setInverseIsA(iia1);
@@ -97,13 +96,13 @@ public class CategorizationPackagerTest {
 		                || (eventDef1.getInverseIsA()[0].equals("test-event2") && eventDef1
 		                        .getInverseIsA()[1].equals("test-event1")));
 
-		Categorization eventCat2 = new Categorization();
+		CategoryEntity eventCat2 = new CategoryEntity();
 		eventCat2.setId(4L);
 		eventCat2.setKey("test-event-cat2");
 		eventCat2.setDisplayName("test-event-cat2-display");
 		eventCat2.setAbbrevDisplayName("test-event-cat2-abbrev");
 		eventCat2.setCategorizationType(CategorizationType.EVENT);
-		List<Proposition> iia2 = new ArrayList<Proposition>();
+		List<DataElementEntity> iia2 = new ArrayList<DataElementEntity>();
 		iia2.add(eventCat1);
 		eventCat2.setInverseIsA(iia2);
 
@@ -133,13 +132,13 @@ public class CategorizationPackagerTest {
 		constant2.setInSystem(true);
 		constant2.setSystemType(SystemType.CONSTANT);
 
-		Categorization constantCat1 = new Categorization();
+		CategoryEntity constantCat1 = new CategoryEntity();
 		constantCat1.setId(3L);
 		constantCat1.setKey("test-constant-cat1");
 		constantCat1.setDisplayName("test-constant-cat1-display");
 		constantCat1.setAbbrevDisplayName("test-constant-cat1-abbrev");
 		constantCat1.setCategorizationType(CategorizationType.CONSTANT);
-		List<Proposition> iia1 = new ArrayList<Proposition>();
+		List<DataElementEntity> iia1 = new ArrayList<DataElementEntity>();
 		iia1.add(constant1);
 		iia1.add(constant2);
 		constantCat1.setInverseIsA(iia1);
@@ -161,13 +160,13 @@ public class CategorizationPackagerTest {
 		                        .equals("test-constant2") && constantDef1
 		                        .getInverseIsA()[1].equals("test-constant1")));
 
-		Categorization constantCat2 = new Categorization();
+		CategoryEntity constantCat2 = new CategoryEntity();
 		constantCat2.setId(4L);
 		constantCat2.setKey("test-constant-cat2");
 		constantCat2.setDisplayName("test-constant-cat2-display");
 		constantCat2.setAbbrevDisplayName("test-constant-cat2-abbrev");
 		constantCat2.setCategorizationType(CategorizationType.CONSTANT);
-		List<Proposition> iia2 = new ArrayList<Proposition>();
+		List<DataElementEntity> iia2 = new ArrayList<DataElementEntity>();
 		iia2.add(constantCat1);
 		constantCat2.setInverseIsA(iia2);
 
@@ -198,14 +197,14 @@ public class CategorizationPackagerTest {
 		primParam2.setInSystem(true);
 		primParam2.setSystemType(SystemType.PRIMITIVE_PARAMETER);
 
-		Categorization primParamCat1 = new Categorization();
+		CategoryEntity primParamCat1 = new CategoryEntity();
 		primParamCat1.setId(3L);
 		primParamCat1.setKey("test-primparam-cat1");
 		primParamCat1.setDisplayName("test-primparam-cat1-display");
 		primParamCat1.setAbbrevDisplayName("test-primparam-cat1-abbrev");
 		primParamCat1
 		        .setCategorizationType(CategorizationType.PRIMITIVE_PARAMETER);
-		List<Proposition> iia1 = new ArrayList<Proposition>();
+		List<DataElementEntity> iia1 = new ArrayList<DataElementEntity>();
 		iia1.add(primParam1);
 		iia1.add(primParam2);
 		primParamCat1.setInverseIsA(iia1);
@@ -228,14 +227,14 @@ public class CategorizationPackagerTest {
 		                        .equals("test-primparam2") && primParamDef1
 		                        .getInverseIsA()[1].equals("test-primparam1")));
 
-		Categorization primParamCat2 = new Categorization();
+		CategoryEntity primParamCat2 = new CategoryEntity();
 		primParamCat2.setId(4L);
 		primParamCat2.setKey("test-primparam-cat2");
 		primParamCat2.setDisplayName("test-primparam-cat2-display");
 		primParamCat2.setAbbrevDisplayName("test-primparam-cat2-abbrev");
 		primParamCat2
 		        .setCategorizationType(CategorizationType.PRIMITIVE_PARAMETER);
-		List<Proposition> iia2 = new ArrayList<Proposition>();
+		List<DataElementEntity> iia2 = new ArrayList<DataElementEntity>();
 		iia2.add(primParamCat1);
 		primParamCat2.setInverseIsA(iia2);
 
@@ -255,23 +254,23 @@ public class CategorizationPackagerTest {
 
 	@Test
 	public void testHighLevelAbstractionCategorization() {
-		HighLevelAbstraction hla1 = new HighLevelAbstraction();
+		SequenceEntity hla1 = new SequenceEntity();
 		hla1.setId(1L);
 		hla1.setKey("test-hla1");
 		hla1.setInSystem(false);
 
-		HighLevelAbstraction hla2 = new HighLevelAbstraction();
+		SequenceEntity hla2 = new SequenceEntity();
 		hla2.setId(2L);
 		hla2.setKey("test-hla2");
 		hla2.setInSystem(false);
 
-		Categorization hlaCat1 = new Categorization();
+		CategoryEntity hlaCat1 = new CategoryEntity();
 		hlaCat1.setId(3L);
 		hlaCat1.setKey("test-hla-cat1");
 		hlaCat1.setDisplayName("test-hla-cat1-display");
 		hlaCat1.setAbbrevDisplayName("test-hla-cat1-abbrev");
 		hlaCat1.setCategorizationType(CategorizationType.HIGH_LEVEL_ABSTRACTION);
-		List<Proposition> iia1 = new ArrayList<Proposition>();
+		List<DataElementEntity> iia1 = new ArrayList<DataElementEntity>();
 		iia1.add(hla1);
 		iia1.add(hla2);
 		hlaCat1.setInverseIsA(iia1);
@@ -293,13 +292,13 @@ public class CategorizationPackagerTest {
 		                || (hlaDef1.getInverseIsA()[0].equals("2") && hlaDef1
 		                        .getInverseIsA()[1].equals("1")));
 
-		Categorization hlaCat2 = new Categorization();
+		CategoryEntity hlaCat2 = new CategoryEntity();
 		hlaCat2.setId(4L);
 		hlaCat2.setKey("test-hla-cat2");
 		hlaCat2.setDisplayName("test-hla-cat2-display");
 		hlaCat2.setAbbrevDisplayName("test-hla-cat2-abbrev");
 		hlaCat2.setCategorizationType(CategorizationType.HIGH_LEVEL_ABSTRACTION);
-		List<Proposition> iia2 = new ArrayList<Proposition>();
+		List<DataElementEntity> iia2 = new ArrayList<DataElementEntity>();
 		iia2.add(hlaCat1);
 		hlaCat2.setInverseIsA(iia2);
 
@@ -318,23 +317,23 @@ public class CategorizationPackagerTest {
 
 	@Test
 	public void testSliceAbstractionCategorization() {
-		SliceAbstraction sa1 = new SliceAbstraction();
+		FrequencyEntity sa1 = new FrequencyEntity();
 		sa1.setId(1L);
 		sa1.setKey("test-slice1");
 		sa1.setInSystem(false);
 
-		SliceAbstraction sa2 = new SliceAbstraction();
+		FrequencyEntity sa2 = new FrequencyEntity();
 		sa2.setId(2L);
 		sa2.setKey("test-slice2");
 		sa2.setInSystem(false);
 
-		Categorization saCat1 = new Categorization();
+		CategoryEntity saCat1 = new CategoryEntity();
 		saCat1.setId(3L);
 		saCat1.setKey("test-slice-cat1");
 		saCat1.setDisplayName("test-slice-cat1-display");
 		saCat1.setAbbrevDisplayName("test-slice-cat1-abbrev");
 		saCat1.setCategorizationType(CategorizationType.SLICE_ABSTRACTION);
-		List<Proposition> iia1 = new ArrayList<Proposition>();
+		List<DataElementEntity> iia1 = new ArrayList<DataElementEntity>();
 		iia1.add(sa1);
 		iia1.add(sa2);
 		saCat1.setInverseIsA(iia1);
@@ -356,13 +355,13 @@ public class CategorizationPackagerTest {
 		                || (saDef1.getInverseIsA()[0].equals("2") && saDef1
 		                        .getInverseIsA()[1].equals("1")));
 
-		Categorization saCat2 = new Categorization();
+		CategoryEntity saCat2 = new CategoryEntity();
 		saCat2.setId(4L);
 		saCat2.setKey("test-slice-cat2");
 		saCat2.setDisplayName("test-slice-cat2-display");
 		saCat2.setAbbrevDisplayName("test-slice-cat2-abbrev");
 		saCat2.setCategorizationType(CategorizationType.SLICE_ABSTRACTION);
-		List<Proposition> iia2 = new ArrayList<Proposition>();
+		List<DataElementEntity> iia2 = new ArrayList<DataElementEntity>();
 		iia2.add(saCat1);
 		saCat2.setInverseIsA(iia2);
 
@@ -381,23 +380,23 @@ public class CategorizationPackagerTest {
 
 	@Test
 	public void testLowLevelAbstractionCategorization() {
-		ValueThresholdEntity lla1 = new ValueThresholdEntity();
+		ValueThresholdGroupEntity lla1 = new ValueThresholdGroupEntity();
 		lla1.setId(1L);
 		lla1.setKey("test-lla1");
 		lla1.setInSystem(false);
 
-		ValueThresholdEntity lla2 = new ValueThresholdEntity();
+		ValueThresholdGroupEntity lla2 = new ValueThresholdGroupEntity();
 		lla2.setId(2L);
 		lla2.setKey("test-lla2");
 		lla2.setInSystem(false);
 
-		Categorization llaCat1 = new Categorization();
+		CategoryEntity llaCat1 = new CategoryEntity();
 		llaCat1.setId(3L);
 		llaCat1.setKey("test-lla-cat1");
 		llaCat1.setDisplayName("test-lla-cat1-display");
 		llaCat1.setAbbrevDisplayName("test-lla-cat1-abbrev");
 		llaCat1.setCategorizationType(CategorizationType.LOW_LEVEL_ABSTRACTION);
-		List<Proposition> iia1 = new ArrayList<Proposition>();
+		List<DataElementEntity> iia1 = new ArrayList<DataElementEntity>();
 		iia1.add(lla1);
 		iia1.add(lla2);
 		llaCat1.setInverseIsA(iia1);
@@ -419,13 +418,13 @@ public class CategorizationPackagerTest {
 		                || (llaDef1.getInverseIsA()[0].equals("2") && llaDef1
 		                        .getInverseIsA()[1].equals("1")));
 
-		Categorization llaCat2 = new Categorization();
+		CategoryEntity llaCat2 = new CategoryEntity();
 		llaCat2.setId(4L);
 		llaCat2.setKey("test-lla-cat2");
 		llaCat2.setDisplayName("test-lla-cat2-display");
 		llaCat2.setAbbrevDisplayName("test-lla-cat2-abbrev");
 		llaCat2.setCategorizationType(CategorizationType.LOW_LEVEL_ABSTRACTION);
-		List<Proposition> iia2 = new ArrayList<Proposition>();
+		List<DataElementEntity> iia2 = new ArrayList<DataElementEntity>();
 		iia2.add(llaCat1);
 		llaCat2.setInverseIsA(iia2);
 
@@ -444,128 +443,128 @@ public class CategorizationPackagerTest {
 
 	@Test
 	public void testCompoundLowLevelAbstractionCategorization() {
-		CompoundValueThreshold clla1 = new CompoundValueThreshold();
-		clla1.setId(1L);
-		clla1.setKey("test-clla1");
-		clla1.setInSystem(false);
-
-		CompoundValueThreshold clla2 = new CompoundValueThreshold();
-		clla2.setId(2L);
-		clla2.setKey("test-clla2");
-		clla2.setInSystem(false);
-
-		Categorization cllaCat1 = new Categorization();
-		cllaCat1.setId(3L);
-		cllaCat1.setKey("test-clla-cat1");
-		cllaCat1.setDisplayName("test-clla-cat1-display");
-		cllaCat1.setAbbrevDisplayName("test-clla-cat1-abbrev");
-		cllaCat1.setCategorizationType(CategorizationType.COMPOUND_LOW_LEVEL_ABSTRACTION);
-		List<Proposition> iia1 = new ArrayList<Proposition>();
-		iia1.add(clla1);
-		iia1.add(clla2);
-		cllaCat1.setInverseIsA(iia1);
-
-		PropositionDefinition cllaDef1 = this.packager.pack(cllaCat1);
-		assertTrue("not a compound low-level abstraction",
-		        cllaDef1 instanceof CompoundLowLevelAbstractionDefinition);
-		assertEquals("wrong ID", "test-clla-cat1", cllaDef1.getId());
-		assertEquals("wrong display name", "test-clla-cat1-display",
-		        cllaDef1.getDisplayName());
-		assertEquals("wrong abbrev display name", "test-clla-cat1-abbrev",
-		        cllaDef1.getAbbreviatedDisplayName());
-		assertEquals("wrong inverse-is-a size", 2,
-		        cllaDef1.getInverseIsA().length);
-		assertTrue(
-		        "wrong inverse-is-a objects",
-		        (cllaDef1.getInverseIsA()[0].equals("1") && cllaDef1
-		                .getInverseIsA()[1].equals("2"))
-		                || (cllaDef1.getInverseIsA()[0].equals("2") && cllaDef1
-		                        .getInverseIsA()[1].equals("1")));
-
-		Categorization cllaCat2 = new Categorization();
-		cllaCat2.setId(4L);
-		cllaCat2.setKey("test-clla-cat2");
-		cllaCat2.setDisplayName("test-clla-cat2-display");
-		cllaCat2.setAbbrevDisplayName("test-clla-cat2-abbrev");
-		cllaCat2.setCategorizationType(CategorizationType.COMPOUND_LOW_LEVEL_ABSTRACTION);
-		List<Proposition> iia2 = new ArrayList<Proposition>();
-		iia2.add(cllaCat1);
-		cllaCat2.setInverseIsA(iia2);
-
-		PropositionDefinition cllaDef2 = this.packager.pack(cllaCat2);
-		assertTrue("not a compound low-level abstraction",
-		        cllaDef2 instanceof CompoundLowLevelAbstractionDefinition);
-		assertEquals("wrong ID", "test-clla-cat2", cllaDef2.getId());
-		assertEquals("wrong display name", "test-clla-cat2-display",
-		        cllaDef2.getDisplayName());
-		assertEquals("wrong abbrev display name", "test-clla-cat2-abbrev",
-		        cllaDef2.getAbbreviatedDisplayName());
-		assertEquals("wrong inverse-is-a size", 1,
-		        cllaDef2.getInverseIsA().length);
-		assertEquals("wrong inverse-is-a", "3", cllaDef2.getInverseIsA()[0]);
-	}
-
-	@Test
-	public void testMixedCategorization() {
-		SystemProposition event = new SystemProposition();
-		event.setId(1L);
-		event.setKey("test-event");
-		event.setInSystem(true);
-		event.setSystemType(SystemType.EVENT);
-
-		SystemProposition primParam = new SystemProposition();
-		primParam.setId(2L);
-		primParam.setKey("test-primparam");
-		primParam.setInSystem(true);
-		primParam.setSystemType(SystemType.PRIMITIVE_PARAMETER);
-
-		Categorization mixedCat1 = new Categorization();
-		mixedCat1.setId(3L);
-		mixedCat1.setKey("test-mixed-cat1");
-		mixedCat1.setDisplayName("test-mixed-cat1-display");
-		mixedCat1.setAbbrevDisplayName("test-mixed-cat1-abbrev");
-		mixedCat1.setCategorizationType(CategorizationType.MIXED);
-		List<Proposition> iia1 = new ArrayList<Proposition>();
-		iia1.add(event);
-		iia1.add(primParam);
-		mixedCat1.setInverseIsA(iia1);
-
-		PropositionDefinition hlaDef1 = this.packager.pack(mixedCat1);
-		assertTrue("not a high-level abstraction",
-		        hlaDef1 instanceof HighLevelAbstractionDefinition);
-		assertEquals("wrong ID", "test-mixed-cat1", hlaDef1.getId());
-		assertEquals("wrong display name", "test-mixed-cat1-display",
-		        hlaDef1.getDisplayName());
-		assertEquals("wrong abbrev display name", "test-mixed-cat1-abbrev",
-		        hlaDef1.getAbbreviatedDisplayName());
-		assertEquals("wrong size of inverse-is-a", 2,
-		        hlaDef1.getInverseIsA().length);
-		assertTrue(
-		        "inverse-is-a missing",
-		        (hlaDef1.getInverseIsA()[0].equals("test-event") && hlaDef1
-		                .getInverseIsA()[1].equals("test-primparam"))
-		                || (hlaDef1.getInverseIsA()[0].equals("test-primparam") && hlaDef1
-		                        .getInverseIsA()[1].equals("test-event")));
-
-		Categorization mixedCat = new Categorization();
-		mixedCat.setId(4L);
-		mixedCat.setKey("test-mixed-cat2");
-		mixedCat.setDisplayName("test-mixed-cat2-display");
-		mixedCat.setAbbrevDisplayName("test-mixed-cat2-abbrev");
-		mixedCat.setCategorizationType(CategorizationType.MIXED);
-		List<Proposition> iia2 = new ArrayList<Proposition>();
-		iia2.add(mixedCat1);
-		mixedCat.setInverseIsA(iia2);
-
-		PropositionDefinition hlaDef2 = this.packager.pack(mixedCat);
-		assertTrue("not an event", hlaDef2 instanceof HighLevelAbstractionDefinition);
-		assertEquals("wrong ID", "test-mixed-cat2", hlaDef2.getId());
-		assertEquals("wrong display name", "test-mixed-cat2-display",
-		        hlaDef2.getDisplayName());
-		assertEquals("wrong abbrev display name", "test-mixed-cat2-abbrev",
-		        hlaDef2.getAbbreviatedDisplayName());
-		assertEquals("wrong inverse-is-a size", 1,
-		        hlaDef2.getInverseIsA().length);
-		assertEquals("wrong inverse-is-a", "3", hlaDef2.getInverseIsA()[0]);
+//		CompoundValueThreshold clla1 = new CompoundValueThreshold();
+//		clla1.setId(1L);
+//		clla1.setKey("test-clla1");
+//		clla1.setInSystem(false);
+//
+//		CompoundValueThreshold clla2 = new CompoundValueThreshold();
+//		clla2.setId(2L);
+//		clla2.setKey("test-clla2");
+//		clla2.setInSystem(false);
+//
+//		CategoryEntity cllaCat1 = new CategoryEntity();
+//		cllaCat1.setId(3L);
+//		cllaCat1.setKey("test-clla-cat1");
+//		cllaCat1.setDisplayName("test-clla-cat1-display");
+//		cllaCat1.setAbbrevDisplayName("test-clla-cat1-abbrev");
+//		cllaCat1.setCategorizationType(CategorizationType.COMPOUND_LOW_LEVEL_ABSTRACTION);
+//		List<DataElementEntity> iia1 = new ArrayList<DataElementEntity>();
+//		iia1.add(clla1);
+//		iia1.add(clla2);
+//		cllaCat1.setInverseIsA(iia1);
+//
+//		PropositionDefinition cllaDef1 = this.packager.pack(cllaCat1);
+//		assertTrue("not a compound low-level abstraction",
+//		        cllaDef1 instanceof CompoundLowLevelAbstractionDefinition);
+//		assertEquals("wrong ID", "test-clla-cat1", cllaDef1.getId());
+//		assertEquals("wrong display name", "test-clla-cat1-display",
+//		        cllaDef1.getDisplayName());
+//		assertEquals("wrong abbrev display name", "test-clla-cat1-abbrev",
+//		        cllaDef1.getAbbreviatedDisplayName());
+//		assertEquals("wrong inverse-is-a size", 2,
+//		        cllaDef1.getInverseIsA().length);
+//		assertTrue(
+//		        "wrong inverse-is-a objects",
+//		        (cllaDef1.getInverseIsA()[0].equals("1") && cllaDef1
+//		                .getInverseIsA()[1].equals("2"))
+//		                || (cllaDef1.getInverseIsA()[0].equals("2") && cllaDef1
+//		                        .getInverseIsA()[1].equals("1")));
+//
+//		CategoryEntity cllaCat2 = new CategoryEntity();
+//		cllaCat2.setId(4L);
+//		cllaCat2.setKey("test-clla-cat2");
+//		cllaCat2.setDisplayName("test-clla-cat2-display");
+//		cllaCat2.setAbbrevDisplayName("test-clla-cat2-abbrev");
+//		cllaCat2.setCategorizationType(CategorizationType.COMPOUND_LOW_LEVEL_ABSTRACTION);
+//		List<DataElementEntity> iia2 = new ArrayList<DataElementEntity>();
+//		iia2.add(cllaCat1);
+//		cllaCat2.setInverseIsA(iia2);
+//
+//		PropositionDefinition cllaDef2 = this.packager.pack(cllaCat2);
+//		assertTrue("not a compound low-level abstraction",
+//		        cllaDef2 instanceof CompoundLowLevelAbstractionDefinition);
+//		assertEquals("wrong ID", "test-clla-cat2", cllaDef2.getId());
+//		assertEquals("wrong display name", "test-clla-cat2-display",
+//		        cllaDef2.getDisplayName());
+//		assertEquals("wrong abbrev display name", "test-clla-cat2-abbrev",
+//		        cllaDef2.getAbbreviatedDisplayName());
+//		assertEquals("wrong inverse-is-a size", 1,
+//		        cllaDef2.getInverseIsA().length);
+//		assertEquals("wrong inverse-is-a", "3", cllaDef2.getInverseIsA()[0]);
+//	}
+//
+//	@Test
+//	public void testMixedCategorization() {
+//		SystemProposition event = new SystemProposition();
+//		event.setId(1L);
+//		event.setKey("test-event");
+//		event.setInSystem(true);
+//		event.setSystemType(SystemType.EVENT);
+//
+//		SystemProposition primParam = new SystemProposition();
+//		primParam.setId(2L);
+//		primParam.setKey("test-primparam");
+//		primParam.setInSystem(true);
+//		primParam.setSystemType(SystemType.PRIMITIVE_PARAMETER);
+//
+//		CategoryEntity mixedCat1 = new CategoryEntity();
+//		mixedCat1.setId(3L);
+//		mixedCat1.setKey("test-mixed-cat1");
+//		mixedCat1.setDisplayName("test-mixed-cat1-display");
+//		mixedCat1.setAbbrevDisplayName("test-mixed-cat1-abbrev");
+//		mixedCat1.setCategorizationType(CategorizationType.MIXED);
+//		List<DataElementEntity> iia1 = new ArrayList<DataElementEntity>();
+//		iia1.add(event);
+//		iia1.add(primParam);
+//		mixedCat1.setInverseIsA(iia1);
+//
+//		PropositionDefinition hlaDef1 = this.packager.pack(mixedCat1);
+//		assertTrue("not a high-level abstraction",
+//		        hlaDef1 instanceof HighLevelAbstractionDefinition);
+//		assertEquals("wrong ID", "test-mixed-cat1", hlaDef1.getId());
+//		assertEquals("wrong display name", "test-mixed-cat1-display",
+//		        hlaDef1.getDisplayName());
+//		assertEquals("wrong abbrev display name", "test-mixed-cat1-abbrev",
+//		        hlaDef1.getAbbreviatedDisplayName());
+//		assertEquals("wrong size of inverse-is-a", 2,
+//		        hlaDef1.getInverseIsA().length);
+//		assertTrue(
+//		        "inverse-is-a missing",
+//		        (hlaDef1.getInverseIsA()[0].equals("test-event") && hlaDef1
+//		                .getInverseIsA()[1].equals("test-primparam"))
+//		                || (hlaDef1.getInverseIsA()[0].equals("test-primparam") && hlaDef1
+//		                        .getInverseIsA()[1].equals("test-event")));
+//
+//		CategoryEntity mixedCat = new CategoryEntity();
+//		mixedCat.setId(4L);
+//		mixedCat.setKey("test-mixed-cat2");
+//		mixedCat.setDisplayName("test-mixed-cat2-display");
+//		mixedCat.setAbbrevDisplayName("test-mixed-cat2-abbrev");
+//		mixedCat.setCategorizationType(CategorizationType.MIXED);
+//		List<DataElementEntity> iia2 = new ArrayList<DataElementEntity>();
+//		iia2.add(mixedCat1);
+//		mixedCat.setInverseIsA(iia2);
+//
+//		PropositionDefinition hlaDef2 = this.packager.pack(mixedCat);
+//		assertTrue("not an event", hlaDef2 instanceof HighLevelAbstractionDefinition);
+//		assertEquals("wrong ID", "test-mixed-cat2", hlaDef2.getId());
+//		assertEquals("wrong display name", "test-mixed-cat2-display",
+//		        hlaDef2.getDisplayName());
+//		assertEquals("wrong abbrev display name", "test-mixed-cat2-abbrev",
+//		        hlaDef2.getAbbreviatedDisplayName());
+//		assertEquals("wrong inverse-is-a size", 1,
+//		        hlaDef2.getInverseIsA().length);
+//		assertEquals("wrong inverse-is-a", "3", hlaDef2.getInverseIsA()[0]);
 	}
 }

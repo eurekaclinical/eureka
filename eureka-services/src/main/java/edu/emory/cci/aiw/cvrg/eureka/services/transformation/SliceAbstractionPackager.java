@@ -17,20 +17,20 @@
  * limitations under the License.
  * #L%
  */
-package edu.emory.cci.aiw.cvrg.eureka.services.packaging;
+package edu.emory.cci.aiw.cvrg.eureka.services.transformation;
 
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.SliceAbstraction;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.FrequencyEntity;
 import org.protempa.MinMaxGapFunction;
 import org.protempa.SliceDefinition;
 
 public final class SliceAbstractionPackager implements
-        PropositionDefinitionPackager<SliceAbstraction, SliceDefinition> {
+        PropositionDefinitionPackager<FrequencyEntity, SliceDefinition> {
 
 	@Override
-	public SliceDefinition pack(SliceAbstraction proposition) {
+	public SliceDefinition pack(FrequencyEntity proposition) {
 		SliceDefinition result = new SliceDefinition(proposition.getKey());
 		
-		result.setMinIndex(proposition.getMinIndex());
+		result.setMinIndex(proposition.getAtLeastCount());
 		result.addAbstractedFrom(proposition.getAbstractedFrom().getKey());
 		result.setGapFunction(new MinMaxGapFunction(proposition
 				.getWithinAtLeast(), PropositionDefinitionPackagerUtil.unit

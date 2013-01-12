@@ -37,7 +37,7 @@ import javax.ws.rs.core.Response;
 import com.google.inject.Inject;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.DataElement;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.Proposition;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.DataElementEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.PropositionChildrenVisitor;
 import edu.emory.cci.aiw.cvrg.eureka.common.exception.DataElementHandlingException;
 import edu.emory.cci.aiw.cvrg.eureka.common.exception.HttpStatusException;
@@ -74,15 +74,15 @@ public class DataElementResource {
 	public List<DataElement> getAll(@PathParam("userId") Long inUserId) {
 
 		List<DataElement> result = new ArrayList<DataElement>();
-		List<Proposition> propositions = this.propositionDao.getByUserId(inUserId);
+		List<DataElementEntity> propositions = this.propositionDao.getByUserId(inUserId);
 
-		for (Proposition proposition : propositions) {
+		for (DataElementEntity proposition : propositions) {
 			this.propositionDao.refresh(proposition);
 			if (proposition.isInSystem()) {
 				result.add(
 						this.systemElementResource.get(
 						inUserId, proposition.getKey()));
-			} else {
+			} else if (!proposition.isHelperProposition()) {
 				proposition.accept(this.propositionTranslatorVisitor);
 				result.add(propositionTranslatorVisitor.getDataElement());
 			}
@@ -96,7 +96,7 @@ public class DataElementResource {
 	public DataElement get(@PathParam("userId") Long inUserId,
 			@PathParam("key") String inKey) {
 		DataElement result;
-		Proposition proposition = this.propositionDao.getByUserAndKey(inUserId, inKey);
+		DataElementEntity proposition = this.propositionDao.getByUserAndKey(inUserId, inKey);
 		if (proposition == null || proposition.isInSystem()) {
 			result = this.systemElementResource.get(inUserId, inKey);
 		} else {
@@ -125,7 +125,7 @@ public class DataElementResource {
 		} catch (DataElementHandlingException ex) {
 			throw new HttpStatusException(ex.getStatus(), ex);
 		}
-		Proposition proposition = this.dataElementTranslatorVisitor
+		DataElementEntity proposition = this.dataElementTranslatorVisitor
 				.getProposition();
 		Date now = new Date();
 		proposition.setCreated(now);
@@ -153,9 +153,9 @@ public class DataElementResource {
 			throw new HttpStatusException(
 					Response.Status.INTERNAL_SERVER_ERROR, ex);
 		}
-		Proposition proposition = this.dataElementTranslatorVisitor
+		DataElementEntity proposition = this.dataElementTranslatorVisitor
 				.getProposition();
-		Proposition oldProposition = this.propositionDao.retrieve(inElement
+		DataElementEntity oldProposition = this.propositionDao.retrieve(inElement
 				.getId());
 
 		if (oldProposition == null) {
@@ -179,18 +179,18 @@ public class DataElementResource {
 	@Path("/{userId}/{key}")
 	public void delete(@PathParam("userId") Long inUserId,
 			@PathParam("key") String inKey) {
-		Proposition proposition = this.propositionDao.getByUserAndKey(inUserId, inKey);
+		DataElementEntity proposition = this.propositionDao.getByUserAndKey(inUserId, inKey);
 		if (proposition == null) {
 			throw new HttpStatusException(Response.Status.NOT_FOUND, 
 					"No data element with userId=" + inUserId + " and key=" + inKey);
 		}
-		List<Proposition> others = this.propositionDao.getByUserId(inUserId);
+		List<DataElementEntity> others = this.propositionDao.getByUserId(inUserId);
 
-		for (Proposition other : others) {
+		for (DataElementEntity other : others) {
 			if (!other.getId().equals(proposition.getId())) {
 				PropositionChildrenVisitor visitor = new PropositionChildrenVisitor();
 				other.accept(visitor);
-				for (Proposition child : visitor.getChildren()) {
+				for (DataElementEntity child : visitor.getChildren()) {
 					if (child.getId().equals(proposition.getId())) {
 						throw new HttpStatusException(Response.Status.PRECONDITION_FAILED, "The data element to be"
 								+ " removed is used in the definition of "

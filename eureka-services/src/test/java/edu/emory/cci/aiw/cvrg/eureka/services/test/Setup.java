@@ -33,13 +33,13 @@ import javax.persistence.criteria.CriteriaQuery;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.Categorization;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.Categorization.CategorizationType;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.CategoryEntity;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.CategoryEntity.CategorizationType;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.FileUpload;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.ValueThresholdEntity;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.Proposition;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.ValueThresholdGroupEntity;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.DataElementEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.Role;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.SimpleParameterConstraint;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.ValueThresholdEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.SystemProposition;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.ThresholdsOperator;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.ThresholdsOperator_;
@@ -67,7 +67,7 @@ public class Setup implements TestDataProvider {
 	private User researcherUser;
 	private User adminUser;
 	private User superUser;
-	private List<Proposition> propositions;
+	private List<DataElementEntity> propositions;
 
 	/**
 	 * Create a Bootstrap class with an EntityManager.
@@ -130,7 +130,7 @@ public class Setup implements TestDataProvider {
 	
 	private void removeDataElements() {
 		EntityManager entityManager = this.getEntityManager();
-		for (Proposition proposition : this.propositions) {
+		for (DataElementEntity proposition : this.propositions) {
 			System.out.println("Deleting data element " + proposition);
 			entityManager.getTransaction().begin();
 			entityManager.remove(proposition);
@@ -148,10 +148,10 @@ public class Setup implements TestDataProvider {
 		entityManager.getTransaction().commit();
 	}
 
-	private List<Proposition> createDataElements(User... users) {
+	private List<DataElementEntity> createDataElements(User... users) {
 		System.out.println("Creating data elements...");
-		List<Proposition> dataElements =
-				new ArrayList<Proposition>(users.length);
+		List<DataElementEntity> dataElements =
+				new ArrayList<DataElementEntity>(users.length);
 		EntityManager entityManager = this.getEntityManager();
 		Date now = new Date();
 		ThresholdsOperator any = new ThresholdsOperator();
@@ -164,7 +164,7 @@ public class Setup implements TestDataProvider {
 		for (User u : users) {
 			entityManager.getTransaction().begin();
 			System.out.println("Loading user " + u.getEmail());
-			Categorization proposition1 = new Categorization();
+			CategoryEntity proposition1 = new CategoryEntity();
 			proposition1.setKey("test-cat");
 			proposition1.setAbbrevDisplayName("test");
 			proposition1.setDisplayName("Test Proposition");
@@ -181,20 +181,16 @@ public class Setup implements TestDataProvider {
 			sysProp.setKey("test-prim-param");
 			sysProp.setCreated(now);
 
-			ValueThresholdEntity lowLevelAbstraction = new ValueThresholdEntity
+			ValueThresholdGroupEntity lowLevelAbstraction = new ValueThresholdGroupEntity
 					();
 			lowLevelAbstraction.setAbbrevDisplayName("test-low-level");
 			lowLevelAbstraction.setKey("test-low-level");
-			lowLevelAbstraction.setName("test-low-level-name");
 			lowLevelAbstraction.setCreated(now);
-			lowLevelAbstraction.setCreatedFrom(ValueThresholdEntity
-					.CreatedFrom.FREQUENCY);
-			lowLevelAbstraction.setMinValues(3);
-			lowLevelAbstraction.setUserConstraint(new SimpleParameterConstraint());
-			lowLevelAbstraction.setComplementConstraint(new SimpleParameterConstraint());
+//			lowLevelAbstraction.setValueThresholds(new ValueThresholdEntity());
+//			lowLevelAbstraction.setComplementConstraint(new ValueThresholdEntity());
 			lowLevelAbstraction.setThresholdsOperator(any);
 			lowLevelAbstraction.setUserId(u.getId());
-			lowLevelAbstraction.setAbstractedFrom(sysProp);
+//			lowLevelAbstraction.setAbstractedFrom(sysProp);
 			entityManager.persist(lowLevelAbstraction);
 			dataElements.add(lowLevelAbstraction);
 			entityManager.getTransaction().commit();

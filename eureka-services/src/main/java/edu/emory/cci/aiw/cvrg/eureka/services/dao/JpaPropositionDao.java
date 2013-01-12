@@ -37,8 +37,8 @@ import com.google.inject.Inject;
 import com.google.inject.Provider;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.dao.GenericDao;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.Proposition;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.Proposition_;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.DataElementEntity;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.DataElementEntity_;
 
 /**
  * An implementation of the {@link PropositionDao} interface, backed by JPA
@@ -46,7 +46,7 @@ import edu.emory.cci.aiw.cvrg.eureka.common.entity.Proposition_;
  *
  * @author hrathod
  */
-public class JpaPropositionDao extends GenericDao<Proposition, Long>
+public class JpaPropositionDao extends GenericDao<DataElementEntity, Long>
 		implements PropositionDao {
 
 	private static Logger LOGGER = LoggerFactory.getLogger(JpaPropositionDao
@@ -59,24 +59,24 @@ public class JpaPropositionDao extends GenericDao<Proposition, Long>
 	 */
 	@Inject
 	public JpaPropositionDao(Provider<EntityManager> inProvider) {
-		super(Proposition.class, inProvider);
+		super(DataElementEntity.class, inProvider);
 	}
 
 	@Override
-	public Proposition getByUserAndKey(Long inUserId, String inKey) {
-		Proposition result;
+	public DataElementEntity getByUserAndKey(Long inUserId, String inKey) {
+		DataElementEntity result;
 		EntityManager entityManager = this.getEntityManager();
 		CriteriaBuilder builder = entityManager.getCriteriaBuilder();
-		CriteriaQuery<Proposition> criteriaQuery = builder.createQuery(
-			Proposition
+		CriteriaQuery<DataElementEntity> criteriaQuery = builder.createQuery(
+			DataElementEntity
 				.class);
-		Root<Proposition> root = criteriaQuery.from(Proposition.class);
+		Root<DataElementEntity> root = criteriaQuery.from(DataElementEntity.class);
 		Predicate userPredicate = builder.equal(
 			root.get(
-				Proposition_.userId), inUserId);
-		Predicate keyPredicate = builder.equal(root.get(Proposition_.key),
+				DataElementEntity_.userId), inUserId);
+		Predicate keyPredicate = builder.equal(root.get(DataElementEntity_.key),
 			inKey);
-		TypedQuery<Proposition> typedQuery = entityManager.createQuery(
+		TypedQuery<DataElementEntity> typedQuery = entityManager.createQuery(
 			criteriaQuery.where(
 				builder.and(userPredicate, keyPredicate)));
 		try {
@@ -98,7 +98,7 @@ public class JpaPropositionDao extends GenericDao<Proposition, Long>
 	}
 
 	@Override
-	public List<Proposition> getByUserId(Long inId) {
+	public List<DataElementEntity> getByUserId(Long inId) {
 		return this.getListByAttribute(Proposition_.userId, inId);
 	}
 }

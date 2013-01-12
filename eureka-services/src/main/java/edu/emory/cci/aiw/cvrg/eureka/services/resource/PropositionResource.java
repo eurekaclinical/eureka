@@ -47,25 +47,24 @@ import edu.emory.cci.aiw.cvrg.eureka.common.comm.SystemElement;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.ValidationRequest;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ClientException;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.EtlClient;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.Categorization;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.HighLevelAbstraction;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.Proposition;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.CategoryEntity;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.DataElementEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.PropositionChildrenVisitor;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.SequenceEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.exception.DataElementHandlingException;
 import edu.emory.cci.aiw.cvrg.eureka.common.exception.HttpStatusException;
 import edu.emory.cci.aiw.cvrg.eureka.services.config.ServiceProperties;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.PropositionDao;
+import edu.emory.cci.aiw.cvrg.eureka.services.dao.ValueComparatorDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.finder.PropositionFindException;
 import edu.emory.cci.aiw.cvrg.eureka.services.finder.SystemPropositionFinder;
 import edu.emory.cci.aiw.cvrg.eureka.services.translation.CategorizationTranslator;
 import edu.emory.cci.aiw.cvrg.eureka.services.translation.DataElementTranslatorVisitor;
-import edu.emory.cci.aiw.cvrg.eureka.services.translation.FrequencyHighLevelAbstractionTranslator;
-import edu.emory.cci.aiw.cvrg.eureka.services.translation.FrequencySliceTranslator;
+import edu.emory.cci.aiw.cvrg.eureka.services.translation.FrequencyTranslator;
 import edu.emory.cci.aiw.cvrg.eureka.services.translation.PropositionTranslatorVisitor;
-import edu.emory.cci.aiw.cvrg.eureka.services.translation.ResultThresholdsCompoundLowLevelAbstractionTranslator;
-import edu.emory.cci.aiw.cvrg.eureka.services.translation.ResultThresholdsLowLevelAbstractionTranslator;
 import edu.emory.cci.aiw.cvrg.eureka.services.translation.SequenceTranslator;
 import edu.emory.cci.aiw.cvrg.eureka.services.translation.SystemPropositionTranslator;
+import edu.emory.cci.aiw.cvrg.eureka.services.translation.ValueThresholdsTranslator;
 import edu.emory.cci.aiw.cvrg.eureka.services.util.PropositionUtil;
 
 /**
@@ -89,10 +88,10 @@ public class PropositionResource {
 	private final SequenceTranslator sequenceTranslator;
 	private final CategorizationTranslator categorizationTranslator;
 	private final SystemPropositionTranslator systemPropositionTranslator;
-	private final FrequencySliceTranslator frequencySliceTranslator;
-	private final FrequencyHighLevelAbstractionTranslator frequencyHighLevelAbstractionTranslator;
-	private final ResultThresholdsLowLevelAbstractionTranslator resultThresholdsLowLevelAbstractionTranslator;
-	private final ResultThresholdsCompoundLowLevelAbstractionTranslator resultThresholdsCompoundLowLevelAbstractionTranslator;
+	private final FrequencyTranslator frequencyTranslator;
+	private final ValueThresholdsTranslator valueThresholdsTranslator;
+	
+	private final ValueComparatorDao valueCompDao;
 
 	/**
 	 * Creates a new instance of PropositionResource
@@ -105,22 +104,18 @@ public class PropositionResource {
 			SequenceTranslator inSequenceTranslator,
 			CategorizationTranslator inCategorizationTranslator,
 			SystemPropositionTranslator inSystemPropositionTranslator,
-			FrequencySliceTranslator inFrequencySliceTranslator,
-			FrequencyHighLevelAbstractionTranslator inFrequencyHighLevelAbstractionTranslator,
-			ResultThresholdsLowLevelAbstractionTranslator inResultThresholdsLowLevelAbstractionTranslator,
-			ResultThresholdsCompoundLowLevelAbstractionTranslator inResultThresholdsCompoundLowLevelAbstractionTranslator) {
+			FrequencyTranslator inFrequencyTranslator,
+			ValueThresholdsTranslator inValueThresholdsTranslator,
+			ValueComparatorDao inValueComparatorDao) {
 		this.propositionDao = inPropositionDao;
 		this.applicationProperties = inApplicationProperties;
 		this.systemPropositionFinder = inFinder;
 		this.sequenceTranslator = inSequenceTranslator;
 		this.categorizationTranslator = inCategorizationTranslator;
 		this.systemPropositionTranslator = inSystemPropositionTranslator;
-		this.frequencySliceTranslator = inFrequencySliceTranslator;
-		this.frequencyHighLevelAbstractionTranslator = inFrequencyHighLevelAbstractionTranslator;
-		this.resultThresholdsLowLevelAbstractionTranslator =
-				inResultThresholdsLowLevelAbstractionTranslator;
-		this.resultThresholdsCompoundLowLevelAbstractionTranslator =
-				inResultThresholdsCompoundLowLevelAbstractionTranslator;
+		this.frequencyTranslator = inFrequencyTranslator;
+		this.valueThresholdsTranslator = inValueThresholdsTranslator;
+		this.valueCompDao = inValueComparatorDao;
 	}
 
 	@GET
@@ -204,7 +199,7 @@ public class PropositionResource {
 	public List<DataElement> getUserPropositions(
 			@PathParam("userId") Long inUserId) {
 		List<DataElement> result = new ArrayList<DataElement>();
-		for (Proposition p : this.propositionDao.getByUserId(inUserId)) {
+		for (DataElementEntity p : this.propositionDao.getByUserId(inUserId)) {
 			this.propositionDao.refresh(p);
 			if (!p.isInSystem()) {
 				PropositionTranslatorVisitor visitor =
@@ -221,21 +216,21 @@ public class PropositionResource {
 	@Path("/user/validate/{userId}")
 	public void validateProposition(@PathParam("userId") Long inUserId,
 			DataElement inDataElement) {
-		List<Proposition> propositions = this.propositionDao
+		List<DataElementEntity> propositions = this.propositionDao
 				.getByUserId(inUserId);
-		Proposition targetProposition = this.propositionDao.getByUserAndKey(
+		DataElementEntity targetProposition = this.propositionDao.getByUserAndKey(
 				inUserId, inDataElement.getKey());
 		List<PropositionDefinition> propDefs = new ArrayList<PropositionDefinition>();
 
-		for (Proposition proposition : propositions) {
-			propDefs.add(PropositionUtil.pack(proposition));
+		for (DataElementEntity proposition : propositions) {
+			propDefs.add(PropositionUtil.pack(proposition, this.valueCompDao));
 		}
 
 		ValidationRequest validationRequest = new ValidationRequest();
 		validationRequest.setUserId(inUserId);
 		validationRequest.setPropositions(propDefs);
 		validationRequest.setTargetProposition(PropositionUtil
-				.pack(targetProposition));
+				.pack(targetProposition, this.valueCompDao));
 
 		EtlClient etlClient = new EtlClient(this.applicationProperties
 				.getEtlUrl());
@@ -252,7 +247,7 @@ public class PropositionResource {
 	public DataElement getUserProposition(
 			@PathParam("propId") Long inPropositionId) {
 		DataElement dataElement = null;
-		Proposition proposition = this.propositionDao.retrieve(inPropositionId);
+		DataElementEntity proposition = this.propositionDao.retrieve(inPropositionId);
 		this.propositionDao.refresh(proposition);
 		if (proposition != null) {
 			if (proposition.isInSystem()) {
@@ -279,10 +274,7 @@ public class PropositionResource {
 		return new PropositionTranslatorVisitor(
 				this.systemPropositionTranslator,
 				this.sequenceTranslator, this.categorizationTranslator,
-				this.frequencySliceTranslator,
-				this.frequencyHighLevelAbstractionTranslator,
-				this.resultThresholdsLowLevelAbstractionTranslator,
-				this.resultThresholdsCompoundLowLevelAbstractionTranslator);
+				this.frequencyTranslator, this.valueThresholdsTranslator);
 	}
 
 	@DELETE
@@ -294,7 +286,7 @@ public class PropositionResource {
 		Response response = Response.ok().build();
 
 		// fetch the proposition for the given ID
-		Proposition target = this.propositionDao.retrieve(inPropositionId);
+		DataElementEntity target = this.propositionDao.retrieve(inPropositionId);
 		if (target == null) {
 			// if the target is not found, return a NOT_FOUND response
 			response = Response.status(Response.Status.NOT_FOUND).build();
@@ -306,21 +298,21 @@ public class PropositionResource {
 					+ target.getUserId()).build();
 		} else {
 			// now get the rest of the propositions for the user
-			List<Proposition> others = this.propositionDao.getByUserId(target
+			List<DataElementEntity> others = this.propositionDao.getByUserId(target
 					.getUserId());
 
 			// now loop through and make sure that the given proposition is
 			// not used in the definition of any of the other propositions.
 			boolean error = false;
-			for (Proposition proposition : others) {
+			for (DataElementEntity proposition : others) {
 				if (proposition.getId().equals(target.getId())) {
 					continue;
 				} else {
 					PropositionChildrenVisitor visitor = new PropositionChildrenVisitor();
 					proposition.accept(visitor);
-					List<? extends Proposition> children = visitor.getChildren();
+					List<? extends DataElementEntity> children = visitor.getChildren();
 
-					for (Proposition p : children) {
+					for (DataElementEntity p : children) {
 						if (p.getId().equals(target.getId())) {
 							response = Response
 									.status(Response.Status.PRECONDITION_FAILED)
@@ -358,7 +350,7 @@ public class PropositionResource {
 				throw new HttpStatusException(
 						Response.Status.INTERNAL_SERVER_ERROR, ex);
 			}
-			Proposition proposition = visitor.getProposition();
+			DataElementEntity proposition = visitor.getProposition();
 			proposition.setLastModified(new Date());
 			this.propositionDao.update(proposition);
 		} else {
@@ -372,10 +364,7 @@ public class PropositionResource {
 				this.systemPropositionTranslator,
 				this.sequenceTranslator,
 				this.categorizationTranslator,
-				this.frequencySliceTranslator,
-				this.frequencyHighLevelAbstractionTranslator,
-				this.resultThresholdsLowLevelAbstractionTranslator,
-				this.resultThresholdsCompoundLowLevelAbstractionTranslator);
+				this.frequencyTranslator, this.valueThresholdsTranslator);
 	}
 
 	@POST
@@ -383,7 +372,7 @@ public class PropositionResource {
 	public void insertProposition(Sequence inSequence) {
 		if (inSequence.getUserId() != null) {
 			try {
-				HighLevelAbstraction abstraction = this.sequenceTranslator
+				SequenceEntity abstraction = this.sequenceTranslator
 						.translateFromElement(inSequence);
 				Date now = new Date();
 				abstraction.setCreated(now);
@@ -404,7 +393,7 @@ public class PropositionResource {
 	public void updateProposition(Sequence inSequence) {
 		if (inSequence.getId() != null && inSequence.getUserId() != null) {
 			try {
-				HighLevelAbstraction abstraction = this.sequenceTranslator
+				SequenceEntity abstraction = this.sequenceTranslator
 						.translateFromElement(inSequence);
 				Date now = new Date();
 				abstraction.setLastModified(now);
@@ -424,7 +413,7 @@ public class PropositionResource {
 	public void insertProposition(Category inElement) {
 		if (inElement.getUserId() != null) {
 			try {
-				Categorization categorization = this.categorizationTranslator
+				CategoryEntity categorization = this.categorizationTranslator
 						.translateFromElement(inElement);
 				Date now = new Date();
 				categorization.setCreated(now);
@@ -445,7 +434,7 @@ public class PropositionResource {
 	public void updateProposition(Category inElement) {
 		if (inElement.getId() != null && inElement.getUserId() != null) {
 			try {
-				Categorization categorization = this.categorizationTranslator
+				CategoryEntity categorization = this.categorizationTranslator
 						.translateFromElement(inElement);
 				Date now = new Date();
 				categorization.setLastModified(now);

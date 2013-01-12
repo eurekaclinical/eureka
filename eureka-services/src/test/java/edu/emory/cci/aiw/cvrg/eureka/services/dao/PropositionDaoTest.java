@@ -28,7 +28,7 @@ import java.util.List;
 import org.junit.Assert;
 import org.junit.Test;
 
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.Proposition;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.DataElementEntity;
 import edu.emory.cci.aiw.cvrg.eureka.services.test.AbstractServiceTest;
 
 /**
@@ -40,7 +40,7 @@ public class PropositionDaoTest extends AbstractServiceTest {
 	@Test
 	public void testDao() {
 		PropositionDao dao = this.getInstance(PropositionDao.class);
-		List<Proposition> propositions = dao.getAll();
+		List<DataElementEntity> propositions = dao.getAll();
 		Assert.assertEquals(9, propositions.size());
 	}
 }

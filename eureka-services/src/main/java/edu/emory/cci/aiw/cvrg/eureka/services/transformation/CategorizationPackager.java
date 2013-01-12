@@ -17,7 +17,7 @@
  * limitations under the License.
  * #L%
  */
-package edu.emory.cci.aiw.cvrg.eureka.services.packaging;
+package edu.emory.cci.aiw.cvrg.eureka.services.transformation;
 
 import org.protempa.CompoundLowLevelAbstractionDefinition;
 import org.protempa.ConstantDefinition;
@@ -26,15 +26,15 @@ import org.protempa.HighLevelAbstractionDefinition;
 import org.protempa.PrimitiveParameterDefinition;
 import org.protempa.PropositionDefinition;
 
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.Categorization;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.CategoryEntity;
 import org.protempa.LowLevelAbstractionDefinition;
 import org.protempa.SliceDefinition;
 
 public final class CategorizationPackager implements
-        PropositionDefinitionPackager<Categorization, PropositionDefinition> {
+        PropositionDefinitionPackager<CategoryEntity, PropositionDefinition> {
 
 	@Override
-	public PropositionDefinition pack(Categorization proposition) {
+	public PropositionDefinition pack(CategoryEntity proposition) {
 		String id = proposition.getKey();
 		String[] inverseIsA = inverseIsA(proposition);
 		switch (proposition.getCategorizationType()) {
@@ -92,7 +92,7 @@ public final class CategorizationPackager implements
 		}
 	}
 
-	private static String[] inverseIsA(Categorization proposition) {
+	private static String[] inverseIsA(CategoryEntity proposition) {
 		String[] result = new String[proposition.getInverseIsA().size()];
 
 		for (int i = 0; i < proposition.getInverseIsA().size(); i++) {

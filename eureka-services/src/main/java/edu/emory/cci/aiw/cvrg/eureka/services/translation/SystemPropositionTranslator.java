@@ -46,7 +46,7 @@ public class SystemPropositionTranslator implements
 	@Override
 	public SystemProposition translateFromElement(SystemElement element) {
 		SystemProposition proposition = new SystemProposition();
-		PropositionTranslatorUtil.populateCommonPropositionFields(proposition,
+		PropositionTranslatorUtil.populateCommonEntityFields(proposition,
 				element);
 		proposition.setSystemType(element.getSystemType());
 		return proposition;

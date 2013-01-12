@@ -26,14 +26,15 @@ import org.protempa.PropertyDefinition;
 import org.protempa.PropositionDefinition;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.SystemElement;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.Proposition;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.DataElementEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.SystemProposition;
+import edu.emory.cci.aiw.cvrg.eureka.services.dao.ValueComparatorDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.finder.PropositionFindException;
 import edu.emory.cci.aiw.cvrg.eureka.services.finder.SystemPropositionFinder;
-import edu.emory.cci.aiw.cvrg.eureka.services.packaging.PropositionDefinitionPackagerVisitor;
+import edu.emory.cci.aiw.cvrg.eureka.services.transformation.PropositionDefinitionPackagerVisitor;
 
 /**
- * Provides common utility functions operating on {@link Proposition}s.
+ * Provides common utility functions operating on {@link DataElementEntity}s.
  */
 public final class PropositionUtil {
 
@@ -41,8 +42,8 @@ public final class PropositionUtil {
 		// do not allow instantiation.
 	}
 
-	public static SystemProposition toSystemProposition(PropositionDefinition inDefinition,
-			Long inUserId) {
+	public static SystemProposition toSystemProposition(
+	        PropositionDefinition inDefinition, Long inUserId) {
 		if (inDefinition == null) {
 			throw new IllegalArgumentException("inDefinition cannot be null");
 		}
@@ -52,8 +53,7 @@ public final class PropositionUtil {
 		sysProp.setDisplayName(inDefinition.getDisplayName());
 		sysProp.setAbbrevDisplayName(inDefinition.getAbbreviatedDisplayName());
 		sysProp.setUserId(inUserId);
-		PropositionDefinitionTypeVisitor propDefTypeVisitor =
-				new PropositionDefinitionTypeVisitor();
+		PropositionDefinitionTypeVisitor propDefTypeVisitor = new PropositionDefinitionTypeVisitor();
 		inDefinition.accept(propDefTypeVisitor);
 		sysProp.setSystemType(propDefTypeVisitor.getSystemType());
 		return sysProp;
@@ -62,10 +62,10 @@ public final class PropositionUtil {
 	/**
 	 * Wraps a proposition definition into a proposition wrapper.
 	 */
-	public static SystemElement toSystemElement(PropositionDefinition inDefinition,
-			boolean summarize, Long inUserId,
-			SystemPropositionFinder inPropositionFinder)
-			throws PropositionFindException {
+	public static SystemElement toSystemElement(
+	        PropositionDefinition inDefinition, boolean summarize,
+	        Long inUserId, SystemPropositionFinder inPropositionFinder)
+	        throws PropositionFindException {
 		if (inDefinition == null) {
 			throw new IllegalArgumentException("inDefinition cannot be null");
 		}
@@ -73,34 +73,33 @@ public final class PropositionUtil {
 		systemElement.setKey(inDefinition.getId());
 		systemElement.setInSystem(true);
 		systemElement.setAbbrevDisplayName(inDefinition
-				.getAbbreviatedDisplayName());
+		        .getAbbreviatedDisplayName());
 		systemElement.setDisplayName(inDefinition.getDisplayName());
 		systemElement.setSummarized(summarize);
 		systemElement.setParent(inDefinition.getChildren().length > 0);
-		PropositionDefinitionTypeVisitor propDefTypeVisitor =
-				new PropositionDefinitionTypeVisitor();
+		PropositionDefinitionTypeVisitor propDefTypeVisitor = new PropositionDefinitionTypeVisitor();
 		inDefinition.accept(propDefTypeVisitor);
 		systemElement.setSystemType(propDefTypeVisitor.getSystemType());
 
 		if (!summarize) {
 			List<SystemElement> children = new ArrayList<SystemElement>();
 			for (String key : inDefinition.getChildren()) {
-				PropositionDefinition pd =
-						inPropositionFinder.find(inUserId, key);
+				PropositionDefinition pd = inPropositionFinder.find(inUserId,
+				        key);
 				if (pd != null) {
-					children.add(
-							toSystemElement(pd, true, inUserId, inPropositionFinder));
+					children.add(toSystemElement(pd, true, inUserId,
+					        inPropositionFinder));
 				} else {
 					throw new PropositionFindException("Could not find child '"
-							+ key + "' of proposition definition '"
-							+ inDefinition.getId() + "'");
+					        + key + "' of proposition definition '"
+					        + inDefinition.getId() + "'");
 				}
 			}
 			systemElement.setChildren(children);
 
 			List<String> properties = new ArrayList<String>();
 			for (PropertyDefinition propertyDef : inDefinition
-					.getPropertyDefinitions()) {
+			        .getPropertyDefinitions()) {
 				properties.add(propertyDef.getName());
 			}
 			systemElement.setProperties(properties);
@@ -108,38 +107,40 @@ public final class PropositionUtil {
 
 		return systemElement;
 	}
-	
+
 	/**
 	 * Converts a proposition entity into an equivalent proposition definition
 	 * understood by Protempa.
-	 *
-	 * @param inProposition the {@link Proposition} to convert
+	 * 
+	 * @param inProposition
+	 *            the {@link DataElementEntity} to convert
 	 * @return a {@link PropositionDefinition} corresponding to the given
-	 * proposition entity
+	 *         proposition entity
 	 */
-	public static PropositionDefinition pack(Proposition inProposition) {
-		PropositionDefinitionPackagerVisitor visitor = 
-				new PropositionDefinitionPackagerVisitor(
-				inProposition.getUserId());
+	public static PropositionDefinition pack(DataElementEntity inProposition,
+	        ValueComparatorDao inValueCompDao) {
+		PropositionDefinitionPackagerVisitor visitor = new PropositionDefinitionPackagerVisitor(
+		        inValueCompDao);
+		visitor.setUserId(inProposition.getUserId());
 		inProposition.accept(visitor);
 		return visitor.getPropositionDefinition();
 	}
 
 	/**
 	 * Converts a list of proposition entities into equivalent proposition
-	 * definitions by repeatedly calling {@link #pack(Proposition)}.
-	 *
-	 * @param inPropositions a {@link List} of {@link Proposition}s to convert
+	 * definitions by repeatedly calling {@link #pack(DataElementEntity)}.
+	 * 
+	 * @param inPropositions
+	 *            a {@link List} of {@link DataElementEntity}s to convert
 	 * @return a {@link List} of {@link PropositionDefinition}s corresponding to
-	 * the given proposition entities
+	 *         the given proposition entities
 	 */
 	public static List<PropositionDefinition> packAll(
-			List<Proposition> inPropositions, Long inUserId) {
-		List<PropositionDefinition> result = 
-				new ArrayList<PropositionDefinition>();
+	        List<DataElementEntity> inPropositions, ValueComparatorDao inValueCompDao) {
+		List<PropositionDefinition> result = new ArrayList<PropositionDefinition>();
 
-		for (Proposition p : inPropositions) {
-			result.add(pack(p));
+		for (DataElementEntity p : inPropositions) {
+			result.add(pack(p, inValueCompDao));
 		}
 
 		return result;

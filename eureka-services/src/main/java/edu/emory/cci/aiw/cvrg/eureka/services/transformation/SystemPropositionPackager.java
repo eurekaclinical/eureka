@@ -17,7 +17,7 @@
  * limitations under the License.
  * #L%
  */
-package edu.emory.cci.aiw.cvrg.eureka.services.packaging;
+package edu.emory.cci.aiw.cvrg.eureka.services.transformation;
 
 import org.protempa.PropositionDefinition;
 

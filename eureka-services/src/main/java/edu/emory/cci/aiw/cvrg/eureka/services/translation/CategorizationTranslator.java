@@ -23,9 +23,9 @@ import com.google.inject.Inject;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.Category;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.Category.CategoricalType;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.DataElement;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.Categorization;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.Categorization.CategorizationType;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.Proposition;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.CategoryEntity;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.CategoryEntity.CategorizationType;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.DataElementEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.exception.DataElementHandlingException;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.PropositionDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.finder.SystemPropositionFinder;
@@ -41,14 +41,12 @@ import javax.ws.rs.core.Response;
  * propositions.
  */
 public final class CategorizationTranslator implements
-		PropositionTranslator<Category, Categorization> {
+		PropositionTranslator<Category, CategoryEntity> {
 
 	private final SequenceTranslator sequenceTranslator;
 	private final SystemPropositionTranslator systemPropositionTranslator;
-	private final FrequencySliceTranslator frequencySliceTranslator;
-	private final FrequencyHighLevelAbstractionTranslator frequencyHighLevelAbstractionTranslator;
-	private final ResultThresholdsLowLevelAbstractionTranslator resultThresholdsLowLevelAbstractionTranslator;
-	private final ResultThresholdsCompoundLowLevelAbstractionTranslator resultThresholdsCompoundLowLevelAbstractionTranslator;
+	private final FrequencyTranslator frequencyTranslator;
+	private final ValueThresholdsTranslator valueThresholdsTranslator;
 	private final TranslatorSupport translatorSupport;
 
 	@Inject
@@ -57,34 +55,27 @@ public final class CategorizationTranslator implements
 			SystemPropositionFinder inFinder,
 			SequenceTranslator inSequenceTranslator,
 			SystemPropositionTranslator inSystemPropositionTranslator,
-			FrequencySliceTranslator inFrequencySliceTranslator,
-			FrequencyHighLevelAbstractionTranslator inFrequencyHighLevelAbstractionTranslator,
-			ResultThresholdsLowLevelAbstractionTranslator inResultThresholdsLowLevelAbstractionTranslator,
-			ResultThresholdsCompoundLowLevelAbstractionTranslator inResultThresholdsCompoundLowLevelAbstractionTranslator) {
+			FrequencyTranslator inFrequencyTranslator,
+			ValueThresholdsTranslator inValueThresholdsTranslator) {
 		this.translatorSupport =
 				new TranslatorSupport(inPropositionDao, inFinder);
 		this.sequenceTranslator = inSequenceTranslator;
 		this.systemPropositionTranslator = inSystemPropositionTranslator;
-		this.frequencySliceTranslator = inFrequencySliceTranslator;
-		this.frequencyHighLevelAbstractionTranslator =
-				inFrequencyHighLevelAbstractionTranslator;
-		this.resultThresholdsLowLevelAbstractionTranslator =
-				inResultThresholdsLowLevelAbstractionTranslator;
-		this.resultThresholdsCompoundLowLevelAbstractionTranslator =
-				inResultThresholdsCompoundLowLevelAbstractionTranslator;
+		this.frequencyTranslator = inFrequencyTranslator;
+		this.valueThresholdsTranslator = inValueThresholdsTranslator;
 	}
 
 	@Override
-	public Categorization translateFromElement(Category element)
+	public CategoryEntity translateFromElement(Category element)
 			throws DataElementHandlingException {
-		Categorization result =
+		CategoryEntity result =
 				this.translatorSupport.getUserEntityInstance(element,
-				Categorization.class);
+				CategoryEntity.class);
 
-		List<Proposition> inverseIsA = new ArrayList<Proposition>();
+		List<DataElementEntity> inverseIsA = new ArrayList<DataElementEntity>();
 		if (element.getChildren() != null) {
 			for (DataElement de : element.getChildren()) {
-				Proposition proposition =
+				DataElementEntity proposition =
 						this.translatorSupport.getSystemEntityInstance(
 						element.getUserId(), de.getKey());
 				inverseIsA.add(proposition);
@@ -97,7 +88,7 @@ public final class CategorizationTranslator implements
 	}
 
 	private CategorizationType checkPropositionType(Category element,
-			List<Proposition> inverseIsA)
+			List<DataElementEntity> inverseIsA)
 			throws DataElementHandlingException {
 		if (inverseIsA.isEmpty()) {
 			throw new DataElementHandlingException(
@@ -107,7 +98,7 @@ public final class CategorizationTranslator implements
 		}
 		Set<CategorizationType> categorizationTypes =
 				new HashSet<CategorizationType>();
-		for (Proposition dataElement : inverseIsA) {
+		for (DataElementEntity dataElement : inverseIsA) {
 			CategorizationType ct = dataElement.categorizationType();//extractType(dataElement);
 			if (categorizationTypes.isEmpty()) {
 				categorizationTypes.add(ct);
@@ -125,20 +116,17 @@ public final class CategorizationTranslator implements
 
 	@Override
 	public Category translateFromProposition(
-			Categorization proposition) {
+			CategoryEntity proposition) {
 		Category result = new Category();
 
 		PropositionTranslatorUtil.populateCommonDataElementFields(result,
 				proposition);
 		List<DataElement> children = new ArrayList<DataElement>();
-		for (Proposition p : proposition.getInverseIsA()) {
+		for (DataElementEntity p : proposition.getInverseIsA()) {
 			PropositionTranslatorVisitor visitor = new PropositionTranslatorVisitor(
 					this.systemPropositionTranslator, this.sequenceTranslator,
 					this,
-					this.frequencySliceTranslator,
-					this.frequencyHighLevelAbstractionTranslator,
-					this.resultThresholdsLowLevelAbstractionTranslator,
-					this.resultThresholdsCompoundLowLevelAbstractionTranslator);
+					this.frequencyTranslator, this.valueThresholdsTranslator);
 			p.accept(visitor);
 			children.add(visitor.getDataElement());
 		}
@@ -148,7 +136,7 @@ public final class CategorizationTranslator implements
 		return result;
 	}
 
-	private CategoricalType checkElementType(Categorization proposition) {
+	private CategoricalType checkElementType(CategoryEntity proposition) {
 		switch (proposition.getCategorizationType()) {
 			case LOW_LEVEL_ABSTRACTION:
 				return CategoricalType.LOW_LEVEL_ABSTRACTION;

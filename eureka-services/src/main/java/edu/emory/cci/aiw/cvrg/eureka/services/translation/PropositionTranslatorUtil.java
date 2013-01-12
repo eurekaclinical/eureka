@@ -24,7 +24,7 @@ import edu.emory.cci.aiw.cvrg.eureka.common.comm.DataElement;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.DataElementField;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.ExtendedProposition;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.PropertyConstraint;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.Proposition;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.DataElementEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.ValueComparator;
 import edu.emory.cci.aiw.cvrg.eureka.common.exception
 		.DataElementHandlingException;
@@ -39,7 +39,7 @@ import edu.emory.cci.aiw.cvrg.eureka.services.finder.PropositionFindException;
 class PropositionTranslatorUtil {
 
 	static void populateExtendedProposition(ExtendedProposition ep, 
-			Proposition proposition, DataElementField dataElement, 
+			DataElementEntity proposition, DataElementField dataElement, 
 			TimeUnitDao timeUnitDao, ValueComparatorDao valCompDao) 
 			throws DataElementHandlingException {
 		ep.setProposition(proposition);
@@ -84,25 +84,25 @@ class PropositionTranslatorUtil {
 	 * Populates the fields common to all propositions based on the given
 	 * proposition.
 	 * 
-	 * @param proposition
-	 *            the {@link Proposition} to populate. Modified as a result of
+	 * @param entity
+	 *            the {@link DataElementEntity} to populate. Modified as a result of
 	 *            calling this method.
 	 * @param dataElement
 	 *            the {@link DataElement} to get the data from
 	 */
-	static void populateCommonPropositionFields(Proposition proposition,
+	static void populateCommonEntityFields(DataElementEntity entity,
 	        DataElement dataElement) {
-		proposition.setId(dataElement.getId());
-		proposition.setDisplayName(dataElement.getDisplayName());
-		proposition.setAbbrevDisplayName(dataElement.getAbbrevDisplayName());
+		entity.setId(dataElement.getId());
+		entity.setDisplayName(dataElement.getDisplayName());
+		entity.setAbbrevDisplayName(dataElement.getAbbrevDisplayName());
 		//proposition.setCreated(dataElement.getCreated());
 		//proposition.setLastModified(dataElement.getLastModified());
-		proposition.setUserId(dataElement.getUserId());
+		entity.setUserId(dataElement.getUserId());
 
 		if (dataElement.getKey() != null) {
-			proposition.setKey(dataElement.getKey());
+			entity.setKey(dataElement.getKey());
 		} else {
-			proposition.setKey(dataElement.getAbbrevDisplayName());
+			entity.setKey(dataElement.getAbbrevDisplayName());
 		}
 	}
 
@@ -114,10 +114,10 @@ class PropositionTranslatorUtil {
 	 *            the {@link DataElement} to populate. Modified as a result of
 	 *            calling this method.
 	 * @param proposition
-	 *            the {@link Proposition} to get the data from
+	 *            the {@link DataElementEntity} to get the data from
 	 */
 	static void populateCommonDataElementFields(DataElement dataElement,
-	        Proposition proposition) {
+	        DataElementEntity proposition) {
 		dataElement.setId(proposition.getId());
 		dataElement.setKey(proposition.getKey());
 		dataElement.setDisplayName(proposition.getDisplayName());
@@ -140,7 +140,7 @@ class PropositionTranslatorUtil {
 		if (ep == null) {
 			ep = new ExtendedProposition();
 		}
-		Proposition proposition = 
+		DataElementEntity proposition = 
 				translatorSupport.getSystemEntityInstance(userId, 
 				dataElement.getDataElementKey());
 		populateExtendedProposition(ep, proposition, dataElement, timeUnitDao, valCompDao);

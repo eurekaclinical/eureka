@@ -49,9 +49,9 @@ import edu.emory.cci.aiw.cvrg.eureka.services.jdbc.DataInserterException;
 /**
  * Create a new task to perform validation on an uploaded file, and submit a job
  * to the ETL layer.
- *
+ * 
  * @author hrathod
- *
+ * 
  */
 public class JobTask implements Runnable {
 
@@ -84,6 +84,10 @@ public class JobTask implements Runnable {
 	 */
 	private List<PropositionDefinition> userPropositions;
 	/**
+	 * The user-created propositions to actually display in i2b2.
+	 */
+	private List<String> nonHelperPropositionIds;
+	/**
 	 * The class level logger.
 	 */
 	private static final Logger LOGGER = LoggerFactory.getLogger(JobTask.class);
@@ -91,23 +95,24 @@ public class JobTask implements Runnable {
 	/**
 	 * Construct an instance with the given file upload, DAO, and related
 	 * information.
-	 *
-	 * @param inFileDao               The DAO used to update status information
-	 *                                   about the file upload.
-	 * @param inServiceProperties Application level configuration object,
-	 *                                   used to fetch relevant URLs needed to
-	 *                                   communicate with the ETL layer.
+	 * 
+	 * @param inFileDao
+	 *            The DAO used to update status information about the file
+	 *            upload.
+	 * @param inServiceProperties
+	 *            Application level configuration object, used to fetch relevant
+	 *            URLs needed to communicate with the ETL layer.
 	 */
 	@Inject
-	public JobTask(FileDao inFileDao,
-			ServiceProperties inServiceProperties) {
+	public JobTask(FileDao inFileDao, ServiceProperties inServiceProperties) {
 		super();
 		this.fileDao = inFileDao;
 		this.serviceProperties = inServiceProperties;
 	}
 
 	/**
-	 * @param inFileUploadId the fileUploadId to set
+	 * @param inFileUploadId
+	 *            the fileUploadId to set
 	 */
 	public void setFileUploadId(Long inFileUploadId) {
 		this.fileUploadId = inFileUploadId;
@@ -115,18 +120,32 @@ public class JobTask implements Runnable {
 
 	/**
 	 * Sets the propositions to add to the task.
-	 * @param inPropositions The list of propositions to add to the task.
+	 * 
+	 * @param inPropositions
+	 *            The list of propositions to add to the task.
 	 */
-	public void setPropositions (List<PropositionDefinition> inPropositions) {
+	public void setPropositions(List<PropositionDefinition> inPropositions) {
 		this.propositions = inPropositions;
 	}
 
 	/**
 	 * Sets the user-created propositions to add to the task.
-	 * @param inPropositions The list of user-created propositions to add to the task
+	 * 
+	 * @param inPropositions
+	 *            The list of user-created propositions to add to the task
 	 */
 	public void setUserPropositions(List<PropositionDefinition> inPropositions) {
 		this.userPropositions = inPropositions;
+	}
+
+	/**
+	 * Sets the user-created propositions to show in i2b2.
+	 * 
+	 * @param inPropositionIds
+	 *            The list of user-created proposition IDs to show in i2b2
+	 */
+	public void setNonHelperPropositionIds(List<String> inPropositionIds) {
+		this.nonHelperPropositionIds = inPropositionIds;
 	}
 
 	/*
@@ -139,10 +158,10 @@ public class JobTask implements Runnable {
 			try {
 				// first we make sure that the file is validated
 				DataProvider dataProvider = new XlsxDataProvider(
-						this.fileUpload);
+				        this.fileUpload);
 				this.validateUpload(dataProvider);
 				LOGGER.debug("Data file validated: {}",
-						this.fileUpload.getLocation());
+				        this.fileUpload.getLocation());
 				this.fileUpload.setValidated(true);
 				this.fileUpload.setTimestamp(new Date());
 				this.fileDao.update(this.fileUpload);
@@ -175,21 +194,24 @@ public class JobTask implements Runnable {
 
 	/**
 	 * Validate the data provided by the given data provider.
-	 *
-	 * @param dataProvider Used to fetch the data to validate.
-	 * @throws TaskException Thrown if there are any errors while validating the
-	 *                          data.
+	 * 
+	 * @param dataProvider
+	 *            Used to fetch the data to validate.
+	 * @throws TaskException
+	 *             Thrown if there are any errors while validating the data.
 	 */
 	private void validateUpload(DataProvider dataProvider) throws TaskException {
 		DataValidator dataValidator = new DataValidator();
 		try {
-			dataValidator.setPatients(dataProvider.getPatients()).setEncounters(dataProvider.
-					getEncounters()).setProviders(dataProvider.getProviders()).
-					setCpts(dataProvider.getCptCodes()).setIcd9Procedures(dataProvider.
-					getIcd9Procedures()).setIcd9Diagnoses(dataProvider.
-					getIcd9Diagnoses()).setMedications(dataProvider.getMedications()).
-					setLabs(dataProvider.getLabs()).setVitals(dataProvider.getVitals()).
-					validate();
+			dataValidator.setPatients(dataProvider.getPatients())
+			        .setEncounters(dataProvider.getEncounters())
+			        .setProviders(dataProvider.getProviders())
+			        .setCpts(dataProvider.getCptCodes())
+			        .setIcd9Procedures(dataProvider.getIcd9Procedures())
+			        .setIcd9Diagnoses(dataProvider.getIcd9Diagnoses())
+			        .setMedications(dataProvider.getMedications())
+			        .setLabs(dataProvider.getLabs())
+			        .setVitals(dataProvider.getVitals()).validate();
 		} catch (DataProviderException e) {
 			throw new TaskException(e);
 		}
@@ -223,11 +245,12 @@ public class JobTask implements Runnable {
 
 	/**
 	 * Process the uploaded file into the data base, to be used by Protempa.
-	 *
-	 * @param dataProvider The data provider to get the data from.
-	 * @throws TaskException Thrown if there are errors while fetching the user
-	 *                          configuration, or while inserting data into the
-	 *                          data source.
+	 * 
+	 * @param dataProvider
+	 *            The data provider to get the data from.
+	 * @throws TaskException
+	 *             Thrown if there are errors while fetching the user
+	 *             configuration, or while inserting data into the data source.
 	 */
 	private void processUpload(DataProvider dataProvider) throws TaskException {
 		Configuration conf = this.getUserConfiguration();
@@ -238,8 +261,10 @@ public class JobTask implements Runnable {
 				dataInserter.insertEncounters(dataProvider.getEncounters());
 				dataInserter.insertProviders(dataProvider.getProviders());
 				dataInserter.insertCptCodes(dataProvider.getCptCodes());
-				dataInserter.insertIcd9Diagnoses(dataProvider.getIcd9Diagnoses());
-				dataInserter.insertIcd9Procedures(dataProvider.getIcd9Procedures());
+				dataInserter.insertIcd9Diagnoses(dataProvider
+				        .getIcd9Diagnoses());
+				dataInserter.insertIcd9Procedures(dataProvider
+				        .getIcd9Procedures());
 				dataInserter.insertLabs(dataProvider.getLabs());
 				dataInserter.insertMedications(dataProvider.getMedications());
 				dataInserter.insertVitals(dataProvider.getVitals());
@@ -256,10 +281,11 @@ public class JobTask implements Runnable {
 	/**
 	 * Submit a new job to the back-end after validating and processing the file
 	 * upload.
-	 *
-	 * @throws TaskException Thrown if there are any errors in submitting the
-	 *                          job to the ETL layer.
-	 *
+	 * 
+	 * @throws TaskException
+	 *             Thrown if there are any errors in submitting the job to the
+	 *             ETL layer.
+	 * 
 	 */
 	private void submitJob() throws TaskException {
 
@@ -271,9 +297,9 @@ public class JobTask implements Runnable {
 		jobRequest.setJob(job);
 		jobRequest.setPropositions(this.propositions);
 		jobRequest.setUserPropositions(this.userPropositions);
+		jobRequest.setNonHelperPropositionIds(this.nonHelperPropositionIds);
 
-		EtlClient etlClient = new EtlClient(this.serviceProperties.getEtlUrl
-				());
+		EtlClient etlClient = new EtlClient(this.serviceProperties.getEtlUrl());
 		try {
 			etlClient.submitJob(jobRequest);
 			LOGGER.info("Job successfully submitted to ETL layer.");
@@ -284,9 +310,9 @@ public class JobTask implements Runnable {
 
 	/**
 	 * Get the configuration associated with the current user.
-	 *
+	 * 
 	 * @return The user configuration.
-	 *
+	 * 
 	 */
 	private Configuration getUserConfiguration() {
 		if (this.configuration == null) {
@@ -305,8 +331,9 @@ public class JobTask implements Runnable {
 	/**
 	 * Set the completed flag on the current file upload, with the given error
 	 * message.
-	 *
-	 * @param message The error message.
+	 * 
+	 * @param message
+	 *            The error message.
 	 */
 	private void setCompleteWithError(String message) {
 		FileError error = new FileError();
@@ -314,7 +341,6 @@ public class JobTask implements Runnable {
 		error.setText(message);
 		error.setLineNumber(Long.valueOf(0));
 		error.setFileUpload(this.fileUpload);
-
 
 		this.fileUpload.addError(error);
 		this.fileUpload.setCompleted(true);

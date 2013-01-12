@@ -31,8 +31,8 @@ import edu.emory.cci.aiw.cvrg.eureka.common.comm.DataElementField;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.Sequence;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.Sequence.RelatedDataElementField;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.ExtendedProposition;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.HighLevelAbstraction;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.Proposition;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.SequenceEntity;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.DataElementEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.Relation;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.RelationOperator;
 import edu.emory.cci.aiw.cvrg.eureka.common.exception.DataElementHandlingException;
@@ -47,10 +47,10 @@ import edu.emory.cci.aiw.cvrg.eureka.services.finder.SystemPropositionFinder;
  * Creates extended propositions and relations as needed.
  */
 public class SequenceTranslator implements
-		PropositionTranslator<Sequence, HighLevelAbstraction> {
+		PropositionTranslator<Sequence, SequenceEntity> {
 
 	private Map<Long, ExtendedProposition> extendedProps;
-	private final Map<String, Proposition> propositions;
+	private final Map<String, DataElementEntity> propositions;
 	private final TimeUnitDao timeUnitDao;
 	private final RelationOperatorDao relationOperatorDao;
 	private final TranslatorSupport translatorSupport;
@@ -66,21 +66,20 @@ public class SequenceTranslator implements
 		this.timeUnitDao = inTimeUnitDao;
 		this.relationOperatorDao = inRelationOperatorDao;
 		this.extendedProps = new HashMap<Long, ExtendedProposition>();
-		this.propositions = new HashMap<String, Proposition>();
+		this.propositions = new HashMap<String, DataElementEntity>();
 		this.valueComparatorDao = inValueComparatorDao;
 	}
 
 	@Override
-	public HighLevelAbstraction translateFromElement(Sequence element)
+	public SequenceEntity translateFromElement(Sequence element)
 			throws DataElementHandlingException {
 		if (element == null) {
 			throw new IllegalArgumentException("element cannot be null");
 		}
 		Long userId = element.getUserId();
-		HighLevelAbstraction result =
+		SequenceEntity result =
 				this.translatorSupport.getUserEntityInstance(element,
-				HighLevelAbstraction.class);
-		result.setCreatedFrom(HighLevelAbstraction.CreatedFrom.SEQUENCE);
+				SequenceEntity.class);
 
 		ExtendedProposition ep =
 				createExtendedProposition(result.getPrimaryProposition(),
@@ -137,7 +136,7 @@ public class SequenceTranslator implements
 			i++;
 		}
 
-		List<Proposition> abstractedFrom = new ArrayList<Proposition>();
+		List<DataElementEntity> abstractedFrom = new ArrayList<DataElementEntity>();
 		for (ExtendedProposition extendedProp : this.extendedProps.values()) {
 			abstractedFrom.add(extendedProp.getProposition());
 		}
@@ -146,10 +145,10 @@ public class SequenceTranslator implements
 		return result;
 	}
 
-	private Proposition getOrCreateProposition(Long userId, String key)
+	private DataElementEntity getOrCreateProposition(Long userId, String key)
 			throws DataElementHandlingException {
 
-		Proposition proposition = null;
+		DataElementEntity proposition = null;
 
 		// first see if we already have the proposition
 		if (this.propositions.containsKey(key)) {
@@ -176,7 +175,7 @@ public class SequenceTranslator implements
 			if (origExtendedProposition == null) {
 				ep = new ExtendedProposition();
 			}
-			Proposition proposition =
+			DataElementEntity proposition =
 					getOrCreateProposition(userId,
 					dataElement.getDataElementKey());
 			PropositionTranslatorUtil.populateExtendedProposition(ep,
@@ -189,7 +188,7 @@ public class SequenceTranslator implements
 	}
 
 	@Override
-	public Sequence translateFromProposition(HighLevelAbstraction proposition) {
+	public Sequence translateFromProposition(SequenceEntity proposition) {
 		Sequence result = new Sequence();
 		PropositionTranslatorUtil.populateCommonDataElementFields(result,
 				proposition);

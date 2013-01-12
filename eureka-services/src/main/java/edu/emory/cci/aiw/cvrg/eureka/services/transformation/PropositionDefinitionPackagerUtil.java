@@ -17,7 +17,7 @@
  * limitations under the License.
  * #L%
  */
-package edu.emory.cci.aiw.cvrg.eureka.services.packaging;
+package edu.emory.cci.aiw.cvrg.eureka.services.transformation;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.TimeUnit;
 import org.protempa.proposition.value.AbsoluteTimeUnit;

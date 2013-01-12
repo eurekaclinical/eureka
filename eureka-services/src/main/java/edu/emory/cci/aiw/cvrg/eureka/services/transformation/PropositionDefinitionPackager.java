@@ -17,12 +17,12 @@
  * limitations under the License.
  * #L%
  */
-package edu.emory.cci.aiw.cvrg.eureka.services.packaging;
+package edu.emory.cci.aiw.cvrg.eureka.services.transformation;
 
 import org.protempa.PropositionDefinition;
 
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.Proposition;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.DataElementEntity;
 
-interface PropositionDefinitionPackager<P extends Proposition, Q extends PropositionDefinition> {
-	Q pack(P proposition);
+interface PropositionDefinitionPackager<E extends DataElementEntity, P extends PropositionDefinition> {
+	P pack(E entity);
 }

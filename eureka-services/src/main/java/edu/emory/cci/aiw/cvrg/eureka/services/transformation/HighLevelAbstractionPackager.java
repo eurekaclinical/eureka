@@ -17,10 +17,10 @@
  * limitations under the License.
  * #L%
  */
-package edu.emory.cci.aiw.cvrg.eureka.services.packaging;
+package edu.emory.cci.aiw.cvrg.eureka.services.transformation;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.ExtendedProposition;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.HighLevelAbstraction;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.SequenceEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.Relation;
 import org.protempa.HighLevelAbstractionDefinition;
 import org.protempa.PropertyConstraint;
@@ -28,14 +28,14 @@ import org.protempa.TemporalExtendedPropositionDefinition;
 import org.protempa.proposition.value.ValueComparator;
 import org.protempa.proposition.value.ValueType;
 
-import static edu.emory.cci.aiw.cvrg.eureka.services.packaging.PropositionDefinitionPackagerUtil.unit;
+import static edu.emory.cci.aiw.cvrg.eureka.services.transformation.PropositionDefinitionPackagerUtil.unit;
 
 final class HighLevelAbstractionPackager
         implements
-        PropositionDefinitionPackager<HighLevelAbstraction, HighLevelAbstractionDefinition> {
+        PropositionDefinitionPackager<SequenceEntity, HighLevelAbstractionDefinition> {
 
 	@Override
-	public HighLevelAbstractionDefinition pack(HighLevelAbstraction proposition) {
+	public HighLevelAbstractionDefinition pack(SequenceEntity proposition) {
 		HighLevelAbstractionDefinition result = new HighLevelAbstractionDefinition(
 		        proposition.getKey());
 

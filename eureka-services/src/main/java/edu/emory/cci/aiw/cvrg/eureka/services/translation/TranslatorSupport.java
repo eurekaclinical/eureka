@@ -20,7 +20,7 @@
 package edu.emory.cci.aiw.cvrg.eureka.services.translation;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.DataElement;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.Proposition;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.DataElementEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.exception.DataElementHandlingException;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.PropositionDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.finder.PropositionFindException;
@@ -53,9 +53,9 @@ final class TranslatorSupport {
 	 * @return
 	 * @throws DataElementHandlingException 
 	 */
-	Proposition getSystemEntityInstance(Long userId, String key) 
+	DataElementEntity getSystemEntityInstance(Long userId, String key) 
 			throws DataElementHandlingException {
-		Proposition abstractedFrom =
+		DataElementEntity abstractedFrom =
 				propositionDao.getByUserAndKey(userId,key);
 		if (abstractedFrom == null) {
 			try {
@@ -80,7 +80,7 @@ final class TranslatorSupport {
 	 * @param cls
 	 * @return 
 	 */
-	<P extends Proposition> P getUserEntityInstance(DataElement element, 
+	<P extends DataElementEntity> P getUserEntityInstance(DataElement element, 
 			Class<P> cls) {
 		String key;
 		if (element.getKey() != null) {
@@ -92,7 +92,7 @@ final class TranslatorSupport {
 		Date now = new Date();
 
 		P result;
-		Proposition oldEntity = propositionDao.getByUserAndKey(
+		DataElementEntity oldEntity = propositionDao.getByUserAndKey(
 				element.getUserId(), key);
 		if (cls.isInstance(oldEntity)) {
 			result = cls.cast(oldEntity);
@@ -112,7 +112,7 @@ final class TranslatorSupport {
 		result.setInSystem(false);
 		result.setLastModified(now);
 		
-		PropositionTranslatorUtil.populateCommonPropositionFields(result,
+		PropositionTranslatorUtil.populateCommonEntityFields(result,
 				element);
 		
 		return result;

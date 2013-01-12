@@ -27,7 +27,7 @@ import edu.emory.cci.aiw.cvrg.eureka.common.comm.Frequency;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.ValueThresholds;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.Sequence;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.SystemElement;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.Proposition;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.DataElementEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.exception.DataElementHandlingException;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.PropositionDao;
 
@@ -36,52 +36,41 @@ public final class DataElementTranslatorVisitor implements DataElementVisitor {
 	private final SystemPropositionTranslator systemPropositionTranslator;
 	private final SequenceTranslator sequenceTranslator;
 	private final CategorizationTranslator categorizationTranslator;
-	private final FrequencySliceTranslator frequencySliceTranslator;
-	private final FrequencyHighLevelAbstractionTranslator frequencyHighLevelAbstractionTranslator;
-	private final ResultThresholdsLowLevelAbstractionTranslator
-			resultThresholdsLowLevelAbstractionTranslator;
-	private final ResultThresholdsCompoundLowLevelAbstractionTranslator resultThresholdsCompoundLowLevelAbstractionTranslator;
-	
-	private Proposition proposition;
+	private final FrequencyTranslator frequencyTranslator;
+	private final ValueThresholdsTranslator valueThresholdsTranslator;
+
+	private DataElementEntity proposition;
 
 	@Inject
 	public DataElementTranslatorVisitor(
-			SystemPropositionTranslator inSystemPropositionTranslator,
-			SequenceTranslator inSequenceTranslator,
-			CategorizationTranslator inCategorizationTranslator,
-			FrequencySliceTranslator inFrequencySliceTranslator,
-			FrequencyHighLevelAbstractionTranslator inFrequencyHighLevelAbstractionTranslator,
-			ResultThresholdsLowLevelAbstractionTranslator
-					inResultThresholdsLowLevelAbstractionTranslator,
-			ResultThresholdsCompoundLowLevelAbstractionTranslator
-					inResultThresholdsCompoundLowLevelAbstractionTranslator) {
+	        SystemPropositionTranslator inSystemPropositionTranslator,
+	        SequenceTranslator inSequenceTranslator,
+	        CategorizationTranslator inCategorizationTranslator,
+	        FrequencyTranslator inFrequencyTranslator,
+	        ValueThresholdsTranslator inValueThresholdsTranslator) {
 		this.systemPropositionTranslator = inSystemPropositionTranslator;
 		this.sequenceTranslator = inSequenceTranslator;
 		this.categorizationTranslator = inCategorizationTranslator;
-		this.frequencySliceTranslator = inFrequencySliceTranslator;
-		this.frequencyHighLevelAbstractionTranslator = inFrequencyHighLevelAbstractionTranslator;
-		this.resultThresholdsLowLevelAbstractionTranslator =
-				inResultThresholdsLowLevelAbstractionTranslator;
-		this.resultThresholdsCompoundLowLevelAbstractionTranslator =
-				inResultThresholdsCompoundLowLevelAbstractionTranslator;
+		this.frequencyTranslator = inFrequencyTranslator;
+		this.valueThresholdsTranslator = inValueThresholdsTranslator;
 	}
 
-	public Proposition getProposition() {
+	public DataElementEntity getProposition() {
 		return proposition;
 	}
 
 	@Override
-	public void visit(SystemElement systemElement) 
-			throws DataElementHandlingException {
+	public void visit(SystemElement systemElement)
+	        throws DataElementHandlingException {
 		proposition = this.systemPropositionTranslator
-				.translateFromElement(systemElement);
+		        .translateFromElement(systemElement);
 	}
 
 	@Override
-	public void visit(Category categoricalElement) 
-			throws DataElementHandlingException{
+	public void visit(Category categoricalElement)
+	        throws DataElementHandlingException {
 		proposition = this.categorizationTranslator
-				.translateFromElement(categoricalElement);
+		        .translateFromElement(categoricalElement);
 	}
 
 	@Override
@@ -91,26 +80,13 @@ public final class DataElementTranslatorVisitor implements DataElementVisitor {
 
 	@Override
 	public void visit(Frequency frequency) throws DataElementHandlingException {
-		if (frequency.getIsConsecutive()) {
-			proposition = this.frequencyHighLevelAbstractionTranslator
-					.translateFromElement(frequency);
-		} else {
-			proposition = this.frequencySliceTranslator
-					.translateFromElement(frequency);
-		}
+		proposition = this.frequencyTranslator.translateFromElement(frequency);
 	}
 
 	@Override
-	public void visit(ValueThresholds thresholds) 
-			throws DataElementHandlingException {
-		if (thresholds.getValueThresholds().size() > 1) {
-			proposition = this
-					.resultThresholdsCompoundLowLevelAbstractionTranslator
-					.translateFromElement(thresholds);
-		} else {
-			proposition = this.resultThresholdsLowLevelAbstractionTranslator
-					.translateFromElement(thresholds);
-		}
+	public void visit(ValueThresholds thresholds)
+	        throws DataElementHandlingException {
+		proposition = this.valueThresholdsTranslator.translateFromElement(thresholds);
 	}
 
 }
