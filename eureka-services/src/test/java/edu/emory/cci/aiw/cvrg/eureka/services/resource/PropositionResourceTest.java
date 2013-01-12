@@ -19,23 +19,24 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.services.resource;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.ws.rs.core.MediaType;
-
-import junit.framework.Assert;
 
 import org.junit.Test;
 
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.GenericType;
 import com.sun.jersey.api.client.WebResource;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.Category;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.DataElement;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.DataElementField;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.Frequency;
-import java.util.Date;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.TimeUnit;
+import edu.emory.cci.aiw.cvrg.eureka.services.dao.TimeUnitDao;
+
+import junit.framework.Assert;
 
 public class PropositionResourceTest extends AbstractServiceResourceTest {
 
@@ -57,10 +58,17 @@ public class PropositionResourceTest extends AbstractServiceResourceTest {
 
 	@Test
 	public void deletePropositionTest() {
-		
+
+		TimeUnitDao timeUnitDao = this.getInstance(TimeUnitDao.class);
+		List<TimeUnit> timeUnits = timeUnitDao.getAll();
+
 		DataElementField dataElementField = new DataElementField();
 		dataElementField.setDataElementKey("test-low-level");
 		dataElementField.setType(DataElementField.Type.VALUE_THRESHOLD);
+		dataElementField.setHasDuration(Boolean.FALSE);
+		dataElementField.setHasPropertyConstraint(Boolean.FALSE);
+		dataElementField.setMinDurationUnits(timeUnits.get(0).getId());
+		dataElementField.setMaxDurationUnits(timeUnits.get(0).getId());
 
 		Frequency frequency = new Frequency();
 		frequency.setKey("testThreshold-frequency");

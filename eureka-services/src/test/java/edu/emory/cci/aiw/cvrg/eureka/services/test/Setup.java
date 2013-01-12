@@ -35,20 +35,17 @@ import com.google.inject.Provider;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.CategoryEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.CategoryEntity.CategorizationType;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.FileUpload;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.ValueThresholdGroupEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.DataElementEntity;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.FileUpload;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.Role;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.ValueThresholdEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.SystemProposition;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.ThresholdsOperator;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.ThresholdsOperator_;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.TimeUnit;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.User;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.ValueThresholdGroupEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.test.TestDataException;
 import edu.emory.cci.aiw.cvrg.eureka.common.test.TestDataProvider;
 import edu.emory.cci.aiw.cvrg.eureka.services.util.StringUtil;
-import javax.persistence.criteria.Path;
-import javax.persistence.criteria.Root;
 
 /**
  * Sets up the environment for testing, by bootstrapping the data store with
@@ -68,6 +65,7 @@ public class Setup implements TestDataProvider {
 	private User adminUser;
 	private User superUser;
 	private List<DataElementEntity> propositions;
+	private List<TimeUnit> timeUnits;
 
 	/**
 	 * Create a Bootstrap class with an EntityManager.
@@ -92,14 +90,18 @@ public class Setup implements TestDataProvider {
 		this.propositions =
 				this.createDataElements(this.researcherUser, this.adminUser,
 						this.superUser);
+		this.timeUnits = this.createTimeUnits();
 	}
 
 	@Override
 	public void tearDown() throws TestDataException {
 		this.remove(FileUpload.class);
-		this.removeDataElements();
+//		this.removeDataElements();
+		this.remove(DataElementEntity.class);
 		this.remove(User.class);
 		this.remove(Role.class);
+		this.remove(TimeUnit.class);
+		this.remove(ThresholdsOperator.class);
 		this.researcherRole = null;
 		this.adminRole = null;
 		this.superRole = null;
@@ -107,6 +109,7 @@ public class Setup implements TestDataProvider {
 		this.adminUser = null;
 		this.superUser = null;
 		this.propositions = null;
+		this.timeUnits = null;
 	}
 
 	private <T> void remove(Class<T> className) {
@@ -128,26 +131,6 @@ public class Setup implements TestDataProvider {
 		entityManager.getTransaction().commit();
 	}
 	
-	private void removeDataElements() {
-		EntityManager entityManager = this.getEntityManager();
-		for (DataElementEntity proposition : this.propositions) {
-			System.out.println("Deleting data element " + proposition);
-			entityManager.getTransaction().begin();
-			entityManager.remove(proposition);
-			entityManager.getTransaction().commit();
-		}
-		
-		CriteriaBuilder builder = entityManager.getCriteriaBuilder();
-		CriteriaQuery<ThresholdsOperator> criteriaQuery = builder.createQuery(ThresholdsOperator.class);
-		Root<ThresholdsOperator> root = criteriaQuery.from(ThresholdsOperator.class);
-		Path<String> path = root.get(ThresholdsOperator_.name);
-		ThresholdsOperator op = entityManager.createQuery(criteriaQuery.where(
-				builder.equal(path, "any"))).getSingleResult();
-		entityManager.getTransaction().begin();
-		entityManager.remove(op);
-		entityManager.getTransaction().commit();
-	}
-
 	private List<DataElementEntity> createDataElements(User... users) {
 		System.out.println("Creating data elements...");
 		List<DataElementEntity> dataElements =
@@ -277,5 +260,19 @@ public class Setup implements TestDataProvider {
 		entityManager.flush();
 		entityManager.getTransaction().commit();
 		return role;
+	}
+
+	private List<TimeUnit> createTimeUnits () {
+		EntityManager entityManager = this.getEntityManager();
+		TimeUnit timeUnit = new TimeUnit();
+		timeUnit.setName("test");
+		timeUnit.setDescription("test timeunit");
+		entityManager.getTransaction().begin();
+		entityManager.persist(timeUnit);
+		entityManager.flush();
+		entityManager.getTransaction().commit();
+		List<TimeUnit> result = new ArrayList<TimeUnit>();
+		result.add(timeUnit);
+		return result;
 	}
 }
