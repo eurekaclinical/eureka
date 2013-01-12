@@ -129,13 +129,13 @@ public final class DdlGenerator {
 				.add(edu.emory.cci.aiw.cvrg.eureka.common.entity
 						.AbstractFileInfo.class);
 		serviceClasses.add(edu.emory.cci.aiw.cvrg.eureka.common.entity
-						.Proposition.class);
+						.DataElementEntity.class);
 		serviceClasses.add(edu.emory.cci.aiw.cvrg.eureka.common.entity
 						.TemporalPattern.class);
 		serviceClasses.add(edu.emory.cci.aiw.cvrg.eureka.common.entity
-			.HighLevelAbstraction.class);
+			.SequenceEntity.class);
 		serviceClasses.add(edu.emory.cci.aiw.cvrg.eureka.common.entity
-			.Categorization.class);
+			.CategoryEntity.class);
 		serviceClasses.add(edu.emory.cci.aiw.cvrg.eureka.common.entity
 			.SystemProposition.class);
 		serviceClasses.add(edu.emory.cci.aiw.cvrg.eureka.common.entity

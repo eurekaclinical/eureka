@@ -19,182 +19,112 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.common.entity;
 
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.Categorization.CategorizationType;
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+
 import org.apache.commons.lang.builder.ToStringBuilder;
 
 /**
- * Contains attributes which describe a Protempa low-level abstraction in the
- * context of the Eureka! UI.
+ * Represents a Protempa allowed value for a {@link LowLevelAbstraction}
  */
 @Entity
 @Table(name = "value_thresholds")
-public class ValueThresholdEntity extends Proposition {
+public class ValueThresholdEntity {
 
-	@Column(nullable = false)
-	private String name;
-
-	/*
-	 * Minimum number of values to match. Default value is 1.
-	 */
-	private int minValues = 1;
-
-	/*
-	 * Minimum allowed time gap between values
-	 */
-	private Integer minGapValues;
+	@Id
+	@SequenceGenerator(sequenceName = "CONSTRAINT_SEQ", name = "CONSTRAINT_SEQ_GENERATOR", allocationSize = 1, initialValue = 1)
+	@GeneratedValue(generator = "CONSTRAINT_SEQ_GENERATOR")
+	private Long id;
 
 	@ManyToOne
-	@JoinColumn(referencedColumnName = "id")
-	private TimeUnit minGapValuesUnits;
+	private DataElementEntity abstractedFrom;
 
-	/*
-	 * Maximum allowed time gap between values
-	 */
-	private Integer maxGapValues;
+	private Number minValueThreshold;
+	private String minUnits;
 
-	@ManyToOne
-	@JoinColumn(referencedColumnName = "id")
-	private TimeUnit maxGapValuesUnits;
-
-	/*
-	 * The propositions that this low-level abstraction is abstracted from.
-	 */
-	@ManyToOne(cascade = { CascadeType.MERGE, CascadeType.REFRESH,
-	        CascadeType.PERSIST }, optional = false)
-	@JoinTable(name = "abstracted_from", joinColumns = { @JoinColumn(name = "target_proposition_id") })
-	private Proposition abstractedFrom;
-
-	/*
-	 * The allowed values of the low-level abstraction
-	 */
-	@OneToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name = "userConstraint", referencedColumnName = "id", nullable = false)
-	private SimpleParameterConstraint userConstraint;
-
-	@OneToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name = "complementConstraint", referencedColumnName = "id", nullable = false)
-	private SimpleParameterConstraint complementConstraint;
-	
 	@OneToOne
-	@JoinColumn(name = "thresholdsOp", referencedColumnName = "id", nullable = false)
-	private ThresholdsOperator thresholdsOperator;
+	@JoinColumn(referencedColumnName = "id")
+	private ValueComparator minValueComp;
 
-	public enum CreatedFrom {
-		FREQUENCY, VALUE_THRESHOLD
+	private Number maxValueThreshold;
+	private String maxUnits;
+
+	@OneToOne
+	@JoinColumn(referencedColumnName = "id")
+	private ValueComparator maxValueComp;
+
+	public Long getId() {
+		return id;
 	}
 
-	@Column(nullable = false)
-	private CreatedFrom createdFrom;
-	
-	public ValueThresholdEntity() {
-		super(CategorizationType.LOW_LEVEL_ABSTRACTION);
+	public void setId(Long id) {
+		this.id = id;
 	}
 
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String inName) {
-		name = inName;
-	}
-
-	public int getMinValues() {
-		return minValues;
-	}
-	
-	public void setMinValues(int minValues) {
-		this.minValues = minValues;
-	}
-
-	public Integer getMinGapValues() {
-		return minGapValues;
-	}
-
-	public void setMinGapValues(Integer minGapValues) {
-		this.minGapValues = minGapValues;
-	}
-
-	public TimeUnit getMinGapValuesUnits() {
-		return minGapValuesUnits;
-	}
-
-	public void setMinGapValuesUnits(TimeUnit minGapValuesUnits) {
-		this.minGapValuesUnits = minGapValuesUnits;
-	}
-
-	public Integer getMaxGapValues() {
-		return maxGapValues;
-	}
-
-	public void setMaxGapValues(Integer maxGapValues) {
-		this.maxGapValues = maxGapValues;
-	}
-
-	public TimeUnit getMaxGapValuesUnits() {
-		return maxGapValuesUnits;
-	}
-
-	public void setMaxGapValuesUnits(TimeUnit maxGapValuesUnits) {
-		this.maxGapValuesUnits = maxGapValuesUnits;
-	}
-
-	public Proposition getAbstractedFrom() {
+	public DataElementEntity getAbstractedFrom() {
 		return abstractedFrom;
 	}
 
-	public void setAbstractedFrom(Proposition abstractedFrom) {
+	public void setAbstractedFrom(DataElementEntity abstractedFrom) {
 		this.abstractedFrom = abstractedFrom;
 	}
 
-	public SimpleParameterConstraint getUserConstraint() {
-		return userConstraint;
+	public Number getMinValueThreshold() {
+		return minValueThreshold;
 	}
 
-	public void setUserConstraint(SimpleParameterConstraint userConstraint) {
-		this.userConstraint = userConstraint;
+	public void setMinValueThreshold(Number minValueThreshold) {
+		this.minValueThreshold = minValueThreshold;
 	}
 
-	public SimpleParameterConstraint getComplementConstraint() {
-		return complementConstraint;
+	public String getMinUnits() {
+		return minUnits;
 	}
 
-	public void setComplementConstraint(
-	        SimpleParameterConstraint complementConstraint) {
-		this.complementConstraint = complementConstraint;
+	public void setMinUnits(String minUnits) {
+		this.minUnits = minUnits;
 	}
 
-	public ThresholdsOperator getThresholdsOperator() {
-		return thresholdsOperator;
+	public ValueComparator getMinValueComp() {
+		return minValueComp;
 	}
 
-	public void setThresholdsOperator(ThresholdsOperator thresholdsOp) {
-		this.thresholdsOperator = thresholdsOp;
+	public void setMinValueComp(ValueComparator minValueComp) {
+		this.minValueComp = minValueComp;
 	}
 
-	public CreatedFrom getCreatedFrom() {
-		return createdFrom;
+	public Number getMaxValueThreshold() {
+		return maxValueThreshold;
 	}
 
-	public void setCreatedFrom(CreatedFrom createdFrom) {
-		this.createdFrom = createdFrom;
+	public void setMaxValueThreshold(Number maxValueThreshold) {
+		this.maxValueThreshold = maxValueThreshold;
 	}
 
-	@Override
-	public void accept(PropositionEntityVisitor visitor) {
-		visitor.visit(this);
+	public String getMaxUnits() {
+		return maxUnits;
 	}
-	
+
+	public void setMaxUnits(String maxUnits) {
+		this.maxUnits = maxUnits;
+	}
+
+	public ValueComparator getMaxValueComp() {
+		return maxValueComp;
+	}
+
+	public void setMaxValueComp(ValueComparator maxValueComp) {
+		this.maxValueComp = maxValueComp;
+	}
+
 	@Override
 	public String toString() {
 		return ToStringBuilder.reflectionToString(this);
 	}
-
 }

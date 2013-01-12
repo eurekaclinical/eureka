@@ -19,7 +19,7 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.common.entity;
 
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.Categorization.CategorizationType;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.CategoryEntity.CategorizationType;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -38,8 +38,8 @@ import javax.persistence.Table;
  * @author hrathod
  */
 @Entity
-@Table(name = "high_level_abstractions")
-public class HighLevelAbstraction extends Proposition {
+@Table(name = "sequences")
+public class SequenceEntity extends DataElementEntity {
 
 	@OneToOne(cascade = CascadeType.ALL)
 	private ExtendedProposition primaryProposition;
@@ -55,16 +55,9 @@ public class HighLevelAbstraction extends Proposition {
 	        CascadeType.PERSIST })
 	@JoinTable(name = "hla_abstracted_from", 
 			joinColumns = { @JoinColumn(name = "target_proposition_id") })
-	private List<Proposition> abstractedFrom;
-
-	public enum CreatedFrom {
-		SEQUENCE, FREQUENCY
-	}
-
-	@Column(nullable = false)
-	private CreatedFrom createdFrom;
+	private List<DataElementEntity> abstractedFrom;
 	
-	public HighLevelAbstraction() {
+	public SequenceEntity() {
 		super(CategorizationType.HIGH_LEVEL_ABSTRACTION);
 	}
 
@@ -90,7 +83,7 @@ public class HighLevelAbstraction extends Proposition {
 	 * @return The list of propositions the current proposition is abstracted
 	 *         from.
 	 */
-	public List<Proposition> getAbstractedFrom() {
+	public List<DataElementEntity> getAbstractedFrom() {
 		return abstractedFrom;
 	}
 
@@ -101,16 +94,8 @@ public class HighLevelAbstraction extends Proposition {
 	 *            The list of propositions the current proposition is abstracted
 	 *            from.
 	 */
-	public void setAbstractedFrom(List<Proposition> abstractedFrom) {
+	public void setAbstractedFrom(List<DataElementEntity> abstractedFrom) {
 		this.abstractedFrom = abstractedFrom;
-	}
-
-	public CreatedFrom getCreatedFrom() {
-		return createdFrom;
-	}
-
-	public void setCreatedFrom(CreatedFrom createdFrom) {
-		this.createdFrom = createdFrom;
 	}
 
 	@Override

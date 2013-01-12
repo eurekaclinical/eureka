@@ -23,14 +23,12 @@ public interface PropositionEntityVisitor {
 	
 	public void visit(SystemProposition proposition);
 	
-	public void visit(Categorization categorization);
+	public void visit(CategoryEntity categorization);
 	
-	public void visit(HighLevelAbstraction highLevelAbstraction);
+	public void visit(SequenceEntity highLevelAbstraction);
 
-	public void visit(ValueThresholdEntity lowLevelAbstraction);
+	public void visit(ValueThresholdGroupEntity lowLevelAbstraction);
 
-	public void visit(CompoundValueThreshold compoundLowLevelAbstraction);
-
-	public void visit(SliceAbstraction sliceAbstraction);
+	public void visit(FrequencyEntity sliceAbstraction);
 
 }

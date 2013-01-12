@@ -26,39 +26,38 @@ import java.util.List;
 public final class PropositionChildrenVisitor implements
         PropositionEntityVisitor {
 
-	private List<? extends Proposition> children;
+	private List<? extends DataElementEntity> children;
 
-	public List<? extends Proposition> getChildren() {
+	public List<? extends DataElementEntity> getChildren() {
 		return children;
 	}
 
 	@Override
 	public void visit(SystemProposition proposition) {
-		this.children = new ArrayList<Proposition>();
+		this.children = new ArrayList<DataElementEntity>();
 	}
 
 	@Override
-	public void visit(Categorization categorization) {
+	public void visit(CategoryEntity categorization) {
 		this.children = categorization.getInverseIsA();
 	}
 
 	@Override
-	public void visit(HighLevelAbstraction highLevelAbstraction) {
+	public void visit(SequenceEntity highLevelAbstraction) {
 		this.children = highLevelAbstraction.getAbstractedFrom();
 	}
 
 	@Override
-	public void visit(ValueThresholdEntity lowLevelAbstraction) {
-		this.children = Collections.singletonList(lowLevelAbstraction.getAbstractedFrom());
+	public void visit(ValueThresholdGroupEntity lowLevelAbstraction) {
+		List<DataElementEntity> cs = new ArrayList<DataElementEntity>();
+		for (ValueThresholdEntity v : lowLevelAbstraction.getValueThresholds()) {
+			cs.add(v.getAbstractedFrom());
+		}
+		this.children = cs;
 	}
 
 	@Override
-	public void visit(CompoundValueThreshold compoundLowLevelAbstraction) {
-		this.children = compoundLowLevelAbstraction.getAbstractedFrom();
-	}
-
-	@Override
-	public void visit(SliceAbstraction sliceAbstraction) {
+	public void visit(FrequencyEntity sliceAbstraction) {
 		this.children = Collections.singletonList(sliceAbstraction
 		        .getAbstractedFrom());
 	}

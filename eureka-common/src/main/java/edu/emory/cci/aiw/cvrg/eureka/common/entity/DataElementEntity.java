@@ -34,7 +34,7 @@ import javax.persistence.UniqueConstraint;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import com.sun.xml.bind.CycleRecoverable;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.Categorization.CategorizationType;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.CategoryEntity.CategorizationType;
 import javax.persistence.Temporal;
 import org.apache.commons.lang.builder.ToStringBuilder;
 
@@ -48,7 +48,7 @@ import org.apache.commons.lang.builder.ToStringBuilder;
 @Table(name = "propositions", uniqueConstraints = { @UniqueConstraint(columnNames = {
         "key", "userId" }) })
 @Inheritance(strategy = InheritanceType.JOINED)
-public abstract class Proposition implements CycleRecoverable,
+public abstract class DataElementEntity implements CycleRecoverable,
         PropositionEntityVisitable, Serializable {
 
 	/**
@@ -104,11 +104,11 @@ public abstract class Proposition implements CycleRecoverable,
 	private boolean helperProposition;
 	private final CategorizationType categorizationType;
 	
-	protected Proposition() {
+	protected DataElementEntity() {
 		this(null);
 	}
 
-	protected Proposition(CategorizationType categorizationType) {
+	protected DataElementEntity(CategorizationType categorizationType) {
 		this.helperProposition = false;
 		this.categorizationType = categorizationType;
 	}

@@ -19,7 +19,7 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.common.entity;
 
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.Categorization.CategorizationType;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.CategoryEntity.CategorizationType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -28,7 +28,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "system_proposition")
-public class SystemProposition extends Proposition {
+public class SystemProposition extends DataElementEntity {
 
 	public enum SystemType {
 

@@ -24,57 +24,52 @@ import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
+
 import org.apache.commons.lang.builder.ToStringBuilder;
 
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.CategoryEntity.CategorizationType;
+
 /**
- * @author hrathod
+ * Contains attributes which describe a Protempa low-level abstraction in the
+ * context of the Eureka! UI.
  */
 @Entity
-@Table(name = "categorizations")
-public class Categorization extends Proposition {
+@Table(name = "value_threshold_groups")
+public class ValueThresholdGroupEntity extends DataElementEntity {
 
-	public enum CategorizationType {
-		CONSTANT, EVENT, PRIMITIVE_PARAMETER, LOW_LEVEL_ABSTRACTION, 
-		COMPOUND_LOW_LEVEL_ABSTRACTION, HIGH_LEVEL_ABSTRACTION, SLICE_ABSTRACTION,
-		VALUE_THRESHOLD, MIXED, UNKNOWN
-	}
-
-	/**
-	 * The "children" of of this proposition.
+	/*
+	 * The allowed values of the low-level abstraction
 	 */
-	@OneToMany(cascade = { CascadeType.MERGE, CascadeType.REFRESH,
-	        CascadeType.PERSIST })
-	@JoinTable(name = "cat_inverse_is_a", joinColumns = { @JoinColumn(name = "target_proposition_id") })
-	private List<Proposition> inverseIsA;
-
-	@Enumerated(EnumType.STRING)
+	@OneToMany(cascade = CascadeType.ALL)
 	@Column(nullable = false)
-	private CategorizationType categorizationType;
+	private List<ValueThresholdEntity> valueThresholds;
 	
-	public Categorization() {
-		super(CategorizationType.EVENT);
+	@OneToOne
+	@JoinColumn(name = "thresholdsOp", referencedColumnName = "id", nullable = false)
+	private ThresholdsOperator thresholdsOperator;
+	
+	public ValueThresholdGroupEntity() {
+		super(CategorizationType.LOW_LEVEL_ABSTRACTION);
 	}
 
-	public List<Proposition> getInverseIsA() {
-		return inverseIsA;
+	public List<ValueThresholdEntity> getValueThresholds() {
+		return valueThresholds;
 	}
 
-	public void setInverseIsA(List<Proposition> inverseIsA) {
-		this.inverseIsA = inverseIsA;
+	public void setValueThresholds(List<ValueThresholdEntity> valueThresholds) {
+		this.valueThresholds = valueThresholds;
 	}
 
-	public CategorizationType getCategorizationType() {
-		return categorizationType;
+	public ThresholdsOperator getThresholdsOperator() {
+		return thresholdsOperator;
 	}
 
-	public void setCategorizationType(CategorizationType categorizationType) {
-		this.categorizationType = categorizationType;
+	public void setThresholdsOperator(ThresholdsOperator thresholdsOp) {
+		this.thresholdsOperator = thresholdsOp;
 	}
 
 	@Override

@@ -19,7 +19,7 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.common.entity;
 
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.Categorization.CategorizationType;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.CategoryEntity.CategorizationType;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -34,40 +34,51 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "frequencies")
-public class SliceAbstraction extends Proposition {
+public class FrequencyEntity extends DataElementEntity {
 
 	@Column(nullable = false)
-	private Integer minIndex;
-	
+	private Integer atLeastCount;
+
+	private boolean consecutive;
+
 	private Integer withinAtLeast;
-	
+
 	@ManyToOne
 	@JoinColumn(referencedColumnName = "id")
 	private TimeUnit withinAtLeastUnits;
-	
+
 	private Integer withinAtMost;
-	
+
 	@ManyToOne
 	@JoinColumn(referencedColumnName = "id")
 	private TimeUnit withinAtMostUnits;
 
 	@OneToOne(cascade = CascadeType.ALL)
 	private ExtendedProposition extendedProposition;
-	
-	public SliceAbstraction() {
+
+	public FrequencyEntity() {
 		super(CategorizationType.SLICE_ABSTRACTION);
 	}
 
-	public Integer getMinIndex() {
-		return minIndex;
+	public Integer getAtLeastCount() {
+		return atLeastCount;
 	}
 
-	public void setMinIndex(Integer minIndex) {
-		this.minIndex = minIndex;
+	public void setAtLeastCount(Integer atLeastCount) {
+		this.atLeastCount = atLeastCount;
 	}
 
-	public Proposition getAbstractedFrom() {
-		return extendedProposition != null ? extendedProposition.getProposition() : null;
+	public boolean isConsecutive() {
+		return consecutive;
+	}
+
+	public void setConsecutive(boolean consecutive) {
+		this.consecutive = consecutive;
+	}
+
+	public DataElementEntity getAbstractedFrom() {
+		return extendedProposition != null ? extendedProposition
+		        .getProposition() : null;
 	}
 
 	public ExtendedProposition getExtendedProposition() {
@@ -77,11 +88,11 @@ public class SliceAbstraction extends Proposition {
 	public void setExtendedProposition(ExtendedProposition extendedProposition) {
 		this.extendedProposition = extendedProposition;
 	}
-	
+
 	public Integer getWithinAtLeast() {
 		return this.withinAtLeast;
 	}
-	
+
 	public void setWithinAtLeast(Integer duration) {
 		this.withinAtLeast = duration;
 	}
@@ -93,15 +104,15 @@ public class SliceAbstraction extends Proposition {
 	public void setWithinAtLeastUnits(TimeUnit withinAtLeastUnits) {
 		this.withinAtLeastUnits = withinAtLeastUnits;
 	}
-	
+
 	public Integer getWithinAtMost() {
 		return this.withinAtMost;
 	}
-	
+
 	public void setWithinAtMost(Integer duration) {
 		this.withinAtMost = duration;
 	}
-	
+
 	public TimeUnit getWithinAtMostUnits() {
 		return withinAtMostUnits;
 	}

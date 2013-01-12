@@ -35,36 +35,22 @@ public final class PropositionTypeVisitor implements PropositionEntityVisitor {
 	}
 
 	@Override
-	public void visit(Categorization categorization) {
+	public void visit(CategoryEntity categorization) {
 		this.type = DataElement.Type.CATEGORIZATION;
 	}
 
 	@Override
-	public void visit(HighLevelAbstraction highLevelAbstraction) {
-		if (highLevelAbstraction.getCreatedFrom() == HighLevelAbstraction
-				.CreatedFrom.SEQUENCE) {
-			this.type = DataElement.Type.SEQUENCE;
-		} else if (highLevelAbstraction.getCreatedFrom() ==
-				HighLevelAbstraction.CreatedFrom.FREQUENCY) {
-			this.type = DataElement.Type.FREQUENCY;
-		} else {
-			throw new IllegalStateException("HighLevelAbstraction must be " +
-					"created from sequence or frequency");
-		}
+	public void visit(SequenceEntity highLevelAbstraction) {
+		this.type = DataElement.Type.SEQUENCE;
 	}
 
 	@Override
-	public void visit(ValueThresholdEntity lowLevelAbstraction) {
+	public void visit(ValueThresholdGroupEntity lowLevelAbstraction) {
 		this.type = DataElement.Type.VALUE_THRESHOLD;
 	}
 
 	@Override
-	public void visit(CompoundValueThreshold compoundLowLevelAbstraction) {
-		this.type = DataElement.Type.VALUE_THRESHOLD;
-	}
-
-	@Override
-	public void visit(SliceAbstraction sliceAbstraction) {
+	public void visit(FrequencyEntity sliceAbstraction) {
 		this.type = DataElement.Type.FREQUENCY;
 	}
 }

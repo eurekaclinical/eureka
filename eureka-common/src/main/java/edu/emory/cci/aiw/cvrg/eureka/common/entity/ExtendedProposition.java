@@ -62,7 +62,7 @@ public class ExtendedProposition {
 	private PropertyConstraint propertyConstraint;
 
 	@ManyToOne(cascade = CascadeType.ALL)
-	private Proposition proposition;
+	private DataElementEntity proposition;
 
 	private String value;
 
@@ -114,11 +114,11 @@ public class ExtendedProposition {
 		propertyConstraint = inPropertyConstraint;
 	}
 
-	public Proposition getProposition() {
+	public DataElementEntity getProposition() {
 		return proposition;
 	}
 
-	public void setProposition(Proposition inProposition) {
+	public void setProposition(DataElementEntity inProposition) {
 		proposition = inProposition;
 	}
 
