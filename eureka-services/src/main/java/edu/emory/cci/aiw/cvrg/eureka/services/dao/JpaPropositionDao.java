@@ -99,6 +99,6 @@ public class JpaPropositionDao extends GenericDao<DataElementEntity, Long>
 
 	@Override
 	public List<DataElementEntity> getByUserId(Long inId) {
-		return this.getListByAttribute(Proposition_.userId, inId);
+		return this.getListByAttribute(DataElementEntity_.userId, inId);
 	}
 }
