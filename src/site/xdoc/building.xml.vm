@@ -44,25 +44,35 @@
 					</li>
 				</ul>
 				<p>Next, you can deploy the warfiles into your servlet 
-					container. Before deploying Eureka! for the first time, be 
-					sure to follow the 
+					container.
+				</p>
+				<h4>Deploying Eureka! for the first time</h4>
+				<p>You will need to go an extra step and compile a binary
+					distribution package. The distribution package contains
+					configuration files for Eureka. A
+					separate project, <code>eureka-package</code>, builds the binary
+					distribution. Download the source code
+					(<a href="http://maven.cci.emory.edu/nexus/service/local/artifact/maven/redirect?r=${project.distributionManagementArtifactRepository.id}&amp;g=${project.groupId}&amp;a=eureka-package&amp;v=${project.version}&amp;c=src&amp;e=zip">eureka-package-${project.version}-src.zip</a>).
+					Then run:</p>
+					<source>mvn clean install</source>
+					<p>If successful, you will find the distribution in the
+					<code>target</code> directory. Then, follow the 
 					<a href="../../install.html">installation instructions</a> 
 					on the main Eureka! website.
 				</p>
-				<p>Eureka! is known to deploy on 
-					<a href="http://tomcat.apache.org">Apache Tomcat</a> 
-					version 7. You may either copy these warfiles into your 
-					Tomcat deployment's <code>$CATALINA_HOME/webapps</code> 
-					directory, or if you have the 
-					<a href="http://tomcat.apache.org/tomcat-7.0-doc/manager-howto.html">Tomcat manager app</a> 
-					deployed execute one of the following commands below.
-				</p>
             </subsection>
 			<subsection name="Deployment from source">
-				<p>Execute a build as above, and then execute one of the 
+				<p>Eureka! is known to deploy on 
+					<a href="http://tomcat.apache.org">Apache Tomcat</a> 
+					version 7. You may copy the three warfiles above 
+					into your Tomcat deployment's <code>$CATALINA_HOME/webapps</code> 
+					directory. Alternatively, if you have the 
+					<a href="http://tomcat.apache.org/tomcat-7.0-doc/manager-howto.html">Tomcat manager app</a> 
+					deployed, you may deploy with a maven command. Execute a 
+					build as above, and then execute one of the 
 					following deployment commands. Each executes in a specified
-					Maven profile (local, dev and prd). For each profile, you 
-					can specify a server in your 
+					Maven profile (local, dev and prd). For each profile you 
+					want to use, specify a server in your 
 					<code>$HOME/.m2/settings.xml</code> file (see 
 					<a href="http://maven.apache.org/settings.html">Settings Reference</a>
 					for more information). For example:
@@ -73,7 +83,7 @@
 		&lt;local.url&gt;http://tomcathostname:tomcatport/manager/text&lt;/local.url&gt;
 	&lt;/properties&gt;
 &lt;/profile&gt;</source>
-				<p>Replace the URL in the <code>local.url</code> with your own.
+				<p>Replace the URL in the <code>local.url</code> property with your own.
 				</p>
 				<h4>Deploy to Tomcat (local installation)</h4>
 				<source>mvn tomcat:deploy -Peureka-tomcat-local</source>
