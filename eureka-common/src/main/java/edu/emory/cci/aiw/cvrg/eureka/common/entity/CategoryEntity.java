@@ -28,7 +28,7 @@ import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
-import javax.persistence.OneToMany;
+import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 import org.apache.commons.lang.builder.ToStringBuilder;
 
@@ -48,7 +48,7 @@ public class CategoryEntity extends DataElementEntity {
 	/**
 	 * The "children" of of this proposition.
 	 */
-	@OneToMany(cascade = { CascadeType.MERGE, CascadeType.REFRESH,
+	@ManyToMany(cascade = { CascadeType.MERGE, CascadeType.REFRESH,
 	        CascadeType.PERSIST })
 	@JoinTable(name = "cat_inverse_is_a", joinColumns = { @JoinColumn(name = "target_proposition_id") })
 	private List<DataElementEntity> inverseIsA;

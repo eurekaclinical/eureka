@@ -30,11 +30,11 @@
 	<template:content name="content">
     <div class="help">
         <h3>Help</h3>
-		<p>The links on this page will open up a new window in the <a href="http://aiw.sourceforge.net/help.html">Eureka! website's help pages</a>.
+		<p>The links on this page will open up a new window in the <a href="http://aiw.sourceforge.net/help.html" target="_blank">Eureka! website's help pages</a>.
         <table>
             <tr>
                 <td>
-                    <a href="http://aiw.sourceforge.net/getting-started.html" target="_blank">
+                    <a href="http://aiw.sourceforge.net/getting-started.html" class="imageAndCaption" target="_blank">
                         <img alt="Getting Started"
                              src="images/100px-Help-getting-started.png"/>
                         <div>
@@ -43,7 +43,7 @@
                     </a>
                 </td>
                 <td>
-                    <a href="http://aiw.sourceforge.net/user-faq.html" target="_blank">
+                    <a href="http://aiw.sourceforge.net/user-faq.html" class="imageAndCaption" target="_blank">
                         <img alt="Frequently Asked Questions"
                              src="images/100px-Help-FAQ.png"/>
                         <div>
@@ -59,21 +59,6 @@
         </div>
 	</template:content>
 	<template:content name="subcontent">
-		<div id="release_notes">
-			<h3>
-				<img src="${pageContext.request.contextPath}/images/rss.png"
-					border="0" /> Related News <a href="xml/rss_news.xml" class="rss"></a>
-			</h3>
-			<script language="JavaScript"
-				src="http://feed2js.org//feed2js.php?src=http%3A%2F%2Fwhsc.emory.edu%2Fhome%2Fnews%2Freleases%2Fresearch.rss&chan=y&num=4&desc=1&utf=y"
-				charset="UTF-8" type="text/javascript"></script>
-
-			<noscript>
-				<a style="padding-left: 35px"
-					href="http://feed2js.org//feed2js.php?src=http%3A%2F%2Fwhsc.emory.edu%2Fhome%2Fnews%2Freleases%2Fresearch.rss&chan=y&num=4&desc=200>1&utf=y&html=y">View
-					RSS feed</a>
-			</noscript>
-
-		</div>
+		<%@ include file="common/rss.jspf" %>
 	</template:content>
 </template:insert>

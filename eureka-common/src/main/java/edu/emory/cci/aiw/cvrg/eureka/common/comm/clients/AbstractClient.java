@@ -27,11 +27,16 @@ import com.sun.jersey.api.client.config.DefaultClientConfig;
 import com.sun.jersey.api.json.JSONConfiguration;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.json.ObjectMapperProvider;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author hrathod
  */
 public abstract class AbstractClient {
+	
+	private static final Logger LOGGER = LoggerFactory
+	        .getLogger(AbstractClient.class);
 
 	protected AbstractClient() {
 	}
@@ -66,6 +71,7 @@ public abstract class AbstractClient {
 		ClientResponse.Status clientResponseStatus = 
 				response.getClientResponseStatus();
 		if (clientResponseStatus.equals(status) == bool) {
+			LOGGER.error(response.getEntity(String.class));
 			throw new ClientException(clientResponseStatus, 
 					response.getEntity(String.class));
 		}

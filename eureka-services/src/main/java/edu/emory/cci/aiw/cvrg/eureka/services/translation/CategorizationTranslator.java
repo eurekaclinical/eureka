@@ -31,10 +31,11 @@ import edu.emory.cci.aiw.cvrg.eureka.services.dao.PropositionDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.finder.SystemPropositionFinder;
 
 import java.util.ArrayList;
-import java.util.HashSet;
+import java.util.EnumSet;
 import java.util.List;
 import java.util.Set;
 import javax.ws.rs.core.Response;
+import org.apache.commons.lang.StringUtils;
 
 /**
  * Translates categorical data elements (UI element) into categorization
@@ -97,19 +98,16 @@ public final class CategorizationTranslator implements
 					+ " is invalid because it has no children");
 		}
 		Set<CategorizationType> categorizationTypes =
-				new HashSet<CategorizationType>();
+				EnumSet.noneOf(CategorizationType.class);
 		for (DataElementEntity dataElement : inverseIsA) {
-			CategorizationType ct = dataElement.categorizationType();//extractType(dataElement);
-			if (categorizationTypes.isEmpty()) {
-				categorizationTypes.add(ct);
-			}
+			categorizationTypes.add(dataElement.categorizationType());
 		}
 		if (categorizationTypes.size() > 1) {
 			throw new DataElementHandlingException(
 					Response.Status.PRECONDITION_FAILED, "Category "
 					+ element.getKey()
 					+ " has children with inconsistent types: "
-					+ categorizationTypes);
+					+ StringUtils.join(categorizationTypes, ", "));
 		}
 		return categorizationTypes.iterator().next();
 	}
