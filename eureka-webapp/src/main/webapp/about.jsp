@@ -16,7 +16,7 @@
   See the License for the specific language governing permissions and
   limitations under the License.
   #L%
-  --%>
+--%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="/WEB-INF/tlds/template.tld" prefix="template"%>
 
@@ -24,41 +24,82 @@
 <template:insert template="/templates/eureka_main.jsp">
 
 	<template:content name="sidebar">
-		`<img src="${pageContext.request.contextPath}/images/medical_research.jpg" />
+		<img src="${pageContext.request.contextPath}/images/medical_research.jpg" />
 	</template:content>
 
 	<template:content name="content">
 		<h3>About</h3>
-		<div>
-        <p>Eureka! Clinical Analytics is a project of the <a href="http://cci.emory.edu" target="_blank" rel="nofollow">Emory Center for Comprehensive Informatics</a>. It was conceived as part of the vision of the <a href="http://www.cvrgrid.org" target="_blank" rel="nofollow">CardioVascular Research Grid (CVRG)</a> to create tools that enable researchers to analyze and manipulate their biomedical research data in the cloud.</p>
-        <h5>What does it do?</h5>
-        <p>It can load your research project's clinical data into your own cloud-based instance of <a href="http://www.i2b2.org" target="_blank" rel="nofollow">i2b2</a>,   where you and your colleagues can ask questions about the data,   summarize data and download subsets of their data for your research. You   provide an Excel spreadsheet that meets certain criteria, and the   software takes care of the rest. While its functionality is targeted to   clinical datasets in cardiovascular disease research, it supports   loading a wide variety of clinical data types into i2b2.</p>
-        <h5>Can I load data with identifiers in it?</h5>
-        <p>No, this is a demonstration website only. Please see the End-user   agreement when you register for an account on the website for details.</p>
-        <h5>What do you mean I can't load data with identifiers on it?</h5>
-        <p>You have two options if you want to load real patient data. You can download the software from our <a href="http://sourceforge.net/projects/aiw" target="_blank" rel="nofollow">Sourceforge website</a> and install it locally on your or your institution's own HIPAA-compliant infrastructure. Alternatively, go to the <a href="http://aws.amazon.com/" target="_blank" rel="nofollow">Amazon EC2 website</a> and clone a virtual machine containing the Eureka! software to enable you to create your own running instance of the website for your lab or research project. There, within the terms of use of the cloud service and your institution's policies, you will be able to load a wider variety of research datasets onto your own instance of the website.</p>
-        <h5>What is going on behind the scenes?</h5>
-      <p>Eureka! Clinical Analytics is a front-end user interface for the <a href="http://cci.emory.edu/cms/projects/aiw.html" target="_blank" rel="nofollow">Analytic Information Warehouse (AIW)</a> software system. The AIW is being developed at <a href="http://www.emory.edu" target="_blank" rel="nofollow">Emory University</a> to provide analytics infrastructure for clinical research and   healthcare quality assessment and performance improvement. We are using   it to develop predictive models of readmission within 30 days and find   &quot;hot spots&quot; in readmissions in Emory Healthcare's patient populations.   The AIW software is itself based on <a href="http://www.ncbi.nlm.nih.gov/pmc/articles/PMC1975802/" target="_blank" rel="nofollow">Protempa</a>,   a software system for finding temporal patterns in clinical datasets.   Loading data into i2b2 is just one of the AIW's features. Future   releases of Eureka! will, over time,  add user interfaces for the   AIW's entire feature set.</p>
-        <h5>May I see the source code?</h5>
-        <p>Yes! The software is available as open source under the <a href="http://www.apache.org/licenses/LICENSE-2.0" target="_blank" rel="nofollow">Apache 2 license</a>. It is available from the <a href="${initParam['eureka-dev-site-url']}" target="_blank">Eureka! Clinical Analytics Developer Resources</a> site.</p>
-        <h5>Where can I get more information?</h5>
-        <p>Check out the CVRG wiki page for PROTEMPA/Analytic Information Warehouse/i2b2 at <a href="http://www.cvrgrid.org/cvrg-tool-demonstrations" target="_blank" rel="nofollow">http://www.cvrgrid.org/cvrg-tool-demonstrations</a>.</p>
-        <h5>The Eureka! Clinical Analytics Team</h5>
-        <p>Andrew Post, MD, PhD - Eureka! lead and CVRG co-investigator<br />
-          Joel Saltz, MD, PhD - CVRG Emory site PI<br />
-          Tahsin Kurc, PhD - CVRG co-investigator<br />
-          Ashish Sharma, PhD - CVRG co-investigator<br />
-          Richard Willard - Eureka! project manager<br />
-          Himanshu Rathod - Lead software engineer<br />
-          Sanjay Agravat, MS - Software engineer<br />
-          Geoff Milton, MS - Software engineer<br />
-          Suzanne Sturm - Web designer	</p>
-          </div>
+		<p>Eureka! Clinical Analytics is a project of the 
+			<a href="http://cci.emory.edu" target="_blank" rel="nofollow">Emory Center for Comprehensive Informatics</a>. 
+			It was conceived as part of the vision of the 
+			<a href="http://www.cvrgrid.org" target="_blank" rel="nofollow">CardioVascular Research Grid (CVRG)</a> 
+			to create tools that enable researchers to analyze and manipulate 
+			their biomedical research data in the cloud.
+		</p>
+		
+		<h4>What does it do?</h4>
+		<p>Eureka! Clinical Analytics provides you with an easy way to 
+			phenotype a patient population based on their clinical and 
+			administrative data, and load those phenotypes and data into your 
+			own instance of <a href="http://www.i2b2.org" target="_blank" rel="nofollow">i2b2</a>.
+			Once in i2b2, you and your colleagues can ask questions about the 
+			data, summarize data and download subsets of your data for your 
+			research. You provide your data in an Excel spreadsheet meeting 
+			certain criteria, and the software takes care of the rest. While 
+			its functionality is targeted to clinical datasets in 
+			cardiovascular disease research, it supports loading a wide variety 
+			of clinical data types into i2b2.
+		</p>
+		
+		<h4>Can I load data with identifiers in it?</h4>
+		<p>No, this is a demonstration website only. Please see the End-user 
+			agreement when you register for an account on the website for 
+			details.
+		</p>
+		
+		<h4>What do you mean I can't load data with identifiers on it?</h4>
+		<p>If you need to load real patient data into Eureka!, you must 
+			deploy your own instance of the software in a <a href="https://hipaa.emory.edu/home/" target="_blank">HIPAA</a>-compliant
+			environment. See the <a href="${initParam['aiw-site-url']}/getit.html" target="_blank">Get the Software page</a>
+			on the Eureka! website for details. We provide a 
+			<a href="http://aiw.sourceforge.net/download.html" target="_blank">distribution of Eureka! for local installation</a> 
+			and an <a href="http://aiw.sourceforge.net/ec2.html" target="_blank">Amazon Machine Instance</a> for you to clone on the 
+			<a href="http://aws.amazon.com/" target="_blank">Amazon Elastic Compute (EC2) Cloud</a>.
+		</p>
+		
+		<h4>What is going on behind the scenes?</h4>
+		<p>Eureka! Clinical Analytics is a front-end user interface for the 
+			<a href="${initParam['aiw-site-url']}/aiw.html" target="_blank">Analytic Information Warehouse (AIW)</a> 
+			software system. The AIW is being developed at 
+			<a href="http://www.emory.edu" target="_blank">Emory University</a> 
+			to provide analytics infrastructure for clinical research and 
+			healthcare quality assessment and performance improvement. We are 
+			using it to develop predictive models of readmission within 30 days 
+			and find &quot;hot spots&quot; in readmissions in Emory 
+			Healthcare's patient populations. The AIW software is itself based 
+			on <a href="http://www.ncbi.nlm.nih.gov/pmc/articles/PMC1975802/" target="_blank" rel="nofollow">Protempa</a>, 
+			a software system for finding temporal patterns in clinical 
+			datasets. Loading data into i2b2 is just one of the AIW's features. 
+			Future releases of Eureka! will, over time, add user interfaces for 
+			the AIW's entire feature set.
+		</p>
+		
+		<h4>May I see the source code?</h4>
+		<p>Yes! The software is available as open source under the 
+			<a href="http://www.apache.org/licenses/LICENSE-2.0.html" target="_blank" rel="nofollow">Apache 2 license</a>. 
+			It is available from the 
+			<a href="${initParam['eureka-dev-site-url']}" target="_blank">Eureka! Clinical Analytics Developer Resources</a> site.
+		</p>
+		
+		<h4>Where can I get more information?</h4>
+		<p>Check out the Eureka! website at 
+			<a href="${initParam['aiw-site-url']}" target="_blank">${initParam['aiw-site-url']}</a>.
+		</p>
 	</template:content>
 	<template:content name="subcontent">
-	  </template:content>
+	</template:content>
 	<template:content name="subcontent">
-	  <%@ include file="common/rss.jspf" %>
+		<%@ include file="common/rss.jspf" %>
 	</template:content>
 
 </template:insert>
