@@ -106,7 +106,7 @@
       </c:forEach>
       <tr>
       <td colspan="6">
-      *Click on a users name to edit their role and/or information
+      *Click on a user's name to edit his/her role(s) and other information
       </td>
       </tr>
     </table>
