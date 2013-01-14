@@ -20,6 +20,7 @@
 package edu.emory.cci.aiw.cvrg.eureka.servlet.worker.useracct;
 
 import java.io.IOException;
+import java.security.Principal;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -32,6 +33,7 @@ import com.sun.jersey.api.client.ClientResponse;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ClientException;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ServicesClient;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.User;
 import edu.emory.cci.aiw.cvrg.eureka.servlet.worker.ServletWorker;
 
 public class SaveUserAcctWorker implements ServletWorker {
@@ -46,9 +48,16 @@ public class SaveUserAcctWorker implements ServletWorker {
 				.getInitParameter("eureka-services-url");
 		ServicesClient servicesClient = new ServicesClient(eurekaServicesUrl);
 
-		String id = req.getParameter("id");
 		String oldPassword = req.getParameter("oldPassword");
 		String newPassword = req.getParameter("newPassword");
+		
+		//id will be empty if this servlet is called  from the password expiration page
+		
+		Principal principal = req.getUserPrincipal();
+		String userName = principal.getName();
+		User user = servicesClient.getUserByName(userName);
+		String id=user.getId().toString();
+		
 
 		// validate verifyPassword equals newPassword
 		String verifyPassword = req.getParameter("verifyPassword");
