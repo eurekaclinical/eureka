@@ -24,8 +24,10 @@ import java.util.List;
 
 import com.google.inject.Inject;
 
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.ShortDataElementField;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.ValueThreshold;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.ValueThresholds;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.DataElementEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.ValueThresholdEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.ValueThresholdGroupEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.exception.DataElementHandlingException;
@@ -99,6 +101,15 @@ public final class ValueThresholdsTranslator implements
 			threshold.setUpperValue(vte.getMaxValueThreshold());
 			threshold.setUpperComp(vte.getMaxValueComp().getId());
 			// threshold.setUpperUnits(vte.getMaxUnits());
+
+			DataElementEntity dataElementEntity = vte.getAbstractedFrom();
+			ShortDataElementField elementField = new ShortDataElementField();
+			elementField.setDataElementAbbrevDisplayName(dataElementEntity
+					.getAbbrevDisplayName());
+			elementField.setDataElementDisplayName(dataElementEntity
+					.getDisplayName());
+			elementField.setDataElementKey(dataElementEntity.getKey());
+			threshold.setDataElement(elementField);
 
 			thresholds.add(threshold);
 		}

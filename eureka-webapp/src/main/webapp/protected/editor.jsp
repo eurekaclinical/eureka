@@ -599,12 +599,12 @@
 																	<c:forEach var="threshold" items="${proposition.valueThresholds}" varStatus="status">
 																	<tr class="value-threshold">
 																		<td>
-																			<div id="thresholdedDataElement${status}" class="tree-drop-single jstree-drop thresholdedDataElement">
+																			<div id="thresholdedDataElement${status.count}" class="tree-drop-single jstree-drop thresholdedDataElement">
 																				<div class="label-info" ><center>Drop Here</center></div>
 																				<ul data-type="threshold1" data-drop-type="single" class="sortable" style="width: 100% height: 100%">
 																					<li data-key="${threshold.dataElement.dataElementKey}" data-desc="${threshold.dataElement.dataElementAbbrevDisplayName}" data-space="${threshold.dataElement.inSystem ? 'system' : 'user'}">
 																						<span class="delete" style="cursor: pointer; background-color: lightblue;"></span>
-																						<span>${threshold.dataElement.dataElementAbbrevDisplayName}(${threshold.dataElement.dataElementKey})</span>
+																						<span class="desc">${empty threshold.dataElement.dataElementAbbrevDisplayName ? threshold.dataElement.dataElementDisplayName : threshold.dataElement.dataElementDisplayName}(${threshold.dataElement.dataElementKey})</span>
 																					</li>
 																				</ul>
 																			</div>
