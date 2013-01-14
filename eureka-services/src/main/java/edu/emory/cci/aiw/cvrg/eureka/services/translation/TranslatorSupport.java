@@ -19,6 +19,14 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.services.translation;
 
+import java.util.Date;
+
+import javax.ws.rs.core.Response;
+
+import org.protempa.PropositionDefinition;
+
+import com.google.inject.Inject;
+
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.DataElement;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.DataElementEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.exception.DataElementHandlingException;
@@ -26,9 +34,6 @@ import edu.emory.cci.aiw.cvrg.eureka.services.dao.PropositionDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.finder.PropositionFindException;
 import edu.emory.cci.aiw.cvrg.eureka.services.finder.SystemPropositionFinder;
 import edu.emory.cci.aiw.cvrg.eureka.services.util.PropositionUtil;
-import java.util.Date;
-import javax.ws.rs.core.Response;
-import org.protempa.PropositionDefinition;
 
 /**
  *
@@ -38,6 +43,7 @@ final class TranslatorSupport {
 	private final PropositionDao propositionDao;
 	private final SystemPropositionFinder finder;
 
+	@Inject
 	public TranslatorSupport(PropositionDao propositionDao, 
 			SystemPropositionFinder finder) {
 		this.propositionDao = propositionDao;

@@ -29,10 +29,8 @@ import edu.emory.cci.aiw.cvrg.eureka.common.comm.ValueThresholds;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.ValueThresholdEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.ValueThresholdGroupEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.exception.DataElementHandlingException;
-import edu.emory.cci.aiw.cvrg.eureka.services.dao.PropositionDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.ThresholdsOperatorDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.ValueComparatorDao;
-import edu.emory.cci.aiw.cvrg.eureka.services.finder.SystemPropositionFinder;
 
 public final class ValueThresholdsTranslator implements
         PropositionTranslator<ValueThresholds, ValueThresholdGroupEntity> {
@@ -42,13 +40,12 @@ public final class ValueThresholdsTranslator implements
 	private final ThresholdsOperatorDao thresholdsOperatorDao;
 
 	@Inject
-	public ValueThresholdsTranslator(PropositionDao inPropositionDao,
-	        ValueComparatorDao inValueComparatorDao,
+	public ValueThresholdsTranslator(ValueComparatorDao inValueComparatorDao,
 	        ThresholdsOperatorDao inThresholdsOperatorDao,
-	        SystemPropositionFinder inFinder) {
-		translatorSupport = new TranslatorSupport(inPropositionDao, inFinder);
+	        TranslatorSupport inSupport) {
 		valueCompDao = inValueComparatorDao;
 		thresholdsOperatorDao = inThresholdsOperatorDao;
+		translatorSupport = inSupport;
 	}
 
 	@Override
