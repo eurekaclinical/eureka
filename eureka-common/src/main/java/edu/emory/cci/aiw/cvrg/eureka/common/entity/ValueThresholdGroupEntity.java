@@ -45,7 +45,7 @@ public class ValueThresholdGroupEntity extends DataElementEntity {
 	 * The allowed values of the low-level abstraction
 	 */
 	@OneToMany(cascade = CascadeType.ALL)
-	@Column(nullable = false)
+	@JoinColumn(nullable = false)
 	private List<ValueThresholdEntity> valueThresholds;
 	
 	@OneToOne
