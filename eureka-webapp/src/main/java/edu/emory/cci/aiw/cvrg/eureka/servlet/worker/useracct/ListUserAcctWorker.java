@@ -21,6 +21,8 @@ package edu.emory.cci.aiw.cvrg.eureka.servlet.worker.useracct;
 
 import java.io.IOException;
 import java.security.Principal;
+import java.util.Calendar;
+import java.util.Date;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -35,14 +37,22 @@ public class ListUserAcctWorker implements ServletWorker {
 	@Override
 	public void execute(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
-
+		String passwordExpiration=new String();
 		String eurekaServicesUrl = req.getSession().getServletContext()
 				.getInitParameter("eureka-services-url");
 		ServicesClient servicesClient = new ServicesClient(eurekaServicesUrl);
 		Principal principal = req.getUserPrincipal();
 		String userName = principal.getName();
 		User user = servicesClient.getUserByName(userName);
-
+		
+		Date now = Calendar.getInstance().getTime();
+		Date expiration = user.getPasswordExpiration();
+		
+		if (expiration != null && now.after(expiration)) {
+			passwordExpiration="Your password has expired.Please change the password.";
+			req.setAttribute("passwordExpiration", passwordExpiration);
+		}
+		
 		req.setAttribute("user", user);
 		req.getRequestDispatcher("/protected/acct.jsp").forward(req, resp);
 	}
