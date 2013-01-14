@@ -20,19 +20,18 @@
 package edu.emory.cci.aiw.cvrg.eureka.services.translation;
 
 
+import javax.ws.rs.core.Response;
+
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.DataElement;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.DataElementField;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.DataElementEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.ExtendedProposition;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.PropertyConstraint;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.DataElementEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.TimeUnit;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.ValueComparator;
-import edu.emory.cci.aiw.cvrg.eureka.common.exception
-		.DataElementHandlingException;
+import edu.emory.cci.aiw.cvrg.eureka.common.exception.DataElementHandlingException;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.TimeUnitDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.ValueComparatorDao;
-import edu.emory.cci.aiw.cvrg.eureka.services.finder.PropositionFindException;
-import javax.ws.rs.core.Response;
 
 /**
  * Contains common utility functions for all implementations of
@@ -159,8 +158,7 @@ class PropositionTranslatorUtil {
 	        DataElementField dataElement, Long userId, 
 			TimeUnitDao timeUnitDao, 
 			TranslatorSupport translatorSupport,
-			ValueComparatorDao valCompDao) throws 
-			PropositionFindException, DataElementHandlingException {
+			ValueComparatorDao valCompDao) throws DataElementHandlingException {
 
 		ExtendedProposition ep = origEP;
 		if (ep == null) {
