@@ -45,7 +45,7 @@ see implementation details http://jersey.java.net/nonav/documentation/latest/jax
 		</filter-class>
 		<init-param>
 			<param-name>redirect-url</param-name>
-			<param-value>/protected/user_acct</param-value>
+			<param-value>/protected/password_expiration.jsp</param-value>
 		</init-param>
 		<init-param>
 			<param-name>save-url</param-name>
@@ -146,6 +146,8 @@ see implementation details http://jersey.java.net/nonav/documentation/latest/jax
 		<servlet-class>edu.emory.cci.aiw.cvrg.eureka.servlet.ForgotPasswordServlet</servlet-class>
 		<load-on-startup>1</load-on-startup>
 	</servlet>
+	
+	
 	
 	<servlet-mapping>
 		<servlet-name>VerifyUserServlet</servlet-name>

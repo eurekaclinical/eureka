@@ -41,11 +41,9 @@
 
 	<template:content name="content">
 
-
-
 		<h3>Account</h3>
 
-		
+	<div style="font-size: 10px;font-weight: 900;"><%=request.getAttribute("passwordExpiration")%></div>		
 
 		<form id="userAcctForm" action="#" method="post">
 
@@ -202,7 +200,7 @@
 
 
 
-				<input type="hidden" name="id" id="id" value="${user.id}" /> <input
+				<input
 
 					type="hidden" name="action" value="save" />
 
