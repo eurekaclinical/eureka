@@ -23,6 +23,9 @@
 
 	<!-- define the package versions for various project we will use -->
 	<properties>
+		<!-- Populates links to the website from Eureka. -->
+		<aiw.site.url>http://aiw.sourceforge.net</aiw.site.url>
+		
 		<eureka.dev.site.url>${project.url}</eureka.dev.site.url>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<currentStableVersion>1.5</currentStableVersion>

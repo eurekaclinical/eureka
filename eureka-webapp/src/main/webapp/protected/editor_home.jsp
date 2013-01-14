@@ -34,6 +34,7 @@
 	</template:content>
 
 	<template:content name="content">
+		<h3>Phenotype Editor</h3>
 		<div id="dialog" title="Confirm Remove Selected Element"></div>
 		<div class="action_link">   
 			<a href="${pageContext.request.contextPath}/protected/editprop" class="create"></a>

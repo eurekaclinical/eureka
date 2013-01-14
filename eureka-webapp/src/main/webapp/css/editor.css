@@ -161,3 +161,8 @@ td.relDataElement {
 	border-color: black;
 	border-width: 1px;
 }
+
+h2.StepTitle span.editorHelp {
+	font-size: 10px; 
+	float: right;
+}

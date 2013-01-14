@@ -355,3 +355,12 @@ a.imageAndCaption {
     margin-right: auto;
     text-align: center;
 }
+
+table#help_topics {
+	margin-top: 1em;
+}
+
+table#help_topics caption {
+	text-align: left;
+	font-weight: bold;
+}

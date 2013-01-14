@@ -77,7 +77,12 @@
 								</a></li>
 						</ul>
 						<div id="step-1">
-							<h2 class="StepTitle">Select Type of Element</h2>
+							<h2 class="StepTitle">
+								<span>Select Type of Element</span>
+								<span class="editorHelp">
+									<a href="${initParam['aiw-site-url']}/phenotypes.html#selectType" target="_blank" id="help_select">Help</a>
+								</span>
+							</h2>
 							<p><br/></p>
 							<table id="select_element_table">
 								<%-- These values come from the DataElement.Type enum --%>
@@ -96,8 +101,8 @@
 						<div id="step-2">
 							<h2 class="StepTitle">
 								<span>Select Elements from Ontology Explorer</span>
-								<span style="font-size: 10px; float:right">
-									<a href="#" id="help_select">Help</a>
+								<span class="editorHelp">
+									<a href="${initParam['aiw-site-url']}/phenotypes.html#selectElements" target="_blank" id="help_select">Help</a>
 								</span>
 							</h2>
 							<p>
@@ -212,7 +217,7 @@
 																					<td>
 																						<select name="mainDataElementMinDurationUnits">
 																							<c:forEach var="unit" items="${timeUnits}">
-																							<option value="${unit.id}" <c:if test="${propositionType == 'SEQUENCE' and unit.id == proposition.primaryDataElement.minDurationUnits}">selected="selected"</c:if>>${unit.description}</option>
+																							<option value="${unit.id}" <c:if test="${(propositionType == 'SEQUENCE' and unit.id == proposition.primaryDataElement.minDurationUnits) or unit.id == defaultTimeUnit.id}">selected="selected"</c:if>>${unit.description}</option>
 																							</c:forEach>
 																						</select>
 																					</td>
@@ -227,7 +232,7 @@
 																					<td>
 																						<select name="mainDataElementMaxDurationUnits">
 																							<c:forEach var="unit" items="${timeUnits}">
-																							<option value="${unit.id}" <c:if test="${propositionType == 'SEQUENCE' and unit.id == proposition.primaryDataElement.maxDurationUnits}">selected="selected"</c:if>>${unit.description}</option>
+																							<option value="${unit.id}" <c:if test="${(propositionType == 'SEQUENCE' and unit.id == proposition.primaryDataElement.maxDurationUnits) or unit.id == defaultTimeUnit.id}">selected="selected"</c:if>>${unit.description}</option>
 																							</c:forEach>
 																						</select>
 																					</td>
@@ -443,7 +448,7 @@
 																			At least
 																		</td>
 																		<td>
-																			<input type="number" class="frequencyCountField" name="freqAtLeastField" value="<c:if test="${propositionType == 'FREQUENCY'}">${proposition.atLeast}</c:if>" />
+																			<input type="number" class="frequencyCountField" name="freqAtLeastField" min="1" value="<c:choose><c:when test="${propositionType == 'FREQUENCY'}">${proposition.atLeast}</c:when><c:otherwise><c:out value="1"/></c:otherwise></c:choose>" />
 																		</td>
 																		<td>
 																			<label id="valueThresholdConsecutiveLabel" style="visibility:hidden"><input type="checkbox" value="true" name="freqIsConsecutive" <c:if test="${propositionType == 'FREQUENCY' and proposition.isConsecutive}">checked="checked"</c:if> />consecutive</label>
@@ -792,12 +797,15 @@
 							<h2 class="StepTitle">
 								<c:choose>
 									<c:when test="${not empty proposition}">
-										Update the Derived Element's Name
+										<span>Update the Derived Element's Name</span>
 									</c:when>
 									<c:otherwise>
-										Select a Name for the Derived Element
+										<span>Select a Name for the Derived Element</span>
 									</c:otherwise>
 								</c:choose>
+								<span class="editorHelp">
+									<a href="${initParam['aiw-site-url']}/phenotypes.html#selectName" target="_blank" id="help_select">Help</a>
+								</span>
 							</h2>
 							<table>
 								<tr>
@@ -831,7 +839,12 @@
 
 							</div>
 							<div id="step-4">
-								<h2 class="StepTitle">Save Element to Database</h2>
+								<h2 class="StepTitle">
+									<span>Save Element to Database</span>
+									<span class="editorHelp">
+										<a href="${initParam['aiw-site-url']}/phenotypes.html#save" target="_blank" id="help_select">Help</a>
+									</span>
+								</h2>
 								<p>
 									Save the new element to the Database as a User Defined Element.
 								</p>

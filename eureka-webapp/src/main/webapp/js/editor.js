@@ -486,34 +486,6 @@ $(document).ready(function(){
 		onFinish:onFinishCallback
 	});
 
-	var dialog = $('<div></div>')
-	.html('<p>' +
-		'For Categorical:<br/>' +
-		'Drag and Drop an element from the System or User-Defined element explorer' +
-		'to the drop box to make it a member of the category.' +
-		'</p>' +
-		'<p>' +
-		'For Sequence:<br/>' +
-		'Coming soon...' +
-		'</p>' +
-		'<p>' +
-		'For Frequency:<br/>' +
-		'Coming soon...' +
-		'</p>' +
-		'<p>' +
-		'For Value Threshold:<br/>' +
-		'Coming soon...' +
-		'</p>'
-		)
-	.dialog({
-		autoOpen: false,
-		title: 'Building New Data Elements Help'
-	});
-
-	$('#help_select').click( function() {
-		dialog.dialog('open');
-	});
-
 	$('#expand_div').hide();
 	$('#collapse_div').hide();
 

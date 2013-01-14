@@ -37,6 +37,12 @@ see implementation details http://jersey.java.net/nonav/documentation/latest/jax
 		<param-value>Messages</param-value>
 		<description>Various string messages.</description>
 	</context-param>
+
+	<!-- Populates links to the AIW website from Eureka. -->
+	<context-param>
+		<param-name>aiw-site-url</param-name>
+		<param-value>${aiw.site.url}</param-value>
+	</context-param>
 	
 	<filter>
 		<filter-name>PasswordExpiredFilter</filter-name>
