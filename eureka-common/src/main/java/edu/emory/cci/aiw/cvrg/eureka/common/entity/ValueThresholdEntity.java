@@ -19,6 +19,7 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.common.entity;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -42,7 +43,8 @@ public class ValueThresholdEntity {
 	@GeneratedValue(generator = "CONSTRAINT_SEQ_GENERATOR")
 	private Long id;
 
-	@ManyToOne
+	@ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.REFRESH, 
+			CascadeType.MERGE})
 	private DataElementEntity abstractedFrom;
 
 	private Number minValueThreshold;
