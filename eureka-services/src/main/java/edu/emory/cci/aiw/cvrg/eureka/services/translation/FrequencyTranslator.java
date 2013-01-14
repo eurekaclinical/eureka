@@ -25,8 +25,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.inject.Inject;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.DataElement;
 
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.DataElement;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.Frequency;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.FrequencyEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.TimeUnit;
@@ -34,7 +34,6 @@ import edu.emory.cci.aiw.cvrg.eureka.common.exception.DataElementHandlingExcepti
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.PropositionDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.TimeUnitDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.ValueComparatorDao;
-import edu.emory.cci.aiw.cvrg.eureka.services.finder.PropositionFindException;
 import edu.emory.cci.aiw.cvrg.eureka.services.finder.SystemPropositionFinder;
 
 public final class FrequencyTranslator implements
@@ -66,18 +65,12 @@ public final class FrequencyTranslator implements
 
 		result.setAtLeastCount(element.getAtLeast());
 		result.setConsecutive(element.getIsConsecutive());
-		try {
 			result.setExtendedProposition(PropositionTranslatorUtil
 			        .createOrUpdateExtendedProposition(
 							result.getExtendedProposition(),
 					        element.getDataElement(), element.getUserId(), 
 					        timeUnitDao, translatorSupport,
 							valueComparatorDao));
-		} catch (PropositionFindException e) {
-			throw new DataElementHandlingException(
-					Response.Status.PRECONDITION_FAILED, 
-					"Frequency contains an unknown data element", e);
-		}
 		result.setInSystem(false);
 		
 		if (element.getIsWithin()) {
