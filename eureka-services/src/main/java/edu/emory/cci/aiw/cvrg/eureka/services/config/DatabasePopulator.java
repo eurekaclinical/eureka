@@ -89,13 +89,13 @@ class DatabasePopulator {
 		}
 		this.createTimeUnitIfNeeded(
 				namesSet, AbsoluteTimeUnit.DAY.getName(), AbsoluteTimeUnit.DAY
-				.getPluralName());
+				.getPluralName(), 3);
 		this.createTimeUnitIfNeeded(
 				namesSet, AbsoluteTimeUnit.HOUR.getName(), 
-				AbsoluteTimeUnit.HOUR.getPluralName());
+				AbsoluteTimeUnit.HOUR.getPluralName(), 2);
 		this.createTimeUnitIfNeeded(
 				namesSet, AbsoluteTimeUnit.MINUTE.getName(), 
-				AbsoluteTimeUnit.MINUTE.getPluralName());
+				AbsoluteTimeUnit.MINUTE.getPluralName(), 1);
 	}
 
 	private void populateDefaultRolesAndUserIfNeeded() {
@@ -128,11 +128,12 @@ class DatabasePopulator {
 	}
 
 	private void createTimeUnitIfNeeded(Set<String> namesSet, String name, 
-			String desc) {
+			String desc, int rank) {
 		if (!namesSet.contains(name)) {
 			TimeUnit timeUnit =	new TimeUnit();
 			timeUnit.setName(name);
 			timeUnit.setDescription(desc);
+			timeUnit.setRank(rank);
 			this.timeUnitDao.create(timeUnit);
 		}
 	}

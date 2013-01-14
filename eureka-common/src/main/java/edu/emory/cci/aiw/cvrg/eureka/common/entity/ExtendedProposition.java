@@ -30,6 +30,7 @@ import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.TableGenerator;
+import org.apache.commons.lang.builder.ToStringBuilder;
 
 /**
  * @author hrathod
@@ -49,19 +50,20 @@ public class ExtendedProposition {
 	private Integer minDuration;
 
 	@ManyToOne
-	@JoinColumn(referencedColumnName = "id")
+	@JoinColumn(referencedColumnName = "id", nullable=false)
 	private TimeUnit minDurationTimeUnit;
 
 	private Integer maxDuration;
 
 	@ManyToOne
-	@JoinColumn(referencedColumnName = "id")
+	@JoinColumn(referencedColumnName = "id", nullable=false)
 	private TimeUnit maxDurationTimeUnit;
 
 	@OneToOne(cascade = CascadeType.ALL)
 	private PropertyConstraint propertyConstraint;
 
 	@ManyToOne(cascade = CascadeType.ALL)
+	@JoinColumn(nullable = false)
 	private DataElementEntity proposition;
 
 	private String value;
@@ -128,5 +130,10 @@ public class ExtendedProposition {
 
 	public void setValue(String value) {
 		this.value = value;
+	}
+	
+	@Override
+	public String toString() {
+		return ToStringBuilder.reflectionToString(this);
 	}
 }

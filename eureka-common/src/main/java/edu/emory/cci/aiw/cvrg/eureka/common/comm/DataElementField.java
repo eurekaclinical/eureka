@@ -19,6 +19,7 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.common.comm;
 
+import org.apache.commons.lang.builder.ToStringBuilder;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 
 /**
@@ -166,20 +167,6 @@ public class DataElementField {
 
 	@Override
 	public String toString() {
-		return "DataElementField{"
-				+ "dataElementKey='" + dataElementKey + '\''
-				+ ", dataElementAbbrevDisplayName='"
-				+ dataElementAbbrevDisplayName + '\''
-				+ ", dataElementDisplayName='" + dataElementDisplayName + '\''
-				+ ", withValue='" + withValue + '\''
-				+ ", hasDuration=" + hasDuration
-				+ ", minDuration=" + minDuration
-				+ ", minDurationUnits=" + minDurationUnits
-				+ ", maxDuration=" + maxDuration
-				+ ", maxDurationUnits=" + maxDurationUnits
-				+ ", hasPropertyConstraint=" + hasPropertyConstraint
-				+ ", property='" + property + '\''
-				+ ", propertyValue='" + propertyValue + '\''
-				+ '}';
+		return ToStringBuilder.reflectionToString(this);
 	}
 }

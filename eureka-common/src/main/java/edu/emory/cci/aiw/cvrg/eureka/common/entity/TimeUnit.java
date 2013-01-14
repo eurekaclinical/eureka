@@ -45,6 +45,9 @@ public class TimeUnit {
 	private String name;
 
 	private String description;
+	
+	@Column(unique=true)
+	private int rank;
 
 	public Long getId() {
 		return id;
@@ -68,5 +71,13 @@ public class TimeUnit {
 
 	public void setDescription(String inDescription) {
 		description = inDescription;
+	}
+
+	public int getRank() {
+		return rank;
+	}
+
+	public void setRank(int rank) {
+		this.rank = rank;
 	}
 }

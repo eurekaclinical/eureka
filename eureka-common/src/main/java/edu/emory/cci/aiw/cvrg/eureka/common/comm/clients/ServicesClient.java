@@ -316,9 +316,23 @@ public class ServicesClient extends AbstractClient {
 		return this.getResource().path(path).accept(
 				MediaType.APPLICATION_JSON).get(TimeUnitList);
 	}
+	
+	public List<TimeUnit> getTimeUnitsAsc() {
+		final String path = "/api/timeunit/listasc";
+		return this.getResource().path(path).accept(
+				MediaType.APPLICATION_JSON).get(TimeUnitList);
+	}
 
 	public TimeUnit getTimeUnit(Long inId) {
 		final String path = "/api/timeunit/" + inId;
+		return this.getResource().path(path).accept(
+				MediaType.APPLICATION_JSON).get(TimeUnit.class);
+	}
+	
+	public TimeUnit getTimeUnitByName(String inName) {
+		final String path = UriBuilder.fromPath("/api/timeunit/byname/")
+				.segment(inName)
+				.build().toString();
 		return this.getResource().path(path).accept(
 				MediaType.APPLICATION_JSON).get(TimeUnit.class);
 	}

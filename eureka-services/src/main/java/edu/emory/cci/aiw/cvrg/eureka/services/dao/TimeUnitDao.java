@@ -21,9 +21,21 @@ package edu.emory.cci.aiw.cvrg.eureka.services.dao;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.dao.Dao;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.TimeUnit;
+import java.util.List;
 
 /**
  * @author hrathod
  */
 public interface TimeUnitDao extends Dao<TimeUnit, Long> {
+
+	/**
+	 * Gets a value comparator based on the name attribute.
+	 *
+	 * @param inName the name to search for in the database
+	 * @return a {@link TimeUnit} with the given name if found, null
+	 * otherwise
+	 */
+	public TimeUnit getByName(String inName);
+
+	public List<TimeUnit> getAllAsc();
 }

@@ -57,6 +57,8 @@ public class Setup implements TestDataProvider {
 
 	private static final String ORGANIZATION = "Emory University";
 	private static final String PASSWORD = "testpassword";
+	public static final String TESTING_TIME_UNIT_NAME = "test";
+	
 	private final Provider<EntityManager> managerProvider;
 	private Role researcherRole;
 	private Role adminRole;
@@ -164,8 +166,8 @@ public class Setup implements TestDataProvider {
 			sysProp.setKey("test-prim-param");
 			sysProp.setCreated(now);
 
-			ValueThresholdGroupEntity lowLevelAbstraction = new ValueThresholdGroupEntity
-					();
+			ValueThresholdGroupEntity lowLevelAbstraction = 
+					new ValueThresholdGroupEntity();
 			lowLevelAbstraction.setAbbrevDisplayName("test-low-level");
 			lowLevelAbstraction.setKey("test-low-level");
 			lowLevelAbstraction.setCreated(now);
@@ -265,7 +267,7 @@ public class Setup implements TestDataProvider {
 	private List<TimeUnit> createTimeUnits () {
 		EntityManager entityManager = this.getEntityManager();
 		TimeUnit timeUnit = new TimeUnit();
-		timeUnit.setName("test");
+		timeUnit.setName(TESTING_TIME_UNIT_NAME);
 		timeUnit.setDescription("test timeunit");
 		entityManager.getTransaction().begin();
 		entityManager.persist(timeUnit);

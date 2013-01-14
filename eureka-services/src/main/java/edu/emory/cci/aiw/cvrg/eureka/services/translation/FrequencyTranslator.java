@@ -25,9 +25,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.inject.Inject;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.DataElement;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.Frequency;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.FrequencyEntity;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.TimeUnit;
 import edu.emory.cci.aiw.cvrg.eureka.common.exception.DataElementHandlingException;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.PropositionDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.TimeUnitDao;
@@ -80,14 +82,48 @@ public final class FrequencyTranslator implements
 		
 		if (element.getIsWithin()) {
 			result.setWithinAtLeast(element.getWithinAtLeast());
-			result.setWithinAtLeastUnits(this.timeUnitDao.retrieve(element.getWithinAtLeastUnits()));
+			Long withinAtLeastUnitsL = element.getWithinAtLeastUnits();
+			if (withinAtLeastUnitsL == null) {
+				throw new DataElementHandlingException(
+						Response.Status.PRECONDITION_FAILED, 
+						"Within at least units must be specified");
+			}
+			result.setWithinAtLeastUnits(
+					this.timeUnitDao.retrieve(withinAtLeastUnitsL));
 			result.setWithinAtMost(element.getWithinAtMost());
-			result.setWithinAtMostUnits(this.timeUnitDao.retrieve(element.getWithinAtMostUnits()));
+			Long withinAtMostUnitsL = element.getWithinAtMostUnits();
+			if (withinAtMostUnitsL == null) {
+				throw new DataElementHandlingException(
+						Response.Status.PRECONDITION_FAILED, 
+						"Within at most units must be specified");
+			}
+			result.setWithinAtMostUnits(
+					this.timeUnitDao.retrieve(withinAtMostUnitsL));
 		} else {
 			result.setWithinAtLeast(null);
-			result.setWithinAtLeastUnits(this.timeUnitDao.retrieve(element.getWithinAtLeastUnits()));
+			Long withinAtLeastUnitsL = element.getWithinAtLeastUnits();
+			TimeUnit withinAtLeastUnits;
+			if (withinAtLeastUnitsL != null) {
+				withinAtLeastUnits = 
+						this.timeUnitDao.retrieve(withinAtLeastUnitsL);
+			} else {
+				withinAtLeastUnits = 
+						this.timeUnitDao.getByName(
+						DataElement.DEFAULT_TIME_UNIT_NAME);
+			}
+			result.setWithinAtLeastUnits(withinAtLeastUnits);
 			result.setWithinAtMost(null);
-			result.setWithinAtMostUnits(this.timeUnitDao.retrieve(element.getWithinAtMostUnits()));
+			Long withinAtMostUnitsL = element.getWithinAtMostUnits();
+			TimeUnit withinAtMostUnits;
+			if (withinAtMostUnitsL != null) {
+				withinAtMostUnits =
+						this.timeUnitDao.retrieve(withinAtMostUnitsL);
+			} else {
+				withinAtMostUnits = this.timeUnitDao.getByName(
+						DataElement.DEFAULT_TIME_UNIT_NAME);
+						
+			}
+			result.setWithinAtMostUnits(withinAtMostUnits);
 		}
 
 		return result;

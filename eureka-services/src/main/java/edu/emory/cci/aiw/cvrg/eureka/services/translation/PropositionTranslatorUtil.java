@@ -25,12 +25,14 @@ import edu.emory.cci.aiw.cvrg.eureka.common.comm.DataElementField;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.ExtendedProposition;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.PropertyConstraint;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.DataElementEntity;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.TimeUnit;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.ValueComparator;
 import edu.emory.cci.aiw.cvrg.eureka.common.exception
 		.DataElementHandlingException;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.TimeUnitDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.ValueComparatorDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.finder.PropositionFindException;
+import javax.ws.rs.core.Response;
 
 /**
  * Contains common utility functions for all implementations of
@@ -43,22 +45,46 @@ class PropositionTranslatorUtil {
 			TimeUnitDao timeUnitDao, ValueComparatorDao valCompDao) 
 			throws DataElementHandlingException {
 		ep.setProposition(proposition);
-		if (dataElement.getHasDuration()) {
+		if (dataElement.getHasDuration() == Boolean.TRUE) {
 			ep.setMinDuration(dataElement.getMinDuration());
-			ep.setMinDurationTimeUnit(timeUnitDao.retrieve(
-					dataElement.getMinDurationUnits()));
+			Long minDurationUnits = dataElement.getMinDurationUnits();
+			if (minDurationUnits == null) {
+				throw new DataElementHandlingException(
+						Response.Status.PRECONDITION_FAILED, 
+						"Min duration units must be specified");
+			}
+			ep.setMinDurationTimeUnit(timeUnitDao.retrieve(minDurationUnits));
 			ep.setMaxDuration(dataElement.getMaxDuration());
-			ep.setMaxDurationTimeUnit(timeUnitDao.retrieve(
-					dataElement.getMaxDurationUnits()));
+			Long maxDurationUnits = dataElement.getMaxDurationUnits();
+			if (maxDurationUnits == null) {
+				throw new DataElementHandlingException(
+						Response.Status.PRECONDITION_FAILED, 
+						"Max duration units must be specified");
+			}
+			ep.setMaxDurationTimeUnit(timeUnitDao.retrieve(maxDurationUnits));
 		} else {
 			ep.setMinDuration(null);
-			ep.setMinDurationTimeUnit(timeUnitDao.retrieve(
-					dataElement.getMinDurationUnits()));
+			Long minDurationUnitsL = dataElement.getMinDurationUnits();
+			TimeUnit minDurationUnits;
+			if (minDurationUnitsL != null) {
+				minDurationUnits = timeUnitDao.retrieve(minDurationUnitsL);
+			} else {
+				minDurationUnits = timeUnitDao.getByName(
+						DataElement.DEFAULT_TIME_UNIT_NAME);
+			}
+			ep.setMinDurationTimeUnit(minDurationUnits);
 			ep.setMaxDuration(null);
-			ep.setMaxDurationTimeUnit(timeUnitDao.retrieve(
-					dataElement.getMaxDurationUnits()));
+			Long maxDurationUnitsL = dataElement.getMaxDurationUnits();
+			TimeUnit maxDurationUnits;
+			if (maxDurationUnitsL != null) {
+				maxDurationUnits = timeUnitDao.retrieve(maxDurationUnitsL);
+			} else {
+				maxDurationUnits = timeUnitDao.getByName(
+						DataElement.DEFAULT_TIME_UNIT_NAME);
+			}
+			ep.setMaxDurationTimeUnit(maxDurationUnits);
 		}
-		if (dataElement.getHasPropertyConstraint()) {
+		if (dataElement.getHasPropertyConstraint() == Boolean.TRUE) {
 			PropertyConstraint pc = ep.getPropertyConstraint();
 			if (pc == null) {
 				pc = new PropertyConstraint();

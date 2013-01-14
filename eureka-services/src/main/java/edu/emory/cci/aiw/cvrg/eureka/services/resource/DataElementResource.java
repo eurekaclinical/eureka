@@ -119,7 +119,7 @@ public class DataElementResource {
 					Response.Status.PRECONDITION_FAILED, "Data element to "
 					+ "be created should have a user identifier.");
 		}
-
+		
 		try {
 			inElement.accept(this.dataElementTranslatorVisitor);
 		} catch (DataElementHandlingException ex) {

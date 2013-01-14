@@ -34,6 +34,7 @@ import edu.emory.cci.aiw.cvrg.eureka.common.comm.Frequency;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.TimeUnit;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.User;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.TimeUnitDao;
+import edu.emory.cci.aiw.cvrg.eureka.services.test.Setup;
 
 /**
  * @author hrathod
@@ -46,15 +47,16 @@ public class DataElementResourceTest extends AbstractServiceResourceTest {
 		User user = users.get(0);
 
 		TimeUnitDao timeUnitDao = this.getInstance(TimeUnitDao.class);
-		List<TimeUnit> timeUnits = timeUnitDao.getAll();
+		TimeUnit timeUnit = 
+				timeUnitDao.getByName(Setup.TESTING_TIME_UNIT_NAME);
 
 		DataElementField dataElementField = new DataElementField();
 		dataElementField.setDataElementKey("test-low-level");
 		dataElementField.setType(DataElementField.Type.VALUE_THRESHOLD);
 		dataElementField.setHasDuration(Boolean.FALSE);
 		dataElementField.setHasPropertyConstraint(Boolean.FALSE);
-		dataElementField.setMinDurationUnits(timeUnits.get(0).getId());
-		dataElementField.setMaxDurationUnits(timeUnits.get(0).getId());
+		dataElementField.setMinDurationUnits(timeUnit.getId());
+		dataElementField.setMaxDurationUnits(timeUnit.getId());
 
 		Frequency frequency = new Frequency();
 		frequency.setKey("testThreshold-frequency");
@@ -71,7 +73,7 @@ public class DataElementResourceTest extends AbstractServiceResourceTest {
 		frequency.setWithinAtMost(60);
 		frequency.setWithinAtMostUnits(Long.valueOf(1));
 		frequency.setDataElement(dataElementField);
-
+				
 		ClientResponse response2 = this.resource().path("/api/dataelement")
 				.type(
 				MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON)

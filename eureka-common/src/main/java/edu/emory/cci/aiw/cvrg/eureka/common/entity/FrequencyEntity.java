@@ -54,6 +54,7 @@ public class FrequencyEntity extends DataElementEntity {
 	private TimeUnit withinAtMostUnits;
 
 	@OneToOne(cascade = CascadeType.ALL)
+	@JoinColumn(nullable = false)
 	private ExtendedProposition extendedProposition;
 
 	public FrequencyEntity() {

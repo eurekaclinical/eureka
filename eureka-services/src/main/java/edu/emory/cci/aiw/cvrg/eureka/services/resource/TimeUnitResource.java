@@ -28,9 +28,12 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
 import com.google.inject.Inject;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.ThresholdsOperator;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.TimeUnit;
+import edu.emory.cci.aiw.cvrg.eureka.common.exception.HttpStatusException;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.TimeUnitDao;
+import javax.ws.rs.core.Response;
 
 /**
  * @author hrathod
@@ -51,10 +54,32 @@ public class TimeUnitResource {
 	public List<TimeUnit> getAll () {
 		return this.timeUnitDao.getAll();
 	}
+	
+	@GET
+	@Path("/listasc")
+	public List<TimeUnit> getAllAsc () {
+		return this.timeUnitDao.getAllAsc();
+	}
 
 	@GET
 	@Path("/{id}")
 	public TimeUnit get (@PathParam("id") Long inId) {
-		return this.timeUnitDao.retrieve(inId);
+		TimeUnit result = this.timeUnitDao.retrieve(inId);
+		if (result == null) {
+			throw new HttpStatusException(Response.Status.NOT_FOUND,
+					"No time unit with id " + inId);
+		}
+		return result;
+	}
+	
+	@GET
+	@Path("/byname/{name}")
+	public TimeUnit getByName(@PathParam("name") String inName) {
+		TimeUnit result = this.timeUnitDao.getByName(inName);
+		if (result == null) {
+			throw new HttpStatusException(Response.Status.NOT_FOUND,
+					"No time unit with name " + inName);
+		}
+		return result;
 	}
 }

@@ -58,7 +58,10 @@ public class EditPropositionServlet extends HttpServlet {
 
 		ServicesClient servicesClient = new ServicesClient(eurekaServicesUrl);
 		User user = servicesClient.getUserByName(userName);
-		List<TimeUnit> timeUnits = servicesClient.getTimeUnits();
+		List<TimeUnit> timeUnits = servicesClient.getTimeUnitsAsc();
+		TimeUnit defaultTimeUnit = 
+				servicesClient.getTimeUnitByName(
+				DataElement.DEFAULT_TIME_UNIT_NAME);
 		List<RelationOperator> operators = servicesClient
 				.getRelationOperators();
 		List<ThresholdsOperator> thresholdOps = 
@@ -90,6 +93,7 @@ public class EditPropositionServlet extends HttpServlet {
 		req.setAttribute("thresholdsOperators", thresholdOps);
 		req.setAttribute("valueComparatorsUpper", valueCompsUpper);
 		req.setAttribute("valueComparatorsLower", valueCompsLower);
+		req.setAttribute("defaultTimeUnit", defaultTimeUnit);
 
 		if ((propKey != null) && (!propKey.equals(""))) {
 			DataElement dataElement = servicesClient.getUserElement

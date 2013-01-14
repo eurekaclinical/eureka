@@ -26,6 +26,8 @@ import com.google.inject.Provider;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.dao.GenericDao;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.TimeUnit;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.TimeUnit_;
+import java.util.List;
 
 /**
  * @author hrathod
@@ -36,5 +38,15 @@ public class JpaTimeUnitDao extends GenericDao<TimeUnit,
 	@Inject
 	protected JpaTimeUnitDao(Provider<EntityManager> inManagerProvider) {
 		super(TimeUnit.class, inManagerProvider);
+	}
+	
+	@Override
+	public TimeUnit getByName(String inName) {
+		return getUniqueByAttribute(TimeUnit_.name, inName);
+	}
+
+	@Override
+	public List<TimeUnit> getAllAsc() {
+		return getListAsc(TimeUnit_.rank);
 	}
 }

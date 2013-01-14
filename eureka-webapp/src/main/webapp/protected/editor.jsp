@@ -367,7 +367,7 @@
 																			<input type="text" class="durationField" name="sequenceRelDataElementMinDurationValue"/>
 																			<select name="sequenceRelDataElementMinDurationUnits">
 																					<c:forEach var="unit" items="${timeUnits}">
-																					<option value="${unit.id}">${unit.description}</option>
+																					<option value="${unit.id}" <c:if test="${unit.id == defaultTimeUnit.id}">selected="selected"</c:if>>${unit.description}</option>
 																					</c:forEach>
 																			</select>
 																			<br />
@@ -375,7 +375,7 @@
 																			<input type="text" class="durationField" name="sequenceRelDataElementMaxDurationValue"/>
 																			<select name="sequenceRelDataElementMaxDurationUnits">
 																					<c:forEach var="unit" items="${timeUnits}">
-																					<option value="${unit.id}">${unit.description}</option>
+																					<option value="${unit.id}" <c:if test="${unit.id == defaultTimeUnit.id}">selected="selected"</c:if>>${unit.description}</option>
 																					</c:forEach>
 																			</select>
 																		</td>
@@ -397,7 +397,7 @@
 																			<input type="text" class="distanceField" name="sequenceRhsDataElementMinDistanceValue"/>
 																			<select name="sequenceRhsDataElementMinDistanceUnits">
 																					<c:forEach var="unit" items="${timeUnits}">
-																					<option value="${unit.id}">${unit.description}</option>
+																					<option value="${unit.id}" <c:if test="${unit.id == defaultTimeUnit.id}">selected="selected"</c:if>>${unit.description}</option>
 																					</c:forEach>
 																			</select>
 																			<br />
@@ -405,7 +405,7 @@
 																			<input type="text" class="distanceField" name="sequenceRhsDataElementMaxDistanceValue"/>
 																			<select name="sequenceRhsDataElementMaxDistanceUnits">
 																					<c:forEach var="unit" items="${timeUnits}">
-																					<option value="${unit.id}">${unit.description}</option>
+																					<option value="${unit.id}" <c:if test="${unit.id == defaultTimeUnit.id}">selected="selected"</c:if>>${unit.description}</option>
 																					</c:forEach>
 																			</select>
 																		</td>
@@ -543,7 +543,7 @@
 																						<input type="text" class="distanceField" name="freqWithinAtLeast" value="<c:if test="${propositionType == 'FREQUENCY'}">${proposition.withinAtLeast}</c:if>" />
 																						<select name="freqWithinAtLeastUnits">
 																								<c:forEach var="unit" items="${timeUnits}">
-																									<option value="${unit.id}" <c:if test="${propositionType == 'FREQUENCY' and unit.id == proposition.withinAtLeastUnits}">selected="selected"</c:if>>${unit.description}</option>
+																									<option value="${unit.id}" <c:if test="${(propositionType == 'FREQUENCY' and unit.id == proposition.withinAtLeastUnits) or unit.id == defaultTimeUnit.id}">selected="selected"</c:if>>${unit.description}</option>
 																								</c:forEach>
 																						</select>
 																						<br />
@@ -551,7 +551,7 @@
 																						<input type="text" class="distanceField" name="freqWithinAtMost" value="<c:if test="${propositionType == 'FREQUENCY'}">${proposition.withinAtMost}</c:if>"/>
 																						<select name="freqWithinAtMostUnits">
 																								<c:forEach var="unit" items="${timeUnits}">
-																								<option value="${unit.id}" <c:if test="${propositionType == 'FREQUENCY' and unit.id == proposition.withinAtMostUnits}">selected="selected"</c:if>>${unit.description}</option>
+																								<option value="${unit.id}" <c:if test="${(propositionType == 'FREQUENCY' and unit.id == proposition.withinAtMostUnits) or unit.id == defaultTimeUnit.id}">selected="selected"</c:if>>${unit.description}</option>
 																								</c:forEach>
 																						</select>
 																					</td>
