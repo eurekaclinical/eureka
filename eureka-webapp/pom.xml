@@ -137,7 +137,7 @@
 					<dependency>
 						<groupId>edu.emory.cci.aiw.cvrg.eureka</groupId>
 						<artifactId>jaas-login-module</artifactId>
-						<version>1.0.2-SNAPSHOT</version>
+						<version>${jaas-login-module-version}</version>
 					</dependency>
 					<dependency>
 						<groupId>javax.mail</groupId>

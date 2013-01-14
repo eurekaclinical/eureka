@@ -17,32 +17,41 @@
  * limitations under the License.
  * #L%
  */
-package edu.emory.cci.aiw.cvrg.eureka.services.transformation;
+package edu.emory.cci.aiw.cvrg.eureka.services.conversion;
+
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.ValueThresholdEntity;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.ValueThresholdGroupEntity;
+import org.protempa.CompoundLowLevelAbstractionDefinition;
+import org.protempa.LowLevelAbstractionDefinition;
+import org.protempa.PropositionDefinition;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import org.protempa.CompoundLowLevelAbstractionDefinition;
-import org.protempa.LowLevelAbstractionDefinition;
-
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.ValueThresholdEntity;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.ValueThresholdGroupEntity;
-
-public final class ValueThresholdsCompoundLowLevelAbstractionPackager
+public final class ValueThresholdsCompoundLowLevelAbstractionConverter
         implements
-        PropositionDefinitionPackager<ValueThresholdGroupEntity, CompoundLowLevelAbstractionDefinition> {
+		PropositionDefinitionConverter<ValueThresholdGroupEntity> {
+
+	private PropositionDefinition primary;
 
 	@Override
-	public CompoundLowLevelAbstractionDefinition pack(
-	        ValueThresholdGroupEntity entity) {
-		CompoundLowLevelAbstractionDefinition result = new CompoundLowLevelAbstractionDefinition(
+	public PropositionDefinition getPrimaryPropositionDefinition() {
+		return primary;
+	}
+
+	@Override
+	public List<PropositionDefinition> convert(
+			ValueThresholdGroupEntity entity) {
+		List<PropositionDefinition> result = new
+				ArrayList<PropositionDefinition>();
+		CompoundLowLevelAbstractionDefinition primary = new CompoundLowLevelAbstractionDefinition(
 		        entity.getKey());
 
 		if (entity.getThresholdsOperator().getName().equalsIgnoreCase("any")) {
-			result.setValueDefinitionMatchOperator(CompoundLowLevelAbstractionDefinition.ValueDefinitionMatchOperator.ANY);
+			primary.setValueDefinitionMatchOperator(CompoundLowLevelAbstractionDefinition.ValueDefinitionMatchOperator.ANY);
 		} else if (entity.getThresholdsOperator().getName()
 		        .equalsIgnoreCase("all")) {
-			result.setValueDefinitionMatchOperator(CompoundLowLevelAbstractionDefinition.ValueDefinitionMatchOperator.ALL);
+			primary.setValueDefinitionMatchOperator(CompoundLowLevelAbstractionDefinition.ValueDefinitionMatchOperator.ALL);
 		} else {
 			throw new IllegalStateException("valueDefinitionMatchOperator"
 			        + " can only be ANY or ALL");
@@ -54,17 +63,21 @@ public final class ValueThresholdsCompoundLowLevelAbstractionPackager
 			        v.getAbstractedFrom().getKey() + "_CLASSIFICATION");
 			def.addPrimitiveParameterId(v.getAbstractedFrom().getKey());
 			def.setMinimumNumberOfValues(1);
-			ValueThresholdsLowLevelAbstractionPackager
+			ValueThresholdsLowLevelAbstractionConverter
 			        .thresholdToValueDefinitions(def.getId(), v, def);
 			llas.add(def);
 		}
+		result.addAll(llas);
 
 		for (LowLevelAbstractionDefinition def : llas) {
-			result.addValueClassification(entity.getKey() + "_VALUE",
-			        def.getId(), def.getValueDefinitions().get(0).getId());
-			result.addValueClassification(entity.getKey() + "_VALUE_COMP",
-			        def.getId(), def.getValueDefinitions().get(1).getId());
+			primary.addValueClassification(entity.getKey() + "_VALUE",
+					def.getId(), def.getValueDefinitions().get(0).getId());
+			primary.addValueClassification(entity.getKey() + "_VALUE_COMP",
+					def.getId(), def.getValueDefinitions().get(1).getId());
 		}
+
+		result.add(primary);
+		this.primary = primary;
 
 		return result;
 	}

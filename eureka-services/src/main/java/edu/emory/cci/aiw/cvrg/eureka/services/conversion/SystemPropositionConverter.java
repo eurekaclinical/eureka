@@ -17,33 +17,42 @@
  * limitations under the License.
  * #L%
  */
-package edu.emory.cci.aiw.cvrg.eureka.services.transformation;
-
-import org.protempa.PropositionDefinition;
+package edu.emory.cci.aiw.cvrg.eureka.services.conversion;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.SystemProposition;
 import edu.emory.cci.aiw.cvrg.eureka.services.config.ServiceProperties;
 import edu.emory.cci.aiw.cvrg.eureka.services.finder.PropositionFindException;
 import edu.emory.cci.aiw.cvrg.eureka.services.finder.SystemPropositionFinder;
 import edu.emory.cci.aiw.cvrg.eureka.services.finder.SystemPropositionRetriever;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.protempa.PropositionDefinition;
 
-public final class SystemPropositionPackager implements
-        PropositionDefinitionPackager<SystemProposition, PropositionDefinition> {
+import java.util.Collections;
+import java.util.List;
+
+public final class SystemPropositionConverter implements
+		PropositionDefinitionConverter<SystemProposition> {
 
 	private final Long userId;
+
+	private PropositionDefinition primary;
 	
-	public SystemPropositionPackager(Long inUserId) {
+	public SystemPropositionConverter(Long inUserId) {
 		this.userId = inUserId;
+	}
+
+	@Override
+	public PropositionDefinition getPrimaryPropositionDefinition() {
+		return primary;
 	}
 	
 	@Override
-	public PropositionDefinition pack(SystemProposition proposition) {
+	public List<PropositionDefinition> convert(SystemProposition proposition) {
 		SystemPropositionFinder finder = new SystemPropositionFinder(
 		        new SystemPropositionRetriever(new ServiceProperties()));
-		try {		
-			return finder.find(this.userId, proposition.getKey());
+		try {
+			this.primary = finder.find(this.userId,
+					proposition.getKey());
+			return Collections.singletonList(primary);
 		} catch (PropositionFindException ex) {
 			throw new AssertionError("Error retrieving system propositions: " + 
 					ex.getMessage());

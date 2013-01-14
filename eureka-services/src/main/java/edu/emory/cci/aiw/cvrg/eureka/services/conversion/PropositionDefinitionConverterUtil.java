@@ -2,7 +2,7 @@
  * #%L
  * Eureka Services
  * %%
- * Copyright (C) 2012 - 2013 Emory University
+ * Copyright (C) 2012 Emory University
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,8 +17,21 @@
  * limitations under the License.
  * #L%
  */
-package edu.emory.cci.aiw.cvrg.eureka.services.packaging;
+package edu.emory.cci.aiw.cvrg.eureka.services.conversion;
 
-public class HighLevelAbstractionPackagerTest {
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.TimeUnit;
+import org.protempa.proposition.value.AbsoluteTimeUnit;
 
+/**
+ *
+ */
+public class PropositionDefinitionConverterUtil {
+	private PropositionDefinitionConverterUtil() {
+		// to prevent instantiation
+	}
+
+	static AbsoluteTimeUnit unit(TimeUnit unit) {
+		return unit != null ? AbsoluteTimeUnit.nameToUnit(unit.getName()) :
+				null;
+	}
 }

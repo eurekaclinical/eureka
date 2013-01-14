@@ -17,12 +17,9 @@
  * limitations under the License.
  * #L%
  */
-package edu.emory.cci.aiw.cvrg.eureka.services.transformation;
-
-import org.protempa.PropositionDefinition;
+package edu.emory.cci.aiw.cvrg.eureka.services.conversion;
 
 import com.google.inject.Inject;
-
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.CategoryEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.FrequencyEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.PropositionEntityVisitor;
@@ -30,18 +27,21 @@ import edu.emory.cci.aiw.cvrg.eureka.common.entity.SequenceEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.SystemProposition;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.ValueThresholdGroupEntity;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.ValueComparatorDao;
+import org.protempa.PropositionDefinition;
 
-public final class PropositionDefinitionPackagerVisitor implements
+import java.util.List;
+
+public final class PropositionDefinitionConverterVisitor implements
         PropositionEntityVisitor {
 
-	private PropositionDefinition propositionDefinition;
+	private List<PropositionDefinition> propositionDefinition;
 	private Long userId;
 
 	private final ValueComparatorDao valueCompDao;
 
 	@Inject
-	public PropositionDefinitionPackagerVisitor(
-	        ValueComparatorDao inValueCompDao) {
+	public PropositionDefinitionConverterVisitor(
+			ValueComparatorDao inValueCompDao) {
 		valueCompDao = inValueCompDao;
 	}
 
@@ -49,46 +49,48 @@ public final class PropositionDefinitionPackagerVisitor implements
 		userId = inUserId;
 	}
 
-	public PropositionDefinition getPropositionDefinition() {
+	public List<PropositionDefinition> getPropositionDefinition() {
 		return propositionDefinition;
 	}
 
 	@Override
 	public void visit(SystemProposition entity) {
-		this.propositionDefinition = new SystemPropositionPackager(this.userId)
-		        .pack(entity);
+		this.propositionDefinition = new SystemPropositionConverter(this.userId)
+		        .convert(entity);
 	}
 
 	@Override
 	public void visit(CategoryEntity entity) {
-		this.propositionDefinition = new CategorizationPackager().pack(entity);
+		this.propositionDefinition = new CategorizationConverter().convert(entity);
 	}
 
 	@Override
 	public void visit(SequenceEntity entity) {
-		this.propositionDefinition = new HighLevelAbstractionPackager()
-		        .pack(entity);
+		this.propositionDefinition = new SequenceConverter(this.valueCompDao)
+		        .convert(entity);
 	}
 
 	@Override
 	public void visit(ValueThresholdGroupEntity entity) {
 		if (entity.getValueThresholds().size() > 1) {
-			this.propositionDefinition = new ValueThresholdsCompoundLowLevelAbstractionPackager()
-			        .pack(entity);
+			this.propositionDefinition = new ValueThresholdsCompoundLowLevelAbstractionConverter()
+			        .convert(entity);
 		} else {
-			this.propositionDefinition = new ValueThresholdsLowLevelAbstractionPackager(
-			        valueCompDao).pack(entity);
+			this.propositionDefinition = new
+					ValueThresholdsLowLevelAbstractionConverter(this.userId,
+			        this.valueCompDao).convert(entity);
 		}
 	}
 
 	@Override
 	public void visit(FrequencyEntity entity) {
 		if (entity.isConsecutive()) {
-			this.propositionDefinition = new FrequencyHighLevelAbstractionPackager(
-			        this.valueCompDao).pack(entity);
+			this.propositionDefinition = new
+					FrequencyHighLevelAbstractionConverter(this.userId,
+			        this.valueCompDao).convert(entity);
 		} else {
-			this.propositionDefinition = new FrequencySliceAbstractionPackager()
-			        .pack(entity);
+			this.propositionDefinition = new FrequencySliceAbstractionConverter()
+			        .convert(entity);
 		}
 	}
 }

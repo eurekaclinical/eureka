@@ -19,19 +19,18 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.services.util;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.protempa.PropertyDefinition;
-import org.protempa.PropositionDefinition;
-
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.SystemElement;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.DataElementEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.SystemProposition;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.ValueComparatorDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.finder.PropositionFindException;
 import edu.emory.cci.aiw.cvrg.eureka.services.finder.SystemPropositionFinder;
-import edu.emory.cci.aiw.cvrg.eureka.services.transformation.PropositionDefinitionPackagerVisitor;
+import edu.emory.cci.aiw.cvrg.eureka.services.conversion.PropositionDefinitionConverterVisitor;
+import org.protempa.PropertyDefinition;
+import org.protempa.PropositionDefinition;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Provides common utility functions operating on {@link DataElementEntity}s.
@@ -114,12 +113,13 @@ public final class PropositionUtil {
 	 * 
 	 * @param inProposition
 	 *            the {@link DataElementEntity} to convert
-	 * @return a {@link PropositionDefinition} corresponding to the given
-	 *         proposition entity
+	 * @return a list of {@link PropositionDefinition}s corresponding to the
+	 * given proposition entity
 	 */
-	public static PropositionDefinition pack(DataElementEntity inProposition,
+	public static List<PropositionDefinition> pack(DataElementEntity
+														inProposition,
 	        ValueComparatorDao inValueCompDao) {
-		PropositionDefinitionPackagerVisitor visitor = new PropositionDefinitionPackagerVisitor(
+		PropositionDefinitionConverterVisitor visitor = new PropositionDefinitionConverterVisitor(
 		        inValueCompDao);
 		visitor.setUserId(inProposition.getUserId());
 		inProposition.accept(visitor);
@@ -128,7 +128,7 @@ public final class PropositionUtil {
 
 	/**
 	 * Converts a list of proposition entities into equivalent proposition
-	 * definitions by repeatedly calling {@link #pack(DataElementEntity)}.
+	 * definitions by repeatedly calling {@link #pack(DataElementEntity, ValueComparatorDao)}.
 	 * 
 	 * @param inPropositions
 	 *            a {@link List} of {@link DataElementEntity}s to convert
@@ -140,7 +140,7 @@ public final class PropositionUtil {
 		List<PropositionDefinition> result = new ArrayList<PropositionDefinition>();
 
 		for (DataElementEntity p : inPropositions) {
-			result.add(pack(p, inValueCompDao));
+			result.addAll(pack(p, inValueCompDao));
 		}
 
 		return result;

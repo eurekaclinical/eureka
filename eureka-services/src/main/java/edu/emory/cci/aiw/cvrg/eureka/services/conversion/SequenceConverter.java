@@ -17,39 +17,70 @@
  * limitations under the License.
  * #L%
  */
-package edu.emory.cci.aiw.cvrg.eureka.services.transformation;
+package edu.emory.cci.aiw.cvrg.eureka.services.conversion;
 
+import com.google.inject.Inject;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.ExtendedProposition;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.SequenceEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.Relation;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.SequenceEntity;
+import edu.emory.cci.aiw.cvrg.eureka.services.dao.ValueComparatorDao;
 import org.protempa.HighLevelAbstractionDefinition;
 import org.protempa.PropertyConstraint;
+import org.protempa.PropositionDefinition;
 import org.protempa.TemporalExtendedPropositionDefinition;
 import org.protempa.proposition.value.ValueComparator;
 import org.protempa.proposition.value.ValueType;
 
-import static edu.emory.cci.aiw.cvrg.eureka.services.transformation.PropositionDefinitionPackagerUtil.unit;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
-final class HighLevelAbstractionPackager
+import static edu.emory.cci.aiw.cvrg.eureka.services.conversion.PropositionDefinitionConverterUtil.unit;
+
+final class SequenceConverter
         implements
-        PropositionDefinitionPackager<SequenceEntity, HighLevelAbstractionDefinition> {
+		PropositionDefinitionConverter<SequenceEntity> {
+
+	private final ValueComparatorDao valueCompDao;
+
+	private PropositionDefinition primary;
+
+	@Inject
+	public SequenceConverter(ValueComparatorDao inValueCompDao) {
+		valueCompDao = inValueCompDao;
+	}
 
 	@Override
-	public HighLevelAbstractionDefinition pack(SequenceEntity proposition) {
-		HighLevelAbstractionDefinition result = new HighLevelAbstractionDefinition(
-		        proposition.getKey());
+	public PropositionDefinition getPrimaryPropositionDefinition() {
+		return primary;
+	}
 
+	@Override
+	public List<PropositionDefinition> convert(SequenceEntity
+														   proposition) {
+		List<PropositionDefinition> result = new
+				ArrayList<PropositionDefinition>();
+		HighLevelAbstractionDefinition primary = new HighLevelAbstractionDefinition(
+		        proposition.getKey());
+		PropositionDefinitionConverterVisitor visitor = new
+				PropositionDefinitionConverterVisitor(valueCompDao);
 		for (Relation rel : proposition.getRelations()) {
+			rel.getLhsExtendedProposition().getProposition().accept(visitor);
+			result.addAll(visitor.getPropositionDefinition());
 			TemporalExtendedPropositionDefinition tepdLhs = buildExtendedProposition(rel
 			        .getLhsExtendedProposition());
+
+			rel.getRhsExtendedProposition().getProposition().accept(visitor);
+			result.addAll(visitor.getPropositionDefinition());
 			TemporalExtendedPropositionDefinition tepdRhs = buildExtendedProposition(rel
 			        .getRhsExtendedProposition());
-			result.add(tepdLhs);
-			result.add(tepdRhs);
-			result.setRelation(tepdLhs, tepdRhs, buildRelation(rel));
+
+			primary.add(tepdLhs);
+			primary.add(tepdRhs);
+			primary.setRelation(tepdLhs, tepdRhs, buildRelation(rel));
 		}
 
-		return result;
+		return Collections.<PropositionDefinition> singletonList(primary);
 	}
 
 	private TemporalExtendedPropositionDefinition buildExtendedProposition(

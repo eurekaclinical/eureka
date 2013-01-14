@@ -17,20 +17,30 @@
  * limitations under the License.
  * #L%
  */
-package edu.emory.cci.aiw.cvrg.eureka.services.transformation;
-
-import org.protempa.MinMaxGapFunction;
-import org.protempa.SliceDefinition;
+package edu.emory.cci.aiw.cvrg.eureka.services.conversion;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.FrequencyEntity;
+import org.protempa.MinMaxGapFunction;
+import org.protempa.PropositionDefinition;
+import org.protempa.SliceDefinition;
 
-import static edu.emory.cci.aiw.cvrg.eureka.services.transformation.PropositionDefinitionPackagerUtil.unit;
+import java.util.Collections;
+import java.util.List;
 
-public final class FrequencySliceAbstractionPackager implements
-        PropositionDefinitionPackager<FrequencyEntity, SliceDefinition> {
+import static edu.emory.cci.aiw.cvrg.eureka.services.conversion.PropositionDefinitionConverterUtil.unit;
+
+public final class FrequencySliceAbstractionConverter implements
+		PropositionDefinitionConverter<FrequencyEntity> {
+
+	private PropositionDefinition primary;
 
 	@Override
-	public SliceDefinition pack(FrequencyEntity entity) {
+	public PropositionDefinition getPrimaryPropositionDefinition() {
+		return primary;
+	}
+
+	@Override
+	public List<PropositionDefinition> convert(FrequencyEntity entity) {
 		SliceDefinition result = new SliceDefinition(entity.getKey());
 
 		result.setMinIndex(entity.getAtLeastCount());
@@ -39,6 +49,8 @@ public final class FrequencySliceAbstractionPackager implements
 		        unit(entity.getWithinAtLeastUnits()), entity.getWithinAtMost(),
 		        unit(entity.getWithinAtMostUnits())));
 
-		return result;
+		this.primary = result;
+
+		return Collections.<PropositionDefinition> singletonList(result);
 	}
 }

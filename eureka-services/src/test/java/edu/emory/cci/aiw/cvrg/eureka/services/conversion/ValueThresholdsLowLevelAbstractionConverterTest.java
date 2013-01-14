@@ -17,23 +17,11 @@
  * limitations under the License.
  * #L%
  */
-package edu.emory.cci.aiw.cvrg.eureka.services.packaging;
+package edu.emory.cci.aiw.cvrg.eureka.services.conversion;
 
 import org.junit.Test;
-import org.protempa.LowLevelAbstractionDefinition;
-import org.protempa.proposition.value.NumberValue;
 
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.ValueThresholdEntity;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.SystemProposition;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.SystemProposition.SystemType;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.TimeUnit;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.ValueComparator;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.ValueThresholdGroupEntity;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-
-public class LowLevelAbstractionPackagerTest {
+public class ValueThresholdsLowLevelAbstractionConverterTest {
 
 //	private LowLevelAbstractionPackager packager = new LowLevelAbstractionPackager();
 
@@ -79,7 +67,7 @@ public class LowLevelAbstractionPackagerTest {
 //		vte.setValueThresholds(userConstraint);
 //		vte.setComplementConstraint(complementConstraint);
 //		
-//		LowLevelAbstractionDefinition llaDef = this.packager.pack(vte);
+//		LowLevelAbstractionDefinition llaDef = this.packager.convert(vte);
 //		assertEquals("wrong id", "test-valuethreshold", llaDef.getId());
 //		assertEquals("wrong abstracted from size", 1, llaDef.getAbstractedFrom().size());
 //		assertEquals("wrong abstracted from", "test-primparam", llaDef.getAbstractedFrom().iterator().next());

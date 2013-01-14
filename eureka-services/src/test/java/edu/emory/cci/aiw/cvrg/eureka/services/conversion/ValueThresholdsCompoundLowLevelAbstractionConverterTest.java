@@ -17,11 +17,11 @@
  * limitations under the License.
  * #L%
  */
-package edu.emory.cci.aiw.cvrg.eureka.services.packaging;
+package edu.emory.cci.aiw.cvrg.eureka.services.conversion;
 
 import org.junit.Test;
 
-public class CompoundLowLevelAbstractionPackagerTest {
+public class ValueThresholdsCompoundLowLevelAbstractionConverterTest {
 
 //	private final CompoundLowLevelAbstractionPackager packager = new CompoundLowLevelAbstractionPackager();
 	
@@ -113,7 +113,7 @@ public class CompoundLowLevelAbstractionPackagerTest {
 //		abstractedFrom.add(vte2);
 //		cvt.setAbstractedFrom(abstractedFrom);
 //		
-//		CompoundLowLevelAbstractionDefinition cllaDef = this.packager.pack(cvt);
+//		CompoundLowLevelAbstractionDefinition cllaDef = this.packager.convert(cvt);
 //		MinMaxGapFunction gf = (MinMaxGapFunction) cllaDef.getGapFunction();
 //		assertEquals("wrong id", "test-valuethreshold", cllaDef.getId());
 //		assertEquals("wrong minimum number of values", 1, cllaDef.getMinimumNumberOfValues());

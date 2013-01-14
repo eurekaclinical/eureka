@@ -2,7 +2,7 @@
  * #%L
  * Eureka Services
  * %%
- * Copyright (C) 2012 Emory University
+ * Copyright (C) 2012 - 2013 Emory University
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,12 +17,8 @@
  * limitations under the License.
  * #L%
  */
-package edu.emory.cci.aiw.cvrg.eureka.services.transformation;
+package edu.emory.cci.aiw.cvrg.eureka.services.conversion;
 
-import org.protempa.PropositionDefinition;
+public class SequenceConverterTest {
 
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.DataElementEntity;
-
-interface PropositionDefinitionPackager<E extends DataElementEntity, P extends PropositionDefinition> {
-	P pack(E entity);
 }

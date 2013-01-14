@@ -19,29 +19,11 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.services.resource;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
-import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-
-import org.protempa.PropositionDefinition;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.google.inject.Inject;
-
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.JobInfo;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.DataElementEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.FileUpload;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.Job;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.DataElementEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.User;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.FileDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.PropositionDao;
@@ -51,6 +33,21 @@ import edu.emory.cci.aiw.cvrg.eureka.services.job.JobCollection;
 import edu.emory.cci.aiw.cvrg.eureka.services.thread.JobExecutor;
 import edu.emory.cci.aiw.cvrg.eureka.services.thread.JobTask;
 import edu.emory.cci.aiw.cvrg.eureka.services.util.PropositionUtil;
+import org.protempa.PropositionDefinition;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 /**
  * REST operations related to jobs submitted by the user.
@@ -160,13 +157,16 @@ public class JobResource {
 		final List<PropositionDefinition> toShow = new ArrayList<PropositionDefinition>();
 
 		for (DataElementEntity p : propositions) {
-			PropositionDefinition propDef = PropositionUtil.pack(p, this.valueCompDao);
-			allProps.add(propDef);
-			if (!p.isInSystem()) {
-				userProps.add(propDef);
-			}
-			if (!p.isHelperProposition()) {
-				toShow.add(propDef);
+			List<PropositionDefinition> propDefs = PropositionUtil.pack(p,
+					this.valueCompDao);
+			allProps.addAll(propDefs);
+			for (PropositionDefinition propDef : propDefs) {
+				if (!p.isInSystem()) {
+					userProps.add(propDef);
+				}
+				if (!p.isHelperProposition()) {
+					toShow.add(propDef);
+				}
 			}
 		}
 

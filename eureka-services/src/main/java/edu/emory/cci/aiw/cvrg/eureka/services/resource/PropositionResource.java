@@ -19,27 +19,7 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.services.resource;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
-import javax.ws.rs.Consumes;
-import javax.ws.rs.DELETE;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-
-import org.protempa.PropositionDefinition;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.google.inject.Inject;
-
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.Category;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.DataElement;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.Sequence;
@@ -66,6 +46,23 @@ import edu.emory.cci.aiw.cvrg.eureka.services.translation.SequenceTranslator;
 import edu.emory.cci.aiw.cvrg.eureka.services.translation.SystemPropositionTranslator;
 import edu.emory.cci.aiw.cvrg.eureka.services.translation.ValueThresholdsTranslator;
 import edu.emory.cci.aiw.cvrg.eureka.services.util.PropositionUtil;
+import org.protempa.PropositionDefinition;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 /**
  * REST Web Service
@@ -223,14 +220,15 @@ public class PropositionResource {
 		List<PropositionDefinition> propDefs = new ArrayList<PropositionDefinition>();
 
 		for (DataElementEntity proposition : propositions) {
-			propDefs.add(PropositionUtil.pack(proposition, this.valueCompDao));
+			propDefs.addAll(PropositionUtil.pack(proposition,
+					this.valueCompDao));
 		}
 
 		ValidationRequest validationRequest = new ValidationRequest();
 		validationRequest.setUserId(inUserId);
 		validationRequest.setPropositions(propDefs);
-		validationRequest.setTargetProposition(PropositionUtil
-				.pack(targetProposition, this.valueCompDao));
+//		validationRequest.setTargetProposition(PropositionUtil
+//				.convert(targetProposition, this.valueCompDao));
 
 		EtlClient etlClient = new EtlClient(this.applicationProperties
 				.getEtlUrl());

@@ -17,79 +17,100 @@
  * limitations under the License.
  * #L%
  */
-package edu.emory.cci.aiw.cvrg.eureka.services.transformation;
+package edu.emory.cci.aiw.cvrg.eureka.services.conversion;
 
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.CategoryEntity;
 import org.protempa.CompoundLowLevelAbstractionDefinition;
 import org.protempa.ConstantDefinition;
 import org.protempa.EventDefinition;
 import org.protempa.HighLevelAbstractionDefinition;
+import org.protempa.LowLevelAbstractionDefinition;
 import org.protempa.PrimitiveParameterDefinition;
 import org.protempa.PropositionDefinition;
-
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.CategoryEntity;
-import org.protempa.LowLevelAbstractionDefinition;
 import org.protempa.SliceDefinition;
 
-public final class CategorizationPackager implements
-        PropositionDefinitionPackager<CategoryEntity, PropositionDefinition> {
+import java.util.Collections;
+import java.util.List;
+
+public final class CategorizationConverter implements
+		PropositionDefinitionConverter<CategoryEntity> {
+
+	private PropositionDefinition primary;
 
 	@Override
-	public PropositionDefinition pack(CategoryEntity proposition) {
+	public PropositionDefinition getPrimaryPropositionDefinition() {
+		return primary;
+	}
+
+	@Override
+	public List<PropositionDefinition> convert(CategoryEntity proposition) {
 		String id = proposition.getKey();
 		String[] inverseIsA = inverseIsA(proposition);
+		PropositionDefinition result;
 		switch (proposition.getCategorizationType()) {
 			case EVENT:
 				EventDefinition event = new EventDefinition(id);
 				event.setAbbreviatedDisplayName(proposition.getAbbrevDisplayName());
 				event.setDisplayName(proposition.getDisplayName());
 				event.setInverseIsA(inverseIsA);
-				return event;
+				result = event;
+				break;
 			case CONSTANT:
 				ConstantDefinition constant = new ConstantDefinition(id);
 				constant.setAbbreviatedDisplayName(proposition.getAbbrevDisplayName());
 				constant.setDisplayName(proposition.getDisplayName());
 				constant.setInverseIsA(inverseIsA);
-				return constant;
+				result = constant;
+				break;
 			case PRIMITIVE_PARAMETER:
 				PrimitiveParameterDefinition primParam = new PrimitiveParameterDefinition(
 				        id);
 				primParam.setAbbreviatedDisplayName(proposition.getAbbrevDisplayName());
 				primParam.setDisplayName(proposition.getDisplayName());
 				primParam.setInverseIsA(inverseIsA);
-				return primParam;
+				result = primParam;
+				break;
 			case HIGH_LEVEL_ABSTRACTION:
 				HighLevelAbstractionDefinition hla = new HighLevelAbstractionDefinition(
 				        id);
 				hla.setAbbreviatedDisplayName(proposition.getAbbrevDisplayName());
 				hla.setDisplayName(proposition.getDisplayName());
 				hla.setInverseIsA(inverseIsA);
-				return hla;
+				result = hla;
+				break;
 			case SLICE_ABSTRACTION:
 				SliceDefinition sla = new SliceDefinition(id);
 				sla.setAbbreviatedDisplayName(proposition.getAbbrevDisplayName());
 				sla.setDisplayName(proposition.getDisplayName());
 				sla.setInverseIsA(inverseIsA);
-				return sla;
+				result = sla;
+				break;
 			case LOW_LEVEL_ABSTRACTION:
 				LowLevelAbstractionDefinition llad = new LowLevelAbstractionDefinition(id);
 				llad.setAbbreviatedDisplayName(proposition.getAbbrevDisplayName());
 				llad.setDisplayName(proposition.getDisplayName());
 				llad.setInverseIsA(inverseIsA);
-				return llad;
+				result = llad;
+				break;
 			case COMPOUND_LOW_LEVEL_ABSTRACTION:
 				CompoundLowLevelAbstractionDefinition cllad = new CompoundLowLevelAbstractionDefinition(id);
 				cllad.setAbbreviatedDisplayName(proposition.getAbbrevDisplayName());
 				cllad.setDisplayName(proposition.getDisplayName());
 				cllad.setInverseIsA(inverseIsA);
-				return cllad;
+				result =  cllad;
+				break;
 			default:
 				HighLevelAbstractionDefinition defaultDef = new HighLevelAbstractionDefinition(
 				        id);
 				defaultDef.setAbbreviatedDisplayName(proposition.getAbbrevDisplayName());
 				defaultDef.setDisplayName(proposition.getDisplayName());
 				defaultDef.setInverseIsA(inverseIsA);
-				return defaultDef;
+				result = defaultDef;
+				break;
 		}
+
+		this.primary = result;
+		return Collections.singletonList(result);
 	}
 
 	private static String[] inverseIsA(CategoryEntity proposition) {

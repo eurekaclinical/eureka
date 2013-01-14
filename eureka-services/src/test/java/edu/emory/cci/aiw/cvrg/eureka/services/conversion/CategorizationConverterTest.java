@@ -17,14 +17,16 @@
  * limitations under the License.
  * #L%
  */
-package edu.emory.cci.aiw.cvrg.eureka.services.packaging;
+package edu.emory.cci.aiw.cvrg.eureka.services.conversion;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-
-import java.util.ArrayList;
-import java.util.List;
-
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.CategoryEntity;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.CategoryEntity.CategorizationType;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.DataElementEntity;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.FrequencyEntity;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.SequenceEntity;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.SystemProposition;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.SystemProposition.SystemType;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.ValueThresholdGroupEntity;
 import org.junit.Before;
 import org.junit.Test;
 import org.protempa.ConstantDefinition;
@@ -35,23 +37,19 @@ import org.protempa.PrimitiveParameterDefinition;
 import org.protempa.PropositionDefinition;
 import org.protempa.SliceDefinition;
 
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.CategoryEntity;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.CategoryEntity.CategorizationType;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.DataElementEntity;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.FrequencyEntity;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.SequenceEntity;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.SystemProposition;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.SystemProposition.SystemType;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.ValueThresholdGroupEntity;
-import edu.emory.cci.aiw.cvrg.eureka.services.transformation.CategorizationPackager;
+import java.util.ArrayList;
+import java.util.List;
 
-public class CategorizationPackagerTest {
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
-	private CategorizationPackager packager;
+public class CategorizationConverterTest {
+
+	private CategorizationConverter converter;
 
 	@Before
 	public void setup() {
-		this.packager = new CategorizationPackager();
+		this.converter = new CategorizationConverter();
 
 	}
 
@@ -80,7 +78,12 @@ public class CategorizationPackagerTest {
 		iia1.add(event2);
 		eventCat1.setInverseIsA(iia1);
 
-		PropositionDefinition eventDef1 = this.packager.pack(eventCat1);
+		List<PropositionDefinition> eventDefs1 = this.converter.convert
+				(eventCat1);
+		assertEquals("wrong number of proposition definitions created", 1,
+				eventDefs1.size());
+		PropositionDefinition eventDef1 = this.converter
+				.getPrimaryPropositionDefinition();
 		assertTrue("not an event", eventDef1 instanceof EventDefinition);
 		assertEquals("wrong ID", "test-event-cat1", eventDef1.getId());
 		assertEquals("wrong display name", "test-event-cat1-display",
@@ -90,11 +93,11 @@ public class CategorizationPackagerTest {
 		assertEquals("wrong size of inverse-is-a", 2,
 		        eventDef1.getInverseIsA().length);
 		assertTrue(
-		        "inverse-is-a missing",
-		        (eventDef1.getInverseIsA()[0].equals("test-event1") && eventDef1
-		                .getInverseIsA()[1].equals("test-event2"))
-		                || (eventDef1.getInverseIsA()[0].equals("test-event2") && eventDef1
-		                        .getInverseIsA()[1].equals("test-event1")));
+				"inverse-is-a missing",
+				(eventDef1.getInverseIsA()[0].equals("test-event1") && eventDef1
+						.getInverseIsA()[1].equals("test-event2"))
+						|| (eventDef1.getInverseIsA()[0].equals("test-event2") && eventDef1
+						.getInverseIsA()[1].equals("test-event1")));
 
 		CategoryEntity eventCat2 = new CategoryEntity();
 		eventCat2.setId(4L);
@@ -106,7 +109,8 @@ public class CategorizationPackagerTest {
 		iia2.add(eventCat1);
 		eventCat2.setInverseIsA(iia2);
 
-		PropositionDefinition eventDef2 = this.packager.pack(eventCat2);
+		PropositionDefinition eventDef2 = this.converter.convert(eventCat2)
+				.get(0);
 		assertTrue("not an event", eventDef2 instanceof EventDefinition);
 		assertEquals("wrong ID", "test-event-cat2", eventDef2.getId());
 		assertEquals("wrong display name", "test-event-cat2-display",
@@ -143,7 +147,8 @@ public class CategorizationPackagerTest {
 		iia1.add(constant2);
 		constantCat1.setInverseIsA(iia1);
 
-		PropositionDefinition constantDef1 = this.packager.pack(constantCat1);
+		PropositionDefinition constantDef1 = this.converter.convert
+				(constantCat1).get(0);
 		assertTrue("not a constant", constantDef1 instanceof ConstantDefinition);
 		assertEquals("wrong ID", "test-constant-cat1", constantDef1.getId());
 		assertEquals("wrong display name", "test-constant-cat1-display",
@@ -153,12 +158,12 @@ public class CategorizationPackagerTest {
 		assertEquals("wrong inverse-is-a size", 2,
 		        constantDef1.getInverseIsA().length);
 		assertTrue(
-		        "wrong inverse-is-a objects",
-		        (constantDef1.getInverseIsA()[0].equals("test-constant1") && constantDef1
-		                .getInverseIsA()[1].equals("test-constant2"))
-		                || (constantDef1.getInverseIsA()[0]
-		                        .equals("test-constant2") && constantDef1
-		                        .getInverseIsA()[1].equals("test-constant1")));
+				"wrong inverse-is-a objects",
+				(constantDef1.getInverseIsA()[0].equals("test-constant1") && constantDef1
+						.getInverseIsA()[1].equals("test-constant2"))
+						|| (constantDef1.getInverseIsA()[0]
+						.equals("test-constant2") && constantDef1
+						.getInverseIsA()[1].equals("test-constant1")));
 
 		CategoryEntity constantCat2 = new CategoryEntity();
 		constantCat2.setId(4L);
@@ -170,7 +175,8 @@ public class CategorizationPackagerTest {
 		iia2.add(constantCat1);
 		constantCat2.setInverseIsA(iia2);
 
-		PropositionDefinition constantDef2 = this.packager.pack(constantCat2);
+		PropositionDefinition constantDef2 = this.converter.convert
+				(constantCat2).get(0);
 		assertTrue("not a constant", constantDef2 instanceof ConstantDefinition);
 		assertEquals("wrong ID", "test-constant-cat2", constantDef2.getId());
 		assertEquals("wrong display name", "test-constant-cat2-display",
@@ -209,9 +215,10 @@ public class CategorizationPackagerTest {
 		iia1.add(primParam2);
 		primParamCat1.setInverseIsA(iia1);
 
-		PropositionDefinition primParamDef1 = this.packager.pack(primParamCat1);
+		PropositionDefinition primParamDef1 = this.converter.convert
+				(primParamCat1).get(0);
 		assertTrue("not a primitive parameter",
-		        primParamDef1 instanceof PrimitiveParameterDefinition);
+				primParamDef1 instanceof PrimitiveParameterDefinition);
 		assertEquals("wrong ID", "test-primparam-cat1", primParamDef1.getId());
 		assertEquals("wrong display name", "test-primparam-cat1-display",
 		        primParamDef1.getDisplayName());
@@ -220,12 +227,12 @@ public class CategorizationPackagerTest {
 		assertEquals("wrong inverse-is-a size", 2,
 		        primParamDef1.getInverseIsA().length);
 		assertTrue(
-		        "wrong inverse-is-a objects",
-		        (primParamDef1.getInverseIsA()[0].equals("test-primparam1") && primParamDef1
-		                .getInverseIsA()[1].equals("test-primparam2"))
-		                || (primParamDef1.getInverseIsA()[0]
-		                        .equals("test-primparam2") && primParamDef1
-		                        .getInverseIsA()[1].equals("test-primparam1")));
+				"wrong inverse-is-a objects",
+				(primParamDef1.getInverseIsA()[0].equals("test-primparam1") && primParamDef1
+						.getInverseIsA()[1].equals("test-primparam2"))
+						|| (primParamDef1.getInverseIsA()[0]
+						.equals("test-primparam2") && primParamDef1
+						.getInverseIsA()[1].equals("test-primparam1")));
 
 		CategoryEntity primParamCat2 = new CategoryEntity();
 		primParamCat2.setId(4L);
@@ -238,7 +245,8 @@ public class CategorizationPackagerTest {
 		iia2.add(primParamCat1);
 		primParamCat2.setInverseIsA(iia2);
 
-		PropositionDefinition primParamDef2 = this.packager.pack(primParamCat2);
+		PropositionDefinition primParamDef2 = this.converter.convert
+				(primParamCat2).get(0);
 		assertTrue("not a primitve parameter",
 		        primParamDef2 instanceof PrimitiveParameterDefinition);
 		assertEquals("wrong ID", "test-primparam-cat2", primParamDef2.getId());
@@ -275,9 +283,9 @@ public class CategorizationPackagerTest {
 		iia1.add(hla2);
 		hlaCat1.setInverseIsA(iia1);
 
-		PropositionDefinition hlaDef1 = this.packager.pack(hlaCat1);
+		PropositionDefinition hlaDef1 = this.converter.convert(hlaCat1).get(0);
 		assertTrue("not a high-level abstraction",
-		        hlaDef1 instanceof HighLevelAbstractionDefinition);
+				hlaDef1 instanceof HighLevelAbstractionDefinition);
 		assertEquals("wrong ID", "test-hla-cat1", hlaDef1.getId());
 		assertEquals("wrong display name", "test-hla-cat1-display",
 		        hlaDef1.getDisplayName());
@@ -286,11 +294,11 @@ public class CategorizationPackagerTest {
 		assertEquals("wrong inverse-is-a size", 2,
 		        hlaDef1.getInverseIsA().length);
 		assertTrue(
-		        "wrong inverse-is-a objects",
-		        (hlaDef1.getInverseIsA()[0].equals("1") && hlaDef1
-		                .getInverseIsA()[1].equals("2"))
-		                || (hlaDef1.getInverseIsA()[0].equals("2") && hlaDef1
-		                        .getInverseIsA()[1].equals("1")));
+				"wrong inverse-is-a objects",
+				(hlaDef1.getInverseIsA()[0].equals("1") && hlaDef1
+						.getInverseIsA()[1].equals("2"))
+						|| (hlaDef1.getInverseIsA()[0].equals("2") && hlaDef1
+						.getInverseIsA()[1].equals("1")));
 
 		CategoryEntity hlaCat2 = new CategoryEntity();
 		hlaCat2.setId(4L);
@@ -302,7 +310,7 @@ public class CategorizationPackagerTest {
 		iia2.add(hlaCat1);
 		hlaCat2.setInverseIsA(iia2);
 
-		PropositionDefinition hlaDef2 = this.packager.pack(hlaCat2);
+		PropositionDefinition hlaDef2 = this.converter.convert(hlaCat2).get(0);
 		assertTrue("not a high-level abstraction",
 		        hlaDef2 instanceof HighLevelAbstractionDefinition);
 		assertEquals("wrong ID", "test-hla-cat2", hlaDef2.getId());
@@ -338,9 +346,9 @@ public class CategorizationPackagerTest {
 		iia1.add(sa2);
 		saCat1.setInverseIsA(iia1);
 
-		PropositionDefinition saDef1 = this.packager.pack(saCat1);
+		PropositionDefinition saDef1 = this.converter.convert(saCat1).get(0);
 		assertTrue("not a slice abstraction",
-		        saDef1 instanceof SliceDefinition);
+				saDef1 instanceof SliceDefinition);
 		assertEquals("wrong ID", "test-slice-cat1", saDef1.getId());
 		assertEquals("wrong display name", "test-slice-cat1-display",
 		        saDef1.getDisplayName());
@@ -349,11 +357,11 @@ public class CategorizationPackagerTest {
 		assertEquals("wrong inverse-is-a size", 2,
 		        saDef1.getInverseIsA().length);
 		assertTrue(
-		        "wrong inverse-is-a objects",
-		        (saDef1.getInverseIsA()[0].equals("1") && saDef1
-		                .getInverseIsA()[1].equals("2"))
-		                || (saDef1.getInverseIsA()[0].equals("2") && saDef1
-		                        .getInverseIsA()[1].equals("1")));
+				"wrong inverse-is-a objects",
+				(saDef1.getInverseIsA()[0].equals("1") && saDef1
+						.getInverseIsA()[1].equals("2"))
+						|| (saDef1.getInverseIsA()[0].equals("2") && saDef1
+						.getInverseIsA()[1].equals("1")));
 
 		CategoryEntity saCat2 = new CategoryEntity();
 		saCat2.setId(4L);
@@ -365,7 +373,7 @@ public class CategorizationPackagerTest {
 		iia2.add(saCat1);
 		saCat2.setInverseIsA(iia2);
 
-		PropositionDefinition saDef2 = this.packager.pack(saCat2);
+		PropositionDefinition saDef2 = this.converter.convert(saCat2).get(0);
 		assertTrue("not a slice abstraction",
 		        saDef2 instanceof SliceDefinition);
 		assertEquals("wrong ID", "test-slice-cat2", saDef2.getId());
@@ -401,9 +409,9 @@ public class CategorizationPackagerTest {
 		iia1.add(lla2);
 		llaCat1.setInverseIsA(iia1);
 
-		PropositionDefinition llaDef1 = this.packager.pack(llaCat1);
+		PropositionDefinition llaDef1 = this.converter.convert(llaCat1).get(0);
 		assertTrue("not a low-level abstraction",
-		        llaDef1 instanceof LowLevelAbstractionDefinition);
+				llaDef1 instanceof LowLevelAbstractionDefinition);
 		assertEquals("wrong ID", "test-lla-cat1", llaDef1.getId());
 		assertEquals("wrong display name", "test-lla-cat1-display",
 		        llaDef1.getDisplayName());
@@ -412,11 +420,11 @@ public class CategorizationPackagerTest {
 		assertEquals("wrong inverse-is-a size", 2,
 		        llaDef1.getInverseIsA().length);
 		assertTrue(
-		        "wrong inverse-is-a objects",
-		        (llaDef1.getInverseIsA()[0].equals("1") && llaDef1
-		                .getInverseIsA()[1].equals("2"))
-		                || (llaDef1.getInverseIsA()[0].equals("2") && llaDef1
-		                        .getInverseIsA()[1].equals("1")));
+				"wrong inverse-is-a objects",
+				(llaDef1.getInverseIsA()[0].equals("1") && llaDef1
+						.getInverseIsA()[1].equals("2"))
+						|| (llaDef1.getInverseIsA()[0].equals("2") && llaDef1
+						.getInverseIsA()[1].equals("1")));
 
 		CategoryEntity llaCat2 = new CategoryEntity();
 		llaCat2.setId(4L);
@@ -428,7 +436,7 @@ public class CategorizationPackagerTest {
 		iia2.add(llaCat1);
 		llaCat2.setInverseIsA(iia2);
 
-		PropositionDefinition llaDef2 = this.packager.pack(llaCat2);
+		PropositionDefinition llaDef2 = this.converter.convert(llaCat2).get(0);
 		assertTrue("not a low-level abstraction",
 		        llaDef2 instanceof LowLevelAbstractionDefinition);
 		assertEquals("wrong ID", "test-lla-cat2", llaDef2.getId());
@@ -464,7 +472,7 @@ public class CategorizationPackagerTest {
 //		iia1.add(clla2);
 //		cllaCat1.setInverseIsA(iia1);
 //
-//		PropositionDefinition cllaDef1 = this.packager.pack(cllaCat1);
+//		PropositionDefinition cllaDef1 = this.converter.convert(cllaCat1);
 //		assertTrue("not a compound low-level abstraction",
 //		        cllaDef1 instanceof CompoundLowLevelAbstractionDefinition);
 //		assertEquals("wrong ID", "test-clla-cat1", cllaDef1.getId());
@@ -491,7 +499,7 @@ public class CategorizationPackagerTest {
 //		iia2.add(cllaCat1);
 //		cllaCat2.setInverseIsA(iia2);
 //
-//		PropositionDefinition cllaDef2 = this.packager.pack(cllaCat2);
+//		PropositionDefinition cllaDef2 = this.converter.convert(cllaCat2);
 //		assertTrue("not a compound low-level abstraction",
 //		        cllaDef2 instanceof CompoundLowLevelAbstractionDefinition);
 //		assertEquals("wrong ID", "test-clla-cat2", cllaDef2.getId());
@@ -529,7 +537,7 @@ public class CategorizationPackagerTest {
 //		iia1.add(primParam);
 //		mixedCat1.setInverseIsA(iia1);
 //
-//		PropositionDefinition hlaDef1 = this.packager.pack(mixedCat1);
+//		PropositionDefinition hlaDef1 = this.converter.convert(mixedCat1);
 //		assertTrue("not a high-level abstraction",
 //		        hlaDef1 instanceof HighLevelAbstractionDefinition);
 //		assertEquals("wrong ID", "test-mixed-cat1", hlaDef1.getId());
@@ -556,7 +564,7 @@ public class CategorizationPackagerTest {
 //		iia2.add(mixedCat1);
 //		mixedCat.setInverseIsA(iia2);
 //
-//		PropositionDefinition hlaDef2 = this.packager.pack(mixedCat);
+//		PropositionDefinition hlaDef2 = this.converter.convert(mixedCat);
 //		assertTrue("not an event", hlaDef2 instanceof HighLevelAbstractionDefinition);
 //		assertEquals("wrong ID", "test-mixed-cat2", hlaDef2.getId());
 //		assertEquals("wrong display name", "test-mixed-cat2-display",

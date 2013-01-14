@@ -17,44 +17,67 @@
  * limitations under the License.
  * #L%
  */
-package edu.emory.cci.aiw.cvrg.eureka.services.transformation;
-
-import org.protempa.LowLevelAbstractionDefinition;
-import org.protempa.LowLevelAbstractionValueDefinition;
-import org.protempa.proposition.value.ValueComparator;
-import org.protempa.proposition.value.ValueType;
+package edu.emory.cci.aiw.cvrg.eureka.services.conversion;
 
 import com.google.inject.Inject;
-
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.ValueThresholdEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.ValueThresholdGroupEntity;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.ValueComparatorDao;
+import org.protempa.LowLevelAbstractionDefinition;
+import org.protempa.LowLevelAbstractionValueDefinition;
+import org.protempa.PropositionDefinition;
+import org.protempa.proposition.value.ValueComparator;
+import org.protempa.proposition.value.ValueType;
 
-public final class ValueThresholdsLowLevelAbstractionPackager
+import java.util.ArrayList;
+import java.util.List;
+
+public final class ValueThresholdsLowLevelAbstractionConverter
         implements
-        PropositionDefinitionPackager<ValueThresholdGroupEntity, LowLevelAbstractionDefinition> {
+		PropositionDefinitionConverter<ValueThresholdGroupEntity> {
 
+	private final Long userId;
 	private final ValueComparatorDao valueCompDao;
 
+	private PropositionDefinition primary;
+
 	@Inject
-	public ValueThresholdsLowLevelAbstractionPackager(
-	        ValueComparatorDao inValueCompDao) {
+	public ValueThresholdsLowLevelAbstractionConverter(Long inUserId,
+													   ValueComparatorDao inValueCompDao) {
+		userId = inUserId;
 		valueCompDao = inValueCompDao;
 	}
 
 	@Override
-	public LowLevelAbstractionDefinition pack(ValueThresholdGroupEntity entity) {
-		LowLevelAbstractionDefinition result = new LowLevelAbstractionDefinition(
+	public PropositionDefinition getPrimaryPropositionDefinition() {
+		return primary;
+	}
+
+	@Override
+	public List<PropositionDefinition> convert(ValueThresholdGroupEntity
+														   entity) {
+		List<PropositionDefinition> result = new
+				ArrayList<PropositionDefinition>();
+		LowLevelAbstractionDefinition primary = new LowLevelAbstractionDefinition(
 		        entity.getKey());
 
-		result.setAlgorithmId("stateDetector");
+		primary.setAlgorithmId("stateDetector");
 
 		// low-level abstractions can be created only from singleton value
 		// thresholds
 		ValueThresholdEntity threshold = entity.getValueThresholds().get(0);
-		result.addPrimitiveParameterId(threshold.getAbstractedFrom().getKey());
-		thresholdToValueDefinitions(entity.getKey() + "_VALUE", threshold, result);
-		result.setMinimumNumberOfValues(1);
+		PropositionDefinitionConverterVisitor visitor = new
+				PropositionDefinitionConverterVisitor(valueCompDao);
+		threshold.getAbstractedFrom().accept(visitor);
+		List<PropositionDefinition> abstractedFrom = visitor
+				.getPropositionDefinition();
+		primary.addPrimitiveParameterId(threshold.getAbstractedFrom().getKey());
+		thresholdToValueDefinitions(entity.getKey() + "_VALUE", threshold, primary);
+		primary.setMinimumNumberOfValues(1);
+
+		result.addAll(abstractedFrom);
+		result.add(primary);
+		this.primary = primary;
 
 		return result;
 	}

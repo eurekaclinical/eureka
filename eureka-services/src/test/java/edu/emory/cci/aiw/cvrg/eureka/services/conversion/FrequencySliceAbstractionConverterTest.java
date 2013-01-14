@@ -17,24 +17,22 @@
  * limitations under the License.
  * #L%
  */
-package edu.emory.cci.aiw.cvrg.eureka.services.packaging;
-
-import org.junit.Test;
-import org.protempa.MinMaxGapFunction;
-import org.protempa.SliceDefinition;
+package edu.emory.cci.aiw.cvrg.eureka.services.conversion;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.ExtendedProposition;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.FrequencyEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.SystemProposition;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.TimeUnit;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.SystemProposition.SystemType;
-import edu.emory.cci.aiw.cvrg.eureka.services.transformation.SliceAbstractionPackager;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.TimeUnit;
+import org.junit.Test;
+import org.protempa.MinMaxGapFunction;
+import org.protempa.SliceDefinition;
 
 import static org.junit.Assert.assertEquals;
 
-public class SliceAbstractionPackagerTest {
+public class FrequencySliceAbstractionConverterTest {
 
-	private SliceAbstractionPackager packager = new SliceAbstractionPackager();
+	private FrequencySliceAbstractionConverter converter = new FrequencySliceAbstractionConverter();
 	
 	@Test
 	public void testSlicePackager() {
@@ -63,7 +61,8 @@ public class SliceAbstractionPackagerTest {
 		
 		sa.setExtendedProposition(af);
 		
-		SliceDefinition sliceDef = this.packager.pack(sa);
+		SliceDefinition sliceDef = (SliceDefinition) this.converter.convert
+				(sa).get(0);
 		assertEquals("wrong ID", "test-slice-key", sliceDef.getId());
 		assertEquals("wrong min index", 3, sliceDef.getMinIndex());
 		assertEquals("wrong abstracted from size", 1, sliceDef.getAbstractedFrom().size());
