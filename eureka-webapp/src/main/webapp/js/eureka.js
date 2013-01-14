@@ -269,7 +269,7 @@ $(document).ready(function() {
              data: dataString,
              success: function() {
              $('#passwordresetComplete').show();
-             $('#passwordresetComplete').text("Password has been reset.");
+             $('#passwordresetComplete').text("Password has been reset.You will receive an email with the new password.");
    	      $('#passwordresetComplete').css({
    	    	  'font-weight' : 'bold',
    	    	  'font-size': 16
@@ -289,6 +289,96 @@ $(document).ready(function() {
 		});
 		 return false;
 	 });
+	 
+	 if ($("#passwordExpirationfrm").length > 0){
+			var pwExpFormValidator = $("#passwordExpirationfrm").validate({
+				rules: {
+				oldExpPassword: {
+						required: true
+					},
+					newExpPassword: {
+						required: true,
+						minlength: 8,
+						passwordCheck: true
+					},
+					verifyExpPassword: {
+						required: true,
+						minlength: 8,
+						equalTo: "#newExpPassword"
+					}
+				},
+				messages: {
+					oldExpPassword: "Please enter your old password",
+					newExpPassword: {
+						required: "Provide a password",
+						rangelength: jQuery.format("Please enter at least {0} characters")
+					},
+					verifyExpPassword: {
+						required: "Repeat your password",
+						minlength: jQuery.format("Please enter at least {0} characters"),
+						equalTo: "Enter the same password as above"
+					}
+				},
+				// the errorPlacement has to take the table layout into account
+				errorPlacement: function(error, element) {
+					if ( element.is(":radio") )
+						error.appendTo( element.parent().next().next() );
+					else if ( element.is(":checkbox") )
+						error.appendTo ( element.next() );
+					else
+						error.appendTo( element.parent().next() );
+				},
+				// specifying a submitHandler prevents the default submit, good for the demo
+				//submitHandler: function() {
+				//	alert("submitted!");
+				//},
+				// set this class to error-labels to indicate valid fields
+				success: function(label) {
+					// set &nbsp; as text for IE
+					label.html("&nbsp;").addClass("checked");
+				}
+			});
+		 
+	 }
+	 
+	 $("#passwordExpirationfrm").submit(function(){
+			var oldPassword = $('#oldExpPassword').val();
+			var newPassword = $('#newExpPassword').val();
+			var verifyPassword = $('#verifyExpPassword').val();
+			var userId = '';
+			var targetURL=$('#targetURL').val();
+			
+	        var dataString = 'action=save' +
+	        				 '&id='+ userId +
+	        				 '&oldPassword=' + oldPassword + 
+	        				 '&newPassword=' + newPassword + 
+	        				 '&verifyPassword=' + verifyPassword;  
+	        	
+	        if (pwExpFormValidator.valid()) {   
+		              $.ajax({
+			              type: 'POST',
+			              url: 'user_acct',
+			              data: dataString,
+			              success: function() {
+		            	      window.location.href = targetURL;
+
+		                  }, 
+		                  error: function(xhr, status, error) {
+
+		                      $('#passwordChangeComplete').show();
+		                      $('#passwordChangeComplete').text(xhr.responseText);
+		                      $('#passwordChangeComplete').css({
+		            	    	  'font-weight' : 'bold',
+		            	    	  'font-size': 16
+		            	      });
+
+		                  } 
+				});
+	        
+	        }
+         return false;
+	 });
+	 
 	 
 	 $("#userAcctForm").submit(function(){
 			var oldPassword = $('#oldPassword').val();
@@ -314,7 +404,7 @@ $(document).ready(function() {
 		            	    	  'font-weight' : 'bold',
 		            	    	  'font-size': 16
 		            	      });
-		            	      $('#saveAcctBtn').hide();
+		            	      $('#newPasswordTable').hide(); 
 
 		                  }, 
 		                  error: function(xhr, status, error) {
