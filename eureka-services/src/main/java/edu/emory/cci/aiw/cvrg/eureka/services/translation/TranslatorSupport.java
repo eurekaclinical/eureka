@@ -118,9 +118,34 @@ final class TranslatorSupport {
 		result.setInSystem(false);
 		result.setLastModified(now);
 		
-		PropositionTranslatorUtil.populateCommonEntityFields(result,
-				element);
+		populateCommonEntityFields(result, element);
 		
 		return result;
+	}
+	
+	/**
+	 * Populates the fields common to all propositions based on the given
+	 * proposition.
+	 * 
+	 * @param entity
+	 *            the {@link DataElementEntity} to populate. Modified as a result of
+	 *            calling this method.
+	 * @param dataElement
+	 *            the {@link DataElement} to get the data from
+	 */
+	private static void populateCommonEntityFields(DataElementEntity entity,
+	        DataElement dataElement) {
+		entity.setId(dataElement.getId());
+		entity.setDisplayName(dataElement.getDisplayName());
+		entity.setAbbrevDisplayName(dataElement.getAbbrevDisplayName());
+		//proposition.setCreated(dataElement.getCreated());
+		//proposition.setLastModified(dataElement.getLastModified());
+		entity.setUserId(dataElement.getUserId());
+
+		if (dataElement.getKey() != null) {
+			entity.setKey(dataElement.getKey());
+		} else {
+			entity.setKey(dataElement.getAbbrevDisplayName());
+		}
 	}
 }

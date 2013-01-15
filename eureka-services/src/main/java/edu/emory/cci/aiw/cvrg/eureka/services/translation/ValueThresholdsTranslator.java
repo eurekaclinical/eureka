@@ -53,15 +53,32 @@ public final class ValueThresholdsTranslator implements
 	@Override
 	public ValueThresholdGroupEntity translateFromElement(
 	        ValueThresholds element) throws DataElementHandlingException {
-		ValueThresholdGroupEntity result = new ValueThresholdGroupEntity();
-
-		PropositionTranslatorUtil.populateCommonEntityFields(result, element);
+		if (element == null) {
+			throw new IllegalArgumentException("element cannot be null");
+		}
+		
+		ValueThresholdGroupEntity result = 
+				this.translatorSupport.getUserEntityInstance(element, 
+				ValueThresholdGroupEntity.class);
 
 		result.setThresholdsOperator(thresholdsOperatorDao.retrieve(element
 		        .getThresholdsOperator()));
-		List<ValueThresholdEntity> thresholds = new ArrayList<ValueThresholdEntity>();
+		
+		List<ValueThresholdEntity> thresholds = result.getValueThresholds();
+		if (thresholds == null) {
+			thresholds = new ArrayList<ValueThresholdEntity>();
+			result.setValueThresholds(thresholds);
+		}
+		
+		int i = 0;
 		for (ValueThreshold vt : element.getValueThresholds()) {
-			ValueThresholdEntity vte = new ValueThresholdEntity();
+			ValueThresholdEntity vte;
+			if (thresholds.size() > i) {
+				vte = thresholds.get(i);
+			} else {
+				vte = new ValueThresholdEntity();
+				thresholds.add(vte);
+			}
 			vte.setAbstractedFrom(translatorSupport.getSystemEntityInstance(
 			        element.getUserId(), vt.getDataElement()
 			                .getDataElementKey()));
@@ -73,8 +90,8 @@ public final class ValueThresholdsTranslator implements
 			vte.setMaxValueThreshold(vt.getUpperValue());
 			vte.setMaxValueComp(valueCompDao.retrieve(vt.getUpperComp()));
 			// vte.setMaxUnits(vt.getUpperUnits());
-
-			thresholds.add(vte);
+			
+			i++;
 		}
 		result.setValueThresholds(thresholds);
 

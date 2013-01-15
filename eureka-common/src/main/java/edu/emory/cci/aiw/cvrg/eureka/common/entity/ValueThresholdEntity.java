@@ -45,20 +45,21 @@ public class ValueThresholdEntity {
 
 	@ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.REFRESH, 
 			CascadeType.MERGE})
+	@JoinColumn(nullable = false)
 	private DataElementEntity abstractedFrom;
 
 	private Number minValueThreshold;
 	private String minUnits;
 
-	@OneToOne
-	@JoinColumn(referencedColumnName = "id")
+	@ManyToOne
+	@JoinColumn(referencedColumnName = "id", nullable = false)
 	private ValueComparator minValueComp;
 
 	private Number maxValueThreshold;
 	private String maxUnits;
 
-	@OneToOne
-	@JoinColumn(referencedColumnName = "id")
+	@ManyToOne
+	@JoinColumn(referencedColumnName = "id", nullable = false)
 	private ValueComparator maxValueComp;
 
 	public Long getId() {

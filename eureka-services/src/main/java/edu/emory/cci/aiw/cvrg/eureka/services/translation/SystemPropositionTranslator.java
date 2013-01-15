@@ -29,6 +29,7 @@ import com.google.inject.Inject;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.SystemElement;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.SystemProposition;
+import edu.emory.cci.aiw.cvrg.eureka.services.dao.PropositionDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.finder.PropositionFindException;
 import edu.emory.cci.aiw.cvrg.eureka.services.finder.SystemPropositionFinder;
 import edu.emory.cci.aiw.cvrg.eureka.services.util.PropositionUtil;
@@ -37,23 +38,28 @@ public class SystemPropositionTranslator implements
 		PropositionTranslator<SystemElement, SystemProposition> {
 
 	private final SystemPropositionFinder finder;
+	private final TranslatorSupport translatorSupport;
 
 	@Inject
-	public SystemPropositionTranslator(SystemPropositionFinder inFinder) {
+	public SystemPropositionTranslator(PropositionDao inPropositionDao, 
+			SystemPropositionFinder inFinder) {
 		finder = inFinder;
+		this.translatorSupport = 
+				new TranslatorSupport(inPropositionDao, inFinder);
 	}
 
 	@Override
 	public SystemProposition translateFromElement(SystemElement element) {
-		SystemProposition proposition = new SystemProposition();
-		PropositionTranslatorUtil.populateCommonEntityFields(proposition,
-				element);
+		SystemProposition proposition = 
+				this.translatorSupport.getUserEntityInstance(element, 
+				SystemProposition.class);
 		proposition.setSystemType(element.getSystemType());
 		return proposition;
 	}
 
 	@Override
-	public SystemElement translateFromProposition(SystemProposition proposition) {
+	public SystemElement translateFromProposition(
+			SystemProposition proposition) {
 		SystemElement element = new SystemElement();
 		try {
 			PropositionTranslatorUtil.populateCommonDataElementFields(element,

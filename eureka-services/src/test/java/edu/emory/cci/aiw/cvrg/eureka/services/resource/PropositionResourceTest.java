@@ -60,15 +60,15 @@ public class PropositionResourceTest extends AbstractServiceResourceTest {
 	public void deletePropositionTest() {
 
 		TimeUnitDao timeUnitDao = this.getInstance(TimeUnitDao.class);
-		List<TimeUnit> timeUnits = timeUnitDao.getAll();
+		TimeUnit timeUnit = timeUnitDao.getByName("test");
 
 		DataElementField dataElementField = new DataElementField();
 		dataElementField.setDataElementKey("test-low-level");
 		dataElementField.setType(DataElementField.Type.VALUE_THRESHOLD);
 		dataElementField.setHasDuration(Boolean.FALSE);
 		dataElementField.setHasPropertyConstraint(Boolean.FALSE);
-		dataElementField.setMinDurationUnits(timeUnits.get(0).getId());
-		dataElementField.setMaxDurationUnits(timeUnits.get(0).getId());
+		dataElementField.setMinDurationUnits(timeUnit.getId());
+		dataElementField.setMaxDurationUnits(timeUnit.getId());
 
 		Frequency frequency = new Frequency();
 		frequency.setKey("testThreshold-frequency");
@@ -113,6 +113,6 @@ public class PropositionResourceTest extends AbstractServiceResourceTest {
 
 		List<DataElement> afterDelete = this.getUserPropositions(USER_ID);
 		
-		Assert.assertEquals(beforeDelete.size() - 2, afterDelete.size());
+		Assert.assertEquals(beforeDelete.size() - 1, afterDelete.size());
 	}
 }

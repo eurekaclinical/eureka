@@ -62,7 +62,8 @@ public class ExtendedProposition {
 	@OneToOne(cascade = CascadeType.ALL)
 	private PropertyConstraint propertyConstraint;
 
-	@ManyToOne(cascade = CascadeType.ALL)
+	@ManyToOne(cascade = { CascadeType.MERGE, CascadeType.REFRESH,
+	        CascadeType.PERSIST })
 	@JoinColumn(nullable = false)
 	private DataElementEntity proposition;
 
