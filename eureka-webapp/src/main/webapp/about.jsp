@@ -29,8 +29,10 @@
 
 	<template:content name="content">
 		<h3>About</h3>
-		<p>Eureka! Clinical Analytics is a project of the 
-			<a href="http://cci.emory.edu" target="_blank" rel="nofollow">Emory Center for Comprehensive Informatics</a>. 
+		<p>Eureka! Clinical Analytics is a project of the
+			<a href="http://cci.emory.edu" target="_blank">Center for Comprehensive Informatics</a>
+			and <a href="http://bmi.emory.edu" target="_blank">Department of Biomedical Informatics</a>
+			at <a href="http://www.emory.edu" target="_blank">Emory University</a>. 
 			It was conceived as part of the vision of the 
 			<a href="http://www.cvrgrid.org" target="_blank" rel="nofollow">CardioVascular Research Grid (CVRG)</a> 
 			to create tools that enable researchers to analyze and manipulate 
