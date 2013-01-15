@@ -644,6 +644,7 @@
 																				</tr>
 																			</table>
 																		</td>
+																		<%--
 																		<td>
 																			<input type="checkbox" value="true" name="thresholdDataElementTemporalRelationCB" <c:if test="${propositionType == 'VALUE_THRESHOLD' and threshold.isBeforeOrAfter}">checked="true"</c:if>/>
 																			<select name="thresholdDataElementTemporalRelation">
@@ -652,7 +653,6 @@
 																				</c:forEach>
 																			</select>
 																		</td>
-																		<%--
 																		<td>
 																			<ul class="sortable" data-drop-type="multiple" data-proptype="empty" style="width: 100% height: 100%">
 																				<c:if test="${not empty proposition and propositionType == 'VALUE_THRESHOLD'}">
