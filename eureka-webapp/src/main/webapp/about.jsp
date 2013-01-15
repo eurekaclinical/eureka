@@ -60,7 +60,7 @@
 		<h4>What do you mean I can't load data with identifiers on it?</h4>
 		<p>If you need to load real patient data into Eureka!, you must 
 			deploy your own instance of the software in a <a href="https://hipaa.emory.edu/home/" target="_blank">HIPAA</a>-compliant
-			environment. See the <a href="${initParam['aiw-site-url']}/getit.html" target="_blank">Get the Software page</a>
+			environment. See the <a href="${initParam['aiw-site-url']}/get-it.html" target="_blank">Get the Software page</a>
 			on the Eureka! website for details. We provide a 
 			<a href="http://aiw.sourceforge.net/download.html" target="_blank">distribution of Eureka! for local installation</a> 
 			and an <a href="http://aiw.sourceforge.net/ec2.html" target="_blank">Amazon Machine Instance</a> for you to clone on the 

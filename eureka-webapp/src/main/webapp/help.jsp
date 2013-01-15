@@ -30,11 +30,11 @@
 	<template:content name="content">
     <div class="help">
         <h3>Help</h3>
-		<p>The links on this page will open up a new window in the <a href="${initParam['aiw-site-url']}/help.html" target="_blank">Eureka! website's help pages</a>.
+		<p>The links on this page will open in a separate window in the <a href="${initParam['eureka-help-url']}/index.html" target="eureka-help">Eureka! website's help pages</a>.
         <table id="help_getting_started">
             <tr>
                 <td>
-                    <a href="${initParam['aiw-site-url']}/getting-started.html" class="imageAndCaption" target="_blank">
+                    <a href="${initParam['eureka-help-url']}/getting-started.html" class="imageAndCaption" target="eureka-help">
                         <img alt="Getting Started"
                              src="images/100px-Help-getting-started.png"/>
                         <div>
@@ -43,7 +43,7 @@
                     </a>
                 </td>
                 <td>
-                    <a href="${initParam['aiw-site-url']}/user-faq.html" class="imageAndCaption" target="_blank">
+                    <a href="${initParam['aiw-site-url']}/user-faq.html" class="imageAndCaption" target="eureka-help">
                         <img alt="Frequently Asked Questions"
                              src="images/100px-Help-FAQ.png"/>
                         <div>
@@ -57,10 +57,10 @@
 			<caption>Topics:</caption>
 			<tr>
 				<td>
-					<a href="${initParam['aiw-site-url']}/spreadsheets.html" target="_blank">Spreadsheet Data Upload</a>
+					<a href="${initParam['eureka-help-url']}/spreadsheets.html" target="eureka-help">Spreadsheet Data Upload</a>
 				</td>
 				<td>
-					<a href="${initParam['aiw-site-url']}/phenotypes.html" target="_blank">Working with Phenotypes</a>
+					<a href="${initParam['eureka-help-url']}/phenotypes.html" target="eureka-help">Working with Phenotypes</a>
 				</td>
 			</tr>
         </table>
