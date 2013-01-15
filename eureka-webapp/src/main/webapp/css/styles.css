@@ -356,11 +356,17 @@ a.imageAndCaption {
     text-align: center;
 }
 
-table#help_topics {
+table#help-topics {
 	margin-top: 1em;
 }
 
-table#help_topics caption {
+table#help-topics caption {
 	text-align: left;
 	font-weight: bold;
+}
+
+address {
+	margin-top: 1em;
+	margin-bottom: 1em;
+	margin-left: 2em;
 }

@@ -79,7 +79,7 @@
 						<div id="step-1">
 							<h2 class="StepTitle">
 								<span>Select Type of Element</span>
-								<span class="editorHelp">
+								<span class="editor-help">
 									<a href="${initParam['eureka-help-url']}/phenotypes.html#select-type" target="eureka-help">Help</a>
 								</span>
 							</h2>
@@ -101,7 +101,7 @@
 						<div id="step-2">
 							<h2 class="StepTitle">
 								<span>Select Elements from Ontology Explorer</span>
-								<span class="editorHelp">
+								<span class="editor-help">
 									<a href="${initParam['eureka-help-url']}/phenotypes.html#select-elements" target="eureka-help">Help</a>
 								</span>
 							</h2>
@@ -803,7 +803,7 @@
 										<span>Select a Name for the Derived Element</span>
 									</c:otherwise>
 								</c:choose>
-								<span class="editorHelp">
+								<span class="editor-help">
 									<a href="${initParam['eureka-help-url']}/phenotypes.html#select-name" target="eureka-help">Help</a>
 								</span>
 							</h2>
@@ -841,7 +841,7 @@
 							<div id="step-4">
 								<h2 class="StepTitle">
 									<span>Save Element to Database</span>
-									<span class="editorHelp">
+									<span class="editor-help">
 										<a href="${initParam['eureka-help-url']}/phenotypes.html#save" target="eureka-help">Help</a>
 									</span>
 								</h2>

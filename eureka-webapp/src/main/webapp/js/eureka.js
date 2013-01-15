@@ -579,3 +579,10 @@ function positionTooltip(event){
         'backgroundColor':'#FFFFEE',
     });
 }; 
+
+function insertMailToTag(userName, domainName) {
+	var atSign = "&#64;"
+	var email = userName + atSign + domainName;
+
+	document.write("<a href='mail" + "to:" + email + "'>" + email +"</a>");
+}

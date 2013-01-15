@@ -31,7 +31,7 @@
     <div class="help">
         <h3>Help</h3>
 		<p>The links on this page will open in a separate window in the <a href="${initParam['eureka-help-url']}/index.html" target="eureka-help">Eureka! website's help pages</a>.
-        <table id="help_getting_started">
+        <table id="help-getting-started">
             <tr>
                 <td>
                     <a href="${initParam['eureka-help-url']}/getting-started.html" class="imageAndCaption" target="eureka-help">
@@ -53,7 +53,7 @@
                 </td>
             </tr>
 		</table>
-		<table id="help_topics">
+		<table id="help-topics">
 			<caption>Topics:</caption>
 			<tr>
 				<td>
