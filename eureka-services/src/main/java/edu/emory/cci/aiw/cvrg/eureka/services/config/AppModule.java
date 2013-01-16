@@ -41,6 +41,8 @@ import edu.emory.cci.aiw.cvrg.eureka.services.dao.ValueComparatorDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.ThresholdsOperatorDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.email.EmailSender;
 import edu.emory.cci.aiw.cvrg.eureka.services.email.FreeMarkerEmailSender;
+import edu.emory.cci.aiw.cvrg.eureka.services.finder.PropositionFinder;
+import edu.emory.cci.aiw.cvrg.eureka.services.finder.SystemPropositionFinder;
 
 import javax.mail.Session;
 import javax.naming.Context;
@@ -66,7 +68,8 @@ class AppModule extends AbstractModule {
 		bind(ThresholdsOperatorDao.class).to(JpaThresholdsOperatorDao.class);
 		bind(ThresholdsOperatorDao.class).to
 				(JpaThresholdsOperatorDao.class);
-		bind(EmailSender.class).to(FreeMarkerEmailSender.class);
+		bind(PropositionFinder.class).to(SystemPropositionFinder.class);
+				bind(EmailSender.class).to(FreeMarkerEmailSender.class);
 		bind(I2b2Client.class).to(I2b2RestClient.class);
 		bind(Context.class).to(InitialContext.class);
 		bind(Session.class).toProvider(
