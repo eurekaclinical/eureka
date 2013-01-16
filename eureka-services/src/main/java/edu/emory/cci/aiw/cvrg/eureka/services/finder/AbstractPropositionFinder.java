@@ -20,19 +20,19 @@
 package edu.emory.cci.aiw.cvrg.eureka.services.finder;
 
 import com.sun.jersey.api.client.UniformInterfaceException;
-import java.util.List;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-
+import net.sf.ehcache.Cache;
+import net.sf.ehcache.CacheManager;
+import net.sf.ehcache.Element;
 import org.protempa.PropositionDefinition;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import net.sf.ehcache.Cache;
-import net.sf.ehcache.CacheManager;
-import net.sf.ehcache.Element;
+import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
-public abstract class AbstractPropositionFinder<U, K> {
+public abstract class AbstractPropositionFinder<U,
+		K> implements PropositionFinder<U, K> {
 
 	private static Logger LOGGER = LoggerFactory.getLogger(AbstractPropositionFinder.class);
 	private static final ExecutorService executorService =
@@ -55,6 +55,7 @@ public abstract class AbstractPropositionFinder<U, K> {
 	 * @throws UniformInterfaceException if an error occurred looking for the
 	 * proposition definition.
 	 */
+	@Override
 	public PropositionDefinition find(U inUserId, K inKey)
 			throws PropositionFindException {
 		LOGGER.debug("Finding {} for user {}", inUserId, inKey);
@@ -72,6 +73,7 @@ public abstract class AbstractPropositionFinder<U, K> {
 		return propDef;
 	}
 
+	@Override
 	public void shutdown() {
 		this.getCacheManager().removalAll();
 		this.getCacheManager().shutdown();
