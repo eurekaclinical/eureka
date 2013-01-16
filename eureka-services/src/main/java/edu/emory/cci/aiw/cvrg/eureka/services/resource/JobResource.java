@@ -140,45 +140,42 @@ public class JobResource {
 		this.fileDao.create(fileUpload);
 		this.jobTask.setFileUploadId(fileUpload.getId());
 		this.converterVisitor.setUserId(fileUpload.getUserId());
-		List<List<PropositionDefinition>> propDefs = filterUserPropositions(propositionDao
+		FilterUserPropositionsResult propDefs = filterUserPropositions(propositionDao
 		        .getByUserId(fileUpload.getUserId()));
-		this.jobTask.setPropositions(propDefs.get(0));
-		this.jobTask.setUserPropositions(propDefs.get(1));
-		List<String> propIdsToShow = new ArrayList<String>();
-		for (PropositionDefinition propDef : propDefs.get(2)) {
-			propIdsToShow.add(propDef.getId());
-		}
-		this.jobTask.setNonHelperPropositionIds(propIdsToShow);
+		this.jobTask.setUserPropositions(propDefs.userProps);
+		this.jobTask.setNonHelperPropositionIds(propDefs.toShow);
 		this.jobExecutor.queueJob(this.jobTask);
 
 		return Response.ok().build();
 	}
 
-	private List<List<PropositionDefinition>> filterUserPropositions(
+	private static class FilterUserPropositionsResult {
+		List<PropositionDefinition> userProps;
+		List<String> toShow;
+	}
+
+	private FilterUserPropositionsResult filterUserPropositions(
 	        List<DataElementEntity> propositions) {
-		final List<PropositionDefinition> allProps = new ArrayList<PropositionDefinition>();
-		final List<PropositionDefinition> userProps = new ArrayList<PropositionDefinition>();
-		final List<PropositionDefinition> toShow = new ArrayList<PropositionDefinition>();
+		final List<PropositionDefinition> userProps = 
+				new ArrayList<PropositionDefinition>();
+		final List<String> toShow = new ArrayList<String>();
 
 		for (DataElementEntity p : propositions) {
 			p.accept(converterVisitor);
 			List<PropositionDefinition> propDefs = converterVisitor
 					.getPropositionDefinitions();
-			allProps.addAll(propDefs);
 			for (PropositionDefinition propDef : propDefs) {
 				if (!p.isInSystem()) {
 					userProps.add(propDef);
 				}
-				if (!p.isHelperProposition()) {
-					toShow.add(propDef);
-				}
 			}
+			toShow.add(p.getId().toString());
 		}
 
-		List<List<PropositionDefinition>> result = new ArrayList<List<PropositionDefinition>>();
-		result.add(allProps);
-		result.add(userProps);
-		result.add(toShow);
+		FilterUserPropositionsResult result = 
+				new FilterUserPropositionsResult();
+		result.userProps = userProps;
+		result.toShow = toShow;
 		return result;
 	}
 

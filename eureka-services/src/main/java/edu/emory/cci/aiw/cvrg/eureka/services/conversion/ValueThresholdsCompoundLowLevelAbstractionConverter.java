@@ -27,6 +27,7 @@ import org.protempa.PropositionDefinition;
 
 import java.util.ArrayList;
 import java.util.List;
+import org.protempa.CompoundLowLevelAbstractionDefinition.ValueClassification;
 
 public final class ValueThresholdsCompoundLowLevelAbstractionConverter
 		implements
@@ -70,10 +71,10 @@ public final class ValueThresholdsCompoundLowLevelAbstractionConverter
 		result.addAll(llas);
 
 		for (LowLevelAbstractionDefinition def : llas) {
-			primary.addValueClassification(entity.getKey() + "_VALUE",
-					def.getId(), def.getValueDefinitions().get(0).getId());
-			primary.addValueClassification(entity.getKey() + "_VALUE_COMP",
-					def.getId(), def.getValueDefinitions().get(1).getId());
+			primary.addValueClassification(new ValueClassification(entity.getKey() + "_VALUE",
+					def.getId(), def.getValueDefinitions().get(0).getId()));
+			primary.addValueClassification(new ValueClassification(entity.getKey() + "_VALUE_COMP",
+					def.getId(), def.getValueDefinitions().get(1).getId()));
 		}
 
 		result.add(primary);

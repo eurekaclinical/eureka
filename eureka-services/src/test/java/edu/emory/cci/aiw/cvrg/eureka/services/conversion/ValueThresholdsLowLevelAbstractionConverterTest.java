@@ -25,6 +25,7 @@ import edu.emory.cci.aiw.cvrg.eureka.common.entity.ValueComparator;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.ValueThresholdEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.ValueThresholdGroupEntity;
 import edu.emory.cci.aiw.cvrg.eureka.services.test.AbstractServiceTest;
+import java.math.BigDecimal;
 import org.junit.Before;
 import org.junit.Test;
 import org.protempa.LowLevelAbstractionDefinition;
@@ -81,9 +82,9 @@ public class ValueThresholdsLowLevelAbstractionConverterTest extends
 
 		ValueThresholdEntity threshold = new ValueThresholdEntity();
 		threshold.setAbstractedFrom(primParam);
-		threshold.setMinValueThreshold(100);
+		threshold.setMinValueThreshold(BigDecimal.valueOf(100));
 		threshold.setMinValueComp(gt);
-		threshold.setMaxValueThreshold(200);
+		threshold.setMaxValueThreshold(BigDecimal.valueOf(200));
 		threshold.setMaxValueComp(lt);
 
 		List<ValueThresholdEntity> thresholds = new
