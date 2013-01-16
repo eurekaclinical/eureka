@@ -30,7 +30,8 @@ import java.util.List;
  *
  * @param <E> The type of {@link DataElementEntity} to convert.
  */
-interface PropositionDefinitionConverter<E extends DataElementEntity> {
+interface PropositionDefinitionConverter<E extends DataElementEntity,
+		P extends PropositionDefinition> {
 
 	/**
 	 * Converts a Eureka database entity into an equivalent list of Protempa
@@ -49,5 +50,5 @@ interface PropositionDefinitionConverter<E extends DataElementEntity> {
 	 *
 	 * @return a {@link PropositionDefinition}.
 	 */
-	PropositionDefinition getPrimaryPropositionDefinition();
+	P getPrimaryPropositionDefinition();
 }

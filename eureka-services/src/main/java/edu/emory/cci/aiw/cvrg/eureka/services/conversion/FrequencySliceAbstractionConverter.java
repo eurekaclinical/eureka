@@ -23,35 +23,87 @@ import edu.emory.cci.aiw.cvrg.eureka.common.entity.FrequencyEntity;
 import org.protempa.MinMaxGapFunction;
 import org.protempa.PropositionDefinition;
 import org.protempa.SliceDefinition;
+import org.protempa.proposition.value.Unit;
 
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.List;
 
 import static edu.emory.cci.aiw.cvrg.eureka.services.conversion.PropositionDefinitionConverterUtil.unit;
 
 public final class FrequencySliceAbstractionConverter implements
-		PropositionDefinitionConverter<FrequencyEntity> {
+		PropositionDefinitionConverter<FrequencyEntity, SliceDefinition> {
 
-	private PropositionDefinition primary;
+	private PropositionDefinitionConverterVisitor converterVisitor;
+
+	private SliceDefinition primary;
+
+//	@Inject
+//	public FrequencySliceAbstractionConverter(
+//			SystemPropositionConverter inSystemPropositionConverter,
+//			CategorizationConverter inCategorizationConverter,
+//			SequenceConverter inSequenceConverter,
+//			FrequencyHighLevelAbstractionConverter
+//					inFrequencyHighLevelAbstractionConverter,
+//			ValueThresholdsLowLevelAbstractionConverter
+//					inValueThresholdsLowLevelAbstractionConverter,
+//			ValueThresholdsCompoundLowLevelAbstractionConverter
+//					inValueThresholdsCompoundLowLevelAbstractionConverter) {
+//		this.converterVisitor = new PropositionDefinitionConverterVisitor
+//				(inSystemPropositionConverter, inCategorizationConverter,
+//						inSequenceConverter,
+//						inValueThresholdsLowLevelAbstractionConverter,
+//						inValueThresholdsCompoundLowLevelAbstractionConverter, this,
+//						inFrequencyHighLevelAbstractionConverter);
+//	}
 
 	@Override
-	public PropositionDefinition getPrimaryPropositionDefinition() {
+	public SliceDefinition getPrimaryPropositionDefinition() {
 		return primary;
+	}
+
+	public void setVisitor(PropositionDefinitionConverterVisitor inVisitor) {
+		converterVisitor = inVisitor;
 	}
 
 	@Override
 	public List<PropositionDefinition> convert(FrequencyEntity entity) {
-		SliceDefinition result = new SliceDefinition(entity.getKey());
+		List<PropositionDefinition> result = new
+				ArrayList<PropositionDefinition>();
+		SliceDefinition primary = new SliceDefinition(entity.getKey());
 		result.setDisplayName(entity.getDisplayName());
 		result.setAbbreviatedDisplayName(entity.getAbbrevDisplayName());
-		result.setMinIndex(entity.getAtLeastCount());
-		result.addAbstractedFrom(entity.getAbstractedFrom().getKey());
-		result.setGapFunction(new MinMaxGapFunction(entity.getWithinAtLeast(),
-		        unit(entity.getWithinAtLeastUnits()), entity.getWithinAtMost(),
-		        unit(entity.getWithinAtMostUnits())));
+		if (entity.getAbstractedFrom() != null) {
+			entity.getAbstractedFrom().accept(converterVisitor);
+			result.addAll(converterVisitor.getPropositionDefinitions());
+			primary.addAbstractedFrom(entity.getAbstractedFrom().getKey());
+		}
 
-		this.primary = result;
+		if (entity.getAtLeastCount() != null) {
+			primary.setMinIndex(entity.getAtLeastCount());
+		}
 
-		return Collections.<PropositionDefinition> singletonList(result);
+		Integer atLeast = null;
+		Unit atLeastUnits = null;
+		Integer atMost = null;
+		Unit atMostUnits = null;
+
+		if (entity.getWithinAtLeast() != null && entity.getWithinAtLeastUnits
+				() != null) {
+			atLeast = entity.getWithinAtLeast();
+			atLeastUnits = unit(entity.getWithinAtLeastUnits());
+		}
+		if (entity.getWithinAtMost() != null && entity.getWithinAtMostUnits()
+				!= null) {
+			atMost = entity.getWithinAtMost();
+			atMostUnits = unit(entity.getWithinAtMostUnits());
+		}
+
+		primary.setGapFunction(new MinMaxGapFunction(atLeast, atLeastUnits,
+				atMost, atMostUnits));
+
+		this.primary = primary;
+		result.add(primary);
+
+		return result;
 	}
 }

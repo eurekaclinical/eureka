@@ -19,7 +19,6 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.services.conversion;
 
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.DataElementEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.ValueThresholdEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.ValueThresholdGroupEntity;
 import org.protempa.CompoundLowLevelAbstractionDefinition;
@@ -28,16 +27,15 @@ import org.protempa.PropositionDefinition;
 
 import java.util.ArrayList;
 import java.util.List;
-import org.protempa.CompoundLowLevelAbstractionDefinition.ValueClassification;
 
 public final class ValueThresholdsCompoundLowLevelAbstractionConverter
-        implements
-		PropositionDefinitionConverter<ValueThresholdGroupEntity> {
+		implements
+		PropositionDefinitionConverter<ValueThresholdGroupEntity, CompoundLowLevelAbstractionDefinition> {
 
-	private PropositionDefinition primary;
+	private CompoundLowLevelAbstractionDefinition primary;
 
 	@Override
-	public PropositionDefinition getPrimaryPropositionDefinition() {
+	public CompoundLowLevelAbstractionDefinition getPrimaryPropositionDefinition() {
 		return primary;
 	}
 
@@ -47,41 +45,35 @@ public final class ValueThresholdsCompoundLowLevelAbstractionConverter
 		List<PropositionDefinition> result = new
 				ArrayList<PropositionDefinition>();
 		CompoundLowLevelAbstractionDefinition primary = new CompoundLowLevelAbstractionDefinition(
-		        entity.getKey());
-		primary.setDisplayName(entity.getDisplayName());
-		primary.setAbbreviatedDisplayName(entity.getAbbrevDisplayName());
+				entity.getKey());
 
 		if (entity.getThresholdsOperator().getName().equalsIgnoreCase("any")) {
 			primary.setValueDefinitionMatchOperator(CompoundLowLevelAbstractionDefinition.ValueDefinitionMatchOperator.ANY);
 		} else if (entity.getThresholdsOperator().getName()
-		        .equalsIgnoreCase("all")) {
+				.equalsIgnoreCase("all")) {
 			primary.setValueDefinitionMatchOperator(CompoundLowLevelAbstractionDefinition.ValueDefinitionMatchOperator.ALL);
 		} else {
 			throw new IllegalStateException("valueDefinitionMatchOperator"
-			        + " can only be ANY or ALL");
+					+ " can only be ANY or ALL");
 		}
 
 		List<LowLevelAbstractionDefinition> llas = new ArrayList<LowLevelAbstractionDefinition>();
 		for (ValueThresholdEntity v : entity.getValueThresholds()) {
-			DataElementEntity abstractedFrom = v.getAbstractedFrom();
 			LowLevelAbstractionDefinition def = new LowLevelAbstractionDefinition(
-			        abstractedFrom.getKey() + "_CLASSIFICATION");
-			def.setDisplayName(abstractedFrom.getDisplayName());
-			def.setAbbreviatedDisplayName(
-					abstractedFrom.getAbbrevDisplayName());
-			def.addPrimitiveParameterId(abstractedFrom.getKey());
+					v.getAbstractedFrom().getKey() + "_CLASSIFICATION");
+			def.addPrimitiveParameterId(v.getAbstractedFrom().getKey());
 			def.setMinimumNumberOfValues(1);
 			ValueThresholdsLowLevelAbstractionConverter
-			        .thresholdToValueDefinitions(def.getId(), v, def);
+					.thresholdToValueDefinitions(def.getId(), v, def);
 			llas.add(def);
 		}
 		result.addAll(llas);
 
 		for (LowLevelAbstractionDefinition def : llas) {
-			primary.addValueClassification(new ValueClassification(entity.getKey() + "_VALUE",
-					def.getId(), def.getValueDefinitions().get(0).getId()));
-			primary.addValueClassification(new ValueClassification(entity.getKey() + "_VALUE_COMP",
-					def.getId(), def.getValueDefinitions().get(1).getId()));
+			primary.addValueClassification(entity.getKey() + "_VALUE",
+					def.getId(), def.getValueDefinitions().get(0).getId());
+			primary.addValueClassification(entity.getKey() + "_VALUE_COMP",
+					def.getId(), def.getValueDefinitions().get(1).getId());
 		}
 
 		result.add(primary);

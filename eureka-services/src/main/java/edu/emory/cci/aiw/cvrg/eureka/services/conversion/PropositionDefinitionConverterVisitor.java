@@ -26,71 +26,131 @@ import edu.emory.cci.aiw.cvrg.eureka.common.entity.PropositionEntityVisitor;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.SequenceEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.SystemProposition;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.ValueThresholdGroupEntity;
-import edu.emory.cci.aiw.cvrg.eureka.services.dao.ValueComparatorDao;
 import org.protempa.PropositionDefinition;
 
 import java.util.List;
 
 public final class PropositionDefinitionConverterVisitor implements
-        PropositionEntityVisitor {
+		PropositionEntityVisitor {
 
-	private List<PropositionDefinition> propositionDefinition;
+	private List<PropositionDefinition> propositionDefinitions;
+	private PropositionDefinition primaryProposition;
+
 	private Long userId;
 
-	private final ValueComparatorDao valueCompDao;
+	private final SystemPropositionConverter systemPropositionConverter;
+	private final CategorizationConverter categorizationConverter;
+	private final SequenceConverter sequenceConverter;
+	private final ValueThresholdsLowLevelAbstractionConverter
+			valueThresholdsLowLevelAbstractionConverter;
+	private final ValueThresholdsCompoundLowLevelAbstractionConverter
+			valueThresholdsCompoundLowLevelAbstractionConverter;
+	private final FrequencySliceAbstractionConverter
+			frequencySliceAbstractionConverter;
+	private final FrequencyHighLevelAbstractionConverter
+			frequencyHighLevelAbstractionConverter;
 
 	@Inject
-	public PropositionDefinitionConverterVisitor(
-			ValueComparatorDao inValueCompDao) {
-		valueCompDao = inValueCompDao;
+	public PropositionDefinitionConverterVisitor(SystemPropositionConverter
+														 inSystemPropositionConverter,
+												 CategorizationConverter inCategorizationConverter,
+												 SequenceConverter inSequenceConverter,
+												 ValueThresholdsLowLevelAbstractionConverter
+														 inValueThresholdsLowLevelAbstractionConverter,
+												 ValueThresholdsCompoundLowLevelAbstractionConverter
+														 inValueThresholdsCompoundLowLevelAbstractionConverter,
+												 FrequencySliceAbstractionConverter inFrequencySliceAbstractionConverter,
+												 FrequencyHighLevelAbstractionConverter
+														 inFrequencyHighLevelAbstractionConverter) {
+		systemPropositionConverter = inSystemPropositionConverter;
+		categorizationConverter = inCategorizationConverter;
+		categorizationConverter.setConverterVisitor(this);
+		sequenceConverter = inSequenceConverter;
+		sequenceConverter.setConverterVisitor(this);
+		valueThresholdsLowLevelAbstractionConverter =
+				inValueThresholdsLowLevelAbstractionConverter;
+		valueThresholdsLowLevelAbstractionConverter.setConverterVisitor(this);
+		valueThresholdsCompoundLowLevelAbstractionConverter =
+				inValueThresholdsCompoundLowLevelAbstractionConverter;
+		frequencySliceAbstractionConverter =
+				inFrequencySliceAbstractionConverter;
+		frequencySliceAbstractionConverter.setVisitor(this);
+		frequencyHighLevelAbstractionConverter =
+				inFrequencyHighLevelAbstractionConverter;
+		frequencyHighLevelAbstractionConverter.setConverterVisitor(this);
 	}
 
 	public void setUserId(Long inUserId) {
 		userId = inUserId;
 	}
 
-	public List<PropositionDefinition> getPropositionDefinition() {
-		return propositionDefinition;
+	public List<PropositionDefinition> getPropositionDefinitions() {
+		return propositionDefinitions;
+	}
+
+	public PropositionDefinition getPrimaryProposition() {
+		return primaryProposition;
 	}
 
 	@Override
 	public void visit(SystemProposition entity) {
-		this.propositionDefinition = new SystemPropositionConverter(this.userId)
-		        .convert(entity);
+		this.systemPropositionConverter.setUserId(this.userId);
+		this.propositionDefinitions = this.systemPropositionConverter
+				.convert(entity);
+		this.primaryProposition = this.systemPropositionConverter
+				.getPrimaryPropositionDefinition();
 	}
 
 	@Override
 	public void visit(CategoryEntity entity) {
-		this.propositionDefinition = new CategorizationConverter().convert(entity);
+		this.propositionDefinitions = this.categorizationConverter
+				.convert(entity);
+		this.primaryProposition = this.categorizationConverter
+				.getPrimaryPropositionDefinition();
 	}
 
 	@Override
 	public void visit(SequenceEntity entity) {
-		this.propositionDefinition = new SequenceConverter(this.valueCompDao)
-		        .convert(entity);
+		this.propositionDefinitions = this.sequenceConverter
+				.convert(entity);
+		this.primaryProposition = this.sequenceConverter
+				.getPrimaryPropositionDefinition();
 	}
 
 	@Override
 	public void visit(ValueThresholdGroupEntity entity) {
-		if (entity.getValueThresholds().size() > 1) {
-			this.propositionDefinition = new ValueThresholdsCompoundLowLevelAbstractionConverter()
-			        .convert(entity);
-		} else {
-			this.propositionDefinition = new
-					ValueThresholdsLowLevelAbstractionConverter(this.userId,
-			        this.valueCompDao).convert(entity);
+		if (entity.getValueThresholds() != null) {
+			if (entity.getValueThresholds().size() > 1) {
+				this.propositionDefinitions = this
+						.valueThresholdsCompoundLowLevelAbstractionConverter
+						.convert(entity);
+				this.primaryProposition = this
+						.valueThresholdsCompoundLowLevelAbstractionConverter
+						.getPrimaryPropositionDefinition();
+			} else {
+				this.propositionDefinitions = this
+						.valueThresholdsLowLevelAbstractionConverter
+						.convert(entity);
+				this.primaryProposition = this
+						.valueThresholdsLowLevelAbstractionConverter
+						.getPrimaryPropositionDefinition();
+			}
 		}
 	}
 
 	@Override
 	public void visit(FrequencyEntity entity) {
 		if (entity.isConsecutive()) {
-			this.propositionDefinition = new
-					FrequencyHighLevelAbstractionConverter(this.userId,
-			        this.valueCompDao).convert(entity);
+			this.propositionDefinitions = this
+					.frequencyHighLevelAbstractionConverter.convert(entity);
+			this.primaryProposition = this
+					.frequencyHighLevelAbstractionConverter
+					.getPrimaryPropositionDefinition();
 		} else {
-			this.propositionDefinition = new FrequencySliceAbstractionConverter()
-			        .convert(entity);
+			this.propositionDefinitions = this.frequencySliceAbstractionConverter
+					.convert(entity);
+			this.primaryProposition = this.frequencySliceAbstractionConverter
+					.getPrimaryPropositionDefinition();
 		}
 	}
 }

@@ -19,25 +19,31 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.services.conversion;
 
+import com.google.inject.Inject;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.SystemProposition;
-import edu.emory.cci.aiw.cvrg.eureka.services.config.ServiceProperties;
 import edu.emory.cci.aiw.cvrg.eureka.services.finder.PropositionFindException;
-import edu.emory.cci.aiw.cvrg.eureka.services.finder.SystemPropositionFinder;
-import edu.emory.cci.aiw.cvrg.eureka.services.finder.SystemPropositionRetriever;
+import edu.emory.cci.aiw.cvrg.eureka.services.finder.PropositionFinder;
 import org.protempa.PropositionDefinition;
 
 import java.util.Collections;
 import java.util.List;
 
 public final class SystemPropositionConverter implements
-		PropositionDefinitionConverter<SystemProposition> {
+		PropositionDefinitionConverter<SystemProposition, PropositionDefinition> {
 
-	private final Long userId;
+	private final PropositionFinder finder;
+
+	private Long userId;
 
 	private PropositionDefinition primary;
-	
-	public SystemPropositionConverter(Long inUserId) {
-		this.userId = inUserId;
+
+	@Inject
+	public SystemPropositionConverter(PropositionFinder inFinder) {
+		finder = inFinder;
+	}
+
+	public void setUserId(Long inUserId) {
+		userId = inUserId;
 	}
 
 	@Override
@@ -47,8 +53,6 @@ public final class SystemPropositionConverter implements
 	
 	@Override
 	public List<PropositionDefinition> convert(SystemProposition proposition) {
-		SystemPropositionFinder finder = new SystemPropositionFinder(
-		        new SystemPropositionRetriever(new ServiceProperties()));
 		try {
 			this.primary = finder.find(this.userId,
 					proposition.getKey());

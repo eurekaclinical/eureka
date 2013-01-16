@@ -32,66 +32,67 @@ import org.protempa.proposition.value.ValueComparator;
 import org.protempa.proposition.value.ValueType;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import static edu.emory.cci.aiw.cvrg.eureka.services.conversion.PropositionDefinitionConverterUtil.unit;
 
 final class SequenceConverter
-        implements
-		PropositionDefinitionConverter<SequenceEntity> {
+		implements
+		PropositionDefinitionConverter<SequenceEntity, HighLevelAbstractionDefinition> {
 
-	private final ValueComparatorDao valueCompDao;
-
-	private PropositionDefinition primary;
-
-	@Inject
-	public SequenceConverter(ValueComparatorDao inValueCompDao) {
-		valueCompDao = inValueCompDao;
-	}
+	private PropositionDefinitionConverterVisitor converterVisitor;
+	private HighLevelAbstractionDefinition primary;
 
 	@Override
-	public PropositionDefinition getPrimaryPropositionDefinition() {
+	public HighLevelAbstractionDefinition getPrimaryPropositionDefinition() {
 		return primary;
 	}
 
+	public void setConverterVisitor(PropositionDefinitionConverterVisitor
+											inVisitor) {
+		converterVisitor = inVisitor;
+	}
+
 	@Override
-	public List<PropositionDefinition> convert(SequenceEntity proposition) {
-		HighLevelAbstractionDefinition hlad = 
-				new HighLevelAbstractionDefinition(
-		        proposition.getKey());
-		hlad.setDisplayName(proposition.getDisplayName());
-		hlad.setAbbreviatedDisplayName(proposition.getAbbrevDisplayName());
-		for (Relation rel : proposition.getRelations()) {
-			TemporalExtendedPropositionDefinition tepdLhs = 
-					buildExtendedProposition(rel
-			        .getLhsExtendedProposition());
+	public List<PropositionDefinition> convert(SequenceEntity
+													   proposition) {
+		List<PropositionDefinition> result = new
+				ArrayList<PropositionDefinition>();
+		HighLevelAbstractionDefinition primary = new HighLevelAbstractionDefinition(
+				proposition.getKey());
+		if (proposition.getRelations() != null) {
+			for (Relation rel : proposition.getRelations()) {
+				rel.getLhsExtendedProposition().getProposition().accept(converterVisitor);
+				result.addAll(converterVisitor.getPropositionDefinitions());
+				TemporalExtendedPropositionDefinition tepdLhs = buildExtendedProposition(rel
+						.getLhsExtendedProposition());
 
-			TemporalExtendedPropositionDefinition tepdRhs = 
-					buildExtendedProposition(rel
-			        .getRhsExtendedProposition());
+				rel.getRhsExtendedProposition().getProposition().accept(converterVisitor);
+				result.addAll(converterVisitor.getPropositionDefinitions());
+				TemporalExtendedPropositionDefinition tepdRhs = buildExtendedProposition(rel
+						.getRhsExtendedProposition());
 
-			hlad.add(tepdLhs);
-			hlad.add(tepdRhs);
-			hlad.setRelation(tepdLhs, tepdRhs, buildRelation(rel));
+				primary.add(tepdLhs);
+				primary.add(tepdRhs);
+				primary.setRelation(tepdLhs, tepdRhs, buildRelation(rel));
+			}
 		}
-		
-		this.primary = hlad;
 
-		return Collections.<PropositionDefinition> singletonList(hlad);
+		this.primary = primary;
+		result.add(primary);
+		return result;
 	}
 
 	private TemporalExtendedPropositionDefinition buildExtendedProposition(
-	        ExtendedProposition ep) {
-		TemporalExtendedPropositionDefinition tepd = 
-				new TemporalExtendedPropositionDefinition(
+			ExtendedProposition ep) {
+		TemporalExtendedPropositionDefinition tepd = new TemporalExtendedPropositionDefinition(
 				ep.getId().toString());
 
 		if (ep.getPropertyConstraint() != null) {
 			PropertyConstraint pc = new PropertyConstraint();
 			pc.setPropertyName(ep.getPropertyConstraint().getPropertyName());
 			pc.setValue(ValueType.VALUE.parse(ep.getPropertyConstraint()
-			        .getValue()));
+					.getValue()));
 			pc.setValueComp(ValueComparator.EQUAL_TO);
 
 			tepd.getPropertyConstraints().add(pc);
@@ -105,12 +106,12 @@ final class SequenceConverter
 	}
 
 	private org.protempa.proposition.interval.Relation buildRelation(
-	        Relation rel) {
+			Relation rel) {
 		return new org.protempa.proposition.interval.Relation(null, null, null,
-		        null, rel.getMins1f2(), unit(rel.getMins1f2TimeUnit()),
-		        rel.getMaxs1f2(), unit(rel.getMaxs1f2TimeUnit()),
-		        rel.getMinf1s2(), unit(rel.getMinf1s2TimeUnit()),
-		        rel.getMaxf1s2(), unit(rel.getMaxf1s2TimeUnit()), null, null,
-		        null, null);
+				null, rel.getMins1f2(), unit(rel.getMins1f2TimeUnit()),
+				rel.getMaxs1f2(), unit(rel.getMaxs1f2TimeUnit()),
+				rel.getMinf1s2(), unit(rel.getMinf1s2TimeUnit()),
+				rel.getMaxf1s2(), unit(rel.getMaxf1s2TimeUnit()), null, null,
+				null, null);
 	}
 }
