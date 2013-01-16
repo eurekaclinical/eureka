@@ -270,20 +270,12 @@ $(document).ready(function() {
              success: function() {
              $('#passwordresetComplete').show();
              $('#passwordresetComplete').text("Password has been reset.You will receive an email with the new password.");
-   	      $('#passwordresetComplete').css({
-   	    	  'font-weight' : 'bold',
-   	    	  'font-size': 16
-   	      });
    	      $('#saveAcctBtn').hide();
 
          }, error: function(xhr, status, error) {
 
              $('#passwordresetComplete').show();
              $('#passwordresetComplete').text(xhr.responseText);
-             $('#passwordresetComplete').css({
-   	    	  'font-weight' : 'bold',
-   	    	  'font-size': 16
-   	      });
 
          } 
 		});
@@ -399,22 +391,15 @@ $(document).ready(function() {
 			              data: dataString,
 			              success: function() {
 		                      $('#passwordChangeComplete').show();
-		                      $('#passwordChangeComplete').text("Password has been changed.");
-		            	      $('#passwordChangeComplete').css({
-		            	    	  'font-weight' : 'bold',
-		            	    	  'font-size': 16
-		            	      });
+		                      $('#passwordChangeComplete').text("password has been changed.");
 		            	      $('#newPasswordTable').hide(); 
+		            	      $('#passwordExpirationMsg').hide();
 
 		                  }, 
 		                  error: function(xhr, status, error) {
 
 		                      $('#passwordChangeComplete').show();
 		                      $('#passwordChangeComplete').text(xhr.responseText);
-		                      $('#passwordChangeComplete').css({
-		            	    	  'font-weight' : 'bold',
-		            	    	  'font-size': 16
-		            	      });
 
 		                  } 
 				});

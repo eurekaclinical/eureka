@@ -43,7 +43,7 @@
 
 		<h3>Account</h3>
 
-	<div style="font-size: 10px;font-weight: 900;"><%=request.getAttribute("passwordExpiration")%></div>		
+	<div id = "passwordExpirationMsg" class ="passwordExpirationMsg" ><%=request.getAttribute("passwordExpiration")%></div>		
 
 		<form id="userAcctForm" action="#" method="post">
 
@@ -206,7 +206,7 @@
 
 		</form>
 
-		<div id="passwordChangeComplete">
+		<div id="passwordChangeComplete" class = "pw_reset left_padding">
 
 		</div>
 		</div>

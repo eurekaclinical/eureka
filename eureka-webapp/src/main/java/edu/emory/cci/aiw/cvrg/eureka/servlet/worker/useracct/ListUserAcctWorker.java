@@ -48,10 +48,11 @@ public class ListUserAcctWorker implements ServletWorker {
 		Date now = Calendar.getInstance().getTime();
 		Date expiration = user.getPasswordExpiration();
 		
-		if (expiration != null && now.after(expiration)) {
+		if (expiration != null && now.after(expiration)) 
 			passwordExpiration="Your password has expired.Please change the password.";
-			req.setAttribute("passwordExpiration", passwordExpiration);
-		}
+		else 
+			passwordExpiration="";
+		req.setAttribute("passwordExpiration", passwordExpiration);
 		
 		req.setAttribute("user", user);
 		req.getRequestDispatcher("/protected/acct.jsp").forward(req, resp);

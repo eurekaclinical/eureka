@@ -108,7 +108,7 @@
 				</table>
 				<input type="hidden" name="targetURL" id="targetURL" value="<%= request.getParameter("redirectURL") %> "/>
 
-		<div id="passwordChangeComplete">
+		<div id="passwordChangeComplete" class = "pw_reset left_padding">
 
 		</div>
 		</form>

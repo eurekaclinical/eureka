@@ -102,6 +102,21 @@ a:visited {
 	border-bottom:1px solid #369;
 	overflow:hidden;
 }
+.pw_reset {
+	font-weight : bold;
+   	font-size: 12px; 
+}
+
+.left_padding
+	{
+	padding-left:1em;
+	}
+
+.passwordExpirationMsg
+	{
+	font-size: 10px;
+	font-weight: bold;
+	}
 
 .sidebar1 {
 	padding:10px 0;
