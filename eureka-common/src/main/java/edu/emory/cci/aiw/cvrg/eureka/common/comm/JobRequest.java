@@ -30,7 +30,7 @@ public class JobRequest {
 	private Job job;
 	private List<PropositionDefinition> propositions;
 	private List<PropositionDefinition> userPropositions;
-	private List<String> nonHelperPropositionIds;
+	private List<String> propIdsToShow;
 
 	public Job getJob() {
 		return job;
@@ -52,15 +52,16 @@ public class JobRequest {
 		return userPropositions;
 	}
 
-	public void setUserPropositions(List<PropositionDefinition> inUserPropositions) {
+	public void setUserPropositions(
+			List<PropositionDefinition> inUserPropositions) {
 		this.userPropositions = inUserPropositions;
 	}
 	
-	public List<String> getNonHelperPropositionIds() {
-		return nonHelperPropositionIds;
+	public List<String> getPropositionIdsToShow() {
+		return propIdsToShow;
 	}
 	
-	public void setNonHelperPropositionIds(List<String> inPropositionIds) {
-		this.nonHelperPropositionIds = inPropositionIds;
+	public void setPropositionIdsToShow(List<String> inPropositionIds) {
+		this.propIdsToShow = inPropositionIds;
 	}
 }

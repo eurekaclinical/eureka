@@ -76,10 +76,6 @@ public class JobTask implements Runnable {
 	 */
 	private Configuration configuration;
 	/**
-	 * The propositions belonging to the user.
-	 */
-	private List<PropositionDefinition> propositions;
-	/**
 	 * The user-created propositions.
 	 */
 	private List<PropositionDefinition> userPropositions;
@@ -116,16 +112,6 @@ public class JobTask implements Runnable {
 	 */
 	public void setFileUploadId(Long inFileUploadId) {
 		this.fileUploadId = inFileUploadId;
-	}
-
-	/**
-	 * Sets the propositions to add to the task.
-	 * 
-	 * @param inPropositions
-	 *            The list of propositions to add to the task.
-	 */
-	public void setPropositions(List<PropositionDefinition> inPropositions) {
-		this.propositions = inPropositions;
 	}
 
 	/**
@@ -295,9 +281,8 @@ public class JobTask implements Runnable {
 		job.setConfigurationId(conf.getId());
 		job.setUserId(this.fileUpload.getUserId());
 		jobRequest.setJob(job);
-		jobRequest.setPropositions(this.propositions);
 		jobRequest.setUserPropositions(this.userPropositions);
-		jobRequest.setNonHelperPropositionIds(this.nonHelperPropositionIds);
+		jobRequest.setPropositionIdsToShow(this.nonHelperPropositionIds);
 
 		EtlClient etlClient = new EtlClient(this.serviceProperties.getEtlUrl());
 		try {

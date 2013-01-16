@@ -30,12 +30,13 @@ import com.google.inject.Inject;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.Job;
 import edu.emory.cci.aiw.cvrg.eureka.etl.dao.JobDao;
 
-public class Task implements Runnable {
+public final class Task implements Runnable {
 	private static final Logger LOGGER = LoggerFactory.getLogger(Task.class);
 	private final JobDao jobDao;
 	private final ETL etl;
 	private Long jobId;
 	private List<PropositionDefinition> propositionDefinitions;
+	private List<String> propIdsToShow;
 
 	@Inject
 	Task(JobDao inJobDao, ETL inEtl) {
@@ -49,6 +50,14 @@ public class Task implements Runnable {
 
 	void setJobId(Long inJobId) {
 		jobId = inJobId;
+	}
+
+	List<String> getPropositionIdsToShow() {
+		return propIdsToShow;
+	}
+
+	void setPropositionIdsToShow(List<String> propIdsToShow) {
+		this.propIdsToShow = propIdsToShow;
 	}
 
 	List<PropositionDefinition> getPropositionDefinitions() {
@@ -75,8 +84,14 @@ public class Task implements Runnable {
 			PropositionDefinition[] propositionArray =
 				new PropositionDefinition[this.getPropositionDefinitions()
 					.size()];
-			this.getPropositionDefinitions().toArray(propositionArray);
-			this.etl.run("config" + configId, propositionArray);
+			this.propositionDefinitions.toArray(propositionArray);
+			
+			String[] propIdsToShowArray = 
+					this.propIdsToShow.toArray(
+					new String[this.propIdsToShow.size()]);
+			
+			this.etl.run("config" + configId, propositionArray, 
+					propIdsToShowArray);
 			this.etl.close();
 		} catch (EtlException e) {
 			handleError(myJob, e);

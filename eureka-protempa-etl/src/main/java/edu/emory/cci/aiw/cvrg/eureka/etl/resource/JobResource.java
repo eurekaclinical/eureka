@@ -86,7 +86,7 @@ public class JobResource {
 		Response response;
 		Job job = inJobRequest.getJob();
 		List<PropositionDefinition> definitions = inJobRequest
-		        .getPropositions();
+		        .getUserPropositions();
 		Configuration configuration = this.confDao.getByUserId(job.getUserId());
 		propositionValidator.setConfiguration(configuration);
 		propositionValidator.setPropositions(definitions);
@@ -103,7 +103,8 @@ public class JobResource {
 			job.setNewState("CREATED", null, null);
 			LOGGER.debug("Request to start new Job {}", job.getId());
 			this.jobDao.create(job);
-			this.taskManager.queueTask(job.getId(), definitions);
+			this.taskManager.queueTask(job.getId(), definitions, 
+					inJobRequest.getPropositionIdsToShow());
 			response = Response.created(URI.create("/" + job.getId())).build();
 		} else {
 			job.setNewState("FAILED", null, null);

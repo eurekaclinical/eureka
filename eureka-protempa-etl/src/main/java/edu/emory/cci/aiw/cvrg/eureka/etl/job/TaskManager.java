@@ -44,10 +44,13 @@ public class TaskManager {
 		this.executorService = Executors.newFixedThreadPool(poolSize);
 	}
 
-	public void queueTask (Long inJobId, List<PropositionDefinition> inPropositionDefinitions) {
+	public void queueTask (Long inJobId, 
+			List<PropositionDefinition> inPropositionDefinitions, 
+			List<String> propIdsToShow) {
 		Task task = this.taskProvider.get();
 		task.setJobId(inJobId);
 		task.setPropositionDefinitions(inPropositionDefinitions);
+		task.setPropositionIdsToShow(propIdsToShow);
 		this.executorService.execute(task);
 	}
 

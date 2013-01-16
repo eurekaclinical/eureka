@@ -80,14 +80,16 @@ public class ETL {
 			"etlconfigdefaults");
 	}
 
-	public void run(String configId, PropositionDefinition[]
-		inPropositionDefinitions) throws EtlException {
+	void run(String configId, 
+			PropositionDefinition[] inPropositionDefinitions,
+			String[] inPropIdsToShow) throws EtlException {
 		Protempa protempa = null;
 
 		try {
 			protempa = getNewProtempa(configId + ".ini");
 			DefaultQueryBuilder q = new DefaultQueryBuilder();
 			q.setPropositionDefinitions(inPropositionDefinitions);
+			q.setPropositionIds(inPropIdsToShow);
 			Query query = protempa.buildQuery(q);
 			File i2b2Config = new File(
 				this.configDirectory, configId + ".xml");
@@ -115,7 +117,22 @@ public class ETL {
 			}
 		}
 	}
-
+	
+	void close() {
+		if (this.knowledgeSource != null) {
+			this.knowledgeSource.reallyClose();
+		}
+		if (this.dataSource != null) {
+			this.dataSource.reallyClose();
+		}
+		if (this.algorithmSource != null) {
+			this.algorithmSource.reallyClose();
+		}
+		if (this.termSource != null) {
+			this.termSource.reallyClose();
+		}
+	}
+	
 	private Protempa getNewProtempa(String configFilename) throws
 		ConfigurationsLoadException, BackendProviderSpecLoaderException,
 		InvalidConfigurationException, ProtempaStartupException,
@@ -177,21 +194,6 @@ public class ETL {
 		}
 
 		return new Protempa(ds, ks, as, ts);
-	}
-
-	public void close() {
-		if (this.knowledgeSource != null) {
-			this.knowledgeSource.reallyClose();
-		}
-		if (this.dataSource != null) {
-			this.dataSource.reallyClose();
-		}
-		if (this.algorithmSource != null) {
-			this.algorithmSource.reallyClose();
-		}
-		if (this.termSource != null) {
-			this.termSource.reallyClose();
-		}
 	}
 
 	private static <E extends Source<?, ?, ?>> E createProxy(Class<E> clz,
