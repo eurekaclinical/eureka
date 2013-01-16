@@ -42,6 +42,8 @@ import edu.emory.cci.aiw.cvrg.eureka.services.dao.UserDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.ValueComparatorDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.email.EmailSender;
 import edu.emory.cci.aiw.cvrg.eureka.services.email.MockEmailSender;
+import edu.emory.cci.aiw.cvrg.eureka.services.finder.PropositionFinder;
+import edu.emory.cci.aiw.cvrg.eureka.services.finder.TestPropositionFinder;
 
 /**
  * Configure Guice for non-web application testing.
@@ -66,5 +68,6 @@ public class AppTestModule extends AbstractModule {
 		bind(EmailSender.class).to(MockEmailSender.class);
 		bind(I2b2Client.class).to(MockI2b2Client.class);
 		bind(ThresholdsOperatorDao.class).to(JpaThresholdsOperatorDao.class);
+		bind(PropositionFinder.class).to(TestPropositionFinder.class);
 	}
 }
