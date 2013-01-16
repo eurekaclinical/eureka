@@ -19,76 +19,104 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.services.conversion;
 
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.SystemProposition;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.TimeUnit;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.ValueComparator;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.ValueThresholdEntity;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.ValueThresholdGroupEntity;
+import edu.emory.cci.aiw.cvrg.eureka.services.test.AbstractServiceTest;
+import org.junit.Before;
 import org.junit.Test;
+import org.protempa.LowLevelAbstractionDefinition;
+import org.protempa.PropositionDefinition;
+import org.protempa.proposition.value.NumberValue;
 
-public class ValueThresholdsLowLevelAbstractionConverterTest {
+import java.util.ArrayList;
+import java.util.List;
 
-//	private LowLevelAbstractionPackager packager = new LowLevelAbstractionPackager();
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
+public class ValueThresholdsLowLevelAbstractionConverterTest extends
+		AbstractServiceTest {
+
+	private PropositionDefinitionConverterVisitor converterVisitor;
+	private ValueThresholdsLowLevelAbstractionConverter converter;
+
+	@Before
+	public void setUp() {
+		converterVisitor = this.getInstance
+				(PropositionDefinitionConverterVisitor.class);
+		converter = new ValueThresholdsLowLevelAbstractionConverter();
+		converter.setConverterVisitor(converterVisitor);
+	}
 
 	@Test
 	public void testLowLevelAbstractionPackager() {
-//		SystemProposition primParam = new SystemProposition();
-//		primParam.setId(1L);
-//		primParam.setKey("test-primparam");
-//		primParam.setInSystem(true);
-//		primParam.setSystemType(SystemType.PRIMITIVE_PARAMETER);
-//		
-//		TimeUnit dayUnit = new TimeUnit();
-//		dayUnit.setName("day");
-//		
-//		ValueThresholdGroupEntity vte = new ValueThresholdGroupEntity();
-//		vte.setId(2L);
-//		vte.setKey("test-valuethreshold");
-//		vte.setName("test-threshold-XX");
-//		vte.setAbstractedFrom(primParam);
-//		vte.setMinValues(1);
-//		vte.setMinGapValues(2);
-//		vte.setMinGapValuesUnits(dayUnit);
-//		vte.setMaxGapValues(4);
-//		vte.setMaxGapValuesUnits(dayUnit);
-//		
-//		ValueComparator lt = new ValueComparator();
-//		lt.setName("<");
-//		ValueComparator gt = new ValueComparator();
-//		gt.setName(">");
-//		
-//		ValueThresholdEntity userConstraint = new ValueThresholdEntity();
-//		userConstraint.setMinValueThreshold(100);
-//		userConstraint.setMinValueComp(gt);
-//		userConstraint.setMaxValueThreshold(200);
-//		userConstraint.setMaxValueComp(lt);
-//		
-//		ValueThresholdEntity complementConstraint = new ValueThresholdEntity();
-//		complementConstraint.setMinValueThreshold(200);
-//		complementConstraint.setMinValueComp(gt);
-//		complementConstraint.setMaxValueThreshold(100);
-//		complementConstraint.setMaxValueComp(lt);
-//		
-//		vte.setValueThresholds(userConstraint);
-//		vte.setComplementConstraint(complementConstraint);
-//		
-//		LowLevelAbstractionDefinition llaDef = this.packager.convert(vte);
-//		assertEquals("wrong id", "test-valuethreshold", llaDef.getId());
-//		assertEquals("wrong abstracted from size", 1, llaDef.getAbstractedFrom().size());
-//		assertEquals("wrong abstracted from", "test-primparam", llaDef.getAbstractedFrom().iterator().next());
-//		assertEquals("wrong minimum number of values", 1, llaDef.getMinimumNumberOfValues());
-//		assertEquals("wrong min gap b/w values", new Integer(2), llaDef.getMinimumGapBetweenValues());
-//		assertEquals("wrong min gap b/w values units", "day", llaDef.getMinimumGapBetweenValuesUnits().getName().toLowerCase());
-//		assertEquals("wrong max gap b/w values", new Integer(4), llaDef.getMaximumGapBetweenValues());
-//		assertEquals("wrong max gap b/w values units", "day", llaDef.getMaximumGapBetweenValuesUnits().getName().toLowerCase());
-//		assertEquals("wrong algorithm", "stateDetector", llaDef.getAlgorithmId());
-//		assertEquals("wrong number of value definitions", 2, llaDef.getValueDefinitions().size());
-//		final String userConstraintName = "test-threshold-XX";
-//		final String compConstraintName = "test-threshold-XX_COMPLEMENT";
-//		assertTrue("value def '" + userConstraintName +"' does not exist", llaDef.getValueDefinition(userConstraintName) != null);
-//		assertEquals("wrong min value for value def: '" + userConstraintName + "'", NumberValue.getInstance(100L), llaDef.getValueDefinition(userConstraintName).getParameterValue("minThreshold"));
-//		assertEquals("wrong min value comp for value def: '" + userConstraintName + "'", ">", llaDef.getValueDefinition(userConstraintName).getParameterComp("minThreshold").getComparatorString());
-//		assertEquals("wrong max value for value def: '" + userConstraintName + "'", NumberValue.getInstance(200L), llaDef.getValueDefinition(userConstraintName).getParameterValue("maxThreshold"));
-//		assertEquals("wrong max value comp for value def: '" + userConstraintName + "'", "<", llaDef.getValueDefinition(userConstraintName).getParameterComp("maxThreshold").getComparatorString());
-//		assertTrue("value def '" + compConstraintName +"' does not exist", llaDef.getValueDefinition(compConstraintName) != null);
-//		assertEquals("wrong min value for value def: '" + compConstraintName + "'", NumberValue.getInstance(200L), llaDef.getValueDefinition(compConstraintName).getParameterValue("minThreshold"));
-//		assertEquals("wrong min value comp for value def: '" + compConstraintName + "'", ">", llaDef.getValueDefinition(compConstraintName).getParameterComp("minThreshold").getComparatorString());
-//		assertEquals("wrong max value for value def: '" + compConstraintName + "'", NumberValue.getInstance(100L), llaDef.getValueDefinition(compConstraintName).getParameterValue("maxThreshold"));
-//		assertEquals("wrong max value comp for value def: '" + compConstraintName + "'", "<", llaDef.getValueDefinition(compConstraintName).getParameterComp("maxThreshold").getComparatorString());
+		SystemProposition primParam = new SystemProposition();
+		primParam.setId(1L);
+		primParam.setKey("test-primparam1");
+		primParam.setInSystem(true);
+		primParam.setSystemType(SystemProposition.SystemType.PRIMITIVE_PARAMETER);
+
+		TimeUnit dayUnit = new TimeUnit();
+		dayUnit.setName("day");
+
+		ValueThresholdGroupEntity thresholdGroup = new ValueThresholdGroupEntity();
+		thresholdGroup.setId(2L);
+		thresholdGroup.setKey("test-valuethreshold");
+
+		ValueComparator lt = new ValueComparator();
+		lt.setName("<");
+		ValueComparator gt = new ValueComparator();
+		gt.setName(">");
+		ValueComparator lte = new ValueComparator();
+		lte.setName("<=");
+		ValueComparator gte = new ValueComparator();
+		gte.setName(">=");
+		lt.setComplement(gte);
+		gte.setComplement(lt);
+		gt.setComplement(lte);
+		lte.setComplement(gt);
+
+		ValueThresholdEntity threshold = new ValueThresholdEntity();
+		threshold.setAbstractedFrom(primParam);
+		threshold.setMinValueThreshold(100);
+		threshold.setMinValueComp(gt);
+		threshold.setMaxValueThreshold(200);
+		threshold.setMaxValueComp(lt);
+
+		List<ValueThresholdEntity> thresholds = new
+				ArrayList<ValueThresholdEntity>();
+		thresholds.add(threshold);
+		thresholdGroup.setValueThresholds(thresholds);
+
+		List<PropositionDefinition> llaDefs = this.converter.convert
+				(thresholdGroup);
+		assertEquals("wrong number of proposition definitions created", 2,
+				llaDefs.size());
+		LowLevelAbstractionDefinition llaDef = this.converter
+				.getPrimaryPropositionDefinition();
+		assertEquals("wrong id", "test-valuethreshold", llaDef.getId());
+		assertEquals("wrong abstracted from size", 1, llaDef.getAbstractedFrom().size());
+		assertEquals("wrong abstracted from", "test-primparam1",
+				llaDef.getAbstractedFrom().iterator().next());
+		assertEquals("wrong minimum number of values", 1, llaDef.getMinimumNumberOfValues());
+		assertEquals("wrong algorithm", "stateDetector", llaDef.getAlgorithmId());
+		assertEquals("wrong number of value definitions", 2, llaDef.getValueDefinitions().size());
+		final String userConstraintName = "test-valuethreshold_VALUE";
+		final String compConstraintName = "test-valuethreshold_VALUE_COMP";
+		assertTrue("value def '" + userConstraintName +"' does not exist", llaDef.getValueDefinition(userConstraintName) != null);
+		assertEquals("wrong min value for value def: '" + userConstraintName + "'", NumberValue.getInstance(100L), llaDef.getValueDefinition(userConstraintName).getParameterValue("minThreshold"));
+		assertEquals("wrong min value comp for value def: '" + userConstraintName + "'", ">", llaDef.getValueDefinition(userConstraintName).getParameterComp("minThreshold").getComparatorString());
+		assertEquals("wrong max value for value def: '" + userConstraintName + "'", NumberValue.getInstance(200L), llaDef.getValueDefinition(userConstraintName).getParameterValue("maxThreshold"));
+		assertEquals("wrong max value comp for value def: '" + userConstraintName + "'", "<", llaDef.getValueDefinition(userConstraintName).getParameterComp("maxThreshold").getComparatorString());
+		assertTrue("value def '" + compConstraintName +"' does not exist", llaDef.getValueDefinition(compConstraintName) != null);
+		assertEquals("wrong min value for value def: '" + compConstraintName + "'", NumberValue.getInstance(200L), llaDef.getValueDefinition(compConstraintName).getParameterValue("minThreshold"));
+		assertEquals("wrong min value comp for value def: '" +
+				compConstraintName + "'", ">=", llaDef.getValueDefinition(compConstraintName).getParameterComp("minThreshold").getComparatorString());
+		assertEquals("wrong max value for value def: '" + compConstraintName + "'", NumberValue.getInstance(100L), llaDef.getValueDefinition(compConstraintName).getParameterValue("maxThreshold"));
+		assertEquals("wrong max value comp for value def: '" +
+				compConstraintName + "'", "<=", llaDef.getValueDefinition(compConstraintName).getParameterComp("maxThreshold").getComparatorString());
 	}
 }

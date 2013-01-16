@@ -24,23 +24,38 @@ import edu.emory.cci.aiw.cvrg.eureka.common.entity.FrequencyEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.SystemProposition;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.SystemProposition.SystemType;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.TimeUnit;
+import edu.emory.cci.aiw.cvrg.eureka.services.test.AbstractServiceTest;
+import org.junit.Before;
 import org.junit.Test;
 import org.protempa.MinMaxGapFunction;
+import org.protempa.PropositionDefinition;
 import org.protempa.SliceDefinition;
+
+import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 
-public class FrequencySliceAbstractionConverterTest {
+public class FrequencySliceAbstractionConverterTest extends
+		AbstractServiceTest {
 
-	private FrequencySliceAbstractionConverter converter = new FrequencySliceAbstractionConverter();
+	private PropositionDefinitionConverterVisitor converterVisitor;
+	private FrequencySliceAbstractionConverter converter;
+
+	@Before
+	public void setUp() {
+		converterVisitor = this.getInstance
+				(PropositionDefinitionConverterVisitor.class);
+		converter = new FrequencySliceAbstractionConverter();
+		converter.setVisitor(converterVisitor);
+	}
 	
 	@Test
-	public void testSlicePackager() {
+	public void testSliceConverter() {
 		SystemProposition event = new SystemProposition();
 		event.setId(1L);
-		event.setKey("test-event");
-		event.setDisplayName("test-event-display");
-		event.setAbbrevDisplayName("test-event-abbrev");
+		event.setKey("test-event1");
+		event.setDisplayName("test-event1-display");
+		event.setAbbrevDisplayName("test-event1-abbrev");
 		event.setInSystem(true);
 		event.setSystemType(SystemType.EVENT);
 		
@@ -60,18 +75,23 @@ public class FrequencySliceAbstractionConverterTest {
 		af.setProposition(event);
 		
 		sa.setExtendedProposition(af);
-		
-		SliceDefinition sliceDef = (SliceDefinition) this.converter.convert
-				(sa).get(0);
+
+		List<PropositionDefinition> sliceDefs = this.converter.convert
+				(sa);
+		System.out.println(sliceDefs);
+		assertEquals("wrong number of proposition definitions created", 2,
+				sliceDefs.size());
+		SliceDefinition sliceDef = this.converter
+				.getPrimaryPropositionDefinition();
 		assertEquals("wrong ID", "test-slice-key", sliceDef.getId());
 		assertEquals("wrong min index", 3, sliceDef.getMinIndex());
 		assertEquals("wrong abstracted from size", 1, sliceDef.getAbstractedFrom().size());
-		assertEquals("wrong abstracted from", "test-event", sliceDef.getAbstractedFrom().iterator().next());
+		assertEquals("wrong abstracted from", "test-event1",
+				sliceDef.getAbstractedFrom().iterator().next());
 		MinMaxGapFunction gf = (MinMaxGapFunction) sliceDef.getGapFunction();
 		assertEquals("wrong gap min", new Integer(1), gf.getMinimumGap());
 		assertEquals("wrong gap min unit", "day", gf.getMinimumGapUnit().getName().toLowerCase());
 		assertEquals("wrong gap max", new Integer(90), gf.getMaximumGap());
 		assertEquals("wrong gap max unit", "day", gf.getMaximumGapUnit().getName().toLowerCase());
-		
 	}
 }

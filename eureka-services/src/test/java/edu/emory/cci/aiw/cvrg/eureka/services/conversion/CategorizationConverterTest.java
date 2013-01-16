@@ -26,9 +26,13 @@ import edu.emory.cci.aiw.cvrg.eureka.common.entity.FrequencyEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.SequenceEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.SystemProposition;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.SystemProposition.SystemType;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.ThresholdsOperator;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.ValueThresholdEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.ValueThresholdGroupEntity;
+import edu.emory.cci.aiw.cvrg.eureka.services.test.AbstractServiceTest;
 import org.junit.Before;
 import org.junit.Test;
+import org.protempa.CompoundLowLevelAbstractionDefinition;
 import org.protempa.ConstantDefinition;
 import org.protempa.EventDefinition;
 import org.protempa.HighLevelAbstractionDefinition;
@@ -43,14 +47,17 @@ import java.util.List;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-public class CategorizationConverterTest {
+public class CategorizationConverterTest extends AbstractServiceTest {
 
+	private PropositionDefinitionConverterVisitor converterVisitor;
 	private CategorizationConverter converter;
 
 	@Before
-	public void setup() {
-		this.converter = new CategorizationConverter();
-
+	public void setUp() {
+		converterVisitor = this.getInstance
+				(PropositionDefinitionConverterVisitor.class);
+		converter = new CategorizationConverter();
+		converter.setConverterVisitor(converterVisitor);
 	}
 
 	@Test
@@ -80,18 +87,18 @@ public class CategorizationConverterTest {
 
 		List<PropositionDefinition> eventDefs1 = this.converter.convert
 				(eventCat1);
-		assertEquals("wrong number of proposition definitions created", 1,
+		assertEquals("wrong number of proposition definitions created", 3,
 				eventDefs1.size());
 		PropositionDefinition eventDef1 = this.converter
 				.getPrimaryPropositionDefinition();
 		assertTrue("not an event", eventDef1 instanceof EventDefinition);
 		assertEquals("wrong ID", "test-event-cat1", eventDef1.getId());
 		assertEquals("wrong display name", "test-event-cat1-display",
-		        eventDef1.getDisplayName());
+				eventDef1.getDisplayName());
 		assertEquals("wrong abbrev display name", "test-event-cat1-abbrev",
-		        eventDef1.getAbbreviatedDisplayName());
+				eventDef1.getAbbreviatedDisplayName());
 		assertEquals("wrong size of inverse-is-a", 2,
-		        eventDef1.getInverseIsA().length);
+				eventDef1.getInverseIsA().length);
 		assertTrue(
 				"inverse-is-a missing",
 				(eventDef1.getInverseIsA()[0].equals("test-event1") && eventDef1
@@ -109,17 +116,23 @@ public class CategorizationConverterTest {
 		iia2.add(eventCat1);
 		eventCat2.setInverseIsA(iia2);
 
-		PropositionDefinition eventDef2 = this.converter.convert(eventCat2)
-				.get(0);
+		List<PropositionDefinition> eventDefs2 = this.converter.convert
+				(eventCat2);
+		assertEquals("wrong number of proposition definitions created", 4,
+				eventDefs2.size());
+		PropositionDefinition eventDef2 = this.converter
+				.getPrimaryPropositionDefinition();
 		assertTrue("not an event", eventDef2 instanceof EventDefinition);
 		assertEquals("wrong ID", "test-event-cat2", eventDef2.getId());
 		assertEquals("wrong display name", "test-event-cat2-display",
-		        eventDef2.getDisplayName());
+				eventDef2.getDisplayName());
 		assertEquals("wrong abbrev display name", "test-event-cat2-abbrev",
-		        eventDef2.getAbbreviatedDisplayName());
+				eventDef2.getAbbreviatedDisplayName());
 		assertEquals("wrong inverse-is-a size", 1,
-		        eventDef2.getInverseIsA().length);
-		assertEquals("wrong inverse-is-a", "3", eventDef2.getInverseIsA()[0]);
+				eventDef2.getInverseIsA().length);
+		assertEquals("wrong inverse-is-a", "test-event-cat1",
+				eventDef2.getInverseIsA()
+						[0]);
 	}
 
 	@Test
@@ -147,16 +160,20 @@ public class CategorizationConverterTest {
 		iia1.add(constant2);
 		constantCat1.setInverseIsA(iia1);
 
-		PropositionDefinition constantDef1 = this.converter.convert
-				(constantCat1).get(0);
+		List<PropositionDefinition> constantDefs1 = this.converter.convert
+				(constantCat1);
+		assertEquals("wrong number of proposition definitions created", 3,
+				constantDefs1.size());
+		PropositionDefinition constantDef1 = this.converter
+				.getPrimaryPropositionDefinition();
 		assertTrue("not a constant", constantDef1 instanceof ConstantDefinition);
 		assertEquals("wrong ID", "test-constant-cat1", constantDef1.getId());
 		assertEquals("wrong display name", "test-constant-cat1-display",
-		        constantDef1.getDisplayName());
+				constantDef1.getDisplayName());
 		assertEquals("wrong abbrev display name", "test-constant-cat1-abbrev",
-		        constantDef1.getAbbreviatedDisplayName());
+				constantDef1.getAbbreviatedDisplayName());
 		assertEquals("wrong inverse-is-a size", 2,
-		        constantDef1.getInverseIsA().length);
+				constantDef1.getInverseIsA().length);
 		assertTrue(
 				"wrong inverse-is-a objects",
 				(constantDef1.getInverseIsA()[0].equals("test-constant1") && constantDef1
@@ -175,17 +192,22 @@ public class CategorizationConverterTest {
 		iia2.add(constantCat1);
 		constantCat2.setInverseIsA(iia2);
 
-		PropositionDefinition constantDef2 = this.converter.convert
-				(constantCat2).get(0);
+		List<PropositionDefinition> constantDefs2 = this.converter.convert
+				(constantCat2);
+		assertEquals("wrong number of proposition definitions created", 4,
+				constantDefs2.size());
+		PropositionDefinition constantDef2 = this.converter
+				.getPrimaryPropositionDefinition();
 		assertTrue("not a constant", constantDef2 instanceof ConstantDefinition);
 		assertEquals("wrong ID", "test-constant-cat2", constantDef2.getId());
 		assertEquals("wrong display name", "test-constant-cat2-display",
-		        constantDef2.getDisplayName());
+				constantDef2.getDisplayName());
 		assertEquals("wrong abbrev display name", "test-constant-cat2-abbrev",
-		        constantDef2.getAbbreviatedDisplayName());
+				constantDef2.getAbbreviatedDisplayName());
 		assertEquals("wrong inverse-is-a size", 1,
-		        constantDef2.getInverseIsA().length);
-		assertEquals("wrong inverse-is-a", "3", constantDef2.getInverseIsA()[0]);
+				constantDef2.getInverseIsA().length);
+		assertEquals("wrong inverse-is-a", "test-constant-cat1",
+				constantDef2.getInverseIsA()[0]);
 
 	}
 
@@ -209,23 +231,27 @@ public class CategorizationConverterTest {
 		primParamCat1.setDisplayName("test-primparam-cat1-display");
 		primParamCat1.setAbbrevDisplayName("test-primparam-cat1-abbrev");
 		primParamCat1
-		        .setCategorizationType(CategorizationType.PRIMITIVE_PARAMETER);
+				.setCategorizationType(CategorizationType.PRIMITIVE_PARAMETER);
 		List<DataElementEntity> iia1 = new ArrayList<DataElementEntity>();
 		iia1.add(primParam1);
 		iia1.add(primParam2);
 		primParamCat1.setInverseIsA(iia1);
 
-		PropositionDefinition primParamDef1 = this.converter.convert
-				(primParamCat1).get(0);
+		List<PropositionDefinition> primParamDefs1 = this.converter.convert
+				(primParamCat1);
+		assertEquals("wrong number of proposition definitions created", 3,
+				primParamDefs1.size());
+		PropositionDefinition primParamDef1 = this.converter
+				.getPrimaryPropositionDefinition();
 		assertTrue("not a primitive parameter",
 				primParamDef1 instanceof PrimitiveParameterDefinition);
 		assertEquals("wrong ID", "test-primparam-cat1", primParamDef1.getId());
 		assertEquals("wrong display name", "test-primparam-cat1-display",
-		        primParamDef1.getDisplayName());
+				primParamDef1.getDisplayName());
 		assertEquals("wrong abbrev display name", "test-primparam-cat1-abbrev",
-		        primParamDef1.getAbbreviatedDisplayName());
+				primParamDef1.getAbbreviatedDisplayName());
 		assertEquals("wrong inverse-is-a size", 2,
-		        primParamDef1.getInverseIsA().length);
+				primParamDef1.getInverseIsA().length);
 		assertTrue(
 				"wrong inverse-is-a objects",
 				(primParamDef1.getInverseIsA()[0].equals("test-primparam1") && primParamDef1
@@ -240,24 +266,28 @@ public class CategorizationConverterTest {
 		primParamCat2.setDisplayName("test-primparam-cat2-display");
 		primParamCat2.setAbbrevDisplayName("test-primparam-cat2-abbrev");
 		primParamCat2
-		        .setCategorizationType(CategorizationType.PRIMITIVE_PARAMETER);
+				.setCategorizationType(CategorizationType.PRIMITIVE_PARAMETER);
 		List<DataElementEntity> iia2 = new ArrayList<DataElementEntity>();
 		iia2.add(primParamCat1);
 		primParamCat2.setInverseIsA(iia2);
 
-		PropositionDefinition primParamDef2 = this.converter.convert
-				(primParamCat2).get(0);
-		assertTrue("not a primitve parameter",
-		        primParamDef2 instanceof PrimitiveParameterDefinition);
+		List<PropositionDefinition> primParamDefs2 = this.converter.convert
+				(primParamCat2);
+		assertEquals("wrong number of proposition definitions created", 4,
+				primParamDefs2.size());
+		PropositionDefinition primParamDef2 = this.converter
+				.getPrimaryPropositionDefinition();
+		assertTrue("not a primitive parameter",
+				primParamDef2 instanceof PrimitiveParameterDefinition);
 		assertEquals("wrong ID", "test-primparam-cat2", primParamDef2.getId());
 		assertEquals("wrong display name", "test-primparam-cat2-display",
-		        primParamDef2.getDisplayName());
+				primParamDef2.getDisplayName());
 		assertEquals("wrong abbrev display name", "test-primparam-cat2-abbrev",
-		        primParamDef2.getAbbreviatedDisplayName());
+				primParamDef2.getAbbreviatedDisplayName());
 		assertEquals("wrong inverse-is-a size", 1,
-		        primParamDef2.getInverseIsA().length);
-		assertEquals("wrong inverse-is-a", "3",
-		        primParamDef2.getInverseIsA()[0]);
+				primParamDef2.getInverseIsA().length);
+		assertEquals("wrong inverse-is-a", "test-primparam-cat1",
+				primParamDef2.getInverseIsA()[0]);
 	}
 
 	@Test
@@ -283,22 +313,28 @@ public class CategorizationConverterTest {
 		iia1.add(hla2);
 		hlaCat1.setInverseIsA(iia1);
 
-		PropositionDefinition hlaDef1 = this.converter.convert(hlaCat1).get(0);
+		List<PropositionDefinition> hlaDefs1 = this.converter.convert
+				(hlaCat1);
+		assertEquals("wrong number of proposition definitions created", 3,
+				hlaDefs1.size());
+		PropositionDefinition hlaDef1 = this.converter
+				.getPrimaryPropositionDefinition();
 		assertTrue("not a high-level abstraction",
 				hlaDef1 instanceof HighLevelAbstractionDefinition);
 		assertEquals("wrong ID", "test-hla-cat1", hlaDef1.getId());
 		assertEquals("wrong display name", "test-hla-cat1-display",
-		        hlaDef1.getDisplayName());
+				hlaDef1.getDisplayName());
 		assertEquals("wrong abbrev display name", "test-hla-cat1-abbrev",
-		        hlaDef1.getAbbreviatedDisplayName());
+				hlaDef1.getAbbreviatedDisplayName());
 		assertEquals("wrong inverse-is-a size", 2,
-		        hlaDef1.getInverseIsA().length);
+				hlaDef1.getInverseIsA().length);
 		assertTrue(
 				"wrong inverse-is-a objects",
-				(hlaDef1.getInverseIsA()[0].equals("1") && hlaDef1
-						.getInverseIsA()[1].equals("2"))
-						|| (hlaDef1.getInverseIsA()[0].equals("2") && hlaDef1
-						.getInverseIsA()[1].equals("1")));
+				(hlaDef1.getInverseIsA()[0].equals("test-hla1") && hlaDef1
+						.getInverseIsA()[1].equals("test-hla2"))
+						|| (hlaDef1.getInverseIsA()[0].equals("test-hla2") &&
+						hlaDef1
+								.getInverseIsA()[1].equals("test-hla1")));
 
 		CategoryEntity hlaCat2 = new CategoryEntity();
 		hlaCat2.setId(4L);
@@ -310,17 +346,22 @@ public class CategorizationConverterTest {
 		iia2.add(hlaCat1);
 		hlaCat2.setInverseIsA(iia2);
 
-		PropositionDefinition hlaDef2 = this.converter.convert(hlaCat2).get(0);
+		List<PropositionDefinition> hlaDefs2 = this.converter.convert(hlaCat2);
+		assertEquals("wrong number of proposition definitions created", 4,
+				hlaDefs2.size());
+		PropositionDefinition hlaDef2 = this.converter
+				.getPrimaryPropositionDefinition();
 		assertTrue("not a high-level abstraction",
-		        hlaDef2 instanceof HighLevelAbstractionDefinition);
+				hlaDef2 instanceof HighLevelAbstractionDefinition);
 		assertEquals("wrong ID", "test-hla-cat2", hlaDef2.getId());
 		assertEquals("wrong display name", "test-hla-cat2-display",
-		        hlaDef2.getDisplayName());
+				hlaDef2.getDisplayName());
 		assertEquals("wrong abbrev display name", "test-hla-cat2-abbrev",
-		        hlaDef2.getAbbreviatedDisplayName());
+				hlaDef2.getAbbreviatedDisplayName());
 		assertEquals("wrong inverse-is-a size", 1,
-		        hlaDef2.getInverseIsA().length);
-		assertEquals("wrong inverse-is-a", "3", hlaDef2.getInverseIsA()[0]);
+				hlaDef2.getInverseIsA().length);
+		assertEquals("wrong inverse-is-a", "test-hla-cat1",
+				hlaDef2.getInverseIsA()[0]);
 	}
 
 	@Test
@@ -346,22 +387,27 @@ public class CategorizationConverterTest {
 		iia1.add(sa2);
 		saCat1.setInverseIsA(iia1);
 
-		PropositionDefinition saDef1 = this.converter.convert(saCat1).get(0);
+		List<PropositionDefinition> saDefs1 = this.converter.convert(saCat1);
+		assertEquals("wrong number of proposition definitions created", 3,
+				saDefs1.size());
+		PropositionDefinition saDef1 = this.converter
+				.getPrimaryPropositionDefinition();
 		assertTrue("not a slice abstraction",
 				saDef1 instanceof SliceDefinition);
 		assertEquals("wrong ID", "test-slice-cat1", saDef1.getId());
 		assertEquals("wrong display name", "test-slice-cat1-display",
-		        saDef1.getDisplayName());
+				saDef1.getDisplayName());
 		assertEquals("wrong abbrev display name", "test-slice-cat1-abbrev",
-		        saDef1.getAbbreviatedDisplayName());
+				saDef1.getAbbreviatedDisplayName());
 		assertEquals("wrong inverse-is-a size", 2,
-		        saDef1.getInverseIsA().length);
+				saDef1.getInverseIsA().length);
 		assertTrue(
 				"wrong inverse-is-a objects",
-				(saDef1.getInverseIsA()[0].equals("1") && saDef1
-						.getInverseIsA()[1].equals("2"))
-						|| (saDef1.getInverseIsA()[0].equals("2") && saDef1
-						.getInverseIsA()[1].equals("1")));
+				(saDef1.getInverseIsA()[0].equals("test-slice1") && saDef1
+						.getInverseIsA()[1].equals("test-slice2"))
+						|| (saDef1.getInverseIsA()[0].equals("test-slice2") &&
+						saDef1
+						.getInverseIsA()[1].equals("test-slice1")));
 
 		CategoryEntity saCat2 = new CategoryEntity();
 		saCat2.setId(4L);
@@ -373,30 +419,56 @@ public class CategorizationConverterTest {
 		iia2.add(saCat1);
 		saCat2.setInverseIsA(iia2);
 
-		PropositionDefinition saDef2 = this.converter.convert(saCat2).get(0);
+		List<PropositionDefinition> saDefs2 = this.converter.convert(saCat2);
+		assertEquals("wrong number of proposition definitions created", 4,
+				saDefs2.size());
+		PropositionDefinition saDef2 = this.converter
+				.getPrimaryPropositionDefinition();
 		assertTrue("not a slice abstraction",
-		        saDef2 instanceof SliceDefinition);
+				saDef2 instanceof SliceDefinition);
 		assertEquals("wrong ID", "test-slice-cat2", saDef2.getId());
 		assertEquals("wrong display name", "test-slice-cat2-display",
-		        saDef2.getDisplayName());
+				saDef2.getDisplayName());
 		assertEquals("wrong abbrev display name", "test-slice-cat2-abbrev",
-		        saDef2.getAbbreviatedDisplayName());
+				saDef2.getAbbreviatedDisplayName());
 		assertEquals("wrong inverse-is-a size", 1,
-		        saDef2.getInverseIsA().length);
-		assertEquals("wrong inverse-is-a", "3", saDef2.getInverseIsA()[0]);
+				saDef2.getInverseIsA().length);
+		assertEquals("wrong inverse-is-a", "test-slice-cat1",
+				saDef2.getInverseIsA()
+						[0]);
 	}
 
 	@Test
 	public void testLowLevelAbstractionCategorization() {
+		SystemProposition primParam1 = new SystemProposition();
+		primParam1.setId(1L);
+		primParam1.setKey("test-primparam1");
+		primParam1.setInSystem(true);
+		primParam1.setSystemType(SystemType.PRIMITIVE_PARAMETER);
+
+		SystemProposition primParam2 = new SystemProposition();
+		primParam2.setId(2L);
+		primParam2.setKey("test-primparam2");
+		primParam2.setInSystem(true);
+		primParam2.setSystemType(SystemType.PRIMITIVE_PARAMETER);
+
 		ValueThresholdGroupEntity lla1 = new ValueThresholdGroupEntity();
 		lla1.setId(1L);
 		lla1.setKey("test-lla1");
 		lla1.setInSystem(false);
+		lla1.setValueThresholds(new ArrayList<ValueThresholdEntity>(1));
+		ValueThresholdEntity vte1 = new ValueThresholdEntity();
+		vte1.setAbstractedFrom(primParam1);
+		lla1.getValueThresholds().add(vte1);
 
 		ValueThresholdGroupEntity lla2 = new ValueThresholdGroupEntity();
 		lla2.setId(2L);
 		lla2.setKey("test-lla2");
 		lla2.setInSystem(false);
+		lla2.setValueThresholds(new ArrayList<ValueThresholdEntity>(1));
+		ValueThresholdEntity vte2 = new ValueThresholdEntity();
+		vte2.setAbstractedFrom(primParam2);
+		lla2.getValueThresholds().add(vte2);
 
 		CategoryEntity llaCat1 = new CategoryEntity();
 		llaCat1.setId(3L);
@@ -409,22 +481,27 @@ public class CategorizationConverterTest {
 		iia1.add(lla2);
 		llaCat1.setInverseIsA(iia1);
 
-		PropositionDefinition llaDef1 = this.converter.convert(llaCat1).get(0);
+		List<PropositionDefinition> llaDefs1 = this.converter.convert(llaCat1);
+		assertEquals("wrong number of proposition definitions created", 5,
+				llaDefs1.size());
+		PropositionDefinition llaDef1 = this.converter
+				.getPrimaryPropositionDefinition();
 		assertTrue("not a low-level abstraction",
 				llaDef1 instanceof LowLevelAbstractionDefinition);
 		assertEquals("wrong ID", "test-lla-cat1", llaDef1.getId());
 		assertEquals("wrong display name", "test-lla-cat1-display",
-		        llaDef1.getDisplayName());
+				llaDef1.getDisplayName());
 		assertEquals("wrong abbrev display name", "test-lla-cat1-abbrev",
-		        llaDef1.getAbbreviatedDisplayName());
+				llaDef1.getAbbreviatedDisplayName());
 		assertEquals("wrong inverse-is-a size", 2,
-		        llaDef1.getInverseIsA().length);
+				llaDef1.getInverseIsA().length);
 		assertTrue(
 				"wrong inverse-is-a objects",
-				(llaDef1.getInverseIsA()[0].equals("1") && llaDef1
-						.getInverseIsA()[1].equals("2"))
-						|| (llaDef1.getInverseIsA()[0].equals("2") && llaDef1
-						.getInverseIsA()[1].equals("1")));
+				(llaDef1.getInverseIsA()[0].equals("test-lla1") && llaDef1
+						.getInverseIsA()[1].equals("test-lla2"))
+						|| (llaDef1.getInverseIsA()[0].equals("test-lla2") &&
+						llaDef1
+						.getInverseIsA()[1].equals("test-lla1")));
 
 		CategoryEntity llaCat2 = new CategoryEntity();
 		llaCat2.setId(4L);
@@ -436,143 +513,201 @@ public class CategorizationConverterTest {
 		iia2.add(llaCat1);
 		llaCat2.setInverseIsA(iia2);
 
-		PropositionDefinition llaDef2 = this.converter.convert(llaCat2).get(0);
+		List<PropositionDefinition> llaDefs2 = this.converter.convert(llaCat2);
+		assertEquals("wrong number of proposition definitions created", 6,
+				llaDefs2.size());
+		PropositionDefinition llaDef2 = this.converter
+				.getPrimaryPropositionDefinition();
 		assertTrue("not a low-level abstraction",
-		        llaDef2 instanceof LowLevelAbstractionDefinition);
+				llaDef2 instanceof LowLevelAbstractionDefinition);
 		assertEquals("wrong ID", "test-lla-cat2", llaDef2.getId());
 		assertEquals("wrong display name", "test-lla-cat2-display",
-		        llaDef2.getDisplayName());
+				llaDef2.getDisplayName());
 		assertEquals("wrong abbrev display name", "test-lla-cat2-abbrev",
-		        llaDef2.getAbbreviatedDisplayName());
+				llaDef2.getAbbreviatedDisplayName());
 		assertEquals("wrong inverse-is-a size", 1,
-		        llaDef2.getInverseIsA().length);
-		assertEquals("wrong inverse-is-a", "3", llaDef2.getInverseIsA()[0]);
+				llaDef2.getInverseIsA().length);
+		assertEquals("wrong inverse-is-a", "test-lla-cat1",
+				llaDef2.getInverseIsA()[0]);
 	}
 
 	@Test
 	public void testCompoundLowLevelAbstractionCategorization() {
-//		CompoundValueThreshold clla1 = new CompoundValueThreshold();
-//		clla1.setId(1L);
-//		clla1.setKey("test-clla1");
-//		clla1.setInSystem(false);
-//
-//		CompoundValueThreshold clla2 = new CompoundValueThreshold();
-//		clla2.setId(2L);
-//		clla2.setKey("test-clla2");
-//		clla2.setInSystem(false);
-//
-//		CategoryEntity cllaCat1 = new CategoryEntity();
-//		cllaCat1.setId(3L);
-//		cllaCat1.setKey("test-clla-cat1");
-//		cllaCat1.setDisplayName("test-clla-cat1-display");
-//		cllaCat1.setAbbrevDisplayName("test-clla-cat1-abbrev");
-//		cllaCat1.setCategorizationType(CategorizationType.COMPOUND_LOW_LEVEL_ABSTRACTION);
-//		List<DataElementEntity> iia1 = new ArrayList<DataElementEntity>();
-//		iia1.add(clla1);
-//		iia1.add(clla2);
-//		cllaCat1.setInverseIsA(iia1);
-//
-//		PropositionDefinition cllaDef1 = this.converter.convert(cllaCat1);
-//		assertTrue("not a compound low-level abstraction",
-//		        cllaDef1 instanceof CompoundLowLevelAbstractionDefinition);
-//		assertEquals("wrong ID", "test-clla-cat1", cllaDef1.getId());
-//		assertEquals("wrong display name", "test-clla-cat1-display",
-//		        cllaDef1.getDisplayName());
-//		assertEquals("wrong abbrev display name", "test-clla-cat1-abbrev",
-//		        cllaDef1.getAbbreviatedDisplayName());
-//		assertEquals("wrong inverse-is-a size", 2,
-//		        cllaDef1.getInverseIsA().length);
-//		assertTrue(
-//		        "wrong inverse-is-a objects",
-//		        (cllaDef1.getInverseIsA()[0].equals("1") && cllaDef1
-//		                .getInverseIsA()[1].equals("2"))
-//		                || (cllaDef1.getInverseIsA()[0].equals("2") && cllaDef1
-//		                        .getInverseIsA()[1].equals("1")));
-//
-//		CategoryEntity cllaCat2 = new CategoryEntity();
-//		cllaCat2.setId(4L);
-//		cllaCat2.setKey("test-clla-cat2");
-//		cllaCat2.setDisplayName("test-clla-cat2-display");
-//		cllaCat2.setAbbrevDisplayName("test-clla-cat2-abbrev");
-//		cllaCat2.setCategorizationType(CategorizationType.COMPOUND_LOW_LEVEL_ABSTRACTION);
-//		List<DataElementEntity> iia2 = new ArrayList<DataElementEntity>();
-//		iia2.add(cllaCat1);
-//		cllaCat2.setInverseIsA(iia2);
-//
-//		PropositionDefinition cllaDef2 = this.converter.convert(cllaCat2);
-//		assertTrue("not a compound low-level abstraction",
-//		        cllaDef2 instanceof CompoundLowLevelAbstractionDefinition);
-//		assertEquals("wrong ID", "test-clla-cat2", cllaDef2.getId());
-//		assertEquals("wrong display name", "test-clla-cat2-display",
-//		        cllaDef2.getDisplayName());
-//		assertEquals("wrong abbrev display name", "test-clla-cat2-abbrev",
-//		        cllaDef2.getAbbreviatedDisplayName());
-//		assertEquals("wrong inverse-is-a size", 1,
-//		        cllaDef2.getInverseIsA().length);
-//		assertEquals("wrong inverse-is-a", "3", cllaDef2.getInverseIsA()[0]);
-//	}
-//
-//	@Test
-//	public void testMixedCategorization() {
-//		SystemProposition event = new SystemProposition();
-//		event.setId(1L);
-//		event.setKey("test-event");
-//		event.setInSystem(true);
-//		event.setSystemType(SystemType.EVENT);
-//
-//		SystemProposition primParam = new SystemProposition();
-//		primParam.setId(2L);
-//		primParam.setKey("test-primparam");
-//		primParam.setInSystem(true);
-//		primParam.setSystemType(SystemType.PRIMITIVE_PARAMETER);
-//
-//		CategoryEntity mixedCat1 = new CategoryEntity();
-//		mixedCat1.setId(3L);
-//		mixedCat1.setKey("test-mixed-cat1");
-//		mixedCat1.setDisplayName("test-mixed-cat1-display");
-//		mixedCat1.setAbbrevDisplayName("test-mixed-cat1-abbrev");
-//		mixedCat1.setCategorizationType(CategorizationType.MIXED);
-//		List<DataElementEntity> iia1 = new ArrayList<DataElementEntity>();
-//		iia1.add(event);
-//		iia1.add(primParam);
-//		mixedCat1.setInverseIsA(iia1);
-//
-//		PropositionDefinition hlaDef1 = this.converter.convert(mixedCat1);
-//		assertTrue("not a high-level abstraction",
-//		        hlaDef1 instanceof HighLevelAbstractionDefinition);
-//		assertEquals("wrong ID", "test-mixed-cat1", hlaDef1.getId());
-//		assertEquals("wrong display name", "test-mixed-cat1-display",
-//		        hlaDef1.getDisplayName());
-//		assertEquals("wrong abbrev display name", "test-mixed-cat1-abbrev",
-//		        hlaDef1.getAbbreviatedDisplayName());
-//		assertEquals("wrong size of inverse-is-a", 2,
-//		        hlaDef1.getInverseIsA().length);
-//		assertTrue(
-//		        "inverse-is-a missing",
-//		        (hlaDef1.getInverseIsA()[0].equals("test-event") && hlaDef1
-//		                .getInverseIsA()[1].equals("test-primparam"))
-//		                || (hlaDef1.getInverseIsA()[0].equals("test-primparam") && hlaDef1
-//		                        .getInverseIsA()[1].equals("test-event")));
-//
-//		CategoryEntity mixedCat = new CategoryEntity();
-//		mixedCat.setId(4L);
-//		mixedCat.setKey("test-mixed-cat2");
-//		mixedCat.setDisplayName("test-mixed-cat2-display");
-//		mixedCat.setAbbrevDisplayName("test-mixed-cat2-abbrev");
-//		mixedCat.setCategorizationType(CategorizationType.MIXED);
-//		List<DataElementEntity> iia2 = new ArrayList<DataElementEntity>();
-//		iia2.add(mixedCat1);
-//		mixedCat.setInverseIsA(iia2);
-//
-//		PropositionDefinition hlaDef2 = this.converter.convert(mixedCat);
-//		assertTrue("not an event", hlaDef2 instanceof HighLevelAbstractionDefinition);
-//		assertEquals("wrong ID", "test-mixed-cat2", hlaDef2.getId());
-//		assertEquals("wrong display name", "test-mixed-cat2-display",
-//		        hlaDef2.getDisplayName());
-//		assertEquals("wrong abbrev display name", "test-mixed-cat2-abbrev",
-//		        hlaDef2.getAbbreviatedDisplayName());
-//		assertEquals("wrong inverse-is-a size", 1,
-//		        hlaDef2.getInverseIsA().length);
-//		assertEquals("wrong inverse-is-a", "3", hlaDef2.getInverseIsA()[0]);
+		ThresholdsOperator op = new ThresholdsOperator();
+		op.setName("any");
+
+		SystemProposition primParam1 = new SystemProposition();
+		primParam1.setId(1L);
+		primParam1.setKey("test-primparam1");
+		primParam1.setInSystem(true);
+		primParam1.setSystemType(SystemType.PRIMITIVE_PARAMETER);
+
+		SystemProposition primParam2 = new SystemProposition();
+		primParam2.setId(2L);
+		primParam2.setKey("test-primparam2");
+		primParam2.setInSystem(true);
+		primParam2.setSystemType(SystemType.PRIMITIVE_PARAMETER);
+
+		ValueThresholdGroupEntity clla1 = new ValueThresholdGroupEntity();
+		clla1.setId(1L);
+		clla1.setKey("test-clla1");
+		clla1.setInSystem(false);
+		clla1.setThresholdsOperator(op);
+		clla1.setValueThresholds(new ArrayList<ValueThresholdEntity>(2));
+
+		ValueThresholdEntity vte1 = new ValueThresholdEntity();
+		vte1.setAbstractedFrom(primParam1);
+		ValueThresholdEntity vte2 = new ValueThresholdEntity();
+		vte2.setAbstractedFrom(primParam2);
+		clla1.getValueThresholds().add(vte1);
+		clla1.getValueThresholds().add(vte2);
+
+		ValueThresholdGroupEntity clla2 = new ValueThresholdGroupEntity();
+		clla2.setId(2L);
+		clla2.setKey("test-clla2");
+		clla2.setInSystem(false);
+		clla2.setThresholdsOperator(op);
+		clla2.setValueThresholds(new ArrayList<ValueThresholdEntity>(2));
+		ValueThresholdEntity vte3 = new ValueThresholdEntity();
+		vte3.setAbstractedFrom(primParam1);
+		ValueThresholdEntity vte4 = new ValueThresholdEntity();
+		vte4.setAbstractedFrom(primParam2);
+		clla1.getValueThresholds().add(vte3);
+		clla1.getValueThresholds().add(vte4);
+
+		CategoryEntity cllaCat1 = new CategoryEntity();
+		cllaCat1.setId(3L);
+		cllaCat1.setKey("test-clla-cat1");
+		cllaCat1.setDisplayName("test-clla-cat1-display");
+		cllaCat1.setAbbrevDisplayName("test-clla-cat1-abbrev");
+		cllaCat1.setCategorizationType(CategorizationType.COMPOUND_LOW_LEVEL_ABSTRACTION);
+		List<DataElementEntity> iia1 = new ArrayList<DataElementEntity>();
+		iia1.add(clla1);
+		iia1.add(clla2);
+		cllaCat1.setInverseIsA(iia1);
+
+		List<PropositionDefinition> cllaDefs1 = this.converter.convert(cllaCat1);
+		assertEquals("wrong number of proposition definitions created", 7,
+				cllaDefs1.size());
+		PropositionDefinition cllaDef1 = this.converter
+				.getPrimaryPropositionDefinition();
+		assertTrue("not a compound low-level abstraction",
+				cllaDef1 instanceof CompoundLowLevelAbstractionDefinition);
+		assertEquals("wrong ID", "test-clla-cat1", cllaDef1.getId());
+		assertEquals("wrong display name", "test-clla-cat1-display",
+				cllaDef1.getDisplayName());
+		assertEquals("wrong abbrev display name", "test-clla-cat1-abbrev",
+				cllaDef1.getAbbreviatedDisplayName());
+		assertEquals("wrong inverse-is-a size", 2,
+				cllaDef1.getInverseIsA().length);
+		assertTrue(
+				"wrong inverse-is-a objects",
+				(cllaDef1.getInverseIsA()[0].equals("test-clla1") && cllaDef1
+						.getInverseIsA()[1].equals("test-clla2"))
+						|| (cllaDef1.getInverseIsA()[0].equals("test-clla2")
+						&& cllaDef1
+						.getInverseIsA()[1].equals("test-clla1")));
+
+		CategoryEntity cllaCat2 = new CategoryEntity();
+		cllaCat2.setId(4L);
+		cllaCat2.setKey("test-clla-cat2");
+		cllaCat2.setDisplayName("test-clla-cat2-display");
+		cllaCat2.setAbbrevDisplayName("test-clla-cat2-abbrev");
+		cllaCat2.setCategorizationType(CategorizationType.COMPOUND_LOW_LEVEL_ABSTRACTION);
+		List<DataElementEntity> iia2 = new ArrayList<DataElementEntity>();
+		iia2.add(cllaCat1);
+		cllaCat2.setInverseIsA(iia2);
+
+		List<PropositionDefinition> cllaDefs2 = this.converter.convert(cllaCat2);
+		assertEquals("wrong number of proposition definitions created", 8,
+				cllaDefs2.size());
+		PropositionDefinition cllaDef2 = this.converter
+				.getPrimaryPropositionDefinition();
+		assertTrue("not a compound low-level abstraction",
+				cllaDef2 instanceof CompoundLowLevelAbstractionDefinition);
+		assertEquals("wrong ID", "test-clla-cat2", cllaDef2.getId());
+		assertEquals("wrong display name", "test-clla-cat2-display",
+				cllaDef2.getDisplayName());
+		assertEquals("wrong abbrev display name", "test-clla-cat2-abbrev",
+				cllaDef2.getAbbreviatedDisplayName());
+		assertEquals("wrong inverse-is-a size", 1,
+				cllaDef2.getInverseIsA().length);
+		assertEquals("wrong inverse-is-a", "test-clla-cat1",
+				cllaDef2.getInverseIsA()[0]);
+	}
+
+	@Test
+	public void testMixedCategorization() {
+		SystemProposition event = new SystemProposition();
+		event.setId(1L);
+		event.setKey("test-event1");
+		event.setInSystem(true);
+		event.setSystemType(SystemType.EVENT);
+
+		SystemProposition primParam = new SystemProposition();
+		primParam.setId(2L);
+		primParam.setKey("test-primparam1");
+		primParam.setInSystem(true);
+		primParam.setSystemType(SystemType.PRIMITIVE_PARAMETER);
+
+		CategoryEntity mixedCat1 = new CategoryEntity();
+		mixedCat1.setId(3L);
+		mixedCat1.setKey("test-mixed-cat1");
+		mixedCat1.setDisplayName("test-mixed-cat1-display");
+		mixedCat1.setAbbrevDisplayName("test-mixed-cat1-abbrev");
+		mixedCat1.setCategorizationType(CategorizationType.MIXED);
+		List<DataElementEntity> iia1 = new ArrayList<DataElementEntity>();
+		iia1.add(event);
+		iia1.add(primParam);
+		mixedCat1.setInverseIsA(iia1);
+
+		List<PropositionDefinition> hlaDefs1 = this.converter.convert
+				(mixedCat1);
+		assertEquals("wrong number of proposition definitions created", 3,
+				hlaDefs1.size());
+		PropositionDefinition hlaDef1 = this.converter
+				.getPrimaryPropositionDefinition();
+		assertTrue("not a high-level abstraction",
+				hlaDef1 instanceof HighLevelAbstractionDefinition);
+		assertEquals("wrong ID", "test-mixed-cat1", hlaDef1.getId());
+		assertEquals("wrong display name", "test-mixed-cat1-display",
+				hlaDef1.getDisplayName());
+		assertEquals("wrong abbrev display name", "test-mixed-cat1-abbrev",
+				hlaDef1.getAbbreviatedDisplayName());
+		assertEquals("wrong size of inverse-is-a", 2,
+				hlaDef1.getInverseIsA().length);
+		assertTrue(
+				"inverse-is-a missing",
+				(hlaDef1.getInverseIsA()[0].equals("test-event1") && hlaDef1
+						.getInverseIsA()[1].equals("test-primparam1"))
+						|| (hlaDef1.getInverseIsA()[0].equals
+						("test-primparam1") && hlaDef1
+						.getInverseIsA()[1].equals("test-event1")));
+
+		CategoryEntity mixedCat2 = new CategoryEntity();
+		mixedCat2.setId(4L);
+		mixedCat2.setKey("test-mixed-cat2");
+		mixedCat2.setDisplayName("test-mixed-cat2-display");
+		mixedCat2.setAbbrevDisplayName("test-mixed-cat2-abbrev");
+		mixedCat2.setCategorizationType(CategorizationType.MIXED);
+		List<DataElementEntity> iia2 = new ArrayList<DataElementEntity>();
+		iia2.add(mixedCat1);
+		mixedCat2.setInverseIsA(iia2);
+
+		List<PropositionDefinition> hlaDefs2 = this.converter.convert
+				(mixedCat2);
+		assertEquals("wrong number of proposition definitions created", 4,
+				hlaDefs2.size());
+		PropositionDefinition hlaDef2 = this.converter.getPrimaryPropositionDefinition();
+		assertTrue("not an event", hlaDef2 instanceof HighLevelAbstractionDefinition);
+		assertEquals("wrong ID", "test-mixed-cat2", hlaDef2.getId());
+		assertEquals("wrong display name", "test-mixed-cat2-display",
+				hlaDef2.getDisplayName());
+		assertEquals("wrong abbrev display name", "test-mixed-cat2-abbrev",
+				hlaDef2.getAbbreviatedDisplayName());
+		assertEquals("wrong inverse-is-a size", 1,
+				hlaDef2.getInverseIsA().length);
+		assertEquals("wrong inverse-is-a", "test-mixed-cat1",
+				hlaDef2.getInverseIsA()[0]);
 	}
 }
