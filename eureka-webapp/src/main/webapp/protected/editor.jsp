@@ -463,11 +463,6 @@
 																								<c:if test="${not empty proposition and propositionType == 'FREQUENCY'}">
 																								<li data-key="${proposition.dataElement.dataElementKey}" data-desc="${proposition.dataElement.dataElementAbbrevDisplayName}" data-space="${proposition.dataElement.inSystem ? 'system' : 'user'}">
 																									<span class="delete" style="cursor: pointer; background-color: lightblue;"></span>
-																									<!-- FOO
-																									ABBREV: ${proposition.dataElement.dataElementAbbrevDisplayName}
-																									DISPLAY: ${proposition.dataElement.dataElementDisplayName}
-																									KEY: ${proposition.dataElement.dataElementKey}
-																									-->
 																									<span class="desc">${empty proposition.dataElement.dataElementAbbrevDisplayName ? proposition.dataElement.dataElementDisplayName : proposition.dataElement.dataElementAbbrevDisplayName} (${proposition.dataElement.dataElementKey})</span>
 																								</li>
 																								</c:if>
