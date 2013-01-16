@@ -22,10 +22,8 @@ package edu.emory.cci.aiw.cvrg.eureka.services.util;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.SystemElement;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.DataElementEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.SystemProposition;
-import edu.emory.cci.aiw.cvrg.eureka.services.dao.ValueComparatorDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.finder.PropositionFindException;
 import edu.emory.cci.aiw.cvrg.eureka.services.finder.SystemPropositionFinder;
-import edu.emory.cci.aiw.cvrg.eureka.services.conversion.PropositionDefinitionConverterVisitor;
 import org.protempa.PropertyDefinition;
 import org.protempa.PropositionDefinition;
 
@@ -105,44 +103,5 @@ public final class PropositionUtil {
 		}
 
 		return systemElement;
-	}
-
-	/**
-	 * Converts a proposition entity into an equivalent proposition definition
-	 * understood by Protempa.
-	 * 
-	 * @param inProposition
-	 *            the {@link DataElementEntity} to convert
-	 * @return a list of {@link PropositionDefinition}s corresponding to the
-	 * given proposition entity
-	 */
-	public static List<PropositionDefinition> pack(DataElementEntity
-														inProposition,
-	        ValueComparatorDao inValueCompDao) {
-		PropositionDefinitionConverterVisitor visitor = new PropositionDefinitionConverterVisitor(
-		        inValueCompDao);
-		visitor.setUserId(inProposition.getUserId());
-		inProposition.accept(visitor);
-		return visitor.getPropositionDefinition();
-	}
-
-	/**
-	 * Converts a list of proposition entities into equivalent proposition
-	 * definitions by repeatedly calling {@link #pack(DataElementEntity, ValueComparatorDao)}.
-	 * 
-	 * @param inPropositions
-	 *            a {@link List} of {@link DataElementEntity}s to convert
-	 * @return a {@link List} of {@link PropositionDefinition}s corresponding to
-	 *         the given proposition entities
-	 */
-	public static List<PropositionDefinition> packAll(
-	        List<DataElementEntity> inPropositions, ValueComparatorDao inValueCompDao) {
-		List<PropositionDefinition> result = new ArrayList<PropositionDefinition>();
-
-		for (DataElementEntity p : inPropositions) {
-			result.addAll(pack(p, inValueCompDao));
-		}
-
-		return result;
 	}
 }
