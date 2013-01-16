@@ -186,7 +186,7 @@
 																					<c:if test="${not empty proposition and propositionType == 'SEQUENCE'}">
 																					<li data-key="${proposition.primaryDataElement.dataElementKey}" data-desc="${proposition.primaryDataElement.dataElementAbbrevDisplayName} (${proposition.primaryDataElement.dataElementKey})" data-space="${proposition.primaryDataElement.inSystem ? 'system' : 'user'}">
 																						<span class="delete" style="cursor: pointer; background-color: lightblue;"></span>
-																						<span class="desc">${proposition.primaryDataElement.dataElementAbbrevDisplayName} (${proposition.primaryDataElement.dataElementKey})</span>
+																						<span class="desc">${empty proposition.primaryDataElement.dataElementAbbrevDisplayName ? proposition.primaryDataElement.dataElementDisplayName : proposition.primaryDataElement.dataElementAbbrevDisplayName} (${proposition.primaryDataElement.dataElementKey})</span>
 																					</li>
 																					</c:if>
 																				</ul>
@@ -463,7 +463,12 @@
 																								<c:if test="${not empty proposition and propositionType == 'FREQUENCY'}">
 																								<li data-key="${proposition.dataElement.dataElementKey}" data-desc="${proposition.dataElement.dataElementAbbrevDisplayName}" data-space="${proposition.dataElement.inSystem ? 'system' : 'user'}">
 																									<span class="delete" style="cursor: pointer; background-color: lightblue;"></span>
-																									<span>${proposition.dataElement.dataElementKey} ${proposition.dataElement.dataElementAbbrevDisplayName}</span>
+																									<!-- FOO
+																									ABBREV: ${proposition.dataElement.dataElementAbbrevDisplayName}
+																									DISPLAY: ${proposition.dataElement.dataElementDisplayName}
+																									KEY: ${proposition.dataElement.dataElementKey}
+																									-->
+																									<span class="desc">${empty proposition.dataElement.dataElementAbbrevDisplayName ? proposition.dataElement.dataElementDisplayName : proposition.dataElement.dataElementAbbrevDisplayName} (${proposition.dataElement.dataElementKey})</span>
 																								</li>
 																								</c:if>
 																							</ul>
