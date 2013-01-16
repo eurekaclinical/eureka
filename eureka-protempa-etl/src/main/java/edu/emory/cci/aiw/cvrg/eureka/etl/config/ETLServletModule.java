@@ -39,8 +39,8 @@ import edu.emory.cci.aiw.cvrg.eureka.etl.validator.PropositionValidator;
 import edu.emory.cci.aiw.cvrg.eureka.etl.validator.PropositionValidatorImpl;
 
 /**
- * A Guice configuratio module, sets up the web infrastructure and binds
- * appropriate implementations to intefaces.
+ * A Guice configuration module for setting up the web infrastructure and
+ * binding appropriate implementations to interfaces.
  *
  * @author hrathod
  *

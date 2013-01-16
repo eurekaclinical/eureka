@@ -51,6 +51,7 @@ import org.protempa.proposition.value.Unit;
 import org.protempa.proposition.value.Value;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.DataElement;
+import org.protempa.CompoundLowLevelAbstractionDefinition;
 
 /**
  * Provides custom JSON serialization/deserialization from proposition
@@ -119,6 +120,11 @@ public class ObjectMapperProvider implements ContextResolver<ObjectMapper> {
 		        new LowLevelAbstractionJsonSerializer());
 		module.addDeserializer(LowLevelAbstractionDefinition.class,
 		        new LowLevelAbstractionJsonDeserializer());
+		
+		module.addSerializer(CompoundLowLevelAbstractionDefinition.class,
+				new CompoundLowLevelAbstractionJsonSerializer());
+		module.addDeserializer(CompoundLowLevelAbstractionDefinition.class,
+				new CompoundLowLevelAbstractionJsonDeserializer());
 
 		// pair abstractions also require custom serialization
 		module.addSerializer(PairDefinition.class,

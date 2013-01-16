@@ -28,7 +28,6 @@ import edu.emory.cci.aiw.cvrg.eureka.common.entity.Job;
 public class JobRequest {
 
 	private Job job;
-	private List<PropositionDefinition> propositions;
 	private List<PropositionDefinition> userPropositions;
 	private List<String> propIdsToShow;
 
@@ -38,14 +37,6 @@ public class JobRequest {
 
 	public void setJob(Job inJob) {
 		job = inJob;
-	}
-
-	public List<PropositionDefinition> getPropositions() {
-		return propositions;
-	}
-
-	public void setPropositions(List<PropositionDefinition> inPropositions) {
-		propositions = inPropositions;
 	}
 
 	public List<PropositionDefinition> getUserPropositions() {
