@@ -149,6 +149,10 @@ class PropositionTranslatorUtil {
 	static DataElementField createDataElementField(ExtendedProposition ep) {
 		DataElementField dataElement = new DataElementField();
 		dataElement.setDataElementKey(ep.getProposition().getKey());
+		dataElement.setDataElementAbbrevDisplayName(ep.getProposition()
+				.getAbbrevDisplayName());
+		dataElement.setDataElementDisplayName(ep.getProposition()
+				.getDisplayName());
 		if (ep.getMinDuration() != null) {
 			dataElement.setHasDuration(true);
 			dataElement.setMinDuration(ep.getMinDuration());
