@@ -56,37 +56,36 @@ final class SequenceConverter
 	}
 
 	@Override
-	public List<PropositionDefinition> convert(SequenceEntity
-														   proposition) {
-		List<PropositionDefinition> result = new
-				ArrayList<PropositionDefinition>();
-		HighLevelAbstractionDefinition primary = new HighLevelAbstractionDefinition(
+	public List<PropositionDefinition> convert(SequenceEntity proposition) {
+		HighLevelAbstractionDefinition hlad = 
+				new HighLevelAbstractionDefinition(
 		        proposition.getKey());
-		PropositionDefinitionConverterVisitor visitor = new
-				PropositionDefinitionConverterVisitor(valueCompDao);
+		hlad.setDisplayName(proposition.getDisplayName());
+		hlad.setAbbreviatedDisplayName(proposition.getAbbrevDisplayName());
 		for (Relation rel : proposition.getRelations()) {
-			rel.getLhsExtendedProposition().getProposition().accept(visitor);
-			result.addAll(visitor.getPropositionDefinition());
-			TemporalExtendedPropositionDefinition tepdLhs = buildExtendedProposition(rel
+			TemporalExtendedPropositionDefinition tepdLhs = 
+					buildExtendedProposition(rel
 			        .getLhsExtendedProposition());
 
-			rel.getRhsExtendedProposition().getProposition().accept(visitor);
-			result.addAll(visitor.getPropositionDefinition());
-			TemporalExtendedPropositionDefinition tepdRhs = buildExtendedProposition(rel
+			TemporalExtendedPropositionDefinition tepdRhs = 
+					buildExtendedProposition(rel
 			        .getRhsExtendedProposition());
 
-			primary.add(tepdLhs);
-			primary.add(tepdRhs);
-			primary.setRelation(tepdLhs, tepdRhs, buildRelation(rel));
+			hlad.add(tepdLhs);
+			hlad.add(tepdRhs);
+			hlad.setRelation(tepdLhs, tepdRhs, buildRelation(rel));
 		}
+		
+		this.primary = hlad;
 
-		return Collections.<PropositionDefinition> singletonList(primary);
+		return Collections.<PropositionDefinition> singletonList(hlad);
 	}
 
 	private TemporalExtendedPropositionDefinition buildExtendedProposition(
 	        ExtendedProposition ep) {
-		TemporalExtendedPropositionDefinition tepd = new TemporalExtendedPropositionDefinition(
-		        ep.getId().toString());
+		TemporalExtendedPropositionDefinition tepd = 
+				new TemporalExtendedPropositionDefinition(
+				ep.getId().toString());
 
 		if (ep.getPropertyConstraint() != null) {
 			PropertyConstraint pc = new PropertyConstraint();

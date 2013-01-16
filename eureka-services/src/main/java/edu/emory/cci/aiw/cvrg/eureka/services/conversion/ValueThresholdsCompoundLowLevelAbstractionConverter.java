@@ -19,6 +19,7 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.services.conversion;
 
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.DataElementEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.ValueThresholdEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.ValueThresholdGroupEntity;
 import org.protempa.CompoundLowLevelAbstractionDefinition;
@@ -46,6 +47,8 @@ public final class ValueThresholdsCompoundLowLevelAbstractionConverter
 				ArrayList<PropositionDefinition>();
 		CompoundLowLevelAbstractionDefinition primary = new CompoundLowLevelAbstractionDefinition(
 		        entity.getKey());
+		primary.setDisplayName(entity.getDisplayName());
+		primary.setAbbreviatedDisplayName(entity.getAbbrevDisplayName());
 
 		if (entity.getThresholdsOperator().getName().equalsIgnoreCase("any")) {
 			primary.setValueDefinitionMatchOperator(CompoundLowLevelAbstractionDefinition.ValueDefinitionMatchOperator.ANY);
@@ -59,9 +62,13 @@ public final class ValueThresholdsCompoundLowLevelAbstractionConverter
 
 		List<LowLevelAbstractionDefinition> llas = new ArrayList<LowLevelAbstractionDefinition>();
 		for (ValueThresholdEntity v : entity.getValueThresholds()) {
+			DataElementEntity abstractedFrom = v.getAbstractedFrom();
 			LowLevelAbstractionDefinition def = new LowLevelAbstractionDefinition(
-			        v.getAbstractedFrom().getKey() + "_CLASSIFICATION");
-			def.addPrimitiveParameterId(v.getAbstractedFrom().getKey());
+			        abstractedFrom.getKey() + "_CLASSIFICATION");
+			def.setDisplayName(abstractedFrom.getDisplayName());
+			def.setAbbreviatedDisplayName(
+					abstractedFrom.getAbbrevDisplayName());
+			def.addPrimitiveParameterId(abstractedFrom.getKey());
 			def.setMinimumNumberOfValues(1);
 			ValueThresholdsLowLevelAbstractionConverter
 			        .thresholdToValueDefinitions(def.getId(), v, def);

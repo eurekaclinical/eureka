@@ -42,7 +42,8 @@ public final class FrequencySliceAbstractionConverter implements
 	@Override
 	public List<PropositionDefinition> convert(FrequencyEntity entity) {
 		SliceDefinition result = new SliceDefinition(entity.getKey());
-
+		result.setDisplayName(entity.getDisplayName());
+		result.setAbbreviatedDisplayName(entity.getAbbrevDisplayName());
 		result.setMinIndex(entity.getAtLeastCount());
 		result.addAbstractedFrom(entity.getAbstractedFrom().getKey());
 		result.setGapFunction(new MinMaxGapFunction(entity.getWithinAtLeast(),

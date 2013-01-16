@@ -60,8 +60,10 @@ public final class FrequencyHighLevelAbstractionConverter
 	public List<PropositionDefinition> convert(FrequencyEntity entity) {
 		List<PropositionDefinition> result = new
 				ArrayList<PropositionDefinition>();
-		HighLevelAbstractionDefinition primary = new HighLevelAbstractionDefinition(
-		        entity.getKey());
+		HighLevelAbstractionDefinition hlad = 
+				new HighLevelAbstractionDefinition(entity.getKey());
+		hlad.setDisplayName(entity.getDisplayName());
+		hlad.setAbbreviatedDisplayName(entity.getAbbrevDisplayName());
 
 		if (!(entity.getAbstractedFrom() instanceof ValueThresholdGroupEntity)) {
 			throw new IllegalArgumentException(
@@ -85,13 +87,13 @@ public final class FrequencyHighLevelAbstractionConverter
 		        converter.getPrimaryPropositionDefinition().getId());
 		tepd.setValue(NominalValue.getInstance(converter.getPrimaryPropositionDefinition().getId()
 		        + "_VALUE"));
-		primary.setRelation(tepd, tepd, new Relation());
-		primary.setGapFunction(new MinMaxGapFunction(entity.getWithinAtLeast(),
+		hlad.setRelation(tepd, tepd, new Relation());
+		hlad.setGapFunction(new MinMaxGapFunction(entity.getWithinAtLeast(),
 				unit(entity.getWithinAtLeastUnits()), entity.getWithinAtMost(),
 				unit(entity.getWithinAtMostUnits())));
 
-		result.add(primary);
-		this.primary = primary;
+		result.add(hlad);
+		this.primary = hlad;
 
 		return result;
 	}

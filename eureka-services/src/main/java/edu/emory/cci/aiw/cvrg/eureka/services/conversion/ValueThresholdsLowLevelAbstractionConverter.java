@@ -56,12 +56,19 @@ public final class ValueThresholdsLowLevelAbstractionConverter
 	@Override
 	public List<PropositionDefinition> convert(ValueThresholdGroupEntity
 														   entity) {
+		if (entity.getValueThresholds().size() > 1) {
+			throw new IllegalArgumentException(
+					"Low-level abstraction definitions may be created only " +
+					"from singleton value thresholds.");
+		}
 		List<PropositionDefinition> result = new
 				ArrayList<PropositionDefinition>();
 		LowLevelAbstractionDefinition primary = new LowLevelAbstractionDefinition(
 		        entity.getKey());
-
+		primary.setDisplayName(entity.getDisplayName());
+		primary.setAbbreviatedDisplayName(entity.getAbbrevDisplayName());
 		primary.setAlgorithmId("stateDetector");
+		
 
 		// low-level abstractions can be created only from singleton value
 		// thresholds

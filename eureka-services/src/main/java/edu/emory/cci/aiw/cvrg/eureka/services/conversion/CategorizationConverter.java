@@ -108,7 +108,7 @@ public final class CategorizationConverter implements
 				result = defaultDef;
 				break;
 		}
-
+		
 		this.primary = result;
 		return Collections.singletonList(result);
 	}
