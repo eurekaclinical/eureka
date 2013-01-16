@@ -391,7 +391,7 @@ $(document).ready(function() {
 			              data: dataString,
 			              success: function() {
 		                      $('#passwordChangeComplete').show();
-		                      $('#passwordChangeComplete').text("password has been changed.");
+		                      $('#passwordChangeComplete').text("Password has been changed.");
 		            	      $('#newPasswordTable').hide(); 
 		            	      $('#passwordExpirationMsg').hide();
 
