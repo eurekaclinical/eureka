@@ -19,52 +19,18 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.common.comm;
 
-import java.io.IOException;
-import java.text.NumberFormat;
-import java.text.ParseException;
 import java.util.List;
-import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.builder.ToStringBuilder;
-import org.codehaus.jackson.JsonParser;
-import org.codehaus.jackson.JsonProcessingException;
-import org.codehaus.jackson.map.DeserializationContext;
-import org.codehaus.jackson.map.JsonDeserializer;
-import org.codehaus.jackson.map.JsonMappingException;
-import org.codehaus.jackson.map.annotate.JsonDeserialize;
 
 public final class ValueThreshold {
-
-	/**
-	 * Parses an empty string for a Number field as null.
-	 */
-	public static class NumberDeserializer extends JsonDeserializer<Number> {
-
-		@Override
-		public Number deserialize(JsonParser jp, DeserializationContext dc)
-				throws IOException, JsonProcessingException {
-			String strippedText = StringUtils.trimToNull(jp.getText());
-			if (strippedText == null) {
-				return null;
-			} else {
-				try {
-					return NumberFormat.getInstance().parse(strippedText);
-				} catch (ParseException ex) {
-					throw new JsonMappingException("Not a number: " + 
-							strippedText);
-				}
-			}
-		}
-	}
 	
 	private ShortDataElementField dataElement;
 	private Long lowerComp;
 	private Long upperComp;
 	
-	@JsonDeserialize(using = NumberDeserializer.class)
-	private Number lowerValue;
+	private String lowerValue;
 	
-	@JsonDeserialize(using = NumberDeserializer.class)
-	private Number upperValue;
+	private String upperValue;
 	
 	private String lowerUnits;
 	private String upperUnits;
@@ -100,19 +66,19 @@ public final class ValueThreshold {
 		this.upperComp = upperComp;
 	}
 
-	public Number getLowerValue() {
+	public String getLowerValue() {
 		return lowerValue;
 	}
 
-	public void setLowerValue(Number lowerValue) {
+	public void setLowerValue(String lowerValue) {
 		this.lowerValue = lowerValue;
 	}
 
-	public Number getUpperValue() {
+	public String getUpperValue() {
 		return upperValue;
 	}
 
-	public void setUpperValue(Number upperValue) {
+	public void setUpperValue(String upperValue) {
 		this.upperValue = upperValue;
 	}
 

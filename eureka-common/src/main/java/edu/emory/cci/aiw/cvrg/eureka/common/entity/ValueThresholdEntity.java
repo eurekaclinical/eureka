@@ -19,6 +19,7 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.common.entity;
 
+import java.math.BigDecimal;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -46,16 +47,20 @@ public class ValueThresholdEntity {
 	@ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.REFRESH, 
 			CascadeType.MERGE})
 	@JoinColumn(nullable = false)
-	private DataElementEntity abstractedFrom;
+	private DataElementEntity abstractedFrom; 
 
-	private Number minValueThreshold;
+	private BigDecimal minValueThreshold;
+	private String minTValueThreshold;
+	
 	private String minUnits;
 
 	@ManyToOne
 	@JoinColumn(referencedColumnName = "id", nullable = false)
 	private ValueComparator minValueComp;
 
-	private Number maxValueThreshold;
+	private BigDecimal maxValueThreshold;
+	private String maxTValueThreshold;
+	
 	private String maxUnits;
 
 	@ManyToOne
@@ -78,12 +83,20 @@ public class ValueThresholdEntity {
 		this.abstractedFrom = abstractedFrom;
 	}
 
-	public Number getMinValueThreshold() {
+	public BigDecimal getMinValueThreshold() {
 		return minValueThreshold;
 	}
 
-	public void setMinValueThreshold(Number minValueThreshold) {
+	public void setMinValueThreshold(BigDecimal minValueThreshold) {
 		this.minValueThreshold = minValueThreshold;
+	}
+	
+	public String getMinTValueThreshold() {
+		return minTValueThreshold;
+	}
+
+	public void setMinTValueThreshold(String minTValueThreshold) {
+		this.minTValueThreshold = minTValueThreshold;
 	}
 
 	public String getMinUnits() {
@@ -102,12 +115,20 @@ public class ValueThresholdEntity {
 		this.minValueComp = minValueComp;
 	}
 
-	public Number getMaxValueThreshold() {
+	public BigDecimal getMaxValueThreshold() {
 		return maxValueThreshold;
 	}
 
-	public void setMaxValueThreshold(Number maxValueThreshold) {
+	public void setMaxValueThreshold(BigDecimal maxValueThreshold) {
 		this.maxValueThreshold = maxValueThreshold;
+	}
+
+	public String getMaxTValueThreshold() {
+		return maxTValueThreshold;
+	}
+
+	public void setMaxTValueThreshold(String maxTValueThreshold) {
+		this.maxTValueThreshold = maxTValueThreshold;
 	}
 
 	public String getMaxUnits() {
