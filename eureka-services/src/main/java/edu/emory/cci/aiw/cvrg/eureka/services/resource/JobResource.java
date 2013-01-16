@@ -25,14 +25,13 @@ import edu.emory.cci.aiw.cvrg.eureka.common.entity.DataElementEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.FileUpload;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.Job;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.User;
+import edu.emory.cci.aiw.cvrg.eureka.services.conversion.PropositionDefinitionConverterVisitor;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.FileDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.PropositionDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.UserDao;
-import edu.emory.cci.aiw.cvrg.eureka.services.dao.ValueComparatorDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.job.JobCollection;
 import edu.emory.cci.aiw.cvrg.eureka.services.thread.JobExecutor;
 import edu.emory.cci.aiw.cvrg.eureka.services.thread.JobTask;
-import edu.emory.cci.aiw.cvrg.eureka.services.util.PropositionUtil;
 import org.protempa.PropositionDefinition;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -78,8 +77,11 @@ public class JobResource {
 	 * submitting a new job request.
 	 */
 	private final PropositionDao propositionDao;
-
-	private final ValueComparatorDao valueCompDao;
+	/**
+	 * Used for converting the different types of Eureka data entities to
+	 * Protempa proposition definitions.
+	 */
+	private final PropositionDefinitionConverterVisitor converterVisitor;
 	/**
 	 * The runnable used to run the data processing and job submission tasks.
 	 */
@@ -105,12 +107,13 @@ public class JobResource {
 	 */
 	@Inject
 	public JobResource(UserDao inUserDao, FileDao inFileDao,
-	        ValueComparatorDao inValueCompDao, PropositionDao inPropositionDao,
+			PropositionDefinitionConverterVisitor inVisitor,
+			PropositionDao inPropositionDao,
 	        JobTask inJobTask, JobExecutor inJobExecutor) {
 		this.userDao = inUserDao;
 		this.fileDao = inFileDao;
 		this.propositionDao = inPropositionDao;
-		this.valueCompDao = inValueCompDao;
+		this.converterVisitor = inVisitor;
 		this.jobTask = inJobTask;
 		this.jobExecutor = inJobExecutor;
 	}
@@ -136,42 +139,46 @@ public class JobResource {
 		fileUpload.setLocation(inFileUpload.getLocation());
 		this.fileDao.create(fileUpload);
 		this.jobTask.setFileUploadId(fileUpload.getId());
-		FilterUserPropositionsResult propDefs = 
-				filterUserPropositions(propositionDao
+		this.converterVisitor.setUserId(fileUpload.getUserId());
+		List<List<PropositionDefinition>> propDefs = filterUserPropositions(propositionDao
 		        .getByUserId(fileUpload.getUserId()));
-		this.jobTask.setUserPropositions(propDefs.userProps);
-		this.jobTask.setNonHelperPropositionIds(propDefs.toShow);
+		this.jobTask.setPropositions(propDefs.get(0));
+		this.jobTask.setUserPropositions(propDefs.get(1));
+		List<String> propIdsToShow = new ArrayList<String>();
+		for (PropositionDefinition propDef : propDefs.get(2)) {
+			propIdsToShow.add(propDef.getId());
+		}
+		this.jobTask.setNonHelperPropositionIds(propIdsToShow);
 		this.jobExecutor.queueJob(this.jobTask);
 
 		return Response.ok().build();
 	}
-	
-	private static class FilterUserPropositionsResult {
-		List<PropositionDefinition> userProps;
-		List<String> toShow;
-	}
 
-	private FilterUserPropositionsResult filterUserPropositions(
+	private List<List<PropositionDefinition>> filterUserPropositions(
 	        List<DataElementEntity> propositions) {
-		final List<PropositionDefinition> userProps = 
-				new ArrayList<PropositionDefinition>();
-		final List<String> toShow = new ArrayList<String>();
+		final List<PropositionDefinition> allProps = new ArrayList<PropositionDefinition>();
+		final List<PropositionDefinition> userProps = new ArrayList<PropositionDefinition>();
+		final List<PropositionDefinition> toShow = new ArrayList<PropositionDefinition>();
 
 		for (DataElementEntity p : propositions) {
-			List<PropositionDefinition> propDefs = PropositionUtil.pack(p,
-					this.valueCompDao);
+			p.accept(converterVisitor);
+			List<PropositionDefinition> propDefs = converterVisitor
+					.getPropositionDefinitions();
+			allProps.addAll(propDefs);
 			for (PropositionDefinition propDef : propDefs) {
 				if (!p.isInSystem()) {
 					userProps.add(propDef);
 				}
-				toShow.add(p.getId().toString());
+				if (!p.isHelperProposition()) {
+					toShow.add(propDef);
+				}
 			}
 		}
 
-		FilterUserPropositionsResult result = 
-				new FilterUserPropositionsResult();
-		result.userProps = userProps;
-		result.toShow = toShow;
+		List<List<PropositionDefinition>> result = new ArrayList<List<PropositionDefinition>>();
+		result.add(allProps);
+		result.add(userProps);
+		result.add(toShow);
 		return result;
 	}
 

@@ -34,8 +34,8 @@ import edu.emory.cci.aiw.cvrg.eureka.common.entity.SequenceEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.exception.DataElementHandlingException;
 import edu.emory.cci.aiw.cvrg.eureka.common.exception.HttpStatusException;
 import edu.emory.cci.aiw.cvrg.eureka.services.config.ServiceProperties;
+import edu.emory.cci.aiw.cvrg.eureka.services.conversion.PropositionDefinitionConverterVisitor;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.PropositionDao;
-import edu.emory.cci.aiw.cvrg.eureka.services.dao.ValueComparatorDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.finder.PropositionFindException;
 import edu.emory.cci.aiw.cvrg.eureka.services.finder.SystemPropositionFinder;
 import edu.emory.cci.aiw.cvrg.eureka.services.translation.CategorizationTranslator;
@@ -87,8 +87,8 @@ public class PropositionResource {
 	private final SystemPropositionTranslator systemPropositionTranslator;
 	private final FrequencyTranslator frequencyTranslator;
 	private final ValueThresholdsTranslator valueThresholdsTranslator;
-	
-	private final ValueComparatorDao valueCompDao;
+
+	private final PropositionDefinitionConverterVisitor converterVisitor;
 
 	/**
 	 * Creates a new instance of PropositionResource
@@ -103,7 +103,7 @@ public class PropositionResource {
 			SystemPropositionTranslator inSystemPropositionTranslator,
 			FrequencyTranslator inFrequencyTranslator,
 			ValueThresholdsTranslator inValueThresholdsTranslator,
-			ValueComparatorDao inValueComparatorDao) {
+			PropositionDefinitionConverterVisitor inVisitor) {
 		this.propositionDao = inPropositionDao;
 		this.applicationProperties = inApplicationProperties;
 		this.systemPropositionFinder = inFinder;
@@ -112,7 +112,7 @@ public class PropositionResource {
 		this.systemPropositionTranslator = inSystemPropositionTranslator;
 		this.frequencyTranslator = inFrequencyTranslator;
 		this.valueThresholdsTranslator = inValueThresholdsTranslator;
-		this.valueCompDao = inValueComparatorDao;
+		this.converterVisitor = inVisitor;
 	}
 
 	@GET
@@ -219,9 +219,10 @@ public class PropositionResource {
 				inUserId, inDataElement.getKey());
 		List<PropositionDefinition> propDefs = new ArrayList<PropositionDefinition>();
 
+		this.converterVisitor.setUserId(inUserId);
 		for (DataElementEntity proposition : propositions) {
-			propDefs.addAll(PropositionUtil.pack(proposition,
-					this.valueCompDao));
+			proposition.accept(this.converterVisitor);
+			propDefs.addAll(this.converterVisitor.getPropositionDefinitions());
 		}
 
 		ValidationRequest validationRequest = new ValidationRequest();
