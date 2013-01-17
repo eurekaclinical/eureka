@@ -20,6 +20,7 @@
 package edu.emory.cci.aiw.cvrg.eureka.services.config;
 
 import com.google.inject.AbstractModule;
+import com.google.inject.TypeLiteral;
 import com.google.inject.persist.jpa.JpaPersistModule;
 
 import edu.emory.cci.aiw.cvrg.eureka.services.clients.I2b2Client;
@@ -68,6 +69,6 @@ public class AppTestModule extends AbstractModule {
 		bind(EmailSender.class).to(MockEmailSender.class);
 		bind(I2b2Client.class).to(MockI2b2Client.class);
 		bind(ThresholdsOperatorDao.class).to(JpaThresholdsOperatorDao.class);
-		bind(PropositionFinder.class).to(TestPropositionFinder.class);
+		bind(new TypeLiteral<PropositionFinder<Long,String>>(){}).to(TestPropositionFinder.class);
 	}
 }
