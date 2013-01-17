@@ -89,7 +89,7 @@ public class JobResource {
 		        .getUserPropositions();
 		Configuration configuration = this.confDao.getByUserId(job.getUserId());
 		propositionValidator.setConfiguration(configuration);
-		propositionValidator.setPropositions(definitions);
+		propositionValidator.setUserPropositions(definitions);
 		boolean valid;
 		try {
 			valid = propositionValidator.validate();

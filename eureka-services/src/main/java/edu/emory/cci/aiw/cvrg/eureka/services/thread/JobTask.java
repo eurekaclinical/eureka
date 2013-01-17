@@ -290,6 +290,7 @@ public class JobTask implements Runnable {
 			LOGGER.info("Job successfully submitted to ETL layer.");
 		} catch (ClientException e) {
 			LOGGER.error(e.getMessage(), e);
+			setCompleteWithError(e.getMessage());
 		}
 	}
 

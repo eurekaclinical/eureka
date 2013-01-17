@@ -178,9 +178,13 @@ public class PropositionValidatorImpl implements PropositionValidator {
 				for (String child : inProposition.getChildren()) {
 					if (isSystemProp(child)) {
 						try {
-							types.add(this
-									.getSystemPropositionType(propositionFinder
-									.find(child)));
+							PropositionDefinition found = propositionFinder
+																 .find(child);
+							if (found == null) {
+								throw new PropositionValidatorException(
+										"Invalid child proposition: " + child);
+							}
+							types.add(this.getSystemPropositionType(found));
 						} catch (PropositionFinderException e) {
 							throw new PropositionValidatorException(e);
 						}
@@ -377,6 +381,7 @@ public class PropositionValidatorImpl implements PropositionValidator {
 		return this.targetProposition;
 	}
 
+	@Override
 	public void setTargetProposition(PropositionDefinition inTargetProposition) {
 		this.targetProposition = inTargetProposition;
 	}
@@ -385,6 +390,7 @@ public class PropositionValidatorImpl implements PropositionValidator {
 		return this.propositions;
 	}
 
+	@Override
 	public void setPropositions(List<PropositionDefinition> inPropositions) {
 		this.propositions = inPropositions;
 	}
@@ -393,6 +399,7 @@ public class PropositionValidatorImpl implements PropositionValidator {
 		return this.userPropositions;
 	}
 
+	@Override
 	public void setUserPropositions(
 			List<PropositionDefinition> inUserPropositions) {
 		this.userPropositions = inUserPropositions;
@@ -402,6 +409,7 @@ public class PropositionValidatorImpl implements PropositionValidator {
 		return configuration;
 	}
 
+	@Override
 	public void setConfiguration(Configuration inConfiguration) {
 		configuration = inConfiguration;
 	}

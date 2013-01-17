@@ -20,6 +20,7 @@
 package edu.emory.cci.aiw.cvrg.eureka.common.json;
 
 import java.io.IOException;
+import org.codehaus.jackson.JsonNode;
 
 import org.codehaus.jackson.JsonParseException;
 import org.codehaus.jackson.JsonParser;
@@ -47,12 +48,13 @@ public final class HighLevelAbstractionJsonDeserializer extends
 	        DeserializationContext ctxt) throws IOException,
 	        JsonProcessingException {
 		this.parser = jp;
-
+		
 		if (this.parser.getCurrentToken() == JsonToken.START_OBJECT) {
 			nextToken(); // should be the id field
 		}
 
 		checkField("id");
+		
 		// now we can construct the HLA
 		HighLevelAbstractionDefinition value = new HighLevelAbstractionDefinition(
 		        this.parser.getText());
@@ -60,15 +62,12 @@ public final class HighLevelAbstractionJsonDeserializer extends
 		value.setSolid(true);
 		value.setConcatenable(true);
 		value.setGapFunction(new SimpleGapFunction());
-
 		nextToken();
 		checkField("displayName");
 		value.setDisplayName(this.parser.getText());
-
 		nextToken();
 		checkField("abbreviatedDisplayName");
 		value.setAbbreviatedDisplayName(this.parser.getText());
-		
 		nextToken();
 		checkField("description");
 		value.setDescription(this.parser.getText());
@@ -101,40 +100,33 @@ public final class HighLevelAbstractionJsonDeserializer extends
 		checkField("sourceId");
 		SourceId sourceId = this.parser.readValueAs(SourceId.class);
 		value.setSourceId(sourceId);
-
 		nextToken();
 		checkField("temporalOffset");
 		value.setTemporalOffset(this.parser.readValueAs(Offsets.class));
-		
 		nextToken();
 		checkField("gapFunction");
 		value.setGapFunction(this.parser.readValueAs(GapFunction.class));
-		
 		nextToken();
 		checkField("defPairs");
-
 		nextToken();
 		while (parser.getCurrentToken() != JsonToken.END_OBJECT) {
 			checkField("lhs");
 			TemporalExtendedPropositionDefinition lhs = this.parser
 			        .readValueAs(TemporalExtendedPropositionDefinition.class);
-
 			nextToken();
 			checkField("rhs");
 			TemporalExtendedPropositionDefinition rhs = this.parser
 			        .readValueAs(TemporalExtendedPropositionDefinition.class);
-
 			nextToken();
 			checkField("rel");
 			Relation rel = this.parser.readValueAs(Relation.class);
-
 			value.add(lhs);
 			value.add(rhs);
 			value.setRelation(lhs, rhs, rel);
-
 			nextToken();
 		}
-
+		nextToken();
+		
 		return value;
 	}
 
