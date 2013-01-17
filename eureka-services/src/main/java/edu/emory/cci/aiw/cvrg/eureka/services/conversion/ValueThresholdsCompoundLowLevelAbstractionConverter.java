@@ -19,22 +19,28 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.services.conversion;
 
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.ValueThresholdEntity;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.ValueThresholdGroupEntity;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.protempa.CompoundLowLevelAbstractionDefinition;
+import org.protempa.CompoundLowLevelAbstractionDefinition.ValueClassification;
 import org.protempa.LowLevelAbstractionDefinition;
 import org.protempa.PropositionDefinition;
 
-import java.util.ArrayList;
-import java.util.List;
-import org.protempa.CompoundLowLevelAbstractionDefinition.ValueClassification;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.ValueThresholdEntity;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.ValueThresholdGroupEntity;
 
 public final class ValueThresholdsCompoundLowLevelAbstractionConverter
 		implements
 		PropositionDefinitionConverter<ValueThresholdGroupEntity, CompoundLowLevelAbstractionDefinition> {
 
+	private PropositionDefinitionConverterVisitor converterVisitor;
 	private CompoundLowLevelAbstractionDefinition primary;
 
+	public void setConverterVisitor(PropositionDefinitionConverterVisitor inConverterVisitor) {
+		converterVisitor = inConverterVisitor;
+	}
+	
 	@Override
 	public CompoundLowLevelAbstractionDefinition getPrimaryPropositionDefinition() {
 		return primary;
@@ -60,12 +66,15 @@ public final class ValueThresholdsCompoundLowLevelAbstractionConverter
 
 		List<LowLevelAbstractionDefinition> llas = new ArrayList<LowLevelAbstractionDefinition>();
 		for (ValueThresholdEntity v : entity.getValueThresholds()) {
+			v.getAbstractedFrom().accept(this.converterVisitor);
+			result.addAll(this.converterVisitor.getPropositionDefinitions());
 			LowLevelAbstractionDefinition def = new LowLevelAbstractionDefinition(
 					v.getAbstractedFrom().getKey() + "_CLASSIFICATION");
-			def.addPrimitiveParameterId(v.getAbstractedFrom().getKey());
+			
+			def.addPrimitiveParameterId(this.converterVisitor.getPrimaryProposition().getId());
 			def.setMinimumNumberOfValues(1);
 			ValueThresholdsLowLevelAbstractionConverter
-					.thresholdToValueDefinitions(def.getId(), v, def);
+					.thresholdToValueDefinitions(def.getId() + "_VALUE", v, def);
 			llas.add(def);
 		}
 		result.addAll(llas);
