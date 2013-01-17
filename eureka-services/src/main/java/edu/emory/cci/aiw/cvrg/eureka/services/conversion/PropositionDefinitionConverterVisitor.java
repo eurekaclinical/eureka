@@ -73,6 +73,7 @@ public final class PropositionDefinitionConverterVisitor implements
 		valueThresholdsLowLevelAbstractionConverter.setConverterVisitor(this);
 		valueThresholdsCompoundLowLevelAbstractionConverter =
 				inValueThresholdsCompoundLowLevelAbstractionConverter;
+		valueThresholdsCompoundLowLevelAbstractionConverter.setConverterVisitor(this);
 		frequencySliceAbstractionConverter =
 				inFrequencySliceAbstractionConverter;
 		frequencySliceAbstractionConverter.setVisitor(this);

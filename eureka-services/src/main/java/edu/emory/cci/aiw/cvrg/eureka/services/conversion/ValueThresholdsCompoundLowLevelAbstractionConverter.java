@@ -71,7 +71,7 @@ public final class ValueThresholdsCompoundLowLevelAbstractionConverter
 			LowLevelAbstractionDefinition def = new LowLevelAbstractionDefinition(
 					v.getAbstractedFrom().getKey() + "_CLASSIFICATION");
 			
-			def.addPrimitiveParameterId(this.converterVisitor.getPrimaryProposition().getId());
+			def.addPrimitiveParameterId(v.getAbstractedFrom().getKey());
 			def.setMinimumNumberOfValues(1);
 			ValueThresholdsLowLevelAbstractionConverter
 					.thresholdToValueDefinitions(def.getId() + "_VALUE", v, def);
