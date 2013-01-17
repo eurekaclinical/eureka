@@ -19,26 +19,29 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.services.conversion;
 
+import java.util.Collections;
+import java.util.List;
+
+import org.protempa.PropositionDefinition;
+
 import com.google.inject.Inject;
+
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.SystemProposition;
 import edu.emory.cci.aiw.cvrg.eureka.services.finder.PropositionFindException;
 import edu.emory.cci.aiw.cvrg.eureka.services.finder.PropositionFinder;
-import org.protempa.PropositionDefinition;
-
-import java.util.Collections;
-import java.util.List;
 
 public final class SystemPropositionConverter implements
 		PropositionDefinitionConverter<SystemProposition, PropositionDefinition> {
 
-	private final PropositionFinder finder;
+	private final PropositionFinder<Long, String> finder;
 
 	private Long userId;
 
 	private PropositionDefinition primary;
 
 	@Inject
-	public SystemPropositionConverter(PropositionFinder inFinder) {
+	public SystemPropositionConverter(PropositionFinder<Long, 
+			String> inFinder) {
 		finder = inFinder;
 	}
 
