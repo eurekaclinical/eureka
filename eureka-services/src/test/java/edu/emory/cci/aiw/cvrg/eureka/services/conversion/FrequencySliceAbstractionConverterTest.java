@@ -62,25 +62,24 @@ public class FrequencySliceAbstractionConverterTest extends
 		TimeUnit dayUnit = new TimeUnit();
 		dayUnit.setName("day");
 		
-		FrequencyEntity sa = new FrequencyEntity();
-		sa.setId(2L);
-		sa.setKey("test-slice-key");
-		sa.setAtLeastCount(3);
-		sa.setWithinAtLeast(1);
-		sa.setWithinAtLeastUnits(dayUnit);
-		sa.setWithinAtMost(90);
-		sa.setWithinAtMostUnits(dayUnit);
+		FrequencyEntity frequency = new FrequencyEntity();
+		frequency.setId(2L);
+		frequency.setKey("test-slice-key");
+		frequency.setAtLeastCount(3);
+		frequency.setWithinAtLeast(1);
+		frequency.setWithinAtLeastUnits(dayUnit);
+		frequency.setWithinAtMost(90);
+		frequency.setWithinAtMostUnits(dayUnit);
 		
 		ExtendedProposition af = new ExtendedProposition();
 		af.setProposition(event);
 		
-		sa.setExtendedProposition(af);
+		frequency.setExtendedProposition(af);
 
-		List<PropositionDefinition> sliceDefs = this.converter.convert
-				(sa);
-		System.out.println(sliceDefs);
+		List<PropositionDefinition> propDefs = this.converter.convert
+				(frequency);
 		assertEquals("wrong number of proposition definitions created", 1,
-				sliceDefs.size());
+				propDefs.size());
 		SliceDefinition sliceDef = this.converter
 				.getPrimaryPropositionDefinition();
 		assertEquals("wrong ID", "test-slice-key", sliceDef.getId());
