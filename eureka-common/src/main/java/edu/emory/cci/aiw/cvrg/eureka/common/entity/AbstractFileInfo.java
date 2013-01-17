@@ -31,6 +31,7 @@ import javax.persistence.SequenceGenerator;
 import org.codehaus.jackson.annotate.JsonBackReference;
 
 import com.sun.xml.bind.CycleRecoverable;
+import org.apache.commons.lang.builder.ToStringBuilder;
 
 /**
  * An abstract base class to hold information found about an uploaded file
@@ -180,10 +181,6 @@ abstract public class AbstractFileInfo implements CycleRecoverable {
 
 	@Override
 	public String toString() {
-		StringBuilder sBuilder = new StringBuilder();
-		sBuilder.append(this.getType()).append("|")
-				.append(this.getLineNumber()).append("|")
-				.append(this.getText());
-		return sBuilder.toString();
+		return ToStringBuilder.reflectionToString(this);
 	}
 }

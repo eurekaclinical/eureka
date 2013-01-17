@@ -41,6 +41,7 @@ import org.slf4j.LoggerFactory;
 
 import com.sun.xml.bind.CycleRecoverable;
 import javax.persistence.Column;
+import org.apache.commons.lang.builder.ToStringBuilder;
 
 /**
  * Store information about a user's file upload.
@@ -315,34 +316,14 @@ public class FileUpload implements CycleRecoverable {
 	public boolean containsWarnings() {
 		return this.warnings.size() > 0;
 	}
-
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see com.sun.xml.bind.CycleRecoverable#onCycleDetected(com.sun.xml.bind.
-	 * CycleRecoverable.Context)
-	 */
+	
 	@Override
 	public Object onCycleDetected(Context inContext) {
 		return null;
 	}
-
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see java.lang.Object#toString()
-	 */
+	
 	@Override
 	public String toString() {
-		StringBuilder builder = new StringBuilder();
-		builder.append("FileUpload [id=").append(this.id).append(", location=")
-				.append(this.location).append(", userId=")
-				.append(this.userId).append(", timestamp=")
-				.append(this.timestamp).append(", validated=")
-				.append(this.validated).append(", processed=")
-				.append(this.processed).append(", completed=")
-				.append(this.completed).append(", errors=").append(this.errors)
-				.append(", warnings=").append(this.warnings).append("]");
-		return builder.toString();
+		return ToStringBuilder.reflectionToString(this);
 	}
 }

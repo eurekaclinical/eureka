@@ -48,5 +48,4 @@ public class FileError extends AbstractFileInfo {
 			this.getFileUpload().addError(this);
 		}
 	}
-
 }

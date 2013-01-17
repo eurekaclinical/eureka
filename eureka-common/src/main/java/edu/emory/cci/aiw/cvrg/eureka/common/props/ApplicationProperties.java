@@ -239,7 +239,7 @@ public abstract class ApplicationProperties {
 	 * INI configuration files.
 	 */
 	public String getConfigDir() {
-		return this.getValue("eureka.etl.config.dir",getDefaultLocation());
+		return this.getValue("eureka.etl.config.dir", getDefaultLocation());
 	}
 
 	/**
@@ -258,7 +258,7 @@ public abstract class ApplicationProperties {
 		 */
 		return this.properties.getProperty(propertyName);
 	}
-	
+
 	/**
 	 * Returns the String value of the given property name, or the given default
 	 * if the given property name does not exist.
@@ -272,8 +272,12 @@ public abstract class ApplicationProperties {
 	protected String getValue(final String propertyName, String defaultValue) {
 		String value = getValue(propertyName);
 		if (value == null) {
-			LOGGER.warn("Property not found in configuration: {}", 
-					propertyName);
+			if (defaultValue == null) {
+				LOGGER.warn(
+						"Property '{}' is not specified in " + 
+						getClass().getName() +
+						", and no default is specified.", propertyName);
+			}
 			value = defaultValue;
 		}
 		return value;
@@ -283,8 +287,8 @@ public abstract class ApplicationProperties {
 	 * Reads in a property value as a whitespace-delimited list of items.
 	 *
 	 * @param inPropertyName The name of the property to read.
-	 * @return A list containing the items in the value, or <code>null</code>
-	 * if the property is not found.
+	 * @return A list containing the items in the value, or <code>null</code> if
+	 * the property is not found.
 	 */
 	protected List<String> getStringListValue(final String inPropertyName) {
 
@@ -304,7 +308,7 @@ public abstract class ApplicationProperties {
 		}
 		return result;
 	}
-	
+
 	/**
 	 * Reads in a property value as a whitespace-delimited list of items.
 	 *
@@ -317,7 +321,7 @@ public abstract class ApplicationProperties {
 
 		List<String> result = getStringListValue(inPropertyName);
 		if (result == null) {
-			LOGGER.warn("Property not found in configuration: {}", 
+			LOGGER.warn("Property not found in configuration: {}",
 					inPropertyName);
 			result = defaultValue;
 		}

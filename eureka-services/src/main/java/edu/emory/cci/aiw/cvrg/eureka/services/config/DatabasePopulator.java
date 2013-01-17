@@ -19,6 +19,8 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.services.config;
 
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.FileError;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.FileUpload;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -37,6 +39,7 @@ import edu.emory.cci.aiw.cvrg.eureka.common.entity.ThresholdsOperator;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.TimeUnit;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.User;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.ValueComparator;
+import edu.emory.cci.aiw.cvrg.eureka.services.dao.FileDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.RelationOperatorDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.RoleDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.ThresholdsOperatorDao;
@@ -44,6 +47,10 @@ import edu.emory.cci.aiw.cvrg.eureka.services.dao.TimeUnitDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.UserDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.ValueComparatorDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.util.StringUtil;
+import java.util.Collections;
+import java.util.Date;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Performs first-time populating of Eureka's database tables. It also tries to
@@ -52,26 +59,29 @@ import edu.emory.cci.aiw.cvrg.eureka.services.util.StringUtil;
  * @author Andrew Post
  */
 class DatabasePopulator {
-	
+
+	private static Logger LOGGER =
+			LoggerFactory.getLogger(DatabasePopulator.class);
 	private final TimeUnitDao timeUnitDao;
 	private final RoleDao roleDao;
 	private final UserDao userDao;
 	private final ValueComparatorDao valueComparatorDao;
 	private final RelationOperatorDao relationOperatorDao;
-	private final ThresholdsOperatorDao 
-			thresholdOperatorDao;
+	private final ThresholdsOperatorDao thresholdOperatorDao;
+	private final FileDao fileDao;
 
 	@Inject
-	DatabasePopulator(TimeUnitDao inTimeUnitDao, RoleDao inRoleDao, 
-			UserDao inUserDao, ValueComparatorDao inValueComparatorDao, 
+	DatabasePopulator(TimeUnitDao inTimeUnitDao, RoleDao inRoleDao,
+			UserDao inUserDao, ValueComparatorDao inValueComparatorDao,
 			RelationOperatorDao inRelationOperatorDao,
-			ThresholdsOperatorDao inMatchOperatorDao) {
+			ThresholdsOperatorDao inMatchOperatorDao, FileDao fileDao) {
 		this.timeUnitDao = inTimeUnitDao;
 		this.roleDao = inRoleDao;
 		this.userDao = inUserDao;
 		this.valueComparatorDao = inValueComparatorDao;
 		this.relationOperatorDao = inRelationOperatorDao;
 		this.thresholdOperatorDao = inMatchOperatorDao;
+		this.fileDao = fileDao;
 	}
 
 	void doPopulateIfNeeded() {
@@ -80,6 +90,7 @@ class DatabasePopulator {
 		populateRelationOperatorsIfNeeded();
 		populateValueComparatorsIfNeeded();
 		populateThresholdOperatorsIfNeeded();
+		repairFileUploadsIfNeeded();
 	}
 
 	private void populateTimeUnitsIfNeeded() {
@@ -91,11 +102,39 @@ class DatabasePopulator {
 				namesSet, AbsoluteTimeUnit.DAY.getName(), AbsoluteTimeUnit.DAY
 				.getPluralName(), 3);
 		this.createTimeUnitIfNeeded(
-				namesSet, AbsoluteTimeUnit.HOUR.getName(), 
+				namesSet, AbsoluteTimeUnit.HOUR.getName(),
 				AbsoluteTimeUnit.HOUR.getPluralName(), 2);
 		this.createTimeUnitIfNeeded(
-				namesSet, AbsoluteTimeUnit.MINUTE.getName(), 
+				namesSet, AbsoluteTimeUnit.MINUTE.getName(),
 				AbsoluteTimeUnit.MINUTE.getPluralName(), 1);
+	}
+
+	private void repairFileUploadsIfNeeded() {
+		Date now = new Date();
+		int numUploadsRepaired = 0;
+		for (FileUpload fileUpload : this.fileDao.getAll()) {
+			if (!fileUpload.isCompleted()) {
+				if (numUploadsRepaired == 0) {
+					LOGGER.warn(
+						"Repairing file uploads table, probably because the "
+						+ "application shut down during a processing run.");
+				}
+				LOGGER.warn("Repairing file upload {}", fileUpload.toString());
+				fileUpload.setCompleted(true);
+				fileUpload.setTimestamp(now);
+				FileError fileError = new FileError();
+				fileError.setText("Eureka! shut down during run.");
+				fileError.setType("unknown");
+				fileUpload.setErrors(Collections.singletonList(fileError));
+				this.fileDao.update(fileUpload);
+				LOGGER.warn("After repair, the file upload's status is {)", 
+						fileUpload.toString());
+				numUploadsRepaired++;
+			}
+		}
+		if (numUploadsRepaired > 0) {
+			LOGGER.warn("{} file uploads were repaired.", numUploadsRepaired);
+		}
 	}
 
 	private void populateDefaultRolesAndUserIfNeeded() {
@@ -119,7 +158,7 @@ class DatabasePopulator {
 			} catch (NoSuchAlgorithmException ex) {
 				throw new AssertionError(
 						"Could not hash default superuser password: "
-								+ ex.getMessage());
+						+ ex.getMessage());
 			}
 			superuser.setRoles(
 					Arrays.asList(researcherRole, adminRole, superuserRole));
@@ -127,18 +166,19 @@ class DatabasePopulator {
 		}
 	}
 
-	private void createTimeUnitIfNeeded(Set<String> namesSet, String name, 
+	private void createTimeUnitIfNeeded(Set<String> namesSet, String name,
 			String desc, int rank) {
 		if (!namesSet.contains(name)) {
-			TimeUnit timeUnit =	new TimeUnit();
+			TimeUnit timeUnit = new TimeUnit();
 			timeUnit.setName(name);
 			timeUnit.setDescription(desc);
 			timeUnit.setRank(rank);
 			this.timeUnitDao.create(timeUnit);
 		}
 	}
-	
+
 	private static class ValueComparatorHolder {
+
 		final ValueComparator valueComparator;
 		final String complementName;
 		final boolean requiresComplement;
@@ -148,39 +188,37 @@ class DatabasePopulator {
 			this.complementName = complementName;
 			this.requiresComplement = requiresComplement;
 		}
-		
-		
 	}
 
 	private void populateValueComparatorsIfNeeded() {
-		Map<String, ValueComparatorHolder> vcMap = 
+		Map<String, ValueComparatorHolder> vcMap =
 				new HashMap<String, ValueComparatorHolder>();
 		for (ValueComparator vc : this.valueComparatorDao.getAll()) {
-			vcMap.put(vc.getName(), 
-					new ValueComparatorHolder(vc, 
+			vcMap.put(vc.getName(),
+					new ValueComparatorHolder(vc,
 					vc.getComplement().getName(), false));
 		}
-		this.createValueComparatorIfNeeded(vcMap, "=", "equals", 
+		this.createValueComparatorIfNeeded(vcMap, "=", "equals",
 				ValueComparator.Threshold.BOTH,
 				Long.valueOf(3), "not=");
-		this.createValueComparatorIfNeeded(vcMap, "not=", "not equals", 
+		this.createValueComparatorIfNeeded(vcMap, "not=", "not equals",
 				ValueComparator.Threshold.BOTH,
 				Long.valueOf(4), "=");
-		this.createValueComparatorIfNeeded(vcMap, ">", "greater than", 
+		this.createValueComparatorIfNeeded(vcMap, ">", "greater than",
 				ValueComparator.Threshold.LOWER_ONLY,
 				Long.valueOf(5), "<=");
 		this.createValueComparatorIfNeeded(vcMap, ">=",
-				"greater than or equal to", 
+				"greater than or equal to",
 				ValueComparator.Threshold.LOWER_ONLY,
 				Long.valueOf(6), "<");
-		this.createValueComparatorIfNeeded(vcMap, "<", "less than", 
-				ValueComparator.Threshold.UPPER_ONLY, 
+		this.createValueComparatorIfNeeded(vcMap, "<", "less than",
+				ValueComparator.Threshold.UPPER_ONLY,
 				Long.valueOf(1), ">=");
 		this.createValueComparatorIfNeeded(vcMap, "<=",
-				"less than or equal to", 
+				"less than or equal to",
 				ValueComparator.Threshold.UPPER_ONLY,
 				Long.valueOf(2), ">");
-		
+
 		for (ValueComparatorHolder vc : vcMap.values()) {
 			ValueComparator valueComparator = vc.valueComparator;
 			if (vc.requiresComplement) {
@@ -192,8 +230,8 @@ class DatabasePopulator {
 	}
 
 	private void createValueComparatorIfNeeded(
-			Map<String, ValueComparatorHolder> vcMap, 
-			String name, String desc, 
+			Map<String, ValueComparatorHolder> vcMap,
+			String name, String desc,
 			ValueComparator.Threshold side, Long rank, String complementName) {
 		ValueComparatorHolder vc = vcMap.get(name);
 		if (vc == null) {
@@ -203,8 +241,8 @@ class DatabasePopulator {
 			valueComparator.setThreshold(side);
 			valueComparator.setRank(rank);
 			this.valueComparatorDao.create(valueComparator);
-			vcMap.put(name, 
-					new ValueComparatorHolder(valueComparator, complementName, 
+			vcMap.put(name,
+					new ValueComparatorHolder(valueComparator, complementName,
 					true));
 		}
 	}
@@ -239,7 +277,7 @@ class DatabasePopulator {
 		createThresholdOperatorIfNeeded("all", "all");
 	}
 
-	private void createThresholdOperatorIfNeeded(String name, 
+	private void createThresholdOperatorIfNeeded(String name,
 			String desc) {
 		ThresholdsOperator op = this.thresholdOperatorDao.getByName(name);
 		if (op == null) {

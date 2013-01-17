@@ -172,6 +172,20 @@ public class JobTask implements Runnable {
 			} catch (TaskException e) {
 				LOGGER.error(e.getMessage(), e);
 				this.setCompleteWithError(e.getMessage());
+			} catch (RuntimeException e) {
+				/*
+				 * Try to recover, though this might not work if the VM is
+				 * completely hosed.
+				 */
+				LOGGER.error(e.getMessage(), e);
+				this.setCompleteWithError(e.getMessage());
+			} catch (Error e) {
+				/*
+				 * Try to recover, though this might not work if the VM is
+				 * completely hosed.
+				 */
+				LOGGER.error(e.getMessage(), e);
+				this.setCompleteWithError(e.getMessage());
 			}
 		} else {
 			LOGGER.error("run() called before setting a file upload");
