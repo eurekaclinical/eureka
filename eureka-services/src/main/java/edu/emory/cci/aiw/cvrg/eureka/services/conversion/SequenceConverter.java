@@ -20,6 +20,7 @@
 package edu.emory.cci.aiw.cvrg.eureka.services.conversion;
 
 import com.google.inject.Inject;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.DataElementEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.ExtendedProposition;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.Relation;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.SequenceEntity;
@@ -48,26 +49,28 @@ final class SequenceConverter
 		return primary;
 	}
 
-	public void setConverterVisitor(PropositionDefinitionConverterVisitor
-											inVisitor) {
+	public void setConverterVisitor(PropositionDefinitionConverterVisitor inVisitor) {
 		converterVisitor = inVisitor;
 	}
 
 	@Override
-	public List<PropositionDefinition> convert(SequenceEntity
-													   proposition) {
-		List<PropositionDefinition> result = new
-				ArrayList<PropositionDefinition>();
+	public List<PropositionDefinition> convert(SequenceEntity proposition) {
+		List<PropositionDefinition> result = new ArrayList<PropositionDefinition>();
 		HighLevelAbstractionDefinition primary = new HighLevelAbstractionDefinition(
 				proposition.getKey());
 		if (proposition.getRelations() != null) {
 			for (Relation rel : proposition.getRelations()) {
-				rel.getLhsExtendedProposition().getProposition().accept(converterVisitor);
-				result.addAll(converterVisitor.getPropositionDefinitions());
+				DataElementEntity lhs =
+						rel.getLhsExtendedProposition().getProposition();
+				lhs.accept(converterVisitor);
+				result.addAll(
+						converterVisitor.getPropositionDefinitions());
 				TemporalExtendedPropositionDefinition tepdLhs = buildExtendedProposition(rel
 						.getLhsExtendedProposition());
 
-				rel.getRhsExtendedProposition().getProposition().accept(converterVisitor);
+				DataElementEntity rhs =
+						rel.getRhsExtendedProposition().getProposition();
+				rhs.accept(converterVisitor);
 				result.addAll(converterVisitor.getPropositionDefinitions());
 				TemporalExtendedPropositionDefinition tepdRhs = buildExtendedProposition(rel
 						.getRhsExtendedProposition());
@@ -85,8 +88,9 @@ final class SequenceConverter
 
 	private TemporalExtendedPropositionDefinition buildExtendedProposition(
 			ExtendedProposition ep) {
-		TemporalExtendedPropositionDefinition tepd = new TemporalExtendedPropositionDefinition(
-				ep.getId().toString());
+		TemporalExtendedPropositionDefinition tepd =
+				new TemporalExtendedPropositionDefinition(
+				ep.getProposition().getKey());
 
 		if (ep.getPropertyConstraint() != null) {
 			PropertyConstraint pc = new PropertyConstraint();

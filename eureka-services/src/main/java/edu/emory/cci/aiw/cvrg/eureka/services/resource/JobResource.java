@@ -50,9 +50,9 @@ import java.util.List;
 
 /**
  * REST operations related to jobs submitted by the user.
- * 
+ *
  * @author hrathod
- * 
+ *
  */
 @Path("/job")
 public class JobResource {
@@ -61,7 +61,7 @@ public class JobResource {
 	 * The class level logger.
 	 */
 	private static final Logger LOGGER = LoggerFactory
-	        .getLogger(JobResource.class);
+			.getLogger(JobResource.class);
 	/**
 	 * The User data access object to retrieve information about the current
 	 * user.
@@ -93,23 +93,20 @@ public class JobResource {
 
 	/**
 	 * Construct a new job resource with the given job update thread.
-	 * 
-	 * @param inUserDao
-	 *            The data access object used to fetch information about users.
-	 * @param inFileDao
-	 *            The data access object used to fetch and store information
-	 *            about uploaded files.
-	 * @param inJobTask
-	 *            The job submission runnable to be used to process incoming
-	 *            data and submit jobs to the ETL layer.
-	 * @param inJobExecutor
-	 *            The executor service used to run the job tasks.
+	 *
+	 * @param inUserDao The data access object used to fetch information about
+	 * users.
+	 * @param inFileDao The data access object used to fetch and store
+	 * information about uploaded files.
+	 * @param inJobTask The job submission runnable to be used to process
+	 * incoming data and submit jobs to the ETL layer.
+	 * @param inJobExecutor The executor service used to run the job tasks.
 	 */
 	@Inject
 	public JobResource(UserDao inUserDao, FileDao inFileDao,
 			PropositionDefinitionConverterVisitor inVisitor,
 			PropositionDao inPropositionDao,
-	        JobTask inJobTask, JobExecutor inJobExecutor) {
+			JobTask inJobTask, JobExecutor inJobExecutor) {
 		this.userDao = inUserDao;
 		this.fileDao = inFileDao;
 		this.propositionDao = inPropositionDao;
@@ -120,18 +117,17 @@ public class JobResource {
 
 	/**
 	 * Create a new job (by uploading a new file).
-	 * 
-	 * @param inFileUpload
-	 *            The file upload to add.
-	 * 
+	 *
+	 * @param inFileUpload The file upload to add.
+	 *
 	 * @return A {@link Response.Status#OK} if the file is successfully added,
-	 *         {@link Response.Status#BAD_REQUEST} if there are errors.
+	 * {@link Response.Status#BAD_REQUEST} if there are errors.
 	 */
 	@Path("/add")
 	@POST
-	@Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
+	@Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
 	public Response uploadFile(
-	        edu.emory.cci.aiw.cvrg.eureka.common.comm.FileUpload inFileUpload) {
+			edu.emory.cci.aiw.cvrg.eureka.common.comm.FileUpload inFileUpload) {
 		LOGGER.debug("Got file upload: {}", inFileUpload);
 		FileUpload fileUpload = new FileUpload();
 		fileUpload.setTimestamp(new Date());
@@ -141,7 +137,7 @@ public class JobResource {
 		this.jobTask.setFileUploadId(fileUpload.getId());
 		this.converterVisitor.setUserId(fileUpload.getUserId());
 		FilterUserPropositionsResult propDefs = filterUserPropositions(propositionDao
-		        .getByUserId(fileUpload.getUserId()));
+				.getByUserId(fileUpload.getUserId()));
 		this.jobTask.setUserPropositions(propDefs.userProps);
 		this.jobTask.setNonHelperPropositionIds(propDefs.toShow);
 		this.jobExecutor.queueJob(this.jobTask);
@@ -150,29 +146,30 @@ public class JobResource {
 	}
 
 	private static class FilterUserPropositionsResult {
+
 		List<PropositionDefinition> userProps;
 		List<String> toShow;
 	}
 
 	private FilterUserPropositionsResult filterUserPropositions(
-	        List<DataElementEntity> propositions) {
-		final List<PropositionDefinition> userProps = 
+			List<DataElementEntity> propositions) {
+		final List<PropositionDefinition> userProps =
 				new ArrayList<PropositionDefinition>();
 		final List<String> toShow = new ArrayList<String>();
 
 		for (DataElementEntity p : propositions) {
-			p.accept(converterVisitor);
-			List<PropositionDefinition> propDefs = converterVisitor
-					.getPropositionDefinitions();
-			for (PropositionDefinition propDef : propDefs) {
-				if (!p.isInSystem()) {
+			if (!p.isInSystem()) {
+				p.accept(converterVisitor);
+				List<PropositionDefinition> propDefs = converterVisitor
+						.getPropositionDefinitions();
+				for (PropositionDefinition propDef : propDefs) {
 					userProps.add(propDef);
 				}
+				toShow.add(p.getKey());
 			}
-			toShow.add(p.getId().toString());
 		}
 
-		FilterUserPropositionsResult result = 
+		FilterUserPropositionsResult result =
 				new FilterUserPropositionsResult();
 		result.userProps = userProps;
 		result.toShow = toShow;
@@ -182,15 +179,14 @@ public class JobResource {
 	/**
 	 * Get a list of jobs associated with user referred to by the given unique
 	 * identifier.
-	 * 
-	 * @param userId
-	 *            The unique identifier for the user.
-	 * 
+	 *
+	 * @param userId The unique identifier for the user.
+	 *
 	 * @return A list of {@link Job} objects associated with the user.
 	 */
 	@Path("/list/{id}")
 	@GET
-	@Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
+	@Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
 	public List<Job> getJobsByUser(@PathParam("id") final Long userId) {
 		User user = this.userDao.retrieve(userId);
 		List<Job> allJobs = JobCollection.getJobs();
@@ -205,14 +201,13 @@ public class JobResource {
 
 	/**
 	 * Get the status of a job process for the given user.
-	 * 
-	 * @param userId
-	 *            The unique identifier of the user to query for.
+	 *
+	 * @param userId The unique identifier of the user to query for.
 	 * @return A {@link JobInfo} object containing the status information.
 	 */
 	@Path("/status/{id}")
 	@GET
-	@Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
+	@Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
 	public JobInfo getStatus(@PathParam("id") final Long userId) {
 
 		Job latestJob = null;
@@ -238,7 +233,7 @@ public class JobResource {
 					latestFileUpload = fileUpload;
 				} else {
 					if (fileUpload.getTimestamp().after(
-					        latestFileUpload.getTimestamp())) {
+							latestFileUpload.getTimestamp())) {
 						latestFileUpload = fileUpload;
 					}
 				}
@@ -249,10 +244,10 @@ public class JobResource {
 		jobInfo.setFileUpload(latestFileUpload);
 		jobInfo.setJob(latestJob);
 		LOGGER.debug(
-		        "Returning job status for user id {}: {}/{}",
-		        new Object[] { userId,
-		                Integer.valueOf(jobInfo.getCurrentStep()),
-		                Integer.valueOf(jobInfo.getTotalSteps()) });
+				"Returning job status for user id {}: {}/{}",
+				new Object[]{userId,
+					Integer.valueOf(jobInfo.getCurrentStep()),
+					Integer.valueOf(jobInfo.getTotalSteps())});
 		return jobInfo;
 	}
 }

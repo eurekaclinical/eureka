@@ -26,6 +26,7 @@ import edu.emory.cci.aiw.cvrg.eureka.common.entity.PropositionEntityVisitor;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.SequenceEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.SystemProposition;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.ValueThresholdGroupEntity;
+import java.util.Collections;
 import org.protempa.PropositionDefinition;
 
 import java.util.List;
@@ -38,7 +39,7 @@ public final class PropositionDefinitionConverterVisitor implements
 
 	private Long userId;
 
-	private final SystemPropositionConverter systemPropositionConverter;
+//	private final SystemPropositionConverter systemPropositionConverter;
 	private final CategorizationConverter categorizationConverter;
 	private final SequenceConverter sequenceConverter;
 	private final ValueThresholdsLowLevelAbstractionConverter
@@ -51,8 +52,8 @@ public final class PropositionDefinitionConverterVisitor implements
 			frequencyHighLevelAbstractionConverter;
 
 	@Inject
-	public PropositionDefinitionConverterVisitor(SystemPropositionConverter
-														 inSystemPropositionConverter,
+	public PropositionDefinitionConverterVisitor(/*SystemPropositionConverter
+														 inSystemPropositionConverter,*/
 												 CategorizationConverter inCategorizationConverter,
 												 SequenceConverter inSequenceConverter,
 												 ValueThresholdsLowLevelAbstractionConverter
@@ -62,7 +63,7 @@ public final class PropositionDefinitionConverterVisitor implements
 												 FrequencySliceAbstractionConverter inFrequencySliceAbstractionConverter,
 												 FrequencyHighLevelAbstractionConverter
 														 inFrequencyHighLevelAbstractionConverter) {
-		systemPropositionConverter = inSystemPropositionConverter;
+//		systemPropositionConverter = inSystemPropositionConverter;
 		categorizationConverter = inCategorizationConverter;
 		categorizationConverter.setConverterVisitor(this);
 		sequenceConverter = inSequenceConverter;
@@ -94,11 +95,12 @@ public final class PropositionDefinitionConverterVisitor implements
 
 	@Override
 	public void visit(SystemProposition entity) {
-		this.systemPropositionConverter.setUserId(this.userId);
-		this.propositionDefinitions = this.systemPropositionConverter
-				.convert(entity);
-		this.primaryProposition = this.systemPropositionConverter
-				.getPrimaryPropositionDefinition();
+		this.propositionDefinitions = Collections.emptyList();
+//		this.systemPropositionConverter.setUserId(this.userId);
+//		this.propositionDefinitions = this.systemPropositionConverter
+//				.convert(entity);
+//		this.primaryProposition = this.systemPropositionConverter
+//				.getPrimaryPropositionDefinition();
 	}
 
 	@Override

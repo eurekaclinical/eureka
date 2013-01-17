@@ -19,7 +19,6 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.servlet;
 
-
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ClientException;
 import java.io.File;
 import java.io.IOException;
@@ -42,7 +41,6 @@ import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ServicesClient;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.FileUpload;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.User;
 
-
 public class CommonsFileUploadServlet extends HttpServlet {
 
 	/**
@@ -50,10 +48,8 @@ public class CommonsFileUploadServlet extends HttpServlet {
 	 */
 	private static final String TMP_DIR_PATH = "/tmp";
 	private File tmpDir;
-
 	/**
-	 * Normal directory to save files to.
-	 * TODO: set value
+	 * Normal directory to save files to. TODO: set value
 	 */
 	private static String DESTINATION_DIR_PATH = "";
 	private File destinationDir;
@@ -63,29 +59,33 @@ public class CommonsFileUploadServlet extends HttpServlet {
 		super.init(config);
 		DESTINATION_DIR_PATH = config.getInitParameter("dest_dir");
 		tmpDir = new File(TMP_DIR_PATH);
-		if(!tmpDir.isDirectory()) {
+		if (!tmpDir.isDirectory()) {
 			throw new ServletException(TMP_DIR_PATH + " is not a directory");
 		}
-		String realPath = getServletContext().getRealPath("/")+DESTINATION_DIR_PATH;
+		String realPath = getServletContext().getRealPath("/") + DESTINATION_DIR_PATH;
 
 		System.out.println(realPath);
 		destinationDir = new File(realPath);
-		if(!destinationDir.isDirectory()) {
-			throw new ServletException(DESTINATION_DIR_PATH+" is not a directory");
+		if (!destinationDir.isDirectory()) {
+			throw new ServletException(DESTINATION_DIR_PATH + " is not a directory");
 		}
 
 	}
 
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
-		DiskFileItemFactory  fileItemFactory = new DiskFileItemFactory ();
+		Principal principal = request.getUserPrincipal();
+		if (principal == null) {
+			throw new ServletException(
+					"Spreadsheet upload attempt: no user associated with the request");
+		}
+		DiskFileItemFactory fileItemFactory = new DiskFileItemFactory();
 		String eurekaServicesUrl = request.getSession().getServletContext()
 				.getInitParameter("eureka-services-url");
 		/*
 		 *Set the size threshold, above which content will be stored on disk.
 		 */
-		fileItemFactory.setSizeThreshold(5*1024*1024); //5 MB
+		fileItemFactory.setSizeThreshold(5 * 1024 * 1024); //5 MB
 		/*
 		 * Set the temporary directory to store the uploaded files of size above threshold.
 		 */
@@ -98,38 +98,36 @@ public class CommonsFileUploadServlet extends HttpServlet {
 			 */
 			List items = uploadHandler.parseRequest(request);
 			Iterator itr = items.iterator();
-			while(itr.hasNext()) {
+			while (itr.hasNext()) {
 				FileItem item = (FileItem) itr.next();
 				/*
 				 * Handle Form Fields.
 				 */
-				if(item.isFormField()) {
-					log("File Name = "+item.getFieldName()+", Value = "+item.getString());
+				if (item.isFormField()) {
+					log("Spreadsheet upload for user " + principal.getName() + ": File Name = " + item.getFieldName() + ", Value = " + item.getString());
 				} else {
 					//Handle Uploaded files.
-					log("Field Name = "+item.getFieldName()+
-						", File Name = "+item.getName()+
-						", Content type = "+item.getContentType()+
-						", File Size = "+item.getSize());
+					log("Spreadsheet upload for user " + principal.getName() + ": Field Name = " + item.getFieldName()
+							+ ", File Name = " + item.getName()
+							+ ", Content type = " + item.getContentType()
+							+ ", File Size = " + item.getSize());
 
-					Principal principal = request.getUserPrincipal();
 					String userName = principal.getName();
-					ServicesClient servicesClient = new ServicesClient
-							(eurekaServicesUrl);
+					ServicesClient servicesClient = new ServicesClient(eurekaServicesUrl);
 					User user = servicesClient.getUserByName(userName);
 
 					/*
 					 * Write file to the ultimate location.
 					 */
-					File file = new File(destinationDir,""+user.getId());
+					File file = new File(destinationDir, "" + user.getId());
 					item.write(file);
 
 
 					FileUpload fileUpload = new FileUpload();
-					fileUpload.setLocation(getServletContext().getRealPath("/") +
-							DESTINATION_DIR_PATH + "/" + user.getId());
+					fileUpload.setLocation(getServletContext().getRealPath("/")
+							+ DESTINATION_DIR_PATH + "/" + user.getId());
 					fileUpload.setUserId(user.getId());
-					
+
 					servicesClient.addJob(fileUpload);
 				}
 
@@ -137,13 +135,22 @@ public class CommonsFileUploadServlet extends HttpServlet {
 				response.sendRedirect(request.getContextPath() + "/protected/jobs");
 			}
 		} catch (ClientException ex) {
-			throw new ServletException("Error encountered calling add job service", ex);
-		} catch(FileUploadException ex) {
-			throw new ServletException("Error encountered while parsing the job upload request",ex);
-		} catch(Exception ex) { //item.write, a third party library, throws Exception...
-			throw new ServletException("Error encountered while writing the uploaded file", ex);
+			String msg = "Error encountered calling add job service";
+			log("Spreadsheet upload attempt for user " + principal.getName() + 
+					": " + msg);
+			throw new ServletException(msg, ex);
+		} catch (FileUploadException ex) {
+			String msg = 
+					"Error encountered while parsing the job upload request";
+			log("Spreadsheet upload attempt for user " + principal.getName() + 
+					": " + msg);
+			throw new ServletException(msg, ex);
+		} catch (Exception ex) { //item.write, a third party library, throws Exception...
+			String msg =
+					"Error encountered while writing the uploaded file";
+			log("Spreadsheet upload attempt for user " + principal.getName() + 
+					": " + msg);
+			throw new ServletException(msg, ex);
 		}
-
 	}
-
 }

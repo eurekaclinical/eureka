@@ -72,8 +72,9 @@ public final class Task implements Runnable {
 	@Override
 	public void run() {
 		Job myJob = this.jobDao.retrieve(this.jobId);
-		LOGGER.debug("{} just got a job, id={}", Thread.currentThread()
-			.getName(), myJob.toString());
+		LOGGER.info("{} just got a job from user {}, id={}",
+				myJob.getUserId(), new Object[]{
+				Thread.currentThread().getName(), myJob.toString()});
 		myJob.setNewState("PROCESSING", null, null);
 		LOGGER.debug("About to save job: {}", myJob.toString());
 		this.jobDao.update(myJob);
@@ -91,18 +92,22 @@ public final class Task implements Runnable {
 					new String[this.propIdsToShow.size()]);
 			
 			this.etl.run("config" + configId, propositionArray, 
-					propIdsToShowArray);
+					propIdsToShowArray, myJob.getId());
 			this.etl.close();
 		} catch (EtlException e) {
 			handleError(myJob, e);
 		}
 
 		myJob.setNewState("DONE", null, null);
+		LOGGER.info("{} completed job {} for user {} without errors.",
+				Thread.currentThread().getName(), 
+				new Object[]{myJob.getId(), myJob.getUserId()});
 		this.jobDao.update(myJob);
 	}
 
-	private void handleError(Job job, Exception e) {
-		LOGGER.error(e.getMessage(), e);
+	private void handleError(Job job, Throwable e) {
+		LOGGER.error("Job " + job.getId() + " for user " 
+				+ job.getUserId() + " failed: " + e.getMessage(), e);
 		job.setNewState("EXCEPTION", e.getMessage(), null);
 		this.jobDao.update(job);
 	}

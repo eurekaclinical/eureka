@@ -34,7 +34,7 @@
 
 
         <form id="uploadForm" name="uploadForm" class="pad_top pad"
-            method="post" action="${pageContext.request.contextPath}/upload"
+            method="post" action="${pageContext.request.contextPath}/protected/upload"
             ENCTYPE="multipart/form-data">
 
             <table>

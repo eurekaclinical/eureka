@@ -87,7 +87,7 @@ public class CategorizationConverterTest extends AbstractServiceTest {
 
 		List<PropositionDefinition> eventDefs1 = this.converter.convert
 				(eventCat1);
-		assertEquals("wrong number of proposition definitions created", 3,
+		assertEquals("wrong number of proposition definitions created", 1,
 				eventDefs1.size());
 		PropositionDefinition eventDef1 = this.converter
 				.getPrimaryPropositionDefinition();
@@ -118,7 +118,7 @@ public class CategorizationConverterTest extends AbstractServiceTest {
 
 		List<PropositionDefinition> eventDefs2 = this.converter.convert
 				(eventCat2);
-		assertEquals("wrong number of proposition definitions created", 4,
+		assertEquals("wrong number of proposition definitions created", 2,
 				eventDefs2.size());
 		PropositionDefinition eventDef2 = this.converter
 				.getPrimaryPropositionDefinition();
@@ -162,7 +162,7 @@ public class CategorizationConverterTest extends AbstractServiceTest {
 
 		List<PropositionDefinition> constantDefs1 = this.converter.convert
 				(constantCat1);
-		assertEquals("wrong number of proposition definitions created", 3,
+		assertEquals("wrong number of proposition definitions created", 1,
 				constantDefs1.size());
 		PropositionDefinition constantDef1 = this.converter
 				.getPrimaryPropositionDefinition();
@@ -194,7 +194,7 @@ public class CategorizationConverterTest extends AbstractServiceTest {
 
 		List<PropositionDefinition> constantDefs2 = this.converter.convert
 				(constantCat2);
-		assertEquals("wrong number of proposition definitions created", 4,
+		assertEquals("wrong number of proposition definitions created", 2,
 				constantDefs2.size());
 		PropositionDefinition constantDef2 = this.converter
 				.getPrimaryPropositionDefinition();
@@ -239,7 +239,7 @@ public class CategorizationConverterTest extends AbstractServiceTest {
 
 		List<PropositionDefinition> primParamDefs1 = this.converter.convert
 				(primParamCat1);
-		assertEquals("wrong number of proposition definitions created", 3,
+		assertEquals("wrong number of proposition definitions created", 1,
 				primParamDefs1.size());
 		PropositionDefinition primParamDef1 = this.converter
 				.getPrimaryPropositionDefinition();
@@ -273,7 +273,7 @@ public class CategorizationConverterTest extends AbstractServiceTest {
 
 		List<PropositionDefinition> primParamDefs2 = this.converter.convert
 				(primParamCat2);
-		assertEquals("wrong number of proposition definitions created", 4,
+		assertEquals("wrong number of proposition definitions created", 2,
 				primParamDefs2.size());
 		PropositionDefinition primParamDef2 = this.converter
 				.getPrimaryPropositionDefinition();
@@ -482,7 +482,7 @@ public class CategorizationConverterTest extends AbstractServiceTest {
 		llaCat1.setInverseIsA(iia1);
 
 		List<PropositionDefinition> llaDefs1 = this.converter.convert(llaCat1);
-		assertEquals("wrong number of proposition definitions created", 5,
+		assertEquals("wrong number of proposition definitions created", 3,
 				llaDefs1.size());
 		PropositionDefinition llaDef1 = this.converter
 				.getPrimaryPropositionDefinition();
@@ -514,7 +514,7 @@ public class CategorizationConverterTest extends AbstractServiceTest {
 		llaCat2.setInverseIsA(iia2);
 
 		List<PropositionDefinition> llaDefs2 = this.converter.convert(llaCat2);
-		assertEquals("wrong number of proposition definitions created", 6,
+		assertEquals("wrong number of proposition definitions created", 4,
 				llaDefs2.size());
 		PropositionDefinition llaDef2 = this.converter
 				.getPrimaryPropositionDefinition();
@@ -663,7 +663,7 @@ public class CategorizationConverterTest extends AbstractServiceTest {
 
 		List<PropositionDefinition> hlaDefs1 = this.converter.convert
 				(mixedCat1);
-		assertEquals("wrong number of proposition definitions created", 3,
+		assertEquals("wrong number of proposition definitions created", 1,
 				hlaDefs1.size());
 		PropositionDefinition hlaDef1 = this.converter
 				.getPrimaryPropositionDefinition();
@@ -696,7 +696,7 @@ public class CategorizationConverterTest extends AbstractServiceTest {
 
 		List<PropositionDefinition> hlaDefs2 = this.converter.convert
 				(mixedCat2);
-		assertEquals("wrong number of proposition definitions created", 4,
+		assertEquals("wrong number of proposition definitions created", 2,
 				hlaDefs2.size());
 		PropositionDefinition hlaDef2 = this.converter.getPrimaryPropositionDefinition();
 		assertTrue("not an event", hlaDef2 instanceof HighLevelAbstractionDefinition);

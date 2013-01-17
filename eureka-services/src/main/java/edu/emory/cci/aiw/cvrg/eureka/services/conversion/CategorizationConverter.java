@@ -44,18 +44,15 @@ public final class CategorizationConverter implements
 		return primary;
 	}
 
-	public void setConverterVisitor(PropositionDefinitionConverterVisitor
-											inVisitor) {
+	public void setConverterVisitor(PropositionDefinitionConverterVisitor inVisitor) {
 		converterVisitor = inVisitor;
 	}
 
 	@Override
 	public List<PropositionDefinition> convert(CategoryEntity proposition) {
-		List<PropositionDefinition> result = new
-				ArrayList<PropositionDefinition>();
+		List<PropositionDefinition> result = new ArrayList<PropositionDefinition>();
 		String id = proposition.getKey();
-		List<PropositionDefinition> inverseIsADefs = new
-				ArrayList<PropositionDefinition>();
+		List<PropositionDefinition> inverseIsADefs = new ArrayList<PropositionDefinition>();
 		for (DataElementEntity e : proposition.getInverseIsA()) {
 			e.accept(this.converterVisitor);
 			if (this.converterVisitor.getPropositionDefinitions() != null) {

@@ -193,7 +193,7 @@ see implementation details http://jersey.java.net/nonav/documentation/latest/jax
 	</servlet-mapping>
 	<servlet-mapping>
 		<servlet-name>CommonsFileUploadServlet</servlet-name>
-		<url-pattern>/upload</url-pattern>
+		<url-pattern>/protected/upload</url-pattern>
 	</servlet-mapping>
 	<servlet-mapping>
 		<servlet-name>Login</servlet-name>

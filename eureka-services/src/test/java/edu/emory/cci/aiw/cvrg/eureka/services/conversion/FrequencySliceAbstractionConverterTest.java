@@ -79,7 +79,7 @@ public class FrequencySliceAbstractionConverterTest extends
 		List<PropositionDefinition> sliceDefs = this.converter.convert
 				(sa);
 		System.out.println(sliceDefs);
-		assertEquals("wrong number of proposition definitions created", 2,
+		assertEquals("wrong number of proposition definitions created", 1,
 				sliceDefs.size());
 		SliceDefinition sliceDef = this.converter
 				.getPrimaryPropositionDefinition();

@@ -19,8 +19,28 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.etl.job;
 
-public class EtlException extends Exception {
-	public EtlException (Throwable inThrowable) {
-		super(inThrowable.getMessage(), inThrowable);
+/**
+ * An ETL exception is thrown when job execution has failed. It always has a 
+ * cause exception.
+ * 
+ * @author Andrew Post
+ */
+public final class EtlException extends Exception {
+
+	public EtlException() {
 	}
+
+	public EtlException(Throwable thrwbl) {
+		super(thrwbl);
+	}
+
+	public EtlException(String string) {
+		super(string);
+	}
+
+	public EtlException(String string, Throwable thrwbl) {
+		super(string, thrwbl);
+	}
+	
+	
 }
