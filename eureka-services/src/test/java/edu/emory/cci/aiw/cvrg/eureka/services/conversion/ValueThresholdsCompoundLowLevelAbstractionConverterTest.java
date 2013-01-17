@@ -115,7 +115,7 @@ public class ValueThresholdsCompoundLowLevelAbstractionConverterTest extends
 
 		List<PropositionDefinition> propDefs = this.converter
 		        .convert(thresholdGroup);
-		assertEquals("wrong number of proposition definitions created", 5,
+		assertEquals("wrong number of proposition definitions created", 3,
 		        propDefs.size());
 		List<LowLevelAbstractionDefinition> llaDefs = new ArrayList<LowLevelAbstractionDefinition>();
 		for (PropositionDefinition pd : propDefs) {
