@@ -67,7 +67,6 @@ public class DeletePropositionServlet extends HttpServlet {
 			resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 			resp.setContentType("text/plain");
 			resp.getWriter().write(e.getMessage());
-			resp.getWriter().flush();
 		}
 	}
 }

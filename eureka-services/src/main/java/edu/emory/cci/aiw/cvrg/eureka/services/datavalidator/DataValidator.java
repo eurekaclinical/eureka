@@ -85,7 +85,8 @@ public class DataValidator {
 	/**
 	 * Holds all the warning/error messages from the validation.
 	 */
-	final private List<ValidationEvent> validationEvents = new ArrayList<ValidationEvent>();
+	final private List<ValidationEvent> validationEvents = 
+			new ArrayList<ValidationEvent>();
 	/**
 	 * Holds the unique identifiers for all the observations, for duplication
 	 * checking.
@@ -411,15 +412,13 @@ public class DataValidator {
 	 */
 	private void checkDuplicateLongIds(long line, String type, Set<Long> idSet,
 			Long id) {
-		if (idSet.contains(id)) {
+		if (!idSet.add(id)) {
 			ValidationEvent event = new ValidationEvent();
 			event.setFatal(true);
 			event.setLine(Long.valueOf(line));
 			event.setType(type);
 			event.setMessage("duplicate id");
 			this.getValidationEvents().add(event);
-		} else {
-			idSet.add(id);
 		}
 	}
 
@@ -435,15 +434,13 @@ public class DataValidator {
 	 */
 	private void checkDuplicateStringIds(long line, String type,
 			Set<String> idSet, String id) {
-		if (idSet.contains(id)) {
+		if (!idSet.add(id)) {
 			ValidationEvent event = new ValidationEvent();
 			event.setFatal(true);
 			event.setLine(Long.valueOf(line));
 			event.setType(type);
 			event.setMessage("duplicate id");
 			this.getValidationEvents().add(event);
-		} else {
-			idSet.add(id);
 		}
 	}
 

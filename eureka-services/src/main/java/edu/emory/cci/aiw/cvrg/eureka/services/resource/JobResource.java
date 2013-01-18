@@ -214,7 +214,7 @@ public class JobResource {
 		FileUpload latestFileUpload = null;
 
 		List<Job> userJobs = this.getJobsByUser(userId);
-		if (userJobs.size() > 0) {
+		if (!userJobs.isEmpty()) {
 			for (Job job : userJobs) {
 				if (latestJob == null) {
 					latestJob = job;
@@ -226,7 +226,7 @@ public class JobResource {
 			}
 		}
 		List<FileUpload> fileUploads = this.fileDao.getByUserId(userId);
-		if (fileUploads.size() > 0) {
+		if (!fileUploads.isEmpty()) {
 			for (FileUpload fileUpload : fileUploads) {
 				this.fileDao.refresh(fileUpload);
 				if (latestFileUpload == null) {

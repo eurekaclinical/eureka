@@ -305,7 +305,7 @@ public class FileUpload implements CycleRecoverable {
 	 * @return True if there are any errors, false otherwise.
 	 */
 	public boolean containsErrors() {
-		return this.errors.size() > 0;
+		return !this.errors.isEmpty();
 	}
 
 	/**
@@ -314,7 +314,7 @@ public class FileUpload implements CycleRecoverable {
 	 * @return True if there are any warnings, false otherwise.
 	 */
 	public boolean containsWarnings() {
-		return this.warnings.size() > 0;
+		return !this.warnings.isEmpty();
 	}
 	
 	@Override

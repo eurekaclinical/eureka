@@ -36,47 +36,45 @@ import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ServicesClient;
  * Servlet implementation class ForgotPasswordServlet
  */
 public class ForgotPasswordServlet extends HttpServlet {
+
 	private static final long serialVersionUID = 1L;
 	private static Logger LOGGER = LoggerFactory.getLogger(ForgotPasswordServlet.class);
-       
-    /**
-     * @see HttpServlet#HttpServlet()
-     */
-    public ForgotPasswordServlet() {
-        super();
-        // TODO Auto-generated constructor stub
-    }
 
 	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
+	 * @see HttpServlet#HttpServlet()
+	 */
+	public ForgotPasswordServlet() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+
+	/**
+	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse
+	 * response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		doPost(request, response);
 	}
 
 	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
+	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse
+	 * response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		String eurekaServicesUrl = request.getSession().getServletContext()
-		.getInitParameter("eureka-services-url");
+				.getInitParameter("eureka-services-url");
 		ServicesClient servicesClient = new ServicesClient(eurekaServicesUrl);
 		String email = request.getParameter("email");
 		try {
-		servicesClient.resetPassword(email);
-		response.setStatus(HttpServletResponse.SC_OK);
-		response.getWriter().write(HttpServletResponse.SC_OK);
-		}
-		catch(ClientException ex)
-		{
+			servicesClient.resetPassword(email);
+			response.setStatus(HttpServletResponse.SC_OK);
+			response.getWriter().write(HttpServletResponse.SC_OK);
+		} catch (ClientException ex) {
 			response.setContentType("text/plain");
-			
+
 			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 			response.getWriter().write(ex.getMessage());
-			
-			response.getWriter().close();
 		}
 	}
-
 }

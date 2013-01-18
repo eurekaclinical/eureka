@@ -58,8 +58,6 @@ public class JobPollServlet extends HttpServlet {
 	        resp.setContentLength(emptyJson.length());
 	        PrintWriter out = resp.getWriter();
 	        out.println(emptyJson);
-	        out.close();
-	        out.flush();
 	    } else {
 	        JobStatus jobStatus = new JobStatus();
 	        jobStatus.setCurrentStep(jobInfo.getCurrentStep());
@@ -83,9 +81,6 @@ public class JobPollServlet extends HttpServlet {
 	                .length());
 	        PrintWriter out = resp.getWriter();
 	        out.println(mapper.writeValueAsString(jobStatus));
-	        out.close();
-	        out.flush();
-
 	    }
 
     }
