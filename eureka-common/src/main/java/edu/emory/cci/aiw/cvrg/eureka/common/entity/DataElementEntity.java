@@ -65,7 +65,7 @@ public abstract class DataElementEntity implements CycleRecoverable,
 	/**
 	 * The user to which this proposition belongs.
 	 */
-	/*@Column(nullable = false)*/
+	@Column(nullable = false)
 	private Long userId;
 	/**
 	 * If proposition is system-level, this key identifies the proposition in
