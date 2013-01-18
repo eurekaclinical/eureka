@@ -423,7 +423,6 @@ $(document).ready(function() {
 		 
 		 
 		 $("#uploadForm").submit(function(){ 
-			 $('#jobUpload').show();
 			 $("input[type=submit]", this).attr('disabled', true); 
 		 });
 		 

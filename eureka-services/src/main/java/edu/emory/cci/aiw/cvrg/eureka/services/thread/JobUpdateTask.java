@@ -29,6 +29,7 @@ import org.slf4j.LoggerFactory;
 import com.google.inject.Singleton;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.JobFilter;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ClientException;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.EtlClient;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.Job;
 import edu.emory.cci.aiw.cvrg.eureka.services.job.JobCollection;
@@ -61,10 +62,10 @@ public class JobUpdateTask implements Runnable {
 	 * Create a job update thread using the given backend url.
 	 *
 	 * @param inBackendUrl The backend url used to make the update calls.
-	 * @throws NoSuchAlgorithmException Thrown when the secure etlClient can not be
-	 *             created properly.
-	 * @throws KeyManagementException Thrown when the secure etlClient can not be
-	 *             create properly.
+	 * @throws NoSuchAlgorithmException Thrown when the secure etlClient can not
+	 * be created properly.
+	 * @throws KeyManagementException Thrown when the secure etlClient can not
+	 * be create properly.
 	 */
 	public JobUpdateTask(String inBackendUrl) throws KeyManagementException,
 			NoSuchAlgorithmException {
@@ -76,11 +77,18 @@ public class JobUpdateTask implements Runnable {
 	public void run() {
 		JobFilter filter = new JobFilter(null, null,
 				null, null, null);
-		List<Job> updatedJobs = this.etlClient.getJobStatus(filter);
-		if (updatedJobs != null) {
-			JobCollection.setJobs(updatedJobs);
-		} else {
-			LOGGER.debug("Job update thread received null");
+		try {
+			List<Job> updatedJobs = this.etlClient.getJobStatus(filter);
+			if (updatedJobs != null) {
+				JobCollection.setJobs(updatedJobs);
+			} else {
+				LOGGER.debug("Job update thread received null");
+			}
+		} catch (ClientException e) {
+			LOGGER.error(
+				"Job update task could not get job status from the ETL layer", 
+				e);
+			LOGGER.error("Job update task will keep trying");
 		}
 	}
 }

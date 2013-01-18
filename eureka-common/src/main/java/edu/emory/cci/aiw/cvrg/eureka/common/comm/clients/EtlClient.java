@@ -79,14 +79,18 @@ public class EtlClient extends AbstractClient {
 		errorIfStatusNotEqualTo(response, ClientResponse.Status.CREATED);
 	}
 
-	public List<Job> getJobStatus(JobFilter inFilter) {
+	public List<Job> getJobStatus(JobFilter inFilter) throws ClientException {
 		final String path = "/api/job/status";
+		try {
 		return this.getResource()
 				.path(path)
 				.queryParam("filter", inFilter.toQueryParam())
 				.accept(MediaType.APPLICATION_JSON)
 				.type(MediaType.APPLICATION_JSON)
 				.get(JobListType);
+		} catch (UniformInterfaceException e) {
+			throw new ClientException(e.getResponse().getClientResponseStatus(), e.getMessage());
+		}
 	}
 
 	public void validatePropositions(ValidationRequest inRequest) throws

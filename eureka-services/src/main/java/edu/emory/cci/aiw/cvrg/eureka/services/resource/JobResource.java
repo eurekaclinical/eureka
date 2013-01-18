@@ -214,28 +214,24 @@ public class JobResource {
 		FileUpload latestFileUpload = null;
 
 		List<Job> userJobs = this.getJobsByUser(userId);
-		if (!userJobs.isEmpty()) {
-			for (Job job : userJobs) {
-				if (latestJob == null) {
+		for (Job job : userJobs) {
+			if (latestJob == null) {
+				latestJob = job;
+			} else {
+				if (job.getTimestamp().after(latestJob.getTimestamp())) {
 					latestJob = job;
-				} else {
-					if (job.getTimestamp().after(latestJob.getTimestamp())) {
-						latestJob = job;
-					}
 				}
 			}
 		}
 		List<FileUpload> fileUploads = this.fileDao.getByUserId(userId);
-		if (!fileUploads.isEmpty()) {
-			for (FileUpload fileUpload : fileUploads) {
-				this.fileDao.refresh(fileUpload);
-				if (latestFileUpload == null) {
+		for (FileUpload fileUpload : fileUploads) {
+			this.fileDao.refresh(fileUpload);
+			if (latestFileUpload == null) {
+				latestFileUpload = fileUpload;
+			} else {
+				if (fileUpload.getTimestamp().after(
+						latestFileUpload.getTimestamp())) {
 					latestFileUpload = fileUpload;
-				} else {
-					if (fileUpload.getTimestamp().after(
-							latestFileUpload.getTimestamp())) {
-						latestFileUpload = fileUpload;
-					}
 				}
 			}
 		}
