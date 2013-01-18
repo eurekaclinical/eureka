@@ -477,6 +477,7 @@ $(document).ready(function() {
 							$('#status').text('No jobs have been submitted.');
 							$('#statusDate').empty();
 							$('#messages').empty();
+							$('#jobUpload').hide();
 						}
 
 					},
