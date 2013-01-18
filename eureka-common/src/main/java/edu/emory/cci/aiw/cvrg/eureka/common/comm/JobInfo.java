@@ -265,10 +265,10 @@ public class JobInfo {
 		List<String> messsages = new ArrayList<String>();
 		if (this.fileUpload != null) {
 			for (FileWarning fileWarning : this.fileUpload.getWarnings()) {
-				messsages.add(fileWarning.toString());
+				messsages.add(fileWarning.toUserMessage());
 			}
 			for (FileError error : this.fileUpload.getErrors()) {
-				messsages.add(error.toString());
+				messsages.add(error.toUserMessage());
 			}
 		}
 		return messsages;

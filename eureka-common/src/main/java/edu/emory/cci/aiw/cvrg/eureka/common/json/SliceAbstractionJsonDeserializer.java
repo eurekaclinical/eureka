@@ -106,6 +106,8 @@ public final class SliceAbstractionJsonDeserializer extends
 		checkField("mergedInterval");
 		value.setMergedInterval(this.parser.getBooleanValue());
 		
+		nextToken();
+		
 		return value;
 	}
 

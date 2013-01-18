@@ -44,6 +44,7 @@ import org.codehaus.jackson.annotate.JsonManagedReference;
 
 import com.sun.xml.bind.CycleRecoverable;
 import javax.persistence.Column;
+import org.apache.commons.lang.builder.ToStringBuilder;
 
 /**
  * Holds information about a job that is sent from the services layer to the
@@ -244,21 +245,10 @@ public class Job implements CycleRecoverable {
 	public Object onCycleDetected(Context inContext) {
 		return null;
 	}
-
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see java.lang.Object#toString()
-	 */
+	
 	@Override
 	public String toString() {
-		StringBuilder builder = new StringBuilder();
-		builder.append("Job [id=").append(this.id).append(", timestamp=")
-				.append(this.timestamp).append(", configurationId=")
-				.append(this.configurationId).append(", userId=")
-				.append(this.userId).append(", jobEvents=")
-				.append(this.jobEvents).append("]");
-		return builder.toString();
+		return ToStringBuilder.reflectionToString(this);
 	}
 
 }

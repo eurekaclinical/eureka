@@ -70,5 +70,9 @@ public class BackEndContextListener extends GuiceServletContextListener {
 		this.ps = this.getInjector().getInstance(PersistService.class);
 		this.ps.start();
 		servletContextEvent.getServletContext().setAttribute("", new Object());
+		
+		DatabasePopulator populator = injector.getInstance(DatabasePopulator
+				.class);
+		populator.doPopulateIfNeeded();
 	}
 }

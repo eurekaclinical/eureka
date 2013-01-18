@@ -47,8 +47,9 @@ import edu.emory.cci.aiw.cvrg.eureka.services.dao.TimeUnitDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.UserDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.ValueComparatorDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.util.StringUtil;
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -123,17 +124,19 @@ class DatabasePopulator {
 				fileUpload.setCompleted(true);
 				fileUpload.setTimestamp(now);
 				FileError fileError = new FileError();
-				fileError.setText("Eureka! shut down during run.");
+				fileError.setText("Eureka! shut down during job.");
 				fileError.setType("unknown");
-				fileUpload.setErrors(Collections.singletonList(fileError));
+				List<FileError> errors = new ArrayList<FileError>();
+				errors.add(fileError);
+				fileUpload.setErrors(errors);
 				this.fileDao.update(fileUpload);
-				LOGGER.warn("After repair, the file upload's status is {)", 
+				LOGGER.warn("After repair, the file upload's status is {}", 
 						fileUpload.toString());
 				numUploadsRepaired++;
 			}
 		}
 		if (numUploadsRepaired > 0) {
-			LOGGER.warn("{} file uploads were repaired.", numUploadsRepaired);
+			LOGGER.warn("Repaired {} file upload(s).", numUploadsRepaired);
 		}
 	}
 

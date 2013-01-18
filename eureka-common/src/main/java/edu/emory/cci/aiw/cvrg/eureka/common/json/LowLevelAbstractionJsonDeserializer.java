@@ -21,6 +21,7 @@ package edu.emory.cci.aiw.cvrg.eureka.common.json;
 
 import java.io.IOException;
 import java.util.Set;
+import org.codehaus.jackson.JsonNode;
 
 import org.codehaus.jackson.JsonParseException;
 import org.codehaus.jackson.JsonParser;
@@ -115,7 +116,9 @@ public final class LowLevelAbstractionJsonDeserializer extends
 		
 		nextToken();
 		checkField("minimumDuration");
-		value.setMinimumDuration(this.parser.getIntValue());
+		if (this.parser.getCurrentToken() != JsonToken.VALUE_NULL) {
+			value.setMinimumDuration(this.parser.getIntValue());
+		}
 		
 		nextToken();
 		checkField("minimumDurationUnits");
@@ -123,7 +126,9 @@ public final class LowLevelAbstractionJsonDeserializer extends
 		
 		nextToken();
 		checkField("maximumDuration");
-		value.setMaximumDuration(this.parser.getIntValue());
+		if (this.parser.getCurrentToken() != JsonToken.VALUE_NULL) {
+			value.setMaximumDuration(this.parser.getIntValue());
+		}
 		
 		nextToken();
 		checkField("maximumDurationUnits");
@@ -175,7 +180,9 @@ public final class LowLevelAbstractionJsonDeserializer extends
 		
 		nextToken();
 		checkField("maxGapBetweenValues");
-		value.setMaximumGapBetweenValues(this.parser.getIntValue());
+		if (this.parser.getCurrentToken() != JsonToken.VALUE_NULL) {
+			value.setMaximumGapBetweenValues(this.parser.getIntValue());
+		}
 		
 		nextToken();
 		checkField("maxGapBetweenValuesUnits");
@@ -220,6 +227,7 @@ public final class LowLevelAbstractionJsonDeserializer extends
 
 			nextToken();
 		}
+		nextToken();
 
 		return value;
 	}

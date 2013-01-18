@@ -31,6 +31,8 @@ import javax.persistence.SequenceGenerator;
 import org.codehaus.jackson.annotate.JsonBackReference;
 
 import com.sun.xml.bind.CycleRecoverable;
+import java.text.MessageFormat;
+import java.text.NumberFormat;
 import org.apache.commons.lang.builder.ToStringBuilder;
 
 /**
@@ -42,6 +44,11 @@ import org.apache.commons.lang.builder.ToStringBuilder;
  */
 @MappedSuperclass
 abstract public class AbstractFileInfo implements CycleRecoverable {
+	protected static final MessageFormat USER_MSG_NO_LINE_NUM = 
+			new MessageFormat("{0} during {1}: {2}");
+	
+	protected static final MessageFormat USER_MSG_WITH_LINE_NUM =
+			new MessageFormat("{0} during {1}, line {2}: {3}");
 
 	/**
 	 * The unique identifier for the file information.
@@ -178,6 +185,8 @@ abstract public class AbstractFileInfo implements CycleRecoverable {
 	public Object onCycleDetected(Context inContext) {
 		return null;
 	}
+	
+	public abstract String toUserMessage();
 
 	@Override
 	public String toString() {

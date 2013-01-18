@@ -339,7 +339,6 @@ public class JobTask implements Runnable {
 		FileError error = new FileError();
 		error.setType("job processing");
 		error.setText(message);
-		error.setLineNumber(Long.valueOf(0));
 		error.setFileUpload(this.fileUpload);
 
 		this.fileUpload.addError(error);

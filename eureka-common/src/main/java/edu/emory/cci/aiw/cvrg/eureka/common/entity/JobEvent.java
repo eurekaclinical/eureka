@@ -38,6 +38,7 @@ import org.codehaus.jackson.annotate.JsonBackReference;
 
 import com.sun.xml.bind.CycleRecoverable;
 import javax.persistence.Column;
+import org.apache.commons.lang.builder.ToStringBuilder;
 
 /**
  * An event associated with a job.
@@ -181,21 +182,11 @@ public class JobEvent implements CycleRecoverable {
 		return null;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see java.lang.Object#toString()
-	 */
-	// @Override
-	// public String toString() {
-	// StringBuilder builder = new StringBuilder();
-	// builder.append("JobEvent [id=").append(this.id).append(", job=")
-	// .append(this.job.getId()).append(", state=").append(this.state)
-	// .append(", exceptionStackTrace=")
-	// .append(Arrays.toString(this.exceptionStackTrace))
-	// .append(", timeStamp=").append(this.timeStamp)
-	// .append(", message=").append(this.message).append("]");
-	// return builder.toString();
-	// }
+	@Override
+	public String toString() {
+		return ToStringBuilder.reflectionToString(this);
+	}
+
+	
 
 }

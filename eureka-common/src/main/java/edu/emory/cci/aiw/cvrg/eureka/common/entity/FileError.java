@@ -19,6 +19,8 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.common.entity;
 
+import java.text.MessageFormat;
+import java.text.NumberFormat;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -46,6 +48,16 @@ public class FileError extends AbstractFileInfo {
 		this.fileUpload = inFileUpload;
 		if (!this.getFileUpload().getErrors().contains(this)) {
 			this.getFileUpload().addError(this);
+		}
+	}
+	
+	@Override
+	public String toUserMessage() {
+		Long lineNumber = getLineNumber();
+		if (lineNumber != null) {
+			return USER_MSG_WITH_LINE_NUM.format(new Object[]{"Error", getType(), lineNumber, getText()});
+		} else {
+			return USER_MSG_NO_LINE_NUM.format(new Object[]{"Error", getType(), getText()});
 		}
 	}
 }

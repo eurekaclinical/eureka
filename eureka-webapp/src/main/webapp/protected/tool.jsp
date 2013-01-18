@@ -41,7 +41,7 @@
                 <tr>
                     <td width="252">Job Status</td>
                     <td width="204">Status Date</td>
-                    <td width="151">Errors</td>
+                    <td width="151">Warnings & Errors</td>
                 </tr>
                 <tr>
                     <td>

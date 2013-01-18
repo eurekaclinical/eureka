@@ -96,6 +96,10 @@ public final class Task implements Runnable {
 			this.etl.close();
 		} catch (EtlException e) {
 			handleError(myJob, e);
+		} catch (RuntimeException e) {
+			handleError(myJob, e);
+		} catch (Error e) {
+			handleError(myJob, e);
 		}
 
 		myJob.setNewState("DONE", null, null);
@@ -108,7 +112,12 @@ public final class Task implements Runnable {
 	private void handleError(Job job, Throwable e) {
 		LOGGER.error("Job " + job.getId() + " for user " 
 				+ job.getUserId() + " failed: " + e.getMessage(), e);
-		job.setNewState("EXCEPTION", e.getMessage(), null);
+		StackTraceElement[] ste = e.getStackTrace();
+		String[] st = new String[ste.length];
+		for (int i = 0; i < ste.length; i++) {
+			st[i] = ste[i].toString();
+		}
+		job.setNewState("EXCEPTION", e.getMessage(), st);
 		this.jobDao.update(job);
 	}
 }
