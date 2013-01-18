@@ -44,6 +44,7 @@ import org.codehaus.jackson.annotate.JsonManagedReference;
 
 import com.sun.xml.bind.CycleRecoverable;
 import javax.persistence.Column;
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.builder.ToStringBuilder;
 
 /**
@@ -204,14 +205,15 @@ public class Job implements CycleRecoverable {
 	}
 
 	public void setNewState(String state, String message, String[] stackTrace) {
-
 		final Date date = new Date();
 		JobEvent jev = new JobEvent();
 		jev.setJob(this);
 		jev.setTimeStamp(date);
 		jev.setState(state);
 		jev.setMessage(message);
-		jev.setExceptionStackTrace(stackTrace);
+		if (stackTrace != null) {
+			jev.setExceptionStackTrace(StringUtils.join(stackTrace,'\n'));
+		}
 		this.setTimestamp(date);
 		this.jobEvents.add(jev);
 	}

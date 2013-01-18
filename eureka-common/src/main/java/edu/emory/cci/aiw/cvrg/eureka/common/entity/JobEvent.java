@@ -38,6 +38,7 @@ import org.codehaus.jackson.annotate.JsonBackReference;
 
 import com.sun.xml.bind.CycleRecoverable;
 import javax.persistence.Column;
+import javax.persistence.Lob;
 import org.apache.commons.lang.builder.ToStringBuilder;
 
 /**
@@ -74,7 +75,8 @@ public class JobEvent implements CycleRecoverable {
 	/**
 	 * The exception stack trace
 	 */
-	private String[] exceptionStackTrace;
+	@Lob
+	private String exceptionStackTrace;
 	/**
 	 * The time stamp for the event.
 	 */
@@ -132,14 +134,14 @@ public class JobEvent implements CycleRecoverable {
 	/**
 	 * @return the exceptionStackTrace
 	 */
-	public String[] getExceptionStackTrace() {
+	public String getExceptionStackTrace() {
 		return this.exceptionStackTrace;
 	}
 
 	/**
 	 * @param inExceptionStackTrace the exceptionStackTrace to set
 	 */
-	public void setExceptionStackTrace(String[] inExceptionStackTrace) {
+	public void setExceptionStackTrace(String inExceptionStackTrace) {
 		this.exceptionStackTrace = inExceptionStackTrace;
 	}
 
