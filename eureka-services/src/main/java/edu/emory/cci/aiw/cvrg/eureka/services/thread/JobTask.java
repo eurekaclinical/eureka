@@ -329,9 +329,12 @@ public class JobTask implements Runnable {
 		EtlClient etlClient = new EtlClient(this.serviceProperties.getEtlUrl());
 		try {
 			etlClient.submitJob(jobRequest);
-			LOGGER.info("Job successfully submitted to ETL layer.");
+			LOGGER.info(
+					"Submitted job from user {} to ETL layer successfully.", 
+					job.getUserId());
 		} catch (ClientException e) {
-			LOGGER.error(e.getMessage(), e);
+			LOGGER.error("Job submission from user {} failed", 
+					job.getUserId(), e);
 			setCompleteWithError(e.getMessage());
 		}
 	}
