@@ -39,7 +39,7 @@ public final class PropositionChildrenVisitor implements
 
 	@Override
 	public void visit(CategoryEntity categorization) {
-		this.children = categorization.getInverseIsA();
+		this.children = categorization.getMembers();
 	}
 
 	@Override

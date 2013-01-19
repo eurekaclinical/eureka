@@ -131,8 +131,6 @@ public final class DdlGenerator {
 		serviceClasses.add(edu.emory.cci.aiw.cvrg.eureka.common.entity
 						.DataElementEntity.class);
 		serviceClasses.add(edu.emory.cci.aiw.cvrg.eureka.common.entity
-						.TemporalPattern.class);
-		serviceClasses.add(edu.emory.cci.aiw.cvrg.eureka.common.entity
 			.SequenceEntity.class);
 		serviceClasses.add(edu.emory.cci.aiw.cvrg.eureka.common.entity
 			.CategoryEntity.class);
@@ -143,7 +141,7 @@ public final class DdlGenerator {
 		serviceClasses.add(edu.emory.cci.aiw.cvrg.eureka.common.entity
 			.TimeUnit.class);
 		serviceClasses.add(edu.emory.cci.aiw.cvrg.eureka.common.entity
-			.ExtendedProposition.class);
+			.ExtendedDataElement.class);
 		serviceClasses.add(edu.emory.cci.aiw.cvrg.eureka.common.entity
 			.PropertyConstraint.class);
 		serviceClasses.add(edu.emory.cci.aiw.cvrg.eureka.common.entity

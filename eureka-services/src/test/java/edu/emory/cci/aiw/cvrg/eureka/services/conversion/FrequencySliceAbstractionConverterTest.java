@@ -19,7 +19,7 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.services.conversion;
 
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.ExtendedProposition;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.ExtendedDataElement;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.FrequencyEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.SystemProposition;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.SystemProposition.SystemType;
@@ -71,8 +71,8 @@ public class FrequencySliceAbstractionConverterTest extends
 		frequency.setWithinAtMost(90);
 		frequency.setWithinAtMostUnits(dayUnit);
 		
-		ExtendedProposition af = new ExtendedProposition();
-		af.setProposition(event);
+		ExtendedDataElement af = new ExtendedDataElement();
+		af.setDataElementEntity(event);
 		
 		frequency.setExtendedProposition(af);
 

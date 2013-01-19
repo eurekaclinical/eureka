@@ -82,7 +82,7 @@ public class DataElementResource {
 				result.add(
 						this.systemElementResource.get(
 						inUserId, proposition.getKey()));
-			} else if (!proposition.isHelperProposition()) {
+			} else {
 				proposition.accept(this.propositionTranslatorVisitor);
 				result.add(propositionTranslatorVisitor.getDataElement());
 			}
@@ -159,13 +159,9 @@ public class DataElementResource {
 				.getId());
 
 		if (oldProposition == null) {
-			throw new HttpStatusException(Response.Status.NOT_FOUND, 
-					"Proposition with ID " + inElement.getId() + " was not " +
-					"found.");
+			throw new HttpStatusException(Response.Status.NOT_FOUND);
 		} else if (!oldProposition.getUserId().equals(inElement.getUserId())) {
-			throw new HttpStatusException(Response.Status.NOT_FOUND,
-					"Proposition with ID " + inElement.getId() + " did not " +
-							"have the same owner, " + inElement.getUserId());
+			throw new HttpStatusException(Response.Status.NOT_FOUND);
 		}
 
 		Date now = new Date();
@@ -181,8 +177,7 @@ public class DataElementResource {
 			@PathParam("key") String inKey) {
 		DataElementEntity proposition = this.propositionDao.getByUserAndKey(inUserId, inKey);
 		if (proposition == null) {
-			throw new HttpStatusException(Response.Status.NOT_FOUND, 
-					"No data element with userId=" + inUserId + " and key=" + inKey);
+			throw new HttpStatusException(Response.Status.NOT_FOUND);
 		}
 		List<DataElementEntity> others = this.propositionDao.getByUserId(inUserId);
 

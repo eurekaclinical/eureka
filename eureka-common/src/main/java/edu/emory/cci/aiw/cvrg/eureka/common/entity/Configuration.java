@@ -26,6 +26,7 @@ import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlRootElement;
+import org.apache.commons.lang.builder.ToStringBuilder;
 
 /**
  * The configuration for a Protempa run, including the input data store
@@ -283,5 +284,10 @@ public class Configuration {
 	 */
 	public void setI2b2DataPassword(String inI2b2DataPassword) {
 		this.i2b2DataPassword = inI2b2DataPassword;
+	}
+	
+	@Override
+	public String toString() {
+		return ToStringBuilder.reflectionToString(this);
 	}
 }

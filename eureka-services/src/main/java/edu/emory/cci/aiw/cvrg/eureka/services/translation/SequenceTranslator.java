@@ -30,7 +30,7 @@ import com.google.inject.Inject;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.DataElementField;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.Sequence;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.Sequence.RelatedDataElementField;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.ExtendedProposition;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.ExtendedDataElement;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.SequenceEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.DataElementEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.Relation;
@@ -49,7 +49,7 @@ import edu.emory.cci.aiw.cvrg.eureka.services.finder.SystemPropositionFinder;
 public class SequenceTranslator implements
 		PropositionTranslator<Sequence, SequenceEntity> {
 
-	private Map<Long, ExtendedProposition> extendedProps;
+	private Map<Long, ExtendedDataElement> extendedProps;
 	private final Map<String, DataElementEntity> propositions;
 	private final TimeUnitDao timeUnitDao;
 	private final RelationOperatorDao relationOperatorDao;
@@ -65,7 +65,7 @@ public class SequenceTranslator implements
 				new TranslatorSupport(inPropositionDao, inFinder);
 		this.timeUnitDao = inTimeUnitDao;
 		this.relationOperatorDao = inRelationOperatorDao;
-		this.extendedProps = new HashMap<Long, ExtendedProposition>();
+		this.extendedProps = new HashMap<Long, ExtendedDataElement>();
 		this.propositions = new HashMap<String, DataElementEntity>();
 		this.valueComparatorDao = inValueComparatorDao;
 	}
@@ -81,10 +81,10 @@ public class SequenceTranslator implements
 				this.translatorSupport.getUserEntityInstance(element,
 				SequenceEntity.class);
 
-		ExtendedProposition ep =
-				createExtendedProposition(result.getPrimaryProposition(),
+		ExtendedDataElement ep =
+				createExtendedProposition(result.getPrimaryExtendedDataElement(),
 				element.getPrimaryDataElement(), userId);
-		result.setPrimaryProposition(ep);
+		result.setPrimaryExtendedDataElement(ep);
 
 		List<Relation> relations = result.getRelations();
 		if (relations == null) {
@@ -94,13 +94,13 @@ public class SequenceTranslator implements
 
 		int i = 0;
 		for (RelatedDataElementField rde : element.getRelatedDataElements()) {
-			ExtendedProposition lhsEP;
-			ExtendedProposition rhsEP;
+			ExtendedDataElement lhsEP;
+			ExtendedDataElement rhsEP;
 			Relation relation;
 			if (relations.size() > i) {
 				relation = relations.get(i);
-				lhsEP = relation.getLhsExtendedProposition();
-				rhsEP = relation.getRhsExtendedProposition();
+				lhsEP = relation.getLhsExtendedDataElement();
+				rhsEP = relation.getRhsExtendedDataElement();
 			} else {
 				relation = new Relation();
 				lhsEP = null;
@@ -123,24 +123,18 @@ public class SequenceTranslator implements
 			relation.setMaxf1s2(rde.getRelationMaxCount());
 			relation.setMaxf1s2TimeUnit(
 					this.timeUnitDao.retrieve(rde.getRelationMaxUnits()));
-			relation.setOp(relationOperator);
+			relation.setRelationOperator(relationOperator);
 
 			if (relationOperator.getName().equalsIgnoreCase("before")) {
-				relation.setLhsExtendedProposition(lhsEP);
-				relation.setRhsExtendedProposition(rhsEP);
+				relation.setLhsExtendedDataElement(lhsEP);
+				relation.setRhsExtendedDataElement(rhsEP);
 			} else if (relationOperator.getName().equalsIgnoreCase("after")) {
-				relation.setLhsExtendedProposition(rhsEP);
-				relation.setRhsExtendedProposition(lhsEP);
+				relation.setLhsExtendedDataElement(rhsEP);
+				relation.setRhsExtendedDataElement(lhsEP);
 			}
 			
 			i++;
 		}
-
-		List<DataElementEntity> abstractedFrom = new ArrayList<DataElementEntity>();
-		for (ExtendedProposition extendedProp : this.extendedProps.values()) {
-			abstractedFrom.add(extendedProp.getProposition());
-		}
-		result.setAbstractedFrom(abstractedFrom);
 
 		return result;
 	}
@@ -164,16 +158,16 @@ public class SequenceTranslator implements
 		return proposition;
 	}
 
-	private ExtendedProposition createExtendedProposition(
-			ExtendedProposition origExtendedProposition,
+	private ExtendedDataElement createExtendedProposition(
+			ExtendedDataElement origExtendedProposition,
 			DataElementField dataElement, Long userId)
 			throws DataElementHandlingException {
-		ExtendedProposition result =
+		ExtendedDataElement result =
 				this.extendedProps.get(dataElement.getId());
 		if (result == null) {
-			ExtendedProposition ep = origExtendedProposition;
+			ExtendedDataElement ep = origExtendedProposition;
 			if (origExtendedProposition == null) {
-				ep = new ExtendedProposition();
+				ep = new ExtendedDataElement();
 			}
 			DataElementEntity proposition =
 					getOrCreateProposition(userId,
@@ -193,21 +187,21 @@ public class SequenceTranslator implements
 		PropositionTranslatorUtil.populateCommonDataElementFields(result,
 				proposition);
 
-		if (proposition.getPrimaryProposition() != null) {
+		if (proposition.getPrimaryExtendedDataElement() != null) {
 			// identify the primary data element
 			result.setPrimaryDataElement(createDataElementField(proposition
-					.getPrimaryProposition()));
+					.getPrimaryExtendedDataElement()));
 
 			// determine the correct source for each sequential data element
 			Map<Long, Long> sequentialSources = new HashMap<Long, Long>();
 			for (Relation relation : proposition.getRelations()) {
-				Long epId = relation.getRhsExtendedProposition().getId();
-				Long pId = proposition.getPrimaryProposition().getId();
+				Long epId = relation.getRhsExtendedDataElement().getId();
+				Long pId = proposition.getPrimaryExtendedDataElement().getId();
 				if (pId.equals(epId)) {
 					sequentialSources.put(epId, pId);
 				} else {
 					for (Relation src : proposition.getRelations()) {
-						Long srcId = src.getLhsExtendedProposition().getId();
+						Long srcId = src.getLhsExtendedDataElement().getId();
 						if (srcId.equals(epId)) {
 							sequentialSources.put(epId, srcId);
 							break;
@@ -223,7 +217,7 @@ public class SequenceTranslator implements
 						createRelatedDataElementField(relation);
 				field.setSequentialDataElementSource(
 						sequentialSources.get(
-						relation.getRhsExtendedProposition().getId()));
+						relation.getRhsExtendedDataElement().getId()));
 				relatedFields.add(field);
 			}
 			result.setRelatedDataElements(relatedFields);
@@ -243,31 +237,31 @@ public class SequenceTranslator implements
 		relatedDataElement.setRelationMaxCount(relation.getMaxf1s2());
 		relatedDataElement.setRelationMaxUnits(relation.getMaxf1s2TimeUnit()
 				.getId());
-		relatedDataElement.setRelationOperator(relation.getOp().getId());
+		relatedDataElement.setRelationOperator(relation.getRelationOperator().getId());
 
-		if (relation.getOp().getName().equalsIgnoreCase("before")) {
+		if (relation.getRelationOperator().getName().equalsIgnoreCase("before")) {
 			relatedDataElement
 					.setDataElementField(createDataElementField(relation
-					.getLhsExtendedProposition()));
+					.getLhsExtendedDataElement()));
 			relatedDataElement.setSequentialDataElement(relation
-					.getRhsExtendedProposition().getProposition().getKey());
-		} else if (relation.getOp().getName().equalsIgnoreCase("after")) {
+					.getRhsExtendedDataElement().getDataElementEntity().getKey());
+		} else if (relation.getRelationOperator().getName().equalsIgnoreCase("after")) {
 			relatedDataElement
 					.setDataElementField(createDataElementField(relation
-					.getRhsExtendedProposition()));
+					.getRhsExtendedDataElement()));
 			relatedDataElement.setSequentialDataElement(relation
-					.getLhsExtendedProposition().getProposition().getKey());
+					.getLhsExtendedDataElement().getDataElementEntity().getKey());
 		}
 
 		return relatedDataElement;
 	}
 
-	private DataElementField createDataElementField(ExtendedProposition ep) {
+	private DataElementField createDataElementField(ExtendedDataElement ep) {
 		DataElementField dataElement = new DataElementField();
-		dataElement.setDataElementKey(ep.getProposition().getKey());
-		dataElement.setDataElementAbbrevDisplayName(ep.getProposition()
+		dataElement.setDataElementKey(ep.getDataElementEntity().getKey());
+		dataElement.setDataElementAbbrevDisplayName(ep.getDataElementEntity()
 				.getAbbrevDisplayName());
-		dataElement.setDataElementDisplayName(ep.getProposition()
+		dataElement.setDataElementDisplayName(ep.getDataElementEntity()
 				.getDisplayName());
 		if (ep.getMinDuration() != null) {
 			dataElement.setHasDuration(true);

@@ -34,7 +34,7 @@ import com.google.inject.Inject;
 import com.google.inject.Provider;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.CategoryEntity;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.CategoryEntity.CategorizationType;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.CategoryEntity.CategoryType;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.DataElementEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.FileUpload;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.Role;
@@ -154,7 +154,7 @@ public class Setup implements TestDataProvider {
 			proposition1.setAbbrevDisplayName("test");
 			proposition1.setDisplayName("Test Proposition");
 			proposition1.setUserId(u.getId());
-			proposition1.setCategorizationType(CategorizationType.EVENT);
+			proposition1.setCategoryType(CategoryType.EVENT);
 			proposition1.setCreated(now);
 			entityManager.persist(proposition1);
 			dataElements.add(proposition1);

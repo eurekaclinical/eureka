@@ -28,6 +28,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import org.apache.commons.lang.builder.ToStringBuilder;
 
 /**
  * @author hrathod
@@ -82,5 +83,10 @@ public class PropertyConstraint {
 
 	public void setValueComparator(ValueComparator inValueComparator) {
 		valueComparator = inValueComparator;
+	}
+	
+	@Override
+	public String toString() {
+		return ToStringBuilder.reflectionToString(this);
 	}
 }

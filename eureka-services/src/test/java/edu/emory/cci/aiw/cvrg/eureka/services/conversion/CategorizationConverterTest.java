@@ -20,7 +20,7 @@
 package edu.emory.cci.aiw.cvrg.eureka.services.conversion;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.CategoryEntity;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.CategoryEntity.CategorizationType;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.CategoryEntity.CategoryType;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.DataElementEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.FrequencyEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.SequenceEntity;
@@ -79,11 +79,11 @@ public class CategorizationConverterTest extends AbstractServiceTest {
 		eventCat1.setKey("test-event-cat1");
 		eventCat1.setDisplayName("test-event-cat1-display");
 		eventCat1.setAbbrevDisplayName("test-event-cat1-abbrev");
-		eventCat1.setCategorizationType(CategorizationType.EVENT);
+		eventCat1.setCategoryType(CategoryType.EVENT);
 		List<DataElementEntity> iia1 = new ArrayList<DataElementEntity>();
 		iia1.add(event1);
 		iia1.add(event2);
-		eventCat1.setInverseIsA(iia1);
+		eventCat1.setMembers(iia1);
 
 		List<PropositionDefinition> eventDefs1 = this.converter.convert
 				(eventCat1);
@@ -111,10 +111,10 @@ public class CategorizationConverterTest extends AbstractServiceTest {
 		eventCat2.setKey("test-event-cat2");
 		eventCat2.setDisplayName("test-event-cat2-display");
 		eventCat2.setAbbrevDisplayName("test-event-cat2-abbrev");
-		eventCat2.setCategorizationType(CategorizationType.EVENT);
+		eventCat2.setCategoryType(CategoryType.EVENT);
 		List<DataElementEntity> iia2 = new ArrayList<DataElementEntity>();
 		iia2.add(eventCat1);
-		eventCat2.setInverseIsA(iia2);
+		eventCat2.setMembers(iia2);
 
 		List<PropositionDefinition> eventDefs2 = this.converter.convert
 				(eventCat2);
@@ -154,11 +154,11 @@ public class CategorizationConverterTest extends AbstractServiceTest {
 		constantCat1.setKey("test-constant-cat1");
 		constantCat1.setDisplayName("test-constant-cat1-display");
 		constantCat1.setAbbrevDisplayName("test-constant-cat1-abbrev");
-		constantCat1.setCategorizationType(CategorizationType.CONSTANT);
+		constantCat1.setCategoryType(CategoryType.CONSTANT);
 		List<DataElementEntity> iia1 = new ArrayList<DataElementEntity>();
 		iia1.add(constant1);
 		iia1.add(constant2);
-		constantCat1.setInverseIsA(iia1);
+		constantCat1.setMembers(iia1);
 
 		List<PropositionDefinition> constantDefs1 = this.converter.convert
 				(constantCat1);
@@ -187,10 +187,10 @@ public class CategorizationConverterTest extends AbstractServiceTest {
 		constantCat2.setKey("test-constant-cat2");
 		constantCat2.setDisplayName("test-constant-cat2-display");
 		constantCat2.setAbbrevDisplayName("test-constant-cat2-abbrev");
-		constantCat2.setCategorizationType(CategorizationType.CONSTANT);
+		constantCat2.setCategoryType(CategoryType.CONSTANT);
 		List<DataElementEntity> iia2 = new ArrayList<DataElementEntity>();
 		iia2.add(constantCat1);
-		constantCat2.setInverseIsA(iia2);
+		constantCat2.setMembers(iia2);
 
 		List<PropositionDefinition> constantDefs2 = this.converter.convert
 				(constantCat2);
@@ -231,11 +231,11 @@ public class CategorizationConverterTest extends AbstractServiceTest {
 		primParamCat1.setDisplayName("test-primparam-cat1-display");
 		primParamCat1.setAbbrevDisplayName("test-primparam-cat1-abbrev");
 		primParamCat1
-				.setCategorizationType(CategorizationType.PRIMITIVE_PARAMETER);
+				.setCategoryType(CategoryType.PRIMITIVE_PARAMETER);
 		List<DataElementEntity> iia1 = new ArrayList<DataElementEntity>();
 		iia1.add(primParam1);
 		iia1.add(primParam2);
-		primParamCat1.setInverseIsA(iia1);
+		primParamCat1.setMembers(iia1);
 
 		List<PropositionDefinition> primParamDefs1 = this.converter.convert
 				(primParamCat1);
@@ -266,10 +266,10 @@ public class CategorizationConverterTest extends AbstractServiceTest {
 		primParamCat2.setDisplayName("test-primparam-cat2-display");
 		primParamCat2.setAbbrevDisplayName("test-primparam-cat2-abbrev");
 		primParamCat2
-				.setCategorizationType(CategorizationType.PRIMITIVE_PARAMETER);
+				.setCategoryType(CategoryType.PRIMITIVE_PARAMETER);
 		List<DataElementEntity> iia2 = new ArrayList<DataElementEntity>();
 		iia2.add(primParamCat1);
-		primParamCat2.setInverseIsA(iia2);
+		primParamCat2.setMembers(iia2);
 
 		List<PropositionDefinition> primParamDefs2 = this.converter.convert
 				(primParamCat2);
@@ -307,11 +307,11 @@ public class CategorizationConverterTest extends AbstractServiceTest {
 		hlaCat1.setKey("test-hla-cat1");
 		hlaCat1.setDisplayName("test-hla-cat1-display");
 		hlaCat1.setAbbrevDisplayName("test-hla-cat1-abbrev");
-		hlaCat1.setCategorizationType(CategorizationType.HIGH_LEVEL_ABSTRACTION);
+		hlaCat1.setCategoryType(CategoryType.HIGH_LEVEL_ABSTRACTION);
 		List<DataElementEntity> iia1 = new ArrayList<DataElementEntity>();
 		iia1.add(hla1);
 		iia1.add(hla2);
-		hlaCat1.setInverseIsA(iia1);
+		hlaCat1.setMembers(iia1);
 
 		List<PropositionDefinition> hlaDefs1 = this.converter.convert
 				(hlaCat1);
@@ -341,10 +341,10 @@ public class CategorizationConverterTest extends AbstractServiceTest {
 		hlaCat2.setKey("test-hla-cat2");
 		hlaCat2.setDisplayName("test-hla-cat2-display");
 		hlaCat2.setAbbrevDisplayName("test-hla-cat2-abbrev");
-		hlaCat2.setCategorizationType(CategorizationType.HIGH_LEVEL_ABSTRACTION);
+		hlaCat2.setCategoryType(CategoryType.HIGH_LEVEL_ABSTRACTION);
 		List<DataElementEntity> iia2 = new ArrayList<DataElementEntity>();
 		iia2.add(hlaCat1);
-		hlaCat2.setInverseIsA(iia2);
+		hlaCat2.setMembers(iia2);
 
 		List<PropositionDefinition> hlaDefs2 = this.converter.convert(hlaCat2);
 		assertEquals("wrong number of proposition definitions created", 4,
@@ -381,11 +381,11 @@ public class CategorizationConverterTest extends AbstractServiceTest {
 		saCat1.setKey("test-slice-cat1");
 		saCat1.setDisplayName("test-slice-cat1-display");
 		saCat1.setAbbrevDisplayName("test-slice-cat1-abbrev");
-		saCat1.setCategorizationType(CategorizationType.SLICE_ABSTRACTION);
+		saCat1.setCategoryType(CategoryType.SLICE_ABSTRACTION);
 		List<DataElementEntity> iia1 = new ArrayList<DataElementEntity>();
 		iia1.add(sa1);
 		iia1.add(sa2);
-		saCat1.setInverseIsA(iia1);
+		saCat1.setMembers(iia1);
 
 		List<PropositionDefinition> saDefs1 = this.converter.convert(saCat1);
 		assertEquals("wrong number of proposition definitions created", 3,
@@ -414,10 +414,10 @@ public class CategorizationConverterTest extends AbstractServiceTest {
 		saCat2.setKey("test-slice-cat2");
 		saCat2.setDisplayName("test-slice-cat2-display");
 		saCat2.setAbbrevDisplayName("test-slice-cat2-abbrev");
-		saCat2.setCategorizationType(CategorizationType.SLICE_ABSTRACTION);
+		saCat2.setCategoryType(CategoryType.SLICE_ABSTRACTION);
 		List<DataElementEntity> iia2 = new ArrayList<DataElementEntity>();
 		iia2.add(saCat1);
-		saCat2.setInverseIsA(iia2);
+		saCat2.setMembers(iia2);
 
 		List<PropositionDefinition> saDefs2 = this.converter.convert(saCat2);
 		assertEquals("wrong number of proposition definitions created", 4,
@@ -475,11 +475,11 @@ public class CategorizationConverterTest extends AbstractServiceTest {
 		llaCat1.setKey("test-lla-cat1");
 		llaCat1.setDisplayName("test-lla-cat1-display");
 		llaCat1.setAbbrevDisplayName("test-lla-cat1-abbrev");
-		llaCat1.setCategorizationType(CategorizationType.LOW_LEVEL_ABSTRACTION);
+		llaCat1.setCategoryType(CategoryType.LOW_LEVEL_ABSTRACTION);
 		List<DataElementEntity> iia1 = new ArrayList<DataElementEntity>();
 		iia1.add(lla1);
 		iia1.add(lla2);
-		llaCat1.setInverseIsA(iia1);
+		llaCat1.setMembers(iia1);
 
 		List<PropositionDefinition> llaDefs1 = this.converter.convert(llaCat1);
 		assertEquals("wrong number of proposition definitions created", 3,
@@ -508,10 +508,10 @@ public class CategorizationConverterTest extends AbstractServiceTest {
 		llaCat2.setKey("test-lla-cat2");
 		llaCat2.setDisplayName("test-lla-cat2-display");
 		llaCat2.setAbbrevDisplayName("test-lla-cat2-abbrev");
-		llaCat2.setCategorizationType(CategorizationType.LOW_LEVEL_ABSTRACTION);
+		llaCat2.setCategoryType(CategoryType.LOW_LEVEL_ABSTRACTION);
 		List<DataElementEntity> iia2 = new ArrayList<DataElementEntity>();
 		iia2.add(llaCat1);
-		llaCat2.setInverseIsA(iia2);
+		llaCat2.setMembers(iia2);
 
 		List<PropositionDefinition> llaDefs2 = this.converter.convert(llaCat2);
 		assertEquals("wrong number of proposition definitions created", 4,
@@ -580,11 +580,11 @@ public class CategorizationConverterTest extends AbstractServiceTest {
 		cllaCat1.setKey("test-clla-cat1");
 		cllaCat1.setDisplayName("test-clla-cat1-display");
 		cllaCat1.setAbbrevDisplayName("test-clla-cat1-abbrev");
-		cllaCat1.setCategorizationType(CategorizationType.COMPOUND_LOW_LEVEL_ABSTRACTION);
+		cllaCat1.setCategoryType(CategoryType.COMPOUND_LOW_LEVEL_ABSTRACTION);
 		List<DataElementEntity> iia1 = new ArrayList<DataElementEntity>();
 		iia1.add(clla1);
 		iia1.add(clla2);
-		cllaCat1.setInverseIsA(iia1);
+		cllaCat1.setMembers(iia1);
 
 		List<PropositionDefinition> cllaDefs1 = this.converter.convert(cllaCat1);
 		assertEquals("wrong number of proposition definitions created", 7,
@@ -613,10 +613,10 @@ public class CategorizationConverterTest extends AbstractServiceTest {
 		cllaCat2.setKey("test-clla-cat2");
 		cllaCat2.setDisplayName("test-clla-cat2-display");
 		cllaCat2.setAbbrevDisplayName("test-clla-cat2-abbrev");
-		cllaCat2.setCategorizationType(CategorizationType.COMPOUND_LOW_LEVEL_ABSTRACTION);
+		cllaCat2.setCategoryType(CategoryType.COMPOUND_LOW_LEVEL_ABSTRACTION);
 		List<DataElementEntity> iia2 = new ArrayList<DataElementEntity>();
 		iia2.add(cllaCat1);
-		cllaCat2.setInverseIsA(iia2);
+		cllaCat2.setMembers(iia2);
 
 		List<PropositionDefinition> cllaDefs2 = this.converter.convert(cllaCat2);
 		assertEquals("wrong number of proposition definitions created", 8,
@@ -655,11 +655,11 @@ public class CategorizationConverterTest extends AbstractServiceTest {
 		mixedCat1.setKey("test-mixed-cat1");
 		mixedCat1.setDisplayName("test-mixed-cat1-display");
 		mixedCat1.setAbbrevDisplayName("test-mixed-cat1-abbrev");
-		mixedCat1.setCategorizationType(CategorizationType.MIXED);
+		mixedCat1.setCategoryType(CategoryType.MIXED);
 		List<DataElementEntity> iia1 = new ArrayList<DataElementEntity>();
 		iia1.add(event);
 		iia1.add(primParam);
-		mixedCat1.setInverseIsA(iia1);
+		mixedCat1.setMembers(iia1);
 
 		List<PropositionDefinition> hlaDefs1 = this.converter.convert
 				(mixedCat1);
@@ -689,10 +689,10 @@ public class CategorizationConverterTest extends AbstractServiceTest {
 		mixedCat2.setKey("test-mixed-cat2");
 		mixedCat2.setDisplayName("test-mixed-cat2-display");
 		mixedCat2.setAbbrevDisplayName("test-mixed-cat2-abbrev");
-		mixedCat2.setCategorizationType(CategorizationType.MIXED);
+		mixedCat2.setCategoryType(CategoryType.MIXED);
 		List<DataElementEntity> iia2 = new ArrayList<DataElementEntity>();
 		iia2.add(mixedCat1);
-		mixedCat2.setInverseIsA(iia2);
+		mixedCat2.setMembers(iia2);
 
 		List<PropositionDefinition> hlaDefs2 = this.converter.convert
 				(mixedCat2);

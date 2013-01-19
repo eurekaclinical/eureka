@@ -25,6 +25,7 @@ import edu.emory.cci.aiw.cvrg.eureka.common.entity.DataElementEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.FileUpload;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.Job;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.User;
+import edu.emory.cci.aiw.cvrg.eureka.common.exception.HttpStatusException;
 import edu.emory.cci.aiw.cvrg.eureka.services.conversion.PropositionDefinitionConverterVisitor;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.FileDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.PropositionDao;
@@ -200,7 +201,7 @@ public class JobResource {
 	}
 
 	/**
-	 * Get the status of a job process for the given user.
+	 * Get the status of the most recent job process for the given user.
 	 *
 	 * @param userId The unique identifier of the user to query for.
 	 * @return A {@link JobInfo} object containing the status information.
@@ -209,20 +210,8 @@ public class JobResource {
 	@GET
 	@Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
 	public JobInfo getStatus(@PathParam("id") final Long userId) {
-
-		Job latestJob = null;
 		FileUpload latestFileUpload = null;
 
-		List<Job> userJobs = this.getJobsByUser(userId);
-		for (Job job : userJobs) {
-			if (latestJob == null) {
-				latestJob = job;
-			} else {
-				if (job.getTimestamp().after(latestJob.getTimestamp())) {
-					latestJob = job;
-				}
-			}
-		}
 		List<FileUpload> fileUploads = this.fileDao.getByUserId(userId);
 		for (FileUpload fileUpload : fileUploads) {
 			this.fileDao.refresh(fileUpload);
@@ -235,10 +224,29 @@ public class JobResource {
 				}
 			}
 		}
+		
+		if (latestFileUpload == null) {
+			throw new HttpStatusException(Response.Status.NOT_FOUND,
+					"No files uploaded by user " + userId);
+		}
 
 		JobInfo jobInfo = new JobInfo();
 		jobInfo.setFileUpload(latestFileUpload);
-		jobInfo.setJob(latestJob);
+		
+		if (latestFileUpload.isCompleted()) {
+			Job latestJob = null;
+			List<Job> userJobs = this.getJobsByUser(userId);
+			for (Job job : userJobs) {
+				if (latestJob == null) {
+					latestJob = job;
+				} else {
+					if (job.getTimestamp().after(latestJob.getTimestamp())) {
+						latestJob = job;
+					}
+				}
+			}
+			jobInfo.setJob(latestJob);
+		}
 		LOGGER.debug(
 				"Returning job status for user id {}: {}/{}",
 				new Object[]{userId,

@@ -26,9 +26,10 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import org.apache.commons.lang.builder.ToStringBuilder;
 
 @Entity
-@Table(name = "relation_op")
+@Table(name = "relation_ops")
 public class RelationOperator {
 
 	@Id
@@ -64,5 +65,10 @@ public class RelationOperator {
 	
 	public String getDescription() {
 		return this.description;
+	}
+	
+	@Override
+	public String toString() {
+		return ToStringBuilder.reflectionToString(this);
 	}
 }

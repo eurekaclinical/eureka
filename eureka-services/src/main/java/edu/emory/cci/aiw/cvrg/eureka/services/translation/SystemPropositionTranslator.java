@@ -29,6 +29,7 @@ import com.google.inject.Inject;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.SystemElement;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.SystemProposition;
+import edu.emory.cci.aiw.cvrg.eureka.common.exception.DataElementHandlingException;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.PropositionDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.finder.PropositionFindException;
 import edu.emory.cci.aiw.cvrg.eureka.services.finder.SystemPropositionFinder;
@@ -49,7 +50,8 @@ public class SystemPropositionTranslator implements
 	}
 
 	@Override
-	public SystemProposition translateFromElement(SystemElement element) {
+	public SystemProposition translateFromElement(SystemElement element) 
+			throws DataElementHandlingException {
 		SystemProposition proposition = 
 				this.translatorSupport.getUserEntityInstance(element, 
 				SystemProposition.class);

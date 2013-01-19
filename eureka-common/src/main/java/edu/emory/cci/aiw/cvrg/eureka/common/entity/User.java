@@ -39,6 +39,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 import com.sun.xml.bind.CycleRecoverable;
 import javax.persistence.Column;
+import org.apache.commons.lang.builder.ToStringBuilder;
 
 /**
  * A bean class to hold information about users in the system.
@@ -111,9 +112,9 @@ public class User implements CycleRecoverable {
 				targetEntity = Role.class)
 	@JoinTable(name = "user_role",
 			   joinColumns = {
-		@JoinColumn(name = "userId")},
+		@JoinColumn(name = "user_id")},
 			   inverseJoinColumns = {
-		@JoinColumn(name = "roleId")})
+		@JoinColumn(name = "role_id")})
 	private List<Role> roles = new ArrayList<Role>();
 
 	/**
@@ -346,24 +347,9 @@ public class User implements CycleRecoverable {
 	public Object onCycleDetected(final Context context) {
 		return null;
 	}
-
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see java.lang.Object#toString()
-	 */
+	
 	@Override
 	public String toString() {
-		StringBuilder builder = new StringBuilder();
-		builder.append("User [id=").append(this.id).append(", active=").append(
-				this.active).append(", verified=").append(this.verified).append(
-				", firstName=").append(this.firstName).append(", lastName=").
-				append(this.lastName).append(", email=").append(this.email).
-				append(", organization=").append(this.organization).append(
-				", password=").append(this.password).append(
-				", verificationCode=").append(this.verificationCode).append(
-				", lastLogin=").append(this.lastLogin).append(", roles=").append(
-				this.roles).append("]");
-		return builder.toString();
+		return ToStringBuilder.reflectionToString(this);
 	}
 }

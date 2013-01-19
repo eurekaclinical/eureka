@@ -73,7 +73,7 @@ public abstract class AbstractClient {
 		if (clientResponseStatus.equals(status) == bool) {
 			String message = response.getEntity(String.class);
 			LOGGER.error(message);
-			throw new ClientException(clientResponseStatus);
+			throw new ClientException(clientResponseStatus, message);
 		}
 	}
 }

@@ -71,7 +71,6 @@ public class UserResource {
 	 */
 	private static final Logger LOGGER = LoggerFactory.getLogger(
 			UserResource.class);
-
 	/**
 	 * A secure random number generator to be used to create passwords.
 	 */
@@ -93,8 +92,7 @@ public class UserResource {
 	 */
 	private final I2b2Client i2b2Client;
 	/**
-	 * And validation errors that we may have encountered while validating a
-	 * new
+	 * And validation errors that we may have encountered while validating a new
 	 * user request, or a user update.
 	 */
 	private String validationError;
@@ -107,7 +105,7 @@ public class UserResource {
 	 * @param inEmailSender Used to send emails to the user when necessary.
 	 */
 	@Inject
-	public UserResource(UserDao inUserDao, RoleDao inRoleDao, 
+	public UserResource(UserDao inUserDao, RoleDao inRoleDao,
 			EmailSender inEmailSender, I2b2Client inClient) {
 		this.userDao = inUserDao;
 		this.roleDao = inRoleDao;
@@ -181,8 +179,7 @@ public class UserResource {
 			userRequest.setVerifyPassword(temp2);
 		} catch (NoSuchAlgorithmException e1) {
 			LOGGER.error(e1.getMessage(), e1);
-			throw new HttpStatusException(Response.Status
-					.INTERNAL_SERVER_ERROR, e1);
+			throw new HttpStatusException(Response.Status.INTERNAL_SERVER_ERROR, e1);
 		}
 
 		if (validateUserRequest(userRequest)) {
@@ -204,7 +201,7 @@ public class UserResource {
 			}
 		} else {
 			LOGGER.info(
-					"Invalid new user request: {}, reason {}", userRequest, 
+					"Invalid new user request: {}, reason {}", userRequest,
 					this.validationError);
 			throw new HttpStatusException(
 					Response.Status.PRECONDITION_FAILED, this.validationError);
@@ -222,8 +219,8 @@ public class UserResource {
 	 */
 	@Path("/passwd/{id}")
 	@PUT
-	public void changePassword(@PathParam("id") final Long inId, 
-			@QueryParam("oldPassword") final String oldPassword, 
+	public void changePassword(@PathParam("id") final Long inId,
+			@QueryParam("oldPassword") final String oldPassword,
 			@QueryParam("newPassword") final String newPassword) {
 
 		User user = this.userDao.retrieve(inId);
@@ -235,9 +232,9 @@ public class UserResource {
 		} catch (NoSuchAlgorithmException e) {
 			LOGGER.error(e.getMessage(), e);
 			throw new HttpStatusException(
-					Response.Status.INTERNAL_SERVER_ERROR, 
-					"Error while changing password. Please contact the " +
-							"administrator.");
+					Response.Status.INTERNAL_SERVER_ERROR,
+					"Error while changing password. Please contact the "
+					+ "administrator.");
 		}
 		if (user.getPassword().equals(oldPasswordHash)) {
 			user.setPassword(newPasswordHash);
@@ -252,8 +249,8 @@ public class UserResource {
 			}
 		} else {
 			throw new HttpStatusException(
-					Response.Status.PRECONDITION_FAILED, "Error while changing" +
-					" password. Old password is incorrect.");
+					Response.Status.PRECONDITION_FAILED, "Error while changing"
+					+ " password. Old password is incorrect.");
 		}
 	}
 
@@ -322,7 +319,7 @@ public class UserResource {
 	 *
 	 * @param inId the unique identifier of the user to be made active.
 	 * @return An HTTP OK response if the modification is completed normall, or
-	 *         a server error if the user cannot be modified properly.
+	 * a server error if the user cannot be modified properly.
 	 */
 	@Path("/activate/{id}")
 	@PUT
@@ -334,8 +331,8 @@ public class UserResource {
 			user.setPasswordExpiration(this.getExpirationDate());
 			this.userDao.update(user);
 		} else {
-			response = Response.status(Status.BAD_REQUEST).entity("Invalid " +
-					"ID").
+			response = Response.status(Status.BAD_REQUEST).entity("Invalid "
+					+ "ID").
 					build();
 		}
 		return response;
@@ -347,7 +344,7 @@ public class UserResource {
 	 * @param inUsername The username for the user whose password should be
 	 * reset.
 	 * @return A {@link Status#OK} if the password is reset and email sent,
-	 *         {@link Status#NOT_MODIFIED} if the user can not be found.
+	 * {@link Status#NOT_MODIFIED} if the user can not be found.
 	 * @throws HttpStatusException Thrown if errors occur when resetting the
 	 * password, or sending an email to the user informing them of the reset.
 	 */
@@ -356,22 +353,21 @@ public class UserResource {
 	public void resetPassword(@PathParam("username") final String inUsername) {
 		User user = this.userDao.getByName(inUsername);
 		if (user == null) {
-			throw new HttpStatusException(Response.Status.NOT_FOUND, 
-					"User " + inUsername + " not found");
+			throw new HttpStatusException(Response.Status.NOT_FOUND);
 		} else {
 			final int length = 15 + RANDOM.nextInt(10);
 			String password = new BigInteger(130, RANDOM).toString(32)
 					.substring(
-							0, length);
+					0, length);
 			String passwordHash;
 			try {
 				passwordHash = StringUtil.md5(password);
 			} catch (NoSuchAlgorithmException e) {
 				LOGGER.error(e.getMessage(), e);
 				throw new HttpStatusException(
-						Response.Status.INTERNAL_SERVER_ERROR, 
-						"Error while changing password. Please contact the " +
-								"administrator.");
+						Response.Status.INTERNAL_SERVER_ERROR,
+						"Error while changing password. Please contact the "
+						+ "administrator.");
 			}
 
 			user.setPassword(passwordHash);
@@ -406,15 +402,14 @@ public class UserResource {
 			if ((userRequest.getEmail() == null) || (userRequest
 					.getVerifyEmail() == null) || (!userRequest.getEmail()
 					.equals(
-							userRequest.getVerifyEmail()))) {
+					userRequest.getVerifyEmail()))) {
 				this.validationError = "Mismatched usernames";
 				result = false;
 			}
 
 			// make sure the passwords are not null, and match each other
 			if ((userRequest.getPassword() == null) || (userRequest
-					.getVerifyPassword() == null) || (!userRequest.getPassword
-					().equals(
+					.getVerifyPassword() == null) || (!userRequest.getPassword().equals(
 					userRequest.getVerifyPassword()))) {
 				this.validationError = "Mismatched passwords";
 				result = false;

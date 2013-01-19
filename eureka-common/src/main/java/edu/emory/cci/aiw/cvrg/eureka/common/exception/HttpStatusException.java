@@ -28,9 +28,10 @@ import javax.ws.rs.core.Response.Status;
  * @author Andrew Post
  */
 public class HttpStatusException extends WebApplicationException {
+	private Status status;
 
 	public HttpStatusException(Status status) {
-		super(Response.status(status).build());
+		super(Response.status(status).entity(status.getReasonPhrase()).type("text/plain").build());
 	}
 
 	public HttpStatusException(Status status, String message) {
@@ -39,12 +40,16 @@ public class HttpStatusException extends WebApplicationException {
 
 	public HttpStatusException(Status status, Throwable cause) {
 		super(cause,
-			Response.status(status).type("text/plain").build());
+			Response.status(status).entity(cause != null ? cause.getMessage() : status.getReasonPhrase()).type("text/plain").build());
 	}
 
 	public HttpStatusException(Status status, String message, Throwable cause) {
 		super(cause,
 			Response.status(status).entity(message).type("text/plain").build());
+	}
+	
+	public Status getStatus() {
+		return this.status;
 	}
 
 

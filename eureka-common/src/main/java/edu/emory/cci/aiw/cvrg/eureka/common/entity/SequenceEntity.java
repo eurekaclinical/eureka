@@ -19,18 +19,19 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.common.entity;
 
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.CategoryEntity.CategorizationType;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.CategoryEntity.CategoryType;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.persistence.CascadeType;
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import org.apache.commons.lang.builder.ToStringBuilder;
 
 /**
  * Contains attributes which describe a Protempa high level abstraction.
@@ -42,31 +43,23 @@ import javax.persistence.Table;
 public class SequenceEntity extends DataElementEntity {
 
 	@OneToOne(cascade = CascadeType.ALL)
-	private ExtendedProposition primaryProposition;
+	@JoinColumn(name="primaryextendeddataelement_id")
+	private ExtendedDataElement primaryExtendedDataElement;
 
 	@OneToMany(cascade = CascadeType.ALL)
-	@JoinColumn(name = "highLevelAbstractionId")
+	@JoinColumn(name = "sequence_id")
 	private List<Relation> relations;
-
-	/**
-	 * The propositions that the current proposition is abstracted from.
-	 */
-	@ManyToMany(cascade = { CascadeType.MERGE, CascadeType.REFRESH,
-	        CascadeType.PERSIST })
-	@JoinTable(name = "hla_abstracted_from", 
-			joinColumns = { @JoinColumn(name = "target_proposition_id") })
-	private List<DataElementEntity> abstractedFrom;
 	
 	public SequenceEntity() {
-		super(CategorizationType.HIGH_LEVEL_ABSTRACTION);
+		super(CategoryType.HIGH_LEVEL_ABSTRACTION);
 	}
 
-	public ExtendedProposition getPrimaryProposition() {
-		return primaryProposition;
+	public ExtendedDataElement getPrimaryExtendedDataElement() {
+		return primaryExtendedDataElement;
 	}
 
-	public void setPrimaryProposition(ExtendedProposition inExtendedProposition) {
-		primaryProposition = inExtendedProposition;
+	public void setPrimaryExtendedDataElement(ExtendedDataElement inExtendedDataElement) {
+		primaryExtendedDataElement = inExtendedDataElement;
 	}
 
 	public List<Relation> getRelations() {
@@ -84,22 +77,28 @@ public class SequenceEntity extends DataElementEntity {
 	 *         from.
 	 */
 	public List<DataElementEntity> getAbstractedFrom() {
-		return abstractedFrom;
-	}
-
-	/**
-	 * Sets the list of propositions the current proposition is abstracted from.
-	 *
-	 * @param abstractedFrom
-	 *            The list of propositions the current proposition is abstracted
-	 *            from.
-	 */
-	public void setAbstractedFrom(List<DataElementEntity> abstractedFrom) {
-		this.abstractedFrom = abstractedFrom;
+		Map<Long, DataElementEntity> entities = 
+				new HashMap<Long, DataElementEntity>();
+		for (Relation relation : this.relations) {
+			DataElementEntity lhs = 
+					relation.getLhsExtendedDataElement()
+					.getDataElementEntity();
+			DataElementEntity rhs = 
+					relation.getRhsExtendedDataElement()
+					.getDataElementEntity();
+			entities.put(lhs.getId(), lhs);
+			entities.put(rhs.getId(), rhs);
+		}
+		return new ArrayList(entities.values());
 	}
 
 	@Override
 	public void accept(PropositionEntityVisitor visitor) {
 		visitor.visit(this);
+	}
+	
+	@Override
+	public String toString() {
+		return ToStringBuilder.reflectionToString(this);
 	}
 }

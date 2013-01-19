@@ -40,7 +40,7 @@ import org.protempa.proposition.interval.Relation;
 import org.protempa.proposition.value.NominalValue;
 import org.protempa.proposition.value.NumberValue;
 
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.ExtendedProposition;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.ExtendedDataElement;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.FrequencyEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.SystemProposition;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.SystemProposition.SystemType;
@@ -113,8 +113,8 @@ public class FrequencyHighLevelAbstractionConverterTest extends AbstractServiceT
 		frequency.setWithinAtMost(90);
 		frequency.setWithinAtMostUnits(dayUnit);
 		
-		ExtendedProposition af = new ExtendedProposition();
-		af.setProposition(thresholdGroup);
+		ExtendedDataElement af = new ExtendedDataElement();
+		af.setDataElementEntity(thresholdGroup);
 		frequency.setExtendedProposition(af);
 		
 		List<PropositionDefinition> propDefs = this.converter.convert(frequency);

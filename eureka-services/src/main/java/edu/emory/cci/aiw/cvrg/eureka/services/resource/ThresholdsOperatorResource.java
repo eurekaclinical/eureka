@@ -59,8 +59,7 @@ public class ThresholdsOperatorResource {
 	public ThresholdsOperator get(@PathParam("id") Long inId) {
 		ThresholdsOperator result = this.thresholdsOpDao.retrieve(inId);
 		if (result == null) {
-			throw new HttpStatusException(Status.NOT_FOUND,
-					"No thresholds operator with id " + inId);
+			throw new HttpStatusException(Status.NOT_FOUND);
 		}
 		return result;
 	}
@@ -70,8 +69,7 @@ public class ThresholdsOperatorResource {
 	public ThresholdsOperator getByName(@PathParam("name") String inName) {
 		ThresholdsOperator result = this.thresholdsOpDao.getByName(inName);
 		if (result == null) {
-			throw new HttpStatusException(Status.NOT_FOUND,
-					"No thresholds operator with name " + inName);
+			throw new HttpStatusException(Status.NOT_FOUND);
 		}
 		return result;
 	}

@@ -49,8 +49,6 @@ public final class CompoundLowLevelAbstractionJsonSerializer extends
 				value.getDescription(), jgen);
 		provider.defaultSerializeField("inverseIsA", 
 				value.getInverseIsA(), jgen);
-		provider.defaultSerializeField("abstractedFrom", 
-				value.getAbstractedFrom(), jgen);
 		provider.defaultSerializeField("properties", 
 				value.getPropertyDefinitions(), jgen);
 		provider.defaultSerializeField("references", 

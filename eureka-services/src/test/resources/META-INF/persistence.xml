@@ -7,7 +7,7 @@
 		<class>edu.emory.cci.aiw.cvrg.eureka.common.entity.AbstractFileInfo</class>
 		<class>edu.emory.cci.aiw.cvrg.eureka.common.entity.CategoryEntity</class>
 		<class>edu.emory.cci.aiw.cvrg.eureka.common.entity.DataElementEntity</class>
-		<class>edu.emory.cci.aiw.cvrg.eureka.common.entity.ExtendedProposition</class>
+		<class>edu.emory.cci.aiw.cvrg.eureka.common.entity.ExtendedDataElement</class>
 		<class>edu.emory.cci.aiw.cvrg.eureka.common.entity.FileError</class>
 		<class>edu.emory.cci.aiw.cvrg.eureka.common.entity.FileUpload</class>
 		<class>edu.emory.cci.aiw.cvrg.eureka.common.entity.FileWarning</class>
@@ -18,7 +18,6 @@
 		<class>edu.emory.cci.aiw.cvrg.eureka.common.entity.Role</class>
 		<class>edu.emory.cci.aiw.cvrg.eureka.common.entity.SequenceEntity</class>
 		<class>edu.emory.cci.aiw.cvrg.eureka.common.entity.SystemProposition</class>
-		<class>edu.emory.cci.aiw.cvrg.eureka.common.entity.TemporalPattern</class>
 		<class>edu.emory.cci.aiw.cvrg.eureka.common.entity.ThresholdsOperator</class>
 		<class>edu.emory.cci.aiw.cvrg.eureka.common.entity.TimeUnit</class>
 		<class>edu.emory.cci.aiw.cvrg.eureka.common.entity.User</class>

@@ -24,6 +24,7 @@ import java.text.NumberFormat;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlRootElement;
+import org.apache.commons.lang.builder.ToStringBuilder;
 
 /**
  * Holds information about errors found in an uploaded file.

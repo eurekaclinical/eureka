@@ -66,8 +66,7 @@ public class TimeUnitResource {
 	public TimeUnit get (@PathParam("id") Long inId) {
 		TimeUnit result = this.timeUnitDao.retrieve(inId);
 		if (result == null) {
-			throw new HttpStatusException(Response.Status.NOT_FOUND,
-					"No time unit with id " + inId);
+			throw new HttpStatusException(Response.Status.NOT_FOUND);
 		}
 		return result;
 	}
@@ -77,8 +76,7 @@ public class TimeUnitResource {
 	public TimeUnit getByName(@PathParam("name") String inName) {
 		TimeUnit result = this.timeUnitDao.getByName(inName);
 		if (result == null) {
-			throw new HttpStatusException(Response.Status.NOT_FOUND,
-					"No time unit with name " + inName);
+			throw new HttpStatusException(Response.Status.NOT_FOUND);
 		}
 		return result;
 	}

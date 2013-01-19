@@ -29,6 +29,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 import com.sun.xml.bind.CycleRecoverable;
 import javax.persistence.Column;
+import org.apache.commons.lang.builder.ToStringBuilder;
 
 /**
  * A bean class to hold information related to roles in the system.
@@ -126,18 +127,9 @@ public class Role implements CycleRecoverable {
 	public Object onCycleDetected(Context context) {
 		return null;
 	}
-
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see java.lang.Object#toString()
-	 */
+	
 	@Override
 	public String toString() {
-		StringBuilder builder = new StringBuilder();
-		builder.append("Role [id=").append(this.id).append(", name=")
-				.append(this.name).append(", defaultRole=")
-				.append(this.defaultRole).append("]");
-		return builder.toString();
+		return ToStringBuilder.reflectionToString(this);
 	}
 }

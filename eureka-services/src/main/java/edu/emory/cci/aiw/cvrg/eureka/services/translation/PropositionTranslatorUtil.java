@@ -25,7 +25,7 @@ import javax.ws.rs.core.Response;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.DataElement;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.DataElementField;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.DataElementEntity;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.ExtendedProposition;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.ExtendedDataElement;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.PropertyConstraint;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.TimeUnit;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.ValueComparator;
@@ -39,11 +39,11 @@ import edu.emory.cci.aiw.cvrg.eureka.services.dao.ValueComparatorDao;
  */
 class PropositionTranslatorUtil {
 
-	static void populateExtendedProposition(ExtendedProposition ep, 
+	static void populateExtendedProposition(ExtendedDataElement ep, 
 			DataElementEntity proposition, DataElementField dataElement, 
 			TimeUnitDao timeUnitDao, ValueComparatorDao valCompDao) 
 			throws DataElementHandlingException {
-		ep.setProposition(proposition);
+		ep.setDataElementEntity(proposition);
 		if (dataElement.getHasDuration() == Boolean.TRUE) {
 			ep.setMinDuration(dataElement.getMinDuration());
 			Long minDurationUnits = dataElement.getMinDurationUnits();
@@ -127,16 +127,16 @@ class PropositionTranslatorUtil {
 		dataElement.setInSystem(proposition.isInSystem());
 	}
 
-	static ExtendedProposition createOrUpdateExtendedProposition(
-			ExtendedProposition origEP,
+	static ExtendedDataElement createOrUpdateExtendedProposition(
+			ExtendedDataElement origEP,
 	        DataElementField dataElement, Long userId, 
 			TimeUnitDao timeUnitDao, 
 			TranslatorSupport translatorSupport,
 			ValueComparatorDao valCompDao) throws DataElementHandlingException {
 
-		ExtendedProposition ep = origEP;
+		ExtendedDataElement ep = origEP;
 		if (ep == null) {
-			ep = new ExtendedProposition();
+			ep = new ExtendedDataElement();
 		}
 		DataElementEntity proposition = 
 				translatorSupport.getSystemEntityInstance(userId, 
@@ -146,12 +146,12 @@ class PropositionTranslatorUtil {
 		return ep;
 	}
 	
-	static DataElementField createDataElementField(ExtendedProposition ep) {
+	static DataElementField createDataElementField(ExtendedDataElement ep) {
 		DataElementField dataElement = new DataElementField();
-		dataElement.setDataElementKey(ep.getProposition().getKey());
-		dataElement.setDataElementAbbrevDisplayName(ep.getProposition()
+		dataElement.setDataElementKey(ep.getDataElementEntity().getKey());
+		dataElement.setDataElementAbbrevDisplayName(ep.getDataElementEntity()
 				.getAbbrevDisplayName());
-		dataElement.setDataElementDisplayName(ep.getProposition()
+		dataElement.setDataElementDisplayName(ep.getDataElementEntity()
 				.getDisplayName());
 		if (ep.getMinDuration() != null) {
 			dataElement.setHasDuration(true);

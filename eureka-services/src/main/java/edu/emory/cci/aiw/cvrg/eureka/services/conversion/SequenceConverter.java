@@ -21,7 +21,7 @@ package edu.emory.cci.aiw.cvrg.eureka.services.conversion;
 
 import com.google.inject.Inject;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.DataElementEntity;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.ExtendedProposition;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.ExtendedDataElement;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.Relation;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.SequenceEntity;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.ValueComparatorDao;
@@ -61,19 +61,19 @@ final class SequenceConverter
 		if (proposition.getRelations() != null) {
 			for (Relation rel : proposition.getRelations()) {
 				DataElementEntity lhs =
-						rel.getLhsExtendedProposition().getProposition();
+						rel.getLhsExtendedDataElement().getDataElementEntity();
 				lhs.accept(converterVisitor);
 				result.addAll(
 						converterVisitor.getPropositionDefinitions());
 				TemporalExtendedPropositionDefinition tepdLhs = buildExtendedProposition(rel
-						.getLhsExtendedProposition());
+						.getLhsExtendedDataElement());
 
 				DataElementEntity rhs =
-						rel.getRhsExtendedProposition().getProposition();
+						rel.getRhsExtendedDataElement().getDataElementEntity();
 				rhs.accept(converterVisitor);
 				result.addAll(converterVisitor.getPropositionDefinitions());
 				TemporalExtendedPropositionDefinition tepdRhs = buildExtendedProposition(rel
-						.getRhsExtendedProposition());
+						.getRhsExtendedDataElement());
 
 				primary.add(tepdLhs);
 				primary.add(tepdRhs);
@@ -87,10 +87,10 @@ final class SequenceConverter
 	}
 
 	private TemporalExtendedPropositionDefinition buildExtendedProposition(
-			ExtendedProposition ep) {
+			ExtendedDataElement ep) {
 		TemporalExtendedPropositionDefinition tepd =
 				new TemporalExtendedPropositionDefinition(
-				ep.getProposition().getKey());
+				ep.getDataElementEntity().getKey());
 
 		if (ep.getPropertyConstraint() != null) {
 			PropertyConstraint pc = new PropertyConstraint();

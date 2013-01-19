@@ -35,15 +35,14 @@ import org.protempa.PropertyDefinition;
 import org.protempa.ReferenceDefinition;
 import org.protempa.SourceId;
 
-public final class CompoundLowLevelAbstractionJsonDeserializer extends
-        JsonDeserializer<CompoundLowLevelAbstractionDefinition> {
+public final class CompoundLowLevelAbstractionJsonDeserializer extends JsonDeserializer<CompoundLowLevelAbstractionDefinition> {
 
 	private JsonParser parser;
 
 	@Override
 	public CompoundLowLevelAbstractionDefinition deserialize(JsonParser jp,
-	        DeserializationContext ctxt) throws IOException,
-	        JsonProcessingException {
+			DeserializationContext ctxt) throws IOException,
+			JsonProcessingException {
 		this.parser = jp;
 
 		if (this.parser.getCurrentToken() == JsonToken.START_OBJECT) {
@@ -51,7 +50,7 @@ public final class CompoundLowLevelAbstractionJsonDeserializer extends
 		}
 		checkField("id");
 		// now we can construct the LLA
-		CompoundLowLevelAbstractionDefinition value = 
+		CompoundLowLevelAbstractionDefinition value =
 				new CompoundLowLevelAbstractionDefinition(
 				this.parser.getText());
 		value.setInDataSource(false);
@@ -75,12 +74,12 @@ public final class CompoundLowLevelAbstractionJsonDeserializer extends
 		nextToken();
 		checkField("properties");
 		value.setPropertyDefinitions(this.parser
-		        .readValueAs(PropertyDefinition[].class));
+				.readValueAs(PropertyDefinition[].class));
 
 		nextToken();
 		checkField("references");
 		value.setReferenceDefinitions(this.parser
-		        .readValueAs(ReferenceDefinition[].class));
+				.readValueAs(ReferenceDefinition[].class));
 
 		nextToken();
 		checkField("sourceId");
@@ -98,34 +97,34 @@ public final class CompoundLowLevelAbstractionJsonDeserializer extends
 		nextToken();
 		checkField("gapFunction");
 		value.setGapFunction(this.parser.readValueAs(GapFunction.class));
-		
+
 		nextToken();
 		checkField("minimumNumberOfValues");
 		value.setMinimumNumberOfValues(this.parser.getIntValue());
-		
+
 		nextToken();
 		checkField("thresholdsOperator");
 		value.setValueDefinitionMatchOperator(
 				ValueDefinitionMatchOperator.valueOf(
 				this.parser.readValueAs(String.class)));
-		
+
 		nextToken();
 		checkField("valueDefinitions");
-		ValueClassification[] vcs = 
+		ValueClassification[] vcs =
 				this.parser.readValueAs(ValueClassification[].class);
 		for (ValueClassification vc : vcs) {
 			value.addValueClassification(vc);
 		}
-		
+
 		nextToken();
 
 		return value;
 	}
 
 	private void checkField(String field) throws JsonParseException,
-	        IOException {
+			IOException {
 		if (!(this.parser.getCurrentToken() == JsonToken.FIELD_NAME && field
-		        .equals(this.parser.getCurrentName()))) {
+				.equals(this.parser.getCurrentName()))) {
 			fail(field);
 		} else {
 			nextValue();
@@ -142,9 +141,8 @@ public final class CompoundLowLevelAbstractionJsonDeserializer extends
 
 	private void fail(String property) throws JsonProcessingException {
 		throw new JsonParseException("\"" + property + "\""
-		        + " not found in expected location. Found \""
-		        + this.parser.getCurrentToken() + "\" instead",
-		        this.parser.getCurrentLocation());
+				+ " not found in expected location. Found \""
+				+ this.parser.getCurrentToken() + "\" instead",
+				this.parser.getCurrentLocation());
 	}
-
 }

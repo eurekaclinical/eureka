@@ -32,7 +32,7 @@ import org.apache.commons.lang.builder.ToStringBuilder;
 *
 */
 @Entity
-@Table(name = "thresholds_op")
+@Table(name = "thresholds_ops")
 public class ThresholdsOperator {
 
 	@Id

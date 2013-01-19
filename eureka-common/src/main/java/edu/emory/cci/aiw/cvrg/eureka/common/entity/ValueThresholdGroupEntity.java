@@ -31,7 +31,7 @@ import javax.persistence.Table;
 
 import org.apache.commons.lang.builder.ToStringBuilder;
 
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.CategoryEntity.CategorizationType;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.CategoryEntity.CategoryType;
 
 /**
  * Contains attributes which describe a Protempa low-level abstraction in the
@@ -45,15 +45,15 @@ public class ValueThresholdGroupEntity extends DataElementEntity {
 	 * The allowed values of the low-level abstraction
 	 */
 	@OneToMany(cascade = CascadeType.ALL)
-	@JoinColumn(nullable = false)
+	@JoinColumn(nullable = false, name = "valuethresholdsgroup_id")
 	private List<ValueThresholdEntity> valueThresholds;
 	
 	@OneToOne
-	@JoinColumn(name = "thresholdsOp", referencedColumnName = "id", nullable = false)
+	@JoinColumn(name = "thresholdsop_id", referencedColumnName = "id", nullable = false)
 	private ThresholdsOperator thresholdsOperator;
 	
 	public ValueThresholdGroupEntity() {
-		super(CategorizationType.LOW_LEVEL_ABSTRACTION);
+		super(CategoryType.LOW_LEVEL_ABSTRACTION);
 	}
 
 	public List<ValueThresholdEntity> getValueThresholds() {

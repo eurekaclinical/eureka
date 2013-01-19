@@ -53,7 +53,7 @@ public final class CategorizationConverter implements
 		List<PropositionDefinition> result = new ArrayList<PropositionDefinition>();
 		String id = proposition.getKey();
 		List<PropositionDefinition> inverseIsADefs = new ArrayList<PropositionDefinition>();
-		for (DataElementEntity e : proposition.getInverseIsA()) {
+		for (DataElementEntity e : proposition.getMembers()) {
 			e.accept(this.converterVisitor);
 			if (this.converterVisitor.getPropositionDefinitions() != null) {
 				inverseIsADefs.addAll(this.converterVisitor
@@ -63,7 +63,7 @@ public final class CategorizationConverter implements
 		result.addAll(inverseIsADefs);
 		String[] inverseIsA = inverseIsA(proposition);
 		PropositionDefinition primary;
-		switch (proposition.getCategorizationType()) {
+		switch (proposition.getCategoryType()) {
 			case EVENT:
 				EventDefinition event = new EventDefinition(id);
 				event.setAbbreviatedDisplayName(proposition.getAbbrevDisplayName());
@@ -131,10 +131,10 @@ public final class CategorizationConverter implements
 	}
 
 	private static String[] inverseIsA(CategoryEntity proposition) {
-		String[] result = new String[proposition.getInverseIsA().size()];
+		String[] result = new String[proposition.getMembers().size()];
 
-		for (int i = 0; i < proposition.getInverseIsA().size(); i++) {
-			result[i] = proposition.getInverseIsA().get(i).getKey();
+		for (int i = 0; i < proposition.getMembers().size(); i++) {
+			result[i] = proposition.getMembers().get(i).getKey();
 		}
 
 		return result;

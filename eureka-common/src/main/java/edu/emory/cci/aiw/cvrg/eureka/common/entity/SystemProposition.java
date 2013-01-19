@@ -19,15 +19,16 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.common.entity;
 
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.CategoryEntity.CategorizationType;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.CategoryEntity.CategoryType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.Table;
+import org.apache.commons.lang.builder.ToStringBuilder;
 
 @Entity
-@Table(name = "system_proposition")
+@Table(name = "system_data_elements")
 public class SystemProposition extends DataElementEntity {
 
 	public enum SystemType {
@@ -46,6 +47,7 @@ public class SystemProposition extends DataElementEntity {
 
 	public void setSystemType(SystemType systemType) {
 		this.systemType = systemType;
+		setCatType(inferCategoryType());
 	}
 
 	@Override
@@ -57,23 +59,22 @@ public class SystemProposition extends DataElementEntity {
 	public boolean isInSystem() {
 		return true;
 	}
-
-	@Override
-	public CategorizationType categorizationType() {
+	
+	private CategoryType inferCategoryType() {
 		if (systemType != null) {
 			switch (systemType) {
 				case HIGH_LEVEL_ABSTRACTION:
-					return CategorizationType.HIGH_LEVEL_ABSTRACTION;
+					return CategoryType.HIGH_LEVEL_ABSTRACTION;
 				case CONSTANT:
-					return CategorizationType.CONSTANT;
+					return CategoryType.CONSTANT;
 				case EVENT:
-					return CategorizationType.EVENT;
+					return CategoryType.EVENT;
 				case PRIMITIVE_PARAMETER:
-					return CategorizationType.PRIMITIVE_PARAMETER;
+					return CategoryType.PRIMITIVE_PARAMETER;
 				case LOW_LEVEL_ABSTRACTION:
-					return CategorizationType.LOW_LEVEL_ABSTRACTION;
+					return CategoryType.LOW_LEVEL_ABSTRACTION;
 				case SLICE_ABSTRACTION:
-					return CategorizationType.SLICE_ABSTRACTION;
+					return CategoryType.SLICE_ABSTRACTION;
 				default:
 					throw new AssertionError(
 							"Invalid system type: " + systemType);
@@ -81,5 +82,10 @@ public class SystemProposition extends DataElementEntity {
 		} else {
 			return null;
 		}
+	}
+	
+	@Override
+	public String toString() {
+		return ToStringBuilder.reflectionToString(this);
 	}
 }

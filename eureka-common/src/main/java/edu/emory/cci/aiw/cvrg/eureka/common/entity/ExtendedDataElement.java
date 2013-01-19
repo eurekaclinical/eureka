@@ -36,15 +36,15 @@ import org.apache.commons.lang.builder.ToStringBuilder;
  * @author hrathod
  */
 @Entity
-@Table(name = "extended_propositions")
-@TableGenerator(name = "EXT_PROP_GENERATOR")
-public class ExtendedProposition {
+@Table(name = "extended_data_elements")
+@TableGenerator(name = "EXT_DE_GENERATOR")
+public class ExtendedDataElement {
 
 	@Id
-	@SequenceGenerator(name = "EXT_PROP_SEQ_GENERATOR",
-		sequenceName = "EXT_PROP_SEQ", allocationSize = 1, initialValue = 1)
+	@SequenceGenerator(name = "EXT_DE_SEQ_GENERATOR",
+		sequenceName = "EXT_DE_SEQ", allocationSize = 1, initialValue = 1)
 	@GeneratedValue(strategy = GenerationType.SEQUENCE,
-		generator = "EXT_PROP_SEQ_GENERATOR")
+		generator = "EXT_DE_SEQ_GENERATOR")
 	private Long id;
 
 	private Integer minDuration;
@@ -64,8 +64,8 @@ public class ExtendedProposition {
 
 	@ManyToOne(cascade = { CascadeType.MERGE, CascadeType.REFRESH,
 	        CascadeType.PERSIST })
-	@JoinColumn(nullable = false)
-	private DataElementEntity proposition;
+	@JoinColumn(nullable = false, name = "dataelement_id")
+	private DataElementEntity dataElementEntity;
 
 	private String value;
 
@@ -117,12 +117,12 @@ public class ExtendedProposition {
 		propertyConstraint = inPropertyConstraint;
 	}
 
-	public DataElementEntity getProposition() {
-		return proposition;
+	public DataElementEntity getDataElementEntity() {
+		return dataElementEntity;
 	}
 
-	public void setProposition(DataElementEntity inProposition) {
-		proposition = inProposition;
+	public void setDataElementEntity(DataElementEntity inDataElementEntity) {
+		dataElementEntity = inDataElementEntity;
 	}
 
 	public String getValue() {

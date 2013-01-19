@@ -29,6 +29,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import org.apache.commons.lang.builder.ToStringBuilder;
 
 /**
  * @author hrathod
@@ -46,15 +47,15 @@ public class Relation {
 
 	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(nullable = false)
-	private ExtendedProposition lhsExtendedProposition;
+	private ExtendedDataElement lhsExtendedDataElement;
 
 	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(nullable = false)
-	private ExtendedProposition rhsExtendedProposition;
+	private ExtendedDataElement rhsExtendedDataElement;
 
 	@OneToOne
-	@JoinColumn(referencedColumnName = "id")
-	private RelationOperator op;
+	@JoinColumn(name="relationop_id", referencedColumnName = "id")
+	private RelationOperator relationOperator;
 
 	private Integer minf1s2;
 
@@ -88,30 +89,30 @@ public class Relation {
 		id = inId;
 	}
 
-	public ExtendedProposition getLhsExtendedProposition() {
-		return lhsExtendedProposition;
+	public ExtendedDataElement getLhsExtendedDataElement() {
+		return lhsExtendedDataElement;
 	}
 
-	public void setLhsExtendedProposition(ExtendedProposition
-		inLhsExtendedProposition) {
-		lhsExtendedProposition = inLhsExtendedProposition;
+	public void setLhsExtendedDataElement(ExtendedDataElement
+		inLhsExtendedDataElement) {
+		lhsExtendedDataElement = inLhsExtendedDataElement;
 	}
 
-	public ExtendedProposition getRhsExtendedProposition() {
-		return rhsExtendedProposition;
+	public ExtendedDataElement getRhsExtendedDataElement() {
+		return rhsExtendedDataElement;
 	}
 
-	public void setRhsExtendedProposition(ExtendedProposition
-		inRhsExtendedProposition) {
-		rhsExtendedProposition = inRhsExtendedProposition;
+	public void setRhsExtendedDataElement(ExtendedDataElement
+		inRhsExtendedDataElement) {
+		rhsExtendedDataElement = inRhsExtendedDataElement;
 	}
 
-	public RelationOperator getOp() {
-		return op;
+	public RelationOperator getRelationOperator() {
+		return relationOperator;
 	}
 
-	public void setOp(RelationOperator inOp) {
-		op = inOp;
+	public void setRelationOperator(RelationOperator inOp) {
+		relationOperator = inOp;
 	}
 
 	public Integer getMinf1s2() {
@@ -176,5 +177,10 @@ public class Relation {
 
 	public void setMaxs1f2TimeUnit(TimeUnit inMaxs1f2TimeUnit) {
 		maxs1f2TimeUnit = inMaxs1f2TimeUnit;
+	}
+	
+	@Override
+	public String toString() {
+		return ToStringBuilder.reflectionToString(this);
 	}
 }

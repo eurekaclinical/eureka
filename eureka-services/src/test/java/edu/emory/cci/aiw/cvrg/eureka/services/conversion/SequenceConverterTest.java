@@ -61,25 +61,25 @@ public class SequenceConverterTest
 		return entity;
 	}
 
-	private ExtendedProposition createPrimaryExtendedProposition() {
-		ExtendedProposition proposition = new ExtendedProposition();
+	private ExtendedDataElement createPrimaryExtendedProposition() {
+		ExtendedDataElement proposition = new ExtendedDataElement();
 		proposition.setId(Long.valueOf(counter++));
 		proposition
-				.setProposition(this.createDataElement(counter++, "Primary"));
+				.setDataElementEntity(this.createDataElement(counter++, "Primary"));
 		return proposition;
 	}
 
-	private ExtendedProposition createLhsProposition() {
-		ExtendedProposition lhs = new ExtendedProposition();
+	private ExtendedDataElement createLhsProposition() {
+		ExtendedDataElement lhs = new ExtendedDataElement();
 		lhs.setId(Long.valueOf(counter++));
-		lhs.setProposition(this.createDataElement(counter++, "LHS"));
+		lhs.setDataElementEntity(this.createDataElement(counter++, "LHS"));
 		return lhs;
 	}
 
-	private ExtendedProposition createRhsProposition() {
-		ExtendedProposition rhs = new ExtendedProposition();
+	private ExtendedDataElement createRhsProposition() {
+		ExtendedDataElement rhs = new ExtendedDataElement();
 		rhs.setId(Long.valueOf(counter++));
-		rhs.setProposition(this.createDataElement(counter++, "RHS"));
+		rhs.setDataElementEntity(this.createDataElement(counter++, "RHS"));
 		return rhs;
 	}
 
@@ -91,8 +91,8 @@ public class SequenceConverterTest
 		relation.setMinf1s2TimeUnit(this.getTimeUnit());
 		relation.setMaxf1s2(MAX);
 		relation.setMaxf1s2TimeUnit(this.getTimeUnit());
-		relation.setLhsExtendedProposition(this.createLhsProposition());
-		relation.setRhsExtendedProposition((this.createRhsProposition()));
+		relation.setLhsExtendedDataElement(this.createLhsProposition());
+		relation.setRhsExtendedDataElement((this.createRhsProposition()));
 		relations.add(relation);
 		return relations;
 	}
@@ -103,10 +103,9 @@ public class SequenceConverterTest
 		result.setKey("test-sequence");
 		result.setAbbrevDisplayName("test-sequence");
 		result.setDisplayName("test-sequence");
-		result.setHelperProposition(false);
 		result.setInSystem(false);
 		result.setRelations(this.createRelations());
-		result.setPrimaryProposition(this.createPrimaryExtendedProposition());
+		result.setPrimaryExtendedDataElement(this.createPrimaryExtendedProposition());
 		return result;
 	}
 

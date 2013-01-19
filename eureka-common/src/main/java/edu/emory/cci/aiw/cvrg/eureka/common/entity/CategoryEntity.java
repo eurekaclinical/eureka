@@ -22,10 +22,7 @@ package edu.emory.cci.aiw.cvrg.eureka.common.entity;
 import java.util.List;
 
 import javax.persistence.CascadeType;
-import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
@@ -36,10 +33,10 @@ import org.apache.commons.lang.builder.ToStringBuilder;
  * @author hrathod
  */
 @Entity
-@Table(name = "categorizations")
+@Table(name = "categories")
 public class CategoryEntity extends DataElementEntity {
 
-	public enum CategorizationType {
+	public enum CategoryType {
 		CONSTANT, EVENT, PRIMITIVE_PARAMETER, LOW_LEVEL_ABSTRACTION, 
 		COMPOUND_LOW_LEVEL_ABSTRACTION, HIGH_LEVEL_ABSTRACTION, SLICE_ABSTRACTION,
 		VALUE_THRESHOLD, MIXED, UNKNOWN
@@ -50,31 +47,25 @@ public class CategoryEntity extends DataElementEntity {
 	 */
 	@ManyToMany(cascade = { CascadeType.MERGE, CascadeType.REFRESH,
 	        CascadeType.PERSIST })
-	@JoinTable(name = "cat_inverse_is_a", joinColumns = { @JoinColumn(name = "target_proposition_id") })
-	private List<DataElementEntity> inverseIsA;
-
-	@Enumerated(EnumType.STRING)
-	@Column(nullable = false)
-	private CategorizationType categorizationType;
+	@JoinTable(name = "category_members", 
+			joinColumns = { @JoinColumn(name = "category_id")},
+			inverseJoinColumns = { @JoinColumn(name = "member_id")})
+	private List<DataElementEntity> members;
 	
 	public CategoryEntity() {
-		super(CategorizationType.EVENT);
+		super(CategoryType.EVENT);
 	}
 
-	public List<DataElementEntity> getInverseIsA() {
-		return inverseIsA;
+	public List<DataElementEntity> getMembers() {
+		return members;
 	}
 
-	public void setInverseIsA(List<DataElementEntity> inverseIsA) {
-		this.inverseIsA = inverseIsA;
+	public void setMembers(List<DataElementEntity> members) {
+		this.members = members;
 	}
-
-	public CategorizationType getCategorizationType() {
-		return categorizationType;
-	}
-
-	public void setCategorizationType(CategorizationType categorizationType) {
-		this.categorizationType = categorizationType;
+	
+	public void setCategoryType(CategoryType categoryType) {
+		setCatType(categoryType);
 	}
 
 	@Override

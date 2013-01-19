@@ -19,7 +19,7 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.common.entity;
 
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.CategoryEntity.CategorizationType;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.CategoryEntity.CategoryType;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -27,6 +27,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import org.apache.commons.lang.builder.ToStringBuilder;
 
 /**
  * Contains attributes which describe a Protempa slice abstraction in the
@@ -55,10 +56,10 @@ public class FrequencyEntity extends DataElementEntity {
 
 	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(nullable = false)
-	private ExtendedProposition extendedProposition;
+	private ExtendedDataElement extendedDataElement;
 
 	public FrequencyEntity() {
-		super(CategorizationType.SLICE_ABSTRACTION);
+		super(CategoryType.SLICE_ABSTRACTION);
 	}
 
 	public Integer getAtLeastCount() {
@@ -78,16 +79,16 @@ public class FrequencyEntity extends DataElementEntity {
 	}
 
 	public DataElementEntity getAbstractedFrom() {
-		return extendedProposition != null ? extendedProposition
-		        .getProposition() : null;
+		return extendedDataElement != null ? extendedDataElement
+		        .getDataElementEntity() : null;
 	}
 
-	public ExtendedProposition getExtendedProposition() {
-		return extendedProposition;
+	public ExtendedDataElement getExtendedProposition() {
+		return extendedDataElement;
 	}
 
-	public void setExtendedProposition(ExtendedProposition extendedProposition) {
-		this.extendedProposition = extendedProposition;
+	public void setExtendedProposition(ExtendedDataElement extendedProposition) {
+		this.extendedDataElement = extendedProposition;
 	}
 
 	public Integer getWithinAtLeast() {
@@ -125,6 +126,11 @@ public class FrequencyEntity extends DataElementEntity {
 	@Override
 	public void accept(PropositionEntityVisitor visitor) {
 		visitor.visit(this);
+	}
+	
+	@Override
+	public String toString() {
+		return ToStringBuilder.reflectionToString(this);
 	}
 
 }

@@ -24,7 +24,7 @@ import edu.emory.cci.aiw.cvrg.eureka.common.comm.Category;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.Category.CategoricalType;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.DataElement;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.CategoryEntity;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.CategoryEntity.CategorizationType;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.CategoryEntity.CategoryType;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.DataElementEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.exception.DataElementHandlingException;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.PropositionDao;
@@ -82,13 +82,13 @@ public final class CategorizationTranslator implements
 				inverseIsA.add(proposition);
 			}
 		}
-		result.setInverseIsA(inverseIsA);
-		result.setCategorizationType(checkPropositionType(element, inverseIsA));
+		result.setMembers(inverseIsA);
+		result.setCategoryType(checkPropositionType(element, inverseIsA));
 
 		return result;
 	}
 
-	private CategorizationType checkPropositionType(Category element,
+	private CategoryType checkPropositionType(Category element,
 			List<DataElementEntity> inverseIsA)
 			throws DataElementHandlingException {
 		if (inverseIsA.isEmpty()) {
@@ -97,10 +97,10 @@ public final class CategorizationTranslator implements
 					+ element.getKey()
 					+ " is invalid because it has no children");
 		}
-		Set<CategorizationType> categorizationTypes =
-				EnumSet.noneOf(CategorizationType.class);
+		Set<CategoryType> categorizationTypes =
+				EnumSet.noneOf(CategoryType.class);
 		for (DataElementEntity dataElement : inverseIsA) {
-			categorizationTypes.add(dataElement.categorizationType());
+			categorizationTypes.add(dataElement.getCategoryType());
 		}
 		if (categorizationTypes.size() > 1) {
 			throw new DataElementHandlingException(
@@ -120,7 +120,7 @@ public final class CategorizationTranslator implements
 		PropositionTranslatorUtil.populateCommonDataElementFields(result,
 				proposition);
 		List<DataElement> children = new ArrayList<DataElement>();
-		for (DataElementEntity p : proposition.getInverseIsA()) {
+		for (DataElementEntity p : proposition.getMembers()) {
 			PropositionTranslatorVisitor visitor = new PropositionTranslatorVisitor(
 					this.systemPropositionTranslator, this.sequenceTranslator,
 					this,
@@ -135,7 +135,7 @@ public final class CategorizationTranslator implements
 	}
 
 	private CategoricalType checkElementType(CategoryEntity proposition) {
-		switch (proposition.getCategorizationType()) {
+		switch (proposition.getCategoryType()) {
 			case LOW_LEVEL_ABSTRACTION:
 				return CategoricalType.LOW_LEVEL_ABSTRACTION;
 			case HIGH_LEVEL_ABSTRACTION:
@@ -150,7 +150,7 @@ public final class CategorizationTranslator implements
 				return CategoricalType.PRIMITIVE_PARAMETER;
 			default:
 				throw new AssertionError("Invalid category type: "
-						+ proposition.getCategorizationType());
+						+ proposition.getCategoryType());
 		}
 	}
 }

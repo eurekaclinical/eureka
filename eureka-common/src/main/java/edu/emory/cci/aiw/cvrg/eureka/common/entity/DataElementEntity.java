@@ -34,7 +34,7 @@ import javax.persistence.UniqueConstraint;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import com.sun.xml.bind.CycleRecoverable;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.CategoryEntity.CategorizationType;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.CategoryEntity.CategoryType;
 import javax.persistence.Temporal;
 import org.apache.commons.lang.builder.ToStringBuilder;
 
@@ -45,8 +45,8 @@ import org.apache.commons.lang.builder.ToStringBuilder;
  */
 @XmlRootElement
 @Entity
-@Table(name = "propositions", uniqueConstraints = { @UniqueConstraint(columnNames = {
-        "key", "userId" }) })
+@Table(name = "data_elements", uniqueConstraints = { @UniqueConstraint(columnNames = {
+        "key", "user_id" }) })
 @Inheritance(strategy = InheritanceType.JOINED)
 public abstract class DataElementEntity implements CycleRecoverable,
         PropositionEntityVisitable, Serializable {
@@ -65,7 +65,7 @@ public abstract class DataElementEntity implements CycleRecoverable,
 	/**
 	 * The user to which this proposition belongs.
 	 */
-	@Column(nullable = false)
+	@Column(nullable = false, name="user_id")
 	private Long userId;
 	/**
 	 * If proposition is system-level, this key identifies the proposition in
@@ -96,21 +96,16 @@ public abstract class DataElementEntity implements CycleRecoverable,
 	 */
 	@Temporal(javax.persistence.TemporalType.TIMESTAMP)
 	private Date lastModified;
-	/**
-	 * True if this proposition is used only as a building block for another
-	 * proposition and ultimately should not show up in i2b2 as a queryable
-	 * concept.
-	 */
-	private boolean helperProposition;
-	private final CategorizationType categorizationType;
+	
+	@Column(nullable = false)
+	private CategoryType categoryType;
 	
 	protected DataElementEntity() {
 		this(null);
 	}
 
-	protected DataElementEntity(CategorizationType categorizationType) {
-		this.helperProposition = false;
-		this.categorizationType = categorizationType;
+	protected DataElementEntity(CategoryType categoryType) {
+		this.categoryType = categoryType;
 	}
 	
 	/**
@@ -266,34 +261,17 @@ public abstract class DataElementEntity implements CycleRecoverable,
 		lastModified = inLastModified;
 	}
 
-	/**
-	 * Is the proposition just a building block of another proposition?
-	 * 
-	 * @return Whether this proposition is used only as a building block in
-	 *         another proposition
-	 */
-	public boolean isHelperProposition() {
-		return helperProposition;
-	}
-
-	/**
-	 * Sets whether this proposition is just a building block of another
-	 * proposition
-	 * 
-	 * @param inHelperProposition
-	 *            the value of the helperProposition field to set
-	 */
-	public void setHelperProposition(boolean inHelperProposition) {
-		helperProposition = inHelperProposition;
-	}
-
 	@Override
 	public Object onCycleDetected(Context context) {
 		return null;
 	}
 	
-	public CategorizationType categorizationType() {
-		return this.categorizationType;
+	protected void setCatType(CategoryType categoryType) {
+		this.categoryType = categoryType;
+	}
+	
+	public CategoryType getCategoryType() {
+		return this.categoryType;
 	}
 
 	@Override
