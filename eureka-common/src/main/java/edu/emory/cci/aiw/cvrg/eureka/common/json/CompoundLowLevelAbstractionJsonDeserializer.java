@@ -110,11 +110,28 @@ public final class CompoundLowLevelAbstractionJsonDeserializer extends JsonDeser
 
 		nextToken();
 		checkField("valueDefinitions");
-		ValueClassification[] vcs =
-				this.parser.readValueAs(ValueClassification[].class);
-		for (ValueClassification vc : vcs) {
-			value.addValueClassification(vc);
+		
+		nextToken();
+		while (parser.getCurrentToken() != JsonToken.END_OBJECT) {
+			checkField("id");
+			String id = parser.getText();
+			
+			nextToken();
+			checkField("lowLevelAbstractionId");
+			String lowLevelAbstractionId = parser.getText();
+			
+			nextToken();
+			checkField("value");
+			String lowLevelAbstractionValueDefName = parser.getText();
+			
+			ValueClassification valueCls = 
+					new ValueClassification(id, lowLevelAbstractionId, 
+					lowLevelAbstractionValueDefName);
+			value.addValueClassification(valueCls);
+			
+			nextToken();
 		}
+		
 
 		nextToken();
 

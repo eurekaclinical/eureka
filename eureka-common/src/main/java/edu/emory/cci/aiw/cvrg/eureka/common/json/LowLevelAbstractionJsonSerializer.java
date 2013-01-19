@@ -44,6 +44,7 @@ public final class LowLevelAbstractionJsonSerializer extends
 		provider.defaultSerializeField("displayName", value.getDisplayName(), jgen);
 		provider.defaultSerializeField("abbreviatedDisplayName", value.getAbbreviatedDisplayName(), jgen);
 		provider.defaultSerializeField("description", value.getDescription(), jgen);
+		provider.defaultSerializeField("algorithm", value.getAlgorithmId(), jgen);
 		provider.defaultSerializeField("inverseIsA", value.getInverseIsA(), jgen);
 		provider.defaultSerializeField("abstractedFrom", value.getAbstractedFrom(), jgen);
 		provider.defaultSerializeField("properties", value.getPropertyDefinitions(), jgen);

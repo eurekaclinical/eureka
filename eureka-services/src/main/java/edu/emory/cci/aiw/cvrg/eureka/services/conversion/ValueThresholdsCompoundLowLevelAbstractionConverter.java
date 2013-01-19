@@ -73,6 +73,7 @@ public final class ValueThresholdsCompoundLowLevelAbstractionConverter
 			
 			def.addPrimitiveParameterId(v.getAbstractedFrom().getKey());
 			def.setMinimumNumberOfValues(1);
+			def.setAlgorithmId("stateDetector");
 			ValueThresholdsLowLevelAbstractionConverter
 					.thresholdToValueDefinitions(def.getId() + "_VALUE", v, def);
 			llas.add(def);

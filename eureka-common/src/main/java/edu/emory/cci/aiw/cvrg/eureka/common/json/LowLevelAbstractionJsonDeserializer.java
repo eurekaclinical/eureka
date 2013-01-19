@@ -72,6 +72,10 @@ public final class LowLevelAbstractionJsonDeserializer extends
 		nextToken();
 		checkField("description");
 		value.setDescription(this.parser.getText());
+		
+		nextToken();
+		checkField("algorithm");
+		value.setDescription(this.parser.getText());
 
 		nextToken();
 		checkField("inverseIsA");
