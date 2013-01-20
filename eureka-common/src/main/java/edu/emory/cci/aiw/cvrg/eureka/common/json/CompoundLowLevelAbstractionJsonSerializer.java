@@ -67,7 +67,7 @@ public final class CompoundLowLevelAbstractionJsonSerializer extends
 				value.getValueDefinitionMatchOperator().name(), jgen);
 //		provider.defaultSerializeField("valueDefinitions",
 //				value.getValueClassifications(), jgen);
-		jgen.writeFieldName("valueDefinitions");
+		jgen.writeFieldName("values");
 		jgen.writeStartObject();
 		for (ValueClassification valueCls : value.getValueClassifications()) {
 			provider.defaultSerializeField("id", valueCls.getId(), jgen);

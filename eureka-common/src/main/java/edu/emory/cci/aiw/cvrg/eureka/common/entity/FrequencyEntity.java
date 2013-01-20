@@ -27,7 +27,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
-import org.apache.commons.lang.builder.ToStringBuilder;
+import org.apache.commons.lang.builder.ReflectionToStringBuilder;
 
 /**
  * Contains attributes which describe a Protempa slice abstraction in the
@@ -130,7 +130,7 @@ public class FrequencyEntity extends DataElementEntity {
 	
 	@Override
 	public String toString() {
-		return ToStringBuilder.reflectionToString(this);
+		return ReflectionToStringBuilder.reflectionToString(this);
 	}
 
 }

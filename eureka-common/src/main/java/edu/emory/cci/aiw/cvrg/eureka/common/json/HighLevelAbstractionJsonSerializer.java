@@ -21,13 +21,16 @@ package edu.emory.cci.aiw.cvrg.eureka.common.json;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.codehaus.jackson.JsonGenerator;
 import org.codehaus.jackson.JsonProcessingException;
 import org.codehaus.jackson.map.JsonSerializer;
 import org.codehaus.jackson.map.SerializerProvider;
+import org.protempa.ExtendedPropositionDefinition;
 import org.protempa.HighLevelAbstractionDefinition;
 import org.protempa.TemporalExtendedPropositionDefinition;
 import org.protempa.proposition.interval.Relation;
@@ -59,6 +62,18 @@ public final class HighLevelAbstractionJsonSerializer extends
 		
 		provider.defaultSerializeField("temporalOffset", value.getTemporalOffset(), jgen);
 		provider.defaultSerializeField("gapFunction", value.getGapFunction(), jgen);
+		
+		jgen.writeFieldName("extendedPropositions");
+		jgen.writeStartObject();
+		Map<ExtendedPropositionDefinition, Long> indices =
+				new HashMap<ExtendedPropositionDefinition, Long>();
+		int i = 1;
+		for (ExtendedPropositionDefinition epd : value.getExtendedPropositionDefinitions()) {
+			indices.put(epd, Long.valueOf(i));
+			jgen.writeFieldName("" + (i++));
+			provider.defaultSerializeValue(epd, jgen);
+		}
+		jgen.writeEndObject();
 
 		// special case for handling extended propositions and relations, which
 		// are not directly gettable
@@ -70,15 +85,15 @@ public final class HighLevelAbstractionJsonSerializer extends
 		}
 
 		// start relation map
-		jgen.writeFieldName("defPairs");
+		jgen.writeFieldName("relations");
 		jgen.writeStartObject();
 		for (Map.Entry<List<TemporalExtendedPropositionDefinition>, Relation> e : defPairs
 		        .entrySet()) {
 			jgen.writeFieldName("lhs");
-			provider.defaultSerializeValue(e.getKey().get(0), jgen);
+			provider.defaultSerializeValue(indices.get(e.getKey().get(0)), jgen);
 			jgen.writeFieldName("rhs");
-			provider.defaultSerializeValue(e.getKey().get(1), jgen);
-			jgen.writeFieldName("rel");
+			provider.defaultSerializeValue(indices.get(e.getKey().get(1)), jgen);
+			jgen.writeFieldName("relation");
 			provider.defaultSerializeValue(e.getValue(), jgen);
 		}
 		jgen.writeEndObject();

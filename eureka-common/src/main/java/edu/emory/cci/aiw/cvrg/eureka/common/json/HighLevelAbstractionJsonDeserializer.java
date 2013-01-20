@@ -20,6 +20,8 @@
 package edu.emory.cci.aiw.cvrg.eureka.common.json;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 import org.codehaus.jackson.JsonNode;
 
 import org.codehaus.jackson.JsonParseException;
@@ -28,6 +30,8 @@ import org.codehaus.jackson.JsonProcessingException;
 import org.codehaus.jackson.JsonToken;
 import org.codehaus.jackson.map.DeserializationContext;
 import org.codehaus.jackson.map.JsonDeserializer;
+import org.codehaus.jackson.map.JsonMappingException;
+import org.protempa.ExtendedPropositionDefinition;
 import org.protempa.GapFunction;
 import org.protempa.HighLevelAbstractionDefinition;
 import org.protempa.Offsets;
@@ -106,23 +110,49 @@ public final class HighLevelAbstractionJsonDeserializer extends
 		nextToken();
 		checkField("gapFunction");
 		value.setGapFunction(this.parser.readValueAs(GapFunction.class));
+		
 		nextToken();
-		checkField("defPairs");
+		checkField("extendedPropositions");
+		nextToken();
+		int i = 1;
+		Map<Long, ExtendedPropositionDefinition> indices =
+				new HashMap<Long, ExtendedPropositionDefinition>();
+		while (parser.getCurrentToken() != JsonToken.END_OBJECT) {
+			checkField("" + i);
+			TemporalExtendedPropositionDefinition lhs = this.parser
+			        .readValueAs(TemporalExtendedPropositionDefinition.class);
+			value.add(lhs);
+			indices.put(Long.valueOf(i), lhs);
+			nextToken();
+			i++;
+		}
+		
+		nextToken();
+		checkField("relations");
 		nextToken();
 		while (parser.getCurrentToken() != JsonToken.END_OBJECT) {
 			checkField("lhs");
-			TemporalExtendedPropositionDefinition lhs = this.parser
-			        .readValueAs(TemporalExtendedPropositionDefinition.class);
+			ExtendedPropositionDefinition lhs = 
+					indices.get(Long.valueOf(this.parser.getIntValue()));
+			if (!(lhs instanceof TemporalExtendedPropositionDefinition)) {
+				throw new JsonMappingException("Proposition definition " 
+						+ lhs.getPropositionId() 
+						+ " is not temporal and cannot be in a temporal relation");
+			}
 			nextToken();
 			checkField("rhs");
-			TemporalExtendedPropositionDefinition rhs = this.parser
-			        .readValueAs(TemporalExtendedPropositionDefinition.class);
+			ExtendedPropositionDefinition rhs =
+					indices.get(Long.valueOf(this.parser.getIntValue()));
+			if (!(rhs instanceof TemporalExtendedPropositionDefinition)) {
+				throw new JsonMappingException("Proposition definition " 
+						+ rhs.getPropositionId() 
+						+ " is not temporal and cannot be in a temporal relation");
+			}
 			nextToken();
-			checkField("rel");
+			checkField("relation");
 			Relation rel = this.parser.readValueAs(Relation.class);
-			value.add(lhs);
-			value.add(rhs);
-			value.setRelation(lhs, rhs, rel);
+			value.setRelation((TemporalExtendedPropositionDefinition) lhs, 
+					(TemporalExtendedPropositionDefinition) rhs, rel);
 			nextToken();
 		}
 		nextToken();

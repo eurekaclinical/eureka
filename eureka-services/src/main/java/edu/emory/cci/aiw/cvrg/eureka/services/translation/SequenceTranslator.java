@@ -41,6 +41,7 @@ import edu.emory.cci.aiw.cvrg.eureka.services.dao.RelationOperatorDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.TimeUnitDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.ValueComparatorDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.finder.SystemPropositionFinder;
+import javax.ws.rs.core.Response;
 
 /**
  * Translates from sequences (UI data element) to high-level abstractions.
@@ -81,9 +82,13 @@ public class SequenceTranslator implements
 				this.translatorSupport.getUserEntityInstance(element,
 				SequenceEntity.class);
 
+		Map<String, DataElementField> dataElementsMap =
+				new HashMap<String, DataElementField>();
+		DataElementField primaryDataElementField = element.getPrimaryDataElement();
 		ExtendedDataElement ep =
 				createExtendedProposition(result.getPrimaryExtendedDataElement(),
-				element.getPrimaryDataElement(), userId);
+				primaryDataElementField, Long.valueOf(1), userId);
+		dataElementsMap.put(primaryDataElementField.getDataElementKey(), primaryDataElementField);
 		result.setPrimaryExtendedDataElement(ep);
 
 		List<Relation> relations = result.getRelations();
@@ -107,13 +112,22 @@ public class SequenceTranslator implements
 				rhsEP = null;
 				relations.add(relation);
 			}
-			
+
+			DataElementField lhsDEF = rde.getDataElementField();
 			lhsEP = createExtendedProposition(lhsEP,
-					rde.getDataElementField(), userId);
-			rhsEP = createExtendedProposition(rhsEP,
-					rde.getDataElementField(), userId);
-			
-			RelationOperator relationOperator = 
+					rde.getDataElementField(), Long.valueOf(i + 2), userId);
+			dataElementsMap.put(lhsDEF.getDataElementKey(), lhsDEF);
+			DataElementField rhsDEF = dataElementsMap.get(
+					rde.getSequentialDataElement());
+			if (rhsDEF == null) {
+				throw new DataElementHandlingException(
+						Response.Status.PRECONDITION_FAILED,
+						"Invalid data element "
+						+ rde.getSequentialDataElement());
+			}
+			rhsEP = createExtendedProposition(rhsEP, rhsDEF, rde.getSequentialDataElementSource(), userId);
+
+			RelationOperator relationOperator =
 					this.relationOperatorDao.retrieve(
 					rde.getRelationOperator());
 
@@ -132,7 +146,7 @@ public class SequenceTranslator implements
 				relation.setLhsExtendedDataElement(rhsEP);
 				relation.setRhsExtendedDataElement(lhsEP);
 			}
-			
+
 			i++;
 		}
 
@@ -160,10 +174,10 @@ public class SequenceTranslator implements
 
 	private ExtendedDataElement createExtendedProposition(
 			ExtendedDataElement origExtendedProposition,
-			DataElementField dataElement, Long userId)
+			DataElementField dataElement, Long sequenceNumber, Long userId)
 			throws DataElementHandlingException {
 		ExtendedDataElement result =
-				this.extendedProps.get(dataElement.getId());
+				this.extendedProps.get(sequenceNumber);
 		if (result == null) {
 			ExtendedDataElement ep = origExtendedProposition;
 			if (origExtendedProposition == null) {
@@ -175,7 +189,7 @@ public class SequenceTranslator implements
 			PropositionTranslatorUtil.populateExtendedProposition(ep,
 					proposition, dataElement, timeUnitDao, valueComparatorDao);
 
-			this.extendedProps.put(dataElement.getId(), ep);
+			this.extendedProps.put(sequenceNumber, ep);
 			result = ep;
 		}
 		return result;
@@ -192,28 +206,15 @@ public class SequenceTranslator implements
 			result.setPrimaryDataElement(createDataElementField(proposition
 					.getPrimaryExtendedDataElement()));
 
-			// determine the correct source for each sequential data element
-			Map<Long, Long> sequentialSources = new HashMap<Long, Long>();
-			for (Relation relation : proposition.getRelations()) {
-				Long epId = relation.getRhsExtendedDataElement().getId();
-				Long pId = proposition.getPrimaryExtendedDataElement().getId();
-				if (pId.equals(epId)) {
-					sequentialSources.put(epId, pId);
-				} else {
-					for (Relation src : proposition.getRelations()) {
-						Long srcId = src.getLhsExtendedDataElement().getId();
-						if (srcId.equals(epId)) {
-							sequentialSources.put(epId, srcId);
-							break;
-						}
-					}
-				}
-			}
+			List<Relation> relations = proposition.getRelations();
+			Long pId = proposition.getPrimaryExtendedDataElement().getId();
+			Map<Long, Long> sequentialSources = 
+					assignSources(pId, proposition);
 
-			List<RelatedDataElementField> relatedFields = 
+			List<RelatedDataElementField> relatedFields =
 					new ArrayList<Sequence.RelatedDataElementField>();
-			for (Relation relation : proposition.getRelations()) {
-				RelatedDataElementField field = 
+			for (Relation relation : relations) {
+				RelatedDataElementField field =
 						createRelatedDataElementField(relation);
 				field.setSequentialDataElementSource(
 						sequentialSources.get(
@@ -228,7 +229,7 @@ public class SequenceTranslator implements
 
 	private RelatedDataElementField createRelatedDataElementField(
 			Relation relation) {
-		RelatedDataElementField relatedDataElement = 
+		RelatedDataElementField relatedDataElement =
 				new RelatedDataElementField();
 
 		relatedDataElement.setRelationMinCount(relation.getMinf1s2());
@@ -280,5 +281,19 @@ public class SequenceTranslator implements
 			dataElement.setPropertyValue(ep.getPropertyConstraint().getValue());
 		}
 		return dataElement;
+	}
+
+	private Map<Long, Long> assignSources(Long pId, SequenceEntity proposition) {
+		// determine the correct source for each sequential data element
+		Map<Long, Long> sequentialSources = new HashMap<Long, Long>();
+		sequentialSources.put(pId, Long.valueOf(1));
+		int i = 2;
+		for (Relation relation : proposition.getRelations()) {
+			Long epId = relation.getRhsExtendedDataElement().getId();
+			if (!sequentialSources.containsKey(epId)) {
+				sequentialSources.put(epId, Long.valueOf(i++));
+			}
+		}
+		return sequentialSources;
 	}
 }

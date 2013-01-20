@@ -1,4 +1,4 @@
-<%--
+ <%--
   #%L
   Eureka WebApp
   %%
@@ -258,10 +258,10 @@
 														</tr>
 														<tr>
 															<td class="sequence-relations-container">
-																<table class="sequence-relation drop-parent" style="margin-top: 10px">
 																	<c:choose>
 																	<c:when test="${not empty proposition and propositionType == 'SEQUENCE' and not empty proposition.relatedDataElements}">
 																	<c:forEach var="relation" items="${proposition.relatedDataElements}" varStatus="status">
+																		<table class="sequence-relation drop-parent" style="margin-top: 10px">
 																	<tr>
 																		<td>Related Data Element <span class="count">${status.count}</span>:</td>
 																		<td colspan="5">
@@ -346,9 +346,11 @@
 																			<input type="text" class="propertyValueField" name="sequenceRelDataElementPropertyValue" value="<c:if test="${not empty relation.dataElementField.propertyValue}">${relation.dataElementField.propertyValue}</c:if>"/>
 																		</td>
 																	</tr>
+																		</table>
 																	</c:forEach>
 																	</c:when>
 																	<c:otherwise>
+																		<table class="sequence-relation drop-parent" style="margin-top: 10px">
 																	<%-- For creating a new data element. --%>
 																	<tr>
 																		<td>Related Data Element <span class="count">1</span>:</td>
@@ -425,9 +427,10 @@
 																			<input type="text" class="propertyValueField" name="sequenceRelDataElementPropertyValue"/>
 																		</td>
 																	</tr>
+																	</table>
 																	</c:otherwise>
 																	</c:choose>
-																</table>
+																
 															</td>
 														</tr>
 														<tr>

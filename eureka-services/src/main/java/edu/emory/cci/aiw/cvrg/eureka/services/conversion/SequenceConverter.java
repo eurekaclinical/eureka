@@ -19,12 +19,10 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.services.conversion;
 
-import com.google.inject.Inject;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.DataElementEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.ExtendedDataElement;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.Relation;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.SequenceEntity;
-import edu.emory.cci.aiw.cvrg.eureka.services.dao.ValueComparatorDao;
 import org.protempa.HighLevelAbstractionDefinition;
 import org.protempa.PropertyConstraint;
 import org.protempa.PropositionDefinition;
@@ -36,6 +34,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static edu.emory.cci.aiw.cvrg.eureka.services.conversion.PropositionDefinitionConverterUtil.unit;
+import java.util.HashMap;
+import java.util.Map;
 
 final class SequenceConverter
 		implements
@@ -43,6 +43,11 @@ final class SequenceConverter
 
 	private PropositionDefinitionConverterVisitor converterVisitor;
 	private HighLevelAbstractionDefinition primary;
+	private final Map<Long, TemporalExtendedPropositionDefinition> extendedProps;
+
+	public SequenceConverter() {
+		this.extendedProps = new HashMap<Long, TemporalExtendedPropositionDefinition>();
+	}
 
 	@Override
 	public HighLevelAbstractionDefinition getPrimaryPropositionDefinition() {
@@ -54,12 +59,13 @@ final class SequenceConverter
 	}
 
 	@Override
-	public List<PropositionDefinition> convert(SequenceEntity proposition) {
+	public List<PropositionDefinition> convert(SequenceEntity sequenceEntity) {
 		List<PropositionDefinition> result = new ArrayList<PropositionDefinition>();
 		HighLevelAbstractionDefinition primary = new HighLevelAbstractionDefinition(
-				proposition.getKey());
-		if (proposition.getRelations() != null) {
-			for (Relation rel : proposition.getRelations()) {
+				sequenceEntity.getKey());
+		System.err.println("STARTED WITH " + sequenceEntity);
+		if (sequenceEntity.getRelations() != null) {
+			for (Relation rel : sequenceEntity.getRelations()) {
 				DataElementEntity lhs =
 						rel.getLhsExtendedDataElement().getDataElementEntity();
 				lhs.accept(converterVisitor);
@@ -82,29 +88,35 @@ final class SequenceConverter
 		}
 
 		this.primary = primary;
+		System.err.println("CONVERTED " + primary);
 		result.add(primary);
 		return result;
 	}
 
 	private TemporalExtendedPropositionDefinition buildExtendedProposition(
 			ExtendedDataElement ep) {
-		TemporalExtendedPropositionDefinition tepd =
-				new TemporalExtendedPropositionDefinition(
-				ep.getDataElementEntity().getKey());
+		TemporalExtendedPropositionDefinition tepd = 
+				this.extendedProps.get(ep.getId());
+		if (tepd == null) {
+			tepd = new TemporalExtendedPropositionDefinition(
+					ep.getDataElementEntity().getKey());
 
-		if (ep.getPropertyConstraint() != null) {
-			PropertyConstraint pc = new PropertyConstraint();
-			pc.setPropertyName(ep.getPropertyConstraint().getPropertyName());
-			pc.setValue(ValueType.VALUE.parse(ep.getPropertyConstraint()
-					.getValue()));
-			pc.setValueComp(ValueComparator.EQUAL_TO);
+			if (ep.getPropertyConstraint() != null) {
+				PropertyConstraint pc = new PropertyConstraint();
+				pc.setPropertyName(
+						ep.getPropertyConstraint().getPropertyName());
+				pc.setValue(ValueType.VALUE.parse(ep.getPropertyConstraint()
+						.getValue()));
+				pc.setValueComp(ValueComparator.EQUAL_TO);
 
-			tepd.getPropertyConstraints().add(pc);
+				tepd.getPropertyConstraints().add(pc);
+			}
+			tepd.setMinLength(ep.getMinDuration());
+			tepd.setMinLengthUnit(unit(ep.getMinDurationTimeUnit()));
+			tepd.setMaxLength(ep.getMaxDuration());
+			tepd.setMaxLengthUnit(unit(ep.getMaxDurationTimeUnit()));
+			this.extendedProps.put(ep.getId(), tepd);
 		}
-		tepd.setMinLength(ep.getMinDuration());
-		tepd.setMinLengthUnit(unit(ep.getMinDurationTimeUnit()));
-		tepd.setMaxLength(ep.getMaxDuration());
-		tepd.setMaxLengthUnit(unit(ep.getMaxDurationTimeUnit()));
 
 		return tepd;
 	}

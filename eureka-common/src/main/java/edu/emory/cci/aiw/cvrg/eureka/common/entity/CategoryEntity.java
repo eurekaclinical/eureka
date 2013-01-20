@@ -27,7 +27,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
-import org.apache.commons.lang.builder.ToStringBuilder;
+import org.apache.commons.lang.builder.ReflectionToStringBuilder;
 
 /**
  * @author hrathod
@@ -75,7 +75,7 @@ public class CategoryEntity extends DataElementEntity {
 	
 	@Override
 	public String toString() {
-		return ToStringBuilder.reflectionToString(this);
+		return ReflectionToStringBuilder.reflectionToString(this);
 	}
 
 }

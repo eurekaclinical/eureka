@@ -109,7 +109,7 @@ public final class CompoundLowLevelAbstractionJsonDeserializer extends JsonDeser
 				this.parser.readValueAs(String.class)));
 
 		nextToken();
-		checkField("valueDefinitions");
+		checkField("values");
 		
 		nextToken();
 		while (parser.getCurrentToken() != JsonToken.END_OBJECT) {

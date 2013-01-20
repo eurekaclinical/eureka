@@ -193,7 +193,7 @@ public final class LowLevelAbstractionJsonDeserializer extends
 		value.setMaximumGapBetweenValuesUnits(this.parser.readValueAs(Unit.class));
 
 		nextToken();
-		checkField("valueDefinitions");
+		checkField("values");
 
 		nextToken();
 		while (parser.getCurrentToken() != JsonToken.END_OBJECT) {

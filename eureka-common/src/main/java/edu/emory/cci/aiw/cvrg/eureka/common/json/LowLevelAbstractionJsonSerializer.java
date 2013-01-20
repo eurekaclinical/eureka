@@ -74,7 +74,7 @@ public final class LowLevelAbstractionJsonSerializer extends
 		
 		
 		// value definitions
-		jgen.writeFieldName("valueDefinitions");
+		jgen.writeFieldName("values");
 		jgen.writeStartObject();
 		for (LowLevelAbstractionValueDefinition valDef : value.getValueDefinitions()) {
 			provider.defaultSerializeField("id", valDef.getId(), jgen);
