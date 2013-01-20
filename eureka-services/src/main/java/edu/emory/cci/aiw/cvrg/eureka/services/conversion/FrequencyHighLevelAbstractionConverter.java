@@ -56,8 +56,6 @@ public final class FrequencyHighLevelAbstractionConverter
 	@Override
 	public List<PropositionDefinition> convert(FrequencyEntity entity) {
 		List<PropositionDefinition> result = new ArrayList<PropositionDefinition>();
-		HighLevelAbstractionDefinition primary = new HighLevelAbstractionDefinition(
-		        entity.getKey());
 
 		if (!(entity.getAbstractedFrom() instanceof ValueThresholdGroupEntity)) {
 			throw new IllegalArgumentException(
@@ -78,6 +76,9 @@ public final class FrequencyHighLevelAbstractionConverter
 		List<PropositionDefinition> abstractedFrom = converterVisitor
 		        .getPropositionDefinitions();
 		result.addAll(abstractedFrom);
+		
+		HighLevelAbstractionDefinition primary = new HighLevelAbstractionDefinition(
+		        entity.getKey());
 		TemporalExtendedParameterDefinition tepd = new TemporalExtendedParameterDefinition(
 		        converterVisitor.getPrimaryProposition().getId());
 		tepd.setValue(NominalValue.getInstance(converterVisitor
@@ -87,7 +88,9 @@ public final class FrequencyHighLevelAbstractionConverter
 		primary.setGapFunction(new MinMaxGapFunction(entity.getWithinAtLeast(),
 		        unit(entity.getWithinAtLeastUnits()), entity.getWithinAtMost(),
 		        unit(entity.getWithinAtMostUnits())));
-
+		primary.setDisplayName(thresholds.getDisplayName());
+		primary.setAbbreviatedDisplayName(thresholds.getAbbrevDisplayName());
+		
 		result.add(primary);
 		this.primary = primary;
 
