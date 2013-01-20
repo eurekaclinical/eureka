@@ -155,7 +155,6 @@ function collectSequenceDataElement (elem) {
 	return {
 		'id': $sortable.data('count'),
 		'dataElementKey': $mainProposition.data('key'),
-		'withValue': $(elem).find('select[name="mainDataElementValue"]').val(),
 		'hasDuration': $(elem).find('input[name="mainDataElementSpecifyDuration"]').is(':checked'),
 		'minDuration': $(elem).find('input[name="mainDataElementMinDurationValue"]').val(),
 		'minDurationUnits': $(elem).find('select[name="mainDataElementMinDurationUnits"]').val(),
@@ -185,7 +184,6 @@ function collectSequenceRelations ($relationElems) {
 				'dataElementField': {
 					'id': id,
 					'dataElementKey': $proposition.data('key'),
-					'withValue': $(r).find('select[name="sequenceRelDataElementValue"]').val(),
 					'hasDuration': $(r).find('input[name="sequenceRelDataElementSpecifyDuration"]').is(':checked'),
 					'minDuration': $(r).find('input[name="sequenceRelDataElementMinDurationValue"]').val(),
 					'minDurationUnits':  $(r).find('select[name="sequenceRelDataElementMinDurationUnits"]').val(),
@@ -367,7 +365,6 @@ function saveFrequency (elem) {
 		'isConsecutive': $(elem).find('input[name=freqIsConsecutive]').is(':checked'),
 		'dataElement': {
 			'dataElementKey': $dataElement.data('key'),
-			'withValue': $(elem).find('select[name="freqDataElementValue"]').val(),
 			'hasDuration': $(elem).find('input[name="freqDataElementSpecifyDuration"]').is(':checked'),
 			'minDuration': $(elem).find('input[name="freqDataElementMinDurationValue"]').val(),
 			'minDurationUnits': $(elem).find('select[name="freqDataElementMinDurationUnits"]').val(),

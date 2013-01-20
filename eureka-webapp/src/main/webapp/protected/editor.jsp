@@ -193,14 +193,14 @@
 																			</div>
 																		</td>
 																	</tr>
-																	<tr>
+																	<%--<tr>
 																		<td>
 																			with value
 																		</td>
 																		<td>
 																			<select name="mainDataElementValue"></select>
 																		</td>
-																	</tr>
+																	</tr>--%>
 																	<tr>
 																		<td>
 																			<label><input type="checkbox" value="true" name="mainDataElementSpecifyDuration" <c:if test="${propositionType == 'SEQUENCE' and proposition.primaryDataElement.hasDuration}">checked="checked"</c:if> >with duration</label>
@@ -276,10 +276,10 @@
 																			</div>
 																		</td>
 																	</tr>
-																	<tr>
+																	<%--<tr>
 																		<td>with value</td>
 																		<td colspan="5"><select name="sequenceRelDataElementValue"></select></td>
-																	</tr>
+																	</tr>--%>
 																	<tr>
 																		<td>
 																			<label><input type="checkbox" value="true" name="sequenceRelDataElementSpecifyDuration" <c:if test="${relation.dataElementField.hasDuration}">checked="checked"</c:if> />with duration</label>
@@ -361,10 +361,10 @@
 																			</div>
 																		</td>
 																	</tr>
-																	<tr>
+																	<%--<tr>
 																		<td>with value</td>
 																		<td colspan="5"><select name="sequenceRelDataElementValue"></select></td>
-																	</tr>
+																	</tr>--%>
 																	<tr>
 																		<td>
 																			<label><input type="checkbox" value="true" name="sequenceRelDataElementSpecifyDuration"/>with duration</label>

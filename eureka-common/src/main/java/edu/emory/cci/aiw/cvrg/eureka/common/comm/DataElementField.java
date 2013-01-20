@@ -38,7 +38,6 @@ public class DataElementField {
 	private String dataElementKey;
 	private String dataElementAbbrevDisplayName;
 	private String dataElementDisplayName;
-	private String withValue;
 	private Boolean hasDuration;
 	private Integer minDuration;
 	private Long minDurationUnits;
@@ -63,14 +62,6 @@ public class DataElementField {
 
 	public void setDataElementKey(String dataElement) {
 		this.dataElementKey = dataElement;
-	}
-
-	public String getWithValue() {
-		return withValue;
-	}
-
-	public void setWithValue(String withValue) {
-		this.withValue = withValue;
 	}
 
 	public Boolean getHasDuration() {

@@ -33,6 +33,9 @@ import javax.persistence.TableGenerator;
 import org.apache.commons.lang.builder.ToStringBuilder;
 
 /**
+ * An ExtendedDataElement represents a data element with constraints on its
+ * duration and one of its property values.
+ * 
  * @author hrathod
  */
 @Entity
@@ -66,8 +69,6 @@ public class ExtendedDataElement {
 	        CascadeType.PERSIST })
 	@JoinColumn(nullable = false, name = "dataelement_id")
 	private DataElementEntity dataElementEntity;
-
-	private String value;
 
 	public Long getId() {
 		return id;
@@ -123,14 +124,6 @@ public class ExtendedDataElement {
 
 	public void setDataElementEntity(DataElementEntity inDataElementEntity) {
 		dataElementEntity = inDataElementEntity;
-	}
-
-	public String getValue() {
-		return value;
-	}
-
-	public void setValue(String value) {
-		this.value = value;
 	}
 	
 	@Override

@@ -23,6 +23,7 @@ import edu.emory.cci.aiw.cvrg.eureka.common.entity.DataElementEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.ExtendedDataElement;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.Relation;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.SequenceEntity;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.ValueThresholdGroupEntity;
 import org.protempa.HighLevelAbstractionDefinition;
 import org.protempa.PropertyConstraint;
 import org.protempa.PropositionDefinition;
@@ -36,6 +37,8 @@ import java.util.List;
 import static edu.emory.cci.aiw.cvrg.eureka.services.conversion.PropositionDefinitionConverterUtil.unit;
 import java.util.HashMap;
 import java.util.Map;
+import org.protempa.TemporalExtendedParameterDefinition;
+import org.protempa.proposition.value.NominalValue;
 
 final class SequenceConverter
 		implements
@@ -98,8 +101,20 @@ final class SequenceConverter
 		TemporalExtendedPropositionDefinition tepd = 
 				this.extendedProps.get(ep.getId());
 		if (tepd == null) {
-			tepd = new TemporalExtendedPropositionDefinition(
-					ep.getDataElementEntity().getKey());
+			DataElementEntity dataElementEntity = ep.getDataElementEntity();
+			if (dataElementEntity instanceof ValueThresholdGroupEntity) {
+				ValueThresholdGroupEntity vtDataElementEntity =
+						(ValueThresholdGroupEntity) dataElementEntity;
+				TemporalExtendedParameterDefinition tepvDef = 
+						new TemporalExtendedParameterDefinition(
+						dataElementEntity.getKey());
+				tepvDef.setValue(
+						NominalValue.getInstance(vtDataElementEntity.getKey() + "_VALUE"));
+				tepd = tepvDef;
+			} else {
+				tepd = new TemporalExtendedPropositionDefinition(
+					dataElementEntity.getKey());
+			}
 
 			if (ep.getPropertyConstraint() != null) {
 				PropertyConstraint pc = new PropertyConstraint();
@@ -115,6 +130,7 @@ final class SequenceConverter
 			tepd.setMinLengthUnit(unit(ep.getMinDurationTimeUnit()));
 			tepd.setMaxLength(ep.getMaxDuration());
 			tepd.setMaxLengthUnit(unit(ep.getMaxDurationTimeUnit()));
+			
 			this.extendedProps.put(ep.getId(), tepd);
 		}
 
