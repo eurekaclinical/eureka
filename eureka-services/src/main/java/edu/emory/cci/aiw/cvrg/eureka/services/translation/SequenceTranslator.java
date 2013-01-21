@@ -260,8 +260,8 @@ public class SequenceTranslator implements
 	private DataElementField createDataElementField(ExtendedDataElement ep) {
 		DataElementField dataElement = new DataElementField();
 		dataElement.setDataElementKey(ep.getDataElementEntity().getKey());
-		dataElement.setDataElementAbbrevDisplayName(ep.getDataElementEntity()
-				.getAbbrevDisplayName());
+		dataElement.setDataElementDescription(ep.getDataElementEntity()
+				.getDescription());
 		dataElement.setDataElementDisplayName(ep.getDataElementEntity()
 				.getDisplayName());
 		if (ep.getMinDuration() != null) {

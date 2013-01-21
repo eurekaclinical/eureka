@@ -166,6 +166,10 @@ public class JobResource {
 				for (PropositionDefinition propDef : propDefs) {
 					userProps.add(propDef);
 				}
+				/*
+				 * Need a visitor for wrapping value thresholds and compound
+				 * value thresholds in a high-level abstraction definition.
+				 */
 				toShow.add(p.getKey());
 			}
 		}

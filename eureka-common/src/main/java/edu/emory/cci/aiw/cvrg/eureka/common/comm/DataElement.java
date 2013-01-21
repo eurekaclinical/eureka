@@ -49,7 +49,7 @@ public abstract class DataElement implements DataElementVisitable {
 	private Long id;
 	private String key;
 	private Long userId;
-	private String abbrevDisplayName;
+	private String description;
 	private String displayName;
 	private boolean inSystem;
 	private Date created;
@@ -85,12 +85,12 @@ public abstract class DataElement implements DataElementVisitable {
 		this.userId = userId;
 	}
 
-	public String getAbbrevDisplayName() {
-		return abbrevDisplayName;
+	public String getDescription() {
+		return description;
 	}
 
-	public void setAbbrevDisplayName(String abbrevDisplayName) {
-		this.abbrevDisplayName = abbrevDisplayName;
+	public void setDescription(String description) {
+		this.description = description;
 	}
 
 	public String getDisplayName() {

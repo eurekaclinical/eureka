@@ -151,7 +151,7 @@ public class Setup implements TestDataProvider {
 			System.out.println("Loading user " + u.getEmail());
 			CategoryEntity proposition1 = new CategoryEntity();
 			proposition1.setKey("test-cat");
-			proposition1.setAbbrevDisplayName("test");
+			proposition1.setDescription("test");
 			proposition1.setDisplayName("Test Proposition");
 			proposition1.setUserId(u.getId());
 			proposition1.setCategoryType(CategoryType.EVENT);
@@ -168,7 +168,7 @@ public class Setup implements TestDataProvider {
 
 			ValueThresholdGroupEntity lowLevelAbstraction = 
 					new ValueThresholdGroupEntity();
-			lowLevelAbstraction.setAbbrevDisplayName("test-low-level");
+			lowLevelAbstraction.setDescription("test-low-level");
 			lowLevelAbstraction.setKey("test-low-level");
 			lowLevelAbstraction.setCreated(now);
 //			lowLevelAbstraction.setValueThresholds(new ValueThresholdEntity());

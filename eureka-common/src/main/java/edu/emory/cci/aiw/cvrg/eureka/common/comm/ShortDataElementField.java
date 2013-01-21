@@ -34,7 +34,7 @@ public class ShortDataElementField {
 	}
 	
 	private String dataElementKey;
-	private String dataElementAbbrevDisplayName;
+	private String dataElementDescription;
 	private String dataElementDisplayName;
 	
 	private Type type;
@@ -47,12 +47,12 @@ public class ShortDataElementField {
 		this.dataElementKey = dataElement;
 	}
 
-	public String getDataElementAbbrevDisplayName() {
-		return dataElementAbbrevDisplayName;
+	public String getDataElementDescription() {
+		return dataElementDescription;
 	}
 
-	public void setDataElementAbbrevDisplayName(String inDataElementAbbrevDisplayName) {
-		dataElementAbbrevDisplayName = inDataElementAbbrevDisplayName;
+	public void setDataElementDescription(String inDataElementDescription) {
+		dataElementDescription = inDataElementDescription;
 	}
 
 	public String getDataElementDisplayName() {

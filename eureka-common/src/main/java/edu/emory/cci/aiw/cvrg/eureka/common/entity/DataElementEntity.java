@@ -35,6 +35,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 import com.sun.xml.bind.CycleRecoverable;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.CategoryEntity.CategoryType;
+import javax.persistence.Lob;
 import javax.persistence.Temporal;
 import org.apache.commons.lang.builder.ToStringBuilder;
 
@@ -68,31 +69,32 @@ public abstract class DataElementEntity implements CycleRecoverable,
 	@Column(nullable = false, name="user_id")
 	private Long userId;
 	/**
-	 * If proposition is system-level, this key identifies the proposition in
+	 * If proposition is system-level, this key identifies the data element in
 	 * the system ontology
 	 */
 	@Column(nullable = false)
 	private String key;
 	/**
-	 * The display name for the proposition.
+	 * The display name for the data element.
 	 */
 	private String displayName;
 	/**
-	 * The abbreviated display name for the proposition.
+	 * A description of the data element.
 	 */
-	private String abbrevDisplayName;
+	@Lob
+	private String description;
 	/**
-	 * Is the proposition a system level proposition?
+	 * Is the proposition a system level data element?
 	 */
 	private boolean inSystem;
 	/**
-	 * The date the proposition was created.
+	 * The date the data element was created.
 	 */
 	/*@Column(nullable = false)*/
 	@Temporal(javax.persistence.TemporalType.TIMESTAMP)
 	private Date created;
 	/**
-	 * The date the proposition was last modified.
+	 * The date the data element was last modified.
 	 */
 	@Temporal(javax.persistence.TemporalType.TIMESTAMP)
 	private Date lastModified;
@@ -109,76 +111,76 @@ public abstract class DataElementEntity implements CycleRecoverable,
 	}
 	
 	/**
-	 * Gets the abbreviated display name of the proposition.
+	 * Gets the data element's description.
 	 * 
-	 * @return The abbreviated display name of the proposition.
+	 * @return The data element's description.
 	 */
-	public String getAbbrevDisplayName() {
-		return abbrevDisplayName;
+	public String getDescription() {
+		return description;
 	}
 
 	/**
-	 * Sets the abbreviated display name.
+	 * Sets the data element's description.
 	 * 
-	 * @param inAbbrevDisplayName
-	 *            The abbreviated display name to set.
+	 * @param inDescription
+	 *            The data element's description to set.
 	 */
-	public void setAbbrevDisplayName(String inAbbrevDisplayName) {
-		this.abbrevDisplayName = inAbbrevDisplayName;
+	public void setDescription(String inDescription) {
+		this.description = inDescription;
 	}
 
 	/**
-	 * Gets the display name of the proposition.
+	 * Gets the display name of the data element.
 	 * 
-	 * @return The display name of the proposition.
+	 * @return The display name of the data element.
 	 */
 	public String getDisplayName() {
 		return displayName;
 	}
 
 	/**
-	 * Sets the display name of the proposition.
+	 * Sets the display name of the data element.
 	 * 
 	 * @param inDisplayName
-	 *            The display name of the proposition.
+	 *            The display name of the data element.
 	 */
 	public void setDisplayName(String inDisplayName) {
 		this.displayName = inDisplayName;
 	}
 
 	/**
-	 * Gets the user to which this proposition belongs.
+	 * Gets the user to which this data element belongs.
 	 * 
-	 * @return The user to which this proposition belongs.
+	 * @return The user to which this data element belongs.
 	 */
 	public Long getUserId() {
 		return this.userId;
 	}
 
 	/**
-	 * Sets the user to which this proposition belongs.
+	 * Sets the user to which this data element belongs.
 	 * 
 	 * @param inUserId
-	 *            The user to which this proposition belongs.
+	 *            The user to which this data element belongs.
 	 */
 	public void setUserId(Long inUserId) {
 		this.userId = inUserId;
 	}
 
 	/**
-	 * Gets the unique identifier for the proposition.
+	 * Gets the unique identifier for the data element.
 	 * 
-	 * @return The unique identifier for the proposition.
+	 * @return The unique identifier for the data element.
 	 */
 	public Long getId() {
 		return id;
 	}
 
 	/**
-	 * Sets the unique identifier for the proposition.
+	 * Sets the unique identifier for the data element.
 	 * 
 	 * @param inId
-	 *            The unique identifier for the proposition.
+	 *            The unique identifier for the data element.
 	 */
 	public void setId(Long inId) {
 		this.id = inId;
@@ -204,9 +206,9 @@ public abstract class DataElementEntity implements CycleRecoverable,
 	}
 
 	/**
-	 * Gets the key for the proposition.
+	 * Gets the key for the data element.
 	 * 
-	 * @return Null if the proposition is not system level, id in the system
+	 * @return Null if the data element is not system level, id in the system
 	 *         ontology otherwise.
 	 */
 	public String getKey() {
@@ -214,10 +216,10 @@ public abstract class DataElementEntity implements CycleRecoverable,
 	}
 
 	/**
-	 * Sets the key for the proposition.
+	 * Sets the key for the data element.
 	 * 
 	 * @param inKey
-	 *            The id of the proposition in the system ontology.
+	 *            The id of the data element in the system ontology.
 	 */
 	public void setKey(String inKey) {
 		key = inKey;

@@ -89,7 +89,7 @@ public final class FrequencyHighLevelAbstractionConverter
 		        unit(entity.getWithinAtLeastUnits()), entity.getWithinAtMost(),
 		        unit(entity.getWithinAtMostUnits())));
 		primary.setDisplayName(thresholds.getDisplayName());
-		primary.setAbbreviatedDisplayName(thresholds.getAbbrevDisplayName());
+		primary.setDescription(thresholds.getDescription());
 		
 		result.add(primary);
 		this.primary = primary;

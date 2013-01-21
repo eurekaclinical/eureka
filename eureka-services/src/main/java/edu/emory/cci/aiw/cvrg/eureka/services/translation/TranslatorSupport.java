@@ -95,7 +95,7 @@ final class TranslatorSupport {
 		if (element.getKey() != null) {
 			key = element.getKey();
 		} else {
-			key = element.getAbbrevDisplayName();
+			key = element.getDisplayName();
 		}
 
 		Date now = new Date();
@@ -142,7 +142,7 @@ final class TranslatorSupport {
 			DataElement dataElement) {
 		entity.setId(dataElement.getId());
 		entity.setDisplayName(dataElement.getDisplayName());
-		entity.setAbbrevDisplayName(dataElement.getAbbrevDisplayName());
+		entity.setDescription(dataElement.getDescription());
 		//proposition.setCreated(dataElement.getCreated());
 		//proposition.setLastModified(dataElement.getLastModified());
 		entity.setUserId(dataElement.getUserId());
@@ -150,7 +150,7 @@ final class TranslatorSupport {
 		if (dataElement.getKey() != null) {
 			entity.setKey(dataElement.getKey());
 		} else {
-			entity.setKey(dataElement.getAbbrevDisplayName());
+			entity.setKey(dataElement.getDisplayName());
 		}
 	}
 }

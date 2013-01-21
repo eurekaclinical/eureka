@@ -71,7 +71,7 @@ public final class FrequencySliceAbstractionConverter implements
 				ArrayList<PropositionDefinition>();
 		SliceDefinition primary = new SliceDefinition(entity.getKey());
 		primary.setDisplayName(entity.getDisplayName());
-		primary.setAbbreviatedDisplayName(entity.getAbbrevDisplayName());
+		primary.setDescription(entity.getDescription());
 		if (entity.getAbstractedFrom() != null) {
 			entity.getAbstractedFrom().accept(converterVisitor);
 			result.addAll(converterVisitor.getPropositionDefinitions());

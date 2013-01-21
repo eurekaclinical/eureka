@@ -70,14 +70,8 @@ public class SystemPropositionListServlet extends HttpServlet {
 	private String getDisplayName(SystemElement p) {
 		String displayName = "";
 
-		if (p.getAbbrevDisplayName() != null
-				&& !p.getAbbrevDisplayName().equals("")) {
-
-			displayName = p.getAbbrevDisplayName() + "(" + p.getKey() + ")";
-
-		} else if (p.getDisplayName() != null && !p.getDisplayName().equals("")) {
-
-			displayName = p.getDisplayName() + "(" + p.getKey() + ")";
+		if (p.getDisplayName() != null && !p.getDisplayName().equals("")) {
+			displayName = p.getDisplayName() + " (" + p.getKey() + ")";
 
 		} else {
 

@@ -35,7 +35,7 @@
 
 	<template:content name="content">
 		<h3>Phenotype Editor</h3>
-		<div id="dialog" title="Confirm Remove Selected Element"></div>
+		<div id="dialog" title="Delete Data Element"></div>
 		<div class="action_link">   
 			<a href="${pageContext.request.contextPath}/protected/editprop" class="create"></a>
 			<a href="${pageContext.request.contextPath}/protected/editprop" style="text-decoration:none">Create New Element</a>
@@ -45,14 +45,17 @@
 				<th>Action</th><th>Name</th><th>Description</th><th>Type</th><th>Created Date</th><th>Last Modified</th>
 			</tr>
 			<c:forEach items="${props}" var="prop">
+				<c:url value="/protected/editprop" var="editUrl">
+					<c:param name="key" value="${prop.attr['key']}"/>
+				</c:url>
 			<tr>
 				<td style="width:60px">
 					<a href="#" onclick="showPopup(event, '${prop.attr['key']}')" class="view" title="View"></a>
-					<a href="${pageContext.request.contextPath}/protected/editprop?key=${prop.attr['key']}" class="edit" title="Edit"></a>
-					<a href="#" onclick="deleteElement(event, '${prop.attr['key']}')" class="delete" title="Delete"></a>
+					<a href="${editUrl}" class="edit" title="Edit"></a>
+					<a href="#" onclick="deleteElement(event, '${prop.attr['displayName']}', '${prop.attr['key']}')" class="delete" title="Delete"></a>
 				</td>
-				<td style="width: 100px">${prop.attr['abbrevDisplay']}</td>
-				<td>${prop.attr['displayName']}</td>
+				<td style="width: 100px">${prop.attr['displayName']}</td>
+				<td>${prop.attr['description']}</td>
 				<td>${prop.attr['type']}</td>
 				<td>${prop.attr['created']}</td>
 				<td>${prop.attr['lastModified']}</td>

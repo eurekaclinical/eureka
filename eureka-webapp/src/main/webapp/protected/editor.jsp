@@ -139,9 +139,9 @@
 																	<ul class="sortable" data-drop-type="multiple" data-proptype="empty" style="width: 100% height: 100%">
 																		<c:if test="${not empty proposition and propositionType == 'CATEGORIZATION'}">
 																		<c:forEach var="child" items="${proposition.children}">
-																		<li data-key="${child.key}" data-desc="${child.abbrevDisplayName}" data-type="${child.type}" data-subtype="${child.type == 'CATEGORIZATION' ? child.categoricalType : ''}" data-space="${proposition.inSystem ? 'system' : 'user'}">
+																		<li data-key="${child.key}" data-desc="${child.displayName}" data-type="${child.type}" data-subtype="${child.type == 'CATEGORIZATION' ? child.categoricalType : ''}" data-space="${proposition.inSystem ? 'system' : 'user'}">
 																			<span class="delete" style="cursor: pointer; background-color: lightblue;"></span>
-																			<span>${child.displayName} ${child.abbrevDisplayName} (${child.key})</span>
+																			<span>${child.displayName} (${child.key})</span>
 																		</li>
 																		</c:forEach>
 																		</c:if>
@@ -161,7 +161,7 @@
 																		<c:forEach var="child" items="${proposition.children}">
 																		<li data-key="${child.key}" data-type="${child.type}" data-space="${proposition.inSystem ? 'sysem' : 'user'}">
 																			<span class="delete" style="cursor: pointer; background-color: lightblue;"></span>
-																			<span>${child.key} ${child.displayName} ${child.abbrevDisplayName}</span>
+																			<span>${child.key} ${child.displayName}</span>
 																		</li>
 																		</c:forEach>
 																		</c:if>
@@ -184,9 +184,9 @@
 																				<div class="label-info" ><center>Drop Here</center></div>
 																				<ul data-type="main" data-drop-type="single" data-count="1" class="sortable" style="width: 100% height: 100%">
 																					<c:if test="${not empty proposition and propositionType == 'SEQUENCE'}">
-																					<li data-key="${proposition.primaryDataElement.dataElementKey}" data-desc="${proposition.primaryDataElement.dataElementAbbrevDisplayName} (${proposition.primaryDataElement.dataElementKey})" data-space="${proposition.primaryDataElement.inSystem ? 'system' : 'user'}">
+																					<li data-key="${proposition.primaryDataElement.dataElementKey}" data-desc="${proposition.primaryDataElement.dataElementDisplayName} (${proposition.primaryDataElement.dataElementKey})" data-space="${proposition.primaryDataElement.inSystem ? 'system' : 'user'}">
 																						<span class="delete" style="cursor: pointer; background-color: lightblue;"></span>
-																						<span class="desc">${empty proposition.primaryDataElement.dataElementAbbrevDisplayName ? proposition.primaryDataElement.dataElementDisplayName : proposition.primaryDataElement.dataElementAbbrevDisplayName} (${proposition.primaryDataElement.dataElementKey})</span>
+																						<span class="desc">${empty proposition.primaryDataElement.dataElementDisplayName ? '' : proposition.primaryDataElement.dataElementDisplayName} (${proposition.primaryDataElement.dataElementKey})</span>
 																					</li>
 																					</c:if>
 																				</ul>
@@ -268,9 +268,9 @@
 																			<div id="relatedDataElement${status.count}" class="tree-drop-single jstree-drop">
 																				<div class="label-info"><center>Drop Here</center></div>
 																				<ul class="sortable" data-type="related" data-drop-type="single" data-count="${status.count + 1}" style="width: 100% height: 100%">
-																					<li data-key="${relation.dataElementField.dataElementKey}" data-desc="${relation.dataElementField.dataElementAbbrevDisplayName} (${relation.dataElementField.dataElementKey})" data-space="${relation.dataElementField.inSystem ? 'system' : 'user'}">
+																					<li data-key="${relation.dataElementField.dataElementKey}" data-desc="${relation.dataElementField.dataElementDisplayName} (${relation.dataElementField.dataElementKey})" data-space="${relation.dataElementField.inSystem ? 'system' : 'user'}">
 																						<span class="delete" style="cursor: pointer; background-color: lightblue;"></span>
-																						<span class="desc">${relation.dataElementField.dataElementAbbrevDisplayName} (${relation.dataElementField.dataElementKey})</span>
+																						<span class="desc">${empty relation.dataElementField.dataElementDisplayName ? '' : relation.dataElementField.dataElementDisplayName} (${relation.dataElementField.dataElementKey})</span>
 																					</li>
 																				</ul>
 																			</div>
@@ -464,9 +464,9 @@
 																							<div class="label-info" ><center>Drop Here</center></div>
 																							<ul data-type="main" data-drop-type="single" class="sortable" style="width: 100% height: 100%">
 																								<c:if test="${not empty proposition and propositionType == 'FREQUENCY'}">
-																								<li data-key="${proposition.dataElement.dataElementKey}" data-desc="${proposition.dataElement.dataElementAbbrevDisplayName}" data-space="${proposition.dataElement.inSystem ? 'system' : 'user'}">
+																								<li data-key="${proposition.dataElement.dataElementKey}" data-desc="${proposition.dataElement.dataElementDisplayName}" data-space="${proposition.dataElement.inSystem ? 'system' : 'user'}">
 																									<span class="delete" style="cursor: pointer; background-color: lightblue;"></span>
-																									<span class="desc">${empty proposition.dataElement.dataElementAbbrevDisplayName ? proposition.dataElement.dataElementDisplayName : proposition.dataElement.dataElementAbbrevDisplayName} (${proposition.dataElement.dataElementKey})</span>
+																									<span class="desc">${empty proposition.dataElement.dataElementDisplayName ? '' : proposition.dataElement.dataElementDisplayName} (${proposition.dataElement.dataElementKey})</span>
 																								</li>
 																								</c:if>
 																							</ul>
@@ -610,9 +610,9 @@
 																			<div id="thresholdedDataElement${status.count}" class="tree-drop-single jstree-drop thresholdedDataElement">
 																				<div class="label-info" ><center>Drop Here</center></div>
 																				<ul data-type="threshold1" data-drop-type="single" class="sortable" style="width: 100% height: 100%">
-																					<li data-key="${threshold.dataElement.dataElementKey}" data-desc="${threshold.dataElement.dataElementAbbrevDisplayName}" data-space="${threshold.dataElement.inSystem ? 'system' : 'user'}">
+																					<li data-key="${threshold.dataElement.dataElementKey}" data-desc="${threshold.dataElement.dataElementDisplayName}" data-space="${threshold.dataElement.inSystem ? 'system' : 'user'}">
 																						<span class="delete" style="cursor: pointer; background-color: lightblue;"></span>
-																						<span class="desc">${empty threshold.dataElement.dataElementAbbrevDisplayName ? threshold.dataElement.dataElementDisplayName : threshold.dataElement.dataElementDisplayName}(${threshold.dataElement.dataElementKey})</span>
+																						<span class="desc">${empty threshold.dataElement.dataElementDisplayName ? '' : threshold.dataElement.dataElementDisplayName} (${threshold.dataElement.dataElementKey})</span>
 																					</li>
 																				</ul>
 																			</div>
@@ -660,9 +660,9 @@
 																			<ul class="sortable" data-drop-type="multiple" data-proptype="empty" style="width: 100% height: 100%">
 																				<c:if test="${not empty proposition and propositionType == 'VALUE_THRESHOLD'}">
 																				<c:forEach var="relatedDataElement" items="${threshold.relatedDataElements}">
-																				<li data-key="${relatedDataElement.key}" data-desc="${child.abbrevDisplayName}" data-type="${child.type}" data-subtype="${child.type == 'CATEGORIZATION' ? child.categoricalType : ''}" data-space="${threshold.inSystem ? 'system' : 'user'}">
+																				<li data-key="${relatedDataElement.key}" data-desc="${child.displayName}" data-type="${child.type}" data-subtype="${child.type == 'CATEGORIZATION' ? child.categoricalType : ''}" data-space="${threshold.inSystem ? 'system' : 'user'}">
 																					<span class="delete" style="cursor: pointer; background-color: lightblue;"></span>
-																					<span>${child.displayName} ${child.abbrevDisplayName} (${child.key})</span>
+																					<span>${child.displayName} (${child.key})</span>
 																				</li>
 																				</c:forEach>
 																				</c:if>
@@ -821,10 +821,10 @@
 												<input type="hidden" id="propId" value="${proposition.id}" />
 												<input type="hidden" id="propType" value="${propositionType}" />
 												<input type="hidden" id="propSubType" value="${propositionType == 'CATEGORIZATION' ? proposition.categoricalType : ''}" />
-												<input type="text" id="propAbbrevDisplayName" style="width:250px" value="${proposition.abbrevDisplayName}" />
+												<input type="text" id="propDisplayName" value="${proposition.displayName}" />
 											</c:when>
 											<c:otherwise>
-												<input type="text" id="propAbbrevDisplayName" style="width:250px"/>
+												<input type="text" id="propDisplayName"/>
 											</c:otherwise>
 										</c:choose>
 									</td>
@@ -834,7 +834,7 @@
 										<label>Description:</label>
 									</td>
 									<td valign="top">
-										<textarea id="propDisplayName" ><c:if test="${not empty proposition}">${proposition.displayName}</c:if></textarea>
+										<textarea id="propDescription" ><c:if test="${not empty proposition}">${proposition.description}</c:if></textarea>
 										</td>
 									</tr>
 
@@ -849,7 +849,14 @@
 									</span>
 								</h2>
 								<p>
-									Save the new element to the Database as a User Defined Element.
+									<c:choose>
+										<c:when test="${not empty proposition}">
+											Save your changes to this data element.
+										</c:when>
+										<c:otherwise>
+											Save the new data element.
+										</c:otherwise>
+									</c:choose>
 								</p>
 							</div>
 						</div>

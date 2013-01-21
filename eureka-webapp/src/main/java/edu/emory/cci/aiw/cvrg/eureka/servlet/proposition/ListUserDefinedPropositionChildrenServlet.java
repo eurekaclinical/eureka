@@ -57,14 +57,9 @@ public class ListUserDefinedPropositionChildrenServlet extends HttpServlet {
 	private String getDisplayName(DataElement p) {
 		String displayName = "";
 
-		if (p.getAbbrevDisplayName() != null
-		        && !p.getAbbrevDisplayName().equals("")) {
+		if (p.getDisplayName() != null && !p.getDisplayName().equals("")) {
 
-			displayName = p.getAbbrevDisplayName();
-
-		} else if (p.getDisplayName() != null && !p.getDisplayName().equals("")) {
-
-			displayName = p.getDisplayName();
+			displayName = p.getDisplayName() + " (" + p.getKey() + ")";
 
 		} else {
 
@@ -113,7 +108,7 @@ public class ListUserDefinedPropositionChildrenServlet extends HttpServlet {
 				if (!userDataElement.isInSystem()) {
 
 					JsonTreeData newData = createData(
-					        userDataElement.getAbbrevDisplayName(),
+					        userDataElement.getDescription(),
 							userDataElement.getKey());
 					getAllData(inUserId, newData);
 					newData.setType("user");

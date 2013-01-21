@@ -55,7 +55,7 @@ public class FrequencySliceAbstractionConverterTest extends
 		event.setId(1L);
 		event.setKey("test-event1");
 		event.setDisplayName("test-event1-display");
-		event.setAbbrevDisplayName("test-event1-abbrev");
+		event.setDescription("test-event1-abbrev");
 		event.setInSystem(true);
 		event.setSystemType(SystemType.EVENT);
 		

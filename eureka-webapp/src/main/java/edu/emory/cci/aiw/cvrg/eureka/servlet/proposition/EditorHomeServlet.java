@@ -53,12 +53,7 @@ public class EditorHomeServlet extends HttpServlet {
 	private String getDisplayName(DataElement e) {
 		String displayName = "";
 
-		if (e.getAbbrevDisplayName() != null && !e.getAbbrevDisplayName()
-			.equals("")) {
-
-			displayName = e.getAbbrevDisplayName() + "(" + e.getKey() + ")";
-
-		} else if (e.getDisplayName() != null && !e.getDisplayName().equals
+		if (e.getDisplayName() != null && !e.getDisplayName().equals
 			("")) {
 
 			displayName = e.getDisplayName() + "(" + e.getKey() + ")";
@@ -98,9 +93,8 @@ public class EditorHomeServlet extends HttpServlet {
 				JsonTreeData d = createData(
 					proposition.getKey(),
 					this.getDisplayName(proposition));
-
-				d.setKeyVal("abbrevDisplay",
-					proposition.getAbbrevDisplayName());
+				d.setKeyVal("description",
+					proposition.getDescription());
 				d.setKeyVal("displayName", proposition.getDisplayName());
 
 				if (proposition.getType() == DataElement.Type

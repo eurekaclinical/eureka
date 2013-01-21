@@ -120,7 +120,7 @@ class PropositionTranslatorUtil {
 		dataElement.setId(proposition.getId());
 		dataElement.setKey(proposition.getKey());
 		dataElement.setDisplayName(proposition.getDisplayName());
-		dataElement.setAbbrevDisplayName(proposition.getAbbrevDisplayName());
+		dataElement.setDescription(proposition.getDescription());
 		dataElement.setCreated(proposition.getCreated());
 		dataElement.setLastModified(proposition.getLastModified());
 		dataElement.setUserId(proposition.getUserId());
@@ -149,8 +149,8 @@ class PropositionTranslatorUtil {
 	static DataElementField createDataElementField(ExtendedDataElement ep) {
 		DataElementField dataElement = new DataElementField();
 		dataElement.setDataElementKey(ep.getDataElementEntity().getKey());
-		dataElement.setDataElementAbbrevDisplayName(ep.getDataElementEntity()
-				.getAbbrevDisplayName());
+		dataElement.setDataElementDescription(ep.getDataElementEntity()
+				.getDescription());
 		dataElement.setDataElementDisplayName(ep.getDataElementEntity()
 				.getDisplayName());
 		if (ep.getMinDuration() != null) {

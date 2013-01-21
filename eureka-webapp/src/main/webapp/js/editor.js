@@ -144,7 +144,22 @@ function postProposition (postData, successFunc) {
 		dataType: "json",
 		success: function (data) {
 			window.location.href = 'editorhome'
-		}
+		}, 
+		error: function(data, statusCode) {
+			var dialog = $('<div>Could not save data element ' + postData.displayName + ': ' + data.responseText + '</div>');
+			$(dialog).dialog({
+				'title': 'Save Failed',
+				'modal': true,
+				'buttons': {
+					"OK": function() {
+						$(this).dialog("close");
+						$(this).remove();
+						window.location.href = 'editorhome'
+					}
+				}
+			});
+			$(dialog).dialog("open");
+		} 
 	});
 }
 
@@ -215,8 +230,8 @@ function saveSequence (elem) {
 		sequence.id = propId;
 	}
 	sequence.type = 'SEQUENCE';
-	sequence.abbrevDisplayName = $('input#propAbbrevDisplayName').val();
-	sequence.displayName = $('textarea#propDisplayName').val();
+	sequence.displayName = $('input#propDisplayName').val();
+	sequence.description = $('textarea#propDescription').val();
 	sequence.primaryDataElement = collectSequenceDataElement(elem);
 	sequence.relatedDataElements = collectSequenceRelations($relationElems);
 
@@ -233,8 +248,8 @@ function saveValueThreshold (elem) {
 		valueThreshold.id = propId;
 	}
 	valueThreshold.type = 'VALUE_THRESHOLD';
-	valueThreshold.abbrevDisplayName = $('input#propAbbrevDisplayName').val();
-	valueThreshold.displayName = $('textarea#propDisplayName').val();
+	valueThreshold.displayName = $('input#propDisplayName').val();
+	valueThreshold.description = $('textarea#propDescription').val();
 	valueThreshold.name = $(elem).find('input[name="valueThresholdValueName"]').val();
 	valueThreshold.thresholdsOperator = $(elem).find('select[name="valueThresholdType"]').val();
 	valueThreshold.valueThresholds = collectValueThresholds($valueThresholds);
@@ -275,7 +290,7 @@ function collectValueThresholds ($valueThresholds) {
 
 function collectShortDataElement(dataElementFromDropBox) {
 	var system = $(dataElementFromDropBox).data('space') === 'system'
-		|| $(dataElementFromDropBox).data('space') === 'SYSTEM';
+	|| $(dataElementFromDropBox).data('space') === 'SYSTEM';
 	var child = {
 		'dataElementKey': $(dataElementFromDropBox).data('key')	
 	};
@@ -312,8 +327,8 @@ function saveCategorization (elem) {
 
 	var categorization = {
 		'type': 'CATEGORIZATION',
-		'abbrevDisplayName': $('input#propAbbrevDisplayName').val(),
-		'displayName': $('textarea#propDisplayName').val(),
+		'displayName': $('input#propDisplayName').val(),
+		'description': $('textarea#propDescription').val(),
 		'categoricalType': categoricalType,
 		'children': childElements
 	}
@@ -338,7 +353,7 @@ function collectDataElements($dataElementsFromDropBox) {
 
 function collectDataElement(dataElementFromDropBox) {
 	var system = $(dataElementFromDropBox).data('space') === 'system'
-		|| $(dataElementFromDropBox).data('space') === 'SYSTEM';
+	|| $(dataElementFromDropBox).data('space') === 'SYSTEM';
 	var child = {
 		'key': $(dataElementFromDropBox).data('key')
 	};
@@ -359,8 +374,8 @@ function saveFrequency (elem) {
 	var $dataElement = $(elem).find('ul[data-type="main"]').find('li').first();
 	var frequency = {
 		'type': 'FREQUENCY',
-		'abbrevDisplayName': $('input#propAbbrevDisplayName').val(),
-		'displayName': $('textarea#propDisplayName').val(),
+		'displayName': $('input#propDisplayName').val(),
+		'description': $('textarea#propDescription').val(),
 		'atLeast': $(elem).find('input[name=freqAtLeastField]').val(),
 		'isConsecutive': $(elem).find('input[name=freqIsConsecutive]').is(':checked'),
 		'dataElement': {
@@ -415,7 +430,9 @@ function setPropositionSelects (elem) {
 						if (eureka.util.objSize(sources) > 1) {
 							desc += ' [' + sourceKey + ']';
 						}
-						var opt = $('<option></option>', {'value': value}).text(desc);
+						var opt = $('<option></option>', {
+							'value': value
+						}).text(desc);
 						if (value == $(selectedItem).data('key') + '__' + originalSource) {
 							opt.attr('selected','selected');
 						}
@@ -436,7 +453,7 @@ function attachDeleteAction (elem) {
 			var $target = $sortable.parent();
 			var dialog = $('<div></div>');
 			$(dialog).dialog({
-				'title': 'Confirm removal of selected element',
+				'title': 'Confirm Remove Member',
 				'modal': true,
 				'buttons': {
 					"Confirm": function() {
@@ -468,7 +485,7 @@ function attachDeleteAction (elem) {
 					}
 				}
 			});
-			$(dialog).html($toRemove.text());
+			$(dialog).html('Are you sure you want to remove member ' + $toRemove.text() + ' from this category? You cannot undo this action.');
 			$(dialog).dialog("open");
 		});
 	});
@@ -588,11 +605,11 @@ $(document).ready(function(){
 			}
 
 		} else if(step == 3) {
-			var propAbbrevDisplayName = $('#propAbbrevDisplayName').val();
-			var propDisplayName= $('#propDisplayName').val();
+			var propDisplayName = $('#propDisplayName').val();
+			var propDescription= $('#propDescription').val();
 
-			if((!propAbbrevDisplayName && propAbbrevDisplayName.length <= 0) ||
-				(!propDisplayName && propDisplayName.length <= 0)){
+			if((!propDisplayName && propDisplayName.length <= 0) ||
+				(!propDescription && propDescription.length <= 0)){
 				isStepValid = false;
 				$('#wizard').smartWizard('showMessage','Please enter an element name and description and click next.');
 				$('#wizard').smartWizard('setError',{
@@ -709,23 +726,13 @@ function dropFinishCallback (data) {
 		}
 
 		// check that all types in the categorization are the same
-		if ($(sortable).data('drop-type') === 'multiple' && $(sortable).data("proptype") !== "empty") {
+		if ($(sortable).data('drop-type') === 'multiple' && $(sortable).data("proptype") !== 'empty') {
 			if ($(sortable).data("proptype") !== $(newItem).data("type")) {
-				var $dialog = $('<div>All the definition elements must be of the same type.</div>').dialog({
-					'title': 'Definition Criteria',
-					'modal': true,
-					'buttons': {
-						'OK': function () {
-							$(this).dialog('close');
-							$(this).remove();
-						}
-					}
-				});
 				return;
 			}
 		} else {
 			var tmptype = $(newItem).data("type");
-			$(sortable).attr("data-proptype", tmptype);
+			$(sortable).data("proptype", tmptype);
 		}
 
 		var X = $("<span></span>", {
@@ -797,19 +804,6 @@ function initTrees() {
 				
 				return droppable;
 			}
-		/*
-			,
-			"drag_check" : function(data) {
-				if (data.r.attr("id") == "phtml_1") {
-					return false;
-				}
-				return {
-					after : false,
-					before : false,
-					inside : true
-				};
-			}
-			*/
 		},
 		// search disabled until we figure out a way to search for nodes not currently loaded in the tree
 		//		"search" : {

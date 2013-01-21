@@ -61,7 +61,8 @@ public class SavePropositionServlet extends HttpServlet {
 				servicesClient.updateUserElement(dataElement);
 			}
 		} catch (ClientException e) {
-			req.setAttribute("error", e.getMessage());
+			resp.setStatus(e.getResponseStatus().getStatusCode());
+			resp.getWriter().write(e.getMessage());
 		}
 	}
 

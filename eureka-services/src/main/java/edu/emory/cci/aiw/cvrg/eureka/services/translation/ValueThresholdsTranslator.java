@@ -145,8 +145,8 @@ public final class ValueThresholdsTranslator implements
 
 			DataElementEntity dataElementEntity = vte.getAbstractedFrom();
 			ShortDataElementField elementField = new ShortDataElementField();
-			elementField.setDataElementAbbrevDisplayName(dataElementEntity
-					.getAbbrevDisplayName());
+			elementField.setDataElementDescription(dataElementEntity
+					.getDescription());
 			elementField.setDataElementDisplayName(dataElementEntity
 					.getDisplayName());
 			elementField.setDataElementKey(dataElementEntity.getKey());

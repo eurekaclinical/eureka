@@ -36,7 +36,7 @@ public class DataElementField {
 
 	private Long id;
 	private String dataElementKey;
-	private String dataElementAbbrevDisplayName;
+	private String dataElementDescription;
 	private String dataElementDisplayName;
 	private Boolean hasDuration;
 	private Integer minDuration;
@@ -128,12 +128,12 @@ public class DataElementField {
 		this.propertyValue = propertyValue;
 	}
 
-	public String getDataElementAbbrevDisplayName() {
-		return dataElementAbbrevDisplayName;
+	public String getDataElementDescription() {
+		return dataElementDescription;
 	}
 
-	public void setDataElementAbbrevDisplayName(String inDataElementAbbrevDisplayName) {
-		dataElementAbbrevDisplayName = inDataElementAbbrevDisplayName;
+	public void setDataElementDescription(String inDataElementDescription) {
+		dataElementDescription = inDataElementDescription;
 	}
 
 	public String getDataElementDisplayName() {

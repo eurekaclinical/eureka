@@ -29,6 +29,7 @@ import org.protempa.proposition.value.ValueType;
 
 import java.util.ArrayList;
 import java.util.List;
+import org.protempa.proposition.value.NominalValue;
 
 public final class ValueThresholdsLowLevelAbstractionConverter
 		implements
@@ -60,7 +61,7 @@ public final class ValueThresholdsLowLevelAbstractionConverter
 		LowLevelAbstractionDefinition primary = new LowLevelAbstractionDefinition(
 				entity.getKey());
 		primary.setDisplayName(entity.getDisplayName());
-		primary.setAbbreviatedDisplayName(entity.getAbbrevDisplayName());
+		primary.setDescription(entity.getDescription());
 		primary.setAlgorithmId("stateDetector");
 		
 
@@ -89,8 +90,10 @@ public final class ValueThresholdsLowLevelAbstractionConverter
 											LowLevelAbstractionDefinition def) {
 		LowLevelAbstractionValueDefinition valueDef = new LowLevelAbstractionValueDefinition(
 				def, name);
+		valueDef.setValue(NominalValue.getInstance(name));
 		LowLevelAbstractionValueDefinition compValueDef = new LowLevelAbstractionValueDefinition(
 				def, name + "_COMP");
+		valueDef.setValue(NominalValue.getInstance(name + "_COMP"));
 		if (threshold.getMinValueThreshold() != null
 				&& threshold.getMinValueComp() != null) {
 			valueDef.setParameterValue("minThreshold", ValueType.VALUE

@@ -78,7 +78,7 @@ public class CategorizationConverterTest extends AbstractServiceTest {
 		eventCat1.setId(3L);
 		eventCat1.setKey("test-event-cat1");
 		eventCat1.setDisplayName("test-event-cat1-display");
-		eventCat1.setAbbrevDisplayName("test-event-cat1-abbrev");
+		eventCat1.setDescription("test-event-cat1-abbrev");
 		eventCat1.setCategoryType(CategoryType.EVENT);
 		List<DataElementEntity> iia1 = new ArrayList<DataElementEntity>();
 		iia1.add(event1);
@@ -95,8 +95,8 @@ public class CategorizationConverterTest extends AbstractServiceTest {
 		assertEquals("wrong ID", "test-event-cat1", eventDef1.getId());
 		assertEquals("wrong display name", "test-event-cat1-display",
 				eventDef1.getDisplayName());
-		assertEquals("wrong abbrev display name", "test-event-cat1-abbrev",
-				eventDef1.getAbbreviatedDisplayName());
+		assertEquals("wrong description", "test-event-cat1-abbrev",
+				eventDef1.getDescription());
 		assertEquals("wrong size of inverse-is-a", 2,
 				eventDef1.getInverseIsA().length);
 		assertTrue(
@@ -110,7 +110,7 @@ public class CategorizationConverterTest extends AbstractServiceTest {
 		eventCat2.setId(4L);
 		eventCat2.setKey("test-event-cat2");
 		eventCat2.setDisplayName("test-event-cat2-display");
-		eventCat2.setAbbrevDisplayName("test-event-cat2-abbrev");
+		eventCat2.setDescription("test-event-cat2-abbrev");
 		eventCat2.setCategoryType(CategoryType.EVENT);
 		List<DataElementEntity> iia2 = new ArrayList<DataElementEntity>();
 		iia2.add(eventCat1);
@@ -127,7 +127,7 @@ public class CategorizationConverterTest extends AbstractServiceTest {
 		assertEquals("wrong display name", "test-event-cat2-display",
 				eventDef2.getDisplayName());
 		assertEquals("wrong abbrev display name", "test-event-cat2-abbrev",
-				eventDef2.getAbbreviatedDisplayName());
+				eventDef2.getDescription());
 		assertEquals("wrong inverse-is-a size", 1,
 				eventDef2.getInverseIsA().length);
 		assertEquals("wrong inverse-is-a", "test-event-cat1",
@@ -153,7 +153,7 @@ public class CategorizationConverterTest extends AbstractServiceTest {
 		constantCat1.setId(3L);
 		constantCat1.setKey("test-constant-cat1");
 		constantCat1.setDisplayName("test-constant-cat1-display");
-		constantCat1.setAbbrevDisplayName("test-constant-cat1-abbrev");
+		constantCat1.setDescription("test-constant-cat1-abbrev");
 		constantCat1.setCategoryType(CategoryType.CONSTANT);
 		List<DataElementEntity> iia1 = new ArrayList<DataElementEntity>();
 		iia1.add(constant1);
@@ -171,7 +171,7 @@ public class CategorizationConverterTest extends AbstractServiceTest {
 		assertEquals("wrong display name", "test-constant-cat1-display",
 				constantDef1.getDisplayName());
 		assertEquals("wrong abbrev display name", "test-constant-cat1-abbrev",
-				constantDef1.getAbbreviatedDisplayName());
+				constantDef1.getDescription());
 		assertEquals("wrong inverse-is-a size", 2,
 				constantDef1.getInverseIsA().length);
 		assertTrue(
@@ -186,7 +186,7 @@ public class CategorizationConverterTest extends AbstractServiceTest {
 		constantCat2.setId(4L);
 		constantCat2.setKey("test-constant-cat2");
 		constantCat2.setDisplayName("test-constant-cat2-display");
-		constantCat2.setAbbrevDisplayName("test-constant-cat2-abbrev");
+		constantCat2.setDescription("test-constant-cat2-abbrev");
 		constantCat2.setCategoryType(CategoryType.CONSTANT);
 		List<DataElementEntity> iia2 = new ArrayList<DataElementEntity>();
 		iia2.add(constantCat1);
@@ -202,8 +202,8 @@ public class CategorizationConverterTest extends AbstractServiceTest {
 		assertEquals("wrong ID", "test-constant-cat2", constantDef2.getId());
 		assertEquals("wrong display name", "test-constant-cat2-display",
 				constantDef2.getDisplayName());
-		assertEquals("wrong abbrev display name", "test-constant-cat2-abbrev",
-				constantDef2.getAbbreviatedDisplayName());
+		assertEquals("wrong description", "test-constant-cat2-abbrev",
+				constantDef2.getDescription());
 		assertEquals("wrong inverse-is-a size", 1,
 				constantDef2.getInverseIsA().length);
 		assertEquals("wrong inverse-is-a", "test-constant-cat1",
@@ -229,7 +229,7 @@ public class CategorizationConverterTest extends AbstractServiceTest {
 		primParamCat1.setId(3L);
 		primParamCat1.setKey("test-primparam-cat1");
 		primParamCat1.setDisplayName("test-primparam-cat1-display");
-		primParamCat1.setAbbrevDisplayName("test-primparam-cat1-abbrev");
+		primParamCat1.setDescription("test-primparam-cat1-abbrev");
 		primParamCat1
 				.setCategoryType(CategoryType.PRIMITIVE_PARAMETER);
 		List<DataElementEntity> iia1 = new ArrayList<DataElementEntity>();
@@ -249,7 +249,7 @@ public class CategorizationConverterTest extends AbstractServiceTest {
 		assertEquals("wrong display name", "test-primparam-cat1-display",
 				primParamDef1.getDisplayName());
 		assertEquals("wrong abbrev display name", "test-primparam-cat1-abbrev",
-				primParamDef1.getAbbreviatedDisplayName());
+				primParamDef1.getDescription());
 		assertEquals("wrong inverse-is-a size", 2,
 				primParamDef1.getInverseIsA().length);
 		assertTrue(
@@ -264,7 +264,7 @@ public class CategorizationConverterTest extends AbstractServiceTest {
 		primParamCat2.setId(4L);
 		primParamCat2.setKey("test-primparam-cat2");
 		primParamCat2.setDisplayName("test-primparam-cat2-display");
-		primParamCat2.setAbbrevDisplayName("test-primparam-cat2-abbrev");
+		primParamCat2.setDescription("test-primparam-cat2-abbrev");
 		primParamCat2
 				.setCategoryType(CategoryType.PRIMITIVE_PARAMETER);
 		List<DataElementEntity> iia2 = new ArrayList<DataElementEntity>();
@@ -282,8 +282,8 @@ public class CategorizationConverterTest extends AbstractServiceTest {
 		assertEquals("wrong ID", "test-primparam-cat2", primParamDef2.getId());
 		assertEquals("wrong display name", "test-primparam-cat2-display",
 				primParamDef2.getDisplayName());
-		assertEquals("wrong abbrev display name", "test-primparam-cat2-abbrev",
-				primParamDef2.getAbbreviatedDisplayName());
+		assertEquals("wrong description", "test-primparam-cat2-abbrev",
+				primParamDef2.getDescription());
 		assertEquals("wrong inverse-is-a size", 1,
 				primParamDef2.getInverseIsA().length);
 		assertEquals("wrong inverse-is-a", "test-primparam-cat1",
@@ -306,7 +306,7 @@ public class CategorizationConverterTest extends AbstractServiceTest {
 		hlaCat1.setId(3L);
 		hlaCat1.setKey("test-hla-cat1");
 		hlaCat1.setDisplayName("test-hla-cat1-display");
-		hlaCat1.setAbbrevDisplayName("test-hla-cat1-abbrev");
+		hlaCat1.setDescription("test-hla-cat1-abbrev");
 		hlaCat1.setCategoryType(CategoryType.HIGH_LEVEL_ABSTRACTION);
 		List<DataElementEntity> iia1 = new ArrayList<DataElementEntity>();
 		iia1.add(hla1);
@@ -325,7 +325,7 @@ public class CategorizationConverterTest extends AbstractServiceTest {
 		assertEquals("wrong display name", "test-hla-cat1-display",
 				hlaDef1.getDisplayName());
 		assertEquals("wrong abbrev display name", "test-hla-cat1-abbrev",
-				hlaDef1.getAbbreviatedDisplayName());
+				hlaDef1.getDescription());
 		assertEquals("wrong inverse-is-a size", 2,
 				hlaDef1.getInverseIsA().length);
 		assertTrue(
@@ -340,7 +340,7 @@ public class CategorizationConverterTest extends AbstractServiceTest {
 		hlaCat2.setId(4L);
 		hlaCat2.setKey("test-hla-cat2");
 		hlaCat2.setDisplayName("test-hla-cat2-display");
-		hlaCat2.setAbbrevDisplayName("test-hla-cat2-abbrev");
+		hlaCat2.setDescription("test-hla-cat2-abbrev");
 		hlaCat2.setCategoryType(CategoryType.HIGH_LEVEL_ABSTRACTION);
 		List<DataElementEntity> iia2 = new ArrayList<DataElementEntity>();
 		iia2.add(hlaCat1);
@@ -356,8 +356,8 @@ public class CategorizationConverterTest extends AbstractServiceTest {
 		assertEquals("wrong ID", "test-hla-cat2", hlaDef2.getId());
 		assertEquals("wrong display name", "test-hla-cat2-display",
 				hlaDef2.getDisplayName());
-		assertEquals("wrong abbrev display name", "test-hla-cat2-abbrev",
-				hlaDef2.getAbbreviatedDisplayName());
+		assertEquals("wrong description", "test-hla-cat2-abbrev",
+				hlaDef2.getDescription());
 		assertEquals("wrong inverse-is-a size", 1,
 				hlaDef2.getInverseIsA().length);
 		assertEquals("wrong inverse-is-a", "test-hla-cat1",
@@ -380,7 +380,7 @@ public class CategorizationConverterTest extends AbstractServiceTest {
 		saCat1.setId(3L);
 		saCat1.setKey("test-slice-cat1");
 		saCat1.setDisplayName("test-slice-cat1-display");
-		saCat1.setAbbrevDisplayName("test-slice-cat1-abbrev");
+		saCat1.setDescription("test-slice-cat1-abbrev");
 		saCat1.setCategoryType(CategoryType.SLICE_ABSTRACTION);
 		List<DataElementEntity> iia1 = new ArrayList<DataElementEntity>();
 		iia1.add(sa1);
@@ -398,7 +398,7 @@ public class CategorizationConverterTest extends AbstractServiceTest {
 		assertEquals("wrong display name", "test-slice-cat1-display",
 				saDef1.getDisplayName());
 		assertEquals("wrong abbrev display name", "test-slice-cat1-abbrev",
-				saDef1.getAbbreviatedDisplayName());
+				saDef1.getDescription());
 		assertEquals("wrong inverse-is-a size", 2,
 				saDef1.getInverseIsA().length);
 		assertTrue(
@@ -413,7 +413,7 @@ public class CategorizationConverterTest extends AbstractServiceTest {
 		saCat2.setId(4L);
 		saCat2.setKey("test-slice-cat2");
 		saCat2.setDisplayName("test-slice-cat2-display");
-		saCat2.setAbbrevDisplayName("test-slice-cat2-abbrev");
+		saCat2.setDescription("test-slice-cat2-abbrev");
 		saCat2.setCategoryType(CategoryType.SLICE_ABSTRACTION);
 		List<DataElementEntity> iia2 = new ArrayList<DataElementEntity>();
 		iia2.add(saCat1);
@@ -429,8 +429,8 @@ public class CategorizationConverterTest extends AbstractServiceTest {
 		assertEquals("wrong ID", "test-slice-cat2", saDef2.getId());
 		assertEquals("wrong display name", "test-slice-cat2-display",
 				saDef2.getDisplayName());
-		assertEquals("wrong abbrev display name", "test-slice-cat2-abbrev",
-				saDef2.getAbbreviatedDisplayName());
+		assertEquals("wrong description", "test-slice-cat2-abbrev",
+				saDef2.getDescription());
 		assertEquals("wrong inverse-is-a size", 1,
 				saDef2.getInverseIsA().length);
 		assertEquals("wrong inverse-is-a", "test-slice-cat1",
@@ -474,7 +474,7 @@ public class CategorizationConverterTest extends AbstractServiceTest {
 		llaCat1.setId(3L);
 		llaCat1.setKey("test-lla-cat1");
 		llaCat1.setDisplayName("test-lla-cat1-display");
-		llaCat1.setAbbrevDisplayName("test-lla-cat1-abbrev");
+		llaCat1.setDescription("test-lla-cat1-abbrev");
 		llaCat1.setCategoryType(CategoryType.LOW_LEVEL_ABSTRACTION);
 		List<DataElementEntity> iia1 = new ArrayList<DataElementEntity>();
 		iia1.add(lla1);
@@ -492,7 +492,7 @@ public class CategorizationConverterTest extends AbstractServiceTest {
 		assertEquals("wrong display name", "test-lla-cat1-display",
 				llaDef1.getDisplayName());
 		assertEquals("wrong abbrev display name", "test-lla-cat1-abbrev",
-				llaDef1.getAbbreviatedDisplayName());
+				llaDef1.getDescription());
 		assertEquals("wrong inverse-is-a size", 2,
 				llaDef1.getInverseIsA().length);
 		assertTrue(
@@ -507,7 +507,7 @@ public class CategorizationConverterTest extends AbstractServiceTest {
 		llaCat2.setId(4L);
 		llaCat2.setKey("test-lla-cat2");
 		llaCat2.setDisplayName("test-lla-cat2-display");
-		llaCat2.setAbbrevDisplayName("test-lla-cat2-abbrev");
+		llaCat2.setDescription("test-lla-cat2-abbrev");
 		llaCat2.setCategoryType(CategoryType.LOW_LEVEL_ABSTRACTION);
 		List<DataElementEntity> iia2 = new ArrayList<DataElementEntity>();
 		iia2.add(llaCat1);
@@ -523,8 +523,8 @@ public class CategorizationConverterTest extends AbstractServiceTest {
 		assertEquals("wrong ID", "test-lla-cat2", llaDef2.getId());
 		assertEquals("wrong display name", "test-lla-cat2-display",
 				llaDef2.getDisplayName());
-		assertEquals("wrong abbrev display name", "test-lla-cat2-abbrev",
-				llaDef2.getAbbreviatedDisplayName());
+		assertEquals("wrong description", "test-lla-cat2-abbrev",
+				llaDef2.getDescription());
 		assertEquals("wrong inverse-is-a size", 1,
 				llaDef2.getInverseIsA().length);
 		assertEquals("wrong inverse-is-a", "test-lla-cat1",
@@ -579,7 +579,7 @@ public class CategorizationConverterTest extends AbstractServiceTest {
 		cllaCat1.setId(3L);
 		cllaCat1.setKey("test-clla-cat1");
 		cllaCat1.setDisplayName("test-clla-cat1-display");
-		cllaCat1.setAbbrevDisplayName("test-clla-cat1-abbrev");
+		cllaCat1.setDescription("test-clla-cat1-abbrev");
 		cllaCat1.setCategoryType(CategoryType.COMPOUND_LOW_LEVEL_ABSTRACTION);
 		List<DataElementEntity> iia1 = new ArrayList<DataElementEntity>();
 		iia1.add(clla1);
@@ -597,7 +597,7 @@ public class CategorizationConverterTest extends AbstractServiceTest {
 		assertEquals("wrong display name", "test-clla-cat1-display",
 				cllaDef1.getDisplayName());
 		assertEquals("wrong abbrev display name", "test-clla-cat1-abbrev",
-				cllaDef1.getAbbreviatedDisplayName());
+				cllaDef1.getDescription());
 		assertEquals("wrong inverse-is-a size", 2,
 				cllaDef1.getInverseIsA().length);
 		assertTrue(
@@ -612,7 +612,7 @@ public class CategorizationConverterTest extends AbstractServiceTest {
 		cllaCat2.setId(4L);
 		cllaCat2.setKey("test-clla-cat2");
 		cllaCat2.setDisplayName("test-clla-cat2-display");
-		cllaCat2.setAbbrevDisplayName("test-clla-cat2-abbrev");
+		cllaCat2.setDescription("test-clla-cat2-abbrev");
 		cllaCat2.setCategoryType(CategoryType.COMPOUND_LOW_LEVEL_ABSTRACTION);
 		List<DataElementEntity> iia2 = new ArrayList<DataElementEntity>();
 		iia2.add(cllaCat1);
@@ -628,8 +628,8 @@ public class CategorizationConverterTest extends AbstractServiceTest {
 		assertEquals("wrong ID", "test-clla-cat2", cllaDef2.getId());
 		assertEquals("wrong display name", "test-clla-cat2-display",
 				cllaDef2.getDisplayName());
-		assertEquals("wrong abbrev display name", "test-clla-cat2-abbrev",
-				cllaDef2.getAbbreviatedDisplayName());
+		assertEquals("wrong description", "test-clla-cat2-abbrev",
+				cllaDef2.getDescription());
 		assertEquals("wrong inverse-is-a size", 1,
 				cllaDef2.getInverseIsA().length);
 		assertEquals("wrong inverse-is-a", "test-clla-cat1",
@@ -654,7 +654,7 @@ public class CategorizationConverterTest extends AbstractServiceTest {
 		mixedCat1.setId(3L);
 		mixedCat1.setKey("test-mixed-cat1");
 		mixedCat1.setDisplayName("test-mixed-cat1-display");
-		mixedCat1.setAbbrevDisplayName("test-mixed-cat1-abbrev");
+		mixedCat1.setDescription("test-mixed-cat1-abbrev");
 		mixedCat1.setCategoryType(CategoryType.MIXED);
 		List<DataElementEntity> iia1 = new ArrayList<DataElementEntity>();
 		iia1.add(event);
@@ -673,7 +673,7 @@ public class CategorizationConverterTest extends AbstractServiceTest {
 		assertEquals("wrong display name", "test-mixed-cat1-display",
 				hlaDef1.getDisplayName());
 		assertEquals("wrong abbrev display name", "test-mixed-cat1-abbrev",
-				hlaDef1.getAbbreviatedDisplayName());
+				hlaDef1.getDescription());
 		assertEquals("wrong size of inverse-is-a", 2,
 				hlaDef1.getInverseIsA().length);
 		assertTrue(
@@ -688,7 +688,7 @@ public class CategorizationConverterTest extends AbstractServiceTest {
 		mixedCat2.setId(4L);
 		mixedCat2.setKey("test-mixed-cat2");
 		mixedCat2.setDisplayName("test-mixed-cat2-display");
-		mixedCat2.setAbbrevDisplayName("test-mixed-cat2-abbrev");
+		mixedCat2.setDescription("test-mixed-cat2-abbrev");
 		mixedCat2.setCategoryType(CategoryType.MIXED);
 		List<DataElementEntity> iia2 = new ArrayList<DataElementEntity>();
 		iia2.add(mixedCat1);
@@ -703,8 +703,8 @@ public class CategorizationConverterTest extends AbstractServiceTest {
 		assertEquals("wrong ID", "test-mixed-cat2", hlaDef2.getId());
 		assertEquals("wrong display name", "test-mixed-cat2-display",
 				hlaDef2.getDisplayName());
-		assertEquals("wrong abbrev display name", "test-mixed-cat2-abbrev",
-				hlaDef2.getAbbreviatedDisplayName());
+		assertEquals("wrong description", "test-mixed-cat2-abbrev",
+				hlaDef2.getDescription());
 		assertEquals("wrong inverse-is-a size", 1,
 				hlaDef2.getInverseIsA().length);
 		assertEquals("wrong inverse-is-a", "test-mixed-cat1",

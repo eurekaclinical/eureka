@@ -200,6 +200,10 @@ public final class LowLevelAbstractionJsonDeserializer extends
 			checkField("id");
 			LowLevelAbstractionValueDefinition valDef = new LowLevelAbstractionValueDefinition(
 			        value, this.parser.getText());
+			
+//			nextToken();
+//			checkField("value");
+//			valDef.setValue(this.parser.readValueAs(Value.class));
 
 			nextToken();
 			checkField("params");

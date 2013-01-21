@@ -505,7 +505,7 @@ function showPopup(event, rowId) {
   
     $("#tree").jstree({
         "json_data" : {
-            "ajax" : { "url" : "userpropchildren?propKey=" + rowId}
+            "ajax" : { "url" : "userpropchildren?propKey=" + encodeURIComponent(rowId)}
         },
     "plugins" : [ "themes", "json_data", "ui" ]
     });
@@ -515,26 +515,22 @@ function showPopup(event, rowId) {
 
 }
 
-function deleteElement(event, rowId) {
+function deleteElement(event, displayName, key) {
 
      $("#dialog").dialog({
             buttons : {
-                "Confirm" : function() {
+                "Delete" : function() {
                     $.ajax({
 	                    type: 'POST',
-	                    url: 'deleteprop?key='+rowId,
+	                    url: 'deleteprop?key=' + encodeURIComponent(key),
                         success: function(data) {
                             $(this).dialog("close");
                             window.location.href="editorhome";
-                    
-                    
-                        }, error: function(data, statusCode) {
+                        }, 
+						error: function(data, statusCode) {
                             $(this).dialog("close");
                             alert(data.statusText);
-                    
-                    
                         } 
-                
     	            });
                 },
                 "Cancel" : function() {
@@ -542,7 +538,7 @@ function deleteElement(event, rowId) {
                 }
             }
         });
-    $("#dialog").html("Confirm Deletion");
+    $("#dialog").html('Are you sure you want to delete data element ' + displayName + '? You cannot undo this action.');
     $("#dialog").dialog("open");
 
    

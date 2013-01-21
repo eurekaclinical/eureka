@@ -66,14 +66,14 @@ public final class CategorizationConverter implements
 		switch (proposition.getCategoryType()) {
 			case EVENT:
 				EventDefinition event = new EventDefinition(id);
-				event.setAbbreviatedDisplayName(proposition.getAbbrevDisplayName());
+				event.setDescription(proposition.getDescription());
 				event.setDisplayName(proposition.getDisplayName());
 				event.setInverseIsA(inverseIsA);
 				primary = event;
 				break;
 			case CONSTANT:
 				ConstantDefinition constant = new ConstantDefinition(id);
-				constant.setAbbreviatedDisplayName(proposition.getAbbrevDisplayName());
+				constant.setDescription(proposition.getDescription());
 				constant.setDisplayName(proposition.getDisplayName());
 				constant.setInverseIsA(inverseIsA);
 				primary = constant;
@@ -81,7 +81,7 @@ public final class CategorizationConverter implements
 			case PRIMITIVE_PARAMETER:
 				PrimitiveParameterDefinition primParam = new PrimitiveParameterDefinition(
 						id);
-				primParam.setAbbreviatedDisplayName(proposition.getAbbrevDisplayName());
+				primParam.setDescription(proposition.getDescription());
 				primParam.setDisplayName(proposition.getDisplayName());
 				primParam.setInverseIsA(inverseIsA);
 				primary = primParam;
@@ -89,28 +89,28 @@ public final class CategorizationConverter implements
 			case HIGH_LEVEL_ABSTRACTION:
 				HighLevelAbstractionDefinition hla = new HighLevelAbstractionDefinition(
 						id);
-				hla.setAbbreviatedDisplayName(proposition.getAbbrevDisplayName());
+				hla.setDescription(proposition.getDescription());
 				hla.setDisplayName(proposition.getDisplayName());
 				hla.setInverseIsA(inverseIsA);
 				primary = hla;
 				break;
 			case SLICE_ABSTRACTION:
 				SliceDefinition sla = new SliceDefinition(id);
-				sla.setAbbreviatedDisplayName(proposition.getAbbrevDisplayName());
+				sla.setDescription(proposition.getDescription());
 				sla.setDisplayName(proposition.getDisplayName());
 				sla.setInverseIsA(inverseIsA);
 				primary = sla;
 				break;
 			case LOW_LEVEL_ABSTRACTION:
 				LowLevelAbstractionDefinition llad = new LowLevelAbstractionDefinition(id);
-				llad.setAbbreviatedDisplayName(proposition.getAbbrevDisplayName());
+				llad.setDescription(proposition.getDescription());
 				llad.setDisplayName(proposition.getDisplayName());
 				llad.setInverseIsA(inverseIsA);
 				primary = llad;
 				break;
 			case COMPOUND_LOW_LEVEL_ABSTRACTION:
 				CompoundLowLevelAbstractionDefinition cllad = new CompoundLowLevelAbstractionDefinition(id);
-				cllad.setAbbreviatedDisplayName(proposition.getAbbrevDisplayName());
+				cllad.setDescription(proposition.getDescription());
 				cllad.setDisplayName(proposition.getDisplayName());
 				cllad.setInverseIsA(inverseIsA);
 				primary = cllad;
@@ -118,7 +118,7 @@ public final class CategorizationConverter implements
 			default:
 				HighLevelAbstractionDefinition defaultDef = new HighLevelAbstractionDefinition(
 						id);
-				defaultDef.setAbbreviatedDisplayName(proposition.getAbbrevDisplayName());
+				defaultDef.setDescription(proposition.getDescription());
 				defaultDef.setDisplayName(proposition.getDisplayName());
 				defaultDef.setInverseIsA(inverseIsA);
 				primary = defaultDef;

@@ -189,7 +189,7 @@ public class DataElementResource {
 					if (child.getId().equals(proposition.getId())) {
 						throw new HttpStatusException(Response.Status.PRECONDITION_FAILED, "The data element to be"
 								+ " removed is used in the definition of "
-								+ other.getAbbrevDisplayName());
+								+ other.getDisplayName());
 					}
 				}
 			}

@@ -62,7 +62,7 @@ public class DataElementResourceTest extends AbstractServiceResourceTest {
 		frequency.setKey("testThreshold-frequency");
 		frequency.setUserId(user.getId());
 		frequency.setDisplayName("testThreshold-frequency");
-		frequency.setAbbrevDisplayName("testThreshold-frequency");
+		frequency.setDescription("testThreshold-frequency");
 		frequency.setInSystem(false);
 		frequency.setCreated(new Date());
 		frequency.setAtLeast(5);

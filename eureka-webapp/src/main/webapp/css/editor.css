@@ -30,6 +30,10 @@ table, td {
 }
 
 #propDisplayName {
+	width: 250px;
+}
+
+#propDescription {
     width: 500px;
     height: 100px;
 }

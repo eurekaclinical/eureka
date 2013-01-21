@@ -48,7 +48,7 @@ public final class PropositionUtil {
 		sysProp.setKey(inDefinition.getId());
 		sysProp.setInSystem(true);
 		sysProp.setDisplayName(inDefinition.getDisplayName());
-		sysProp.setAbbrevDisplayName(inDefinition.getAbbreviatedDisplayName());
+		sysProp.setDescription(inDefinition.getAbbreviatedDisplayName());
 		sysProp.setUserId(inUserId);
 		PropositionDefinitionTypeVisitor propDefTypeVisitor = new PropositionDefinitionTypeVisitor();
 		inDefinition.accept(propDefTypeVisitor);
@@ -69,7 +69,7 @@ public final class PropositionUtil {
 		SystemElement systemElement = new SystemElement();
 		systemElement.setKey(inDefinition.getId());
 		systemElement.setInSystem(true);
-		systemElement.setAbbrevDisplayName(inDefinition
+		systemElement.setDescription(inDefinition
 		        .getAbbreviatedDisplayName());
 		systemElement.setDisplayName(inDefinition.getDisplayName());
 		systemElement.setSummarized(summarize);

@@ -46,7 +46,7 @@ public class UserPropositionListServlet extends HttpServlet {
 
 	private JsonTreeData createData(DataElement element) {
 		JsonTreeData d = new JsonTreeData();
-		d.setData(element.getAbbrevDisplayName());
+		d.setData(getDisplayName(element));
 		d.setKeyVal("id", String.valueOf(element.getId()));
 
 		d.setKeyVal("data-key", element.getKey());
@@ -63,14 +63,9 @@ public class UserPropositionListServlet extends HttpServlet {
 	private String getDisplayName(DataElement p) {
 		String displayName = "";
 
-		if (p.getAbbrevDisplayName() != null
-		        && !p.getAbbrevDisplayName().equals("")) {
+		if (p.getDisplayName() != null && !p.getDisplayName().equals("")) {
 
-			displayName = p.getAbbrevDisplayName() + "(" + p.getKey() + ")";
-
-		} else if (p.getDisplayName() != null && !p.getDisplayName().equals("")) {
-
-			displayName = p.getDisplayName() + "(" + p.getKey() + ")";
+			displayName = p.getDisplayName() + " (" + p.getKey() + ")";
 
 		} else {
 

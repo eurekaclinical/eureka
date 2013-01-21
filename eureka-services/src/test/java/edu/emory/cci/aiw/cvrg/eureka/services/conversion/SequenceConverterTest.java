@@ -56,7 +56,7 @@ public class SequenceConverterTest
 		entity.setId(Long.valueOf(id));
 		entity.setSystemType(SystemProposition.SystemType.EVENT);
 		entity.setKey("Encounter" + suffix);
-		entity.setAbbrevDisplayName("Encounter" + suffix);
+		entity.setDescription("Encounter" + suffix);
 		entity.setDisplayName("Encounter" + suffix);
 		return entity;
 	}
@@ -101,7 +101,7 @@ public class SequenceConverterTest
 		SequenceEntity result = new SequenceEntity();
 		result.setId(Long.valueOf(counter++));
 		result.setKey("test-sequence");
-		result.setAbbrevDisplayName("test-sequence");
+		result.setDescription("test-sequence");
 		result.setDisplayName("test-sequence");
 		result.setInSystem(false);
 		result.setRelations(this.createRelations());
