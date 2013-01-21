@@ -440,7 +440,6 @@ $(document).ready(function() {
 
      }
 
-
      function poll() {
 
 				$.ajax({
@@ -487,13 +486,27 @@ $(document).ready(function() {
      }
 
 
-	
+	if ($("#elements").length > 0) {
+		 var $dataElements = $("#elements").find('tr.editor-home-data-element');
+		 $dataElements.each(function(i, dataElement) {
+			 var viewLink = $(dataElement).find('a.view');
+			 $(viewLink).click(function() {
+				 viewElement($(dataElement).data('key'));
+			 });
+			 
+			 var deleteLink = $(dataElement).find('a.delete');
+			 $(deleteLink).click(function() {
+				 deleteElement($(dataElement).data('display-name'), 
+					$(dataElement).data('key'));
+			 });
+		 });
+	 }
 
 });
 	
 
 // Creates a popup containing a summary of a derived data element.
-function showPopup(event, rowId) {
+function viewElement(rowId) {
 
     //$('<div class="tooltip"><div id="tree"></div></div>').appendTo('body');
     //var rowId = event.target.parentNode.id;
@@ -515,7 +528,7 @@ function showPopup(event, rowId) {
 
 }
 
-function deleteElement(event, displayName, key) {
+function deleteElement(displayName, key) {
 
      $("#dialog").dialog({
             buttons : {
@@ -540,11 +553,6 @@ function deleteElement(event, displayName, key) {
         });
     $("#dialog").html('Are you sure you want to delete data element ' + displayName + '? You cannot undo this action.');
     $("#dialog").dialog("open");
-
-   
-  
-
-
 }
 
 function positionTooltip(event){

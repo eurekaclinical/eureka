@@ -48,18 +48,18 @@
 				<c:url value="/protected/editprop" var="editUrl">
 					<c:param name="key" value="${prop.attr['key']}"/>
 				</c:url>
-			<tr>
-				<td style="width:60px">
-					<a href="#" onclick="showPopup(event, '${prop.attr['key']}')" class="view" title="View"></a>
-					<a href="${editUrl}" class="edit" title="Edit"></a>
-					<a href="#" onclick="deleteElement(event, '${prop.attr['displayName']}', '${prop.attr['key']}')" class="delete" title="Delete"></a>
-				</td>
-				<td style="width: 100px">${prop.attr['displayName']}</td>
-				<td>${prop.attr['description']}</td>
-				<td>${prop.attr['type']}</td>
-				<td>${prop.attr['created']}</td>
-				<td>${prop.attr['lastModified']}</td>
-			</tr>
+				<tr class="editor-home-data-element" data-key="${prop.attr['key']}" data-display-name="${prop.attr['displayName']}">
+					<td style="width:60px">
+						<a href="#" class="view" title="View"></a>
+						<a href="${editUrl}" class="edit" title="Edit"></a>
+						<a href="#" class="delete" title="Delete"></a>
+					</td>
+					<td style="width: 100px">${prop.attr['displayName']}</td>
+					<td>${prop.attr['description']}</td>
+					<td>${prop.attr['type']}</td>
+					<td>${prop.attr['created']}</td>
+					<td>${prop.attr['lastModified']}</td>
+				</tr>
 			</c:forEach>
 		</table>
 	</template:content>
