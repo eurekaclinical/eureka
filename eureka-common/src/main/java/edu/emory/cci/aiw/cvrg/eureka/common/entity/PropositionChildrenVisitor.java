@@ -24,7 +24,7 @@ import java.util.Collections;
 import java.util.List;
 
 public final class PropositionChildrenVisitor implements
-        PropositionEntityVisitor {
+        DataElementEntityVisitor {
 
 	private List<? extends DataElementEntity> children;
 

@@ -34,9 +34,12 @@ import org.protempa.proposition.value.ValueType;
 import java.util.ArrayList;
 import java.util.List;
 
-import static edu.emory.cci.aiw.cvrg.eureka.services.conversion.PropositionDefinitionConverterUtil.unit;
+import static edu.emory.cci.aiw.cvrg.eureka.services.conversion.ConversionUtil.unit;
 import java.util.HashMap;
 import java.util.Map;
+import org.protempa.IntervalSide;
+import org.protempa.Offsets;
+import org.protempa.SimpleGapFunction;
 import org.protempa.TemporalExtendedParameterDefinition;
 import org.protempa.proposition.value.NominalValue;
 
@@ -46,6 +49,7 @@ final class SequenceConverter
 
 	private PropositionDefinitionConverterVisitor converterVisitor;
 	private HighLevelAbstractionDefinition primary;
+	private String primaryPropId;
 	private final Map<Long, TemporalExtendedPropositionDefinition> extendedProps;
 
 	public SequenceConverter() {
@@ -56,6 +60,11 @@ final class SequenceConverter
 	public HighLevelAbstractionDefinition getPrimaryPropositionDefinition() {
 		return primary;
 	}
+	
+	@Override
+	public String getPrimaryPropositionId() {
+		return primaryPropId;
+	}
 
 	public void setConverterVisitor(PropositionDefinitionConverterVisitor inVisitor) {
 		converterVisitor = inVisitor;
@@ -64,56 +73,77 @@ final class SequenceConverter
 	@Override
 	public List<PropositionDefinition> convert(SequenceEntity sequenceEntity) {
 		List<PropositionDefinition> result = new ArrayList<PropositionDefinition>();
-		HighLevelAbstractionDefinition primary = new HighLevelAbstractionDefinition(
-				sequenceEntity.getKey());
-		System.err.println("STARTED WITH " + sequenceEntity);
-		if (sequenceEntity.getRelations() != null) {
-			for (Relation rel : sequenceEntity.getRelations()) {
-				DataElementEntity lhs =
-						rel.getLhsExtendedDataElement().getDataElementEntity();
-				lhs.accept(converterVisitor);
-				result.addAll(
-						converterVisitor.getPropositionDefinitions());
-				TemporalExtendedPropositionDefinition tepdLhs = buildExtendedProposition(rel
-						.getLhsExtendedDataElement());
+		String propId = sequenceEntity.getKey() + ConversionUtil.PRIMARY_PROP_ID_SUFFIX;
+		this.primaryPropId = propId;
+		if (this.converterVisitor.addPropositionId(propId)) {
+			HighLevelAbstractionDefinition primary = new HighLevelAbstractionDefinition(
+					propId);
+			TemporalExtendedPropositionDefinition primaryEP = 
+					buildExtendedProposition(
+					sequenceEntity.getPrimaryExtendedDataElement());
+			if (sequenceEntity.getRelations() != null) {
+				for (Relation rel : sequenceEntity.getRelations()) {
+					DataElementEntity lhs =
+							rel.getLhsExtendedDataElement().getDataElementEntity();
+					lhs.accept(converterVisitor);
+					result.addAll(
+							converterVisitor.getPropositionDefinitions());
+					TemporalExtendedPropositionDefinition tepdLhs = buildExtendedProposition(rel
+							.getLhsExtendedDataElement());
 
-				DataElementEntity rhs =
-						rel.getRhsExtendedDataElement().getDataElementEntity();
-				rhs.accept(converterVisitor);
-				result.addAll(converterVisitor.getPropositionDefinitions());
-				TemporalExtendedPropositionDefinition tepdRhs = buildExtendedProposition(rel
-						.getRhsExtendedDataElement());
+					DataElementEntity rhs =
+							rel.getRhsExtendedDataElement().getDataElementEntity();
+					rhs.accept(converterVisitor);
+					result.addAll(converterVisitor.getPropositionDefinitions());
+					TemporalExtendedPropositionDefinition tepdRhs = buildExtendedProposition(rel
+							.getRhsExtendedDataElement());
 
-				primary.add(tepdLhs);
-				primary.add(tepdRhs);
-				primary.setRelation(tepdLhs, tepdRhs, buildRelation(rel));
+					primary.add(tepdLhs);
+					primary.add(tepdRhs);
+					primary.setRelation(tepdLhs, tepdRhs, buildRelation(rel));
+				}
 			}
-		}
+			primary.setGapFunction(
+					new SimpleGapFunction(Integer.valueOf(0), null));
+			Offsets temporalOffsets = new Offsets();
+			temporalOffsets.setStartTemporalExtendedPropositionDefinition(primaryEP);
+			temporalOffsets.setStartIntervalSide(IntervalSide.START);
+			temporalOffsets.setStartOffset(Integer.valueOf(0));
+			temporalOffsets.setStartOffsetUnits(null);
+			temporalOffsets.setFinishTemporalExtendedPropositionDefinition(primaryEP);
+			temporalOffsets.setFinishIntervalSide(IntervalSide.FINISH);
+			temporalOffsets.setFinishOffset(Integer.valueOf(0));
+			temporalOffsets.setFinishOffsetUnits(null);
+			primary.setTemporalOffset(temporalOffsets);
 
-		this.primary = primary;
-		System.err.println("CONVERTED " + primary);
-		result.add(primary);
+			this.primary = primary;
+			result.add(primary);
+		}
 		return result;
 	}
 
 	private TemporalExtendedPropositionDefinition buildExtendedProposition(
 			ExtendedDataElement ep) {
-		TemporalExtendedPropositionDefinition tepd = 
+		TemporalExtendedPropositionDefinition tepd =
 				this.extendedProps.get(ep.getId());
 		if (tepd == null) {
 			DataElementEntity dataElementEntity = ep.getDataElementEntity();
+			String propId;
+			if (dataElementEntity.isInSystem()) {
+				propId = dataElementEntity.getKey();
+			} else {
+				propId = dataElementEntity.getKey() + ConversionUtil.PRIMARY_PROP_ID_SUFFIX;
+			}
 			if (dataElementEntity instanceof ValueThresholdGroupEntity) {
 				ValueThresholdGroupEntity vtDataElementEntity =
 						(ValueThresholdGroupEntity) dataElementEntity;
-				TemporalExtendedParameterDefinition tepvDef = 
-						new TemporalExtendedParameterDefinition(
-						dataElementEntity.getKey());
+				TemporalExtendedParameterDefinition tepvDef =
+						new TemporalExtendedParameterDefinition(propId);
 				tepvDef.setValue(
 						NominalValue.getInstance(vtDataElementEntity.getKey() + "_VALUE"));
 				tepd = tepvDef;
 			} else {
-				tepd = new TemporalExtendedPropositionDefinition(
-					dataElementEntity.getKey());
+				tepd = new TemporalExtendedPropositionDefinition(propId);
 			}
 
 			if (ep.getPropertyConstraint() != null) {
@@ -130,7 +160,7 @@ final class SequenceConverter
 			tepd.setMinLengthUnit(unit(ep.getMinDurationTimeUnit()));
 			tepd.setMaxLength(ep.getMaxDuration());
 			tepd.setMaxLengthUnit(unit(ep.getMaxDurationTimeUnit()));
-			
+
 			this.extendedProps.put(ep.getId(), tepd);
 		}
 

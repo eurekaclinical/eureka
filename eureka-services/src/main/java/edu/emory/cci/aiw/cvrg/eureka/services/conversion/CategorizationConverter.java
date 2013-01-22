@@ -38,10 +38,16 @@ public final class CategorizationConverter implements
 
 	private PropositionDefinitionConverterVisitor converterVisitor;
 	private PropositionDefinition primary;
+	private String primaryPropId;
 
 	@Override
 	public PropositionDefinition getPrimaryPropositionDefinition() {
 		return primary;
+	}
+	
+	@Override
+	public String getPrimaryPropositionId() {
+		return primaryPropId;
 	}
 
 	public void setConverterVisitor(PropositionDefinitionConverterVisitor inVisitor) {
@@ -49,94 +55,93 @@ public final class CategorizationConverter implements
 	}
 
 	@Override
-	public List<PropositionDefinition> convert(CategoryEntity proposition) {
-		List<PropositionDefinition> result = new ArrayList<PropositionDefinition>();
-		String id = proposition.getKey();
-		List<PropositionDefinition> inverseIsADefs = new ArrayList<PropositionDefinition>();
-		for (DataElementEntity e : proposition.getMembers()) {
-			e.accept(this.converterVisitor);
-			if (this.converterVisitor.getPropositionDefinitions() != null) {
-				inverseIsADefs.addAll(this.converterVisitor
+	public List<PropositionDefinition> convert(CategoryEntity category) {
+		List<PropositionDefinition> result =
+				new ArrayList<PropositionDefinition>();
+		String id = category.getKey()
+					+ ConversionUtil.PRIMARY_PROP_ID_SUFFIX;
+		this.primaryPropId = id;
+		if (this.converterVisitor.addPropositionId(id)) {
+			PropositionDefinition primary;
+			List<String> inverseIsADefs =
+					new ArrayList<String>();
+			List<PropositionDefinition> inverseIsADefsIncludingSecondaries =
+					new ArrayList<PropositionDefinition>();
+			for (DataElementEntity e : category.getMembers()) {
+				e.accept(this.converterVisitor);
+				inverseIsADefsIncludingSecondaries.addAll(this.converterVisitor
 						.getPropositionDefinitions());
+				String primaryPropositionId =
+						this.converterVisitor.getPrimaryPropositionId();
+				inverseIsADefs.add(primaryPropositionId);
 			}
+			result.addAll(inverseIsADefsIncludingSecondaries);
+			String[] inverseIsA = inverseIsADefs.toArray(new String[inverseIsADefs.size()]);
+			switch (category.getCategoryType()) {
+				case EVENT:
+					EventDefinition event = new EventDefinition(id);
+					event.setDescription(category.getDescription());
+					event.setDisplayName(category.getDisplayName());
+					event.setInverseIsA(inverseIsA);
+					primary = event;
+					break;
+				case CONSTANT:
+					ConstantDefinition constant = new ConstantDefinition(id);
+					constant.setDescription(category.getDescription());
+					constant.setDisplayName(category.getDisplayName());
+					constant.setInverseIsA(inverseIsA);
+					primary = constant;
+					break;
+				case PRIMITIVE_PARAMETER:
+					PrimitiveParameterDefinition primParam = new PrimitiveParameterDefinition(
+							id);
+					primParam.setDescription(category.getDescription());
+					primParam.setDisplayName(category.getDisplayName());
+					primParam.setInverseIsA(inverseIsA);
+					primary = primParam;
+					break;
+				case HIGH_LEVEL_ABSTRACTION:
+					HighLevelAbstractionDefinition hla = new HighLevelAbstractionDefinition(
+							id);
+					hla.setDescription(category.getDescription());
+					hla.setDisplayName(category.getDisplayName());
+					hla.setInverseIsA(inverseIsA);
+					primary = hla;
+					break;
+				case SLICE_ABSTRACTION:
+					SliceDefinition sla = new SliceDefinition(id);
+					sla.setDescription(category.getDescription());
+					sla.setDisplayName(category.getDisplayName());
+					sla.setInverseIsA(inverseIsA);
+					primary = sla;
+					break;
+				case LOW_LEVEL_ABSTRACTION:
+					LowLevelAbstractionDefinition llad = new LowLevelAbstractionDefinition(id);
+					llad.setDescription(category.getDescription());
+					llad.setDisplayName(category.getDisplayName());
+					llad.setInverseIsA(inverseIsA);
+					primary = llad;
+					break;
+				case COMPOUND_LOW_LEVEL_ABSTRACTION:
+					CompoundLowLevelAbstractionDefinition cllad = new CompoundLowLevelAbstractionDefinition(id);
+					cllad.setDescription(category.getDescription());
+					cllad.setDisplayName(category.getDisplayName());
+					cllad.setInverseIsA(inverseIsA);
+					primary = cllad;
+					break;
+				default:
+					HighLevelAbstractionDefinition defaultDef = new HighLevelAbstractionDefinition(
+							id);
+					defaultDef.setDescription(category.getDescription());
+					defaultDef.setDisplayName(category.getDisplayName());
+					defaultDef.setInverseIsA(inverseIsA);
+					primary = defaultDef;
+					break;
+			}
+
+			result.add(primary);
+			this.primary = primary;
 		}
-		result.addAll(inverseIsADefs);
-		String[] inverseIsA = inverseIsA(proposition);
-		PropositionDefinition primary;
-		switch (proposition.getCategoryType()) {
-			case EVENT:
-				EventDefinition event = new EventDefinition(id);
-				event.setDescription(proposition.getDescription());
-				event.setDisplayName(proposition.getDisplayName());
-				event.setInverseIsA(inverseIsA);
-				primary = event;
-				break;
-			case CONSTANT:
-				ConstantDefinition constant = new ConstantDefinition(id);
-				constant.setDescription(proposition.getDescription());
-				constant.setDisplayName(proposition.getDisplayName());
-				constant.setInverseIsA(inverseIsA);
-				primary = constant;
-				break;
-			case PRIMITIVE_PARAMETER:
-				PrimitiveParameterDefinition primParam = new PrimitiveParameterDefinition(
-						id);
-				primParam.setDescription(proposition.getDescription());
-				primParam.setDisplayName(proposition.getDisplayName());
-				primParam.setInverseIsA(inverseIsA);
-				primary = primParam;
-				break;
-			case HIGH_LEVEL_ABSTRACTION:
-				HighLevelAbstractionDefinition hla = new HighLevelAbstractionDefinition(
-						id);
-				hla.setDescription(proposition.getDescription());
-				hla.setDisplayName(proposition.getDisplayName());
-				hla.setInverseIsA(inverseIsA);
-				primary = hla;
-				break;
-			case SLICE_ABSTRACTION:
-				SliceDefinition sla = new SliceDefinition(id);
-				sla.setDescription(proposition.getDescription());
-				sla.setDisplayName(proposition.getDisplayName());
-				sla.setInverseIsA(inverseIsA);
-				primary = sla;
-				break;
-			case LOW_LEVEL_ABSTRACTION:
-				LowLevelAbstractionDefinition llad = new LowLevelAbstractionDefinition(id);
-				llad.setDescription(proposition.getDescription());
-				llad.setDisplayName(proposition.getDisplayName());
-				llad.setInverseIsA(inverseIsA);
-				primary = llad;
-				break;
-			case COMPOUND_LOW_LEVEL_ABSTRACTION:
-				CompoundLowLevelAbstractionDefinition cllad = new CompoundLowLevelAbstractionDefinition(id);
-				cllad.setDescription(proposition.getDescription());
-				cllad.setDisplayName(proposition.getDisplayName());
-				cllad.setInverseIsA(inverseIsA);
-				primary = cllad;
-				break;
-			default:
-				HighLevelAbstractionDefinition defaultDef = new HighLevelAbstractionDefinition(
-						id);
-				defaultDef.setDescription(proposition.getDescription());
-				defaultDef.setDisplayName(proposition.getDisplayName());
-				defaultDef.setInverseIsA(inverseIsA);
-				primary = defaultDef;
-				break;
-		}
-
-		result.add(primary);
-		this.primary = primary;
-		return result;
-	}
-
-	private static String[] inverseIsA(CategoryEntity proposition) {
-		String[] result = new String[proposition.getMembers().size()];
-
-		for (int i = 0; i < proposition.getMembers().size(); i++) {
-			result[i] = proposition.getMembers().get(i).getKey();
-		}
-
 		return result;
 	}
 }

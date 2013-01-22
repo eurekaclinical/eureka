@@ -2,7 +2,7 @@
  * #%L
  * Eureka Common
  * %%
- * Copyright (C) 2012 Emory University
+ * Copyright (C) 2012 - 2013 Emory University
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,38 +19,36 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.common.entity;
 
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.DataElement;
-
-public final class PropositionTypeVisitor implements DataElementEntityVisitor {
-
-	private DataElement.Type type;
-
-	public DataElement.Type getType() {
-		return type;
-	}
+/**
+ *
+ * @author Andrew Post
+ */
+public abstract class AbstractDataElementEntityVisitor 
+		implements DataElementEntityVisitor{
 
 	@Override
 	public void visit(SystemProposition proposition) {
-		this.type = DataElement.Type.SYSTEM;
+		throw new UnsupportedOperationException("Not supported yet.");
 	}
 
 	@Override
 	public void visit(CategoryEntity categorization) {
-		this.type = DataElement.Type.CATEGORIZATION;
+		throw new UnsupportedOperationException("Not supported yet.");
 	}
 
 	@Override
 	public void visit(SequenceEntity highLevelAbstraction) {
-		this.type = DataElement.Type.SEQUENCE;
+		throw new UnsupportedOperationException("Not supported yet.");
 	}
 
 	@Override
 	public void visit(ValueThresholdGroupEntity lowLevelAbstraction) {
-		this.type = DataElement.Type.VALUE_THRESHOLD;
+		throw new UnsupportedOperationException("Not supported yet.");
 	}
 
 	@Override
 	public void visit(FrequencyEntity sliceAbstraction) {
-		this.type = DataElement.Type.FREQUENCY;
+		throw new UnsupportedOperationException("Not supported yet.");
 	}
+	
 }

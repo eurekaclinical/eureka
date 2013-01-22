@@ -19,7 +19,7 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.common.entity;
 
-public interface PropositionEntityVisitor {
+public interface DataElementEntityVisitor {
 	
 	public void visit(SystemProposition proposition);
 	

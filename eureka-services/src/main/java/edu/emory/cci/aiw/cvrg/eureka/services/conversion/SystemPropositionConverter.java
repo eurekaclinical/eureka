@@ -38,6 +38,8 @@ public final class SystemPropositionConverter implements
 	private Long userId;
 
 	private PropositionDefinition primary;
+	
+	private String primaryPropId;
 
 	@Inject
 	public SystemPropositionConverter(PropositionFinder<Long, 
@@ -55,14 +57,13 @@ public final class SystemPropositionConverter implements
 	}
 	
 	@Override
+	public String getPrimaryPropositionId() {
+		return primaryPropId;
+	}
+	
+	@Override
 	public List<PropositionDefinition> convert(SystemProposition proposition) {
-		try {
-			this.primary = finder.find(this.userId,
-					proposition.getKey());
-			return Collections.singletonList(primary);
-		} catch (PropositionFindException ex) {
-			throw new AssertionError("Error retrieving system propositions: " + 
-					ex.getMessage());
-		}
+		this.primaryPropId = proposition.getKey();
+		return Collections.emptyList();
 	}
 }

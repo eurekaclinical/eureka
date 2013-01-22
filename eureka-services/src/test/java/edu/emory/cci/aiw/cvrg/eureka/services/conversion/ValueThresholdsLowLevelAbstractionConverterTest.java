@@ -98,7 +98,7 @@ public class ValueThresholdsLowLevelAbstractionConverterTest extends
 				llaDefs.size());
 		LowLevelAbstractionDefinition llaDef = this.converter
 				.getPrimaryPropositionDefinition();
-		assertEquals("wrong id", "test-valuethreshold", llaDef.getId());
+		assertEquals("wrong id", "test-valuethreshold" + ConversionUtil.PRIMARY_PROP_ID_SUFFIX, llaDef.getId());
 		assertEquals("wrong abstracted from size", 1, llaDef.getAbstractedFrom().size());
 		assertEquals("wrong abstracted from", "test-primparam1",
 				llaDef.getAbstractedFrom().iterator().next());

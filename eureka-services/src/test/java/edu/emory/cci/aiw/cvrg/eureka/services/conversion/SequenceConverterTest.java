@@ -125,8 +125,9 @@ public class SequenceConverterTest
 
 		Assert.assertEquals("Proposition list size", 1, definitions.size());
 
-		Assert.assertEquals("Primary proposition id", primary.getId(),
-				"test-sequence");
+		Assert.assertEquals("Primary proposition id",
+				"test-sequence" + ConversionUtil.PRIMARY_PROP_ID_SUFFIX, 
+				primary.getId());
 
 		Set<String> abstractedFrom = primary.getAbstractedFrom();
 		String[] expectedAbstractedFrom = {"EncounterLHS", "EncounterRHS"};

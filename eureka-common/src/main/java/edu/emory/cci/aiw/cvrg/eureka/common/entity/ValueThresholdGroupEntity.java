@@ -72,7 +72,7 @@ public class ValueThresholdGroupEntity extends DataElementEntity {
 	}
 
 	@Override
-	public void accept(PropositionEntityVisitor visitor) {
+	public void accept(DataElementEntityVisitor visitor) {
 		visitor.visit(this);
 	}
 	

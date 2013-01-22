@@ -69,7 +69,7 @@ public class CategoryEntity extends DataElementEntity {
 	}
 
 	@Override
-	public void accept(PropositionEntityVisitor visitor) {
+	public void accept(DataElementEntityVisitor visitor) {
 		visitor.visit(this);
 	}
 	

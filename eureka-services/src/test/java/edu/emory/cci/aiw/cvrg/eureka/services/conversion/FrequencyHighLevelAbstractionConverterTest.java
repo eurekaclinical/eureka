@@ -127,11 +127,11 @@ public class FrequencyHighLevelAbstractionConverterTest extends AbstractServiceT
 		}
 		assertEquals("wrong number of low-level abstractions created", 1, llas.size());
 		LowLevelAbstractionDefinition llaDef = llas.get(0);
-		assertEquals("wrong id", "test-valuethreshold", llaDef.getId());
+		assertEquals("wrong id", "test-valuethreshold" + ConversionUtil.PRIMARY_PROP_ID_SUFFIX, llaDef.getId());
 		assertEquals("wrong abstracted from size", 1, llaDef.getAbstractedFrom().size());
 		assertEquals("wrong abstracted from", "test-primparam1",
 				llaDef.getAbstractedFrom().iterator().next());
-		assertEquals("wrong minimum number of values", 2, llaDef.getMinimumNumberOfValues());
+		assertEquals("wrong minimum number of values", 1, llaDef.getMinimumNumberOfValues());
 		assertEquals("wrong algorithm", "stateDetector", llaDef.getAlgorithmId());
 		assertEquals("wrong number of value definitions", 2, llaDef.getValueDefinitions().size());
 		final String userConstraintName = "test-valuethreshold_VALUE";
@@ -150,11 +150,11 @@ public class FrequencyHighLevelAbstractionConverterTest extends AbstractServiceT
 				compConstraintName + "'", "<=", llaDef.getValueDefinition(compConstraintName).getParameterComp("maxThreshold").getComparatorString());
 
 		HighLevelAbstractionDefinition hlad = this.converter.getPrimaryPropositionDefinition();
-		assertEquals("wrong id", "test-freqhla-key", hlad.getId());
+		assertEquals("wrong id", "test-freqhla-key" + ConversionUtil.PRIMARY_PROP_ID_SUFFIX, hlad.getId());
 		assertEquals("wrong number of extended propositions", 1, hlad.getExtendedPropositionDefinitions().size());
 		TemporalExtendedParameterDefinition tepd = (TemporalExtendedParameterDefinition) hlad.getExtendedPropositionDefinitions().iterator().next();
-		assertEquals("wrong extended proposition", "test-valuethreshold", tepd.getPropositionId());
-		assertEquals("wrong value definition for extended proposition", NominalValue.getInstance("test-valuethreshold_VALUE"), tepd.getValue());
+		assertEquals("wrong extended proposition", "test-valuethreshold" + ConversionUtil.PRIMARY_PROP_ID_SUFFIX, tepd.getPropositionId());
+		assertEquals("wrong value definition for extended proposition", NominalValue.getInstance("test-valuethreshold" + ConversionUtil.PRIMARY_PROP_ID_SUFFIX + "_VALUE"), tepd.getValue());
 		assertEquals("wrong number of relations defined", 1, hlad.getTemporalExtendedPropositionDefinitionPairs().size());
 		Relation relation = hlad.getRelation(tepd, tepd);
 		Assert.assertNotNull("relation is null", relation);

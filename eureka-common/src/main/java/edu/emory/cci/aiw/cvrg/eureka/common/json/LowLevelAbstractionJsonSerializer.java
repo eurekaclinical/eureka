@@ -58,7 +58,6 @@ public final class LowLevelAbstractionJsonSerializer extends
 		provider.defaultSerializeField("minimumDurationUnits", value.getMinimumDurationUnits(), jgen);
 		provider.defaultSerializeField("maximumDuration", value.getMaximumDuration(), jgen);
 		provider.defaultSerializeField("maximumDurationUnits", value.getMaximumDurationUnits(), jgen);
-		provider.defaultSerializeField("algorithm", value.getAlgorithmId(), jgen);
 		provider.defaultSerializeField("valueType", value.getValueType(), jgen);
 		provider.defaultSerializeField("skipStart", value.getSkipStart(), jgen);
 		provider.defaultSerializeField("skipEnd", value.getSkipEnd(), jgen);

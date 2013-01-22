@@ -75,7 +75,7 @@ public final class LowLevelAbstractionJsonDeserializer extends
 		
 		nextToken();
 		checkField("algorithm");
-		value.setDescription(this.parser.getText());
+		value.setAlgorithmId(this.parser.getText());
 
 		nextToken();
 		checkField("inverseIsA");
@@ -137,10 +137,6 @@ public final class LowLevelAbstractionJsonDeserializer extends
 		nextToken();
 		checkField("maximumDurationUnits");
 		value.setMaximumDurationUnits(this.parser.readValueAs(Unit.class));
-		
-		nextToken();
-		checkField("algorithm");
-		value.setAlgorithmId(this.parser.getText());
 		
 		nextToken();
 		checkField("valueType");

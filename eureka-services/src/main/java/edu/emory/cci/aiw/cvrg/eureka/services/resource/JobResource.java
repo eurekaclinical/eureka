@@ -19,9 +19,9 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.services.resource;
 
+import edu.emory.cci.aiw.cvrg.eureka.services.conversion.PropositionDefinitionCollector;
 import com.google.inject.Inject;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.JobInfo;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.DataElementEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.FileUpload;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.Job;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.User;
@@ -33,7 +33,6 @@ import edu.emory.cci.aiw.cvrg.eureka.services.dao.UserDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.job.JobCollection;
 import edu.emory.cci.aiw.cvrg.eureka.services.thread.JobExecutor;
 import edu.emory.cci.aiw.cvrg.eureka.services.thread.JobTask;
-import org.protempa.PropositionDefinition;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -137,48 +136,15 @@ public class JobResource {
 		this.fileDao.create(fileUpload);
 		this.jobTask.setFileUploadId(fileUpload.getId());
 		this.converterVisitor.setUserId(fileUpload.getUserId());
-		FilterUserPropositionsResult propDefs = filterUserPropositions(propositionDao
+		PropositionDefinitionCollector collector =
+				PropositionDefinitionCollector.getInstance(
+				this.converterVisitor, this.propositionDao
 				.getByUserId(fileUpload.getUserId()));
-		this.jobTask.setUserPropositions(propDefs.userProps);
-		this.jobTask.setNonHelperPropositionIds(propDefs.toShow);
+		this.jobTask.setUserPropositions(collector.getUserPropDefs());
+		this.jobTask.setNonHelperPropositionIds(collector.getToShowPropDefs());
 		this.jobExecutor.queueJob(this.jobTask);
 
 		return Response.ok().build();
-	}
-
-	private static class FilterUserPropositionsResult {
-
-		List<PropositionDefinition> userProps;
-		List<String> toShow;
-	}
-
-	private FilterUserPropositionsResult filterUserPropositions(
-			List<DataElementEntity> propositions) {
-		final List<PropositionDefinition> userProps =
-				new ArrayList<PropositionDefinition>();
-		final List<String> toShow = new ArrayList<String>();
-
-		for (DataElementEntity p : propositions) {
-			if (!p.isInSystem()) {
-				p.accept(converterVisitor);
-				List<PropositionDefinition> propDefs = converterVisitor
-						.getPropositionDefinitions();
-				for (PropositionDefinition propDef : propDefs) {
-					userProps.add(propDef);
-				}
-				/*
-				 * Need a visitor for wrapping value thresholds and compound
-				 * value thresholds in a high-level abstraction definition.
-				 */
-				toShow.add(p.getKey());
-			}
-		}
-
-		FilterUserPropositionsResult result =
-				new FilterUserPropositionsResult();
-		result.userProps = userProps;
-		result.toShow = toShow;
-		return result;
 	}
 
 	/**
@@ -228,7 +194,7 @@ public class JobResource {
 				}
 			}
 		}
-		
+
 		if (latestFileUpload == null) {
 			throw new HttpStatusException(Response.Status.NOT_FOUND,
 					"No files uploaded by user " + userId);
@@ -236,7 +202,7 @@ public class JobResource {
 
 		JobInfo jobInfo = new JobInfo();
 		jobInfo.setFileUpload(latestFileUpload);
-		
+
 		if (latestFileUpload.isCompleted()) {
 			Job latestJob = null;
 			List<Job> userJobs = this.getJobsByUser(userId);

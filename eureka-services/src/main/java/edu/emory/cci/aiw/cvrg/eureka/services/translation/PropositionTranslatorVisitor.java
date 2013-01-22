@@ -24,13 +24,13 @@ import com.google.inject.Inject;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.DataElement;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.CategoryEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.FrequencyEntity;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.PropositionEntityVisitor;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.DataElementEntityVisitor;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.SequenceEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.SystemProposition;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.ValueThresholdGroupEntity;
 
 public final class PropositionTranslatorVisitor implements
-		PropositionEntityVisitor {
+		DataElementEntityVisitor {
 
 	private final SystemPropositionTranslator systemPropositionTranslator;
 	private final SequenceTranslator sequenceTranslator;

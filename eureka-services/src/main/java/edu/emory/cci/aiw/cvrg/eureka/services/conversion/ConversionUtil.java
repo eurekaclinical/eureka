@@ -2,7 +2,7 @@
  * #%L
  * Eureka Services
  * %%
- * Copyright (C) 2012 Emory University
+ * Copyright (C) 2012 - 2013 Emory University
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,12 +24,11 @@ import org.protempa.proposition.value.AbsoluteTimeUnit;
 
 /**
  *
+ * @author Andrew Post
  */
-public class PropositionDefinitionConverterUtil {
-	private PropositionDefinitionConverterUtil() {
-		// to prevent instantiation
-	}
-
+class ConversionUtil {
+	static final String PRIMARY_PROP_ID_SUFFIX = "_PRIMARY";
+	
 	static AbsoluteTimeUnit unit(TimeUnit unit) {
 		return unit != null ? AbsoluteTimeUnit.nameToUnit(unit.getName()) :
 				null;

@@ -82,7 +82,7 @@ public class FrequencySliceAbstractionConverterTest extends
 				propDefs.size());
 		SliceDefinition sliceDef = this.converter
 				.getPrimaryPropositionDefinition();
-		assertEquals("wrong ID", "test-slice-key", sliceDef.getId());
+		assertEquals("wrong ID", "test-slice-key" + ConversionUtil.PRIMARY_PROP_ID_SUFFIX, sliceDef.getId());
 		assertEquals("wrong min index", 3, sliceDef.getMinIndex());
 		assertEquals("wrong abstracted from size", 1, sliceDef.getAbstractedFrom().size());
 		assertEquals("wrong abstracted from", "test-event1",

@@ -22,7 +22,9 @@ package edu.emory.cci.aiw.cvrg.eureka.services.conversion;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.CategoryEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.CategoryEntity.CategoryType;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.DataElementEntity;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.ExtendedDataElement;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.FrequencyEntity;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.Relation;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.SequenceEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.SystemProposition;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.SystemProposition.SystemType;
@@ -43,6 +45,8 @@ import org.protempa.SliceDefinition;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+import org.arp.javautil.arrays.Arrays;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -85,26 +89,25 @@ public class CategorizationConverterTest extends AbstractServiceTest {
 		iia1.add(event2);
 		eventCat1.setMembers(iia1);
 
-		List<PropositionDefinition> eventDefs1 = this.converter.convert
-				(eventCat1);
+		List<PropositionDefinition> eventDefs1 = 
+				this.converter.convert(eventCat1);
 		assertEquals("wrong number of proposition definitions created", 1,
 				eventDefs1.size());
 		PropositionDefinition eventDef1 = this.converter
 				.getPrimaryPropositionDefinition();
 		assertTrue("not an event", eventDef1 instanceof EventDefinition);
-		assertEquals("wrong ID", "test-event-cat1", eventDef1.getId());
+		assertEquals("wrong ID", "test-event-cat1" + ConversionUtil.PRIMARY_PROP_ID_SUFFIX, eventDef1.getId());
 		assertEquals("wrong display name", "test-event-cat1-display",
 				eventDef1.getDisplayName());
 		assertEquals("wrong description", "test-event-cat1-abbrev",
 				eventDef1.getDescription());
 		assertEquals("wrong size of inverse-is-a", 2,
 				eventDef1.getInverseIsA().length);
-		assertTrue(
-				"inverse-is-a missing",
-				(eventDef1.getInverseIsA()[0].equals("test-event1") && eventDef1
-						.getInverseIsA()[1].equals("test-event2"))
-						|| (eventDef1.getInverseIsA()[0].equals("test-event2") && eventDef1
-						.getInverseIsA()[1].equals("test-event1")));
+		String[] inverseIsA = eventDef1.getInverseIsA();
+		assertTrue("inverse-is-a-missing test-event1", 
+				Arrays.contains(inverseIsA, "test-event1"));
+		assertTrue("inverse-is-a-missing test-event2",
+				Arrays.contains(inverseIsA, "test-event2"));
 
 		CategoryEntity eventCat2 = new CategoryEntity();
 		eventCat2.setId(4L);
@@ -118,19 +121,19 @@ public class CategorizationConverterTest extends AbstractServiceTest {
 
 		List<PropositionDefinition> eventDefs2 = this.converter.convert
 				(eventCat2);
-		assertEquals("wrong number of proposition definitions created", 2,
+		assertEquals("wrong number of proposition definitions created", 1,
 				eventDefs2.size());
 		PropositionDefinition eventDef2 = this.converter
 				.getPrimaryPropositionDefinition();
 		assertTrue("not an event", eventDef2 instanceof EventDefinition);
-		assertEquals("wrong ID", "test-event-cat2", eventDef2.getId());
+		assertEquals("wrong ID", "test-event-cat2" + ConversionUtil.PRIMARY_PROP_ID_SUFFIX, eventDef2.getId());
 		assertEquals("wrong display name", "test-event-cat2-display",
 				eventDef2.getDisplayName());
 		assertEquals("wrong abbrev display name", "test-event-cat2-abbrev",
 				eventDef2.getDescription());
 		assertEquals("wrong inverse-is-a size", 1,
 				eventDef2.getInverseIsA().length);
-		assertEquals("wrong inverse-is-a", "test-event-cat1",
+		assertEquals("wrong inverse-is-a", "test-event-cat1" + ConversionUtil.PRIMARY_PROP_ID_SUFFIX,
 				eventDef2.getInverseIsA()
 						[0]);
 	}
@@ -167,20 +170,17 @@ public class CategorizationConverterTest extends AbstractServiceTest {
 		PropositionDefinition constantDef1 = this.converter
 				.getPrimaryPropositionDefinition();
 		assertTrue("not a constant", constantDef1 instanceof ConstantDefinition);
-		assertEquals("wrong ID", "test-constant-cat1", constantDef1.getId());
+		assertEquals("wrong ID", "test-constant-cat1" + ConversionUtil.PRIMARY_PROP_ID_SUFFIX, constantDef1.getId());
 		assertEquals("wrong display name", "test-constant-cat1-display",
 				constantDef1.getDisplayName());
 		assertEquals("wrong abbrev display name", "test-constant-cat1-abbrev",
 				constantDef1.getDescription());
 		assertEquals("wrong inverse-is-a size", 2,
 				constantDef1.getInverseIsA().length);
-		assertTrue(
-				"wrong inverse-is-a objects",
-				(constantDef1.getInverseIsA()[0].equals("test-constant1") && constantDef1
-						.getInverseIsA()[1].equals("test-constant2"))
-						|| (constantDef1.getInverseIsA()[0]
-						.equals("test-constant2") && constantDef1
-						.getInverseIsA()[1].equals("test-constant1")));
+		Set<String> inverseIsASet = Arrays.asSet(constantDef1.getInverseIsA());
+		Set<String> expected = Arrays.asSet(
+				new String[]{"test-constant1", "test-constant2"});
+		assertEquals("inverse-is-a missing", expected, inverseIsASet);
 
 		CategoryEntity constantCat2 = new CategoryEntity();
 		constantCat2.setId(4L);
@@ -194,19 +194,19 @@ public class CategorizationConverterTest extends AbstractServiceTest {
 
 		List<PropositionDefinition> constantDefs2 = this.converter.convert
 				(constantCat2);
-		assertEquals("wrong number of proposition definitions created", 2,
+		assertEquals("wrong number of proposition definitions created", 1,
 				constantDefs2.size());
 		PropositionDefinition constantDef2 = this.converter
 				.getPrimaryPropositionDefinition();
 		assertTrue("not a constant", constantDef2 instanceof ConstantDefinition);
-		assertEquals("wrong ID", "test-constant-cat2", constantDef2.getId());
+		assertEquals("wrong ID", "test-constant-cat2" + ConversionUtil.PRIMARY_PROP_ID_SUFFIX, constantDef2.getId());
 		assertEquals("wrong display name", "test-constant-cat2-display",
 				constantDef2.getDisplayName());
 		assertEquals("wrong description", "test-constant-cat2-abbrev",
 				constantDef2.getDescription());
 		assertEquals("wrong inverse-is-a size", 1,
 				constantDef2.getInverseIsA().length);
-		assertEquals("wrong inverse-is-a", "test-constant-cat1",
+		assertEquals("wrong inverse-is-a", "test-constant-cat1" + ConversionUtil.PRIMARY_PROP_ID_SUFFIX,
 				constantDef2.getInverseIsA()[0]);
 
 	}
@@ -245,20 +245,17 @@ public class CategorizationConverterTest extends AbstractServiceTest {
 				.getPrimaryPropositionDefinition();
 		assertTrue("not a primitive parameter",
 				primParamDef1 instanceof PrimitiveParameterDefinition);
-		assertEquals("wrong ID", "test-primparam-cat1", primParamDef1.getId());
+		assertEquals("wrong ID", "test-primparam-cat1" + ConversionUtil.PRIMARY_PROP_ID_SUFFIX, primParamDef1.getId());
 		assertEquals("wrong display name", "test-primparam-cat1-display",
 				primParamDef1.getDisplayName());
 		assertEquals("wrong abbrev display name", "test-primparam-cat1-abbrev",
 				primParamDef1.getDescription());
 		assertEquals("wrong inverse-is-a size", 2,
 				primParamDef1.getInverseIsA().length);
-		assertTrue(
-				"wrong inverse-is-a objects",
-				(primParamDef1.getInverseIsA()[0].equals("test-primparam1") && primParamDef1
-						.getInverseIsA()[1].equals("test-primparam2"))
-						|| (primParamDef1.getInverseIsA()[0]
-						.equals("test-primparam2") && primParamDef1
-						.getInverseIsA()[1].equals("test-primparam1")));
+		Set<String> inverseIsASet = Arrays.asSet(primParamDef1.getInverseIsA());
+		Set<String> expected = Arrays.asSet(
+				new String[]{"test-primparam1", "test-primparam2"});
+		assertEquals("inverse-is-a missing", expected, inverseIsASet);
 
 		CategoryEntity primParamCat2 = new CategoryEntity();
 		primParamCat2.setId(4L);
@@ -273,34 +270,57 @@ public class CategorizationConverterTest extends AbstractServiceTest {
 
 		List<PropositionDefinition> primParamDefs2 = this.converter.convert
 				(primParamCat2);
-		assertEquals("wrong number of proposition definitions created", 2,
+		assertEquals("wrong number of proposition definitions created", 1,
 				primParamDefs2.size());
 		PropositionDefinition primParamDef2 = this.converter
 				.getPrimaryPropositionDefinition();
 		assertTrue("not a primitive parameter",
 				primParamDef2 instanceof PrimitiveParameterDefinition);
-		assertEquals("wrong ID", "test-primparam-cat2", primParamDef2.getId());
+		assertEquals("wrong ID", "test-primparam-cat2" + ConversionUtil.PRIMARY_PROP_ID_SUFFIX, primParamDef2.getId());
 		assertEquals("wrong display name", "test-primparam-cat2-display",
 				primParamDef2.getDisplayName());
 		assertEquals("wrong description", "test-primparam-cat2-abbrev",
 				primParamDef2.getDescription());
 		assertEquals("wrong inverse-is-a size", 1,
 				primParamDef2.getInverseIsA().length);
-		assertEquals("wrong inverse-is-a", "test-primparam-cat1",
+		assertEquals("wrong inverse-is-a", "test-primparam-cat1" + ConversionUtil.PRIMARY_PROP_ID_SUFFIX,
 				primParamDef2.getInverseIsA()[0]);
 	}
 
 	@Test
 	public void testHighLevelAbstractionCategorization() {
+		SystemProposition primParam1 = new SystemProposition();
+		primParam1.setId(1L);
+		primParam1.setKey("test-primparam1");
+		primParam1.setInSystem(true);
+		primParam1.setSystemType(SystemType.PRIMITIVE_PARAMETER);
+
+		SystemProposition primParam2 = new SystemProposition();
+		primParam2.setId(2L);
+		primParam2.setKey("test-primparam2");
+		primParam2.setInSystem(true);
+		primParam2.setSystemType(SystemType.PRIMITIVE_PARAMETER);
+		
 		SequenceEntity hla1 = new SequenceEntity();
 		hla1.setId(1L);
 		hla1.setKey("test-hla1");
 		hla1.setInSystem(false);
+		ExtendedDataElement ep1 = new ExtendedDataElement();
+		ep1.setDataElementEntity(primParam1);
+		ExtendedDataElement ep2 = new ExtendedDataElement();
+		ep2.setDataElementEntity(primParam2);
+		hla1.setPrimaryExtendedDataElement(ep1);
+		Relation relation = new Relation();
+		relation.setLhsExtendedDataElement(ep1);
+		relation.setRhsExtendedDataElement(ep2);
+		hla1.setRelations(Arrays.asList(new Relation[]{relation}));
 
 		SequenceEntity hla2 = new SequenceEntity();
 		hla2.setId(2L);
 		hla2.setKey("test-hla2");
 		hla2.setInSystem(false);
+		hla2.setPrimaryExtendedDataElement(ep1);
+		hla2.setRelations(Arrays.asList(new Relation[]{relation}));
 
 		CategoryEntity hlaCat1 = new CategoryEntity();
 		hlaCat1.setId(3L);
@@ -321,7 +341,7 @@ public class CategorizationConverterTest extends AbstractServiceTest {
 				.getPrimaryPropositionDefinition();
 		assertTrue("not a high-level abstraction",
 				hlaDef1 instanceof HighLevelAbstractionDefinition);
-		assertEquals("wrong ID", "test-hla-cat1", hlaDef1.getId());
+		assertEquals("wrong ID", "test-hla-cat1" + ConversionUtil.PRIMARY_PROP_ID_SUFFIX, hlaDef1.getId());
 		assertEquals("wrong display name", "test-hla-cat1-display",
 				hlaDef1.getDisplayName());
 		assertEquals("wrong abbrev display name", "test-hla-cat1-abbrev",
@@ -330,11 +350,11 @@ public class CategorizationConverterTest extends AbstractServiceTest {
 				hlaDef1.getInverseIsA().length);
 		assertTrue(
 				"wrong inverse-is-a objects",
-				(hlaDef1.getInverseIsA()[0].equals("test-hla1") && hlaDef1
-						.getInverseIsA()[1].equals("test-hla2"))
-						|| (hlaDef1.getInverseIsA()[0].equals("test-hla2") &&
+				(hlaDef1.getInverseIsA()[0].equals("test-hla1" + ConversionUtil.PRIMARY_PROP_ID_SUFFIX) && hlaDef1
+						.getInverseIsA()[1].equals("test-hla2" + ConversionUtil.PRIMARY_PROP_ID_SUFFIX))
+						|| (hlaDef1.getInverseIsA()[0].equals("test-hla2" + ConversionUtil.PRIMARY_PROP_ID_SUFFIX) &&
 						hlaDef1
-								.getInverseIsA()[1].equals("test-hla1")));
+								.getInverseIsA()[1].equals("test-hla1" + ConversionUtil.PRIMARY_PROP_ID_SUFFIX)));
 
 		CategoryEntity hlaCat2 = new CategoryEntity();
 		hlaCat2.setId(4L);
@@ -347,34 +367,45 @@ public class CategorizationConverterTest extends AbstractServiceTest {
 		hlaCat2.setMembers(iia2);
 
 		List<PropositionDefinition> hlaDefs2 = this.converter.convert(hlaCat2);
-		assertEquals("wrong number of proposition definitions created", 4,
+		assertEquals("wrong number of proposition definitions created", 1,
 				hlaDefs2.size());
 		PropositionDefinition hlaDef2 = this.converter
 				.getPrimaryPropositionDefinition();
 		assertTrue("not a high-level abstraction",
 				hlaDef2 instanceof HighLevelAbstractionDefinition);
-		assertEquals("wrong ID", "test-hla-cat2", hlaDef2.getId());
+		assertEquals("wrong ID", "test-hla-cat2" + ConversionUtil.PRIMARY_PROP_ID_SUFFIX, hlaDef2.getId());
 		assertEquals("wrong display name", "test-hla-cat2-display",
 				hlaDef2.getDisplayName());
 		assertEquals("wrong description", "test-hla-cat2-abbrev",
 				hlaDef2.getDescription());
 		assertEquals("wrong inverse-is-a size", 1,
 				hlaDef2.getInverseIsA().length);
-		assertEquals("wrong inverse-is-a", "test-hla-cat1",
+		assertEquals("wrong inverse-is-a", "test-hla-cat1" + ConversionUtil.PRIMARY_PROP_ID_SUFFIX,
 				hlaDef2.getInverseIsA()[0]);
 	}
 
 	@Test
 	public void testSliceAbstractionCategorization() {
+		SystemProposition sp = new SystemProposition();
+		sp.setInSystem(true);
+		sp.setKey("foo");
+		sp.setSystemType(SystemType.EVENT);
+		
 		FrequencyEntity sa1 = new FrequencyEntity();
 		sa1.setId(1L);
 		sa1.setKey("test-slice1");
 		sa1.setInSystem(false);
+		ExtendedDataElement ede1 = new ExtendedDataElement();
+		ede1.setDataElementEntity(sp);
+		sa1.setExtendedProposition(ede1);
 
 		FrequencyEntity sa2 = new FrequencyEntity();
 		sa2.setId(2L);
 		sa2.setKey("test-slice2");
 		sa2.setInSystem(false);
+		ExtendedDataElement ede2 = new ExtendedDataElement();
+		ede2.setDataElementEntity(sp);
+		sa2.setExtendedProposition(ede2);
 
 		CategoryEntity saCat1 = new CategoryEntity();
 		saCat1.setId(3L);
@@ -394,7 +425,7 @@ public class CategorizationConverterTest extends AbstractServiceTest {
 				.getPrimaryPropositionDefinition();
 		assertTrue("not a slice abstraction",
 				saDef1 instanceof SliceDefinition);
-		assertEquals("wrong ID", "test-slice-cat1", saDef1.getId());
+		assertEquals("wrong ID", "test-slice-cat1" + ConversionUtil.PRIMARY_PROP_ID_SUFFIX, saDef1.getId());
 		assertEquals("wrong display name", "test-slice-cat1-display",
 				saDef1.getDisplayName());
 		assertEquals("wrong abbrev display name", "test-slice-cat1-abbrev",
@@ -403,11 +434,11 @@ public class CategorizationConverterTest extends AbstractServiceTest {
 				saDef1.getInverseIsA().length);
 		assertTrue(
 				"wrong inverse-is-a objects",
-				(saDef1.getInverseIsA()[0].equals("test-slice1") && saDef1
-						.getInverseIsA()[1].equals("test-slice2"))
-						|| (saDef1.getInverseIsA()[0].equals("test-slice2") &&
+				(saDef1.getInverseIsA()[0].equals("test-slice1" + ConversionUtil.PRIMARY_PROP_ID_SUFFIX) && saDef1
+						.getInverseIsA()[1].equals("test-slice2" + ConversionUtil.PRIMARY_PROP_ID_SUFFIX))
+						|| (saDef1.getInverseIsA()[0].equals("test-slice2" + ConversionUtil.PRIMARY_PROP_ID_SUFFIX) &&
 						saDef1
-						.getInverseIsA()[1].equals("test-slice1")));
+						.getInverseIsA()[1].equals("test-slice1" + ConversionUtil.PRIMARY_PROP_ID_SUFFIX)));
 
 		CategoryEntity saCat2 = new CategoryEntity();
 		saCat2.setId(4L);
@@ -420,20 +451,20 @@ public class CategorizationConverterTest extends AbstractServiceTest {
 		saCat2.setMembers(iia2);
 
 		List<PropositionDefinition> saDefs2 = this.converter.convert(saCat2);
-		assertEquals("wrong number of proposition definitions created", 4,
+		assertEquals("wrong number of proposition definitions created", 1,
 				saDefs2.size());
 		PropositionDefinition saDef2 = this.converter
 				.getPrimaryPropositionDefinition();
 		assertTrue("not a slice abstraction",
 				saDef2 instanceof SliceDefinition);
-		assertEquals("wrong ID", "test-slice-cat2", saDef2.getId());
+		assertEquals("wrong ID", "test-slice-cat2" + ConversionUtil.PRIMARY_PROP_ID_SUFFIX, saDef2.getId());
 		assertEquals("wrong display name", "test-slice-cat2-display",
 				saDef2.getDisplayName());
 		assertEquals("wrong description", "test-slice-cat2-abbrev",
 				saDef2.getDescription());
 		assertEquals("wrong inverse-is-a size", 1,
 				saDef2.getInverseIsA().length);
-		assertEquals("wrong inverse-is-a", "test-slice-cat1",
+		assertEquals("wrong inverse-is-a", "test-slice-cat1" + ConversionUtil.PRIMARY_PROP_ID_SUFFIX,
 				saDef2.getInverseIsA()
 						[0]);
 	}
@@ -488,7 +519,7 @@ public class CategorizationConverterTest extends AbstractServiceTest {
 				.getPrimaryPropositionDefinition();
 		assertTrue("not a low-level abstraction",
 				llaDef1 instanceof LowLevelAbstractionDefinition);
-		assertEquals("wrong ID", "test-lla-cat1", llaDef1.getId());
+		assertEquals("wrong ID", "test-lla-cat1" + ConversionUtil.PRIMARY_PROP_ID_SUFFIX, llaDef1.getId());
 		assertEquals("wrong display name", "test-lla-cat1-display",
 				llaDef1.getDisplayName());
 		assertEquals("wrong abbrev display name", "test-lla-cat1-abbrev",
@@ -497,11 +528,11 @@ public class CategorizationConverterTest extends AbstractServiceTest {
 				llaDef1.getInverseIsA().length);
 		assertTrue(
 				"wrong inverse-is-a objects",
-				(llaDef1.getInverseIsA()[0].equals("test-lla1") && llaDef1
-						.getInverseIsA()[1].equals("test-lla2"))
-						|| (llaDef1.getInverseIsA()[0].equals("test-lla2") &&
+				(llaDef1.getInverseIsA()[0].equals("test-lla1" + ConversionUtil.PRIMARY_PROP_ID_SUFFIX) && llaDef1
+						.getInverseIsA()[1].equals("test-lla2" + ConversionUtil.PRIMARY_PROP_ID_SUFFIX))
+						|| (llaDef1.getInverseIsA()[0].equals("test-lla2" + ConversionUtil.PRIMARY_PROP_ID_SUFFIX) &&
 						llaDef1
-						.getInverseIsA()[1].equals("test-lla1")));
+						.getInverseIsA()[1].equals("test-lla1" + ConversionUtil.PRIMARY_PROP_ID_SUFFIX)));
 
 		CategoryEntity llaCat2 = new CategoryEntity();
 		llaCat2.setId(4L);
@@ -514,20 +545,20 @@ public class CategorizationConverterTest extends AbstractServiceTest {
 		llaCat2.setMembers(iia2);
 
 		List<PropositionDefinition> llaDefs2 = this.converter.convert(llaCat2);
-		assertEquals("wrong number of proposition definitions created", 4,
+		assertEquals("wrong number of proposition definitions created", 1,
 				llaDefs2.size());
 		PropositionDefinition llaDef2 = this.converter
 				.getPrimaryPropositionDefinition();
 		assertTrue("not a low-level abstraction",
 				llaDef2 instanceof LowLevelAbstractionDefinition);
-		assertEquals("wrong ID", "test-lla-cat2", llaDef2.getId());
+		assertEquals("wrong ID", "test-lla-cat2" + ConversionUtil.PRIMARY_PROP_ID_SUFFIX, llaDef2.getId());
 		assertEquals("wrong display name", "test-lla-cat2-display",
 				llaDef2.getDisplayName());
 		assertEquals("wrong description", "test-lla-cat2-abbrev",
 				llaDef2.getDescription());
 		assertEquals("wrong inverse-is-a size", 1,
 				llaDef2.getInverseIsA().length);
-		assertEquals("wrong inverse-is-a", "test-lla-cat1",
+		assertEquals("wrong inverse-is-a", "test-lla-cat1" + ConversionUtil.PRIMARY_PROP_ID_SUFFIX,
 				llaDef2.getInverseIsA()[0]);
 	}
 
@@ -593,7 +624,7 @@ public class CategorizationConverterTest extends AbstractServiceTest {
 				.getPrimaryPropositionDefinition();
 		assertTrue("not a compound low-level abstraction",
 				cllaDef1 instanceof CompoundLowLevelAbstractionDefinition);
-		assertEquals("wrong ID", "test-clla-cat1", cllaDef1.getId());
+		assertEquals("wrong ID", "test-clla-cat1" + ConversionUtil.PRIMARY_PROP_ID_SUFFIX, cllaDef1.getId());
 		assertEquals("wrong display name", "test-clla-cat1-display",
 				cllaDef1.getDisplayName());
 		assertEquals("wrong abbrev display name", "test-clla-cat1-abbrev",
@@ -602,11 +633,11 @@ public class CategorizationConverterTest extends AbstractServiceTest {
 				cllaDef1.getInverseIsA().length);
 		assertTrue(
 				"wrong inverse-is-a objects",
-				(cllaDef1.getInverseIsA()[0].equals("test-clla1") && cllaDef1
-						.getInverseIsA()[1].equals("test-clla2"))
-						|| (cllaDef1.getInverseIsA()[0].equals("test-clla2")
+				(cllaDef1.getInverseIsA()[0].equals("test-clla1" + ConversionUtil.PRIMARY_PROP_ID_SUFFIX) && cllaDef1
+						.getInverseIsA()[1].equals("test-clla2" + ConversionUtil.PRIMARY_PROP_ID_SUFFIX))
+						|| (cllaDef1.getInverseIsA()[0].equals("test-clla2" + ConversionUtil.PRIMARY_PROP_ID_SUFFIX)
 						&& cllaDef1
-						.getInverseIsA()[1].equals("test-clla1")));
+						.getInverseIsA()[1].equals("test-clla1" + ConversionUtil.PRIMARY_PROP_ID_SUFFIX)));
 
 		CategoryEntity cllaCat2 = new CategoryEntity();
 		cllaCat2.setId(4L);
@@ -619,20 +650,20 @@ public class CategorizationConverterTest extends AbstractServiceTest {
 		cllaCat2.setMembers(iia2);
 
 		List<PropositionDefinition> cllaDefs2 = this.converter.convert(cllaCat2);
-		assertEquals("wrong number of proposition definitions created", 8,
+		assertEquals("wrong number of proposition definitions created", 1,
 				cllaDefs2.size());
 		PropositionDefinition cllaDef2 = this.converter
 				.getPrimaryPropositionDefinition();
 		assertTrue("not a compound low-level abstraction",
 				cllaDef2 instanceof CompoundLowLevelAbstractionDefinition);
-		assertEquals("wrong ID", "test-clla-cat2", cllaDef2.getId());
+		assertEquals("wrong ID", "test-clla-cat2" + ConversionUtil.PRIMARY_PROP_ID_SUFFIX, cllaDef2.getId());
 		assertEquals("wrong display name", "test-clla-cat2-display",
 				cllaDef2.getDisplayName());
 		assertEquals("wrong description", "test-clla-cat2-abbrev",
 				cllaDef2.getDescription());
 		assertEquals("wrong inverse-is-a size", 1,
 				cllaDef2.getInverseIsA().length);
-		assertEquals("wrong inverse-is-a", "test-clla-cat1",
+		assertEquals("wrong inverse-is-a", "test-clla-cat1" + ConversionUtil.PRIMARY_PROP_ID_SUFFIX,
 				cllaDef2.getInverseIsA()[0]);
 	}
 
@@ -669,20 +700,16 @@ public class CategorizationConverterTest extends AbstractServiceTest {
 				.getPrimaryPropositionDefinition();
 		assertTrue("not a high-level abstraction",
 				hlaDef1 instanceof HighLevelAbstractionDefinition);
-		assertEquals("wrong ID", "test-mixed-cat1", hlaDef1.getId());
+		assertEquals("wrong ID", "test-mixed-cat1" + ConversionUtil.PRIMARY_PROP_ID_SUFFIX, hlaDef1.getId());
 		assertEquals("wrong display name", "test-mixed-cat1-display",
 				hlaDef1.getDisplayName());
 		assertEquals("wrong abbrev display name", "test-mixed-cat1-abbrev",
 				hlaDef1.getDescription());
 		assertEquals("wrong size of inverse-is-a", 2,
 				hlaDef1.getInverseIsA().length);
-		assertTrue(
-				"inverse-is-a missing",
-				(hlaDef1.getInverseIsA()[0].equals("test-event1") && hlaDef1
-						.getInverseIsA()[1].equals("test-primparam1"))
-						|| (hlaDef1.getInverseIsA()[0].equals
-						("test-primparam1") && hlaDef1
-						.getInverseIsA()[1].equals("test-event1")));
+		Set<String> inverseIsASet = Arrays.asSet(hlaDef1.getInverseIsA());
+		Set<String> expected = Arrays.asSet(new String[]{"test-event1", "test-primparam1"});
+		assertEquals("inverse-is-a missing", expected, inverseIsASet);
 
 		CategoryEntity mixedCat2 = new CategoryEntity();
 		mixedCat2.setId(4L);
@@ -696,18 +723,18 @@ public class CategorizationConverterTest extends AbstractServiceTest {
 
 		List<PropositionDefinition> hlaDefs2 = this.converter.convert
 				(mixedCat2);
-		assertEquals("wrong number of proposition definitions created", 2,
+		assertEquals("wrong number of proposition definitions created", 1,
 				hlaDefs2.size());
 		PropositionDefinition hlaDef2 = this.converter.getPrimaryPropositionDefinition();
 		assertTrue("not an event", hlaDef2 instanceof HighLevelAbstractionDefinition);
-		assertEquals("wrong ID", "test-mixed-cat2", hlaDef2.getId());
+		assertEquals("wrong ID", "test-mixed-cat2" + ConversionUtil.PRIMARY_PROP_ID_SUFFIX, hlaDef2.getId());
 		assertEquals("wrong display name", "test-mixed-cat2-display",
 				hlaDef2.getDisplayName());
 		assertEquals("wrong description", "test-mixed-cat2-abbrev",
 				hlaDef2.getDescription());
 		assertEquals("wrong inverse-is-a size", 1,
 				hlaDef2.getInverseIsA().length);
-		assertEquals("wrong inverse-is-a", "test-mixed-cat1",
+		assertEquals("wrong inverse-is-a", "test-mixed-cat1" + ConversionUtil.PRIMARY_PROP_ID_SUFFIX,
 				hlaDef2.getInverseIsA()[0]);
 	}
 }

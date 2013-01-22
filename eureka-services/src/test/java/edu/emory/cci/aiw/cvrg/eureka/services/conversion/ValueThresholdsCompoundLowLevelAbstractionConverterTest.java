@@ -236,7 +236,7 @@ public class ValueThresholdsCompoundLowLevelAbstractionConverterTest extends
 
 		CompoundLowLevelAbstractionDefinition cllaDef = this.converter
 		        .getPrimaryPropositionDefinition();
-		assertEquals("wrong id", "test-valuethreshold", cllaDef.getId());
+		assertEquals("wrong id", "test-valuethreshold" + ConversionUtil.PRIMARY_PROP_ID_SUFFIX, cllaDef.getId());
 		assertEquals("wrong minimum number of values", 1,
 		        cllaDef.getMinimumNumberOfValues());
 		assertEquals("wrong value def match operator", "ALL", cllaDef

@@ -34,7 +34,8 @@ import org.protempa.proposition.value.NominalValue;
 import java.util.ArrayList;
 import java.util.List;
 
-import static edu.emory.cci.aiw.cvrg.eureka.services.conversion.PropositionDefinitionConverterUtil.unit;
+import static edu.emory.cci.aiw.cvrg.eureka.services.conversion.ConversionUtil.unit;
+import java.util.Collection;
 
 public final class FrequencyHighLevelAbstractionConverter
         implements
@@ -42,10 +43,16 @@ public final class FrequencyHighLevelAbstractionConverter
 
 	private PropositionDefinitionConverterVisitor converterVisitor;
 	private HighLevelAbstractionDefinition primary;
+	private String primaryPropId;
 
 	@Override
 	public HighLevelAbstractionDefinition getPrimaryPropositionDefinition() {
 		return primary;
+	}
+	
+	@Override
+	public String getPrimaryPropositionId() {
+		return primaryPropId;
 	}
 
 	public void setConverterVisitor(
@@ -61,38 +68,37 @@ public final class FrequencyHighLevelAbstractionConverter
 			throw new IllegalArgumentException(
 			        "frequency must be abstracted from value thresholds");
 		}
-		ValueThresholdGroupEntity thresholds = (ValueThresholdGroupEntity) entity
-		        .getAbstractedFrom();
-		thresholds.accept(converterVisitor);
-		if (thresholds.getValueThresholds().size() > 1) {
-			((CompoundLowLevelAbstractionDefinition) converterVisitor
-			        .getPrimaryProposition()).setMinimumNumberOfValues(entity
-			        .getAtLeastCount());
-		} else {
-			((LowLevelAbstractionDefinition) converterVisitor
-			        .getPrimaryProposition()).setMinimumNumberOfValues(entity
-			        .getAtLeastCount());
+		String propId = entity.getKey() + ConversionUtil.PRIMARY_PROP_ID_SUFFIX;
+		this.primaryPropId = propId;
+		if (this.converterVisitor.addPropositionId(propId)) {
+			HighLevelAbstractionDefinition hlad = new HighLevelAbstractionDefinition(
+					propId);
+
+			ValueThresholdGroupEntity thresholds = (ValueThresholdGroupEntity) entity
+					.getAbstractedFrom();
+			thresholds.accept(converterVisitor);
+			Collection<PropositionDefinition> intermediates = converterVisitor
+					.getPropositionDefinitions();
+			result.addAll(intermediates);
+
+
+			TemporalExtendedParameterDefinition tepd = 
+					new TemporalExtendedParameterDefinition(
+					converterVisitor.getPrimaryPropositionId());
+			tepd.setValue(NominalValue.getInstance(converterVisitor
+					.getPrimaryPropositionId() + "_VALUE"));
+			hlad.add(tepd);
+			hlad.setRelation(tepd, tepd, new Relation());
+			hlad.setGapFunction(new MinMaxGapFunction(entity.getWithinAtLeast(),
+					unit(entity.getWithinAtLeastUnits()), entity.getWithinAtMost(),
+					unit(entity.getWithinAtMostUnits())));
+			hlad.setDisplayName(thresholds.getDisplayName());
+			hlad.setDescription(thresholds.getDescription());
+
+			result.add(hlad);
+			this.primary = hlad;
 		}
-		List<PropositionDefinition> abstractedFrom = converterVisitor
-		        .getPropositionDefinitions();
-		result.addAll(abstractedFrom);
 		
-		HighLevelAbstractionDefinition primary = new HighLevelAbstractionDefinition(
-		        entity.getKey());
-		TemporalExtendedParameterDefinition tepd = new TemporalExtendedParameterDefinition(
-		        converterVisitor.getPrimaryProposition().getId());
-		tepd.setValue(NominalValue.getInstance(converterVisitor
-		        .getPrimaryProposition().getId() + "_VALUE"));
-		primary.add(tepd);
-		primary.setRelation(tepd, tepd, new Relation());
-		primary.setGapFunction(new MinMaxGapFunction(entity.getWithinAtLeast(),
-		        unit(entity.getWithinAtLeastUnits()), entity.getWithinAtMost(),
-		        unit(entity.getWithinAtMostUnits())));
-		primary.setDisplayName(thresholds.getDisplayName());
-		primary.setDescription(thresholds.getDescription());
-		
-		result.add(primary);
-		this.primary = primary;
 
 		return result;
 	}

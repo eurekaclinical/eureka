@@ -51,4 +51,6 @@ interface PropositionDefinitionConverter<E extends DataElementEntity,
 	 * @return a {@link PropositionDefinition}.
 	 */
 	P getPrimaryPropositionDefinition();
+	
+	String getPrimaryPropositionId();
 }
