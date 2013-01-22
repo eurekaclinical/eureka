@@ -87,7 +87,6 @@ public final class ValueThresholdsLowLevelAbstractionConverter
 				result.addAll(abstractedFrom);
 			}
 			primary.setMinimumNumberOfValues(1);
-			primary.setMaximumNumberOfValues(1);
 
 			result.add(primary);
 			this.primary = primary;
