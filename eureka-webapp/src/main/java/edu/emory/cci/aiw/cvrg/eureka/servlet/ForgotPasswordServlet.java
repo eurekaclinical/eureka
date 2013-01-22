@@ -45,7 +45,6 @@ public class ForgotPasswordServlet extends HttpServlet {
 	 */
 	public ForgotPasswordServlet() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 
 	/**
@@ -61,7 +60,6 @@ public class ForgotPasswordServlet extends HttpServlet {
 	 * response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
 		String eurekaServicesUrl = request.getSession().getServletContext()
 				.getInitParameter("eureka-services-url");
 		ServicesClient servicesClient = new ServicesClient(eurekaServicesUrl);
