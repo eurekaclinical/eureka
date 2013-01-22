@@ -92,8 +92,8 @@ public final class FrequencyHighLevelAbstractionConverter
 			hlad.setGapFunction(new MinMaxGapFunction(entity.getWithinAtLeast(),
 					unit(entity.getWithinAtLeastUnits()), entity.getWithinAtMost(),
 					unit(entity.getWithinAtMostUnits())));
-			hlad.setDisplayName(thresholds.getDisplayName());
-			hlad.setDescription(thresholds.getDescription());
+			hlad.setDisplayName(entity.getDisplayName());
+			hlad.setDescription(entity.getDescription());
 
 			result.add(hlad);
 			this.primary = hlad;
