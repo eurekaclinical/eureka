@@ -32,6 +32,7 @@ import edu.emory.cci.aiw.cvrg.eureka.common.entity.ThresholdsOperator;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.ValueThresholdEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.ValueThresholdGroupEntity;
 import edu.emory.cci.aiw.cvrg.eureka.services.test.AbstractServiceTest;
+import org.arp.javautil.arrays.Arrays;
 import org.junit.Before;
 import org.junit.Test;
 import org.protempa.CompoundLowLevelAbstractionDefinition;
@@ -46,7 +47,6 @@ import org.protempa.SliceDefinition;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
-import org.arp.javautil.arrays.Arrays;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -313,14 +313,14 @@ public class CategorizationConverterTest extends AbstractServiceTest {
 		Relation relation = new Relation();
 		relation.setLhsExtendedDataElement(ep1);
 		relation.setRhsExtendedDataElement(ep2);
-		hla1.setRelations(Arrays.asList(new Relation[]{relation}));
+		hla1.setRelations(Arrays.<Relation>asList(new Relation[]{relation}));
 
 		SequenceEntity hla2 = new SequenceEntity();
 		hla2.setId(2L);
 		hla2.setKey("test-hla2");
 		hla2.setInSystem(false);
 		hla2.setPrimaryExtendedDataElement(ep1);
-		hla2.setRelations(Arrays.asList(new Relation[]{relation}));
+		hla2.setRelations(Arrays.<Relation>asList(new Relation[]{relation}));
 
 		CategoryEntity hlaCat1 = new CategoryEntity();
 		hlaCat1.setId(3L);
