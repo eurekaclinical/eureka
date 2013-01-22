@@ -87,6 +87,7 @@ public final class ValueThresholdsCompoundLowLevelAbstractionConverter
 				def.setConcatenable(false);
 				def.addPrimitiveParameterId(this.converterVisitor.getPrimaryPropositionId());
 				def.setMinimumNumberOfValues(1);
+				def.setMaximumNumberOfValues(1);
 				def.setAlgorithmId("stateDetector");
 				def.setGapFunction(new SimpleGapFunction(Integer.valueOf(0), null));
 				ValueThresholdsLowLevelAbstractionConverter
