@@ -20,6 +20,8 @@
 package edu.emory.cci.aiw.cvrg.eureka.services.conversion;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.*;
+import edu.emory.cci.aiw.cvrg.eureka.common.test.TestDataProvider;
+import edu.emory.cci.aiw.cvrg.eureka.services.test.AbstractServiceTest;
 import junit.framework.Assert;
 import org.junit.Test;
 import org.protempa.HighLevelAbstractionDefinition;
@@ -30,25 +32,28 @@ import org.protempa.proposition.value.AbsoluteTimeUnit;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import org.junit.After;
+import org.junit.Before;
 
-public class SequenceConverterTest
-		extends FrequencySliceAbstractionConverterTest {
+public class SequenceConverterTest extends AbstractServiceTest {
 
 	private static final Integer MIN = Integer.valueOf(1);
 	private static final Integer MAX = Integer.valueOf(2);
-	private final TimeUnit timeUnit;
+	private TimeUnit timeUnit;
 	private long counter = 0;
-
-	public SequenceConverterTest() {
+	
+	@Before
+	public void setUp() {
 		this.timeUnit = new TimeUnit();
 		this.timeUnit.setId(1L);
 		this.timeUnit.setName(AbsoluteTimeUnit.DAY.getName());
 		this.timeUnit.setDescription(AbsoluteTimeUnit.DAY.getPluralName());
 		this.timeUnit.setRank(1);
 	}
-
-	private TimeUnit getTimeUnit() {
-		return this.timeUnit;
+	
+	@After
+	public void tearDown() {
+		timeUnit = null;
 	}
 
 	private DataElementEntity createDataElement(long id, String suffix) {
@@ -88,9 +93,9 @@ public class SequenceConverterTest
 		Relation relation = new Relation();
 		relation.setId(Long.valueOf(counter++));
 		relation.setMinf1s2(MIN);
-		relation.setMinf1s2TimeUnit(this.getTimeUnit());
+		relation.setMinf1s2TimeUnit(this.timeUnit);
 		relation.setMaxf1s2(MAX);
-		relation.setMaxf1s2TimeUnit(this.getTimeUnit());
+		relation.setMaxf1s2TimeUnit(this.timeUnit);
 		relation.setLhsExtendedDataElement(this.createLhsProposition());
 		relation.setRhsExtendedDataElement((this.createRhsProposition()));
 		relations.add(relation);

@@ -32,26 +32,29 @@ import org.protempa.PropositionDefinition;
 import org.protempa.SliceDefinition;
 
 import java.util.List;
+import org.junit.After;
 
 import static org.junit.Assert.assertEquals;
+import org.protempa.proposition.value.AbsoluteTimeUnit;
 
 public class FrequencySliceAbstractionConverterTest extends
 		AbstractServiceTest {
-
-	private PropositionDefinitionConverterVisitor converterVisitor;
-	private FrequencySliceAbstractionConverter converter;
+	private SystemProposition event;
+	private FrequencyEntity frequency;
+	private SliceDefinition sliceDef;
+	private List<PropositionDefinition> propDefs;
+	private MinMaxGapFunction gf;
 
 	@Before
 	public void setUp() {
-		converterVisitor = this.getInstance
+		PropositionDefinitionConverterVisitor converterVisitor = 
+				this.getInstance
 				(PropositionDefinitionConverterVisitor.class);
-		converter = new FrequencySliceAbstractionConverter();
+		FrequencySliceAbstractionConverter converter = 
+				new FrequencySliceAbstractionConverter();
 		converter.setVisitor(converterVisitor);
-	}
-	
-	@Test
-	public void testSliceConverter() {
-		SystemProposition event = new SystemProposition();
+		
+		event = new SystemProposition();
 		event.setId(1L);
 		event.setKey("test-event1");
 		event.setDisplayName("test-event1-display");
@@ -62,7 +65,7 @@ public class FrequencySliceAbstractionConverterTest extends
 		TimeUnit dayUnit = new TimeUnit();
 		dayUnit.setName("day");
 		
-		FrequencyEntity frequency = new FrequencyEntity();
+		frequency = new FrequencyEntity();
 		frequency.setId(2L);
 		frequency.setKey("test-slice-key");
 		frequency.setAtLeastCount(3);
@@ -75,22 +78,69 @@ public class FrequencySliceAbstractionConverterTest extends
 		af.setDataElementEntity(event);
 		
 		frequency.setExtendedProposition(af);
-
-		List<PropositionDefinition> propDefs = this.converter.convert
-				(frequency);
+		propDefs = converter.convert(frequency);
+		sliceDef = converter.getPrimaryPropositionDefinition();
+		gf = (MinMaxGapFunction) sliceDef.getGapFunction();
+	}
+	
+	@After
+	public void tearDown() {
+		event = null;
+		frequency = null;
+		sliceDef = null;
+		propDefs = null;
+		gf = null;
+	}
+	
+	@Test
+	public void testNumberOfPropositionDefinitionsCreated() {
 		assertEquals("wrong number of proposition definitions created", 1,
 				propDefs.size());
-		SliceDefinition sliceDef = this.converter
-				.getPrimaryPropositionDefinition();
-		assertEquals("wrong ID", "test-slice-key" + ConversionUtil.PRIMARY_PROP_ID_SUFFIX, sliceDef.getId());
+	}
+	
+	@Test
+	public void testId() {
+		assertEquals("wrong ID", 
+				frequency.getKey() + ConversionUtil.PRIMARY_PROP_ID_SUFFIX, 
+				sliceDef.getId());
+	}
+	
+	@Test
+	public void testMinIndex() {
 		assertEquals("wrong min index", 3, sliceDef.getMinIndex());
-		assertEquals("wrong abstracted from size", 1, sliceDef.getAbstractedFrom().size());
-		assertEquals("wrong abstracted from", "test-event1",
+	}
+	
+	@Test
+	public void testAbstractedFromSize() {
+		assertEquals("wrong abstracted from size", 
+				1, sliceDef.getAbstractedFrom().size());
+	}
+	
+	@Test
+	public void testAbstractedFrom() {
+		assertEquals("wrong abstracted from", event.getKey(),
 				sliceDef.getAbstractedFrom().iterator().next());
-		MinMaxGapFunction gf = (MinMaxGapFunction) sliceDef.getGapFunction();
-		assertEquals("wrong gap min", new Integer(1), gf.getMinimumGap());
-		assertEquals("wrong gap min unit", "day", gf.getMinimumGapUnit().getName().toLowerCase());
-		assertEquals("wrong gap max", new Integer(90), gf.getMaximumGap());
-		assertEquals("wrong gap max unit", "day", gf.getMaximumGapUnit().getName().toLowerCase());
+	}
+	
+	@Test
+	public void testGapMin() {
+		assertEquals("wrong gap min", Integer.valueOf(1), gf.getMinimumGap());
+	}
+	
+	@Test
+	public void testGapMinUnit() {
+		assertEquals("wrong gap min unit", 
+				AbsoluteTimeUnit.DAY, gf.getMinimumGapUnit());
+	}
+	
+	@Test
+	public void testGapMax() {
+		assertEquals("wrong gap max", Integer.valueOf(90), gf.getMaximumGap());
+	}
+	
+	@Test
+	public void testGapMaxUnit() {
+		assertEquals("wrong gap max unit", 
+				AbsoluteTimeUnit.DAY, gf.getMaximumGapUnit());
 	}
 }

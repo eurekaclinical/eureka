@@ -35,10 +35,22 @@ import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ClientException;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ServicesClient;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.User;
 import edu.emory.cci.aiw.cvrg.eureka.servlet.worker.ServletWorker;
+import java.text.MessageFormat;
+import java.util.ResourceBundle;
+import javax.servlet.ServletContext;
 
 public class SaveUserAcctWorker implements ServletWorker {
 
 	private static Logger LOGGER = LoggerFactory.getLogger(SaveUserAcctWorker.class);
+	
+	private ResourceBundle messages;
+
+	public SaveUserAcctWorker(ServletContext ctx) {
+		String localizationContextName = ctx.getInitParameter("javax.servlet.jsp.jstl.fmt.localizationContext");
+		this.messages = ResourceBundle.getBundle(localizationContextName);
+	}
+	
+	
 
 	@Override
 	public void execute(HttpServletRequest req, HttpServletResponse resp)
@@ -78,10 +90,14 @@ public class SaveUserAcctWorker implements ServletWorker {
 			resp.setContentType("text/plain");
 			if (ClientResponse.Status.PRECONDITION_FAILED.equals(e.getResponseStatus())) {
 				resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+				resp.getWriter().write(e.getMessage());
 			} else {
 				resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+				String msg = messages.getString("passwordChange.error.internalServerError");
+				String formattedMsg = MessageFormat.format(msg, "aiwhelp@emory.edu");
+				resp.getWriter().write(formattedMsg);
 			}
-			resp.getWriter().write(e.getMessage());
+			
 		}
 
 		resp.getWriter().close();

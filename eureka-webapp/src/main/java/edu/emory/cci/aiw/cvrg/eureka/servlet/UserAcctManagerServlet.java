@@ -54,7 +54,7 @@ public class UserAcctManagerServlet extends HttpServlet {
 
 		if (action != null && action.equals("save")) {
 			LOGGER.info("Saving user");
-			worker = new SaveUserAcctWorker();
+			worker = new SaveUserAcctWorker(getServletContext());
 		} else {
 			LOGGER.info("Listing user");
 			worker = new ListUserAcctWorker();

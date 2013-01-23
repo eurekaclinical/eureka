@@ -20,12 +20,16 @@
 package edu.emory.cci.aiw.cvrg.eureka.common.json;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.codehaus.jackson.JsonGenerator;
 import org.codehaus.jackson.JsonProcessingException;
 import org.codehaus.jackson.map.JsonSerializer;
 import org.codehaus.jackson.map.SerializerProvider;
+import org.protempa.ExtendedPropositionDefinition;
 import org.protempa.SliceDefinition;
+import org.protempa.TemporalExtendedPropositionDefinition;
 
 public final class SliceAbstractionJsonSerializer extends
         JsonSerializer<SliceDefinition> {
@@ -47,8 +51,19 @@ public final class SliceAbstractionJsonSerializer extends
 		        jgen);
 		provider.defaultSerializeField("inverseIsA", value.getInverseIsA(),
 		        jgen);
-		provider.defaultSerializeField("abstractedFrom",
-		        value.getAbstractedFrom(), jgen);
+		
+		jgen.writeFieldName("extendedPropositions");
+		jgen.writeStartObject();
+		Map<ExtendedPropositionDefinition, Long> indices =
+				new HashMap<ExtendedPropositionDefinition, Long>();
+		int i = 1;
+		for (TemporalExtendedPropositionDefinition epd : value.getTemporalExtendedPropositionDefinitions()) {
+			indices.put(epd, Long.valueOf(i));
+			jgen.writeFieldName("" + (i++));
+			provider.defaultSerializeValue(epd, jgen);
+		}
+		jgen.writeEndObject();
+		
 		provider.defaultSerializeField("properties",
 		        value.getPropertyDefinitions(), jgen);
 		provider.defaultSerializeField("references",

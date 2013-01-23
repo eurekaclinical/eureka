@@ -95,7 +95,7 @@ final class TranslatorSupport {
 		if (element.getKey() != null) {
 			key = element.getKey();
 		} else {
-			key = element.getDisplayName();
+			key = "USER:" + element.getDisplayName();
 		}
 
 		Date now = new Date();
@@ -150,7 +150,7 @@ final class TranslatorSupport {
 		if (dataElement.getKey() != null) {
 			entity.setKey(dataElement.getKey());
 		} else {
-			entity.setKey(dataElement.getDisplayName());
+			entity.setKey("USER:" + dataElement.getDisplayName());
 		}
 	}
 }

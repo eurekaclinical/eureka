@@ -20,13 +20,26 @@
 package edu.emory.cci.aiw.cvrg.eureka.services.test;
 
 import com.google.inject.Module;
+import com.google.inject.persist.PersistService;
 import edu.emory.cci.aiw.cvrg.eureka.common.test.AbstractTest;
+import edu.emory.cci.aiw.cvrg.eureka.common.test.TestDataException;
 import edu.emory.cci.aiw.cvrg.eureka.common.test.TestDataProvider;
 import edu.emory.cci.aiw.cvrg.eureka.services.config.AppTestModule;
+import org.junit.After;
+import org.junit.Before;
 
 public class AbstractServiceTest extends AbstractTest {
 
-	@Override
+	/**
+	 * Instance of a class that can set up and tear down test data.
+	 */
+	private TestDataProvider testDataProvider;
+	/**
+	 * Instance of a persistence service, to be used to store test data and run
+	 * queries against.
+	 */
+	private PersistService persistService;
+
 	protected Class<? extends TestDataProvider> getDataProvider() {
 		return Setup.class;
 	}
@@ -34,5 +47,39 @@ public class AbstractServiceTest extends AbstractTest {
 	@Override
 	protected Module[] getModules() {
 		return new Module[]{new AppTestModule()};
+	}
+
+	/**
+	 * Runs before each test is executed. Sets up the persistence service, and
+	 * then create the necessary data for the test.
+	 *
+	 * @throws TestDataException Thrown if the test data can not be inserted
+	 * properly.
+	 */
+	@Before
+	public void beforeAbstractServiceTest() throws TestDataException {
+		persistService = getInstance(PersistService.class);
+		persistService.start();
+		if (getDataProvider() != null) {
+			testDataProvider = getInstance(getDataProvider());
+			testDataProvider.setUp();
+		}
+	}
+
+	/**
+	 * Runs after each test is executed. Removes any test data, and then shuts
+	 * down the persistence service.
+	 *
+	 * @throws TestDataException Thrown if the test data can not be cleanly
+	 * removed.
+	 */
+	@After
+	public void afterAbstractServiceTest() throws TestDataException {
+		if (testDataProvider != null) {
+			testDataProvider.tearDown();
+		}
+		persistService.stop();
+		testDataProvider = null;
+		persistService = null;
 	}
 }

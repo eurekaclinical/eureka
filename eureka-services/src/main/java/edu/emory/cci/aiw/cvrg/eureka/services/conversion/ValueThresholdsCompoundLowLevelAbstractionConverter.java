@@ -82,8 +82,9 @@ public final class ValueThresholdsCompoundLowLevelAbstractionConverter
 			for (ValueThresholdEntity v : entity.getValueThresholds()) {
 				v.getAbstractedFrom().accept(this.converterVisitor);
 				result.addAll(this.converterVisitor.getPropositionDefinitions());
-				LowLevelAbstractionDefinition def = new LowLevelAbstractionDefinition(
-						v.getAbstractedFrom().getKey() + "_CLASSIFICATION");
+				LowLevelAbstractionDefinition def = 
+						new LowLevelAbstractionDefinition(
+						entity.getKey() + "_SUB" + v.getId());
 				def.setConcatenable(false);
 				def.addPrimitiveParameterId(this.converterVisitor.getPrimaryPropositionId());
 				def.setMinimumNumberOfValues(1);
@@ -91,7 +92,7 @@ public final class ValueThresholdsCompoundLowLevelAbstractionConverter
 				def.setAlgorithmId("stateDetector");
 				def.setGapFunction(new SimpleGapFunction(Integer.valueOf(0), null));
 				ValueThresholdsLowLevelAbstractionConverter
-						.thresholdToValueDefinitions(def.getId() + "_VALUE", v, def);
+						.thresholdToValueDefinitions(entity.getKey() + "_VALUE", v, def);
 				intermediates.add(def);
 			}
 			result.addAll(intermediates);

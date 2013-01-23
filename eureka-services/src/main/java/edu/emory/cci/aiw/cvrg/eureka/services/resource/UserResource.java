@@ -224,6 +224,11 @@ public class UserResource {
 			@QueryParam("newPassword") final String newPassword) {
 
 		User user = this.userDao.retrieve(inId);
+		if (user == null) {
+			LOGGER.error("User id " + inId + " not found");
+			throw new HttpStatusException(
+					Response.Status.NOT_FOUND);
+		}
 		String oldPasswordHash;
 		String newPasswordHash;
 		try {
@@ -232,9 +237,7 @@ public class UserResource {
 		} catch (NoSuchAlgorithmException e) {
 			LOGGER.error(e.getMessage(), e);
 			throw new HttpStatusException(
-					Response.Status.INTERNAL_SERVER_ERROR,
-					"Error while changing password. Please contact the "
-					+ "administrator.");
+					Response.Status.INTERNAL_SERVER_ERROR, e);
 		}
 		if (user.getPassword().equals(oldPasswordHash)) {
 			user.setPassword(newPasswordHash);
@@ -365,9 +368,7 @@ public class UserResource {
 			} catch (NoSuchAlgorithmException e) {
 				LOGGER.error(e.getMessage(), e);
 				throw new HttpStatusException(
-						Response.Status.INTERNAL_SERVER_ERROR,
-						"Error while changing password. Please contact the "
-						+ "administrator.");
+						Response.Status.INTERNAL_SERVER_ERROR, e);
 			}
 
 			user.setPassword(passwordHash);

@@ -22,9 +22,7 @@ package edu.emory.cci.aiw.cvrg.eureka.services.conversion;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.FrequencyEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.ValueThresholdGroupEntity;
 
-import org.protempa.CompoundLowLevelAbstractionDefinition;
 import org.protempa.HighLevelAbstractionDefinition;
-import org.protempa.LowLevelAbstractionDefinition;
 import org.protempa.MinMaxGapFunction;
 import org.protempa.PropositionDefinition;
 import org.protempa.TemporalExtendedParameterDefinition;
@@ -36,6 +34,9 @@ import java.util.List;
 
 import static edu.emory.cci.aiw.cvrg.eureka.services.conversion.ConversionUtil.unit;
 import java.util.Collection;
+import org.protempa.CompoundLowLevelAbstractionDefinition;
+import org.protempa.CompoundLowLevelAbstractionDefinition.ValueClassification;
+import org.protempa.SimpleGapFunction;
 
 public final class FrequencyHighLevelAbstractionConverter
         implements
@@ -80,13 +81,29 @@ public final class FrequencyHighLevelAbstractionConverter
 			Collection<PropositionDefinition> intermediates = converterVisitor
 					.getPropositionDefinitions();
 			result.addAll(intermediates);
-
-
+			
+			String frequencyWrapperPropId = entity.getKey() + "_SUB";
+			CompoundLowLevelAbstractionDefinition frequencyWrapper =
+					new CompoundLowLevelAbstractionDefinition(
+					frequencyWrapperPropId);
+			frequencyWrapper.setMinimumNumberOfValues(entity.getAtLeastCount());
+			frequencyWrapper.setGapFunction(new SimpleGapFunction(Integer.valueOf(0), null));
+			ValueClassification vc = new ValueClassification(
+					entity.getKey() + "_VALUE", 
+					this.converterVisitor.getPrimaryPropositionId(), 
+					thresholds.getKey() + "_VALUE");
+			frequencyWrapper.addValueClassification(vc);
+			ValueClassification vcComp = new ValueClassification(
+					entity.getKey() + "_VALUE_COMP", 
+					this.converterVisitor.getPrimaryPropositionId(), 
+					thresholds.getKey() + "_VALUE_COMP");
+			frequencyWrapper.addValueClassification(vcComp);
+			result.add(frequencyWrapper);
+			
 			TemporalExtendedParameterDefinition tepd = 
 					new TemporalExtendedParameterDefinition(
-					converterVisitor.getPrimaryPropositionId());
-			tepd.setValue(NominalValue.getInstance(converterVisitor
-					.getPrimaryPropositionId() + "_VALUE"));
+					frequencyWrapper.getId(), 
+					NominalValue.getInstance(thresholds.getKey() + "_VALUE"));
 			hlad.add(tepd);
 			hlad.setRelation(tepd, tepd, new Relation());
 			hlad.setGapFunction(new MinMaxGapFunction(entity.getWithinAtLeast(),

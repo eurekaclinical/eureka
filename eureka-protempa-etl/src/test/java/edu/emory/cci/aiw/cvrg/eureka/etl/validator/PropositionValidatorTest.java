@@ -27,21 +27,50 @@ import org.protempa.EventDefinition;
 import org.protempa.PropositionDefinition;
 
 import com.google.inject.Module;
+import com.google.inject.persist.PersistService;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.test.AbstractTest;
+import edu.emory.cci.aiw.cvrg.eureka.common.test.TestDataException;
 import edu.emory.cci.aiw.cvrg.eureka.common.test.TestDataProvider;
 import edu.emory.cci.aiw.cvrg.eureka.etl.config.AppTestModule;
 import edu.emory.cci.aiw.cvrg.eureka.etl.dao.ConfDao;
 import edu.emory.cci.aiw.cvrg.eureka.etl.test.Setup;
 import edu.stanford.smi.protege.util.Assert;
+import org.junit.After;
 
 import static org.junit.Assert.assertTrue;
+import org.junit.Before;
 
 public class PropositionValidatorTest extends AbstractTest {
 
 	private static Long USER_ID = Long.valueOf(1L);
-
-	@Override
+	
+	/**
+	 * Instance of a class that can set up and tear down test data.
+	 */
+	private TestDataProvider testDataProvider;
+	/**
+	 * Instance of a persistence service, to be used to store test data and run
+	 * queries against.
+	 */
+	private PersistService persistService;
+	
+	@Before
+	public void beforePropositionValidatorTest() throws TestDataException {
+		persistService = getInstance(PersistService.class);
+		persistService.start();
+		testDataProvider = getInstance(getDataProvider());
+		testDataProvider.setUp();
+	}
+	
+	@After
+	public void afterPropositionValidatorTest() throws TestDataException {
+		testDataProvider.tearDown();
+		persistService.stop();
+		testDataProvider = null;
+		persistService = null;
+	}
+	
 	protected Class<? extends TestDataProvider> getDataProvider() {
 		return Setup.class;
 	}
@@ -126,5 +155,7 @@ public class PropositionValidatorTest extends AbstractTest {
 	
 		Assert.assertFalse(result);
 	}
+	
+	
 
 }

@@ -20,6 +20,8 @@
 package edu.emory.cci.aiw.cvrg.eureka.common.json;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 
 import org.codehaus.jackson.JsonParseException;
@@ -28,10 +30,12 @@ import org.codehaus.jackson.JsonProcessingException;
 import org.codehaus.jackson.JsonToken;
 import org.codehaus.jackson.map.DeserializationContext;
 import org.codehaus.jackson.map.JsonDeserializer;
+import org.protempa.ExtendedPropositionDefinition;
 import org.protempa.PropertyDefinition;
 import org.protempa.ReferenceDefinition;
 import org.protempa.SliceDefinition;
 import org.protempa.SourceId;
+import org.protempa.TemporalExtendedPropositionDefinition;
 
 public final class SliceAbstractionJsonDeserializer extends
         JsonDeserializer<SliceDefinition> {
@@ -70,11 +74,19 @@ public final class SliceAbstractionJsonDeserializer extends
 		value.setInverseIsA(this.parser.readValueAs(String[].class));
 
 		nextToken();
-		checkField("abstractedFrom");
-		Set<String> abstractedFrom = (Set<String>) this.parser
-		        .readValueAs(Set.class);
-		for (String af : abstractedFrom) {
-			value.addAbstractedFrom(af);
+		checkField("extendedPropositions");
+		nextToken();
+		int i = 1;
+		Map<Long, ExtendedPropositionDefinition> indices =
+				new HashMap<Long, ExtendedPropositionDefinition>();
+		while (parser.getCurrentToken() != JsonToken.END_OBJECT) {
+			checkField("" + i);
+			TemporalExtendedPropositionDefinition lhs = this.parser
+			        .readValueAs(TemporalExtendedPropositionDefinition.class);
+			value.add(lhs);
+			indices.put(Long.valueOf(i), lhs);
+			nextToken();
+			i++;
 		}
 		
 		nextToken();

@@ -40,23 +40,32 @@ import edu.emory.cci.aiw.cvrg.eureka.common.entity.ValueComparator;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.ValueThresholdEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.ValueThresholdGroupEntity;
 import edu.emory.cci.aiw.cvrg.eureka.services.test.AbstractServiceTest;
+import org.apache.commons.lang.StringUtils;
+import org.junit.After;
+import org.protempa.LowLevelAbstractionValueDefinition;
 
 public class ValueThresholdsCompoundLowLevelAbstractionConverterTest extends
         AbstractServiceTest {
-
-	private PropositionDefinitionConverterVisitor converterVisitor;
-	private ValueThresholdsCompoundLowLevelAbstractionConverter converter;
+	
+	private List<PropositionDefinition> propDefs;
+	private List<LowLevelAbstractionDefinition> llaDefs;
+	private LowLevelAbstractionDefinition firstLlaDef;
+	private LowLevelAbstractionDefinition secondLlaDef;
+	private CompoundLowLevelAbstractionDefinition cllaDef;
+	private String userConstraintName;
+	private String compConstraintName;
+	private String secondUserConstraintName;
+	private String secondCompConstraintName;
+	private ValueThresholdGroupEntity thresholdGroup;
 
 	@Before
 	public void setUp() {
-		converterVisitor = this
+		PropositionDefinitionConverterVisitor converterVisitor = this
 		        .getInstance(PropositionDefinitionConverterVisitor.class);
-		converter = new ValueThresholdsCompoundLowLevelAbstractionConverter();
+		ValueThresholdsCompoundLowLevelAbstractionConverter converter = 
+				new ValueThresholdsCompoundLowLevelAbstractionConverter();
 		converter.setConverterVisitor(converterVisitor);
-	}
-
-	@Test
-	public void testCompoundLowLevelAbstractionConverter() {
+		
 		ThresholdsOperator op = new ThresholdsOperator();
 		op.setName("all");
 
@@ -91,7 +100,7 @@ public class ValueThresholdsCompoundLowLevelAbstractionConverterTest extends
 		primParam2.setInSystem(true);
 		primParam2.setSystemType(SystemType.PRIMITIVE_PARAMETER);
 
-		ValueThresholdGroupEntity thresholdGroup = new ValueThresholdGroupEntity();
+		thresholdGroup = new ValueThresholdGroupEntity();
 		thresholdGroup.setId(3L);
 		thresholdGroup.setKey("test-valuethreshold");
 
@@ -101,11 +110,13 @@ public class ValueThresholdsCompoundLowLevelAbstractionConverterTest extends
 		threshold1.setMinValueComp(gt);
 		threshold1.setMaxValueThreshold(BigDecimal.valueOf(200));
 		threshold1.setMaxValueComp(lt);
+		threshold1.setId(1L);
 
 		ValueThresholdEntity threshold2 = new ValueThresholdEntity();
 		threshold2.setAbstractedFrom(primParam2);
 		threshold2.setMinValueThreshold(BigDecimal.valueOf(5));
 		threshold2.setMinValueComp(eq);
+		threshold2.setId(2L);
 
 		List<ValueThresholdEntity> thresholds = new ArrayList<ValueThresholdEntity>();
 		thresholds.add(threshold1);
@@ -113,144 +124,293 @@ public class ValueThresholdsCompoundLowLevelAbstractionConverterTest extends
 		thresholdGroup.setValueThresholds(thresholds);
 		thresholdGroup.setThresholdsOperator(op);
 
-		List<PropositionDefinition> propDefs = this.converter
+		propDefs = converter
 		        .convert(thresholdGroup);
-		assertEquals("wrong number of proposition definitions created", 3,
-		        propDefs.size());
-		List<LowLevelAbstractionDefinition> llaDefs = new ArrayList<LowLevelAbstractionDefinition>();
+		llaDefs = new ArrayList<LowLevelAbstractionDefinition>();
 		for (PropositionDefinition pd : propDefs) {
 			if (pd instanceof LowLevelAbstractionDefinition) {
 				llaDefs.add((LowLevelAbstractionDefinition) pd);
 			}
 		}
+		firstLlaDef = llaDefs.get(0);
+		secondLlaDef = llaDefs.get(1);
+		cllaDef = converter.getPrimaryPropositionDefinition();
+		userConstraintName = thresholdGroup.getKey() + "_VALUE";
+		compConstraintName = userConstraintName + "_COMP";
+		secondUserConstraintName = thresholdGroup.getKey() + "_VALUE";
+		secondCompConstraintName = secondUserConstraintName + "_COMP";
+	}
+	
+	@After
+	public void tearDown() {
+		propDefs = null;
+		llaDefs = null;
+		firstLlaDef = null;
+		secondLlaDef = null;
+		cllaDef = null;
+		userConstraintName = null;
+		compConstraintName = null;
+		secondUserConstraintName = null;
+		secondCompConstraintName = null;
+		thresholdGroup = null;
+	}
+	
+	@Test
+	public void testNumberOfPropositionDefinitionsCreated() {
+		assertEquals("wrong number of proposition definitions created", 3,
+		        propDefs.size());
+	}
+	
+	@Test
+	public void testNumberOfLowLevelAbstractionDefinitionsCreated() {
 		assertEquals(
 		        "wrong number of low-level abstraction definitions created", 2,
 		        llaDefs.size());
-		LowLevelAbstractionDefinition llaDef = llaDefs.get(0);
+	}
+	
+	@Test
+	public void testIdForFirstLLAD() {
 		assertEquals("wrong id for first low-level abstraction definition",
-		        "test-primparam1_CLASSIFICATION", llaDef.getId());
+		        thresholdGroup.getKey() + "_SUB1", firstLlaDef.getId());
+	}
+	
+	@Test
+	public void testNumberOfAbstractedFromForFirstLLAD() {
 		assertEquals(
 		        "wrong number of abstracted from for first low-level abstraction definition",
-		        1, llaDef.getAbstractedFrom().size());
+		        1, firstLlaDef.getAbstractedFrom().size());
+	}
+	
+	@Test
+	public void testAbstractedFromForFirstLLAD() {
 		assertEquals(
 		        "wrong abstracted from for first low-level abstraction definition",
-		        "test-primparam1", llaDef.getAbstractedFrom().iterator().next());
-		String userConstraintName = "test-primparam1_CLASSIFICATION_VALUE";
-		String compConstraintName = userConstraintName + "_COMP";
-		assertTrue("value def '" + userConstraintName + "' does not exist",
-		        llaDef.getValueDefinition(userConstraintName) != null);
+		        "test-primparam1", firstLlaDef.getAbstractedFrom().iterator().next());
+	}
+	
+	@Test
+	public void testValueDefExists() {
+		List<String> ids = new ArrayList<String>();
+		for (LowLevelAbstractionValueDefinition vd : firstLlaDef.getValueDefinitions()) {
+			ids.add(vd.getId());
+		}
+		assertTrue("value def '" + userConstraintName + 
+				"' does not exist; value definition ids: " +
+				StringUtils.join(ids, ", "),
+		        firstLlaDef.getValueDefinition(userConstraintName) != null);
+	}
+	
+	@Test
+	public void testValueDefMinValue() {
 		assertEquals("wrong min value for value def: '" + userConstraintName
 		        + "'", NumberValue.getInstance(100L),
-		        llaDef.getValueDefinition(userConstraintName)
+		        firstLlaDef.getValueDefinition(userConstraintName)
 		                .getParameterValue("minThreshold"));
+	}
+	
+	@Test
+	public void testValueDefMinGT() {
 		assertEquals(
 		        "wrong min value comp for value def: '" + userConstraintName
 		                + "'",
 		        ">",
-		        llaDef.getValueDefinition(userConstraintName)
-		                .getParameterComp("minThreshold").getComparatorString());
+		        firstLlaDef.getValueDefinition(userConstraintName)
+				.getParameterComp("minThreshold").getComparatorString());
+	}
+	
+	@Test
+	public void testValueDefMaxValue() {
 		assertEquals("wrong max value for value def: '" + userConstraintName
 		        + "'", NumberValue.getInstance(200L),
-		        llaDef.getValueDefinition(userConstraintName)
+		        firstLlaDef.getValueDefinition(userConstraintName)
 		                .getParameterValue("maxThreshold"));
+	}
+	
+	@Test
+	public void testValueDefMaxLT() {
 		assertEquals(
 		        "wrong max value comp for value def: '" + userConstraintName
 		                + "'",
 		        "<",
-		        llaDef.getValueDefinition(userConstraintName)
-		                .getParameterComp("maxThreshold").getComparatorString());
+		        firstLlaDef.getValueDefinition(userConstraintName)
+		        .getParameterComp("maxThreshold").getComparatorString());
+	}
+	
+	@Test
+	public void testValueDefCompExists() {
 		assertTrue("value def '" + compConstraintName + "' does not exist",
-		        llaDef.getValueDefinition(compConstraintName) != null);
+		        firstLlaDef.getValueDefinition(compConstraintName) != null);
+	}
+	
+	@Test
+	public void testValueDefCompMinValue() {
 		assertEquals("wrong min value for value def: '" + compConstraintName
 		        + "'", NumberValue.getInstance(200L),
-		        llaDef.getValueDefinition(compConstraintName)
+		        firstLlaDef.getValueDefinition(compConstraintName)
 		                .getParameterValue("minThreshold"));
+	}
+	
+	@Test
+	public void testValueDefCompGE() {
 		assertEquals(
 		        "wrong min value comp for value def: '" + compConstraintName
 		                + "'",
 		        ">=",
-		        llaDef.getValueDefinition(compConstraintName)
-		                .getParameterComp("minThreshold").getComparatorString());
+		        firstLlaDef.getValueDefinition(compConstraintName)
+		        .getParameterComp("minThreshold").getComparatorString());
+	}
+	
+	@Test
+	public void testValueDefCompMaxValue() {
 		assertEquals("wrong max value for value def: '" + compConstraintName
 		        + "'", NumberValue.getInstance(100L),
-		        llaDef.getValueDefinition(compConstraintName)
+		        firstLlaDef.getValueDefinition(compConstraintName)
 		                .getParameterValue("maxThreshold"));
+	}
+	
+	@Test
+	public void testValueDefCompLE() {
 		assertEquals(
 		        "wrong max value comp for value def: '" + compConstraintName
 		                + "'",
 		        "<=",
-		        llaDef.getValueDefinition(compConstraintName)
-		                .getParameterComp("maxThreshold").getComparatorString());
-
-		llaDef = llaDefs.get(1);
+		        firstLlaDef.getValueDefinition(compConstraintName)
+		        .getParameterComp("maxThreshold").getComparatorString());
+	}
+	
+	@Test
+	public void testSecondLLADId() {
 		assertEquals("wrong id for first low-level abstraction definition",
-		        "test-primparam2_CLASSIFICATION", llaDef.getId());
+		        thresholdGroup.getKey() + "_SUB2", secondLlaDef.getId());
+	}
+	
+	@Test
+	public void testSecondLLADNumberOfAbstractedFrom() {
 		assertEquals(
 		        "wrong number of abstracted from for first low-level abstraction definition",
-		        1, llaDef.getAbstractedFrom().size());
+		        1, secondLlaDef.getAbstractedFrom().size());
+	}
+	
+	@Test
+	public void testSecondLLADAbstractedFrom() {
 		assertEquals(
 		        "wrong abstracted from for first low-level abstraction definition",
-		        "test-primparam2", llaDef.getAbstractedFrom().iterator().next());
-		userConstraintName = "test-primparam2_CLASSIFICATION_VALUE";
-		compConstraintName = userConstraintName + "_COMP";
-		assertTrue("value def '" + userConstraintName + "' does not exist",
-		        llaDef.getValueDefinition(userConstraintName) != null);
-		assertEquals("wrong min value for value def: '" + userConstraintName
+		        "test-primparam2", secondLlaDef.getAbstractedFrom().iterator().next());
+	}
+	
+	@Test
+	public void testSecondLLADValueDefExists() {
+		assertTrue("value def '" + secondUserConstraintName + "' does not exist",
+		        secondLlaDef
+				.getValueDefinition(secondUserConstraintName) != null);
+	}
+	
+	@Test
+	public void testSecondLLADMinValue() {
+		assertEquals("wrong min value for value def: '" + secondUserConstraintName
 		        + "'", NumberValue.getInstance(5L),
-		        llaDef.getValueDefinition(userConstraintName)
+		        secondLlaDef.getValueDefinition(secondUserConstraintName)
 		                .getParameterValue("minThreshold"));
+	}
+	
+	@Test
+	public void testSecondLLADMinEQ() {
 		assertEquals(
-		        "wrong min value comp for value def: '" + userConstraintName
+		        "wrong min value comp for value def: '" + secondUserConstraintName
 		                + "'",
 		        "=",
-		        llaDef.getValueDefinition(userConstraintName)
-		                .getParameterComp("minThreshold").getComparatorString());
-		assertTrue("max value for value def: '" + userConstraintName
+		        secondLlaDef.getValueDefinition(secondUserConstraintName)
+		        .getParameterComp("minThreshold").getComparatorString());
+	}
+	
+	@Test
+	public void testSecondLLADMaxThresholdParamExists() {
+		assertTrue("max value for value def: '" + secondUserConstraintName
 		        + "' exists",
-		        false == llaDef.getValueDefinition(userConstraintName)
+		        false == secondLlaDef.getValueDefinition(secondUserConstraintName)
 		                .getParameters().contains("maxThreshold"));
-		assertTrue("max value comp for value def: '" + userConstraintName
+	}
+	
+	@Test
+	public void testSecondLLADMaxThresholdCompParamExists() {
+		assertTrue("max value comp for value def: '" + secondUserConstraintName
 		        + "' exists",
-		        false == llaDef.getValueDefinition(userConstraintName)
+		        false == secondLlaDef.getValueDefinition(secondUserConstraintName)
 		                .getParameterComps().contains("maxThreshold"));
-		assertTrue("value def '" + compConstraintName + "' does not exist",
-		        llaDef.getValueDefinition(compConstraintName) != null);
-		assertTrue("min value for value def: '" + compConstraintName
+	}
+	
+	@Test
+	public void testSecondLLADCompValueDefExists() {
+		assertTrue("value def '" + secondCompConstraintName + "' does not exist",
+		        secondLlaDef.getValueDefinition(secondCompConstraintName) != null);
+	}
+	
+	@Test
+	public void testSecondLLADCompMinThresholdExists() {
+		assertTrue("min value for value def: '" + secondCompConstraintName
 		        + "' exists",
-		        false == llaDef.getValueDefinition(compConstraintName)
+		        false == secondLlaDef.getValueDefinition(secondCompConstraintName)
 		                .getParameters().contains("minThreshold"));
-		assertTrue("min value comp for value def: '" + compConstraintName
+	}
+	
+	@Test
+	public void testSecondLLADCompMinThresholdCompParamExists() {
+		assertTrue("min value comp for value def: '" + secondCompConstraintName
 		        + "' exists",
-		        false == llaDef.getValueDefinition(compConstraintName)
+		        false == secondLlaDef.getValueDefinition(secondCompConstraintName)
 		                .getParameterComps().contains("minThreshold"));
-		assertEquals("wrong max value for value def: '" + compConstraintName
+	}
+	
+	@Test
+	public void testSecondLLADCompMaxValue() {
+		assertEquals("wrong max value for value def: '" + secondCompConstraintName
 		        + "'", NumberValue.getInstance(5L),
-		        llaDef.getValueDefinition(compConstraintName)
+		        secondLlaDef.getValueDefinition(secondCompConstraintName)
 		                .getParameterValue("maxThreshold"));
+	}
+	
+	@Test
+	public void testSecondLLADCompNE() {
 		assertEquals(
-		        "wrong max value comp for value def: '" + compConstraintName
+		        "wrong max value comp for value def: '" + secondCompConstraintName
 		                + "'",
 		        "!=",
-		        llaDef.getValueDefinition(compConstraintName)
-		                .getParameterComp("maxThreshold").getComparatorString());
-
-		CompoundLowLevelAbstractionDefinition cllaDef = this.converter
-		        .getPrimaryPropositionDefinition();
-		assertEquals("wrong id", "test-valuethreshold" + ConversionUtil.PRIMARY_PROP_ID_SUFFIX, cllaDef.getId());
+		        secondLlaDef.getValueDefinition(secondCompConstraintName)
+		                .getParameterComp("maxThreshold").getComparatorString());	
+	}
+	
+	@Test
+	public void testThresholdGroupId() {
+		assertEquals("wrong id", thresholdGroup.getKey() + ConversionUtil.PRIMARY_PROP_ID_SUFFIX, cllaDef.getId());
+	}
+	
+	@Test
+	public void testMinimumNumberOfValues() {
 		assertEquals("wrong minimum number of values", 1,
 		        cllaDef.getMinimumNumberOfValues());
+	}
+	
+	@Test
+	public void testThresholdsOperator() {
 		assertEquals("wrong value def match operator", "ALL", cllaDef
 		        .getValueDefinitionMatchOperator().name());
+	}
+	
+	@Test
+	public void testNumberOfAbstractedFrom() {
 		assertEquals("wrong number of abstracted from", 2,
 		        cllaDef.getAbstractedFrom().size());
+	}
+	
+	@Test
+	public void testAbstractedFrom() {
 		String[] af = new String[cllaDef.getAbstractedFrom().size()];
 		cllaDef.getAbstractedFrom().toArray(af);
 		assertTrue(
 		        "wrong abstracted from",
-		        (af[0].equals("test-primparam1_CLASSIFICATION")
-		                && af[1].equals("test-primparam2_CLASSIFICATION") || (af[0]
-		                .equals("test-primparam2_CLASSIFICATION") && af[1]
-		                .equals("test-primparam1_CLASSIFICATION"))));
-
+		        (af[0].equals("test-valuethreshold_SUB1")
+		                && af[1].equals("test-valuethreshold_SUB2") || (af[0]
+		                .equals("test-valuethreshold_SUB2") && af[1]
+		                .equals("test-valuethreshold_SUB1"))));
 	}
 }

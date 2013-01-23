@@ -19,6 +19,7 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.servlet;
 
+import com.sun.jersey.api.client.ClientResponse;
 import java.io.IOException;
 
 import javax.servlet.ServletException;
@@ -31,6 +32,10 @@ import org.slf4j.LoggerFactory;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ClientException;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ServicesClient;
+import java.text.MessageFormat;
+import java.util.ResourceBundle;
+import javax.servlet.ServletConfig;
+import javax.ws.rs.core.Response;
 
 /**
  * Servlet implementation class ForgotPasswordServlet
@@ -39,26 +44,27 @@ public class ForgotPasswordServlet extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
 	private static Logger LOGGER = LoggerFactory.getLogger(ForgotPasswordServlet.class);
+	private ResourceBundle messages;
 
-	/**
-	 * @see HttpServlet#HttpServlet()
-	 */
 	public ForgotPasswordServlet() {
 		super();
 	}
 
-	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse
-	 * response)
-	 */
+	@Override
+	public void init(ServletConfig config) throws ServletException {
+		String localizationContextName =
+				getServletContext()
+				.getInitParameter(
+				"javax.servlet.jsp.jstl.fmt.localizationContext");
+		this.messages = ResourceBundle.getBundle(localizationContextName);
+	}
+
+	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		doPost(request, response);
 	}
 
-	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse
-	 * response)
-	 */
+	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String eurekaServicesUrl = request.getSession().getServletContext()
 				.getInitParameter("eureka-services-url");
@@ -70,9 +76,10 @@ public class ForgotPasswordServlet extends HttpServlet {
 			response.getWriter().write(HttpServletResponse.SC_OK);
 		} catch (ClientException ex) {
 			response.setContentType("text/plain");
-
 			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-			response.getWriter().write(ex.getMessage());
+			String msg = this.messages.getString("passwordChange.error.internalServerError");
+			String formattedMsg = MessageFormat.format(msg, "aiwhelp@emory.edu");
+			response.getWriter().write(formattedMsg);
 		}
 	}
 }

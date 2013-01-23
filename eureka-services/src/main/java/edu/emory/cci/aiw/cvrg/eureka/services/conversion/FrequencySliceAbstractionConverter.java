@@ -20,6 +20,7 @@
 package edu.emory.cci.aiw.cvrg.eureka.services.conversion;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.FrequencyEntity;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.ValueThresholdGroupEntity;
 import org.protempa.MinMaxGapFunction;
 import org.protempa.PropositionDefinition;
 import org.protempa.SliceDefinition;
@@ -29,6 +30,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static edu.emory.cci.aiw.cvrg.eureka.services.conversion.ConversionUtil.unit;
+import org.protempa.TemporalExtendedParameterDefinition;
+import org.protempa.TemporalExtendedPropositionDefinition;
+import org.protempa.proposition.value.NominalValue;
 
 public final class FrequencySliceAbstractionConverter implements
 		PropositionDefinitionConverter<FrequencyEntity, SliceDefinition> {
@@ -84,8 +88,17 @@ public final class FrequencySliceAbstractionConverter implements
 
 			entity.getAbstractedFrom().accept(converterVisitor);
 			result.addAll(converterVisitor.getPropositionDefinitions());
-			primary.addAbstractedFrom(
+			TemporalExtendedPropositionDefinition tepd;
+			if (entity.getExtendedProposition().getDataElementEntity() instanceof ValueThresholdGroupEntity) {
+				tepd = new TemporalExtendedParameterDefinition(
+						converterVisitor.getPrimaryPropositionId(),
+						NominalValue.getInstance(
+						entity.getExtendedProposition().getDataElementEntity().getKey() + "_VALUE"));
+			} else {
+				tepd = new TemporalExtendedPropositionDefinition(
 					converterVisitor.getPrimaryPropositionId());
+			}
+			primary.add(tepd);
 
 			if (entity.getAtLeastCount() != null) {
 				primary.setMinIndex(entity.getAtLeastCount());

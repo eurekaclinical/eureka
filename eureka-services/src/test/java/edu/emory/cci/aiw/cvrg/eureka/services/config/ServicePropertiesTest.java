@@ -26,16 +26,10 @@ import org.junit.Test;
 import com.google.inject.Module;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.test.AbstractTest;
-import edu.emory.cci.aiw.cvrg.eureka.common.test.TestDataProvider;
-import edu.emory.cci.aiw.cvrg.eureka.services.test.Setup;
 
 import junit.framework.Assert;
 
 public class ServicePropertiesTest extends AbstractTest {
-	@Override
-	protected Class<? extends TestDataProvider> getDataProvider() {
-		return Setup.class;
-	}
 
 	@Override
 	protected Module[] getModules() {

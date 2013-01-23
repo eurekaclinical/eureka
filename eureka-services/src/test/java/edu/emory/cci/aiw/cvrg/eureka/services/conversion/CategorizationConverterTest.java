@@ -31,6 +31,7 @@ import edu.emory.cci.aiw.cvrg.eureka.common.entity.SystemProposition.SystemType;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.ThresholdsOperator;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.ValueThresholdEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.ValueThresholdGroupEntity;
+import edu.emory.cci.aiw.cvrg.eureka.common.test.TestDataProvider;
 import edu.emory.cci.aiw.cvrg.eureka.services.test.AbstractServiceTest;
 import org.arp.javautil.arrays.Arrays;
 import org.junit.Before;
@@ -47,6 +48,7 @@ import org.protempa.SliceDefinition;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import org.junit.After;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -62,6 +64,12 @@ public class CategorizationConverterTest extends AbstractServiceTest {
 				(PropositionDefinitionConverterVisitor.class);
 		converter = new CategorizationConverter();
 		converter.setConverterVisitor(converterVisitor);
+	}
+	
+	@After
+	public void tearDown() {
+		converterVisitor = null;
+		converter = null;
 	}
 
 	@Test
