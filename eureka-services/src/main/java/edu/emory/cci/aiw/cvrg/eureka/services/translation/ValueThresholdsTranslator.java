@@ -91,7 +91,7 @@ public final class ValueThresholdsTranslator implements
 
 			String lowerValue = vt.getLowerValue();
 			vte.setMinTValueThreshold(lowerValue);
-			if (lowerValue != null) {
+			if (lowerValue != null && !lowerValue.isEmpty()) {
 				try {
 					vte.setMinValueThreshold(new BigDecimal(lowerValue));
 				} catch (NumberFormatException ex) {
@@ -104,7 +104,7 @@ public final class ValueThresholdsTranslator implements
 
 			String upperValue = vt.getUpperValue();
 			vte.setMaxTValueThreshold(upperValue);
-			if (upperValue != null) {
+			if (upperValue != null && !upperValue.isEmpty()) {
 				try {
 					vte.setMaxValueThreshold(new BigDecimal(upperValue));
 				} catch (NumberFormatException ex) {
