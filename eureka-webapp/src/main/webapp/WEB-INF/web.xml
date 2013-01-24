@@ -90,10 +90,20 @@ see implementation details http://jersey.java.net/nonav/documentation/latest/jax
 			<param-value>/protected/user_acct</param-value>
 		</init-param>
 	</filter>
+	<filter>
+		<filter-name>MessagesFilter</filter-name>
+		<filter-class>
+			edu.emory.cci.aiw.cvrg.eureka.servlet.filter.MessagesFilter
+		</filter-class>
+	</filter>
 	
 	<filter-mapping>
 		<filter-name>PasswordExpiredFilter</filter-name>
 		<url-pattern>/protected/*</url-pattern>
+	</filter-mapping>
+	<filter-mapping>
+		<filter-name>MessagesFilter</filter-name>
+		<url-pattern>/*</url-pattern>
 	</filter-mapping>
 
 	<servlet>

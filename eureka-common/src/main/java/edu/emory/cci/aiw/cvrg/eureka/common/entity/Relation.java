@@ -44,17 +44,19 @@ public class Relation {
 	@GeneratedValue(strategy = GenerationType.SEQUENCE,
 		generator = "RELATION_SEQ_GENERATOR")
 	private Long id;
-
-	@OneToOne(cascade = CascadeType.ALL)
+	
+	@ManyToOne(cascade = CascadeType.ALL)
 	@JoinColumn(nullable = false)
 	private ExtendedDataElement lhsExtendedDataElement;
-
-	@OneToOne(cascade = CascadeType.ALL)
+	
+	@ManyToOne(cascade = { CascadeType.MERGE, CascadeType.REFRESH,
+	        CascadeType.PERSIST })
 	@JoinColumn(nullable = false)
 	private ExtendedDataElement rhsExtendedDataElement;
 
-	@OneToOne
-	@JoinColumn(name="relationop_id", referencedColumnName = "id")
+	@ManyToOne
+	@JoinColumn(name="relationop_id", referencedColumnName = "id", 
+			nullable = false)
 	private RelationOperator relationOperator;
 
 	private Integer minf1s2;

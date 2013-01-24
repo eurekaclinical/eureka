@@ -19,7 +19,6 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.servlet;
 
-import com.sun.jersey.api.client.ClientResponse;
 import java.io.IOException;
 
 import javax.servlet.ServletException;
@@ -34,8 +33,6 @@ import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ClientException;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ServicesClient;
 import java.text.MessageFormat;
 import java.util.ResourceBundle;
-import javax.servlet.ServletConfig;
-import javax.ws.rs.core.Response;
 
 /**
  * Servlet implementation class ForgotPasswordServlet
@@ -43,20 +40,11 @@ import javax.ws.rs.core.Response;
 public class ForgotPasswordServlet extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
-	private static Logger LOGGER = LoggerFactory.getLogger(ForgotPasswordServlet.class);
-	private ResourceBundle messages;
+	private static Logger LOGGER = 
+			LoggerFactory.getLogger(ForgotPasswordServlet.class);
 
 	public ForgotPasswordServlet() {
 		super();
-	}
-
-	@Override
-	public void init(ServletConfig config) throws ServletException {
-		String localizationContextName =
-				getServletContext()
-				.getInitParameter(
-				"javax.servlet.jsp.jstl.fmt.localizationContext");
-		this.messages = ResourceBundle.getBundle(localizationContextName);
 	}
 
 	@Override
@@ -75,9 +63,12 @@ public class ForgotPasswordServlet extends HttpServlet {
 			response.setStatus(HttpServletResponse.SC_OK);
 			response.getWriter().write(HttpServletResponse.SC_OK);
 		} catch (ClientException ex) {
+			LOGGER.error("Error resetting password for user {}", email, ex);
+			ResourceBundle messages = 
+					(ResourceBundle) request.getAttribute("messages");
 			response.setContentType("text/plain");
 			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-			String msg = this.messages.getString("passwordChange.error.internalServerError");
+			String msg = messages.getString("passwordChange.error.internalServerError");
 			String formattedMsg = MessageFormat.format(msg, "aiwhelp@emory.edu");
 			response.getWriter().write(formattedMsg);
 		}

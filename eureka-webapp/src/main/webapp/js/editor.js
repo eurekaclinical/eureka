@@ -485,7 +485,7 @@ function attachDeleteAction (elem) {
 					}
 				}
 			});
-			$(dialog).html('Are you sure you want to remove member ' + $toRemove.text() + ' from this category? You cannot undo this action.');
+			$(dialog).html('Are you sure you want to remove member ' + $toRemove.text() + ' from this category?');
 			$(dialog).dialog("open");
 		});
 	});

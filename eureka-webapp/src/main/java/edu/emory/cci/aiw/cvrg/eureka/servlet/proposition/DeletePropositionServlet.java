@@ -19,6 +19,7 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.servlet.proposition;
 
+import com.sun.jersey.api.client.ClientResponse;
 import java.io.IOException;
 import java.security.Principal;
 
@@ -33,6 +34,9 @@ import org.slf4j.LoggerFactory;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ClientException;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ServicesClient;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.User;
+import java.text.MessageFormat;
+import java.util.ResourceBundle;
+import javax.ws.rs.core.MediaType;
 
 public class DeletePropositionServlet extends HttpServlet {
 
@@ -64,9 +68,25 @@ public class DeletePropositionServlet extends HttpServlet {
 		try {
 			servicesClient.deleteUserElement(user.getId(), propKey);
 		} catch (ClientException e) {
-			resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-			resp.setContentType("text/plain");
-			resp.getWriter().write(e.getMessage());
+			resp.setContentType(MediaType.TEXT_PLAIN);
+			switch (e.getResponseStatus()) {
+				case INTERNAL_SERVER_ERROR:
+					resp.setStatus(
+							HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+					LOGGER.error("Error deleting data element " + propKey, e);
+					ResourceBundle messages = 
+							(ResourceBundle) req.getAttribute("messages");
+					String msgTemplate = 
+							messages.getString("deleteDataElement.error.internalServerError");
+					String msg = 
+							MessageFormat.format(msgTemplate, "aiwhelp@emory.edu");
+					resp.getWriter().write(msg);
+					break;
+				default:
+					LOGGER.debug("Deleting data element {} failed", propKey, e);
+					resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+					resp.getWriter().write(e.getMessage());
+			}
 		}
 	}
 }

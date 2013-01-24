@@ -2,7 +2,7 @@
 
 $(document).ready(function() {
 
-    /*
+	/*
      $('#tree').hover(
         function() { $.data(this, 'hover', true); },
         function() { $.data(this, 'hover', false); }
@@ -19,20 +19,20 @@ $(document).ready(function() {
     */
 	
 	var fileUploadErrors = {
-	    maxFileSize: 'File is too big',
-	    minFileSize: 'File is too small',
-	    acceptFileTypes: 'Filetype not allowed',
-	    maxNumberOfFiles: 'Max number of files exceeded',
-	    uploadedBytes: 'Uploaded bytes exceed file size',
-	    emptyResult: 'Empty file upload result'
+		maxFileSize: 'File is too big',
+		minFileSize: 'File is too small',
+		acceptFileTypes: 'Filetype not allowed',
+		maxNumberOfFiles: 'Max number of files exceeded',
+		uploadedBytes: 'Uploaded bytes exceed file size',
+		emptyResult: 'Empty file upload result'
 	};
 	
-    $.validator.addMethod("passwordCheck",
-            function(value, element) {
-                return value.length>= 8 && /[0-9]+/.test(value) && /[a-zA-Z]+/.test(value);
-            },
-            "Please enter at least 8 characters with at least 1 digit."
-    );
+	$.validator.addMethod("passwordCheck",
+		function(value, element) {
+			return value.length>= 8 && /[0-9]+/.test(value) && /[a-zA-Z]+/.test(value);
+		},
+		"Please enter at least 8 characters with at least 1 digit."
+		);
 	
 	if ($("#editUserForm").length > 0){
 		var editUserFormValidator = $("#editUserForm").validate({
@@ -115,10 +115,10 @@ $(document).ready(function() {
 					minlength: "Please enter a valid email address",
 					equalTo: "Enter the same email as above"					
 				},
-                agreement: {
-                    required: "Please check the agreement checkbox"
-			    }
-            },
+				agreement: {
+					required: "Please check the agreement checkbox"
+				}
+			},
 			// the errorPlacement has to take the table layout into account
 			errorPlacement: function(error, element) {
 				if ( element.is(":radio") )
@@ -151,26 +151,26 @@ $(document).ready(function() {
 	
 	
 	$('#editAcctBtn').click(function(){
-	     $('#newPasswordTable').show();
-	     $('#editAcctBtn').hide();
-	     $('#saveAcctBtn').show();
-    });
+		$('#newPasswordTable').show();
+		$('#editAcctBtn').hide();
+		$('#saveAcctBtn').show();
+	});
 
 	$('#ChangePasswordbtn').click(function(e){
-			e.preventDefault();
-	     $('#newPasswordTable').show();
-	     $('#editAcctBtn').hide();
-	     $('#saveAcctBtn').show();
-    });
+		e.preventDefault();
+		$('#newPasswordTable').show();
+		$('#editAcctBtn').hide();
+		$('#saveAcctBtn').show();
+	});
 	
 	$('#ChangePasswordbtn').click(function(){
-	     $('#newPasswordTable').show();
-	     $('#editAcctBtn').hide();
-	     $('#saveAcctBtn').show();
-	     return false;
-  });
+		$('#newPasswordTable').show();
+		$('#editAcctBtn').hide();
+		$('#saveAcctBtn').show();
+		return false;
+	});
 	
-	 $("#signupForm").submit(function() {
+	$("#signupForm").submit(function() {
 		if (signupFormValidator.valid()) {
 			var firstName = $('#firstName').val();
 			var lastName  = $('#lastName').val(); 
@@ -180,327 +180,329 @@ $(document).ready(function() {
 			var  email = $('#email').val();
 			var verifyEmail = $('#verifyEmail').val();
 	
-	        var dataString = 'firstName='+ firstName+ '&lastName=' + lastName + '&organization=' + organization + 		
-	                            '&password=' + password+ '&verifyPassword=' + verifyPassword + 
-	                            '&email=' + email + '&verifyEmail=' + verifyEmail;		
+			var dataString = 'firstName='+ firstName+ '&lastName=' + lastName + '&organization=' + organization + 		
+			'&password=' + password+ '&verifyPassword=' + verifyPassword + 
+			'&email=' + email + '&verifyEmail=' + verifyEmail;		
 			$.ajax({
-	              type: 'POST',
-	              url: 'register',
-	              data: dataString,
-                  success: function() {
-                      $('#passwordChangeFailure').hide();
-                      $('#signupForm').hide();
-                      $('#registerHeading').hide();
-                      $('#registrationComplete').show();
+				type: 'POST',
+				url: 'register',
+				data: dataString,
+				success: function() {
+					$('#passwordChangeFailure').hide();
+					$('#signupForm').hide();
+					$('#registerHeading').hide();
+					$('#registrationComplete').show();
 
-                  }, error: function(xhr, err) {
+				}, 
+				error: function(xhr, err) {
 
-                      $('#passwordChangeFailure').show();
-                      $('#passwordErrorMessage').text(xhr.responseText)
+					$('#passwordChangeFailure').show();
+					$('#passwordErrorMessage').text(xhr.responseText)
 
-                  } 
+				} 
 
-				});
+			});
 		}
 
-        return false;
+		return false;
 		
 
-	 });
+	});
 	 
 	 
-	 if ($("#userAcctForm").length > 0){
-			var userFormValidator = $("#userAcctForm").validate({
-				rules: {
-					oldPassword: {
-						required: true
-					},
-					newPassword: {
-						required: true,
-						minlength: 8,
-						passwordCheck: true
-					},
-					verifyPassword: {
-						required: true,
-						minlength: 8,
-						equalTo: "#newPassword"
-					}
+	if ($("#userAcctForm").length > 0){
+		var userFormValidator = $("#userAcctForm").validate({
+			rules: {
+				oldPassword: {
+					required: true
 				},
-				messages: {
-					oldPassword: "Please enter your old password",
-					newPassword: {
-						required: "Provide a password",
-						rangelength: jQuery.format("Please enter at least {0} characters")
-					},
-					verifyPassword: {
-						required: "Repeat your password",
-						minlength: jQuery.format("Please enter at least {0} characters"),
-						equalTo: "Enter the same password as above"
-					}
+				newPassword: {
+					required: true,
+					minlength: 8,
+					passwordCheck: true
 				},
-				// the errorPlacement has to take the table layout into account
-				errorPlacement: function(error, element) {
-					if ( element.is(":radio") )
-						error.appendTo( element.parent().next().next() );
-					else if ( element.is(":checkbox") )
-						error.appendTo ( element.next() );
-					else
-						error.appendTo( element.parent().next() );
-				},
-				// specifying a submitHandler prevents the default submit, good for the demo
-				//submitHandler: function() {
-				//	alert("submitted!");
-				//},
-				// set this class to error-labels to indicate valid fields
-				success: function(label) {
-					// set &nbsp; as text for IE
-					label.html("&nbsp;").addClass("checked");
+				verifyPassword: {
+					required: true,
+					minlength: 8,
+					equalTo: "#newPassword"
 				}
-			});
-		 
-	 }
-	 
-	 $("#ResetPsdForm").submit(function(){
-		 var email = $('#email').val();
-		 var dataString = 'email='+ email;
-		 $.ajax({
-             type: 'POST',
-             url: 'forgot_password',
-             data: dataString,
-             success: function() {
-             $('#passwordresetComplete').show();
-             $('#passwordresetComplete').text("Password has been reset.You will receive an email with the new password.");
-   	      $('#saveAcctBtn').hide();
-
-         }, error: function(xhr, status, error) {
-
-             $('#passwordresetComplete').show();
-             $('#passwordresetComplete').text(xhr.responseText);
-
-         } 
+			},
+			messages: {
+				oldPassword: "Please enter your old password",
+				newPassword: {
+					required: "Provide a password",
+					rangelength: jQuery.format("Please enter at least {0} characters")
+				},
+				verifyPassword: {
+					required: "Repeat your password",
+					minlength: jQuery.format("Please enter at least {0} characters"),
+					equalTo: "Enter the same password as above"
+				}
+			},
+			// the errorPlacement has to take the table layout into account
+			errorPlacement: function(error, element) {
+				if ( element.is(":radio") )
+					error.appendTo( element.parent().next().next() );
+				else if ( element.is(":checkbox") )
+					error.appendTo ( element.next() );
+				else
+					error.appendTo( element.parent().next() );
+			},
+			// specifying a submitHandler prevents the default submit, good for the demo
+			//submitHandler: function() {
+			//	alert("submitted!");
+			//},
+			// set this class to error-labels to indicate valid fields
+			success: function(label) {
+				// set &nbsp; as text for IE
+				label.html("&nbsp;").addClass("checked");
+			}
 		});
-		 return false;
-	 });
+		 
+	}
 	 
-	 if ($("#passwordExpirationfrm").length > 0){
-			var pwExpFormValidator = $("#passwordExpirationfrm").validate({
-				rules: {
+	$("#ResetPsdForm").submit(function(){
+		var email = $('#email').val();
+		var dataString = 'email='+ email;
+		$.ajax({
+			type: 'POST',
+			url: 'forgot_password',
+			data: dataString,
+			success: function() {
+				$('#passwordresetComplete').show();
+				$('#passwordresetComplete').text("Password has been reset.You will receive an email with the new password.");
+				$('#saveAcctBtn').hide();
+
+			}, 
+			error: function(xhr, status, error) {
+
+				$('#passwordresetComplete').show();
+				$('#passwordresetComplete').text(xhr.responseText);
+
+			} 
+		});
+		return false;
+	});
+	 
+	if ($("#passwordExpirationfrm").length > 0){
+		var pwExpFormValidator = $("#passwordExpirationfrm").validate({
+			rules: {
 				oldExpPassword: {
-						required: true
-					},
-					newExpPassword: {
-						required: true,
-						minlength: 8,
-						passwordCheck: true
-					},
-					verifyExpPassword: {
-						required: true,
-						minlength: 8,
-						equalTo: "#newExpPassword"
-					}
+					required: true
 				},
-				messages: {
-					oldExpPassword: "Please enter your old password",
-					newExpPassword: {
-						required: "Provide a password",
-						rangelength: jQuery.format("Please enter at least {0} characters")
-					},
-					verifyExpPassword: {
-						required: "Repeat your password",
-						minlength: jQuery.format("Please enter at least {0} characters"),
-						equalTo: "Enter the same password as above"
-					}
+				newExpPassword: {
+					required: true,
+					minlength: 8,
+					passwordCheck: true
 				},
-				// the errorPlacement has to take the table layout into account
-				errorPlacement: function(error, element) {
-					if ( element.is(":radio") )
-						error.appendTo( element.parent().next().next() );
-					else if ( element.is(":checkbox") )
-						error.appendTo ( element.next() );
-					else
-						error.appendTo( element.parent().next() );
-				},
-				// specifying a submitHandler prevents the default submit, good for the demo
-				//submitHandler: function() {
-				//	alert("submitted!");
-				//},
-				// set this class to error-labels to indicate valid fields
-				success: function(label) {
-					// set &nbsp; as text for IE
-					label.html("&nbsp;").addClass("checked");
+				verifyExpPassword: {
+					required: true,
+					minlength: 8,
+					equalTo: "#newExpPassword"
 				}
-			});
+			},
+			messages: {
+				oldExpPassword: "Please enter your old password",
+				newExpPassword: {
+					required: "Provide a password",
+					rangelength: jQuery.format("Please enter at least {0} characters")
+				},
+				verifyExpPassword: {
+					required: "Repeat your password",
+					minlength: jQuery.format("Please enter at least {0} characters"),
+					equalTo: "Enter the same password as above"
+				}
+			},
+			// the errorPlacement has to take the table layout into account
+			errorPlacement: function(error, element) {
+				if ( element.is(":radio") )
+					error.appendTo( element.parent().next().next() );
+				else if ( element.is(":checkbox") )
+					error.appendTo ( element.next() );
+				else
+					error.appendTo( element.parent().next() );
+			},
+			// specifying a submitHandler prevents the default submit, good for the demo
+			//submitHandler: function() {
+			//	alert("submitted!");
+			//},
+			// set this class to error-labels to indicate valid fields
+			success: function(label) {
+				// set &nbsp; as text for IE
+				label.html("&nbsp;").addClass("checked");
+			}
+		});
 		 
-	 }
+	}
 	 
-	 $("#passwordExpirationfrm").submit(function(){
-			var oldPassword = $('#oldExpPassword').val();
-			var newPassword = $('#newExpPassword').val();
-			var verifyPassword = $('#verifyExpPassword').val();
-			var userId = '';
-			var targetURL=$('#targetURL').val();
+	$("#passwordExpirationfrm").submit(function(){
+		var oldPassword = $('#oldExpPassword').val();
+		var newPassword = $('#newExpPassword').val();
+		var verifyPassword = $('#verifyExpPassword').val();
+		var userId = '';
+		var targetURL=$('#targetURL').val();
 			
-	        var dataString = 'action=save' +
-	        				 '&id='+ userId +
-	        				 '&oldPassword=' + oldPassword + 
-	        				 '&newPassword=' + newPassword + 
-	        				 '&verifyPassword=' + verifyPassword;  
+		var dataString = 'action=save' +
+		'&id='+ userId +
+		'&oldPassword=' + oldPassword + 
+		'&newPassword=' + newPassword + 
+		'&verifyPassword=' + verifyPassword;  
 	        	
-	        if (pwExpFormValidator.valid()) {   
-		              $.ajax({
-			              type: 'POST',
-			              url: 'user_acct',
-			              data: dataString,
-			              success: function() {
-		            	      window.location.href = targetURL;
+		if (pwExpFormValidator.valid()) {   
+			$.ajax({
+				type: 'POST',
+				url: 'user_acct',
+				data: dataString,
+				success: function() {
+					window.location.href = targetURL;
 
-		                  }, 
-		                  error: function(xhr, status, error) {
+				}, 
+				error: function(xhr, status, error) {
 
-		                      $('#passwordChangeComplete').show();
-		                      $('#passwordChangeComplete').text(xhr.responseText);
-		                      $('#passwordChangeComplete').css({
-		            	    	  'font-weight' : 'bold',
-		            	    	  'font-size': 16
-		            	      });
+					$('#passwordChangeComplete').show();
+					$('#passwordChangeComplete').text(xhr.responseText);
+					$('#passwordChangeComplete').css({
+						'font-weight' : 'bold',
+						'font-size': 16
+					});
 
-		                  } 
-				});
+				} 
+			});
 	        
-	        }
-         return false;
-	 });
+		}
+		return false;
+	});
 	 
 	 
-	 $("#userAcctForm").submit(function(){
-			var oldPassword = $('#oldPassword').val();
-			var newPassword = $('#newPassword').val();
-			var verifyPassword = $('#verifyPassword').val();
-			var userId = $('#id').val();
+	$("#userAcctForm").submit(function(){
+		var oldPassword = $('#oldPassword').val();
+		var newPassword = $('#newPassword').val();
+		var verifyPassword = $('#verifyPassword').val();
+		var userId = $('#id').val();
 			
-	        var dataString = 'action=save' +
-	        				 '&id='+ userId +
-	        				 '&oldPassword=' + oldPassword + 
-	        				 '&newPassword=' + newPassword + 
-	        				 '&verifyPassword=' + verifyPassword;  
+		var dataString = 'action=save' +
+		'&id='+ userId +
+		'&oldPassword=' + oldPassword + 
+		'&newPassword=' + newPassword + 
+		'&verifyPassword=' + verifyPassword;  
 	        
-	        if (userFormValidator.valid()) {                   		
-		              $.ajax({
-			              type: 'POST',
-			              url: 'user_acct',
-			              data: dataString,
-			              success: function() {
-		                      $('#passwordChangeComplete').show();
-		                      $('#passwordChangeComplete').text("Password has been changed.");
-		            	      $('#newPasswordTable').hide(); 
-		            	      $('#passwordExpirationMsg').hide();
+		if (userFormValidator.valid()) {                   		
+			$.ajax({
+				type: 'POST',
+				url: 'user_acct',
+				data: dataString,
+				success: function() {
+					$('#passwordChangeComplete').show();
+					$('#passwordChangeComplete').text("Password has been changed.");
+					$('#newPasswordTable').hide(); 
+					$('#passwordExpirationMsg').hide();
 
-		                  }, 
-		                  error: function(xhr, status, error) {
+				}, 
+				error: function(xhr, status, error) {
 
-		                      $('#passwordChangeComplete').show();
-		                      $('#passwordChangeComplete').text(xhr.responseText);
+					$('#passwordChangeComplete').show();
+					$('#passwordChangeComplete').text(xhr.responseText);
 
-		                  } 
-				});
-	        }
+				} 
+			});
+		}
 
-            return false;
-	 });
+		return false;
+	});
 	 
-	 if ($("#status").length > 0){
+	if ($("#status").length > 0){
 		 
 		 
-			 $('input:file').change(
-					 function(){
-						 if ($(this).val()) {
-							 $('input:submit').attr('disabled',false);
-							 // or, as has been pointed out elsewhere:
-							 // $('input:submit').removeAttr('disabled'); 
-						 } 
-					 }
-					 );
+		$('input:file').change(
+			function(){
+				if ($(this).val()) {
+					$('input:submit').attr('disabled',false);
+				// or, as has been pointed out elsewhere:
+				// $('input:submit').removeAttr('disabled'); 
+				} 
+			}
+			);
 		 
 		 
-		 $("#uploadForm").submit(function(){ 
-			 $("input[type=submit]", this).attr('disabled', true); 
-		 });
+		$("#uploadForm").submit(function(){ 
+			$("input[type=submit]", this).attr('disabled', true); 
+		});
 		 
-	 }
+	}
 	 
-	 if ($("#jobUpload").length > 0){
+	if ($("#jobUpload").length > 0){
 		poll();
 
 		(function pollStatus() {
 			setTimeout(function() {
-			  poll();
-			  pollStatus();	
+				poll();
+				pollStatus();	
 			}, 5000);
 		})();
 
-     }
+	}
 
-     function poll() {
+	function poll() {
 
-				$.ajax({
-					url : "jobpoll",
-					success : function(data) {
+		$.ajax({
+			url : "jobpoll",
+			success : function(data) {
 
-						if (data['currentStep'] != undefined) {
-							if (data['currentStep'] < data['totalSteps']) {
-								$('#browseButton').attr('disabled', true);
-								$('#status').text(
-										data['currentStep'] + " out of "
-												+ data['totalSteps']);
-			                    $('#jobUpload').show();
-							} else {
-								$('#browseButton').attr('disabled', false);
-								$('#status').text('Complete');
-			                    			$('#jobUpload').hide();
+				if (data['currentStep'] != undefined) {
+					if (data['currentStep'] < data['totalSteps']) {
+						$('#browseButton').attr('disabled', true);
+						$('#status').text(
+							data['currentStep'] + " out of "
+							+ data['totalSteps']);
+						$('#jobUpload').show();
+					} else {
+						$('#browseButton').attr('disabled', false);
+						$('#status').text('Complete');
+						$('#jobUpload').hide();
 
-							}
+					}
 
-							var d = new Date(data['uploadTime']);
-							var dateStr = (d.getMonth()+1) + "/" + d.getDate()
-									+ "/" + d.getFullYear() + " "
-									+ d.toLocaleTimeString();
+					var d = new Date(data['uploadTime']);
+					var dateStr = (d.getMonth()+1) + "/" + d.getDate()
+					+ "/" + d.getFullYear() + " "
+					+ d.toLocaleTimeString();
 
-							$('#statusDate').text(dateStr);
-							if (data['messages'][0] == null) {
-								$('#messages').text('No errors reported');
-							} else {
-								$('#messages').text(data['messages'][0]);
-							}
-						} else {
-							$('#browseButton').attr('disabled', false);
-							$('#status').text('No jobs have been submitted.');
-							$('#statusDate').empty();
-							$('#messages').empty();
-							$('#jobUpload').hide();
-						}
+					$('#statusDate').text(dateStr);
+					if (data['messages'][0] == null) {
+						$('#messages').text('No errors reported');
+					} else {
+						$('#messages').text(data['messages'][0]);
+					}
+				} else {
+					$('#browseButton').attr('disabled', false);
+					$('#status').text('No jobs have been submitted.');
+					$('#statusDate').empty();
+					$('#messages').empty();
+					$('#jobUpload').hide();
+				}
 
-					},
-					dataType : "json"
-				});
+			},
+			dataType : "json"
+		});
 
-     }
+	}
 
 
 	if ($("#elements").length > 0) {
-		 var $dataElements = $("#elements").find('tr.editor-home-data-element');
-		 $dataElements.each(function(i, dataElement) {
-			 var viewLink = $(dataElement).find('a.view');
-			 $(viewLink).click(function() {
-				 viewElement($(dataElement).data('key'));
-			 });
+		var $dataElements = $("#elements").find('tr.editor-home-data-element');
+		$dataElements.each(function(i, dataElement) {
+			var viewLink = $(dataElement).find('a.view');
+			$(viewLink).click(function() {
+				viewElement($(dataElement).data('key'));
+			});
 			 
-			 var deleteLink = $(dataElement).find('a.delete');
-			 $(deleteLink).click(function() {
-				 deleteElement($(dataElement).data('display-name'), 
+			var deleteLink = $(dataElement).find('a.delete');
+			$(deleteLink).click(function() {
+				deleteElement($(dataElement).data('display-name'), 
 					$(dataElement).data('key'));
-			 });
-		 });
-	 }
+			});
+		});
+	}
 
 });
 	
@@ -508,65 +510,86 @@ $(document).ready(function() {
 // Creates a popup containing a summary of a derived data element.
 function viewElement(rowId) {
 
-    //$('<div class="tooltip"><div id="tree"></div></div>').appendTo('body');
-    //var rowId = event.target.parentNode.id;
-    $('div.tooltip').hide();
-    $(".rowdata td").css("background", "white");
-    $('#'+rowId + " td").css("background", "yellow");
+	//$('<div class="tooltip"><div id="tree"></div></div>').appendTo('body');
+	//var rowId = event.target.parentNode.id;
+	$('div.tooltip').hide();
+	$(".rowdata td").css("background", "white");
+	$('#'+rowId + " td").css("background", "yellow");
    
-    //positionTooltip(event);
+	//positionTooltip(event);
   
-    $("#tree").jstree({
-        "json_data" : {
-            "ajax" : { "url" : "userpropchildren?propKey=" + encodeURIComponent(rowId)}
-        },
-    "plugins" : [ "themes", "json_data", "ui" ]
-    });
+	$("#tree").jstree({
+		"json_data" : {
+			"ajax" : {
+				"url" : "userpropchildren?propKey=" + encodeURIComponent(rowId)
+				}
+		},
+		"plugins" : [ "themes", "json_data", "ui" ]
+	});
 
-    $('div.tooltip').show();
+	$('div.tooltip').show();
 
 
 }
 
 function deleteElement(displayName, key) {
-
-     $("#dialog").dialog({
-            buttons : {
-                "Delete" : function() {
-                    $.ajax({
-	                    type: 'POST',
-	                    url: 'deleteprop?key=' + encodeURIComponent(key),
-                        success: function(data) {
-                            $(this).dialog("close");
-                            window.location.href="editorhome";
-                        }, 
+	var $dialog = $('<div></div>')
+		.html('Are you sure you want to delete data element ' + 
+			displayName + '? You cannot undo this action.')
+		.dialog({
+			title : "Delete Data Element",
+			buttons : {
+				"Delete" : function() {
+					$.ajax({
+						type: 'POST',
+						url: 'deleteprop?key=' + encodeURIComponent(key),
+						success: function(data) {
+							$(this).dialog("close");
+							window.location.href="editorhome";
+						}, 
 						error: function(data, statusCode) {
-                            $(this).dialog("close");
-                            alert(data.statusText);
-                        } 
-    	            });
-                },
-                "Cancel" : function() {
-                    $(this).dialog("close");
-                }
-            }
-        });
-    $("#dialog").html('Are you sure you want to delete data element ' + displayName + '? You cannot undo this action.');
-    $("#dialog").dialog("open");
+							var $errorDialog = $('<div></div>')
+								.html(data.responseText)
+								.dialog({
+									title : "Error Deleting Data Element",
+									buttons: {
+										"OK" : function() {
+											$(this).dialog("close");
+										}
+										
+									},
+									close: function() {
+										$dialog.dialog("close");
+									}
+								})
+							$errorDialog.dialog("open");
+
+						} 
+					});
+				},
+				"Cancel" : function() {
+					$(this).dialog("close");
+				}
+			},
+			close : function() {
+				window.location.href="editorhome";
+			}
+	});
+	$dialog.dialog("open");
 }
 
 function positionTooltip(event){
-    var tPosX = event.pageX + 20;
-    var tPosY = event.pageY - 150;
-    $('div.tooltip').css({
-        'position': 'absolute',
-        'top': tPosY,
-        'left': tPosX,
-        'width': '200px',
-        'height': '200px',
-        'border':'1px solid black',
-        'backgroundColor':'#FFFFEE',
-    });
+	var tPosX = event.pageX + 20;
+	var tPosY = event.pageY - 150;
+	$('div.tooltip').css({
+		'position': 'absolute',
+		'top': tPosY,
+		'left': tPosX,
+		'width': '200px',
+		'height': '200px',
+		'border':'1px solid black',
+		'backgroundColor':'#FFFFEE',
+	});
 }; 
 
 function insertMailToTag(userName, domainName) {

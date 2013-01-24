@@ -44,6 +44,9 @@ import edu.emory.cci.aiw.cvrg.eureka.common.exception.HttpStatusException;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.PropositionDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.translation.DataElementTranslatorVisitor;
 import edu.emory.cci.aiw.cvrg.eureka.services.translation.PropositionTranslatorVisitor;
+import java.text.MessageFormat;
+import java.util.ResourceBundle;
+import org.apache.commons.lang.StringUtils;
 
 /**
  * PropositionCh
@@ -54,6 +57,9 @@ import edu.emory.cci.aiw.cvrg.eureka.services.translation.PropositionTranslatorV
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public class DataElementResource {
+	
+	private static ResourceBundle messages = 
+			ResourceBundle.getBundle("Messages");
 
 	private final PropositionDao propositionDao;
 	private final SystemElementResource systemElementResource;
@@ -119,7 +125,7 @@ public class DataElementResource {
 					Response.Status.PRECONDITION_FAILED, "Data element to "
 					+ "be created should have a user identifier.");
 		}
-		
+
 		try {
 			inElement.accept(this.dataElementTranslatorVisitor);
 		} catch (DataElementHandlingException ex) {
@@ -130,20 +136,20 @@ public class DataElementResource {
 		Date now = new Date();
 		proposition.setCreated(now);
 		proposition.setLastModified(now);
-		
+
 		this.propositionDao.create(proposition);
 	}
 
 	@PUT
 	public void update(DataElement inElement) {
 		if (inElement.getId() == null) {
-			throw new HttpStatusException(Response.Status.PRECONDITION_FAILED, 
+			throw new HttpStatusException(Response.Status.PRECONDITION_FAILED,
 					"Data element to be updated must "
 					+ "have a unique identifier.");
 		}
 
 		if (inElement.getUserId() == null) {
-			throw new HttpStatusException(Response.Status.PRECONDITION_FAILED, 
+			throw new HttpStatusException(Response.Status.PRECONDITION_FAILED,
 					"Data element to be updated must "
 					+ "have a user identifier");
 		}
@@ -175,26 +181,53 @@ public class DataElementResource {
 	@Path("/{userId}/{key}")
 	public void delete(@PathParam("userId") Long inUserId,
 			@PathParam("key") String inKey) {
-		DataElementEntity proposition = this.propositionDao.getByUserAndKey(inUserId, inKey);
+		DataElementEntity proposition =
+				this.propositionDao.getByUserAndKey(inUserId, inKey);
 		if (proposition == null) {
 			throw new HttpStatusException(Response.Status.NOT_FOUND);
 		}
-		List<DataElementEntity> others = this.propositionDao.getByUserId(inUserId);
+		List<DataElementEntity> others =
+				this.propositionDao.getByUserId(inUserId);
 
+		List<String> dataElementsUsedIn = new ArrayList<String>();
 		for (DataElementEntity other : others) {
 			if (!other.getId().equals(proposition.getId())) {
-				PropositionChildrenVisitor visitor = new PropositionChildrenVisitor();
+				PropositionChildrenVisitor visitor =
+						new PropositionChildrenVisitor();
 				other.accept(visitor);
 				for (DataElementEntity child : visitor.getChildren()) {
 					if (child.getId().equals(proposition.getId())) {
-						throw new HttpStatusException(Response.Status.PRECONDITION_FAILED, "The data element to be"
-								+ " removed is used in the definition of "
-								+ other.getDisplayName());
+						dataElementsUsedIn.add(other.getDisplayName());
 					}
 				}
 			}
 		}
-
+		if (!dataElementsUsedIn.isEmpty()) {
+			String dataElementList;
+			int size = dataElementsUsedIn.size();
+			if (size > 1) {
+				List<String> subList =
+						dataElementsUsedIn.subList(0,
+						dataElementsUsedIn.size() - 1);
+				dataElementList = StringUtils.join(subList, ", ")
+						+ " and "
+						+ dataElementsUsedIn.get(size - 1);
+			} else {
+				dataElementList = dataElementsUsedIn.get(0);
+			}
+			MessageFormat usedByOtherDataElements =
+					new MessageFormat(messages.getString(
+					"dataElementResource.delete.error.usedByOtherDataElements"));
+			String msg = usedByOtherDataElements.format(
+					new Object[]{
+						proposition.getDisplayName(),
+						dataElementsUsedIn.size(),
+						dataElementList
+					});
+			throw new HttpStatusException(
+					Response.Status.PRECONDITION_FAILED, msg);
+		}
+		
 		this.propositionDao.remove(proposition);
 	}
 	/*
