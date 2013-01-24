@@ -140,6 +140,7 @@ public class JobResource {
 				PropositionDefinitionCollector.getInstance(
 				this.converterVisitor, this.propositionDao
 				.getByUserId(fileUpload.getUserId()));
+		LOGGER.debug("Received propositions:\n {}", collector.getUserPropDefs());
 		this.jobTask.setUserPropositions(collector.getUserPropDefs());
 		this.jobTask.setNonHelperPropositionIds(collector.getToShowPropDefs());
 		this.jobExecutor.queueJob(this.jobTask);
