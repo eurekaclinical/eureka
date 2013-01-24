@@ -85,7 +85,6 @@ public class JobResource {
 	public Response startJob(JobRequest inJobRequest) {
 		Response response;
 		Job job = inJobRequest.getJob();
-		LOGGER.debug("Sending propositions:\n {}", inJobRequest.getUserPropositions());
 		List<PropositionDefinition> definitions = inJobRequest
 		        .getUserPropositions();
 		Configuration configuration = this.confDao.getByUserId(job.getUserId());
@@ -101,6 +100,11 @@ public class JobResource {
 
 		if (valid) {
 			LOGGER.debug("Created {} definitions", definitions.size());
+			if (LOGGER.isDebugEnabled()) {
+				for (PropositionDefinition pd : definitions) {
+					LOGGER.debug("PropDef: {}", pd);
+				}
+			}
 			job.setNewState("CREATED", null, null);
 			LOGGER.debug("Request to start new Job {}", job.getId());
 			this.jobDao.create(job);
