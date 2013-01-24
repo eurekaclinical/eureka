@@ -146,7 +146,7 @@ function postProposition (postData, successFunc) {
 			window.location.href = 'editorhome'
 		}, 
 		error: function(data, statusCode) {
-			var dialog = $('<div>Could not save data element ' + postData.displayName + ': ' + data.responseText + '</div>');
+			var dialog = $('<div>Could not save data element ' + postData.displayName + '. ' + data.responseText + '</div>');
 			$(dialog).dialog({
 				'title': 'Save Failed',
 				'modal': true,
@@ -154,7 +154,6 @@ function postProposition (postData, successFunc) {
 					"OK": function() {
 						$(this).dialog("close");
 						$(this).remove();
-						window.location.href = 'editorhome'
 					}
 				}
 			});
@@ -320,10 +319,11 @@ function saveCategorization (elem) {
 	var $memberDataElements = $(elem).find('ul.sortable').find('li');
 	var childElements = collectDataElements($memberDataElements);
 
-	var categoricalType = $(elem).find('ul.sortable').data('proptype');
-	if (categoricalType == 'empty') {
-		categoricalType = $('#propSubType').val();
-	}
+//	var categoricalType = $(elem).find('ul.sortable').data('proptype');
+//	if (categoricalType == 'empty') {
+//		categoricalType = $('#propSubType').val();
+//	}
+	var categoricalType = $('#propSubType').val();
 
 	var categorization = {
 		'type': 'CATEGORIZATION',

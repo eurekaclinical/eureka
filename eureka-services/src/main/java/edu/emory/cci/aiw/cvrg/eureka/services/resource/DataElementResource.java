@@ -37,8 +37,13 @@ import javax.ws.rs.core.Response;
 import com.google.inject.Inject;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.DataElement;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.CategoryEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.DataElementEntity;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.ExtendedDataElement;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.FrequencyEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.PropositionChildrenVisitor;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.Relation;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.SequenceEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.exception.DataElementHandlingException;
 import edu.emory.cci.aiw.cvrg.eureka.common.exception.HttpStatusException;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.PropositionDao;
@@ -46,6 +51,7 @@ import edu.emory.cci.aiw.cvrg.eureka.services.translation.DataElementTranslatorV
 import edu.emory.cci.aiw.cvrg.eureka.services.translation.PropositionTranslatorVisitor;
 import java.text.MessageFormat;
 import java.util.ResourceBundle;
+import javax.ws.rs.core.Response.Status;
 import org.apache.commons.lang.StringUtils;
 
 /**
@@ -57,10 +63,9 @@ import org.apache.commons.lang.StringUtils;
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public class DataElementResource {
-	
-	private static ResourceBundle messages = 
-			ResourceBundle.getBundle("Messages");
 
+	private static ResourceBundle messages =
+			ResourceBundle.getBundle("Messages");
 	private final PropositionDao propositionDao;
 	private final SystemElementResource systemElementResource;
 	private final PropositionTranslatorVisitor propositionTranslatorVisitor;
@@ -133,6 +138,14 @@ public class DataElementResource {
 		}
 		DataElementEntity proposition = this.dataElementTranslatorVisitor
 				.getProposition();
+		
+		if (this.propositionDao.getByUserAndKey(
+				inElement.getUserId(), proposition.getKey()) != null) {
+			String msg = this.messages.getString(
+					"dataElementResource.create.error.duplicate");
+			throw new HttpStatusException(Status.CONFLICT, msg);
+		}
+		
 		Date now = new Date();
 		proposition.setCreated(now);
 		proposition.setLastModified(now);
@@ -168,6 +181,11 @@ public class DataElementResource {
 			throw new HttpStatusException(Response.Status.NOT_FOUND);
 		} else if (!oldProposition.getUserId().equals(inElement.getUserId())) {
 			throw new HttpStatusException(Response.Status.NOT_FOUND);
+		} else if (this.propositionDao.getByUserAndKey(
+				inElement.getUserId(), proposition.getKey()) != null) {
+			String msg = this.messages.getString(
+					"dataElementResource.create.error.duplicate");
+			throw new HttpStatusException(Status.CONFLICT, msg);
 		}
 
 		Date now = new Date();
@@ -181,6 +199,7 @@ public class DataElementResource {
 	@Path("/{userId}/{key}")
 	public void delete(@PathParam("userId") Long inUserId,
 			@PathParam("key") String inKey) {
+		System.err.print("delete: " + inKey);
 		DataElementEntity proposition =
 				this.propositionDao.getByUserAndKey(inUserId, inKey);
 		if (proposition == null) {
@@ -188,7 +207,6 @@ public class DataElementResource {
 		}
 		List<DataElementEntity> others =
 				this.propositionDao.getByUserId(inUserId);
-
 		List<String> dataElementsUsedIn = new ArrayList<String>();
 		for (DataElementEntity other : others) {
 			if (!other.getId().equals(proposition.getId())) {
@@ -228,6 +246,21 @@ public class DataElementResource {
 					Response.Status.PRECONDITION_FAILED, msg);
 		}
 		
+
+//		if (proposition instanceof FrequencyEntity) {
+//			ExtendedDataElement extendedProposition = ((FrequencyEntity) proposition).getExtendedProposition();
+//			extendedProposition.getDataElementEntity().getExtendedDataElements().remove(extendedProposition);
+//		} else if (proposition instanceof SequenceEntity) {
+//			ExtendedDataElement extendedProposition = ((SequenceEntity) proposition).getPrimaryExtendedDataElement();
+//			extendedProposition.getDataElementEntity().getExtendedDataElements().remove(extendedProposition);
+//			for (Relation relation : ((SequenceEntity) proposition).getRelations()) {
+//				ExtendedDataElement lhs = relation.getLhsExtendedDataElement();
+//				lhs.getDataElementEntity().getExtendedDataElements().remove(lhs);
+//				ExtendedDataElement rhs = relation.getRhsExtendedDataElement();
+//				rhs.getDataElementEntity().getExtendedDataElements().remove(rhs);
+//			}
+//		}
+
 		this.propositionDao.remove(proposition);
 	}
 	/*
