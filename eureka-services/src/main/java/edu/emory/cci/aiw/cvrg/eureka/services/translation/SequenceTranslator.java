@@ -167,6 +167,7 @@ public class SequenceTranslator implements
 		if (proposition == null) {
 			proposition =
 					this.translatorSupport.getSystemEntityInstance(userId, key);
+			this.propositions.put(proposition.getKey(), proposition);
 		}
 
 		return proposition;
