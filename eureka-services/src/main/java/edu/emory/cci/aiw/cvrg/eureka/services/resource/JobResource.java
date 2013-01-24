@@ -33,6 +33,8 @@ import edu.emory.cci.aiw.cvrg.eureka.services.dao.UserDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.job.JobCollection;
 import edu.emory.cci.aiw.cvrg.eureka.services.thread.JobExecutor;
 import edu.emory.cci.aiw.cvrg.eureka.services.thread.JobTask;
+
+import org.protempa.PropositionDefinition;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -140,7 +142,12 @@ public class JobResource {
 				PropositionDefinitionCollector.getInstance(
 				this.converterVisitor, this.propositionDao
 				.getByUserId(fileUpload.getUserId()));
-		LOGGER.debug("Received propositions:\n {}", collector.getUserPropDefs());
+		LOGGER.debug("Sending {} propositions:", collector.getUserPropDefs().size());
+		if (LOGGER.isDebugEnabled()) {
+			for (PropositionDefinition pd : collector.getUserPropDefs()) {
+				LOGGER.debug("PropDef: {}", pd);
+			}
+		}
 		this.jobTask.setUserPropositions(collector.getUserPropDefs());
 		this.jobTask.setNonHelperPropositionIds(collector.getToShowPropDefs());
 		this.jobExecutor.queueJob(this.jobTask);
