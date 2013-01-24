@@ -85,6 +85,7 @@ public class JobResource {
 	public Response startJob(JobRequest inJobRequest) {
 		Response response;
 		Job job = inJobRequest.getJob();
+		LOGGER.debug("Sending propositions:\n {}", inJobRequest.getUserPropositions());
 		List<PropositionDefinition> definitions = inJobRequest
 		        .getUserPropositions();
 		Configuration configuration = this.confDao.getByUserId(job.getUserId());
