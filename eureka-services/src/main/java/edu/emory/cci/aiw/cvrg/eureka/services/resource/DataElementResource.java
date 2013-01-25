@@ -157,13 +157,13 @@ public class DataElementResource {
 	public void update(DataElement inElement) {
 		if (inElement.getId() == null) {
 			throw new HttpStatusException(Response.Status.PRECONDITION_FAILED,
-					"Data element to be updated must "
+					"The data element to be updated must "
 					+ "have a unique identifier.");
 		}
 
 		if (inElement.getUserId() == null) {
 			throw new HttpStatusException(Response.Status.PRECONDITION_FAILED,
-					"Data element to be updated must "
+					"The data element to be updated must "
 					+ "have a user identifier");
 		}
 		try {
@@ -181,11 +181,6 @@ public class DataElementResource {
 			throw new HttpStatusException(Response.Status.NOT_FOUND);
 		} else if (!oldProposition.getUserId().equals(inElement.getUserId())) {
 			throw new HttpStatusException(Response.Status.NOT_FOUND);
-		} else if (this.propositionDao.getByUserAndKey(
-				inElement.getUserId(), proposition.getKey()) != null) {
-			String msg = this.messages.getString(
-					"dataElementResource.create.error.duplicate");
-			throw new HttpStatusException(Status.CONFLICT, msg);
 		}
 
 		Date now = new Date();

@@ -51,7 +51,7 @@ public class MessagesFilter implements Filter {
 	@Override
 	public void doFilter(ServletRequest inRequest, ServletResponse inResponse, 
 	FilterChain inFilterChain) throws IOException, ServletException {
-		Locale locale = inResponse.getLocale();
+		Locale locale = inRequest.getLocale();
 		String resourceBundleName = 
 				this.servletContext.getInitParameter(
 				"javax.servlet.jsp.jstl.fmt.localizationContext");

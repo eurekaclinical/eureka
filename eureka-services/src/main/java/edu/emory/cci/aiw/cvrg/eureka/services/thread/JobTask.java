@@ -46,6 +46,7 @@ import edu.emory.cci.aiw.cvrg.eureka.services.datavalidator.ValidationEvent;
 import edu.emory.cci.aiw.cvrg.eureka.services.jdbc.DataInserter;
 import edu.emory.cci.aiw.cvrg.eureka.services.jdbc.DataInserterException;
 import java.io.IOException;
+import java.util.Locale;
 import java.util.logging.Level;
 
 /**
@@ -85,6 +86,7 @@ public class JobTask implements Runnable {
 	 * The user-created propositions to actually display in i2b2.
 	 */
 	private List<String> nonHelperPropositionIds;
+	private Locale locale;
 	/**
 	 * The class level logger.
 	 */
@@ -104,6 +106,19 @@ public class JobTask implements Runnable {
 		super();
 		this.fileDao = inFileDao;
 		this.serviceProperties = inServiceProperties;
+		this.locale = Locale.getDefault();
+	}
+
+	public Locale getLocale() {
+		return locale;
+	}
+
+	public void setLocale(Locale locale) {
+		if (locale == null) {
+			this.locale = Locale.getDefault();
+		} else {
+			this.locale = locale;
+		}
 	}
 
 	/**
@@ -143,7 +158,7 @@ public class JobTask implements Runnable {
 			try {
 				// first we make sure that the file is validated
 				DataProvider dataProvider = new XlsxDataProvider(
-						this.fileUpload);
+						this.fileUpload, this.locale);
 				try {
 					this.validateUpload(dataProvider);
 					if (LOGGER.isDebugEnabled()) {
@@ -199,8 +214,8 @@ public class JobTask implements Runnable {
 				}
 			} catch (DataProviderException e) {
 				LOGGER.error("Error reading spreadsheet "
-						+ this.fileUpload.getLocation() + " uploaded by " +
-						this.fileUpload.getUserId(), e);
+						+ this.fileUpload.getLocation() + " uploaded by "
+						+ this.fileUpload.getUserId(), e);
 				this.setCompleteWithError(e.getMessage());
 			} catch (RuntimeException e) {
 				/*
@@ -208,8 +223,8 @@ public class JobTask implements Runnable {
 				 * completely hosed.
 				 */
 				LOGGER.error("Error reading spreadsheet "
-						+ this.fileUpload.getLocation() + " uploaded by " +
-						this.fileUpload.getUserId(), e);
+						+ this.fileUpload.getLocation() + " uploaded by "
+						+ this.fileUpload.getUserId(), e);
 				this.setCompleteWithError(e.getMessage());
 			} catch (Error e) {
 				/*
@@ -217,8 +232,8 @@ public class JobTask implements Runnable {
 				 * completely hosed.
 				 */
 				LOGGER.error("Error reading spreadsheet "
-						+ this.fileUpload.getLocation() + " uploaded by " +
-						this.fileUpload.getUserId(), e);
+						+ this.fileUpload.getLocation() + " uploaded by "
+						+ this.fileUpload.getUserId(), e);
 				this.setCompleteWithError(e.getMessage());
 			}
 		} else {
@@ -330,10 +345,10 @@ public class JobTask implements Runnable {
 		try {
 			etlClient.submitJob(jobRequest);
 			LOGGER.info(
-					"Submitted job from user {} to ETL layer successfully.", 
+					"Submitted job from user {} to ETL layer successfully.",
 					job.getUserId());
 		} catch (ClientException e) {
-			LOGGER.error("Job submission from user {} failed", 
+			LOGGER.error("Job submission from user {} failed",
 					job.getUserId(), e);
 			setCompleteWithError(e.getMessage());
 		}

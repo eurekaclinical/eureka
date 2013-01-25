@@ -82,16 +82,16 @@ public final class Task implements Runnable {
 		Long configId = myJob.getConfigurationId();
 
 		try {
-			PropositionDefinition[] propositionArray =
+			PropositionDefinition[] propDefArray =
 				new PropositionDefinition[this.getPropositionDefinitions()
 					.size()];
-			this.propositionDefinitions.toArray(propositionArray);
+			this.propositionDefinitions.toArray(propDefArray);
 			
 			String[] propIdsToShowArray = 
 					this.propIdsToShow.toArray(
 					new String[this.propIdsToShow.size()]);
 			
-			this.etl.run("config" + configId, propositionArray, 
+			this.etl.run("config" + configId, propDefArray, 
 					propIdsToShowArray, myJob.getId());
 			this.etl.close();
 		} catch (EtlException e) {
@@ -117,7 +117,11 @@ public final class Task implements Runnable {
 		for (int i = 0; i < ste.length; i++) {
 			st[i] = ste[i].toString();
 		}
-		job.setNewState("EXCEPTION", e.getMessage(), st);
+		String msg = e.getMessage();
+		if (msg == null) {
+			msg = e.getClass().getName();
+		}
+		job.setNewState("EXCEPTION", msg, st);
 		this.jobDao.update(job);
 	}
 }

@@ -30,6 +30,8 @@ import org.protempa.proposition.value.ValueType;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import org.protempa.SimpleGapFunction;
+import org.protempa.SlidingWindowWidthMode;
 import org.protempa.proposition.value.NominalValue;
 
 public final class ValueThresholdsLowLevelAbstractionConverter
@@ -86,8 +88,8 @@ public final class ValueThresholdsLowLevelAbstractionConverter
 				thresholdToValueDefinitions(entity.getKey() + "_VALUE", threshold, primary);
 				result.addAll(abstractedFrom);
 			}
-			primary.setMinimumNumberOfValues(1);
-			primary.setMaximumNumberOfValues(1);
+			primary.setSlidingWindowWidthMode(SlidingWindowWidthMode.DEFAULT);
+			primary.setGapFunction(new SimpleGapFunction(0, null));
 
 			result.add(primary);
 			this.primary = primary;

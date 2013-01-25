@@ -108,11 +108,11 @@ final class SequenceConverter
 			Offsets temporalOffsets = new Offsets();
 			temporalOffsets.setStartTemporalExtendedPropositionDefinition(primaryEP);
 			temporalOffsets.setStartIntervalSide(IntervalSide.START);
-			temporalOffsets.setStartOffset(Integer.valueOf(0));
+			temporalOffsets.setStartOffset(0);
 			temporalOffsets.setStartOffsetUnits(null);
 			temporalOffsets.setFinishTemporalExtendedPropositionDefinition(primaryEP);
 			temporalOffsets.setFinishIntervalSide(IntervalSide.FINISH);
-			temporalOffsets.setFinishOffset(Integer.valueOf(0));
+			temporalOffsets.setFinishOffset(0);
 			temporalOffsets.setFinishOffsetUnits(null);
 			primary.setTemporalOffset(temporalOffsets);
 

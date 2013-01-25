@@ -49,6 +49,8 @@ import javax.ws.rs.core.Response;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import javax.servlet.http.HttpServletRequest;
+import javax.ws.rs.core.Context;
 
 /**
  * REST operations related to jobs submitted by the user.
@@ -128,7 +130,7 @@ public class JobResource {
 	@Path("/add")
 	@POST
 	@Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
-	public Response uploadFile(
+	public Response uploadFile(@Context HttpServletRequest request,
 			edu.emory.cci.aiw.cvrg.eureka.common.comm.FileUpload inFileUpload) {
 		LOGGER.debug("Got file upload: {}", inFileUpload);
 		FileUpload fileUpload = new FileUpload();
@@ -150,6 +152,7 @@ public class JobResource {
 		}
 		this.jobTask.setUserPropositions(collector.getUserPropDefs());
 		this.jobTask.setNonHelperPropositionIds(collector.getToShowPropDefs());
+		this.jobTask.setLocale(request.getLocale());
 		this.jobExecutor.queueJob(this.jobTask);
 
 		return Response.ok().build();

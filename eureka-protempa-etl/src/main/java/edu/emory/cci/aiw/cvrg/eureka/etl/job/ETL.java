@@ -48,6 +48,7 @@ import com.google.inject.Inject;
 
 import edu.emory.cci.aiw.cvrg.eureka.etl.config.EtlProperties;
 import edu.emory.cci.aiw.i2b2etl.I2B2QueryResultsHandler;
+import java.util.Arrays;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -92,14 +93,13 @@ public class ETL {
 				"inPropositionDefinitions cannot be null";
 		assert jobId != null : "jobId cannot be null";
 		Protempa protempa = null;
-
 		try {
 			protempa = getNewProtempa(configId + ".ini");
 			DefaultQueryBuilder q = new DefaultQueryBuilder();
 			q.setPropositionDefinitions(inPropositionDefinitions);
 			q.setPropositionIds(inPropIdsToShow);
 			q.setId(jobId.toString());
-			LOGGER.error("Constructed Protempa query " + q);
+			LOGGER.debug("Constructed Protempa query " + q);
 			Query query = protempa.buildQuery(q);
 			File i2b2Config = new File(
 					this.configDirectory, configId + ".xml");

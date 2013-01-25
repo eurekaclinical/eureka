@@ -38,16 +38,19 @@ import org.slf4j.LoggerFactory;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.FileUpload;
 import java.text.MessageFormat;
+import java.util.Locale;
+import java.util.ResourceBundle;
 import java.util.logging.Level;
+import org.apache.poi.hssf.util.CellReference;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.openxml4j.opc.OPCPackage;
 
 /**
  * An implementation of the {@link DataProvider} interface, using an Excel
  * workbook as the data source.
- * 
+ *
  * @author hrathod
- * 
+ *
  */
 public class XlsxDataProvider implements DataProvider {
 
@@ -65,19 +68,16 @@ public class XlsxDataProvider implements DataProvider {
 	 */
 	private static final Logger LOGGER = LoggerFactory
 			.getLogger(XlsxDataProvider.class);
-	
 	/**
 	 * Log message template for a missing required worksheet. Takes one
 	 * parameter, the worksheet name.
 	 */
 	private final MessageFormat logErrorMessage;
-	
 	/**
-	 * Exception message for a missing required worksheet. Takes one
-	 * parameter, the worksheet name.
+	 * Exception message for a missing required worksheet. Takes one parameter,
+	 * the worksheet name.
 	 */
 	private final MessageFormat exceptionErrorMessage;
-	
 	/**
 	 * A handle to the input stream so we can close it.
 	 */
@@ -122,15 +122,16 @@ public class XlsxDataProvider implements DataProvider {
 	 * The list of vitals parsed from the data file.
 	 */
 	private List<Vital> vitals;
+	private final ResourceBundle messages;
 
 	/**
 	 * Create the data provider from the given data file.
-	 * 
+	 *
 	 * @param inDataFile The Excel workbook file to use as the data store.
 	 * @throws DataProviderException Thrown when the workbook can not be
-	 *             accessed, or parsed correctly.
+	 * accessed, or parsed correctly.
 	 */
-	public XlsxDataProvider(FileUpload inDataFile) throws DataProviderException {
+	public XlsxDataProvider(FileUpload inDataFile, Locale locale) throws DataProviderException {
 		if (inDataFile == null) {
 			throw new IllegalArgumentException("inDataFile cannot be null");
 		}
@@ -138,14 +139,14 @@ public class XlsxDataProvider implements DataProvider {
 			throw new IllegalArgumentException(
 					"inDataFile cannot have a null location field");
 		}
-		
+
 		this.logErrorMessage = new MessageFormat(MessageFormat.format(
-				"Spreadsheet {0} uploaded by {1} is missing required sheet", 
-				new Object[]{inDataFile.getLocation(), inDataFile.getUserId()}) 
+				"Spreadsheet {0} uploaded by {1} is missing required sheet",
+				new Object[]{inDataFile.getLocation(), inDataFile.getUserId()})
 				+ " {0}");
 		this.exceptionErrorMessage = new MessageFormat(
 				"Required worksheet {0} is missing");
-		
+
 		try {
 			LOGGER.debug("Creating workbook from {}", inDataFile.getLocation());
 			this.opcPackage = OPCPackage.open(inDataFile.getLocation());
@@ -158,18 +159,19 @@ public class XlsxDataProvider implements DataProvider {
 		} catch (InvalidOperationException ioe) {
 			throw new DataProviderException("Invalid XLSX file", ioe);
 		}
+		this.messages = ResourceBundle.getBundle("Messages", locale);
 	}
 
 	/**
 	 * Make sure that all the necessary worksheets are present in the given
 	 * workbook.
-	 * 
+	 *
 	 * @throws DataProviderException Thrown if there are missing worksheets in
-	 *             the given workbook.
+	 * the given workbook.
 	 */
 	private void validateWorksheets() throws DataProviderException {
-		String[] requiredSheetNames = new String[] { "patient", "provider",
-				"encounter" };
+		String[] requiredSheetNames = new String[]{"patient", "provider",
+			"encounter"};
 		for (String sheetName : requiredSheetNames) {
 			XSSFSheet sheet = this.workbook.getSheet(sheetName);
 			if (sheet == null) {
@@ -250,23 +252,23 @@ public class XlsxDataProvider implements DataProvider {
 		}
 		return this.vitals;
 	}
-	
+
 	@Override
 	public void close() throws IOException {
 		if (this.opcPackage != null) {
 			this.opcPackage.close();
 		}
 	}
-	
+
 	/**
-	 * Convenience method to read a required sheet and throw an exception if
-	 * the sheet is not present.
-	 * 
+	 * Convenience method to read a required sheet and throw an exception if the
+	 * sheet is not present.
+	 *
 	 * @param sheetName the sheet's name.
 	 * @return the sheet, guaranteed not <code>null</code>.
 	 * @throws DataProviderException if the sheet is not present.
 	 */
-	private XSSFSheet readRequiredSheet(String sheetName) 
+	private XSSFSheet readRequiredSheet(String sheetName)
 			throws DataProviderException {
 		XSSFSheet sheet = this.workbook.getSheet(sheetName);
 		if (sheet == null) {
@@ -279,28 +281,26 @@ public class XlsxDataProvider implements DataProvider {
 
 	/**
 	 * Parse the list of patients from the workbook.
-	 * 
+	 *
 	 * @return A list of {@link Patient} objects.
 	 */
 	private List<Patient> readPatients() throws DataProviderException {
 		XSSFSheet sheet = readRequiredSheet("patient");
+		String sheetName = sheet.getSheetName();
 		List<Patient> result = new ArrayList<Patient>();
 		Iterator<Row> rows = sheet.rowIterator();
 		rows.next(); // skip header row
 		while (rows.hasNext()) {
 			Row row = rows.next();
 			Patient patient = new Patient();
-			patient.setId(XlsxDataProvider.readLongValue(row.getCell(0)));
-			patient.setFirstName(XlsxDataProvider.readStringValue(row
-					.getCell(1)));
-			patient.setLastName(XlsxDataProvider.readStringValue(row.getCell(2)));
-			patient.setDateOfBirth(XlsxDataProvider.readDateValue(row
-					.getCell(3)));
-			patient.setLanguage(XlsxDataProvider.readStringValue(row.getCell(4)));
-			patient.setMaritalStatus(XlsxDataProvider.readStringValue(row
-					.getCell(5)));
-			patient.setRace(XlsxDataProvider.readStringValue(row.getCell(6)));
-			patient.setGender(XlsxDataProvider.readStringValue(row.getCell(7)));
+			patient.setId(readLongValue(sheetName, row.getCell(0)));
+			patient.setFirstName(readStringValue(sheetName, row.getCell(1)));
+			patient.setLastName(readStringValue(sheetName, row.getCell(2)));
+			patient.setDateOfBirth(readDateValue(sheetName, row.getCell(3)));
+			patient.setLanguage(readStringValue(sheetName, row.getCell(4)));
+			patient.setMaritalStatus(readStringValue(sheetName, row.getCell(5)));
+			patient.setRace(readStringValue(sheetName, row.getCell(6)));
+			patient.setGender(readStringValue(sheetName, row.getCell(7)));
 			result.add(patient);
 		}
 		return result;
@@ -308,22 +308,21 @@ public class XlsxDataProvider implements DataProvider {
 
 	/**
 	 * Parse the list of providers in the workbook.
-	 * 
+	 *
 	 * @return A list of {@link Provider} objects.
 	 */
 	private List<Provider> readProviders() throws DataProviderException {
 		XSSFSheet sheet = readRequiredSheet("provider");
+		String sheetName = sheet.getSheetName();
 		List<Provider> result = new ArrayList<Provider>();
 		Iterator<Row> rows = sheet.rowIterator();
 		rows.next(); // skip header row
 		while (rows.hasNext()) {
 			Row row = rows.next();
 			Provider provider = new Provider();
-			provider.setId(XlsxDataProvider.readLongValue(row.getCell(0)));
-			provider.setFirstName(XlsxDataProvider.readStringValue(row
-					.getCell(1)));
-			provider.setLastName(XlsxDataProvider.readStringValue(row
-					.getCell(2)));
+			provider.setId(readLongValue(sheetName, row.getCell(0)));
+			provider.setFirstName(readStringValue(sheetName, row.getCell(1)));
+			provider.setLastName(readStringValue(sheetName, row.getCell(2)));
 			result.add(provider);
 		}
 		return result;
@@ -331,11 +330,12 @@ public class XlsxDataProvider implements DataProvider {
 
 	/**
 	 * Parse the list of encounters in the workbook.
-	 * 
+	 *
 	 * @return A list of {@link Encounter} objects.
 	 */
 	private List<Encounter> readEncounters() throws DataProviderException {
 		XSSFSheet sheet = readRequiredSheet("encounter");
+		String sheetName = sheet.getSheetName();
 		List<Encounter> result = new ArrayList<Encounter>();
 		Iterator<Row> rows = sheet.rowIterator();
 		LOGGER.debug("Encounter iterator: {}", Integer.valueOf(rows.hashCode()));
@@ -343,16 +343,13 @@ public class XlsxDataProvider implements DataProvider {
 		while (rows.hasNext()) {
 			Row row = rows.next();
 			Encounter encounter = new Encounter();
-			encounter.setId(XlsxDataProvider.readLongValue(row.getCell(0)));
-			encounter.setPatientId(XlsxDataProvider.readLongValue(row
-					.getCell(1)));
-			encounter.setProviderId(XlsxDataProvider.readLongValue(row
-					.getCell(2)));
-			encounter.setStart(XlsxDataProvider.readDateValue(row.getCell(3)));
-			encounter.setEnd(XlsxDataProvider.readDateValue(row.getCell(4)));
-			encounter.setType(XlsxDataProvider.readStringValue(row.getCell(5)));
-			encounter.setDischargeDisposition(XlsxDataProvider
-					.readStringValue(row.getCell(6)));
+			encounter.setId(readLongValue(sheetName, row.getCell(0)));
+			encounter.setPatientId(readLongValue(sheetName, row.getCell(1)));
+			encounter.setProviderId(readLongValue(sheetName, row.getCell(2)));
+			encounter.setStart(readDateValue(sheetName, row.getCell(3)));
+			encounter.setEnd(readDateValue(sheetName, row.getCell(4)));
+			encounter.setType(readStringValue(sheetName, row.getCell(5)));
+			encounter.setDischargeDisposition(readStringValue(sheetName, row.getCell(6)));
 			result.add(encounter);
 		}
 		return result;
@@ -360,22 +357,23 @@ public class XlsxDataProvider implements DataProvider {
 
 	/**
 	 * Parse the list of CPT codes in the workbook.
-	 * 
+	 *
 	 * @return A list of {@link CPT} objects.
 	 */
 	private List<CPT> readCpts() throws DataProviderException {
 		XSSFSheet sheet = this.workbook.getSheet("eCPT");
 		List<CPT> result = new ArrayList<CPT>();
 		if (sheet != null) {
+			String sheetName = sheet.getSheetName();
 			Iterator<Row> rows = sheet.rowIterator();
 			rows.next(); // skip header row
 			while (rows.hasNext()) {
 				Row row = rows.next();
 				CPT cpt = new CPT();
-				cpt.setId(XlsxDataProvider.readStringValue(row.getCell(0)));
-				cpt.setEncounterId(XlsxDataProvider.readLongValue(row.getCell(1)));
-				cpt.setTimestamp(XlsxDataProvider.readDateValue(row.getCell(2)));
-				cpt.setEntityId(XlsxDataProvider.readStringValue(row.getCell(3)));
+				cpt.setId(readStringValue(sheetName, row.getCell(0)));
+				cpt.setEncounterId(readLongValue(sheetName, row.getCell(1)));
+				cpt.setTimestamp(readDateValue(sheetName, row.getCell(2)));
+				cpt.setEntityId(readStringValue(sheetName, row.getCell(3)));
 				result.add(cpt);
 			}
 		}
@@ -384,24 +382,24 @@ public class XlsxDataProvider implements DataProvider {
 
 	/**
 	 * Parse the list of ICD9 Diagnostic codes present in the workbook.
-	 * 
+	 *
 	 * @return A list of {@link Icd9Diagnosis} objects.
 	 */
 	private List<Icd9Diagnosis> readIcd9Diagnoses() throws DataProviderException {
 		XSSFSheet sheet = this.workbook.getSheet("eICD9D");
 		List<Icd9Diagnosis> result = new ArrayList<Icd9Diagnosis>();
 		if (sheet != null) {
+			String sheetName = sheet.getSheetName();
 			Iterator<Row> rows = sheet.rowIterator();
 			rows.next(); // skip header row
 			while (rows.hasNext()) {
 				Row row = rows.next();
 				Icd9Diagnosis diagnosis = new Icd9Diagnosis();
-				diagnosis.setId(XlsxDataProvider.readStringValue(row.getCell(0)));
-				diagnosis.setEncounterId(XlsxDataProvider.readLongValue(row
-						.getCell(1)));
-				diagnosis.setTimestamp(XlsxDataProvider.readDateValue(row
+				diagnosis.setId(readStringValue(sheetName, row.getCell(0)));
+				diagnosis.setEncounterId(readLongValue(sheetName, row.getCell(1)));
+				diagnosis.setTimestamp(readDateValue(sheetName, row
 						.getCell(2)));
-				diagnosis.setEntityId(XlsxDataProvider.readStringValue(row
+				diagnosis.setEntityId(readStringValue(sheetName, row
 						.getCell(3)));
 				result.add(diagnosis);
 			}
@@ -411,24 +409,24 @@ public class XlsxDataProvider implements DataProvider {
 
 	/**
 	 * Parse the list of ICD9 Procedure codes present in the workbook.
-	 * 
+	 *
 	 * @return A list of {@link Icd9Procedure} objects.
 	 */
 	private List<Icd9Procedure> readIcd9Procedures() throws DataProviderException {
 		XSSFSheet sheet = this.workbook.getSheet("eICD9P");
 		List<Icd9Procedure> result = new ArrayList<Icd9Procedure>();
 		if (sheet != null) {
+			String sheetName = sheet.getSheetName();
 			Iterator<Row> rows = sheet.rowIterator();
 			rows.next(); // skip header row
 			while (rows.hasNext()) {
 				Row row = rows.next();
 				Icd9Procedure procedure = new Icd9Procedure();
-				procedure.setId(XlsxDataProvider.readStringValue(row.getCell(0)));
-				procedure.setEncounterId(XlsxDataProvider.readLongValue(row
-						.getCell(1)));
-				procedure.setTimestamp(XlsxDataProvider.readDateValue(row
+				procedure.setId(readStringValue(sheetName, row.getCell(0)));
+				procedure.setEncounterId(readLongValue(sheetName, row.getCell(1)));
+				procedure.setTimestamp(readDateValue(sheetName, row
 						.getCell(2)));
-				procedure.setEntityId(XlsxDataProvider.readStringValue(row
+				procedure.setEntityId(readStringValue(sheetName, row
 						.getCell(3)));
 				result.add(procedure);
 			}
@@ -438,24 +436,25 @@ public class XlsxDataProvider implements DataProvider {
 
 	/**
 	 * Parse the list of medications present in the workbook.
-	 * 
+	 *
 	 * @return A list of {@link Medication} objects.
 	 */
 	private List<Medication> readMedications() throws DataProviderException {
 		XSSFSheet sheet = this.workbook.getSheet("eMEDS");
 		List<Medication> result = new ArrayList<Medication>();
 		if (sheet != null) {
+			String sheetName = sheet.getSheetName();
 			Iterator<Row> rows = sheet.rowIterator();
 			rows.next(); // skip header row
 			while (rows.hasNext()) {
 				Row row = rows.next();
 				Medication medication = new Medication();
-				medication.setId(XlsxDataProvider.readStringValue(row.getCell(0)));
-				medication.setEncounterId(XlsxDataProvider.readLongValue(row
+				medication.setId(readStringValue(sheetName, row.getCell(0)));
+				medication.setEncounterId(readLongValue(sheetName, row
 						.getCell(1)));
-				medication.setTimestamp(XlsxDataProvider.readDateValue(row
+				medication.setTimestamp(readDateValue(sheetName, row
 						.getCell(2)));
-				medication.setEntityId(XlsxDataProvider.readStringValue(row
+				medication.setEntityId(readStringValue(sheetName, row
 						.getCell(3)));
 				result.add(medication);
 			}
@@ -465,26 +464,27 @@ public class XlsxDataProvider implements DataProvider {
 
 	/**
 	 * Parse the list of labs present in the workbook's "eLABS" worksheet.
-	 * 
+	 *
 	 * @return A list of {@link Lab} objects.
 	 */
 	private List<Lab> readLabs() throws DataProviderException {
 		XSSFSheet sheet = this.workbook.getSheet("eLABS");
 		List<Lab> result = new ArrayList<Lab>();
 		if (sheet != null) {
+			String sheetName = sheet.getSheetName();
 			Iterator<Row> rows = sheet.rowIterator();
 			rows.next(); // skip header row
 			while (rows.hasNext()) {
 				Row row = rows.next();
 				Lab lab = new Lab();
-				lab.setId(XlsxDataProvider.readStringValue(row.getCell(0)));
-				lab.setEncounterId(XlsxDataProvider.readLongValue(row.getCell(1)));
-				lab.setTimestamp(XlsxDataProvider.readDateValue(row.getCell(2)));
-				lab.setEntityId(XlsxDataProvider.readStringValue(row.getCell(3)));
-				lab.setResultAsStr(XlsxDataProvider.readStringValue(row.getCell(4)));
-				lab.setResultAsNum(XlsxDataProvider.readDoubleValue(row.getCell(5)));
-				lab.setUnits(XlsxDataProvider.readStringValue(row.getCell(6)));
-				lab.setFlag(XlsxDataProvider.readStringValue(row.getCell(7)));
+				lab.setId(readStringValue(sheetName, row.getCell(0)));
+				lab.setEncounterId(readLongValue(sheetName, row.getCell(1)));
+				lab.setTimestamp(readDateValue(sheetName, row.getCell(2)));
+				lab.setEntityId(readStringValue(sheetName, row.getCell(3)));
+				lab.setResultAsStr(readStringValue(sheetName, row.getCell(4)));
+				lab.setResultAsNum(readDoubleValue(sheetName, row.getCell(5)));
+				lab.setUnits(readStringValue(sheetName, row.getCell(6)));
+				lab.setFlag(readStringValue(sheetName, row.getCell(7)));
 				result.add(lab);
 			}
 		}
@@ -493,28 +493,27 @@ public class XlsxDataProvider implements DataProvider {
 
 	/**
 	 * Parse the list of vitals present in the workbook's "eVITALS" worksheet.
-	 * 
+	 *
 	 * @return A list of {@link Vital} objects.
 	 */
 	private List<Vital> readVitals() throws DataProviderException {
 		XSSFSheet sheet = this.workbook.getSheet("eVITALS");
 		List<Vital> result = new ArrayList<Vital>();
 		if (sheet != null) {
+			String sheetName = sheet.getSheetName();
 			Iterator<Row> rows = sheet.rowIterator();
 			rows.next(); // skip header row
 			while (rows.hasNext()) {
 				Row row = rows.next();
 				Vital vital = new Vital();
-				vital.setId(XlsxDataProvider.readStringValue(row.getCell(0)));
-				vital.setEncounterId(XlsxDataProvider.readLongValue(row.getCell(1)));
-				vital.setTimestamp(XlsxDataProvider.readDateValue(row.getCell(2)));
-				vital.setEntityId(XlsxDataProvider.readStringValue(row.getCell(3)));
-				vital.setResultAsStr(XlsxDataProvider.readStringValue(row
-						.getCell(4)));
-				vital.setResultAsNum(XlsxDataProvider.readDoubleValue(row
-						.getCell(5)));
-				vital.setUnits(XlsxDataProvider.readStringValue(row.getCell(6)));
-				vital.setFlag(XlsxDataProvider.readStringValue(row.getCell(7)));
+				vital.setId(readStringValue(sheetName, row.getCell(0)));
+				vital.setEncounterId(readLongValue(sheetName, row.getCell(1)));
+				vital.setTimestamp(readDateValue(sheetName, row.getCell(2)));
+				vital.setEntityId(readStringValue(sheetName, row.getCell(3)));
+				vital.setResultAsStr(readStringValue(sheetName, row.getCell(4)));
+				vital.setResultAsNum(readDoubleValue(sheetName, row.getCell(5)));
+				vital.setUnits(readStringValue(sheetName, row.getCell(6)));
+				vital.setFlag(readStringValue(sheetName, row.getCell(7)));
 				result.add(vital);
 			}
 		}
@@ -523,20 +522,19 @@ public class XlsxDataProvider implements DataProvider {
 
 	/**
 	 * Read a date value from the given spreadsheet cell.
-	 * 
+	 *
 	 * @param cell The cell to read the value from.
 	 * @return The date in the cell, if valid, null otherwise.
 	 */
-	private static Date readDateValue(Cell cell) throws DataProviderException {
-		Date result;
-		String value = XlsxDataProvider.readStringValue(cell);
-		if (value == null) {
-			result = null;
-		} else {
+	private Date readDateValue(String sheetName, Cell cell) 
+			throws DataProviderException {
+		Date result = null;
+		String value = readStringValue(sheetName, cell);
+		if (value != null) {
 			try {
 				result = dateFormat.get().parse(value);
 			} catch (ParseException e) {
-				throw new DataProviderException(e);
+				throwException(sheetName, cell, e.getMessage(), e);
 			}
 		}
 		return result;
@@ -544,40 +542,68 @@ public class XlsxDataProvider implements DataProvider {
 
 	/**
 	 * Read a string value from the given cell.
-	 * 
+	 *
 	 * @param cell The cell to read value from.
 	 * @return A String containing the cell value, if valid, null otherwise.
 	 */
-	private static String readStringValue(Cell cell) {
-		String result;
-		if (cell == null) {
-			result = null;
-		} else {
-			if (cell.getCellType() != Cell.CELL_TYPE_STRING) {
-				result = null;
-			} else {
-				result = cell.getStringCellValue();
+	private String readStringValue(String sheetName, Cell cell)
+			throws DataProviderException {
+		String result = null;
+		if (cell != null) {
+			try {
+				int cellType = cell.getCellType();
+				if (cellType == Cell.CELL_TYPE_STRING) {
+					result = cell.getStringCellValue();
+				} else if (cellType == Cell.CELL_TYPE_NUMERIC) {
+					result = Double.toString(cell.getNumericCellValue());
+				} else if (cellType == Cell.CELL_TYPE_BLANK) {
+					result = null;
+				} else if (cellType == Cell.CELL_TYPE_BOOLEAN) {
+					result = Boolean.toString(cell.getBooleanCellValue());
+				} else {
+					throwException(sheetName, cell,
+							"Cell type must be a number, string, boolean or blank");
+				}
+			} catch (Exception e) {
+				throwException(sheetName, cell, e.getMessage(), e);
 			}
 		}
 		return result;
 	}
 
+	private void throwException(String sheetName, Cell cell, 
+			String problemDescription) throws DataProviderException {
+		throwException(sheetName, cell, problemDescription, null);
+	}
+
+	private void throwException(String sheetName, Cell cell, 
+			String problemDescription, Exception cause) 
+			throws DataProviderException {
+		String msgTemplate =
+				messages.getString("xlsxDataProvider.error.parsing");
+		CellReference cellRef =
+				new CellReference(cell.getRowIndex(),
+				cell.getColumnIndex());
+		String msg = MessageFormat.format(msgTemplate, sheetName, 
+				cellRef.formatAsString(), problemDescription);
+		throw new DataProviderException(msg, cause);
+	}
+
 	/**
 	 * Read a numerical value as a Long type from the given cell.
-	 * 
+	 *
 	 * @param cell The cell to read the value from.
 	 * @return A Long containing the cell's value, if valid, null otherwise.
 	 */
-	private static Long readLongValue(Cell cell) {
-		Long result;
-		if (cell == null) {
-			result = null;
-		} else {
-			if (cell.getCellType() == Cell.CELL_TYPE_NUMERIC) {
+	private Long readLongValue(String sheetName, Cell cell) 
+			throws DataProviderException {
+		Long result = null;
+		if (cell != null) {
+			try {
 				Double value = new Double(cell.getNumericCellValue());
 				result = Long.valueOf(value.longValue());
-			} else {
-				result = null;
+			} catch (Exception e) {
+				throwException(sheetName, cell, e.getMessage(), e);
 			}
 		}
 		return result;
@@ -585,20 +611,19 @@ public class XlsxDataProvider implements DataProvider {
 
 	/**
 	 * Read the give cell's value as a Double type.
-	 * 
+	 *
 	 * @param cell The cell to read the value from.
 	 * @return A Double containing the cell value, if valid, null otherwise.
 	 */
-	private static Double readDoubleValue(Cell cell) {
-		Double result;
-		if (cell == null) {
-			result = null;
-		} else {
-			if (cell.getCellType() == Cell.CELL_TYPE_NUMERIC) {
+	private Double readDoubleValue(String sheetName, Cell cell) 
+			throws DataProviderException {
+		Double result = null;
+		if (cell != null) {
+			try {
 				double value = cell.getNumericCellValue();
 				result = Double.valueOf(value);
-			} else {
-				result = null;
+			} catch (Exception e) {
+				throwException(sheetName, cell, e.getMessage(), e);
 			}
 		}
 		return result;
