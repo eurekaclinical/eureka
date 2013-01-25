@@ -119,6 +119,9 @@ final class SequenceConverter
 			this.primary = primary;
 			result.add(primary);
 		}
+		
+		primary.setDisplayName(sequenceEntity.getDisplayName());
+		primary.setDescription(sequenceEntity.getDescription());
 		return result;
 	}
 
