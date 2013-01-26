@@ -454,7 +454,7 @@
 																			<input type="number" class="frequencyCountField" name="freqAtLeastField" min="1" value="<c:choose><c:when test="${propositionType == 'FREQUENCY'}">${proposition.atLeast}</c:when><c:otherwise><c:out value="1"/></c:otherwise></c:choose>" />
 																		</td>
 																		<td>
-																			<label id="valueThresholdConsecutiveLabel" style="visibility:hidden"><input type="checkbox" value="true" name="freqIsConsecutive" <c:if test="${propositionType == 'FREQUENCY' and proposition.isConsecutive}">checked="checked"</c:if> />consecutive</label>
+																			<label id="valueThresholdConsecutiveLabel" <c:if test="${propositionType != 'FREQUENCY' or (not empty proposition and proposition.dataElement.type != 'VALUE_THRESHOLD')}">style="visibility:hidden"</c:if>><input type="checkbox" value="true" name="freqIsConsecutive" <c:if test="${propositionType == 'FREQUENCY' and proposition.isConsecutive}">checked="checked"</c:if> />consecutive</label>
 																		</td>
 																		<td>
 																			<table>

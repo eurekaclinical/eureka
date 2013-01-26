@@ -50,12 +50,6 @@ ul.nav a { zoom: 1; }
 
 <!--  -->
 <link href="${pageContext.request.contextPath}/css/jquery-ui.css" type="text/css" rel="stylesheet"/>
-<link href="${pageContext.request.contextPath}/css/ui-lightness/jquery-ui-1.8.21.custom.css"
-	rel="stylesheet" type="text/css" />
-
-<link href="${pageContext.request.contextPath}/css/buttons.css"
-	rel="stylesheet" type="text/css" />
-
 <link href="${pageContext.request.contextPath}/themes/default/style.css"
 	rel="stylesheet" type="text/css" />
 
@@ -195,7 +189,7 @@ background-color:#EAF2D3;
  
   
   <div class="footer">
-    <p>Copyright &copy; 2012 Emory University -- All  Rights Reserved</p>
+    <p>Copyright &copy; 2012-2013 Emory University -- All  Rights Reserved</p>
   </div>
   <!-- end .container --></div>
 </body>

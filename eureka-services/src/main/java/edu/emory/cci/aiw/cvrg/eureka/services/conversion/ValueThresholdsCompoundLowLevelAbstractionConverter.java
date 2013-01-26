@@ -30,6 +30,7 @@ import org.protempa.PropositionDefinition;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.ValueThresholdEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.ValueThresholdGroupEntity;
 import org.protempa.SimpleGapFunction;
+import org.protempa.SlidingWindowWidthMode;
 
 public final class ValueThresholdsCompoundLowLevelAbstractionConverter
 		implements
@@ -93,15 +94,17 @@ public final class ValueThresholdsCompoundLowLevelAbstractionConverter
 				def.setGapFunction(new SimpleGapFunction(Integer.valueOf(0), null));
 				ValueThresholdsLowLevelAbstractionConverter
 						.thresholdToValueDefinitions(entity.getKey() + "_VALUE", v, def);
+				def.setSlidingWindowWidthMode(SlidingWindowWidthMode.DEFAULT);
+				def.setGapFunction(new SimpleGapFunction(0, null));
 				intermediates.add(def);
 			}
 			result.addAll(intermediates);
 
 			for (LowLevelAbstractionDefinition def : intermediates) {
 				primary.addValueClassification(new ValueClassification(entity.getKey() + "_VALUE",
-						def.getId(), def.getValueDefinitions().get(0).getId()));
+						def.getId(), entity.getKey() + "_VALUE"));
 				primary.addValueClassification(new ValueClassification(entity.getKey() + "_VALUE_COMP",
-						def.getId(), def.getValueDefinitions().get(1).getId()));
+						def.getId(), entity.getKey() + "_VALUE_COMP"));
 			}
 
 			result.add(primary);

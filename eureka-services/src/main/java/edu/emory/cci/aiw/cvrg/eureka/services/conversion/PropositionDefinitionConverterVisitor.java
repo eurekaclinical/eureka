@@ -51,8 +51,8 @@ public final class PropositionDefinitionConverterVisitor implements
 	private final SequenceConverter sequenceConverter;
 	private final ValueThresholdsLowLevelAbstractionConverter valueThresholdsLowLevelAbstractionConverter;
 	private final ValueThresholdsCompoundLowLevelAbstractionConverter valueThresholdsCompoundLowLevelAbstractionConverter;
-	private final FrequencySliceAbstractionConverter frequencySliceAbstractionConverter;
-	private final FrequencyHighLevelAbstractionConverter frequencyHighLevelAbstractionConverter;
+	private final FrequencyNonConsecutiveConverter frequencySliceAbstractionConverter;
+	private final FrequencyConsecutiveConverter frequencyHighLevelAbstractionConverter;
 
 	@Inject
 	public PropositionDefinitionConverterVisitor(SystemPropositionConverter inSystemPropositionConverter,
@@ -60,8 +60,8 @@ public final class PropositionDefinitionConverterVisitor implements
 			SequenceConverter inSequenceConverter,
 			ValueThresholdsLowLevelAbstractionConverter inValueThresholdsLowLevelAbstractionConverter,
 			ValueThresholdsCompoundLowLevelAbstractionConverter inValueThresholdsCompoundLowLevelAbstractionConverter,
-			FrequencySliceAbstractionConverter inFrequencySliceAbstractionConverter,
-			FrequencyHighLevelAbstractionConverter inFrequencyHighLevelAbstractionConverter) {
+			FrequencyNonConsecutiveConverter inFrequencySliceAbstractionConverter,
+			FrequencyConsecutiveConverter inFrequencyHighLevelAbstractionConverter) {
 		systemPropositionConverter = inSystemPropositionConverter;
 		categorizationConverter = inCategorizationConverter;
 		categorizationConverter.setConverterVisitor(this);

@@ -22,6 +22,8 @@ package edu.emory.cci.aiw.cvrg.eureka.common.comm;
 import java.util.List;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.exception.DataElementHandlingException;
+import org.apache.commons.lang.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang.builder.ToStringBuilder;
 
 /**
  * Container class for the sequence user-created data element from the UI.
@@ -53,7 +55,7 @@ public final class Sequence extends DataElement {
 		this.relatedDataElements = relatedDataElements;
 	}
 
-	public static class RelatedDataElementField {
+	public static final class RelatedDataElementField {
 		private DataElementField dataElementField;
 		private Long relationOperator;
 		private String sequentialDataElement;
@@ -130,24 +132,13 @@ public final class Sequence extends DataElement {
 
 		@Override
 		public String toString() {
-			return "RelatedDataElementField{" +
-				"dataElementField=" + dataElementField +
-				", relationOperator=" + relationOperator +
-				", sequentialDataElement='" + sequentialDataElement + '\'' +
-				", relationMinCount=" + relationMinCount +
-				", relationMinUnits=" + relationMinUnits +
-				", relationMaxCount=" + relationMaxCount +
-				", relationMaxUnits=" + relationMaxUnits +
-				'}';
+			return ToStringBuilder.reflectionToString(this);
 		}
 	}
 
 	@Override
 	public String toString() {
-		return "Sequence{" +
-			"primaryDataElement=" + primaryDataElement +
-			", relatedDataElements=" + relatedDataElements +
-			'}';
+		return ReflectionToStringBuilder.reflectionToString(this);
 	}
 
 	@Override

@@ -70,7 +70,7 @@ public class FrequencyHighLevelAbstractionConverterTest extends AbstractServiceT
 	@Before
 	public void setUp() {
 		PropositionDefinitionConverterVisitor converterVisitor = this.getInstance(PropositionDefinitionConverterVisitor.class);
-		FrequencyHighLevelAbstractionConverter converter = new FrequencyHighLevelAbstractionConverter();
+		FrequencyConsecutiveConverter converter = new FrequencyConsecutiveConverter();
 		converter.setConverterVisitor(converterVisitor);
 		SystemProposition primParam = new SystemProposition();
 		primParam.setId(1L);
@@ -310,20 +310,14 @@ public class FrequencyHighLevelAbstractionConverterTest extends AbstractServiceT
 	
 	@Test
 	public void testExtendedPropositionDefinitionPropositionId() {
-		TemporalExtendedParameterDefinition tepd = 
-				(TemporalExtendedParameterDefinition) 
-				hlad.getExtendedPropositionDefinitions().iterator().next();
 		assertEquals("wrong extended proposition definition", 
 				frequency.getKey() + "_SUB", tepd.getPropositionId());
 	}
 	
 	@Test
 	public void testValueForExtendedPropositionDefinition() {
-		TemporalExtendedParameterDefinition tepd = 
-				(TemporalExtendedParameterDefinition) 
-				hlad.getExtendedPropositionDefinitions().iterator().next();
 		assertEquals("wrong value for extended proposition definition", 
-				NominalValue.getInstance(thresholdGroupKey + "_VALUE"), 
+				NominalValue.getInstance(frequency.getKey() + "_VALUE"), 
 				tepd.getValue());
 	}
 	

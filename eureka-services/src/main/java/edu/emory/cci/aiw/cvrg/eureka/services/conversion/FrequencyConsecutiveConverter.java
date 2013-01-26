@@ -38,8 +38,7 @@ import org.protempa.CompoundLowLevelAbstractionDefinition;
 import org.protempa.CompoundLowLevelAbstractionDefinition.ValueClassification;
 import org.protempa.SimpleGapFunction;
 
-public final class FrequencyHighLevelAbstractionConverter
-        implements
+public final class FrequencyConsecutiveConverter implements
         PropositionDefinitionConverter<FrequencyEntity, HighLevelAbstractionDefinition> {
 
 	private PropositionDefinitionConverterVisitor converterVisitor;
@@ -103,7 +102,7 @@ public final class FrequencyHighLevelAbstractionConverter
 			TemporalExtendedParameterDefinition tepd = 
 					new TemporalExtendedParameterDefinition(
 					frequencyWrapper.getId(), 
-					NominalValue.getInstance(thresholds.getKey() + "_VALUE"));
+					NominalValue.getInstance(entity.getKey() + "_VALUE"));
 			hlad.add(tepd);
 			hlad.setRelation(tepd, tepd, new Relation());
 			hlad.setGapFunction(new MinMaxGapFunction(entity.getWithinAtLeast(),
@@ -111,6 +110,8 @@ public final class FrequencyHighLevelAbstractionConverter
 					unit(entity.getWithinAtMostUnits())));
 			hlad.setDisplayName(entity.getDisplayName());
 			hlad.setDescription(entity.getDescription());
+			hlad.setConcatenable(false);
+			hlad.setSolid(false);
 
 			result.add(hlad);
 			this.primary = hlad;

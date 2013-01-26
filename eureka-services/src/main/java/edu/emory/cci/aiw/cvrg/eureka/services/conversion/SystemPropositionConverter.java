@@ -27,13 +27,10 @@ import org.protempa.PropositionDefinition;
 import com.google.inject.Inject;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.SystemProposition;
-import edu.emory.cci.aiw.cvrg.eureka.services.finder.PropositionFindException;
 import edu.emory.cci.aiw.cvrg.eureka.services.finder.PropositionFinder;
 
 public final class SystemPropositionConverter implements
 		PropositionDefinitionConverter<SystemProposition, PropositionDefinition> {
-
-	private final PropositionFinder<Long, String> finder;
 
 	private Long userId;
 
@@ -41,10 +38,7 @@ public final class SystemPropositionConverter implements
 	
 	private String primaryPropId;
 
-	@Inject
-	public SystemPropositionConverter(PropositionFinder<Long, 
-			String> inFinder) {
-		finder = inFinder;
+	public SystemPropositionConverter() {
 	}
 
 	public void setUserId(Long inUserId) {

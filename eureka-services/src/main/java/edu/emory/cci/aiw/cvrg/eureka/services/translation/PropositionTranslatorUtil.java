@@ -26,7 +26,9 @@ import edu.emory.cci.aiw.cvrg.eureka.common.comm.DataElement;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.DataElementField;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.DataElementEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.ExtendedDataElement;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.FrequencyEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.PropertyConstraint;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.PropositionTypeVisitor;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.TimeUnit;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.ValueComparator;
 import edu.emory.cci.aiw.cvrg.eureka.common.exception.DataElementHandlingException;
@@ -153,6 +155,9 @@ class PropositionTranslatorUtil {
 				.getDescription());
 		dataElement.setDataElementDisplayName(ep.getDataElementEntity()
 				.getDisplayName());
+		PropositionTypeVisitor v = new PropositionTypeVisitor();
+		ep.getDataElementEntity().accept(v);
+		dataElement.setType(v.getType());
 		if (ep.getMinDuration() != null) {
 			dataElement.setHasDuration(true);
 			dataElement.setMinDuration(ep.getMinDuration());

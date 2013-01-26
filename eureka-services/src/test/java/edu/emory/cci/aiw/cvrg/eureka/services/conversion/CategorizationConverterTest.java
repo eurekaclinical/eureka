@@ -31,7 +31,6 @@ import edu.emory.cci.aiw.cvrg.eureka.common.entity.SystemProposition.SystemType;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.ThresholdsOperator;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.ValueThresholdEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.ValueThresholdGroupEntity;
-import edu.emory.cci.aiw.cvrg.eureka.common.test.TestDataProvider;
 import edu.emory.cci.aiw.cvrg.eureka.services.test.AbstractServiceTest;
 import org.arp.javautil.arrays.Arrays;
 import org.junit.Before;
@@ -406,6 +405,7 @@ public class CategorizationConverterTest extends AbstractServiceTest {
 		ExtendedDataElement ede1 = new ExtendedDataElement();
 		ede1.setDataElementEntity(sp);
 		sa1.setExtendedProposition(ede1);
+		sa1.setAtLeastCount(1);
 
 		FrequencyEntity sa2 = new FrequencyEntity();
 		sa2.setId(2L);
@@ -414,6 +414,7 @@ public class CategorizationConverterTest extends AbstractServiceTest {
 		ExtendedDataElement ede2 = new ExtendedDataElement();
 		ede2.setDataElementEntity(sp);
 		sa2.setExtendedProposition(ede2);
+		sa2.setAtLeastCount(1);
 
 		CategoryEntity saCat1 = new CategoryEntity();
 		saCat1.setId(3L);
@@ -694,7 +695,7 @@ public class CategorizationConverterTest extends AbstractServiceTest {
 		mixedCat1.setKey("test-mixed-cat1");
 		mixedCat1.setDisplayName("test-mixed-cat1-display");
 		mixedCat1.setDescription("test-mixed-cat1-abbrev");
-		mixedCat1.setCategoryType(CategoryType.MIXED);
+		mixedCat1.setCategoryType(CategoryType.HIGH_LEVEL_ABSTRACTION);
 		List<DataElementEntity> iia1 = new ArrayList<DataElementEntity>();
 		iia1.add(event);
 		iia1.add(primParam);
@@ -724,7 +725,7 @@ public class CategorizationConverterTest extends AbstractServiceTest {
 		mixedCat2.setKey("test-mixed-cat2");
 		mixedCat2.setDisplayName("test-mixed-cat2-display");
 		mixedCat2.setDescription("test-mixed-cat2-abbrev");
-		mixedCat2.setCategoryType(CategoryType.MIXED);
+		mixedCat2.setCategoryType(CategoryType.HIGH_LEVEL_ABSTRACTION);
 		List<DataElementEntity> iia2 = new ArrayList<DataElementEntity>();
 		iia2.add(mixedCat1);
 		mixedCat2.setMembers(iia2);

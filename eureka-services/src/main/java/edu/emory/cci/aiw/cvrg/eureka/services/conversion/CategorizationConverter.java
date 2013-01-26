@@ -21,6 +21,7 @@ package edu.emory.cci.aiw.cvrg.eureka.services.conversion;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.CategoryEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.DataElementEntity;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.FrequencyEntity;
 import org.protempa.CompoundLowLevelAbstractionDefinition;
 import org.protempa.ConstantDefinition;
 import org.protempa.EventDefinition;
@@ -32,6 +33,7 @@ import org.protempa.SliceDefinition;
 
 import java.util.ArrayList;
 import java.util.List;
+import org.protempa.SimpleGapFunction;
 
 public final class CategorizationConverter implements
 		PropositionDefinitionConverter<CategoryEntity, PropositionDefinition> {
@@ -44,7 +46,7 @@ public final class CategorizationConverter implements
 	public PropositionDefinition getPrimaryPropositionDefinition() {
 		return primary;
 	}
-	
+
 	@Override
 	public String getPrimaryPropositionId() {
 		return primaryPropId;
@@ -59,7 +61,7 @@ public final class CategorizationConverter implements
 		List<PropositionDefinition> result =
 				new ArrayList<PropositionDefinition>();
 		String id = category.getKey()
-					+ ConversionUtil.PRIMARY_PROP_ID_SUFFIX;
+				+ ConversionUtil.PRIMARY_PROP_ID_SUFFIX;
 		this.primaryPropId = id;
 		if (this.converterVisitor.addPropositionId(id)) {
 			PropositionDefinition primary;
@@ -76,7 +78,8 @@ public final class CategorizationConverter implements
 				inverseIsADefs.add(primaryPropositionId);
 			}
 			result.addAll(inverseIsADefsIncludingSecondaries);
-			String[] inverseIsA = inverseIsADefs.toArray(new String[inverseIsADefs.size()]);
+			String[] inverseIsA = inverseIsADefs.toArray(
+					new String[inverseIsADefs.size()]);
 			switch (category.getCategoryType()) {
 				case EVENT:
 					EventDefinition event = new EventDefinition(id);
@@ -93,19 +96,20 @@ public final class CategorizationConverter implements
 					primary = constant;
 					break;
 				case PRIMITIVE_PARAMETER:
-					PrimitiveParameterDefinition primParam = new PrimitiveParameterDefinition(
-							id);
+					PrimitiveParameterDefinition primParam =
+							new PrimitiveParameterDefinition(id);
 					primParam.setDescription(category.getDescription());
 					primParam.setDisplayName(category.getDisplayName());
 					primParam.setInverseIsA(inverseIsA);
 					primary = primParam;
 					break;
 				case HIGH_LEVEL_ABSTRACTION:
-					HighLevelAbstractionDefinition hla = new HighLevelAbstractionDefinition(
-							id);
+					HighLevelAbstractionDefinition hla =
+							new HighLevelAbstractionDefinition(id);
 					hla.setDescription(category.getDescription());
 					hla.setDisplayName(category.getDisplayName());
 					hla.setInverseIsA(inverseIsA);
+					hla.setGapFunction(new SimpleGapFunction(0, null));
 					primary = hla;
 					break;
 				case SLICE_ABSTRACTION:
@@ -116,27 +120,28 @@ public final class CategorizationConverter implements
 					primary = sla;
 					break;
 				case LOW_LEVEL_ABSTRACTION:
-					LowLevelAbstractionDefinition llad = new LowLevelAbstractionDefinition(id);
+					LowLevelAbstractionDefinition llad =
+							new LowLevelAbstractionDefinition(id);
 					llad.setDescription(category.getDescription());
 					llad.setDisplayName(category.getDisplayName());
 					llad.setInverseIsA(inverseIsA);
+					llad.setConcatenable(false);
+					llad.setGapFunction(new SimpleGapFunction(0, null));
 					primary = llad;
 					break;
 				case COMPOUND_LOW_LEVEL_ABSTRACTION:
-					CompoundLowLevelAbstractionDefinition cllad = new CompoundLowLevelAbstractionDefinition(id);
+					CompoundLowLevelAbstractionDefinition cllad =
+							new CompoundLowLevelAbstractionDefinition(id);
 					cllad.setDescription(category.getDescription());
 					cllad.setDisplayName(category.getDisplayName());
 					cllad.setInverseIsA(inverseIsA);
+					cllad.setConcatenable(false);
+					cllad.setGapFunction(new SimpleGapFunction(0, null));
 					primary = cllad;
 					break;
 				default:
-					HighLevelAbstractionDefinition defaultDef = new HighLevelAbstractionDefinition(
-							id);
-					defaultDef.setDescription(category.getDescription());
-					defaultDef.setDisplayName(category.getDisplayName());
-					defaultDef.setInverseIsA(inverseIsA);
-					primary = defaultDef;
-					break;
+					throw new AssertionError("Invalid category type "
+							+ category.getCategoryType());
 			}
 
 			result.add(primary);

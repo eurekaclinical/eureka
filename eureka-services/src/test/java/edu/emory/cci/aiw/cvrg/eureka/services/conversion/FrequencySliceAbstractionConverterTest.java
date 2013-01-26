@@ -27,31 +27,34 @@ import edu.emory.cci.aiw.cvrg.eureka.common.entity.TimeUnit;
 import edu.emory.cci.aiw.cvrg.eureka.services.test.AbstractServiceTest;
 import org.junit.Before;
 import org.junit.Test;
-import org.protempa.MinMaxGapFunction;
 import org.protempa.PropositionDefinition;
-import org.protempa.SliceDefinition;
 
 import java.util.List;
+import java.util.Set;
 import org.junit.After;
 
 import static org.junit.Assert.assertEquals;
+import org.protempa.HighLevelAbstractionDefinition;
+import org.protempa.SimpleGapFunction;
+import org.protempa.TemporalExtendedPropositionDefinition;
+import org.protempa.proposition.interval.Relation;
 import org.protempa.proposition.value.AbsoluteTimeUnit;
 
 public class FrequencySliceAbstractionConverterTest extends
 		AbstractServiceTest {
 	private SystemProposition event;
 	private FrequencyEntity frequency;
-	private SliceDefinition sliceDef;
+	private HighLevelAbstractionDefinition sliceDef;
 	private List<PropositionDefinition> propDefs;
-	private MinMaxGapFunction gf;
+	private SimpleGapFunction gf;
 
 	@Before
 	public void setUp() {
 		PropositionDefinitionConverterVisitor converterVisitor = 
 				this.getInstance
 				(PropositionDefinitionConverterVisitor.class);
-		FrequencySliceAbstractionConverter converter = 
-				new FrequencySliceAbstractionConverter();
+		FrequencyNonConsecutiveConverter converter = 
+				new FrequencyNonConsecutiveConverter();
 		converter.setVisitor(converterVisitor);
 		
 		event = new SystemProposition();
@@ -80,7 +83,7 @@ public class FrequencySliceAbstractionConverterTest extends
 		frequency.setExtendedProposition(af);
 		propDefs = converter.convert(frequency);
 		sliceDef = converter.getPrimaryPropositionDefinition();
-		gf = (MinMaxGapFunction) sliceDef.getGapFunction();
+		gf = (SimpleGapFunction) sliceDef.getGapFunction();
 	}
 	
 	@After
@@ -107,7 +110,7 @@ public class FrequencySliceAbstractionConverterTest extends
 	
 	@Test
 	public void testMinIndex() {
-		assertEquals("wrong min index", 3, sliceDef.getMinIndex());
+		assertEquals("wrong min index", 3, sliceDef.getExtendedPropositionDefinitions().size());
 	}
 	
 	@Test
@@ -123,24 +126,32 @@ public class FrequencySliceAbstractionConverterTest extends
 	}
 	
 	@Test
-	public void testGapMin() {
-		assertEquals("wrong gap min", Integer.valueOf(1), gf.getMinimumGap());
-	}
-	
-	@Test
-	public void testGapMinUnit() {
-		assertEquals("wrong gap min unit", 
-				AbsoluteTimeUnit.DAY, gf.getMinimumGapUnit());
-	}
-	
-	@Test
 	public void testGapMax() {
-		assertEquals("wrong gap max", Integer.valueOf(90), gf.getMaximumGap());
+		assertEquals("wrong gap max", Integer.valueOf(0), gf.getMaximumGap());
 	}
 	
 	@Test
 	public void testGapMaxUnit() {
-		assertEquals("wrong gap max unit", 
-				AbsoluteTimeUnit.DAY, gf.getMaximumGapUnit());
+		assertEquals("wrong gap max unit", null, gf.getMaximumGapUnit());
+	}
+	
+	@Test
+	public void minDistanceBetween() {
+		Set<List<TemporalExtendedPropositionDefinition>> tepdPairs = 
+				sliceDef.getTemporalExtendedPropositionDefinitionPairs();
+		for (List<TemporalExtendedPropositionDefinition> tepdPair : tepdPairs) {
+			Relation rel = sliceDef.getRelation(tepdPair);
+			assertEquals("wrong min distance between", Integer.valueOf(1), rel.getMinDistanceBetween());
+		}
+	}
+	
+	@Test
+	public void minDistanceBetweenUnits() {
+		Set<List<TemporalExtendedPropositionDefinition>> tepdPairs = 
+				sliceDef.getTemporalExtendedPropositionDefinitionPairs();
+		for (List<TemporalExtendedPropositionDefinition> tepdPair : tepdPairs) {
+			Relation rel = sliceDef.getRelation(tepdPair);
+			assertEquals("wrong min distance between units", AbsoluteTimeUnit.DAY, rel.getMinDistanceBetweenUnits());
+		}
 	}
 }

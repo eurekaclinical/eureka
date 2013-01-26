@@ -25,6 +25,8 @@ import java.util.List;
 
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import org.apache.commons.lang.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang.builder.ToStringBuilder;
 
 /**
  * Container class for the categorical user-created data element from the UI.
@@ -67,5 +69,10 @@ public final class Category extends DataElement {
 	public void accept(DataElementVisitor visitor) 
 			throws DataElementHandlingException {
 		visitor.visit(this);
+	}
+	
+	@Override
+	public String toString() {
+		return ReflectionToStringBuilder.reflectionToString(this);
 	}
 }

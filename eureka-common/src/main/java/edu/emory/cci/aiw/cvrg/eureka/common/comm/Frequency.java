@@ -20,7 +20,7 @@
 package edu.emory.cci.aiw.cvrg.eureka.common.comm;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.exception.DataElementHandlingException;
-import org.apache.commons.lang.builder.ToStringBuilder;
+import org.apache.commons.lang.builder.ReflectionToStringBuilder;
 
 public final class Frequency extends DataElement {
 
@@ -109,7 +109,7 @@ public final class Frequency extends DataElement {
 	
 	@Override
 	public String toString() {
-		return ToStringBuilder.reflectionToString(this);
+		return ReflectionToStringBuilder.reflectionToString(this);
 	}
 
 }

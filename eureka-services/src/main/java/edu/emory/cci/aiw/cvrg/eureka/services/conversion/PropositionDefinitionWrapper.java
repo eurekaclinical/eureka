@@ -31,6 +31,7 @@ import java.util.Collection;
 import java.util.List;
 import org.protempa.HighLevelAbstractionDefinition;
 import org.protempa.PropositionDefinition;
+import org.protempa.SimpleGapFunction;
 import org.protempa.TemporalExtendedParameterDefinition;
 import org.protempa.proposition.interval.Relation;
 import org.protempa.proposition.value.NominalValue;
@@ -94,6 +95,9 @@ final class PropositionDefinitionWrapper extends AbstractDataElementEntityVisito
 		wrapper.add(tepd);
 		Relation relation = new Relation();
 		wrapper.setRelation(tepd, tepd, relation);
+		wrapper.setConcatenable(false);
+		wrapper.setGapFunction(new SimpleGapFunction(0, null));
+		wrapper.setSolid(false);
 		this.propDefs.add(wrapper);
 		this.toShowPropIds.add(wrapper.getId());
 	}

@@ -67,13 +67,12 @@ public final class ValueThresholdsLowLevelAbstractionConverter
 		String propId = entity.getKey() + ConversionUtil.PRIMARY_PROP_ID_SUFFIX;
 		this.primaryPropId = propId;
 		if (this.converterVisitor.addPropositionId(propId)) {
-			LowLevelAbstractionDefinition primary = new LowLevelAbstractionDefinition(
-					propId);
+			LowLevelAbstractionDefinition primary = 
+					new LowLevelAbstractionDefinition(propId);
 			primary.setDisplayName(entity.getDisplayName());
 			primary.setDescription(entity.getDescription());
 			primary.setAlgorithmId("stateDetector");
 			primary.setConcatenable(false);
-
 
 			// low-level abstractions can be created only from singleton value
 			// thresholds
@@ -98,15 +97,15 @@ public final class ValueThresholdsLowLevelAbstractionConverter
 		return result;
 	}
 
-	static void thresholdToValueDefinitions(String name,
+	static void thresholdToValueDefinitions(String value,
 			ValueThresholdEntity threshold,
 			LowLevelAbstractionDefinition def) {
 		LowLevelAbstractionValueDefinition valueDef = new LowLevelAbstractionValueDefinition(
-				def, name);
-		valueDef.setValue(NominalValue.getInstance(name));
+				def, value);
+		valueDef.setValue(NominalValue.getInstance(value));
 		LowLevelAbstractionValueDefinition compValueDef = new LowLevelAbstractionValueDefinition(
-				def, name + "_COMP");
-		compValueDef.setValue(NominalValue.getInstance(name + "_COMP"));
+				def, value + "_COMP");
+		compValueDef.setValue(NominalValue.getInstance(value + "_COMP"));
 		if (threshold.getMinValueThreshold() != null
 				&& threshold.getMinValueComp() != null) {
 			valueDef.setParameterValue("minThreshold", ValueType.VALUE

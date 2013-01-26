@@ -28,6 +28,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import com.sun.jersey.api.client.ClientResponse;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.DataElement;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.DataElementField;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.Frequency;
@@ -52,7 +53,7 @@ public class DataElementResourceTest extends AbstractServiceResourceTest {
 
 		DataElementField dataElementField = new DataElementField();
 		dataElementField.setDataElementKey("test-low-level");
-		dataElementField.setType(DataElementField.Type.VALUE_THRESHOLD);
+		dataElementField.setType(DataElement.Type.VALUE_THRESHOLD);
 		dataElementField.setHasDuration(Boolean.FALSE);
 		dataElementField.setHasPropertyConstraint(Boolean.FALSE);
 		dataElementField.setMinDurationUnits(timeUnit.getId());
