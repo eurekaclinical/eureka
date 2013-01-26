@@ -81,8 +81,18 @@ public abstract class DataElementEntity implements CycleRecoverable,
 	/**
 	 * A description of the data element.
 	 */
+	
+	/**
+	 * The data element's description. The name is prefixed with a z to force
+	 * hibernate to populate this field last in insert and update statements
+	 * to avoid the dreaded 
+	 * <code>ORA-24816: Expanded non LONG bind data supplied after actual LONG or LOB column</code>
+	 * error message from Oracle. Hibernate apparently orders fields 
+	 * alphabetically.
+	 */
 	@Lob
-	private String description;
+	@Column(name="description")
+	private String zDescription;
 	/**
 	 * Is the proposition a system level data element?
 	 */
@@ -116,7 +126,7 @@ public abstract class DataElementEntity implements CycleRecoverable,
 	 * @return The data element's description.
 	 */
 	public String getDescription() {
-		return description;
+		return zDescription;
 	}
 
 	/**
@@ -126,7 +136,7 @@ public abstract class DataElementEntity implements CycleRecoverable,
 	 *            The data element's description to set.
 	 */
 	public void setDescription(String inDescription) {
-		this.description = inDescription;
+		this.zDescription = inDescription;
 	}
 
 	/**

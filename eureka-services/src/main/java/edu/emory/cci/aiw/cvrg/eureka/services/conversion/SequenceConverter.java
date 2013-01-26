@@ -115,13 +115,13 @@ final class SequenceConverter
 			temporalOffsets.setFinishOffset(0);
 			temporalOffsets.setFinishOffsetUnits(null);
 			primary.setTemporalOffset(temporalOffsets);
-
+			primary.setDisplayName(sequenceEntity.getDisplayName());
+			primary.setDescription(sequenceEntity.getDescription());
 			this.primary = primary;
 			result.add(primary);
 		}
 		
-		primary.setDisplayName(sequenceEntity.getDisplayName());
-		primary.setDescription(sequenceEntity.getDescription());
+		
 		return result;
 	}
 
@@ -172,11 +172,16 @@ final class SequenceConverter
 
 	private org.protempa.proposition.interval.Relation buildRelation(
 			Relation rel) {
-		return new org.protempa.proposition.interval.Relation(null, null, null,
-				null, rel.getMins1f2(), unit(rel.getMins1f2TimeUnit()),
-				rel.getMaxs1f2(), unit(rel.getMaxs1f2TimeUnit()),
-				rel.getMinf1s2(), unit(rel.getMinf1s2TimeUnit()),
-				rel.getMaxf1s2(), unit(rel.getMaxf1s2TimeUnit()), null, null,
-				null, null);
+		return new org.protempa.proposition.interval.Relation(
+				null, null, null, null, 
+				rel.getMins1f2(), 
+				unit(rel.getMins1f2TimeUnit()),
+				rel.getMaxs1f2(), 
+				unit(rel.getMaxs1f2TimeUnit()),
+				rel.getMinf1s2(), 
+				unit(rel.getMinf1s2TimeUnit()),
+				rel.getMaxf1s2(), 
+				unit(rel.getMaxf1s2TimeUnit()), 
+				null, null, null, null);
 	}
 }

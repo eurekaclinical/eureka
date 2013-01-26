@@ -31,6 +31,7 @@ import edu.emory.cci.aiw.cvrg.eureka.common.entity.Job;
 import edu.emory.cci.aiw.cvrg.eureka.etl.dao.JobDao;
 
 public final class Task implements Runnable {
+
 	private static final Logger LOGGER = LoggerFactory.getLogger(Task.class);
 	private final JobDao jobDao;
 	private final ETL etl;
@@ -64,54 +65,72 @@ public final class Task implements Runnable {
 		return propositionDefinitions;
 	}
 
-	void setPropositionDefinitions(List<PropositionDefinition>
-		inPropositionDefinitions) {
+	void setPropositionDefinitions(List<PropositionDefinition> inPropositionDefinitions) {
 		propositionDefinitions = inPropositionDefinitions;
 	}
 
 	@Override
 	public void run() {
-		Job myJob = this.jobDao.retrieve(this.jobId);
-		LOGGER.info("{} just got a job from user {}, id={}",
-				myJob.getUserId(), new Object[]{
-				Thread.currentThread().getName(), myJob.toString()});
-		myJob.setNewState("PROCESSING", null, null);
-		LOGGER.debug("About to save job: {}", myJob.toString());
-		this.jobDao.update(myJob);
-
-		Long configId = myJob.getConfigurationId();
-
+		Job myJob = null;
 		try {
+			myJob = this.jobDao.retrieve(this.jobId);
+			LOGGER.info("{} just got a job from user {}, id={}",
+					myJob.getUserId(), new Object[]{
+						Thread.currentThread().getName(), myJob.toString()});
+			myJob.setNewState("PROCESSING", null, null);
+			LOGGER.debug("About to save job: {}", myJob.toString());
+			this.jobDao.update(myJob);
+
+			Long configId = myJob.getConfigurationId();
+
+
 			PropositionDefinition[] propDefArray =
-				new PropositionDefinition[this.getPropositionDefinitions()
+					new PropositionDefinition[this.getPropositionDefinitions()
 					.size()];
 			this.propositionDefinitions.toArray(propDefArray);
-			
-			String[] propIdsToShowArray = 
+
+			String[] propIdsToShowArray =
 					this.propIdsToShow.toArray(
 					new String[this.propIdsToShow.size()]);
-			
-			this.etl.run("config" + configId, propDefArray, 
+
+			this.etl.run("config" + configId, propDefArray,
 					propIdsToShowArray, myJob.getId());
 			this.etl.close();
+			myJob.setNewState("DONE", null, null);
+			this.jobDao.update(myJob);
+			LOGGER.info("{} completed job {} for user {} without errors.",
+					Thread.currentThread().getName(),
+					new Object[]{myJob.getId(), myJob.getUserId()});
+			myJob = null;
 		} catch (EtlException e) {
 			handleError(myJob, e);
 		} catch (RuntimeException e) {
 			handleError(myJob, e);
 		} catch (Error e) {
 			handleError(myJob, e);
+		} finally {
+			if (myJob != null) {
+				try {
+					myJob.setNewState("DONE", null, null);
+					LOGGER.info("{} finished job {} for user {} with errors.",
+							Thread.currentThread().getName(),
+							new Object[]{myJob.getId(), myJob.getUserId()});
+					this.jobDao.update(myJob);
+				} catch (Throwable ignore) {
+				}
+			}
 		}
 
-		myJob.setNewState("DONE", null, null);
-		LOGGER.info("{} completed job {} for user {} without errors.",
-				Thread.currentThread().getName(), 
-				new Object[]{myJob.getId(), myJob.getUserId()});
-		this.jobDao.update(myJob);
+
 	}
 
 	private void handleError(Job job, Throwable e) {
-		LOGGER.error("Job " + job.getId() + " for user " 
-				+ job.getUserId() + " failed: " + e.getMessage(), e);
+		if (job != null) {
+			LOGGER.error("Job " + job.getId() + " for user "
+					+ job.getUserId() + " failed: " + e.getMessage(), e);
+		} else {
+			LOGGER.error("Could not create job: " + e.getMessage(), e);
+		}
 		StackTraceElement[] ste = e.getStackTrace();
 		String[] st = new String[ste.length];
 		for (int i = 0; i < ste.length; i++) {
@@ -121,7 +140,9 @@ public final class Task implements Runnable {
 		if (msg == null) {
 			msg = e.getClass().getName();
 		}
-		job.setNewState("EXCEPTION", msg, st);
-		this.jobDao.update(job);
+		if (job != null) {
+			job.setNewState("EXCEPTION", msg, st);
+			this.jobDao.update(job);
+		}
 	}
 }

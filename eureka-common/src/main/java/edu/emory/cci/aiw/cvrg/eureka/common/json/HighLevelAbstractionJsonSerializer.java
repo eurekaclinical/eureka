@@ -21,10 +21,8 @@ package edu.emory.cci.aiw.cvrg.eureka.common.json;
 
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import org.codehaus.jackson.JsonGenerator;
 import org.codehaus.jackson.JsonProcessingException;
@@ -32,17 +30,17 @@ import org.codehaus.jackson.map.JsonSerializer;
 import org.codehaus.jackson.map.SerializerProvider;
 import org.protempa.ExtendedPropositionDefinition;
 import org.protempa.HighLevelAbstractionDefinition;
+import org.protempa.Offsets;
 import org.protempa.TemporalExtendedPropositionDefinition;
 import org.protempa.proposition.interval.Relation;
 
-public final class HighLevelAbstractionJsonSerializer extends
-        JsonSerializer<HighLevelAbstractionDefinition> {
+public final class HighLevelAbstractionJsonSerializer extends JsonSerializer<HighLevelAbstractionDefinition> {
 
 	@Override
 	public void serialize(HighLevelAbstractionDefinition value,
-	        JsonGenerator jgen, SerializerProvider provider) throws IOException,
-	        JsonProcessingException {
-
+			JsonGenerator jgen, SerializerProvider provider) throws IOException,
+			JsonProcessingException {
+		
 		// start HLA
 		jgen.writeStartObject();
 
@@ -59,10 +57,8 @@ public final class HighLevelAbstractionJsonSerializer extends
 		provider.defaultSerializeField("concatenable", value.isConcatenable(), jgen);
 		provider.defaultSerializeField("inDataSource", value.getInDataSource(), jgen);
 		provider.defaultSerializeField("sourceId", value.getSourceId(), jgen);
-		
-		provider.defaultSerializeField("temporalOffset", value.getTemporalOffset(), jgen);
 		provider.defaultSerializeField("gapFunction", value.getGapFunction(), jgen);
-		
+
 		jgen.writeFieldName("extendedPropositions");
 		jgen.writeStartObject();
 		Map<ExtendedPropositionDefinition, Long> indices =
@@ -77,9 +73,10 @@ public final class HighLevelAbstractionJsonSerializer extends
 
 		// special case for handling extended propositions and relations, which
 		// are not directly gettable
-		Map<List<TemporalExtendedPropositionDefinition>, Relation> defPairs = new HashMap<List<TemporalExtendedPropositionDefinition>, Relation>();
+		Map<List<TemporalExtendedPropositionDefinition>, Relation> defPairs =
+				new HashMap<List<TemporalExtendedPropositionDefinition>, Relation>();
 		for (List<TemporalExtendedPropositionDefinition> epdPair : value
-		        .getTemporalExtendedPropositionDefinitionPairs()) {
+				.getTemporalExtendedPropositionDefinitionPairs()) {
 			Relation r = value.getRelation(epdPair);
 			defPairs.put(epdPair, r);
 		}
@@ -88,7 +85,7 @@ public final class HighLevelAbstractionJsonSerializer extends
 		jgen.writeFieldName("relations");
 		jgen.writeStartObject();
 		for (Map.Entry<List<TemporalExtendedPropositionDefinition>, Relation> e : defPairs
-		        .entrySet()) {
+				.entrySet()) {
 			jgen.writeFieldName("lhs");
 			provider.defaultSerializeValue(indices.get(e.getKey().get(0)), jgen);
 			jgen.writeFieldName("rhs");
@@ -99,8 +96,35 @@ public final class HighLevelAbstractionJsonSerializer extends
 		jgen.writeEndObject();
 		// end relation map
 
-		// end HLA
+		jgen.writeFieldName("temporalOffset");
+		jgen.writeStartObject();
+		Offsets offsets = value.getTemporalOffset();
+		if (offsets != null) {
+			TemporalExtendedPropositionDefinition start = offsets.getStartTemporalExtendedPropositionDefinition();
+			if (start != null) {
+				provider.defaultSerializeField("startExtendedProposition", indices.get(start), jgen);
+			} else {
+				provider.defaultSerializeField("startExtendedProposition", null, jgen);
+			}
+			provider.defaultSerializeField("startValue", offsets.getStartAbstractParamValue(), jgen);
+			provider.defaultSerializeField("startSide", offsets.getStartIntervalSide(), jgen);
+			provider.defaultSerializeField("startOffset", offsets.getStartOffset(), jgen);
+			provider.defaultSerializeField("startOffsetUnits", offsets.getStartOffsetUnits(), jgen);
+			
+			TemporalExtendedPropositionDefinition finish = offsets.getFinishTemporalExtendedPropositionDefinition();
+			if (finish != null) {
+				provider.defaultSerializeField("finishExtendedProposition", indices.get(finish), jgen);
+			} else {
+				provider.defaultSerializeField("finishExtendedProposition", null, jgen);
+			}
+			provider.defaultSerializeField("finishValue", offsets.getFinishAbstractParamValue(), jgen);
+			provider.defaultSerializeField("finishSide", offsets.getFinishIntervalSide(), jgen);
+			provider.defaultSerializeField("finishOffset", offsets.getFinishOffset(), jgen);
+			provider.defaultSerializeField("finishOffsetUnits", offsets.getFinishOffsetUnits(), jgen);
+		}
 		jgen.writeEndObject();
-	}
+		
+		jgen.writeEndObject();
 
+	}
 }

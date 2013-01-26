@@ -60,8 +60,9 @@
 	<template:content name="subcontent">
 		<h3>Release Notes</h3>
 		<div class="release_notes sub_width" style="position: absolute; top: 570px; left: 10px; background-color:#fff;">
-			<p>10.11.2012 : Eureka! now has support for user-defined derived data elements.  Click the &quot;Editor&quot; link after logging in.</p>
-			<p>04.05.2012 : Eureka! Release</p>
+			<p>01.26.2013: THe user-defined data element editor now supports 4 kinds of derived data elements for specifying various temporal patterns.</p>
+			<p>10.11.2012: Eureka! now has support for user-defined derived data elements.  Click the &quot;Editor&quot; link after logging in.</p>
+			<p>04.05.2012: Eureka! Release</p>
 		</div>
 		<%--
 				<div class="release_notes sub_width" style="position: absolute; top: 570px; left: 280px; background-color:#fff;">

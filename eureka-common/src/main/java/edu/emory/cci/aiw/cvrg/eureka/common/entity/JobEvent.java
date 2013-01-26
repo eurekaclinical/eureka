@@ -72,11 +72,18 @@ public class JobEvent implements CycleRecoverable {
 	 */
 	@Column(nullable = false)
 	private String state;
+	
 	/**
-	 * The exception stack trace
+	 * The exception stack trace. The name is prefixed with a z to force
+	 * hibernate to populate this field last in insert and update statements
+	 * to avoid the dreaded 
+	 * <code>ORA-24816: Expanded non LONG bind data supplied after actual LONG or LOB column</code>
+	 * error message from Oracle. Hibernate apparently orders fields 
+	 * alphabetically.
 	 */
 	@Lob
-	private String exceptionStackTrace;
+	@Column(name="exceptionstacktrace")
+	private String zExceptionStackTrace;
 	/**
 	 * The time stamp for the event.
 	 */
@@ -135,14 +142,14 @@ public class JobEvent implements CycleRecoverable {
 	 * @return the exceptionStackTrace
 	 */
 	public String getExceptionStackTrace() {
-		return this.exceptionStackTrace;
+		return this.zExceptionStackTrace;
 	}
 
 	/**
 	 * @param inExceptionStackTrace the exceptionStackTrace to set
 	 */
 	public void setExceptionStackTrace(String inExceptionStackTrace) {
-		this.exceptionStackTrace = inExceptionStackTrace;
+		this.zExceptionStackTrace = inExceptionStackTrace;
 	}
 
 	/**

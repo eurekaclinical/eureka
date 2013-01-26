@@ -53,8 +53,8 @@ public class FrequencySliceAbstractionConverterTest extends
 		PropositionDefinitionConverterVisitor converterVisitor = 
 				this.getInstance
 				(PropositionDefinitionConverterVisitor.class);
-		FrequencyNonConsecutiveConverter converter = 
-				new FrequencyNonConsecutiveConverter();
+		FrequencyNonConsecutiveAbstractionConverter converter = 
+				new FrequencyNonConsecutiveAbstractionConverter();
 		converter.setVisitor(converterVisitor);
 		
 		event = new SystemProposition();

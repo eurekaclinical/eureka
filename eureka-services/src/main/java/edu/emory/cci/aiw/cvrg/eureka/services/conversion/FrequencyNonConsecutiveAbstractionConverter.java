@@ -35,7 +35,7 @@ import org.protempa.TemporalExtendedPropositionDefinition;
 import org.protempa.proposition.interval.Relation;
 import org.protempa.proposition.value.NominalValue;
 
-public final class FrequencyNonConsecutiveConverter implements
+public final class FrequencyNonConsecutiveAbstractionConverter implements
 		PropositionDefinitionConverter<FrequencyEntity, HighLevelAbstractionDefinition> {
 
 	private PropositionDefinitionConverterVisitor converterVisitor;

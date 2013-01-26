@@ -34,6 +34,7 @@ import org.codehaus.jackson.map.JsonMappingException;
 import org.protempa.ExtendedPropositionDefinition;
 import org.protempa.GapFunction;
 import org.protempa.HighLevelAbstractionDefinition;
+import org.protempa.IntervalSide;
 import org.protempa.Offsets;
 import org.protempa.PropertyDefinition;
 import org.protempa.ReferenceDefinition;
@@ -41,6 +42,8 @@ import org.protempa.SimpleGapFunction;
 import org.protempa.SourceId;
 import org.protempa.TemporalExtendedPropositionDefinition;
 import org.protempa.proposition.interval.Relation;
+import org.protempa.proposition.value.Unit;
+import org.protempa.proposition.value.Value;
 
 public final class HighLevelAbstractionJsonDeserializer extends
         JsonDeserializer<HighLevelAbstractionDefinition> {
@@ -104,9 +107,7 @@ public final class HighLevelAbstractionJsonDeserializer extends
 		checkField("sourceId");
 		SourceId sourceId = this.parser.readValueAs(SourceId.class);
 		value.setSourceId(sourceId);
-		nextToken();
-		checkField("temporalOffset");
-		value.setTemporalOffset(this.parser.readValueAs(Offsets.class));
+		
 		nextToken();
 		checkField("gapFunction");
 		value.setGapFunction(this.parser.readValueAs(GapFunction.class));
@@ -119,10 +120,10 @@ public final class HighLevelAbstractionJsonDeserializer extends
 				new HashMap<Long, ExtendedPropositionDefinition>();
 		while (parser.getCurrentToken() != JsonToken.END_OBJECT) {
 			checkField("" + i);
-			TemporalExtendedPropositionDefinition lhs = this.parser
+			TemporalExtendedPropositionDefinition ep = this.parser
 			        .readValueAs(TemporalExtendedPropositionDefinition.class);
-			value.add(lhs);
-			indices.put(Long.valueOf(i), lhs);
+			value.add(ep);
+			indices.put(Long.valueOf(i), ep);
 			nextToken();
 			i++;
 		}
@@ -133,7 +134,7 @@ public final class HighLevelAbstractionJsonDeserializer extends
 		while (parser.getCurrentToken() != JsonToken.END_OBJECT) {
 			checkField("lhs");
 			ExtendedPropositionDefinition lhs = 
-					indices.get(Long.valueOf(this.parser.getIntValue()));
+					indices.get(Long.valueOf(this.parser.getLongValue()));
 			if (!(lhs instanceof TemporalExtendedPropositionDefinition)) {
 				throw new JsonMappingException("Proposition definition " 
 						+ lhs.getPropositionId() 
@@ -142,7 +143,7 @@ public final class HighLevelAbstractionJsonDeserializer extends
 			nextToken();
 			checkField("rhs");
 			ExtendedPropositionDefinition rhs =
-					indices.get(Long.valueOf(this.parser.getIntValue()));
+					indices.get(Long.valueOf(this.parser.getLongValue()));
 			if (!(rhs instanceof TemporalExtendedPropositionDefinition)) {
 				throw new JsonMappingException("Proposition definition " 
 						+ rhs.getPropositionId() 
@@ -157,6 +158,66 @@ public final class HighLevelAbstractionJsonDeserializer extends
 		}
 		nextToken();
 		
+		checkField("temporalOffset");
+		nextToken();
+		if (parser.getCurrentToken() != JsonToken.END_OBJECT) {
+			Offsets offsets = new Offsets();
+			checkField("startExtendedProposition");
+			Long startIndex = this.parser.getLongValue();
+			if (startIndex != null) {
+				ExtendedPropositionDefinition start = indices.get(startIndex);
+				if (!(start instanceof TemporalExtendedPropositionDefinition)) {
+					throw new JsonMappingException("Proposition definition " 
+						+ start.getPropositionId() 
+						+ " is not temporal and cannot be in a temporal relation");
+				}
+				offsets.setStartTemporalExtendedPropositionDefinition((TemporalExtendedPropositionDefinition) start);
+			}
+			nextToken();
+			checkField("startValue");
+			offsets.setStartAbstractParamValue(this.parser.readValueAs(Value.class));
+			nextToken();
+			checkField("startSide");
+			offsets.setStartIntervalSide(this.parser.readValueAs(IntervalSide.class));
+			nextToken();
+			checkField("startOffset");
+			offsets.setStartOffset(this.parser.getIntValue());
+			nextToken();
+			checkField("startOffsetUnits");
+			offsets.setStartOffsetUnits(this.parser.readValueAs(Unit.class));
+			nextToken();
+			checkField("finishExtendedProposition");
+			Long finishIndex = this.parser.getLongValue();
+			if (finishIndex != null) {
+				ExtendedPropositionDefinition finish = indices.get(finishIndex);
+				if (!(finish instanceof TemporalExtendedPropositionDefinition)) {
+					throw new JsonMappingException("Proposition definition " 
+						+ finish.getPropositionId() 
+						+ " is not temporal and cannot be in a temporal relation");
+				}
+				offsets.setFinishTemporalExtendedPropositionDefinition((TemporalExtendedPropositionDefinition) finish);
+			}
+			nextToken();
+			checkField("finishValue");
+			offsets.setFinishAbstractParamValue(this.parser.readValueAs(Value.class));
+			nextToken();
+			checkField("finishSide");
+			offsets.setFinishIntervalSide(this.parser.readValueAs(IntervalSide.class));
+			nextToken();
+			checkField("finishOffset");
+			offsets.setFinishOffset(this.parser.getIntValue());
+			nextToken();
+			checkField("finishOffsetUnits");
+			offsets.setFinishOffsetUnits(this.parser.readValueAs(Unit.class));
+			
+			nextToken();
+			
+			value.setTemporalOffset(offsets);
+			
+		}
+		
+		nextToken();
+				
 		return value;
 	}
 
