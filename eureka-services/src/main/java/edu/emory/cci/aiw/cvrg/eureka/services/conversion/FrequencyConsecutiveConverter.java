@@ -74,8 +74,8 @@ public final class FrequencyConsecutiveConverter implements
 			HighLevelAbstractionDefinition hlad = new HighLevelAbstractionDefinition(
 					propId);
 
-			ValueThresholdGroupEntity thresholds = (ValueThresholdGroupEntity) entity
-					.getAbstractedFrom();
+			ValueThresholdGroupEntity thresholds = 
+					(ValueThresholdGroupEntity) entity.getAbstractedFrom();
 			thresholds.accept(converterVisitor);
 			Collection<PropositionDefinition> intermediates = converterVisitor
 					.getPropositionDefinitions();
@@ -97,6 +97,11 @@ public final class FrequencyConsecutiveConverter implements
 					this.converterVisitor.getPrimaryPropositionId(), 
 					thresholds.getKey() + "_VALUE_COMP");
 			frequencyWrapper.addValueClassification(vcComp);
+			frequencyWrapper.setGapFunctionBetweenValues(
+					new MinMaxGapFunction(entity.getWithinAtLeast(),
+					unit(entity.getWithinAtLeastUnits()), 
+					entity.getWithinAtMost(),
+					unit(entity.getWithinAtMostUnits())));
 			result.add(frequencyWrapper);
 			
 			TemporalExtendedParameterDefinition tepd = 
@@ -105,13 +110,9 @@ public final class FrequencyConsecutiveConverter implements
 					NominalValue.getInstance(entity.getKey() + "_VALUE"));
 			hlad.add(tepd);
 			hlad.setRelation(tepd, tepd, new Relation());
-			hlad.setGapFunction(new MinMaxGapFunction(entity.getWithinAtLeast(),
-					unit(entity.getWithinAtLeastUnits()), entity.getWithinAtMost(),
-					unit(entity.getWithinAtMostUnits())));
 			hlad.setDisplayName(entity.getDisplayName());
 			hlad.setDescription(entity.getDescription());
-			hlad.setConcatenable(false);
-			hlad.setSolid(false);
+			hlad.setGapFunction(new SimpleGapFunction(Integer.valueOf(0), null));
 
 			result.add(hlad);
 			this.primary = hlad;

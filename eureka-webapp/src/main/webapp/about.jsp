@@ -28,7 +28,7 @@
 	</template:content>
 
 	<template:content name="content">
-		<h3>About</h3>
+		<h3>About Version ${initParam['eureka-version']}</h3>
 		<p>Eureka! Clinical Analytics is a project of the
 			<a href="http://cci.emory.edu" target="_blank">Center for Comprehensive Informatics</a>
 			and <a href="http://bmi.emory.edu" target="_blank">Department of Biomedical Informatics</a>

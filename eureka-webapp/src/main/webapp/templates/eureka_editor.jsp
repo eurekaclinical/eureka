@@ -189,7 +189,7 @@ background-color:#EAF2D3;
  
   
   <div class="footer">
-    <p>Copyright &copy; 2012-2013 Emory University -- All  Rights Reserved</p>
+    <p>Copyright &copy; 2012-2013 ${initParam['eureka-organization-name']} -- All  Rights Reserved</p>
   </div>
   <!-- end .container --></div>
 </body>

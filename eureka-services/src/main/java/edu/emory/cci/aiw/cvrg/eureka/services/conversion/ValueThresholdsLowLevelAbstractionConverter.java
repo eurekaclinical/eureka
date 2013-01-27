@@ -72,7 +72,6 @@ public final class ValueThresholdsLowLevelAbstractionConverter
 			primary.setDisplayName(entity.getDisplayName());
 			primary.setDescription(entity.getDescription());
 			primary.setAlgorithmId("stateDetector");
-			primary.setConcatenable(false);
 
 			// low-level abstractions can be created only from singleton value
 			// thresholds

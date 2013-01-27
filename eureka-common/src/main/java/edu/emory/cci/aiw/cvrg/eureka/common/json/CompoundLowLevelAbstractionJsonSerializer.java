@@ -61,6 +61,8 @@ public final class CompoundLowLevelAbstractionJsonSerializer extends
 				value.getInDataSource(), jgen);
 		provider.defaultSerializeField("gapFunction", 
 				value.getGapFunction(), jgen);
+		provider.defaultSerializeField("gapFunctionBetweenValues", 
+				value.getGapFunctionBetweenValues(), jgen);
 		provider.defaultSerializeField("minimumNumberOfValues", 
 				value.getMinimumNumberOfValues(), jgen);
 		provider.defaultSerializeField("thresholdsOperator", 

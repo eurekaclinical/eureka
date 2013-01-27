@@ -77,7 +77,6 @@ public final class ValueThresholdsCompoundLowLevelAbstractionConverter
 			}
 			
 			primary.setGapFunction(new SimpleGapFunction(Integer.valueOf(0), null));
-			primary.setConcatenable(false);
 
 			List<LowLevelAbstractionDefinition> intermediates = new ArrayList<LowLevelAbstractionDefinition>();
 			for (ValueThresholdEntity v : entity.getValueThresholds()) {

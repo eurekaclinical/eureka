@@ -51,6 +51,7 @@ import edu.emory.cci.aiw.cvrg.eureka.services.test.AbstractServiceTest;
 import org.apache.commons.lang.StringUtils;
 import org.junit.After;
 import org.protempa.LowLevelAbstractionValueDefinition;
+import org.protempa.SimpleGapFunction;
 import org.protempa.proposition.value.AbsoluteTimeUnit;
 
 /**
@@ -64,7 +65,7 @@ public class FrequencyHighLevelAbstractionConverterTest extends AbstractServiceT
 	private HighLevelAbstractionDefinition hlad;
 	private FrequencyEntity frequency;
 	private TemporalExtendedParameterDefinition tepd;
-	private MinMaxGapFunction gf;
+	private SimpleGapFunction gf;
 	private String thresholdGroupKey;
 	
 	@Before
@@ -145,7 +146,7 @@ public class FrequencyHighLevelAbstractionConverterTest extends AbstractServiceT
 		tepd = (TemporalExtendedParameterDefinition) 
 				hlad.getExtendedPropositionDefinitions().iterator().next();
 		
-		gf = (MinMaxGapFunction) hlad.getGapFunction();
+		gf = (SimpleGapFunction) hlad.getGapFunction();
 	}
 	
 	@After
@@ -341,24 +342,12 @@ public class FrequencyHighLevelAbstractionConverterTest extends AbstractServiceT
 	}
 	
 	@Test
-	public void testMinGap() {
-		assertEquals("wrong min gap ", Integer.valueOf(1), gf.getMinimumGap());
-	}
-	
-	@Test
-	public void testMinGapUnit() {
-		assertEquals("wrong min gap unit", 
-				AbsoluteTimeUnit.DAY, gf.getMinimumGapUnit());
-	}
-	
-	@Test
 	public void testMaxGap() {
-		assertEquals("wrong max gap", new Integer(90), gf.getMaximumGap());
+		assertEquals("wrong max gap", Integer.valueOf(0), gf.getMaximumGap());
 	}
 	
 	@Test
 	public void testMaxGapUnit() {
-		assertEquals("wrong max gap unit", 
-				AbsoluteTimeUnit.DAY, gf.getMaximumGapUnit());
+		assertEquals("wrong max gap unit", null, gf.getMaximumGapUnit());
 	}
 }

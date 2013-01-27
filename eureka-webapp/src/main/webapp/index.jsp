@@ -49,10 +49,7 @@
         <p class="small_text">The software powering this site has been 
 			supported in part by <a href="http://www.emoryhealthcare.org" target="_blank" rel="nofollow">Emory Healthcare</a>; 
 			<a href="http://winshipcancer.emory.edu" target="_blank" rel="nofollow">Emory Winship Cancer Institute</a>; 
-			NHLBI grant R24 HL085343; PHS Grant UL1 RR025008, KL2 RR025009 and 
-			TL1 RR025010 from the CTSA program, NIH, NCRR; NIH/ARRA grant 
-			325011.300001.80022; and M01 RR-00039 from the GCRC program, NIH, 
-			NCRR.
+			NHLBI grant R24 HL085343; PHS Grant UL1 RR025008, KL2 RR025009 and TL1 RR025010 from the CTSA program, NIH, NCRR; and NCMHD grant RC4MD005964.
 		</p>
 	</template:content>
 	<template:content name="subcontent">
@@ -60,9 +57,9 @@
 	<template:content name="subcontent">
 		<h3>Release Notes</h3>
 		<div class="release_notes sub_width" style="position: absolute; top: 570px; left: 10px; background-color:#fff;">
-			<p>01.26.2013: THe user-defined data element editor now supports 4 kinds of derived data elements for specifying various temporal patterns.</p>
-			<p>10.11.2012: Eureka! now has support for user-defined derived data elements.  Click the &quot;Editor&quot; link after logging in.</p>
-			<p>04.05.2012: Eureka! Release</p>
+			<p>01.28.2013: Version 1.6 is out! The user-defined data element editor now supports four kinds of derived data elements for specifying various temporal patterns.</p>
+			<p>10.11.2012: Version 1.5 is out! We now have preliminary user-defined derived data elements.  Click the &quot;Editor&quot; link after logging in.</p>
+			<p>04.05.2012: First Eureka! Public Release (Version 1.4)</p>
 		</div>
 		<%--
 				<div class="release_notes sub_width" style="position: absolute; top: 570px; left: 280px; background-color:#fff;">

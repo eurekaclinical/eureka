@@ -97,6 +97,10 @@ public final class CompoundLowLevelAbstractionJsonDeserializer extends JsonDeser
 		nextToken();
 		checkField("gapFunction");
 		value.setGapFunction(this.parser.readValueAs(GapFunction.class));
+		
+		nextToken();
+		checkField("gapFunctionBetweenValues");
+		value.setGapFunctionBetweenValues(this.parser.readValueAs(GapFunction.class));
 
 		nextToken();
 		checkField("minimumNumberOfValues");
