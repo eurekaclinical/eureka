@@ -59,8 +59,8 @@
 
 		<!-- properties for site creation -->
 		<javautil-version>2.0.6</javautil-version>
-		<jaas-login-module-version>1.0.2-SNAPSHOT</jaas-login-module-version>
-		<jaas-login-module-repo>aiw-snapshots</jaas-login-module-repo>
+		<jaas-login-module-version>1.0.2</jaas-login-module-version>
+		<jaas-login-module-repo>aiw</jaas-login-module-repo>
 	</properties>
 
 	<scm>
