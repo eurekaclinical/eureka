@@ -1,5 +1,4 @@
-Eureka! Clinical Analytics 1.6-SNAPSHOT -- An ETL Tool for Loading
-Data into i2b2.  
+Eureka! Clinical Analytics 1.6 -- An ETL Tool for Loading Data into i2b2.  
 Center for Comprehensive Informatics, Emory University
 
 OVERVIEW
@@ -18,14 +17,13 @@ WHAT'S NEW
 Version 1.6 extends the rudimentary data element editing support
 provided in version 1.5 to provide a complete data element editor. You
 can specify a relatively complete set of the temporal patterns that
-can be specified in the underlying Protempa software. Version 1.6
-SNAPSHOT releases will track the development of this feature.
+can be specified in the underlying Protempa software.
 
 REQUIREMENTS
 
 The current version is known to work with Oracle Java 6. It is
 expected to work with OpenJDK 6 as well. It is incompatible with Java
-7.
+7 due to incompatibility of some of its dependencies.
 
 Eureka! Clinical Analytics uses the Maven build system, available from
 http://maven.apache.org. You must install maven, if you do not already
@@ -45,10 +43,9 @@ Eureka! Clinical Analytics is freely available as open source under
 the Apache License, Version 2.0. A copy of the license is in the
 LICENSE file provided in this distribution.
 
-Eureka! Clinical Analytics is Copyright (C) 2012 Emory University.
+Eureka! Clinical Analytics is Copyright (C) 2012-2013 Emory University.
 
 MORE INFORMATION
 
 Please see http://aiw.sourceforge.net for more information and
-http://aiw.sourceforge.net/dev/eureka-1.6-SNAPSHOT for technical
-documentation.
+http://aiw.sourceforge.net/dev/eureka-1.6 for technical documentation.
