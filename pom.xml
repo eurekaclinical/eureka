@@ -683,6 +683,13 @@
 			<name>AIW Release Repository</name>
 			<url>http://maven.cci.emory.edu/nexus/content/repositories/aiw/</url>
 		</repository>
+		<!--
+		<repository>
+			<id>aiw-snapshots</id>
+			<name>AIW Snapshots Repository</name>
+			<url>http://maven.cci.emory.edu/nexus/content/repositories/aiw-snapshots/</url>
+		</repository>
+		-->
 	</repositories>
 
 	<!-- define any additional repositories needed to fetch the plugins we are
