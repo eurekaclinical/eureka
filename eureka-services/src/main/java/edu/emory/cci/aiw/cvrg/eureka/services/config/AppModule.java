@@ -49,6 +49,8 @@ import edu.emory.cci.aiw.cvrg.eureka.services.email.EmailSender;
 import edu.emory.cci.aiw.cvrg.eureka.services.email.FreeMarkerEmailSender;
 import edu.emory.cci.aiw.cvrg.eureka.services.finder.PropositionFinder;
 import edu.emory.cci.aiw.cvrg.eureka.services.finder.SystemPropositionFinder;
+import edu.emory.cci.aiw.cvrg.eureka.services.util.PasswordGenerator;
+import edu.emory.cci.aiw.cvrg.eureka.services.util.PasswordGeneratorImpl;
 
 /**
  * Configure all the non-web related binding for Guice.
@@ -78,6 +80,7 @@ class AppModule extends AbstractModule {
 		bind(Session.class).toProvider(
 				JndiIntegration.fromJndi(Session.class,
 						"java:comp/env/mail/Session"));
+		bind(PasswordGenerator.class).to(PasswordGeneratorImpl.class);
 	}
 
 }

@@ -19,9 +19,7 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.services.resource;
 
-import java.math.BigInteger;
 import java.security.NoSuchAlgorithmException;
-import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -54,6 +52,7 @@ import edu.emory.cci.aiw.cvrg.eureka.services.dao.RoleDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.UserDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.email.EmailException;
 import edu.emory.cci.aiw.cvrg.eureka.services.email.EmailSender;
+import edu.emory.cci.aiw.cvrg.eureka.services.util.PasswordGenerator;
 import edu.emory.cci.aiw.cvrg.eureka.services.util.StringUtil;
 
 /**
@@ -72,10 +71,6 @@ public class UserResource {
 	private static final Logger LOGGER = LoggerFactory.getLogger(
 			UserResource.class);
 	/**
-	 * A secure random number generator to be used to create passwords.
-	 */
-	private static final SecureRandom RANDOM = new SecureRandom();
-	/**
 	 * Data access object to work with User objects.
 	 */
 	private final UserDao userDao;
@@ -92,6 +87,10 @@ public class UserResource {
 	 */
 	private final I2b2Client i2b2Client;
 	/**
+	 * Used to generate random passwords for the reset password functionality.
+	 */
+	private final PasswordGenerator passwordGenerator;
+	/**
 	 * And validation errors that we may have encountered while validating a new
 	 * user request, or a user update.
 	 */
@@ -106,11 +105,13 @@ public class UserResource {
 	 */
 	@Inject
 	public UserResource(UserDao inUserDao, RoleDao inRoleDao,
-			EmailSender inEmailSender, I2b2Client inClient) {
+			EmailSender inEmailSender, I2b2Client inClient,
+			PasswordGenerator inPasswordGenerator) {
 		this.userDao = inUserDao;
 		this.roleDao = inRoleDao;
 		this.emailSender = inEmailSender;
 		this.i2b2Client = inClient;
+		this.passwordGenerator = inPasswordGenerator;
 	}
 
 	/**
@@ -228,6 +229,8 @@ public class UserResource {
 			LOGGER.error("User id " + inId + " not found");
 			throw new HttpStatusException(
 					Response.Status.NOT_FOUND);
+		} else {
+			this.userDao.refresh(user);
 		}
 		String oldPasswordHash;
 		String newPasswordHash;
@@ -346,23 +349,18 @@ public class UserResource {
 	 *
 	 * @param inUsername The username for the user whose password should be
 	 * reset.
-	 * @return A {@link Status#OK} if the password is reset and email sent,
-	 * {@link Status#NOT_MODIFIED} if the user can not be found.
-	 * @throws HttpStatusException Thrown if errors occur when resetting the
-	 * password, or sending an email to the user informing them of the reset.
+	 * @throws HttpStatusException if the password can not be reset properly.
 	 */
 	@Path("/pwreset/{username}")
 	@PUT
 	public void resetPassword(@PathParam("username") final String inUsername) {
 		User user = this.userDao.getByName(inUsername);
+		LOGGER.debug("Resetting user: {}", user);
 		if (user == null) {
 			throw new HttpStatusException(Response.Status.NOT_FOUND);
 		} else {
-			final int length = 15 + RANDOM.nextInt(10);
-			String password = new BigInteger(130, RANDOM).toString(32)
-					.substring(
-					0, length);
 			String passwordHash;
+			String password = this.passwordGenerator.generatePassword();
 			try {
 				passwordHash = StringUtil.md5(password);
 			} catch (NoSuchAlgorithmException e) {
@@ -380,9 +378,8 @@ public class UserResource {
 			} catch (EmailException e) {
 				LOGGER.error(e.getMessage(), e);
 			}
-
 		}
-
+		LOGGER.debug("Reset user to: {}", user);
 	}
 
 	/**

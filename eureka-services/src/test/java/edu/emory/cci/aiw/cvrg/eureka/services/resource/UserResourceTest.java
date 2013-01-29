@@ -19,6 +19,7 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.services.resource;
 
+import java.security.NoSuchAlgorithmException;
 import java.util.List;
 
 import javax.ws.rs.core.MediaType;
@@ -31,6 +32,8 @@ import com.sun.jersey.api.client.WebResource;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.UserRequest;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.User;
+import edu.emory.cci.aiw.cvrg.eureka.services.util.PasswordGenerator;
+import edu.emory.cci.aiw.cvrg.eureka.services.util.StringUtil;
 
 import junit.framework.Assert;
 
@@ -135,14 +138,24 @@ public class UserResourceTest extends AbstractServiceResourceTest {
 	}
 	
 	@Test
-	public void testResetPassword() {
+	public void testResetPassword() throws NoSuchAlgorithmException {
+		PasswordGenerator generator = this.getInstance(PasswordGenerator
+				.class);
+		List<User> users;
+		User user;
+
 		WebResource resource = this.resource();
-		List<User> users = this.getUserList();
-		User user = users.get(0);
+		users = this.getUserList();
+		user = users.get(0);
 		ClientResponse response = resource
 				.path("/api/user/pwreset/" + user.getEmail())
 				.put(ClientResponse.class);
 		Assert.assertEquals(Status.NO_CONTENT, response.getClientResponseStatus());
+
+		users = this.getUserList();
+		user = users.get(0);
+		Assert.assertEquals(StringUtil.md5(generator.generatePassword()),
+				user.getPassword());
 	}
 
 	/**

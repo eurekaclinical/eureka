@@ -45,6 +45,8 @@ import edu.emory.cci.aiw.cvrg.eureka.services.email.EmailSender;
 import edu.emory.cci.aiw.cvrg.eureka.services.email.MockEmailSender;
 import edu.emory.cci.aiw.cvrg.eureka.services.finder.PropositionFinder;
 import edu.emory.cci.aiw.cvrg.eureka.services.finder.TestPropositionFinder;
+import edu.emory.cci.aiw.cvrg.eureka.services.util.PasswordGenerator;
+import edu.emory.cci.aiw.cvrg.eureka.services.util.PasswordGeneratorTestImpl;
 
 /**
  * Configure Guice for non-web application testing.
@@ -70,5 +72,6 @@ public class AppTestModule extends AbstractModule {
 		bind(I2b2Client.class).to(MockI2b2Client.class);
 		bind(ThresholdsOperatorDao.class).to(JpaThresholdsOperatorDao.class);
 		bind(new TypeLiteral<PropositionFinder<Long,String>>(){}).to(TestPropositionFinder.class);
+		bind(PasswordGenerator.class).to(PasswordGeneratorTestImpl.class);
 	}
 }
