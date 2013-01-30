@@ -27,10 +27,12 @@ import java.util.Map;
 
 import com.google.inject.Inject;
 
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.DataElement;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.DataElementField;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.Sequence;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.Sequence.RelatedDataElementField;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.ExtendedDataElement;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.PropositionTypeVisitor;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.SequenceEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.DataElementEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.Relation;
@@ -261,10 +263,33 @@ public class SequenceTranslator implements
 	private DataElementField createDataElementField(ExtendedDataElement ep) {
 		DataElementField dataElement = new DataElementField();
 		dataElement.setDataElementKey(ep.getDataElementEntity().getKey());
-		dataElement.setDataElementDescription(ep.getDataElementEntity()
-				.getDescription());
-		dataElement.setDataElementDisplayName(ep.getDataElementEntity()
-				.getDisplayName());
+		dataElement.setDataElementDescription(
+				ep.getDataElementEntity().getDescription());
+		dataElement.setDataElementDisplayName(
+				ep.getDataElementEntity().getDisplayName());
+		DataElementEntity entity = ep.getDataElementEntity();
+		PropositionTypeVisitor visitor = new PropositionTypeVisitor();
+		entity.accept(visitor);
+		switch (visitor.getType()) {
+			case SEQUENCE:
+				dataElement.setType(DataElement.Type.SEQUENCE);
+				break;
+			case SYSTEM:
+				dataElement.setType(DataElement.Type.SYSTEM);
+				break;
+			case CATEGORIZATION:
+				dataElement.setType(DataElement.Type.CATEGORIZATION);
+				break;
+			case FREQUENCY:
+				dataElement.setType(DataElement.Type.FREQUENCY);
+				break;
+			case VALUE_THRESHOLD:
+				dataElement.setType(DataElement.Type.VALUE_THRESHOLD);
+				break;
+			default:
+				throw new IllegalStateException("Unknown proposition type: "
+						+ visitor.getType());
+		}
 		if (ep.getMinDuration() != null) {
 			dataElement.setHasDuration(true);
 			dataElement.setMinDuration(ep.getMinDuration());

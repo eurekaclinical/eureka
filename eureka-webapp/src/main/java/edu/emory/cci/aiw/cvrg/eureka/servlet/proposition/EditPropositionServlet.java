@@ -21,6 +21,7 @@ package edu.emory.cci.aiw.cvrg.eureka.servlet.proposition;
 
 import java.io.IOException;
 import java.security.Principal;
+import java.util.HashMap;
 import java.util.List;
 
 import javax.servlet.ServletException;
@@ -29,29 +30,46 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.Category;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.DataElement;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.DataElementField;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.DataElementVisitor;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.Frequency;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.Sequence;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.SystemElement;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.ValueThresholds;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ServicesClient;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.RelationOperator;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.TimeUnit;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.User;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.ValueComparator;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.ThresholdsOperator;
+import edu.emory.cci.aiw.cvrg.eureka.common.exception.DataElementHandlingException;
+
 import java.util.ArrayList;
+import java.util.Map;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class EditPropositionServlet extends HttpServlet {
+
+	private static final Logger LOGGER = LoggerFactory
+			.getLogger(EditPropositionServlet.class);
 
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
 		doGet(req, resp);
 	}
+
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
 
 		String eurekaServicesUrl = req.getSession().getServletContext()
 				.getInitParameter("eureka-services-url");
-        String propKey = req.getParameter("key");
+		String propKey = req.getParameter("key");
 
 		Principal principal = req.getUserPrincipal();
 		String userName = principal.getName();
@@ -59,16 +77,15 @@ public class EditPropositionServlet extends HttpServlet {
 		ServicesClient servicesClient = new ServicesClient(eurekaServicesUrl);
 		User user = servicesClient.getUserByName(userName);
 		List<TimeUnit> timeUnits = servicesClient.getTimeUnitsAsc();
-		TimeUnit defaultTimeUnit = 
-				servicesClient.getTimeUnitByName(
-				DataElement.DEFAULT_TIME_UNIT_NAME);
+		TimeUnit defaultTimeUnit = servicesClient
+				.getTimeUnitByName(DataElement.DEFAULT_TIME_UNIT_NAME);
 		List<RelationOperator> operators = servicesClient
 				.getRelationOperators();
-		List<ThresholdsOperator> thresholdOps = 
-				servicesClient.getThresholdsOperators();
-		
-		List<ValueComparator> valueComparators = 
-				servicesClient.getValueComparatorsAsc();
+		List<ThresholdsOperator> thresholdOps = servicesClient
+				.getThresholdsOperators();
+
+		List<ValueComparator> valueComparators = servicesClient
+				.getValueComparatorsAsc();
 		List<ValueComparator> valueCompsUpper = new ArrayList<ValueComparator>();
 		List<ValueComparator> valueCompsLower = new ArrayList<ValueComparator>();
 		for (ValueComparator vc : valueComparators) {
@@ -84,7 +101,8 @@ public class EditPropositionServlet extends HttpServlet {
 					valueCompsLower.add(vc);
 					break;
 				default:
-					throw new AssertionError("Invalid threshold: " + vc.getThreshold());
+					throw new AssertionError(
+							"Invalid threshold: " + vc.getThreshold());
 			}
 		}
 
@@ -96,13 +114,94 @@ public class EditPropositionServlet extends HttpServlet {
 		req.setAttribute("defaultTimeUnit", defaultTimeUnit);
 
 		if ((propKey != null) && (!propKey.equals(""))) {
-			DataElement dataElement = servicesClient.getUserElement
-					(user.getId(), propKey);
+			DataElement dataElement = servicesClient
+					.getUserElement(user.getId(), propKey);
+			PropertiesDataElementVisitor visitor = new PropertiesDataElementVisitor(
+					user.getId(), servicesClient);
+			try {
+				LOGGER.debug("Visiting {}", dataElement.getKey());
+				dataElement.accept(visitor);
+			} catch (DataElementHandlingException e) {
+				LOGGER.error(e.getMessage(), e);
+			}
+			req.setAttribute("properties", visitor.getProperties());
 			req.setAttribute("proposition", dataElement);
-			req.setAttribute("propositionType", 
-					dataElement.getType().toString());
+			req.setAttribute(
+					"propositionType", dataElement.getType().toString());
 		}
 
 		req.getRequestDispatcher("/protected/editor.jsp").forward(req, resp);
+	}
+
+	private static final class PropertiesDataElementVisitor
+			implements DataElementVisitor {
+		private final Long userId;
+		private final ServicesClient servicesClient;
+		private final Map<String, List<String>> properties;
+
+		private PropertiesDataElementVisitor(Long inUserId,
+				ServicesClient inServicesClient) {
+
+			this.userId = inUserId;
+			this.servicesClient = inServicesClient;
+			this.properties = new HashMap<String, List<String>>();
+		}
+
+		private void handleDataElementField(DataElementField inField) {
+			SystemElement systemElement = this.servicesClient
+					.getSystemElement(this.userId, inField.getDataElementKey());
+			this.properties.put(
+					inField.getDataElementKey(), systemElement.getProperties());
+		}
+
+		@Override
+		public void visit(SystemElement systemElement)
+				throws DataElementHandlingException {
+			LOGGER.debug(
+					"visit system element -- {}", systemElement.getKey());
+		}
+
+		@Override
+		public void visit(Category categoricalElement)
+				throws DataElementHandlingException {
+			LOGGER.debug(
+					"visit category element -- {}",
+					categoricalElement.getKey());
+		}
+
+		@Override
+		public void visit(Sequence sequence)
+				throws DataElementHandlingException {
+			LOGGER.debug("visit sequence element -- {}", sequence.getKey());
+			DataElementField primary = sequence.getPrimaryDataElement();
+			if (primary.getType() == DataElement.Type.SYSTEM) {
+				handleDataElementField(primary);
+			}
+
+			for (Sequence.RelatedDataElementField field : sequence
+					.getRelatedDataElements()) {
+				DataElementField element = field.getDataElementField();
+				if (element.getType() == DataElement.Type.SYSTEM) {
+					handleDataElementField(element);
+				}
+			}
+		}
+
+		@Override
+		public void visit(Frequency frequency)
+				throws DataElementHandlingException {
+			LOGGER.debug("visit frequency element -- {}", frequency.getKey());
+		}
+
+		@Override
+		public void visit(ValueThresholds thresholds)
+				throws DataElementHandlingException {
+			LOGGER.debug(
+					"visit threshold element -- {}", thresholds.getKey());
+		}
+
+		public Map<String, List<String>> getProperties() {
+			return this.properties;
+		}
 	}
 }

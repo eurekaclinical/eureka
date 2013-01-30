@@ -246,9 +246,9 @@
 																		</td>
 																		<td>
 																			<select name="mainDataElementPropertyName" data-properties-provider="mainDataElement">
-																				<c:if test="${propositionType == 'SEQUENCE' and not empty proposition.primaryDataElement.property}">
-																				<option value="${proposition.primaryDataElement.property}">${proposition.primaryDataElement.property}</option>
-																				</c:if>
+																				<c:forEach var="property" items="${properties[proposition.primaryDataElement.dataElementKey]}">
+																					<option value="${property}" <c:if test="${proposition.primaryDataElement.property == property}">selected="selected"</c:if>>${property}</option>
+																				</c:forEach>
 																			</select>
 																			<input type="text" class="propertyValueField" name="mainDataElementPropertyValue" value="<c:if test="${propositionType == 'SEQUENCE' and not empty proposition.primaryDataElement.propertyValue}">${proposition.primaryDataElement.propertyValue}</c:if>"/>
 																		</td>
@@ -339,9 +339,9 @@
 																		</td>
 																		<td colspan="5">
 																			<select name="sequenceRelDataElementPropertyName" data-properties-provider="relatedDataElement${status.count}">
-																				<c:if test="${not empty relation.dataElementField.property}">
-																				<option value="${relation.dataElementField.property}">${relation.dataElementField.property}<option>
-																				</c:if>
+																				<c:forEach var="property" items="${properties[relation.dataElementField.dataElementKey]}">
+																					<option value="${property}" <c:if test="${relation.dataElementField.property == property}">selected="selected"</c:if>>${property}</option>
+																				</c:forEach>
 																			</select>
 																			<input type="text" class="propertyValueField" name="sequenceRelDataElementPropertyValue" value="<c:if test="${not empty relation.dataElementField.propertyValue}">${relation.dataElementField.propertyValue}</c:if>"/>
 																		</td>
