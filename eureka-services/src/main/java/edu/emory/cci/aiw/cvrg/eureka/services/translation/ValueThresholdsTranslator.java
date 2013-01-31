@@ -28,6 +28,7 @@ import edu.emory.cci.aiw.cvrg.eureka.common.comm.ShortDataElementField;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.ValueThreshold;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.ValueThresholds;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.DataElementEntity;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.PropositionTypeVisitor;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.ValueThresholdEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.ValueThresholdGroupEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.exception.DataElementHandlingException;
@@ -145,6 +146,9 @@ public final class ValueThresholdsTranslator implements
 
 			DataElementEntity dataElementEntity = vte.getAbstractedFrom();
 			ShortDataElementField elementField = new ShortDataElementField();
+			PropositionTypeVisitor visitor = new PropositionTypeVisitor();
+			dataElementEntity.accept(visitor);
+			elementField.setType(visitor.getType());
 			elementField.setDataElementDescription(dataElementEntity
 					.getDescription());
 			elementField.setDataElementDisplayName(dataElementEntity
