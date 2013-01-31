@@ -144,4 +144,18 @@ public class EtlClient extends AbstractClient {
 		}
 		return result;
 	}
+
+	public void ping (Long inUserId) throws ClientException {
+		String path = "/api/ping/" + inUserId;
+		ClientResponse response;
+		ClientResponse.Status status;
+		try {
+			response = this.getResource().path(path).accept(MediaType
+					.APPLICATION_JSON).get(ClientResponse.class);
+			this.errorIfStatusNotEqualTo(response, ClientResponse.Status.OK);
+		} catch (UniformInterfaceException e) {
+			status = e.getResponse().getClientResponseStatus();
+			throw new ClientException(status,e.getMessage());
+		}
+	}
 }

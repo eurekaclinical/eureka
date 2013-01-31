@@ -38,9 +38,10 @@
                 <table>
                     <tr>
                         <td width="124">Name:</td>
-                        <td colspan="4">${user.firstName} ${user.lastName}
+												<td colspan="4">${user.firstName} ${user.lastName}
+																(<a href="${pageContext.request.contextPath}/protected/ping?id=${user.id}">Ping</a>)
                                 <input type="hidden" name="id" value="${user.id}" />
-                                <input type="hidden" name="action" value="save" />
+																<input type="hidden" name="action" value="save" />
                         </td>
                     </tr>
                     <tr>

@@ -29,6 +29,7 @@ import org.slf4j.LoggerFactory;
 
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.GenericType;
+import com.sun.jersey.api.client.UniformInterfaceException;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.DataElement;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.JobInfo;
@@ -404,5 +405,20 @@ public class ServicesClient extends AbstractClient {
 				.build().toString();
 		return this.getResource().path(path).accept(
 				MediaType.APPLICATION_JSON).get(ValueComparator.class);
+	}
+
+	public void pingAccount (Long inUserId) throws ClientException {
+		final String path = "/api/ping/" + inUserId;
+		try {
+			ClientResponse response = this.getResource().path(path).accept(
+					MediaType.APPLICATION_JSON).get(ClientResponse.class);
+			this.errorIfStatusNotEqualTo(response, ClientResponse.Status
+					.OK);
+		} catch (UniformInterfaceException e) {
+			ClientResponse.Status status = e.getResponse()
+					.getClientResponseStatus();
+			String message = e.getResponse().getEntity(String.class);
+			throw new ClientException(status, message, e);
+		}
 	}
 }

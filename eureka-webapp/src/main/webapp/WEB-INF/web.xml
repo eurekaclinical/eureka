@@ -28,14 +28,14 @@ see implementation details http://jersey.java.net/nonav/documentation/latest/jax
 		<param-value>http://localhost:8080/eureka-services</param-value>
 	</context-param>
 	<context-param>
+		<description>Is populated with the site URL from the maven pom.xml from which Eureka! was compiled. The developer documention URL on the Eureka! index page is constructed by appending '/dev' to this URL.</description>
 		<param-name>eureka-dev-site-url</param-name>
 		<param-value>${eureka.dev.site.url}</param-value>
-		<description>Is populated with the site URL from the maven pom.xml from which Eureka! was compiled. The developer documention URL on the Eureka! index page is constructed by appending '/dev' to this URL.</description>
 	</context-param>
 	<context-param>
+		<description>Various string messages.</description>
 		<param-name>javax.servlet.jsp.jstl.fmt.localizationContext</param-name>
 		<param-value>Messages</param-value>
-		<description>Various string messages.</description>
 	</context-param>
 
 	<!-- Populates links to the AIW website from Eureka. -->
@@ -198,7 +198,11 @@ see implementation details http://jersey.java.net/nonav/documentation/latest/jax
 		<servlet-class>edu.emory.cci.aiw.cvrg.eureka.servlet.ForgotPasswordServlet</servlet-class>
 		<load-on-startup>1</load-on-startup>
 	</servlet>
-	
+	<servlet>
+		<servlet-name>PingServlet</servlet-name>
+		<servlet-class>edu.emory.cci.aiw.cvrg.eureka.servlet.PingServlet</servlet-class>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
 	
 	
 	<servlet-mapping>
@@ -268,6 +272,10 @@ see implementation details http://jersey.java.net/nonav/documentation/latest/jax
 	<servlet-mapping>
 		<servlet-name>ForgotPasswordServlet</servlet-name>
 		<url-pattern>/forgot_password</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>PingServlet</servlet-name>
+		<url-pattern>/protected/ping</url-pattern>
 	</servlet-mapping>
 
 	<login-config>
