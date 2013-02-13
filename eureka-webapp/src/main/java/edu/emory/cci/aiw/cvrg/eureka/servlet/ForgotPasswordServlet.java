@@ -29,6 +29,8 @@ import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.sun.jersey.api.client.ClientResponse;
+
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ClientException;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ServicesClient;
 import java.text.MessageFormat;
@@ -64,6 +66,11 @@ public class ForgotPasswordServlet extends HttpServlet {
 			response.getWriter().write(HttpServletResponse.SC_OK);
 		} catch (ClientException ex) {
 			LOGGER.error("Error resetting password for user {}", email, ex);
+			if (ClientResponse.Status.NOT_FOUND.equals(ex.getResponseStatus())) {
+				response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+				String formattedMsg = MessageFormat.format(ex.getMessage(), "aiwhelp@emory.edu");
+				response.getWriter().write(formattedMsg);
+			} else {
 			ResourceBundle messages = 
 					(ResourceBundle) request.getAttribute("messages");
 			response.setContentType("text/plain");
@@ -71,6 +78,7 @@ public class ForgotPasswordServlet extends HttpServlet {
 			String msg = messages.getString("passwordChange.error.internalServerError");
 			String formattedMsg = MessageFormat.format(msg, "aiwhelp@emory.edu");
 			response.getWriter().write(formattedMsg);
+			}
 		}
 	}
 }

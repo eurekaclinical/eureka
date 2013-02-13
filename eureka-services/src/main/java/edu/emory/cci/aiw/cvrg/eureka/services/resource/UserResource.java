@@ -357,7 +357,10 @@ public class UserResource {
 		User user = this.userDao.getByName(inUsername);
 		LOGGER.debug("Resetting user: {}", user);
 		if (user == null) {
-			throw new HttpStatusException(Response.Status.NOT_FOUND);
+			throw new HttpStatusException(
+					Response.Status.NOT_FOUND, "We could not find this email address in our records."
+					+ " Please check the email address or contact {0} for help.");
+			
 		} else {
 			String passwordHash;
 			String password = this.passwordGenerator.generatePassword();
