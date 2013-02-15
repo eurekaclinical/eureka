@@ -246,9 +246,11 @@
 																		</td>
 																		<td>
 																			<select name="mainDataElementPropertyName" data-properties-provider="mainDataElement">
+																				<c:if test="${propositionType == 'SEQUENCE'}">
 																				<c:forEach var="property" items="${properties[proposition.primaryDataElement.dataElementKey]}">
 																					<option value="${property}" <c:if test="${proposition.primaryDataElement.property == property}">selected="selected"</c:if>>${property}</option>
 																				</c:forEach>
+																				</c:if>
 																			</select>
 																			<input type="text" class="propertyValueField" name="mainDataElementPropertyValue" value="<c:if test="${propositionType == 'SEQUENCE' and not empty proposition.primaryDataElement.propertyValue}">${proposition.primaryDataElement.propertyValue}</c:if>"/>
 																		</td>
