@@ -31,7 +31,7 @@ import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.ValidationRequest;
-import edu.stanford.smi.protege.util.Assert;
+import org.junit.Assert;
 
 /**
  * @author hrathod
