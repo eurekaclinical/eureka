@@ -62,9 +62,9 @@
 	</properties>
 
 	<scm>
-		<developerConnection>scm:svn:https://scm.cci.emory.edu/svn/aiw/tags/eureka-1.6
+		<developerConnection>scm:svn:https://scm.cci.emory.edu/svn/aiw/branches/eureka-1.6
 		</developerConnection>
-		<url>https://scm.cci.emory.edu/svn/aiw/tags/eureka-1.6</url>
+		<url>https://scm.cci.emory.edu/svn/aiw/branches/eureka-1.6</url>
 	</scm>
 
 	<issueManagement>
