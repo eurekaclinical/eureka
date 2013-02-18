@@ -124,7 +124,7 @@
 			<groupId>org.protempa</groupId>
 			<artifactId>protempa-dsb-relationaldb</artifactId>
 		</dependency>
-                <dependency>
+		<dependency>
 			<groupId>org.protempa</groupId>
 			<artifactId>protempa-framework</artifactId>
 		</dependency>
@@ -138,6 +138,49 @@
 			<type>test-jar</type>
 		</dependency>
 	</dependencies>
-
+	<profiles>
+		<profile>
+			<id>eureka-tomcat-local</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.liquibase</groupId>
+						<artifactId>liquibase-maven-plugin</artifactId>
+						<configuration>
+							<changeLogFile>src/main/resources/db_migration/changelog-master.xml</changeLogFile>
+							<driver>${local.protempaetl.db.jdbc.driver}</driver>
+							<url>${local.protempaetl.db.jdbc.url}</url>
+							<username>${local.protempaetl.username}</username>
+							<password>${local.protempaetl.password}</password>
+							<referenceUrl>persistence:backend-jpa-unit</referenceUrl>
+							<promptOnNonLocalDatabase>false</promptOnNonLocalDatabase>
+							<verbose>true</verbose>
+							<logging>debug</logging>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+		<profile>
+			<id>eureka-tomcat-dev</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.liquibase</groupId>
+						<artifactId>liquibase-maven-plugin</artifactId>
+						<configuration>
+							<changeLogFile>src/main/resources/db_migration/changelog-master.xml</changeLogFile>
+							<driver>${dev.protempaetl.db.jdbc.driver}</driver>
+							<url>${dev.protempaetl.db.jdbc.url}</url>
+							<username>${dev.protempaetl.username}</username>
+							<password>${dev.protempaetl.password}</password>
+							<referenceUrl>persistence:backend-jpa-unit</referenceUrl>
+							<promptOnNonLocalDatabase>false</promptOnNonLocalDatabase>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
 </project>
 

@@ -28,7 +28,6 @@ import org.protempa.ConstantDefinition;
 import org.protempa.EventDefinition;
 import org.protempa.HighLevelAbstractionDefinition;
 import org.protempa.LowLevelAbstractionDefinition;
-import org.protempa.PairDefinition;
 import org.protempa.PrimitiveParameterDefinition;
 import org.protempa.PropositionDefinition;
 import org.protempa.PropositionDefinitionVisitor;
@@ -43,12 +42,16 @@ import edu.emory.cci.aiw.cvrg.eureka.etl.config.EtlProperties;
 import edu.emory.cci.aiw.cvrg.eureka.etl.ksb.PropositionFinder;
 import edu.emory.cci.aiw.cvrg.eureka.etl.ksb.PropositionFinderException;
 import org.protempa.CompoundLowLevelAbstractionDefinition;
+import org.protempa.ContextDefinition;
+import org.protempa.SequentialTemporalPatternDefinition;
 
 public class PropositionValidatorImpl implements PropositionValidator {
 
 	private enum PropositionType {
 
-		HIGH_LEVEL_ABSTRACTION, SLICE, EVENT, PRIMITIVE_PARAMETER, CONSTANT, PAIR, LOW_LEVEL_ABSTRACTION, INVALID
+		HIGH_LEVEL_ABSTRACTION, SLICE, EVENT, PRIMITIVE_PARAMETER, CONSTANT, 
+		SEQUENTIAL_TEMPORAL_PATTERN, LOW_LEVEL_ABSTRACTION, CONTEXT, INVALID,
+		COMPOUND_LOW_LEVEL
 	}
 
 	private static class ValidatorVisitor implements
@@ -102,14 +105,21 @@ public class PropositionValidatorImpl implements PropositionValidator {
 		}
 
 		@Override
-		public void visit(PairDefinition def) {
-			this.setType(PropositionType.PAIR);
+		public void visit(SequentialTemporalPatternDefinition def) {
+			this.setType(PropositionType.SEQUENTIAL_TEMPORAL_PATTERN);
 		}
 
 		@Override
 		public void visit(CompoundLowLevelAbstractionDefinition def) {
-			throw new UnsupportedOperationException("Not supported yet.");
+			setType(PropositionType.COMPOUND_LOW_LEVEL);
 		}
+
+		@Override
+		public void visit(ContextDefinition def) {
+			setType(PropositionType.CONTEXT);
+		}
+		
+		
 	}
 	private static final Logger LOGGER = LoggerFactory
 			.getLogger(PropositionValidatorImpl.class);

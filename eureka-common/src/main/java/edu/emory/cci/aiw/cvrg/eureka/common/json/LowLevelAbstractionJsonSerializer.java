@@ -71,6 +71,8 @@ public final class LowLevelAbstractionJsonSerializer extends
 		provider.defaultSerializeField("maxGapBetweenValues", value.getMaximumGapBetweenValues(), jgen);
 		provider.defaultSerializeField("maxGapBetweenValuesUnits", value.getMaximumGapBetweenValuesUnits(), jgen);
 		
+		provider.defaultSerializeField("context", value.getContextId(), jgen);
+		
 		
 		// value definitions
 		jgen.writeFieldName("values");

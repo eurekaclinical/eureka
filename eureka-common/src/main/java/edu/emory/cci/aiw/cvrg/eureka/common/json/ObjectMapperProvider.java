@@ -34,7 +34,6 @@ import org.protempa.HighLevelAbstractionDefinition;
 import org.protempa.IntervalSide;
 import org.protempa.LowLevelAbstractionDefinition;
 import org.protempa.NotRecordedSourceId;
-import org.protempa.PairDefinition;
 import org.protempa.PrimitiveParameterDefinition;
 import org.protempa.PropertyDefinition;
 import org.protempa.PropositionDefinition;
@@ -50,8 +49,10 @@ import org.protempa.proposition.value.NumberValue;
 import org.protempa.proposition.value.Unit;
 import org.protempa.proposition.value.Value;
 
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.DataElement;
 import org.protempa.CompoundLowLevelAbstractionDefinition;
+import org.protempa.ContextDefinition;
+import org.protempa.SequentialTemporalPatternDefinition;
+import org.protempa.SequentialTemporalPatternDefinition.SubsequentTemporalExtendedPropositionDefinition;
 
 /**
  * Provides custom JSON serialization/deserialization from proposition
@@ -106,6 +107,12 @@ public class ObjectMapperProvider implements ContextResolver<ObjectMapper> {
 				        PropertyMixin.class);
 				context.setMixInAnnotations(ReferenceDefinition.class,
 				        ReferenceMixin.class);
+				context.setMixInAnnotations(ContextDefinition.class,
+						ContextDefinitionMixin.class);
+				context.setMixInAnnotations(SubsequentTemporalExtendedPropositionDefinition.class,
+						SubsequentTemporalExtendedPropositionDefinitionMixin.class);
+				context.setMixInAnnotations(SequentialTemporalPatternDefinition.class,
+						SequentialTemporalPatternDefinitionMixin.class);
 			}
 		};
 
@@ -125,12 +132,6 @@ public class ObjectMapperProvider implements ContextResolver<ObjectMapper> {
 				new CompoundLowLevelAbstractionJsonSerializer());
 		module.addDeserializer(CompoundLowLevelAbstractionDefinition.class,
 				new CompoundLowLevelAbstractionJsonDeserializer());
-
-		// pair abstractions also require custom serialization
-		module.addSerializer(PairDefinition.class,
-		        new PairAbstractionJsonSerializer());
-		module.addDeserializer(PairDefinition.class,
-		        new PairAbstractionJsonDeserializer());
 
 		// slice abstractions also require custom serialization
 		module.addSerializer(SliceDefinition.class,

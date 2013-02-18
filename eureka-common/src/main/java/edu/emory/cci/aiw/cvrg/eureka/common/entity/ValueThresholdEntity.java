@@ -20,12 +20,14 @@
 package edu.emory.cci.aiw.cvrg.eureka.common.entity;
 
 import java.math.BigDecimal;
+import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
@@ -65,6 +67,25 @@ public class ValueThresholdEntity {
 	@ManyToOne
 	@JoinColumn(referencedColumnName = "id", nullable = false)
 	private ValueComparator maxValueComp;
+	
+	@OneToMany(cascade = CascadeType.ALL)
+	@JoinColumn(name="valuethreshold_id")
+	private List<ExtendedDataElement> extendedDataElements;
+	
+	@ManyToOne
+	@JoinColumn(name="relationop_id", referencedColumnName = "id", nullable = false)
+	private RelationOperator relationOperator;
+	
+	private Integer withinAtLeast;
+	private Integer withinAtMost;
+	
+	@ManyToOne
+	@JoinColumn(referencedColumnName = "id", nullable = false)
+	private TimeUnit withinAtMostUnits;
+	
+	@ManyToOne
+	@JoinColumn(referencedColumnName = "id", nullable = false)
+	private TimeUnit withinAtLeastUnits;
 
 	public Long getId() {
 		return id;
@@ -146,8 +167,58 @@ public class ValueThresholdEntity {
 		this.maxValueComp = maxValueComp;
 	}
 
+	public List<ExtendedDataElement> getExtendedDataElements() {
+		return extendedDataElements;
+	}
+
+	public void setExtendedDataElements(List<ExtendedDataElement> extendedDataElements) {
+		this.extendedDataElements = extendedDataElements;
+	}
+	
 	@Override
 	public String toString() {
 		return ToStringBuilder.reflectionToString(this);
 	}
+
+	public void setRelationOperator(RelationOperator relationOperator) {
+		this.relationOperator = relationOperator;
+	}
+
+	public void setWithinAtLeast(Integer withinAtLeast) {
+		this.withinAtLeast = withinAtLeast;
+	}
+
+	public void setWithinAtMost(Integer withinAtMost) {
+		this.withinAtMost = withinAtMost;
+	}
+
+	public void setWithinAtMostUnits(TimeUnit withinAtMostUnits) {
+		this.withinAtMostUnits = withinAtMostUnits;
+	}
+
+	public void setWithinAtLeastUnits(TimeUnit withinAtLeastUnits) {
+		this.withinAtLeastUnits = withinAtLeastUnits;
+	}
+
+	public RelationOperator getRelationOperator() {
+		return relationOperator;
+	}
+
+	public Integer getWithinAtLeast() {
+		return withinAtLeast;
+	}
+
+	public Integer getWithinAtMost() {
+		return withinAtMost;
+	}
+
+	public TimeUnit getWithinAtMostUnits() {
+		return withinAtMostUnits;
+	}
+
+	public TimeUnit getWithinAtLeastUnits() {
+		return withinAtLeastUnits;
+	}
+	
+	
 }

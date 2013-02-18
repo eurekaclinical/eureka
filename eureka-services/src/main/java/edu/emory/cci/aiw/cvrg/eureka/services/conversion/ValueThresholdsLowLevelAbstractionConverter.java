@@ -34,9 +34,9 @@ import org.protempa.SimpleGapFunction;
 import org.protempa.SlidingWindowWidthMode;
 import org.protempa.proposition.value.NominalValue;
 
-public final class ValueThresholdsLowLevelAbstractionConverter
-		implements
-		PropositionDefinitionConverter<ValueThresholdGroupEntity, LowLevelAbstractionDefinition> {
+public final class ValueThresholdsLowLevelAbstractionConverter implements
+		PropositionDefinitionConverter<ValueThresholdGroupEntity, 
+		LowLevelAbstractionDefinition> {
 
 	private PropositionDefinitionConverterVisitor converterVisitor;
 	private LowLevelAbstractionDefinition primary;
@@ -52,19 +52,23 @@ public final class ValueThresholdsLowLevelAbstractionConverter
 		return primaryPropId;
 	}
 
-	public void setConverterVisitor(PropositionDefinitionConverterVisitor inVisitor) {
+	public void setConverterVisitor(
+			PropositionDefinitionConverterVisitor inVisitor) {
 		converterVisitor = inVisitor;
 	}
 
 	@Override
-	public List<PropositionDefinition> convert(ValueThresholdGroupEntity entity) {
+	public List<PropositionDefinition> convert(
+			ValueThresholdGroupEntity entity) {
 		if (entity.getValueThresholds().size() > 1) {
 			throw new IllegalArgumentException(
 					"Low-level abstraction definitions may be created only "
 					+ "from singleton value thresholds.");
 		}
-		List<PropositionDefinition> result = new ArrayList<PropositionDefinition>();
-		String propId = entity.getKey() + ConversionUtil.PRIMARY_PROP_ID_SUFFIX;
+		List<PropositionDefinition> result = 
+				new ArrayList<PropositionDefinition>();
+		String propId = 
+				entity.getKey() + ConversionUtil.PRIMARY_PROP_ID_SUFFIX;
 		this.primaryPropId = propId;
 		if (this.converterVisitor.addPropositionId(propId)) {
 			LowLevelAbstractionDefinition primary = 
@@ -75,15 +79,18 @@ public final class ValueThresholdsLowLevelAbstractionConverter
 
 			// low-level abstractions can be created only from singleton value
 			// thresholds
-			if (entity.getValueThresholds() != null && entity.getValueThresholds().size() == 1) {
-				ValueThresholdEntity threshold = entity.getValueThresholds().get(0);
+			if (entity.getValueThresholds() != null && 
+					entity.getValueThresholds().size() == 1) {
+				ValueThresholdEntity threshold = 
+						entity.getValueThresholds().get(0);
 				threshold.getAbstractedFrom().accept(converterVisitor);
-				Collection<PropositionDefinition> abstractedFrom = converterVisitor
-						.getPropositionDefinitions();
+				Collection<PropositionDefinition> abstractedFrom = 
+						converterVisitor.getPropositionDefinitions();
 
 				primary.addPrimitiveParameterId(
 						converterVisitor.getPrimaryPropositionId());
-				thresholdToValueDefinitions(entity.getKey() + "_VALUE", threshold, primary);
+				thresholdToValueDefinitions(entity.getKey() + "_VALUE", 
+						threshold, primary);
 				result.addAll(abstractedFrom);
 			}
 			primary.setSlidingWindowWidthMode(SlidingWindowWidthMode.DEFAULT);
@@ -99,11 +106,12 @@ public final class ValueThresholdsLowLevelAbstractionConverter
 	static void thresholdToValueDefinitions(String value,
 			ValueThresholdEntity threshold,
 			LowLevelAbstractionDefinition def) {
-		LowLevelAbstractionValueDefinition valueDef = new LowLevelAbstractionValueDefinition(
+		LowLevelAbstractionValueDefinition valueDef = 
+				new LowLevelAbstractionValueDefinition(
 				def, value);
 		valueDef.setValue(NominalValue.getInstance(value));
-		LowLevelAbstractionValueDefinition compValueDef = new LowLevelAbstractionValueDefinition(
-				def, value + "_COMP");
+		LowLevelAbstractionValueDefinition compValueDef = 
+				new LowLevelAbstractionValueDefinition(def, value + "_COMP");
 		compValueDef.setValue(NominalValue.getInstance(value + "_COMP"));
 		if (threshold.getMinValueThreshold() != null
 				&& threshold.getMinValueComp() != null) {
@@ -113,8 +121,7 @@ public final class ValueThresholdsLowLevelAbstractionConverter
 					.parse(threshold.getMinValueComp().getName()));
 			compValueDef.setParameterValue("maxThreshold", ValueType.VALUE
 					.parse(threshold.getMinValueThreshold().toString()));
-			compValueDef.setParameterComp(
-					"maxThreshold",
+			compValueDef.setParameterComp("maxThreshold",
 					ValueComparator.parse(threshold.getMinValueComp()
 					.getComplement().getName()));
 		}
@@ -126,8 +133,7 @@ public final class ValueThresholdsLowLevelAbstractionConverter
 					.parse(threshold.getMaxValueComp().getName()));
 			compValueDef.setParameterValue("minThreshold", ValueType.VALUE
 					.parse(threshold.getMaxValueThreshold().toString()));
-			compValueDef.setParameterComp(
-					"minThreshold",
+			compValueDef.setParameterComp("minThreshold",
 					ValueComparator.parse(threshold.getMaxValueComp()
 					.getComplement().getName()));
 		}

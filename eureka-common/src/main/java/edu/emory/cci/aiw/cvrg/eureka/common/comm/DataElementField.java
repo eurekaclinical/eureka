@@ -19,6 +19,7 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.common.comm;
 
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.Category.CategoricalType;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.DataElement.Type;
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
@@ -43,6 +44,7 @@ public class DataElementField {
 	private String property;
 	private String propertyValue;
 	private Type type;
+	private CategoricalType categoricalType;
 
 	public Long getId() {
 		return id;
@@ -146,6 +148,14 @@ public class DataElementField {
 
 	public void setType(Type type) {
 		this.type = type;
+	}
+
+	public CategoricalType getCategoricalType() {
+		return categoricalType;
+	}
+
+	public void setCategoricalType(CategoricalType categoricalType) {
+		this.categoricalType = categoricalType;
 	}
 
 	public boolean isInSystem() {

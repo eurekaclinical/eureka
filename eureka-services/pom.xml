@@ -6,7 +6,8 @@
 	<packaging>war</packaging>
 	<name>Eureka Services</name>
 	<description>Eureka Services is the middle services
-		layer of the Eureka! Clinical Analytics application.</description>
+		layer of the Eureka! Clinical Analytics application.
+	</description>
 
 	<parent>
 		<groupId>edu.emory.cci.aiw.cvrg</groupId>
@@ -33,8 +34,29 @@
 				<groupId>org.apache.tomcat.maven</groupId>
 				<artifactId>tomcat7-maven-plugin</artifactId>
 			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-resources-plugin</artifactId>
+			</plugin>
 		</plugins>
+		<resources>
+			<resource>
+				<directory>src/main/resources</directory>
+				<filtering>false</filtering>
+				<excludes>
+					<exclude>META-INF/persistence.xml</exclude>
+				</excludes>
+			</resource>
+			<resource>
+				<directory>src/main/resources</directory>
+				<filtering>true</filtering>
+				<includes>
+					<include>META-INF/persistence.xml</include>
+				</includes>
+			</resource>
+		</resources>
 	</build>
+	
 	<dependencies>
 		<dependency>
 			<groupId>junit</groupId>
@@ -131,10 +153,53 @@
 			<type>pom</type>
 		</dependency>
 		<dependency>
-				<groupId>org.protempa</groupId>
-				<artifactId>protempa-framework</artifactId>
+			<groupId>org.protempa</groupId>
+			<artifactId>protempa-framework</artifactId>
 		</dependency>
 	</dependencies>
-
+	<profiles>
+		<profile>
+			<id>eureka-tomcat-local</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.liquibase</groupId>
+						<artifactId>liquibase-maven-plugin</artifactId>
+						<configuration>
+							<changeLogFile>src/main/resources/db_migration/changelog-master.xml</changeLogFile>
+							<driver>${local.services.db.jdbc.driver}</driver>
+							<url>${local.services.db.jdbc.url}</url>
+							<username>${local.services.username}</username>
+							<password>${local.services.password}</password>
+							<referenceUrl>persistence:services-jpa-unit</referenceUrl>
+							<promptOnNonLocalDatabase>false</promptOnNonLocalDatabase>
+							<verbose>true</verbose>
+							<logging>debug</logging>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+		<profile>
+			<id>eureka-tomcat-dev</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.liquibase</groupId>
+						<artifactId>liquibase-maven-plugin</artifactId>
+						<configuration>
+							<changeLogFile>src/main/resources/db_migration/changelog-master.xml</changeLogFile>
+							<driver>${dev.services.db.jdbc.driver}</driver>
+							<url>${dev.services.db.jdbc.url}</url>
+							<username>${dev.services.username}</username>
+							<password>${dev.services.password}</password>
+							<referenceUrl>persistence:services-jpa-unit</referenceUrl>
+							<promptOnNonLocalDatabase>false</promptOnNonLocalDatabase>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
 </project>
 

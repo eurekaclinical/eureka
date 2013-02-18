@@ -28,12 +28,12 @@ import org.codehaus.jackson.JsonToken;
 import org.codehaus.jackson.map.DeserializationContext;
 import org.codehaus.jackson.map.JsonDeserializer;
 import org.protempa.CompoundLowLevelAbstractionDefinition;
-import org.protempa.CompoundLowLevelAbstractionDefinition.ValueClassification;
 import org.protempa.CompoundLowLevelAbstractionDefinition.ValueDefinitionMatchOperator;
 import org.protempa.GapFunction;
 import org.protempa.PropertyDefinition;
 import org.protempa.ReferenceDefinition;
 import org.protempa.SourceId;
+import org.protempa.ValueClassification;
 
 public final class CompoundLowLevelAbstractionJsonDeserializer extends JsonDeserializer<CompoundLowLevelAbstractionDefinition> {
 
@@ -52,20 +52,20 @@ public final class CompoundLowLevelAbstractionJsonDeserializer extends JsonDeser
 		// now we can construct the LLA
 		CompoundLowLevelAbstractionDefinition value =
 				new CompoundLowLevelAbstractionDefinition(
-				this.parser.getText());
+				this.parser.readValueAs(String.class));
 		value.setInDataSource(false);
 
 		nextToken();
 		checkField("displayName");
-		value.setDisplayName(this.parser.getText());
+		value.setDisplayName(this.parser.readValueAs(String.class));
 
 		nextToken();
 		checkField("abbreviatedDisplayName");
-		value.setAbbreviatedDisplayName(this.parser.getText());
+		value.setAbbreviatedDisplayName(this.parser.readValueAs(String.class));
 
 		nextToken();
 		checkField("description");
-		value.setDescription(this.parser.getText());
+		value.setDescription(this.parser.readValueAs(String.class));
 
 		nextToken();
 		checkField("inverseIsA");
@@ -111,6 +111,10 @@ public final class CompoundLowLevelAbstractionJsonDeserializer extends JsonDeser
 		value.setValueDefinitionMatchOperator(
 				ValueDefinitionMatchOperator.valueOf(
 				this.parser.readValueAs(String.class)));
+		
+		nextToken();
+		checkField("context");
+		value.setContextId(this.parser.readValueAs(String.class));
 
 		nextToken();
 		checkField("values");
@@ -118,15 +122,15 @@ public final class CompoundLowLevelAbstractionJsonDeserializer extends JsonDeser
 		nextToken();
 		while (parser.getCurrentToken() != JsonToken.END_OBJECT) {
 			checkField("id");
-			String id = parser.getText();
+			String id = this.parser.readValueAs(String.class);
 			
 			nextToken();
 			checkField("lowLevelAbstractionId");
-			String lowLevelAbstractionId = parser.getText();
+			String lowLevelAbstractionId = this.parser.readValueAs(String.class);
 			
 			nextToken();
 			checkField("value");
-			String lowLevelAbstractionValueDefName = parser.getText();
+			String lowLevelAbstractionValueDefName = this.parser.readValueAs(String.class);
 			
 			ValueClassification valueCls = 
 					new ValueClassification(id, lowLevelAbstractionId, 

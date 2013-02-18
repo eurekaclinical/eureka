@@ -22,7 +22,6 @@ package edu.emory.cci.aiw.cvrg.eureka.common.json;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 
 import org.codehaus.jackson.JsonParseException;
 import org.codehaus.jackson.JsonParser;
@@ -54,20 +53,21 @@ public final class SliceAbstractionJsonDeserializer extends
 
 		checkField("id");
 		// now we can construct the slice definition
-		SliceDefinition value = new SliceDefinition(this.parser.getText());
+		SliceDefinition value = new SliceDefinition(
+				this.parser.readValueAs(String.class));
 		value.setInDataSource(false);
 
 		nextToken();
 		checkField("displayName");
-		value.setDisplayName(this.parser.getText());
+		value.setDisplayName(this.parser.readValueAs(String.class));
 
 		nextToken();
 		checkField("abbreviatedDisplayName");
-		value.setAbbreviatedDisplayName(this.parser.getText());
+		value.setAbbreviatedDisplayName(this.parser.readValueAs(String.class));
 
 		nextToken();
 		checkField("description");
-		value.setDescription(this.parser.getText());
+		value.setDescription(this.parser.readValueAs(String.class));
 
 		nextToken();
 		checkField("inverseIsA");

@@ -23,7 +23,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.protempa.CompoundLowLevelAbstractionDefinition;
-import org.protempa.CompoundLowLevelAbstractionDefinition.ValueClassification;
 import org.protempa.LowLevelAbstractionDefinition;
 import org.protempa.PropositionDefinition;
 
@@ -31,6 +30,7 @@ import edu.emory.cci.aiw.cvrg.eureka.common.entity.ValueThresholdEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.ValueThresholdGroupEntity;
 import org.protempa.SimpleGapFunction;
 import org.protempa.SlidingWindowWidthMode;
+import org.protempa.ValueClassification;
 
 public final class ValueThresholdsCompoundLowLevelAbstractionConverter
 		implements

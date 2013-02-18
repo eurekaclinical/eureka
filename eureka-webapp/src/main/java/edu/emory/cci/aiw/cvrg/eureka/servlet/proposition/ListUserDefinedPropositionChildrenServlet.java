@@ -37,6 +37,7 @@ import org.slf4j.LoggerFactory;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.Category;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.DataElement;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.DataElementField;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ServicesClient;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.User;
 
@@ -54,17 +55,29 @@ public class ListUserDefinedPropositionChildrenServlet extends HttpServlet {
 		this.servicesClient = new ServicesClient(parameter);
 	}
 
-	private String getDisplayName(DataElement p) {
-		String displayName = "";
+	private String getDisplayName(DataElementField p) {
+		String displayName;
+		String dataEltDisplayName = p.getDataElementDisplayName();
 
-		if (p.getDisplayName() != null && !p.getDisplayName().equals("")) {
-
-			displayName = p.getDisplayName() + " (" + p.getKey() + ")";
-
+		if (dataEltDisplayName != null && !dataEltDisplayName.equals("")) {
+			displayName = dataEltDisplayName + 
+					" (" + p.getDataElementKey() + ")";
 		} else {
+			displayName = p.getDataElementKey();
+		}
 
+		return displayName;
+	}
+	
+	private String getDisplayName(DataElement p) {
+		String displayName;
+		String dataEltDisplayName = p.getDisplayName();
+
+		if (dataEltDisplayName != null && !dataEltDisplayName.equals("")) {
+			displayName = dataEltDisplayName + 
+					" (" + p.getKey() + ")";
+		} else {
 			displayName = p.getKey();
-
 		}
 
 		return displayName;
@@ -92,28 +105,28 @@ public class ListUserDefinedPropositionChildrenServlet extends HttpServlet {
 
 		if (dataElement.getType() == DataElement.Type.CATEGORIZATION) {
 			Category ce = (Category) dataElement;
-			for (DataElement de : ce.getChildren()) {
+			for (DataElementField de : ce.getChildren()) {
 				if (de.isInSystem()) {
 
-					JsonTreeData newData = createData(this.getDisplayName
-							(de),de.getKey());
+					JsonTreeData newData = createData(this.getDisplayName(de),
+							de.getDataElementKey());
 					newData.setType("system");
-					LOGGER.debug("add sysTarget {}", de.getKey());
+					LOGGER.debug("add sysTarget {}", de.getDataElementKey());
 					d.addNodes(newData);
 
 				}
 			}
 
-			for (DataElement userDataElement : ce.getChildren()) {
+			for (DataElementField userDataElement : ce.getChildren()) {
 				if (!userDataElement.isInSystem()) {
 
 					JsonTreeData newData = createData(
-					        userDataElement.getDescription(),
-							userDataElement.getKey());
+					        userDataElement.getDataElementDescription(),
+							userDataElement.getDataElementKey());
 					getAllData(inUserId, newData);
 					newData.setType("user");
-					LOGGER.debug("add user defined {}", userDataElement.getKey
-							());
+					LOGGER.debug("add user defined {}", 
+							userDataElement.getDataElementKey());
 					d.addNodes(newData);
 				}
 			}

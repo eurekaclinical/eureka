@@ -44,6 +44,249 @@ eureka.util.removeIn = function (obj, path) {
 	}
 	delete current[path[path.length - 1]];
 };
+
+eureka.dataElement = {
+	post: function(postData, successFunc) {
+		$.ajax({
+			type: "POST",
+			url: 'saveprop',
+			//contentType: "application/json; charset=utf-8",
+			data: JSON.stringify(postData),
+			dataType: "json",
+			success: function (data) {
+				window.location.href = 'editorhome'
+			}, 
+			error: function(data, statusCode) {
+				var dialog = $('<div>Could not save data element ' + postData.displayName + '. ' + data.responseText + '</div>');
+				$(dialog).dialog({
+					'title': 'Save Failed',
+					'modal': true,
+					'buttons': {
+						"OK": function() {
+							$(this).dialog("close");
+							$(this).remove();
+						}
+					}
+				});
+				$(dialog).dialog("open");
+			} 
+		});
+	},
+
+	collectSequence: function(elem) {
+		// var type = $mainProposition.data('type');
+		var $sortable = $(elem).find('ul.sortable[data-type="main"]');
+		var $mainProposition = $sortable.find('li').first();
+		return {
+			'id': $sortable.data('count'),
+			'dataElementKey': $mainProposition.data('key'),
+			'hasDuration': $(elem).find('input[name="mainDataElementSpecifyDuration"]').is(':checked'),
+			'minDuration': $(elem).find('input[name="mainDataElementMinDurationValue"]').val(),
+			'minDurationUnits': $(elem).find('select[name="mainDataElementMinDurationUnits"]').val(),
+			'maxDuration': $(elem).find('input[name="mainDataElementMaxDurationValue"]').val(),
+			'maxDurationUnits': $(elem).find('select[name="mainDataElementMaxDurationUnits"]').val(),
+			'hasPropertyConstraint': $(elem).find('input[name="mainDataElementSpecifyProperty"]').is(':checked'),
+			'property': $(elem).find('select[name="mainDataElementPropertyName"]').val(),
+			'propertyValue': $(elem).find('input[name="mainDataElementPropertyValue"]').val()
+		}
+	},
+
+	collectSequenceRelations: function($relationElems) {
+		var relations = new Array();
+
+		$relationElems.each(function (i,r) {
+			var $sortable = $(r).find('ul.sortable');
+			var $proposition = $sortable.find('li').first();
+			var id = $sortable.data('count');
+			var key = $proposition.data('key');
+			var sequentialValue = $(r).find('select[name="propositionSelect"]').val();
+			var sequentialData = sequentialValue.split('__');
+			var sequentialDataElement = sequentialData[0];
+			var sequentialDataElementSource = sequentialData[1];
+
+			if (key) {
+				relations.push({
+					'dataElementField': {
+						'id': id,
+						'dataElementKey': $proposition.data('key'),
+						'hasDuration': $(r).find('input[name="sequenceRelDataElementSpecifyDuration"]').is(':checked'),
+						'minDuration': $(r).find('input[name="sequenceRelDataElementMinDurationValue"]').val(),
+						'minDurationUnits':  $(r).find('select[name="sequenceRelDataElementMinDurationUnits"]').val(),
+						'maxDuration': $(r).find('input[name="sequenceRelDataElementMaxDurationValue"]').val(),
+						'maxDurationUnits':  $(r).find('select[name="sequenceRelDataElementMaxDurationUnits"]').val(),
+						'hasPropertyConstraint': $(r).find('input[name="sequenceRelDataElementSpecifyProperty"]').is(':checked'),
+						'property': $(r).find('select[name="sequenceRelDataElementPropertyName"]').val(),
+						'propertyValue': $(r).find('input[name="sequenceRelDataElementPropertyValue"]').val()
+					},
+					'relationOperator': $(r).find('select[name="sequenceRelDataElementTemporalRelation"]').val(),
+					'sequentialDataElement': sequentialDataElement,
+					'sequentialDataElementSource': sequentialDataElementSource,
+					'relationMinCount': $(r).find('input[name="sequenceRhsDataElementMinDistanceValue"]').val(),
+					'relationMinUnits': $(r).find('select[name="sequenceRhsDataElementMinDistanceUnits"]').val(),
+					'relationMaxCount': $(r).find('input[name="sequenceRhsDataElementMaxDistanceValue"]').val(),
+					'relationMaxUnits': $(r).find('select[name="sequenceRhsDataElementMaxDistanceUnits"]').val()
+				});
+			}
+		});
+		return relations;
+	},
+
+	collectValueThresholds: function($valueThresholds) {
+		var valueThresholdsArr = new Array();
+
+		$valueThresholds.each(function (i,r) {
+			var dataEltFromDropBox = $(r).find('div.thresholdedDataElement').find('li');
+			var dataElt = eureka.dataElement.collectDataElement(dataEltFromDropBox);
+
+			var $relatedDataElements = $(r).find('div.thresholdedRelatedDataElements').find('li');
+
+			valueThresholdsArr.push({
+				'dataElement': dataElt,
+				'lowerComp': $(r).find('select[name="thresholdLowerComp"]').val(),
+				'lowerValue': $(r).find('input[name="thresholdLowerVal"]').val(),
+				'lowerUnits': null, //placeholder
+				'upperComp': $(r).find('select[name="thresholdUpperComp"]').val(),
+				'upperValue': $(r).find('input[name="thresholdUpperVal"]').val(),
+				'upperUnits': null, //placeholder
+				'relationOperator': $(r).find('select[name="thresholdDataElementTemporalRelation"]').val(),
+				'relatedDataElements': eureka.dataElement.collectDataElements($relatedDataElements),
+				'withinAtLeast': $(r).find('input[name="thresholdWithinAtLeast"]').val(),
+				'withinAtLeastUnit': $(r).find('select[name="thresholdWithinAtLeastUnits"]').val(),
+				'withinAtMost': $(r).find('input[name="thresholdWithinAtMost"]').val(),
+				'withinAtMostUnit': $(r).find('select[name="thresholdWithinAtMostUnits"]').val()
+			});
+		});
+		return valueThresholdsArr;
+	},
+
+	collectDataElements: function($dataElementsFromDropBox) {
+		var childElements = new Array();
+
+		$dataElementsFromDropBox.each(function (i, p) {
+			childElements.push(eureka.dataElement.collectDataElement(p));
+		});
+
+		return childElements;
+	},
+
+	collectDataElement: function(dataElementFromDropBox) {
+		var system = $(dataElementFromDropBox).data('space') === 'system'
+		|| $(dataElementFromDropBox).data('space') === 'SYSTEM';
+		var child = {
+			'dataElementKey': $(dataElementFromDropBox).data('key')
+		};
+
+		if (system) {
+			child['type'] =  'SYSTEM';
+		} else {
+			child['type'] =  $(dataElementFromDropBox).data('type');
+		}
+		return child;
+	},
+
+	saveSequence: function(elem) {
+		var sequence = new Object();
+		var $relationElems = $(elem).find('.sequence-relations-container').find('.sequence-relation');
+		var propId = $('#propId').val();
+
+		if (propId) {
+			sequence.id = propId;
+		}
+		sequence.type = 'SEQUENCE';
+		sequence.displayName = $('input#propDisplayName').val();
+		sequence.description = $('textarea#propDescription').val();
+		sequence.primaryDataElement = eureka.dataElement.collectSequence(elem);
+		sequence.relatedDataElements = eureka.dataElement.collectSequenceRelations($relationElems);
+
+		eureka.dataElement.post(sequence);
+	},
+
+	saveValueThreshold: function(elem) {
+		var valueThreshold = new Object();
+
+		var $valueThresholds = $(elem).find('.value-thresholds-container').find('.value-threshold');
+
+		var propId = $('#propId').val();
+		if (propId) {
+			valueThreshold.id = propId;
+		}
+		valueThreshold.type = 'VALUE_THRESHOLD';
+		valueThreshold.displayName = $('input#propDisplayName').val();
+		valueThreshold.description = $('textarea#propDescription').val();
+		valueThreshold.name = $(elem).find('input[name="valueThresholdValueName"]').val();
+		valueThreshold.thresholdsOperator = $(elem).find('select[name="valueThresholdType"]').val();
+		valueThreshold.valueThresholds = eureka.dataElement.collectValueThresholds($valueThresholds);
+
+		eureka.dataElement.post(valueThreshold);
+	},
+
+	saveCategorization: function(elem) {
+		var $memberDataElements = $(elem).find('ul.sortable').find('li');
+		var childElements = eureka.dataElement.collectDataElements($memberDataElements);
+
+		var categoricalType = $('#propSubType').val();
+
+		var categorization = {
+			'type': 'CATEGORIZATION',
+			'displayName': $('input#propDisplayName').val(),
+			'description': $('textarea#propDescription').val(),
+			'categoricalType': categoricalType,
+			'children': childElements
+		}
+
+		var propId = $('#propId').val();
+		if (propId) {
+			categorization.id = propId;
+		}
+
+		eureka.dataElement.post(categorization);
+	},
+
+	saveFrequency: function(elem) {
+		var $dataElement = $(elem).find('ul[data-type="main"]').find('li').first();
+		var frequency = {
+			'type': 'FREQUENCY',
+			'displayName': $('input#propDisplayName').val(),
+			'description': $('textarea#propDescription').val(),
+			'atLeast': $(elem).find('input[name=freqAtLeastField]').val(),
+			'isConsecutive': $(elem).find('input[name=freqIsConsecutive]').is(':checked'),
+			'dataElement': {
+				'dataElementKey': $dataElement.data('key'),
+				'hasDuration': $(elem).find('input[name="freqDataElementSpecifyDuration"]').is(':checked'),
+				'minDuration': $(elem).find('input[name="freqDataElementMinDurationValue"]').val(),
+				'minDurationUnits': $(elem).find('select[name="freqDataElementMinDurationUnits"]').val(),
+				'maxDuration': $(elem).find('input[name="freqDataElementMaxDurationValue"]').val(),
+				'maxDurationUnits': $(elem).find('select[name="freqDataElementMaxDurationUnits"]').val(),
+				'hasPropertyConstraint': $(elem).find('input[name="freqDataElementSpecifyProperty"]').is(':checked'),
+				'property': $(elem).find('select[name="freqDataElementPropertyName"]').val(),
+				'propertyValue': $(elem).find('input[name="freqDataElementPropertyValue"]').val()
+			},
+			'isWithin': $(elem).find('input[name=freqIsWithin]').is(':checked'),
+			'withinAtLeast': $(elem).find('input[name=freqWithinAtLeast]').val(),
+			'withinAtLeastUnits': $(elem).find('select[name=freqWithinAtLeastUnits]').val(),
+			'withinAtMost': $(elem).find('input[name=freqWithinAtMost]').val(),
+			'withinAtMostUnits': $(elem).find('select[name=freqWithinAtMostUnits]').val()
+		}
+
+		var propId = $('#propId').val();
+
+		if (propId) {
+			frequency.id = propId;
+		}
+
+		eureka.dataElement.post(frequency);
+	},
+	
+	save: function(dataElementType, elem) {
+		var saveFuncs = {
+			'SEQUENCE': eureka.dataElement.saveSequence,
+			'CATEGORIZATION': eureka.dataElement.saveCategorization,
+			'FREQUENCY': eureka.dataElement.saveFrequency,
+			'VALUE_THRESHOLD': eureka.dataElement.saveValueThreshold
+		};
+		saveFuncs[dataElementType](elem);
+	}
+}
 // END "namespacing"
 
 $("ul.sortable").sortable();
@@ -51,28 +294,13 @@ $("ul.sortable").disableSelection();
 
 var dropBoxMaxTextWidth = 275;
 var droppedElements  = new Object();
-var saveFuncs = {
-	'SEQUENCE': saveSequence,
-	'CATEGORIZATION': saveCategorization,
-	'FREQUENCY': saveFrequency,
-	'VALUE_THRESHOLD': saveValueThreshold
-};
+
 var dndActions = {
-	'FREQUENCY': enableFrequencyFields
+	//'FREQUENCY': enableFrequencyFields
 };
 var deleteActions = {
-	'FREQUENCY': disableFrequencyFields
+	//'FREQUENCY': disableFrequencyFields
 };
-
-function enableFrequencyFields(dropped) {
-	if ($(dropped).data('type') == 'VALUE_THRESHOLD') {
-		$('#valueThresholdConsecutiveLabel').css('visibility','visible');
-	}
-}
-
-function disableFrequencyFields() {
-	$('#valueThresholdConsecutiveLabel').css('visibility','hidden');
-}
 
 function addDroppedElement(propType, dropped, dropTarget) {
 	var elementKey = $(dropped).data('key');
@@ -133,276 +361,6 @@ function removeDroppedElement(propType, removed, removeTarget) {
 			}
 		}
 	}
-}
-
-function postProposition (postData, successFunc) {
-	$.ajax({
-		type: "POST",
-		url: 'saveprop',
-		contentType: "application/json; charset=utf-8",
-		data: JSON.stringify(postData),
-		dataType: "json",
-		success: function (data) {
-			window.location.href = 'editorhome'
-		}, 
-		error: function(data, statusCode) {
-			var dialog = $('<div>Could not save data element ' + postData.displayName + '. ' + data.responseText + '</div>');
-			$(dialog).dialog({
-				'title': 'Save Failed',
-				'modal': true,
-				'buttons': {
-					"OK": function() {
-						$(this).dialog("close");
-						$(this).remove();
-					}
-				}
-			});
-			$(dialog).dialog("open");
-		} 
-	});
-}
-
-function collectSequenceDataElement (elem) {
-	// var type = $mainProposition.data('type');
-	var $sortable = $(elem).find('ul.sortable[data-type="main"]');
-	var $mainProposition = $sortable.find('li').first();
-	return {
-		'id': $sortable.data('count'),
-		'dataElementKey': $mainProposition.data('key'),
-		'hasDuration': $(elem).find('input[name="mainDataElementSpecifyDuration"]').is(':checked'),
-		'minDuration': $(elem).find('input[name="mainDataElementMinDurationValue"]').val(),
-		'minDurationUnits': $(elem).find('select[name="mainDataElementMinDurationUnits"]').val(),
-		'maxDuration': $(elem).find('input[name="mainDataElementMaxDurationValue"]').val(),
-		'maxDurationUnits': $(elem).find('select[name="mainDataElementMaxDurationUnits"]').val(),
-		'hasPropertyConstraint': $(elem).find('input[name="mainDataElementSpecifyProperty"]').is(':checked'),
-		'property': $(elem).find('select[name="mainDataElementPropertyName"]').val(),
-		'propertyValue': $(elem).find('input[name="mainDataElementPropertyValue"]').val()
-	}
-}
-
-function collectSequenceRelations ($relationElems) {
-	var relations = new Array();
-
-	$relationElems.each(function (i,r) {
-		var $sortable = $(r).find('ul.sortable');
-		var $proposition = $sortable.find('li').first();
-		var id = $sortable.data('count');
-		var key = $proposition.data('key');
-		var sequentialValue = $(r).find('select[name="propositionSelect"]').val();
-		var sequentialData = sequentialValue.split('__');
-		var sequentialDataElement = sequentialData[0];
-		var sequentialDataElementSource = sequentialData[1];
-
-		if (key) {
-			relations.push({
-				'dataElementField': {
-					'id': id,
-					'dataElementKey': $proposition.data('key'),
-					'hasDuration': $(r).find('input[name="sequenceRelDataElementSpecifyDuration"]').is(':checked'),
-					'minDuration': $(r).find('input[name="sequenceRelDataElementMinDurationValue"]').val(),
-					'minDurationUnits':  $(r).find('select[name="sequenceRelDataElementMinDurationUnits"]').val(),
-					'maxDuration': $(r).find('input[name="sequenceRelDataElementMaxDurationValue"]').val(),
-					'maxDurationUnits':  $(r).find('select[name="sequenceRelDataElementMaxDurationUnits"]').val(),
-					'hasPropertyConstraint': $(r).find('input[name="sequenceRelDataElementSpecifyProperty"]').is(':checked'),
-					'property': $(r).find('select[name="sequenceRelDataElementPropertyName"]').val(),
-					'propertyValue': $(r).find('input[name="sequenceRelDataElementPropertyValue"]').val()
-				},
-				'relationOperator': $(r).find('select[name="sequenceRelDataElementTemporalRelation"]').val(),
-				'sequentialDataElement': sequentialDataElement,
-				'sequentialDataElementSource': sequentialDataElementSource,
-				'relationMinCount': $(r).find('input[name="sequenceRhsDataElementMinDistanceValue"]').val(),
-				'relationMinUnits': $(r).find('select[name="sequenceRhsDataElementMinDistanceUnits"]').val(),
-				'relationMaxCount': $(r).find('input[name="sequenceRhsDataElementMaxDistanceValue"]').val(),
-				'relationMaxUnits': $(r).find('select[name="sequenceRhsDataElementMaxDistanceUnits"]').val()
-			});
-		}
-	});
-	return relations;
-}
-
-function saveSequence (elem) {
-	var sequence = new Object();
-	var $relationElems = $(elem).find('.sequence-relations-container').find('.sequence-relation');
-	var propId = $('#propId').val();
-
-	if (propId) {
-		sequence.id = propId;
-	}
-	sequence.type = 'SEQUENCE';
-	sequence.displayName = $('input#propDisplayName').val();
-	sequence.description = $('textarea#propDescription').val();
-	sequence.primaryDataElement = collectSequenceDataElement(elem);
-	sequence.relatedDataElements = collectSequenceRelations($relationElems);
-
-	postProposition(sequence);
-}
-
-function saveValueThreshold (elem) {
-	var valueThreshold = new Object();
-	
-	var $valueThresholds = $(elem).find('.value-thresholds-container').find('.value-threshold');
-	
-	var propId = $('#propId').val();
-	if (propId) {
-		valueThreshold.id = propId;
-	}
-	valueThreshold.type = 'VALUE_THRESHOLD';
-	valueThreshold.displayName = $('input#propDisplayName').val();
-	valueThreshold.description = $('textarea#propDescription').val();
-	valueThreshold.name = $(elem).find('input[name="valueThresholdValueName"]').val();
-	valueThreshold.thresholdsOperator = $(elem).find('select[name="valueThresholdType"]').val();
-	valueThreshold.valueThresholds = collectValueThresholds($valueThresholds);
-
-	postProposition(valueThreshold);
-}
-
-function collectValueThresholds ($valueThresholds) {
-	var valueThresholdsArr = new Array();
-	
-	
-	$valueThresholds.each(function (i,r) {
-		var thresholdedDataEltFromDropBox = 
-		$(r).find('ul.sortable').find('li').first();
-		var thresholdedDataElement = collectShortDataElement(thresholdedDataEltFromDropBox);
-		
-		var $relatedDataElements = $(r).find('ul.sortable').find('li');
-
-		valueThresholdsArr.push({
-			'dataElement': thresholdedDataElement,
-			'lowerComp': $(r).find('select[name="thresholdLowerComp"]').val(),
-			'lowerValue': $(r).find('input[name="thresholdLowerVal"]').val(),
-			'lowerUnits': null, //placeholder
-			'upperComp': $(r).find('select[name="thresholdUpperComp"]').val(),
-			'upperValue': $(r).find('input[name="thresholdUpperVal"]').val(),
-			'upperUnits': null, //placeholder
-			'isBeforeOrAfter': $(r).find('select[name="thresholdDataElementTemporalRelationCB"]').is(":checked"),
-			'relationOperator': $(r).find('select[name="thresholdDataElementTemporalRelation"]').val(),
-			'relatedDataElements': collectRelatedDataElementKeys($relatedDataElements),
-			'atLeastCount': $(r).find('input[name="thresholdWithinAtLeast"]').val(),
-			'atLeastTimeUnit': $(r).find('select[name="thresholdWithinAtLeastUnits"]').val(),
-			'atMostCount': $(r).find('input[name="thresholdWithinAtMost"]').val(),
-			'atMostTimeUnit': $(r).find('select[name="thresholdWithinAtMostUnits"]').val()
-		});
-	});
-	return valueThresholdsArr;
-}
-
-function collectShortDataElement(dataElementFromDropBox) {
-	var system = $(dataElementFromDropBox).data('space') === 'system'
-	|| $(dataElementFromDropBox).data('space') === 'SYSTEM';
-	var child = {
-		'dataElementKey': $(dataElementFromDropBox).data('key')	
-	};
-	
-	if (system) {
-		child['type'] = 'SYSTEM';
-	} else {
-		child['type'] = $(dataElementFromDropBox).data('type');
-		if (child['type'] === 'CATEGORIZATION') {
-			child['categoricalType'] = $(dataElementFromDropBox).data('subtype');
-		}
-	}
-	return child;
-}
-
-function collectRelatedDataElementKeys($relatedDataElements) {
-	var keys = new Array();
-	
-	$relatedDataElements.each(function (i, p) {
-		keys.push($(p).data('key'));
-	});
-	
-	return keys;
-}
-
-function saveCategorization (elem) {
-	var $memberDataElements = $(elem).find('ul.sortable').find('li');
-	var childElements = collectDataElements($memberDataElements);
-
-//	var categoricalType = $(elem).find('ul.sortable').data('proptype');
-//	if (categoricalType == 'empty') {
-//		categoricalType = $('#propSubType').val();
-//	}
-	var categoricalType = $('#propSubType').val();
-
-	var categorization = {
-		'type': 'CATEGORIZATION',
-		'displayName': $('input#propDisplayName').val(),
-		'description': $('textarea#propDescription').val(),
-		'categoricalType': categoricalType,
-		'children': childElements
-	}
-
-	var propId = $('#propId').val();
-	if (propId) {
-		categorization.id = propId;
-	}
-
-	postProposition(categorization);
-}
-
-function collectDataElements($dataElementsFromDropBox) {
-	var childElements = new Array();
-
-	$dataElementsFromDropBox.each(function (i, p) {
-		childElements.push(collectDataElement(p));
-	});
-	
-	return childElements;
-}
-
-function collectDataElement(dataElementFromDropBox) {
-	var system = $(dataElementFromDropBox).data('space') === 'system'
-	|| $(dataElementFromDropBox).data('space') === 'SYSTEM';
-	var child = {
-		'key': $(dataElementFromDropBox).data('key')
-	};
-
-	if (system) {
-		child['type'] =  'SYSTEM';
-	} else {
-		child['type'] =  $(dataElementFromDropBox).data('type'); //.toLowerCase();
-		if (child['type'] === 'CATEGORIZATION') {
-			child['categoricalType'] = 
-			$(dataElementFromDropBox).data('subtype');
-		}
-	}
-	return child;
-}
-
-function saveFrequency (elem) {
-	var $dataElement = $(elem).find('ul[data-type="main"]').find('li').first();
-	var frequency = {
-		'type': 'FREQUENCY',
-		'displayName': $('input#propDisplayName').val(),
-		'description': $('textarea#propDescription').val(),
-		'atLeast': $(elem).find('input[name=freqAtLeastField]').val(),
-		'isConsecutive': $(elem).find('input[name=freqIsConsecutive]').is(':checked'),
-		'dataElement': {
-			'dataElementKey': $dataElement.data('key'),
-			'hasDuration': $(elem).find('input[name="freqDataElementSpecifyDuration"]').is(':checked'),
-			'minDuration': $(elem).find('input[name="freqDataElementMinDurationValue"]').val(),
-			'minDurationUnits': $(elem).find('select[name="freqDataElementMinDurationUnits"]').val(),
-			'maxDuration': $(elem).find('input[name="freqDataElementMaxDurationValue"]').val(),
-			'maxDurationUnits': $(elem).find('select[name="freqDataElementMaxDurationUnits"]').val(),
-			'hasPropertyConstraint': $(elem).find('input[name="freqDataElementSpecifyProperty"]').is(':checked'),
-			'property': $(elem).find('select[name="freqDataElementPropertyName"]').val(),
-			'propertyValue': $(elem).find('input[name="freqDataElementPropertyValue"]').val()
-		},
-		'isWithin': $(elem).find('input[name=freqIsWithin]').is(':checked'),
-		'withinAtLeast': $(elem).find('input[name=freqWithinAtLeast]').val(),
-		'withinAtLeastUnits': $(elem).find('select[name=freqWithinAtLeastUnits]').val(),
-		'withinAtMost': $(elem).find('input[name=freqWithinAtMost]').val(),
-		'withinAtMostUnits': $(elem).find('select[name=freqWithinAtMostUnits]').val()
-	}
-	
-	var propId = $('#propId').val();
-
-	if (propId) {
-		frequency.id = propId;
-	}
-	
-	postProposition(frequency);
 }
 
 function setPropositionSelects (elem) {
@@ -560,7 +518,7 @@ $(document).ready(function(){
 
 	function onFinishCallback(){
 		var type = $("input:radio[name='type']:checked").val();
-		saveFuncs[type]($('#' + type + 'definition'));
+		eureka.dataElement.save(type, $('#' + type + 'definition'));
 	}
 
 

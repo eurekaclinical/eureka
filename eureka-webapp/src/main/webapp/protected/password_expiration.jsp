@@ -18,12 +18,7 @@
   #L%
   --%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
-
 <%@ taglib uri="/WEB-INF/tlds/template.tld" prefix="template"%>
-
-
-
-
 
 <template:insert template="/templates/eureka_main.jsp">
 
@@ -38,7 +33,7 @@
 	</template:content>
 	<template:content name="content">
 
-		<h3>Your password has expired. Please change your password.</h3>
+		<h3>Your password has expired. Enter a new one below:</h3>
 		<form id="passwordExpirationfrm" action="#" method="post">
 		<table id="newPasswordTableForExpiration">
 

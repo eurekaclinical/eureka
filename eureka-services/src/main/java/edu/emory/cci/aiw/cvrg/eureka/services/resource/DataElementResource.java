@@ -37,13 +37,8 @@ import javax.ws.rs.core.Response;
 import com.google.inject.Inject;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.DataElement;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.CategoryEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.DataElementEntity;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.ExtendedDataElement;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.FrequencyEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.PropositionChildrenVisitor;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.Relation;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.SequenceEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.exception.DataElementHandlingException;
 import edu.emory.cci.aiw.cvrg.eureka.common.exception.HttpStatusException;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.PropositionDao;
@@ -72,7 +67,9 @@ public class DataElementResource {
 	private final DataElementTranslatorVisitor dataElementTranslatorVisitor;
 
 	@Inject
-	public DataElementResource(PropositionDao inDao, SystemElementResource inResource, PropositionTranslatorVisitor inPropositionTranslatorVisitor,
+	public DataElementResource(PropositionDao inDao, 
+			SystemElementResource inResource, 
+			PropositionTranslatorVisitor inPropositionTranslatorVisitor,
 			DataElementTranslatorVisitor inDataElementTranslatorVisitor) {
 		this.propositionDao = inDao;
 		this.systemElementResource = inResource;

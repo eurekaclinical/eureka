@@ -30,8 +30,8 @@ import org.codehaus.jackson.map.JsonSerializer;
 import org.codehaus.jackson.map.SerializerProvider;
 import org.protempa.ExtendedPropositionDefinition;
 import org.protempa.HighLevelAbstractionDefinition;
-import org.protempa.Offsets;
 import org.protempa.TemporalExtendedPropositionDefinition;
+import org.protempa.TemporalPatternOffset;
 import org.protempa.proposition.interval.Relation;
 
 public final class HighLevelAbstractionJsonSerializer extends JsonSerializer<HighLevelAbstractionDefinition> {
@@ -98,7 +98,7 @@ public final class HighLevelAbstractionJsonSerializer extends JsonSerializer<Hig
 
 		jgen.writeFieldName("temporalOffset");
 		jgen.writeStartObject();
-		Offsets offsets = value.getTemporalOffset();
+		TemporalPatternOffset offsets = value.getTemporalOffset();
 		if (offsets != null) {
 			TemporalExtendedPropositionDefinition start = offsets.getStartTemporalExtendedPropositionDefinition();
 			if (start != null) {

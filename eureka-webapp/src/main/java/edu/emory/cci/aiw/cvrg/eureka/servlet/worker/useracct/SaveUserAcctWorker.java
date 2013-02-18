@@ -69,14 +69,12 @@ public class SaveUserAcctWorker implements ServletWorker {
 		String userName = principal.getName();
 		User user = servicesClient.getUserByName(userName);
 		String id=user.getId().toString();
-		
 
 		// validate verifyPassword equals newPassword
 		String verifyPassword = req.getParameter("verifyPassword");
 		if (!verifyPassword.equals(newPassword)) {
 			resp.setContentType("text/html");
 			resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-			resp.getWriter().close();
 			return;
 		}
 
@@ -100,6 +98,5 @@ public class SaveUserAcctWorker implements ServletWorker {
 			
 		}
 
-		resp.getWriter().close();
 	}
 }

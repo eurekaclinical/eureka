@@ -58,24 +58,24 @@ public final class LowLevelAbstractionJsonDeserializer extends
 		checkField("id");
 		// now we can construct the LLA
 		LowLevelAbstractionDefinition value = new LowLevelAbstractionDefinition(
-		        this.parser.getText());
+		        this.parser.readValueAs(String.class));
 		value.setInDataSource(false);
 
 		nextToken();
 		checkField("displayName");
-		value.setDisplayName(this.parser.getText());
+		value.setDisplayName(this.parser.readValueAs(String.class));
 
 		nextToken();
 		checkField("abbreviatedDisplayName");
-		value.setAbbreviatedDisplayName(this.parser.getText());
+		value.setAbbreviatedDisplayName(this.parser.readValueAs(String.class));
 
 		nextToken();
 		checkField("description");
-		value.setDescription(this.parser.getText());
+		value.setDescription(this.parser.readValueAs(String.class));
 		
 		nextToken();
 		checkField("algorithm");
-		value.setAlgorithmId(this.parser.getText());
+		value.setAlgorithmId(this.parser.readValueAs(String.class));
 
 		nextToken();
 		checkField("inverseIsA");
@@ -187,6 +187,10 @@ public final class LowLevelAbstractionJsonDeserializer extends
 		nextToken();
 		checkField("maxGapBetweenValuesUnits");
 		value.setMaximumGapBetweenValuesUnits(this.parser.readValueAs(Unit.class));
+		
+		nextToken();
+		checkField("context");
+		value.setContextId(this.parser.readValueAs(String.class));
 
 		nextToken();
 		checkField("values");
@@ -195,7 +199,7 @@ public final class LowLevelAbstractionJsonDeserializer extends
 		while (parser.getCurrentToken() != JsonToken.END_OBJECT) {
 			checkField("id");
 			LowLevelAbstractionValueDefinition valDef = new LowLevelAbstractionValueDefinition(
-			        value, this.parser.getText());
+			        value, this.parser.readValueAs(String.class));
 			
 			nextToken();
 			checkField("value");
@@ -208,7 +212,7 @@ public final class LowLevelAbstractionJsonDeserializer extends
 			while (parser.getCurrentToken() != JsonToken.END_ARRAY) {
 				nextToken();
 				checkField("name");
-				String name = this.parser.getText();
+				String name = this.parser.readValueAs(String.class);
 
 				nextToken();
 				checkField("value");
@@ -216,7 +220,7 @@ public final class LowLevelAbstractionJsonDeserializer extends
 
 				nextToken();
 				checkField("comp");
-				String compStr = this.parser.getText();
+				String compStr = this.parser.readValueAs(String.class);
 				if (compStr != null && !compStr.isEmpty()
 				        && !compStr.equals("null")) {
 					ValueComparator comp = ValueComparator.valueOf(compStr);

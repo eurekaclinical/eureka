@@ -22,10 +22,11 @@ package edu.emory.cci.aiw.cvrg.eureka.services.translation;
 import com.google.inject.Inject;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.Category;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.Category.CategoricalType;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.DataElement;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.DataElementField;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.CategoryEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.CategoryEntity.CategoryType;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.DataElementEntity;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.PropositionTypeVisitor;
 import edu.emory.cci.aiw.cvrg.eureka.common.exception.DataElementHandlingException;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.PropositionDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.finder.SystemPropositionFinder;
@@ -75,10 +76,10 @@ public final class CategorizationTranslator implements
 
 		List<DataElementEntity> inverseIsA = new ArrayList<DataElementEntity>();
 		if (element.getChildren() != null) {
-			for (DataElement de : element.getChildren()) {
+			for (DataElementField de : element.getChildren()) {
 				DataElementEntity proposition =
 						this.translatorSupport.getSystemEntityInstance(
-						element.getUserId(), de.getKey());
+						element.getUserId(), de.getDataElementKey());
 				inverseIsA.add(proposition);
 			}
 		}
@@ -119,15 +120,21 @@ public final class CategorizationTranslator implements
 
 		PropositionTranslatorUtil.populateCommonDataElementFields(result,
 				proposition);
-		List<DataElement> children = new ArrayList<DataElement>();
+		List<DataElementField> children = new ArrayList<DataElementField>();
 		for (DataElementEntity p : proposition.getMembers()) {
-			PropositionTranslatorVisitor visitor = new PropositionTranslatorVisitor(
-					this.systemPropositionTranslator, this.sequenceTranslator,
-					this,
-					this.frequencyTranslator, this.valueThresholdsTranslator);
+			DataElementField def = new DataElementField();
+			def.setDataElementKey(p.getKey());
+			def.setDataElementDisplayName(p.getDisplayName());
+			def.setDataElementDescription(p.getDescription());
+			PropositionTypeVisitor visitor = new PropositionTypeVisitor();
 			p.accept(visitor);
-			children.add(visitor.getDataElement());
+			def.setType(visitor.getType());
+			if (p instanceof CategoryEntity) {
+				def.setCategoricalType(checkElementType((CategoryEntity) p));
+			}
+			children.add(def);
 		}
+		
 		result.setChildren(children);
 		result.setCategoricalType(checkElementType(proposition));
 

@@ -152,7 +152,7 @@ public class ServiceProperties extends ApplicationProperties {
 	 * configuration file.
 	 */
 	public String getVerificationUrl(HttpServletRequest request) {
-		String verUrl = this.getValue("eureka.webapp.url");
+		String verUrl = getApplicationUrl(request);
 		return verUrl + (verUrl.endsWith("/") ? "" : "/") + "verify?code=";
 	}
 

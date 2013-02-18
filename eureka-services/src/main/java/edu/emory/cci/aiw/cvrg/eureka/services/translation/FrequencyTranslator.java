@@ -37,48 +37,46 @@ import edu.emory.cci.aiw.cvrg.eureka.services.dao.ValueComparatorDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.finder.SystemPropositionFinder;
 
 public final class FrequencyTranslator implements
-        PropositionTranslator<Frequency, FrequencyEntity> {
+		PropositionTranslator<Frequency, FrequencyEntity> {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger
-			(FrequencyTranslator.class);
-	
+	private static final Logger LOGGER = LoggerFactory.getLogger(FrequencyTranslator.class);
 	private final TimeUnitDao timeUnitDao;
 	private final ValueComparatorDao valueComparatorDao;
 	private final TranslatorSupport translatorSupport;
-	
+
 	@Inject
 	public FrequencyTranslator(PropositionDao inPropositionDao,
-	        TimeUnitDao inTimeUnitDao, SystemPropositionFinder inFinder,
+			TimeUnitDao inTimeUnitDao, SystemPropositionFinder inFinder,
 			ValueComparatorDao inValueComparatorDao) {
 		this.timeUnitDao = inTimeUnitDao;
-		this.translatorSupport = new TranslatorSupport(inPropositionDao, 
+		this.translatorSupport = new TranslatorSupport(inPropositionDao,
 				inFinder);
 		this.valueComparatorDao = inValueComparatorDao;
 	}
-	
+
 	@Override
 	public FrequencyEntity translateFromElement(Frequency element)
-	        throws DataElementHandlingException {
-		FrequencyEntity result = 
-				this.translatorSupport.getUserEntityInstance(element, 
+			throws DataElementHandlingException {
+		FrequencyEntity result =
+				this.translatorSupport.getUserEntityInstance(element,
 				FrequencyEntity.class);
 
 		result.setAtLeastCount(element.getAtLeast());
 		result.setConsecutive(element.getIsConsecutive());
-			result.setExtendedProposition(PropositionTranslatorUtil
-			        .createOrUpdateExtendedProposition(
-							result.getExtendedProposition(),
-					        element.getDataElement(), element.getUserId(), 
-					        timeUnitDao, translatorSupport,
-							valueComparatorDao));
+		result.setExtendedProposition(PropositionTranslatorUtil
+				.createOrUpdateExtendedProposition(
+				result.getExtendedProposition(),
+				element.getDataElement(), element.getUserId(),
+				timeUnitDao, translatorSupport,
+				valueComparatorDao));
 		result.setInSystem(false);
-		
+
 		if (element.getIsWithin()) {
 			result.setWithinAtLeast(element.getWithinAtLeast());
 			Long withinAtLeastUnitsL = element.getWithinAtLeastUnits();
 			if (withinAtLeastUnitsL == null) {
 				throw new DataElementHandlingException(
-						Response.Status.PRECONDITION_FAILED, 
+						Response.Status.PRECONDITION_FAILED,
 						"Within at least units must be specified");
 			}
 			result.setWithinAtLeastUnits(
@@ -87,7 +85,7 @@ public final class FrequencyTranslator implements
 			Long withinAtMostUnitsL = element.getWithinAtMostUnits();
 			if (withinAtMostUnitsL == null) {
 				throw new DataElementHandlingException(
-						Response.Status.PRECONDITION_FAILED, 
+						Response.Status.PRECONDITION_FAILED,
 						"Within at most units must be specified");
 			}
 			result.setWithinAtMostUnits(
@@ -97,10 +95,10 @@ public final class FrequencyTranslator implements
 			Long withinAtLeastUnitsL = element.getWithinAtLeastUnits();
 			TimeUnit withinAtLeastUnits;
 			if (withinAtLeastUnitsL != null) {
-				withinAtLeastUnits = 
+				withinAtLeastUnits =
 						this.timeUnitDao.retrieve(withinAtLeastUnitsL);
 			} else {
-				withinAtLeastUnits = 
+				withinAtLeastUnits =
 						this.timeUnitDao.getByName(
 						DataElement.DEFAULT_TIME_UNIT_NAME);
 			}
@@ -114,7 +112,7 @@ public final class FrequencyTranslator implements
 			} else {
 				withinAtMostUnits = this.timeUnitDao.getByName(
 						DataElement.DEFAULT_TIME_UNIT_NAME);
-						
+
 			}
 			result.setWithinAtMostUnits(withinAtMostUnits);
 		}
@@ -127,12 +125,12 @@ public final class FrequencyTranslator implements
 		Frequency result = new Frequency();
 
 		PropositionTranslatorUtil.populateCommonDataElementFields(result,
-		        entity);
+				entity);
 		result.setAtLeast(entity.getAtLeastCount());
 		result.setIsConsecutive(entity.isConsecutive());
 		result.setDataElement(PropositionTranslatorUtil
-		        .createDataElementField(entity.getExtendedProposition()));
-		
+				.createDataElementField(entity.getExtendedProposition()));
+
 		result.setWithinAtLeast(entity.getWithinAtLeast());
 		result.setWithinAtLeastUnits(entity.getWithinAtLeastUnits().getId());
 		result.setWithinAtMost(entity.getWithinAtMost());
@@ -143,5 +141,4 @@ public final class FrequencyTranslator implements
 
 		return result;
 	}
-
 }

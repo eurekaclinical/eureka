@@ -35,7 +35,8 @@ public class SystemProposition extends DataElementEntity {
 
 		CONSTANT, EVENT, PRIMITIVE_PARAMETER, LOW_LEVEL_ABSTRACTION,
 		COMPOUND_LOW_LEVEL_ABSTRACTION, HIGH_LEVEL_ABSTRACTION,
-		SLICE_ABSTRACTION
+		SLICE_ABSTRACTION, SEQUENTIAL_TEMPORAL_PATTERN_ABSTRACTION,
+		CONTEXT
 	}
 	@Enumerated(EnumType.STRING)
 	@Column(nullable = false)
@@ -75,6 +76,10 @@ public class SystemProposition extends DataElementEntity {
 					return CategoryType.LOW_LEVEL_ABSTRACTION;
 				case SLICE_ABSTRACTION:
 					return CategoryType.SLICE_ABSTRACTION;
+				case SEQUENTIAL_TEMPORAL_PATTERN_ABSTRACTION:
+					return CategoryType.SEQUENTIAL_TEMPORAL_PATTERN_ABSTRACTION;
+				case CONTEXT:
+					return CategoryType.CONTEXT;
 				default:
 					throw new AssertionError(
 							"Invalid system type: " + systemType);

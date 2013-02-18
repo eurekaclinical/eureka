@@ -26,7 +26,6 @@ import java.util.List;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import org.apache.commons.lang.builder.ReflectionToStringBuilder;
-import org.apache.commons.lang.builder.ToStringBuilder;
 
 /**
  * Container class for the categorical user-created data element from the UI.
@@ -40,7 +39,8 @@ public final class Category extends DataElement {
 		MIXED, UNKNOWN
 	}
 
-	private List<DataElement> children = new ArrayList<DataElement>();
+	private List<DataElementField> children = 
+			new ArrayList<DataElementField>();
 
 	@Enumerated(EnumType.STRING)
 	private CategoricalType categoricalType;
@@ -49,11 +49,11 @@ public final class Category extends DataElement {
 		super(DataElement.Type.CATEGORIZATION);
 	}
 
-	public List<DataElement> getChildren() {
+	public List<DataElementField> getChildren() {
 		return children;
 	}
 
-	public void setChildren(List<DataElement> children) {
+	public void setChildren(List<DataElementField> children) {
 		this.children = children;
 	}
 

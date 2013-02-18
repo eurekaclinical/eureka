@@ -23,16 +23,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.google.inject.Inject;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.DataElementField;
 
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.ShortDataElementField;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.ValueThreshold;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.ValueThresholds;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.DataElementEntity;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.ExtendedDataElement;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.PropositionTypeVisitor;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.ValueThresholdEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.ValueThresholdGroupEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.exception.DataElementHandlingException;
+import edu.emory.cci.aiw.cvrg.eureka.services.dao.RelationOperatorDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.ThresholdsOperatorDao;
+import edu.emory.cci.aiw.cvrg.eureka.services.dao.TimeUnitDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.ValueComparatorDao;
 import java.math.BigDecimal;
 import org.slf4j.Logger;
@@ -40,21 +43,26 @@ import org.slf4j.LoggerFactory;
 
 public final class ValueThresholdsTranslator implements
 		PropositionTranslator<ValueThresholds, ValueThresholdGroupEntity> {
-	
+
 	private static final Logger LOGGER = LoggerFactory.getLogger(
 			ValueThresholdsTranslator.class);
-
 	private final TranslatorSupport translatorSupport;
 	private final ValueComparatorDao valueCompDao;
 	private final ThresholdsOperatorDao thresholdsOperatorDao;
+	private final TimeUnitDao timeUnitDao;
+	private final RelationOperatorDao relationOpDao;
 
 	@Inject
 	public ValueThresholdsTranslator(ValueComparatorDao inValueComparatorDao,
 			ThresholdsOperatorDao inThresholdsOperatorDao,
-			TranslatorSupport inSupport) {
+			TranslatorSupport inSupport,
+			TimeUnitDao inTimeUnitDao,
+			RelationOperatorDao inRelationOpDao) {
 		valueCompDao = inValueComparatorDao;
 		thresholdsOperatorDao = inThresholdsOperatorDao;
 		translatorSupport = inSupport;
+		timeUnitDao = inTimeUnitDao;
+		relationOpDao = inRelationOpDao;
 	}
 
 	@Override
@@ -96,8 +104,8 @@ public final class ValueThresholdsTranslator implements
 				try {
 					vte.setMinValueThreshold(new BigDecimal(lowerValue));
 				} catch (NumberFormatException ex) {
-					LOGGER.debug("Could not parse " + lowerValue + 
-							" as a BigDecimal", ex);
+					LOGGER.debug("Could not parse " + lowerValue
+							+ " as a BigDecimal", ex);
 				}
 			}
 			vte.setMinValueComp(valueCompDao.retrieve(vt.getLowerComp()));
@@ -109,12 +117,52 @@ public final class ValueThresholdsTranslator implements
 				try {
 					vte.setMaxValueThreshold(new BigDecimal(upperValue));
 				} catch (NumberFormatException ex) {
-					LOGGER.debug("Could not parse " + upperValue + 
-							" as a BigDecimal", ex);
+					LOGGER.debug("Could not parse " + upperValue
+							+ " as a BigDecimal", ex);
 				}
 			}
 			vte.setMaxValueComp(valueCompDao.retrieve(vt.getUpperComp()));
 			// vte.setMaxUnits(vt.getUpperUnits());
+			List<ExtendedDataElement> extendedDataElements =
+					vte.getExtendedDataElements();
+
+			vte.setRelationOperator(
+					relationOpDao.retrieve(vt.getRelationOperator()));
+			vte.setWithinAtLeast(vt.getWithinAtLeast());
+			vte.setWithinAtLeastUnits(
+					timeUnitDao.retrieve(vt.getWithinAtLeastUnit()));
+			vte.setWithinAtMost(vt.getWithinAtMost());
+			vte.setWithinAtMostUnits(
+					timeUnitDao.retrieve(vt.getWithinAtMostUnit()));
+
+			if (extendedDataElements == null) {
+				extendedDataElements = new ArrayList<ExtendedDataElement>();
+				vte.setExtendedDataElements(extendedDataElements);
+			}
+			int j = 0;
+			for (DataElementField de : vt.getRelatedDataElements()) {
+				ExtendedDataElement ede;
+				if (extendedDataElements.size() > i) {
+					ede = extendedDataElements.get(i);
+					PropositionTranslatorUtil
+							.createOrUpdateExtendedProposition(
+							ede,
+							de, element.getUserId(),
+							timeUnitDao, translatorSupport,
+							valueCompDao);
+				} else {
+					ede = null;
+					extendedDataElements.add(PropositionTranslatorUtil
+							.createOrUpdateExtendedProposition(
+							ede,
+							de, element.getUserId(),
+							timeUnitDao, translatorSupport,
+							valueCompDao));
+				}
+				j++;
+			}
+			vte.setExtendedDataElements(extendedDataElements);
+
 
 			i++;
 		}
@@ -145,7 +193,7 @@ public final class ValueThresholdsTranslator implements
 			// threshold.setUpperUnits(vte.getMaxUnits());
 
 			DataElementEntity dataElementEntity = vte.getAbstractedFrom();
-			ShortDataElementField elementField = new ShortDataElementField();
+			DataElementField elementField = new DataElementField();
 			PropositionTypeVisitor visitor = new PropositionTypeVisitor();
 			dataElementEntity.accept(visitor);
 			elementField.setType(visitor.getType());
@@ -155,7 +203,20 @@ public final class ValueThresholdsTranslator implements
 					.getDisplayName());
 			elementField.setDataElementKey(dataElementEntity.getKey());
 			threshold.setDataElement(elementField);
-
+			
+			List<DataElementField> relatedDataElements =
+					new ArrayList<DataElementField>();
+			for (ExtendedDataElement elt : vte.getExtendedDataElements()) {
+				DataElementField dataElementField =
+						PropositionTranslatorUtil.createDataElementField(elt);
+				relatedDataElements.add(dataElementField);
+			}
+			threshold.setRelatedDataElements(relatedDataElements);
+			
+			threshold.setWithinAtLeast(vte.getWithinAtLeast());
+			threshold.setWithinAtLeastUnit(vte.getWithinAtLeastUnits().getId());
+			threshold.setWithinAtMost(vte.getWithinAtMost());
+			threshold.setWithinAtMostUnit(vte.getWithinAtMostUnits().getId());
 			thresholds.add(threshold);
 		}
 		result.setValueThresholds(thresholds);

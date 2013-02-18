@@ -35,6 +35,7 @@ import edu.emory.cci.aiw.cvrg.eureka.common.comm.DataElement;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.DataElementField;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.DataElementVisitor;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.Frequency;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.RelatedDataElementField;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.Sequence;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.SystemElement;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.ValueThresholds;
@@ -122,7 +123,8 @@ public class EditPropositionServlet extends HttpServlet {
 				LOGGER.debug("Visiting {}", dataElement.getKey());
 				dataElement.accept(visitor);
 			} catch (DataElementHandlingException e) {
-				LOGGER.error(e.getMessage(), e);
+				LOGGER.error("Visiting {}", dataElement.getKey(), e);
+				throw new AssertionError("Should never happen: " + e.getMessage());
 			}
 			req.setAttribute("properties", visitor.getProperties());
 			req.setAttribute("proposition", dataElement);
@@ -155,30 +157,27 @@ public class EditPropositionServlet extends HttpServlet {
 		}
 
 		@Override
-		public void visit(SystemElement systemElement)
-				throws DataElementHandlingException {
+		public void visit(SystemElement systemElement) {
 			LOGGER.debug(
 					"visit system element -- {}", systemElement.getKey());
 		}
 
 		@Override
-		public void visit(Category categoricalElement)
-				throws DataElementHandlingException {
+		public void visit(Category categoricalElement) {
 			LOGGER.debug(
 					"visit category element -- {}",
 					categoricalElement.getKey());
 		}
 
 		@Override
-		public void visit(Sequence sequence)
-				throws DataElementHandlingException {
+		public void visit(Sequence sequence) {
 			LOGGER.debug("visit sequence element -- {}", sequence.getKey());
 			DataElementField primary = sequence.getPrimaryDataElement();
 			if (primary.getType() == DataElement.Type.SYSTEM) {
 				handleDataElementField(primary);
 			}
 
-			for (Sequence.RelatedDataElementField field : sequence
+			for (RelatedDataElementField field : sequence
 					.getRelatedDataElements()) {
 				DataElementField element = field.getDataElementField();
 				if (element.getType() == DataElement.Type.SYSTEM) {
@@ -188,14 +187,16 @@ public class EditPropositionServlet extends HttpServlet {
 		}
 
 		@Override
-		public void visit(Frequency frequency)
-				throws DataElementHandlingException {
+		public void visit(Frequency frequency) {
 			LOGGER.debug("visit frequency element -- {}", frequency.getKey());
+			DataElementField def = frequency.getDataElement();
+			if (def.getType() == DataElement.Type.SYSTEM) {
+				handleDataElementField(def);
+			}
 		}
 
 		@Override
-		public void visit(ValueThresholds thresholds)
-				throws DataElementHandlingException {
+		public void visit(ValueThresholds thresholds) {
 			LOGGER.debug(
 					"visit threshold element -- {}", thresholds.getKey());
 		}

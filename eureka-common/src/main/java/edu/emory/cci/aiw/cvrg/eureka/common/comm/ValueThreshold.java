@@ -24,7 +24,7 @@ import org.apache.commons.lang.builder.ToStringBuilder;
 
 public final class ValueThreshold {
 	
-	private ShortDataElementField dataElement;
+	private DataElementField dataElement;
 	private Long lowerComp;
 	private Long upperComp;
 	
@@ -34,19 +34,18 @@ public final class ValueThreshold {
 	
 	private String lowerUnits;
 	private String upperUnits;
-	private Boolean isBeforeOrAfter;
 	private Long relationOperator;
-	private List<DataElement> relatedDataElements;
-	private Integer atLeastCount;
-	private Long atLeastTimeUnit;
-	private Integer atMostCount;
-	private Long atMostTimeUnit;
+	private List<DataElementField> relatedDataElements;
+	private Integer withinAtLeast;
+	private Long withinAtLeastUnit;
+	private Integer withinAtMost;
+	private Long withinAtMostUnit;
 
-	public ShortDataElementField getDataElement() {
+	public DataElementField getDataElement() {
 		return dataElement;
 	}
 
-	public void setDataElement(ShortDataElementField dataElement) {
+	public void setDataElement(DataElementField dataElement) {
 		this.dataElement = dataElement;
 	}
 
@@ -98,14 +97,6 @@ public final class ValueThreshold {
 		this.upperUnits = upperUnits;
 	}
 
-	public Boolean getIsBeforeOrAfter() {
-		return isBeforeOrAfter;
-	}
-
-	public void setIsBeforeOrAfter(Boolean isBeforeOrAfter) {
-		this.isBeforeOrAfter = isBeforeOrAfter;
-	}
-
 	public Long getRelationOperator() {
 		return relationOperator;
 	}
@@ -114,44 +105,44 @@ public final class ValueThreshold {
 		this.relationOperator = relationOperator;
 	}
 
-	public List<DataElement> getRelatedDataElements() {
+	public List<DataElementField> getRelatedDataElements() {
 		return relatedDataElements;
 	}
 
-	public void setRelatedDataElements(List<DataElement> relatedDataElements) {
+	public void setRelatedDataElements(List<DataElementField> relatedDataElements) {
 		this.relatedDataElements = relatedDataElements;
 	}
 
-	public Integer getAtLeastCount() {
-		return atLeastCount;
+	public Integer getWithinAtLeast() {
+		return withinAtLeast;
 	}
 
-	public void setAtLeastCount(Integer atLeastCount) {
-		this.atLeastCount = atLeastCount;
+	public void setWithinAtLeast(Integer atLeastCount) {
+		this.withinAtLeast = atLeastCount;
 	}
 
-	public Long getAtLeastTimeUnit() {
-		return atLeastTimeUnit;
+	public Long getWithinAtLeastUnit() {
+		return withinAtLeastUnit;
 	}
 
-	public void setAtLeastTimeUnit(Long atLeastTimeUnit) {
-		this.atLeastTimeUnit = atLeastTimeUnit;
+	public void setWithinAtLeastUnit(Long atLeastTimeUnit) {
+		this.withinAtLeastUnit = atLeastTimeUnit;
 	}
 
-	public Integer getAtMostCount() {
-		return atMostCount;
+	public Integer getWithinAtMost() {
+		return withinAtMost;
 	}
 
-	public void setAtMostCount(Integer atMostCount) {
-		this.atMostCount = atMostCount;
+	public void setWithinAtMost(Integer atMostCount) {
+		this.withinAtMost = atMostCount;
 	}
 
-	public Long getAtMostTimeUnit() {
-		return atMostTimeUnit;
+	public Long getWithinAtMostUnit() {
+		return withinAtMostUnit;
 	}
 
-	public void setAtMostTimeUnit(Long atMostTimeUnit) {
-		this.atMostTimeUnit = atMostTimeUnit;
+	public void setWithinAtMostUnit(Long atMostTimeUnit) {
+		this.withinAtMostUnit = atMostTimeUnit;
 	}
 	
 	@Override

@@ -21,21 +21,17 @@ package edu.emory.cci.aiw.cvrg.eureka.services.conversion;
 
 import com.google.inject.Inject;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.CategoryEntity;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.DataElementEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.FrequencyEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.DataElementEntityVisitor;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.SequenceEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.SystemProposition;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.ValueThresholdGroupEntity;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.HashSet;
 import org.protempa.PropositionDefinition;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 public final class PropositionDefinitionConverterVisitor implements

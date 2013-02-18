@@ -26,7 +26,7 @@ import org.codehaus.jackson.JsonProcessingException;
 import org.codehaus.jackson.map.JsonSerializer;
 import org.codehaus.jackson.map.SerializerProvider;
 import org.protempa.CompoundLowLevelAbstractionDefinition;
-import org.protempa.CompoundLowLevelAbstractionDefinition.ValueClassification;
+import org.protempa.ValueClassification;
 
 public final class CompoundLowLevelAbstractionJsonSerializer extends
         JsonSerializer<CompoundLowLevelAbstractionDefinition> {
@@ -67,8 +67,7 @@ public final class CompoundLowLevelAbstractionJsonSerializer extends
 				value.getMinimumNumberOfValues(), jgen);
 		provider.defaultSerializeField("thresholdsOperator", 
 				value.getValueDefinitionMatchOperator().name(), jgen);
-//		provider.defaultSerializeField("valueDefinitions",
-//				value.getValueClassifications(), jgen);
+		provider.defaultSerializeField("context", value.getContextId(), jgen);
 		jgen.writeFieldName("values");
 		jgen.writeStartObject();
 		for (ValueClassification valueCls : value.getValueClassifications()) {

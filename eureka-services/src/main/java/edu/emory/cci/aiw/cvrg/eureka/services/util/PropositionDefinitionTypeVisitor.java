@@ -23,13 +23,14 @@ import edu.emory.cci.aiw.cvrg.eureka.common.entity.SystemProposition.SystemType;
 import java.util.Collection;
 import org.protempa.CompoundLowLevelAbstractionDefinition;
 import org.protempa.ConstantDefinition;
+import org.protempa.ContextDefinition;
 import org.protempa.EventDefinition;
 import org.protempa.HighLevelAbstractionDefinition;
 import org.protempa.LowLevelAbstractionDefinition;
-import org.protempa.PairDefinition;
 import org.protempa.PrimitiveParameterDefinition;
 import org.protempa.PropositionDefinition;
 import org.protempa.PropositionDefinitionVisitor;
+import org.protempa.SequentialTemporalPatternDefinition;
 import org.protempa.SliceDefinition;
 
 public class PropositionDefinitionTypeVisitor implements PropositionDefinitionVisitor {
@@ -65,8 +66,8 @@ public class PropositionDefinitionTypeVisitor implements PropositionDefinitionVi
 	}
 
 	@Override
-	public void visit(PairDefinition arg0) {
-		systemType = SystemType.HIGH_LEVEL_ABSTRACTION;
+	public void visit(SequentialTemporalPatternDefinition arg0) {
+		systemType = SystemType.SEQUENTIAL_TEMPORAL_PATTERN_ABSTRACTION;
 	}
 
 	@Override
@@ -82,6 +83,11 @@ public class PropositionDefinitionTypeVisitor implements PropositionDefinitionVi
 	@Override
 	public void visit(CompoundLowLevelAbstractionDefinition def) {
 		systemType = SystemType.COMPOUND_LOW_LEVEL_ABSTRACTION;
+	}
+	
+	@Override
+	public void visit(ContextDefinition def) {
+		systemType = SystemType.CONTEXT;
 	}
     
 }

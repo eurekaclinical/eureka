@@ -29,8 +29,9 @@ import javax.ws.rs.core.Response;
 import com.google.inject.Inject;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.DataElementField;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.RelatedDataElementField;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.Sequence;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.Sequence.RelatedDataElementField;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.RelatedDataElementField;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.DataElementEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.ExtendedDataElement;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.PropositionTypeVisitor;
@@ -126,7 +127,8 @@ public class SequenceTranslator implements
 						"Invalid data element "
 						+ rde.getSequentialDataElement());
 			}
-			rhsEP = createExtendedProposition(rhsEP, rhsDEF, rde.getSequentialDataElementSource(), userId);
+			rhsEP = createExtendedProposition(rhsEP, rhsDEF, 
+					rde.getSequentialDataElementSource(), userId);
 
 			RelationOperator relationOperator =
 					this.relationOperatorDao.retrieve(
@@ -214,7 +216,7 @@ public class SequenceTranslator implements
 					assignSources(pId, proposition);
 
 			List<RelatedDataElementField> relatedFields =
-					new ArrayList<Sequence.RelatedDataElementField>();
+					new ArrayList<RelatedDataElementField>();
 			for (Relation relation : relations) {
 				RelatedDataElementField field =
 						createRelatedDataElementField(relation);

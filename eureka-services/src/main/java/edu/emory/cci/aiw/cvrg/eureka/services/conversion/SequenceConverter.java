@@ -38,9 +38,9 @@ import static edu.emory.cci.aiw.cvrg.eureka.services.conversion.ConversionUtil.u
 import java.util.HashMap;
 import java.util.Map;
 import org.protempa.IntervalSide;
-import org.protempa.Offsets;
 import org.protempa.SimpleGapFunction;
 import org.protempa.TemporalExtendedParameterDefinition;
+import org.protempa.TemporalPatternOffset;
 import org.protempa.proposition.value.NominalValue;
 
 final class SequenceConverter
@@ -105,7 +105,7 @@ final class SequenceConverter
 			}
 			primary.setGapFunction(
 					new SimpleGapFunction(Integer.valueOf(0), null));
-			Offsets temporalOffsets = new Offsets();
+			TemporalPatternOffset temporalOffsets = new TemporalPatternOffset();
 			temporalOffsets.setStartTemporalExtendedPropositionDefinition(primaryEP);
 			temporalOffsets.setStartIntervalSide(IntervalSide.START);
 			temporalOffsets.setStartOffset(0);

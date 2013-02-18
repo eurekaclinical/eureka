@@ -35,7 +35,7 @@ public final class IntervalSideJsonDeserializer extends
 	        throws IOException, JsonProcessingException {
 		parser.nextToken();
 		parser.nextValue();
-		String name = parser.getText();
+		String name = parser.readValueAs(String.class);
 		parser.nextToken();
 		return IntervalSide.intervalSide(name);
 	}

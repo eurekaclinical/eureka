@@ -22,7 +22,6 @@ package edu.emory.cci.aiw.cvrg.eureka.common.json;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-import org.codehaus.jackson.JsonNode;
 
 import org.codehaus.jackson.JsonParseException;
 import org.codehaus.jackson.JsonParser;
@@ -35,12 +34,12 @@ import org.protempa.ExtendedPropositionDefinition;
 import org.protempa.GapFunction;
 import org.protempa.HighLevelAbstractionDefinition;
 import org.protempa.IntervalSide;
-import org.protempa.Offsets;
 import org.protempa.PropertyDefinition;
 import org.protempa.ReferenceDefinition;
 import org.protempa.SimpleGapFunction;
 import org.protempa.SourceId;
 import org.protempa.TemporalExtendedPropositionDefinition;
+import org.protempa.TemporalPatternOffset;
 import org.protempa.proposition.interval.Relation;
 import org.protempa.proposition.value.Unit;
 import org.protempa.proposition.value.Value;
@@ -64,20 +63,20 @@ public final class HighLevelAbstractionJsonDeserializer extends
 		
 		// now we can construct the HLA
 		HighLevelAbstractionDefinition value = new HighLevelAbstractionDefinition(
-		        this.parser.getText());
+		        this.parser.readValueAs(String.class));
 		value.setInDataSource(false);
 		value.setSolid(true);
 		value.setConcatenable(true);
 		value.setGapFunction(new SimpleGapFunction());
 		nextToken();
 		checkField("displayName");
-		value.setDisplayName(this.parser.getText());
+		value.setDisplayName(this.parser.readValueAs(String.class));
 		nextToken();
 		checkField("abbreviatedDisplayName");
-		value.setAbbreviatedDisplayName(this.parser.getText());
+		value.setAbbreviatedDisplayName(this.parser.readValueAs(String.class));
 		nextToken();
 		checkField("description");
-		value.setDescription(this.parser.getText());
+		value.setDescription(this.parser.readValueAs(String.class));
 		
 		nextToken();
 		checkField("inverseIsA");
@@ -161,7 +160,7 @@ public final class HighLevelAbstractionJsonDeserializer extends
 		checkField("temporalOffset");
 		nextToken();
 		if (parser.getCurrentToken() != JsonToken.END_OBJECT) {
-			Offsets offsets = new Offsets();
+			TemporalPatternOffset offsets = new TemporalPatternOffset();
 			checkField("startExtendedProposition");
 			Long startIndex = this.parser.getLongValue();
 			if (startIndex != null) {

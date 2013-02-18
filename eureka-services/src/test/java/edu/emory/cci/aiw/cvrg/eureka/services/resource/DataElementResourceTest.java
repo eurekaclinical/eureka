@@ -36,17 +36,32 @@ import edu.emory.cci.aiw.cvrg.eureka.common.entity.TimeUnit;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.User;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.TimeUnitDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.test.Setup;
+import org.junit.After;
+import org.junit.Before;
 
 /**
  * @author hrathod
  */
 public class DataElementResourceTest extends AbstractServiceResourceTest {
+	private User user;
+	private String frequencyKey;
+	
+	@Before
+	public void setupDataElementResourceTest() {
+		List<User> users = this.getUserList();
+		user = users.get(0);
+		frequencyKey = "testThreshold-frequency";
+	}
+	
+	@After
+	public void tearDownDataElementResourceTest() {
+		user = null;
+		frequencyKey = null;
+	}
+	
 
 	@Test
 	public void testConsecutiveFrequency() {
-		List<User> users = this.getUserList();
-		User user = users.get(0);
-
 		TimeUnitDao timeUnitDao = this.getInstance(TimeUnitDao.class);
 		TimeUnit timeUnit = 
 				timeUnitDao.getByName(Setup.TESTING_TIME_UNIT_NAME);
@@ -58,9 +73,9 @@ public class DataElementResourceTest extends AbstractServiceResourceTest {
 		dataElementField.setHasPropertyConstraint(Boolean.FALSE);
 		dataElementField.setMinDurationUnits(timeUnit.getId());
 		dataElementField.setMaxDurationUnits(timeUnit.getId());
-
+		
 		Frequency frequency = new Frequency();
-		frequency.setKey("testThreshold-frequency");
+		frequency.setKey(frequencyKey);
 		frequency.setUserId(user.getId());
 		frequency.setDisplayName("testThreshold-frequency");
 		frequency.setDescription("testThreshold-frequency");
@@ -84,10 +99,15 @@ public class DataElementResourceTest extends AbstractServiceResourceTest {
 				ClientResponse.Status.NO_CONTENT,
 				response2.getClientResponseStatus());
 		
-		ClientResponse response3 = this.resource().path("/api/dataelement/" + user.getId() + "/" + frequency.getKey()).type(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON).delete(ClientResponse.class);
+		ClientResponse response3 = this.resource()
+				.path("/api/dataelement/" + user.getId() + "/" + frequencyKey)
+				.type(MediaType.APPLICATION_JSON)
+				.accept(MediaType.APPLICATION_JSON)
+				.delete(ClientResponse.class);
 		
 		Assert.assertEquals(
 				ClientResponse.Status.NO_CONTENT,
 				response3.getClientResponseStatus());
+		
 	}
 }
