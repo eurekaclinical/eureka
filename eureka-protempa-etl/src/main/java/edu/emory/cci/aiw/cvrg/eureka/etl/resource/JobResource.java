@@ -100,7 +100,6 @@ public class JobResource {
 
 		if (valid) {
 			LOGGER.debug("Created {} definitions", definitions.size());
-			System.err.println("PropDefs: " + definitions);
 			if (LOGGER.isDebugEnabled()) {
 				for (PropositionDefinition pd : definitions) {
 					LOGGER.debug("PropDef: {}", pd);
