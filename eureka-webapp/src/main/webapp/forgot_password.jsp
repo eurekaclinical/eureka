@@ -33,7 +33,7 @@
 		<form id="ResetPsdForm" action="#" method="post">
 			<div class="pad_btm fltlft">
 				<p>Remember, your user name is the email address that you used when you registered.</p>
-				<p>If you cannot remember your password, please enter your email address and click Reset Password below:</p>         
+				<p>If you cannot remember your password, please enter your email address and click the Reset Password button below. You will receive an email with a temporary password. You will be asked to change the password the next time you login.</p>         
 
 				<div>
 					<table class="white">
