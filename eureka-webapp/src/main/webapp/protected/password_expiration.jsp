@@ -16,7 +16,7 @@
   See the License for the specific language governing permissions and
   limitations under the License.
   #L%
-  --%>
+--%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="/WEB-INF/tlds/template.tld" prefix="template"%>
 
@@ -32,80 +32,57 @@
 
 	</template:content>
 	<template:content name="content">
+		<c:choose>
+			<c:when test="${param.firstLogin}">
+				<h3>Welcome! Please replace the default password with your own below:</h3>
+			</c:when>
+			<c:otherwise>
+				<h3>Your password has expired. Enter a new one below:</h3>
+			</c:otherwise>
+		</c:choose>
 
-		<h3>Your password has expired. Enter a new one below:</h3>
 		<form id="passwordExpirationfrm" action="#" method="post">
-		<table id="newPasswordTableForExpiration">
+			<table id="newPasswordTableForExpiration">
+				<tr>
+					<td class="status white"></td>
+				</tr>
+				<tr>
+					<td class=" white">
+						<label>Old Password:</label>
+					</td>
+					<td class="field white">
+						<input type="password" name="oldExpPassword" id="oldExpPassword" />
+					</td>
+					<td class="status white"></td>
+				</tr>
+				<tr>
+					<td class=" white"><label>New Password:</label></td>
+					<td class="field white">
+						<input type="password" name="newExpPassword" id="newExpPassword" />
+					</td>
+					<td class="status white"></td>
+				</tr>
+				<tr>
+					<td class=" white">
+						<label>Re-enter New Password</label>
+					</td>
+					<td class="field white">
+						<input type="password" name="verifyExpPassword" id="verifyExpPassword" />
+					</td>
+					<td class="status white"></td>
+				</tr>
+				<tr>
+					<td class=" white">&nbsp;</td>
+					<td class="field white fltrt">
+						<input type="submit" value="Save" id="saveAcctBtnExp" class="button" />
+					</td>
+					<td class="status white">&nbsp;</td>
+				</tr>
+			</table>
+			<input type="hidden" name="targetURL" id="targetURL" value="${param.redirectURL}"/>
 
-
-					<tr>
-
-						<td class="status white"></td>
-
-					</tr>
-
-					<tr>
-
-						<td class=" white"><label id="lemail" for="email">Old
-
-								Password:</label></td>
-
-						<td class="field white"><input type="password"
-
-							name="oldExpPassword" id="oldExpPassword" /></td>
-
-						<td class="status white"></td>
-
-					</tr>
-
-
-
-					<tr>
-
-						<td class=" white"><label id="lemail" for="email">New
-
-								Password:</label></td>
-
-						<td class="field white"><input type="password"
-
-							name="newExpPassword" id="newExpPassword" /></td>
-
-						<td class="status white"></td>
-
-					</tr>
-
-					<tr>
-
-						<td class=" white"><label id="lemail" for="email">Re-enter
-
-								New Password</label></td>
-
-						<td class="field white"><input type="password"
-
-							name="verifyExpPassword" id="verifyExpPassword" /></td>
-
-						<td class="status white"></td>
-
-					</tr>
-
-					<tr>
-
-						<td class=" white">&nbsp;</td>
-
-						<td class="field white fltrt"><input type="submit"
-
-							value="Save" id="saveAcctBtnExp" class="button" /></td>
-
-						<td class="status white">&nbsp;</td>
-
-					</tr>
-
-				</table>
-				<input type="hidden" name="targetURL" id="targetURL" value="<%= request.getParameter("redirectURL") %> "/>
-
-		<div id="passwordChangeComplete" class = "pw_reset left_padding">
-
-		</div>
+			<div id="passwordChangeComplete" class = "pw_reset left_padding">
+			</div>
 		</form>
 	</template:content>
 </template:insert>

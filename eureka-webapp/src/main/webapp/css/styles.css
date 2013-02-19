@@ -179,6 +179,17 @@ a:visited {
 	font-size:10px;
 	text-align:center;
 }
+button {
+	font-size:10px;
+	text-align:center;
+}
+input {
+	font-size:10px;
+}
+select {
+	font-size:10px;
+}
+
 .margin {
 	margin-right:20px;
 }
@@ -213,6 +224,7 @@ td
     padding: 4px;
     border-width: 1px 0 0 0;
 }
+
 .bold {
 	font-weight:bold;
 	color:#4f81bc;

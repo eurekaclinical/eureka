@@ -629,7 +629,7 @@
 																						</select>
 																					</td>
 																					<td>
-																						<input type="text" name="thresholdLowerVal" value="<c:if test="${propositionType == 'VALUE_THRESHOLD'}">${threshold.lowerValue}</c:if>"/>
+																						<input type="text" name="thresholdLowerVal" class="valueField" value="<c:if test="${propositionType == 'VALUE_THRESHOLD'}">${threshold.lowerValue}</c:if>"/>
 																					</td>
 																				</tr>
 																				<tr>
@@ -642,20 +642,14 @@
 																						</select>
 																					</td>
 																					<td>
-																						<input type="text" name="thresholdUpperVal" value="<c:if test="${propositionType == 'VALUE_THRESHOLD'}">${threshold.upperValue}</c:if>"/>
+																						<input type="text" name="thresholdUpperVal" class="valueField" value="<c:if test="${propositionType == 'VALUE_THRESHOLD'}">${threshold.upperValue}</c:if>"/>
 																					</td>
 																				</tr>
 																			</table>
 																		</td>
+																		<td>with</td>
 																		<td>
-																			<select name="thresholdDataElementTemporalRelation">
-																				<c:forEach var="op" items="${operators}">
-																				<option value="${op.id}" <c:if test="${propositionType == 'VALUE_THRESHOLD' and op.id == threshold.relationOperator}">selected="selected"</c:if>>${op.description}</option>
-																				</c:forEach>
-																			</select>
-																		</td>
-																		<td>
-																			<div id="thresholdRelatedDataElements${status.count}" class="tree-drop-single jstree-drop thresholdedRelatedDataElements">
+																			<div id="thresholdRelatedDataElements${status.count}" class="tree-drop-multiple jstree-drop thresholdedRelatedDataElements">
 																			<ul data-proptype="empty" data-drop-type="multiple" class="sortable" style="width: 100% height: 100%">
 																				<c:if test="${not empty proposition and propositionType == 'VALUE_THRESHOLD'}">
 																				<c:forEach var="relatedDataElement" items="${threshold.relatedDataElements}">
@@ -667,7 +661,6 @@
 																				</c:if>
 																			</ul>
 																			</div>
-																			by
 																		</td>
 																		<td>
 																			<table>
@@ -690,7 +683,11 @@
 																						</select>
 																					</td>
 																					<td>
-																						of each other
+																						<select name="thresholdDataElementTemporalRelation">
+																							<c:forEach var="op" items="${operators}">
+																							<option value="${op.id}" <c:if test="${propositionType == 'VALUE_THRESHOLD' and op.id == threshold.relationOperator}">selected="selected"</c:if>>${op.description}</option>
+																							</c:forEach>
+																						</select>
 																					</td>
 																				</tr>
 																			</table>
@@ -719,7 +716,7 @@
 																						</select>
 																					</td>
 																					<td>
-																						<input type="text" name="thresholdLowerVal"/>
+																						<input type="text" class="valueField" name="thresholdLowerVal"/>
 																					</td>
 																				</tr>
 																				<tr>
@@ -732,26 +729,18 @@
 																						</select>
 																					</td>
 																					<td>
-																						<input type="text" name="thresholdUpperVal"/>
+																						<input type="text" class="valueField" name="thresholdUpperVal"/>
 																					</td>
 																				</tr>
 																			</table>
 																		</td>
+																		<td>with</td>
 																		<td>
-																			<select name="thresholdDataElementTemporalRelation">
-																				<c:forEach var="op" items="${operators}">
-																				<option value="${op.id}">${op.description}</option>
-																				</c:forEach>
-																			</select>
-																		</td>
-																		
-																		<td>
-																			<div id="thresholdRelatedDataElements1" class="tree-drop-single jstree-drop thresholdedRelatedDataElements">
+																			<div id="thresholdRelatedDataElements1" class="tree-drop-multiple jstree-drop thresholdedRelatedDataElements">
 																				<div class="label-info" ><center>Drop Here</center></div>
 																				<ul data-proptype="empty" data-drop-type="multiple" class="sortable" style="width: 100% height: 100%">
 																				</ul>
 																			</div>
-																			by
 																		</td>
 																		<td>
 																			<table>
@@ -774,7 +763,11 @@
 																						</select>
 																					</td>
 																					<td>
-																						of each other
+																						<select name="thresholdDataElementTemporalRelation">
+																							<c:forEach var="op" items="${operators}">
+																							<option value="${op.id}">${op.description}</option>
+																							</c:forEach>
+																						</select>
 																					</td>
 																				</tr>
 																			</table>

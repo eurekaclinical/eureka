@@ -34,6 +34,8 @@ import edu.emory.cci.aiw.cvrg.eureka.services.dao.PropositionDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.finder.PropositionFindException;
 import edu.emory.cci.aiw.cvrg.eureka.services.finder.SystemPropositionFinder;
 import edu.emory.cci.aiw.cvrg.eureka.services.util.PropositionUtil;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  *
@@ -41,6 +43,51 @@ import edu.emory.cci.aiw.cvrg.eureka.services.util.PropositionUtil;
  */
 final class TranslatorSupport {
 
+	private static final class DataElementMapKey {
+
+		private final Long userId;
+		private final String key;
+
+		DataElementMapKey(Long userId, String key) {
+			this.userId = userId;
+			this.key = key;
+		}
+
+		Long getUserId() {
+			return userId;
+		}
+
+		String getKey() {
+			return key;
+		}
+
+		@Override
+		public int hashCode() {
+			int hash = 5;
+			hash = 97 * hash + (this.userId != null ? this.userId.hashCode() : 0);
+			hash = 97 * hash + (this.key != null ? this.key.hashCode() : 0);
+			return hash;
+		}
+
+		@Override
+		public boolean equals(Object obj) {
+			if (obj == null) {
+				return false;
+			}
+			if (getClass() != obj.getClass()) {
+				return false;
+			}
+			final DataElementMapKey other = (DataElementMapKey) obj;
+			if (this.userId != other.userId && (this.userId == null || !this.userId.equals(other.userId))) {
+				return false;
+			}
+			if ((this.key == null) ? (other.key != null) : !this.key.equals(other.key)) {
+				return false;
+			}
+			return true;
+		}
+	}
+	private final Map<DataElementMapKey, DataElementEntity> dataElementEntities;
 	private final PropositionDao propositionDao;
 	private final SystemPropositionFinder finder;
 
@@ -49,6 +96,8 @@ final class TranslatorSupport {
 			SystemPropositionFinder finder) {
 		this.propositionDao = propositionDao;
 		this.finder = finder;
+		this.dataElementEntities = 
+				new HashMap<DataElementMapKey, DataElementEntity>();
 	}
 
 	/**
@@ -65,22 +114,29 @@ final class TranslatorSupport {
 		DataElementEntity abstractedFrom =
 				propositionDao.getByUserAndKey(userId, key);
 		if (abstractedFrom == null) {
-			try {
-				PropositionDefinition propDef = this.finder.find(userId, key);
-				abstractedFrom = PropositionUtil.toSystemProposition(propDef,
-						userId);
-			} catch (PropositionFindException ex) {
-				throw new DataElementHandlingException(
-						Response.Status.PRECONDITION_FAILED,
-						"No system data element with name " + key, ex);
+			DataElementMapKey deMapKey = new DataElementMapKey(userId, key);
+			abstractedFrom = this.dataElementEntities.get(deMapKey);
+			if (abstractedFrom == null) {
+				try {
+					PropositionDefinition propDef = 
+							this.finder.find(userId, key);
+					abstractedFrom = 
+							PropositionUtil.toSystemProposition(propDef,
+							userId);
+					this.dataElementEntities.put(deMapKey, abstractedFrom);
+				} catch (PropositionFindException ex) {
+					throw new DataElementHandlingException(
+							Response.Status.PRECONDITION_FAILED,
+							"No system data element with name " + key, ex);
+				}
 			}
 		}
 		return abstractedFrom;
 	}
 
 	/**
-	 * Creates a new user entity if one with the provided data element's id
-	 * does not already exist.
+	 * Creates a new user entity if one with the provided data element's id does
+	 * not already exist.
 	 *
 	 * @param <P>
 	 * @param element

@@ -130,39 +130,9 @@ final class SequenceConverter
 		TemporalExtendedPropositionDefinition tepd =
 				this.extendedProps.get(ep.getId());
 		if (tepd == null) {
-			DataElementEntity dataElementEntity = ep.getDataElementEntity();
-			String propId;
-			if (dataElementEntity.isInSystem()) {
-				propId = dataElementEntity.getKey();
-			} else {
-				propId = dataElementEntity.getKey() + ConversionUtil.PRIMARY_PROP_ID_SUFFIX;
-			}
-			if (dataElementEntity instanceof ValueThresholdGroupEntity) {
-				ValueThresholdGroupEntity vtDataElementEntity =
-						(ValueThresholdGroupEntity) dataElementEntity;
-				TemporalExtendedParameterDefinition tepvDef =
-						new TemporalExtendedParameterDefinition(propId);
-				tepvDef.setValue(
-						NominalValue.getInstance(vtDataElementEntity.getKey() + "_VALUE"));
-				tepd = tepvDef;
-			} else {
-				tepd = new TemporalExtendedPropositionDefinition(propId);
-			}
-
-			if (ep.getPropertyConstraint() != null) {
-				PropertyConstraint pc = new PropertyConstraint();
-				pc.setPropertyName(
-						ep.getPropertyConstraint().getPropertyName());
-				pc.setValue(ValueType.VALUE.parse(ep.getPropertyConstraint()
-						.getValue()));
-				pc.setValueComp(ValueComparator.EQUAL_TO);
-
-				tepd.getPropertyConstraints().add(pc);
-			}
-			tepd.setMinLength(ep.getMinDuration());
-			tepd.setMinLengthUnit(unit(ep.getMinDurationTimeUnit()));
-			tepd.setMaxLength(ep.getMaxDuration());
-			tepd.setMaxLengthUnit(unit(ep.getMaxDurationTimeUnit()));
+			tepd = 
+					ConversionUtil.buildExtendedPropositionDefinition(
+					ep);
 
 			this.extendedProps.put(ep.getId(), tepd);
 		}

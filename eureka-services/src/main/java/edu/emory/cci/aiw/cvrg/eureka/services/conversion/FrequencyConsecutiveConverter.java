@@ -20,6 +20,7 @@
 package edu.emory.cci.aiw.cvrg.eureka.services.conversion;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.DataElementEntity;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.ExtendedDataElement;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.FrequencyEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.ValueThresholdGroupEntity;
 
@@ -74,7 +75,10 @@ public final class FrequencyConsecutiveConverter implements
 		this.primaryPropId = propId;
 
 		if (this.converterVisitor.addPropositionId(propId)) {
-			DataElementEntity abstractedFrom = entity.getAbstractedFrom();
+			ExtendedDataElement extendedProposition =
+					entity.getExtendedProposition();
+			DataElementEntity abstractedFrom =
+					extendedProposition.getDataElementEntity();
 			abstractedFrom.accept(this.converterVisitor);
 			Collection<PropositionDefinition> intermediates =
 					this.converterVisitor.getPropositionDefinitions();
@@ -84,6 +88,7 @@ public final class FrequencyConsecutiveConverter implements
 			String wrapperPropId = entity.getKey() + "_SUB";
 			HighLevelAbstractionDefinition hlad =
 					new HighLevelAbstractionDefinition(propId);
+			TemporalExtendedPropositionDefinition tepdOuter;
 			if (abstractedFrom instanceof ValueThresholdGroupEntity) {
 				CompoundLowLevelAbstractionDefinition frequencyWrapper =
 						new CompoundLowLevelAbstractionDefinition(
@@ -108,24 +113,28 @@ public final class FrequencyConsecutiveConverter implements
 						entity.getWithinAtMost(),
 						unit(entity.getWithinAtMostUnits())));
 				result.add(frequencyWrapper);
+				TemporalExtendedParameterDefinition tepd =
+					new TemporalExtendedParameterDefinition(wrapperPropId);
+				tepd.setValue(NominalValue.getInstance(entity.getKey() + "_VALUE"));
+				tepdOuter = tepd;
 			} else {
 				SequentialTemporalPatternDefinition stpd =
-						new SequentialTemporalPatternDefinition(propId);
+						new SequentialTemporalPatternDefinition(wrapperPropId);
 				stpd.setDisplayName(entity.getDisplayName());
 				stpd.setDescription(entity.getDescription());
 				stpd.setGapFunction(
 						new SimpleGapFunction(Integer.valueOf(0), null));
 				TemporalExtendedPropositionDefinition tepd =
-						new TemporalExtendedPropositionDefinition(
-						abstractedFrom.getKey());
+						ConversionUtil.buildExtendedPropositionDefinition(
+						extendedProposition);
 				stpd.setFirstTemporalExtendedPropositionDefinition(tepd);
 				int n = entity.getAtLeastCount() - 1;
 				SubsequentTemporalExtendedPropositionDefinition[] rtepds =
 						new SubsequentTemporalExtendedPropositionDefinition[n];
 				for (int i = 0; i < n; i++) {
 					TemporalExtendedPropositionDefinition tepd2 =
-							new TemporalExtendedPropositionDefinition(
-							abstractedFrom.getKey());
+							ConversionUtil.buildExtendedPropositionDefinition(
+							extendedProposition);
 					Relation r = new Relation(null, null, null, null, null,
 							null, null, null,
 							entity.getWithinAtLeast(),
@@ -139,12 +148,13 @@ public final class FrequencyConsecutiveConverter implements
 				}
 				stpd.setSubsequentTemporalExtendedPropositionDefinitions(rtepds);
 				result.add(stpd);
+				tepdOuter = new TemporalExtendedPropositionDefinition(wrapperPropId);
+				
 			}
-			TemporalExtendedParameterDefinition tepd =
-					new TemporalExtendedParameterDefinition(wrapperPropId,
-					NominalValue.getInstance(entity.getKey() + "_VALUE"));
-			hlad.add(tepd);
-			hlad.setRelation(tepd, tepd, new Relation());
+
+			hlad.add(tepdOuter);
+			hlad.setRelation(tepdOuter, tepdOuter, new Relation());
+
 			hlad.setDisplayName(entity.getDisplayName());
 			hlad.setDescription(entity.getDescription());
 			hlad.setGapFunction(

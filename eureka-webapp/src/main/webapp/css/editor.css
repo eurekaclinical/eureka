@@ -139,8 +139,18 @@ div.tabs > div h2 {
     float: left;
     overflow: auto;
     border: 3px solid gray;
-    width: 300px;
+    width: 20em;
     height: 3em;
+    background: #C3D9FF;
+    color: green;
+}
+
+.tree-drop-multiple {
+	float: left;
+    overflow: auto;
+    border: 3px solid gray;
+    width: 20em;
+    height: 6em;
     background: #C3D9FF;
     color: green;
 }
@@ -150,6 +160,10 @@ input.durationField {
 }
 
 input.distanceField {
+	width: 4em;
+}
+
+input.valueField {
 	width: 4em;
 }
 

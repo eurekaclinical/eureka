@@ -38,6 +38,8 @@ import edu.emory.cci.aiw.cvrg.eureka.services.dao.ThresholdsOperatorDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.TimeUnitDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.ValueComparatorDao;
 import java.math.BigDecimal;
+import java.util.HashMap;
+import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -142,8 +144,8 @@ public final class ValueThresholdsTranslator implements
 			int j = 0;
 			for (DataElementField de : vt.getRelatedDataElements()) {
 				ExtendedDataElement ede;
-				if (extendedDataElements.size() > i) {
-					ede = extendedDataElements.get(i);
+				if (extendedDataElements.size() > j) {
+					ede = extendedDataElements.get(j);
 					PropositionTranslatorUtil
 							.createOrUpdateExtendedProposition(
 							ede,
@@ -161,9 +163,7 @@ public final class ValueThresholdsTranslator implements
 				}
 				j++;
 			}
-			vte.setExtendedDataElements(extendedDataElements);
-
-
+			
 			i++;
 		}
 		result.setValueThresholds(thresholds);

@@ -20,6 +20,7 @@
 package edu.emory.cci.aiw.cvrg.eureka.services.conversion;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.DataElementEntity;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.ExtendedDataElement;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.FrequencyEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.ValueThresholdGroupEntity;
 import org.protempa.PropositionDefinition;
@@ -65,30 +66,23 @@ public final class FrequencyNonConsecutiveAbstractionConverter implements
 		String propId = entity.getKey() + ConversionUtil.PRIMARY_PROP_ID_SUFFIX;
 		this.primaryPropId = propId;
 		if (this.converterVisitor.addPropositionId(propId)) {
-			HighLevelAbstractionDefinition primary =
+			HighLevelAbstractionDefinition p =
 					new HighLevelAbstractionDefinition(propId);
-			primary.setDisplayName(entity.getDisplayName());
-			primary.setDescription(entity.getDescription());
-			DataElementEntity abstractedFrom = entity.getAbstractedFrom();
+			p.setDisplayName(entity.getDisplayName());
+			p.setDescription(entity.getDescription());
+			ExtendedDataElement extendedProposition = entity.getExtendedProposition();
+			DataElementEntity abstractedFrom = extendedProposition.getDataElementEntity();
 			abstractedFrom.accept(converterVisitor);
 			result.addAll(converterVisitor.getPropositionDefinitions());
 			TemporalExtendedPropositionDefinition[] tepds =
 					new TemporalExtendedPropositionDefinition[
 							entity.getAtLeastCount()];
 			for (int i = 0; i < entity.getAtLeastCount(); i++) {
-				TemporalExtendedPropositionDefinition tepd;
-				if (entity.getExtendedProposition().getDataElementEntity() 
-						instanceof ValueThresholdGroupEntity) {
-					tepd = new TemporalExtendedParameterDefinition(
-							converterVisitor.getPrimaryPropositionId(),
-							NominalValue.getInstance(abstractedFrom.getKey() + 
-							"_VALUE"));
-				} else {
-					tepd = new TemporalExtendedPropositionDefinition(
-							converterVisitor.getPrimaryPropositionId());
-				}
+				TemporalExtendedPropositionDefinition tepd =
+						ConversionUtil.buildExtendedPropositionDefinition(
+						extendedProposition);
 				tepds[i] = tepd;
-				primary.add(tepd);
+				p.add(tepd);
 			}
 			if (tepds.length > 1) {
 				for (int i = 0; i < tepds.length - 1; i++) {
@@ -98,16 +92,16 @@ public final class FrequencyNonConsecutiveAbstractionConverter implements
 							entity.getWithinAtMost(), 
 							unit(entity.getWithinAtMostUnits()), null, null, 
 							null, null);
-					primary.setRelation(tepds[i], tepds[i + 1], rel);
+					p.setRelation(tepds[i], tepds[i + 1], rel);
 				}
 			} else {
-				primary.setRelation(tepds[0], tepds[0], new Relation());
+				p.setRelation(tepds[0], tepds[0], new Relation());
 			}
 
-			primary.setGapFunction(new SimpleGapFunction(0, null));
+			p.setGapFunction(new SimpleGapFunction(0, null));
 
-			this.primary = primary;
-			result.add(primary);
+			this.primary = p;
+			result.add(p);
 		}
 		return result;
 	}

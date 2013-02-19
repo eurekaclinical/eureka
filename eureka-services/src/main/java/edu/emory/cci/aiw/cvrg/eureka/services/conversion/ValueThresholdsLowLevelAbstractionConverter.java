@@ -19,6 +19,7 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.services.conversion;
 
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.ExtendedDataElement;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.ValueThresholdEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.ValueThresholdGroupEntity;
 import org.protempa.LowLevelAbstractionDefinition;
@@ -30,13 +31,14 @@ import org.protempa.proposition.value.ValueType;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import org.protempa.ContextDefinition;
 import org.protempa.SimpleGapFunction;
 import org.protempa.SlidingWindowWidthMode;
 import org.protempa.proposition.value.NominalValue;
+import static edu.emory.cci.aiw.cvrg.eureka.services.conversion.ConversionUtil.extractContextDefinition;
 
 public final class ValueThresholdsLowLevelAbstractionConverter implements
-		PropositionDefinitionConverter<ValueThresholdGroupEntity, 
-		LowLevelAbstractionDefinition> {
+		PropositionDefinitionConverter<ValueThresholdGroupEntity, LowLevelAbstractionDefinition> {
 
 	private PropositionDefinitionConverterVisitor converterVisitor;
 	private LowLevelAbstractionDefinition primary;
@@ -46,7 +48,7 @@ public final class ValueThresholdsLowLevelAbstractionConverter implements
 	public LowLevelAbstractionDefinition getPrimaryPropositionDefinition() {
 		return primary;
 	}
-	
+
 	@Override
 	public String getPrimaryPropositionId() {
 		return primaryPropId;
@@ -65,13 +67,13 @@ public final class ValueThresholdsLowLevelAbstractionConverter implements
 					"Low-level abstraction definitions may be created only "
 					+ "from singleton value thresholds.");
 		}
-		List<PropositionDefinition> result = 
+		List<PropositionDefinition> result =
 				new ArrayList<PropositionDefinition>();
-		String propId = 
+		String propId =
 				entity.getKey() + ConversionUtil.PRIMARY_PROP_ID_SUFFIX;
 		this.primaryPropId = propId;
 		if (this.converterVisitor.addPropositionId(propId)) {
-			LowLevelAbstractionDefinition primary = 
+			LowLevelAbstractionDefinition primary =
 					new LowLevelAbstractionDefinition(propId);
 			primary.setDisplayName(entity.getDisplayName());
 			primary.setDescription(entity.getDescription());
@@ -79,18 +81,25 @@ public final class ValueThresholdsLowLevelAbstractionConverter implements
 
 			// low-level abstractions can be created only from singleton value
 			// thresholds
-			if (entity.getValueThresholds() != null && 
-					entity.getValueThresholds().size() == 1) {
-				ValueThresholdEntity threshold = 
+			if (entity.getValueThresholds() != null
+					&& entity.getValueThresholds().size() == 1) {
+				ValueThresholdEntity threshold =
 						entity.getValueThresholds().get(0);
 				threshold.getAbstractedFrom().accept(converterVisitor);
-				Collection<PropositionDefinition> abstractedFrom = 
+				Collection<PropositionDefinition> abstractedFrom =
 						converterVisitor.getPropositionDefinitions();
 
 				primary.addPrimitiveParameterId(
 						converterVisitor.getPrimaryPropositionId());
-				thresholdToValueDefinitions(entity.getKey() + "_VALUE", 
+				thresholdToValueDefinitions(entity.getKey() + "_VALUE",
 						threshold, primary);
+				List<ExtendedDataElement> extendedDataElements = threshold.getExtendedDataElements();
+				if (extendedDataElements != null && !extendedDataElements.isEmpty()) {
+					ContextDefinition contextDefinition = extractContextDefinition(entity,
+							threshold.getExtendedDataElements(), threshold);
+					result.add(contextDefinition);
+					primary.setContextId(contextDefinition.getId());
+				}
 				result.addAll(abstractedFrom);
 			}
 			primary.setSlidingWindowWidthMode(SlidingWindowWidthMode.DEFAULT);
@@ -106,11 +115,11 @@ public final class ValueThresholdsLowLevelAbstractionConverter implements
 	static void thresholdToValueDefinitions(String value,
 			ValueThresholdEntity threshold,
 			LowLevelAbstractionDefinition def) {
-		LowLevelAbstractionValueDefinition valueDef = 
+		LowLevelAbstractionValueDefinition valueDef =
 				new LowLevelAbstractionValueDefinition(
 				def, value);
 		valueDef.setValue(NominalValue.getInstance(value));
-		LowLevelAbstractionValueDefinition compValueDef = 
+		LowLevelAbstractionValueDefinition compValueDef =
 				new LowLevelAbstractionValueDefinition(def, value + "_COMP");
 		compValueDef.setValue(NominalValue.getInstance(value + "_COMP"));
 		if (threshold.getMinValueThreshold() != null

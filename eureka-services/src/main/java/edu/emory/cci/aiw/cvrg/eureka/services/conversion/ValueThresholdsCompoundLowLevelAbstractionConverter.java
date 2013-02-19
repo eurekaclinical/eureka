@@ -19,6 +19,7 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.services.conversion;
 
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.ExtendedDataElement;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,9 +29,11 @@ import org.protempa.PropositionDefinition;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.ValueThresholdEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.ValueThresholdGroupEntity;
+import org.protempa.ContextDefinition;
 import org.protempa.SimpleGapFunction;
 import org.protempa.SlidingWindowWidthMode;
 import org.protempa.ValueClassification;
+import static edu.emory.cci.aiw.cvrg.eureka.services.conversion.ConversionUtil.extractContextDefinition;
 
 public final class ValueThresholdsCompoundLowLevelAbstractionConverter
 		implements
@@ -48,7 +51,7 @@ public final class ValueThresholdsCompoundLowLevelAbstractionConverter
 	public CompoundLowLevelAbstractionDefinition getPrimaryPropositionDefinition() {
 		return primary;
 	}
-	
+
 	@Override
 	public String getPrimaryPropositionId() {
 		return primaryPropId;
@@ -75,14 +78,14 @@ public final class ValueThresholdsCompoundLowLevelAbstractionConverter
 				throw new IllegalStateException("valueDefinitionMatchOperator"
 						+ " can only be ANY or ALL");
 			}
-			
+
 			primary.setGapFunction(new SimpleGapFunction(Integer.valueOf(0), null));
 
 			List<LowLevelAbstractionDefinition> intermediates = new ArrayList<LowLevelAbstractionDefinition>();
 			for (ValueThresholdEntity v : entity.getValueThresholds()) {
 				v.getAbstractedFrom().accept(this.converterVisitor);
 				result.addAll(this.converterVisitor.getPropositionDefinitions());
-				LowLevelAbstractionDefinition def = 
+				LowLevelAbstractionDefinition def =
 						new LowLevelAbstractionDefinition(
 						entity.getKey() + "_SUB" + v.getId());
 				def.setConcatenable(false);
@@ -95,6 +98,15 @@ public final class ValueThresholdsCompoundLowLevelAbstractionConverter
 						.thresholdToValueDefinitions(entity.getKey() + "_VALUE", v, def);
 				def.setSlidingWindowWidthMode(SlidingWindowWidthMode.DEFAULT);
 				def.setGapFunction(new SimpleGapFunction(0, null));
+				List<ExtendedDataElement> extendedDataElements =
+						v.getExtendedDataElements();
+				if (extendedDataElements != null && !extendedDataElements.isEmpty()) {
+					ContextDefinition cd = 
+							extractContextDefinition(entity, 
+							extendedDataElements, v);
+					result.add(cd);
+					def.setContextId(cd.getId());
+				}
 				intermediates.add(def);
 			}
 			result.addAll(intermediates);
