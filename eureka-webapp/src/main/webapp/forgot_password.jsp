@@ -32,11 +32,11 @@
 		<h3>Having trouble logging in?</h3>
 		<form id="ResetPsdForm" action="#" method="post">
 			<div class="pad_btm fltlft">
-				<p>
-					Remember that your user name is your email address you used when you registered.<br />
-					If you cannot remember your password, please enter your email address.   </p>         
+				<p>Remember, your user name is the email address that you used when you registered.</p>
+				<p>If you cannot remember your password, please enter your email address and click Reset Password below:</p>         
 
-				<div ><table class="white">
+				<div>
+					<table class="white">
 						<tr>
 							<td class=" white"><label id="lemail" for="email">Email Address:</label></td>
 							<td class="field white"><input id="email" name="email" type="text"  class="email" value="" /></td>
@@ -44,7 +44,8 @@
 						</tr>
 					</table>
 					&nbsp;&nbsp;&nbsp;
-					<button id="submit" type="submit" class="btn btn-primary submit left_padding">Reset Password</button></div>
+					<button id="submit" type="submit">Reset Password</button>
+				</div>
 
 				<br />
 				<br />
