@@ -22,6 +22,7 @@ package edu.emory.cci.aiw.cvrg.eureka.common.comm.clients;
 import java.util.List;
 
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.UriBuilder;
 
 import org.protempa.PropositionDefinition;
@@ -29,6 +30,7 @@ import org.protempa.PropositionDefinition;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.GenericType;
 import com.sun.jersey.api.client.UniformInterfaceException;
+import com.sun.jersey.core.util.MultivaluedMapImpl;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.JobFilter;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.JobRequest;
@@ -132,6 +134,47 @@ public class EtlClient extends AbstractClient {
 					.accept(MediaType.APPLICATION_JSON)
 					.type(MediaType.APPLICATION_JSON)
 					.get(PropositionDefinition.class);
+		} catch (UniformInterfaceException e) {
+			ClientResponse.Status clientResponseStatus = 
+					e.getResponse().getClientResponseStatus();
+			if (!ClientResponse.Status.NOT_FOUND.equals(clientResponseStatus)) {
+				throw new ClientException(clientResponseStatus, 
+						e.getMessage());
+			} else {
+				result = null;
+			}
+		}
+		return result;
+	}
+	
+	/**
+	 * Gets all of the proposition definitions given by the key IDs for the given user.
+	 * 
+	 * @param inUserId the user's ID
+	 * @param inKeys the keys (IDs) of the proposition definitions to get
+	 * @param withChildren whether to get the children of specified proposition definitions as well
+	 * @return a {@link List} of {@link PropositionDefinition}s
+	 * 
+	 * @throws ClientException if an error occurred looking for the proposition definitions
+	 */
+	public List<PropositionDefinition> getPropositionDefinitions (Long inUserId,
+			List<String> inKeys, Boolean withChildren) throws ClientException {
+		List<PropositionDefinition> result;
+		try {
+			MultivaluedMap<String, String> queryParams = new MultivaluedMapImpl();
+			for (String key : inKeys) {
+				queryParams.add("key", key);
+			}
+			queryParams.add("withChildren", withChildren.toString());
+			String path = UriBuilder.fromPath("/api/proposition/")
+					.segment("{arg1}")
+					.build(inUserId).toString();
+			result = this.getResource()
+					.path(path)
+					.queryParams(queryParams)
+					.accept(MediaType.APPLICATION_JSON)
+					.type(MediaType.APPLICATION_JSON)
+					.get(new GenericType<List<PropositionDefinition>>() {});
 		} catch (UniformInterfaceException e) {
 			ClientResponse.Status clientResponseStatus = 
 					e.getResponse().getClientResponseStatus();
