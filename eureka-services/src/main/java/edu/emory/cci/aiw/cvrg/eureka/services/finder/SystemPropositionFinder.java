@@ -36,14 +36,30 @@ public class SystemPropositionFinder extends AbstractPropositionFinder<Long,
 	String> {
 
 	private static final String CACHE_NAME = "systemPropositions";
+	private final SystemPropositionRetriever retriever;
 	private final CacheManager cacheManager;
 	private final Cache cache;
 
 	@Inject
 	public SystemPropositionFinder(SystemPropositionRetriever inRetriever) {
 		super(inRetriever);
+		this.retriever = inRetriever;
 		this.cacheManager = CacheManager.create();
 		this.cache = this.cacheManager.getCache(CACHE_NAME);
+	}
+	
+	/**
+	 * Finds all of the system elements given by the keys for the given user
+	 * 
+	 * @param inUserId the user ID
+	 * @param inKeys the keys of the system elements to look up
+	 * @param withChildren whether to find the given system elements' children as well
+	 * @return a {@link List} of {@link SystemElement}s
+	 * @throws PropositionFindException
+	 */
+	public List<PropositionDefinition> findAll(Long inUserId,
+	        List<String> inKeys, Boolean withChildren) throws PropositionFindException {
+		return this.retriever.retrieveAll(inUserId, inKeys, withChildren);
 	}
 
 	@Override
