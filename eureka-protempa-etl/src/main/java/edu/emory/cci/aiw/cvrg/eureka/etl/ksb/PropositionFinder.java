@@ -49,19 +49,6 @@ public class PropositionFinder {
 	private static final String DEFAULT_CONF_FILE = "defaults.ini";
 	private final KnowledgeSource knowledgeSource;
 	
-	private static Map<Long, PropositionFinder> userPropFinderMap = new HashMap<Long, PropositionFinder>();
-
-	public static PropositionFinder get(Configuration inConfiguration,
-	        String confDir) throws PropositionFinderException {
-		if (userPropFinderMap.containsKey(inConfiguration.getId())) {
-			return userPropFinderMap.get(inConfiguration.getId());
-		} else {
-			PropositionFinder result = new PropositionFinder(inConfiguration, confDir);
-			userPropFinderMap.put(inConfiguration.getId(), result);
-			return result;
-		}
-	}
-	
 	public PropositionFinder(Configuration inConfiguration,
 		String confDir) throws PropositionFinderException {
 		File etlConfDir = new File(confDir + "/" + CONFIG_DIR);
@@ -71,7 +58,7 @@ public class PropositionFinder {
 		try {
 			String idStr = String.valueOf(confId.longValue());
 			String confFileName = CONF_PREFIX + idStr + ".ini";
-			LOGGER.info("Creating new configurations, source factory, and knowledge source");
+			LOGGER.debug("Creating new configurations, source factory, and knowledge source");
 			Configurations configurations = new INICommonsConfigurations
 				(etlConfDir);
 			SourceFactory sf = new SourceFactory(
@@ -89,7 +76,7 @@ public class PropositionFinder {
 				}
 			}
 			this.knowledgeSource = ks;
-			LOGGER.info("Done");
+			LOGGER.debug("Done: configurations, source factory, and knowledge source created");
 		} catch (BackendProviderSpecLoaderException e) {
 			throw new PropositionFinderException(e);
 		} catch (InvalidConfigurationException e) {
