@@ -114,8 +114,8 @@ public class PropositionResource {
 			if (configuration != null) {
 				if (this.etlProperties.getConfigDir() != null) {
 					PropositionFinder propositionFinder =
-					// new PropositionFinder(
-					PropositionFinder.get(configuration,
+//					PropositionFinder.get(
+					 new PropositionFinder(configuration,
 					        this.etlProperties.getConfigDir());
 					PropositionDefinition definition = propositionFinder
 					        .find(inKey);
@@ -158,7 +158,8 @@ public class PropositionResource {
 				if (this.etlProperties.getConfigDir() != null) {
 					List<PropositionDefinition> result = new ArrayList<PropositionDefinition>();
 					PropositionFinder propositionFinder =
-					PropositionFinder.get(configuration,
+//					PropositionFinder.get
+					new PropositionFinder(configuration,
 					        this.etlProperties.getConfigDir());
 					for (String key : inKeys) {
 						PropositionDefinition definition = propositionFinder
