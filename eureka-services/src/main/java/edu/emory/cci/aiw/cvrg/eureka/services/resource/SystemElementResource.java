@@ -20,7 +20,9 @@
 package edu.emory.cci.aiw.cvrg.eureka.services.resource;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -51,39 +53,58 @@ import edu.emory.cci.aiw.cvrg.eureka.services.util.PropositionUtil;
 @Consumes(MediaType.APPLICATION_JSON)
 public class SystemElementResource {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(SystemElementResource.class);
+	private static final Logger LOGGER = LoggerFactory
+	        .getLogger(SystemElementResource.class);
 	private final SystemPropositionFinder finder;
 	private final ServiceProperties serviceProperties;
 
 	@Inject
 	public SystemElementResource(SystemPropositionFinder inFinder,
-			ServiceProperties inServiceProperties) {
+	        ServiceProperties inServiceProperties) {
 		this.finder = inFinder;
 		this.serviceProperties = inServiceProperties;
 	}
 
+	/**
+	 * Gets all of the system elements for a user
+	 * 
+	 * @param inUserId the user ID
+	 * @return a {@link List} of {@link SystemElement}s
+	 */
 	@GET
 	@Path("/{userId}")
 	public List<SystemElement> getAll(@PathParam("userId") Long inUserId) {
+		List<SystemElement> allElements = new ArrayList<SystemElement>();
 		List<SystemElement> result = new ArrayList<SystemElement>();
-		for (String key : this.serviceProperties
-				.getDefaultSystemPropositions()) {
-			try {
-				PropositionDefinition definition = this.finder.find(
-						inUserId, key);
-				if (definition == null) {
-					LOGGER.warn(
-							"Invalid proposition key specified in system "
-							+ "propositions list " + key);
-				} else {
+		try {
+			List<PropositionDefinition> definitions = this.finder.findAll(
+			        inUserId,
+			        this.serviceProperties.getDefaultSystemPropositions(),
+			        Boolean.TRUE);
+			if (definitions.isEmpty()) {
+				LOGGER.warn("No proposition definitions retrieved");
+			} else {
+				for (PropositionDefinition definition : definitions) {
 					SystemElement element = PropositionUtil.toSystemElement(
-							definition, false, inUserId, this.finder);
-					result.add(element);
+					        definition, true, inUserId, this.finder);
+					allElements.add(element);
 				}
-			} catch (PropositionFindException e) {
-				throw new HttpStatusException(
-						Response.Status.INTERNAL_SERVER_ERROR, e);
+
+				Set<String> defaultPropositions = new HashSet<String>(
+				        this.serviceProperties.getDefaultSystemPropositions());
+				for (SystemElement element : allElements) {
+					if (defaultPropositions.contains(element.getKey())) {
+						result.add(element);
+						// some default propositions may be children of other
+						// default propositions, and we don't want them to show
+						// up twice
+						defaultPropositions.remove(element.getKey());
+					}
+				}
 			}
+		} catch (PropositionFindException e) {
+			throw new HttpStatusException(
+			        Response.Status.INTERNAL_SERVER_ERROR, e);
 		}
 		return result;
 	}
@@ -91,18 +112,19 @@ public class SystemElementResource {
 	@GET
 	@Path("/{userId}/{key}")
 	public SystemElement get(@PathParam("userId") Long inUserId,
-			@PathParam("key") String inKey) {
+	        @PathParam("key") String inKey) {
+		LOGGER.info("Finding system element {}", inKey);
 		PropositionDefinition definition;
 		try {
 			definition = this.finder.find(inUserId, inKey);
 			if (definition == null) {
 				throw new HttpStatusException(Response.Status.NOT_FOUND);
 			}
-			return PropositionUtil.toSystemElement(definition, false, inUserId, 
-					this.finder);
+			return PropositionUtil.toSystemElement(definition, false, inUserId,
+			        this.finder);
 		} catch (PropositionFindException ex) {
 			throw new HttpStatusException(
-						Response.Status.INTERNAL_SERVER_ERROR, ex);
+			        Response.Status.INTERNAL_SERVER_ERROR, ex);
 		}
 	}
 }
