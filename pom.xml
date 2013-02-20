@@ -13,7 +13,7 @@
 		and data into your own instance of the i2b2 data warehouse system.
 	</description>
 	<url>http://aiw.sourceforge.net/dev/eureka-${project.version}</url>
-
+	<inceptionYear>2012</inceptionYear>
 	<organization>
 		<name>Emory University</name>
 		<url>http://www.emory.edu</url>
@@ -453,13 +453,9 @@
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>license-maven-plugin</artifactId>
-				<version>1.0</version>
+				<version>1.4</version>
 				<configuration>
 					<licenseName>apache_v2</licenseName>
-					<verbose>false</verbose>
-					<organizationName>Emory University</organizationName>
-					<inceptionYear>2012</inceptionYear>
-					<canUpdateDescription>false</canUpdateDescription>
 					<roots>
 						<root>src/main</root>
 						<root>src/test/java/</root>

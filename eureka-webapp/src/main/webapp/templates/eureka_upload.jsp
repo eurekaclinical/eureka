@@ -2,7 +2,7 @@
   #%L
   Eureka WebApp
   %%
-  Copyright (C) 2012 Emory University
+  Copyright (C) 2012 - 2013 Emory University
   %%
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -92,18 +92,6 @@ ul.nav a { zoom: 1; }
 
 <div class="container">
 <div>
-<!--<div id="login">
-	   <label>User Name
-	   <input id="login_field" type="text" name="textfield" />
-	   </label>
-	   	   <label>Password
-	   <input id="login_field" type="text" name="textfield" />
-	   </label>
- 	       <input id="submit" type="submit" name="Submit" value="Log In" />
- <br />
- 	<span class="sub_text"><a href="forgot_password.html">Login Help</a></span>
-<br />
-    </div>-->
 <div class="header">
     <span><a href="${pageContext.request.contextPath}"><img src="${pageContext.request.contextPath}/images/tag_line.gif" alt="Data Analysis Tool" width="238" align="absmiddle" /></a></span>
 </div>
