@@ -24,8 +24,11 @@ import edu.emory.cci.aiw.cvrg.eureka.common.entity.DataElementEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.SystemProposition;
 import edu.emory.cci.aiw.cvrg.eureka.services.finder.PropositionFindException;
 import edu.emory.cci.aiw.cvrg.eureka.services.finder.SystemPropositionFinder;
+
+import org.arp.javautil.arrays.Arrays;
 import org.protempa.PropertyDefinition;
 import org.protempa.PropositionDefinition;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -69,8 +72,7 @@ public final class PropositionUtil {
 		SystemElement systemElement = new SystemElement();
 		systemElement.setKey(inDefinition.getId());
 		systemElement.setInSystem(true);
-		systemElement.setDescription(inDefinition
-		        .getAbbreviatedDisplayName());
+		systemElement.setDescription(inDefinition.getAbbreviatedDisplayName());
 		systemElement.setDisplayName(inDefinition.getDisplayName());
 		systemElement.setSummarized(summarize);
 		systemElement.setParent(inDefinition.getChildren().length > 0);
@@ -80,17 +82,13 @@ public final class PropositionUtil {
 
 		if (!summarize) {
 			List<SystemElement> children = new ArrayList<SystemElement>();
-			for (String key : inDefinition.getChildren()) {
-				PropositionDefinition pd = inPropositionFinder.find(inUserId,
-				        key);
-				if (pd != null) {
-					children.add(toSystemElement(pd, true, inUserId,
-					        inPropositionFinder));
-				} else {
-					throw new PropositionFindException("Could not find child '"
-					        + key + "' of proposition definition '"
-					        + inDefinition.getId() + "'");
-				}
+			List<PropositionDefinition> pds = inPropositionFinder.findAll(
+			        inUserId,
+			        Arrays.<String> asList(inDefinition.getChildren()),
+			        Boolean.FALSE);
+			for (PropositionDefinition pd : pds) {
+				children.add(toSystemElement(pd, true, inUserId,
+				        inPropositionFinder));
 			}
 			systemElement.setChildren(children);
 
