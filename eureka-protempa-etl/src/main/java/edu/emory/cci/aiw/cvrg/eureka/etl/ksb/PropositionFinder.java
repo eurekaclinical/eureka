@@ -62,7 +62,7 @@ public class PropositionFinder {
 		}
 	}
 	
-	private PropositionFinder(Configuration inConfiguration,
+	public PropositionFinder(Configuration inConfiguration,
 		String confDir) throws PropositionFinderException {
 		File etlConfDir = new File(confDir + "/" + CONFIG_DIR);
 		File defaultEtlConfDir = new File(confDir + "/" + DEFAULT_CONFIG_DIR);
