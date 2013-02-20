@@ -20,6 +20,8 @@
 package edu.emory.cci.aiw.cvrg.eureka.etl.ksb;
 
 import java.io.File;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.protempa.KnowledgeSource;
 import org.protempa.KnowledgeSourceReadException;
@@ -46,8 +48,21 @@ public class PropositionFinder {
 	private static final String CONF_PREFIX = "config";
 	private static final String DEFAULT_CONF_FILE = "defaults.ini";
 	private final KnowledgeSource knowledgeSource;
+	
+	private static Map<Long, PropositionFinder> userPropFinderMap = new HashMap<Long, PropositionFinder>();
 
-	public PropositionFinder(Configuration inConfiguration,
+	public static PropositionFinder get(Configuration inConfiguration,
+	        String confDir) throws PropositionFinderException {
+		if (userPropFinderMap.containsKey(inConfiguration.getId())) {
+			return userPropFinderMap.get(inConfiguration.getId());
+		} else {
+			PropositionFinder result = new PropositionFinder(inConfiguration, confDir);
+			userPropFinderMap.put(inConfiguration.getId(), result);
+			return result;
+		}
+	}
+	
+	private PropositionFinder(Configuration inConfiguration,
 		String confDir) throws PropositionFinderException {
 		File etlConfDir = new File(confDir + "/" + CONFIG_DIR);
 		File defaultEtlConfDir = new File(confDir + "/" + DEFAULT_CONFIG_DIR);
@@ -56,6 +71,7 @@ public class PropositionFinder {
 		try {
 			String idStr = String.valueOf(confId.longValue());
 			String confFileName = CONF_PREFIX + idStr + ".ini";
+			LOGGER.info("Creating new configurations, source factory, and knowledge source");
 			Configurations configurations = new INICommonsConfigurations
 				(etlConfDir);
 			SourceFactory sf = new SourceFactory(
@@ -73,6 +89,7 @@ public class PropositionFinder {
 				}
 			}
 			this.knowledgeSource = ks;
+			LOGGER.info("Done");
 		} catch (BackendProviderSpecLoaderException e) {
 			throw new PropositionFinderException(e);
 		} catch (InvalidConfigurationException e) {
