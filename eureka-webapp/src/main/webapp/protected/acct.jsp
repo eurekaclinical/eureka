@@ -80,7 +80,7 @@
 					</tr>
 					<tr>
 						<td class=" white">
-							<label>Re-enter New Password</label>
+							<label>Re-enter New Password:</label>
 						</td>
 						<td class="field white">
 							<input type="password" name="verifyPassword" id="verifyPassword" />
