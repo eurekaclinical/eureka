@@ -38,6 +38,9 @@ import com.google.inject.servlet.GuiceServletContextListener;
 
 import edu.emory.cci.aiw.cvrg.eureka.services.finder.SystemPropositionFinder;
 import edu.emory.cci.aiw.cvrg.eureka.services.thread.JobUpdateTask;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
 
 /**
  * Set up the Guice dependency injection engine. Uses two modules:
@@ -49,6 +52,7 @@ import edu.emory.cci.aiw.cvrg.eureka.services.thread.JobUpdateTask;
  */
 public class ConfigListener extends GuiceServletContextListener {
 
+	private static final String JPA_UNIT = "services-jpa-unit";
 	/**
 	 * A timer scheduler to run the job update task.
 	 */
@@ -58,11 +62,7 @@ public class ConfigListener extends GuiceServletContextListener {
 	 * Make sure we always use the same injector
 	 */
 	private final Injector injector = Guice.createInjector(new ServletModule(),
-			new AppModule(), new JpaPersistModule("services-jpa-unit"));
-	/**
-	 * The persistence service for the application.
-	 */
-	private PersistService persistService = null;
+			new AppModule(), new JpaPersistModule(JPA_UNIT));
 
 	@Override
 	protected Injector getInjector() {
@@ -74,27 +74,37 @@ public class ConfigListener extends GuiceServletContextListener {
 	private static final Logger LOGGER = LoggerFactory
 			.getLogger(ConfigListener.class);
 
-	/*
-	 * @see
-	 * com.google.inject.servlet.GuiceServletContextListener#contextInitialized
-	 * (javax.servlet.ServletContextEvent)
-	 */
 	@Override
 	public void contextInitialized(ServletContextEvent inServletContextEvent) {
 		super.contextInitialized(inServletContextEvent);
-		
-		Injector injector = this.getInjector();
 
-		this.persistService = injector.getInstance(PersistService.class);
-		this.persistService.start();
-		
-		DatabasePopulator populator = injector.getInstance(DatabasePopulator
-				.class);
-		populator.doPopulateIfNeeded();
-		
-		DatabaseMigrator migrator = injector.getInstance(DatabaseMigrator
-				.class);
-		migrator.doMigrateIfNeeded();
+		EntityManagerFactory factory =
+				Persistence.createEntityManagerFactory(JPA_UNIT);
+		try {
+			EntityManager entityManager = factory.createEntityManager();
+			try {
+				DatabasePopulator dp = new DatabasePopulator(entityManager);
+				dp.doPopulateIfNeeded();
+				entityManager.close();
+				entityManager = null;
+			} finally {
+				if (entityManager != null) {
+					try {
+						entityManager.close();
+					} catch (Exception ignore) {
+					}
+				}
+			}
+			factory.close();
+			factory = null;
+		} finally {
+			if (factory != null) {
+				try {
+					factory.close();
+				} catch (Exception ignore) {
+				}
+			}
+		}
 
 		try {
 			ServiceProperties applicationProperties = injector
@@ -110,17 +120,9 @@ public class ConfigListener extends GuiceServletContextListener {
 		}
 	}
 
-	/*
-	 * @see
-	 * com.google.inject.servlet.GuiceServletContextListener#contextDestroyed
-	 * (javax.servlet.ServletContextEvent)
-	 */
 	@Override
 	public void contextDestroyed(ServletContextEvent inServletContextEvent) {
 		super.contextDestroyed(inServletContextEvent);
-		if (this.persistService != null) {
-			this.persistService.stop();
-		}
 		this.executorService.shutdown();
 		try {
 			this.executorService.awaitTermination(10, TimeUnit.SECONDS);
@@ -128,7 +130,7 @@ public class ConfigListener extends GuiceServletContextListener {
 			LOGGER.error(e.getMessage(), e);
 		}
 
-		SystemPropositionFinder finder = 
+		SystemPropositionFinder finder =
 				this.getInjector().getInstance(SystemPropositionFinder.class);
 		finder.shutdown();
 	}

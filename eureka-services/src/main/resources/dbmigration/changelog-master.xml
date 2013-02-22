@@ -11,503 +11,666 @@
   
        http://www.apache.org/licenses/LICENSE-2.0
   
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-  #L%
-  -->
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+#L%
+-->
 
-<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd">
-    <changeSet author="arpost (generated)" id="1360440238345-1">
-        <createTable tableName="CATEGORIES">
-            <column name="ID" type="NUMBER(19,0)">
-                <constraints nullable="false" primaryKey="true" primaryKeyName="SYS_C0013388" primaryKeyTablespace="SYSTEM"/>
-            </column>
-        </createTable>
-    </changeSet>
-    <changeSet author="arpost (generated)" id="1360440238345-2">
-        <createTable tableName="CATEGORY_MEMBERS">
-            <column name="CATEGORY_ID" type="NUMBER(19,0)">
-                <constraints nullable="false"/>
-            </column>
-            <column name="MEMBER_ID" type="NUMBER(19,0)">
-                <constraints nullable="false"/>
-            </column>
-        </createTable>
-    </changeSet>
-    <changeSet author="arpost (generated)" id="1360440238345-3">
-        <createTable tableName="DATA_ELEMENTS">
-            <column name="ID" type="NUMBER(19,0)">
-                <constraints nullable="false" primaryKey="true" primaryKeyName="SYS_C0013396" primaryKeyTablespace="SYSTEM"/>
-            </column>
-            <column name="CATEGORYTYPE" type="NUMBER(10,0)">
-                <constraints nullable="false"/>
-            </column>
-            <column name="CREATED" type="TIMESTAMP(6)"/>
-            <column name="DESCRIPTION" type="CLOB"/>
-            <column name="DISPLAYNAME" type="VARCHAR2(255 CHAR)"/>
-            <column name="INSYSTEM" type="NUMBER(1,0)">
-                <constraints nullable="false"/>
-            </column>
-            <column name="KEY" type="VARCHAR2(255 CHAR)">
-                <constraints nullable="false"/>
-            </column>
-            <column name="LASTMODIFIED" type="TIMESTAMP(6)"/>
-            <column name="USER_ID" type="NUMBER(19,0)">
-                <constraints nullable="false"/>
-            </column>
-        </createTable>
-    </changeSet>
-    <changeSet author="arpost (generated)" id="1360440238345-4">
-        <createTable tableName="EXTENDED_DATA_ELEMENTS">
-            <column name="ID" type="NUMBER(19,0)">
-                <constraints nullable="false" primaryKey="true" primaryKeyName="SYS_C0013402" primaryKeyTablespace="SYSTEM"/>
-            </column>
-            <column name="MAXDURATION" type="NUMBER(10,0)"/>
-            <column name="MINDURATION" type="NUMBER(10,0)"/>
-            <column name="DATAELEMENT_ID" type="NUMBER(19,0)">
-                <constraints nullable="false"/>
-            </column>
-            <column name="MAXDURATIONTIMEUNIT_ID" type="NUMBER(19,0)">
-                <constraints nullable="false"/>
-            </column>
-            <column name="MINDURATIONTIMEUNIT_ID" type="NUMBER(19,0)">
-                <constraints nullable="false"/>
-            </column>
-            <column name="PROPERTYCONSTRAINT_ID" type="NUMBER(19,0)"/>
-        </createTable>
-    </changeSet>
-    <changeSet author="arpost (generated)" id="1360440238345-5">
-        <createTable tableName="FILE_ERRORS">
-            <column name="ID" type="NUMBER(19,0)">
-                <constraints nullable="false" primaryKey="true" primaryKeyName="SYS_C0013404" primaryKeyTablespace="SYSTEM"/>
-            </column>
-            <column name="LINENUMBER" type="NUMBER(19,0)"/>
-            <column name="TEXT" type="VARCHAR2(255 CHAR)"/>
-            <column name="TYPE" type="VARCHAR2(255 CHAR)"/>
-            <column name="FILEUPLOAD_ID" type="NUMBER(19,0)"/>
-        </createTable>
-    </changeSet>
-    <changeSet author="arpost (generated)" id="1360440238345-6">
-        <createTable tableName="FILE_UPLOADS">
-            <column name="ID" type="NUMBER(19,0)">
-                <constraints nullable="false" primaryKey="true" primaryKeyName="SYS_C0013412" primaryKeyTablespace="SYSTEM"/>
-            </column>
-            <column name="COMPLETED" type="NUMBER(1,0)">
-                <constraints nullable="false"/>
-            </column>
-            <column name="LOCATION" type="VARCHAR2(255 CHAR)">
-                <constraints nullable="false"/>
-            </column>
-            <column name="PROCESSED" type="NUMBER(1,0)">
-                <constraints nullable="false"/>
-            </column>
-            <column name="TIMESTAMP" type="TIMESTAMP(6)">
-                <constraints nullable="false"/>
-            </column>
-            <column name="USERID" type="NUMBER(19,0)">
-                <constraints nullable="false"/>
-            </column>
-            <column name="VALIDATED" type="NUMBER(1,0)">
-                <constraints nullable="false"/>
-            </column>
-        </createTable>
-    </changeSet>
-    <changeSet author="arpost (generated)" id="1360440238345-7">
-        <createTable tableName="FILE_WARNINGS">
-            <column name="ID" type="NUMBER(19,0)">
-                <constraints nullable="false" primaryKey="true" primaryKeyName="SYS_C0013414" primaryKeyTablespace="SYSTEM"/>
-            </column>
-            <column name="LINENUMBER" type="NUMBER(19,0)"/>
-            <column name="TEXT" type="VARCHAR2(255 CHAR)"/>
-            <column name="TYPE" type="VARCHAR2(255 CHAR)"/>
-            <column name="FILEUPLOAD_ID" type="NUMBER(19,0)"/>
-        </createTable>
-    </changeSet>
-    <changeSet author="arpost (generated)" id="1360440238345-8">
-        <createTable tableName="FREQUENCIES">
-            <column name="ATLEASTCOUNT" type="NUMBER(10,0)">
-                <constraints nullable="false"/>
-            </column>
-            <column name="CONSECUTIVE" type="NUMBER(1,0)">
-                <constraints nullable="false"/>
-            </column>
-            <column name="WITHINATLEAST" type="NUMBER(10,0)"/>
-            <column name="WITHINATMOST" type="NUMBER(10,0)"/>
-            <column name="ID" type="NUMBER(19,0)">
-                <constraints nullable="false" primaryKey="true" primaryKeyName="SYS_C0013419" primaryKeyTablespace="SYSTEM"/>
-            </column>
-            <column name="EXTENDEDDATAELEMENT_ID" type="NUMBER(19,0)">
-                <constraints nullable="false"/>
-            </column>
-            <column name="WITHINATLEASTUNITS_ID" type="NUMBER(19,0)"/>
-            <column name="WITHINATMOSTUNITS_ID" type="NUMBER(19,0)"/>
-        </createTable>
-    </changeSet>
-    <changeSet author="arpost (generated)" id="1360440238345-9">
-        <createTable tableName="PROPERTY_CONSTRAINTS">
-            <column name="ID" type="NUMBER(19,0)">
-                <constraints nullable="false" primaryKey="true" primaryKeyName="SYS_C0013422" primaryKeyTablespace="SYSTEM"/>
-            </column>
-            <column name="PROPERTYNAME" type="VARCHAR2(255 CHAR)">
-                <constraints nullable="false"/>
-            </column>
-            <column name="VALUE" type="VARCHAR2(255 CHAR)"/>
-            <column name="VALUECOMPARATOR_ID" type="NUMBER(19,0)"/>
-        </createTable>
-    </changeSet>
-    <changeSet author="arpost (generated)" id="1360440238345-10">
-        <createTable tableName="RELATION_OPS">
-            <column name="ID" type="NUMBER(19,0)">
-                <constraints nullable="false" primaryKey="true" primaryKeyName="SYS_C0013425" primaryKeyTablespace="SYSTEM"/>
-            </column>
-            <column name="DESCRIPTION" type="VARCHAR2(255 CHAR)"/>
-            <column name="NAME" type="VARCHAR2(255 CHAR)">
-                <constraints nullable="false"/>
-            </column>
-        </createTable>
-    </changeSet>
-    <changeSet author="arpost (generated)" id="1360440238345-11">
-        <createTable tableName="RELATIONS">
-            <column name="ID" type="NUMBER(19,0)">
-                <constraints nullable="false" primaryKey="true" primaryKeyName="SYS_C0013431" primaryKeyTablespace="SYSTEM"/>
-            </column>
-            <column name="MAXF1S2" type="NUMBER(10,0)"/>
-            <column name="MAXS1F2" type="NUMBER(10,0)"/>
-            <column name="MINF1S2" type="NUMBER(10,0)"/>
-            <column name="MINS1F2" type="NUMBER(10,0)"/>
-            <column name="LHSEXTENDEDDATAELEMENT_ID" type="NUMBER(19,0)">
-                <constraints nullable="false"/>
-            </column>
-            <column name="MAXF1S2TIMEUNIT_ID" type="NUMBER(19,0)"/>
-            <column name="MAXS1F2TIMEUNIT_ID" type="NUMBER(19,0)"/>
-            <column name="MINF1S2TIMEUNIT_ID" type="NUMBER(19,0)"/>
-            <column name="MINS1F2TIMEUNIT_ID" type="NUMBER(19,0)"/>
-            <column name="RELATIONOP_ID" type="NUMBER(19,0)">
-                <constraints nullable="false"/>
-            </column>
-            <column name="RHSEXTENDEDDATAELEMENT_ID" type="NUMBER(19,0)">
-                <constraints nullable="false"/>
-            </column>
-            <column name="SEQUENCE_ID" type="NUMBER(19,0)"/>
-        </createTable>
-    </changeSet>
-    <changeSet author="arpost (generated)" id="1360440238345-12">
-        <createTable tableName="ROLES">
-            <column name="ID" type="NUMBER(19,0)">
-                <constraints nullable="false" primaryKey="true" primaryKeyName="SYS_C0013014" primaryKeyTablespace="SYSTEM"/>
-            </column>
-            <column name="DEFAULTROLE" type="NUMBER(1,0)">
-                <constraints nullable="false"/>
-            </column>
-            <column name="NAME" type="VARCHAR2(255 CHAR)">
-                <constraints nullable="false"/>
-            </column>
-        </createTable>
-    </changeSet>
-    <changeSet author="arpost (generated)" id="1360440238345-13">
-        <createTable tableName="SEQUENCES">
-            <column name="ID" type="NUMBER(19,0)">
-                <constraints nullable="false" primaryKey="true" primaryKeyName="SYS_C0013433" primaryKeyTablespace="SYSTEM"/>
-            </column>
-            <column name="PRIMARYEXTENDEDDATAELEMENT_ID" type="NUMBER(19,0)"/>
-        </createTable>
-    </changeSet>
-    <changeSet author="arpost (generated)" id="1360440238345-14">
-        <createTable tableName="SYSTEM_DATA_ELEMENTS">
-            <column name="SYSTEMTYPE" type="VARCHAR2(255 CHAR)">
-                <constraints nullable="false"/>
-            </column>
-            <column name="ID" type="NUMBER(19,0)">
-                <constraints nullable="false" primaryKey="true" primaryKeyName="SYS_C0013436" primaryKeyTablespace="SYSTEM"/>
-            </column>
-        </createTable>
-    </changeSet>
-    <changeSet author="arpost (generated)" id="1360440238345-15">
-        <createTable tableName="THRESHOLDS_OPS">
-            <column name="ID" type="NUMBER(19,0)">
-                <constraints nullable="false" primaryKey="true" primaryKeyName="SYS_C0013439" primaryKeyTablespace="SYSTEM"/>
-            </column>
-            <column name="DESCRIPTION" type="VARCHAR2(255 CHAR)"/>
-            <column name="NAME" type="VARCHAR2(255 CHAR)">
-                <constraints nullable="false"/>
-            </column>
-        </createTable>
-    </changeSet>
-    <changeSet author="arpost (generated)" id="1360440238345-16">
-        <createTable tableName="TIME_UNITS">
-            <column name="ID" type="NUMBER(19,0)">
-                <constraints nullable="false" primaryKey="true" primaryKeyName="SYS_C0013443" primaryKeyTablespace="SYSTEM"/>
-            </column>
-            <column name="DESCRIPTION" type="VARCHAR2(255 CHAR)"/>
-            <column name="NAME" type="VARCHAR2(255 CHAR)">
-                <constraints nullable="false"/>
-            </column>
-            <column name="RANK" type="NUMBER(10,0)"/>
-        </createTable>
-    </changeSet>
-    <changeSet author="arpost (generated)" id="1360440238345-17">
-        <createTable tableName="USER_ROLE">
-            <column name="USER_ID" type="NUMBER(19,0)">
-                <constraints nullable="false"/>
-            </column>
-            <column name="ROLE_ID" type="NUMBER(19,0)">
-                <constraints nullable="false"/>
-            </column>
-        </createTable>
-    </changeSet>
-    <changeSet author="arpost (generated)" id="1360440238345-18">
-        <createTable tableName="USERS">
-            <column name="ID" type="NUMBER(19,0)">
-                <constraints nullable="false" primaryKey="true" primaryKeyName="SYS_C0013037" primaryKeyTablespace="SYSTEM"/>
-            </column>
-            <column name="ACTIVE" type="NUMBER(1,0)">
-                <constraints nullable="false"/>
-            </column>
-            <column name="EMAIL" type="VARCHAR2(255 CHAR)">
-                <constraints nullable="false"/>
-            </column>
-            <column name="FIRSTNAME" type="VARCHAR2(255 CHAR)"/>
-            <column name="LASTLOGIN" type="TIMESTAMP(6)"/>
-            <column name="LASTNAME" type="VARCHAR2(255 CHAR)"/>
-            <column name="ORGANIZATION" type="VARCHAR2(255 CHAR)"/>
-            <column name="PASSWORD" type="VARCHAR2(255 CHAR)">
-                <constraints nullable="false"/>
-            </column>
-            <column name="PASSWORDEXPIRATION" type="TIMESTAMP(6)"/>
-            <column name="VERIFICATIONCODE" type="VARCHAR2(255 CHAR)"/>
-            <column name="VERIFIED" type="NUMBER(1,0)">
-                <constraints nullable="false"/>
-            </column>
-        </createTable>
-    </changeSet>
-    <changeSet author="arpost (generated)" id="1360440238345-19">
-        <createTable tableName="VALUE_COMPARATORS">
-            <column name="ID" type="NUMBER(19,0)">
-                <constraints nullable="false" primaryKey="true" primaryKeyName="SYS_C0013450" primaryKeyTablespace="SYSTEM"/>
-            </column>
-            <column name="DESCRIPTION" type="VARCHAR2(255 CHAR)"/>
-            <column name="NAME" type="VARCHAR2(255 CHAR)">
-                <constraints nullable="false"/>
-            </column>
-            <column name="RANK" type="NUMBER(19,0)">
-                <constraints nullable="false"/>
-            </column>
-            <column name="THRESHOLD" type="VARCHAR2(255 CHAR)">
-                <constraints nullable="false"/>
-            </column>
-            <column name="COMPLEMENT_ID" type="NUMBER(19,0)"/>
-        </createTable>
-    </changeSet>
-    <changeSet author="arpost (generated)" id="1360440238345-20">
-        <createTable tableName="VALUE_THRESHOLD_GROUPS">
-            <column name="ID" type="NUMBER(19,0)">
-                <constraints nullable="false" primaryKey="true" primaryKeyName="SYS_C0013455" primaryKeyTablespace="SYSTEM"/>
-            </column>
-            <column name="THRESHOLDSOP_ID" type="NUMBER(19,0)">
-                <constraints nullable="false"/>
-            </column>
-        </createTable>
-    </changeSet>
-    <changeSet author="arpost (generated)" id="1360440238345-21">
-        <createTable tableName="VALUE_THRESHOLDS">
-            <column name="ID" type="NUMBER(19,0)">
-                <constraints nullable="false" primaryKey="true" primaryKeyName="SYS_C0013461" primaryKeyTablespace="SYSTEM"/>
-            </column>
-            <column name="MAXTVALUETHRESHOLD" type="VARCHAR2(255 CHAR)"/>
-            <column name="MAXUNITS" type="VARCHAR2(255 CHAR)"/>
-            <column name="MAXVALUETHRESHOLD" type="NUMBER(19,2)"/>
-            <column name="MINTVALUETHRESHOLD" type="VARCHAR2(255 CHAR)"/>
-            <column name="MINUNITS" type="VARCHAR2(255 CHAR)"/>
-            <column name="MINVALUETHRESHOLD" type="NUMBER(19,2)"/>
-            <column name="ABSTRACTEDFROM_ID" type="NUMBER(19,0)">
-                <constraints nullable="false"/>
-            </column>
-            <column name="MAXVALUECOMP_ID" type="NUMBER(19,0)">
-                <constraints nullable="false"/>
-            </column>
-            <column name="MINVALUECOMP_ID" type="NUMBER(19,0)">
-                <constraints nullable="false"/>
-            </column>
-            <column name="VALUETHRESHOLDSGROUP_ID" type="NUMBER(19,0)">
-                <constraints nullable="false"/>
-            </column>
-        </createTable>
-    </changeSet>
-    <changeSet author="arpost (generated)" id="1360440238345-22">
-        <addUniqueConstraint columnNames="KEY, USER_ID" constraintName="SYS_C0013397" deferrable="false" disabled="false" initiallyDeferred="false" tableName="DATA_ELEMENTS" tablespace="SYSTEM"/>
-    </changeSet>
-    <changeSet author="arpost (generated)" id="1360440238345-23">
-        <addUniqueConstraint columnNames="NAME" constraintName="SYS_C0013426" deferrable="false" disabled="false" initiallyDeferred="false" tableName="RELATION_OPS" tablespace="SYSTEM"/>
-    </changeSet>
-    <changeSet author="arpost (generated)" id="1360440238345-24">
-        <addUniqueConstraint columnNames="NAME" constraintName="SYS_C0013015" deferrable="false" disabled="false" initiallyDeferred="false" tableName="ROLES" tablespace="SYSTEM"/>
-    </changeSet>
-    <changeSet author="arpost (generated)" id="1360440238345-25">
-        <addUniqueConstraint columnNames="NAME" constraintName="SYS_C0013440" deferrable="false" disabled="false" initiallyDeferred="false" tableName="THRESHOLDS_OPS" tablespace="SYSTEM"/>
-    </changeSet>
-    <changeSet author="arpost (generated)" id="1360440238345-26">
-        <addUniqueConstraint columnNames="NAME" constraintName="SYS_C0013444" deferrable="false" disabled="false" initiallyDeferred="false" tableName="TIME_UNITS" tablespace="SYSTEM"/>
-    </changeSet>
-    <changeSet author="arpost (generated)" id="1360440238345-27">
-        <addUniqueConstraint columnNames="RANK" constraintName="SYS_C0013445" deferrable="false" disabled="false" initiallyDeferred="false" tableName="TIME_UNITS" tablespace="SYSTEM"/>
-    </changeSet>
-    <changeSet author="arpost (generated)" id="1360440238345-28">
-        <addUniqueConstraint columnNames="EMAIL" constraintName="SYS_C0013038" deferrable="false" disabled="false" initiallyDeferred="false" tableName="USERS" tablespace="SYSTEM"/>
-    </changeSet>
-    <changeSet author="arpost (generated)" id="1360440238345-29">
-        <addUniqueConstraint columnNames="NAME" constraintName="SYS_C0013451" deferrable="false" disabled="false" initiallyDeferred="false" tableName="VALUE_COMPARATORS" tablespace="SYSTEM"/>
-    </changeSet>
-    <changeSet author="arpost (generated)" id="1360440238345-30">
-        <addUniqueConstraint columnNames="RANK" constraintName="SYS_C0013452" deferrable="false" disabled="false" initiallyDeferred="false" tableName="VALUE_COMPARATORS" tablespace="SYSTEM"/>
-    </changeSet>
-    <changeSet author="arpost (generated)" id="1360440238345-31">
-        <addForeignKeyConstraint baseColumnNames="ID" baseTableName="CATEGORIES" baseTableSchemaName="EUREKASERVICE" constraintName="FK4D47461C2DAC163D" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" referencedColumnNames="ID" referencedTableName="DATA_ELEMENTS" referencedTableSchemaName="EUREKASERVICE" referencesUniqueColumn="false"/>
-    </changeSet>
-    <changeSet author="arpost (generated)" id="1360440238345-32">
-        <addForeignKeyConstraint baseColumnNames="CATEGORY_ID" baseTableName="CATEGORY_MEMBERS" baseTableSchemaName="EUREKASERVICE" constraintName="FK38B4ED8976806F0" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" referencedColumnNames="ID" referencedTableName="CATEGORIES" referencedTableSchemaName="EUREKASERVICE" referencesUniqueColumn="false"/>
-    </changeSet>
-    <changeSet author="arpost (generated)" id="1360440238345-33">
-        <addForeignKeyConstraint baseColumnNames="MEMBER_ID" baseTableName="CATEGORY_MEMBERS" baseTableSchemaName="EUREKASERVICE" constraintName="FK38B4ED87DACB202" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" referencedColumnNames="ID" referencedTableName="DATA_ELEMENTS" referencedTableSchemaName="EUREKASERVICE" referencesUniqueColumn="false"/>
-    </changeSet>
-    <changeSet author="arpost (generated)" id="1360440238345-34">
-        <addForeignKeyConstraint baseColumnNames="DATAELEMENT_ID" baseTableName="EXTENDED_DATA_ELEMENTS" baseTableSchemaName="EUREKASERVICE" constraintName="FK18762966D16F0D8A" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" referencedColumnNames="ID" referencedTableName="DATA_ELEMENTS" referencedTableSchemaName="EUREKASERVICE" referencesUniqueColumn="false"/>
-    </changeSet>
-    <changeSet author="arpost (generated)" id="1360440238345-35">
-        <addForeignKeyConstraint baseColumnNames="MAXDURATIONTIMEUNIT_ID" baseTableName="EXTENDED_DATA_ELEMENTS" baseTableSchemaName="EUREKASERVICE" constraintName="FK187629663C3904F5" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" referencedColumnNames="ID" referencedTableName="TIME_UNITS" referencedTableSchemaName="EUREKASERVICE" referencesUniqueColumn="false"/>
-    </changeSet>
-    <changeSet author="arpost (generated)" id="1360440238345-36">
-        <addForeignKeyConstraint baseColumnNames="MINDURATIONTIMEUNIT_ID" baseTableName="EXTENDED_DATA_ELEMENTS" baseTableSchemaName="EUREKASERVICE" constraintName="FK1876296694AE5147" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" referencedColumnNames="ID" referencedTableName="TIME_UNITS" referencedTableSchemaName="EUREKASERVICE" referencesUniqueColumn="false"/>
-    </changeSet>
-    <changeSet author="arpost (generated)" id="1360440238345-37">
-        <addForeignKeyConstraint baseColumnNames="PROPERTYCONSTRAINT_ID" baseTableName="EXTENDED_DATA_ELEMENTS" baseTableSchemaName="EUREKASERVICE" constraintName="FK187629668A6E938D" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" referencedColumnNames="ID" referencedTableName="PROPERTY_CONSTRAINTS" referencedTableSchemaName="EUREKASERVICE" referencesUniqueColumn="false"/>
-    </changeSet>
-    <changeSet author="arpost (generated)" id="1360440238345-38">
-        <addForeignKeyConstraint baseColumnNames="FILEUPLOAD_ID" baseTableName="FILE_ERRORS" baseTableSchemaName="EUREKASERVICE" constraintName="FK6239938EACFDA6AD" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" referencedColumnNames="ID" referencedTableName="FILE_UPLOADS" referencedTableSchemaName="EUREKASERVICE" referencesUniqueColumn="false"/>
-    </changeSet>
-    <changeSet author="arpost (generated)" id="1360440238345-39">
-        <addForeignKeyConstraint baseColumnNames="FILEUPLOAD_ID" baseTableName="FILE_WARNINGS" baseTableSchemaName="EUREKASERVICE" constraintName="FK849BEBBAACFDA6AD" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" referencedColumnNames="ID" referencedTableName="FILE_UPLOADS" referencedTableSchemaName="EUREKASERVICE" referencesUniqueColumn="false"/>
-    </changeSet>
-    <changeSet author="arpost (generated)" id="1360440238345-40">
-        <addForeignKeyConstraint baseColumnNames="EXTENDEDDATAELEMENT_ID" baseTableName="FREQUENCIES" baseTableSchemaName="EUREKASERVICE" constraintName="FK55076EFA858DC647" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" referencedColumnNames="ID" referencedTableName="EXTENDED_DATA_ELEMENTS" referencedTableSchemaName="EUREKASERVICE" referencesUniqueColumn="false"/>
-    </changeSet>
-    <changeSet author="arpost (generated)" id="1360440238345-41">
-        <addForeignKeyConstraint baseColumnNames="ID" baseTableName="FREQUENCIES" baseTableSchemaName="EUREKASERVICE" constraintName="FK55076EFA2DAC163D" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" referencedColumnNames="ID" referencedTableName="DATA_ELEMENTS" referencedTableSchemaName="EUREKASERVICE" referencesUniqueColumn="false"/>
-    </changeSet>
-    <changeSet author="arpost (generated)" id="1360440238345-42">
-        <addForeignKeyConstraint baseColumnNames="WITHINATLEASTUNITS_ID" baseTableName="FREQUENCIES" baseTableSchemaName="EUREKASERVICE" constraintName="FK55076EFA7DB3C4DA" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" referencedColumnNames="ID" referencedTableName="TIME_UNITS" referencedTableSchemaName="EUREKASERVICE" referencesUniqueColumn="false"/>
-    </changeSet>
-    <changeSet author="arpost (generated)" id="1360440238345-43">
-        <addForeignKeyConstraint baseColumnNames="WITHINATMOSTUNITS_ID" baseTableName="FREQUENCIES" baseTableSchemaName="EUREKASERVICE" constraintName="FK55076EFA984A25F0" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" referencedColumnNames="ID" referencedTableName="TIME_UNITS" referencedTableSchemaName="EUREKASERVICE" referencesUniqueColumn="false"/>
-    </changeSet>
-    <changeSet author="arpost (generated)" id="1360440238345-44">
-        <addForeignKeyConstraint baseColumnNames="VALUECOMPARATOR_ID" baseTableName="PROPERTY_CONSTRAINTS" baseTableSchemaName="EUREKASERVICE" constraintName="FK416CACC9BE4E667" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" referencedColumnNames="ID" referencedTableName="VALUE_COMPARATORS" referencedTableSchemaName="EUREKASERVICE" referencesUniqueColumn="false"/>
-    </changeSet>
-    <changeSet author="arpost (generated)" id="1360440238345-45">
-        <addForeignKeyConstraint baseColumnNames="LHSEXTENDEDDATAELEMENT_ID" baseTableName="RELATIONS" baseTableSchemaName="EUREKASERVICE" constraintName="FKFF8B45F7FED8257E" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" referencedColumnNames="ID" referencedTableName="EXTENDED_DATA_ELEMENTS" referencedTableSchemaName="EUREKASERVICE" referencesUniqueColumn="false"/>
-    </changeSet>
-    <changeSet author="arpost (generated)" id="1360440238345-46">
-        <addForeignKeyConstraint baseColumnNames="MAXF1S2TIMEUNIT_ID" baseTableName="RELATIONS" baseTableSchemaName="EUREKASERVICE" constraintName="FKFF8B45F7A3126ADF" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" referencedColumnNames="ID" referencedTableName="TIME_UNITS" referencedTableSchemaName="EUREKASERVICE" referencesUniqueColumn="false"/>
-    </changeSet>
-    <changeSet author="arpost (generated)" id="1360440238345-47">
-        <addForeignKeyConstraint baseColumnNames="MAXS1F2TIMEUNIT_ID" baseTableName="RELATIONS" baseTableSchemaName="EUREKASERVICE" constraintName="FKFF8B45F7168F7B9F" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" referencedColumnNames="ID" referencedTableName="TIME_UNITS" referencedTableSchemaName="EUREKASERVICE" referencesUniqueColumn="false"/>
-    </changeSet>
-    <changeSet author="arpost (generated)" id="1360440238345-48">
-        <addForeignKeyConstraint baseColumnNames="MINF1S2TIMEUNIT_ID" baseTableName="RELATIONS" baseTableSchemaName="EUREKASERVICE" constraintName="FKFF8B45F758AEB031" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" referencedColumnNames="ID" referencedTableName="TIME_UNITS" referencedTableSchemaName="EUREKASERVICE" referencesUniqueColumn="false"/>
-    </changeSet>
-    <changeSet author="arpost (generated)" id="1360440238345-49">
-        <addForeignKeyConstraint baseColumnNames="MINS1F2TIMEUNIT_ID" baseTableName="RELATIONS" baseTableSchemaName="EUREKASERVICE" constraintName="FKFF8B45F7CC2BC0F1" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" referencedColumnNames="ID" referencedTableName="TIME_UNITS" referencedTableSchemaName="EUREKASERVICE" referencesUniqueColumn="false"/>
-    </changeSet>
-    <changeSet author="arpost (generated)" id="1360440238345-50">
-        <addForeignKeyConstraint baseColumnNames="RELATIONOP_ID" baseTableName="RELATIONS" baseTableSchemaName="EUREKASERVICE" constraintName="FKFF8B45F7459AEE30" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" referencedColumnNames="ID" referencedTableName="RELATION_OPS" referencedTableSchemaName="EUREKASERVICE" referencesUniqueColumn="false"/>
-    </changeSet>
-    <changeSet author="arpost (generated)" id="1360440238345-51">
-        <addForeignKeyConstraint baseColumnNames="RHSEXTENDEDDATAELEMENT_ID" baseTableName="RELATIONS" baseTableSchemaName="EUREKASERVICE" constraintName="FKFF8B45F717F9F384" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" referencedColumnNames="ID" referencedTableName="EXTENDED_DATA_ELEMENTS" referencedTableSchemaName="EUREKASERVICE" referencesUniqueColumn="false"/>
-    </changeSet>
-    <changeSet author="arpost (generated)" id="1360440238345-52">
-        <addForeignKeyConstraint baseColumnNames="SEQUENCE_ID" baseTableName="RELATIONS" baseTableSchemaName="EUREKASERVICE" constraintName="FKFF8B45F765DA0DD0" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" referencedColumnNames="ID" referencedTableName="SEQUENCES" referencedTableSchemaName="EUREKASERVICE" referencesUniqueColumn="false"/>
-    </changeSet>
-    <changeSet author="arpost (generated)" id="1360440238345-53">
-        <addForeignKeyConstraint baseColumnNames="ID" baseTableName="SEQUENCES" baseTableSchemaName="EUREKASERVICE" constraintName="FKBD9E80D22DAC163D" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" referencedColumnNames="ID" referencedTableName="DATA_ELEMENTS" referencedTableSchemaName="EUREKASERVICE" referencesUniqueColumn="false"/>
-    </changeSet>
-    <changeSet author="arpost (generated)" id="1360440238345-54">
-        <addForeignKeyConstraint baseColumnNames="PRIMARYEXTENDEDDATAELEMENT_ID" baseTableName="SEQUENCES" baseTableSchemaName="EUREKASERVICE" constraintName="FKBD9E80D281CF86C9" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" referencedColumnNames="ID" referencedTableName="EXTENDED_DATA_ELEMENTS" referencedTableSchemaName="EUREKASERVICE" referencesUniqueColumn="false"/>
-    </changeSet>
-    <changeSet author="arpost (generated)" id="1360440238345-55">
-        <addForeignKeyConstraint baseColumnNames="ID" baseTableName="SYSTEM_DATA_ELEMENTS" baseTableSchemaName="EUREKASERVICE" constraintName="FK51DC47DC2DAC163D" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" referencedColumnNames="ID" referencedTableName="DATA_ELEMENTS" referencedTableSchemaName="EUREKASERVICE" referencesUniqueColumn="false"/>
-    </changeSet>
-    <changeSet author="arpost (generated)" id="1360440238345-56">
-        <addForeignKeyConstraint baseColumnNames="ROLE_ID" baseTableName="USER_ROLE" baseTableSchemaName="EUREKASERVICE" constraintName="FK143BF46A2EE17E2D" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" referencedColumnNames="ID" referencedTableName="ROLES" referencedTableSchemaName="EUREKASERVICE" referencesUniqueColumn="false"/>
-    </changeSet>
-    <changeSet author="arpost (generated)" id="1360440238345-57">
-        <addForeignKeyConstraint baseColumnNames="USER_ID" baseTableName="USER_ROLE" baseTableSchemaName="EUREKASERVICE" constraintName="FK143BF46AD40C420D" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" referencedColumnNames="ID" referencedTableName="USERS" referencedTableSchemaName="EUREKASERVICE" referencesUniqueColumn="false"/>
-    </changeSet>
-    <changeSet author="arpost (generated)" id="1360440238345-58">
-        <addForeignKeyConstraint baseColumnNames="COMPLEMENT_ID" baseTableName="VALUE_COMPARATORS" baseTableSchemaName="EUREKASERVICE" constraintName="FKA55F9C8F929E3CE8" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" referencedColumnNames="ID" referencedTableName="VALUE_COMPARATORS" referencedTableSchemaName="EUREKASERVICE" referencesUniqueColumn="false"/>
-    </changeSet>
-    <changeSet author="arpost (generated)" id="1360440238345-59">
-        <addForeignKeyConstraint baseColumnNames="ID" baseTableName="VALUE_THRESHOLD_GROUPS" baseTableSchemaName="EUREKASERVICE" constraintName="FKB716F5362DAC163D" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" referencedColumnNames="ID" referencedTableName="DATA_ELEMENTS" referencedTableSchemaName="EUREKASERVICE" referencesUniqueColumn="false"/>
-    </changeSet>
-    <changeSet author="arpost (generated)" id="1360440238345-60">
-        <addForeignKeyConstraint baseColumnNames="THRESHOLDSOP_ID" baseTableName="VALUE_THRESHOLD_GROUPS" baseTableSchemaName="EUREKASERVICE" constraintName="FKB716F536691D64F0" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" referencedColumnNames="ID" referencedTableName="THRESHOLDS_OPS" referencedTableSchemaName="EUREKASERVICE" referencesUniqueColumn="false"/>
-    </changeSet>
-    <changeSet author="arpost (generated)" id="1360440238345-61">
-        <addForeignKeyConstraint baseColumnNames="ABSTRACTEDFROM_ID" baseTableName="VALUE_THRESHOLDS" baseTableSchemaName="EUREKASERVICE" constraintName="FK7321CCF623D9B391" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" referencedColumnNames="ID" referencedTableName="DATA_ELEMENTS" referencedTableSchemaName="EUREKASERVICE" referencesUniqueColumn="false"/>
-    </changeSet>
-    <changeSet author="arpost (generated)" id="1360440238345-62">
-        <addForeignKeyConstraint baseColumnNames="MAXVALUECOMP_ID" baseTableName="VALUE_THRESHOLDS" baseTableSchemaName="EUREKASERVICE" constraintName="FK7321CCF69B3AEC32" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" referencedColumnNames="ID" referencedTableName="VALUE_COMPARATORS" referencedTableSchemaName="EUREKASERVICE" referencesUniqueColumn="false"/>
-    </changeSet>
-    <changeSet author="arpost (generated)" id="1360440238345-63">
-        <addForeignKeyConstraint baseColumnNames="MINVALUECOMP_ID" baseTableName="VALUE_THRESHOLDS" baseTableSchemaName="EUREKASERVICE" constraintName="FK7321CCF6590AF820" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" referencedColumnNames="ID" referencedTableName="VALUE_COMPARATORS" referencedTableSchemaName="EUREKASERVICE" referencesUniqueColumn="false"/>
-    </changeSet>
-    <changeSet author="arpost (generated)" id="1360440238345-64">
-        <addForeignKeyConstraint baseColumnNames="VALUETHRESHOLDSGROUP_ID" baseTableName="VALUE_THRESHOLDS" baseTableSchemaName="EUREKASERVICE" constraintName="FK7321CCF6DE772609" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" referencedColumnNames="ID" referencedTableName="VALUE_THRESHOLD_GROUPS" referencedTableSchemaName="EUREKASERVICE" referencesUniqueColumn="false"/>
-    </changeSet>
-    <changeSet author="arpost (generated)" id="1360440238345-65">
-        <createSequence schemaName="EUREKASERVICE" sequenceName="COMP_SEQ"/>
-    </changeSet>
-    <changeSet author="arpost (generated)" id="1360440238345-66">
-        <createSequence schemaName="EUREKASERVICE" sequenceName="CONSTRAINT_SEQ"/>
-    </changeSet>
-    <changeSet author="arpost (generated)" id="1360440238345-67">
-        <createSequence schemaName="EUREKASERVICE" sequenceName="EXT_DE_SEQ"/>
-    </changeSet>
-    <changeSet author="arpost (generated)" id="1360440238345-68">
-        <createSequence schemaName="EUREKASERVICE" sequenceName="EXT_PROP_SEQ"/>
-    </changeSet>
-    <changeSet author="arpost (generated)" id="1360440238345-69">
-        <createSequence schemaName="EUREKASERVICE" sequenceName="FILEINFO_SEQ"/>
-    </changeSet>
-    <changeSet author="arpost (generated)" id="1360440238345-70">
-        <createSequence schemaName="EUREKASERVICE" sequenceName="FILE_SEQ"/>
-    </changeSet>
-    <changeSet author="arpost (generated)" id="1360440238345-71">
-        <createSequence schemaName="EUREKASERVICE" sequenceName="PROP_SEQ"/>
-    </changeSet>
-    <changeSet author="arpost (generated)" id="1360440238345-72">
-        <createSequence schemaName="EUREKASERVICE" sequenceName="RELATION_OP_SEQ"/>
-    </changeSet>
-    <changeSet author="arpost (generated)" id="1360440238345-73">
-        <createSequence schemaName="EUREKASERVICE" sequenceName="RELATION_SEQ"/>
-    </changeSet>
-    <changeSet author="arpost (generated)" id="1360440238345-74">
-        <createSequence schemaName="EUREKASERVICE" sequenceName="ROLE_SEQ"/>
-    </changeSet>
-    <changeSet author="arpost (generated)" id="1360440238345-75">
-        <createSequence schemaName="EUREKASERVICE" sequenceName="TEMP_PAT_SEQ"/>
-    </changeSet>
-    <changeSet author="arpost (generated)" id="1360440238345-76">
-        <createSequence schemaName="EUREKASERVICE" sequenceName="THRESHOLDS_OP_SEQ"/>
-    </changeSet>
-    <changeSet author="arpost (generated)" id="1360440238345-77">
-        <createSequence schemaName="EUREKASERVICE" sequenceName="TIME_SEQ"/>
-    </changeSet>
-    <changeSet author="arpost (generated)" id="1360440238345-78">
-        <createSequence schemaName="EUREKASERVICE" sequenceName="USER_SEQ"/>
-    </changeSet>
-    <changeSet author="arpost (generated)" id="1360440238345-79">
-        <createSequence schemaName="EUREKASERVICE" sequenceName="VALUE_DEF_MATCH_OP_SEQ"/>
-    </changeSet>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd" logicalFilePath="changelog-master.xml">
+	<changeSet author="arpost (generated)" id="1360440238345-1">
+		<createTable tableName="CATEGORIES">
+			<column name="ID" type="NUMBER(19,0)">
+				<constraints nullable="false" primaryKey="true" primaryKeyName="SYS_C0013388" primaryKeyTablespace="SYSTEM"/>
+			</column>
+		</createTable>
+	</changeSet>
+	<changeSet author="arpost (generated)" id="1360440238345-2">
+		<createTable tableName="CATEGORY_MEMBERS">
+			<column name="CATEGORY_ID" type="NUMBER(19,0)">
+				<constraints nullable="false"/>
+			</column>
+			<column name="MEMBER_ID" type="NUMBER(19,0)">
+				<constraints nullable="false"/>
+			</column>
+		</createTable>
+	</changeSet>
+	<changeSet author="arpost (generated)" id="1360440238345-3">
+		<createTable tableName="DATA_ELEMENTS">
+			<column name="ID" type="NUMBER(19,0)">
+				<constraints nullable="false" primaryKey="true" primaryKeyName="SYS_C0013396" primaryKeyTablespace="SYSTEM"/>
+			</column>
+			<column name="CATEGORYTYPE" type="NUMBER(10,0)">
+				<constraints nullable="false"/>
+			</column>
+			<column name="CREATED" type="TIMESTAMP(6)"/>
+			<column name="DESCRIPTION" type="CLOB"/>
+			<column name="DISPLAYNAME" type="VARCHAR2(255 CHAR)"/>
+			<column name="INSYSTEM" type="NUMBER(1,0)">
+				<constraints nullable="false"/>
+			</column>
+			<column name="KEY" type="VARCHAR2(255 CHAR)">
+				<constraints nullable="false"/>
+			</column>
+			<column name="LASTMODIFIED" type="TIMESTAMP(6)"/>
+			<column name="USER_ID" type="NUMBER(19,0)">
+				<constraints nullable="false"/>
+			</column>
+		</createTable>
+	</changeSet>
+	<changeSet author="arpost (generated)" id="1360440238345-4">
+		<createTable tableName="EXTENDED_DATA_ELEMENTS">
+			<column name="ID" type="NUMBER(19,0)">
+				<constraints nullable="false" primaryKey="true" primaryKeyName="SYS_C0013402" primaryKeyTablespace="SYSTEM"/>
+			</column>
+			<column name="MAXDURATION" type="NUMBER(10,0)"/>
+			<column name="MINDURATION" type="NUMBER(10,0)"/>
+			<column name="DATAELEMENT_ID" type="NUMBER(19,0)">
+				<constraints nullable="false"/>
+			</column>
+			<column name="MAXDURATIONTIMEUNIT_ID" type="NUMBER(19,0)">
+				<constraints nullable="false"/>
+			</column>
+			<column name="MINDURATIONTIMEUNIT_ID" type="NUMBER(19,0)">
+				<constraints nullable="false"/>
+			</column>
+			<column name="PROPERTYCONSTRAINT_ID" type="NUMBER(19,0)"/>
+		</createTable>
+	</changeSet>
+	<changeSet author="arpost (generated)" id="1360440238345-5">
+		<createTable tableName="FILE_ERRORS">
+			<column name="ID" type="NUMBER(19,0)">
+				<constraints nullable="false" primaryKey="true" primaryKeyName="SYS_C0013404" primaryKeyTablespace="SYSTEM"/>
+			</column>
+			<column name="LINENUMBER" type="NUMBER(19,0)"/>
+			<column name="TEXT" type="VARCHAR2(255 CHAR)"/>
+			<column name="TYPE" type="VARCHAR2(255 CHAR)"/>
+			<column name="FILEUPLOAD_ID" type="NUMBER(19,0)"/>
+		</createTable>
+	</changeSet>
+	<changeSet author="arpost (generated)" id="1360440238345-6">
+		<createTable tableName="FILE_UPLOADS">
+			<column name="ID" type="NUMBER(19,0)">
+				<constraints nullable="false" primaryKey="true" primaryKeyName="SYS_C0013412" primaryKeyTablespace="SYSTEM"/>
+			</column>
+			<column name="COMPLETED" type="NUMBER(1,0)">
+				<constraints nullable="false"/>
+			</column>
+			<column name="LOCATION" type="VARCHAR2(255 CHAR)">
+				<constraints nullable="false"/>
+			</column>
+			<column name="PROCESSED" type="NUMBER(1,0)">
+				<constraints nullable="false"/>
+			</column>
+			<column name="TIMESTAMP" type="TIMESTAMP(6)">
+				<constraints nullable="false"/>
+			</column>
+			<column name="USERID" type="NUMBER(19,0)">
+				<constraints nullable="false"/>
+			</column>
+			<column name="VALIDATED" type="NUMBER(1,0)">
+				<constraints nullable="false"/>
+			</column>
+		</createTable>
+	</changeSet>
+	<changeSet author="arpost (generated)" id="1360440238345-7">
+		<createTable tableName="FILE_WARNINGS">
+			<column name="ID" type="NUMBER(19,0)">
+				<constraints nullable="false" primaryKey="true" primaryKeyName="SYS_C0013414" primaryKeyTablespace="SYSTEM"/>
+			</column>
+			<column name="LINENUMBER" type="NUMBER(19,0)"/>
+			<column name="TEXT" type="VARCHAR2(255 CHAR)"/>
+			<column name="TYPE" type="VARCHAR2(255 CHAR)"/>
+			<column name="FILEUPLOAD_ID" type="NUMBER(19,0)"/>
+		</createTable>
+	</changeSet>
+	<changeSet author="arpost (generated)" id="1360440238345-8">
+		<createTable tableName="FREQUENCIES">
+			<column name="ATLEASTCOUNT" type="NUMBER(10,0)">
+				<constraints nullable="false"/>
+			</column>
+			<column name="CONSECUTIVE" type="NUMBER(1,0)">
+				<constraints nullable="false"/>
+			</column>
+			<column name="WITHINATLEAST" type="NUMBER(10,0)"/>
+			<column name="WITHINATMOST" type="NUMBER(10,0)"/>
+			<column name="ID" type="NUMBER(19,0)">
+				<constraints nullable="false" primaryKey="true" primaryKeyName="SYS_C0013419" primaryKeyTablespace="SYSTEM"/>
+			</column>
+			<column name="EXTENDEDDATAELEMENT_ID" type="NUMBER(19,0)">
+				<constraints nullable="false"/>
+			</column>
+			<column name="WITHINATLEASTUNITS_ID" type="NUMBER(19,0)"/>
+			<column name="WITHINATMOSTUNITS_ID" type="NUMBER(19,0)"/>
+		</createTable>
+	</changeSet>
+	<changeSet author="arpost (generated)" id="1360440238345-9">
+		<createTable tableName="PROPERTY_CONSTRAINTS">
+			<column name="ID" type="NUMBER(19,0)">
+				<constraints nullable="false" primaryKey="true" primaryKeyName="SYS_C0013422" primaryKeyTablespace="SYSTEM"/>
+			</column>
+			<column name="PROPERTYNAME" type="VARCHAR2(255 CHAR)">
+				<constraints nullable="false"/>
+			</column>
+			<column name="VALUE" type="VARCHAR2(255 CHAR)"/>
+			<column name="VALUECOMPARATOR_ID" type="NUMBER(19,0)"/>
+		</createTable>
+	</changeSet>
+	<changeSet author="arpost (generated)" id="1360440238345-10">
+		<createTable tableName="RELATION_OPS">
+			<column name="ID" type="NUMBER(19,0)">
+				<constraints nullable="false" primaryKey="true" primaryKeyName="SYS_C0013425" primaryKeyTablespace="SYSTEM"/>
+			</column>
+			<column name="DESCRIPTION" type="VARCHAR2(255 CHAR)"/>
+			<column name="NAME" type="VARCHAR2(255 CHAR)">
+				<constraints nullable="false"/>
+			</column>
+		</createTable>
+	</changeSet>
+	<changeSet author="arpost (generated)" id="1360440238345-11">
+		<createTable tableName="RELATIONS">
+			<column name="ID" type="NUMBER(19,0)">
+				<constraints nullable="false" primaryKey="true" primaryKeyName="SYS_C0013431" primaryKeyTablespace="SYSTEM"/>
+			</column>
+			<column name="MAXF1S2" type="NUMBER(10,0)"/>
+			<column name="MAXS1F2" type="NUMBER(10,0)"/>
+			<column name="MINF1S2" type="NUMBER(10,0)"/>
+			<column name="MINS1F2" type="NUMBER(10,0)"/>
+			<column name="LHSEXTENDEDDATAELEMENT_ID" type="NUMBER(19,0)">
+				<constraints nullable="false"/>
+			</column>
+			<column name="MAXF1S2TIMEUNIT_ID" type="NUMBER(19,0)"/>
+			<column name="MAXS1F2TIMEUNIT_ID" type="NUMBER(19,0)"/>
+			<column name="MINF1S2TIMEUNIT_ID" type="NUMBER(19,0)"/>
+			<column name="MINS1F2TIMEUNIT_ID" type="NUMBER(19,0)"/>
+			<column name="RELATIONOP_ID" type="NUMBER(19,0)">
+				<constraints nullable="false"/>
+			</column>
+			<column name="RHSEXTENDEDDATAELEMENT_ID" type="NUMBER(19,0)">
+				<constraints nullable="false"/>
+			</column>
+			<column name="SEQUENCE_ID" type="NUMBER(19,0)"/>
+		</createTable>
+	</changeSet>
+	<changeSet author="arpost (generated)" id="1360440238345-12">
+		<createTable tableName="ROLES">
+			<column name="ID" type="NUMBER(19,0)">
+				<constraints nullable="false" primaryKey="true" primaryKeyName="SYS_C0013014" primaryKeyTablespace="SYSTEM"/>
+			</column>
+			<column name="DEFAULTROLE" type="NUMBER(1,0)">
+				<constraints nullable="false"/>
+			</column>
+			<column name="NAME" type="VARCHAR2(255 CHAR)">
+				<constraints nullable="false"/>
+			</column>
+		</createTable>
+	</changeSet>
+	<changeSet author="arpost (generated)" id="1360440238345-13">
+		<createTable tableName="SEQUENCES">
+			<column name="ID" type="NUMBER(19,0)">
+				<constraints nullable="false" primaryKey="true" primaryKeyName="SYS_C0013433" primaryKeyTablespace="SYSTEM"/>
+			</column>
+			<column name="PRIMARYEXTENDEDDATAELEMENT_ID" type="NUMBER(19,0)"/>
+		</createTable>
+	</changeSet>
+	<changeSet author="arpost (generated)" id="1360440238345-14">
+		<createTable tableName="SYSTEM_DATA_ELEMENTS">
+			<column name="SYSTEMTYPE" type="VARCHAR2(255 CHAR)">
+				<constraints nullable="false"/>
+			</column>
+			<column name="ID" type="NUMBER(19,0)">
+				<constraints nullable="false" primaryKey="true" primaryKeyName="SYS_C0013436" primaryKeyTablespace="SYSTEM"/>
+			</column>
+		</createTable>
+	</changeSet>
+	<changeSet author="arpost (generated)" id="1360440238345-15">
+		<createTable tableName="THRESHOLDS_OPS">
+			<column name="ID" type="NUMBER(19,0)">
+				<constraints nullable="false" primaryKey="true" primaryKeyName="SYS_C0013439" primaryKeyTablespace="SYSTEM"/>
+			</column>
+			<column name="DESCRIPTION" type="VARCHAR2(255 CHAR)"/>
+			<column name="NAME" type="VARCHAR2(255 CHAR)">
+				<constraints nullable="false"/>
+			</column>
+		</createTable>
+	</changeSet>
+	<changeSet author="arpost (generated)" id="1360440238345-16">
+		<createTable tableName="TIME_UNITS">
+			<column name="ID" type="NUMBER(19,0)">
+				<constraints nullable="false" primaryKey="true" primaryKeyName="SYS_C0013443" primaryKeyTablespace="SYSTEM"/>
+			</column>
+			<column name="DESCRIPTION" type="VARCHAR2(255 CHAR)"/>
+			<column name="NAME" type="VARCHAR2(255 CHAR)">
+				<constraints nullable="false"/>
+			</column>
+			<column name="RANK" type="NUMBER(10,0)"/>
+		</createTable>
+	</changeSet>
+	<changeSet author="arpost (generated)" id="1360440238345-17">
+		<createTable tableName="USER_ROLE">
+			<column name="USER_ID" type="NUMBER(19,0)">
+				<constraints nullable="false"/>
+			</column>
+			<column name="ROLE_ID" type="NUMBER(19,0)">
+				<constraints nullable="false"/>
+			</column>
+		</createTable>
+	</changeSet>
+	<changeSet author="arpost (generated)" id="1360440238345-18">
+		<createTable tableName="USERS">
+			<column name="ID" type="NUMBER(19,0)">
+				<constraints nullable="false" primaryKey="true" primaryKeyName="SYS_C0013037" primaryKeyTablespace="SYSTEM"/>
+			</column>
+			<column name="ACTIVE" type="NUMBER(1,0)">
+				<constraints nullable="false"/>
+			</column>
+			<column name="EMAIL" type="VARCHAR2(255 CHAR)">
+				<constraints nullable="false"/>
+			</column>
+			<column name="FIRSTNAME" type="VARCHAR2(255 CHAR)"/>
+			<column name="LASTLOGIN" type="TIMESTAMP(6)"/>
+			<column name="LASTNAME" type="VARCHAR2(255 CHAR)"/>
+			<column name="ORGANIZATION" type="VARCHAR2(255 CHAR)"/>
+			<column name="PASSWORD" type="VARCHAR2(255 CHAR)">
+				<constraints nullable="false"/>
+			</column>
+			<column name="PASSWORDEXPIRATION" type="TIMESTAMP(6)"/>
+			<column name="VERIFICATIONCODE" type="VARCHAR2(255 CHAR)"/>
+			<column name="VERIFIED" type="NUMBER(1,0)">
+				<constraints nullable="false"/>
+			</column>
+		</createTable>
+	</changeSet>
+	<changeSet author="arpost (generated)" id="1360440238345-19">
+		<createTable tableName="VALUE_COMPARATORS">
+			<column name="ID" type="NUMBER(19,0)">
+				<constraints nullable="false" primaryKey="true" primaryKeyName="SYS_C0013450" primaryKeyTablespace="SYSTEM"/>
+			</column>
+			<column name="DESCRIPTION" type="VARCHAR2(255 CHAR)"/>
+			<column name="NAME" type="VARCHAR2(255 CHAR)">
+				<constraints nullable="false"/>
+			</column>
+			<column name="RANK" type="NUMBER(19,0)">
+				<constraints nullable="false"/>
+			</column>
+			<column name="THRESHOLD" type="VARCHAR2(255 CHAR)">
+				<constraints nullable="false"/>
+			</column>
+			<column name="COMPLEMENT_ID" type="NUMBER(19,0)"/>
+		</createTable>
+	</changeSet>
+	<changeSet author="arpost (generated)" id="1360440238345-20">
+		<createTable tableName="VALUE_THRESHOLD_GROUPS">
+			<column name="ID" type="NUMBER(19,0)">
+				<constraints nullable="false" primaryKey="true" primaryKeyName="SYS_C0013455" primaryKeyTablespace="SYSTEM"/>
+			</column>
+			<column name="THRESHOLDSOP_ID" type="NUMBER(19,0)">
+				<constraints nullable="false"/>
+			</column>
+		</createTable>
+	</changeSet>
+	<changeSet author="arpost (generated)" id="1360440238345-21">
+		<createTable tableName="VALUE_THRESHOLDS">
+			<column name="ID" type="NUMBER(19,0)">
+				<constraints nullable="false" primaryKey="true" primaryKeyName="SYS_C0013461" primaryKeyTablespace="SYSTEM"/>
+			</column>
+			<column name="MAXTVALUETHRESHOLD" type="VARCHAR2(255 CHAR)"/>
+			<column name="MAXUNITS" type="VARCHAR2(255 CHAR)"/>
+			<column name="MAXVALUETHRESHOLD" type="NUMBER(19,2)"/>
+			<column name="MINTVALUETHRESHOLD" type="VARCHAR2(255 CHAR)"/>
+			<column name="MINUNITS" type="VARCHAR2(255 CHAR)"/>
+			<column name="MINVALUETHRESHOLD" type="NUMBER(19,2)"/>
+			<column name="ABSTRACTEDFROM_ID" type="NUMBER(19,0)">
+				<constraints nullable="false"/>
+			</column>
+			<column name="MAXVALUECOMP_ID" type="NUMBER(19,0)">
+				<constraints nullable="false"/>
+			</column>
+			<column name="MINVALUECOMP_ID" type="NUMBER(19,0)">
+				<constraints nullable="false"/>
+			</column>
+			<column name="VALUETHRESHOLDSGROUP_ID" type="NUMBER(19,0)">
+				<constraints nullable="false"/>
+			</column>
+		</createTable>
+	</changeSet>
+	<changeSet author="arpost (generated)" id="1360440238345-22">
+		<addUniqueConstraint columnNames="KEY, USER_ID" constraintName="SYS_C0013397" deferrable="false" disabled="false" initiallyDeferred="false" tableName="DATA_ELEMENTS" tablespace="SYSTEM"/>
+	</changeSet>
+	<changeSet author="arpost (generated)" id="1360440238345-23">
+		<addUniqueConstraint columnNames="NAME" constraintName="SYS_C0013426" deferrable="false" disabled="false" initiallyDeferred="false" tableName="RELATION_OPS" tablespace="SYSTEM"/>
+	</changeSet>
+	<changeSet author="arpost (generated)" id="1360440238345-24">
+		<addUniqueConstraint columnNames="NAME" constraintName="SYS_C0013015" deferrable="false" disabled="false" initiallyDeferred="false" tableName="ROLES" tablespace="SYSTEM"/>
+	</changeSet>
+	<changeSet author="arpost (generated)" id="1360440238345-25">
+		<addUniqueConstraint columnNames="NAME" constraintName="SYS_C0013440" deferrable="false" disabled="false" initiallyDeferred="false" tableName="THRESHOLDS_OPS" tablespace="SYSTEM"/>
+	</changeSet>
+	<changeSet author="arpost (generated)" id="1360440238345-26">
+		<addUniqueConstraint columnNames="NAME" constraintName="SYS_C0013444" deferrable="false" disabled="false" initiallyDeferred="false" tableName="TIME_UNITS" tablespace="SYSTEM"/>
+	</changeSet>
+	<changeSet author="arpost (generated)" id="1360440238345-27">
+		<addUniqueConstraint columnNames="RANK" constraintName="SYS_C0013445" deferrable="false" disabled="false" initiallyDeferred="false" tableName="TIME_UNITS" tablespace="SYSTEM"/>
+	</changeSet>
+	<changeSet author="arpost (generated)" id="1360440238345-28">
+		<addUniqueConstraint columnNames="EMAIL" constraintName="SYS_C0013038" deferrable="false" disabled="false" initiallyDeferred="false" tableName="USERS" tablespace="SYSTEM"/>
+	</changeSet>
+	<changeSet author="arpost (generated)" id="1360440238345-29">
+		<addUniqueConstraint columnNames="NAME" constraintName="SYS_C0013451" deferrable="false" disabled="false" initiallyDeferred="false" tableName="VALUE_COMPARATORS" tablespace="SYSTEM"/>
+	</changeSet>
+	<changeSet author="arpost (generated)" id="1360440238345-30">
+		<addUniqueConstraint columnNames="RANK" constraintName="SYS_C0013452" deferrable="false" disabled="false" initiallyDeferred="false" tableName="VALUE_COMPARATORS" tablespace="SYSTEM"/>
+	</changeSet>
+	<changeSet author="arpost (generated)" id="1360440238345-31">
+		<addForeignKeyConstraint baseColumnNames="ID" baseTableName="CATEGORIES" constraintName="FK4D47461C2DAC163D" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" referencedColumnNames="ID" referencedTableName="DATA_ELEMENTS" referencedTableSchemaName="EUREKASERVICE" referencesUniqueColumn="false"/>
+	</changeSet>
+	<changeSet author="arpost (generated)" id="1360440238345-32">
+		<addForeignKeyConstraint baseColumnNames="CATEGORY_ID" baseTableName="CATEGORY_MEMBERS" constraintName="FK38B4ED8976806F0" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" referencedColumnNames="ID" referencedTableName="CATEGORIES" referencedTableSchemaName="EUREKASERVICE" referencesUniqueColumn="false"/>
+	</changeSet>
+	<changeSet author="arpost (generated)" id="1360440238345-33">
+		<addForeignKeyConstraint baseColumnNames="MEMBER_ID" baseTableName="CATEGORY_MEMBERS" constraintName="FK38B4ED87DACB202" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" referencedColumnNames="ID" referencedTableName="DATA_ELEMENTS" referencedTableSchemaName="EUREKASERVICE" referencesUniqueColumn="false"/>
+	</changeSet>
+	<changeSet author="arpost (generated)" id="1360440238345-34">
+		<addForeignKeyConstraint baseColumnNames="DATAELEMENT_ID" baseTableName="EXTENDED_DATA_ELEMENTS" constraintName="FK18762966D16F0D8A" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" referencedColumnNames="ID" referencedTableName="DATA_ELEMENTS" referencedTableSchemaName="EUREKASERVICE" referencesUniqueColumn="false"/>
+	</changeSet>
+	<changeSet author="arpost (generated)" id="1360440238345-35">
+		<addForeignKeyConstraint baseColumnNames="MAXDURATIONTIMEUNIT_ID" baseTableName="EXTENDED_DATA_ELEMENTS" constraintName="FK187629663C3904F5" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" referencedColumnNames="ID" referencedTableName="TIME_UNITS" referencedTableSchemaName="EUREKASERVICE" referencesUniqueColumn="false"/>
+	</changeSet>
+	<changeSet author="arpost (generated)" id="1360440238345-36">
+		<addForeignKeyConstraint baseColumnNames="MINDURATIONTIMEUNIT_ID" baseTableName="EXTENDED_DATA_ELEMENTS" constraintName="FK1876296694AE5147" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" referencedColumnNames="ID" referencedTableName="TIME_UNITS" referencedTableSchemaName="EUREKASERVICE" referencesUniqueColumn="false"/>
+	</changeSet>
+	<changeSet author="arpost (generated)" id="1360440238345-37">
+		<addForeignKeyConstraint baseColumnNames="PROPERTYCONSTRAINT_ID" baseTableName="EXTENDED_DATA_ELEMENTS" constraintName="FK187629668A6E938D" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" referencedColumnNames="ID" referencedTableName="PROPERTY_CONSTRAINTS" referencedTableSchemaName="EUREKASERVICE" referencesUniqueColumn="false"/>
+	</changeSet>
+	<changeSet author="arpost (generated)" id="1360440238345-38">
+		<addForeignKeyConstraint baseColumnNames="FILEUPLOAD_ID" baseTableName="FILE_ERRORS" constraintName="FK6239938EACFDA6AD" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" referencedColumnNames="ID" referencedTableName="FILE_UPLOADS" referencedTableSchemaName="EUREKASERVICE" referencesUniqueColumn="false"/>
+	</changeSet>
+	<changeSet author="arpost (generated)" id="1360440238345-39">
+		<addForeignKeyConstraint baseColumnNames="FILEUPLOAD_ID" baseTableName="FILE_WARNINGS" constraintName="FK849BEBBAACFDA6AD" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" referencedColumnNames="ID" referencedTableName="FILE_UPLOADS" referencedTableSchemaName="EUREKASERVICE" referencesUniqueColumn="false"/>
+	</changeSet>
+	<changeSet author="arpost (generated)" id="1360440238345-40">
+		<addForeignKeyConstraint baseColumnNames="EXTENDEDDATAELEMENT_ID" baseTableName="FREQUENCIES" constraintName="FK55076EFA858DC647" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" referencedColumnNames="ID" referencedTableName="EXTENDED_DATA_ELEMENTS" referencedTableSchemaName="EUREKASERVICE" referencesUniqueColumn="false"/>
+	</changeSet>
+	<changeSet author="arpost (generated)" id="1360440238345-41">
+		<addForeignKeyConstraint baseColumnNames="ID" baseTableName="FREQUENCIES" constraintName="FK55076EFA2DAC163D" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" referencedColumnNames="ID" referencedTableName="DATA_ELEMENTS" referencedTableSchemaName="EUREKASERVICE" referencesUniqueColumn="false"/>
+	</changeSet>
+	<changeSet author="arpost (generated)" id="1360440238345-42">
+		<addForeignKeyConstraint baseColumnNames="WITHINATLEASTUNITS_ID" baseTableName="FREQUENCIES" constraintName="FK55076EFA7DB3C4DA" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" referencedColumnNames="ID" referencedTableName="TIME_UNITS" referencedTableSchemaName="EUREKASERVICE" referencesUniqueColumn="false"/>
+	</changeSet>
+	<changeSet author="arpost (generated)" id="1360440238345-43">
+		<addForeignKeyConstraint baseColumnNames="WITHINATMOSTUNITS_ID" baseTableName="FREQUENCIES" constraintName="FK55076EFA984A25F0" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" referencedColumnNames="ID" referencedTableName="TIME_UNITS" referencedTableSchemaName="EUREKASERVICE" referencesUniqueColumn="false"/>
+	</changeSet>
+	<changeSet author="arpost (generated)" id="1360440238345-44">
+		<addForeignKeyConstraint baseColumnNames="VALUECOMPARATOR_ID" baseTableName="PROPERTY_CONSTRAINTS" constraintName="FK416CACC9BE4E667" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" referencedColumnNames="ID" referencedTableName="VALUE_COMPARATORS" referencedTableSchemaName="EUREKASERVICE" referencesUniqueColumn="false"/>
+	</changeSet>
+	<changeSet author="arpost (generated)" id="1360440238345-45">
+		<addForeignKeyConstraint baseColumnNames="LHSEXTENDEDDATAELEMENT_ID" baseTableName="RELATIONS" constraintName="FKFF8B45F7FED8257E" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" referencedColumnNames="ID" referencedTableName="EXTENDED_DATA_ELEMENTS" referencedTableSchemaName="EUREKASERVICE" referencesUniqueColumn="false"/>
+	</changeSet>
+	<changeSet author="arpost (generated)" id="1360440238345-46">
+		<addForeignKeyConstraint baseColumnNames="MAXF1S2TIMEUNIT_ID" baseTableName="RELATIONS" constraintName="FKFF8B45F7A3126ADF" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" referencedColumnNames="ID" referencedTableName="TIME_UNITS" referencedTableSchemaName="EUREKASERVICE" referencesUniqueColumn="false"/>
+	</changeSet>
+	<changeSet author="arpost (generated)" id="1360440238345-47">
+		<addForeignKeyConstraint baseColumnNames="MAXS1F2TIMEUNIT_ID" baseTableName="RELATIONS" constraintName="FKFF8B45F7168F7B9F" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" referencedColumnNames="ID" referencedTableName="TIME_UNITS" referencedTableSchemaName="EUREKASERVICE" referencesUniqueColumn="false"/>
+	</changeSet>
+	<changeSet author="arpost (generated)" id="1360440238345-48">
+		<addForeignKeyConstraint baseColumnNames="MINF1S2TIMEUNIT_ID" baseTableName="RELATIONS" constraintName="FKFF8B45F758AEB031" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" referencedColumnNames="ID" referencedTableName="TIME_UNITS" referencedTableSchemaName="EUREKASERVICE" referencesUniqueColumn="false"/>
+	</changeSet>
+	<changeSet author="arpost (generated)" id="1360440238345-49">
+		<addForeignKeyConstraint baseColumnNames="MINS1F2TIMEUNIT_ID" baseTableName="RELATIONS" constraintName="FKFF8B45F7CC2BC0F1" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" referencedColumnNames="ID" referencedTableName="TIME_UNITS" referencedTableSchemaName="EUREKASERVICE" referencesUniqueColumn="false"/>
+	</changeSet>
+	<changeSet author="arpost (generated)" id="1360440238345-50">
+		<addForeignKeyConstraint baseColumnNames="RELATIONOP_ID" baseTableName="RELATIONS" constraintName="FKFF8B45F7459AEE30" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" referencedColumnNames="ID" referencedTableName="RELATION_OPS" referencedTableSchemaName="EUREKASERVICE" referencesUniqueColumn="false"/>
+	</changeSet>
+	<changeSet author="arpost (generated)" id="1360440238345-51">
+		<addForeignKeyConstraint baseColumnNames="RHSEXTENDEDDATAELEMENT_ID" baseTableName="RELATIONS" constraintName="FKFF8B45F717F9F384" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" referencedColumnNames="ID" referencedTableName="EXTENDED_DATA_ELEMENTS" referencedTableSchemaName="EUREKASERVICE" referencesUniqueColumn="false"/>
+	</changeSet>
+	<changeSet author="arpost (generated)" id="1360440238345-52">
+		<addForeignKeyConstraint baseColumnNames="SEQUENCE_ID" baseTableName="RELATIONS" constraintName="FKFF8B45F765DA0DD0" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" referencedColumnNames="ID" referencedTableName="SEQUENCES" referencedTableSchemaName="EUREKASERVICE" referencesUniqueColumn="false"/>
+	</changeSet>
+	<changeSet author="arpost (generated)" id="1360440238345-53">
+		<addForeignKeyConstraint baseColumnNames="ID" baseTableName="SEQUENCES" constraintName="FKBD9E80D22DAC163D" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" referencedColumnNames="ID" referencedTableName="DATA_ELEMENTS" referencedTableSchemaName="EUREKASERVICE" referencesUniqueColumn="false"/>
+	</changeSet>
+	<changeSet author="arpost (generated)" id="1360440238345-54">
+		<addForeignKeyConstraint baseColumnNames="PRIMARYEXTENDEDDATAELEMENT_ID" baseTableName="SEQUENCES" constraintName="FKBD9E80D281CF86C9" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" referencedColumnNames="ID" referencedTableName="EXTENDED_DATA_ELEMENTS" referencedTableSchemaName="EUREKASERVICE" referencesUniqueColumn="false"/>
+	</changeSet>
+	<changeSet author="arpost (generated)" id="1360440238345-55">
+		<addForeignKeyConstraint baseColumnNames="ID" baseTableName="SYSTEM_DATA_ELEMENTS" constraintName="FK51DC47DC2DAC163D" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" referencedColumnNames="ID" referencedTableName="DATA_ELEMENTS" referencedTableSchemaName="EUREKASERVICE" referencesUniqueColumn="false"/>
+	</changeSet>
+	<changeSet author="arpost (generated)" id="1360440238345-56">
+		<addForeignKeyConstraint baseColumnNames="ROLE_ID" baseTableName="USER_ROLE" constraintName="FK143BF46A2EE17E2D" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" referencedColumnNames="ID" referencedTableName="ROLES" referencedTableSchemaName="EUREKASERVICE" referencesUniqueColumn="false"/>
+	</changeSet>
+	<changeSet author="arpost (generated)" id="1360440238345-57">
+		<addForeignKeyConstraint baseColumnNames="USER_ID" baseTableName="USER_ROLE" constraintName="FK143BF46AD40C420D" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" referencedColumnNames="ID" referencedTableName="USERS" referencedTableSchemaName="EUREKASERVICE" referencesUniqueColumn="false"/>
+	</changeSet>
+	<changeSet author="arpost (generated)" id="1360440238345-59">
+		<addForeignKeyConstraint baseColumnNames="ID" baseTableName="VALUE_THRESHOLD_GROUPS" constraintName="FKB716F5362DAC163D" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" referencedColumnNames="ID" referencedTableName="DATA_ELEMENTS" referencedTableSchemaName="EUREKASERVICE" referencesUniqueColumn="false"/>
+	</changeSet>
+	<changeSet author="arpost (generated)" id="1360440238345-60">
+		<addForeignKeyConstraint baseColumnNames="THRESHOLDSOP_ID" baseTableName="VALUE_THRESHOLD_GROUPS" constraintName="FKB716F536691D64F0" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" referencedColumnNames="ID" referencedTableName="THRESHOLDS_OPS" referencedTableSchemaName="EUREKASERVICE" referencesUniqueColumn="false"/>
+	</changeSet>
+	<changeSet author="arpost (generated)" id="1360440238345-61">
+		<addForeignKeyConstraint baseColumnNames="ABSTRACTEDFROM_ID" baseTableName="VALUE_THRESHOLDS" constraintName="FK7321CCF623D9B391" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" referencedColumnNames="ID" referencedTableName="DATA_ELEMENTS" referencedTableSchemaName="EUREKASERVICE" referencesUniqueColumn="false"/>
+	</changeSet>
+	<changeSet author="arpost (generated)" id="1360440238345-62">
+		<addForeignKeyConstraint baseColumnNames="MAXVALUECOMP_ID" baseTableName="VALUE_THRESHOLDS" constraintName="FK7321CCF69B3AEC32" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" referencedColumnNames="ID" referencedTableName="VALUE_COMPARATORS" referencedTableSchemaName="EUREKASERVICE" referencesUniqueColumn="false"/>
+	</changeSet>
+	<changeSet author="arpost (generated)" id="1360440238345-63">
+		<addForeignKeyConstraint baseColumnNames="MINVALUECOMP_ID" baseTableName="VALUE_THRESHOLDS" constraintName="FK7321CCF6590AF820" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" referencedColumnNames="ID" referencedTableName="VALUE_COMPARATORS" referencedTableSchemaName="EUREKASERVICE" referencesUniqueColumn="false"/>
+	</changeSet>
+	<changeSet author="arpost (generated)" id="1360440238345-64">
+		<addForeignKeyConstraint baseColumnNames="VALUETHRESHOLDSGROUP_ID" baseTableName="VALUE_THRESHOLDS" constraintName="FK7321CCF6DE772609" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" referencedColumnNames="ID" referencedTableName="VALUE_THRESHOLD_GROUPS" referencedTableSchemaName="EUREKASERVICE" referencesUniqueColumn="false"/>
+	</changeSet>
+	<changeSet author="arpost (generated)" id="1360440238345-65">
+		<createSequence schemaName="EUREKASERVICE" sequenceName="COMP_SEQ"/>
+	</changeSet>
+	<changeSet author="arpost (generated)" id="1360440238345-66">
+		<createSequence schemaName="EUREKASERVICE" sequenceName="CONSTRAINT_SEQ"/>
+	</changeSet>
+	<changeSet author="arpost (generated)" id="1360440238345-67">
+		<createSequence schemaName="EUREKASERVICE" sequenceName="EXT_DE_SEQ"/>
+	</changeSet>
+	<changeSet author="arpost (generated)" id="1360440238345-68">
+		<createSequence schemaName="EUREKASERVICE" sequenceName="EXT_PROP_SEQ"/>
+	</changeSet>
+	<changeSet author="arpost (generated)" id="1360440238345-69">
+		<createSequence schemaName="EUREKASERVICE" sequenceName="FILEINFO_SEQ"/>
+	</changeSet>
+	<changeSet author="arpost (generated)" id="1360440238345-70">
+		<createSequence schemaName="EUREKASERVICE" sequenceName="FILE_SEQ"/>
+	</changeSet>
+	<changeSet author="arpost (generated)" id="1360440238345-71">
+		<createSequence schemaName="EUREKASERVICE" sequenceName="PROP_SEQ"/>
+	</changeSet>
+	<changeSet author="arpost (generated)" id="1360440238345-72">
+		<createSequence schemaName="EUREKASERVICE" sequenceName="RELATION_OP_SEQ"/>
+	</changeSet>
+	<changeSet author="arpost (generated)" id="1360440238345-73">
+		<createSequence schemaName="EUREKASERVICE" sequenceName="RELATION_SEQ"/>
+	</changeSet>
+	<changeSet author="arpost (generated)" id="1360440238345-74">
+		<createSequence schemaName="EUREKASERVICE" sequenceName="ROLE_SEQ"/>
+	</changeSet>
+	<changeSet author="arpost (generated)" id="1360440238345-75">
+		<createSequence schemaName="EUREKASERVICE" sequenceName="TEMP_PAT_SEQ"/>
+	</changeSet>
+	<changeSet author="arpost (generated)" id="1360440238345-76">
+		<createSequence schemaName="EUREKASERVICE" sequenceName="THRESHOLDS_OP_SEQ"/>
+	</changeSet>
+	<changeSet author="arpost (generated)" id="1360440238345-77">
+		<createSequence schemaName="EUREKASERVICE" sequenceName="TIME_SEQ"/>
+	</changeSet>
+	<changeSet author="arpost (generated)" id="1360440238345-78">
+		<createSequence schemaName="EUREKASERVICE" sequenceName="USER_SEQ"/>
+	</changeSet>
+	<changeSet author="arpost (generated)" id="1360440238345-79">
+		<createSequence schemaName="EUREKASERVICE" sequenceName="VALUE_DEF_MATCH_OP_SEQ"/>
+	</changeSet>
+	<changeSet author="arpost" id="1360440238345-80">
+		<insert tableName="ROLES">
+			<column name="ID" valueNumeric="2"/>
+			<column name="NAME" value="researcher"/>
+			<column name="DEFAULTROLE" valueBoolean="true"/>
+		</insert>
+		<insert tableName="ROLES">
+			<column name="ID" valueNumeric="3"/>
+			<column name="NAME" value="admin"/>
+			<column name="DEFAULTROLE" valueBoolean="false"/>
+		</insert>
+		<insert tableName="ROLES">
+			<column name="ID" valueNumeric="1"/>
+			<column name="NAME" value="superuser"/>
+			<column name="DEFAULTROLE" valueBoolean="false"/>
+		</insert>
+		<insert tableName="USERS">
+			<column name="ID" valueNumeric="1"/>
+			<column name="ACTIVE" valueBoolean="true"/>
+			<column name="EMAIL" value="super.user@emory.edu"/>
+			<column name="FIRSTNAME" value="Super"/>
+			<column name="LASTNAME" value="User"/>
+			<column name="ORGANIZATION" value="N/A"/>
+			<column name="VERIFIED" valueBoolean="true"/>
+			<column name="PASSWORDEXPIRATION" valueDate="1971-01-01T00:00:00"/>
+			<!-- the default password is defaultPassword -->
+			<column name="PASSWORD" value="4a94e453e6ee6a8253def63db4d159"/>
+		</insert>
+		<insert tableName="USER_ROLE">
+			<column name="USER_ID" valueNumeric="1"/>
+			<column name="ROLE_ID" valueNumeric="1"/>
+		</insert>
+		<insert tableName="USER_ROLE">
+			<column name="USER_ID" valueNumeric="1"/>
+			<column name="ROLE_ID" valueNumeric="2"/>
+		</insert>
+		<insert tableName="USER_ROLE">
+			<column name="USER_ID" valueNumeric="1"/>
+			<column name="ROLE_ID" valueNumeric="3"/>
+		</insert>
+	</changeSet>
+	<changeSet author="arpost" id="1360440238345-81">
+		<insert tableName="TIME_UNITS">
+			<column name="ID" valueNumeric="1"/>
+			<column name="NAME" value="day"/>
+			<column name="DESCRIPTION" value="days"/>
+			<column name="RANK" valueNumeric="3"/>
+		</insert>
+		<insert tableName="TIME_UNITS">
+			<column name="ID" valueNumeric="2"/>
+			<column name="NAME" value="hour"/>
+			<column name="DESCRIPTION" value="hours"/>
+			<column name="RANK" valueNumeric="2"/>
+		</insert>
+		<insert tableName="TIME_UNITS">
+			<column name="ID" valueNumeric="3"/>
+			<column name="NAME" value="minute"/>
+			<column name="DESCRIPTION" value="minutes"/>
+			<column name="RANK" valueNumeric="1"/>
+		</insert>
+	</changeSet>
+	<changeSet author="arpost" id="1360440238345-82">
+		<insert tableName="RELATION_OPS">
+			<column name="ID" valueNumeric="1"/>
+			<column name="NAME" value="before"/>
+			<column name="DESCRIPTION" value="before"/>
+		</insert>
+		<insert tableName="RELATION_OPS">
+			<column name="ID" valueNumeric="2"/>
+			<column name="NAME" value="after"/>
+			<column name="DESCRIPTION" value="after"/>
+		</insert>
+	</changeSet>
+	<changeSet author="arpost" id="1360440238345-83">
+		<insert tableName="THRESHOLDS_OPS">
+			<column name="ID" valueNumeric="1"/>
+			<column name="NAME" value="any"/>
+			<column name="DESCRIPTION" value="any"/>
+		</insert>
+		<insert tableName="THRESHOLDS_OPS">
+			<column name="ID" valueNumeric="2"/>
+			<column name="NAME" value="all"/>
+			<column name="DESCRIPTION" value="all"/>
+		</insert>
+	</changeSet>
+	<changeSet author="arpost" id="1360440238345-84">
+		<insert tableName="VALUE_COMPARATORS">
+			<column name="ID" valueNumeric="1"/>
+			<column name="NAME" value="="/>
+			<column name="DESCRIPTION" value="equals"/>
+			<column name="RANK" valueNumeric="3"/>
+			<column name="THRESHOLD" value="BOTH"/>
+			<column name="COMPLEMENT_ID" valueNumeric="2"/>
+		</insert>
+		<insert tableName="VALUE_COMPARATORS">
+			<column name="ID" valueNumeric="2"/>
+			<column name="NAME" value="not="/>
+			<column name="DESCRIPTION" value="not equals"/>
+			<column name="RANK" valueNumeric="4"/>
+			<column name="THRESHOLD" value="BOTH"/>
+			<column name="COMPLEMENT_ID" valueNumeric="1"/>
+		</insert>
+		<insert tableName="VALUE_COMPARATORS">
+			<column name="ID" valueNumeric="3"/>
+			<column name="NAME" value="&gt;"/>
+			<column name="DESCRIPTION" value="greater than"/>
+			<column name="RANK" valueNumeric="5"/>
+			<column name="THRESHOLD" value="LOWER_ONLY"/>
+			<column name="COMPLEMENT_ID" valueNumeric="6"/>
+		</insert>
+		<insert tableName="VALUE_COMPARATORS">
+			<column name="ID" valueNumeric="4"/>
+			<column name="NAME" value="&gt;="/>
+			<column name="DESCRIPTION" value="greater than or equal to"/>
+			<column name="RANK" valueNumeric="6"/>
+			<column name="THRESHOLD" value="LOWER_ONLY"/>
+			<column name="COMPLEMENT_ID" valueNumeric="5"/>
+		</insert>
+		<insert tableName="VALUE_COMPARATORS">
+			<column name="ID" valueNumeric="5"/>
+			<column name="NAME" value="&lt;"/>
+			<column name="DESCRIPTION" value="less than"/>
+			<column name="RANK" valueNumeric="1"/>
+			<column name="THRESHOLD" value="UPPER_ONLY"/>
+			<column name="COMPLEMENT_ID" valueNumeric="4"/>
+		</insert>
+		<insert tableName="VALUE_COMPARATORS">
+			<column name="ID" valueNumeric="6"/>
+			<column name="NAME" value="&lt;="/>
+			<column name="DESCRIPTION" value="less than or equal to"/>
+			<column name="RANK" valueNumeric="2"/>
+			<column name="THRESHOLD" value="UPPER_ONLY"/>
+			<column name="COMPLEMENT_ID" valueNumeric="3"/>
+		</insert>
+	</changeSet>
+	<changeSet author="arpost (generated)" id="1360440238345-85">
+		<addForeignKeyConstraint baseColumnNames="COMPLEMENT_ID" baseTableName="VALUE_COMPARATORS" constraintName="FKA55F9C8F929E3CE8" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" referencedColumnNames="ID" referencedTableName="VALUE_COMPARATORS" referencedTableSchemaName="EUREKASERVICE" referencesUniqueColumn="false"/>
+	</changeSet>
+	<changeSet author="arpost (generated)" id="1360440238345-86">
+		<addColumn tableName="EXTENDED_DATA_ELEMENTS">
+			<column name="VALUETHRESHOLD_ID" type="NUMBER(19,0)"/>
+		</addColumn> 
+		<addColumn tableName="VALUE_THRESHOLDS">
+			<column name="RELATIONOP_ID" type="NUMBER(19,0)"/>
+		</addColumn> 
+		<addColumn tableName="VALUE_THRESHOLDS">
+			<column name="WITHINATLEAST" type="NUMBER(10,0)"/>
+		</addColumn> 
+		<addColumn tableName="VALUE_THRESHOLDS">
+			<column name="WITHINATLEASTUNITS_ID" type="NUMBER(19,0)" defaultValueNumeric="1">
+				<constraints nullable="false"/>
+			</column>
+		</addColumn> 
+		<addColumn tableName="VALUE_THRESHOLDS">
+			<column name="WITHINATMOST" type="NUMBER(10,0)"/>
+		</addColumn> 
+		<addColumn tableName="VALUE_THRESHOLDS">
+			<column name="WITHINATMOSTUNITS_ID" type="NUMBER(19,0)" defaultValueNumeric="1">
+				<constraints nullable="false"/>
+			</column>
+		</addColumn> 
+		<addForeignKeyConstraint baseColumnNames="VALUETHRESHOLD_ID" baseTableName="EXTENDED_DATA_ELEMENTS" constraintName="FK18762966E8C1B210" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" referencedColumnNames="ID" referencedTableName="VALUE_THRESHOLDS" referencesUniqueColumn="false"/>
+		<addForeignKeyConstraint baseColumnNames="RELATIONOP_ID" baseTableName="VALUE_THRESHOLDS" constraintName="FK7321CCF6459AEE30" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" referencedColumnNames="ID" referencedTableName="RELATION_OPS" referencesUniqueColumn="false"/>
+		<addForeignKeyConstraint baseColumnNames="WITHINATLEASTUNITS_ID" baseTableName="VALUE_THRESHOLDS" constraintName="FK7321CCF67DB3C4DA" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" referencedColumnNames="ID" referencedTableName="TIME_UNITS" referencesUniqueColumn="false"/>
+		<addForeignKeyConstraint baseColumnNames="WITHINATMOSTUNITS_ID" baseTableName="VALUE_THRESHOLDS" constraintName="FK7321CCF6984A25F0" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" referencedColumnNames="ID" referencedTableName="TIME_UNITS" referencesUniqueColumn="false"/>
+	</changeSet>
 </databaseChangeLog>

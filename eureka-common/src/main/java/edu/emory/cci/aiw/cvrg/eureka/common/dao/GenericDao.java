@@ -19,6 +19,7 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.common.dao;
 
+import com.google.inject.Inject;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -127,12 +128,9 @@ public class GenericDao<T, PK> implements Dao<T, PK> {
 
 	@Override
 	public List<T> getAll() {
-		EntityManager entityManager = this.getEntityManager();
-		CriteriaBuilder builder = entityManager.getCriteriaBuilder();
-		CriteriaQuery<T> criteriaQuery = builder.createQuery(this.entityClass);
-		criteriaQuery.from(this.entityClass);
-		TypedQuery<T> typedQuery = entityManager.createQuery(criteriaQuery);
-		return typedQuery.getResultList();
+		DatabaseSupport dbSupport = 
+				new DatabaseSupport(getEntityManager());
+		return dbSupport.getAll(this.entityClass);
 	}
 	
 	protected List<T> getListAsc(SingularAttribute<T, ?> attribute) {
@@ -154,24 +152,14 @@ public class GenericDao<T, PK> implements Dao<T, PK> {
 	 */
 	protected <Y> T getUniqueByAttribute(SingularAttribute<T, Y> attribute,
 			Y value) {
-		TypedQuery<T> query = this.createTypedQuery(attribute, value);
-		T result;
-		try {
-			result = query.getSingleResult();
-		} catch (NonUniqueResultException nure) {
-			LOGGER.warn("Result not unique for {} = {}", attribute, value);
-			result = null;
-		} catch (NoResultException nre) {
-			LOGGER.error("Result not existant for {} = {}", attribute, value);
-			result = null;
-		}
-		return result;
+		return new DatabaseSupport(getEntityManager())
+				.getUniqueByAttribute(this.entityClass, attribute, value);
 	}
 	
 	protected <Y> List<T> getListByAttribute(SingularAttribute<T,
 		Y> attribute, Y value) {
-		TypedQuery<T> query = this.createTypedQuery(attribute, value);
-		return query.getResultList();
+		return new DatabaseSupport(getEntityManager())
+				.getListByAttribute(this.entityClass, attribute, value);
 	}
 	
 	protected <Y extends Number> List<T> getListByAttribute(
@@ -181,25 +169,6 @@ public class GenericDao<T, PK> implements Dao<T, PK> {
 		TypedQuery<T> query = this.createTypedQuery(
 				attribute, comparator, value);
 		return query.getResultList();
-	}
-
-	/**
-	 * Creates a typed query based on the attribute given and the target value
-	 * for that attribute.
-	 * @param attribute The attribute to compare.
-	 * @param value The target value for the given attribute.
-	 * @param <Y> The type of the target attribute and target value.
-	 * @return A typed query that contains the given criteria.
-	 */
-	private <Y> TypedQuery<T> createTypedQuery(SingularAttribute<T, Y> attribute,
-			Y value) {
-		EntityManager entityManager = this.getEntityManager();
-		CriteriaBuilder builder = entityManager.getCriteriaBuilder();
-		CriteriaQuery<T> criteriaQuery = builder.createQuery(this.entityClass);
-		Root<T> root = criteriaQuery.from(this.entityClass);
-		Path<Y> path = root.get(attribute);
-		return entityManager.createQuery(criteriaQuery.where(
-				builder.equal(path, value)));
 	}
 	
 	private <Y extends Number> TypedQuery<T> createTypedQuery(
@@ -270,6 +239,7 @@ public class GenericDao<T, PK> implements Dao<T, PK> {
 	 */
 	protected final EntityManager getEntityManager() {
 		return this.managerProvider.get();
+		//return this.entityManager;
 	}
 
 	/**

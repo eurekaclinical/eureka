@@ -19,6 +19,7 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.services.config;
 
+import edu.emory.cci.aiw.cvrg.eureka.common.dao.DatabaseSupport;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.FileError;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.FileUpload;
 import java.security.NoSuchAlgorithmException;
@@ -29,27 +30,24 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import javax.inject.Inject;
 
 import org.protempa.proposition.value.AbsoluteTimeUnit;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.RelationOperator;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.RelationOperator_;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.Role;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.Role_;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.ThresholdsOperator;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.ThresholdsOperator_;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.TimeUnit;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.User;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.User_;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.ValueComparator;
-import edu.emory.cci.aiw.cvrg.eureka.services.dao.FileDao;
-import edu.emory.cci.aiw.cvrg.eureka.services.dao.RelationOperatorDao;
-import edu.emory.cci.aiw.cvrg.eureka.services.dao.RoleDao;
-import edu.emory.cci.aiw.cvrg.eureka.services.dao.ThresholdsOperatorDao;
-import edu.emory.cci.aiw.cvrg.eureka.services.dao.TimeUnitDao;
-import edu.emory.cci.aiw.cvrg.eureka.services.dao.UserDao;
-import edu.emory.cci.aiw.cvrg.eureka.services.dao.ValueComparatorDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.util.StringUtil;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import javax.persistence.EntityManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -63,40 +61,63 @@ class DatabasePopulator {
 
 	private static Logger LOGGER =
 			LoggerFactory.getLogger(DatabasePopulator.class);
-	private final TimeUnitDao timeUnitDao;
-	private final RoleDao roleDao;
-	private final UserDao userDao;
-	private final ValueComparatorDao valueComparatorDao;
-	private final RelationOperatorDao relationOperatorDao;
-	private final ThresholdsOperatorDao thresholdOperatorDao;
-	private final FileDao fileDao;
+	private final EntityManager entityManager;
+	private final DatabaseSupport dbSupport;
 
-	@Inject
-	DatabasePopulator(TimeUnitDao inTimeUnitDao, RoleDao inRoleDao,
-			UserDao inUserDao, ValueComparatorDao inValueComparatorDao,
-			RelationOperatorDao inRelationOperatorDao,
-			ThresholdsOperatorDao inMatchOperatorDao, FileDao fileDao) {
-		this.timeUnitDao = inTimeUnitDao;
-		this.roleDao = inRoleDao;
-		this.userDao = inUserDao;
-		this.valueComparatorDao = inValueComparatorDao;
-		this.relationOperatorDao = inRelationOperatorDao;
-		this.thresholdOperatorDao = inMatchOperatorDao;
-		this.fileDao = fileDao;
+	DatabasePopulator(EntityManager entityManager) {
+		assert entityManager != null : "entityManager cannot be null";
+		this.entityManager = entityManager;
+		this.dbSupport = new DatabaseSupport(this.entityManager);
 	}
 
 	void doPopulateIfNeeded() {
-		populateDefaultRolesAndUserIfNeeded();
-		populateTimeUnitsIfNeeded();
-		populateRelationOperatorsIfNeeded();
-		populateValueComparatorsIfNeeded();
-		populateThresholdOperatorsIfNeeded();
-		repairFileUploadsIfNeeded();
+//		this.entityManager.getTransaction().begin();
+//		try {
+//			populateDefaultRolesAndUserIfNeeded();
+//			this.entityManager.getTransaction().commit();
+//		} catch (Throwable t) {
+//			this.entityManager.getTransaction().rollback();
+//		}
+//		this.entityManager.getTransaction().begin();
+//		try {
+//			populateTimeUnitsIfNeeded();
+//			this.entityManager.getTransaction().commit();
+//		} catch (Throwable t) {
+//			this.entityManager.getTransaction().rollback();
+//		}
+//		this.entityManager.getTransaction().begin();
+//		try {
+//			populateRelationOperatorsIfNeeded();
+//			this.entityManager.getTransaction().commit();
+//		} catch (Throwable t) {
+//			this.entityManager.getTransaction().rollback();
+//		}
+//		this.entityManager.getTransaction().begin();
+//		try {
+//			populateValueComparatorsIfNeeded();
+//			this.entityManager.getTransaction().commit();
+//		} catch (Throwable t) {
+//			this.entityManager.getTransaction().rollback();
+//		}
+//		this.entityManager.getTransaction().begin();
+//		try {
+//			populateThresholdOperatorsIfNeeded();
+//			this.entityManager.getTransaction().commit();
+//		} catch (Throwable t) {
+//			this.entityManager.getTransaction().rollback();
+//		}
+		this.entityManager.getTransaction().begin();
+		try {
+			repairFileUploadsIfNeeded();
+			this.entityManager.getTransaction().commit();
+		} catch (Throwable t) {
+			this.entityManager.getTransaction().rollback();
+		}
 	}
 
 	private void populateTimeUnitsIfNeeded() {
 		Set<String> namesSet = new HashSet<String>();
-		for (TimeUnit timeUnit : this.timeUnitDao.getAll()) {
+		for (TimeUnit timeUnit : this.dbSupport.getAll(TimeUnit.class)) {
 			namesSet.add(timeUnit.getName());
 		}
 		this.createTimeUnitIfNeeded(
@@ -113,12 +134,12 @@ class DatabasePopulator {
 	private void repairFileUploadsIfNeeded() {
 		Date now = new Date();
 		int numUploadsRepaired = 0;
-		for (FileUpload fileUpload : this.fileDao.getAll()) {
+		for (FileUpload fileUpload : this.dbSupport.getAll(FileUpload.class)) {
 			if (!fileUpload.isCompleted()) {
 				if (numUploadsRepaired == 0) {
 					LOGGER.warn(
-						"Repairing file uploads table, probably because the "
-						+ "application shut down during a processing run.");
+							"Repairing file uploads table, probably because the "
+							+ "application shut down during a processing run.");
 				}
 				LOGGER.warn("Repairing file upload {}", fileUpload.toString());
 				fileUpload.setCompleted(true);
@@ -129,8 +150,8 @@ class DatabasePopulator {
 				List<FileError> errors = new ArrayList<FileError>();
 				errors.add(fileError);
 				fileUpload.setErrors(errors);
-				this.fileDao.update(fileUpload);
-				LOGGER.warn("After repair, the file upload's status is {}", 
+				this.entityManager.merge(fileUpload);
+				LOGGER.warn("After repair, the file upload's status is {}",
 						fileUpload.toString());
 				numUploadsRepaired++;
 			}
@@ -146,7 +167,9 @@ class DatabasePopulator {
 		Role superuserRole = this.createOrGetRole("superuser");
 
 		String superuserEmail = "super.user@emory.edu";
-		User superuser = this.userDao.getByName(superuserEmail);
+		User superuser =
+				this.dbSupport.getUniqueByAttribute(User.class, User_.email,
+				superuserEmail);
 		if (superuser == null) {
 			superuser = new User();
 			superuser.setActive(true);
@@ -165,7 +188,7 @@ class DatabasePopulator {
 			}
 			superuser.setRoles(
 					Arrays.asList(researcherRole, adminRole, superuserRole));
-			userDao.create(superuser);
+			this.entityManager.persist(superuser);
 		}
 	}
 
@@ -176,7 +199,7 @@ class DatabasePopulator {
 			timeUnit.setName(name);
 			timeUnit.setDescription(desc);
 			timeUnit.setRank(rank);
-			this.timeUnitDao.create(timeUnit);
+			this.entityManager.persist(timeUnit);
 		}
 	}
 
@@ -196,7 +219,8 @@ class DatabasePopulator {
 	private void populateValueComparatorsIfNeeded() {
 		Map<String, ValueComparatorHolder> vcMap =
 				new HashMap<String, ValueComparatorHolder>();
-		for (ValueComparator vc : this.valueComparatorDao.getAll()) {
+		for (ValueComparator vc :
+				this.dbSupport.getAll(ValueComparator.class)) {
 			vcMap.put(vc.getName(),
 					new ValueComparatorHolder(vc,
 					vc.getComplement().getName(), false));
@@ -228,7 +252,7 @@ class DatabasePopulator {
 				valueComparator.setComplement(
 						vcMap.get(vc.complementName).valueComparator);
 			}
-			this.valueComparatorDao.update(valueComparator);
+			this.entityManager.merge(valueComparator);
 		}
 	}
 
@@ -243,7 +267,7 @@ class DatabasePopulator {
 			valueComparator.setDescription(desc);
 			valueComparator.setThreshold(side);
 			valueComparator.setRank(rank);
-			this.valueComparatorDao.create(valueComparator);
+			this.entityManager.persist(valueComparator);
 			vcMap.put(name,
 					new ValueComparatorHolder(valueComparator, complementName,
 					true));
@@ -251,11 +275,12 @@ class DatabasePopulator {
 	}
 
 	private Role createOrGetRole(String name) {
-		Role role = this.roleDao.getRoleByName(name);
+		Role role = this.dbSupport.getUniqueByAttribute(
+				Role.class, Role_.name, name);
 		if (role == null) {
 			role = new Role();
 			role.setName(name);
-			this.roleDao.create(role);
+			this.entityManager.persist(role);
 		}
 		return role;
 	}
@@ -266,12 +291,13 @@ class DatabasePopulator {
 	}
 
 	private void createRelationOperatorIfNeeded(String name, String desc) {
-		RelationOperator relOp = this.relationOperatorDao.getByName(name);
+		RelationOperator relOp = this.dbSupport.getUniqueByAttribute(
+				RelationOperator.class, RelationOperator_.name, name);
 		if (relOp == null) {
 			relOp = new RelationOperator();
 			relOp.setName(name);
 			relOp.setDescription(desc);
-			this.relationOperatorDao.create(relOp);
+			this.entityManager.persist(relOp);
 		}
 	}
 
@@ -282,12 +308,13 @@ class DatabasePopulator {
 
 	private void createThresholdOperatorIfNeeded(String name,
 			String desc) {
-		ThresholdsOperator op = this.thresholdOperatorDao.getByName(name);
+		ThresholdsOperator op = this.dbSupport.getUniqueByAttribute(
+				ThresholdsOperator.class, ThresholdsOperator_.name, name);
 		if (op == null) {
 			op = new ThresholdsOperator();
 			op.setName(name);
 			op.setDescription(desc);
-			this.thresholdOperatorDao.create(op);
+			this.entityManager.persist(op);
 		}
 	}
 }

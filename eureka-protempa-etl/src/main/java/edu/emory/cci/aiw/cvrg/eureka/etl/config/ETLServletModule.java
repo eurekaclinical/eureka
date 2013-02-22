@@ -19,6 +19,7 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.etl.config;
 
+import com.google.inject.persist.PersistFilter;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -49,13 +50,14 @@ public class ETLServletModule extends JerseyServletModule {
 
 	@Override
 	protected void configureServlets() {
-
 		bind(JobDao.class).to(JpaJobDao.class);
 		bind(ConfDao.class).to(JpaConfDao.class);
 		bind(PropositionValidator.class).to(PropositionValidatorImpl.class);
 		bind(Task.class).toProvider(TaskProvider.class);
 
-		install(new JpaPersistModule("backend-jpa-unit"));
+		install(new JpaPersistModule(BackEndContextListener.JPA_UNIT));
+		
+		filter("/api/*").through(PersistFilter.class);
 
 		Map<String, String> params = new HashMap<String, String>();
 		params.put("com.sun.jersey.api.json.POJOMappingFeature", "true");

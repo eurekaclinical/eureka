@@ -386,6 +386,9 @@
 							<version>${slf4j-version}</version>
 						</dependency>
 					</dependencies>
+					<configuration>
+						<driver>oracle.jdbc.OracleDriver</driver>
+					</configuration>
 				</plugin>
 			</plugins>
 		</pluginManagement>

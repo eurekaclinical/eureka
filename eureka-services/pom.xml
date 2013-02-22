@@ -166,15 +166,13 @@
 						<groupId>org.liquibase</groupId>
 						<artifactId>liquibase-maven-plugin</artifactId>
 						<configuration>
-							<changeLogFile>src/main/resources/db_migration/changelog-master.xml</changeLogFile>
+							<changeLogFile>src/main/resources/dbmigration/changelog-master.xml</changeLogFile>
 							<driver>${local.services.db.jdbc.driver}</driver>
 							<url>${local.services.db.jdbc.url}</url>
 							<username>${local.services.username}</username>
 							<password>${local.services.password}</password>
 							<referenceUrl>persistence:services-jpa-unit</referenceUrl>
 							<promptOnNonLocalDatabase>false</promptOnNonLocalDatabase>
-							<verbose>true</verbose>
-							<logging>debug</logging>
 						</configuration>
 					</plugin>
 				</plugins>
@@ -188,7 +186,7 @@
 						<groupId>org.liquibase</groupId>
 						<artifactId>liquibase-maven-plugin</artifactId>
 						<configuration>
-							<changeLogFile>src/main/resources/db_migration/changelog-master.xml</changeLogFile>
+							<changeLogFile>src/main/resources/dbmigration/changelog-master.xml</changeLogFile>
 							<driver>${dev.services.db.jdbc.driver}</driver>
 							<url>${dev.services.db.jdbc.url}</url>
 							<username>${dev.services.username}</username>

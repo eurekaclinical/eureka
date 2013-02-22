@@ -19,6 +19,8 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.services.config;
 
+import com.google.inject.persist.PersistFilter;
+import com.google.inject.persist.jpa.JpaPersistModule;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -38,6 +40,8 @@ class ServletModule extends JerseyServletModule {
 
 	@Override
 	protected void configureServlets() {
+		filter("/api/*").through(PersistFilter.class);
+		
 		Map<String, String> params = new HashMap<String, String>();
 		params.put("com.sun.jersey.api.json.POJOMappingFeature", "true");
 		params.put(PackagesResourceConfig.PROPERTY_PACKAGES,

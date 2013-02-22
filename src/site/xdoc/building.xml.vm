@@ -62,9 +62,8 @@
 				</p>
             </subsection>
 			<subsection name="Deployment from source">
-				<p>Eureka! is known to deploy on 
-					<a href="http://tomcat.apache.org">Apache Tomcat</a> 
-					version 7. You may copy the three warfiles above 
+				<h4>Configuration</h4>
+				<p>You may copy the three warfiles above 
 					into your Tomcat deployment's <code>$CATALINA_HOME/webapps</code> 
 					directory. Alternatively, if you have the 
 					<a href="http://tomcat.apache.org/tomcat-7.0-doc/manager-howto.html">Tomcat manager app</a> 
@@ -78,13 +77,78 @@
 					for more information). For example:
 				</p>
 				<source>&lt;profile&gt;
-	&lt;id&gt;eureka-tomcat-local&lt;/id&gt;
-	&lt;properties&gt;
-		&lt;local.url&gt;http://tomcathostname:tomcatport/manager/text&lt;/local.url&gt;
-	&lt;/properties&gt;
-&lt;/profile&gt;</source>
+					&lt;id&gt;eureka-tomcat-local&lt;/id&gt;
+					&lt;properties&gt;
+						&lt;local.url&gt;http://tomcathostname:tomcatport/manager/text&lt;/local.url&gt;
+					&lt;/properties&gt;
+				&lt;/profile&gt;</source>
 				<p>Replace the URL in the <code>local.url</code> property with your own.
 				</p>
+				<p>These profiles also support properties for specifying 
+					connection information for the services and backend 
+					database schemas, similarly starting with 
+					<code>local</code>, 
+					<code>dev</code>, or 
+					<code>prd</code> depending on the profile you want to use
+					(<code>local</code> properties are shown):
+				</p>
+				<dl>
+					<dt>
+						<code>local.services.db.jdbc.driver</code>
+					</dt>
+					<dd>JDBC driver classname for the services schema.</dd>
+					<dt>
+						<code>local.services.db.jdbc.url</code>
+					</dt>
+					<dd>The JDBC URL for the services schema.</dd>
+					<dt>
+						<code>local.services.username</code>
+					</dt>
+					<dd>Database username for the services schema.</dd>
+					<dt>
+						<code>local.services.password</code>
+					</dt>
+					<dd>Database password for the services schema.</dd>
+					<dt>
+						<code>local.protempaetl.db.jdbc.driver</code>
+					</dt>
+					<dd>JDBC driver classname for the backend schema.</dd>
+					<dt>
+						<code>local.protempaetl.db.jdbc.url</code>
+					</dt>
+					<dd>The JDBC URL for the backend schema.</dd>
+					<dt>
+						<code>local.protempaetl.username</code>
+					</dt>
+					<dd>Database username for the backend schema.</dd>
+					<dt>
+						<code>local.protempaetl.password</code>
+					</dt>
+					<dd>Database password for the backend schema.</dd>
+				</dl>
+
+				<p>These properties may be used to update the schema via
+					maven as described in the next section.
+				</p>
+
+				<h4>Updating the database schema from Maven</h4>
+				<p>In the eureka-services directory, execute the following to
+					to make the services schema in your local development 
+					environment up-to-date.
+				</p>
+				<source>mvn liquibase:update -Peureka-tomcat-local</source>
+
+				<p>This command will also create the schema from scratch if
+					you have not done so already. The same command works to 
+					update the backend schema if you run it from the 
+					eureka-protempa-etl directory.
+				</p>
+
+				<p>To find out whether your schema needs updating, run the
+					following command:
+				</p>
+				<source>mvn liquibase:status -Peureka-tomcat-local</source>
+
 				<h4>Deploy to Tomcat (local installation)</h4>
 				<source>mvn tomcat:deploy -Peureka-tomcat-local</source>
 
