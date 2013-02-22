@@ -20,7 +20,6 @@
 package edu.emory.cci.aiw.cvrg.eureka.services.config;
 
 import com.google.inject.persist.PersistFilter;
-import com.google.inject.persist.jpa.JpaPersistModule;
 import java.util.HashMap;
 import java.util.Map;
 

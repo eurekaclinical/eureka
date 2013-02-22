@@ -19,12 +19,9 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.common.dao;
 
-import com.google.inject.Inject;
 import java.util.List;
 
 import javax.persistence.EntityManager;
-import javax.persistence.NoResultException;
-import javax.persistence.NonUniqueResultException;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -89,7 +86,6 @@ public class GenericDao<T, PK> implements Dao<T, PK> {
 	public T create(T entity) {
 		EntityManager entityManager = this.getEntityManager();
 		entityManager.persist(entity);
-		entityManager.flush();
 		return entity;
 	}
 
@@ -103,7 +99,6 @@ public class GenericDao<T, PK> implements Dao<T, PK> {
 	public T update(T entity) {
 		EntityManager entityManager = this.getEntityManager();
 		T result = entityManager.merge(entity);
-		entityManager.flush();
 		return result;
 	}
 
@@ -116,7 +111,6 @@ public class GenericDao<T, PK> implements Dao<T, PK> {
 		} else {
 			entityManager.remove(entityManager.merge(entity));
 		}
-		entityManager.flush();
 		return entity;
 	}
 
