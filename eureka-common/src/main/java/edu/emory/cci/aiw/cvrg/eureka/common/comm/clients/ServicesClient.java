@@ -337,9 +337,21 @@ public class ServicesClient extends AbstractClient {
 		return this.getResource().path(path).accept(
 				MediaType.APPLICATION_JSON).get(TimeUnit.class);
 	}
+	
+	public TimeUnit getDefaultTimeUnit() {
+		String path = "/api/timeunit/default";
+		return this.getResource().path(path).accept(
+				MediaType.APPLICATION_JSON).get(TimeUnit.class);
+	}
 
 	public List<RelationOperator> getRelationOperators() {
 		final String path = "/api/relationop/list";
+		return this.getResource().path(path).accept(
+				MediaType.APPLICATION_JSON).get(RelationOperatorList);
+	}
+	
+	public List<RelationOperator> getRelationOperatorsAsc() {
+		final String path = "/api/relationop/listasc";
 		return this.getResource().path(path).accept(
 				MediaType.APPLICATION_JSON).get(RelationOperatorList);
 	}
@@ -356,6 +368,14 @@ public class ServicesClient extends AbstractClient {
 				.build().toString();
 		return this.getResource().path(path).accept(
 				MediaType.APPLICATION_JSON).get(RelationOperator.class);
+	}
+	
+	public RelationOperator getDefaultRelationOperator() {
+		String path = "/api/relationop/default";
+		return getResource()
+				.path(path)
+				.accept(MediaType.APPLICATION_JSON)
+				.get(RelationOperator.class);
 	}
 
 	public List<ThresholdsOperator> getThresholdsOperators() {

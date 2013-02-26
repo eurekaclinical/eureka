@@ -70,8 +70,7 @@ class PropositionTranslatorUtil {
 			if (minDurationUnitsL != null) {
 				minDurationUnits = timeUnitDao.retrieve(minDurationUnitsL);
 			} else {
-				minDurationUnits = timeUnitDao.getByName(
-						DataElement.DEFAULT_TIME_UNIT_NAME);
+				minDurationUnits = timeUnitDao.getDefault();
 			}
 			ep.setMinDurationTimeUnit(minDurationUnits);
 			ep.setMaxDuration(null);
@@ -80,8 +79,7 @@ class PropositionTranslatorUtil {
 			if (maxDurationUnitsL != null) {
 				maxDurationUnits = timeUnitDao.retrieve(maxDurationUnitsL);
 			} else {
-				maxDurationUnits = timeUnitDao.getByName(
-						DataElement.DEFAULT_TIME_UNIT_NAME);
+				maxDurationUnits = timeUnitDao.getDefault();
 			}
 			ep.setMaxDurationTimeUnit(maxDurationUnits);
 		}

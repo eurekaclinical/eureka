@@ -21,6 +21,8 @@ package edu.emory.cci.aiw.cvrg.eureka.common.entity;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -31,6 +33,11 @@ import org.apache.commons.lang.builder.ToStringBuilder;
 @Entity
 @Table(name = "relation_ops")
 public class RelationOperator {
+	
+	public static enum Type {
+		SEQUENTIAL,
+		OVERLAPPING
+	}
 
 	@Id
 	@SequenceGenerator(name = "RELATION_OP_SEQ_GENERATOR",
@@ -42,6 +49,16 @@ public class RelationOperator {
 	@Column(unique = true, nullable = false)
 	private String name;
 	private String description;
+	
+	@Column(unique = true)
+	private int rank;
+	
+	@Column(nullable = false)
+	private boolean isDefault;
+	
+	@Enumerated(EnumType.STRING)
+	@Column(nullable = false)
+	private Type type;
 
 	public Long getId() {
 		return id;
@@ -65,6 +82,30 @@ public class RelationOperator {
 	
 	public String getDescription() {
 		return this.description;
+	}
+	
+	public int getRank() {
+		return this.rank;
+	}
+	
+	public void setRank(int rank) {
+		this.rank = rank;
+	}
+	
+	public boolean isDefault() {
+		return this.isDefault;
+	}
+	
+	public void setDefault(boolean isDefault) {
+		this.isDefault = isDefault;
+	}
+
+	public Type getType() {
+		return type;
+	}
+
+	public void setType(Type type) {
+		this.type = type;
 	}
 	
 	@Override

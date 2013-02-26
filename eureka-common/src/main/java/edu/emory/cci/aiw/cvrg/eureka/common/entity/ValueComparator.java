@@ -27,7 +27,7 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToOne;
+import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import org.apache.commons.lang.builder.ToStringBuilder;
@@ -65,7 +65,7 @@ public class ValueComparator {
 	@Column(unique = true, nullable = false)
 	private Long rank;
 
-	@OneToOne
+	@ManyToOne
 	@JsonIgnore // Needed due to infinite recursion without it. Maybe there's another way?
 	private ValueComparator complement;
 

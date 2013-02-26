@@ -21,10 +21,13 @@ package edu.emory.cci.aiw.cvrg.eureka.services.dao;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.dao.Dao;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.RelationOperator;
+import java.util.List;
 
 /**
  * @author hrathod
  */
 public interface RelationOperatorDao extends Dao<RelationOperator,Long>  {
-	public RelationOperator getByName (String inName);
+	RelationOperator getByName (String inName);
+	RelationOperator getDefault();
+	List<RelationOperator> getAllAsc();
 }

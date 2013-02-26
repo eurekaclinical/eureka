@@ -36,6 +36,8 @@ public interface TimeUnitDao extends Dao<TimeUnit, Long> {
 	 * otherwise
 	 */
 	public TimeUnit getByName(String inName);
+	
+	public TimeUnit getDefault();
 
 	public List<TimeUnit> getAllAsc();
 }

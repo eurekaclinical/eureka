@@ -23,7 +23,7 @@ limitations under the License.
 	<changeSet author="arpost (generated)" id="1360440238345-1">
 		<createTable tableName="CATEGORIES">
 			<column name="ID" type="NUMBER(19,0)">
-				<constraints nullable="false" primaryKey="true" primaryKeyName="SYS_C0013388" primaryKeyTablespace="SYSTEM"/>
+				<constraints nullable="false" primaryKey="true" primaryKeyName="SYS_C0013388"/>
 			</column>
 		</createTable>
 	</changeSet>
@@ -40,7 +40,7 @@ limitations under the License.
 	<changeSet author="arpost (generated)" id="1360440238345-3">
 		<createTable tableName="DATA_ELEMENTS">
 			<column name="ID" type="NUMBER(19,0)">
-				<constraints nullable="false" primaryKey="true" primaryKeyName="SYS_C0013396" primaryKeyTablespace="SYSTEM"/>
+				<constraints nullable="false" primaryKey="true" primaryKeyName="SYS_C0013396"/>
 			</column>
 			<column name="CATEGORYTYPE" type="NUMBER(10,0)">
 				<constraints nullable="false"/>
@@ -63,7 +63,7 @@ limitations under the License.
 	<changeSet author="arpost (generated)" id="1360440238345-4">
 		<createTable tableName="EXTENDED_DATA_ELEMENTS">
 			<column name="ID" type="NUMBER(19,0)">
-				<constraints nullable="false" primaryKey="true" primaryKeyName="SYS_C0013402" primaryKeyTablespace="SYSTEM"/>
+				<constraints nullable="false" primaryKey="true" primaryKeyName="SYS_C0013402"/>
 			</column>
 			<column name="MAXDURATION" type="NUMBER(10,0)"/>
 			<column name="MINDURATION" type="NUMBER(10,0)"/>
@@ -82,7 +82,7 @@ limitations under the License.
 	<changeSet author="arpost (generated)" id="1360440238345-5">
 		<createTable tableName="FILE_ERRORS">
 			<column name="ID" type="NUMBER(19,0)">
-				<constraints nullable="false" primaryKey="true" primaryKeyName="SYS_C0013404" primaryKeyTablespace="SYSTEM"/>
+				<constraints nullable="false" primaryKey="true" primaryKeyName="SYS_C0013404"/>
 			</column>
 			<column name="LINENUMBER" type="NUMBER(19,0)"/>
 			<column name="TEXT" type="VARCHAR2(255 CHAR)"/>
@@ -93,7 +93,7 @@ limitations under the License.
 	<changeSet author="arpost (generated)" id="1360440238345-6">
 		<createTable tableName="FILE_UPLOADS">
 			<column name="ID" type="NUMBER(19,0)">
-				<constraints nullable="false" primaryKey="true" primaryKeyName="SYS_C0013412" primaryKeyTablespace="SYSTEM"/>
+				<constraints nullable="false" primaryKey="true" primaryKeyName="SYS_C0013412"/>
 			</column>
 			<column name="COMPLETED" type="NUMBER(1,0)">
 				<constraints nullable="false"/>
@@ -118,7 +118,7 @@ limitations under the License.
 	<changeSet author="arpost (generated)" id="1360440238345-7">
 		<createTable tableName="FILE_WARNINGS">
 			<column name="ID" type="NUMBER(19,0)">
-				<constraints nullable="false" primaryKey="true" primaryKeyName="SYS_C0013414" primaryKeyTablespace="SYSTEM"/>
+				<constraints nullable="false" primaryKey="true" primaryKeyName="SYS_C0013414"/>
 			</column>
 			<column name="LINENUMBER" type="NUMBER(19,0)"/>
 			<column name="TEXT" type="VARCHAR2(255 CHAR)"/>
@@ -137,7 +137,7 @@ limitations under the License.
 			<column name="WITHINATLEAST" type="NUMBER(10,0)"/>
 			<column name="WITHINATMOST" type="NUMBER(10,0)"/>
 			<column name="ID" type="NUMBER(19,0)">
-				<constraints nullable="false" primaryKey="true" primaryKeyName="SYS_C0013419" primaryKeyTablespace="SYSTEM"/>
+				<constraints nullable="false" primaryKey="true" primaryKeyName="SYS_C0013419"/>
 			</column>
 			<column name="EXTENDEDDATAELEMENT_ID" type="NUMBER(19,0)">
 				<constraints nullable="false"/>
@@ -149,7 +149,7 @@ limitations under the License.
 	<changeSet author="arpost (generated)" id="1360440238345-9">
 		<createTable tableName="PROPERTY_CONSTRAINTS">
 			<column name="ID" type="NUMBER(19,0)">
-				<constraints nullable="false" primaryKey="true" primaryKeyName="SYS_C0013422" primaryKeyTablespace="SYSTEM"/>
+				<constraints nullable="false" primaryKey="true" primaryKeyName="SYS_C0013422"/>
 			</column>
 			<column name="PROPERTYNAME" type="VARCHAR2(255 CHAR)">
 				<constraints nullable="false"/>
@@ -161,7 +161,7 @@ limitations under the License.
 	<changeSet author="arpost (generated)" id="1360440238345-10">
 		<createTable tableName="RELATION_OPS">
 			<column name="ID" type="NUMBER(19,0)">
-				<constraints nullable="false" primaryKey="true" primaryKeyName="SYS_C0013425" primaryKeyTablespace="SYSTEM"/>
+				<constraints nullable="false" primaryKey="true" primaryKeyName="SYS_C0013425"/>
 			</column>
 			<column name="DESCRIPTION" type="VARCHAR2(255 CHAR)"/>
 			<column name="NAME" type="VARCHAR2(255 CHAR)">
@@ -172,7 +172,7 @@ limitations under the License.
 	<changeSet author="arpost (generated)" id="1360440238345-11">
 		<createTable tableName="RELATIONS">
 			<column name="ID" type="NUMBER(19,0)">
-				<constraints nullable="false" primaryKey="true" primaryKeyName="SYS_C0013431" primaryKeyTablespace="SYSTEM"/>
+				<constraints nullable="false" primaryKey="true" primaryKeyName="SYS_C0013431"/>
 			</column>
 			<column name="MAXF1S2" type="NUMBER(10,0)"/>
 			<column name="MAXS1F2" type="NUMBER(10,0)"/>
@@ -197,7 +197,7 @@ limitations under the License.
 	<changeSet author="arpost (generated)" id="1360440238345-12">
 		<createTable tableName="ROLES">
 			<column name="ID" type="NUMBER(19,0)">
-				<constraints nullable="false" primaryKey="true" primaryKeyName="SYS_C0013014" primaryKeyTablespace="SYSTEM"/>
+				<constraints nullable="false" primaryKey="true" primaryKeyName="SYS_C0013014"/>
 			</column>
 			<column name="DEFAULTROLE" type="NUMBER(1,0)">
 				<constraints nullable="false"/>
@@ -210,7 +210,7 @@ limitations under the License.
 	<changeSet author="arpost (generated)" id="1360440238345-13">
 		<createTable tableName="SEQUENCES">
 			<column name="ID" type="NUMBER(19,0)">
-				<constraints nullable="false" primaryKey="true" primaryKeyName="SYS_C0013433" primaryKeyTablespace="SYSTEM"/>
+				<constraints nullable="false" primaryKey="true" primaryKeyName="SYS_C0013433"/>
 			</column>
 			<column name="PRIMARYEXTENDEDDATAELEMENT_ID" type="NUMBER(19,0)"/>
 		</createTable>
@@ -221,14 +221,14 @@ limitations under the License.
 				<constraints nullable="false"/>
 			</column>
 			<column name="ID" type="NUMBER(19,0)">
-				<constraints nullable="false" primaryKey="true" primaryKeyName="SYS_C0013436" primaryKeyTablespace="SYSTEM"/>
+				<constraints nullable="false" primaryKey="true" primaryKeyName="SYS_C0013436"/>
 			</column>
 		</createTable>
 	</changeSet>
 	<changeSet author="arpost (generated)" id="1360440238345-15">
 		<createTable tableName="THRESHOLDS_OPS">
 			<column name="ID" type="NUMBER(19,0)">
-				<constraints nullable="false" primaryKey="true" primaryKeyName="SYS_C0013439" primaryKeyTablespace="SYSTEM"/>
+				<constraints nullable="false" primaryKey="true" primaryKeyName="SYS_C0013439"/>
 			</column>
 			<column name="DESCRIPTION" type="VARCHAR2(255 CHAR)"/>
 			<column name="NAME" type="VARCHAR2(255 CHAR)">
@@ -239,7 +239,7 @@ limitations under the License.
 	<changeSet author="arpost (generated)" id="1360440238345-16">
 		<createTable tableName="TIME_UNITS">
 			<column name="ID" type="NUMBER(19,0)">
-				<constraints nullable="false" primaryKey="true" primaryKeyName="SYS_C0013443" primaryKeyTablespace="SYSTEM"/>
+				<constraints nullable="false" primaryKey="true" primaryKeyName="SYS_C0013443"/>
 			</column>
 			<column name="DESCRIPTION" type="VARCHAR2(255 CHAR)"/>
 			<column name="NAME" type="VARCHAR2(255 CHAR)">
@@ -261,7 +261,7 @@ limitations under the License.
 	<changeSet author="arpost (generated)" id="1360440238345-18">
 		<createTable tableName="USERS">
 			<column name="ID" type="NUMBER(19,0)">
-				<constraints nullable="false" primaryKey="true" primaryKeyName="SYS_C0013037" primaryKeyTablespace="SYSTEM"/>
+				<constraints nullable="false" primaryKey="true" primaryKeyName="SYS_C0013037"/>
 			</column>
 			<column name="ACTIVE" type="NUMBER(1,0)">
 				<constraints nullable="false"/>
@@ -286,7 +286,7 @@ limitations under the License.
 	<changeSet author="arpost (generated)" id="1360440238345-19">
 		<createTable tableName="VALUE_COMPARATORS">
 			<column name="ID" type="NUMBER(19,0)">
-				<constraints nullable="false" primaryKey="true" primaryKeyName="SYS_C0013450" primaryKeyTablespace="SYSTEM"/>
+				<constraints nullable="false" primaryKey="true" primaryKeyName="SYS_C0013450"/>
 			</column>
 			<column name="DESCRIPTION" type="VARCHAR2(255 CHAR)"/>
 			<column name="NAME" type="VARCHAR2(255 CHAR)">
@@ -304,7 +304,7 @@ limitations under the License.
 	<changeSet author="arpost (generated)" id="1360440238345-20">
 		<createTable tableName="VALUE_THRESHOLD_GROUPS">
 			<column name="ID" type="NUMBER(19,0)">
-				<constraints nullable="false" primaryKey="true" primaryKeyName="SYS_C0013455" primaryKeyTablespace="SYSTEM"/>
+				<constraints nullable="false" primaryKey="true" primaryKeyName="SYS_C0013455"/>
 			</column>
 			<column name="THRESHOLDSOP_ID" type="NUMBER(19,0)">
 				<constraints nullable="false"/>
@@ -314,7 +314,7 @@ limitations under the License.
 	<changeSet author="arpost (generated)" id="1360440238345-21">
 		<createTable tableName="VALUE_THRESHOLDS">
 			<column name="ID" type="NUMBER(19,0)">
-				<constraints nullable="false" primaryKey="true" primaryKeyName="SYS_C0013461" primaryKeyTablespace="SYSTEM"/>
+				<constraints nullable="false" primaryKey="true" primaryKeyName="SYS_C0013461"/>
 			</column>
 			<column name="MAXTVALUETHRESHOLD" type="VARCHAR2(255 CHAR)"/>
 			<column name="MAXUNITS" type="VARCHAR2(255 CHAR)"/>
@@ -337,31 +337,31 @@ limitations under the License.
 		</createTable>
 	</changeSet>
 	<changeSet author="arpost (generated)" id="1360440238345-22">
-		<addUniqueConstraint columnNames="KEY, USER_ID" constraintName="SYS_C0013397" deferrable="false" disabled="false" initiallyDeferred="false" tableName="DATA_ELEMENTS" tablespace="SYSTEM"/>
+		<addUniqueConstraint columnNames="KEY, USER_ID" constraintName="SYS_C0013397" deferrable="false" disabled="false" initiallyDeferred="false" tableName="DATA_ELEMENTS"/>
 	</changeSet>
 	<changeSet author="arpost (generated)" id="1360440238345-23">
-		<addUniqueConstraint columnNames="NAME" constraintName="SYS_C0013426" deferrable="false" disabled="false" initiallyDeferred="false" tableName="RELATION_OPS" tablespace="SYSTEM"/>
+		<addUniqueConstraint columnNames="NAME" constraintName="SYS_C0013426" deferrable="false" disabled="false" initiallyDeferred="false" tableName="RELATION_OPS"/>
 	</changeSet>
 	<changeSet author="arpost (generated)" id="1360440238345-24">
-		<addUniqueConstraint columnNames="NAME" constraintName="SYS_C0013015" deferrable="false" disabled="false" initiallyDeferred="false" tableName="ROLES" tablespace="SYSTEM"/>
+		<addUniqueConstraint columnNames="NAME" constraintName="SYS_C0013015" deferrable="false" disabled="false" initiallyDeferred="false" tableName="ROLES"/>
 	</changeSet>
 	<changeSet author="arpost (generated)" id="1360440238345-25">
-		<addUniqueConstraint columnNames="NAME" constraintName="SYS_C0013440" deferrable="false" disabled="false" initiallyDeferred="false" tableName="THRESHOLDS_OPS" tablespace="SYSTEM"/>
+		<addUniqueConstraint columnNames="NAME" constraintName="SYS_C0013440" deferrable="false" disabled="false" initiallyDeferred="false" tableName="THRESHOLDS_OPS"/>
 	</changeSet>
 	<changeSet author="arpost (generated)" id="1360440238345-26">
-		<addUniqueConstraint columnNames="NAME" constraintName="SYS_C0013444" deferrable="false" disabled="false" initiallyDeferred="false" tableName="TIME_UNITS" tablespace="SYSTEM"/>
+		<addUniqueConstraint columnNames="NAME" constraintName="SYS_C0013444" deferrable="false" disabled="false" initiallyDeferred="false" tableName="TIME_UNITS"/>
 	</changeSet>
 	<changeSet author="arpost (generated)" id="1360440238345-27">
-		<addUniqueConstraint columnNames="RANK" constraintName="SYS_C0013445" deferrable="false" disabled="false" initiallyDeferred="false" tableName="TIME_UNITS" tablespace="SYSTEM"/>
+		<addUniqueConstraint columnNames="RANK" constraintName="SYS_C0013445" deferrable="false" disabled="false" initiallyDeferred="false" tableName="TIME_UNITS"/>
 	</changeSet>
 	<changeSet author="arpost (generated)" id="1360440238345-28">
-		<addUniqueConstraint columnNames="EMAIL" constraintName="SYS_C0013038" deferrable="false" disabled="false" initiallyDeferred="false" tableName="USERS" tablespace="SYSTEM"/>
+		<addUniqueConstraint columnNames="EMAIL" constraintName="SYS_C0013038" deferrable="false" disabled="false" initiallyDeferred="false" tableName="USERS"/>
 	</changeSet>
 	<changeSet author="arpost (generated)" id="1360440238345-29">
-		<addUniqueConstraint columnNames="NAME" constraintName="SYS_C0013451" deferrable="false" disabled="false" initiallyDeferred="false" tableName="VALUE_COMPARATORS" tablespace="SYSTEM"/>
+		<addUniqueConstraint columnNames="NAME" constraintName="SYS_C0013451" deferrable="false" disabled="false" initiallyDeferred="false" tableName="VALUE_COMPARATORS"/>
 	</changeSet>
 	<changeSet author="arpost (generated)" id="1360440238345-30">
-		<addUniqueConstraint columnNames="RANK" constraintName="SYS_C0013452" deferrable="false" disabled="false" initiallyDeferred="false" tableName="VALUE_COMPARATORS" tablespace="SYSTEM"/>
+		<addUniqueConstraint columnNames="RANK" constraintName="SYS_C0013452" deferrable="false" disabled="false" initiallyDeferred="false" tableName="VALUE_COMPARATORS"/>
 	</changeSet>
 	<changeSet author="arpost (generated)" id="1360440238345-31">
 		<addForeignKeyConstraint baseColumnNames="ID" baseTableName="CATEGORIES" constraintName="FK4D47461C2DAC163D" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" referencedColumnNames="ID" referencedTableName="DATA_ELEMENTS" referencedTableSchemaName="EUREKASERVICE" referencesUniqueColumn="false"/>
@@ -645,6 +645,8 @@ limitations under the License.
 	<changeSet author="arpost (generated)" id="1360440238345-85">
 		<addForeignKeyConstraint baseColumnNames="COMPLEMENT_ID" baseTableName="VALUE_COMPARATORS" constraintName="FKA55F9C8F929E3CE8" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" referencedColumnNames="ID" referencedTableName="VALUE_COMPARATORS" referencedTableSchemaName="EUREKASERVICE" referencesUniqueColumn="false"/>
 	</changeSet>
+	
+	<!-- 1.7 changes -->
 	<changeSet author="arpost (generated)" id="1360440238345-86">
 		<addColumn tableName="EXTENDED_DATA_ELEMENTS">
 			<column name="VALUETHRESHOLD_ID" type="NUMBER(19,0)"/>
@@ -672,5 +674,44 @@ limitations under the License.
 		<addForeignKeyConstraint baseColumnNames="RELATIONOP_ID" baseTableName="VALUE_THRESHOLDS" constraintName="FK7321CCF6459AEE30" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" referencedColumnNames="ID" referencedTableName="RELATION_OPS" referencesUniqueColumn="false"/>
 		<addForeignKeyConstraint baseColumnNames="WITHINATLEASTUNITS_ID" baseTableName="VALUE_THRESHOLDS" constraintName="FK7321CCF67DB3C4DA" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" referencedColumnNames="ID" referencedTableName="TIME_UNITS" referencesUniqueColumn="false"/>
 		<addForeignKeyConstraint baseColumnNames="WITHINATMOSTUNITS_ID" baseTableName="VALUE_THRESHOLDS" constraintName="FK7321CCF6984A25F0" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" referencedColumnNames="ID" referencedTableName="TIME_UNITS" referencesUniqueColumn="false"/>
+	</changeSet>
+	<changeSet author="arpost" id="1360440238345-87">
+		<addColumn tableName="RELATION_OPS">
+			<column name="RANK" type="NUMBER(10,0)"/>
+			<column name="ISDEFAULT" type="BOOLEAN" defaultValueBoolean="false">
+				<constraints nullable="false"/>
+			</column>
+			<column name="TYPE" type="VARCHAR2(255 CHAR)"/>
+		</addColumn>
+		<addUniqueConstraint columnNames="RANK" constraintName="TIME_UNITS_RANK" deferrable="false" disabled="false" initiallyDeferred="false" tableName="RELATION_OPS"/>
+		<update tableName="RELATION_OPS">
+			<column name="RANK" valueNumeric="1"/>
+			<column name="ISDEFAULT" valueBoolean="true"/>
+			<column name="TYPE" value="SEQUENTIAL"/>
+			<where>NAME='before'</where>
+		</update>
+		<update tableName="RELATION_OPS">
+			<column name="RANK" valueNumeric="2"/>
+			<column name="TYPE" value="SEQUENTIAL"/>
+			<where>NAME='after'</where>
+		</update>
+		<insert tableName="RELATION_OPS">
+			<column name="ID" valueNumeric="3"/>
+			<column name="NAME" value="around"/>
+			<column name="DESCRIPTION" value="around"/>
+			<column name="RANK" valueNumeric="3"/>
+			<column name="TYPE" value="OVERLAPPING"/>
+		</insert>
+		<addNotNullConstraint tableName="RELATION_OPS" columnName="TYPE"/>
+		<addColumn tableName="TIME_UNITS">
+			<column name="ISDEFAULT" type="BOOLEAN" defaultValueBoolean="false">
+				<constraints nullable="false"/>
+			</column>
+		</addColumn>
+		<update tableName="TIME_UNITS">
+			<column name="ISDEFAULT" valueBoolean="true"/>
+			<where>NAME='day'</where>
+		</update>
+		<addNotNullConstraint tableName="PROPERTY_CONSTRAINTS" columnName="VALUECOMPARATOR_ID"/>
 	</changeSet>
 </databaseChangeLog>

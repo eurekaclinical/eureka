@@ -98,9 +98,7 @@ public final class FrequencyTranslator implements
 				withinAtLeastUnits =
 						this.timeUnitDao.retrieve(withinAtLeastUnitsL);
 			} else {
-				withinAtLeastUnits =
-						this.timeUnitDao.getByName(
-						DataElement.DEFAULT_TIME_UNIT_NAME);
+				withinAtLeastUnits = this.timeUnitDao.getDefault();
 			}
 			result.setWithinAtLeastUnits(withinAtLeastUnits);
 			result.setWithinAtMost(null);
@@ -110,8 +108,7 @@ public final class FrequencyTranslator implements
 				withinAtMostUnits =
 						this.timeUnitDao.retrieve(withinAtMostUnitsL);
 			} else {
-				withinAtMostUnits = this.timeUnitDao.getByName(
-						DataElement.DEFAULT_TIME_UNIT_NAME);
+				withinAtMostUnits = this.timeUnitDao.getDefault();
 
 			}
 			result.setWithinAtMostUnits(withinAtMostUnits);

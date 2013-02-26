@@ -44,6 +44,11 @@ public class JpaTimeUnitDao extends GenericDao<TimeUnit,
 	public TimeUnit getByName(String inName) {
 		return getUniqueByAttribute(TimeUnit_.name, inName);
 	}
+	
+	@Override
+	public TimeUnit getDefault() {
+		return getUniqueByAttribute(TimeUnit_.isDefault, true);
+	}
 
 	@Override
 	public List<TimeUnit> getAllAsc() {

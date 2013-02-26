@@ -78,10 +78,27 @@ public class EditPropositionServlet extends HttpServlet {
 		ServicesClient servicesClient = new ServicesClient(eurekaServicesUrl);
 		User user = servicesClient.getUserByName(userName);
 		List<TimeUnit> timeUnits = servicesClient.getTimeUnitsAsc();
-		TimeUnit defaultTimeUnit = servicesClient
-				.getTimeUnitByName(DataElement.DEFAULT_TIME_UNIT_NAME);
-		List<RelationOperator> operators = servicesClient
-				.getRelationOperators();
+		TimeUnit defaultTimeUnit = servicesClient.getDefaultTimeUnit();
+		List<RelationOperator> relOps = 
+				servicesClient.getRelationOperatorsAsc();
+		List<RelationOperator> sequentialRelOps =
+				new ArrayList<RelationOperator>();
+		List<RelationOperator> contextRelOps = 
+				new ArrayList<RelationOperator>();
+		for (RelationOperator relOp : relOps) {
+			switch (relOp.getType()) {
+				case SEQUENTIAL:
+					sequentialRelOps.add(relOp);
+				case OVERLAPPING:
+					contextRelOps.add(relOp);
+					break;
+				default:
+					throw new AssertionError(
+							"Unexpected relation type: " + relOp);
+			}
+		}
+		RelationOperator defaultRelOp = 
+				servicesClient.getDefaultRelationOperator();
 		List<ThresholdsOperator> thresholdOps = servicesClient
 				.getThresholdsOperators();
 
@@ -103,16 +120,18 @@ public class EditPropositionServlet extends HttpServlet {
 					break;
 				default:
 					throw new AssertionError(
-							"Invalid threshold: " + vc.getThreshold());
+							"Unexpected threshold: " + vc.getThreshold());
 			}
 		}
 
 		req.setAttribute("timeUnits", timeUnits);
-		req.setAttribute("operators", operators);
+		req.setAttribute("sequentialRelationOps", sequentialRelOps);
+		req.setAttribute("contextRelationOps", contextRelOps);
 		req.setAttribute("thresholdsOperators", thresholdOps);
 		req.setAttribute("valueComparatorsUpper", valueCompsUpper);
 		req.setAttribute("valueComparatorsLower", valueCompsLower);
 		req.setAttribute("defaultTimeUnit", defaultTimeUnit);
+		req.setAttribute("defaultRelationOp", defaultRelOp);
 
 		if ((propKey != null) && (!propKey.equals(""))) {
 			DataElement dataElement = servicesClient

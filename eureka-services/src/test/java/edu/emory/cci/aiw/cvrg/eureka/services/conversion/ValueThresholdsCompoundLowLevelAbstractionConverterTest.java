@@ -72,7 +72,7 @@ public class ValueThresholdsCompoundLowLevelAbstractionConverterTest extends
 		ValueComparator eq = new ValueComparator();
 		eq.setName("=");
 		ValueComparator ne = new ValueComparator();
-		ne.setName("!=");
+		ne.setName("not=");
 		ValueComparator lt = new ValueComparator();
 		lt.setName("<");
 		ValueComparator gte = new ValueComparator();

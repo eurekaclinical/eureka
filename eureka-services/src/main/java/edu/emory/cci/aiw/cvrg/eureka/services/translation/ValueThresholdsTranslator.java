@@ -163,6 +163,9 @@ public final class ValueThresholdsTranslator implements
 				}
 				j++;
 			}
+			for (int k = extendedDataElements.size() - 1; k >= j; k--) {
+				extendedDataElements.remove(k);
+			}
 			
 			i++;
 		}
@@ -217,6 +220,7 @@ public final class ValueThresholdsTranslator implements
 			threshold.setWithinAtLeastUnit(vte.getWithinAtLeastUnits().getId());
 			threshold.setWithinAtMost(vte.getWithinAtMost());
 			threshold.setWithinAtMostUnit(vte.getWithinAtMostUnits().getId());
+			threshold.setRelationOperator(vte.getRelationOperator().getId());
 			thresholds.add(threshold);
 		}
 		result.setValueThresholds(thresholds);

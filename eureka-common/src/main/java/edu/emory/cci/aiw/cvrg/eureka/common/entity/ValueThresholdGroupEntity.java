@@ -25,11 +25,11 @@ import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.CategoryEntity.CategoryType;
+import javax.persistence.ManyToOne;
 import org.apache.commons.lang.builder.ReflectionToStringBuilder;
 
 /**
@@ -47,7 +47,7 @@ public class ValueThresholdGroupEntity extends DataElementEntity {
 	@JoinColumn(nullable = false, name = "valuethresholdsgroup_id")
 	private List<ValueThresholdEntity> valueThresholds;
 	
-	@OneToOne
+	@ManyToOne
 	@JoinColumn(name = "thresholdsop_id", referencedColumnName = "id", nullable = false)
 	private ThresholdsOperator thresholdsOperator;
 	

@@ -127,7 +127,7 @@ public class SequenceTranslator implements
 						"Invalid data element "
 						+ rde.getSequentialDataElement());
 			}
-			rhsEP = createExtendedProposition(rhsEP, rhsDEF, 
+			rhsEP = createExtendedProposition(rhsEP, rhsDEF,
 					rde.getSequentialDataElementSource(), userId);
 
 			RelationOperator relationOperator =
@@ -142,12 +142,17 @@ public class SequenceTranslator implements
 					this.timeUnitDao.retrieve(rde.getRelationMaxUnits()));
 			relation.setRelationOperator(relationOperator);
 
-			if (relationOperator.getName().equalsIgnoreCase("before")) {
+			String relOpName = relationOperator.getName();
+			if (relOpName.equals("before")) {
 				relation.setLhsExtendedDataElement(lhsEP);
 				relation.setRhsExtendedDataElement(rhsEP);
-			} else if (relationOperator.getName().equalsIgnoreCase("after")) {
+			} else if (relOpName.equals("after")) {
 				relation.setLhsExtendedDataElement(rhsEP);
 				relation.setRhsExtendedDataElement(lhsEP);
+			} else {
+				throw new DataElementHandlingException(
+						Response.Status.BAD_REQUEST,
+						"Invalid temporal relationship '" + relOpName + "'");
 			}
 
 			i++;
@@ -212,7 +217,7 @@ public class SequenceTranslator implements
 
 			List<Relation> relations = proposition.getRelations();
 			Long pId = proposition.getPrimaryExtendedDataElement().getId();
-			Map<Long, Long> sequentialSources = 
+			Map<Long, Long> sequentialSources =
 					assignSources(pId, proposition);
 
 			List<RelatedDataElementField> relatedFields =

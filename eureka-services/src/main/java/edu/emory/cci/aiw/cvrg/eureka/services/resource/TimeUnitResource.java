@@ -80,4 +80,14 @@ public class TimeUnitResource {
 		}
 		return result;
 	}
+	
+	@GET
+	@Path("/default")
+	public TimeUnit getDefault() {
+		TimeUnit result = this.timeUnitDao.getDefault();
+		if (result == null) {
+			throw new HttpStatusException(Response.Status.NOT_FOUND);
+		}
+		return result;
+	}
 }

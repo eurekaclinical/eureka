@@ -27,6 +27,7 @@ import com.google.inject.Provider;
 import edu.emory.cci.aiw.cvrg.eureka.common.dao.GenericDao;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.RelationOperator;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.RelationOperator_;
+import java.util.List;
 
 /**
  * @author hrathod
@@ -39,7 +40,18 @@ public class JpaRelationOperatorDao extends GenericDao<RelationOperator,
 		super(RelationOperator.class, inManagerProvider);
 	}
 
+	@Override
 	public RelationOperator getByName (String inName) {
 		return this.getUniqueByAttribute(RelationOperator_.name, inName);
+	}
+	
+	@Override
+	public RelationOperator getDefault() {
+		return getUniqueByAttribute(RelationOperator_.isDefault, true);
+	}
+	
+	@Override
+	public List<RelationOperator> getAllAsc() {
+		return getListAsc(RelationOperator_.rank);
 	}
 }

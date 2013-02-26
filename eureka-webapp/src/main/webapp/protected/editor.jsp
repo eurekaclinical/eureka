@@ -303,7 +303,7 @@
 																		</td>
 																		<td>
 																			<select name="sequenceRelDataElementTemporalRelation">
-																				<c:forEach var="op" items="${operators}">
+																				<c:forEach var="op" items="${sequentialRelationOps}">
 																				<option value="${op.id}" <c:if test="${op.id == relation.relationOperator}">selected="selected"</c:if>>${op.description}</option>
 																				</c:forEach>
 																			</select>
@@ -388,8 +388,8 @@
 																		</td>
 																		<td>
 																			<select name="sequenceRelDataElementTemporalRelation">
-																				<c:forEach var="op" items="${operators}">
-																				<option value="${op.id}">${op.description}</option>
+																				<c:forEach var="op" items="${sequentialRelationOps}">
+																				<option value="${op.id}" <c:if test="${op.id == defaultRelationOp.id}">selected="selected"</c:if>>${op.description}</option>
 																				</c:forEach>
 																			</select>
 																		</td>
@@ -682,7 +682,7 @@
 																					</td>
 																					<td>
 																						<select name="thresholdDataElementTemporalRelation">
-																							<c:forEach var="op" items="${operators}">
+																							<c:forEach var="op" items="${contextRelationOps}">
 																							<option value="${op.id}" <c:if test="${propositionType == 'VALUE_THRESHOLD' and op.id == threshold.relationOperator}">selected="selected"</c:if>>${op.description}</option>
 																							</c:forEach>
 																						</select>
@@ -762,8 +762,8 @@
 																					</td>
 																					<td>
 																						<select name="thresholdDataElementTemporalRelation">
-																							<c:forEach var="op" items="${operators}">
-																							<option value="${op.id}">${op.description}</option>
+																							<c:forEach var="op" items="${contextRelationOps}">
+																							<option value="${op.id}" <c:if test="${op.id == defaultRelationOp.id}">selected="selected"</c:if>>${op.description}</option>
 																							</c:forEach>
 																						</select>
 																					</td>

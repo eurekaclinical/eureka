@@ -36,10 +36,23 @@ import org.protempa.SimpleGapFunction;
 import org.protempa.SlidingWindowWidthMode;
 import org.protempa.proposition.value.NominalValue;
 import static edu.emory.cci.aiw.cvrg.eureka.services.conversion.ConversionUtil.extractContextDefinition;
+import java.util.HashMap;
+import java.util.Map;
 
 public final class ValueThresholdsLowLevelAbstractionConverter implements
 		PropositionDefinitionConverter<ValueThresholdGroupEntity, LowLevelAbstractionDefinition> {
-
+	
+	private static final Map<String, ValueComparator> VC_MAP =
+			new HashMap<String, ValueComparator>();
+	static {
+		VC_MAP.put(">", ValueComparator.GREATER_THAN);
+		VC_MAP.put(">=", ValueComparator.GREATER_THAN_OR_EQUAL_TO);
+		VC_MAP.put("=", ValueComparator.EQUAL_TO);
+		VC_MAP.put("not=", ValueComparator.NOT_EQUAL_TO);
+		VC_MAP.put("<=", ValueComparator.LESS_THAN_OR_EQUAL_TO);
+		VC_MAP.put("<", ValueComparator.LESS_THAN);
+	}
+	
 	private PropositionDefinitionConverterVisitor converterVisitor;
 	private LowLevelAbstractionDefinition primary;
 	private String primaryPropId;
@@ -126,25 +139,27 @@ public final class ValueThresholdsLowLevelAbstractionConverter implements
 				&& threshold.getMinValueComp() != null) {
 			valueDef.setParameterValue("minThreshold", ValueType.VALUE
 					.parse(threshold.getMinValueThreshold().toString()));
-			valueDef.setParameterComp("minThreshold", ValueComparator
-					.parse(threshold.getMinValueComp().getName()));
+			valueDef.setParameterComp("minThreshold", 
+					VC_MAP.get(threshold.getMinValueComp().getName()));
 			compValueDef.setParameterValue("maxThreshold", ValueType.VALUE
 					.parse(threshold.getMinValueThreshold().toString()));
 			compValueDef.setParameterComp("maxThreshold",
-					ValueComparator.parse(threshold.getMinValueComp()
+					VC_MAP.get(threshold.getMinValueComp()
 					.getComplement().getName()));
 		}
 		if (threshold.getMaxValueThreshold() != null
 				&& threshold.getMaxValueComp() != null) {
 			valueDef.setParameterValue("maxThreshold", ValueType.VALUE
 					.parse(threshold.getMaxValueThreshold().toString()));
-			valueDef.setParameterComp("maxThreshold", ValueComparator
-					.parse(threshold.getMaxValueComp().getName()));
+			valueDef.setParameterComp("maxThreshold", 
+					VC_MAP.get(threshold.getMaxValueComp().getName()));
 			compValueDef.setParameterValue("minThreshold", ValueType.VALUE
 					.parse(threshold.getMaxValueThreshold().toString()));
 			compValueDef.setParameterComp("minThreshold",
-					ValueComparator.parse(threshold.getMaxValueComp()
-					.getComplement().getName()));
+					VC_MAP.get(
+					threshold.getMaxValueComp().getComplement().getName()));
 		}
 	}
+	
+	
 }

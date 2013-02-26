@@ -52,6 +52,12 @@ public class RelationOperatorResource {
 	public List<RelationOperator> getAll () {
 		return this.relationOperatorDao.getAll();
 	}
+	
+	@GET
+	@Path("/listasc")
+	public List<RelationOperator> getAllAsc () {
+		return this.relationOperatorDao.getAllAsc();
+	}
 
 	@GET
 	@Path("/{id}")
@@ -63,5 +69,11 @@ public class RelationOperatorResource {
 	@Path("/byname/{name}")
 	public RelationOperator getByName (@PathParam("name") String inName) {
 		return this.relationOperatorDao.getByName(inName);
+	}
+	
+	@GET
+	@Path("/default")
+	public RelationOperator getDefault() {
+		return this.relationOperatorDao.getDefault();
 	}
 }

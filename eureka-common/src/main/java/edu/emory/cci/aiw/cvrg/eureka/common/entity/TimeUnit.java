@@ -49,6 +49,9 @@ public class TimeUnit {
 	
 	@Column(unique=true)
 	private int rank;
+	
+	@Column(nullable=false)
+	private boolean isDefault;
 
 	public Long getId() {
 		return id;
@@ -80,6 +83,14 @@ public class TimeUnit {
 
 	public void setRank(int rank) {
 		this.rank = rank;
+	}
+	
+	public boolean isDefault() {
+		return this.isDefault;
+	}
+	
+	public void setDefault(boolean isDefault) {
+		this.isDefault = isDefault;
 	}
 	
 	@Override

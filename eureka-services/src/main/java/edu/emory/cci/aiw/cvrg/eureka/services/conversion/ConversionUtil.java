@@ -25,6 +25,7 @@ import edu.emory.cci.aiw.cvrg.eureka.common.entity.RelationOperator;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.TimeUnit;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.ValueThresholdEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.ValueThresholdGroupEntity;
+import java.util.Date;
 import java.util.List;
 import org.protempa.ContextDefinition;
 import org.protempa.ContextOffset;
@@ -33,6 +34,7 @@ import org.protempa.PropertyConstraint;
 import org.protempa.SimpleGapFunction;
 import org.protempa.TemporalExtendedParameterDefinition;
 import org.protempa.TemporalExtendedPropositionDefinition;
+import org.protempa.proposition.value.AbsoluteTimeGranularityUtil;
 import org.protempa.proposition.value.AbsoluteTimeUnit;
 import org.protempa.proposition.value.NominalValue;
 import org.protempa.proposition.value.ValueComparator;
@@ -51,8 +53,7 @@ class ConversionUtil {
 				: null;
 	}
 
-	static TemporalExtendedPropositionDefinition 
-			buildExtendedPropositionDefinition(ExtendedDataElement ep) {
+	static TemporalExtendedPropositionDefinition buildExtendedPropositionDefinition(ExtendedDataElement ep) {
 		DataElementEntity dataElementEntity = ep.getDataElementEntity();
 		TemporalExtendedPropositionDefinition tepd =
 				buildExtendedPropositionDefinition(dataElementEntity);
@@ -113,35 +114,38 @@ class ConversionUtil {
 		RelationOperator relOp = v.getRelationOperator();
 		Integer withinAtLeast = v.getWithinAtLeast();
 		Integer withinAtMost = v.getWithinAtMost();
-		if ("before".equals(relOp.getName())) {
+		String relOpName = relOp.getName();
+		if ("before".equals(relOpName)) {
 			offset.setStartIntervalSide(IntervalSide.FINISH);
 			offset.setFinishIntervalSide(IntervalSide.FINISH);
 			if (withinAtLeast != null) {
 				offset.setStartOffset(withinAtLeast);
 			}
 			offset.setStartOffsetUnits(unit(v.getWithinAtLeastUnits()));
-			if (withinAtMost != null) {
-				offset.setFinishOffset(withinAtMost);
-			}
+			offset.setFinishOffset(withinAtMost);
 			offset.setFinishOffsetUnits(unit(v.getWithinAtMostUnits()));
-		} else {
+		} else if ("after".equals(relOpName)) {
 			offset.setStartIntervalSide(IntervalSide.START);
 			offset.setFinishIntervalSide(IntervalSide.START);
-			if (withinAtMost != null) {
-				offset.setStartOffset(-withinAtMost);
-			}
+			offset.setStartOffset(withinAtMost != null ? -withinAtMost : null);
 			offset.setStartOffsetUnits(unit(v.getWithinAtMostUnits()));
 			if (withinAtLeast != null) {
 				offset.setFinishOffset(-withinAtLeast);
 			}
 			offset.setFinishOffsetUnits(unit(v.getWithinAtLeastUnits()));
+		} else if ("around".equals(relOpName)) {
+			offset.setStartIntervalSide(IntervalSide.START);
+			offset.setFinishIntervalSide(IntervalSide.FINISH);
+			offset.setStartOffset(withinAtLeast != null ? -withinAtLeast : null);
+			offset.setStartOffsetUnits(unit(v.getWithinAtLeastUnits()));
+			offset.setFinishOffset(withinAtMost);
+			offset.setFinishOffsetUnits(unit(v.getWithinAtMostUnits()));
 		}
 		cd.setOffset(offset);
 		return cd;
 	}
-	
-	private static TemporalExtendedPropositionDefinition 
-			buildExtendedPropositionDefinition(String propId,
+
+	private static TemporalExtendedPropositionDefinition buildExtendedPropositionDefinition(String propId,
 			DataElementEntity entity) {
 		TemporalExtendedPropositionDefinition tepd;
 		if (entity instanceof ValueThresholdGroupEntity) {
@@ -156,8 +160,7 @@ class ConversionUtil {
 		return tepd;
 	}
 
-	private static TemporalExtendedPropositionDefinition 
-			buildExtendedPropositionDefinition(
+	private static TemporalExtendedPropositionDefinition buildExtendedPropositionDefinition(
 			DataElementEntity dataElementEntity) {
 		String propId;
 		if (dataElementEntity.isInSystem()) {
