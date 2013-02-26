@@ -19,19 +19,18 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.services.util;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.arp.javautil.arrays.Arrays;
+import org.protempa.PropertyDefinition;
+import org.protempa.PropositionDefinition;
+
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.SystemElement;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.DataElementEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.SystemProposition;
 import edu.emory.cci.aiw.cvrg.eureka.services.finder.PropositionFindException;
 import edu.emory.cci.aiw.cvrg.eureka.services.finder.SystemPropositionFinder;
-
-import org.arp.javautil.arrays.Arrays;
-import org.protempa.PropertyDefinition;
-import org.protempa.PropositionDefinition;
-import org.slf4j.LoggerFactory;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Provides common utility functions operating on {@link DataElementEntity}s.
@@ -80,6 +79,13 @@ public final class PropositionUtil {
 		inDefinition.accept(propDefTypeVisitor);
 		systemElement.setSystemType(propDefTypeVisitor.getSystemType());
 
+		List<String> properties = new ArrayList<String>();
+		for (PropertyDefinition propertyDef : inDefinition
+				.getPropertyDefinitions()) {
+			properties.add(propertyDef.getName());
+		}
+		systemElement.setProperties(properties);
+
 		if (!summarize) {
 			List<SystemElement> children = new ArrayList<SystemElement>();
 			List<PropositionDefinition> pds = inPropositionFinder.findAll(
@@ -92,12 +98,6 @@ public final class PropositionUtil {
 			}
 			systemElement.setChildren(children);
 
-			List<String> properties = new ArrayList<String>();
-			for (PropertyDefinition propertyDef : inDefinition
-			        .getPropertyDefinitions()) {
-				properties.add(propertyDef.getName());
-			}
-			systemElement.setProperties(properties);
 		}
 
 		return systemElement;
