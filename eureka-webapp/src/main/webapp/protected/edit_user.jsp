@@ -34,7 +34,7 @@
 
 		<h3>Edit User ${user.email}</h3>
 		<div class="pad pad_top">
-			<form action="admin" method="GET" id="editUserForm">
+			<form id="userform" action="admin" method="GET" id="editUserForm">
                 <table>
                     <tr>
                         <td width="124">Name:</td>
@@ -72,10 +72,10 @@
                                 </c:forEach> 
                                 <c:choose>
                                     <c:when test="${hasRole == 1}">
-                                        <input type="checkbox" name="role" id="role" value="${role.id}" checked ${role.name eq  'superuser' ? "disabled" : ''}/>${role.name}<span class="status"></span><br />
+																			<input type="checkbox" name="role" value="${role.id}" checked="checked" ${role.name eq  'superuser' ? 'disabled="disabled"' : ''}/>${role.name}<span class="status"></span><br />
                                     </c:when>
                                     <c:otherwise>
-                                        <input type="checkbox" name="role" id="role" value="${role.id}" />${role.name}<span class="status"></span><br />
+                                        <input type="checkbox" name="role" value="${role.id}" />${role.name}<span class="status"></span><br />
 
                                     </c:otherwise>
                                 </c:choose>
@@ -121,6 +121,16 @@
             </form>
 
         </div>
+				<script type="text/javascript">
+					$(document).ready(function () {
+						$('#userform').submit(function () {
+							$('#userform :input').each(function () {
+								$(this).removeAttr('disabled');
+							});
+							return true;
+						});
+					});
+				</script>
     </template:content>
     <template:content name="subcontent">
         <%@ include file="../common/rss.jspf" %>
