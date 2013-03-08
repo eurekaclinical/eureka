@@ -148,6 +148,16 @@ public final class DdlGenerator {
 			.ValueComparator.class);
 		serviceClasses.add(edu.emory.cci.aiw.cvrg.eureka.common.entity
 			.RelationOperator.class);
+		serviceClasses.add(edu.emory.cci.aiw.cvrg.eureka.common.entity
+				.CategoryEntity.class);
+		serviceClasses.add(edu.emory.cci.aiw.cvrg.eureka.common.entity
+				.ValueThresholdEntity.class);
+		serviceClasses.add(edu.emory.cci.aiw.cvrg.eureka.common.entity
+				.FrequencyEntity.class);
+		serviceClasses.add(edu.emory.cci.aiw.cvrg.eureka.common.entity
+				.ThresholdsOperator.class);
+		serviceClasses.add(edu.emory.cci.aiw.cvrg.eureka.common.entity
+				.ValueThresholdGroupEntity.class);
 		generate(serviceClasses, outputFile);
 	}
 
