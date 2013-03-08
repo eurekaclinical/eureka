@@ -271,21 +271,22 @@ public class UserResource {
 	public Response putUser(final User inUser) {
 		LOGGER.debug("Received updated user: {}", inUser);
 		Response response;
-		User currentUser = this.userDao.retrieve(inUser.getId());
-		this.userDao.refresh(currentUser);
-		boolean activation = (!currentUser.isActive()) && (inUser.isActive());
-		List<Role> roles = inUser.getRoles();
-		List<Role> updatedRoles = new ArrayList<Role>();
-		for (Role r : roles) {
-			Role updatedRole = this.roleDao.retrieve(r.getId());
-			updatedRoles.add(updatedRole);
-		}
 
-		currentUser.setRoles(updatedRoles);
-		currentUser.setActive(inUser.isActive());
-		currentUser.setLastLogin(inUser.getLastLogin());
+		if (this.validateUpdatedUser(inUser)) {
+			User currentUser = this.userDao.retrieve(inUser.getId());
+			this.userDao.refresh(currentUser);
+			boolean activation = (!currentUser.isActive()) && (inUser.isActive());
+			List<Role> roles = inUser.getRoles();
+			List<Role> updatedRoles = new ArrayList<Role>();
+			for (Role r : roles) {
+				Role updatedRole = this.roleDao.retrieve(r.getId());
+				updatedRoles.add(updatedRole);
+			}
 
-		if (this.validateUpdatedUser(currentUser)) {
+			currentUser.setRoles(updatedRoles);
+			currentUser.setActive(inUser.isActive());
+			currentUser.setLastLogin(inUser.getLastLogin());
+
 			LOGGER.debug("Saving updated user: {}", currentUser);
 			this.userDao.update(currentUser);
 
