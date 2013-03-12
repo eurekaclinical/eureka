@@ -694,7 +694,7 @@ function dropFinishCallback (data) {
 		}
 
 		var X = $("<span></span>", {
-			class: "delete"
+			'class': "delete"
 		});
 		attachDeleteAction(X);
 
