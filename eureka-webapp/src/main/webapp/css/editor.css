@@ -171,7 +171,11 @@ input.propertyValueField {
 	width: 10em;
 }
 
-input.frequencyCountField {
+select#freqTypes {
+	text-transform: capitalize;
+}
+
+input#frequencyCountField {
 	width: 4em;
 }
 

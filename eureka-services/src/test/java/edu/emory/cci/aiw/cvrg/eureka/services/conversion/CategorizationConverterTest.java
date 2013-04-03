@@ -24,6 +24,7 @@ import edu.emory.cci.aiw.cvrg.eureka.common.entity.CategoryEntity.CategoryType;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.DataElementEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.ExtendedDataElement;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.FrequencyEntity;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.FrequencyType;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.Relation;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.SequenceEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.SystemProposition;
@@ -398,6 +399,9 @@ public class CategorizationConverterTest extends AbstractServiceTest {
 		sp.setKey("foo");
 		sp.setSystemType(SystemType.EVENT);
 		
+		FrequencyType ft = new FrequencyType();
+		ft.setName("at least");
+		
 		FrequencyEntity sa1 = new FrequencyEntity();
 		sa1.setId(1L);
 		sa1.setKey("test-slice1");
@@ -405,7 +409,8 @@ public class CategorizationConverterTest extends AbstractServiceTest {
 		ExtendedDataElement ede1 = new ExtendedDataElement();
 		ede1.setDataElementEntity(sp);
 		sa1.setExtendedProposition(ede1);
-		sa1.setAtLeastCount(1);
+		sa1.setCount(1);
+		sa1.setFrequencyType(ft);
 
 		FrequencyEntity sa2 = new FrequencyEntity();
 		sa2.setId(2L);
@@ -414,7 +419,8 @@ public class CategorizationConverterTest extends AbstractServiceTest {
 		ExtendedDataElement ede2 = new ExtendedDataElement();
 		ede2.setDataElementEntity(sp);
 		sa2.setExtendedProposition(ede2);
-		sa2.setAtLeastCount(1);
+		sa2.setCount(1);
+		sa2.setFrequencyType(ft);
 
 		CategoryEntity saCat1 = new CategoryEntity();
 		saCat1.setId(3L);
@@ -428,6 +434,7 @@ public class CategorizationConverterTest extends AbstractServiceTest {
 		saCat1.setMembers(iia1);
 
 		List<PropositionDefinition> saDefs1 = this.converter.convert(saCat1);
+		System.err.println("saDefs1: " + saDefs1);
 		assertEquals("wrong number of proposition definitions created", 3,
 				saDefs1.size());
 		PropositionDefinition saDef1 = this.converter

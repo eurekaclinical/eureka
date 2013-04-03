@@ -22,7 +22,6 @@ package edu.emory.cci.aiw.cvrg.eureka.services.conversion;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.DataElementEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.ExtendedDataElement;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.FrequencyEntity;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.ValueThresholdGroupEntity;
 import org.protempa.PropositionDefinition;
 
 import java.util.ArrayList;
@@ -31,13 +30,14 @@ import java.util.List;
 import static edu.emory.cci.aiw.cvrg.eureka.services.conversion.ConversionUtil.unit;
 import org.protempa.HighLevelAbstractionDefinition;
 import org.protempa.SimpleGapFunction;
+import org.protempa.SliceDefinition;
 import org.protempa.TemporalExtendedParameterDefinition;
 import org.protempa.TemporalExtendedPropositionDefinition;
 import org.protempa.proposition.interval.Relation;
 import org.protempa.proposition.value.NominalValue;
 
-public final class FrequencyNonConsecutiveAbstractionConverter implements
-		PropositionDefinitionConverter<FrequencyEntity, HighLevelAbstractionDefinition> {
+public final class FrequencyNotValueThresholdConverter implements
+		FrequencyConverter {
 
 	private PropositionDefinitionConverterVisitor converterVisitor;
 	private HighLevelAbstractionDefinition primary;
@@ -66,40 +66,64 @@ public final class FrequencyNonConsecutiveAbstractionConverter implements
 		String propId = entity.getKey() + ConversionUtil.PRIMARY_PROP_ID_SUFFIX;
 		this.primaryPropId = propId;
 		if (this.converterVisitor.addPropositionId(propId)) {
+			ExtendedDataElement extendedProposition = entity.getExtendedProposition();
 			HighLevelAbstractionDefinition p =
 					new HighLevelAbstractionDefinition(propId);
 			p.setDisplayName(entity.getDisplayName());
 			p.setDescription(entity.getDescription());
-			ExtendedDataElement extendedProposition = entity.getExtendedProposition();
-			DataElementEntity abstractedFrom = extendedProposition.getDataElementEntity();
-			abstractedFrom.accept(converterVisitor);
-			result.addAll(converterVisitor.getPropositionDefinitions());
-			TemporalExtendedPropositionDefinition[] tepds =
-					new TemporalExtendedPropositionDefinition[
-							entity.getAtLeastCount()];
-			for (int i = 0; i < entity.getAtLeastCount(); i++) {
+			p.setGapFunction(new SimpleGapFunction(0, null));
+			if (entity.getFrequencyType().getName().equals("at least")) {
+				DataElementEntity abstractedFrom = extendedProposition.getDataElementEntity();
+				abstractedFrom.accept(converterVisitor);
+				result.addAll(converterVisitor.getPropositionDefinitions());
+				TemporalExtendedPropositionDefinition[] tepds =
+						new TemporalExtendedPropositionDefinition[entity.getCount()];
+				for (int i = 0; i < entity.getCount(); i++) {
+					TemporalExtendedPropositionDefinition tepd =
+							ConversionUtil.buildExtendedPropositionDefinition(
+							extendedProposition);
+					tepds[i] = tepd;
+					p.add(tepd);
+				}
+				if (tepds.length > 1) {
+					for (int i = 0; i < tepds.length - 1; i++) {
+						Relation rel = new Relation(null, null, null, null, null,
+								null, null, null, entity.getWithinAtLeast(),
+								unit(entity.getWithinAtLeastUnits()),
+								entity.getWithinAtMost(),
+								unit(entity.getWithinAtMostUnits()), null, null,
+								null, null);
+						p.setRelation(tepds[i], tepds[i + 1], rel);
+					}
+				} else {
+					p.setRelation(tepds[0], tepds[0], new Relation());
+				}
+			} else if (entity.getFrequencyType().getName().equals("first")) {
+				String wrapperPropId = entity.getKey() + "_SUB";
+				SliceDefinition sp = new SliceDefinition(wrapperPropId);
+				sp.setDisplayName(entity.getDisplayName());
+				sp.setDescription(entity.getDescription());
+				DataElementEntity abstractedFrom = extendedProposition.getDataElementEntity();
+				abstractedFrom.accept(converterVisitor);
+				result.addAll(converterVisitor.getPropositionDefinitions());
+				sp.setMergedInterval(true);
+				sp.setGapFunction(new SimpleGapFunction(0, null));
 				TemporalExtendedPropositionDefinition tepd =
 						ConversionUtil.buildExtendedPropositionDefinition(
 						extendedProposition);
-				tepds[i] = tepd;
-				p.add(tepd);
-			}
-			if (tepds.length > 1) {
-				for (int i = 0; i < tepds.length - 1; i++) {
-					Relation rel = new Relation(null, null, null, null, null, 
-							null, null, null, entity.getWithinAtLeast(), 
-							unit(entity.getWithinAtLeastUnits()), 
-							entity.getWithinAtMost(), 
-							unit(entity.getWithinAtMostUnits()), null, null, 
-							null, null);
-					p.setRelation(tepds[i], tepds[i + 1], rel);
-				}
+				sp.add(tepd);
+				sp.setMinIndex(0);
+				sp.setMaxIndex(entity.getCount());
+
+				TemporalExtendedPropositionDefinition tepds =
+						new TemporalExtendedPropositionDefinition(wrapperPropId);
+				p.add(tepds);
+				p.setRelation(tepds, tepds, new Relation());
+				result.add(sp);
 			} else {
-				p.setRelation(tepds[0], tepds[0], new Relation());
+				throw new IllegalStateException("invalid frequency type: " + entity.getFrequencyType().getName());
 			}
-
-			p.setGapFunction(new SimpleGapFunction(0, null));
-
+			
 			this.primary = p;
 			result.add(p);
 		}

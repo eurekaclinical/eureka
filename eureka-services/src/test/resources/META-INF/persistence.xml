@@ -12,6 +12,7 @@
 		<class>edu.emory.cci.aiw.cvrg.eureka.common.entity.FileUpload</class>
 		<class>edu.emory.cci.aiw.cvrg.eureka.common.entity.FileWarning</class>
 		<class>edu.emory.cci.aiw.cvrg.eureka.common.entity.FrequencyEntity</class>
+		<class>edu.emory.cci.aiw.cvrg.eureka.common.entity.FrequencyType</class>
 		<class>edu.emory.cci.aiw.cvrg.eureka.common.entity.PropertyConstraint</class>
 		<class>edu.emory.cci.aiw.cvrg.eureka.common.entity.Relation</class>
 		<class>edu.emory.cci.aiw.cvrg.eureka.common.entity.RelationOperator</class>

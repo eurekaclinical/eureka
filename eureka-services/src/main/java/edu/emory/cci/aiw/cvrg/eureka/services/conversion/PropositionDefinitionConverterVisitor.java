@@ -47,8 +47,8 @@ public final class PropositionDefinitionConverterVisitor implements
 	private final SequenceConverter sequenceConverter;
 	private final ValueThresholdsLowLevelAbstractionConverter valueThresholdsLowLevelAbstractionConverter;
 	private final ValueThresholdsCompoundLowLevelAbstractionConverter valueThresholdsCompoundLowLevelAbstractionConverter;
-	private final FrequencyNonConsecutiveAbstractionConverter frequencySliceAbstractionConverter;
-	private final FrequencyConsecutiveConverter frequencyHighLevelAbstractionConverter;
+	private final FrequencyNotValueThresholdConverter frequencyNotValueThresholdConverter;
+	private final FrequencyValueThresholdConverter frequencyValueThresholdConverter;
 
 	@Inject
 	public PropositionDefinitionConverterVisitor(SystemPropositionConverter inSystemPropositionConverter,
@@ -56,8 +56,8 @@ public final class PropositionDefinitionConverterVisitor implements
 			SequenceConverter inSequenceConverter,
 			ValueThresholdsLowLevelAbstractionConverter inValueThresholdsLowLevelAbstractionConverter,
 			ValueThresholdsCompoundLowLevelAbstractionConverter inValueThresholdsCompoundLowLevelAbstractionConverter,
-			FrequencyNonConsecutiveAbstractionConverter inFrequencySliceAbstractionConverter,
-			FrequencyConsecutiveConverter inFrequencyHighLevelAbstractionConverter) {
+			FrequencyNotValueThresholdConverter inFrequencySliceAbstractionConverter,
+			FrequencyValueThresholdConverter inFrequencyHighLevelAbstractionConverter) {
 		systemPropositionConverter = inSystemPropositionConverter;
 		categorizationConverter = inCategorizationConverter;
 		categorizationConverter.setConverterVisitor(this);
@@ -69,12 +69,12 @@ public final class PropositionDefinitionConverterVisitor implements
 		valueThresholdsCompoundLowLevelAbstractionConverter =
 				inValueThresholdsCompoundLowLevelAbstractionConverter;
 		valueThresholdsCompoundLowLevelAbstractionConverter.setConverterVisitor(this);
-		frequencySliceAbstractionConverter =
+		frequencyNotValueThresholdConverter =
 				inFrequencySliceAbstractionConverter;
-		frequencySliceAbstractionConverter.setVisitor(this);
-		frequencyHighLevelAbstractionConverter =
+		frequencyNotValueThresholdConverter.setVisitor(this);
+		frequencyValueThresholdConverter =
 				inFrequencyHighLevelAbstractionConverter;
-		frequencyHighLevelAbstractionConverter.setConverterVisitor(this);
+		frequencyValueThresholdConverter.setConverterVisitor(this);
 		propIds = new HashSet<String>();
 	}
 
@@ -156,20 +156,21 @@ public final class PropositionDefinitionConverterVisitor implements
 
 	@Override
 	public void visit(FrequencyEntity entity) {
-		if (entity.isConsecutive()) {
-			this.propositionDefinitions = this.frequencyHighLevelAbstractionConverter.convert(entity);
-			this.primaryProposition = this.frequencyHighLevelAbstractionConverter
+		if (entity.getAbstractedFrom() instanceof ValueThresholdGroupEntity) {
+			this.propositionDefinitions = 
+					this.frequencyValueThresholdConverter.convert(entity);
+			this.primaryProposition = this.frequencyValueThresholdConverter
 					.getPrimaryPropositionDefinition();
 			this.primaryPropositionId =
-					this.frequencyHighLevelAbstractionConverter
+					this.frequencyValueThresholdConverter
 					.getPrimaryPropositionId();
 		} else {
-			this.propositionDefinitions = this.frequencySliceAbstractionConverter
-					.convert(entity);
-			this.primaryProposition = this.frequencySliceAbstractionConverter
+			this.propositionDefinitions = 
+					this.frequencyNotValueThresholdConverter.convert(entity);
+			this.primaryProposition = this.frequencyNotValueThresholdConverter
 					.getPrimaryPropositionDefinition();
 			this.primaryPropositionId =
-					this.frequencySliceAbstractionConverter
+					this.frequencyNotValueThresholdConverter
 					.getPrimaryPropositionId();
 		}
 	}

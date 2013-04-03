@@ -40,6 +40,7 @@ import edu.emory.cci.aiw.cvrg.eureka.common.comm.Sequence;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.SystemElement;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.ValueThresholds;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ServicesClient;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.FrequencyType;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.RelationOperator;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.TimeUnit;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.User;
@@ -77,6 +78,8 @@ public class EditPropositionServlet extends HttpServlet {
 
 		ServicesClient servicesClient = new ServicesClient(eurekaServicesUrl);
 		User user = servicesClient.getUserByName(userName);
+		List<FrequencyType> freqTypes = servicesClient.getFrequencyTypesAsc();
+		FrequencyType defaultFreqType = servicesClient.getDefaultFrequencyType();
 		List<TimeUnit> timeUnits = servicesClient.getTimeUnitsAsc();
 		TimeUnit defaultTimeUnit = servicesClient.getDefaultTimeUnit();
 		List<RelationOperator> relOps = 
@@ -132,6 +135,8 @@ public class EditPropositionServlet extends HttpServlet {
 		req.setAttribute("valueComparatorsLower", valueCompsLower);
 		req.setAttribute("defaultTimeUnit", defaultTimeUnit);
 		req.setAttribute("defaultRelationOp", defaultRelOp);
+		req.setAttribute("frequencyTypes", freqTypes);
+		req.setAttribute("defaultFrequencyType", defaultFreqType);
 
 		if ((propKey != null) && (!propKey.equals(""))) {
 			DataElement dataElement = servicesClient

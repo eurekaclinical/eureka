@@ -61,6 +61,7 @@ eureka.dataElement = {
 				$(dialog).dialog({
 					'title': 'Save Failed',
 					'modal': true,
+					'resizable': false,
 					'buttons': {
 						"OK": function() {
 							$(this).dialog("close");
@@ -246,6 +247,7 @@ eureka.dataElement = {
 		var $dataElement = $(elem).find('ul[data-type="main"]').find('li').first();
 		var frequency = {
 			'type': 'FREQUENCY',
+			'frequencyType': $('select[name="freqTypes"]').val(),
 			'displayName': $('input#propDisplayName').val(),
 			'description': $('textarea#propDescription').val(),
 			'atLeast': $(elem).find('input[name=freqAtLeastField]').val(),
@@ -296,11 +298,21 @@ var dropBoxMaxTextWidth = 275;
 var droppedElements  = new Object();
 
 var dndActions = {
-	//'FREQUENCY': enableFrequencyFields
+	'FREQUENCY': enableFrequencyFields
 };
 var deleteActions = {
-	//'FREQUENCY': disableFrequencyFields
+	'FREQUENCY': disableFrequencyFields
 };
+
+function enableFrequencyFields(dropped) {
+	if ($(dropped).data('type') == 'VALUE_THRESHOLD') {
+		$('#valueThresholdConsecutiveLabel').css('visibility','visible');
+	}
+}
+
+function disableFrequencyFields() {
+	$('#valueThresholdConsecutiveLabel').css('visibility','hidden');
+}
 
 function addDroppedElement(propType, dropped, dropTarget) {
 	var elementKey = $(dropped).data('key');
@@ -411,8 +423,9 @@ function attachDeleteAction (elem) {
 			var $target = $sortable.parent();
 			var dialog = $('<div></div>');
 			$(dialog).dialog({
-				'title': 'Confirm Remove Member',
+				'title': 'Remove Data Element',
 				'modal': true,
+				'resizable': false,
 				'buttons': {
 					"Confirm": function() {
 						var type = $("input:radio[name='type']:checked").val();
@@ -443,7 +456,7 @@ function attachDeleteAction (elem) {
 					}
 				}
 			});
-			$(dialog).html('Are you sure you want to remove member ' + $toRemove.text() + ' from this category?');
+			$(dialog).html('Are you sure you want to remove data element ' + $toRemove.text() + '?');
 			$(dialog).dialog("open");
 		});
 	});

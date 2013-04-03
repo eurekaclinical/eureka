@@ -32,8 +32,10 @@ import edu.emory.cci.aiw.cvrg.eureka.common.comm.DataElement;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.DataElementField;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.Frequency;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.FrequencyType;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.TimeUnit;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.User;
+import edu.emory.cci.aiw.cvrg.eureka.services.dao.FrequencyTypeDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.TimeUnitDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.test.Setup;
 import org.junit.After;
@@ -65,6 +67,9 @@ public class DataElementResourceTest extends AbstractServiceResourceTest {
 		TimeUnitDao timeUnitDao = this.getInstance(TimeUnitDao.class);
 		TimeUnit timeUnit = 
 				timeUnitDao.getByName(Setup.TESTING_TIME_UNIT_NAME);
+		FrequencyTypeDao freqTypeDao = getInstance(FrequencyTypeDao.class);
+		FrequencyType freqType =
+				freqTypeDao.getByName(Setup.TESTING_FREQ_TYPE_NAME);
 
 		DataElementField dataElementField = new DataElementField();
 		dataElementField.setDataElementKey("test-low-level");
@@ -88,6 +93,7 @@ public class DataElementResourceTest extends AbstractServiceResourceTest {
 		frequency.setWithinAtLeastUnits(Long.valueOf(1));
 		frequency.setWithinAtMost(60);
 		frequency.setWithinAtMostUnits(Long.valueOf(1));
+		frequency.setFrequencyType(freqType.getId());
 		frequency.setDataElement(dataElementField);
 				
 		ClientResponse response2 = this.resource().path("/api/dataelement")

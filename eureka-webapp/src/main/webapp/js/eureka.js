@@ -538,6 +538,8 @@ function deleteElement(displayName, key) {
 			displayName + '? You cannot undo this action.')
 		.dialog({
 			title : "Delete Data Element",
+			modal: true,
+			resizable: false,
 			buttons : {
 				"Delete" : function() {
 					$.ajax({

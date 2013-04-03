@@ -32,15 +32,14 @@ import org.junit.Before;
 import org.junit.Test;
 import org.protempa.HighLevelAbstractionDefinition;
 import org.protempa.LowLevelAbstractionDefinition;
-import org.protempa.MinMaxGapFunction;
 import org.protempa.PropositionDefinition;
 import org.protempa.TemporalExtendedParameterDefinition;
-import org.protempa.proposition.interval.Relation;
 import org.protempa.proposition.value.NominalValue;
 import org.protempa.proposition.value.NumberValue;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.ExtendedDataElement;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.FrequencyEntity;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.FrequencyType;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.SystemProposition;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.SystemProposition.SystemType;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.TimeUnit;
@@ -52,12 +51,13 @@ import org.apache.commons.lang.StringUtils;
 import org.junit.After;
 import org.protempa.LowLevelAbstractionValueDefinition;
 import org.protempa.SimpleGapFunction;
-import org.protempa.proposition.value.AbsoluteTimeUnit;
+import org.protempa.proposition.interval.Relation;
 
 /**
  *
  */
-public class FrequencyHighLevelAbstractionConverterTest extends AbstractServiceTest {
+public class FrequencyAtLeastConsecutiveValueThresholdConverterTest extends AbstractServiceTest {
+	private List<PropositionDefinition> propDefs;
 	private List<LowLevelAbstractionDefinition> llas;
 	private LowLevelAbstractionDefinition llaDef;
 	private String userConstraintName;
@@ -70,8 +70,10 @@ public class FrequencyHighLevelAbstractionConverterTest extends AbstractServiceT
 	
 	@Before
 	public void setUp() {
-		PropositionDefinitionConverterVisitor converterVisitor = this.getInstance(PropositionDefinitionConverterVisitor.class);
-		FrequencyConsecutiveConverter converter = new FrequencyConsecutiveConverter();
+		PropositionDefinitionConverterVisitor converterVisitor = 
+				this.getInstance(PropositionDefinitionConverterVisitor.class);
+		FrequencyValueThresholdConverter converter = 
+				new FrequencyValueThresholdConverter();
 		converter.setConverterVisitor(converterVisitor);
 		SystemProposition primParam = new SystemProposition();
 		primParam.setId(1L);
@@ -79,7 +81,8 @@ public class FrequencyHighLevelAbstractionConverterTest extends AbstractServiceT
 		primParam.setInSystem(true);
 		primParam.setSystemType(SystemType.PRIMITIVE_PARAMETER);
 		
-		ValueThresholdGroupEntity thresholdGroup = new ValueThresholdGroupEntity();
+		ValueThresholdGroupEntity thresholdGroup = 
+				new ValueThresholdGroupEntity();
 		thresholdGroup.setId(2L);
 		thresholdGroup.setKey("test-valuethreshold");
 		thresholdGroupKey = thresholdGroup.getKey();
@@ -113,24 +116,27 @@ public class FrequencyHighLevelAbstractionConverterTest extends AbstractServiceT
 		TimeUnit dayUnit = new TimeUnit();
 		dayUnit.setName("day");
 		
+		FrequencyType ft = new FrequencyType();
+		ft.setName("at least");
+		
 		frequency = new FrequencyEntity();
 		frequency.setId(3L);
 		frequency.setKey("test-freqhla-key");
-		frequency.setAtLeastCount(2);
+		frequency.setCount(2);
 		frequency.setWithinAtLeast(1);
 		frequency.setWithinAtLeastUnits(dayUnit);
 		frequency.setWithinAtMost(90);
 		frequency.setWithinAtMostUnits(dayUnit);
+		frequency.setFrequencyType(ft);
+		frequency.setConsecutive(true);
 		
 		
 		ExtendedDataElement af = new ExtendedDataElement();
 		af.setDataElementEntity(thresholdGroup);
 		frequency.setExtendedProposition(af);
 		
-		List<PropositionDefinition> propDefs = 
-				converter.convert(frequency);
-		assertEquals("wrong number of proposition definitions created", 
-				3, propDefs.size());
+		propDefs = converter.convert(frequency);
+		
 		llas = new ArrayList<LowLevelAbstractionDefinition>();
 		for (PropositionDefinition propDef : propDefs) {
 			if (propDef instanceof LowLevelAbstractionDefinition) {
@@ -152,6 +158,7 @@ public class FrequencyHighLevelAbstractionConverterTest extends AbstractServiceT
 	@After
 	public void tearDown() {
 		llas = null;
+		propDefs = null;
 		llaDef = null;
 		userConstraintName = null;
 		compConstraintName = null;
@@ -160,6 +167,19 @@ public class FrequencyHighLevelAbstractionConverterTest extends AbstractServiceT
 		hlad = null;
 		gf = null;
 		thresholdGroupKey = null;
+	}
+	
+	@Test
+	public void testPrimaryPropositionId() {
+		assertEquals("wrong primary proposition id", 
+				frequency.getKey() + ConversionUtil.PRIMARY_PROP_ID_SUFFIX, 
+				hlad.getId());
+	}
+	
+	@Test
+	public void testNumberOfPropositionDefinitionsCreated() {
+		assertEquals("wrong number of proposition definitions created", 
+				3, propDefs.size());
 	}
 	
 	@Test
@@ -312,7 +332,8 @@ public class FrequencyHighLevelAbstractionConverterTest extends AbstractServiceT
 	@Test
 	public void testExtendedPropositionDefinitionPropositionId() {
 		assertEquals("wrong extended proposition definition", 
-				frequency.getKey() + "_SUB", tepd.getPropositionId());
+				frequency.getKey() + "_SUB", 
+				tepd.getPropositionId());
 	}
 	
 	@Test
@@ -330,8 +351,7 @@ public class FrequencyHighLevelAbstractionConverterTest extends AbstractServiceT
 	}
 	
 	@Test
-	public void testRelationExists() {
-		
+	public void testRelationExists() {	
 		Relation relation = hlad.getRelation(tepd, tepd);
 		Assert.assertNotNull("relation is null", relation);
 	}

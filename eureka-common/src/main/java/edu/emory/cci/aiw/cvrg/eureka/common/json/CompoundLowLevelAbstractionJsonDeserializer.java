@@ -115,6 +115,10 @@ public final class CompoundLowLevelAbstractionJsonDeserializer extends JsonDeser
 		nextToken();
 		checkField("context");
 		value.setContextId(this.parser.readValueAs(String.class));
+		
+		nextToken();
+		checkField("skip");
+		value.setSkip(this.parser.getIntValue());
 
 		nextToken();
 		checkField("values");

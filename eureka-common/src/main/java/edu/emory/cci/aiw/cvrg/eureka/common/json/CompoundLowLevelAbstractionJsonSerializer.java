@@ -68,6 +68,7 @@ public final class CompoundLowLevelAbstractionJsonSerializer extends
 		provider.defaultSerializeField("thresholdsOperator", 
 				value.getValueDefinitionMatchOperator().name(), jgen);
 		provider.defaultSerializeField("context", value.getContextId(), jgen);
+		provider.defaultSerializeField("skip", value.getSkip(), jgen);
 		jgen.writeFieldName("values");
 		jgen.writeStartObject();
 		for (ValueClassification valueCls : value.getValueClassifications()) {

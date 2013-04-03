@@ -22,7 +22,6 @@ package edu.emory.cci.aiw.cvrg.eureka.services.conversion;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.DataElementEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.ExtendedDataElement;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.FrequencyEntity;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.ValueThresholdGroupEntity;
 
 import org.protempa.HighLevelAbstractionDefinition;
 import org.protempa.MinMaxGapFunction;
@@ -37,14 +36,13 @@ import java.util.List;
 import static edu.emory.cci.aiw.cvrg.eureka.services.conversion.ConversionUtil.unit;
 import java.util.Collection;
 import org.protempa.CompoundLowLevelAbstractionDefinition;
-import org.protempa.SequentialTemporalPatternDefinition;
-import org.protempa.SequentialTemporalPatternDefinition.SubsequentTemporalExtendedPropositionDefinition;
 import org.protempa.SimpleGapFunction;
+import org.protempa.SliceDefinition;
 import org.protempa.TemporalExtendedPropositionDefinition;
 import org.protempa.ValueClassification;
 
-public final class FrequencyConsecutiveConverter implements
-		PropositionDefinitionConverter<FrequencyEntity, HighLevelAbstractionDefinition> {
+public final class FrequencyValueThresholdConverter implements
+		FrequencyConverter {
 
 	private PropositionDefinitionConverterVisitor converterVisitor;
 	private HighLevelAbstractionDefinition primary;
@@ -86,15 +84,13 @@ public final class FrequencyConsecutiveConverter implements
 			String abstractedFromPrimaryPropId =
 					this.converterVisitor.getPrimaryPropositionId();
 			String wrapperPropId = entity.getKey() + "_SUB";
-			HighLevelAbstractionDefinition hlad =
-					new HighLevelAbstractionDefinition(propId);
-			TemporalExtendedPropositionDefinition tepdOuter;
-			if (abstractedFrom instanceof ValueThresholdGroupEntity) {
+
+			if (entity.isConsecutive()) {
 				CompoundLowLevelAbstractionDefinition frequencyWrapper =
 						new CompoundLowLevelAbstractionDefinition(
 						wrapperPropId);
 				frequencyWrapper.setMinimumNumberOfValues(
-						entity.getAtLeastCount());
+						entity.getCount());
 				frequencyWrapper.setGapFunction(
 						new SimpleGapFunction(Integer.valueOf(0), null));
 				ValueClassification vc = new ValueClassification(
@@ -113,54 +109,96 @@ public final class FrequencyConsecutiveConverter implements
 						entity.getWithinAtMost(),
 						unit(entity.getWithinAtMostUnits())));
 				result.add(frequencyWrapper);
-				TemporalExtendedParameterDefinition tepd =
-					new TemporalExtendedParameterDefinition(wrapperPropId);
-				tepd.setValue(NominalValue.getInstance(entity.getKey() + "_VALUE"));
-				tepdOuter = tepd;
-			} else {
-				SequentialTemporalPatternDefinition stpd =
-						new SequentialTemporalPatternDefinition(wrapperPropId);
-				stpd.setDisplayName(entity.getDisplayName());
-				stpd.setDescription(entity.getDescription());
-				stpd.setGapFunction(
+				
+				TemporalExtendedPropositionDefinition tepdOuter;
+				if (entity.getFrequencyType().getName().equals("at least")) {
+					TemporalExtendedParameterDefinition tepd =
+							new TemporalExtendedParameterDefinition(wrapperPropId);
+					tepd.setValue(NominalValue.getInstance(entity.getKey() + "_VALUE"));
+					tepdOuter = tepd;
+				} else if (entity.getFrequencyType().getName().equals("first")) {
+					frequencyWrapper.setSkip(1);
+					String subWrapperPropId = wrapperPropId + "SUB";
+					SliceDefinition sp = new SliceDefinition(subWrapperPropId);
+					sp.setMinIndex(0);
+					sp.setMaxIndex(1);
+					TemporalExtendedParameterDefinition tepd2 =
+							new TemporalExtendedParameterDefinition(wrapperPropId);
+					tepd2.setValue(NominalValue.getInstance(entity.getKey() + "_VALUE"));
+					sp.add(tepd2);
+					result.add(sp);
+
+					TemporalExtendedPropositionDefinition tepd =
+							new TemporalExtendedPropositionDefinition(subWrapperPropId);
+
+					tepdOuter = tepd;
+				} else {
+					throw new IllegalStateException("invalid frequency type: " + entity.getFrequencyType().getName());
+				}
+				HighLevelAbstractionDefinition hlad =
+						new HighLevelAbstractionDefinition(propId);
+				hlad.add(tepdOuter);
+				hlad.setRelation(tepdOuter, tepdOuter, new Relation());
+
+				hlad.setDisplayName(entity.getDisplayName());
+				hlad.setDescription(entity.getDescription());
+				hlad.setGapFunction(
 						new SimpleGapFunction(Integer.valueOf(0), null));
-				TemporalExtendedPropositionDefinition tepd =
-						ConversionUtil.buildExtendedPropositionDefinition(
-						extendedProposition);
-				stpd.setFirstTemporalExtendedPropositionDefinition(tepd);
-				int n = entity.getAtLeastCount() - 1;
-				SubsequentTemporalExtendedPropositionDefinition[] rtepds =
-						new SubsequentTemporalExtendedPropositionDefinition[n];
-				for (int i = 0; i < n; i++) {
-					TemporalExtendedPropositionDefinition tepd2 =
+				result.add(hlad);
+				this.primary = hlad;
+			} else {
+				HighLevelAbstractionDefinition p =
+						new HighLevelAbstractionDefinition(propId);
+				p.setDisplayName(entity.getDisplayName());
+				p.setDescription(entity.getDescription());
+				if (entity.getFrequencyType().getName().equals("at least")) {
+					TemporalExtendedPropositionDefinition[] tepds =
+							new TemporalExtendedPropositionDefinition[entity.getCount()];
+					for (int i = 0; i < entity.getCount(); i++) {
+						TemporalExtendedPropositionDefinition tepd =
+								ConversionUtil.buildExtendedPropositionDefinition(
+								extendedProposition);
+						tepds[i] = tepd;
+						p.add(tepd);
+					}
+					if (tepds.length > 1) {
+						for (int i = 0; i < tepds.length - 1; i++) {
+							Relation rel = new Relation(null, null, null, null, null,
+									null, null, null, entity.getWithinAtLeast(),
+									unit(entity.getWithinAtLeastUnits()),
+									entity.getWithinAtMost(),
+									unit(entity.getWithinAtMostUnits()), null, null,
+									null, null);
+							p.setRelation(tepds[i], tepds[i + 1], rel);
+						}
+					} else {
+						p.setRelation(tepds[0], tepds[0], new Relation());
+					}
+				} else if (entity.getFrequencyType().getName().equals("first")) {
+					SliceDefinition sp = new SliceDefinition(wrapperPropId);
+					sp.setDisplayName(entity.getDisplayName());
+					sp.setDescription(entity.getDescription());
+					sp.setMergedInterval(true);
+					sp.setGapFunction(new SimpleGapFunction(0, null));
+					TemporalExtendedPropositionDefinition tepd =
 							ConversionUtil.buildExtendedPropositionDefinition(
 							extendedProposition);
-					Relation r = new Relation(null, null, null, null, null,
-							null, null, null,
-							entity.getWithinAtLeast(),
-							unit(entity.getWithinAtLeastUnits()),
-							entity.getWithinAtMost(),
-							unit(entity.getWithinAtMostUnits()),
-							null, null, null, null);
-					rtepds[i] =
-							new SubsequentTemporalExtendedPropositionDefinition(r,
-							tepd2);
+					sp.add(tepd);
+					sp.setMinIndex(0);
+					sp.setMaxIndex(entity.getCount());
+					result.add(sp);
+					TemporalExtendedPropositionDefinition tepdForSlice =
+							new TemporalExtendedPropositionDefinition(wrapperPropId);
+					p.add(tepdForSlice);
+					p.setRelation(tepdForSlice, tepdForSlice, new Relation());
+				} else {
+					throw new IllegalStateException("invalid frequency type: " + entity.getFrequencyType().getName());
 				}
-				stpd.setSubsequentTemporalExtendedPropositionDefinitions(rtepds);
-				result.add(stpd);
-				tepdOuter = new TemporalExtendedPropositionDefinition(wrapperPropId);
-				
+				p.setGapFunction(new SimpleGapFunction(0, null));
+				this.primary = p;
+				result.add(p);
 			}
-
-			hlad.add(tepdOuter);
-			hlad.setRelation(tepdOuter, tepdOuter, new Relation());
-
-			hlad.setDisplayName(entity.getDisplayName());
-			hlad.setDescription(entity.getDescription());
-			hlad.setGapFunction(
-					new SimpleGapFunction(Integer.valueOf(0), null));
-			result.add(hlad);
-			this.primary = hlad;
+			this.primaryPropId = this.primary.getPropositionId();
 		}
 
 

@@ -38,7 +38,7 @@ import org.apache.commons.lang.builder.ReflectionToStringBuilder;
 public class FrequencyEntity extends DataElementEntity {
 
 	@Column(nullable = false)
-	private Integer atLeastCount;
+	private Integer count;
 
 	private boolean consecutive;
 
@@ -57,17 +57,21 @@ public class FrequencyEntity extends DataElementEntity {
 	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(nullable = false)
 	private ExtendedDataElement extendedDataElement;
+	
+	@ManyToOne
+	@JoinColumn(nullable = false)
+	private FrequencyType frequencyType;
 
 	public FrequencyEntity() {
 		super(CategoryType.SLICE_ABSTRACTION);
 	}
 
-	public Integer getAtLeastCount() {
-		return atLeastCount;
+	public Integer getCount() {
+		return count;
 	}
 
-	public void setAtLeastCount(Integer atLeastCount) {
-		this.atLeastCount = atLeastCount;
+	public void setCount(Integer count) {
+		this.count = count;
 	}
 
 	public boolean isConsecutive() {
@@ -123,6 +127,14 @@ public class FrequencyEntity extends DataElementEntity {
 		this.withinAtMostUnits = withinAtMostUnits;
 	}
 
+	public FrequencyType getFrequencyType() {
+		return frequencyType;
+	}
+
+	public void setFrequencyType(FrequencyType frequencyType) {
+		this.frequencyType = frequencyType;
+	}
+	
 	@Override
 	public void accept(DataElementEntityVisitor visitor) {
 		visitor.visit(this);

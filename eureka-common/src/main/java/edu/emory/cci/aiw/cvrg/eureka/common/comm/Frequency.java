@@ -32,9 +32,18 @@ public final class Frequency extends DataElement {
 	private Long withinAtLeastUnits;
 	private Integer withinAtMost;
 	private Long withinAtMostUnits;
+	private Long frequencyType;
 
 	public Frequency() {
 		super(Type.FREQUENCY);
+	}
+	
+	public Long getFrequencyType() {
+		return frequencyType;
+	}
+	
+	public void setFrequencyType(Long frequencyType) {
+		this.frequencyType = frequencyType;
 	}
 
 	public Integer getAtLeast() {

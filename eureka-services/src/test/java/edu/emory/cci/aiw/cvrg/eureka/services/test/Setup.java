@@ -37,6 +37,7 @@ import edu.emory.cci.aiw.cvrg.eureka.common.entity.CategoryEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.CategoryEntity.CategoryType;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.DataElementEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.FileUpload;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.FrequencyType;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.Role;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.SystemProposition;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.ThresholdsOperator;
@@ -58,6 +59,7 @@ public class Setup implements TestDataProvider {
 	private static final String ORGANIZATION = "Emory University";
 	private static final String PASSWORD = "testpassword";
 	public static final String TESTING_TIME_UNIT_NAME = "test";
+	public static final String TESTING_FREQ_TYPE_NAME = "at least";
 	
 	private final Provider<EntityManager> managerProvider;
 	private Role researcherRole;
@@ -68,6 +70,7 @@ public class Setup implements TestDataProvider {
 	private User superUser;
 	private List<DataElementEntity> propositions;
 	private List<TimeUnit> timeUnits;
+	private List<FrequencyType> freqTypes;
 
 	/**
 	 * Create a Bootstrap class with an EntityManager.
@@ -93,6 +96,7 @@ public class Setup implements TestDataProvider {
 				this.createDataElements(this.researcherUser, this.adminUser,
 						this.superUser);
 		this.timeUnits = this.createTimeUnits();
+		this.freqTypes = createFrequencyTypes();
 	}
 
 	@Override
@@ -104,6 +108,7 @@ public class Setup implements TestDataProvider {
 		this.remove(Role.class);
 		this.remove(TimeUnit.class);
 		this.remove(ThresholdsOperator.class);
+		this.remove(FrequencyType.class);
 		this.researcherRole = null;
 		this.adminRole = null;
 		this.superRole = null;
@@ -112,6 +117,7 @@ public class Setup implements TestDataProvider {
 		this.superUser = null;
 		this.propositions = null;
 		this.timeUnits = null;
+		this.freqTypes = null;
 	}
 
 	private <T> void remove(Class<T> className) {
@@ -275,6 +281,21 @@ public class Setup implements TestDataProvider {
 		entityManager.getTransaction().commit();
 		List<TimeUnit> result = new ArrayList<TimeUnit>();
 		result.add(timeUnit);
+		return result;
+	}
+	
+	private List<FrequencyType> createFrequencyTypes() {
+		EntityManager entityManager = getEntityManager();
+		FrequencyType freqType = new FrequencyType();
+		freqType.setName(TESTING_FREQ_TYPE_NAME);
+		freqType.setDescription("test frequency type");
+		freqType.setRank(1);
+		freqType.setDefault(true);
+		entityManager.getTransaction().begin();
+		entityManager.persist(freqType);
+		entityManager.getTransaction().commit();
+		List<FrequencyType> result = new ArrayList<FrequencyType>();
+		result.add(freqType);
 		return result;
 	}
 }

@@ -448,13 +448,17 @@
 																<table>
 																	<tr>
 																		<td>
-																			At least
+																			<select id="freqTypes" name="freqTypes">
+																					<c:forEach var="freqType" items="${frequencyTypes}">
+																					<option value="${freqType.id}" <c:if test="${propositionType == 'FREQUENCY' ? freqType.id == proposition.frequencyType : freqType.id == defaultFrequencyType.id}">selected="selected"</c:if>>${freqType.description}</option>
+																					</c:forEach>
+																			</select>
 																		</td>
 																		<td>
-																			<input type="number" class="frequencyCountField" name="freqAtLeastField" min="1" value="<c:choose><c:when test="${propositionType == 'FREQUENCY'}">${proposition.atLeast}</c:when><c:otherwise><c:out value="1"/></c:otherwise></c:choose>" />
+																			<input type="number" id="frequencyCountField" name="freqAtLeastField" min="1" value="<c:choose><c:when test="${propositionType == 'FREQUENCY'}">${proposition.atLeast}</c:when><c:otherwise><c:out value="1"/></c:otherwise></c:choose>" />
 																		</td>
 																		<td>
-																			<label id="valueThresholdConsecutiveLabel"><input type="checkbox" value="true" name="freqIsConsecutive" <c:if test="${propositionType == 'FREQUENCY' and proposition.isConsecutive}">checked="checked"</c:if> />consecutive</label>
+																			<label id="valueThresholdConsecutiveLabel" <c:if test="${propositionType != 'FREQUENCY' or (not empty proposition and proposition.dataElement.type != 'VALUE_THRESHOLD')}">style="visibility:hidden"</c:if>><input type="checkbox" value="true" name="freqIsConsecutive" <c:if test="${propositionType == 'FREQUENCY' and proposition.isConsecutive}">checked="checked"</c:if> />consecutive</label>
 																		</td>
 																		<td>
 																			<table>

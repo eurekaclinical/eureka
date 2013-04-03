@@ -463,49 +463,49 @@ limitations under the License.
 		<addForeignKeyConstraint baseColumnNames="VALUETHRESHOLDSGROUP_ID" baseTableName="VALUE_THRESHOLDS" constraintName="FK7321CCF6DE772609" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" referencedColumnNames="ID" referencedTableName="VALUE_THRESHOLD_GROUPS" referencedTableSchemaName="EUREKASERVICE" referencesUniqueColumn="false"/>
 	</changeSet>
 	<changeSet author="arpost (generated)" id="1360440238345-65">
-		<createSequence schemaName="EUREKASERVICE" sequenceName="COMP_SEQ"/>
+		<createSequence sequenceName="COMP_SEQ"/>
 	</changeSet>
 	<changeSet author="arpost (generated)" id="1360440238345-66">
-		<createSequence schemaName="EUREKASERVICE" sequenceName="CONSTRAINT_SEQ"/>
+		<createSequence sequenceName="CONSTRAINT_SEQ"/>
 	</changeSet>
 	<changeSet author="arpost (generated)" id="1360440238345-67">
-		<createSequence schemaName="EUREKASERVICE" sequenceName="EXT_DE_SEQ"/>
+		<createSequence sequenceName="EXT_DE_SEQ"/>
 	</changeSet>
 	<changeSet author="arpost (generated)" id="1360440238345-68">
-		<createSequence schemaName="EUREKASERVICE" sequenceName="EXT_PROP_SEQ"/>
+		<createSequence sequenceName="EXT_PROP_SEQ"/>
 	</changeSet>
 	<changeSet author="arpost (generated)" id="1360440238345-69">
-		<createSequence schemaName="EUREKASERVICE" sequenceName="FILEINFO_SEQ"/>
+		<createSequence sequenceName="FILEINFO_SEQ"/>
 	</changeSet>
 	<changeSet author="arpost (generated)" id="1360440238345-70">
-		<createSequence schemaName="EUREKASERVICE" sequenceName="FILE_SEQ"/>
+		<createSequence sequenceName="FILE_SEQ"/>
 	</changeSet>
 	<changeSet author="arpost (generated)" id="1360440238345-71">
-		<createSequence schemaName="EUREKASERVICE" sequenceName="PROP_SEQ"/>
+		<createSequence sequenceName="PROP_SEQ"/>
 	</changeSet>
 	<changeSet author="arpost (generated)" id="1360440238345-72">
-		<createSequence schemaName="EUREKASERVICE" sequenceName="RELATION_OP_SEQ"/>
+		<createSequence sequenceName="RELATION_OP_SEQ"/>
 	</changeSet>
 	<changeSet author="arpost (generated)" id="1360440238345-73">
-		<createSequence schemaName="EUREKASERVICE" sequenceName="RELATION_SEQ"/>
+		<createSequence sequenceName="RELATION_SEQ"/>
 	</changeSet>
 	<changeSet author="arpost (generated)" id="1360440238345-74">
-		<createSequence schemaName="EUREKASERVICE" sequenceName="ROLE_SEQ"/>
+		<createSequence sequenceName="ROLE_SEQ"/>
 	</changeSet>
 	<changeSet author="arpost (generated)" id="1360440238345-75">
-		<createSequence schemaName="EUREKASERVICE" sequenceName="TEMP_PAT_SEQ"/>
+		<createSequence sequenceName="TEMP_PAT_SEQ"/>
 	</changeSet>
 	<changeSet author="arpost (generated)" id="1360440238345-76">
-		<createSequence schemaName="EUREKASERVICE" sequenceName="THRESHOLDS_OP_SEQ"/>
+		<createSequence sequenceName="THRESHOLDS_OP_SEQ"/>
 	</changeSet>
 	<changeSet author="arpost (generated)" id="1360440238345-77">
-		<createSequence schemaName="EUREKASERVICE" sequenceName="TIME_SEQ"/>
+		<createSequence sequenceName="TIME_SEQ"/>
 	</changeSet>
 	<changeSet author="arpost (generated)" id="1360440238345-78">
-		<createSequence schemaName="EUREKASERVICE" sequenceName="USER_SEQ"/>
+		<createSequence sequenceName="USER_SEQ"/>
 	</changeSet>
 	<changeSet author="arpost (generated)" id="1360440238345-79">
-		<createSequence schemaName="EUREKASERVICE" sequenceName="VALUE_DEF_MATCH_OP_SEQ"/>
+		<createSequence sequenceName="VALUE_DEF_MATCH_OP_SEQ"/>
 	</changeSet>
 	<changeSet author="arpost" id="1360440238345-80">
 		<insert tableName="ROLES">
@@ -713,5 +713,47 @@ limitations under the License.
 			<where>NAME='day'</where>
 		</update>
 		<addNotNullConstraint tableName="PROPERTY_CONSTRAINTS" columnName="VALUECOMPARATOR_ID"/>
+	</changeSet>
+	<changeSet author="arpost" id="1360440238345-88">
+		<createTable tableName="FREQUENCY_TYPES">
+			<column name="ID" type="NUMBER(19,0)">
+				<constraints nullable="false" primaryKey="true" primaryKeyName="FREQ_TYPE_PK"/>
+			</column>
+			<column name="DESCRIPTION" type="VARCHAR2(255 CHAR)"/>
+			<column name="NAME" type="VARCHAR2(255 CHAR)">
+				<constraints nullable="false"/>
+			</column>
+			<column name="RANK" type="NUMBER(10,0)">
+				<constraints nullable="false"/>
+			</column>
+			<column name="ISDEFAULT" type="BOOLEAN">
+				<constraints nullable="false"/>
+			</column>
+		</createTable>
+		<addUniqueConstraint columnNames="RANK" constraintName="FREQ_TYPE_RANK_UC" deferrable="false" disabled="false" initiallyDeferred="false" tableName="FREQUENCY_TYPES"/>
+		<addUniqueConstraint columnNames="NAME" constraintName="FREQ_TYPE_BAME_UC" deferrable="false" disabled="false" initiallyDeferred="false" tableName="FREQUENCY_TYPES"/>
+		<insert tableName="FREQUENCY_TYPES">
+			<column name="ID" valueNumeric="1"/>
+			<column name="NAME" value="at least"/>
+			<column name="DESCRIPTION" value="at least"/>
+			<column name="RANK" value="1"/>
+			<column name="ISDEFAULT" valueBoolean="true"/>
+		</insert>
+		<insert tableName="FREQUENCY_TYPES">
+			<column name="ID" valueNumeric="2"/>
+			<column name="NAME" value="first"/>
+			<column name="DESCRIPTION" value="first"/>
+			<column name="RANK" value="2"/>
+			<column name="ISDEFAULT" valueBoolean="false"/>
+		</insert>
+		<addColumn tableName="FREQUENCIES">
+			<column name="FREQUENCYTYPE_ID" type="NUMBER(10,0)" defaultValueNumeric="1">
+				<constraints nullable="false"/>
+			</column>
+		</addColumn>
+		<createSequence sequenceName="FREQUENCYTYPES_OP_SEQ"/>
+	</changeSet>
+	<changeSet author="arpost" id="1360440238345-89">
+		<renameColumn tableName="FREQUENCIES" oldColumnName="ATLEASTCOUNT" newColumnName="COUNT"/>
 	</changeSet>
 </databaseChangeLog>

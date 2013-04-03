@@ -23,13 +23,9 @@ import edu.emory.cci.aiw.cvrg.eureka.common.entity.DataElementEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.ExtendedDataElement;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.Relation;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.SequenceEntity;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.ValueThresholdGroupEntity;
 import org.protempa.HighLevelAbstractionDefinition;
-import org.protempa.PropertyConstraint;
 import org.protempa.PropositionDefinition;
 import org.protempa.TemporalExtendedPropositionDefinition;
-import org.protempa.proposition.value.ValueComparator;
-import org.protempa.proposition.value.ValueType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,9 +35,7 @@ import java.util.HashMap;
 import java.util.Map;
 import org.protempa.IntervalSide;
 import org.protempa.SimpleGapFunction;
-import org.protempa.TemporalExtendedParameterDefinition;
 import org.protempa.TemporalPatternOffset;
-import org.protempa.proposition.value.NominalValue;
 
 final class SequenceConverter
 		implements
@@ -103,8 +97,11 @@ final class SequenceConverter
 					primary.setRelation(tepdLhs, tepdRhs, buildRelation(rel));
 				}
 			}
-			primary.setGapFunction(
-					new SimpleGapFunction(Integer.valueOf(0), null));
+			
+			primary.setConcatenable(false);
+			primary.setSolid(false);
+			primary.setGapFunction(new SimpleGapFunction(0, null));
+			
 			TemporalPatternOffset temporalOffsets = new TemporalPatternOffset();
 			temporalOffsets.setStartTemporalExtendedPropositionDefinition(primaryEP);
 			temporalOffsets.setStartIntervalSide(IntervalSide.START);

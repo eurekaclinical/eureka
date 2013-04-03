@@ -26,7 +26,9 @@ import com.google.inject.persist.jpa.JpaPersistModule;
 import edu.emory.cci.aiw.cvrg.eureka.services.clients.I2b2Client;
 import edu.emory.cci.aiw.cvrg.eureka.services.clients.MockI2b2Client;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.FileDao;
+import edu.emory.cci.aiw.cvrg.eureka.services.dao.FrequencyTypeDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.JpaFileDao;
+import edu.emory.cci.aiw.cvrg.eureka.services.dao.JpaFrequencyTypeDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.JpaPropositionDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.JpaRelationOperatorDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.JpaRoleDao;
@@ -66,6 +68,7 @@ public class AppTestModule extends AbstractModule {
 		bind(FileDao.class).to(JpaFileDao.class);
 		bind(TimeUnitDao.class).to(JpaTimeUnitDao.class);
 		bind(ValueComparatorDao.class).to(JpaValueComparatorDao.class);
+		bind(FrequencyTypeDao.class).to(JpaFrequencyTypeDao.class);
 		bind(RelationOperatorDao.class).to(JpaRelationOperatorDao.class);
 		bind(PropositionDao.class).to(JpaPropositionDao.class);
 		bind(EmailSender.class).to(MockEmailSender.class);

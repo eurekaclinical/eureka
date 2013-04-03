@@ -21,6 +21,7 @@ package edu.emory.cci.aiw.cvrg.eureka.services.conversion;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.ExtendedDataElement;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.FrequencyEntity;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.FrequencyType;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.SystemProposition;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.SystemProposition.SystemType;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.TimeUnit;
@@ -30,21 +31,17 @@ import org.junit.Test;
 import org.protempa.PropositionDefinition;
 
 import java.util.List;
-import java.util.Set;
 import org.junit.After;
 
 import static org.junit.Assert.assertEquals;
-import org.protempa.HighLevelAbstractionDefinition;
+import org.protempa.AbstractionDefinition;
 import org.protempa.SimpleGapFunction;
-import org.protempa.TemporalExtendedPropositionDefinition;
-import org.protempa.proposition.interval.Relation;
-import org.protempa.proposition.value.AbsoluteTimeUnit;
 
-public class FrequencySliceAbstractionConverterTest extends
+public class FrequencyFirstNotValueThresholdConverterTest extends
 		AbstractServiceTest {
 	private SystemProposition event;
 	private FrequencyEntity frequency;
-	private HighLevelAbstractionDefinition sliceDef;
+	private AbstractionDefinition hlad;
 	private List<PropositionDefinition> propDefs;
 	private SimpleGapFunction gf;
 
@@ -53,8 +50,8 @@ public class FrequencySliceAbstractionConverterTest extends
 		PropositionDefinitionConverterVisitor converterVisitor = 
 				this.getInstance
 				(PropositionDefinitionConverterVisitor.class);
-		FrequencyNonConsecutiveAbstractionConverter converter = 
-				new FrequencyNonConsecutiveAbstractionConverter();
+		FrequencyNotValueThresholdConverter converter = 
+				new FrequencyNotValueThresholdConverter();
 		converter.setVisitor(converterVisitor);
 		
 		event = new SystemProposition();
@@ -68,36 +65,40 @@ public class FrequencySliceAbstractionConverterTest extends
 		TimeUnit dayUnit = new TimeUnit();
 		dayUnit.setName("day");
 		
+		FrequencyType ft = new FrequencyType();
+		ft.setName("first");
+		
 		frequency = new FrequencyEntity();
 		frequency.setId(2L);
 		frequency.setKey("test-slice-key");
-		frequency.setAtLeastCount(3);
+		frequency.setCount(3);
 		frequency.setWithinAtLeast(1);
 		frequency.setWithinAtLeastUnits(dayUnit);
 		frequency.setWithinAtMost(90);
 		frequency.setWithinAtMostUnits(dayUnit);
+		frequency.setFrequencyType(ft);
 		
 		ExtendedDataElement af = new ExtendedDataElement();
 		af.setDataElementEntity(event);
 		
 		frequency.setExtendedProposition(af);
 		propDefs = converter.convert(frequency);
-		sliceDef = converter.getPrimaryPropositionDefinition();
-		gf = (SimpleGapFunction) sliceDef.getGapFunction();
+		hlad = converter.getPrimaryPropositionDefinition();
+		gf = (SimpleGapFunction) hlad.getGapFunction();
 	}
 	
 	@After
 	public void tearDown() {
 		event = null;
 		frequency = null;
-		sliceDef = null;
+		hlad = null;
 		propDefs = null;
 		gf = null;
 	}
 	
 	@Test
 	public void testNumberOfPropositionDefinitionsCreated() {
-		assertEquals("wrong number of proposition definitions created", 1,
+		assertEquals("wrong number of proposition definitions created", 2,
 				propDefs.size());
 	}
 	
@@ -105,24 +106,24 @@ public class FrequencySliceAbstractionConverterTest extends
 	public void testId() {
 		assertEquals("wrong ID", 
 				frequency.getKey() + ConversionUtil.PRIMARY_PROP_ID_SUFFIX, 
-				sliceDef.getId());
+				hlad.getId());
 	}
 	
-	@Test
-	public void testMinIndex() {
-		assertEquals("wrong min index", 3, sliceDef.getExtendedPropositionDefinitions().size());
-	}
+//	@Test
+//	public void testMinIndex() {
+//		assertEquals("wrong min index", 3, sliceDef.getExtendedPropositionDefinitions().size());
+//	}
 	
 	@Test
 	public void testAbstractedFromSize() {
 		assertEquals("wrong abstracted from size", 
-				1, sliceDef.getAbstractedFrom().size());
+				1, hlad.getAbstractedFrom().size());
 	}
 	
 	@Test
 	public void testAbstractedFrom() {
-		assertEquals("wrong abstracted from", event.getKey(),
-				sliceDef.getAbstractedFrom().iterator().next());
+		assertEquals("wrong abstracted from", frequency.getKey() + "_SUB",
+				hlad.getAbstractedFrom().iterator().next());
 	}
 	
 	@Test
@@ -135,23 +136,23 @@ public class FrequencySliceAbstractionConverterTest extends
 		assertEquals("wrong gap max unit", null, gf.getMaximumGapUnit());
 	}
 	
-	@Test
-	public void minDistanceBetween() {
-		Set<List<TemporalExtendedPropositionDefinition>> tepdPairs = 
-				sliceDef.getTemporalExtendedPropositionDefinitionPairs();
-		for (List<TemporalExtendedPropositionDefinition> tepdPair : tepdPairs) {
-			Relation rel = sliceDef.getRelation(tepdPair);
-			assertEquals("wrong min distance between", Integer.valueOf(1), rel.getMinDistanceBetween());
-		}
-	}
-	
-	@Test
-	public void minDistanceBetweenUnits() {
-		Set<List<TemporalExtendedPropositionDefinition>> tepdPairs = 
-				sliceDef.getTemporalExtendedPropositionDefinitionPairs();
-		for (List<TemporalExtendedPropositionDefinition> tepdPair : tepdPairs) {
-			Relation rel = sliceDef.getRelation(tepdPair);
-			assertEquals("wrong min distance between units", AbsoluteTimeUnit.DAY, rel.getMinDistanceBetweenUnits());
-		}
-	}
+//	@Test
+//	public void minDistanceBetween() {
+//		Set<List<TemporalExtendedPropositionDefinition>> tepdPairs = 
+//				sliceDef.getTemporalExtendedPropositionDefinitionPairs();
+//		for (List<TemporalExtendedPropositionDefinition> tepdPair : tepdPairs) {
+//			Relation rel = sliceDef.getRelation(tepdPair);
+//			assertEquals("wrong min distance between", Integer.valueOf(1), rel.getMinDistanceBetween());
+//		}
+//	}
+//	
+//	@Test
+//	public void minDistanceBetweenUnits() {
+//		Set<List<TemporalExtendedPropositionDefinition>> tepdPairs = 
+//				sliceDef.getTemporalExtendedPropositionDefinitionPairs();
+//		for (List<TemporalExtendedPropositionDefinition> tepdPair : tepdPairs) {
+//			Relation rel = sliceDef.getRelation(tepdPair);
+//			assertEquals("wrong min distance between units", AbsoluteTimeUnit.DAY, rel.getMinDistanceBetweenUnits());
+//		}
+//	}
 }

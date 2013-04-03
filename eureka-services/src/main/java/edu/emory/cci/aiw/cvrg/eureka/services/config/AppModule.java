@@ -30,7 +30,9 @@ import com.google.inject.jndi.JndiIntegration;
 import edu.emory.cci.aiw.cvrg.eureka.services.clients.I2b2Client;
 import edu.emory.cci.aiw.cvrg.eureka.services.clients.I2b2RestClient;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.FileDao;
+import edu.emory.cci.aiw.cvrg.eureka.services.dao.FrequencyTypeDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.JpaFileDao;
+import edu.emory.cci.aiw.cvrg.eureka.services.dao.JpaFrequencyTypeDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.JpaPropositionDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.JpaRelationOperatorDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.JpaRoleDao;
@@ -70,6 +72,7 @@ class AppModule extends AbstractModule {
 		bind(RelationOperatorDao.class).to(JpaRelationOperatorDao.class);
 		bind(ValueComparatorDao.class).to(JpaValueComparatorDao.class);
 		bind(ThresholdsOperatorDao.class).to(JpaThresholdsOperatorDao.class);
+		bind(FrequencyTypeDao.class).to(JpaFrequencyTypeDao.class);
 		bind(ThresholdsOperatorDao.class).to
 				(JpaThresholdsOperatorDao.class);
 		bind(new TypeLiteral<PropositionFinder<Long, 

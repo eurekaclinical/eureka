@@ -36,6 +36,7 @@ import edu.emory.cci.aiw.cvrg.eureka.common.comm.JobInfo;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.SystemElement;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.UserRequest;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.FileUpload;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.FrequencyType;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.Job;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.RelationOperator;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.Role;
@@ -53,6 +54,8 @@ public class ServicesClient extends AbstractClient {
 	private static final GenericType<List<DataElement>> UserPropositionList = new GenericType<List<DataElement>>() {
 	};
 	private static final GenericType<List<TimeUnit>> TimeUnitList = new GenericType<List<TimeUnit>>() {
+	};
+	private static final GenericType<List<FrequencyType>> FrequencyTypeList = new GenericType<List<FrequencyType>>() {
 	};
 	private static final GenericType<List<RelationOperator>> RelationOperatorList = new GenericType<List<RelationOperator>>() {
 	};
@@ -440,5 +443,19 @@ public class ServicesClient extends AbstractClient {
 			String message = e.getResponse().getEntity(String.class);
 			throw new ClientException(status, message, e);
 		}
+	}
+
+	public List<FrequencyType> getFrequencyTypesAsc() {
+		final String path = "/api/frequencytype/listasc";
+		return this.getResource().path(path).accept(
+				MediaType.APPLICATION_JSON).get(FrequencyTypeList);
+	}
+
+	public FrequencyType getDefaultFrequencyType() {
+		String path = "/api/frequencytype/default";
+		return getResource()
+				.path(path)
+				.accept(MediaType.APPLICATION_JSON)
+				.get(FrequencyType.class);
 	}
 }
