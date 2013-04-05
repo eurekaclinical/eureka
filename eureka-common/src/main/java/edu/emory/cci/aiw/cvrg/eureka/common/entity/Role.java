@@ -132,4 +132,26 @@ public class Role implements CycleRecoverable {
 	public String toString() {
 		return ToStringBuilder.reflectionToString(this);
 	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (!(o instanceof Role)) return false;
+
+		Role role = (Role) o;
+
+		if (defaultRole != role.defaultRole) return false;
+		if (!id.equals(role.id)) return false;
+		if (!name.equals(role.name)) return false;
+
+		return true;
+	}
+
+	@Override
+	public int hashCode() {
+		int result = id.hashCode();
+		result = 31 * result + name.hashCode();
+		result = 31 * result + (defaultRole ? 1 : 0);
+		return result;
+	}
 }
