@@ -271,22 +271,21 @@ public class UserResource {
 	public Response putUser(final User inUser) {
 		LOGGER.debug("Received updated user: {}", inUser);
 		Response response;
+		User currentUser = this.userDao.retrieve(inUser.getId());
+		this.userDao.refresh(currentUser);
+		boolean activation = (!currentUser.isActive()) && (inUser.isActive());
+		List<Role> roles = inUser.getRoles();
+		List<Role> updatedRoles = new ArrayList<Role>();
+		for (Role r : roles) {
+			Role updatedRole = this.roleDao.retrieve(r.getId());
+			updatedRoles.add(updatedRole);
+		}
 
-		if (this.validateUpdatedUser(inUser)) {
-			User currentUser = this.userDao.retrieve(inUser.getId());
-			this.userDao.refresh(currentUser);
-			boolean activation = (!currentUser.isActive()) && (inUser.isActive());
-			List<Role> roles = inUser.getRoles();
-			List<Role> updatedRoles = new ArrayList<Role>();
-			for (Role r : roles) {
-				Role updatedRole = this.roleDao.retrieve(r.getId());
-				updatedRoles.add(updatedRole);
-			}
+		currentUser.setRoles(updatedRoles);
+		currentUser.setActive(inUser.isActive());
+		currentUser.setLastLogin(inUser.getLastLogin());
 
-			currentUser.setRoles(updatedRoles);
-			currentUser.setActive(inUser.isActive());
-			currentUser.setLastLogin(inUser.getLastLogin());
-
+		if (this.validateUpdatedUser(currentUser)) {
 			LOGGER.debug("Saving updated user: {}", currentUser);
 			this.userDao.update(currentUser);
 
@@ -361,7 +360,7 @@ public class UserResource {
 			throw new HttpStatusException(
 					Response.Status.NOT_FOUND, "We could not find this email address in our records."
 					+ " Please check the email address or contact {0} for help.");
-			
+
 		} else {
 			String passwordHash;
 			String password = this.passwordGenerator.generatePassword();
@@ -433,26 +432,23 @@ public class UserResource {
 	private boolean validateUpdatedUser(User updatedUser) {
 		boolean result = true;
 
-		// get the user as they currently exist in the data store.
-		User currentUser = this.userDao.retrieve(updatedUser.getId());
-		List<Role> currentRoles = currentUser.getRoles();
-
 		// the roles to check
 		Role superUserRole = this.roleDao.getRoleByName("superuser");
-		Role adminRole = this.roleDao.getRoleByName("admin");
 
 		// a super user can not be stripped of admin rights, 
 		// or be de-activated.
-		if (currentRoles.contains(superUserRole)) {
+		if (updatedUser.getRoles().contains(superUserRole)) {
 			if (!updatedUser.isActive()) {
 				this.validationError = "Superuser can not be de-activated";
 				result = false;
 			}
+			Role adminRole = this.roleDao.getRoleByName("admin");
 			if (!updatedUser.getRoles().contains(adminRole)) {
 				this.validationError = "Superuser can not lose admin rights";
 				result = false;
 			}
 		}
+		
 		return result;
 	}
 
