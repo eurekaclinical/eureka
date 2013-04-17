@@ -131,7 +131,7 @@ public class JobResource {
 		LOGGER.debug("Request for job status");
 		List<Job> jobs = this.jobDao.getWithFilter(inFilter);
 		for (Job job : jobs) {
-			this.jobDao.refresh(job);
+//			this.jobDao.refresh(job);
 			LOGGER.debug("Returning job {} with status {}", job.getId(),
 			        job.getCurrentState());
 		}

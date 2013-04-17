@@ -85,7 +85,7 @@ public class DataElementResource {
 		List<DataElementEntity> propositions = this.propositionDao.getByUserId(inUserId);
 
 		for (DataElementEntity proposition : propositions) {
-			this.propositionDao.refresh(proposition);
+//			this.propositionDao.refresh(proposition);
 			if (proposition.isInSystem()) {
 				result.add(
 						this.systemElementResource.get(

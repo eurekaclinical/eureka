@@ -64,7 +64,7 @@ public class PingResource {
 		if (user == null) {
 			response = "No user with id " + inUserId;
 		} else {
-			this.userDao.refresh(user);
+//			this.userDao.refresh(user);
 			try {
 				testUserRoles(user);
 				testUserConfiguration(user);

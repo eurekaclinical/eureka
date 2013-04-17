@@ -124,9 +124,9 @@ public class UserResource {
 	@Produces(MediaType.APPLICATION_JSON)
 	public List<User> getUsers() {
 		List<User> users = this.userDao.getAll();
-		for (User user : users) {
-			this.userDao.refresh(user);
-		}
+//		for (User user : users) {
+//			this.userDao.refresh(user);
+//		}
 		LOGGER.debug("Returning list of users");
 		return users;
 	}

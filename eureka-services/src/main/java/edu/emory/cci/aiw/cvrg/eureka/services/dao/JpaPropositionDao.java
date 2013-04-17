@@ -90,9 +90,9 @@ public class JpaPropositionDao extends GenericDao<DataElementEntity, Long>
 				inUserId, inKey);
 			result = null;
 		}
-		if (result != null) {
-			this.refresh(result);
-		}
+//		if (result != null) {
+//			this.refresh(result);
+//		}
 		
 		return result;
 	}
