@@ -19,15 +19,14 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.common.ddl;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.persistence.Entity;
-
 import org.hibernate.cfg.Configuration;
 import org.hibernate.tool.hbm2ddl.SchemaExport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import javax.persistence.Entity;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Generates the SQL statements needed to create the tables used to persist the
@@ -45,10 +44,10 @@ public final class DdlGenerator {
 	/**
 	 * The dialect to produce the SQL for.
 	 */
-//	private static final String DIALECT =
-//			"org.hibernate.dialect.Oracle10gDialect";
 	private static final String DIALECT =
-		"org.hibernate.dialect.H2Dialect";
+			"org.hibernate.dialect.Oracle10gDialect";
+//	private static final String DIALECT =
+//		"org.hibernate.dialect.H2Dialect";
 
 	/**
 	 * Prevent the utility class from being instantiated.
@@ -129,31 +128,33 @@ public final class DdlGenerator {
 				.add(edu.emory.cci.aiw.cvrg.eureka.common.entity
 						.AbstractFileInfo.class);
 		serviceClasses.add(edu.emory.cci.aiw.cvrg.eureka.common.entity
-						.DataElementEntity.class);
+				.DataElementEntity.class);
 		serviceClasses.add(edu.emory.cci.aiw.cvrg.eureka.common.entity
-			.SequenceEntity.class);
+				.SequenceEntity.class);
 		serviceClasses.add(edu.emory.cci.aiw.cvrg.eureka.common.entity
-			.CategoryEntity.class);
+				.CategoryEntity.class);
 		serviceClasses.add(edu.emory.cci.aiw.cvrg.eureka.common.entity
-			.SystemProposition.class);
+				.SystemProposition.class);
 		serviceClasses.add(edu.emory.cci.aiw.cvrg.eureka.common.entity
-			.Relation.class);
+				.Relation.class);
 		serviceClasses.add(edu.emory.cci.aiw.cvrg.eureka.common.entity
-			.TimeUnit.class);
+				.TimeUnit.class);
 		serviceClasses.add(edu.emory.cci.aiw.cvrg.eureka.common.entity
-			.ExtendedDataElement.class);
+				.ExtendedDataElement.class);
 		serviceClasses.add(edu.emory.cci.aiw.cvrg.eureka.common.entity
-			.PropertyConstraint.class);
+				.PropertyConstraint.class);
 		serviceClasses.add(edu.emory.cci.aiw.cvrg.eureka.common.entity
-			.ValueComparator.class);
+				.ValueComparator.class);
 		serviceClasses.add(edu.emory.cci.aiw.cvrg.eureka.common.entity
-			.RelationOperator.class);
+				.RelationOperator.class);
 		serviceClasses.add(edu.emory.cci.aiw.cvrg.eureka.common.entity
 				.CategoryEntity.class);
 		serviceClasses.add(edu.emory.cci.aiw.cvrg.eureka.common.entity
 				.ValueThresholdEntity.class);
 		serviceClasses.add(edu.emory.cci.aiw.cvrg.eureka.common.entity
 				.FrequencyEntity.class);
+		serviceClasses.add(
+				edu.emory.cci.aiw.cvrg.eureka.common.entity.FrequencyType.class);
 		serviceClasses.add(edu.emory.cci.aiw.cvrg.eureka.common.entity
 				.ThresholdsOperator.class);
 		serviceClasses.add(edu.emory.cci.aiw.cvrg.eureka.common.entity
@@ -163,7 +164,7 @@ public final class DdlGenerator {
 
 	/**
 	 * @param args The first param is the file where the service layer DDL
-	 * should go, and the second parameter is where the ETL layer DDL should go.
+	 *             should go, and the second parameter is where the ETL layer DDL should go.
 	 */
 	public static void main(String[] args) {
 		if (args.length < 2) {
