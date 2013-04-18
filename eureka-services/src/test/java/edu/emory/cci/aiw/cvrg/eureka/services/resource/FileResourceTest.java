@@ -28,8 +28,8 @@ import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.ClientResponse.Status;
 import com.sun.jersey.api.client.WebResource;
 
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.UserInfo;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.FileUpload;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.User;
 import junit.framework.Assert;
 
 /**
@@ -45,8 +45,8 @@ public class FileResourceTest extends AbstractServiceResourceTest {
 	 */
 	@Test
 	public final void testFileUpload() {
-		List<User> users = this.getUserList();
-		User user = users.get(0);
+		List<UserInfo> users = this.getUserList();
+		UserInfo user = users.get(0);
 		FileUpload fileUpload = new FileUpload();
 		fileUpload.setLocation("/tmp/foo");
 		fileUpload.setUserId(user.getId());

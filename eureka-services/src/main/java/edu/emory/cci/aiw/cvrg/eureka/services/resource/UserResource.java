@@ -43,6 +43,7 @@ import org.slf4j.LoggerFactory;
 import com.google.inject.Inject;
 import com.sun.jersey.api.client.ClientResponse.Status;
 
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.UserInfo;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.UserRequest;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.Role;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.User;
@@ -122,13 +123,13 @@ public class UserResource {
 	@Path("/list")
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	public List<User> getUsers() {
+	public List<UserInfo> getUsers() {
 		List<User> users = this.userDao.getAll();
 //		for (User user : users) {
 //			this.userDao.refresh(user);
 //		}
 		LOGGER.debug("Returning list of users");
-		return users;
+		return this.toUserInfoList(users);
 	}
 
 	/**
@@ -140,11 +141,11 @@ public class UserResource {
 	@Path("/byid/{id}")
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	public User getUserById(@PathParam("id") Long inId) {
+	public UserInfo getUserById(@PathParam("id") Long inId) {
 		User user = this.userDao.retrieve(inId);
 		this.userDao.refresh(user);
 		LOGGER.debug("Returning user for ID {}: {}", inId, user);
-		return user;
+		return this.toUserInfo(user);
 	}
 
 	/**
@@ -156,13 +157,13 @@ public class UserResource {
 	@Path("/byname/{name}")
 	@GET
 	@Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
-	public User getUserByName(@PathParam("name") String inName) {
+	public UserInfo getUserByName(@PathParam("name") String inName) {
 		User user = this.userDao.getByName(inName);
 		if (user != null) {
 			this.userDao.refresh(user);
 		}
 		LOGGER.debug("Returning user for name {}: {}", inName, user);
-		return user;
+		return this.toUserInfo(user);
 	}
 
 	/**
@@ -263,27 +264,21 @@ public class UserResource {
 	/**
 	 * Put an updated user to the system.
 	 *
-	 * @param inUser Object containing all the information about the user to
+	 * @param inUserInfo Object containing all the information about the user to
 	 * add.
 	 * @return A "Created" response with a link to the user page if successful.
 	 */
 	@PUT
-	public Response putUser(final User inUser) {
-		LOGGER.debug("Received updated user: {}", inUser);
+	public Response putUser(final UserInfo inUserInfo) {
+		LOGGER.debug("Received updated user: {}", inUserInfo);
 		Response response;
-		User currentUser = this.userDao.retrieve(inUser.getId());
-		this.userDao.refresh(currentUser);
-		boolean activation = (!currentUser.isActive()) && (inUser.isActive());
-		List<Role> roles = inUser.getRoles();
-		List<Role> updatedRoles = new ArrayList<Role>();
-		for (Role r : roles) {
-			Role updatedRole = this.roleDao.retrieve(r.getId());
-			updatedRoles.add(updatedRole);
-		}
+		User currentUser = this.userDao.retrieve(inUserInfo.getId());
+		boolean activation = (!currentUser.isActive()) && (inUserInfo.isActive());
+		List<Role> updatedRoles = this.roleIdsToRoles(inUserInfo.getRoles());
 
 		currentUser.setRoles(updatedRoles);
-		currentUser.setActive(inUser.isActive());
-		currentUser.setLastLogin(inUser.getLastLogin());
+		currentUser.setActive(inUserInfo.isActive());
+		currentUser.setLastLogin(inUserInfo.getLastLogin());
 
 		if (this.validateUpdatedUser(currentUser)) {
 			LOGGER.debug("Saving updated user: {}", currentUser);
@@ -448,7 +443,6 @@ public class UserResource {
 				result = false;
 			}
 		}
-		
 		return result;
 	}
 
@@ -471,5 +465,46 @@ public class UserResource {
 		Calendar calendar = Calendar.getInstance();
 		calendar.add(Calendar.DATE, 90);
 		return calendar.getTime();
+	}
+
+	private List<UserInfo> toUserInfoList (List<User> inUsers) {
+		List<UserInfo> infos = new ArrayList<UserInfo>(inUsers.size());
+		for (User user : inUsers) {
+			infos.add(this.toUserInfo(user));
+		}
+		return infos;
+	}
+
+	private UserInfo toUserInfo (User inUser) {
+		UserInfo info = new UserInfo();
+		info.setId(inUser.getId());
+		info.setActive(inUser.isActive());
+		info.setEmail(inUser.getEmail());
+		info.setFirstName(inUser.getFirstName());
+		info.setLastName(inUser.getLastName());
+		info.setLastLogin(inUser.getLastLogin());
+		info.setOrganization(inUser.getOrganization());
+		info.setPassword(inUser.getPassword());
+		info.setPasswordExpiration(inUser.getPasswordExpiration());
+		info.setVerificationCode(inUser.getVerificationCode());
+		info.setVerified(inUser.isVerified());
+		info.setRoles(this.rolesToRoleIds(inUser.getRoles()));
+		return info;
+	}
+
+	private List<Long> rolesToRoleIds (List<Role> inRoles) {
+		List<Long> roleIds = new ArrayList<Long>(inRoles.size());
+		for (Role role : inRoles) {
+			roleIds.add(role.getId());
+		}
+		return roleIds;
+	}
+
+	private List<Role> roleIdsToRoles (List<Long> inRoleIds) {
+		List<Role> roles = new ArrayList<Role>(inRoleIds.size());
+		for (Long roleId : inRoleIds) {
+			roles.add(this.roleDao.retrieve(roleId));
+		}
+		return roles;
 	}
 }

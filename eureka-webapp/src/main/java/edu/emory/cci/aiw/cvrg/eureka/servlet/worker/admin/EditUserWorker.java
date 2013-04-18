@@ -26,9 +26,9 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.UserInfo;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ServicesClient;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.Role;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.User;
 import edu.emory.cci.aiw.cvrg.eureka.servlet.worker.ServletWorker;
 
 public class EditUserWorker implements ServletWorker {
@@ -42,7 +42,7 @@ public class EditUserWorker implements ServletWorker {
 
 		String id = req.getParameter("id");
 		ServicesClient servicesClient = new ServicesClient(eurekaServicesUrl);
-		User user = servicesClient.getUserById(Long.valueOf(id));
+		UserInfo user = servicesClient.getUserById(Long.valueOf(id));
 		List<Role> roles = servicesClient.getRoles();
 
 		req.setAttribute("roles", roles);

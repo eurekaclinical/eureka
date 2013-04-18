@@ -56,7 +56,7 @@
                 <c:set var="is_admin" value="false" />
                 <c:set var="is_inactive" value="false" />
                 <c:forEach var="role" items="${user.roles}">
-                    <c:if test="${role.name == 'admin'}">
+                    <c:if test="${roles[role].name == 'admin'}">
                         <c:set var="is_admin" value="true" />                   
                     </c:if>                     
                 </c:forEach>            
@@ -87,7 +87,7 @@
             </td>
             <td>
                 <c:forEach var="role" items="${user.roles}">
-                ${role.name} 
+                ${roles[role].name}
                 </c:forEach>            
             </td>
             <td>${user.email}</td>

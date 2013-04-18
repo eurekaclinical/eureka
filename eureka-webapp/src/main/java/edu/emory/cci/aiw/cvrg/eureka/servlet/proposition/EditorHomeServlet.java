@@ -34,8 +34,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.DataElement;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.UserInfo;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ServicesClient;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.User;
 
 public class EditorHomeServlet extends HttpServlet {
 
@@ -85,7 +85,7 @@ public class EditorHomeServlet extends HttpServlet {
 
 		LOGGER.debug("got username {}", userName);
 		ServicesClient servicesClient = new ServicesClient(eurekaServicesUrl);
-		User user = servicesClient.getUserByName(userName);
+		UserInfo user = servicesClient.getUserByName(userName);
 		List<DataElement> props = servicesClient.getUserElements(user.getId());
 		SimpleDateFormat df = new SimpleDateFormat("MM/dd/yyyy");
 		for (DataElement proposition : props) {

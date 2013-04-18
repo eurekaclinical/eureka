@@ -24,8 +24,8 @@ import java.security.Principal;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.UserInfo;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ServicesClient;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.User;
 
 /**
  * @author hrathod
@@ -44,7 +44,7 @@ public final class ServletUtil {
 		return new ServicesClient(serviceUrl);
 	}
 
-	public static User getCurrentUser(HttpServletRequest inRequest) {
+	public static UserInfo getCurrentUser(HttpServletRequest inRequest) {
 		Principal principal = inRequest.getUserPrincipal();
 		String name = principal.getName();
 		return getServicesClient(inRequest).getUserByName(name);

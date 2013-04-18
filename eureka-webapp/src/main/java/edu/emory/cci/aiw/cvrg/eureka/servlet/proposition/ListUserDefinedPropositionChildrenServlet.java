@@ -38,8 +38,8 @@ import org.slf4j.LoggerFactory;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.Category;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.DataElement;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.DataElementField;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.UserInfo;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ServicesClient;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.User;
 
 public class ListUserDefinedPropositionChildrenServlet extends HttpServlet {
 
@@ -142,7 +142,7 @@ public class ListUserDefinedPropositionChildrenServlet extends HttpServlet {
 
 		Principal principal = req.getUserPrincipal();
 		String userName = principal.getName();
-		User user = this.servicesClient.getUserByName(userName);
+		UserInfo user = this.servicesClient.getUserByName(userName);
 		DataElement dataElement = servicesClient.getUserElement(user.getId(),
 				propKey);
 

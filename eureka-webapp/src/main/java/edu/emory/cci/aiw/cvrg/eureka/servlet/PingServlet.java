@@ -26,9 +26,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.UserInfo;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ClientException;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ServicesClient;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.User;
 
 /**
  * @author hrathod
@@ -39,7 +39,7 @@ public class PingServlet extends HttpServlet {
 			throws ServletException, IOException {
 		ServicesClient client = ServletUtil.getServicesClient(req);
 		String userId = req.getParameter("id");
-		User user = client.getUserById(Long.valueOf(userId));
+		UserInfo user = client.getUserById(Long.valueOf(userId));
 		resp.setContentType("text/plain");
 		try {
 			client.pingAccount(user.getId());

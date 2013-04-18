@@ -34,6 +34,7 @@ import com.sun.jersey.api.client.UniformInterfaceException;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.DataElement;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.JobInfo;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.SystemElement;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.UserInfo;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.UserRequest;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.FileUpload;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.FrequencyType;
@@ -41,7 +42,6 @@ import edu.emory.cci.aiw.cvrg.eureka.common.entity.Job;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.RelationOperator;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.Role;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.TimeUnit;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.User;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.ValueComparator;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.ThresholdsOperator;
 
@@ -72,7 +72,7 @@ public class ServicesClient extends AbstractClient {
 	};
 	private static final GenericType<List<Job>> JobList = new GenericType<List<Job>>() {
 	};
-	private static final GenericType<List<User>> UserList = new GenericType<List<User>>() {
+	private static final GenericType<List<UserInfo>> UserList = new GenericType<List<UserInfo>>() {
 	};
 	private final String servicesUrl;
 
@@ -86,7 +86,7 @@ public class ServicesClient extends AbstractClient {
 		return this.servicesUrl;
 	}
 
-	public List<User> getUsers() {
+	public List<UserInfo> getUsers() {
 		final String path = "/api/user/list";
 		return this.getResource()
 				.path(path)
@@ -94,20 +94,20 @@ public class ServicesClient extends AbstractClient {
 				.accept(MediaType.APPLICATION_JSON).get(UserList);
 	}
 
-	public User getUserByName(String username) {
+	public UserInfo getUserByName(String username) {
 		final String path = "/api/user/byname/" + username;
 		return this.getResource()
 				.path(path)
 				.accept(MediaType.APPLICATION_JSON)
-				.get(User.class);
+				.get(UserInfo.class);
 	}
 
-	public User getUserById(Long inUserId) {
+	public UserInfo getUserById(Long inUserId) {
 		final String path = "/api/user/byid/" + inUserId;
 		return this.getResource()
 				.path(path)
 				.accept(MediaType.APPLICATION_JSON)
-				.get(User.class);
+				.get(UserInfo.class);
 	}
 
 	public void addUser(UserRequest inRequest) throws ClientException {
@@ -137,7 +137,7 @@ public class ServicesClient extends AbstractClient {
 		errorIfStatusNotEqualTo(response, ClientResponse.Status.NO_CONTENT);
 	}
 	
-	public void updateUser(User inUser) throws ClientException {
+	public void updateUser(UserInfo inUser) throws ClientException {
 		final String path = "/api/user";
 		ClientResponse response = this.getResource()
 				.path(path)

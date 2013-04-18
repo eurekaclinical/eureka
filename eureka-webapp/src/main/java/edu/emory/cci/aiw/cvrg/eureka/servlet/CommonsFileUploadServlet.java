@@ -19,6 +19,7 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.servlet;
 
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.UserInfo;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ClientException;
 import java.io.File;
 import java.io.IOException;
@@ -39,7 +40,6 @@ import org.apache.commons.fileupload.servlet.ServletFileUpload;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ServicesClient;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.FileUpload;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.User;
 
 public class CommonsFileUploadServlet extends HttpServlet {
 
@@ -114,7 +114,7 @@ public class CommonsFileUploadServlet extends HttpServlet {
 
 					String userName = principal.getName();
 					ServicesClient servicesClient = new ServicesClient(eurekaServicesUrl);
-					User user = servicesClient.getUserByName(userName);
+					UserInfo user = servicesClient.getUserByName(userName);
 
 					/*
 					 * Write file to the ultimate location.

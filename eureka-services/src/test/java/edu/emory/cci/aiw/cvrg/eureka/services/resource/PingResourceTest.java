@@ -21,11 +21,9 @@ package edu.emory.cci.aiw.cvrg.eureka.services.resource;
 
 import java.util.List;
 
-import org.junit.Test;
-
 import com.sun.jersey.api.client.ClientResponse;
 
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.User;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.UserInfo;
 
 import junit.framework.Assert;
 
@@ -36,8 +34,8 @@ public class PingResourceTest extends AbstractServiceResourceTest {
 
 //	@Test
 	public void testPing() {
-		List<User> users = this.getUserList();
-		User user = users.get(0);
+		List<UserInfo> users = this.getUserList();
+		UserInfo user = users.get(0);
 		ClientResponse response = this.resource()
 				.path("/api/ping/" + user.getId()).post(ClientResponse.class);
 		Assert.assertEquals(ClientResponse.Status.NO_CONTENT,

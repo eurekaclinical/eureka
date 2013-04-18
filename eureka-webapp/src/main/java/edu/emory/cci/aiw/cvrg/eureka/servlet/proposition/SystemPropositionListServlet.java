@@ -37,8 +37,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.SystemElement;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.UserInfo;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ServicesClient;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.User;
 
 public class SystemPropositionListServlet extends HttpServlet {
 
@@ -101,7 +101,7 @@ public class SystemPropositionListServlet extends HttpServlet {
 		LOGGER.debug("got username {}", userName);
 
 		ServicesClient servicesClient = new ServicesClient(eurekaServicesUrl);
-		User user = servicesClient.getUserByName(userName);
+		UserInfo user = servicesClient.getUserByName(userName);
 
 		String propKey = req.getParameter("key");
 

@@ -30,8 +30,8 @@ import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.ClientResponse.Status;
 import com.sun.jersey.api.client.WebResource;
 
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.UserInfo;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.UserRequest;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.User;
 import edu.emory.cci.aiw.cvrg.eureka.services.util.PasswordGenerator;
 import edu.emory.cci.aiw.cvrg.eureka.services.util.StringUtil;
 
@@ -57,7 +57,7 @@ public class UserResourceTest extends AbstractServiceResourceTest {
 	 */
 	@Test
 	public void testUserList() {
-		List<User> users = this.getUserList();
+		List<UserInfo> users = this.getUserList();
 		Assert.assertEquals(3, users.size());
 	}
 	
@@ -73,10 +73,10 @@ public class UserResourceTest extends AbstractServiceResourceTest {
 	 */
 	@Test
 	public void testUserActivation() {
-		List<User> users = getUserList();
+		List<UserInfo> users = getUserList();
 		Assert.assertTrue(users.size() > 0);
 
-		User user = users.get(0);
+		UserInfo user = users.get(0);
 		Long id = user.getId();
 		WebResource webResource = this.resource();
 		ClientResponse response = webResource.path(
@@ -127,8 +127,8 @@ public class UserResourceTest extends AbstractServiceResourceTest {
 	@Test
 	public void testPasswordChange() {
 		WebResource resource = this.resource();
-		List<User> users = this.getUserList();
-		User user = users.get(0);
+		List<UserInfo> users = this.getUserList();
+		UserInfo user = users.get(0);
 		ClientResponse response = resource
 				.path("/api/user/passwd/" + user.getId())
 				.queryParam("oldPassword", "testpassword")
@@ -141,8 +141,8 @@ public class UserResourceTest extends AbstractServiceResourceTest {
 	public void testResetPassword() throws NoSuchAlgorithmException {
 		PasswordGenerator generator = this.getInstance(PasswordGenerator
 				.class);
-		List<User> users;
-		User user;
+		List<UserInfo> users;
+		UserInfo user;
 
 		WebResource resource = this.resource();
 		users = this.getUserList();
@@ -164,12 +164,12 @@ public class UserResourceTest extends AbstractServiceResourceTest {
 	@Test
 	public void testFindByName() {
 		WebResource resource = this.resource();
-		List<User> users = this.getUserList();
-		User user = users.get(0);
+		List<UserInfo> users = this.getUserList();
+		UserInfo user = users.get(0);
 		ClientResponse response = resource.path("/api/user/byname/" + user.getEmail()).accept(MediaType.APPLICATION_JSON).get(ClientResponse.class);
 		Assert.assertEquals(Status.OK, response.getClientResponseStatus());
 
-		User responseUser = response.getEntity(User.class);
+		UserInfo responseUser = response.getEntity(UserInfo.class);
 		Assert.assertEquals(user.getEmail(), responseUser.getEmail());
 	}
 }

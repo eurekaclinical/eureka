@@ -31,9 +31,9 @@ import org.slf4j.LoggerFactory;
 
 import com.sun.jersey.api.client.ClientResponse;
 
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.UserInfo;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ClientException;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ServicesClient;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.User;
 import edu.emory.cci.aiw.cvrg.eureka.servlet.worker.ServletWorker;
 import java.text.MessageFormat;
 import java.util.ResourceBundle;
@@ -67,7 +67,7 @@ public class SaveUserAcctWorker implements ServletWorker {
 		
 		Principal principal = req.getUserPrincipal();
 		String userName = principal.getName();
-		User user = servicesClient.getUserByName(userName);
+		UserInfo user = servicesClient.getUserByName(userName);
 		String id=user.getId().toString();
 
 		// validate verifyPassword equals newPassword

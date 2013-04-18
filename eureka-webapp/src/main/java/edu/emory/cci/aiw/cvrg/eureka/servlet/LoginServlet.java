@@ -28,9 +28,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.UserInfo;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ClientException;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ServicesClient;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.User;
 
 public class LoginServlet extends HttpServlet {
 
@@ -44,7 +44,7 @@ public class LoginServlet extends HttpServlet {
 
 		Principal principal = req.getUserPrincipal();
 		String userName = principal.getName();
-		User user = servicesClient.getUserByName(userName);
+		UserInfo user = servicesClient.getUserByName(userName);
 
 		user.setLastLogin(new Date());
 		try {

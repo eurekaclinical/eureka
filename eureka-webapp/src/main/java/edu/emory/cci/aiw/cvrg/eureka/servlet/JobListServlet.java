@@ -28,9 +28,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.UserInfo;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ServicesClient;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.Job;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.User;
 
 public class JobListServlet extends HttpServlet {
 
@@ -43,7 +43,7 @@ public class JobListServlet extends HttpServlet {
 		Principal principal = req.getUserPrincipal();
 		String userName = principal.getName();
 		ServicesClient servicesClient = new ServicesClient(eurekaServicesUrl);
-		User user = servicesClient.getUserByName(userName);
+		UserInfo user = servicesClient.getUserByName(userName);
 		List<Job> jobs = servicesClient.getJobsByUserId(user.getId());
 
 		req.setAttribute("jobs", jobs);

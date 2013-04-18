@@ -22,14 +22,17 @@ package edu.emory.cci.aiw.cvrg.eureka.servlet.worker.admin;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.UserInfo;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ServicesClient;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.User;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.Role;
 import edu.emory.cci.aiw.cvrg.eureka.servlet.worker.ServletWorker;
 
 public class ListUsersWorker implements ServletWorker {
@@ -41,11 +44,16 @@ public class ListUsersWorker implements ServletWorker {
 		String eurekaServicesUrl = req.getSession().getServletContext()
 				.getInitParameter("eureka-services-url");
 		ServicesClient servicesClient = new ServicesClient(eurekaServicesUrl);
-		List<User> users = servicesClient.getUsers();
+		List<UserInfo> users = servicesClient.getUsers();
+		List<Role> roles = servicesClient.getRoles();
+		Map<Long, Role> rolesMap = new HashMap<Long, Role>();
+		for (Role role : roles) {
+			rolesMap.put(role.getId(), role);
+		}
 
 		// Set sort order to show the inactive users first.
-		Collections.sort(users, new Comparator<User>() {
-			public int compare(User user1, User user2) {
+		Collections.sort(users, new Comparator<UserInfo>() {
+			public int compare(UserInfo user1, UserInfo user2) {
 				int u1 = 0;
 				int u2 = 0;
 				if (user1.isActive())
@@ -57,6 +65,7 @@ public class ListUsersWorker implements ServletWorker {
 			}
 		});
 		req.setAttribute("users", users);
+		req.setAttribute("roles", rolesMap);
 		req.getRequestDispatcher("/protected/admin.jsp").forward(req, resp);
 	}
 }

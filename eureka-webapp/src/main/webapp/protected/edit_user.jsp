@@ -55,24 +55,22 @@
                     <tr>
                         <td>Role:</td>
                         <td colspan="4">
+                            <c:set var="isSuperUser" value="0"></c:set>
                             <c:forEach var="role" items="${roles}">
                                 <c:set var="hasRole" value="0"></c:set>
-                                <c:set var="isSuperUser" value="0"></c:set>
 
                                 <c:forEach var="userRole" items="${user.roles}">
 
-                                    <c:if test="${userRole.id ==  role.id}">
+                                    <c:if test="${userRole ==  role.id}">
                                         <c:set var="hasRole" value="1"></c:set>
+                                        <c:if test="${role.name eq 'superuser'}">
+											<c:set var="isSuperUser" value="1"></c:set>
+                                        </c:if>
                                     </c:if>
-                                    <c:if test="${userRole.name eq 'superuser'}">
-                                        <c:set var="isSuperUser" value="1"></c:set>
-                                    </c:if>
-
-
-                                </c:forEach> 
+                                </c:forEach>
                                 <c:choose>
                                     <c:when test="${hasRole == 1}">
-																			<input type="checkbox" name="role" value="${role.id}" checked="checked" ${role.name eq  'superuser' ? 'disabled="disabled"' : ''}/>${role.name}<span class="status"></span><br />
+										<input type="checkbox" name="role" value="${role.id}" checked="checked" ${role.name eq  'superuser' ? 'disabled="disabled"' : ''}/>${role.name}<span class="status"></span><br />
                                     </c:when>
                                     <c:otherwise>
                                         <input type="checkbox" name="role" value="${role.id}" />${role.name}<span class="status"></span><br />

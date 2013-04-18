@@ -36,8 +36,8 @@ import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.UserInfo;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ServicesClient;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.User;
 
 /**
  * @author hrathod
@@ -78,7 +78,7 @@ public class PasswordExpiredFilter implements Filter {
 			Principal principal = servletRequest.getUserPrincipal();
 			if (principal != null) {
 				LOGGER.debug("username: {}", principal.getName());
-				User user = this.servicesClient.getUserByName(principal
+				UserInfo user = this.servicesClient.getUserByName(principal
 						.getName());
 				Date now = Calendar.getInstance().getTime();
 				Date expiration = user.getPasswordExpiration();

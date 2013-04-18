@@ -28,8 +28,8 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.UserInfo;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ServicesClient;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.User;
 import edu.emory.cci.aiw.cvrg.eureka.servlet.worker.ServletWorker;
 
 public class ListUserAcctWorker implements ServletWorker {
@@ -43,7 +43,7 @@ public class ListUserAcctWorker implements ServletWorker {
 		ServicesClient servicesClient = new ServicesClient(eurekaServicesUrl);
 		Principal principal = req.getUserPrincipal();
 		String userName = principal.getName();
-		User user = servicesClient.getUserByName(userName);
+		UserInfo user = servicesClient.getUserByName(userName);
 		
 		Date now = Calendar.getInstance().getTime();
 		Date expiration = user.getPasswordExpiration();

@@ -31,9 +31,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.DataElement;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.UserInfo;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ClientException;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ServicesClient;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.User;
 
 public class SavePropositionServlet extends HttpServlet {
 
@@ -52,7 +52,7 @@ public class SavePropositionServlet extends HttpServlet {
 		String servicesUrl = req.getSession().getServletContext()
 				.getInitParameter("eureka-services-url");
 		ServicesClient servicesClient = new ServicesClient(servicesUrl);
-		User user = servicesClient.getUserByName(username);
+		UserInfo user = servicesClient.getUserByName(username);
 		try {
 			dataElement.setUserId(user.getId());
 			if (dataElement.getId() == null) {

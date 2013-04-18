@@ -36,8 +36,8 @@ import org.slf4j.LoggerFactory;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.Category;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.DataElement;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.UserInfo;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ServicesClient;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.User;
 
 public class UserPropositionListServlet extends HttpServlet {
 
@@ -93,7 +93,7 @@ public class UserPropositionListServlet extends HttpServlet {
 		ServicesClient servicesClient = new ServicesClient(eurekaServicesUrl);
 		Principal principal = req.getUserPrincipal();
 		String userName = principal.getName();
-		User user = servicesClient.getUserByName(userName);
+		UserInfo user = servicesClient.getUserByName(userName);
 
 		List<DataElement> props = servicesClient.getUserElements(user.getId());
 		for (DataElement proposition : props) {

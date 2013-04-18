@@ -27,10 +27,10 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.UserInfo;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ClientException;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ServicesClient;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.Role;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.User;
 import edu.emory.cci.aiw.cvrg.eureka.servlet.worker.ServletWorker;
 
 public class SaveUserWorker implements ServletWorker {
@@ -53,12 +53,15 @@ public class SaveUserWorker implements ServletWorker {
 
 		}
 
-		User user = servicesClient.getUserById(Long.valueOf(id));
+		UserInfo user = servicesClient.getUserById(Long.valueOf(id));
 		String[] roles = req.getParameterValues("role");
-		List<Role> userRoles = new ArrayList<Role>();
+		List<Long> userRoles = new ArrayList<Long>();
 		for (String roleId : roles) {
-			Role role = servicesClient.getRole(Long.valueOf(roleId));
-			userRoles.add(role);
+			try {
+				userRoles.add(Long.valueOf(roleId));
+			} catch (NumberFormatException nfe) {
+				throw new ServletException(nfe);
+			}
 		}
 		user.setRoles(userRoles);
 		user.setActive(isActivated);

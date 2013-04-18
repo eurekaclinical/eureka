@@ -30,7 +30,7 @@ import com.google.inject.servlet.GuiceFilter;
 import com.sun.jersey.api.client.GenericType;
 import com.sun.jersey.api.client.WebResource;
 
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.User;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.UserInfo;
 import edu.emory.cci.aiw.cvrg.eureka.common.test.AbstractResourceTest;
 import edu.emory.cci.aiw.cvrg.eureka.common.test.TestDataProvider;
 import edu.emory.cci.aiw.cvrg.eureka.services.config.AppTestModule;
@@ -53,14 +53,15 @@ abstract class AbstractServiceResourceTest extends AbstractResourceTest {
 	/**
 	 * Helper method to get a list of users from the resource.
 	 *
-	 * @return A list of {@link User} objects, fetched from the {@link UserResource}
+	 * @return A list of {@link UserInfo} objects, fetched from the {@link
+	 * UserResource}
 	 * service.
 	 */
-	protected List<User> getUserList() {
+	protected List<UserInfo> getUserList() {
 		WebResource webResource = this.resource();
 		return webResource.path("/api/user/list").type(
 				MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON).
-				get(new GenericType<List<User>>() {
+				get(new GenericType<List<UserInfo>>() {
 			// Nothing to implement, used to hold returned data.
 		});
 	}

@@ -19,7 +19,6 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.servlet.proposition;
 
-import com.sun.jersey.api.client.ClientResponse;
 import java.io.IOException;
 import java.security.Principal;
 
@@ -31,9 +30,9 @@ import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.UserInfo;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ClientException;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ServicesClient;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.User;
 import java.text.MessageFormat;
 import java.util.ResourceBundle;
 import javax.ws.rs.core.MediaType;
@@ -62,7 +61,7 @@ public class DeletePropositionServlet extends HttpServlet {
 		Principal principal = req.getUserPrincipal();
 		String userName = principal.getName();
 		ServicesClient servicesClient = new ServicesClient(eurekaServicesUrl);
-		User user = servicesClient.getUserByName(userName);
+		UserInfo user = servicesClient.getUserByName(userName);
 
 		// user/delete/{userId}/{prodId}
 		try {
