@@ -533,7 +533,7 @@ limitations under the License.
 			<column name="VERIFIED" valueBoolean="true"/>
 			<column name="PASSWORDEXPIRATION" valueDate="1971-01-01T00:00:00"/>
 			<!-- the default password is defaultPassword -->
-			<column name="PASSWORD" value="4a94e453e6ee6a8253def63db4d159"/>
+			<column name="PASSWORD" value="4656fd365a7b2a27efb753bca9b9cf1"/>
 		</insert>
 		<insert tableName="USER_ROLE">
 			<column name="USER_ID" valueNumeric="1"/>
