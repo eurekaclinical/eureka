@@ -372,7 +372,7 @@ public class EurekaDataSourceBackend extends RelationalDbDataSourceBackend {
 										ReferenceSpec.Type.MANY),
 								/*new ReferenceSpec("chargeAmount", "Hospital Charge Amount", new ColumnSpec[]{new ColumnSpec(schemaName, "ENCOUNTER", "RECORD_ID")}, ReferenceSpec.Type.ONE)*/},
 						null, null, null, null, null,
-						AbsoluteTimeGranularity.DAY, dtPositionParser, null),
+						AbsoluteTimeGranularity.MINUTE, dtPositionParser, null),
 				new EntitySpec("Diagnosis Codes", null, this.mapper
 						.readCodes("icd9_diagnosis_08172011.txt", "\t", 0),
 						true, new ColumnSpec(getKeyIdSchema(), getKeyIdTable(),
