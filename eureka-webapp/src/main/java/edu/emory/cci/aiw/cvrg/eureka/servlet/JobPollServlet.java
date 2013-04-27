@@ -19,9 +19,9 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.servlet;
 
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.Job;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.security.Principal;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -30,58 +30,57 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.codehaus.jackson.map.ObjectMapper;
 
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.JobInfo;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.JobStatus;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.UserInfo;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ClientException;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ServicesClient;
+import java.util.List;
 
 public class JobPollServlet extends HttpServlet {
 
-    @Override
-    public void doGet(HttpServletRequest req, HttpServletResponse resp)
-            throws ServletException, IOException {
+	@Override
+	public void doGet(HttpServletRequest req, HttpServletResponse resp)
+			throws ServletException, IOException {
 
-        String eurekaServicesUrl = req.getSession().getServletContext()
-                .getInitParameter("eureka-services-url");
+		String eurekaServicesUrl = req.getSession().getServletContext()
+				.getInitParameter("eureka-services-url");
 
-        resp.setContentType("application/json");
+		resp.setContentType("application/json");
 
-	    ServicesClient servicesClient = new ServicesClient(eurekaServicesUrl);
+		String jobIdStr = req.getParameter("jobId");
+		Long jobId;
+		if (jobIdStr != null) {
+			try {
+				jobId = Long.valueOf(jobIdStr);
+			} catch (NumberFormatException nfe) {
+				throw new ServletException("jobId parameter must be a long, was " + jobIdStr);
+			}
+		} else {
+			jobId = null;
+		}
 
-	    Principal principal = req.getUserPrincipal();
-	    String userName = principal.getName();
-	    UserInfo user = servicesClient.getUserByName(userName);
-	    JobInfo jobInfo = servicesClient.getJobInfo(user.getId());
+		ServicesClient servicesClient = new ServicesClient(eurekaServicesUrl);
+		Job job;
+		try {
+			if (jobId != null) {
+				job = servicesClient.getJob(jobId);
+			} else {
+				List<Job> jobs = servicesClient.getJobsDesc();
+				if (!jobs.isEmpty()) {
+					job = jobs.get(0);
+				} else {
+					job = null;
+				}
+			}
+		} catch (ClientException ex) {
+			throw new ServletException("Error polling job list", ex);
+		}
 
-	    if (jobInfo.getCurrentStep() == 0) {
-	        String emptyJson = "{}";
-	        resp.setContentLength(emptyJson.length());
-	        PrintWriter out = resp.getWriter();
-	        out.println(emptyJson);
-	    } else {
-	        JobStatus jobStatus = new JobStatus();
-	        jobStatus.setCurrentStep(jobInfo.getCurrentStep());
-	        jobStatus.setTotalSteps(jobInfo.getTotalSteps());
-	        jobStatus.setMessages(jobInfo.getMessages());
+		JobStatus jobStatus = job.toJobStatus();
+		ObjectMapper mapper = new ObjectMapper();
+		resp.setContentLength(mapper.writeValueAsString(jobStatus)
+				.length());
+		PrintWriter out = resp.getWriter();
+		out.println(mapper.writeValueAsString(jobStatus));
 
-	        // Date uploadTime = new Date();
-	        //
-	        // if (jobInfo.getCurrentStep() < 4 &&
-	        // jobInfo.getFileUpload().getTimestamp() != null)
-	        // uploadTime = jobInfo.getFileUpload().getTimestamp();
-	        // else if (jobInfo.getCurrentStep() >= 4 &&
-	        // jobInfo.getJob().getTimestamp() != null) {
-	        // uploadTime = jobInfo.getJob().getTimestamp();
-	        // }
-	        // jobStatus.setUploadTime(uploadTime);
-	        jobStatus.setUploadTime(jobInfo.getTimestamp());
-
-	        ObjectMapper mapper = new ObjectMapper();
-	        resp.setContentLength(mapper.writeValueAsString(jobStatus)
-	                .length());
-	        PrintWriter out = resp.getWriter();
-	        out.println(mapper.writeValueAsString(jobStatus));
-	    }
-
-    }
+	}
 }

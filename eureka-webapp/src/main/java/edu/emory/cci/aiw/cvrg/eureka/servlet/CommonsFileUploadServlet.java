@@ -39,39 +39,39 @@ import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ServicesClient;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.FileUpload;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.JobSpec;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.SourceConfigParams;
+import java.io.InputStream;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import org.apache.commons.io.FileUtils;
 
 public class CommonsFileUploadServlet extends HttpServlet {
-
-	/**
-	 * Temp directory to write to if file size is too big.
-	 */
-	private static final String TMP_DIR_PATH = "/tmp";
+	
 	private File tmpDir;
 	/**
 	 * Normal directory to save files to. TODO: set value
 	 */
-	private static String DESTINATION_DIR_PATH = "";
-	private File destinationDir;
-
+	private ServicesClient servicesClient;
+	
 	@Override
 	public void init(ServletConfig config) throws ServletException {
 		super.init(config);
-		DESTINATION_DIR_PATH = config.getInitParameter("dest_dir");
-		tmpDir = new File(TMP_DIR_PATH);
+		tmpDir = FileUtils.getTempDirectory();
 		if (!tmpDir.isDirectory()) {
-			throw new ServletException(TMP_DIR_PATH + " is not a directory");
+			throw new ServletException(tmpDir.getAbsolutePath() + " is not a directory");
 		}
-		String realPath = getServletContext().getRealPath("/") + DESTINATION_DIR_PATH;
-
-		System.out.println(realPath);
-		destinationDir = new File(realPath);
-		if (!destinationDir.isDirectory()) {
-			throw new ServletException(DESTINATION_DIR_PATH + " is not a directory");
-		}
-
+		
+		this.servicesClient = new ServicesClient(
+				config.getServletContext()
+				.getInitParameter("eureka-services-url"));
 	}
-
+	
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		Principal principal = request.getUserPrincipal();
@@ -79,9 +79,37 @@ public class CommonsFileUploadServlet extends HttpServlet {
 			throw new ServletException(
 					"Spreadsheet upload attempt: no user associated with the request");
 		}
+		try {
+			Long jobId = submitJob(request, principal);
+			response.sendRedirect(request.getContextPath() + "/protected/jobs?jobId=" + jobId);
+		} catch (ParseException ex) {
+			throw new ServletException("Invalid date range", ex);
+		} catch (ClientException ex) {
+			String msg = "Error encountered calling add job service";
+			log("Spreadsheet upload attempt for user " + principal.getName()
+					+ ": " + msg);
+			throw new ServletException(msg, ex);
+		} catch (FileUploadException ex) {
+			String msg =
+					"Error encountered while parsing the job upload request";
+			log("Spreadsheet upload attempt for user " + principal.getName()
+					+ ": " + msg);
+			throw new ServletException(msg, ex);
+		} catch (IOException ex) { //item.write, a third party library, throws Exception...
+			String msg =
+					"Error encountered while writing the uploaded file";
+			log("Spreadsheet upload attempt for user " + principal.getName()
+					+ ": " + msg);
+			throw new ServletException(msg, ex);
+		}
+	}
+	
+	private Long submitJob(
+			HttpServletRequest request, Principal principal)
+			throws FileUploadException, IOException, ClientException, ParseException {
+		
 		DiskFileItemFactory fileItemFactory = new DiskFileItemFactory();
-		String eurekaServicesUrl = request.getSession().getServletContext()
-				.getInitParameter("eureka-services-url");
+
 		/*
 		 *Set the size threshold, above which content will be stored on disk.
 		 */
@@ -90,67 +118,64 @@ public class CommonsFileUploadServlet extends HttpServlet {
 		 * Set the temporary directory to store the uploaded files of size above threshold.
 		 */
 		fileItemFactory.setRepository(tmpDir);
-
+		
 		ServletFileUpload uploadHandler = new ServletFileUpload(fileItemFactory);
-		try {
+		/*
+		 * Parse the request
+		 */
+		List items = uploadHandler.parseRequest(request);
+		Properties fields = new Properties();
+		for (Iterator itr = items.iterator(); itr.hasNext();) {
+			FileItem item = (FileItem) itr.next();
 			/*
-			 * Parse the request
+			 * Handle Form Fields.
 			 */
-			List items = uploadHandler.parseRequest(request);
-			Iterator itr = items.iterator();
-			while (itr.hasNext()) {
-				FileItem item = (FileItem) itr.next();
-				/*
-				 * Handle Form Fields.
-				 */
-				if (item.isFormField()) {
-					log("Spreadsheet upload for user " + principal.getName() + ": File Name = " + item.getFieldName() + ", Value = " + item.getString());
-				} else {
-					//Handle Uploaded files.
-					log("Spreadsheet upload for user " + principal.getName() + ": Field Name = " + item.getFieldName()
-							+ ", File Name = " + item.getName()
-							+ ", Content type = " + item.getContentType()
-							+ ", File Size = " + item.getSize());
-
-					String userName = principal.getName();
-					ServicesClient servicesClient = new ServicesClient(eurekaServicesUrl);
-					UserInfo user = servicesClient.getUserByName(userName);
-
-					/*
-					 * Write file to the ultimate location.
-					 */
-					File file = new File(destinationDir, "" + user.getId());
-					item.write(file);
-
-
-					FileUpload fileUpload = new FileUpload();
-					fileUpload.setLocation(getServletContext().getRealPath("/")
-							+ DESTINATION_DIR_PATH + "/" + user.getId());
-					fileUpload.setUserId(user.getId());
-
-					servicesClient.addJob(fileUpload);
-				}
-
-
-				response.sendRedirect(request.getContextPath() + "/protected/jobs");
+			if (item.isFormField()) {
+				fields.setProperty(item.getFieldName(), item.getString());
 			}
-		} catch (ClientException ex) {
-			String msg = "Error encountered calling add job service";
-			log("Spreadsheet upload attempt for user " + principal.getName() + 
-					": " + msg);
-			throw new ServletException(msg, ex);
-		} catch (FileUploadException ex) {
-			String msg = 
-					"Error encountered while parsing the job upload request";
-			log("Spreadsheet upload attempt for user " + principal.getName() + 
-					": " + msg);
-			throw new ServletException(msg, ex);
-		} catch (Exception ex) { //item.write, a third party library, throws Exception...
-			String msg =
-					"Error encountered while writing the uploaded file";
-			log("Spreadsheet upload attempt for user " + principal.getName() + 
-					": " + msg);
-			throw new ServletException(msg, ex);
 		}
+		for (Iterator itr = items.iterator(); itr.hasNext();) {
+			FileItem item = (FileItem) itr.next();
+			if (!item.isFormField()) {
+				//Handle Uploaded files.
+				log("Spreadsheet upload for user " + principal.getName() + ": Field Name = " + item.getFieldName()
+						+ ", File Name = " + item.getName()
+						+ ", Content type = " + item.getContentType()
+						+ ", File Size = " + item.getSize());
+				if (item.getSize() > 0) {
+					InputStream is = item.getInputStream();
+					try {
+						this.servicesClient.upload(item.getName(),
+								fields.getProperty("source"),
+								item.getFieldName(), is);
+						log("File '" + item.getName() + "' uploaded successfully");
+					} finally {
+						if (is != null) {
+							try {
+								is.close();
+							} catch (IOException ignore) {
+							}
+						}
+					}
+				} else {
+					log("File '" + item.getName() + "' ignored because it was zero length");
+				}
+			}
+		}
+		JobSpec jobSpec = new JobSpec();
+		jobSpec.setSourceConfigId(fields.getProperty("source"));
+		jobSpec.setDestinationId(fields.getProperty("destination"));
+//		DateFormat df = new SimpleDateFormat("MM/dd/yyyy");
+//		String earliestStr = fields.getProperty("earliestDate");
+//		if (earliestStr != null && !earliestStr.trim().isEmpty()) {
+//			jobSpec.setEarliestDate(df.parse(earliestStr));
+//		}
+//		String latestStr = fields.getProperty("latestDate");
+//		if (latestStr != null && !latestStr.trim().isEmpty()) {
+//			jobSpec.setLatestDate(df.parse(latestStr));
+//		}
+		Long jobId = this.servicesClient.submitJob(jobSpec);
+		log("Job " + jobId + " submitted for user " + principal.getName());
+		return jobId;
 	}
 }

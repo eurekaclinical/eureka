@@ -19,6 +19,7 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.servlet.worker.admin;
 
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ClientException;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.Comparator;
@@ -44,8 +45,18 @@ public class ListUsersWorker implements ServletWorker {
 		String eurekaServicesUrl = req.getSession().getServletContext()
 				.getInitParameter("eureka-services-url");
 		ServicesClient servicesClient = new ServicesClient(eurekaServicesUrl);
-		List<UserInfo> users = servicesClient.getUsers();
-		List<Role> roles = servicesClient.getRoles();
+		List<UserInfo> users;
+		try {
+			users = servicesClient.getUsers();
+		} catch (ClientException ex) {
+			throw new ServletException("Error getting user list", ex);
+		}
+		List<Role> roles;
+		try {
+			roles = servicesClient.getRoles();
+		} catch (ClientException ex) {
+			throw new ServletException("Error getting role list", ex);
+		}
 		Map<Long, Role> rolesMap = new HashMap<Long, Role>();
 		for (Role role : roles) {
 			rolesMap.put(role.getId(), role);
@@ -53,13 +64,16 @@ public class ListUsersWorker implements ServletWorker {
 
 		// Set sort order to show the inactive users first.
 		Collections.sort(users, new Comparator<UserInfo>() {
+			@Override
 			public int compare(UserInfo user1, UserInfo user2) {
 				int u1 = 0;
 				int u2 = 0;
-				if (user1.isActive())
+				if (user1.isActive()) {
 					u1 = 1;
-				if (user2.isActive())
+				}
+				if (user2.isActive()) {
 					u2 = 1;
+				}
 
 				return u1 - u2;
 			}

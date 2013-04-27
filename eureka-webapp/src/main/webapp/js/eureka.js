@@ -147,8 +147,6 @@ $(document).ready(function() {
 	$('#saveAcctBtn').hide();
 	$('#registrationComplete').hide();
 	$('#passwordChangeComplete').hide();
-	$('#jobUpload').hide();
-	
 	
 	$('#editAcctBtn').click(function(){
 		$('#newPasswordTable').show();
@@ -410,27 +408,109 @@ $(document).ready(function() {
 		return false;
 	});
 	 
-	if ($("#status").length > 0){
-		 
+	if ($("#jobUpload").length > 0){
+		// Helper functions
+		function updateSubmitButtonStatus() {
+			var doDisable = false;
+			if ($('form#uploadForm').data('job-running')) {
+				doDisable = true;
+			} else {
+				var missingRequired = false;
+				$(".browseButton").each(function() {
+					if (!$(this).disabled && $(this).data('required') && !$(this).val()) {
+						missingRequired = true;
+					}
+				});
+				if (!missingRequired) {
+					doDisable = false;
+				} else {
+					doDisable = true;
+				}
+			}
+			$('input:submit').prop('disabled', doDisable);
+		}
+		
+		function updateInputFields(sourceId) {
+			$(".uploads").each(function(i, r) {
+				if ($(r).attr('id') === 'uploads' + sourceId) {
+					$(r).find("input[type='file']").prop('disabled', false);
+					$(r).show();
+				} else {
+					$(r).find("input[type='file']").prop('disabled', true);
+					$(r).hide();
+				}
+			});
+			updateSubmitButtonStatus();
+		}
+		
+		function onFinish() {
+			$('#uploadForm').prop('disabled', false);
+			$('#jobUpload').hide();
+			$('form#uploadForm').data('job-running', false)
+			updateSubmitButtonStatus();
+		}
+		
+		function setInitialStatus() {
+			var running = false;
+			if ($('form#uploadForm').data('job-running')) {
+				running = true;
+			} else {
+				$('#jobUpload').hide();
+			}
+			var sourceId = $("form#uploadForm").find('select[name="source"]').val();
+			updateInputFields(sourceId);
+			return running;
+		}
+		
+		// Initialize widgets
+		//$("#earliestDate").datepicker();
+		//$("#latestDate").datepicker();
+		
+		// Create event handlers.
+		$("form#uploadForm").find('select[name="source"]').change(
+			function() {
+				var sourceId = $(this).find(":selected").val();
+				updateInputFields(sourceId);
+			}
+		);
 		 
 		$('input:file').change(
 			function(){
-				if ($(this).val()) {
-					$('input:submit').attr('disabled',false);
-				// or, as has been pointed out elsewhere:
-				// $('input:submit').removeAttr('disabled'); 
-				} 
+				updateSubmitButtonStatus();
 			}
 			);
-		 
-		 
-		$("#uploadForm").submit(function(){ 
-			$("input[type=submit]", this).attr('disabled', true); 
+		
+		$("#uploadForm").submit(function() {
+			$('form#uploadForm').data('job-running', true)
+			updateSubmitButtonStatus();
 		});
-		 
-	}
-	 
-	if ($("#jobUpload").length > 0){
+		
+		
+		var running = setInitialStatus();
+		
+		function poll() {
+			var jobId = $('form#uploadForm').data('jobid');
+			$.ajax({
+				url : "jobpoll" + (jobId != null ? "?jobId=" + jobId : ""),
+				success : function(data) {
+					$('#status').text(data.status);
+					$('#statusDate').text(data.statusDate);
+					$('#messages').text(data.firstMessage);
+					if (running && !data.jobSubmitted) {
+						onFinish();
+						running = false;
+					}
+				},
+				error : function(xhr) {
+					$('#status').text("Job status unavailable: " + xhr.responseText);
+					$('#statusDate').empty();
+					$('#messages').empty();
+				},
+				dataType : "json"
+			});
+
+		}
+		
 		poll();
 
 		(function pollStatus() {
@@ -439,54 +519,7 @@ $(document).ready(function() {
 				pollStatus();	
 			}, 5000);
 		})();
-
 	}
-
-	function poll() {
-
-		$.ajax({
-			url : "jobpoll",
-			success : function(data) {
-
-				if (data['currentStep'] != undefined) {
-					if (data['currentStep'] < data['totalSteps']) {
-						$('#browseButton').attr('disabled', true);
-						$('#status').text(
-							data['currentStep'] + " out of "
-							+ data['totalSteps']);
-						$('#jobUpload').show();
-					} else {
-						$('#browseButton').attr('disabled', false);
-						$('#status').text('Complete');
-						$('#jobUpload').hide();
-
-					}
-
-					var d = new Date(data['uploadTime']);
-					var dateStr = (d.getMonth()+1) + "/" + d.getDate()
-					+ "/" + d.getFullYear() + " "
-					+ d.toLocaleTimeString();
-
-					$('#statusDate').text(dateStr);
-					if (data['messages'][0] == null) {
-						$('#messages').text('No errors reported');
-					} else {
-						$('#messages').text(data['messages'][0]);
-					}
-				} else {
-					$('#browseButton').attr('disabled', false);
-					$('#status').text('No jobs have been submitted.');
-					$('#statusDate').empty();
-					$('#messages').empty();
-					$('#jobUpload').hide();
-				}
-
-			},
-			dataType : "json"
-		});
-
-	}
-
 
 	if ($("#elements").length > 0) {
 		var $dataElements = $("#elements").find('tr.editor-home-data-element');

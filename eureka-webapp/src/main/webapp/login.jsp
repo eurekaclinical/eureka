@@ -30,7 +30,7 @@
 		<h3>Login</h3>
 		<form method="POST" action="j_security_check" style="width: 80%; text-align: right">
 			<p>
-				Enter your e-mail address and password.
+				Enter your e-mail address and password:
 			</p>
 			<span style="text-align: right">
 				E-mail Address:

@@ -30,7 +30,6 @@ import javax.servlet.http.HttpServletResponse;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.UserInfo;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ClientException;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ServicesClient;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.Role;
 import edu.emory.cci.aiw.cvrg.eureka.servlet.worker.ServletWorker;
 
 public class SaveUserWorker implements ServletWorker {
@@ -48,28 +47,26 @@ public class SaveUserWorker implements ServletWorker {
 		boolean isActivated = false;
 
 		if (activeStatus != null) {
-
 			isActivated = true;
 
 		}
-
-		UserInfo user = servicesClient.getUserById(Long.valueOf(id));
-		String[] roles = req.getParameterValues("role");
-		List<Long> userRoles = new ArrayList<Long>();
-		for (String roleId : roles) {
-			try {
-				userRoles.add(Long.valueOf(roleId));
-			} catch (NumberFormatException nfe) {
-				throw new ServletException(nfe);
-			}
-		}
-		user.setRoles(userRoles);
-		user.setActive(isActivated);
-
 		try {
+			UserInfo user = servicesClient.getUserById(Long.valueOf(id));
+			String[] roles = req.getParameterValues("role");
+			List<Long> userRoles = new ArrayList<Long>();
+			for (String roleId : roles) {
+				try {
+					userRoles.add(Long.valueOf(roleId));
+				} catch (NumberFormatException nfe) {
+					throw new ServletException(nfe);
+				}
+			}
+			user.setRoles(userRoles);
+			user.setActive(isActivated);
+
 			servicesClient.updateUser(user);
 		} catch (ClientException e) {
-			throw new ServletException(e);
+			throw new ServletException("Error saving user", e);
 		}
 
 		resp.sendRedirect(req.getContextPath() + "/protected/admin?action=list");

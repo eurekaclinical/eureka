@@ -21,7 +21,6 @@ package edu.emory.cci.aiw.cvrg.eureka.servlet.proposition;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,20 +37,19 @@ import org.slf4j.LoggerFactory;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.Category;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.DataElement;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.DataElementField;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.UserInfo;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ClientException;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ServicesClient;
 
 public class ListUserDefinedPropositionChildrenServlet extends HttpServlet {
 
 	private static final Logger LOGGER = LoggerFactory
-	        .getLogger(ListUserDefinedPropositionChildrenServlet.class);
+			.getLogger(ListUserDefinedPropositionChildrenServlet.class);
 	private ServicesClient servicesClient;
 
 	@Override
 	public void init(ServletConfig config) throws ServletException {
 		super.init(config);
-		String parameter = config.getServletContext().getInitParameter
-				("eureka-services-url");
+		String parameter = config.getServletContext().getInitParameter("eureka-services-url");
 		this.servicesClient = new ServicesClient(parameter);
 	}
 
@@ -60,29 +58,28 @@ public class ListUserDefinedPropositionChildrenServlet extends HttpServlet {
 		String dataEltDisplayName = p.getDataElementDisplayName();
 
 		if (dataEltDisplayName != null && !dataEltDisplayName.equals("")) {
-			displayName = dataEltDisplayName + 
-					" (" + p.getDataElementKey() + ")";
+			displayName = dataEltDisplayName
+					+ " (" + p.getDataElementKey() + ")";
 		} else {
 			displayName = p.getDataElementKey();
 		}
 
 		return displayName;
 	}
-	
+
 	private String getDisplayName(DataElement p) {
 		String displayName;
 		String dataEltDisplayName = p.getDisplayName();
 
 		if (dataEltDisplayName != null && !dataEltDisplayName.equals("")) {
-			displayName = dataEltDisplayName + 
-					" (" + p.getKey() + ")";
+			displayName = dataEltDisplayName
+					+ " (" + p.getKey() + ")";
 		} else {
 			displayName = p.getKey();
 		}
 
 		return displayName;
 	}
-
 
 	private JsonTreeData createData(String data, String key) {
 		JsonTreeData d = new JsonTreeData();
@@ -95,13 +92,12 @@ public class ListUserDefinedPropositionChildrenServlet extends HttpServlet {
 
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp)
-	        throws ServletException, IOException {
+			throws ServletException, IOException {
 		doGet(req, resp);
 	}
 
-	private void getAllData(Long inUserId, JsonTreeData d) {
-		DataElement dataElement = this.servicesClient.getUserElement
-				(inUserId, d.getAttr().get("data-key"));
+	private void getAllData(JsonTreeData d) throws ClientException {
+		DataElement dataElement = this.servicesClient.getUserElement(d.getAttr().get("data-key"));
 
 		if (dataElement.getType() == DataElement.Type.CATEGORIZATION) {
 			Category ce = (Category) dataElement;
@@ -121,11 +117,11 @@ public class ListUserDefinedPropositionChildrenServlet extends HttpServlet {
 				if (!userDataElement.isInSystem()) {
 
 					JsonTreeData newData = createData(
-					        userDataElement.getDataElementDescription(),
+							userDataElement.getDataElementDescription(),
 							userDataElement.getDataElementKey());
-					getAllData(inUserId, newData);
+					getAllData(newData);
 					newData.setType("user");
-					LOGGER.debug("add user defined {}", 
+					LOGGER.debug("add user defined {}",
 							userDataElement.getDataElementKey());
 					d.addNodes(newData);
 				}
@@ -135,25 +131,27 @@ public class ListUserDefinedPropositionChildrenServlet extends HttpServlet {
 
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
-	        throws ServletException, IOException {
+			throws ServletException, IOException {
 
 		List<JsonTreeData> l = new ArrayList<JsonTreeData>();
 		String propKey = req.getParameter("propKey");
 
-		Principal principal = req.getUserPrincipal();
-		String userName = principal.getName();
-		UserInfo user = this.servicesClient.getUserByName(userName);
-		DataElement dataElement = servicesClient.getUserElement(user.getId(),
-				propKey);
+		DataElement dataElement;
+		try {
+			dataElement = servicesClient.getUserElement(propKey);
 
-		JsonTreeData newData = createData(this.getDisplayName(dataElement),
-		        propKey);
-		getAllData(user.getId(),newData);
-		l.add(newData);
+			JsonTreeData newData = createData(this.getDisplayName(dataElement),
+					propKey);
+			getAllData(newData);
+			l.add(newData);
 
-		ObjectMapper mapper = new ObjectMapper();
-		resp.setContentType("application/json");
-		PrintWriter out = resp.getWriter();
-		mapper.writeValue(out, l);
+			ObjectMapper mapper = new ObjectMapper();
+			resp.setContentType("application/json");
+			PrintWriter out = resp.getWriter();
+			mapper.writeValue(out, l);
+		} catch (ClientException ex) {
+			throw new ServletException(
+					"error getting user defined data element " + propKey, ex);
+		}
 	}
 }

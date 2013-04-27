@@ -71,7 +71,6 @@ public class RegisterUserServlet extends HttpServlet {
 		try {
 			servicesClient.addUser(userRequest);
 			resp.setStatus(HttpServletResponse.SC_OK);
-			resp.getWriter().close();
 		} catch (ClientException e) {
 			resp.setContentType("text/plain");
 			String msg = e.getMessage();
@@ -79,7 +78,6 @@ public class RegisterUserServlet extends HttpServlet {
 			resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 			resp.setContentLength(msg.length());
 			resp.getWriter().write(msg);
-			resp.getWriter().close();			
 		}
 	}
 }

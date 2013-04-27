@@ -44,13 +44,18 @@ public class LoginServlet extends HttpServlet {
 
 		Principal principal = req.getUserPrincipal();
 		String userName = principal.getName();
-		UserInfo user = servicesClient.getUserByName(userName);
+		UserInfo user;
+		try {
+			user = servicesClient.getUserByName(userName);
+		} catch (ClientException ex) {
+			throw new ServletException("Error getting user " + userName, ex);
+		}
 
 		user.setLastLogin(new Date());
 		try {
 			servicesClient.updateUser(user);
 		} catch (ClientException e) {
-			throw new ServletException(e.getMessage());
+			throw new ServletException(e);
 		}
 
 		resp.sendRedirect(req.getContextPath() + "/index.jsp");

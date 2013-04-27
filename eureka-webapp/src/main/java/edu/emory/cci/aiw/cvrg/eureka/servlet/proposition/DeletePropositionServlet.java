@@ -61,10 +61,10 @@ public class DeletePropositionServlet extends HttpServlet {
 		Principal principal = req.getUserPrincipal();
 		String userName = principal.getName();
 		ServicesClient servicesClient = new ServicesClient(eurekaServicesUrl);
-		UserInfo user = servicesClient.getUserByName(userName);
-
+		
 		// user/delete/{userId}/{prodId}
 		try {
+			UserInfo user = servicesClient.getUserByName(userName);
 			servicesClient.deleteUserElement(user.getId(), propKey);
 		} catch (ClientException e) {
 			resp.setContentType(MediaType.TEXT_PLAIN);

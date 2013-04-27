@@ -19,6 +19,7 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.servlet.worker.useracct;
 
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ClientException;
 import java.io.IOException;
 import java.security.Principal;
 import java.util.Calendar;
@@ -37,23 +38,29 @@ public class ListUserAcctWorker implements ServletWorker {
 	@Override
 	public void execute(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
-		String passwordExpiration=new String();
+
 		String eurekaServicesUrl = req.getSession().getServletContext()
 				.getInitParameter("eureka-services-url");
 		ServicesClient servicesClient = new ServicesClient(eurekaServicesUrl);
 		Principal principal = req.getUserPrincipal();
 		String userName = principal.getName();
-		UserInfo user = servicesClient.getUserByName(userName);
-		
+		UserInfo user;
+		try {
+			user = servicesClient.getUserByName(userName);
+		} catch (ClientException ex) {
+			throw new ServletException("Error getting user " + userName, ex);
+		}
+
 		Date now = Calendar.getInstance().getTime();
 		Date expiration = user.getPasswordExpiration();
-		
-		if (expiration != null && now.after(expiration)) 
-			passwordExpiration="Your password has expired.Please change the password.";
-		else 
-			passwordExpiration="";
+		String passwordExpiration;
+		if (expiration != null && now.after(expiration)) {
+			passwordExpiration = "Your password has expired. Please change it below.";
+		} else {
+			passwordExpiration = "";
+		}
 		req.setAttribute("passwordExpiration", passwordExpiration);
-		
+
 		req.setAttribute("user", user);
 		req.getRequestDispatcher("/protected/acct.jsp").forward(req, resp);
 	}

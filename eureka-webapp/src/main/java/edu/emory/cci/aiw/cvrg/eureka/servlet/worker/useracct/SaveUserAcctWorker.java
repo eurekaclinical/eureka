@@ -63,13 +63,6 @@ public class SaveUserAcctWorker implements ServletWorker {
 		String oldPassword = req.getParameter("oldPassword");
 		String newPassword = req.getParameter("newPassword");
 		
-		//id will be empty if this servlet is called  from the password expiration page
-		
-		Principal principal = req.getUserPrincipal();
-		String userName = principal.getName();
-		UserInfo user = servicesClient.getUserByName(userName);
-		String id=user.getId().toString();
-
 		// validate verifyPassword equals newPassword
 		String verifyPassword = req.getParameter("verifyPassword");
 		if (!verifyPassword.equals(newPassword)) {
@@ -80,8 +73,7 @@ public class SaveUserAcctWorker implements ServletWorker {
 
 		resp.setContentType("text/html");
 		try {
-			servicesClient.changePassword(Long.valueOf(id), oldPassword,
-					newPassword);
+			servicesClient.changePassword(oldPassword, newPassword);
 			resp.setStatus(HttpServletResponse.SC_OK);
 			resp.getWriter().write(HttpServletResponse.SC_OK);
 		} catch (ClientException e) {

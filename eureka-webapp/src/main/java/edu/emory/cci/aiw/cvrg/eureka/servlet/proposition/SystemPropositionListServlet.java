@@ -19,10 +19,8 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.servlet.proposition;
 
-import com.sun.jersey.api.client.UniformInterfaceException;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,7 +35,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.SystemElement;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.UserInfo;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ClientException;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ServicesClient;
 
 public class SystemPropositionListServlet extends HttpServlet {
@@ -96,36 +94,31 @@ public class SystemPropositionListServlet extends HttpServlet {
 		List<JsonTreeData> l = new ArrayList<JsonTreeData>();
 		String eurekaServicesUrl = req.getSession().getServletContext()
 				.getInitParameter("eureka-services-url");
-		Principal principal = req.getUserPrincipal();
-		String userName = principal.getName();
-		LOGGER.debug("got username {}", userName);
 
 		ServicesClient servicesClient = new ServicesClient(eurekaServicesUrl);
-		UserInfo user = servicesClient.getUserByName(userName);
 
 		String propKey = req.getParameter("key");
 
 		if (propKey == null) {
 			throw new ServletException("Invalid parameter id: " + propKey);
 		}
-		
+
 		try {
 			if (propKey.equals("root")) {
-				List<SystemElement> props = servicesClient.getSystemElements(user.getId());
+				List<SystemElement> props = servicesClient.getSystemElements();
 				for (SystemElement proposition : props) {
 					JsonTreeData d = createData(proposition);
 					l.add(d);
 				}
 			} else {
-				SystemElement element = servicesClient.getSystemElement(user
-						.getId(), propKey);
+				SystemElement element = servicesClient.getSystemElement(propKey);
 				for (SystemElement propChild : element.getChildren()) {
 					JsonTreeData newData = createData(propChild);
 					newData.setType("system");
 					l.add(newData);
 				}
 			}
-		} catch (UniformInterfaceException e) {
+		} catch (ClientException e) {
 			throw new ServletException("Error getting proposition list", e);
 		}
 

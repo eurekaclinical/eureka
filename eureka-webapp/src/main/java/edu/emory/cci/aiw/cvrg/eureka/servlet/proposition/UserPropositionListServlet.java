@@ -21,7 +21,6 @@ package edu.emory.cci.aiw.cvrg.eureka.servlet.proposition;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,7 +35,7 @@ import org.slf4j.LoggerFactory;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.Category;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.DataElement;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.UserInfo;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ClientException;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ServicesClient;
 
 public class UserPropositionListServlet extends HttpServlet {
@@ -91,11 +90,13 @@ public class UserPropositionListServlet extends HttpServlet {
 		String eurekaServicesUrl = req.getSession().getServletContext()
 		        .getInitParameter("eureka-services-url");
 		ServicesClient servicesClient = new ServicesClient(eurekaServicesUrl);
-		Principal principal = req.getUserPrincipal();
-		String userName = principal.getName();
-		UserInfo user = servicesClient.getUserByName(userName);
 
-		List<DataElement> props = servicesClient.getUserElements(user.getId());
+		List<DataElement> props;
+		try {
+			props = servicesClient.getUserElements();
+		} catch (ClientException ex) {
+			throw new ServletException("Error getting user-defined data element list", ex);
+		}
 		for (DataElement proposition : props) {
 			if (!proposition.isInSystem()) {
 				JsonTreeData d = createData(proposition);

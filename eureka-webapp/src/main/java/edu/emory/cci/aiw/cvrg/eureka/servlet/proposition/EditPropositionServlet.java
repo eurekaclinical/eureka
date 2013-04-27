@@ -20,7 +20,6 @@
 package edu.emory.cci.aiw.cvrg.eureka.servlet.proposition;
 
 import java.io.IOException;
-import java.security.Principal;
 import java.util.HashMap;
 import java.util.List;
 
@@ -38,8 +37,8 @@ import edu.emory.cci.aiw.cvrg.eureka.common.comm.Frequency;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.RelatedDataElementField;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.Sequence;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.SystemElement;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.UserInfo;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.ValueThresholds;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ClientException;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ServicesClient;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.FrequencyType;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.RelationOperator;
@@ -68,114 +67,112 @@ public class EditPropositionServlet extends HttpServlet {
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
-
 		String eurekaServicesUrl = req.getSession().getServletContext()
 				.getInitParameter("eureka-services-url");
 		String propKey = req.getParameter("key");
 
-		Principal principal = req.getUserPrincipal();
-		String userName = principal.getName();
-
 		ServicesClient servicesClient = new ServicesClient(eurekaServicesUrl);
-		UserInfo user = servicesClient.getUserByName(userName);
-		List<FrequencyType> freqTypes = servicesClient.getFrequencyTypesAsc();
-		FrequencyType defaultFreqType = servicesClient.getDefaultFrequencyType();
-		List<TimeUnit> timeUnits = servicesClient.getTimeUnitsAsc();
-		TimeUnit defaultTimeUnit = servicesClient.getDefaultTimeUnit();
-		List<RelationOperator> relOps = 
-				servicesClient.getRelationOperatorsAsc();
-		List<RelationOperator> sequentialRelOps =
-				new ArrayList<RelationOperator>();
-		List<RelationOperator> contextRelOps = 
-				new ArrayList<RelationOperator>();
-		for (RelationOperator relOp : relOps) {
-			switch (relOp.getType()) {
-				case SEQUENTIAL:
-					sequentialRelOps.add(relOp);
-				case OVERLAPPING:
-					contextRelOps.add(relOp);
-					break;
-				default:
-					throw new AssertionError(
-							"Unexpected relation type: " + relOp);
+		try {
+			List<FrequencyType> freqTypes = servicesClient.getFrequencyTypesAsc();
+			FrequencyType defaultFreqType = servicesClient.getDefaultFrequencyType();
+			List<TimeUnit> timeUnits = servicesClient.getTimeUnitsAsc();
+			TimeUnit defaultTimeUnit = servicesClient.getDefaultTimeUnit();
+			List<RelationOperator> relOps =
+					servicesClient.getRelationOperatorsAsc();
+			List<RelationOperator> sequentialRelOps =
+					new ArrayList<RelationOperator>();
+			List<RelationOperator> contextRelOps =
+					new ArrayList<RelationOperator>();
+			for (RelationOperator relOp : relOps) {
+				switch (relOp.getType()) {
+					case SEQUENTIAL:
+						sequentialRelOps.add(relOp);
+					case OVERLAPPING:
+						contextRelOps.add(relOp);
+						break;
+					default:
+						throw new AssertionError(
+								"Unexpected relation type: " + relOp);
+				}
 			}
-		}
-		RelationOperator defaultRelOp = 
-				servicesClient.getDefaultRelationOperator();
-		List<ThresholdsOperator> thresholdOps = servicesClient
-				.getThresholdsOperators();
+			RelationOperator defaultRelOp =
+					servicesClient.getDefaultRelationOperator();
+			List<ThresholdsOperator> thresholdOps = servicesClient
+					.getThresholdsOperators();
 
-		List<ValueComparator> valueComparators = servicesClient
-				.getValueComparatorsAsc();
-		List<ValueComparator> valueCompsUpper = new ArrayList<ValueComparator>();
-		List<ValueComparator> valueCompsLower = new ArrayList<ValueComparator>();
-		for (ValueComparator vc : valueComparators) {
-			switch (vc.getThreshold()) {
-				case BOTH:
-					valueCompsUpper.add(vc);
-					valueCompsLower.add(vc);
-					break;
-				case UPPER_ONLY:
-					valueCompsUpper.add(vc);
-					break;
-				case LOWER_ONLY:
-					valueCompsLower.add(vc);
-					break;
-				default:
-					throw new AssertionError(
-							"Unexpected threshold: " + vc.getThreshold());
+			List<ValueComparator> valueComparators = servicesClient
+					.getValueComparatorsAsc();
+			List<ValueComparator> valueCompsUpper = new ArrayList<ValueComparator>();
+			List<ValueComparator> valueCompsLower = new ArrayList<ValueComparator>();
+			for (ValueComparator vc : valueComparators) {
+				switch (vc.getThreshold()) {
+					case BOTH:
+						valueCompsUpper.add(vc);
+						valueCompsLower.add(vc);
+						break;
+					case UPPER_ONLY:
+						valueCompsUpper.add(vc);
+						break;
+					case LOWER_ONLY:
+						valueCompsLower.add(vc);
+						break;
+					default:
+						throw new AssertionError(
+								"Unexpected threshold: " + vc.getThreshold());
+				}
 			}
-		}
 
-		req.setAttribute("timeUnits", timeUnits);
-		req.setAttribute("sequentialRelationOps", sequentialRelOps);
-		req.setAttribute("contextRelationOps", contextRelOps);
-		req.setAttribute("thresholdsOperators", thresholdOps);
-		req.setAttribute("valueComparatorsUpper", valueCompsUpper);
-		req.setAttribute("valueComparatorsLower", valueCompsLower);
-		req.setAttribute("defaultTimeUnit", defaultTimeUnit);
-		req.setAttribute("defaultRelationOp", defaultRelOp);
-		req.setAttribute("frequencyTypes", freqTypes);
-		req.setAttribute("defaultFrequencyType", defaultFreqType);
+			req.setAttribute("timeUnits", timeUnits);
+			req.setAttribute("sequentialRelationOps", sequentialRelOps);
+			req.setAttribute("contextRelationOps", contextRelOps);
+			req.setAttribute("thresholdsOperators", thresholdOps);
+			req.setAttribute("valueComparatorsUpper", valueCompsUpper);
+			req.setAttribute("valueComparatorsLower", valueCompsLower);
+			req.setAttribute("defaultTimeUnit", defaultTimeUnit);
+			req.setAttribute("defaultRelationOp", defaultRelOp);
+			req.setAttribute("frequencyTypes", freqTypes);
+			req.setAttribute("defaultFrequencyType", defaultFreqType);
 
-		if ((propKey != null) && (!propKey.equals(""))) {
-			DataElement dataElement = servicesClient
-					.getUserElement(user.getId(), propKey);
-			PropertiesDataElementVisitor visitor = new PropertiesDataElementVisitor(
-					user.getId(), servicesClient);
-			try {
-				LOGGER.debug("Visiting {}", dataElement.getKey());
-				dataElement.accept(visitor);
-			} catch (DataElementHandlingException e) {
-				LOGGER.error("Visiting {}", dataElement.getKey(), e);
-				throw new AssertionError("Should never happen: " + e.getMessage());
+			if ((propKey != null) && (!propKey.equals(""))) {
+				DataElement dataElement = servicesClient
+						.getUserElement(propKey);
+				PropertiesDataElementVisitor visitor = new PropertiesDataElementVisitor(
+						servicesClient);
+				try {
+					LOGGER.debug("Visiting {}", dataElement.getKey());
+					dataElement.accept(visitor);
+				} catch (DataElementHandlingException e) {
+					LOGGER.error("Visiting {}", dataElement.getKey(), e);
+					throw new ServletException("Error getting data element properties", e.getCause());
+				}
+				req.setAttribute("properties", visitor.getProperties());
+				req.setAttribute("proposition", dataElement);
+				req.setAttribute(
+						"propositionType", dataElement.getType().toString());
 			}
-			req.setAttribute("properties", visitor.getProperties());
-			req.setAttribute("proposition", dataElement);
-			req.setAttribute(
-					"propositionType", dataElement.getType().toString());
-		}
 
-		req.getRequestDispatcher("/protected/editor.jsp").forward(req, resp);
+			req.getRequestDispatcher("/protected/editor.jsp").forward(req, resp);
+		} catch (ClientException ex) {
+			throw new ServletException("Error setting up data element editor", ex);
+		}
 	}
 
 	private static final class PropertiesDataElementVisitor
 			implements DataElementVisitor {
-		private final Long userId;
+
 		private final ServicesClient servicesClient;
 		private final Map<String, List<String>> properties;
 
-		private PropertiesDataElementVisitor(Long inUserId,
+		private PropertiesDataElementVisitor(
 				ServicesClient inServicesClient) {
 
-			this.userId = inUserId;
 			this.servicesClient = inServicesClient;
 			this.properties = new HashMap<String, List<String>>();
 		}
 
-		private void handleDataElementField(DataElementField inField) {
+		private void handleDataElementField(DataElementField inField) throws ClientException {
 			SystemElement systemElement = this.servicesClient
-					.getSystemElement(this.userId, inField.getDataElementKey());
+					.getSystemElement(inField.getDataElementKey());
 			this.properties.put(
 					inField.getDataElementKey(), systemElement.getProperties());
 		}
@@ -194,28 +191,40 @@ public class EditPropositionServlet extends HttpServlet {
 		}
 
 		@Override
-		public void visit(Sequence sequence) {
+		public void visit(Sequence sequence) throws DataElementHandlingException {
 			LOGGER.debug("visit sequence element -- {}", sequence.getKey());
 			DataElementField primary = sequence.getPrimaryDataElement();
 			if (primary.getType() == DataElement.Type.SYSTEM) {
-				handleDataElementField(primary);
+				try {
+					handleDataElementField(primary);
+				} catch (ClientException ex) {
+					throw new DataElementHandlingException(null, ex);
+				}
 			}
 
 			for (RelatedDataElementField field : sequence
 					.getRelatedDataElements()) {
 				DataElementField element = field.getDataElementField();
 				if (element.getType() == DataElement.Type.SYSTEM) {
-					handleDataElementField(element);
+					try {
+						handleDataElementField(element);
+					} catch (ClientException ex) {
+						throw new DataElementHandlingException(null, ex);
+					}
 				}
 			}
 		}
 
 		@Override
-		public void visit(Frequency frequency) {
+		public void visit(Frequency frequency) throws DataElementHandlingException {
 			LOGGER.debug("visit frequency element -- {}", frequency.getKey());
 			DataElementField def = frequency.getDataElement();
 			if (def.getType() == DataElement.Type.SYSTEM) {
-				handleDataElementField(def);
+				try {
+					handleDataElementField(def);
+				} catch (ClientException ex) {
+					throw new DataElementHandlingException(null, ex);
+				}
 			}
 		}
 

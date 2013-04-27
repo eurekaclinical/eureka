@@ -20,7 +20,6 @@
 package edu.emory.cci.aiw.cvrg.eureka.servlet.proposition;
 
 import java.io.IOException;
-import java.security.Principal;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -34,7 +33,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.DataElement;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.UserInfo;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ClientException;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ServicesClient;
 
 public class EditorHomeServlet extends HttpServlet {
@@ -80,13 +79,14 @@ public class EditorHomeServlet extends HttpServlet {
 		List<JsonTreeData> l = new ArrayList<JsonTreeData>();
 		String eurekaServicesUrl = req.getSession().getServletContext()
 			.getInitParameter("eureka-services-url");
-		Principal principal = req.getUserPrincipal();
-		String userName = principal.getName();
 
-		LOGGER.debug("got username {}", userName);
 		ServicesClient servicesClient = new ServicesClient(eurekaServicesUrl);
-		UserInfo user = servicesClient.getUserByName(userName);
-		List<DataElement> props = servicesClient.getUserElements(user.getId());
+		List<DataElement> props;
+		try {
+			props = servicesClient.getUserElements();
+		} catch (ClientException ex) {
+			throw new ServletException("Error getting user-defined data elements", ex);
+		}
 		SimpleDateFormat df = new SimpleDateFormat("MM/dd/yyyy");
 		for (DataElement proposition : props) {
 			if (!proposition.isInSystem()) {

@@ -52,8 +52,8 @@ public class SavePropositionServlet extends HttpServlet {
 		String servicesUrl = req.getSession().getServletContext()
 				.getInitParameter("eureka-services-url");
 		ServicesClient servicesClient = new ServicesClient(servicesUrl);
-		UserInfo user = servicesClient.getUserByName(username);
 		try {
+			UserInfo user = servicesClient.getUserByName(username);
 			dataElement.setUserId(user.getId());
 			if (dataElement.getId() == null) {
 				servicesClient.saveUserElement(dataElement);

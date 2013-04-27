@@ -39,7 +39,12 @@ public class PingServlet extends HttpServlet {
 			throws ServletException, IOException {
 		ServicesClient client = ServletUtil.getServicesClient(req);
 		String userId = req.getParameter("id");
-		UserInfo user = client.getUserById(Long.valueOf(userId));
+		UserInfo user;
+		try {
+			user = client.getUserById(Long.valueOf(userId));
+		} catch (ClientException ex) {
+			throw new ServletException("Error pinging services layer", ex);
+		}
 		resp.setContentType("text/plain");
 		try {
 			client.pingAccount(user.getId());

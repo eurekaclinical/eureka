@@ -19,6 +19,7 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.servlet;
 
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ClientException;
 import java.security.Principal;
 
 import javax.servlet.ServletContext;
@@ -44,7 +45,7 @@ public final class ServletUtil {
 		return new ServicesClient(serviceUrl);
 	}
 
-	public static UserInfo getCurrentUser(HttpServletRequest inRequest) {
+	public static UserInfo getCurrentUser(HttpServletRequest inRequest) throws ClientException {
 		Principal principal = inRequest.getUserPrincipal();
 		String name = principal.getName();
 		return getServicesClient(inRequest).getUserByName(name);

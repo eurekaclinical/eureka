@@ -19,6 +19,7 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.servlet.worker.admin;
 
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ClientException;
 import java.io.IOException;
 import java.util.List;
 
@@ -42,12 +43,16 @@ public class EditUserWorker implements ServletWorker {
 
 		String id = req.getParameter("id");
 		ServicesClient servicesClient = new ServicesClient(eurekaServicesUrl);
-		UserInfo user = servicesClient.getUserById(Long.valueOf(id));
-		List<Role> roles = servicesClient.getRoles();
+		try {
+			UserInfo user = servicesClient.getUserById(Long.valueOf(id));
+			List<Role> roles = servicesClient.getRoles();
 
-		req.setAttribute("roles", roles);
-		req.setAttribute("user", user);
-		req.getRequestDispatcher("/protected/edit_user.jsp").forward(req,
-				resp);
+			req.setAttribute("roles", roles);
+			req.setAttribute("user", user);
+			req.getRequestDispatcher("/protected/edit_user.jsp").forward(req,
+					resp);
+		} catch (ClientException ex) {
+			throw new ServletException("Error getting user information", ex);
+		}
 	}
 }

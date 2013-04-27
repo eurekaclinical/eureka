@@ -19,8 +19,12 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.servlet;
 
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.Destination;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.Job;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.JobStatus;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.SourceConfigParams;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ClientException;
 import java.io.IOException;
-import java.security.Principal;
 import java.util.List;
 
 import javax.servlet.ServletException;
@@ -30,7 +34,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.UserInfo;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ServicesClient;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.Job;
 
 public class JobListServlet extends HttpServlet {
 
@@ -40,13 +43,41 @@ public class JobListServlet extends HttpServlet {
 
 		String eurekaServicesUrl = req.getSession().getServletContext()
 				.getInitParameter("eureka-services-url");
-		Principal principal = req.getUserPrincipal();
-		String userName = principal.getName();
 		ServicesClient servicesClient = new ServicesClient(eurekaServicesUrl);
-		UserInfo user = servicesClient.getUserByName(userName);
-		List<Job> jobs = servicesClient.getJobsByUserId(user.getId());
 
-		req.setAttribute("jobs", jobs);
-		req.getRequestDispatcher("/protected/tool.jsp").forward(req, resp);
+		try {
+			List<SourceConfigParams> sourceConfigParams = servicesClient.getSourceConfigParams();
+			req.setAttribute("sources", sourceConfigParams);
+
+			List<Destination> destinations = servicesClient.getDestinations();
+			req.setAttribute("destinations", destinations);
+
+			String jobIdStr = req.getParameter("jobId");
+			Job job;
+			if (jobIdStr != null) {
+				Long jobId;
+				try {
+					jobId = Long.valueOf(jobIdStr);
+				} catch (NumberFormatException ex) {
+					throw new ServletException("Query parameter jobId must be a long, was " + jobIdStr);
+				}
+				job = servicesClient.getJob(jobId);
+			} else {
+				List<Job> jobs = servicesClient.getJobsDesc();
+				if (!jobs.isEmpty()) {
+					job = jobs.get(0);
+				} else {
+					job = null;
+				}
+			}
+			if (job != null) {
+				req.setAttribute("jobStatus", job.toJobStatus());
+			}
+
+			req.getRequestDispatcher("/protected/tool.jsp").forward(req, resp);
+		} catch (ClientException ex) {
+			throw new ServletException("Error getting job list", ex);
+		}
+
 	}
 }
