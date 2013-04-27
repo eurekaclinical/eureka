@@ -89,10 +89,6 @@
 			<artifactId>hibernate-entitymanager</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>com.h2database</groupId>
-			<artifactId>h2</artifactId>
-		</dependency>
-		<dependency>
 			<groupId>javax.servlet</groupId>
 			<artifactId>servlet-api</artifactId>
 		</dependency>
@@ -110,7 +106,7 @@
 		</dependency>
 		<dependency>
 			<groupId>org.protempa</groupId>
-			<artifactId>protempa-bconfigs-commons-ini</artifactId>
+			<artifactId>protempa-bconfigs-ini4j-ini</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.protempa</groupId>
@@ -136,6 +132,22 @@
 			<groupId>edu.emory.cci.aiw.cvrg</groupId>
 			<artifactId>eureka-common</artifactId>
 			<type>test-jar</type>
+		</dependency>
+		<dependency>
+			<groupId>com.sun.jersey.contribs</groupId>
+			<artifactId>jersey-multipart</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.poi</groupId>
+			<artifactId>poi-ooxml</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.arp</groupId>
+			<artifactId>javautil</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.h2database</groupId>
+			<artifactId>h2</artifactId>
 		</dependency>
 	</dependencies>
 	<profiles>

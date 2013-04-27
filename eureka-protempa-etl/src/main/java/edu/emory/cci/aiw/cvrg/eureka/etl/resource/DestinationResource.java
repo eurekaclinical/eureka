@@ -21,47 +21,57 @@ package edu.emory.cci.aiw.cvrg.eureka.etl.resource;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
-import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.google.inject.Inject;
 
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.Configuration;
-import edu.emory.cci.aiw.cvrg.eureka.etl.dao.ConfDao;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.Destination;
+import edu.emory.cci.aiw.cvrg.eureka.etl.config.EtlProperties;
+import java.util.List;
+import javax.annotation.security.RolesAllowed;
+import javax.servlet.http.HttpServletRequest;
+import javax.ws.rs.core.Context;
 
-@Path("/configuration")
+@Path("/destination")
+@RolesAllowed({"researcher", "admin"})
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-public class ConfigurationResource {
+public class DestinationResource {
 
-	private static final Logger LOGGER =
-			LoggerFactory.getLogger(ConfigurationResource.class);
-	private final ConfDao confDao;
+	private final EtlProperties etlProperties;
+	private final Destinations destFactory;
+	
 
 	@Inject
-	public ConfigurationResource(ConfDao inConfDao) {
-		this.confDao = inConfDao;
+	public DestinationResource(EtlProperties inEtlProperties) {
+		this.etlProperties = inEtlProperties;
+		this.destFactory = new Destinations(this.etlProperties);
 	}
 
 	@GET
-	@Path("/get/{userId}")
-	public Configuration getConfByUserId(@PathParam("userId") Long userId) {
-		LOGGER.debug("Configuration request for user {}", userId);
-		return this.confDao.getByUserId(userId);
+	@Path("/{destId}")
+	public Destination getDestination(
+			@Context HttpServletRequest request,
+			@PathParam("destId") String destId) {
+		
+		return this.destFactory.getDestination(destId);
 	}
 
-	@POST
-	@Path("/submit")
-	public Response submitConfiguration(Configuration conf) {
-		this.confDao.create(conf);
-		LOGGER.debug("Request to save Configuration");
-		return Response.ok().build();
+	@GET
+	@Path("/list")
+	public List<Destination> getAll() {
+		return this.destFactory.getAll();
 	}
+
+	/*@POST
+	 public void create(Destination source) {
+	 }
+	
+	 @PUT
+	 public void update(Destination source) {
+	 }*/
 }

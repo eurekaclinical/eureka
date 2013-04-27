@@ -29,10 +29,10 @@ import com.sun.jersey.api.core.PackagesResourceConfig;
 import com.sun.jersey.api.core.ResourceConfig;
 import com.sun.jersey.guice.JerseyServletModule;
 import com.sun.jersey.guice.spi.container.servlet.GuiceContainer;
+import edu.emory.cci.aiw.cvrg.eureka.etl.dao.EtlUserDao;
 
-import edu.emory.cci.aiw.cvrg.eureka.etl.dao.ConfDao;
 import edu.emory.cci.aiw.cvrg.eureka.etl.dao.JobDao;
-import edu.emory.cci.aiw.cvrg.eureka.etl.dao.JpaConfDao;
+import edu.emory.cci.aiw.cvrg.eureka.etl.dao.JpaEtlUserDao;
 import edu.emory.cci.aiw.cvrg.eureka.etl.dao.JpaJobDao;
 import edu.emory.cci.aiw.cvrg.eureka.etl.job.Task;
 import edu.emory.cci.aiw.cvrg.eureka.etl.job.TaskProvider;
@@ -51,7 +51,7 @@ public class ETLServletModule extends JerseyServletModule {
 	@Override
 	protected void configureServlets() {
 		bind(JobDao.class).to(JpaJobDao.class);
-		bind(ConfDao.class).to(JpaConfDao.class);
+		bind(EtlUserDao.class).to(JpaEtlUserDao.class);
 		bind(PropositionValidator.class).to(PropositionValidatorImpl.class);
 		bind(Task.class).toProvider(TaskProvider.class);
 

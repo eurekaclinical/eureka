@@ -20,8 +20,6 @@
 package edu.emory.cci.aiw.cvrg.eureka.etl.ksb;
 
 import java.io.File;
-import java.util.HashMap;
-import java.util.Map;
 
 import org.protempa.KnowledgeSource;
 import org.protempa.KnowledgeSourceReadException;
@@ -33,50 +31,31 @@ import org.protempa.backend.BackendProviderSpecLoaderException;
 import org.protempa.backend.Configurations;
 import org.protempa.backend.ConfigurationsLoadException;
 import org.protempa.backend.InvalidConfigurationException;
-import org.protempa.bconfigs.commons.INICommonsConfigurations;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.Configuration;
+import edu.emory.cci.aiw.cvrg.eureka.etl.config.EtlProperties;
+import edu.emory.cci.aiw.cvrg.eureka.etl.config.EurekaProtempaConfigurations;
+import org.protempa.backend.ConfigurationsNotFoundException;
 
-public class PropositionFinder {
+public class PropositionDefinitionFinder {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger
-		(PropositionFinder.class);
-	private static final String CONFIG_DIR = "etlconfig";
-	private static final String DEFAULT_CONFIG_DIR = "etlconfigdefaults";
-	private static final String CONF_PREFIX = "config";
-	private static final String DEFAULT_CONF_FILE = "defaults.ini";
+	private static final Logger LOGGER = LoggerFactory.getLogger(PropositionDefinitionFinder.class);
 	private final KnowledgeSource knowledgeSource;
-	
-	public PropositionFinder(Configuration inConfiguration,
-		String confDir) throws PropositionFinderException {
-		File etlConfDir = new File(confDir + "/" + CONFIG_DIR);
-		File defaultEtlConfDir = new File(confDir + "/" + DEFAULT_CONFIG_DIR);
+
+	public PropositionDefinitionFinder(String configId,
+			EtlProperties etlProperties) throws PropositionFinderException {
+		File etlConfDir = etlProperties.getSourceConfigDirectory();
 		this.validateConfigDir(etlConfDir);
-		Long confId = inConfiguration.getId();
 		try {
-			String idStr = String.valueOf(confId.longValue());
-			String confFileName = CONF_PREFIX + idStr + ".ini";
 			LOGGER.debug("Creating new configurations, source factory, and knowledge source");
-			Configurations configurations = new INICommonsConfigurations
-				(etlConfDir);
-			SourceFactory sf = new SourceFactory(
-				configurations, confFileName);
-			KnowledgeSource ks = sf.newKnowledgeSourceInstance();
-			if (ks == null && defaultEtlConfDir.exists()) {
-				File defaultConfFile = new File(
-					defaultEtlConfDir, DEFAULT_CONF_FILE);
-				if (defaultConfFile.exists()) {
-					Configurations defaultConfigs = new
-						INICommonsConfigurations(defaultConfFile);
-					SourceFactory defaultSF = new SourceFactory(
-						defaultConfigs, DEFAULT_CONF_FILE);
-					ks = defaultSF.newKnowledgeSourceInstance();
-				}
-			}
-			this.knowledgeSource = ks;
+			Configurations configurations = 
+					new EurekaProtempaConfigurations(etlProperties);
+			SourceFactory sf = new SourceFactory(configurations, configId);
+			this.knowledgeSource = sf.newKnowledgeSourceInstance();
 			LOGGER.debug("Done: configurations, source factory, and knowledge source created");
+		} catch (ConfigurationsNotFoundException ex) {
+			throw new PropositionFinderException(ex);
 		} catch (BackendProviderSpecLoaderException e) {
 			throw new PropositionFinderException(e);
 		} catch (InvalidConfigurationException e) {
@@ -94,24 +73,23 @@ public class PropositionFinder {
 		if (LOGGER.isErrorEnabled()) {
 			if (!inFile.exists()) {
 				LOGGER.error(
-					"Configuration directory " + inFile.getAbsolutePath() +
-						" does not exist. Proposition finding will not work" +
-						" without it. Please create it and try again.");
+						"Configuration directory " + inFile.getAbsolutePath()
+						+ " does not exist. Proposition finding will not work"
+						+ " without it. Please create it and try again.");
 			} else if (!inFile.isDirectory()) {
 				LOGGER.error(
-					"Path " + inFile.getAbsolutePath() + " is not a " +
-						"directory. Proposition finding requires it to be a" +
-						" directory.");
+						"Path " + inFile.getAbsolutePath() + " is not a "
+						+ "directory. Proposition finding requires it to be a"
+						+ " directory.");
 			}
 		}
 	}
 
 	public PropositionDefinition find(String inKey) throws
-		PropositionFinderException {
+			PropositionFinderException {
 		PropositionDefinition definition = null;
 		try {
-			definition = this.knowledgeSource.readPropositionDefinition
-				(inKey);
+			definition = this.knowledgeSource.readPropositionDefinition(inKey);
 		} catch (KnowledgeSourceReadException e) {
 			throw new PropositionFinderException(e);
 		}

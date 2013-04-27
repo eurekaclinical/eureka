@@ -51,7 +51,7 @@ public class PropositionResourceTest extends AbstractEtlResourceTest {
 		validationRequest.setPropositions(propositions);
 
 		ClientResponse response =
-			webResource.path("/api/proposition/validate").type(
+			webResource.path("/api/proposition/validate/0").type(
 				MediaType.APPLICATION_JSON).post(ClientResponse.class,
 				validationRequest);
 

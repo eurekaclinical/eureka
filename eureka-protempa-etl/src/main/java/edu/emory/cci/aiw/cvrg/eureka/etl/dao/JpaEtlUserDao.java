@@ -1,6 +1,6 @@
 /*
  * #%L
- * Eureka Protempa ETL
+ * Eureka Services
  * %%
  * Copyright (C) 2012 - 2013 Emory University
  * %%
@@ -25,31 +25,32 @@ import com.google.inject.Inject;
 import com.google.inject.Provider;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.dao.GenericDao;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.Configuration;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.Configuration_;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.EtlUser;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.EtlUser_;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.User;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.User_;
 
 /**
- * Implementation of the {@link ConfDao} interface, based on JPA.
+ * An implementation of the {@link UserDao} interface, backed by JPA entities
+ * and queries.
  *
- * @author hrathod
- *
+ * @author Andrew Post
  */
-public class JpaConfDao extends GenericDao<Configuration, Long> implements
-		ConfDao {
+public class JpaEtlUserDao extends GenericDao<EtlUser, Long> implements EtlUserDao {
 
 	/**
-	 * Creates an object using the given entity manager.
+	 * Create an object with the give entity manager.
 	 *
-	 * @param provider A provider that can deliver new entity manager instances
-	 * on-demand.
+	 * @param inEMProvider The entity manager to be used for communication with
+	 *                     the data store.
 	 */
 	@Inject
-	public JpaConfDao(Provider<EntityManager> provider) {
-		super(Configuration.class, provider);
+	public JpaEtlUserDao(Provider<EntityManager> inEMProvider) {
+		super(EtlUser.class, inEMProvider);
 	}
 
 	@Override
-	public Configuration getByUserId(Long userId) {
-		return getUniqueByAttribute(Configuration_.userId, userId);
+	public EtlUser getByUsername(String name) {
+		return this.getUniqueByAttribute(EtlUser_.username, name);
 	}
 }

@@ -23,14 +23,15 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.etl.config;
 
+import com.sun.jersey.api.container.filter.RolesAllowedResourceFilterFactory;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.sun.jersey.api.container.filter.RolesAllowedResourceFilterFactory;
 import com.sun.jersey.api.core.PackagesResourceConfig;
 import com.sun.jersey.api.core.ResourceConfig;
 import com.sun.jersey.guice.JerseyServletModule;
 import com.sun.jersey.guice.spi.container.servlet.GuiceContainer;
+import edu.emory.cci.aiw.cvrg.eureka.common.test.UserRoleAdderFilter;
 
 /**
  *
@@ -40,12 +41,15 @@ public class ServletTestModule extends JerseyServletModule {
 
 	@Override
 	protected void configureServlets() {
+		
 		Map<String, String> params = new HashMap<String, String>();
 		params.put("com.sun.jersey.api.json.POJOMappingFeature", "true");
 		params.put(PackagesResourceConfig.PROPERTY_PACKAGES,
 				"edu.emory.cci.aiw.cvrg.eureka.etl.resource;edu.emory.cci.aiw.cvrg.eureka.common.json");
 		params.put(ResourceConfig.PROPERTY_RESOURCE_FILTER_FACTORIES,
 				RolesAllowedResourceFilterFactory.class.getName());
+		
+		filter("/api/*").through(UserRoleAdderFilter.class);
 
 		serve("/api/*").with(GuiceContainer.class, params);
 	}

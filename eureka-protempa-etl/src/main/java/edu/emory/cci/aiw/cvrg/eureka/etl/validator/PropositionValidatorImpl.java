@@ -37,9 +37,9 @@ import org.slf4j.LoggerFactory;
 
 import com.google.inject.Inject;
 
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.Configuration;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.Destination;
 import edu.emory.cci.aiw.cvrg.eureka.etl.config.EtlProperties;
-import edu.emory.cci.aiw.cvrg.eureka.etl.ksb.PropositionFinder;
+import edu.emory.cci.aiw.cvrg.eureka.etl.ksb.PropositionDefinitionFinder;
 import edu.emory.cci.aiw.cvrg.eureka.etl.ksb.PropositionFinderException;
 import org.protempa.CompoundLowLevelAbstractionDefinition;
 import org.protempa.ContextDefinition;
@@ -126,7 +126,7 @@ public class PropositionValidatorImpl implements PropositionValidator {
 	private PropositionDefinition targetProposition;
 	private List<PropositionDefinition> propositions;
 	private List<PropositionDefinition> userPropositions;
-	private Configuration configuration;
+	private String configId;
 	private final List<String> messages;
 	private final EtlProperties etlProperties;
 
@@ -183,8 +183,8 @@ public class PropositionValidatorImpl implements PropositionValidator {
 			}
 			List<PropositionType> types = new ArrayList<PropositionType>();
 			try {
-				PropositionFinder propositionFinder = new PropositionFinder(
-						this.configuration, this.etlProperties.getConfigDir());
+				PropositionDefinitionFinder propositionFinder = new PropositionDefinitionFinder(
+						this.configId, this.etlProperties);
 				for (String child : inProposition.getChildren()) {
 					if (isSystemProp(child)) {
 						try {
@@ -321,8 +321,8 @@ public class PropositionValidatorImpl implements PropositionValidator {
 		PropositionDefinition propDef = this.findById(inTarget);
 
 		try {
-			PropositionFinder propositionFinder = new PropositionFinder(
-					this.configuration, this.etlProperties.getConfigDir());
+			PropositionDefinitionFinder propositionFinder = new PropositionDefinitionFinder(
+					this.configId, this.etlProperties);
 			for (String child : propDef.getChildren()) {
 				if (isSystemProp(child)) {
 					try {
@@ -415,13 +415,13 @@ public class PropositionValidatorImpl implements PropositionValidator {
 		this.userPropositions = inUserPropositions;
 	}
 
-	public Configuration getConfiguration() {
-		return configuration;
+	public String getConfigId() {
+		return configId;
 	}
 
 	@Override
-	public void setConfiguration(Configuration inConfiguration) {
-		configuration = inConfiguration;
+	public void setConfigId(String inConfiguration) {
+		configId = inConfiguration;
 	}
 
 	private void addMessage(String inMessage) {

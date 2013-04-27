@@ -38,6 +38,6 @@ public class TaskProvider implements Provider<Task> {
 
 	@Override
 	public Task get() {
-		return new Task(this.jobDao, new ETL(this.etlProperties));
+		return new Task(this.jobDao, new ETL(this.etlProperties, this.jobDao));
 	}
 }

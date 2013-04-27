@@ -27,7 +27,8 @@ import org.slf4j.LoggerFactory;
 
 import com.google.inject.Inject;
 
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.Job;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.JobEntity;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.JobState;
 import edu.emory.cci.aiw.cvrg.eureka.etl.dao.JobDao;
 
 public final class Task implements Runnable {
@@ -71,18 +72,15 @@ public final class Task implements Runnable {
 
 	@Override
 	public void run() {
-		Job myJob = null;
+		JobEntity myJob = null;
 		try {
 			myJob = this.jobDao.retrieve(this.jobId);
 			LOGGER.info("{} just got a job from user {}, id={}",
-					myJob.getUserId(), new Object[]{
+					myJob.getEtlUser(), new Object[]{
 						Thread.currentThread().getName(), myJob.toString()});
-			myJob.setNewState("PROCESSING", null, null);
+			myJob.setNewState(JobState.PROCESSING, null, null);
 			LOGGER.debug("About to save job: {}", myJob.toString());
 			this.jobDao.update(myJob);
-
-			Long configId = myJob.getConfigurationId();
-
 
 			PropositionDefinition[] propDefArray =
 					new PropositionDefinition[this.getPropositionDefinitions()
@@ -93,14 +91,13 @@ public final class Task implements Runnable {
 					this.propIdsToShow.toArray(
 					new String[this.propIdsToShow.size()]);
 
-			this.etl.run("config" + configId, propDefArray,
-					propIdsToShowArray, myJob.getId());
+			this.etl.run(myJob, propDefArray, propIdsToShowArray);
 			this.etl.close();
-			myJob.setNewState("DONE", null, null);
+			myJob.setNewState(JobState.DONE, null, null);
 			this.jobDao.update(myJob);
 			LOGGER.info("{} completed job {} for user {} without errors.",
 					Thread.currentThread().getName(),
-					new Object[]{myJob.getId(), myJob.getUserId()});
+					new Object[]{myJob.getId(), myJob.getEtlUser()});
 			myJob = null;
 		} catch (EtlException e) {
 			handleError(myJob, e);
@@ -111,10 +108,10 @@ public final class Task implements Runnable {
 		} finally {
 			if (myJob != null) {
 				try {
-					myJob.setNewState("DONE", null, null);
+					myJob.setNewState(JobState.DONE, null, null);
 					LOGGER.info("{} finished job {} for user {} with errors.",
 							Thread.currentThread().getName(),
-							new Object[]{myJob.getId(), myJob.getUserId()});
+							new Object[]{myJob.getId(), myJob.getEtlUser()});
 					this.jobDao.update(myJob);
 				} catch (Throwable ignore) {
 				}
@@ -124,10 +121,10 @@ public final class Task implements Runnable {
 
 	}
 
-	private void handleError(Job job, Throwable e) {
+	private void handleError(JobEntity job, Throwable e) {
 		if (job != null) {
 			LOGGER.error("Job " + job.getId() + " for user "
-					+ job.getUserId() + " failed: " + e.getMessage(), e);
+					+ job.getEtlUser().getUsername() + " failed: " + e.getMessage(), e);
 		} else {
 			LOGGER.error("Could not create job: " + e.getMessage(), e);
 		}
@@ -141,7 +138,7 @@ public final class Task implements Runnable {
 			msg = e.getClass().getName();
 		}
 		if (job != null) {
-			job.setNewState("EXCEPTION", msg, st);
+			job.setNewState(JobState.ERROR, msg, st);
 			this.jobDao.update(job);
 		}
 	}

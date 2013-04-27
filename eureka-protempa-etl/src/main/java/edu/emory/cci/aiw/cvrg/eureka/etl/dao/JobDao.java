@@ -23,7 +23,7 @@ import java.util.List;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.JobFilter;
 import edu.emory.cci.aiw.cvrg.eureka.common.dao.Dao;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.Job;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.JobEntity;
 
 /**
  * A data access object interface to retrieve and store information about
@@ -32,7 +32,7 @@ import edu.emory.cci.aiw.cvrg.eureka.common.entity.Job;
  * @author hrathod
  *
  */
-public interface JobDao extends Dao<Job, Long> {
+public interface JobDao extends Dao<JobEntity, Long> {
 
 	/**
 	 * Gets a list of jobs that meet the given filter criteria.
@@ -40,6 +40,8 @@ public interface JobDao extends Dao<Job, Long> {
 	 * @param jobFilter The filter criteria.
 	 * @return A list of jobs that meet the filter criteria.
 	 */
-	public List<Job> getWithFilter(JobFilter jobFilter);
+	public List<JobEntity> getWithFilter(JobFilter jobFilter);
+	
+	public List<JobEntity> getWithFilterDesc(JobFilter jobFilter);
 
 }

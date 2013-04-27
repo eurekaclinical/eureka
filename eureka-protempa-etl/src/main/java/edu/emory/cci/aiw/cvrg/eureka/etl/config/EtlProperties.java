@@ -19,9 +19,11 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.etl.config;
 
+import edu.emory.cci.aiw.cvrg.eureka.etl.resource.ToConfigFile;
 import com.google.inject.Singleton;
 
-import edu.emory.cci.aiw.cvrg.eureka.common.props.ApplicationProperties;
+import edu.emory.cci.aiw.cvrg.eureka.common.props.AbstractProperties;
+import java.io.File;
 
 /**
  * Contains methods to fetch configuration information for the application.
@@ -30,8 +32,8 @@ import edu.emory.cci.aiw.cvrg.eureka.common.props.ApplicationProperties;
  *
  */
 @Singleton
-public class EtlProperties extends ApplicationProperties {
-
+public class EtlProperties extends AbstractProperties {
+	
 	/**
 	 * Gets the size of the thread pool created to run Protempa tasks.
 	 *
@@ -40,4 +42,33 @@ public class EtlProperties extends ApplicationProperties {
 	public int getTaskThreadPoolSize() {
 		return this.getIntValue("eureka.etl.threadpool.size", 4);
 	}
+	
+	public File getSourceConfigDirectory() {
+		return new File(getConfigDir(), "sourceconfig");
+	}
+	
+	public File getDestinationConfigDirectory() {
+		return new File(getConfigDir(), "destconfig");
+	}
+
+	public File getUploadedDirectory() {
+		return new File(getConfigDir(), "etluploaded");
+	}
+	
+	public File uploadedDirectory(String sourceId, String fileTypeId) {
+		return new File(new File(getUploadedDirectory(), 
+				ToConfigFile.fromSourceConfigId(sourceId)), fileTypeId);
+	}
+	
+	public File sourceConfigFile(String sourceId) {
+		return new File(getSourceConfigDirectory(), 
+				ToConfigFile.fromSourceConfigId(sourceId));
+	}
+	
+	public File destinationConfigFile(String destId) {
+		return new File(getDestinationConfigDirectory(),
+				ToConfigFile.fromDestId(destId));
+	}
+	
+	
 }

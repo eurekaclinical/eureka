@@ -1,6 +1,6 @@
 /*
  * #%L
- * Eureka Protempa ETL
+ * Eureka Services
  * %%
  * Copyright (C) 2012 - 2013 Emory University
  * %%
@@ -17,27 +17,14 @@
  * limitations under the License.
  * #L%
  */
-package edu.emory.cci.aiw.cvrg.eureka.etl.dao;
-
-import edu.emory.cci.aiw.cvrg.eureka.common.dao.Dao;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.Configuration;
+package edu.emory.cci.aiw.cvrg.eureka.etl.spreadsheet;
 
 /**
- * A data access object interface used to retrieve and store information about
- * backend configurations.
- *
+ * Holds results information about lab tests performed during an encounter.
+ * 
  * @author hrathod
- *
+ * 
  */
-public interface ConfDao extends Dao<Configuration, Long> {
-
-	/**
-	 * Gets a configuration that belongs to the give user (denoted by the unique
-	 * identifier).
-	 *
-	 * @param userId Unique identifier of the user to whom the configuration
-	 * belongs.
-	 * @return A configuration belonging to the give user.
-	 */
-	public Configuration getByUserId(Long userId);
+public class Lab extends ObservationWithResultImpl {
+	// no additional fields needed, yet.
 }

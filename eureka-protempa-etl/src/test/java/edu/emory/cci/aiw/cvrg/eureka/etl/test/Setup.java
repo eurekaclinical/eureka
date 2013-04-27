@@ -26,8 +26,9 @@ import javax.persistence.EntityManager;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.Configuration;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.Job;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.EtlUser;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.JobEntity;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.JobState;
 import edu.emory.cci.aiw.cvrg.eureka.common.test.TestDataException;
 import edu.emory.cci.aiw.cvrg.eureka.common.test.TestDataProvider;
 
@@ -37,13 +38,9 @@ import edu.emory.cci.aiw.cvrg.eureka.common.test.TestDataProvider;
  */
 public class Setup implements TestDataProvider {
 
-	private static final Long CONF_ID = Long.valueOf(1);
-	private static final Long JOB_ID = Long.valueOf(1);
-	private static final Long USER_ID = Long.valueOf(1);
-	private static final String EMPTY_STRING = "";
 	private final Provider<EntityManager> managerProvider;
-	private Configuration configuration;
-	private Job job;
+	private JobEntity job;
+	private EtlUser etlUser;
 
 	/**
 	 * Sets up necessary data for testing.
@@ -57,7 +54,6 @@ public class Setup implements TestDataProvider {
 
 	@Override
 	public void setUp() throws TestDataException {
-		addConfigs();
 		addJobs();
 	}
 
@@ -66,8 +62,7 @@ public class Setup implements TestDataProvider {
 		EntityManager entityManager = this.getEntityManager();
 		entityManager.getTransaction().begin();
 		entityManager.remove(this.job);
-		entityManager.remove(this.configuration);
-		entityManager.flush();
+		entityManager.remove(this.etlUser);
 		entityManager.getTransaction().commit();
 	}
 
@@ -80,36 +75,17 @@ public class Setup implements TestDataProvider {
 	 */
 	private void addJobs() {
 		EntityManager entityManager = this.getEntityManager();
-		this.job = new Job();
-		this.job.setTimestamp(new Date());
-		this.job.setConfigurationId(this.configuration.getId());
-		this.job.setUserId(USER_ID);
-		this.job.setNewState("STARTING", null, null);
 		entityManager.getTransaction().begin();
+		this.etlUser = new EtlUser();
+		this.etlUser.setUsername("test");
+		entityManager.persist(this.etlUser);
+		this.job = new JobEntity();
+		this.job.setCreated(new Date());
+		this.job.setSourceConfigId("0");
+		this.job.setDestinationId("0");
+		this.job.setEtlUser(this.etlUser);
+		this.job.setNewState(JobState.CREATED, null, null);
 		entityManager.persist(this.job);
-		entityManager.flush();
-		entityManager.getTransaction().commit();
-	}
-
-	/**
-	 * Add configuration information to the database.
-	 */
-	private void addConfigs() {
-		EntityManager entityManager = this.getEntityManager();
-		this.configuration = new Configuration();
-		this.configuration.setUserId(USER_ID);
-		this.configuration.setI2b2DataPassword(EMPTY_STRING);
-		this.configuration.setI2b2DataSchema(EMPTY_STRING);
-		this.configuration.setI2b2JdbcUrl(EMPTY_STRING);
-		this.configuration.setI2b2MetaPassword(EMPTY_STRING);
-		this.configuration.setI2b2MetaSchema(EMPTY_STRING);
-		this.configuration.setOntology(EMPTY_STRING);
-		this.configuration.setProtempaJdbcUrl(EMPTY_STRING);
-		this.configuration.setProtempaPassword(EMPTY_STRING);
-		this.configuration.setProtempaSchema(EMPTY_STRING);
-		entityManager.getTransaction().begin();
-		entityManager.persist(this.configuration);
-		entityManager.flush();
 		entityManager.getTransaction().commit();
 	}
 }

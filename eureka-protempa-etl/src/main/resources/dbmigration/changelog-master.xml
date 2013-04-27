@@ -20,67 +20,76 @@
   -->
 
 <databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd" logicalFilePath="changelog-master.xml">
-    <changeSet author="arpost (generated)" id="1361552652236-1">
-        <createTable tableName="CONFIGURATIONS">
-            <column name="ID" type="NUMBER(19,0)">
-                <constraints nullable="false" primaryKey="true" primaryKeyName="SYS_C007773" primaryKeyTablespace="SYSTEM"/>
-            </column>
-            <column name="I2B2DATAPASS" type="VARCHAR2(255 CHAR)"/>
-            <column name="I2B2DATASCHEMA" type="VARCHAR2(255 CHAR)"/>
-            <column name="I2B2HOST" type="VARCHAR2(255 CHAR)"/>
-            <column name="I2B2METAPASS" type="VARCHAR2(255 CHAR)"/>
-            <column name="I2B2METASCHEMA" type="VARCHAR2(255 CHAR)"/>
-            <column name="I2B2PORT" type="NUMBER(10,0)"/>
-            <column name="ONTOLOGY" type="VARCHAR2(255 CHAR)"/>
-            <column name="PROTEMPADATABASENAME" type="VARCHAR2(255 CHAR)"/>
-            <column name="PROTEMPAHOST" type="VARCHAR2(255 CHAR)"/>
-            <column name="PROTEMPAPASS" type="VARCHAR2(255 CHAR)"/>
-            <column name="PROTEMPAPORT" type="NUMBER(10,0)"/>
-            <column name="PROTEMPASCHEMA" type="VARCHAR2(255 CHAR)"/>
-            <column name="USERID" type="NUMBER(19,0)"/>
-            <column name="I2B2DATAPASSWORD" type="VARCHAR2(255 CHAR)"/>
-            <column name="I2B2JDBCURL" type="VARCHAR2(255 CHAR)"/>
-            <column name="I2B2METAPASSWORD" type="VARCHAR2(255 CHAR)"/>
-            <column name="PROTEMPAJDBCURL" type="VARCHAR2(255 CHAR)"/>
-            <column name="PROTEMPAPASSWORD" type="VARCHAR2(255 CHAR)"/>
-        </createTable>
-    </changeSet>
     <changeSet author="arpost (generated)" id="1361552652236-2">
         <createTable tableName="JOB_EVENTS">
-            <column name="ID" type="NUMBER(19,0)">
-                <constraints nullable="false" primaryKey="true" primaryKeyName="SYS_C0012512" primaryKeyTablespace="SYSTEM"/>
+            <column name="ID" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="SYS_C0012512"/>
             </column>
             <column name="EXCEPTIONSTACKTRACE" type="CLOB"/>
-            <column name="MESSAGE" type="VARCHAR2(255 CHAR)"/>
-            <column name="STATE" type="VARCHAR2(255 CHAR)">
+            <column name="MESSAGE" type="VARCHAR(255)"/>
+            <column name="STATE" type="VARCHAR(255)">
                 <constraints nullable="false"/>
             </column>
             <column name="TIMESTAMP" type="TIMESTAMP(6)">
                 <constraints nullable="false"/>
             </column>
-            <column name="JOB_ID" type="NUMBER(19,0)"/>
+            <column name="JOB_ID" type="BIGINT"/>
         </createTable>
     </changeSet>
     <changeSet author="arpost (generated)" id="1361552652236-3">
         <createTable tableName="JOBS">
-            <column name="ID" type="NUMBER(19,0)">
-                <constraints nullable="false" primaryKey="true" primaryKeyName="SYS_C007777" primaryKeyTablespace="SYSTEM"/>
+            <column name="ID" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="SYS_C007777"/>
             </column>
-            <column name="CONFIGURATIONID" type="NUMBER(19,0)"/>
+            <column name="CONFIGURATIONID" type="BIGINT"/>
             <column name="TIMESTAMP" type="TIMESTAMP(6)"/>
-            <column name="USERID" type="NUMBER(19,0)"/>
+            <column name="USERID" type="BIGINT"/>
         </createTable>
     </changeSet>
     <changeSet author="arpost (generated)" id="1361552652236-4">
-        <addForeignKeyConstraint baseColumnNames="JOB_ID" baseTableName="JOB_EVENTS" baseTableSchemaName="EUREKABACKEND" constraintName="FK88C003DB45BC207" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" referencedColumnNames="ID" referencedTableName="JOBS" referencedTableSchemaName="EUREKABACKEND" referencesUniqueColumn="false"/>
+        <addForeignKeyConstraint baseColumnNames="JOB_ID" baseTableName="JOB_EVENTS" constraintName="FK88C003DB45BC207" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" referencedColumnNames="ID" referencedTableName="JOBS" referencesUniqueColumn="false"/>
     </changeSet>
     <changeSet author="arpost (generated)" id="1361552652236-5">
-        <createSequence schemaName="EUREKABACKEND" sequenceName="CONFIG_SEQ"/>
+        <createSequence sequenceName="CONFIG_SEQ"/>
     </changeSet>
     <changeSet author="arpost (generated)" id="1361552652236-6">
-        <createSequence schemaName="EUREKABACKEND" sequenceName="JOBEVENT_SEQ"/>
+        <createSequence sequenceName="JOBEVENT_SEQ"/>
     </changeSet>
     <changeSet author="arpost (generated)" id="1361552652236-7">
-        <createSequence schemaName="EUREKABACKEND" sequenceName="JOB_SEQ"/>
+        <createSequence sequenceName="JOB_SEQ"/>
     </changeSet>
+
+	<!-- 1.7 changes -->
+	<!-- WARNING: THE JOBS AND JOB_EVENTS TABLES WILL BE CLEARED OUT AS A RESULT OF
+		THIS CHANGELOG! -->
+	<changeSet author="arpost (generated)" id="1361552652236-8">
+		<delete tableName="JOB_EVENTS"/>
+		<delete tableName="JOBS"/>
+		<renameColumn tableName="JOBS" oldColumnName="USERID" newColumnName="USER_ID"/>
+		<addColumn tableName="JOBS">
+			<column name="DESTINATIONID" type="VARCHAR(255)">
+				<constraints nullable="false"/>
+			</column>
+		</addColumn>
+		<modifyDataType tableName="JOBS" columnName="CONFIGURATIONID" newDataType="VARCHAR(255)"/>
+		<renameColumn tableName="JOBS" oldColumnName="CONFIGURATIONID" newColumnName="SOURCECONFIGID"/>
+		<renameColumn tableName="JOBS" oldColumnName="TIMESTAMP" newColumnName="CREATED"/>
+		<addNotNullConstraint tableName="JOBS" columnName="SOURCECONFIGID"/>
+		<modifyDataType tableName="JOB_EVENTS" columnName="STATE" newDataType="TINYINT"/>
+		<addColumn tableName="JOB_EVENTS">
+			<column name="MESSAGE2" type="CLOB"/>
+		</addColumn>
+		<dropColumn tableName="JOB_EVENTS" columnName="MESSAGE"/>
+		<renameColumn tableName="JOB_EVENTS" oldColumnName="MESSAGE2" newColumnName="MESSAGE"/>
+		<createTable tableName="USERS">
+            <column name="ID" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="USERS_PK"/>
+            </column>
+            <column name="USERNAME" type="VARCHAR(255)">
+				<constraints  nullable="false"/>
+			</column>
+        </createTable>
+		<addForeignKeyConstraint baseColumnNames="USER_ID" baseTableName="JOBS" constraintName="JOBS_USER_ID_CONSTRAINT" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" referencedColumnNames="ID" referencedTableName="USERS" referencesUniqueColumn="false"/>
+		<createSequence sequenceName="USER_SEQ"/>
+	</changeSet>
 </databaseChangeLog>

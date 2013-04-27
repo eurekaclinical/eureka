@@ -27,7 +27,6 @@ import java.util.List;
 
 import org.protempa.PropositionDefinition;
 
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.Configuration;
 
 /**
  *
@@ -35,7 +34,7 @@ import edu.emory.cci.aiw.cvrg.eureka.common.entity.Configuration;
  */
 public interface PropositionValidator {
 
-	void setConfiguration(Configuration inConfiguration);
+	void setConfigId(String inConfigId);
 
 	void setTargetProposition(PropositionDefinition inProposition);
 

@@ -25,7 +25,8 @@ import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.servlet.GuiceServletContextListener;
 import edu.emory.cci.aiw.cvrg.eureka.common.dao.DatabaseSupport;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.Job;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.JobEntity;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.JobState;
 
 import edu.emory.cci.aiw.cvrg.eureka.etl.job.TaskManager;
 import java.util.List;
@@ -78,22 +79,22 @@ public class BackEndContextListener extends GuiceServletContextListener {
 	}
 	
 	private static void repairJobsIfNeeded(
-			EntityManager entityManager, List<Job> jobs) {
+			EntityManager entityManager, List<JobEntity> jobs) {
 		int numJobsRepaired = 0;
-		for (Job job : jobs) {
-			String currentState = job.getCurrentState();
-			if (!"DONE".equals(currentState)) {
+		for (JobEntity job : jobs) {
+			JobState currentState = job.getCurrentState();
+			if (!JobState.DONE.equals(currentState)) {
 				if (numJobsRepaired == 0) {
 					LOGGER.warn(
 						"Repairing jobs table, probably because the "
 						+ "application shut down during a processing run.");
 				}
 				LOGGER.warn("Repairing job {}", job.toString());
-				if (!"EXCEPTION".equals(currentState)) {
-					job.setNewState("EXCEPTION", 
+				if (!JobState.ERROR.equals(currentState)) {
+					job.setNewState(JobState.ERROR, 
 							"Eureka! shut down during job", null);
 				}
-				job.setNewState("DONE", null, null);
+				job.setNewState(JobState.DONE, null, null);
 				entityManager.merge(job);
 				LOGGER.warn("After repair, the job's status is {}", 
 						job.toString());
@@ -105,9 +106,9 @@ public class BackEndContextListener extends GuiceServletContextListener {
 		}
 	}
 
-	private static List<Job> getAllJobs(EntityManager entityManager) {
+	private static List<JobEntity> getAllJobs(EntityManager entityManager) {
 		DatabaseSupport dbSupport = new DatabaseSupport(entityManager);
-		return dbSupport.getAll(Job.class);
+		return dbSupport.getAll(JobEntity.class);
 	}
 
 	private static void initDatabase() {
@@ -116,7 +117,7 @@ public class BackEndContextListener extends GuiceServletContextListener {
 		try {
 			EntityManager entityManager = factory.createEntityManager();
 			try {
-				List<Job> jobs = getAllJobs(entityManager);
+				List<JobEntity> jobs = getAllJobs(entityManager);
 				repairJobsIfNeeded(entityManager, jobs);
 				entityManager.close();
 				entityManager = null;

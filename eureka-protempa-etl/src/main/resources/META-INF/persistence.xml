@@ -26,9 +26,9 @@
 		<provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
 		<jta-data-source>jdbc/EurekaBackend</jta-data-source>
 	-->
-		<class>edu.emory.cci.aiw.cvrg.eureka.common.entity.Job</class>
+		<class>edu.emory.cci.aiw.cvrg.eureka.common.entity.JobEntity</class>
 		<class>edu.emory.cci.aiw.cvrg.eureka.common.entity.JobEvent</class>
-		<class>edu.emory.cci.aiw.cvrg.eureka.common.entity.Configuration</class>
+		<class>edu.emory.cci.aiw.cvrg.eureka.common.entity.EtlUser</class>
 
 		<properties>
 			<!-- Disable the second-level cache -->

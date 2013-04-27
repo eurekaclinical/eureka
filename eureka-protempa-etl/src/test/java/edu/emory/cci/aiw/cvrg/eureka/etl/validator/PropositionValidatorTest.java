@@ -33,7 +33,6 @@ import edu.emory.cci.aiw.cvrg.eureka.common.test.AbstractTest;
 import edu.emory.cci.aiw.cvrg.eureka.common.test.TestDataException;
 import edu.emory.cci.aiw.cvrg.eureka.common.test.TestDataProvider;
 import edu.emory.cci.aiw.cvrg.eureka.etl.config.AppTestModule;
-import edu.emory.cci.aiw.cvrg.eureka.etl.dao.ConfDao;
 import edu.emory.cci.aiw.cvrg.eureka.etl.test.Setup;
 import edu.stanford.smi.protege.util.Assert;
 import org.junit.After;
@@ -43,8 +42,6 @@ import org.junit.Before;
 
 public class PropositionValidatorTest extends AbstractTest {
 
-	private static Long USER_ID = Long.valueOf(1L);
-	
 	/**
 	 * Instance of a class that can set up and tear down test data.
 	 */
@@ -82,13 +79,12 @@ public class PropositionValidatorTest extends AbstractTest {
 
 	@Test
 	public void testNoPropositions() {
-		ConfDao confDao = this.getInstance(ConfDao.class);
 		PropositionValidator validator = this.getInstance
 			(PropositionValidator.class);
 		List<PropositionDefinition> wrappers = new
 			ArrayList<PropositionDefinition>();
 		validator.setUserPropositions(wrappers);
-		validator.setConfiguration(confDao.getByUserId(USER_ID));
+		validator.setConfigId("0");
 
 		boolean actual;
 		try {
@@ -103,13 +99,12 @@ public class PropositionValidatorTest extends AbstractTest {
 
 	@Test
 	public void testSinglePropositionNoDef() {
-		ConfDao confDao = this.getInstance(ConfDao.class);
 		PropositionValidator validator = this.getInstance(PropositionValidator.class);
 		List<PropositionDefinition> definitions = new
 			ArrayList<PropositionDefinition>();
 		EventDefinition event = new EventDefinition("TestEvent");
 		definitions.add(event);
-		validator.setConfiguration(confDao.getByUserId(USER_ID));
+		validator.setConfigId("0");
 		validator.setUserPropositions(definitions);
 
 		boolean actual;
@@ -130,7 +125,6 @@ public class PropositionValidatorTest extends AbstractTest {
 	@Test
 	public void testCycleDetection() throws PropositionValidatorException {
 
-		ConfDao confDao = this.getInstance(ConfDao.class);
 		PropositionValidator validator = this.getInstance
 			(PropositionValidator.class);
 
@@ -147,7 +141,7 @@ public class PropositionValidatorTest extends AbstractTest {
 		propositions.add(def1);
 		propositions.add(def2);
 
-		validator.setConfiguration(confDao.getByUserId(USER_ID));
+		validator.setConfigId("0");
 		validator.setUserPropositions(propositions);
 		validator.setTargetProposition(def3);
 		boolean result;

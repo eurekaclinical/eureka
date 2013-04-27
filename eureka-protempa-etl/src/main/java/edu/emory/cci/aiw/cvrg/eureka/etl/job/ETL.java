@@ -20,35 +20,41 @@
 package edu.emory.cci.aiw.cvrg.eureka.etl.job;
 
 import java.io.File;
-import java.lang.reflect.Proxy;
-
-import org.protempa.AlgorithmSource;
-import org.protempa.DataSource;
 import org.protempa.FinderException;
-import org.protempa.KnowledgeSource;
 import org.protempa.PropositionDefinition;
 import org.protempa.Protempa;
 import org.protempa.ProtempaStartupException;
-import org.protempa.Source;
 import org.protempa.SourceFactory;
-import org.protempa.TermSource;
 import org.protempa.backend.BackendInitializationException;
 import org.protempa.backend.BackendNewInstanceException;
 import org.protempa.backend.BackendProviderSpecLoaderException;
 import org.protempa.backend.Configurations;
 import org.protempa.backend.ConfigurationsLoadException;
 import org.protempa.backend.InvalidConfigurationException;
-import org.protempa.bconfigs.commons.INICommonsConfigurations;
 import org.protempa.query.DefaultQueryBuilder;
 import org.protempa.query.Query;
 import org.protempa.query.QueryBuildException;
 import org.protempa.query.handler.QueryResultsHandler;
 
 import com.google.inject.Inject;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.Destination;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.JobEntity;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.JobEvent;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.JobState;
 
 import edu.emory.cci.aiw.cvrg.eureka.etl.config.EtlProperties;
-import edu.emory.cci.aiw.i2b2etl.I2B2QueryResultsHandler;
-import java.util.Arrays;
+import edu.emory.cci.aiw.cvrg.eureka.etl.config.EurekaProtempaConfigurations;
+import edu.emory.cci.aiw.cvrg.eureka.etl.dao.JobDao;
+import edu.emory.cci.aiw.cvrg.eureka.etl.queryresultshandler.QueryResultsHandlerFactory;
+import edu.emory.cci.aiw.cvrg.eureka.etl.resource.Destinations;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.logging.Level;
+import org.protempa.CloseException;
+import org.protempa.DataSourceFailedDataValidationException;
+import org.protempa.DataSourceValidationIncompleteException;
+import org.protempa.backend.ConfigurationsNotFoundException;
+import org.protempa.backend.dsb.DataValidationEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -67,44 +73,58 @@ import org.slf4j.LoggerFactory;
  * @author Andrew Post
  */
 public class ETL {
-	
-	private static final Logger LOGGER = LoggerFactory.getLogger(ETL.class);
 
-	private final File configDefaultsDirectory;
-	private final File configDirectory;
+	private static final Logger LOGGER = LoggerFactory.getLogger(ETL.class);
+	private final EtlProperties etlProperties;
 	private PreventCloseKnowledgeSource knowledgeSource;
 	private PreventCloseDataSource dataSource;
 	private PreventCloseAlgorithmSource algorithmSource;
 	private PreventCloseTermSource termSource;
+	private final JobDao jobDao;
+	private final Destinations destFactory;
 
 	@Inject
-	public ETL(EtlProperties inEtlProperties) {
-		final String configDir = inEtlProperties.getConfigDir();
-		this.configDirectory = new File(configDir, "etlconfig");
-		this.configDefaultsDirectory = new File(configDir,
-				"etlconfigdefaults");
+	public ETL(EtlProperties inEtlProperties, JobDao inJobDao) {
+		this.etlProperties = inEtlProperties;
+		this.jobDao = inJobDao;
+		this.destFactory = new Destinations(this.etlProperties);
 	}
 
-	void run(String configId,
-			PropositionDefinition[] inPropositionDefinitions,
-			String[] inPropIdsToShow, Long jobId) throws EtlException {
-		assert configId != null : "configId cannot be null";
-		assert inPropositionDefinitions != null : 
+	void run(JobEntity job, PropositionDefinition[] inPropositionDefinitions,
+			String[] inPropIdsToShow) throws EtlException {
+		assert inPropositionDefinitions != null :
 				"inPropositionDefinitions cannot be null";
-		assert jobId != null : "jobId cannot be null";
+		assert job != null : "job cannot be null";
 		Protempa protempa = null;
 		try {
-			protempa = getNewProtempa(configId + ".ini");
+			protempa = getNewProtempa(job);
+			logValidationEvents(job, protempa.validateDataSourceBackendData(), null);
 			DefaultQueryBuilder q = new DefaultQueryBuilder();
 			q.setPropositionDefinitions(inPropositionDefinitions);
 			q.setPropositionIds(inPropIdsToShow);
-			q.setId(jobId.toString());
+			q.setId(job.getId().toString());
 			LOGGER.debug("Constructed Protempa query " + q);
 			Query query = protempa.buildQuery(q);
-			File i2b2Config = new File(
-					this.configDirectory, configId + ".xml");
-			QueryResultsHandler qrh = new I2B2QueryResultsHandler(i2b2Config);
+			File i2b2Config = 
+					this.etlProperties.destinationConfigFile(
+					job.getDestinationId());
+			Destination dest = 
+					this.destFactory.getDestination(job.getDestinationId());
+			QueryResultsHandler qrh = 
+					new QueryResultsHandlerFactory()
+					.getInstance(dest.getType(), i2b2Config);
 			protempa.execute(query, qrh);
+			protempa.close();
+			protempa = null;
+		} catch (CloseException ex) {
+			throw new EtlException(ex);
+		} catch (DataSourceFailedDataValidationException ex) {
+			logValidationEvents(job, ex.getValidationEvents(), ex);
+			throw new EtlException(ex);
+		} catch (DataSourceValidationIncompleteException ex) {
+			throw new EtlException(ex);
+		} catch (ConfigurationsNotFoundException ex) {
+			throw new EtlException(ex);
 		} catch (InvalidConfigurationException e) {
 			throw new EtlException(e);
 		} catch (QueryBuildException e) {
@@ -126,7 +146,10 @@ public class ETL {
 			throw new EtlException(e);
 		} finally {
 			if (protempa != null) {
-				protempa.close();
+				try {
+					protempa.close();
+				} catch (CloseException ignore) {
+				}
 			}
 		}
 	}
@@ -146,75 +169,44 @@ public class ETL {
 		}
 	}
 
-	private Protempa getNewProtempa(String configFilename) throws
+	private void logValidationEvents(JobEntity job, DataValidationEvent[] events, DataSourceFailedDataValidationException ex) {
+		// if the validation caused any errors/warnings, we insert them into
+		// our file upload object, and amend our response.
+		List<JobEvent> jobEvents = new ArrayList<JobEvent>();
+		for (DataValidationEvent event : events) {
+			JobEvent jobEvent = new JobEvent();
+			jobEvent.setJob(job);
+			jobEvent.setTimeStamp(event.getTimestamp());
+			AbstractFileInfo fileInfo;
+			if (event.isFatal()) {
+				fileInfo = new FileError();
+				jobEvent.setState(JobState.ERROR);
+			} else {
+				fileInfo = new FileWarning();
+				jobEvent.setState(JobState.WARNING);
+			}
+			fileInfo.setLineNumber(event.getLine());
+			fileInfo.setText(event.getMessage());
+			fileInfo.setType(event.getType());
+			fileInfo.setURI(event.getURI());
+			jobEvent.setMessage(fileInfo.toUserMessage());
+			jobEvent.setExceptionStackTrace(collectThrowableMessages(ex));
+		}
+		job.setJobEvents(jobEvents);
+		this.jobDao.update(job);
+	}
+
+	private Protempa getNewProtempa(JobEntity job) throws
 			ConfigurationsLoadException, BackendProviderSpecLoaderException,
 			InvalidConfigurationException, ProtempaStartupException,
-			BackendInitializationException, BackendNewInstanceException {
-		KnowledgeSource ks;
-		SourceFactory defaultsSF = null;
-		if (this.configDefaultsDirectory.exists()) {
-			File defaultConfFile = new File(
-					this.configDefaultsDirectory, "defaults.ini");
-			if (defaultConfFile.exists()) {
-				Configurations defaultConfigs = new INICommonsConfigurations(
-						this.configDefaultsDirectory);
-				defaultsSF = new SourceFactory(defaultConfigs,
-						"defaults.ini");
-			}
-		}
-		Configurations configurations = new INICommonsConfigurations(this.configDirectory);
-		SourceFactory sf = new SourceFactory(configurations, configFilename);
-
-		ks = sf.newKnowledgeSourceInstance();
-		if (ks.getBackends().length == 0 && defaultsSF != null) {
-			if (this.knowledgeSource == null) {
-				this.knowledgeSource = createProxy(
-						PreventCloseKnowledgeSource.class,
-						defaultsSF.newKnowledgeSourceInstance());
-			}
-			ks = this.knowledgeSource;
-		}
-
-		DataSource ds = sf.newDataSourceInstance();
-		if (ds.getBackends().length == 0 && defaultsSF != null) {
-			if (this.dataSource == null) {
-				this.dataSource = createProxy(
-						PreventCloseDataSource.class,
-						defaultsSF.newDataSourceInstance());
-			}
-			ds = this.dataSource;
-		}
-
-		AlgorithmSource as = sf.newAlgorithmSourceInstance();
-		if (as.getBackends().length == 0 && defaultsSF != null) {
-			if (this.algorithmSource == null) {
-				this.algorithmSource = createProxy(
-						PreventCloseAlgorithmSource.class,
-						defaultsSF.newAlgorithmSourceInstance());
-			}
-			as = this.algorithmSource;
-		}
-
-		TermSource ts = sf.newTermSourceInstance();
-		if (ts.getBackends().length == 0 && defaultsSF != null) {
-			if (this.termSource == null) {
-				this.termSource = createProxy(
-						PreventCloseTermSource.class,
-						defaultsSF.newTermSourceInstance());
-			}
-			ts = this.termSource;
-		}
-
-		return new Protempa(ds, ks, as, ts);
+			BackendInitializationException, BackendNewInstanceException, ConfigurationsNotFoundException {
+		Configurations configurations =
+				new EurekaProtempaConfigurations(this.etlProperties);
+		SourceFactory sf =
+				new SourceFactory(configurations, job.getSourceConfigId());
+		return Protempa.newInstance(sf);
 	}
 
-	private static <E extends Source<?, ?, ?>> E createProxy(Class<E> clz,
-			Source<?, ?, ?> proxied) {
-		return clz.cast(
-				Proxy.newProxyInstance(
-				clz.getClassLoader(), new Class[]{clz}, new PreventCloseInvocationHandler(proxied)));
-	}
-	
 	private static String collectThrowableMessages(Throwable throwable) {
 		String msg = throwable.getMessage();
 		Throwable cause = throwable.getCause();
