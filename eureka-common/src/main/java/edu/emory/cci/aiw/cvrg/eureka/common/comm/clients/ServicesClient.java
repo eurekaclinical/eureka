@@ -21,7 +21,6 @@ package edu.emory.cci.aiw.cvrg.eureka.common.comm.clients;
 
 import java.util.List;
 
-import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.UriBuilder;
 
 import org.slf4j.Logger;
@@ -29,39 +28,43 @@ import org.slf4j.LoggerFactory;
 
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.GenericType;
-import com.sun.jersey.api.client.UniformInterfaceException;
+import com.sun.jersey.core.util.MultivaluedMapImpl;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.DataElement;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.JobInfo;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.Destination;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.Job;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.SystemElement;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.UserInfo;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.UserRequest;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.FileUpload;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.JobSpec;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.PasswordChangeRequest;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.SourceConfig;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.SourceConfigParams;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.FrequencyType;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.Job;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.RelationOperator;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.Role;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.TimeUnit;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.ValueComparator;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.ThresholdsOperator;
+import java.io.InputStream;
+import java.net.URI;
+import javax.ws.rs.core.MultivaluedMap;
 
 /**
  * @author hrathod
  */
-public class ServicesClient extends AbstractClient {
+public class ServicesClient extends EurekaClient {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(ServicesClient.class);
-	private static final GenericType<List<DataElement>> UserPropositionList = new GenericType<List<DataElement>>() {
-	};
 	private static final GenericType<List<TimeUnit>> TimeUnitList = new GenericType<List<TimeUnit>>() {
 	};
 	private static final GenericType<List<FrequencyType>> FrequencyTypeList = new GenericType<List<FrequencyType>>() {
 	};
 	private static final GenericType<List<RelationOperator>> RelationOperatorList = new GenericType<List<RelationOperator>>() {
 	};
-	private static final GenericType<List<ThresholdsOperator>> ThresholdsOperatorList = new GenericType<List<ThresholdsOperator>>() {	
+	private static final GenericType<List<ThresholdsOperator>> ThresholdsOperatorList = new GenericType<List<ThresholdsOperator>>() {
 	};
-	private static final GenericType<List<ValueComparator>> ValueComparatorList = new GenericType<List<ValueComparator>>() {	
+	private static final GenericType<List<ValueComparator>> ValueComparatorList = new GenericType<List<ValueComparator>>() {
 	};
 	private static final GenericType<List<SystemElement>> SystemElementList = new GenericType<List<SystemElement>>() {
 	};
@@ -73,6 +76,12 @@ public class ServicesClient extends AbstractClient {
 	private static final GenericType<List<Job>> JobList = new GenericType<List<Job>>() {
 	};
 	private static final GenericType<List<UserInfo>> UserList = new GenericType<List<UserInfo>>() {
+	};
+	private static final GenericType<List<SourceConfig>> SourceConfigList = new GenericType<List<SourceConfig>>() {
+	};
+	private static final GenericType<List<SourceConfigParams>> SourceConfigParamsList = new GenericType<List<SourceConfigParams>>() {
+	};
+	private static final GenericType<List<Destination>> DestinationList = new GenericType<List<Destination>>() {
 	};
 	private final String servicesUrl;
 
@@ -86,159 +95,115 @@ public class ServicesClient extends AbstractClient {
 		return this.servicesUrl;
 	}
 
-	public List<UserInfo> getUsers() {
+	public List<UserInfo> getUsers() throws ClientException {
 		final String path = "/api/user/list";
-		return this.getResource()
-				.path(path)
-				.type(MediaType.APPLICATION_JSON)
-				.accept(MediaType.APPLICATION_JSON).get(UserList);
+		return doGet(path, UserList);
 	}
 
-	public UserInfo getUserByName(String username) {
-		final String path = "/api/user/byname/" + username;
-		return this.getResource()
-				.path(path)
-				.accept(MediaType.APPLICATION_JSON)
-				.get(UserInfo.class);
+	public UserInfo getUserByName(String username) throws ClientException {
+		String path = UriBuilder.fromPath("/api/user/byname/")
+				.segment("{arg1}")
+				.build(username)
+				.toString();
+		return doGet(path, UserInfo.class);
 	}
 
-	public UserInfo getUserById(Long inUserId) {
+	public UserInfo getUserById(Long inUserId) throws ClientException {
 		final String path = "/api/user/byid/" + inUserId;
-		return this.getResource()
-				.path(path)
-				.accept(MediaType.APPLICATION_JSON)
-				.get(UserInfo.class);
+		return doGet(path, UserInfo.class);
 	}
 
 	public void addUser(UserRequest inRequest) throws ClientException {
 		final String path = "/api/user";
-		ClientResponse response = this.getResource()
-				.path(path)
-				.accept(MediaType.APPLICATION_JSON)
-				.type(MediaType.APPLICATION_JSON)
-				.post(ClientResponse.class, inRequest);
-		errorIfStatusNotEqualTo(response, ClientResponse.Status.NO_CONTENT);
+		doPost(path, inRequest);
 	}
 
-	public void changePassword(Long inUserId, String inOldPass,
-			String inNewPass) throws ClientException {
-		final String path = "/api/user/passwd/" + inUserId;
-		ClientResponse response = this.getResource().path(path).queryParam
-				("oldPassword", inOldPass).queryParam("newPassword",
-				inNewPass).put(ClientResponse.class);
-		errorIfStatusNotEqualTo(response, ClientResponse.Status.NO_CONTENT);
+	public void changePassword(String inOldPass, String inNewPass) throws ClientException {
+		final String path = "/api/user/passwordchangerequest";
+		PasswordChangeRequest passwordChangeRequest =
+				new PasswordChangeRequest();
+		passwordChangeRequest.setOldPassword(inOldPass);
+		passwordChangeRequest.setNewPassword(inNewPass);
+		doPost(path, passwordChangeRequest);
 	}
 
 	public void resetPassword(String email) throws ClientException {
 		final String path = "/api/user/pwreset/" + email;
-		ClientResponse response = this.getResource()
-				.path(path)
-				.put(ClientResponse.class);
-		errorIfStatusNotEqualTo(response, ClientResponse.Status.NO_CONTENT);
+		doPut(path);
 	}
-	
+
 	public void updateUser(UserInfo inUser) throws ClientException {
 		final String path = "/api/user";
-		ClientResponse response = this.getResource()
-				.path(path)
-				.type(MediaType.APPLICATION_JSON)
-				.accept(MediaType.APPLICATION_JSON)
-				.put(ClientResponse.class, inUser);
-		errorIfStatusEqualTo(response, ClientResponse.Status.NOT_MODIFIED);
+		doPut(path, inUser);
 	}
 
 	public void verifyUser(String inCode) throws ClientException {
 		final String path = "/api/user/verify/" + inCode;
-		ClientResponse response = this.getResource()
-				.path(path)
-				.type(MediaType.APPLICATION_JSON)
-				.accept(MediaType.APPLICATION_JSON)
-				.put(ClientResponse.class);
-		errorIfStatusNotEqualTo(response, ClientResponse.Status.NO_CONTENT);
+		doPut(path);
 	}
 
-	public List<Role> getRoles() {
+	public List<Role> getRoles() throws ClientException {
 		final String path = "/api/role/list";
-		return this.getResource()
-				.path(path)
-				.accept(MediaType.APPLICATION_JSON)
-				.get(RoleList);
+		return doGet(path, RoleList);
 	}
 
-	public Role getRole(Long inRoleId) {
+	public Role getRole(Long inRoleId) throws ClientException {
 		final String path = "/api/role/" + inRoleId;
-		return this.getResource()
-				.path(path)
-				.type(MediaType.APPLICATION_JSON)
-				.accept(MediaType.APPLICATION_JSON)
-				.get(Role.class);
+		return doGet(path, Role.class);
 	}
 
-	public void addJob(FileUpload inUpload) throws ClientException {
-		final String path = "/api/job/add";
-		ClientResponse response = this.getResource()
-				.path(path)
-				.type(MediaType.APPLICATION_JSON)
-				.accept(MediaType.APPLICATION_JSON)
-				.post(ClientResponse.class, inUpload);
-		errorIfStatusNotEqualTo(response, ClientResponse.Status.OK);
+	public Long submitJob(JobSpec inUpload) throws ClientException {
+		final String path = "/api/jobs";
+		URI jobUrl = doPostCreate(path, inUpload);
+		return extractId(jobUrl);
 	}
 
-	public List<Job> getJobsByUserId(Long inUserId) {
-		final String path = "/api/job/list/" + inUserId;
-		return this.getResource()
-				.path(path)
-				.type(MediaType.APPLICATION_JSON)
-				.accept(MediaType.APPLICATION_JSON)
-				.get(JobList);
+	public void upload(String fileName, String sourceId,
+			String fileTypeId, InputStream inputStream)
+			throws ClientException {
+		String path = UriBuilder
+				.fromPath("/api/file/upload/")
+				.segment(sourceId)
+				.segment(fileTypeId)
+				.build().toString();
+		doPostMultipart(path, fileName, inputStream);
+	}
+	
+	public Job getJob(Long jobId) throws ClientException {
+		final String path = "/api/jobs/" + jobId;
+		return doGet(path, Job.class);
 	}
 
-	public JobInfo getJobInfo(Long inUserId) {
-		final String path = "/api/job/status/" + inUserId;
-		return this.getResource()
-				.path(path)
-				.type(MediaType.APPLICATION_JSON)
-				.accept(MediaType.APPLICATION_JSON)
-				.get(JobInfo.class);
+	public List<Job> getJobs() throws ClientException {
+		final String path = "/api/jobs";
+		return doGet(path, JobList);
+	}
+	
+	public List<Job> getJobsDesc() throws ClientException {
+		final String path = "/api/jobs";
+		MultivaluedMap<String, String> queryParams = new MultivaluedMapImpl();
+		queryParams.add("order", "desc");
+		return doGet(path, JobList, queryParams);
 	}
 
 	public void saveUserElement(DataElement inDataElement)
 			throws ClientException {
 		final String path = "/api/dataelement";
-		ClientResponse response = this.getResource()
-				.path(path)
-				.type(MediaType.APPLICATION_JSON)
-				.accept(MediaType.APPLICATION_JSON)
-				.post(ClientResponse.class, inDataElement);
-		errorIfStatusNotEqualTo(response, ClientResponse.Status.NO_CONTENT);
+		doPost(path, inDataElement);
 	}
 
 	public void updateUserElement(DataElement inDataElement) throws
 			ClientException {
 		final String path = "/api/dataelement";
-		ClientResponse response = this.getResource()
-				.path(path)
-				.type(MediaType.APPLICATION_JSON)
-				.accept(MediaType.APPLICATION_JSON)
-				.put(ClientResponse.class, inDataElement);
-		errorIfStatusNotEqualTo(response, ClientResponse.Status.NO_CONTENT);
+		doPut(path, inDataElement);
 	}
 
-	public List<DataElement> getUserElements(Long inUserId) {
-		if (inUserId == null) {
-			throw new IllegalArgumentException("inUserId cannot be null");
-		}
-		final String path = "/api/dataelement/" + inUserId;
-		return this.getResource()
-				.path(path)
-				.accept(MediaType.APPLICATION_JSON)
-				.get(DataElementList);
+	public List<DataElement> getUserElements() throws ClientException {
+		final String path = "/api/dataelement/";
+		return doGet(path, DataElementList);
 	}
 
-	public DataElement getUserElement(Long inUserId, String inKey) {
-		if (inUserId == null) {
-			throw new IllegalArgumentException("inUserId cannot be null");
-		}
+	public DataElement getUserElement(String inKey) throws ClientException {
 		if (inKey == null) {
 			throw new IllegalArgumentException("inKey cannot be null");
 		}
@@ -250,13 +215,9 @@ public class ServicesClient extends AbstractClient {
 		 */
 		String path = UriBuilder
 				.fromPath("/api/dataelement/")
-				.segment("{arg1}")
 				.segment(inKey)
-				.build(inUserId).toString();
-		return this.getResource()
-				.path(path)
-				.accept(MediaType.APPLICATION_JSON)
-				.get(DataElement.class);
+				.build().toString();
+		return doGet(path, DataElement.class);
 	}
 
 	public void deleteUserElement(Long inUserId, String inKey) throws
@@ -278,27 +239,15 @@ public class ServicesClient extends AbstractClient {
 				.segment("{arg1}")
 				.segment(inKey)
 				.build(inUserId).toString();
-		ClientResponse response = this.getResource()
-				.path(path)
-				.accept(MediaType.APPLICATION_JSON)
-				.type(MediaType.APPLICATION_JSON)
-				.delete(ClientResponse.class);
-		errorIfStatusNotEqualTo(response, ClientResponse.Status.NO_CONTENT);
+		doDelete(path);
 	}
 
-	public List<SystemElement> getSystemElements(Long inUserId) {
-		if (inUserId == null) {
-			throw new IllegalArgumentException("inUserId cannot be null");
-		}
-		final String path = "/api/systemelement/" + inUserId;
-		return this.getResource().path(path).accept(
-				MediaType.APPLICATION_JSON).get(SystemElementList);
+	public List<SystemElement> getSystemElements() throws ClientException {
+		final String path = UriBuilder.fromPath("/api/systemelement/").build().toString();
+		return doGet(path, SystemElementList);
 	}
 
-	public SystemElement getSystemElement(Long inUserId, String inKey) {
-		if (inUserId == null) {
-			throw new IllegalArgumentException("inUserId cannot be null");
-		}
+	public SystemElement getSystemElement(String inKey) throws ClientException {
 		if (inKey == null) {
 			throw new IllegalArgumentException("inKey cannot be null");
 		}
@@ -309,153 +258,133 @@ public class ServicesClient extends AbstractClient {
 		 * string can't be templated because the slashes won't be encoded!
 		 */
 		String path = UriBuilder.fromPath("/api/systemelement/")
-				.segment("{arg1}", inKey)
-				.build(inUserId).toString();
-		return this.getResource().path(path).accept(
-				MediaType.APPLICATION_JSON).get(SystemElement.class);
+				.segment(inKey)
+				.build().toString();
+		return doGet(path, SystemElement.class);
 	}
 
-	public List<TimeUnit> getTimeUnits() {
+	public List<TimeUnit> getTimeUnits() throws ClientException {
 		final String path = "/api/timeunit/list";
-		return this.getResource().path(path).accept(
-				MediaType.APPLICATION_JSON).get(TimeUnitList);
-	}
-	
-	public List<TimeUnit> getTimeUnitsAsc() {
-		final String path = "/api/timeunit/listasc";
-		return this.getResource().path(path).accept(
-				MediaType.APPLICATION_JSON).get(TimeUnitList);
+		return doGet(path, TimeUnitList);
 	}
 
-	public TimeUnit getTimeUnit(Long inId) {
-		final String path = "/api/timeunit/" + inId;
-		return this.getResource().path(path).accept(
-				MediaType.APPLICATION_JSON).get(TimeUnit.class);
+	public List<TimeUnit> getTimeUnitsAsc() throws ClientException {
+		final String path = "/api/timeunit/listasc";
+		return doGet(path, TimeUnitList);
 	}
-	
-	public TimeUnit getTimeUnitByName(String inName) {
+
+	public TimeUnit getTimeUnit(Long inId) throws ClientException {
+		final String path = "/api/timeunit/" + inId;
+		return doGet(path, TimeUnit.class);
+	}
+
+	public TimeUnit getTimeUnitByName(String inName) throws ClientException {
 		final String path = UriBuilder.fromPath("/api/timeunit/byname/")
 				.segment(inName)
 				.build().toString();
-		return this.getResource().path(path).accept(
-				MediaType.APPLICATION_JSON).get(TimeUnit.class);
+		return doGet(path, TimeUnit.class);
 	}
-	
-	public TimeUnit getDefaultTimeUnit() {
+
+	public TimeUnit getDefaultTimeUnit() throws ClientException {
 		String path = "/api/timeunit/default";
-		return this.getResource().path(path).accept(
-				MediaType.APPLICATION_JSON).get(TimeUnit.class);
+		return doGet(path, TimeUnit.class);
 	}
 
-	public List<RelationOperator> getRelationOperators() {
+	public List<RelationOperator> getRelationOperators() throws ClientException {
 		final String path = "/api/relationop/list";
-		return this.getResource().path(path).accept(
-				MediaType.APPLICATION_JSON).get(RelationOperatorList);
+		return doGet(path, RelationOperatorList);
 	}
-	
-	public List<RelationOperator> getRelationOperatorsAsc() {
+
+	public List<RelationOperator> getRelationOperatorsAsc() throws ClientException {
 		final String path = "/api/relationop/listasc";
-		return this.getResource().path(path).accept(
-				MediaType.APPLICATION_JSON).get(RelationOperatorList);
+		return doGet(path, RelationOperatorList);
 	}
 
-	public RelationOperator getRelationOperator(Long inId) {
+	public RelationOperator getRelationOperator(Long inId) throws ClientException {
 		final String path = "/api/relationop/" + inId;
-		return this.getResource().path(path).accept(
-				MediaType.APPLICATION_JSON).get(RelationOperator.class);
+		return doGet(path, RelationOperator.class);
 	}
 
-	public RelationOperator getRelationOperatorByName(String inName) {
+	public RelationOperator getRelationOperatorByName(String inName) throws ClientException {
 		final String path = UriBuilder.fromPath("/api/relationop/byname/")
 				.segment(inName)
 				.build().toString();
-		return this.getResource().path(path).accept(
-				MediaType.APPLICATION_JSON).get(RelationOperator.class);
-	}
-	
-	public RelationOperator getDefaultRelationOperator() {
-		String path = "/api/relationop/default";
-		return getResource()
-				.path(path)
-				.accept(MediaType.APPLICATION_JSON)
-				.get(RelationOperator.class);
+		return doGet(path, RelationOperator.class);
 	}
 
-	public List<ThresholdsOperator> getThresholdsOperators() {
+	public RelationOperator getDefaultRelationOperator() throws ClientException {
+		String path = "/api/relationop/default";
+		return doGet(path, RelationOperator.class);
+	}
+
+	public List<ThresholdsOperator> getThresholdsOperators() throws ClientException {
 		final String path = "/api/thresholdsop/list";
-		return this.getResource().path(path).accept(
-				MediaType.APPLICATION_JSON).get(ThresholdsOperatorList);
+		return doGet(path, ThresholdsOperatorList);
 	}
-	
-	public ThresholdsOperator getThresholdsOperator(Long inId) {
+
+	public ThresholdsOperator getThresholdsOperator(Long inId) throws ClientException {
 		final String path = "/api/thresholdsop/" + inId;
-		return this.getResource().path(path).accept(
-				MediaType.APPLICATION_JSON).get(
-				ThresholdsOperator.class);
+		return doGet(path, ThresholdsOperator.class);
 	}
-	
+
 	public ThresholdsOperator getThresholdsOperatorByName(
-			String inName) {
+			String inName) throws ClientException {
 		final String path = UriBuilder.fromPath("/api/thresholdsop/byname/")
 				.segment(inName)
 				.build().toString();
-		return this.getResource().path(path).accept(
-				MediaType.APPLICATION_JSON).get(
-				ThresholdsOperator.class); 
+		return doGet(path, ThresholdsOperator.class);
 	}
 
-	public List<ValueComparator> getValueComparators() {
+	public List<ValueComparator> getValueComparators() throws ClientException {
 		final String path = "/api/valuecomps/list";
-		return this.getResource().path(path).accept(
-				MediaType.APPLICATION_JSON).get(ValueComparatorList);
+		return doGet(path, ValueComparatorList);
 	}
-	
-	public List<ValueComparator> getValueComparatorsAsc() {
+
+	public List<ValueComparator> getValueComparatorsAsc() throws ClientException {
 		final String path = "/api/valuecomps/listasc";
-		return this.getResource().path(path).accept(
-				MediaType.APPLICATION_JSON).get(ValueComparatorList);
+		return doGet(path, ValueComparatorList);
 	}
-	
-	public ValueComparator getValueComparator(Long inId) {
+
+	public ValueComparator getValueComparator(Long inId) throws ClientException {
 		final String path = "/api/valuecomps/" + inId;
-		return this.getResource().path(path).accept(
-				MediaType.APPLICATION_JSON).get(ValueComparator.class);
+		return doGet(path, ValueComparator.class);
 	}
-	
-	public ValueComparator getValueComparatorByName(String inName) {
+
+	public ValueComparator getValueComparatorByName(String inName) throws ClientException {
 		final String path = UriBuilder.fromPath("/api/valuecomps/byname/")
 				.segment(inName)
 				.build().toString();
-		return this.getResource().path(path).accept(
-				MediaType.APPLICATION_JSON).get(ValueComparator.class);
+		return doGet(path, ValueComparator.class);
 	}
 
-	public void pingAccount (Long inUserId) throws ClientException {
-		final String path = "/api/ping/" + inUserId;
-		try {
-			ClientResponse response = this.getResource().path(path).accept(
-					MediaType.APPLICATION_JSON).get(ClientResponse.class);
-			this.errorIfStatusNotEqualTo(response, ClientResponse.Status
-					.OK);
-		} catch (UniformInterfaceException e) {
-			ClientResponse.Status status = e.getResponse()
-					.getClientResponseStatus();
-			String message = e.getResponse().getEntity(String.class);
-			throw new ClientException(status, message, e);
-		}
+	public void pingAccount(Long inUserId) throws ClientException {
+		final String path = "/api/ping/testuser/" + inUserId;
+		doGet(path, ClientResponse.class);
 	}
 
-	public List<FrequencyType> getFrequencyTypesAsc() {
+	public List<FrequencyType> getFrequencyTypesAsc() throws ClientException {
 		final String path = "/api/frequencytype/listasc";
-		return this.getResource().path(path).accept(
-				MediaType.APPLICATION_JSON).get(FrequencyTypeList);
+		return doGet(path, FrequencyTypeList);
 	}
 
-	public FrequencyType getDefaultFrequencyType() {
+	public FrequencyType getDefaultFrequencyType() throws ClientException {
 		String path = "/api/frequencytype/default";
-		return getResource()
-				.path(path)
-				.accept(MediaType.APPLICATION_JSON)
-				.get(FrequencyType.class);
+		return doGet(path, FrequencyType.class);
 	}
+
+	public List<SourceConfig> getSourceConfigs() throws ClientException {
+		String path = "/api/sourceconfig/list";
+		return doGet(path, SourceConfigList);
+	}
+
+	public List<SourceConfigParams> getSourceConfigParams() throws ClientException {
+		String path = "/api/sourceconfig/parameters/list";
+		return doGet(path, SourceConfigParamsList);
+	}
+
+	public List<Destination> getDestinations() throws ClientException {
+		String path = "/api/destination/list";
+		return doGet(path, DestinationList);
+	}
+	
 }

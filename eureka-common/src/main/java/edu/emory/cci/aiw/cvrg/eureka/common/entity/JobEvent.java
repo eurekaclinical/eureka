@@ -64,14 +64,14 @@ public class JobEvent implements CycleRecoverable {
 	/**
 	 * The job for which the event was generated.
 	 */
-	@ManyToOne(cascade = CascadeType.ALL, targetEntity = Job.class)
+	@ManyToOne(cascade = CascadeType.ALL, targetEntity = JobEntity.class)
 	@JoinColumn(name = "job_id")
-	private Job job;
+	private JobEntity job;
 	/**
 	 * The state of the event.
 	 */
 	@Column(nullable = false)
-	private String state;
+	private JobState state;
 	
 	/**
 	 * The exception stack trace. The name is prefixed with a z to force
@@ -93,6 +93,7 @@ public class JobEvent implements CycleRecoverable {
 	/**
 	 * The message generated for the event.
 	 */
+	@Lob
 	private String message;
 
 	/**
@@ -113,28 +114,28 @@ public class JobEvent implements CycleRecoverable {
 	 * @return the job
 	 */
 	@JsonBackReference("job-event")
-	public Job getJob() {
+	public JobEntity getJob() {
 		return this.job;
 	}
 
 	/**
 	 * @param inJob the job to set
 	 */
-	public void setJob(Job inJob) {
+	public void setJob(JobEntity inJob) {
 		this.job = inJob;
 	}
 
 	/**
 	 * @return the state
 	 */
-	public String getState() {
+	public JobState getState() {
 		return this.state;
 	}
 
 	/**
 	 * @param inState the state to set
 	 */
-	public void setState(String inState) {
+	public void setState(JobState inState) {
 		this.state = inState;
 	}
 

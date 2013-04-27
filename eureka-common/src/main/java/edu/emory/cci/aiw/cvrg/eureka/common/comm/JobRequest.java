@@ -23,19 +23,18 @@ import java.util.List;
 
 import org.protempa.PropositionDefinition;
 
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.Job;
 
 public class JobRequest {
 
-	private Job job;
+	private JobSpec job;
 	private List<PropositionDefinition> userPropositions;
 	private List<String> propIdsToShow;
 
-	public Job getJob() {
+	public JobSpec getJobSpec() {
 		return job;
 	}
 
-	public void setJob(Job inJob) {
+	public void setJobSpec(JobSpec inJob) {
 		job = inJob;
 	}
 

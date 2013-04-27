@@ -19,48 +19,48 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.common.comm;
 
+import java.util.Date;
+
 /**
  * Hold information about a user's file upload.
  * 
  * @author Andrew Post
  */
-public class FileUpload {
-	private String location;
-	private Long userId;
+public class JobSpec {
+	private String sourceConfigId;
+	private String destinationId;
+//	private Date earliestDate;
+//	private Date latestDate;
 
-	/**
-	 * Get the on-disk location of the file upload.
-	 *
-	 * @return The on-disk location of the file upload.
-	 */
-	public String getLocation() {
-		return location;
+	public String getSourceConfigId() {
+		return sourceConfigId;
 	}
 
-	/**
-	 * Set the on-desk location of the file upload.
-	 *
-	 * @param location The on-disk location of the file upload.
-	 */
-	public void setLocation(String location) {
-		this.location = location;
+	public void setSourceConfigId(String sourceId) {
+		this.sourceConfigId = sourceId;
 	}
 
-	/**
-	 * Get the user to which the file upload belongs.
-	 *
-	 * @return The user to which the file upload belongs.
-	 */
-	public Long getUserId() {
-		return userId;
+	public String getDestinationId() {
+		return destinationId;
 	}
 
-	/**
-	 * Set the user to which the file upload belongs.
-	 *
-	 * @param userId The user to which the file upload belongs.
-	 */
-	public void setUserId(Long userId) {
-		this.userId = userId;
+	public void setDestinationId(String destinationId) {
+		this.destinationId = destinationId;
 	}
+
+//	public Date getEarliestDate() {
+//		return earliestDate;
+//	}
+//
+//	public void setEarliestDate(Date earliestDate) {
+//		this.earliestDate = earliestDate;
+//	}
+//
+//	public Date getLatestDate() {
+//		return latestDate;
+//	}
+//
+//	public void setLatestDate(Date latestDate) {
+//		this.latestDate = latestDate;
+//	}
 }

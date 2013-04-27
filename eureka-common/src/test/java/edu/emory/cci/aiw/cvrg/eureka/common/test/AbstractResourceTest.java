@@ -29,14 +29,26 @@ import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.Module;
 import com.google.inject.persist.PersistService;
+import com.sun.jersey.api.client.WebResource;
 import com.sun.jersey.api.client.config.ClientConfig;
 import com.sun.jersey.api.client.config.DefaultClientConfig;
+import com.sun.jersey.api.client.filter.HTTPBasicAuthFilter;
 import com.sun.jersey.api.json.JSONConfiguration;
 import com.sun.jersey.test.framework.AppDescriptor;
 import com.sun.jersey.test.framework.JerseyTest;
 import com.sun.jersey.test.framework.WebAppDescriptor;
+import com.sun.jersey.test.framework.WebAppDescriptor.Builder;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.json.ObjectMapperProvider;
+import java.io.IOException;
+import java.security.Principal;
+import javax.servlet.FilterChain;
+import javax.servlet.FilterConfig;
+import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletRequestWrapper;
 
 /**
  * Base class for all the Jersey resource related test classes.
@@ -79,11 +91,13 @@ public abstract class AbstractResourceTest extends JerseyTest {
 		clientConfig.getFeatures().put(JSONConfiguration.FEATURE_POJO_MAPPING,
 				Boolean.TRUE);
 		clientConfig.getClasses().add(ObjectMapperProvider.class);
-		return (new WebAppDescriptor.Builder())
+		 ;
+		
+		Builder builder = (new WebAppDescriptor.Builder())
 				.contextListenerClass(getListener())
 				.filterClass(getFilter())
-				.clientConfig(clientConfig)
-				.build();
+				.clientConfig(clientConfig);
+		return builder.build();
 	}
 
 	/**
@@ -160,4 +174,13 @@ public abstract class AbstractResourceTest extends JerseyTest {
 	 * @return An array of Modules.
 	 */
 	protected abstract Module[] getModules();
+
+	@Override
+	public WebResource resource() {
+		WebResource resource = super.resource();
+		resource.addFilter(new HTTPBasicAuthFilter("test", "test"));
+		return resource;
+	}
+	
+	
 }

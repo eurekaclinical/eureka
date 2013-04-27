@@ -24,12 +24,10 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
+import javax.servlet.http.HttpServletRequest;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,13 +36,13 @@ import org.slf4j.LoggerFactory;
  *
  * @author hrathod
  */
-public abstract class ApplicationProperties {
+public abstract class AbstractProperties {
 
 	/**
 	 * The class level logger.
 	 */
 	private static final Logger LOGGER = LoggerFactory.getLogger(
-			ApplicationProperties.class);
+			AbstractProperties.class);
 	/**
 	 * Name of the system property that points to the configuration file.
 	 */
@@ -82,17 +80,25 @@ public abstract class ApplicationProperties {
 	 * <code>eureka.config.file</code> system property, the property values in
 	 * which override those in the default configuration above.
 	 */
-	public ApplicationProperties() {
+	public AbstractProperties() {
 		String userConfig = System.getProperty(PROPERTY_NAME);
 		String defaultConfig = getDefaultLocation() + PROPERTIES_FILE;
-		String fallbackConfig = this.getFallBackConfig();
+		InputStream fallbackConfig = this.getFallBackConfig();
 		Properties temp = null;
 
 		try {
 			temp = this.load(fallbackConfig, null);
+			fallbackConfig.close();
+			fallbackConfig = null;
 		} catch (IOException ex) {
 			throw new AssertionError("Fallback configuration not found: "
 					+ ex.getMessage());
+		} finally {
+			if (fallbackConfig != null) {
+				try {
+					fallbackConfig.close();
+				} catch (IOException ignore) {}
+			}
 		}
 
 		LOGGER.info("Trying to load default configuration from {}",
@@ -159,23 +165,13 @@ public abstract class ApplicationProperties {
 	 *
 	 * @return The location of the fallback configuration, guaranteed not null.
 	 */
-	private String getFallBackConfig() {
-		String path = null;
-		try {
-			URL fileUrl = this.getClass().getResource(PROPERTIES_FILE);
-			if (fileUrl != null) {
-				URI fileUri = fileUrl.toURI();
-				path = fileUri.getPath();
-			} else {
-				throw new AssertionError(
-						"Could not locate fallback configuration.");
-			}
-		} catch (URISyntaxException e) {
-			LOGGER.error("Could not locate fallback configuration.", e);
+	private InputStream getFallBackConfig() {
+		InputStream in = this.getClass().getResourceAsStream(PROPERTIES_FILE);
+		if (in == null) {
 			throw new AssertionError(
 					"Could not locate fallback configuration.");
 		}
-		return path;
+		return in;
 	}
 
 	/**
@@ -243,6 +239,23 @@ public abstract class ApplicationProperties {
 	}
 
 	/**
+	 * Get the base URL for the application front-end for external users.
+	 *
+	 * @param request the HTTP request, which will be used to generate a URL to
+	 * the website if none of the properties files contain an application URL
+	 * property.
+	 *
+	 * @return The base URL.
+	 */
+	public String getApplicationUrl(HttpServletRequest request) {
+		String result = this.getValue("eureka.webapp.url");
+		if (result == null) {
+			result = PublicUrlGenerator.generate(request);
+		}
+		return result;
+	}
+
+	/**
 	 * Returns the String value of the given property name.
 	 *
 	 * @param propertyName The property name to fetch the value for.
@@ -274,9 +287,9 @@ public abstract class ApplicationProperties {
 		if (value == null) {
 			if (defaultValue == null) {
 				LOGGER.warn(
-						"Property '{}' is not specified in " + 
-						getClass().getName() +
-						", and no default is specified.", propertyName);
+						"Property '{}' is not specified in "
+						+ getClass().getName()
+						+ ", and no default is specified.", propertyName);
 			}
 			value = defaultValue;
 		}

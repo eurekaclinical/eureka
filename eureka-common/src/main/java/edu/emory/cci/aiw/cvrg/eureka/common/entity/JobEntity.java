@@ -28,7 +28,6 @@ import java.util.TreeSet;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -37,13 +36,13 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import javax.xml.bind.annotation.XmlRootElement;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.annotate.JsonManagedReference;
 
-import com.sun.xml.bind.CycleRecoverable;
 import javax.persistence.Column;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.builder.ToStringBuilder;
 
@@ -54,11 +53,10 @@ import org.apache.commons.lang.builder.ToStringBuilder;
  * @author hrathod
  *
  */
-@XmlRootElement
 @Entity
 @Table(name = "jobs")
-public class Job implements CycleRecoverable {
-
+public class JobEntity {
+	
 	/**
 	 * The unique identifier for the job request.
 	 */
@@ -72,22 +70,29 @@ public class Job implements CycleRecoverable {
 	 * The initial timestamp when the job was started.
 	 */
 	@Temporal(TemporalType.TIMESTAMP)
-	private Date timestamp = new Date();
+	private Date created = new Date();
 	/**
 	 * The unique identifier of the configuration to use for this job.
 	 */
 	@Column(nullable = false)
-	private Long configurationId;
+	private String sourceConfigId;
+	
+	/**
+	 * The unique identifier of the configuration to use for this job.
+	 */
+	@Column(nullable = false)
+	private String destinationId;
 	/**
 	 * The unique identifier of the user submitting the job request.
 	 */
-	@Column(nullable = false)
-	private Long userId;
+	@ManyToOne
+	@JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false)
+	private EtlUser etlUser;
 	/**
 	 * The events generated for the job.
 	 */
 	@OneToMany(cascade = CascadeType.ALL, targetEntity = JobEvent.class,
-			fetch = FetchType.EAGER, mappedBy = "job")
+			mappedBy = "job")
 	private List<JobEvent> jobEvents = new ArrayList<JobEvent>();
 
 	private static class JobEventComparator implements Comparator<JobEvent>,
@@ -133,15 +138,15 @@ public class Job implements CycleRecoverable {
 	/**
 	 * @return the timestamp
 	 */
-	public Date getTimestamp() {
-		return new Date(this.timestamp.getTime());
+	public Date getCreated() {
+		return this.created;
 	}
 
 	/**
 	 * @param inTimestamp the timestamp to set
 	 */
-	public void setTimestamp(Date inTimestamp) {
-		this.timestamp = new Date(inTimestamp.getTime());
+	public void setCreated(Date inTimestamp) {
+		this.created = inTimestamp;
 	}
 
 	/**
@@ -150,36 +155,46 @@ public class Job implements CycleRecoverable {
 	 *
 	 * @return The unique identifier of the configuration.
 	 */
-	public Long getConfigurationId() {
-		return this.configurationId;
+	public String getSourceConfigId() {
+		return this.sourceConfigId;
 	}
 
 	/**
 	 * Set the unique identifier of the configuration to be used for the job
 	 * request.
 	 *
-	 * @param inConfigurationId The unique identifier of the configuration.
+	 * @param inSourceConfigId The unique identifier of the configuration.
 	 */
-	public void setConfigurationId(Long inConfigurationId) {
-		this.configurationId = inConfigurationId;
+	public void setSourceConfigId(String inSourceConfigId) {
+		this.sourceConfigId = inSourceConfigId;
 	}
+
+	public String getDestinationId() {
+		return destinationId;
+	}
+
+	public void setDestinationId(String inDestinationId) {
+		this.destinationId = inDestinationId;
+	}
+	
+	
 
 	/**
 	 * Get the unique identifier for the user who submitted the request.
 	 *
 	 * @return The unique identifier for the user.
 	 */
-	public Long getUserId() {
-		return this.userId;
+	public EtlUser getEtlUser() {
+		return this.etlUser;
 	}
 
 	/**
 	 * Set the unique identifier for the user who submitted the request.
 	 *
-	 * @param inUserId The unique identifier for the user.
+	 * @param inEtlUser The unique identifier for the user.
 	 */
-	public void setUserId(Long inUserId) {
-		this.userId = inUserId;
+	public void setEtlUser(EtlUser inEtlUser) {
+		this.etlUser = inEtlUser;
 	}
 
 	/**
@@ -198,13 +213,13 @@ public class Job implements CycleRecoverable {
 	}
 
 	@JsonIgnore
-	public String getCurrentState() {
+	public JobState getCurrentState() {
 
 		JobEvent jev = getSortedEvents().last();
-		return (jev == null) ? "" : jev.getState();
+		return (jev == null) ? null : jev.getState();
 	}
 
-	public void setNewState(String state, String message, String[] stackTrace) {
+	public void setNewState(JobState state, String message, String[] stackTrace) {
 		final Date date = new Date();
 		JobEvent jev = new JobEvent();
 		jev.setJob(this);
@@ -214,7 +229,7 @@ public class Job implements CycleRecoverable {
 		if (stackTrace != null) {
 			jev.setExceptionStackTrace(StringUtils.join(stackTrace,'\n'));
 		}
-		this.setTimestamp(date);
+		this.setCreated(date);
 		this.jobEvents.add(jev);
 	}
 
@@ -235,17 +250,6 @@ public class Job implements CycleRecoverable {
 		TreeSet<JobEvent> ts = new TreeSet<JobEvent>(JOB_EVENT_COMPARATOR);
 		ts.addAll(this.jobEvents);
 		return ts;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see com.sun.xml.bind.CycleRecoverable#onCycleDetected(com.sun.xml.bind.
-	 * CycleRecoverable.Context)
-	 */
-	@Override
-	public Object onCycleDetected(Context inContext) {
-		return null;
 	}
 	
 	@Override

@@ -94,9 +94,9 @@ public final class DdlGenerator {
 	private static void generateBackendDdl(final String outputFile) {
 		final List<Class<?>> backendClasses = new ArrayList<Class<?>>();
 		backendClasses
-				.add(edu.emory.cci.aiw.cvrg.eureka.common.entity
-						.Configuration.class);
-		backendClasses.add(edu.emory.cci.aiw.cvrg.eureka.common.entity.Job
+				.add(edu.emory.cci.aiw.cvrg.eureka.common.comm
+						.Destination.class);
+		backendClasses.add(edu.emory.cci.aiw.cvrg.eureka.common.entity.JobEntity
 				.class);
 		backendClasses.add(edu.emory.cci.aiw.cvrg.eureka.common.entity
 				.JobEvent
@@ -113,20 +113,8 @@ public final class DdlGenerator {
 		final List<Class<?>> serviceClasses = new ArrayList<Class<?>>();
 		serviceClasses.add(edu.emory.cci.aiw.cvrg.eureka.common.entity.User
 				.class);
-		serviceClasses
-				.add(edu.emory.cci.aiw.cvrg.eureka.common.entity.FileUpload
-						.class);
-		serviceClasses.add(edu.emory.cci.aiw.cvrg.eureka.common.entity
-				.FileError
-				.class);
-		serviceClasses
-				.add(edu.emory.cci.aiw.cvrg.eureka.common.entity
-						.FileWarning.class);
 		serviceClasses.add(edu.emory.cci.aiw.cvrg.eureka.common.entity.Role
 				.class);
-		serviceClasses
-				.add(edu.emory.cci.aiw.cvrg.eureka.common.entity
-						.AbstractFileInfo.class);
 		serviceClasses.add(edu.emory.cci.aiw.cvrg.eureka.common.entity
 				.DataElementEntity.class);
 		serviceClasses.add(edu.emory.cci.aiw.cvrg.eureka.common.entity

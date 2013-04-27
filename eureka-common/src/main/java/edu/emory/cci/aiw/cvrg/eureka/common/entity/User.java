@@ -35,9 +35,6 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import javax.xml.bind.annotation.XmlRootElement;
-
-import com.sun.xml.bind.CycleRecoverable;
 import javax.persistence.Column;
 import org.apache.commons.lang.builder.ToStringBuilder;
 
@@ -48,18 +45,17 @@ import org.apache.commons.lang.builder.ToStringBuilder;
  *
  */
 @Entity
-@XmlRootElement
 @Table(name = "users")
-public class User implements CycleRecoverable {
+public class User {
 
 	/**
 	 * The user's unique identifier.
 	 */
 	@Id
 	@SequenceGenerator(name = "USER_SEQ_GENERATOR", sequenceName = "USER_SEQ",
-					   allocationSize = 1)
+	allocationSize = 1)
 	@GeneratedValue(strategy = GenerationType.SEQUENCE,
-					generator = "USER_SEQ_GENERATOR")
+	generator = "USER_SEQ_GENERATOR")
 	private Long id;
 	/**
 	 * Is the user activated?
@@ -109,11 +105,11 @@ public class User implements CycleRecoverable {
 	 * A list of roles assigned to the user.
 	 */
 	@ManyToMany(cascade = {CascadeType.REFRESH, CascadeType.MERGE},
-				targetEntity = Role.class)
+	targetEntity = Role.class)
 	@JoinTable(name = "user_role",
-			   joinColumns = {
+	joinColumns = {
 		@JoinColumn(name = "user_id")},
-			   inverseJoinColumns = {
+	inverseJoinColumns = {
 		@JoinColumn(name = "role_id")})
 	private List<Role> roles = new ArrayList<Role>();
 
@@ -134,7 +130,7 @@ public class User implements CycleRecoverable {
 	}
 
 	/**
-	 * Set the uesr's unique identifier.
+	 * Set the user's unique identifier.
 	 *
 	 * @param inId A {@link Long} representing the user's unique identifier.
 	 */
@@ -285,15 +281,15 @@ public class User implements CycleRecoverable {
 	/**
 	 * Get the last log-in date for the user.
 	 *
-	 * @return The user's last log-in date, or <code>null</code> if the
-         * user has never logged in.
+	 * @return The user's last log-in date, or <code>null</code> if the user has
+	 * never logged in.
 	 */
 	public Date getLastLogin() {
-            if (this.lastLogin != null) {
-		return new Date(this.lastLogin.getTime());
-            } else {
-                return null;
-            }
+		if (this.lastLogin != null) {
+			return new Date(this.lastLogin.getTime());
+		} else {
+			return null;
+		}
 	}
 
 	/**
@@ -302,15 +298,16 @@ public class User implements CycleRecoverable {
 	 * @param inLastLogin The last log-in date for the user.
 	 */
 	public void setLastLogin(final Date inLastLogin) {
-            if (inLastLogin != null) {
-		this.lastLogin = new Date(inLastLogin.getTime());
-            } else {
-                this.lastLogin = null;
-            }
+		if (inLastLogin != null) {
+			this.lastLogin = new Date(inLastLogin.getTime());
+		} else {
+			this.lastLogin = null;
+		}
 	}
 
 	/**
 	 * Get the user's password expiration date.
+	 *
 	 * @return The user's password expiration date.
 	 */
 	public Date getPasswordExpiration() {
@@ -319,6 +316,7 @@ public class User implements CycleRecoverable {
 
 	/**
 	 * Set the user's password expiration date.
+	 *
 	 * @param inPasswordExpiration The user's password expiration date.
 	 */
 	public void setPasswordExpiration(Date inPasswordExpiration) {
@@ -343,11 +341,6 @@ public class User implements CycleRecoverable {
 		this.roles = inRoles;
 	}
 
-	@Override
-	public Object onCycleDetected(final Context context) {
-		return null;
-	}
-	
 	@Override
 	public String toString() {
 		return ToStringBuilder.reflectionToString(this);

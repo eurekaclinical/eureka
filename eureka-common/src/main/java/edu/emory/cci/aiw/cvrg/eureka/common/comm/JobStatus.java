@@ -19,6 +19,8 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.common.comm;
 
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.JobState;
+import java.text.DateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -29,17 +31,9 @@ import java.util.List;
  *
  */
 public class JobStatus {
-
-	/**
-	 * The current step in the process.
-	 */
-	private int currentStep;
-
-	/**
-	 * The total number of steps in the process.
-	 */
-	private int totalSteps;
-
+	
+	private JobState state;
+	
 	/**
 	 * The date of the document upload.
 	 */
@@ -50,29 +44,67 @@ public class JobStatus {
 	 */
 	private List<String> messages;
 
-	public int getCurrentStep() {
-		return currentStep;
+	public boolean isJobSubmitted() {
+		return this.state != JobState.DONE;
 	}
-	public void setCurrentStep(int currentStep) {
-		this.currentStep = currentStep;
-	}
-	public int getTotalSteps() {
-		return totalSteps;
-	}
-	public void setTotalSteps(int totalSteps) {
-		this.totalSteps = totalSteps;
-	}
+
 	public Date getUploadTime() {
-		return new Date(uploadTime.getTime());
+		return uploadTime;
 	}
 	public void setUploadTime(Date uploadTime) {
-		this.uploadTime = new Date(uploadTime.getTime());
+		this.uploadTime = uploadTime;
 	}
 	public List<String> getMessages() {
 		return messages;
 	}
 	public void setMessages(List<String> messages) {
 		this.messages = messages;
+	}
+
+	public JobState getState() {
+		return state;
+	}
+
+	public void setState(JobState state) {
+		this.state = state;
+	}
+	
+	public String getStatusDate() {
+		DateFormat df = DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.MEDIUM);
+		return df.format(this.uploadTime);
+	}
+	
+	public String getStatus() {
+		if (this.state != JobState.DONE) {
+			return step() + " out of " + totalSteps();
+		} else {
+			return "Complete";
+		}
+	}
+	
+	public String getFirstMessage() {
+		if (this.messages == null || this.messages.isEmpty()) {
+			return "No errors reported";
+		} else {
+			return this.messages.get(0);
+		}
+	}
+	
+	private static int totalSteps() {
+		return 4;
+	}
+
+	private int step() {
+		switch (this.state) {
+			case CREATED:
+				return 1;
+			case VALIDATED:
+				return 2;
+			case PROCESSING:
+				return 3;
+			default:
+				return 4;
+		}
 	}
 
 }

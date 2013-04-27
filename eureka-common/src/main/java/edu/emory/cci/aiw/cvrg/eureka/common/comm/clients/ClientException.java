@@ -37,7 +37,7 @@ public final class ClientException extends Exception {
 	 * @param responseStatus the {@link ClientResponse.Status}. Cannot be
 	 * <code>null</code>.
 	 */
-	ClientException(ClientResponse.Status responseStatus) {
+	public ClientException(ClientResponse.Status responseStatus) {
 		super(responseStatus.getReasonPhrase());
 		this.responseStatus = responseStatus;
 	}
@@ -49,7 +49,7 @@ public final class ClientException extends Exception {
 	 * <code>null</code>.
 	 * @param message the exception's message.
 	 */
-	ClientException(ClientResponse.Status responseStatus, 
+	public ClientException(ClientResponse.Status responseStatus, 
 			String message) {
 		super(message);
 		this.responseStatus = responseStatus;
@@ -64,7 +64,7 @@ public final class ClientException extends Exception {
 	 * @param message the exception's message.
 	 * @param thrwbl the {@link Throwable} that is the cause of this exception.
 	 */
-	ClientException(ClientResponse.Status responseStatus, 
+	public ClientException(ClientResponse.Status responseStatus, 
 			String message, Throwable thrwbl) {
 		super(message, thrwbl);
 		this.responseStatus = responseStatus;
@@ -77,7 +77,7 @@ public final class ClientException extends Exception {
 	 * <code>null</code>.
 	 * @param thrwbl the {@link Throwable} that is the cause of this exception.
 	 */
-	ClientException(ClientResponse.Status responseStatus, 
+	public ClientException(ClientResponse.Status responseStatus, 
 			Throwable thrwbl) {
 		super(thrwbl);
 		this.responseStatus = responseStatus;
