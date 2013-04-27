@@ -28,18 +28,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.List;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
-public abstract class AbstractPropositionFinder<U,
-		K> implements PropositionFinder<U, K> {
+public abstract class AbstractPropositionFinder<K> implements PropositionFinder<K> {
 
 	private static Logger LOGGER = LoggerFactory.getLogger(AbstractPropositionFinder.class);
-	private static final ExecutorService executorService =
-			Executors.newSingleThreadExecutor();
-	private final PropositionRetriever<U, K> retriever;
+	private final PropositionRetriever<K> retriever;
 
-	protected AbstractPropositionFinder(PropositionRetriever<U, K> inRetriever) {
+	protected AbstractPropositionFinder(PropositionRetriever<K> inRetriever) {
 		this.retriever = inRetriever;
 	}
 
@@ -56,14 +51,14 @@ public abstract class AbstractPropositionFinder<U,
 	 * proposition definition.
 	 */
 	@Override
-	public PropositionDefinition find(U inUserId, K inKey)
+	public PropositionDefinition find(String sourceConfigId, K inKey)
 			throws PropositionFindException {
-		LOGGER.debug("Finding {} for user {}", inUserId, inKey);
+		LOGGER.debug("Finding {}", inKey);
 		Cache cache = this.getCache();
 		Element element = cache.get(inKey);
 		if (element == null) {
 			PropositionDefinition propDef =
-					this.retriever.retrieve(inUserId, inKey);
+					this.retriever.retrieve(sourceConfigId, inKey);
 			element = new Element(inKey, propDef);
 			cache.put(element);
 		}
@@ -79,50 +74,9 @@ public abstract class AbstractPropositionFinder<U,
 		this.getCacheManager().shutdown();
 	}
 
-	private void prefetch(U inUserId, PropositionDefinition inProposition) {
-		final Cache cache = this.getCache();
-		for (K key : this.getPrefetchKeys(inProposition)) {
-			Element element = cache.get(key);
-			if (element == null) {
-				LOGGER.debug("Prefetching {}", key);
-				Runnable runnable =
-						new RetrieveRunnable(inUserId, key, cache,
-						this.retriever);
-				executorService.execute(runnable);
-			}
-		}
-	}
-
 	abstract protected CacheManager getCacheManager();
 
 	abstract protected List<K> getPrefetchKeys(PropositionDefinition inWrapper);
 
 	abstract protected Cache getCache();
-
-	private class RetrieveRunnable implements Runnable {
-
-		private final U userId;
-		private final K key;
-		private final Cache cache;
-		private final PropositionRetriever<U, K> retriever;
-
-		RetrieveRunnable(U inUserId, K inKey, Cache inCache,
-				PropositionRetriever<U, K> inRetriever) {
-			this.userId = inUserId;
-			this.key = inKey;
-			this.cache = inCache;
-			this.retriever = inRetriever;
-		}
-
-		@Override
-		public void run() {
-			try {
-				PropositionDefinition pd =
-						this.retriever.retrieve(this.userId, this.key);
-				this.cache.put(new Element(this.key, pd));
-			} catch (PropositionFindException ex) {
-				LOGGER.error("Could not retrieve proposition definition", ex);
-			}
-		}
-	}
 }

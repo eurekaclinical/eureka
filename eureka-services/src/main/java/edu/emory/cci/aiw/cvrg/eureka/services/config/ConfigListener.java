@@ -19,11 +19,6 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.services.config;
 
-import java.security.KeyManagementException;
-import java.security.NoSuchAlgorithmException;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 
 import javax.servlet.ServletContextEvent;
 
@@ -32,15 +27,10 @@ import org.slf4j.LoggerFactory;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
-import com.google.inject.persist.PersistService;
 import com.google.inject.persist.jpa.JpaPersistModule;
 import com.google.inject.servlet.GuiceServletContextListener;
 
 import edu.emory.cci.aiw.cvrg.eureka.services.finder.SystemPropositionFinder;
-import edu.emory.cci.aiw.cvrg.eureka.services.thread.JobUpdateTask;
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
 
 /**
  * Set up the Guice dependency injection engine. Uses two modules:
@@ -56,8 +46,8 @@ public class ConfigListener extends GuiceServletContextListener {
 	/**
 	 * A timer scheduler to run the job update task.
 	 */
-	private final ScheduledExecutorService executorService = Executors
-			.newSingleThreadScheduledExecutor();
+//	private final ScheduledExecutorService executorService = Executors
+//			.newSingleThreadScheduledExecutor();
 	/**
 	 * Make sure we always use the same injector
 	 */
@@ -78,57 +68,21 @@ public class ConfigListener extends GuiceServletContextListener {
 	public void contextInitialized(ServletContextEvent inServletContextEvent) {
 		super.contextInitialized(inServletContextEvent);
 
-		EntityManagerFactory factory =
-				Persistence.createEntityManagerFactory(JPA_UNIT);
-		try {
-			EntityManager entityManager = factory.createEntityManager();
-			try {
-				DatabasePopulator dp = new DatabasePopulator(entityManager);
-				dp.doPopulateIfNeeded();
-				entityManager.close();
-				entityManager = null;
-			} finally {
-				if (entityManager != null) {
-					try {
-						entityManager.close();
-					} catch (Exception ignore) {
-					}
-				}
-			}
-			factory.close();
-			factory = null;
-		} finally {
-			if (factory != null) {
-				try {
-					factory.close();
-				} catch (Exception ignore) {
-				}
-			}
-		}
-
-		try {
-			ServiceProperties applicationProperties = injector
-					.getInstance(ServiceProperties.class);
-			JobUpdateTask jobUpdateTask = new JobUpdateTask(
-					applicationProperties.getEtlUrl());
-			this.executorService.scheduleWithFixedDelay(jobUpdateTask, 0, 10,
-					TimeUnit.SECONDS);
-		} catch (KeyManagementException e) {
-			LOGGER.error(e.getMessage(), e);
-		} catch (NoSuchAlgorithmException e) {
-			LOGGER.error(e.getMessage(), e);
-		}
+//		JobUpdateTask jobUpdateTask = 
+//				this.injector.getInstance(JobUpdateTask.class);
+//		this.executorService.scheduleWithFixedDelay(jobUpdateTask, 0, 10,
+//				TimeUnit.SECONDS);
 	}
 
 	@Override
 	public void contextDestroyed(ServletContextEvent inServletContextEvent) {
 		super.contextDestroyed(inServletContextEvent);
-		this.executorService.shutdown();
-		try {
-			this.executorService.awaitTermination(10, TimeUnit.SECONDS);
-		} catch (InterruptedException e) {
-			LOGGER.error(e.getMessage(), e);
-		}
+//		this.executorService.shutdown();
+//		try {
+//			this.executorService.awaitTermination(10, TimeUnit.SECONDS);
+//		} catch (InterruptedException e) {
+//			LOGGER.error(e.getMessage(), e);
+//		}
 
 		SystemPropositionFinder finder =
 				this.getInjector().getInstance(SystemPropositionFinder.class);

@@ -36,7 +36,6 @@ import com.google.inject.Provider;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.CategoryEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.CategoryEntity.CategoryType;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.DataElementEntity;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.FileUpload;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.FrequencyType;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.Role;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.SystemProposition;
@@ -101,7 +100,6 @@ public class Setup implements TestDataProvider {
 
 	@Override
 	public void tearDown() throws TestDataException {
-		this.remove(FileUpload.class);
 //		this.removeDataElements();
 		this.remove(DataElementEntity.class);
 		this.remove(User.class);
@@ -193,22 +191,22 @@ public class Setup implements TestDataProvider {
 
 	private User createResearcherUser() throws TestDataException {
 		return this.createAndPersistUser("user@emory.edu", "Regular", "User",
-				createFileUpload(), this.researcherRole);
+				this.researcherRole);
 	}
 
 	private User createAdminUser() throws TestDataException {
 		return this.createAndPersistUser("admin.user@emory.edu", "Admin",
-				"User", createFileUpload(), this.researcherRole, this.adminRole);
+				"User", this.researcherRole, this.adminRole);
 	}
 
 	private User createSuperUser() throws TestDataException {
 		return this.createAndPersistUser("super.user@emory.edu", "Super",
-				"User", createFileUpload(), this.researcherRole, this.adminRole,
+				"User", this.researcherRole, this.adminRole,
 				this.superRole);
 	}
 
 	private User createAndPersistUser(String email, String firstName,
-	                                  String lastName, FileUpload upload,
+	                                  String lastName,
 	                                  Role... roles) throws
 			TestDataException {
 		EntityManager entityManager = this.getEntityManager();
@@ -232,18 +230,9 @@ public class Setup implements TestDataProvider {
 		entityManager.getTransaction().commit();
 		
 		entityManager.getTransaction().begin();
-		upload.setUserId(user.getId());
-		entityManager.persist(upload);
 		entityManager.flush();
 		entityManager.getTransaction().commit();
 		return user;
-	}
-	
-	private FileUpload createFileUpload () {
-		FileUpload fileUpload = new FileUpload();
-		fileUpload.setLocation("test_location");
-		fileUpload.setTimestamp(new Date());
-		return fileUpload;
 	}
 
 	private Role createResearcherRole() {

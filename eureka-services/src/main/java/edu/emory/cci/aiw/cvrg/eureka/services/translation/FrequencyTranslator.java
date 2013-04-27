@@ -21,12 +21,9 @@ package edu.emory.cci.aiw.cvrg.eureka.services.translation;
 
 import javax.ws.rs.core.Response;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.google.inject.Inject;
 
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.DataElement;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.Frequency;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.FrequencyEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.TimeUnit;
@@ -36,11 +33,11 @@ import edu.emory.cci.aiw.cvrg.eureka.services.dao.PropositionDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.TimeUnitDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.ValueComparatorDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.finder.SystemPropositionFinder;
+import edu.emory.cci.aiw.cvrg.eureka.services.resource.SourceConfigResource;
 
 public final class FrequencyTranslator implements
 		PropositionTranslator<Frequency, FrequencyEntity> {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(FrequencyTranslator.class);
 	private final TimeUnitDao timeUnitDao;
 	private final ValueComparatorDao valueComparatorDao;
 	private final FrequencyTypeDao freqTypeDao;
@@ -50,10 +47,11 @@ public final class FrequencyTranslator implements
 	public FrequencyTranslator(PropositionDao inPropositionDao,
 			TimeUnitDao inTimeUnitDao, SystemPropositionFinder inFinder,
 			ValueComparatorDao inValueComparatorDao,
-			FrequencyTypeDao inFrequencyTypeDao) {
+			FrequencyTypeDao inFrequencyTypeDao,
+			SourceConfigResource inSourceConfigResource) {
 		this.timeUnitDao = inTimeUnitDao;
 		this.translatorSupport = new TranslatorSupport(inPropositionDao,
-				inFinder);
+				inFinder, inSourceConfigResource);
 		this.valueComparatorDao = inValueComparatorDao;
 		this.freqTypeDao = inFrequencyTypeDao;
 	}

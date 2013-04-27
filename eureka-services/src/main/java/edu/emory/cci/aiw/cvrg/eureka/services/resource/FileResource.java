@@ -19,23 +19,22 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.services.resource;
 
-import java.net.URI;
 
-import javax.servlet.ServletException;
 import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import com.google.inject.Inject;
-import com.sun.jersey.api.client.ClientResponse.Status;
-
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.FileUpload;
-import edu.emory.cci.aiw.cvrg.eureka.services.dao.FileDao;
+import com.sun.jersey.core.header.FormDataContentDisposition;
+import com.sun.jersey.multipart.FormDataParam;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ClientException;
+import edu.emory.cci.aiw.cvrg.eureka.common.exception.HttpStatusException;
+import edu.emory.cci.aiw.cvrg.eureka.services.config.EtlClient;
+import java.io.InputStream;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.core.Response.Status;
 
 /**
  * Operations related to a data file (upload, status, etc)
@@ -45,12 +44,8 @@ import edu.emory.cci.aiw.cvrg.eureka.services.dao.FileDao;
  */
 @Path("/file")
 public class FileResource {
-
-	/**
-	 * The data access object used to work with file upload objects in the data
-	 * store.
-	 */
-	private final FileDao fileDao;
+	
+	private final EtlClient etlClient;
 
 	/**
 	 * Create an object with the give data access object.
@@ -59,44 +54,23 @@ public class FileResource {
 	 *            {@link FileDao} objects in the data store.
 	 */
 	@Inject
-	public FileResource(FileDao inFileDao) {
-		this.fileDao = inFileDao;
+	public FileResource(EtlClient inEtlClient) {
+		this.etlClient = inEtlClient;
 	}
 
-	/**
-	 * Add a new uploaded file.
-	 *
-	 * @param fileUpload The file upload to add.
-	 * @return A {@link Status#CREATED} if the file is successfully added,
-	 *         {@link Status#BAD_REQUEST} if there are errors.
-	 */
-	@Path("/upload")
 	@POST
-	@Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
-	@Produces(MediaType.TEXT_PLAIN)
-	public Response uploadFile(FileUpload fileUpload) {
-		this.fileDao.create(fileUpload);
-        return Response.created(
-                URI.create("/" + fileUpload.getId())).build();
-	}
-
-	/**
-	 * Get an uploaded file referred to by the given unique identifier.
-	 *
-	 * @param inId The unique identifier for the file to be fetched.
-	 * @return The uploaded file information
-	 * @throws ServletException Thrown if the given unique identifier is
-	 *             invalid.
-	 */
-	@Path("/{id}")
-	@GET
-	@Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
-	public FileUpload getFile(@PathParam("id") final Long inId)
-			throws ServletException {
-		FileUpload fileUpload = this.fileDao.retrieve(inId);
-		if (fileUpload == null) {
-			throw new ServletException("Invalid ID");
+	@Path("/upload/{sourceConfigId}/{sourceId}")
+	@Consumes(MediaType.MULTIPART_FORM_DATA)
+	public Response upload(@PathParam("sourceConfigId") String sourceConfigId,
+			@PathParam("sourceId") String sourceId,
+			@FormDataParam("file") InputStream uploadingInputStream,
+			@FormDataParam("file") FormDataContentDisposition fileDetail) {
+		try {
+			etlClient.upload(fileDetail.getFileName(), sourceConfigId, 
+					sourceId, uploadingInputStream);
+		} catch (ClientException ex) {
+			throw new HttpStatusException(Status.INTERNAL_SERVER_ERROR, ex);
 		}
-		return fileUpload;
+		return Response.status(Status.CREATED).build();
 	}
 }

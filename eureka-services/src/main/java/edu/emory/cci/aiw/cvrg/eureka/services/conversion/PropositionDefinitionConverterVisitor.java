@@ -41,7 +41,6 @@ public final class PropositionDefinitionConverterVisitor implements
 	private final Set<String> propIds;
 	private PropositionDefinition primaryProposition;
 	private String primaryPropositionId;
-	private Long userId;
 	private final SystemPropositionConverter systemPropositionConverter;
 	private final CategorizationConverter categorizationConverter;
 	private final SequenceConverter sequenceConverter;
@@ -78,10 +77,6 @@ public final class PropositionDefinitionConverterVisitor implements
 		propIds = new HashSet<String>();
 	}
 
-	public void setUserId(Long inUserId) {
-		userId = inUserId;
-	}
-
 	public Collection<PropositionDefinition> getPropositionDefinitions() {
 		return propositionDefinitions;
 	}
@@ -101,7 +96,6 @@ public final class PropositionDefinitionConverterVisitor implements
 	@Override
 	public void visit(SystemProposition entity) {
 		this.propositionDefinitions = Collections.emptyList();
-		this.systemPropositionConverter.setUserId(this.userId);
 		this.propositionDefinitions = this.systemPropositionConverter
 				.convert(entity);
 		this.primaryProposition = this.systemPropositionConverter

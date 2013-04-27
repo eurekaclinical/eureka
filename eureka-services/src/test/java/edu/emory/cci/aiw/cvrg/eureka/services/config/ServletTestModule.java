@@ -27,6 +27,7 @@ import com.sun.jersey.api.core.PackagesResourceConfig;
 import com.sun.jersey.api.core.ResourceConfig;
 import com.sun.jersey.guice.JerseyServletModule;
 import com.sun.jersey.guice.spi.container.servlet.GuiceContainer;
+import edu.emory.cci.aiw.cvrg.eureka.common.test.UserRoleAdderFilter;
 
 /**
  * Configure Guice for testing.
@@ -45,6 +46,7 @@ class ServletTestModule extends JerseyServletModule {
 				"edu.emory.cci.aiw.cvrg.eureka.services.resource;edu.emory.cci.aiw.cvrg.eureka.common.json");
 		params.put(ResourceConfig.PROPERTY_RESOURCE_FILTER_FACTORIES,
 				RolesAllowedResourceFilterFactory.class.getName());
+		filter("/api/*").through(UserRoleAdderFilter.class);
 		serve("/api/*").with(GuiceContainer.class, params);
 	}
 

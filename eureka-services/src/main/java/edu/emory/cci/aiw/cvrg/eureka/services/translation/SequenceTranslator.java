@@ -29,7 +29,6 @@ import javax.ws.rs.core.Response;
 import com.google.inject.Inject;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.DataElementField;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.RelatedDataElementField;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.Sequence;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.RelatedDataElementField;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.DataElementEntity;
@@ -44,6 +43,7 @@ import edu.emory.cci.aiw.cvrg.eureka.services.dao.RelationOperatorDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.TimeUnitDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.ValueComparatorDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.finder.SystemPropositionFinder;
+import edu.emory.cci.aiw.cvrg.eureka.services.resource.SourceConfigResource;
 
 /**
  * Translates from sequences (UI data element) to high-level abstractions.
@@ -63,9 +63,10 @@ public class SequenceTranslator implements
 	public SequenceTranslator(PropositionDao inPropositionDao,
 			TimeUnitDao inTimeUnitDao, RelationOperatorDao inRelationOperatorDao,
 			SystemPropositionFinder inFinder,
-			ValueComparatorDao inValueComparatorDao) {
+			ValueComparatorDao inValueComparatorDao,
+			SourceConfigResource inSourceConfigResource) {
 		this.translatorSupport =
-				new TranslatorSupport(inPropositionDao, inFinder);
+				new TranslatorSupport(inPropositionDao, inFinder, inSourceConfigResource);
 		this.timeUnitDao = inTimeUnitDao;
 		this.relationOperatorDao = inRelationOperatorDao;
 		this.extendedProps = new HashMap<Long, ExtendedDataElement>();

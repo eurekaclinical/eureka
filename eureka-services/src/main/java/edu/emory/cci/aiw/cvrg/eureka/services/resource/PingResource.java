@@ -27,13 +27,18 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import com.google.inject.Inject;
+import com.sun.jersey.api.client.ClientResponse;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ClientException;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.EtlClient;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.User;
 import edu.emory.cci.aiw.cvrg.eureka.common.exception.HttpStatusException;
-import edu.emory.cci.aiw.cvrg.eureka.services.config.ServiceProperties;
+import edu.emory.cci.aiw.cvrg.eureka.services.config.EtlClient;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.UserDao;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.NewCookie;
 
 /**
  * A REST resource to allow an administrator to test an account.
@@ -48,17 +53,25 @@ public class PingResource {
 	private final EtlClient etlClient;
 
 	@Inject
-	public PingResource(UserDao inUserDao, ServiceProperties inProperties) {
+	public PingResource(UserDao inUserDao, EtlClient inEtlClient) {
 		this.userDao = inUserDao;
-		this.etlClient = new EtlClient(inProperties.getEtlUrl());
+		this.etlClient = inEtlClient;
+	}
+
+	@GET
+	@Path("")
+	public Response doPing(@Context HttpServletRequest request) {
+		HttpSession session = request.getSession();
+		NewCookie cookie = new NewCookie("JSESSIONID", session.getId());
+		return Response.ok().cookie(cookie).build();
 	}
 
 	/**
 	 * Test the given account for errors.
 	 */
 	@GET
-	@Path("/{id}")
-	public String ping (@PathParam("id") Long inUserId) {
+	@Path("/testuser/{id}")
+	public String doPingUser(@PathParam("id") Long inUserId) {
 		String response = "Ping successful";
 		User user = this.userDao.retrieve(inUserId);
 		if (user == null) {
@@ -69,22 +82,20 @@ public class PingResource {
 				testUserRoles(user);
 				testUserConfiguration(user);
 			} catch (ClientException e) {
-				throw new HttpStatusException(Response.Status
-						.PRECONDITION_FAILED, e.getMessage());
+				throw new HttpStatusException(Response.Status.PRECONDITION_FAILED, e.getMessage());
 			}
 		}
 		return response;
 	}
 
-	private void testUserConfiguration (User inUser) throws ClientException {
+	private void testUserConfiguration(User inUser) throws ClientException {
 		this.etlClient.ping(inUser.getId());
 	}
 
-	private void testUserRoles (User inUser) {
-			if (inUser.getRoles() == null || inUser.getRoles().size() < 1) {
-				throw new HttpStatusException(Response.Status
-						.PRECONDITION_FAILED, "No roles assigned for user " +
-						inUser.getId());
-			}
+	private void testUserRoles(User inUser) {
+		if (inUser.getRoles() == null || inUser.getRoles().size() < 1) {
+			throw new HttpStatusException(Response.Status.PRECONDITION_FAILED, "No roles assigned for user "
+					+ inUser.getId());
+		}
 	}
 }

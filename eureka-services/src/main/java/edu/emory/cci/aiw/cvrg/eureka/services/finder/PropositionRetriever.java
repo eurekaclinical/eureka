@@ -25,10 +25,9 @@ import org.protempa.PropositionDefinition;
  * Interface for accessing sources of proposition definitions.
  * 
  * @author hrathod
- * @param <U> user id objects.
  * @param <K> proposition id objects.
  */
-public interface PropositionRetriever<U, K> {
+public interface PropositionRetriever<K> {
 	/**
 	 * Retrieves a proposition definition with the specified id and for the
 	 * specified user.
@@ -38,6 +37,6 @@ public interface PropositionRetriever<U, K> {
 	 * @return the proposition definition of interest, or <code>null</code> if 
 	 * not found.
 	 */
-	PropositionDefinition retrieve (U inUserId, K inKey)
+	PropositionDefinition retrieve (String sourceConfigId, K inKey)
 			throws PropositionFindException;
 }

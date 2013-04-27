@@ -30,7 +30,7 @@ import java.util.Map;
 /**
  *
  */
-public class TestPropositionFinder implements PropositionFinder<Long, String> {
+public class TestPropositionFinder implements PropositionFinder<String> {
 
 	private Map<String, PropositionDefinition> propDefs = new
 			HashMap<String, PropositionDefinition>();
@@ -63,7 +63,7 @@ public class TestPropositionFinder implements PropositionFinder<Long, String> {
 	}
 
 	@Override
-	public PropositionDefinition find(Long inUserId,
+	public PropositionDefinition find(String sourceConfigId,
 									  String inKey) throws PropositionFindException {
 		if (propDefs.containsKey(inKey)) {
 			return propDefs.get(inKey);

@@ -24,25 +24,17 @@ import java.util.List;
 
 import org.protempa.PropositionDefinition;
 
-import com.google.inject.Inject;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.SystemProposition;
-import edu.emory.cci.aiw.cvrg.eureka.services.finder.PropositionFinder;
 
 public final class SystemPropositionConverter implements
 		PropositionDefinitionConverter<SystemProposition, PropositionDefinition> {
-
-	private Long userId;
 
 	private PropositionDefinition primary;
 	
 	private String primaryPropId;
 
 	public SystemPropositionConverter() {
-	}
-
-	public void setUserId(Long inUserId) {
-		userId = inUserId;
 	}
 
 	@Override

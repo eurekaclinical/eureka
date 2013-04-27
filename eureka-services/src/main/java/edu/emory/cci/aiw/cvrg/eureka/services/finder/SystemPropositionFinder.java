@@ -27,12 +27,13 @@ import org.protempa.PropositionDefinition;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.SystemElement;
 
 import net.sf.ehcache.Cache;
 import net.sf.ehcache.CacheManager;
 
 @Singleton
-public class SystemPropositionFinder extends AbstractPropositionFinder<Long,
+public class SystemPropositionFinder extends AbstractPropositionFinder<
 	String> {
 
 	private static final String CACHE_NAME = "systemPropositions";
@@ -57,9 +58,9 @@ public class SystemPropositionFinder extends AbstractPropositionFinder<Long,
 	 * @return a {@link List} of {@link SystemElement}s
 	 * @throws PropositionFindException
 	 */
-	public List<PropositionDefinition> findAll(Long inUserId,
-	        List<String> inKeys, Boolean withChildren) throws PropositionFindException {
-		return this.retriever.retrieveAll(inUserId, inKeys, withChildren);
+	public List<PropositionDefinition> findAll(
+	        String sourceConfigId, List<String> inKeys, Boolean withChildren) throws PropositionFindException {
+		return this.retriever.retrieveAll(sourceConfigId, inKeys, withChildren);
 	}
 
 	@Override

@@ -42,6 +42,7 @@ import org.slf4j.LoggerFactory;
 
 import com.google.inject.Inject;
 import com.sun.jersey.api.client.ClientResponse.Status;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.PasswordChangeRequest;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.UserInfo;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.UserRequest;
@@ -55,6 +56,8 @@ import edu.emory.cci.aiw.cvrg.eureka.services.email.EmailException;
 import edu.emory.cci.aiw.cvrg.eureka.services.email.EmailSender;
 import edu.emory.cci.aiw.cvrg.eureka.services.util.PasswordGenerator;
 import edu.emory.cci.aiw.cvrg.eureka.services.util.StringUtil;
+import javax.servlet.http.HttpServletRequest;
+import javax.ws.rs.core.Context;
 
 /**
  * RESTful end-point for {@link User} related methods.
@@ -122,7 +125,6 @@ public class UserResource {
 	 */
 	@Path("/list")
 	@GET
-	@Produces(MediaType.APPLICATION_JSON)
 	public List<UserInfo> getUsers() {
 		List<User> users = this.userDao.getAll();
 //		for (User user : users) {
@@ -140,7 +142,6 @@ public class UserResource {
 	 */
 	@Path("/byid/{id}")
 	@GET
-	@Produces(MediaType.APPLICATION_JSON)
 	public UserInfo getUserById(@PathParam("id") Long inId) {
 		User user = this.userDao.retrieve(inId);
 		this.userDao.refresh(user);
@@ -156,7 +157,6 @@ public class UserResource {
 	 */
 	@Path("/byname/{name}")
 	@GET
-	@Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
 	public UserInfo getUserByName(@PathParam("name") String inName) {
 		User user = this.userDao.getByName(inName);
 		if (user != null) {
@@ -219,24 +219,23 @@ public class UserResource {
 	 * @throws HttpStatusException Thrown when a password cannot be properly
 	 * hashed, or the passwords are mismatched.
 	 */
-	@Path("/passwd/{id}")
-	@PUT
-	public void changePassword(@PathParam("id") final Long inId,
-			@QueryParam("oldPassword") final String oldPassword,
-			@QueryParam("newPassword") final String newPassword) {
-
-		User user = this.userDao.retrieve(inId);
+	@Path("/passwordchangerequest")
+	@POST
+	public void changePassword(@Context HttpServletRequest request,
+			PasswordChangeRequest passwordChangeRequest) {
+		String username = request.getUserPrincipal().getName();
+		User user = this.userDao.getByName(username);
 		if (user == null) {
-			LOGGER.error("User id " + inId + " not found");
-			throw new HttpStatusException(
-					Response.Status.NOT_FOUND);
+			LOGGER.error("User " + username + " not found");
+			throw new HttpStatusException(Response.Status.INTERNAL_SERVER_ERROR);
 		} else {
 			this.userDao.refresh(user);
 		}
+		String newPassword = passwordChangeRequest.getNewPassword();
 		String oldPasswordHash;
 		String newPasswordHash;
 		try {
-			oldPasswordHash = StringUtil.md5(oldPassword);
+			oldPasswordHash = StringUtil.md5(passwordChangeRequest.getOldPassword());
 			newPasswordHash = StringUtil.md5(newPassword);
 		} catch (NoSuchAlgorithmException e) {
 			LOGGER.error(e.getMessage(), e);
@@ -256,8 +255,8 @@ public class UserResource {
 			}
 		} else {
 			throw new HttpStatusException(
-					Response.Status.PRECONDITION_FAILED, "Error while changing"
-					+ " password. Old password is incorrect.");
+					Response.Status.PRECONDITION_FAILED, 
+					"Error while changing password. Old password is incorrect.");
 		}
 	}
 

@@ -24,6 +24,7 @@ import java.util.List;
 
 import com.google.inject.Inject;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.DataElementField;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.SourceConfigParams;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.ValueThreshold;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.ValueThresholds;
@@ -33,13 +34,16 @@ import edu.emory.cci.aiw.cvrg.eureka.common.entity.PropositionTypeVisitor;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.ValueThresholdEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.ValueThresholdGroupEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.exception.DataElementHandlingException;
+import edu.emory.cci.aiw.cvrg.eureka.common.exception.HttpStatusException;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.RelationOperatorDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.ThresholdsOperatorDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.TimeUnitDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.ValueComparatorDao;
+import edu.emory.cci.aiw.cvrg.eureka.services.resource.SourceConfigResource;
 import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
+import javax.ws.rs.core.Response;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -53,18 +57,21 @@ public final class ValueThresholdsTranslator implements
 	private final ThresholdsOperatorDao thresholdsOperatorDao;
 	private final TimeUnitDao timeUnitDao;
 	private final RelationOperatorDao relationOpDao;
+	private final SourceConfigResource sourceConfigResource;
 
 	@Inject
 	public ValueThresholdsTranslator(ValueComparatorDao inValueComparatorDao,
 			ThresholdsOperatorDao inThresholdsOperatorDao,
 			TranslatorSupport inSupport,
 			TimeUnitDao inTimeUnitDao,
-			RelationOperatorDao inRelationOpDao) {
+			RelationOperatorDao inRelationOpDao,
+			SourceConfigResource inSourceConfigResource) {
 		valueCompDao = inValueComparatorDao;
 		thresholdsOperatorDao = inThresholdsOperatorDao;
 		translatorSupport = inSupport;
 		timeUnitDao = inTimeUnitDao;
 		relationOpDao = inRelationOpDao;
+		sourceConfigResource = inSourceConfigResource;
 	}
 
 	@Override

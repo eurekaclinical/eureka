@@ -39,13 +39,17 @@ import com.google.inject.Inject;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.DataElement;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.DataElementEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.PropositionChildrenVisitor;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.User;
 import edu.emory.cci.aiw.cvrg.eureka.common.exception.DataElementHandlingException;
 import edu.emory.cci.aiw.cvrg.eureka.common.exception.HttpStatusException;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.PropositionDao;
+import edu.emory.cci.aiw.cvrg.eureka.services.dao.UserDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.translation.DataElementTranslatorVisitor;
 import edu.emory.cci.aiw.cvrg.eureka.services.translation.PropositionTranslatorVisitor;
 import java.text.MessageFormat;
 import java.util.ResourceBundle;
+import javax.servlet.http.HttpServletRequest;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response.Status;
 import org.apache.commons.lang.StringUtils;
 
@@ -62,12 +66,13 @@ public class DataElementResource {
 	private static ResourceBundle messages =
 			ResourceBundle.getBundle("Messages");
 	private final PropositionDao propositionDao;
+	private final UserDao userDao;
 	private final SystemElementResource systemElementResource;
 	private final PropositionTranslatorVisitor propositionTranslatorVisitor;
 	private final DataElementTranslatorVisitor dataElementTranslatorVisitor;
 
 	@Inject
-	public DataElementResource(PropositionDao inDao, 
+	public DataElementResource(PropositionDao inDao, UserDao userDao,
 			SystemElementResource inResource, 
 			PropositionTranslatorVisitor inPropositionTranslatorVisitor,
 			DataElementTranslatorVisitor inDataElementTranslatorVisitor) {
@@ -75,21 +80,20 @@ public class DataElementResource {
 		this.systemElementResource = inResource;
 		this.propositionTranslatorVisitor = inPropositionTranslatorVisitor;
 		this.dataElementTranslatorVisitor = inDataElementTranslatorVisitor;
+		this.userDao = userDao;
 	}
 
 	@GET
-	@Path("/{userId}")
-	public List<DataElement> getAll(@PathParam("userId") Long inUserId) {
-
+	@Path("/")
+	public List<DataElement> getAll(@Context HttpServletRequest request) {
+		User user = this.userDao.getByName(request.getUserPrincipal().getName());
 		List<DataElement> result = new ArrayList<DataElement>();
-		List<DataElementEntity> propositions = this.propositionDao.getByUserId(inUserId);
-
+		List<DataElementEntity> propositions = this.propositionDao.getByUserId(user.getId());
 		for (DataElementEntity proposition : propositions) {
 //			this.propositionDao.refresh(proposition);
 			if (proposition.isInSystem()) {
 				result.add(
-						this.systemElementResource.get(
-						inUserId, proposition.getKey()));
+						this.systemElementResource.get(proposition.getKey()));
 			} else {
 				proposition.accept(this.propositionTranslatorVisitor);
 				result.add(propositionTranslatorVisitor.getDataElement());
@@ -100,13 +104,14 @@ public class DataElementResource {
 	}
 
 	@GET
-	@Path("/{userId}/{key}")
-	public DataElement get(@PathParam("userId") Long inUserId,
+	@Path("/{key}")
+	public DataElement get(@Context HttpServletRequest request,
 			@PathParam("key") String inKey) {
+		User user = this.userDao.getByName(request.getUserPrincipal().getName());
 		DataElement result;
-		DataElementEntity proposition = this.propositionDao.getByUserAndKey(inUserId, inKey);
+		DataElementEntity proposition = this.propositionDao.getByUserAndKey(user.getId(), inKey);
 		if (proposition == null || proposition.isInSystem()) {
-			result = this.systemElementResource.get(inUserId, inKey);
+			result = this.systemElementResource.get(inKey);
 		} else {
 			proposition.accept(this.propositionTranslatorVisitor);
 			result = this.propositionTranslatorVisitor.getDataElement();

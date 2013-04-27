@@ -19,10 +19,10 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.services.job;
 
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.Job;
 import java.util.ArrayList;
 import java.util.List;
 
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.Job;
 
 /**
  * A class to hold a collection of jobs.

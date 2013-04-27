@@ -26,12 +26,12 @@ import javax.naming.InitialContext;
 import com.google.inject.AbstractModule;
 import com.google.inject.TypeLiteral;
 import com.google.inject.jndi.JndiIntegration;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.cassupport.CasWebResourceWrapperFactory;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.WebResourceWrapperFactory;
 
 import edu.emory.cci.aiw.cvrg.eureka.services.clients.I2b2Client;
 import edu.emory.cci.aiw.cvrg.eureka.services.clients.I2b2RestClient;
-import edu.emory.cci.aiw.cvrg.eureka.services.dao.FileDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.FrequencyTypeDao;
-import edu.emory.cci.aiw.cvrg.eureka.services.dao.JpaFileDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.JpaFrequencyTypeDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.JpaPropositionDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.JpaRelationOperatorDao;
@@ -66,7 +66,6 @@ class AppModule extends AbstractModule {
 	protected void configure() {
 		bind(UserDao.class).to(JpaUserDao.class);
 		bind(RoleDao.class).to(JpaRoleDao.class);
-		bind(FileDao.class).to(JpaFileDao.class);
 		bind(PropositionDao.class).to(JpaPropositionDao.class);
 		bind(TimeUnitDao.class).to(JpaTimeUnitDao.class);
 		bind(RelationOperatorDao.class).to(JpaRelationOperatorDao.class);
@@ -75,7 +74,7 @@ class AppModule extends AbstractModule {
 		bind(FrequencyTypeDao.class).to(JpaFrequencyTypeDao.class);
 		bind(ThresholdsOperatorDao.class).to
 				(JpaThresholdsOperatorDao.class);
-		bind(new TypeLiteral<PropositionFinder<Long, 
+		bind(new TypeLiteral<PropositionFinder<
 				String>>(){}).to(SystemPropositionFinder.class);
 		bind(EmailSender.class).to(FreeMarkerEmailSender.class);
 		bind(I2b2Client.class).to(I2b2RestClient.class);
@@ -84,6 +83,8 @@ class AppModule extends AbstractModule {
 				JndiIntegration.fromJndi(Session.class,
 						"java:comp/env/mail/Session"));
 		bind(PasswordGenerator.class).to(PasswordGeneratorImpl.class);
+		bind(EtlClient.class).to(EtlClientImpl.class);
+		bind(WebResourceWrapperFactory.class).to(CasWebResourceWrapperFactory.class);
 	}
 
 }

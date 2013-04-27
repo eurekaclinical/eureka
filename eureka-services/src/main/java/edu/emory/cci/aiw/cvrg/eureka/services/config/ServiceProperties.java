@@ -24,8 +24,8 @@ import java.util.List;
 
 import com.google.inject.Singleton;
 
-import edu.emory.cci.aiw.cvrg.eureka.common.props.ApplicationProperties;
-import edu.emory.cci.aiw.cvrg.eureka.services.util.PublicUrlGenerator;
+import edu.emory.cci.aiw.cvrg.eureka.common.props.AbstractProperties;
+import edu.emory.cci.aiw.cvrg.eureka.common.props.PublicUrlGenerator;
 import javax.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,7 +38,7 @@ import org.slf4j.LoggerFactory;
  *
  */
 @Singleton
-public class ServiceProperties extends ApplicationProperties {
+public class ServiceProperties extends AbstractProperties {
 
 	/**
 	 * The class level logger.
@@ -103,23 +103,6 @@ public class ServiceProperties extends ApplicationProperties {
 	public String getActivationEmailSubject() {
 		return this.getValue(
 				"eureka.services.email.activation.subject");
-	}
-	
-	/**
-	 * Get the base URL for the application front-end for external users.
-	 * 
-	 * @param request the HTTP request, which will be used to generate a
-	 * URL to the website if none of the properties files
-	 * contain an application URL property.
-	 *
-	 * @return The base URL.
-	 */
-	public String getApplicationUrl(HttpServletRequest request) {
-		String result = this.getValue("eureka.webapp.url");
-		if (result == null) {
-			result = PublicUrlGenerator.generate(request);
-		}
-		return result;
 	}
 
 	/**

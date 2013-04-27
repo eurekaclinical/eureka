@@ -22,12 +22,12 @@ package edu.emory.cci.aiw.cvrg.eureka.services.config;
 import com.google.inject.AbstractModule;
 import com.google.inject.TypeLiteral;
 import com.google.inject.persist.jpa.JpaPersistModule;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.cassupport.CasWebResourceWrapperFactory;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.WebResourceWrapperFactory;
 
 import edu.emory.cci.aiw.cvrg.eureka.services.clients.I2b2Client;
 import edu.emory.cci.aiw.cvrg.eureka.services.clients.MockI2b2Client;
-import edu.emory.cci.aiw.cvrg.eureka.services.dao.FileDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.FrequencyTypeDao;
-import edu.emory.cci.aiw.cvrg.eureka.services.dao.JpaFileDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.JpaFrequencyTypeDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.JpaPropositionDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.JpaRelationOperatorDao;
@@ -65,7 +65,6 @@ public class AppTestModule extends AbstractModule {
 
 		bind(UserDao.class).to(JpaUserDao.class);
 		bind(RoleDao.class).to(JpaRoleDao.class);
-		bind(FileDao.class).to(JpaFileDao.class);
 		bind(TimeUnitDao.class).to(JpaTimeUnitDao.class);
 		bind(ValueComparatorDao.class).to(JpaValueComparatorDao.class);
 		bind(FrequencyTypeDao.class).to(JpaFrequencyTypeDao.class);
@@ -74,7 +73,9 @@ public class AppTestModule extends AbstractModule {
 		bind(EmailSender.class).to(MockEmailSender.class);
 		bind(I2b2Client.class).to(MockI2b2Client.class);
 		bind(ThresholdsOperatorDao.class).to(JpaThresholdsOperatorDao.class);
-		bind(new TypeLiteral<PropositionFinder<Long,String>>(){}).to(TestPropositionFinder.class);
+		bind(new TypeLiteral<PropositionFinder<String>>(){}).to(TestPropositionFinder.class);
 		bind(PasswordGenerator.class).to(PasswordGeneratorTestImpl.class);
+		bind(EtlClient.class).to(MockEtlClient.class);
+		bind(WebResourceWrapperFactory.class).to(CasWebResourceWrapperFactory.class);
 	}
 }

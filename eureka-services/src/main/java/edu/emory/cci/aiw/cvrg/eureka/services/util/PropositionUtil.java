@@ -62,8 +62,9 @@ public final class PropositionUtil {
 	 * Wraps a proposition definition into a proposition wrapper.
 	 */
 	public static SystemElement toSystemElement(
+			String sourceConfigId,
 	        PropositionDefinition inDefinition, boolean summarize,
-	        Long inUserId, SystemPropositionFinder inPropositionFinder)
+	        SystemPropositionFinder inPropositionFinder)
 	        throws PropositionFindException {
 		if (inDefinition == null) {
 			throw new IllegalArgumentException("inDefinition cannot be null");
@@ -89,11 +90,11 @@ public final class PropositionUtil {
 		if (!summarize) {
 			List<SystemElement> children = new ArrayList<SystemElement>();
 			List<PropositionDefinition> pds = inPropositionFinder.findAll(
-			        inUserId,
+					sourceConfigId,
 			        Arrays.<String> asList(inDefinition.getChildren()),
 			        Boolean.FALSE);
 			for (PropositionDefinition pd : pds) {
-				children.add(toSystemElement(pd, true, inUserId,
+				children.add(toSystemElement(sourceConfigId, pd, true,
 				        inPropositionFinder));
 			}
 			systemElement.setChildren(children);

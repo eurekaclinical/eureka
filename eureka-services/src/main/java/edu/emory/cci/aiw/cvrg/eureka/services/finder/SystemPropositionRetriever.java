@@ -27,10 +27,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.inject.Inject;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.SystemElement;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ClientException;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.EtlClient;
-import edu.emory.cci.aiw.cvrg.eureka.services.config.ServiceProperties;
+import edu.emory.cci.aiw.cvrg.eureka.services.config.EtlClient;
 
 /**
  * Retrieves proposition definitions from the ETL layer.
@@ -38,30 +38,27 @@ import edu.emory.cci.aiw.cvrg.eureka.services.config.ServiceProperties;
  * @author hrathod
  */
 public class SystemPropositionRetriever implements
-        PropositionRetriever<Long, String> {
+        PropositionRetriever<String> {
 
 	private static final Logger LOGGER = LoggerFactory
 	        .getLogger(SystemPropositionRetriever.class);
-	private final ServiceProperties applicationProperties;
+	private final EtlClient etlClient;
 
 	@Inject
-	public SystemPropositionRetriever(ServiceProperties inProperties) {
-		this.applicationProperties = inProperties;
+	public SystemPropositionRetriever(EtlClient inEtlClient) {
+		this.etlClient = inEtlClient;
 	}
 
 	@Override
-	public PropositionDefinition retrieve(Long inUserId, String inKey)
+	public PropositionDefinition retrieve(String sourceConfigId, String inKey)
 	        throws PropositionFindException {
-		EtlClient etlClient = new EtlClient(
-		        this.applicationProperties.getEtlUrl());
 		PropositionDefinition result;
 		try {
-			result = etlClient.getPropositionDefinition(inUserId, inKey);
+			result = etlClient.getPropositionDefinition(sourceConfigId, inKey);
 		} catch (ClientException e) {
 			LOGGER.error(e.getMessage(), e);
 			throw new PropositionFindException(
-			        "Could not retrieve proposition definition " + inKey
-			                + " for user " + inUserId, e);
+			        "Could not retrieve proposition definition " + inKey, e);
 		}
 		return result;
 	}
@@ -75,18 +72,15 @@ public class SystemPropositionRetriever implements
 	 * @return a {@link List} of {@link SystemElement}s
 	 * @throws PropositionFindException
 	 */
-	public List<PropositionDefinition> retrieveAll(Long inUserId,
-	        List<String> inKeys, Boolean withChildren) throws PropositionFindException {
-		EtlClient etlClient = new EtlClient(
-		        this.applicationProperties.getEtlUrl());
+	public List<PropositionDefinition> retrieveAll(
+	        String sourceConfigId, List<String> inKeys, Boolean withChildren) throws PropositionFindException {
 		List<PropositionDefinition> result = new ArrayList<PropositionDefinition>();
 		try {
-			result = etlClient.getPropositionDefinitions(inUserId, inKeys, withChildren);
+			result = etlClient.getPropositionDefinitions(sourceConfigId, inKeys, withChildren);
 		} catch (ClientException e) {
 			LOGGER.error(e.getMessage(), e);
 			throw new PropositionFindException(
-			        "Could not retrieve proposition definitions for user "
-			                + inUserId, e);
+			        "Could not retrieve proposition definitions", e);
 		}
 		return result;
 

@@ -39,7 +39,7 @@ import com.google.inject.Inject;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.User;
 import edu.emory.cci.aiw.cvrg.eureka.services.config.ServiceProperties;
-import edu.emory.cci.aiw.cvrg.eureka.services.util.PublicUrlGenerator;
+import edu.emory.cci.aiw.cvrg.eureka.common.props.PublicUrlGenerator;
 
 import freemarker.template.Configuration;
 import freemarker.template.DefaultObjectWrapper;

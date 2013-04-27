@@ -30,6 +30,7 @@ import edu.emory.cci.aiw.cvrg.eureka.common.entity.PropositionTypeVisitor;
 import edu.emory.cci.aiw.cvrg.eureka.common.exception.DataElementHandlingException;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.PropositionDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.finder.SystemPropositionFinder;
+import edu.emory.cci.aiw.cvrg.eureka.services.resource.SourceConfigResource;
 
 import java.util.ArrayList;
 import java.util.EnumSet;
@@ -45,26 +46,15 @@ import org.apache.commons.lang.StringUtils;
 public final class CategorizationTranslator implements
 		PropositionTranslator<Category, CategoryEntity> {
 
-	private final SequenceTranslator sequenceTranslator;
-	private final SystemPropositionTranslator systemPropositionTranslator;
-	private final FrequencyTranslator frequencyTranslator;
-	private final ValueThresholdsTranslator valueThresholdsTranslator;
 	private final TranslatorSupport translatorSupport;
 
 	@Inject
 	public CategorizationTranslator(
 			PropositionDao inPropositionDao,
 			SystemPropositionFinder inFinder,
-			SequenceTranslator inSequenceTranslator,
-			SystemPropositionTranslator inSystemPropositionTranslator,
-			FrequencyTranslator inFrequencyTranslator,
-			ValueThresholdsTranslator inValueThresholdsTranslator) {
+			SourceConfigResource inSourceConfigResource) {
 		this.translatorSupport =
-				new TranslatorSupport(inPropositionDao, inFinder);
-		this.sequenceTranslator = inSequenceTranslator;
-		this.systemPropositionTranslator = inSystemPropositionTranslator;
-		this.frequencyTranslator = inFrequencyTranslator;
-		this.valueThresholdsTranslator = inValueThresholdsTranslator;
+				new TranslatorSupport(inPropositionDao, inFinder, inSourceConfigResource);
 	}
 
 	@Override

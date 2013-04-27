@@ -24,10 +24,9 @@ import org.protempa.PropositionDefinition;
 /**
  * Finds proposition definitions.
  *
- * @param <U> the type of the user identifier to use in look-ups
  * @param <K> the type of the proposition key to use in look-ups
  */
-public interface PropositionFinder<U, K> {
+public interface PropositionFinder<K> {
 	/**
 	 * Finds the proposition definition for the given user and key.
 	 *
@@ -38,7 +37,7 @@ public interface PropositionFinder<U, K> {
 	 * @throws PropositionFindException if an error occurs while performing
 	 *                                  the operation
 	 */
-	public PropositionDefinition find(U inUserId,
+	public PropositionDefinition find(String sourceConfigId, 
 									  K inKey) throws PropositionFindException;
 
 	/**

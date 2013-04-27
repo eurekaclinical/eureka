@@ -22,316 +22,269 @@ limitations under the License.
 <databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd" logicalFilePath="changelog-master.xml">
 	<changeSet author="arpost (generated)" id="1360440238345-1">
 		<createTable tableName="CATEGORIES">
-			<column name="ID" type="NUMBER(19,0)">
+			<column name="ID" type="BIGINT">
 				<constraints nullable="false" primaryKey="true" primaryKeyName="SYS_C0013388"/>
 			</column>
 		</createTable>
 	</changeSet>
 	<changeSet author="arpost (generated)" id="1360440238345-2">
 		<createTable tableName="CATEGORY_MEMBERS">
-			<column name="CATEGORY_ID" type="NUMBER(19,0)">
+			<column name="CATEGORY_ID" type="BIGINT">
 				<constraints nullable="false"/>
 			</column>
-			<column name="MEMBER_ID" type="NUMBER(19,0)">
+			<column name="MEMBER_ID" type="BIGINT">
 				<constraints nullable="false"/>
 			</column>
 		</createTable>
 	</changeSet>
 	<changeSet author="arpost (generated)" id="1360440238345-3">
 		<createTable tableName="DATA_ELEMENTS">
-			<column name="ID" type="NUMBER(19,0)">
+			<column name="ID" type="BIGINT">
 				<constraints nullable="false" primaryKey="true" primaryKeyName="SYS_C0013396"/>
 			</column>
-			<column name="CATEGORYTYPE" type="NUMBER(10,0)">
+			<column name="CATEGORYTYPE" type="INT">
 				<constraints nullable="false"/>
 			</column>
 			<column name="CREATED" type="TIMESTAMP(6)"/>
 			<column name="DESCRIPTION" type="CLOB"/>
-			<column name="DISPLAYNAME" type="VARCHAR2(255 CHAR)"/>
-			<column name="INSYSTEM" type="NUMBER(1,0)">
+			<column name="DISPLAYNAME" type="VARCHAR(255)"/>
+			<column name="INSYSTEM" type="BOOLEAN">
 				<constraints nullable="false"/>
 			</column>
-			<column name="KEY" type="VARCHAR2(255 CHAR)">
+			<column name="KEY" type="VARCHAR(255)">
 				<constraints nullable="false"/>
 			</column>
 			<column name="LASTMODIFIED" type="TIMESTAMP(6)"/>
-			<column name="USER_ID" type="NUMBER(19,0)">
+			<column name="USER_ID" type="BIGINT">
 				<constraints nullable="false"/>
 			</column>
 		</createTable>
 	</changeSet>
 	<changeSet author="arpost (generated)" id="1360440238345-4">
 		<createTable tableName="EXTENDED_DATA_ELEMENTS">
-			<column name="ID" type="NUMBER(19,0)">
+			<column name="ID" type="BIGINT">
 				<constraints nullable="false" primaryKey="true" primaryKeyName="SYS_C0013402"/>
 			</column>
-			<column name="MAXDURATION" type="NUMBER(10,0)"/>
-			<column name="MINDURATION" type="NUMBER(10,0)"/>
-			<column name="DATAELEMENT_ID" type="NUMBER(19,0)">
+			<column name="MAXDURATION" type="INT"/>
+			<column name="MINDURATION" type="INT"/>
+			<column name="DATAELEMENT_ID" type="BIGINT">
 				<constraints nullable="false"/>
 			</column>
-			<column name="MAXDURATIONTIMEUNIT_ID" type="NUMBER(19,0)">
+			<column name="MAXDURATIONTIMEUNIT_ID" type="BIGINT">
 				<constraints nullable="false"/>
 			</column>
-			<column name="MINDURATIONTIMEUNIT_ID" type="NUMBER(19,0)">
+			<column name="MINDURATIONTIMEUNIT_ID" type="BIGINT">
 				<constraints nullable="false"/>
 			</column>
-			<column name="PROPERTYCONSTRAINT_ID" type="NUMBER(19,0)"/>
-		</createTable>
-	</changeSet>
-	<changeSet author="arpost (generated)" id="1360440238345-5">
-		<createTable tableName="FILE_ERRORS">
-			<column name="ID" type="NUMBER(19,0)">
-				<constraints nullable="false" primaryKey="true" primaryKeyName="SYS_C0013404"/>
-			</column>
-			<column name="LINENUMBER" type="NUMBER(19,0)"/>
-			<column name="TEXT" type="VARCHAR2(255 CHAR)"/>
-			<column name="TYPE" type="VARCHAR2(255 CHAR)"/>
-			<column name="FILEUPLOAD_ID" type="NUMBER(19,0)"/>
-		</createTable>
-	</changeSet>
-	<changeSet author="arpost (generated)" id="1360440238345-6">
-		<createTable tableName="FILE_UPLOADS">
-			<column name="ID" type="NUMBER(19,0)">
-				<constraints nullable="false" primaryKey="true" primaryKeyName="SYS_C0013412"/>
-			</column>
-			<column name="COMPLETED" type="NUMBER(1,0)">
-				<constraints nullable="false"/>
-			</column>
-			<column name="LOCATION" type="VARCHAR2(255 CHAR)">
-				<constraints nullable="false"/>
-			</column>
-			<column name="PROCESSED" type="NUMBER(1,0)">
-				<constraints nullable="false"/>
-			</column>
-			<column name="TIMESTAMP" type="TIMESTAMP(6)">
-				<constraints nullable="false"/>
-			</column>
-			<column name="USERID" type="NUMBER(19,0)">
-				<constraints nullable="false"/>
-			</column>
-			<column name="VALIDATED" type="NUMBER(1,0)">
-				<constraints nullable="false"/>
-			</column>
-		</createTable>
-	</changeSet>
-	<changeSet author="arpost (generated)" id="1360440238345-7">
-		<createTable tableName="FILE_WARNINGS">
-			<column name="ID" type="NUMBER(19,0)">
-				<constraints nullable="false" primaryKey="true" primaryKeyName="SYS_C0013414"/>
-			</column>
-			<column name="LINENUMBER" type="NUMBER(19,0)"/>
-			<column name="TEXT" type="VARCHAR2(255 CHAR)"/>
-			<column name="TYPE" type="VARCHAR2(255 CHAR)"/>
-			<column name="FILEUPLOAD_ID" type="NUMBER(19,0)"/>
+			<column name="PROPERTYCONSTRAINT_ID" type="BIGINT"/>
 		</createTable>
 	</changeSet>
 	<changeSet author="arpost (generated)" id="1360440238345-8">
 		<createTable tableName="FREQUENCIES">
-			<column name="ATLEASTCOUNT" type="NUMBER(10,0)">
+			<column name="ATLEASTCOUNT" type="INT">
 				<constraints nullable="false"/>
 			</column>
-			<column name="CONSECUTIVE" type="NUMBER(1,0)">
+			<column name="CONSECUTIVE" type="BOOLEAN">
 				<constraints nullable="false"/>
 			</column>
-			<column name="WITHINATLEAST" type="NUMBER(10,0)"/>
-			<column name="WITHINATMOST" type="NUMBER(10,0)"/>
-			<column name="ID" type="NUMBER(19,0)">
+			<column name="WITHINATLEAST" type="INT"/>
+			<column name="WITHINATMOST" type="INT"/>
+			<column name="ID" type="BIGINT">
 				<constraints nullable="false" primaryKey="true" primaryKeyName="SYS_C0013419"/>
 			</column>
-			<column name="EXTENDEDDATAELEMENT_ID" type="NUMBER(19,0)">
+			<column name="EXTENDEDDATAELEMENT_ID" type="BIGINT">
 				<constraints nullable="false"/>
 			</column>
-			<column name="WITHINATLEASTUNITS_ID" type="NUMBER(19,0)"/>
-			<column name="WITHINATMOSTUNITS_ID" type="NUMBER(19,0)"/>
+			<column name="WITHINATLEASTUNITS_ID" type="BIGINT"/>
+			<column name="WITHINATMOSTUNITS_ID" type="BIGINT"/>
 		</createTable>
 	</changeSet>
 	<changeSet author="arpost (generated)" id="1360440238345-9">
 		<createTable tableName="PROPERTY_CONSTRAINTS">
-			<column name="ID" type="NUMBER(19,0)">
+			<column name="ID" type="BIGINT">
 				<constraints nullable="false" primaryKey="true" primaryKeyName="SYS_C0013422"/>
 			</column>
-			<column name="PROPERTYNAME" type="VARCHAR2(255 CHAR)">
+			<column name="PROPERTYNAME" type="VARCHAR(255)">
 				<constraints nullable="false"/>
 			</column>
-			<column name="VALUE" type="VARCHAR2(255 CHAR)"/>
-			<column name="VALUECOMPARATOR_ID" type="NUMBER(19,0)"/>
+			<column name="VALUE" type="VARCHAR(255)"/>
+			<column name="VALUECOMPARATOR_ID" type="BIGINT"/>
 		</createTable>
 	</changeSet>
 	<changeSet author="arpost (generated)" id="1360440238345-10">
 		<createTable tableName="RELATION_OPS">
-			<column name="ID" type="NUMBER(19,0)">
+			<column name="ID" type="BIGINT">
 				<constraints nullable="false" primaryKey="true" primaryKeyName="SYS_C0013425"/>
 			</column>
-			<column name="DESCRIPTION" type="VARCHAR2(255 CHAR)"/>
-			<column name="NAME" type="VARCHAR2(255 CHAR)">
+			<column name="DESCRIPTION" type="VARCHAR(255)"/>
+			<column name="NAME" type="VARCHAR(255)">
 				<constraints nullable="false"/>
 			</column>
 		</createTable>
 	</changeSet>
 	<changeSet author="arpost (generated)" id="1360440238345-11">
 		<createTable tableName="RELATIONS">
-			<column name="ID" type="NUMBER(19,0)">
+			<column name="ID" type="BIGINT">
 				<constraints nullable="false" primaryKey="true" primaryKeyName="SYS_C0013431"/>
 			</column>
-			<column name="MAXF1S2" type="NUMBER(10,0)"/>
-			<column name="MAXS1F2" type="NUMBER(10,0)"/>
-			<column name="MINF1S2" type="NUMBER(10,0)"/>
-			<column name="MINS1F2" type="NUMBER(10,0)"/>
-			<column name="LHSEXTENDEDDATAELEMENT_ID" type="NUMBER(19,0)">
+			<column name="MAXF1S2" type="INT"/>
+			<column name="MAXS1F2" type="INT"/>
+			<column name="MINF1S2" type="INT"/>
+			<column name="MINS1F2" type="INT"/>
+			<column name="LHSEXTENDEDDATAELEMENT_ID" type="BIGINT">
 				<constraints nullable="false"/>
 			</column>
-			<column name="MAXF1S2TIMEUNIT_ID" type="NUMBER(19,0)"/>
-			<column name="MAXS1F2TIMEUNIT_ID" type="NUMBER(19,0)"/>
-			<column name="MINF1S2TIMEUNIT_ID" type="NUMBER(19,0)"/>
-			<column name="MINS1F2TIMEUNIT_ID" type="NUMBER(19,0)"/>
-			<column name="RELATIONOP_ID" type="NUMBER(19,0)">
+			<column name="MAXF1S2TIMEUNIT_ID" type="BIGINT"/>
+			<column name="MAXS1F2TIMEUNIT_ID" type="BIGINT"/>
+			<column name="MINF1S2TIMEUNIT_ID" type="BIGINT"/>
+			<column name="MINS1F2TIMEUNIT_ID" type="BIGINT"/>
+			<column name="RELATIONOP_ID" type="BIGINT">
 				<constraints nullable="false"/>
 			</column>
-			<column name="RHSEXTENDEDDATAELEMENT_ID" type="NUMBER(19,0)">
+			<column name="RHSEXTENDEDDATAELEMENT_ID" type="BIGINT">
 				<constraints nullable="false"/>
 			</column>
-			<column name="SEQUENCE_ID" type="NUMBER(19,0)"/>
+			<column name="SEQUENCE_ID" type="BIGINT"/>
 		</createTable>
 	</changeSet>
 	<changeSet author="arpost (generated)" id="1360440238345-12">
 		<createTable tableName="ROLES">
-			<column name="ID" type="NUMBER(19,0)">
+			<column name="ID" type="BIGINT">
 				<constraints nullable="false" primaryKey="true" primaryKeyName="SYS_C0013014"/>
 			</column>
-			<column name="DEFAULTROLE" type="NUMBER(1,0)">
+			<column name="DEFAULTROLE" type="BOOLEAN">
 				<constraints nullable="false"/>
 			</column>
-			<column name="NAME" type="VARCHAR2(255 CHAR)">
+			<column name="NAME" type="VARCHAR(255)">
 				<constraints nullable="false"/>
 			</column>
 		</createTable>
 	</changeSet>
 	<changeSet author="arpost (generated)" id="1360440238345-13">
 		<createTable tableName="SEQUENCES">
-			<column name="ID" type="NUMBER(19,0)">
+			<column name="ID" type="BIGINT">
 				<constraints nullable="false" primaryKey="true" primaryKeyName="SYS_C0013433"/>
 			</column>
-			<column name="PRIMARYEXTENDEDDATAELEMENT_ID" type="NUMBER(19,0)"/>
+			<column name="PRIMARYEXTENDEDDATAELEMENT_ID" type="BIGINT"/>
 		</createTable>
 	</changeSet>
 	<changeSet author="arpost (generated)" id="1360440238345-14">
 		<createTable tableName="SYSTEM_DATA_ELEMENTS">
-			<column name="SYSTEMTYPE" type="VARCHAR2(255 CHAR)">
+			<column name="SYSTEMTYPE" type="VARCHAR(255)">
 				<constraints nullable="false"/>
 			</column>
-			<column name="ID" type="NUMBER(19,0)">
+			<column name="ID" type="BIGINT">
 				<constraints nullable="false" primaryKey="true" primaryKeyName="SYS_C0013436"/>
 			</column>
 		</createTable>
 	</changeSet>
 	<changeSet author="arpost (generated)" id="1360440238345-15">
 		<createTable tableName="THRESHOLDS_OPS">
-			<column name="ID" type="NUMBER(19,0)">
+			<column name="ID" type="BIGINT">
 				<constraints nullable="false" primaryKey="true" primaryKeyName="SYS_C0013439"/>
 			</column>
-			<column name="DESCRIPTION" type="VARCHAR2(255 CHAR)"/>
-			<column name="NAME" type="VARCHAR2(255 CHAR)">
+			<column name="DESCRIPTION" type="VARCHAR(255)"/>
+			<column name="NAME" type="VARCHAR(255)">
 				<constraints nullable="false"/>
 			</column>
 		</createTable>
 	</changeSet>
 	<changeSet author="arpost (generated)" id="1360440238345-16">
 		<createTable tableName="TIME_UNITS">
-			<column name="ID" type="NUMBER(19,0)">
+			<column name="ID" type="BIGINT">
 				<constraints nullable="false" primaryKey="true" primaryKeyName="SYS_C0013443"/>
 			</column>
-			<column name="DESCRIPTION" type="VARCHAR2(255 CHAR)"/>
-			<column name="NAME" type="VARCHAR2(255 CHAR)">
+			<column name="DESCRIPTION" type="VARCHAR(255)"/>
+			<column name="NAME" type="VARCHAR(255)">
 				<constraints nullable="false"/>
 			</column>
-			<column name="RANK" type="NUMBER(10,0)"/>
+			<column name="RANK" type="INT"/>
 		</createTable>
 	</changeSet>
 	<changeSet author="arpost (generated)" id="1360440238345-17">
 		<createTable tableName="USER_ROLE">
-			<column name="USER_ID" type="NUMBER(19,0)">
+			<column name="USER_ID" type="BIGINT">
 				<constraints nullable="false"/>
 			</column>
-			<column name="ROLE_ID" type="NUMBER(19,0)">
+			<column name="ROLE_ID" type="BIGINT">
 				<constraints nullable="false"/>
 			</column>
 		</createTable>
 	</changeSet>
 	<changeSet author="arpost (generated)" id="1360440238345-18">
 		<createTable tableName="USERS">
-			<column name="ID" type="NUMBER(19,0)">
+			<column name="ID" type="BIGINT">
 				<constraints nullable="false" primaryKey="true" primaryKeyName="SYS_C0013037"/>
 			</column>
-			<column name="ACTIVE" type="NUMBER(1,0)">
+			<column name="ACTIVE" type="BOOLEAN">
 				<constraints nullable="false"/>
 			</column>
-			<column name="EMAIL" type="VARCHAR2(255 CHAR)">
+			<column name="EMAIL" type="VARCHAR(255)">
 				<constraints nullable="false"/>
 			</column>
-			<column name="FIRSTNAME" type="VARCHAR2(255 CHAR)"/>
+			<column name="FIRSTNAME" type="VARCHAR(255)"/>
 			<column name="LASTLOGIN" type="TIMESTAMP(6)"/>
-			<column name="LASTNAME" type="VARCHAR2(255 CHAR)"/>
-			<column name="ORGANIZATION" type="VARCHAR2(255 CHAR)"/>
-			<column name="PASSWORD" type="VARCHAR2(255 CHAR)">
+			<column name="LASTNAME" type="VARCHAR(255)"/>
+			<column name="ORGANIZATION" type="VARCHAR(255)"/>
+			<column name="PASSWORD" type="VARCHAR(255)">
 				<constraints nullable="false"/>
 			</column>
 			<column name="PASSWORDEXPIRATION" type="TIMESTAMP(6)"/>
-			<column name="VERIFICATIONCODE" type="VARCHAR2(255 CHAR)"/>
-			<column name="VERIFIED" type="NUMBER(1,0)">
+			<column name="VERIFICATIONCODE" type="VARCHAR(255)"/>
+			<column name="VERIFIED" type="BOOLEAN">
 				<constraints nullable="false"/>
 			</column>
 		</createTable>
 	</changeSet>
 	<changeSet author="arpost (generated)" id="1360440238345-19">
 		<createTable tableName="VALUE_COMPARATORS">
-			<column name="ID" type="NUMBER(19,0)">
+			<column name="ID" type="BIGINT">
 				<constraints nullable="false" primaryKey="true" primaryKeyName="SYS_C0013450"/>
 			</column>
-			<column name="DESCRIPTION" type="VARCHAR2(255 CHAR)"/>
-			<column name="NAME" type="VARCHAR2(255 CHAR)">
+			<column name="DESCRIPTION" type="VARCHAR(255)"/>
+			<column name="NAME" type="VARCHAR(255)">
 				<constraints nullable="false"/>
 			</column>
-			<column name="RANK" type="NUMBER(19,0)">
+			<column name="RANK" type="BIGINT">
 				<constraints nullable="false"/>
 			</column>
-			<column name="THRESHOLD" type="VARCHAR2(255 CHAR)">
+			<column name="THRESHOLD" type="VARCHAR(255)">
 				<constraints nullable="false"/>
 			</column>
-			<column name="COMPLEMENT_ID" type="NUMBER(19,0)"/>
+			<column name="COMPLEMENT_ID" type="BIGINT"/>
 		</createTable>
 	</changeSet>
 	<changeSet author="arpost (generated)" id="1360440238345-20">
 		<createTable tableName="VALUE_THRESHOLD_GROUPS">
-			<column name="ID" type="NUMBER(19,0)">
+			<column name="ID" type="BIGINT">
 				<constraints nullable="false" primaryKey="true" primaryKeyName="SYS_C0013455"/>
 			</column>
-			<column name="THRESHOLDSOP_ID" type="NUMBER(19,0)">
+			<column name="THRESHOLDSOP_ID" type="BIGINT">
 				<constraints nullable="false"/>
 			</column>
 		</createTable>
 	</changeSet>
 	<changeSet author="arpost (generated)" id="1360440238345-21">
 		<createTable tableName="VALUE_THRESHOLDS">
-			<column name="ID" type="NUMBER(19,0)">
+			<column name="ID" type="BIGINT">
 				<constraints nullable="false" primaryKey="true" primaryKeyName="SYS_C0013461"/>
 			</column>
-			<column name="MAXTVALUETHRESHOLD" type="VARCHAR2(255 CHAR)"/>
-			<column name="MAXUNITS" type="VARCHAR2(255 CHAR)"/>
-			<column name="MAXVALUETHRESHOLD" type="NUMBER(19,2)"/>
-			<column name="MINTVALUETHRESHOLD" type="VARCHAR2(255 CHAR)"/>
-			<column name="MINUNITS" type="VARCHAR2(255 CHAR)"/>
-			<column name="MINVALUETHRESHOLD" type="NUMBER(19,2)"/>
-			<column name="ABSTRACTEDFROM_ID" type="NUMBER(19,0)">
+			<column name="MAXTVALUETHRESHOLD" type="VARCHAR(255)"/>
+			<column name="MAXUNITS" type="VARCHAR(255)"/>
+			<column name="MAXVALUETHRESHOLD" type="NUMERIC"/>
+			<column name="MINTVALUETHRESHOLD" type="VARCHAR(255)"/>
+			<column name="MINUNITS" type="VARCHAR(255)"/>
+			<column name="MINVALUETHRESHOLD" type="NUMERIC"/>
+			<column name="ABSTRACTEDFROM_ID" type="BIGINT">
 				<constraints nullable="false"/>
 			</column>
-			<column name="MAXVALUECOMP_ID" type="NUMBER(19,0)">
+			<column name="MAXVALUECOMP_ID" type="BIGINT">
 				<constraints nullable="false"/>
 			</column>
-			<column name="MINVALUECOMP_ID" type="NUMBER(19,0)">
+			<column name="MINVALUECOMP_ID" type="BIGINT">
 				<constraints nullable="false"/>
 			</column>
-			<column name="VALUETHRESHOLDSGROUP_ID" type="NUMBER(19,0)">
+			<column name="VALUETHRESHOLDSGROUP_ID" type="BIGINT">
 				<constraints nullable="false"/>
 			</column>
 		</createTable>
@@ -383,12 +336,6 @@ limitations under the License.
 	</changeSet>
 	<changeSet author="arpost (generated)" id="1360440238345-37">
 		<addForeignKeyConstraint baseColumnNames="PROPERTYCONSTRAINT_ID" baseTableName="EXTENDED_DATA_ELEMENTS" constraintName="FK187629668A6E938D" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" referencedColumnNames="ID" referencedTableName="PROPERTY_CONSTRAINTS" referencedTableSchemaName="EUREKASERVICE" referencesUniqueColumn="false"/>
-	</changeSet>
-	<changeSet author="arpost (generated)" id="1360440238345-38">
-		<addForeignKeyConstraint baseColumnNames="FILEUPLOAD_ID" baseTableName="FILE_ERRORS" constraintName="FK6239938EACFDA6AD" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" referencedColumnNames="ID" referencedTableName="FILE_UPLOADS" referencedTableSchemaName="EUREKASERVICE" referencesUniqueColumn="false"/>
-	</changeSet>
-	<changeSet author="arpost (generated)" id="1360440238345-39">
-		<addForeignKeyConstraint baseColumnNames="FILEUPLOAD_ID" baseTableName="FILE_WARNINGS" constraintName="FK849BEBBAACFDA6AD" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" referencedColumnNames="ID" referencedTableName="FILE_UPLOADS" referencedTableSchemaName="EUREKASERVICE" referencesUniqueColumn="false"/>
 	</changeSet>
 	<changeSet author="arpost (generated)" id="1360440238345-40">
 		<addForeignKeyConstraint baseColumnNames="EXTENDEDDATAELEMENT_ID" baseTableName="FREQUENCIES" constraintName="FK55076EFA858DC647" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" referencedColumnNames="ID" referencedTableName="EXTENDED_DATA_ELEMENTS" referencedTableSchemaName="EUREKASERVICE" referencesUniqueColumn="false"/>
@@ -473,12 +420,6 @@ limitations under the License.
 	</changeSet>
 	<changeSet author="arpost (generated)" id="1360440238345-68">
 		<createSequence sequenceName="EXT_PROP_SEQ"/>
-	</changeSet>
-	<changeSet author="arpost (generated)" id="1360440238345-69">
-		<createSequence sequenceName="FILEINFO_SEQ"/>
-	</changeSet>
-	<changeSet author="arpost (generated)" id="1360440238345-70">
-		<createSequence sequenceName="FILE_SEQ"/>
 	</changeSet>
 	<changeSet author="arpost (generated)" id="1360440238345-71">
 		<createSequence sequenceName="PROP_SEQ"/>
@@ -649,24 +590,24 @@ limitations under the License.
 	<!-- 1.7 changes -->
 	<changeSet author="arpost (generated)" id="1360440238345-86">
 		<addColumn tableName="EXTENDED_DATA_ELEMENTS">
-			<column name="VALUETHRESHOLD_ID" type="NUMBER(19,0)"/>
+			<column name="VALUETHRESHOLD_ID" type="BIGINT"/>
 		</addColumn> 
 		<addColumn tableName="VALUE_THRESHOLDS">
-			<column name="RELATIONOP_ID" type="NUMBER(19,0)"/>
+			<column name="RELATIONOP_ID" type="BIGINT"/>
 		</addColumn> 
 		<addColumn tableName="VALUE_THRESHOLDS">
-			<column name="WITHINATLEAST" type="NUMBER(10,0)"/>
+			<column name="WITHINATLEAST" type="INT"/>
 		</addColumn> 
 		<addColumn tableName="VALUE_THRESHOLDS">
-			<column name="WITHINATLEASTUNITS_ID" type="NUMBER(19,0)" defaultValueNumeric="1">
+			<column name="WITHINATLEASTUNITS_ID" type="BIGINT" defaultValueNumeric="1">
 				<constraints nullable="false"/>
 			</column>
 		</addColumn> 
 		<addColumn tableName="VALUE_THRESHOLDS">
-			<column name="WITHINATMOST" type="NUMBER(10,0)"/>
+			<column name="WITHINATMOST" type="INT"/>
 		</addColumn> 
 		<addColumn tableName="VALUE_THRESHOLDS">
-			<column name="WITHINATMOSTUNITS_ID" type="NUMBER(19,0)" defaultValueNumeric="1">
+			<column name="WITHINATMOSTUNITS_ID" type="BIGINT" defaultValueNumeric="1">
 				<constraints nullable="false"/>
 			</column>
 		</addColumn> 
@@ -677,11 +618,11 @@ limitations under the License.
 	</changeSet>
 	<changeSet author="arpost" id="1360440238345-87">
 		<addColumn tableName="RELATION_OPS">
-			<column name="RANK" type="NUMBER(10,0)"/>
+			<column name="RANK" type="INT"/>
 			<column name="ISDEFAULT" type="BOOLEAN" defaultValueBoolean="false">
 				<constraints nullable="false"/>
 			</column>
-			<column name="TYPE" type="VARCHAR2(255 CHAR)"/>
+			<column name="TYPE" type="VARCHAR(255)"/>
 		</addColumn>
 		<addUniqueConstraint columnNames="RANK" constraintName="TIME_UNITS_RANK" deferrable="false" disabled="false" initiallyDeferred="false" tableName="RELATION_OPS"/>
 		<update tableName="RELATION_OPS">
@@ -716,14 +657,14 @@ limitations under the License.
 	</changeSet>
 	<changeSet author="arpost" id="1360440238345-88">
 		<createTable tableName="FREQUENCY_TYPES">
-			<column name="ID" type="NUMBER(19,0)">
+			<column name="ID" type="BIGINT">
 				<constraints nullable="false" primaryKey="true" primaryKeyName="FREQ_TYPE_PK"/>
 			</column>
-			<column name="DESCRIPTION" type="VARCHAR2(255 CHAR)"/>
-			<column name="NAME" type="VARCHAR2(255 CHAR)">
+			<column name="DESCRIPTION" type="VARCHAR(255)"/>
+			<column name="NAME" type="VARCHAR(255)">
 				<constraints nullable="false"/>
 			</column>
-			<column name="RANK" type="NUMBER(10,0)">
+			<column name="RANK" type="INT">
 				<constraints nullable="false"/>
 			</column>
 			<column name="ISDEFAULT" type="BOOLEAN">
@@ -747,7 +688,7 @@ limitations under the License.
 			<column name="ISDEFAULT" valueBoolean="false"/>
 		</insert>
 		<addColumn tableName="FREQUENCIES">
-			<column name="FREQUENCYTYPE_ID" type="NUMBER(10,0)" defaultValueNumeric="1">
+			<column name="FREQUENCYTYPE_ID" type="INT" defaultValueNumeric="1">
 				<constraints nullable="false"/>
 			</column>
 		</addColumn>

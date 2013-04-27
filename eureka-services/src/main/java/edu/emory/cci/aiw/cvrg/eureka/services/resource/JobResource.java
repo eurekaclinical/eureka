@@ -21,18 +21,20 @@ package edu.emory.cci.aiw.cvrg.eureka.services.resource;
 
 import edu.emory.cci.aiw.cvrg.eureka.services.conversion.PropositionDefinitionCollector;
 import com.google.inject.Inject;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.JobInfo;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.FileUpload;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.Job;
+import com.sun.jersey.api.client.ClientResponse;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.Job;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.JobFilter;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.JobRequest;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.JobSpec;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ClientException;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.User;
 import edu.emory.cci.aiw.cvrg.eureka.common.exception.HttpStatusException;
+import edu.emory.cci.aiw.cvrg.eureka.services.config.EtlClient;
 import edu.emory.cci.aiw.cvrg.eureka.services.conversion.PropositionDefinitionConverterVisitor;
-import edu.emory.cci.aiw.cvrg.eureka.services.dao.FileDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.PropositionDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.UserDao;
-import edu.emory.cci.aiw.cvrg.eureka.services.job.JobCollection;
-import edu.emory.cci.aiw.cvrg.eureka.services.thread.JobExecutor;
-import edu.emory.cci.aiw.cvrg.eureka.services.thread.JobTask;
+import java.net.URI;
+import java.security.Principal;
 
 import org.protempa.PropositionDefinition;
 import org.slf4j.Logger;
@@ -46,11 +48,11 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
+import javax.ws.rs.core.Response.Status;
 
 /**
  * REST operations related to jobs submitted by the user.
@@ -58,7 +60,7 @@ import javax.ws.rs.core.Context;
  * @author hrathod
  *
  */
-@Path("/job")
+@Path("/jobs")
 public class JobResource {
 
 	/**
@@ -72,11 +74,6 @@ public class JobResource {
 	 */
 	private final UserDao userDao;
 	/**
-	 * The data access object used to work with file upload objects in the data
-	 * store.
-	 */
-	private final FileDao fileDao;
-	/**
 	 * Used to fetch the user's Propositions, to be sent to the ETL layer when
 	 * submitting a new job request.
 	 */
@@ -86,14 +83,7 @@ public class JobResource {
 	 * Protempa proposition definitions.
 	 */
 	private final PropositionDefinitionConverterVisitor converterVisitor;
-	/**
-	 * The runnable used to run the data processing and job submission tasks.
-	 */
-	private final JobTask jobTask;
-	/**
-	 * The executor service used to run the job tasks.
-	 */
-	private final JobExecutor jobExecutor;
+	private final EtlClient etlClient;
 
 	/**
 	 * Construct a new job resource with the given job update thread.
@@ -107,55 +97,68 @@ public class JobResource {
 	 * @param inJobExecutor The executor service used to run the job tasks.
 	 */
 	@Inject
-	public JobResource(UserDao inUserDao, FileDao inFileDao,
+	public JobResource(UserDao inUserDao,
 			PropositionDefinitionConverterVisitor inVisitor,
 			PropositionDao inPropositionDao,
-			JobTask inJobTask, JobExecutor inJobExecutor) {
+			EtlClient inEtlClient) {
 		this.userDao = inUserDao;
-		this.fileDao = inFileDao;
 		this.propositionDao = inPropositionDao;
 		this.converterVisitor = inVisitor;
-		this.jobTask = inJobTask;
-		this.jobExecutor = inJobExecutor;
+		this.etlClient = inEtlClient;
 	}
 
 	/**
 	 * Create a new job (by uploading a new file).
 	 *
-	 * @param inFileUpload The file upload to add.
+	 * @param jobSpec The file upload to add.
 	 *
 	 * @return A {@link Response.Status#OK} if the file is successfully added,
 	 * {@link Response.Status#BAD_REQUEST} if there are errors.
 	 */
-	@Path("/add")
 	@POST
-	@Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
-	public Response uploadFile(@Context HttpServletRequest request,
-			edu.emory.cci.aiw.cvrg.eureka.common.comm.FileUpload inFileUpload) {
-		LOGGER.debug("Got file upload: {}", inFileUpload);
-		FileUpload fileUpload = new FileUpload();
-		fileUpload.setTimestamp(new Date());
-		fileUpload.setUserId(inFileUpload.getUserId());
-		fileUpload.setLocation(inFileUpload.getLocation());
-		this.fileDao.create(fileUpload);
-		this.jobTask.setFileUploadId(fileUpload.getId());
-		this.converterVisitor.setUserId(fileUpload.getUserId());
+	@Consumes({MediaType.APPLICATION_JSON})
+	public Response submit(@Context HttpServletRequest request, JobSpec jobSpec) {
+		LOGGER.debug("Got job submission: {}", jobSpec);
+		Principal userPrincipal = request.getUserPrincipal();
+		User user = this.userDao.getByName(userPrincipal.getName());
+		JobRequest jobRequest = new JobRequest();
 		PropositionDefinitionCollector collector =
 				PropositionDefinitionCollector.getInstance(
 				this.converterVisitor, this.propositionDao
-				.getByUserId(fileUpload.getUserId()));
-		LOGGER.debug("Sending {} propositions:", collector.getUserPropDefs().size());
+				.getByUserId(user.getId()));
+		LOGGER.debug("Sending {} proposition definitions:", collector.getUserPropDefs().size());
 		if (LOGGER.isDebugEnabled()) {
 			for (PropositionDefinition pd : collector.getUserPropDefs()) {
 				LOGGER.debug("PropDef: {}", pd);
 			}
 		}
-		this.jobTask.setUserPropositions(collector.getUserPropDefs());
-		this.jobTask.setNonHelperPropositionIds(collector.getToShowPropDefs());
-		this.jobTask.setLocale(request.getLocale());
-		this.jobExecutor.queueJob(this.jobTask);
+		jobRequest.setJobSpec(jobSpec);
+		jobRequest.setUserPropositions(collector.getUserPropDefs());
+		jobRequest.setPropositionIdsToShow(collector.getToShowPropDefs());
+		Long jobId;
+		try {
+			jobId = this.etlClient.submitJob(jobRequest);
+		} catch (ClientException ex) {
+			throw new HttpStatusException(Status.INTERNAL_SERVER_ERROR, ex);
+		}
 
-		return Response.ok().build();
+		return Response.created(URI.create("/" + jobId)).build();
+	}
+
+	@Path("/{jobId}")
+	@GET
+	@Produces({MediaType.APPLICATION_JSON})
+	public Job getJob(@PathParam("jobId") Long inJobId) {
+		try {
+			return this.etlClient.getJob(inJobId);
+		} catch (ClientException ex) {
+			ClientResponse.Status responseStatus = ex.getResponseStatus();
+			if (responseStatus == ClientResponse.Status.NOT_FOUND) {
+				throw new HttpStatusException(Status.NOT_FOUND);
+			} else {
+				throw new HttpStatusException(Status.INTERNAL_SERVER_ERROR, ex);
+			}
+		}
 	}
 
 	/**
@@ -166,19 +169,21 @@ public class JobResource {
 	 *
 	 * @return A list of {@link Job} objects associated with the user.
 	 */
-	@Path("/list/{id}")
 	@GET
-	@Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
-	public List<Job> getJobsByUser(@PathParam("id") final Long userId) {
-		User user = this.userDao.retrieve(userId);
-		List<Job> allJobs = JobCollection.getJobs();
-		List<Job> result = new ArrayList<Job>();
-		for (Job job : allJobs) {
-			if (job.getUserId().equals(user.getId())) {
-				result.add(job);
+	@Produces({MediaType.APPLICATION_JSON})
+	public List<Job> getJobsByUser(@QueryParam("order") String order) {
+		try {
+			if (order == null) {
+				return this.etlClient.getJobs();
+			} else if (order.equals("desc")) {
+				return this.etlClient.getJobsDesc();
+			} else {
+				throw new HttpStatusException(Status.PRECONDITION_FAILED, 
+						"Invalid value for the order query parameter: " + order);
 			}
+		} catch (ClientException ex) {
+			throw new HttpStatusException(Status.INTERNAL_SERVER_ERROR, ex);
 		}
-		return result;
 	}
 
 	/**
@@ -187,52 +192,14 @@ public class JobResource {
 	 * @param userId The unique identifier of the user to query for.
 	 * @return A {@link JobInfo} object containing the status information.
 	 */
-	@Path("/status/{id}")
+	@Path("/status")
 	@GET
-	@Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
-	public JobInfo getStatus(@PathParam("id") final Long userId) {
-		FileUpload latestFileUpload = null;
-
-		List<FileUpload> fileUploads = this.fileDao.getByUserId(userId);
-		for (FileUpload fileUpload : fileUploads) {
-//			this.fileDao.refresh(fileUpload);
-			if (latestFileUpload == null) {
-				latestFileUpload = fileUpload;
-			} else {
-				if (fileUpload.getTimestamp().after(
-						latestFileUpload.getTimestamp())) {
-					latestFileUpload = fileUpload;
-				}
-			}
+	@Produces({MediaType.APPLICATION_JSON})
+	public List<Job> getStatus(@QueryParam("filter") JobFilter inFilter) {
+		try {
+			return this.etlClient.getJobStatus(inFilter);
+		} catch (ClientException ex) {
+			throw new HttpStatusException(Status.INTERNAL_SERVER_ERROR, ex);
 		}
-
-		if (latestFileUpload == null) {
-			throw new HttpStatusException(Response.Status.NOT_FOUND,
-					"No files uploaded by user " + userId);
-		}
-
-		JobInfo jobInfo = new JobInfo();
-		jobInfo.setFileUpload(latestFileUpload);
-
-		if (latestFileUpload.isCompleted()) {
-			Job latestJob = null;
-			List<Job> userJobs = this.getJobsByUser(userId);
-			for (Job job : userJobs) {
-				if (latestJob == null) {
-					latestJob = job;
-				} else {
-					if (job.getTimestamp().after(latestJob.getTimestamp())) {
-						latestJob = job;
-					}
-				}
-			}
-			jobInfo.setJob(latestJob);
-		}
-		LOGGER.debug(
-				"Returning job status for user id {}: {}/{}",
-				new Object[]{userId,
-					Integer.valueOf(jobInfo.getCurrentStep()),
-					Integer.valueOf(jobInfo.getTotalSteps())});
-		return jobInfo;
 	}
 }

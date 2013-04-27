@@ -4,13 +4,9 @@
 	version="2.0">
 	<persistence-unit name="services-jpa-unit"
 		transaction-type="RESOURCE_LOCAL">
-		<class>edu.emory.cci.aiw.cvrg.eureka.common.entity.AbstractFileInfo</class>
 		<class>edu.emory.cci.aiw.cvrg.eureka.common.entity.CategoryEntity</class>
 		<class>edu.emory.cci.aiw.cvrg.eureka.common.entity.DataElementEntity</class>
 		<class>edu.emory.cci.aiw.cvrg.eureka.common.entity.ExtendedDataElement</class>
-		<class>edu.emory.cci.aiw.cvrg.eureka.common.entity.FileError</class>
-		<class>edu.emory.cci.aiw.cvrg.eureka.common.entity.FileUpload</class>
-		<class>edu.emory.cci.aiw.cvrg.eureka.common.entity.FileWarning</class>
 		<class>edu.emory.cci.aiw.cvrg.eureka.common.entity.FrequencyEntity</class>
 		<class>edu.emory.cci.aiw.cvrg.eureka.common.entity.FrequencyType</class>
 		<class>edu.emory.cci.aiw.cvrg.eureka.common.entity.PropertyConstraint</class>

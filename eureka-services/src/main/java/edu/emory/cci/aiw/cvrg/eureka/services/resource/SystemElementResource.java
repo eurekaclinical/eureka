@@ -37,13 +37,16 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.inject.Inject;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.SourceConfigParams;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.SystemElement;
 import edu.emory.cci.aiw.cvrg.eureka.common.exception.HttpStatusException;
 import edu.emory.cci.aiw.cvrg.eureka.services.config.ServiceProperties;
+import edu.emory.cci.aiw.cvrg.eureka.services.dao.UserDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.finder.PropositionFindException;
 import edu.emory.cci.aiw.cvrg.eureka.services.finder.SystemPropositionFinder;
 import edu.emory.cci.aiw.cvrg.eureka.services.util.PropositionUtil;
+import javax.ws.rs.core.Response.Status;
 
 /**
  * @author hrathod
@@ -54,44 +57,57 @@ import edu.emory.cci.aiw.cvrg.eureka.services.util.PropositionUtil;
 public class SystemElementResource {
 
 	private static final Logger LOGGER = LoggerFactory
-	        .getLogger(SystemElementResource.class);
+			.getLogger(SystemElementResource.class);
 	private final SystemPropositionFinder finder;
 	private final ServiceProperties serviceProperties;
+	private final UserDao userDao;
+	private final SourceConfigResource sourceConfigResource;
 
 	@Inject
 	public SystemElementResource(SystemPropositionFinder inFinder,
-	        ServiceProperties inServiceProperties) {
+			SourceConfigResource inSourceConfigResource,
+			ServiceProperties inServiceProperties, UserDao userDao) {
 		this.finder = inFinder;
 		this.serviceProperties = inServiceProperties;
+		this.userDao = userDao;
+		this.sourceConfigResource = inSourceConfigResource;
 	}
 
 	/**
 	 * Gets all of the system elements for a user
-	 * 
+	 *
 	 * @param inUserId the user ID
 	 * @return a {@link List} of {@link SystemElement}s
 	 */
 	@GET
-	@Path("/{userId}")
-	public List<SystemElement> getAll(@PathParam("userId") Long inUserId) {
+	@Path("/")
+	public List<SystemElement> getAll() {
 		List<SystemElement> allElements = new ArrayList<SystemElement>();
 		List<SystemElement> result = new ArrayList<SystemElement>();
+		/*
+		 * Hack to get an ontology source that assumes all Protempa configurations
+		 * for a user point to the same knowledge source backends. This will go away.
+		 */
+		List<SourceConfigParams> scps = this.sourceConfigResource.getParamsList();
+		if (scps.isEmpty()) {
+			throw new HttpStatusException(Status.INTERNAL_SERVER_ERROR, "No source configs");
+		}
 		try {
 			List<PropositionDefinition> definitions = this.finder.findAll(
-			        inUserId,
-			        this.serviceProperties.getDefaultSystemPropositions(),
-			        Boolean.TRUE);
+					scps.get(0).getId(),
+					this.serviceProperties.getDefaultSystemPropositions(),
+					Boolean.TRUE);
 			if (definitions.isEmpty()) {
 				LOGGER.warn("No proposition definitions retrieved");
 			} else {
 				for (PropositionDefinition definition : definitions) {
 					SystemElement element = PropositionUtil.toSystemElement(
-					        definition, true, inUserId, this.finder);
+							scps.get(0).getId(), definition, true, this.finder);
 					allElements.add(element);
 				}
 
 				Set<String> defaultPropositions = new HashSet<String>(
-				        this.serviceProperties.getDefaultSystemPropositions());
+						this.serviceProperties.getDefaultSystemPropositions());
 				for (SystemElement element : allElements) {
 					if (defaultPropositions.contains(element.getKey())) {
 						result.add(element);
@@ -104,27 +120,34 @@ public class SystemElementResource {
 			}
 		} catch (PropositionFindException e) {
 			throw new HttpStatusException(
-			        Response.Status.INTERNAL_SERVER_ERROR, e);
+					Response.Status.INTERNAL_SERVER_ERROR, e);
 		}
 		return result;
 	}
 
 	@GET
-	@Path("/{userId}/{key}")
-	public SystemElement get(@PathParam("userId") Long inUserId,
-	        @PathParam("key") String inKey) {
+	@Path("/{key}")
+	public SystemElement get(@PathParam("key") String inKey) {
 		LOGGER.info("Finding system element {}", inKey);
+		/*
+		 * Hack to get an ontology source that assumes all Protempa configurations
+		 * for a user point to the same knowledge source backends. This will go away.
+		 */
+		List<SourceConfigParams> scps = this.sourceConfigResource.getParamsList();
+		if (scps.isEmpty()) {
+			throw new HttpStatusException(Status.INTERNAL_SERVER_ERROR, "No source configs");
+		}
 		PropositionDefinition definition;
 		try {
-			definition = this.finder.find(inUserId, inKey);
+			definition = this.finder.find(scps.get(0).getId(), inKey);
 			if (definition == null) {
 				throw new HttpStatusException(Response.Status.NOT_FOUND);
 			}
-			return PropositionUtil.toSystemElement(definition, false, inUserId,
-			        this.finder);
+			return PropositionUtil.toSystemElement(scps.get(0).getId(), definition, false,
+					this.finder);
 		} catch (PropositionFindException ex) {
 			throw new HttpStatusException(
-			        Response.Status.INTERNAL_SERVER_ERROR, ex);
+					Response.Status.INTERNAL_SERVER_ERROR, ex);
 		}
 	}
 }

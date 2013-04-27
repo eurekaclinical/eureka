@@ -19,6 +19,7 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.services.thread;
 
+import com.google.inject.Inject;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
@@ -27,11 +28,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.inject.Singleton;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.Job;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.JobFilter;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ClientException;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.EtlClient;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.Job;
+import edu.emory.cci.aiw.cvrg.eureka.services.config.EtlClient;
+import edu.emory.cci.aiw.cvrg.eureka.services.config.EtlClientImpl;
 import edu.emory.cci.aiw.cvrg.eureka.services.job.JobCollection;
 
 /**
@@ -50,10 +52,6 @@ public class JobUpdateTask implements Runnable {
 	private static final Logger LOGGER = LoggerFactory
 			.getLogger(JobUpdateTask.class);
 	/**
-	 * The back-end URL needed to make the REST calls for job updates.
-	 */
-	private final String backendUrl;
-	/**
 	 * The etlClient used to call into the ETL layer.
 	 */
 	private final EtlClient etlClient;
@@ -67,10 +65,9 @@ public class JobUpdateTask implements Runnable {
 	 * @throws KeyManagementException Thrown when the secure etlClient can not
 	 * be create properly.
 	 */
-	public JobUpdateTask(String inBackendUrl) throws KeyManagementException,
-			NoSuchAlgorithmException {
-		this.backendUrl = inBackendUrl;
-		this.etlClient = new EtlClient(this.backendUrl);
+	@Inject
+	public JobUpdateTask(EtlClient inEtlClient) {
+		this.etlClient = inEtlClient;
 	}
 
 	@Override

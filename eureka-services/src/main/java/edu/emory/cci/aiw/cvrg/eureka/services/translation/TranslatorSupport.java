@@ -28,13 +28,17 @@ import org.protempa.PropositionDefinition;
 import com.google.inject.Inject;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.DataElement;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.SourceConfigParams;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.DataElementEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.exception.DataElementHandlingException;
+import edu.emory.cci.aiw.cvrg.eureka.common.exception.HttpStatusException;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.PropositionDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.finder.PropositionFindException;
 import edu.emory.cci.aiw.cvrg.eureka.services.finder.SystemPropositionFinder;
+import edu.emory.cci.aiw.cvrg.eureka.services.resource.SourceConfigResource;
 import edu.emory.cci.aiw.cvrg.eureka.services.util.PropositionUtil;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -42,6 +46,7 @@ import java.util.Map;
  * @author Andrew Post
  */
 final class TranslatorSupport {
+	private final SourceConfigResource sourceConfigResource;
 
 	private static final class DataElementMapKey {
 
@@ -93,11 +98,13 @@ final class TranslatorSupport {
 
 	@Inject
 	public TranslatorSupport(PropositionDao propositionDao,
-			SystemPropositionFinder finder) {
+			SystemPropositionFinder finder,
+			SourceConfigResource inSourceConfigResource) {
 		this.propositionDao = propositionDao;
 		this.finder = finder;
 		this.dataElementEntities = 
 				new HashMap<DataElementMapKey, DataElementEntity>();
+		this.sourceConfigResource = inSourceConfigResource;
 	}
 
 	/**
@@ -113,13 +120,22 @@ final class TranslatorSupport {
 			throws DataElementHandlingException {
 		DataElementEntity abstractedFrom =
 				propositionDao.getByUserAndKey(userId, key);
+		/*
+		 * Hack to get an ontology source that assumes all Protempa configurations
+		 * for a user point to the same knowledge source backends. This will go away.
+		 */
+		List<SourceConfigParams> scps = this.sourceConfigResource.getParamsList();
+		if (scps.isEmpty()) {
+			throw new HttpStatusException(Response.Status.INTERNAL_SERVER_ERROR, "No source configs");
+		}
+		String sourceConfigId = scps.get(0).getId();
 		if (abstractedFrom == null) {
 			DataElementMapKey deMapKey = new DataElementMapKey(userId, key);
 			abstractedFrom = this.dataElementEntities.get(deMapKey);
 			if (abstractedFrom == null) {
 				try {
 					PropositionDefinition propDef = 
-							this.finder.find(userId, key);
+							this.finder.find(sourceConfigId, key);
 					abstractedFrom = 
 							PropositionUtil.toSystemProposition(propDef,
 							userId);
