@@ -1,0 +1,17 @@
+AmericanIndianOrAlaskaNative	Aleutian
+AmericanIndianOrAlaskaNative	American Indian
+Asian	Asian
+NativeHawaiianOrOtherPacificIslander	Asian Pacific Islander
+BlackOrAfricanAmerican	Black
+AmericanIndianOrAlaskaNative	Eskimo
+Unknown	Hispanic
+Asian	Indian
+Asian	Middle Eastern
+Other	Multiracial
+AmericanIndianOrAlaskaNative	Native American
+AmericanIndianOrAlaskaNative	Navajo
+NotRecorded	Not Recorded
+Asian	Oriental
+Other	Other
+White	White
+Unknown	Unknown

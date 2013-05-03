@@ -1,0 +1,59 @@
+<?xml version="1.0"?>
+<document xmlns="http://maven.apache.org/XDOC/2.0" 
+		  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		  xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
+	<properties>
+		<title>Homepage</title>
+		<author email="aiwhelp@emory.edu">
+			The Eureka! Clinical Analytics Team
+		</author>
+	</properties>
+
+	<body>
+		<h2>What is Eureka! Clinical Analytics?</h2>
+        
+		<p>Eureka! Clinical Analytics is a web application that provides you 
+			with an easy way to phenotype a patient population based on their 
+			clinical and administrative data, and load those phenotypes and 
+			data into your own instance of the
+			<a href="http://www.i2b2.org/">i2b2</a> data warehouse system. 
+		</p>
+
+		<p>Eureka! Clinical Analytics is developed and maintained by the
+		<a href="http://cci.emory.edu">Emory Center for Comprehensive Informatics</a>.
+		</p>
+
+		<h2>Source Code</h2>
+		<p>Source code for the current release (version ${currentStableVersion}) 
+			is available from our 
+			<a href="http://aiw.sourceforge.net">Sourceforge website</a>. You 
+			can also download the 
+			<a href="http://maven.cci.emory.edu/nexus/service/local/artifact/maven/redirect?r=aiw-snapshots&amp;g=edu.emory.cci.aiw.cvrg&amp;a=eureka&amp;v=LATEST&amp;c=src&amp;e=zip">latest snapshot</a> from our 
+			<a href="http://maven.cci.emory.edu/nexus">Maven repository</a>.
+		</p>
+
+		<h2>Related Packages</h2>
+        
+		<p>Eureka! Clinical Analytics depends on a number of open source
+			packages that are maintained by the Emory Center for Comprehensive
+			Informatics:
+		</p>
+		<ul>
+			<li>
+				<a href="../javautil-${javautil-version}">JavaUtil: A Utility Library for Developing
+					Java Software</a>
+			</li>
+			<li>
+				<a href="../jaas-login-module-${jaas-login-module-version}">Jaas Login Module: JAAS Support for
+					Eureka! Clinical Analytics</a>
+			</li>
+			<li>
+				<a href="../protempa-${protempa-version}">Protempa: A Temporal Query Framework for Clinical Databases</a>
+			</li>
+			<li>
+				<a href="../aiw-i2b2-etl-${aiw-i2b2-etl-version}">AIW i2b2 ETL: A Query Results Handler for
+					Protempa for Loading Data and Abstractions into i2b2</a>
+			</li>
+		</ul>
+	</body>
+</document>

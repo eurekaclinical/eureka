@@ -1,0 +1,172 @@
+/* Eureka WebApp. Copyright (C) 2012 Emory University. Licensed under http://www.apache.org/licenses/LICENSE-2.0. */
+@import url("styles.css");
+
+/* Editor-specific styling. */
+
+body {
+	overflow: auto;
+}
+
+.content {
+	/*padding: 10px 0;*/
+	width: 98%;
+	height: 500px;
+}
+
+table, td {
+	border-style: none;
+	margin: 0px;
+	padding: 1px;
+}
+
+.footer {
+	margin-top: 650px;
+}
+
+/* Data element list styling. */
+
+.editor_menu {
+	margin-bottom: 10px;
+}
+
+#propDisplayName {
+	width: 250px;
+}
+
+#propDescription {
+    width: 500px;
+    height: 100px;
+}
+
+ul.sortable {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+
+/* Step 2 styling. */
+
+#select_element_table {
+	width: 100%;
+}
+
+#select_element_table td.firstCol {
+	/*width: 100px;*/
+	display: inline-block;
+	white-space: nowrap;
+}
+
+/* Step 3 styling. */
+
+/* Data element selector styling. */
+
+.tabs {
+	float: left;
+}
+
+UL.tabNavigation {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+UL.tabNavigation LI {
+    display: inline;
+}
+
+UL.tabNavigation LI A {
+    padding: 3px 5px;
+    background-color: #ccc;
+    color: #000;
+    text-decoration: none;
+}
+
+UL.tabNavigation LI A.selected,
+UL.tabNavigation LI A:hover {
+    background-color: #333;
+    color: #fff;
+    padding-top: 7px;
+}
+
+UL.tabNavigation LI A:focus {
+	outline: 0;
+}
+
+div.tabs > div {
+	padding: 5px;
+	margin-top: 3px;
+	border: 2px solid #333;
+}
+
+div.tabs > div h2 {
+	margin-top: 0;
+}
+
+#systemTree {
+	overflow: auto;
+	height: 255px;
+	width: 300px;
+}
+#userTree {
+	overflow: auto;
+	height: 255px;
+	width: 300px;
+}
+
+/* Data element drop target styling. */
+
+.label-info {
+    /*
+    width: 75px;
+    height: 50px;
+    margin: auto;
+    bottom:100px;
+    */
+    position: relative;
+}
+
+.tree-drop {
+    float: left;
+    overflow: auto;
+    border: 3px solid gray;
+    width: 285px;
+    height: 263px;
+    background: #C3D9FF;
+    color: green;
+}
+
+.tree-drop-single {
+    float: left;
+    overflow: auto;
+    border: 3px solid gray;
+    width: 300px;
+    height: 3em;
+    background: #C3D9FF;
+    color: green;
+}
+
+input.durationField {
+	width: 4em;
+}
+
+input.distanceField {
+	width: 4em;
+}
+
+input.propertyValueField {
+	width: 10em;
+}
+
+input.frequencyCountField {
+	width: 4em;
+}
+
+td.relDataElement {
+	border-color: black;
+	border-width: 1px;
+}
+
+h2.StepTitle span.editor-help {
+	font-size: 10px; 
+	float: right;
+}

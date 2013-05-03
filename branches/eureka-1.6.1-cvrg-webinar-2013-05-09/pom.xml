@@ -1,0 +1,741 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>edu.emory.cci.aiw.cvrg</groupId>
+	<artifactId>eureka</artifactId>
+	<version>1.6.1</version>
+	<packaging>pom</packaging>
+	<name>Eureka! Clinical Analytics</name>
+	<description>Eureka! Clinical Analytics is a web application that
+		provides you with an easy way to phenotype a patient population based
+		on their clinical and administrative data, and load those phenotypes
+		and data into your own instance of the i2b2 data warehouse system.
+	</description>
+	<url>http://aiw.sourceforge.net/dev/eureka-${project.version}</url>
+
+	<organization>
+		<name>Emory University</name>
+		<url>http://www.emory.edu</url>
+	</organization>
+
+	<!-- define the package versions for various project we will use -->
+	<properties>
+		<!-- Populates links to the website from Eureka. -->
+		<aiw.site.url>http://aiw.sourceforge.net</aiw.site.url>
+		
+		<eureka.dev.site.url>${project.url}</eureka.dev.site.url>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<currentStableVersion>1.6.1</currentStableVersion>
+		<junit-version>4.10</junit-version>
+		<jersey-version>1.16</jersey-version>
+		<guice-version>3.0</guice-version>
+		<annotation-version>1.0</annotation-version>
+		<hibernate-version>3.6.8.Final</hibernate-version>
+		<hibernate-persistence-version>1.0.1.Final
+		</hibernate-persistence-version>
+		<h2-version>1.3.162</h2-version>
+		<servlet-api-version>2.5</servlet-api-version>
+		<slf4j-version>1.6.4</slf4j-version>
+		<poi-version>3.7</poi-version>
+		<jstl-version>1.2</jstl-version>
+		<jsp-api-version>2.0</jsp-api-version>
+		<java-mail-version>1.4</java-mail-version>
+		<jaxb-version>2.2.4-1</jaxb-version>
+		<commons-io-version>2.1</commons-io-version>
+		<commons-fileupload-version>1.2.2</commons-fileupload-version>
+		<commons-lang-version>2.6</commons-lang-version>
+		<eureka-version>1.6.1</eureka-version>
+		<protempa-version>2.0.3</protempa-version>
+		<aiw-i2b2-etl-version>1.0.3</aiw-i2b2-etl-version>
+		<oracle-version>11.2.0.3</oracle-version>
+		<freemarker-version>2.3.9</freemarker-version>
+		<jpamodelgen-version>1.2.0.Final</jpamodelgen-version>
+		<mysql-version>5.1.18</mysql-version>
+		<ehcache-version>2.6.0</ehcache-version>
+		<tomcat-plugin-version>1.1</tomcat-plugin-version>
+
+		<!-- properties for site creation -->
+		<javautil-version>2.0.6</javautil-version>
+		<jaas-login-module-version>1.0.2</jaas-login-module-version>
+		<jaas-login-module-repo>aiw</jaas-login-module-repo>
+	</properties>
+
+	<scm>
+		<developerConnection>scm:svn:https://scm.cci.emory.edu/svn/aiw/tags/eureka-1.6.1
+		</developerConnection>
+		<url>https://scm.cci.emory.edu/svn/aiw/tags/eureka-1.6.1</url>
+	</scm>
+
+	<issueManagement>
+		<system>JIRA</system>
+		<url>http://jira.cci.emory.edu:8080/jira/secure/Dashboard.jspa</url>
+	</issueManagement>
+
+	<distributionManagement>
+		<site>
+			<id>aiw.sourceforge.net</id>
+			<url>scp://shell.sourceforge.net/home/project-web/aiw/htdocs/dev/eureka-${project.version}</url>
+		</site>
+		<repository>
+			<id>aiw</id>
+			<name>AIW Repo</name>
+			<url>http://maven.cci.emory.edu/nexus/content/repositories/aiw/</url>
+		</repository>
+		<snapshotRepository>
+			<id>aiw-snapshots</id>
+			<name>AIW Snapshots Repo</name>
+			<url>http://maven.cci.emory.edu/nexus/content/repositories/aiw-snapshots/</url>
+		</snapshotRepository>
+	</distributionManagement>
+
+	<licenses>
+		<license>
+			<name>Apache License, Version 2.0</name>
+			<url>http://www.apache.org/licenses/LICENSE-2.0.html</url>
+			<distribution>manual</distribution>
+		</license>
+	</licenses>
+
+	<developers>
+		<developer>
+			<id>arpost</id>
+			<name>Andrew Post</name>
+			<email>arpost@emory.edu</email>
+			<roles>
+				<role>Faculty Project Lead</role>
+			</roles>
+			<organization>Center for Comprehensive Informatics, Emory
+				University
+			</organization>
+		</developer>
+		<developer>
+			<id>hrathod</id>
+			<name>Himanshu Rathod</name>
+			<email>Himanshu.Rathod@emory.edu</email>
+			<roles>
+				<role>Software Developer</role>
+			</roles>
+			<organization>Center for Comprehensive Informatics, Emory
+				University
+			</organization>
+		</developer>
+		<developer>
+			<id>mmansour</id>
+			<name>Michel Mansour</name>
+			<email>mmansour@emory.edu</email>
+			<roles>
+				<role>Software Developer</role>
+			</roles>
+			<organization>Center for Comprehensive Informatics, Emory
+				University
+			</organization>
+		</developer>
+		<developer>
+			<id>wtorian</id>
+			<name>Mike Torian</name>
+			<email>william.m.torian@emory.edu</email>
+			<roles>
+				<role>Data Warehouse Engineer</role>
+			</roles>
+			<organization>Center for Comprehensive Informatics, Emory
+				University
+			</organization>
+		</developer>
+		<developer>
+			<id>mbrow2</id>
+			<name>Michael Brown</name>
+			<email>mbrow2@emory.edu</email>
+			<roles>
+				<role>Software Engineer</role>
+			</roles>
+			<organization>Center for Comprehensive Informatics, Emory
+				University
+			</organization>
+		</developer>
+		<developer>
+			<id>sagravat</id>
+			<name>Sanjay Agravat</name>
+			<email>sagrava@emory.edu</email>
+			<roles>
+				<role>Software Developer</role>
+			</roles>
+			<organization>Center for Comprehensive Informatics, Emory
+				University
+			</organization>
+		</developer>
+		<developer>
+			<id>gsmilto</id>
+			<name>Geoff Milton</name>
+			<email>gsmilto@emory.edu</email>
+			<roles>
+				<role>Software Developer</role>
+			</roles>
+			<organization>Center for Comprehensive Informatics, Emory
+				University
+			</organization>
+		</developer>
+		<developer>
+			<id>ssturm2</id>
+			<name>Zanna Sturm</name>
+			<email>ssturm2@emory.edu</email>
+			<roles>
+				<role>User Interface Designer</role>
+			</roles>
+			<organization>Center for Comprehensive Informatics, Emory
+				University
+			</organization>
+		</developer>
+		<developer>
+			<id>akalsan</id>
+			<name>Akshatha Kalsanka Pai</name>
+			<email>akalsan@emory.edu</email>
+			<roles>
+				<role>Software Developer</role>
+			</roles>
+			<organization>Center for Comprehensive Informatics, Emory
+				University
+			</organization>
+		</developer>
+		<developer>
+			<id>richard.willard</id>
+			<name>Richie Willard</name>
+			<email>richard.willard@emoryhealthcare.org</email>
+			<roles>
+				<role>Project Manager</role>
+			</roles>
+			<organization>Center for Comprehensive Informatics, Emory
+				University
+			</organization>
+		</developer>
+	</developers>
+
+	<modules>
+		<module>eureka-common</module>
+		<module>eureka-webapp</module>
+		<module>eureka-services</module>
+		<module>eureka-protempa-etl</module>
+		<module>eureka-ear</module>
+	</modules>
+
+	<!-- make sure our code complies with Java 1.6 specifications, and define
+	the name of the WAR file to create -->
+	<build>
+		<pluginManagement>
+			<plugins>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-compiler-plugin</artifactId>
+					<version>2.3.2</version>
+					<configuration>
+						<source>1.6</source>
+						<target>1.6</target>
+					</configuration>
+				</plugin>
+				<plugin>
+					<groupId>org.jasig.maven</groupId>
+					<artifactId>maven-notice-plugin</artifactId>
+					<version>1.0.5</version>
+					<configuration>
+						<noticeTemplate>etc/NOTICE.template</noticeTemplate>
+						<licenseMapping>
+							<param>etc/license-mappings.xml</param>
+						</licenseMapping>
+					</configuration>
+					<executions>
+						<execution>
+							<id>checkontest</id>
+							<goals>
+								<goal>check</goal>
+							</goals>
+							<phase>test</phase>
+						</execution>
+					</executions>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-jar-plugin</artifactId>
+					<version>2.4</version>
+					<executions>
+						<execution>
+							<goals>
+								<goal>test-jar</goal>
+							</goals>
+						</execution>
+					</executions>
+				</plugin>
+				<plugin>
+					<groupId>org.codehaus.mojo</groupId>
+					<artifactId>versions-maven-plugin</artifactId>
+					<version>1.2</version>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.tomcat.maven</groupId>
+					<artifactId>tomcat7-maven-plugin</artifactId>
+					<version>2.0</version>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-resources-plugin</artifactId>
+					<version>2.4.3</version>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-site-plugin</artifactId>
+					<version>3.2</version>
+					<dependencies>
+						<dependency>
+							<groupId>org.apache.maven.wagon</groupId>
+							<artifactId>wagon-ssh</artifactId>
+							<version>2.3</version>
+						</dependency>
+					</dependencies>
+					<configuration>
+						<reportPlugins>
+							<plugin>
+								<groupId>org.apache.maven.plugins</groupId>
+								<artifactId>maven-project-info-reports-plugin
+								</artifactId>
+								<version>2.6</version>
+							</plugin>
+							<plugin>
+								<groupId>org.apache.maven.plugins</groupId>
+								<artifactId>maven-javadoc-plugin</artifactId>
+								<version>2.9</version>
+							</plugin>
+							<plugin>
+								<groupId>org.apache.maven.plugins</groupId>
+								<artifactId>maven-jxr-plugin</artifactId>
+								<version>2.3</version>
+							</plugin>
+							<plugin>
+								<groupId>org.apache.maven.plugins</groupId>
+								<artifactId>maven-surefire-report-plugin
+								</artifactId>
+								<version>2.12.4</version>
+								<configuration>
+									<aggregate>true</aggregate>
+								</configuration>
+							</plugin>
+							<plugin>
+								<groupId>org.codehaus.mojo</groupId>
+								<artifactId>cobertura-maven-plugin</artifactId>
+								<version>2.4</version>
+								<configuration>
+									<formats>
+										<format>xml</format>
+										<format>html</format>
+									</formats>
+								</configuration>
+							</plugin>
+							<plugin>
+								<groupId>org.apache.maven.plugins</groupId>
+								<artifactId>maven-checkstyle-plugin</artifactId>
+								<version>2.9.1</version>
+								<configuration>  
+									<configLocation>http://aiw.sourceforge.net/dev/aiw-checkstyle-1.0/eureka-checkstyle.xml</configLocation>
+								</configuration>
+							</plugin>
+						</reportPlugins>
+					</configuration>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-project-info-reports-plugin</artifactId>
+					<version>2.4</version>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-surefire-plugin</artifactId>
+					<version>2.7.2</version>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+		<plugins>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>build-helper-maven-plugin</artifactId>
+				<version>1.7</version>
+				<executions>
+					<execution>
+						<id>parse-version</id>
+						<goals>
+							<goal>parse-version</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-war-plugin</artifactId>
+				<version>2.3</version>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-assembly-plugin</artifactId>
+				<version>2.3</version>
+				<inherited>false</inherited>
+				<configuration>
+					<descriptors>
+						<descriptor>assembly/src.xml</descriptor>
+					</descriptors>
+				</configuration>
+				<executions>
+					<execution>
+						<phase>package</phase>
+						<goals>
+							<goal>single</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<!--<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>appassembler-maven-plugin</artifactId>
+				<version>1.3</version>
+				<configuration>
+					<repositoryLayout>flat</repositoryLayout>
+					<repositoryName>lib</repositoryName>
+					<installArtifacts>false</installArtifacts>
+					<programs />
+				</configuration>
+				<executions>
+					<execution>
+						<phase>package</phase>
+						<goals>
+							<goal>assemble</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>-->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-site-plugin</artifactId>
+			</plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>license-maven-plugin</artifactId>
+				<version>1.0</version>
+				<configuration>
+					<licenseName>apache_v2</licenseName>
+					<verbose>false</verbose>
+					<organizationName>Emory University</organizationName>
+					<inceptionYear>2012</inceptionYear>
+					<canUpdateDescription>false</canUpdateDescription>
+					<roots>
+						<root>src/main</root>
+						<root>src/test/java/</root>
+					</roots>
+					<extraExtensions>
+						<!-- .xsd files are not supported by default -->
+						<!-- but should be commented in XML style -->
+						<xsd>xml</xsd>
+					</extraExtensions>
+					<excludes>
+						<exclude>**/*.htm</exclude>
+						<exclude>**/*.html</exclude>
+						<exclude>**/*.js</exclude>
+						<exclude>**/*.css</exclude>
+					</excludes>
+				</configuration>
+				<executions>
+					<execution>
+						<id>first</id>
+						<goals>
+							<goal>update-file-header</goal>
+						</goals>
+						<phase>process-sources</phase>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+
+	<!-- define our dependencies -->
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>junit</groupId>
+				<artifactId>junit</artifactId>
+				<version>${junit-version}</version>
+				<scope>test</scope>
+			</dependency>
+			<dependency>
+				<groupId>com.sun.jersey.jersey-test-framework</groupId>
+				<artifactId>jersey-test-framework-grizzly2</artifactId>
+				<version>${jersey-version}</version>
+				<scope>test</scope>
+			</dependency>
+			<dependency>
+				<groupId>com.sun.jersey</groupId>
+				<artifactId>jersey-server</artifactId>
+				<version>${jersey-version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.sun.jersey</groupId>
+				<artifactId>jersey-json</artifactId>
+				<version>${jersey-version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.sun.jersey</groupId>
+				<artifactId>jersey-client</artifactId>
+				<version>${jersey-version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.sun.jersey.contribs</groupId>
+				<artifactId>jersey-guice</artifactId>
+				<version>${jersey-version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.google.inject</groupId>
+				<artifactId>guice</artifactId>
+				<version>${guice-version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.google.inject.extensions</groupId>
+				<artifactId>guice-servlet</artifactId>
+				<version>${guice-version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.google.inject.extensions</groupId>
+				<artifactId>guice-persist</artifactId>
+				<version>${guice-version}</version>
+			</dependency>
+			<dependency>
+				<groupId>javax.annotation</groupId>
+				<artifactId>jsr250-api</artifactId>
+				<version>${annotation-version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.hibernate.javax.persistence</groupId>
+				<artifactId>hibernate-jpa-2.0-api</artifactId>
+				<version>${hibernate-persistence-version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.hibernate</groupId>
+				<artifactId>hibernate-entitymanager</artifactId>
+				<version>${hibernate-version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.h2database</groupId>
+				<artifactId>h2</artifactId>
+				<version>${h2-version}</version>
+				<scope>test</scope>
+			</dependency>
+			<dependency>
+				<groupId>javax.servlet</groupId>
+				<artifactId>servlet-api</artifactId>
+				<version>${servlet-api-version}</version>
+				<scope>provided</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.slf4j</groupId>
+				<artifactId>slf4j-jdk14</artifactId>
+				<version>${slf4j-version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.poi</groupId>
+				<artifactId>poi-ooxml</artifactId>
+				<version>${poi-version}</version>
+			</dependency>
+			<dependency>
+				<groupId>javax.mail</groupId>
+				<artifactId>mail</artifactId>
+				<version>${java-mail-version}</version>
+				<scope>provided</scope>
+			</dependency>
+			<dependency>
+				<groupId>jstl</groupId>
+				<artifactId>jstl</artifactId>
+				<version>${jstl-version}</version>
+			</dependency>
+			<dependency>
+				<groupId>javax.servlet</groupId>
+				<artifactId>jsp-api</artifactId>
+				<version>${jsp-api-version}</version>
+				<scope>provided</scope>
+			</dependency>
+			<dependency>
+				<groupId>com.sun.xml.bind</groupId>
+				<artifactId>jaxb-impl</artifactId>
+				<version>${jaxb-version}</version>
+			</dependency>
+			<dependency>
+				<groupId>commons-io</groupId>
+				<artifactId>commons-io</artifactId>
+				<version>${commons-io-version}</version>
+			</dependency>
+			<dependency>
+				<groupId>commons-fileupload</groupId>
+				<artifactId>commons-fileupload</artifactId>
+				<version>${commons-fileupload-version}</version>
+			</dependency>
+			<dependency>
+				<groupId>commons-lang</groupId>
+				<artifactId>commons-lang</artifactId>
+				<version>${commons-lang-version}</version>
+			</dependency>
+			<dependency>
+				<groupId>edu.emory.cci.aiw.cvrg</groupId>
+				<artifactId>eureka-common</artifactId>
+				<version>${eureka-version}</version>
+			</dependency>
+			<dependency>
+				<groupId>edu.emory.cci.aiw.cvrg</groupId>
+				<artifactId>eureka-common</artifactId>
+				<version>${eureka-version}</version>
+				<scope>test</scope>
+				<type>test-jar</type>
+			</dependency>
+			<dependency>
+				<groupId>edu.emory.cci.aiw.cvrg</groupId>
+				<artifactId>eureka-services</artifactId>
+				<type>war</type>
+				<version>${eureka-version}</version>
+			</dependency>
+			<dependency>
+				<groupId>edu.emory.cci.aiw.cvrg</groupId>
+				<artifactId>eureka-webapp</artifactId>
+				<type>war</type>
+				<version>${eureka-version}</version>
+			</dependency>
+			<dependency>
+				<groupId>edu.emory.cci.aiw.cvrg</groupId>
+				<artifactId>eureka-protempa-etl</artifactId>
+				<type>war</type>
+				<version>${eureka-version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.protempa</groupId>
+				<artifactId>protempa-framework</artifactId>
+				<version>${protempa-version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.protempa</groupId>
+				<artifactId>protempa-bconfigs-commons-ini</artifactId>
+				<version>${protempa-version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.protempa</groupId>
+				<artifactId>protempa-ksb-protege</artifactId>
+				<version>${protempa-version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.protempa</groupId>
+				<artifactId>protempa-tsb-umls</artifactId>
+				<version>${protempa-version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.protempa</groupId>
+				<artifactId>protempa-dsb-relationaldb</artifactId>
+				<version>${protempa-version}</version>
+			</dependency>
+			<dependency>
+				<groupId>edu.emory.cci</groupId>
+				<artifactId>aiw-i2b2-etl</artifactId>
+				<version>${aiw-i2b2-etl-version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.oracle</groupId>
+				<artifactId>ojdbc6</artifactId>
+				<version>${oracle-version}</version>
+				<scope>provided</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.freemarker</groupId>
+				<artifactId>freemarker</artifactId>
+				<version>${freemarker-version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.google.inject.extensions</groupId>
+				<artifactId>guice-jndi</artifactId>
+				<version>${guice-version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.hibernate</groupId>
+				<artifactId>hibernate-jpamodelgen</artifactId>
+				<version>${jpamodelgen-version}</version>
+			</dependency>
+			<dependency>
+				<groupId>mysql</groupId>
+				<artifactId>mysql-connector-java</artifactId>
+				<version>${mysql-version}</version>
+				<scope>test</scope>
+			</dependency>
+			<dependency>
+				<groupId>net.sf.ehcache</groupId>
+				<artifactId>ehcache</artifactId>
+				<version>${ehcache-version}</version>
+				<type>pom</type>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+
+	<!-- define an additional repositories needed to fetch the dependencies. -->
+	<repositories>
+		<repository>
+			<id>maven.cci</id>
+			<name>CCI Maven Repository</name>
+			<url>http://maven.cci.emory.edu/nexus/content/repositories/public</url>
+		</repository>
+		<repository>
+			<id>aiw</id>
+			<name>AIW Release Repository</name>
+			<url>http://maven.cci.emory.edu/nexus/content/repositories/aiw/</url>
+		</repository>
+	</repositories>
+
+	<!-- define any additional repositories needed to fetch the plugins we are
+	using -->
+	<profiles>
+		<profile>
+			<id>eureka-tomcat-local</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.codehaus.mojo</groupId>
+						<artifactId>tomcat-maven-plugin</artifactId>
+						<version>${tomcat-plugin-version}</version>
+						<configuration>
+							<url>${local.url}</url>
+							<server>eureka.tomcat.local</server>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+		<profile>
+			<id>eureka-tomcat-dev</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.codehaus.mojo</groupId>
+						<artifactId>tomcat-maven-plugin</artifactId>
+						<version>${tomcat-plugin-version}</version>
+						<configuration>
+							<url>${dev.url}</url>
+							<server>eureka.tomcat.dev</server>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+		<profile>
+			<id>eureka-tomcat-prd</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.codehaus.mojo</groupId>
+						<artifactId>tomcat-maven-plugin</artifactId>
+						<version>${tomcat-plugin-version}</version>
+						<configuration>
+							<url>${prd.url}</url>
+							<server>eureka.tomcat.prd</server>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
+</project>
+
