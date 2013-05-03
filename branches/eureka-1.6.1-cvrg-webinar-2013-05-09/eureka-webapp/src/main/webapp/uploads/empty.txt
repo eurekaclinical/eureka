@@ -1,1 +1,0 @@
-Created empty file to ensure the parent directory (uploads) is included in war creation.
