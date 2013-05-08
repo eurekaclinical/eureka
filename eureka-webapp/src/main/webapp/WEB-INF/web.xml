@@ -8,7 +8,7 @@
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
   You may obtain a copy of the License at
-       http://www.apache.org/licenses/LICENSE-2.0
+ http://www.apache.org/licenses/LICENSE-2.0
   Unless required by applicable law or agreed to in writing, software
   distributed under the License is distributed on an "AS IS" BASIS,
   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -24,6 +24,10 @@ see implementation details http://jersey.java.net/nonav/documentation/latest/jax
 	<context-param>
 		<param-name>eureka-services-url</param-name>
 		<param-value>https://localhost:8443/eureka-services</param-value>
+	</context-param>
+	<context-param>
+		<param-name>cas-server-logout-url</param-name>
+		<param-value>https://localhost:8443/cas-server/logout</param-value>
 	</context-param>
 	<context-param>
 		<description>Is populated with the site URL from the maven pom.xml from which Eureka! was compiled. The developer documention URL on the Eureka! index page is constructed by appending '/dev' to this URL.</description>
@@ -77,7 +81,7 @@ see implementation details http://jersey.java.net/nonav/documentation/latest/jax
 		<param-name>eureka-help-url</param-name>
 		<param-value>${aiw.site.url}/help/v${parsedVersion.majorVersion}-${parsedVersion.minorVersion}</param-value>
 	</context-param>
-	
+
 	<filter>
 		<filter-name>PasswordExpiredFilter</filter-name>
 		<filter-class>
@@ -99,7 +103,7 @@ see implementation details http://jersey.java.net/nonav/documentation/latest/jax
 		</filter-class>
 	</filter>
 
-<!-- UNCOMMENT THESE FILTERS AND THEIR MAPPINGS TO ENABLE AUTHENTICATION VIA CAS -->
+	<!-- UNCOMMENT THESE FILTERS AND THEIR MAPPINGS TO ENABLE AUTHENTICATION VIA CAS -->
 	<filter>
 		<filter-name>CAS Proxy Filter</filter-name>
 		<filter-class>org.jasig.cas.client.validation.Cas20ProxyReceivingTicketValidationFilter</filter-class>
@@ -165,7 +169,6 @@ see implementation details http://jersey.java.net/nonav/documentation/latest/jax
 		<filter-name>MessagesFilter</filter-name>
 		<url-pattern>/*</url-pattern>
 	</filter-mapping>
-
 	<filter-mapping>
 		<filter-name>CAS Proxy Filter</filter-name>
 		<url-pattern>/proxyCallback</url-pattern>

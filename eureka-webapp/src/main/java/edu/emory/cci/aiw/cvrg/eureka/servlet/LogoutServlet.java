@@ -27,7 +27,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-
 public class LogoutServlet extends HttpServlet {
 
 	@Override
@@ -37,11 +36,13 @@ public class LogoutServlet extends HttpServlet {
 		if (session != null) {
 			session.invalidate();
 		}
-                /*
-                 * We need to redirect here rather than forward so that 
-                 * logout.jsp gets a request object without a user. Otherwise,
-                 * the button bar will think we're still logged in.
-                 */
-                resp.sendRedirect(req.getContextPath() + "/logout.jsp");
+		/*
+		 * We need to redirect here rather than forward so that 
+		 * logout.jsp gets a request object without a user. Otherwise,
+		 * the button bar will think we're still logged in.
+		 */
+		String casServerLogoutUrl = req.getSession().getServletContext()
+				.getInitParameter("cas-server-logout-url");
+		resp.sendRedirect(casServerLogoutUrl);
 	}
 }
