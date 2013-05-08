@@ -58,13 +58,14 @@ ul.nav a { zoom: 1; }
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery-ui.min.js"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery.jstree.js"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/raphael.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery.validate.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/js/eureka.js"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/editor.js"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery.smartWizard-2.0.js"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery.cookie.js"></script>
 
 <link type="text/css" rel="stylesheet" href="${pageContext.request.contextPath}/css/smart-wizard/smart_wizard.css" />
 <link type="text/css" rel="stylesheet" href="${pageContext.request.contextPath}/css/smart-wizard/demo_style.css" />
-
 <link href="${pageContext.request.contextPath}/css/editor.css"
 	rel="stylesheet" type="text/css" />
 

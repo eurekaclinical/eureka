@@ -33,7 +33,7 @@ import java.util.List;
 import static edu.emory.cci.aiw.cvrg.eureka.services.conversion.ConversionUtil.unit;
 import java.util.HashMap;
 import java.util.Map;
-import org.protempa.IntervalSide;
+import org.protempa.proposition.interval.Interval.Side;
 import org.protempa.SimpleGapFunction;
 import org.protempa.TemporalPatternOffset;
 
@@ -104,11 +104,11 @@ final class SequenceConverter
 			
 			TemporalPatternOffset temporalOffsets = new TemporalPatternOffset();
 			temporalOffsets.setStartTemporalExtendedPropositionDefinition(primaryEP);
-			temporalOffsets.setStartIntervalSide(IntervalSide.START);
+			temporalOffsets.setStartIntervalSide(Side.START);
 			temporalOffsets.setStartOffset(0);
 			temporalOffsets.setStartOffsetUnits(null);
 			temporalOffsets.setFinishTemporalExtendedPropositionDefinition(primaryEP);
-			temporalOffsets.setFinishIntervalSide(IntervalSide.FINISH);
+			temporalOffsets.setFinishIntervalSide(Side.FINISH);
 			temporalOffsets.setFinishOffset(0);
 			temporalOffsets.setFinishOffsetUnits(null);
 			primary.setTemporalOffset(temporalOffsets);

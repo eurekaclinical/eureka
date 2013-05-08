@@ -40,6 +40,7 @@ public class Destination {
 	private String id;
 	private Type type;
 	private String displayName;
+	private DataElementField[] dataElementFields;
 	/**
 	 * The unique identifier for the owner of this configuration.
 	 */
@@ -97,6 +98,14 @@ public class Destination {
 		this.displayName = displayName;
 	}
 
+	public DataElementField[] getDataElementFields() {
+		return dataElementFields;
+	}
+
+	public void setDataElementFields(DataElementField[] dataElementFields) {
+		this.dataElementFields = dataElementFields;
+	}
+	
 	@Override
 	public String toString() {
 		return ToStringBuilder.reflectionToString(this);

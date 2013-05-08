@@ -21,8 +21,8 @@ package edu.emory.cci.aiw.cvrg.eureka.servlet;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.Destination;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.Job;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.JobStatus;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.SourceConfigParams;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.SystemElement;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ClientException;
 import java.io.IOException;
 import java.util.List;
@@ -32,8 +32,10 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.UserInfo;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ServicesClient;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.SystemProposition.SystemType;
+import java.util.ArrayList;
+import org.protempa.proposition.interval.Interval.Side;
 
 public class JobListServlet extends HttpServlet {
 
@@ -51,6 +53,15 @@ public class JobListServlet extends HttpServlet {
 
 			List<Destination> destinations = servicesClient.getDestinations();
 			req.setAttribute("destinations", destinations);
+			List<SystemElement> systemElements = servicesClient.getSystemElements();
+			List<SystemElement> dateRangeDataElements = new ArrayList<SystemElement>(systemElements.size());
+			for (SystemElement entity : systemElements) {
+				if (entity.getSystemType() != SystemType.CONSTANT) {
+					dateRangeDataElements.add(entity);
+				}
+			}
+			req.setAttribute("dateRangeDataElements", systemElements);
+			req.setAttribute("dateRangeSides", DateRangeSide.values());
 
 			String jobIdStr = req.getParameter("jobId");
 			Job job;

@@ -20,6 +20,7 @@
 package edu.emory.cci.aiw.cvrg.eureka.common.comm;
 
 import java.util.Date;
+import org.protempa.proposition.interval.Interval.Side;
 
 /**
  * Hold information about a user's file upload.
@@ -27,10 +28,14 @@ import java.util.Date;
  * @author Andrew Post
  */
 public class JobSpec {
+	
 	private String sourceConfigId;
 	private String destinationId;
-//	private Date earliestDate;
-//	private Date latestDate;
+	private String dateRangeDataElementKey;
+	private Date earliestDate;
+	private Side earliestDateSide;
+	private Date latestDate;
+	private Side latestDateSide;
 
 	public String getSourceConfigId() {
 		return sourceConfigId;
@@ -48,19 +53,43 @@ public class JobSpec {
 		this.destinationId = destinationId;
 	}
 
-//	public Date getEarliestDate() {
-//		return earliestDate;
-//	}
-//
-//	public void setEarliestDate(Date earliestDate) {
-//		this.earliestDate = earliestDate;
-//	}
-//
-//	public Date getLatestDate() {
-//		return latestDate;
-//	}
-//
-//	public void setLatestDate(Date latestDate) {
-//		this.latestDate = latestDate;
-//	}
+	public String getDateRangeDataElementKey() {
+		return dateRangeDataElementKey;
+	}
+
+	public void setDateRangeDataElementKey(String dataElementKey) {
+		this.dateRangeDataElementKey = dataElementKey;
+	}
+	
+	public Date getEarliestDate() {
+		return earliestDate;
+	}
+
+	public void setEarliestDate(Date earliestDate) {
+		this.earliestDate = earliestDate;
+	}
+
+	public Side getEarliestDateSide() {
+		return earliestDateSide;
+	}
+
+	public void setEarliestDateSide(Side earliestDateSide) {
+		this.earliestDateSide = earliestDateSide;
+	}
+	
+	public Date getLatestDate() {
+		return latestDate;
+	}
+
+	public void setLatestDate(Date latestDate) {
+		this.latestDate = latestDate;
+	}
+	
+	public Side getLatestDateSide() {
+		return latestDateSide;
+	}
+
+	public void setLatestDateSide(Side latestDateSide) {
+		this.latestDateSide = latestDateSide;
+	}
 }

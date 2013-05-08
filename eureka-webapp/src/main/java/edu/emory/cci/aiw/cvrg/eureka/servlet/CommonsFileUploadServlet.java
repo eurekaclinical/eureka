@@ -19,7 +19,6 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.servlet;
 
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.UserInfo;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ClientException;
 import java.io.File;
 import java.io.IOException;
@@ -40,16 +39,13 @@ import org.apache.commons.fileupload.servlet.ServletFileUpload;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ServicesClient;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.JobSpec;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.SourceConfigParams;
 import java.io.InputStream;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.Properties;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.apache.commons.io.FileUtils;
+import org.protempa.proposition.interval.Interval.Side;
 
 public class CommonsFileUploadServlet extends HttpServlet {
 	
@@ -165,15 +161,23 @@ public class CommonsFileUploadServlet extends HttpServlet {
 		JobSpec jobSpec = new JobSpec();
 		jobSpec.setSourceConfigId(fields.getProperty("source"));
 		jobSpec.setDestinationId(fields.getProperty("destination"));
-//		DateFormat df = new SimpleDateFormat("MM/dd/yyyy");
-//		String earliestStr = fields.getProperty("earliestDate");
-//		if (earliestStr != null && !earliestStr.trim().isEmpty()) {
-//			jobSpec.setEarliestDate(df.parse(earliestStr));
-//		}
-//		String latestStr = fields.getProperty("latestDate");
-//		if (latestStr != null && !latestStr.trim().isEmpty()) {
-//			jobSpec.setLatestDate(df.parse(latestStr));
-//		}
+		jobSpec.setDateRangeDataElementKey(
+				fields.getProperty("dateRangeDataElementKey"));
+		DateFormat df = new SimpleDateFormat("MM/dd/yyyy");
+		String earliestStr = fields.getProperty("earliestDate");
+		if (earliestStr != null && !earliestStr.trim().isEmpty()) {
+			jobSpec.setEarliestDate(df.parse(earliestStr));
+		}
+		jobSpec.setEarliestDateSide(
+				Side.valueOf(
+				fields.getProperty("dateRangeEarliestDateSide")));
+		String latestStr = fields.getProperty("latestDate");
+		if (latestStr != null && !latestStr.trim().isEmpty()) {
+			jobSpec.setLatestDate(df.parse(latestStr));
+		}
+		jobSpec.setLatestDateSide(
+				Side.valueOf(
+				fields.getProperty("dateRangeLatestDateSide")));
 		Long jobId = this.servicesClient.submitJob(jobSpec);
 		log("Job " + jobId + " submitted for user " + principal.getName());
 		return jobId;

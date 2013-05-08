@@ -55,6 +55,7 @@ import org.protempa.DataSourceFailedDataValidationException;
 import org.protempa.DataSourceValidationIncompleteException;
 import org.protempa.backend.ConfigurationsNotFoundException;
 import org.protempa.backend.dsb.DataValidationEvent;
+import org.protempa.backend.dsb.filter.Filter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -91,7 +92,7 @@ public class ETL {
 	}
 
 	void run(JobEntity job, PropositionDefinition[] inPropositionDefinitions,
-			String[] inPropIdsToShow) throws EtlException {
+			String[] inPropIdsToShow, Filter filter) throws EtlException {
 		assert inPropositionDefinitions != null :
 				"inPropositionDefinitions cannot be null";
 		assert job != null : "job cannot be null";
@@ -103,6 +104,7 @@ public class ETL {
 			q.setPropositionDefinitions(inPropositionDefinitions);
 			q.setPropositionIds(inPropIdsToShow);
 			q.setId(job.getId().toString());
+			q.setFilters(filter);
 			LOGGER.debug("Constructed Protempa query " + q);
 			Query query = protempa.buildQuery(q);
 			File i2b2Config = 

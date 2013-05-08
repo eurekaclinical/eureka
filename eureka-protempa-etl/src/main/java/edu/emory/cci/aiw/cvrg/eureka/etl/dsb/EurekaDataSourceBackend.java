@@ -38,6 +38,7 @@ import java.util.logging.Level;
 import org.arp.javautil.io.FileUtil;
 import org.arp.javautil.io.IOUtil;
 import org.arp.javautil.sql.InvalidConnectionSpecArguments;
+import org.arp.javautil.sql.SQLExecutor;
 import org.drools.util.StringUtils;
 import org.protempa.BackendCloseException;
 import org.protempa.DataSourceBackendCloseException;
@@ -793,6 +794,16 @@ public final class EurekaDataSourceBackend extends RelationalDbDataSourceBackend
 	@Override
 	public void close() throws BackendCloseException {
 		super.close();
+		BackendCloseException exceptionToThrow = null;
+		try {
+			SQLExecutor.executeSQL(getConnectionSpecInstance(), "DROP ALL OBJECTS", null);
+		} catch (SQLException ex) {
+			this.exceptionOccurred = true;
+			exceptionToThrow = new DataSourceBackendCloseException("Error in data source backend " + nameForErrors() + ": could not drop the database", ex);
+		} catch (InvalidConnectionSpecArguments ex) {
+			this.exceptionOccurred = true;
+			exceptionToThrow = new DataSourceBackendCloseException("Error in data source backend " + nameForErrors() + ": could not drop the database", ex);
+		}
 		if (!this.exceptionOccurred) {
 			for (XlsxDataProvider dataProvider : dataProviders) {
 				File dataFile = dataProvider.getDataFile();
@@ -809,13 +820,19 @@ public final class EurekaDataSourceBackend extends RelationalDbDataSourceBackend
 				File dataFile = dataProvider.getDataFile();
 				try {
 					if (!dataFile.renameTo(FileUtil.replaceExtension(dataFile, ".failed"))) {
-						throw new DataSourceBackendCloseException("Error in data source backend " + nameForErrors() + ": could not mark data file " + dataFile.getAbsolutePath() + " as failed");
+						if (exceptionToThrow == null) {
+							throw new DataSourceBackendCloseException("Error in data source backend " + nameForErrors() + ": could not mark data file " + dataFile.getAbsolutePath() + " as failed");
+						}
 					}
 				} catch (SecurityException se) {
-					throw new DataSourceBackendCloseException("Error in data source backend " + nameForErrors() + ": could not mark data file " + dataFile.getAbsolutePath() + " as failed", se);
+					if (exceptionToThrow == null) {
+						throw new DataSourceBackendCloseException("Error in data source backend " + nameForErrors() + ": could not mark data file " + dataFile.getAbsolutePath() + " as failed", se);
+					}
 				}
 			}
 		}
-
+		if (exceptionToThrow != null) {
+			throw exceptionToThrow;
+		}
 	}
 }

@@ -53,11 +53,15 @@ import edu.emory.cci.aiw.cvrg.eureka.etl.validator.PropositionValidator;
 import edu.emory.cci.aiw.cvrg.eureka.etl.validator.PropositionValidatorException;
 import java.security.Principal;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import javax.annotation.security.RolesAllowed;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response.Status;
+import org.protempa.backend.dsb.filter.DateTimeFilter;
+import org.protempa.backend.dsb.filter.Filter;
+import org.protempa.proposition.value.AbsoluteTimeGranularity;
 
 @Path("/jobs")
 @RolesAllowed({"researcher", "admin"})
@@ -170,9 +174,10 @@ public class JobResource {
 			return failed(jobEntity);
 		}
 
+		Filter dateRangeFilter = new DateTimeFilter(new String[]{job.getDateRangeDataElementKey()}, job.getEarliestDate(), AbsoluteTimeGranularity.DAY, job.getLatestDate(), AbsoluteTimeGranularity.DAY, job.getEarliestDateSide(), job.getLatestDateSide());
 		LOGGER.debug("Request to start new Job {}", jobEntity.getId());
 		this.taskManager.queueTask(jobEntity.getId(), definitions,
-				inJobRequest.getPropositionIdsToShow());
+				inJobRequest.getPropositionIdsToShow(), dateRangeFilter);
 		return Response.created(URI.create("/" + jobEntity.getId())).build();
 	}
 

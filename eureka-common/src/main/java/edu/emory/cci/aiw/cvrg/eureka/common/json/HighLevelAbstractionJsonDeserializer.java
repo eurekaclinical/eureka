@@ -33,7 +33,7 @@ import org.codehaus.jackson.map.JsonMappingException;
 import org.protempa.ExtendedPropositionDefinition;
 import org.protempa.GapFunction;
 import org.protempa.HighLevelAbstractionDefinition;
-import org.protempa.IntervalSide;
+import org.protempa.proposition.interval.Interval.Side;
 import org.protempa.PropertyDefinition;
 import org.protempa.ReferenceDefinition;
 import org.protempa.SimpleGapFunction;
@@ -177,7 +177,7 @@ public final class HighLevelAbstractionJsonDeserializer extends
 			offsets.setStartAbstractParamValue(this.parser.readValueAs(Value.class));
 			nextToken();
 			checkField("startSide");
-			offsets.setStartIntervalSide(this.parser.readValueAs(IntervalSide.class));
+			offsets.setStartIntervalSide(this.parser.readValueAs(Side.class));
 			nextToken();
 			checkField("startOffset");
 			offsets.setStartOffset(this.parser.getIntValue());
@@ -201,7 +201,7 @@ public final class HighLevelAbstractionJsonDeserializer extends
 			offsets.setFinishAbstractParamValue(this.parser.readValueAs(Value.class));
 			nextToken();
 			checkField("finishSide");
-			offsets.setFinishIntervalSide(this.parser.readValueAs(IntervalSide.class));
+			offsets.setFinishIntervalSide(this.parser.readValueAs(Side.class));
 			nextToken();
 			checkField("finishOffset");
 			offsets.setFinishOffset(this.parser.getIntValue());

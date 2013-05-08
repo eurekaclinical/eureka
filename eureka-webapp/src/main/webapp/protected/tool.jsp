@@ -16,7 +16,7 @@
   See the License for the specific language governing permissions and
   limitations under the License.
   #L%
-  --%>
+--%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="/WEB-INF/tlds/template.tld" prefix="template"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
@@ -33,11 +33,11 @@
         <h3>Submit Job</h3>
 
 		<form id="uploadForm" name="uploadForm" class="pad_top pad"
-			method="post" action="${pageContext.request.contextPath}/protected/upload"
-			ENCTYPE="multipart/form-data" 
-			<c:if test="${not empty param.jobId}">data-jobid="${param.jobId}"</c:if>
-			<c:if test="${not empty requestScope.jobStatus and jobStatus.jobSubmitted}">data-job-running="true"</c:if>
-			accept-charset="utf-8">
+			  method="post" action="${pageContext.request.contextPath}/protected/upload"
+			  ENCTYPE="multipart/form-data" 
+			  <c:if test="${not empty param.jobId}">data-jobid="${param.jobId}"</c:if>
+			  <c:if test="${not empty requestScope.jobStatus and jobStatus.jobSubmitted}">data-job-running="true"</c:if>
+			  accept-charset="utf-8">
 
 			<table>
 				<tr>
@@ -80,31 +80,31 @@
 					<p>No configurations are available.</p>
 				</c:when>
 				<c:otherwise>
-					<div id="configuration">
-						<p>Choose a configuration:</p>
+					<fieldset id="configuration">
+						<legend>Configuration</legend>
 						<label>Source:<select name="source">
-							<c:forEach var="source" items="${sources}">
-								<option value="${source.id}">${source.name}</option>
-							</c:forEach>
-						</select>
+								<c:forEach var="source" items="${sources}">
+									<option value="${source.id}">${source.name}</option>
+								</c:forEach>
+							</select>
 						</label>
 						<label>Destination:<select name="destination">
-							<c:forEach var="destination" items="${destinations}">
-								<option value="${destination.id}">${destination.displayName}</option>
-							</c:forEach>
-						</select>
+								<c:forEach var="destination" items="${destinations}">
+									<option value="${destination.id}">${destination.displayName}</option>
+								</c:forEach>
+							</select>
 						</label>
-					</div>
+					</fieldset>
 					<c:set var="required" value="${false}"/>
 					<c:forEach var="source" items="${sources}">
 						<c:if test="${not empty source.uploads}">
-							<div id="uploads${source.id}" class="uploads">
-								<p>Upload file(s):</p>
+							<fieldset id="uploads${source.id}" class="uploads">
+								<legend>File upload(s)</legend>
 								<c:forEach var="upload" items="${source.uploads}">
 									<div id="uploader${upload.sourceId}" class="uploader">
 										<label>${upload.sourceId}: <input type="file" name="${upload.sourceId}" class="button browseButton"
 																		  <c:if test="${upload.required}">data-required="true"</c:if>
-											value="Browse" accept="${fn:join(upload.acceptedMimetypes, '|')}"/>
+																		  value="Browse" accept="${fn:join(upload.acceptedMimetypes, '|')}"/>
 											<c:if test="${upload.required}">
 												<span class="uploadRequired">*</span>
 												<c:set var="required" value="${true}"/>
@@ -115,14 +115,57 @@
 										</label>
 									</div>
 								</c:forEach>
-							</div>
+							</fieldset>
 						</c:if>
 					</c:forEach>
-					<!--<div id="dateRange">
-						<p>Choose a date range:</p>
-						<label>Earliest date:<input type="text" id="earliestDate" name="earliestDate"></label>
-						<label>Latest date:<input type="text" id="latestDate" name="latestDate"></label>
-					</div>-->
+					<fieldset id="dateRange">
+						<legend>Date range</legend>
+						<span>
+							<div class="tabs">
+								<ul class="tabNavigation">
+									<li><a href="#first">System</a></li>
+									<li><a href="#second">User Defined</a></li>
+								</ul>
+								<div id="first">
+									<div id="systemTree"></div>
+								</div>
+								<div id="second">
+									<div id="userTree"></div>
+								</div>
+							</div>
+						</span>
+						<span>
+							<table>
+								<tr>
+									<td>Data element for date range:</td>
+									<td>
+										<div id="dateRangeDataElementKey" class="tree-drop-single jstree-drop">
+											<div class="label-info" ><center>Drop Here</center></div>
+											<ul data-type="main" data-drop-type="single" class="sortable" style="width: 100% height: 100%">
+											</ul>
+										</div>
+										<input type="hidden" name="dateRangeDataElementKey">
+									</td>
+								</tr>
+								<tr>
+									<td><select name="dateRangeEarliestDateSide">
+												<c:forEach var="dateRangeSide" items="${dateRangeSides}">
+													<option value="${dateRangeSide.id}">${dateRangeSide.displayName}</option>
+												</c:forEach>
+											</select> <span class="dateRangeDataElementName"/> has earliest date:</td>
+									<td><input type="text" id="earliestDate" name="earliestDate"></td>
+								</tr>
+								<tr>
+									<td><select name="dateRangeLatestDateSide">
+												<c:forEach var="dateRangeSide" items="${dateRangeSides}">
+													<option value="${dateRangeSide.id}">${dateRangeSide.displayName}</option>
+												</c:forEach>
+											</select> <span class="dateRangeDataElementName"/> has latest date:</td>
+									<td><input type="text" id="latestDate" name="latestDate"></td>
+								</tr>
+							</table>
+						</span>
+					</fieldset>
 					<c:choose>
 						<c:when test="${not required}">
 							<input type="submit" id="button" class="button" value="Start"> 
@@ -144,7 +187,7 @@
         <div id="jobUpload">
             <h3>Please wait while your project is being uploaded.....</h3>
             <img src="${pageContext.request.contextPath}/images/e-ani.gif"
-                hspace="450" align="middle" />
+				 hspace="450" align="middle" />
         </div>
     </template:content>
 </template:insert>

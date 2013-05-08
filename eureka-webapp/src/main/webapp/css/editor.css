@@ -38,12 +38,6 @@ table, td {
     height: 100px;
 }
 
-ul.sortable {
-    list-style-type: none;
-    margin: 0;
-    padding: 0;
-}
-
 /* Step 2 styling. */
 
 #select_element_table {
@@ -60,8 +54,14 @@ ul.sortable {
 
 /* Data element selector styling. */
 
-.tabs {
+/*.tabs {
 	float: left;
+}
+
+ul.sortable {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
 }
 
 UL.tabNavigation {
@@ -111,17 +111,11 @@ div.tabs > div h2 {
 	overflow: auto;
 	height: 255px;
 	width: 300px;
-}
+}*/
 
 /* Data element drop target styling. */
 
-.label-info {
-    /*
-    width: 75px;
-    height: 50px;
-    margin: auto;
-    bottom:100px;
-    */
+/*.label-info {
     position: relative;
 }
 
@@ -153,7 +147,9 @@ div.tabs > div h2 {
     height: 6em;
     background: #C3D9FF;
     color: green;
-}
+}*/
+
+/* Editor field styling. */
 
 input.durationField {
 	width: 4em;

@@ -29,7 +29,7 @@ import java.util.Date;
 import java.util.List;
 import org.protempa.ContextDefinition;
 import org.protempa.ContextOffset;
-import org.protempa.IntervalSide;
+import org.protempa.proposition.interval.Interval.Side;
 import org.protempa.PropertyConstraint;
 import org.protempa.SimpleGapFunction;
 import org.protempa.TemporalExtendedParameterDefinition;
@@ -116,8 +116,8 @@ class ConversionUtil {
 		Integer withinAtMost = v.getWithinAtMost();
 		String relOpName = relOp.getName();
 		if ("before".equals(relOpName)) {
-			offset.setStartIntervalSide(IntervalSide.FINISH);
-			offset.setFinishIntervalSide(IntervalSide.FINISH);
+			offset.setStartIntervalSide(Side.FINISH);
+			offset.setFinishIntervalSide(Side.FINISH);
 			if (withinAtLeast != null) {
 				offset.setStartOffset(withinAtLeast);
 			}
@@ -125,8 +125,8 @@ class ConversionUtil {
 			offset.setFinishOffset(withinAtMost);
 			offset.setFinishOffsetUnits(unit(v.getWithinAtMostUnits()));
 		} else if ("after".equals(relOpName)) {
-			offset.setStartIntervalSide(IntervalSide.START);
-			offset.setFinishIntervalSide(IntervalSide.START);
+			offset.setStartIntervalSide(Side.START);
+			offset.setFinishIntervalSide(Side.START);
 			offset.setStartOffset(withinAtMost != null ? -withinAtMost : null);
 			offset.setStartOffsetUnits(unit(v.getWithinAtMostUnits()));
 			if (withinAtLeast != null) {
@@ -134,8 +134,8 @@ class ConversionUtil {
 			}
 			offset.setFinishOffsetUnits(unit(v.getWithinAtLeastUnits()));
 		} else if ("around".equals(relOpName)) {
-			offset.setStartIntervalSide(IntervalSide.START);
-			offset.setFinishIntervalSide(IntervalSide.FINISH);
+			offset.setStartIntervalSide(Side.START);
+			offset.setFinishIntervalSide(Side.FINISH);
 			offset.setStartOffset(withinAtLeast != null ? -withinAtLeast : null);
 			offset.setStartOffsetUnits(unit(v.getWithinAtLeastUnits()));
 			offset.setFinishOffset(withinAtMost);

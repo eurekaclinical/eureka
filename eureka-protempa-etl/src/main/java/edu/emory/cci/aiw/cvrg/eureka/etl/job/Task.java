@@ -30,6 +30,7 @@ import com.google.inject.Inject;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.JobEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.JobState;
 import edu.emory.cci.aiw.cvrg.eureka.etl.dao.JobDao;
+import org.protempa.backend.dsb.filter.Filter;
 
 public final class Task implements Runnable {
 
@@ -39,6 +40,7 @@ public final class Task implements Runnable {
 	private Long jobId;
 	private List<PropositionDefinition> propositionDefinitions;
 	private List<String> propIdsToShow;
+	private Filter filter;
 
 	@Inject
 	Task(JobDao inJobDao, ETL inEtl) {
@@ -54,6 +56,14 @@ public final class Task implements Runnable {
 		jobId = inJobId;
 	}
 
+	public Filter getFilter() {
+		return filter;
+	}
+
+	public void setFilter(Filter filter) {
+		this.filter = filter;
+	}
+	
 	List<String> getPropositionIdsToShow() {
 		return propIdsToShow;
 	}
@@ -91,7 +101,7 @@ public final class Task implements Runnable {
 					this.propIdsToShow.toArray(
 					new String[this.propIdsToShow.size()]);
 
-			this.etl.run(myJob, propDefArray, propIdsToShowArray);
+			this.etl.run(myJob, propDefArray, propIdsToShowArray, this.filter);
 			this.etl.close();
 			myJob.setNewState(JobState.DONE, null, null);
 			this.jobDao.update(myJob);

@@ -284,6 +284,11 @@ see implementation details http://jersey.java.net/nonav/documentation/latest/jax
 		<servlet-class>edu.emory.cci.aiw.cvrg.eureka.servlet.PingServlet</servlet-class>
 		<load-on-startup>1</load-on-startup>
 	</servlet>
+	<servlet>
+		<servlet-name>DateRangeDataElementServlet</servlet-name>
+		<servlet-class>edu.emory.cci.aiw.cvrg.eureka.servlet.DateRangeDataElementServlet</servlet-class>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
 	
 	
 	<servlet-mapping>
@@ -358,5 +363,8 @@ see implementation details http://jersey.java.net/nonav/documentation/latest/jax
 		<servlet-name>PingServlet</servlet-name>
 		<url-pattern>/protected/ping</url-pattern>
 	</servlet-mapping>
-
+	<servlet-mapping>
+		<servlet-name>DateRangeDataElementServlet</servlet-name>
+		<url-pattern>/protected/destinationdataelements</url-pattern>
+	</servlet-mapping>
 </web-app>

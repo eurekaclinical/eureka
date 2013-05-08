@@ -30,6 +30,7 @@ import com.google.inject.Provider;
 import com.google.inject.Singleton;
 
 import edu.emory.cci.aiw.cvrg.eureka.etl.config.EtlProperties;
+import org.protempa.backend.dsb.filter.Filter;
 
 @Singleton
 public class TaskManager {
@@ -46,11 +47,12 @@ public class TaskManager {
 
 	public void queueTask (Long inJobId, 
 			List<PropositionDefinition> inPropositionDefinitions, 
-			List<String> propIdsToShow) {
+			List<String> propIdsToShow, Filter filter) {
 		Task task = this.taskProvider.get();
 		task.setJobId(inJobId);
 		task.setPropositionDefinitions(inPropositionDefinitions);
 		task.setPropositionIdsToShow(propIdsToShow);
+		task.setFilter(filter);
 		this.executorService.execute(task);
 	}
 

@@ -1,50 +1,5 @@
 /* Eureka WebApp. Copyright (C) 2012 Emory University. Licensed under http://www.apache.org/licenses/LICENSE-2.0. */
 
-// Starting to "namespace" some functions to reduce clutter in the global namespace
-var eureka = new Object();
-eureka.util = new Object();
-eureka.util.objSize = function (obj) {
-	var size = 0;
-	for (key in obj) {
-		if (obj.hasOwnProperty(key)) {
-			size++;
-		}
-	}
-	return size;
-};
-eureka.util.getIn = function (obj, path) {
-	var current = obj;
-	for (var i = 0; i < path.length; i++) {
-		current  = current[path[i]];
-		if (!current) {
-			break;
-		}
-	}
-	return current;
-};
-eureka.util.setIn = function (obj, path, value) {
-	var current = obj;
-	for (var i = 0; i < path.length - 1; i++) {
-		var tmp = current[path[i]];
-		if (!tmp) {
-			tmp = new Object();
-			current[path[i]] = tmp;
-		}
-		current = tmp;
-	}
-	current[path[path.length - 1]] = value;
-};
-eureka.util.removeIn = function (obj, path) {
-	var current = obj;
-	for (var i = 0; i < path.length - 1; i++) {
-		current = current[path[i]];
-		if (current == null) {
-			break;
-		}
-	}
-	delete current[path[path.length - 1]];
-};
-
 eureka.dataElement = {
 	post: function(postData, successFunc) {
 		$.ajax({
@@ -294,16 +249,6 @@ eureka.dataElement = {
 $("ul.sortable").sortable();
 $("ul.sortable").disableSelection();
 
-var dropBoxMaxTextWidth = 275;
-var droppedElements  = new Object();
-
-var dndActions = {
-	'FREQUENCY': enableFrequencyFields
-};
-var deleteActions = {
-	'FREQUENCY': disableFrequencyFields
-};
-
 function enableFrequencyFields(dropped) {
 	if ($(dropped).data('type') == 'VALUE_THRESHOLD') {
 		$('#valueThresholdConsecutiveLabel').css('visibility','visible');
@@ -313,155 +258,6 @@ function enableFrequencyFields(dropped) {
 function disableFrequencyFields() {
 	$('#valueThresholdConsecutiveLabel').css('visibility','hidden');
 }
-
-function addDroppedElement(propType, dropped, dropTarget) {
-	var elementKey = $(dropped).data('key');
-	var sourceId = $(dropTarget).data('count');
-	var sourcePath = [propType, elementKey, 'sources', sourceId];
-	var defPath = [propType, elementKey, 'definition'];
-	var definition = eureka.util.getIn(droppedElements, defPath);
-
-	eureka.util.setIn(droppedElements, sourcePath, dropTarget);
-	if (!definition) {
-		var properties = ['key', 'desc', 'type', 'subtype', 'space'];
-		definition = new Object();
-		$.each(properties, function(i, property) {
-			definition[property] = $(dropped).data(property);
-		});
-		eureka.util.setIn(droppedElements, defPath, definition);
-	}
-
-	var allSourcesPath = [propType, elementKey, 'sources'];
-	var allSources = eureka.util.getIn(droppedElements, allSourcesPath);
-	var size = eureka.util.objSize(allSources);
-	if (size > 1) {
-		for (key in allSources) {
-			if (allSources.hasOwnProperty(key)) {
-				var source = allSources[key];
-				var items = $(source).find('li');
-				$(items).each(function (i, item) {
-					var span = $(item).find('span.desc');
-					var newText = $(dropped).data('desc') + ' [' + $(source).data('count') + ']';
-					$(span).text(newText);
-				});
-			}
-		}
-	}
-}
-
-function removeDroppedElement(propType, removed, removeTarget) {
-	var elementKey = $(removed).data('key');
-	var sourceId = $(removeTarget).data('count');
-	var path = [propType, elementKey, 'sources', sourceId];
-	eureka.util.removeIn(droppedElements, path);
-
-	var defPath = [propType, elementKey, 'definition'];
-	var definition = eureka.util.getIn(droppedElements, defPath);
-	var allSourcesPath = [propType, elementKey, 'sources'];
-	var allSources = eureka.util.getIn(droppedElements, allSourcesPath);
-	var size = eureka.util.objSize(allSources);
-	if (size <= 1) {
-		for (key in allSources) {
-			if (allSources.hasOwnProperty(key)) {
-				var source = allSources[key];
-				var items = $(source).find('li');
-				$(items).each(function (i, item) {
-					var span = $(item).find('span.desc');
-					var newText = $(removed).data('desc');
-					$(span).text(newText);
-				});
-			}
-		}
-	}
-}
-
-function setPropositionSelects (elem) {
-	var type = $("input:radio[name='type']:checked").val();
-	var droppedElems = droppedElements[type];
-	var selects = $(elem).find('select[name="propositionSelect"]');
-	$(selects).each(function (i, sel) {
-		var $sortable = $(sel).closest('.drop-parent').find('ul.sortable');
-		var originalSource = $(sel).data('sourceid');
-		$(sel).attr('data-sourceid','');
-		$(sel).empty();
-		$.each(droppedElems, function(elemKey, elemValue) {
-			var sources = droppedElems[elemKey]['sources'];
-			$.each(sources, function(sourceKey, sourceValue) {
-				var $items = $(sourceValue).find('li');
-				var selectedItem;
-				$items.each(function(i, item) {
-					if ($(item).data('key') == elemKey) {
-						selectedItem = item;
-					}
-					if (selectedItem && $sortable.data('count') != $(sourceValue).data('count')) {
-						var sourceId = $(sourceValue).data('count');
-						var value = $(selectedItem).data('key') + '__' + sourceId;
-						var desc = $(selectedItem).data('desc');
-						if (eureka.util.objSize(sources) > 1) {
-							desc += ' [' + sourceKey + ']';
-						}
-						var opt = $('<option></option>', {
-							'value': value
-						}).text(desc);
-						if (value == $(selectedItem).data('key') + '__' + originalSource) {
-							opt.attr('selected','selected');
-						}
-						$(sel).append(opt);
-					}
-				});
-			});
-		});
-	});
-}
-
-function attachDeleteAction (elem) {
-	$(elem).each(function(i, item) {
-		$(item).click(function () {
-			var $toRemove = $(item).closest('li');
-			var $sortable = $toRemove.closest('ul.sortable');
-			var $infoLabel = $sortable.siblings('div.label-info');
-			var $target = $sortable.parent();
-			var dialog = $('<div></div>');
-			$(dialog).dialog({
-				'title': 'Remove Data Element',
-				'modal': true,
-				'resizable': false,
-				'buttons': {
-					"Confirm": function() {
-						var type = $("input:radio[name='type']:checked").val();
-						removeDroppedElement(type, $toRemove,$sortable);
-						setPropositionSelects($sortable.closest('[data-definition-container="true"]'));
-						$toRemove.remove();
-						if ($sortable.find('li').length == 0) {
-							$sortable.data('proptype','empty');
-							$infoLabel.show();
-						}
-
-						// remove the properties from the drop down
-						$('select[data-properties-provider=' + $target.attr('id') + ']').each(function (i, item) {
-							$(item).empty();
-						});
-
-						// perform any additional delete actions
-						if (deleteActions[type]) {
-							deleteActions[type]();
-						}
-
-						$(this).dialog("close");
-						$(this).remove();
-					},
-					"Cancel": function() {
-						$(this).dialog("close");
-						$(this).remove();
-					}
-				}
-			});
-			$(dialog).html('Are you sure you want to remove data element ' + $toRemove.text() + '?');
-			$(dialog).dialog("open");
-		});
-	});
-}
-
 
 $(document).ready(function(){
 
@@ -491,15 +287,15 @@ $(document).ready(function(){
 		$('div.label-info').hide();
 		$sortables.each(function (i, list) {
 			$(list).find('li').each(function (j, item) {
-				addDroppedElement(propType, item, $(list));
+				eureka.trees.addDroppedElement(propType, item, $(list));
 			});
 		});
-		setPropositionSelects($def);
+		eureka.trees.setPropositionSelects($def);
 	}
 
 	// make any deletable items actually delete
 	$('ul.sortable').find('li').find('span.delete').each(function(i,item) {
-		attachDeleteAction(item);
+		eureka.trees.attachDeleteAction(item);
 	});
 
 	function leaveAStepCallback(from, to){
@@ -601,19 +397,14 @@ $(document).ready(function(){
 
 		return isStepValid;
 	}
-
-	var tabContainers = $('div.tabs > div');
-	tabContainers.hide().filter(':first').show();
-
-	$('div.tabs ul.tabNavigation a').click(function () {
-		tabContainers.hide();
-		tabContainers.filter(this.hash).show();
-		$('div.tabs ul.tabNavigation a').removeClass('selected');
-		$(this).addClass('selected');
-		return false;
-	}).filter(':first').click();
-
-	initTrees();
+	
+	var dndActions = {
+		'FREQUENCY': enableFrequencyFields
+	};
+	var deleteActions = {
+		'FREQUENCY': disableFrequencyFields
+	};
+	eureka.trees.init(dndActions, deleteActions);
 
 	/**
 	 * Insert search-form
@@ -652,7 +443,7 @@ $(document).ready(function(){
 		data.find('div.thresholdedDataElement').attr('id','thresholdedDataElement' + newCount);
 		data.find('select[name="sequenceRelDataElementPropertyName"]').attr('data-properties-provider','relatedDataElement' + newCount);
 		appendTo.append(data);
-		setPropositionSelects($(appendTo).closest('[data-definition-container="true"]'));
+		eureka.trees.setPropositionSelects($(appendTo).closest('[data-definition-container="true"]'));
 	});
 	
 	$('a#add-threshold').click(function (e) {
@@ -667,188 +458,7 @@ $(document).ready(function(){
 
 });
 
-function dropFinishCallback (data) {
-	var propType = $("input:radio[name='type']:checked").val();
-	var target = data.e.currentTarget;
-	var textContent = data.o[0].children[1].childNodes[1].textContent;
-
-	if (idIsNotInList(target, data.o[0].id)) {
-
-		var infoLabel = $(target).find('div.label-info');
-		infoLabel.hide();
-
-		var sortable = $(target).find('ul.sortable');
-		var newItem = $('<li></li>')
-		.attr("data-space", $(data.o[0]).data("space"))
-		.attr("data-desc", textContent)
-		.attr("data-type", $(data.o[0]).data("type"))
-		.attr("data-subtype", $(data.o[0]).data("subtype") || '')
-		.attr('data-key', $(data.o[0]).data("proposition") || $(data.o[0]).data('key'));
-
-		// set the properties in the properties select
-		if ($(data.o[0]).data('properties')) {
-			var properties = $(data.o[0]).data('properties').split(",");
-			$('select[data-properties-provider=' + $(target).attr('id') + ']').each(function (i, item) {
-				$(item).empty();
-				$(properties).each(function (j, property) {
-					$(item).append($('<option></option>').attr('value', property).text(property));
-				});
-			});
-		}
-
-		// check that all types in the categorization are the same
-		if ($(sortable).data('drop-type') === 'multiple' && $(sortable).data("proptype") !== 'empty') {
-			if ($(sortable).data("proptype") !== $(newItem).data("type")) {
-				return;
-			}
-		} else {
-			var tmptype = $(newItem).data("type");
-			$(sortable).data("proptype", tmptype);
-		}
-
-		var X = $("<span></span>", {
-			'class': "delete"
-		});
-		attachDeleteAction(X);
-
-		var txt = $("<span></span>", {
-			'class': 'desc',
-			'text': textContent
-		});
-
-		if ($(sortable).data('drop-type') === 'single') {
-			$(sortable).find('li').each(function (i,item) {
-				$(item).find('span.delete').click();
-				$(item).remove();
-			});
-		}
-
-		newItem.append(X);
-		newItem.append(txt);
-		sortable.append(newItem);
-
-		// add the newly dropped element to the set of dropped elements
-		addDroppedElement(propType, newItem, sortable);
-		setPropositionSelects($(sortable).closest('[data-definition-container="true"]'));
-
-		// finally, call any actions specific to the type of proposition being entered/edited
-		if (dndActions[propType]) {
-			dndActions[propType](data.o[0]);
-		}
-	}
-}
-
-
-function initTrees() {
-
-	$("#systemTree").jstree({
-		"json_data" : {
-			"ajax" : {
-				"url" : "systemlist" ,
-				"data": function(n) {
-					return {
-						key : n.attr ? n.attr("data-key") : "root"
-					};
-				}
-
-			}
-		},
-		"crrm" : {
-			// prevent movement and reordering of nodes
-			"move" : {
-				"check_move" : function (m) {
-					return false;
-				}
-			}
-		},
-		"dnd" : {
-			"drop_finish": dropFinishCallback,
-			"drop_check": function (data) {
-				var target = data.r;
-				var sortable = $(target).find('ul.sortable');
-				var datatype = $(sortable).data("proptype");
-				var droppable = false;
-
-				if (datatype == "empty" || datatype == $(data.o).data("type") || $(sortable).data('drop-type') === 'single') {
-					droppable = true;
-				}
-				
-				return droppable;
-			}
-		},
-		// search disabled until we figure out a way to search for nodes not currently loaded in the tree
-		//		"search" : {
-		//			"show_only_matches" : true,
-		//		},
-		"plugins" : [ "themes", "json_data", "ui", "crrm", "dnd"/*, "search"*/ ]
-	})
-	/*
-	.bind("open_node.jstree", function(e, data)
-	{
-		if(data.rslt.obj[0].id == undefined) {
-			alert("No href defined for this element");
-		}
-	})
-	*/
-	;
-
-	$("#userTree").jstree({
-		"json_data" : {
-			"ajax" : {
-				"url" : "userproplist?key=root"
-			}
-		},
-		"dnd" : {
-			"drop_finish" : dropFinishCallback
-		/*
-		,
-			"drag_check" : function(data) {
-				if (data.r.attr("id") == "phtml_1") {
-					return false;
-				}
-				return {
-					after : false,
-					before : false,
-					inside : true
-				};
-			}
-			*/
-		},
-		"plugins" : [ "themes", "json_data", "ui", "dnd" ]
-	})
-/*
-	.bind("select_node.jstree", function(e, data)
-	{
-		if(data.rslt.obj[0].id !== undefined)
-		{
-			if ($("[id='"+data.rslt.obj[0].id+ "']")[0].children.length < 3) {
-				loadUserDefinedProps(data.rslt.obj[0].id);
-			}
-		}
-		else
-		{
-			alert("No href defined for this element");
-		}
-
-
-	})
-	*/
-;
-
-
-
-}
-
 function showHelp() {
 
 }
-function idIsNotInList(target, id) {
-	var retVal = true;
-	$(target).find('ul.sortable').find('li').each( function(i, item) {
-		if ($(item).data('key') == id) {
-			retVal = false;
-		}
 
-	});
-	return retVal;
-}

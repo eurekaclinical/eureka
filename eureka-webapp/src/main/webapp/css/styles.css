@@ -372,7 +372,6 @@ td .error {
 }
 
 #elements {
-
     overflow: hidden;
 }
 
@@ -396,4 +395,111 @@ address {
 	margin-top: 1em;
 	margin-bottom: 1em;
 	margin-left: 2em;
+}
+
+/* Data element selector styling. */
+
+.tabs {
+	float: left;
+}
+
+ul.sortable {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+
+UL.tabNavigation {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+UL.tabNavigation LI {
+    display: inline;
+}
+
+UL.tabNavigation LI A {
+    padding: 3px 5px;
+    background-color: #ccc;
+    color: #000;
+    text-decoration: none;
+}
+
+UL.tabNavigation LI A.selected,
+UL.tabNavigation LI A:hover {
+    background-color: #333;
+    color: #fff;
+    padding-top: 7px;
+}
+
+UL.tabNavigation LI A:focus {
+	outline: 0;
+}
+
+div.tabs > div {
+	padding: 5px;
+	margin-top: 3px;
+	border: 2px solid #333;
+}
+
+div.tabs > div h2 {
+	margin-top: 0;
+}
+
+#systemTree {
+	overflow: auto;
+	height: 255px;
+	width: 300px;
+}
+#userTree {
+	overflow: auto;
+	height: 255px;
+	width: 300px;
+}
+
+/* Data element drop target styling. */
+
+.label-info {
+    /*
+    width: 75px;
+    height: 50px;
+    margin: auto;
+    bottom:100px;
+    */
+    position: relative;
+}
+
+.tree-drop {
+    float: left;
+    overflow: auto;
+    border: 3px solid gray;
+    width: 285px;
+    height: 263px;
+    background: #C3D9FF;
+    color: green;
+}
+
+.tree-drop-single {
+    float: left;
+    overflow: auto;
+    border: 3px solid gray;
+    width: 20em;
+    height: 3em;
+    background: #C3D9FF;
+    color: green;
+}
+
+.tree-drop-multiple {
+	float: left;
+    overflow: auto;
+    border: 3px solid gray;
+    width: 20em;
+    height: 6em;
+    background: #C3D9FF;
+    color: green;
+}
+
+fieldset#dateRange > label {
+	display: inline-block;
 }

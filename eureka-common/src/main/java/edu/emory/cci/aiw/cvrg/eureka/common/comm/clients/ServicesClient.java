@@ -241,7 +241,7 @@ public class ServicesClient extends EurekaClient {
 				.build(inUserId).toString();
 		doDelete(path);
 	}
-
+	
 	public List<SystemElement> getSystemElements() throws ClientException {
 		final String path = UriBuilder.fromPath("/api/systemelement/").build().toString();
 		return doGet(path, SystemElementList);
@@ -385,6 +385,13 @@ public class ServicesClient extends EurekaClient {
 	public List<Destination> getDestinations() throws ClientException {
 		String path = "/api/destination/list";
 		return doGet(path, DestinationList);
+	}
+	
+	public Destination getDestination(String destinationId) throws ClientException {
+		String path = UriBuilder.fromPath("/api/destination/")
+				.segment(destinationId)
+				.build().toString();
+		return doGet(path, Destination.class);
 	}
 	
 }

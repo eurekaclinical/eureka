@@ -31,7 +31,6 @@ import org.protempa.EventDefinition;
 import org.protempa.ExtendedPropositionDefinition;
 import org.protempa.GapFunction;
 import org.protempa.HighLevelAbstractionDefinition;
-import org.protempa.IntervalSide;
 import org.protempa.LowLevelAbstractionDefinition;
 import org.protempa.NotRecordedSourceId;
 import org.protempa.PrimitiveParameterDefinition;
@@ -138,11 +137,6 @@ public class ObjectMapperProvider implements ContextResolver<ObjectMapper> {
 		        new SliceAbstractionJsonSerializer());
 		module.addDeserializer(SliceDefinition.class,
 		        new SliceAbstractionJsonDeserializer());
-
-		module.addSerializer(IntervalSide.class,
-		        new IntervalSideJsonSerializer());
-		module.addDeserializer(IntervalSide.class,
-		        new IntervalSideJsonDeserializer());
 
 		this.mapper.registerModule(module);
 	}
