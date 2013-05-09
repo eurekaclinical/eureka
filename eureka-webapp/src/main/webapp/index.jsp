@@ -46,6 +46,10 @@
 					identifiers.</strong>
 			</p>
 		</c:if>
+		<c:if test="${not applicationScope.webappProperties.demoMode and applicationScope.webappProperties.ephiProhibited}">
+			<p><strong>NOTE: Loading real patient data into the system is strictly prohibited.</strong>
+			</p>
+		</c:if>
 		
         <p class="small_text">&nbsp;</p>
         <p class="small_text">The software powering this site has been 

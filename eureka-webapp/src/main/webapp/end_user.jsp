@@ -31,9 +31,7 @@
 
     <h3 id="registerHeading">End User Agreement</h3>
 <div class="help">
-	<c:if test="${applicationScope.webappProperties.demoMode}">
   <h5>This is a demonstration website. It is not suitable for use with sensitive data including patient data that contains identifiers. Do not under any circumstances load sensitive data to this site.</h5>
-	</c:if>
   <p>This is beta-quality software. There exists the risk that data that   you upload to this site could accidentally be exposed, deleted or   corrupted. You agree to accept the risk that this web site and the   software on it may delete, corrupt or publicly disclose any data you   upload to this site and agree to hold Emory University and the   individual contributors to this web site harmless from any negative   consequence of you uploading data to this site.</p>
   <p>By uploading data to this web site, you warrant that you have the   legal right to do so. You also agree that if you upload data to this web   set that you are not legally entitled to upload, you will hold Emory   University and all other parties connected with this web site harmless   from the consequences of your action.</p>
   <p>This web site, the software on the web site and any other  intellectual property on the web site are provided &quot;as is&quot; without  warranty of any kind.  Emory University and the individual contributors   to this web site, its software and content disclaim all warranties,   express and implied, including and without limitation, any implied   warranties of merchantability, fitness for a particular purpose or   noninfringement.</p>

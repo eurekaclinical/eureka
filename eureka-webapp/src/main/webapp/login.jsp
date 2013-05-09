@@ -42,7 +42,7 @@
 				<br>
 				<br>
 			</span>
-			<c:if test="${applicationScope.webappProperties.demoMode}">
+			<c:if test="${applicationScope.webappProperties.demoMode or applicationScope.webappProperties.ephiProhibited}">
 			*Please note that loading real patient data into the system is strictly prohibited!
 			</c:if>
 			<br>

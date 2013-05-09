@@ -30,7 +30,7 @@
 	<template:content name="content">
 
     <h3 id="registerHeading">Register</h3>
-	<c:if test="${applicationScope.webappProperties.demoMode}">
+	<c:if test="${applicationScope.webappProperties.demoMode or applicationScope.webappProperties.ephiProhibited}">
     <p><span class="pad"><b>*Disclaimer: Loading real patient data into the system is strictly prohibited.</b> </span></p>
 	</c:if>
 <form id="signupForm" action="#" method="post" class="pad">
@@ -76,12 +76,13 @@
         	<p class="pw_fail error" id="passwordErrorMessage"></p>
     	</div>
 	<div class="small_text pad" style="float:left">
-    <p>*Passwords must be at least 8 characters and contain at least one letter & digit
-	<br/>
-	<input type="checkbox" name="agreement" id="agreement" style="padding:0px" />
-    <label for="checkbox" style="display: inline">
-    	<a style="pad" href="end_user.jsp">End User Agreement</a>
-    </label>
+    <p>*Passwords must be at least 8 characters and contain at least one letter & digit</p>
+	<c:if test="${applicationScope.webappProperties.demoMode}">
+		<input type="checkbox" name="agreement" id="agreement" style="padding:0px" />
+		<label for="checkbox" style="display: inline">
+			<a style="pad" href="end_user.jsp">End User Agreement</a>
+		</label>
+	</c:if>
     &nbsp;&nbsp;&nbsp;
 <button id="submit" type="submit" class="btn btn-primary submit">Submit</button>
     <br />
