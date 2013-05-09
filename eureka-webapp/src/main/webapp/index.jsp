@@ -35,15 +35,17 @@
 			data into your own instance of the <a href="http://www.i2b2.org" target="_blank" rel="nofollow">i2b2 data warehouse system</a>.
 		</p>
 
-		<p>This website is a fully functional online demo. Take a look at our 
-			<a href="http://aiw.sourceforge.net" target="_blank">Sourceforge website</a> for how to deploy your own copy 
-			of Eureka!
-		</p>
-		
-		<p><strong>NOTE: This demonstration website is NOT suitable for use 
-				with sensitive data including patient data that contains 
-				identifiers.</strong>
-		</p>
+		<c:if test="${applicationScope.webappProperties.demoMode}">
+			<p>This website is a fully functional online demo. Take a look at our 
+				<a href="http://aiw.sourceforge.net" target="_blank">Sourceforge website</a> for how to deploy your own copy 
+				of Eureka!
+			</p>
+
+			<p><strong>NOTE: This demonstration website is NOT suitable for use 
+					with sensitive data including patient data that contains 
+					identifiers.</strong>
+			</p>
+		</c:if>
 		
         <p class="small_text">&nbsp;</p>
         <p class="small_text">The software powering this site has been 
@@ -62,17 +64,6 @@
 			<p>10.11.2012: Version 1.5 is out! We now have preliminary user-defined derived data elements.  Click the &quot;Editor&quot; link after logging in.</p>
 			<p>04.05.2012: First Eureka! Public Release (Version 1.4)</p>
 		</div>
-		<%--
-				<div class="release_notes sub_width" style="position: absolute; top: 570px; left: 280px; background-color:#fff;">
-					<p></p>
-				</div>
-				<div class="release_notes sub_width" style="position: absolute; top: 570px; left: 600px; background-color:#fff;">
-					<p></p>
-				</div>
-				<div class="release_notes sub_width" style="position: absolute; top: 570px; left:920px; background-color:#fff;">
-					<p></p>
-				</div>
-		--%>
 	</template:content>
 
 </template:insert>

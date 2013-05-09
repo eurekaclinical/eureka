@@ -64,8 +64,10 @@
 				</td>
 			</tr>
         </table>
+		<c:if test="${applicationScope.webappProperties.demoMode}">
 		<p>NOTE: For privacy, data retention and other policies regarding this 
 			site, click on Frequently Asked Questions above.</p>
+		</c:if>
         <p class="pad_top">&nbsp;</p>
         </div>
 	</template:content>

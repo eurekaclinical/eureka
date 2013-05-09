@@ -53,6 +53,7 @@
 			of clinical data types into i2b2.
 		</p>
 		
+		<c:if test="${applicationScope.webappProperties.demoMode}">
 		<h4>Can I load data with identifiers in it?</h4>
 		<p>No, this is a demonstration website only. Please see the End-user 
 			agreement when you register for an account on the website for 
@@ -68,6 +69,7 @@
 			and an <a href="http://aiw.sourceforge.net/ec2.html" target="_blank">Amazon Machine Instance</a> for you to clone on the 
 			<a href="http://aws.amazon.com/" target="_blank">Amazon Elastic Compute (EC2) Cloud</a>.
 		</p>
+		</c:if>
 		
 		<h4>What is going on behind the scenes?</h4>
 		<p>Eureka! Clinical Analytics is a front-end user interface for the 

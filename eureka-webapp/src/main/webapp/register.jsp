@@ -30,7 +30,9 @@
 	<template:content name="content">
 
     <h3 id="registerHeading">Register</h3>
+	<c:if test="${applicationScope.webappProperties.demoMode}">
     <p><span class="pad"><b>*Disclaimer: Loading real patient data into the system is strictly prohibited.</b> </span></p>
+	</c:if>
 <form id="signupForm" action="#" method="post" class="pad">
 
 	  		  <table class="white">

@@ -82,6 +82,10 @@ see implementation details http://jersey.java.net/nonav/documentation/latest/jax
 		<param-value>${aiw.site.url}/help/v${parsedVersion.majorVersion}-${parsedVersion.minorVersion}</param-value>
 	</context-param>
 
+	<listener>
+		<listener-class>edu.emory.cci.aiw.cvrg.eureka.webapp.config.WebappListener</listener-class>
+	</listener>
+
 	<filter>
 		<filter-name>PasswordExpiredFilter</filter-name>
 		<filter-class>

@@ -42,7 +42,9 @@
 				<br>
 				<br>
 			</span>
+			<c:if test="${applicationScope.webappProperties.demoMode}">
 			*Please note that loading real patient data into the system is strictly prohibited!
+			</c:if>
 			<br>
 			<br>
 			<div class="row btn-row">
