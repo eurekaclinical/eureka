@@ -38,6 +38,9 @@ public class AdminManagerServlet extends HttpServlet {
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
+		//if (!req.isUserInRole("admin")) {
+		//	throw new ServletException();
+		//}
 		
 		String action = req.getParameter("action");
 		ServletWorker worker = null;

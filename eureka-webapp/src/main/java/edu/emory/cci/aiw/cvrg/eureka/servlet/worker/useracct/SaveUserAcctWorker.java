@@ -77,6 +77,7 @@ public class SaveUserAcctWorker implements ServletWorker {
 			resp.setStatus(HttpServletResponse.SC_OK);
 			resp.getWriter().write(HttpServletResponse.SC_OK);
 		} catch (ClientException e) {
+			LOGGER.error("Error trying to change password for user {}", req.getUserPrincipal().getName(), e);
 			resp.setContentType("text/plain");
 			if (ClientResponse.Status.PRECONDITION_FAILED.equals(e.getResponseStatus())) {
 				resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);

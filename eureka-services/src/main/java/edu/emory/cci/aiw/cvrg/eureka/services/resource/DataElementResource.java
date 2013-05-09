@@ -58,7 +58,7 @@ import org.apache.commons.lang.StringUtils;
  *
  * @author hrathod
  */
-@Path("/dataelement")
+@Path("/protected/dataelement")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public class DataElementResource {

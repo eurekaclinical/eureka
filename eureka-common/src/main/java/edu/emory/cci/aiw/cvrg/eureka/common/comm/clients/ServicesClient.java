@@ -96,12 +96,12 @@ public class ServicesClient extends EurekaClient {
 	}
 
 	public List<UserInfo> getUsers() throws ClientException {
-		final String path = "/api/user/list";
+		final String path = "/api/protected/user/list";
 		return doGet(path, UserList);
 	}
 
 	public UserInfo getUserByName(String username) throws ClientException {
-		String path = UriBuilder.fromPath("/api/user/byname/")
+		String path = UriBuilder.fromPath("/api/protected/user/byname/")
 				.segment("{arg1}")
 				.build(username)
 				.toString();
@@ -109,17 +109,27 @@ public class ServicesClient extends EurekaClient {
 	}
 
 	public UserInfo getUserById(Long inUserId) throws ClientException {
-		final String path = "/api/user/byid/" + inUserId;
+		final String path = "/api/protected/user/byid/" + inUserId;
 		return doGet(path, UserInfo.class);
 	}
 
 	public void addUser(UserRequest inRequest) throws ClientException {
-		final String path = "/api/user";
+		final String path = "/api/userreg/new/";
 		doPost(path, inRequest);
+	}
+	
+	public void resetPassword(String email) throws ClientException {
+		final String path = "/api/userreg/resetpassword/" + email;
+		doPut(path);
+	}
+	
+	public void verifyUser(String inCode) throws ClientException {
+		final String path = "/api/userreg/verify/" + inCode;
+		doPut(path);
 	}
 
 	public void changePassword(String inOldPass, String inNewPass) throws ClientException {
-		final String path = "/api/user/passwordchangerequest";
+		final String path = "/api/protected/user/passwordchangerequest";
 		PasswordChangeRequest passwordChangeRequest =
 				new PasswordChangeRequest();
 		passwordChangeRequest.setOldPassword(inOldPass);
@@ -127,33 +137,23 @@ public class ServicesClient extends EurekaClient {
 		doPost(path, passwordChangeRequest);
 	}
 
-	public void resetPassword(String email) throws ClientException {
-		final String path = "/api/user/pwreset/" + email;
-		doPut(path);
-	}
-
 	public void updateUser(UserInfo inUser) throws ClientException {
-		final String path = "/api/user";
+		final String path = "/api/protected/user";
 		doPut(path, inUser);
 	}
 
-	public void verifyUser(String inCode) throws ClientException {
-		final String path = "/api/user/verify/" + inCode;
-		doPut(path);
-	}
-
 	public List<Role> getRoles() throws ClientException {
-		final String path = "/api/role/list";
+		final String path = "/api/protected/role/list";
 		return doGet(path, RoleList);
 	}
 
 	public Role getRole(Long inRoleId) throws ClientException {
-		final String path = "/api/role/" + inRoleId;
+		final String path = "/api/protected/role/" + inRoleId;
 		return doGet(path, Role.class);
 	}
 
 	public Long submitJob(JobSpec inUpload) throws ClientException {
-		final String path = "/api/jobs";
+		final String path = "/api/protected/jobs";
 		URI jobUrl = doPostCreate(path, inUpload);
 		return extractId(jobUrl);
 	}
@@ -162,7 +162,7 @@ public class ServicesClient extends EurekaClient {
 			String fileTypeId, InputStream inputStream)
 			throws ClientException {
 		String path = UriBuilder
-				.fromPath("/api/file/upload/")
+				.fromPath("/api/protected/file/upload/")
 				.segment(sourceId)
 				.segment(fileTypeId)
 				.build().toString();
@@ -170,17 +170,17 @@ public class ServicesClient extends EurekaClient {
 	}
 	
 	public Job getJob(Long jobId) throws ClientException {
-		final String path = "/api/jobs/" + jobId;
+		final String path = "/api/protected/jobs/" + jobId;
 		return doGet(path, Job.class);
 	}
 
 	public List<Job> getJobs() throws ClientException {
-		final String path = "/api/jobs";
+		final String path = "/api/protected/jobs";
 		return doGet(path, JobList);
 	}
 	
 	public List<Job> getJobsDesc() throws ClientException {
-		final String path = "/api/jobs";
+		final String path = "/api/protected/jobs";
 		MultivaluedMap<String, String> queryParams = new MultivaluedMapImpl();
 		queryParams.add("order", "desc");
 		return doGet(path, JobList, queryParams);
@@ -188,18 +188,18 @@ public class ServicesClient extends EurekaClient {
 
 	public void saveUserElement(DataElement inDataElement)
 			throws ClientException {
-		final String path = "/api/dataelement";
+		final String path = "/api/protected/dataelement";
 		doPost(path, inDataElement);
 	}
 
 	public void updateUserElement(DataElement inDataElement) throws
 			ClientException {
-		final String path = "/api/dataelement";
+		final String path = "/api/protected/dataelement";
 		doPut(path, inDataElement);
 	}
 
 	public List<DataElement> getUserElements() throws ClientException {
-		final String path = "/api/dataelement/";
+		final String path = "/api/protected/dataelement/";
 		return doGet(path, DataElementList);
 	}
 
@@ -214,7 +214,7 @@ public class ServicesClient extends EurekaClient {
 		 * string can't be templated because the slashes won't be encoded!
 		 */
 		String path = UriBuilder
-				.fromPath("/api/dataelement/")
+				.fromPath("/api/protected/dataelement/")
 				.segment(inKey)
 				.build().toString();
 		return doGet(path, DataElement.class);
@@ -235,7 +235,7 @@ public class ServicesClient extends EurekaClient {
 		 * string can't be templated because the slashes won't be encoded!
 		 */
 		String path = UriBuilder
-				.fromPath("/api/dataelement/")
+				.fromPath("/api/protected/dataelement/")
 				.segment("{arg1}")
 				.segment(inKey)
 				.build(inUserId).toString();
@@ -243,7 +243,7 @@ public class ServicesClient extends EurekaClient {
 	}
 	
 	public List<SystemElement> getSystemElements() throws ClientException {
-		final String path = UriBuilder.fromPath("/api/systemelement/").build().toString();
+		final String path = UriBuilder.fromPath("/api/protected/systemelement/").build().toString();
 		return doGet(path, SystemElementList);
 	}
 
@@ -257,7 +257,7 @@ public class ServicesClient extends EurekaClient {
 		 * encoded. We use UriBuilder to guarantee a valid URL. The inKey
 		 * string can't be templated because the slashes won't be encoded!
 		 */
-		String path = UriBuilder.fromPath("/api/systemelement/")
+		String path = UriBuilder.fromPath("/api/protected/systemelement/")
 				.segment(inKey)
 				.build().toString();
 		return doGet(path, SystemElement.class);
@@ -358,7 +358,7 @@ public class ServicesClient extends EurekaClient {
 	}
 
 	public void pingAccount(Long inUserId) throws ClientException {
-		final String path = "/api/ping/testuser/" + inUserId;
+		final String path = "/api/protected/ping/testuser/" + inUserId;
 		doGet(path, ClientResponse.class);
 	}
 
@@ -373,22 +373,22 @@ public class ServicesClient extends EurekaClient {
 	}
 
 	public List<SourceConfig> getSourceConfigs() throws ClientException {
-		String path = "/api/sourceconfig/list";
+		String path = "/api/protected/sourceconfig/list";
 		return doGet(path, SourceConfigList);
 	}
 
 	public List<SourceConfigParams> getSourceConfigParams() throws ClientException {
-		String path = "/api/sourceconfig/parameters/list";
+		String path = "/api/protected/sourceconfig/parameters/list";
 		return doGet(path, SourceConfigParamsList);
 	}
 
 	public List<Destination> getDestinations() throws ClientException {
-		String path = "/api/destination/list";
+		String path = "/api/protected/destination/list";
 		return doGet(path, DestinationList);
 	}
 	
 	public Destination getDestination(String destinationId) throws ClientException {
-		String path = UriBuilder.fromPath("/api/destination/")
+		String path = UriBuilder.fromPath("/api/protected/destination/")
 				.segment(destinationId)
 				.build().toString();
 		return doGet(path, Destination.class);

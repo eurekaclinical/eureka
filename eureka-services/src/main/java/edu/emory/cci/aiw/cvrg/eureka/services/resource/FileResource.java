@@ -42,7 +42,7 @@ import javax.ws.rs.core.Response.Status;
  * @author hrathod
  *
  */
-@Path("/file")
+@Path("/protected/file")
 public class FileResource {
 	
 	private final EtlClient etlClient;

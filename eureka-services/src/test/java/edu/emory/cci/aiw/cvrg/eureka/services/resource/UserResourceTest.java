@@ -65,7 +65,7 @@ public class UserResourceTest extends AbstractServiceResourceTest {
 	@Test
 	public void getOptions () {
 		System.out.println(
-				this.resource().path("/api/user/list").options(String.class));
+				this.resource().path("/api/protected/user/list").options(String.class));
 	}
 
 	/**
@@ -81,7 +81,7 @@ public class UserResourceTest extends AbstractServiceResourceTest {
 		Long id = user.getId();
 		WebResource webResource = this.resource();
 		ClientResponse response = webResource.path(
-				"/api/user/activate/" + String.valueOf(id.longValue())).put(
+				"/api/protected/user/activate/" + String.valueOf(id.longValue())).put(
 				ClientResponse.class);
 
 		Assert.assertTrue(response.getClientResponseStatus() == Status.OK);
@@ -114,7 +114,7 @@ public class UserResourceTest extends AbstractServiceResourceTest {
 		userRequest.setPassword(password);
 		userRequest.setVerifyPassword(verifyPassword);
 
-		ClientResponse response = webResource.path("/api/user")
+		ClientResponse response = webResource.path("/api/userreg/new")
 				.type(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON)
 				.post(ClientResponse.class, userRequest);
 
@@ -132,7 +132,7 @@ public class UserResourceTest extends AbstractServiceResourceTest {
 		request.setOldPassword("testpassword");
 		request.setNewPassword("newPassword");
 		ClientResponse response = resource
-				.path("/api/user/passwordchangerequest")
+				.path("/api/protected/user/passwordchangerequest")
 				.type(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON)
 				.post(ClientResponse.class, request);
 		Assert.assertEquals(Status.INTERNAL_SERVER_ERROR, response.getClientResponseStatus());
@@ -149,7 +149,7 @@ public class UserResourceTest extends AbstractServiceResourceTest {
 		users = this.getUserList();
 		user = users.get(0);
 		ClientResponse response = resource
-				.path("/api/user/pwreset/" + user.getEmail())
+				.path("/api/userreg/resetpassword/" + user.getEmail())
 				.put(ClientResponse.class);
 		Assert.assertEquals(Status.NO_CONTENT, response.getClientResponseStatus());
 
@@ -167,7 +167,7 @@ public class UserResourceTest extends AbstractServiceResourceTest {
 		WebResource resource = this.resource();
 		List<UserInfo> users = this.getUserList();
 		UserInfo user = users.get(0);
-		ClientResponse response = resource.path("/api/user/byname/" + user.getEmail()).accept(MediaType.APPLICATION_JSON).get(ClientResponse.class);
+		ClientResponse response = resource.path("/api/protected/user/byname/" + user.getEmail()).accept(MediaType.APPLICATION_JSON).get(ClientResponse.class);
 		Assert.assertEquals(Status.OK, response.getClientResponseStatus());
 
 		UserInfo responseUser = response.getEntity(UserInfo.class);

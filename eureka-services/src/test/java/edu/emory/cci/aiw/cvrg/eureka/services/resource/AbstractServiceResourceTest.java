@@ -59,7 +59,7 @@ abstract class AbstractServiceResourceTest extends AbstractResourceTest {
 	 */
 	protected List<UserInfo> getUserList() {
 		WebResource webResource = this.resource();
-		return webResource.path("/api/user/list").type(
+		return webResource.path("/api/protected/user/list").type(
 				MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON).
 				get(new GenericType<List<UserInfo>>() {
 			// Nothing to implement, used to hold returned data.

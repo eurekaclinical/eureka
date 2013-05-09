@@ -41,7 +41,7 @@ import javax.ws.rs.core.Response.Status;
 /**
  * @author Andrew Post
  */
-@Path("/destination")
+@Path("/protected/destination")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public class DestinationResource {

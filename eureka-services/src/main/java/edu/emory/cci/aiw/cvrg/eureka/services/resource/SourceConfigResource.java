@@ -49,7 +49,7 @@ import org.arp.javautil.string.StringUtil;
 /**
  * @author Andrew Post
  */
-@Path("/sourceconfig")
+@Path("/protected/sourceconfig")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public class SourceConfigResource {

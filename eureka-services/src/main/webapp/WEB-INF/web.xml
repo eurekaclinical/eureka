@@ -107,11 +107,11 @@ see implementation details http://jersey.java.net/nonav/documentation/latest/jax
 	</filter-mapping>
 	<filter-mapping> 
 		<filter-name>CAS Proxy Filter</filter-name>
-		<url-pattern>/api/*</url-pattern> 
+		<url-pattern>/api/protected/*</url-pattern> 
 	</filter-mapping> 
 	<filter-mapping> 
 		<filter-name>CAS Authentication Filter</filter-name> 
-		<url-pattern>/api/*</url-pattern> 
+		<url-pattern>/api/protected/*</url-pattern> 
 	</filter-mapping>
 	<filter-mapping> 
 		<filter-name>CAS HttpServletRequest Wrapper Filter</filter-name>

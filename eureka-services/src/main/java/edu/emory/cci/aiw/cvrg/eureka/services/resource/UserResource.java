@@ -24,7 +24,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.UUID;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -33,7 +32,6 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
@@ -64,7 +62,7 @@ import javax.ws.rs.core.Context;
  *
  * @author hrathod
  */
-@Path("/user")
+@Path("/protected/user")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public class UserResource {
@@ -167,7 +165,7 @@ public class UserResource {
 	}
 
 	/**
-	 * Add a new user to the system.
+	 * Add a new user to the system. The user is activated immediately.
 	 *
 	 * @param userRequest Object containing all the information about the user
 	 * to add.
@@ -192,12 +190,12 @@ public class UserResource {
 			user.setOrganization(userRequest.getOrganization());
 			user.setRoles(this.getDefaultRoles());
 			user.setPassword(userRequest.getPassword());
-			user.setVerificationCode(UUID.randomUUID().toString());
+			user.setActive(true);
 			LOGGER.debug("Saving new user {}", user.getEmail());
 			this.userDao.create(user);
 			try {
 				LOGGER.debug("Sending email to {}", user.getEmail());
-				this.emailSender.sendVerificationMessage(user);
+				this.emailSender.sendActivationMessage(user);
 			} catch (EmailException e) {
 				LOGGER.error("Error sending email to {}", user.getEmail(), e);
 			}
@@ -298,23 +296,6 @@ public class UserResource {
 	}
 
 	/**
-	 * Mark a user as verified.
-	 *
-	 * @param code The verification code to match against users.
-	 */
-	@Path("/verify/{code}")
-	@PUT
-	public void verifyUser(@PathParam("code") final String code) {
-		User user = this.userDao.getByVerificationCode(code);
-		if (user != null) {
-			user.setVerified(true);
-			this.userDao.update(user);
-		} else {
-			throw new HttpStatusException(Response.Status.NOT_FOUND);
-		}
-	}
-
-	/**
 	 * Mark a user as active.
 	 *
 	 * @param inId the unique identifier of the user to be made active.
@@ -336,85 +317,6 @@ public class UserResource {
 					build();
 		}
 		return response;
-	}
-
-	/**
-	 * Reset the given user's password. The password is randomly generated.
-	 *
-	 * @param inUsername The username for the user whose password should be
-	 * reset.
-	 * @throws HttpStatusException if the password can not be reset properly.
-	 */
-	@Path("/pwreset/{username}")
-	@PUT
-	public void resetPassword(@PathParam("username") final String inUsername) {
-		User user = this.userDao.getByName(inUsername);
-		LOGGER.debug("Resetting user: {}", user);
-		if (user == null) {
-			throw new HttpStatusException(
-					Response.Status.NOT_FOUND, "We could not find this email address in our records."
-					+ " Please check the email address or contact {0} for help.");
-
-		} else {
-			String passwordHash;
-			String password = this.passwordGenerator.generatePassword();
-			try {
-				passwordHash = StringUtil.md5(password);
-			} catch (NoSuchAlgorithmException e) {
-				LOGGER.error(e.getMessage(), e);
-				throw new HttpStatusException(
-						Response.Status.INTERNAL_SERVER_ERROR, e);
-			}
-
-			user.setPassword(passwordHash);
-			user.setPasswordExpiration(Calendar.getInstance().getTime());
-			this.i2b2Client.changePassword(user.getEmail(), password);
-			this.userDao.update(user);
-			try {
-				this.emailSender.sendPasswordResetMessage(user, password);
-			} catch (EmailException e) {
-				LOGGER.error(e.getMessage(), e);
-			}
-		}
-		LOGGER.debug("Reset user to: {}", user);
-	}
-
-	/**
-	 * Validate a {@link UserRequest} object. Two rules are implemented: 1) The
-	 * email addresses in the two email fields must match, and 2) The passwords
-	 * in the two password fields must match.
-	 *
-	 * @param userRequest The {@link UserRequest} object to validate.
-	 * @return True if the request is valid, and false otherwise.
-	 */
-	private boolean validateUserRequest(UserRequest userRequest) {
-		boolean result = true;
-
-		// make sure a user with the same email address does not exist.
-		User user = this.userDao.getByName(userRequest.getEmail());
-		if (user == null) {
-			// make sure the email addresses are not null, and match each other
-			if ((userRequest.getEmail() == null) || (userRequest
-					.getVerifyEmail() == null) || (!userRequest.getEmail()
-					.equals(
-					userRequest.getVerifyEmail()))) {
-				this.validationError = "Mismatched usernames";
-				result = false;
-			}
-
-			// make sure the passwords are not null, and match each other
-			if ((userRequest.getPassword() == null) || (userRequest
-					.getVerifyPassword() == null) || (!userRequest.getPassword().equals(
-					userRequest.getVerifyPassword()))) {
-				this.validationError = "Mismatched passwords";
-				result = false;
-			}
-		} else {
-			this.validationError = "Email address already exists";
-			result = false;
-		}
-
-		return result;
 	}
 
 	/**
@@ -505,5 +407,43 @@ public class UserResource {
 			roles.add(this.roleDao.retrieve(roleId));
 		}
 		return roles;
+	}
+	
+	/**
+	 * Validate a {@link UserRequest} object. Two rules are implemented: 1) The
+	 * email addresses in the two email fields must match, and 2) The passwords
+	 * in the two password fields must match.
+	 *
+	 * @param userRequest The {@link UserRequest} object to validate.
+	 * @return True if the request is valid, and false otherwise.
+	 */
+	private boolean validateUserRequest(UserRequest userRequest) {
+		boolean result = true;
+
+		// make sure a user with the same email address does not exist.
+		User user = this.userDao.getByName(userRequest.getEmail());
+		if (user == null) {
+			// make sure the email addresses are not null, and match each other
+			if ((userRequest.getEmail() == null) || (userRequest
+					.getVerifyEmail() == null) || (!userRequest.getEmail()
+					.equals(
+					userRequest.getVerifyEmail()))) {
+				this.validationError = "Mismatched usernames";
+				result = false;
+			}
+
+			// make sure the passwords are not null, and match each other
+			if ((userRequest.getPassword() == null) || (userRequest
+					.getVerifyPassword() == null) || (!userRequest.getPassword().equals(
+					userRequest.getVerifyPassword()))) {
+				this.validationError = "Mismatched passwords";
+				result = false;
+			}
+		} else {
+			this.validationError = "Email address already exists";
+			result = false;
+		}
+
+		return result;
 	}
 }

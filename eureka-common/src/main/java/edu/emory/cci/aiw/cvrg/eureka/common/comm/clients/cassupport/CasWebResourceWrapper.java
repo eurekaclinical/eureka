@@ -67,7 +67,7 @@ public class CasWebResourceWrapper extends AbstractWebResourceWrapper {
 	}
 
 	private String doGetSession() throws ClientException {
-		WebResource webResource = getWebResource().path("/api/ping");
+		WebResource webResource = getWebResource().path("/api/protected/ping");
 		webResource = withProxyTicket(webResource);
 		ClientResponse response = webResource.get(ClientResponse.class);
 		return extractJSESSIONID(response);

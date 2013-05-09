@@ -53,7 +53,7 @@ public class RoleResourceTest extends AbstractServiceResourceTest {
 	@Test
 	public final void testRoleList() {
 		WebResource webResource = this.resource();
-		List<Role> roles = webResource.path("/api/role/list")
+		List<Role> roles = webResource.path("/api/protected/role/list")
 				.accept(MediaType.APPLICATION_JSON)
 				.get(new GenericType<List<Role>>() {
 					// Nothing to implement, used to hold returned data.

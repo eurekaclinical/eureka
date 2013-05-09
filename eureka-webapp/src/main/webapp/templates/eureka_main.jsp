@@ -93,7 +93,7 @@ ul.nav a { zoom: 1; }
 
  	<c:if test="${pageContext.request.remoteUser != null}">
 
- 		<c:if test="${myfn:isUserInRole(pageContext.request, 'ROLE_ADMIN')}">
+ 		<c:if test="${myfn:isUserInRole(pageContext.request, 'admin')}">
                   <img src="${pageContext.request.contextPath}/images/admin_icon.gif" alt="Administration" width="30" height="30" align="absmiddle" />
                   <li><a href="${pageContext.request.contextPath}/protected/admin?action=list">Administration</a></li>
         </c:if>

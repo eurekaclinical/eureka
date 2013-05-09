@@ -96,7 +96,7 @@ public class DataElementResourceTest extends AbstractServiceResourceTest {
 		frequency.setFrequencyType(freqType.getId());
 		frequency.setDataElement(dataElementField);
 				
-		ClientResponse response2 = this.resource().path("/api/dataelement")
+		ClientResponse response2 = this.resource().path("/api/protected/dataelement")
 				.type(
 				MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON)
 				.post(ClientResponse.class, frequency);
@@ -106,7 +106,7 @@ public class DataElementResourceTest extends AbstractServiceResourceTest {
 				response2.getClientResponseStatus());
 		
 		ClientResponse response3 = this.resource()
-				.path("/api/dataelement/" + user.getId() + "/" + frequencyKey)
+				.path("/api/protected/dataelement/" + user.getId() + "/" + frequencyKey)
 				.type(MediaType.APPLICATION_JSON)
 				.accept(MediaType.APPLICATION_JSON)
 				.delete(ClientResponse.class);

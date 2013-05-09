@@ -60,7 +60,7 @@ import javax.ws.rs.core.Response.Status;
  * @author hrathod
  *
  */
-@Path("/jobs")
+@Path("/protected/jobs")
 public class JobResource {
 
 	/**

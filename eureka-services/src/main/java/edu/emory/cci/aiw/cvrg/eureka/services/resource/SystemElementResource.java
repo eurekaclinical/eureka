@@ -51,7 +51,7 @@ import javax.ws.rs.core.Response.Status;
 /**
  * @author hrathod
  */
-@Path("/systemelement")
+@Path("/protected/systemelement")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public class SystemElementResource {

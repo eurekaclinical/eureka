@@ -38,7 +38,7 @@ import edu.emory.cci.aiw.cvrg.eureka.services.dao.RoleDao;
  * @author hrathod
  *
  */
-@Path("/role")
+@Path("/protected/role")
 public class RoleResource {
 	/**
 	 * The data access object used to work with Role objects in the data store.

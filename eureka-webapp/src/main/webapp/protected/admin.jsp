@@ -29,13 +29,6 @@
     </template:content>
 
     <template:content name="content">
-    <script type="text/javascript">
-
-    $(document).ready(function() {
-    
-    });
-
-</script>
 
     <h3>Administration </h3>
 
