@@ -20,8 +20,6 @@
 package edu.emory.cci.aiw.cvrg.eureka.servlet;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -38,10 +36,6 @@ public class AdminManagerServlet extends HttpServlet {
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
-		//if (!req.isUserInRole("admin")) {
-		//	throw new ServletException();
-		//}
-		
 		String action = req.getParameter("action");
 		ServletWorker worker = null;
 
@@ -52,13 +46,12 @@ public class AdminManagerServlet extends HttpServlet {
 		} else if (action.equals("edit")) {
 			worker = new EditUserWorker();
 			worker.execute(req, resp);
-			
+
 		} else if (action.equals("save")) {
 			worker = new SaveUserWorker();
-			worker.execute(req, resp);			
-			
+			worker.execute(req, resp);
 		} else {
-			
+			resp.setStatus(HttpServletResponse.SC_PRECONDITION_FAILED);
 		}
 	}
 }
