@@ -29,6 +29,7 @@ import com.sun.jersey.api.core.PackagesResourceConfig;
 import com.sun.jersey.api.core.ResourceConfig;
 import com.sun.jersey.guice.JerseyServletModule;
 import com.sun.jersey.guice.spi.container.servlet.GuiceContainer;
+import edu.emory.cci.aiw.cvrg.eureka.common.filter.RolesFilter;
 import edu.emory.cci.aiw.cvrg.eureka.etl.dao.EtlUserDao;
 
 import edu.emory.cci.aiw.cvrg.eureka.etl.dao.JobDao;
@@ -58,7 +59,12 @@ public class ETLServletModule extends JerseyServletModule {
 		install(new JpaPersistModule(BackEndContextListener.JPA_UNIT));
 		
 		filter("/api/*").through(PersistFilter.class);
-
+		Map<String, String> rolesFilterInitParams =
+				new HashMap<String, String>();
+		rolesFilterInitParams.put("datasource", "java:comp/env/jdbc/EurekaService");
+		rolesFilterInitParams.put("sql", "select a.name as role from roles a, user_role b, users c where a.id=b.role_id and b.user_id=c.id and c.email=?");
+		rolesFilterInitParams.put("rolecolumn", "role");
+		filter("/api/*").through(RolesFilter.class, rolesFilterInitParams);
 		Map<String, String> params = new HashMap<String, String>();
 		params.put("com.sun.jersey.api.json.POJOMappingFeature", "true");
 		params.put(PackagesResourceConfig.PROPERTY_PACKAGES,

@@ -65,27 +65,7 @@ public class UserResourceTest extends AbstractServiceResourceTest {
 	@Test
 	public void getOptions () {
 		System.out.println(
-				this.resource().path("/api/protected/user/list").options(String.class));
-	}
-
-	/**
-	 * Test that an activation put request sent to the resource returns a proper
-	 * OK response.
-	 */
-	@Test
-	public void testUserActivation() {
-		List<UserInfo> users = getUserList();
-		Assert.assertTrue(users.size() > 0);
-
-		UserInfo user = users.get(0);
-		Long id = user.getId();
-		WebResource webResource = this.resource();
-		ClientResponse response = webResource.path(
-				"/api/protected/user/activate/" + String.valueOf(id.longValue())).put(
-				ClientResponse.class);
-
-		Assert.assertTrue(response.getClientResponseStatus() == Status.OK);
-
+				this.resource().path("/api/protected/users").options(String.class));
 	}
 
 	/**
@@ -114,7 +94,7 @@ public class UserResourceTest extends AbstractServiceResourceTest {
 		userRequest.setPassword(password);
 		userRequest.setVerifyPassword(verifyPassword);
 
-		ClientResponse response = webResource.path("/api/userreg/new")
+		ClientResponse response = webResource.path("/api/userrequest/new")
 				.type(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON)
 				.post(ClientResponse.class, userRequest);
 
@@ -132,7 +112,7 @@ public class UserResourceTest extends AbstractServiceResourceTest {
 		request.setOldPassword("testpassword");
 		request.setNewPassword("newPassword");
 		ClientResponse response = resource
-				.path("/api/protected/user/passwordchangerequest")
+				.path("/api/protected/users/passwordchangerequest")
 				.type(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON)
 				.post(ClientResponse.class, request);
 		Assert.assertEquals(Status.INTERNAL_SERVER_ERROR, response.getClientResponseStatus());
@@ -149,8 +129,8 @@ public class UserResourceTest extends AbstractServiceResourceTest {
 		users = this.getUserList();
 		user = users.get(0);
 		ClientResponse response = resource
-				.path("/api/userreg/resetpassword/" + user.getEmail())
-				.put(ClientResponse.class);
+				.path("/api/passwordresetrequest/" + user.getEmail())
+				.post(ClientResponse.class);
 		Assert.assertEquals(Status.NO_CONTENT, response.getClientResponseStatus());
 
 		users = this.getUserList();
@@ -167,7 +147,7 @@ public class UserResourceTest extends AbstractServiceResourceTest {
 		WebResource resource = this.resource();
 		List<UserInfo> users = this.getUserList();
 		UserInfo user = users.get(0);
-		ClientResponse response = resource.path("/api/protected/user/byname/" + user.getEmail()).accept(MediaType.APPLICATION_JSON).get(ClientResponse.class);
+		ClientResponse response = resource.path("/api/protected/users/byname/" + user.getEmail()).accept(MediaType.APPLICATION_JSON).get(ClientResponse.class);
 		Assert.assertEquals(Status.OK, response.getClientResponseStatus());
 
 		UserInfo responseUser = response.getEntity(UserInfo.class);

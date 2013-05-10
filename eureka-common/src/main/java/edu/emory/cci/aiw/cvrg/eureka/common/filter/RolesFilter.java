@@ -19,6 +19,7 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.common.filter;
 
+import com.google.inject.Singleton;
 import java.io.IOException;
 import java.security.Principal;
 import java.sql.Connection;
@@ -51,6 +52,7 @@ import org.slf4j.LoggerFactory;
  * @author hrathod
  *
  */
+@Singleton
 public class RolesFilter implements Filter {
 
 	/**
@@ -107,9 +109,11 @@ public class RolesFilter implements Filter {
 				while (resultSet.next()) {
 					String role = resultSet.getString(this.colName);
 					if (role != null) {
-						String authority = "ROLE_" + role.toUpperCase();
-						LOGGER.debug("Assigning role {}", authority);
-						roles.add(authority);
+						//String authority = "ROLE_" + role.toUpperCase();
+						//LOGGER.debug("Assigning role {}", authority);
+						LOGGER.debug("Assigning role {}", role);
+						//roles.add(authority);
+						roles.add(role);
 					}
 				}
 			} catch (SQLException e) {

@@ -36,7 +36,7 @@ import javax.ws.rs.core.Response.Status;
  *
  * @author Andrew Post
  */
-@Path("/thresholdsop")
+@Path("/protected/thresholdsop")
 @Produces(MediaType.APPLICATION_JSON)
 public class ThresholdsOperatorResource {
 

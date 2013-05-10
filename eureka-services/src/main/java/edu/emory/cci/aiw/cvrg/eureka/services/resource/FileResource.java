@@ -33,6 +33,7 @@ import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ClientException;
 import edu.emory.cci.aiw.cvrg.eureka.common.exception.HttpStatusException;
 import edu.emory.cci.aiw.cvrg.eureka.services.config.EtlClient;
 import java.io.InputStream;
+import javax.annotation.security.RolesAllowed;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.core.Response.Status;
 
@@ -43,6 +44,7 @@ import javax.ws.rs.core.Response.Status;
  *
  */
 @Path("/protected/file")
+@RolesAllowed({"researcher"})
 public class FileResource {
 	
 	private final EtlClient etlClient;

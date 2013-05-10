@@ -21,7 +21,6 @@ package edu.emory.cci.aiw.cvrg.eureka.services.resource;
 
 import com.google.inject.Inject;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.ValueComparator;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.ThresholdsOperator;
 import edu.emory.cci.aiw.cvrg.eureka.common.exception.HttpStatusException;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.ValueComparatorDao;
 import java.util.List;
@@ -36,7 +35,7 @@ import javax.ws.rs.core.Response.Status;
  *
  * @author Andrew Post
  */
-@Path("/valuecomps")
+@Path("/protected/valuecomps")
 @Produces(MediaType.APPLICATION_JSON)
 public class ValueComparatorResource {
 	

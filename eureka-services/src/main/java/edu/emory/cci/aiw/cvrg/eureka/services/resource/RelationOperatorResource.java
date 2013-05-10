@@ -35,7 +35,7 @@ import edu.emory.cci.aiw.cvrg.eureka.services.dao.RelationOperatorDao;
 /**
  * @author hrathod
  */
-@Path("/relationop")
+@Path("/protected/relationop")
 @Produces(MediaType.APPLICATION_JSON)
 public class RelationOperatorResource {
 

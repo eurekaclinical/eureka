@@ -96,12 +96,12 @@ public class ServicesClient extends EurekaClient {
 	}
 
 	public List<UserInfo> getUsers() throws ClientException {
-		final String path = "/api/protected/user/list";
+		final String path = "/api/protected/users";
 		return doGet(path, UserList);
 	}
 
 	public UserInfo getUserByName(String username) throws ClientException {
-		String path = UriBuilder.fromPath("/api/protected/user/byname/")
+		String path = UriBuilder.fromPath("/api/protected/users/byname/")
 				.segment("{arg1}")
 				.build(username)
 				.toString();
@@ -109,27 +109,27 @@ public class ServicesClient extends EurekaClient {
 	}
 
 	public UserInfo getUserById(Long inUserId) throws ClientException {
-		final String path = "/api/protected/user/byid/" + inUserId;
+		final String path = "/api/protected/users/byid/" + inUserId;
 		return doGet(path, UserInfo.class);
 	}
 
 	public void addUser(UserRequest inRequest) throws ClientException {
-		final String path = "/api/userreg/new/";
+		final String path = "/api/userrequest/new";
 		doPost(path, inRequest);
 	}
 	
-	public void resetPassword(String email) throws ClientException {
-		final String path = "/api/userreg/resetpassword/" + email;
-		doPut(path);
+	public void resetPassword(String username) throws ClientException {
+		final String path = "/api/passwordresetrequest/" + username;
+		doPost(path);
 	}
 	
 	public void verifyUser(String inCode) throws ClientException {
-		final String path = "/api/userreg/verify/" + inCode;
+		final String path = "/api/userrequest/verify/" + inCode;
 		doPut(path);
 	}
 
 	public void changePassword(String inOldPass, String inNewPass) throws ClientException {
-		final String path = "/api/protected/user/passwordchangerequest";
+		final String path = "/api/protected/users/passwordchangerequest";
 		PasswordChangeRequest passwordChangeRequest =
 				new PasswordChangeRequest();
 		passwordChangeRequest.setOldPassword(inOldPass);
@@ -138,7 +138,7 @@ public class ServicesClient extends EurekaClient {
 	}
 
 	public void updateUser(UserInfo inUser) throws ClientException {
-		final String path = "/api/protected/user";
+		final String path = "/api/protected/users";
 		doPut(path, inUser);
 	}
 
@@ -264,94 +264,94 @@ public class ServicesClient extends EurekaClient {
 	}
 
 	public List<TimeUnit> getTimeUnits() throws ClientException {
-		final String path = "/api/timeunit/list";
+		final String path = "/api/protected/timeunit/list";
 		return doGet(path, TimeUnitList);
 	}
 
 	public List<TimeUnit> getTimeUnitsAsc() throws ClientException {
-		final String path = "/api/timeunit/listasc";
+		final String path = "/api/protected/timeunit/listasc";
 		return doGet(path, TimeUnitList);
 	}
 
 	public TimeUnit getTimeUnit(Long inId) throws ClientException {
-		final String path = "/api/timeunit/" + inId;
+		final String path = "/api/protected/timeunit/" + inId;
 		return doGet(path, TimeUnit.class);
 	}
 
 	public TimeUnit getTimeUnitByName(String inName) throws ClientException {
-		final String path = UriBuilder.fromPath("/api/timeunit/byname/")
+		final String path = UriBuilder.fromPath("/api/protected/timeunit/byname/")
 				.segment(inName)
 				.build().toString();
 		return doGet(path, TimeUnit.class);
 	}
 
 	public TimeUnit getDefaultTimeUnit() throws ClientException {
-		String path = "/api/timeunit/default";
+		String path = "/api/protected/timeunit/default";
 		return doGet(path, TimeUnit.class);
 	}
 
 	public List<RelationOperator> getRelationOperators() throws ClientException {
-		final String path = "/api/relationop/list";
+		final String path = "/api/protected/relationop/list";
 		return doGet(path, RelationOperatorList);
 	}
 
 	public List<RelationOperator> getRelationOperatorsAsc() throws ClientException {
-		final String path = "/api/relationop/listasc";
+		final String path = "/api/protected/relationop/listasc";
 		return doGet(path, RelationOperatorList);
 	}
 
 	public RelationOperator getRelationOperator(Long inId) throws ClientException {
-		final String path = "/api/relationop/" + inId;
+		final String path = "/api/protected/relationop/" + inId;
 		return doGet(path, RelationOperator.class);
 	}
 
 	public RelationOperator getRelationOperatorByName(String inName) throws ClientException {
-		final String path = UriBuilder.fromPath("/api/relationop/byname/")
+		final String path = UriBuilder.fromPath("/api/protected/relationop/byname/")
 				.segment(inName)
 				.build().toString();
 		return doGet(path, RelationOperator.class);
 	}
 
 	public RelationOperator getDefaultRelationOperator() throws ClientException {
-		String path = "/api/relationop/default";
+		String path = "/api/protected/relationop/default";
 		return doGet(path, RelationOperator.class);
 	}
 
 	public List<ThresholdsOperator> getThresholdsOperators() throws ClientException {
-		final String path = "/api/thresholdsop/list";
+		final String path = "/api/protected/thresholdsop/list";
 		return doGet(path, ThresholdsOperatorList);
 	}
 
 	public ThresholdsOperator getThresholdsOperator(Long inId) throws ClientException {
-		final String path = "/api/thresholdsop/" + inId;
+		final String path = "/api/protected/thresholdsop/" + inId;
 		return doGet(path, ThresholdsOperator.class);
 	}
 
 	public ThresholdsOperator getThresholdsOperatorByName(
 			String inName) throws ClientException {
-		final String path = UriBuilder.fromPath("/api/thresholdsop/byname/")
+		final String path = UriBuilder.fromPath("/api/protected/thresholdsop/byname/")
 				.segment(inName)
 				.build().toString();
 		return doGet(path, ThresholdsOperator.class);
 	}
 
 	public List<ValueComparator> getValueComparators() throws ClientException {
-		final String path = "/api/valuecomps/list";
+		final String path = "/api/protected/valuecomps/list";
 		return doGet(path, ValueComparatorList);
 	}
 
 	public List<ValueComparator> getValueComparatorsAsc() throws ClientException {
-		final String path = "/api/valuecomps/listasc";
+		final String path = "/api/protected/valuecomps/listasc";
 		return doGet(path, ValueComparatorList);
 	}
 
 	public ValueComparator getValueComparator(Long inId) throws ClientException {
-		final String path = "/api/valuecomps/" + inId;
+		final String path = "/api/protected/valuecomps/" + inId;
 		return doGet(path, ValueComparator.class);
 	}
 
 	public ValueComparator getValueComparatorByName(String inName) throws ClientException {
-		final String path = UriBuilder.fromPath("/api/valuecomps/byname/")
+		final String path = UriBuilder.fromPath("/api/protected/valuecomps/byname/")
 				.segment(inName)
 				.build().toString();
 		return doGet(path, ValueComparator.class);
@@ -363,12 +363,12 @@ public class ServicesClient extends EurekaClient {
 	}
 
 	public List<FrequencyType> getFrequencyTypesAsc() throws ClientException {
-		final String path = "/api/frequencytype/listasc";
+		final String path = "/api/protected/frequencytype/listasc";
 		return doGet(path, FrequencyTypeList);
 	}
 
 	public FrequencyType getDefaultFrequencyType() throws ClientException {
-		String path = "/api/frequencytype/default";
+		String path = "/api/protected/frequencytype/default";
 		return doGet(path, FrequencyType.class);
 	}
 

@@ -43,6 +43,7 @@ import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ClientException;
 import edu.emory.cci.aiw.cvrg.eureka.common.exception.HttpStatusException;
 import edu.emory.cci.aiw.cvrg.eureka.services.config.EtlClient;
 import java.util.ArrayList;
+import javax.annotation.security.RolesAllowed;
 import javax.ws.rs.core.Response.Status;
 import org.arp.javautil.string.StringUtil;
 
@@ -50,6 +51,7 @@ import org.arp.javautil.string.StringUtil;
  * @author Andrew Post
  */
 @Path("/protected/sourceconfig")
+@RolesAllowed({"researcher"})
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public class SourceConfigResource {

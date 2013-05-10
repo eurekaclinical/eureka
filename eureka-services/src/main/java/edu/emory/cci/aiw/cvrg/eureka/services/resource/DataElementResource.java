@@ -48,6 +48,7 @@ import edu.emory.cci.aiw.cvrg.eureka.services.translation.DataElementTranslatorV
 import edu.emory.cci.aiw.cvrg.eureka.services.translation.PropositionTranslatorVisitor;
 import java.text.MessageFormat;
 import java.util.ResourceBundle;
+import javax.annotation.security.RolesAllowed;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response.Status;
@@ -59,6 +60,7 @@ import org.apache.commons.lang.StringUtils;
  * @author hrathod
  */
 @Path("/protected/dataelement")
+@RolesAllowed({"researcher"})
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public class DataElementResource {

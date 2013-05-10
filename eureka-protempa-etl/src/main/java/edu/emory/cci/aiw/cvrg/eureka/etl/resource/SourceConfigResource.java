@@ -37,7 +37,7 @@ import java.util.List;
 import javax.annotation.security.RolesAllowed;
 
 @Path("/sourceconfig")
-@RolesAllowed({"researcher", "admin"})
+@RolesAllowed({"researcher"})
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public class SourceConfigResource {

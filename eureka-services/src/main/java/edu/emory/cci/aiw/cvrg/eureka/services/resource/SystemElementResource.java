@@ -46,12 +46,14 @@ import edu.emory.cci.aiw.cvrg.eureka.services.dao.UserDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.finder.PropositionFindException;
 import edu.emory.cci.aiw.cvrg.eureka.services.finder.SystemPropositionFinder;
 import edu.emory.cci.aiw.cvrg.eureka.services.util.PropositionUtil;
+import javax.annotation.security.RolesAllowed;
 import javax.ws.rs.core.Response.Status;
 
 /**
  * @author hrathod
  */
 @Path("/protected/systemelement")
+@RolesAllowed({"researcher"})
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public class SystemElementResource {

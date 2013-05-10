@@ -53,7 +53,6 @@ import edu.emory.cci.aiw.cvrg.eureka.etl.validator.PropositionValidator;
 import edu.emory.cci.aiw.cvrg.eureka.etl.validator.PropositionValidatorException;
 import java.security.Principal;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
 import javax.annotation.security.RolesAllowed;
 import javax.servlet.http.HttpServletRequest;
@@ -64,7 +63,7 @@ import org.protempa.backend.dsb.filter.Filter;
 import org.protempa.proposition.value.AbsoluteTimeGranularity;
 
 @Path("/jobs")
-@RolesAllowed({"researcher", "admin"})
+@RolesAllowed({"researcher"})
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public class JobResource {
@@ -201,6 +200,7 @@ public class JobResource {
 	}
 
 	@GET
+	@RolesAllowed({"admin"})
 	@Path("/status")
 	public List<Job> getJobStatus(@QueryParam("filter") JobFilter inFilter) {
 		List<Job> jobs = new ArrayList<Job>();

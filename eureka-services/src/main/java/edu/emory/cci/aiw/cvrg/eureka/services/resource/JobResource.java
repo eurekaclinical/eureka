@@ -49,6 +49,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.List;
+import javax.annotation.security.RolesAllowed;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
@@ -61,6 +62,7 @@ import javax.ws.rs.core.Response.Status;
  *
  */
 @Path("/protected/jobs")
+@RolesAllowed({"researcher"})
 public class JobResource {
 
 	/**
@@ -194,6 +196,7 @@ public class JobResource {
 	 */
 	@Path("/status")
 	@GET
+	@RolesAllowed({"admin"})
 	@Produces({MediaType.APPLICATION_JSON})
 	public List<Job> getStatus(@QueryParam("filter") JobFilter inFilter) {
 		try {

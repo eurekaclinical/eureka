@@ -54,6 +54,7 @@ import edu.emory.cci.aiw.cvrg.eureka.services.email.EmailException;
 import edu.emory.cci.aiw.cvrg.eureka.services.email.EmailSender;
 import edu.emory.cci.aiw.cvrg.eureka.services.util.PasswordGenerator;
 import edu.emory.cci.aiw.cvrg.eureka.services.util.StringUtil;
+import javax.annotation.security.RolesAllowed;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.core.Context;
 
@@ -62,7 +63,7 @@ import javax.ws.rs.core.Context;
  *
  * @author hrathod
  */
-@Path("/protected/user")
+@Path("/protected/users")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public class UserResource {
@@ -121,7 +122,8 @@ public class UserResource {
 	 *
 	 * @return A list of {@link User} objects.
 	 */
-	@Path("/list")
+	@Path("")
+	@RolesAllowed({"admin"})
 	@GET
 	public List<UserInfo> getUsers() {
 		List<User> users = this.userDao.getAll();
@@ -139,9 +141,15 @@ public class UserResource {
 	 * @return The user referenced by the identification number.
 	 */
 	@Path("/byid/{id}")
+	@RolesAllowed({"admin"})
 	@GET
-	public UserInfo getUserById(@PathParam("id") Long inId) {
+	public UserInfo getUserById(@Context HttpServletRequest req, 
+			@PathParam("id") Long inId) {
 		User user = this.userDao.retrieve(inId);
+		String username = req.getUserPrincipal().getName();
+		if (!req.isUserInRole("admin") && !username.equals(user.getEmail())) {
+			throw new HttpStatusException(Response.Status.UNAUTHORIZED);
+		}
 		this.userDao.refresh(user);
 		LOGGER.debug("Returning user for ID {}: {}", inId, user);
 		return this.toUserInfo(user);
@@ -155,7 +163,12 @@ public class UserResource {
 	 */
 	@Path("/byname/{name}")
 	@GET
-	public UserInfo getUserByName(@PathParam("name") String inName) {
+	public UserInfo getUserByName(@Context HttpServletRequest req, 
+			@PathParam("name") String inName) {
+		String username = req.getUserPrincipal().getName();
+		if (!req.isUserInRole("admin") && !username.equals(inName)) {
+			throw new HttpStatusException(Response.Status.UNAUTHORIZED);
+		}
 		User user = this.userDao.getByName(inName);
 		if (user != null) {
 			this.userDao.refresh(user);
@@ -170,6 +183,7 @@ public class UserResource {
 	 * @param userRequest Object containing all the information about the user
 	 * to add.
 	 */
+	@RolesAllowed({"admin"})
 	@POST
 	public void addUser(final UserRequest userRequest) {
 		try {
@@ -259,14 +273,20 @@ public class UserResource {
 	}
 
 	/**
-	 * Put an updated user to the system.
+	 * Put an updated user to the system. Unless the user has the admin role, 
+	 * s/he may only update their own user info.
 	 *
 	 * @param inUserInfo Object containing all the information about the user to
 	 * add.
 	 * @return A "Created" response with a link to the user page if successful.
 	 */
 	@PUT
-	public Response putUser(final UserInfo inUserInfo) {
+	public Response putUser(@Context HttpServletRequest req, 
+			final UserInfo inUserInfo) {
+		String username = req.getUserPrincipal().getName();
+		if (!req.isUserInRole("admin") && !username.equals(inUserInfo.getEmail())) {
+			throw new HttpStatusException(Response.Status.UNAUTHORIZED);
+		}
 		LOGGER.debug("Received updated user: {}", inUserInfo);
 		Response response;
 		User currentUser = this.userDao.retrieve(inUserInfo.getId());
@@ -291,30 +311,6 @@ public class UserResource {
 			response = Response.ok().build();
 		} else {
 			response = Response.notModified(this.validationError).build();
-		}
-		return response;
-	}
-
-	/**
-	 * Mark a user as active.
-	 *
-	 * @param inId the unique identifier of the user to be made active.
-	 * @return An HTTP OK response if the modification is completed normall, or
-	 * a server error if the user cannot be modified properly.
-	 */
-	@Path("/activate/{id}")
-	@PUT
-	public Response activateUser(@PathParam("id") final Long inId) {
-		Response response = Response.ok().build();
-		User user = this.userDao.retrieve(inId);
-		if (user != null) {
-			user.setActive(true);
-			user.setPasswordExpiration(this.getExpirationDate());
-			this.userDao.update(user);
-		} else {
-			response = Response.status(Status.BAD_REQUEST).entity("Invalid "
-					+ "ID").
-					build();
 		}
 		return response;
 	}

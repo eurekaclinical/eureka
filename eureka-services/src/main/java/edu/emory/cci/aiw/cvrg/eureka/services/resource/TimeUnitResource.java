@@ -38,7 +38,7 @@ import javax.ws.rs.core.Response;
 /**
  * @author hrathod
  */
-@Path("/timeunit")
+@Path("/protected/timeunit")
 @Produces(MediaType.APPLICATION_JSON)
 public class TimeUnitResource {
 

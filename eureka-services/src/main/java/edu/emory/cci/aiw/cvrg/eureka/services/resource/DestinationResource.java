@@ -36,12 +36,14 @@ import edu.emory.cci.aiw.cvrg.eureka.common.comm.SystemElement;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ClientException;
 import edu.emory.cci.aiw.cvrg.eureka.common.exception.HttpStatusException;
 import edu.emory.cci.aiw.cvrg.eureka.services.config.EtlClient;
+import javax.annotation.security.RolesAllowed;
 import javax.ws.rs.core.Response.Status;
 
 /**
  * @author Andrew Post
  */
 @Path("/protected/destination")
+@RolesAllowed({"researcher"})
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public class DestinationResource {

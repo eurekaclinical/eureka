@@ -101,6 +101,14 @@ public abstract class EurekaClient extends AbstractClient {
 		errorIfStatusNotEqualTo(response, ClientResponse.Status.OK);
 		return response.getEntity(genericType);
 	}
+	
+	protected void doPost(String path) throws ClientException {
+		ClientResponse response = getResourceWrapper().rewritten(path, HttpMethod.POST)
+				.accept(MediaType.APPLICATION_JSON)
+				.type(MediaType.APPLICATION_JSON)
+				.post(ClientResponse.class);
+		errorIfStatusNotEqualTo(response, ClientResponse.Status.NO_CONTENT);
+	}
 
 	protected void doPost(String path, Object o) throws ClientException {
 		ClientResponse response = getResourceWrapper().rewritten(path, HttpMethod.POST)

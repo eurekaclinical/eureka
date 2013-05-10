@@ -29,9 +29,6 @@ import javax.ws.rs.core.MediaType;
 
 import com.google.inject.Inject;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.FrequencyType;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.ThresholdsOperator;
-
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.TimeUnit;
 import edu.emory.cci.aiw.cvrg.eureka.common.exception.HttpStatusException;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.FrequencyTypeDao;
 import javax.ws.rs.core.Response;
@@ -39,7 +36,7 @@ import javax.ws.rs.core.Response;
 /**
  * @author hrathod
  */
-@Path("/frequencytype")
+@Path("/protected/frequencytype")
 @Produces(MediaType.APPLICATION_JSON)
 public class FrequencyTypeResource {
 

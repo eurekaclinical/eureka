@@ -31,6 +31,7 @@ import com.google.inject.Inject;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.Role;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.RoleDao;
+import javax.annotation.security.RolesAllowed;
 
 /**
  * A RESTful end-point for working with {@link Role} objects.
@@ -39,6 +40,7 @@ import edu.emory.cci.aiw.cvrg.eureka.services.dao.RoleDao;
  *
  */
 @Path("/protected/role")
+@RolesAllowed({"admin"})
 public class RoleResource {
 	/**
 	 * The data access object used to work with Role objects in the data store.

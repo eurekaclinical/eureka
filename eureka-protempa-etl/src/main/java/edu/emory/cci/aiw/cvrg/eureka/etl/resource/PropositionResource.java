@@ -52,7 +52,7 @@ import javax.annotation.security.RolesAllowed;
  * @author hrathod
  */
 @Path("/proposition")
-@RolesAllowed({"researcher", "admin"})
+@RolesAllowed({"researcher"})
 public class PropositionResource {
 
 	private static final Logger LOGGER = LoggerFactory

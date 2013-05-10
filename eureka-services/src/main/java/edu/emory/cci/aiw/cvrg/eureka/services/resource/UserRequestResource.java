@@ -56,16 +56,16 @@ import edu.emory.cci.aiw.cvrg.eureka.services.util.StringUtil;
  *
  * @author hrathod
  */
-@Path("/userreg")
+@Path("/userrequest")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-public class UserRegistrationResource {
+public class UserRequestResource {
 
 	/**
 	 * The class logger.
 	 */
 	private static final Logger LOGGER = LoggerFactory.getLogger(
-			UserRegistrationResource.class);
+			UserRequestResource.class);
 	/**
 	 * Data access object to work with User objects.
 	 */
@@ -101,7 +101,7 @@ public class UserRegistrationResource {
 	 * @param inEmailSender Used to send emails to the user when necessary.
 	 */
 	@Inject
-	public UserRegistrationResource(UserDao inUserDao, RoleDao inRoleDao,
+	public UserRequestResource(UserDao inUserDao, RoleDao inRoleDao,
 			EmailSender inEmailSender, I2b2Client inClient,
 			PasswordGenerator inPasswordGenerator,
 			ServiceProperties serviceProperties) {
@@ -173,49 +173,6 @@ public class UserRegistrationResource {
 		} else {
 			throw new HttpStatusException(Response.Status.NOT_FOUND);
 		}
-	}
-
-	/**
-	 * Reset the given user's password. The password is randomly generated.
-	 *
-	 * @param inUsername The username for the user whose password should be
-	 * reset.
-	 * @throws HttpStatusException if the password can not be reset properly.
-	 */
-	@Path("/resetpassword/{username}")
-	@PUT
-	public void resetPassword(@PathParam("username") final String inUsername) {
-		User user = this.userDao.getByName(inUsername);
-		LOGGER.debug("Resetting user: {}", user);
-		if (user == null) {
-			throw new HttpStatusException(
-					Response.Status.NOT_FOUND, 
-					"We could not find this email address in our records."
-					+ " Please check the email address or contact " + 
-					this.serviceProperties.getSupportEmail() + " for help.");
-
-		} else {
-			String passwordHash;
-			String password = this.passwordGenerator.generatePassword();
-			try {
-				passwordHash = StringUtil.md5(password);
-			} catch (NoSuchAlgorithmException e) {
-				LOGGER.error(e.getMessage(), e);
-				throw new HttpStatusException(
-						Response.Status.INTERNAL_SERVER_ERROR, e);
-			}
-
-			user.setPassword(passwordHash);
-			user.setPasswordExpiration(Calendar.getInstance().getTime());
-			this.i2b2Client.changePassword(user.getEmail(), password);
-			this.userDao.update(user);
-			try {
-				this.emailSender.sendPasswordResetMessage(user, password);
-			} catch (EmailException e) {
-				LOGGER.error(e.getMessage(), e);
-			}
-		}
-		LOGGER.debug("Reset user to: {}", user);
 	}
 
 	/**

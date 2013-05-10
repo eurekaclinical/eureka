@@ -34,6 +34,7 @@ import edu.emory.cci.aiw.cvrg.eureka.common.entity.User;
 import edu.emory.cci.aiw.cvrg.eureka.common.exception.HttpStatusException;
 import edu.emory.cci.aiw.cvrg.eureka.services.config.EtlClient;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.UserDao;
+import javax.annotation.security.RolesAllowed;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -70,14 +71,15 @@ public class PingResource {
 	 * Test the given account for errors.
 	 */
 	@GET
+	@RolesAllowed({"admin"})
 	@Path("/testuser/{id}")
-	public String doPingUser(@PathParam("id") Long inUserId) {
+	public String doPingUser(@Context HttpServletRequest req,
+			@PathParam("id") Long inUserId) {
 		String response = "Ping successful";
 		User user = this.userDao.retrieve(inUserId);
 		if (user == null) {
-			response = "No user with id " + inUserId;
+			throw new HttpStatusException(Response.Status.NOT_FOUND);
 		} else {
-//			this.userDao.refresh(user);
 			try {
 				testUserRoles(user);
 				testUserConfiguration(user);

@@ -44,7 +44,7 @@ import org.arp.javautil.io.FileUtil;
  * @author Andrew Post
  */
 @Path("/file")
-@RolesAllowed({"researcher", "admin"})
+@RolesAllowed({"researcher"})
 public class FileResource {
 
 	private final EtlProperties etlProperties;
