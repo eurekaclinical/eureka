@@ -168,6 +168,25 @@ see implementation details http://jersey.java.net/nonav/documentation/latest/jax
 		<filter-name>CAS Assertion Thread Local Filter</filter-name>
 		<filter-class>org.jasig.cas.client.util.AssertionThreadLocalFilter</filter-class>
 	</filter>
+	<filter>
+		<filter-name>Roles Filter</filter-name>
+		<filter-class>edu.emory.cci.aiw.cvrg.eureka.common.filter.RolesFilter</filter-class>
+		<init-param>
+			<!-- Which data source to use for querying role information -->
+			<param-name>datasource</param-name>
+			<param-value>java:comp/env/jdbc/EurekaService</param-value>
+		</init-param>
+		<init-param>
+			<!-- The SQL used to fetch role information, the ? will be replaced with the Principal's name, using a preparedstatement.setString(1, xxx) -->
+			<param-name>sql</param-name>
+			<param-value>select a.name as role from roles a, user_role b, users c where a.id=b.role_id and b.user_id=c.id and c.email=?</param-value>
+		</init-param>
+		<init-param>
+			<!-- Column name in the result set that should be used to get role names -->
+			<param-name>rolecolumn</param-name>
+			<param-value>role</param-value>
+		</init-param>
+	</filter>
 	
 	<filter-mapping>
 		<filter-name>MessagesFilter</filter-name>
@@ -191,6 +210,10 @@ see implementation details http://jersey.java.net/nonav/documentation/latest/jax
 	</filter-mapping>
 	<filter-mapping>
 		<filter-name>CAS Assertion Thread Local Filter</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+	<filter-mapping>
+		<filter-name>Roles Filter</filter-name>
 		<url-pattern>/*</url-pattern>
 	</filter-mapping>
 	<filter-mapping>
