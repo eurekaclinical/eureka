@@ -36,22 +36,27 @@ public class AdminManagerServlet extends HttpServlet {
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
-		String action = req.getParameter("action");
-		ServletWorker worker = null;
-
-		if (action.equals("list")) {
-			worker = new ListUsersWorker();
-			worker.execute(req, resp);
-
-		} else if (action.equals("edit")) {
-			worker = new EditUserWorker();
-			worker.execute(req, resp);
-
-		} else if (action.equals("save")) {
-			worker = new SaveUserWorker();
-			worker.execute(req, resp);
+		if (!req.isUserInRole("admin")) {
+			resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
 		} else {
-			resp.setStatus(HttpServletResponse.SC_PRECONDITION_FAILED);
+			String action = req.getParameter("action");
+			ServletWorker worker = null;
+			if (action == null) {
+				resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+				resp.getWriter().write("The action parameter is required");
+			} else if (action.equals("list")) {
+				worker = new ListUsersWorker();
+				worker.execute(req, resp);
+			} else if (action.equals("edit")) {
+				worker = new EditUserWorker();
+				worker.execute(req, resp);
+			} else if (action.equals("save")) {
+				worker = new SaveUserWorker();
+				worker.execute(req, resp);
+			} else {
+				resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+				resp.getWriter().write("Invalid action parameter " + action + ". Allowed values are list, edit and save.");
+			}
 		}
 	}
 }

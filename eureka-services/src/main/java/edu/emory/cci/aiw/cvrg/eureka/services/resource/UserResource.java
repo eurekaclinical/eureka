@@ -141,14 +141,13 @@ public class UserResource {
 	 * @return The user referenced by the identification number.
 	 */
 	@Path("/byid/{id}")
-	@RolesAllowed({"admin"})
 	@GET
 	public UserInfo getUserById(@Context HttpServletRequest req, 
 			@PathParam("id") Long inId) {
 		User user = this.userDao.retrieve(inId);
 		String username = req.getUserPrincipal().getName();
 		if (!req.isUserInRole("admin") && !username.equals(user.getEmail())) {
-			throw new HttpStatusException(Response.Status.UNAUTHORIZED);
+			throw new HttpStatusException(Response.Status.NOT_FOUND);
 		}
 		this.userDao.refresh(user);
 		LOGGER.debug("Returning user for ID {}: {}", inId, user);
@@ -167,7 +166,7 @@ public class UserResource {
 			@PathParam("name") String inName) {
 		String username = req.getUserPrincipal().getName();
 		if (!req.isUserInRole("admin") && !username.equals(inName)) {
-			throw new HttpStatusException(Response.Status.UNAUTHORIZED);
+			throw new HttpStatusException(Response.Status.NOT_FOUND);
 		}
 		User user = this.userDao.getByName(inName);
 		if (user != null) {
@@ -218,7 +217,7 @@ public class UserResource {
 					"Invalid new user request: {}, reason {}", userRequest,
 					this.validationError);
 			throw new HttpStatusException(
-					Response.Status.PRECONDITION_FAILED, this.validationError);
+					Response.Status.BAD_REQUEST, this.validationError);
 		}
 	}
 
@@ -267,7 +266,7 @@ public class UserResource {
 			}
 		} else {
 			throw new HttpStatusException(
-					Response.Status.PRECONDITION_FAILED, 
+					Response.Status.BAD_REQUEST, 
 					"Error while changing password. Old password is incorrect.");
 		}
 	}
@@ -285,7 +284,7 @@ public class UserResource {
 			final UserInfo inUserInfo) {
 		String username = req.getUserPrincipal().getName();
 		if (!req.isUserInRole("admin") && !username.equals(inUserInfo.getEmail())) {
-			throw new HttpStatusException(Response.Status.UNAUTHORIZED);
+			throw new HttpStatusException(Response.Status.BAD_REQUEST);
 		}
 		LOGGER.debug("Received updated user: {}", inUserInfo);
 		Response response;
