@@ -22,14 +22,17 @@ package edu.emory.cci.aiw.cvrg.eureka.etl.resource;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.SourceConfig;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.SourceConfig.Option;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.SourceConfig.Section;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.EtlGroup;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.EtlUser;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.SourceConfigEntity;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.SourceConfigGroupMembership;
 import edu.emory.cci.aiw.cvrg.eureka.common.exception.HttpStatusException;
 import edu.emory.cci.aiw.cvrg.eureka.etl.config.EtlProperties;
 import edu.emory.cci.aiw.cvrg.eureka.etl.config.EurekaProtempaConfigurations;
+import edu.emory.cci.aiw.cvrg.eureka.etl.dao.SourceConfigDao;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.ws.rs.core.Response;
 import org.apache.commons.lang.StringUtils;
 import org.protempa.backend.Backend;
@@ -52,69 +55,18 @@ import org.protempa.backend.tsb.TermSourceBackend;
  *
  * @author Andrew Post
  */
-public final class SourceConfigs {
+final class SourceConfigs extends Configs<SourceConfig, SourceConfigEntity> {
 
-	private final EtlProperties etlProperties;
-
-	public SourceConfigs(EtlProperties inEtlProperties) {
-		if (inEtlProperties == null) {
-			throw new IllegalArgumentException("inEtlProperties cannot be null");
-		}
-		this.etlProperties = inEtlProperties;
-		if (!this.etlProperties.getSourceConfigDirectory().exists()) {
-			try {
-				this.etlProperties.getSourceConfigDirectory().mkdir();
-			} catch (SecurityException ex) {
-				throw new HttpStatusException(Response.Status.INTERNAL_SERVER_ERROR,
-						"Could not create source config directory", ex);
-			}
-		}
+	SourceConfigs(EtlProperties inEtlProperties, EtlUser inEtlUser, SourceConfigDao inSourceConfigDao) {
+		super("source", inEtlProperties, inEtlUser, inEtlProperties.getSourceConfigDirectory(), inSourceConfigDao);
 	}
 
-	/**
-	 * Checks if the Protempa configuration with the specified id exists.
-	 *
-	 * @param sourceConfigId
-	 * @return
-	 */
-	public boolean sourceConfigExists(String sourceConfigId) {
-		if (sourceConfigId == null) {
-			throw new IllegalArgumentException("sourceConfigId cannot be null");
-		}
-		return this.etlProperties.sourceConfigFile(sourceConfigId).exists();
-	}
-
-	public List<SourceConfig> getAll() {
-		List<SourceConfig> result = new ArrayList<SourceConfig>();
-		try {
-			File[] files = this.etlProperties
-					.getSourceConfigDirectory()
-					.listFiles();
-			if (files == null) {
-				throw new HttpStatusException(
-						Response.Status.INTERNAL_SERVER_ERROR,
-						"Source config directory " + this.etlProperties.getSourceConfigDirectory().getAbsolutePath() + " does not exist");
-			}
-			for (File file : files) {
-				String filename = file.getName();
-				result.add(getSourceConfig(filename));
-			}
-		} catch (SecurityException ex) {
-			throw new HttpStatusException(
-					Response.Status.INTERNAL_SERVER_ERROR,
-					"Source config directory " + this.etlProperties.getSourceConfigDirectory().getAbsolutePath() + " could not be accessed", ex);
-		}
-		return result;
-	}
-
-	public SourceConfig getSourceConfig(String configId) {
-		if (configId == null) {
-			throw new IllegalArgumentException("configId cannot be null");
-		}
+	@Override
+	SourceConfig config(String configId, Perm perm) {
 		SourceConfig config = new SourceConfig();
 		try {
 			EurekaProtempaConfigurations configs =
-					new EurekaProtempaConfigurations(this.etlProperties);
+					new EurekaProtempaConfigurations(getEtlProperties());
 			BackendProvider backendProvider =
 					BackendProviderManager.getBackendProvider();
 			BackendSpecLoader<DataSourceBackend> dataSourceBackendSpecLoader =
@@ -144,7 +96,12 @@ public final class SourceConfigs {
 			}
 
 			config.setId(configId);
-			config.setPermissions(SourceConfig.Permissions.READ_ONLY);
+
+			config.setRead(perm.read);
+			config.setWrite(perm.write);
+			config.setExecute(perm.execute);
+			config.setOwnerUsername(perm.owner.getUsername());
+
 			List<SourceConfig.Section> dataSourceBackendSections =
 					extractConfig(dataSourceBackendSpecLoader, configs, configId);
 			config.setDataSourceBackends(
@@ -171,7 +128,7 @@ public final class SourceConfigs {
 					termSourceBackendSections.toArray(
 					new SourceConfig.Section[termSourceBackendSections.size()]));
 		} catch (ConfigurationsNotFoundException ex) {
-			Logger.getLogger(SourceConfigs.class.getName()).log(Level.SEVERE, null, ex);
+			throw new HttpStatusException(Response.Status.INTERNAL_SERVER_ERROR, ex);
 		} catch (InvalidPropertyNameException ex) {
 			throw new HttpStatusException(Response.Status.INTERNAL_SERVER_ERROR, ex);
 		} catch (BackendProviderSpecLoaderException ex) {
@@ -210,4 +167,21 @@ public final class SourceConfigs {
 		}
 		return backendSections;
 	}
+
+	@Override
+	List<SourceConfigEntity> configs(EtlUser user) {
+		return user.getSourceConfigs();
+	}
+
+	@Override
+	List<SourceConfigGroupMembership> groupConfigs(EtlGroup group) {
+		return group.getSourceConfigs();
+	}
+
+	@Override
+	String toConfigId(File file) {
+		return FromConfigFile.toSourceConfigId(file);
+	}
+	
+	
 }

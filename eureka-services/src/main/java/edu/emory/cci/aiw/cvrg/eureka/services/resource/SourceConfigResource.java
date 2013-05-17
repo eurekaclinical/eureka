@@ -76,7 +76,7 @@ public class SourceConfigResource {
 	public List<SourceConfig> getAll() {
 		List<SourceConfig> sources;
 		try {
-			return this.etlClient.getSources();
+			return this.etlClient.getSourceConfigs();
 		} catch (ClientException ex) {
 			throw new HttpStatusException(Status.INTERNAL_SERVER_ERROR, ex);
 		}
@@ -101,7 +101,7 @@ public class SourceConfigResource {
 	public List<SourceConfigParams> getParamsList() {
 		List<SourceConfigParams> result = new ArrayList<SourceConfigParams>();
 		try {
-			for (SourceConfig config : this.etlClient.getSources()) {
+			for (SourceConfig config : this.etlClient.getSourceConfigs()) {
 				result.add(toParams(config));
 			}
 		} catch (ClientException ex) {

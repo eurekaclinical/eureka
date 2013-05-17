@@ -79,7 +79,7 @@ public class MockEtlClient implements EtlClient {
 	}
 
 	@Override
-	public List<SourceConfig> getSources() throws ClientException {
+	public List<SourceConfig> getSourceConfigs() throws ClientException {
 		SourceConfig mockSourceConfig = new SourceConfig();
 		mockSourceConfig.setId("mockSourceConfig");
 		mockSourceConfig.setDisplayName("Mock Source Configuration");

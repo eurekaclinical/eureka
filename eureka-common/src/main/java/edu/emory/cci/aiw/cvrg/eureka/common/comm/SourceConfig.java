@@ -25,11 +25,6 @@ package edu.emory.cci.aiw.cvrg.eureka.common.comm;
  * @author Andrew Post
  */
 public class SourceConfig {
-	
-	public static enum Permissions {
-		READ_WRITE,
-		READ_ONLY;
-	}
 
 	public static final Section[] EMPTY_SECTION_ARRAY = new Section[0];
 
@@ -95,12 +90,14 @@ public class SourceConfig {
 	}
 	private String id;
 	private String displayName;
-	private Long ownerUserId;
+	private String ownerUsername;
 	private Section[] dataSourceBackends;
 	private Section[] knowledgeSourceBackends;
 	private Section[] algorithmSourceBackends;
 	private Section[] termSourceBackends;
-	private Permissions permissions;
+	private boolean read;
+	private boolean write;
+	private boolean execute;
 
 	public SourceConfig() {
 		this.dataSourceBackends = EMPTY_SECTION_ARRAY;
@@ -125,22 +122,38 @@ public class SourceConfig {
 		this.displayName = displayName;
 	}
 
-	public Long getOwnerUserId() {
-		return ownerUserId;
+	public String getOwnerUsername() {
+		return ownerUsername;
 	}
 
-	public void setOwnerUserId(Long ownerUserId) {
-		this.ownerUserId = ownerUserId;
+	public void setOwnerUsername(String ownerUsername) {
+		this.ownerUsername = ownerUsername;
 	}
 
-	public Permissions getPermissions() {
-		return permissions;
+	public boolean isRead() {
+		return read;
 	}
 
-	public void setPermissions(Permissions permissions) {
-		this.permissions = permissions;
+	public void setRead(boolean read) {
+		this.read = read;
 	}
-	
+
+	public boolean isWrite() {
+		return write;
+	}
+
+	public void setWrite(boolean write) {
+		this.write = write;
+	}
+
+	public boolean isExecute() {
+		return execute;
+	}
+
+	public void setExecute(boolean execute) {
+		this.execute = execute;
+	}
+
 	public Section[] getDataSourceBackends() {
 		return dataSourceBackends;
 	}

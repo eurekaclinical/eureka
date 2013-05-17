@@ -37,7 +37,7 @@ import javax.ws.rs.core.Response;
  *
  * @author hrathod
  */
-@Path("/ping")
+@Path("/protected/ping")
 @Produces(MediaType.APPLICATION_JSON)
 public class PingResource {
 

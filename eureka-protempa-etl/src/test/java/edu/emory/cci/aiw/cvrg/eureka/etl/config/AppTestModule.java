@@ -21,11 +21,17 @@ package edu.emory.cci.aiw.cvrg.eureka.etl.config;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.persist.jpa.JpaPersistModule;
+import edu.emory.cci.aiw.cvrg.eureka.etl.dao.DestinationDao;
+import edu.emory.cci.aiw.cvrg.eureka.etl.dao.EtlGroupDao;
 import edu.emory.cci.aiw.cvrg.eureka.etl.dao.EtlUserDao;
 
 import edu.emory.cci.aiw.cvrg.eureka.etl.dao.JobDao;
+import edu.emory.cci.aiw.cvrg.eureka.etl.dao.JpaDestinationDao;
+import edu.emory.cci.aiw.cvrg.eureka.etl.dao.JpaEtlGroupDao;
 import edu.emory.cci.aiw.cvrg.eureka.etl.dao.JpaEtlUserDao;
 import edu.emory.cci.aiw.cvrg.eureka.etl.dao.JpaJobDao;
+import edu.emory.cci.aiw.cvrg.eureka.etl.dao.JpaSourceConfigDao;
+import edu.emory.cci.aiw.cvrg.eureka.etl.dao.SourceConfigDao;
 import edu.emory.cci.aiw.cvrg.eureka.etl.validator.PropositionValidator;
 import edu.emory.cci.aiw.cvrg.eureka.etl.validator.PropositionValidatorImpl;
 
@@ -40,6 +46,9 @@ public class AppTestModule extends AbstractModule {
 		install(new JpaPersistModule("backend-jpa-unit"));
 		bind(JobDao.class).to(JpaJobDao.class);
 		bind(EtlUserDao.class).to(JpaEtlUserDao.class);
+		bind(EtlGroupDao.class).to(JpaEtlGroupDao.class);
+		bind(DestinationDao.class).to(JpaDestinationDao.class);
+		bind(SourceConfigDao.class).to(JpaSourceConfigDao.class);
 		bind(PropositionValidator.class).to(PropositionValidatorImpl.class);
 	}
 }

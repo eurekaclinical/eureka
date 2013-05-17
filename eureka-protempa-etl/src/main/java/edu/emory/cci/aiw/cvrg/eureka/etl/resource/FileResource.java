@@ -22,17 +22,23 @@ package edu.emory.cci.aiw.cvrg.eureka.etl.resource;
 import com.google.inject.Inject;
 import com.sun.jersey.core.header.FormDataContentDisposition;
 import com.sun.jersey.multipart.FormDataParam;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.SourceConfig;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.EtlUser;
 import edu.emory.cci.aiw.cvrg.eureka.common.exception.HttpStatusException;
 import edu.emory.cci.aiw.cvrg.eureka.etl.config.EtlProperties;
+import edu.emory.cci.aiw.cvrg.eureka.etl.dao.EtlUserDao;
+import edu.emory.cci.aiw.cvrg.eureka.etl.dao.SourceConfigDao;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import javax.annotation.security.RolesAllowed;
+import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
@@ -43,32 +49,43 @@ import org.arp.javautil.io.FileUtil;
  * 
  * @author Andrew Post
  */
-@Path("/file")
+@Path("/protected/file")
 @RolesAllowed({"researcher"})
 public class FileResource {
 
 	private final EtlProperties etlProperties;
+	private final EtlUserDao userDao;
+	private final SourceConfigDao sourceConfigDao;
 
 	@Inject
-	public FileResource(EtlProperties inEtlProperties) {
+	public FileResource(EtlProperties inEtlProperties, EtlUserDao inUserDao, SourceConfigDao inSourceConfigDao) {
 		this.etlProperties = inEtlProperties;
+		this.userDao = inUserDao;
+		this.sourceConfigDao = inSourceConfigDao;
 	}
 	
 	@POST
 	@Path("/upload/{sourceConfigId}/{sourceId}")
 	@Consumes(MediaType.MULTIPART_FORM_DATA)
 	public Response upload(
+			@Context HttpServletRequest req,
 			@PathParam("sourceConfigId") String sourceConfigId,
 			@PathParam("sourceId") String sourceId,
 			@FormDataParam("file") InputStream uploadingInputStream,
 			@FormDataParam("file") FormDataContentDisposition fileDetail) {
-
-		SourceConfigs sources = new SourceConfigs(this.etlProperties);
+		String username = req.getUserPrincipal().getName();
+		EtlUser user = this.userDao.getByUsername(username);
+		if (user == null) {
+			user = new EtlUser();
+			user.setUsername(username);
+			this.userDao.create(user);
+		}
+		SourceConfigs sources = new SourceConfigs(this.etlProperties, user, this.sourceConfigDao);
 
 		try {
-			if (!sources.sourceConfigExists(sourceConfigId)) {
-				throw new HttpStatusException(Status.PRECONDITION_FAILED,
-						"Source id '" + sourceConfigId + "' not found");
+			SourceConfig sourceConfig = sources.getOne(sourceConfigId);
+			if (sourceConfig == null || !sourceConfig.isExecute()) {
+				throw new HttpStatusException(Status.NOT_FOUND);
 			}
 
 			File uploadedDir = this.etlProperties.uploadedDirectory(sourceConfigId, sourceId);

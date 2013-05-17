@@ -45,6 +45,10 @@ public class Destination {
 	 * The unique identifier for the owner of this configuration.
 	 */
 	private Long ownerUserId;
+	
+	private boolean read;
+	private boolean write;
+	private boolean execute;
 
 	/**
 	 * Get the unique identifier for the configuration.
@@ -104,6 +108,30 @@ public class Destination {
 
 	public void setDataElementFields(DataElementField[] dataElementFields) {
 		this.dataElementFields = dataElementFields;
+	}
+
+	public boolean isRead() {
+		return read;
+	}
+
+	public void setRead(boolean read) {
+		this.read = read;
+	}
+
+	public boolean isWrite() {
+		return write;
+	}
+
+	public void setWrite(boolean write) {
+		this.write = write;
+	}
+
+	public boolean isExecute() {
+		return execute;
+	}
+
+	public void setExecute(boolean execute) {
+		this.execute = execute;
 	}
 	
 	@Override

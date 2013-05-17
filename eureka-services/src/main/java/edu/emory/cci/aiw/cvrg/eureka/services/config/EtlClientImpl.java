@@ -73,16 +73,16 @@ public class EtlClientImpl extends EurekaClient implements EtlClient {
 	}
 
 	@Override
-	public List<SourceConfig> getSources() throws
+	public List<SourceConfig> getSourceConfigs() throws
 			ClientException {
-		final String path = "/api/sourceconfig/list";
+		final String path = "/api/protected/sourceconfigs";
 		return doGet(path, SourceConfigListType);
 	}
 
 	@Override
 	public SourceConfig getSourceConfig(String sourceConfigId) throws
 			ClientException {
-		String path = UriBuilder.fromPath("/api/sourceconfig/")
+		String path = UriBuilder.fromPath("/api/protected/sourceconfigs/")
 				.segment(sourceConfigId)
 				.build().toString();
 		return doGet(path, SourceConfig.class);
@@ -91,14 +91,14 @@ public class EtlClientImpl extends EurekaClient implements EtlClient {
 	@Override
 	public List<Destination> getDestinations() throws
 			ClientException {
-		final String path = "/api/destination/list";
+		final String path = "/api/protected/destinations";
 		return doGet(path, DestinationListType);
 	}
 
 	@Override
 	public Destination getDestination(String destId) throws
 			ClientException {
-		String path = UriBuilder.fromPath("/api/destination/")
+		String path = UriBuilder.fromPath("/api/protected/destinations/")
 				.segment(destId)
 				.build().toString();
 		return doGet(path, Destination.class);
@@ -106,26 +106,26 @@ public class EtlClientImpl extends EurekaClient implements EtlClient {
 
 	@Override
 	public Long submitJob(JobRequest inJobRequest) throws ClientException {
-		final String path = "/api/jobs";
+		final String path = "/api/protected/jobs";
 		URI jobUri = doPostCreate(path, inJobRequest);
 		return extractId(jobUri);
 	}
 
 	@Override
 	public List<Job> getJobStatus(JobFilter inFilter) throws ClientException {
-		final String path = "/api/jobs/status";
+		final String path = "/api/protected/jobs/status";
 		return doGet(path, JobListType);
 	}
 
 	@Override
 	public List<Job> getJobs() throws ClientException {
-		final String path = "/api/jobs";
+		final String path = "/api/protected/jobs";
 		return doGet(path, JobListType);
 	}
 	
 	@Override
 	public List<Job> getJobsDesc() throws ClientException {
-		final String path = "/api/jobs";
+		final String path = "/api/protected/jobs";
 		MultivaluedMap<String, String> queryParams = new MultivaluedMapImpl();
 		queryParams.add("order", "desc");
 		return doGet(path, JobListType, queryParams);
@@ -133,14 +133,14 @@ public class EtlClientImpl extends EurekaClient implements EtlClient {
 
 	@Override
 	public Job getJob(Long inJobId) throws ClientException {
-		final String path = "/api/jobs/" + inJobId;
+		final String path = "/api/protected/jobs/" + inJobId;
 		return doGet(path, JobType);
 	}
 
 	@Override
 	public void validatePropositions(ValidationRequest inRequest) throws
 			ClientException {
-		final String path = "/api/validate";
+		final String path = "/api/protected/validate";
 		doPost(path, inRequest);
 	}
 
@@ -157,7 +157,7 @@ public class EtlClientImpl extends EurekaClient implements EtlClient {
 	@Override
 	public PropositionDefinition getPropositionDefinition(
 			String sourceConfigId, String inKey) throws ClientException {
-		String path = UriBuilder.fromPath("/api/proposition/")
+		String path = UriBuilder.fromPath("/api/protected/proposition/")
 					.segment(sourceConfigId, inKey)
 					.build().toString();
 		return doGet(path, PropositionDefinition.class);
@@ -184,7 +184,7 @@ public class EtlClientImpl extends EurekaClient implements EtlClient {
 				queryParams.add("key", key);
 			}
 			queryParams.add("withChildren", withChildren.toString());
-			String path = UriBuilder.fromPath("/api/proposition/")
+			String path = UriBuilder.fromPath("/api/protected/proposition/")
 					.segment(sourceConfigId)
 					.build().toString();
 		return doGet(path, PropositionDefinitionList, queryParams);
@@ -192,7 +192,7 @@ public class EtlClientImpl extends EurekaClient implements EtlClient {
 
 	@Override
 	public void ping(Long inUserId) throws ClientException {
-		String path = "/api/ping/testuser/" + inUserId;
+		String path = "/api/protected/ping/testuser/" + inUserId;
 		doGet(path, ClientResponse.class);
 	}
 
@@ -201,7 +201,7 @@ public class EtlClientImpl extends EurekaClient implements EtlClient {
 			String fileTypeId, InputStream inputStream)
 			throws ClientException {
 		String path = UriBuilder
-				.fromPath("/api/file/upload/")
+				.fromPath("/api/protected/file/upload/")
 				.segment(sourceId)
 				.segment(fileTypeId)
 				.build().toString();

@@ -44,12 +44,12 @@ import edu.emory.cci.aiw.cvrg.eureka.common.entity.JobState;
 
 import edu.emory.cci.aiw.cvrg.eureka.etl.config.EtlProperties;
 import edu.emory.cci.aiw.cvrg.eureka.etl.config.EurekaProtempaConfigurations;
+import edu.emory.cci.aiw.cvrg.eureka.etl.dao.DestinationDao;
 import edu.emory.cci.aiw.cvrg.eureka.etl.dao.JobDao;
 import edu.emory.cci.aiw.cvrg.eureka.etl.queryresultshandler.QueryResultsHandlerFactory;
 import edu.emory.cci.aiw.cvrg.eureka.etl.resource.Destinations;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
 import org.protempa.CloseException;
 import org.protempa.DataSourceFailedDataValidationException;
 import org.protempa.DataSourceValidationIncompleteException;
@@ -82,13 +82,13 @@ public class ETL {
 	private PreventCloseAlgorithmSource algorithmSource;
 	private PreventCloseTermSource termSource;
 	private final JobDao jobDao;
-	private final Destinations destFactory;
+	private final DestinationDao destinationDao;
 
 	@Inject
-	public ETL(EtlProperties inEtlProperties, JobDao inJobDao) {
+	public ETL(EtlProperties inEtlProperties, JobDao inJobDao, DestinationDao inDestinationDao) {
 		this.etlProperties = inEtlProperties;
 		this.jobDao = inJobDao;
-		this.destFactory = new Destinations(this.etlProperties);
+		this.destinationDao = inDestinationDao;
 	}
 
 	void run(JobEntity job, PropositionDefinition[] inPropositionDefinitions,
@@ -111,7 +111,7 @@ public class ETL {
 					this.etlProperties.destinationConfigFile(
 					job.getDestinationId());
 			Destination dest = 
-					this.destFactory.getDestination(job.getDestinationId());
+					new Destinations(this.etlProperties, job.getEtlUser(), this.destinationDao).getOne(job.getDestinationId());
 			QueryResultsHandler qrh = 
 					new QueryResultsHandlerFactory()
 					.getInstance(dest.getType(), i2b2Config);

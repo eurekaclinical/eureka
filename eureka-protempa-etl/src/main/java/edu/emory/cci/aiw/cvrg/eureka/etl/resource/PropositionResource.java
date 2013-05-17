@@ -51,7 +51,7 @@ import javax.annotation.security.RolesAllowed;
 /**
  * @author hrathod
  */
-@Path("/proposition")
+@Path("/protected/proposition")
 @RolesAllowed({"researcher"})
 public class PropositionResource {
 

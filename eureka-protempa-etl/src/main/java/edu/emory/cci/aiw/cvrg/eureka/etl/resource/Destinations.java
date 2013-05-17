@@ -20,14 +20,17 @@ package edu.emory.cci.aiw.cvrg.eureka.etl.resource;
  * #L%
  */
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.Destination;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.DestinationEntity;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.DestinationGroupMembership;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.EtlGroup;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.EtlUser;
 import edu.emory.cci.aiw.cvrg.eureka.common.exception.HttpStatusException;
 import edu.emory.cci.aiw.cvrg.eureka.etl.config.EtlProperties;
+import edu.emory.cci.aiw.cvrg.eureka.etl.dao.DestinationDao;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.Status;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -36,7 +39,6 @@ import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpression;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
-import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
@@ -45,14 +47,14 @@ import org.xml.sax.SAXException;
  *
  * @author Andrew Post
  */
-public class Destinations {
+public final class Destinations extends Configs<Destination, DestinationEntity> {
 
 	private final XPathExpression typeExpr;
 	private final XPathExpression displayNameExpr;
 	private final DocumentBuilderFactory docBuilderFactory;
-	private final EtlProperties etlProperties;
 
-	public Destinations(EtlProperties etlProperties) {
+	public Destinations(EtlProperties inEtlProperties, EtlUser inEtlUser, DestinationDao inDestinationDao) {
+		super("destination", inEtlProperties, inEtlUser, inEtlProperties.getDestinationConfigDirectory(), inDestinationDao);
 		XPathFactory xpathFactory = XPathFactory.newInstance();
 		XPath xpath = xpathFactory.newXPath();
 		try {
@@ -63,51 +65,21 @@ public class Destinations {
 		}
 		this.docBuilderFactory = DocumentBuilderFactory.newInstance();
 		this.docBuilderFactory.setNamespaceAware(true); // never forget this!
-		this.etlProperties = etlProperties;
-		if (!this.etlProperties.getDestinationConfigDirectory().exists()) {
-			try {
-				this.etlProperties.getDestinationConfigDirectory().mkdir();
-			} catch (SecurityException ex) {
-				throw new HttpStatusException(Response.Status.INTERNAL_SERVER_ERROR,
-						"Could not create destination config directory", ex);
-			}
-		}
 	}
 
-	public Destination getDestination(String destId) {
-		File file = this.etlProperties.destinationConfigFile(destId);
-		if (!file.exists()) {
-			throw new HttpStatusException(Status.NOT_FOUND, "Invalid destination id '" + destId + "'");
-		}
-		return getInstance(destId, file);
-	}
-
-	public List<Destination> getAll() {
-		List<Destination> result = new ArrayList<Destination>();
-		try {
-			File[] files = this.etlProperties.getDestinationConfigDirectory().listFiles();
-			if (files == null) {
-				throw new HttpStatusException(
-						Response.Status.INTERNAL_SERVER_ERROR,
-						"Destination config directory " + this.etlProperties.getDestinationConfigDirectory().getAbsolutePath() + " does not exist");
-			}
-			for (File file : files) {
-				result.add(getInstance(FromConfigFile.toDestId(file), file));
-			}
-		} catch (SecurityException ex) {
-			throw new HttpStatusException(Response.Status.INTERNAL_SERVER_ERROR,
-					"Destination config directory " + this.etlProperties.getDestinationConfigDirectory().getAbsolutePath() + " could not be accessed", ex);
-		}
-		return result;
-	}
-
-	private Destination getInstance(String destId, File file) {
+	@Override
+	Destination config(String destId, Perm perm) {
 		DocumentBuilder builder;
 		try {
 			builder = this.docBuilderFactory.newDocumentBuilder();
-			Document doc = builder.parse(file);
+			Document doc = builder.parse(getEtlProperties().destinationConfigFile(destId));
 			Destination dest = new Destination();
 			dest.setId(destId);
+			
+			dest.setRead(perm.read);
+			dest.setWrite(perm.write);
+			dest.setExecute(perm.execute);
+			
 			String type = (String) typeExpr.evaluate(doc, XPathConstants.STRING);
 			if (type == null) {
 				throw new HttpStatusException(Response.Status.INTERNAL_SERVER_ERROR, "No type specified in the configuration for destination '" + destId + "'");
@@ -130,4 +102,21 @@ public class Destinations {
 			throw new HttpStatusException(Response.Status.INTERNAL_SERVER_ERROR, ex);
 		}
 	}
+
+	@Override
+	List<DestinationEntity> configs(EtlUser user) {
+		return user.getDestinations();
+	}
+
+	@Override
+	List<DestinationGroupMembership> groupConfigs(EtlGroup group) {
+		return group.getDestinations();
+	}
+
+	@Override
+	String toConfigId(File file) {
+		return FromConfigFile.toDestId(file);
+	}
+	
+	
 }

@@ -29,6 +29,7 @@ import com.google.inject.Provider;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.EtlUser;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.JobEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.JobState;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.SourceConfigEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.test.TestDataException;
 import edu.emory.cci.aiw.cvrg.eureka.common.test.TestDataProvider;
 
@@ -41,6 +42,7 @@ public class Setup implements TestDataProvider {
 	private final Provider<EntityManager> managerProvider;
 	private JobEntity job;
 	private EtlUser etlUser;
+	private SourceConfigEntity sce;
 
 	/**
 	 * Sets up necessary data for testing.
@@ -55,12 +57,14 @@ public class Setup implements TestDataProvider {
 	@Override
 	public void setUp() throws TestDataException {
 		addJobs();
+		addSourceConfig();
 	}
 
 	@Override
 	public void tearDown() throws TestDataException {
 		EntityManager entityManager = this.getEntityManager();
 		entityManager.getTransaction().begin();
+		entityManager.remove(this.sce);
 		entityManager.remove(this.job);
 		entityManager.remove(this.etlUser);
 		entityManager.getTransaction().commit();
@@ -88,4 +92,16 @@ public class Setup implements TestDataProvider {
 		entityManager.persist(this.job);
 		entityManager.getTransaction().commit();
 	}
+
+	private void addSourceConfig() {
+		EntityManager entityManager = this.getEntityManager();
+		entityManager.getTransaction().begin();
+		this.sce = new SourceConfigEntity();
+		this.sce.setName("foo");
+		this.sce.setOwner(this.etlUser);
+		entityManager.persist(this.sce);
+		entityManager.getTransaction().commit();
+	}
+	
+	
 }

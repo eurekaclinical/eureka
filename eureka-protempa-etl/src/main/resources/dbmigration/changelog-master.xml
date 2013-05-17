@@ -11,57 +11,57 @@
   
        http://www.apache.org/licenses/LICENSE-2.0
   
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-  #L%
-  -->
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+#L%
+-->
 
 <databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd" logicalFilePath="changelog-master.xml">
-    <changeSet author="arpost (generated)" id="1361552652236-2">
-        <createTable tableName="JOB_EVENTS">
-            <column name="ID" type="BIGINT">
-                <constraints nullable="false" primaryKey="true" primaryKeyName="SYS_C0012512"/>
-            </column>
-            <column name="EXCEPTIONSTACKTRACE" type="CLOB"/>
-            <column name="MESSAGE" type="VARCHAR(255)"/>
-            <column name="STATE" type="VARCHAR(255)">
-                <constraints nullable="false"/>
-            </column>
-            <column name="TIMESTAMP" type="TIMESTAMP(6)">
-                <constraints nullable="false"/>
-            </column>
-            <column name="JOB_ID" type="BIGINT"/>
-        </createTable>
-    </changeSet>
-    <changeSet author="arpost (generated)" id="1361552652236-3">
-        <createTable tableName="JOBS">
-            <column name="ID" type="BIGINT">
-                <constraints nullable="false" primaryKey="true" primaryKeyName="SYS_C007777"/>
-            </column>
-            <column name="CONFIGURATIONID" type="BIGINT"/>
-            <column name="TIMESTAMP" type="TIMESTAMP(6)"/>
-            <column name="USERID" type="BIGINT"/>
-        </createTable>
-    </changeSet>
-    <changeSet author="arpost (generated)" id="1361552652236-4">
-        <addForeignKeyConstraint baseColumnNames="JOB_ID" baseTableName="JOB_EVENTS" constraintName="FK88C003DB45BC207" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" referencedColumnNames="ID" referencedTableName="JOBS" referencesUniqueColumn="false"/>
-    </changeSet>
-    <changeSet author="arpost (generated)" id="1361552652236-5">
-        <createSequence sequenceName="CONFIG_SEQ"/>
-    </changeSet>
-    <changeSet author="arpost (generated)" id="1361552652236-6">
-        <createSequence sequenceName="JOBEVENT_SEQ"/>
-    </changeSet>
-    <changeSet author="arpost (generated)" id="1361552652236-7">
-        <createSequence sequenceName="JOB_SEQ"/>
-    </changeSet>
+	<changeSet author="arpost (generated)" id="1361552652236-2">
+		<createTable tableName="JOB_EVENTS">
+			<column name="ID" type="BIGINT">
+				<constraints nullable="false" primaryKey="true" primaryKeyName="SYS_C0012512"/>
+			</column>
+			<column name="EXCEPTIONSTACKTRACE" type="CLOB"/>
+			<column name="MESSAGE" type="VARCHAR(255)"/>
+			<column name="STATE" type="VARCHAR(255)">
+				<constraints nullable="false"/>
+			</column>
+			<column name="TIMESTAMP" type="TIMESTAMP(6)">
+				<constraints nullable="false"/>
+			</column>
+			<column name="JOB_ID" type="BIGINT"/>
+		</createTable>
+	</changeSet>
+	<changeSet author="arpost (generated)" id="1361552652236-3">
+		<createTable tableName="JOBS">
+			<column name="ID" type="BIGINT">
+				<constraints nullable="false" primaryKey="true" primaryKeyName="SYS_C007777"/>
+			</column>
+			<column name="CONFIGURATIONID" type="BIGINT"/>
+			<column name="TIMESTAMP" type="TIMESTAMP(6)"/>
+			<column name="USERID" type="BIGINT"/>
+		</createTable>
+	</changeSet>
+	<changeSet author="arpost (generated)" id="1361552652236-4">
+		<addForeignKeyConstraint baseColumnNames="JOB_ID" baseTableName="JOB_EVENTS" constraintName="FK88C003DB45BC207" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" referencedColumnNames="ID" referencedTableName="JOBS" referencesUniqueColumn="false"/>
+	</changeSet>
+	<changeSet author="arpost (generated)" id="1361552652236-5">
+		<createSequence sequenceName="CONFIG_SEQ"/>
+	</changeSet>
+	<changeSet author="arpost (generated)" id="1361552652236-6">
+		<createSequence sequenceName="JOBEVENT_SEQ"/>
+	</changeSet>
+	<changeSet author="arpost (generated)" id="1361552652236-7">
+		<createSequence sequenceName="JOB_SEQ"/>
+	</changeSet>
 
 	<!-- 1.7 changes -->
 	<!-- WARNING: THE JOBS AND JOB_EVENTS TABLES WILL BE CLEARED OUT AS A RESULT OF
-		THIS CHANGELOG! -->
+	THIS CHANGELOG! -->
 	<changeSet author="arpost (generated)" id="1361552652236-8">
 		<delete tableName="JOB_EVENTS"/>
 		<delete tableName="JOBS"/>
@@ -82,14 +82,126 @@
 		<dropColumn tableName="JOB_EVENTS" columnName="MESSAGE"/>
 		<renameColumn tableName="JOB_EVENTS" oldColumnName="MESSAGE2" newColumnName="MESSAGE"/>
 		<createTable tableName="USERS">
-            <column name="ID" type="BIGINT">
-                <constraints nullable="false" primaryKey="true" primaryKeyName="USERS_PK"/>
-            </column>
-            <column name="USERNAME" type="VARCHAR(255)">
+			<column name="ID" type="BIGINT">
+				<constraints nullable="false" primaryKey="true" primaryKeyName="USERS_PK"/>
+			</column>
+			<column name="USERNAME" type="VARCHAR(255)">
 				<constraints  nullable="false"/>
 			</column>
-        </createTable>
+		</createTable>
 		<addForeignKeyConstraint baseColumnNames="USER_ID" baseTableName="JOBS" constraintName="JOBS_USER_ID_CONSTRAINT" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" referencedColumnNames="ID" referencedTableName="USERS" referencesUniqueColumn="false"/>
 		<createSequence sequenceName="USER_SEQ"/>
+	</changeSet>
+	<changeSet author="arpost (generated)" id="1361552652236-9">
+		<createTable tableName="DESTINATIONS">
+            <column name="ID" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="DEST_PK"/>
+            </column>
+            <column name="NAME" type="VARCHAR(255)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="OWNER_ID" type="BIGINT"/>
+        </createTable>
+		<createTable tableName="DESTINATIONS_GROUPS">
+			<column name="ID" type="BIGINT">
+				<constraints nullable="false" primaryKey="true" primaryKeyName="DEST_GRP_PK"/>
+			</column>
+			<column name="GROUPEXECUTE" type="BOOLEAN">
+				<constraints nullable="false"/>
+			</column>
+			<column name="GROUPREAD" type="BOOLEAN">
+				<constraints nullable="false"/>
+			</column>
+			<column name="GROUPWRITE" type="BOOLEAN">
+				<constraints nullable="false"/>
+			</column>
+			<column name="DESTINATIONS_ID" type="BIGINT">
+				<constraints nullable="false"/>
+			</column>
+			<column name="GROUPS_ID" type="BIGINT">
+				<constraints nullable="false"/>
+			</column>
+		</createTable>
+		<createTable tableName="GROUPS">
+			<column name="ID" type="BIGINT">
+				<constraints nullable="false" primaryKey="true" primaryKeyName="GROUPS_PK"/>
+			</column>
+			<column name="NAME" type="VARCHAR(255)"/>
+		</createTable>
+		<createTable tableName="SOURCECONFIGS">
+			<column name="ID" type="BIGINT">
+				<constraints nullable="false" primaryKey="true" primaryKeyName="SC_PK"/>
+			</column>
+			<column name="NAME" type="VARCHAR(255)">
+				<constraints nullable="false" unique="true"/>
+			</column>
+			<column name="OWNER_ID" type="BIGINT"/>
+		</createTable>
+		<createTable tableName="SOURCECONFIGS_GROUPS">
+			<column name="ID" type="BIGINT">
+				<constraints nullable="false" primaryKey="true" primaryKeyName="SC_GRP_PK"/>
+			</column>
+			<column name="GROUPEXECUTE" type="BOOLEAN">
+				<constraints nullable="false"/>
+			</column>
+			<column name="GROUPREAD" type="BOOLEAN">
+				<constraints nullable="false"/>
+			</column>
+			<column name="GROUPWRITE" type="BOOLEAN">
+				<constraints nullable="false"/>
+			</column>
+			<column name="GROUPS_ID" type="BIGINT">
+				<constraints nullable="false"/>
+			</column>
+			<column name="SOURCECONFIGS_ID" type="BIGINT">
+				<constraints nullable="false"/>
+			</column>
+		</createTable>
+		<createTable tableName="USERS_DESTINATIONS">
+			<column name="USERS_ID" type="BIGINT">
+				<constraints nullable="false"/>
+			</column>
+			<column name="DESTINATIONS_ID" type="BIGINT">
+				<constraints nullable="false"/>
+			</column>
+		</createTable>
+		<createTable tableName="USERS_GROUPS">
+			<column name="USERS_ID" type="BIGINT">
+				<constraints nullable="false"/>
+			</column>
+			<column name="GROUPS_ID" type="BIGINT">
+				<constraints nullable="false"/>
+			</column>
+		</createTable>
+		<createTable tableName="USERS_SOURCECONFIGS">
+			<column name="USERS_ID" type="BIGINT">
+				<constraints nullable="false"/>
+			</column>
+			<column name="SOURCECONFIGS_ID" type="BIGINT">
+				<constraints nullable="false"/>
+			</column>
+		</createTable>
+		<addUniqueConstraint columnNames="DESTINATIONS_ID, GROUPS_ID" constraintName="SYS_C0033774" deferrable="false" disabled="false" initiallyDeferred="false" tableName="DESTINATIONS_GROUPS"/>
+		<addUniqueConstraint columnNames="SOURCECONFIGS_ID, GROUPS_ID" constraintName="SYS_C0033796" deferrable="false" disabled="false" initiallyDeferred="false" tableName="SOURCECONFIGS_GROUPS"/>
+		<addUniqueConstraint columnNames="DESTINATIONS_ID" constraintName="SYS_C0033803" deferrable="false" disabled="false" initiallyDeferred="false" tableName="USERS_DESTINATIONS" />
+		<addUniqueConstraint columnNames="SOURCECONFIGS_ID" constraintName="SYS_C0033808" deferrable="false" disabled="false" initiallyDeferred="false" tableName="USERS_SOURCECONFIGS" />
+		<addForeignKeyConstraint baseColumnNames="OWNER_ID" baseTableName="DESTINATIONS" constraintName="FKAE023E25E287381C" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" referencedColumnNames="ID" referencedTableName="USERS" referencesUniqueColumn="false"/>
+		<addForeignKeyConstraint baseColumnNames="DESTINATIONS_ID" baseTableName="DESTINATIONS_GROUPS" constraintName="FKCFD5552E245A59B3" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" referencedColumnNames="ID" referencedTableName="DESTINATIONS" referencesUniqueColumn="false"/>
+		<addForeignKeyConstraint baseColumnNames="DESTINATIONS_ID" baseTableName="DESTINATIONS_GROUPS" constraintName="FKCFD5552E387530A" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" referencedColumnNames="ID" referencedTableName="GROUPS" referencesUniqueColumn="false"/>
+		<addForeignKeyConstraint baseColumnNames="GROUPS_ID" baseTableName="DESTINATIONS_GROUPS" constraintName="FKCFD5552E143164FB" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" referencedColumnNames="ID" referencedTableName="GROUPS" referencesUniqueColumn="false"/>
+		<addForeignKeyConstraint baseColumnNames="OWNER_ID" baseTableName="SOURCECONFIGS" constraintName="FKDB1B38F6E287381C" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" referencedColumnNames="ID" referencedTableName="USERS" referencesUniqueColumn="false"/>
+		<addForeignKeyConstraint baseColumnNames="GROUPS_ID" baseTableName="SOURCECONFIGS_GROUPS" constraintName="FKEC64BD3D143164FB" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" referencedColumnNames="ID" referencedTableName="GROUPS" referencesUniqueColumn="false"/>
+		<addForeignKeyConstraint baseColumnNames="SOURCECONFIGS_ID" baseTableName="SOURCECONFIGS_GROUPS" constraintName="FKEC64BD3D48666577" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" referencedColumnNames="ID" referencedTableName="SOURCECONFIGS" referencesUniqueColumn="false"/>
+		<addForeignKeyConstraint baseColumnNames="DESTINATIONS_ID" baseTableName="USERS_DESTINATIONS" constraintName="FKBC8026FC245A59B3" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" referencedColumnNames="ID" referencedTableName="DESTINATIONS" referencesUniqueColumn="false"/>
+		<addForeignKeyConstraint baseColumnNames="USERS_ID" baseTableName="USERS_DESTINATIONS" constraintName="FKBC8026FC6F9160A7" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" referencedColumnNames="ID" referencedTableName="USERS" referencesUniqueColumn="false"/>
+		<addForeignKeyConstraint baseColumnNames="GROUPS_ID" baseTableName="USERS_GROUPS" constraintName="FKD034EFEB143164FB" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" referencedColumnNames="ID" referencedTableName="GROUPS" referencesUniqueColumn="false"/>
+		<addForeignKeyConstraint baseColumnNames="USERS_ID" baseTableName="USERS_GROUPS" constraintName="FKD034EFEB6F9160A7" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" referencedColumnNames="ID" referencedTableName="USERS" referencesUniqueColumn="false"/>
+		<addForeignKeyConstraint baseColumnNames="SOURCECONFIGS_ID" baseTableName="USERS_SOURCECONFIGS" constraintName="FK9C5A6AFF48666577" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" referencedColumnNames="ID" referencedTableName="SOURCECONFIGS" referencesUniqueColumn="false"/>
+		<addForeignKeyConstraint baseColumnNames="USERS_ID" baseTableName="USERS_SOURCECONFIGS" constraintName="FK9C5A6AFF6F9160A7" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" referencedColumnNames="ID" referencedTableName="USERS" referencesUniqueColumn="false"/>
+		<createSequence sequenceName="DEST_GRP_SEQ"/>
+		<createSequence sequenceName="DEST_SEQ"/>
+		<createSequence sequenceName="GROUPS_SEQ"/>
+		<createSequence sequenceName="SC_GRP_SEQ"/>
+		<createSequence sequenceName="SOURCECONFIG_SEQ"/>
 	</changeSet>
 </databaseChangeLog>

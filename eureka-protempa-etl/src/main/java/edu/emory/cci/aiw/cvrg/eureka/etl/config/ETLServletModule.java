@@ -30,11 +30,17 @@ import com.sun.jersey.api.core.ResourceConfig;
 import com.sun.jersey.guice.JerseyServletModule;
 import com.sun.jersey.guice.spi.container.servlet.GuiceContainer;
 import edu.emory.cci.aiw.cvrg.eureka.common.filter.RolesFilter;
+import edu.emory.cci.aiw.cvrg.eureka.etl.dao.DestinationDao;
+import edu.emory.cci.aiw.cvrg.eureka.etl.dao.EtlGroupDao;
 import edu.emory.cci.aiw.cvrg.eureka.etl.dao.EtlUserDao;
 
 import edu.emory.cci.aiw.cvrg.eureka.etl.dao.JobDao;
+import edu.emory.cci.aiw.cvrg.eureka.etl.dao.JpaDestinationDao;
+import edu.emory.cci.aiw.cvrg.eureka.etl.dao.JpaEtlGroupDao;
 import edu.emory.cci.aiw.cvrg.eureka.etl.dao.JpaEtlUserDao;
 import edu.emory.cci.aiw.cvrg.eureka.etl.dao.JpaJobDao;
+import edu.emory.cci.aiw.cvrg.eureka.etl.dao.JpaSourceConfigDao;
+import edu.emory.cci.aiw.cvrg.eureka.etl.dao.SourceConfigDao;
 import edu.emory.cci.aiw.cvrg.eureka.etl.job.Task;
 import edu.emory.cci.aiw.cvrg.eureka.etl.job.TaskProvider;
 import edu.emory.cci.aiw.cvrg.eureka.etl.validator.PropositionValidator;
@@ -53,6 +59,9 @@ public class ETLServletModule extends JerseyServletModule {
 	protected void configureServlets() {
 		bind(JobDao.class).to(JpaJobDao.class);
 		bind(EtlUserDao.class).to(JpaEtlUserDao.class);
+		bind(EtlGroupDao.class).to(JpaEtlGroupDao.class);
+		bind(DestinationDao.class).to(JpaDestinationDao.class);
+		bind(SourceConfigDao.class).to(JpaSourceConfigDao.class);
 		bind(PropositionValidator.class).to(PropositionValidatorImpl.class);
 		bind(Task.class).toProvider(TaskProvider.class);
 

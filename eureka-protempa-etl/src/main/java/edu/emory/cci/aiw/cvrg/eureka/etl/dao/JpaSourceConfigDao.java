@@ -1,3 +1,5 @@
+package edu.emory.cci.aiw.cvrg.eureka.etl.dao;
+
 /*
  * #%L
  * Eureka Protempa ETL
@@ -17,30 +19,30 @@
  * limitations under the License.
  * #L%
  */
-package edu.emory.cci.aiw.cvrg.eureka.etl.job;
 
 import com.google.inject.Inject;
 import com.google.inject.Provider;
+import edu.emory.cci.aiw.cvrg.eureka.common.dao.GenericDao;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.SourceConfigEntity;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.SourceConfigEntity_;
+import javax.persistence.EntityManager;
 
-import edu.emory.cci.aiw.cvrg.eureka.etl.config.EtlProperties;
-import edu.emory.cci.aiw.cvrg.eureka.etl.dao.DestinationDao;
-import edu.emory.cci.aiw.cvrg.eureka.etl.dao.JobDao;
-
-public class TaskProvider implements Provider<Task> {
-
-	private final JobDao jobDao;
-	private final EtlProperties etlProperties;
-	private final DestinationDao destinationDao;
+/**
+ *
+ * @author Andrew Post
+ */
+public class JpaSourceConfigDao extends GenericDao<SourceConfigEntity, Long> implements SourceConfigDao {
 
 	@Inject
-	public TaskProvider (JobDao inJobDao, EtlProperties inEtlProperties, DestinationDao inDestinationDao) {
-		this.jobDao = inJobDao;
-		this.etlProperties = inEtlProperties;
-		this.destinationDao = inDestinationDao;
+	public JpaSourceConfigDao(Provider<EntityManager> inManagerProvider) {
+		super(SourceConfigEntity.class, inManagerProvider);
 	}
 
 	@Override
-	public Task get() {
-		return new Task(this.jobDao, new ETL(this.etlProperties, this.jobDao, this.destinationDao));
+	public SourceConfigEntity getByName(String name) {
+		return getUniqueByAttribute(SourceConfigEntity_.name, name);
 	}
+	
+	
+	
 }

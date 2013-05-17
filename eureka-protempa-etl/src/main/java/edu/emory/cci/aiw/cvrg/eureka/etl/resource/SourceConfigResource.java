@@ -26,44 +26,70 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.google.inject.Inject;
+import com.sun.jersey.api.client.ClientResponse;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.SourceConfig;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.EtlUser;
+import edu.emory.cci.aiw.cvrg.eureka.common.exception.HttpStatusException;
 import edu.emory.cci.aiw.cvrg.eureka.etl.config.EtlProperties;
+import edu.emory.cci.aiw.cvrg.eureka.etl.dao.EtlUserDao;
+import edu.emory.cci.aiw.cvrg.eureka.etl.dao.SourceConfigDao;
 import java.util.List;
 import javax.annotation.security.RolesAllowed;
+import javax.servlet.http.HttpServletRequest;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.Response.Status;
 
-@Path("/sourceconfig")
+@Path("/protected/sourceconfigs")
 @RolesAllowed({"researcher"})
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public class SourceConfigResource {
-
-	private static final Logger LOGGER =
-			LoggerFactory.getLogger(SourceConfigResource.class);
 	private final EtlProperties etlProperties;
-	private final SourceConfigs sources;
+	private final EtlUserDao userDao;
+	private final SourceConfigDao sourceConfigDao;
 
 	@Inject
-	public SourceConfigResource(EtlProperties inEtlProperties) {
+	public SourceConfigResource(EtlProperties inEtlProperties, EtlUserDao inUserDao, SourceConfigDao inSourceConfigDao) {
 		this.etlProperties = inEtlProperties;
-		this.sources = new SourceConfigs(this.etlProperties);
+		this.userDao = inUserDao;
+		this.sourceConfigDao = inSourceConfigDao;
 	}
 
 	@GET
 	@Path("/{sourceConfigId}")
-	public SourceConfig getSource(
+	public SourceConfig getSource(@Context HttpServletRequest req,
 			@PathParam("sourceConfigId") String sourceConfigId) {
-		return sources.getSourceConfig(sourceConfigId);
+		String username = req.getUserPrincipal().getName();
+		EtlUser user = this.userDao.getByUsername(username);
+		if (user == null) {
+			user = new EtlUser();
+			user.setUsername(username);
+			this.userDao.create(user);
+		}
+		SourceConfigs sourceConfigs = new SourceConfigs(this.etlProperties, user, this.sourceConfigDao);
+		SourceConfig sourceConfig = sourceConfigs.getOne(sourceConfigId);
+		if (sourceConfig != null) {
+			return sourceConfig;
+		} else {
+			throw new HttpStatusException(Status.NOT_FOUND);
+		}
 	}
 
 	@GET
-	@Path("/list")
-	public List<SourceConfig> getAll() {
-		return sources.getAll();
+	@Path("")
+	public List<SourceConfig> getAll(@Context HttpServletRequest req) {
+		String username = req.getUserPrincipal().getName();
+		EtlUser user = this.userDao.getByUsername(username);
+		if (user == null) {
+			user = new EtlUser();
+			user.setUsername(username);
+			this.userDao.create(user);
+		}
+		SourceConfigs sourceConfigs = new SourceConfigs(this.etlProperties, user, this.sourceConfigDao);
+		return sourceConfigs.getAll();
 	}
 
 	/*@POST

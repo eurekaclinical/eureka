@@ -76,7 +76,7 @@ public interface EtlClient {
 
 	SourceConfig getSourceConfig(String sourceConfigId) throws ClientException;
 
-	List<SourceConfig> getSources() throws ClientException;
+	List<SourceConfig> getSourceConfigs() throws ClientException;
 
 	void ping(Long inUserId) throws ClientException;
 

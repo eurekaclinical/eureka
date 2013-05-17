@@ -59,14 +59,19 @@ public class FileResourceTest extends AbstractEtlResourceTest {
 		this.tmpFile.delete();
 		this.tmpFile = null;
 	}
-
+	
 	@Test
-	public final void testFileUploadPreconditionFailed() throws IOException {
-		Assert.assertEquals(Status.PRECONDITION_FAILED, doUpload("baz", "oof"));
+	public final void testFileUploadCreated1() throws IOException {
+		Assert.assertEquals(Status.CREATED, doUpload("foo", "oof"));
 	}
 
 	@Test
-	public final void testFileUploadCreated() throws IOException {
+	public final void testFileUploadNotFound() throws IOException {
+		Assert.assertEquals(Status.NOT_FOUND, doUpload("baz", "oof"));
+	}
+
+	@Test
+	public final void testFileUploadCreated2() throws IOException {
 		doUpload("foo", "bar");
 		EtlProperties etlProperties = new EtlProperties();
 		File dir = etlProperties.uploadedDirectory("foo", "bar");
@@ -76,7 +81,7 @@ public class FileResourceTest extends AbstractEtlResourceTest {
 				return filename.endsWith(".uploaded");
 			}
 		});
-		Assert.assertEquals(1, files.length);
+		Assert.assertEquals(1, files == null ? 0 : files.length);
 	}
 
 	private Status doUpload(String sourceId, String fileTypeId) throws UniformInterfaceException, 
@@ -87,10 +92,11 @@ public class FileResourceTest extends AbstractEtlResourceTest {
 					new FormDataMultiPart();
 			part.bodyPart(new FormDataBodyPart(FormDataContentDisposition.name("file").fileName(tmpFile.getName()).build(), is, MediaType.APPLICATION_OCTET_STREAM_TYPE));
 			ClientResponse response = resource()
-					.path("/api/file/upload/" + sourceId + "/" + fileTypeId)
+					.path("/api/protected/file/upload/" + sourceId + "/" + fileTypeId)
 					.type(MediaType.MULTIPART_FORM_DATA_TYPE)
 					.post(ClientResponse.class, part);
 			Status result = response.getClientResponseStatus();
+			System.err.println("RESULT: " + result);
 			is.close();
 			is = null;
 			return result;
@@ -102,7 +108,5 @@ public class FileResourceTest extends AbstractEtlResourceTest {
 				}
 			}
 		}
-
-		
 	}
 }

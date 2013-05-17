@@ -31,14 +31,14 @@ import com.sun.xml.bind.CycleRecoverable;
 import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
-import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import org.apache.commons.lang.builder.ToStringBuilder;
 
 /**
  * A bean class to hold information about users in the system.
  *
- * @author hrathod
+ * @author Andrew Post
  *
  */
 @Entity
@@ -55,6 +55,7 @@ public class EtlUser implements CycleRecoverable {
 	@GeneratedValue(strategy = GenerationType.SEQUENCE,
 	generator = "USER_SEQ_GENERATOR")
 	private Long id;
+	
 	/**
 	 * The user's email address.
 	 */
@@ -63,7 +64,16 @@ public class EtlUser implements CycleRecoverable {
 	
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "id")
 	private List<JobEntity> jobs;
-
+	
+	@ManyToMany
+	private List<EtlGroup> groups;
+	
+	@OneToMany(mappedBy = "owner")
+	private List<SourceConfigEntity> sourceConfigs;
+	
+	@OneToMany(mappedBy = "owner")
+	private List<DestinationEntity> destinations;
+	
 	/**
 	 * Create an empty User object.
 	 */
@@ -114,6 +124,30 @@ public class EtlUser implements CycleRecoverable {
 		this.jobs = jobs;
 	}
 
+	public List<EtlGroup> getGroups() {
+		return groups;
+	}
+
+	public void setGroups(List<EtlGroup> groups) {
+		this.groups = groups;
+	}
+
+	public List<SourceConfigEntity> getSourceConfigs() {
+		return sourceConfigs;
+	}
+
+	public void setSourceConfigs(List<SourceConfigEntity> sourceConfigs) {
+		this.sourceConfigs = sourceConfigs;
+	}
+
+	public List<DestinationEntity> getDestinations() {
+		return destinations;
+	}
+
+	public void setDestinations(List<DestinationEntity> destinations) {
+		this.destinations = destinations;
+	}
+	
 	@Override
 	public Object onCycleDetected(final Context context) {
 		return null;

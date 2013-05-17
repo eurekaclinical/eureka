@@ -62,7 +62,7 @@ import org.protempa.backend.dsb.filter.DateTimeFilter;
 import org.protempa.backend.dsb.filter.Filter;
 import org.protempa.proposition.value.AbsoluteTimeGranularity;
 
-@Path("/jobs")
+@Path("/protected/jobs")
 @RolesAllowed({"researcher"})
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)

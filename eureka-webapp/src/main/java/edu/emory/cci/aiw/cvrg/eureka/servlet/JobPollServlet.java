@@ -75,7 +75,12 @@ public class JobPollServlet extends HttpServlet {
 			throw new ServletException("Error polling job list", ex);
 		}
 
-		JobStatus jobStatus = job.toJobStatus();
+		JobStatus jobStatus;
+		if (job != null) {
+			jobStatus = job.toJobStatus();
+		} else {
+			jobStatus = null;
+		}
 		ObjectMapper mapper = new ObjectMapper();
 		resp.setContentLength(mapper.writeValueAsString(jobStatus)
 				.length());

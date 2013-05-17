@@ -46,7 +46,7 @@ public class JobResourceTest extends AbstractEtlResourceTest {
 	public void testJobListWithFilter() {
 		WebResource resource = this.resource();
 		JobFilter jobFilter = new JobFilter(null, null, null, null, null);
-		List<Job> jobs = resource.path("/api/jobs/status").queryParam("filter",
+		List<Job> jobs = resource.path("/api/protected/jobs/status").queryParam("filter",
 				jobFilter.toQueryParam()).accept(
 				MediaType.APPLICATION_JSON).get(new GenericType<List<Job>>() {
 		});
@@ -56,7 +56,7 @@ public class JobResourceTest extends AbstractEtlResourceTest {
 	@Test
 	public void testJobList () {
 		WebResource resource = this.resource();
-		List<Job> jobs = resource.path("/api/jobs").accept(
+		List<Job> jobs = resource.path("/api/protected/jobs").accept(
 				MediaType.APPLICATION_JSON).get(new GenericType<List<Job>>() {
 		});
 		System.err.println("jobs: " + jobs);
@@ -65,7 +65,7 @@ public class JobResourceTest extends AbstractEtlResourceTest {
 	
 	@Test
 	public void testJob () {
-		resource().path("/api/jobs/1").accept(
+		resource().path("/api/protected/jobs/1").accept(
 				MediaType.APPLICATION_JSON).get(new GenericType<Job>() {});
 	}
 
