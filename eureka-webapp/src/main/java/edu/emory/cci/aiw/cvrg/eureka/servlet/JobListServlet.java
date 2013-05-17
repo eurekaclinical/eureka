@@ -35,7 +35,6 @@ import javax.servlet.http.HttpServletResponse;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ServicesClient;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.SystemProposition.SystemType;
 import java.util.ArrayList;
-import org.protempa.proposition.interval.Interval.Side;
 
 public class JobListServlet extends HttpServlet {
 
