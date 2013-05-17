@@ -127,19 +127,21 @@ public abstract class Configs<E, F extends ConfigEntity> {
 			boolean write = false;
 			boolean execute = false;
 			List<EtlGroup> groups = user.getGroups();
-			for (EtlGroup group : groups) {
-				List<? extends GroupMembership> configPerms = groupConfigs(group);
-				if (configPerms != null) {
-					for (GroupMembership groupMembership : configPerms) {
-						if (groupMembership.configName().equals(configId)) {
-							if (!read) {
-								read = groupMembership.isGroupRead();
-							}
-							if (!write) {
-								write = groupMembership.isGroupWrite();
-							}
-							if (!execute) {
-								execute = groupMembership.isGroupExecute();
+			if (groups != null) {
+				for (EtlGroup group : groups) {
+					List<? extends GroupMembership> configPerms = groupConfigs(group);
+					if (configPerms != null) {
+						for (GroupMembership groupMembership : configPerms) {
+							if (groupMembership.configName().equals(configId)) {
+								if (!read) {
+									read = groupMembership.isGroupRead();
+								}
+								if (!write) {
+									write = groupMembership.isGroupWrite();
+								}
+								if (!execute) {
+									execute = groupMembership.isGroupExecute();
+								}
 							}
 						}
 					}
