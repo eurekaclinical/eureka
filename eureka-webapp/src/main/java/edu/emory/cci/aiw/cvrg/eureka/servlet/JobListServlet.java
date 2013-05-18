@@ -52,14 +52,6 @@ public class JobListServlet extends HttpServlet {
 
 			List<Destination> destinations = servicesClient.getDestinations();
 			req.setAttribute("destinations", destinations);
-			List<SystemElement> systemElements = servicesClient.getSystemElements();
-			List<SystemElement> dateRangeDataElements = new ArrayList<SystemElement>(systemElements.size());
-			for (SystemElement entity : systemElements) {
-				if (entity.getSystemType() != SystemType.CONSTANT) {
-					dateRangeDataElements.add(entity);
-				}
-			}
-			req.setAttribute("dateRangeDataElements", systemElements);
 			req.setAttribute("dateRangeSides", DateRangeSide.values());
 
 			String jobIdStr = req.getParameter("jobId");
