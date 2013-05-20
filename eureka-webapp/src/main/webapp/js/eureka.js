@@ -749,7 +749,7 @@ $(document).ready(function() {
 			} else {
 				var missingRequired = false;
 				$(".browseButton").each(function() {
-					if (!$(this).disabled && $(this).data('required') && !$(this).val()) {
+					if (!$(this).prop('disabled') && $(this).data('required') && !$(this).val()) {
 						missingRequired = true;
 					}
 				});
