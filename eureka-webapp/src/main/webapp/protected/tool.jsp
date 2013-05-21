@@ -185,7 +185,7 @@
     </template:content>
     <template:content name="subcontent">
         <div id="jobUpload">
-            <h3>Please wait while your project is being uploaded.....</h3>
+            <h3>Please wait while your data is loading.....</h3>
             <img src="${pageContext.request.contextPath}/images/e-ani.gif"
 				 hspace="450" align="middle" />
         </div>
