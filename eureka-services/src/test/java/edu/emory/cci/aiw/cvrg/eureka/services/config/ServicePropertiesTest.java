@@ -42,6 +42,9 @@ public class ServicePropertiesTest extends AbstractTest {
 			.class);
 		List<String> propositionNames = properties
 			.getDefaultSystemPropositions();
-		Assert.assertEquals(33,propositionNames.size());
+		for (String propositionName : propositionNames) {
+			System.out.println("\"" + propositionName + "\"");
+		}
+		Assert.assertEquals(32,propositionNames.size());
 	}
 }
