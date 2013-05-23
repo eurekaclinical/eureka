@@ -63,5 +63,5 @@
 		<user_name>${id}</user_name>
 	    <password>${new_password}</password>
 </pm:set_user>
-<message_body>
+</message_body>
 </i2b2:request>
