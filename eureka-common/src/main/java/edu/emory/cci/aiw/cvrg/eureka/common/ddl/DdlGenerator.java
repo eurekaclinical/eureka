@@ -19,17 +19,45 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.common.ddl;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.persistence.Entity;
+
 import org.hibernate.cfg.Configuration;
 import org.hibernate.tool.hbm2ddl.SchemaExport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.persistence.Entity;
-import java.util.ArrayList;
-import java.util.List;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.CategoryEntity;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.DataElementEntity;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.DestinationEntity;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.DestinationGroupMembership;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.EtlGroup;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.EtlUser;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.ExtendedDataElement;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.FrequencyEntity;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.FrequencyType;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.JobEntity;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.JobEvent;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.PropertyConstraint;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.Relation;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.RelationOperator;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.Role;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.SequenceEntity;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.SourceConfigEntity;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.SourceConfigGroupMembership;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.SystemProposition;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.ThresholdsOperator;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.TimeUnit;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.User;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.ValueComparator;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.ValueThresholdEntity;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.ValueThresholdGroupEntity;
 
 /**
- * Generates the SQL statements needed to create the tables used to persist the
+ * Generates the SQL statements needed to create the tables used to persist
+ * the
  * model for the application.
  *
  * @author hrathod
@@ -39,8 +67,8 @@ public final class DdlGenerator {
 	/**
 	 * The class level logger.
 	 */
-	private static final Logger LOGGER = LoggerFactory
-			.getLogger(DdlGenerator.class);
+	private static final Logger LOGGER =
+			LoggerFactory.getLogger(DdlGenerator.class);
 	/**
 	 * The dialect to produce the SQL for.
 	 */
@@ -57,7 +85,8 @@ public final class DdlGenerator {
 	}
 
 	/**
-	 * Given a list of classes annotated with the {@link Entity} annotation, a
+	 * Given a list of classes annotated with the {@link Entity}
+	 * annotation, a
 	 * Hibernate database dialect, and an output file name, generates the SQL
 	 * needed to persist the given entities to a database and writes the
 	 * SQL out to
@@ -89,76 +118,64 @@ public final class DdlGenerator {
 	/**
 	 * Generate the SQL for entities used in ETL layer classes.
 	 *
-	 * @param outputFile The location of file where the SQL should be written.
+	 * @param outputFile The location of file where the SQL should be
+	 *                   written.
 	 */
 	private static void generateBackendDdl(final String outputFile) {
 		final List<Class<?>> backendClasses = new ArrayList<Class<?>>();
-		backendClasses
-				.add(edu.emory.cci.aiw.cvrg.eureka.common.comm
-						.Destination.class);
-		backendClasses.add(edu.emory.cci.aiw.cvrg.eureka.common.entity.JobEntity
-				.class);
-		backendClasses.add(edu.emory.cci.aiw.cvrg.eureka.common.entity
-				.JobEvent
-				.class);
+		backendClasses.add(JobEntity.class);
+		backendClasses.add(JobEvent.class);
+		backendClasses.add(EtlUser.class);
+		backendClasses.add(EtlGroup.class);
+		backendClasses.add(SourceConfigEntity.class);
+		backendClasses.add(DestinationEntity.class);
+		backendClasses.add(SourceConfigGroupMembership.class);
+		backendClasses.add(DestinationGroupMembership.class);
 		generate(backendClasses, outputFile);
 	}
 
 	/**
 	 * Generate the SQL for entities used in service layer classes.
 	 *
-	 * @param outputFile The location of file where the SQL should be written.
+	 * @param outputFile The location of file where the SQL should be
+	 *                   written.
 	 */
 	private static void generateServiceDdl(final String outputFile) {
 		final List<Class<?>> serviceClasses = new ArrayList<Class<?>>();
-		serviceClasses.add(edu.emory.cci.aiw.cvrg.eureka.common.entity.User
-				.class);
-		serviceClasses.add(edu.emory.cci.aiw.cvrg.eureka.common.entity.Role
-				.class);
-		serviceClasses.add(edu.emory.cci.aiw.cvrg.eureka.common.entity
-				.DataElementEntity.class);
-		serviceClasses.add(edu.emory.cci.aiw.cvrg.eureka.common.entity
-				.SequenceEntity.class);
-		serviceClasses.add(edu.emory.cci.aiw.cvrg.eureka.common.entity
-				.CategoryEntity.class);
-		serviceClasses.add(edu.emory.cci.aiw.cvrg.eureka.common.entity
-				.SystemProposition.class);
-		serviceClasses.add(edu.emory.cci.aiw.cvrg.eureka.common.entity
-				.Relation.class);
-		serviceClasses.add(edu.emory.cci.aiw.cvrg.eureka.common.entity
-				.TimeUnit.class);
-		serviceClasses.add(edu.emory.cci.aiw.cvrg.eureka.common.entity
-				.ExtendedDataElement.class);
-		serviceClasses.add(edu.emory.cci.aiw.cvrg.eureka.common.entity
-				.PropertyConstraint.class);
-		serviceClasses.add(edu.emory.cci.aiw.cvrg.eureka.common.entity
-				.ValueComparator.class);
-		serviceClasses.add(edu.emory.cci.aiw.cvrg.eureka.common.entity
-				.RelationOperator.class);
-		serviceClasses.add(edu.emory.cci.aiw.cvrg.eureka.common.entity
-				.CategoryEntity.class);
-		serviceClasses.add(edu.emory.cci.aiw.cvrg.eureka.common.entity
-				.ValueThresholdEntity.class);
-		serviceClasses.add(edu.emory.cci.aiw.cvrg.eureka.common.entity
-				.FrequencyEntity.class);
-		serviceClasses.add(
-				edu.emory.cci.aiw.cvrg.eureka.common.entity.FrequencyType.class);
-		serviceClasses.add(edu.emory.cci.aiw.cvrg.eureka.common.entity
-				.ThresholdsOperator.class);
-		serviceClasses.add(edu.emory.cci.aiw.cvrg.eureka.common.entity
-				.ValueThresholdGroupEntity.class);
+		serviceClasses.add(User.class);
+		serviceClasses.add(Role.class);
+		serviceClasses.add(DataElementEntity.class);
+		serviceClasses.add(SequenceEntity.class);
+		serviceClasses.add(CategoryEntity.class);
+		serviceClasses.add(SystemProposition.class);
+		serviceClasses.add(Relation.class);
+		serviceClasses.add(TimeUnit.class);
+		serviceClasses.add(ExtendedDataElement.class);
+		serviceClasses.add(PropertyConstraint.class);
+		serviceClasses.add(ValueComparator.class);
+		serviceClasses.add(RelationOperator.class);
+		serviceClasses.add(CategoryEntity.class);
+		serviceClasses.add(ValueThresholdEntity.class);
+		serviceClasses.add(FrequencyEntity.class);
+		serviceClasses.add(FrequencyType.class);
+		serviceClasses.add(ThresholdsOperator.class);
+		serviceClasses.add(ValueThresholdGroupEntity.class);
 		generate(serviceClasses, outputFile);
 	}
 
 	/**
 	 * @param args The first param is the file where the service layer DDL
-	 *             should go, and the second parameter is where the ETL layer DDL should go.
+	 *             should go, and the second parameter is where the ETL
+	 *             layer DDL should go.
 	 */
 	public static void main(String[] args) {
 		if (args.length < 2) {
-			System.err.println("Please provide two parameters, " +
-					"first for the service layer file and the second " +
-					"for the ETL layer file.");
+			System.err.println(
+					"Please provide two parameters, " +
+							"first for the service layer file and the " +
+							"second" +
+							" " +
+							"for the ETL layer file.");
 		} else {
 			generateServiceDdl(args[0]);
 			generateBackendDdl(args[1]);
