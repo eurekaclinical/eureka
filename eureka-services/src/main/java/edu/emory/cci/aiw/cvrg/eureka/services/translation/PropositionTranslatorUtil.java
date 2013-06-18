@@ -26,7 +26,6 @@ import edu.emory.cci.aiw.cvrg.eureka.common.comm.DataElement;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.DataElementField;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.DataElementEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.ExtendedDataElement;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.FrequencyEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.PropertyConstraint;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.PropositionTypeVisitor;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.TimeUnit;
@@ -51,7 +50,7 @@ class PropositionTranslatorUtil {
 			Long minDurationUnits = dataElement.getMinDurationUnits();
 			if (minDurationUnits == null) {
 				throw new DataElementHandlingException(
-						Response.Status.PRECONDITION_FAILED, 
+						Response.Status.BAD_REQUEST, 
 						"Min duration units must be specified");
 			}
 			ep.setMinDurationTimeUnit(timeUnitDao.retrieve(minDurationUnits));
@@ -59,7 +58,7 @@ class PropositionTranslatorUtil {
 			Long maxDurationUnits = dataElement.getMaxDurationUnits();
 			if (maxDurationUnits == null) {
 				throw new DataElementHandlingException(
-						Response.Status.PRECONDITION_FAILED, 
+						Response.Status.BAD_REQUEST, 
 						"Max duration units must be specified");
 			}
 			ep.setMaxDurationTimeUnit(timeUnitDao.retrieve(maxDurationUnits));
@@ -84,11 +83,17 @@ class PropositionTranslatorUtil {
 			ep.setMaxDurationTimeUnit(maxDurationUnits);
 		}
 		if (dataElement.getHasPropertyConstraint() == Boolean.TRUE) {
+			String propertyName = dataElement.getProperty();
+			if (propertyName == null) {
+				throw new DataElementHandlingException(
+						Response.Status.BAD_REQUEST, 
+						"A property name must be specified");
+			}
 			PropertyConstraint pc = ep.getPropertyConstraint();
 			if (pc == null) {
 				pc = new PropertyConstraint();
 			}
-			pc.setPropertyName(dataElement.getProperty());
+			pc.setPropertyName(propertyName);
 			pc.setValue(dataElement.getPropertyValue());
 			ValueComparator valComp = valCompDao.getByName("=");
 			if (valComp == null) {
