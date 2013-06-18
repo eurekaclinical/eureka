@@ -263,6 +263,7 @@ $(document).ready(function(){
 
 	$('#wizard').smartWizard({
 		'labelFinish': 'Save',
+		keyNavigation: false,
 		onLeaveStep:leaveAStepCallback,
 		onFinish:onFinishCallback
 	});
