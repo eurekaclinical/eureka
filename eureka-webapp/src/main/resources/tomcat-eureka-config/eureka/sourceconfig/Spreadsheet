@@ -1,0 +1,15 @@
+[edu.emory.cci.aiw.cvrg.eureka.etl.dsb.EurekaDataSourceBackend]
+dataSourceBackendId=AIW
+databaseName = spreadsheet
+dataFileDirectoryName = spreadsheet
+mimetypes = application/vnd.openxmlformats-officedocument.spreadsheetml.sheet
+sampleUrl = ../docs/sample.xlsx
+required = true
+
+[org.protempa.backend.ksb.protege.LocalKnowledgeSourceBackend]
+knowledgeBaseName = AIW
+projectString = ${project.build.directory}/eureka-config/eureka/ontologies/AIW.pprj
+units = ABSOLUTE
+
+[org.protempa.backend.asb.java.JavaAlgorithmBackend]
+
