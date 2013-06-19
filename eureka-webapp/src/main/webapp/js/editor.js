@@ -441,7 +441,8 @@ $(document).ready(function(){
 		sortable.empty();
 		sortable.attr('data-count', newCount + 1);
 		data.find('span.count').text(newCount);
-		data.find('div.thresholdedDataElement').attr('id','thresholdedDataElement' + newCount);
+		//data.find('div.thresholdedDataElement').attr('id','thresholdedDataElement' + newCount);
+		data.find('div.sequencedDataElement').attr('id','relatedDataElement' + newCount);
 		data.find('select[name="sequenceRelDataElementPropertyName"]').attr('data-properties-provider','relatedDataElement' + newCount);
 		appendTo.append(data);
 		eureka.trees.setPropositionSelects($(appendTo).closest('[data-definition-container="true"]'));

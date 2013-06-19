@@ -207,16 +207,7 @@ eureka.trees = {
 			.attr("data-subtype", $(data.o[0]).data("subtype") || '')
 			.attr('data-key', $(data.o[0]).data("proposition") || $(data.o[0]).data('key'));
 
-			// set the properties in the properties select
-			if ($(data.o[0]).data('properties')) {
-				var properties = $(data.o[0]).data('properties').split(",");
-				$('select[data-properties-provider=' + $(target).attr('id') + ']').each(function (i, item) {
-					$(item).empty();
-					$(properties).each(function (j, property) {
-						$(item).append($('<option></option>').attr('value', property).text(property));
-					});
-				});
-			}
+			
 
 			// check that all types in the categorization are the same
 			if ($(sortable).data('drop-type') === 'multiple' && $(sortable).data("proptype") !== 'empty') {
@@ -237,29 +228,105 @@ eureka.trees = {
 				'class': 'desc',
 				'text': textContent
 			});
+			//this loop is executed only during replacement of a system element when droptype==single. In all other cases(adding element to multiple droptype lists, adding a new element to an empty list) the else statement is executed. 
+			if ($(sortable).data('drop-type') === 'single' && $(sortable).find('li').length>0) {
+				
+				//$(sortable).find('li').each(function (i,item) {
+					//$(item).find('span.delete').click();
+					
+					var $toRemove = $(sortable).find('li');
+					var $target = $(sortable).parent();
+					var dialog = $('<div></div>');
+					$(dialog).dialog({
+						'title': 'Remove Data Element',
+						'modal': true,
+						'resizable': false,
+						'buttons': {
+							"Confirm": function() {
+								var type = $("input:radio[name='type']:checked").val();
+								eureka.trees.removeDroppedElement(type, $toRemove,sortable);
+								eureka.trees.setPropositionSelects(sortable.closest('[data-definition-container="true"]'));
+								$toRemove.remove();
+								if (sortable.find('li').length == 0) {
+									sortable.data('proptype','empty');
+								}
 
-			if ($(sortable).data('drop-type') === 'single') {
-				$(sortable).find('li').each(function (i,item) {
-					$(item).find('span.delete').click();
-					$(item).remove();
-				});
+								// remove the properties from the drop down
+								$('select[data-properties-provider=' + $target.attr('id') + ']').each(function (i, item) {
+									$(item).empty();
+								});
+
+								// perform any additional delete actions
+								if (deleteActions && deleteActions[type]) {
+									deleteActions[type]();
+								}
+								
+								newItem.append(X);
+								newItem.append(txt);
+								sortable.append(newItem);
+								
+								// set the properties in the properties select
+								if ($(data.o[0]).data('properties')) {
+								var properties = $(data.o[0]).data('properties').split(",");
+								$('select[data-properties-provider=' + $(target).attr('id') + ']').each(function (i, item) {
+								$(item).empty();
+								$(properties).each(function (j, property) {
+								$(item).append($('<option></option>').attr('value', property).text(property));
+								});
+								});
+								}		
+
+								// add the newly dropped element to the set of dropped elements
+								eureka.trees.addDroppedElement(propType, newItem, sortable);
+								eureka.trees.setPropositionSelects($(sortable).closest('[data-definition-container="true"]'));
+
+								// finally, call any actions specific to the type of proposition being entered/edited
+								if (dndActions && dndActions[propType]) {
+									dndActions[propType](data.o[0]);
+								}
+
+								$(this).dialog("close");
+								$(this).remove();
+							},
+							"Cancel": function() {
+								$(this).dialog("close");
+								$(this).remove();
+							}
+						}
+					});
+					$(dialog).html('Are you sure you want to remove data element ' + $toRemove.text() + '?');
+					$(dialog).dialog("open");
+					//$(item).remove();
 			}
+			else
+			{
+				newItem.append(X);
+				newItem.append(txt);
+				sortable.append(newItem);
+				
+				// set the properties in the properties select
+				if ($(data.o[0]).data('properties')) {
+				var properties = $(data.o[0]).data('properties').split(",");
+				$('select[data-properties-provider=' + $(target).attr('id') + ']').each(function (i, item) {
+				$(item).empty();
+				$(properties).each(function (j, property) {
+				$(item).append($('<option></option>').attr('value', property).text(property));
+				});
+				});
+				}
 
-			newItem.append(X);
-			newItem.append(txt);
-			sortable.append(newItem);
-
-			// add the newly dropped element to the set of dropped elements
-			eureka.trees.addDroppedElement(propType, newItem, sortable);
-			eureka.trees.setPropositionSelects($(sortable).closest('[data-definition-container="true"]'));
+				// add the newly dropped element to the set of dropped elements
+				eureka.trees.addDroppedElement(propType, newItem, sortable);
+				eureka.trees.setPropositionSelects($(sortable).closest('[data-definition-container="true"]'));
 
 			// finally, call any actions specific to the type of proposition being entered/edited
 			if (dndActions && dndActions[propType]) {
 				dndActions[propType](data.o[0]);
 			}
+			
 		}
-	},
-
+	}
+},
 	setPropositionSelects: function(elem) {
 		var type = $("input:radio[name='type']:checked").val();
 		var droppedElems = droppedElements[type];

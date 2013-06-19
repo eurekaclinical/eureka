@@ -265,7 +265,7 @@
 																	<tr>
 																		<td>Related Data Element <span class="count">${status.count}</span>:</td>
 																		<td colspan="5">
-																			<div id="relatedDataElement${status.count}" class="tree-drop-single jstree-drop">
+																			<div id="relatedDataElement${status.count}" class="tree-drop-single jstree-drop sequencedDataElement">
 																				<div class="label-info"><center>Drop Here</center></div>
 																				<ul class="sortable" data-type="related" data-drop-type="single" data-count="${status.count + 1}" style="width: 100% height: 100%">
 																					<li data-key="${relation.dataElementField.dataElementKey}" data-desc="${relation.dataElementField.dataElementDisplayName} (${relation.dataElementField.dataElementKey})" data-space="${relation.dataElementField.inSystem ? 'system' : 'user'}">
@@ -355,7 +355,7 @@
 																	<tr>
 																		<td>Related Data Element <span class="count">1</span>:</td>
 																		<td colspan="5">
-																			<div id="relatedDataElement1" class="tree-drop-single jstree-drop">
+																			<div id="relatedDataElement1" class="tree-drop-single jstree-drop sequencedDataElement">
 																				<div class="label-info"><center>Drop Here</center></div>
 																				<ul class="sortable" data-type="related" data-drop-type="single" data-count="2" style="width: 100% height: 100%"></ul>
 																			</div>
