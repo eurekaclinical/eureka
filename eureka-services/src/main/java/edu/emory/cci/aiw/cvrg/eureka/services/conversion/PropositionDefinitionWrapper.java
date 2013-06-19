@@ -25,16 +25,16 @@ import edu.emory.cci.aiw.cvrg.eureka.common.entity.FrequencyEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.SequenceEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.SystemProposition;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.ValueThresholdGroupEntity;
-import edu.emory.cci.aiw.cvrg.eureka.services.conversion.ConversionUtil;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
 import org.protempa.HighLevelAbstractionDefinition;
 import org.protempa.PropositionDefinition;
 import org.protempa.SimpleGapFunction;
 import org.protempa.TemporalExtendedParameterDefinition;
 import org.protempa.proposition.interval.Relation;
 import org.protempa.proposition.value.NominalValue;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 /**
  *
@@ -82,7 +82,8 @@ final class PropositionDefinitionWrapper extends AbstractDataElementEntityVisito
 	public void visit(ValueThresholdGroupEntity valueThresholdGroup) {
 		HighLevelAbstractionDefinition wrapper = 
 				new HighLevelAbstractionDefinition(
-				valueThresholdGroup.getKey() + "_WRAPPER");
+				valueThresholdGroup.getKey() + ConversionUtil
+						.PRIMARY_PROP_ID_SUFFIX + "_WRAPPER");
 		wrapper.setDisplayName(valueThresholdGroup.getDisplayName());
 		wrapper.setDescription(valueThresholdGroup.getDescription());
 		TemporalExtendedParameterDefinition tepd = 

@@ -34,13 +34,12 @@ import edu.emory.cci.aiw.cvrg.eureka.common.entity.ValueThresholdEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.ValueThresholdGroupEntity;
 import edu.emory.cci.aiw.cvrg.eureka.services.test.AbstractServiceTest;
 import org.arp.javautil.arrays.Arrays;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.protempa.CompoundLowLevelAbstractionDefinition;
 import org.protempa.ConstantDefinition;
 import org.protempa.EventDefinition;
 import org.protempa.HighLevelAbstractionDefinition;
-import org.protempa.LowLevelAbstractionDefinition;
 import org.protempa.PrimitiveParameterDefinition;
 import org.protempa.PropositionDefinition;
 import org.protempa.SliceDefinition;
@@ -48,7 +47,6 @@ import org.protempa.SliceDefinition;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
-import org.junit.After;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -533,8 +531,8 @@ public class CategorizationConverterTest extends AbstractServiceTest {
 				llaDefs1.size());
 		PropositionDefinition llaDef1 = this.converter
 				.getPrimaryPropositionDefinition();
-		assertTrue("not a low-level abstraction",
-				llaDef1 instanceof LowLevelAbstractionDefinition);
+		assertTrue("not a high-level abstraction",
+				llaDef1 instanceof HighLevelAbstractionDefinition);
 		assertEquals("wrong ID", "test-lla-cat1" + ConversionUtil.PRIMARY_PROP_ID_SUFFIX, llaDef1.getId());
 		assertEquals("wrong display name", "test-lla-cat1-display",
 				llaDef1.getDisplayName());
@@ -544,8 +542,12 @@ public class CategorizationConverterTest extends AbstractServiceTest {
 				llaDef1.getInverseIsA().length);
 		assertTrue(
 				"wrong inverse-is-a objects",
-				(llaDef1.getInverseIsA()[0].equals("test-lla1" + ConversionUtil.PRIMARY_PROP_ID_SUFFIX) && llaDef1
-						.getInverseIsA()[1].equals("test-lla2" + ConversionUtil.PRIMARY_PROP_ID_SUFFIX))
+				(llaDef1.getInverseIsA()[0].equals("test-lla1" +
+						ConversionUtil.PRIMARY_PROP_ID_SUFFIX + "_WRAPPER") &&
+						llaDef1
+						.getInverseIsA()[1].equals("test-lla2" +
+								ConversionUtil.PRIMARY_PROP_ID_SUFFIX +
+								"_WRAPPER"))
 						|| (llaDef1.getInverseIsA()[0].equals("test-lla2" + ConversionUtil.PRIMARY_PROP_ID_SUFFIX) &&
 						llaDef1
 						.getInverseIsA()[1].equals("test-lla1" + ConversionUtil.PRIMARY_PROP_ID_SUFFIX)));
@@ -565,8 +567,8 @@ public class CategorizationConverterTest extends AbstractServiceTest {
 				llaDefs2.size());
 		PropositionDefinition llaDef2 = this.converter
 				.getPrimaryPropositionDefinition();
-		assertTrue("not a low-level abstraction",
-				llaDef2 instanceof LowLevelAbstractionDefinition);
+		assertTrue("not a high-level abstraction",
+				llaDef2 instanceof HighLevelAbstractionDefinition);
 		assertEquals("wrong ID", "test-lla-cat2" + ConversionUtil.PRIMARY_PROP_ID_SUFFIX, llaDef2.getId());
 		assertEquals("wrong display name", "test-lla-cat2-display",
 				llaDef2.getDisplayName());
@@ -574,7 +576,8 @@ public class CategorizationConverterTest extends AbstractServiceTest {
 				llaDef2.getDescription());
 		assertEquals("wrong inverse-is-a size", 1,
 				llaDef2.getInverseIsA().length);
-		assertEquals("wrong inverse-is-a", "test-lla-cat1" + ConversionUtil.PRIMARY_PROP_ID_SUFFIX,
+		assertEquals("wrong inverse-is-a", "test-lla-cat1" + ConversionUtil
+				.PRIMARY_PROP_ID_SUFFIX + "_WRAPPER",
 				llaDef2.getInverseIsA()[0]);
 	}
 
@@ -638,8 +641,8 @@ public class CategorizationConverterTest extends AbstractServiceTest {
 				cllaDefs1.size());
 		PropositionDefinition cllaDef1 = this.converter
 				.getPrimaryPropositionDefinition();
-		assertTrue("not a compound low-level abstraction",
-				cllaDef1 instanceof CompoundLowLevelAbstractionDefinition);
+		assertTrue("not a high-level abstraction",
+				cllaDef1 instanceof HighLevelAbstractionDefinition);
 		assertEquals("wrong ID", "test-clla-cat1" + ConversionUtil.PRIMARY_PROP_ID_SUFFIX, cllaDef1.getId());
 		assertEquals("wrong display name", "test-clla-cat1-display",
 				cllaDef1.getDisplayName());
@@ -649,11 +652,17 @@ public class CategorizationConverterTest extends AbstractServiceTest {
 				cllaDef1.getInverseIsA().length);
 		assertTrue(
 				"wrong inverse-is-a objects",
-				(cllaDef1.getInverseIsA()[0].equals("test-clla1" + ConversionUtil.PRIMARY_PROP_ID_SUFFIX) && cllaDef1
-						.getInverseIsA()[1].equals("test-clla2" + ConversionUtil.PRIMARY_PROP_ID_SUFFIX))
-						|| (cllaDef1.getInverseIsA()[0].equals("test-clla2" + ConversionUtil.PRIMARY_PROP_ID_SUFFIX)
+				(cllaDef1.getInverseIsA()[0].equals("test-clla1" +
+						ConversionUtil.PRIMARY_PROP_ID_SUFFIX + "_WRAPPER") &&
+						cllaDef1
+						.getInverseIsA()[1].equals("test-clla2" +
+								ConversionUtil.PRIMARY_PROP_ID_SUFFIX +
+								"_WRAPPER"))
+						|| (cllaDef1.getInverseIsA()[0].equals("test-clla2" +
+						ConversionUtil.PRIMARY_PROP_ID_SUFFIX + "_WRAPPER")
 						&& cllaDef1
-						.getInverseIsA()[1].equals("test-clla1" + ConversionUtil.PRIMARY_PROP_ID_SUFFIX)));
+						.getInverseIsA()[1].equals("test-clla1" +
+						ConversionUtil.PRIMARY_PROP_ID_SUFFIX + "_WRAPPER")));
 
 		CategoryEntity cllaCat2 = new CategoryEntity();
 		cllaCat2.setId(4L);
@@ -670,8 +679,8 @@ public class CategorizationConverterTest extends AbstractServiceTest {
 				cllaDefs2.size());
 		PropositionDefinition cllaDef2 = this.converter
 				.getPrimaryPropositionDefinition();
-		assertTrue("not a compound low-level abstraction",
-				cllaDef2 instanceof CompoundLowLevelAbstractionDefinition);
+		assertTrue("not a high-level abstraction",
+				cllaDef2 instanceof HighLevelAbstractionDefinition);
 		assertEquals("wrong ID", "test-clla-cat2" + ConversionUtil.PRIMARY_PROP_ID_SUFFIX, cllaDef2.getId());
 		assertEquals("wrong display name", "test-clla-cat2-display",
 				cllaDef2.getDisplayName());
@@ -679,7 +688,8 @@ public class CategorizationConverterTest extends AbstractServiceTest {
 				cllaDef2.getDescription());
 		assertEquals("wrong inverse-is-a size", 1,
 				cllaDef2.getInverseIsA().length);
-		assertEquals("wrong inverse-is-a", "test-clla-cat1" + ConversionUtil.PRIMARY_PROP_ID_SUFFIX,
+		assertEquals("wrong inverse-is-a", "test-clla-cat1" + ConversionUtil
+				.PRIMARY_PROP_ID_SUFFIX + "_WRAPPER",
 				cllaDef2.getInverseIsA()[0]);
 	}
 

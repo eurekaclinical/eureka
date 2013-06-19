@@ -21,18 +21,16 @@ package edu.emory.cci.aiw.cvrg.eureka.services.conversion;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.CategoryEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.DataElementEntity;
-import org.protempa.CompoundLowLevelAbstractionDefinition;
 import org.protempa.ConstantDefinition;
 import org.protempa.EventDefinition;
 import org.protempa.HighLevelAbstractionDefinition;
-import org.protempa.LowLevelAbstractionDefinition;
 import org.protempa.PrimitiveParameterDefinition;
 import org.protempa.PropositionDefinition;
+import org.protempa.SimpleGapFunction;
 import org.protempa.SliceDefinition;
 
 import java.util.ArrayList;
 import java.util.List;
-import org.protempa.SimpleGapFunction;
 
 public final class CategorizationConverter implements
 		PropositionDefinitionConverter<CategoryEntity, PropositionDefinition> {
@@ -119,24 +117,27 @@ public final class CategorizationConverter implements
 					primary = sla;
 					break;
 				case LOW_LEVEL_ABSTRACTION:
-					LowLevelAbstractionDefinition llad =
-							new LowLevelAbstractionDefinition(id);
+					// fall through
+				case COMPOUND_LOW_LEVEL_ABSTRACTION:
+					HighLevelAbstractionDefinition llad =
+							new HighLevelAbstractionDefinition(id);
 					llad.setDescription(category.getDescription());
 					llad.setDisplayName(category.getDisplayName());
-					llad.setInverseIsA(inverseIsA);
-					llad.setConcatenable(false);
+
+					// before low-level abstractions are sent to Protempa,
+					// they will be wrapped in high-level abstractions to
+					// actually match the values the user specified
+					// we want these wrapper abstractions to be the
+					// inverse-is-a elements
+					String[] wrappedIia = new String[inverseIsA.length];
+					for (int i = 0; i < inverseIsA.length; i++) {
+						wrappedIia[i] = inverseIsA[i] + "_WRAPPER";
+					}
+
+					llad.setInverseIsA(wrappedIia);
+//					llad.setConcatenable(false);
 					llad.setGapFunction(new SimpleGapFunction(0, null));
 					primary = llad;
-					break;
-				case COMPOUND_LOW_LEVEL_ABSTRACTION:
-					CompoundLowLevelAbstractionDefinition cllad =
-							new CompoundLowLevelAbstractionDefinition(id);
-					cllad.setDescription(category.getDescription());
-					cllad.setDisplayName(category.getDisplayName());
-					cllad.setInverseIsA(inverseIsA);
-					cllad.setConcatenable(false);
-					cllad.setGapFunction(new SimpleGapFunction(0, null));
-					primary = cllad;
 					break;
 				default:
 					throw new AssertionError("Invalid category type "
