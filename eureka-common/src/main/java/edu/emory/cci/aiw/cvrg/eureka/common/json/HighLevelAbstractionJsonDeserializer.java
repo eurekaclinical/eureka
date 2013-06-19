@@ -162,15 +162,19 @@ public final class HighLevelAbstractionJsonDeserializer extends
 		if (parser.getCurrentToken() != JsonToken.END_OBJECT) {
 			TemporalPatternOffset offsets = new TemporalPatternOffset();
 			checkField("startExtendedProposition");
-			Long startIndex = this.parser.getLongValue();
-			if (startIndex != null) {
-				ExtendedPropositionDefinition start = indices.get(startIndex);
-				if (!(start instanceof TemporalExtendedPropositionDefinition)) {
-					throw new JsonMappingException("Proposition definition " 
-						+ start.getPropositionId() 
-						+ " is not temporal and cannot be in a temporal relation");
+			if (this.parser.getCurrentToken() == JsonToken.VALUE_NULL) {
+				offsets.setStartTemporalExtendedPropositionDefinition(null);
+			} else {
+				Long startIndex = this.parser.getLongValue();
+				if (startIndex != null) {
+					ExtendedPropositionDefinition start = indices.get(startIndex);
+					if (!(start instanceof TemporalExtendedPropositionDefinition)) {
+						throw new JsonMappingException("Proposition definition "
+								+ start.getPropositionId()
+								+ " is not temporal and cannot be in a temporal relation");
+					}
+					offsets.setStartTemporalExtendedPropositionDefinition((TemporalExtendedPropositionDefinition) start);
 				}
-				offsets.setStartTemporalExtendedPropositionDefinition((TemporalExtendedPropositionDefinition) start);
 			}
 			nextToken();
 			checkField("startValue");
@@ -186,15 +190,19 @@ public final class HighLevelAbstractionJsonDeserializer extends
 			offsets.setStartOffsetUnits(this.parser.readValueAs(Unit.class));
 			nextToken();
 			checkField("finishExtendedProposition");
-			Long finishIndex = this.parser.getLongValue();
-			if (finishIndex != null) {
-				ExtendedPropositionDefinition finish = indices.get(finishIndex);
-				if (!(finish instanceof TemporalExtendedPropositionDefinition)) {
-					throw new JsonMappingException("Proposition definition " 
-						+ finish.getPropositionId() 
-						+ " is not temporal and cannot be in a temporal relation");
+			if (this.parser.getCurrentToken() == JsonToken.VALUE_NULL) {
+				offsets.setFinishTemporalExtendedPropositionDefinition(null);
+			} else {
+				Long finishIndex = this.parser.getLongValue();
+				if (finishIndex != null) {
+					ExtendedPropositionDefinition finish = indices.get(finishIndex);
+					if (!(finish instanceof TemporalExtendedPropositionDefinition)) {
+						throw new JsonMappingException("Proposition definition "
+								+ finish.getPropositionId()
+								+ " is not temporal and cannot be in a temporal relation");
+					}
+					offsets.setFinishTemporalExtendedPropositionDefinition((TemporalExtendedPropositionDefinition) finish);
 				}
-				offsets.setFinishTemporalExtendedPropositionDefinition((TemporalExtendedPropositionDefinition) finish);
 			}
 			nextToken();
 			checkField("finishValue");
