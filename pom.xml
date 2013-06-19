@@ -730,7 +730,7 @@
 				<groupId>org.jasig.cas.client</groupId>
 				<artifactId>cas-client-core</artifactId>
 				<version>${cas-client-version}</version>
-				<scope>test</scope>
+				<scope>provided</scope>
 			</dependency>
 			<!-- These are pulled into eureka-services and eureka-protempa-etl
 			by other dependencies, but CAS requires them to be in 
