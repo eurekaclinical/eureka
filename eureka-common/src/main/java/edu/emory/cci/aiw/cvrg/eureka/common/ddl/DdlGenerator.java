@@ -19,16 +19,6 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.common.ddl;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.persistence.Entity;
-
-import org.hibernate.cfg.Configuration;
-import org.hibernate.tool.hbm2ddl.SchemaExport;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.CategoryEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.DataElementEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.DestinationEntity;
@@ -54,6 +44,14 @@ import edu.emory.cci.aiw.cvrg.eureka.common.entity.User;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.ValueComparator;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.ValueThresholdEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.ValueThresholdGroupEntity;
+import org.hibernate.cfg.Configuration;
+import org.hibernate.tool.hbm2ddl.SchemaExport;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.persistence.Entity;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Generates the SQL statements needed to create the tables used to persist
@@ -131,6 +129,19 @@ public final class DdlGenerator {
 		backendClasses.add(DestinationEntity.class);
 		backendClasses.add(SourceConfigGroupMembership.class);
 		backendClasses.add(DestinationGroupMembership.class);
+		backendClasses.add(edu.emory.cci.aiw.cvrg.eureka.common.entity
+				.EtlUser.class);
+		backendClasses.add(edu.emory.cci.aiw.cvrg.eureka.common.entity.EtlGroup
+				.class);
+		backendClasses.add(edu.emory.cci.aiw.cvrg.eureka.common.entity
+				.SourceConfigEntity.class);
+		backendClasses.add(edu.emory.cci.aiw.cvrg.eureka.common.entity
+				.DestinationEntity.class);
+		backendClasses.add(edu.emory.cci.aiw.cvrg.eureka.common.entity
+				.SourceConfigGroupMembership.class);
+		backendClasses.add(edu.emory.cci.aiw.cvrg.eureka.common.entity
+				.DestinationGroupMembership.class);
+
 		generate(backendClasses, outputFile);
 	}
 
