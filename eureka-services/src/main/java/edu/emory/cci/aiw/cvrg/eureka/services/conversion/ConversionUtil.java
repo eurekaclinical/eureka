@@ -88,17 +88,19 @@ class ConversionUtil {
 		for (ExtendedDataElement ede : extendedDataElements) {
 			DataElementEntity dee = ede.getDataElementEntity();
 			TemporalExtendedPropositionDefinition tepd;
+			String tepdId = dee.getKey();
+			if (!dee.isInSystem()) {
+				tepdId += PRIMARY_PROP_ID_SUFFIX;
+			}
 			if (dee instanceof ValueThresholdGroupEntity) {
 				TemporalExtendedParameterDefinition teParamD =
-						new TemporalExtendedParameterDefinition(
-						dee.getKey());
+						new TemporalExtendedParameterDefinition(tepdId);
 				teParamD.setValue(
 						NominalValue.getInstance(
 						dee.getKey() + "_VALUE"));
 				tepd = teParamD;
 			} else {
-				tepd = new TemporalExtendedPropositionDefinition(
-						dee.getKey());
+				tepd = new TemporalExtendedPropositionDefinition(tepdId);
 			}
 			tepd.setDisplayName(dee.getDisplayName());
 			tepd.setMaxLength(ede.getMaxDuration());
