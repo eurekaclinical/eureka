@@ -19,16 +19,10 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.etl.spreadsheet;
 
-import java.io.IOException;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.List;
-
+import org.apache.poi.hssf.util.CellReference;
+import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.openxml4j.exceptions.InvalidOperationException;
+import org.apache.poi.openxml4j.opc.OPCPackage;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
@@ -37,12 +31,17 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
+import java.io.IOException;
+import java.text.DateFormat;
 import java.text.MessageFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
-import org.apache.poi.hssf.util.CellReference;
-import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
-import org.apache.poi.openxml4j.opc.OPCPackage;
 
 /**
  * An implementation of the {@link DataProvider} interface, using an Excel
@@ -177,7 +176,8 @@ public class XlsxDataProvider implements DataProvider {
 			XSSFSheet sheet = this.workbook.getSheet(sheetName);
 			if (sheet == null) {
 				throw new DataProviderException(
-						this.exceptionErrorMessage.format(sheetName));
+						this.exceptionErrorMessage.format(new
+								String[]{sheetName}));
 			}
 		}
 	}
