@@ -26,15 +26,6 @@ import edu.emory.cci.aiw.cvrg.eureka.etl.spreadsheet.DataProvider;
 import edu.emory.cci.aiw.cvrg.eureka.etl.spreadsheet.DataProviderException;
 import edu.emory.cci.aiw.cvrg.eureka.etl.spreadsheet.DataValidator;
 import edu.emory.cci.aiw.cvrg.eureka.etl.spreadsheet.XlsxDataProvider;
-import java.io.File;
-import java.io.FilenameFilter;
-import java.io.IOException;
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
-import java.util.logging.Level;
 import org.arp.javautil.io.FileUtil;
 import org.arp.javautil.io.IOUtil;
 import org.arp.javautil.sql.InvalidConnectionSpecArguments;
@@ -43,7 +34,6 @@ import org.drools.util.StringUtils;
 import org.protempa.BackendCloseException;
 import org.protempa.DataSourceBackendCloseException;
 import org.protempa.DataSourceReadException;
-import org.protempa.DataStreamingEvent;
 import org.protempa.DataStreamingEventIterator;
 import org.protempa.KnowledgeSource;
 import org.protempa.KnowledgeSourceReadException;
@@ -53,7 +43,6 @@ import org.protempa.backend.BackendInitializationException;
 import org.protempa.backend.BackendInstanceSpec;
 import org.protempa.backend.DataSourceBackendFailedDataValidationException;
 import org.protempa.backend.DataSourceBackendInitializationException;
-
 import org.protempa.backend.annotations.BackendInfo;
 import org.protempa.backend.annotations.BackendProperty;
 import org.protempa.backend.dsb.DataValidationEvent;
@@ -78,6 +67,15 @@ import org.protempa.proposition.value.UnitFactory;
 import org.protempa.proposition.value.ValueType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.File;
+import java.io.FilenameFilter;
+import java.io.IOException;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
 
 /**
  * Data source backend for Eureka!.
@@ -136,6 +134,8 @@ public final class EurekaDataSourceBackend extends RelationalDbDataSourceBackend
 				try {
 					this.dataProviders[i] = new XlsxDataProvider(dataFiles[i], null);
 				} catch (DataProviderException ex) {
+					dataFiles[i].renameTo(FileUtil.replaceExtension
+							(dataFiles[i], ".failed"));
 					throw new DataSourceBackendInitializationException("Error initializing data source backend " + this.nameForErrors(), ex);
 				}
 			}
