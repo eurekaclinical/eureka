@@ -18,6 +18,7 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<tomcat.port>8080</tomcat.port>
+		<tomcat.httpsPort>8443</tomcat.httpsPort>
 	</properties>
 
 	<build>
@@ -61,6 +62,13 @@
 										<include>logging.properties</include>
 									</includes>
 								</resource>
+                                <resource>
+                                    <directory>src/main/resources/tomcat-server-config</directory>
+                                    <filtering>false</filtering>
+                                    <includes>
+                                        <include>localhost.keystore</include>
+                                    </includes>
+                                </resource>
 							</resources>
 						</configuration>
 					</execution>
@@ -97,6 +105,10 @@
 				<artifactId>tomcat7-maven-plugin</artifactId>
 				<configuration>
 					<port>${tomcat.port}</port>
+                    <httpsPort>${tomcat.httpsPort}</httpsPort>
+                    <keystorePass>changeit</keystorePass>
+                    <keystoreFile>conf/localhost.keystore</keystoreFile>
+                    <keystoreType>JKS</keystoreType>
 					<additionalConfigFilesDir>${project.build.directory}/tomcat-config</additionalConfigFilesDir>
 					<systemProperties>
 						<java.security.auth.login.config>${catalina.home}/conf/jaas.config</java.security.auth.login.config>
@@ -118,6 +130,13 @@
 							<type>war</type>
 							<asWebapp>true</asWebapp>
 						</webapp>
+                        <webapp>
+                            <groupId>edu.emory.cci.cas</groupId>
+                            <artifactId>cas-server</artifactId>
+                            <version>1.0-SNAPSHOT</version>
+                            <type>war</type>
+                            <asWebapp>true</asWebapp>
+                        </webapp>
 					</webapps>
 					<addContextWarDependencies>true</addContextWarDependencies>
 					<addWarDependenciesInClassloader>true</addWarDependenciesInClassloader>
@@ -133,6 +152,11 @@
 						<artifactId>mysql-connector-java</artifactId>
 						<version>${mysql-version}</version>
 					</dependency>
+                    <dependency>
+                        <groupId>com.oracle</groupId>
+                        <artifactId>ojdbc6</artifactId>
+                        <version>${oracle-version}</version>
+                    </dependency>
 					<dependency>
 						<groupId>edu.emory.cci.aiw.cvrg.eureka</groupId>
 						<artifactId>jaas-login-module</artifactId>
@@ -143,6 +167,18 @@
 						<artifactId>mail</artifactId>
 						<version>${java-mail-version}</version>
 					</dependency>
+                    <dependency>
+                        <groupId>org.jasig.cas.client</groupId>
+                        <artifactId>cas-client-core</artifactId>
+                        <version>${cas-client-version}</version>
+                        <!-- <scope>provided</scope> -->
+                        <exclusions>
+                            <exclusion>
+                                <groupId>commons-logging</groupId>
+                                <artifactId>commons-logging</artifactId>
+                            </exclusion>
+                        </exclusions>
+                    </dependency>
 				</dependencies>
 			</plugin>
 		</plugins>
