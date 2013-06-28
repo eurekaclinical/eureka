@@ -14,6 +14,15 @@ http://aiw.sourceforge.net/.
 
 WHAT'S NEW
 
+Version 1.7 provides the ability to create new types of phenotypes.
+Frequency data elements can now specify the first n occurrences as 
+opposed to just n occurrences.  Value Threshold elements can not 
+be defined in the "context" of other elements.  The jasig CAS 
+(Central Authentication Server) was also incorporated into the 
+infrastructure for greater security and Single Sign-On (SSO) ability.  
+Other improvements include bug fixes, performance enhancements, 
+more complete help documentation, and other data element enhancements.
+
 Version 1.6 extends the rudimentary data element editing support
 provided in version 1.5 to provide a complete data element editor. You
 can specify a relatively complete set of the temporal patterns that
