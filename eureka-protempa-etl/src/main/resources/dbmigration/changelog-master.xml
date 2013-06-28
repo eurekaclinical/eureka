@@ -20,7 +20,7 @@ limitations under the License.
 -->
 
 <databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd" logicalFilePath="changelog-master.xml">
-	<changeSet author="arpost (generated)" id="1361552652236-2">
+	   <changeSet author="arpost (generated)" id="1361552652236-2">
 		<createTable tableName="JOB_EVENTS">
 			<column name="ID" type="BIGINT">
 				<constraints nullable="false" primaryKey="true" primaryKeyName="SYS_C0012512"/>
@@ -56,14 +56,13 @@ limitations under the License.
 		<createSequence sequenceName="JOBEVENT_SEQ"/>
 	</changeSet>
 	<changeSet author="arpost (generated)" id="1361552652236-7">
-		<createSequence sequenceName="JOB_SEQ"/>
-	</changeSet>
-
+		 <createSequence sequenceName="JOB_SEQ"/> 
+	</changeSet> 
 	<!-- 1.7 changes -->
 	<!-- WARNING: THE JOBS AND JOB_EVENTS TABLES WILL BE CLEARED OUT AS A RESULT OF
 	THIS CHANGELOG! -->
-	<changeSet author="arpost (generated)" id="1361552652236-8">
-		<delete tableName="JOB_EVENTS"/>
+	  <changeSet author="arpost (generated)" id="1361552652236-8">
+		 <delete tableName="JOB_EVENTS"/>
 		<delete tableName="JOBS"/>
 		<renameColumn tableName="JOBS" oldColumnName="USERID" newColumnName="USER_ID"/>
 		<addColumn tableName="JOBS">
@@ -74,7 +73,7 @@ limitations under the License.
 		<modifyDataType tableName="JOBS" columnName="CONFIGURATIONID" newDataType="VARCHAR(255)"/>
 		<renameColumn tableName="JOBS" oldColumnName="CONFIGURATIONID" newColumnName="SOURCECONFIGID"/>
 		<renameColumn tableName="JOBS" oldColumnName="TIMESTAMP" newColumnName="CREATED"/>
-		<addNotNullConstraint tableName="JOBS" columnName="SOURCECONFIGID"/>
+		<!--   <addNotNullConstraint tableName="JOBS" columnName="SOURCECONFIGID"/> --> 
 		<modifyDataType tableName="JOB_EVENTS" columnName="STATE" newDataType="TINYINT"/>
 		<addColumn tableName="JOB_EVENTS">
 			<column name="MESSAGE2" type="CLOB"/>
