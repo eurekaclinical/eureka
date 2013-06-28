@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>edu.emory.cci.aiw.cvrg</groupId>
 	<artifactId>eureka</artifactId>
-	<version>1.7</version>
+	<version>1.8-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<name>Eureka! Clinical Analytics</name>
 	<description>Eureka! Clinical Analytics is a web application that
@@ -45,7 +45,7 @@
 		<commons-io-version>2.1</commons-io-version>
 		<commons-fileupload-version>1.2.2</commons-fileupload-version>
 		<commons-lang-version>2.6</commons-lang-version>
-		<eureka-version>1.7</eureka-version>
+		<eureka-version>1.8-SNAPSHOT</eureka-version>
 		<protempa-version>2.1</protempa-version>
 		<aiw-i2b2-etl-version>1.0.3</aiw-i2b2-etl-version>
 		<oracle-version>11.2.0.3</oracle-version>
@@ -69,9 +69,9 @@
 	</properties>
 
 	<scm>
-		<developerConnection>scm:svn:https://scm.cci.emory.edu/svn/aiw/tags/eureka-1.7
+		<developerConnection>scm:svn:https://scm.cci.emory.edu/svn/aiw/trunk/cvrg/eureka
 		</developerConnection>
-		<url>https://scm.cci.emory.edu/svn/aiw/tags/eureka-1.7</url>
+		<url>https://scm.cci.emory.edu/svn/aiw/trunk/cvrg/eureka</url>
 	</scm>
 
 	<issueManagement>
