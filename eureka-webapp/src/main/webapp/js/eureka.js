@@ -219,7 +219,7 @@ eureka.trees = {
 				$(sortable).data("proptype", tmptype);
 			}
 
-			var X = $("<span></span>", {
+			/*var X = $("<span></span>", {
 				'class': "delete"
 			});
 			eureka.trees.attachDeleteAction(X, deleteActions);
@@ -227,14 +227,14 @@ eureka.trees = {
 			var txt = $("<span></span>", {
 				'class': 'desc',
 				'text': textContent
-			});
+			});*/
 			//this loop is executed only during replacement of a system element when droptype==single. In all other cases(adding element to multiple droptype lists, adding a new element to an empty list) the else statement is executed. 
 			if ($(sortable).data('drop-type') === 'single' && $(sortable).find('li').length>0) {
 				
 				//$(sortable).find('li').each(function (i,item) {
 					//$(item).find('span.delete').click();
 					
-					var $toRemove = $(sortable).find('li');
+					var toRemove = $(sortable).find('li');
 					var $target = $(sortable).parent();
 					var dialog = $('<div></div>');
 					$(dialog).dialog({
@@ -243,47 +243,10 @@ eureka.trees = {
 						'resizable': false,
 						'buttons': {
 							"Confirm": function() {
-								var type = $("input:radio[name='type']:checked").val();
-								eureka.trees.removeDroppedElement(type, $toRemove,sortable);
-								eureka.trees.setPropositionSelects(sortable.closest('[data-definition-container="true"]'));
-								$toRemove.remove();
-								if (sortable.find('li').length == 0) {
-									sortable.data('proptype','empty');
-								}
-
-								// remove the properties from the drop down
-								$('select[data-properties-provider=' + $target.attr('id') + ']').each(function (i, item) {
-									$(item).empty();
-								});
-
-								// perform any additional delete actions
-								if (deleteActions && deleteActions[type]) {
-									deleteActions[type]();
-								}
+							
+								eureka.trees.deleteItem(toRemove,sortable,deleteActions,1);
 								
-								newItem.append(X);
-								newItem.append(txt);
-								sortable.append(newItem);
-								
-								// set the properties in the properties select
-								if ($(data.o[0]).data('properties')) {
-								var properties = $(data.o[0]).data('properties').split(",");
-								$('select[data-properties-provider=' + $(target).attr('id') + ']').each(function (i, item) {
-								$(item).empty();
-								$(properties).each(function (j, property) {
-								$(item).append($('<option></option>').attr('value', property).text(property));
-								});
-								});
-								}		
-
-								// add the newly dropped element to the set of dropped elements
-								eureka.trees.addDroppedElement(propType, newItem, sortable);
-								eureka.trees.setPropositionSelects($(sortable).closest('[data-definition-container="true"]'));
-
-								// finally, call any actions specific to the type of proposition being entered/edited
-								if (dndActions && dndActions[propType]) {
-									dndActions[propType](data.o[0]);
-								}
+								eureka.trees.addNewItemToList(data,sortable,newItem,deleteActions,dndActions);
 
 								$(this).dialog("close");
 								$(this).remove();
@@ -294,38 +257,86 @@ eureka.trees = {
 							}
 						}
 					});
-					$(dialog).html('Are you sure you want to remove data element ' + $toRemove.text() + '?');
+					$(dialog).html('Are you sure you want to remove data element ' + toRemove.text() + '?');
 					$(dialog).dialog("open");
 					//$(item).remove();
 			}
 			else
 			{
-				newItem.append(X);
-				newItem.append(txt);
-				sortable.append(newItem);
-				
-				// set the properties in the properties select
-				if ($(data.o[0]).data('properties')) {
-				var properties = $(data.o[0]).data('properties').split(",");
-				$('select[data-properties-provider=' + $(target).attr('id') + ']').each(function (i, item) {
-				$(item).empty();
-				$(properties).each(function (j, property) {
-				$(item).append($('<option></option>').attr('value', property).text(property));
-				});
-				});
-				}
-
-				// add the newly dropped element to the set of dropped elements
-				eureka.trees.addDroppedElement(propType, newItem, sortable);
-				eureka.trees.setPropositionSelects($(sortable).closest('[data-definition-container="true"]'));
-
-			// finally, call any actions specific to the type of proposition being entered/edited
-			if (dndActions && dndActions[propType]) {
-				dndActions[propType](data.o[0]);
-			}
+			
+				eureka.trees.addNewItemToList(data,sortable,newItem,deleteActions,dndActions);	
 			
 		}
 	}
+},
+deleteItem:function(toRemove,sortable,deleteActions,replace){
+				var infoLabel = sortable.siblings('div.label-info');
+				var type = $("input:radio[name='type']:checked").val();
+				var target = sortable.parent();
+				eureka.trees.removeDroppedElement(type, toRemove,sortable);
+				eureka.trees.setPropositionSelects(sortable.closest('[data-definition-container="true"]'));
+				toRemove.remove();
+				if (sortable.find('li').length == 0 && replace==0) {
+						sortable.data('proptype','empty');
+						infoLabel.show();
+					}
+
+				// remove the properties from the drop down
+				$('select[data-properties-provider=' + $(target).attr('id') + ']').each(function (i, item) {
+					$(item).empty();
+				});
+				//remove the disabled attribute to the property textbox if any.
+				var parentTable = $(target).parent().parent().parent();
+				var inputProperty=$(parentTable).find('input.propertyValueField');
+				$(inputProperty).removeAttr('disabled');
+				var inputPropertycheckbox=$(parentTable).find('input.propertyValueConstraint');
+				$(inputPropertycheckbox).removeAttr('disabled');
+
+				// perform any additional delete actions
+				if (deleteActions && deleteActions[type]) {
+					deleteActions[type]();
+				}
+},
+addNewItemToList:function(data,sortable,newItem,deleteActions,dndActions){
+	var target = $(sortable).parent();
+	var propType = $("input:radio[name='type']:checked").val();
+	
+	var X = $("<span></span>", {
+		'class': "delete"
+	});
+	eureka.trees.attachDeleteAction(X, deleteActions);
+	
+	newItem.append(X);
+	newItem.append(data.o[0].children[1].childNodes[1].textContent);
+	sortable.append(newItem);
+	
+	// set the properties in the properties select
+	if ($(data.o[0]).data('properties')) {
+	var properties = $(data.o[0]).data('properties').split(",");
+	$('select[data-properties-provider=' + $(target).attr('id') + ']').each(function (i, item) {
+	$(item).empty();
+	$(properties).each(function (j, property) {
+	$(item).append($('<option></option>').attr('value', property).text(property));
+	});
+	});
+	}
+	else 
+	{
+		var parentTable = $(target).parent().parent().parent();
+		var inputProperty=$(parentTable).find('input.propertyValueField');
+		$(inputProperty).attr('disabled','disabled');
+		var inputPropertycheckbox=$(parentTable).find('input.propertyValueConstraint');
+		$(inputPropertycheckbox).attr('disabled','disabled');
+	}
+
+	// add the newly dropped element to the set of dropped elements
+	eureka.trees.addDroppedElement(propType, newItem, sortable);
+	eureka.trees.setPropositionSelects($(sortable).closest('[data-definition-container="true"]'));
+
+// finally, call any actions specific to the type of proposition being entered/edited
+if (dndActions && dndActions[propType]) {
+	dndActions[propType](data.o[0]);
+}
 },
 	setPropositionSelects: function(elem) {
 		var type = $("input:radio[name='type']:checked").val();
@@ -380,25 +391,7 @@ eureka.trees = {
 					'resizable': false,
 					'buttons': {
 						"Confirm": function() {
-							var type = $("input:radio[name='type']:checked").val();
-							eureka.trees.removeDroppedElement(type, $toRemove,$sortable);
-							eureka.trees.setPropositionSelects($sortable.closest('[data-definition-container="true"]'));
-							$toRemove.remove();
-							if ($sortable.find('li').length == 0) {
-								$sortable.data('proptype','empty');
-								$infoLabel.show();
-							}
-
-							// remove the properties from the drop down
-							$('select[data-properties-provider=' + $target.attr('id') + ']').each(function (i, item) {
-								$(item).empty();
-							});
-
-							// perform any additional delete actions
-							if (deleteActions && deleteActions[type]) {
-								deleteActions[type]();
-							}
-
+						eureka.trees.deleteItem($toRemove,$sortable,deleteActions,0);
 							$(this).dialog("close");
 							$(this).remove();
 						},

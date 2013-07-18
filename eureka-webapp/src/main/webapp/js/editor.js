@@ -438,6 +438,10 @@ $(document).ready(function(){
 		var data = $('table.sequence-relation').filter(':last').clone();
 		var appendTo = $('td.sequence-relations-container');
 		var sortable = data.find('ul.sortable');
+		var inputPropertycheckbox = data.find('input.propertyValueConstraint');
+		$(inputPropertycheckbox).removeAttr('disabled');
+		var inputProperty=data.find('input.propertyValueField');
+		$(inputProperty).removeAttr('disabled');
 		sortable.empty();
 		sortable.attr('data-count', newCount + 1);
 		data.find('span.count').text(newCount);

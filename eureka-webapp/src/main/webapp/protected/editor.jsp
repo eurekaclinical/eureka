@@ -240,7 +240,8 @@
 																	</tr>
 																	<tr>
 																		<td>
-																			<label><input type="checkbox" value="true" name="mainDataElementSpecifyProperty" <c:if test="${propositionType == 'SEQUENCE' and proposition.primaryDataElement.hasPropertyConstraint}">checked="checked"</c:if>/>with property value</label>
+																			<label><input type="checkbox" class="propertyValueConstraint" value="true" name="mainDataElementSpecifyProperty" <c:if test="${propositionType == 'SEQUENCE' and proposition.primaryDataElement.hasPropertyConstraint}">checked="checked"</c:if>
+																			<c:if test="${empty properties[proposition.primaryDataElement.dataElementKey]}">disabled="disabled"</c:if>/>with property value</label>
 																		</td>
 																		<td>
 																			<select name="mainDataElementPropertyName" data-properties-provider="mainDataElement">
@@ -250,7 +251,9 @@
 																					</c:forEach>
 																				</c:if>
 																			</select>
-																			<input type="text" class="propertyValueField" name="mainDataElementPropertyValue" value="<c:if test="${propositionType == 'SEQUENCE' and not empty proposition.primaryDataElement.propertyValue}">${proposition.primaryDataElement.propertyValue}</c:if>"/>
+																			<input type="text" class="propertyValueField" name="mainDataElementPropertyValue" value="<c:if test="${propositionType == 'SEQUENCE' and not empty proposition.primaryDataElement.propertyValue}">${proposition.primaryDataElement.propertyValue}</c:if>"
+																			<c:if test="${empty properties[proposition.primaryDataElement.dataElementKey]}">disabled="disabled"</c:if>
+																			/>
 																		</td>
 																	</tr>
 																</table>
@@ -334,7 +337,8 @@
 																	</tr>
 																	<tr>
 																		<td>
-																			<input type="checkbox" value="true" name="sequenceRelDataElementSpecifyProperty" <c:if test="${relation.dataElementField.hasPropertyConstraint}">checked="checked"</c:if>/>
+																			<input type="checkbox" class="propertyValueConstraint" value="true" name="sequenceRelDataElementSpecifyProperty" <c:if test="${relation.dataElementField.hasPropertyConstraint}">checked="checked"</c:if> 
+																			<c:if test="${empty properties[relation.dataElementField.dataElementKey]}">disabled="disabled"</c:if>/>
 																			<label>with property value</label>
 																		</td>
 																		<td colspan="5">
@@ -343,7 +347,10 @@
 																					<option value="${property}" <c:if test="${relation.dataElementField.property == property}">selected="selected"</c:if>>${property}</option>
 																				</c:forEach>
 																			</select>
-																			<input type="text" class="propertyValueField" name="sequenceRelDataElementPropertyValue" value="<c:if test="${not empty relation.dataElementField.propertyValue}">${relation.dataElementField.propertyValue}</c:if>"/>
+			
+																			<input type="text" class="propertyValueField" name="sequenceRelDataElementPropertyValue" value="<c:if test="${not empty relation.dataElementField.propertyValue}">${relation.dataElementField.propertyValue}</c:if>"
+																			<c:if test="${empty properties[relation.dataElementField.dataElementKey]}">disabled="disabled"</c:if>
+																			/>
 																		</td>
 																	</tr>
 																		</table>
