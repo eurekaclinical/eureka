@@ -136,6 +136,8 @@ ul.nav a { zoom: 1; }
   <div class="footer">
     <p>Copyright &copy; 2012-2013 ${initParam['eureka-organization-name']} -- All Rights Reserved</p>
   </div>
-  <!-- end .container --></div>
+  <!-- end .container -->
+</div>
+</div>
 </body>
 </html>
