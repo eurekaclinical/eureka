@@ -58,6 +58,14 @@ public class UserRequest {
 	 * The user's password verification.
 	 */
 	private String verifyPassword;
+	/**
+	 * The user's title. Added later on.
+	 */
+	private String title;
+	/**
+	 * The user's department. Added later on.
+	 */
+	private String department;
 
 	/**
 	 * Default constructor, calls super()
@@ -210,6 +218,45 @@ public class UserRequest {
 		this.verifyPassword = inVerifyPassword;
 	}
 
+	
+	/**
+	 * Get the user's title.
+	 * 
+	 * @return The user's title.
+	 */
+	public String getTitle() {
+		return this.title;
+	}
+
+	/**
+	 * Set the user's title
+	 * 
+	 * @param inLastName The user's title.
+	 */
+	
+	
+	public void setTitle(String inTitle) {
+		this.title = inTitle;
+	}
+	
+	/**
+	 * Get the user's department.
+	 * 
+	 * @return The user's department.
+	 */
+	public String getDepartment() {
+		return this.department;
+	}
+
+	/**
+	 * Set the user's department.
+	 * 
+	 * @param inLastName The user's department.
+	 */
+	public void setDepartment(String inDepartment) {
+		this.department = inDepartment;
+	}
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -225,7 +272,10 @@ public class UserRequest {
 				.append(this.verifyEmail).append(", organization=")
 				.append(this.organization).append(", password=")
 				.append(this.password).append(", verifyPassword=")
-				.append(this.verifyPassword).append("]");
+				.append(this.verifyPassword).append(", title=")
+				.append(this.title).append(", department=")
+				.append(this.department).append("]");
 		return builder.toString();
 	}
+
 }

@@ -20,7 +20,7 @@ limitations under the License.
 -->
 
 <databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd" logicalFilePath="changelog-master.xml">
-	<changeSet author="arpost (generated)" id="1360440238345-1">
+	    <changeSet author="arpost (generated)" id="1360440238345-1">
 		<createTable tableName="CATEGORIES">
 			<column name="ID" type="BIGINT">
 				<constraints nullable="false" primaryKey="true" primaryKeyName="SYS_C0013388"/>
@@ -586,8 +586,9 @@ limitations under the License.
 	<changeSet author="arpost (generated)" id="1360440238345-85">
 		<addForeignKeyConstraint baseColumnNames="COMPLEMENT_ID" baseTableName="VALUE_COMPARATORS" constraintName="FKA55F9C8F929E3CE8" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" referencedColumnNames="ID" referencedTableName="VALUE_COMPARATORS" referencedTableSchemaName="EUREKASERVICE" referencesUniqueColumn="false"/>
 	</changeSet>
-	
+	 
 	<!-- 1.7 changes -->
+	
 	<changeSet author="arpost (generated)" id="1360440238345-86">
 		<addColumn tableName="EXTENDED_DATA_ELEMENTS">
 			<column name="VALUETHRESHOLD_ID" type="BIGINT"/>
@@ -696,5 +697,12 @@ limitations under the License.
 	</changeSet>
 	<changeSet author="arpost" id="1360440238345-89">
 		<renameColumn tableName="FREQUENCIES" oldColumnName="ATLEASTCOUNT" newColumnName="COUNT"/>
+	</changeSet> 
+	<!-- 1.8 changes -->
+	<changeSet author="akalsan" id="1360440238345-90">
+	<addColumn tableName="USERS">
+	<column name="TITLE" type="VARCHAR(255)"/>
+	<column name="DEPARTMENT" type="VARCHAR(255)"/>
+	</addColumn>
 	</changeSet>
 </databaseChangeLog>

@@ -52,6 +52,16 @@
 	  			<td class="status white shift_left error"></td>
 	  		  </tr>
 	  		  <tr>
+	  			<td class=" white"><label id="ltitle" for="title">Title</label></td>
+	  			<td class="field white"><input id="title" name="title" type="text"  class="register_field" value="" /></td>
+	  			<td class="status white shift_left error"></td>
+	  		  </tr>	
+	  		  <tr>
+	  			<td class=" white"><label id="ldepartment" for="department">Department</label></td>
+	  			<td class="field white"><input id="department" name="department" type="text"  class="register_field" value="" /></td>
+	  			<td class="status white shift_left error"></td>
+	  		  </tr>	
+	  		  <tr>
 	  			<td class=" white"><label id="lemail" for="email">Email Address</label></td>
 	  			<td class="field white"><input id="email" name="email" type="text"  class="register_field" value="" /></td>
 	  			<td class="status white shift_left error"></td>

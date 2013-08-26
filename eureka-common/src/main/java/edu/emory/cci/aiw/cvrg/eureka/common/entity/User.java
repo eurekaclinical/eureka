@@ -73,6 +73,17 @@ public class User {
 	 * The user's last name.
 	 */
 	private String lastName;
+
+	/**
+	 * The user's title.
+	 */
+	private String title;
+	
+	/**
+	 * The user's department.
+	 */
+	private String department;
+	
 	/**
 	 * The user's email address.
 	 */
@@ -339,6 +350,42 @@ public class User {
 	 */
 	public void setRoles(final List<Role> inRoles) {
 		this.roles = inRoles;
+	}
+	
+	/**
+	 * Get the user's title.
+	 *
+	 * @return The user's title.
+	 */
+	public String getTitle() {
+		return this.title;
+	}
+
+	/**
+	 * Set the user's title.
+	 *
+	 * @param inTitle The user's title.
+	 */
+	public void setTitle(String inTitle) {
+		title = inTitle;
+	}
+	
+	/**
+	 * Get the user's Department.
+	 *
+	 * @return The user's Department.
+	 */
+	public String getDepartment() {
+		return this.department;
+	}
+
+	/**
+	 * Set the user's Department.
+	 *
+	 * @param inDepartment The user's department.
+	 */
+	public void setDepartment(String inDepartment) {
+		department = inDepartment;
 	}
 
 	@Override

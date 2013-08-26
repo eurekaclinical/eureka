@@ -40,6 +40,8 @@ public class UserInfo {
 	private String password;
 	private Date passwordExpiration;
 	private List<Long> roles = new ArrayList<Long>();
+	private String title;
+	private String department;
 
 	public Long getId() {
 		return id;
@@ -135,5 +137,21 @@ public class UserInfo {
 
 	public void setRoles(List<Long> inRoles) {
 		roles = inRoles;
+	}
+
+	public String getTitle() {
+		return title;
+	}
+
+	public void setTitle(String title) {
+		this.title = title;
+	}
+
+	public String getDepartment() {
+		return department;
+	}
+
+	public void setDepartment(String department) {
+		this.department = department;
 	}
 }

@@ -58,6 +58,8 @@ public class RegisterUserServlet extends HttpServlet {
 		String organization = req.getParameter("organization");
 		String password 	= req.getParameter("password");
 		String verifyPassword = req.getParameter("verifyPassword");
+		String title = req.getParameter("title");
+		String department = req.getParameter("department");
 
 		UserRequest userRequest = new UserRequest();
 		userRequest.setFirstName(firstName);
@@ -67,6 +69,8 @@ public class RegisterUserServlet extends HttpServlet {
 		userRequest.setOrganization(organization);
 		userRequest.setVerifyPassword(verifyPassword);
 		userRequest.setPassword(password);
+		userRequest.setTitle(title);
+		userRequest.setDepartment(department);
 
 		try {
 			servicesClient.addUser(userRequest);

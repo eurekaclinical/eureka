@@ -385,6 +385,8 @@ public class UserResource {
 		info.setVerificationCode(inUser.getVerificationCode());
 		info.setVerified(inUser.isVerified());
 		info.setRoles(this.rolesToRoleIds(inUser.getRoles()));
+		info.setDepartment(inUser.getDepartment());
+		info.setTitle(inUser.getTitle());
 		return info;
 	}
 

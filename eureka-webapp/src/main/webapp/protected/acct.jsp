@@ -50,6 +50,14 @@
 						<td colspan="3">${user.email}</td>
 					</tr>
 					<tr>
+						<td>Title:</td>
+						<td colspan="3">${user.title}</td>
+					</tr>
+					<tr>
+						<td>Department:</td>
+						<td colspan="3">${user.department}</td>
+					</tr>
+					<tr>
 						<td>&nbsp;</td>
 						<td colspan="3">
 							<button id="ChangePasswordbtn">Change Password</button>

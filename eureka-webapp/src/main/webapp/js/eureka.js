@@ -98,9 +98,9 @@ eureka.trees = {
 				}
 			},
 			// search disabled until we figure out a way to search for nodes not currently loaded in the tree
-			//		"search" : {
-			//			"show_only_matches" : true,
-			//		},
+				//"search" : {
+					//"show_only_matches" : true,
+					//},
 			"plugins" : [ "themes", "json_data", "ui", "crrm", "dnd"/*, "search"*/ ]
 		});
 
@@ -483,6 +483,12 @@ $(document).ready(function() {
 				},
 				agreement: {
 					required: true
+				},
+				title: {
+					required: true
+				},
+				department: {
+					required: true
 				}
 			},
 			messages: {
@@ -509,7 +515,9 @@ $(document).ready(function() {
 				},
 				agreement: {
 					required: "Please check the agreement checkbox"
-				}
+				},
+				title: "Enter your title",
+				department: "Enter your department"
 			},
 			// the errorPlacement has to take the table layout into account
 			errorPlacement: function(error, element) {
@@ -569,10 +577,12 @@ $(document).ready(function() {
 			var verifyPassword = $('#verifyPassword').val();
 			var  email = $('#email').val();
 			var verifyEmail = $('#verifyEmail').val();
+			var title = $('#title').val();
+			var department = $('#department').val();
 	
 			var dataString = 'firstName='+ firstName+ '&lastName=' + lastName + '&organization=' + organization + 		
 			'&password=' + password+ '&verifyPassword=' + verifyPassword + 
-			'&email=' + email + '&verifyEmail=' + verifyEmail;		
+			'&email=' + email + '&verifyEmail=' + verifyEmail + '&title=' + title + '&department=' + department;		
 			$.ajax({
 				type: 'POST',
 				url: 'register',
