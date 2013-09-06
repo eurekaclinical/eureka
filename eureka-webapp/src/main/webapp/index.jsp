@@ -36,12 +36,12 @@
             with your data, either imported from a spreadsheet or located in
             a data warehouse at your healthcare institution. It also populates 
             the database with cohort descriptions of your patients, called 
-            clinical phenotypes, that you specify as patterns in diagnoses, 
-            procedures, lab test results and other clinical and administrative 
-            data. While researchers today typically perform chart abstraction
-            to assign patients to cohorts, Eureka! does it automatically. I2b2 
-            lets you extract data and computed phenotypes about selected 
-            patients into standard statistical analysis tools.
+            clinical phenotypes, that you specify as temporal patterns in 
+			diagnoses, procedures, lab test results and other clinical and 
+			administrative data. While researchers today typically perform 
+			chart abstraction to assign patients to cohorts, Eureka! does it 
+			automatically. I2b2 lets you extract data and computed phenotypes 
+			about selected patients into standard statistical analysis tools.
         </p>
 
 		<c:if test="${applicationScope.webappProperties.demoMode}">
