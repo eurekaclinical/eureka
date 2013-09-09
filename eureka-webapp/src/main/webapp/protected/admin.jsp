@@ -42,6 +42,8 @@
         <td width="217">Email</td>
         <td width="179">Organization</td>
         <td width="100">Status</td>
+        <td width="200">Title</td>
+        <td width="200">Department</td>
       </tr>
        <c:forEach items="${users}" var="user">
         <tr>
@@ -95,6 +97,8 @@
             </c:otherwise>
             </c:choose>
             </td>
+            <td>${user.title}</td>
+            <td>${user.department}</td>
         </tr>
       </c:forEach>
       <tr>

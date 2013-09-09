@@ -48,6 +48,14 @@
                         <td>Organization:</td>
                         <td colspan="4">${user.organization}</td>
                     </tr>
+                     <tr>
+                        <td>Title:</td>
+                        <td colspan="4">${user.title}</td>
+                    </tr>
+                     <tr>
+                        <td>Organization:</td>
+                        <td colspan="4">${user.department}</td>
+                    </tr>
                     <tr>
                         <td>Email:</td>
                         <td colspan="4">${user.email}</td>
