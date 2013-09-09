@@ -83,6 +83,8 @@ public class UserResourceTest extends AbstractServiceResourceTest {
 		String organization = "Emory University";
 		String password = "password";
 		String verifyPassword = "password";
+		String title = "Software Engineer";
+		String department = "CCI";
 
 		UserRequest userRequest = new UserRequest();
 
@@ -93,6 +95,8 @@ public class UserResourceTest extends AbstractServiceResourceTest {
 		userRequest.setOrganization(organization);
 		userRequest.setPassword(password);
 		userRequest.setVerifyPassword(verifyPassword);
+		userRequest.setDepartment(department);
+		userRequest.setTitle(title);
 
 		ClientResponse response = webResource.path("/api/userrequest/new")
 				.type(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON)

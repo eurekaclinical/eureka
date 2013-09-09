@@ -207,6 +207,18 @@ public class UserRequestResource {
 				this.validationError = "Mismatched passwords";
 				result = false;
 			}
+			
+			if(userRequest.getTitle() == null)
+			{
+				this.validationError = "Title cannot be null";
+				result = false;
+			}
+			
+			if(userRequest.getDepartment() == null)
+			{
+				this.validationError = "Department cannot be null";
+				result = false;
+			}
 		} else {
 			this.validationError = "Email address already exists";
 			result = false;

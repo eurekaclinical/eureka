@@ -53,7 +53,7 @@
                         <td colspan="4">${user.title}</td>
                     </tr>
                      <tr>
-                        <td>Organization:</td>
+                        <td>Department:</td>
                         <td colspan="4">${user.department}</td>
                     </tr>
                     <tr>
