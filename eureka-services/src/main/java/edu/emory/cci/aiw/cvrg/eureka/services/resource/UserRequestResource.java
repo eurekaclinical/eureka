@@ -141,6 +141,8 @@ public class UserRequestResource {
 			user.setRoles(this.getDefaultRoles());
 			user.setPassword(userRequest.getPassword());
 			user.setVerificationCode(UUID.randomUUID().toString());
+			user.setDepartment(userRequest.getDepartment());
+			user.setTitle(userRequest.getTitle());
 			LOGGER.debug("Saving new user {}", user.getEmail());
 			this.userDao.create(user);
 			try {
