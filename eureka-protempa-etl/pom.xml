@@ -149,6 +149,10 @@
 			<groupId>com.h2database</groupId>
 			<artifactId>h2</artifactId>
 		</dependency>
+        <dependency>
+            <groupId>edu.emory.cci.aiw</groupId>
+            <artifactId>exist-dsb</artifactId>
+        </dependency>
 	</dependencies>
 	<profiles>
 		<profile>
