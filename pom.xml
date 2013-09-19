@@ -47,7 +47,7 @@
 		<commons-lang-version>2.6</commons-lang-version>
 		<eureka-version>1.8-SNAPSHOT</eureka-version>
 		<protempa-version>2.1</protempa-version>
-		<aiw-i2b2-etl-version>1.0.3</aiw-i2b2-etl-version>
+		<aiw-i2b2-etl-version>1.0.5-SNAPSHOT</aiw-i2b2-etl-version>
 		<oracle-version>11.2.0.3</oracle-version>
 		<freemarker-version>2.3.9</freemarker-version>
 		<jpamodelgen-version>1.2.0.Final</jpamodelgen-version>
