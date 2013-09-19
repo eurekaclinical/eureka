@@ -23,7 +23,7 @@
 	<properties>
 		<!-- Populates links to the website from Eureka. -->
 		<aiw.site.url>http://aiw.sourceforge.net</aiw.site.url>
-		
+
 		<eureka.dev.site.url>${project.url}</eureka.dev.site.url>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<currentStableVersion>1.6</currentStableVersion>
@@ -55,6 +55,7 @@
 		<ehcache-version>2.6.0</ehcache-version>
 		<tomcat-plugin-version>1.1</tomcat-plugin-version>
         <exist-dsb-version>0.1</exist-dsb-version>
+        <mimc-dsb-version>1.0-SNAPSHOT</mimc-dsb-version>
 
 		<!-- properties for site creation -->
 		<javautil-version>2.1</javautil-version>
@@ -340,7 +341,7 @@
 								<groupId>org.apache.maven.plugins</groupId>
 								<artifactId>maven-checkstyle-plugin</artifactId>
 								<version>2.9.1</version>
-								<configuration>  
+								<configuration>
 									<configLocation>http://aiw.sourceforge.net/dev/aiw-checkstyle-1.0/eureka-checkstyle.xml</configLocation>
 								</configuration>
 							</plugin>
@@ -370,7 +371,7 @@
 						<dependency>
 							<groupId>org.liquibase.ext</groupId>
 							<artifactId>liquibase-hibernate</artifactId>
-							<version>2.0.3.1-WAF_AIW</version>                        
+							<version>2.0.3.1-WAF_AIW</version>
 						</dependency>
 						<dependency>
 							<groupId>org.hibernate</groupId>
@@ -734,11 +735,11 @@
 				<scope>provided</scope>
 			</dependency>
 			<!-- These are pulled into eureka-services and eureka-protempa-etl
-			by other dependencies, but CAS requires them to be in 
+			by other dependencies, but CAS requires them to be in
 			$CATALINA_HOME/lib. The versions CAS requires are newer than those
 			that are pulled in. So we specify the versions and make them
 			provided so they are there at compile time but not pulled into the
-			warfiles. 
+			warfiles.
 			-->
 			<dependency>
 				<groupId>commons-codec</groupId>
@@ -752,11 +753,16 @@
 				<version>${commons-logging-version}</version>
 				<scope>provided</scope>
 			</dependency>
-            <dependency>
-                <groupId>edu.emory.cci.aiw</groupId>
-                <artifactId>exist-dsb</artifactId>
-                <version>${exist-dsb-version}</version>
-            </dependency>
+			<dependency>
+				<groupId>edu.emory.cci.aiw</groupId>
+				<artifactId>exist-dsb</artifactId>
+				<version>${exist-dsb-version}</version>
+			</dependency>
+			<dependency>
+				<groupId>edu.emory.cci</groupId>
+				<artifactId>aiw-mimicii-dsb</artifactId>
+				<version>${mimc-dsb-version}</version>
+			</dependency>
 		</dependencies>
 	</dependencyManagement>
 
