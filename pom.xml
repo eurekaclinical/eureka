@@ -46,7 +46,7 @@
 		<commons-fileupload-version>1.2.2</commons-fileupload-version>
 		<commons-lang-version>2.6</commons-lang-version>
 		<eureka-version>1.8-SNAPSHOT</eureka-version>
-		<protempa-version>2.1</protempa-version>
+		<protempa-version>2.2-SNAPSHOT</protempa-version>
 		<aiw-i2b2-etl-version>1.0.5-SNAPSHOT</aiw-i2b2-etl-version>
 		<oracle-version>11.2.0.3</oracle-version>
 		<freemarker-version>2.3.9</freemarker-version>
@@ -58,7 +58,7 @@
         <mimc-dsb-version>1.0-SNAPSHOT</mimc-dsb-version>
 
 		<!-- properties for site creation -->
-		<javautil-version>2.1</javautil-version>
+		<javautil-version>2.2-SNAPSHOT</javautil-version>
 		<jaas-login-module-version>1.0.2</jaas-login-module-version>
 		<jaas-login-module-repo>aiw</jaas-login-module-repo>
 		<hibernate-hbm2ddl-auto>validate</hibernate-hbm2ddl-auto>
