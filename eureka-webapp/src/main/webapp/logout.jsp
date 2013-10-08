@@ -20,7 +20,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="/WEB-INF/tlds/template.tld" prefix="template"%>
 
-<template:insert template="/templates/eureka_main.jsp">
+<template:insert template="/templates/eureka_sidebar.jsp">
 
 	<template:content name="sidebar">
 		<img src="${pageContext.request.contextPath}/images/scientific_research.jpg" />
@@ -32,9 +32,5 @@
 			<p>You have successfully logged out of Eureka! Clinical Analytics.</p>
 			<p>For security reasons, exit your web browser.</p>
 		</div>
-	</template:content>
-
-	<template:content name="subcontent">
-		<%@ include file="common/rss.jspf" %>
 	</template:content>
 </template:insert>

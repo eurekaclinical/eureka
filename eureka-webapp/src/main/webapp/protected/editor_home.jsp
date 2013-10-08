@@ -21,7 +21,7 @@
 <%@ taglib uri="/WEB-INF/tlds/template.tld" prefix="template"%>
 
 
-<template:insert template="/templates/eureka_main.jsp">
+<template:insert template="/templates/eureka_sidebar.jsp">
 
 	<template:content name="sidebar">
          <div class="tooltip" id="tooltip" style="text-align: left">
@@ -62,11 +62,6 @@
 				</tr>
 			</c:forEach>
 		</table>
-	</template:content>
-
-	<template:content name="subcontent">
-			</div>
-		</div>
 	</template:content>
 
 </template:insert>

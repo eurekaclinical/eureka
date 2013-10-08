@@ -20,7 +20,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="/WEB-INF/tlds/template.tld" prefix="template"%>
 
-<template:insert template="/templates/eureka_main.jsp">
+<template:insert template="/templates/eureka_sidebar.jsp">
 
 
 

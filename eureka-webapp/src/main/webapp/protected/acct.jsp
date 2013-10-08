@@ -25,7 +25,7 @@
 
 
 
-<template:insert template="/templates/eureka_main.jsp">
+<template:insert template="/templates/eureka_sidebar.jsp">
 	<template:content name="sidebar">
 		<img src="${pageContext.request.contextPath}/images/bioinformatics.jpg" />
 	</template:content>
@@ -108,10 +108,6 @@
 		<div id="passwordChangeComplete" class = "pw_reset left_padding">
 		</div>
 	</div>
-</template:content>
-
-<template:content name="subcontent">
-	<%@ include file="../common/rss.jspf" %>
 </template:content>
 
 </template:insert>

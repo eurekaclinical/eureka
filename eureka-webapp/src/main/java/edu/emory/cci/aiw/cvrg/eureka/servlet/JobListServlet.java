@@ -21,6 +21,7 @@ package edu.emory.cci.aiw.cvrg.eureka.servlet;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.Destination;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.Job;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.SourceConfig;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.SourceConfigParams;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.SystemElement;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ClientException;
@@ -53,7 +54,7 @@ public class JobListServlet extends HttpServlet {
 			List<Destination> destinations = servicesClient.getDestinations();
 			req.setAttribute("destinations", destinations);
 			req.setAttribute("dateRangeSides", DateRangeSide.values());
-
+			
 			String jobIdStr = req.getParameter("jobId");
 			Job job;
 			if (jobIdStr != null) {
@@ -74,6 +75,20 @@ public class JobListServlet extends HttpServlet {
 			}
 			if (job != null) {
 				req.setAttribute("jobStatus", job.toJobStatus());
+				Destination destination = 
+						servicesClient.getDestination(job.getDestinationId());
+				String destName = destination.getDisplayName();
+				if (destName == null) {
+					destName = destination.getId();
+				}
+				req.setAttribute("destination", destName);
+				SourceConfig sourceConfig =
+						servicesClient.getSourceConfig(job.getSourceConfigId());
+				String sourceConfigName = sourceConfig.getDisplayName();
+				if (sourceConfigName == null) {
+					sourceConfigName = sourceConfig.getId();
+				}
+				req.setAttribute("sourceConfig", sourceConfigName);
 			}
 
 			req.getRequestDispatcher("/protected/tool.jsp").forward(req, resp);

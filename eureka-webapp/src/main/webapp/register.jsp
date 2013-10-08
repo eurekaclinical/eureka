@@ -21,7 +21,7 @@
 <%@ taglib uri="/WEB-INF/tlds/template.tld" prefix="template" %>
 
 
-<template:insert template="/templates/eureka_main.jsp">
+<template:insert template="/templates/eureka_sidebar.jsp">
 
 	<template:content name="sidebar">
 		<img src="${pageContext.request.contextPath}/images/informatics.jpg" />
@@ -106,9 +106,5 @@
         </br> You will be notified once your account is activated.
         </p>
 	</div>
-	</template:content>
-	
-	<template:content name="subcontent">
-		<%@ include file="common/rss.jspf" %>
 	</template:content>
 </template:insert>

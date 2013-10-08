@@ -23,7 +23,7 @@
 
 
 
-<template:insert template="/templates/eureka_main.jsp">
+<template:insert template="/templates/eureka_sidebar.jsp">
 
 
     <template:content name="sidebar">
@@ -137,9 +137,6 @@
 						});
 					});
 				</script>
-    </template:content>
-    <template:content name="subcontent">
-        <%@ include file="../common/rss.jspf" %>
     </template:content>
 
 </template:insert>

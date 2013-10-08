@@ -21,7 +21,7 @@
 <%@ taglib uri="/WEB-INF/tlds/template.tld" prefix="template"%>
 
 
-<template:insert template="/templates/eureka_main.jsp">
+<template:insert template="/templates/eureka_sidebar.jsp">
 
 	<template:content name="sidebar">
 		<img src="${pageContext.request.contextPath}/images/medical_research.jpg" />
@@ -99,11 +99,6 @@
 		<p>Check out the Eureka! website at 
 			<a href="${initParam['aiw-site-url']}" target="_blank">${initParam['aiw-site-url']}</a>.
 		</p>
-	</template:content>
-	<template:content name="subcontent">
-	</template:content>
-	<template:content name="subcontent">
-		<%@ include file="common/rss.jspf" %>
 	</template:content>
 
 </template:insert>

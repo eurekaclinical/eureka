@@ -376,6 +376,13 @@ public class ServicesClient extends EurekaClient {
 		String path = "/api/protected/sourceconfig/list";
 		return doGet(path, SourceConfigList);
 	}
+	
+	public SourceConfig getSourceConfig(String sourceConfigId) throws ClientException {
+		String path = UriBuilder.fromPath("/api/protected/sourceconfig/")
+				.segment(sourceConfigId)
+				.build().toString();
+		return doGet(path, SourceConfig.class);
+	}
 
 	public List<SourceConfigParams> getSourceConfigParams() throws ClientException {
 		String path = "/api/protected/sourceconfig/parameters/list";

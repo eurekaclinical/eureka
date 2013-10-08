@@ -21,12 +21,7 @@
 <%@ taglib uri="/WEB-INF/tlds/template.tld" prefix="template"%>
 
 
-<template:insert template="/templates/eureka_main.jsp">
-
-	<template:content name="sidebar">
-		<img
-			src="${pageContext.request.contextPath}/images/clinical_research.jpg" />
-	</template:content>
+<template:insert template="/templates/eureka_main2.jsp">
 
 	<template:content name="content">
 		<h3>Contact Information</h3>
@@ -45,11 +40,8 @@
 			</address>
           </div>
           <div class="fltlft margin">
-           <iframe width="300" height="300" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" src="https://maps.google.com/maps?f=q&amp;source=s_q&amp;hl=en&amp;geocode=&amp;q=Psychology+Building,+Emory+University,+Atlanta,+GA+30322&amp;aq=&amp;sll=33.772352,-84.395771&amp;sspn=0.010666,0.01369&amp;ie=UTF8&amp;hq=&amp;hnear=Psychology+Bldg,+Druid+Hills,+DeKalb,+Georgia+30307&amp;t=m&amp;ll=33.794948,-84.327407&amp;spn=0.010699,0.012875&amp;z=15&amp;iwloc=A&amp;output=embed"></iframe><br /><small><a href="https://maps.google.com/maps?f=q&amp;source=embed&amp;hl=en&amp;geocode=&amp;q=Psychology+Building,+Emory+University,+Atlanta,+GA+30322&amp;aq=&amp;sll=33.772352,-84.395771&amp;sspn=0.010666,0.01369&amp;ie=UTF8&amp;hq=&amp;hnear=Psychology+Bldg,+Druid+Hills,+DeKalb,+Georgia+30307&amp;t=m&amp;ll=33.794948,-84.327407&amp;spn=0.010699,0.012875&amp;z=15&amp;iwloc=A" style="color:#0000FF;text-align:left">View Larger Map</a></small>
+           <iframe width="500" height="400" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" src="https://maps.google.com/maps?f=q&amp;source=s_q&amp;hl=en&amp;geocode=&amp;q=Psychology+Building,+Emory+University,+Atlanta,+GA+30322&amp;aq=&amp;sll=33.772352,-84.395771&amp;sspn=0.010666,0.01369&amp;ie=UTF8&amp;hq=&amp;hnear=Psychology+Bldg,+Druid+Hills,+DeKalb,+Georgia+30307&amp;t=m&amp;ll=33.794948,-84.327407&amp;spn=0.010699,0.012875&amp;z=15&amp;iwloc=A&amp;output=embed"></iframe><br /><small><a href="https://maps.google.com/maps?f=q&amp;source=embed&amp;hl=en&amp;geocode=&amp;q=Psychology+Building,+Emory+University,+Atlanta,+GA+30322&amp;aq=&amp;sll=33.772352,-84.395771&amp;sspn=0.010666,0.01369&amp;ie=UTF8&amp;hq=&amp;hnear=Psychology+Bldg,+Druid+Hills,+DeKalb,+Georgia+30307&amp;t=m&amp;ll=33.794948,-84.327407&amp;spn=0.010699,0.012875&amp;z=15&amp;iwloc=A" style="color:#0000FF;text-align:left">View Larger Map</a></small>
 		  </div>
 
-	</template:content>
-	<template:content name="subcontent">
-		<%@ include file="common/rss.jspf" %>
 	</template:content>
 </template:insert>

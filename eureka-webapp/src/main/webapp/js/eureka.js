@@ -810,7 +810,7 @@ $(document).ready(function() {
 		return false;
 	});
 	 
-	if ($("#jobUpload").length > 0){
+	if ($("form#uploadForm").length > 0){
 		// Helper functions
 		function updateSubmitButtonStatus() {
 			var doDisable = false;
@@ -847,7 +847,7 @@ $(document).ready(function() {
 		
 		function onFinish() {
 			$('#uploadForm').prop('disabled', false);
-			$('#jobUpload').hide();
+			//$('#jobUpload').hide();
 			$('form#uploadForm').data('job-running', false)
 			updateSubmitButtonStatus();
 		}
@@ -857,7 +857,7 @@ $(document).ready(function() {
 			if ($('form#uploadForm').data('job-running')) {
 				running = true;
 			} else {
-				$('#jobUpload').hide();
+				//$('#jobUpload').hide();
 			}
 			var sourceId = $("form#uploadForm").find('select[name="source"]').val();
 			updateInputFields(sourceId);

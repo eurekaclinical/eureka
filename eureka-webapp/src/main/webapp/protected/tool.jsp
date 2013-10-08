@@ -21,12 +21,12 @@
 <%@ taglib uri="/WEB-INF/tlds/template.tld" prefix="template"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 
-<template:insert template="/templates/eureka_main.jsp">
+<template:insert template="/templates/eureka_main2.jsp">
 
-    <template:content name="sidebar">
+    <%--<template:content name="sidebar">
         <img
             src="${pageContext.request.contextPath}/images/bioinformatics.jpg" />
-    </template:content>
+    </template:content>--%>
 
     <template:content name="content">
 
@@ -41,11 +41,23 @@
 
 			<table>
 				<tr>
-					<td width="252">Job Status</td>
-					<td width="204">Status Date</td>
-					<td width="151">Warnings & Errors</td>
+					<td>Source</td>
+					<td>Destination</td>
+					<td>Job Status</td>
+					<td>Status Date</td>
+					<td>Warnings & Errors</td>
 				</tr>
 				<tr>
+					<td>
+						<div id="sourceConfig">
+							${sourceConfig}
+						</div>
+					</td>
+					<td>
+						<div id="destination">
+							${destination}
+						</div>
+					</td>
 					<td>
 						<div id="status">
 							<c:choose>
@@ -183,12 +195,12 @@
 			</c:choose>
 		</form>
     </template:content>
-    <template:content name="subcontent">
+    <%--<template:content name="subcontent">
         <div id="jobUpload">
             <h3>Please wait while your data is loading.....</h3>
             <img src="${pageContext.request.contextPath}/images/e-ani.gif"
 				 hspace="450" align="middle" />
         </div>
-    </template:content>
+    </template:content>--%>
 </template:insert>
 

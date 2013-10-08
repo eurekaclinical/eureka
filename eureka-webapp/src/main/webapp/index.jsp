@@ -71,7 +71,8 @@
 	</template:content>
 	<template:content name="subcontent">
 		<h3>Release Notes</h3>
-		<div class="release_notes sub_width" style="position: absolute; top: 570px; left: 10px; background-color:#fff;">
+		<div class="release_notes sub_width">
+			<p>07.01.2013: Version 1.7 is out! It provides enhancements to the data element editor and integration with jasig CAS (Central Authentication Service).</p>
 			<p>02.15.2013: Version 1.6.1 is out! It fixes bugs in registration verification and editing data elements with property constraints.</p>
 			<p>01.28.2013: Version 1.6 is out! The user-defined data element editor now supports four kinds of derived data elements for specifying various temporal patterns.</p>
 			<p>10.11.2012: Version 1.5 is out! We now have preliminary user-defined derived data elements.  Click the &quot;Editor&quot; link after logging in.</p>
