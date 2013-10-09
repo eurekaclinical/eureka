@@ -145,6 +145,8 @@ public final class CategorizationTranslator implements
 				return CategoricalType.EVENT;
 			case PRIMITIVE_PARAMETER:
 				return CategoricalType.PRIMITIVE_PARAMETER;
+			case SEQUENTIAL_TEMPORAL_PATTERN_ABSTRACTION:
+				return CategoricalType.SEQUENTIAL_TEMPORAL_PATTERN_ABSTRACTION;
 			default:
 				throw new AssertionError("Invalid category type: "
 						+ proposition.getCategoryType());

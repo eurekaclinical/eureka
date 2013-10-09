@@ -241,7 +241,7 @@
 																	<tr>
 																		<td>
 																			<label><input type="checkbox" class="propertyValueConstraint" value="true" name="mainDataElementSpecifyProperty" <c:if test="${propositionType == 'SEQUENCE' and proposition.primaryDataElement.hasPropertyConstraint}">checked="checked"</c:if>
-																			<c:if test="${empty properties[proposition.primaryDataElement.dataElementKey]}">disabled="disabled"</c:if>/>with property value</label>
+																			<c:if test="${propositionType == 'SEQUENCE' and empty properties[proposition.primaryDataElement.dataElementKey]}">disabled="disabled"</c:if>/>with property value</label>
 																		</td>
 																		<td>
 																			<select name="mainDataElementPropertyName" data-properties-provider="mainDataElement">
@@ -252,7 +252,7 @@
 																				</c:if>
 																			</select>
 																			<input type="text" class="propertyValueField" name="mainDataElementPropertyValue" value="<c:if test="${propositionType == 'SEQUENCE' and not empty proposition.primaryDataElement.propertyValue}">${proposition.primaryDataElement.propertyValue}</c:if>"
-																			<c:if test="${empty properties[proposition.primaryDataElement.dataElementKey]}">disabled="disabled"</c:if>
+																			<c:if test="${propositionType == 'SEQUENCE' and empty properties[proposition.primaryDataElement.dataElementKey]}">disabled="disabled"</c:if>
 																			/>
 																		</td>
 																	</tr>
@@ -338,7 +338,7 @@
 																	<tr>
 																		<td>
 																			<input type="checkbox" class="propertyValueConstraint" value="true" name="sequenceRelDataElementSpecifyProperty" <c:if test="${relation.dataElementField.hasPropertyConstraint}">checked="checked"</c:if> 
-																			<c:if test="${empty properties[relation.dataElementField.dataElementKey]}">disabled="disabled"</c:if>/>
+																			<c:if test="${propositionType == 'SEQUENCE' and empty properties[relation.dataElementField.dataElementKey]}">disabled="disabled"</c:if>/>
 																			<label>with property value</label>
 																		</td>
 																		<td colspan="5">
