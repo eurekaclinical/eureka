@@ -19,11 +19,25 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<tomcat.port>8080</tomcat.port>
 		<tomcat.httpsPort>8443</tomcat.httpsPort>
+		<maven.build.timestamp.format>yyyyMMddHHmmss</maven.build.timestamp.format>
 	</properties>
 
 	<build>
 		<finalName>eureka-webapp</finalName>
 		<plugins>
+			<plugin>
+                <groupId>net.alchim31.maven</groupId>
+                <artifactId>yuicompressor-maven-plugin</artifactId>
+                <configuration>
+                    <suffix>${maven.build.timestamp}</suffix>
+					<includes>
+						<include>js/editor.js</include>
+						<include>js/eureka.js</include>
+						<include>css/editor.css</include>
+						<include>css/styles.css</include>
+					</includes>
+                </configuration>
+            </plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
@@ -38,6 +52,12 @@
 				<version>2.3</version>
 				<configuration>
 					<filteringDeploymentDescriptors>true</filteringDeploymentDescriptors>
+					<packagingExcludes>
+						js/editor.js, 
+						js/eureka.js, 
+						css/editor.css, 
+						css/styles.css
+					</packagingExcludes>
 				</configuration>
 			</plugin>
 			<plugin>

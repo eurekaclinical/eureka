@@ -23,7 +23,7 @@
 	<properties>
 		<!-- Populates links to the website from Eureka. -->
 		<aiw.site.url>http://aiw.sourceforge.net</aiw.site.url>
-
+		<eureka.build.timestamp>${maven.build.timestamp}</eureka.build.timestamp>
 		<eureka.dev.site.url>${project.url}</eureka.dev.site.url>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<currentStableVersion>1.6</currentStableVersion>
@@ -54,8 +54,8 @@
 		<mysql-version>5.1.18</mysql-version>
 		<ehcache-version>2.6.0</ehcache-version>
 		<tomcat-plugin-version>1.1</tomcat-plugin-version>
-        <exist-dsb-version>0.1</exist-dsb-version>
-        <mimc-dsb-version>1.0-SNAPSHOT</mimc-dsb-version>
+		<exist-dsb-version>0.1</exist-dsb-version>
+		<mimc-dsb-version>1.0-SNAPSHOT</mimc-dsb-version>
 
 		<!-- properties for site creation -->
 		<javautil-version>2.2-SNAPSHOT</javautil-version>
@@ -232,6 +232,24 @@
 	<build>
 		<pluginManagement>
 			<plugins>
+				<plugin>
+					<groupId>net.alchim31.maven</groupId>
+					<artifactId>yuicompressor-maven-plugin</artifactId>
+					<version>1.3.2</version>
+					<executions>
+						<execution>
+							<phase>prepare-package</phase>
+							<goals>
+								<goal>compress</goal>
+							</goals>
+						</execution>
+					</executions>
+					<configuration>
+						<encoding>UTF-8</encoding>
+						<linebreakpos>-1</linebreakpos>
+						<nosuffix>false</nosuffix>
+					</configuration>
+				</plugin>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-compiler-plugin</artifactId>

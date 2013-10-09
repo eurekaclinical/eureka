@@ -46,12 +46,12 @@ ul.nav a { zoom: 1; }
 
 
 <link href="${pageContext.request.contextPath}/css/jquery-ui.css" type="text/css" rel="stylesheet"/>
-<link href="${pageContext.request.contextPath}/css/styles.css" rel="stylesheet" type="text/css" />
+<link href="${pageContext.request.contextPath}/css/styles${initParam['eureka-build-timestamp']}.css" rel="stylesheet" type="text/css" />
 <script src="${pageContext.request.contextPath}/js/jquery-1.7.1.min.js"></script>
 <script src="${pageContext.request.contextPath}/js/jquery.validate.js"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery-ui.min.js"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery.jstree.js"></script>
-<script src="${pageContext.request.contextPath}/js/eureka.js"></script>
+<script src="${pageContext.request.contextPath}/js/eureka${initParam['eureka-build-timestamp']}.js"></script>
 <link href="${pageContext.request.contextPath}/themes/default/style.css" rel="stylesheet" type="text/css" />
 
 
