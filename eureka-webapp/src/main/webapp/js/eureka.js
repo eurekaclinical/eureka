@@ -884,39 +884,46 @@ $(document).ready(function() {
 				updateSubmitButtonStatus();
 			});
 		
+		var submitted = false;
 		$uploadForm.submit(function() {
 			$uploadForm.data('job-running', true)
 			var $dataElement = $uploadForm.find('ul[data-type="main"]').find('li').first();
 			$("input[name='dateRangeDataElementKey']").val($dataElement.data('key'));
 			updateSubmitButtonStatus();
+			submitted = true;
 		});
 		
 		
 		var running = setInitialStatus();
 		
 		function poll() {
-			var jobId = $('form#uploadForm').data('jobid');
-			$.ajax({
-				url : "jobpoll" + (jobId != null ? "?jobId=" + jobId : ""),
-				success : function(data) {
-					$('#status').text(data.status);
-					$('#startedDate').text(data.startedDateFormatted);
-					$('#finishedDate').text(data.finishedDateFormatted);
-					$('#messages').text(data.mostRecentMessage);
-					if (running && !data.jobSubmitted) {
-						onFinish();
-						running = false;
-					}
-				},
-				error : function(xhr) {
-					$('#status').text("Job status unavailable");
-					$('#startedDate').empty();
-					$('#finishedDate').empty();
-					$('#messages').empty();
-				},
-				dataType : "json"
-			});
-
+			if (!submitted) {
+				var jobId = $('form#uploadForm').data('jobid');
+				$.ajax({
+					url : "jobpoll" + (jobId != null ? "?jobId=" + jobId : ""),
+					success : function(data) {
+						if (!submitted) {
+							$('#status').text(data.status);
+							$('#startedDate').text(data.startedDateFormatted);
+							$('#finishedDate').text(data.finishedDateFormatted);
+							$('#messages').text(data.mostRecentMessage);
+							if (running && !data.jobSubmitted) {
+								onFinish();
+								running = false;
+							}
+						}
+					},
+					error : function(xhr) {
+						if (!submitted) {
+							$('#status').text("Job status unavailable");
+							$('#startedDate').empty();
+							$('#finishedDate').empty();
+							$('#messages').empty();
+						}
+					},
+					dataType : "json"
+				});
+			}
 		}
 		
 		poll();

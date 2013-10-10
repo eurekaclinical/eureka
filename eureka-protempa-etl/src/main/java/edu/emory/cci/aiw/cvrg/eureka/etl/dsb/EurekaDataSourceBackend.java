@@ -131,6 +131,7 @@ public final class EurekaDataSourceBackend extends RelationalDbDataSourceBackend
 		if (dataFiles != null) {
 			this.dataProviders = new XlsxDataProvider[dataFiles.length];
 			for (int i = 0; i < dataFiles.length; i++) {
+				System.err.println("Processing data file " + dataFiles[i].getName());
 				try {
 					this.dataProviders[i] = new XlsxDataProvider(dataFiles[i], null);
 				} catch (DataProviderException ex) {
@@ -787,7 +788,7 @@ public final class EurekaDataSourceBackend extends RelationalDbDataSourceBackend
 	}
 
 	@Override
-	public void exceptionOccurred(ProtempaException protempaException) {
+	public void failureOccurred(Throwable protempaException) {
 		this.exceptionOccurred = true;
 	}
 
