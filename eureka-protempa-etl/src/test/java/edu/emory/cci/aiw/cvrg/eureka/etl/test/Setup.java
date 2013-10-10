@@ -28,7 +28,7 @@ import com.google.inject.Provider;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.EtlUser;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.JobEntity;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.JobState;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.JobEventType;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.SourceConfigEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.test.TestDataException;
 import edu.emory.cci.aiw.cvrg.eureka.common.test.TestDataProvider;
@@ -88,7 +88,7 @@ public class Setup implements TestDataProvider {
 		this.job.setSourceConfigId("0");
 		this.job.setDestinationId("0");
 		this.job.setEtlUser(this.etlUser);
-		this.job.setNewState(JobState.CREATED, null, null);
+		this.job.newEvent(JobEventType.VALIDATING, null, null);
 		entityManager.persist(this.job);
 		entityManager.getTransaction().commit();
 	}

@@ -28,7 +28,7 @@ import org.slf4j.LoggerFactory;
 import com.google.inject.Inject;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.JobEntity;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.JobState;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.JobEventType;
 import edu.emory.cci.aiw.cvrg.eureka.etl.dao.JobDao;
 import org.protempa.backend.dsb.filter.Filter;
 
@@ -36,7 +36,7 @@ public final class Task implements Runnable {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(Task.class);
 	private final JobDao jobDao;
-	private final ETL etl;
+	private ETL etl;
 	private Long jobId;
 	private List<PropositionDefinition> propositionDefinitions;
 	private List<String> propIdsToShow;
@@ -63,7 +63,7 @@ public final class Task implements Runnable {
 	public void setFilter(Filter filter) {
 		this.filter = filter;
 	}
-	
+
 	List<String> getPropositionIdsToShow() {
 		return propIdsToShow;
 	}
@@ -87,8 +87,8 @@ public final class Task implements Runnable {
 			myJob = this.jobDao.retrieve(this.jobId);
 			LOGGER.info("{} just got a job from user {}, id={}",
 					myJob.getEtlUser(), new Object[]{
-						Thread.currentThread().getName(), myJob.toString()});
-			myJob.setNewState(JobState.PROCESSING, null, null);
+				Thread.currentThread().getName(), myJob.toString()});
+			myJob.newEvent(JobEventType.PROCESSING, "Processing started", null);
 			LOGGER.debug("About to save job: {}", myJob.toString());
 			this.jobDao.update(myJob);
 
@@ -103,7 +103,8 @@ public final class Task implements Runnable {
 
 			this.etl.run(myJob, propDefArray, propIdsToShowArray, this.filter);
 			this.etl.close();
-			myJob.setNewState(JobState.DONE, null, null);
+			this.etl = null;
+			myJob.newEvent(JobEventType.COMPLETED, "Processing completed without error", null);
 			this.jobDao.update(myJob);
 			LOGGER.info("{} completed job {} for user {} without errors.",
 					Thread.currentThread().getName(),
@@ -118,11 +119,17 @@ public final class Task implements Runnable {
 		} finally {
 			if (myJob != null) {
 				try {
-					myJob.setNewState(JobState.DONE, null, null);
-					LOGGER.info("{} finished job {} for user {} with errors.",
+					myJob.newEvent(JobEventType.FAILED, "Processing failed", null);
+					LOGGER.error("{} finished job {} for user {} with errors.",
 							Thread.currentThread().getName(),
 							new Object[]{myJob.getId(), myJob.getEtlUser()});
 					this.jobDao.update(myJob);
+				} catch (Throwable ignore) {
+				}
+			}
+			if (this.etl != null) {
+				try {
+					this.etl.close();
 				} catch (Throwable ignore) {
 				}
 			}
@@ -135,21 +142,20 @@ public final class Task implements Runnable {
 		if (job != null) {
 			LOGGER.error("Job " + job.getId() + " for user "
 					+ job.getEtlUser().getUsername() + " failed: " + e.getMessage(), e);
+			StackTraceElement[] ste = e.getStackTrace();
+			String[] st = new String[ste.length];
+			for (int i = 0; i < ste.length; i++) {
+				st[i] = ste[i].toString();
+			}
+			String msg = e.getMessage();
+			if (msg == null) {
+				msg = e.getClass().getName();
+			}
+			job.newEvent(JobEventType.ERROR, msg, st);
+			this.jobDao.update(job);
 		} else {
 			LOGGER.error("Could not create job: " + e.getMessage(), e);
 		}
-		StackTraceElement[] ste = e.getStackTrace();
-		String[] st = new String[ste.length];
-		for (int i = 0; i < ste.length; i++) {
-			st[i] = ste[i].toString();
-		}
-		String msg = e.getMessage();
-		if (msg == null) {
-			msg = e.getClass().getName();
-		}
-		if (job != null) {
-			job.setNewState(JobState.ERROR, msg, st);
-			this.jobDao.update(job);
-		}
+
 	}
 }

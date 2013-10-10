@@ -40,7 +40,7 @@ import com.google.inject.Inject;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.Destination;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.JobEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.JobEvent;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.JobState;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.JobEventType;
 
 import edu.emory.cci.aiw.cvrg.eureka.etl.config.EtlProperties;
 import edu.emory.cci.aiw.cvrg.eureka.etl.config.EurekaProtempaConfigurations;
@@ -182,10 +182,10 @@ public class ETL {
 			AbstractFileInfo fileInfo;
 			if (event.isFatal()) {
 				fileInfo = new FileError();
-				jobEvent.setState(JobState.ERROR);
+				jobEvent.setState(JobEventType.ERROR);
 			} else {
 				fileInfo = new FileWarning();
-				jobEvent.setState(JobState.WARNING);
+				jobEvent.setState(JobEventType.WARNING);
 			}
 			fileInfo.setLineNumber(event.getLine());
 			fileInfo.setText(event.getMessage());

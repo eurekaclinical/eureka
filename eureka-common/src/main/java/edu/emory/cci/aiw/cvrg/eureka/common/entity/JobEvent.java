@@ -71,7 +71,7 @@ public class JobEvent implements CycleRecoverable {
 	 * The state of the event.
 	 */
 	@Column(nullable = false)
-	private JobState state;
+	private JobEventType state;
 	
 	/**
 	 * The exception stack trace. The name is prefixed with a z to force
@@ -128,14 +128,14 @@ public class JobEvent implements CycleRecoverable {
 	/**
 	 * @return the state
 	 */
-	public JobState getState() {
+	public JobEventType getState() {
 		return this.state;
 	}
 
 	/**
 	 * @param inState the state to set
 	 */
-	public void setState(JobState inState) {
+	public void setState(JobEventType inState) {
 		this.state = inState;
 	}
 

@@ -20,7 +20,7 @@ package edu.emory.cci.aiw.cvrg.eureka.common.comm;
  * #L%
  */
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.JobEvent;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.JobState;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.JobEventType;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Date;
@@ -64,7 +64,7 @@ public class Job {
 	 */
 	private String destinationId;
 	private String username;
-	private JobState state;
+	private JobEventType state;
 	private List<JobEvent> jobEvents;
 
 	public Long getId() {
@@ -107,11 +107,11 @@ public class Job {
 		this.username = username;
 	}
 
-	public JobState getState() {
+	public JobEventType getState() {
 		return state;
 	}
 
-	public void setState(JobState state) {
+	public void setState(JobEventType state) {
 		this.state = state;
 	}
 
@@ -143,7 +143,16 @@ public class Job {
 		JobStatus jobStatus = new JobStatus();
 		jobStatus.setState(getState());
 		jobStatus.setMessages(messages());
-		jobStatus.setUploadTime(getTimestamp());
+		jobStatus.setStartedDate(getTimestamp());
+		if (this.jobEvents != null) {
+			for (JobEvent jobEvent : this.jobEvents) {
+				if (jobEvent.getState() == JobEventType.COMPLETED
+						|| jobEvent.getState() == JobEventType.FAILED) {
+					jobStatus.setFinishedDate(jobEvent.getTimeStamp());
+					break;
+				}
+			}
+		}
 		return jobStatus;
 	}
 

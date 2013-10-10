@@ -23,7 +23,10 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.EnumMap;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.TreeSet;
 
 import javax.persistence.CascadeType;
@@ -99,19 +102,21 @@ public class JobEntity {
 			Serializable {
 
 		private static final long serialVersionUID = -1597150892714722679L;
-
+		
+		private static final Map<JobEventType, Integer> order = new EnumMap<JobEventType, Integer>(JobEventType.class);
+		static {
+			order.put(JobEventType.VALIDATING, 0);
+			order.put(JobEventType.VALIDATED, 1);
+			order.put(JobEventType.PROCESSING, 2);
+			order.put(JobEventType.WARNING, 3);
+			order.put(JobEventType.ERROR, 4);
+			order.put(JobEventType.COMPLETED, 5);
+			order.put(JobEventType.FAILED, 6);
+		}
+		
 		@Override
 		public int compare(JobEvent a, JobEvent b) {
-			if (a.getTimeStamp() == null && b.getTimeStamp() == null) {
-				return 0;
-			}
-			if (a.getTimeStamp() == null) {
-				return 1;
-			}
-			if (b.getTimeStamp() == null) {
-				return -1;
-			}
-			return a.getTimeStamp().compareTo(b.getTimeStamp());
+			return order.get(a.getState()).compareTo(order.get(b.getState()));
 		}
 	}
 
@@ -213,13 +218,16 @@ public class JobEntity {
 	}
 
 	@JsonIgnore
-	public JobState getCurrentState() {
+	public JobEventType getCurrentState() {
 
 		JobEvent jev = getSortedEvents().last();
 		return (jev == null) ? null : jev.getState();
 	}
 
-	public void setNewState(JobState state, String message, String[] stackTrace) {
+	public void newEvent(JobEventType state, String message, String[] stackTrace) {
+		if (state == null) {
+			throw new IllegalArgumentException("state cannot be null");
+		}
 		final Date date = new Date();
 		JobEvent jev = new JobEvent();
 		jev.setJob(this);
@@ -229,15 +237,7 @@ public class JobEntity {
 		if (stackTrace != null) {
 			jev.setExceptionStackTrace(StringUtils.join(stackTrace,'\n'));
 		}
-		this.setCreated(date);
 		this.jobEvents.add(jev);
-	}
-
-	@JsonIgnore
-	public Date getCreationTime() {
-
-		JobEvent jev = getSortedEvents().first();
-		return (jev == null) ? null : jev.getTimeStamp();
 	}
 
 	@JsonIgnore

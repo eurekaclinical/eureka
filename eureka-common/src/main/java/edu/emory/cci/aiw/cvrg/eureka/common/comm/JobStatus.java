@@ -19,7 +19,7 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.common.comm;
 
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.JobState;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.JobEventType;
 import java.text.DateFormat;
 import java.util.Date;
 import java.util.List;
@@ -31,80 +31,90 @@ import java.util.List;
  *
  */
 public class JobStatus {
-	
-	private JobState state;
-	
-	/**
-	 * The date of the document upload.
-	 */
-	private Date uploadTime;
 
+	private JobEventType state;
+	/**
+	 * The date of job start.
+	 */
+	private Date startedDate;
+	private Date finishedDate;
 	/**
 	 * A list of messages about the file or job processing status.
 	 */
 	private List<String> messages;
 
 	public boolean isJobSubmitted() {
-		return this.state != JobState.DONE;
+		return this.state != JobEventType.COMPLETED && this.state != JobEventType.FAILED;
 	}
 
-	public Date getUploadTime() {
-		return uploadTime;
+	public Date getStartedDate() {
+		return startedDate;
 	}
-	public void setUploadTime(Date uploadTime) {
-		this.uploadTime = uploadTime;
+
+	public void setStartedDate(Date startedDate) {
+		this.startedDate = startedDate;
 	}
+
+	public Date getFinishedDate() {
+		return finishedDate;
+	}
+
+	public void setFinishedDate(Date finishedDate) {
+		this.finishedDate = finishedDate;
+	}
+
 	public List<String> getMessages() {
 		return messages;
 	}
+
 	public void setMessages(List<String> messages) {
 		this.messages = messages;
 	}
 
-	public JobState getState() {
+	public JobEventType getState() {
 		return state;
 	}
 
-	public void setState(JobState state) {
+	public void setState(JobEventType state) {
 		this.state = state;
 	}
-	
-	public String getStatusDate() {
+
+	public String getStartedDateFormatted() {
 		DateFormat df = DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.MEDIUM);
-		return df.format(this.uploadTime);
+		return df.format(this.startedDate);
 	}
-	
-	public String getStatus() {
-		if (this.state != JobState.DONE) {
-			return step() + " out of " + totalSteps();
+
+	public String getFinishedDateFormatted() {
+		if (this.finishedDate != null) {
+			DateFormat df = DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.MEDIUM);
+			return df.format(this.finishedDate);
 		} else {
-			return "Complete";
+			return "";
 		}
 	}
-	
-	public String getFirstMessage() {
+
+	public String getStatus() {
+		switch (this.state) {
+			case COMPLETED:
+				return "Completed";
+			case FAILED:
+				return "Failed";
+			case VALIDATING:
+			case VALIDATED:
+			case PROCESSING:
+			case WARNING:
+			case ERROR:
+				return "In progress";
+			default:
+				throw new AssertionError("Invalid state " + this.state);
+		}
+	}
+
+	public String getMostRecentMessage() {
 		if (this.messages == null || this.messages.isEmpty()) {
 			return "No errors reported";
 		} else {
-			return this.messages.get(0);
+			return this.messages.get(this.messages.size() - 1);
 		}
 	}
-	
-	private static int totalSteps() {
-		return 4;
-	}
-
-	private int step() {
-		switch (this.state) {
-			case CREATED:
-				return 1;
-			case VALIDATED:
-				return 2;
-			case PROCESSING:
-				return 3;
-			default:
-				return 4;
-		}
-	}
-
 }

@@ -31,6 +31,7 @@ import org.protempa.SliceDefinition;
 
 import java.util.ArrayList;
 import java.util.List;
+import org.protempa.SequentialTemporalPatternDefinition;
 
 public final class CategorizationConverter implements
 		PropositionDefinitionConverter<CategoryEntity, PropositionDefinition> {
@@ -108,6 +109,15 @@ public final class CategorizationConverter implements
 					hla.setInverseIsA(inverseIsA);
 					hla.setGapFunction(new SimpleGapFunction(0, null));
 					primary = hla;
+					break;
+				case SEQUENTIAL_TEMPORAL_PATTERN_ABSTRACTION:
+					SequentialTemporalPatternDefinition stpa =
+							new SequentialTemporalPatternDefinition(id);
+					stpa.setDescription(category.getDescription());
+					stpa.setDisplayName(category.getDisplayName());
+					stpa.setInverseIsA(inverseIsA);
+					stpa.setGapFunction(new SimpleGapFunction(0, null));
+					primary = stpa;
 					break;
 				case SLICE_ABSTRACTION:
 					SliceDefinition sla = new SliceDefinition(id);

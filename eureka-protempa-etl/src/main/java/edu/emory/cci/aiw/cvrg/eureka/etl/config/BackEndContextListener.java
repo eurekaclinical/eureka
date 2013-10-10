@@ -26,7 +26,7 @@ import com.google.inject.Injector;
 import com.google.inject.servlet.GuiceServletContextListener;
 import edu.emory.cci.aiw.cvrg.eureka.common.dao.DatabaseSupport;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.JobEntity;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.JobState;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.JobEventType;
 
 import edu.emory.cci.aiw.cvrg.eureka.etl.job.TaskManager;
 import java.util.List;
@@ -80,27 +80,30 @@ public class BackEndContextListener extends GuiceServletContextListener {
 	
 	private static void repairJobsIfNeeded(
 			EntityManager entityManager, List<JobEntity> jobs) {
+		entityManager.getTransaction().begin();
 		int numJobsRepaired = 0;
 		for (JobEntity job : jobs) {
-			JobState currentState = job.getCurrentState();
-			if (!JobState.DONE.equals(currentState)) {
+			JobEventType currentState = job.getCurrentState();
+			if (!JobEventType.COMPLETED.equals(currentState) 
+					&& !JobEventType.FAILED.equals(currentState)) {
 				if (numJobsRepaired == 0) {
 					LOGGER.warn(
 						"Repairing jobs table, probably because the "
 						+ "application shut down during a processing run.");
 				}
 				LOGGER.warn("Repairing job {}", job.toString());
-				if (!JobState.ERROR.equals(currentState)) {
-					job.setNewState(JobState.ERROR, 
+				if (!JobEventType.ERROR.equals(currentState)) {
+					job.newEvent(JobEventType.ERROR, 
 							"Eureka! shut down during job", null);
 				}
-				job.setNewState(JobState.DONE, null, null);
+				job.newEvent(JobEventType.FAILED, null, null);
 				entityManager.merge(job);
 				LOGGER.warn("After repair, the job's status is {}", 
 						job.toString());
 				numJobsRepaired++;
 			}
 		}
+		entityManager.getTransaction().commit();
 		if (numJobsRepaired > 0) {
 			LOGGER.warn("Repaired {} job(s).", numJobsRepaired);
 		}

@@ -44,7 +44,7 @@ import edu.emory.cci.aiw.cvrg.eureka.common.comm.JobRequest;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.JobSpec;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.EtlUser;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.JobEntity;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.JobState;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.JobEventType;
 import edu.emory.cci.aiw.cvrg.eureka.common.exception.HttpStatusException;
 import edu.emory.cci.aiw.cvrg.eureka.etl.dao.EtlUserDao;
 import edu.emory.cci.aiw.cvrg.eureka.etl.dao.JobDao;
@@ -87,7 +87,7 @@ public class JobResource {
 	@GET
 	public List<Job> getAll(@Context HttpServletRequest request,
 			@QueryParam("order") String order) {
-		JobFilter jobFilter = new JobFilter(null, 
+		JobFilter jobFilter = new JobFilter(null,
 				request.getUserPrincipal().getName(), null, null, null);
 		List<Job> jobs = new ArrayList<Job>();
 		List<JobEntity> jobEntities;
@@ -99,15 +99,7 @@ public class JobResource {
 			throw new HttpStatusException(Response.Status.PRECONDITION_FAILED, "Invalid value for the order parameter: " + order);
 		}
 		for (JobEntity jobEntity : jobEntities) {
-			Job job = new Job();
-			job.setDestinationId(jobEntity.getDestinationId());
-			job.setSourceConfigId(jobEntity.getSourceConfigId());
-			job.setTimestamp(jobEntity.getCreated());
-			job.setId(jobEntity.getId());
-			job.setUsername(jobEntity.getEtlUser().getUsername());
-			job.setState(jobEntity.getCurrentState());
-			job.setJobEvents(jobEntity.getJobEvents());
-			jobs.add(job);
+			jobs.add(jobEntityToJob(jobEntity));
 		}
 		return jobs;
 	}
@@ -116,7 +108,7 @@ public class JobResource {
 	@Path("/{jobId}")
 	public Job getJob(@Context HttpServletRequest request,
 			@PathParam("jobId") Long inJobId) {
-		JobFilter jobFilter = new JobFilter(inJobId, 
+		JobFilter jobFilter = new JobFilter(inJobId,
 				request.getUserPrincipal().getName(), null, null, null);
 		List<JobEntity> jobEntities = this.jobDao.getWithFilter(jobFilter);
 		if (jobEntities.isEmpty()) {
@@ -125,15 +117,7 @@ public class JobResource {
 			throw new HttpStatusException(Status.INTERNAL_SERVER_ERROR, jobEntities.size() + " jobs returned for job id " + inJobId);
 		} else {
 			JobEntity jobEntity = jobEntities.get(0);
-			Job job = new Job();
-			job.setDestinationId(jobEntity.getDestinationId());
-			job.setSourceConfigId(jobEntity.getSourceConfigId());
-			job.setTimestamp(jobEntity.getCreated());
-			job.setId(jobEntity.getId());
-			job.setUsername(jobEntity.getEtlUser().getUsername());
-			job.setState(jobEntity.getCurrentState());
-			job.setJobEvents(jobEntity.getJobEvents());
-			return job;
+			return jobEntityToJob(jobEntity);
 		}
 	}
 
@@ -141,60 +125,48 @@ public class JobResource {
 	public Response submit(@Context HttpServletRequest request,
 			JobRequest inJobRequest) {
 		JobSpec job = inJobRequest.getJobSpec();
-		JobEntity jobEntity = new JobEntity();
-		jobEntity.setSourceConfigId(job.getSourceConfigId());
-		jobEntity.setDestinationId(job.getDestinationId());
-		jobEntity.setNewState(JobState.CREATED, null, null);
-		jobEntity.setCreated(new Date());
-		jobEntity.setEtlUser(toEtlUser(request.getUserPrincipal()));
-		this.jobDao.create(jobEntity);
+
+		JobEntity jobEntity = newJobEntity(job, request);
 
 		List<PropositionDefinition> definitions = inJobRequest
 				.getUserPropositions();
-		propositionValidator.setConfigId(job.getSourceConfigId());
-		propositionValidator.setUserPropositions(definitions);
-		boolean valid;
-		try {
-			LOGGER.debug("Created {} definitions", definitions.size());
-			if (LOGGER.isDebugEnabled()) {
-				for (PropositionDefinition pd : definitions) {
-					LOGGER.debug("PropDef: {}", pd);
-				}
+		if (LOGGER.isDebugEnabled()) {
+			LOGGER.debug("Submitted {} proposition definitions", definitions.size());
+			for (PropositionDefinition pd : definitions) {
+				LOGGER.debug("PropDef: {}", pd);
 			}
-			valid = propositionValidator.validate();
-		} catch (PropositionValidatorException e) {
-			LOGGER.error(e.getMessage(), e);
-			valid = false;
 		}
-		if (valid) {
-			jobEntity.setNewState(JobState.VALIDATED, null, null);
-			this.jobDao.update(jobEntity);
-		} else {
-			return failed(jobEntity);
+		Response failureResponse = doValidateJob(jobEntity, job, definitions);
+		if (failureResponse != null) {
+			return failureResponse;
 		}
 
-		Filter dateRangeFilter = new DateTimeFilter(new String[]{job.getDateRangeDataElementKey()}, job.getEarliestDate(), AbsoluteTimeGranularity.DAY, job.getLatestDate(), AbsoluteTimeGranularity.DAY, job.getEarliestDateSide(), job.getLatestDateSide());
-		LOGGER.debug("Request to start new Job {}", jobEntity.getId());
+		Filter dateRangeFilter = new DateTimeFilter(
+				new String[]{job.getDateRangeDataElementKey()},
+				job.getEarliestDate(), AbsoluteTimeGranularity.DAY,
+				job.getLatestDate(), AbsoluteTimeGranularity.DAY,
+				job.getEarliestDateSide(), job.getLatestDateSide());
+
 		this.taskManager.queueTask(jobEntity.getId(), definitions,
 				inJobRequest.getPropositionIdsToShow(), dateRangeFilter);
 		return Response.created(URI.create("/" + jobEntity.getId())).build();
 	}
 
-	private Response failed(JobEntity job) {
-		return failed(job, null, null);
-	}
-
 	private Response failed(JobEntity job, String message, Exception ex) {
-		StackTraceElement[] stes = ex.getStackTrace();
-		String[] stackTrace = new String[stes.length];
-		for (int i = 0; i < stackTrace.length; i++) {
-			stackTrace[i] = stes[i].toString();
-		}
-		job.setNewState(JobState.FAILED, message, stackTrace);
-		this.jobDao.update(job);
 		for (String msg : propositionValidator.getMessages()) {
 			LOGGER.error(msg);
+			job.newEvent(JobEventType.ERROR, msg, null);
 		}
+		if (ex != null) {
+			StackTraceElement[] stes = ex.getStackTrace();
+			String[] stackTrace = new String[stes.length];
+			for (int i = 0; i < stackTrace.length; i++) {
+				stackTrace[i] = stes[i].toString();
+			}
+			job.newEvent(JobEventType.ERROR, ex.getMessage(), stackTrace);
+		}
+		job.newEvent(JobEventType.FAILED, message, null);
+		this.jobDao.update(job);
 		return Response.status(Response.Status.BAD_REQUEST)
 				.entity(propositionValidator.getMessages()).build();
 	}
@@ -205,19 +177,11 @@ public class JobResource {
 	public List<Job> getJobStatus(@QueryParam("filter") JobFilter inFilter) {
 		List<Job> jobs = new ArrayList<Job>();
 		for (JobEntity jobEntity : this.jobDao.getWithFilter(inFilter)) {
-			Job job = new Job();
-			job.setDestinationId(jobEntity.getDestinationId());
-			job.setSourceConfigId(jobEntity.getSourceConfigId());
-			job.setTimestamp(jobEntity.getCreated());
-			job.setId(jobEntity.getId());
-			job.setUsername(jobEntity.getEtlUser().getUsername());
-			job.setState(jobEntity.getCurrentState());
-			job.setJobEvents(jobEntity.getJobEvents());
-			jobs.add(job);
+			jobs.add(jobEntityToJob(jobEntity));
 		}
 		return jobs;
 	}
-	
+
 	private EtlUser toEtlUser(Principal userPrincipal) {
 		String username = userPrincipal.getName();
 		EtlUser etlUser = this.etlUserDao.getByUsername(username);
@@ -227,5 +191,47 @@ public class JobResource {
 			this.etlUserDao.create(etlUser);
 		}
 		return etlUser;
+	}
+
+	private JobEntity newJobEntity(JobSpec job, HttpServletRequest request) {
+		JobEntity jobEntity = new JobEntity();
+		jobEntity.setSourceConfigId(job.getSourceConfigId());
+		jobEntity.setDestinationId(job.getDestinationId());
+		jobEntity.setCreated(new Date());
+		jobEntity.setEtlUser(toEtlUser(request.getUserPrincipal()));
+		this.jobDao.create(jobEntity);
+		return jobEntity;
+	}
+
+	private Response doValidateJob(JobEntity jobEntity,
+			JobSpec job, List<PropositionDefinition> definitions) {
+		jobEntity.newEvent(JobEventType.VALIDATING, "Job validation started", null);
+		this.jobDao.update(jobEntity);
+		propositionValidator.setConfigId(job.getSourceConfigId());
+		propositionValidator.setUserPropositions(definitions);
+		try {
+			boolean valid = propositionValidator.validate();
+			if (valid) {
+				jobEntity.newEvent(JobEventType.VALIDATED, "Job has been validated", null);
+				this.jobDao.update(jobEntity);
+			} else {
+				return failed(jobEntity, "Job failed validation", null);
+			}
+		} catch (PropositionValidatorException e) {
+			return failed(jobEntity, "Job failed validation", e);
+		}
+		return null;
+	}
+
+	private Job jobEntityToJob(JobEntity jobEntity) {
+		Job job = new Job();
+		job.setDestinationId(jobEntity.getDestinationId());
+		job.setSourceConfigId(jobEntity.getSourceConfigId());
+		job.setTimestamp(jobEntity.getCreated());
+		job.setId(jobEntity.getId());
+		job.setUsername(jobEntity.getEtlUser().getUsername());
+		job.setState(jobEntity.getCurrentState());
+		job.setJobEvents(jobEntity.getJobEvents());
+		return job;
 	}
 }

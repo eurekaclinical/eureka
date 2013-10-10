@@ -900,16 +900,18 @@ $(document).ready(function() {
 				url : "jobpoll" + (jobId != null ? "?jobId=" + jobId : ""),
 				success : function(data) {
 					$('#status').text(data.status);
-					$('#statusDate').text(data.statusDate);
-					$('#messages').text(data.firstMessage);
+					$('#startedDate').text(data.startedDateFormatted);
+					$('#finishedDate').text(data.finishedDateFormatted);
+					$('#messages').text(data.mostRecentMessage);
 					if (running && !data.jobSubmitted) {
 						onFinish();
 						running = false;
 					}
 				},
 				error : function(xhr) {
-					$('#status').text("Job status unavailable: " + xhr.responseText);
-					$('#statusDate').empty();
+					$('#status').text("Job status unavailable");
+					$('#startedDate').empty();
+					$('#finishedDate').empty();
 					$('#messages').empty();
 				},
 				dataType : "json"

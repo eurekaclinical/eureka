@@ -44,8 +44,9 @@
 					<td>Source</td>
 					<td>Destination</td>
 					<td>Job Status</td>
-					<td>Status Date</td>
-					<td>Warnings & Errors</td>
+					<td>Started</td>
+					<td>Finished</td>
+					<td>Messages</td>
 				</tr>
 				<tr>
 					<td>
@@ -71,16 +72,23 @@
 						</div>
 					</td>
 					<td>
-						<div id="statusDate">
+						<div id="startedDate">
 							<c:if test="${not empty requestScope.jobStatus}">
-								${jobStatus.statusDate}
+								${jobStatus.startedDateFormatted}
+							</c:if>
+						</div>
+					</td>
+					<td>
+						<div id="finishedDate">
+							<c:if test="${not empty requestScope.jobStatus}">
+								${jobStatus.finishedDateFormatted}
 							</c:if>
 						</div>
 					</td>
 					<td>
 						<div id="messages">
 							<c:if test="${not empty requestScope.jobStatus}">
-								${jobStatus.firstMessage}
+								${jobStatus.mostRecentMessage}
 							</c:if>
 						</div>
 					</td>
