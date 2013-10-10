@@ -40,17 +40,16 @@
 		</p>
 		
 		<h4>What does it do?</h4>
-		<p>Eureka! Clinical Analytics provides you with an easy way to 
-			phenotype a patient population based on their clinical and 
-			administrative data, and load those phenotypes and data into your 
-			own instance of <a href="http://www.i2b2.org" target="_blank" rel="nofollow">i2b2</a>.
-			Once in i2b2, you and your colleagues can ask questions about the 
-			data, summarize data and download subsets of your data for your 
-			research. You provide your data in an Excel spreadsheet meeting 
-			certain criteria, and the software takes care of the rest. While 
-			its functionality is targeted to clinical datasets in 
-			cardiovascular disease research, it supports loading a wide variety 
-			of clinical data types into i2b2.
+		<p>Eureka! Clinical Analytics enables biomedical researchers to create 
+			databases containing clinical data of interest for cohort discovery 
+			and analysis. As a researcher, you specify a data source, and you 
+			specify your own cohort definitions in a web user interface as 
+			temporal patterns in the longitudinal medical record. The software 
+			then computes when patients in your dataset match each cohort 
+			definition, and it loads your data and cohort matches into an 
+			instance of 
+			<a href="http://www.i2b2.org" target="_blank" rel="nofollow">i2b2</a>. 
+			From i2b2, you can query and extract your data and cohorts any way you like.
 		</p>
 		
 		<c:if test="${applicationScope.webappProperties.demoMode}">

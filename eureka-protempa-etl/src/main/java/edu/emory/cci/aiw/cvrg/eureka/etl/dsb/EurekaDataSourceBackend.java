@@ -37,7 +37,6 @@ import org.protempa.DataSourceReadException;
 import org.protempa.DataStreamingEventIterator;
 import org.protempa.KnowledgeSource;
 import org.protempa.KnowledgeSourceReadException;
-import org.protempa.ProtempaException;
 import org.protempa.QuerySession;
 import org.protempa.backend.BackendInitializationException;
 import org.protempa.backend.BackendInstanceSpec;
@@ -131,15 +130,21 @@ public final class EurekaDataSourceBackend extends RelationalDbDataSourceBackend
 		if (dataFiles != null) {
 			this.dataProviders = new XlsxDataProvider[dataFiles.length];
 			for (int i = 0; i < dataFiles.length; i++) {
-				System.err.println("Processing data file " + dataFiles[i].getName());
 				try {
 					this.dataProviders[i] = new XlsxDataProvider(dataFiles[i], null);
 				} catch (DataProviderException ex) {
-					dataFiles[i].renameTo(FileUtil.replaceExtension
-							(dataFiles[i], ".failed"));
+					dataFiles[i].renameTo(FileUtil.replaceExtension(dataFiles[i], ".failed"));
+					for (int j = 0; j < i; j++) {
+						try {
+							this.dataProviders[j].close();
+						} catch (IOException ignore) {
+						}
+					}
 					throw new DataSourceBackendInitializationException("Error initializing data source backend " + this.nameForErrors(), ex);
 				}
 			}
+		} else {
+			this.dataProviders = null;
 		}
 	}
 
@@ -147,28 +152,27 @@ public final class EurekaDataSourceBackend extends RelationalDbDataSourceBackend
 	public DataValidationEvent[] validateData(KnowledgeSource knowledgeSource) throws DataSourceBackendFailedDataValidationException, KnowledgeSourceReadException {
 		List<DataValidationEvent> events = new ArrayList<DataValidationEvent>();
 		boolean failedValidation = false;
-		if (this.dataProviders == null) {
-			throw new DataSourceBackendFailedDataValidationException("No spreadsheets found by data source backend " + nameForErrors(), null);
-		}
-		for (XlsxDataProvider dataProvider : this.dataProviders) {
-			DataValidator dataValidator = new DataValidator(dataProvider.getDataFile());
-			try {
-				dataValidator.setPatients(dataProvider.getPatients())
-						.setEncounters(dataProvider.getEncounters())
-						.setProviders(dataProvider.getProviders())
-						.setCpts(dataProvider.getCptCodes())
-						.setIcd9Procedures(dataProvider.getIcd9Procedures())
-						.setIcd9Diagnoses(dataProvider.getIcd9Diagnoses())
-						.setMedications(dataProvider.getMedications())
-						.setLabs(dataProvider.getLabs())
-						.setVitals(dataProvider.getVitals()).validate();
-			} catch (DataProviderException e) {
-				throw new DataSourceBackendFailedDataValidationException(e, null);
-			}
-			events.addAll(dataValidator.getValidationEvents());
+		if (this.dataProviders != null) {
+			for (XlsxDataProvider dataProvider : this.dataProviders) {
+				DataValidator dataValidator = new DataValidator(dataProvider.getDataFile());
+				try {
+					dataValidator.setPatients(dataProvider.getPatients())
+							.setEncounters(dataProvider.getEncounters())
+							.setProviders(dataProvider.getProviders())
+							.setCpts(dataProvider.getCptCodes())
+							.setIcd9Procedures(dataProvider.getIcd9Procedures())
+							.setIcd9Diagnoses(dataProvider.getIcd9Diagnoses())
+							.setMedications(dataProvider.getMedications())
+							.setLabs(dataProvider.getLabs())
+							.setVitals(dataProvider.getVitals()).validate();
+				} catch (DataProviderException e) {
+					throw new DataSourceBackendFailedDataValidationException(e, null);
+				}
+				events.addAll(dataValidator.getValidationEvents());
 
-			if (dataValidator.isFailed()) {
-				failedValidation = true;
+				if (dataValidator.isFailed()) {
+					failedValidation = true;
+				}
 			}
 		}
 		DataValidationEvent[] validationEvents = events.toArray(new DataValidationEvent[events.size()]);
@@ -184,20 +188,22 @@ public final class EurekaDataSourceBackend extends RelationalDbDataSourceBackend
 		try {
 			dataInserterConnection =
 					getConnectionSpecInstance().getOrCreate();
-			for (DataProvider dataProvider : this.dataProviders) {
-				DataInserter dataInserter =
-						new DataInserter(dataInserterConnection);
-				dataInserter.insertPatients(dataProvider.getPatients());
-				dataInserter.insertEncounters(dataProvider.getEncounters());
-				dataInserter.insertProviders(dataProvider.getProviders());
-				dataInserter.insertCptCodes(dataProvider.getCptCodes());
-				dataInserter.insertIcd9Diagnoses(dataProvider
-						.getIcd9Diagnoses());
-				dataInserter.insertIcd9Procedures(dataProvider
-						.getIcd9Procedures());
-				dataInserter.insertLabs(dataProvider.getLabs());
-				dataInserter.insertMedications(dataProvider.getMedications());
-				dataInserter.insertVitals(dataProvider.getVitals());
+			if (this.dataProviders != null) {
+				for (DataProvider dataProvider : this.dataProviders) {
+					DataInserter dataInserter =
+							new DataInserter(dataInserterConnection);
+					dataInserter.insertPatients(dataProvider.getPatients());
+					dataInserter.insertEncounters(dataProvider.getEncounters());
+					dataInserter.insertProviders(dataProvider.getProviders());
+					dataInserter.insertCptCodes(dataProvider.getCptCodes());
+					dataInserter.insertIcd9Diagnoses(dataProvider
+							.getIcd9Diagnoses());
+					dataInserter.insertIcd9Procedures(dataProvider
+							.getIcd9Procedures());
+					dataInserter.insertLabs(dataProvider.getLabs());
+					dataInserter.insertMedications(dataProvider.getMedications());
+					dataInserter.insertVitals(dataProvider.getVitals());
+				}
 			}
 			this.dataPopulated = true;
 			dataInserterConnection.close();
@@ -805,35 +811,58 @@ public final class EurekaDataSourceBackend extends RelationalDbDataSourceBackend
 			this.exceptionOccurred = true;
 			exceptionToThrow = new DataSourceBackendCloseException("Error in data source backend " + nameForErrors() + ": could not drop the database", ex);
 		}
-		if (!this.exceptionOccurred) {
-			for (XlsxDataProvider dataProvider : dataProviders) {
-				File dataFile = dataProvider.getDataFile();
-				try {
-					if (!dataFile.renameTo(FileUtil.replaceExtension(dataFile, ".processed"))) {
-						throw new DataSourceBackendCloseException("Error in data source backend " + nameForErrors() + ": failed to mark data file " + dataFile.getAbsolutePath() + " as processed");
-					}
-				} catch (SecurityException se) {
-					throw new DataSourceBackendCloseException("Error in data source backend " + nameForErrors() + ": failed to mark data file " + dataFile.getAbsolutePath() + " as processed", se);
-				}
-			}
-		} else {
-			for (XlsxDataProvider dataProvider : dataProviders) {
-				File dataFile = dataProvider.getDataFile();
-				try {
-					if (!dataFile.renameTo(FileUtil.replaceExtension(dataFile, ".failed"))) {
+		try {
+			if (!this.exceptionOccurred) {
+				for (XlsxDataProvider dataProvider : dataProviders) {
+					File dataFile = dataProvider.getDataFile();
+					try {
+						if (!dataFile.renameTo(FileUtil.replaceExtension(dataFile, ".processed"))) {
+							if (exceptionToThrow == null) {
+								exceptionToThrow = new DataSourceBackendCloseException("Error in data source backend " + nameForErrors() + ": failed to mark data file " + dataFile.getAbsolutePath() + " as processed");
+							}
+						}
+					} catch (SecurityException se) {
 						if (exceptionToThrow == null) {
-							throw new DataSourceBackendCloseException("Error in data source backend " + nameForErrors() + ": could not mark data file " + dataFile.getAbsolutePath() + " as failed");
+							exceptionToThrow = new DataSourceBackendCloseException("Error in data source backend " + nameForErrors() + ": failed to mark data file " + dataFile.getAbsolutePath() + " as processed", se);
 						}
 					}
-				} catch (SecurityException se) {
-					if (exceptionToThrow == null) {
-						throw new DataSourceBackendCloseException("Error in data source backend " + nameForErrors() + ": could not mark data file " + dataFile.getAbsolutePath() + " as failed", se);
+				}
+			} else {
+				for (XlsxDataProvider dataProvider : dataProviders) {
+					File dataFile = dataProvider.getDataFile();
+					try {
+						if (!dataFile.renameTo(FileUtil.replaceExtension(dataFile, ".failed"))) {
+							if (exceptionToThrow == null) {
+								exceptionToThrow = new DataSourceBackendCloseException("Error in data source backend " + nameForErrors() + ": could not mark data file " + dataFile.getAbsolutePath() + " as failed");
+							}
+						}
+					} catch (SecurityException se) {
+						if (exceptionToThrow == null) {
+							exceptionToThrow = new DataSourceBackendCloseException("Error in data source backend " + nameForErrors() + ": could not mark data file " + dataFile.getAbsolutePath() + " as failed", se);
+						}
 					}
 				}
 			}
-		}
-		if (exceptionToThrow != null) {
-			throw exceptionToThrow;
+			if (exceptionToThrow != null) {
+				throw exceptionToThrow;
+			}
+		} finally {
+			exceptionToThrow = null;
+			if (dataProviders != null) {
+				for (XlsxDataProvider dataProvider : dataProviders) {
+					try {
+						dataProvider.close();
+					} catch (IOException ex) {
+						if (exceptionToThrow == null) {
+							exceptionToThrow = new DataSourceBackendCloseException("Error in data source backend " + nameForErrors() + ": could not close Excel spreadsheet " + dataProvider.getDataFile().getName(), ex);
+						}
+					}
+				}
+				this.dataProviders = null;
+				if (exceptionToThrow != null) {
+					throw exceptionToThrow;
+				}
+			}
 		}
 	}
 }

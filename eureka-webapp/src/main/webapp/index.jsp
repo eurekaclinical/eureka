@@ -28,32 +28,27 @@
 
 
 	<template:content name="content">
-		<h3>What is Eureka! Clinical Analytics?</h3>
-		<p>Eureka! Clinical Analytics is a tool for creating research 
-            databases containing electronic health record and other data in 
-            support of cohort discovery and analysis.</p>
-        <p>Eureka! populates an <a href="http://www.i2b2.org">i2b2</a> database 
-            with your data, either imported from a spreadsheet or located in
-            a data warehouse at your healthcare institution. It also populates 
-            the database with cohort descriptions of your patients, called 
-            clinical phenotypes, that you specify as temporal patterns in 
-			diagnoses, procedures, lab test results and other clinical and 
-			administrative data. While researchers today typically perform 
-			chart abstraction to assign patients to cohorts, Eureka! does it 
-			automatically. I2b2 lets you extract data and computed phenotypes 
-			about selected patients into standard statistical analysis tools.
-        </p>
-
+		<h3>Welcome to Eureka! Clinical Analytics</h3>
+		<p>Upload your spreadsheets, connect to your databases, define patient
+		features of interest, and compute them in millions of patients. Then,
+		explore!</p>
 		<c:if test="${applicationScope.webappProperties.demoMode}">
-			<p>This website is a fully functional online demo. Take a look at our 
-				<a href="http://aiw.sourceforge.net" target="_blank">Sourceforge website</a> for how to deploy your own copy 
-				of Eureka!
-			</p>
-
+        <h3>Want to try it out?</h3>
+		<p>This is our online demonstration site. Go to the 
+			<a href="register.jsp">registration page</a> to get an account. If you 
+			already have an account, go ahead and <a href="protected/login">login</a>.
+        </p>
+		<p>
 			<p><strong>NOTE: This demonstration website is NOT suitable for use 
 					with sensitive data including patient data that contains 
 					identifiers.</strong>
 			</p>
+		</p>
+		<h3>Want to deploy Eureka! at your institution or lab?</h3>
+		<p>Go to our 
+			<a href="http://aiw.sourceforge.net" target="_blank">Sourceforge website</a> 
+			to get your own copy.
+		</p>
 		</c:if>
 		<c:if test="${not applicationScope.webappProperties.demoMode and applicationScope.webappProperties.ephiProhibited}">
 			<p><strong>NOTE: Loading real patient data into the system is strictly prohibited.</strong>

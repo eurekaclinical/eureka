@@ -42,6 +42,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
+import org.apache.poi.openxml4j.opc.PackageAccess;
 
 /**
  * An implementation of the {@link DataProvider} interface, using an Excel
@@ -144,8 +145,10 @@ public class XlsxDataProvider implements DataProvider {
 				"Required worksheet {0} is missing");
 
 		try {
-			LOGGER.debug("Creating workbook from {}", inDataFile.getAbsolutePath());
-			this.opcPackage = OPCPackage.open(inDataFile.getAbsolutePath());
+			LOGGER.debug("Creating workbook from {}", 
+					inDataFile.getAbsolutePath());
+			this.opcPackage = OPCPackage.open(inDataFile.getAbsolutePath(), 
+					PackageAccess.READ);
 			this.workbook = new XSSFWorkbook(this.opcPackage);
 			this.validateWorksheets();
 		} catch (InvalidFormatException ex) {
@@ -263,7 +266,7 @@ public class XlsxDataProvider implements DataProvider {
 	@Override
 	public void close() throws IOException {
 		if (this.opcPackage != null) {
-			this.opcPackage.close();
+			this.opcPackage.revert(); //Close without saving.
 		}
 	}
 
