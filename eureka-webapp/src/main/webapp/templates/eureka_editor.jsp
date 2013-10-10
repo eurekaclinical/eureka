@@ -66,6 +66,8 @@ ul.nav a { zoom: 1; }
 
 <link type="text/css" rel="stylesheet" href="${pageContext.request.contextPath}/css/smart-wizard/smart_wizard.css" />
 <link type="text/css" rel="stylesheet" href="${pageContext.request.contextPath}/css/smart-wizard/demo_style.css" />
+<link href="${pageContext.request.contextPath}/css/styles${initParam['eureka-build-timestamp']}.css"
+	rel="stylesheet" type="text/css" />
 <link href="${pageContext.request.contextPath}/css/editor${initParam['eureka-build-timestamp']}.css"
 	rel="stylesheet" type="text/css" />
 
