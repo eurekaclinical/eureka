@@ -101,7 +101,7 @@ public class JobStatus {
 				return "Failed";
 			case VALIDATING:
 			case VALIDATED:
-			case PROCESSING:
+			case STARTED:
 			case WARNING:
 			case ERROR:
 				return "In progress";

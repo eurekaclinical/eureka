@@ -107,7 +107,7 @@ public class JobEntity {
 		static {
 			order.put(JobEventType.VALIDATING, 0);
 			order.put(JobEventType.VALIDATED, 1);
-			order.put(JobEventType.PROCESSING, 2);
+			order.put(JobEventType.STARTED, 2);
 			order.put(JobEventType.WARNING, 3);
 			order.put(JobEventType.ERROR, 4);
 			order.put(JobEventType.COMPLETED, 5);

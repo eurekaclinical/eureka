@@ -44,6 +44,11 @@ public interface PropositionValidator {
 
 	boolean validate() throws PropositionValidatorException;
 
+	/**
+	 * Returns validation error messages. 
+	 * 
+	 * @return a {@link List<String>}, guaranteed not <code>null</code>.
+	 */
 	List<String> getMessages();
 
 }

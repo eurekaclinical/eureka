@@ -25,9 +25,9 @@ package edu.emory.cci.aiw.cvrg.eureka.common.entity;
  * follows:
  * <dl>
  *   <dt>VALIDATING</dt>
- *	 <dd>Job validation started.</dd>
+ *	 <dd>Job validation started (deprecated, no longer used).</dd>
  *   <dt>VALIDATED</dt>
- *   <dd>Job validation completed without errors detected.</dd>
+ *   <dd>Job validation completed without errors detected (deprecated, no longer used).</dd>
  *   <dt>PROCESSING</dt>
  *   <dd>Job processing started.</dd>
  *   <dt>COMPLETED</dt>
@@ -44,7 +44,7 @@ package edu.emory.cci.aiw.cvrg.eureka.common.entity;
 public enum JobEventType {
 	VALIDATING,
 	VALIDATED,
-	PROCESSING,
+	STARTED,
 	COMPLETED,
 	WARNING,
 	ERROR,

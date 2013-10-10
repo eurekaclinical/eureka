@@ -88,8 +88,7 @@ public final class Task implements Runnable {
 			LOGGER.info("{} just got a job from user {}, id={}",
 					myJob.getEtlUser(), new Object[]{
 				Thread.currentThread().getName(), myJob.toString()});
-			myJob.newEvent(JobEventType.PROCESSING, "Processing started", null);
-			LOGGER.debug("About to save job: {}", myJob.toString());
+			myJob.newEvent(JobEventType.STARTED, "Processing started", null);
 			this.jobDao.update(myJob);
 
 			PropositionDefinition[] propDefArray =
