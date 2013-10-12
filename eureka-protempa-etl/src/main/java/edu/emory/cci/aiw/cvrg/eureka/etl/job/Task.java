@@ -85,9 +85,11 @@ public final class Task implements Runnable {
 		JobEntity myJob = null;
 		try {
 			myJob = this.jobDao.retrieve(this.jobId);
-			LOGGER.info("{} just got a job from user {}, id={}",
-					myJob.getEtlUser(), new Object[]{
-				Thread.currentThread().getName(), myJob.toString()});
+			if (LOGGER.isInfoEnabled()) {
+				LOGGER.info("{} just got a job from user {}, id={}",
+						new Object[]{myJob.getEtlUser().getUsername(),
+					Thread.currentThread().getName(), myJob.toString()});
+			}
 			myJob.newEvent(JobEventType.STARTED, "Processing started", null);
 			this.jobDao.update(myJob);
 
@@ -105,9 +107,11 @@ public final class Task implements Runnable {
 			this.etl = null;
 			myJob.newEvent(JobEventType.COMPLETED, "Processing completed without error", null);
 			this.jobDao.update(myJob);
-			LOGGER.info("{} completed job {} for user {} without errors.",
-					Thread.currentThread().getName(),
-					new Object[]{myJob.getId(), myJob.getEtlUser()});
+			if (LOGGER.isInfoEnabled()) {
+				LOGGER.info("{} completed job {} for user {} without errors.",
+						new Object[]{Thread.currentThread().getName(), 
+							myJob.getId(), myJob.getEtlUser().getUsername()});
+			}
 			myJob = null;
 		} catch (EtlException e) {
 			handleError(myJob, e);
@@ -120,8 +124,8 @@ public final class Task implements Runnable {
 				try {
 					myJob.newEvent(JobEventType.FAILED, "Processing failed", null);
 					LOGGER.error("{} finished job {} for user {} with errors.",
-							Thread.currentThread().getName(),
-							new Object[]{myJob.getId(), myJob.getEtlUser()});
+							new Object[]{Thread.currentThread().getName(), 
+								myJob.getId(), myJob.getEtlUser().getUsername()});
 					this.jobDao.update(myJob);
 				} catch (Throwable ignore) {
 				}

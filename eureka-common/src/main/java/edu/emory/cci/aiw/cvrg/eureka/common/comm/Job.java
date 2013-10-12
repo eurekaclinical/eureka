@@ -22,7 +22,6 @@ package edu.emory.cci.aiw.cvrg.eureka.common.comm;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.JobEvent;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.JobEventType;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import org.apache.commons.lang.builder.ToStringBuilder;
@@ -32,24 +31,7 @@ import org.apache.commons.lang.builder.ToStringBuilder;
  * @author Andrew Post
  */
 public class Job {
-
-	public static class TimestampComparator implements Comparator<Job> {
-
-		@Override
-		public int compare(Job t, Job t1) {
-			Date tt = t.getTimestamp();
-			Date t1t = t1.getTimestamp();
-			if (tt == null && t1t == null) {
-				return 0;
-			} else if (t1t == null) {
-				return 1;
-			} else if (tt == null) {
-				return -1;
-			} else {
-				return tt.compareTo(t1t);
-			}
-		}
-	}
+	
 	private Long id;
 	/**
 	 * The initial timestamp when the job was started.
@@ -115,10 +97,18 @@ public class Job {
 		this.state = state;
 	}
 
+	/**
+	 * Gets job events, assumed in order of occurrence.
+	 * @param jobEvents a {@link List<JobEvent>} of job events.
+	 */
 	public List<JobEvent> getJobEvents() {
 		return jobEvents;
 	}
 
+	/**
+	 * Sets job events, assumed in order of occurrence.
+	 * @param jobEvents a {@link List<JobEvent>} of job events.
+	 */
 	public void setJobEvents(List<JobEvent> jobEvents) {
 		this.jobEvents = jobEvents;
 	}

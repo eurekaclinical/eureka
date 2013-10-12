@@ -44,7 +44,6 @@ import edu.emory.cci.aiw.cvrg.eureka.common.comm.JobRequest;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.JobSpec;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.EtlUser;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.JobEntity;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.JobEventType;
 import edu.emory.cci.aiw.cvrg.eureka.common.exception.HttpStatusException;
 import edu.emory.cci.aiw.cvrg.eureka.etl.dao.EtlUserDao;
 import edu.emory.cci.aiw.cvrg.eureka.etl.dao.JobDao;
@@ -60,7 +59,6 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response.Status;
 import org.apache.commons.lang.StringUtils;
 import org.protempa.backend.dsb.filter.DateTimeFilter;
-import org.protempa.backend.dsb.filter.Filter;
 import org.protempa.proposition.value.AbsoluteTimeGranularity;
 
 @Path("/protected/jobs")
@@ -100,7 +98,7 @@ public class JobResource {
 			throw new HttpStatusException(Response.Status.PRECONDITION_FAILED, "Invalid value for the order parameter: " + order);
 		}
 		for (JobEntity jobEntity : jobEntities) {
-			jobs.add(jobEntityToJob(jobEntity));
+			jobs.add(jobEntity.toJob());
 		}
 		return jobs;
 	}
@@ -118,7 +116,7 @@ public class JobResource {
 			throw new HttpStatusException(Status.INTERNAL_SERVER_ERROR, jobEntities.size() + " jobs returned for job id " + inJobId);
 		} else {
 			JobEntity jobEntity = jobEntities.get(0);
-			return jobEntityToJob(jobEntity);
+			return jobEntity.toJob();
 		}
 	}
 
@@ -151,7 +149,7 @@ public class JobResource {
 	public List<Job> getJobStatus(@QueryParam("filter") JobFilter inFilter) {
 		List<Job> jobs = new ArrayList<Job>();
 		for (JobEntity jobEntity : this.jobDao.getWithFilter(inFilter)) {
-			jobs.add(jobEntityToJob(jobEntity));
+			jobs.add(jobEntity.toJob());
 		}
 		return jobs;
 	}
@@ -197,17 +195,5 @@ public class JobResource {
 			throw new HttpStatusException(Status.INTERNAL_SERVER_ERROR, e);
 		}
 		return null;
-	}
-
-	private Job jobEntityToJob(JobEntity jobEntity) {
-		Job job = new Job();
-		job.setDestinationId(jobEntity.getDestinationId());
-		job.setSourceConfigId(jobEntity.getSourceConfigId());
-		job.setTimestamp(jobEntity.getCreated());
-		job.setId(jobEntity.getId());
-		job.setUsername(jobEntity.getEtlUser().getUsername());
-		job.setState(jobEntity.getCurrentState());
-		job.setJobEvents(jobEntity.getJobEvents());
-		return job;
 	}
 }

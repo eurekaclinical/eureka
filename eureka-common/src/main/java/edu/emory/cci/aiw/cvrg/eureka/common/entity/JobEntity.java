@@ -19,15 +19,11 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.common.entity;
 
-import java.io.Serializable;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.Job;
 import java.util.ArrayList;
-import java.util.Comparator;
+import java.util.Collections;
 import java.util.Date;
-import java.util.EnumMap;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.TreeSet;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -40,7 +36,6 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
-import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.annotate.JsonManagedReference;
 
 import javax.persistence.Column;
@@ -59,7 +54,7 @@ import org.apache.commons.lang.builder.ToStringBuilder;
 @Entity
 @Table(name = "jobs")
 public class JobEntity {
-	
+
 	/**
 	 * The unique identifier for the job request.
 	 */
@@ -79,7 +74,6 @@ public class JobEntity {
 	 */
 	@Column(nullable = false)
 	private String sourceConfigId;
-	
 	/**
 	 * The unique identifier of the configuration to use for this job.
 	 */
@@ -97,29 +91,6 @@ public class JobEntity {
 	@OneToMany(cascade = CascadeType.ALL, targetEntity = JobEvent.class,
 			mappedBy = "job")
 	private List<JobEvent> jobEvents = new ArrayList<JobEvent>();
-
-	private static class JobEventComparator implements Comparator<JobEvent>,
-			Serializable {
-
-		private static final long serialVersionUID = -1597150892714722679L;
-		
-		private static final Map<JobEventType, Integer> order = new EnumMap<JobEventType, Integer>(JobEventType.class);
-		static {
-			order.put(JobEventType.VALIDATING, 0);
-			order.put(JobEventType.VALIDATED, 1);
-			order.put(JobEventType.STARTED, 2);
-			order.put(JobEventType.WARNING, 3);
-			order.put(JobEventType.ERROR, 4);
-			order.put(JobEventType.COMPLETED, 5);
-			order.put(JobEventType.FAILED, 6);
-		}
-		
-		@Override
-		public int compare(JobEvent a, JobEvent b) {
-			return order.get(a.getState()).compareTo(order.get(b.getState()));
-		}
-	}
-
 	private static JobEventComparator JOB_EVENT_COMPARATOR = new JobEventComparator();
 
 	/**
@@ -181,8 +152,6 @@ public class JobEntity {
 	public void setDestinationId(String inDestinationId) {
 		this.destinationId = inDestinationId;
 	}
-	
-	
 
 	/**
 	 * Get the unique identifier for the user who submitted the request.
@@ -214,13 +183,15 @@ public class JobEntity {
 	 * @param inJobEvents the jobEvents to set
 	 */
 	public void setJobEvents(List<JobEvent> inJobEvents) {
-		this.jobEvents = inJobEvents;
+		if (inJobEvents == null) {
+			this.jobEvents = new ArrayList<JobEvent>();
+		} else {
+			this.jobEvents = inJobEvents;
+		}
 	}
 
-	@JsonIgnore
 	public JobEventType getCurrentState() {
-
-		JobEvent jev = getSortedEvents().last();
+		JobEvent jev = getJobEventsInReverseOrder().get(0);
 		return (jev == null) ? null : jev.getState();
 	}
 
@@ -235,26 +206,53 @@ public class JobEntity {
 		jev.setState(state);
 		jev.setMessage(message);
 		if (stackTrace != null) {
-			jev.setExceptionStackTrace(StringUtils.join(stackTrace,'\n'));
+			jev.setExceptionStackTrace(StringUtils.join(stackTrace, '\n'));
 		}
 		this.jobEvents.add(jev);
 	}
 
-	@JsonIgnore
-	private TreeSet<JobEvent> getSortedEvents() {
-
-		if (this.jobEvents == null || this.jobEvents.size() == 0) {
-
-			return new TreeSet<JobEvent>();
-		}
-		TreeSet<JobEvent> ts = new TreeSet<JobEvent>(JOB_EVENT_COMPARATOR);
-		ts.addAll(this.jobEvents);
+	/**
+	 * Gets job events sorted in reverse order of occurrence. Uses the
+	 * {@link JobEventComparator} to perform sorting.
+	 *
+	 * @return a {@link List<JobEvent>} of job events in reverse order of
+	 * occurrence.
+	 */
+	public List<JobEvent> getJobEventsInOrder() {
+		List<JobEvent> ts = new ArrayList<JobEvent>(this.jobEvents);
+		Collections.sort(ts, JOB_EVENT_COMPARATOR);
 		return ts;
 	}
-	
+
+	/**
+	 * Gets job events sorted in reverse order of occurrence. Uses the
+	 * {@link JobEventComparator} to perform sorting.
+	 *
+	 * @return a {@link List<JobEvent>} of job events in reverse order of
+	 * occurrence.
+	 */
+	public List<JobEvent> getJobEventsInReverseOrder() {
+		List<JobEvent> ts = new ArrayList<JobEvent>(this.jobEvents);
+		Collections.sort(ts, Collections.reverseOrder(JOB_EVENT_COMPARATOR));
+		return ts;
+	}
+
+	public Job toJob() {
+		Job job = new Job();
+		job.setDestinationId(this.destinationId);
+		job.setSourceConfigId(this.sourceConfigId);
+		job.setTimestamp(this.created);
+		job.setId(this.id);
+		if (this.etlUser != null) {
+			job.setUsername(this.etlUser.getUsername());
+		}
+		job.setState(getCurrentState());
+		job.setJobEvents(getJobEventsInOrder());
+		return job;
+	}
+
 	@Override
 	public String toString() {
 		return ToStringBuilder.reflectionToString(this);
 	}
-
 }
