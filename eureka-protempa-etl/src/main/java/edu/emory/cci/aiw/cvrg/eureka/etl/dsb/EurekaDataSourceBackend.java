@@ -559,7 +559,7 @@ public final class EurekaDataSourceBackend extends RelationalDbDataSourceBackend
 					"ICD9D_EVENT",
 					"EVENT_KEY")))},
 				ReferenceSpec.Type.MANY),
-				new ReferenceSpec("medications",
+				new ReferenceSpec("medicationHistory",
 				"Medication Orders", new ColumnSpec[]{
 					new ColumnSpec(schemaName, "ENCOUNTER",
 					new JoinSpec("ENCOUNTER_KEY",
