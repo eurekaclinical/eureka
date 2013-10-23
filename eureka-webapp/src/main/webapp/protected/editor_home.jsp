@@ -40,7 +40,7 @@
 			<a href="${pageContext.request.contextPath}/protected/editprop" class="create"></a>
 			<a href="${pageContext.request.contextPath}/protected/editprop" style="text-decoration:none">Create New Element</a>
 		</div>
-		<table align="center" id="elements" style="width: 98%">
+		<table align="center" id="elements">
 			<tr class="bold" >
 				<th>Action</th><th>Name</th><th>Description</th><th>Type</th><th>Created Date</th><th>Last Modified</th>
 			</tr>

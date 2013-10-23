@@ -120,7 +120,6 @@ ul.nav a { zoom: 1; }
 	  </c:choose>
     </ul>
   </div>
-
   <div class="sidebar1">
 	<template:get name="sidebar" />
   </div>
@@ -128,7 +127,6 @@ ul.nav a { zoom: 1; }
   <div class="content">
 		<template:get name="content" />
   </div>
-
    <div class="sub-content">
 		<template:get name="subcontent" />
   </div>

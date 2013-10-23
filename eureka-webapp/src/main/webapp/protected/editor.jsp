@@ -125,7 +125,7 @@
 									</td>
 
 									<td valign="top"><!-- step content -->
-									<div style="height: 290px; overflow:auto; padding-left: 20px;">
+									<div style="padding-left: 20px;">
 										<table>
 											<tr>
 												<td>

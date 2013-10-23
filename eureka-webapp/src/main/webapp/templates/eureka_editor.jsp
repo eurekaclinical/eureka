@@ -61,7 +61,7 @@ ul.nav a { zoom: 1; }
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery.validate.js"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/eureka${initParam['eureka-build-timestamp']}.js"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/editor${initParam['eureka-build-timestamp']}.js"></script>
-<script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery.smartWizard-2.0.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery.smartWizard-2.0-eureka.js"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery.cookie.js"></script>
 
 <link type="text/css" rel="stylesheet" href="${pageContext.request.contextPath}/css/smart-wizard/smart_wizard.css" />
@@ -70,51 +70,6 @@ ul.nav a { zoom: 1; }
 	rel="stylesheet" type="text/css" />
 <link href="${pageContext.request.contextPath}/css/editor${initParam['eureka-build-timestamp']}.css"
 	rel="stylesheet" type="text/css" />
-
-<!--  -->
-
-<style>
-	#sortable { list-style-type: none; margin: 0; padding: 0; }
-	#sortable li { 
-		/*margin: 0 3px 3px 3px; */
-		/*padding: 0.4em; padding-left: 1.5em; */
-		/*font-size: 1.4em; height: 18px; */
-          display: list-item;
-		}
-
-#elements
-{
-font-family:"Trebuchet MS", Arial, Helvetica, sans-serif;
-width:100%;
-border-collapse:collapse;
-}
-#elements td, #elements th 
-{
-font-size:1em;
-border:1px solid #24497A;
-padding:3px 7px 2px 7px;
-}
-#elements th 
-{
-font-size:1.1em;
-text-align:left;
-padding-top:5px;
-/*padding-bottom:4px;*/
-background-color:#24497A;
-color:#ffffff;
-}
-#elements tr.alt td 
-{
-color:#000000;
-background-color:#EAF2D3;
-}
-#elements tr td.bottom
-{
-    border-top: 2px solid;
-}
-
-</style>
-
 
 <link rel="SHORTCUT ICON" href="${pageContext.request.contextPath}/favicon.ico">
 <meta name="Description" content="A Clinical Analysis Tool for Biomedical Informatics and Data" />

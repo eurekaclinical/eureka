@@ -1,4 +1,4 @@
-/* Eureka WebApp. Copyright (C) 2012 Emory University. Licensed under http://www.apache.org/licenses/LICENSE-2.0. */
+/* Eureka WebApp. Copyright (C) 2012-2013 Emory University. Licensed under http://www.apache.org/licenses/LICENSE-2.0. */
 
 /* Editor-specific styling. */
 
@@ -7,9 +7,9 @@ body {
 }
 
 .content {
-	/*padding: 10px 0;*/
+	padding: 10px 0;
 	width: 98%;
-	height: 500px;
+	/*height: 500px;*/
 }
 
 table, td {
@@ -47,6 +47,10 @@ table, td {
 	/*width: 100px;*/
 	display: inline-block;
 	white-space: nowrap;
+}
+
+.swMain .stepContainer {
+	height: auto;
 }
 
 /* Step 3 styling. */
