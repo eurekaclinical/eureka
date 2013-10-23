@@ -53,6 +53,10 @@ table, td {
 	height: auto;
 }
 
+.swMain ul.anchor li a {
+	width: 210px;
+}
+
 /* Step 3 styling. */
 
 /* Data element selector styling. */
