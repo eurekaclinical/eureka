@@ -70,52 +70,39 @@ ul.nav a { zoom: 1; }
     <span><a href="${pageContext.request.contextPath}/"><img src="${pageContext.request.contextPath}/images/tag_line.gif" alt="Data Analysis Tool" width="238" align="absmiddle" /></a></span>
 </div>
 
- <div>
-  <ul class="nav">
+ <div class="nav">
+  <ul class="left-nav">
       <li><a href="${pageContext.request.contextPath}/about.jsp"><img src="${pageContext.request.contextPath}/images/about_icon.gif" alt="About" width="30" height="30" align="absmiddle" />About</a></li>
       <c:choose>
         <c:when test="${pageContext.request.remoteUser == null}">
-          <img src="${pageContext.request.contextPath}/images/reg_icon.gif" alt="Register" width="30" height="30" align="absmiddle" />
-          <li><a href="${pageContext.request.contextPath}/register.jsp">Register</a></li>
+          <li><a href="${pageContext.request.contextPath}/register.jsp"><img src="${pageContext.request.contextPath}/images/reg_icon.gif" alt="Register" width="30" height="30" align="absmiddle" />Register</a></li>
         </c:when>
       </c:choose>
       <c:choose>
         <c:when test="${pageContext.request.remoteUser != null}">
-          <img src="${pageContext.request.contextPath}/images/acct_icon.gif" alt="Account" width="30" height="30" align="absmiddle" />
-          <li><a href="${pageContext.request.contextPath}/protected/user_acct?action=list">Account</a></li>
+          <li><a href="${pageContext.request.contextPath}/protected/user_acct?action=list"><img src="${pageContext.request.contextPath}/images/acct_icon.gif" alt="Account" width="30" height="30" align="absmiddle" />Account</a></li>
         </c:when>
       </c:choose>
 
-      <img src="${pageContext.request.contextPath}/images/contact_icon.gif" alt="Contact" width="30" height="30" align="absmiddle" />
-      <li><a href="${pageContext.request.contextPath}/contact.jsp">Contact</a></li>
-      <img src="${pageContext.request.contextPath}/images/help_icon.gif" alt="Help" width="30" height="30" align="absmiddle" />
-      <li><a href="${pageContext.request.contextPath}/help.jsp">Help</a></li>
+      <li><a href="${pageContext.request.contextPath}/contact.jsp"><img src="${pageContext.request.contextPath}/images/contact_icon.gif" alt="Contact" width="30" height="30" align="absmiddle" />Contact</a></li>
+      <li><a href="${pageContext.request.contextPath}/help.jsp"><img src="${pageContext.request.contextPath}/images/help_icon.gif" alt="Help" width="30" height="30" align="absmiddle" />Help</a></li>
 
  	<c:if test="${pageContext.request.remoteUser != null}">
-
  		<c:if test="${myfn:isUserInRole(pageContext.request, 'admin')}">
-                  <img src="${pageContext.request.contextPath}/images/admin_icon.gif" alt="Administration" width="30" height="30" align="absmiddle" />
-                  <li><a href="${pageContext.request.contextPath}/protected/admin?action=list">Administration</a></li>
+			<li><a href="${pageContext.request.contextPath}/protected/admin?action=list"><img src="${pageContext.request.contextPath}/images/admin_icon.gif" alt="Administration" width="30" height="30" align="absmiddle" />Administration</a></li>
         </c:if>
  	  </c:if>
+  </ul>
+	  <ul class="right-nav">
 	  <c:choose>
-
 	  	<c:when test="${pageContext.request.remoteUser != null}">
-<div class="fltrt">
 	  	  <li>Welcome ${pageContext.request.remoteUser} | <a href="${pageContext.request.contextPath}/logout">Logout</a></li>
       	  <li><a href="${pageContext.request.contextPath}/protected/editorhome">Editor</a></li>
-      	  <img src="${pageContext.request.contextPath}/images/i2b2_icon.gif" alt="i2b2" width="30" height="30" align="absmiddle" />
-	      <li><a href="/i2b2/" target="_blank">i2b2</a></li>
-	      <img src="${pageContext.request.contextPath}/images/rsch_icon.gif" alt="Upload Data" width="30" height="30" align="absmiddle" />
-	      <li><a href="${pageContext.request.contextPath}/protected/jobs">Upload Data</a></li>
-</div>
+	      <li><a href="/i2b2/" target="_blank"><img src="${pageContext.request.contextPath}/images/i2b2_icon.gif" alt="i2b2" width="30" height="30" align="absmiddle" />i2b2</a></li>
+	      <li><a href="${pageContext.request.contextPath}/protected/jobs"><img src="${pageContext.request.contextPath}/images/rsch_icon.gif" alt="Upload Data" width="30" height="30" align="absmiddle" />Upload Data</a></li>
 	  	</c:when>
-
 	  	<c:otherwise>
-<div class="fltrt">
-	      <img src="${pageContext.request.contextPath}/images/login_icon.gif" alt="Login" width="30" height="30" align="absmiddle" />
-	      <li><a href="${pageContext.request.contextPath}/protected/login">Login</a></li>   </div>
-
+	      <li><a href="${pageContext.request.contextPath}/protected/login"><img src="${pageContext.request.contextPath}/images/login_icon.gif" alt="Login" width="30" height="30" align="absmiddle" />Login</a></li>   <%--</div>--%>
 	  	</c:otherwise>
 	  </c:choose>
     </ul>

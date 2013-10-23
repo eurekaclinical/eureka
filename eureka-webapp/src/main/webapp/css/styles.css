@@ -16,21 +16,30 @@ ul {
 	margin: 0;
 }
 
-ul.nav li {
+ul.left-nav li, ul.right-nav li {
 	list-style: none;
 	display: inline;
 }
 
-ul.nav a, ul.nav a:visited {
+ul.left-nav a, ul.left-nav a:visited, ul.right-nav a, ul.right-nav a:visited {
 	text-decoration: none;
 	color: #036;
 	padding-right:10px;
 	font-weight: 800;
 	font-size:9px;
 }
-ul.nav a:hover, ul.nav a:active, ul.nav a:focus {
+ul.left-nav a:hover, ul.left-nav a:active, ul.left-nav a:focus, ul.right-nav a:hover, ul.right-nav a:active, ul.right-nav a:focus {
 	color: #999999;
 }
+
+ul.left-nav {
+	float: left;
+}
+
+ul.right-nav {
+	float: right;
+}
+
 h1, h2, h3, h4, h5, h6, p {
 	/*margin-top: 0;*/
 	padding-right: 15px;
@@ -98,7 +107,7 @@ a:visited {
 
 .nav {
 	padding-left:10px;
-	height:30px;
+	/*height:30px;*/
 	background-image:url(../images/header_bg.png);
 	border-bottom:1px solid #369;
 	overflow:hidden;
