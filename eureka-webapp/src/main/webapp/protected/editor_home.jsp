@@ -35,6 +35,9 @@
 
 	<template:content name="content">
 		<h3>Phenotype Editor</h3>
+		<p>Specify the phenotypes that you want to compute in your datasets below. 
+			Phenotypes are patient features inferred from sequence, frequency and other temporal patterns in the events and observations in your dataset.
+			These features are computed as intervals with a start time and a stop time representing when they are present.</p>
 		<div id="dialog" title="Delete Data Element"></div>
 		<div class="action_link">   
 			<a href="${pageContext.request.contextPath}/protected/editprop" class="create"></a>

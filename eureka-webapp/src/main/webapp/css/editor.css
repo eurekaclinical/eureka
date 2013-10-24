@@ -7,15 +7,21 @@ body {
 }
 
 .content {
-	padding: 10px 0;
+	/*padding: 10px 0;*/
 	width: 98%;
 	/*height: 500px;*/
 }
 
 table, td {
 	border-style: none;
+	/*margin: 0px;
+	padding: 1px;*/
+	padding: 2px;
 	margin: 0px;
-	padding: 1px;
+}
+
+.specify-phenotype-form {
+	white-space: nowrap;
 }
 
 /*.footer {
@@ -39,14 +45,19 @@ table, td {
 
 /* Step 2 styling. */
 
-#select_element_table {
+/*#select_element_table {
 	width: 100%;
+}*/
+
+#select_element_table dt.firstCol {
+	/*width: 100px;*/
+	/*display: inline-block;*/
+	/*white-space: nowrap;*/
+	font-weight: bold;
 }
 
-#select_element_table td.firstCol {
-	/*width: 100px;*/
-	display: inline-block;
-	white-space: nowrap;
+dt.firstCol:after {
+	content: ":";
 }
 
 .swMain .stepContainer {
@@ -55,6 +66,12 @@ table, td {
 
 .swMain ul.anchor li a {
 	width: 210px;
+	padding: 0;
+	height: 50px;
+}
+
+td.editor-description {
+	padding-bottom: 10px;
 }
 
 /* Step 3 styling. */
@@ -155,6 +172,10 @@ div.tabs > div h2 {
     background: #C3D9FF;
     color: green;
 }*/
+
+div.tabs {
+	padding-top: 10px;
+}
 
 /* Editor field styling. */
 

@@ -72,14 +72,29 @@ a:link {
 a:visited {
 	color: #4E5869;
 }
-#login {
+
+.login_content {
+	margin: 0 auto;
+	width: 350px;
+	padding-right: 26px;
+	padding-bottom: 26px;
+	border: 1px solid #CCC;
+	border-radius: 10px;
+	text-align: right;
+}
+
+.login_content input#username, .login_content input#password {
+	width: 25em;
+}
+
+/*#login {
 	background: #24497a;
 	float: right;
 	width:410px;
 	height:15px;
 	padding-top:20px;
 	text-align:left;
-}
+}*/
 #login_field {
 	width:100px;
 	height:11px;
@@ -87,7 +102,7 @@ a:visited {
 
 .container {
 	/*width: 100%;*/
-	min-width: 950px;
+	min-width: 940px;
 	margin: 0 auto;
 	border: 1px solid #036;
 	background:#FFFFFF;
@@ -176,6 +191,7 @@ a:visited {
 	/*float: left;*/
 	margin: 0 auto;
 	border: 1px solid #CCC;
+	border-radius: 10px;
 	/*background-color:#FFF;
 	height:190px;*/
 	overflow:hidden;
@@ -321,7 +337,7 @@ td
 .sub_text a {
 	color:#5c85bb;
 	font-size:9px;
-	padding-left:295px;
+	/*padding-left:295px;*/
 	text-decoration:none;
 }
 .pad {
@@ -489,12 +505,12 @@ div.tabs > div h2 {
 
 #systemTree {
 	overflow: auto;
-	height: 255px;
+	height: 400px;
 	width: 300px;
 }
 #userTree {
 	overflow: auto;
-	height: 255px;
+	height: 400px;
 	width: 300px;
 }
 
@@ -512,8 +528,9 @@ div.tabs > div h2 {
 
 .tree-drop {
     float: left;
-    overflow: auto;
-    border: 3px solid gray;
+    overflow: hidden;
+    border: 2px solid gray;
+	border-radius: 10px;
     width: 285px;
     height: 263px;
     background: #C3D9FF;
@@ -522,9 +539,10 @@ div.tabs > div h2 {
 
 .tree-drop-single {
     float: left;
-    overflow: auto;
-    border: 3px solid gray;
-    width: 20em;
+    overflow: hidden;
+    border: 2px solid gray;
+	border-radius: 10px;
+    width: 30em;
     height: 3em;
     background: #C3D9FF;
     color: green;
@@ -532,9 +550,10 @@ div.tabs > div h2 {
 
 .tree-drop-multiple {
 	float: left;
-    overflow: auto;
-    border: 3px solid gray;
-    width: 20em;
+    overflow: hidden;
+    border: 2px solid gray;
+	border-radius: 10px;
+    width: 30em;
     height: 6em;
     background: #C3D9FF;
     color: green;

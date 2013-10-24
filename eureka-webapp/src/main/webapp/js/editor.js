@@ -251,12 +251,12 @@ $("ul.sortable").disableSelection();
 
 function enableFrequencyFields(dropped) {
 	if ($(dropped).data('type') == 'VALUE_THRESHOLD') {
-		$('#valueThresholdConsecutiveLabel').css('visibility','visible');
+		$('#valueThresholdConsecutiveLabel').css('display','inline');
 	}
 }
 
 function disableFrequencyFields() {
-	$('#valueThresholdConsecutiveLabel').css('visibility','hidden');
+	$('#valueThresholdConsecutiveLabel').css('display','none');
 }
 
 $(document).ready(function(){
@@ -435,7 +435,7 @@ $(document).ready(function(){
 	$('a#add-to-sequence').click(function (e) {
 		var total = $('table.sequence-relation').length;
 		var newCount = total + 1;
-		var data = $('table.sequence-relation').filter(':last').clone();
+		var data = $('fieldset.sequence-relation').filter(':last').clone();
 		var appendTo = $('td.sequence-relations-container');
 		var sortable = data.find('ul.sortable');
 		var inputPropertycheckbox = data.find('input.propertyValueConstraint');
