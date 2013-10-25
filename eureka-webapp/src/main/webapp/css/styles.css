@@ -251,8 +251,6 @@ select {
 	margin-bottom:58px;
 }
 table {
-	width:inherit;
-	align:center;
 	margin: 10px;
     border-spacing: 0;
     border-collapse: collapse;
@@ -277,6 +275,10 @@ td
     margin: 0;
     padding: 4px;
     border-width: 1px 0 0 0;
+}
+
+form#uploadForm fieldset#dateRange td {
+	border-width: 0;
 }
 
 .bold {
@@ -464,6 +466,7 @@ address {
 
 .tabs {
 	float: left;
+	margin-top: 5px;
 }
 
 ul.sortable {
@@ -474,7 +477,7 @@ ul.sortable {
 
 UL.tabNavigation {
     list-style: none;
-    margin: 0;
+    margin: 0 0 0 10px;
     padding: 0;
 }
 
@@ -487,6 +490,7 @@ UL.tabNavigation LI A {
     background-color: #ccc;
     color: #000;
     text-decoration: none;
+	border-radius: 3px 3px 0 0;
 }
 
 UL.tabNavigation LI A.selected,
@@ -502,8 +506,9 @@ UL.tabNavigation LI A:focus {
 
 div.tabs > div {
 	padding: 5px;
-	margin-top: 3px;
+	margin-top: 2px;
 	border: 2px solid #333;
+	border-radius: 10px;
 }
 
 div.tabs > div h2 {
