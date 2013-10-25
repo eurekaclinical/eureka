@@ -380,6 +380,13 @@ td .error {
 
 .action_link {
     margin: 10px;
+	cursor: pointer;
+}
+
+.action-create:before {
+	content:url('../images/create_icon.gif');
+	position: relative;
+	bottom: -.5em;
 }
 
 .delete {

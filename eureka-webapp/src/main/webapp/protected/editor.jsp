@@ -507,11 +507,8 @@
 																</td>
 															</tr>
 															<tr>
-																<td colspan="6" style="text-align: center">
-																	<div class="action_link">
-																		<a href="#" class="create"></a>
-																		<a id="add-to-sequence" href="#" style="text-decoration:none">Add to sequence</a>
-																	</div>
+																<td colspan="6" id="sequenceActions">
+																	<span id="add-to-sequence" class="action_link action-create">Add to sequence</span>
 																</td>
 															</tr>
 														</table>
@@ -639,15 +636,9 @@
 															</tr>
 														</table>
 														<table id="VALUE_THRESHOLDdefinition" class="specify-phenotype-form" data-definition-container="true">
-															<tr><td colspan="2" class="editor-description">Computes intervals corresponding to when the specified thresholds below are present.</td></tr>
+															<tr><td class="editor-description">Computes intervals corresponding to when the specified thresholds below are present.</td></tr>
 															<tr>
-																<td style="text-align: left">
-																	<div class="action_link">
-																		<a href="#" class="create"></a>
-																		<a id="add-threshold" href="#" style="text-decoration:none">Add threshold</a>
-																	</div>
-																</td>
-																<td style="text-align: left" title="Compute this phenotype when any of the thresholds below are present or only if all are present">
+																<td id="thresholdOptions" title="Compute this phenotype when any of the thresholds below are present or only if all are present">
 																	Value thresholds:
 																	<select name="valueThresholdType">
 																		<c:forEach var="operator" items="${thresholdsOperators}">
@@ -657,7 +648,7 @@
 																</td>
 															</tr>
 															<tr>
-																<td colspan="2">
+																<td>
 																	<table class="value-thresholds-container">
 																		<c:choose>
 																			<c:when test="${not empty proposition and propositionType == 'VALUE_THRESHOLD' and not empty proposition.valueThresholds}">
@@ -931,6 +922,11 @@
 																			</c:otherwise>
 																		</c:choose>
 																	</table>
+																</td>
+															</tr>
+															<tr>
+																<td id="thresholdActions">
+																	<span id="add-threshold" class="action_link action-create">Add threshold</span>
 																</td>
 															</tr>
 														</table>

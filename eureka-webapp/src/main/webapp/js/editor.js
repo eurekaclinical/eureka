@@ -432,7 +432,7 @@ $(document).ready(function(){
 	//			})
 	//	);
 
-	$('a#add-to-sequence').click(function (e) {
+	$('span#add-to-sequence').click(function (e) {
 		var total = $('fieldset.sequence-relation').length;
 		var newCount = total + 1;
 		var data = $('fieldset.sequence-relation').filter(':last').clone();
@@ -452,7 +452,7 @@ $(document).ready(function(){
 		eureka.trees.setPropositionSelects($(appendTo).closest('[data-definition-container="true"]'));
 	});
 	
-	$('a#add-threshold').click(function (e) {
+	$('span#add-threshold').click(function (e) {
 		var total = $('tr.value-threshold').length;
 		var newCount  = total + 1;
 		var data = $('tr.value-threshold').filter(':last').clone();

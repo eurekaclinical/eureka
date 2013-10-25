@@ -212,3 +212,15 @@ h2.StepTitle span.editor-help {
 	font-size: 10px; 
 	float: right;
 }
+
+td#sequenceActions {
+	text-align: center;
+}
+
+td#thresholdOptions {
+	text-align: center;
+}
+
+td#thresholdActions {
+	text-align: center;
+}
