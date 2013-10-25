@@ -433,7 +433,7 @@ $(document).ready(function(){
 	//	);
 
 	$('a#add-to-sequence').click(function (e) {
-		var total = $('table.sequence-relation').length;
+		var total = $('fieldset.sequence-relation').length;
 		var newCount = total + 1;
 		var data = $('fieldset.sequence-relation').filter(':last').clone();
 		var appendTo = $('td.sequence-relations-container');
