@@ -41,12 +41,12 @@
 
 				  <table>
 					  <tr>
-						  <td>Source</td>
-						  <td>Destination</td>
-						  <td>Job Status</td>
-						  <td>Started</td>
-						  <td>Finished</td>
-						  <td>Messages</td>
+						  <th>Source</th>
+						  <th>Destination</th>
+						  <th>Job Status</th>
+						  <th>Started</th>
+						  <th>Finished</th>
+						  <th>Messages</th>
 					  </tr>
 					  <tr>
 						  <td>

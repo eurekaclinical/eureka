@@ -122,10 +122,10 @@ ul.nav a { zoom: 1; }
 	  <ul class="right-nav">
 	  <c:choose>
 	  	<c:when test="${pageContext.request.remoteUser != null}">
-	  	  <li>Welcome ${pageContext.request.remoteUser} | <a href="${pageContext.request.contextPath}/logout">Logout</a></li>
+	  	  <li>Welcome, <span id="welcomeUsername">${pageContext.request.remoteUser}</span> | <a href="${pageContext.request.contextPath}/logout">Logout</a></li>
       	  <li><a href="${pageContext.request.contextPath}/protected/editorhome">Editor</a></li>
 	      <li><a href="/i2b2/" target="_blank"><img src="${pageContext.request.contextPath}/images/i2b2_icon.gif" alt="i2b2" width="30" height="30" align="absmiddle" />i2b2</a></li>
-	      <li><a href="${pageContext.request.contextPath}/protected/jobs"><img src="${pageContext.request.contextPath}/images/rsch_icon.gif" alt="Upload Data" width="30" height="30" align="absmiddle" />Upload Data</a></li>
+	      <li><a href="${pageContext.request.contextPath}/protected/jobs"><img src="${pageContext.request.contextPath}/images/rsch_icon.gif" alt="Submit Job" width="30" height="30" align="absmiddle" />Submit Job</a></li>
 	  	</c:when>
 	  	<c:otherwise>
 	      <li><a href="${pageContext.request.contextPath}/protected/login"><img src="${pageContext.request.contextPath}/images/login_icon.gif" alt="Login" width="30" height="30" align="absmiddle" />Login</a></li>   <%--</div>--%>
