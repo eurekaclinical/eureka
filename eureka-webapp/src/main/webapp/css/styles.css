@@ -127,6 +127,11 @@ a:visited {
 	border-bottom:1px solid #369;
 	overflow:hidden;
 }
+
+#welcomeUsername {
+	font-weight: bold;
+}
+
 .pw_reset {
 	font-weight : bold;
    	font-size: 12px; 
@@ -279,6 +284,10 @@ td
 
 form#uploadForm fieldset#dateRange td {
 	border-width: 0;
+}
+
+legend {
+	font-weight: bold;
 }
 
 .bold {
