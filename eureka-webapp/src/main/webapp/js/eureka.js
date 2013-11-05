@@ -939,12 +939,12 @@ $(document).ready(function() {
 	if ($("#elements").length > 0) {
 		var $dataElements = $("#elements").find('tr.editor-home-data-element');
 		$dataElements.each(function(i, dataElement) {
-			var viewLink = $(dataElement).find('a.view');
+			var viewLink = $(dataElement).find('span.view');
 			$(viewLink).click(function() {
 				viewElement($(dataElement).data('key'));
 			});
 			 
-			var deleteLink = $(dataElement).find('a.delete');
+			var deleteLink = $(dataElement).find('span.delete');
 			$(deleteLink).click(function() {
 				deleteElement($(dataElement).data('display-name'), 
 					$(dataElement).data('key'));

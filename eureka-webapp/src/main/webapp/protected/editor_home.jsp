@@ -53,9 +53,9 @@
 				</c:url>
 				<tr class="editor-home-data-element" data-key="${prop.attr['key']}" data-display-name="${prop.attr['displayName']}">
 					<td style="width:60px">
-						<a href="#" class="view" title="View"></a>
+						<span class="view" title="View"></span>
 						<a href="${editUrl}" class="edit" title="Edit"></a>
-						<a href="#" class="delete" title="Delete"></a>
+						<span class="delete" title="Delete"></span>
 					</td>
 					<td style="width: 100px">${prop.attr['displayName']}</td>
 					<td>${prop.attr['description']}</td>
