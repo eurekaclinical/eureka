@@ -592,3 +592,9 @@ fieldset#dateRange > label {
 #cciBMILocationMap {
 	float: left;
 }
+
+table#jobinfo th {
+    padding-right: 3em;
+    padding-left: 4px;
+    text-align: left;
+}

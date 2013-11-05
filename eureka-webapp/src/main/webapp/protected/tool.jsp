@@ -39,7 +39,7 @@
 			  <c:if test="${not empty requestScope.jobStatus and jobStatus.jobSubmitted}">data-job-running="true"</c:if>
 				  accept-charset="utf-8">
 
-				  <table>
+				  <table id="jobinfo">
 					  <tr>
 						  <th>Source</th>
 						  <th>Destination</th>
