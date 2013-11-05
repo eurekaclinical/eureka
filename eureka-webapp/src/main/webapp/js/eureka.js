@@ -1022,7 +1022,7 @@ function deleteElement(displayName, key) {
 				}
 			},
 			close : function() {
-				window.location.href="editorhome";
+                // do nothing here.
 			}
 	});
 	$dialog.dialog("open");
