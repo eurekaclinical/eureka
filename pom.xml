@@ -45,20 +45,18 @@
 		<commons-io-version>2.1</commons-io-version>
 		<commons-fileupload-version>1.2.2</commons-fileupload-version>
 		<commons-lang-version>2.6</commons-lang-version>
-		<eureka-version>1.8-SNAPSHOT</eureka-version>
-		<protempa-version>2.2-SNAPSHOT</protempa-version>
-		<aiw-i2b2-etl-version>1.0.5-SNAPSHOT</aiw-i2b2-etl-version>
+		<eureka-version>1.8</eureka-version>
+		<protempa-version>2.2</protempa-version>
+		<aiw-i2b2-etl-version>1.0.5</aiw-i2b2-etl-version>
 		<oracle-version>11.2.0.3</oracle-version>
 		<freemarker-version>2.3.9</freemarker-version>
 		<jpamodelgen-version>1.2.0.Final</jpamodelgen-version>
 		<mysql-version>5.1.18</mysql-version>
 		<ehcache-version>2.6.0</ehcache-version>
 		<tomcat-plugin-version>1.1</tomcat-plugin-version>
-		<!--<exist-dsb-version>0.1</exist-dsb-version>-->
-		<!--<mimc-dsb-version>1.0-SNAPSHOT</mimc-dsb-version>-->
 
 		<!-- properties for site creation -->
-		<javautil-version>2.2-SNAPSHOT</javautil-version>
+		<javautil-version>2.2</javautil-version>
 		<jaas-login-module-version>1.0.2</jaas-login-module-version>
 		<jaas-login-module-repo>aiw</jaas-login-module-repo>
 		<hibernate-hbm2ddl-auto>validate</hibernate-hbm2ddl-auto>
