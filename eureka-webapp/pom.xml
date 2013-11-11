@@ -124,6 +124,7 @@
 				<groupId>org.apache.tomcat.maven</groupId>
 				<artifactId>tomcat7-maven-plugin</artifactId>
 				<configuration>
+					<warSourceDirectory>${project.build.directory}/${project.build.finalName}</warSourceDirectory>
 					<port>${tomcat.port}</port>
                     <httpsPort>${tomcat.httpsPort}</httpsPort>
                     <keystorePass>changeit</keystorePass>
