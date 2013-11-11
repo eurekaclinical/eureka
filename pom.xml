@@ -54,8 +54,8 @@
 		<mysql-version>5.1.18</mysql-version>
 		<ehcache-version>2.6.0</ehcache-version>
 		<tomcat-plugin-version>1.1</tomcat-plugin-version>
-		<exist-dsb-version>0.1</exist-dsb-version>
-		<mimc-dsb-version>1.0-SNAPSHOT</mimc-dsb-version>
+		<!--<exist-dsb-version>0.1</exist-dsb-version>-->
+		<!--<mimc-dsb-version>1.0-SNAPSHOT</mimc-dsb-version>-->
 
 		<!-- properties for site creation -->
 		<javautil-version>2.2-SNAPSHOT</javautil-version>
@@ -771,16 +771,16 @@
 				<version>${commons-logging-version}</version>
 				<scope>provided</scope>
 			</dependency>
-			<dependency>
-				<groupId>edu.emory.cci.aiw</groupId>
-				<artifactId>exist-dsb</artifactId>
-				<version>${exist-dsb-version}</version>
-			</dependency>
-			<dependency>
-				<groupId>edu.emory.cci</groupId>
-				<artifactId>aiw-mimicii-dsb</artifactId>
-				<version>${mimc-dsb-version}</version>
-			</dependency>
+			<!--<dependency>-->
+				<!--<groupId>edu.emory.cci.aiw</groupId>-->
+				<!--<artifactId>exist-dsb</artifactId>-->
+				<!--<version>${exist-dsb-version}</version>-->
+			<!--</dependency>-->
+			<!--<dependency>-->
+				<!--<groupId>edu.emory.cci</groupId>-->
+				<!--<artifactId>aiw-mimicii-dsb</artifactId>-->
+				<!--<version>${mimc-dsb-version}</version>-->
+			<!--</dependency>-->
 		</dependencies>
 	</dependencyManagement>
 
