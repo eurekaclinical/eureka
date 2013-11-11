@@ -150,13 +150,13 @@
 							<type>war</type>
 							<asWebapp>true</asWebapp>
 						</webapp>
-                        <webapp>
-                            <groupId>edu.emory.cci.cas</groupId>
-                            <artifactId>cas-server</artifactId>
-                            <version>1.0-SNAPSHOT</version>
-                            <type>war</type>
-                            <asWebapp>true</asWebapp>
-                        </webapp>
+						<webapp>
+							<groupId>edu.emory.cci.cas</groupId>
+							<artifactId>cas-server</artifactId>
+							<version>1.0.1-SNAPSHOT</version>
+							<type>war</type>
+							<asWebapp>true</asWebapp>
+						</webapp>
 					</webapps>
 					<addContextWarDependencies>true</addContextWarDependencies>
 					<addWarDependenciesInClassloader>true</addWarDependenciesInClassloader>
