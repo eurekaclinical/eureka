@@ -1,4 +1,4 @@
-Eureka! Clinical Analytics 1.7 -- An ETL Tool for Loading Data into i2b2.  
+Eureka! Clinical Analytics 1.8 -- An ETL Tool for Loading Data into i2b2.
 Center for Comprehensive Informatics, Emory University
 
 OVERVIEW
@@ -13,6 +13,12 @@ This package contains source code only. For binaries, please go to
 http://aiw.sourceforge.net/.
 
 WHAT'S NEW
+
+Version 1.8 adds the ability to connect directly to a database as a
+data source, in addition to the spreadsheet upload mechanism.  This
+change allows Eureka! to pull patient data directly from a data warehouse.
+There are also improvements to the phenotype editor and job submission
+user interfaces.
 
 Version 1.7 provides the ability to create new types of phenotypes.
 Frequency data elements can now specify the first n occurrences as 
@@ -57,4 +63,4 @@ Eureka! Clinical Analytics is Copyright (C) 2012-2013 Emory University.
 MORE INFORMATION
 
 Please see http://aiw.sourceforge.net for more information and
-http://aiw.sourceforge.net/dev/eureka-1.7 for technical documentation.
+http://aiw.sourceforge.net/dev/eureka-1.8 for technical documentation.
