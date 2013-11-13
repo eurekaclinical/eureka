@@ -40,9 +40,6 @@
 	</template:content>
 	<template:content name="subcontent">
 	  </template:content>
-	<template:content name="subcontent">
-	  <%@ include file="common/rss.jspf" %>
-	</template:content>
 
 </template:insert>
 
