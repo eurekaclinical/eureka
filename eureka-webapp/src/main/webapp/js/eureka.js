@@ -670,7 +670,7 @@ $(document).ready(function() {
 			data: dataString,
 			success: function() {
 				$('#passwordresetComplete').show();
-				$('#passwordresetComplete').text("Password has been reset.You will receive an email with the new password.");
+				$('#passwordresetComplete').text("Password has been reset. You will receive an email with the new password.");
 				$('#saveAcctBtn').hide();
 
 			}, 
