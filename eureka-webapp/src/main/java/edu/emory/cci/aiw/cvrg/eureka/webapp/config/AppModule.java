@@ -1,3 +1,9 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+
 package edu.emory.cci.aiw.cvrg.eureka.webapp.config;
 
 /*
@@ -20,25 +26,18 @@ package edu.emory.cci.aiw.cvrg.eureka.webapp.config;
  * #L%
  */
 
-import edu.emory.cci.aiw.cvrg.eureka.common.props.AbstractProperties;
+import com.google.inject.AbstractModule;
+import com.google.inject.Singleton;
 
 /**
  *
- * @author Andrew Post
+ * @author hrathod
  */
-public class WebappProperties extends AbstractProperties {
-	public boolean isEphiProhibited() {
-		return Boolean.parseBoolean(getValue("eureka.webapp.ephiprohibited"));
-	}
-	public boolean isDemoMode() {
-		return Boolean.parseBoolean(getValue("eureka.webapp.demomode"));
-	}
+class AppModule extends AbstractModule {
 
-	public String getUploadDir() {
-		return this.getValue("eureka.webapp.uploaddir");
+	@Override
+	protected void configure() {
+		bind(WebappProperties.class).in(Singleton.class);
 	}
-
-	public String getServiceUrl() {
-		return this.getValue("eureka.services.url");
-	}
+	
 }

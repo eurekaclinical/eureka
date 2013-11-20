@@ -44,6 +44,11 @@ public abstract class AbstractProperties {
 	private static final Logger LOGGER = LoggerFactory.getLogger(
 			AbstractProperties.class);
 	/**
+	 * The default server name for the application server, if none is
+	 * provided in the configuration.
+	 */
+	private static final String DEFAULT_SERVER_NAME = "http://localhost:8080";
+	/**
 	 * Name of the system property that points to the configuration file.
 	 */
 	private static final String PROPERTY_NAME = "eureka.config.file";
@@ -255,6 +260,31 @@ public abstract class AbstractProperties {
 		return result;
 	}
 
+
+	public String getServerName() {
+		return this.getValue("eureka.servername", DEFAULT_SERVER_NAME);
+	}
+
+	public String getCasUrl () {
+		return this.getValue("cas.url");
+	}
+
+	public String getMajorVersion () {
+		return this.getValue("eureka.version.major");
+	}
+
+	public String getMinorVersion () {
+		return this.getValue("eureka.version.minor");
+	}
+	public String getIncrementalVersion () {
+		return this.getValue("eureka.version.incremental");
+	}
+	public String getQualifier () {
+		return this.getValue("eureka.version.qualifier");
+	}
+	public String getBuildNumber () {
+		return this.getValue("eureka.version.buildNumber");
+	}
 	/**
 	 * Returns the String value of the given property name.
 	 *
@@ -309,7 +339,7 @@ public abstract class AbstractProperties {
 		String value = this.properties.getProperty(inPropertyName);
 		if (value != null) {
 			String[] temp = value.split("\\s+");
-			result = new ArrayList<String>(temp.length);
+			result = new ArrayList<>(temp.length);
 			for (String s : temp) {
 				String trimmed = s.trim();
 				if (trimmed.length() > 0) {

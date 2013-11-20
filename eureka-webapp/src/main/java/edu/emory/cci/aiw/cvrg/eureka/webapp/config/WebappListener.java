@@ -19,24 +19,49 @@ package edu.emory.cci.aiw.cvrg.eureka.webapp.config;
  * limitations under the License.
  * #L%
  */
-
 import javax.servlet.ServletContextEvent;
-import javax.servlet.ServletContextListener;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import com.google.inject.Guice;
+import com.google.inject.Injector;
+import com.google.inject.servlet.GuiceServletContextListener;
 
 /**
  *
  * @author Andrew Post
  */
-public class WebappListener implements ServletContextListener {
+public class WebappListener extends GuiceServletContextListener {
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(WebappListener.class);
+	private Injector injector = null;
+	private String context = null;
 
 	@Override
-	public void contextInitialized(ServletContextEvent sce) {
-		sce.getServletContext().setAttribute("webappProperties", new WebappProperties());
+	public void contextInitialized(ServletContextEvent servletContextEvent) {
+		super.contextInitialized(servletContextEvent);
+		this.context = servletContextEvent.getServletContext().getContextPath();
+		LOGGER.info("context initialized");
+		LOGGER.info("context = {}", this.context);
 	}
 
 	@Override
-	public void contextDestroyed(ServletContextEvent sce) {
-		sce.getServletContext().removeAttribute("webappProperties");
+	protected Injector getInjector() {
+		if (null == injector) {
+			LOGGER.info("context = {}", this.context);
+			injector = Guice.createInjector(
+					new AppModule(),
+					new ServletModule(new WebappProperties()));
+		}
+		LOGGER.info("getInjector called");
+		return this.injector;
 	}
-	
+
+	@Override
+	public void contextDestroyed(ServletContextEvent servletContextEvent) {
+		super.contextDestroyed(servletContextEvent);
+		this.injector = null;
+		this.context = null;
+		LOGGER.info("context destroyed");
+	}
 }
