@@ -20,15 +20,8 @@
 package edu.emory.cci.aiw.cvrg.eureka.services.config;
 
 import com.google.inject.persist.PersistFilter;
-import java.util.HashMap;
-import java.util.Map;
 
-import com.sun.jersey.api.container.filter.RolesAllowedResourceFilterFactory;
-import com.sun.jersey.api.core.PackagesResourceConfig;
-import com.sun.jersey.api.core.ResourceConfig;
-import com.sun.jersey.guice.JerseyServletModule;
-import com.sun.jersey.guice.spi.container.servlet.GuiceContainer;
-import edu.emory.cci.aiw.cvrg.eureka.common.filter.RolesFilter;
+import edu.emory.cci.aiw.cvrg.eureka.common.config.AbstractServletModule;
 
 /**
  * Configure web related items for Guice and Jersey.
@@ -36,25 +29,46 @@ import edu.emory.cci.aiw.cvrg.eureka.common.filter.RolesFilter;
  * @author hrathod
  * 
  */
-class ServletModule extends JerseyServletModule {
+class ServletModule extends AbstractServletModule {
 
+	private static final String CONTAINER_PATH = "/api/*";
+	private static final String PACKAGE_NAMES = "edu.emory.cci.aiw.cvrg.eureka.services.resource;edu.emory.cci.aiw.cvrg.eureka.common.json";
+	private final String contextPath;
+	private final ServiceProperties serviceProperties;
+
+	public ServletModule (ServiceProperties inProperties) {
+		super();
+		this.contextPath = this.getServletContext().getContextPath();
+		this.serviceProperties = inProperties;
+	}
 	@Override
 	protected void configureServlets() {
-		filter("/api/*").through(PersistFilter.class);
-		
-		Map<String, String> rolesFilterInitParams =
-				new HashMap<String, String>();
-		rolesFilterInitParams.put("datasource", "java:comp/env/jdbc/EurekaService");
-		rolesFilterInitParams.put("sql", "select a.name as role from roles a, user_role b, users c where a.id=b.role_id and b.user_id=c.id and c.email=?");
-		rolesFilterInitParams.put("rolecolumn", "role");
-		filter("/api/*").through(RolesFilter.class, rolesFilterInitParams);
-		Map<String, String> params = new HashMap<String, String>();
-		params.put("com.sun.jersey.api.json.POJOMappingFeature", "true");
-		params.put(PackagesResourceConfig.PROPERTY_PACKAGES,
-				"edu.emory.cci.aiw.cvrg.eureka.services.resource;edu.emory.cci.aiw.cvrg.eureka.common.json");
-		params.put(ResourceConfig.PROPERTY_RESOURCE_FILTER_FACTORIES,
-				RolesAllowedResourceFilterFactory.class.getName());
-		serve("/api/*").with(GuiceContainer.class, params);
+		filter(this.getContainerPath()).through(PersistFilter.class);
+		super.configureServlets();
 	}
 
+	@Override
+	protected String getContextPath() {
+		return this.contextPath;
+	}
+
+	@Override
+	protected String getPackageNames() {
+		return PACKAGE_NAMES;
+	}
+
+	@Override
+	protected String getServerName() {
+		return this.serviceProperties.getServerName();
+	}
+
+	@Override
+	protected String getCasUrl() {
+		return this.serviceProperties.getCasUrl();
+	}
+
+	@Override
+	protected String getContainerPath() {
+		return CONTAINER_PATH;
+	}
 }

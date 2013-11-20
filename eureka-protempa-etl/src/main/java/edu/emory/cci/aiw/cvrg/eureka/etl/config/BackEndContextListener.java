@@ -19,37 +19,30 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.etl.config;
 
-import javax.servlet.ServletContextEvent;
-
-import com.google.inject.Guice;
-import com.google.inject.Injector;
-import com.google.inject.servlet.GuiceServletContextListener;
-import edu.emory.cci.aiw.cvrg.eureka.common.dao.DatabaseSupport;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.JobEntity;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.JobEventType;
-
-import edu.emory.cci.aiw.cvrg.eureka.etl.job.TaskManager;
-import java.io.File;
 import java.util.List;
-import java.util.logging.Level;
+
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
-import org.protempa.CloseException;
+import javax.servlet.ServletContextEvent;
+
 import org.protempa.DataSource;
 import org.protempa.Protempa;
 import org.protempa.ProtempaException;
-import org.protempa.ProtempaStartupException;
 import org.protempa.SourceFactory;
-import org.protempa.backend.BackendInitializationException;
-import org.protempa.backend.BackendNewInstanceException;
-import org.protempa.backend.BackendProviderSpecLoaderException;
 import org.protempa.backend.Configurations;
-import org.protempa.backend.ConfigurationsLoadException;
-import org.protempa.backend.ConfigurationsNotFoundException;
-import org.protempa.backend.InvalidConfigurationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.google.inject.Guice;
+import com.google.inject.Injector;
+import com.google.inject.persist.jpa.JpaPersistModule;
+import com.google.inject.servlet.GuiceServletContextListener;
+
+import edu.emory.cci.aiw.cvrg.eureka.common.dao.DatabaseSupport;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.JobEntity;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.JobEventType;
+import edu.emory.cci.aiw.cvrg.eureka.etl.job.TaskManager;
 
 /**
  * Loaded up on application initialization, sets up the application with Guice
@@ -63,6 +56,36 @@ public class BackEndContextListener extends GuiceServletContextListener {
 	private static Logger LOGGER =
 			LoggerFactory.getLogger(BackEndContextListener.class);
 	static final String JPA_UNIT = "backend-jpa-unit";
+	/**
+	 * The Guice injector used to fetch instances of dependency injection
+	 * enabled classes.
+	 */
+	private Injector injector = null;
+
+	@Override
+	protected Injector getInjector() {
+		if (null == this.injector) {
+			this.injector = Guice.createInjector(
+								new AppModule(),
+								new ETLServletModule(new EtlProperties()),
+								new JpaPersistModule(JPA_UNIT));
+		}
+		return this.injector;
+	}
+
+	@Override
+	public void contextInitialized(ServletContextEvent inServletContextEvent) {
+		super.contextInitialized(inServletContextEvent);
+		initDatabase();
+	}
+
+	@Override
+	public void contextDestroyed(ServletContextEvent servletContextEvent) {
+		super.contextDestroyed(servletContextEvent);
+		TaskManager taskManager =
+				this.getInjector().getInstance(TaskManager.class);
+		taskManager.shutdown();
+	}
 
 	private static void repairData(EtlProperties etlProp, JobEntity job) {
 		Protempa protempa = null;
@@ -98,33 +121,6 @@ public class BackEndContextListener extends GuiceServletContextListener {
 		entityManager.merge(job);
 		LOGGER.warn("After repair, the job's status is {}",
 				job.toString());
-	}
-	/**
-	 * The Guice injector used to fetch instances of dependency injection
-	 * enabled classes.
-	 */
-	private final Injector injector = Guice
-			.createInjector(new ETLServletModule());
-
-	@Override
-	protected Injector getInjector() {
-		return this.injector;
-	}
-
-	@Override
-	public void contextInitialized(ServletContextEvent servletContextEvent) {
-		super.contextInitialized(servletContextEvent);
-		// FIXME what is this line for?
-		servletContextEvent.getServletContext().setAttribute("", new Object());
-		initDatabase();
-	}
-
-	@Override
-	public void contextDestroyed(ServletContextEvent servletContextEvent) {
-		super.contextDestroyed(servletContextEvent);
-		TaskManager taskManager =
-				this.getInjector().getInstance(TaskManager.class);
-		taskManager.shutdown();
 	}
 
 	private static void repairJobsIfNeeded(

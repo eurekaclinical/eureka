@@ -41,19 +41,15 @@ public class WebappListener extends GuiceServletContextListener {
 	public void contextInitialized(ServletContextEvent servletContextEvent) {
 		super.contextInitialized(servletContextEvent);
 		this.context = servletContextEvent.getServletContext().getContextPath();
-		LOGGER.info("context initialized");
-		LOGGER.info("context = {}", this.context);
 	}
 
 	@Override
 	protected Injector getInjector() {
 		if (null == injector) {
-			LOGGER.info("context = {}", this.context);
 			injector = Guice.createInjector(
 					new AppModule(),
 					new ServletModule(new WebappProperties()));
 		}
-		LOGGER.info("getInjector called");
 		return this.injector;
 	}
 
@@ -62,6 +58,5 @@ public class WebappListener extends GuiceServletContextListener {
 		super.contextDestroyed(servletContextEvent);
 		this.injector = null;
 		this.context = null;
-		LOGGER.info("context destroyed");
 	}
 }

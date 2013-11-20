@@ -62,7 +62,7 @@ class ServletModule extends AbstractServletModule {
 	private static final String PROPERTY_PACKAGE_NAMES = "edu.emory.cci.aiw.cvrg.eureka.webapp.resource;edu.emory.cci.aiw.cvrg.eureka.servlet";
 	private static final String REDIRECT_URL = "/protected/password_expiration.jsp";
 	private static final String PASSWORD_SAVE_PATH = "/protected/user_acct";
-	private static final String CAS_URL = "https://localhost:8443/cas-server";
+	private static final String CONTAINER_PATH = "/site/*";
 	private final String contextPath;
 	private final WebappProperties properties;
 
@@ -184,5 +184,10 @@ class ServletModule extends AbstractServletModule {
 	@Override
 	protected String getCasUrl() {
 		return this.properties.getCasUrl();
+	}
+
+	@Override
+	protected String getContainerPath() {
+		return CONTAINER_PATH;
 	}
 }

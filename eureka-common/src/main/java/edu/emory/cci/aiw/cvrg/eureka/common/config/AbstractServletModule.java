@@ -57,6 +57,7 @@ public abstract class AbstractServletModule extends JerseyServletModule {
 	private static final String BACKEND_JNDI_NAME = "java:comp/env/jdbc/EurekaBackend";
 	
 	protected AbstractServletModule() {
+		super();
 	}
 
 	protected void printParams (Map<String, String> inParams) {
@@ -132,7 +133,7 @@ public abstract class AbstractServletModule extends JerseyServletModule {
 		if (LOGGER.isDebugEnabled()) {
 			this.printParams(params);
 		}
-		serve("/site/*").with(GuiceContainer.class, params);
+		serve(this.getContainerPath()).with(GuiceContainer.class, params);
 	}
 	
 	@Override
@@ -169,4 +170,6 @@ public abstract class AbstractServletModule extends JerseyServletModule {
 	protected abstract String getServerName();
 	
 	protected abstract String getCasUrl();
+
+	protected abstract String getContainerPath();
 }
