@@ -44,7 +44,7 @@ import edu.emory.cci.aiw.cvrg.eureka.common.filter.RolesFilter;
  * @author hrathod
  */
 public abstract class AbstractServletModule extends JerseyServletModule {
-	
+
 	private static final Logger LOGGER = LoggerFactory
 			.getLogger(AbstractServletModule.class);
 	private static final String CAS_CALLBACK_PATH = "/proxyCallback";
@@ -55,12 +55,12 @@ public abstract class AbstractServletModule extends JerseyServletModule {
 	private static final String WEB_CONTENT_REGEX = "(/(image|js|css)/?.*)|(/.*\\.jsp)|(/WEB-INF/.*\\.jsp)|(/WEB-INF/.*\\.jspf)|(/.*\\.html)|(/favicon\\.ico)|(/robots\\.txt)";
 	private static final String SERVICES_JNDI_NAME = "java:comp/env/jdbc/EurekaService";
 	private static final String BACKEND_JNDI_NAME = "java:comp/env/jdbc/EurekaBackend";
-	
+
 	protected AbstractServletModule() {
 		super();
 	}
 
-	protected void printParams (Map<String, String> inParams) {
+	protected void printParams(Map<String, String> inParams) {
 		for (Map.Entry<String, String> entry : inParams.entrySet()) {
 			LOGGER.debug(entry.getKey() + " -> " + entry.getValue());
 		}
@@ -74,10 +74,10 @@ public abstract class AbstractServletModule extends JerseyServletModule {
 		rolesFilterInitParams.put("rolecolumn", ROLE_COLUMN);
 		filter("/*").through(RolesFilter.class, rolesFilterInitParams);
 	}
-	
+
 	private void setupCasProxyFilter() {
-		bind(Cas20ProxyReceivingTicketValidationFilter.class)
-				.in(Singleton.class);
+		bind(Cas20ProxyReceivingTicketValidationFilter.class).in(
+				Singleton.class);
 		Map<String, String> params = new HashMap<>();
 		params.put("acceptAnyProxy", "true");
 		params.put("proxyCallbackUrl", this.getProxyCallbackUrl());
@@ -85,13 +85,14 @@ public abstract class AbstractServletModule extends JerseyServletModule {
 		params.put("casServerUrlPrefix", this.getCasUrl());
 		params.put("serverName", this.getServerName());
 		params.put("redirectAfterValidation", "true");
-		if(LOGGER.isDebugEnabled()) {
+		if (LOGGER.isDebugEnabled()) {
 			this.printParams(params);
 		}
-		filter(this.getProxyReceptorUrl(), "/protected/*").through(
-				Cas20ProxyReceivingTicketValidationFilter.class, params);
+		filter(this.getProxyReceptorUrl(), this.getContainerProtectedPath())
+				.through(Cas20ProxyReceivingTicketValidationFilter.class,
+						params);
 	}
-	
+
 	private void setupCasAuthenticationFilter() {
 		bind(AuthenticationFilter.class).in(Singleton.class);
 		Map<String, String> params = new HashMap<>();
@@ -99,10 +100,11 @@ public abstract class AbstractServletModule extends JerseyServletModule {
 		params.put("serverName", this.getServerName());
 		params.put("renew", "false");
 		params.put("gateway", "false");
-		if(LOGGER.isDebugEnabled()) {
+		if (LOGGER.isDebugEnabled()) {
 			this.printParams(params);
 		}
-		filter("/protected/*").through(AuthenticationFilter.class, params);
+		filter(this.getContainerProtectedPath()).through(
+				AuthenticationFilter.class, params);
 	}
 
 	private void setupServletRequestWrapperFilter() {
@@ -119,7 +121,7 @@ public abstract class AbstractServletModule extends JerseyServletModule {
 		bind(AssertionThreadLocalFilter.class).in(Singleton.class);
 		filter("/*").through(AssertionThreadLocalFilter.class);
 	}
-	
+
 	private void setupContainer() {
 		Map<String, String> params = new HashMap<>();
 		params.put(JSONConfiguration.FEATURE_POJO_MAPPING, "true");
@@ -135,7 +137,7 @@ public abstract class AbstractServletModule extends JerseyServletModule {
 		}
 		serve(this.getContainerPath()).with(GuiceContainer.class, params);
 	}
-	
+
 	@Override
 	protected void configureServlets() {
 		super.configureServlets();
@@ -146,30 +148,32 @@ public abstract class AbstractServletModule extends JerseyServletModule {
 		this.setupAuthorizationFilter();
 		this.setupContainer();
 	}
-	
+
 	private String getProxyCallbackUrl() {
 		return this.getApplicationUrl() + CAS_CALLBACK_PATH;
 	}
-	
+
 	private String getProxyReceptorUrl() {
 		return CAS_CALLBACK_PATH;
 	}
-	
+
 	protected String getApplicationUrl() {
 		return this.getServerName() + this.getContextPath();
 	}
-	
+
 	protected String getCasLoginUrl() {
 		return this.getCasUrl() + CAS_LOGIN_PATH;
 	}
-	
+
 	protected abstract String getContextPath();
-	
+
 	protected abstract String getPackageNames();
-	
+
 	protected abstract String getServerName();
-	
+
 	protected abstract String getCasUrl();
 
 	protected abstract String getContainerPath();
+
+	protected abstract String getContainerProtectedPath();
 }

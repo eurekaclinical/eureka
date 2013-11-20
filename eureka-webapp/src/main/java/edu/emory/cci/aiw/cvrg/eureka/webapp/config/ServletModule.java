@@ -27,7 +27,6 @@ import org.slf4j.LoggerFactory;
 
 import com.google.inject.Singleton;
 
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ServicesClient;
 import edu.emory.cci.aiw.cvrg.eureka.common.config.AbstractServletModule;
 import edu.emory.cci.aiw.cvrg.eureka.servlet.AdminManagerServlet;
 import edu.emory.cci.aiw.cvrg.eureka.servlet.CommonsFileUploadServlet;
@@ -50,19 +49,20 @@ import edu.emory.cci.aiw.cvrg.eureka.servlet.proposition.ListUserDefinedProposit
 import edu.emory.cci.aiw.cvrg.eureka.servlet.proposition.SavePropositionServlet;
 import edu.emory.cci.aiw.cvrg.eureka.servlet.proposition.SystemPropositionListServlet;
 import edu.emory.cci.aiw.cvrg.eureka.servlet.proposition.UserPropositionListServlet;
-import edu.emory.cci.aiw.cvrg.eureka.webapp.provider.ServicesClientProvider;
 
 /**
- *
+ * 
  * @author hrathod
  */
 class ServletModule extends AbstractServletModule {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(ServletModule.class);
+	private static final Logger LOGGER = LoggerFactory
+			.getLogger(ServletModule.class);
 	private static final String PROPERTY_PACKAGE_NAMES = "edu.emory.cci.aiw.cvrg.eureka.webapp.resource;edu.emory.cci.aiw.cvrg.eureka.servlet";
 	private static final String REDIRECT_URL = "/protected/password_expiration.jsp";
 	private static final String PASSWORD_SAVE_PATH = "/protected/user_acct";
 	private static final String CONTAINER_PATH = "/site/*";
+	private static final String CONTAINER_PROTECTED_PATH = "/protected/*";
 	private final String contextPath;
 	private final WebappProperties properties;
 
@@ -80,7 +80,8 @@ class ServletModule extends AbstractServletModule {
 		if (LOGGER.isDebugEnabled()) {
 			this.printParams(params);
 		}
-		filter("/protected/*").through(PasswordExpiredFilter.class, params);
+		filter(this.getContainerProtectedPath()).through(
+				PasswordExpiredFilter.class, params);
 	}
 
 	private void setupMessageFilter() {
@@ -153,15 +154,10 @@ class ServletModule extends AbstractServletModule {
 		serve("/protected/ping").with(PingServlet.class);
 	}
 
-	private void bindProviders () {
-		bind(ServicesClient.class).toProvider(ServicesClientProvider.class);
-	}
-
 	@Override
 	protected void configureServlets() {
 		super.configureServlets();
 		this.setupServlets();
-		this.bindProviders();
 		this.setupPasswordExpiredFilter();
 		this.setupMessageFilter();
 	}
@@ -189,5 +185,10 @@ class ServletModule extends AbstractServletModule {
 	@Override
 	protected String getContainerPath() {
 		return CONTAINER_PATH;
+	}
+
+	@Override
+	protected String getContainerProtectedPath() {
+		return CONTAINER_PROTECTED_PATH;
 	}
 }

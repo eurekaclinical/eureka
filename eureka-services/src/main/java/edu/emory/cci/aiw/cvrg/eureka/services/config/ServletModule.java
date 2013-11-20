@@ -32,6 +32,7 @@ import edu.emory.cci.aiw.cvrg.eureka.common.config.AbstractServletModule;
 class ServletModule extends AbstractServletModule {
 
 	private static final String CONTAINER_PATH = "/api/*";
+	private static final String CONTAINER_PROTECTED_PATH = "/api/protected/*";
 	private static final String PACKAGE_NAMES = "edu.emory.cci.aiw.cvrg.eureka.services.resource;edu.emory.cci.aiw.cvrg.eureka.common.json";
 	private final String contextPath;
 	private final ServiceProperties serviceProperties;
@@ -43,8 +44,8 @@ class ServletModule extends AbstractServletModule {
 	}
 	@Override
 	protected void configureServlets() {
-		filter(this.getContainerPath()).through(PersistFilter.class);
 		super.configureServlets();
+		filter(this.getContainerPath()).through(PersistFilter.class);
 	}
 
 	@Override
@@ -70,5 +71,10 @@ class ServletModule extends AbstractServletModule {
 	@Override
 	protected String getContainerPath() {
 		return CONTAINER_PATH;
+	}
+
+	@Override
+	protected String getContainerProtectedPath() {
+		return CONTAINER_PROTECTED_PATH;
 	}
 }
