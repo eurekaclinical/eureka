@@ -19,6 +19,7 @@ package edu.emory.cci.aiw.cvrg.eureka.common.config;
  * limitations under the License.
  * #L%
  */
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -39,6 +40,7 @@ import com.sun.jersey.guice.spi.container.servlet.GuiceContainer;
 import com.sun.jersey.spi.container.servlet.ServletContainer;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.filter.RolesFilter;
+import edu.emory.cci.aiw.cvrg.eureka.common.props.AbstractProperties;
 
 /**
  * @author hrathod
@@ -55,9 +57,21 @@ public abstract class AbstractServletModule extends JerseyServletModule {
 	private static final String WEB_CONTENT_REGEX = "(/(image|js|css)/?.*)|(/.*\\.jsp)|(/WEB-INF/.*\\.jsp)|(/WEB-INF/.*\\.jspf)|(/.*\\.html)|(/favicon\\.ico)|(/robots\\.txt)";
 	private static final String SERVICES_JNDI_NAME = "java:comp/env/jdbc/EurekaService";
 	private static final String BACKEND_JNDI_NAME = "java:comp/env/jdbc/EurekaBackend";
+	private final AbstractProperties properties;
+	private final String containerPath;
+	private final String protectedPath;
+	private final String packageNames;
+	private final String contextPath;
 
-	protected AbstractServletModule() {
+	protected AbstractServletModule(AbstractProperties inProperties,
+			String inPackageNames, String inContainerPath,
+			String inProtectedPath) {
 		super();
+		this.properties = inProperties;
+		this.containerPath = inContainerPath;
+		this.packageNames = inPackageNames;
+		this.protectedPath = inProtectedPath;
+		this.contextPath = this.getServletContext().getContextPath();
 	}
 
 	protected void printParams(Map<String, String> inParams) {
@@ -82,29 +96,27 @@ public abstract class AbstractServletModule extends JerseyServletModule {
 		params.put("acceptAnyProxy", "true");
 		params.put("proxyCallbackUrl", this.getProxyCallbackUrl());
 		params.put("proxyReceptorUrl", this.getProxyReceptorUrl());
-		params.put("casServerUrlPrefix", this.getCasUrl());
-		params.put("serverName", this.getServerName());
+		params.put("casServerUrlPrefix", this.properties.getCasUrl());
+		params.put("serverName", this.properties.getProxyCallbackServer());
 		params.put("redirectAfterValidation", "true");
 		if (LOGGER.isDebugEnabled()) {
 			this.printParams(params);
 		}
-		filter(this.getProxyReceptorUrl(), this.getContainerProtectedPath())
-				.through(Cas20ProxyReceivingTicketValidationFilter.class,
-						params);
+		filter(this.getProxyReceptorUrl(), this.protectedPath).through(
+				Cas20ProxyReceivingTicketValidationFilter.class, params);
 	}
 
 	private void setupCasAuthenticationFilter() {
 		bind(AuthenticationFilter.class).in(Singleton.class);
 		Map<String, String> params = new HashMap<>();
 		params.put("casServerLoginUrl", this.getCasLoginUrl());
-		params.put("serverName", this.getServerName());
+		params.put("serverName", this.properties.getProxyCallbackServer());
 		params.put("renew", "false");
 		params.put("gateway", "false");
 		if (LOGGER.isDebugEnabled()) {
 			this.printParams(params);
 		}
-		filter(this.getContainerProtectedPath()).through(
-				AuthenticationFilter.class, params);
+		filter(this.protectedPath).through(AuthenticationFilter.class, params);
 	}
 
 	private void setupServletRequestWrapperFilter() {
@@ -125,8 +137,7 @@ public abstract class AbstractServletModule extends JerseyServletModule {
 	private void setupContainer() {
 		Map<String, String> params = new HashMap<>();
 		params.put(JSONConfiguration.FEATURE_POJO_MAPPING, "true");
-		params.put(PackagesResourceConfig.PROPERTY_PACKAGES,
-				this.getPackageNames());
+		params.put(PackagesResourceConfig.PROPERTY_PACKAGES, this.packageNames);
 		params.put(ResourceConfig.PROPERTY_RESOURCE_FILTER_FACTORIES,
 				RolesAllowedResourceFilterFactory.class.getName());
 		params.put(ServletContainer.JSP_TEMPLATES_BASE_PATH, TEMPLATES_PATH);
@@ -135,7 +146,7 @@ public abstract class AbstractServletModule extends JerseyServletModule {
 		if (LOGGER.isDebugEnabled()) {
 			this.printParams(params);
 		}
-		serve(this.getContainerPath()).with(GuiceContainer.class, params);
+		serve(this.containerPath).with(GuiceContainer.class, params);
 	}
 
 	@Override
@@ -150,30 +161,15 @@ public abstract class AbstractServletModule extends JerseyServletModule {
 	}
 
 	private String getProxyCallbackUrl() {
-		return this.getApplicationUrl() + CAS_CALLBACK_PATH;
+		return this.properties.getProxyCallbackServer() + this.contextPath
+				+ CAS_CALLBACK_PATH;
 	}
 
 	private String getProxyReceptorUrl() {
 		return CAS_CALLBACK_PATH;
 	}
 
-	protected String getApplicationUrl() {
-		return this.getServerName() + this.getContextPath();
-	}
-
 	protected String getCasLoginUrl() {
-		return this.getCasUrl() + CAS_LOGIN_PATH;
+		return this.properties.getCasUrl() + CAS_LOGIN_PATH;
 	}
-
-	protected abstract String getContextPath();
-
-	protected abstract String getPackageNames();
-
-	protected abstract String getServerName();
-
-	protected abstract String getCasUrl();
-
-	protected abstract String getContainerPath();
-
-	protected abstract String getContainerProtectedPath();
 }

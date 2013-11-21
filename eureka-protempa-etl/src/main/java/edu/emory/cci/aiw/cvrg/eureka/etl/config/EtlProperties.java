@@ -19,11 +19,12 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.etl.config;
 
-import edu.emory.cci.aiw.cvrg.eureka.etl.resource.ToConfigFile;
+import java.io.File;
+
 import com.google.inject.Singleton;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.props.AbstractProperties;
-import java.io.File;
+import edu.emory.cci.aiw.cvrg.eureka.etl.resource.ToConfigFile;
 
 /**
  * Contains methods to fetch configuration information for the application.
@@ -69,6 +70,9 @@ public class EtlProperties extends AbstractProperties {
 		return new File(getDestinationConfigDirectory(),
 				ToConfigFile.fromDestId(destId));
 	}
-	
-	
+
+	@Override
+	public String getProxyCallbackServer() {
+		return this.getValue("eureka.etl.callbackserver");
+	}
 }

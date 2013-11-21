@@ -37,44 +37,16 @@ class ServletModule extends AbstractServletModule {
 	private final String contextPath;
 	private final ServiceProperties serviceProperties;
 
-	public ServletModule (ServiceProperties inProperties) {
-		super();
+	public ServletModule(ServiceProperties inProperties) {
+		super(inProperties, PACKAGE_NAMES, CONTAINER_PATH,
+				CONTAINER_PROTECTED_PATH);
 		this.contextPath = this.getServletContext().getContextPath();
 		this.serviceProperties = inProperties;
 	}
+
 	@Override
 	protected void configureServlets() {
 		super.configureServlets();
-		filter(this.getContainerPath()).through(PersistFilter.class);
-	}
-
-	@Override
-	protected String getContextPath() {
-		return this.contextPath;
-	}
-
-	@Override
-	protected String getPackageNames() {
-		return PACKAGE_NAMES;
-	}
-
-	@Override
-	protected String getServerName() {
-		return this.serviceProperties.getServerName();
-	}
-
-	@Override
-	protected String getCasUrl() {
-		return this.serviceProperties.getCasUrl();
-	}
-
-	@Override
-	protected String getContainerPath() {
-		return CONTAINER_PATH;
-	}
-
-	@Override
-	protected String getContainerProtectedPath() {
-		return CONTAINER_PROTECTED_PATH;
+		filter(CONTAINER_PATH).through(PersistFilter.class);
 	}
 }

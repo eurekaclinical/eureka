@@ -26,9 +26,9 @@ import edu.emory.cci.aiw.cvrg.eureka.common.config.AbstractServletModule;
 /**
  * A Guice configuration module for setting up the web infrastructure and
  * binding appropriate implementations to interfaces.
- *
+ * 
  * @author hrathod
- *
+ * 
  */
 public class ETLServletModule extends AbstractServletModule {
 
@@ -38,8 +38,9 @@ public class ETLServletModule extends AbstractServletModule {
 	private final String contextPath;
 	private final EtlProperties etlProperties;
 
-	public ETLServletModule (EtlProperties inProperties) {
-		super();
+	public ETLServletModule(EtlProperties inProperties) {
+		super(inProperties, PACKAGE_NAMES, CONTAINER_PATH,
+				CONTAINER_PROTECTED_PATH);
 		this.contextPath = this.getServletContext().getContextPath();
 		this.etlProperties = inProperties;
 	}
@@ -47,36 +48,6 @@ public class ETLServletModule extends AbstractServletModule {
 	@Override
 	protected void configureServlets() {
 		super.configureServlets();
-		filter(this.getContainerPath()).through(PersistFilter.class);
-	}
-
-	@Override
-	protected String getContextPath() {
-		return this.contextPath;
-	}
-
-	@Override
-	protected String getPackageNames() {
-		return PACKAGE_NAMES;
-	}
-
-	@Override
-	protected String getServerName() {
-		return this.etlProperties.getServerName();
-	}
-
-	@Override
-	protected String getCasUrl() {
-		return this.etlProperties.getCasUrl();
-	}
-
-	@Override
-	protected String getContainerPath() {
-		return CONTAINER_PATH;
-	}
-
-	@Override
-	protected String getContainerProtectedPath() {
-		return CONTAINER_PROTECTED_PATH;
+		filter(CONTAINER_PATH).through(PersistFilter.class);
 	}
 }

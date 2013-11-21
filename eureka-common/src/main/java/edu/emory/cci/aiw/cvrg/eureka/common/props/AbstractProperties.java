@@ -260,10 +260,7 @@ public abstract class AbstractProperties {
 		return result;
 	}
 
-
-	public String getServerName() {
-		return this.getValue("eureka.servername", DEFAULT_SERVER_NAME);
-	}
+	public abstract String getProxyCallbackServer ();
 
 	public String getCasUrl () {
 		return this.getValue("cas.url");

@@ -22,13 +22,15 @@ package edu.emory.cci.aiw.cvrg.eureka.services.config;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.google.inject.Singleton;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.props.AbstractProperties;
 import edu.emory.cci.aiw.cvrg.eureka.common.props.PublicUrlGenerator;
-import javax.servlet.http.HttpServletRequest;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Looks up the application properties file (application.properties) and
@@ -211,5 +213,10 @@ public class ServiceProperties extends AbstractProperties {
 	 */
 	public String getI2b2Domain() {
 		return this.getValue("eureka.services.i2b2.domain");
+	}
+
+	@Override
+	public String getProxyCallbackServer() {
+		return this.getValue("eureka.services.callbackserver");
 	}
 }

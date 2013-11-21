@@ -63,12 +63,10 @@ class ServletModule extends AbstractServletModule {
 	private static final String PASSWORD_SAVE_PATH = "/protected/user_acct";
 	private static final String CONTAINER_PATH = "/site/*";
 	private static final String CONTAINER_PROTECTED_PATH = "/protected/*";
-	private final String contextPath;
 	private final WebappProperties properties;
 
 	public ServletModule(WebappProperties inProperties) {
-		super();
-		this.contextPath = this.getServletContext().getContextPath();
+		super(inProperties, PROPERTY_PACKAGE_NAMES, CONTAINER_PATH, CONTAINER_PROTECTED_PATH);
 		this.properties = inProperties;
 	}
 
@@ -80,7 +78,7 @@ class ServletModule extends AbstractServletModule {
 		if (LOGGER.isDebugEnabled()) {
 			this.printParams(params);
 		}
-		filter(this.getContainerProtectedPath()).through(
+		filter(CONTAINER_PROTECTED_PATH).through(
 				PasswordExpiredFilter.class, params);
 	}
 
@@ -160,35 +158,5 @@ class ServletModule extends AbstractServletModule {
 		this.setupServlets();
 		this.setupPasswordExpiredFilter();
 		this.setupMessageFilter();
-	}
-
-	@Override
-	protected String getContextPath() {
-		return this.contextPath;
-	}
-
-	@Override
-	protected String getPackageNames() {
-		return PROPERTY_PACKAGE_NAMES;
-	}
-
-	@Override
-	protected String getServerName() {
-		return this.properties.getServerName();
-	}
-
-	@Override
-	protected String getCasUrl() {
-		return this.properties.getCasUrl();
-	}
-
-	@Override
-	protected String getContainerPath() {
-		return CONTAINER_PATH;
-	}
-
-	@Override
-	protected String getContainerProtectedPath() {
-		return CONTAINER_PROTECTED_PATH;
 	}
 }
