@@ -32,6 +32,8 @@ import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.inject.Inject;
+
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.DataElement;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ClientException;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ServicesClient;
@@ -40,6 +42,13 @@ public class EditorHomeServlet extends HttpServlet {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger
 		(EditorHomeServlet.class);
+
+	private final ServicesClient servicesClient;
+
+	@Inject
+	public EditorHomeServlet (ServicesClient inClient) {
+		this.servicesClient = inClient;
+	}
 
 	private JsonTreeData createData(String key, String data) {
 		JsonTreeData d = new JsonTreeData();
@@ -76,14 +85,10 @@ public class EditorHomeServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
 		throws ServletException, IOException {
 
-		List<JsonTreeData> l = new ArrayList<JsonTreeData>();
-		String eurekaServicesUrl = req.getSession().getServletContext()
-			.getInitParameter("eureka-services-url");
-
-		ServicesClient servicesClient = new ServicesClient(eurekaServicesUrl);
+		List<JsonTreeData> l = new ArrayList<>();
 		List<DataElement> props;
 		try {
-			props = servicesClient.getUserElements();
+			props = this.servicesClient.getUserElements();
 		} catch (ClientException ex) {
 			throw new ServletException("Error getting user-defined data elements", ex);
 		}

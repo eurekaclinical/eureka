@@ -34,6 +34,8 @@ import org.codehaus.jackson.map.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.inject.Inject;
+
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.Category;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.DataElement;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.DataElementField;
@@ -44,13 +46,17 @@ public class ListUserDefinedPropositionChildrenServlet extends HttpServlet {
 
 	private static final Logger LOGGER = LoggerFactory
 			.getLogger(ListUserDefinedPropositionChildrenServlet.class);
-	private ServicesClient servicesClient;
+	private final ServicesClient servicesClient;
+
+	@Inject
+	public ListUserDefinedPropositionChildrenServlet(
+			ServicesClient inClient) {
+		this.servicesClient = inClient;
+	}
 
 	@Override
 	public void init(ServletConfig config) throws ServletException {
 		super.init(config);
-		String parameter = config.getServletContext().getInitParameter("eureka-services-url");
-		this.servicesClient = new ServicesClient(parameter);
 	}
 
 	private String getDisplayName(DataElementField p) {
@@ -133,12 +139,12 @@ public class ListUserDefinedPropositionChildrenServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
 
-		List<JsonTreeData> l = new ArrayList<JsonTreeData>();
+		List<JsonTreeData> l = new ArrayList<>();
 		String propKey = req.getParameter("propKey");
 
 		DataElement dataElement;
 		try {
-			dataElement = servicesClient.getUserElement(propKey);
+			dataElement = this.servicesClient.getUserElement(propKey);
 
 			JsonTreeData newData = createData(this.getDisplayName(dataElement),
 					propKey);

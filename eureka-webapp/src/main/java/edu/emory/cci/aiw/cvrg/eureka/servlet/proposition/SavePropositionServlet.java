@@ -30,6 +30,8 @@ import org.codehaus.jackson.map.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.inject.Inject;
+
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.DataElement;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.UserInfo;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ClientException;
@@ -39,6 +41,12 @@ public class SavePropositionServlet extends HttpServlet {
 
 	private static final Logger LOGGER = LoggerFactory
 	        .getLogger(SavePropositionServlet.class);
+	private final ServicesClient servicesClient;
+
+	@Inject
+	public SavePropositionServlet (ServicesClient inClient) {
+		this.servicesClient = inClient;
+	}
 
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp)
@@ -49,16 +57,13 @@ public class SavePropositionServlet extends HttpServlet {
 				DataElement.class);
 
 		String username = req.getUserPrincipal().getName();
-		String servicesUrl = req.getSession().getServletContext()
-				.getInitParameter("eureka-services-url");
-		ServicesClient servicesClient = new ServicesClient(servicesUrl);
 		try {
-			UserInfo user = servicesClient.getUserByName(username);
+			UserInfo user = this.servicesClient.getUserByName(username);
 			dataElement.setUserId(user.getId());
 			if (dataElement.getId() == null) {
-				servicesClient.saveUserElement(dataElement);
+				this.servicesClient.saveUserElement(dataElement);
 			} else {
-				servicesClient.updateUserElement(dataElement);
+				this.servicesClient.updateUserElement(dataElement);
 			}
 		} catch (ClientException e) {
 			resp.setStatus(e.getResponseStatus().getStatusCode());

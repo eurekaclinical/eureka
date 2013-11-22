@@ -21,27 +21,35 @@ package edu.emory.cci.aiw.cvrg.eureka.servlet.proposition;
 
 import java.io.IOException;
 import java.security.Principal;
+import java.text.MessageFormat;
+import java.util.ResourceBundle;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.ws.rs.core.MediaType;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.inject.Inject;
+
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.UserInfo;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ClientException;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ServicesClient;
-import java.text.MessageFormat;
-import java.util.ResourceBundle;
-import javax.ws.rs.core.MediaType;
 
 public class DeletePropositionServlet extends HttpServlet {
 
 	private static final Logger LOGGER = LoggerFactory
 			.getLogger(DeletePropositionServlet.class);
 
+	private final ServicesClient servicesClient;
+
+	@Inject
+	public DeletePropositionServlet (ServicesClient inClient) {
+		this.servicesClient = inClient;
+	}
 
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp)
@@ -56,16 +64,12 @@ public class DeletePropositionServlet extends HttpServlet {
 		LOGGER.debug("DeletePropositionServlet");
 		String propKey = req.getParameter("key");
 
-		String eurekaServicesUrl = req.getSession().getServletContext()
-				.getInitParameter("eureka-services-url");
 		Principal principal = req.getUserPrincipal();
 		String userName = principal.getName();
-		ServicesClient servicesClient = new ServicesClient(eurekaServicesUrl);
-		
 		// user/delete/{userId}/{prodId}
 		try {
-			UserInfo user = servicesClient.getUserByName(userName);
-			servicesClient.deleteUserElement(user.getId(), propKey);
+			UserInfo user = this.servicesClient.getUserByName(userName);
+			this.servicesClient.deleteUserElement(user.getId(), propKey);
 		} catch (ClientException e) {
 			resp.setContentType(MediaType.TEXT_PLAIN);
 			switch (e.getResponseStatus()) {

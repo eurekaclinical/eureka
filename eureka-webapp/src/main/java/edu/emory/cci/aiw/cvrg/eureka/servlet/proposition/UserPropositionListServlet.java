@@ -33,6 +33,8 @@ import org.codehaus.jackson.map.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.inject.Inject;
+
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.Category;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.DataElement;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ClientException;
@@ -42,6 +44,12 @@ public class UserPropositionListServlet extends HttpServlet {
 
 	private static final Logger LOGGER = LoggerFactory
 	        .getLogger(UserPropositionListServlet.class);
+	private final ServicesClient servicesClient;
+
+	@Inject
+	public UserPropositionListServlet (ServicesClient inClient) {
+		this.servicesClient = inClient;
+	}
 
 	private JsonTreeData createData(DataElement element) {
 		JsonTreeData d = new JsonTreeData();
@@ -86,14 +94,10 @@ public class UserPropositionListServlet extends HttpServlet {
 	        throws ServletException, IOException {
 
 		LOGGER.debug("doGet");
-		List<JsonTreeData> l = new ArrayList<JsonTreeData>();
-		String eurekaServicesUrl = req.getSession().getServletContext()
-		        .getInitParameter("eureka-services-url");
-		ServicesClient servicesClient = new ServicesClient(eurekaServicesUrl);
-
+		List<JsonTreeData> l = new ArrayList<>();
 		List<DataElement> props;
 		try {
-			props = servicesClient.getUserElements();
+			props = this.servicesClient.getUserElements();
 		} catch (ClientException ex) {
 			throw new ServletException("Error getting user-defined data element list", ex);
 		}

@@ -20,14 +20,20 @@
 package edu.emory.cci.aiw.cvrg.eureka.servlet.proposition;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.google.inject.Inject;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.Category;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.DataElement;
@@ -42,21 +48,21 @@ import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ClientException;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ServicesClient;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.FrequencyType;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.RelationOperator;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.ThresholdsOperator;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.TimeUnit;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.ValueComparator;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.ThresholdsOperator;
 import edu.emory.cci.aiw.cvrg.eureka.common.exception.DataElementHandlingException;
-
-import java.util.ArrayList;
-import java.util.Map;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class EditPropositionServlet extends HttpServlet {
 
 	private static final Logger LOGGER = LoggerFactory
 			.getLogger(EditPropositionServlet.class);
+	private final ServicesClient servicesClient;
+
+	@Inject
+	public EditPropositionServlet(ServicesClient inClient) {
+		this.servicesClient = inClient;
+	}
 
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp)
@@ -67,18 +73,14 @@ public class EditPropositionServlet extends HttpServlet {
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
-		String eurekaServicesUrl = req.getSession().getServletContext()
-				.getInitParameter("eureka-services-url");
 		String propKey = req.getParameter("key");
-
-		ServicesClient servicesClient = new ServicesClient(eurekaServicesUrl);
 		try {
-			List<FrequencyType> freqTypes = servicesClient.getFrequencyTypesAsc();
-			FrequencyType defaultFreqType = servicesClient.getDefaultFrequencyType();
-			List<TimeUnit> timeUnits = servicesClient.getTimeUnitsAsc();
-			TimeUnit defaultTimeUnit = servicesClient.getDefaultTimeUnit();
+			List<FrequencyType> freqTypes = this.servicesClient.getFrequencyTypesAsc();
+			FrequencyType defaultFreqType = this.servicesClient.getDefaultFrequencyType();
+			List<TimeUnit> timeUnits = this.servicesClient.getTimeUnitsAsc();
+			TimeUnit defaultTimeUnit = this.servicesClient.getDefaultTimeUnit();
 			List<RelationOperator> relOps =
-					servicesClient.getRelationOperatorsAsc();
+					this.servicesClient.getRelationOperatorsAsc();
 			List<RelationOperator> sequentialRelOps =
 					new ArrayList<RelationOperator>();
 			List<RelationOperator> contextRelOps =
@@ -96,14 +98,14 @@ public class EditPropositionServlet extends HttpServlet {
 				}
 			}
 			RelationOperator defaultRelOp =
-					servicesClient.getDefaultRelationOperator();
-			List<ThresholdsOperator> thresholdOps = servicesClient
+					this.servicesClient.getDefaultRelationOperator();
+			List<ThresholdsOperator> thresholdOps = this.servicesClient
 					.getThresholdsOperators();
 
-			List<ValueComparator> valueComparators = servicesClient
+			List<ValueComparator> valueComparators = this.servicesClient
 					.getValueComparatorsAsc();
-			List<ValueComparator> valueCompsUpper = new ArrayList<ValueComparator>();
-			List<ValueComparator> valueCompsLower = new ArrayList<ValueComparator>();
+			List<ValueComparator> valueCompsUpper = new ArrayList<>();
+			List<ValueComparator> valueCompsLower = new ArrayList<>();
 			for (ValueComparator vc : valueComparators) {
 				switch (vc.getThreshold()) {
 					case BOTH:
@@ -134,10 +136,10 @@ public class EditPropositionServlet extends HttpServlet {
 			req.setAttribute("defaultFrequencyType", defaultFreqType);
 
 			if ((propKey != null) && (!propKey.equals(""))) {
-				DataElement dataElement = servicesClient
+				DataElement dataElement = this.servicesClient
 						.getUserElement(propKey);
 				PropertiesDataElementVisitor visitor = new PropertiesDataElementVisitor(
-						servicesClient);
+						this.servicesClient);
 				try {
 					LOGGER.debug("Visiting {}", dataElement.getKey());
 					dataElement.accept(visitor);
@@ -167,7 +169,7 @@ public class EditPropositionServlet extends HttpServlet {
 				ServicesClient inServicesClient) {
 
 			this.servicesClient = inServicesClient;
-			this.properties = new HashMap<String, List<String>>();
+			this.properties = new HashMap<>();
 		}
 
 		private void handleDataElementField(DataElementField inField) throws ClientException {

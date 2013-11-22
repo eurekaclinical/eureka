@@ -34,6 +34,8 @@ import org.codehaus.jackson.map.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.inject.Inject;
+
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.SystemElement;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ClientException;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ServicesClient;
@@ -42,6 +44,12 @@ public class SystemPropositionListServlet extends HttpServlet {
 
 	private static final Logger LOGGER = LoggerFactory
 			.getLogger(SystemPropositionListServlet.class);
+	private final ServicesClient servicesClient;
+
+	@Inject
+	public SystemPropositionListServlet (ServicesClient inClient) {
+		this.servicesClient = inClient;
+	}
 
 	private JsonTreeData createData(SystemElement element) {
 		JsonTreeData d = new JsonTreeData();
@@ -91,12 +99,7 @@ public class SystemPropositionListServlet extends HttpServlet {
 			throws ServletException, IOException {
 
 		LOGGER.debug("doGet");
-		List<JsonTreeData> l = new ArrayList<JsonTreeData>();
-		String eurekaServicesUrl = req.getSession().getServletContext()
-				.getInitParameter("eureka-services-url");
-
-		ServicesClient servicesClient = new ServicesClient(eurekaServicesUrl);
-
+		List<JsonTreeData> l = new ArrayList<>();
 		String propKey = req.getParameter("key");
 
 		if (propKey == null) {
@@ -105,13 +108,13 @@ public class SystemPropositionListServlet extends HttpServlet {
 
 		try {
 			if (propKey.equals("root")) {
-				List<SystemElement> props = servicesClient.getSystemElements();
+				List<SystemElement> props = this.servicesClient.getSystemElements();
 				for (SystemElement proposition : props) {
 					JsonTreeData d = createData(proposition);
 					l.add(d);
 				}
 			} else {
-				SystemElement element = servicesClient.getSystemElement(propKey);
+				SystemElement element = this.servicesClient.getSystemElement(propKey);
 				for (SystemElement propChild : element.getChildren()) {
 					JsonTreeData newData = createData(propChild);
 					newData.setType("system");

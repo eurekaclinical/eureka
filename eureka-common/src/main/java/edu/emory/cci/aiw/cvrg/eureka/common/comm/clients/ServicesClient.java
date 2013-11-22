@@ -19,8 +19,11 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.common.comm.clients;
 
+import java.io.InputStream;
+import java.net.URI;
 import java.util.List;
 
+import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.UriBuilder;
 
 import org.slf4j.Logger;
@@ -33,22 +36,19 @@ import com.sun.jersey.core.util.MultivaluedMapImpl;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.DataElement;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.Destination;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.Job;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.SystemElement;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.UserInfo;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.UserRequest;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.JobSpec;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.PasswordChangeRequest;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.SourceConfig;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.SourceConfigParams;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.SystemElement;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.UserInfo;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.UserRequest;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.FrequencyType;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.RelationOperator;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.Role;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.ThresholdsOperator;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.TimeUnit;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.ValueComparator;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.ThresholdsOperator;
-import java.io.InputStream;
-import java.net.URI;
-import javax.ws.rs.core.MultivaluedMap;
 
 /**
  * @author hrathod
@@ -87,6 +87,7 @@ public class ServicesClient extends EurekaClient {
 
 	public ServicesClient(String inServicesUrl) {
 		super();
+		LOGGER.debug("Using services URL {}", inServicesUrl);
 		this.servicesUrl = inServicesUrl;
 	}
 
