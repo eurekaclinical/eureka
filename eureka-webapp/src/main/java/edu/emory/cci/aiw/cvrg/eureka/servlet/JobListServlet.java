@@ -19,12 +19,6 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.servlet;
 
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.Destination;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.Job;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.SourceConfig;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.SourceConfigParams;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.SystemElement;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ClientException;
 import java.io.IOException;
 import java.util.List;
 
@@ -33,25 +27,33 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.google.inject.Inject;
+
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.Destination;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.Job;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.SourceConfig;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.SourceConfigParams;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ClientException;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ServicesClient;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.SystemProposition.SystemType;
-import java.util.ArrayList;
 
 public class JobListServlet extends HttpServlet {
+
+	private final ServicesClient servicesClient;
+
+	@Inject
+	public JobListServlet (ServicesClient inClient) {
+		this.servicesClient = inClient;
+	}
 
 	@Override
 	public void doGet(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
 
-		String eurekaServicesUrl = req.getSession().getServletContext()
-				.getInitParameter("eureka-services-url");
-		ServicesClient servicesClient = new ServicesClient(eurekaServicesUrl);
-
 		try {
-			List<SourceConfigParams> sourceConfigParams = servicesClient.getSourceConfigParams();
+			List<SourceConfigParams> sourceConfigParams = this.servicesClient.getSourceConfigParams();
 			req.setAttribute("sources", sourceConfigParams);
 
-			List<Destination> destinations = servicesClient.getDestinations();
+			List<Destination> destinations = this.servicesClient.getDestinations();
 			req.setAttribute("destinations", destinations);
 			req.setAttribute("dateRangeSides", DateRangeSide.values());
 			
@@ -64,9 +66,9 @@ public class JobListServlet extends HttpServlet {
 				} catch (NumberFormatException ex) {
 					throw new ServletException("Query parameter jobId must be a long, was " + jobIdStr);
 				}
-				job = servicesClient.getJob(jobId);
+				job = this.servicesClient.getJob(jobId);
 			} else {
-				List<Job> jobs = servicesClient.getJobsDesc();
+				List<Job> jobs = this.servicesClient.getJobsDesc();
 				if (!jobs.isEmpty()) {
 					job = jobs.get(0);
 				} else {
@@ -76,14 +78,14 @@ public class JobListServlet extends HttpServlet {
 			if (job != null) {
 				req.setAttribute("jobStatus", job.toJobStatus());
 				Destination destination = 
-						servicesClient.getDestination(job.getDestinationId());
+						this.servicesClient.getDestination(job.getDestinationId());
 				String destName = destination.getDisplayName();
 				if (destName == null) {
 					destName = destination.getId();
 				}
 				req.setAttribute("destination", destName);
 				SourceConfig sourceConfig =
-						servicesClient.getSourceConfig(job.getSourceConfigId());
+						this.servicesClient.getSourceConfig(job.getSourceConfigId());
 				String sourceConfigName = sourceConfig.getDisplayName();
 				if (sourceConfigName == null) {
 					sourceConfigName = sourceConfig.getId();

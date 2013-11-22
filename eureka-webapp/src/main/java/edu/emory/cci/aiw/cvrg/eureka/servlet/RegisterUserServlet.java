@@ -29,6 +29,8 @@ import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.inject.Inject;
+
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.UserRequest;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ClientException;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ServicesClient;
@@ -36,6 +38,12 @@ import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ServicesClient;
 public class RegisterUserServlet extends HttpServlet {
 
 	private static Logger LOGGER = LoggerFactory.getLogger(RegisterUserServlet.class);
+	private final ServicesClient servicesClient;
+
+	@Inject
+	public RegisterUserServlet (ServicesClient inClient) {
+		this.servicesClient = inClient;
+	}
 
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp)
@@ -46,10 +54,6 @@ public class RegisterUserServlet extends HttpServlet {
 	@Override
 	public void doGet(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
-
-		String eurekaServicesUrl = req.getSession().getServletContext()
-				.getInitParameter("eureka-services-url");
-		ServicesClient servicesClient = new ServicesClient(eurekaServicesUrl);
 
 		String email 		= req.getParameter("email");
 		String verifyEmail 	= req.getParameter("verifyEmail");
@@ -73,7 +77,7 @@ public class RegisterUserServlet extends HttpServlet {
 		userRequest.setDepartment(department);
 
 		try {
-			servicesClient.addUser(userRequest);
+			this.servicesClient.addUser(userRequest);
 			resp.setStatus(HttpServletResponse.SC_OK);
 		} catch (ClientException e) {
 			resp.setContentType("text/plain");

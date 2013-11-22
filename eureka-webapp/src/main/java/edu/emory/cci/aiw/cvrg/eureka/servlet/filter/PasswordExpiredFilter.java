@@ -19,7 +19,6 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.servlet.filter;
 
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ClientException;
 import java.io.IOException;
 import java.security.Principal;
 import java.util.Calendar;
@@ -37,9 +36,11 @@ import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.inject.Inject;
+
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.UserInfo;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ClientException;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ServicesClient;
-import java.util.logging.Level;
 
 /**
  * @author hrathod
@@ -47,15 +48,17 @@ import java.util.logging.Level;
 public class PasswordExpiredFilter implements Filter {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(PasswordExpiredFilter.class);
-	private ServicesClient servicesClient;
+	private final ServicesClient servicesClient;
 	private String redirectUrl;
 	private String saveUrl;
 
+	@Inject
+	public PasswordExpiredFilter (ServicesClient inClient) {
+		this.servicesClient = inClient;
+	}
+
 	@Override
 	public void init(FilterConfig filterConfig) throws ServletException {
-		String serviceUrl = filterConfig.getServletContext()
-				.getInitParameter("eureka-services-url");
-		this.servicesClient = new ServicesClient(serviceUrl);
 		this.redirectUrl = filterConfig.getInitParameter("redirect-url");
 		this.saveUrl = filterConfig.getInitParameter("save-url");
 		if (this.redirectUrl == null) {
@@ -112,6 +115,5 @@ public class PasswordExpiredFilter implements Filter {
 
 	@Override
 	public void destroy() {
-		this.servicesClient = null;
 	}
 }

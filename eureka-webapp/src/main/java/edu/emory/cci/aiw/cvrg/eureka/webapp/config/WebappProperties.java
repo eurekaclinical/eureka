@@ -27,6 +27,7 @@ import edu.emory.cci.aiw.cvrg.eureka.common.props.AbstractProperties;
  * @author Andrew Post
  */
 public class WebappProperties extends AbstractProperties {
+
 	public boolean isEphiProhibited() {
 		return Boolean.parseBoolean(getValue("eureka.webapp.ephiprohibited"));
 	}
@@ -46,4 +47,5 @@ public class WebappProperties extends AbstractProperties {
 	public String getProxyCallbackServer() {
 		return this.getValue("eureka.webapp.callbackserver");
 	}
+
 }

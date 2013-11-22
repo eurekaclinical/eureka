@@ -19,9 +19,9 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.servlet;
 
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.Job;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -30,19 +30,25 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.codehaus.jackson.map.ObjectMapper;
 
+import com.google.inject.Inject;
+
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.Job;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.JobStatus;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ClientException;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ServicesClient;
-import java.util.List;
 
 public class JobPollServlet extends HttpServlet {
+
+	private final ServicesClient servicesClient;
+
+	@Inject
+	public JobPollServlet (ServicesClient inClient) {
+		this.servicesClient = inClient;
+	}
 
 	@Override
 	public void doGet(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
-
-		String eurekaServicesUrl = req.getSession().getServletContext()
-				.getInitParameter("eureka-services-url");
 
 		resp.setContentType("application/json");
 
@@ -58,13 +64,12 @@ public class JobPollServlet extends HttpServlet {
 			jobId = null;
 		}
 
-		ServicesClient servicesClient = new ServicesClient(eurekaServicesUrl);
 		Job job;
 		try {
 			if (jobId != null) {
-				job = servicesClient.getJob(jobId);
+				job = this.servicesClient.getJob(jobId);
 			} else {
-				List<Job> jobs = servicesClient.getJobsDesc();
+				List<Job> jobs = this.servicesClient.getJobsDesc();
 				if (!jobs.isEmpty()) {
 					job = jobs.get(0);
 				} else {

@@ -20,6 +20,8 @@
 package edu.emory.cci.aiw.cvrg.eureka.servlet;
 
 import java.io.IOException;
+import java.text.MessageFormat;
+import java.util.ResourceBundle;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -29,12 +31,11 @@ import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.inject.Inject;
 import com.sun.jersey.api.client.ClientResponse;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ClientException;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ServicesClient;
-import java.text.MessageFormat;
-import java.util.ResourceBundle;
 
 /**
  * Servlet implementation class ForgotPasswordServlet
@@ -44,9 +45,12 @@ public class ForgotPasswordServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private static Logger LOGGER =
 			LoggerFactory.getLogger(ForgotPasswordServlet.class);
+	private final ServicesClient servicesClient;
 
-	public ForgotPasswordServlet() {
+	@Inject
+	public ForgotPasswordServlet(ServicesClient inClient) {
 		super();
+		this.servicesClient = inClient;
 	}
 
 	@Override
@@ -56,12 +60,9 @@ public class ForgotPasswordServlet extends HttpServlet {
 
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		String eurekaServicesUrl = request.getSession().getServletContext()
-				.getInitParameter("eureka-services-url");
-		ServicesClient servicesClient = new ServicesClient(eurekaServicesUrl);
 		String email = request.getParameter("email");
 		try {
-			servicesClient.resetPassword(email);
+			this.servicesClient.resetPassword(email);
 			response.setStatus(HttpServletResponse.SC_OK);
 			response.getWriter().write(HttpServletResponse.SC_OK);
 		} catch (ClientException ex) {

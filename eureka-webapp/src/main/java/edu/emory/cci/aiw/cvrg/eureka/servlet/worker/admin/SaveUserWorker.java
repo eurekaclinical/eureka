@@ -34,13 +34,15 @@ import edu.emory.cci.aiw.cvrg.eureka.servlet.worker.ServletWorker;
 
 public class SaveUserWorker implements ServletWorker {
 
+	private final ServicesClient servicesClient;
+
+	public SaveUserWorker(ServicesClient inServicesClient) {
+		this.servicesClient = inServicesClient;
+	}
+
 	@Override
 	public void execute(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
-
-		String eurekaServicesUrl = req.getSession().getServletContext()
-				.getInitParameter("eureka-services-url");
-		ServicesClient servicesClient = new ServicesClient(eurekaServicesUrl);
 
 		String id = req.getParameter("id");
 		String activeStatus = req.getParameter("active");
@@ -51,9 +53,9 @@ public class SaveUserWorker implements ServletWorker {
 
 		}
 		try {
-			UserInfo user = servicesClient.getUserById(Long.valueOf(id));
+			UserInfo user = this.servicesClient.getUserById(Long.valueOf(id));
 			String[] roles = req.getParameterValues("role");
-			List<Long> userRoles = new ArrayList<Long>();
+			List<Long> userRoles = new ArrayList<>();
 			for (String roleId : roles) {
 				try {
 					userRoles.add(Long.valueOf(roleId));
@@ -64,7 +66,7 @@ public class SaveUserWorker implements ServletWorker {
 			user.setRoles(userRoles);
 			user.setActive(isActivated);
 
-			servicesClient.updateUser(user);
+			this.servicesClient.updateUser(user);
 		} catch (ClientException e) {
 			throw new ServletException("Error saving user", e);
 		}

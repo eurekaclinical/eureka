@@ -20,8 +20,10 @@
 package edu.emory.cci.aiw.cvrg.eureka.servlet.worker.useracct;
 
 import java.io.IOException;
-import java.security.Principal;
+import java.text.MessageFormat;
+import java.util.ResourceBundle;
 
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -31,34 +33,26 @@ import org.slf4j.LoggerFactory;
 
 import com.sun.jersey.api.client.ClientResponse;
 
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.UserInfo;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ClientException;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ServicesClient;
 import edu.emory.cci.aiw.cvrg.eureka.servlet.worker.ServletWorker;
-import java.text.MessageFormat;
-import java.util.ResourceBundle;
-import javax.servlet.ServletContext;
 
 public class SaveUserAcctWorker implements ServletWorker {
 
 	private static Logger LOGGER = LoggerFactory.getLogger(SaveUserAcctWorker.class);
 	
-	private ResourceBundle messages;
+	private final ResourceBundle messages;
+	private final ServicesClient servicesClient;
 
-	public SaveUserAcctWorker(ServletContext ctx) {
+	public SaveUserAcctWorker(ServletContext ctx, ServicesClient inClient) {
 		String localizationContextName = ctx.getInitParameter("javax.servlet.jsp.jstl.fmt.localizationContext");
 		this.messages = ResourceBundle.getBundle(localizationContextName);
+		this.servicesClient = inClient;
 	}
-	
-	
 
 	@Override
 	public void execute(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
-
-		String eurekaServicesUrl = req.getSession().getServletContext()
-				.getInitParameter("eureka-services-url");
-		ServicesClient servicesClient = new ServicesClient(eurekaServicesUrl);
 
 		String oldPassword = req.getParameter("oldPassword");
 		String newPassword = req.getParameter("newPassword");
@@ -73,7 +67,7 @@ public class SaveUserAcctWorker implements ServletWorker {
 
 		resp.setContentType("text/html");
 		try {
-			servicesClient.changePassword(oldPassword, newPassword);
+			this.servicesClient.changePassword(oldPassword, newPassword);
 			resp.setStatus(HttpServletResponse.SC_OK);
 			resp.getWriter().write(HttpServletResponse.SC_OK);
 		} catch (ClientException e) {

@@ -19,7 +19,6 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.servlet.worker.admin;
 
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ClientException;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.Comparator;
@@ -32,32 +31,35 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.UserInfo;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ClientException;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ServicesClient;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.Role;
 import edu.emory.cci.aiw.cvrg.eureka.servlet.worker.ServletWorker;
 
 public class ListUsersWorker implements ServletWorker {
 
+	private final ServicesClient servicesClient;
+
+	public ListUsersWorker (ServicesClient inServicesClient) {
+		this.servicesClient = inServicesClient;
+	}
 	@Override
 	public void execute(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
 
-		String eurekaServicesUrl = req.getSession().getServletContext()
-				.getInitParameter("eureka-services-url");
-		ServicesClient servicesClient = new ServicesClient(eurekaServicesUrl);
 		List<UserInfo> users;
 		try {
-			users = servicesClient.getUsers();
+			users = this.servicesClient.getUsers();
 		} catch (ClientException ex) {
 			throw new ServletException("Error getting user list", ex);
 		}
 		List<Role> roles;
 		try {
-			roles = servicesClient.getRoles();
+			roles = this.servicesClient.getRoles();
 		} catch (ClientException ex) {
 			throw new ServletException("Error getting role list", ex);
 		}
-		Map<Long, Role> rolesMap = new HashMap<Long, Role>();
+		Map<Long, Role> rolesMap = new HashMap<>();
 		for (Role role : roles) {
 			rolesMap.put(role.getId(), role);
 		}

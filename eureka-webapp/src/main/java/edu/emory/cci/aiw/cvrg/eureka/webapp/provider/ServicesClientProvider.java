@@ -26,6 +26,9 @@ package edu.emory.cci.aiw.cvrg.eureka.webapp.provider;
  * #L%
  */
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
@@ -34,22 +37,25 @@ import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ServicesClient;
 import edu.emory.cci.aiw.cvrg.eureka.webapp.config.WebappProperties;
 
 /**
- *
+ * 
  * @author hrathod
  */
 @Singleton
 public class ServicesClientProvider implements Provider<ServicesClient> {
 
+	private static final Logger LOGGER = LoggerFactory
+			.getLogger(ServicesClientProvider.class);
 	private final ServicesClient client;
 
 	@Inject
-	public ServicesClientProvider (WebappProperties inProperties) {
-		client = new ServicesClient(inProperties.getServiceUrl());
+	public ServicesClientProvider(WebappProperties inProperties) {
+		LOGGER.debug("service url = {}", inProperties.getServiceUrl());
+		this.client = new ServicesClient(inProperties.getServiceUrl());
 	}
 
 	@Override
 	public ServicesClient get() {
 		return this.client;
 	}
-	
+
 }

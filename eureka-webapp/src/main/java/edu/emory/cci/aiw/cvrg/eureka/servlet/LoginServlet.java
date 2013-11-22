@@ -28,32 +28,37 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.google.inject.Inject;
+
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.UserInfo;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ClientException;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ServicesClient;
 
 public class LoginServlet extends HttpServlet {
 
+	private final ServicesClient servicesClient;
+
+	@Inject
+	public LoginServlet (ServicesClient inClient) {
+		this.servicesClient = inClient;
+	}
+
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
-
-		String eurekaServicesUrl = req.getSession().getServletContext()
-				.getInitParameter("eureka-services-url");
-		ServicesClient servicesClient = new ServicesClient(eurekaServicesUrl);
 
 		Principal principal = req.getUserPrincipal();
 		String userName = principal.getName();
 		UserInfo user;
 		try {
-			user = servicesClient.getUserByName(userName);
+			user = this.servicesClient.getUserByName(userName);
 		} catch (ClientException ex) {
 			throw new ServletException("Error getting user " + userName, ex);
 		}
 
 		user.setLastLogin(new Date());
 		try {
-			servicesClient.updateUser(user);
+			this.servicesClient.updateUser(user);
 		} catch (ClientException e) {
 			throw new ServletException(e);
 		}

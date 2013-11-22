@@ -50,7 +50,6 @@ public abstract class AbstractServletModule extends JerseyServletModule {
 	private static final Logger LOGGER = LoggerFactory
 			.getLogger(AbstractServletModule.class);
 	private static final String CAS_CALLBACK_PATH = "/proxyCallback";
-	private static final String CAS_LOGIN_PATH = "/login";
 	private static final String ROLES_SQL = "select a.name as role from roles a, user_role b, users c where a.id=b.role_id and b.user_id=c.id and c.email=?";
 	private static final String ROLE_COLUMN = "role";
 	private static final String TEMPLATES_PATH = "/WEB-INF/templates";
@@ -170,6 +169,6 @@ public abstract class AbstractServletModule extends JerseyServletModule {
 	}
 
 	protected String getCasLoginUrl() {
-		return this.properties.getCasUrl() + CAS_LOGIN_PATH;
+		return this.properties.getCasLoginUrl();
 	}
 }

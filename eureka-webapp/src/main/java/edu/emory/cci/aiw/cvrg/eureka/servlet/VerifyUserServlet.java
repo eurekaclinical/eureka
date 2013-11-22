@@ -29,6 +29,8 @@ import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.inject.Inject;
+
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ClientException;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ServicesClient;
 
@@ -50,6 +52,12 @@ public class VerifyUserServlet extends HttpServlet {
 	 */
 	private static final Logger LOGGER = LoggerFactory
 			.getLogger(VerifyUserServlet.class);
+	private final ServicesClient servicesClient;
+
+	@Inject
+	public VerifyUserServlet (ServicesClient inClient) {
+		this.servicesClient = inClient;
+	}
 
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp)
@@ -61,13 +69,10 @@ public class VerifyUserServlet extends HttpServlet {
 	public void doGet(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
 
-		String eurekaServicesUrl = req.getSession().getServletContext()
-				.getInitParameter("eureka-services-url");
-		ServicesClient servicesClient = new ServicesClient(eurekaServicesUrl);
 		String code = req.getParameter("code");
 
 		try {
-			servicesClient.verifyUser(code);
+			this.servicesClient.verifyUser(code);
 		} catch (ClientException e) {
 			throw new ServletException(e);
 		}

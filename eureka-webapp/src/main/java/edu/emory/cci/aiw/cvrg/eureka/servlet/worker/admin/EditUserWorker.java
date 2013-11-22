@@ -19,7 +19,6 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.servlet.worker.admin;
 
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ClientException;
 import java.io.IOException;
 import java.util.List;
 
@@ -28,24 +27,27 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.UserInfo;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ClientException;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ServicesClient;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.Role;
 import edu.emory.cci.aiw.cvrg.eureka.servlet.worker.ServletWorker;
 
 public class EditUserWorker implements ServletWorker {
 
+	private final ServicesClient servicesClient;
+
+	public EditUserWorker(ServicesClient inServicesClient) {
+		this.servicesClient = inServicesClient;
+	}
+
 	@Override
 	public void execute(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
 
-		String eurekaServicesUrl = req.getSession().getServletContext()
-				.getInitParameter("eureka-services-url");
-
 		String id = req.getParameter("id");
-		ServicesClient servicesClient = new ServicesClient(eurekaServicesUrl);
 		try {
-			UserInfo user = servicesClient.getUserById(Long.valueOf(id));
-			List<Role> roles = servicesClient.getRoles();
+			UserInfo user = this.servicesClient.getUserById(Long.valueOf(id));
+			List<Role> roles = this.servicesClient.getRoles();
 
 			req.setAttribute("roles", roles);
 			req.setAttribute("user", user);

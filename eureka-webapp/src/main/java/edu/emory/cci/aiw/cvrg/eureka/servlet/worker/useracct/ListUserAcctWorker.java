@@ -19,7 +19,6 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.servlet.worker.useracct;
 
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ClientException;
 import java.io.IOException;
 import java.security.Principal;
 import java.util.Calendar;
@@ -30,23 +29,27 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.UserInfo;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ClientException;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ServicesClient;
 import edu.emory.cci.aiw.cvrg.eureka.servlet.worker.ServletWorker;
 
 public class ListUserAcctWorker implements ServletWorker {
 
+	private final ServicesClient servicesClient;
+
+	public ListUserAcctWorker (ServicesClient inClient) {
+		this.servicesClient = inClient;
+	}
+
 	@Override
 	public void execute(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
 
-		String eurekaServicesUrl = req.getSession().getServletContext()
-				.getInitParameter("eureka-services-url");
-		ServicesClient servicesClient = new ServicesClient(eurekaServicesUrl);
 		Principal principal = req.getUserPrincipal();
 		String userName = principal.getName();
 		UserInfo user;
 		try {
-			user = servicesClient.getUserByName(userName);
+			user = this.servicesClient.getUserByName(userName);
 		} catch (ClientException ex) {
 			throw new ServletException("Error getting user " + userName, ex);
 		}

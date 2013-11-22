@@ -44,11 +44,6 @@ public abstract class AbstractProperties {
 	private static final Logger LOGGER = LoggerFactory.getLogger(
 			AbstractProperties.class);
 	/**
-	 * The default server name for the application server, if none is
-	 * provided in the configuration.
-	 */
-	private static final String DEFAULT_SERVER_NAME = "http://localhost:8080";
-	/**
 	 * Name of the system property that points to the configuration file.
 	 */
 	private static final String PROPERTY_NAME = "eureka.config.file";
@@ -64,6 +59,8 @@ public abstract class AbstractProperties {
 	 * configuration.
 	 */
 	private static final String PROPERTIES_FILE = "/application.properties";
+	private static final String CAS_LOGOUT_PATH = "/logout";
+	private static final String CAS_LOGIN_PATH = "/login";
 	/**
 	 * Holds an instance of the properties object which contains all the
 	 * application configuration properties.
@@ -266,6 +263,13 @@ public abstract class AbstractProperties {
 		return this.getValue("cas.url");
 	}
 
+	public String getCasLogoutUrl() {
+		return this.getCasUrl() + CAS_LOGOUT_PATH;
+	}
+
+	public String getCasLoginUrl () {
+		return this.getCasUrl() + CAS_LOGIN_PATH;
+	}
 	public String getMajorVersion () {
 		return this.getValue("eureka.version.major");
 	}

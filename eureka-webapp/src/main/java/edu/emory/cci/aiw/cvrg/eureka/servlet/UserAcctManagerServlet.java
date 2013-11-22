@@ -29,14 +29,25 @@ import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.inject.Inject;
+
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ServicesClient;
 import edu.emory.cci.aiw.cvrg.eureka.servlet.worker.ServletWorker;
-import edu.emory.cci.aiw.cvrg.eureka.servlet.worker.useracct.ListUserAcctWorker;
-import edu.emory.cci.aiw.cvrg.eureka.servlet.worker.useracct.SaveUserAcctWorker;
+import edu.emory.cci.aiw.cvrg.eureka.servlet.worker.useracct
+		.ListUserAcctWorker;
+import edu.emory.cci.aiw.cvrg.eureka.servlet.worker.useracct
+		.SaveUserAcctWorker;
 
 public class UserAcctManagerServlet extends HttpServlet {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger
 			(UserAcctManagerServlet.class);
+	private final ServicesClient servicesClient;
+
+	@Inject
+	public UserAcctManagerServlet (ServicesClient inClient) {
+		this.servicesClient = inClient;
+	}
 
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp)
@@ -54,10 +65,10 @@ public class UserAcctManagerServlet extends HttpServlet {
 
 		if (action != null && action.equals("save")) {
 			LOGGER.info("Saving user");
-			worker = new SaveUserAcctWorker(getServletContext());
+			worker = new SaveUserAcctWorker(this.getServletContext(), this.servicesClient);
 		} else {
 			LOGGER.info("Listing user");
-			worker = new ListUserAcctWorker();
+			worker = new ListUserAcctWorker(this.servicesClient);
 		}
 		worker.execute(req, resp);
 	}

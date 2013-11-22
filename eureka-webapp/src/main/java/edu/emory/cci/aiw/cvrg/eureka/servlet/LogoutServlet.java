@@ -27,7 +27,18 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import com.google.inject.Inject;
+
+import edu.emory.cci.aiw.cvrg.eureka.webapp.config.WebappProperties;
+
 public class LogoutServlet extends HttpServlet {
+
+	private final WebappProperties webappProperties;
+
+	@Inject
+	public LogoutServlet (WebappProperties inProperties) {
+		this.webappProperties = inProperties;
+	}
 
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
@@ -41,8 +52,6 @@ public class LogoutServlet extends HttpServlet {
 		 * logout.jsp gets a request object without a user. Otherwise,
 		 * the button bar will think we're still logged in.
 		 */
-		String casServerLogoutUrl = req.getSession().getServletContext()
-				.getInitParameter("cas-server-logout-url");
-		resp.sendRedirect(casServerLogoutUrl);
+		resp.sendRedirect(webappProperties.getCasLogoutUrl());
 	}
 }

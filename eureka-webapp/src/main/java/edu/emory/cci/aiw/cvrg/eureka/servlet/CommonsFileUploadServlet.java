@@ -19,12 +19,16 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.servlet;
 
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ClientException;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.security.Principal;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Properties;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -36,38 +40,37 @@ import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
-
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ServicesClient;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.JobSpec;
-import java.io.InputStream;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Properties;
 import org.apache.commons.io.FileUtils;
 import org.protempa.proposition.interval.Interval.Side;
 
+import com.google.inject.Inject;
+
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.JobSpec;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ClientException;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ServicesClient;
+
 public class CommonsFileUploadServlet extends HttpServlet {
 	
-	private File tmpDir;
 	/**
 	 * Normal directory to save files to. TODO: set value
 	 */
-	private ServicesClient servicesClient;
-	
+	private File tmpDir;
+	private final ServicesClient servicesClient;
+
+	@Inject
+	public CommonsFileUploadServlet (ServicesClient inClient) {
+		this.servicesClient = inClient;
+	}
+
 	@Override
 	public void init(ServletConfig config) throws ServletException {
 		super.init(config);
-		tmpDir = FileUtils.getTempDirectory();
-		if (!tmpDir.isDirectory()) {
-			throw new ServletException(tmpDir.getAbsolutePath() + " is not a directory");
+		this.tmpDir = FileUtils.getTempDirectory();
+		if (!this.tmpDir.isDirectory()) {
+			throw new ServletException(this.tmpDir.getAbsolutePath() + " is not a directory");
 		}
-		
-		this.servicesClient = new ServicesClient(
-				config.getServletContext()
-				.getInitParameter("eureka-services-url"));
 	}
-	
+
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		Principal principal = request.getUserPrincipal();
@@ -113,7 +116,7 @@ public class CommonsFileUploadServlet extends HttpServlet {
 		/*
 		 * Set the temporary directory to store the uploaded files of size above threshold.
 		 */
-		fileItemFactory.setRepository(tmpDir);
+		fileItemFactory.setRepository(this.tmpDir);
 		
 		ServletFileUpload uploadHandler = new ServletFileUpload(fileItemFactory);
 		/*

@@ -22,14 +22,6 @@ see implementation details http://jersey.java.net/nonav/documentation/latest/jax
 <web-app xmlns="http://java.sun.com/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.5" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
 
 	<context-param>
-		<param-name>eureka-services-url</param-name>
-		<param-value>https://localhost:8443/eureka-services</param-value>
-	</context-param>
-	<context-param>
-		<param-name>cas-server-logout-url</param-name>
-		<param-value>https://localhost:8443/cas-server/logout</param-value>
-	</context-param>
-	<context-param>
 		<description>Is populated with the site URL from the maven pom.xml from which Eureka! was compiled. The developer documention URL on the Eureka! index page is constructed by appending '/dev' to this URL.</description>
 		<param-name>eureka-dev-site-url</param-name>
 		<param-value>${eureka.dev.site.url}</param-value>

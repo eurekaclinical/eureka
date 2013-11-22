@@ -26,6 +26,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.google.inject.Inject;
+
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ServicesClient;
 import edu.emory.cci.aiw.cvrg.eureka.servlet.worker.ServletWorker;
 import edu.emory.cci.aiw.cvrg.eureka.servlet.worker.admin.EditUserWorker;
 import edu.emory.cci.aiw.cvrg.eureka.servlet.worker.admin.ListUsersWorker;
@@ -33,29 +36,40 @@ import edu.emory.cci.aiw.cvrg.eureka.servlet.worker.admin.SaveUserWorker;
 
 public class AdminManagerServlet extends HttpServlet {
 
+	private final ServicesClient servicesClient;
+
+	@Inject
+	public AdminManagerServlet (ServicesClient inClient) {
+		this.servicesClient = inClient;
+	}
+
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
 		if (!req.isUserInRole("admin")) {
-			resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
+			resp.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
 		} else {
 			String action = req.getParameter("action");
-			ServletWorker worker = null;
 			if (action == null) {
 				resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 				resp.getWriter().write("The action parameter is required");
-			} else if (action.equals("list")) {
-				worker = new ListUsersWorker();
-				worker.execute(req, resp);
-			} else if (action.equals("edit")) {
-				worker = new EditUserWorker();
-				worker.execute(req, resp);
-			} else if (action.equals("save")) {
-				worker = new SaveUserWorker();
-				worker.execute(req, resp);
 			} else {
-				resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-				resp.getWriter().write("Invalid action parameter " + action + ". Allowed values are list, edit and save.");
+				ServletWorker worker = null;
+				if (action.equals("list")) {
+					worker = new ListUsersWorker(this.servicesClient);
+				} else if (action.equals("edit")) {
+					worker = new EditUserWorker(this.servicesClient);
+				} else if (action.equals("save")) {
+					worker = new SaveUserWorker(this.servicesClient);
+				}
+
+				if (null == worker) {
+					resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+					resp.getWriter().write("Invalid action parameter " + action + ". Allowed values are list, edit and save.");
+				}
+				else {
+					worker.execute(req, resp);
+				}
 			}
 		}
 	}
