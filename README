@@ -1,5 +1,5 @@
-Eureka! Clinical Analytics 1.8 -- An ETL Tool for Loading Data into i2b2.
-Center for Comprehensive Informatics, Emory University
+Eureka! Clinical Analytics ${project.version} -- An ETL Tool for Loading Data into i2b2.
+Department of Biomedical Informatics, Emory University
 
 OVERVIEW
 
@@ -36,13 +36,13 @@ can be specified in the underlying Protempa software.
 
 REQUIREMENTS
 
-The current version is known to work with Oracle Java 6. It is
-expected to work with OpenJDK 6 as well. It is incompatible with Java
-7 due to incompatibility of some of its dependencies.
+The current version requires Java 7. It is known to work with Oracle Java 7, and
+it is expected to work with OpenJDK 7 as well. It is incompatible with earlier
+versions of Java.
 
 Eureka! Clinical Analytics uses the Maven build system, available from
 http://maven.apache.org. You must install maven, if you do not already
-have it, to work with the source code. We use Maven 3.
+have it, to work with the source code. Maven 3 is required.
 
 INSTALLATION
 
@@ -63,4 +63,4 @@ Eureka! Clinical Analytics is Copyright (C) 2012-2013 Emory University.
 MORE INFORMATION
 
 Please see http://aiw.sourceforge.net for more information and
-http://aiw.sourceforge.net/dev/eureka-1.8 for technical documentation.
+http://aiw.sourceforge.net/dev/eureka-${project.version} for technical documentation.
