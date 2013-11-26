@@ -1,6 +1,6 @@
-Eureka Common 1.6-SNAPSHOT -- a library of shared functionality for
+Eureka Common ${project.version} -- a library of shared functionality for
 Eureka!  Clinical Analytics.  
-Center for Comprehensive Informatics, Emory University
+Department of Biomedical Informatics, Emory University
 
 OVERVIEW
 
@@ -10,21 +10,35 @@ project.
 
 WHAT'S NEW
 
+Version 1.8 adds the ability to connect directly to a database as a
+data source, in addition to the spreadsheet upload mechanism.  This
+change allows Eureka! to pull patient data directly from a data warehouse.
+There are also improvements to the phenotype editor and job submission
+user interfaces.
+
+Version 1.7 provides the ability to create new types of phenotypes.
+Frequency data elements can now specify the first n occurrences as
+opposed to just n occurrences.  Value Threshold elements can not
+be defined in the "context" of other elements.  The jasig CAS
+(Central Authentication Server) was also incorporated into the
+infrastructure for greater security and Single Sign-On (SSO) ability.
+Other improvements include bug fixes, performance enhancements,
+more complete help documentation, and other data element enhancements.
+
 Version 1.6 extends the rudimentary data element editing support
 provided in version 1.5 to provide a complete data element editor. You
 can specify a relatively complete set of the temporal patterns that
-can be specified in the underlying Protempa software. Version 1.6
-SNAPSHOT releases will track the development of this feature.
+can be specified in the underlying Protempa software.
 
 REQUIREMENTS
 
-The current version is known to work with Oracle Java 6. It is
-expected to work with OpenJDK 6 as well. It is incompatible with Java
-7.
+The current version requires Java 7. It is known to work with Oracle Java 7, and
+it is expected to work with OpenJDK 7 as well. It is incompatible with earlier
+versions of Java.
 
 Eureka! Clinical Analytics uses the Maven build system, available from
 http://maven.apache.org. You must install maven, if you do not already
-have it, to work with the source code. We use Maven 3.
+have it, to work with the source code. Maven 3 is required.
 
 INSTALLATION
 
@@ -48,5 +62,5 @@ Eureka Common is Copyright (C) 2012 Emory University.
 MORE INFORMATION
 
 Please see http://aiw.sourceforge.net for more information and
-http://aiw.sourceforge.net/dev/eureka-1.6-SNAPSHOT for technical
+http://aiw.sourceforge.net/dev/eureka-${project.version} for technical
 documentation.
