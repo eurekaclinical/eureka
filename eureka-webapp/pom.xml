@@ -26,18 +26,18 @@
 		<finalName>eureka-webapp</finalName>
 		<plugins>
 			<plugin>
-                <groupId>net.alchim31.maven</groupId>
-                <artifactId>yuicompressor-maven-plugin</artifactId>
-                <configuration>
-                    <suffix>${maven.build.timestamp}</suffix>
+				<groupId>net.alchim31.maven</groupId>
+				<artifactId>yuicompressor-maven-plugin</artifactId>
+				<configuration>
+					<suffix>${maven.build.timestamp}</suffix>
 					<includes>
 						<include>js/editor.js</include>
 						<include>js/eureka.js</include>
 						<include>css/editor.css</include>
 						<include>css/styles.css</include>
 					</includes>
-                </configuration>
-            </plugin>
+				</configuration>
+			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
@@ -82,13 +82,13 @@
 										<include>logging.properties</include>
 									</includes>
 								</resource>
-                                <resource>
-                                    <directory>src/main/resources/tomcat-server-config</directory>
-                                    <filtering>false</filtering>
-                                    <includes>
-                                        <include>localhost.keystore</include>
-                                    </includes>
-                                </resource>
+								<resource>
+									<directory>src/main/resources/tomcat-server-config</directory>
+									<filtering>false</filtering>
+									<includes>
+										<include>localhost.keystore</include>
+									</includes>
+								</resource>
 							</resources>
 						</configuration>
 					</execution>
@@ -126,10 +126,10 @@
 				<configuration>
 					<warSourceDirectory>${project.build.directory}/${project.build.finalName}</warSourceDirectory>
 					<port>${tomcat.port}</port>
-                    <httpsPort>${tomcat.httpsPort}</httpsPort>
-                    <keystorePass>changeit</keystorePass>
-                    <keystoreFile>conf/localhost.keystore</keystoreFile>
-                    <keystoreType>JKS</keystoreType>
+					<httpsPort>${tomcat.httpsPort}</httpsPort>
+					<keystorePass>changeit</keystorePass>
+					<keystoreFile>conf/localhost.keystore</keystoreFile>
+					<keystoreType>JKS</keystoreType>
 					<additionalConfigFilesDir>${project.build.directory}/tomcat-config</additionalConfigFilesDir>
 					<systemProperties>
 						<java.security.auth.login.config>${catalina.home}/conf/jaas.config</java.security.auth.login.config>
@@ -173,11 +173,11 @@
 						<artifactId>mysql-connector-java</artifactId>
 						<version>${mysql-version}</version>
 					</dependency>
-                    <dependency>
-                        <groupId>com.oracle</groupId>
-                        <artifactId>ojdbc6</artifactId>
-                        <version>${oracle-version}</version>
-                    </dependency>
+					<dependency>
+						<groupId>com.oracle</groupId>
+						<artifactId>ojdbc6</artifactId>
+						<version>${oracle-version}</version>
+					</dependency>
 					<dependency>
 						<groupId>edu.emory.cci.aiw.cvrg.eureka</groupId>
 						<artifactId>jaas-login-module</artifactId>
@@ -188,18 +188,18 @@
 						<artifactId>mail</artifactId>
 						<version>${java-mail-version}</version>
 					</dependency>
-                    <dependency>
-                        <groupId>org.jasig.cas.client</groupId>
-                        <artifactId>cas-client-core</artifactId>
-                        <version>${cas-client-version}</version>
-                        <!-- <scope>provided</scope> -->
-                        <exclusions>
-                            <exclusion>
-                                <groupId>commons-logging</groupId>
-                                <artifactId>commons-logging</artifactId>
-                            </exclusion>
-                        </exclusions>
-                    </dependency>
+					<dependency>
+						<groupId>org.jasig.cas.client</groupId>
+						<artifactId>cas-client-core</artifactId>
+						<version>${cas-client-version}</version>
+						<!-- <scope>provided</scope> -->
+						<exclusions>
+							<exclusion>
+								<groupId>commons-logging</groupId>
+								<artifactId>commons-logging</artifactId>
+							</exclusion>
+						</exclusions>
+					</dependency>
 				</dependencies>
 			</plugin>
 		</plugins>
