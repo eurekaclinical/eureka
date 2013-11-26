@@ -16,7 +16,7 @@
 
 		<p>${project.name} is a module of the Eureka! Clinical Analytics 
 			project. It is developed and maintained by the
-            <a href="http://cci.emory.edu">Emory Center for Comprehensive Informatics</a>.
+            <a href="http://www.bmi.emory.edu">Emory Department of Biomedical Informatics</a>.
         </p>
                 
         <h2>Binaries</h2>
