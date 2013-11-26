@@ -1,14 +1,19 @@
 .imageAndCaption {
-    display: block;
-    margin-left: auto;
-    margin-right: auto;
-    text-align: center;
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
+	text-align: center;
 }
 
 .container-fluid {
-    min-width: 900px;
+	min-width: 900px;
 }
 
 img.screenshot {
-    padding-bottom: 2em;
+	padding-bottom: 2em;
+}
+
+#bannerRight img {
+	background-color: #002878;
+	margin-bottom: 20px;
 }
