@@ -112,29 +112,29 @@
 			<roles>
 				<role>Faculty Project Lead</role>
 			</roles>
-			<organization>Center for Comprehensive Informatics, Emory
+			<organization>Department of Biomedical Informatics, Emory
 				University
 			</organization>
 		</developer>
 		<developer>
 			<id>hrathod</id>
 			<name>Himanshu Rathod</name>
-			<email>Himanshu.Rathod@emory.edu</email>
+			<email>himanshu.rathod@emory.edu</email>
 			<roles>
 				<role>Software Developer</role>
 			</roles>
-			<organization>Center for Comprehensive Informatics, Emory
+			<organization>Department of Biomedical Informatics, Emory
 				University
 			</organization>
 		</developer>
 		<developer>
 			<id>mmansour</id>
 			<name>Michel Mansour</name>
-			<email>mmansour@emory.edu</email>
+			<email>michel.mansour@emory.edu</email>
 			<roles>
 				<role>Software Developer</role>
 			</roles>
-			<organization>Center for Comprehensive Informatics, Emory
+			<organization>Department of Biomedical Informatics, Emory
 				University
 			</organization>
 		</developer>
@@ -145,7 +145,7 @@
 			<roles>
 				<role>Data Warehouse Engineer</role>
 			</roles>
-			<organization>Center for Comprehensive Informatics, Emory
+			<organization>Department of Biomedical Informatics, Emory
 				University
 			</organization>
 		</developer>
@@ -156,7 +156,7 @@
 			<roles>
 				<role>Software Engineer</role>
 			</roles>
-			<organization>Center for Comprehensive Informatics, Emory
+			<organization>Department of Biomedical Informatics, Emory
 				University
 			</organization>
 		</developer>
@@ -167,7 +167,7 @@
 			<roles>
 				<role>Software Developer</role>
 			</roles>
-			<organization>Center for Comprehensive Informatics, Emory
+			<organization>Department of Biomedical Informatics, Emory
 				University
 			</organization>
 		</developer>
@@ -178,7 +178,7 @@
 			<roles>
 				<role>Software Developer</role>
 			</roles>
-			<organization>Center for Comprehensive Informatics, Emory
+			<organization>Department of Biomedical Informatics, Emory
 				University
 			</organization>
 		</developer>
@@ -189,7 +189,7 @@
 			<roles>
 				<role>User Interface Designer</role>
 			</roles>
-			<organization>Center for Comprehensive Informatics, Emory
+			<organization>Department of Biomedical Informatics, Emory
 				University
 			</organization>
 		</developer>
@@ -200,7 +200,7 @@
 			<roles>
 				<role>Software Developer</role>
 			</roles>
-			<organization>Center for Comprehensive Informatics, Emory
+			<organization>Department of Biomedical Informatics, Emory
 				University
 			</organization>
 		</developer>
@@ -211,7 +211,7 @@
 			<roles>
 				<role>Project Manager</role>
 			</roles>
-			<organization>Center for Comprehensive Informatics, Emory
+			<organization>Department of Biomedical Informatics, Emory
 				University
 			</organization>
 		</developer>
@@ -224,6 +224,55 @@
 		<module>eureka-protempa-etl</module>
 		<module>eureka-ear</module>
 	</modules>
+
+	<reporting>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-project-info-reports-plugin
+				</artifactId>
+				<version>2.6</version>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-javadoc-plugin</artifactId>
+				<version>2.9</version>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jxr-plugin</artifactId>
+				<version>2.3</version>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-report-plugin
+				</artifactId>
+				<version>2.12.4</version>
+				<configuration>
+					<aggregate>true</aggregate>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>cobertura-maven-plugin</artifactId>
+				<version>2.4</version>
+				<configuration>
+					<formats>
+						<format>xml</format>
+						<format>html</format>
+					</formats>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-checkstyle-plugin</artifactId>
+				<version>2.9.1</version>
+				<configuration>
+					<configLocation>http://aiw.sourceforge.net/dev/aiw-checkstyle-1.0/eureka-checkstyle.xml</configLocation>
+				</configuration>
+			</plugin>
+		</plugins>
+	</reporting>
 
 	<!-- make sure our code complies with Java 1.6 specifications, and define
 	the name of the WAR file to create -->
@@ -307,7 +356,7 @@
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-site-plugin</artifactId>
-					<version>3.2</version>
+					<version>3.3</version>
 					<dependencies>
 						<dependency>
 							<groupId>org.apache.maven.wagon</groupId>
@@ -315,54 +364,6 @@
 							<version>2.3</version>
 						</dependency>
 					</dependencies>
-					<configuration>
-						<reportPlugins>
-							<plugin>
-								<groupId>org.apache.maven.plugins</groupId>
-								<artifactId>maven-project-info-reports-plugin
-								</artifactId>
-								<version>2.6</version>
-							</plugin>
-							<plugin>
-								<groupId>org.apache.maven.plugins</groupId>
-								<artifactId>maven-javadoc-plugin</artifactId>
-								<version>2.9</version>
-							</plugin>
-							<plugin>
-								<groupId>org.apache.maven.plugins</groupId>
-								<artifactId>maven-jxr-plugin</artifactId>
-								<version>2.3</version>
-							</plugin>
-							<plugin>
-								<groupId>org.apache.maven.plugins</groupId>
-								<artifactId>maven-surefire-report-plugin
-								</artifactId>
-								<version>2.12.4</version>
-								<configuration>
-									<aggregate>true</aggregate>
-								</configuration>
-							</plugin>
-							<plugin>
-								<groupId>org.codehaus.mojo</groupId>
-								<artifactId>cobertura-maven-plugin</artifactId>
-								<version>2.4</version>
-								<configuration>
-									<formats>
-										<format>xml</format>
-										<format>html</format>
-									</formats>
-								</configuration>
-							</plugin>
-							<plugin>
-								<groupId>org.apache.maven.plugins</groupId>
-								<artifactId>maven-checkstyle-plugin</artifactId>
-								<version>2.9.1</version>
-								<configuration>
-									<configLocation>http://aiw.sourceforge.net/dev/aiw-checkstyle-1.0/eureka-checkstyle.xml</configLocation>
-								</configuration>
-							</plugin>
-						</reportPlugins>
-					</configuration>
 				</plugin>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
@@ -786,7 +787,7 @@
 	<repositories>
 		<repository>
 			<id>maven.cci</id>
-			<name>CCI Maven Repository</name>
+			<name>BMI Maven Repository</name>
 			<url>http://maven.cci.emory.edu/nexus/content/repositories/public</url>
 		</repository>
 		<repository>
@@ -805,7 +806,7 @@
 	<pluginRepositories>
 		<pluginRepository>
 			<id>maven.cci</id>
-			<name>CCI Maven Repository</name>
+			<name>BMI Maven Repository</name>
 			<url>http://maven.cci.emory.edu/nexus/content/repositories/public</url>
 		</pluginRepository>
 		<pluginRepository>
