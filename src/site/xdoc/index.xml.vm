@@ -20,7 +20,7 @@
 		</p>
 
 		<p>Eureka! Clinical Analytics is developed and maintained by the
-		<a href="http://cci.emory.edu">Emory Center for Comprehensive Informatics</a>.
+		<a href="http://www.bmi.emory.edu">Emory Department of Biomedical Informatics</a>.
 		</p>
 
 		<h2>Source Code</h2>
@@ -42,7 +42,7 @@
 		<h2>Related Packages</h2>
         
 		<p>Eureka! Clinical Analytics depends on a number of open source
-			packages that are maintained by the Emory Center for Comprehensive
+			packages that are maintained by the Emory Department of Biomedical
 			Informatics:
 		</p>
 		<ul>
