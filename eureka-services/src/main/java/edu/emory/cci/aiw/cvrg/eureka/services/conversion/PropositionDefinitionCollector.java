@@ -35,8 +35,8 @@ public class PropositionDefinitionCollector {
 			PropositionDefinitionConverterVisitor converterVisitor, 
 			List<DataElementEntity> dataElements) {
 		List<PropositionDefinition> userProps = 
-				new ArrayList<PropositionDefinition>();
-		List<String> toShow = new ArrayList<String>();
+				new ArrayList<>();
+		List<String> toShow = new ArrayList<>();
 		PropositionDefinitionWrapper wrapper = 
 				new PropositionDefinitionWrapper();
 		for (DataElementEntity de : dataElements) {

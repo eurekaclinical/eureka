@@ -101,7 +101,7 @@ public class FreeMarkerEmailSender implements EmailSender {
 	@Override
 	public void sendVerificationMessage(final User inUser) 
 			throws EmailException {
-		Map<String, Object> params = new HashMap<String, Object>();
+		Map<String, Object> params = new HashMap<>();
 		String verificationUrl = this.serviceProperties.getVerificationUrl(this.request);
 		params.put("verificationUrl", verificationUrl);
 		sendMessage(inUser, "verification.ftl",
@@ -110,7 +110,7 @@ public class FreeMarkerEmailSender implements EmailSender {
 	
 	@Override
 	public void sendActivationMessage(final User inUser) throws EmailException {
-		Map<String, Object> params = new HashMap<String, Object>();
+		Map<String, Object> params = new HashMap<>();
 		String applicationUrl = this.serviceProperties.getApplicationUrl(this.request);
 		params.put("applicationUrl", applicationUrl);
 		sendMessage(inUser, "activation.ftl",
@@ -126,7 +126,7 @@ public class FreeMarkerEmailSender implements EmailSender {
 	@Override
 	public void sendPasswordResetMessage(User inUser, String inNewPassword)
 			throws EmailException {
-		Map<String, Object> params = new HashMap<String, Object>();
+		Map<String, Object> params = new HashMap<>();
 		params.put("plainTextPassword", inNewPassword);
 		sendMessage(inUser, "password_reset.ftl",
 				this.serviceProperties.getPasswordResetEmailSubject(), params);
@@ -169,7 +169,7 @@ public class FreeMarkerEmailSender implements EmailSender {
 	private void sendMessage(final User inUser, 
 			final String templateName,
 			final String subject) throws EmailException {
-		Map<String, Object> params = new HashMap<String, Object>();
+		Map<String, Object> params = new HashMap<>();
 		sendMessage(inUser, templateName, subject, params);
 	}
 

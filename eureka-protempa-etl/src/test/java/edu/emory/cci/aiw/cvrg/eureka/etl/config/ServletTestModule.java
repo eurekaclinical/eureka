@@ -42,7 +42,7 @@ public class ServletTestModule extends JerseyServletModule {
 	@Override
 	protected void configureServlets() {
 		
-		Map<String, String> params = new HashMap<String, String>();
+		Map<String, String> params = new HashMap<>();
 		params.put("com.sun.jersey.api.json.POJOMappingFeature", "true");
 		params.put(PackagesResourceConfig.PROPERTY_PACKAGES,
 				"edu.emory.cci.aiw.cvrg.eureka.etl.resource;edu.emory.cci.aiw.cvrg.eureka.common.json");

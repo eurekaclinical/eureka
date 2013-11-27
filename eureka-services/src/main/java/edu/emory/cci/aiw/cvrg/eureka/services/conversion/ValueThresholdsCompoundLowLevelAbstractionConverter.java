@@ -60,7 +60,7 @@ public final class ValueThresholdsCompoundLowLevelAbstractionConverter
 	@Override
 	public List<PropositionDefinition> convert(
 			ValueThresholdGroupEntity entity) {
-		List<PropositionDefinition> result = new ArrayList<PropositionDefinition>();
+		List<PropositionDefinition> result = new ArrayList<>();
 		String propId = entity.getKey() + ConversionUtil.PRIMARY_PROP_ID_SUFFIX;
 		this.primaryPropId = propId;
 		if (this.converterVisitor.addPropositionId(propId)) {
@@ -81,7 +81,7 @@ public final class ValueThresholdsCompoundLowLevelAbstractionConverter
 
 			primary.setGapFunction(new SimpleGapFunction(Integer.valueOf(0), null));
 
-			List<LowLevelAbstractionDefinition> intermediates = new ArrayList<LowLevelAbstractionDefinition>();
+			List<LowLevelAbstractionDefinition> intermediates = new ArrayList<>();
 			for (ValueThresholdEntity v : entity.getValueThresholds()) {
 				v.getAbstractedFrom().accept(this.converterVisitor);
 				result.addAll(this.converterVisitor.getPropositionDefinitions());

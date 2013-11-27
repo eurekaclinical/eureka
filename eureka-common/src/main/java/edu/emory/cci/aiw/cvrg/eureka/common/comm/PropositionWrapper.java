@@ -53,7 +53,7 @@ public class PropositionWrapper implements Serializable {
 	 * Creates the message object.
 	 */
 	public PropositionWrapper() {
-		children = new ArrayList<PropositionWrapper>();
+		children = new ArrayList<>();
 	}
 
 	/**

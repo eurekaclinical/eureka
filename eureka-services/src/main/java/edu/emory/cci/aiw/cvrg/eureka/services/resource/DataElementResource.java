@@ -89,7 +89,7 @@ public class DataElementResource {
 	@Path("/")
 	public List<DataElement> getAll(@Context HttpServletRequest request) {
 		User user = this.userDao.getByName(request.getUserPrincipal().getName());
-		List<DataElement> result = new ArrayList<DataElement>();
+		List<DataElement> result = new ArrayList<>();
 		List<DataElementEntity> propositions = this.propositionDao.getByUserId(user.getId());
 		for (DataElementEntity proposition : propositions) {
 //			this.propositionDao.refresh(proposition);
@@ -206,7 +206,7 @@ public class DataElementResource {
 		}
 		List<DataElementEntity> others =
 				this.propositionDao.getByUserId(inUserId);
-		List<String> dataElementsUsedIn = new ArrayList<String>();
+		List<String> dataElementsUsedIn = new ArrayList<>();
 		for (DataElementEntity other : others) {
 			if (!other.getId().equals(proposition.getId())) {
 				PropositionChildrenVisitor visitor =

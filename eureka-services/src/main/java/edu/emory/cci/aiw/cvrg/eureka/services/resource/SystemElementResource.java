@@ -84,8 +84,8 @@ public class SystemElementResource {
 	@GET
 	@Path("/")
 	public List<SystemElement> getAll() {
-		List<SystemElement> allElements = new ArrayList<SystemElement>();
-		List<SystemElement> result = new ArrayList<SystemElement>();
+		List<SystemElement> allElements = new ArrayList<>();
+		List<SystemElement> result = new ArrayList<>();
 		/*
 		 * Hack to get an ontology source that assumes all Protempa configurations
 		 * for a user point to the same knowledge source backends. This will go away.
@@ -108,7 +108,7 @@ public class SystemElementResource {
 					allElements.add(element);
 				}
 
-				Set<String> defaultPropositions = new HashSet<String>(
+				Set<String> defaultPropositions = new HashSet<>(
 						this.serviceProperties.getDefaultSystemPropositions());
 				for (SystemElement element : allElements) {
 					if (defaultPropositions.contains(element.getKey())) {

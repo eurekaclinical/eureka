@@ -348,7 +348,7 @@ public class UserResource {
 	 * @return A list of default roles.
 	 */
 	private List<Role> getDefaultRoles() {
-		List<Role> defaultRoles = new ArrayList<Role>();
+		List<Role> defaultRoles = new ArrayList<>();
 		for (Role role : this.roleDao.getAll()) {
 			if (Boolean.TRUE.equals(role.isDefaultRole())) {
 				defaultRoles.add(role);
@@ -364,7 +364,7 @@ public class UserResource {
 	}
 
 	private List<UserInfo> toUserInfoList (List<User> inUsers) {
-		List<UserInfo> infos = new ArrayList<UserInfo>(inUsers.size());
+		List<UserInfo> infos = new ArrayList<>(inUsers.size());
 		for (User user : inUsers) {
 			infos.add(this.toUserInfo(user));
 		}
@@ -391,7 +391,7 @@ public class UserResource {
 	}
 
 	private List<Long> rolesToRoleIds (List<Role> inRoles) {
-		List<Long> roleIds = new ArrayList<Long>(inRoles.size());
+		List<Long> roleIds = new ArrayList<>(inRoles.size());
 		for (Role role : inRoles) {
 			roleIds.add(role.getId());
 		}
@@ -399,7 +399,7 @@ public class UserResource {
 	}
 
 	private List<Role> roleIdsToRoles (List<Long> inRoleIds) {
-		List<Role> roles = new ArrayList<Role>(inRoleIds.size());
+		List<Role> roles = new ArrayList<>(inRoleIds.size());
 		for (Long roleId : inRoleIds) {
 			roles.add(this.roleDao.retrieve(roleId));
 		}

@@ -47,7 +47,7 @@ final class SequenceConverter
 	private final Map<Long, TemporalExtendedPropositionDefinition> extendedProps;
 
 	public SequenceConverter() {
-		this.extendedProps = new HashMap<Long, TemporalExtendedPropositionDefinition>();
+		this.extendedProps = new HashMap<>();
 	}
 
 	@Override
@@ -66,7 +66,7 @@ final class SequenceConverter
 
 	@Override
 	public List<PropositionDefinition> convert(SequenceEntity sequenceEntity) {
-		List<PropositionDefinition> result = new ArrayList<PropositionDefinition>();
+		List<PropositionDefinition> result = new ArrayList<>();
 		String propId = sequenceEntity.getKey() + ConversionUtil.PRIMARY_PROP_ID_SUFFIX;
 		this.primaryPropId = propId;
 		if (this.converterVisitor.addPropositionId(propId)) {

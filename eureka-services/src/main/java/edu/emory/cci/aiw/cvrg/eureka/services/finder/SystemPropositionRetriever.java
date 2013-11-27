@@ -74,7 +74,7 @@ public class SystemPropositionRetriever implements
 	 */
 	public List<PropositionDefinition> retrieveAll(
 	        String sourceConfigId, List<String> inKeys, Boolean withChildren) throws PropositionFindException {
-		List<PropositionDefinition> result = new ArrayList<PropositionDefinition>();
+		List<PropositionDefinition> result = new ArrayList<>();
 		try {
 			result = etlClient.getPropositionDefinitions(sourceConfigId, inKeys, withChildren);
 		} catch (ClientException e) {

@@ -43,7 +43,7 @@ public final class ValueThresholdsLowLevelAbstractionConverter implements
 		PropositionDefinitionConverter<ValueThresholdGroupEntity, LowLevelAbstractionDefinition> {
 	
 	private static final Map<String, ValueComparator> VC_MAP =
-			new HashMap<String, ValueComparator>();
+			new HashMap<>();
 	static {
 		VC_MAP.put(">", ValueComparator.GREATER_THAN);
 		VC_MAP.put(">=", ValueComparator.GREATER_THAN_OR_EQUAL_TO);
@@ -81,7 +81,7 @@ public final class ValueThresholdsLowLevelAbstractionConverter implements
 					+ "from singleton value thresholds.");
 		}
 		List<PropositionDefinition> result =
-				new ArrayList<PropositionDefinition>();
+				new ArrayList<>();
 		String propId =
 				entity.getKey() + ConversionUtil.PRIMARY_PROP_ID_SUFFIX;
 		this.primaryPropId = propId;

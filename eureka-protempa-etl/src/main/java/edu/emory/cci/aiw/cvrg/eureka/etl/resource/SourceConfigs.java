@@ -78,7 +78,7 @@ final class SourceConfigs extends Configs<SourceConfig, SourceConfigEntity> {
 			BackendSpecLoader<TermSourceBackend> termSourceBackendSpecLoader =
 					backendProvider.getTermSourceBackendSpecLoader();
 
-			List<String> badConfigIds = new ArrayList<String>();
+			List<String> badConfigIds = new ArrayList<>();
 			for (String id : configs.loadConfigurationIds(configId)) {
 				if (!dataSourceBackendSpecLoader.hasSpec(id)
 						&& !knowledgeSourceBackendSpecLoader.hasSpec(id)
@@ -144,7 +144,7 @@ final class SourceConfigs extends Configs<SourceConfig, SourceConfigEntity> {
 			EurekaProtempaConfigurations configs, String sourceId)
 			throws ConfigurationsNotFoundException,
 			ConfigurationsLoadException, InvalidPropertyNameException {
-		List<Section> backendSections = new ArrayList<Section>();
+		List<Section> backendSections = new ArrayList<>();
 		for (BackendSpec<B> bs : backendSpecLoader) {
 			List<BackendInstanceSpec<B>> load = configs.load(sourceId, bs);
 			for (BackendInstanceSpec<B> bis : load) {

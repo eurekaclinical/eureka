@@ -33,7 +33,7 @@ import java.util.Map;
 public class TestPropositionFinder implements PropositionFinder<String> {
 
 	private Map<String, PropositionDefinition> propDefs = new
-			HashMap<String, PropositionDefinition>();
+			HashMap<>();
 
 	private final EventDefinition TEST_EVENT_1 = new EventDefinition
 			("test-event1");

@@ -233,7 +233,7 @@ public class UserRequestResource {
 	 * @return A list of default roles.
 	 */
 	private List<Role> getDefaultRoles() {
-		List<Role> defaultRoles = new ArrayList<Role>();
+		List<Role> defaultRoles = new ArrayList<>();
 		for (Role role : this.roleDao.getAll()) {
 			if (Boolean.TRUE.equals(role.isDefaultRole())) {
 				defaultRoles.add(role);

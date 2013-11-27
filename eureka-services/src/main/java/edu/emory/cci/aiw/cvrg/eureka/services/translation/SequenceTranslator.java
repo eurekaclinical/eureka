@@ -69,8 +69,8 @@ public class SequenceTranslator implements
 				new TranslatorSupport(inPropositionDao, inFinder, inSourceConfigResource);
 		this.timeUnitDao = inTimeUnitDao;
 		this.relationOperatorDao = inRelationOperatorDao;
-		this.extendedProps = new HashMap<Long, ExtendedDataElement>();
-		this.propositions = new HashMap<String, DataElementEntity>();
+		this.extendedProps = new HashMap<>();
+		this.propositions = new HashMap<>();
 		this.valueComparatorDao = inValueComparatorDao;
 	}
 
@@ -86,7 +86,7 @@ public class SequenceTranslator implements
 				SequenceEntity.class);
 
 		Map<String, DataElementField> dataElementsMap =
-				new HashMap<String, DataElementField>();
+				new HashMap<>();
 		DataElementField primaryDataElementField = element.getPrimaryDataElement();
 		ExtendedDataElement ep =
 				createExtendedProposition(result.getPrimaryExtendedDataElement(),
@@ -96,7 +96,7 @@ public class SequenceTranslator implements
 
 		List<Relation> relations = result.getRelations();
 		if (relations == null) {
-			relations = new ArrayList<Relation>();
+			relations = new ArrayList<>();
 			result.setRelations(relations);
 		}
 
@@ -222,7 +222,7 @@ public class SequenceTranslator implements
 					assignSources(pId, proposition);
 
 			List<RelatedDataElementField> relatedFields =
-					new ArrayList<RelatedDataElementField>();
+					new ArrayList<>();
 			for (Relation relation : relations) {
 				RelatedDataElementField field =
 						createRelatedDataElementField(relation);
@@ -299,7 +299,7 @@ public class SequenceTranslator implements
 
 	private Map<Long, Long> assignSources(Long pId, SequenceEntity proposition) {
 		// determine the correct source for each sequential data element
-		Map<Long, Long> sequentialSources = new HashMap<Long, Long>();
+		Map<Long, Long> sequentialSources = new HashMap<>();
 		sequentialSources.put(pId, Long.valueOf(1));
 		int i = 2;
 		for (Relation relation : proposition.getRelations()) {

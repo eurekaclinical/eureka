@@ -79,12 +79,12 @@ public class DataValidator {
 	 * Holds all the warning/error messages from the validation.
 	 */
 	final private List<DataValidationEvent> validationEvents = 
-			new ArrayList<DataValidationEvent>();
+			new ArrayList<>();
 	/**
 	 * Holds the unique identifiers for all the observations, for duplication
 	 * checking.
 	 */
-	final private Set<String> observationIds = new HashSet<String>();
+	final private Set<String> observationIds = new HashSet<>();
 	
 	private boolean failed;
 	private final File dataFile;
@@ -219,7 +219,7 @@ public class DataValidator {
 	private void validatePatients() {
 		long counter = 1L;
 		String type = "patient";
-		Set<Long> idSet = new HashSet<Long>();
+		Set<Long> idSet = new HashSet<>();
 		for (Patient patient : this.patients) {
 			this.validateId(patient.getId(), counter, type, "bad patient id");
 			this.validateName(patient.getFirstName(), counter, type,
@@ -236,7 +236,7 @@ public class DataValidator {
 	private void validateEncounters() {
 		long counter = 1;
 		String type = "encounter";
-		Set<Long> idSet = new HashSet<Long>();
+		Set<Long> idSet = new HashSet<>();
 		for (Encounter encounter : this.encounters) {
 			this.validateId(encounter.getId(), counter, type,
 					"bad encounter id");
@@ -251,7 +251,7 @@ public class DataValidator {
 	private void validateProviders() {
 		long counter = 1;
 		String type = "provider";
-		Set<Long> idSet = new HashSet<Long>();
+		Set<Long> idSet = new HashSet<>();
 		for (Provider provider : this.providers) {
 			this.validateId(provider.getId(), counter, type, "bad provider id");
 			this.checkDuplicateLongIds(counter, type, idSet, provider.getId());
@@ -464,7 +464,7 @@ public class DataValidator {
 	 */
 	private Set<Long> getEncounterIds() {
 		if (this.encounterIds == null) {
-			Set<Long> idSet = new HashSet<Long>();
+			Set<Long> idSet = new HashSet<>();
 			for (Encounter encounter : this.encounters) {
 				idSet.add(encounter.getId());
 			}

@@ -82,7 +82,7 @@ public class PropositionValidatorTest extends AbstractTest {
 		PropositionValidator validator = this.getInstance
 			(PropositionValidator.class);
 		List<PropositionDefinition> wrappers = new
-			ArrayList<PropositionDefinition>();
+			ArrayList<>();
 		validator.setUserPropositions(wrappers);
 		validator.setConfigId("0");
 
@@ -101,7 +101,7 @@ public class PropositionValidatorTest extends AbstractTest {
 	public void testSinglePropositionNoDef() {
 		PropositionValidator validator = this.getInstance(PropositionValidator.class);
 		List<PropositionDefinition> definitions = new
-			ArrayList<PropositionDefinition>();
+			ArrayList<>();
 		EventDefinition event = new EventDefinition("TestEvent");
 		definitions.add(event);
 		validator.setConfigId("0");
@@ -137,7 +137,7 @@ public class PropositionValidatorTest extends AbstractTest {
 		def3.setInverseIsA(def1.getId());
 
 		List<PropositionDefinition> propositions = new ArrayList
-			<PropositionDefinition>();
+				<>();
 		propositions.add(def1);
 		propositions.add(def2);
 

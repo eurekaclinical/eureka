@@ -103,7 +103,7 @@ final class TranslatorSupport {
 		this.propositionDao = propositionDao;
 		this.finder = finder;
 		this.dataElementEntities = 
-				new HashMap<DataElementMapKey, DataElementEntity>();
+				new HashMap<>();
 		this.sourceConfigResource = inSourceConfigResource;
 	}
 

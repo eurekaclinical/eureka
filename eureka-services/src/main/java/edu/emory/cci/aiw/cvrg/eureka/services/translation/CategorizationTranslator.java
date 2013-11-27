@@ -64,7 +64,7 @@ public final class CategorizationTranslator implements
 				this.translatorSupport.getUserEntityInstance(element,
 				CategoryEntity.class);
 
-		List<DataElementEntity> inverseIsA = new ArrayList<DataElementEntity>();
+		List<DataElementEntity> inverseIsA = new ArrayList<>();
 		if (element.getChildren() != null) {
 			for (DataElementField de : element.getChildren()) {
 				DataElementEntity proposition =
@@ -110,7 +110,7 @@ public final class CategorizationTranslator implements
 
 		PropositionTranslatorUtil.populateCommonDataElementFields(result,
 				proposition);
-		List<DataElementField> children = new ArrayList<DataElementField>();
+		List<DataElementField> children = new ArrayList<>();
 		for (DataElementEntity p : proposition.getMembers()) {
 			DataElementField def = new DataElementField();
 			def.setDataElementKey(p.getKey());

@@ -66,7 +66,7 @@ public final class FrequencyValueThresholdConverter implements
 	@Override
 	public List<PropositionDefinition> convert(FrequencyEntity entity) {
 		List<PropositionDefinition> result =
-				new ArrayList<PropositionDefinition>();
+				new ArrayList<>();
 
 		String propId = entity.getKey()
 				+ ConversionUtil.PRIMARY_PROP_ID_SUFFIX;

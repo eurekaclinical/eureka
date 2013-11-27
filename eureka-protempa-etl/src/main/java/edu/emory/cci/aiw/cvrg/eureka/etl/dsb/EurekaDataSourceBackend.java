@@ -150,7 +150,7 @@ public final class EurekaDataSourceBackend extends RelationalDbDataSourceBackend
 
 	@Override
 	public DataValidationEvent[] validateData(KnowledgeSource knowledgeSource) throws DataSourceBackendFailedDataValidationException, KnowledgeSourceReadException {
-		List<DataValidationEvent> events = new ArrayList<DataValidationEvent>();
+		List<DataValidationEvent> events = new ArrayList<>();
 		boolean failedValidation = false;
 		if (this.dataProviders != null) {
 			for (XlsxDataProvider dataProvider : this.dataProviders) {

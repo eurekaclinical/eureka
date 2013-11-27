@@ -83,7 +83,7 @@ public class SystemPropositionTranslator implements
 			}
 			PropositionDefinition propDef = finder.find(scps.get(0).getId(),
 					proposition.getKey());
-			List<SystemElement> children = new ArrayList<SystemElement>();
+			List<SystemElement> children = new ArrayList<>();
 			for (String child : propDef.getInverseIsA()) {
 				PropositionDefinition childDef = finder.find(
 						scps.get(0).getId(), child);
@@ -95,7 +95,7 @@ public class SystemPropositionTranslator implements
 			}
 			element.setChildren(children);
 
-			List<String> properties = new ArrayList<String>();
+			List<String> properties = new ArrayList<>();
 			for (PropertyDefinition property : propDef.getPropertyDefinitions()) {
 				properties.add(property.getName());
 			}

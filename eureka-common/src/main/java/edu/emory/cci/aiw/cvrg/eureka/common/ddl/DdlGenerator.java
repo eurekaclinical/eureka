@@ -120,7 +120,7 @@ public final class DdlGenerator {
 	 *                   written.
 	 */
 	private static void generateBackendDdl(final String outputFile) {
-		final List<Class<?>> backendClasses = new ArrayList<Class<?>>();
+		final List<Class<?>> backendClasses = new ArrayList<>();
 		backendClasses.add(JobEntity.class);
 		backendClasses.add(JobEvent.class);
 		backendClasses.add(EtlUser.class);
@@ -152,7 +152,7 @@ public final class DdlGenerator {
 	 *                   written.
 	 */
 	private static void generateServiceDdl(final String outputFile) {
-		final List<Class<?>> serviceClasses = new ArrayList<Class<?>>();
+		final List<Class<?>> serviceClasses = new ArrayList<>();
 		serviceClasses.add(User.class);
 		serviceClasses.add(Role.class);
 		serviceClasses.add(DataElementEntity.class);

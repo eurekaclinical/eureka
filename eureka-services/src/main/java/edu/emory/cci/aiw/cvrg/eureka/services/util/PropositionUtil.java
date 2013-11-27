@@ -80,7 +80,7 @@ public final class PropositionUtil {
 		inDefinition.accept(propDefTypeVisitor);
 		systemElement.setSystemType(propDefTypeVisitor.getSystemType());
 
-		List<String> properties = new ArrayList<String>();
+		List<String> properties = new ArrayList<>();
 		for (PropertyDefinition propertyDef : inDefinition
 				.getPropertyDefinitions()) {
 			properties.add(propertyDef.getName());
@@ -88,7 +88,7 @@ public final class PropositionUtil {
 		systemElement.setProperties(properties);
 
 		if (!summarize) {
-			List<SystemElement> children = new ArrayList<SystemElement>();
+			List<SystemElement> children = new ArrayList<>();
 			List<PropositionDefinition> pds = inPropositionFinder.findAll(
 					sourceConfigId,
 			        Arrays.<String> asList(inDefinition.getChildren()),

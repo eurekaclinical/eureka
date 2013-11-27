@@ -118,7 +118,7 @@ public class ValueThresholdsCompoundLowLevelAbstractionConverterTest extends
 		threshold2.setMinValueComp(eq);
 		threshold2.setId(2L);
 
-		List<ValueThresholdEntity> thresholds = new ArrayList<ValueThresholdEntity>();
+		List<ValueThresholdEntity> thresholds = new ArrayList<>();
 		thresholds.add(threshold1);
 		thresholds.add(threshold2);
 		thresholdGroup.setValueThresholds(thresholds);
@@ -126,7 +126,7 @@ public class ValueThresholdsCompoundLowLevelAbstractionConverterTest extends
 
 		propDefs = converter
 		        .convert(thresholdGroup);
-		llaDefs = new ArrayList<LowLevelAbstractionDefinition>();
+		llaDefs = new ArrayList<>();
 		for (PropositionDefinition pd : propDefs) {
 			if (pd instanceof LowLevelAbstractionDefinition) {
 				llaDefs.add((LowLevelAbstractionDefinition) pd);
@@ -190,7 +190,7 @@ public class ValueThresholdsCompoundLowLevelAbstractionConverterTest extends
 	
 	@Test
 	public void testValueDefExists() {
-		List<String> ids = new ArrayList<String>();
+		List<String> ids = new ArrayList<>();
 		for (LowLevelAbstractionValueDefinition vd : firstLlaDef.getValueDefinitions()) {
 			ids.add(vd.getId());
 		}

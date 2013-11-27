@@ -90,7 +90,7 @@ public class JobEntity {
 	 */
 	@OneToMany(cascade = CascadeType.ALL, targetEntity = JobEvent.class,
 			mappedBy = "job")
-	private List<JobEvent> jobEvents = new ArrayList<JobEvent>();
+	private List<JobEvent> jobEvents = new ArrayList<>();
 	private static JobEventComparator JOB_EVENT_COMPARATOR = new JobEventComparator();
 
 	/**
@@ -184,7 +184,7 @@ public class JobEntity {
 	 */
 	public void setJobEvents(List<JobEvent> inJobEvents) {
 		if (inJobEvents == null) {
-			this.jobEvents = new ArrayList<JobEvent>();
+			this.jobEvents = new ArrayList<>();
 		} else {
 			this.jobEvents = inJobEvents;
 		}
@@ -219,7 +219,7 @@ public class JobEntity {
 	 * occurrence.
 	 */
 	public List<JobEvent> getJobEventsInOrder() {
-		List<JobEvent> ts = new ArrayList<JobEvent>(this.jobEvents);
+		List<JobEvent> ts = new ArrayList<>(this.jobEvents);
 		Collections.sort(ts, JOB_EVENT_COMPARATOR);
 		return ts;
 	}
@@ -232,7 +232,7 @@ public class JobEntity {
 	 * occurrence.
 	 */
 	public List<JobEvent> getJobEventsInReverseOrder() {
-		List<JobEvent> ts = new ArrayList<JobEvent>(this.jobEvents);
+		List<JobEvent> ts = new ArrayList<>(this.jobEvents);
 		Collections.sort(ts, Collections.reverseOrder(JOB_EVENT_COMPARATOR));
 		return ts;
 	}

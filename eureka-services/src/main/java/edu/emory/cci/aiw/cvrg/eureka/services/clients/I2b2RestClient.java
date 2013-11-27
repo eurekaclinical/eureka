@@ -98,7 +98,7 @@ public class I2b2RestClient extends AbstractClient implements I2b2Client {
 						(adminPassword != null ? "*********" : null));
 			}
 
-			Map<String, Object> params = new HashMap<String, Object>();
+			Map<String, Object> params = new HashMap<>();
 			params.put("id", email);
 			params.put("new_password", passwd);
 			params.put("todayDate", dateFormat.format(date));

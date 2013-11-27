@@ -88,7 +88,7 @@ public class JobResource {
 			@QueryParam("order") String order) {
 		JobFilter jobFilter = new JobFilter(null,
 				request.getUserPrincipal().getName(), null, null, null);
-		List<Job> jobs = new ArrayList<Job>();
+		List<Job> jobs = new ArrayList<>();
 		List<JobEntity> jobEntities;
 		if (order == null) {
 			jobEntities = this.jobDao.getWithFilter(jobFilter);
@@ -147,7 +147,7 @@ public class JobResource {
 	@RolesAllowed({"admin"})
 	@Path("/status")
 	public List<Job> getJobStatus(@QueryParam("filter") JobFilter inFilter) {
-		List<Job> jobs = new ArrayList<Job>();
+		List<Job> jobs = new ArrayList<>();
 		for (JobEntity jobEntity : this.jobDao.getWithFilter(inFilter)) {
 			jobs.add(jobEntity.toJob());
 		}

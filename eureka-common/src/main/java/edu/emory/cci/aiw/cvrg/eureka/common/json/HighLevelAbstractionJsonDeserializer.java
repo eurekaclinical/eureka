@@ -116,7 +116,7 @@ public final class HighLevelAbstractionJsonDeserializer extends
 		nextToken();
 		int i = 1;
 		Map<Long, ExtendedPropositionDefinition> indices =
-				new HashMap<Long, ExtendedPropositionDefinition>();
+				new HashMap<>();
 		while (parser.getCurrentToken() != JsonToken.END_OBJECT) {
 			checkField("" + i);
 			TemporalExtendedPropositionDefinition ep = this.parser

@@ -99,7 +99,7 @@ public class SourceConfigResource {
 	@GET
 	@Path("/parameters/list")
 	public List<SourceConfigParams> getParamsList() {
-		List<SourceConfigParams> result = new ArrayList<SourceConfigParams>();
+		List<SourceConfigParams> result = new ArrayList<>();
 		try {
 			for (SourceConfig config : this.etlClient.getSourceConfigs()) {
 				result.add(toParams(config));
@@ -132,7 +132,7 @@ public class SourceConfigResource {
 			displayName = config.getId();
 		}
 		params.setName(displayName);
-		List<Upload> uploads = new ArrayList<Upload>();
+		List<Upload> uploads = new ArrayList<>();
 		for (Section section : config.getDataSourceBackends()) {
 			Upload upload = null;
 			String sourceId = null;

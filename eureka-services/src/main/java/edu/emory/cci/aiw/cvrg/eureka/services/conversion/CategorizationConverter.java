@@ -57,16 +57,16 @@ public final class CategorizationConverter implements
 	@Override
 	public List<PropositionDefinition> convert(CategoryEntity category) {
 		List<PropositionDefinition> result =
-				new ArrayList<PropositionDefinition>();
+				new ArrayList<>();
 		String id = category.getKey()
 				+ ConversionUtil.PRIMARY_PROP_ID_SUFFIX;
 		this.primaryPropId = id;
 		if (this.converterVisitor.addPropositionId(id)) {
 			PropositionDefinition primary;
 			List<String> inverseIsADefs =
-					new ArrayList<String>();
+					new ArrayList<>();
 			List<PropositionDefinition> inverseIsADefsIncludingSecondaries =
-					new ArrayList<PropositionDefinition>();
+					new ArrayList<>();
 			for (DataElementEntity e : category.getMembers()) {
 				e.accept(this.converterVisitor);
 				inverseIsADefsIncludingSecondaries.addAll(this.converterVisitor

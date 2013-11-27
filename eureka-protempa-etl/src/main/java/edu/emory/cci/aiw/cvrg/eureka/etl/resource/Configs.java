@@ -94,7 +94,7 @@ public abstract class Configs<E, F extends ConfigEntity> {
 	 * @return a {@link List<SourceConfig>}.
 	 */
 	public final List<E> getAll() {
-		List<E> result = new ArrayList<E>();
+		List<E> result = new ArrayList<>();
 		try {
 			File[] files = this.configDir.listFiles();
 			if (files == null) {

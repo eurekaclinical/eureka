@@ -82,9 +82,9 @@ public class EditPropositionServlet extends HttpServlet {
 			List<RelationOperator> relOps =
 					this.servicesClient.getRelationOperatorsAsc();
 			List<RelationOperator> sequentialRelOps =
-					new ArrayList<RelationOperator>();
+					new ArrayList<>();
 			List<RelationOperator> contextRelOps =
-					new ArrayList<RelationOperator>();
+					new ArrayList<>();
 			for (RelationOperator relOp : relOps) {
 				switch (relOp.getType()) {
 					case SEQUENTIAL:

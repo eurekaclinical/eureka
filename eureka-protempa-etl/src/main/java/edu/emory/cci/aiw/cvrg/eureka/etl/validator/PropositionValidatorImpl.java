@@ -131,10 +131,10 @@ public class PropositionValidatorImpl implements PropositionValidator {
 
 	@Inject
 	public PropositionValidatorImpl(EtlProperties inEtlProperties) {
-		this.messages = new ArrayList<String>();
-		this.propositions = new ArrayList<PropositionDefinition>();
+		this.messages = new ArrayList<>();
+		this.propositions = new ArrayList<>();
 		this.etlProperties = inEtlProperties;
-		this.userPropositions = new ArrayList<PropositionDefinition>();
+		this.userPropositions = new ArrayList<>();
 	}
 
 	@Override
@@ -166,7 +166,7 @@ public class PropositionValidatorImpl implements PropositionValidator {
 			throws PropositionValidatorException {
 
 		boolean result;
-		Stack<String> cycleStack = new Stack<String>();
+		Stack<String> cycleStack = new Stack<>();
 		boolean cycle = this.detectCycle(inProposition, cycleStack);
 
 		if (cycle) {
@@ -180,7 +180,7 @@ public class PropositionValidatorImpl implements PropositionValidator {
 						+ "Proposition finding will not work without it. "
 						+ "Please create it and try again.");
 			}
-			List<PropositionType> types = new ArrayList<PropositionType>();
+			List<PropositionType> types = new ArrayList<>();
 			try {
 				PropositionDefinitionFinder propositionFinder = new PropositionDefinitionFinder(
 						this.configId, this.etlProperties);
@@ -316,7 +316,7 @@ public class PropositionValidatorImpl implements PropositionValidator {
 		}
 
 		PropositionType result = PropositionType.INVALID;
-		List<PropositionType> childTypes = new ArrayList<PropositionType>();
+		List<PropositionType> childTypes = new ArrayList<>();
 		PropositionDefinition propDef = this.findById(inTarget);
 
 		try {
@@ -359,7 +359,7 @@ public class PropositionValidatorImpl implements PropositionValidator {
 		LOGGER.debug("Looking for proposition id {}", inId);
 		PropositionDefinition result = null;
 		List<PropositionDefinition> allProps = new ArrayList
-				<PropositionDefinition>();
+				<>();
 		allProps.addAll(this.userPropositions);
 		allProps.addAll(this.propositions);
 		for (PropositionDefinition propDef : allProps) {

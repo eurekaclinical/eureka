@@ -29,8 +29,8 @@ import java.util.Map;
 
 public class JsonTreeData {
 
-	private List<JsonTreeData> children = new ArrayList<JsonTreeData>();
-	private Map<String,String> attr = new HashMap<String, String>();
+	private List<JsonTreeData> children = new ArrayList<>();
+	private Map<String,String> attr = new HashMap<>();
 	private String id;
 	private String data;
 	private String type;

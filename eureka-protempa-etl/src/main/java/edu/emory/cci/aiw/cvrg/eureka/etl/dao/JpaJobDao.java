@@ -100,7 +100,7 @@ public class JpaJobDao extends GenericDao<JobEntity, Long> implements JobDao {
 	}
 
 	private Predicate[] buildWhere(JobFilter jobFilter, CriteriaBuilder builder, Root<JobEntity> root) {
-		List<Predicate> predicates = new ArrayList<Predicate>();
+		List<Predicate> predicates = new ArrayList<>();
 		if (jobFilter != null) {
 			LOGGER.debug("Checking for job ID.");
 			if (jobFilter.getJobId() != null) {

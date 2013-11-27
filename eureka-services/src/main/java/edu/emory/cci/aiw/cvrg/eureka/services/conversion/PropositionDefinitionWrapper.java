@@ -45,8 +45,8 @@ final class PropositionDefinitionWrapper extends AbstractDataElementEntityVisito
 	private List<String> toShowPropIds;
 
 	PropositionDefinitionWrapper() {
-		this.propDefs = new ArrayList<PropositionDefinition>();
-		this.toShowPropIds = new ArrayList<String>();
+		this.propDefs = new ArrayList<>();
+		this.toShowPropIds = new ArrayList<>();
 	}
 
 	Collection<PropositionDefinition> getUserPropositionDefinitions() {

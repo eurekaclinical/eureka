@@ -78,7 +78,7 @@ public final class SliceAbstractionJsonDeserializer extends
 		nextToken();
 		int i = 1;
 		Map<Long, ExtendedPropositionDefinition> indices =
-				new HashMap<Long, ExtendedPropositionDefinition>();
+				new HashMap<>();
 		while (parser.getCurrentToken() != JsonToken.END_OBJECT) {
 			checkField("" + i);
 			TemporalExtendedPropositionDefinition lhs = this.parser

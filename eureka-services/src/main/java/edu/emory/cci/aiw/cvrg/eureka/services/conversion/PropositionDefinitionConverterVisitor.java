@@ -74,7 +74,7 @@ public final class PropositionDefinitionConverterVisitor implements
 		frequencyValueThresholdConverter =
 				inFrequencyHighLevelAbstractionConverter;
 		frequencyValueThresholdConverter.setConverterVisitor(this);
-		propIds = new HashSet<String>();
+		propIds = new HashSet<>();
 	}
 
 	public Collection<PropositionDefinition> getPropositionDefinitions() {

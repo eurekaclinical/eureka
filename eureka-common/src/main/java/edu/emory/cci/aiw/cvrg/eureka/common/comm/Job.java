@@ -119,7 +119,7 @@ public class Job {
 	 * @return The list of messages.
 	 */
 	public List<String> messages() {
-		final List<String> messages = new ArrayList<String>();
+		final List<String> messages = new ArrayList<>();
 		for (JobEvent event : this.jobEvents) {
 			final String message = event.getMessage();
 			if (message != null) {

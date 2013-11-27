@@ -65,7 +65,7 @@ public class SystemPropositionFinder extends AbstractPropositionFinder<
 
 	@Override
 	protected List<String> getPrefetchKeys(PropositionDefinition inProposition) {
-		List<String> keys = new ArrayList<String>();
+		List<String> keys = new ArrayList<>();
 
 		keys.addAll(Arrays.<String> asList(inProposition.getInverseIsA()));
 		return keys;

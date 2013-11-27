@@ -34,7 +34,7 @@ public final class PropositionChildrenVisitor implements
 
 	@Override
 	public void visit(SystemProposition proposition) {
-		this.children = new ArrayList<DataElementEntity>();
+		this.children = new ArrayList<>();
 	}
 
 	@Override
@@ -49,7 +49,7 @@ public final class PropositionChildrenVisitor implements
 
 	@Override
 	public void visit(ValueThresholdGroupEntity lowLevelAbstraction) {
-		List<DataElementEntity> cs = new ArrayList<DataElementEntity>();
+		List<DataElementEntity> cs = new ArrayList<>();
 		for (ValueThresholdEntity v : lowLevelAbstraction.getValueThresholds()) {
 			cs.add(v.getAbstractedFrom());
 		}

@@ -78,7 +78,7 @@ public class SequenceEntity extends DataElementEntity {
 	 */
 	public List<DataElementEntity> getAbstractedFrom() {
 		Map<Long, DataElementEntity> entities = 
-				new HashMap<Long, DataElementEntity>();
+				new HashMap<>();
 		for (Relation relation : this.relations) {
 			DataElementEntity lhs = 
 					relation.getLhsExtendedDataElement()

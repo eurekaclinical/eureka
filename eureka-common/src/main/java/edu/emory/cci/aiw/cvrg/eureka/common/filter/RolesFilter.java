@@ -96,7 +96,7 @@ public class RolesFilter implements Filter {
 		HttpServletRequest servletRequest = (HttpServletRequest) inRequest;
 		Principal principal = servletRequest.getUserPrincipal();
 		if (principal != null) {
-			Set<String> roles = new HashSet<String>();
+			Set<String> roles = new HashSet<>();
 			String name = principal.getName();
 			Connection connection = null;
 			PreparedStatement preparedStatement = null;

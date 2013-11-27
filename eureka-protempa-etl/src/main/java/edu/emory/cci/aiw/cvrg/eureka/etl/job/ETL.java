@@ -174,7 +174,7 @@ public class ETL {
 	private void logValidationEvents(JobEntity job, DataValidationEvent[] events, DataSourceFailedDataValidationException ex) {
 		// if the validation caused any errors/warnings, we insert them into
 		// our file upload object, and amend our response.
-		List<JobEvent> jobEvents = new ArrayList<JobEvent>();
+		List<JobEvent> jobEvents = new ArrayList<>();
 		for (DataValidationEvent event : events) {
 			JobEvent jobEvent = new JobEvent();
 			jobEvent.setJob(job);

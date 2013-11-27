@@ -55,7 +55,7 @@ public final class SliceAbstractionJsonSerializer extends
 		jgen.writeFieldName("extendedPropositions");
 		jgen.writeStartObject();
 		Map<ExtendedPropositionDefinition, Long> indices =
-				new HashMap<ExtendedPropositionDefinition, Long>();
+				new HashMap<>();
 		int i = 1;
 		for (TemporalExtendedPropositionDefinition epd : value.getTemporalExtendedPropositionDefinitions()) {
 			indices.put(epd, Long.valueOf(i));

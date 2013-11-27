@@ -87,7 +87,7 @@ public class JobFilter {
 	 * @param queryString Parse the filter from this given string.
 	 */
 	public JobFilter(String queryString) {
-		Map<String, String> params = new HashMap<String, String>();
+		Map<String, String> params = new HashMap<>();
 		String[] parts = queryString.split("|");
 		for (String part : parts) {
 			String[] data = part.split("=");

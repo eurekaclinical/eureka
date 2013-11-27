@@ -34,7 +34,7 @@ public class JobEventComparator implements Comparator<JobEvent>,
 
 	private static final long serialVersionUID = -1597150892714722679L;
 	private static final Map<JobEventType, Integer> order = 
-			new EnumMap<JobEventType, Integer>(JobEventType.class);
+			new EnumMap<>(JobEventType.class);
 
 	static {
 		order.put(JobEventType.VALIDATING, 0);

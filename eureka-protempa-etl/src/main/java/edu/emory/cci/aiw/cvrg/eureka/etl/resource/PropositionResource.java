@@ -140,7 +140,7 @@ public class PropositionResource {
 			@QueryParam("withChildren") String withChildren) {
 		try {
 			if (this.etlProperties.getConfigDir() != null) {
-				List<PropositionDefinition> result = new ArrayList<PropositionDefinition>();
+				List<PropositionDefinition> result = new ArrayList<>();
 				PropositionDefinitionFinder propositionFinder =
 						new PropositionDefinitionFinder(inConfigId,
 						this.etlProperties);

@@ -90,7 +90,7 @@ public final class ValueThresholdsTranslator implements
 
 		List<ValueThresholdEntity> thresholds = result.getValueThresholds();
 		if (thresholds == null) {
-			thresholds = new ArrayList<ValueThresholdEntity>();
+			thresholds = new ArrayList<>();
 			result.setValueThresholds(thresholds);
 		}
 
@@ -145,7 +145,7 @@ public final class ValueThresholdsTranslator implements
 					timeUnitDao.retrieve(vt.getWithinAtMostUnit()));
 
 			if (extendedDataElements == null) {
-				extendedDataElements = new ArrayList<ExtendedDataElement>();
+				extendedDataElements = new ArrayList<>();
 				vte.setExtendedDataElements(extendedDataElements);
 			}
 			int j = 0;
@@ -191,7 +191,7 @@ public final class ValueThresholdsTranslator implements
 
 		result.setThresholdsOperator(entity.getThresholdsOperator().getId());
 
-		List<ValueThreshold> thresholds = new ArrayList<ValueThreshold>();
+		List<ValueThreshold> thresholds = new ArrayList<>();
 		for (ValueThresholdEntity vte : entity.getValueThresholds()) {
 			ValueThreshold threshold = new ValueThreshold();
 			threshold.setLowerValue(vte.getMinTValueThreshold());
@@ -215,7 +215,7 @@ public final class ValueThresholdsTranslator implements
 			threshold.setDataElement(elementField);
 			
 			List<DataElementField> relatedDataElements =
-					new ArrayList<DataElementField>();
+					new ArrayList<>();
 			for (ExtendedDataElement elt : vte.getExtendedDataElements()) {
 				DataElementField dataElementField =
 						PropositionTranslatorUtil.createDataElementField(elt);

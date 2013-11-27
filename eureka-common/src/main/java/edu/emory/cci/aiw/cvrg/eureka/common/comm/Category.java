@@ -40,7 +40,7 @@ public final class Category extends DataElement {
 	}
 
 	private List<DataElementField> children = 
-			new ArrayList<DataElementField>();
+			new ArrayList<>();
 
 	@Enumerated(EnumType.STRING)
 	private CategoricalType categoricalType;

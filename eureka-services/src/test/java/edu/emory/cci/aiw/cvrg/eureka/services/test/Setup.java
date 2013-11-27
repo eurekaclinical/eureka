@@ -140,7 +140,7 @@ public class Setup implements TestDataProvider {
 	private List<DataElementEntity> createDataElements(User... users) {
 		System.out.println("Creating data elements...");
 		List<DataElementEntity> dataElements =
-				new ArrayList<DataElementEntity>(users.length);
+				new ArrayList<>(users.length);
 		EntityManager entityManager = this.getEntityManager();
 		Date now = new Date();
 		ThresholdsOperator any = new ThresholdsOperator();
@@ -268,7 +268,7 @@ public class Setup implements TestDataProvider {
 		entityManager.persist(timeUnit);
 		entityManager.flush();
 		entityManager.getTransaction().commit();
-		List<TimeUnit> result = new ArrayList<TimeUnit>();
+		List<TimeUnit> result = new ArrayList<>();
 		result.add(timeUnit);
 		return result;
 	}
@@ -283,7 +283,7 @@ public class Setup implements TestDataProvider {
 		entityManager.getTransaction().begin();
 		entityManager.persist(freqType);
 		entityManager.getTransaction().commit();
-		List<FrequencyType> result = new ArrayList<FrequencyType>();
+		List<FrequencyType> result = new ArrayList<>();
 		result.add(freqType);
 		return result;
 	}

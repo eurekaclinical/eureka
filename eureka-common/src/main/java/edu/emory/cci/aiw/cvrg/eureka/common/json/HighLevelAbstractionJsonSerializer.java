@@ -62,7 +62,7 @@ public final class HighLevelAbstractionJsonSerializer extends JsonSerializer<Hig
 		jgen.writeFieldName("extendedPropositions");
 		jgen.writeStartObject();
 		Map<ExtendedPropositionDefinition, Long> indices =
-				new HashMap<ExtendedPropositionDefinition, Long>();
+				new HashMap<>();
 		int i = 1;
 		for (ExtendedPropositionDefinition epd : value.getExtendedPropositionDefinitions()) {
 			indices.put(epd, Long.valueOf(i));
@@ -74,7 +74,7 @@ public final class HighLevelAbstractionJsonSerializer extends JsonSerializer<Hig
 		// special case for handling extended propositions and relations, which
 		// are not directly gettable
 		Map<List<TemporalExtendedPropositionDefinition>, Relation> defPairs =
-				new HashMap<List<TemporalExtendedPropositionDefinition>, Relation>();
+				new HashMap<>();
 		for (List<TemporalExtendedPropositionDefinition> epdPair : value
 				.getTemporalExtendedPropositionDefinitionPairs()) {
 			Relation r = value.getRelation(epdPair);

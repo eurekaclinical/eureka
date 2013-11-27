@@ -44,7 +44,7 @@ public class PropositionResourceTest extends AbstractEtlResourceTest {
 	public void testValidation() throws Exception {
 		WebResource webResource = this.resource();
 		List<PropositionDefinition> propositions =
-			new ArrayList<PropositionDefinition>();
+			new ArrayList<>();
 
 		ValidationRequest validationRequest = new ValidationRequest();
 		validationRequest.setUserId(USER_ID);

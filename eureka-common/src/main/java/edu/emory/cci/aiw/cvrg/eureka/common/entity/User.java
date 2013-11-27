@@ -122,7 +122,7 @@ public class User {
 		@JoinColumn(name = "user_id")},
 	inverseJoinColumns = {
 		@JoinColumn(name = "role_id")})
-	private List<Role> roles = new ArrayList<Role>();
+	private List<Role> roles = new ArrayList<>();
 
 	/**
 	 * Create an empty User object.

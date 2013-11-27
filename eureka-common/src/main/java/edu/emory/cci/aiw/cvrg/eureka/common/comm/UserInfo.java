@@ -39,7 +39,7 @@ public class UserInfo {
 	private Date lastLogin;
 	private String password;
 	private Date passwordExpiration;
-	private List<Long> roles = new ArrayList<Long>();
+	private List<Long> roles = new ArrayList<>();
 	private String title;
 	private String department;
 

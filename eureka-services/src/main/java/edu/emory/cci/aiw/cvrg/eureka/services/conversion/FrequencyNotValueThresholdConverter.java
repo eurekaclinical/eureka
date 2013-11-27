@@ -62,7 +62,7 @@ public final class FrequencyNotValueThresholdConverter implements
 		if (entity.getAbstractedFrom() == null) {
 			throw new IllegalArgumentException("entity cannot have a null abstractedFrom field");
 		}
-		List<PropositionDefinition> result = new ArrayList<PropositionDefinition>();
+		List<PropositionDefinition> result = new ArrayList<>();
 		String propId = entity.getKey() + ConversionUtil.PRIMARY_PROP_ID_SUFFIX;
 		this.primaryPropId = propId;
 		if (this.converterVisitor.addPropositionId(propId)) {

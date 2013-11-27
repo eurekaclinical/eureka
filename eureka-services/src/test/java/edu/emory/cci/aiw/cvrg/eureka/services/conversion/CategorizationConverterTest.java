@@ -90,7 +90,7 @@ public class CategorizationConverterTest extends AbstractServiceTest {
 		eventCat1.setDisplayName("test-event-cat1-display");
 		eventCat1.setDescription("test-event-cat1-abbrev");
 		eventCat1.setCategoryType(CategoryType.EVENT);
-		List<DataElementEntity> iia1 = new ArrayList<DataElementEntity>();
+		List<DataElementEntity> iia1 = new ArrayList<>();
 		iia1.add(event1);
 		iia1.add(event2);
 		eventCat1.setMembers(iia1);
@@ -121,7 +121,7 @@ public class CategorizationConverterTest extends AbstractServiceTest {
 		eventCat2.setDisplayName("test-event-cat2-display");
 		eventCat2.setDescription("test-event-cat2-abbrev");
 		eventCat2.setCategoryType(CategoryType.EVENT);
-		List<DataElementEntity> iia2 = new ArrayList<DataElementEntity>();
+		List<DataElementEntity> iia2 = new ArrayList<>();
 		iia2.add(eventCat1);
 		eventCat2.setMembers(iia2);
 
@@ -164,7 +164,7 @@ public class CategorizationConverterTest extends AbstractServiceTest {
 		constantCat1.setDisplayName("test-constant-cat1-display");
 		constantCat1.setDescription("test-constant-cat1-abbrev");
 		constantCat1.setCategoryType(CategoryType.CONSTANT);
-		List<DataElementEntity> iia1 = new ArrayList<DataElementEntity>();
+		List<DataElementEntity> iia1 = new ArrayList<>();
 		iia1.add(constant1);
 		iia1.add(constant2);
 		constantCat1.setMembers(iia1);
@@ -194,7 +194,7 @@ public class CategorizationConverterTest extends AbstractServiceTest {
 		constantCat2.setDisplayName("test-constant-cat2-display");
 		constantCat2.setDescription("test-constant-cat2-abbrev");
 		constantCat2.setCategoryType(CategoryType.CONSTANT);
-		List<DataElementEntity> iia2 = new ArrayList<DataElementEntity>();
+		List<DataElementEntity> iia2 = new ArrayList<>();
 		iia2.add(constantCat1);
 		constantCat2.setMembers(iia2);
 
@@ -238,7 +238,7 @@ public class CategorizationConverterTest extends AbstractServiceTest {
 		primParamCat1.setDescription("test-primparam-cat1-abbrev");
 		primParamCat1
 				.setCategoryType(CategoryType.PRIMITIVE_PARAMETER);
-		List<DataElementEntity> iia1 = new ArrayList<DataElementEntity>();
+		List<DataElementEntity> iia1 = new ArrayList<>();
 		iia1.add(primParam1);
 		iia1.add(primParam2);
 		primParamCat1.setMembers(iia1);
@@ -270,7 +270,7 @@ public class CategorizationConverterTest extends AbstractServiceTest {
 		primParamCat2.setDescription("test-primparam-cat2-abbrev");
 		primParamCat2
 				.setCategoryType(CategoryType.PRIMITIVE_PARAMETER);
-		List<DataElementEntity> iia2 = new ArrayList<DataElementEntity>();
+		List<DataElementEntity> iia2 = new ArrayList<>();
 		iia2.add(primParamCat1);
 		primParamCat2.setMembers(iia2);
 
@@ -334,7 +334,7 @@ public class CategorizationConverterTest extends AbstractServiceTest {
 		hlaCat1.setDisplayName("test-hla-cat1-display");
 		hlaCat1.setDescription("test-hla-cat1-abbrev");
 		hlaCat1.setCategoryType(CategoryType.HIGH_LEVEL_ABSTRACTION);
-		List<DataElementEntity> iia1 = new ArrayList<DataElementEntity>();
+		List<DataElementEntity> iia1 = new ArrayList<>();
 		iia1.add(hla1);
 		iia1.add(hla2);
 		hlaCat1.setMembers(iia1);
@@ -368,7 +368,7 @@ public class CategorizationConverterTest extends AbstractServiceTest {
 		hlaCat2.setDisplayName("test-hla-cat2-display");
 		hlaCat2.setDescription("test-hla-cat2-abbrev");
 		hlaCat2.setCategoryType(CategoryType.HIGH_LEVEL_ABSTRACTION);
-		List<DataElementEntity> iia2 = new ArrayList<DataElementEntity>();
+		List<DataElementEntity> iia2 = new ArrayList<>();
 		iia2.add(hlaCat1);
 		hlaCat2.setMembers(iia2);
 
@@ -426,7 +426,7 @@ public class CategorizationConverterTest extends AbstractServiceTest {
 		saCat1.setDisplayName("test-slice-cat1-display");
 		saCat1.setDescription("test-slice-cat1-abbrev");
 		saCat1.setCategoryType(CategoryType.SLICE_ABSTRACTION);
-		List<DataElementEntity> iia1 = new ArrayList<DataElementEntity>();
+		List<DataElementEntity> iia1 = new ArrayList<>();
 		iia1.add(sa1);
 		iia1.add(sa2);
 		saCat1.setMembers(iia1);
@@ -460,7 +460,7 @@ public class CategorizationConverterTest extends AbstractServiceTest {
 		saCat2.setDisplayName("test-slice-cat2-display");
 		saCat2.setDescription("test-slice-cat2-abbrev");
 		saCat2.setCategoryType(CategoryType.SLICE_ABSTRACTION);
-		List<DataElementEntity> iia2 = new ArrayList<DataElementEntity>();
+		List<DataElementEntity> iia2 = new ArrayList<>();
 		iia2.add(saCat1);
 		saCat2.setMembers(iia2);
 
@@ -521,7 +521,7 @@ public class CategorizationConverterTest extends AbstractServiceTest {
 		llaCat1.setDisplayName("test-lla-cat1-display");
 		llaCat1.setDescription("test-lla-cat1-abbrev");
 		llaCat1.setCategoryType(CategoryType.LOW_LEVEL_ABSTRACTION);
-		List<DataElementEntity> iia1 = new ArrayList<DataElementEntity>();
+		List<DataElementEntity> iia1 = new ArrayList<>();
 		iia1.add(lla1);
 		iia1.add(lla2);
 		llaCat1.setMembers(iia1);
@@ -558,7 +558,7 @@ public class CategorizationConverterTest extends AbstractServiceTest {
 		llaCat2.setDisplayName("test-lla-cat2-display");
 		llaCat2.setDescription("test-lla-cat2-abbrev");
 		llaCat2.setCategoryType(CategoryType.LOW_LEVEL_ABSTRACTION);
-		List<DataElementEntity> iia2 = new ArrayList<DataElementEntity>();
+		List<DataElementEntity> iia2 = new ArrayList<>();
 		iia2.add(llaCat1);
 		llaCat2.setMembers(iia2);
 
@@ -631,7 +631,7 @@ public class CategorizationConverterTest extends AbstractServiceTest {
 		cllaCat1.setDisplayName("test-clla-cat1-display");
 		cllaCat1.setDescription("test-clla-cat1-abbrev");
 		cllaCat1.setCategoryType(CategoryType.COMPOUND_LOW_LEVEL_ABSTRACTION);
-		List<DataElementEntity> iia1 = new ArrayList<DataElementEntity>();
+		List<DataElementEntity> iia1 = new ArrayList<>();
 		iia1.add(clla1);
 		iia1.add(clla2);
 		cllaCat1.setMembers(iia1);
@@ -670,7 +670,7 @@ public class CategorizationConverterTest extends AbstractServiceTest {
 		cllaCat2.setDisplayName("test-clla-cat2-display");
 		cllaCat2.setDescription("test-clla-cat2-abbrev");
 		cllaCat2.setCategoryType(CategoryType.COMPOUND_LOW_LEVEL_ABSTRACTION);
-		List<DataElementEntity> iia2 = new ArrayList<DataElementEntity>();
+		List<DataElementEntity> iia2 = new ArrayList<>();
 		iia2.add(cllaCat1);
 		cllaCat2.setMembers(iia2);
 
@@ -713,7 +713,7 @@ public class CategorizationConverterTest extends AbstractServiceTest {
 		mixedCat1.setDisplayName("test-mixed-cat1-display");
 		mixedCat1.setDescription("test-mixed-cat1-abbrev");
 		mixedCat1.setCategoryType(CategoryType.HIGH_LEVEL_ABSTRACTION);
-		List<DataElementEntity> iia1 = new ArrayList<DataElementEntity>();
+		List<DataElementEntity> iia1 = new ArrayList<>();
 		iia1.add(event);
 		iia1.add(primParam);
 		mixedCat1.setMembers(iia1);
@@ -743,7 +743,7 @@ public class CategorizationConverterTest extends AbstractServiceTest {
 		mixedCat2.setDisplayName("test-mixed-cat2-display");
 		mixedCat2.setDescription("test-mixed-cat2-abbrev");
 		mixedCat2.setCategoryType(CategoryType.HIGH_LEVEL_ABSTRACTION);
-		List<DataElementEntity> iia2 = new ArrayList<DataElementEntity>();
+		List<DataElementEntity> iia2 = new ArrayList<>();
 		iia2.add(mixedCat1);
 		mixedCat2.setMembers(iia2);
 
