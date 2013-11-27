@@ -26,7 +26,7 @@
 		<eureka.build.timestamp>${maven.build.timestamp}</eureka.build.timestamp>
 		<eureka.dev.site.url>${project.url}</eureka.dev.site.url>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<currentStableVersion>1.6</currentStableVersion>
+		<currentStableVersion>1.8</currentStableVersion>
 		<junit-version>4.10</junit-version>
 		<jersey-version>1.17.1</jersey-version>
 		<guice-version>3.0</guice-version>
@@ -47,7 +47,7 @@
 		<commons-lang-version>3.1</commons-lang-version>
 		<eureka-version>1.9-SNAPSHOT</eureka-version>
 		<protempa-version>2.3-SNAPSHOT</protempa-version>
-		<aiw-i2b2-etl-version>1.0.5</aiw-i2b2-etl-version>
+		<aiw-i2b2-etl-version>1.0.6-SNAPSHOT</aiw-i2b2-etl-version>
 		<oracle-version>11.2.0.3</oracle-version>
 		<freemarker-version>2.3.9</freemarker-version>
 		<jpamodelgen-version>1.2.0.Final</jpamodelgen-version>
