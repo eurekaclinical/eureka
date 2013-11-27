@@ -194,9 +194,7 @@ public class FreeMarkerEmailSender implements EmailSender {
 		try {
 			Template template = this.configuration.getTemplate(templateName);
 			template.process(params, stringWriter);
-		} catch (TemplateException e) {
-			throw new EmailException(e);
-		} catch (IOException e) {
+		} catch (TemplateException | IOException e) {
 			throw new EmailException(e);
 		}
 
@@ -224,8 +222,6 @@ public class FreeMarkerEmailSender implements EmailSender {
 					emailAddress));
 			message.setSender(fromEmailAddress);
 			Transport.send(message);
-		} catch (AddressException e) {
-			throw new EmailException(e);
 		} catch (MessagingException e) {
 			throw new EmailException(e);
 		}

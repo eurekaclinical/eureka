@@ -95,7 +95,7 @@ public class SequenceConverterTest extends AbstractServiceTest {
 	}
 
 	private List<Relation> createRelations() {
-		List<Relation> relations = new ArrayList<Relation>();
+		List<Relation> relations = new ArrayList<>();
 		Relation relation = new Relation();
 		relation.setId(counter++);
 		relation.setMinf1s2(MIN);

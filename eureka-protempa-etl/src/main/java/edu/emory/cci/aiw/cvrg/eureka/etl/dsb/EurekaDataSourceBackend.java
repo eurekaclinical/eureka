@@ -208,14 +208,8 @@ public final class EurekaDataSourceBackend extends RelationalDbDataSourceBackend
 			this.dataPopulated = true;
 			dataInserterConnection.close();
 			dataInserterConnection = null;
-		} catch (SQLException sqle) {
+		} catch (SQLException | DataProviderException | DataInserterException | InvalidConnectionSpecArguments sqle) {
 			throw new DataSourceReadException("Error reading spreadsheets in " + this.dataFileDirectoryName + " in data source backend " + nameForErrors(), sqle);
-		} catch (InvalidConnectionSpecArguments ex) {
-			throw new DataSourceReadException("Error reading spreadsheets in " + this.dataFileDirectoryName + " in data source backend " + nameForErrors(), ex);
-		} catch (DataInserterException e) {
-			throw new DataSourceReadException("Error reading spreadsheets in " + this.dataFileDirectoryName + " in data source backend " + nameForErrors(), e);
-		} catch (DataProviderException e) {
-			throw new DataSourceReadException("Error reading spreadsheets in " + this.dataFileDirectoryName + " in data source backend " + nameForErrors(), e);
 		} finally {
 			if (dataInserterConnection != null) {
 				try {

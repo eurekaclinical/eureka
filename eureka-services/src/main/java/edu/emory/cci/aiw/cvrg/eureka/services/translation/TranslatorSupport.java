@@ -19,14 +19,7 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.services.translation;
 
-import java.util.Date;
-
-import javax.ws.rs.core.Response;
-
-import org.protempa.PropositionDefinition;
-
 import com.google.inject.Inject;
-
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.DataElement;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.SourceConfigParams;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.DataElementEntity;
@@ -37,6 +30,10 @@ import edu.emory.cci.aiw.cvrg.eureka.services.finder.PropositionFindException;
 import edu.emory.cci.aiw.cvrg.eureka.services.finder.SystemPropositionFinder;
 import edu.emory.cci.aiw.cvrg.eureka.services.resource.SourceConfigResource;
 import edu.emory.cci.aiw.cvrg.eureka.services.util.PropositionUtil;
+import org.protempa.PropositionDefinition;
+
+import javax.ws.rs.core.Response;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -184,10 +181,7 @@ final class TranslatorSupport {
 		} else {
 			try {
 				result = cls.newInstance();
-			} catch (InstantiationException ex) {
-				throw new AssertionError("Could not instantiate entity " + key
-						+ ": " + ex.getMessage());
-			} catch (IllegalAccessException ex) {
+			} catch (InstantiationException | IllegalAccessException ex) {
 				throw new AssertionError("Could not instantiate entity " + key
 						+ ": " + ex.getMessage());
 			}

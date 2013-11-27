@@ -105,7 +105,7 @@ public class FrequencyFirstNotConsecutiveValueThresholdConverterTest extends Abs
 		threshold.setId(Long.valueOf(1));
 		
 		List<ValueThresholdEntity> thresholds = new
-				ArrayList<ValueThresholdEntity>();
+				ArrayList<>();
 		thresholds.add(threshold);
 		thresholdGroup.setValueThresholds(thresholds);
 		
@@ -132,7 +132,7 @@ public class FrequencyFirstNotConsecutiveValueThresholdConverterTest extends Abs
 		
 		propDefs = converter.convert(frequency);
 		
-		llas = new ArrayList<LowLevelAbstractionDefinition>();
+		llas = new ArrayList<>();
 		for (PropositionDefinition propDef : propDefs) {
 			if (propDef instanceof LowLevelAbstractionDefinition) {
 				llas.add((LowLevelAbstractionDefinition) propDef);
@@ -222,7 +222,7 @@ public class FrequencyFirstNotConsecutiveValueThresholdConverterTest extends Abs
 	
 	@Test
 	public void testValueDefDoesNotExist() {
-		List<String> vds = new ArrayList<String>();
+		List<String> vds = new ArrayList<>();
 		for (LowLevelAbstractionValueDefinition vd : 
 				llaDef.getValueDefinitions()) {
 			vds.add(vd.getId());

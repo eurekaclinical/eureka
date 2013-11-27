@@ -127,13 +127,7 @@ final class SourceConfigs extends Configs<SourceConfig, SourceConfigEntity> {
 			config.setTermSourceBackends(
 					termSourceBackendSections.toArray(
 					new SourceConfig.Section[termSourceBackendSections.size()]));
-		} catch (ConfigurationsNotFoundException ex) {
-			throw new HttpStatusException(Response.Status.INTERNAL_SERVER_ERROR, ex);
-		} catch (InvalidPropertyNameException ex) {
-			throw new HttpStatusException(Response.Status.INTERNAL_SERVER_ERROR, ex);
-		} catch (BackendProviderSpecLoaderException ex) {
-			throw new HttpStatusException(Response.Status.INTERNAL_SERVER_ERROR, ex);
-		} catch (ConfigurationsLoadException ex) {
+		} catch (ConfigurationsNotFoundException | ConfigurationsLoadException | BackendProviderSpecLoaderException | InvalidPropertyNameException ex) {
 			throw new HttpStatusException(Response.Status.INTERNAL_SERVER_ERROR, ex);
 		}
 		return config;
