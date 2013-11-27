@@ -20,7 +20,7 @@
 package edu.emory.cci.aiw.cvrg.eureka.common.comm;
 
 import java.util.List;
-import org.apache.commons.lang.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 
 public final class ValueThreshold {
 	

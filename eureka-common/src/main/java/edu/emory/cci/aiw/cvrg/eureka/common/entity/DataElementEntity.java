@@ -37,7 +37,7 @@ import com.sun.xml.bind.CycleRecoverable;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.CategoryEntity.CategoryType;
 import javax.persistence.Lob;
 import javax.persistence.Temporal;
-import org.apache.commons.lang.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 
 /**
  * Holds information about a user-defined ontological concept.

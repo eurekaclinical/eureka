@@ -24,14 +24,14 @@ import edu.emory.cci.aiw.cvrg.eureka.common.entity.JobEventType;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import org.apache.commons.lang.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 
 /**
  *
  * @author Andrew Post
  */
 public class Job {
-	
+
 	private Long id;
 	/**
 	 * The initial timestamp when the job was started.

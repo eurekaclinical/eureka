@@ -22,8 +22,8 @@ package edu.emory.cci.aiw.cvrg.eureka.common.comm;
 import java.util.List;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.exception.DataElementHandlingException;
-import org.apache.commons.lang.builder.ReflectionToStringBuilder;
-import org.apache.commons.lang.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 
 /**
  * Container class for the sequence user-created data element from the UI.

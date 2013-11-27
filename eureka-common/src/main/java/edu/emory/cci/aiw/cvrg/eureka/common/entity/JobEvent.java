@@ -39,7 +39,7 @@ import org.codehaus.jackson.annotate.JsonBackReference;
 import com.sun.xml.bind.CycleRecoverable;
 import javax.persistence.Column;
 import javax.persistence.Lob;
-import org.apache.commons.lang.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 
 /**
  * An event associated with a job.

@@ -30,7 +30,7 @@ import javax.persistence.Table;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.CategoryEntity.CategoryType;
 import javax.persistence.ManyToOne;
-import org.apache.commons.lang.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 
 /**
  * Contains attributes which describe a Protempa low-level abstraction in the

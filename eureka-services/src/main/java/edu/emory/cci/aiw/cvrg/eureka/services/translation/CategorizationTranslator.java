@@ -37,7 +37,7 @@ import java.util.EnumSet;
 import java.util.List;
 import java.util.Set;
 import javax.ws.rs.core.Response;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * Translates categorical data elements (UI element) into categorization

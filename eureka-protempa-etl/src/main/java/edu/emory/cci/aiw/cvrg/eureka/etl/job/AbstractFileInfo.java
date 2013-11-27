@@ -21,7 +21,7 @@ package edu.emory.cci.aiw.cvrg.eureka.etl.job;
 
 import java.net.URI;
 import java.text.MessageFormat;
-import org.apache.commons.lang.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 
 /**
  * An abstract base class to hold information found about an uploaded file
