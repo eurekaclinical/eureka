@@ -184,9 +184,9 @@
 						<version>${jaas-login-module-version}</version>
 					</dependency>
 					<dependency>
-						<groupId>javax.mail</groupId>
-						<artifactId>mail</artifactId>
-						<version>${java-mail-version}</version>
+						<groupId>com.sun.mail</groupId>
+						<artifactId>javax.mail</artifactId>
+                        <version>${java-mail-version}</version>
 					</dependency>
 					<dependency>
 						<groupId>org.jasig.cas.client</groupId>
