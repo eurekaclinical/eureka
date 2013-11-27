@@ -23,6 +23,7 @@ import org.apache.poi.hssf.util.CellReference;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.openxml4j.exceptions.InvalidOperationException;
 import org.apache.poi.openxml4j.opc.OPCPackage;
+import org.apache.poi.openxml4j.opc.PackageAccess;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
@@ -42,7 +43,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
-import org.apache.poi.openxml4j.opc.PackageAccess;
 
 /**
  * An implementation of the {@link DataProvider} interface, using an Excel
@@ -151,12 +151,10 @@ public class XlsxDataProvider implements DataProvider {
 					PackageAccess.READ);
 			this.workbook = new XSSFWorkbook(this.opcPackage);
 			this.validateWorksheets();
-		} catch (InvalidFormatException ex) {
+		} catch (InvalidFormatException | InvalidOperationException ex) {
 			throw new DataProviderException("Invalid XLSX file", ex);
 		} catch (IOException ioe) {
 			throw new DataProviderException("Error reading XLSX file", ioe);
-		} catch (InvalidOperationException ioe) {
-			throw new DataProviderException("Invalid XLSX file", ioe);
 		}
 		this.messages = 
 				locale != null 

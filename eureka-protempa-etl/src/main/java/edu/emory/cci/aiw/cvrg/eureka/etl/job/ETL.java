@@ -19,7 +19,20 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.etl.job;
 
-import java.io.File;
+import com.google.inject.Inject;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.Destination;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.JobEntity;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.JobEvent;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.JobEventType;
+import edu.emory.cci.aiw.cvrg.eureka.etl.config.EtlProperties;
+import edu.emory.cci.aiw.cvrg.eureka.etl.config.EurekaProtempaConfigurations;
+import edu.emory.cci.aiw.cvrg.eureka.etl.dao.DestinationDao;
+import edu.emory.cci.aiw.cvrg.eureka.etl.dao.JobDao;
+import edu.emory.cci.aiw.cvrg.eureka.etl.queryresultshandler.QueryResultsHandlerFactory;
+import edu.emory.cci.aiw.cvrg.eureka.etl.resource.Destinations;
+import org.protempa.CloseException;
+import org.protempa.DataSourceFailedDataValidationException;
+import org.protempa.DataSourceValidationIncompleteException;
 import org.protempa.FinderException;
 import org.protempa.PropositionDefinition;
 import org.protempa.Protempa;
@@ -30,34 +43,20 @@ import org.protempa.backend.BackendNewInstanceException;
 import org.protempa.backend.BackendProviderSpecLoaderException;
 import org.protempa.backend.Configurations;
 import org.protempa.backend.ConfigurationsLoadException;
+import org.protempa.backend.ConfigurationsNotFoundException;
 import org.protempa.backend.InvalidConfigurationException;
+import org.protempa.backend.dsb.DataValidationEvent;
+import org.protempa.backend.dsb.filter.Filter;
 import org.protempa.query.DefaultQueryBuilder;
 import org.protempa.query.Query;
 import org.protempa.query.QueryBuildException;
 import org.protempa.query.handler.QueryResultsHandler;
-
-import com.google.inject.Inject;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.Destination;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.JobEntity;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.JobEvent;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.JobEventType;
-
-import edu.emory.cci.aiw.cvrg.eureka.etl.config.EtlProperties;
-import edu.emory.cci.aiw.cvrg.eureka.etl.config.EurekaProtempaConfigurations;
-import edu.emory.cci.aiw.cvrg.eureka.etl.dao.DestinationDao;
-import edu.emory.cci.aiw.cvrg.eureka.etl.dao.JobDao;
-import edu.emory.cci.aiw.cvrg.eureka.etl.queryresultshandler.QueryResultsHandlerFactory;
-import edu.emory.cci.aiw.cvrg.eureka.etl.resource.Destinations;
-import java.util.ArrayList;
-import java.util.List;
-import org.protempa.CloseException;
-import org.protempa.DataSourceFailedDataValidationException;
-import org.protempa.DataSourceValidationIncompleteException;
-import org.protempa.backend.ConfigurationsNotFoundException;
-import org.protempa.backend.dsb.DataValidationEvent;
-import org.protempa.backend.dsb.filter.Filter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * This class actually runs Protempa.
@@ -118,34 +117,18 @@ public class ETL {
 			protempa.execute(query, qrh);
 			protempa.close();
 			protempa = null;
-		} catch (CloseException ex) {
+		} catch (CloseException | BackendNewInstanceException | BackendInitializationException | ConfigurationsLoadException | BackendProviderSpecLoaderException | QueryBuildException | InvalidConfigurationException | ConfigurationsNotFoundException | DataSourceValidationIncompleteException ex) {
 			throw new EtlException(ex);
 		} catch (DataSourceFailedDataValidationException ex) {
 			logValidationEvents(job, ex.getValidationEvents(), ex);
 			throw new EtlException(ex);
-		} catch (DataSourceValidationIncompleteException ex) {
-			throw new EtlException(ex);
-		} catch (ConfigurationsNotFoundException ex) {
-			throw new EtlException(ex);
-		} catch (InvalidConfigurationException e) {
-			throw new EtlException(e);
-		} catch (QueryBuildException e) {
-			throw new EtlException(e);
-		} catch (BackendProviderSpecLoaderException e) {
-			throw new EtlException(e);
-		} catch (ConfigurationsLoadException e) {
-			throw new EtlException(e);
 		} catch (FinderException e) {
 			String msg = collectThrowableMessages(e.getCause());
 			throw new EtlException(msg, e);
-		} catch (BackendInitializationException e) {
-			throw new EtlException(e);
 		} catch (ProtempaStartupException e) {
 			Throwable cause = e.getCause();
 			String msg = collectThrowableMessages(cause != null ? cause : e);
 			throw new EtlException(msg, e);
-		} catch (BackendNewInstanceException e) {
-			throw new EtlException(e);
 		} finally {
 			if (protempa != null) {
 				try {

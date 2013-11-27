@@ -19,8 +19,8 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.etl.ksb;
 
-import java.io.File;
-
+import edu.emory.cci.aiw.cvrg.eureka.etl.config.EtlProperties;
+import edu.emory.cci.aiw.cvrg.eureka.etl.config.EurekaProtempaConfigurations;
 import org.protempa.KnowledgeSource;
 import org.protempa.KnowledgeSourceReadException;
 import org.protempa.PropositionDefinition;
@@ -30,13 +30,12 @@ import org.protempa.backend.BackendNewInstanceException;
 import org.protempa.backend.BackendProviderSpecLoaderException;
 import org.protempa.backend.Configurations;
 import org.protempa.backend.ConfigurationsLoadException;
+import org.protempa.backend.ConfigurationsNotFoundException;
 import org.protempa.backend.InvalidConfigurationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import edu.emory.cci.aiw.cvrg.eureka.etl.config.EtlProperties;
-import edu.emory.cci.aiw.cvrg.eureka.etl.config.EurekaProtempaConfigurations;
-import org.protempa.backend.ConfigurationsNotFoundException;
+import java.io.File;
 
 public class PropositionDefinitionFinder {
 
@@ -54,18 +53,8 @@ public class PropositionDefinitionFinder {
 			SourceFactory sf = new SourceFactory(configurations, configId);
 			this.knowledgeSource = sf.newKnowledgeSourceInstance();
 			LOGGER.debug("Done: configurations, source factory, and knowledge source created");
-		} catch (ConfigurationsNotFoundException ex) {
+		} catch (ConfigurationsNotFoundException | BackendInitializationException | BackendNewInstanceException | ConfigurationsLoadException | InvalidConfigurationException | BackendProviderSpecLoaderException ex) {
 			throw new PropositionFinderException(ex);
-		} catch (BackendProviderSpecLoaderException e) {
-			throw new PropositionFinderException(e);
-		} catch (InvalidConfigurationException e) {
-			throw new PropositionFinderException(e);
-		} catch (ConfigurationsLoadException e) {
-			throw new PropositionFinderException(e);
-		} catch (BackendNewInstanceException e) {
-			throw new PropositionFinderException(e);
-		} catch (BackendInitializationException e) {
-			throw new PropositionFinderException(e);
 		}
 	}
 

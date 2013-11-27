@@ -19,18 +19,16 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.etl.job;
 
-import java.util.List;
-
-import org.protempa.PropositionDefinition;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.google.inject.Inject;
-
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.JobEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.JobEventType;
 import edu.emory.cci.aiw.cvrg.eureka.etl.dao.JobDao;
+import org.protempa.PropositionDefinition;
 import org.protempa.backend.dsb.filter.Filter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.List;
 
 public final class Task implements Runnable {
 
@@ -113,11 +111,7 @@ public final class Task implements Runnable {
 							myJob.getId(), myJob.getEtlUser().getUsername()});
 			}
 			myJob = null;
-		} catch (EtlException e) {
-			handleError(myJob, e);
-		} catch (RuntimeException e) {
-			handleError(myJob, e);
-		} catch (Error e) {
+		} catch (EtlException | Error | RuntimeException e) {
 			handleError(myJob, e);
 		} finally {
 			if (myJob != null) {

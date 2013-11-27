@@ -27,9 +27,10 @@ import edu.emory.cci.aiw.cvrg.eureka.common.entity.EtlUser;
 import edu.emory.cci.aiw.cvrg.eureka.common.exception.HttpStatusException;
 import edu.emory.cci.aiw.cvrg.eureka.etl.config.EtlProperties;
 import edu.emory.cci.aiw.cvrg.eureka.etl.dao.DestinationDao;
-import java.io.File;
-import java.io.IOException;
-import java.util.List;
+import org.apache.commons.lang3.StringUtils;
+import org.w3c.dom.Document;
+import org.xml.sax.SAXException;
+
 import javax.ws.rs.core.Response;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -39,9 +40,9 @@ import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpression;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
-import org.apache.commons.lang3.StringUtils;
-import org.w3c.dom.Document;
-import org.xml.sax.SAXException;
+import java.io.File;
+import java.io.IOException;
+import java.util.List;
 
 /**
  *
@@ -92,13 +93,7 @@ public final class Destinations extends Configs<Destination, DestinationEntity> 
 			String displayName = (String) displayNameExpr.evaluate(doc, XPathConstants.STRING);
 			dest.setDisplayName(displayName);
 			return dest;
-		} catch (XPathExpressionException ex) {
-			throw new HttpStatusException(Response.Status.INTERNAL_SERVER_ERROR, ex);
-		} catch (SAXException ex) {
-			throw new HttpStatusException(Response.Status.INTERNAL_SERVER_ERROR, ex);
-		} catch (IOException ex) {
-			throw new HttpStatusException(Response.Status.INTERNAL_SERVER_ERROR, ex);
-		} catch (ParserConfigurationException ex) {
+		} catch (XPathExpressionException | ParserConfigurationException | IOException | SAXException ex) {
 			throw new HttpStatusException(Response.Status.INTERNAL_SERVER_ERROR, ex);
 		}
 	}
