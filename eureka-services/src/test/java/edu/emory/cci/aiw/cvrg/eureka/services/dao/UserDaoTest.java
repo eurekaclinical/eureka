@@ -19,14 +19,13 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.services.dao;
 
-import java.util.List;
-
-import org.junit.Test;
-
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.User;
 import edu.emory.cci.aiw.cvrg.eureka.services.test.AbstractServiceTest;
+import org.junit.Test;
 
-import junit.framework.Assert;
+import java.util.List;
+
+import static org.junit.Assert.assertEquals;
 
 /**
  * Test case for the User data access object.
@@ -44,7 +43,7 @@ public class UserDaoTest extends AbstractServiceTest {
 	public void testDao() {
 		UserDao dao = this.getInstance(UserDao.class);
 		List<User> users = dao.getAll();
-		Assert.assertEquals(3, users.size());
+		assertEquals(3, users.size());
 	}
 
 	/**
@@ -56,7 +55,7 @@ public class UserDaoTest extends AbstractServiceTest {
 		List<User> users = dao.getAll();
 		User user = users.get(0);
 		User testUser = dao.getByName(user.getEmail());
-		Assert.assertEquals(user.getEmail(), testUser.getEmail());
+		assertEquals(user.getEmail(), testUser.getEmail());
 	}
 
 }

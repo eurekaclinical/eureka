@@ -20,8 +20,6 @@
 package edu.emory.cci.aiw.cvrg.eureka.etl.resource;
 
 import com.sun.jersey.api.client.ClientHandlerException;
-import org.junit.Test;
-
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.ClientResponse.Status;
 import com.sun.jersey.api.client.UniformInterfaceException;
@@ -29,15 +27,17 @@ import com.sun.jersey.core.header.FormDataContentDisposition;
 import com.sun.jersey.multipart.FormDataBodyPart;
 import com.sun.jersey.multipart.FormDataMultiPart;
 import edu.emory.cci.aiw.cvrg.eureka.etl.config.EtlProperties;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 
+import javax.ws.rs.core.MediaType;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FilenameFilter;
 import java.io.IOException;
-import javax.ws.rs.core.MediaType;
-import junit.framework.Assert;
-import org.junit.After;
-import org.junit.Before;
+
+import static org.junit.Assert.assertEquals;
 
 /**
  * Tests related to the file upload resource.
@@ -62,12 +62,12 @@ public class FileResourceTest extends AbstractEtlResourceTest {
 	
 	@Test
 	public final void testFileUploadCreated1() throws IOException {
-		Assert.assertEquals(Status.CREATED, doUpload("foo", "oof"));
+		assertEquals(Status.CREATED, doUpload("foo", "oof"));
 	}
 
 	@Test
 	public final void testFileUploadNotFound() throws IOException {
-		Assert.assertEquals(Status.NOT_FOUND, doUpload("baz", "oof"));
+		assertEquals(Status.NOT_FOUND, doUpload("baz", "oof"));
 	}
 
 	@Test
@@ -81,7 +81,7 @@ public class FileResourceTest extends AbstractEtlResourceTest {
 				return filename.endsWith(".uploaded");
 			}
 		});
-		Assert.assertEquals(1, files == null ? 0 : files.length);
+		assertEquals(1, files == null ? 0 : files.length);
 	}
 
 	private Status doUpload(String sourceId, String fileTypeId) throws UniformInterfaceException, 

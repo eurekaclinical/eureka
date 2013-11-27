@@ -19,15 +19,12 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.services.config;
 
-import java.util.List;
-
+import com.google.inject.Module;
+import edu.emory.cci.aiw.cvrg.eureka.common.test.AbstractTest;
+import org.junit.Assert;
 import org.junit.Test;
 
-import com.google.inject.Module;
-
-import edu.emory.cci.aiw.cvrg.eureka.common.test.AbstractTest;
-
-import junit.framework.Assert;
+import java.util.List;
 
 public class ServicePropertiesTest extends AbstractTest {
 

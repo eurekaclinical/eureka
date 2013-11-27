@@ -19,24 +19,21 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.services.resource;
 
-import java.security.NoSuchAlgorithmException;
-import java.util.List;
-
-import javax.ws.rs.core.MediaType;
-
-import org.junit.Test;
-
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.ClientResponse.Status;
 import com.sun.jersey.api.client.WebResource;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.PasswordChangeRequest;
-
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.UserInfo;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.UserRequest;
 import edu.emory.cci.aiw.cvrg.eureka.services.util.PasswordGenerator;
 import edu.emory.cci.aiw.cvrg.eureka.services.util.StringUtil;
+import org.junit.Test;
 
-import junit.framework.Assert;
+import javax.ws.rs.core.MediaType;
+import java.security.NoSuchAlgorithmException;
+import java.util.List;
+
+import static org.junit.Assert.assertEquals;
 
 /**
  * Test cases related to the {@link UserResource} class.
@@ -59,7 +56,7 @@ public class UserResourceTest extends AbstractServiceResourceTest {
 	@Test
 	public void testUserList() {
 		List<UserInfo> users = this.getUserList();
-		Assert.assertEquals(3, users.size());
+		assertEquals(3, users.size());
 	}
 	
 	@Test
@@ -102,7 +99,7 @@ public class UserResourceTest extends AbstractServiceResourceTest {
 				.type(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON)
 				.post(ClientResponse.class, userRequest);
 
-		Assert.assertEquals(Status.NO_CONTENT, response.getClientResponseStatus());
+		assertEquals(Status.NO_CONTENT, response.getClientResponseStatus());
 
 	}
 
@@ -119,7 +116,7 @@ public class UserResourceTest extends AbstractServiceResourceTest {
 				.path("/api/protected/users/passwordchangerequest")
 				.type(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON)
 				.post(ClientResponse.class, request);
-		Assert.assertEquals(Status.INTERNAL_SERVER_ERROR, response.getClientResponseStatus());
+		assertEquals(Status.INTERNAL_SERVER_ERROR, response.getClientResponseStatus());
 	}
 	
 	@Test
@@ -135,11 +132,11 @@ public class UserResourceTest extends AbstractServiceResourceTest {
 		ClientResponse response = resource
 				.path("/api/passwordresetrequest/" + user.getEmail())
 				.post(ClientResponse.class);
-		Assert.assertEquals(Status.NO_CONTENT, response.getClientResponseStatus());
+		assertEquals(Status.NO_CONTENT, response.getClientResponseStatus());
 
 		users = this.getUserList();
 		user = users.get(0);
-		Assert.assertEquals(StringUtil.md5(generator.generatePassword()),
+		assertEquals(StringUtil.md5(generator.generatePassword()),
 				user.getPassword());
 	}
 
@@ -152,9 +149,9 @@ public class UserResourceTest extends AbstractServiceResourceTest {
 		List<UserInfo> users = this.getUserList();
 		UserInfo user = users.get(0);
 		ClientResponse response = resource.path("/api/protected/users/byname/" + user.getEmail()).accept(MediaType.APPLICATION_JSON).get(ClientResponse.class);
-		Assert.assertEquals(Status.OK, response.getClientResponseStatus());
+		assertEquals(Status.OK, response.getClientResponseStatus());
 
 		UserInfo responseUser = response.getEntity(UserInfo.class);
-		Assert.assertEquals(user.getEmail(), responseUser.getEmail());
+		assertEquals(user.getEmail(), responseUser.getEmail());
 	}
 }

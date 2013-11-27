@@ -19,18 +19,14 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.services.resource;
 
-import java.util.List;
-
-import javax.ws.rs.core.MediaType;
-
-import junit.framework.Assert;
-
-import org.junit.Test;
-
 import com.sun.jersey.api.client.GenericType;
 import com.sun.jersey.api.client.WebResource;
-
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.Role;
+import org.junit.Assert;
+import org.junit.Test;
+
+import javax.ws.rs.core.MediaType;
+import java.util.List;
 
 /**
  * Tests for the {@link RoleResource} class.

@@ -19,13 +19,11 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.services.resource;
 
-import java.util.List;
-
 import com.sun.jersey.api.client.ClientResponse;
-
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.UserInfo;
+import org.junit.Assert;
 
-import junit.framework.Assert;
+import java.util.List;
 
 /**
  * @author hrathod

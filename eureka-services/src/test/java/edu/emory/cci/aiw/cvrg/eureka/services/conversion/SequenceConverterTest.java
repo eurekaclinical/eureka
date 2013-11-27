@@ -19,10 +19,16 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.services.conversion;
 
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.*;
-import edu.emory.cci.aiw.cvrg.eureka.common.test.TestDataProvider;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.DataElementEntity;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.ExtendedDataElement;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.Relation;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.SequenceEntity;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.SystemProposition;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.TimeUnit;
 import edu.emory.cci.aiw.cvrg.eureka.services.test.AbstractServiceTest;
-import junit.framework.Assert;
+import org.junit.After;
+import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.protempa.HighLevelAbstractionDefinition;
 import org.protempa.PropositionDefinition;
@@ -32,13 +38,13 @@ import org.protempa.proposition.value.AbsoluteTimeUnit;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
-import org.junit.After;
-import org.junit.Before;
+
+import static org.junit.Assert.assertEquals;
 
 public class SequenceConverterTest extends AbstractServiceTest {
 
-	private static final Integer MIN = Integer.valueOf(1);
-	private static final Integer MAX = Integer.valueOf(2);
+	private static final Integer MIN = 1;
+	private static final Integer MAX = 2;
 	private TimeUnit timeUnit;
 	private long counter = 0;
 	
@@ -58,7 +64,7 @@ public class SequenceConverterTest extends AbstractServiceTest {
 
 	private DataElementEntity createDataElement(long id, String suffix) {
 		SystemProposition entity = new SystemProposition();
-		entity.setId(Long.valueOf(id));
+		entity.setId(id);
 		entity.setSystemType(SystemProposition.SystemType.EVENT);
 		entity.setKey("Encounter" + suffix);
 		entity.setDescription("Encounter" + suffix);
@@ -68,7 +74,7 @@ public class SequenceConverterTest extends AbstractServiceTest {
 
 	private ExtendedDataElement createPrimaryExtendedProposition() {
 		ExtendedDataElement proposition = new ExtendedDataElement();
-		proposition.setId(Long.valueOf(counter++));
+		proposition.setId(counter++);
 		proposition
 				.setDataElementEntity(this.createDataElement(counter++, "Primary"));
 		return proposition;
@@ -76,14 +82,14 @@ public class SequenceConverterTest extends AbstractServiceTest {
 
 	private ExtendedDataElement createLhsProposition() {
 		ExtendedDataElement lhs = new ExtendedDataElement();
-		lhs.setId(Long.valueOf(counter++));
+		lhs.setId(counter++);
 		lhs.setDataElementEntity(this.createDataElement(counter++, "LHS"));
 		return lhs;
 	}
 
 	private ExtendedDataElement createRhsProposition() {
 		ExtendedDataElement rhs = new ExtendedDataElement();
-		rhs.setId(Long.valueOf(counter++));
+		rhs.setId(counter++);
 		rhs.setDataElementEntity(this.createDataElement(counter++, "RHS"));
 		return rhs;
 	}
@@ -91,7 +97,7 @@ public class SequenceConverterTest extends AbstractServiceTest {
 	private List<Relation> createRelations() {
 		List<Relation> relations = new ArrayList<Relation>();
 		Relation relation = new Relation();
-		relation.setId(Long.valueOf(counter++));
+		relation.setId(counter++);
 		relation.setMinf1s2(MIN);
 		relation.setMinf1s2TimeUnit(this.timeUnit);
 		relation.setMaxf1s2(MAX);
@@ -104,7 +110,7 @@ public class SequenceConverterTest extends AbstractServiceTest {
 
 	private SequenceEntity createSequenceEntity() {
 		SequenceEntity result = new SequenceEntity();
-		result.setId(Long.valueOf(counter++));
+		result.setId(counter++);
 		result.setKey("test-sequence");
 		result.setDescription("test-sequence");
 		result.setDisplayName("test-sequence");
@@ -128,15 +134,15 @@ public class SequenceConverterTest extends AbstractServiceTest {
 		HighLevelAbstractionDefinition primary =
 				converter.getPrimaryPropositionDefinition();
 
-		Assert.assertEquals("Proposition list size", 1, definitions.size());
+		assertEquals("Proposition list size", 1, definitions.size());
 
-		Assert.assertEquals("Primary proposition id",
-				"test-sequence" + ConversionUtil.PRIMARY_PROP_ID_SUFFIX, 
+		assertEquals("Primary proposition id",
+				"test-sequence" + ConversionUtil.PRIMARY_PROP_ID_SUFFIX,
 				primary.getId());
 
 		Set<String> abstractedFrom = primary.getAbstractedFrom();
 		String[] expectedAbstractedFrom = {"EncounterLHS", "EncounterRHS"};
-		Assert.assertEquals("Abstracted from", 2, abstractedFrom.size());
+		assertEquals("Abstracted from", 2, abstractedFrom.size());
 		for (String key : expectedAbstractedFrom) {
 			Assert.assertTrue("Absracted from", abstractedFrom.contains(key));
 		}
@@ -146,14 +152,14 @@ public class SequenceConverterTest extends AbstractServiceTest {
 		for (List<TemporalExtendedPropositionDefinition> pair : pairs) {
 			TemporalExtendedPropositionDefinition lhs = pair.get(0);
 			TemporalExtendedPropositionDefinition rhs = pair.get(1);
-			Assert.assertEquals("LHS = EncounterLHS", "EncounterLHS",
+			assertEquals("LHS = EncounterLHS", "EncounterLHS",
 					lhs.getPropositionId());
-			Assert.assertEquals("RHS = EncounterRHS", "EncounterRHS",
+			assertEquals("RHS = EncounterRHS", "EncounterRHS",
 					rhs.getPropositionId());
 
 			org.protempa.proposition.interval.Relation relation =
 					primary.getRelation(pair);
-			Assert.assertEquals("Relation time units", AbsoluteTimeUnit.DAY,
+			assertEquals("Relation time units", AbsoluteTimeUnit.DAY,
 					relation.getMaxDistanceBetweenUnits());
 		}
 	}
