@@ -20,22 +20,22 @@
 package edu.emory.cci.aiw.cvrg.eureka.services.resource;
 
 
-import javax.ws.rs.Consumes;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-
 import com.google.inject.Inject;
 import com.sun.jersey.core.header.FormDataContentDisposition;
 import com.sun.jersey.multipart.FormDataParam;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ClientException;
 import edu.emory.cci.aiw.cvrg.eureka.common.exception.HttpStatusException;
 import edu.emory.cci.aiw.cvrg.eureka.services.config.EtlClient;
-import java.io.InputStream;
+
 import javax.annotation.security.RolesAllowed;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
+import java.io.InputStream;
 
 /**
  * Operations related to a data file (upload, status, etc)
@@ -52,8 +52,8 @@ public class FileResource {
 	/**
 	 * Create an object with the give data access object.
 	 *
-	 * @param inFileDao The data access object used to communicate with
-	 *            {@link FileDao} objects in the data store.
+	 * @param inEtlClient the {@link EtlClient} to use to perform the resource
+	 *                    operations
 	 */
 	@Inject
 	public FileResource(EtlClient inEtlClient) {

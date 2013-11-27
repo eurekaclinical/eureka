@@ -19,7 +19,6 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.services.resource;
 
-import edu.emory.cci.aiw.cvrg.eureka.services.conversion.PropositionDefinitionCollector;
 import com.google.inject.Inject;
 import com.sun.jersey.api.client.ClientResponse;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.Job;
@@ -30,30 +29,30 @@ import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ClientException;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.User;
 import edu.emory.cci.aiw.cvrg.eureka.common.exception.HttpStatusException;
 import edu.emory.cci.aiw.cvrg.eureka.services.config.EtlClient;
+import edu.emory.cci.aiw.cvrg.eureka.services.conversion.PropositionDefinitionCollector;
 import edu.emory.cci.aiw.cvrg.eureka.services.conversion.PropositionDefinitionConverterVisitor;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.PropositionDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.UserDao;
-import java.net.URI;
-import java.security.Principal;
-
 import org.protempa.PropositionDefinition;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.annotation.security.RolesAllowed;
+import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-import java.util.List;
-import javax.annotation.security.RolesAllowed;
-import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
+import java.net.URI;
+import java.security.Principal;
+import java.util.List;
 
 /**
  * REST operations related to jobs submitted by the user.
@@ -92,11 +91,12 @@ public class JobResource {
 	 *
 	 * @param inUserDao The data access object used to fetch information about
 	 * users.
-	 * @param inFileDao The data access object used to fetch and store
-	 * information about uploaded files.
-	 * @param inJobTask The job submission runnable to be used to process
-	 * incoming data and submit jobs to the ETL layer.
-	 * @param inJobExecutor The executor service used to run the job tasks.
+	 * @param inVisitor The proposition definition converter visitor that
+	 *                     will be used to determine how to convert
+	 *                     proposition definitions
+	 * @param inPropositionDao The data access object used to fetch
+	 *                            information about propositions.
+	 * @param inEtlClient The ETL client to use to perform ETL operations.
 	 */
 	@Inject
 	public JobResource(UserDao inUserDao,
@@ -114,8 +114,8 @@ public class JobResource {
 	 *
 	 * @param jobSpec The file upload to add.
 	 *
-	 * @return A {@link Response.Status#OK} if the file is successfully added,
-	 * {@link Response.Status#BAD_REQUEST} if there are errors.
+	 * @return A {@link javax.ws.rs.core.Response} indicating the result of
+	 * the operation.
 	 */
 	@POST
 	@Consumes({MediaType.APPLICATION_JSON})
@@ -167,7 +167,7 @@ public class JobResource {
 	 * Get a list of jobs associated with user referred to by the given unique
 	 * identifier.
 	 *
-	 * @param userId The unique identifier for the user.
+	 * @param order The order in which to get the user's jobs.
 	 *
 	 * @return A list of {@link Job} objects associated with the user.
 	 */
@@ -191,8 +191,9 @@ public class JobResource {
 	/**
 	 * Get the status of the most recent job process for the given user.
 	 *
-	 * @param userId The unique identifier of the user to query for.
-	 * @return A {@link JobInfo} object containing the status information.
+	 * @param inFilter The filter to use when fetching the job statuses.
+	 * @return A {@link List} of {@link Job}s containing the status
+	 * information.
 	 */
 	@Path("/status")
 	@GET

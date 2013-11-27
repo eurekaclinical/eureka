@@ -24,7 +24,8 @@ import org.protempa.proposition.interval.Interval;
 import org.protempa.proposition.interval.Interval.Side;
 
 /**
- * Wrapper around {@link Interval.Side} objects for use in JSTL.
+ * Wrapper around <code>org.protempa.proposition.interval.Interval.Side</code>
+ * objects for use in JSTL.
  * 
  * @author Andrew Post
  */
@@ -42,28 +43,29 @@ public class DateRangeSide {
 	private final Side side;
 
 	/**
-	 * Create an instance that wraps the specified {@link Interval.Side}.
+	 * Create an instance that wraps the specified
+	 * <code>org.protempa.proposition.interval.Interval.Side</code>.
 	 * 
-	 * @param side the specified {@link Interval.Side}.
+	 * @param side the specified <code>org.protempa.proposition.interval.Interval.Side</code>.
 	 */
 	public DateRangeSide(Interval.Side side) {
 		this.side = side;
 	}
 	
 	/**
-	 * Returns the wrapped {@link Interval.Side}'s name.
+	 * Returns the wrapped <code>org.protempa.proposition.interval.Interval.Side</code>'s name.
 	 * 
-	 * @return the wrapped {@link Interval.Side}'s name.
+	 * @return the wrapped <code>org.protempa.proposition.interval.Interval.Side</code>'s name.
 	 */
 	public String getId() {
 		return this.side.name();
 	}
 	
 	/**
-	 * Delegates to the wrapped {@link Interval.Side}'s <code>toString</code>
-	 * method.
+	 * Delegates to the wrapped <code>org.protempa.proposition.interval.Interval.Side</code>'s
+	 * <code>toString</code> method.
 	 * 
-	 * @return the value returned by the wrapped {@link Interval.Side}'s 
+	 * @return the value returned by the wrapped <code>org.protempa.proposition.interval.Interval.Side</code>'s
 	 * <code>toString</code> method.
 	 */
 	public String getDisplayName() {

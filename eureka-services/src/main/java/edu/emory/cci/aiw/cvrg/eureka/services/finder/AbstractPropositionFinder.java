@@ -19,7 +19,6 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.services.finder;
 
-import com.sun.jersey.api.client.UniformInterfaceException;
 import net.sf.ehcache.Cache;
 import net.sf.ehcache.CacheManager;
 import net.sf.ehcache.Element;
@@ -42,12 +41,12 @@ public abstract class AbstractPropositionFinder<K> implements PropositionFinder<
 	 * Retrieves a proposition definition from the {@link PropositionRetriever}
 	 * specified in this object's constructor.
 	 *
-	 * @param inUserId a user id.
+	 * @param sourceConfigId the source configuration ID
 	 * @param inKey a proposition key.
 	 * @return the proposition definition, or <code>null</code> if there is no
 	 * proposition definition with the specified key for the specified user.
 	 *
-	 * @throws UniformInterfaceException if an error occurred looking for the
+	 * @throws PropositionFindException if an error occurred looking for the
 	 * proposition definition.
 	 */
 	@Override

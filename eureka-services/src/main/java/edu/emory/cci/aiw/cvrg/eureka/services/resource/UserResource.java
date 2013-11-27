@@ -19,29 +19,8 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.services.resource;
 
-import java.security.NoSuchAlgorithmException;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
-
-import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.google.inject.Inject;
-import com.sun.jersey.api.client.ClientResponse.Status;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.PasswordChangeRequest;
-
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.UserInfo;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.UserRequest;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.Role;
@@ -54,9 +33,26 @@ import edu.emory.cci.aiw.cvrg.eureka.services.email.EmailException;
 import edu.emory.cci.aiw.cvrg.eureka.services.email.EmailSender;
 import edu.emory.cci.aiw.cvrg.eureka.services.util.PasswordGenerator;
 import edu.emory.cci.aiw.cvrg.eureka.services.util.StringUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import javax.annotation.security.RolesAllowed;
 import javax.servlet.http.HttpServletRequest;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
 
 /**
  * RESTful end-point for {@link User} related methods.
@@ -222,11 +218,12 @@ public class UserResource {
 	}
 
 	/**
-	 * Change a user's password.
+	 * Changes a user's password.
 	 *
-	 * @param inId The unique identifier for the user.
-	 * @param oldPassword The old password for the user.
-	 * @param newPassword The new password for the user.
+	 * @param request the incoming servlet request
+	 * @param passwordChangeRequest the request to use to make the password
+	 *                                 change
+	 *
 	 * @throws HttpStatusException Thrown when a password cannot be properly
 	 * hashed, or the passwords are mismatched.
 	 */

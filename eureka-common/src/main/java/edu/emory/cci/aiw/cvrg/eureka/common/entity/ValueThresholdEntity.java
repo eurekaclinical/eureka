@@ -19,8 +19,8 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.common.entity;
 
-import java.math.BigDecimal;
-import java.util.List;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -30,11 +30,12 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
-
-import org.apache.commons.lang3.builder.ToStringBuilder;
+import java.math.BigDecimal;
+import java.util.List;
 
 /**
- * Represents a Protempa allowed value for a {@link LowLevelAbstraction}
+ * Represents a Protempa allowed value for a <code>org.protempa
+ * .LowLevelAbstraction</code>
  */
 @Entity
 @Table(name = "value_thresholds")

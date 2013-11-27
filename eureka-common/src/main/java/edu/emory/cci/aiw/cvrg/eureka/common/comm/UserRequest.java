@@ -231,7 +231,7 @@ public class UserRequest {
 	/**
 	 * Set the user's title
 	 * 
-	 * @param inLastName The user's title.
+	 * @param inTitle The user's title.
 	 */
 	
 	
@@ -251,7 +251,7 @@ public class UserRequest {
 	/**
 	 * Set the user's department.
 	 * 
-	 * @param inLastName The user's department.
+	 * @param inDepartment The user's department.
 	 */
 	public void setDepartment(String inDepartment) {
 		this.department = inDepartment;

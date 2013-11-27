@@ -30,7 +30,7 @@ public interface ThresholdsOperatorDao  extends
 	/**
 	 * Gets a value definition match operator based on the name attribute.
 	 * @param inName the name to search for in the database
-	 * @return a {@link ValueDefinitionMatchOperator} with the given name if
+	 * @return a {@link ThresholdsOperator} with the given name if
 	 * found, null otherwise
 	 */
 	public ThresholdsOperator getByName(String inName);

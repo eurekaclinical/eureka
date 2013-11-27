@@ -30,11 +30,12 @@ import edu.emory.cci.aiw.cvrg.eureka.common.entity.GroupMembership;
 import edu.emory.cci.aiw.cvrg.eureka.common.exception.HttpStatusException;
 import edu.emory.cci.aiw.cvrg.eureka.etl.config.EtlProperties;
 import edu.emory.cci.aiw.cvrg.eureka.etl.dao.ConfigDao;
+import org.apache.commons.lang3.StringUtils;
+
+import javax.ws.rs.core.Response;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-import javax.ws.rs.core.Response;
-import org.apache.commons.lang3.StringUtils;
 
 /**
  *
@@ -74,7 +75,7 @@ public abstract class Configs<E, F extends ConfigEntity> {
 	 * user lacks read permissions for it, this method returns
 	 * <code>null</code>.
 	 *
-	 * @return a {@link List<SourceConfig>}.
+	 * @return a config.
 	 */
 	public final E getOne(String configId) {
 		if (configId == null) {
@@ -91,7 +92,7 @@ public abstract class Configs<E, F extends ConfigEntity> {
 	/**
 	 * Gets all configs for which the current user has read permissions.
 	 *
-	 * @return a {@link List<SourceConfig>}.
+	 * @return a {@link List} of configs.
 	 */
 	public final List<E> getAll() {
 		List<E> result = new ArrayList<>();

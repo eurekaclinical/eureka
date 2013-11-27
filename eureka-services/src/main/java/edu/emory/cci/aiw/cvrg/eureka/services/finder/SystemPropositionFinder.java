@@ -19,18 +19,16 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.services.finder;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.arp.javautil.arrays.Arrays;
-import org.protempa.PropositionDefinition;
-
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.SystemElement;
-
 import net.sf.ehcache.Cache;
 import net.sf.ehcache.CacheManager;
+import org.arp.javautil.arrays.Arrays;
+import org.protempa.PropositionDefinition;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Singleton
 public class SystemPropositionFinder extends AbstractPropositionFinder<
@@ -52,7 +50,7 @@ public class SystemPropositionFinder extends AbstractPropositionFinder<
 	/**
 	 * Finds all of the system elements given by the keys for the given user
 	 * 
-	 * @param inUserId the user ID
+	 * @param sourceConfigId the ID of the source config to use for the look-up
 	 * @param inKeys the keys of the system elements to look up
 	 * @param withChildren whether to find the given system elements' children as well
 	 * @return a {@link List} of {@link SystemElement}s

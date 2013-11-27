@@ -19,19 +19,16 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.etl.dao;
 
-import javax.persistence.EntityManager;
-
 import com.google.inject.Inject;
 import com.google.inject.Provider;
-
 import edu.emory.cci.aiw.cvrg.eureka.common.dao.GenericDao;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.EtlUser;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.EtlUser_;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.User;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.User_;
+
+import javax.persistence.EntityManager;
 
 /**
- * An implementation of the {@link UserDao} interface, backed by JPA entities
+ * An implementation of the {@link EtlUserDao} interface, backed by JPA entities
  * and queries.
  *
  * @author Andrew Post

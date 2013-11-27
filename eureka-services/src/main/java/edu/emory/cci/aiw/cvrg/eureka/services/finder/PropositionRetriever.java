@@ -32,7 +32,7 @@ public interface PropositionRetriever<K> {
 	 * Retrieves a proposition definition with the specified id and for the
 	 * specified user.
 	 * 
-	 * @param inUserId the user's id.
+	 * @param sourceConfigId the source config id of interest.
 	 * @param inKey the proposition id of interest.
 	 * @return the proposition definition of interest, or <code>null</code> if 
 	 * not found.

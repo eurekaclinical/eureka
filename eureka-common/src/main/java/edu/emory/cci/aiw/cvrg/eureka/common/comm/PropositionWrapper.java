@@ -289,7 +289,7 @@ public class PropositionWrapper implements Serializable {
 	/**
 	 * Gets this data element definition's properties, if any.
 	 *
-	 * @return a {@link List) of this data element definition's properties, if
+	 * @return a {@link List} of this data element definition's properties, if
 	 *         any
 	 */
 	public List<String> getProperties() {

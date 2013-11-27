@@ -20,29 +20,27 @@
 package edu.emory.cci.aiw.cvrg.eureka.common.entity;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.Job;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.codehaus.jackson.annotate.JsonManagedReference;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-
-import org.codehaus.jackson.annotate.JsonManagedReference;
-
-import javax.persistence.Column;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.builder.ToStringBuilder;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
 
 /**
  * Holds information about a job that is sent from the services layer to the
@@ -215,7 +213,8 @@ public class JobEntity {
 	 * Gets job events sorted in reverse order of occurrence. Uses the
 	 * {@link JobEventComparator} to perform sorting.
 	 *
-	 * @return a {@link List<JobEvent>} of job events in reverse order of
+	 * @return a {@link List} of {@link JobEvent}s in reverse
+	 * order of
 	 * occurrence.
 	 */
 	public List<JobEvent> getJobEventsInOrder() {
@@ -228,8 +227,8 @@ public class JobEntity {
 	 * Gets job events sorted in reverse order of occurrence. Uses the
 	 * {@link JobEventComparator} to perform sorting.
 	 *
-	 * @return a {@link List<JobEvent>} of job events in reverse order of
-	 * occurrence.
+	 * @return a {@link List} of {@link JobEvent}s in reverse
+	 * order of occurrence.
 	 */
 	public List<JobEvent> getJobEventsInReverseOrder() {
 		List<JobEvent> ts = new ArrayList<>(this.jobEvents);

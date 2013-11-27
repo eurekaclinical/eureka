@@ -27,9 +27,10 @@ import edu.emory.cci.aiw.cvrg.eureka.common.comm.JobRequest;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.SourceConfig;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.ValidationRequest;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ClientException;
+import org.protempa.PropositionDefinition;
+
 import java.io.InputStream;
 import java.util.List;
-import org.protempa.PropositionDefinition;
 
 /**
  *
@@ -48,9 +49,10 @@ public interface EtlClient {
 	List<Job> getJobs() throws ClientException;
 
 	/**
-	 * Gets a proposition definition with a specified id for a specified user.
+	 * Gets a proposition definition with a specified id for a source
+	 * configuration.
 	 *
-	 * @param inUserId the user's id.
+	 * @param sourceConfigId the source config id of interest
 	 * @param inKey the proposition id of interest.
 	 * @return the proposition id, if found, or <code>null</code> if not.
 	 *
@@ -61,9 +63,9 @@ public interface EtlClient {
 
 	/**
 	 * Gets all of the proposition definitions given by the key IDs for the
-	 * given user.
+	 * given source configuration.
 	 *
-	 * @param inUserId the user's ID
+	 * @param sourceConfigId the ID of the source configuration to use
 	 * @param inKeys the keys (IDs) of the proposition definitions to get
 	 * @param withChildren whether to get the children of specified proposition
 	 * definitions as well

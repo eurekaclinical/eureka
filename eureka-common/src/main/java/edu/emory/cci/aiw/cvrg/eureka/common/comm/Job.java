@@ -21,10 +21,11 @@ package edu.emory.cci.aiw.cvrg.eureka.common.comm;
  */
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.JobEvent;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.JobEventType;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import org.apache.commons.lang3.builder.ToStringBuilder;
 
 /**
  *
@@ -99,7 +100,7 @@ public class Job {
 
 	/**
 	 * Gets job events, assumed in order of occurrence.
-	 * @param jobEvents a {@link List<JobEvent>} of job events.
+	 * @return a {@link List} of job events.
 	 */
 	public List<JobEvent> getJobEvents() {
 		return jobEvents;
@@ -107,7 +108,7 @@ public class Job {
 
 	/**
 	 * Sets job events, assumed in order of occurrence.
-	 * @param jobEvents a {@link List<JobEvent>} of job events.
+	 * @param jobEvents a {@link List} of job events.
 	 */
 	public void setJobEvents(List<JobEvent> jobEvents) {
 		this.jobEvents = jobEvents;

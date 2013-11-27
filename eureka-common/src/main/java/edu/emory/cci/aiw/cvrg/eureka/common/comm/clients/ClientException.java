@@ -34,8 +34,8 @@ public final class ClientException extends Exception {
 	 * Creates the exception using the reason phrase of the response status as
 	 * the exception's message.
 	 * 
-	 * @param responseStatus the {@link ClientResponse.Status}. Cannot be
-	 * <code>null</code>.
+	 * @param responseStatus the <code>com.sun.jersey.api.client.ClientResponse.Status</code>.
+	 *                          Cannot be <code>null</code>.
 	 */
 	public ClientException(ClientResponse.Status responseStatus) {
 		super(responseStatus.getReasonPhrase());
@@ -45,8 +45,8 @@ public final class ClientException extends Exception {
 	/**
 	 * Creates the exception using the provided response status and message.
 	 * 
-	 * @param responseStatus the {@link ClientResponse.Status}. Cannot be
-	 * <code>null</code>.
+	 * @param responseStatus the <code>com.sun.jersey.api.client.ClientResponse.Status</code>.
+	 *                          Cannot be <code>null</code>.
 	 * @param message the exception's message.
 	 */
 	public ClientException(ClientResponse.Status responseStatus, 
@@ -59,8 +59,8 @@ public final class ClientException extends Exception {
 	 * Creates the exception using the provided response status, message and
 	 * cause.
 	 * 
-	 * @param responseStatus the {@link ClientResponse.Status}. Cannot be
-	 * <code>null</code>.
+	 * @param responseStatus the <code>com.sun.jersey.api.client.ClientResponse.Status</code>.
+	 *                          Cannot be <code>null</code>.
 	 * @param message the exception's message.
 	 * @param thrwbl the {@link Throwable} that is the cause of this exception.
 	 */
@@ -73,8 +73,8 @@ public final class ClientException extends Exception {
 	/**
 	 * Creates the exception using the provided response status and cause.
 	 * 
-	 * @param responseStatus the {@link ClientResponse.Status}. Cannot be
-	 * <code>null</code>.
+	 * @param responseStatus the <code>com.sun.jersey.api.client.ClientResponse.Status</code>.
+	 *                          Cannot be <code>null</code>.
 	 * @param thrwbl the {@link Throwable} that is the cause of this exception.
 	 */
 	public ClientException(ClientResponse.Status responseStatus, 
@@ -87,8 +87,8 @@ public final class ClientException extends Exception {
 	 * Returns the response status of the REST call that this exception 
 	 * concerns.
 	 * 
-	 * @return the {@link ClientResponse.Status}. Guaranteed not 
-	 * <code>null</code>.
+	 * @return the <code>com.sun.jersey.api.client.ClientResponse.Status</code>.
+	 * Guaranteed not <code>null</code>.
 	 */
 	public ClientResponse.Status getResponseStatus() {
 		return responseStatus;

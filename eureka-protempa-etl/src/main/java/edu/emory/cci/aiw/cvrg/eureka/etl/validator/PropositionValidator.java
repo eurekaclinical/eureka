@@ -23,9 +23,9 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.etl.validator;
 
-import java.util.List;
-
 import org.protempa.PropositionDefinition;
+
+import java.util.List;
 
 
 /**
@@ -47,7 +47,7 @@ public interface PropositionValidator {
 	/**
 	 * Returns validation error messages. 
 	 * 
-	 * @return a {@link List<String>}, guaranteed not <code>null</code>.
+	 * @return a {@link List} of messages, guaranteed not <code>null</code>.
 	 */
 	List<String> getMessages();
 

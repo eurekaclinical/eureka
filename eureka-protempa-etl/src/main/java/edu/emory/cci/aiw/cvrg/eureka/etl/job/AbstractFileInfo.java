@@ -19,9 +19,10 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.etl.job;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
+
 import java.net.URI;
 import java.text.MessageFormat;
-import org.apache.commons.lang3.builder.ToStringBuilder;
 
 /**
  * An abstract base class to hold information found about an uploaded file
@@ -125,7 +126,7 @@ abstract public class AbstractFileInfo {
 	/**
 	 * Set the file upload object with which the information is associated.
 	 * 
-	 * @param inFileUpload THe file upload with which the information is
+	 * @param uri THe file upload with which the information is
 	 *            associated.
 	 */
 	void setURI(URI uri) {

@@ -30,7 +30,7 @@ public interface PropositionFinder<K> {
 	/**
 	 * Finds the proposition definition for the given user and key.
 	 *
-	 * @param inUserId user ID to use for the look-up
+	 * @param sourceConfigId source config id to use for the look-up
 	 * @param inKey    key to use for the look-up
 	 * @return a {@link PropositionDefinition} matching the user ID and key,
 	 *         if any

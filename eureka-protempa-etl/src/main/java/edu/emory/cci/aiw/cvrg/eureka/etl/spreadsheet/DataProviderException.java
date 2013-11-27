@@ -54,8 +54,9 @@ public final class DataProviderException extends Exception {
 	/**
 	 * Create the exception using the provided message and a {@link Throwable} 
 	 * to be used as the cause.
-	 * 
-	 * @param throwable the root cause for this exception.
+	 *
+	 * @param message the message for this exception.
+	 * @param thrwbl the root cause for this exception.
 	 */
 	DataProviderException(String message, Throwable thrwbl) {
 		super(message, thrwbl);

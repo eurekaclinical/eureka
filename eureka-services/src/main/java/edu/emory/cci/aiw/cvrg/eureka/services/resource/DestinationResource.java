@@ -19,25 +19,22 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.services.resource;
 
-import java.util.List;
+import com.google.inject.Inject;
+import com.sun.jersey.api.client.ClientResponse;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.Destination;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ClientException;
+import edu.emory.cci.aiw.cvrg.eureka.common.exception.HttpStatusException;
+import edu.emory.cci.aiw.cvrg.eureka.services.config.EtlClient;
 
+import javax.annotation.security.RolesAllowed;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
-
-import com.google.inject.Inject;
-import com.sun.jersey.api.client.ClientResponse;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.Destination;
-
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.SystemElement;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ClientException;
-import edu.emory.cci.aiw.cvrg.eureka.common.exception.HttpStatusException;
-import edu.emory.cci.aiw.cvrg.eureka.services.config.EtlClient;
-import javax.annotation.security.RolesAllowed;
 import javax.ws.rs.core.Response.Status;
+import java.util.List;
 
 /**
  * @author Andrew Post
@@ -56,10 +53,9 @@ public class DestinationResource {
 	}
 
 	/**
-	 * Gets all of the system elements for a user
+	 * Gets all of the destincations for a user
 	 *
-	 * @param inUserId the user ID
-	 * @return a {@link List} of {@link SystemElement}s
+	 * @return a {@link List} of {@link Destination}s
 	 */
 	@GET
 	@Path("/list")

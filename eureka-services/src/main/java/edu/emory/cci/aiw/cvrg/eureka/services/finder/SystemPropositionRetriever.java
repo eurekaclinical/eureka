@@ -19,18 +19,16 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.services.finder;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import com.google.inject.Inject;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.SystemElement;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ClientException;
+import edu.emory.cci.aiw.cvrg.eureka.services.config.EtlClient;
 import org.protempa.PropositionDefinition;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.google.inject.Inject;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.SystemElement;
-
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ClientException;
-import edu.emory.cci.aiw.cvrg.eureka.services.config.EtlClient;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Retrieves proposition definitions from the ETL layer.
@@ -66,7 +64,7 @@ public class SystemPropositionRetriever implements
 	/**
 	 * Retrieves all of the system elements given by the keys for the given user
 	 * 
-	 * @param inUserId the user ID
+	 * @param sourceConfigId the ID of the source config to use for the look up
 	 * @param inKeys the keys of the system elements to retrieve
 	 * @param withChildren whether the children of the given elements should be retrieved as well
 	 * @return a {@link List} of {@link SystemElement}s

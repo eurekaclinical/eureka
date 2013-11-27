@@ -20,27 +20,24 @@
 package edu.emory.cci.aiw.cvrg.eureka.services.config;
 
 import com.google.inject.Inject;
-import java.util.List;
-
-import javax.ws.rs.core.MultivaluedMap;
-import javax.ws.rs.core.UriBuilder;
-
-import org.protempa.PropositionDefinition;
-
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.GenericType;
 import com.sun.jersey.core.util.MultivaluedMapImpl;
-
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.JobFilter;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.JobRequest;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.ValidationRequest;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.Destination;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.Job;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.JobFilter;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.JobRequest;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.SourceConfig;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.EurekaClient;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.ValidationRequest;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ClientException;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.EurekaClient;
+import org.protempa.PropositionDefinition;
+
+import javax.ws.rs.core.MultivaluedMap;
+import javax.ws.rs.core.UriBuilder;
 import java.io.InputStream;
 import java.net.URI;
+import java.util.List;
 
 /**
  * @author hrathod
@@ -147,7 +144,7 @@ public class EtlClientImpl extends EurekaClient implements EtlClient {
 	/**
 	 * Gets a proposition definition with a specified id for a specified user.
 	 *
-	 * @param inUserId the user's id.
+	 * @param sourceConfigId the source config id of interest.
 	 * @param inKey the proposition id of interest.
 	 * @return the proposition id, if found, or <code>null</code> if not.
 	 *
@@ -167,7 +164,7 @@ public class EtlClientImpl extends EurekaClient implements EtlClient {
 	 * Gets all of the proposition definitions given by the key IDs for the
 	 * given user.
 	 *
-	 * @param inUserId the user's ID
+	 * @param sourceConfigId the ID of the source configuration to use
 	 * @param inKeys the keys (IDs) of the proposition definitions to get
 	 * @param withChildren whether to get the children of specified proposition
 	 * definitions as well
