@@ -27,7 +27,6 @@ public class SearchFilter {
 	List<String> rootIDS;
 
 	public SearchFilter(List<String> rootIDs) {
-		// TODO Auto-generated constructor stub
 		this.rootIDS = rootIDs;
 	}
 
