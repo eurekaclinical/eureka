@@ -97,11 +97,43 @@ eureka.trees = {
 					return droppable;
 				}
 			},
-			// search disabled until we figure out a way to search for nodes not currently loaded in the tree
-				//"search" : {
-					//"show_only_matches" : true,
-					//},
-			"plugins" : [ "themes", "json_data", "ui", "crrm", "dnd"/*, "search"*/ ]
+			
+			"search":{
+			    "show_only_matches" : true,
+			    "ajax" : {
+					"url" : "searchsystemlist" ,
+					"data": function(n) {
+					    return {
+							searchKey:n
+						}; 
+					},
+					success:function(data){
+
+					    if(data.length>200){
+					        var dialog = $('<div></div>');
+                            $(dialog).dialog({
+                                'title': 'Search update.',
+                                'modal': true,
+                                'resizable': false,
+                                'buttons': {
+                                   "OK": function() {
+                                        $(this).dialog("close");
+                                        $(this).remove();
+                                        }
+                                }
+                            });
+
+					        $(dialog).html("The search is in progress."+
+                                	" The number of search results exceeded the maximum limit and all results might not be displayed."+
+                                    " Please give a more specific search query to see all results.");
+					        $(dialog).dialog("open");
+					    }
+					}
+					
+
+			    }
+	        },
+			"plugins" : [ "themes", "json_data", "ui", "crrm", "dnd", "search" ]
 		});
 
 		$("#userTree").jstree({
@@ -541,8 +573,7 @@ $(document).ready(function() {
 		
 		
 	}
-
-	
+			
 	$('#newPasswordTable').hide();
 	$('#saveAcctBtn').hide();
 	$('#registrationComplete').hide();
@@ -1022,7 +1053,7 @@ function deleteElement(displayName, key) {
 				}
 			},
 			close : function() {
-                // do nothing here.
+                      // do nothing here.
 			}
 	});
 	$dialog.dialog("open");

@@ -83,6 +83,8 @@ public class ServicesClient extends EurekaClient {
 	};
 	private static final GenericType<List<Destination>> DestinationList = new GenericType<List<Destination>>() {
 	};
+	private static final GenericType<List<String>> SystemElementSearchResultsList = new GenericType<List<String>>() {
+	};
 	private final String servicesUrl;
 
 	public ServicesClient(String inServicesUrl) {
@@ -400,6 +402,14 @@ public class ServicesClient extends EurekaClient {
 				.segment(destinationId)
 				.build().toString();
 		return doGet(path, Destination.class);
+	}
+	
+	//Search Functionality
+	public List<String> getSystemElementSearchResults(String searchKey) throws ClientException {
+		final String path = UriBuilder.fromPath("/api/protected/systemelement/search/")
+			.segment(searchKey)
+			.build().toString();
+		return doGet(path, SystemElementSearchResultsList);
 	}
 	
 }

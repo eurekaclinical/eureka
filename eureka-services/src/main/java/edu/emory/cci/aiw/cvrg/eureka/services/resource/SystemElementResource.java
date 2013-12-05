@@ -45,6 +45,9 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import javax.ws.rs.core.Response.Status;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ClientException;
+import edu.emory.cci.aiw.cvrg.eureka.services.config.EtlClient;
 
 /**
  * @author hrathod
@@ -61,15 +64,18 @@ public class SystemElementResource {
 	private final ServiceProperties serviceProperties;
 	private final UserDao userDao;
 	private final SourceConfigResource sourceConfigResource;
-
+	private final EtlClient etlClient;
+	
 	@Inject
 	public SystemElementResource(SystemPropositionFinder inFinder,
 			SourceConfigResource inSourceConfigResource,
-			ServiceProperties inServiceProperties, UserDao userDao) {
+			ServiceProperties inServiceProperties, UserDao userDao,
+			EtlClient inEtlClient) {
 		this.finder = inFinder;
 		this.serviceProperties = inServiceProperties;
 		this.userDao = userDao;
 		this.sourceConfigResource = inSourceConfigResource;
+		this.etlClient=inEtlClient;
 	}
 
 	/**
@@ -147,5 +153,33 @@ public class SystemElementResource {
 			throw new HttpStatusException(
 					Response.Status.INTERNAL_SERVER_ERROR, ex);
 		}
+	}
+	
+	@GET
+	@Path("/search/{searchKey}")
+	public List<String> searchSystemElements(
+			@PathParam("searchKey") String inSearchKey) {
+		LOGGER.info("Searching system element tree for the searchKey {}",
+				inSearchKey);
+
+		List<SourceConfigParams> scps = this.sourceConfigResource
+				.getParamsList();
+		if (scps.isEmpty()) {
+			throw new HttpStatusException(Status.INTERNAL_SERVER_ERROR,
+					"No source configs");
+		}
+
+		try {
+			List<String> searchResult = etlClient.getPropositionSearchResults(
+					scps.get(0).getId(), inSearchKey);
+
+			LOGGER.info("returning search results list of size"
+					+ searchResult.size());
+			return searchResult;
+		} catch (ClientException e) {
+			LOGGER.error(e.getMessage(), e);
+			throw new HttpStatusException(Status.INTERNAL_SERVER_ERROR, e);
+		}
+
 	}
 }

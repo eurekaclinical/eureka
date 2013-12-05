@@ -49,7 +49,7 @@ import edu.emory.cci.aiw.cvrg.eureka.servlet.proposition.ListUserDefinedProposit
 import edu.emory.cci.aiw.cvrg.eureka.servlet.proposition.SavePropositionServlet;
 import edu.emory.cci.aiw.cvrg.eureka.servlet.proposition.SystemPropositionListServlet;
 import edu.emory.cci.aiw.cvrg.eureka.servlet.proposition.UserPropositionListServlet;
-
+import edu.emory.cci.aiw.cvrg.eureka.servlet.proposition.SearchSystemPropositionServlet;
 /**
  * 
  * @author hrathod
@@ -150,6 +150,10 @@ class ServletModule extends AbstractServletModule {
 
 		bind(PingServlet.class).in(Singleton.class);
 		serve("/protected/ping").with(PingServlet.class);
+
+        bind(SearchSystemPropositionServlet.class).in(Singleton.class);
+        serve("/protected/searchsystemlist").with(SearchSystemPropositionServlet.class);
+
 	}
 
 	@Override

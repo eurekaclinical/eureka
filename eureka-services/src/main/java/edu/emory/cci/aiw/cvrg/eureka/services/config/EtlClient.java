@@ -89,5 +89,7 @@ public interface EtlClient {
 	void validatePropositions(ValidationRequest inRequest) throws ClientException;
 
 	public List<Job> getJobsDesc() throws ClientException;
+	
+	public  List<String> getPropositionSearchResults(String sourceConfigID, String inSearchKey) throws ClientException;
     
 }

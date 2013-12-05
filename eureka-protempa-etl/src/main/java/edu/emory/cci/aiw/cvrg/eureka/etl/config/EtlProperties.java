@@ -75,4 +75,9 @@ public class EtlProperties extends AbstractProperties {
 	public String getProxyCallbackServer() {
 		return this.getValue("eureka.etl.callbackserver");
 	}
+
+    public int getSearchLimit()
+    {
+        return this.getIntValue("eureka.jstree.searchlimit",200);
+    }
 }

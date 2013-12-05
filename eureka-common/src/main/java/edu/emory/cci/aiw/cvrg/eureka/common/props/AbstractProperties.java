@@ -392,4 +392,14 @@ public abstract class AbstractProperties {
 		}
 		return result;
 	}
+	
+	/**
+	 * Gets the default list of system propositions for the application.
+	 *
+	 * @return The default list of system propositions.
+	 */
+	public List<String> getDefaultSystemPropositions() {
+		return this.getStringListValue("eureka.services.defaultprops",
+				new ArrayList<String>());
+	}
 }

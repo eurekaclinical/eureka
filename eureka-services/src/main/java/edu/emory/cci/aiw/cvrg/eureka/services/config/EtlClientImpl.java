@@ -57,6 +57,9 @@ public class EtlClientImpl extends EurekaClient implements EtlClient {
 	private static final GenericType<List<PropositionDefinition>> PropositionDefinitionList =
 			new GenericType<List<PropositionDefinition>>() {
 			};
+	private static final GenericType<List<String>> PropositionSearchResultsList =
+				new GenericType<List<String>>() {
+				};
 	private final String resourceUrl;
 
 	@Inject
@@ -203,5 +206,15 @@ public class EtlClientImpl extends EurekaClient implements EtlClient {
 				.segment(fileTypeId)
 				.build().toString();
 		doPostMultipart(path, fileName, inputStream);
+	}
+
+	public List<String> getPropositionSearchResults(String sourceConfigId,
+													String inSearchKey) throws ClientException {
+
+		String path = UriBuilder.fromPath("/api/protected/proposition/search/")
+				.segment(sourceConfigId)
+				.segment(inSearchKey)
+				.build().toString();
+		return doGet(path, PropositionSearchResultsList);
 	}
 }

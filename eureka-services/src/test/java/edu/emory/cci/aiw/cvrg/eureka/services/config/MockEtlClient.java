@@ -110,5 +110,10 @@ public class MockEtlClient implements EtlClient {
 	public List<Job> getJobsDesc() throws ClientException {
 		throw new UnsupportedOperationException("Not supported yet.");
 	}
+	@Override
+	public List<String> getPropositionSearchResults(String sourceConfigId,String inSearchKey)
+			throws ClientException {
+		throw new UnsupportedOperationException("Not supported yet.");
+	}
 	
 }

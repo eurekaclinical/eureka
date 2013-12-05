@@ -21,7 +21,6 @@ package edu.emory.cci.aiw.cvrg.eureka.etl.resource;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -41,8 +40,10 @@ import com.google.inject.Inject;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.ValidationRequest;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.Destination;
 import edu.emory.cci.aiw.cvrg.eureka.common.exception.HttpStatusException;
+import edu.emory.cci.aiw.cvrg.eureka.common.filter.SearchFilter;
 import edu.emory.cci.aiw.cvrg.eureka.etl.config.EtlProperties;
 import edu.emory.cci.aiw.cvrg.eureka.etl.ksb.PropositionDefinitionFinder;
+import edu.emory.cci.aiw.cvrg.eureka.etl.ksb.PropositionDefinitionSearcher;
 import edu.emory.cci.aiw.cvrg.eureka.etl.ksb.PropositionFinderException;
 import edu.emory.cci.aiw.cvrg.eureka.etl.validator.PropositionValidator;
 import edu.emory.cci.aiw.cvrg.eureka.etl.validator.PropositionValidatorException;
@@ -177,5 +178,39 @@ public class PropositionResource {
 			throw new HttpStatusException(
 					Response.Status.INTERNAL_SERVER_ERROR, e);
 		}
+	}
+
+
+	@GET
+	@Path("/search/{sourceConfigId}/{searchKey}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public List<String> searchPropositionsInTheOntology(
+			@PathParam("sourceConfigId") String inSourceConfigId,
+			@PathParam("searchKey") String inSearchKey) {
+		try {
+			LOGGER.debug("Searching for String " + inSearchKey
+					+ " in the system element tree");
+			if (this.etlProperties.getConfigDir() != null) {
+				PropositionDefinitionSearcher propositionSearcher = new PropositionDefinitionSearcher(
+						inSourceConfigId, this.etlProperties);
+				SearchFilter eurekaFilter = new SearchFilter(
+						this.etlProperties.getDefaultSystemPropositions());
+				return propositionSearcher.searchPropositions(inSearchKey,
+						eurekaFilter);
+			} else {
+				throw new HttpStatusException(
+						Response.Status.INTERNAL_SERVER_ERROR,
+						"No Protempa configuration directory is "
+								+ "specified in application.properties. "
+								+ "Proposition finding will not work without it. "
+								+ "Please create it and try again.");
+			}
+
+		} catch (PropositionFinderException e) {
+			throw new HttpStatusException(
+					Response.Status.INTERNAL_SERVER_ERROR, e);
+		}
+
+
 	}
 }

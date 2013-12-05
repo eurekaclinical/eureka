@@ -411,26 +411,41 @@ $(document).ready(function(){
 	 * Insert search-form
 	 */
 	// This doesn't work yet because we don't load all of the nodes
-	//	$('#systemTree').before(
-	//			$('<form id="search"><span></span><input type="text" value=""><input type="submit" value="search"><input type="reset" value="X"></form>').
-	//			bind({
-	//				reset: function(evt){
-	//					$('#systemTree').jstree('clear_search');
-	//					$('#search span').html('');
-	//				},
-	//				submit: function(evt){
-	//					var searchvalue = $('#search input[type="text"]').val();
-	//					if(searchvalue!='') {
-	//						$('#systemTree').jstree('search', searchvalue);
-	//						$('#search span').html('');
-	//					} else {
-	//						$('#systemTree').jstree('clear_search');
-	//						$('#search span').html('Please enter searchvalue');
-	//					}
-	//					return false;
-	//				}
-	//			})
-	//	);
+	$('#systemTree').before(
+			$('<form id="search"><span></span><input type="text" value=""><input type="submit" value="search"><input type="reset" value="X"></form>').
+			bind({
+				reset: function(evt){
+					$('#systemTree').jstree('clear_search');
+					$('#search span').html('');
+				},
+				submit: function(evt){
+					var searchvalue = $('#search input[type="text"]').val();
+					if(searchvalue!='' && searchvalue.length>=4) {
+						$('#systemTree').jstree('search', searchvalue);
+						$('#search span').html('');
+					} else if(searchvalue.length<4){
+						$('#systemTree').jstree('clear_search');
+						var dialog = $('<div></div>');
+                        $(dialog).dialog({
+                            'title': 'Search update.',
+                            'modal': true,
+                            'resizable': false,
+                            'buttons': {
+                                "OK": function() {
+                                    $(this).dialog("close");
+                                    $(this).remove();
+                                    }
+                                }
+                            });
+						$(dialog).html("Please enter a search value with length greater than 3.");
+                        $(dialog).dialog("open");
+
+						//$('#search span').html('Please enter searchvalue');
+					}
+					return false;
+				}
+			})
+	);
 
 	$('span#add-to-sequence').click(function (e) {
 		var total = $('fieldset.sequence-relation').length;
