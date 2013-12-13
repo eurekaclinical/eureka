@@ -62,8 +62,4 @@
 			</div>
 		</form>
 	</template:content>
-
-	<%--<template:content name="subcontent">
-		<%@ include file="common/rss.jspf" %>
-	</template:content>--%>
 </template:insert>
