@@ -15,7 +15,7 @@
 	<parent>
 		<groupId>edu.emory.cci.aiw.cvrg</groupId>
 		<artifactId>eureka</artifactId>
-		<version>1.8.1-SNAPSHOT</version>
+		<version>1.8.1</version>
 	</parent>
 
 	<properties>
