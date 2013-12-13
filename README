@@ -1,4 +1,4 @@
-Eureka! Clinical Analytics 1.8 -- An ETL Tool for Loading Data into i2b2.
+Eureka! Clinical Analytics 1.8.1 -- An ETL Tool for Loading Data into i2b2.
 Center for Comprehensive Informatics, Emory University
 
 OVERVIEW
@@ -13,6 +13,8 @@ This package contains source code only. For binaries, please go to
 http://aiw.sourceforge.net/.
 
 WHAT'S NEW
+
+Version 1.8.1 includes minor bug-fixes.
 
 Version 1.8 adds the ability to connect directly to a database as a
 data source, in addition to the spreadsheet upload mechanism.  This
