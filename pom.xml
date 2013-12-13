@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>edu.emory.cci.aiw.cvrg</groupId>
 	<artifactId>eureka</artifactId>
-	<version>1.8</version>
+	<version>1.8.1-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<name>Eureka! Clinical Analytics</name>
 	<description>Eureka! Clinical Analytics is a web application that
