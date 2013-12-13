@@ -21,20 +21,20 @@ package edu.emory.cci.aiw.cvrg.eureka.etl.queryresultshandler;
  */
 
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.Destination;
-import edu.emory.cci.aiw.i2b2etl.I2B2QueryResultsHandler;
+import edu.emory.cci.aiw.i2b2etl.I2B2QueryResultsHandlerFactory;
 import java.io.File;
-import org.protempa.query.handler.QueryResultsHandler;
+import org.protempa.query.handler.QueryResultsHandlerFactory;
 
 /**
  *
  * @author Andrew Post
  */
-public class QueryResultsHandlerFactory {
+public class EurekaQueryResultsHandlerFactory {
 	
-	public QueryResultsHandler getInstance(Destination.Type type, File config) {
+	public QueryResultsHandlerFactory getInstance(Destination.Type type, File config) {
 		switch(type) {
 			case I2B2:
-				return new I2B2QueryResultsHandler(config);
+				return new I2B2QueryResultsHandlerFactory(config);
 			default:
 				throw new AssertionError("Unexpected destination type " + type);
 		}
