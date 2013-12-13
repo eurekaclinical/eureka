@@ -54,6 +54,7 @@
 		<mysql-version>5.1.18</mysql-version>
 		<ehcache-version>2.6.0</ehcache-version>
 		<tomcat-plugin-version>1.1</tomcat-plugin-version>
+		<i2b2-export-version>1.0</i2b2-export-version>
 
 		<!-- properties for site creation -->
 		<javautil-version>2.2</javautil-version>
@@ -69,9 +70,9 @@
 	</properties>
 
 	<scm>
-		<developerConnection>scm:svn:https://scm.cci.emory.edu/svn/aiw/tags/eureka-1.8
-		</developerConnection>
-		<url>https://scm.cci.emory.edu/svn/aiw/tags/eureka-1.8</url>
+		<developerConnection>scm:git:ssh://git.cci.emory.edu:/opt/git/aiw/eureka.git</developerConnection>
+		<url>ssh://git.cci.emory.edu:/opt/git/aiw/eureka.git</url>
+		<tag>HEAD</tag>
 	</scm>
 
 	<issueManagement>
