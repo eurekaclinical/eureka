@@ -30,22 +30,24 @@ import com.google.inject.servlet.GuiceServletContextListener;
 /**
  *
  * @author Andrew Post
+ * @author hrathod
  */
 public class WebappListener extends GuiceServletContextListener {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(WebappListener.class);
 	private Injector injector = null;
-	private String context = null;
 
 	@Override
 	public void contextInitialized(ServletContextEvent servletContextEvent) {
 		super.contextInitialized(servletContextEvent);
-		this.context = servletContextEvent.getServletContext().getContextPath();
+		servletContextEvent.getServletContext().setAttribute(
+				"webappProperties", new WebappProperties());
 	}
 
 	@Override
 	protected Injector getInjector() {
 		if (null == injector) {
+			LOGGER.debug("Creating new Guice Injector");
 			injector = Guice.createInjector(
 					new AppModule(),
 					new ServletModule(new WebappProperties()));
@@ -56,7 +58,8 @@ public class WebappListener extends GuiceServletContextListener {
 	@Override
 	public void contextDestroyed(ServletContextEvent servletContextEvent) {
 		super.contextDestroyed(servletContextEvent);
+		servletContextEvent.getServletContext().removeAttribute(
+				"webappProperties");
 		this.injector = null;
-		this.context = null;
 	}
 }
