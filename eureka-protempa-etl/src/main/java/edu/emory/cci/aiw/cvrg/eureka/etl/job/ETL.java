@@ -28,7 +28,7 @@ import edu.emory.cci.aiw.cvrg.eureka.etl.config.EtlProperties;
 import edu.emory.cci.aiw.cvrg.eureka.etl.config.EurekaProtempaConfigurations;
 import edu.emory.cci.aiw.cvrg.eureka.etl.dao.DestinationDao;
 import edu.emory.cci.aiw.cvrg.eureka.etl.dao.JobDao;
-import edu.emory.cci.aiw.cvrg.eureka.etl.queryresultshandler.EurekaQueryResultsHandlerFactory;
+import edu.emory.cci.aiw.cvrg.eureka.etl.queryresultshandler.ProtempaDestinationFactory;
 import edu.emory.cci.aiw.cvrg.eureka.etl.resource.Destinations;
 import org.protempa.CloseException;
 import org.protempa.DataSourceFailedDataValidationException;
@@ -56,7 +56,6 @@ import org.slf4j.LoggerFactory;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-import org.protempa.query.handler.QueryResultsHandlerFactory;
 
 /**
  * This class actually runs Protempa.
@@ -109,12 +108,12 @@ public class ETL {
 			File i2b2Config = 
 					this.etlProperties.destinationConfigFile(
 					job.getDestinationId());
-			Destination dest = 
+			Destination eurekaDestination = 
 					new Destinations(this.etlProperties, job.getEtlUser(), this.destinationDao).getOne(job.getDestinationId());
-			QueryResultsHandlerFactory qrh = 
-					new EurekaQueryResultsHandlerFactory()
-					.getInstance(dest.getType(), i2b2Config);
-			protempa.execute(query, qrh);
+			org.protempa.dest.Destination protempaDestination = 
+					new ProtempaDestinationFactory()
+					.getInstance(eurekaDestination.getType(), i2b2Config);
+			protempa.execute(query, protempaDestination);
 			protempa.close();
 			protempa = null;
 		} catch (CloseException | BackendNewInstanceException | BackendInitializationException | ConfigurationsLoadException | BackendProviderSpecLoaderException | QueryBuildException | InvalidConfigurationException | ConfigurationsNotFoundException | DataSourceValidationIncompleteException ex) {
