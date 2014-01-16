@@ -1,4 +1,4 @@
-Eureka! Clinical Analytics 1.8.1 -- An ETL Tool for Loading Data into i2b2.
+Eureka! Clinical Analytics 1.8.2 -- An ETL Tool for Loading Data into i2b2.
 Center for Comprehensive Informatics, Emory University
 
 OVERVIEW
@@ -13,6 +13,8 @@ This package contains source code only. For binaries, please go to
 http://aiw.sourceforge.net/.
 
 WHAT'S NEW
+
+Version 1.8.2 includes some minor bug-fixes.
 
 Version 1.8.1 includes minor bug-fixes.
 
@@ -60,7 +62,7 @@ Eureka! Clinical Analytics is freely available as open source under
 the Apache License, Version 2.0. A copy of the license is in the
 LICENSE file provided in this distribution.
 
-Eureka! Clinical Analytics is Copyright (C) 2012-2013 Emory University.
+Eureka! Clinical Analytics is Copyright (C) 2012-2014 Emory University.
 
 MORE INFORMATION
 
