@@ -30,7 +30,7 @@ import edu.emory.cci.aiw.cvrg.eureka.common.entity.DataElementEntity;
  *
  * @author hrathod
  */
-public interface PropositionDao extends Dao<DataElementEntity, Long> {
+public interface DataElementEntityDao extends Dao<DataElementEntity, Long> {
 	/**
 	 * Gets a proposition based on the "key" attribute.
 	 * @param inUserId The userId to search for in the database.

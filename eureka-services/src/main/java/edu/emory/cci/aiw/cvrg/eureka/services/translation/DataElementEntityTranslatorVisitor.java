@@ -29,7 +29,7 @@ import edu.emory.cci.aiw.cvrg.eureka.common.entity.SequenceEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.SystemProposition;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.ValueThresholdGroupEntity;
 
-public final class PropositionTranslatorVisitor implements
+public final class DataElementEntityTranslatorVisitor implements
 		DataElementEntityVisitor {
 
 	private final SystemPropositionTranslator systemPropositionTranslator;
@@ -41,7 +41,7 @@ public final class PropositionTranslatorVisitor implements
 	private DataElement dataElement;
 
 	@Inject
-	public PropositionTranslatorVisitor(
+	public DataElementEntityTranslatorVisitor(
 			SystemPropositionTranslator inSystemPropositionTranslator,
 			SequenceTranslator inSequenceTranslator,
 			CategorizationTranslator inCategorizationTranslator,

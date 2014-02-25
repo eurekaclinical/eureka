@@ -39,7 +39,7 @@ public class PropositionDaoTest extends AbstractServiceTest {
 
 	@Test
 	public void testDao() {
-		PropositionDao dao = this.getInstance(PropositionDao.class);
+		DataElementEntityDao dao = this.getInstance(DataElementEntityDao.class);
 		List<DataElementEntity> propositions = dao.getAll();
 		Assert.assertEquals(6, propositions.size());
 	}

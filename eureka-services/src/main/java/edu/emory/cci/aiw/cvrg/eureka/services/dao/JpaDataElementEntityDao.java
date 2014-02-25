@@ -41,16 +41,16 @@ import edu.emory.cci.aiw.cvrg.eureka.common.entity.DataElementEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.DataElementEntity_;
 
 /**
- * An implementation of the {@link PropositionDao} interface, backed by JPA
+ * An implementation of the {@link DataElementEntityDao} interface, backed by JPA
  * entities and queries.
  *
  * @author hrathod
  */
-public class JpaPropositionDao extends GenericDao<DataElementEntity, Long>
-		implements PropositionDao {
+public class JpaDataElementEntityDao extends GenericDao<DataElementEntity, Long>
+		implements DataElementEntityDao {
 
-	private static Logger LOGGER = LoggerFactory.getLogger(JpaPropositionDao
-		.class);
+	private static Logger LOGGER = 
+			LoggerFactory.getLogger(JpaDataElementEntityDao.class);
 
 	/**
 	 * Create an object with the given entity manager provider.
@@ -58,7 +58,7 @@ public class JpaPropositionDao extends GenericDao<DataElementEntity, Long>
 	 * @param inProvider An entity manager provider.
 	 */
 	@Inject
-	public JpaPropositionDao(Provider<EntityManager> inProvider) {
+	public JpaDataElementEntityDao(Provider<EntityManager> inProvider) {
 		super(DataElementEntity.class, inProvider);
 	}
 
@@ -76,9 +76,11 @@ public class JpaPropositionDao extends GenericDao<DataElementEntity, Long>
 				DataElementEntity_.userId), inUserId);
 		Predicate keyPredicate = builder.equal(root.get(DataElementEntity_.key),
 			inKey);
+		Predicate notInSystemPredicate = builder.equal(root.get(DataElementEntity_.inSystem), false);
 		TypedQuery<DataElementEntity> typedQuery = entityManager.createQuery(
 			criteriaQuery.where(
-				builder.and(userPredicate, keyPredicate)));
+				builder.and(userPredicate, keyPredicate, notInSystemPredicate)));
+		
 		try {
 			result = typedQuery.getSingleResult();
 		} catch (NonUniqueResultException nure) {
@@ -90,15 +92,29 @@ public class JpaPropositionDao extends GenericDao<DataElementEntity, Long>
 				inUserId, inKey);
 			result = null;
 		}
-//		if (result != null) {
-//			this.refresh(result);
-//		}
 		
 		return result;
 	}
 
 	@Override
-	public List<DataElementEntity> getByUserId(Long inId) {
-		return this.getListByAttribute(DataElementEntity_.userId, inId);
+	public List<DataElementEntity> getByUserId(Long inUserId) {
+		List<DataElementEntity> result;
+		EntityManager entityManager = this.getEntityManager();
+		CriteriaBuilder builder = entityManager.getCriteriaBuilder();
+		CriteriaQuery<DataElementEntity> criteriaQuery = builder.createQuery(
+			DataElementEntity
+				.class);
+		Root<DataElementEntity> root = criteriaQuery.from(DataElementEntity.class);
+		Predicate userPredicate = builder.equal(
+			root.get(
+				DataElementEntity_.userId), inUserId);
+		Predicate notInSystemPredicate = builder.equal(root.get(DataElementEntity_.inSystem), false);
+		TypedQuery<DataElementEntity> typedQuery = entityManager.createQuery(
+			criteriaQuery.where(
+				builder.and(userPredicate, notInSystemPredicate)));
+		
+		result = typedQuery.getResultList();
+		
+		return result;
 	}
 }

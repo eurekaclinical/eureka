@@ -28,7 +28,7 @@ import edu.emory.cci.aiw.cvrg.eureka.common.entity.CategoryEntity.CategoryType;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.DataElementEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.PropositionTypeVisitor;
 import edu.emory.cci.aiw.cvrg.eureka.common.exception.DataElementHandlingException;
-import edu.emory.cci.aiw.cvrg.eureka.services.dao.PropositionDao;
+import edu.emory.cci.aiw.cvrg.eureka.services.dao.DataElementEntityDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.finder.SystemPropositionFinder;
 import edu.emory.cci.aiw.cvrg.eureka.services.resource.SourceConfigResource;
 
@@ -50,7 +50,7 @@ public final class CategorizationTranslator implements
 
 	@Inject
 	public CategorizationTranslator(
-			PropositionDao inPropositionDao,
+			DataElementEntityDao inPropositionDao,
 			SystemPropositionFinder inFinder,
 			SourceConfigResource inSourceConfigResource) {
 		this.translatorSupport =

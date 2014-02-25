@@ -88,49 +88,47 @@ public class EditorHomeServlet extends HttpServlet {
 		List<JsonTreeData> l = new ArrayList<>();
 		List<DataElement> props;
 		try {
-			props = this.servicesClient.getUserElements();
+			props = this.servicesClient.getSummarizedUserElements();
 		} catch (ClientException ex) {
 			throw new ServletException("Error getting user-defined data elements", ex);
 		}
 		SimpleDateFormat df = new SimpleDateFormat("MM/dd/yyyy");
 		for (DataElement proposition : props) {
-			if (!proposition.isInSystem()) {
-				JsonTreeData d = createData(
-					proposition.getKey(),
-					this.getDisplayName(proposition));
-				d.setKeyVal("description",
-					proposition.getDescription());
-				d.setKeyVal("displayName", proposition.getDisplayName());
+			JsonTreeData d = createData(
+				proposition.getKey(),
+				this.getDisplayName(proposition));
+			d.setKeyVal("description",
+				proposition.getDescription());
+			d.setKeyVal("displayName", proposition.getDisplayName());
 
-				if (proposition.getType() == DataElement.Type
-					.CATEGORIZATION) {
-					d.setKeyVal("type", "Categorical");
-				} else if (proposition.getType() == DataElement.Type
-					.SEQUENCE) {
-					d.setKeyVal("type", "Sequence");
-				} else if (proposition.getType() == DataElement.Type
-					.FREQUENCY) {
-					d.setKeyVal("type", "Frequency");
-				} else if (proposition.getType() == DataElement.Type
-					.VALUE_THRESHOLD) {
-					d.setKeyVal("type", "Value Threshold");
-				}
-
-				if (proposition.getCreated() != null) {
-					LOGGER.debug(
-						"created date: " + df.format(proposition.getCreated
-							()));
-					d.setKeyVal("created", df.format(proposition.getCreated
-						()));
-				}
-				if (proposition.getLastModified() != null) {
-					d.setKeyVal(
-						"lastModified", df.format(proposition
-						.getLastModified()));
-				}
-				l.add(d);
-				LOGGER.debug("Added user prop: " + d.getData());
+			if (proposition.getType() == DataElement.Type
+				.CATEGORIZATION) {
+				d.setKeyVal("type", "Categorical");
+			} else if (proposition.getType() == DataElement.Type
+				.SEQUENCE) {
+				d.setKeyVal("type", "Sequence");
+			} else if (proposition.getType() == DataElement.Type
+				.FREQUENCY) {
+				d.setKeyVal("type", "Frequency");
+			} else if (proposition.getType() == DataElement.Type
+				.VALUE_THRESHOLD) {
+				d.setKeyVal("type", "Value Threshold");
 			}
+
+			if (proposition.getCreated() != null) {
+				LOGGER.debug(
+					"created date: " + df.format(proposition.getCreated
+						()));
+				d.setKeyVal("created", df.format(proposition.getCreated
+					()));
+			}
+			if (proposition.getLastModified() != null) {
+				d.setKeyVal(
+					"lastModified", df.format(proposition
+					.getLastModified()));
+			}
+			l.add(d);
+			LOGGER.debug("Added user prop: " + d.getData());
 		}
 
 		req.setAttribute("props", l);

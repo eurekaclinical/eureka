@@ -29,7 +29,7 @@ import edu.emory.cci.aiw.cvrg.eureka.common.entity.FrequencyEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.TimeUnit;
 import edu.emory.cci.aiw.cvrg.eureka.common.exception.DataElementHandlingException;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.FrequencyTypeDao;
-import edu.emory.cci.aiw.cvrg.eureka.services.dao.PropositionDao;
+import edu.emory.cci.aiw.cvrg.eureka.services.dao.DataElementEntityDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.TimeUnitDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.ValueComparatorDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.finder.SystemPropositionFinder;
@@ -44,7 +44,7 @@ public final class FrequencyTranslator implements
 	private final TranslatorSupport translatorSupport;
 
 	@Inject
-	public FrequencyTranslator(PropositionDao inPropositionDao,
+	public FrequencyTranslator(DataElementEntityDao inPropositionDao,
 			TimeUnitDao inTimeUnitDao, SystemPropositionFinder inFinder,
 			ValueComparatorDao inValueComparatorDao,
 			FrequencyTypeDao inFrequencyTypeDao,

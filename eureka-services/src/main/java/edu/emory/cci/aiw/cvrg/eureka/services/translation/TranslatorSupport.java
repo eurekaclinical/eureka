@@ -25,7 +25,7 @@ import edu.emory.cci.aiw.cvrg.eureka.common.comm.SourceConfigParams;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.DataElementEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.exception.DataElementHandlingException;
 import edu.emory.cci.aiw.cvrg.eureka.common.exception.HttpStatusException;
-import edu.emory.cci.aiw.cvrg.eureka.services.dao.PropositionDao;
+import edu.emory.cci.aiw.cvrg.eureka.services.dao.DataElementEntityDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.finder.PropositionFindException;
 import edu.emory.cci.aiw.cvrg.eureka.services.finder.SystemPropositionFinder;
 import edu.emory.cci.aiw.cvrg.eureka.services.resource.SourceConfigResource;
@@ -90,11 +90,11 @@ final class TranslatorSupport {
 		}
 	}
 	private final Map<DataElementMapKey, DataElementEntity> dataElementEntities;
-	private final PropositionDao propositionDao;
+	private final DataElementEntityDao propositionDao;
 	private final SystemPropositionFinder finder;
 
 	@Inject
-	public TranslatorSupport(PropositionDao propositionDao,
+	public TranslatorSupport(DataElementEntityDao propositionDao,
 			SystemPropositionFinder finder,
 			SourceConfigResource inSourceConfigResource) {
 		this.propositionDao = propositionDao;

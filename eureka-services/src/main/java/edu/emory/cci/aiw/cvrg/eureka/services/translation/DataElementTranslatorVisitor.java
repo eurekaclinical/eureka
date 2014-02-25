@@ -53,7 +53,7 @@ public final class DataElementTranslatorVisitor implements DataElementVisitor {
 		this.valueThresholdsTranslator = inValueThresholdsTranslator;
 	}
 
-	public DataElementEntity getProposition() {
+	public DataElementEntity getDataElementEntity() {
 		return proposition;
 	}
 

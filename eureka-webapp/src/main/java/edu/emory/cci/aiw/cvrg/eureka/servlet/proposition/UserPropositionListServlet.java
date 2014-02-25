@@ -102,11 +102,9 @@ public class UserPropositionListServlet extends HttpServlet {
 			throw new ServletException("Error getting user-defined data element list", ex);
 		}
 		for (DataElement proposition : props) {
-			if (!proposition.isInSystem()) {
-				JsonTreeData d = createData(proposition);
-				l.add(d);
-				LOGGER.debug("Added user prop: " + d.getData());
-			}
+			JsonTreeData d = createData(proposition);
+			l.add(d);
+			LOGGER.debug("Added user prop: " + d.getData());
 		}
 		LOGGER.debug("executed resource get");
 

@@ -206,6 +206,13 @@ public class ServicesClient extends EurekaClient {
 		return doGet(path, DataElementList);
 	}
 
+	public List<DataElement> getSummarizedUserElements() throws ClientException {
+		final String path = "/api/protected/dataelement/";
+		MultivaluedMap<String, String> queryParams = new MultivaluedMapImpl();
+		queryParams.add("summarize", "true");
+		return doGet(path, DataElementList, queryParams);
+	}
+
 	public DataElement getUserElement(String inKey) throws ClientException {
 		if (inKey == null) {
 			throw new IllegalArgumentException("inKey cannot be null");

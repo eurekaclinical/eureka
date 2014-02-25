@@ -38,7 +38,7 @@ import edu.emory.cci.aiw.cvrg.eureka.common.entity.Relation;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.RelationOperator;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.SequenceEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.exception.DataElementHandlingException;
-import edu.emory.cci.aiw.cvrg.eureka.services.dao.PropositionDao;
+import edu.emory.cci.aiw.cvrg.eureka.services.dao.DataElementEntityDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.RelationOperatorDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.TimeUnitDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.ValueComparatorDao;
@@ -60,7 +60,7 @@ public class SequenceTranslator implements
 	private final ValueComparatorDao valueComparatorDao;
 
 	@Inject
-	public SequenceTranslator(PropositionDao inPropositionDao,
+	public SequenceTranslator(DataElementEntityDao inPropositionDao,
 			TimeUnitDao inTimeUnitDao, RelationOperatorDao inRelationOperatorDao,
 			SystemPropositionFinder inFinder,
 			ValueComparatorDao inValueComparatorDao,

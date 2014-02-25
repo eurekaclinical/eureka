@@ -24,7 +24,6 @@ import edu.emory.cci.aiw.cvrg.eureka.common.comm.SourceConfigParams;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.SystemElement;
 import edu.emory.cci.aiw.cvrg.eureka.common.exception.HttpStatusException;
 import edu.emory.cci.aiw.cvrg.eureka.services.config.ServiceProperties;
-import edu.emory.cci.aiw.cvrg.eureka.services.dao.UserDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.finder.PropositionFindException;
 import edu.emory.cci.aiw.cvrg.eureka.services.finder.SystemPropositionFinder;
 import edu.emory.cci.aiw.cvrg.eureka.services.util.PropositionUtil;
@@ -40,7 +39,6 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.Status;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -62,18 +60,16 @@ public class SystemElementResource {
 			.getLogger(SystemElementResource.class);
 	private final SystemPropositionFinder finder;
 	private final ServiceProperties serviceProperties;
-	private final UserDao userDao;
 	private final SourceConfigResource sourceConfigResource;
 	private final EtlClient etlClient;
 	
 	@Inject
 	public SystemElementResource(SystemPropositionFinder inFinder,
 			SourceConfigResource inSourceConfigResource,
-			ServiceProperties inServiceProperties, UserDao userDao,
+			ServiceProperties inServiceProperties,
 			EtlClient inEtlClient) {
 		this.finder = inFinder;
 		this.serviceProperties = inServiceProperties;
-		this.userDao = userDao;
 		this.sourceConfigResource = inSourceConfigResource;
 		this.etlClient=inEtlClient;
 	}

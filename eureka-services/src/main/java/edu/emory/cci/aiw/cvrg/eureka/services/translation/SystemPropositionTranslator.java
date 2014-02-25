@@ -32,7 +32,7 @@ import edu.emory.cci.aiw.cvrg.eureka.common.comm.SystemElement;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.SystemProposition;
 import edu.emory.cci.aiw.cvrg.eureka.common.exception.DataElementHandlingException;
 import edu.emory.cci.aiw.cvrg.eureka.common.exception.HttpStatusException;
-import edu.emory.cci.aiw.cvrg.eureka.services.dao.PropositionDao;
+import edu.emory.cci.aiw.cvrg.eureka.services.dao.DataElementEntityDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.finder.PropositionFindException;
 import edu.emory.cci.aiw.cvrg.eureka.services.finder.SystemPropositionFinder;
 import edu.emory.cci.aiw.cvrg.eureka.services.resource.SourceConfigResource;
@@ -47,7 +47,7 @@ public class SystemPropositionTranslator implements
 	private final TranslatorSupport translatorSupport;
 
 	@Inject
-	public SystemPropositionTranslator(PropositionDao inPropositionDao,
+	public SystemPropositionTranslator(DataElementEntityDao inPropositionDao,
 			SourceConfigResource inSourceConfigResource,
 			SystemPropositionFinder inFinder) {
 		finder = inFinder;

@@ -31,7 +31,7 @@ import edu.emory.cci.aiw.cvrg.eureka.common.exception.HttpStatusException;
 import edu.emory.cci.aiw.cvrg.eureka.services.config.EtlClient;
 import edu.emory.cci.aiw.cvrg.eureka.services.conversion.PropositionDefinitionCollector;
 import edu.emory.cci.aiw.cvrg.eureka.services.conversion.PropositionDefinitionConverterVisitor;
-import edu.emory.cci.aiw.cvrg.eureka.services.dao.PropositionDao;
+import edu.emory.cci.aiw.cvrg.eureka.services.dao.DataElementEntityDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.UserDao;
 import org.protempa.PropositionDefinition;
 import org.slf4j.Logger;
@@ -78,7 +78,7 @@ public class JobResource {
 	 * Used to fetch the user's Propositions, to be sent to the ETL layer when
 	 * submitting a new job request.
 	 */
-	private final PropositionDao propositionDao;
+	private final DataElementEntityDao propositionDao;
 	/**
 	 * Used for converting the different types of Eureka data entities to
 	 * Protempa proposition definitions.
@@ -101,7 +101,7 @@ public class JobResource {
 	@Inject
 	public JobResource(UserDao inUserDao,
 			PropositionDefinitionConverterVisitor inVisitor,
-			PropositionDao inPropositionDao,
+			DataElementEntityDao inPropositionDao,
 			EtlClient inEtlClient) {
 		this.userDao = inUserDao;
 		this.propositionDao = inPropositionDao;
