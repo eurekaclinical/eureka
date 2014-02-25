@@ -100,7 +100,6 @@ public class DataElementResourceTest extends AbstractServiceResourceTest {
 				.type(
 				MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON)
 				.post(ClientResponse.class, frequency);
-
 		Assert.assertEquals(
 				ClientResponse.Status.NO_CONTENT,
 				response2.getClientResponseStatus());

@@ -175,7 +175,7 @@ public class SequenceTranslator implements
 		// next we try to fetch it from the database
 		if (proposition == null) {
 			proposition =
-					this.translatorSupport.getSystemEntityInstance(userId, key);
+					this.translatorSupport.getUserOrSystemEntityInstance(userId, key);
 			this.propositions.put(proposition.getKey(), proposition);
 		}
 

@@ -103,7 +103,7 @@ public final class ValueThresholdsTranslator implements
 				vte = new ValueThresholdEntity();
 				thresholds.add(vte);
 			}
-			vte.setAbstractedFrom(translatorSupport.getSystemEntityInstance(
+			vte.setAbstractedFrom(translatorSupport.getUserOrSystemEntityInstance(
 					element.getUserId(), vt.getDataElement()
 					.getDataElementKey()));
 

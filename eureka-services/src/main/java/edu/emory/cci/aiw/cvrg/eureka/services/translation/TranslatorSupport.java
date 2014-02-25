@@ -43,6 +43,7 @@ import java.util.Map;
  * @author Andrew Post
  */
 final class TranslatorSupport {
+
 	private final SourceConfigResource sourceConfigResource;
 
 	private static final class DataElementMapKey {
@@ -90,17 +91,17 @@ final class TranslatorSupport {
 		}
 	}
 	private final Map<DataElementMapKey, DataElementEntity> dataElementEntities;
-	private final DataElementEntityDao propositionDao;
+	private final DataElementEntityDao dataElementEntityDao;
 	private final SystemPropositionFinder finder;
 
 	@Inject
-	public TranslatorSupport(DataElementEntityDao propositionDao,
+	public TranslatorSupport(DataElementEntityDao dataElementEntityDao,
 			SystemPropositionFinder finder,
 			SourceConfigResource inSourceConfigResource) {
-		this.propositionDao = propositionDao;
+		this.dataElementEntityDao = dataElementEntityDao;
 		this.finder = finder;
-		this.dataElementEntities = 
-				new HashMap<>();
+		this.dataElementEntities
+				= new HashMap<>();
 		this.sourceConfigResource = inSourceConfigResource;
 	}
 
@@ -113,30 +114,31 @@ final class TranslatorSupport {
 	 * @return
 	 * @throws DataElementHandlingException
 	 */
-	DataElementEntity getSystemEntityInstance(Long userId, String key)
+	DataElementEntity getUserOrSystemEntityInstance(Long userId, String key)
 			throws DataElementHandlingException {
-		DataElementEntity abstractedFrom =
-				propositionDao.getByUserAndKey(userId, key);
-		/*
-		 * Hack to get an ontology source that assumes all Protempa configurations
-		 * for a user point to the same knowledge source backends. This will go away.
-		 */
-		List<SourceConfigParams> scps = this.sourceConfigResource.getParamsList();
-		if (scps.isEmpty()) {
-			throw new HttpStatusException(Response.Status.INTERNAL_SERVER_ERROR, "No source configs");
-		}
-		String sourceConfigId = scps.get(0).getId();
-		if (abstractedFrom == null) {
+		DataElementEntity dataElementEntity
+				= dataElementEntityDao.getUserOrSystemByUserAndKey(userId, key);
+		
+		if (dataElementEntity == null) {
+			/*
+			 * Hack to get an ontology source that assumes all Protempa configurations
+			 * for a user point to the same knowledge source backends. This will go away.
+			 */
+			List<SourceConfigParams> scps = this.sourceConfigResource.getParamsList();
+			if (scps.isEmpty()) {
+				throw new HttpStatusException(Response.Status.INTERNAL_SERVER_ERROR, "No source configs");
+			}
+			String sourceConfigId = scps.get(0).getId();
 			DataElementMapKey deMapKey = new DataElementMapKey(userId, key);
-			abstractedFrom = this.dataElementEntities.get(deMapKey);
-			if (abstractedFrom == null) {
+			dataElementEntity = this.dataElementEntities.get(deMapKey);
+			if (dataElementEntity == null) {
 				try {
-					PropositionDefinition propDef = 
-							this.finder.find(sourceConfigId, key);
-					abstractedFrom = 
-							PropositionUtil.toSystemProposition(propDef,
-							userId);
-					this.dataElementEntities.put(deMapKey, abstractedFrom);
+					PropositionDefinition propDef
+							= this.finder.find(sourceConfigId, key);
+					dataElementEntity
+							= PropositionUtil.toSystemProposition(propDef,
+									userId);
+					this.dataElementEntities.put(deMapKey, dataElementEntity);
 				} catch (PropositionFindException ex) {
 					throw new DataElementHandlingException(
 							Response.Status.PRECONDITION_FAILED,
@@ -144,7 +146,7 @@ final class TranslatorSupport {
 				}
 			}
 		}
-		return abstractedFrom;
+		return dataElementEntity;
 	}
 
 	/**
@@ -172,7 +174,7 @@ final class TranslatorSupport {
 		P result;
 		DataElementEntity oldEntity;
 		if (element.getId() != null) {
-			oldEntity = propositionDao.retrieve(element.getId());
+			oldEntity = dataElementEntityDao.retrieve(element.getId());
 		} else {
 			oldEntity = null;
 		}

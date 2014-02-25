@@ -39,18 +39,19 @@ import com.google.inject.Provider;
 import edu.emory.cci.aiw.cvrg.eureka.common.dao.GenericDao;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.DataElementEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.DataElementEntity_;
+import java.util.ArrayList;
 
 /**
- * An implementation of the {@link DataElementEntityDao} interface, backed by JPA
- * entities and queries.
+ * An implementation of the {@link DataElementEntityDao} interface, backed by
+ * JPA entities and queries.
  *
  * @author hrathod
  */
 public class JpaDataElementEntityDao extends GenericDao<DataElementEntity, Long>
 		implements DataElementEntityDao {
 
-	private static Logger LOGGER = 
-			LoggerFactory.getLogger(JpaDataElementEntityDao.class);
+	private static Logger LOGGER
+			= LoggerFactory.getLogger(JpaDataElementEntityDao.class);
 
 	/**
 	 * Create an object with the given entity manager provider.
@@ -64,36 +65,12 @@ public class JpaDataElementEntityDao extends GenericDao<DataElementEntity, Long>
 
 	@Override
 	public DataElementEntity getByUserAndKey(Long inUserId, String inKey) {
-		DataElementEntity result;
-		EntityManager entityManager = this.getEntityManager();
-		CriteriaBuilder builder = entityManager.getCriteriaBuilder();
-		CriteriaQuery<DataElementEntity> criteriaQuery = builder.createQuery(
-			DataElementEntity
-				.class);
-		Root<DataElementEntity> root = criteriaQuery.from(DataElementEntity.class);
-		Predicate userPredicate = builder.equal(
-			root.get(
-				DataElementEntity_.userId), inUserId);
-		Predicate keyPredicate = builder.equal(root.get(DataElementEntity_.key),
-			inKey);
-		Predicate notInSystemPredicate = builder.equal(root.get(DataElementEntity_.inSystem), false);
-		TypedQuery<DataElementEntity> typedQuery = entityManager.createQuery(
-			criteriaQuery.where(
-				builder.and(userPredicate, keyPredicate, notInSystemPredicate)));
-		
-		try {
-			result = typedQuery.getSingleResult();
-		} catch (NonUniqueResultException nure) {
-			LOGGER.warn("Result not unique for user id = {} and key = {}",
-				inUserId, inKey);
-			result = null;
-		} catch (NoResultException nre) {
-			LOGGER.warn("Result not existent for user id = {} and key = {}",
-				inUserId, inKey);
-			result = null;
-		}
-		
-		return result;
+		return getByUserAndKey(inUserId, inKey, true);
+	}
+
+	@Override
+	public DataElementEntity getUserOrSystemByUserAndKey(Long inUserId, String inKey) {
+		return getByUserAndKey(inUserId, inKey, false);
 	}
 
 	@Override
@@ -102,19 +79,60 @@ public class JpaDataElementEntityDao extends GenericDao<DataElementEntity, Long>
 		EntityManager entityManager = this.getEntityManager();
 		CriteriaBuilder builder = entityManager.getCriteriaBuilder();
 		CriteriaQuery<DataElementEntity> criteriaQuery = builder.createQuery(
-			DataElementEntity
-				.class);
+				DataElementEntity.class);
 		Root<DataElementEntity> root = criteriaQuery.from(DataElementEntity.class);
 		Predicate userPredicate = builder.equal(
-			root.get(
-				DataElementEntity_.userId), inUserId);
+				root.get(
+						DataElementEntity_.userId), inUserId);
 		Predicate notInSystemPredicate = builder.equal(root.get(DataElementEntity_.inSystem), false);
 		TypedQuery<DataElementEntity> typedQuery = entityManager.createQuery(
-			criteriaQuery.where(
-				builder.and(userPredicate, notInSystemPredicate)));
-		
+				criteriaQuery.where(
+						builder.and(userPredicate, notInSystemPredicate)));
+
 		result = typedQuery.getResultList();
+
+		return result;
+	}
+
+	private DataElementEntity getByUserAndKey(Long inUserId, String inKey, boolean excludeSystemElements) {
+		DataElementEntity result;
+		EntityManager entityManager = this.getEntityManager();
+		CriteriaBuilder builder = entityManager.getCriteriaBuilder();
+		CriteriaQuery<DataElementEntity> criteriaQuery = builder.createQuery(
+				DataElementEntity.class);
+		Root<DataElementEntity> root = criteriaQuery.from(DataElementEntity.class);
 		
+		List<Predicate> predicates = new ArrayList<Predicate>(3);
+		Predicate userPredicate = builder.equal(
+				root.get(
+						DataElementEntity_.userId), inUserId);
+		predicates.add(userPredicate);
+		Predicate keyPredicate = builder.equal(root.get(DataElementEntity_.key),
+				inKey);
+		predicates.add(keyPredicate);
+		if (excludeSystemElements) {
+			Predicate notInSystemPredicate = builder.equal(root.get(DataElementEntity_.inSystem),
+					false);
+			predicates.add(notInSystemPredicate);
+		}
+		
+		TypedQuery<DataElementEntity> typedQuery = entityManager.createQuery(
+					criteriaQuery.where(
+							builder.and(predicates.toArray(
+									new Predicate[predicates.size()]))));
+
+		try {
+			result = typedQuery.getSingleResult();
+		} catch (NonUniqueResultException nure) {
+			LOGGER.warn("Result not unique for user id = {} and key = {}",
+					inUserId, inKey);
+			result = null;
+		} catch (NoResultException nre) {
+			LOGGER.warn("Result not existent for user id = {} and key = {}",
+					inUserId, inKey);
+			result = null;
+		}
+
 		return result;
 	}
 }

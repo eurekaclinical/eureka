@@ -72,19 +72,16 @@ public class DataElementResource {
 			ResourceBundle.getBundle("Messages");
 	private final DataElementEntityDao propositionDao;
 	private final UserDao userDao;
-	private final SystemElementResource systemElementResource;
 	private final DataElementEntityTranslatorVisitor dataElementEntityTranslatorVisitor;
 	private final DataElementTranslatorVisitor dataElementTranslatorVisitor;
 	private final SummarizingDataElementEntityTranslatorVisitor summarizingDataElementEntityTranslatorVisitor;
 
 	@Inject
 	public DataElementResource(DataElementEntityDao inDao, UserDao userDao,
-			SystemElementResource inResource, 
 			DataElementEntityTranslatorVisitor inPropositionTranslatorVisitor,
 			SummarizingDataElementEntityTranslatorVisitor inSummarizingPropositionTranslatorVisitor,
 			DataElementTranslatorVisitor inDataElementTranslatorVisitor) {
 		this.propositionDao = inDao;
-		this.systemElementResource = inResource;
 		this.dataElementEntityTranslatorVisitor = inPropositionTranslatorVisitor;
 		this.summarizingDataElementEntityTranslatorVisitor = inSummarizingPropositionTranslatorVisitor;
 		this.dataElementTranslatorVisitor = inDataElementTranslatorVisitor;
@@ -111,7 +108,12 @@ public class DataElementResource {
 	public DataElement get(@Context HttpServletRequest request,
 			@PathParam("key") String inKey, 
 			@DefaultValue("false") @QueryParam("summarize") boolean summarize) {
-		return readDataElement(request, inKey, summarize); 
+		DataElement result = readDataElement(request, inKey, summarize);
+		if (result == null) {
+			throw new HttpStatusException(Response.Status.NOT_FOUND);
+		} else {
+			return result;
+		}
 	}
 
 	@POST

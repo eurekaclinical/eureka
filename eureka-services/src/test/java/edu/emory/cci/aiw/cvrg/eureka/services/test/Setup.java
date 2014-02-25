@@ -100,7 +100,6 @@ public class Setup implements TestDataProvider {
 
 	@Override
 	public void tearDown() throws TestDataException {
-//		this.removeDataElements();
 		this.remove(DataElementEntity.class);
 		this.remove(User.class);
 		this.remove(Role.class);

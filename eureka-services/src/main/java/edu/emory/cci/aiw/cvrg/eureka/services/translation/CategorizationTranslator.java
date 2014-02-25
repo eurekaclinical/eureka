@@ -68,7 +68,7 @@ public final class CategorizationTranslator implements
 		if (element.getChildren() != null) {
 			for (DataElementField de : element.getChildren()) {
 				DataElementEntity proposition =
-						this.translatorSupport.getSystemEntityInstance(
+						this.translatorSupport.getUserOrSystemEntityInstance(
 						element.getUserId(), de.getDataElementKey());
 				inverseIsA.add(proposition);
 			}

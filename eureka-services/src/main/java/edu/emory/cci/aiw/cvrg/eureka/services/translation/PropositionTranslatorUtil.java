@@ -144,7 +144,7 @@ class PropositionTranslatorUtil {
 			ep = new ExtendedDataElement();
 		}
 		DataElementEntity proposition = 
-				translatorSupport.getSystemEntityInstance(userId, 
+				translatorSupport.getUserOrSystemEntityInstance(userId, 
 				dataElement.getDataElementKey());
 		populateExtendedProposition(ep, proposition, dataElement, timeUnitDao, valCompDao);
 

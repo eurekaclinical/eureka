@@ -37,7 +37,7 @@ public final class DataElementTranslatorVisitor implements DataElementVisitor {
 	private final FrequencyTranslator frequencyTranslator;
 	private final ValueThresholdsTranslator valueThresholdsTranslator;
 
-	private DataElementEntity proposition;
+	private DataElementEntity dataElementEntity;
 
 	@Inject
 	public DataElementTranslatorVisitor(
@@ -54,13 +54,13 @@ public final class DataElementTranslatorVisitor implements DataElementVisitor {
 	}
 
 	public DataElementEntity getDataElementEntity() {
-		return proposition;
+		return dataElementEntity;
 	}
 
 	@Override
 	public void visit(SystemElement systemElement)
 	        throws DataElementHandlingException {
-		proposition = this.systemPropositionTranslator
+		dataElementEntity = this.systemPropositionTranslator
 		        .translateFromElement(systemElement);
 
 
@@ -69,24 +69,24 @@ public final class DataElementTranslatorVisitor implements DataElementVisitor {
 	@Override
 	public void visit(Category categoricalElement)
 	        throws DataElementHandlingException {
-		proposition = this.categorizationTranslator
+		dataElementEntity = this.categorizationTranslator
 		        .translateFromElement(categoricalElement);
 	}
 
 	@Override
 	public void visit(Sequence sequence) throws DataElementHandlingException {
-		proposition = this.sequenceTranslator.translateFromElement(sequence);
+		dataElementEntity = this.sequenceTranslator.translateFromElement(sequence);
 	}
 
 	@Override
 	public void visit(Frequency frequency) throws DataElementHandlingException {
-		proposition = this.frequencyTranslator.translateFromElement(frequency);
+		dataElementEntity = this.frequencyTranslator.translateFromElement(frequency);
 	}
 
 	@Override
 	public void visit(ValueThresholds thresholds)
 	        throws DataElementHandlingException {
-		proposition = this.valueThresholdsTranslator.translateFromElement(thresholds);
+		dataElementEntity = this.valueThresholdsTranslator.translateFromElement(thresholds);
 	}
 
 }

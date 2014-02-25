@@ -32,15 +32,25 @@ import edu.emory.cci.aiw.cvrg.eureka.common.entity.DataElementEntity;
  */
 public interface DataElementEntityDao extends Dao<DataElementEntity, Long> {
 	/**
-	 * Gets a proposition based on the "key" attribute.
+	 * Gets a user-defined data element entity based on the "key" attribute.
 	 * @param inUserId The userId to search for in the database.
 	 * @param inKey The key to be searched in the database.
 	 * @return A proposition if found, null otherwise.
 	 */
 	public DataElementEntity getByUserAndKey(Long inUserId, String inKey);
+	
+	/**
+	 * Gets a system proposition definition that has been loaded previously
+	 * into the database.
+	 * 
+	 * @param inUserId The userId to search for in the database.
+	 * @param inKey he key to be searched in the database.
+	 * @return a system proposition found in the database, null otherwise.
+	 */
+	public DataElementEntity getUserOrSystemByUserAndKey(Long inUserId, String inKey);
 
 	/**
-	 * Gets a list of propositions for the given user ID.
+	 * Gets a list of user-defined data element entities for the given user ID.
 	 * @param inId the unique identifier for the given user.
 	 * @return A list of propositions belonging to the given user.
 	 */
