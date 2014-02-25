@@ -30,40 +30,38 @@ import org.protempa.PropositionDefinition;
  * @author Andrew Post
  */
 public class PropositionDefinitionCollector {
-	
+
 	public static PropositionDefinitionCollector getInstance(
-			PropositionDefinitionConverterVisitor converterVisitor, 
+			PropositionDefinitionConverterVisitor converterVisitor,
 			List<DataElementEntity> dataElements) {
-		List<PropositionDefinition> userProps = 
-				new ArrayList<>();
+		List<PropositionDefinition> userProps
+				= new ArrayList<>();
 		List<String> toShow = new ArrayList<>();
-		PropositionDefinitionWrapper wrapper = 
-				new PropositionDefinitionWrapper();
+		PropositionDefinitionWrapper wrapper
+				= new PropositionDefinitionWrapper();
 		for (DataElementEntity de : dataElements) {
-			if (!de.isInSystem()) {
-				de.accept(converterVisitor);
-				Collection<PropositionDefinition> propDefs = 
-						converterVisitor.getPropositionDefinitions();
-				for (PropositionDefinition propDef : propDefs) {
-					userProps.add(propDef);
-				}
-				de.accept(wrapper);
+			de.accept(converterVisitor);
+			Collection<PropositionDefinition> propDefs
+					= converterVisitor.getPropositionDefinitions();
+			for (PropositionDefinition propDef : propDefs) {
+				userProps.add(propDef);
 			}
+			de.accept(wrapper);
 		}
 		userProps.addAll(wrapper.getUserPropositionDefinitions());
 		toShow.addAll(wrapper.getToShowPropositionIds());
-		PropositionDefinitionCollector result = 
-				new PropositionDefinitionCollector();
+		PropositionDefinitionCollector result
+				= new PropositionDefinitionCollector();
 		result.userPropDefs = userProps;
 		result.toShowPropDefs = toShow;
 		return result;
 	}
-	
+
 	private List<PropositionDefinition> userPropDefs;
 	private List<String> toShowPropDefs;
-	
+
 	private PropositionDefinitionCollector() {
-		
+
 	}
 
 	public List<PropositionDefinition> getUserPropDefs() {
@@ -73,7 +71,5 @@ public class PropositionDefinitionCollector {
 	public List<String> getToShowPropDefs() {
 		return toShowPropDefs;
 	}
-	
-	
-    
+
 }
