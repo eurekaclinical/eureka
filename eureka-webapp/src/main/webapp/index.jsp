@@ -67,6 +67,7 @@
 	<template:content name="subcontent">
 		<h3>Release Notes</h3>
 		<div class="release_notes sub_width">
+			<p>2014.01.16: Version 1.8.2 is out! This version includes some minor bug fixes.</p>
 			<p>2013.12.13: Version 1.8.1 is out! This version includes some minor bug fixes.</p>
 			<p>2013.11.11: Version 1.8 is out! This version provides the ability to directly connect to a database as a data source, in addition to uploading a spreadsheet.  The phenotype editor UI has also been improved.</p>
 			<p>2013.07.01: Version 1.7 is out! It provides enhancements to the data element editor and integration with jasig CAS (Central Authentication Service).</p>
