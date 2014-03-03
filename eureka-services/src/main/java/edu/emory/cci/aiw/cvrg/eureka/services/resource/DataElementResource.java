@@ -70,34 +70,35 @@ public class DataElementResource {
 
 	private static final ResourceBundle messages =
 			ResourceBundle.getBundle("Messages");
-	private final DataElementEntityDao propositionDao;
+	private final DataElementEntityDao dataElementEntityDao;
 	private final UserDao userDao;
-	private final DataElementEntityTranslatorVisitor dataElementEntityTranslatorVisitor;
+	private final DataElementEntityTranslatorVisitor dEETranslatorVisitor;
 	private final DataElementTranslatorVisitor dataElementTranslatorVisitor;
-	private final SummarizingDataElementEntityTranslatorVisitor summarizingDataElementEntityTranslatorVisitor;
+	private final SummarizingDataElementEntityTranslatorVisitor summDEETranslatorVisitor;
 
 	@Inject
-	public DataElementResource(DataElementEntityDao inDao, UserDao userDao,
-			DataElementEntityTranslatorVisitor inPropositionTranslatorVisitor,
-			SummarizingDataElementEntityTranslatorVisitor inSummarizingPropositionTranslatorVisitor,
+	public DataElementResource(DataElementEntityDao inDao, UserDao inUserDao,
+			DataElementEntityTranslatorVisitor inDEETranslatorVisitor,
+			SummarizingDataElementEntityTranslatorVisitor inSummDEETranslatorVisitor,
 			DataElementTranslatorVisitor inDataElementTranslatorVisitor) {
-		this.propositionDao = inDao;
-		this.dataElementEntityTranslatorVisitor = inPropositionTranslatorVisitor;
-		this.summarizingDataElementEntityTranslatorVisitor = inSummarizingPropositionTranslatorVisitor;
+		this.dataElementEntityDao = inDao;
+		this.dEETranslatorVisitor = inDEETranslatorVisitor;
+		this.summDEETranslatorVisitor = inSummDEETranslatorVisitor;
 		this.dataElementTranslatorVisitor = inDataElementTranslatorVisitor;
-		this.userDao = userDao;
+		this.userDao = inUserDao;
 	}
 
 	@GET
 	@Path("/")
-	public List<DataElement> getAll(@Context HttpServletRequest request,
-			@DefaultValue("false") @QueryParam("summarize") boolean summarize) {
-		User user = this.userDao.getByName(request.getUserPrincipal().getName());
+	public List<DataElement> getAll(@Context HttpServletRequest inRequest,
+			@DefaultValue("false") @QueryParam("summarize") boolean inSummarize) {
+		User user = 
+				this.userDao.getByName(inRequest.getUserPrincipal().getName());
 		List<DataElement> result = new ArrayList<>();
 		List<DataElementEntity> dataElementEntities = 
-				this.propositionDao.getByUserId(user.getId());
+				this.dataElementEntityDao.getByUserId(user.getId());
 		for (DataElementEntity dataElementEntity : dataElementEntities) {
-			result.add(convertToDataElement(dataElementEntity, summarize));
+			result.add(convertToDataElement(dataElementEntity, inSummarize));
 		}
 
 		return result;
@@ -105,10 +106,12 @@ public class DataElementResource {
 
 	@GET
 	@Path("/{key}")
-	public DataElement get(@Context HttpServletRequest request,
+	public DataElement get(@Context HttpServletRequest inRequest,
 			@PathParam("key") String inKey, 
-			@DefaultValue("false") @QueryParam("summarize") boolean summarize) {
-		DataElement result = readDataElement(request, inKey, summarize);
+			@DefaultValue("false") @QueryParam("summarize") boolean inSummarize) {
+		DataElement result = 
+				readDataElement(inRequest.getUserPrincipal().getName(), 
+						inKey, inSummarize);
 		if (result == null) {
 			throw new HttpStatusException(Response.Status.NOT_FOUND);
 		} else {
@@ -144,9 +147,9 @@ public class DataElementResource {
 		DataElementEntity dataElementEntity = this.dataElementTranslatorVisitor
 				.getDataElementEntity();
 		
-		if (this.propositionDao.getByUserAndKey(
+		if (this.dataElementEntityDao.getByUserAndKey(
 				inElement.getUserId(), dataElementEntity.getKey()) != null) {
-			String msg = this.messages.getString(
+			String msg = messages.getString(
 					"dataElementResource.create.error.duplicate");
 			throw new HttpStatusException(Status.CONFLICT, msg);
 		}
@@ -155,11 +158,12 @@ public class DataElementResource {
 		dataElementEntity.setCreated(now);
 		dataElementEntity.setLastModified(now);
 
-		this.propositionDao.create(dataElementEntity);
+		this.dataElementEntityDao.create(dataElementEntity);
 	}
 
 	@PUT
-	public void update(@Context HttpServletRequest request, DataElement inElement) {
+	public void update(@Context HttpServletRequest inRequest, 
+			DataElement inElement) {
 		if (inElement.getId() == null) {
 			throw new HttpStatusException(Response.Status.PRECONDITION_FAILED,
 					"The data element to be updated must "
@@ -186,15 +190,17 @@ public class DataElementResource {
 		}
 		DataElementEntity dataElementEntity = this.dataElementTranslatorVisitor
 				.getDataElementEntity();
-		DataElementEntity oldDataElementEntity = this.propositionDao.retrieve(inElement
-				.getId());
+		DataElementEntity oldDataElementEntity = 
+				this.dataElementEntityDao.retrieve(inElement.getId());
 		
 		if (oldDataElementEntity == null) {
 			throw new HttpStatusException(Response.Status.NOT_FOUND);
-		} else if (!oldDataElementEntity.getUserId().equals(inElement.getUserId())) {
+		} else if (!oldDataElementEntity.getUserId().equals(
+				inElement.getUserId())) {
 			throw new HttpStatusException(Response.Status.NOT_FOUND);
 		} else {
-			User user = this.userDao.getByName(request.getUserPrincipal().getName());
+			User user = this.userDao.getByName(
+					inRequest.getUserPrincipal().getName());
 			if (!user.getId().equals(oldDataElementEntity.getUserId())) {
 				throw new HttpStatusException(Response.Status.NOT_FOUND);
 			}
@@ -204,7 +210,7 @@ public class DataElementResource {
 		dataElementEntity.setLastModified(now);
 		dataElementEntity.setCreated(oldDataElementEntity.getCreated());
 		dataElementEntity.setId(oldDataElementEntity.getId());
-		this.propositionDao.update(dataElementEntity);
+		this.dataElementEntityDao.update(dataElementEntity);
 	}
 
 	@DELETE
@@ -212,7 +218,7 @@ public class DataElementResource {
 	public void delete(@PathParam("userId") Long inUserId,
 			@PathParam("key") String inKey) {
 		DataElementEntity dataElementEntity =
-				this.propositionDao.getByUserAndKey(inUserId, inKey);
+				this.dataElementEntityDao.getByUserAndKey(inUserId, inKey);
 		if (dataElementEntity == null) {
 			throw new HttpStatusException(Response.Status.NOT_FOUND);
 		}
@@ -222,10 +228,11 @@ public class DataElementResource {
 			deleteFailed(dataElementsUsedIn, dataElementEntity);
 		}
 
-		this.propositionDao.remove(dataElementEntity);
+		this.dataElementEntityDao.remove(dataElementEntity);
 	}
 
-	private void deleteFailed(List<String> dataElementsUsedIn, DataElementEntity proposition) throws HttpStatusException {
+	private void deleteFailed(List<String> dataElementsUsedIn, 
+			DataElementEntity proposition) throws HttpStatusException {
 		String dataElementList;
 		int size = dataElementsUsedIn.size();
 		if (size > 1) {
@@ -240,7 +247,7 @@ public class DataElementResource {
 		}
 		MessageFormat usedByOtherDataElements =
 				new MessageFormat(messages.getString(
-						"dataElementResource.delete.error.usedByOtherDataElements"));
+				"dataElementResource.delete.error.usedByOtherDataElements"));
 		String msg = usedByOtherDataElements.format(
 				new Object[]{
 					proposition.getDisplayName(),
@@ -251,9 +258,10 @@ public class DataElementResource {
 				Response.Status.PRECONDITION_FAILED, msg);
 	}
 
-	private List<String> getDataElementsUsedIn(Long inUserId, DataElementEntity proposition) {
+	private List<String> getDataElementsUsedIn(Long inUserId, 
+			DataElementEntity proposition) {
 		List<DataElementEntity> others =
-				this.propositionDao.getByUserId(inUserId);
+				this.dataElementEntityDao.getByUserId(inUserId);
 		List<String> dataElementsUsedIn = new ArrayList<>();
 		for (DataElementEntity other : others) {
 			if (!other.getId().equals(proposition.getId())) {
@@ -270,16 +278,18 @@ public class DataElementResource {
 		return dataElementsUsedIn;
 	}
 	
-	private DataElement readDataElement(HttpServletRequest request, String inKey, boolean summarize) {
-		User user = this.userDao.getByName(request.getUserPrincipal().getName());
+	private DataElement readDataElement(String username, String inKey, 
+			boolean summarize) {
+		User user = this.userDao.getByName(username);
 		DataElement result;
 		DataElementEntity dataElementEntity =
-				this.propositionDao.getByUserAndKey(user.getId(), inKey);
+				this.dataElementEntityDao.getByUserAndKey(user.getId(), inKey);
 		result = convertToDataElement(dataElementEntity, summarize);
 		return result;
 	}
 
-	private DataElement convertToDataElement(DataElementEntity dataElementEntity, boolean summarize) {
+	private DataElement convertToDataElement(
+			DataElementEntity dataElementEntity, boolean summarize) {
 		DataElement result;
 		if (dataElementEntity == null) {
 			result = null;
@@ -292,12 +302,13 @@ public class DataElementResource {
 	}
 	
 	private DataElement toDataElement(DataElementEntity dataElementEntity) {
-		dataElementEntity.accept(this.dataElementEntityTranslatorVisitor);
-		return this.dataElementEntityTranslatorVisitor.getDataElement();
+		dataElementEntity.accept(this.dEETranslatorVisitor);
+		return this.dEETranslatorVisitor.getDataElement();
 	}
 	
-	private DataElement toSummarizedDataElement(DataElementEntity dataElementEntity) {
-		dataElementEntity.accept(this.summarizingDataElementEntityTranslatorVisitor);
-		return this.summarizingDataElementEntityTranslatorVisitor.getDataElement();
+	private DataElement toSummarizedDataElement(
+			DataElementEntity dataElementEntity) {
+		dataElementEntity.accept(this.summDEETranslatorVisitor);
+		return this.summDEETranslatorVisitor.getDataElement();
 	}
 }
