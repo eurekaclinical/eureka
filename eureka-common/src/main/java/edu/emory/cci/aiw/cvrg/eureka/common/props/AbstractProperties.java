@@ -24,12 +24,11 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 import javax.servlet.http.HttpServletRequest;
+import javax.ws.rs.core.UriBuilder;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -46,29 +45,35 @@ public abstract class AbstractProperties {
 	private static final Logger LOGGER = LoggerFactory.getLogger(
 			AbstractProperties.class);
 	/**
-	 * Name of the system property that points to the configuration file.
+	 * Name of the system property containing a pathname to the configuration 
+	 * file.
 	 */
 	private static final String PROPERTY_NAME = "eureka.config.file";
+	
 	/**
-	 * If the configuration file is not specified by the user, search this
-	 * default location.
+	 * If the configuration file is not specified by the user in the above
+	 * system property, search this default location.
 	 */
-	private static final String DEFAULT_UNIX_LOCATION = "/etc/eureka";
+	private static final String DEFAULT_UNIX_LOCATION = "/etc/eureka/";
 	private static final String DEFAULT_WIN_LOCATION = "C:\\Program "
-			+ "Files\\eureka";
+			+ "Files\\eureka\\";
+	
 	/**
-	 * Name of the properties file that is required for application
-	 * configuration.
+	 * The name of the properties file for application configuration.
 	 */
-	private static final String PROPERTIES_FILE = "/application.properties";
-	private static final String CAS_LOGOUT_PATH = "/logout";
-	private static final String CAS_LOGIN_PATH = "/login";
+	private static final String PROPERTIES_FILE = "application.properties";
+	
+	/**
+	 * Fallback properties file for application configuration as a resource.
+	 */
+	private static final String FALLBACK_CONFIG_FILE = '/' + PROPERTIES_FILE;
+	
 	/**
 	 * Holds an instance of the properties object which contains all the
 	 * application configuration properties.
 	 */
 	private final Properties properties;
-
+	
 	/**
 	 * Loads the application configuration.
 	 *
@@ -76,33 +81,25 @@ public abstract class AbstractProperties {
 	 * fallback configuration should always be there. The default configuration
 	 * file is created by the application's administrator and overrides the
 	 * fallback configuration for each configuration property that is specified.
-	 * It is searched for in the <code>/etc/eureka</code> directory for
-	 * Unix/Linux/Mac installations, and <code>C:\Program Files\eureka</code>
-	 * for Windows installations. It is optional, though highly recommended.
-	 * Finally, the pathname of a configuration file may be specified in the
+	 * It is searched for in the
+	 * <code>/etc/eureka</code> directory for Unix/Linux/Mac installations, and
+	 * <code>C:\Program Files\eureka</code> for Windows installations. It is
+	 * optional, though highly recommended. Finally, the pathname of a
+	 * configuration file may be specified in the
 	 * <code>eureka.config.file</code> system property, the property values in
 	 * which override those in the default configuration above.
 	 */
 	public AbstractProperties() {
 		String userConfig = System.getProperty(PROPERTY_NAME);
 		String defaultConfig = getDefaultLocation() + PROPERTIES_FILE;
-		InputStream fallbackConfig = this.getFallBackConfig();
-		Properties temp = null;
-
-		try {
+		
+		Properties temp;
+		try (InputStream fallbackConfig = this.getFallBackConfig();) {
 			temp = this.load(fallbackConfig, null);
-			fallbackConfig.close();
-			fallbackConfig = null;
 		} catch (IOException ex) {
-			throw new AssertionError("Fallback configuration not found: "
-					+ ex.getMessage());
-		} finally {
-			if (fallbackConfig != null) {
-				try {
-					fallbackConfig.close();
-				} catch (IOException ignore) {
-				}
-			}
+			throw new AssertionError(
+					"Fallback configuration could not be read: "
+							+ ex.getMessage());
 		}
 
 		LOGGER.info("Trying to load default configuration from {}",
@@ -141,9 +138,10 @@ public abstract class AbstractProperties {
 					PROPERTY_NAME);
 		}
 
+
 		this.properties = temp;
 	}
-
+	
 	/**
 	 * Gets the default location of configuration file, based on the operating
 	 * system.
@@ -169,7 +167,7 @@ public abstract class AbstractProperties {
 	 * @return The location of the fallback configuration, guaranteed not null.
 	 */
 	private InputStream getFallBackConfig() {
-		InputStream in = this.getClass().getResourceAsStream(PROPERTIES_FILE);
+		InputStream in = getClass().getResourceAsStream(FALLBACK_CONFIG_FILE);
 		if (in == null) {
 			throw new AssertionError(
 					"Could not locate fallback configuration.");
@@ -201,16 +199,9 @@ public abstract class AbstractProperties {
 	 * @throws IOException Thrown if the named file can not be properly read.
 	 */
 	private Properties load(File inFile, Properties defaults) throws IOException {
-		InputStream inputStream = new FileInputStream(inFile);
 		Properties props;
-		try {
+		try (InputStream inputStream = new FileInputStream(inFile);) {
 			props = load(inputStream, defaults);
-		} finally {
-			try {
-				inputStream.close();
-			} catch (IOException ioe) {
-				// do nothing here
-			}
 		}
 		return props;
 	}
@@ -237,7 +228,7 @@ public abstract class AbstractProperties {
 	 * @return A string containing the path to the directory containing Protempa
 	 * INI configuration files.
 	 */
-	public String getConfigDir() {
+	public final String getConfigDir() {
 		return this.getValue("eureka.etl.config.dir", getDefaultLocation());
 	}
 
@@ -258,62 +249,40 @@ public abstract class AbstractProperties {
 		return result;
 	}
 
-	public abstract String getProxyCallbackServer();
-
+	public abstract String getProxyCallbackServer ();
+	
 	public String getCasUrl() {
 		return this.getValue("cas.url");
 	}
+	
+	public String getCasLoginUrl() {
+		UriBuilder builder = UriBuilder.fromUri(this.getValue("cas.url"));
+		builder.path(this.getValue("cas.url.login"));
+		return builder.build().toString();
+	}
 
 	public String getCasLogoutUrl() {
-		return this.getCasUrl() + CAS_LOGOUT_PATH;
+		UriBuilder builder = UriBuilder.fromUri(this.getValue("cas.url"));
+		builder.path(this.getValue("cas.url.logout"));
+		return builder.build().toString();
 	}
-
-	public String getCasLoginUrl() {
-		return this.getCasUrl() + CAS_LOGIN_PATH;
-	}
-
-	public String getMajorVersion() {
+	
+	public String getMajorVersion () {
 		return this.getValue("eureka.version.major");
 	}
 
-	public String getMinorVersion() {
+	public String getMinorVersion () {
 		return this.getValue("eureka.version.minor");
 	}
-
-	public String getIncrementalVersion() {
+	public String getIncrementalVersion () {
 		return this.getValue("eureka.version.incremental");
 	}
-
-	public String getQualifier() {
+	public String getQualifier () {
 		return this.getValue("eureka.version.qualifier");
 	}
-
-	public String getBuildNumber() {
+	public String getBuildNumber () {
 		return this.getValue("eureka.version.buildNumber");
 	}
-
-	/**
-	 * Get the support email address for the application.
-	 *
-	 * @return The support email address.
-	 */
-	public SupportUri getSupportUri() {
-		SupportUri supportUri;
-		try {
-			String uriStr = this.getValue("eureka.support.uri");
-			String uriName = this.getValue("eureka.support.uri.name");
-			if (uriStr != null) {
-				supportUri = new SupportUri(new URI(uriStr), uriName);
-			} else {
-				supportUri = null;
-			}
-		} catch (URISyntaxException ex) {
-			LOGGER.error("Invalid support URI in application.properties", ex);
-			supportUri = null;
-		}
-		return supportUri;
-	}
-
 	/**
 	 * Returns the String value of the given property name.
 	 *
@@ -420,7 +389,7 @@ public abstract class AbstractProperties {
 		}
 		return result;
 	}
-
+	
 	/**
 	 * Gets the default list of system propositions for the application.
 	 *
