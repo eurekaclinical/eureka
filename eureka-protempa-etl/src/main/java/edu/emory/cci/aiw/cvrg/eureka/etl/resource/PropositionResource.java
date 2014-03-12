@@ -107,9 +107,9 @@ public class PropositionResource {
 			@PathParam("key") String inKey) {
 		try {
 			if (this.etlProperties.getConfigDir() != null) {
-				PropositionDefinitionFinder propositionFinder =
-						new PropositionDefinitionFinder(
-						inConfigId, this.etlProperties);
+				PropositionDefinitionFinder propositionFinder
+						= new PropositionDefinitionFinder(
+								inConfigId, this.etlProperties);
 				PropositionDefinition definition = propositionFinder
 						.find(inKey);
 				if (definition != null) {
@@ -142,7 +142,7 @@ public class PropositionResource {
 			@QueryParam("withChildren") String withChildren) {
 		return getPropositionsCommon(inConfigId, inKeys, withChildren);
 	}
-	
+
 	@POST
 	@Path("/{configId}")
 	@Produces(MediaType.APPLICATION_JSON)
@@ -152,20 +152,20 @@ public class PropositionResource {
 			@FormParam("withChildren") String withChildren) {
 		return getPropositionsCommon(inConfigId, inKeys, withChildren);
 	}
-	
+
 	private List<PropositionDefinition> getPropositionsCommon(String inConfigId, List<String> inKeys, String withChildren) throws HttpStatusException {
 		try {
 			if (this.etlProperties.getConfigDir() != null) {
 				List<PropositionDefinition> result = new ArrayList<>();
-				PropositionDefinitionFinder propositionFinder =
-						new PropositionDefinitionFinder(inConfigId,
+				PropositionDefinitionFinder propositionFinder
+						= new PropositionDefinitionFinder(inConfigId,
 								this.etlProperties);
 				for (String key : inKeys) {
 					PropositionDefinition definition = propositionFinder
 							.find(key);
 					if (definition != null) {
 						result.add(definition);
-						if (withChildren.equalsIgnoreCase("true")) {
+						if (Boolean.parseBoolean(withChildren)) {
 							for (String childId : definition.getChildren()) {
 								PropositionDefinition child = propositionFinder
 										.find(childId);
@@ -185,16 +185,15 @@ public class PropositionResource {
 				throw new HttpStatusException(
 						Response.Status.INTERNAL_SERVER_ERROR,
 						"No Protempa configuration directory is "
-								+ "specified in application.properties. "
-								+ "Proposition finding will not work without it. "
-								+ "Please create it and try again.");
+						+ "specified in application.properties. "
+						+ "Proposition finding will not work without it. "
+						+ "Please create it and try again.");
 			}
 		} catch (PropositionFinderException e) {
 			throw new HttpStatusException(
 					Response.Status.INTERNAL_SERVER_ERROR, e);
 		}
 	}
-
 
 	@GET
 	@Path("/search/{sourceConfigId}/{searchKey}")
@@ -216,16 +215,15 @@ public class PropositionResource {
 				throw new HttpStatusException(
 						Response.Status.INTERNAL_SERVER_ERROR,
 						"No Protempa configuration directory is "
-								+ "specified in application.properties. "
-								+ "Proposition finding will not work without it. "
-								+ "Please create it and try again.");
+						+ "specified in application.properties. "
+						+ "Proposition finding will not work without it. "
+						+ "Please create it and try again.");
 			}
 
 		} catch (PropositionFinderException e) {
 			throw new HttpStatusException(
 					Response.Status.INTERNAL_SERVER_ERROR, e);
 		}
-
 
 	}
 }
