@@ -179,15 +179,15 @@ public class EtlClientImpl extends EurekaClient implements EtlClient {
 	@Override
 	public List<PropositionDefinition> getPropositionDefinitions(
 			String sourceConfigId, List<String> inKeys, Boolean withChildren) throws ClientException {
-		MultivaluedMap<String, String> queryParams = new MultivaluedMapImpl();
+		MultivaluedMap<String, String> formParams = new MultivaluedMapImpl();
 			for (String key : inKeys) {
-				queryParams.add("key", key);
+				formParams.add("key", key);
 			}
-			queryParams.add("withChildren", withChildren.toString());
+			formParams.add("withChildren", withChildren.toString());
 			String path = UriBuilder.fromPath("/api/protected/proposition/")
 					.segment(sourceConfigId)
 					.build().toString();
-		return doGet(path, PropositionDefinitionList, queryParams);
+		return doPost(path, PropositionDefinitionList, formParams);
 	}
 
 	@Override

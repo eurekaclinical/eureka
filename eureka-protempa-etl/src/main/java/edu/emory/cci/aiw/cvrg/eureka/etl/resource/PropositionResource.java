@@ -48,6 +48,7 @@ import edu.emory.cci.aiw.cvrg.eureka.etl.ksb.PropositionFinderException;
 import edu.emory.cci.aiw.cvrg.eureka.etl.validator.PropositionValidator;
 import edu.emory.cci.aiw.cvrg.eureka.etl.validator.PropositionValidatorException;
 import javax.annotation.security.RolesAllowed;
+import javax.ws.rs.FormParam;
 
 /**
  * @author hrathod
@@ -135,16 +136,30 @@ public class PropositionResource {
 	@GET
 	@Path("/{configId}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public List<PropositionDefinition> getPropositions(
+	public List<PropositionDefinition> getPropositionsGet(
 			@PathParam("configId") String inConfigId,
 			@QueryParam("key") List<String> inKeys,
 			@QueryParam("withChildren") String withChildren) {
+		return getPropositionsCommon(inConfigId, inKeys, withChildren);
+	}
+	
+	@POST
+	@Path("/{configId}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public List<PropositionDefinition> getPropositionsPost(
+			@PathParam("configId") String inConfigId,
+			@FormParam("key") List<String> inKeys,
+			@FormParam("withChildren") String withChildren) {
+		return getPropositionsCommon(inConfigId, inKeys, withChildren);
+	}
+	
+	private List<PropositionDefinition> getPropositionsCommon(String inConfigId, List<String> inKeys, String withChildren) throws HttpStatusException {
 		try {
 			if (this.etlProperties.getConfigDir() != null) {
 				List<PropositionDefinition> result = new ArrayList<>();
 				PropositionDefinitionFinder propositionFinder =
 						new PropositionDefinitionFinder(inConfigId,
-						this.etlProperties);
+								this.etlProperties);
 				for (String key : inKeys) {
 					PropositionDefinition definition = propositionFinder
 							.find(key);
@@ -170,9 +185,9 @@ public class PropositionResource {
 				throw new HttpStatusException(
 						Response.Status.INTERNAL_SERVER_ERROR,
 						"No Protempa configuration directory is "
-						+ "specified in application.properties. "
-						+ "Proposition finding will not work without it. "
-						+ "Please create it and try again.");
+								+ "specified in application.properties. "
+								+ "Proposition finding will not work without it. "
+								+ "Please create it and try again.");
 			}
 		} catch (PropositionFinderException e) {
 			throw new HttpStatusException(
