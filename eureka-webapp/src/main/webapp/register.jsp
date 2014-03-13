@@ -23,6 +23,15 @@
 <template:insert template="/templates/eureka_main.jsp">
 <template:content name="content">
 <h3 id="registerHeading">Register</h3>
+<c:choose>
+	<c:when test="${not empty pageContext.request.remoteUser}">
+		<h3 id="registerHeading">Welcome to Eureka!</h3>
+		<p>Please complete and review your profile information.</p>
+	</c:when>
+	<c:otherwise>
+		<h3 id="registerHeading">Register</h3>
+	</c:otherwise>
+</c:choose>
 <c:if test="${applicationScope.webappProperties.demoMode or applicationScope.webappProperties.ephiProhibited}">
 	<p>
 		<span class="pad">
@@ -32,12 +41,13 @@
 	</p>
 </c:if>
 <form id="signupForm" action="#" method="POST" novalidate role="form">
+	<input type="hidden" name="fullName" value="${param.fullName}" />
 	<div class="row">
 		<div class="col-sm-6">
 			<div class="form-group">
 				<label for="firstName" class="control-label">First Name</label>
 				<input id="firstName" name="firstName" type="text"
-					   class="form-control" value=""/>
+					   class="form-control" value="${param.firstName}"/>
 				<span class="help-block default-hidden"></span>
 			</div>
 		</div>
@@ -47,7 +57,7 @@
 			<div class="form-group">
 				<label for="lastName" class="control-label">Last Name</label>
 				<input id="lastName" name="lastName" type="text"
-					   class="form-control" value=""/>
+					   class="form-control" value="${param.lastName}"/>
 				<span class="help-block default-hidden"></span>
 			</div>
 		</div>
@@ -57,7 +67,7 @@
 			<div class="form-group">
 				<label for="organization" class="control-label">Organization</label>
 				<input id="organization" name="organization" type="text"
-					   class="form-control" value=""/>
+					   class="form-control" value="${param.organization}"/>
 				<span class="help-block default-hidden"></span>
 			</div>
 		</div>
@@ -67,7 +77,7 @@
 			<div class="form-group">
 				<label for="title" class="control-label">Title</label>
 				<input id="title" name="title" type="text"
-					   class="form-control" value=""/>
+					   class="form-control" value="${param.title}"/>
 				<span class="help-block default-hidden"></span>
 			</div>
 		</div>
@@ -77,7 +87,7 @@
 			<div class="form-group">
 				<label for="department" class="control-label">Department</label>
 				<input id="department" name="department" type="text"
-					   class="form-control" value=""/>
+					   class="form-control" value="${param.department}"/>
 				<span class="help-block default-hidden"></span>
 			</div>
 		</div>
@@ -87,7 +97,7 @@
 			<div class="form-group">
 				<label for="email" class="control-label">Email Address</label>
 				<input id="email" name="email" type="text"
-					   class="form-control" value=""/>
+					   class="form-control" value="${param.email}"/>
 				<span class="help-block default-hidden"></span>
 			</div>
 		</div>
@@ -97,11 +107,12 @@
 			<div class="form-group">
 				<label for="verifyEmail" class="control-label">Verify Email Address</label>
 				<input id="verifyEmail" name="verifyEmail" type="text"
-					   class="form-control" value=""/>
+					   class="form-control" value="${param.email}"/>
 				<span class="help-block default-hidden"></span>
 			</div>
 		</div>
 	</div>
+	<c:if test="${empty pageContext.request.remoteUser}">
 	<div class="row">
 		<div class="col-sm-6">
 			<div class="form-group">
@@ -122,6 +133,7 @@
 			</div>
 		</div>
 	</div>
+	</c:if>
 	<c:if test="${applicationScope.webappProperties.demoMode}">
 		<div class="row">
 			<div class="col-sm-6">
@@ -135,6 +147,7 @@
 			</div>
 		</div>
 	</c:if>
+	<c:if test="${empty pageContext.request.remoteUser}">
 	<div class="row">
 		<div class="col-sm-12">
 			<div class="form-group">
@@ -143,6 +156,7 @@
 			</div>
 		</div>
 	</div>
+	</c:if>
 	<div class="row">
 		<div id="passwordChangeFailure" class="default-hidden help-block has-error">
 			<div id="passwordErrorMessage"></div>

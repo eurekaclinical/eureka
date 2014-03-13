@@ -30,6 +30,12 @@ public class UserRequest {
 	 * The request's unique identifier.
 	 */
 	private Long id;
+	
+	/**
+	 * The user's unique username.
+	 */
+	private String username;
+	
 	/**
 	 * The user's first name.
 	 */
@@ -92,6 +98,22 @@ public class UserRequest {
 		this.id = inId;
 	}
 
+	/**
+	 * Gets the user's unique username.
+	 * @return the user's unique username.
+	 */
+	public String getUsername() {
+		return username;
+	}
+
+	/**
+	 * Sets the user's unique username.
+	 * @param inUsername the user's unique username.
+	 */
+	public void setUsername(String inUsername) {
+		this.username = inUsername;
+	}
+	
 	/**
 	 * Get the user's first name.
 	 * 

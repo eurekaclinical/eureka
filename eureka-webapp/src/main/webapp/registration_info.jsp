@@ -23,6 +23,10 @@
 
 <template:insert template="/templates/eureka_main.jsp">
 	<template:content name="content">
+		<% org.jasig.cas.client.authentication.AttributePrincipal principal = (org.jasig.cas.client.authentication.AttributePrincipal) request.getUserPrincipal();%>
+		<p>
+			<% out.println(principal.getAttributes());%>
+		</p>
 		<c:choose>
 			<c:when test="${requestScope.error}">
 				${error}

@@ -40,6 +40,7 @@ import edu.emory.cci.aiw.cvrg.eureka.servlet.PingServlet;
 import edu.emory.cci.aiw.cvrg.eureka.servlet.RegisterUserServlet;
 import edu.emory.cci.aiw.cvrg.eureka.servlet.UserAcctManagerServlet;
 import edu.emory.cci.aiw.cvrg.eureka.servlet.VerifyUserServlet;
+import edu.emory.cci.aiw.cvrg.eureka.servlet.filter.HaveUserRecordFilter;
 import edu.emory.cci.aiw.cvrg.eureka.servlet.filter.MessagesFilter;
 import edu.emory.cci.aiw.cvrg.eureka.servlet.filter.PasswordExpiredFilter;
 import edu.emory.cci.aiw.cvrg.eureka.servlet.proposition.DeletePropositionServlet;
@@ -59,8 +60,9 @@ class ServletModule extends AbstractServletModule {
 	private static final Logger LOGGER = LoggerFactory
 			.getLogger(ServletModule.class);
 	private static final String PROPERTY_PACKAGE_NAMES = "edu.emory.cci.aiw.cvrg.eureka.webapp.resource;edu.emory.cci.aiw.cvrg.eureka.servlet";
-	private static final String REDIRECT_URL = "/protected/password_expiration.jsp";
+	private static final String PASSWORD_EXPIRED_REDIRECT_URL = "/protected/password_expiration.jsp";
 	private static final String PASSWORD_SAVE_PATH = "/protected/user_acct";
+	private static final String NO_USER_RECORD_REDIRECT_URL = "/register.jsp";
 	private static final String CONTAINER_PATH = "/site/*";
 	private static final String CONTAINER_PROTECTED_PATH = "/protected/*";
 	private final WebappProperties properties;
@@ -69,11 +71,24 @@ class ServletModule extends AbstractServletModule {
 		super(inProperties, PROPERTY_PACKAGE_NAMES, CONTAINER_PATH, CONTAINER_PROTECTED_PATH);
 		this.properties = inProperties;
 	}
+	
+	private void setupMessageFilter() {
+		bind(MessagesFilter.class).in(Singleton.class);
+		filter("/*").through(MessagesFilter.class);
+	}
+	
+	private void setupHaveUserRecordFilter() {
+		bind(HaveUserRecordFilter.class).in(Singleton.class);
+		Map<String, String> params = new HashMap<>();
+		params.put("redirect-url", NO_USER_RECORD_REDIRECT_URL);
+		filter(CONTAINER_PROTECTED_PATH).through(HaveUserRecordFilter.class,
+				params);
+	}
 
 	private void setupPasswordExpiredFilter() {
 		bind(PasswordExpiredFilter.class).in(Singleton.class);
 		Map<String, String> params = new HashMap<>();
-		params.put("redirect-url", REDIRECT_URL);
+		params.put("redirect-url", PASSWORD_EXPIRED_REDIRECT_URL);
 		params.put("save-url", PASSWORD_SAVE_PATH);
 		if (LOGGER.isDebugEnabled()) {
 			this.printParams(params);
@@ -81,12 +96,7 @@ class ServletModule extends AbstractServletModule {
 		filter(CONTAINER_PROTECTED_PATH).through(
 				PasswordExpiredFilter.class, params);
 	}
-
-	private void setupMessageFilter() {
-		bind(MessagesFilter.class).in(Singleton.class);
-		filter("/*").through(MessagesFilter.class);
-	}
-
+	
 	private void setupServlets() {
 		bind(RegisterUserServlet.class).in(Singleton.class);
 		serve("/register").with(RegisterUserServlet.class);
@@ -160,7 +170,10 @@ class ServletModule extends AbstractServletModule {
 	protected void configureServlets() {
 		super.configureServlets();
 		this.setupServlets();
-		this.setupPasswordExpiredFilter();
 		this.setupMessageFilter();
+		this.setupHaveUserRecordFilter();
+		this.setupPasswordExpiredFilter();
+		
 	}
+
 }

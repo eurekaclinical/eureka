@@ -138,9 +138,12 @@ public class UserResource {
 	 */
 	@Path("/byid/{id}")
 	@GET
-	public UserInfo getUserById(@Context HttpServletRequest req, 
+	public UserInfo getUserById(@Context HttpServletRequest req,
 			@PathParam("id") Long inId) {
 		User user = this.userDao.retrieve(inId);
+		if (user == null) {
+			throw new HttpStatusException(Response.Status.NOT_FOUND);
+		}
 		String username = req.getUserPrincipal().getName();
 		if (!req.isUserInRole("admin") && !username.equals(user.getEmail())) {
 			throw new HttpStatusException(Response.Status.NOT_FOUND);
@@ -158,7 +161,7 @@ public class UserResource {
 	 */
 	@Path("/byname/{name}")
 	@GET
-	public UserInfo getUserByName(@Context HttpServletRequest req, 
+	public UserInfo getUserByName(@Context HttpServletRequest req,
 			@PathParam("name") String inName) {
 		String username = req.getUserPrincipal().getName();
 		if (!req.isUserInRole("admin") && !username.equals(inName)) {
@@ -167,6 +170,8 @@ public class UserResource {
 		User user = this.userDao.getByName(inName);
 		if (user != null) {
 			this.userDao.refresh(user);
+		} else {
+			throw new HttpStatusException(Response.Status.NOT_FOUND);
 		}
 		LOGGER.debug("Returning user for name {}: {}", inName, user);
 		return this.toUserInfo(user);
@@ -222,7 +227,7 @@ public class UserResource {
 	 *
 	 * @param request the incoming servlet request
 	 * @param passwordChangeRequest the request to use to make the password
-	 *                                 change
+	 * change
 	 *
 	 * @throws HttpStatusException Thrown when a password cannot be properly
 	 * hashed, or the passwords are mismatched.
@@ -263,13 +268,13 @@ public class UserResource {
 			}
 		} else {
 			throw new HttpStatusException(
-					Response.Status.BAD_REQUEST, 
+					Response.Status.BAD_REQUEST,
 					"Error while changing password. Old password is incorrect.");
 		}
 	}
 
 	/**
-	 * Put an updated user to the system. Unless the user has the admin role, 
+	 * Put an updated user to the system. Unless the user has the admin role,
 	 * s/he may only update their own user info.
 	 *
 	 * @param inUserInfo Object containing all the information about the user to
@@ -277,7 +282,7 @@ public class UserResource {
 	 * @return A "Created" response with a link to the user page if successful.
 	 */
 	@PUT
-	public Response putUser(@Context HttpServletRequest req, 
+	public Response putUser(@Context HttpServletRequest req,
 			final UserInfo inUserInfo) {
 		String username = req.getUserPrincipal().getName();
 		if (!req.isUserInRole("admin") && !username.equals(inUserInfo.getEmail())) {
@@ -360,15 +365,21 @@ public class UserResource {
 		return calendar.getTime();
 	}
 
-	private List<UserInfo> toUserInfoList (List<User> inUsers) {
+	private List<UserInfo> toUserInfoList(List<User> inUsers) {
 		List<UserInfo> infos = new ArrayList<>(inUsers.size());
 		for (User user : inUsers) {
-			infos.add(this.toUserInfo(user));
+			UserInfo userInfo = this.toUserInfo(user);
+			if (userInfo != null) {
+				infos.add(userInfo);
+			}
 		}
 		return infos;
 	}
 
-	private UserInfo toUserInfo (User inUser) {
+	private UserInfo toUserInfo(User inUser) {
+		if (inUser == null) {
+			return null;
+		}
 		UserInfo info = new UserInfo();
 		info.setId(inUser.getId());
 		info.setActive(inUser.isActive());
@@ -387,7 +398,7 @@ public class UserResource {
 		return info;
 	}
 
-	private List<Long> rolesToRoleIds (List<Role> inRoles) {
+	private List<Long> rolesToRoleIds(List<Role> inRoles) {
 		List<Long> roleIds = new ArrayList<>(inRoles.size());
 		for (Role role : inRoles) {
 			roleIds.add(role.getId());
@@ -395,14 +406,14 @@ public class UserResource {
 		return roleIds;
 	}
 
-	private List<Role> roleIdsToRoles (List<Long> inRoleIds) {
+	private List<Role> roleIdsToRoles(List<Long> inRoleIds) {
 		List<Role> roles = new ArrayList<>(inRoleIds.size());
 		for (Long roleId : inRoleIds) {
 			roles.add(this.roleDao.retrieve(roleId));
 		}
 		return roles;
 	}
-	
+
 	/**
 	 * Validate a {@link UserRequest} object. Two rules are implemented: 1) The
 	 * email addresses in the two email fields must match, and 2) The passwords
@@ -421,7 +432,7 @@ public class UserResource {
 			if ((userRequest.getEmail() == null) || (userRequest
 					.getVerifyEmail() == null) || (!userRequest.getEmail()
 					.equals(
-					userRequest.getVerifyEmail()))) {
+							userRequest.getVerifyEmail()))) {
 				this.validationError = "Mismatched usernames";
 				result = false;
 			}
@@ -429,7 +440,7 @@ public class UserResource {
 			// make sure the passwords are not null, and match each other
 			if ((userRequest.getPassword() == null) || (userRequest
 					.getVerifyPassword() == null) || (!userRequest.getPassword().equals(
-					userRequest.getVerifyPassword()))) {
+							userRequest.getVerifyPassword()))) {
 				this.validationError = "Mismatched passwords";
 				result = false;
 			}
