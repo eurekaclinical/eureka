@@ -96,6 +96,8 @@ public abstract class AbstractProperties {
 		Properties temp;
 		try (InputStream fallbackConfig = this.getFallBackConfig();) {
 			temp = this.load(fallbackConfig, null);
+			LOGGER.info("Loaded fallback configuration from {}",
+					FALLBACK_CONFIG_FILE);
 		} catch (IOException ex) {
 			throw new AssertionError(
 					"Fallback configuration could not be read: "
