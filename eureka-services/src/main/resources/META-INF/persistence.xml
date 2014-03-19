@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <!--
   #%L
   Eureka Services
@@ -15,35 +16,35 @@
   limitations under the License.
   #L%
   -->
-<persistence xmlns="http://java.sun.com/xml/ns/persistence"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd"
-	version="2.0">
-	<persistence-unit name="services-jpa-unit" transaction-type="RESOURCE_LOCAL">
-		<provider>org.hibernate.ejb.HibernatePersistence</provider>
-		<non-jta-data-source>java:comp/env/jdbc/EurekaService</non-jta-data-source>
-	<!--
+<persistence version="2.0" xmlns="http://java.sun.com/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd">
+  <persistence-unit name="services-jpa-unit" transaction-type="RESOURCE_LOCAL">
+    <provider>org.hibernate.ejb.HibernatePersistence</provider>
+    <non-jta-data-source>java:comp/env/jdbc/EurekaService</non-jta-data-source>
+    <!--
 		<provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
 		<jta-data-source>jdbc/EurekaService</jta-data-source>
 	-->
-		<class>edu.emory.cci.aiw.cvrg.eureka.common.entity.CategoryEntity</class>
-		<class>edu.emory.cci.aiw.cvrg.eureka.common.entity.DataElementEntity</class>
-		<class>edu.emory.cci.aiw.cvrg.eureka.common.entity.ExtendedDataElement</class>
-		<class>edu.emory.cci.aiw.cvrg.eureka.common.entity.FrequencyEntity</class>
-		<class>edu.emory.cci.aiw.cvrg.eureka.common.entity.FrequencyType</class>
-		<class>edu.emory.cci.aiw.cvrg.eureka.common.entity.PropertyConstraint</class>
-		<class>edu.emory.cci.aiw.cvrg.eureka.common.entity.Relation</class>
-		<class>edu.emory.cci.aiw.cvrg.eureka.common.entity.RelationOperator</class>
-		<class>edu.emory.cci.aiw.cvrg.eureka.common.entity.Role</class>
-		<class>edu.emory.cci.aiw.cvrg.eureka.common.entity.SequenceEntity</class>
-		<class>edu.emory.cci.aiw.cvrg.eureka.common.entity.SystemProposition</class>
-		<class>edu.emory.cci.aiw.cvrg.eureka.common.entity.ThresholdsOperator</class>
-		<class>edu.emory.cci.aiw.cvrg.eureka.common.entity.TimeUnit</class>
-		<class>edu.emory.cci.aiw.cvrg.eureka.common.entity.User</class>
-		<class>edu.emory.cci.aiw.cvrg.eureka.common.entity.ValueComparator</class>
-		<class>edu.emory.cci.aiw.cvrg.eureka.common.entity.ValueThresholdEntity</class>
-		<class>edu.emory.cci.aiw.cvrg.eureka.common.entity.ValueThresholdGroupEntity</class>
-<!--
+    <class>edu.emory.cci.aiw.cvrg.eureka.common.entity.CategoryEntity</class>
+    <class>edu.emory.cci.aiw.cvrg.eureka.common.entity.DataElementEntity</class>
+    <class>edu.emory.cci.aiw.cvrg.eureka.common.entity.ExtendedDataElement</class>
+    <class>edu.emory.cci.aiw.cvrg.eureka.common.entity.FrequencyEntity</class>
+    <class>edu.emory.cci.aiw.cvrg.eureka.common.entity.FrequencyType</class>
+    <class>edu.emory.cci.aiw.cvrg.eureka.common.entity.PropertyConstraint</class>
+    <class>edu.emory.cci.aiw.cvrg.eureka.common.entity.Relation</class>
+    <class>edu.emory.cci.aiw.cvrg.eureka.common.entity.RelationOperator</class>
+    <class>edu.emory.cci.aiw.cvrg.eureka.common.entity.Role</class>
+    <class>edu.emory.cci.aiw.cvrg.eureka.common.entity.SequenceEntity</class>
+    <class>edu.emory.cci.aiw.cvrg.eureka.common.entity.SystemProposition</class>
+    <class>edu.emory.cci.aiw.cvrg.eureka.common.entity.ThresholdsOperator</class>
+    <class>edu.emory.cci.aiw.cvrg.eureka.common.entity.TimeUnit</class>
+    <class>edu.emory.cci.aiw.cvrg.eureka.common.entity.UserEntity</class>
+    <class>edu.emory.cci.aiw.cvrg.eureka.common.entity.LocalUserEntity</class>
+    <class>edu.emory.cci.aiw.cvrg.eureka.common.entity.OAuthUserEntity</class>
+    <class>edu.emory.cci.aiw.cvrg.eureka.common.entity.LdapUserEntity</class>
+    <class>edu.emory.cci.aiw.cvrg.eureka.common.entity.ValueComparator</class>
+    <class>edu.emory.cci.aiw.cvrg.eureka.common.entity.ValueThresholdEntity</class>
+    <class>edu.emory.cci.aiw.cvrg.eureka.common.entity.ValueThresholdGroupEntity</class>
+    <!--
 		<properties>
 			<property name="javax.persistence.jdbc.driver" value="oracle.jdbc.OracleDriver"/>
 			<property name="javax.persistence.jdbc.url" value="jdbc:oracle:thin:@adrastea.cci.emory.edu:1521:XE"/>
@@ -52,15 +53,16 @@
 			<property name="eclipselink.ddl-generation.output-mode" value="database"/>
 		</properties>
 -->
-		<properties>
-			<!-- Disable the second-level cache -->
-			<!--<property name="hibernate.cache.provider_class" value="org.hibernate.cache.NoCacheProvider" />-->
-			<!--<property name="hibernate.show_sql" value="true"/>-->
-			<property name="hibernate.hbm2ddl.auto" value="${hibernate-hbm2ddl-auto}" />
-			<!--<property name="hibernate.dialect" value="org.hibernate.dialect.Oracle10gDialect" />-->
-			<!-- Default is false for backwards compatibility. Should be used on all
+    <class>edu.emory.cci.aiw.cvrg.eureka.common.entity.OAuthProvider</class>
+    <properties>
+      <!-- Disable the second-level cache -->
+      <!--<property name="hibernate.cache.provider_class" value="org.hibernate.cache.NoCacheProvider" />-->
+      <!--<property name="hibernate.show_sql" value="true"/>-->
+      <property name="hibernate.hbm2ddl.auto" value="${hibernate-hbm2ddl-auto}"/>
+      <!--<property name="hibernate.dialect" value="org.hibernate.dialect.Oracle10gDialect" />-->
+      <!-- Default is false for backwards compatibility. Should be used on all
 				new projects -->
-			<property name="hibernate.id.new_generator_mappings" value="true" />
-		</properties>
-	</persistence-unit>
+      <property name="hibernate.id.new_generator_mappings" value="true"/>
+    </properties>
+  </persistence-unit>
 </persistence>

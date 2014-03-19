@@ -19,8 +19,7 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.services.email;
 
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.User;
-import javax.servlet.http.HttpServletRequest;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.UserEntity;
 
 /**
  * An interface that defines how emails can be sent out from the application.
@@ -38,7 +37,7 @@ public interface EmailSender {
 	 * @param user To whom the email should be sent.
 	 * @throws EmailException If the email can not be sent for any reason.
 	 */
-	public void sendVerificationMessage(User user) throws EmailException;
+	public void sendVerificationMessage(UserEntity user) throws EmailException;
 
 	/**
 	 * Send an activation email to the user. The activation email is sent after
@@ -49,7 +48,7 @@ public interface EmailSender {
 	 * @throws EmailException Thrown if the email can not be sent for any
 	 *             reason.
 	 */
-	public void sendActivationMessage(User user) throws EmailException;
+	public void sendActivationMessage(UserEntity user) throws EmailException;
 
 	/**
 	 * Send a password change email to the user. The password change email is
@@ -58,7 +57,7 @@ public interface EmailSender {
 	 * @param user To whom the email should be sent.
 	 * @throws EmailException Thrown if the email can not be properly sent.
 	 */
-	public void sendPasswordChangeMessage(User user) throws EmailException;
+	public void sendPasswordChangeMessage(UserEntity user) throws EmailException;
 
 	/**
 	 * Send a password reset email to the user. The password reset email is sent
@@ -69,6 +68,6 @@ public interface EmailSender {
 	 * @throws EmailException Thrown if the email can not be sent for any
 	 *             reason.
 	 */
-	public void sendPasswordResetMessage(User user, String newPassword)
+	public void sendPasswordResetMessage(UserEntity user, String newPassword)
 			throws EmailException;
 }

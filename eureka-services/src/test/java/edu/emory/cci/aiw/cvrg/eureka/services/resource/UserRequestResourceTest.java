@@ -22,11 +22,12 @@ package edu.emory.cci.aiw.cvrg.eureka.services.resource;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.ClientResponse.Status;
 import com.sun.jersey.api.client.WebResource;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.LocalUser;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.LocalUserRequest;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.PasswordChangeRequest;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.UserInfo;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.UserRequest;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.User;
 import edu.emory.cci.aiw.cvrg.eureka.services.util.PasswordGenerator;
-import edu.emory.cci.aiw.cvrg.eureka.services.util.StringUtil;
+import edu.emory.cci.aiw.cvrg.eureka.common.util.StringUtil;
 import org.junit.Test;
 
 import javax.ws.rs.core.MediaType;
@@ -41,12 +42,12 @@ import static org.junit.Assert.assertEquals;
  * @author hrathod
  *
  */
-public class UserResourceTest extends AbstractServiceResourceTest {
+public class UserRequestResourceTest extends AbstractServiceResourceTest {
 
 	/**
 	 * Simply call super().
 	 */
-	public UserResourceTest() {
+	public UserRequestResourceTest() {
 		super();
 	}
 
@@ -55,7 +56,7 @@ public class UserResourceTest extends AbstractServiceResourceTest {
 	 */
 	@Test
 	public void testUserList() {
-		List<UserInfo> users = this.getUserList();
+		List<User> users = this.getUserList();
 		assertEquals(3, users.size());
 	}
 	
@@ -83,10 +84,11 @@ public class UserResourceTest extends AbstractServiceResourceTest {
 		String title = "Software Engineer";
 		String department = "CCI";
 
-		UserRequest userRequest = new UserRequest();
+		LocalUserRequest userRequest = new LocalUserRequest();
 
 		userRequest.setFirstName(firstName);
 		userRequest.setLastName(lastName);
+		userRequest.setUsername(email);
 		userRequest.setEmail(email);
 		userRequest.setVerifyEmail(verifyEmail);
 		userRequest.setOrganization(organization);
@@ -123,19 +125,19 @@ public class UserResourceTest extends AbstractServiceResourceTest {
 	public void testResetPassword() throws NoSuchAlgorithmException {
 		PasswordGenerator generator = this.getInstance(PasswordGenerator
 				.class);
-		List<UserInfo> users;
-		UserInfo user;
+		List<User> users;
+		LocalUser user;
 
 		WebResource resource = this.resource();
 		users = this.getUserList();
-		user = users.get(0);
+		user = (LocalUser) users.get(0);
 		ClientResponse response = resource
 				.path("/api/passwordresetrequest/" + user.getEmail())
 				.post(ClientResponse.class);
 		assertEquals(Status.NO_CONTENT, response.getClientResponseStatus());
 
 		users = this.getUserList();
-		user = users.get(0);
+		user = (LocalUser) users.get(0);
 		assertEquals(StringUtil.md5(generator.generatePassword()),
 				user.getPassword());
 	}
@@ -146,12 +148,12 @@ public class UserResourceTest extends AbstractServiceResourceTest {
 	@Test
 	public void testFindByName() {
 		WebResource resource = this.resource();
-		List<UserInfo> users = this.getUserList();
-		UserInfo user = users.get(0);
+		List<User> users = this.getUserList();
+		User user = users.get(0);
 		ClientResponse response = resource.path("/api/protected/users/byname/" + user.getEmail()).accept(MediaType.APPLICATION_JSON).get(ClientResponse.class);
 		assertEquals(Status.OK, response.getClientResponseStatus());
 
-		UserInfo responseUser = response.getEntity(UserInfo.class);
+		User responseUser = response.getEntity(User.class);
 		assertEquals(user.getEmail(), responseUser.getEmail());
 	}
 }

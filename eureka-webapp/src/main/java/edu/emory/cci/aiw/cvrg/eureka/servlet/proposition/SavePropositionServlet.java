@@ -33,7 +33,7 @@ import org.slf4j.LoggerFactory;
 import com.google.inject.Inject;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.DataElement;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.UserInfo;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.User;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ClientException;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ServicesClient;
 
@@ -58,7 +58,7 @@ public class SavePropositionServlet extends HttpServlet {
 
 		String username = req.getUserPrincipal().getName();
 		try {
-			UserInfo user = this.servicesClient.getUserByName(username);
+			User user = this.servicesClient.getUserByName(username);
 			dataElement.setUserId(user.getId());
 			if (dataElement.getId() == null) {
 				this.servicesClient.saveUserElement(dataElement);

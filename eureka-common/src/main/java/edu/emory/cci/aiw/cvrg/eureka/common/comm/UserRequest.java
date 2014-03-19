@@ -19,23 +19,36 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.common.comm;
 
+import java.util.ArrayList;
+import java.util.List;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.codehaus.jackson.annotate.JsonSubTypes;
+import org.codehaus.jackson.annotate.JsonTypeInfo;
+
 /**
  * A bean holding information about a user's registration request.
- * 
+ *
  * @author hrathod
- * 
+ *
  */
-public class UserRequest {
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
+@JsonSubTypes({
+        @JsonSubTypes.Type(value = LocalUserRequest.class, name = "LOCAL"),
+        @JsonSubTypes.Type(value = OAuthUserRequest.class, name = "OAUTH"),
+        @JsonSubTypes.Type(value = LdapUserRequest.class, name = "LDAP")
+})
+public abstract class UserRequest implements UserRequestVisitable {
+
 	/**
 	 * The request's unique identifier.
 	 */
 	private Long id;
-	
+
 	/**
 	 * The user's unique username.
 	 */
 	private String username;
-	
+
 	/**
 	 * The user's first name.
 	 */
@@ -44,6 +57,10 @@ public class UserRequest {
 	 * The user's last name.
 	 */
 	private String lastName;
+	/**
+	 * The user's full name.
+	 */
+	private String fullName;
 	/**
 	 * The user's email address.
 	 */
@@ -56,14 +73,7 @@ public class UserRequest {
 	 * The user's organization.
 	 */
 	private String organization;
-	/**
-	 * The user's password.
-	 */
-	private String password;
-	/**
-	 * The user's password verification.
-	 */
-	private String verifyPassword;
+
 	/**
 	 * The user's title. Added later on.
 	 */
@@ -82,7 +92,7 @@ public class UserRequest {
 
 	/**
 	 * Get the request's unique identifier.
-	 * 
+	 *
 	 * @return The request's unique identifier.
 	 */
 	public Long getId() {
@@ -91,7 +101,7 @@ public class UserRequest {
 
 	/**
 	 * Set the user's unique identifier.
-	 * 
+	 *
 	 * @param inId The unique identifier for the request.
 	 */
 	public void setId(Long inId) {
@@ -100,6 +110,7 @@ public class UserRequest {
 
 	/**
 	 * Gets the user's unique username.
+	 *
 	 * @return the user's unique username.
 	 */
 	public String getUsername() {
@@ -108,15 +119,16 @@ public class UserRequest {
 
 	/**
 	 * Sets the user's unique username.
+	 *
 	 * @param inUsername the user's unique username.
 	 */
 	public void setUsername(String inUsername) {
 		this.username = inUsername;
 	}
-	
+
 	/**
 	 * Get the user's first name.
-	 * 
+	 *
 	 * @return user's first name.
 	 */
 	public String getFirstName() {
@@ -125,7 +137,7 @@ public class UserRequest {
 
 	/**
 	 * Set the user's first name.
-	 * 
+	 *
 	 * @param inFirstName the user's first name.
 	 */
 	public void setFirstName(String inFirstName) {
@@ -134,7 +146,7 @@ public class UserRequest {
 
 	/**
 	 * Get the user's last name.
-	 * 
+	 *
 	 * @return The user's last name.
 	 */
 	public String getLastName() {
@@ -143,16 +155,24 @@ public class UserRequest {
 
 	/**
 	 * Set the user's last name.
-	 * 
+	 *
 	 * @param inLastName The user's last name.
 	 */
 	public void setLastName(String inLastName) {
 		this.lastName = inLastName;
 	}
 
+	public String getFullName() {
+		return fullName;
+	}
+
+	public void setFullName(String fullName) {
+		this.fullName = fullName;
+	}
+
 	/**
 	 * Get the user's email address.
-	 * 
+	 *
 	 * @return The user's email address.
 	 */
 	public String getEmail() {
@@ -161,7 +181,7 @@ public class UserRequest {
 
 	/**
 	 * Set the user's email address.
-	 * 
+	 *
 	 * @param inEmail The user's email address.
 	 */
 	public void setEmail(String inEmail) {
@@ -170,7 +190,7 @@ public class UserRequest {
 
 	/**
 	 * Set the user's email address verification.
-	 * 
+	 *
 	 * @return The user's email address verification.
 	 */
 	public String getVerifyEmail() {
@@ -179,7 +199,7 @@ public class UserRequest {
 
 	/**
 	 * Set the user's email address verification.
-	 * 
+	 *
 	 * @param inVerifyEmail The user's email address verification.
 	 */
 	public void setVerifyEmail(String inVerifyEmail) {
@@ -188,7 +208,7 @@ public class UserRequest {
 
 	/**
 	 * Get the user's organization.
-	 * 
+	 *
 	 * @return The user's organization.
 	 */
 	public String getOrganization() {
@@ -197,7 +217,7 @@ public class UserRequest {
 
 	/**
 	 * Set the user's organization.
-	 * 
+	 *
 	 * @param inOrganization The user's organization.
 	 */
 	public void setOrganization(String inOrganization) {
@@ -205,45 +225,8 @@ public class UserRequest {
 	}
 
 	/**
-	 * Get the user's password.
-	 * 
-	 * @return The user's password.
-	 */
-	public String getPassword() {
-		return this.password;
-	}
-
-	/**
-	 * Set the user's password.
-	 * 
-	 * @param inPassword The user's password.
-	 */
-	public void setPassword(String inPassword) {
-		this.password = inPassword;
-	}
-
-	/**
-	 * Get the password verification.
-	 * 
-	 * @return The password verification.
-	 */
-	public String getVerifyPassword() {
-		return this.verifyPassword;
-	}
-
-	/**
-	 * Set the password verification.
-	 * 
-	 * @param inVerifyPassword The password verification.
-	 */
-	public void setVerifyPassword(String inVerifyPassword) {
-		this.verifyPassword = inVerifyPassword;
-	}
-
-	
-	/**
 	 * Get the user's title.
-	 * 
+	 *
 	 * @return The user's title.
 	 */
 	public String getTitle() {
@@ -252,18 +235,16 @@ public class UserRequest {
 
 	/**
 	 * Set the user's title
-	 * 
+	 *
 	 * @param inTitle The user's title.
 	 */
-	
-	
 	public void setTitle(String inTitle) {
 		this.title = inTitle;
 	}
-	
+
 	/**
 	 * Get the user's department.
-	 * 
+	 *
 	 * @return The user's department.
 	 */
 	public String getDepartment() {
@@ -272,32 +253,41 @@ public class UserRequest {
 
 	/**
 	 * Set the user's department.
-	 * 
+	 *
 	 * @param inDepartment The user's department.
 	 */
 	public void setDepartment(String inDepartment) {
 		this.department = inDepartment;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.lang.Object#toString()
+	/**
+	 * Validate a {@link UserRequest} object. Two rules are implemented: 1) The
+	 * email addresses in the two email fields must match, and 2) The passwords
+	 * in the two password fields must match.
+	 *
+	 * @return an array of validation error messages, or an empty array if
+	 * validation succeeded.
 	 */
+	public String[] validate() {
+		List<String> result = new ArrayList<>();
+		
+		if (this.username == null) {
+			result.add("Username unspecified");
+		}
+		if (this.email == null && this.verifyEmail == null) {
+			result.add("Email unspecified");
+		} else if ((this.email == null) || (this.verifyEmail == null) || (!this.email
+				.equals(
+						this.verifyEmail))) {
+			result.add("Mismatched emails");
+		}
+		
+		return result.toArray(new String[result.size()]);
+	}
+
 	@Override
 	public String toString() {
-		StringBuilder builder = new StringBuilder();
-		builder.append("UserRequest [id=").append(this.id)
-				.append(", firstName=").append(this.firstName)
-				.append(", lastName=").append(this.lastName).append(", email=")
-				.append(this.email).append(", verifyEmail=")
-				.append(this.verifyEmail).append(", organization=")
-				.append(this.organization).append(", password=")
-				.append(this.password).append(", verifyPassword=")
-				.append(this.verifyPassword).append(", title=")
-				.append(this.title).append(", department=")
-				.append(this.department).append("]");
-		return builder.toString();
+		return ToStringBuilder.reflectionToString(this);
 	}
 
 }

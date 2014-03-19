@@ -20,13 +20,12 @@ package edu.emory.cci.aiw.cvrg.eureka.servlet.filter;
  * #L%
  */
 import com.google.inject.Inject;
+import com.google.inject.Singleton;
 import com.sun.jersey.api.client.ClientResponse.Status;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.UserInfo;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.UserRequest;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.User;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ClientException;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ServicesClient;
 import java.io.IOException;
-import java.security.Principal;
 import java.util.Map;
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -37,7 +36,6 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
 import org.jasig.cas.client.authentication.AttributePrincipal;
 import org.slf4j.Logger;
@@ -47,6 +45,7 @@ import org.slf4j.LoggerFactory;
  *
  * @author Andrew Post
  */
+@Singleton
 public class HaveUserRecordFilter implements Filter {
 
 	private static final Logger LOGGER
@@ -78,8 +77,12 @@ public class HaveUserRecordFilter implements Filter {
 		AttributePrincipal principal = (AttributePrincipal) servletRequest.getUserPrincipal();
 		LOGGER.debug("username: {}", principal.getName());
 		try {
-			this.servicesClient.getUserByName(principal.getName());
-			inFilterChain.doFilter(inRequest, inResponse);
+			User user = this.servicesClient.getUserByName(principal.getName());
+			if (!user.isActive()) {
+				servletResponse.setStatus(HttpServletResponse.SC_FORBIDDEN);
+			} else {
+				inFilterChain.doFilter(inRequest, inResponse);
+			}
 		} catch (ClientException ex) {
 			if (Status.NOT_FOUND.equals(ex.getResponseStatus())) {
 				/*
@@ -91,14 +94,14 @@ public class HaveUserRecordFilter implements Filter {
 						+ this.redirectUrl;
 				Map<String, Object> attributes = principal.getAttributes();
 				UriBuilder uriBuilder = UriBuilder.fromUri(fullRedirectUrl);
-				
+
 				Object firstName = attributes.get("firstName");
 				Object fullName = attributes.get("fullName");
 				Object lastName = attributes.get("lastName");
-				if ((firstName == null || lastName == null) 
+				if ((firstName == null || lastName == null)
 						&& fullName instanceof String) {
-					PersonNameSplitter splitter = 
-							new PersonNameSplitter((String) fullName);
+					PersonNameSplitter splitter
+							= new PersonNameSplitter((String) fullName);
 					if (firstName == null) {
 						firstName = splitter.getFirstName();
 					}
@@ -115,21 +118,22 @@ public class HaveUserRecordFilter implements Filter {
 				if (fullName != null) {
 					uriBuilder = uriBuilder.queryParam("fullName", fullName);
 				}
-				
+
 				String[] attrNames = {
-					"title", "department", "organization", "email"};
+					"title", "department", "organization", "email", 
+					"username"};
 				for (String attrName : attrNames) {
 					Object val = attributes.get(attrName);
 					if (val != null) {
 						uriBuilder = uriBuilder.queryParam(attrName, val);
 					}
 				}
-				String redirectUrlWithQueryParams = 
-						uriBuilder.build().toString();
-						
+				String redirectUrlWithQueryParams
+						= uriBuilder.build().toString();
+
 				servletResponse.sendRedirect(redirectUrlWithQueryParams);
 			} else {
-				throw new ServletException("Error getting user " 
+				throw new ServletException("Error getting user "
 						+ principal.getName(), ex);
 			}
 		}
@@ -139,4 +143,5 @@ public class HaveUserRecordFilter implements Filter {
 	public void destroy() {
 		this.servletContext = null;
 	}
+	
 }

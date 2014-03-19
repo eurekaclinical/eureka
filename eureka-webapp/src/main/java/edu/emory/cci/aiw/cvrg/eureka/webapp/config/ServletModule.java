@@ -19,14 +19,9 @@ package edu.emory.cci.aiw.cvrg.eureka.webapp.config;
  * limitations under the License.
  * #L%
  */
-import java.util.HashMap;
-import java.util.Map;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.google.inject.Singleton;
-
 import edu.emory.cci.aiw.cvrg.eureka.common.config.AbstractServletModule;
 import edu.emory.cci.aiw.cvrg.eureka.servlet.AdminManagerServlet;
 import edu.emory.cci.aiw.cvrg.eureka.servlet.CommonsFileUploadServlet;
@@ -48,27 +43,31 @@ import edu.emory.cci.aiw.cvrg.eureka.servlet.proposition.EditPropositionServlet;
 import edu.emory.cci.aiw.cvrg.eureka.servlet.proposition.EditorHomeServlet;
 import edu.emory.cci.aiw.cvrg.eureka.servlet.proposition.ListUserDefinedPropositionChildrenServlet;
 import edu.emory.cci.aiw.cvrg.eureka.servlet.proposition.SavePropositionServlet;
+import edu.emory.cci.aiw.cvrg.eureka.servlet.proposition.SearchSystemPropositionServlet;
 import edu.emory.cci.aiw.cvrg.eureka.servlet.proposition.SystemPropositionListServlet;
 import edu.emory.cci.aiw.cvrg.eureka.servlet.proposition.UserPropositionListServlet;
-import edu.emory.cci.aiw.cvrg.eureka.servlet.proposition.SearchSystemPropositionServlet;
+import java.util.HashMap;
+import java.util.Map;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 /**
  * 
  * @author hrathod
  */
 class ServletModule extends AbstractServletModule {
-
+	
 	private static final Logger LOGGER = LoggerFactory
 			.getLogger(ServletModule.class);
-	private static final String PROPERTY_PACKAGE_NAMES = "edu.emory.cci.aiw.cvrg.eureka.webapp.resource;edu.emory.cci.aiw.cvrg.eureka.servlet";
+	private static final String CONTAINER_PATH = "/site/*";
+	private static final String CONTAINER_PROTECTED_PATH = "/protected/*";
 	private static final String PASSWORD_EXPIRED_REDIRECT_URL = "/protected/password_expiration.jsp";
 	private static final String PASSWORD_SAVE_PATH = "/protected/user_acct";
 	private static final String NO_USER_RECORD_REDIRECT_URL = "/register.jsp";
-	private static final String CONTAINER_PATH = "/site/*";
-	private static final String CONTAINER_PROTECTED_PATH = "/protected/*";
+	
 	private final WebappProperties properties;
 
 	public ServletModule(WebappProperties inProperties) {
-		super(inProperties, PROPERTY_PACKAGE_NAMES, CONTAINER_PATH, CONTAINER_PROTECTED_PATH);
+		super(inProperties, CONTAINER_PATH, CONTAINER_PROTECTED_PATH);
 		this.properties = inProperties;
 	}
 	
@@ -97,7 +96,15 @@ class ServletModule extends AbstractServletModule {
 				PasswordExpiredFilter.class, params);
 	}
 	
-	private void setupServlets() {
+	@Override
+	protected void setupFilters() {
+		this.setupMessageFilter();
+		this.setupHaveUserRecordFilter();
+		this.setupPasswordExpiredFilter();
+	}
+	
+	@Override
+	protected void setupServlets() {
 		bind(RegisterUserServlet.class).in(Singleton.class);
 		serve("/register").with(RegisterUserServlet.class);
 
@@ -164,16 +171,6 @@ class ServletModule extends AbstractServletModule {
         bind(SearchSystemPropositionServlet.class).in(Singleton.class);
         serve("/protected/searchsystemlist").with(SearchSystemPropositionServlet.class);
 
-	}
-
-	@Override
-	protected void configureServlets() {
-		super.configureServlets();
-		this.setupServlets();
-		this.setupMessageFilter();
-		this.setupHaveUserRecordFilter();
-		this.setupPasswordExpiredFilter();
-		
 	}
 
 }

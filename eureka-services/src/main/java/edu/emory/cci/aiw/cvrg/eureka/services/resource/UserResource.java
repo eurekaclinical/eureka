@@ -21,18 +21,22 @@ package edu.emory.cci.aiw.cvrg.eureka.services.resource;
 
 import com.google.inject.Inject;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.PasswordChangeRequest;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.UserInfo;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.UserRequest;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.User;
+import edu.emory.cci.aiw.cvrg.eureka.services.util.UserToUserEntityVisitor;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.LocalUserEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.Role;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.User;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.UserEntity;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.UserEntityToUserVisitor;
 import edu.emory.cci.aiw.cvrg.eureka.common.exception.HttpStatusException;
 import edu.emory.cci.aiw.cvrg.eureka.services.clients.I2b2Client;
+import edu.emory.cci.aiw.cvrg.eureka.services.dao.LocalUserDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.RoleDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.UserDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.email.EmailException;
 import edu.emory.cci.aiw.cvrg.eureka.services.email.EmailSender;
 import edu.emory.cci.aiw.cvrg.eureka.services.util.PasswordGenerator;
-import edu.emory.cci.aiw.cvrg.eureka.services.util.StringUtil;
+import edu.emory.cci.aiw.cvrg.eureka.common.util.StringUtil;
+import edu.emory.cci.aiw.cvrg.eureka.services.dao.OAuthProviderDao;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -53,9 +57,10 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import org.apache.commons.lang3.StringUtils;
 
 /**
- * RESTful end-point for {@link User} related methods.
+ * RESTful end-point for {@link UserEntity} related methods.
  *
  * @author hrathod
  */
@@ -73,6 +78,11 @@ public class UserResource {
 	 * Data access object to work with User objects.
 	 */
 	private final UserDao userDao;
+	
+	/**
+	 * Data access object to work with LocalUser objects.
+	 */
+	private final LocalUserDao localUserDao;
 	/**
 	 * Data access object to work with Role objects.
 	 */
@@ -94,40 +104,45 @@ public class UserResource {
 	 * user request, or a user update.
 	 */
 	private String validationError;
+	
+	private UserToUserEntityVisitor visitor;
 
 	/**
 	 * Create a UserResource object with a User DAO and a Role DAO.
 	 *
-	 * @param inUserDao DAO used to access {@link User} related functionality.
+	 * @param inUserDao DAO used to access {@link UserEntity} related functionality.
 	 * @param inRoleDao DAO used to access {@link Role} related functionality.
 	 * @param inEmailSender Used to send emails to the user when necessary.
 	 */
 	@Inject
-	public UserResource(UserDao inUserDao, RoleDao inRoleDao,
+	public UserResource(UserDao inUserDao, LocalUserDao inLocalUserDao,
+			RoleDao inRoleDao,
 			EmailSender inEmailSender, I2b2Client inClient,
-			PasswordGenerator inPasswordGenerator) {
+			PasswordGenerator inPasswordGenerator,
+			OAuthProviderDao inOAuthProviderDao) {
 		this.userDao = inUserDao;
+		this.localUserDao = inLocalUserDao;
 		this.roleDao = inRoleDao;
 		this.emailSender = inEmailSender;
 		this.i2b2Client = inClient;
 		this.passwordGenerator = inPasswordGenerator;
+		this.visitor = new UserToUserEntityVisitor(inOAuthProviderDao, inRoleDao);
 	}
 
 	/**
 	 * Get a list of all users in the system.
 	 *
-	 * @return A list of {@link User} objects.
+	 * @return A list of {@link UserEntity} objects.
 	 */
 	@Path("")
 	@RolesAllowed({"admin"})
 	@GET
-	public List<UserInfo> getUsers() {
-		List<User> users = this.userDao.getAll();
-//		for (User user : users) {
-//			this.userDao.refresh(user);
-//		}
+	public List<User> getUsers() {
+		List<UserEntity> users = this.userDao.getAll();
 		LOGGER.debug("Returning list of users");
-		return this.toUserInfoList(users);
+		UserEntityToUserVisitor visitor = new UserEntityToUserVisitor();
+		visitor.visit(users);
+		return visitor.getUsers();
 	}
 
 	/**
@@ -138,19 +153,21 @@ public class UserResource {
 	 */
 	@Path("/byid/{id}")
 	@GET
-	public UserInfo getUserById(@Context HttpServletRequest req,
+	public User getUserById(@Context HttpServletRequest req,
 			@PathParam("id") Long inId) {
-		User user = this.userDao.retrieve(inId);
-		if (user == null) {
+		UserEntity userEntity = this.userDao.retrieve(inId);
+		if (userEntity == null) {
 			throw new HttpStatusException(Response.Status.NOT_FOUND);
 		}
 		String username = req.getUserPrincipal().getName();
-		if (!req.isUserInRole("admin") && !username.equals(user.getEmail())) {
+		if (!req.isUserInRole("admin") && !username.equals(userEntity.getEmail())) {
 			throw new HttpStatusException(Response.Status.NOT_FOUND);
 		}
-		this.userDao.refresh(user);
-		LOGGER.debug("Returning user for ID {}: {}", inId, user);
-		return this.toUserInfo(user);
+		this.userDao.refresh(userEntity);
+		LOGGER.debug("Returning user for ID {}: {}", inId, userEntity);
+		UserEntityToUserVisitor visitor = new UserEntityToUserVisitor();
+		userEntity.accept(visitor);
+		return visitor.getUser();
 	}
 
 	/**
@@ -161,64 +178,54 @@ public class UserResource {
 	 */
 	@Path("/byname/{name}")
 	@GET
-	public UserInfo getUserByName(@Context HttpServletRequest req,
+	public User getUserByName(@Context HttpServletRequest req,
 			@PathParam("name") String inName) {
 		String username = req.getUserPrincipal().getName();
 		if (!req.isUserInRole("admin") && !username.equals(inName)) {
 			throw new HttpStatusException(Response.Status.NOT_FOUND);
 		}
-		User user = this.userDao.getByName(inName);
-		if (user != null) {
-			this.userDao.refresh(user);
+		UserEntity userEntity = this.userDao.getByName(inName);
+		if (userEntity != null) {
+			this.userDao.refresh(userEntity);
 		} else {
 			throw new HttpStatusException(Response.Status.NOT_FOUND);
 		}
-		LOGGER.debug("Returning user for name {}: {}", inName, user);
-		return this.toUserInfo(user);
+		LOGGER.debug("Returning user for name {}: {}", inName, userEntity);
+		UserEntityToUserVisitor visitor = new UserEntityToUserVisitor();
+		userEntity.accept(visitor);
+		return visitor.getUser();
 	}
 
 	/**
 	 * Add a new user to the system. The user is activated immediately.
 	 *
-	 * @param userRequest Object containing all the information about the user
+	 * @param user Object containing all the information about the user
 	 * to add.
 	 */
 	@RolesAllowed({"admin"})
 	@POST
-	public void addUser(final UserRequest userRequest) {
-		try {
-			String temp = StringUtil.md5(userRequest.getPassword());
-			String temp2 = StringUtil.md5(userRequest.getVerifyPassword());
-			userRequest.setPassword(temp);
-			userRequest.setVerifyPassword(temp2);
-		} catch (NoSuchAlgorithmException e1) {
-			LOGGER.error(e1.getMessage(), e1);
-			throw new HttpStatusException(Response.Status.INTERNAL_SERVER_ERROR, e1);
+	public void addUser(final User user) {
+		if (this.userDao.getByName(user.getUsername()) != null) {
+			throw new HttpStatusException(Response.Status.CONFLICT);
 		}
-
-		if (validateUserRequest(userRequest)) {
-			User user = new User();
-			user.setEmail(userRequest.getEmail());
-			user.setFirstName(userRequest.getFirstName());
-			user.setLastName(userRequest.getLastName());
-			user.setOrganization(userRequest.getOrganization());
-			user.setRoles(this.getDefaultRoles());
-			user.setPassword(userRequest.getPassword());
-			user.setActive(true);
-			LOGGER.debug("Saving new user {}", user.getEmail());
-			this.userDao.create(user);
+		String[] errors = user.validate();
+		if (errors.length == 0) {
+			user.accept(visitor);
+			UserEntity userEntity = visitor.getUserEntity();
+			LOGGER.debug("Saving new user {}", userEntity.getEmail());
+			this.userDao.create(userEntity);
 			try {
-				LOGGER.debug("Sending email to {}", user.getEmail());
-				this.emailSender.sendActivationMessage(user);
+				LOGGER.debug("Sending email to {}", userEntity.getEmail());
+				this.emailSender.sendActivationMessage(userEntity);
 			} catch (EmailException e) {
-				LOGGER.error("Error sending email to {}", user.getEmail(), e);
+				LOGGER.error("Error sending email to {}", userEntity.getEmail(), e);
 			}
 		} else {
 			LOGGER.info(
-					"Invalid new user request: {}, reason {}", userRequest,
+					"Invalid new user request: {}, reason {}", user,
 					this.validationError);
 			throw new HttpStatusException(
-					Response.Status.BAD_REQUEST, this.validationError);
+					Response.Status.BAD_REQUEST, StringUtils.join(errors, ", "));
 		}
 	}
 
@@ -237,12 +244,12 @@ public class UserResource {
 	public void changePassword(@Context HttpServletRequest request,
 			PasswordChangeRequest passwordChangeRequest) {
 		String username = request.getUserPrincipal().getName();
-		User user = this.userDao.getByName(username);
+		LocalUserEntity user = this.localUserDao.getByName(username);
 		if (user == null) {
 			LOGGER.error("User " + username + " not found");
 			throw new HttpStatusException(Response.Status.INTERNAL_SERVER_ERROR);
 		} else {
-			this.userDao.refresh(user);
+			this.localUserDao.refresh(user);
 		}
 		String newPassword = passwordChangeRequest.getNewPassword();
 		String oldPasswordHash;
@@ -259,7 +266,7 @@ public class UserResource {
 			user.setPassword(newPasswordHash);
 			user.setPasswordExpiration(this.getExpirationDate());
 			this.i2b2Client.changePassword(user.getEmail(), newPassword);
-			this.userDao.update(user);
+			this.localUserDao.update(user);
 
 			try {
 				this.emailSender.sendPasswordChangeMessage(user);
@@ -277,26 +284,26 @@ public class UserResource {
 	 * Put an updated user to the system. Unless the user has the admin role,
 	 * s/he may only update their own user info.
 	 *
-	 * @param inUserInfo Object containing all the information about the user to
+	 * @param inUser Object containing all the information about the user to
 	 * add.
 	 * @return A "Created" response with a link to the user page if successful.
 	 */
 	@PUT
 	public Response putUser(@Context HttpServletRequest req,
-			final UserInfo inUserInfo) {
+			final User inUser) {
 		String username = req.getUserPrincipal().getName();
-		if (!req.isUserInRole("admin") && !username.equals(inUserInfo.getEmail())) {
+		if (!req.isUserInRole("admin") && !username.equals(inUser.getUsername())) {
 			throw new HttpStatusException(Response.Status.BAD_REQUEST);
 		}
-		LOGGER.debug("Received updated user: {}", inUserInfo);
+		LOGGER.debug("Received updated user: {}", inUser);
 		Response response;
-		User currentUser = this.userDao.retrieve(inUserInfo.getId());
-		boolean activation = (!currentUser.isActive()) && (inUserInfo.isActive());
-		List<Role> updatedRoles = this.roleIdsToRoles(inUserInfo.getRoles());
+		UserEntity currentUser = this.userDao.retrieve(inUser.getId());
+		boolean activation = (!currentUser.isActive()) && (inUser.isActive());
+		List<Role> updatedRoles = this.roleIdsToRoles(inUser.getRoles());
 
 		currentUser.setRoles(updatedRoles);
-		currentUser.setActive(inUserInfo.isActive());
-		currentUser.setLastLogin(inUserInfo.getLastLogin());
+		currentUser.setActive(inUser.isActive());
+		currentUser.setLastLogin(inUser.getLastLogin());
 
 		if (this.validateUpdatedUser(currentUser)) {
 			LOGGER.debug("Saving updated user: {}", currentUser);
@@ -322,7 +329,7 @@ public class UserResource {
 	 * @param updatedUser The user to be validate.
 	 * @return True if the user is valid, false otherwise.
 	 */
-	private boolean validateUpdatedUser(User updatedUser) {
+	private boolean validateUpdatedUser(UserEntity updatedUser) {
 		boolean result = true;
 
 		// the roles to check
@@ -365,90 +372,11 @@ public class UserResource {
 		return calendar.getTime();
 	}
 
-	private List<UserInfo> toUserInfoList(List<User> inUsers) {
-		List<UserInfo> infos = new ArrayList<>(inUsers.size());
-		for (User user : inUsers) {
-			UserInfo userInfo = this.toUserInfo(user);
-			if (userInfo != null) {
-				infos.add(userInfo);
-			}
-		}
-		return infos;
-	}
-
-	private UserInfo toUserInfo(User inUser) {
-		if (inUser == null) {
-			return null;
-		}
-		UserInfo info = new UserInfo();
-		info.setId(inUser.getId());
-		info.setActive(inUser.isActive());
-		info.setEmail(inUser.getEmail());
-		info.setFirstName(inUser.getFirstName());
-		info.setLastName(inUser.getLastName());
-		info.setLastLogin(inUser.getLastLogin());
-		info.setOrganization(inUser.getOrganization());
-		info.setPassword(inUser.getPassword());
-		info.setPasswordExpiration(inUser.getPasswordExpiration());
-		info.setVerificationCode(inUser.getVerificationCode());
-		info.setVerified(inUser.isVerified());
-		info.setRoles(this.rolesToRoleIds(inUser.getRoles()));
-		info.setDepartment(inUser.getDepartment());
-		info.setTitle(inUser.getTitle());
-		return info;
-	}
-
-	private List<Long> rolesToRoleIds(List<Role> inRoles) {
-		List<Long> roleIds = new ArrayList<>(inRoles.size());
-		for (Role role : inRoles) {
-			roleIds.add(role.getId());
-		}
-		return roleIds;
-	}
-
 	private List<Role> roleIdsToRoles(List<Long> inRoleIds) {
 		List<Role> roles = new ArrayList<>(inRoleIds.size());
 		for (Long roleId : inRoleIds) {
 			roles.add(this.roleDao.retrieve(roleId));
 		}
 		return roles;
-	}
-
-	/**
-	 * Validate a {@link UserRequest} object. Two rules are implemented: 1) The
-	 * email addresses in the two email fields must match, and 2) The passwords
-	 * in the two password fields must match.
-	 *
-	 * @param userRequest The {@link UserRequest} object to validate.
-	 * @return True if the request is valid, and false otherwise.
-	 */
-	private boolean validateUserRequest(UserRequest userRequest) {
-		boolean result = true;
-
-		// make sure a user with the same email address does not exist.
-		User user = this.userDao.getByName(userRequest.getEmail());
-		if (user == null) {
-			// make sure the email addresses are not null, and match each other
-			if ((userRequest.getEmail() == null) || (userRequest
-					.getVerifyEmail() == null) || (!userRequest.getEmail()
-					.equals(
-							userRequest.getVerifyEmail()))) {
-				this.validationError = "Mismatched usernames";
-				result = false;
-			}
-
-			// make sure the passwords are not null, and match each other
-			if ((userRequest.getPassword() == null) || (userRequest
-					.getVerifyPassword() == null) || (!userRequest.getPassword().equals(
-							userRequest.getVerifyPassword()))) {
-				this.validationError = "Mismatched passwords";
-				result = false;
-			}
-		} else {
-			this.validationError = "Email address already exists";
-			result = false;
-		}
-
-		return result;
 	}
 }

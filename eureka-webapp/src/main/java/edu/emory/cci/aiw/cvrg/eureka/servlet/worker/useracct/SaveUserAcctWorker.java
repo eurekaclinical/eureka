@@ -81,10 +81,8 @@ public class SaveUserAcctWorker implements ServletWorker {
 				resp.getWriter().write(e.getMessage());
 			} else {
 				resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-				String msg = messages.getString("passwordChange.error.internalServerError");
-				String formattedMsg = 
-						MessageFormat.format(msg, this.properties.getSupportUri());
-				resp.getWriter().write(formattedMsg);
+				resp.getWriter().write(
+						messages.getString("passwordChange.error.internalServerError"));
 			}
 			
 		}

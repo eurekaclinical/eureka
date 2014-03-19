@@ -19,11 +19,6 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.services.resource;
 
-import java.security.NoSuchAlgorithmException;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
-import java.util.UUID;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
@@ -39,17 +34,24 @@ import org.slf4j.LoggerFactory;
 
 import com.google.inject.Inject;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.UserRequest;
+import edu.emory.cci.aiw.cvrg.eureka.services.util.UserRequestToUserEntityVisitor;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.LocalUserRequest;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.LocalUserEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.Role;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.User;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.UserEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.exception.HttpStatusException;
 import edu.emory.cci.aiw.cvrg.eureka.services.clients.I2b2Client;
 import edu.emory.cci.aiw.cvrg.eureka.services.config.ServiceProperties;
+import edu.emory.cci.aiw.cvrg.eureka.services.dao.LocalUserDao;
+import edu.emory.cci.aiw.cvrg.eureka.services.dao.OAuthProviderDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.RoleDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.UserDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.email.EmailException;
 import edu.emory.cci.aiw.cvrg.eureka.services.email.EmailSender;
 import edu.emory.cci.aiw.cvrg.eureka.services.util.PasswordGenerator;
-import edu.emory.cci.aiw.cvrg.eureka.services.util.StringUtil;
+import javax.servlet.http.HttpServletRequest;
+import javax.ws.rs.core.Context;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * RESTful end-point for new user registration-related methods.
@@ -70,6 +72,7 @@ public class UserRequestResource {
 	 * Data access object to work with User objects.
 	 */
 	private final UserDao userDao;
+	private final LocalUserDao localUserDao;
 	/**
 	 * Data access object to work with Role objects.
 	 */
@@ -86,31 +89,34 @@ public class UserRequestResource {
 	 * Used to generate random passwords for the reset password functionality.
 	 */
 	private final PasswordGenerator passwordGenerator;
-	/**
-	 * And validation errors that we may have encountered while validating a new
-	 * user request, or a user update.
-	 */
-	private String validationError;
 	private final ServiceProperties serviceProperties;
+	private final UserRequestToUserEntityVisitor visitor;
 
 	/**
 	 * Create a UserResource object with a User DAO and a Role DAO.
 	 *
-	 * @param inUserDao DAO used to access {@link User} related functionality.
+	 * @param inUserDao DAO used to access {@link UserEntity} related
+	 * functionality.
+	 * @param inLocalUserDao DAO used to access {@link LocalUserEntity} related
+	 * functionality.
 	 * @param inRoleDao DAO used to access {@link Role} related functionality.
 	 * @param inEmailSender Used to send emails to the user when necessary.
 	 */
 	@Inject
-	public UserRequestResource(UserDao inUserDao, RoleDao inRoleDao,
+	public UserRequestResource(UserDao inUserDao, LocalUserDao inLocalUserDao,
+			RoleDao inRoleDao,
 			EmailSender inEmailSender, I2b2Client inClient,
 			PasswordGenerator inPasswordGenerator,
-			ServiceProperties serviceProperties) {
+			ServiceProperties serviceProperties,
+			OAuthProviderDao inOAuthProviderDao) {
 		this.userDao = inUserDao;
+		this.localUserDao = inLocalUserDao;
 		this.roleDao = inRoleDao;
 		this.emailSender = inEmailSender;
 		this.i2b2Client = inClient;
 		this.passwordGenerator = inPasswordGenerator;
 		this.serviceProperties = serviceProperties;
+		this.visitor = new UserRequestToUserEntityVisitor(inOAuthProviderDao, inRoleDao);
 	}
 
 	/**
@@ -121,124 +127,66 @@ public class UserRequestResource {
 	 */
 	@Path("/new")
 	@POST
-	public void addUser(final UserRequest userRequest) {
-		try {
-			String temp = StringUtil.md5(userRequest.getPassword());
-			String temp2 = StringUtil.md5(userRequest.getVerifyPassword());
-			userRequest.setPassword(temp);
-			userRequest.setVerifyPassword(temp2);
-		} catch (NoSuchAlgorithmException e1) {
-			LOGGER.error(e1.getMessage(), e1);
-			throw new HttpStatusException(Response.Status.INTERNAL_SERVER_ERROR, e1);
-		}
-
-		if (validateUserRequest(userRequest)) {
-			User user = new User();
-			user.setEmail(userRequest.getEmail());
-			user.setFirstName(userRequest.getFirstName());
-			user.setLastName(userRequest.getLastName());
-			user.setOrganization(userRequest.getOrganization());
-			user.setRoles(this.getDefaultRoles());
-			user.setPassword(userRequest.getPassword());
-			user.setVerificationCode(UUID.randomUUID().toString());
-			user.setDepartment(userRequest.getDepartment());
-			user.setTitle(userRequest.getTitle());
-			LOGGER.debug("Saving new user {}", user.getEmail());
-			this.userDao.create(user);
-			try {
-				LOGGER.debug("Sending email to {}", user.getEmail());
-				this.emailSender.sendVerificationMessage(user);
-			} catch (EmailException e) {
-				LOGGER.error("Error sending email to {}", user.getEmail(), e);
+	public void addUser(@Context HttpServletRequest inRequest,
+			UserRequest userRequest) {
+		if (inRequest.getRemoteUser() != null) {
+			if (!inRequest.getRemoteUser().equals(userRequest.getUsername())) {
+				throw new HttpStatusException(Response.Status.BAD_REQUEST, 
+						"Cannot request a user other than yourself");
+			} else if (userRequest instanceof LocalUserRequest) {
+				throw new HttpStatusException(Response.Status.BAD_REQUEST, 
+						"Cannot request a local user while already logged in");
 			}
 		} else {
+			if (!(userRequest instanceof LocalUserRequest)) {
+				throw new HttpStatusException(Response.Status.BAD_REQUEST, 
+						"Only local user requests are permitted if you are not already authenticated");
+			}
+		}
+		UserEntity user = this.userDao.getByName(userRequest.getUsername());
+		if (user != null) {
+			throw new HttpStatusException(Response.Status.CONFLICT,
+					"That username is already taken");
+		}
+		String[] errors = userRequest.validate();
+		if (errors.length == 0) {
+			userRequest.accept(visitor);
+			UserEntity userEntity = visitor.getUserEntity();
+			LOGGER.debug("Saving new user {}", userEntity.getUsername());
+			this.userDao.create(userEntity);
+			if (userEntity instanceof LocalUserEntity) {
+				try {
+					LOGGER.debug("Sending email to {}", userEntity.getEmail());
+					this.emailSender.sendVerificationMessage(userEntity);
+				} catch (EmailException e) {
+					LOGGER.error("Error sending email to {}", userEntity.getEmail(), e);
+				}
+			}
+		} else {
+			String errorMsg = StringUtils.join(errors, ", ");
 			LOGGER.info(
 					"Invalid new user request: {}, reason {}", userRequest,
-					this.validationError);
+					errorMsg);
 			throw new HttpStatusException(
-					Response.Status.PRECONDITION_FAILED, this.validationError);
+					Response.Status.BAD_REQUEST, errorMsg);
 		}
 	}
 
 	/**
-	 * Mark a user as verified.
+	 * Mark a local user as verified.
 	 *
-	 * @param code The verification code to match against users.
+	 * @param code The verification code to match against local users.
 	 */
 	@Path("/verify/{code}")
 	@PUT
 	public void verifyUser(@PathParam("code") final String code) {
-		User user = this.userDao.getByVerificationCode(code);
+		LocalUserEntity user = this.localUserDao.getByVerificationCode(code);
 		if (user != null) {
 			user.setVerified(true);
-			this.userDao.update(user);
+			this.localUserDao.update(user);
 		} else {
 			throw new HttpStatusException(Response.Status.NOT_FOUND);
 		}
 	}
 
-	/**
-	 * Validate a {@link UserRequest} object. Two rules are implemented: 1) The
-	 * email addresses in the two email fields must match, and 2) The passwords
-	 * in the two password fields must match.
-	 *
-	 * @param userRequest The {@link UserRequest} object to validate.
-	 * @return True if the request is valid, and false otherwise.
-	 */
-	private boolean validateUserRequest(UserRequest userRequest) {
-		boolean result = true;
-
-		// make sure a user with the same email address does not exist.
-		User user = this.userDao.getByName(userRequest.getEmail());
-		if (user == null) {
-			// make sure the email addresses are not null, and match each other
-			if ((userRequest.getEmail() == null) || (userRequest
-					.getVerifyEmail() == null) || (!userRequest.getEmail()
-					.equals(
-					userRequest.getVerifyEmail()))) {
-				this.validationError = "Mismatched usernames";
-				result = false;
-			}
-
-			// make sure the passwords are not null, and match each other
-			if ((userRequest.getPassword() == null) || (userRequest
-					.getVerifyPassword() == null) || (!userRequest.getPassword().equals(
-					userRequest.getVerifyPassword()))) {
-				this.validationError = "Mismatched passwords";
-				result = false;
-			}
-			
-			if(userRequest.getTitle() == null)
-			{
-				this.validationError = "Title cannot be null";
-				result = false;
-			}
-			
-			if(userRequest.getDepartment() == null)
-			{
-				this.validationError = "Department cannot be null";
-				result = false;
-			}
-		} else {
-			this.validationError = "Email address already exists";
-			result = false;
-		}
-
-		return result;
-	}
-
-	/**
-	 * Get a set of default roles to be added to a newly created user.
-	 *
-	 * @return A list of default roles.
-	 */
-	private List<Role> getDefaultRoles() {
-		List<Role> defaultRoles = new ArrayList<>();
-		for (Role role : this.roleDao.getAll()) {
-			if (Boolean.TRUE.equals(role.isDefaultRole())) {
-				defaultRoles.add(role);
-			}
-		}
-		return defaultRoles;
-	}
 }

@@ -21,7 +21,6 @@ package edu.emory.cci.aiw.cvrg.eureka.servlet.proposition;
 
 import java.io.IOException;
 import java.security.Principal;
-import java.text.MessageFormat;
 import java.util.ResourceBundle;
 
 import javax.servlet.ServletException;
@@ -35,10 +34,9 @@ import org.slf4j.LoggerFactory;
 
 import com.google.inject.Inject;
 
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.UserInfo;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.User;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ClientException;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ServicesClient;
-import edu.emory.cci.aiw.cvrg.eureka.webapp.config.WebappProperties;
 
 public class DeletePropositionServlet extends HttpServlet {
 
@@ -46,12 +44,10 @@ public class DeletePropositionServlet extends HttpServlet {
 			.getLogger(DeletePropositionServlet.class);
 
 	private final ServicesClient servicesClient;
-	private final WebappProperties properties;
 
 	@Inject
 	public DeletePropositionServlet (ServicesClient inClient) {
 		this.servicesClient = inClient;
-		this.properties = new WebappProperties();
 	}
 
 	@Override
@@ -71,7 +67,7 @@ public class DeletePropositionServlet extends HttpServlet {
 		String userName = principal.getName();
 		// user/delete/{userId}/{prodId}
 		try {
-			UserInfo user = this.servicesClient.getUserByName(userName);
+			User user = this.servicesClient.getUserByName(userName);
 			this.servicesClient.deleteUserElement(user.getId(), propKey);
 		} catch (ClientException e) {
 			resp.setContentType(MediaType.TEXT_PLAIN);
@@ -82,11 +78,8 @@ public class DeletePropositionServlet extends HttpServlet {
 					LOGGER.error("Error deleting data element " + propKey, e);
 					ResourceBundle messages = 
 							(ResourceBundle) req.getAttribute("messages");
-					String msgTemplate = 
-							messages.getString("deleteDataElement.error.internalServerError");
 					String msg = 
-							MessageFormat.format(msgTemplate, 
-									this.properties.getSupportUri());
+							messages.getString("deleteDataElement.error.internalServerError");
 					resp.getWriter().write(msg);
 					break;
 				default:

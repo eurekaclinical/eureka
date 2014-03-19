@@ -19,7 +19,7 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.services.email;
 
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.User;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.UserEntity;
 
 /**
  * A mock implementation of the EmailSender interface that does nothing.
@@ -30,7 +30,7 @@ import edu.emory.cci.aiw.cvrg.eureka.common.entity.User;
 public class MockEmailSender implements EmailSender {
 
 	@Override
-	public void sendVerificationMessage(User inUser) throws EmailException {
+	public void sendVerificationMessage(UserEntity inUser) throws EmailException {
 		// do nothing, we don't want any emails to actually be sent out.
 	}
 
@@ -41,7 +41,7 @@ public class MockEmailSender implements EmailSender {
 	 * sendActivationMessage(edu.emory.cci.aiw.cvrg.eureka.common.entity.User)
 	 */
 	@Override
-	public void sendActivationMessage(User inUser) throws EmailException {
+	public void sendActivationMessage(UserEntity inUser) throws EmailException {
 		// do nothing, we don't want any emails to actually be sent out.
 	}
 
@@ -53,7 +53,7 @@ public class MockEmailSender implements EmailSender {
 	 * (edu.emory.cci.aiw.cvrg.eureka.common.entity.User)
 	 */
 	@Override
-	public void sendPasswordChangeMessage(User inUser) throws EmailException {
+	public void sendPasswordChangeMessage(UserEntity inUser) throws EmailException {
 		// do nothing, we don't want any emails to actually be sent out.
 	}
 
@@ -65,7 +65,7 @@ public class MockEmailSender implements EmailSender {
 	 * (edu.emory.cci.aiw.cvrg.eureka.common.entity.User, java.lang.String)
 	 */
 	@Override
-	public void sendPasswordResetMessage(User inUser, String inNewPassword)
+	public void sendPasswordResetMessage(UserEntity inUser, String inNewPassword)
 			throws EmailException {
 		// do nothing, we don't want any emails to actually be sent out.
 	}

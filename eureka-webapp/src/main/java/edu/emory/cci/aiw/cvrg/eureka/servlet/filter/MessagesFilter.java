@@ -19,6 +19,7 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.servlet.filter;
 
+import com.google.inject.Singleton;
 import java.io.IOException;
 import java.util.Locale;
 import java.util.ResourceBundle;
@@ -36,6 +37,7 @@ import org.slf4j.LoggerFactory;
  *
  * @author Andrew Post
  */
+@Singleton
 public class MessagesFilter implements Filter {
 	
 	private static final Logger LOGGER = 

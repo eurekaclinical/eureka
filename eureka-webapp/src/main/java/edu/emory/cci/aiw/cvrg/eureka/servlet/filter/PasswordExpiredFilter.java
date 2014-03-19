@@ -21,7 +21,6 @@ package edu.emory.cci.aiw.cvrg.eureka.servlet.filter;
 
 import java.io.IOException;
 import java.security.Principal;
-import java.util.Calendar;
 import java.util.Date;
 
 import javax.servlet.Filter;
@@ -37,14 +36,17 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.inject.Inject;
+import com.google.inject.Singleton;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.LocalUser;
 
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.UserInfo;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.User;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ClientException;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ServicesClient;
 
 /**
  * @author hrathod
  */
+@Singleton
 public class PasswordExpiredFilter implements Filter {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(PasswordExpiredFilter.class);
@@ -53,7 +55,7 @@ public class PasswordExpiredFilter implements Filter {
 	private String saveUrl;
 
 	@Inject
-	public PasswordExpiredFilter (ServicesClient inClient) {
+	public PasswordExpiredFilter(ServicesClient inClient) {
 		this.servicesClient = inClient;
 	}
 
@@ -79,35 +81,38 @@ public class PasswordExpiredFilter implements Filter {
 			HttpServletResponse servletResponse = (HttpServletResponse) response;
 			Principal principal = servletRequest.getUserPrincipal();
 			LOGGER.debug("username: {}", principal.getName());
-			UserInfo user;
+			User user;
 			try {
 				user = this.servicesClient.getUserByName(principal
 						.getName());
 			} catch (ClientException ex) {
 				throw new ServletException("Error getting user " + principal.getName(), ex);
 			}
-			Date now = Calendar.getInstance().getTime();
-			Date expiration = user.getPasswordExpiration();
-			LOGGER.debug("expiration date: {}", user.getPasswordExpiration());
-			if (expiration != null && now.after(expiration)) {
-				String targetUrl = servletRequest.getRequestURI();
-				String fullRedirectUrl = servletRequest.getContextPath()
-						+ this.redirectUrl;
-				String fullSaveUrl = servletRequest.getContextPath()
-						+ this.saveUrl;
-				LOGGER.debug("fullRedirectUrl: {}", fullRedirectUrl);
-				LOGGER.debug("fullSaveUrl: {}", fullSaveUrl);
-				LOGGER.debug("targetUrl: {}", targetUrl);
-				if (!targetUrl.equals(fullRedirectUrl) && !targetUrl
-						.equals(fullSaveUrl)) {
-					servletResponse.sendRedirect(fullRedirectUrl + "?firstLogin=" + (user.getLastLogin() == null) + "&redirectURL=" + targetUrl);
+			if (!(user instanceof LocalUser)) {
+				chain.doFilter(request, response);
+			} else {
+				Date now = new Date();
+				Date expiration = ((LocalUser) user).getPasswordExpiration();
+				LOGGER.debug("expiration date: {}", expiration);
+				if (expiration != null && now.after(expiration)) {
+					String targetUrl = servletRequest.getRequestURI();
+					String fullRedirectUrl = servletRequest.getContextPath()
+							+ this.redirectUrl;
+					String fullSaveUrl = servletRequest.getContextPath()
+							+ this.saveUrl;
+					LOGGER.debug("fullRedirectUrl: {}", fullRedirectUrl);
+					LOGGER.debug("fullSaveUrl: {}", fullSaveUrl);
+					LOGGER.debug("targetUrl: {}", targetUrl);
+					if (!targetUrl.equals(fullRedirectUrl) && !targetUrl
+							.equals(fullSaveUrl)) {
+						servletResponse.sendRedirect(fullRedirectUrl + "?firstLogin=" + (user.getLastLogin() == null) + "&redirectURL=" + targetUrl);
+					} else {
+						chain.doFilter(request, response);
+					}
 				} else {
 					chain.doFilter(request, response);
 				}
-			} else {
-				chain.doFilter(request, response);
 			}
-
 		} else {
 			chain.doFilter(request, response);
 		}

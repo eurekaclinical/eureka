@@ -40,7 +40,7 @@ import edu.emory.cci.aiw.cvrg.eureka.common.entity.SourceConfigGroupMembership;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.SystemProposition;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.ThresholdsOperator;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.TimeUnit;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.User;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.UserEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.ValueComparator;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.ValueThresholdEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.ValueThresholdGroupEntity;
@@ -153,7 +153,7 @@ public final class DdlGenerator {
 	 */
 	private static void generateServiceDdl(final String outputFile) {
 		final List<Class<?>> serviceClasses = new ArrayList<>();
-		serviceClasses.add(User.class);
+		serviceClasses.add(UserEntity.class);
 		serviceClasses.add(Role.class);
 		serviceClasses.add(DataElementEntity.class);
 		serviceClasses.add(SequenceEntity.class);

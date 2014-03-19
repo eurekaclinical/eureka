@@ -20,18 +20,15 @@ package edu.emory.cci.aiw.cvrg.eureka.services.resource;
  * #L%
  */
 import com.google.inject.Inject;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.User;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.LocalUserEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.exception.HttpStatusException;
 import edu.emory.cci.aiw.cvrg.eureka.services.clients.I2b2Client;
-import edu.emory.cci.aiw.cvrg.eureka.services.config.ServiceProperties;
-import edu.emory.cci.aiw.cvrg.eureka.services.dao.UserDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.email.EmailException;
 import edu.emory.cci.aiw.cvrg.eureka.services.email.EmailSender;
 import edu.emory.cci.aiw.cvrg.eureka.services.util.PasswordGenerator;
-import edu.emory.cci.aiw.cvrg.eureka.services.util.StringUtil;
-import java.net.URI;
+import edu.emory.cci.aiw.cvrg.eureka.common.util.StringUtil;
+import edu.emory.cci.aiw.cvrg.eureka.services.dao.LocalUserDao;
 import java.security.NoSuchAlgorithmException;
-import java.text.MessageFormat;
 import java.util.Calendar;
 import java.util.ResourceBundle;
 import javax.ws.rs.Consumes;
@@ -61,16 +58,16 @@ public class PasswordResetResource {
 	 */
 	private static final Logger LOGGER = LoggerFactory.getLogger(
 			PasswordResetResource.class);
-	private final UserDao userDao;
+	private final LocalUserDao localUserDao;
 	private final PasswordGenerator passwordGenerator;
 	private final I2b2Client i2b2Client;
 	private final EmailSender emailSender;
-
+	
 	@Inject
-	public PasswordResetResource(UserDao inUserDao,
+	public PasswordResetResource(LocalUserDao inLocalUserDao,
 			EmailSender inEmailSender, I2b2Client inClient,
 			PasswordGenerator inPasswordGenerator) {
-		this.userDao = inUserDao;
+		this.localUserDao = inLocalUserDao;
 		this.emailSender = inEmailSender;
 		this.i2b2Client = inClient;
 		this.passwordGenerator = inPasswordGenerator;
@@ -86,7 +83,7 @@ public class PasswordResetResource {
 	@Path("/{username}")
 	@POST
 	public void resetPassword(@PathParam("username") final String inUsername) {
-		User user = this.userDao.getByName(inUsername);
+		LocalUserEntity user = this.localUserDao.getByName(inUsername);
 		LOGGER.debug("Resetting user: {}", user);
 		if (user == null) {
 			throw new HttpStatusException(Response.Status.NOT_FOUND);
@@ -104,7 +101,7 @@ public class PasswordResetResource {
 			user.setPassword(passwordHash);
 			user.setPasswordExpiration(Calendar.getInstance().getTime());
 			this.i2b2Client.changePassword(user.getEmail(), password);
-			this.userDao.update(user);
+			this.localUserDao.update(user);
 			try {
 				this.emailSender.sendPasswordResetMessage(user, password);
 			} catch (EmailException e) {

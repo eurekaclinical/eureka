@@ -30,7 +30,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.google.inject.Inject;
 
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.UserInfo;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.User;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ClientException;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ServicesClient;
 
@@ -49,7 +49,7 @@ public class LoginServlet extends HttpServlet {
 
 		Principal principal = req.getUserPrincipal();
 		String userName = principal.getName();
-		UserInfo user;
+		User user;
 		try {
 			user = this.servicesClient.getUserByName(userName);
 		} catch (ClientException ex) {

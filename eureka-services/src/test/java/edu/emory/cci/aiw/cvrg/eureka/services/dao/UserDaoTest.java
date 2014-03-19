@@ -19,7 +19,7 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.services.dao;
 
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.User;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.UserEntity;
 import edu.emory.cci.aiw.cvrg.eureka.services.test.AbstractServiceTest;
 import org.junit.Test;
 
@@ -42,7 +42,7 @@ public class UserDaoTest extends AbstractServiceTest {
 	@Test
 	public void testDao() {
 		UserDao dao = this.getInstance(UserDao.class);
-		List<User> users = dao.getAll();
+		List<UserEntity> users = dao.getAll();
 		assertEquals(3, users.size());
 	}
 
@@ -52,9 +52,9 @@ public class UserDaoTest extends AbstractServiceTest {
 	@Test
 	public void testGetByName() {
 		UserDao dao = this.getInstance(UserDao.class);
-		List<User> users = dao.getAll();
-		User user = users.get(0);
-		User testUser = dao.getByName(user.getEmail());
+		List<UserEntity> users = dao.getAll();
+		UserEntity user = users.get(0);
+		UserEntity testUser = dao.getByName(user.getEmail());
 		assertEquals(user.getEmail(), testUser.getEmail());
 	}
 

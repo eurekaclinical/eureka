@@ -25,8 +25,8 @@ import com.google.inject.Inject;
 import com.google.inject.Provider;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.dao.GenericDao;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.User;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.User_;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.UserEntity;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.UserEntity_;
 
 /**
  * An implementation of the {@link UserDao} interface, backed by JPA entities
@@ -34,7 +34,7 @@ import edu.emory.cci.aiw.cvrg.eureka.common.entity.User_;
  *
  * @author hrathod
  */
-public class JpaUserDao extends GenericDao<User, Long> implements UserDao {
+public class JpaUserDao extends GenericDao<UserEntity, Long> implements UserDao {
 
 	/**
 	 * Create an object with the give entity manager.
@@ -44,16 +44,12 @@ public class JpaUserDao extends GenericDao<User, Long> implements UserDao {
 	 */
 	@Inject
 	public JpaUserDao(Provider<EntityManager> inEMProvider) {
-		super(User.class, inEMProvider);
+		super(UserEntity.class, inEMProvider);
 	}
 
 	@Override
-	public User getByName(String name) {
-		return this.getUniqueByAttribute(User_.email, name);
+	public UserEntity getByName(String name) {
+		return this.getUniqueByAttribute(UserEntity_.username, name);
 	}
-
-	@Override
-	public User getByVerificationCode(String inCode) {
-		return this.getUniqueByAttribute(User_.verificationCode, inCode);
-	}
+	
 }

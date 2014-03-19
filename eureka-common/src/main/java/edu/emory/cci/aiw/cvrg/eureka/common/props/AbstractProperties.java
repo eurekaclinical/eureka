@@ -24,6 +24,8 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
@@ -285,6 +287,30 @@ public abstract class AbstractProperties {
 	public String getBuildNumber () {
 		return this.getValue("eureka.version.buildNumber");
 	}
+	
+		/**
+	 * Get the support email address for the application.
+	 *
+	 * @return The support email address.
+	 */
+	public SupportUri getSupportUri() {
+		SupportUri supportUri;
+		try {
+			String uriStr = this.getValue("eureka.support.uri");
+			String uriName = this.getValue("eureka.support.uri.name");
+			if (uriStr != null) {
+				supportUri = new SupportUri(new URI(uriStr), uriName);
+			} else {
+				supportUri = null;
+			}
+		} catch (URISyntaxException ex) {
+			LOGGER.error("Invalid support URI in application.properties", ex);
+			supportUri = null;
+		}
+		return supportUri;
+	}
+
+	
 	/**
 	 * Returns the String value of the given property name.
 	 *

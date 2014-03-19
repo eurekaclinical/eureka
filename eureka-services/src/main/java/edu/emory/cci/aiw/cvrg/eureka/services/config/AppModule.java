@@ -41,6 +41,10 @@ import edu.emory.cci.aiw.cvrg.eureka.services.dao.JpaTimeUnitDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.JpaUserDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.JpaValueComparatorDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.DataElementEntityDao;
+import edu.emory.cci.aiw.cvrg.eureka.services.dao.JpaLocalUserDao;
+import edu.emory.cci.aiw.cvrg.eureka.services.dao.JpaOAuthProviderDao;
+import edu.emory.cci.aiw.cvrg.eureka.services.dao.LocalUserDao;
+import edu.emory.cci.aiw.cvrg.eureka.services.dao.OAuthProviderDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.RelationOperatorDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.RoleDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.ThresholdsOperatorDao;
@@ -65,6 +69,7 @@ class AppModule extends AbstractModule {
 	@Override
 	protected void configure() {
 		bind(UserDao.class).to(JpaUserDao.class);
+		bind(LocalUserDao.class).to(JpaLocalUserDao.class);
 		bind(RoleDao.class).to(JpaRoleDao.class);
 		bind(DataElementEntityDao.class).to(JpaDataElementEntityDao.class);
 		bind(TimeUnitDao.class).to(JpaTimeUnitDao.class);
@@ -74,6 +79,7 @@ class AppModule extends AbstractModule {
 		bind(FrequencyTypeDao.class).to(JpaFrequencyTypeDao.class);
 		bind(ThresholdsOperatorDao.class).to
 				(JpaThresholdsOperatorDao.class);
+		bind(OAuthProviderDao.class).to(JpaOAuthProviderDao.class);
 		bind(new TypeLiteral<PropositionFinder<
 				String>>(){}).to(SystemPropositionFinder.class);
 		bind(EmailSender.class).to(FreeMarkerEmailSender.class);

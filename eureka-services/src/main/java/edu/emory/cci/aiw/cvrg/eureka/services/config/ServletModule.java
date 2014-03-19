@@ -19,9 +19,8 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.services.config;
 
-import com.google.inject.persist.PersistFilter;
 
-import edu.emory.cci.aiw.cvrg.eureka.common.config.AbstractServletModule;
+import edu.emory.cci.aiw.cvrg.eureka.common.config.AbstractJerseyServletModule;
 
 /**
  * Configure web related items for Guice and Jersey.
@@ -29,24 +28,12 @@ import edu.emory.cci.aiw.cvrg.eureka.common.config.AbstractServletModule;
  * @author hrathod
  * 
  */
-class ServletModule extends AbstractServletModule {
+class ServletModule extends AbstractJerseyServletModule {
 
-	private static final String CONTAINER_PATH = "/api/*";
-	private static final String CONTAINER_PROTECTED_PATH = "/api/protected/*";
 	private static final String PACKAGE_NAMES = "edu.emory.cci.aiw.cvrg.eureka.services.resource;edu.emory.cci.aiw.cvrg.eureka.common.json";
-	private final String contextPath;
-	private final ServiceProperties serviceProperties;
 
 	public ServletModule(ServiceProperties inProperties) {
-		super(inProperties, PACKAGE_NAMES, CONTAINER_PATH,
-				CONTAINER_PROTECTED_PATH);
-		this.contextPath = this.getServletContext().getContextPath();
-		this.serviceProperties = inProperties;
+		super(inProperties, PACKAGE_NAMES);
 	}
 
-	@Override
-	protected void configureServlets() {
-		super.configureServlets();
-		filter(CONTAINER_PATH).through(PersistFilter.class);
-	}
 }

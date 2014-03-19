@@ -40,15 +40,6 @@ import com.sun.jersey.test.framework.WebAppDescriptor;
 import com.sun.jersey.test.framework.WebAppDescriptor.Builder;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.json.ObjectMapperProvider;
-import java.io.IOException;
-import java.security.Principal;
-import javax.servlet.FilterChain;
-import javax.servlet.FilterConfig;
-import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletRequestWrapper;
 
 /**
  * Base class for all the Jersey resource related test classes.

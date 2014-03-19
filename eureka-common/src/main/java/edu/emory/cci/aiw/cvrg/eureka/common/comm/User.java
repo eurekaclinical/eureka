@@ -23,22 +23,29 @@ package edu.emory.cci.aiw.cvrg.eureka.common.comm;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import org.codehaus.jackson.annotate.JsonSubTypes;
+import org.codehaus.jackson.annotate.JsonTypeInfo;
 
 /**
  * @author hrathod
  */
-public class UserInfo {
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
+@JsonSubTypes({
+        @JsonSubTypes.Type(value = LocalUser.class, name = "LOCAL"),
+        @JsonSubTypes.Type(value = OAuthUser.class, name = "OAUTH"),
+        @JsonSubTypes.Type(value = LdapUser.class, name = "LDAP")
+})
+public abstract class User implements UserVisitable {
 	private Long id;
+	private String username;
+	private Date created;
 	private boolean active;
-	private boolean verified;
 	private String firstName;
 	private String lastName;
+	private String fullName;
 	private String email;
 	private String organization;
-	private String verificationCode;
 	private Date lastLogin;
-	private String password;
-	private Date passwordExpiration;
 	private List<Long> roles = new ArrayList<>();
 	private String title;
 	private String department;
@@ -51,20 +58,28 @@ public class UserInfo {
 		id = inId;
 	}
 
+	public Date getCreated() {
+		return created;
+	}
+
+	public void setCreated(Date created) {
+		this.created = created;
+	}
+	
+	public String getUsername() {
+		return username;
+	}
+
+	public void setUsername(String username) {
+		this.username = username;
+	}
+	
 	public boolean isActive() {
 		return active;
 	}
 
 	public void setActive(boolean inActive) {
 		active = inActive;
-	}
-
-	public boolean isVerified() {
-		return verified;
-	}
-
-	public void setVerified(boolean inVerified) {
-		verified = inVerified;
 	}
 
 	public String getFirstName() {
@@ -83,6 +98,14 @@ public class UserInfo {
 		lastName = inLastName;
 	}
 
+	public String getFullName() {
+		return fullName;
+	}
+
+	public void setFullName(String fullName) {
+		this.fullName = fullName;
+	}
+	
 	public String getEmail() {
 		return email;
 	}
@@ -99,36 +122,12 @@ public class UserInfo {
 		organization = inOrganization;
 	}
 
-	public String getVerificationCode() {
-		return verificationCode;
-	}
-
-	public void setVerificationCode(String inVerificationCode) {
-		verificationCode = inVerificationCode;
-	}
-
 	public Date getLastLogin() {
 		return lastLogin;
 	}
 
 	public void setLastLogin(Date inLastLogin) {
 		lastLogin = inLastLogin;
-	}
-
-	public String getPassword() {
-		return password;
-	}
-
-	public void setPassword(String inPassword) {
-		password = inPassword;
-	}
-
-	public Date getPasswordExpiration() {
-		return passwordExpiration;
-	}
-
-	public void setPasswordExpiration(Date inPasswordExpiration) {
-		passwordExpiration = inPasswordExpiration;
 	}
 
 	public List<Long> getRoles() {
@@ -154,4 +153,26 @@ public class UserInfo {
 	public void setDepartment(String department) {
 		this.department = department;
 	}
+	
+	/**
+	 * Validate a {@link User} object. Two rules are implemented: 1) The
+	 * email addresses in the two email fields must match, and 2) The passwords
+	 * in the two password fields must match.
+	 *
+	 * @return an array of validation error messages, or an empty array if
+	 * validation succeeded.
+	 */
+	public String[] validate() {
+		List<String> result = new ArrayList<>();
+
+		if (this.username == null) {
+			result.add("Username unspecified");
+		}
+		if (this.email == null) {
+			result.add("Email unspecified");
+		}
+
+		return result.toArray(new String[result.size()]);
+	}
+
 }

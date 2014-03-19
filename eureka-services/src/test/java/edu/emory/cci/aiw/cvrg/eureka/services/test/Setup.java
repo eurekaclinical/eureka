@@ -37,15 +37,16 @@ import edu.emory.cci.aiw.cvrg.eureka.common.entity.CategoryEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.CategoryEntity.CategoryType;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.DataElementEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.FrequencyType;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.LocalUserEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.Role;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.SystemProposition;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.ThresholdsOperator;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.TimeUnit;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.User;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.UserEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.ValueThresholdGroupEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.test.TestDataException;
 import edu.emory.cci.aiw.cvrg.eureka.common.test.TestDataProvider;
-import edu.emory.cci.aiw.cvrg.eureka.services.util.StringUtil;
+import edu.emory.cci.aiw.cvrg.eureka.common.util.StringUtil;
 
 /**
  * Sets up the environment for testing, by bootstrapping the data store with
@@ -64,9 +65,9 @@ public class Setup implements TestDataProvider {
 	private Role researcherRole;
 	private Role adminRole;
 	private Role superRole;
-	private User researcherUser;
-	private User adminUser;
-	private User superUser;
+	private UserEntity researcherUser;
+	private UserEntity adminUser;
+	private UserEntity superUser;
 	private List<DataElementEntity> propositions;
 	private List<TimeUnit> timeUnits;
 	private List<FrequencyType> freqTypes;
@@ -101,7 +102,7 @@ public class Setup implements TestDataProvider {
 	@Override
 	public void tearDown() throws TestDataException {
 		this.remove(DataElementEntity.class);
-		this.remove(User.class);
+		this.remove(UserEntity.class);
 		this.remove(Role.class);
 		this.remove(TimeUnit.class);
 		this.remove(ThresholdsOperator.class);
@@ -136,7 +137,7 @@ public class Setup implements TestDataProvider {
 		entityManager.getTransaction().commit();
 	}
 	
-	private List<DataElementEntity> createDataElements(User... users) {
+	private List<DataElementEntity> createDataElements(UserEntity... users) {
 		System.out.println("Creating data elements...");
 		List<DataElementEntity> dataElements =
 				new ArrayList<>(users.length);
@@ -149,7 +150,7 @@ public class Setup implements TestDataProvider {
 		entityManager.persist(any);
 		entityManager.getTransaction().commit();
 		
-		for (User u : users) {
+		for (UserEntity u : users) {
 			entityManager.getTransaction().begin();
 			System.out.println("Loading user " + u.getEmail());
 			CategoryEntity proposition1 = new CategoryEntity();
@@ -188,32 +189,33 @@ public class Setup implements TestDataProvider {
 		return dataElements;
 	}
 
-	private User createResearcherUser() throws TestDataException {
+	private UserEntity createResearcherUser() throws TestDataException {
 		return this.createAndPersistUser("user@emory.edu", "Regular", "User",
 				this.researcherRole);
 	}
 
-	private User createAdminUser() throws TestDataException {
+	private UserEntity createAdminUser() throws TestDataException {
 		return this.createAndPersistUser("admin.user@emory.edu", "Admin",
 				"User", this.researcherRole, this.adminRole);
 	}
 
-	private User createSuperUser() throws TestDataException {
+	private UserEntity createSuperUser() throws TestDataException {
 		return this.createAndPersistUser("super.user@emory.edu", "Super",
 				"User", this.researcherRole, this.adminRole,
 				this.superRole);
 	}
 
-	private User createAndPersistUser(String email, String firstName,
+	private UserEntity createAndPersistUser(String email, String firstName,
 	                                  String lastName,
 	                                  Role... roles) throws
 			TestDataException {
 		EntityManager entityManager = this.getEntityManager();
-		User user = new User();
+		LocalUserEntity user = new LocalUserEntity();
 		try {
 			user.setActive(true);
 			user.setVerified(true);
 			user.setEmail(email);
+			user.setUsername(email);
 			user.setFirstName(firstName);
 			user.setLastName(lastName);
 			user.setOrganization(ORGANIZATION);

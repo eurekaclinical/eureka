@@ -19,6 +19,8 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.common.entity;
 
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.User;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.UserRequest;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -36,6 +38,8 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Column;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 /**
@@ -46,25 +50,28 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
  */
 @Entity
 @Table(name = "users")
-public class User {
+@Inheritance(strategy = InheritanceType.JOINED)
+public abstract class UserEntity implements UserEntityVisitable {
 
 	/**
 	 * The user's unique identifier.
 	 */
 	@Id
 	@SequenceGenerator(name = "USER_SEQ_GENERATOR", sequenceName = "USER_SEQ",
-	allocationSize = 1)
+			allocationSize = 1)
 	@GeneratedValue(strategy = GenerationType.SEQUENCE,
-	generator = "USER_SEQ_GENERATOR")
+			generator = "USER_SEQ_GENERATOR")
 	private Long id;
 	/**
 	 * Is the user activated?
 	 */
 	private boolean active;
 	/**
-	 * Is the user verified?
+	 * The login name of the user.
 	 */
-	private boolean verified;
+	@Column(unique = true, nullable = false)
+	private String username;
+
 	/**
 	 * The user's first name.
 	 */
@@ -75,60 +82,59 @@ public class User {
 	private String lastName;
 
 	/**
+	 * The user's full name
+	 */
+	private String fullName;
+
+	/**
 	 * The user's title.
 	 */
 	private String title;
-	
+
 	/**
 	 * The user's department.
 	 */
 	private String department;
-	
+
 	/**
 	 * The user's email address.
 	 */
-	@Column(unique = true, nullable = false)
+	@Column(nullable = false)
 	private String email;
 	/**
 	 * The user's organization.
 	 */
 	private String organization;
+
 	/**
-	 * The user's password.
+	 * The date when the account was created on Eureka.
 	 */
+	@Temporal(TemporalType.TIMESTAMP)
 	@Column(nullable = false)
-	private String password;
-	/**
-	 * The user's verification code;
-	 */
-	private String verificationCode;
+	private Date created;
 	/**
 	 * The last log-in date for the user.
 	 */
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date lastLogin;
-	/**
-	 * The password expiration date.
-	 */
-	@Temporal(TemporalType.TIMESTAMP)
-	private Date passwordExpiration;
+	
 	/**
 	 * A list of roles assigned to the user.
 	 */
 	@ManyToMany(cascade = {CascadeType.REFRESH, CascadeType.MERGE},
-	targetEntity = Role.class)
+			targetEntity = Role.class)
 	@JoinTable(name = "user_role",
-	joinColumns = {
-		@JoinColumn(name = "user_id")},
-	inverseJoinColumns = {
-		@JoinColumn(name = "role_id")})
+			joinColumns = {
+				@JoinColumn(name = "user_id")},
+			inverseJoinColumns = {
+				@JoinColumn(name = "role_id")})
 	private List<Role> roles = new ArrayList<>();
 
 	/**
 	 * Create an empty User object.
 	 */
-	public User() {
-		super();
+	public UserEntity() {
+		this.created = new Date();
 	}
 
 	/**
@@ -167,22 +173,24 @@ public class User {
 		this.active = inActive;
 	}
 
-	/**
-	 * Get whether the user has been verified.
-	 *
-	 * @return True if the user has been verified, false otherwise.
-	 */
-	public boolean isVerified() {
-		return this.verified;
+	public String getUsername() {
+		return username;
 	}
 
-	/**
-	 * Set whether the user has been verified.
-	 *
-	 * @param inVerified True if the user has been verified, false otherwise.
-	 */
-	public void setVerified(final boolean inVerified) {
-		this.verified = inVerified;
+	public void setUsername(String username) {
+		this.username = username;
+	}
+
+	public Date getCreated() {
+		return created;
+	}
+
+	public void setCreated(Date created) {
+		if (created == null) {
+			this.created = new Date();
+		} else {
+			this.created = created;
+		}
 	}
 
 	/**
@@ -219,6 +227,14 @@ public class User {
 	 */
 	public void setLastName(final String inLastName) {
 		this.lastName = inLastName;
+	}
+
+	public String getFullName() {
+		return fullName;
+	}
+
+	public void setFullName(String fullName) {
+		this.fullName = fullName;
 	}
 
 	/**
@@ -258,49 +274,13 @@ public class User {
 	}
 
 	/**
-	 * Get the user's password
-	 *
-	 * @return A String containing the user's password.
-	 */
-	public String getPassword() {
-		return this.password;
-	}
-
-	/**
-	 * Set the user's password.
-	 *
-	 * @param inPassword A String containing the user's password.
-	 */
-	public void setPassword(final String inPassword) {
-		this.password = inPassword;
-	}
-
-	/**
-	 * @return the verificationCode
-	 */
-	public String getVerificationCode() {
-		return this.verificationCode;
-	}
-
-	/**
-	 * @param inVerificationCode the verificationCode to set
-	 */
-	public void setVerificationCode(String inVerificationCode) {
-		this.verificationCode = inVerificationCode;
-	}
-
-	/**
 	 * Get the last log-in date for the user.
 	 *
 	 * @return The user's last log-in date, or <code>null</code> if the user has
 	 * never logged in.
 	 */
 	public Date getLastLogin() {
-		if (this.lastLogin != null) {
-			return new Date(this.lastLogin.getTime());
-		} else {
-			return null;
-		}
+		return this.lastLogin;
 	}
 
 	/**
@@ -308,30 +288,8 @@ public class User {
 	 *
 	 * @param inLastLogin The last log-in date for the user.
 	 */
-	public void setLastLogin(final Date inLastLogin) {
-		if (inLastLogin != null) {
-			this.lastLogin = new Date(inLastLogin.getTime());
-		} else {
-			this.lastLogin = null;
-		}
-	}
-
-	/**
-	 * Get the user's password expiration date.
-	 *
-	 * @return The user's password expiration date.
-	 */
-	public Date getPasswordExpiration() {
-		return passwordExpiration;
-	}
-
-	/**
-	 * Set the user's password expiration date.
-	 *
-	 * @param inPasswordExpiration The user's password expiration date.
-	 */
-	public void setPasswordExpiration(Date inPasswordExpiration) {
-		passwordExpiration = inPasswordExpiration;
+	public void setLastLogin(Date inLastLogin) {
+		this.lastLogin = inLastLogin;
 	}
 
 	/**
@@ -351,7 +309,7 @@ public class User {
 	public void setRoles(final List<Role> inRoles) {
 		this.roles = inRoles;
 	}
-	
+
 	/**
 	 * Get the user's title.
 	 *
@@ -369,7 +327,7 @@ public class User {
 	public void setTitle(String inTitle) {
 		title = inTitle;
 	}
-	
+
 	/**
 	 * Get the user's Department.
 	 *

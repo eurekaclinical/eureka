@@ -19,16 +19,16 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.servlet.worker.useracct;
 
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.LocalUser;
 import java.io.IOException;
 import java.security.Principal;
-import java.util.Calendar;
 import java.util.Date;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.UserInfo;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.User;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ClientException;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ServicesClient;
 import edu.emory.cci.aiw.cvrg.eureka.servlet.worker.ServletWorker;
@@ -44,18 +44,17 @@ public class ListUserAcctWorker implements ServletWorker {
 	@Override
 	public void execute(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
-
 		Principal principal = req.getUserPrincipal();
 		String userName = principal.getName();
-		UserInfo user;
+		User user;
 		try {
 			user = this.servicesClient.getUserByName(userName);
 		} catch (ClientException ex) {
 			throw new ServletException("Error getting user " + userName, ex);
 		}
 
-		Date now = Calendar.getInstance().getTime();
-		Date expiration = user.getPasswordExpiration();
+		Date now = new Date();
+		Date expiration = user instanceof LocalUser ? ((LocalUser) user).getPasswordExpiration() : null;
 		String passwordExpiration;
 		if (expiration != null && now.after(expiration)) {
 			passwordExpiration = "Your password has expired. Please change it below.";

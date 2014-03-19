@@ -37,6 +37,10 @@ import edu.emory.cci.aiw.cvrg.eureka.services.dao.JpaTimeUnitDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.JpaUserDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.JpaValueComparatorDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.DataElementEntityDao;
+import edu.emory.cci.aiw.cvrg.eureka.services.dao.JpaLocalUserDao;
+import edu.emory.cci.aiw.cvrg.eureka.services.dao.JpaOAuthProviderDao;
+import edu.emory.cci.aiw.cvrg.eureka.services.dao.LocalUserDao;
+import edu.emory.cci.aiw.cvrg.eureka.services.dao.OAuthProviderDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.RelationOperatorDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.RoleDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.ThresholdsOperatorDao;
@@ -64,12 +68,14 @@ public class AppTestModule extends AbstractModule {
 		install(new JpaPersistModule("services-jpa-unit"));
 
 		bind(UserDao.class).to(JpaUserDao.class);
+		bind(LocalUserDao.class).to(JpaLocalUserDao.class);
 		bind(RoleDao.class).to(JpaRoleDao.class);
 		bind(TimeUnitDao.class).to(JpaTimeUnitDao.class);
 		bind(ValueComparatorDao.class).to(JpaValueComparatorDao.class);
 		bind(FrequencyTypeDao.class).to(JpaFrequencyTypeDao.class);
 		bind(RelationOperatorDao.class).to(JpaRelationOperatorDao.class);
 		bind(DataElementEntityDao.class).to(JpaDataElementEntityDao.class);
+		bind(OAuthProviderDao.class).to(JpaOAuthProviderDao.class);
 		bind(EmailSender.class).to(MockEmailSender.class);
 		bind(I2b2Client.class).to(MockI2b2Client.class);
 		bind(ThresholdsOperatorDao.class).to(JpaThresholdsOperatorDao.class);

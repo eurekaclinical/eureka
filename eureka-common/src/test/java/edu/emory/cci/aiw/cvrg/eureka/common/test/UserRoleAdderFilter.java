@@ -36,7 +36,7 @@ import javax.servlet.http.HttpServletRequest;
 
 /**
  *
- * @author arpost
+ * @author Andrew Post
  */
 @Singleton
 public class UserRoleAdderFilter implements Filter {

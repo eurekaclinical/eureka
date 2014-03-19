@@ -30,7 +30,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.UserInfo;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.User;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ClientException;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ServicesClient;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.Role;
@@ -47,7 +47,7 @@ public class ListUsersWorker implements ServletWorker {
 	public void execute(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
 
-		List<UserInfo> users;
+		List<User> users;
 		try {
 			users = this.servicesClient.getUsers();
 		} catch (ClientException ex) {
@@ -65,9 +65,9 @@ public class ListUsersWorker implements ServletWorker {
 		}
 
 		// Set sort order to show the inactive users first.
-		Collections.sort(users, new Comparator<UserInfo>() {
+		Collections.sort(users, new Comparator<User>() {
 			@Override
-			public int compare(UserInfo user1, UserInfo user2) {
+			public int compare(User user1, User user2) {
 				int u1 = 0;
 				int u2 = 0;
 				if (user1.isActive()) {

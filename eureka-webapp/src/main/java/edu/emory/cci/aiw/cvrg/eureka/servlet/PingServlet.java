@@ -28,7 +28,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.google.inject.Inject;
 
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.UserInfo;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.User;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ClientException;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ServicesClient;
 
@@ -48,7 +48,7 @@ public class PingServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
 		String userId = req.getParameter("id");
-		UserInfo user;
+		User user;
 		try {
 			user = this.servicesClient.getUserById(Long.valueOf(userId));
 		} catch (ClientException ex) {

@@ -26,7 +26,7 @@ import edu.emory.cci.aiw.cvrg.eureka.common.comm.JobFilter;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.JobRequest;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.JobSpec;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ClientException;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.User;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.UserEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.exception.HttpStatusException;
 import edu.emory.cci.aiw.cvrg.eureka.services.config.EtlClient;
 import edu.emory.cci.aiw.cvrg.eureka.services.conversion.PropositionDefinitionCollector;
@@ -122,7 +122,7 @@ public class JobResource {
 	public Response submit(@Context HttpServletRequest request, JobSpec jobSpec) {
 		LOGGER.debug("Got job submission: {}", jobSpec);
 		Principal userPrincipal = request.getUserPrincipal();
-		User user = this.userDao.getByName(userPrincipal.getName());
+		UserEntity user = this.userDao.getByName(userPrincipal.getName());
 		JobRequest jobRequest = new JobRequest();
 		PropositionDefinitionCollector collector =
 				PropositionDefinitionCollector.getInstance(

@@ -30,7 +30,7 @@ import com.google.inject.Inject;
 import com.sun.jersey.api.client.ClientResponse;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ClientException;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.User;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.UserEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.exception.HttpStatusException;
 import edu.emory.cci.aiw.cvrg.eureka.services.config.EtlClient;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.UserDao;
@@ -76,7 +76,7 @@ public class PingResource {
 	public String doPingUser(@Context HttpServletRequest req,
 			@PathParam("id") Long inUserId) {
 		String response = "Ping successful";
-		User user = this.userDao.retrieve(inUserId);
+		UserEntity user = this.userDao.retrieve(inUserId);
 		if (user == null) {
 			throw new HttpStatusException(Response.Status.NOT_FOUND);
 		} else {
@@ -90,11 +90,11 @@ public class PingResource {
 		return response;
 	}
 
-	private void testUserConfiguration(User inUser) throws ClientException {
+	private void testUserConfiguration(UserEntity inUser) throws ClientException {
 		this.etlClient.ping(inUser.getId());
 	}
 
-	private void testUserRoles(User inUser) {
+	private void testUserRoles(UserEntity inUser) {
 		if (inUser.getRoles() == null || inUser.getRoles().size() < 1) {
 			throw new HttpStatusException(Response.Status.PRECONDITION_FAILED, "No roles assigned for user "
 					+ inUser.getId());

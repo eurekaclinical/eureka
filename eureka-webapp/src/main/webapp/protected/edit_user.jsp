@@ -118,11 +118,18 @@
 				</label>
 				<div class="form-control-static">
 					<c:choose>
-						<c:when test="${user.verified == true}">
-							Verified<span class="status"></span><br />
+						<c:when test="${user['class'].name == 'edu.emory.cci.aiw.cvrg.eureka.common.comm.LocalUser'}">
+							<c:choose>
+								<c:when test="${user.verified == true}">
+									Verified<span class="status"></span><br />
+								</c:when>
+								<c:otherwise>
+									Un-verified<span class="status"></span><br />                                   
+								</c:otherwise>
+							</c:choose>
 						</c:when>
 						<c:otherwise>
-							Un-verified<span class="status"></span><br />
+							N/A
 						</c:otherwise>
 					</c:choose>
 				</div>

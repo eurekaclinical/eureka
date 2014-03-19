@@ -705,4 +705,96 @@ limitations under the License.
 	<column name="DEPARTMENT" type="VARCHAR(255)"/>
 	</addColumn>
 	</changeSet>
+		<!-- 1.9 changes -->
+		<changeSet author="arpost" id="1360440238345-91">
+			<createTable tableName="LOCAL_USERS">
+				<column name="ID" type="BIGINT">
+					<constraints nullable="false" primaryKey="true" primaryKeyName="LOCAL_USERS_PK"/>
+				</column>
+				<column name="PASSWORD" type="VARCHAR(255)">
+					<constraints nullable="false"/>
+				</column>
+				<column name="PASSWORDEXPIRATION" type="TIMESTAMP(6)"/>
+				<column name="VERIFICATIONCODE" type="VARCHAR(255)"/>
+				<column name="VERIFIED" type="BOOLEAN">
+					<constraints nullable="false"/>
+				</column>
+			</createTable>
+			<sql>
+				INSERT INTO LOCAL_USERS (SELECT ID, PASSWORD, PASSWORDEXPIRATION, VERIFICATIONCODE, VERIFIED FROM USERS)
+			</sql>
+			<dropColumn tableName="USERS" columnName="PASSWORD"/>
+			<dropColumn tableName="USERS" columnName="PASSWORDEXPIRATION"/>
+			<dropColumn tableName="USERS" columnName="VERIFICATIONCODE"/>
+			<dropColumn tableName="USERS" columnName="VERIFIED"/>
+			<addColumn tableName="USERS">
+				<column name="USERNAME" type="VARCHAR(255)"/>
+			</addColumn>
+			<update tableName="USERS">
+				<column name="USERNAME" value="superuser"/>
+				<where>EMAIL='super.user@emory.edu'</where>
+			</update>
+			<update tableName="USERS">
+				<column name="EMAIL" value="no-reply@localhost"/>
+				<where>EMAIL='super.user@emory.edu'</where>
+			</update>
+			<sql>
+				UPDATE USERS SET USERNAME=EMAIL WHERE USERNAME IS NULL
+			</sql>
+			<addNotNullConstraint tableName="USERS" columnName="USERNAME"/>
+			<addColumn tableName="USERS">
+				<column name="FULLNAME" type="VARCHAR(255)"/>
+			</addColumn>
+			<addColumn tableName="USERS">
+				<column name="CREATED" type="TIMESTAMP(6)" defaultValueDate="1970-01-01 00:00:00">
+					<constraints nullable="false" />
+				</column>
+			</addColumn>
+			<createTable tableName="OAUTH_PROVIDERS">
+				<column name="ID" type="BIGINT">
+					<constraints nullable="false" primaryKey="true" primaryKeyName="OAUTH_PROVIDERS_PK"/>
+				</column>
+				<column name="DESCRIPTION" type="VARCHAR(255)"/>
+				<column name="NAME" type="VARCHAR(255)">
+					<constraints nullable="false"/>
+				</column>
+			</createTable>
+			<insert tableName="OAUTH_PROVIDERS">
+				<column name="ID" valueNumeric="1"/>
+				<column name="NAME" value="SSLTwitterProvider"/>
+				<column name="DESCRIPTION" value="Twitter"/>
+			</insert>
+			<insert tableName="OAUTH_PROVIDERS">
+				<column name="ID" valueNumeric="2"/>
+				<column name="NAME" value="Google2Provider"/>
+				<column name="DESCRIPTION" value="Google"/>
+			</insert>
+			<insert tableName="OAUTH_PROVIDERS">
+				<column name="ID" valueNumeric="3"/>
+				<column name="NAME" value="GitHubProvider"/>
+				<column name="DESCRIPTION" value="GitHub"/>
+			</insert>
+			<createTable tableName="OAUTH_USERS">
+				<column name="ID" type="BIGINT">
+					<constraints nullable="false" primaryKey="true" primaryKeyName="OAUTH_USERS_PK"/>
+				</column>
+				<column name="PROVIDERUSERNAME" type="VARCHAR(255)"/>
+				<column name="OAUTHPROVIDER_ID" type="BIGINT">
+					<constraints nullable="false"/>
+				</column>
+			</createTable>
+			<addForeignKeyConstraint baseColumnNames="OAUTHPROVIDER_ID" baseTableName="OAUTH_USERS" constraintName="FK_OAUTH_USERS_PROV" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" referencedColumnNames="ID" referencedTableName="OAUTH_PROVIDERS" referencesUniqueColumn="false"/>
+			<createTable tableName="LDAP_USERS">
+				<column name="ID" type="BIGINT">
+					<constraints nullable="false" primaryKey="true" primaryKeyName="LDAP_USERS_PK"/>
+				</column>
+			</createTable>
+		</changeSet>
+		<changeSet author="arpost" id="1360440238345-92">
+			<createSequence sequenceName="OAUTH_PROV_SEQ"/>
+		</changeSet>
+		<changeSet author="arpost" id="1360440238345-93">
+			<addUniqueConstraint tableName="USERS" columnNames="USERNAME"/>
+			<dropUniqueConstraint tableName="USERS" constraintName="SYS_C0013038"/>
+		</changeSet>
 </databaseChangeLog>

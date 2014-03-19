@@ -21,10 +21,10 @@ package edu.emory.cci.aiw.cvrg.eureka.etl.dao;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.dao.Dao;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.EtlUser;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.User;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.UserEntity;
 
 /**
- * A data access object interface for working with {@link User} objects in the
+ * A data access object interface for working with {@link UserEntity} objects in the
  * data store.
  *
  * @author hrathod

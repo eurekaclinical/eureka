@@ -37,7 +37,7 @@ import javax.ws.rs.core.Context;
 
 import com.google.inject.Inject;
 
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.User;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.UserEntity;
 import edu.emory.cci.aiw.cvrg.eureka.services.config.ServiceProperties;
 import edu.emory.cci.aiw.cvrg.eureka.common.props.PublicUrlGenerator;
 
@@ -99,7 +99,7 @@ public class FreeMarkerEmailSender implements EmailSender {
 	 * @throws EmailException 
 	 */
 	@Override
-	public void sendVerificationMessage(final User inUser) 
+	public void sendVerificationMessage(final UserEntity inUser) 
 			throws EmailException {
 		Map<String, Object> params = new HashMap<>();
 		String verificationUrl = this.serviceProperties.getVerificationUrl(this.request);
@@ -109,7 +109,7 @@ public class FreeMarkerEmailSender implements EmailSender {
 	}
 	
 	@Override
-	public void sendActivationMessage(final User inUser) throws EmailException {
+	public void sendActivationMessage(final UserEntity inUser) throws EmailException {
 		Map<String, Object> params = new HashMap<>();
 		String applicationUrl = this.serviceProperties.getApplicationUrl(this.request);
 		params.put("applicationUrl", applicationUrl);
@@ -118,13 +118,13 @@ public class FreeMarkerEmailSender implements EmailSender {
 	}
 	
 	@Override
-	public void sendPasswordChangeMessage(User inUser) throws EmailException {
+	public void sendPasswordChangeMessage(UserEntity inUser) throws EmailException {
 		sendMessage(inUser, "password.ftl",
 				this.serviceProperties.getPasswordChangeEmailSubject());
 	}
 	
 	@Override
-	public void sendPasswordResetMessage(User inUser, String inNewPassword)
+	public void sendPasswordResetMessage(UserEntity inUser, String inNewPassword)
 			throws EmailException {
 		Map<String, Object> params = new HashMap<>();
 		params.put("plainTextPassword", inNewPassword);
@@ -146,7 +146,7 @@ public class FreeMarkerEmailSender implements EmailSender {
 	 *             content from the template, composing the email, or sending
 	 *             the email.
 	 */
-	private void sendMessage(final User inUser, final String templateName,
+	private void sendMessage(final UserEntity inUser, final String templateName,
 			final String subject, Map<String, Object> params)
 			throws EmailException {
 		params.put("user", inUser);
@@ -166,7 +166,7 @@ public class FreeMarkerEmailSender implements EmailSender {
 	 *             content from the template, composing the email, or sending
 	 *             the email.
 	 */
-	private void sendMessage(final User inUser, 
+	private void sendMessage(final UserEntity inUser, 
 			final String templateName,
 			final String subject) throws EmailException {
 		Map<String, Object> params = new HashMap<>();

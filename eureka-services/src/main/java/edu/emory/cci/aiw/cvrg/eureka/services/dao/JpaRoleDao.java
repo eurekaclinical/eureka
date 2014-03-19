@@ -21,8 +21,6 @@ package edu.emory.cci.aiw.cvrg.eureka.services.dao;
 
 import javax.persistence.EntityManager;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.google.inject.Inject;
 import com.google.inject.Provider;
@@ -38,12 +36,6 @@ import edu.emory.cci.aiw.cvrg.eureka.common.entity.Role_;
  *
  */
 public class JpaRoleDao extends GenericDao<Role, Long> implements RoleDao {
-
-	/**
-	 * The class level logger.
-	 */
-	private static final Logger LOGGER = LoggerFactory.getLogger(
-			JpaRoleDao.class);
 
 	/**
 	 * Create a new object with the given entity manager.

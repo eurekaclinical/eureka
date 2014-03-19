@@ -19,6 +19,7 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.services.util;
 
+import edu.emory.cci.aiw.cvrg.eureka.common.util.StringUtil;
 import java.security.NoSuchAlgorithmException;
 
 /**

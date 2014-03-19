@@ -20,7 +20,6 @@ package edu.emory.cci.aiw.cvrg.eureka.common.config;
  * #L%
  */
 
-import java.util.HashMap;
 import java.util.Map;
 
 import org.jasig.cas.client.authentication.AuthenticationFilter;
@@ -31,13 +30,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.inject.Singleton;
-import com.sun.jersey.api.container.filter.RolesAllowedResourceFilterFactory;
-import com.sun.jersey.api.core.PackagesResourceConfig;
-import com.sun.jersey.api.core.ResourceConfig;
-import com.sun.jersey.api.json.JSONConfiguration;
-import com.sun.jersey.guice.JerseyServletModule;
-import com.sun.jersey.guice.spi.container.servlet.GuiceContainer;
-import com.sun.jersey.spi.container.servlet.ServletContainer;
+import com.google.inject.servlet.ServletModule;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.filter.RolesFilter;
 import edu.emory.cci.aiw.cvrg.eureka.common.props.AbstractProperties;
@@ -45,32 +38,21 @@ import edu.emory.cci.aiw.cvrg.eureka.common.props.AbstractProperties;
 /**
  * @author hrathod
  */
-public abstract class AbstractServletModule extends JerseyServletModule {
+public abstract class AbstractServletModule extends ServletModule {
 
 	private static final Logger LOGGER = LoggerFactory
 			.getLogger(AbstractServletModule.class);
 	private static final String CAS_CALLBACK_PATH = "/proxyCallback";
-	private static final String ROLES_SQL = "select a.name as role from roles a, user_role b, users c where a.id=b.role_id and b.user_id=c.id and c.email=?";
-	private static final String ROLE_COLUMN = "role";
-	private static final String TEMPLATES_PATH = "/WEB-INF/templates";
-	private static final String WEB_CONTENT_REGEX = "(/(image|js|css)/?.*)|(/.*\\.jsp)|(/WEB-INF/.*\\.jsp)|(/WEB-INF/.*\\.jspf)|(/.*\\.html)|(/favicon\\.ico)|(/robots\\.txt)";
-	private static final String SERVICES_JNDI_NAME = "java:comp/env/jdbc/EurekaService";
-	private static final String BACKEND_JNDI_NAME = "java:comp/env/jdbc/EurekaBackend";
 	private final AbstractProperties properties;
-	private final String containerPath;
 	private final String protectedPath;
-	private final String packageNames;
-	private final String contextPath;
+	private final ServletModuleSupport servletModuleSupport;
 
 	protected AbstractServletModule(AbstractProperties inProperties,
-			String inPackageNames, String inContainerPath,
-			String inProtectedPath) {
-		super();
+			String inContainerPath, String inProtectedPath) {
+		this.servletModuleSupport = new ServletModuleSupport(
+		this.getServletContext().getContextPath(), inProperties);
 		this.properties = inProperties;
-		this.containerPath = inContainerPath;
-		this.packageNames = inPackageNames;
 		this.protectedPath = inProtectedPath;
-		this.contextPath = this.getServletContext().getContextPath();
 	}
 
 	protected void printParams(Map<String, String> inParams) {
@@ -81,50 +63,31 @@ public abstract class AbstractServletModule extends JerseyServletModule {
 
 	private void setupAuthorizationFilter() {
 		bind(RolesFilter.class).in(Singleton.class);
-		Map<String, String> rolesFilterInitParams = new HashMap<>();
-		rolesFilterInitParams.put("datasource", SERVICES_JNDI_NAME);
-		rolesFilterInitParams.put("sql", ROLES_SQL);
-		rolesFilterInitParams.put("rolecolumn", ROLE_COLUMN);
+		Map<String, String> rolesFilterInitParams = 
+				this.servletModuleSupport.getRolesFilterInitParams();
 		filter("/*").through(RolesFilter.class, rolesFilterInitParams);
 	}
 
 	private void setupCasProxyFilter() {
 		bind(Cas20ProxyReceivingTicketValidationFilter.class).in(
 				Singleton.class);
-		Map<String, String> params = new HashMap<>();
-		params.put("acceptAnyProxy", "true");
-		params.put("proxyCallbackUrl", this.getProxyCallbackUrl());
-		params.put("proxyReceptorUrl", this.getProxyReceptorUrl());
-		params.put("casServerUrlPrefix", this.properties.getCasUrl());
-		params.put("serverName", this.properties.getProxyCallbackServer());
-		params.put("redirectAfterValidation", "true");
-		if (LOGGER.isDebugEnabled()) {
-			this.printParams(params);
-		}
-		filter(this.getProxyReceptorUrl(), this.protectedPath).through(
+		Map<String, String> params = 
+				this.servletModuleSupport.getCasProxyFilterInitParams();
+		filter(CAS_CALLBACK_PATH, this.protectedPath).through(
 				Cas20ProxyReceivingTicketValidationFilter.class, params);
 	}
 
 	private void setupCasAuthenticationFilter() {
 		bind(AuthenticationFilter.class).in(Singleton.class);
-		Map<String, String> params = new HashMap<>();
-		params.put("casServerLoginUrl", this.getCasLoginUrl());
-		params.put("serverName", this.properties.getProxyCallbackServer());
-		params.put("renew", "false");
-		params.put("gateway", "false");
-		if (LOGGER.isDebugEnabled()) {
-			this.printParams(params);
-		}
+		Map<String, String> params = 
+				this.servletModuleSupport.getCasAuthenticationFilterInitParams();
 		filter(this.protectedPath).through(AuthenticationFilter.class, params);
 	}
 
 	private void setupServletRequestWrapperFilter() {
 		bind(HttpServletRequestWrapperFilter.class).in(Singleton.class);
-		Map<String, String> params = new HashMap<>();
-		params.put("roleAttribute", "authorities");
-		if (LOGGER.isDebugEnabled()) {
-			this.printParams(params);
-		}
+		Map<String, String> params = 
+				this.servletModuleSupport.getServletRequestWrapperFilterInitParams();
 		filter("/*").through(HttpServletRequestWrapperFilter.class, params);
 	}
 
@@ -132,20 +95,11 @@ public abstract class AbstractServletModule extends JerseyServletModule {
 		bind(AssertionThreadLocalFilter.class).in(Singleton.class);
 		filter("/*").through(AssertionThreadLocalFilter.class);
 	}
-
-	private void setupContainer() {
-		Map<String, String> params = new HashMap<>();
-		params.put(JSONConfiguration.FEATURE_POJO_MAPPING, "true");
-		params.put(PackagesResourceConfig.PROPERTY_PACKAGES, this.packageNames);
-		params.put(ResourceConfig.PROPERTY_RESOURCE_FILTER_FACTORIES,
-				RolesAllowedResourceFilterFactory.class.getName());
-		params.put(ServletContainer.JSP_TEMPLATES_BASE_PATH, TEMPLATES_PATH);
-		params.put(ServletContainer.PROPERTY_WEB_PAGE_CONTENT_REGEX,
-				WEB_CONTENT_REGEX);
-		if (LOGGER.isDebugEnabled()) {
-			this.printParams(params);
-		}
-		serve(this.containerPath).with(GuiceContainer.class, params);
+	
+	protected abstract void setupServlets();
+	
+	protected void setupFilters() {
+		
 	}
 
 	@Override
@@ -156,19 +110,8 @@ public abstract class AbstractServletModule extends JerseyServletModule {
 		this.setupServletRequestWrapperFilter();
 		this.setupCasThreadLocalAssertionFilter();
 		this.setupAuthorizationFilter();
-		this.setupContainer();
+		this.setupFilters();
+		this.setupServlets();
 	}
 
-	private String getProxyCallbackUrl() {
-		return this.properties.getProxyCallbackServer() + this.contextPath
-				+ CAS_CALLBACK_PATH;
-	}
-
-	private String getProxyReceptorUrl() {
-		return CAS_CALLBACK_PATH;
-	}
-
-	protected String getCasLoginUrl() {
-		return this.properties.getCasLoginUrl();
-	}
 }

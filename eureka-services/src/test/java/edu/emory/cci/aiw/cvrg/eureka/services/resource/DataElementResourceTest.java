@@ -32,7 +32,7 @@ import edu.emory.cci.aiw.cvrg.eureka.common.comm.DataElement;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.DataElementField;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.Frequency;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.UserInfo;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.User;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.FrequencyType;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.TimeUnit;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.FrequencyTypeDao;
@@ -45,12 +45,12 @@ import org.junit.Before;
  * @author hrathod
  */
 public class DataElementResourceTest extends AbstractServiceResourceTest {
-	private UserInfo user;
+	private User user;
 	private String frequencyKey;
 	
 	@Before
 	public void setupDataElementResourceTest() {
-		List<UserInfo> users = this.getUserList();
+		List<User> users = this.getUserList();
 		user = users.get(0);
 		frequencyKey = "testThreshold-frequency";
 	}

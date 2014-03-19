@@ -41,9 +41,10 @@ import edu.emory.cci.aiw.cvrg.eureka.common.comm.PasswordChangeRequest;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.SourceConfig;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.SourceConfigParams;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.SystemElement;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.UserInfo;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.User;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.UserRequest;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.FrequencyType;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.OAuthProvider;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.RelationOperator;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.Role;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.ThresholdsOperator;
@@ -75,7 +76,7 @@ public class ServicesClient extends EurekaClient {
 	};
 	private static final GenericType<List<Job>> JobList = new GenericType<List<Job>>() {
 	};
-	private static final GenericType<List<UserInfo>> UserList = new GenericType<List<UserInfo>>() {
+	private static final GenericType<List<User>> UserList = new GenericType<List<User>>() {
 	};
 	private static final GenericType<List<SourceConfig>> SourceConfigList = new GenericType<List<SourceConfig>>() {
 	};
@@ -98,22 +99,22 @@ public class ServicesClient extends EurekaClient {
 		return this.servicesUrl;
 	}
 
-	public List<UserInfo> getUsers() throws ClientException {
+	public List<User> getUsers() throws ClientException {
 		final String path = "/api/protected/users";
 		return doGet(path, UserList);
 	}
 
-	public UserInfo getUserByName(String username) throws ClientException {
+	public User getUserByName(String username) throws ClientException {
 		String path = UriBuilder.fromPath("/api/protected/users/byname/")
 				.segment("{arg1}")
 				.build(username)
 				.toString();
-		return doGet(path, UserInfo.class);
+		return doGet(path, User.class);
 	}
 
-	public UserInfo getUserById(Long inUserId) throws ClientException {
+	public User getUserById(Long inUserId) throws ClientException {
 		final String path = "/api/protected/users/byid/" + inUserId;
-		return doGet(path, UserInfo.class);
+		return doGet(path, User.class);
 	}
 
 	public void addUser(UserRequest inRequest) throws ClientException {
@@ -140,7 +141,7 @@ public class ServicesClient extends EurekaClient {
 		doPost(path, passwordChangeRequest);
 	}
 
-	public void updateUser(UserInfo inUser) throws ClientException {
+	public void updateUser(User inUser) throws ClientException {
 		final String path = "/api/protected/users";
 		doPut(path, inUser);
 	}
@@ -320,6 +321,18 @@ public class ServicesClient extends EurekaClient {
 				.segment(inName)
 				.build().toString();
 		return doGet(path, RelationOperator.class);
+	}
+	
+	public OAuthProvider getOAuthProvider(Long inId) throws ClientException {
+		final String path = "/api/protected/oauthprovider/" + inId;
+		return doGet(path, OAuthProvider.class);
+	}
+
+	public OAuthProvider getOAuthProviderByName(String inName) throws ClientException {
+		final String path = UriBuilder.fromPath("/api/protected/oauthprovider/byname/")
+				.segment(inName)
+				.build().toString();
+		return doGet(path, OAuthProvider.class);
 	}
 
 	public RelationOperator getDefaultRelationOperator() throws ClientException {

@@ -17,7 +17,7 @@
  * limitations under the License.
  * #L%
  */
-package edu.emory.cci.aiw.cvrg.eureka.services.util;
+package edu.emory.cci.aiw.cvrg.eureka.common.util;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;

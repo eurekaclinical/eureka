@@ -68,12 +68,14 @@
 							${user.department}
 					</p>
 				</div>
+				<c:if test="${user['class'].name == 'edu.emory.cci.aiw.cvrg.eureka.common.comm.LocalUser'}">
 				<div class="form-group">
 					<button id="changePasswordBtn" class="btn btn-primary">Change Password</button>
 				</div>
+				</c:if>
 			</fieldset>
 		</form>
-
+		<c:if test="${user['class'].name == 'edu.emory.cci.aiw.cvrg.eureka.common.comm.LocalUser'}">
 		<div id="newPasswordModal" class="modal fade" role="dialog" aria-labelledby="newPasswordModalLabel"
 			 aria-hidden="true">
 			<div class="modal-dialog">
@@ -125,6 +127,7 @@
 				</div>
 			</div>
 		</div>
+		</c:if>
 		<script type="text/javascript" src="${pageContext.request.contextPath}/assets/js/jquery.validate.js"></script>
 		<script type="text/javascript" src="${pageContext.request.contextPath}/assets/js/eureka.account${initParam['eureka-build-timestamp']}.js"></script>
 		<script type="text/javascript">

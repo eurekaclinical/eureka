@@ -39,7 +39,7 @@ import com.google.inject.Inject;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.DataElement;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.DataElementEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.PropositionChildrenVisitor;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.User;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.UserEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.exception.DataElementHandlingException;
 import edu.emory.cci.aiw.cvrg.eureka.common.exception.HttpStatusException;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.DataElementEntityDao;
@@ -92,7 +92,7 @@ public class DataElementResource {
 	@Path("/")
 	public List<DataElement> getAll(@Context HttpServletRequest inRequest,
 			@DefaultValue("false") @QueryParam("summarize") boolean inSummarize) {
-		User user = 
+		UserEntity user = 
 				this.userDao.getByName(inRequest.getUserPrincipal().getName());
 		List<DataElement> result = new ArrayList<>();
 		List<DataElementEntity> dataElementEntities = 
@@ -199,7 +199,7 @@ public class DataElementResource {
 				inElement.getUserId())) {
 			throw new HttpStatusException(Response.Status.NOT_FOUND);
 		} else {
-			User user = this.userDao.getByName(
+			UserEntity user = this.userDao.getByName(
 					inRequest.getUserPrincipal().getName());
 			if (!user.getId().equals(oldDataElementEntity.getUserId())) {
 				throw new HttpStatusException(Response.Status.NOT_FOUND);
@@ -280,7 +280,7 @@ public class DataElementResource {
 	
 	private DataElement readDataElement(String username, String inKey, 
 			boolean summarize) {
-		User user = this.userDao.getByName(username);
+		UserEntity user = this.userDao.getByName(username);
 		DataElement result;
 		DataElementEntity dataElementEntity =
 				this.dataElementEntityDao.getByUserAndKey(user.getId(), inKey);
