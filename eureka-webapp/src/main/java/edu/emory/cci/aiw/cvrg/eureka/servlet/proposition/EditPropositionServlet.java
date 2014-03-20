@@ -19,39 +19,24 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.servlet.proposition;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import com.google.inject.Inject;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.*;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ClientException;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ServicesClient;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.*;
+import edu.emory.cci.aiw.cvrg.eureka.common.exception.DataElementHandlingException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.google.inject.Inject;
-
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.Category;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.DataElement;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.DataElementField;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.DataElementVisitor;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.Frequency;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.RelatedDataElementField;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.Sequence;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.SystemElement;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.ValueThresholds;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ClientException;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ServicesClient;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.FrequencyType;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.RelationOperator;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.ThresholdsOperator;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.TimeUnit;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.ValueComparator;
-import edu.emory.cci.aiw.cvrg.eureka.common.exception.DataElementHandlingException;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class EditPropositionServlet extends HttpServlet {
 
@@ -74,6 +59,7 @@ public class EditPropositionServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
 		String propKey = req.getParameter("key");
+        DataElement.Type propType = this.getPropTypeFromParam(req.getParameter("type"));
 		try {
 			List<FrequencyType> freqTypes = this.servicesClient.getFrequencyTypesAsc();
 			FrequencyType defaultFreqType = this.servicesClient.getDefaultFrequencyType();
@@ -151,12 +137,46 @@ public class EditPropositionServlet extends HttpServlet {
 				req.setAttribute("proposition", dataElement);
 				req.setAttribute(
 						"propositionType", dataElement.getType().toString());
+				propType = dataElement.getType();
 			}
 
-			req.getRequestDispatcher("/protected/editor.jsp").forward(req, resp);
+			String jsp = null;
+			switch (propType) {
+				case FREQUENCY:
+					jsp = "frequency";
+					break;
+				case CATEGORIZATION:
+					jsp = "categorization";
+					break;
+				case SEQUENCE:
+					jsp = "sequence";
+					break;
+				case VALUE_THRESHOLD:
+					jsp = "value_threshold";
+					break;
+			}
+			if (jsp != null) {
+				req.getRequestDispatcher("/protected/" + jsp + ".jsp").forward(req, resp);
+			} else {
+				throw new ServletException("Unknown data element type");
+			}
 		} catch (ClientException ex) {
 			throw new ServletException("Error setting up data element editor", ex);
 		}
+	}
+
+	private DataElement.Type getPropTypeFromParam(String inType) {
+		DataElement.Type type = null;
+		if ("categorization".equals(inType)) {
+			type = DataElement.Type.CATEGORIZATION;
+		} else if ("sequence".equals(inType)) {
+			type = DataElement.Type.SEQUENCE;
+		} else if ("frequency".equals(inType)) {
+			type = DataElement.Type.FREQUENCY;
+		} else if ("value_threshold".equals(inType)) {
+			type = DataElement.Type.VALUE_THRESHOLD;
+		}
+		return type;
 	}
 
 	private static final class PropertiesDataElementVisitor

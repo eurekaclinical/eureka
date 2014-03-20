@@ -21,54 +21,49 @@
 <%@ taglib uri="/WEB-INF/tlds/template.tld" prefix="template"%>
 
 
-<template:insert template="/templates/eureka_sidebar.jsp">
+<template:insert template="/templates/eureka_main.jsp">
 
-	<template:content name="sidebar">
-		    <img src="${pageContext.request.contextPath}/images/clinical_analytics.jpg" />
-	</template:content>
-	
 	<template:content name="content">
-    <div class="help">
-        <h3>Help</h3>
+	<div class="help">
+		<h3>Help</h3>
 		<p>The links on this page will open in a separate window in the <a href="${initParam['eureka-help-url']}/index.html" target="eureka-help">Eureka! website's help pages</a>.
-        <table id="help-getting-started">
-            <tr>
-                <td>
-                    <a href="${initParam['eureka-help-url']}/getting-started.html" class="imageAndCaption" target="eureka-help">
-                        <img alt="Getting Started"
-                             src="images/100px-Help-getting-started.png"/>
-                        <div>
-                            Getting Started
-                        </div>
-                    </a>
-                </td>
-                <td>
-                    <a href="${initParam['aiw-site-url']}/user-faq.html" class="imageAndCaption" target="eureka-help">
-                        <img alt="Frequently Asked Questions"
-                             src="images/100px-Help-FAQ.png"/>
-                        <div>
-                            Frequently Asked Questions
-                        </div>
-                    </a>
-                </td>
-            </tr>
-		</table>
-		<table id="help-topics">
-			<caption>Topics:</caption>
-			<tr>
-				<td>
-					<a href="${initParam['eureka-help-url']}/spreadsheets.html" target="eureka-help">Spreadsheet Data Upload</a>
-				</td>
-				<td>
-					<a href="${initParam['eureka-help-url']}/phenotypes.html" target="eureka-help">Working with Phenotypes</a>
-				</td>
-			</tr>
-        </table>
+		<div class="row">
+			<div class="col-sm-3">
+				<span class="thumbnail text-center">
+					<a href="${initParam['eureka-help-url']}/getting-started.html" class="imageAndCaption" target="eureka-help">
+						<img alt="Getting Started" src="images/100px-Help-getting-started.png"/>
+						<span class="caption">
+							Getting Started
+						</span>
+					</a>
+				</span>
+			</div>
+			<div class="col-sm-3">
+				<span class="thumbnail text-center">
+					<a href="${initParam['aiw-site-url']}/user-faq.html" class="imageAndCaption" target="eureka-help">
+						<img alt="Frequently Asked Questions" src="images/100px-Help-FAQ.png"/>
+						<span class="caption">
+							Frequently Asked Questions
+						</span>
+					</a>
+				</span>
+			</div>
+		</div>
+		<h4>Topics:</h4>
+		<ul>
+			<li>
+				<a href="${initParam['eureka-help-url']}/spreadsheets.html" target="eureka-help">Spreadsheet Data Upload</a>
+			</li>
+			<li>
+				<a href="${initParam['eureka-help-url']}/phenotypes.html" target="eureka-help">Working with Phenotypes</a>
+			</li>
+		</ul>
 		<c:if test="${applicationScope.webappProperties.demoMode}">
-		<p>NOTE: For privacy, data retention and other policies regarding this 
-			site, click on Frequently Asked Questions above.</p>
+		<p>
+			NOTE: For privacy, data retention and other policies regarding this
+			site, click on Frequently Asked Questions above.
+		</p>
 		</c:if>
-        <p class="pad_top">&nbsp;</p>
-        </div>
+	</div>
 	</template:content>
 </template:insert>

@@ -17,98 +17,122 @@
   limitations under the License.
   #L%
 --%>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 
-<%@ taglib uri="/WEB-INF/tlds/template.tld" prefix="template"%>
-
-
+<%@ taglib uri="/WEB-INF/tlds/template.tld" prefix="template" %>
 
 
-
-<template:insert template="/templates/eureka_sidebar.jsp">
-	<template:content name="sidebar">
-		<img src="${pageContext.request.contextPath}/images/bioinformatics.jpg" />
-	</template:content>
-		
+<template:insert template="/templates/eureka_main.jsp">
 	<template:content name="content">
 		<h3>Account</h3>
-		<div id = "passwordExpirationMsg" class ="passwordExpirationMsg" ><%=request.getAttribute("passwordExpiration")%></div>		
-		<form id="userAcctForm" action="#" method="post">
-			<div class="pad pad_top">
-				<table id="userAcctTable">
-					<tr>
-						<td width="124">Name:</td>
-						<td width="465" colspan="3">${user.firstName}
-							${user.lastName}</td>
-					</tr>
-					<tr>
-						<td>Organization:</td>
-						<td colspan="3">${user.organization}</td>
-					</tr>
-					<tr>
-						<td>Email:</td>
-						<td colspan="3">${user.email}</td>
-					</tr>
-					<tr>
-						<td>Title:</td>
-						<td colspan="3">${user.title}</td>
-					</tr>
-					<tr>
-						<td>Department:</td>
-						<td colspan="3">${user.department}</td>
-					</tr>
-					<tr>
-						<td>&nbsp;</td>
-						<td colspan="3">
-							<button id="ChangePasswordbtn">Change Password</button>
-						</td>
-					</tr>
-				</table>
-				<table id="newPasswordTable">
-					<tr>
-						<td class="status white"></td>
-					</tr>
-					<tr>
-						<td class=" white">
-							<label>Old Password:</label>
-						</td>
-						<td class="field white">
-							<input type="password" name="oldPassword" id="oldPassword" />
-						</td>
-						<td class="status white"></td>
-					</tr>
-					<tr>
-						<td class=" white">
-							<label>New Password:</label>
-						</td>
-						<td class="field white">
-							<input type="password" name="newPassword" id="newPassword" />
-						</td>
-						<td class="status white"></td>
-					</tr>
-					<tr>
-						<td class=" white">
-							<label>Re-enter New Password:</label>
-						</td>
-						<td class="field white">
-							<input type="password" name="verifyPassword" id="verifyPassword" />
-						</td>
-						<td class="status white"></td>
-					</tr>
-					<tr>
-						<td class=" white">&nbsp;</td>
-						<td class="field white fltrt">
-							<input type="submit" value="Save" id="saveAcctBtn" class="button" />
-						</td>
-						<td class="status white">&nbsp;</td>
-					</tr>
-				</table>
-				<input type="hidden" name="action" value="save" />
-		</form>
-		<div id="passwordChangeComplete" class = "pw_reset left_padding">
+		<div id="passwordExpirationMsg" class="passwordExpirationMsg">
+			<%=request.getAttribute("passwordExpiration")%>
 		</div>
-	</div>
-</template:content>
+		<form role="form">
+			<fieldset>
+				<div class="form-group">
+					<label for="userName">Name</label>
+					<p class="form-control-static" id="userName">
+							${user.firstName} ${user.lastName}
+					</p>
+				</div>
+				<div class="form-group">
+					<label for="organization">
+						Organization
+					</label>
+					<p class="form-control-static" id="organization">
+							${user.organization}
+					</p>
+				</div>
+				<div class="form-group">
+					<label for="email">
+						Email
+					</label>
+					<p class="form-control-static" id="email">
+							${user.email}
+					</p>
+				</div>
+				<div class="form-group">
+					<label for="title">
+						Title
+					</label>
+					<p class="form-control-static" id="title">
+							${user.title}
+					</p>
+				</div>
+				<div class="form-group">
+					<label for="department">
+						Department
+					</label>
+					<p class="form-control-static" id="department">
+							${user.department}
+					</p>
+				</div>
+				</div>
+				<div class="form-group text-centered">
+					<button id="changePasswordBtn" class="btn btn-primary">Change Password</button>
+				</div>
+			</fieldset>
+		</form>
 
+		<div id="newPasswordModal" class="modal fade" role="dialog" aria-labelledby="newPasswordModalLabel"
+			 aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<form id="userAcctForm" class="form-horizontal" action="#" method="post"
+						  role="form">
+						<div class="modal-header">
+							<h4 id="newPasswordModalLabel" class="modal-title">
+								Change Password
+							</h4>
+						</div>
+						<div class="modal-body">
+							<div class="form-group">
+								<label class="control-label" for="oldPassword">Old Password:</label>
+								<input type="password" name="oldPassword" id="oldPassword"
+									   class="form-control"/>
+								<div class="help-block default-hidden">
+									<div class="help-inline"></div>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="control-label" for="newPassword">New Password:</label>
+								<input type="password" name="newPassword" id="newPassword"
+									   class="form-control"/>
+								<div class="help-block default-hidden">
+									<div class="help-inline"></div>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="control-label" for="verifyPassword">Re-enter New
+									Password:</label>
+								<input type="password" name="verifyPassword" id="verifyPassword"
+									   class="form-control"/>
+								<div class="help-block default-hidden">
+									<div class="help-inline"></div>
+								</div>
+							</div>
+							<div class="row">
+								<div id="passwordChangeComplete" class="default-hidden">
+								</div>
+							</div>
+						</div>
+						<div class="modal-footer">
+							<input type="hidden" name="action" value="save"/>
+							<input type="submit" value="Save" id="saveAcctBtn" class="btn btn-primary"/>
+							<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+		<script type="text/javascript" src="${pageContext.request.contextPath}/assets/js/jquery.validate.js"></script>
+		<script type="text/javascript" src="${pageContext.request.contextPath}/assets/js/eureka.account.js"></script>
+		<script type="text/javascript">
+			$(document).ready(function () {
+				eureka.account.setup('#changePasswordBtn', '#newPasswordModal', '#userAcctForm', '#passwordChangeComplete', '#passwordExpirationMsg');
+			});
+		</script>
+	</template:content>
 </template:insert>
 

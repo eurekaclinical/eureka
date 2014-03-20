@@ -21,11 +21,7 @@
 <%@ taglib uri="/WEB-INF/tlds/template.tld" prefix="template"%>
 
 
-<template:insert template="/templates/eureka_sidebar.jsp">
-
-	<template:content name="sidebar">
-		<img src="${pageContext.request.contextPath}/images/medical_research.jpg" />
-	</template:content>
+<template:insert template="/templates/eureka_main.jsp">
 
 	<template:content name="content">
 		<h3>About Version ${initParam['eureka-version']}</h3>
@@ -40,7 +36,7 @@
 		</p>
 		
 		<h4>What does it do?</h4>
-		<p>Eureka! Clinical Analytics enables biomedical researchers to create 
+		<p>Eureka! Clinical Analytics enables biomedical researchers to create
 			databases containing clinical data of interest for cohort discovery 
 			and analysis. As a researcher, you specify a data source, and you 
 			specify your own cohort definitions in a web user interface as 
@@ -54,7 +50,7 @@
 		
 		<c:if test="${applicationScope.webappProperties.demoMode}">
 		<h4>Can I load data with identifiers in it?</h4>
-		<p>No, this is a demonstration website only. Please see the End-user 
+		<p>No, this is a demonstration website only. Please see the End-user
 			agreement when you register for an account on the website for 
 			details.
 		</p>

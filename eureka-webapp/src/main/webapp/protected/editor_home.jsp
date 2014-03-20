@@ -17,54 +17,181 @@
   limitations under the License.
   #L%
   --%>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
-<%@ taglib uri="/WEB-INF/tlds/template.tld" prefix="template"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="/WEB-INF/tlds/template.tld" prefix="template" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 
-
-<template:insert template="/templates/eureka_sidebar.jsp">
-
-	<template:content name="sidebar">
-         <div class="tooltip" id="tooltip" style="text-align: left">
-                <div id="tree" style="background-color: #ffffff;
-                                        height: 255px;
-                                        overflow: auto;
-                                        width: 380px">
-                </div>
-        </div>
-	</template:content>
+<template:insert template="/templates/eureka_main.jsp">
 
 	<template:content name="content">
-		<h3>Phenotype Editor</h3>
-		<p>Specify the phenotypes that you want to compute in your datasets below. 
-			Phenotypes are patient features inferred from sequence, frequency and other temporal patterns in the events and observations in your dataset.
-			These features are computed as intervals with a start time and a stop time representing when they are present.</p>
-		<div id="dialog" title="Delete Data Element"></div>
-		<div class="action_link">   
-			<a href="${pageContext.request.contextPath}/protected/editprop" class="create"></a>
-			<a href="${pageContext.request.contextPath}/protected/editprop" style="text-decoration:none">Create New Element</a>
+		<div class="row">
+			<div class="col-sm-12">
+				<h3>Phenotype Editor</h3>
+				<p>Specify the phenotypes that you want to compute in your
+					datasets below.
+					Phenotypes are patient features inferred from sequence,
+					frequency and other temporal patterns in the events and
+					observations in your dataset.
+					These features are computed as intervals with a start time
+					and a stop time representing when they are present.
+				</p>
+
+				<div id="dialog" title="Delete Data Element"></div>
+				<div class="btn-group">
+					<div class="btn-group">
+						<button id="typeDropdown" class="btn btn-primary" data-toggle="dropdown">
+							<span class="glyphicon glyphicon-plus-sign"></span>
+							Create New Element
+						</button>
+						<ul class="dropdown-menu" role="menu" aria-labelledby="typeDropdown">
+							<li>
+								<a href="${pageContext.request.contextPath}/protected/editprop?type=categorization">
+									<dt>
+										Categorization
+									</dt>
+									<dd>
+										<fmt:message key="dataelementtype.CATEGORIZATION.description"/>
+									</dd>
+								</a>
+							</li>
+							<li>
+								<a href="${pageContext.request.contextPath}/protected/editprop?type=sequence">
+									<dt>
+										Sequence
+									</dt>
+									<dd>
+										<fmt:message key="dataelementtype.SEQUENCE.description"/>
+									</dd>
+								</a>
+							</li>
+							<li>
+								<a href="${pageContext.request.contextPath}/protected/editprop?type=frequency">
+									<dt>
+										Frequency
+									</dt>
+									<dd>
+										<fmt:message key="dataelementtype.FREQUENCY.description"/>
+									</dd>
+								</a>
+							</li>
+							<li>
+								<a href="${pageContext.request.contextPath}/protected/editprop?type=value_threshold">
+									<dt>
+										Value Threshold
+									</dt>
+									<dd>
+										<fmt:message key="dataelementtype.VALUE_THRESHOLD.description"/>
+									</dd>
+								</a>
+							</li>
+						</ul>
+					</div>
+					<a class="btn btn-default" href="${initParam['eureka-help-url']}/phenotypes.html#select-type"
+					   target="eureka-help">
+						<span class="glyphicon glyphicon-question-sign"></span>
+					</a>
+				</div>
+				<table class="table table-responsive vert-offset">
+					<tr>
+						<th>Action</th>
+						<th>Name</th>
+						<th>Description</th>
+						<th>Type</th>
+						<th>Created Date</th>
+						<th>Last Modified</th>
+					</tr>
+					<c:forEach items="${props}" var="prop">
+						<c:url value="/protected/editprop" var="editUrl">
+							<c:param name="key" value="${prop.attr['key']}"/>
+						</c:url>
+						<tr data-key="${prop.attr['key']}"
+							data-display-name="${prop.attr['displayName']}">
+							<td>
+								<%--<span class="glyphicon glyphicon-eye-open view-icon" title="View"></span>--%>
+								<a href="${editUrl}" title="Edit">
+									<span class="glyphicon glyphicon-pencil edit-icon" title="Edit"></span>
+								</a>
+								<span class="glyphicon glyphicon-remove delete-icon" title="Delete"></span>
+							</td>
+							<td>${prop.attr['displayName']}</td>
+							<td>${prop.attr['description']}</td>
+							<td>${prop.attr['type']}</td>
+							<td>${prop.attr['created']}</td>
+							<td>${prop.attr['lastModified']}</td>
+						</tr>
+					</c:forEach>
+				</table>
+			</div>
+			<%--<div class="col-sm-2">--%>
+				<%--<div class="tooltip" id="tooltip" style="text-align: left">--%>
+					<%--<div id="tree">--%>
+					<%--</div>--%>
+				<%--</div>--%>
+			<%--</div>--%>
 		</div>
-		<table align="center" id="elements">
-			<tr class="bold" >
-				<th>Action</th><th>Name</th><th>Description</th><th>Type</th><th>Created Date</th><th>Last Modified</th>
-			</tr>
-			<c:forEach items="${props}" var="prop">
-				<c:url value="/protected/editprop" var="editUrl">
-					<c:param name="key" value="${prop.attr['key']}"/>
-				</c:url>
-				<tr class="editor-home-data-element" data-key="${prop.attr['key']}" data-display-name="${prop.attr['displayName']}">
-					<td style="width:60px">
-						<span class="view" title="View"></span>
-						<a href="${editUrl}" class="edit" title="Edit"></a>
-						<span class="delete" title="Delete"></span>
-					</td>
-					<td style="width: 100px">${prop.attr['displayName']}</td>
-					<td>${prop.attr['description']}</td>
-					<td>${prop.attr['type']}</td>
-					<td>${prop.attr['created']}</td>
-					<td>${prop.attr['lastModified']}</td>
-				</tr>
-			</c:forEach>
-		</table>
+		<div id="deleteModal" class="modal" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+			<div class="modal-dialog modal-lg">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h4 id="deleteModalLabel" class="modal-title">
+							Delete Element
+						</h4>
+					</div>
+					<div id="deleteContent" class="modal-body">
+					</div>
+					<div class="modal-footer">
+						<button id="confirmButton" type="button" class="btn btn-primary">Delete</button>
+						<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div id="errorModal" class="modal" role="dialog" aria-labelledby="errorModalLabel" aria-hidden="true">
+			<div class="modal-dialog modal-lg">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h4 id="errorModalLabel" class="modal-title">
+							Error
+						</h4>
+					</div>
+					<div id="errorContent" class="modal-body">
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		<script language="JavaScript" src="${pageContext.request.contextPath}/assets/js/eureka.editor.js"></script>
+		<script language="JavaScript">
+
+			$('span.delete-icon').on('click', function () {
+				var $tr = $(this).closest('tr');
+				var displayName = $tr.data('display-name');
+				var key = $tr.data('key');
+				var dialog = $('#deleteModal');
+				$(dialog).find('#deleteContent').html('Are you sure you want to remove data element ' + displayName + '?');
+				$(dialog).find('#confirmButton').one('click', function (e) {
+					$(dialog).modal('toggle');
+					$.ajax({
+						type: "POST",
+						url: 'deleteprop?key=' + encodeURIComponent(key),
+						success: function (data) {
+							window.location.href = 'editorhome'
+						},
+						error: function (data, statusCode, errorThrown) {
+							var content = 'Error while deleting ' + displayName + '. ' + data.responseText + '. Status Code: ' + statusCode;
+							$('#errorModal').find('#errorContent').html(content);
+							$('#errorModal').modal('show');
+							if (errorThrown != null) {
+								console.log(errorThrown);
+							}
+						}
+					});
+				});
+				$(dialog).modal("toggle");
+			});
+		</script>
 	</template:content>
 
 </template:insert>

@@ -17,126 +17,132 @@
   limitations under the License.
   #L%
 --%>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
-<%@ taglib uri="/WEB-INF/tlds/template.tld" prefix="template"%>
-<%@ taglib uri="/WEB-INF/tlds/function.tld" prefix="myfn"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="/WEB-INF/tlds/template.tld" prefix="template" %>
+<%@ taglib uri="/WEB-INF/tlds/function.tld" prefix="myfn" %>
 
 
-
-<template:insert template="/templates/eureka_sidebar.jsp">
-
-
-    <template:content name="sidebar">
-		<img src="${pageContext.request.contextPath}/images/bioinformatics.jpg" />
-    </template:content>
-
-    <template:content name="content">
-
+<template:insert template="/templates/eureka_main.jsp">
+	<template:content name="content">
 		<h3>Edit User ${user.email}</h3>
-		<div class="pad pad_top">
-			<form id="userform" action="admin" method="GET" id="editUserForm">
-                <table>
-                    <tr>
-                        <td width="124">Name:</td>
-						<td colspan="4">${user.firstName} ${user.lastName}
-							(<a href="${pageContext.request.contextPath}/protected/ping?id=${user.id}">Ping</a>)
-							<input type="hidden" name="id" value="${user.id}" />
-							<input type="hidden" name="action" value="save" />
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Organization:</td>
-                        <td colspan="4">${user.organization}</td>
-                    </tr>
-                     <tr>
-                        <td>Title:</td>
-                        <td colspan="4">${user.title}</td>
-                    </tr>
-                     <tr>
-                        <td>Department:</td>
-                        <td colspan="4">${user.department}</td>
-                    </tr>
-                    <tr>
-                        <td>Email:</td>
-                        <td colspan="4">${user.email}</td>
-                    </tr>
-                    <tr>
-                        <td>Role:</td>
-                        <td colspan="4">
-                            <c:set var="isSuperUser" value="0"></c:set>
-                            <c:forEach var="role" items="${roles}">
-                                <c:set var="hasRole" value="0"></c:set>
 
-                                <c:forEach var="userRole" items="${user.roles}">
-
-                                    <c:if test="${userRole ==  role.id}">
-                                        <c:set var="hasRole" value="1"></c:set>
-                                        <c:if test="${role.name eq 'superuser'}">
-											<c:set var="isSuperUser" value="1"></c:set>
-                                        </c:if>
-                                    </c:if>
-                                </c:forEach>
-                                <c:choose>
-                                    <c:when test="${hasRole == 1}">
-										<input type="checkbox" name="role" value="${role.id}" checked="checked" ${role.name eq  'superuser' ? 'disabled="disabled"' : ''}/>${role.name}<span class="status"></span><br />
-                                    </c:when>
-                                    <c:otherwise>
-                                        <input type="checkbox" name="role" value="${role.id}" />${role.name}<span class="status"></span><br />
-
-                                    </c:otherwise>
-                                </c:choose>
-
-                            </c:forEach>                        
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Activated</td>
-                        <td colspan="4">
-							<c:choose>
-								<c:when test="${user.active == true}">
-									<input type="checkbox" name="active" id="active"  checked ${isSuperUser ==  1 ? "disabled" : ''}/><span class="status"></span><br />
-								</c:when>
-								<c:otherwise>
-									<input type="checkbox" name="active" id="active" /><span class="status"></span><br />
-
-								</c:otherwise>
-							</c:choose>
-                        </td>
-                    </tr>
-
-                    <tr>
-                        <td>Verification Status:</td>
-                        <td colspan="4">
-							<c:choose>
-								<c:when test="${user.verified == true}">
-									Verified<span class="status"></span><br />
-								</c:when>
-								<c:otherwise>
-									Un-verified<span class="status"></span><br />                                   
-								</c:otherwise>
-							</c:choose>
-                        </td>
-                    </tr>
-                    <tr>
-						<td>&nbsp;</td>
-						<td><button class="fltrt">Save</button></td>
-					</tr>
-
-                </table>
-
-            </form>
-
-        </div>
-				<script type="text/javascript">
-					$(document).ready(function () {
-						$('#userform').submit(function () {
-							$('#userform :input').each(function () {
-								$(this).removeAttr('disabled');
-							});
-							return true;
-						});
+		<form id="userform" action="admin" method="GET" id="editUserForm" role="form" class="">
+			<div class="form-group">
+				<label>
+					Name
+				</label>
+				<div class="form-control-static">
+						${user.firstName} ${user.lastName}
+					(<a href="${pageContext.request.contextPath}/protected/ping?id=${user.id}">Ping</a>)
+				</div>
+			</div>
+			<div class="form-group">
+				<label>
+					Organization
+				</label>
+				<div class="form-control-static">
+						${user.organization}
+				</div>
+			</div>
+			<div class="form-group">
+				<label>
+					Title
+				</label>
+				<div class="form-control-static">
+						${user.title}
+				</div>
+			</div>
+			<div class="form-group">
+				<label>
+					Department
+				</label>
+				<div class="form-control-static">
+						${user.department}
+				</div>
+			</div>
+			<div class="form-group">
+				<label>
+					Email
+				</label>
+				<div class="form-control-static">
+						${user.email}
+				</div>
+			</div>
+			<div class="form-group">
+				<label>
+					Role
+				</label>
+				<div class="form-control-static">
+					<c:set var="isSuperUser" value="0"></c:set>
+					<c:forEach var="role" items="${roles}">
+						<c:set var="hasRole" value="0"></c:set>
+						<c:forEach var="userRole" items="${user.roles}">
+							<c:if test="${userRole ==  role.id}">
+								<c:set var="hasRole" value="1"></c:set>
+								<c:if test="${role.name eq 'superuser'}">
+									<c:set var="isSuperUser" value="1"></c:set>
+								</c:if>
+							</c:if>
+						</c:forEach>
+						<c:choose>
+							<c:when test="${hasRole == 1}">
+								<input type="checkbox" name="role" value="${role.id}"
+									   checked="checked" ${role.name eq  'superuser' ? 'disabled="disabled"' : ''}/>${role.name}
+							</c:when>
+							<c:otherwise>
+								<input type="checkbox" name="role" value="${role.id}"/>${role.name}
+							</c:otherwise>
+						</c:choose>
+					</c:forEach>
+				</div>
+			</div>
+			<div class="form-group">
+				<div class="checkbox checkbox-inline">
+					<label>
+						<c:choose>
+							<c:when test="${user.active == true}">
+								<input type="checkbox" name="active" id="active"
+									   checked ${isSuperUser ==  1 ? "disabled" : ''}/>
+							</c:when>
+							<c:otherwise>
+								<input type="checkbox" name="active" id="active"/>
+							</c:otherwise>
+						</c:choose>
+						Activated
+					</label>
+				</div>
+			</div>
+			<div class="form-group">
+				<label>
+					Verification Status:
+				</label>
+				<div class="form-control-static">
+					<c:choose>
+						<c:when test="${user.verified == true}">
+							Verified<span class="status"></span><br />
+						</c:when>
+						<c:otherwise>
+							Un-verified<span class="status"></span><br />
+						</c:otherwise>
+					</c:choose>
+				</div>
+			</div>
+			<div class="form-group">
+				<input type="hidden" name="id" value="${user.id}"/>
+				<input type="hidden" name="action" value="save"/>
+				<button type="submit" class="btn btn-primary">Save</button>
+			</div>
+		</form>
+		<script type="text/javascript">
+			$(document).ready(function () {
+				$('#userform').submit(function () {
+					$('#userform :input').each(function () {
+						$(this).removeAttr('disabled');
 					});
-				</script>
-    </template:content>
+					return true;
+				});
+			});
+		</script>
+	</template:content>
 
 </template:insert>

@@ -21,7 +21,7 @@
 <%@ taglib uri="/WEB-INF/tlds/template.tld" prefix="template" %>
 
 
-<template:insert template="/templates/eureka_editor.jsp">
+<template:insert template="/templates/eureka_main.jsp">
 
 	<template:content name="sidebar">
 		<img src="${pageContext.request.contextPath}/images/bioinformatics.jpg" />
@@ -189,7 +189,7 @@
 																						<td>
 																							<div id="mainDataElement" class="tree-drop-single jstree-drop" title="Drag a system or user-defined data element in here">
 																								<div class="label-info" ><center>Drop Here</center></div>
-																								<ul data-type="main" data-drop-type="single" data-count="1" class="sortable" style="width: 100% height: 100%">
+																								<ul data-type="main" data-drop-type="single" data-count="1" class="sortable" style="width: 100%; height: 100%">
 																									<c:if test="${not empty proposition and propositionType == 'SEQUENCE'}">
 																										<li data-key="${proposition.primaryDataElement.dataElementKey}" data-desc="${proposition.primaryDataElement.dataElementDisplayName} (${proposition.primaryDataElement.dataElementKey})" data-space="${proposition.primaryDataElement.inSystem ? 'system' : 'user'}">
 																											<span class="delete" style="cursor: pointer; background-color: lightblue;"></span>
