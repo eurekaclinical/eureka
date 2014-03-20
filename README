@@ -62,7 +62,7 @@ Eureka! Clinical Analytics is freely available as open source under
 the Apache License, Version 2.0. A copy of the license is in the
 LICENSE file provided in this distribution.
 
-Eureka! Clinical Analytics is Copyright (C) 2012-2013 Emory University.
+Eureka! Clinical Analytics is Copyright (C) ${inceptionYear}-${currentYear} Emory University.
 
 MORE INFORMATION
 
