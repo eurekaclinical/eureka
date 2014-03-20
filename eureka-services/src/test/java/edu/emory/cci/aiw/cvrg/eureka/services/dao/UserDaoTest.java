@@ -54,7 +54,7 @@ public class UserDaoTest extends AbstractServiceTest {
 		UserDao dao = this.getInstance(UserDao.class);
 		List<UserEntity> users = dao.getAll();
 		UserEntity user = users.get(0);
-		UserEntity testUser = dao.getByName(user.getEmail());
+		UserEntity testUser = dao.getByUsername(user.getUsername());
 		assertEquals(user.getEmail(), testUser.getEmail());
 	}
 

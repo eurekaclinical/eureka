@@ -794,7 +794,70 @@ limitations under the License.
 			<createSequence sequenceName="OAUTH_PROV_SEQ"/>
 		</changeSet>
 		<changeSet author="arpost" id="1360440238345-93">
-			<addUniqueConstraint tableName="USERS" columnNames="USERNAME"/>
-			<dropUniqueConstraint tableName="USERS" constraintName="SYS_C0013038"/>
+			<addColumn tableName="USERS">
+				<column name="LOGINTYPE_ID" type="BIGINT"/>
+			</addColumn>
+			<addColumn tableName="USERS">
+				<column name="AUTHENTICATIONMETHOD_ID" type="BIGINT"/>
+			</addColumn>
+		</changeSet>
+		<changeSet author="arpost" id="1360440238345-94">
+			<createTable tableName="LOGIN_TYPES">
+				<column name="ID" type="BIGINT">
+					<constraints nullable="false" primaryKey="true" primaryKeyName="LOGIN_TYPES_PK"/>
+				</column>
+				<column name="DESCRIPTION" type="VARCHAR(255)"/>
+				<column name="NAME" type="VARCHAR(255)">
+					<constraints nullable="false"/>
+				</column>
+			</createTable>
+			<createSequence sequenceName="LOGIN_TYPES_SEQ"/>
+			<insert tableName="LOGIN_TYPES">
+				<column name="ID" valueNumeric="1"/>
+				<column name="NAME" value="INTERNAL"/>
+				<column name="DESCRIPTION" value="Authenticated by Eureka!"/>
+			</insert>
+			<insert tableName="LOGIN_TYPES">
+				<column name="ID" valueNumeric="2"/>
+				<column name="NAME" value="PROVIDER"/>
+				<column name="DESCRIPTION" value="Authenticated by an external provider"/>
+			</insert>
+			<update tableName="USERS">
+				<column name="LOGINTYPE_ID" value="1"/>
+			</update>
+			<addNotNullConstraint tableName="USERS" columnName="LOGINTYPE_ID"/>
+			<addForeignKeyConstraint baseColumnNames="LOGINTYPE_ID" baseTableName="USERS" constraintName="FK_USERS_LOGINTYPE" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" referencedColumnNames="ID" referencedTableName="LOGIN_TYPES" referencesUniqueColumn="false"/>
+		</changeSet>
+		<changeSet author="arpost" id="1360440238345-95">
+			<createTable tableName="AUTHENTICATION_METHODS">
+				<column name="ID" type="BIGINT">
+					<constraints nullable="false" primaryKey="true" primaryKeyName="AUTHENTICATION_METHODS_PK"/>
+				</column>
+				<column name="DESCRIPTION" type="VARCHAR(255)"/>
+				<column name="NAME" type="VARCHAR(255)">
+					<constraints nullable="false"/>
+				</column>
+			</createTable>
+			<createSequence sequenceName="AUTHENTICATION_METHODS_SEQ"/>
+			<insert tableName="AUTHENTICATION_METHODS">
+				<column name="ID" valueNumeric="1"/>
+				<column name="NAME" value="LOCAL"/>
+				<column name="DESCRIPTION" value="Stored within Eureka!"/>
+			</insert>
+			<insert tableName="AUTHENTICATION_METHODS">
+				<column name="ID" valueNumeric="2"/>
+				<column name="NAME" value="LDAP"/>
+				<column name="DESCRIPTION" value="Managed by an LDAP server"/>
+			</insert>
+			<insert tableName="AUTHENTICATION_METHODS">
+				<column name="ID" valueNumeric="3"/>
+				<column name="NAME" value="OAUTH"/>
+				<column name="DESCRIPTION" value="Managed by an OAuth provider"/>
+			</insert>
+			<update tableName="USERS">
+				<column name="AUTHENTICATIONMETHOD_ID" valueNumeric="1"/>
+			</update>
+			<addNotNullConstraint tableName="USERS" columnName="AUTHENTICATIONMETHOD_ID"/>
+			<addForeignKeyConstraint baseColumnNames="AUTHENTICATIONMETHOD_ID" baseTableName="USERS" constraintName="FK_USERS_AUTHENTMETHOD" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" referencedColumnNames="ID" referencedTableName="AUTHENTICATION_METHODS" referencesUniqueColumn="false"/>
 		</changeSet>
 </databaseChangeLog>

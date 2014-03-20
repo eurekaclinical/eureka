@@ -28,11 +28,11 @@ import javax.ws.rs.core.MediaType;
 
 
 import com.google.inject.Inject;
-import com.sun.jersey.api.client.ClientResponse;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.Destination;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.EtlUser;
 import edu.emory.cci.aiw.cvrg.eureka.common.exception.HttpStatusException;
+import edu.emory.cci.aiw.cvrg.eureka.etl.authentication.EtlAuthenticationSupport;
 import edu.emory.cci.aiw.cvrg.eureka.etl.config.EtlProperties;
 import edu.emory.cci.aiw.cvrg.eureka.etl.dao.DestinationDao;
 import edu.emory.cci.aiw.cvrg.eureka.etl.dao.EtlUserDao;
@@ -51,13 +51,14 @@ public class DestinationResource {
 	private final EtlProperties etlProperties;
 	private final EtlUserDao userDao;
 	private final DestinationDao destinationDao;
-	
+	private final EtlAuthenticationSupport authenticationSupport;
 
 	@Inject
 	public DestinationResource(EtlProperties inEtlProperties, EtlUserDao inEtlUserDao, DestinationDao inDestinationDao) {
 		this.etlProperties = inEtlProperties;
 		this.userDao = inEtlUserDao;
 		this.destinationDao = inDestinationDao;
+		this.authenticationSupport = new EtlAuthenticationSupport(this.userDao);
 	}
 
 	@GET
@@ -65,13 +66,7 @@ public class DestinationResource {
 	public Destination getDestination(
 			@Context HttpServletRequest request,
 			@PathParam("destId") String destId) {
-		String username = request.getUserPrincipal().getName();
-		EtlUser user = this.userDao.getByUsername(username);
-		if (user == null) {
-			user = new EtlUser();
-			user.setUsername(username);
-			this.userDao.create(user);
-		}
+		EtlUser user = this.authenticationSupport.getEtlUser(request);
 		Destination result 
 				= new Destinations(this.etlProperties, user, this.destinationDao).getOne(destId);
 		if (result != null) {
@@ -84,21 +79,8 @@ public class DestinationResource {
 	@GET
 	@Path("")
 	public List<Destination> getAll(@Context HttpServletRequest request) {
-		String username = request.getUserPrincipal().getName();
-		EtlUser user = this.userDao.getByUsername(username);
-		if (user == null) {
-			user = new EtlUser();
-			user.setUsername(username);
-			this.userDao.create(user);
-		}
+		EtlUser user = this.authenticationSupport.getEtlUser(request);
 		return new Destinations(this.etlProperties, user, this.destinationDao).getAll();
 	}
 
-	/*@POST
-	 public void create(Destination source) {
-	 }
-	
-	 @PUT
-	 public void update(Destination source) {
-	 }*/
 }

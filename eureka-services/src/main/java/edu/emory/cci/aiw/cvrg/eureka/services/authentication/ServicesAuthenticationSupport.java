@@ -1,8 +1,8 @@
-package edu.emory.cci.aiw.cvrg.eureka.servlet;
+package edu.emory.cci.aiw.cvrg.eureka.services.authentication;
 
 /*
  * #%L
- * Eureka WebApp
+ * Eureka Services
  * %%
  * Copyright (C) 2012 - 2014 Emory University
  * %%
@@ -20,12 +20,12 @@ package edu.emory.cci.aiw.cvrg.eureka.servlet;
  * #L%
  */
 
+import edu.emory.cci.aiw.cvrg.eureka.common.authentication.AbstractAuthenticationSupport;
+
 /**
  *
  * @author Andrew Post
  */
-public enum AuthenticationMethod {
-	LOCAL,
-	LDAP,
-	OAUTH
+public final class ServicesAuthenticationSupport extends AbstractAuthenticationSupport {
+	
 }

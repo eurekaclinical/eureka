@@ -35,6 +35,8 @@ import org.slf4j.LoggerFactory;
 
 import com.google.inject.Inject;
 import com.google.inject.Provider;
+import edu.emory.cci.aiw.cvrg.eureka.common.authentication.AuthenticationMethod;
+import edu.emory.cci.aiw.cvrg.eureka.common.authentication.UserPrincipalAttributes;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.JobFilter;
 import edu.emory.cci.aiw.cvrg.eureka.common.dao.GenericDao;
@@ -109,10 +111,10 @@ public class JpaJobDao extends GenericDao<JobEntity, Long> implements JobDao {
 						jobFilter.getJobId()));
 			}
 			LOGGER.debug("Checking for user ID.");
-			if (jobFilter.getUsername() != null) {
-				LOGGER.debug("Found user ID: {}", jobFilter.getUsername());
-				predicates.add(builder.equal(root.get(JobEntity_.etlUser).get(EtlUser_.username),
-						jobFilter.getUsername()));
+			if (jobFilter.getUserId() != null) {
+				LOGGER.debug("Found user ID: {}", jobFilter.getUserId());
+				predicates.add(builder.equal(root.get(JobEntity_.etlUser).get(EtlUser_.id),
+						jobFilter.getUserId()));
 			}
 			LOGGER.debug("Checking for start time.");
 			if (jobFilter.getFrom() != null) {

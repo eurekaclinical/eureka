@@ -1,5 +1,7 @@
 package edu.emory.cci.aiw.cvrg.eureka.common.comm;
 
+import edu.emory.cci.aiw.cvrg.eureka.common.authentication.LoginType;
+
 /*
  * #%L
  * Eureka Common
@@ -35,6 +37,10 @@ public final class LocalUserRequest extends UserRequest {
 	 */
 	private String verifyPassword;
 
+	public LocalUserRequest() {
+		setLoginType(LoginType.INTERNAL);
+	}
+	
 	/**
 	 * Get the user's password.
 	 *
@@ -94,5 +100,10 @@ public final class LocalUserRequest extends UserRequest {
 	@Override
 	public void accept(UserRequestVisitor userRequestVisitor) {
 		userRequestVisitor.visit(this);
+	}
+	
+	@Override
+	public edu.emory.cci.aiw.cvrg.eureka.common.authentication.AuthenticationMethod authenticationMethod() {
+		return edu.emory.cci.aiw.cvrg.eureka.common.authentication.AuthenticationMethod.LOCAL;
 	}
 }

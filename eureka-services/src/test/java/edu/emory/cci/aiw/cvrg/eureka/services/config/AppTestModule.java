@@ -27,6 +27,7 @@ import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.WebResourceWrapperFacto
 
 import edu.emory.cci.aiw.cvrg.eureka.services.clients.I2b2Client;
 import edu.emory.cci.aiw.cvrg.eureka.services.clients.MockI2b2Client;
+import edu.emory.cci.aiw.cvrg.eureka.services.dao.AuthenticationMethodDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.FrequencyTypeDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.JpaFrequencyTypeDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.JpaDataElementEntityDao;
@@ -37,9 +38,12 @@ import edu.emory.cci.aiw.cvrg.eureka.services.dao.JpaTimeUnitDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.JpaUserDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.JpaValueComparatorDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.DataElementEntityDao;
+import edu.emory.cci.aiw.cvrg.eureka.services.dao.JpaAuthenticationMethodDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.JpaLocalUserDao;
+import edu.emory.cci.aiw.cvrg.eureka.services.dao.JpaLoginTypeDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.JpaOAuthProviderDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.LocalUserDao;
+import edu.emory.cci.aiw.cvrg.eureka.services.dao.LoginTypeDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.OAuthProviderDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.RelationOperatorDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.RoleDao;
@@ -76,6 +80,8 @@ public class AppTestModule extends AbstractModule {
 		bind(RelationOperatorDao.class).to(JpaRelationOperatorDao.class);
 		bind(DataElementEntityDao.class).to(JpaDataElementEntityDao.class);
 		bind(OAuthProviderDao.class).to(JpaOAuthProviderDao.class);
+		bind(AuthenticationMethodDao.class).to(JpaAuthenticationMethodDao.class);
+		bind(LoginTypeDao.class).to(JpaLoginTypeDao.class);
 		bind(EmailSender.class).to(MockEmailSender.class);
 		bind(I2b2Client.class).to(MockI2b2Client.class);
 		bind(ThresholdsOperatorDao.class).to(JpaThresholdsOperatorDao.class);

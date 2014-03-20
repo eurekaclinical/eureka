@@ -20,6 +20,7 @@ package edu.emory.cci.aiw.cvrg.eureka.common.comm;
  * #L%
  */
 
+import edu.emory.cci.aiw.cvrg.eureka.common.authentication.LoginType;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -49,6 +50,7 @@ public abstract class User implements UserVisitable {
 	private List<Long> roles = new ArrayList<>();
 	private String title;
 	private String department;
+	private LoginType loginType;
 
 	public Long getId() {
 		return id;
@@ -153,6 +155,14 @@ public abstract class User implements UserVisitable {
 	public void setDepartment(String department) {
 		this.department = department;
 	}
+
+	public LoginType getLoginType() {
+		return loginType;
+	}
+
+	protected void setLoginType(LoginType loginType) {
+		this.loginType = loginType;
+	}
 	
 	/**
 	 * Validate a {@link User} object. Two rules are implemented: 1) The
@@ -174,5 +184,7 @@ public abstract class User implements UserVisitable {
 
 		return result.toArray(new String[result.size()]);
 	}
+	
+	public abstract edu.emory.cci.aiw.cvrg.eureka.common.authentication.AuthenticationMethod authenticationMethod();
 
 }

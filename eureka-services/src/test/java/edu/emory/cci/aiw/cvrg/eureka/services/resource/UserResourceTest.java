@@ -42,12 +42,12 @@ import static org.junit.Assert.assertEquals;
  * @author hrathod
  *
  */
-public class UserRequestResourceTest extends AbstractServiceResourceTest {
+public class UserResourceTest extends AbstractServiceResourceTest {
 
 	/**
 	 * Simply call super().
 	 */
-	public UserRequestResourceTest() {
+	public UserResourceTest() {
 		super();
 	}
 
@@ -118,7 +118,7 @@ public class UserRequestResourceTest extends AbstractServiceResourceTest {
 				.path("/api/protected/users/passwordchangerequest")
 				.type(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON)
 				.post(ClientResponse.class, request);
-		assertEquals(Status.INTERNAL_SERVER_ERROR, response.getClientResponseStatus());
+		assertEquals(Status.NO_CONTENT, response.getClientResponseStatus());
 	}
 	
 	@Test
@@ -150,7 +150,10 @@ public class UserRequestResourceTest extends AbstractServiceResourceTest {
 		WebResource resource = this.resource();
 		List<User> users = this.getUserList();
 		User user = users.get(0);
-		ClientResponse response = resource.path("/api/protected/users/byname/" + user.getEmail()).accept(MediaType.APPLICATION_JSON).get(ClientResponse.class);
+		ClientResponse response = 
+				resource.path("/api/protected/users/me")
+						.accept(MediaType.APPLICATION_JSON)
+						.get(ClientResponse.class);
 		assertEquals(Status.OK, response.getClientResponseStatus());
 
 		User responseUser = response.getEntity(User.class);

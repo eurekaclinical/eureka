@@ -45,12 +45,12 @@ import edu.emory.cci.aiw.cvrg.eureka.common.comm.JobSpec;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.EtlUser;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.JobEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.exception.HttpStatusException;
+import edu.emory.cci.aiw.cvrg.eureka.etl.authentication.EtlAuthenticationSupport;
 import edu.emory.cci.aiw.cvrg.eureka.etl.dao.EtlUserDao;
 import edu.emory.cci.aiw.cvrg.eureka.etl.dao.JobDao;
 import edu.emory.cci.aiw.cvrg.eureka.etl.job.TaskManager;
 import edu.emory.cci.aiw.cvrg.eureka.etl.validator.PropositionValidator;
 import edu.emory.cci.aiw.cvrg.eureka.etl.validator.PropositionValidatorException;
-import java.security.Principal;
 import java.util.ArrayList;
 import java.util.Date;
 import javax.annotation.security.RolesAllowed;
@@ -73,6 +73,7 @@ public class JobResource {
 	private final EtlUserDao etlUserDao;
 	private final PropositionValidator propositionValidator;
 	private final TaskManager taskManager;
+	private final EtlAuthenticationSupport authenticationSupport;
 
 	@Inject
 	public JobResource(JobDao inJobDao, TaskManager inTaskManager,
@@ -81,13 +82,14 @@ public class JobResource {
 		this.taskManager = inTaskManager;
 		this.propositionValidator = inValidator;
 		this.etlUserDao = inEtlUserDao;
+		this.authenticationSupport = new EtlAuthenticationSupport(this.etlUserDao);
 	}
 
 	@GET
 	public List<Job> getAll(@Context HttpServletRequest request,
 			@QueryParam("order") String order) {
 		JobFilter jobFilter = new JobFilter(null,
-				request.getUserPrincipal().getName(), null, null, null);
+				this.authenticationSupport.getEtlUser(request).getId(), null, null, null);
 		List<Job> jobs = new ArrayList<>();
 		List<JobEntity> jobEntities;
 		if (order == null) {
@@ -108,7 +110,7 @@ public class JobResource {
 	public Job getJob(@Context HttpServletRequest request,
 			@PathParam("jobId") Long inJobId) {
 		JobFilter jobFilter = new JobFilter(inJobId,
-				request.getUserPrincipal().getName(), null, null, null);
+				this.authenticationSupport.getEtlUser(request).getId(), null, null, null);
 		List<JobEntity> jobEntities = this.jobDao.getWithFilter(jobFilter);
 		if (jobEntities.isEmpty()) {
 			throw new HttpStatusException(Status.NOT_FOUND);
@@ -131,7 +133,8 @@ public class JobResource {
 	private Long doCreateJob(JobRequest inJobRequest, HttpServletRequest request) {
 		JobSpec job = inJobRequest.getJobSpec();
 		JobEntity jobEntity = 
-				newJobEntity(job, toEtlUser(request.getUserPrincipal()));
+				newJobEntity(job, 
+						this.authenticationSupport.getEtlUser(request));
 		this.taskManager.queueTask(jobEntity.getId(), 
 				inJobRequest.getUserPropositions(),
 				inJobRequest.getPropositionIdsToShow(), 
@@ -152,17 +155,6 @@ public class JobResource {
 			jobs.add(jobEntity.toJob());
 		}
 		return jobs;
-	}
-
-	private EtlUser toEtlUser(Principal userPrincipal) {
-		String username = userPrincipal.getName();
-		EtlUser etlUser = this.etlUserDao.getByUsername(username);
-		if (etlUser == null) {
-			etlUser = new EtlUser();
-			etlUser.setUsername(username);
-			this.etlUserDao.create(etlUser);
-		}
-		return etlUser;
 	}
 
 	private JobEntity newJobEntity(JobSpec job, EtlUser etlUser) {

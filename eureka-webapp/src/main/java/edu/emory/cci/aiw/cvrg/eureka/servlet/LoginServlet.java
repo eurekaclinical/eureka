@@ -20,7 +20,6 @@
 package edu.emory.cci.aiw.cvrg.eureka.servlet;
 
 import java.io.IOException;
-import java.security.Principal;
 import java.util.Date;
 
 import javax.servlet.ServletException;
@@ -33,6 +32,7 @@ import com.google.inject.Inject;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.User;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ClientException;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ServicesClient;
+import edu.emory.cci.aiw.cvrg.eureka.webapp.authentication.WebappAuthenticationSupport;
 
 public class LoginServlet extends HttpServlet {
 
@@ -46,18 +46,9 @@ public class LoginServlet extends HttpServlet {
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
-
-		Principal principal = req.getUserPrincipal();
-		String userName = principal.getName();
-		User user;
 		try {
-			user = this.servicesClient.getUserByName(userName);
-		} catch (ClientException ex) {
-			throw new ServletException("Error getting user " + userName, ex);
-		}
-
-		user.setLastLogin(new Date());
-		try {
+			User user = this.servicesClient.getMe();
+			user.setLastLogin(new Date());
 			this.servicesClient.updateUser(user);
 		} catch (ClientException e) {
 			throw new ServletException(e);

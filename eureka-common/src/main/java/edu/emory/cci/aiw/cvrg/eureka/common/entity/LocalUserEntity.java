@@ -60,10 +60,15 @@ public class LocalUserEntity extends UserEntity {
 	 */
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date passwordExpiration;
-
-	public LocalUserEntity() {
+	
+	public LocalUserEntity(LoginTypeEntity loginType, AuthenticationMethodEntity authenticationMethod) {
+		super(loginType, authenticationMethod);
 	}
 	
+	protected LocalUserEntity() {
+		
+	}
+
 	/**
 	 * Get the user's password
 	 *

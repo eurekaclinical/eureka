@@ -36,16 +36,19 @@ import edu.emory.cci.aiw.cvrg.eureka.common.comm.DataElement;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.User;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ClientException;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ServicesClient;
+import edu.emory.cci.aiw.cvrg.eureka.webapp.authentication.WebappAuthenticationSupport;
 
 public class SavePropositionServlet extends HttpServlet {
 
 	private static final Logger LOGGER = LoggerFactory
 	        .getLogger(SavePropositionServlet.class);
 	private final ServicesClient servicesClient;
+	private final WebappAuthenticationSupport authenticationSupport;
 
 	@Inject
 	public SavePropositionServlet (ServicesClient inClient) {
 		this.servicesClient = inClient;
+		this.authenticationSupport = new WebappAuthenticationSupport(this.servicesClient);
 	}
 
 	@Override
@@ -55,10 +58,8 @@ public class SavePropositionServlet extends HttpServlet {
 		ObjectMapper objectMapper = new ObjectMapper();
 		DataElement dataElement = objectMapper.readValue(req.getReader(),
 				DataElement.class);
-
-		String username = req.getUserPrincipal().getName();
 		try {
-			User user = this.servicesClient.getUserByName(username);
+			User user = this.authenticationSupport.getMe(req);
 			dataElement.setUserId(user.getId());
 			if (dataElement.getId() == null) {
 				this.servicesClient.saveUserElement(dataElement);

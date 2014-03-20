@@ -19,8 +19,6 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.common.entity;
 
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.User;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.UserRequest;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -40,6 +38,7 @@ import javax.persistence.TemporalType;
 import javax.persistence.Column;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
+import javax.persistence.ManyToOne;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 /**
@@ -118,6 +117,14 @@ public abstract class UserEntity implements UserEntityVisitable {
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date lastLogin;
 	
+	@ManyToOne(optional = false)
+	@JoinColumn(referencedColumnName = "id", nullable = false)
+	private LoginTypeEntity loginType;
+	
+	@ManyToOne(optional = false)
+	@JoinColumn(referencedColumnName = "id", nullable = false)
+	private AuthenticationMethodEntity authenticationMethod;
+	
 	/**
 	 * A list of roles assigned to the user.
 	 */
@@ -133,8 +140,16 @@ public abstract class UserEntity implements UserEntityVisitable {
 	/**
 	 * Create an empty User object.
 	 */
-	public UserEntity() {
+	protected UserEntity() {
 		this.created = new Date();
+	}
+	
+	protected UserEntity(LoginTypeEntity loginType, AuthenticationMethodEntity authenticationMethod) {
+		this();
+		assert loginType != null : "loginType cannot be null";
+		assert authenticationMethod != null : "authenticationMethod cannot be null";
+		this.loginType = loginType;
+		this.authenticationMethod = authenticationMethod;
 	}
 
 	/**
@@ -346,6 +361,22 @@ public abstract class UserEntity implements UserEntityVisitable {
 		department = inDepartment;
 	}
 
+	public LoginTypeEntity getLoginType() {
+		return loginType;
+	}
+
+	void setLoginType(LoginTypeEntity loginType) {
+		this.loginType = loginType;
+	}
+
+	public AuthenticationMethodEntity getAuthenticationMethod() {
+		return authenticationMethod;
+	}
+
+	void setAuthenticationMethod(AuthenticationMethodEntity authMethod) {
+		this.authenticationMethod = authMethod;
+	}
+	
 	@Override
 	public String toString() {
 		return ToStringBuilder.reflectionToString(this);

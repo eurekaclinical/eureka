@@ -40,9 +40,12 @@ import edu.emory.cci.aiw.cvrg.eureka.common.entity.LocalUserEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.Role;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.UserEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.exception.HttpStatusException;
+import edu.emory.cci.aiw.cvrg.eureka.services.authentication.ServicesAuthenticationSupport;
 import edu.emory.cci.aiw.cvrg.eureka.services.clients.I2b2Client;
 import edu.emory.cci.aiw.cvrg.eureka.services.config.ServiceProperties;
+import edu.emory.cci.aiw.cvrg.eureka.services.dao.AuthenticationMethodDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.LocalUserDao;
+import edu.emory.cci.aiw.cvrg.eureka.services.dao.LoginTypeDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.OAuthProviderDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.RoleDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.UserDao;
@@ -91,6 +94,7 @@ public class UserRequestResource {
 	private final PasswordGenerator passwordGenerator;
 	private final ServiceProperties serviceProperties;
 	private final UserRequestToUserEntityVisitor visitor;
+	private final ServicesAuthenticationSupport authenticationSupport;
 
 	/**
 	 * Create a UserResource object with a User DAO and a Role DAO.
@@ -108,7 +112,9 @@ public class UserRequestResource {
 			EmailSender inEmailSender, I2b2Client inClient,
 			PasswordGenerator inPasswordGenerator,
 			ServiceProperties serviceProperties,
-			OAuthProviderDao inOAuthProviderDao) {
+			OAuthProviderDao inOAuthProviderDao,
+			LoginTypeDao inLoginTypeDao,
+			AuthenticationMethodDao inAuthenticationMethodDao) {
 		this.userDao = inUserDao;
 		this.localUserDao = inLocalUserDao;
 		this.roleDao = inRoleDao;
@@ -116,7 +122,9 @@ public class UserRequestResource {
 		this.i2b2Client = inClient;
 		this.passwordGenerator = inPasswordGenerator;
 		this.serviceProperties = serviceProperties;
-		this.visitor = new UserRequestToUserEntityVisitor(inOAuthProviderDao, inRoleDao);
+		this.visitor = new UserRequestToUserEntityVisitor(inOAuthProviderDao, 
+				inRoleDao, inLoginTypeDao, inAuthenticationMethodDao);
+		this.authenticationSupport = new ServicesAuthenticationSupport();
 	}
 
 	/**
@@ -130,7 +138,7 @@ public class UserRequestResource {
 	public void addUser(@Context HttpServletRequest inRequest,
 			UserRequest userRequest) {
 		if (inRequest.getRemoteUser() != null) {
-			if (!inRequest.getRemoteUser().equals(userRequest.getUsername())) {
+			if (!this.authenticationSupport.isSameUser(inRequest, userRequest)) {
 				throw new HttpStatusException(Response.Status.BAD_REQUEST, 
 						"Cannot request a user other than yourself");
 			} else if (userRequest instanceof LocalUserRequest) {
@@ -143,7 +151,8 @@ public class UserRequestResource {
 						"Only local user requests are permitted if you are not already authenticated");
 			}
 		}
-		UserEntity user = this.userDao.getByName(userRequest.getUsername());
+		UserEntity user = 
+				this.userDao.getByUsername(userRequest.getUsername());
 		if (user != null) {
 			throw new HttpStatusException(Response.Status.CONFLICT,
 					"That username is already taken");

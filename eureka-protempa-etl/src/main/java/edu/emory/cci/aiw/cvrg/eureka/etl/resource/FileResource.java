@@ -25,6 +25,7 @@ import com.sun.jersey.multipart.FormDataParam;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.SourceConfig;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.EtlUser;
 import edu.emory.cci.aiw.cvrg.eureka.common.exception.HttpStatusException;
+import edu.emory.cci.aiw.cvrg.eureka.etl.authentication.EtlAuthenticationSupport;
 import edu.emory.cci.aiw.cvrg.eureka.etl.config.EtlProperties;
 import edu.emory.cci.aiw.cvrg.eureka.etl.dao.EtlUserDao;
 import edu.emory.cci.aiw.cvrg.eureka.etl.dao.SourceConfigDao;
@@ -37,7 +38,6 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -56,12 +56,14 @@ public class FileResource {
 	private final EtlProperties etlProperties;
 	private final EtlUserDao userDao;
 	private final SourceConfigDao sourceConfigDao;
+	private final EtlAuthenticationSupport authenticationSupport;
 
 	@Inject
 	public FileResource(EtlProperties inEtlProperties, EtlUserDao inUserDao, SourceConfigDao inSourceConfigDao) {
 		this.etlProperties = inEtlProperties;
 		this.userDao = inUserDao;
 		this.sourceConfigDao = inSourceConfigDao;
+		this.authenticationSupport = new EtlAuthenticationSupport(this.userDao);
 	}
 	
 	@POST
@@ -73,13 +75,7 @@ public class FileResource {
 			@PathParam("sourceId") String sourceId,
 			@FormDataParam("file") InputStream uploadingInputStream,
 			@FormDataParam("file") FormDataContentDisposition fileDetail) {
-		String username = req.getUserPrincipal().getName();
-		EtlUser user = this.userDao.getByUsername(username);
-		if (user == null) {
-			user = new EtlUser();
-			user.setUsername(username);
-			this.userDao.create(user);
-		}
+		EtlUser user = this.authenticationSupport.getEtlUser(req);
 		SourceConfigs sources = new SourceConfigs(this.etlProperties, user, this.sourceConfigDao);
 
 		try {

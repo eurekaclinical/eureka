@@ -23,10 +23,25 @@ import javax.persistence.EntityManager;
 
 import com.google.inject.Inject;
 import com.google.inject.Provider;
+import edu.emory.cci.aiw.cvrg.eureka.common.authentication.AuthenticationMethod;
+import edu.emory.cci.aiw.cvrg.eureka.common.authentication.UserPrincipalAttributes;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.dao.GenericDao;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.AuthenticationMethodEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.UserEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.UserEntity_;
+import java.text.MessageFormat;
+import javax.persistence.NoResultException;
+import javax.persistence.NonUniqueResultException;
+import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Path;
+import javax.persistence.criteria.Root;
+import javax.servlet.http.HttpServletRequest;
+import org.jasig.cas.client.authentication.AttributePrincipal;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * An implementation of the {@link UserDao} interface, backed by JPA entities
@@ -35,6 +50,11 @@ import edu.emory.cci.aiw.cvrg.eureka.common.entity.UserEntity_;
  * @author hrathod
  */
 public class JpaUserDao extends GenericDao<UserEntity, Long> implements UserDao {
+	/**
+	 * The class level logger.
+	 */
+	private static final Logger LOGGER = LoggerFactory.getLogger(
+			JpaUserDao.class);
 
 	/**
 	 * Create an object with the give entity manager.
@@ -46,10 +66,23 @@ public class JpaUserDao extends GenericDao<UserEntity, Long> implements UserDao 
 	public JpaUserDao(Provider<EntityManager> inEMProvider) {
 		super(UserEntity.class, inEMProvider);
 	}
+	
+	@Override
+	public UserEntity getByHttpServletRequest(HttpServletRequest request) {
+		AttributePrincipal principal = 
+				(AttributePrincipal) request.getUserPrincipal();
+		return getByAttributePrincipal(principal);
+	}
 
 	@Override
-	public UserEntity getByName(String name) {
-		return this.getUniqueByAttribute(UserEntity_.username, name);
+	public UserEntity getByAttributePrincipal(AttributePrincipal principal) {
+		String name = principal.getName();
+		return getByUsername(name);
+	}
+	
+	@Override
+	public UserEntity getByUsername(String username) {
+		return this.getUniqueByAttribute(UserEntity_.username, username);
 	}
 	
 }

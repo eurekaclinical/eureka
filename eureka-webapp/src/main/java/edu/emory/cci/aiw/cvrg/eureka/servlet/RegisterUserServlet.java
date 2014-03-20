@@ -19,6 +19,7 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.servlet;
 
+import edu.emory.cci.aiw.cvrg.eureka.common.authentication.AuthenticationMethod;
 import java.io.IOException;
 
 import javax.servlet.ServletException;
@@ -31,6 +32,7 @@ import org.slf4j.LoggerFactory;
 
 import com.google.inject.Inject;
 import com.sun.jersey.api.client.ClientResponse.Status;
+import edu.emory.cci.aiw.cvrg.eureka.common.authentication.UserPrincipalAttributes;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.LdapUserRequest;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.LocalUserRequest;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.OAuthUserRequest;
@@ -39,6 +41,8 @@ import edu.emory.cci.aiw.cvrg.eureka.common.comm.UserRequest;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ClientException;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ServicesClient;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.OAuthProvider;
+import edu.emory.cci.aiw.cvrg.eureka.webapp.authentication.WebappAuthenticationSupport;
+import edu.emory.cci.aiw.cvrg.eureka.webapp.config.WebappProperties;
 import java.text.MessageFormat;
 import java.util.ResourceBundle;
 import org.jasig.cas.client.authentication.AttributePrincipal;
@@ -49,20 +53,26 @@ public class RegisterUserServlet extends HttpServlet {
 	private static final ResourceBundle messages
 			= ResourceBundle.getBundle("Messages");
 	private final ServicesClient servicesClient;
+	private final WebappAuthenticationSupport authenticationSupport;
+	private final WebappProperties properties;
 
 	@Inject
 	public RegisterUserServlet(ServicesClient inClient) {
 		this.servicesClient = inClient;
+		this.authenticationSupport = new WebappAuthenticationSupport(inClient);
+		this.properties = new WebappProperties();
 	}
 
 	@Override
 	public void doPost(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
 		AttributePrincipal principal
-				= (AttributePrincipal) req.getUserPrincipal();
+				= this.authenticationSupport.getUserPrincipal(req);
 		String authenticationMethod;
 		if (principal != null) {
-			authenticationMethod = (String) principal.getAttributes().get("authenticationMethod");
+			authenticationMethod
+					= (String) principal.getAttributes().get(
+							UserPrincipalAttributes.AUTHENTICATION_METHOD);
 		} else {
 			authenticationMethod = AuthenticationMethod.LOCAL.name();
 		}
@@ -105,7 +115,7 @@ public class RegisterUserServlet extends HttpServlet {
 						break;
 					default:
 						throw new ServletException("Unexpected authentication method: "
-						+ authenticationMethod);
+								+ authenticationMethod);
 				}
 			} catch (IllegalArgumentException iae) {
 				throw new ServletException("Invalid authentication method: "
@@ -128,15 +138,22 @@ public class RegisterUserServlet extends HttpServlet {
 			this.servicesClient.addUser(userRequest);
 			resp.setStatus(HttpServletResponse.SC_OK);
 		} catch (ClientException e) {
+			String msg = e.getMessage();
 			Status responseStatus = e.getResponseStatus();
 			if (responseStatus.equals(Status.CONFLICT)) {
 				resp.setStatus(HttpServletResponse.SC_CONFLICT);
+				//This should only happen with local accounts.
+				if (!authenticationMethod.equals(AuthenticationMethod.LOCAL.name())) {
+					LOGGER.error("Attempted to register a non-local account ({}) that already exists!", principal.getName());
+					msg = MessageFormat.format(messages.getString("registerUserServlet.error.unspecified"), "aiwhelp@emory.edu");
+				} else {
+					msg = messages.getString("registerUserServlet.error.localAccountConflict");
+				}
 			} else if (responseStatus.equals(Status.BAD_REQUEST)) {
 				resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 			} else {
 				resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 			}
-			String msg = e.getMessage();
 			resp.setContentType("text/plain");
 			LOGGER.debug("Error: {}", msg);
 			resp.setContentLength(msg.length());

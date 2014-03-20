@@ -1,5 +1,7 @@
 package edu.emory.cci.aiw.cvrg.eureka.common.comm;
 
+import edu.emory.cci.aiw.cvrg.eureka.common.authentication.LoginType;
+
 /*
  * #%L
  * Eureka Common
@@ -26,9 +28,18 @@ package edu.emory.cci.aiw.cvrg.eureka.common.comm;
  */
 public final class LdapUserRequest extends UserRequest {
 
+	public LdapUserRequest() {
+		setLoginType(LoginType.INTERNAL);
+	}
+	
 	@Override
 	public void accept(UserRequestVisitor userRequestVisitor) {
 		userRequestVisitor.visit(this);
+	}
+	
+	@Override
+	public edu.emory.cci.aiw.cvrg.eureka.common.authentication.AuthenticationMethod authenticationMethod() {
+		return edu.emory.cci.aiw.cvrg.eureka.common.authentication.AuthenticationMethod.LDAP;
 	}
 	
 }

@@ -38,7 +38,7 @@ public class JobFilter {
 	/**
 	 * The unique identifier for a user to whom the jobs should belong.
 	 */
-	private final String username;
+	private final Long userId;
 	/**
 	 * The state in which the jobs should be when retrieved.
 	 */
@@ -58,17 +58,17 @@ public class JobFilter {
 	 * to search between.
 	 *
 	 * @param inJobId Search for a specific job using a unique identifier.
-	 * @param inUsername Search for all jobs belonging to a specific user.
+	 * @param inPrincipal Search for all jobs belonging to a specific user.
 	 * @param inState Search for all jobs in a given state.
 	 * @param inFrom Search for all jobs with a timestamp after the given time.
 	 * @param inTo Search for all jobs with a timestamp before the given time.
 	 */
-	public JobFilter(final Long inJobId, final String inUsername,
+	public JobFilter(final Long inJobId, final Long inUserId,
 			final String inState, final Date inFrom,
 			final Date inTo) {
 
 		this.jobId = inJobId;
-		this.username = inUsername;
+		this.userId = inUserId;
 		this.state = inState;
 		this.from = (null == inFrom) ? null : new Date(inFrom.getTime());
 		this.to = (null == inTo) ? null : new Date(inTo.getTime());
@@ -97,8 +97,8 @@ public class JobFilter {
 		}
 		this.jobId = params.get("jobId") == null ? null : Long.valueOf(params.
 				get("jobId"));
-		this.username = params.get("username") == null ? null : params.
-				get("username");
+		this.userId = params.get("userId") == null ? null : Long.valueOf(params.
+				get("userId"));
 		this.state = params.get("state");
 		this.from = params.get("from") == null ? null : new Date(Long.valueOf(params.
 				get("from")));
@@ -116,8 +116,8 @@ public class JobFilter {
 	/**
 	 * @return the userId
 	 */
-	public final String getUsername() {
-		return this.username;
+	public final Long getUserId() {
+		return this.userId;
 	}
 
 	/**
@@ -153,8 +153,8 @@ public class JobFilter {
 		if (this.jobId != null) {
 			builder.append("jobId=").append(this.jobId);
 		}
-		if (this.username != null) {
-			builder.append("|userId=").append(username);
+		if (this.userId != null) {
+			builder.append("|userId=").append(this.userId);
 		}
 		if (this.state != null) {
 			builder.append("|state=").append(state);

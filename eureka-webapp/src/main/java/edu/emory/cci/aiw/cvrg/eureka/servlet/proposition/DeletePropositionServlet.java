@@ -20,7 +20,6 @@
 package edu.emory.cci.aiw.cvrg.eureka.servlet.proposition;
 
 import java.io.IOException;
-import java.security.Principal;
 import java.util.ResourceBundle;
 
 import javax.servlet.ServletException;
@@ -37,6 +36,7 @@ import com.google.inject.Inject;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.User;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ClientException;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ServicesClient;
+import edu.emory.cci.aiw.cvrg.eureka.webapp.authentication.WebappAuthenticationSupport;
 
 public class DeletePropositionServlet extends HttpServlet {
 
@@ -44,10 +44,12 @@ public class DeletePropositionServlet extends HttpServlet {
 			.getLogger(DeletePropositionServlet.class);
 
 	private final ServicesClient servicesClient;
+	private final WebappAuthenticationSupport authenticationSupport;
 
 	@Inject
 	public DeletePropositionServlet (ServicesClient inClient) {
 		this.servicesClient = inClient;
+		this.authenticationSupport = new WebappAuthenticationSupport(this.servicesClient);
 	}
 
 	@Override
@@ -63,11 +65,8 @@ public class DeletePropositionServlet extends HttpServlet {
 		LOGGER.debug("DeletePropositionServlet");
 		String propKey = req.getParameter("key");
 
-		Principal principal = req.getUserPrincipal();
-		String userName = principal.getName();
-		// user/delete/{userId}/{prodId}
 		try {
-			User user = this.servicesClient.getUserByName(userName);
+			User user = this.authenticationSupport.getMe(req);
 			this.servicesClient.deleteUserElement(user.getId(), propKey);
 		} catch (ClientException e) {
 			resp.setContentType(MediaType.TEXT_PLAIN);

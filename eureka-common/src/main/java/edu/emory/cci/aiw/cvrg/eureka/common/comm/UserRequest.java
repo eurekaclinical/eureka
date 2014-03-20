@@ -19,6 +19,7 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.common.comm;
 
+import edu.emory.cci.aiw.cvrg.eureka.common.authentication.LoginType;
 import java.util.ArrayList;
 import java.util.List;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -82,6 +83,8 @@ public abstract class UserRequest implements UserRequestVisitable {
 	 * The user's department. Added later on.
 	 */
 	private String department;
+	
+	private LoginType loginType;
 
 	/**
 	 * Default constructor, calls super()
@@ -260,6 +263,14 @@ public abstract class UserRequest implements UserRequestVisitable {
 		this.department = inDepartment;
 	}
 
+	public LoginType getLoginType() {
+		return loginType;
+	}
+
+	protected void setLoginType(LoginType inLoginType) {
+		this.loginType = inLoginType;
+	}
+	
 	/**
 	 * Validate a {@link UserRequest} object. Two rules are implemented: 1) The
 	 * email addresses in the two email fields must match, and 2) The passwords
@@ -284,6 +295,8 @@ public abstract class UserRequest implements UserRequestVisitable {
 		
 		return result.toArray(new String[result.size()]);
 	}
+	
+	public abstract edu.emory.cci.aiw.cvrg.eureka.common.authentication.AuthenticationMethod authenticationMethod();
 
 	@Override
 	public String toString() {

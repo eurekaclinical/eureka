@@ -20,6 +20,7 @@
 package edu.emory.cci.aiw.cvrg.eureka.services.resource;
 
 import com.google.inject.Inject;
+import edu.emory.cci.aiw.cvrg.eureka.common.authentication.AuthenticationMethod;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.PasswordChangeRequest;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.User;
 import edu.emory.cci.aiw.cvrg.eureka.services.util.UserToUserEntityVisitor;
@@ -36,6 +37,9 @@ import edu.emory.cci.aiw.cvrg.eureka.services.email.EmailException;
 import edu.emory.cci.aiw.cvrg.eureka.services.email.EmailSender;
 import edu.emory.cci.aiw.cvrg.eureka.services.util.PasswordGenerator;
 import edu.emory.cci.aiw.cvrg.eureka.common.util.StringUtil;
+import edu.emory.cci.aiw.cvrg.eureka.services.authentication.ServicesAuthenticationSupport;
+import edu.emory.cci.aiw.cvrg.eureka.services.dao.AuthenticationMethodDao;
+import edu.emory.cci.aiw.cvrg.eureka.services.dao.LoginTypeDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.OAuthProviderDao;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -58,6 +62,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import org.apache.commons.lang3.StringUtils;
+import org.jasig.cas.client.authentication.AttributePrincipal;
 
 /**
  * RESTful end-point for {@link UserEntity} related methods.
@@ -106,6 +111,7 @@ public class UserResource {
 	private String validationError;
 	
 	private UserToUserEntityVisitor visitor;
+	private final ServicesAuthenticationSupport authenticationSupport;
 
 	/**
 	 * Create a UserResource object with a User DAO and a Role DAO.
@@ -119,14 +125,18 @@ public class UserResource {
 			RoleDao inRoleDao,
 			EmailSender inEmailSender, I2b2Client inClient,
 			PasswordGenerator inPasswordGenerator,
-			OAuthProviderDao inOAuthProviderDao) {
+			OAuthProviderDao inOAuthProviderDao,
+			LoginTypeDao inLoginTypeDao,
+			AuthenticationMethodDao inAuthenticationMethodDao) {
 		this.userDao = inUserDao;
 		this.localUserDao = inLocalUserDao;
 		this.roleDao = inRoleDao;
 		this.emailSender = inEmailSender;
 		this.i2b2Client = inClient;
 		this.passwordGenerator = inPasswordGenerator;
-		this.visitor = new UserToUserEntityVisitor(inOAuthProviderDao, inRoleDao);
+		this.visitor = new UserToUserEntityVisitor(inOAuthProviderDao, 
+				inRoleDao, inLoginTypeDao, inAuthenticationMethodDao);
+		this.authenticationSupport = new ServicesAuthenticationSupport();
 	}
 
 	/**
@@ -159,8 +169,7 @@ public class UserResource {
 		if (userEntity == null) {
 			throw new HttpStatusException(Response.Status.NOT_FOUND);
 		}
-		String username = req.getUserPrincipal().getName();
-		if (!req.isUserInRole("admin") && !username.equals(userEntity.getEmail())) {
+		if (!req.isUserInRole("admin") && !this.authenticationSupport.isSameUser(req, userEntity)) {
 			throw new HttpStatusException(Response.Status.NOT_FOUND);
 		}
 		this.userDao.refresh(userEntity);
@@ -176,21 +185,20 @@ public class UserResource {
 	 * @param inName The of the user to fetch.
 	 * @return The user corresponding to the given name.
 	 */
-	@Path("/byname/{name}")
+	@Path("/me")
 	@GET
-	public User getUserByName(@Context HttpServletRequest req,
-			@PathParam("name") String inName) {
-		String username = req.getUserPrincipal().getName();
-		if (!req.isUserInRole("admin") && !username.equals(inName)) {
-			throw new HttpStatusException(Response.Status.NOT_FOUND);
-		}
-		UserEntity userEntity = this.userDao.getByName(inName);
+	public User getMe(@Context HttpServletRequest req) {
+		AttributePrincipal principal = 
+				this.authenticationSupport.getUserPrincipal(req);
+		String username = principal.getName();
+		UserEntity userEntity = this.userDao.getByUsername(username);
 		if (userEntity != null) {
 			this.userDao.refresh(userEntity);
 		} else {
-			throw new HttpStatusException(Response.Status.NOT_FOUND);
+			throw new AssertionError("Cannot find " + username + 
+					" in user database!");
 		}
-		LOGGER.debug("Returning user for name {}: {}", inName, userEntity);
+		LOGGER.debug("Returning user for name {}: {}", username, userEntity);
 		UserEntityToUserVisitor visitor = new UserEntityToUserVisitor();
 		userEntity.accept(visitor);
 		return visitor.getUser();
@@ -205,7 +213,7 @@ public class UserResource {
 	@RolesAllowed({"admin"})
 	@POST
 	public void addUser(final User user) {
-		if (this.userDao.getByName(user.getUsername()) != null) {
+		if (this.userDao.getByUsername(user.getUsername()) != null) {
 			throw new HttpStatusException(Response.Status.CONFLICT);
 		}
 		String[] errors = user.validate();
@@ -289,8 +297,7 @@ public class UserResource {
 	 * @return A "Created" response with a link to the user page if successful.
 	 */
 	@PUT
-	public Response putUser(@Context HttpServletRequest req,
-			final User inUser) {
+	public Response putUser(@Context HttpServletRequest req, User inUser) {
 		String username = req.getUserPrincipal().getName();
 		if (!req.isUserInRole("admin") && !username.equals(inUser.getUsername())) {
 			throw new HttpStatusException(Response.Status.BAD_REQUEST);

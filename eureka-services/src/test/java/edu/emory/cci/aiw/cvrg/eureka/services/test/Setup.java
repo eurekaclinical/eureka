@@ -32,12 +32,16 @@ import javax.persistence.criteria.CriteriaQuery;
 
 import com.google.inject.Inject;
 import com.google.inject.Provider;
+import edu.emory.cci.aiw.cvrg.eureka.common.authentication.AuthenticationMethod;
+import edu.emory.cci.aiw.cvrg.eureka.common.authentication.LoginType;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.AuthenticationMethodEntity;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.CategoryEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.CategoryEntity.CategoryType;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.DataElementEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.FrequencyType;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.LocalUserEntity;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.LoginTypeEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.Role;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.SystemProposition;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.ThresholdsOperator;
@@ -47,6 +51,10 @@ import edu.emory.cci.aiw.cvrg.eureka.common.entity.ValueThresholdGroupEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.test.TestDataException;
 import edu.emory.cci.aiw.cvrg.eureka.common.test.TestDataProvider;
 import edu.emory.cci.aiw.cvrg.eureka.common.util.StringUtil;
+import edu.emory.cci.aiw.cvrg.eureka.services.dao.AuthenticationMethodDao;
+import edu.emory.cci.aiw.cvrg.eureka.services.dao.LoginTypeDao;
+import edu.emory.cci.aiw.cvrg.eureka.services.entity.UserEntityFactory;
+import java.util.Collections;
 
 /**
  * Sets up the environment for testing, by bootstrapping the data store with
@@ -71,13 +79,19 @@ public class Setup implements TestDataProvider {
 	private List<DataElementEntity> propositions;
 	private List<TimeUnit> timeUnits;
 	private List<FrequencyType> freqTypes;
+	private final UserEntityFactory userEntityFactory;
+	private List<LoginTypeEntity> loginTypes;
+	private List<AuthenticationMethodEntity> authenticationMethods;
 
 	/**
 	 * Create a Bootstrap class with an EntityManager.
 	 */
 	@Inject
-	Setup(Provider<EntityManager> inManagerProvider) {
+	Setup(Provider<EntityManager> inManagerProvider,
+			LoginTypeDao inLoginTypeDao,
+			AuthenticationMethodDao inAuthenticationMethodDao) {
 		this.managerProvider = inManagerProvider;
+		this.userEntityFactory = new UserEntityFactory(inLoginTypeDao, inAuthenticationMethodDao);
 	}
 
 	private EntityManager getEntityManager() {
@@ -89,6 +103,8 @@ public class Setup implements TestDataProvider {
 		this.researcherRole = this.createResearcherRole();
 		this.adminRole = this.createAdminRole();
 		this.superRole = this.createSuperRole();
+		this.loginTypes = createLoginTypes();
+		this.authenticationMethods = createAuthenticationMethods();
 		this.researcherUser = this.createResearcherUser();
 		this.adminUser = this.createAdminUser();
 		this.superUser = this.createSuperUser();
@@ -97,6 +113,7 @@ public class Setup implements TestDataProvider {
 						this.superUser);
 		this.timeUnits = this.createTimeUnits();
 		this.freqTypes = createFrequencyTypes();
+		
 	}
 
 	@Override
@@ -110,6 +127,8 @@ public class Setup implements TestDataProvider {
 		this.researcherRole = null;
 		this.adminRole = null;
 		this.superRole = null;
+		this.loginTypes = null;
+		this.authenticationMethods = null;
 		this.researcherUser = null;
 		this.adminUser = null;
 		this.superUser = null;
@@ -210,7 +229,7 @@ public class Setup implements TestDataProvider {
 	                                  Role... roles) throws
 			TestDataException {
 		EntityManager entityManager = this.getEntityManager();
-		LocalUserEntity user = new LocalUserEntity();
+		LocalUserEntity user = this.userEntityFactory.getLocalUserEntityInstance();
 		try {
 			user.setActive(true);
 			user.setVerified(true);
@@ -269,9 +288,7 @@ public class Setup implements TestDataProvider {
 		entityManager.persist(timeUnit);
 		entityManager.flush();
 		entityManager.getTransaction().commit();
-		List<TimeUnit> result = new ArrayList<>();
-		result.add(timeUnit);
-		return result;
+		return Collections.singletonList(timeUnit);
 	}
 	
 	private List<FrequencyType> createFrequencyTypes() {
@@ -284,8 +301,28 @@ public class Setup implements TestDataProvider {
 		entityManager.getTransaction().begin();
 		entityManager.persist(freqType);
 		entityManager.getTransaction().commit();
-		List<FrequencyType> result = new ArrayList<>();
-		result.add(freqType);
-		return result;
+		return Collections.singletonList(freqType);
+	}
+	
+	private List<LoginTypeEntity> createLoginTypes() {
+		EntityManager entityManager = getEntityManager();
+		LoginTypeEntity loginType = new LoginTypeEntity();
+		loginType.setName(LoginType.INTERNAL);
+		loginType.setDescription(LoginType.INTERNAL.name());
+		entityManager.getTransaction().begin();
+		entityManager.persist(loginType);
+		entityManager.getTransaction().commit();
+		return Collections.singletonList(loginType);
+	}
+	
+	private List<AuthenticationMethodEntity> createAuthenticationMethods() {
+		EntityManager entityManager = getEntityManager();
+		AuthenticationMethodEntity authenticationMethod = new AuthenticationMethodEntity();
+		authenticationMethod.setName(AuthenticationMethod.LOCAL);
+		authenticationMethod.setDescription(AuthenticationMethod.LOCAL.name());
+		entityManager.getTransaction().begin();
+		entityManager.persist(authenticationMethod);
+		entityManager.getTransaction().commit();
+		return Collections.singletonList(authenticationMethod);
 	}
 }

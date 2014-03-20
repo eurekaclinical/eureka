@@ -51,8 +51,8 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import java.net.URI;
-import java.security.Principal;
 import java.util.List;
+import org.jasig.cas.client.authentication.AttributePrincipal;
 
 /**
  * REST operations related to jobs submitted by the user.
@@ -121,8 +121,7 @@ public class JobResource {
 	@Consumes({MediaType.APPLICATION_JSON})
 	public Response submit(@Context HttpServletRequest request, JobSpec jobSpec) {
 		LOGGER.debug("Got job submission: {}", jobSpec);
-		Principal userPrincipal = request.getUserPrincipal();
-		UserEntity user = this.userDao.getByName(userPrincipal.getName());
+		UserEntity user = this.userDao.getByHttpServletRequest(request);
 		JobRequest jobRequest = new JobRequest();
 		PropositionDefinitionCollector collector =
 				PropositionDefinitionCollector.getInstance(

@@ -20,6 +20,8 @@ package edu.emory.cci.aiw.cvrg.eureka.common.comm;
  * #L%
  */
 
+import edu.emory.cci.aiw.cvrg.eureka.common.authentication.AuthenticationMethod;
+import edu.emory.cci.aiw.cvrg.eureka.common.authentication.LoginType;
 import java.util.Date;
 
 /**
@@ -31,6 +33,10 @@ public final class LocalUser extends User {
 	private String verificationCode;
 	private String password;
 	private Date passwordExpiration;
+
+	public LocalUser() {
+		setLoginType(LoginType.INTERNAL);
+	}
 	
 	public boolean isVerified() {
 		return verified;
@@ -81,4 +87,10 @@ public final class LocalUser extends User {
 	public void accept(UserVisitor userVisitor) {
 		userVisitor.visit(this);
 	}
+
+	@Override
+	public AuthenticationMethod authenticationMethod() {
+		return AuthenticationMethod.LOCAL;
+	}
+	
 }

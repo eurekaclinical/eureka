@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package edu.emory.cci.aiw.cvrg.eureka.common.test;
 
 /*
@@ -24,15 +20,21 @@ package edu.emory.cci.aiw.cvrg.eureka.common.test;
  * #L%
  */
 
+import edu.emory.cci.aiw.cvrg.eureka.common.authentication.AuthenticationMethod;
+import edu.emory.cci.aiw.cvrg.eureka.common.authentication.UserPrincipalAttributes;
 import java.security.Principal;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
+import org.jasig.cas.client.authentication.AttributePrincipal;
 
 /**
  *
- * @author arpost
+ * @author Andrew Post
  */
-class UserRoleRequestWrapper extends HttpServletRequestWrapper {
+public class UserRoleRequestWrapper extends HttpServletRequestWrapper {
 
 	public UserRoleRequestWrapper(HttpServletRequest req) {
 		super(req);
@@ -45,10 +47,24 @@ class UserRoleRequestWrapper extends HttpServletRequestWrapper {
 
 	@Override
 	public Principal getUserPrincipal() {
-		return new Principal() {
+		return new AttributePrincipal() {
 			@Override
 			public String getName() {
-				return "test";
+				return "user@emory.edu";
+			}
+
+			@Override
+			public String getProxyTicketFor(String string) {
+				throw new UnsupportedOperationException("Not supported yet.");
+			}
+
+			@Override
+			public Map<String, Object> getAttributes() {
+				Map<String, Object> attrs = new HashMap<>();
+				attrs.put(
+						UserPrincipalAttributes.AUTHENTICATION_METHOD, 
+						AuthenticationMethod.LOCAL.name());
+				return Collections.unmodifiableMap(attrs);
 			}
 		};
 	}

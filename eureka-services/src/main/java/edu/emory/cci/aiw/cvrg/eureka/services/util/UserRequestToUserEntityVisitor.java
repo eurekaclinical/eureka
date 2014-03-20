@@ -33,8 +33,11 @@ import edu.emory.cci.aiw.cvrg.eureka.common.entity.Role;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.UserEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.exception.HttpStatusException;
 import edu.emory.cci.aiw.cvrg.eureka.common.util.StringUtil;
+import edu.emory.cci.aiw.cvrg.eureka.services.dao.AuthenticationMethodDao;
+import edu.emory.cci.aiw.cvrg.eureka.services.dao.LoginTypeDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.OAuthProviderDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.RoleDao;
+import edu.emory.cci.aiw.cvrg.eureka.services.entity.UserEntityFactory;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -51,16 +54,23 @@ public class UserRequestToUserEntityVisitor implements UserRequestVisitor {
 	private UserEntity userEntity;
 	private final OAuthProviderDao oauthProviderDao;
 	private final RoleDao roleDao;
+	private final UserEntityFactory userEntityFactory;
+	private final LoginTypeDao loginTypeDao;
+	private final AuthenticationMethodDao authenticationMethodDao;
 
 	public UserRequestToUserEntityVisitor(OAuthProviderDao inOAuthProviderDao,
-			RoleDao inRoleDao) {
+			RoleDao inRoleDao, LoginTypeDao inLoginTypeDao,
+			AuthenticationMethodDao inAuthenticationMethodDao) {
 		this.oauthProviderDao = inOAuthProviderDao;
 		this.roleDao = inRoleDao;
+		this.loginTypeDao = inLoginTypeDao;
+		this.authenticationMethodDao = inAuthenticationMethodDao;
+		this.userEntityFactory = new UserEntityFactory(this.loginTypeDao, this.authenticationMethodDao);
 	}
 	
 	@Override
 	public void visit(LocalUserRequest localUserRequest) {
-		LocalUserEntity localUserEntity = new LocalUserEntity();
+		LocalUserEntity localUserEntity = this.userEntityFactory.getLocalUserEntityInstance();
 		populateUserEntityFields(localUserEntity, localUserRequest);
 		
 		try {
@@ -78,13 +88,13 @@ public class UserRequestToUserEntityVisitor implements UserRequestVisitor {
 
 	@Override
 	public void visit(LdapUserRequest ldapUserRequest) {
-		this.userEntity = new LdapUserEntity();
+		this.userEntity = this.userEntityFactory.getLdapUserEntityInstance();
 		populateUserEntityFields(this.userEntity, ldapUserRequest);
 	}
 
 	@Override
 	public void visit(OAuthUserRequest oauthUserRequest) {
-		OAuthUserEntity oauthUserEntity = new OAuthUserEntity();
+		OAuthUserEntity oauthUserEntity = this.userEntityFactory.getOAuthUserEntityInstance();
 		populateUserEntityFields(oauthUserEntity, oauthUserRequest);
 		oauthUserEntity.setProviderUsername(oauthUserRequest.getProviderUsername());
 		oauthUserEntity.setOAuthProvider(this.oauthProviderDao.retrieve(oauthUserRequest.getOAuthProvider()));

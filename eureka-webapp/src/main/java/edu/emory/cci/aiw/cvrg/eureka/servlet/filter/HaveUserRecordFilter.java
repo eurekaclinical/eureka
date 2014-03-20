@@ -25,6 +25,7 @@ import com.sun.jersey.api.client.ClientResponse.Status;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.User;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ClientException;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ServicesClient;
+import edu.emory.cci.aiw.cvrg.eureka.webapp.authentication.WebappAuthenticationSupport;
 import java.io.IOException;
 import java.util.Map;
 import javax.servlet.Filter;
@@ -37,7 +38,6 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.core.UriBuilder;
-import org.jasig.cas.client.authentication.AttributePrincipal;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -52,12 +52,14 @@ public class HaveUserRecordFilter implements Filter {
 			= LoggerFactory.getLogger(MessagesFilter.class);
 
 	private ServletContext servletContext;
-	private final ServicesClient servicesClient;
 	private String redirectUrl;
+	private final ServicesClient servicesClient;
+	private final WebappAuthenticationSupport authenticationSupport;
 
 	@Inject
 	public HaveUserRecordFilter(ServicesClient inServicesClient) {
 		this.servicesClient = inServicesClient;
+		this.authenticationSupport = new WebappAuthenticationSupport(this.servicesClient);
 	}
 
 	@Override
@@ -74,10 +76,9 @@ public class HaveUserRecordFilter implements Filter {
 	public void doFilter(ServletRequest inRequest, ServletResponse inResponse, FilterChain inFilterChain) throws IOException, ServletException {
 		HttpServletRequest servletRequest = (HttpServletRequest) inRequest;
 		HttpServletResponse servletResponse = (HttpServletResponse) inResponse;
-		AttributePrincipal principal = (AttributePrincipal) servletRequest.getUserPrincipal();
-		LOGGER.debug("username: {}", principal.getName());
+		LOGGER.debug("username: {}", servletRequest.getRemoteUser());
 		try {
-			User user = this.servicesClient.getUserByName(principal.getName());
+			User user = this.servicesClient.getMe();
 			if (!user.isActive()) {
 				servletResponse.setStatus(HttpServletResponse.SC_FORBIDDEN);
 			} else {
@@ -92,7 +93,7 @@ public class HaveUserRecordFilter implements Filter {
 				 */
 				String fullRedirectUrl = servletRequest.getContextPath()
 						+ this.redirectUrl;
-				Map<String, Object> attributes = principal.getAttributes();
+				Map<String, Object> attributes = this.authenticationSupport.getUserPrincipalAttributes(servletRequest);
 				UriBuilder uriBuilder = UriBuilder.fromUri(fullRedirectUrl);
 
 				Object firstName = attributes.get("firstName");
@@ -134,7 +135,7 @@ public class HaveUserRecordFilter implements Filter {
 				servletResponse.sendRedirect(redirectUrlWithQueryParams);
 			} else {
 				throw new ServletException("Error getting user "
-						+ principal.getName(), ex);
+						+ servletRequest.getRemoteUser(), ex);
 			}
 		}
 	}

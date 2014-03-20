@@ -20,9 +20,8 @@ package edu.emory.cci.aiw.cvrg.eureka.common.entity;
  * #L%
  */
 
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.LdapUserRequest;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.User;
-import java.util.List;
+import edu.emory.cci.aiw.cvrg.eureka.common.authentication.LoginType;
+import edu.emory.cci.aiw.cvrg.eureka.common.authentication.AuthenticationMethod;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
@@ -33,10 +32,15 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "ldap_users")
 public class LdapUserEntity extends UserEntity {
-
-	public LdapUserEntity() {
+	
+	public LdapUserEntity(LoginTypeEntity loginType, AuthenticationMethodEntity authenticationMethod) {
+		super(loginType, authenticationMethod);
 	}
 	
+	protected LdapUserEntity() {
+		
+	}
+
 	@Override
 	public void accept(UserEntityVisitor userEntityVisitor) {
 		userEntityVisitor.visit(this);

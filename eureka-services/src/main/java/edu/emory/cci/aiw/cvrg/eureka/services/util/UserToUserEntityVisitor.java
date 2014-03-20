@@ -20,19 +20,20 @@ package edu.emory.cci.aiw.cvrg.eureka.services.util;
  * #L%
  */
 
-import com.google.inject.Inject;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.LdapUser;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.LocalUser;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.OAuthUser;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.User;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.UserVisitor;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.LdapUserEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.LocalUserEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.OAuthUserEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.Role;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.UserEntity;
+import edu.emory.cci.aiw.cvrg.eureka.services.dao.AuthenticationMethodDao;
+import edu.emory.cci.aiw.cvrg.eureka.services.dao.LoginTypeDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.OAuthProviderDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.RoleDao;
+import edu.emory.cci.aiw.cvrg.eureka.services.entity.UserEntityFactory;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -44,16 +45,23 @@ public class UserToUserEntityVisitor implements UserVisitor {
 	private final OAuthProviderDao oauthProviderDao;
 	private final RoleDao roleDao;
 	private UserEntity userEntity;
+	private final UserEntityFactory userEntityFactory;
+	private final LoginTypeDao loginTypeDao;
+	private final AuthenticationMethodDao authenticationMethodDao;
 	
 	public UserToUserEntityVisitor(OAuthProviderDao inOAuthProviderDao,
-			RoleDao inRoleDao) {
+			RoleDao inRoleDao, LoginTypeDao inLoginTypeDao,
+			AuthenticationMethodDao inAuthenticationMethodDao) {
 		this.oauthProviderDao = inOAuthProviderDao;
 		this.roleDao = inRoleDao;
+		this.loginTypeDao = inLoginTypeDao;
+		this.authenticationMethodDao = inAuthenticationMethodDao;
+		this.userEntityFactory = new UserEntityFactory(this.loginTypeDao, this.authenticationMethodDao);
 	}
 	
 	@Override
 	public void visit(LocalUser localUser) {
-		LocalUserEntity localUserEntity = new LocalUserEntity();
+		LocalUserEntity localUserEntity = this.userEntityFactory.getLocalUserEntityInstance();
 		populateUserEntityFields(localUserEntity, localUser);
 		localUserEntity.setPassword(localUser.getPassword());
 		localUserEntity.setPasswordExpiration(localUser.getPasswordExpiration());
@@ -64,13 +72,13 @@ public class UserToUserEntityVisitor implements UserVisitor {
 
 	@Override
 	public void visit(LdapUser ldapUser) {
-		this.userEntity = new LdapUserEntity();
+		this.userEntity = this.userEntityFactory.getLdapUserEntityInstance();
 		populateUserEntityFields(this.userEntity, ldapUser);
 	}
 
 	@Override
 	public void visit(OAuthUser oauthUser) {
-		OAuthUserEntity oauthUserEntity = new OAuthUserEntity();
+		OAuthUserEntity oauthUserEntity = this.userEntityFactory.getOAuthUserEntityInstance();
 		populateUserEntityFields(oauthUserEntity, oauthUser);
 		oauthUserEntity.setProviderUsername(oauthUser.getProviderUsername());
 		oauthUserEntity.setOAuthProvider(

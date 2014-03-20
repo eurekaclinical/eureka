@@ -1,5 +1,8 @@
 package edu.emory.cci.aiw.cvrg.eureka.common.comm;
 
+import edu.emory.cci.aiw.cvrg.eureka.common.authentication.AuthenticationMethod;
+import edu.emory.cci.aiw.cvrg.eureka.common.authentication.LoginType;
+
 /*
  * #%L
  * Eureka Common
@@ -27,6 +30,10 @@ package edu.emory.cci.aiw.cvrg.eureka.common.comm;
 public final class OAuthUser extends User {
 	private String providerUsername;
 	private Long oauthProvider;
+
+	public OAuthUser() {
+		setLoginType(LoginType.PROVIDER);
+	}
 
 	public String getProviderUsername() {
 		return providerUsername;
@@ -61,5 +68,12 @@ public final class OAuthUser extends User {
 	public void accept(UserVisitor userVisitor) {
 		userVisitor.visit(this);
 	}
+
+	@Override
+	public AuthenticationMethod authenticationMethod() {
+		return AuthenticationMethod.OAUTH;
+	}
+	
+	
 	
 }

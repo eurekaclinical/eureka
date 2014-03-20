@@ -38,7 +38,6 @@ import org.slf4j.LoggerFactory;
 import com.google.inject.Inject;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.ValidationRequest;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.Destination;
 import edu.emory.cci.aiw.cvrg.eureka.common.exception.HttpStatusException;
 import edu.emory.cci.aiw.cvrg.eureka.common.filter.SearchFilter;
 import edu.emory.cci.aiw.cvrg.eureka.etl.config.EtlProperties;

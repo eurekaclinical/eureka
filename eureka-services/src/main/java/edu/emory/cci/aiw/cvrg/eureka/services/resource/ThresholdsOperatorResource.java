@@ -20,7 +20,6 @@
 package edu.emory.cci.aiw.cvrg.eureka.services.resource;
 
 import com.google.inject.Inject;
-import com.sun.jersey.api.client.ClientResponse;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.ThresholdsOperator;
 import edu.emory.cci.aiw.cvrg.eureka.common.exception.HttpStatusException;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.ThresholdsOperatorDao;

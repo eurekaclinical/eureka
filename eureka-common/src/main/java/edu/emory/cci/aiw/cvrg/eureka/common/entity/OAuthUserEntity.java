@@ -20,6 +20,8 @@ package edu.emory.cci.aiw.cvrg.eureka.common.entity;
  * #L%
  */
 
+import edu.emory.cci.aiw.cvrg.eureka.common.authentication.LoginType;
+import edu.emory.cci.aiw.cvrg.eureka.common.authentication.AuthenticationMethod;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
@@ -39,11 +41,15 @@ public class OAuthUserEntity extends UserEntity {
 	@Column(nullable = false)
 	private String providerUsername;
 	
-	@ManyToOne
+	@ManyToOne(optional = false)
 	@JoinColumn(referencedColumnName = "id", nullable = false)
 	private OAuthProvider oauthProvider;
+	
+	public OAuthUserEntity(LoginTypeEntity loginType, AuthenticationMethodEntity authenticationMethod) {
+		super(loginType, authenticationMethod);
+	}
 
-	public OAuthUserEntity() {
+	protected OAuthUserEntity() {
 	}
 	
 	public String getProviderUsername() {

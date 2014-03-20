@@ -20,7 +20,6 @@
 package edu.emory.cci.aiw.cvrg.eureka.servlet.filter;
 
 import java.io.IOException;
-import java.security.Principal;
 import java.util.Date;
 
 import javax.servlet.Filter;
@@ -42,6 +41,7 @@ import edu.emory.cci.aiw.cvrg.eureka.common.comm.LocalUser;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.User;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ClientException;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ServicesClient;
+import edu.emory.cci.aiw.cvrg.eureka.webapp.authentication.WebappAuthenticationSupport;
 
 /**
  * @author hrathod
@@ -51,12 +51,14 @@ public class PasswordExpiredFilter implements Filter {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(PasswordExpiredFilter.class);
 	private final ServicesClient servicesClient;
+	private final WebappAuthenticationSupport authenticationSupport;
 	private String redirectUrl;
 	private String saveUrl;
 
 	@Inject
 	public PasswordExpiredFilter(ServicesClient inClient) {
 		this.servicesClient = inClient;
+		this.authenticationSupport = new WebappAuthenticationSupport(this.servicesClient);
 	}
 
 	@Override
@@ -79,15 +81,9 @@ public class PasswordExpiredFilter implements Filter {
 		if (request instanceof HttpServletRequest && response instanceof HttpServletResponse) {
 			HttpServletRequest servletRequest = (HttpServletRequest) request;
 			HttpServletResponse servletResponse = (HttpServletResponse) response;
-			Principal principal = servletRequest.getUserPrincipal();
-			LOGGER.debug("username: {}", principal.getName());
-			User user;
-			try {
-				user = this.servicesClient.getUserByName(principal
-						.getName());
-			} catch (ClientException ex) {
-				throw new ServletException("Error getting user " + principal.getName(), ex);
-			}
+			String name = servletRequest.getRemoteUser();
+			LOGGER.debug("username: {}", name);
+			User user = this.authenticationSupport.getMe(servletRequest);
 			if (!(user instanceof LocalUser)) {
 				chain.doFilter(request, response);
 			} else {
