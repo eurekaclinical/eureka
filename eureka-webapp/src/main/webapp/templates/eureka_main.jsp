@@ -176,7 +176,7 @@ limitations under the License.
 	<template:get name="content"/>
 </div>
 <div class="footer">
-	Copyright &copy; 2012-2013 ${initParam['eureka-organization-name']} -- All
+	Copyright &copy; ${initParam['inception-year']}-${initParam['current-year']} ${initParam['eureka-organization-name']} -- All
 	Rights Reserved
 </div>
 </body>

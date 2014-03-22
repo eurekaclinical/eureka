@@ -435,6 +435,18 @@ and data into your own instance of the i2b2 data warehouse system.
 							<goal>parse-version</goal>
 						</goals>
 					</execution>
+					<execution>
+						<id>timestamp-property</id>
+						<goals>
+							<goal>timestamp-property</goal>
+						</goals>
+						<configuration>
+							<name>currentYear</name>
+							<pattern>yyyy</pattern>
+							<units>year</units>
+							<offset>0</offset>
+						</configuration>
+					</execution>
 				</executions>
 			</plugin>
 			<plugin>

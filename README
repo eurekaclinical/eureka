@@ -61,7 +61,7 @@ ${project.name} is freely available as open source under
 the Apache License, Version 2.0. A copy of the license is in the
 LICENSE file provided in this distribution.
 
-${project.name} is Copyright (C) ${project.inceptionYear}-2013 ${project.organization.name}.
+${project.name} is Copyright (C) ${inceptionYear}-${currentYear} ${project.organization.name}.
 
 MORE INFORMATION
 
