@@ -47,5 +47,9 @@ public class WebappProperties extends AbstractProperties {
 	public String getProxyCallbackServer() {
 		return this.getValue("eureka.webapp.callbackserver");
 	}
+	
+	public String getContactEmail() {
+		return this.getValue("eureka.webapp.contactemail");
+	}
 
 }

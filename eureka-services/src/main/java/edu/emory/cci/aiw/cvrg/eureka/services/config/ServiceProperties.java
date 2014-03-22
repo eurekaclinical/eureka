@@ -142,15 +142,6 @@ public class ServiceProperties extends AbstractProperties {
 	}
 
 	/**
-	 * Get the support email address for the application.
-	 *
-	 * @return The support email address.
-	 */
-	public String getSupportEmail() {
-		return this.getValue("eureka.services.support.email");
-	}
-
-	/**
 	 * Get the password change email subject line.
 	 *
 	 * @return The email subject line.

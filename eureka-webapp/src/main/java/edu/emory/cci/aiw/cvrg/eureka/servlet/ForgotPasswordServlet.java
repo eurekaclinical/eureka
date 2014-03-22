@@ -20,8 +20,6 @@
 package edu.emory.cci.aiw.cvrg.eureka.servlet;
 
 import java.io.IOException;
-import java.text.MessageFormat;
-import java.util.ResourceBundle;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -43,7 +41,7 @@ import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ServicesClient;
 public class ForgotPasswordServlet extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
-	private static Logger LOGGER =
+	private static final Logger LOGGER =
 			LoggerFactory.getLogger(ForgotPasswordServlet.class);
 	private final ServicesClient servicesClient;
 
@@ -69,16 +67,9 @@ public class ForgotPasswordServlet extends HttpServlet {
 			LOGGER.error("Error resetting password for user {}", email, ex);
 			if (ClientResponse.Status.NOT_FOUND.equals(ex.getResponseStatus())) {
 				response.setStatus(HttpServletResponse.SC_NOT_FOUND);
-				String formattedMsg = MessageFormat.format(ex.getMessage(), "aiwhelp@emory.edu");
-				response.getWriter().write(formattedMsg);
+				response.getWriter().write(ex.getMessage());
 			} else {
-				ResourceBundle messages =
-						(ResourceBundle) request.getAttribute("messages");
-				response.setContentType("text/plain");
 				response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-				String msg = messages.getString("passwordChange.error.internalServerError");
-				String formattedMsg = MessageFormat.format(msg, "aiwhelp@emory.edu");
-				response.getWriter().write(formattedMsg);
 			}
 		}
 	}

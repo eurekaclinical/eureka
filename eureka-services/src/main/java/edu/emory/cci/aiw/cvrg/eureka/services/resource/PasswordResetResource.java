@@ -19,7 +19,6 @@ package edu.emory.cci.aiw.cvrg.eureka.services.resource;
  * limitations under the License.
  * #L%
  */
-
 import com.google.inject.Inject;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.User;
 import edu.emory.cci.aiw.cvrg.eureka.common.exception.HttpStatusException;
@@ -30,8 +29,11 @@ import edu.emory.cci.aiw.cvrg.eureka.services.email.EmailException;
 import edu.emory.cci.aiw.cvrg.eureka.services.email.EmailSender;
 import edu.emory.cci.aiw.cvrg.eureka.services.util.PasswordGenerator;
 import edu.emory.cci.aiw.cvrg.eureka.services.util.StringUtil;
+import java.net.URI;
 import java.security.NoSuchAlgorithmException;
+import java.text.MessageFormat;
 import java.util.Calendar;
+import java.util.ResourceBundle;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -50,29 +52,30 @@ import org.slf4j.LoggerFactory;
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public class PasswordResetResource {
+
+	private static final ResourceBundle messages
+			= ResourceBundle.getBundle("Messages");
+
 	/**
 	 * The class logger.
 	 */
 	private static final Logger LOGGER = LoggerFactory.getLogger(
 			PasswordResetResource.class);
-	private UserDao userDao;
-	private ServiceProperties serviceProperties;
-	private PasswordGenerator passwordGenerator;
-	private I2b2Client i2b2Client;
-	private EmailSender emailSender;
-	
+	private final UserDao userDao;
+	private final PasswordGenerator passwordGenerator;
+	private final I2b2Client i2b2Client;
+	private final EmailSender emailSender;
+
 	@Inject
 	public PasswordResetResource(UserDao inUserDao,
 			EmailSender inEmailSender, I2b2Client inClient,
-			PasswordGenerator inPasswordGenerator,
-			ServiceProperties serviceProperties) {
+			PasswordGenerator inPasswordGenerator) {
 		this.userDao = inUserDao;
 		this.emailSender = inEmailSender;
 		this.i2b2Client = inClient;
 		this.passwordGenerator = inPasswordGenerator;
-		this.serviceProperties = serviceProperties;
 	}
-	
+
 	/**
 	 * Reset the given user's password. The password is randomly generated.
 	 *
@@ -86,12 +89,7 @@ public class PasswordResetResource {
 		User user = this.userDao.getByName(inUsername);
 		LOGGER.debug("Resetting user: {}", user);
 		if (user == null) {
-			throw new HttpStatusException(
-					Response.Status.NOT_FOUND, 
-					"We could not find this email address in our records."
-					+ " Please check the email address or contact " + 
-					this.serviceProperties.getSupportEmail() + " for help.");
-
+			throw new HttpStatusException(Response.Status.NOT_FOUND);
 		} else {
 			String passwordHash;
 			String password = this.passwordGenerator.generatePassword();
@@ -100,7 +98,7 @@ public class PasswordResetResource {
 			} catch (NoSuchAlgorithmException e) {
 				LOGGER.error(e.getMessage(), e);
 				throw new HttpStatusException(
-						Response.Status.INTERNAL_SERVER_ERROR, e);
+						Response.Status.INTERNAL_SERVER_ERROR, e.getMessage(), e);
 			}
 
 			user.setPassword(passwordHash);
@@ -111,6 +109,8 @@ public class PasswordResetResource {
 				this.emailSender.sendPasswordResetMessage(user, password);
 			} catch (EmailException e) {
 				LOGGER.error(e.getMessage(), e);
+				throw new HttpStatusException(
+						Response.Status.INTERNAL_SERVER_ERROR, e.getMessage(), e);
 			}
 		}
 		LOGGER.debug("Reset user to: {}", user);

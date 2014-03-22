@@ -1,13 +1,20 @@
-Eureka WebApp ${project.version} -- the implementation of Eureka! Clinical
-Analytics' web user interface.  
-Department of Biomedical Informatics, Emory University
+${project.name} ${project.version} -- the ${project.parent.name} 
+web user interface.  
+Department of Biomedical Informatics, ${project.organization.name}
 
 OVERVIEW
 
-Welcome to Eureka WebApp! Eureka WebApp is the implementation of
-Eureka! Clinical Analytics' web user interface.
+Welcome to ${project.parent.name}! 
+
+${project.parent.description}
+
+${project.description}
 
 WHAT'S NEW
+
+Version 1.8.2 includes minor bug-fixes. 
+
+Version 1.8.1 includes minor bug-fixes.
 
 Version 1.8 adds the ability to connect directly to a database as a
 data source, in addition to the spreadsheet upload mechanism.  This
@@ -41,24 +48,24 @@ have it, to work with the source code. Maven 3 is required.
 
 INSTALLATION
 
-Eureka WebApp is a module of Eureka! Clinical Analytics and currently
+${project.name} is a module of Eureka! Clinical Analytics and currently
 only runs in the context of the entire application. Please see
-http://aiw.sourceforge.net for installation instructions.
+${aiw.site.url} for installation instructions.
 
 CONTACTING US
 
-Please send an email to aiwhelp@emory.edu for support or questions.
+Please send an email to ${eureka.support.email} for support or questions.
 
 LICENSING
 
-Eureka WebApp is freely available as open source under the Apache
+${project.name} is freely available as open source under the Apache
 License, Version 2.0. A copy of the license is in the LICENSE file
 provided in this distribution.
 
-Eureka WebApp is Copyright (C) 2012 Emory University.
+${project.name} is Copyright (C) ${project.inceptionYear}-2013 ${project.organization.name}.
 
 MORE INFORMATION
 
-Please see http://aiw.sourceforge.net for more information and
-http://aiw.sourceforge.net/dev/eureka-${project.version} for technical
+Please see ${aiw.site.url} for more information and
+${project.url} for technical
 documentation.

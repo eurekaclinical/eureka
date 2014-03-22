@@ -38,6 +38,7 @@ import com.google.inject.Inject;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.UserInfo;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ClientException;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ServicesClient;
+import edu.emory.cci.aiw.cvrg.eureka.webapp.config.WebappProperties;
 
 public class DeletePropositionServlet extends HttpServlet {
 
@@ -45,10 +46,12 @@ public class DeletePropositionServlet extends HttpServlet {
 			.getLogger(DeletePropositionServlet.class);
 
 	private final ServicesClient servicesClient;
+	private final WebappProperties properties;
 
 	@Inject
 	public DeletePropositionServlet (ServicesClient inClient) {
 		this.servicesClient = inClient;
+		this.properties = new WebappProperties();
 	}
 
 	@Override
@@ -82,7 +85,8 @@ public class DeletePropositionServlet extends HttpServlet {
 					String msgTemplate = 
 							messages.getString("deleteDataElement.error.internalServerError");
 					String msg = 
-							MessageFormat.format(msgTemplate, "aiwhelp@emory.edu");
+							MessageFormat.format(msgTemplate, 
+									this.properties.getSupportUri());
 					resp.getWriter().write(msg);
 					break;
 				default:

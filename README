@@ -1,16 +1,15 @@
-Eureka! Clinical Analytics ${project.version} -- An ETL Tool for Loading Data into i2b2.
-Department of Biomedical Informatics, Emory University
+${project.name} ${project.version} -- An ETL Tool for Loading Data 
+into i2b2.
+Department of Biomedical Informatics, ${project.organization.name}
 
 OVERVIEW
 
-Welcome to Eureka! Clinical Analytics! Eureka! is a web application
-that provides you with an easy way to phenotype a patient population
-based on their clinical and administrative data, and load those
-phenotypes and data into your own instance of the i2b2 data warehouse
-system.
+Welcome to ${project.name}! 
+
+${project.description}
 
 This package contains source code only. For binaries, please go to
-http://aiw.sourceforge.net/.
+${aiw.site.url}.
 
 WHAT'S NEW
 
@@ -44,27 +43,27 @@ The current version requires Java 7. It is known to work with Oracle Java 7, and
 it is expected to work with OpenJDK 7 as well. It is incompatible with earlier
 versions of Java.
 
-Eureka! Clinical Analytics uses the Maven build system, available from
+${project.name} uses the Maven build system, available from
 http://maven.apache.org. You must install maven, if you do not already
 have it, to work with the source code. Maven 3 is required.
 
 INSTALLATION
 
-Please see http://aiw.sourceforge.net for installation instructions.
+Please see ${aiw.site.url} for installation instructions.
 
 CONTACTING US
 
-Please send an email to aiwhelp@emory.edu for support or questions.
+Please send an email to ${eureka.support.email} for support or questions.
 
 LICENSING
 
-Eureka! Clinical Analytics is freely available as open source under
+${project.name} is freely available as open source under
 the Apache License, Version 2.0. A copy of the license is in the
 LICENSE file provided in this distribution.
 
-Eureka! Clinical Analytics is Copyright (C) 2012-2013 Emory University.
+${project.name} is Copyright (C) ${project.inceptionYear}-2013 ${project.organization.name}.
 
 MORE INFORMATION
 
-Please see http://aiw.sourceforge.net for more information and
-http://aiw.sourceforge.net/dev/eureka-${project.version} for technical documentation.
+Please see ${aiw.site.url} for more information and
+${project.url} for technical documentation.

@@ -1,14 +1,20 @@
-Eureka Common ${project.version} -- a library of shared functionality for
-Eureka!  Clinical Analytics.  
-Department of Biomedical Informatics, Emory University
+${project.name} ${project.version} -- a library of shared functionality for
+${project.parent.name}.  
+Department of Biomedical Informatics, ${project.organization.name}
 
 OVERVIEW
 
-Welcome to Eureka Common! Eureka Commons is a library of shared
-functionality for the other modules of the Eureka! Clinical Analytics
-project.
+Welcome to ${project.parent.name}! 
+
+${project.parent.description}
+
+${project.description}
 
 WHAT'S NEW
+
+Version 1.8.2 includes minor bug-fixes. 
+
+Version 1.8.1 includes minor bug-fixes.
 
 Version 1.8 adds the ability to connect directly to a database as a
 data source, in addition to the spreadsheet upload mechanism.  This
@@ -42,25 +48,25 @@ have it, to work with the source code. Maven 3 is required.
 
 INSTALLATION
 
-Eureka Common is a module of Eureka! Clinical Analytics and is not
+${project.name} is a module of Eureka! Clinical Analytics and is not
 designed to be useful outside of the context of the Eureka!
-application. Please see http://aiw.sourceforge.net for installation
+application. Please see ${aiw.site.url} for installation
 instructions.
 
 CONTACTING US
 
-Please send an email to aiwhelp@emory.edu for support or questions.
+Please send an email to ${eureka.support.email} for support or questions.
 
 LICENSING
 
-Eureka Common is freely available as open source under the Apache
+${project.name} is freely available as open source under the Apache
 License, Version 2.0. A copy of the license is in the LICENSE file
 provided in this distribution.
 
-Eureka Common is Copyright (C) 2012 Emory University.
+${project.name} is Copyright (C) ${project.inceptionYear}-2013 ${project.organization.name}.
 
 MORE INFORMATION
 
-Please see http://aiw.sourceforge.net for more information and
-http://aiw.sourceforge.net/dev/eureka-${project.version} for technical
+Please see ${aiw.site.url} for more information and
+${project.url} for technical
 documentation.

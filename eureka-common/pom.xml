@@ -6,7 +6,7 @@
 	<packaging>jar</packaging>
 	<name>Eureka Common</name>
 	<description>Eureka Common is a library of shared functionality for the
-		other modules of the Eureka! Clinical Analytics project.
+other modules of the Eureka! Clinical Analytics project.
 	</description>
 
 	<parent>

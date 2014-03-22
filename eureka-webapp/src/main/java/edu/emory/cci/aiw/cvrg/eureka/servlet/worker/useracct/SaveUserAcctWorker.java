@@ -36,6 +36,7 @@ import com.sun.jersey.api.client.ClientResponse;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ClientException;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ServicesClient;
 import edu.emory.cci.aiw.cvrg.eureka.servlet.worker.ServletWorker;
+import edu.emory.cci.aiw.cvrg.eureka.webapp.config.WebappProperties;
 
 public class SaveUserAcctWorker implements ServletWorker {
 
@@ -43,11 +44,13 @@ public class SaveUserAcctWorker implements ServletWorker {
 	
 	private final ResourceBundle messages;
 	private final ServicesClient servicesClient;
+	private final WebappProperties properties;
 
 	public SaveUserAcctWorker(ServletContext ctx, ServicesClient inClient) {
 		String localizationContextName = ctx.getInitParameter("javax.servlet.jsp.jstl.fmt.localizationContext");
 		this.messages = ResourceBundle.getBundle(localizationContextName);
 		this.servicesClient = inClient;
+		this.properties = new WebappProperties();
 	}
 
 	@Override
@@ -79,7 +82,8 @@ public class SaveUserAcctWorker implements ServletWorker {
 			} else {
 				resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 				String msg = messages.getString("passwordChange.error.internalServerError");
-				String formattedMsg = MessageFormat.format(msg, "aiwhelp@emory.edu");
+				String formattedMsg = 
+						MessageFormat.format(msg, this.properties.getSupportUri());
 				resp.getWriter().write(formattedMsg);
 			}
 			

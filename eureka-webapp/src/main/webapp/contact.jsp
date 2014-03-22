@@ -19,7 +19,9 @@
 --%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="/WEB-INF/tlds/template.tld" prefix="template" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 
+<jsp:useBean id="webappProperties" class="edu.emory.cci.aiw.cvrg.eureka.webapp.config.WebappProperties" scope="page"/>
 
 <template:insert template="/templates/eureka_main.jsp">
 
@@ -29,7 +31,6 @@
 		<div class="row">
 			<div class="col-sm-4">
 				<address>
-					Center for Comprehensive Informatics<br/>
 					Department of Biomedical Informatics<br/>
 					Emory University<br/>
 					Psychology and Interdisciplinary Sciences Building, Suite
@@ -52,10 +53,16 @@
 		</div>
 		<script type="text/javascript"
 				src="${pageContext.request.contextPath}/assets/js/eureka.util.js"></script>
-		<script type="text/javascript">
-			$(document).ready(function () {
-				eureka.util.insertMailToTag("#contactEmail", 'aiwhelp', 'emory.edu');
-			});
-		</script>
+		<c:set var="contactEmail" value="${webappProperties.contactEmail}"/>
+		<c:if test="${not empty contactEmail}">
+			<c:set var="emailParts" value="${fn:split(contactEmail, '@')}"/>
+			<c:if test="${fn:length(emailParts) == 2}">
+				<script type="text/javascript">
+					$(document).ready(function () {
+						eureka.util.insertMailToTag("#contactEmail", "${emailParts[0]}", "${emailParts[1]}");
+					});
+				</script>
+			</c:if>
+		</c:if>
 	</template:content>
 </template:insert>

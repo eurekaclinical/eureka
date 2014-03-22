@@ -33,6 +33,7 @@ import com.google.inject.Inject;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ClientException;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ServicesClient;
+import edu.emory.cci.aiw.cvrg.eureka.webapp.config.WebappProperties;
 
 /**
  * Servlet to handle user verification requests.
@@ -53,10 +54,12 @@ public class VerifyUserServlet extends HttpServlet {
 	private static final Logger LOGGER = LoggerFactory
 			.getLogger(VerifyUserServlet.class);
 	private final ServicesClient servicesClient;
+	private final WebappProperties properties;
 
 	@Inject
 	public VerifyUserServlet (ServicesClient inClient) {
 		this.servicesClient = inClient;
+		this.properties = new WebappProperties();
 	}
 
 	@Override
@@ -76,7 +79,7 @@ public class VerifyUserServlet extends HttpServlet {
 		} catch (ClientException e) {
 			throw new ServletException(e);
 		}
-
+		
 		req.getRequestDispatcher("/registration_info.jsp").forward(req,
 				resp);
 	}

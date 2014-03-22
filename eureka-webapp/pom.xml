@@ -5,8 +5,8 @@
 	<artifactId>eureka-webapp</artifactId>
 	<packaging>war</packaging>
 	<name>Eureka WebApp</name>
-	<description>Eureka WebApp is the implementation of Eureka! Clinical 
-		Analytics' web user interface.
+	<description>Eureka WebApp is the implementation 
+of the Eureka! Clinical Analytics web user interface.
 	</description>
 
 	<parent>

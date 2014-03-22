@@ -80,12 +80,8 @@ public class RegisterUserServlet extends HttpServlet {
 			this.servicesClient.addUser(userRequest);
 			resp.setStatus(HttpServletResponse.SC_OK);
 		} catch (ClientException e) {
-			resp.setContentType("text/plain");
-			String msg = e.getMessage();
-			LOGGER.debug("Error: {}", msg);
+			LOGGER.error("Error: {}", e.getMessage());
 			resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-			resp.setContentLength(msg.length());
-			resp.getWriter().write(msg);
 		}
 	}
 }

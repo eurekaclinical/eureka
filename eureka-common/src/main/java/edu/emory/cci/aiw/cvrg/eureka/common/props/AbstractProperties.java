@@ -24,6 +24,8 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
@@ -74,11 +76,10 @@ public abstract class AbstractProperties {
 	 * fallback configuration should always be there. The default configuration
 	 * file is created by the application's administrator and overrides the
 	 * fallback configuration for each configuration property that is specified.
-	 * It is searched for in the
-	 * <code>/etc/eureka</code> directory for Unix/Linux/Mac installations, and
-	 * <code>C:\Program Files\eureka</code> for Windows installations. It is
-	 * optional, though highly recommended. Finally, the pathname of a
-	 * configuration file may be specified in the
+	 * It is searched for in the <code>/etc/eureka</code> directory for
+	 * Unix/Linux/Mac installations, and <code>C:\Program Files\eureka</code>
+	 * for Windows installations. It is optional, though highly recommended.
+	 * Finally, the pathname of a configuration file may be specified in the
 	 * <code>eureka.config.file</code> system property, the property values in
 	 * which override those in the default configuration above.
 	 */
@@ -99,7 +100,8 @@ public abstract class AbstractProperties {
 			if (fallbackConfig != null) {
 				try {
 					fallbackConfig.close();
-				} catch (IOException ignore) {}
+				} catch (IOException ignore) {
+				}
 			}
 		}
 
@@ -138,7 +140,6 @@ public abstract class AbstractProperties {
 			LOGGER.debug("User configuration property {} not specified",
 					PROPERTY_NAME);
 		}
-
 
 		this.properties = temp;
 	}
@@ -257,9 +258,9 @@ public abstract class AbstractProperties {
 		return result;
 	}
 
-	public abstract String getProxyCallbackServer ();
+	public abstract String getProxyCallbackServer();
 
-	public String getCasUrl () {
+	public String getCasUrl() {
 		return this.getValue("cas.url");
 	}
 
@@ -267,25 +268,52 @@ public abstract class AbstractProperties {
 		return this.getCasUrl() + CAS_LOGOUT_PATH;
 	}
 
-	public String getCasLoginUrl () {
+	public String getCasLoginUrl() {
 		return this.getCasUrl() + CAS_LOGIN_PATH;
 	}
-	public String getMajorVersion () {
+
+	public String getMajorVersion() {
 		return this.getValue("eureka.version.major");
 	}
 
-	public String getMinorVersion () {
+	public String getMinorVersion() {
 		return this.getValue("eureka.version.minor");
 	}
-	public String getIncrementalVersion () {
+
+	public String getIncrementalVersion() {
 		return this.getValue("eureka.version.incremental");
 	}
-	public String getQualifier () {
+
+	public String getQualifier() {
 		return this.getValue("eureka.version.qualifier");
 	}
-	public String getBuildNumber () {
+
+	public String getBuildNumber() {
 		return this.getValue("eureka.version.buildNumber");
 	}
+
+	/**
+	 * Get the support email address for the application.
+	 *
+	 * @return The support email address.
+	 */
+	public SupportUri getSupportUri() {
+		SupportUri supportUri;
+		try {
+			String uriStr = this.getValue("eureka.support.uri");
+			String uriName = this.getValue("eureka.support.uri.name");
+			if (uriStr != null) {
+				supportUri = new SupportUri(new URI(uriStr), uriName);
+			} else {
+				supportUri = null;
+			}
+		} catch (URISyntaxException ex) {
+			LOGGER.error("Invalid support URI in application.properties", ex);
+			supportUri = null;
+		}
+		return supportUri;
+	}
+
 	/**
 	 * Returns the String value of the given property name.
 	 *
@@ -392,7 +420,7 @@ public abstract class AbstractProperties {
 		}
 		return result;
 	}
-	
+
 	/**
 	 * Gets the default list of system propositions for the application.
 	 *

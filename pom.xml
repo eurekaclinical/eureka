@@ -8,9 +8,9 @@
 	<packaging>pom</packaging>
 	<name>Eureka! Clinical Analytics</name>
 	<description>Eureka! Clinical Analytics is a web application that
-		provides you with an easy way to phenotype a patient population based
-		on their clinical and administrative data, and load those phenotypes
-		and data into your own instance of the i2b2 data warehouse system.
+provides you with an easy way to phenotype a patient population based
+on their clinical and administrative data, and load those phenotypes
+and data into your own instance of the i2b2 data warehouse system.
 	</description>
 	<url>http://aiw.sourceforge.net/dev/eureka-${project.version}</url>
 	<inceptionYear>2012</inceptionYear>
@@ -22,7 +22,8 @@
 	<!-- define the package versions for various project we will use -->
 	<properties>
 		<!-- Populates links to the website from Eureka. -->
-		<aiw.site.url>http://aiw.sourceforge.net</aiw.site.url>
+		<aiw.site.url>http://eurekaclinical.org</aiw.site.url>
+		<eureka.support.email>help@eurekaclinical.org</eureka.support.email>
 		<eureka.build.timestamp>${maven.build.timestamp}</eureka.build.timestamp>
 		<eureka.dev.site.url>${project.url}</eureka.dev.site.url>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
