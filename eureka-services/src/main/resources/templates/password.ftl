@@ -19,7 +19,11 @@
 -->
 Dear ${user.firstName} ${user.lastName},
 
-This is notification that your Eureka! Clinical Analytics password was changed. If you did not change your password on the website or make a support request to change your password, please send an email as soon as possible to ${config.supportEmail}.
+<#if config.supportUri != null>
+This is notification that your Eureka! Clinical Analytics password was changed. If you did not change your password on the website or make a support request to change your password, please contact us as soon as possible at ${config.supportUri.name}.
+<#else>
+This is notification that your Eureka! Clinical Analytics password was changed.
+</#if>
 
 Thanks,
 The Eureka! Clinical Analytics Team

@@ -29,7 +29,6 @@ import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.Session;
 import javax.mail.Transport;
-import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import javax.servlet.http.HttpServletRequest;
@@ -227,20 +226,4 @@ public class FreeMarkerEmailSender implements EmailSender {
 		}
 	}
 	
-//	private void responseUrl() {
-//		if (result == null) {
-//			try {
-//				result = InetAddress.getLocalHost().getHostName();
-//			} catch (UnknownHostException ex) {
-//				LOGGER.warn("Eureka! could not determine the server's " +
-//						"hostname. Falling back to http://localhost");
-//				result = "http://localhost";
-//			}
-//		}
-//		int port = this.servletRequest.getServerPort();
-//		if (port != 80) {
-//			result += ":" + port;
-//		}
-//		return result;
-//	}
 }
