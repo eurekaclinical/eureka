@@ -51,7 +51,10 @@
 					<p id="passwordresetComplete" class="default-hidden text-danger">
 				</div>
 			</div>
-			</div>
 		</form>
+		<script type="text/javascript" src="${pageContext.request.contextPath}/assets/js/eureka.reset.js"></script>
+		<script type="text/javascript">
+			eureka.reset.setup('#ResetPsdForm', '#email');
+		</script>
 	</template:content>
 </template:insert>

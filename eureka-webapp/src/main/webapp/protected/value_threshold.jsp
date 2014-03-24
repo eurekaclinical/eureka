@@ -69,7 +69,6 @@
 	</select>
 </div>
 <div class="form-group">
-<label for="propDefinition">Definition</label>
 <div id="propDefinition" class="value-thresholds-container">
 <c:choose>
 <c:when test="${not empty proposition and propositionType == 'VALUE_THRESHOLD' and not empty proposition.valueThresholds}">

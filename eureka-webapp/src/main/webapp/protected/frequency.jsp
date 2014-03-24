@@ -77,15 +77,6 @@
 						   value="<c:choose><c:when test="${propositionType == 'FREQUENCY'}">${proposition.atLeast}</c:when><c:otherwise><c:out value="1"/></c:otherwise></c:choose>"
 						   title="Specify the frequency count" class="form-control"/>
 				</div>
-				<div class="col-sm-2">
-					<label id="valueThresholdConsecutiveLabel" class="default-hidden"
-						   title="For value threshold data elements, specifies whether no intervening values are present that do not match the threshold or any duration or property constraints specified below"
-							<c:if test="${propositionType != 'FREQUENCY' or (not empty proposition and proposition.dataElement.type != 'VALUE_THRESHOLD')}"></c:if>>
-						<input type="checkbox" value="true" name="freqIsConsecutive"
-							   <c:if test="${propositionType == 'FREQUENCY' and proposition.isConsecutive}">checked="checked"</c:if> />
-						consecutive
-					</label>
-				</div>
 			</div>
 			<div class="form-group">
 				<div class="col-sm-9 col-sm-offset-1">
@@ -104,6 +95,17 @@
 						</ul>
 					</div>
 				</div>
+			</div>
+			<div class="form-group">
+				<div class="col-sm-9 col-sm-offset-1">
+						<label id="valueThresholdConsecutiveLabel" class="default-hidden"
+							   title="For value threshold data elements, specifies whether no intervening values are present that do not match the threshold or any duration or property constraints specified below"
+								<c:if test="${propositionType != 'FREQUENCY' or (not empty proposition and proposition.dataElement.type != 'VALUE_THRESHOLD')}"></c:if>>
+							<input type="checkbox" value="true" name="freqIsConsecutive"
+								   <c:if test="${propositionType == 'FREQUENCY' and proposition.isConsecutive}">checked="checked"</c:if> />
+							consecutive
+						</label>
+					</div>
 			</div>
 			<div class="form-group">
 				<label>

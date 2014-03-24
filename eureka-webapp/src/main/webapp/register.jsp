@@ -31,150 +31,126 @@
 		</span>
 	</p>
 </c:if>
-<form id="signupForm" action="#" method="POST" novalidate
-	  class="form-horizontal" role="form">
-	<div class="form-group">
-		<div class="col-sm-2 control-label">
-			<label for="firstName">First Name</label>
-		</div>
+<form id="signupForm" action="#" method="POST" novalidate role="form">
+	<div class="row">
 		<div class="col-sm-6">
-			<input id="firstName" name="firstName" type="text"
-				   class="form-control" value=""/>
-		</div>
-		<div class="col-sm-4 help-block">
-			<div class="help-inline"></div>
+			<div class="form-group">
+				<label for="firstName" class="control-label">First Name</label>
+				<input id="firstName" name="firstName" type="text"
+					   class="form-control" value=""/>
+				<span class="help-block default-hidden"></span>
+			</div>
 		</div>
 	</div>
-	<div class="form-group">
-		<div class="col-sm-2 control-label">
-			<label for="lastName">Last Name</label>
-		</div>
+	<div class="row">
 		<div class="col-sm-6">
-			<input id="lastName" name="lastName" type="text"
-				   class="form-control" value=""/>
-		</div>
-		<div class="col-sm-4 help-block">
-			<div class="help-inline"></div>
+			<div class="form-group">
+				<label for="lastName" class="control-label">Last Name</label>
+				<input id="lastName" name="lastName" type="text"
+					   class="form-control" value=""/>
+				<span class="help-block default-hidden"></span>
+			</div>
 		</div>
 	</div>
-	<div class="form-group">
-		<div class="col-sm-2 control-label">
-			<label for="organization">Organization</label>
-		</div>
+	<div class="row">
 		<div class="col-sm-6">
-			<input id="organization" name="organization" type="text"
-				   class="form-control" value=""/>
-		</div>
-		<div class="col-sm-4 help-block">
-			<div class="help-inline"></div>
+			<div class="form-group">
+				<label for="organization" class="control-label">Organization</label>
+				<input id="organization" name="organization" type="text"
+					   class="form-control" value=""/>
+				<span class="help-block default-hidden"></span>
+			</div>
 		</div>
 	</div>
-	<div class="form-group">
-		<div class="col-sm-2 control-label">
-			<label for="title">Title</label>
-		</div>
+	<div class="row">
 		<div class="col-sm-6">
-			<input id="title" name="title" type="text"
-				   class="form-control" value=""/>
-		</div>
-		<div class="col-sm-4 help-block">
-			<div class="help-inline"></div>
+			<div class="form-group">
+				<label for="title" class="control-label">Title</label>
+				<input id="title" name="title" type="text"
+					   class="form-control" value=""/>
+				<span class="help-block default-hidden"></span>
+			</div>
 		</div>
 	</div>
-	<div class="form-group">
-		<div class="col-sm-2 control-label">
-			<label for="department">Department</label>
-		</div>
+	<div class="row">
 		<div class="col-sm-6">
-			<input id="department" name="department" type="text"
-				   class="form-control" value=""/>
-		</div>
-		<div class="col-sm-4 help-block">
-			<div class="help-inline"></div>
+			<div class="form-group">
+				<label for="department" class="control-label">Department</label>
+				<input id="department" name="department" type="text"
+					   class="form-control" value=""/>
+				<span class="help-block default-hidden"></span>
+			</div>
 		</div>
 	</div>
-	<div class="form-group">
-		<div class="col-sm-2 control-label">
-			<label for="email">Email Address</label>
-		</div>
+	<div class="row">
 		<div class="col-sm-6">
-			<input id="email" name="email" type="text"
-				   class="form-control" value=""/>
-		</div>
-		<div class="col-sm-4 help-block">
-			<div class="help-inline"></div>
+			<div class="form-group">
+				<label for="email" class="control-label">Email Address</label>
+				<input id="email" name="email" type="text"
+					   class="form-control" value=""/>
+				<span class="help-block default-hidden"></span>
+			</div>
 		</div>
 	</div>
-	<div class="form-group">
-		<div class="col-sm-2 control-label">
-			<label for="verifyEmail">Verify Email Address</label>
-		</div>
+	<div class="row">
 		<div class="col-sm-6">
-			<input id="verifyEmail" name="verifyEmail" type="text"
-				   class="form-control" value=""/>
-		</div>
-		<div class="col-sm-4 help-block">
-			<div class="help-inline"></div>
+			<div class="form-group">
+				<label for="verifyEmail" class="control-label">Verify Email Address</label>
+				<input id="verifyEmail" name="verifyEmail" type="text"
+					   class="form-control" value=""/>
+				<span class="help-block default-hidden"></span>
+			</div>
 		</div>
 	</div>
-	<div class="form-group">
-		<div class="col-sm-2 control-label">
-			<label for="password">Password</label>
-		</div>
+	<div class="row">
 		<div class="col-sm-6">
-			<input id="password" name="password" type="password"
-				   class="form-control" value=""/>
-		</div>
-		<div class="col-sm-4 help-block">
-			<div class="help-inline"></div>
+			<div class="form-group">
+				<label for="password" class="control-label">Password</label>
+				<input id="password" name="password" type="password"
+					   class="form-control" value=""/>
+				<span class="help-block default-hidden"></span>
+			</div>
 		</div>
 	</div>
-	<div class="form-group">
-		<div class="col-sm-2 control-label">
-			<label for="verifyPassword">Confirm Password</label>
-		</div>
+	<div class="row">
 		<div class="col-sm-6">
-			<input id="verifyPassword" name="verifyPassword"
-				   type="password" class="form-control" value=""/>
-		</div>
-		<div class="col-sm-4 help-block">
-			<div class="help-inline"></div>
+			<div class="form-group">
+				<label for="verifyPassword" class="control-label">Confirm Password</label>
+				<input id="verifyPassword" name="verifyPassword"
+					   type="password" class="form-control" value=""/>
+				<span class="help-block default-hidden"></span>
+			</div>
 		</div>
 	</div>
 	<c:if test="${applicationScope.webappProperties.demoMode}">
-		<div class="form-group">
-			<div class="col-sm-2 control-label">
-				<label for="agreement">
-					End User Agreement
-				</label>
-			</div>
+		<div class="row">
 			<div class="col-sm-6">
-				<input type="checkbox" name="agreement" id="agreement"/>
-				I agree to the <a id="agreementAnchor" href="#">End User Agreement</a>
-			</div>
-			<div class="col-sm-4 help-block">
-				<div class="help-inline"></div>
+				<div class="form-group">
+					<label for="agreement" class="control-label">
+						<input type="checkbox" name="agreement" id="agreement" class="checkbox checkbox-inline"/>
+						I agree to the <a id="agreementAnchor" href="#">End User Agreement</a>
+					</label>
+					<span class="help-block default-hidden"></span>
+				</div>
 			</div>
 		</div>
 	</c:if>
 	<div class="row">
-		<div class="col-sm-8 text-center">
-			*Passwords must be at least 8 characters and contain at least
-			one letter & digit
+		<div class="col-sm-12">
+			<div class="form-group">
+				*Passwords must be at least 8 characters and contain at least
+				one letter & digit
+			</div>
 		</div>
 	</div>
 	<div class="row">
-		<div id="passwordChangeFailure" class="col-sm-8 default-hidden help-block has-error">
-			<div class="help-inline" id="passwordErrorMessage"></div>
+		<div id="passwordChangeFailure" class="default-hidden help-block has-error">
+			<div id="passwordErrorMessage"></div>
 		</div>
 	</div>
-	<div class="row">
-		<div class="col-sm-8 text-center vert-offset">
-			<button id="submit" type="submit" class="btn btn-primary">
-				Submit
-			</button>
-		</div>
-	</div>
+	<button id="submit" type="submit" class="btn btn-primary">
+		Submit
+	</button>
 </form>
 <div id="registrationComplete" class="default-hidden">
 	<p>

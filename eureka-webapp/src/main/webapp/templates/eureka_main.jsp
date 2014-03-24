@@ -172,7 +172,7 @@ limitations under the License.
 		</div>
 	</div>
 </c:if>
-<div class="container">
+<div class="container big-container">
 	<template:get name="content"/>
 </div>
 <div class="footer">

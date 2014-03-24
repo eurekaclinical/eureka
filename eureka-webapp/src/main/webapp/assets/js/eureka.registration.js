@@ -19,6 +19,8 @@ window.eureka.registration = new function () {
 	};
 
 	self.validator = $("#signupForm").validate({
+		errorElement: 'span',
+		errorClass: null,
 		rules: {
 			firstName: "required",
 			lastName: "required",
@@ -82,13 +84,16 @@ window.eureka.registration = new function () {
 			department: "Enter your department"
 		},
 		errorPlacement: function (error, element) {
-			error.appendTo($(element).closest('.form-group').find('.help-block .help-inline'));
+			$(element).closest('.form-group').find('.help-block').empty();
+			error.appendTo($(element).closest('.form-group').find('.help-block'));
 		},
 		highlight: function (element) {
 			$(element).closest('.form-group').addClass('has-error');
+			$(element).closest('.form-group').find('.help-block').removeClass('default-hidden');
 		},
 		unhighlight: function (element) {
 			$(element).closest('.form-group').removeClass('has-error');
+			$(element).closest('.form-group').find('.help-block').addClass('default-hidden');
 		},
 		// set this class to error-labels to indicate valid fields
 		success: function (label) {

@@ -68,8 +68,7 @@
 							${user.department}
 					</p>
 				</div>
-				</div>
-				<div class="form-group text-centered">
+				<div class="form-group">
 					<button id="changePasswordBtn" class="btn btn-primary">Change Password</button>
 				</div>
 			</fieldset>

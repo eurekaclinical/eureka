@@ -115,3 +115,11 @@ ul.sortable {
 	min-width: 4em;
 	max-width: 6em;
 }
+
+legend {
+	border-color: #CCCCCC;
+}
+
+.big-container {
+	min-height: 500px;
+}

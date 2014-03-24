@@ -23,22 +23,15 @@
 
 <template:insert template="/templates/eureka_main.jsp">
 <template:content name="content">
-<h3>
-	Sequence Editor
-</h3>
-<p>
-	Computes intervals with the same start and stop time as the Main data element below when the temporal
+<h3>Sequence Editor</h3>
+<p>Computes intervals with the same start and stop time as the Main data element below when the temporal
 	relationships below are satisfied.
 </p>
 <div class="row">
 <div class="col-xs-5">
 	<ul class="nav nav-tabs">
-		<li class="active">
-			<a href="#systemElems" data-toggle="tab">System</a>
-		</li>
-		<li>
-			<a href="#userElems" data-toggle="tab">User</a>
-		</li>
+		<li class="active"><a href="#systemElems" data-toggle="tab">System</a></li>
+		<li><a href="#userElems" data-toggle="tab">User</a></li>
 	</ul>
 	<div id="treeContent" class="tab-content proposition-tree">
 		<div id="systemElems" class="tab-pane fade active in">
@@ -65,34 +58,30 @@
 	<div id="propDefinition" class="col-sm-12">
 		<fieldset>
 			<legend>Main Data Element</legend>
-			<div class="row">
-				<div class="col-xs-12">
-					<div class="form-group">
-						<label>Name</label>
-						<div id="mainDataElement" class="tree-drop tree-drop-single jstree-drop"
-							 title="Drag a system or user-defined data element in here">
-							<div class="label-info text-centered">Drop Here</div>
-							<ul data-type="main" data-drop-type="single" data-count="1" class="sortable"
-								style="width: 100%; height: 100%">
-								<c:if test="${not empty proposition and propositionType == 'SEQUENCE'}">
-									<li data-key="${proposition.primaryDataElement.dataElementKey}"
-										data-desc="${proposition.primaryDataElement.dataElementDisplayName} (${proposition.primaryDataElement.dataElementKey})"
-										data-space="${proposition.primaryDataElement.inSystem ? 'system' : 'user'}">
-										<span class="delete-icon glyphicon glyphicon-remove"></span>
-										<span class="desc">${empty proposition.primaryDataElement.dataElementDisplayName ? '' : proposition.primaryDataElement.dataElementDisplayName} (${proposition.primaryDataElement.dataElementKey})</span>
-									</li>
-								</c:if>
-							</ul>
-						</div>
-					</div>
+			<div class="form-group">
+				<label>Name</label>
+				<div id="mainDataElement" class="tree-drop tree-drop-single jstree-drop"
+					 title="Drag a system or user-defined data element in here">
+					<div class="label-info text-centered">Drop Here</div>
+					<ul data-type="main" data-drop-type="single" data-count="1" class="sortable"
+						style="width: 100%; height: 100%">
+						<c:if test="${not empty proposition and propositionType == 'SEQUENCE'}">
+							<li data-key="${proposition.primaryDataElement.dataElementKey}"
+								data-desc="${proposition.primaryDataElement.dataElementDisplayName} (${proposition.primaryDataElement.dataElementKey})"
+								data-space="${proposition.primaryDataElement.inSystem ? 'system' : 'user'}"><span
+									class="delete-icon glyphicon glyphicon-remove"></span> <span
+									class="desc">${empty proposition.primaryDataElement.dataElementDisplayName ? '' : proposition.primaryDataElement.dataElementDisplayName}
+																(${proposition.primaryDataElement.dataElementKey})</span>
+							</li>
+						</c:if>
+					</ul>
 				</div>
 			</div>
 			<div class="form-group">
-				<label for="mainDataElementSpecifyDuration">
-					<input id="mainDataElementSpecifyDuration" type="checkbox" value="true"
-						   class="checkbox-inline"
-						   name="mainDataElementSpecifyDuration"
-						   <c:if test="${propositionType == 'SEQUENCE' and proposition.primaryDataElement.hasDuration}">checked="checked"</c:if> />
+				<label for="mainDataElementSpecifyDuration"> <input id="mainDataElementSpecifyDuration" type="checkbox"
+																	value="true" class="checkbox-inline"
+																	name="mainDataElementSpecifyDuration"
+																	<c:if test="${propositionType == 'SEQUENCE' and proposition.primaryDataElement.hasDuration}">checked="checked"</c:if> />
 					with duration
 				</label>
 			</div>
@@ -101,8 +90,7 @@
 					<label>at least</label>
 				</div>
 				<div class="col-sm-3">
-					<input type="number" class="form-control"
-						   name="mainDataElementMinDurationValue"
+					<input type="number" class="form-control" name="mainDataElementMinDurationValue"
 						   value="<c:if test="${propositionType == 'SEQUENCE'}">${proposition.primaryDataElement.minDuration}</c:if>"/>
 				</div>
 				<div class="col-sm-4">
@@ -119,8 +107,7 @@
 					<label>at most</label>
 				</div>
 				<div class="col-sm-3">
-					<input type="number" class="form-control"
-						   name="mainDataElementMaxDurationValue"
+					<input type="number" class="form-control" name="mainDataElementMaxDurationValue"
 						   value="<c:if test="${propositionType == 'SEQUENCE'}">${proposition.primaryDataElement.maxDuration}</c:if>"/>
 				</div>
 				<div class="col-sm-4">
@@ -156,8 +143,7 @@
 					</select>
 				</div>
 				<div class="col-sm-4">
-					<input type="text" class="form-control propertyValueField"
-						   name="mainDataElementPropertyValue"
+					<input type="text" class="form-control propertyValueField" name="mainDataElementPropertyValue"
 						   value="<c:if test="${propositionType == 'SEQUENCE' and not empty proposition.primaryDataElement.propertyValue}">${proposition.primaryDataElement.propertyValue}</c:if>"
 						   <c:if test="${propositionType == 'SEQUENCE' and empty properties[proposition.primaryDataElement.dataElementKey]}">disabled="disabled"</c:if> />
 				</div>
@@ -205,8 +191,7 @@
 						<label>at least</label>
 					</div>
 					<div class="col-sm-3">
-						<input type="number" class="form-control"
-							   name="sequenceRelDataElementMinDurationValue"
+						<input type="number" class="form-control" name="sequenceRelDataElementMinDurationValue"
 							   value="${relation.dataElementField.minDuration}"/>
 					</div>
 					<div class="col-sm-4">
@@ -223,8 +208,7 @@
 						<label>at most</label>
 					</div>
 					<div class="col-sm-3">
-						<input type="number" class="form-control"
-							   name="sequenceRelDataElementMaxDurationValue"
+						<input type="number" class="form-control" name="sequenceRelDataElementMaxDurationValue"
 							   value="${relation.dataElementField.maxDuration}"/>
 					</div>
 					<div class="col-sm-4">
@@ -248,8 +232,7 @@
 				</div>
 				<div class="form-group">
 					<div class="col-sm-5 col-sm-offset-1">
-						<select name="sequenceRelDataElementPropertyName"
-								class="form-control"
+						<select name="sequenceRelDataElementPropertyName" class="form-control"
 								data-properties-provider="relatedDataElement${status.count}">
 							<c:forEach var="property" items="${properties[relation.dataElementField.dataElementKey]}">
 								<option value="${property}"
@@ -287,14 +270,14 @@
 						<label>by at least</label>
 					</div>
 					<div class="col-sm-3">
-						<input type="text" class="form-control"
-							   name="sequenceRhsDataElementMinDistanceValue"
+						<input type="text" class="form-control" name="sequenceRhsDataElementMinDistanceValue"
 							   value="${relation.relationMinCount}"/>
 					</div>
 					<div class="col-sm-4">
 						<select name="sequenceRhsDataElementMinDistanceUnits" class="form-control">
 							<c:forEach var="unit" items="${timeUnits}">
-								<option value="${unit.id}" <c:if test="${unit.id == relation.relationMinUnits}">selected="selected"</c:if>>${unit.description}</option>
+								<option value="${unit.id}"
+										<c:if test="${unit.id == relation.relationMinUnits}">selected="selected"</c:if>>${unit.description}</option>
 							</c:forEach>
 						</select>
 					</div>
@@ -461,8 +444,7 @@
 <div class="form-group">
 	<div class="col-sm-12 text-centered">
 		<button id="duplicateRelatedButton" type="button" class="btn btn-primary">
-			<span class="glyphicon glyphicon-plus"></span>
-			Add Related Data Element
+			<span class="glyphicon glyphicon-plus"></span> Add Related Data Element
 		</button>
 		<button id="savePropositionButton" type="button" class="btn btn-primary">Save</button>
 	</div>
@@ -520,17 +502,15 @@
 		</div>
 	</div>
 </div>
-<script language="JavaScript"
-		src="${pageContext.request.contextPath}/assets/js/jquery.jstree.js"></script>
-<script language="JavaScript"
-		src="${pageContext.request.contextPath}/assets/js/eureka.tree.js"></script>
-<script language="JavaScript"
-		src="${pageContext.request.contextPath}/assets/js/eureka.editor.js"></script>
+<script language="JavaScript" src="${pageContext.request.contextPath}/assets/js/jquery.jstree.js"></script>
+<script language="JavaScript" src="${pageContext.request.contextPath}/assets/js/eureka.tree.js"></script>
+<script language="JavaScript" src="${pageContext.request.contextPath}/assets/js/eureka.editor.js"></script>
 <script language="JavaScript">
 	eureka.editor.setup('SEQUENCE', '', ${proposition != null ? proposition.id : 'null'},
 			'#systemTree', '#userTree', '#definitionContainer', '#savePropositionButton', 'span.delete-icon',
 			'ul.sortable', '${pageContext.request.contextPath}/assets/css/jstree-themes/default/style.css', '#searchModal');
-	eureka.editor.setupDuplication('#duplicateRelatedButton', '.sequence-relations-container', '.sequence-relation', eureka.editor.duplicateSequenceRelation, eureka.editor.setPropositionSelects);
+	eureka.editor.setupDuplication('#duplicateRelatedButton', '.sequence-relations-container', '.sequence-relation',
+			eureka.editor.duplicateSequenceRelation, eureka.editor.setPropositionSelects);
 </script>
 </template:content>
 </template:insert>
