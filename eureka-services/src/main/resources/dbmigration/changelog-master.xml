@@ -860,4 +860,11 @@ limitations under the License.
 			<addNotNullConstraint tableName="USERS" columnName="AUTHENTICATIONMETHOD_ID"/>
 			<addForeignKeyConstraint baseColumnNames="AUTHENTICATIONMETHOD_ID" baseTableName="USERS" constraintName="FK_USERS_AUTHENTMETHOD" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" referencedColumnNames="ID" referencedTableName="AUTHENTICATION_METHODS" referencesUniqueColumn="false"/>
 		</changeSet>
+		<changeSet author="arpost" id="1360440238345-96">
+			<insert tableName="OAUTH_PROVIDERS">
+				<column name="ID" valueNumeric="4"/>
+				<column name="NAME" value="GlobusProvider"/>
+				<column name="DESCRIPTION" value="Globus"/>
+			</insert>
+		</changeSet>
 </databaseChangeLog>
