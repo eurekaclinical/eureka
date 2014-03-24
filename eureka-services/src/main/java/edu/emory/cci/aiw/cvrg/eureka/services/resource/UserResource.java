@@ -195,8 +195,7 @@ public class UserResource {
 		if (userEntity != null) {
 			this.userDao.refresh(userEntity);
 		} else {
-			throw new AssertionError("Cannot find " + username + 
-					" in user database!");
+			throw new HttpStatusException(Response.Status.NOT_FOUND);
 		}
 		LOGGER.debug("Returning user for name {}: {}", username, userEntity);
 		UserEntityToUserVisitor visitor = new UserEntityToUserVisitor();
