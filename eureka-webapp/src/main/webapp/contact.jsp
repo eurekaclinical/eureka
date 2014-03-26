@@ -52,7 +52,7 @@
 			</div>
 		</div>
 		<script type="text/javascript"
-				src="${pageContext.request.contextPath}/assets/js/eureka.util.js"></script>
+				src="${pageContext.request.contextPath}/assets/js/eureka.util${initParam['eureka-build-timestamp']}.js"></script>
 		<c:set var="contactEmail" value="${webappProperties.contactEmail}"/>
 		<c:if test="${not empty contactEmail}">
 			<c:set var="emailParts" value="${fn:split(contactEmail, '@')}"/>

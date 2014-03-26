@@ -212,7 +212,7 @@
 				</p>
 			</div>
 			<div class="modal-footer">
-				<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+				<button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
 			</div>
 		</div>
 	</div>
@@ -220,7 +220,7 @@
 <script type="text/javascript"
 		src="${pageContext.request.contextPath}/assets/js/jquery.validate.js"></script>
 <script type="text/javascript"
-		src="${pageContext.request.contextPath}/assets/js/eureka.registration.js"></script>
+		src="${pageContext.request.contextPath}/assets/js/eureka.registration${initParam['eureka-build-timestamp']}.js"></script>
 <script type="text/javascript">
 	$(document).ready(function () {
 		eureka.registration.setup($('#signupForm'), $('#agreementAnchor'), $('#agreementModal'));

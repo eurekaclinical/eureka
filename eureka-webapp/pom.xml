@@ -35,6 +35,8 @@ of the Eureka! Clinical Analytics web user interface.
 						<include>js/eureka.js</include>
 						<include>css/editor.css</include>
 						<include>css/styles.css</include>
+						<include>assets/js/eureka.*.js</include>
+						<include>assets/css/eureka.css</include>
 					</includes>
 				</configuration>
 			</plugin>
@@ -53,10 +55,10 @@ of the Eureka! Clinical Analytics web user interface.
 				<configuration>
 					<filteringDeploymentDescriptors>true</filteringDeploymentDescriptors>
 					<packagingExcludes>
-						js/editor.js, 
-						js/eureka.js, 
-						css/editor.css, 
-						css/styles.css
+						js/editor.js,
+						js/eureka.js,
+						css/editor.css,
+						css/styles.css,
 					</packagingExcludes>
 				</configuration>
 			</plugin>

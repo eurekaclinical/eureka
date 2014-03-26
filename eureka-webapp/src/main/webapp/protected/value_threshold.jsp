@@ -362,7 +362,7 @@
 			</div>
 			<div class="modal-footer">
 				<button id="confirmButton" type="button" class="btn btn-primary">Delete</button>
-				<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+				<button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
 			</div>
 		</div>
 	</div>
@@ -378,7 +378,7 @@
 			<div id="errorContent" class="modal-body">
 			</div>
 			<div class="modal-footer">
-				<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+				<button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
 			</div>
 		</div>
 	</div>
@@ -386,9 +386,9 @@
 <script language="JavaScript"
 		src="${pageContext.request.contextPath}/assets/js/jquery.jstree.js"></script>
 <script language="JavaScript"
-		src="${pageContext.request.contextPath}/assets/js/eureka.tree.js"></script>
+		src="${pageContext.request.contextPath}/assets/js/eureka.tree${initParam['eureka-build-timestamp']}.js"></script>
 <script language="JavaScript"
-		src="${pageContext.request.contextPath}/assets/js/eureka.editor.js"></script>
+		src="${pageContext.request.contextPath}/assets/js/eureka.editor${initParam['eureka-build-timestamp']}.js"></script>
 <script language="JavaScript">
 	eureka.editor.setup('VALUE_THRESHOLD', '', ${proposition != null ? proposition.id : 'null'},
 			'#systemTree', '#userTree', '#definitionContainer', '#savePropositionButton', 'span.delete-icon',

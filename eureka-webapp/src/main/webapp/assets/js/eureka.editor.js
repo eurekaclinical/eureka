@@ -20,6 +20,7 @@ window.eureka.editor = new function () {
 			$('.label-info').hide();
 		}
 
+
 		$(saveButtonElem).on('click', function () {
 			self.save($(containerElem));
 		});
@@ -32,6 +33,7 @@ window.eureka.editor = new function () {
 			});
 		});
 
+		self.setPropositionSelects($(containerElem));
 		eureka.tree.setupUserTree(userTreeElem, self.dropFinishCallback);
 		eureka.tree.setupSystemTree(systemTreeElem, treeCssUrl, searchModalElem, self.dropFinishCallback);
 	};

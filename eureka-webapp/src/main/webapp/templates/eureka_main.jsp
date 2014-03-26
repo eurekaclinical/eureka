@@ -49,7 +49,7 @@ limitations under the License.
 	<link rel="stylesheet"
 		  href="${pageContext.request.contextPath}/assets/css/bootstrap.min.css"/>
 	<link rel="stylesheet"
-		  href="${pageContext.request.contextPath}/assets/css/eureka.css"/>
+		  href="${pageContext.request.contextPath}/assets/css/eureka${initParam['eureka-build-timestamp']}.css"/>
 
 	<!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
 	<!--[if lt IE 9]>
@@ -58,7 +58,6 @@ limitations under the License.
 	<![endif]-->
 	<script src="${pageContext.request.contextPath}/assets/js/jquery-1.10.2.min.js"></script>
 	<script src="${pageContext.request.contextPath}/assets/js/bootstrap.min.js"></script>
-	<script src="https://ajax.googleapis.com/ajax/libs/webfont/1.4.7/webfont.js"></script>
 	<%--
 		<script src="${pageContext.request.contextPath}/js/jquery-1.7.1.min.js"></script>
 		<script src="${pageContext.request.contextPath}/js/jquery.validate.js"></script>
@@ -172,7 +171,7 @@ limitations under the License.
 		</div>
 	</div>
 </c:if>
-<div class="container big-container">
+<div class="container container-big">
 	<template:get name="content"/>
 </div>
 <div class="footer">

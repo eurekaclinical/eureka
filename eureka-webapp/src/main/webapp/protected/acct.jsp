@@ -119,14 +119,14 @@
 						<div class="modal-footer">
 							<input type="hidden" name="action" value="save"/>
 							<input type="submit" value="Save" id="saveAcctBtn" class="btn btn-primary"/>
-							<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+							<button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
 						</div>
 					</form>
 				</div>
 			</div>
 		</div>
 		<script type="text/javascript" src="${pageContext.request.contextPath}/assets/js/jquery.validate.js"></script>
-		<script type="text/javascript" src="${pageContext.request.contextPath}/assets/js/eureka.account.js"></script>
+		<script type="text/javascript" src="${pageContext.request.contextPath}/assets/js/eureka.account${initParam['eureka-build-timestamp']}.js"></script>
 		<script type="text/javascript">
 			$(document).ready(function () {
 				eureka.account.setup('#changePasswordBtn', '#newPasswordModal', '#userAcctForm', '#passwordChangeComplete', '#passwordExpirationMsg');

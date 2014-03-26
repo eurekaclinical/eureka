@@ -79,7 +79,7 @@
 			</div>
 		</form>
 		<script type="text/javascript" src="${pageContext.request.contextPath}/assets/js/jquery.validate.js"></script>
-		<script type="text/javascript" src="${pageContext.request.contextPath}/assets/js/eureka.password.js"></script>
+		<script type="text/javascript" src="${pageContext.request.contextPath}/assets/js/eureka.password${initParam['eureka-build-timestamp']}.js"></script>
 		<script type="text/javascript">
 			eureka.password.setup('#passwordExpirationfrm');
 		</script>
