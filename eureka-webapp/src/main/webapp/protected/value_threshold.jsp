@@ -143,10 +143,12 @@
 								Drop Contextual Data Element(s) Here
 							</div>
 							<ul data-proptype="empty" data-drop-type="multiple" class="sortable">
-								<li data-key="${relatedDataElement.dataElementKey}" data-desc="${relatedDataElement.dataElementDisplayName}" data-type="${relatedDataElement.type}" data-subtype="${relatedDataElement.type == 'CATEGORIZATION' ? relatedDataElement.categoricalType : ''}" data-space="${relatedDataElement.inSystem ? 'system' : 'user'}">
-									<span class="delete-icon glyphicon glyphicon-remove"></span>
-									<span>${relatedDataElement.dataElementDisplayName} (${relatedDataElement.dataElementKey})</span>
-								</li>
+								<c:forEach var="relatedDataElement" items="${threshold.relatedDataElements}">
+									<li data-key="${relatedDataElement.dataElementKey}" data-desc="${relatedDataElement.dataElementDisplayName}" data-type="${relatedDataElement.type}" data-subtype="${relatedDataElement.type == 'CATEGORIZATION' ? relatedDataElement.categoricalType : ''}" data-space="${relatedDataElement.inSystem ? 'system' : 'user'}">
+										<span class="delete-icon glyphicon glyphicon-remove"></span>
+										<span>${relatedDataElement.dataElementDisplayName} (${relatedDataElement.dataElementKey})</span>
+									</li>
+								</c:forEach>
 							</ul>
 						</div>
 					</div>
