@@ -55,11 +55,10 @@
 			test="${not empty proposition}">${proposition.description}</c:if></textarea>
 </div>
 <div class="row">
-	<div id="propDefinition" class="col-sm-12">
-		<fieldset>
-			<legend>Main Data Element</legend>
-			<div class="form-group">
-				<label>Name</label>
+	<div id="propDefinition" class="col-sm-12 panel panel-default">
+		<div class="row panel-heading"><h4 class="panel-title">Main Data Element</h4></div>
+			<div class="form-group col-sm-12">
+				<label class="sr-only" for="mainDataElement">Main data element</label>
 				<div id="mainDataElement" class="tree-drop tree-drop-single jstree-drop"
 					 title="Drag a system or user-defined data element in here">
 					<div class="label-info text-centered">Drop Here</div>
@@ -77,41 +76,42 @@
 					</ul>
 				</div>
 			</div>
+			<fieldset>
+			<legend><input id="mainDataElementSpecifyDuration" type="checkbox"
+																value="true" class="checkbox-inline"
+																name="mainDataElementSpecifyDuration"
+																<c:if test="${propositionType == 'SEQUENCE' and proposition.primaryDataElement.hasDuration}">checked="checked"</c:if> />
+				Duration
+			</legend>
 			<div class="form-group">
-				<label for="mainDataElementSpecifyDuration"> <input id="mainDataElementSpecifyDuration" type="checkbox"
-																	value="true" class="checkbox-inline"
-																	name="mainDataElementSpecifyDuration"
-																	<c:if test="${propositionType == 'SEQUENCE' and proposition.primaryDataElement.hasDuration}">checked="checked"</c:if> />
-					with duration
-				</label>
-			</div>
-			<div class="form-group">
-				<div class="col-sm-3 control-label">
-					<label>at least</label>
-				</div>
-				<div class="col-sm-3">
+				<div class="col-md-2">
+					<label class="sr-only" id="mainDataElementMinDurationValue">From</label>
 					<input type="number" class="form-control" name="mainDataElementMinDurationValue"
+						   id="mainDataElementMinDurationValue"
+						   placeholder="min"
 						   value="<c:if test="${propositionType == 'SEQUENCE'}">${proposition.primaryDataElement.minDuration}</c:if>"/>
 				</div>
-				<div class="col-sm-4">
-					<select name="mainDataElementMinDurationUnits" class="form-control">
+				<div class="col-md-3">
+					<label class="sr-only" id="mainDataElementMinDurationUnits">From time units</label>
+					<select name="mainDataElementMinDurationUnits" id="mainDataElementMinDurationUnits" class="form-control">
 						<c:forEach var="unit" items="${timeUnits}">
 							<option value="${unit.id}"
 									<c:if test="${propositionType == 'SEQUENCE' ? unit.id == proposition.primaryDataElement.minDurationUnits : unit.id == defaultTimeUnit.id}">selected="selected"</c:if>>${unit.description}</option>
 						</c:forEach>
 					</select>
 				</div>
-			</div>
-			<div class="form-group">
-				<div class="col-sm-3 control-label">
-					<label>at most</label>
+				<div class="col-md-1 control-label" style="text-align: center">
+					<label for="mainDataElementMaxDurationValue">to</label>
 				</div>
-				<div class="col-sm-3">
+				<div class="col-md-2">
 					<input type="number" class="form-control" name="mainDataElementMaxDurationValue"
+						   id="mainDataElementMaxDurationValue"
+						   placeholder="max"
 						   value="<c:if test="${propositionType == 'SEQUENCE'}">${proposition.primaryDataElement.maxDuration}</c:if>"/>
 				</div>
-				<div class="col-sm-4">
-					<select name="mainDataElementMaxDurationUnits" class="form-control">
+				<div class="col-md-3">
+					<label class="sr-only" id="mainDataElementMaxDurationUnits">From time units</label>
+					<select name="mainDataElementMaxDurationUnits" id="mainDataElementMaxDurationUnits" class="form-control">
 						<c:forEach var="unit" items="${timeUnits}">
 							<option value="${unit.id}"
 									<c:if test="${propositionType == 'SEQUENCE' ? unit.id == proposition.primaryDataElement.maxDurationUnits : unit.id == defaultTimeUnit.id}">selected="selected"</c:if>>${unit.description}</option>
@@ -119,19 +119,20 @@
 					</select>
 				</div>
 			</div>
-			<div class="form-group"
-				 title="Optionally specify a property value constraint for this data element">
-				<label>
-					<input type="checkbox" class="checkbox-inline propertyValueConstraint" value="true"
-						   name="mainDataElementSpecifyProperty"
-						   <c:if test="${propositionType == 'SEQUENCE' and proposition.primaryDataElement.hasPropertyConstraint}">checked="checked"</c:if>
-						   <c:if test="${propositionType == 'SEQUENCE' and empty properties[proposition.primaryDataElement.dataElementKey]}">disabled="disabled"</c:if> />
-					with property value
-				</label>
-			</div>
+			</fieldset>
+			<fieldset>
+			<legend>
+				<input type="checkbox" class="checkbox-inline propertyValueConstraint" value="true"
+					   name="mainDataElementSpecifyProperty"
+					   <c:if test="${propositionType == 'SEQUENCE' and proposition.primaryDataElement.hasPropertyConstraint}">checked="checked"</c:if>
+					   <c:if test="${propositionType == 'SEQUENCE' and empty properties[proposition.primaryDataElement.dataElementKey]}">disabled="disabled"</c:if> />
+				Property value
+			</legend>
 			<div class="form-group">
-				<div class="col-sm-5 col-sm-offset-1">
+				<div class="col-sm-6">
+					<label class="sr-only" for="mainDataElementPropertyName">Property name</label>
 					<select name="mainDataElementPropertyName" class="form-control"
+							id="mainDataElementPropertyName"
 							data-properties-provider="mainDataElement">
 						<c:if test="${propositionType == 'SEQUENCE'}">
 							<c:forEach var="property"
@@ -142,26 +143,25 @@
 						</c:if>
 					</select>
 				</div>
-				<div class="col-sm-4">
-					<input type="text" class="form-control propertyValueField" name="mainDataElementPropertyValue"
+				<div class="col-sm-6">
+					<label class="sr-only" for="mainDataElementPropertyValue">Property value</label>
+					<input type="text" class="form-control propertyValueField" name="mainDataElementPropertyValue" id="mainDataElementPropertyValue"
 						   value="<c:if test="${propositionType == 'SEQUENCE' and not empty proposition.primaryDataElement.propertyValue}">${proposition.primaryDataElement.propertyValue}</c:if>"
 						   <c:if test="${propositionType == 'SEQUENCE' and empty properties[proposition.primaryDataElement.dataElementKey]}">disabled="disabled"</c:if> />
 				</div>
 			</div>
-		</fieldset>
+			</fieldset>
 	</div>
 </div>
 <div class="form-group">
-<div class="col-sm-12">
 <div id="sequenceRelatedDataElements" class="sequence-relations-container">
 <c:choose>
 <c:when test="${not empty proposition and propositionType == 'SEQUENCE' and not empty proposition.relatedDataElements}">
 	<c:forEach var="relation" items="${proposition.relatedDataElements}" varStatus="status">
-		<div class="sequence-relation drop-parent">
-			<fieldset>
-				<legend>Related data element <span class="count">${status.count}</span></legend>
-				<div class="form-group">
-					<label>Name</label>
+		<div class="sequence-relation drop-parent panel panel-default col-sm-12">
+			<div class="row panel-heading"><h4 class="panel-title">Related data element <span class="count">${status.count}</span></h4></div>
+				<div class="form-group col-sm-12">
+					<label class="sr-only" for="relatedDataElement${status.count}">Related data element ${status.count}</label>
 					<div id="relatedDataElement${status.count}"
 						 class="tree-drop tree-drop-single jstree-drop sequencedDataElement"
 						 title="Drag another system or user-defined data element in here">
@@ -177,24 +177,23 @@
 						</ul>
 					</div>
 				</div>
-				<div class="form-group"
-					 title="Optionally specify a duration range that intervals of this data element must have">
-					<label>
-						<input type="checkbox" value="true"
-							   name="sequenceRelDataElementSpecifyDuration"
-							   <c:if test="${relation.dataElementField.hasDuration}">checked="checked"</c:if> />
-						with duration
-					</label>
-				</div>
+				<fieldset>
+				<legend>
+					<input type="checkbox" value="true"
+						   name="sequenceRelDataElementSpecifyDuration"
+						   <c:if test="${relation.dataElementField.hasDuration}">checked="checked"</c:if> />
+					Duration
+				</legend>
 				<div class="form-group">
-					<div class="col-sm-3 control-label">
-						<label>at least</label>
-					</div>
-					<div class="col-sm-3">
+					<div class="col-md-2">
+						<label class="sr-only" for="sequenceRelDataElementMinDurationValue">From</label>
 						<input type="number" class="form-control" name="sequenceRelDataElementMinDurationValue"
+							   id="sequenceRelDataElementMinDurationValue"
+							   placeholder="min"
 							   value="${relation.dataElementField.minDuration}"/>
 					</div>
-					<div class="col-sm-4">
+					<div class="col-md-3">
+						<label class="sr-only" for="sequenceRelDataElementMinDurationUnits">From units</label>
 						<select name="sequenceRelDataElementMinDurationUnits" class="form-control">
 							<c:forEach var="unit" items="${timeUnits}">
 								<option value="${unit.id}"
@@ -202,16 +201,17 @@
 							</c:forEach>
 						</select>
 					</div>
-				</div>
-				<div class="form-group">
-					<div class="col-sm-3 control-label">
-						<label>at most</label>
+					<div class="col-md-1 control-label" style="text-align: center">
+						<label for="sequenceRelDataElementMaxDurationValue">to</label>
 					</div>
-					<div class="col-sm-3">
+					<div class="col-md-2">
 						<input type="number" class="form-control" name="sequenceRelDataElementMaxDurationValue"
+							   id="sequenceRelDataElementMaxDurationValue"
+							   placeholder="max"
 							   value="${relation.dataElementField.maxDuration}"/>
 					</div>
-					<div class="col-sm-4">
+					<div class="col-md-3">
+						<label class="sr-only" for="sequenceRelDataElementMaxDurationUnits">To units</label>
 						<select name="sequenceRelDataElementMaxDurationUnits" class="form-control">
 							<c:forEach var="unit" items="${timeUnits}">
 								<option value="${unit.id}"
@@ -220,19 +220,20 @@
 						</select>
 					</div>
 				</div>
-				<div class="form-group"
-					 title="Optionally specify a property value that matching intervals of this data element must have">
-					<label>
-						<input type="checkbox" class="checkbox-inline propertyValueConstraint" value="true"
-							   name="sequenceRelDataElementSpecifyProperty"
-							   <c:if test="${relation.dataElementField.hasPropertyConstraint}">checked="checked"</c:if>
-							   <c:if test="${propositionType == 'SEQUENCE' and empty properties[relation.dataElementField.dataElementKey]}">disabled="disabled"</c:if> />
-						with property value
-					</label>
-				</div>
+				</fieldset>
+				<fieldset>
+				<legend>
+					<input type="checkbox" class="checkbox-inline propertyValueConstraint" value="true"
+						   name="sequenceRelDataElementSpecifyProperty"
+						   <c:if test="${relation.dataElementField.hasPropertyConstraint}">checked="checked"</c:if>
+						   <c:if test="${propositionType == 'SEQUENCE' and empty properties[relation.dataElementField.dataElementKey]}">disabled="disabled"</c:if> />
+					Property value
+				</legend>
 				<div class="form-group">
-					<div class="col-sm-5 col-sm-offset-1">
+					<div class="col-sm-6">
+						<label class="sr-only" for="sequenceRelDataElementPropertyName">Property name</label>
 						<select name="sequenceRelDataElementPropertyName" class="form-control"
+								id="sequenceRelDataElementPropertyName"
 								data-properties-provider="relatedDataElement${status.count}">
 							<c:forEach var="property" items="${properties[relation.dataElementField.dataElementKey]}">
 								<option value="${property}"
@@ -240,58 +241,66 @@
 							</c:forEach>
 						</select>
 					</div>
-					<div class="col-sm-4">
+					<div class="col-sm-6">
+						<label class="sr-only" for="sequenceRelDataElementPropertyValue">Property value</label>
 						<input type="text" class="form-control propertyValueField"
 							   name="sequenceRelDataElementPropertyValue"
+							   id="sequenceRelDataElementPropertyValue"
 							   value="<c:if test="${not empty relation.dataElementField.propertyValue}">${relation.dataElementField.propertyValue}</c:if>"
 							   <c:if test="${empty properties[relation.dataElementField.dataElementKey]}">disabled="disabled"</c:if> />
 					</div>
 				</div>
-				<div class="form-group"
-					 title="Specify the temporal relationship that intervals of this data element must have">
-					<label>Temporal Relationship</label>
-				</div>
+				</fieldset>
+				<fieldset>
+				<legend>Temporal Relationship</legend>
 				<div class="form-group">
-					<div class="col-sm-5 col-sm-offset-1">
+					<div class="col-sm-6">
+						<label class="sr-only" for="sequenceRelDataElementTemporalRelation">Temporal relation</label>
 						<select name="sequenceRelDataElementTemporalRelation"
+								id="sequenceRelDataElementTemporalRelation"
 								class="form-control">
 							<c:forEach var="op" items="${sequentialRelationOps}">
 								<option value="${op.id}" <c:if test="${op.id == relation.relationOperator}">selected="selected"</c:if>>${op.description}</option>
 							</c:forEach>
 						</select>
 					</div>
-					<div class="col-sm-4">
+					<div class="col-sm-6">
+						<label class="sr-only" for="propositionSelect">Other data element</label>
 						<select name="propositionSelect" class="form-control"
 								data-sourceid="${relation.sequentialDataElementSource}"></select>
 					</div>
 				</div>
 				<div class="form-group">
-					<div class="col-sm-3 control-label">
-						<label>by at least</label>
+					<div class="col-md-1 control-label" style="text-align: center">
+						<label for="sequenceRhsDataElementMinDistanceValue">by</label>
 					</div>
-					<div class="col-sm-3">
+					<div class="col-md-2">
 						<input type="text" class="form-control" name="sequenceRhsDataElementMinDistanceValue"
+							   id="sequenceRhsDataElementMinDistanceValue"
+							   placeholder="min"
 							   value="${relation.relationMinCount}"/>
 					</div>
-					<div class="col-sm-4">
-						<select name="sequenceRhsDataElementMinDistanceUnits" class="form-control">
+					<div class="col-md-3">
+						<label class="sr-only" for="sequenceRhsDataElementMinDistanceUnits">By units</label>
+						<select name="sequenceRhsDataElementMinDistanceUnits" id="sequenceRhsDataElementMinDistanceUnits" class="form-control">
 							<c:forEach var="unit" items="${timeUnits}">
 								<option value="${unit.id}"
 										<c:if test="${unit.id == relation.relationMinUnits}">selected="selected"</c:if>>${unit.description}</option>
 							</c:forEach>
 						</select>
 					</div>
-				</div>
-				<div class="form-group">
-					<div class="col-sm-3 control-label">
-						<label>by at most</label>
+					<div class="col-md-1 control-label" style="text-align: center">
+						<label for="sequenceRhsDataElementMaxDistanceValue">to</label>
 					</div>
-					<div class="col-sm-3">
+					<div class="col-md-2">
 						<input type="text" class="form-control"
+							   placeholder="max"
 							   name="sequenceRhsDataElementMaxDistanceValue"
+							   id="sequenceRhsDataElementMaxDistanceValue"
 							   value="${relation.relationMaxCount}" />
 					</div>
-					<div class="col-sm-4">
+					<div class="col-md-3">
+						<label class="sr-only" for="sequenceRhsDataElementMaxDistanceUnits">To units</label>
 						<select name="sequenceRhsDataElementMaxDistanceUnits" class="form-control">
 							<<c:forEach var="unit" items="${timeUnits}">
 							<option value="${unit.id}" <c:if test="${unit.id == relation.relationMaxUnits}">selected="selected"</c:if>>${unit.description}</option>
@@ -299,61 +308,59 @@
 						</select>
 					</div>
 				</div>
-			</fieldset>
+				</fieldset>
 		</div>
 	</c:forEach>
 </c:when>
 <c:otherwise>
-<div class="sequence-relation drop-parent">
+<div class="sequence-relation drop-parent panel panel-default col-sm-12">
+	<div class="row panel-heading">
+		<h4 class="panel-title">Related data element <span class="count">1</span></h4>
+	</div>
+	<div class="form-group col-sm-12">
+		<div id="relatedDataElement1"
+			 class="tree-drop tree-drop-single jstree-drop sequencedDataElement"
+			 title="Drag another system or user-defined data element in here">
+			<div class="label-info text-centered">Drop Here</div>
+			<ul class="sortable" data-type="related" data-drop-type="single"
+				data-count="2">
+			</ul>
+		</div>
+	</div>
 	<fieldset>
 		<legend>
-			Related data element <span class="count">1</span>
+			<input type="checkbox" value="true"
+				   name="sequenceRelDataElementSpecifyDuration"/>
+			Duration
 		</legend>
 		<div class="form-group">
-			<label>Name</label>
-			<div id="relatedDataElement1"
-				 class="tree-drop tree-drop-single jstree-drop sequencedDataElement"
-				 title="Drag another system or user-defined data element in here">
-				<div class="label-info text-centered">Drop Here</div>
-				<ul class="sortable" data-type="related" data-drop-type="single"
-					data-count="2">
-				</ul>
-			</div>
-		</div>
-		<div class="form-group"
-			 title="Optionally specify a duration range that intervals of this data element must have">
-			<label>
-				<input type="checkbox" value="true"
-					   name="sequenceRelDataElementSpecifyDuration"/>
-				with duration
-			</label>
-		</div>
-		<div class="form-group">
-			<div class="col-sm-3 control-label">
-				<label>at least</label>
-			</div>
-			<div class="col-sm-3">
+			<div class="col-md-2">
+				<label class="sr-only" for="sequenceRelDataElementMinDurationValue">Min duration</label>
 				<input type="number" class="form-control"
+					   placeholder="min"
 					   name="sequenceRelDataElementMinDurationValue"/>
 			</div>
-			<div class="col-sm-4">
-				<select name="sequenceRelDataElementMinDurationUnits" class="form-control">
+			<div class="col-md-3">
+				<label class="sr-only" for="sequenceRelDataElementMinDurationUnits">Min duration time units</label>
+				<select name="sequenceRelDataElementMinDurationUnits" 
+						id="sequenceRelDataElementMinDurationUnits" class="form-control">
 					<c:forEach var="unit" items="${timeUnits}">
 						<option value="${unit.id}"
 								<c:if test="${unit.id == defaultTimeUnit.id}">selected="selected"</c:if>>${unit.description}</option>
 					</c:forEach>
 				</select>
 			</div>
-		</div>
-		<div class="form-group">
-			<div class="col-sm-3 control-label">
-				<label>at most</label>
+			<div class="col-md-1 control-label" style="text-align: center">
+				<label for="sequenceRelDataElementMaxDurationValue">to</label>
 			</div>
-			<div class="col-sm-3">
+			<div class="col-md-2">
 				<input type="number" class="form-control"
-					   name="sequenceRelDataElementMaxDurationValue"/>
+					   placeholder="max"
+					   name="sequenceRelDataElementMaxDurationValue"
+					   id="sequenceRelDataElementMaxDurationValue"/>
 			</div>
-			<div class="col-sm-4">
+			<div class="col-md-3">
+				<label class="sr-only" for="sequenceRelDataElementMaxDurationUnits">Max duration time units</label>
 				<select name="sequenceRelDataElementMaxDurationUnits" class="form-control">
 					<c:forEach var="unit" items="${timeUnits}">
 						<option value="${unit.id}"
@@ -362,33 +369,37 @@
 				</select>
 			</div>
 		</div>
-		<div class="form-group"
-			 title="Optionally specify a property value that matching intervals of this data element must have">
-			<label>
-				<input type="checkbox" class="checkbox-inline propertyValueConstraint" value="true"
-					   name="sequenceRelDataElementSpecifyProperty"/>
-				with property value
-			</label>
-		</div>
+	</fieldset>
+	<fieldset>
+		<legend>
+			<input type="checkbox" class="checkbox-inline propertyValueConstraint" value="true"
+				   name="sequenceRelDataElementSpecifyProperty"/>
+			Property value
+		</legend>
 		<div class="form-group">
-			<div class="col-sm-5 col-sm-offset-1">
+			<div class="col-sm-6">
+				<label class="sr-only" for="sequenceRelDataElementPropertyName">Property name</label>
 				<select name="sequenceRelDataElementPropertyName"
+						id="sequenceRelDataElementPropertyName"
 						class="form-control"
 						data-properties-provider="relatedDataElement1">
 				</select>
 			</div>
-			<div class="col-sm-4">
+			<div class="col-sm-6">
+				<label class="sr-only" for="sequenceRelDataElementPropertyValue">Property value</label>
 				<input type="text" class="form-control propertyValueField"
-					   name="sequenceRelDataElementPropertyValue"/>
+					   name="sequenceRelDataElementPropertyValue"
+					   id="sequenceRelDataElementPropertyValue"/>
 			</div>
 		</div>
-		<div class="form-group"
-			 title="Specify the temporal relationship that intervals of this data element must have">
-			<label>Temporal relationship</label>
-		</div>
+	</fieldset>
+	<fieldset>
+		<legend>Temporal relationship</legend>
 		<div class="form-group">
-			<div class="col-sm-5 col-sm-offset-1">
+			<div class="col-sm-6">
+				<label class="sr-only" for="sequenceRelDataElementTemporalRelation">Temporal relation</label>
 				<select name="sequenceRelDataElementTemporalRelation"
+						id="sequenceRelDataElementTemporalRelation"
 						class="form-control">
 					<c:forEach var="op" items="${sequentialRelationOps}">
 						<option value="${op.id}"
@@ -396,19 +407,23 @@
 					</c:forEach>
 				</select>
 			</div>
-			<div class="col-sm-4">
-				<select name="propositionSelect" class="form-control"></select>
+			<div class="col-sm-6">
+				<label class="sr-only" for="propositionSelect">Selected data element</label>
+				<select name="propositionSelect" id="propositionSelect" class="form-control"></select>
 			</div>
 		</div>
 		<div class="form-group">
-			<div class="col-sm-3 control-label">
-				<label>by at least</label>
+			<div class="col-md-1 control-label" style="text-align: center">
+				<label for="sequenceRhsDataElementMinDistanceValue">by</label>
 			</div>
-			<div class="col-sm-3">
+			<div class="col-md-2">
 				<input type="text" class="form-control"
-					   name="sequenceRhsDataElementMinDistanceValue"/>
+					   placeholder="min"
+					   name="sequenceRhsDataElementMinDistanceValue"
+					   id="sequenceRhsDataElementMinDistanceValue"/>
 			</div>
-			<div class="col-sm-4">
+			<div class="col-md-3">
+				<label class=sr-only" for="sequenceRhsDataElementMinDistanceUnits">By units</label>
 				<select name="sequenceRhsDataElementMinDistanceUnits" class="form-control">
 					<c:forEach var="unit" items="${timeUnits}">
 						<option value="${unit.id}"
@@ -416,16 +431,17 @@
 					</c:forEach>
 				</select>
 			</div>
-		</div>
-		<div class="form-group">
-			<div class="col-sm-3 control-label">
-				<label>by at most</label>
+			<div class="col-md-1 control-label" style="text-align: center">
+				<label for="sequenceRhsDataElementMaxDistanceValue">to</label>
 			</div>
-			<div class="col-sm-3">
+			<div class="col-md-2">
 				<input type="text" class="form-control"
-					   name="sequenceRhsDataElementMaxDistanceValue"/>
+					   placeholder="max"
+					   name="sequenceRhsDataElementMaxDistanceValue"
+					   id="sequenceRhsDataElementMaxDistanceValue"/>
 			</div>
-			<div class="col-sm-4">
+			<div class="col-md-3">
+				<label for="sequenceRhsDataElementMaxDistanceUnits">To units</label>
 				<select name="sequenceRhsDataElementMaxDistanceUnits" class="form-control">
 					<c:forEach var="unit" items="${timeUnits}">
 						<option value="${unit.id}"
@@ -439,7 +455,6 @@
 </div>
 </c:otherwise>
 </c:choose>
-</div>
 </div>
 <div class="form-group">
 	<div class="col-sm-12 text-centered">

@@ -60,7 +60,7 @@
 								test="${not empty proposition}">${proposition.description}</c:if></textarea>
 					</div>
 					<div class="form-group">
-						<label for="propDefinition" class="control-label">Definition</label>
+						<label for="propDefinition" class="control-label">Members</label>
 						<div id="propDefinition"
 							 class="jstree-drop tree-drop tree-drop-multiple"
 							 title="Drop your category's system and/or user-defined data element members in here">

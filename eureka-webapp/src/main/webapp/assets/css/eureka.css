@@ -123,3 +123,8 @@ legend {
 .container-big {
 	min-height: 500px;
 }
+
+.panel legend {
+	font-size: 1em;
+	font-weight: bold;
+}
