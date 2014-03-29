@@ -67,9 +67,9 @@ public class ForgotPasswordServlet extends HttpServlet {
 			LOGGER.error("Error resetting password for user {}", email, ex);
 			if (ClientResponse.Status.NOT_FOUND.equals(ex.getResponseStatus())) {
 				response.setStatus(HttpServletResponse.SC_NOT_FOUND);
-				response.getWriter().write(ex.getMessage());
 			} else {
 				response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+				response.getWriter().write(ex.getMessage());
 			}
 		}
 	}

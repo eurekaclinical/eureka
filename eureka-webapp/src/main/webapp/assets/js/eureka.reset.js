@@ -21,7 +21,11 @@ window.eureka.reset = new function () {
 				},
 				error: function (xhr /*, status, error */) {
 					$('#passwordresetComplete').show();
-					$('#passwordresetComplete').text(xhr.responseText);
+					if (xhr.status === 404) {
+						$('#passwordresetComplete').text("There is no account associated with that email address.");
+					} else {
+						$('#passwordresetComplete').text("Password change failed.");
+					}
 				}
 			});
 			return false;
