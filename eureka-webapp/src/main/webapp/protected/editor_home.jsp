@@ -129,10 +129,11 @@
 				<%--</div>--%>
 			<%--</div>--%>
 		</div>
-		<div id="deleteModal" class="modal" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+		<div id="deleteModal" class="modal fade" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
 			<div class="modal-dialog modal-lg">
 				<div class="modal-content">
 					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 						<h4 id="deleteModalLabel" class="modal-title">
 							Delete Element
 						</h4>
@@ -146,10 +147,11 @@
 				</div>
 			</div>
 		</div>
-		<div id="errorModal" class="modal" role="dialog" aria-labelledby="errorModalLabel" aria-hidden="true">
+		<div id="errorModal" class="modal fade" role="dialog" aria-labelledby="errorModalLabel" aria-hidden="true">
 			<div class="modal-dialog modal-lg">
 				<div class="modal-content">
 					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 						<h4 id="errorModalLabel" class="modal-title">
 							Error
 						</h4>
@@ -171,8 +173,8 @@
 				var key = $tr.data('key');
 				var dialog = $('#deleteModal');
 				$(dialog).find('#deleteContent').html('Are you sure you want to remove data element ' + displayName + '?');
-				$(dialog).find('#confirmButton').one('click', function (e) {
-					$(dialog).modal('toggle');
+				$(dialog).find('#confirmButton').on('click', function (e) {
+					$(dialog).modal('hide');
 					$.ajax({
 						type: "POST",
 						url: 'deleteprop?key=' + encodeURIComponent(key),
@@ -189,7 +191,7 @@
 						}
 					});
 				});
-				$(dialog).modal("toggle");
+				$(dialog).modal("show");
 			});
 		</script>
 	</template:content>

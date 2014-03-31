@@ -220,10 +220,6 @@ window.eureka.editor = new function () {
 		var textContent = data.o[0].children[1].childNodes[1].textContent;
 
 		if (self.idIsNotInList(target, data.o[0].id)) {
-
-//			var infoLabel = $(target).find('div.label-info');
-//			infoLabel.hide();
-
 			var sortable = $(target).find('ul.sortable');
 			var newItem = $('<li></li>')
 				.attr("data-space", $(data.o[0]).data("space"))
@@ -248,14 +244,14 @@ window.eureka.editor = new function () {
 			// statement is executed.
 			if ($(sortable).data('drop-type') === 'single' && $(sortable).find('li').length > 0) {
 				var $toRemove = $(sortable).find('li');
-				var dialog = $('#deleteModal');
-				$(dialog).find('#deleteContent').html('Are you sure you want to remove data element ' + $toRemove.text() + '?');
-				$(dialog).find('#confirmButton').one('click', function (e) {
+				var dialog = $('#replaceModal');
+				$(dialog).find('#replaceContent').html('Are you sure you want to replace data element ' + $toRemove.text() + '?');
+				$(dialog).find('#confirmButton').on('click', function (e) {
 					self.deleteItem($toRemove, $(sortable), 0);
 					self.addNewItemToList(data, $(sortable), newItem);
-					$(dialog).modal('toggle');
+					$(dialog).modal('hide');
 				});
-				$(dialog).modal("toggle");
+				$(dialog).modal('show');
 			}
 			else {
 				self.addNewItemToList(data, sortable, newItem);
@@ -386,11 +382,11 @@ window.eureka.editor = new function () {
 				var $sortable = $toRemove.closest('ul.sortable');
 				var dialog = $('#deleteModal');
 				$(dialog).find('#deleteContent').html('Are you sure you want to remove data element ' + $toRemove.text() + '?');
-				$(dialog).find('#confirmButton').one('click', function (e) {
+				$(dialog).find('#confirmButton').on('click', function (e) {
 					self.deleteItem($toRemove, $sortable, 0);
-					$(dialog).modal('toggle');
+					$(dialog).modal('hide');
 				});
-				$(dialog).modal("toggle");
+				$(dialog).modal('show');
 			});
 		});
 	};
@@ -599,10 +595,9 @@ window.eureka.editor = new function () {
 	self.saveSequence = function (elem) {
 		var sequence = new Object();
 		var $relationElems = $(elem).find('.sequence-relations-container').find('.sequence-relation');
-		var propId = $('#propId').val();
 
-		if (propId) {
-			sequence.id = propId;
+		if (self.propId) {
+			sequence.id = self.propId;
 		}
 		sequence.type = 'SEQUENCE';
 		sequence.displayName = $('input#propDisplayName').val();

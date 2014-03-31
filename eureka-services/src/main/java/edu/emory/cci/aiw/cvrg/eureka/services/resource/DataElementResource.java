@@ -189,6 +189,17 @@ public class DataElementResource {
 		}
 		DataElementEntity dataElementEntity = this.dataElementTranslatorVisitor
 				.getDataElementEntity();
+		
+		DataElementEntity potentialConflict = 
+				this.dataElementEntityDao.getByUserAndKey(
+				inElement.getUserId(), dataElementEntity.getKey());
+		if (potentialConflict != null && 
+				!potentialConflict.getId().equals(dataElementEntity.getId())) {
+			String msg = messages.getString(
+					"dataElementResource.update.error.duplicate");
+			throw new HttpStatusException(Status.CONFLICT, msg);
+		}
+		
 		DataElementEntity oldDataElementEntity
 				= this.dataElementEntityDao.retrieve(inElement.getId());
 

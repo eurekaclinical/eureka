@@ -57,23 +57,25 @@
 <div class="row">
 	<div id="propDefinition" class="col-sm-12 panel panel-default">
 		<div class="row panel-heading"><h4 class="panel-title">Main Data Element</h4></div>
-			<div class="form-group col-sm-12">
-				<label class="sr-only" for="mainDataElement">Main data element</label>
-				<div id="mainDataElement" class="tree-drop tree-drop-single jstree-drop"
-					 title="Drag a system or user-defined data element in here">
-					<div class="label-info text-centered">Drop Here</div>
-					<ul data-type="main" data-drop-type="single" data-count="1" class="sortable"
-						style="width: 100%; height: 100%">
-						<c:if test="${not empty proposition and propositionType == 'SEQUENCE'}">
-							<li data-key="${proposition.primaryDataElement.dataElementKey}"
-								data-desc="${proposition.primaryDataElement.dataElementDisplayName} (${proposition.primaryDataElement.dataElementKey})"
-								data-space="${proposition.primaryDataElement.inSystem ? 'system' : 'user'}"><span
-									class="delete-icon glyphicon glyphicon-remove"></span> <span
-									class="desc">${empty proposition.primaryDataElement.dataElementDisplayName ? '' : proposition.primaryDataElement.dataElementDisplayName}
-																(${proposition.primaryDataElement.dataElementKey})</span>
-							</li>
-						</c:if>
-					</ul>
+			<div class="form-group">
+				<div class="col-sm-12">
+					<label class="sr-only" for="mainDataElement">Main data element</label>
+					<div id="mainDataElement" class="tree-drop tree-drop-single jstree-drop"
+						 title="Drag a system or user-defined data element in here">
+						<div class="label-info text-centered">Drop Here</div>
+						<ul data-type="main" data-drop-type="single" data-count="1" class="sortable"
+							style="width: 100%; height: 100%">
+							<c:if test="${not empty proposition and propositionType == 'SEQUENCE'}">
+								<li data-key="${proposition.primaryDataElement.dataElementKey}"
+									data-desc="${proposition.primaryDataElement.dataElementDisplayName} (${proposition.primaryDataElement.dataElementKey})"
+									data-space="${proposition.primaryDataElement.inSystem ? 'system' : 'user'}"><span
+										class="delete-icon glyphicon glyphicon-remove"></span> <span
+										class="desc">${empty proposition.primaryDataElement.dataElementDisplayName ? '' : proposition.primaryDataElement.dataElementDisplayName}
+																	(${proposition.primaryDataElement.dataElementKey})</span>
+								</li>
+							</c:if>
+						</ul>
+					</div>
 				</div>
 			</div>
 			<fieldset>
@@ -160,21 +162,23 @@
 	<c:forEach var="relation" items="${proposition.relatedDataElements}" varStatus="status">
 		<div class="sequence-relation drop-parent panel panel-default col-sm-12">
 			<div class="row panel-heading"><h4 class="panel-title">Related data element <span class="count">${status.count}</span></h4></div>
-				<div class="form-group col-sm-12">
-					<label class="sr-only" for="relatedDataElement${status.count}">Related data element ${status.count}</label>
-					<div id="relatedDataElement${status.count}"
-						 class="tree-drop tree-drop-single jstree-drop sequencedDataElement"
-						 title="Drag another system or user-defined data element in here">
-						<div class="label-info text-centered">Drop Here</div>
-						<ul class="sortable" data-type="related" data-drop-type="single"
-							data-count="${status.count + 1}">
-							<li data-key="${relation.dataElementField.dataElementKey}"
-								data-desc="${relation.dataElementField.dataElementDisplayName} (${relation.dataElementField.dataElementKey})"
-								data-space="${relation.dataElementField.inSystem ? 'system' : 'user'}">
-								<span class="delete-icon glyphicon glyphicon-remove"></span>
-								<span class="desc">${empty relation.dataElementField.dataElementDisplayName ? '' : relation.dataElementField.dataElementDisplayName} (${relation.dataElementField.dataElementKey})</span>
-							</li>
-						</ul>
+				<div class="form-group">
+					<div class="col-sm-12">
+						<label class="sr-only" for="relatedDataElement${status.count}">Related data element ${status.count}</label>
+						<div id="relatedDataElement${status.count}"
+							 class="tree-drop tree-drop-single jstree-drop sequencedDataElement"
+							 title="Drag another system or user-defined data element in here">
+							<div class="label-info text-centered">Drop Here</div>
+							<ul class="sortable" data-type="related" data-drop-type="single"
+								data-count="${status.count + 1}">
+								<li data-key="${relation.dataElementField.dataElementKey}"
+									data-desc="${relation.dataElementField.dataElementDisplayName} (${relation.dataElementField.dataElementKey})"
+									data-space="${relation.dataElementField.inSystem ? 'system' : 'user'}">
+									<span class="delete-icon glyphicon glyphicon-remove"></span>
+									<span class="desc">${empty relation.dataElementField.dataElementDisplayName ? '' : relation.dataElementField.dataElementDisplayName} (${relation.dataElementField.dataElementKey})</span>
+								</li>
+							</ul>
+						</div>
 					</div>
 				</div>
 				<fieldset>
@@ -317,14 +321,16 @@
 	<div class="row panel-heading">
 		<h4 class="panel-title">Related data element <span class="count">1</span></h4>
 	</div>
-	<div class="form-group col-sm-12">
-		<div id="relatedDataElement1"
-			 class="tree-drop tree-drop-single jstree-drop sequencedDataElement"
-			 title="Drag another system or user-defined data element in here">
-			<div class="label-info text-centered">Drop Here</div>
-			<ul class="sortable" data-type="related" data-drop-type="single"
-				data-count="2">
-			</ul>
+	<div class="form-group">
+		<div class="col-sm-12">
+			<div id="relatedDataElement1"
+				 class="tree-drop tree-drop-single jstree-drop sequencedDataElement"
+				 title="Drag another system or user-defined data element in here">
+				<div class="label-info text-centered">Drop Here</div>
+				<ul class="sortable" data-type="related" data-drop-type="single"
+					data-count="2">
+				</ul>
+			</div>
 		</div>
 	</div>
 	<fieldset>
@@ -423,7 +429,7 @@
 					   id="sequenceRhsDataElementMinDistanceValue"/>
 			</div>
 			<div class="col-md-3">
-				<label class=sr-only" for="sequenceRhsDataElementMinDistanceUnits">By units</label>
+				<label class="sr-only" for="sequenceRhsDataElementMinDistanceUnits">By units</label>
 				<select name="sequenceRhsDataElementMinDistanceUnits" class="form-control">
 					<c:forEach var="unit" items="${timeUnits}">
 						<option value="${unit.id}"
@@ -441,7 +447,7 @@
 					   id="sequenceRhsDataElementMaxDistanceValue"/>
 			</div>
 			<div class="col-md-3">
-				<label for="sequenceRhsDataElementMaxDistanceUnits">To units</label>
+				<label class="sr-only" for="sequenceRhsDataElementMaxDistanceUnits">To units</label>
 				<select name="sequenceRhsDataElementMaxDistanceUnits" class="form-control">
 					<c:forEach var="unit" items="${timeUnits}">
 						<option value="${unit.id}"
@@ -468,13 +474,12 @@
 </form>
 </div>
 </div>
-<div id="deleteModal" class="modal" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+<div id="deleteModal" class="modal fade" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
 	<div class="modal-dialog modal-lg">
 		<div class="modal-content">
 			<div class="modal-header">
-				<h4 id="deleteModalLabel" class="modal-title">
-					Delete Element
-				</h4>
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+				<h4 id="deleteModalLabel" class="modal-title">Delete Element</h4>
 			</div>
 			<div id="deleteContent" class="modal-body">
 			</div>
@@ -485,13 +490,28 @@
 		</div>
 	</div>
 </div>
-<div id="errorModal" class="modal" role="dialog" aria-labelledby="errorModalLabel" aria-hidden="true">
+<div id="replaceModal" class="modal fade" role="dialog" aria-labelledby="replaceModalLabel" aria-hidden="true">
 	<div class="modal-dialog modal-lg">
 		<div class="modal-content">
 			<div class="modal-header">
-				<h4 id="errorModalLabel" class="modal-title">
-					Error
-				</h4>
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+				<h4 id="replaceModalLabel" class="modal-title">Replace Element</h4>
+			</div>
+			<div id="replaceContent" class="modal-body">
+			</div>
+			<div class="modal-footer">
+				<button id="confirmButton" type="button" class="btn btn-primary">Replace</button>
+				<button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+			</div>
+		</div>
+	</div>
+</div>
+<div id="errorModal" class="modal fade" role="dialog" aria-labelledby="errorModalLabel" aria-hidden="true">
+	<div class="modal-dialog modal-lg">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+				<h4 id="errorModalLabel" class="modal-title">Error</h4>
 			</div>
 			<div id="errorContent" class="modal-body">
 			</div>
@@ -501,10 +521,11 @@
 		</div>
 	</div>
 </div>
-<div id="searchModal" class="modal" role="dialog" aria-labelledby="searchModalLabel" aria-hidden="true">
+<div id="searchModal" class="modal fade" role="dialog" aria-labelledby="searchModalLabel" aria-hidden="true">
 	<div class="modal-dialog modal-lg">
 		<div class="modal-content">
 			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 				<h4 id="searchModalLabel" class="modal-title">
 					Search
 				</h4>

@@ -63,7 +63,7 @@
 			<fieldset>
 			<legend>Threshold</legend>
 			<div class="form-group">
-				<div class="col-sm-6">
+				<div class="col-sm-4">
 					<label class="sr-only" for="freqTypes">Type</label>
 					<select id="freqTypes" class="form-control" name="freqTypes" id="freqTypes"
 							title="Specify whether only the first n intervals will be matched (First) or any n intervals (At least)">
@@ -73,11 +73,18 @@
 						</c:forEach>
 					</select>
 				</div>
-				<div class="col-sm-6">
+				<div class="col-sm-4">
 					<label class="sr-only" for="freqAtLeastField">Count</label>
 					<input type="number" id="frequencyCountField" name="freqAtLeastField" id="freqAtLeastField" min="1"
 						   value="<c:choose><c:when test="${propositionType == 'FREQUENCY'}">${proposition.atLeast}</c:when><c:otherwise><c:out value="1"/></c:otherwise></c:choose>"
 						   title="Specify the frequency count" class="form-control"/>
+				</div>
+				<div class="col-sm-4">
+						<label id="valueThresholdConsecutiveLabel" class="checkbox-inline<c:if test="${empty proposition or proposition.dataElement.type != 'VALUE_THRESHOLD'}"> default-hidden</c:if>">
+						<input type="checkbox" value="true" name="freqIsConsecutive" class="form-control"
+								  title="For value threshold data elements, specifies whether no intervening values are present that do not match the threshold or any duration or property constraints specified below"
+							   <c:if test="${propositionType == 'FREQUENCY' and proposition.isConsecutive}">checked="checked"</c:if> />consecutive
+					</label>
 				</div>
 			</div>
 			<div class="form-group">
@@ -97,17 +104,6 @@
 							</c:if>
 						</ul>
 					</div>
-				</div>
-			</div>
-			<div class="form-group">
-				<div class="col-sm-9 col-sm-offset-1">
-					<label id="valueThresholdConsecutiveLabel" class="default-hidden"
-						   title="For value threshold data elements, specifies whether no intervening values are present that do not match the threshold or any duration or property constraints specified below"
-							<c:if test="${propositionType != 'FREQUENCY' or (not empty proposition and proposition.dataElement.type != 'VALUE_THRESHOLD')}"></c:if>>
-						<input type="checkbox" value="true" name="freqIsConsecutive"
-							   <c:if test="${propositionType == 'FREQUENCY' and proposition.isConsecutive}">checked="checked"</c:if> />
-						consecutive
-					</label>
 				</div>
 			</div>
 			</fieldset>
@@ -234,13 +230,12 @@
 		</form>
 	</div>
 </div>
-<div id="deleteModal" class="modal" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+<div id="deleteModal" class="modal fade" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
 	<div class="modal-dialog modal-lg">
 		<div class="modal-content">
 			<div class="modal-header">
-				<h4 id="deleteModalLabel" class="modal-title">
-					Delete Element
-				</h4>
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+				<h4 id="deleteModalLabel" class="modal-title">Delete Element</h4>
 			</div>
 			<div id="deleteContent" class="modal-body">
 			</div>
@@ -251,15 +246,47 @@
 		</div>
 	</div>
 </div>
-<div id="errorModal" class="modal" role="dialog" aria-labelledby="errorModalLabel" aria-hidden="true">
+<div id="replaceModal" class="modal fade" role="dialog" aria-labelledby="replaceModalLabel" aria-hidden="true">
 	<div class="modal-dialog modal-lg">
 		<div class="modal-content">
 			<div class="modal-header">
-				<h4 id="errorModalLabel" class="modal-title">
-					Error
-				</h4>
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+				<h4 id="replaceModalLabel" class="modal-title">Replace Element</h4>
+			</div>
+			<div id="replaceContent" class="modal-body">
+			</div>
+			<div class="modal-footer">
+				<button id="confirmButton" type="button" class="btn btn-primary">Replace</button>
+				<button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+			</div>
+		</div>
+	</div>
+</div>
+<div id="errorModal" class="modal fade" role="dialog" aria-labelledby="errorModalLabel" aria-hidden="true">
+	<div class="modal-dialog modal-lg">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+				<h4 id="errorModalLabel" class="modal-title">Error</h4>
 			</div>
 			<div id="errorContent" class="modal-body">
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+			</div>
+		</div>
+	</div>
+</div>
+<div id="searchModal" class="modal fade" role="dialog" aria-labelledby="searchModalLabel" aria-hidden="true">
+	<div class="modal-dialog modal-lg">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+				<h4 id="searchModalLabel" class="modal-title">
+					Search
+				</h4>
+			</div>
+			<div id="searchContent" class="modal-body">
 			</div>
 			<div class="modal-footer">
 				<button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
