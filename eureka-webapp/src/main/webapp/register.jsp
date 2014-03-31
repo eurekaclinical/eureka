@@ -22,7 +22,6 @@
 
 <template:insert template="/templates/eureka_main.jsp">
 <template:content name="content">
-<h3 id="registerHeading">Register</h3>
 <c:choose>
 	<c:when test="${not empty pageContext.request.remoteUser}">
 		<h3 id="registerHeading">Welcome to Eureka!</h3>
