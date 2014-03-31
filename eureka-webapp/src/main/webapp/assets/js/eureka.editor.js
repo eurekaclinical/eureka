@@ -595,10 +595,9 @@ window.eureka.editor = new function () {
 	self.saveSequence = function (elem) {
 		var sequence = new Object();
 		var $relationElems = $(elem).find('.sequence-relations-container').find('.sequence-relation');
-		var propId = $('#propId').val();
 
-		if (propId) {
-			sequence.id = propId;
+		if (self.propId) {
+			sequence.id = self.propId;
 		}
 		sequence.type = 'SEQUENCE';
 		sequence.displayName = $('input#propDisplayName').val();
