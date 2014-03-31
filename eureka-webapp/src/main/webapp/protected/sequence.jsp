@@ -429,7 +429,7 @@
 					   id="sequenceRhsDataElementMinDistanceValue"/>
 			</div>
 			<div class="col-md-3">
-				<label class=sr-only" for="sequenceRhsDataElementMinDistanceUnits">By units</label>
+				<label class="sr-only" for="sequenceRhsDataElementMinDistanceUnits">By units</label>
 				<select name="sequenceRhsDataElementMinDistanceUnits" class="form-control">
 					<c:forEach var="unit" items="${timeUnits}">
 						<option value="${unit.id}"
@@ -447,7 +447,7 @@
 					   id="sequenceRhsDataElementMaxDistanceValue"/>
 			</div>
 			<div class="col-md-3">
-				<label for="sequenceRhsDataElementMaxDistanceUnits">To units</label>
+				<label class="sr-only" for="sequenceRhsDataElementMaxDistanceUnits">To units</label>
 				<select name="sequenceRhsDataElementMaxDistanceUnits" class="form-control">
 					<c:forEach var="unit" items="${timeUnits}">
 						<option value="${unit.id}"
