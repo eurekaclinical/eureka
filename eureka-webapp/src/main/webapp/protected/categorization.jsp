@@ -89,43 +89,58 @@
 				</form>
 			</div>
 		</div>
-		<div id="deleteModal" class="modal" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
-			<div class="modal-dialog modal-lg">
-				<div class="modal-content">
-					<div class="modal-header">
-						<h4 id="deleteModalLabel" class="modal-title">
-							Delete Element
-						</h4>
-					</div>
-					<div id="deleteContent" class="modal-body">
-					</div>
-					<div class="modal-footer">
-						<button id="confirmButton" type="button" class="btn btn-primary">Delete</button>
-						<button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
-					</div>
+		<div id="deleteModal" class="modal fade" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+		<div class="modal-dialog modal-lg">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+					<h4 id="deleteModalLabel" class="modal-title">Delete Element</h4>
+				</div>
+				<div id="deleteContent" class="modal-body">
+				</div>
+				<div class="modal-footer">
+					<button id="confirmButton" type="button" class="btn btn-primary">Delete</button>
+					<button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
 				</div>
 			</div>
 		</div>
-		<div id="errorModal" class="modal" role="dialog" aria-labelledby="errorModalLabel" aria-hidden="true">
-			<div class="modal-dialog modal-lg">
-				<div class="modal-content">
-					<div class="modal-header">
-						<h4 id="errorModalLabel" class="modal-title">
-							Error
-						</h4>
-					</div>
-					<div id="errorContent" class="modal-body">
-					</div>
-					<div class="modal-footer">
-						<button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
-					</div>
+	</div>
+	<div id="replaceModal" class="modal fade" role="dialog" aria-labelledby="replaceModalLabel" aria-hidden="true">
+		<div class="modal-dialog modal-lg">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+					<h4 id="replaceModalLabel" class="modal-title">Replace Element</h4>
+				</div>
+				<div id="replaceContent" class="modal-body">
+				</div>
+				<div class="modal-footer">
+					<button id="confirmButton" type="button" class="btn btn-primary">Replace</button>
+					<button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
 				</div>
 			</div>
 		</div>
-		<div id="searchModal" class="modal" role="dialog" aria-labelledby="searchModalLabel" aria-hidden="true">
+	</div>
+	<div id="errorModal" class="modal fade" role="dialog" aria-labelledby="errorModalLabel" aria-hidden="true">
+		<div class="modal-dialog modal-lg">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+					<h4 id="errorModalLabel" class="modal-title">Error</h4>
+				</div>
+				<div id="errorContent" class="modal-body">
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+				</div>
+			</div>
+		</div>
+	</div>
+		<div id="searchModal" class="modal fade" role="dialog" aria-labelledby="searchModalLabel" aria-hidden="true">
 			<div class="modal-dialog modal-lg">
 				<div class="modal-content">
 					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 						<h4 id="searchModalLabel" class="modal-title">
 							Search
 						</h4>
