@@ -103,12 +103,12 @@ window.eureka.editor = new function () {
 
 	self.enableFrequencyFields = function (dropped) {
 		if ($(dropped).data('type') == 'VALUE_THRESHOLD') {
-			$('#valueThresholdConsecutiveLabel').css('display', 'inline');
+			$('#valueThresholdConsecutiveLabel').removeClass('hide');
 		}
 	};
 
 	self.disableFrequencyFields = function () {
-		$('#valueThresholdConsecutiveLabel').css('display', 'none');
+		$('#valueThresholdConsecutiveLabel').addClass('hide');
 	};
 
 	self.dndActions = {

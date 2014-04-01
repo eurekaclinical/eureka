@@ -80,8 +80,8 @@
 						   title="Specify the frequency count" class="form-control"/>
 				</div>
 				<div class="col-sm-4">
-						<label id="valueThresholdConsecutiveLabel" class="checkbox-inline<c:if test="${empty proposition or proposition.dataElement.type != 'VALUE_THRESHOLD'}"> default-hidden</c:if>">
-						<input type="checkbox" value="true" name="freqIsConsecutive" class="form-control"
+						<label id="valueThresholdConsecutiveLabel" class="checkbox-inline<c:if test="${empty proposition or proposition.dataElement.type != 'VALUE_THRESHOLD'}"> hide</c:if>">
+						<input type="checkbox" value="true" name="freqIsConsecutive"
 								  title="For value threshold data elements, specifies whether no intervening values are present that do not match the threshold or any duration or property constraints specified below"
 							   <c:if test="${propositionType == 'FREQUENCY' and proposition.isConsecutive}">checked="checked"</c:if> />consecutive
 					</label>
