@@ -104,6 +104,7 @@ window.eureka.registration = new function () {
 
 	self.submit = function () {
 		if (self.validator.valid()) {
+			var username = $('#username').val();
 			var firstName = $('#firstName').val();
 			var lastName = $('#lastName').val();
 			var organization = $('#organization').val();
@@ -116,7 +117,8 @@ window.eureka.registration = new function () {
 
 			var dataString = 'firstName=' + firstName + '&lastName=' + lastName + '&organization=' + organization +
 				'&password=' + password + '&verifyPassword=' + verifyPassword +
-				'&email=' + email + '&verifyEmail=' + verifyEmail + '&title=' + title + '&department=' + department;
+				'&email=' + email + '&verifyEmail=' + verifyEmail + '&title=' + title + '&department=' + department +
+				(username ? '&username=' + username : '');
 			$.ajax({
 				type: 'POST',
 				url: 'register',

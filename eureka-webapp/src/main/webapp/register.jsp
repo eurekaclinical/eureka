@@ -22,25 +22,25 @@
 
 <template:insert template="/templates/eureka_main.jsp">
 <template:content name="content">
-<c:choose>
-	<c:when test="${not empty pageContext.request.remoteUser}">
-		<h3 id="registerHeading">Welcome to Eureka!</h3>
-		<p>Please complete and review your profile information.</p>
-	</c:when>
-	<c:otherwise>
-		<h3 id="registerHeading">Register</h3>
-	</c:otherwise>
-</c:choose>
-<c:if test="${applicationScope.webappProperties.demoMode or applicationScope.webappProperties.ephiProhibited}">
-	<p>
-		<span class="pad">
-			<b>*Disclaimer: Loading real patient data into the system is
-				strictly prohibited.</b>
-		</span>
-	</p>
-</c:if>
+<div id="registerHeading">
+	<c:choose>
+		<c:when test="${not empty pageContext.request.remoteUser}">
+			<h3>Welcome to Eureka!</h3>
+			<p>Please complete and review your profile information.</p>
+		</c:when>
+		<c:otherwise>
+			<h3>Register</h3>
+		</c:otherwise>
+	</c:choose>
+	<c:if test="${applicationScope.webappProperties.demoMode or applicationScope.webappProperties.ephiProhibited}">
+		<div class="alert alert-warning">
+				<strong>Disclaimer: Loading real patient data into the system is strictly prohibited!</strong>
+		</div>
+	</c:if>
+</div>
 <form id="signupForm" action="#" method="POST" novalidate role="form">
-	<input type="hidden" name="fullName" value="${param.fullName}" />
+	<input type="hidden" name="fullName" id="fullName" value="${param.fullName}" />
+	<input type="hidden" name="username" id="username" value="${param.username}" />
 	<div class="row">
 		<div class="col-sm-6">
 			<div class="form-group">
@@ -165,13 +165,8 @@
 		Submit
 	</button>
 </form>
-<div id="registrationComplete" class="default-hidden">
-	<p>
-		Your request has been successfully submitted.
-	</p>
-	<p>
-		You will be notified once your account is activated.
-	</p>
+<div id="registrationComplete" class="default-hidden alert alert-success">
+	<p><strong>Your request has been submitted.</strong> You will be notified once your account is activated.</p>
 </div>
 <div id="agreementModal" class="modal" role="dialog" aria-labelledby="agreementModalLabel" aria-hidden="true">
 	<div class="modal-dialog modal-lg">
