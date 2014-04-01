@@ -141,7 +141,7 @@
 					<div id="deleteContent" class="modal-body">
 					</div>
 					<div class="modal-footer">
-						<button id="confirmButton" type="button" class="btn btn-primary">Delete</button>
+						<button id="deleteButton" type="button" class="btn btn-primary">Delete</button>
 						<button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
 					</div>
 				</div>
@@ -173,7 +173,7 @@
 				var key = $tr.data('key');
 				var dialog = $('#deleteModal');
 				$(dialog).find('#deleteContent').html('Are you sure you want to remove data element ' + displayName + '?');
-				$(dialog).find('#confirmButton').on('click', function (e) {
+				$(dialog).find('#deleteButton').on('click', function (e) {
 					$(dialog).modal('hide');
 					$.ajax({
 						type: "POST",

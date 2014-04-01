@@ -20,10 +20,11 @@ window.eureka.editor = new function () {
 			$('.label-info').hide();
 		}
 
-
 		$(saveButtonElem).on('click', function () {
 			self.save($(containerElem));
 		});
+		
+		self.attachClearModalHandlers();
 
 		self.attachDeleteAction(deleteButtonElem);
 
@@ -36,6 +37,23 @@ window.eureka.editor = new function () {
 		self.setPropositionSelects($(containerElem));
 		eureka.tree.setupUserTree(userTreeElem, self.dropFinishCallback);
 		eureka.tree.setupSystemTree(systemTreeElem, treeCssUrl, searchModalElem, self.dropFinishCallback);
+	};
+	
+	self.attachClearModalHandlers = function () {
+		var deleteModal = $('#deleteModal');
+		if (deleteModal) {
+			var $deleteButton = $(deleteModal).find('#deleteButton');
+			$(deleteModal).on('hidden.bs.modal', function(e) {
+				$deleteButton.off('click');
+			});
+		}
+		var replaceModal = $('#replaceModal');
+		if (replaceModal) {
+			var $replaceButton = $(replaceModal).find('#replaceButton');
+			$(replaceModal).on('hidden.bs.modal', function(e) {
+				$replaceButton.off('click');
+			});
+		}
 	};
 
 	self.objSize = function (obj) {
@@ -246,7 +264,7 @@ window.eureka.editor = new function () {
 				var $toRemove = $(sortable).find('li');
 				var dialog = $('#replaceModal');
 				$(dialog).find('#replaceContent').html('Are you sure you want to replace data element ' + $toRemove.text() + '?');
-				$(dialog).find('#confirmButton').on('click', function (e) {
+				$(dialog).find('#replaceButton').on('click', function (e) {
 					self.deleteItem($toRemove, $(sortable), 0);
 					self.addNewItemToList(data, $(sortable), newItem);
 					$(dialog).modal('hide');
@@ -382,7 +400,7 @@ window.eureka.editor = new function () {
 				var $sortable = $toRemove.closest('ul.sortable');
 				var dialog = $('#deleteModal');
 				$(dialog).find('#deleteContent').html('Are you sure you want to remove data element ' + $toRemove.text() + '?');
-				$(dialog).find('#confirmButton').on('click', function (e) {
+				$(dialog).find('#deleteButton').on('click', function (e) {
 					self.deleteItem($toRemove, $sortable, 0);
 					$(dialog).modal('hide');
 				});

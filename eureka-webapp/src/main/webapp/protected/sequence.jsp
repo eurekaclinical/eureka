@@ -484,7 +484,7 @@
 			<div id="deleteContent" class="modal-body">
 			</div>
 			<div class="modal-footer">
-				<button id="confirmButton" type="button" class="btn btn-primary">Delete</button>
+				<button id="deleteButton" type="button" class="btn btn-primary">Delete</button>
 				<button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
 			</div>
 		</div>
@@ -500,7 +500,7 @@
 			<div id="replaceContent" class="modal-body">
 			</div>
 			<div class="modal-footer">
-				<button id="confirmButton" type="button" class="btn btn-primary">Replace</button>
+				<button id="replaceButton" type="button" class="btn btn-primary">Replace</button>
 				<button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
 			</div>
 		</div>
