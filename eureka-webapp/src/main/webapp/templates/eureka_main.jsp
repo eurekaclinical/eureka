@@ -37,6 +37,7 @@ limitations under the License.
 	<meta name="Description"
 		  content="A Clinical Analysis Tool for Biomedical Informatics and Data"/>
 	<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
 	<%--
 		<link href="${pageContext.request.contextPath}/css/jquery-ui.css" type="text/css" rel="stylesheet"/>
 		<link href="${pageContext.request.contextPath}/css/styles${initParam['eureka-build-timestamp']}.css" rel="stylesheet" type="text/css" />
