@@ -60,45 +60,43 @@ public class PropositionDefinitionSearcher {
 			this.knowledgeSource = sf.newKnowledgeSourceInstance();
 			LOGGER
 					.debug("Done: configurations, source factory, and knowledge source created");
-		} catch (ConfigurationsNotFoundException | BackendProviderSpecLoaderException | InvalidConfigurationException |  ConfigurationsLoadException | BackendNewInstanceException
-				| BackendInitializationException ex) {
+		} catch (ConfigurationsNotFoundException | BackendProviderSpecLoaderException | InvalidConfigurationException |
+				ConfigurationsLoadException | BackendNewInstanceException| BackendInitializationException ex) {
 			throw new PropositionFinderException(ex);
 		}
 	}
 
-    public List<String> searchPropositions(String inSearchKey,
-                                           SearchFilter searchFilter)
-            throws PropositionFinderException {
-        try {
-            List<String> filteredSearchResults = new ArrayList<String>();
-            int searchLimit = etlProperties.getSearchLimit();
-            List<List<String>> searchResults = knowledgeSource
-                    .getMatchingPropositionDefinitions(inSearchKey);
-            for (int indexForList = 0; indexForList < searchResults.size(); indexForList++) {
-                List<String> currentSearchResult = searchResults
-                        .get(indexForList);
-                if (searchFilter.filter(currentSearchResult
-                        .get(currentSearchResult.size() - 1)) && filteredSearchResults.size() < searchLimit) {
-                    for (int indexForCurrentSearch = currentSearchResult.size() - 1; indexForCurrentSearch >= 0; indexForCurrentSearch--) {
-                        if (!filteredSearchResults.contains(currentSearchResult
-                                .get(indexForCurrentSearch))) {
-                            filteredSearchResults.add(currentSearchResult
-                                    .get(indexForCurrentSearch));
-                        }
-                    }
-                    /*this list converts to all nodes that need to be loaded before the
-                    client side search takes place. For performance issues we limit this to 200
-                     */
-                    if (filteredSearchResults.size() >= searchLimit) {
-                        break;
-                    }
+	public List<String> searchPropositions(String inSearchKey,
+										   SearchFilter searchFilter)
+			throws PropositionFinderException {
+		try {
+			List<String> filteredSearchResults = new ArrayList<String>();
+			int searchLimit = etlProperties.getSearchLimit();
+			List<List<String>> searchResults = knowledgeSource
+					.getMatchingPropositionDefinitions(inSearchKey);
+			for (int indexForList = 0; indexForList < searchResults.size(); indexForList++) {
+				List<String> currentSearchResult = searchResults
+						.get(indexForList);
 
-                }
-            }
-            return filteredSearchResults;
-        } catch (KnowledgeSourceReadException e) {
-            throw new PropositionFinderException(e);
-        }
+				for (int indexForCurrentSearch = currentSearchResult.size() - 1; indexForCurrentSearch >= 0; indexForCurrentSearch--) {
+					if (searchFilter.filter(currentSearchResult.get(indexForCurrentSearch)) && filteredSearchResults.size() < searchLimit) {
+						for (int secondIndexForCurrentSearch = indexForCurrentSearch; secondIndexForCurrentSearch >= 0; secondIndexForCurrentSearch--) {
+							String nodeName = currentSearchResult.get(secondIndexForCurrentSearch);
+							if (!filteredSearchResults.contains(nodeName)) {
+								filteredSearchResults.add(nodeName);
+							}
+						}
+						break;
+					}
+				}
+				if (filteredSearchResults.size() >= searchLimit) {
+					break;
+				}
+			}
+			return filteredSearchResults;
+		} catch (KnowledgeSourceReadException e) {
+			throw new PropositionFinderException(e);
+		}
 
-    }
+	}
 }
