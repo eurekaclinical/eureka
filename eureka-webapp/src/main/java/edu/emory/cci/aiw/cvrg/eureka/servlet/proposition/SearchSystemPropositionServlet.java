@@ -24,6 +24,8 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -73,7 +75,7 @@ public class SearchSystemPropositionServlet extends HttpServlet {
 		try {
 			searchResult = servicesClient
 					.getSystemElementSearchResults(searchKey);
-			processedSearchResult = convertResultsForClientRequirement(searchResult);
+			processedSearchResult = convertResultsForJstreeRequirement(searchResult);
 		} catch (ClientException e) {
 			e.printStackTrace();
 		}
@@ -86,9 +88,23 @@ public class SearchSystemPropositionServlet extends HttpServlet {
 		mapper.writeValue(out, processedSearchResult);
 	}
 
-	private List<String> convertResultsForClientRequirement(
+	private List<String> convertResultsForJstreeRequirement(
 			List<String> searchResult) {
-		String specialCharacters[] = {":", "-", "."};
+		Pattern pattern = Pattern.compile("[^a-zA-Z0-9]");
+		List<String> newResultSet = new ArrayList<String>();
+		for (int index = 0; index < searchResult.size(); index++)
+		{
+			String currentResult =  searchResult.get(index);
+			Matcher matcher = pattern.matcher(currentResult);
+			while (matcher.find()) {
+				currentResult = currentResult.replace(matcher.group(),"\\"+matcher.group())  ;
+			}
+			newResultSet.add(index,"#"+currentResult);
+		}
+		newResultSet.add(0, "#root");
+		return newResultSet;
+
+		/*String specialCharacters[] = {":", "-", ".","/","(",")","%","<",">","@","!","*","~","^","&",",","'","$"};
 		List<String> newResultSet = new ArrayList<String>();
 		for (int index = 0; index < searchResult.size(); index++) {
 			newResultSet.add(searchResult.get(index));
@@ -103,7 +119,7 @@ public class SearchSystemPropositionServlet extends HttpServlet {
 			newResultSet.set(index, "#" + newResultSet.get(index));
 		}
 		newResultSet.add(0, "#root");
-		return newResultSet;
+		return newResultSet;    */
 	}
 
 }
