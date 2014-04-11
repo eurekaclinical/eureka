@@ -21,10 +21,11 @@ package edu.emory.cci.aiw.cvrg.eureka.common.config;
  */
 
 import edu.emory.cci.aiw.cvrg.eureka.common.props.AbstractProperties;
-import java.util.HashMap;
-import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  *
@@ -70,7 +71,7 @@ import org.slf4j.LoggerFactory;
 		params.put("proxyReceptorUrl", this.getProxyReceptorUrl());
 		params.put("casServerUrlPrefix", this.properties.getCasUrl());
 		params.put("serverName", this.properties.getProxyCallbackServer());
-		params.put("redirectAfterValidation", "true");
+		params.put("redirectAfterValidation", "false");
 		if (LOGGER.isDebugEnabled()) {
 			this.printParams(params);
 		}

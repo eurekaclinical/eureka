@@ -25,15 +25,13 @@ import com.sun.jersey.api.client.UniformInterfaceException;
 import com.sun.jersey.api.client.WebResource;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.AbstractWebResourceWrapper;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ClientException;
-import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.ws.rs.HttpMethod;
-import javax.ws.rs.core.MultivaluedMap;
-import javax.ws.rs.core.NewCookie;
 import org.jasig.cas.client.authentication.AttributePrincipal;
 import org.jasig.cas.client.util.AssertionHolder;
 import org.jasig.cas.client.validation.Assertion;
+
+import javax.ws.rs.core.MultivaluedMap;
+import javax.ws.rs.core.NewCookie;
+import java.util.List;
 
 /**
  *
@@ -51,18 +49,20 @@ public class CasWebResourceWrapper extends AbstractWebResourceWrapper {
 		if (queryParams != null) {
 			webResource = webResource.queryParams(queryParams);
 		}
-		if (!HttpMethod.POST.equals(method)) {
-			webResource = webResource.path(path);
-			webResource = withProxyTicket(webResource);
-		} else {
-			try {
-				String jsessionId = doGetSession();
-				path += ";jsessionid=" + jsessionId;
-				webResource = webResource.path(path);
-			} catch (ClientException ex) {
-				Logger.getLogger(CasWebResourceWrapper.class.getName()).log(Level.SEVERE, null, ex);
-			}
-		}
+//		if (!HttpMethod.POST.equals(method)) {
+//			webResource = webResource.path(path);
+//			webResource = withProxyTicket(webResource);
+//		} else {
+//			try {
+//				String jsessionId = doGetSession();
+//				path += ";jsessionid=" + jsessionId;
+//				webResource = webResource.path(path);
+//			} catch (ClientException ex) {
+//				Logger.getLogger(CasWebResourceWrapper.class.getName()).log(Level.SEVERE, null, ex);
+//			}
+//		}
+		webResource = webResource.path(path);
+		webResource = withProxyTicket(webResource);
 		return webResource;
 	}
 
