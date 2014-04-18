@@ -126,8 +126,8 @@ public abstract class AbstractJerseyServletModule extends JerseyServletModule {
 	@Override
 	protected void configureServlets() {
 		super.configureServlets();
-		this.setupCasProxyFilter();
 		this.setupCasAuthenticationFilter();
+		this.setupCasProxyFilter();
 		this.setupServletRequestWrapperFilter();
 		this.setupCasThreadLocalAssertionFilter();
 		this.setupAuthorizationFilter();

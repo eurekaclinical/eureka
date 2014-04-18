@@ -19,27 +19,23 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.services.resource;
 
+import javax.annotation.security.RolesAllowed;
+import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import com.google.inject.Inject;
-import com.sun.jersey.api.client.ClientResponse;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ClientException;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.UserEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.exception.HttpStatusException;
 import edu.emory.cci.aiw.cvrg.eureka.services.config.EtlClient;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.UserDao;
-import javax.annotation.security.RolesAllowed;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.NewCookie;
 
 /**
  * A REST resource to allow an administrator to test an account.
@@ -60,11 +56,8 @@ public class PingResource {
 	}
 
 	@GET
-	@Path("")
-	public Response doPing(@Context HttpServletRequest request) {
-		HttpSession session = request.getSession();
-		NewCookie cookie = new NewCookie("JSESSIONID", session.getId());
-		return Response.ok().cookie(cookie).build();
+	public Response doPing() {
+		return Response.ok().build();
 	}
 
 	/**
