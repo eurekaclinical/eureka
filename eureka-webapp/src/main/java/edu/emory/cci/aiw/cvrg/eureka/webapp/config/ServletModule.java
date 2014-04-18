@@ -23,33 +23,17 @@ package edu.emory.cci.aiw.cvrg.eureka.webapp.config;
 
 import com.google.inject.Singleton;
 import edu.emory.cci.aiw.cvrg.eureka.common.config.AbstractServletModule;
-import edu.emory.cci.aiw.cvrg.eureka.servlet.AdminManagerServlet;
-import edu.emory.cci.aiw.cvrg.eureka.servlet.CommonsFileUploadServlet;
-import edu.emory.cci.aiw.cvrg.eureka.servlet.DateRangeDataElementServlet;
-import edu.emory.cci.aiw.cvrg.eureka.servlet.ForgotPasswordServlet;
-import edu.emory.cci.aiw.cvrg.eureka.servlet.JobListServlet;
-import edu.emory.cci.aiw.cvrg.eureka.servlet.JobPollServlet;
-import edu.emory.cci.aiw.cvrg.eureka.servlet.LoginServlet;
-import edu.emory.cci.aiw.cvrg.eureka.servlet.LogoutServlet;
-import edu.emory.cci.aiw.cvrg.eureka.servlet.PingServlet;
-import edu.emory.cci.aiw.cvrg.eureka.servlet.RegisterUserServlet;
-import edu.emory.cci.aiw.cvrg.eureka.servlet.UserAcctManagerServlet;
-import edu.emory.cci.aiw.cvrg.eureka.servlet.VerifyUserServlet;
+import edu.emory.cci.aiw.cvrg.eureka.servlet.*;
 import edu.emory.cci.aiw.cvrg.eureka.servlet.filter.HaveUserRecordFilter;
 import edu.emory.cci.aiw.cvrg.eureka.servlet.filter.MessagesFilter;
 import edu.emory.cci.aiw.cvrg.eureka.servlet.filter.PasswordExpiredFilter;
-import edu.emory.cci.aiw.cvrg.eureka.servlet.proposition.DeletePropositionServlet;
-import edu.emory.cci.aiw.cvrg.eureka.servlet.proposition.EditPropositionServlet;
-import edu.emory.cci.aiw.cvrg.eureka.servlet.proposition.EditorHomeServlet;
-import edu.emory.cci.aiw.cvrg.eureka.servlet.proposition.ListUserDefinedPropositionChildrenServlet;
-import edu.emory.cci.aiw.cvrg.eureka.servlet.proposition.SavePropositionServlet;
-import edu.emory.cci.aiw.cvrg.eureka.servlet.proposition.SearchSystemPropositionServlet;
-import edu.emory.cci.aiw.cvrg.eureka.servlet.proposition.SystemPropositionListServlet;
-import edu.emory.cci.aiw.cvrg.eureka.servlet.proposition.UserPropositionListServlet;
-import java.util.HashMap;
-import java.util.Map;
+import edu.emory.cci.aiw.cvrg.eureka.servlet.filter.UserInfoFilter;
+import edu.emory.cci.aiw.cvrg.eureka.servlet.proposition.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.HashMap;
+import java.util.Map;
 /**
  * 
  * @author hrathod
@@ -84,6 +68,11 @@ class ServletModule extends AbstractServletModule {
 				params);
 	}
 
+	private void setupUserInfoFilter () {
+		bind(UserInfoFilter.class).in(Singleton.class);
+		filter("/*").through(UserInfoFilter.class);
+	}
+
 	private void setupPasswordExpiredFilter() {
 		bind(PasswordExpiredFilter.class).in(Singleton.class);
 		Map<String, String> params = new HashMap<>();
@@ -99,6 +88,7 @@ class ServletModule extends AbstractServletModule {
 	@Override
 	protected void setupFilters() {
 		this.setupMessageFilter();
+		this.setupUserInfoFilter();
 		this.setupHaveUserRecordFilter();
 		this.setupPasswordExpiredFilter();
 	}

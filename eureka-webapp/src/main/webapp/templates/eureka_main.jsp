@@ -91,7 +91,7 @@ limitations under the License.
 					</a>
 				</li>
 				<li>
-					<c:if test="${pageContext.request.remoteUser == null}">
+					<c:if test="${not userIsActivated}">
 						<a href="${pageContext.request.contextPath}/register.jsp">
 							<span class="glyphicon glyphicon-user"></span>
 							Register
@@ -132,7 +132,7 @@ limitations under the License.
 		</div>
 	</div>
 </div>
-<c:if test="${pageContext.request.remoteUser != null}">
+<c:if test="${userIsActivated}">
 	<div class="navbar navbar-static-top" role="navigation">
 		<div class="container sub-nav rounded-bottom">
 			<ul class="nav navbar-nav navbar-right menu-text">
