@@ -90,36 +90,18 @@ public class SearchSystemPropositionServlet extends HttpServlet {
 
 	private List<String> convertResultsForJstreeRequirement(
 			List<String> searchResult) {
-		Pattern pattern = Pattern.compile("[^a-zA-Z0-9]");
+		String specialCharacters[] = {":", "-", "."," ",".", "/", "*", "!", "@", "#", "$", "%", "^", "&", "(", ")", "_", "[", "]", "|", "?", "<", ">"};
 		List<String> newResultSet = new ArrayList<String>();
-		for (int index = 0; index < searchResult.size(); index++)
-		{
-			String currentResult =  searchResult.get(index);
-			Matcher matcher = pattern.matcher(currentResult);
-			while (matcher.find()) {
-				currentResult = currentResult.replace(matcher.group(),"\\"+matcher.group())  ;
+		for (String currentSearchResult :searchResult ) {
+			for (String specCharacter : specialCharacters) {
+				if(currentSearchResult.contains(specCharacter)) {
+					currentSearchResult = currentSearchResult.replace(specCharacter,"\\"+specCharacter);
+				}
 			}
-			newResultSet.add(index,"#"+currentResult);
+			newResultSet.add("#"+currentSearchResult);
 		}
 		newResultSet.add(0, "#root");
 		return newResultSet;
-
-		/*String specialCharacters[] = {":", "-", ".","/","(",")","%","<",">","@","!","*","~","^","&",",","'","$"};
-		List<String> newResultSet = new ArrayList<String>();
-		for (int index = 0; index < searchResult.size(); index++) {
-			newResultSet.add(searchResult.get(index));
-			for (int specCharIndex = 0; specCharIndex < specialCharacters.length; specCharIndex++) {
-				if (searchResult.get(index).contains(
-						specialCharacters[specCharIndex])) {
-					newResultSet.set(index, newResultSet.get(index).replace(
-							specialCharacters[specCharIndex],
-							"\\" + specialCharacters[specCharIndex]));
-				}
-			}
-			newResultSet.set(index, "#" + newResultSet.get(index));
-		}
-		newResultSet.add(0, "#root");
-		return newResultSet;    */
 	}
 
 }
