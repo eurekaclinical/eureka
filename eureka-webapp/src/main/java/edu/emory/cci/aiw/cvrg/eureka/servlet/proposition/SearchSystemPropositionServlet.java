@@ -90,7 +90,15 @@ public class SearchSystemPropositionServlet extends HttpServlet {
 
 	private List<String> convertResultsForJstreeRequirement(
 			List<String> searchResult) {
-		String specialCharacters[] = {":", "-", "."," ",".", "/", "*", "!", "@", "#", "$", "%", "^", "&", "(", ")", "_", "[", "]", "|", "?", "<", ">"};
+
+		List<String> newResultSet = new ArrayList<String>();
+		newResultSet.add("#root");
+		for(String currentSearchResult : searchResult){
+			newResultSet.add("#"+currentSearchResult.replaceAll("[^a-zA-Z0-9]", "\\\\$0"));
+		}
+
+
+		/*String specialCharacters[] = {":", "-", "."," ",".", "/", "*", "!", "@", "#", "$", "%", "^", "&", "(", ")", "_", "[", "]", "|", "?", "<", ">"};
 		List<String> newResultSet = new ArrayList<String>();
 		for (String currentSearchResult :searchResult ) {
 			for (String specCharacter : specialCharacters) {
@@ -100,7 +108,7 @@ public class SearchSystemPropositionServlet extends HttpServlet {
 			}
 			newResultSet.add("#"+currentSearchResult);
 		}
-		newResultSet.add(0, "#root");
+		newResultSet.add(0, "#root");    */
 		return newResultSet;
 	}
 
