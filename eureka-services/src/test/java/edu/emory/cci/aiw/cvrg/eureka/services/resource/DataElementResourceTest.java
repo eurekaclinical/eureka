@@ -25,11 +25,12 @@ import java.util.List;
 import javax.ws.rs.core.MediaType;
 
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 
 import com.sun.jersey.api.client.ClientResponse;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.DataElement;
 
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.DataElement;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.DataElementField;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.Frequency;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.User;
@@ -38,8 +39,6 @@ import edu.emory.cci.aiw.cvrg.eureka.common.entity.TimeUnit;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.FrequencyTypeDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.TimeUnitDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.test.Setup;
-import org.junit.After;
-import org.junit.Before;
 
 /**
  * @author hrathod
@@ -54,13 +53,6 @@ public class DataElementResourceTest extends AbstractServiceResourceTest {
 		user = users.get(0);
 		frequencyKey = "testThreshold-frequency";
 	}
-	
-	@After
-	public void tearDownDataElementResourceTest() {
-		user = null;
-		frequencyKey = null;
-	}
-	
 
 	@Test
 	public void testConsecutiveFrequency() {

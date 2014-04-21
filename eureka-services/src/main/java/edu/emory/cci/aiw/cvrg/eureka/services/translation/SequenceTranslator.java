@@ -102,8 +102,8 @@ public class SequenceTranslator implements
 
 		int i = 0;
 		for (RelatedDataElementField rde : element.getRelatedDataElements()) {
-			ExtendedDataElement lhsEP;
-			ExtendedDataElement rhsEP;
+			ExtendedDataElement lhsEP = null;
+			ExtendedDataElement rhsEP = null;
 			Relation relation;
 			if (relations.size() > i) {
 				relation = relations.get(i);
@@ -111,8 +111,6 @@ public class SequenceTranslator implements
 				rhsEP = relation.getRhsExtendedDataElement();
 			} else {
 				relation = new Relation();
-				lhsEP = null;
-				rhsEP = null;
 				relations.add(relation);
 			}
 

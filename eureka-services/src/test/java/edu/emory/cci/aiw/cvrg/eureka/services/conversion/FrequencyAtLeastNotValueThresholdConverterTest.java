@@ -19,23 +19,19 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.services.conversion;
 
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.ExtendedDataElement;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.FrequencyEntity;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.FrequencyType;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.SystemProposition;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.SystemProposition.SystemType;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.TimeUnit;
-import edu.emory.cci.aiw.cvrg.eureka.services.test.AbstractServiceTest;
+import java.util.List;
+
 import org.junit.Before;
 import org.junit.Test;
+import org.protempa.AbstractionDefinition;
 import org.protempa.PropositionDefinition;
+import org.protempa.SimpleGapFunction;
 
-import java.util.List;
-import org.junit.After;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.*;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.SystemProposition.SystemType;
+import edu.emory.cci.aiw.cvrg.eureka.services.test.AbstractServiceTest;
 
 import static org.junit.Assert.assertEquals;
-import org.protempa.AbstractionDefinition;
-import org.protempa.SimpleGapFunction;
 
 public class FrequencyAtLeastNotValueThresholdConverterTest extends
 		AbstractServiceTest {
@@ -86,16 +82,7 @@ public class FrequencyAtLeastNotValueThresholdConverterTest extends
 		hlad = converter.getPrimaryPropositionDefinition();
 		gf = (SimpleGapFunction) hlad.getGapFunction();
 	}
-	
-	@After
-	public void tearDown() {
-		event = null;
-		frequency = null;
-		hlad = null;
-		propDefs = null;
-		gf = null;
-	}
-	
+
 	@Test
 	public void testNumberOfPropositionDefinitionsCreated() {
 		assertEquals("wrong number of proposition definitions created", 1,

@@ -19,20 +19,21 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.services.resource;
 
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.ResourceBundle;
 
-import javax.ws.rs.Consumes;
-import javax.ws.rs.DELETE;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
+import javax.annotation.security.RolesAllowed;
+import javax.servlet.http.HttpServletRequest;
+import javax.ws.rs.*;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
+
+import org.apache.commons.lang3.StringUtils;
 
 import com.google.inject.Inject;
 
@@ -44,19 +45,9 @@ import edu.emory.cci.aiw.cvrg.eureka.common.exception.DataElementHandlingExcepti
 import edu.emory.cci.aiw.cvrg.eureka.common.exception.HttpStatusException;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.DataElementEntityDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.UserDao;
-import edu.emory.cci.aiw.cvrg.eureka.services.translation.DataElementTranslatorVisitor;
 import edu.emory.cci.aiw.cvrg.eureka.services.translation.DataElementEntityTranslatorVisitor;
+import edu.emory.cci.aiw.cvrg.eureka.services.translation.DataElementTranslatorVisitor;
 import edu.emory.cci.aiw.cvrg.eureka.services.translation.SummarizingDataElementEntityTranslatorVisitor;
-import java.text.MessageFormat;
-import java.util.ResourceBundle;
-import javax.annotation.security.RolesAllowed;
-import javax.servlet.http.HttpServletRequest;
-import javax.ws.rs.DefaultValue;
-import javax.ws.rs.QueryParam;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.Response.Status;
-import org.apache.commons.lang3.StringUtils;
-import org.jasig.cas.client.authentication.AttributePrincipal;
 
 /**
  * PropositionCh
@@ -300,13 +291,13 @@ public class DataElementResource {
 
 	private DataElement convertToDataElement(
 			DataElementEntity dataElementEntity, boolean summarize) {
-		DataElement result;
-		if (dataElementEntity == null) {
-			result = null;
-		} else if (summarize) {
-			result = toSummarizedDataElement(dataElementEntity);
-		} else {
-			result = toDataElement(dataElementEntity);
+		DataElement result = null;
+		if (dataElementEntity != null) {
+			if (summarize) {
+				result = toSummarizedDataElement(dataElementEntity);
+			} else {
+				result = toDataElement(dataElementEntity);
+			}
 		}
 		return result;
 	}

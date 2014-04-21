@@ -19,33 +19,25 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.services.translation;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.google.inject.Inject;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.DataElementField;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.SourceConfigParams;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import com.google.inject.Inject;
+
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.DataElementField;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.ValueThreshold;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.ValueThresholds;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.DataElementEntity;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.ExtendedDataElement;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.PropositionTypeVisitor;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.ValueThresholdEntity;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.ValueThresholdGroupEntity;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.*;
 import edu.emory.cci.aiw.cvrg.eureka.common.exception.DataElementHandlingException;
-import edu.emory.cci.aiw.cvrg.eureka.common.exception.HttpStatusException;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.RelationOperatorDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.ThresholdsOperatorDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.TimeUnitDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.ValueComparatorDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.resource.SourceConfigResource;
-import java.math.BigDecimal;
-import java.util.HashMap;
-import java.util.Map;
-import javax.ws.rs.core.Response;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public final class ValueThresholdsTranslator implements
 		PropositionTranslator<ValueThresholds, ValueThresholdGroupEntity> {
@@ -150,7 +142,7 @@ public final class ValueThresholdsTranslator implements
 			}
 			int j = 0;
 			for (DataElementField de : vt.getRelatedDataElements()) {
-				ExtendedDataElement ede;
+				ExtendedDataElement ede = null;
 				if (extendedDataElements.size() > j) {
 					ede = extendedDataElements.get(j);
 					PropositionTranslatorUtil
@@ -160,7 +152,6 @@ public final class ValueThresholdsTranslator implements
 							timeUnitDao, translatorSupport,
 							valueCompDao);
 				} else {
-					ede = null;
 					extendedDataElements.add(PropositionTranslatorUtil
 							.createOrUpdateExtendedProposition(
 							ede,

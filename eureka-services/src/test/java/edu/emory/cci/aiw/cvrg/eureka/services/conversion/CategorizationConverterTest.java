@@ -64,11 +64,6 @@ public class CategorizationConverterTest extends AbstractServiceTest {
 		converter.setConverterVisitor(converterVisitor);
 	}
 	
-	@After
-	public void tearDown() {
-		converterVisitor = null;
-		converter = null;
-	}
 
 	@Test
 	public void testEventCategorization() {

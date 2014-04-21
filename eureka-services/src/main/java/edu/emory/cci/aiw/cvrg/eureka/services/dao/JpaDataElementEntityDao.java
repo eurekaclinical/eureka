@@ -19,6 +19,7 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.services.dao;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -39,7 +40,6 @@ import com.google.inject.Provider;
 import edu.emory.cci.aiw.cvrg.eureka.common.dao.GenericDao;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.DataElementEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.DataElementEntity_;
-import java.util.ArrayList;
 
 /**
  * An implementation of the {@link DataElementEntityDao} interface, backed by
@@ -95,7 +95,7 @@ public class JpaDataElementEntityDao extends GenericDao<DataElementEntity, Long>
 	}
 
 	private DataElementEntity getByUserAndKey(Long inUserId, String inKey, boolean excludeSystemElements) {
-		DataElementEntity result;
+		DataElementEntity result = null;
 		EntityManager entityManager = this.getEntityManager();
 		CriteriaBuilder builder = entityManager.getCriteriaBuilder();
 		CriteriaQuery<DataElementEntity> criteriaQuery = builder.createQuery(
@@ -126,11 +126,9 @@ public class JpaDataElementEntityDao extends GenericDao<DataElementEntity, Long>
 		} catch (NonUniqueResultException nure) {
 			LOGGER.warn("Result not unique for user id = {} and key = {}",
 					inUserId, inKey);
-			result = null;
 		} catch (NoResultException nre) {
 			LOGGER.warn("Result not existent for user id = {} and key = {}",
 					inUserId, inKey);
-			result = null;
 		}
 
 		return result;

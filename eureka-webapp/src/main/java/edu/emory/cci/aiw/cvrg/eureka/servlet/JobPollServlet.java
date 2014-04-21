@@ -53,18 +53,16 @@ public class JobPollServlet extends HttpServlet {
 		resp.setContentType("application/json");
 
 		String jobIdStr = req.getParameter("jobId");
-		Long jobId;
+		Long jobId = null;
 		if (jobIdStr != null) {
 			try {
 				jobId = Long.valueOf(jobIdStr);
 			} catch (NumberFormatException nfe) {
 				throw new ServletException("jobId parameter must be a long, was " + jobIdStr);
 			}
-		} else {
-			jobId = null;
 		}
 
-		Job job;
+		Job job = null;
 		try {
 			if (jobId != null) {
 				job = this.servicesClient.getJob(jobId);
@@ -72,19 +70,15 @@ public class JobPollServlet extends HttpServlet {
 				List<Job> jobs = this.servicesClient.getJobsDesc();
 				if (!jobs.isEmpty()) {
 					job = jobs.get(0);
-				} else {
-					job = null;
 				}
 			}
 		} catch (ClientException ex) {
 			throw new ServletException("Error polling job list", ex);
 		}
 
-		JobStatus jobStatus;
+		JobStatus jobStatus = null;
 		if (job != null) {
 			jobStatus = job.toJobStatus();
-		} else {
-			jobStatus = null;
 		}
 		ObjectMapper mapper = new ObjectMapper();
 		resp.setContentLength(mapper.writeValueAsString(jobStatus)

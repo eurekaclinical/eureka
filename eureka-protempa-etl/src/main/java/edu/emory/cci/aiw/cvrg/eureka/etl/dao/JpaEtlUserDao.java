@@ -19,16 +19,6 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.etl.dao;
 
-import com.google.inject.Inject;
-import com.google.inject.Provider;
-import edu.emory.cci.aiw.cvrg.eureka.common.authentication.AuthenticationMethod;
-import edu.emory.cci.aiw.cvrg.eureka.common.authentication.UserPrincipalAttributes;
-import edu.emory.cci.aiw.cvrg.eureka.common.dao.GenericDao;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.EtlUser;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.EtlUser_;
-import edu.emory.cci.aiw.cvrg.eureka.common.authentication.LoginType;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.UserEntity;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.UserEntity_;
 import java.text.MessageFormat;
 
 import javax.persistence.EntityManager;
@@ -39,9 +29,18 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Root;
+
 import org.jasig.cas.client.authentication.AttributePrincipal;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.google.inject.Inject;
+import com.google.inject.Provider;
+
+import edu.emory.cci.aiw.cvrg.eureka.common.dao.GenericDao;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.EtlUser;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.EtlUser_;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.UserEntity_;
 
 /**
  * An implementation of the {@link EtlUserDao} interface, backed by JPA entities
@@ -81,7 +80,7 @@ public class JpaEtlUserDao extends GenericDao<EtlUser, Long> implements EtlUserD
 		Path<String> usernamePath = root.get(EtlUser_.username);
 		TypedQuery<EtlUser> query = entityManager.createQuery(criteriaQuery.where(
 				builder.equal(usernamePath, username)));
-		EtlUser result;
+		EtlUser result = null;
 		try {
 			result = query.getSingleResult();
 		} catch (NonUniqueResultException nure) {
@@ -93,7 +92,6 @@ public class JpaEtlUserDao extends GenericDao<EtlUser, Long> implements EtlUserD
 		} catch (NoResultException nre) {
 			LOGGER.debug("No user with {} = {} and {} = {}", 
 					UserEntity_.username, username);
-			result = null;
 		}
 		return result;
 	}

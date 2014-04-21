@@ -115,7 +115,6 @@ public class ETL {
 					.getInstance(eurekaDestination.getType(), i2b2Config);
 			protempa.execute(query, protempaDestination);
 			protempa.close();
-			protempa = null;
 		} catch (CloseException | BackendNewInstanceException | BackendInitializationException | ConfigurationsLoadException | BackendProviderSpecLoaderException | QueryBuildException | InvalidConfigurationException | ConfigurationsNotFoundException | DataSourceValidationIncompleteException ex) {
 			throw new EtlException(ex);
 		} catch (DataSourceFailedDataValidationException ex) {

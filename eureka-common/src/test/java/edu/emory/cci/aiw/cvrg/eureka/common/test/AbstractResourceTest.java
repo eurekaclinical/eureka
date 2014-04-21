@@ -118,10 +118,7 @@ public abstract class AbstractResourceTest extends JerseyTest {
 	@Override
 	public final void tearDown() throws Exception {
 		this.dataProvider.tearDown();
-		this.dataProvider = null;
-
 		this.persistService.stop();
-		this.persistService = null;
 		super.tearDown();
 	}
 

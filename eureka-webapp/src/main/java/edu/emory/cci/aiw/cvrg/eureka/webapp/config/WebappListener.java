@@ -60,6 +60,5 @@ public class WebappListener extends GuiceServletContextListener {
 		super.contextDestroyed(servletContextEvent);
 		servletContextEvent.getServletContext().removeAttribute(
 				"webappProperties");
-		this.injector = null;
 	}
 }

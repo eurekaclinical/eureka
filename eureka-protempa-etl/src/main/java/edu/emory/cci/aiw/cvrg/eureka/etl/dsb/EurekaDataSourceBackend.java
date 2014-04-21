@@ -19,54 +19,6 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.etl.dsb;
 
-import edu.emory.cci.aiw.cvrg.eureka.etl.config.EtlProperties;
-import edu.emory.cci.aiw.cvrg.eureka.etl.spreadsheet.DataInserter;
-import edu.emory.cci.aiw.cvrg.eureka.etl.spreadsheet.DataInserterException;
-import edu.emory.cci.aiw.cvrg.eureka.etl.spreadsheet.DataProvider;
-import edu.emory.cci.aiw.cvrg.eureka.etl.spreadsheet.DataProviderException;
-import edu.emory.cci.aiw.cvrg.eureka.etl.spreadsheet.DataValidator;
-import edu.emory.cci.aiw.cvrg.eureka.etl.spreadsheet.XlsxDataProvider;
-import org.arp.javautil.io.FileUtil;
-import org.arp.javautil.io.IOUtil;
-import org.arp.javautil.sql.InvalidConnectionSpecArguments;
-import org.arp.javautil.sql.SQLExecutor;
-import org.drools.util.StringUtils;
-import org.protempa.BackendCloseException;
-import org.protempa.DataSourceBackendCloseException;
-import org.protempa.DataSourceReadException;
-import org.protempa.DataStreamingEventIterator;
-import org.protempa.KnowledgeSource;
-import org.protempa.KnowledgeSourceReadException;
-import org.protempa.QuerySession;
-import org.protempa.backend.BackendInitializationException;
-import org.protempa.backend.BackendInstanceSpec;
-import org.protempa.backend.DataSourceBackendFailedDataValidationException;
-import org.protempa.backend.DataSourceBackendInitializationException;
-import org.protempa.backend.annotations.BackendInfo;
-import org.protempa.backend.annotations.BackendProperty;
-import org.protempa.backend.dsb.DataValidationEvent;
-import org.protempa.backend.dsb.filter.Filter;
-import org.protempa.backend.dsb.relationaldb.ColumnSpec;
-import org.protempa.backend.dsb.relationaldb.EntitySpec;
-import org.protempa.backend.dsb.relationaldb.JDBCDateTimeTimestampDateValueFormat;
-import org.protempa.backend.dsb.relationaldb.JDBCDateTimeTimestampPositionParser;
-import org.protempa.backend.dsb.relationaldb.JDBCPositionFormat;
-import org.protempa.backend.dsb.relationaldb.JoinSpec;
-import org.protempa.backend.dsb.relationaldb.PropIdToSQLCodeMapper;
-import org.protempa.backend.dsb.relationaldb.PropertySpec;
-import org.protempa.backend.dsb.relationaldb.ReferenceSpec;
-import org.protempa.backend.dsb.relationaldb.RelationalDbDataSourceBackend;
-import org.protempa.backend.dsb.relationaldb.StagingSpec;
-import org.protempa.proposition.Proposition;
-import org.protempa.proposition.value.AbsoluteTimeGranularity;
-import org.protempa.proposition.value.AbsoluteTimeGranularityFactory;
-import org.protempa.proposition.value.AbsoluteTimeUnitFactory;
-import org.protempa.proposition.value.GranularityFactory;
-import org.protempa.proposition.value.UnitFactory;
-import org.protempa.proposition.value.ValueType;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.io.File;
 import java.io.FilenameFilter;
 import java.io.IOException;
@@ -75,6 +27,29 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+
+import org.arp.javautil.io.FileUtil;
+import org.arp.javautil.io.IOUtil;
+import org.arp.javautil.sql.InvalidConnectionSpecArguments;
+import org.arp.javautil.sql.SQLExecutor;
+import org.drools.util.StringUtils;
+import org.protempa.*;
+import org.protempa.backend.BackendInitializationException;
+import org.protempa.backend.BackendInstanceSpec;
+import org.protempa.backend.DataSourceBackendFailedDataValidationException;
+import org.protempa.backend.DataSourceBackendInitializationException;
+import org.protempa.backend.annotations.BackendInfo;
+import org.protempa.backend.annotations.BackendProperty;
+import org.protempa.backend.dsb.DataValidationEvent;
+import org.protempa.backend.dsb.filter.Filter;
+import org.protempa.backend.dsb.relationaldb.*;
+import org.protempa.proposition.Proposition;
+import org.protempa.proposition.value.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import edu.emory.cci.aiw.cvrg.eureka.etl.config.EtlProperties;
+import edu.emory.cci.aiw.cvrg.eureka.etl.spreadsheet.*;
 
 /**
  * Data source backend for Eureka!.
@@ -92,7 +67,7 @@ public final class EurekaDataSourceBackend extends RelationalDbDataSourceBackend
 	private static JDBCPositionFormat dtPositionParser =
 			new JDBCDateTimeTimestampPositionParser();
 	private final PropIdToSQLCodeMapper mapper;
-	private XlsxDataProvider[] dataProviders;
+	private XlsxDataProvider[] dataProviders = null;
 	private boolean dataPopulated;
 	private String dataFileDirectoryName;
 	private String[] mimetypes;
@@ -143,8 +118,6 @@ public final class EurekaDataSourceBackend extends RelationalDbDataSourceBackend
 					throw new DataSourceBackendInitializationException("Error initializing data source backend " + this.nameForErrors(), ex);
 				}
 			}
-		} else {
-			this.dataProviders = null;
 		}
 	}
 
@@ -207,7 +180,6 @@ public final class EurekaDataSourceBackend extends RelationalDbDataSourceBackend
 			}
 			this.dataPopulated = true;
 			dataInserterConnection.close();
-			dataInserterConnection = null;
 		} catch (SQLException | DataProviderException | DataInserterException | InvalidConnectionSpecArguments sqle) {
 			throw new DataSourceReadException("Error reading spreadsheets in " + this.dataFileDirectoryName + " in data source backend " + nameForErrors(), sqle);
 		} finally {
@@ -841,7 +813,6 @@ public final class EurekaDataSourceBackend extends RelationalDbDataSourceBackend
 				throw exceptionToThrow;
 			}
 		} finally {
-			exceptionToThrow = null;
 			if (dataProviders != null) {
 				for (XlsxDataProvider dataProvider : dataProviders) {
 					try {
@@ -852,7 +823,6 @@ public final class EurekaDataSourceBackend extends RelationalDbDataSourceBackend
 						}
 					}
 				}
-				this.dataProviders = null;
 				if (exceptionToThrow != null) {
 					throw exceptionToThrow;
 				}

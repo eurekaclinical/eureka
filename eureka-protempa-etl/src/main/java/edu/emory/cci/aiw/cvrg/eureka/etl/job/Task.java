@@ -102,7 +102,6 @@ public final class Task implements Runnable {
 
 			this.etl.run(myJob, propDefArray, propIdsToShowArray, this.filter);
 			this.etl.close();
-			this.etl = null;
 			myJob.newEvent(JobEventType.COMPLETED, "Processing completed without error", null);
 			this.jobDao.update(myJob);
 			if (LOGGER.isInfoEnabled()) {
@@ -110,7 +109,6 @@ public final class Task implements Runnable {
 						new Object[]{Thread.currentThread().getName(), 
 							myJob.getId(), myJob.getEtlUser().getUsername()});
 			}
-			myJob = null;
 		} catch (EtlException | Error | RuntimeException e) {
 			handleError(myJob, e);
 		} finally {

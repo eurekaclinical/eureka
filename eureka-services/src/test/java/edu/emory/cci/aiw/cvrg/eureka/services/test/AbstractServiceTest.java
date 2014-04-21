@@ -79,7 +79,5 @@ public class AbstractServiceTest extends AbstractTest {
 			testDataProvider.tearDown();
 		}
 		persistService.stop();
-		testDataProvider = null;
-		persistService = null;
 	}
 }

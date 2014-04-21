@@ -20,10 +20,7 @@
 package edu.emory.cci.aiw.cvrg.eureka.services.test;
 
 import java.security.NoSuchAlgorithmException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
@@ -32,29 +29,17 @@ import javax.persistence.criteria.CriteriaQuery;
 
 import com.google.inject.Inject;
 import com.google.inject.Provider;
+
 import edu.emory.cci.aiw.cvrg.eureka.common.authentication.AuthenticationMethod;
 import edu.emory.cci.aiw.cvrg.eureka.common.authentication.LoginType;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.AuthenticationMethodEntity;
-
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.CategoryEntity;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.*;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.CategoryEntity.CategoryType;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.DataElementEntity;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.FrequencyType;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.LocalUserEntity;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.LoginTypeEntity;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.Role;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.SystemProposition;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.ThresholdsOperator;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.TimeUnit;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.UserEntity;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.ValueThresholdGroupEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.test.TestDataException;
 import edu.emory.cci.aiw.cvrg.eureka.common.test.TestDataProvider;
 import edu.emory.cci.aiw.cvrg.eureka.common.util.StringUtil;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.AuthenticationMethodDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.LoginTypeDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.entity.UserEntityFactory;
-import java.util.Collections;
 
 /**
  * Sets up the environment for testing, by bootstrapping the data store with
@@ -124,17 +109,6 @@ public class Setup implements TestDataProvider {
 		this.remove(TimeUnit.class);
 		this.remove(ThresholdsOperator.class);
 		this.remove(FrequencyType.class);
-		this.researcherRole = null;
-		this.adminRole = null;
-		this.superRole = null;
-		this.loginTypes = null;
-		this.authenticationMethods = null;
-		this.researcherUser = null;
-		this.adminUser = null;
-		this.superUser = null;
-		this.propositions = null;
-		this.timeUnits = null;
-		this.freqTypes = null;
 	}
 
 	private <T> void remove(Class<T> className) {

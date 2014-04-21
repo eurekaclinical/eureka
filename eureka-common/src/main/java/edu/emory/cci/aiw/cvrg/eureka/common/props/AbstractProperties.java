@@ -294,18 +294,15 @@ public abstract class AbstractProperties {
 	 * @return The support email address.
 	 */
 	public SupportUri getSupportUri() {
-		SupportUri supportUri;
+		SupportUri supportUri = null;
 		try {
 			String uriStr = this.getValue("eureka.support.uri");
 			String uriName = this.getValue("eureka.support.uri.name");
 			if (uriStr != null) {
 				supportUri = new SupportUri(new URI(uriStr), uriName);
-			} else {
-				supportUri = null;
 			}
 		} catch (URISyntaxException ex) {
 			LOGGER.error("Invalid support URI in application.properties", ex);
-			supportUri = null;
 		}
 		return supportUri;
 	}
@@ -361,7 +358,7 @@ public abstract class AbstractProperties {
 	 */
 	protected List<String> getStringListValue(final String inPropertyName) {
 
-		List<String> result;
+		List<String> result = null;
 		String value = this.properties.getProperty(inPropertyName);
 		if (value != null) {
 			String[] temp = value.split("\\s+");
@@ -372,8 +369,6 @@ public abstract class AbstractProperties {
 					result.add(s.trim());
 				}
 			}
-		} else {
-			result = null;
 		}
 		return result;
 	}
