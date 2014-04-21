@@ -96,19 +96,6 @@ public class SearchSystemPropositionServlet extends HttpServlet {
 		for(String currentSearchResult : searchResult){
 			newResultSet.add("#"+currentSearchResult.replaceAll("[^a-zA-Z0-9]", "\\\\$0"));
 		}
-
-
-		/*String specialCharacters[] = {":", "-", "."," ",".", "/", "*", "!", "@", "#", "$", "%", "^", "&", "(", ")", "_", "[", "]", "|", "?", "<", ">"};
-		List<String> newResultSet = new ArrayList<String>();
-		for (String currentSearchResult :searchResult ) {
-			for (String specCharacter : specialCharacters) {
-				if(currentSearchResult.contains(specCharacter)) {
-					currentSearchResult = currentSearchResult.replace(specCharacter,"\\"+specCharacter);
-				}
-			}
-			newResultSet.add("#"+currentSearchResult);
-		}
-		newResultSet.add(0, "#root");    */
 		return newResultSet;
 	}
 
