@@ -24,6 +24,8 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -60,49 +62,40 @@ public class SearchSystemPropositionServlet extends HttpServlet {
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
-		String eurekaServicesUrl = req.getSession().getServletContext()
-				.getInitParameter("eureka-services-url");
-
 
 		String searchKey = req.getParameter("searchKey");
-		List<String> searchResult = null;
-		List<String> processedSearchResult = null;
+
 		if (searchKey == null) {
-			throw new ServletException("Invalid parameter id: " + searchKey);
+			throw new ServletException("Search key is null");
 		}
+
 		try {
+			List<String> processedSearchResult = null;
+			List<String> searchResult = null;
 			searchResult = servicesClient
 					.getSystemElementSearchResults(searchKey);
-			processedSearchResult = convertResultsForClientRequirement(searchResult);
+			processedSearchResult = convertResultsForJstreeRequirement(searchResult);
+
+			ObjectMapper mapper = new ObjectMapper();
+			resp.setContentType("application/json");
+			PrintWriter out = resp.getWriter();
+			mapper.writeValue(out, processedSearchResult);
 		} catch (ClientException e) {
-			e.printStackTrace();
+			throw new ServletException("Error getting search results", e);
 		}
 
-		LOGGER.debug("executed resource ");
 
-		ObjectMapper mapper = new ObjectMapper();
-		resp.setContentType("application/json");
-		PrintWriter out = resp.getWriter();
-		mapper.writeValue(out, processedSearchResult);
 	}
 
-	private List<String> convertResultsForClientRequirement(
+	private List<String> convertResultsForJstreeRequirement(
 			List<String> searchResult) {
-		String specialCharacters[] = {":", "-", "."};
-		List<String> newResultSet = new ArrayList<String>();
-		for (int index = 0; index < searchResult.size(); index++) {
-			newResultSet.add(searchResult.get(index));
-			for (int specCharIndex = 0; specCharIndex < specialCharacters.length; specCharIndex++) {
-				if (searchResult.get(index).contains(
-						specialCharacters[specCharIndex])) {
-					newResultSet.set(index, newResultSet.get(index).replace(
-							specialCharacters[specCharIndex],
-							"\\" + specialCharacters[specCharIndex]));
-				}
-			}
-			newResultSet.set(index, "#" + newResultSet.get(index));
+		List<String> newResultSet = new ArrayList<>();
+		Pattern pattern = Pattern.compile("[^a-zA-Z0-9]");
+
+		newResultSet.add("#root");
+		for (String currentSearchResult : searchResult) {
+			newResultSet.add("#" + pattern.matcher(currentSearchResult).replaceAll("\\\\$0"));
 		}
-		newResultSet.add(0, "#root");
 		return newResultSet;
 	}
 

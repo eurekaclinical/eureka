@@ -11,7 +11,8 @@ window.eureka.editor = new function () {
 	self.propSubType = null;
 	self.droppedElements = {};
 
-	self.setup = function (propType, propSubType, propId, systemTreeElem, userTreeElem, containerElem, saveButtonElem, deleteButtonElem, listElem, treeCssUrl, searchModalElem) {
+	self.setup = function (propType, propSubType, propId, systemTreeElem, userTreeElem, containerElem, saveButtonElem, deleteButtonElem, listElem, treeCssUrl, searchModalElem,
+	searchValidationModalElem,searchNoResultsModalElem,searchUpdateDivElem) {
 		self.propId = propId;
 		self.propType = propType;
 		self.propSubType = (propSubType == '') ? null : propSubType;
@@ -36,7 +37,8 @@ window.eureka.editor = new function () {
 
 		self.setPropositionSelects($(containerElem));
 		eureka.tree.setupUserTree(userTreeElem, self.dropFinishCallback);
-		eureka.tree.setupSystemTree(systemTreeElem, treeCssUrl, searchModalElem, self.dropFinishCallback);
+		eureka.tree.setupSystemTree(systemTreeElem, treeCssUrl, searchModalElem, self.dropFinishCallback,searchValidationModalElem,searchNoResultsModalElem,
+		searchUpdateDivElem);
 	};
 	
 	self.attachClearModalHandlers = function () {

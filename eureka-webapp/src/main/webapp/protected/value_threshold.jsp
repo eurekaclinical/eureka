@@ -41,6 +41,7 @@
 	<div id="treeContent" class="tab-content proposition-tree">
 		<div id="systemElems" class="tab-pane fade active in">
 			<div id="systemTree"></div>
+			<div id="searchUpdateDiv" class="searchUpdateMessage"></div>
 		</div>
 		<div id="userElems" class="tab-pane fade">
 			<div id="userTree"></div>
@@ -382,7 +383,7 @@
 					<div class="modal-header">
 						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 						<h4 id="searchModalLabel" class="modal-title">
-							Search
+							Broad Search Update
 						</h4>
 					</div>
 					<div id="searchContent" class="modal-body">
@@ -393,6 +394,40 @@
 				</div>
 			</div>
 		</div>
+		<div id="searchValidationModal" class="modal fade" role="dialog" aria-labelledby="searchModalLabel" aria-hidden="true">
+                	<div class="modal-dialog modal-lg">
+                		<div class="modal-content">
+                			<div class="modal-header">
+                				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                				<h4 id="searchModalLabel" class="modal-title">
+                					Search String Validation Failed
+                				</h4>
+                			</div>
+                			<div id="searchContent" class="modal-body">
+                			</div>
+                			<div class="modal-footer">
+                				<button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+                			</div>
+                		</div>
+                	</div>
+                </div>
+                <div id="searchNoResultsModal" class="modal fade" role="dialog" aria-labelledby="searchModalLabel" aria-hidden="true">
+                	<div class="modal-dialog modal-lg">
+                		<div class="modal-content">
+                			<div class="modal-header">
+                				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                				<h4 id="searchModalLabel" class="modal-title">
+                					No Search Results
+                				</h4>
+                			</div>
+                			<div id="searchContent" class="modal-body">
+                			</div>
+                			<div class="modal-footer">
+                				<button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+                			</div>
+                		</div>
+                	</div>
+                </div>
 <script language="JavaScript"
 		src="${pageContext.request.contextPath}/assets/js/jquery.jstree.js"></script>
 <script language="JavaScript"
@@ -402,7 +437,8 @@
 <script language="JavaScript">
 	eureka.editor.setup('VALUE_THRESHOLD', '', ${proposition != null ? proposition.id : 'null'},
 			'#systemTree', '#userTree', '#definitionContainer', '#savePropositionButton', 'span.delete-icon',
-			'ul.sortable', '${pageContext.request.contextPath}/assets/css/jstree-themes/default/style.css');
+			'ul.sortable', '${pageContext.request.contextPath}/assets/css/jstree-themes/default/style.css',
+			'#searchValidationModal','#searchNoResultsModal','#searchUpdateDiv');
 	eureka.editor.setupDuplication('#duplicateThresholdButton', '#propDefinition', '.value-threshold', eureka.editor.duplicateThreshold);
 </script>
 </template:content>

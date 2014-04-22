@@ -21,7 +21,7 @@ window.eureka.tree = new function () {
 		});
 	};
 
-	self.setupSystemTree = function (systemTreeElem, treeCssUrl, searchModalElem, dropFinishCallback) {
+	self.setupSystemTree = function (systemTreeElem, treeCssUrl, searchModalElem, dropFinishCallback,searchValidationModalElem,searchNoResultsModalElem,searchUpdateDivElem) {
 		$(systemTreeElem).jstree({
 			"json_data": {
 				"ajax": {
@@ -69,12 +69,35 @@ window.eureka.tree = new function () {
 						};
 					},
 					success: function (data) {
-						console.log(data);
+					    console.log(data);
+					    $elem = $(searchUpdateDivElem);
+					    $elem.hide();
+                        $('#systemTree').show();
+                        $('#userTree').show();
+                        if(data.length==1){
+                            /*var dialog = $('<div></div>');
+                            $(dialog).dialog({
+                                'title': 'No Search Results',
+                                'modal': true,
+                                'resizable': false,
+                                'buttons': {
+                                    "OK": function() {
+                                        $(this).dialog("close");
+                                        $(this).remove();
+                                    }
+                                }
+                            });
+                            $(dialog).html("There are no entries in our database that matched your search criteria.");
+                            $(dialog).dialog("open");   */
+                            $elem = $(searchNoResultsModalElem);
+                            $elem.find('#searchContent').html("There are no entries in our database that matched your search criteria.");
+                            $elem.modal("toggle");
+                        }
 						if (data != null && data.length > 200) {
 							$elem = $(searchModalElem);
-							$elem.find('#searchContent').html("The search is in progress." +
-								" The number of search results exceeded the maximum limit and all results might not be displayed." +
-								" Please give a more specific search query to see all results.");
+							$elem.find('#searchContent').html("The number of search results exceeded the  "+
+							 " maximum limit and all results might not be displayed."+
+                             " Please give a more specific search query to see all results.");
 							$elem.modal("toggle");
 						}
 					}
@@ -102,26 +125,37 @@ window.eureka.tree = new function () {
 						$('#search span').html('');
 					},
 					submit: function(evt){
+					    $('#systemTree').jstree('clear_search');
 						var searchvalue = $('#search input[type="text"]').val();
 						if(searchvalue!='' && searchvalue.length>=4) {
+						    $('#systemTree').hide();
+                            $('#userTree').hide();
+                            $elem = $(searchUpdateDivElem);
+                            $elem.text("Search is in progress. Please wait...");
+                            $elem.show();
+                            //$('#searchUpdateDivElem').text("Search is in progress. Please wait...");
+                            //$('#searchUpdateDivElem').show();
 							$('#systemTree').jstree('search', searchvalue);
 							$('#search span').html('');
 						} else if(searchvalue.length<4){
-							$('#systemTree').jstree('clear_search');
-							var dialog = $('<div></div>');
+						    $elem = $(searchValidationModalElem);
+                            $elem.find('#searchContent').html("Please enter a search value with length greater than 3.");
+                            $elem.modal("toggle");
+
+							/*var dialog = $('<div></div>');
 							$(dialog).dialog({
-								'title': 'Search update.',
-								'modal': true,
-								'resizable': false,
-								'buttons': {
-									"OK": function() {
-										$(this).dialog("close");
-										$(this).remove();
-									}
-								}
-							});
+								'title': 'Search String Validation Failed',
+                                'modal': true,
+                                'resizable': false,
+                                'buttons': {
+                                    "OK": function() {
+                                    $(this).dialog("close");
+                                    $(this).remove();
+                                    }
+                                 }
+                            });
 							$(dialog).html("Please enter a search value with length greater than 3.");
-							$(dialog).dialog("open");
+							$(dialog).dialog("open");        */
 
 							//$('#search span').html('Please enter searchvalue');
 						}
