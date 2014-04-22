@@ -62,39 +62,39 @@ public class SearchSystemPropositionServlet extends HttpServlet {
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
-		String eurekaServicesUrl = req.getSession().getServletContext()
-				.getInitParameter("eureka-services-url");
-
 
 		String searchKey = req.getParameter("searchKey");
-		List<String> searchResult = null;
-		List<String> processedSearchResult = null;
+
 		if (searchKey == null) {
-			throw new ServletException("Invalid parameter id: " + searchKey);
+			throw new ServletException("Search key is null");
 		}
+
 		try {
+			List<String> processedSearchResult = null;
+			List<String> searchResult = null;
 			searchResult = servicesClient
 					.getSystemElementSearchResults(searchKey);
 			processedSearchResult = convertResultsForJstreeRequirement(searchResult);
+
+			ObjectMapper mapper = new ObjectMapper();
+			resp.setContentType("application/json");
+			PrintWriter out = resp.getWriter();
+			mapper.writeValue(out, processedSearchResult);
 		} catch (ClientException e) {
-			e.printStackTrace();
+			throw new ServletException("Error getting search results", e);
 		}
 
-		LOGGER.debug("executed resource ");
 
-		ObjectMapper mapper = new ObjectMapper();
-		resp.setContentType("application/json");
-		PrintWriter out = resp.getWriter();
-		mapper.writeValue(out, processedSearchResult);
 	}
 
 	private List<String> convertResultsForJstreeRequirement(
 			List<String> searchResult) {
+		List<String> newResultSet = new ArrayList<>();
+		Pattern pattern = Pattern.compile("[^a-zA-Z0-9]");
 
-		List<String> newResultSet = new ArrayList<String>();
 		newResultSet.add("#root");
-		for(String currentSearchResult : searchResult){
-			newResultSet.add("#"+currentSearchResult.replaceAll("[^a-zA-Z0-9]", "\\\\$0"));
+		for (String currentSearchResult : searchResult) {
+			newResultSet.add("#" + pattern.matcher(currentSearchResult).replaceAll("\\\\$0"));
 		}
 		return newResultSet;
 	}
