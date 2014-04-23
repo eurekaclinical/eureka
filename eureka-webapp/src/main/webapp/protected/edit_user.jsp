@@ -33,7 +33,6 @@
 				</label>
 				<div class="form-control-static">
 						${user.firstName} ${user.lastName}
-					(<a href="${pageContext.request.contextPath}/protected/ping?id=${user.id}">Ping</a>)
 				</div>
 			</div>
 			<div class="form-group">

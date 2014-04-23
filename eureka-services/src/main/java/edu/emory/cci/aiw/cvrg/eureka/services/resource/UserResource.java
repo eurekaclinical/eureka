@@ -19,50 +19,40 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.services.resource;
 
-import com.google.inject.Inject;
-import edu.emory.cci.aiw.cvrg.eureka.common.authentication.AuthenticationMethod;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.PasswordChangeRequest;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.User;
-import edu.emory.cci.aiw.cvrg.eureka.services.util.UserToUserEntityVisitor;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.LocalUserEntity;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.Role;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.UserEntity;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.UserEntityToUserVisitor;
-import edu.emory.cci.aiw.cvrg.eureka.common.exception.HttpStatusException;
-import edu.emory.cci.aiw.cvrg.eureka.services.clients.I2b2Client;
-import edu.emory.cci.aiw.cvrg.eureka.services.dao.LocalUserDao;
-import edu.emory.cci.aiw.cvrg.eureka.services.dao.RoleDao;
-import edu.emory.cci.aiw.cvrg.eureka.services.dao.UserDao;
-import edu.emory.cci.aiw.cvrg.eureka.services.email.EmailException;
-import edu.emory.cci.aiw.cvrg.eureka.services.email.EmailSender;
-import edu.emory.cci.aiw.cvrg.eureka.services.util.PasswordGenerator;
-import edu.emory.cci.aiw.cvrg.eureka.common.util.StringUtil;
-import edu.emory.cci.aiw.cvrg.eureka.services.authentication.ServicesAuthenticationSupport;
-import edu.emory.cci.aiw.cvrg.eureka.services.dao.AuthenticationMethodDao;
-import edu.emory.cci.aiw.cvrg.eureka.services.dao.LoginTypeDao;
-import edu.emory.cci.aiw.cvrg.eureka.services.dao.OAuthProviderDao;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import javax.annotation.security.RolesAllowed;
-import javax.servlet.http.HttpServletRequest;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+
+import javax.annotation.security.RolesAllowed;
+import javax.servlet.http.HttpServletRequest;
+import javax.ws.rs.*;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+
 import org.apache.commons.lang3.StringUtils;
 import org.jasig.cas.client.authentication.AttributePrincipal;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.google.inject.Inject;
+
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.PasswordChangeRequest;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.User;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.LocalUserEntity;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.Role;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.UserEntity;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.UserEntityToUserVisitor;
+import edu.emory.cci.aiw.cvrg.eureka.common.exception.HttpStatusException;
+import edu.emory.cci.aiw.cvrg.eureka.common.util.StringUtil;
+import edu.emory.cci.aiw.cvrg.eureka.services.authentication.ServicesAuthenticationSupport;
+import edu.emory.cci.aiw.cvrg.eureka.services.clients.I2b2Client;
+import edu.emory.cci.aiw.cvrg.eureka.services.dao.*;
+import edu.emory.cci.aiw.cvrg.eureka.services.email.EmailException;
+import edu.emory.cci.aiw.cvrg.eureka.services.email.EmailSender;
+import edu.emory.cci.aiw.cvrg.eureka.services.util.UserToUserEntityVisitor;
 
 /**
  * RESTful end-point for {@link UserEntity} related methods.
@@ -101,10 +91,6 @@ public class UserResource {
 	 */
 	private final I2b2Client i2b2Client;
 	/**
-	 * Used to generate random passwords for the reset password functionality.
-	 */
-	private final PasswordGenerator passwordGenerator;
-	/**
 	 * And validation errors that we may have encountered while validating a new
 	 * user request, or a user update.
 	 */
@@ -124,7 +110,6 @@ public class UserResource {
 	public UserResource(UserDao inUserDao, LocalUserDao inLocalUserDao,
 			RoleDao inRoleDao,
 			EmailSender inEmailSender, I2b2Client inClient,
-			PasswordGenerator inPasswordGenerator,
 			OAuthProviderDao inOAuthProviderDao,
 			LoginTypeDao inLoginTypeDao,
 			AuthenticationMethodDao inAuthenticationMethodDao) {
@@ -133,8 +118,7 @@ public class UserResource {
 		this.roleDao = inRoleDao;
 		this.emailSender = inEmailSender;
 		this.i2b2Client = inClient;
-		this.passwordGenerator = inPasswordGenerator;
-		this.visitor = new UserToUserEntityVisitor(inOAuthProviderDao, 
+		this.visitor = new UserToUserEntityVisitor(inOAuthProviderDao,
 				inRoleDao, inLoginTypeDao, inAuthenticationMethodDao);
 		this.authenticationSupport = new ServicesAuthenticationSupport();
 	}
@@ -144,7 +128,6 @@ public class UserResource {
 	 *
 	 * @return A list of {@link UserEntity} objects.
 	 */
-	@Path("")
 	@RolesAllowed({"admin"})
 	@GET
 	public List<User> getUsers() {
@@ -181,8 +164,8 @@ public class UserResource {
 
 	/**
 	 * Get a user using the username.
+	 * @param req The HTTP request containing the user name.
 	 *
-	 * @param inName The of the user to fetch.
 	 * @return The user corresponding to the given name.
 	 */
 	@Path("/me")
@@ -355,21 +338,6 @@ public class UserResource {
 			}
 		}
 		return result;
-	}
-
-	/**
-	 * Get a set of default roles to be added to a newly created user.
-	 *
-	 * @return A list of default roles.
-	 */
-	private List<Role> getDefaultRoles() {
-		List<Role> defaultRoles = new ArrayList<>();
-		for (Role role : this.roleDao.getAll()) {
-			if (Boolean.TRUE.equals(role.isDefaultRole())) {
-				defaultRoles.add(role);
-			}
-		}
-		return defaultRoles;
 	}
 
 	private Date getExpirationDate() {

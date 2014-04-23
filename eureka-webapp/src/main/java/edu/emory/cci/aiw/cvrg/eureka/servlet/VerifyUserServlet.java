@@ -26,14 +26,10 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.google.inject.Inject;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ClientException;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ServicesClient;
-import edu.emory.cci.aiw.cvrg.eureka.webapp.config.WebappProperties;
 
 /**
  * Servlet to handle user verification requests.
@@ -48,18 +44,11 @@ public class VerifyUserServlet extends HttpServlet {
 	 * Used for serialization/deserialization.
 	 */
 	private static final long serialVersionUID = -737043484641381552L;
-	/**
-	 * The class level logger.
-	 */
-	private static final Logger LOGGER = LoggerFactory
-			.getLogger(VerifyUserServlet.class);
 	private final ServicesClient servicesClient;
-	private final WebappProperties properties;
 
 	@Inject
 	public VerifyUserServlet (ServicesClient inClient) {
 		this.servicesClient = inClient;
-		this.properties = new WebappProperties();
 	}
 
 	@Override

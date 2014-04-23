@@ -29,11 +29,8 @@ import javax.ws.rs.core.UriBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.GenericType;
 import com.sun.jersey.core.util.MultivaluedMapImpl;
-import edu.emory.cci.aiw.cvrg.eureka.common.authentication.AuthenticationMethod;
-import edu.emory.cci.aiw.cvrg.eureka.common.authentication.UserPrincipalAttributes;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.DataElement;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.Destination;
@@ -46,14 +43,12 @@ import edu.emory.cci.aiw.cvrg.eureka.common.comm.SystemElement;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.User;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.UserRequest;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.FrequencyType;
-import edu.emory.cci.aiw.cvrg.eureka.common.authentication.LoginType;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.OAuthProvider;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.RelationOperator;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.Role;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.ThresholdsOperator;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.TimeUnit;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.ValueComparator;
-import org.jasig.cas.client.authentication.AttributePrincipal;
 
 /**
  * @author hrathod
@@ -379,11 +374,6 @@ public class ServicesClient extends EurekaClient {
 				.segment(inName)
 				.build().toString();
 		return doGet(path, ValueComparator.class);
-	}
-
-	public void pingAccount(Long inUserId) throws ClientException {
-		final String path = "/api/protected/ping/testuser/" + inUserId;
-		doGet(path, ClientResponse.class);
 	}
 
 	public List<FrequencyType> getFrequencyTypesAsc() throws ClientException {

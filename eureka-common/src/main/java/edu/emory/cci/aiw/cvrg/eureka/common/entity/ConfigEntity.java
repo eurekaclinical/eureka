@@ -20,16 +20,11 @@ package edu.emory.cci.aiw.cvrg.eureka.common.entity;
  * #L%
  */
 
-import javax.persistence.Column;
-import javax.persistence.MappedSuperclass;
-
 /**
  *
  * @author Andrew Post
  */
-@MappedSuperclass
-public abstract class ConfigEntity {
-	
+public interface ConfigEntity {
 
 	public abstract String getName();
 	

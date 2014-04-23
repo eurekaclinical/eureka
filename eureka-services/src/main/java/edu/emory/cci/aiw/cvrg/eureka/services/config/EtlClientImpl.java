@@ -19,25 +19,22 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.services.config;
 
-import com.google.inject.Inject;
-import com.sun.jersey.api.client.ClientResponse;
-import com.sun.jersey.api.client.GenericType;
-import com.sun.jersey.core.util.MultivaluedMapImpl;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.Destination;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.Job;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.JobFilter;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.JobRequest;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.SourceConfig;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.ValidationRequest;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ClientException;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.EurekaClient;
-import org.protempa.PropositionDefinition;
-
-import javax.ws.rs.core.MultivaluedMap;
-import javax.ws.rs.core.UriBuilder;
 import java.io.InputStream;
 import java.net.URI;
 import java.util.List;
+
+import javax.ws.rs.core.MultivaluedMap;
+import javax.ws.rs.core.UriBuilder;
+
+import org.protempa.PropositionDefinition;
+
+import com.google.inject.Inject;
+import com.sun.jersey.api.client.GenericType;
+import com.sun.jersey.core.util.MultivaluedMapImpl;
+
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.*;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ClientException;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.EurekaClient;
 
 /**
  * @author hrathod
@@ -188,12 +185,6 @@ public class EtlClientImpl extends EurekaClient implements EtlClient {
 					.segment(sourceConfigId)
 					.build().toString();
 		return doPost(path, PropositionDefinitionList, formParams);
-	}
-
-	@Override
-	public void ping(Long inUserId) throws ClientException {
-		String path = "/api/protected/ping/testuser/" + inUserId;
-		doGet(path, ClientResponse.class);
 	}
 
 	@Override

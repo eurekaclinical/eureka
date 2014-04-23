@@ -77,7 +77,6 @@ public class DestinationResource {
 	}
 
 	@GET
-	@Path("")
 	public List<Destination> getAll(@Context HttpServletRequest request) {
 		EtlUser user = this.authenticationSupport.getEtlUser(request);
 		return new Destinations(this.etlProperties, user, this.destinationDao).getAll();

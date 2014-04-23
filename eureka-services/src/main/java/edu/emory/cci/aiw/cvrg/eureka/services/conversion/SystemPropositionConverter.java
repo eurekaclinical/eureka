@@ -30,8 +30,8 @@ import edu.emory.cci.aiw.cvrg.eureka.common.entity.SystemProposition;
 public final class SystemPropositionConverter implements
 		PropositionDefinitionConverter<SystemProposition, PropositionDefinition> {
 
-	private PropositionDefinition primary;
-	
+	private PropositionDefinition primary = null;
+
 	private String primaryPropId;
 
 	public SystemPropositionConverter() {

@@ -37,7 +37,6 @@ import edu.emory.cci.aiw.cvrg.eureka.services.dao.RelationOperatorDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.ThresholdsOperatorDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.TimeUnitDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.ValueComparatorDao;
-import edu.emory.cci.aiw.cvrg.eureka.services.resource.SourceConfigResource;
 
 public final class ValueThresholdsTranslator implements
 		PropositionTranslator<ValueThresholds, ValueThresholdGroupEntity> {
@@ -49,21 +48,18 @@ public final class ValueThresholdsTranslator implements
 	private final ThresholdsOperatorDao thresholdsOperatorDao;
 	private final TimeUnitDao timeUnitDao;
 	private final RelationOperatorDao relationOpDao;
-	private final SourceConfigResource sourceConfigResource;
 
 	@Inject
 	public ValueThresholdsTranslator(ValueComparatorDao inValueComparatorDao,
 			ThresholdsOperatorDao inThresholdsOperatorDao,
 			TranslatorSupport inSupport,
 			TimeUnitDao inTimeUnitDao,
-			RelationOperatorDao inRelationOpDao,
-			SourceConfigResource inSourceConfigResource) {
+			RelationOperatorDao inRelationOpDao) {
 		valueCompDao = inValueComparatorDao;
 		thresholdsOperatorDao = inThresholdsOperatorDao;
 		translatorSupport = inSupport;
 		timeUnitDao = inTimeUnitDao;
 		relationOpDao = inRelationOpDao;
-		sourceConfigResource = inSourceConfigResource;
 	}
 
 	@Override

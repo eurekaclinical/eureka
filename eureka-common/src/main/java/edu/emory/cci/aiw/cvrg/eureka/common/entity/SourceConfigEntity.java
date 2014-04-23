@@ -38,7 +38,7 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "sourceconfigs")
-public class SourceConfigEntity extends ConfigEntity {
+public class SourceConfigEntity implements ConfigEntity {
 	@Id
 	@SequenceGenerator(name = "SOURCECONFIG_SEQ_GENERATOR", sequenceName = "SOURCECONFIG_SEQ",
 	allocationSize = 1)

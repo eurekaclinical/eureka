@@ -21,7 +21,14 @@ package edu.emory.cci.aiw.cvrg.eureka.webapp.config;
  */
 
 
+import java.util.HashMap;
+import java.util.Map;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.google.inject.Singleton;
+
 import edu.emory.cci.aiw.cvrg.eureka.common.config.AbstractServletModule;
 import edu.emory.cci.aiw.cvrg.eureka.servlet.*;
 import edu.emory.cci.aiw.cvrg.eureka.servlet.filter.HaveUserRecordFilter;
@@ -29,11 +36,6 @@ import edu.emory.cci.aiw.cvrg.eureka.servlet.filter.MessagesFilter;
 import edu.emory.cci.aiw.cvrg.eureka.servlet.filter.PasswordExpiredFilter;
 import edu.emory.cci.aiw.cvrg.eureka.servlet.filter.UserInfoFilter;
 import edu.emory.cci.aiw.cvrg.eureka.servlet.proposition.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.util.HashMap;
-import java.util.Map;
 /**
  * 
  * @author hrathod
@@ -50,7 +52,7 @@ class ServletModule extends AbstractServletModule {
 	
 	private final WebappProperties properties;
 
-	public ServletModule(WebappProperties inProperties) {
+	ServletModule(WebappProperties inProperties) {
 		super(inProperties, CONTAINER_PATH, CONTAINER_PROTECTED_PATH);
 		this.properties = inProperties;
 	}
@@ -154,9 +156,6 @@ class ServletModule extends AbstractServletModule {
 		bind(DateRangeDataElementServlet.class).in(Singleton.class);
 		serve("/protected/destinationdataelements").with(
 				DateRangeDataElementServlet.class);
-
-		bind(PingServlet.class).in(Singleton.class);
-		serve("/protected/ping").with(PingServlet.class);
 
         bind(SearchSystemPropositionServlet.class).in(Singleton.class);
         serve("/protected/searchsystemlist").with(SearchSystemPropositionServlet.class);

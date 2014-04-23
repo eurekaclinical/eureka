@@ -89,7 +89,7 @@ public class SequenceEntity extends DataElementEntity {
 			entities.put(lhs.getId(), lhs);
 			entities.put(rhs.getId(), rhs);
 		}
-		return new ArrayList(entities.values());
+		return new ArrayList<>(entities.values());
 	}
 
 	@Override

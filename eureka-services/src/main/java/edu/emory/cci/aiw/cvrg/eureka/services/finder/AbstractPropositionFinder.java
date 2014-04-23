@@ -19,14 +19,13 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.services.finder;
 
-import net.sf.ehcache.Cache;
-import net.sf.ehcache.CacheManager;
-import net.sf.ehcache.Element;
 import org.protempa.PropositionDefinition;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.List;
+import net.sf.ehcache.Cache;
+import net.sf.ehcache.CacheManager;
+import net.sf.ehcache.Element;
 
 public abstract class AbstractPropositionFinder<K> implements PropositionFinder<K> {
 
@@ -63,7 +62,6 @@ public abstract class AbstractPropositionFinder<K> implements PropositionFinder<
 		}
 
 		PropositionDefinition propDef = (PropositionDefinition) element.getValue();
-//		this.prefetch(inUserId, propDef);
 		return propDef;
 	}
 
@@ -74,8 +72,6 @@ public abstract class AbstractPropositionFinder<K> implements PropositionFinder<
 	}
 
 	abstract protected CacheManager getCacheManager();
-
-	abstract protected List<K> getPrefetchKeys(PropositionDefinition inWrapper);
 
 	abstract protected Cache getCache();
 }

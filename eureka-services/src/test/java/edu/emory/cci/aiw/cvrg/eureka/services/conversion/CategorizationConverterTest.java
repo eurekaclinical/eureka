@@ -19,34 +19,19 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.services.conversion;
 
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.CategoryEntity;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.CategoryEntity.CategoryType;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.DataElementEntity;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.ExtendedDataElement;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.FrequencyEntity;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.FrequencyType;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.Relation;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.SequenceEntity;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.SystemProposition;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.SystemProposition.SystemType;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.ThresholdsOperator;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.ValueThresholdEntity;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.ValueThresholdGroupEntity;
-import edu.emory.cci.aiw.cvrg.eureka.services.test.AbstractServiceTest;
-import org.arp.javautil.arrays.Arrays;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import org.protempa.ConstantDefinition;
-import org.protempa.EventDefinition;
-import org.protempa.HighLevelAbstractionDefinition;
-import org.protempa.PrimitiveParameterDefinition;
-import org.protempa.PropositionDefinition;
-import org.protempa.SliceDefinition;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+
+import org.arp.javautil.arrays.Arrays;
+import org.junit.Before;
+import org.junit.Test;
+import org.protempa.*;
+
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.*;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.CategoryEntity.CategoryType;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.SystemProposition.SystemType;
+import edu.emory.cci.aiw.cvrg.eureka.services.test.AbstractServiceTest;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;

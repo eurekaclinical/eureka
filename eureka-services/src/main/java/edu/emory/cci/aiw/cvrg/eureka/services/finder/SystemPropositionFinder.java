@@ -19,16 +19,17 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.services.finder;
 
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.SystemElement;
-import net.sf.ehcache.Cache;
-import net.sf.ehcache.CacheManager;
-import org.arp.javautil.arrays.Arrays;
+import java.util.List;
+
 import org.protempa.PropositionDefinition;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
+
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.SystemElement;
+
+import net.sf.ehcache.Cache;
+import net.sf.ehcache.CacheManager;
 
 @Singleton
 public class SystemPropositionFinder extends AbstractPropositionFinder<
@@ -59,14 +60,6 @@ public class SystemPropositionFinder extends AbstractPropositionFinder<
 	public List<PropositionDefinition> findAll(
 	        String sourceConfigId, List<String> inKeys, Boolean withChildren) throws PropositionFindException {
 		return this.retriever.retrieveAll(sourceConfigId, inKeys, withChildren);
-	}
-
-	@Override
-	protected List<String> getPrefetchKeys(PropositionDefinition inProposition) {
-		List<String> keys = new ArrayList<>();
-
-		keys.addAll(Arrays.<String> asList(inProposition.getInverseIsA()));
-		return keys;
 	}
 
 	@Override

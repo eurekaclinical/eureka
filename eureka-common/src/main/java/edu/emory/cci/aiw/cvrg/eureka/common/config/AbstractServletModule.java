@@ -43,7 +43,6 @@ public abstract class AbstractServletModule extends ServletModule {
 	private static final Logger LOGGER = LoggerFactory
 			.getLogger(AbstractServletModule.class);
 	private static final String CAS_CALLBACK_PATH = "/proxyCallback";
-	private final AbstractProperties properties;
 	private final String protectedPath;
 	private final ServletModuleSupport servletModuleSupport;
 
@@ -51,7 +50,6 @@ public abstract class AbstractServletModule extends ServletModule {
 			String inContainerPath, String inProtectedPath) {
 		this.servletModuleSupport = new ServletModuleSupport(
 		this.getServletContext().getContextPath(), inProperties);
-		this.properties = inProperties;
 		this.protectedPath = inProtectedPath;
 	}
 

@@ -19,13 +19,7 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.services.config;
 
-import edu.emory.cci.aiw.cvrg.eureka.services.test.Setup;
-import java.security.NoSuchAlgorithmException;
-
 import javax.servlet.ServletContextEvent;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
@@ -40,12 +34,6 @@ import com.google.inject.servlet.GuiceServletContextListener;
  */
 public class ContextTestListener extends GuiceServletContextListener {
 
-
-	/**
-	 * The class level logger.
-	 */
-	private static final Logger LOGGER = LoggerFactory
-			.getLogger(ContextTestListener.class);
 	/**
 	 * Make sure we always use the same injector.
 	 */
