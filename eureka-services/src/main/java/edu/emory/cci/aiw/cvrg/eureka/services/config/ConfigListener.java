@@ -44,12 +44,16 @@ public class ConfigListener extends GuiceServletContextListener {
 	/**
 	 * Make sure we always use the same injector
 	 */
-	private final Injector injector = Guice.createInjector(new AppModule(),
-			new ServletModule(new ServiceProperties()), new JpaPersistModule(
-					JPA_UNIT));
+	private Injector injector;
 
 	@Override
 	protected Injector getInjector() {
+		if (this.injector == null) {
+			this.injector = Guice.createInjector(new AppModule(),
+					new ServletModule(new ServiceProperties()), new JpaPersistModule(
+							JPA_UNIT)
+			);
+		}
 		return this.injector;
 	}
 
