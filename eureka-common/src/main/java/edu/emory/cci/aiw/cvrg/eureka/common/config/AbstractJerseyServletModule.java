@@ -86,7 +86,7 @@ public abstract class AbstractJerseyServletModule extends JerseyServletModule {
 		bind(Cas20ProxyReceivingTicketValidationFilter.class).in(
 				Singleton.class);
 		Map<String, String> params = this.servletModuleSupport
-				.getCasProxyFilterInitParams();
+				.getCasProxyFilterInitParamsForWebService();
 		filter(CAS_CALLBACK_PATH, CONTAINER_PROTECTED_PATH).through(
 				Cas20ProxyReceivingTicketValidationFilter.class, params);
 	}

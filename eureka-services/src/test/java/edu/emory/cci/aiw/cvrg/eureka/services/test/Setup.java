@@ -59,6 +59,9 @@ public class Setup implements TestDataProvider {
 	private Role adminRole;
 	private Role superRole;
 	private final UserEntityFactory userEntityFactory;
+	private List<LoginTypeEntity> loginTypes;
+	private List<AuthenticationMethodEntity> authenticationMethods;
+
 
 	/**
 	 * Create a Bootstrap class with an EntityManager.
@@ -80,17 +83,14 @@ public class Setup implements TestDataProvider {
 		this.researcherRole = this.createResearcherRole();
 		this.adminRole = this.createAdminRole();
 		this.superRole = this.createSuperRole();
-
+		this.loginTypes = createLoginTypes();
+		this.authenticationMethods = createAuthenticationMethods();
 		UserEntity researcherUser = this.createResearcherUser();
 		UserEntity adminUser = this.createAdminUser();
 		UserEntity superUser = this.createSuperUser();
-
-		this.createLoginTypes();
-		this.createAuthenticationMethods();
 		this.createDataElements(researcherUser, adminUser, superUser);
 		this.createTimeUnits();
 		this.createFrequencyTypes();
-		
 	}
 
 	@Override

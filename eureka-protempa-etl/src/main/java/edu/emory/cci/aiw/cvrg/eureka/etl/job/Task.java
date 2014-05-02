@@ -109,6 +109,7 @@ public final class Task implements Runnable {
 						new Object[]{Thread.currentThread().getName(), 
 							myJob.getId(), myJob.getEtlUser().getUsername()});
 			}
+			myJob = null;
 		} catch (EtlException | Error | RuntimeException e) {
 			handleError(myJob, e);
 		} finally {
