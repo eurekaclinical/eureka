@@ -49,11 +49,13 @@ class ServletModule extends AbstractServletModule {
 	private static final String PASSWORD_EXPIRED_REDIRECT_URL = "/protected/password_expiration.jsp";
 	private static final String PASSWORD_SAVE_PATH = "/protected/user_acct";
 	private static final String NO_USER_RECORD_REDIRECT_URL = "/register.jsp";
+	private static final String LOGOUT_PATH = "/logout";
 	
 	private final WebappProperties properties;
 
-	ServletModule(WebappProperties inProperties) {
-		super(inProperties, CONTAINER_PATH, CONTAINER_PROTECTED_PATH);
+	public ServletModule(WebappProperties inProperties) {
+		super(inProperties, CONTAINER_PATH, CONTAINER_PROTECTED_PATH, 
+				LOGOUT_PATH);
 		this.properties = inProperties;
 	}
 	
@@ -104,7 +106,7 @@ class ServletModule extends AbstractServletModule {
 		serve("/forgot_password").with(ForgotPasswordServlet.class);
 
 		bind(LogoutServlet.class).in(Singleton.class);
-		serve("/logout").with(LogoutServlet.class);
+		serve(LOGOUT_PATH).with(LogoutServlet.class);
 
 		bind(VerifyUserServlet.class).in(Singleton.class);
 		serve("/verify").with(VerifyUserServlet.class);
