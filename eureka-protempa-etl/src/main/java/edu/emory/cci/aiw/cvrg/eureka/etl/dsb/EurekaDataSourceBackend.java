@@ -75,7 +75,7 @@ public final class EurekaDataSourceBackend extends RelationalDbDataSourceBackend
 	private Boolean required = Boolean.FALSE;
 	private String databaseName;
 	private boolean exceptionOccurred;
-
+	
 	@Override
 	public void initialize(BackendInstanceSpec config) throws BackendInitializationException {
 		super.initialize(config);
@@ -195,6 +195,10 @@ public final class EurekaDataSourceBackend extends RelationalDbDataSourceBackend
 	public EurekaDataSourceBackend() {
 		this.mapper = new PropIdToSQLCodeMapper("/mappings/",
 				getClass());
+		setSchemaName("EUREKA");
+		setKeyIdTable("PATIENT");
+		setKeyIdColumn("PATIENT_KEY");
+		setKeyIdJoinKey("PATIENT_KEY");
 	}
 
 	@Override
@@ -208,26 +212,6 @@ public final class EurekaDataSourceBackend extends RelationalDbDataSourceBackend
 	@Override
 	protected StagingSpec[] stagedSpecs() throws IOException {
 		return null;
-	}
-
-	@Override
-	public String getSchemaName() {
-		return "EUREKA";
-	}
-
-	@Override
-	public String getKeyIdTable() {
-		return "PATIENT";
-	}
-
-	@Override
-	public String getKeyIdColumn() {
-		return "PATIENT_KEY";
-	}
-
-	@Override
-	public String getKeyIdJoinKey() {
-		return "PATIENT_KEY";
 	}
 
 	@Override
