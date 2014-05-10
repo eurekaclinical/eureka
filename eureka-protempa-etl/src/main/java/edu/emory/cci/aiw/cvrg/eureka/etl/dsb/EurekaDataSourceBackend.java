@@ -558,7 +558,7 @@ public final class EurekaDataSourceBackend extends RelationalDbDataSourceBackend
 			null, null, null, null, null,
 			AbsoluteTimeGranularity.DAY, dtPositionParser, null),
 			new EntitySpec("Diagnosis Codes", null, this.mapper
-			.readCodes("icd9_diagnosis_08172011.txt", "\t", 0),
+			.readCodes("icd9_diagnosis_08172011.txt", 0),
 			true, new ColumnSpec(getKeyIdSchema(), getKeyIdTable(),
 			getKeyIdColumn(),
 			new JoinSpec("PATIENT_KEY", "PATIENT_KEY",
@@ -588,7 +588,7 @@ public final class EurekaDataSourceBackend extends RelationalDbDataSourceBackend
 			null, null, null, AbsoluteTimeGranularity.MINUTE,
 			dtPositionParser, null),
 			new EntitySpec("ICD9 Procedure Codes", null, this.mapper
-			.readCodes("icd9_procedure_08172011.txt", "\t", 0),
+			.readCodes("icd9_procedure_08172011.txt", 0),
 			true, new ColumnSpec(getKeyIdSchema(), getKeyIdTable(),
 			getKeyIdColumn(),
 			new JoinSpec("PATIENT_KEY", "PATIENT_KEY",
@@ -617,7 +617,7 @@ public final class EurekaDataSourceBackend extends RelationalDbDataSourceBackend
 			null, null, null, AbsoluteTimeGranularity.MINUTE,
 			dtPositionParser, null),
 			new EntitySpec("CPT Procedure Codes", null, this.mapper
-			.readCodes("cpt_procedure_08172011.txt", "\t", 0), true,
+			.readCodes("cpt_procedure_08172011.txt", 0), true,
 			new ColumnSpec(getKeyIdSchema(), getKeyIdTable(),
 			getKeyIdColumn(),
 			new JoinSpec("PATIENT_KEY", "PATIENT_KEY",
@@ -647,7 +647,7 @@ public final class EurekaDataSourceBackend extends RelationalDbDataSourceBackend
 			null, null, null, AbsoluteTimeGranularity.MINUTE,
 			dtPositionParser, null),
 			new EntitySpec("Medication Orders", null,
-			this.mapper.readCodes("meds_08182011.txt", "\t", 0),
+			this.mapper.readCodes("meds_08182011.txt", 0),
 			true, new ColumnSpec(getKeyIdSchema(), getKeyIdTable(),
 			getKeyIdColumn(),
 			new JoinSpec("PATIENT_KEY", "PATIENT_KEY",
@@ -676,7 +676,7 @@ public final class EurekaDataSourceBackend extends RelationalDbDataSourceBackend
 		String schemaName = getSchemaName();
 		EntitySpec[] primitiveParameterSpecs = new EntitySpec[]{
 			new EntitySpec("Labs", null,
-			this.mapper.readCodes("labs_08172011.txt", "\t", 0),
+			this.mapper.readCodes("labs_08172011.txt", 0),
 			true, new ColumnSpec(getKeyIdSchema(), getKeyIdTable(),
 			getKeyIdColumn(),
 			new JoinSpec("PATIENT_KEY", "PATIENT_KEY",
@@ -706,7 +706,7 @@ public final class EurekaDataSourceBackend extends RelationalDbDataSourceBackend
 			ValueType.VALUE, AbsoluteTimeGranularity.MINUTE,
 			dtPositionParser, null), new EntitySpec("Vitals", null,
 			this.mapper
-			.readCodes("vitals_result_types_08172011.txt", "\t", 0),
+			.readCodes("vitals_result_types_08172011.txt", 0),
 			true, new ColumnSpec(getKeyIdSchema(), getKeyIdTable(),
 			getKeyIdColumn(), new JoinSpec("PATIENT_KEY", "PATIENT_KEY",
 			new ColumnSpec(schemaName, "ENCOUNTER",
