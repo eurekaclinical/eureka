@@ -221,6 +221,6 @@ window.eureka.job = new function () {
 		// enable this if we want to disallow job submission without a data element selected
 		// doDisable = doDisable || (self.currentElement == null);
 
-		$('input:submit').prop('disabled', doDisable);
+		//$('input:submit').prop('disabled', doDisable);
 	};
 };
