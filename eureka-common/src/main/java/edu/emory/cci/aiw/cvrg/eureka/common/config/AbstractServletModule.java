@@ -50,12 +50,21 @@ public abstract class AbstractServletModule extends ServletModule {
 	private static final String CAS_CALLBACK_PATH = "/proxyCallback";
 	private final String protectedPath;
 	private final ServletModuleSupport servletModuleSupport;
+	private final String logoutPath;
 
 	protected AbstractServletModule(AbstractProperties inProperties,
-			String inContainerPath, String inProtectedPath) {
+			String inContainerPath, String inProtectedPath,
+			String inLogoutPath) {
+		if (inProtectedPath == null) {
+			throw new IllegalArgumentException("inProtectedPath cannot be null");
+		}
+		if (inLogoutPath == null) {
+			throw new IllegalArgumentException("inLogoutPath cannot be null");
+		}
 		this.servletModuleSupport = new ServletModuleSupport(
 		this.getServletContext().getContextPath(), inProperties);
 		this.protectedPath = inProtectedPath;
+		this.logoutPath = inLogoutPath;
 	}
 
 	protected void printParams(Map<String, String> inParams) {
@@ -66,7 +75,7 @@ public abstract class AbstractServletModule extends ServletModule {
 	
 	private void setupCasSingleSignOutFilter() {
 		bind(SingleSignOutFilter.class).in(Singleton.class);
-		filter("/*").through(SingleSignOutFilter.class);
+		filter(this.logoutPath).through(SingleSignOutFilter.class);
 	}
 
 
