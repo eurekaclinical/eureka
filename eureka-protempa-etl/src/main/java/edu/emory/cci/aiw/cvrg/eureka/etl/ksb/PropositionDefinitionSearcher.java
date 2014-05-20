@@ -69,7 +69,6 @@ public class PropositionDefinitionSearcher {
 
 	public List<String> searchPropositions(String inSearchKey) throws PropositionFinderException {
 		LinkedHashSet<String> nodesToLoad = new LinkedHashSet<>();
-		List<String> nodesToLoadList;
 		try {
 			List<PropositionDefinition> searchResults = knowledgeSource.getMatchingPropositionDefinitions(inSearchKey);
 			for (PropositionDefinition pf : searchResults) {
@@ -81,11 +80,10 @@ public class PropositionDefinitionSearcher {
 					}
 				}
 			}
-			nodesToLoadList = new ArrayList<>(nodesToLoad);
 		} catch (KnowledgeSourceReadException e) {
 			throw new PropositionFinderException(e);
 		}
-		return nodesToLoadList;
+		return new ArrayList<>(nodesToLoad);
 	}
 
 	private void readParentsForSearchResult(PropositionDefinition pf, LinkedHashSet<String> nodesToLoad) throws PropositionFinderException {
