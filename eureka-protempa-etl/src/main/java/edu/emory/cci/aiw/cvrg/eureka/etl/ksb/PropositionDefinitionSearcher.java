@@ -69,7 +69,7 @@ public class PropositionDefinitionSearcher {
 
 	public List<String> searchPropositions(String inSearchKey) throws PropositionFinderException {
 		LinkedHashSet<String> nodesToLoad = new LinkedHashSet<>();
-		List<String> nodesToLoadList = new ArrayList<>();
+		List<String> nodesToLoadList;
 		try {
 			List<PropositionDefinition> searchResults = knowledgeSource.getMatchingPropositionDefinitions(inSearchKey);
 			for (PropositionDefinition pf : searchResults) {
@@ -81,10 +81,7 @@ public class PropositionDefinitionSearcher {
 					}
 				}
 			}
-			Iterator nodeIterator = nodesToLoad.iterator();
-			while (nodeIterator.hasNext()) {
-				nodesToLoadList.add(nodeIterator.next().toString());
-			}
+			nodesToLoadList = new ArrayList<>(nodesToLoad);
 		} catch (KnowledgeSourceReadException e) {
 			throw new PropositionFinderException(e);
 		}
@@ -94,30 +91,29 @@ public class PropositionDefinitionSearcher {
 	private void readParentsForSearchResult(PropositionDefinition pf, LinkedHashSet<String> nodesToLoad) throws PropositionFinderException {
 		try {
 			Queue<PropositionDefinition> toProcessQueue = new LinkedList<>();
-			Stack processedStack = new Stack();
+			Stack<String> processedStack = new Stack<>();
 			toProcessQueue.add(pf);
-			while (toProcessQueue.peek() != null) {
-				PropositionDefinition topInQueue = toProcessQueue.remove();
-				List<PropositionDefinition> parents;
-				parents = parentsCache.get(topInQueue.getId());
+			while (!toProcessQueue.isEmpty()) {
+				PropositionDefinition currentPropDef = toProcessQueue.remove();
+				List<PropositionDefinition> parents = parentsCache.get(currentPropDef.getId());
 				if (parents == null) {
-					parents = knowledgeSource.readParents(topInQueue);
-					parentsCache.put(topInQueue.getId(), parents);
+					parents = knowledgeSource.readParents(currentPropDef);
+					parentsCache.put(currentPropDef.getId(), parents);
 				}
 				for (PropositionDefinition parent : parents) {
 					toProcessQueue.add(parent);
 					processedStack.add(parent.getId());
 				}
 			}
-			emptyStackToGetNodes(processedStack, nodesToLoad);
+			getNodesToLoad(processedStack, nodesToLoad);
 		} catch (KnowledgeSourceReadException e) {
 			throw new PropositionFinderException(e);
 		}
 	}
 
-	private void emptyStackToGetNodes(Stack processedStack, LinkedHashSet<String> nodesToLoad) {
+	private void getNodesToLoad(Stack<String> processedStack, LinkedHashSet<String> nodesToLoad) {
 		while (!processedStack.empty()) {
-			String node = (String) processedStack.pop();
+			String node = processedStack.pop();
 			if (!nodesToLoad.contains(node)) {
 				if (defaultProps.contains(node)) {
 					nodesToLoad.add(node);

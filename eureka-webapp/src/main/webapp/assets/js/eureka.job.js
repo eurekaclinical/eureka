@@ -7,9 +7,10 @@ window.eureka.job = new function () {
 
 	self.currentElement = null;
 
-	self.setup = function (systemTreeElem, userTreeElem, treeCssUrl, uploadFormElem, earliestDateElem, latestDateElem, datePickerCssUrl, statusElem, searchModalElem) {
+	self.setup = function (systemTreeElem, userTreeElem, treeCssUrl, uploadFormElem, earliestDateElem, latestDateElem, datePickerCssUrl, statusElem, searchModalElem,
+	searchValidationModalElem,searchNoResultsModalElem,searchUpdateDivElem) {
 		// Initialize widgets
-		eureka.tree.setupSystemTree(systemTreeElem, treeCssUrl, searchModalElem, self.dropFinishCallback);
+		eureka.tree.setupSystemTree(systemTreeElem, treeCssUrl, searchModalElem, self.dropFinishCallback,searchValidationModalElem,searchNoResultsModalElem,searchUpdateDivElem);
 		eureka.tree.setupUserTree(userTreeElem, treeCssUrl, self.dropFinishCallback);
 		self.setupDatePicker(earliestDateElem);
 		self.setupDatePicker(latestDateElem);
@@ -221,6 +222,6 @@ window.eureka.job = new function () {
 		// enable this if we want to disallow job submission without a data element selected
 		// doDisable = doDisable || (self.currentElement == null);
 
-		//$('input:submit').prop('disabled', doDisable);
+		$('#startButton').prop('disabled', doDisable);
 	};
 };
