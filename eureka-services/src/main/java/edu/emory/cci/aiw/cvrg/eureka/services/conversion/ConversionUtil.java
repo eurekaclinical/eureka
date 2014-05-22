@@ -65,7 +65,7 @@ class ConversionUtil {
 					.getValue()));
 			pc.setValueComp(ValueComparator.EQUAL_TO);
 
-			tepd.getPropertyConstraints().add(pc);
+			tepd.setPropertyConstraints(new PropertyConstraint[] {pc});
 		}
 		tepd.setMinLength(ep.getMinDuration());
 		tepd.setMinLengthUnit(unit(ep.getMinDurationTimeUnit()));
