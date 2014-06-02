@@ -70,7 +70,8 @@ and data into your own instance of the i2b2 data warehouse system.
 	</properties>
 
 	<scm>
-		<developerConnection>scm:git:ssh://git.cci.emory.edu/opt/git/aiw/eureka</developerConnection>
+		<developerConnection>scm:git:ssh://git.cci.emory.edu/opt/git/aiw/eureka.git</developerConnection>
+		<tag>HEAD</tag>
 	</scm>
 
 	<issueManagement>
