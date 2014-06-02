@@ -78,7 +78,7 @@ limitations under the License.
 				<span class="icon-bar"></span>
 				<span class="icon-bar"></span>
 			</button>
-			<a href="${pageContext.request.contextPath}" class="navbar-brand">
+			<a href="${pageContext.request.contextPath}/" class="navbar-brand">
 				<span class="brand-text">Eureka!</span>
 			</a>
 		</div>
