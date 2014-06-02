@@ -635,8 +635,42 @@ window.eureka.editor = new function () {
 		'VALUE_THRESHOLD': self.saveValueThreshold
 	};
 
+	self.validateCategorization = function (elem) {
+		var name = $('input#propDisplayName').val()
+		return name != null && name.length > 0;
+	}
+
+	self.validateSequence = function (elem) {
+		var name = $('input#propDisplayName').val()
+		return name != null && name.length > 0;
+	}
+
+	self.validateFrequency = function (elem) {
+		var name = $('input#propDisplayName').val()
+		return name != null && name.length > 0;
+	}
+
+	self.validateValueThreshold = function (elem) {
+		var name = $('input#propDisplayName').val()
+		return name != null && name.length > 0;
+	}
+
+	self.validationFunctions = {
+		'SEQUENCE': self.validateSequence,
+		'CATEGORIZATION': self.validateCategorization,
+		'FREQUENCE': self.validateFrequency,
+		'VALUE_THRESHOLD': self.validateValueThreshold
+	};
+
 	self.save = function (containerElem) {
-		self.saveFunctions[self.propType](containerElem);
+		var validationFunction = self.validationFunctions[self.propType];
+		if (validationFunction(containerElem)) {
+			self.saveFunctions[self.propType](containerElem);
+		} else {
+			var content = 'Please ensure that the element display name is filled out.';
+			$('#errorModal').find('#errorContent').html(content);
+			$('#errorModal').modal('show');
+		}
 	};
 
 	self.duplicateSequenceRelation = function (duplicateElement, newCount) {
