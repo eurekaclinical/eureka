@@ -19,19 +19,22 @@ package edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.cassupport;
  * limitations under the License.
  * #L%
  */
-import com.sun.jersey.api.client.ClientHandlerException;
-import com.sun.jersey.api.client.ClientResponse;
-import com.sun.jersey.api.client.UniformInterfaceException;
-import com.sun.jersey.api.client.WebResource;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.AbstractWebResourceWrapper;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ClientException;
+import java.util.List;
+
+import javax.ws.rs.core.MultivaluedMap;
+import javax.ws.rs.core.NewCookie;
+
 import org.jasig.cas.client.authentication.AttributePrincipal;
 import org.jasig.cas.client.util.AssertionHolder;
 import org.jasig.cas.client.validation.Assertion;
 
-import javax.ws.rs.core.MultivaluedMap;
-import javax.ws.rs.core.NewCookie;
-import java.util.List;
+import com.sun.jersey.api.client.ClientHandlerException;
+import com.sun.jersey.api.client.ClientResponse;
+import com.sun.jersey.api.client.UniformInterfaceException;
+import com.sun.jersey.api.client.WebResource;
+
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.AbstractWebResourceWrapper;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ClientException;
 
 /**
  *
@@ -49,46 +52,9 @@ public class CasWebResourceWrapper extends AbstractWebResourceWrapper {
 		if (queryParams != null) {
 			webResource = webResource.queryParams(queryParams);
 		}
-//		if (!HttpMethod.POST.equals(method)) {
-//			webResource = webResource.path(path);
-//			webResource = withProxyTicket(webResource);
-//		} else {
-//			try {
-//				String jsessionId = doGetSession();
-//				path += ";jsessionid=" + jsessionId;
-//				webResource = webResource.path(path);
-//			} catch (ClientException ex) {
-//				Logger.getLogger(CasWebResourceWrapper.class.getName()).log(Level.SEVERE, null, ex);
-//			}
-//		}
 		webResource = webResource.path(path);
 		webResource = withProxyTicket(webResource);
 		return webResource;
-	}
-
-	private String doGetSession() throws ClientException {
-		WebResource webResource = getWebResource().path("/api/protected/ping");
-		webResource = withProxyTicket(webResource);
-		ClientResponse response = webResource.get(ClientResponse.class);
-		return extractJSESSIONID(response);
-	}
-
-	private static String extractJSESSIONID(ClientResponse resp) throws UniformInterfaceException, ClientHandlerException {
-		List<NewCookie> cookies = resp.getCookies();
-		String jsessionId = null;
-		for (NewCookie newCookie : cookies) {
-			if ("JSESSIONID".equals(newCookie.getName())) {
-				jsessionId = newCookie.getValue();
-				break;
-			}
-		}
-		if (jsessionId == null) {
-			List<String> get = resp.getHeaders().get("JSESSIONID");
-			if (get != null && !get.isEmpty()) {
-				jsessionId = get.get(0);
-			}
-		}
-		return jsessionId;
 	}
 
 	private static WebResource withProxyTicket(WebResource webResource) throws ClientException {

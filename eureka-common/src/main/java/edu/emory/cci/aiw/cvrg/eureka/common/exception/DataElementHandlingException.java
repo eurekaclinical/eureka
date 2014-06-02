@@ -30,10 +30,6 @@ public class DataElementHandlingException extends Exception {
 
 	private Response.Status status;
 
-	public DataElementHandlingException(Response.Status status) {
-		this.status = status;
-	}
-
 	public DataElementHandlingException(Response.Status status, String string) {
 		super(string);
 		this.status = status;

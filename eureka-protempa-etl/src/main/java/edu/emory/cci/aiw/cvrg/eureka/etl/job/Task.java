@@ -102,7 +102,6 @@ public final class Task implements Runnable {
 
 			this.etl.run(myJob, propDefArray, propIdsToShowArray, this.filter);
 			this.etl.close();
-			this.etl = null;
 			myJob.newEvent(JobEventType.COMPLETED, "Processing completed without error", null);
 			this.jobDao.update(myJob);
 			if (LOGGER.isInfoEnabled()) {

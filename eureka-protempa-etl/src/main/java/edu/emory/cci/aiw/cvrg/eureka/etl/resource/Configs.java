@@ -23,6 +23,14 @@ package edu.emory.cci.aiw.cvrg.eureka.etl.resource;
  * limitations under the License.
  * #L%
  */
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.ws.rs.core.Response;
+
+import org.apache.commons.lang3.StringUtils;
+
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.ConfigEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.EtlGroup;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.EtlUser;
@@ -30,12 +38,6 @@ import edu.emory.cci.aiw.cvrg.eureka.common.entity.GroupMembership;
 import edu.emory.cci.aiw.cvrg.eureka.common.exception.HttpStatusException;
 import edu.emory.cci.aiw.cvrg.eureka.etl.config.EtlProperties;
 import edu.emory.cci.aiw.cvrg.eureka.etl.dao.ConfigDao;
-import org.apache.commons.lang3.StringUtils;
-
-import javax.ws.rs.core.Response;
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  *

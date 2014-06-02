@@ -22,9 +22,6 @@ package edu.emory.cci.aiw.cvrg.eureka.common.test;
 import javax.servlet.Filter;
 import javax.servlet.ServletContextListener;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.Module;
@@ -48,11 +45,6 @@ import edu.emory.cci.aiw.cvrg.eureka.common.json.ObjectMapperProvider;
  */
 public abstract class AbstractResourceTest extends JerseyTest {
 
-	/**
-	 * Class level logger.
-	 */
-	private static final Logger LOGGER = LoggerFactory.getLogger(
-			AbstractResourceTest.class);
 	/**
 	 * An instance of Guice Injector, used to create other necessary objects for
 	 * the test.
@@ -118,10 +110,7 @@ public abstract class AbstractResourceTest extends JerseyTest {
 	@Override
 	public final void tearDown() throws Exception {
 		this.dataProvider.tearDown();
-		this.dataProvider = null;
-
 		this.persistService.stop();
-		this.persistService = null;
 		super.tearDown();
 	}
 

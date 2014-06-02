@@ -20,17 +20,13 @@ package edu.emory.cci.aiw.cvrg.eureka.services.config;
  * #L%
  */
 
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.Destination;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.Job;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.JobFilter;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.JobRequest;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.SourceConfig;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.ValidationRequest;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ClientException;
-import org.protempa.PropositionDefinition;
-
 import java.io.InputStream;
 import java.util.List;
+
+import org.protempa.PropositionDefinition;
+
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.*;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ClientException;
 
 /**
  *
@@ -79,8 +75,6 @@ public interface EtlClient {
 	SourceConfig getSourceConfig(String sourceConfigId) throws ClientException;
 
 	List<SourceConfig> getSourceConfigs() throws ClientException;
-
-	void ping(Long inUserId) throws ClientException;
 
 	Long submitJob(JobRequest inJobRequest) throws ClientException;
 

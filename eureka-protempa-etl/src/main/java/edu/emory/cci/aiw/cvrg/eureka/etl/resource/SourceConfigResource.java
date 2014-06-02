@@ -78,7 +78,6 @@ public class SourceConfigResource {
 	}
 
 	@GET
-	@Path("")
 	public List<SourceConfig> getAll(@Context HttpServletRequest req) {
 		EtlUser user = this.authenticationSupport.getEtlUser(req);
 		SourceConfigs sourceConfigs = new SourceConfigs(this.etlProperties, user, this.sourceConfigDao);

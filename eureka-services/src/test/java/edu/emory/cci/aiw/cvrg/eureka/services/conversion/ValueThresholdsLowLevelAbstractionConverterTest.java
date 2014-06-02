@@ -19,27 +19,23 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.services.conversion;
 
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.SystemProposition;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.TimeUnit;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.ValueComparator;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.ValueThresholdEntity;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.ValueThresholdGroupEntity;
-import edu.emory.cci.aiw.cvrg.eureka.services.test.AbstractServiceTest;
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.apache.commons.lang3.StringUtils;
 import org.junit.Before;
 import org.junit.Test;
 import org.protempa.LowLevelAbstractionDefinition;
+import org.protempa.LowLevelAbstractionValueDefinition;
 import org.protempa.PropositionDefinition;
 import org.protempa.proposition.value.NumberValue;
 
-import java.util.ArrayList;
-import java.util.List;
-import org.apache.commons.lang3.StringUtils;
-import org.junit.After;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.*;
+import edu.emory.cci.aiw.cvrg.eureka.services.test.AbstractServiceTest;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-import org.protempa.LowLevelAbstractionValueDefinition;
 
 public class ValueThresholdsLowLevelAbstractionConverterTest extends
 		AbstractServiceTest {
@@ -102,14 +98,7 @@ public class ValueThresholdsLowLevelAbstractionConverterTest extends
 				converter.convert(thresholdGroup);
 		llaDef = converter.getPrimaryPropositionDefinition();
 	}
-	
-	@After
-	public void tearDown() {
-		userConstraintName = null;
-		compConstraintName = null;
-		llaDef = null;
-	}
-	
+
 	@Test
 	public void testNumberOfPropositionDefinitionsCreated() {
 		assertEquals("wrong number of proposition definitions created", 1,

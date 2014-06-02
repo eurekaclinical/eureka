@@ -19,14 +19,10 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.services.conversion;
 
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.DataElementEntity;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.ExtendedDataElement;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.Relation;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.SequenceEntity;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.SystemProposition;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.TimeUnit;
-import edu.emory.cci.aiw.cvrg.eureka.services.test.AbstractServiceTest;
-import org.junit.After;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -35,9 +31,8 @@ import org.protempa.PropositionDefinition;
 import org.protempa.TemporalExtendedPropositionDefinition;
 import org.protempa.proposition.value.AbsoluteTimeUnit;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.*;
+import edu.emory.cci.aiw.cvrg.eureka.services.test.AbstractServiceTest;
 
 import static org.junit.Assert.assertEquals;
 
@@ -55,11 +50,6 @@ public class SequenceConverterTest extends AbstractServiceTest {
 		this.timeUnit.setName(AbsoluteTimeUnit.DAY.getName());
 		this.timeUnit.setDescription(AbsoluteTimeUnit.DAY.getPluralName());
 		this.timeUnit.setRank(1);
-	}
-	
-	@After
-	public void tearDown() {
-		timeUnit = null;
 	}
 
 	private DataElementEntity createDataElement(long id, String suffix) {

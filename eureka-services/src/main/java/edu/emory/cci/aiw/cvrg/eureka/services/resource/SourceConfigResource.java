@@ -19,8 +19,19 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.services.resource;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.annotation.security.RolesAllowed;
+import javax.ws.rs.*;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response.Status;
+
+import org.arp.javautil.string.StringUtil;
+
 import com.google.inject.Inject;
 import com.sun.jersey.api.client.ClientResponse;
+
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.SourceConfig;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.SourceConfig.Option;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.SourceConfig.Section;
@@ -30,20 +41,6 @@ import edu.emory.cci.aiw.cvrg.eureka.common.comm.SystemElement;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ClientException;
 import edu.emory.cci.aiw.cvrg.eureka.common.exception.HttpStatusException;
 import edu.emory.cci.aiw.cvrg.eureka.services.config.EtlClient;
-import org.arp.javautil.string.StringUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import javax.annotation.security.RolesAllowed;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response.Status;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @author Andrew Post
@@ -54,8 +51,6 @@ import java.util.List;
 @Consumes(MediaType.APPLICATION_JSON)
 public class SourceConfigResource {
 
-	private static final Logger LOGGER = LoggerFactory
-			.getLogger(SourceConfigResource.class);
 	private final EtlClient etlClient;
 
 	@Inject
@@ -73,10 +68,11 @@ public class SourceConfigResource {
 	public List<SourceConfig> getAll() {
 		List<SourceConfig> sources;
 		try {
-			return this.etlClient.getSourceConfigs();
+			sources = this.etlClient.getSourceConfigs();
 		} catch (ClientException ex) {
 			throw new HttpStatusException(Status.INTERNAL_SERVER_ERROR, ex);
 		}
+		return sources;
 	}
 
 	@GET

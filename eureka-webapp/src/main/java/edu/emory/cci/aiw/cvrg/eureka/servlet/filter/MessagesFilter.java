@@ -66,7 +66,6 @@ public class MessagesFilter implements Filter {
 
 	@Override
 	public void destroy() {
-		this.servletContext = null;
 	}
 	
 }

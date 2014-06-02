@@ -19,15 +19,11 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.etl.spreadsheet;
 
+import java.sql.*;
+import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.sql.Connection;
-import java.sql.Date;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-import java.sql.Timestamp;
-import java.util.List;
 
 
 /**
@@ -78,7 +74,6 @@ public class DataInserter {
 					preparedStatement.executeBatch();
 					preparedStatement.clearBatch();
 					preparedStatement.close();
-					preparedStatement = null;
 				} finally {
 					if (preparedStatement != null) {
 						try {
@@ -118,10 +113,8 @@ public class DataInserter {
 			@Override
 			void doExecute(PreparedStatement preparedStatement) throws SQLException {
 				for (Patient patient : patients) {
-					Date dateOfBirth;
-					if (patient.getDateOfBirth() == null) {
-						dateOfBirth = null;
-					} else {
+					Date dateOfBirth = null;
+					if (patient.getDateOfBirth() != null) {
 						dateOfBirth = new Date(
 								patient.getDateOfBirth().getTime());
 					}

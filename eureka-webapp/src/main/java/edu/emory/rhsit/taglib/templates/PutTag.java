@@ -66,9 +66,4 @@ public class PutTag extends TagSupport {
 
 		return SKIP_BODY;
 	}
-
-	public void release() {
-		name = content = direct = null;
-	}
-
 }

@@ -58,7 +58,7 @@ public class JobListServlet extends HttpServlet {
 			req.setAttribute("dateRangeSides", DateRangeSide.values());
 			
 			String jobIdStr = req.getParameter("jobId");
-			Job job;
+			Job job = null;
 			if (jobIdStr != null) {
 				Long jobId;
 				try {
@@ -71,8 +71,6 @@ public class JobListServlet extends HttpServlet {
 				List<Job> jobs = this.servicesClient.getJobsDesc();
 				if (!jobs.isEmpty()) {
 					job = jobs.get(0);
-				} else {
-					job = null;
 				}
 			}
 			if (job != null) {

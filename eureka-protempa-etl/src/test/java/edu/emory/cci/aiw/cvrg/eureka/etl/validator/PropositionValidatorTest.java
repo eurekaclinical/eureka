@@ -64,8 +64,6 @@ public class PropositionValidatorTest extends AbstractTest {
 	public void afterPropositionValidatorTest() throws TestDataException {
 		testDataProvider.tearDown();
 		persistService.stop();
-		testDataProvider = null;
-		persistService = null;
 	}
 	
 	protected Class<? extends TestDataProvider> getDataProvider() {

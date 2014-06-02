@@ -38,7 +38,7 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "destinations")
-public class DestinationEntity extends ConfigEntity {
+public class DestinationEntity implements ConfigEntity {
 	@Id
 	@SequenceGenerator(name = "DEST_SEQ_GENERATOR", sequenceName = "DEST_SEQ",
 	allocationSize = 1)

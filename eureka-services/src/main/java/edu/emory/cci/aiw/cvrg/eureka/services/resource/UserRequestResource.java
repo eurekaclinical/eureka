@@ -20,41 +20,29 @@
 package edu.emory.cci.aiw.cvrg.eureka.services.resource;
 
 
-import javax.ws.rs.Consumes;
-import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
+import javax.servlet.http.HttpServletRequest;
+import javax.ws.rs.*;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.inject.Inject;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.UserRequest;
-import edu.emory.cci.aiw.cvrg.eureka.services.util.UserRequestToUserEntityVisitor;
+
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.LocalUserRequest;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.UserRequest;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.LocalUserEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.Role;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.UserEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.exception.HttpStatusException;
 import edu.emory.cci.aiw.cvrg.eureka.services.authentication.ServicesAuthenticationSupport;
-import edu.emory.cci.aiw.cvrg.eureka.services.clients.I2b2Client;
-import edu.emory.cci.aiw.cvrg.eureka.services.config.ServiceProperties;
-import edu.emory.cci.aiw.cvrg.eureka.services.dao.AuthenticationMethodDao;
-import edu.emory.cci.aiw.cvrg.eureka.services.dao.LocalUserDao;
-import edu.emory.cci.aiw.cvrg.eureka.services.dao.LoginTypeDao;
-import edu.emory.cci.aiw.cvrg.eureka.services.dao.OAuthProviderDao;
-import edu.emory.cci.aiw.cvrg.eureka.services.dao.RoleDao;
-import edu.emory.cci.aiw.cvrg.eureka.services.dao.UserDao;
+import edu.emory.cci.aiw.cvrg.eureka.services.dao.*;
 import edu.emory.cci.aiw.cvrg.eureka.services.email.EmailException;
 import edu.emory.cci.aiw.cvrg.eureka.services.email.EmailSender;
-import edu.emory.cci.aiw.cvrg.eureka.services.util.PasswordGenerator;
-import javax.servlet.http.HttpServletRequest;
-import javax.ws.rs.core.Context;
-import org.apache.commons.lang3.StringUtils;
+import edu.emory.cci.aiw.cvrg.eureka.services.util.UserRequestToUserEntityVisitor;
 
 /**
  * RESTful end-point for new user registration-related methods.
@@ -77,22 +65,9 @@ public class UserRequestResource {
 	private final UserDao userDao;
 	private final LocalUserDao localUserDao;
 	/**
-	 * Data access object to work with Role objects.
-	 */
-	private final RoleDao roleDao;
-	/**
 	 * Used to send emails to the user when needed.
 	 */
 	private final EmailSender emailSender;
-	/**
-	 * An i2b2 client to change the password remotely.
-	 */
-	private final I2b2Client i2b2Client;
-	/**
-	 * Used to generate random passwords for the reset password functionality.
-	 */
-	private final PasswordGenerator passwordGenerator;
-	private final ServiceProperties serviceProperties;
 	private final UserRequestToUserEntityVisitor visitor;
 	private final ServicesAuthenticationSupport authenticationSupport;
 
@@ -109,20 +84,14 @@ public class UserRequestResource {
 	@Inject
 	public UserRequestResource(UserDao inUserDao, LocalUserDao inLocalUserDao,
 			RoleDao inRoleDao,
-			EmailSender inEmailSender, I2b2Client inClient,
-			PasswordGenerator inPasswordGenerator,
-			ServiceProperties serviceProperties,
+			EmailSender inEmailSender,
 			OAuthProviderDao inOAuthProviderDao,
 			LoginTypeDao inLoginTypeDao,
 			AuthenticationMethodDao inAuthenticationMethodDao) {
 		this.userDao = inUserDao;
 		this.localUserDao = inLocalUserDao;
-		this.roleDao = inRoleDao;
 		this.emailSender = inEmailSender;
-		this.i2b2Client = inClient;
-		this.passwordGenerator = inPasswordGenerator;
-		this.serviceProperties = serviceProperties;
-		this.visitor = new UserRequestToUserEntityVisitor(inOAuthProviderDao, 
+		this.visitor = new UserRequestToUserEntityVisitor(inOAuthProviderDao,
 				inRoleDao, inLoginTypeDao, inAuthenticationMethodDao);
 		this.authenticationSupport = new ServicesAuthenticationSupport();
 	}

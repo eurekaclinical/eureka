@@ -19,30 +19,25 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.services.conversion;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.junit.Before;
 import org.junit.Test;
 import org.protempa.CompoundLowLevelAbstractionDefinition;
 import org.protempa.LowLevelAbstractionDefinition;
+import org.protempa.LowLevelAbstractionValueDefinition;
 import org.protempa.PropositionDefinition;
 import org.protempa.proposition.value.NumberValue;
 
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.SystemProposition;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.*;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.SystemProposition.SystemType;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.ThresholdsOperator;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.ValueComparator;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.ValueThresholdEntity;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.ValueThresholdGroupEntity;
 import edu.emory.cci.aiw.cvrg.eureka.services.test.AbstractServiceTest;
-import org.apache.commons.lang3.StringUtils;
-import org.junit.After;
-import org.protempa.LowLevelAbstractionValueDefinition;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class ValueThresholdsCompoundLowLevelAbstractionConverterTest extends
         AbstractServiceTest {
@@ -140,21 +135,7 @@ public class ValueThresholdsCompoundLowLevelAbstractionConverterTest extends
 		secondUserConstraintName = thresholdGroup.getKey() + "_VALUE";
 		secondCompConstraintName = secondUserConstraintName + "_COMP";
 	}
-	
-	@After
-	public void tearDown() {
-		propDefs = null;
-		llaDefs = null;
-		firstLlaDef = null;
-		secondLlaDef = null;
-		cllaDef = null;
-		userConstraintName = null;
-		compConstraintName = null;
-		secondUserConstraintName = null;
-		secondCompConstraintName = null;
-		thresholdGroup = null;
-	}
-	
+
 	@Test
 	public void testNumberOfPropositionDefinitionsCreated() {
 		assertEquals("wrong number of proposition definitions created", 3,

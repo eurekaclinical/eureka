@@ -64,17 +64,30 @@ import java.util.Map;
 		return rolesFilterInitParams;
 	}
 
-	Map<String, String> getCasProxyFilterInitParams() {
+	Map<String, String> getCasProxyFilterInitParamsForWebApp() {
+		Map<String, String> params = getCasProxyFilterInitParams();
+		if (LOGGER.isDebugEnabled()) {
+			this.printParams(params);
+		}
+		return params;
+	}
+	
+	Map<String, String> getCasProxyFilterInitParamsForWebService() {
+		Map<String, String> params = getCasProxyFilterInitParams();
+		params.put("redirectAfterValidation", "false");
+		if (LOGGER.isDebugEnabled()) {
+			this.printParams(params);
+		}
+		return params;
+	}
+	
+	private Map<String, String> getCasProxyFilterInitParams() {
 		Map<String, String> params = new HashMap<>();
 		params.put("acceptAnyProxy", "true");
 		params.put("proxyCallbackUrl", this.getProxyCallbackUrl());
 		params.put("proxyReceptorUrl", this.getProxyReceptorUrl());
 		params.put("casServerUrlPrefix", this.properties.getCasUrl());
 		params.put("serverName", this.properties.getProxyCallbackServer());
-		params.put("redirectAfterValidation", "false");
-		if (LOGGER.isDebugEnabled()) {
-			this.printParams(params);
-		}
 		return params;
 	}
 

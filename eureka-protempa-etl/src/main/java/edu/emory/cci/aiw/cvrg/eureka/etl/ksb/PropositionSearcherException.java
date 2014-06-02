@@ -1,8 +1,10 @@
+package edu.emory.cci.aiw.cvrg.eureka.etl.ksb;
+
 /*
  * #%L
- * Eureka Services
+ * Eureka Protempa ETL
  * %%
- * Copyright (C) 2012 - 2013 Emory University
+ * Copyright (C) 2012 - 2014 Emory University
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,8 +19,12 @@
  * limitations under the License.
  * #L%
  */
-package edu.emory.cci.aiw.cvrg.eureka.services.conversion;
 
-public class SystemPropositionConverterTest {
-
+/**
+ * Created by akshatha on 5/19/14.
+ */
+public class PropositionSearcherException extends Exception{
+	public PropositionSearcherException(Throwable inThrowable) {
+		super(inThrowable);
+	}
 }

@@ -28,58 +28,19 @@ import com.sun.jersey.api.client.ClientResponse;
  * @author hrathod
  */
 public final class ClientException extends Exception {
+
 	private final ClientResponse.Status responseStatus;
 
 	/**
-	 * Creates the exception using the reason phrase of the response status as
-	 * the exception's message.
-	 * 
-	 * @param responseStatus the <code>com.sun.jersey.api.client.ClientResponse.Status</code>.
-	 *                          Cannot be <code>null</code>.
-	 */
-	public ClientException(ClientResponse.Status responseStatus) {
-		super(responseStatus.getReasonPhrase());
-		this.responseStatus = responseStatus;
-	}
-
-	/**
 	 * Creates the exception using the provided response status and message.
-	 * 
+	 *
 	 * @param responseStatus the <code>com.sun.jersey.api.client.ClientResponse.Status</code>.
 	 *                          Cannot be <code>null</code>.
 	 * @param message the exception's message.
 	 */
-	public ClientException(ClientResponse.Status responseStatus, 
+	public ClientException(ClientResponse.Status responseStatus,
 			String message) {
 		super(message);
-		this.responseStatus = responseStatus;
-	}
-
-	/**
-	 * Creates the exception using the provided response status, message and
-	 * cause.
-	 * 
-	 * @param responseStatus the <code>com.sun.jersey.api.client.ClientResponse.Status</code>.
-	 *                          Cannot be <code>null</code>.
-	 * @param message the exception's message.
-	 * @param thrwbl the {@link Throwable} that is the cause of this exception.
-	 */
-	public ClientException(ClientResponse.Status responseStatus, 
-			String message, Throwable thrwbl) {
-		super(message, thrwbl);
-		this.responseStatus = responseStatus;
-	}
-
-	/**
-	 * Creates the exception using the provided response status and cause.
-	 * 
-	 * @param responseStatus the <code>com.sun.jersey.api.client.ClientResponse.Status</code>.
-	 *                          Cannot be <code>null</code>.
-	 * @param thrwbl the {@link Throwable} that is the cause of this exception.
-	 */
-	public ClientException(ClientResponse.Status responseStatus, 
-			Throwable thrwbl) {
-		super(thrwbl);
 		this.responseStatus = responseStatus;
 	}
 

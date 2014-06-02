@@ -20,17 +20,14 @@ package edu.emory.cci.aiw.cvrg.eureka.services.config;
  * #L%
  */
 
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.Destination;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.Job;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.JobFilter;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.JobRequest;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.SourceConfig;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.ValidationRequest;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ClientException;
 import java.io.InputStream;
 import java.util.Collections;
 import java.util.List;
+
 import org.protempa.PropositionDefinition;
+
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.*;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ClientException;
 
 /**
  *
@@ -84,11 +81,6 @@ public class MockEtlClient implements EtlClient {
 		mockSourceConfig.setId("mockSourceConfig");
 		mockSourceConfig.setDisplayName("Mock Source Configuration");
 		return Collections.singletonList(mockSourceConfig);
-	}
-
-	@Override
-	public void ping(Long inUserId) throws ClientException {
-		throw new UnsupportedOperationException("Not supported yet.");
 	}
 
 	@Override

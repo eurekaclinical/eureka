@@ -19,6 +19,14 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.etl.spreadsheet;
 
+import java.io.File;
+import java.io.IOException;
+import java.text.DateFormat;
+import java.text.MessageFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
+
 import org.apache.poi.hssf.util.CellReference;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.openxml4j.exceptions.InvalidOperationException;
@@ -30,19 +38,6 @@ import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.io.File;
-import java.io.IOException;
-import java.text.DateFormat;
-import java.text.MessageFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Locale;
-import java.util.ResourceBundle;
 
 /**
  * An implementation of the {@link DataProvider} interface, using an Excel
@@ -564,8 +559,6 @@ public class XlsxDataProvider implements DataProvider {
 					result = cell.getStringCellValue();
 				} else if (cellType == Cell.CELL_TYPE_NUMERIC) {
 					result = Double.toString(cell.getNumericCellValue());
-				} else if (cellType == Cell.CELL_TYPE_BLANK) {
-					result = null;
 				} else if (cellType == Cell.CELL_TYPE_BOOLEAN) {
 					result = Boolean.toString(cell.getBooleanCellValue());
 				} else {

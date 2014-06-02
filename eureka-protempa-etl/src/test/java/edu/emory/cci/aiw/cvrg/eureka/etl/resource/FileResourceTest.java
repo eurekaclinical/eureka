@@ -57,7 +57,6 @@ public class FileResourceTest extends AbstractEtlResourceTest {
 	@After
 	public void fileResourceTearDown() {
 		this.tmpFile.delete();
-		this.tmpFile = null;
 	}
 	
 	@Test
@@ -98,7 +97,6 @@ public class FileResourceTest extends AbstractEtlResourceTest {
 			Status result = response.getClientResponseStatus();
 			System.err.println("RESULT: " + result);
 			is.close();
-			is = null;
 			return result;
 		} finally {
 			if (is != null) {

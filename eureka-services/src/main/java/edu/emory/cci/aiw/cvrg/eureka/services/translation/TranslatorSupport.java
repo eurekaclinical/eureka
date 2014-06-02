@@ -19,7 +19,17 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.services.translation;
 
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.ws.rs.core.Response;
+
+import org.protempa.PropositionDefinition;
+
 import com.google.inject.Inject;
+
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.DataElement;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.SourceConfigParams;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.DataElementEntity;
@@ -30,13 +40,6 @@ import edu.emory.cci.aiw.cvrg.eureka.services.finder.PropositionFindException;
 import edu.emory.cci.aiw.cvrg.eureka.services.finder.SystemPropositionFinder;
 import edu.emory.cci.aiw.cvrg.eureka.services.resource.SourceConfigResource;
 import edu.emory.cci.aiw.cvrg.eureka.services.util.PropositionUtil;
-import org.protempa.PropositionDefinition;
-
-import javax.ws.rs.core.Response;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 /**
  *
@@ -172,11 +175,9 @@ final class TranslatorSupport {
 		Date now = new Date();
 
 		P result;
-		DataElementEntity oldEntity;
+		DataElementEntity oldEntity = null;
 		if (element.getId() != null) {
 			oldEntity = dataElementEntityDao.retrieve(element.getId());
-		} else {
-			oldEntity = null;
 		}
 		if (cls.isInstance(oldEntity)) {
 			result = cls.cast(oldEntity);

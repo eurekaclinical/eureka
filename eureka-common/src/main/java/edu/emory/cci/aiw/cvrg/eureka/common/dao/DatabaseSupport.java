@@ -61,15 +61,13 @@ public final class DatabaseSupport {
 	public <T, Y> T getUniqueByAttribute(Class<T> entityCls, 
 			SingularAttribute<T, Y> attribute, Y value) {
 		TypedQuery<T> query = createTypedQuery(entityCls, attribute, value);
-		T result;
+		T result = null;
 		try {
 			result = query.getSingleResult();
 		} catch (NonUniqueResultException nure) {
 			LOGGER.warn("Result not unique for {} = {}", attribute, value);
-			result = null;
 		} catch (NoResultException nre) {
 			LOGGER.debug("Result not existant for {} = {}", attribute, value);
-			result = null;
 		}
 		return result;
 	}

@@ -22,9 +22,6 @@ package edu.emory.cci.aiw.cvrg.eureka.services.config;
 
 import javax.servlet.ServletContextEvent;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.persist.jpa.JpaPersistModule;
@@ -45,22 +42,17 @@ public class ConfigListener extends GuiceServletContextListener {
 	private static final String JPA_UNIT = "services-jpa-unit";
 
 	/**
-	 * The class level logger.
-	 */
-	private static final Logger LOGGER = LoggerFactory
-			.getLogger(ConfigListener.class);
-	/**
 	 * Make sure we always use the same injector
 	 */
-	private Injector injector = null;
+	private Injector injector;
 
 	@Override
 	protected Injector getInjector() {
-		if (null == injector) {
-			injector = Guice.createInjector(
-					new AppModule(),
-					new ServletModule(new ServiceProperties()),
-					new JpaPersistModule(JPA_UNIT));
+		if (this.injector == null) {
+			this.injector = Guice.createInjector(new AppModule(),
+					new ServletModule(new ServiceProperties()), new JpaPersistModule(
+							JPA_UNIT)
+			);
 		}
 		return this.injector;
 	}

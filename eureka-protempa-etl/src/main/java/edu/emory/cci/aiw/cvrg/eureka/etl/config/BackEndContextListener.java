@@ -98,7 +98,6 @@ public class BackEndContextListener extends GuiceServletContextListener {
 			DataSource dataSource = protempa.getDataSource();
 			dataSource.failureOccurred(null);
 			protempa.close();
-			protempa = null;
 		} catch (ProtempaException ex) {
 			LOGGER.error("Data for job {} is in an inconsistent state and could not be repaired", job, ex);
 		} finally {
@@ -162,7 +161,6 @@ public class BackEndContextListener extends GuiceServletContextListener {
 				List<JobEntity> jobs = getAllJobs(entityManager);
 				repairJobsIfNeeded(entityManager, jobs);
 				entityManager.close();
-				entityManager = null;
 			} finally {
 				if (entityManager != null) {
 					try {
@@ -172,7 +170,6 @@ public class BackEndContextListener extends GuiceServletContextListener {
 				}
 			}
 			factory.close();
-			factory = null;
 		} finally {
 			if (factory != null) {
 				try {

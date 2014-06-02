@@ -31,7 +31,7 @@ import javax.servlet.jsp.tagext.TagSupport;
  *
  */
 public class GetTag extends TagSupport {
-	private String name;
+	private String name = null;
 
 	public void setName(String name) {
 		this.name = name;
@@ -69,9 +69,5 @@ public class GetTag extends TagSupport {
 			}
 		}
 		return SKIP_BODY;
-	}
-
-	public void release() {
-		name = null;
 	}
 }

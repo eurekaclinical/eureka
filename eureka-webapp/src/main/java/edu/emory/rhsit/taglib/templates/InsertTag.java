@@ -52,10 +52,7 @@ public class InsertTag extends TagSupport {
 		stack.pop();
 		return EVAL_PAGE;
 	}
-	public void release() {
-		template = null;
-		stack = null;
-	}
+
 	public Stack getStack() {
 		Stack s = (Stack)pageContext.getAttribute(
 								"template-stack",

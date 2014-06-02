@@ -317,97 +317,97 @@ limitations under the License.
 		<addUniqueConstraint columnNames="RANK" constraintName="SYS_C0013452" deferrable="false" disabled="false" initiallyDeferred="false" tableName="VALUE_COMPARATORS"/>
 	</changeSet>
 	<changeSet author="arpost (generated)" id="1360440238345-31">
-		<addForeignKeyConstraint baseColumnNames="ID" baseTableName="CATEGORIES" constraintName="FK4D47461C2DAC163D" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" referencedColumnNames="ID" referencedTableName="DATA_ELEMENTS" referencedTableSchemaName="EUREKASERVICE" referencesUniqueColumn="false"/>
+		<addForeignKeyConstraint baseColumnNames="ID" baseTableName="CATEGORIES" constraintName="FK4D47461C2DAC163D" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" referencedColumnNames="ID" referencedTableName="DATA_ELEMENTS" referencesUniqueColumn="false"/>
 	</changeSet>
 	<changeSet author="arpost (generated)" id="1360440238345-32">
-		<addForeignKeyConstraint baseColumnNames="CATEGORY_ID" baseTableName="CATEGORY_MEMBERS" constraintName="FK38B4ED8976806F0" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" referencedColumnNames="ID" referencedTableName="CATEGORIES" referencedTableSchemaName="EUREKASERVICE" referencesUniqueColumn="false"/>
+		<addForeignKeyConstraint baseColumnNames="CATEGORY_ID" baseTableName="CATEGORY_MEMBERS" constraintName="FK38B4ED8976806F0" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" referencedColumnNames="ID" referencedTableName="CATEGORIES" referencesUniqueColumn="false"/>
 	</changeSet>
 	<changeSet author="arpost (generated)" id="1360440238345-33">
-		<addForeignKeyConstraint baseColumnNames="MEMBER_ID" baseTableName="CATEGORY_MEMBERS" constraintName="FK38B4ED87DACB202" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" referencedColumnNames="ID" referencedTableName="DATA_ELEMENTS" referencedTableSchemaName="EUREKASERVICE" referencesUniqueColumn="false"/>
+		<addForeignKeyConstraint baseColumnNames="MEMBER_ID" baseTableName="CATEGORY_MEMBERS" constraintName="FK38B4ED87DACB202" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" referencedColumnNames="ID" referencedTableName="DATA_ELEMENTS" referencesUniqueColumn="false"/>
 	</changeSet>
 	<changeSet author="arpost (generated)" id="1360440238345-34">
-		<addForeignKeyConstraint baseColumnNames="DATAELEMENT_ID" baseTableName="EXTENDED_DATA_ELEMENTS" constraintName="FK18762966D16F0D8A" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" referencedColumnNames="ID" referencedTableName="DATA_ELEMENTS" referencedTableSchemaName="EUREKASERVICE" referencesUniqueColumn="false"/>
+		<addForeignKeyConstraint baseColumnNames="DATAELEMENT_ID" baseTableName="EXTENDED_DATA_ELEMENTS" constraintName="FK18762966D16F0D8A" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" referencedColumnNames="ID" referencedTableName="DATA_ELEMENTS" referencesUniqueColumn="false"/>
 	</changeSet>
 	<changeSet author="arpost (generated)" id="1360440238345-35">
-		<addForeignKeyConstraint baseColumnNames="MAXDURATIONTIMEUNIT_ID" baseTableName="EXTENDED_DATA_ELEMENTS" constraintName="FK187629663C3904F5" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" referencedColumnNames="ID" referencedTableName="TIME_UNITS" referencedTableSchemaName="EUREKASERVICE" referencesUniqueColumn="false"/>
+		<addForeignKeyConstraint baseColumnNames="MAXDURATIONTIMEUNIT_ID" baseTableName="EXTENDED_DATA_ELEMENTS" constraintName="FK187629663C3904F5" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" referencedColumnNames="ID" referencedTableName="TIME_UNITS" referencesUniqueColumn="false"/>
 	</changeSet>
 	<changeSet author="arpost (generated)" id="1360440238345-36">
-		<addForeignKeyConstraint baseColumnNames="MINDURATIONTIMEUNIT_ID" baseTableName="EXTENDED_DATA_ELEMENTS" constraintName="FK1876296694AE5147" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" referencedColumnNames="ID" referencedTableName="TIME_UNITS" referencedTableSchemaName="EUREKASERVICE" referencesUniqueColumn="false"/>
+		<addForeignKeyConstraint baseColumnNames="MINDURATIONTIMEUNIT_ID" baseTableName="EXTENDED_DATA_ELEMENTS" constraintName="FK1876296694AE5147" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" referencedColumnNames="ID" referencedTableName="TIME_UNITS" referencesUniqueColumn="false"/>
 	</changeSet>
 	<changeSet author="arpost (generated)" id="1360440238345-37">
-		<addForeignKeyConstraint baseColumnNames="PROPERTYCONSTRAINT_ID" baseTableName="EXTENDED_DATA_ELEMENTS" constraintName="FK187629668A6E938D" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" referencedColumnNames="ID" referencedTableName="PROPERTY_CONSTRAINTS" referencedTableSchemaName="EUREKASERVICE" referencesUniqueColumn="false"/>
+		<addForeignKeyConstraint baseColumnNames="PROPERTYCONSTRAINT_ID" baseTableName="EXTENDED_DATA_ELEMENTS" constraintName="FK187629668A6E938D" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" referencedColumnNames="ID" referencedTableName="PROPERTY_CONSTRAINTS" referencesUniqueColumn="false"/>
 	</changeSet>
 	<changeSet author="arpost (generated)" id="1360440238345-40">
-		<addForeignKeyConstraint baseColumnNames="EXTENDEDDATAELEMENT_ID" baseTableName="FREQUENCIES" constraintName="FK55076EFA858DC647" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" referencedColumnNames="ID" referencedTableName="EXTENDED_DATA_ELEMENTS" referencedTableSchemaName="EUREKASERVICE" referencesUniqueColumn="false"/>
+		<addForeignKeyConstraint baseColumnNames="EXTENDEDDATAELEMENT_ID" baseTableName="FREQUENCIES" constraintName="FK55076EFA858DC647" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" referencedColumnNames="ID" referencedTableName="EXTENDED_DATA_ELEMENTS" referencesUniqueColumn="false"/>
 	</changeSet>
 	<changeSet author="arpost (generated)" id="1360440238345-41">
-		<addForeignKeyConstraint baseColumnNames="ID" baseTableName="FREQUENCIES" constraintName="FK55076EFA2DAC163D" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" referencedColumnNames="ID" referencedTableName="DATA_ELEMENTS" referencedTableSchemaName="EUREKASERVICE" referencesUniqueColumn="false"/>
+		<addForeignKeyConstraint baseColumnNames="ID" baseTableName="FREQUENCIES" constraintName="FK55076EFA2DAC163D" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" referencedColumnNames="ID" referencedTableName="DATA_ELEMENTS" referencesUniqueColumn="false"/>
 	</changeSet>
 	<changeSet author="arpost (generated)" id="1360440238345-42">
-		<addForeignKeyConstraint baseColumnNames="WITHINATLEASTUNITS_ID" baseTableName="FREQUENCIES" constraintName="FK55076EFA7DB3C4DA" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" referencedColumnNames="ID" referencedTableName="TIME_UNITS" referencedTableSchemaName="EUREKASERVICE" referencesUniqueColumn="false"/>
+		<addForeignKeyConstraint baseColumnNames="WITHINATLEASTUNITS_ID" baseTableName="FREQUENCIES" constraintName="FK55076EFA7DB3C4DA" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" referencedColumnNames="ID" referencedTableName="TIME_UNITS" referencesUniqueColumn="false"/>
 	</changeSet>
 	<changeSet author="arpost (generated)" id="1360440238345-43">
-		<addForeignKeyConstraint baseColumnNames="WITHINATMOSTUNITS_ID" baseTableName="FREQUENCIES" constraintName="FK55076EFA984A25F0" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" referencedColumnNames="ID" referencedTableName="TIME_UNITS" referencedTableSchemaName="EUREKASERVICE" referencesUniqueColumn="false"/>
+		<addForeignKeyConstraint baseColumnNames="WITHINATMOSTUNITS_ID" baseTableName="FREQUENCIES" constraintName="FK55076EFA984A25F0" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" referencedColumnNames="ID" referencedTableName="TIME_UNITS" referencesUniqueColumn="false"/>
 	</changeSet>
 	<changeSet author="arpost (generated)" id="1360440238345-44">
-		<addForeignKeyConstraint baseColumnNames="VALUECOMPARATOR_ID" baseTableName="PROPERTY_CONSTRAINTS" constraintName="FK416CACC9BE4E667" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" referencedColumnNames="ID" referencedTableName="VALUE_COMPARATORS" referencedTableSchemaName="EUREKASERVICE" referencesUniqueColumn="false"/>
+		<addForeignKeyConstraint baseColumnNames="VALUECOMPARATOR_ID" baseTableName="PROPERTY_CONSTRAINTS" constraintName="FK416CACC9BE4E667" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" referencedColumnNames="ID" referencedTableName="VALUE_COMPARATORS" referencesUniqueColumn="false"/>
 	</changeSet>
 	<changeSet author="arpost (generated)" id="1360440238345-45">
-		<addForeignKeyConstraint baseColumnNames="LHSEXTENDEDDATAELEMENT_ID" baseTableName="RELATIONS" constraintName="FKFF8B45F7FED8257E" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" referencedColumnNames="ID" referencedTableName="EXTENDED_DATA_ELEMENTS" referencedTableSchemaName="EUREKASERVICE" referencesUniqueColumn="false"/>
+		<addForeignKeyConstraint baseColumnNames="LHSEXTENDEDDATAELEMENT_ID" baseTableName="RELATIONS" constraintName="FKFF8B45F7FED8257E" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" referencedColumnNames="ID" referencedTableName="EXTENDED_DATA_ELEMENTS" referencesUniqueColumn="false"/>
 	</changeSet>
 	<changeSet author="arpost (generated)" id="1360440238345-46">
-		<addForeignKeyConstraint baseColumnNames="MAXF1S2TIMEUNIT_ID" baseTableName="RELATIONS" constraintName="FKFF8B45F7A3126ADF" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" referencedColumnNames="ID" referencedTableName="TIME_UNITS" referencedTableSchemaName="EUREKASERVICE" referencesUniqueColumn="false"/>
+		<addForeignKeyConstraint baseColumnNames="MAXF1S2TIMEUNIT_ID" baseTableName="RELATIONS" constraintName="FKFF8B45F7A3126ADF" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" referencedColumnNames="ID" referencedTableName="TIME_UNITS" referencesUniqueColumn="false"/>
 	</changeSet>
 	<changeSet author="arpost (generated)" id="1360440238345-47">
-		<addForeignKeyConstraint baseColumnNames="MAXS1F2TIMEUNIT_ID" baseTableName="RELATIONS" constraintName="FKFF8B45F7168F7B9F" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" referencedColumnNames="ID" referencedTableName="TIME_UNITS" referencedTableSchemaName="EUREKASERVICE" referencesUniqueColumn="false"/>
+		<addForeignKeyConstraint baseColumnNames="MAXS1F2TIMEUNIT_ID" baseTableName="RELATIONS" constraintName="FKFF8B45F7168F7B9F" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" referencedColumnNames="ID" referencedTableName="TIME_UNITS" referencesUniqueColumn="false"/>
 	</changeSet>
 	<changeSet author="arpost (generated)" id="1360440238345-48">
-		<addForeignKeyConstraint baseColumnNames="MINF1S2TIMEUNIT_ID" baseTableName="RELATIONS" constraintName="FKFF8B45F758AEB031" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" referencedColumnNames="ID" referencedTableName="TIME_UNITS" referencedTableSchemaName="EUREKASERVICE" referencesUniqueColumn="false"/>
+		<addForeignKeyConstraint baseColumnNames="MINF1S2TIMEUNIT_ID" baseTableName="RELATIONS" constraintName="FKFF8B45F758AEB031" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" referencedColumnNames="ID" referencedTableName="TIME_UNITS" referencesUniqueColumn="false"/>
 	</changeSet>
 	<changeSet author="arpost (generated)" id="1360440238345-49">
-		<addForeignKeyConstraint baseColumnNames="MINS1F2TIMEUNIT_ID" baseTableName="RELATIONS" constraintName="FKFF8B45F7CC2BC0F1" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" referencedColumnNames="ID" referencedTableName="TIME_UNITS" referencedTableSchemaName="EUREKASERVICE" referencesUniqueColumn="false"/>
+		<addForeignKeyConstraint baseColumnNames="MINS1F2TIMEUNIT_ID" baseTableName="RELATIONS" constraintName="FKFF8B45F7CC2BC0F1" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" referencedColumnNames="ID" referencedTableName="TIME_UNITS" referencesUniqueColumn="false"/>
 	</changeSet>
 	<changeSet author="arpost (generated)" id="1360440238345-50">
-		<addForeignKeyConstraint baseColumnNames="RELATIONOP_ID" baseTableName="RELATIONS" constraintName="FKFF8B45F7459AEE30" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" referencedColumnNames="ID" referencedTableName="RELATION_OPS" referencedTableSchemaName="EUREKASERVICE" referencesUniqueColumn="false"/>
+		<addForeignKeyConstraint baseColumnNames="RELATIONOP_ID" baseTableName="RELATIONS" constraintName="FKFF8B45F7459AEE30" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" referencedColumnNames="ID" referencedTableName="RELATION_OPS" referencesUniqueColumn="false"/>
 	</changeSet>
 	<changeSet author="arpost (generated)" id="1360440238345-51">
-		<addForeignKeyConstraint baseColumnNames="RHSEXTENDEDDATAELEMENT_ID" baseTableName="RELATIONS" constraintName="FKFF8B45F717F9F384" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" referencedColumnNames="ID" referencedTableName="EXTENDED_DATA_ELEMENTS" referencedTableSchemaName="EUREKASERVICE" referencesUniqueColumn="false"/>
+		<addForeignKeyConstraint baseColumnNames="RHSEXTENDEDDATAELEMENT_ID" baseTableName="RELATIONS" constraintName="FKFF8B45F717F9F384" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" referencedColumnNames="ID" referencedTableName="EXTENDED_DATA_ELEMENTS" referencesUniqueColumn="false"/>
 	</changeSet>
 	<changeSet author="arpost (generated)" id="1360440238345-52">
-		<addForeignKeyConstraint baseColumnNames="SEQUENCE_ID" baseTableName="RELATIONS" constraintName="FKFF8B45F765DA0DD0" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" referencedColumnNames="ID" referencedTableName="SEQUENCES" referencedTableSchemaName="EUREKASERVICE" referencesUniqueColumn="false"/>
+		<addForeignKeyConstraint baseColumnNames="SEQUENCE_ID" baseTableName="RELATIONS" constraintName="FKFF8B45F765DA0DD0" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" referencedColumnNames="ID" referencedTableName="SEQUENCES" referencesUniqueColumn="false"/>
 	</changeSet>
 	<changeSet author="arpost (generated)" id="1360440238345-53">
-		<addForeignKeyConstraint baseColumnNames="ID" baseTableName="SEQUENCES" constraintName="FKBD9E80D22DAC163D" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" referencedColumnNames="ID" referencedTableName="DATA_ELEMENTS" referencedTableSchemaName="EUREKASERVICE" referencesUniqueColumn="false"/>
+		<addForeignKeyConstraint baseColumnNames="ID" baseTableName="SEQUENCES" constraintName="FKBD9E80D22DAC163D" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" referencedColumnNames="ID" referencedTableName="DATA_ELEMENTS" referencesUniqueColumn="false"/>
 	</changeSet>
 	<changeSet author="arpost (generated)" id="1360440238345-54">
-		<addForeignKeyConstraint baseColumnNames="PRIMARYEXTENDEDDATAELEMENT_ID" baseTableName="SEQUENCES" constraintName="FKBD9E80D281CF86C9" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" referencedColumnNames="ID" referencedTableName="EXTENDED_DATA_ELEMENTS" referencedTableSchemaName="EUREKASERVICE" referencesUniqueColumn="false"/>
+		<addForeignKeyConstraint baseColumnNames="PRIMARYEXTENDEDDATAELEMENT_ID" baseTableName="SEQUENCES" constraintName="FKBD9E80D281CF86C9" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" referencedColumnNames="ID" referencedTableName="EXTENDED_DATA_ELEMENTS" referencesUniqueColumn="false"/>
 	</changeSet>
 	<changeSet author="arpost (generated)" id="1360440238345-55">
-		<addForeignKeyConstraint baseColumnNames="ID" baseTableName="SYSTEM_DATA_ELEMENTS" constraintName="FK51DC47DC2DAC163D" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" referencedColumnNames="ID" referencedTableName="DATA_ELEMENTS" referencedTableSchemaName="EUREKASERVICE" referencesUniqueColumn="false"/>
+		<addForeignKeyConstraint baseColumnNames="ID" baseTableName="SYSTEM_DATA_ELEMENTS" constraintName="FK51DC47DC2DAC163D" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" referencedColumnNames="ID" referencedTableName="DATA_ELEMENTS" referencesUniqueColumn="false"/>
 	</changeSet>
 	<changeSet author="arpost (generated)" id="1360440238345-56">
-		<addForeignKeyConstraint baseColumnNames="ROLE_ID" baseTableName="USER_ROLE" constraintName="FK143BF46A2EE17E2D" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" referencedColumnNames="ID" referencedTableName="ROLES" referencedTableSchemaName="EUREKASERVICE" referencesUniqueColumn="false"/>
+		<addForeignKeyConstraint baseColumnNames="ROLE_ID" baseTableName="USER_ROLE" constraintName="FK143BF46A2EE17E2D" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" referencedColumnNames="ID" referencedTableName="ROLES" referencesUniqueColumn="false"/>
 	</changeSet>
 	<changeSet author="arpost (generated)" id="1360440238345-57">
-		<addForeignKeyConstraint baseColumnNames="USER_ID" baseTableName="USER_ROLE" constraintName="FK143BF46AD40C420D" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" referencedColumnNames="ID" referencedTableName="USERS" referencedTableSchemaName="EUREKASERVICE" referencesUniqueColumn="false"/>
+		<addForeignKeyConstraint baseColumnNames="USER_ID" baseTableName="USER_ROLE" constraintName="FK143BF46AD40C420D" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" referencedColumnNames="ID" referencedTableName="USERS" referencesUniqueColumn="false"/>
 	</changeSet>
 	<changeSet author="arpost (generated)" id="1360440238345-59">
-		<addForeignKeyConstraint baseColumnNames="ID" baseTableName="VALUE_THRESHOLD_GROUPS" constraintName="FKB716F5362DAC163D" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" referencedColumnNames="ID" referencedTableName="DATA_ELEMENTS" referencedTableSchemaName="EUREKASERVICE" referencesUniqueColumn="false"/>
+		<addForeignKeyConstraint baseColumnNames="ID" baseTableName="VALUE_THRESHOLD_GROUPS" constraintName="FKB716F5362DAC163D" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" referencedColumnNames="ID" referencedTableName="DATA_ELEMENTS" referencesUniqueColumn="false"/>
 	</changeSet>
 	<changeSet author="arpost (generated)" id="1360440238345-60">
-		<addForeignKeyConstraint baseColumnNames="THRESHOLDSOP_ID" baseTableName="VALUE_THRESHOLD_GROUPS" constraintName="FKB716F536691D64F0" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" referencedColumnNames="ID" referencedTableName="THRESHOLDS_OPS" referencedTableSchemaName="EUREKASERVICE" referencesUniqueColumn="false"/>
+		<addForeignKeyConstraint baseColumnNames="THRESHOLDSOP_ID" baseTableName="VALUE_THRESHOLD_GROUPS" constraintName="FKB716F536691D64F0" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" referencedColumnNames="ID" referencedTableName="THRESHOLDS_OPS" referencesUniqueColumn="false"/>
 	</changeSet>
 	<changeSet author="arpost (generated)" id="1360440238345-61">
-		<addForeignKeyConstraint baseColumnNames="ABSTRACTEDFROM_ID" baseTableName="VALUE_THRESHOLDS" constraintName="FK7321CCF623D9B391" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" referencedColumnNames="ID" referencedTableName="DATA_ELEMENTS" referencedTableSchemaName="EUREKASERVICE" referencesUniqueColumn="false"/>
+		<addForeignKeyConstraint baseColumnNames="ABSTRACTEDFROM_ID" baseTableName="VALUE_THRESHOLDS" constraintName="FK7321CCF623D9B391" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" referencedColumnNames="ID" referencedTableName="DATA_ELEMENTS" referencesUniqueColumn="false"/>
 	</changeSet>
 	<changeSet author="arpost (generated)" id="1360440238345-62">
-		<addForeignKeyConstraint baseColumnNames="MAXVALUECOMP_ID" baseTableName="VALUE_THRESHOLDS" constraintName="FK7321CCF69B3AEC32" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" referencedColumnNames="ID" referencedTableName="VALUE_COMPARATORS" referencedTableSchemaName="EUREKASERVICE" referencesUniqueColumn="false"/>
+		<addForeignKeyConstraint baseColumnNames="MAXVALUECOMP_ID" baseTableName="VALUE_THRESHOLDS" constraintName="FK7321CCF69B3AEC32" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" referencedColumnNames="ID" referencedTableName="VALUE_COMPARATORS" referencesUniqueColumn="false"/>
 	</changeSet>
 	<changeSet author="arpost (generated)" id="1360440238345-63">
-		<addForeignKeyConstraint baseColumnNames="MINVALUECOMP_ID" baseTableName="VALUE_THRESHOLDS" constraintName="FK7321CCF6590AF820" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" referencedColumnNames="ID" referencedTableName="VALUE_COMPARATORS" referencedTableSchemaName="EUREKASERVICE" referencesUniqueColumn="false"/>
+		<addForeignKeyConstraint baseColumnNames="MINVALUECOMP_ID" baseTableName="VALUE_THRESHOLDS" constraintName="FK7321CCF6590AF820" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" referencedColumnNames="ID" referencedTableName="VALUE_COMPARATORS" referencesUniqueColumn="false"/>
 	</changeSet>
 	<changeSet author="arpost (generated)" id="1360440238345-64">
-		<addForeignKeyConstraint baseColumnNames="VALUETHRESHOLDSGROUP_ID" baseTableName="VALUE_THRESHOLDS" constraintName="FK7321CCF6DE772609" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" referencedColumnNames="ID" referencedTableName="VALUE_THRESHOLD_GROUPS" referencedTableSchemaName="EUREKASERVICE" referencesUniqueColumn="false"/>
+		<addForeignKeyConstraint baseColumnNames="VALUETHRESHOLDSGROUP_ID" baseTableName="VALUE_THRESHOLDS" constraintName="FK7321CCF6DE772609" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" referencedColumnNames="ID" referencedTableName="VALUE_THRESHOLD_GROUPS" referencesUniqueColumn="false"/>
 	</changeSet>
 	<changeSet author="arpost (generated)" id="1360440238345-65">
 		<createSequence sequenceName="COMP_SEQ"/>
@@ -584,7 +584,7 @@ limitations under the License.
 		</insert>
 	</changeSet>
 	<changeSet author="arpost (generated)" id="1360440238345-85">
-		<addForeignKeyConstraint baseColumnNames="COMPLEMENT_ID" baseTableName="VALUE_COMPARATORS" constraintName="FKA55F9C8F929E3CE8" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" referencedColumnNames="ID" referencedTableName="VALUE_COMPARATORS" referencedTableSchemaName="EUREKASERVICE" referencesUniqueColumn="false"/>
+		<addForeignKeyConstraint baseColumnNames="COMPLEMENT_ID" baseTableName="VALUE_COMPARATORS" constraintName="FKA55F9C8F929E3CE8" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" referencedColumnNames="ID" referencedTableName="VALUE_COMPARATORS" referencesUniqueColumn="false"/>
 	</changeSet>
 	 
 	<!-- 1.7 changes -->

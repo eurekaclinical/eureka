@@ -19,31 +19,23 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.common.filter;
 
-import com.google.inject.Singleton;
 import java.io.IOException;
 import java.security.Principal;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.HashSet;
 import java.util.Set;
 
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
-import javax.servlet.Filter;
-import javax.servlet.FilterChain;
-import javax.servlet.FilterConfig;
-import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
+import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.sql.DataSource;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.google.inject.Singleton;
 
 /**
  * A filter to fetch roles from a database, and assign them to the current
@@ -165,8 +157,5 @@ public class RolesFilter implements Filter {
 
 	@Override
 	public void destroy() {
-		this.dataSource = null;
-		this.colName = null;
-		this.sql = null;
 	}
 }

@@ -25,7 +25,6 @@ import java.util.Map;
 import org.jasig.cas.client.authentication.AuthenticationFilter;
 import org.jasig.cas.client.util.AssertionThreadLocalFilter;
 import org.jasig.cas.client.util.HttpServletRequestWrapperFilter;
-import org.jasig.cas.client.validation.Cas20ProxyReceivingTicketValidationFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -34,8 +33,14 @@ import com.google.inject.servlet.ServletModule;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.filter.RolesFilter;
 import edu.emory.cci.aiw.cvrg.eureka.common.props.AbstractProperties;
+import org.jasig.cas.client.session.SingleSignOutFilter;
+import org.jasig.cas.client.validation.Cas20ProxyReceivingTicketValidationFilter;
 
 /**
+ * Extend to setup Eureka web applications. This abstract class sets up Guice
+ * and binds the authentication and authorization filters that every Eureka
+ * web application should have.
+ * 
  * @author hrathod
  */
 public abstract class AbstractServletModule extends ServletModule {
@@ -43,16 +48,23 @@ public abstract class AbstractServletModule extends ServletModule {
 	private static final Logger LOGGER = LoggerFactory
 			.getLogger(AbstractServletModule.class);
 	private static final String CAS_CALLBACK_PATH = "/proxyCallback";
-	private final AbstractProperties properties;
 	private final String protectedPath;
 	private final ServletModuleSupport servletModuleSupport;
+	private final String logoutPath;
 
 	protected AbstractServletModule(AbstractProperties inProperties,
-			String inContainerPath, String inProtectedPath) {
+			String inContainerPath, String inProtectedPath,
+			String inLogoutPath) {
+		if (inProtectedPath == null) {
+			throw new IllegalArgumentException("inProtectedPath cannot be null");
+		}
+		if (inLogoutPath == null) {
+			throw new IllegalArgumentException("inLogoutPath cannot be null");
+		}
 		this.servletModuleSupport = new ServletModuleSupport(
 		this.getServletContext().getContextPath(), inProperties);
-		this.properties = inProperties;
 		this.protectedPath = inProtectedPath;
+		this.logoutPath = inLogoutPath;
 	}
 
 	protected void printParams(Map<String, String> inParams) {
@@ -60,6 +72,12 @@ public abstract class AbstractServletModule extends ServletModule {
 			LOGGER.debug(entry.getKey() + " -> " + entry.getValue());
 		}
 	}
+	
+	private void setupCasSingleSignOutFilter() {
+		bind(SingleSignOutFilter.class).in(Singleton.class);
+		filter(this.logoutPath).through(SingleSignOutFilter.class);
+	}
+
 
 	private void setupAuthorizationFilter() {
 		bind(RolesFilter.class).in(Singleton.class);
@@ -67,15 +85,16 @@ public abstract class AbstractServletModule extends ServletModule {
 				this.servletModuleSupport.getRolesFilterInitParams();
 		filter("/*").through(RolesFilter.class, rolesFilterInitParams);
 	}
-
+	
 	private void setupCasProxyFilter() {
 		bind(Cas20ProxyReceivingTicketValidationFilter.class).in(
 				Singleton.class);
 		Map<String, String> params = 
-				this.servletModuleSupport.getCasProxyFilterInitParams();
+				this.servletModuleSupport.getCasProxyFilterInitParamsForWebApp();
 		filter(CAS_CALLBACK_PATH, this.protectedPath).through(
 				Cas20ProxyReceivingTicketValidationFilter.class, params);
 	}
+	
 
 	private void setupCasAuthenticationFilter() {
 		bind(AuthenticationFilter.class).in(Singleton.class);
@@ -84,7 +103,7 @@ public abstract class AbstractServletModule extends ServletModule {
 		filter(this.protectedPath).through(AuthenticationFilter.class, params);
 	}
 
-	private void setupServletRequestWrapperFilter() {
+	private void setupCasServletRequestWrapperFilter() {
 		bind(HttpServletRequestWrapperFilter.class).in(Singleton.class);
 		Map<String, String> params = 
 				this.servletModuleSupport.getServletRequestWrapperFilterInitParams();
@@ -98,20 +117,37 @@ public abstract class AbstractServletModule extends ServletModule {
 	
 	protected abstract void setupServlets();
 	
+	/**
+	 * Override to setup additional filters. The default implementation does 
+	 * nothing.
+	 */
 	protected void setupFilters() {
-		
 	}
 
 	@Override
 	protected void configureServlets() {
 		super.configureServlets();
-		this.setupCasProxyFilter();
-		this.setupCasAuthenticationFilter();
-		this.setupServletRequestWrapperFilter();
-		this.setupCasThreadLocalAssertionFilter();
+		/*
+		 * CAS filters must go before other filters.
+		 */
+		this.setupCasFilters();
 		this.setupAuthorizationFilter();
 		this.setupFilters();
 		this.setupServlets();
+	}
+	
+	/*
+	 * Sets up CAS filters. The filter order is specified in
+	 * https://wiki.jasig.org/display/CASC/Configuring+Single+Sign+Out
+	 * and
+	 * https://wiki.jasig.org/display/CASC/CAS+Client+for+Java+3.1
+	 */
+	private void setupCasFilters() {
+		this.setupCasSingleSignOutFilter();
+		this.setupCasAuthenticationFilter();
+		this.setupCasProxyFilter();
+		this.setupCasServletRequestWrapperFilter();
+		this.setupCasThreadLocalAssertionFilter();
 	}
 
 }

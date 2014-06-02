@@ -20,10 +20,7 @@
 package edu.emory.cci.aiw.cvrg.eureka.services.test;
 
 import java.security.NoSuchAlgorithmException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
@@ -32,29 +29,17 @@ import javax.persistence.criteria.CriteriaQuery;
 
 import com.google.inject.Inject;
 import com.google.inject.Provider;
+
 import edu.emory.cci.aiw.cvrg.eureka.common.authentication.AuthenticationMethod;
 import edu.emory.cci.aiw.cvrg.eureka.common.authentication.LoginType;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.AuthenticationMethodEntity;
-
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.CategoryEntity;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.*;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.CategoryEntity.CategoryType;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.DataElementEntity;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.FrequencyType;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.LocalUserEntity;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.LoginTypeEntity;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.Role;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.SystemProposition;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.ThresholdsOperator;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.TimeUnit;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.UserEntity;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.ValueThresholdGroupEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.test.TestDataException;
 import edu.emory.cci.aiw.cvrg.eureka.common.test.TestDataProvider;
 import edu.emory.cci.aiw.cvrg.eureka.common.util.StringUtil;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.AuthenticationMethodDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.LoginTypeDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.entity.UserEntityFactory;
-import java.util.Collections;
 
 /**
  * Sets up the environment for testing, by bootstrapping the data store with
@@ -73,15 +58,10 @@ public class Setup implements TestDataProvider {
 	private Role researcherRole;
 	private Role adminRole;
 	private Role superRole;
-	private UserEntity researcherUser;
-	private UserEntity adminUser;
-	private UserEntity superUser;
-	private List<DataElementEntity> propositions;
-	private List<TimeUnit> timeUnits;
-	private List<FrequencyType> freqTypes;
 	private final UserEntityFactory userEntityFactory;
 	private List<LoginTypeEntity> loginTypes;
 	private List<AuthenticationMethodEntity> authenticationMethods;
+
 
 	/**
 	 * Create a Bootstrap class with an EntityManager.
@@ -105,15 +85,12 @@ public class Setup implements TestDataProvider {
 		this.superRole = this.createSuperRole();
 		this.loginTypes = createLoginTypes();
 		this.authenticationMethods = createAuthenticationMethods();
-		this.researcherUser = this.createResearcherUser();
-		this.adminUser = this.createAdminUser();
-		this.superUser = this.createSuperUser();
-		this.propositions =
-				this.createDataElements(this.researcherUser, this.adminUser,
-						this.superUser);
-		this.timeUnits = this.createTimeUnits();
-		this.freqTypes = createFrequencyTypes();
-		
+		UserEntity researcherUser = this.createResearcherUser();
+		UserEntity adminUser = this.createAdminUser();
+		UserEntity superUser = this.createSuperUser();
+		this.createDataElements(researcherUser, adminUser, superUser);
+		this.createTimeUnits();
+		this.createFrequencyTypes();
 	}
 
 	@Override
@@ -124,17 +101,6 @@ public class Setup implements TestDataProvider {
 		this.remove(TimeUnit.class);
 		this.remove(ThresholdsOperator.class);
 		this.remove(FrequencyType.class);
-		this.researcherRole = null;
-		this.adminRole = null;
-		this.superRole = null;
-		this.loginTypes = null;
-		this.authenticationMethods = null;
-		this.researcherUser = null;
-		this.adminUser = null;
-		this.superUser = null;
-		this.propositions = null;
-		this.timeUnits = null;
-		this.freqTypes = null;
 	}
 
 	private <T> void remove(Class<T> className) {
@@ -144,7 +110,7 @@ public class Setup implements TestDataProvider {
 		criteriaQuery.from(className);
 		TypedQuery<T> query = entityManager.createQuery(criteriaQuery);
 		List<T> entities = query.getResultList();
-		System.out.println("Deleting " + className.getName() + "; count: " + 
+		System.out.println("Deleting " + className.getName() + "; count: " +
 				entities.size());
 		entityManager.getTransaction().begin();
 		int i = 1;
@@ -194,11 +160,8 @@ public class Setup implements TestDataProvider {
 			lowLevelAbstraction.setDescription("test-low-level");
 			lowLevelAbstraction.setKey("test-low-level");
 			lowLevelAbstraction.setCreated(now);
-//			lowLevelAbstraction.setValueThresholds(new ValueThresholdEntity());
-//			lowLevelAbstraction.setComplementConstraint(new ValueThresholdEntity());
 			lowLevelAbstraction.setThresholdsOperator(any);
 			lowLevelAbstraction.setUserId(u.getId());
-//			lowLevelAbstraction.setAbstractedFrom(sysProp);
 			entityManager.persist(lowLevelAbstraction);
 			dataElements.add(lowLevelAbstraction);
 			entityManager.getTransaction().commit();

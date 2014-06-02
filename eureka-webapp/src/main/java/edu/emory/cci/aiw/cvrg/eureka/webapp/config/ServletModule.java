@@ -21,7 +21,14 @@ package edu.emory.cci.aiw.cvrg.eureka.webapp.config;
  */
 
 
+import java.util.HashMap;
+import java.util.Map;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.google.inject.Singleton;
+
 import edu.emory.cci.aiw.cvrg.eureka.common.config.AbstractServletModule;
 import edu.emory.cci.aiw.cvrg.eureka.servlet.*;
 import edu.emory.cci.aiw.cvrg.eureka.servlet.filter.HaveUserRecordFilter;
@@ -29,11 +36,6 @@ import edu.emory.cci.aiw.cvrg.eureka.servlet.filter.MessagesFilter;
 import edu.emory.cci.aiw.cvrg.eureka.servlet.filter.PasswordExpiredFilter;
 import edu.emory.cci.aiw.cvrg.eureka.servlet.filter.UserInfoFilter;
 import edu.emory.cci.aiw.cvrg.eureka.servlet.proposition.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.util.HashMap;
-import java.util.Map;
 /**
  * 
  * @author hrathod
@@ -47,11 +49,13 @@ class ServletModule extends AbstractServletModule {
 	private static final String PASSWORD_EXPIRED_REDIRECT_URL = "/protected/password_expiration.jsp";
 	private static final String PASSWORD_SAVE_PATH = "/protected/user_acct";
 	private static final String NO_USER_RECORD_REDIRECT_URL = "/register.jsp";
+	private static final String LOGOUT_PATH = "/logout";
 	
 	private final WebappProperties properties;
 
 	public ServletModule(WebappProperties inProperties) {
-		super(inProperties, CONTAINER_PATH, CONTAINER_PROTECTED_PATH);
+		super(inProperties, CONTAINER_PATH, CONTAINER_PROTECTED_PATH, 
+				LOGOUT_PATH);
 		this.properties = inProperties;
 	}
 	
@@ -102,7 +106,7 @@ class ServletModule extends AbstractServletModule {
 		serve("/forgot_password").with(ForgotPasswordServlet.class);
 
 		bind(LogoutServlet.class).in(Singleton.class);
-		serve("/logout").with(LogoutServlet.class);
+		serve(LOGOUT_PATH).with(LogoutServlet.class);
 
 		bind(VerifyUserServlet.class).in(Singleton.class);
 		serve("/verify").with(VerifyUserServlet.class);
@@ -154,9 +158,6 @@ class ServletModule extends AbstractServletModule {
 		bind(DateRangeDataElementServlet.class).in(Singleton.class);
 		serve("/protected/destinationdataelements").with(
 				DateRangeDataElementServlet.class);
-
-		bind(PingServlet.class).in(Singleton.class);
-		serve("/protected/ping").with(PingServlet.class);
 
         bind(SearchSystemPropositionServlet.class).in(Singleton.class);
         serve("/protected/searchsystemlist").with(SearchSystemPropositionServlet.class);

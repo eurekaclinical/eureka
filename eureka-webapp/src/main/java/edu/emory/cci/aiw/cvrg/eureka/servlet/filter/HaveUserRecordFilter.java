@@ -19,27 +19,25 @@ package edu.emory.cci.aiw.cvrg.eureka.servlet.filter;
  * limitations under the License.
  * #L%
  */
+import java.io.IOException;
+import java.util.Map;
+
+import javax.servlet.*;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.ws.rs.core.UriBuilder;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.sun.jersey.api.client.ClientResponse.Status;
+
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.User;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ClientException;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ServicesClient;
 import edu.emory.cci.aiw.cvrg.eureka.webapp.authentication.WebappAuthenticationSupport;
-import java.io.IOException;
-import java.util.Map;
-import javax.servlet.Filter;
-import javax.servlet.FilterChain;
-import javax.servlet.FilterConfig;
-import javax.servlet.ServletContext;
-import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.ws.rs.core.UriBuilder;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  *
@@ -51,7 +49,6 @@ public class HaveUserRecordFilter implements Filter {
 	private static final Logger LOGGER
 			= LoggerFactory.getLogger(MessagesFilter.class);
 
-	private ServletContext servletContext;
 	private String redirectUrl;
 	private final ServicesClient servicesClient;
 	private final WebappAuthenticationSupport authenticationSupport;
@@ -64,7 +61,6 @@ public class HaveUserRecordFilter implements Filter {
 
 	@Override
 	public void init(FilterConfig inFilterConfig) throws ServletException {
-		this.servletContext = inFilterConfig.getServletContext();
 		this.redirectUrl = inFilterConfig.getInitParameter("redirect-url");
 		if (this.redirectUrl == null) {
 			throw new ServletException("Parameter redirect-url must be set");
@@ -142,7 +138,6 @@ public class HaveUserRecordFilter implements Filter {
 
 	@Override
 	public void destroy() {
-		this.servletContext = null;
 	}
-	
+
 }

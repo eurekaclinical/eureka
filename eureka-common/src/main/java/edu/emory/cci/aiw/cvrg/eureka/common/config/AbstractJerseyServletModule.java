@@ -44,6 +44,10 @@ import edu.emory.cci.aiw.cvrg.eureka.common.filter.RolesFilter;
 import edu.emory.cci.aiw.cvrg.eureka.common.props.AbstractProperties;
 
 /**
+ * Extend to setup Eureka RESTful web services. This abstract class sets up 
+ * Guice and Jersey and binds the authentication and authorization filters that 
+ * every Eureka web service should have.
+ * 
  * @author hrathod
  */
 public abstract class AbstractJerseyServletModule extends JerseyServletModule {
@@ -55,15 +59,13 @@ public abstract class AbstractJerseyServletModule extends JerseyServletModule {
 	private static final String CAS_CALLBACK_PATH = "/proxyCallback";
 	private static final String TEMPLATES_PATH = "/WEB-INF/templates";
 	private static final String WEB_CONTENT_REGEX = "(/(image|js|css)/?.*)|(/.*\\.jsp)|(/WEB-INF/.*\\.jsp)|(/WEB-INF/.*\\.jspf)|(/.*\\.html)|(/favicon\\.ico)|(/robots\\.txt)";
-	private final AbstractProperties properties;
 	private final String packageNames;
 	private final ServletModuleSupport servletModuleSupport;
 
 	protected AbstractJerseyServletModule(AbstractProperties inProperties,
 			String inPackageNames) {
-		this.servletModuleSupport = new ServletModuleSupport(
-		this.getServletContext().getContextPath(), inProperties);
-		this.properties = inProperties;
+		this.servletModuleSupport = new ServletModuleSupport(this
+				.getServletContext().getContextPath(), inProperties);
 		this.packageNames = inPackageNames;
 	}
 
@@ -75,31 +77,32 @@ public abstract class AbstractJerseyServletModule extends JerseyServletModule {
 
 	private void setupAuthorizationFilter() {
 		bind(RolesFilter.class).in(Singleton.class);
-		Map<String, String> rolesFilterInitParams = 
-				this.servletModuleSupport.getRolesFilterInitParams();
+		Map<String, String> rolesFilterInitParams = this.servletModuleSupport
+				.getRolesFilterInitParams();
 		filter("/*").through(RolesFilter.class, rolesFilterInitParams);
 	}
 
 	private void setupCasProxyFilter() {
 		bind(Cas20ProxyReceivingTicketValidationFilter.class).in(
 				Singleton.class);
-		Map<String, String> params = 
-				this.servletModuleSupport.getCasProxyFilterInitParams();
+		Map<String, String> params = this.servletModuleSupport
+				.getCasProxyFilterInitParamsForWebService();
 		filter(CAS_CALLBACK_PATH, CONTAINER_PROTECTED_PATH).through(
 				Cas20ProxyReceivingTicketValidationFilter.class, params);
 	}
 
 	private void setupCasAuthenticationFilter() {
 		bind(AuthenticationFilter.class).in(Singleton.class);
-		Map<String, String> params = 
-				this.servletModuleSupport.getCasAuthenticationFilterInitParams();
-		filter(CONTAINER_PROTECTED_PATH).through(AuthenticationFilter.class, params);
+		Map<String, String> params = this.servletModuleSupport
+				.getCasAuthenticationFilterInitParams();
+		filter(CONTAINER_PROTECTED_PATH).through(AuthenticationFilter.class,
+				params);
 	}
 
-	private void setupServletRequestWrapperFilter() {
+	private void setupCasServletRequestWrapperFilter() {
 		bind(HttpServletRequestWrapperFilter.class).in(Singleton.class);
-		Map<String, String> params = 
-				this.servletModuleSupport.getServletRequestWrapperFilterInitParams();
+		Map<String, String> params = this.servletModuleSupport
+				.getServletRequestWrapperFilterInitParams();
 		filter("/*").through(HttpServletRequestWrapperFilter.class, params);
 	}
 
@@ -113,7 +116,7 @@ public abstract class AbstractJerseyServletModule extends JerseyServletModule {
 		params.put(JSONConfiguration.FEATURE_POJO_MAPPING, "true");
 		params.put(PackagesResourceConfig.PROPERTY_PACKAGES, this.packageNames);
 		params.put(ResourceConfig.PROPERTY_RESOURCE_FILTER_FACTORIES,
-			RolesAllowedResourceFilterFactory.class.getName());
+				RolesAllowedResourceFilterFactory.class.getName());
 		params.put(ServletContainer.JSP_TEMPLATES_BASE_PATH, TEMPLATES_PATH);
 		params.put(ServletContainer.PROPERTY_WEB_PAGE_CONTENT_REGEX,
 				WEB_CONTENT_REGEX);
@@ -122,17 +125,28 @@ public abstract class AbstractJerseyServletModule extends JerseyServletModule {
 		}
 		serve(CONTAINER_PATH).with(GuiceContainer.class, params);
 	}
-
+	
 	@Override
 	protected void configureServlets() {
 		super.configureServlets();
-		this.setupCasAuthenticationFilter();
-		this.setupCasProxyFilter();
-		this.setupServletRequestWrapperFilter();
-		this.setupCasThreadLocalAssertionFilter();
+		/*
+		 * CAS filters must go before other filters.
+		 */
+		this.setupCasFilters();
 		this.setupAuthorizationFilter();
 		this.setupContainer();
 		filter(CONTAINER_PATH).through(PersistFilter.class);
+	}
+
+	/**
+	 * Sets up CAS filters. The filter order is specified in
+	 * https://wiki.jasig.org/display/CASC/CAS+Client+for+Java+3.1
+	 */
+	private void setupCasFilters() {
+		this.setupCasAuthenticationFilter();
+		this.setupCasProxyFilter();
+		this.setupCasServletRequestWrapperFilter();
+		this.setupCasThreadLocalAssertionFilter();
 	}
 
 }
