@@ -401,7 +401,7 @@ window.eureka.editor = new function () {
 				var $toRemove = $(item).closest('li');
 				var $sortable = $toRemove.closest('ul.sortable');
 				var dialog = $('#deleteModal');
-				$(dialog).find('#deleteContent').html('Are you sure you want to remove data element ' + $toRemove.text() + '?');
+				$(dialog).find('#deleteContent').html('Are you sure you want to remove data element &quot;' + $toRemove.text() + '&quot;?');
 				$(dialog).find('#deleteButton').on('click', function (e) {
 					self.deleteItem($toRemove, $sortable, 0);
 					$(dialog).modal('hide');
