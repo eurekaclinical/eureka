@@ -71,7 +71,6 @@ and data into your own instance of the i2b2 data warehouse system.
 
 	<scm>
 		<developerConnection>scm:git:ssh://git.cci.emory.edu/opt/git/aiw/{projectName}</developerConnection>
-		<url>https://scm.cci.emory.edu/svn/aiw/trunk/cvrg/eureka</url>
 	</scm>
 
 	<issueManagement>
