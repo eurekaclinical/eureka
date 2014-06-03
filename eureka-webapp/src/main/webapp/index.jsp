@@ -36,12 +36,14 @@
 				patient features of interest, and compute them in millions of
 				patients. Then, explore!
 			</p>
+			<c:if test="${pageContext.request.remoteUser == null}">
 			<p class="vert-offset text-center">
 				<a href="${pageContext.request.contextPath}/register.jsp"
 				   class="btn btn-default btn-lg">
 					Register
 				</a>
 			</p>
+			</c:if>
 		</div>
 		<c:if test="${applicationScope.webappProperties.demoMode}">
 			<h3>Want to try it out?</h3>
