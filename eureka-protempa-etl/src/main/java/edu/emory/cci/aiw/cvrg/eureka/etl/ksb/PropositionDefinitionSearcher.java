@@ -22,6 +22,7 @@ package edu.emory.cci.aiw.cvrg.eureka.etl.ksb;
 
 import java.util.*;
 
+import org.apache.commons.collections4.map.ReferenceMap;
 import org.protempa.KnowledgeSource;
 import org.protempa.KnowledgeSourceReadException;
 import org.protempa.PropositionDefinition;
@@ -43,7 +44,7 @@ public class PropositionDefinitionSearcher {
 
 	private static final Logger LOGGER = LoggerFactory
 			.getLogger(PropositionDefinitionSearcher.class);
-	private static final Map<String, List<PropositionDefinition>> parentsCache = new HashMap<>();
+	private static final Map<String, List<PropositionDefinition>> parentsCache = new ReferenceMap<>();
 	private final KnowledgeSource knowledgeSource;
 	private final EtlProperties etlProperties;
 	private final Set<String> defaultProps;
