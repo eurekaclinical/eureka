@@ -19,9 +19,16 @@
   --%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="/WEB-INF/tlds/template.tld" prefix="template" %>
+<%@ taglib uri="/WEB-INF/tlds/function.tld" prefix="myfn" %>
 
 <template:insert template="/templates/eureka_main.jsp">
 <template:content name="content">
+<c:choose>
+<c:when test="${pageContext.request.remoteUser != null and myfn:isUserInRole(pageContext.request, 'researcher')}">
+	You are already registered with Eureka!.  If you would like to register a new user, please
+	<a href="${pageContext.request.contextPath}/logout">logout</a> and try again.  Thank you.
+</c:when>
+<c:otherwise>
 <div id="registerHeading">
 	<c:choose>
 		<c:when test="${not empty pageContext.request.remoteUser}">
@@ -234,5 +241,7 @@
 		eureka.registration.setup($('#signupForm'), $('#agreementAnchor'), $('#agreementModal'));
 	});
 </script>
+</c:otherwise>
+</c:choose>
 </template:content>
 </template:insert>
