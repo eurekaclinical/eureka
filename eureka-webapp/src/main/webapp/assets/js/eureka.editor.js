@@ -122,8 +122,8 @@ window.eureka.editor = new function () {
 
 	self.deleteElement = function (displayName, key) {
 		var $dialog = $('<div></div>')
-			.html('Are you sure you want to delete data element ' +
-				displayName + '? You cannot undo this action.')
+			.html('Are you sure you want to delete data element &quot;' +
+				displayName.trim() + '&quot;? You cannot undo this action.')
 			.dialog({
 				title: "Delete Data Element",
 				modal: true,
@@ -265,7 +265,7 @@ window.eureka.editor = new function () {
 			if ($(sortable).data('drop-type') === 'single' && $(sortable).find('li').length > 0) {
 				var $toRemove = $(sortable).find('li');
 				var dialog = $('#replaceModal');
-				$(dialog).find('#replaceContent').html('Are you sure you want to replace data element ' + $toRemove.text() + '?');
+				$(dialog).find('#replaceContent').html('Are you sure you want to replace data element &quot;' + $toRemove.text().trim() + '&quot;?');
 				$(dialog).find('#replaceButton').on('click', function (e) {
 					self.deleteItem($toRemove, $(sortable), 0);
 					self.addNewItemToList(data, $(sortable), newItem);
@@ -401,7 +401,7 @@ window.eureka.editor = new function () {
 				var $toRemove = $(item).closest('li');
 				var $sortable = $toRemove.closest('ul.sortable');
 				var dialog = $('#deleteModal');
-				$(dialog).find('#deleteContent').html('Are you sure you want to remove data element &quot;' + $toRemove.text() + '&quot;?');
+				$(dialog).find('#deleteContent').html('Are you sure you want to remove data element &quot;' + $toRemove.text().trim() + '&quot;?');
 				$(dialog).find('#deleteButton').on('click', function (e) {
 					self.deleteItem($toRemove, $sortable, 0);
 					$(dialog).modal('hide');
