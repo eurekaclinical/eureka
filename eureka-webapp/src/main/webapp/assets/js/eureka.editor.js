@@ -658,7 +658,7 @@ window.eureka.editor = new function () {
 	self.validationFunctions = {
 		'SEQUENCE': self.validateSequence,
 		'CATEGORIZATION': self.validateCategorization,
-		'FREQUENCE': self.validateFrequency,
+		'FREQUENCY': self.validateFrequency,
 		'VALUE_THRESHOLD': self.validateValueThreshold
 	};
 
