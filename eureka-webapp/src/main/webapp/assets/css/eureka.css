@@ -130,7 +130,12 @@ legend {
 }
 
 .searchUpdateMessage
- {
-   display: none;
-   color: red ;
- }
+{
+	display: none;
+	color: red ;
+}
+
+#systemTree li, #userTree li
+{
+	line-height: 1.5em;
+}
