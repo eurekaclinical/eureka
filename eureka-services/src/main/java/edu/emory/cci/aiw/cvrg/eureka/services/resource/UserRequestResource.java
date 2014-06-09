@@ -32,13 +32,11 @@ import org.slf4j.LoggerFactory;
 
 import com.google.inject.Inject;
 
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.LocalUserRequest;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.UserRequest;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.LocalUserEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.Role;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.UserEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.exception.HttpStatusException;
-import edu.emory.cci.aiw.cvrg.eureka.services.authentication.ServicesAuthenticationSupport;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.*;
 import edu.emory.cci.aiw.cvrg.eureka.services.email.EmailException;
 import edu.emory.cci.aiw.cvrg.eureka.services.email.EmailSender;
@@ -69,7 +67,6 @@ public class UserRequestResource {
 	 */
 	private final EmailSender emailSender;
 	private final UserRequestToUserEntityVisitor visitor;
-	private final ServicesAuthenticationSupport authenticationSupport;
 
 	/**
 	 * Create a UserResource object with a User DAO and a Role DAO.
@@ -93,7 +90,6 @@ public class UserRequestResource {
 		this.emailSender = inEmailSender;
 		this.visitor = new UserRequestToUserEntityVisitor(inOAuthProviderDao,
 				inRoleDao, inLoginTypeDao, inAuthenticationMethodDao);
-		this.authenticationSupport = new ServicesAuthenticationSupport();
 	}
 
 	/**
@@ -106,21 +102,7 @@ public class UserRequestResource {
 	@POST
 	public void addUser(@Context HttpServletRequest inRequest,
 			UserRequest userRequest) {
-		if (inRequest.getRemoteUser() != null) {
-			if (!this.authenticationSupport.isSameUser(inRequest, userRequest)) {
-				throw new HttpStatusException(Response.Status.BAD_REQUEST, 
-						"Cannot request a user other than yourself");
-			} else if (userRequest instanceof LocalUserRequest) {
-				throw new HttpStatusException(Response.Status.BAD_REQUEST, 
-						"Cannot request a local user while already logged in");
-			}
-		} else {
-			if (!(userRequest instanceof LocalUserRequest)) {
-				throw new HttpStatusException(Response.Status.BAD_REQUEST, 
-						"Only local user requests are permitted if you are not already authenticated");
-			}
-		}
-		UserEntity user = 
+		UserEntity user =
 				this.userDao.getByUsername(userRequest.getUsername());
 		if (user != null) {
 			throw new HttpStatusException(Response.Status.CONFLICT,
