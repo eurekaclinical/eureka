@@ -31,7 +31,7 @@
 			<div class="col-sm-3">
 				<span class="thumbnail text-center">
 					<a href="${initParam['eureka-help-url']}/getting-started.html" class="imageAndCaption" target="eureka-help">
-						<img alt="Getting Started" src="assets/images/100px-Help-getting-started.png"/>
+						<img alt="Getting Started" src="${pageContext.request.contextPath}/assets/images/100px-Help-getting-started.png"/>
 						<span class="caption">
 							Getting Started
 						</span>
@@ -41,7 +41,7 @@
 			<div class="col-sm-3">
 				<span class="thumbnail text-center">
 					<a href="${initParam['aiw-site-url']}/user-faq.html" class="imageAndCaption" target="eureka-help">
-						<img alt="Frequently Asked Questions" src="assets/images/100px-Help-FAQ.png"/>
+						<img alt="Frequently Asked Questions" src="${pageContext.request.contextPath}/assets/images/100px-Help-FAQ.png"/>
 						<span class="caption">
 							Frequently Asked Questions
 						</span>

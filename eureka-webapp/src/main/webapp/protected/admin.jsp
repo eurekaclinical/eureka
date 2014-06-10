@@ -56,16 +56,16 @@
 						</c:if>
 						<c:choose>
 							<c:when test="${is_inactive == true}">
-								<img src="${pageContext.request.contextPath}/images/New_User.gif"/>
+								<img src="${pageContext.request.contextPath}/assets/images/New_User.gif"/>
 							</c:when>
 
 							<c:otherwise>
 								<c:choose>
 									<c:when test="${is_admin == true}">
-										<img src="${pageContext.request.contextPath}/images/Role_Admin.gif"/>
+										<img src="${pageContext.request.contextPath}/assets/images/Role_Admin.gif"/>
 									</c:when>
 									<c:otherwise>
-										<img src="${pageContext.request.contextPath}/images/Role_Researcher.gif"/>
+										<img src="${pageContext.request.contextPath}/assets/images/Role_Researcher.gif"/>
 									</c:otherwise>
 								</c:choose>
 
