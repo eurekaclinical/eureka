@@ -702,6 +702,11 @@ and data into your own instance of the i2b2 data warehouse system.
 			</dependency>
 			<dependency>
 				<groupId>org.protempa</groupId>
+				<artifactId>protempa-ksb-bioportal</artifactId>
+				<version>${protempa-version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.protempa</groupId>
 				<artifactId>protempa-tsb-umls</artifactId>
 				<version>${protempa-version}</version>
 			</dependency>
