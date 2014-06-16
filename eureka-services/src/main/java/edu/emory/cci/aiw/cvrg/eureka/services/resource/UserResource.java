@@ -156,7 +156,7 @@ public class UserResource {
 			throw new HttpStatusException(Response.Status.NOT_FOUND);
 		}
 		this.userDao.refresh(userEntity);
-		LOGGER.debug("Returning user for ID {}: {}", inId, userEntity);
+		LOGGER.debug("Returning user for ID {}", inId);
 		UserEntityToUserVisitor visitor = new UserEntityToUserVisitor();
 		userEntity.accept(visitor);
 		return visitor.getUser();
@@ -180,7 +180,7 @@ public class UserResource {
 		} else {
 			throw new HttpStatusException(Response.Status.NOT_FOUND);
 		}
-		LOGGER.debug("Returning user for name {}: {}", username, userEntity);
+		LOGGER.debug("Returning user for name {}", username);
 		UserEntityToUserVisitor visitor = new UserEntityToUserVisitor();
 		userEntity.accept(visitor);
 		return visitor.getUser();
@@ -295,7 +295,7 @@ public class UserResource {
 		currentUser.setLastLogin(inUser.getLastLogin());
 
 		if (this.validateUpdatedUser(currentUser)) {
-			LOGGER.debug("Saving updated user: {}", currentUser);
+			LOGGER.debug("Saving updated user: {}", currentUser.getEmail());
 			this.userDao.update(currentUser);
 
 			if (activation) {

@@ -125,7 +125,7 @@ public class UserRequestResource {
 		} else {
 			String errorMsg = StringUtils.join(errors, ", ");
 			LOGGER.info(
-					"Invalid new user request: {}, reason {}", userRequest,
+					"Invalid new user request: {}, reason {}", userRequest.getEmail(),
 					errorMsg);
 			throw new HttpStatusException(
 					Response.Status.BAD_REQUEST, errorMsg);
