@@ -20,7 +20,7 @@
 Dear ${user.firstName} ${user.lastName},
 
 Your account on Eureka! Clinical Analytics has been activated. Go to ${applicationUrl} and click the Login button, and enter the email address and password that you provided when you registered for an account.
-<#if config.supportUri != null>
+<#if (config.supportUri.name)?has_content>
 
 If you did not request an account on Eureka! Clinical Analytics, we apologize for the inconvenience. Please contact us at ${config.supportUri.name} to report the incident as soon as possible.
 </#if>
