@@ -145,7 +145,7 @@ public class RegisterUserServlet extends HttpServlet {
 				//This should only happen with local accounts.
 				if (!authenticationMethod.equals(AuthenticationMethod.LOCAL.name())) {
 					LOGGER.error("Attempted to register a non-local account ({}) that already exists!", principal.getName());
-					msg = MessageFormat.format(messages.getString("registerUserServlet.error.unspecified"), "aiwhelp@emory.edu");
+					msg = MessageFormat.format(messages.getString("registerUserServlet.error.unspecified"), "help@eurekaclinical.org");
 				} else {
 					msg = messages.getString("registerUserServlet.error.localAccountConflict");
 				}
