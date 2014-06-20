@@ -13,6 +13,17 @@ ${aiw.site.url}.
 
 WHAT'S NEW
 
+Version 1.9 includes an update to the UI, now using Bootstrap 3, 
+to make the application more usable on mobile devices.  It also 
+includes support for i2b2 1.7.  A new feature to allow usage of 
+BioPortal for ontologies was added.  The codebase was also updated 
+to utilize Java 7.  A data element search functionality was 
+added to the phenotype editor and job submission screens.  Eureka! 
+can now utilize OAuth as an authentication mechanism, allowing 
+the use of services like Facebook, Twitter, Google Plus, and other 
+to log into the system.  Finally, many improvements were made 
+to ease the process of installing and configuring the software.
+
 Version 1.8.2 includes minor bug-fixes. 
 
 Version 1.8.1 includes minor bug-fixes.
