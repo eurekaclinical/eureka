@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>edu.emory.cci.aiw.cvrg</groupId>
 	<artifactId>eureka</artifactId>
-	<version>1.9</version>
+	<version>1.10-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<name>Eureka! Clinical Analytics</name>
 	<description>Eureka! Clinical Analytics is a web application that
@@ -46,7 +46,7 @@ and data into your own instance of the i2b2 data warehouse system.
 		<commons-io-version>2.4</commons-io-version>
 		<commons-fileupload-version>1.3</commons-fileupload-version>
 		<commons-lang-version>3.1</commons-lang-version>
-		<eureka-version>1.9</eureka-version>
+		<eureka-version>1.10-SNAPSHOT</eureka-version>
 		<protempa-version>2.3-SNAPSHOT</protempa-version>
 		<aiw-i2b2-etl-version>1.0.6-SNAPSHOT</aiw-i2b2-etl-version>
 		<oracle-version>11.2.0.3</oracle-version>
@@ -71,7 +71,7 @@ and data into your own instance of the i2b2 data warehouse system.
 
 	<scm>
 		<developerConnection>scm:git:ssh://git.cci.emory.edu/opt/git/aiw/eureka.git</developerConnection>
-		<tag>1.9</tag>
+		<tag>HEAD</tag>
 	</scm>
 
 	<issueManagement>
