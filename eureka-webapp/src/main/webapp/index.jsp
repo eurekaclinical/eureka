@@ -94,6 +94,18 @@
 		<h3>Release Notes</h3>
 		<div class="row">
 			<div class="col-sm-1">
+				2014.07.02
+			</div>
+			<div class="col-sm-11">
+				Version 1.9 out out! This version includes a brand
+				new UI, search functionality for data elements,
+				support for OAuth authentication providers, integration
+				with i2b2 version 1.7, and allows the use of BioPortal
+				as an ontology source.
+			</div>
+		</div>
+		<div class="row vert-offset">
+			<div class="col-sm-1">
 				2014.01.16
 			</div>
 			<div class="col-sm-11">
