@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 
-package edu.emory.cci.aiw.cvrg.eureka.webapp.config;
+package edu.emory.cci.aiw.cvrg.eureka.webapp.provider;
 
 /*
  * #%L
@@ -26,24 +26,34 @@ package edu.emory.cci.aiw.cvrg.eureka.webapp.config;
  * #L%
  */
 
-import com.google.inject.AbstractModule;
+import com.google.inject.Inject;
+import com.google.inject.Provider;
 import com.google.inject.Singleton;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.CohortsClient;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ServicesClient;
-import edu.emory.cci.aiw.cvrg.eureka.webapp.provider.CohortsClientProvider;
-import edu.emory.cci.aiw.cvrg.eureka.webapp.provider.ServicesClientProvider;
+import edu.emory.cci.aiw.cvrg.eureka.webapp.config.WebappProperties;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
- *
- * @author hrathod
+ * 
+ * @author Andrew Post
  */
-class AppModule extends AbstractModule {
+@Singleton
+public class CohortsClientProvider implements Provider<CohortsClient> {
+
+	private static final Logger LOGGER = LoggerFactory
+			.getLogger(CohortsClientProvider.class);
+	private final CohortsClient client;
+
+	@Inject
+	public CohortsClientProvider(WebappProperties inProperties) {
+		LOGGER.debug("cohorts url = {}", inProperties.getCohortsUrl());
+		this.client = new CohortsClient(inProperties.getCohortsUrl());
+	}
 
 	@Override
-	protected void configure() {
-		bind(WebappProperties.class).in(Singleton.class);
-		bind(ServicesClient.class).toProvider(ServicesClientProvider.class);
-		bind(CohortsClient.class).toProvider(CohortsClientProvider.class);
+	public CohortsClient get() {
+		return this.client;
 	}
-	
+
 }

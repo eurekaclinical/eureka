@@ -42,6 +42,10 @@ public class WebappProperties extends AbstractProperties {
 	public String getServiceUrl() {
 		return this.getValue("eureka.services.url");
 	}
+	
+	public String getCohortsUrl() {
+		return this.getValue("eureka.cohorts.url");
+	}
 
 	@Override
 	public String getProxyCallbackServer() {
