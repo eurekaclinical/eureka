@@ -20,7 +20,7 @@
 package edu.emory.cci.aiw.cvrg.eureka.etl.job;
 
 import com.google.inject.Inject;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.Destination;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.EtlDestination;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.JobEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.JobEvent;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.JobEventType;
@@ -30,6 +30,9 @@ import edu.emory.cci.aiw.cvrg.eureka.etl.dao.DestinationDao;
 import edu.emory.cci.aiw.cvrg.eureka.etl.dao.JobDao;
 import edu.emory.cci.aiw.cvrg.eureka.etl.queryresultshandler.ProtempaDestinationFactory;
 import edu.emory.cci.aiw.cvrg.eureka.etl.resource.Destinations;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 import org.protempa.CloseException;
 import org.protempa.DataSourceFailedDataValidationException;
 import org.protempa.DataSourceValidationIncompleteException;
@@ -52,10 +55,6 @@ import org.protempa.query.Query;
 import org.protempa.query.QueryBuildException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * This class actually runs Protempa.
@@ -105,14 +104,14 @@ public class ETL {
 			q.setFilters(filter);
 			LOGGER.debug("Constructed Protempa query " + q);
 			Query query = protempa.buildQuery(q);
-			File i2b2Config = 
+			File configFile = 
 					this.etlProperties.destinationConfigFile(
 					job.getDestinationId());
-			Destination eurekaDestination = 
+			EtlDestination eurekaDestination = 
 					new Destinations(this.etlProperties, job.getEtlUser(), this.destinationDao).getOne(job.getDestinationId());
 			org.protempa.dest.Destination protempaDestination = 
 					new ProtempaDestinationFactory()
-					.getInstance(eurekaDestination.getType(), i2b2Config);
+					.getInstance(eurekaDestination.getType(), configFile);
 			protempa.execute(query, protempaDestination);
 			protempa.close();
 		} catch (CloseException | BackendNewInstanceException | BackendInitializationException | ConfigurationsLoadException | BackendProviderSpecLoaderException | QueryBuildException | InvalidConfigurationException | ConfigurationsNotFoundException | DataSourceValidationIncompleteException ex) {

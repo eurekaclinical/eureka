@@ -20,9 +20,12 @@ package edu.emory.cci.aiw.cvrg.eureka.common.comm;
  * #L%
  */
 
+import java.util.List;
+import java.util.Map;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.codehaus.jackson.annotate.JsonSubTypes;
 import org.codehaus.jackson.annotate.JsonTypeInfo;
+import org.protempa.proposition.Proposition;
 
 /**
  *
@@ -48,5 +51,7 @@ public abstract class Node {
 	public String toString() {
 		return ToStringBuilder.reflectionToString(this);
 	}
+
+	abstract boolean evaluate(Map<String, List<Proposition>> propMap);
 	
 }

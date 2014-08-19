@@ -127,7 +127,7 @@ public class SequenceConverterTest extends AbstractServiceTest {
 		assertEquals("Proposition list size", 1, definitions.size());
 
 		assertEquals("Primary proposition id",
-				"test-sequence" + ConversionUtil.PRIMARY_PROP_ID_SUFFIX,
+				toPropositionId("test-sequence"),
 				primary.getId());
 
 		Set<String> abstractedFrom = primary.getAbstractedFrom();

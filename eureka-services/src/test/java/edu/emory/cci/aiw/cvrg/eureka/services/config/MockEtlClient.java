@@ -20,13 +20,18 @@ package edu.emory.cci.aiw.cvrg.eureka.services.config;
  * #L%
  */
 
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.EtlDestination;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.Job;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.JobFilter;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.JobRequest;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.SourceConfig;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.ValidationRequest;
 import java.io.InputStream;
 import java.util.Collections;
 import java.util.List;
 
 import org.protempa.PropositionDefinition;
 
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.*;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ClientException;
 
 /**
@@ -36,12 +41,12 @@ import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ClientException;
 public class MockEtlClient implements EtlClient {
 
 	@Override
-	public Destination getDestination(String destId) throws ClientException {
+	public EtlDestination getDestination(String destId) throws ClientException {
 		throw new UnsupportedOperationException("Not supported yet.");
 	}
 
 	@Override
-	public List<Destination> getDestinations() throws ClientException {
+	public List<EtlDestination> getDestinations() throws ClientException {
 		throw new UnsupportedOperationException("Not supported yet.");
 	}
 

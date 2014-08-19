@@ -20,27 +20,27 @@
 package edu.emory.cci.aiw.cvrg.eureka.services.conversion;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.ExtendedDataElement;
-import java.util.ArrayList;
-import java.util.List;
-
-import org.protempa.CompoundLowLevelAbstractionDefinition;
-import org.protempa.LowLevelAbstractionDefinition;
-import org.protempa.PropositionDefinition;
-
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.ValueThresholdEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.ValueThresholdGroupEntity;
+import static edu.emory.cci.aiw.cvrg.eureka.services.conversion.ConversionUtil.extractContextDefinition;
+import java.util.ArrayList;
+import java.util.List;
+import org.protempa.CompoundLowLevelAbstractionDefinition;
 import org.protempa.ContextDefinition;
+import org.protempa.HighLevelAbstractionDefinition;
+import org.protempa.LowLevelAbstractionDefinition;
+import org.protempa.PropositionDefinition;
 import org.protempa.SimpleGapFunction;
 import org.protempa.SlidingWindowWidthMode;
 import org.protempa.ValueClassification;
-import static edu.emory.cci.aiw.cvrg.eureka.services.conversion.ConversionUtil.extractContextDefinition;
 
 public final class ValueThresholdsCompoundLowLevelAbstractionConverter
+		extends AbstractValueThresholdGroupEntityConverter
 		implements
-		PropositionDefinitionConverter<ValueThresholdGroupEntity, CompoundLowLevelAbstractionDefinition> {
+		PropositionDefinitionConverter<ValueThresholdGroupEntity, HighLevelAbstractionDefinition> {
 
 	private PropositionDefinitionConverterVisitor converterVisitor;
-	private CompoundLowLevelAbstractionDefinition primary;
+	private HighLevelAbstractionDefinition primary;
 	private String primaryPropId;
 
 	public void setConverterVisitor(PropositionDefinitionConverterVisitor inConverterVisitor) {
@@ -48,7 +48,7 @@ public final class ValueThresholdsCompoundLowLevelAbstractionConverter
 	}
 
 	@Override
-	public CompoundLowLevelAbstractionDefinition getPrimaryPropositionDefinition() {
+	public HighLevelAbstractionDefinition getPrimaryPropositionDefinition() {
 		return primary;
 	}
 
@@ -61,25 +61,24 @@ public final class ValueThresholdsCompoundLowLevelAbstractionConverter
 	public List<PropositionDefinition> convert(
 			ValueThresholdGroupEntity entity) {
 		List<PropositionDefinition> result = new ArrayList<>();
-		String propId = entity.getKey() + ConversionUtil.PRIMARY_PROP_ID_SUFFIX;
-		this.primaryPropId = propId;
+		String propId = toPropositionIdWrapped(entity);
 		if (this.converterVisitor.addPropositionId(propId)) {
-			CompoundLowLevelAbstractionDefinition primary = new CompoundLowLevelAbstractionDefinition(
+			CompoundLowLevelAbstractionDefinition wrapped = new CompoundLowLevelAbstractionDefinition(
 					propId);
-			primary.setDisplayName(entity.getDisplayName());
-			primary.setDescription(entity.getDescription());
+			wrapped.setDisplayName(entity.getDisplayName());
+			wrapped.setDescription(entity.getDescription());
 
 			if (entity.getThresholdsOperator().getName().equalsIgnoreCase("any")) {
-				primary.setValueDefinitionMatchOperator(CompoundLowLevelAbstractionDefinition.ValueDefinitionMatchOperator.ANY);
+				wrapped.setValueDefinitionMatchOperator(CompoundLowLevelAbstractionDefinition.ValueDefinitionMatchOperator.ANY);
 			} else if (entity.getThresholdsOperator().getName()
 					.equalsIgnoreCase("all")) {
-				primary.setValueDefinitionMatchOperator(CompoundLowLevelAbstractionDefinition.ValueDefinitionMatchOperator.ALL);
+				wrapped.setValueDefinitionMatchOperator(CompoundLowLevelAbstractionDefinition.ValueDefinitionMatchOperator.ALL);
 			} else {
 				throw new IllegalStateException("valueDefinitionMatchOperator"
 						+ " can only be ANY or ALL");
 			}
 
-			primary.setGapFunction(new SimpleGapFunction(Integer.valueOf(0), null));
+			wrapped.setGapFunction(new SimpleGapFunction(0, null));
 
 			List<LowLevelAbstractionDefinition> intermediates = new ArrayList<>();
 			for (ValueThresholdEntity v : entity.getValueThresholds()) {
@@ -95,7 +94,7 @@ public final class ValueThresholdsCompoundLowLevelAbstractionConverter
 				def.setAlgorithmId("stateDetector");
 				def.setGapFunction(new SimpleGapFunction(Integer.valueOf(0), null));
 				ValueThresholdsLowLevelAbstractionConverter
-						.thresholdToValueDefinitions(entity.getKey() + "_VALUE", v, def);
+						.thresholdToValueDefinitions(asValueString(entity), v, def);
 				def.setSlidingWindowWidthMode(SlidingWindowWidthMode.DEFAULT);
 				def.setGapFunction(new SimpleGapFunction(0, null));
 				List<ExtendedDataElement> extendedDataElements =
@@ -112,14 +111,17 @@ public final class ValueThresholdsCompoundLowLevelAbstractionConverter
 			result.addAll(intermediates);
 
 			for (LowLevelAbstractionDefinition def : intermediates) {
-				primary.addValueClassification(new ValueClassification(entity.getKey() + "_VALUE",
-						def.getId(), entity.getKey() + "_VALUE"));
-				primary.addValueClassification(new ValueClassification(entity.getKey() + "_VALUE_COMP",
+				wrapped.addValueClassification(new ValueClassification(asValueString(entity),
+						def.getId(), asValueString(entity)));
+				wrapped.addValueClassification(new ValueClassification(entity.getKey() + "_VALUE_COMP",
 						def.getId(), entity.getKey() + "_VALUE_COMP"));
 			}
 
-			result.add(primary);
-			this.primary = primary;
+			result.add(wrapped);
+			HighLevelAbstractionDefinition wrapper = wrap(entity);
+			result.add(wrapper);
+			this.primary = wrapper;
+			this.primaryPropId = wrapper.getPropositionId();
 		}
 
 		return result;

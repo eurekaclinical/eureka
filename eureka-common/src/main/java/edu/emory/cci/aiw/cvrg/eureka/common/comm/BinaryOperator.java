@@ -20,14 +20,18 @@ package edu.emory.cci.aiw.cvrg.eureka.common.comm;
  * #L%
  */
 
+import java.util.List;
+import java.util.Map;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.codehaus.jackson.annotate.JsonProperty;
+import org.protempa.proposition.Proposition;
 
 /**
  *
  * @author Andrew Post
  */
 public class BinaryOperator extends Node {
+
 	public static enum Op {
 		AND,
 		OR
@@ -63,6 +67,18 @@ public class BinaryOperator extends Node {
 
 	public void setRightNode(Node rightNode) {
 		this.rightNode = rightNode;
+	}
+	
+	@Override
+	boolean evaluate(Map<String, List<Proposition>> propMap) {
+		switch (this.op) {
+			case AND:
+				return this.leftNode.evaluate(propMap) && this.rightNode.evaluate(propMap);
+			case OR:
+				return this.leftNode.evaluate(propMap) || this.rightNode.evaluate(propMap);
+			default:
+				throw new AssertionError("Invalid op " + this.op);
+		}
 	}
 	
 	@Override

@@ -91,9 +91,7 @@ public class FrequencyAtLeastNotValueThresholdConverterTest extends
 	
 	@Test
 	public void testId() {
-		assertEquals("wrong ID", 
-				frequency.getKey() + ConversionUtil.PRIMARY_PROP_ID_SUFFIX, 
-				hlad.getId());
+		assertEquals("wrong ID", toPropositionId(frequency), hlad.getId());
 	}
 	
 //	@Test

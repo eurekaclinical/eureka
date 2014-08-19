@@ -21,12 +21,15 @@ package edu.emory.cci.aiw.cvrg.eureka.services.test;
 
 import com.google.inject.Module;
 import com.google.inject.persist.PersistService;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.DataElementEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.test.AbstractTest;
 import edu.emory.cci.aiw.cvrg.eureka.common.test.TestDataException;
 import edu.emory.cci.aiw.cvrg.eureka.common.test.TestDataProvider;
 import edu.emory.cci.aiw.cvrg.eureka.services.config.AppTestModule;
+import edu.emory.cci.aiw.cvrg.eureka.services.conversion.ConversionSupport;
 import org.junit.After;
 import org.junit.Before;
+import org.protempa.proposition.value.NominalValue;
 
 public class AbstractServiceTest extends AbstractTest {
 
@@ -39,6 +42,8 @@ public class AbstractServiceTest extends AbstractTest {
 	 * queries against.
 	 */
 	private PersistService persistService;
+	
+	private ConversionSupport conversionSupport;
 
 	protected Class<? extends TestDataProvider> getDataProvider() {
 		return Setup.class;
@@ -64,6 +69,7 @@ public class AbstractServiceTest extends AbstractTest {
 			testDataProvider = getInstance(getDataProvider());
 			testDataProvider.setUp();
 		}
+		this.conversionSupport = new ConversionSupport();
 	}
 
 	/**
@@ -79,5 +85,38 @@ public class AbstractServiceTest extends AbstractTest {
 			testDataProvider.tearDown();
 		}
 		persistService.stop();
+		this.conversionSupport = null;
+	}
+	
+	protected String toPropositionIdWrapped(String dataElementKey) {
+		return this.conversionSupport.toPropositionIdWrapped(dataElementKey);
+	}
+	
+	protected String toPropositionIdWrapped(DataElementEntity dataElement) {
+		return this.conversionSupport.toPropositionIdWrapped(dataElement);
+	}
+	
+	protected String toPropositionId(DataElementEntity dataElement) {
+		return this.conversionSupport.toPropositionId(dataElement);
+	}
+	
+	protected String toPropositionId(String dataElementKey) {
+		return this.conversionSupport.toPropositionId(dataElementKey);
+	}
+	
+	protected String asValueString(DataElementEntity dataElement) {
+		return this.conversionSupport.asValueString(dataElement);
+	}
+	
+	protected String asValueString(String dataElementKey) {
+		return this.conversionSupport.asValueString(dataElementKey);
+	}
+	
+	protected NominalValue asValue(DataElementEntity dataElement) {
+		return this.conversionSupport.asValue(dataElement);
+	}
+	
+	protected NominalValue asValue(String dataElementKey) {
+		return this.conversionSupport.asValue(dataElementKey);
 	}
 }

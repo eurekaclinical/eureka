@@ -28,8 +28,8 @@ import javax.ws.rs.core.MediaType;
 
 
 import com.google.inject.Inject;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.EtlDestination;
 
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.Destination;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.EtlUser;
 import edu.emory.cci.aiw.cvrg.eureka.common.exception.HttpStatusException;
 import edu.emory.cci.aiw.cvrg.eureka.etl.authentication.EtlAuthenticationSupport;
@@ -63,11 +63,11 @@ public class DestinationResource {
 
 	@GET
 	@Path("/{destId}")
-	public Destination getDestination(
+	public EtlDestination getDestination(
 			@Context HttpServletRequest request,
 			@PathParam("destId") String destId) {
 		EtlUser user = this.authenticationSupport.getEtlUser(request);
-		Destination result 
+		EtlDestination result 
 				= new Destinations(this.etlProperties, user, this.destinationDao).getOne(destId);
 		if (result != null) {
 			return result;
@@ -77,7 +77,7 @@ public class DestinationResource {
 	}
 
 	@GET
-	public List<Destination> getAll(@Context HttpServletRequest request) {
+	public List<EtlDestination> getAll(@Context HttpServletRequest request) {
 		EtlUser user = this.authenticationSupport.getEtlUser(request);
 		return new Destinations(this.etlProperties, user, this.destinationDao).getAll();
 	}

@@ -31,8 +31,13 @@ import org.protempa.PropositionDefinition;
 import com.google.inject.Inject;
 import com.sun.jersey.api.client.GenericType;
 import com.sun.jersey.core.util.MultivaluedMapImpl;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.EtlDestination;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.Job;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.JobFilter;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.JobRequest;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.SourceConfig;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.ValidationRequest;
 
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.*;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ClientException;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.EurekaClient;
 
@@ -48,8 +53,8 @@ public class EtlClientImpl extends EurekaClient implements EtlClient {
 	private static final GenericType<List<SourceConfig>> SourceConfigListType =
 			new GenericType<List<SourceConfig>>() {
 			};
-	private static final GenericType<List<Destination>> DestinationListType =
-			new GenericType<List<Destination>>() {
+	private static final GenericType<List<EtlDestination>> DestinationListType =
+			new GenericType<List<EtlDestination>>() {
 			};
 	private static final GenericType<List<PropositionDefinition>> PropositionDefinitionList =
 			new GenericType<List<PropositionDefinition>>() {
@@ -86,19 +91,19 @@ public class EtlClientImpl extends EurekaClient implements EtlClient {
 	}
 
 	@Override
-	public List<Destination> getDestinations() throws
+	public List<EtlDestination> getDestinations() throws
 			ClientException {
 		final String path = "/api/protected/destinations";
 		return doGet(path, DestinationListType);
 	}
 
 	@Override
-	public Destination getDestination(String destId) throws
+	public EtlDestination getDestination(String destId) throws
 			ClientException {
 		String path = UriBuilder.fromPath("/api/protected/destinations/")
 				.segment(destId)
 				.build().toString();
-		return doGet(path, Destination.class);
+		return doGet(path, EtlDestination.class);
 	}
 
 	@Override

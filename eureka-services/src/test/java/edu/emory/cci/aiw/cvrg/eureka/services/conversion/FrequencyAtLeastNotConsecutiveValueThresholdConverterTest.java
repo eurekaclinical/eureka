@@ -28,7 +28,6 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.protempa.*;
-import org.protempa.proposition.value.NominalValue;
 import org.protempa.proposition.value.NumberValue;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.*;
@@ -130,7 +129,7 @@ public class FrequencyAtLeastNotConsecutiveValueThresholdConverterTest extends A
 		llaDef = llas.get(0);
 		hlad = converter.getPrimaryPropositionDefinition();
 		
-		userConstraintName = thresholdGroupKey + "_VALUE";
+		userConstraintName = asValueString(thresholdGroupKey);
 		compConstraintName = thresholdGroupKey + "_VALUE_COMP";
 		
 		tepd = (TemporalExtendedParameterDefinition) 
@@ -142,14 +141,14 @@ public class FrequencyAtLeastNotConsecutiveValueThresholdConverterTest extends A
 	@Test
 	public void testPrimaryPropositionId() {
 		assertEquals("wrong primary proposition id", 
-				frequency.getKey() + ConversionUtil.PRIMARY_PROP_ID_SUFFIX, 
+				toPropositionId(frequency), 
 				hlad.getId());
 	}
 	
 	@Test
 	public void testNumberOfPropositionDefinitionsCreated() {
 		assertEquals("wrong number of proposition definitions created", 
-				2, propDefs.size());
+				3, propDefs.size());
 	}
 	
 	@Test
@@ -161,7 +160,7 @@ public class FrequencyAtLeastNotConsecutiveValueThresholdConverterTest extends A
 	@Test
 	public void testLLAId() {
 		assertEquals("wrong id", 
-				"test-valuethreshold" + ConversionUtil.PRIMARY_PROP_ID_SUFFIX, 
+				toPropositionIdWrapped("test-valuethreshold"), 
 				llaDef.getId());
 	}
 	
@@ -288,8 +287,7 @@ public class FrequencyAtLeastNotConsecutiveValueThresholdConverterTest extends A
 	
 	@Test
 	public void testHLAId() {
-		String hladExpectedId = frequency.getKey() + 
-				ConversionUtil.PRIMARY_PROP_ID_SUFFIX;
+		String hladExpectedId = toPropositionId(frequency);
 		assertEquals("wrong id", hladExpectedId, hlad.getId());
 	}
 	
@@ -302,14 +300,14 @@ public class FrequencyAtLeastNotConsecutiveValueThresholdConverterTest extends A
 	@Test
 	public void testExtendedPropositionDefinitionPropositionId() {
 		assertEquals("wrong extended proposition definition", 
-				thresholdGroupKey + ConversionUtil.PRIMARY_PROP_ID_SUFFIX, 
+				toPropositionId(thresholdGroupKey), 
 				tepd.getPropositionId());
 	}
 	
 	@Test
 	public void testValueForExtendedPropositionDefinition() {
 		assertEquals("wrong value for extended proposition definition", 
-				NominalValue.getInstance(thresholdGroupKey + "_VALUE"), 
+				asValue(thresholdGroupKey), 
 				tepd.getValue());
 	}
 	

@@ -132,7 +132,7 @@ public class FrequencyAtLeastConsecutiveValueThresholdConverterTest extends Abst
 		llaDef = llas.get(0);
 		hlad = converter.getPrimaryPropositionDefinition();
 		
-		userConstraintName = thresholdGroupKey + "_VALUE";
+		userConstraintName = asValueString(thresholdGroupKey);
 		compConstraintName = thresholdGroupKey + "_VALUE_COMP";
 		
 		tepd = (TemporalExtendedParameterDefinition) 
@@ -144,14 +144,14 @@ public class FrequencyAtLeastConsecutiveValueThresholdConverterTest extends Abst
 	@Test
 	public void testPrimaryPropositionId() {
 		assertEquals("wrong primary proposition id", 
-				frequency.getKey() + ConversionUtil.PRIMARY_PROP_ID_SUFFIX, 
+				toPropositionId(frequency), 
 				hlad.getId());
 	}
 	
 	@Test
 	public void testNumberOfPropositionDefinitionsCreated() {
 		assertEquals("wrong number of proposition definitions created", 
-				3, propDefs.size());
+				4, propDefs.size());
 	}
 	
 	@Test
@@ -163,7 +163,7 @@ public class FrequencyAtLeastConsecutiveValueThresholdConverterTest extends Abst
 	@Test
 	public void testLLAId() {
 		assertEquals("wrong id", 
-				"test-valuethreshold" + ConversionUtil.PRIMARY_PROP_ID_SUFFIX, 
+				toPropositionIdWrapped("test-valuethreshold"), 
 				llaDef.getId());
 	}
 	
@@ -290,8 +290,7 @@ public class FrequencyAtLeastConsecutiveValueThresholdConverterTest extends Abst
 	
 	@Test
 	public void testHLAId() {
-		String hladExpectedId = frequency.getKey() + 
-				ConversionUtil.PRIMARY_PROP_ID_SUFFIX;
+		String hladExpectedId = toPropositionId(frequency);
 		assertEquals("wrong id", hladExpectedId, hlad.getId());
 	}
 	
@@ -311,7 +310,7 @@ public class FrequencyAtLeastConsecutiveValueThresholdConverterTest extends Abst
 	@Test
 	public void testValueForExtendedPropositionDefinition() {
 		assertEquals("wrong value for extended proposition definition", 
-				NominalValue.getInstance(frequency.getKey() + "_VALUE"), 
+				asValue(frequency), 
 				tepd.getValue());
 	}
 	

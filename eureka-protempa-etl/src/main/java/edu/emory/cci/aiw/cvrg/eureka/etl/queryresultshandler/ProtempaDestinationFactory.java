@@ -20,9 +20,10 @@ package edu.emory.cci.aiw.cvrg.eureka.etl.queryresultshandler;
  * #L%
  */
 
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.Destination;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.DestinationType;
 import edu.emory.cci.aiw.i2b2etl.I2b2Destination;
 import java.io.File;
+import org.protempa.dest.keyloader.KeyLoaderDestination;
 
 /**
  *
@@ -30,12 +31,15 @@ import java.io.File;
  */
 public class ProtempaDestinationFactory {
 	
-	public org.protempa.dest.Destination getInstance(Destination.Type type, File config) {
+	public org.protempa.dest.Destination getInstance(DestinationType type, File config) {
 		switch(type) {
 			case I2B2:
 				return new I2b2Destination(config);
+			case COHORT:
+				return new KeyLoaderDestination(new CohortCriteria(config));
 			default:
 				throw new AssertionError("Unexpected destination type " + type);
 		}
 	}
+
 }

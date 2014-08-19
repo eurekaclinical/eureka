@@ -42,7 +42,12 @@ public final class FrequencyNotValueThresholdConverter implements
 	private PropositionDefinitionConverterVisitor converterVisitor;
 	private HighLevelAbstractionDefinition primary;
 	private String primaryPropId;
+	private final ConversionSupport conversionSupport;
 
+	public FrequencyNotValueThresholdConverter() {
+		this.conversionSupport = new ConversionSupport();
+	}
+	
 	@Override
 	public HighLevelAbstractionDefinition getPrimaryPropositionDefinition() {
 		return primary;
@@ -63,7 +68,7 @@ public final class FrequencyNotValueThresholdConverter implements
 			throw new IllegalArgumentException("entity cannot have a null abstractedFrom field");
 		}
 		List<PropositionDefinition> result = new ArrayList<>();
-		String propId = entity.getKey() + ConversionUtil.PRIMARY_PROP_ID_SUFFIX;
+		String propId = this.conversionSupport.toPropositionId(entity);
 		this.primaryPropId = propId;
 		if (this.converterVisitor.addPropositionId(propId)) {
 			ExtendedDataElement extendedProposition = entity.getExtendedProposition();

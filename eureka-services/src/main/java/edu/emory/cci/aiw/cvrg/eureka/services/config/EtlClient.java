@@ -20,12 +20,17 @@ package edu.emory.cci.aiw.cvrg.eureka.services.config;
  * #L%
  */
 
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.EtlDestination;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.Job;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.JobFilter;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.JobRequest;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.SourceConfig;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.ValidationRequest;
 import java.io.InputStream;
 import java.util.List;
 
 import org.protempa.PropositionDefinition;
 
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.*;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ClientException;
 
 /**
@@ -34,9 +39,9 @@ import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ClientException;
  */
 public interface EtlClient {
 
-	Destination getDestination(String destId) throws ClientException;
+	EtlDestination getDestination(String destId) throws ClientException;
 
-	List<Destination> getDestinations() throws ClientException;
+	List<EtlDestination> getDestinations() throws ClientException;
 
 	Job getJob(Long inJobId) throws ClientException;
 

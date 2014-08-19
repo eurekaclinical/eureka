@@ -19,7 +19,10 @@ package edu.emory.cci.aiw.cvrg.eureka.etl.resource;
  * limitations under the License.
  * #L%
  */
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.Destination;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.DestinationType;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.EtlCohortDestination;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.EtlDestination;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.EtlI2B2Destination;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.DestinationEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.DestinationGroupMembership;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.EtlGroup;
@@ -27,10 +30,9 @@ import edu.emory.cci.aiw.cvrg.eureka.common.entity.EtlUser;
 import edu.emory.cci.aiw.cvrg.eureka.common.exception.HttpStatusException;
 import edu.emory.cci.aiw.cvrg.eureka.etl.config.EtlProperties;
 import edu.emory.cci.aiw.cvrg.eureka.etl.dao.DestinationDao;
-import org.apache.commons.lang3.StringUtils;
-import org.w3c.dom.Document;
-import org.xml.sax.SAXException;
-
+import java.io.File;
+import java.io.IOException;
+import java.util.List;
 import javax.ws.rs.core.Response;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -40,15 +42,15 @@ import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpression;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
-import java.io.File;
-import java.io.IOException;
-import java.util.List;
+import org.apache.commons.lang3.StringUtils;
+import org.w3c.dom.Document;
+import org.xml.sax.SAXException;
 
 /**
  *
  * @author Andrew Post
  */
-public final class Destinations extends Configs<Destination, DestinationEntity> {
+public final class Destinations extends Configs<EtlDestination, DestinationEntity> {
 
 	private final XPathExpression typeExpr;
 	private final XPathExpression displayNameExpr;
@@ -69,26 +71,32 @@ public final class Destinations extends Configs<Destination, DestinationEntity> 
 	}
 
 	@Override
-	Destination config(String destId, Perm perm) {
+	EtlDestination config(String destId, Perm perm) {
 		DocumentBuilder builder;
 		try {
 			builder = this.docBuilderFactory.newDocumentBuilder();
 			Document doc = builder.parse(getEtlProperties().destinationConfigFile(destId));
-			Destination dest = new Destination();
+			String type = (String) typeExpr.evaluate(doc, XPathConstants.STRING);
+			EtlDestination dest;
+			switch (DestinationType.valueOf(type)) {
+				case I2B2:
+					dest = new EtlI2B2Destination();
+					break;
+				case COHORT:
+					dest = new EtlCohortDestination();
+					break;
+				default:
+					throw new AssertionError("Unexpected destination type " + type);
+			}
+			
 			dest.setId(destId);
 			
 			dest.setRead(perm.read);
 			dest.setWrite(perm.write);
 			dest.setExecute(perm.execute);
 			
-			String type = (String) typeExpr.evaluate(doc, XPathConstants.STRING);
 			if (type == null) {
 				throw new HttpStatusException(Response.Status.INTERNAL_SERVER_ERROR, "No type specified in the configuration for destination '" + destId + "'");
-			}
-			try {
-				dest.setType(Destination.Type.valueOf(type));
-			} catch (IllegalArgumentException ex) {
-				throw new HttpStatusException(Response.Status.INTERNAL_SERVER_ERROR, "Invalid destination type '" + type + "' in destination '" + destId + "'; allowed values are " + StringUtils.join(Destination.Type.values(), ", "));
 			}
 			String displayName = (String) displayNameExpr.evaluate(doc, XPathConstants.STRING);
 			dest.setDisplayName(displayName);

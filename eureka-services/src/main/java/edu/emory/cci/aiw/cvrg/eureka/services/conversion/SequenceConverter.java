@@ -45,9 +45,11 @@ final class SequenceConverter
 	private HighLevelAbstractionDefinition primary;
 	private String primaryPropId;
 	private final Map<Long, TemporalExtendedPropositionDefinition> extendedProps;
+	private final ConversionSupport conversionSupport;
 
 	public SequenceConverter() {
 		this.extendedProps = new HashMap<>();
+		this.conversionSupport = new ConversionSupport();
 	}
 
 	@Override
@@ -67,7 +69,7 @@ final class SequenceConverter
 	@Override
 	public List<PropositionDefinition> convert(SequenceEntity sequenceEntity) {
 		List<PropositionDefinition> result = new ArrayList<>();
-		String propId = sequenceEntity.getKey() + ConversionUtil.PRIMARY_PROP_ID_SUFFIX;
+		String propId = this.conversionSupport.toPropositionId(sequenceEntity);
 		this.primaryPropId = propId;
 		if (this.converterVisitor.addPropositionId(propId)) {
 			HighLevelAbstractionDefinition primary = new HighLevelAbstractionDefinition(

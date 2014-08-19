@@ -38,9 +38,11 @@ import org.protempa.proposition.value.NominalValue;
 import static edu.emory.cci.aiw.cvrg.eureka.services.conversion.ConversionUtil.extractContextDefinition;
 import java.util.HashMap;
 import java.util.Map;
+import org.protempa.HighLevelAbstractionDefinition;
 
-public final class ValueThresholdsLowLevelAbstractionConverter implements
-		PropositionDefinitionConverter<ValueThresholdGroupEntity, LowLevelAbstractionDefinition> {
+public final class ValueThresholdsLowLevelAbstractionConverter 
+		extends AbstractValueThresholdGroupEntityConverter implements
+		PropositionDefinitionConverter<ValueThresholdGroupEntity, HighLevelAbstractionDefinition> {
 	
 	private static final Map<String, ValueComparator> VC_MAP =
 			new HashMap<>();
@@ -54,11 +56,11 @@ public final class ValueThresholdsLowLevelAbstractionConverter implements
 	}
 	
 	private PropositionDefinitionConverterVisitor converterVisitor;
-	private LowLevelAbstractionDefinition primary;
+	private HighLevelAbstractionDefinition primary;
 	private String primaryPropId;
 
 	@Override
-	public LowLevelAbstractionDefinition getPrimaryPropositionDefinition() {
+	public HighLevelAbstractionDefinition getPrimaryPropositionDefinition() {
 		return primary;
 	}
 
@@ -82,15 +84,13 @@ public final class ValueThresholdsLowLevelAbstractionConverter implements
 		}
 		List<PropositionDefinition> result =
 				new ArrayList<>();
-		String propId =
-				entity.getKey() + ConversionUtil.PRIMARY_PROP_ID_SUFFIX;
-		this.primaryPropId = propId;
+		String propId = toPropositionIdWrapped(entity);
 		if (this.converterVisitor.addPropositionId(propId)) {
-			LowLevelAbstractionDefinition primary =
+			LowLevelAbstractionDefinition wrapped =
 					new LowLevelAbstractionDefinition(propId);
-			primary.setDisplayName(entity.getDisplayName());
-			primary.setDescription(entity.getDescription());
-			primary.setAlgorithmId("stateDetector");
+			wrapped.setDisplayName(entity.getDisplayName());
+			wrapped.setDescription(entity.getDescription());
+			wrapped.setAlgorithmId("stateDetector");
 
 			// low-level abstractions can be created only from singleton value
 			// thresholds
@@ -102,24 +102,27 @@ public final class ValueThresholdsLowLevelAbstractionConverter implements
 				Collection<PropositionDefinition> abstractedFrom =
 						converterVisitor.getPropositionDefinitions();
 
-				primary.addPrimitiveParameterId(
+				wrapped.addPrimitiveParameterId(
 						converterVisitor.getPrimaryPropositionId());
-				thresholdToValueDefinitions(entity.getKey() + "_VALUE",
-						threshold, primary);
+				thresholdToValueDefinitions(asValueString(entity),
+						threshold, wrapped);
 				List<ExtendedDataElement> extendedDataElements = threshold.getExtendedDataElements();
 				if (extendedDataElements != null && !extendedDataElements.isEmpty()) {
 					ContextDefinition contextDefinition = extractContextDefinition(entity,
 							threshold.getExtendedDataElements(), threshold);
 					result.add(contextDefinition);
-					primary.setContextId(contextDefinition.getId());
+					wrapped.setContextId(contextDefinition.getId());
 				}
 				result.addAll(abstractedFrom);
 			}
-			primary.setSlidingWindowWidthMode(SlidingWindowWidthMode.DEFAULT);
-			primary.setGapFunction(new SimpleGapFunction(0, null));
+			wrapped.setSlidingWindowWidthMode(SlidingWindowWidthMode.DEFAULT);
+			wrapped.setGapFunction(new SimpleGapFunction(0, null));
 
-			result.add(primary);
-			this.primary = primary;
+			result.add(wrapped);
+			HighLevelAbstractionDefinition wrapper = wrap(entity);
+			result.add(wrapper);
+			this.primary = wrapper;
+			this.primaryPropId = wrapper.getPropositionId();
 		}
 
 		return result;

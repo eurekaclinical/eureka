@@ -67,7 +67,7 @@ public class ValueThresholdsLowLevelAbstractionConverterTest extends
 				new ValueThresholdGroupEntity();
 		thresholdGroup.setId(2L);
 		thresholdGroup.setKey("test-valuethreshold");
-		userConstraintName = thresholdGroup.getKey() + "_VALUE";
+		userConstraintName = asValueString(thresholdGroup);
 		compConstraintName = thresholdGroup.getKey() + "_VALUE_COMP";
 
 		ValueComparator lt = new ValueComparator();
@@ -96,19 +96,26 @@ public class ValueThresholdsLowLevelAbstractionConverterTest extends
 		thresholdGroup.setValueThresholds(thresholds);
 		llaDefs = 
 				converter.convert(thresholdGroup);
-		llaDef = converter.getPrimaryPropositionDefinition();
+		System.err.println("llaDefs are: " + llaDefs);
+		String toPropositionIdWrapped = toPropositionIdWrapped("test-valuethreshold");
+		for (PropositionDefinition propDef : llaDefs) {
+			if (propDef.getId().equals(toPropositionIdWrapped)) {
+				llaDef = (LowLevelAbstractionDefinition) propDef;
+				break;
+			}
+		}
 	}
 
 	@Test
 	public void testNumberOfPropositionDefinitionsCreated() {
-		assertEquals("wrong number of proposition definitions created", 1,
+		assertEquals("wrong number of proposition definitions created", 2,
 				llaDefs.size());
 	}
 	
 	@Test
 	public void testId() {
-		assertEquals("wrong id", "test-valuethreshold" + 
-				ConversionUtil.PRIMARY_PROP_ID_SUFFIX, llaDef.getId());
+		assertEquals("wrong id", 
+				toPropositionIdWrapped("test-valuethreshold"), llaDef.getId());
 	}
 	
 	@Test

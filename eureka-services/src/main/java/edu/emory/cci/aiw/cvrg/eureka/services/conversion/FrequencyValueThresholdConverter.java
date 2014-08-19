@@ -28,7 +28,6 @@ import org.protempa.MinMaxGapFunction;
 import org.protempa.PropositionDefinition;
 import org.protempa.TemporalExtendedParameterDefinition;
 import org.protempa.proposition.interval.Relation;
-import org.protempa.proposition.value.NominalValue;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,8 +40,8 @@ import org.protempa.SliceDefinition;
 import org.protempa.TemporalExtendedPropositionDefinition;
 import org.protempa.ValueClassification;
 
-public final class FrequencyValueThresholdConverter implements
-		FrequencyConverter {
+public final class FrequencyValueThresholdConverter extends AbstractConverter 
+		implements FrequencyConverter {
 
 	private PropositionDefinitionConverterVisitor converterVisitor;
 	private HighLevelAbstractionDefinition primary;
@@ -68,8 +67,7 @@ public final class FrequencyValueThresholdConverter implements
 		List<PropositionDefinition> result =
 				new ArrayList<>();
 
-		String propId = entity.getKey()
-				+ ConversionUtil.PRIMARY_PROP_ID_SUFFIX;
+		String propId = toPropositionId(entity);
 		this.primaryPropId = propId;
 
 		if (this.converterVisitor.addPropositionId(propId)) {
@@ -94,9 +92,9 @@ public final class FrequencyValueThresholdConverter implements
 				frequencyWrapper.setGapFunction(
 						new SimpleGapFunction(Integer.valueOf(0), null));
 				ValueClassification vc = new ValueClassification(
-						entity.getKey() + "_VALUE",
+						asValueString(entity),
 						abstractedFromPrimaryPropId,
-						abstractedFrom.getKey() + "_VALUE");
+						asValueString(abstractedFrom));
 				frequencyWrapper.addValueClassification(vc);
 				ValueClassification vcComp = new ValueClassification(
 						entity.getKey() + "_VALUE_COMP",
@@ -114,7 +112,7 @@ public final class FrequencyValueThresholdConverter implements
 				if (entity.getFrequencyType().getName().equals("at least")) {
 					TemporalExtendedParameterDefinition tepd =
 							new TemporalExtendedParameterDefinition(wrapperPropId);
-					tepd.setValue(NominalValue.getInstance(entity.getKey() + "_VALUE"));
+					tepd.setValue(asValue(entity));
 					tepdOuter = tepd;
 				} else if (entity.getFrequencyType().getName().equals("first")) {
 					frequencyWrapper.setSkip(1);
@@ -124,7 +122,7 @@ public final class FrequencyValueThresholdConverter implements
 					sp.setMaxIndex(1);
 					TemporalExtendedParameterDefinition tepd2 =
 							new TemporalExtendedParameterDefinition(wrapperPropId);
-					tepd2.setValue(NominalValue.getInstance(entity.getKey() + "_VALUE"));
+					tepd2.setValue(asValue(entity));
 					sp.add(tepd2);
 					result.add(sp);
 
@@ -204,4 +202,5 @@ public final class FrequencyValueThresholdConverter implements
 
 		return result;
 	}
+	
 }

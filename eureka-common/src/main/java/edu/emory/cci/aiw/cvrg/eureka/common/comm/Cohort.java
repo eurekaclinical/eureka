@@ -19,32 +19,37 @@ package edu.emory.cci.aiw.cvrg.eureka.common.comm;
  * limitations under the License.
  * #L%
  */
-
 import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.arp.javautil.collections.Collections;
 import org.codehaus.jackson.annotate.JsonProperty;
+import org.protempa.proposition.Proposition;
 
 /**
  *
  * @author Andrew Post
  */
 public class Cohort {
+
 	private Long id;
-	
+
 	private String name;
-	
+
 	private String description;
-	
+
 	private String username;
-	
+
 	private Node node;
-	
+
 	@JsonProperty("created_at")
 	private Date createdAt;
-	
+
 	@JsonProperty("updated_at")
 	private Date updatedAt;
-	
+
 	public Long getId() {
 		return id;
 	}
@@ -76,7 +81,7 @@ public class Cohort {
 	public void setUsername(String username) {
 		this.username = username;
 	}
-	
+
 	public Node getNode() {
 		return node;
 	}
@@ -100,7 +105,17 @@ public class Cohort {
 	public void setUpdatedAt(Date updatedAt) {
 		this.updatedAt = updatedAt;
 	}
-	
+
+	public boolean evaluate(List<Proposition> propositions) {
+		Map<String, List<Proposition>> propMap = new HashMap<>();
+		for (Map.Entry<String, List<Proposition>> me : propMap.entrySet()) {
+			for (Proposition prop : me.getValue()) {
+				Collections.putList(propMap, prop.getId(), prop);
+			}
+		}
+		return this.node.evaluate(propMap);
+	}
+
 	@Override
 	public String toString() {
 		return ToStringBuilder.reflectionToString(this);

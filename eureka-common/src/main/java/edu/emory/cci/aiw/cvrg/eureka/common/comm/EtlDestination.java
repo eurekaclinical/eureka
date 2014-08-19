@@ -34,9 +34,9 @@ import org.codehaus.jackson.annotate.JsonTypeInfo;
  */
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
 @JsonSubTypes({
-        @JsonSubTypes.Type(value = CohortDestination.class, name = "COHORT"),
-        @JsonSubTypes.Type(value = I2B2Destination.class, name = "I2B2") })
-public abstract class Destination {
+        @JsonSubTypes.Type(value = EtlCohortDestination.class, name = "COHORT"),
+        @JsonSubTypes.Type(value = EtlI2B2Destination.class, name = "I2B2") })
+public abstract class EtlDestination {
 
 	/**
 	 * The unique identifier for the configuration.
@@ -53,27 +53,6 @@ public abstract class Destination {
 	private boolean read;
 	private boolean write;
 	private boolean execute;
-	
-	public Destination() {
-		
-	}
-	
-	public Destination(EtlDestination etlDest) {
-		if (etlDest != null) {
-			this.id = etlDest.getId();
-			this.type = etlDest.getType();
-			this.displayName = etlDest.getDisplayName();
-			DataElementField[] etlDestDataElementFields = 
-					etlDest.getDataElementFields();
-			if (etlDestDataElementFields != null) {
-				this.dataElementFields = etlDestDataElementFields.clone();
-			}
-			this.ownerUserId = etlDest.getOwnerUserId();
-			this.read = etlDest.isRead();
-			this.write = etlDest.isWrite();
-			this.execute = etlDest.isExecute();
-		}
-	}
 
 	/**
 	 * Get the unique identifier for the configuration.
@@ -160,5 +139,7 @@ public abstract class Destination {
 	public String toString() {
 		return ToStringBuilder.reflectionToString(this);
 	}
+	
+	public abstract Destination toDestination();
 	
 }

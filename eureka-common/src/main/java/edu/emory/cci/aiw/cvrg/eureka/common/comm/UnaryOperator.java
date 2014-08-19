@@ -20,14 +20,18 @@ package edu.emory.cci.aiw.cvrg.eureka.common.comm;
  * #L%
  */
 
+import java.util.List;
+import java.util.Map;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.codehaus.jackson.annotate.JsonProperty;
+import org.protempa.proposition.Proposition;
 
 /**
  *
  * @author Andrew Post
  */
 public class UnaryOperator extends Node {
+
 	public static enum Op {
 		NOT
 	};
@@ -54,7 +58,18 @@ public class UnaryOperator extends Node {
 	}
 	
 	@Override
+	boolean evaluate(Map<String, List<Proposition>> propMap) {
+		switch (this.op) {
+			case NOT:
+				return !this.node.evaluate(propMap);
+			default:
+				throw new AssertionError("Invalid op " + this.op);
+		}
+	}
+	
+	@Override
 	public String toString() {
 		return ReflectionToStringBuilder.reflectionToString(this);
 	}
+	
 }

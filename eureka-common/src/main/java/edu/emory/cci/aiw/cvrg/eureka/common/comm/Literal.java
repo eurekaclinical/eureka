@@ -21,8 +21,20 @@ package edu.emory.cci.aiw.cvrg.eureka.common.comm;
  */
 
 import java.util.Date;
-import javax.xml.bind.annotation.XmlElement;
+import java.util.List;
+import java.util.Map;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.protempa.proposition.AbstractParameter;
+import org.protempa.proposition.Constant;
+import org.protempa.proposition.Context;
+import org.protempa.proposition.Event;
+import org.protempa.proposition.PrimitiveParameter;
+import org.protempa.proposition.Proposition;
+import org.protempa.proposition.TemporalProposition;
+import org.protempa.proposition.interval.AbsoluteTimeIntervalFactory;
+import org.protempa.proposition.interval.Interval;
+import org.protempa.proposition.interval.Relation;
+import org.protempa.proposition.visitor.AbstractPropositionVisitor;
 
 /**
  *
@@ -34,7 +46,9 @@ public class Literal extends Node {
 	private Date start;
 	
 	private Date finish;
-
+	
+	private Interval interval;
+	
 	public String getName() {
 		return name;
 	}
@@ -62,5 +76,69 @@ public class Literal extends Node {
 	@Override
 	public String toString() {
 		return ReflectionToStringBuilder.reflectionToString(this);
+	}
+
+	@Override
+	boolean evaluate(Map<String, List<Proposition>> propMap) {
+		if (this.interval == null) {
+			this.interval = 
+					new AbsoluteTimeIntervalFactory().getInstance(
+							start, null, 
+							finish, null);
+		}
+		List<Proposition> props = propMap.get(this.name);
+		if (props != null && !props.isEmpty()) {
+			LiteralEvaluatePropositionVisitor v = 
+					new LiteralEvaluatePropositionVisitor();
+			for (Proposition prop : props) {
+				prop.accept(v);
+				if (v.evaluate()) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
+	private class LiteralEvaluatePropositionVisitor extends AbstractPropositionVisitor {
+		private boolean result;
+
+		LiteralEvaluatePropositionVisitor() {
+		}
+
+		boolean evaluate() {
+			return result;
+		}
+
+		@Override
+		public void visit(Context context) {
+			handleTemporalProposition(context);
+		}
+
+		@Override
+		public void visit(Constant constant) {
+			this.result = true;
+		}
+
+		@Override
+		public void visit(PrimitiveParameter primitiveParameter) {
+			handleTemporalProposition(primitiveParameter);
+		}
+
+		@Override
+		public void visit(Event event) {
+			handleTemporalProposition(event);
+		}
+
+		@Override
+		public void visit(AbstractParameter abstractParameter) {
+			handleTemporalProposition(abstractParameter);
+		}
+		
+		private void handleTemporalProposition(TemporalProposition tempProp) {
+			Interval tempPropIval = tempProp.getInterval();
+			this.result = Relation.CONTAINS_OR_EQUALS.hasRelation(interval, tempPropIval);
+		}
+		
 	}
 }

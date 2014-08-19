@@ -39,7 +39,12 @@ public final class CategorizationConverter implements
 	private PropositionDefinitionConverterVisitor converterVisitor;
 	private PropositionDefinition primary;
 	private String primaryPropId;
+	private final ConversionSupport conversionSupport;
 
+	public CategorizationConverter() {
+		this.conversionSupport = new ConversionSupport();
+	}
+	
 	@Override
 	public PropositionDefinition getPrimaryPropositionDefinition() {
 		return primary;
@@ -58,8 +63,7 @@ public final class CategorizationConverter implements
 	public List<PropositionDefinition> convert(CategoryEntity category) {
 		List<PropositionDefinition> result =
 				new ArrayList<>();
-		String id = category.getKey()
-				+ ConversionUtil.PRIMARY_PROP_ID_SUFFIX;
+		String id = this.conversionSupport.toPropositionId(category);
 		this.primaryPropId = id;
 		if (this.converterVisitor.addPropositionId(id)) {
 			PropositionDefinition primary;
@@ -133,19 +137,7 @@ public final class CategorizationConverter implements
 							new HighLevelAbstractionDefinition(id);
 					llad.setDescription(category.getDescription());
 					llad.setDisplayName(category.getDisplayName());
-
-					// before low-level abstractions are sent to Protempa,
-					// they will be wrapped in high-level abstractions to
-					// actually match the values the user specified
-					// we want these wrapper abstractions to be the
-					// inverse-is-a elements
-					String[] wrappedIia = new String[inverseIsA.length];
-					for (int i = 0; i < inverseIsA.length; i++) {
-						wrappedIia[i] = inverseIsA[i] + "_WRAPPER";
-					}
-
-					llad.setInverseIsA(wrappedIia);
-//					llad.setConcatenable(false);
+					llad.setInverseIsA(inverseIsA);
 					llad.setGapFunction(new SimpleGapFunction(0, null));
 					primary = llad;
 					break;

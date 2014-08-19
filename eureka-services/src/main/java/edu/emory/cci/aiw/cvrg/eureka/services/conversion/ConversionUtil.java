@@ -25,7 +25,6 @@ import edu.emory.cci.aiw.cvrg.eureka.common.entity.RelationOperator;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.TimeUnit;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.ValueThresholdEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.ValueThresholdGroupEntity;
-import java.util.Date;
 import java.util.List;
 import org.protempa.ContextDefinition;
 import org.protempa.ContextOffset;
@@ -34,9 +33,7 @@ import org.protempa.PropertyConstraint;
 import org.protempa.SimpleGapFunction;
 import org.protempa.TemporalExtendedParameterDefinition;
 import org.protempa.TemporalExtendedPropositionDefinition;
-import org.protempa.proposition.value.AbsoluteTimeGranularityUtil;
 import org.protempa.proposition.value.AbsoluteTimeUnit;
-import org.protempa.proposition.value.NominalValue;
 import org.protempa.proposition.value.ValueComparator;
 import org.protempa.proposition.value.ValueType;
 
@@ -47,6 +44,11 @@ import org.protempa.proposition.value.ValueType;
 class ConversionUtil {
 
 	static final String PRIMARY_PROP_ID_SUFFIX = "_PRIMARY";
+	static final String VALUE_SUFFIX = "_VALUE";
+	static final String PROP_ID_WRAPPED_SUFFIX = "_WRAPPED";
+	
+	private static final ConversionSupport CONVERSION_SUPPORT =
+			new ConversionSupport();
 
 	static AbsoluteTimeUnit unit(TimeUnit unit) {
 		return unit != null ? AbsoluteTimeUnit.nameToUnit(unit.getName())
@@ -80,8 +82,7 @@ class ConversionUtil {
 			ValueThresholdEntity v) {
 		ContextDefinition cd = new ContextDefinition(
 				entity.getKey() + "_SUB_CONTEXT");
-		cd.setGapFunction(new SimpleGapFunction(
-				Integer.valueOf(0), null));
+		cd.setGapFunction(new SimpleGapFunction(0, null));
 		TemporalExtendedPropositionDefinition[] tepds =
 				new TemporalExtendedPropositionDefinition[extendedDataElements.size()];
 		int i = 0;
@@ -90,14 +91,12 @@ class ConversionUtil {
 			TemporalExtendedPropositionDefinition tepd;
 			String tepdId = dee.getKey();
 			if (!dee.isInSystem()) {
-				tepdId += PRIMARY_PROP_ID_SUFFIX;
+				tepdId = CONVERSION_SUPPORT.toPropositionId(tepdId);
 			}
 			if (dee instanceof ValueThresholdGroupEntity) {
 				TemporalExtendedParameterDefinition teParamD =
 						new TemporalExtendedParameterDefinition(tepdId);
-				teParamD.setValue(
-						NominalValue.getInstance(
-						dee.getKey() + "_VALUE"));
+				teParamD.setValue(CONVERSION_SUPPORT.asValue(dee));
 				tepd = teParamD;
 			} else {
 				tepd = new TemporalExtendedPropositionDefinition(tepdId);
@@ -153,8 +152,7 @@ class ConversionUtil {
 		if (entity instanceof ValueThresholdGroupEntity) {
 			TemporalExtendedParameterDefinition tepvDef =
 					new TemporalExtendedParameterDefinition(propId);
-			tepvDef.setValue(
-					NominalValue.getInstance(entity.getKey() + "_VALUE"));
+			tepvDef.setValue(CONVERSION_SUPPORT.asValue(entity));
 			tepd = tepvDef;
 		} else {
 			tepd = new TemporalExtendedPropositionDefinition(propId);
@@ -168,8 +166,7 @@ class ConversionUtil {
 		if (dataElementEntity.isInSystem()) {
 			propId = dataElementEntity.getKey();
 		} else {
-			propId = dataElementEntity.getKey()
-					+ ConversionUtil.PRIMARY_PROP_ID_SUFFIX;
+			propId = CONVERSION_SUPPORT.toPropositionId(dataElementEntity);
 		}
 		return buildExtendedPropositionDefinition(propId, dataElementEntity);
 	}
