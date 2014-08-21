@@ -23,12 +23,14 @@ import edu.emory.cci.aiw.cvrg.eureka.common.comm.SourceConfig;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.SourceConfig.Option;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.SourceConfig.Section;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.EtlGroup;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.EtlUser;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.EtlUserEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.SourceConfigEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.SourceConfigGroupMembership;
 import edu.emory.cci.aiw.cvrg.eureka.common.exception.HttpStatusException;
 import edu.emory.cci.aiw.cvrg.eureka.etl.config.EtlProperties;
 import edu.emory.cci.aiw.cvrg.eureka.etl.config.EurekaProtempaConfigurations;
+import edu.emory.cci.aiw.cvrg.eureka.etl.dao.EtlGroupDao;
+import edu.emory.cci.aiw.cvrg.eureka.etl.dao.ResolvedPermissions;
 import edu.emory.cci.aiw.cvrg.eureka.etl.dao.SourceConfigDao;
 import java.io.File;
 import java.util.ArrayList;
@@ -56,13 +58,25 @@ import org.protempa.backend.tsb.TermSourceBackend;
  * @author Andrew Post
  */
 final class SourceConfigs extends Configs<SourceConfig, SourceConfigEntity> {
+	private EtlGroupDao groupDao;
 
-	SourceConfigs(EtlProperties inEtlProperties, EtlUser inEtlUser, SourceConfigDao inSourceConfigDao) {
-		super("source", inEtlProperties, inEtlUser, inEtlProperties.getSourceConfigDirectory(), inSourceConfigDao);
+	SourceConfigs(EtlProperties inEtlProperties, EtlUserEntity inEtlUser, SourceConfigDao inSourceConfigDao, EtlGroupDao inGroupDao) {
+		super(inEtlProperties, inEtlUser, inSourceConfigDao);
+		File inConfigDir = inEtlProperties.getSourceConfigDirectory();
+		if (!inConfigDir.exists()) {
+			try {
+				inConfigDir.mkdir();
+			} catch (SecurityException ex) {
+				throw new HttpStatusException(Response.Status.INTERNAL_SERVER_ERROR,
+						"Could not create source config directory", ex);
+			}
+		}
+		this.groupDao = inGroupDao;
 	}
 
 	@Override
-	SourceConfig config(String configId, Perm perm) {
+	SourceConfig extractDTO(Perm perm, SourceConfigEntity sourceConfigEntity) {
+		String configId = sourceConfigEntity.getName();
 		SourceConfig config = new SourceConfig();
 		try {
 			EurekaProtempaConfigurations configs =
@@ -162,20 +176,20 @@ final class SourceConfigs extends Configs<SourceConfig, SourceConfigEntity> {
 		return backendSections;
 	}
 
-	@Override
-	List<SourceConfigEntity> configs(EtlUser user) {
+	List<SourceConfigEntity> configs(EtlUserEntity user) {
 		return user.getSourceConfigs();
 	}
 
-	@Override
 	List<SourceConfigGroupMembership> groupConfigs(EtlGroup group) {
 		return group.getSourceConfigs();
 	}
 
-	@Override
 	String toConfigId(File file) {
 		return FromConfigFile.toSourceConfigId(file);
 	}
 	
-	
+	@Override
+	ResolvedPermissions resolvePermissions(EtlUserEntity owner, SourceConfigEntity entity) {
+		return this.groupDao.resolveSourceConfigPermissions(owner, entity);
+	}
 }

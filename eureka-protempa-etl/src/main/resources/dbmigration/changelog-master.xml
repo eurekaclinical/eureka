@@ -206,4 +206,84 @@ limitations under the License.
 	<changeSet author="arpost (generated)" id="1361552652236-10">
 		<addUniqueConstraint tableName="USERS" columnNames="USERNAME"/>
 	</changeSet>
+	<!-- 1.10 changes -->
+	<changeSet author="arpost (generated)" id="1361552652236-11">
+		<addColumn tableName="DESTINATIONS">
+			<column name="DESCRIPTION" type="CLOB"/>
+		</addColumn>
+		<addColumn tableName="DESTINATIONS">
+			<column name="CREATED_AT" type="TIMESTAMP(6)"/>
+		</addColumn>
+		<addColumn tableName="DESTINATIONS">
+			<column name="UPDATED_AT" type="TIMESTAMP(6)"/>
+		</addColumn>
+		<createTable tableName="NODES">
+			<column name="ID" type="BIGINT">
+				<constraints nullable="false" primaryKey="true" primaryKeyName="NODE_PK"/>
+			</column>
+		</createTable>
+		<createTable tableName="UNARY_OPERATORS">
+			<column name="ID" type="BIGINT">
+				<constraints nullable="false" primaryKey="true" primaryKeyName="UNARYOP_PK"/>
+			</column>
+			<column name="OP" type="VARCHAR(3)">
+				<constraints nullable="false"/>
+			</column>
+			<column name="NODE_ID" type="BIGINT">
+				<constraints nullable="false"/>
+			</column>
+		</createTable>
+		<addForeignKeyConstraint baseColumnNames="NODE_ID" baseTableName="UNARY_OPERATORS" constraintName="FK_UNARY_OPS_NODE_ID" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" referencedColumnNames="ID" referencedTableName="NODES" referencesUniqueColumn="false"/>
+		<createTable tableName="BINARY_OPERATORS">
+			<column name="ID" type="BIGINT">
+				<constraints nullable="false" primaryKey="true" primaryKeyName="BINARYOP_PK"/>
+			</column>
+			<column name="OP" type="VARCHAR(3)">
+				<constraints nullable="false"/>
+			</column>
+			<column name="LEFTNODE_ID" type="BIGINT">
+				<constraints nullable="false"/>
+			</column>
+			<column name="RIGHTNODE_ID" type="BIGINT">
+				<constraints nullable="false"/>
+			</column>
+		</createTable>
+		<addForeignKeyConstraint baseColumnNames="LEFTNODE_ID" baseTableName="BINARY_OPERATORS" constraintName="FK_BINARY_OPS_LEFTNODE_ID" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" referencedColumnNames="ID" referencedTableName="NODES" referencesUniqueColumn="false"/>
+		<addForeignKeyConstraint baseColumnNames="RIGHTNODE_ID" baseTableName="BINARY_OPERATORS" constraintName="FK_BINARY_OPS_RIGHTNODE_ID" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" referencedColumnNames="ID" referencedTableName="NODES" referencesUniqueColumn="false"/>
+		<createTable tableName="LITERALS">
+			<column name="ID" type="BIGINT">
+				<constraints nullable="false" primaryKey="true" primaryKeyName="LITERAL_PK"/>
+			</column>
+			<column name="NAME" type="VARCHAR(255)">
+				<constraints nullable="false"/>
+			</column>
+			<column name="START_DT" type="TIMESTAMP(6)"/>
+			<column name="FINISH_DT" type="TIMESTAMP(6)"/>
+		</createTable>
+		<createTable tableName="COHORTS">
+			<column name="ID" type="BIGINT">
+				<constraints nullable="false" primaryKey="true" primaryKeyName="COHORT_PK"/>
+			</column>
+			<column name="NODE_ID" type="BIGINT">
+				<constraints nullable="false"/>
+			</column>
+		</createTable>
+		<addForeignKeyConstraint baseColumnNames="NODE_ID" baseTableName="COHORTS" constraintName="FK_COHORT_NODE_ID" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" referencedColumnNames="ID" referencedTableName="NODES" referencesUniqueColumn="false"/>
+		<createTable tableName="COHORT_DESTINATIONS">
+			<column name="ID" type="BIGINT">
+				<constraints nullable="false" primaryKey="true" primaryKeyName="COHORT_DEST_PK"/>
+			</column>
+			<column name="COHORT_ID" type="BIGINT">
+				<constraints nullable="false"/>
+			</column>
+		</createTable>
+		<addForeignKeyConstraint baseColumnNames="COHORT_ID" baseTableName="COHORT_DESTINATIONS" constraintName="FK_COHORT_DEST_COHORT_ID" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" referencedColumnNames="ID" referencedTableName="COHORTS" referencesUniqueColumn="false"/>
+		<createTable tableName="I2B2_DESTINATIONS">
+			<column name="ID" type="BIGINT">
+				<constraints nullable="false" primaryKey="true" primaryKeyName="I2B2_DEST_PK"/>
+			</column>
+		</createTable>
+		<createSequence sequenceName="COHORT_SEQ"/>
+		<createSequence sequenceName="NODE_SEQ"/>
+	</changeSet>
 </databaseChangeLog>

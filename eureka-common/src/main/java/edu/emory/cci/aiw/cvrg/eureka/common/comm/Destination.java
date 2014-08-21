@@ -19,8 +19,10 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.common.comm;
 
+import java.util.Date;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.codehaus.jackson.annotate.JsonIgnore;
+import org.codehaus.jackson.annotate.JsonProperty;
 import org.codehaus.jackson.annotate.JsonSubTypes;
 import org.codehaus.jackson.annotate.JsonTypeInfo;
 
@@ -41,9 +43,9 @@ public abstract class Destination {
 	/**
 	 * The unique identifier for the configuration.
 	 */
-	private String id;
+	private Long id;
 	private DestinationType type;
-	private String displayName;
+	private String name;
 	private DataElementField[] dataElementFields;
 	/**
 	 * The unique identifier for the owner of this configuration.
@@ -54,33 +56,22 @@ public abstract class Destination {
 	private boolean write;
 	private boolean execute;
 	
+	@JsonProperty("created_at")
+	private Date createdAt;
+
+	@JsonProperty("updated_at")
+	private Date updatedAt;
+	
 	public Destination() {
 		
 	}
 	
-	public Destination(EtlDestination etlDest) {
-		if (etlDest != null) {
-			this.id = etlDest.getId();
-			this.type = etlDest.getType();
-			this.displayName = etlDest.getDisplayName();
-			DataElementField[] etlDestDataElementFields = 
-					etlDest.getDataElementFields();
-			if (etlDestDataElementFields != null) {
-				this.dataElementFields = etlDestDataElementFields.clone();
-			}
-			this.ownerUserId = etlDest.getOwnerUserId();
-			this.read = etlDest.isRead();
-			this.write = etlDest.isWrite();
-			this.execute = etlDest.isExecute();
-		}
-	}
-
 	/**
 	 * Get the unique identifier for the configuration.
 	 *
 	 * @return The unique identifier for the configuration.
 	 */
-	public String getId() {
+	public Long getId() {
 		return this.id;
 	}
 
@@ -89,7 +80,7 @@ public abstract class Destination {
 	 *
 	 * @param inId The unique identifier for the configuration.
 	 */
-	public void setId(String inId) {
+	public void setId(Long inId) {
 		this.id = inId;
 	}
 
@@ -116,12 +107,12 @@ public abstract class Destination {
 		this.ownerUserId = inUserId;
 	}
 
-	public String getDisplayName() {
-		return displayName;
+	public String getName() {
+		return name;
 	}
 
-	public void setDisplayName(String displayName) {
-		this.displayName = displayName;
+	public void setName(String name) {
+		this.name = name;
 	}
 
 	public DataElementField[] getDataElementFields() {
@@ -155,6 +146,24 @@ public abstract class Destination {
 	public void setExecute(boolean execute) {
 		this.execute = execute;
 	}
+	
+	public Date getCreatedAt() {
+		return createdAt;
+	}
+
+	public void setCreatedAt(Date createdAt) {
+		this.createdAt = createdAt;
+	}
+
+	public Date getUpdatedAt() {
+		return updatedAt;
+	}
+
+	public void setUpdatedAt(Date updatedAt) {
+		this.updatedAt = updatedAt;
+	}
+	
+	public abstract void accept(DestinationVisitor destinationVisitor);
 	
 	@Override
 	public String toString() {

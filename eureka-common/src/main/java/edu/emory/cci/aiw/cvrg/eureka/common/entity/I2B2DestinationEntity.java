@@ -1,4 +1,4 @@
-package edu.emory.cci.aiw.cvrg.eureka.common.comm;
+package edu.emory.cci.aiw.cvrg.eureka.common.entity;
 
 /*
  * #%L
@@ -20,24 +20,15 @@ package edu.emory.cci.aiw.cvrg.eureka.common.comm;
  * #L%
  */
 
+import javax.persistence.Entity;
+import javax.persistence.Table;
+
 /**
  *
  * @author Andrew Post
  */
-public class EtlCohortDestination extends EtlDestination {
-    private Cohort cohort;
+@Entity
+@Table(name = "i2b2_destinations")
+public class I2B2DestinationEntity extends DestinationEntity {
 	
-	public Cohort getCohort() {
-		return cohort;
-	}
-
-	public void setCohort(Cohort cohort) {
-		this.cohort = cohort;
-	}
-	
-	@Override
-	public void accept(EtlDestinationVisitor etlDestinationVisitor) {
-		etlDestinationVisitor.visit(this);
-	}
-
 }

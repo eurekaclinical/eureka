@@ -42,6 +42,10 @@ public interface EtlClient {
 	EtlDestination getDestination(String destId) throws ClientException;
 
 	List<EtlDestination> getDestinations() throws ClientException;
+	
+	void createDestination(EtlDestination etlDest) throws ClientException;
+
+	void updateDestination(EtlDestination etlDest) throws ClientException;
 
 	Job getJob(Long inJobId) throws ClientException;
 
@@ -90,5 +94,5 @@ public interface EtlClient {
 	public List<Job> getJobsDesc() throws ClientException;
 	
 	public  List<String> getPropositionSearchResults(String sourceConfigID, String inSearchKey) throws ClientException;
-    
+
 }

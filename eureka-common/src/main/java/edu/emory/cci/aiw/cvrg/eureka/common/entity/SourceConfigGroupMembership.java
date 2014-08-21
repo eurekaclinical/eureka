@@ -36,7 +36,7 @@ import javax.persistence.UniqueConstraint;
  */
 @Entity
 @Table(name="sourceconfigs_groups", uniqueConstraints=@UniqueConstraint(columnNames={"sourceconfigs_id", "groups_id"}))
-public class SourceConfigGroupMembership extends GroupMembership {
+public class SourceConfigGroupMembership {
 	@Id
 	@SequenceGenerator(name = "SC_GRP_SEQ_GENERATOR", sequenceName = "SC_GRP_SEQ",
 	allocationSize = 1)
@@ -51,6 +51,12 @@ public class SourceConfigGroupMembership extends GroupMembership {
 	@ManyToOne
 	@JoinColumn(name="sourceconfigs_id", nullable = false)
 	private SourceConfigEntity sourceConfig;
+	
+	private boolean groupRead;
+	
+	private boolean groupWrite;
+	
+	private boolean groupExecute;
 	
 	public Long getId() {
 		return id;
@@ -75,8 +81,31 @@ public class SourceConfigGroupMembership extends GroupMembership {
 	public void setSourceConfig(SourceConfigEntity sourceConfig) {
 		this.sourceConfig = sourceConfig;
 	}
+	
+	public boolean isGroupRead() {
+		return groupRead;
+	}
 
-	@Override
+	public void setGroupRead(boolean groupRead) {
+		this.groupRead = groupRead;
+	}
+
+	public boolean isGroupWrite() {
+		return groupWrite;
+	}
+
+	public void setGroupWrite(boolean groupWrite) {
+		this.groupWrite = groupWrite;
+	}
+
+	public boolean isGroupExecute() {
+		return groupExecute;
+	}
+
+	public void setGroupExecute(boolean groupExecute) {
+		this.groupExecute = groupExecute;
+	}
+
 	public final String configName() {
 		return this.sourceConfig != null ? this.sourceConfig.getName() : null;
 	}

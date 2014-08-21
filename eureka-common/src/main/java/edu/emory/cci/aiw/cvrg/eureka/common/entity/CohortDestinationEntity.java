@@ -4,7 +4,7 @@ package edu.emory.cci.aiw.cvrg.eureka.common.entity;
  * #%L
  * Eureka Common
  * %%
- * Copyright (C) 2012 - 2013 Emory University
+ * Copyright (C) 2012 - 2014 Emory University
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,43 +20,28 @@ package edu.emory.cci.aiw.cvrg.eureka.common.entity;
  * #L%
  */
 
-import javax.persistence.MappedSuperclass;
+import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
 
 /**
  *
  * @author Andrew Post
  */
-@MappedSuperclass
-public abstract class GroupMembership {
-	private boolean groupRead;
+@Entity
+@Table(name = "cohort_destinations")
+public class CohortDestinationEntity extends DestinationEntity {
+	@OneToOne
+	@JoinColumn(nullable = false)
+	private CohortEntity cohort;
+
+	public CohortEntity getCohort() {
+		return cohort;
+	}
+
+	public void setCohort(CohortEntity cohort) {
+		this.cohort = cohort;
+	}
 	
-	private boolean groupWrite;
-	
-	private boolean groupExecute;
-	
-	public abstract String configName();
-	
-	public boolean isGroupRead() {
-		return groupRead;
-	}
-
-	public void setGroupRead(boolean groupRead) {
-		this.groupRead = groupRead;
-	}
-
-	public boolean isGroupWrite() {
-		return groupWrite;
-	}
-
-	public void setGroupWrite(boolean groupWrite) {
-		this.groupWrite = groupWrite;
-	}
-
-	public boolean isGroupExecute() {
-		return groupExecute;
-	}
-
-	public void setGroupExecute(boolean groupExecute) {
-		this.groupExecute = groupExecute;
-	}
 }

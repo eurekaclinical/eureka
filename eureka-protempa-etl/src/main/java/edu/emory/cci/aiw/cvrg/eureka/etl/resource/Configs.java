@@ -23,69 +23,51 @@ package edu.emory.cci.aiw.cvrg.eureka.etl.resource;
  * limitations under the License.
  * #L%
  */
-import java.io.File;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.ConfigEntity;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.EtlUserEntity;
+import edu.emory.cci.aiw.cvrg.eureka.etl.config.EtlProperties;
+import edu.emory.cci.aiw.cvrg.eureka.etl.dao.ConfigDao;
+import edu.emory.cci.aiw.cvrg.eureka.etl.dao.ResolvedPermissions;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.ws.rs.core.Response;
-
-import org.apache.commons.lang3.StringUtils;
-
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.ConfigEntity;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.EtlGroup;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.EtlUser;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.GroupMembership;
-import edu.emory.cci.aiw.cvrg.eureka.common.exception.HttpStatusException;
-import edu.emory.cci.aiw.cvrg.eureka.etl.config.EtlProperties;
-import edu.emory.cci.aiw.cvrg.eureka.etl.dao.ConfigDao;
-
 /**
  *
- * @author arpost
+ * @author Andrew Post
  */
 public abstract class Configs<E, F extends ConfigEntity> {
 
-	private final String name;
-	private final EtlUser user;
+	private final EtlUserEntity user;
 	private final EtlProperties etlProperties;
-	private final File configDir;
-	private final ConfigDao configDao;
+	private final ConfigDao<F> configDao;
 
-	Configs(String inName, EtlProperties inEtlProperties, EtlUser inEtlUser, File inConfigDir, ConfigDao inConfigDao) {
-		assert inName != null : "inName cannot be null";
+	Configs(EtlProperties inEtlProperties, EtlUserEntity inEtlUser, ConfigDao<F> inConfigDao) {
 		assert inEtlProperties != null : "inEtlProperties cannot be null";
 		assert inEtlUser != null : "inEtlUser cannot be null";
-		assert inConfigDir != null : "inConfigDir cannot be null";
 		assert inConfigDao != null : "inConfigDao cannot be null";
-		this.name = inName;
 		this.user = inEtlUser;
 		this.etlProperties = inEtlProperties;
-		if (!inConfigDir.exists()) {
-			try {
-				inConfigDir.mkdir();
-			} catch (SecurityException ex) {
-				throw new HttpStatusException(Response.Status.INTERNAL_SERVER_ERROR,
-						"Could not create " + this.name + " config directory", ex);
-			}
-		}
-		this.configDir = inConfigDir;
 		this.configDao = inConfigDao;
 	}
 
 	/**
-	 * Gets the specified source config. If it does not exist or the current
+	 * Gets the specified source extractDTO. If it does not exist or the current
 	 * user lacks read permissions for it, this method returns
 	 * <code>null</code>.
 	 *
-	 * @return a config.
+	 * @return a extractDTO.
 	 */
 	public final E getOne(String configId) {
 		if (configId == null) {
 			throw new IllegalArgumentException("configId cannot be null");
 		}
-		Perm perm = perm(configId);
+		return Configs.this.extractDTO(this.configDao.getByName(configId));
+	}
+
+	private E extractDTO(F configEntity) {
+		Perm perm = perm(configEntity);
 		if (perm != null && perm.read) {
-			return config(configId, perm);
+			return extractDTO(perm, configEntity);
 		} else {
 			return null;
 		}
@@ -98,59 +80,24 @@ public abstract class Configs<E, F extends ConfigEntity> {
 	 */
 	public final List<E> getAll() {
 		List<E> result = new ArrayList<>();
-		try {
-			File[] files = this.configDir.listFiles();
-			if (files == null) {
-				throw new HttpStatusException(
-						Response.Status.INTERNAL_SERVER_ERROR,
-						StringUtils.capitalize(this.name) + " config directory " + this.configDir.getAbsolutePath() + " does not exist");
+		for (F configEntity : this.configDao.getAll()) {
+			E dto = extractDTO(configEntity);
+			if (dto != null) {
+				result.add(dto);
 			}
-			for (File file : files) {
-				E d = getOne(toConfigId(file));
-				if (d != null) {
-					result.add(d);
-				}
-			}
-		} catch (SecurityException ex) {
-			throw new HttpStatusException(Response.Status.INTERNAL_SERVER_ERROR,
-					StringUtils.capitalize(this.name) + " config directory " + this.configDir.getAbsolutePath() + " could not be accessed", ex);
 		}
 		return result;
 	}
 
-	final Perm perm(String configId) {
-		ConfigEntity configEntity = this.configDao.getByName(configId);
+	private Perm perm(F configEntity) {
 		if (configEntity != null) {
-			EtlUser owner = configEntity.getOwner();
+			EtlUserEntity owner = configEntity.getOwner();
 			if (this.user.equals(owner)) {
 				return new Perm(owner, true, true, true);
 			}
 
-			boolean read = false;
-			boolean write = false;
-			boolean execute = false;
-			List<EtlGroup> groups = user.getGroups();
-			if (groups != null) {
-				for (EtlGroup group : groups) {
-					List<? extends GroupMembership> configPerms = groupConfigs(group);
-					if (configPerms != null) {
-						for (GroupMembership groupMembership : configPerms) {
-							if (groupMembership.configName().equals(configId)) {
-								if (!read) {
-									read = groupMembership.isGroupRead();
-								}
-								if (!write) {
-									write = groupMembership.isGroupWrite();
-								}
-								if (!execute) {
-									execute = groupMembership.isGroupExecute();
-								}
-							}
-						}
-					}
-				}
-			}
-			return new Perm(owner, read, write, execute);
+			ResolvedPermissions resolvedPermissions = resolvePermissions(owner, configEntity);
+			return new Perm(owner, resolvedPermissions.isGroupRead(), resolvedPermissions.isGroupWrite(), resolvedPermissions.isGroupExecute());
 		} else {
 			return null;
 		}
@@ -160,11 +107,7 @@ public abstract class Configs<E, F extends ConfigEntity> {
 		return etlProperties;
 	}
 
-	abstract String toConfigId(File file);
+	abstract E extractDTO(Perm perm, F configEntity);
 
-	abstract E config(String configId, Perm perm);
-
-	abstract List<F> configs(EtlUser user);
-
-	abstract List<? extends GroupMembership> groupConfigs(EtlGroup group);
+	abstract ResolvedPermissions resolvePermissions(EtlUserEntity owner, F entity);
 }

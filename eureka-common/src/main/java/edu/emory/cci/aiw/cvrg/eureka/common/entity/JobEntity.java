@@ -82,7 +82,7 @@ public class JobEntity {
 	 */
 	@ManyToOne
 	@JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false)
-	private EtlUser etlUser;
+	private EtlUserEntity etlUser;
 	/**
 	 * The events generated for the job.
 	 */
@@ -156,7 +156,7 @@ public class JobEntity {
 	 *
 	 * @return The unique identifier for the user.
 	 */
-	public EtlUser getEtlUser() {
+	public EtlUserEntity getEtlUser() {
 		return this.etlUser;
 	}
 
@@ -165,7 +165,7 @@ public class JobEntity {
 	 *
 	 * @param inEtlUser The unique identifier for the user.
 	 */
-	public void setEtlUser(EtlUser inEtlUser) {
+	public void setEtlUser(EtlUserEntity inEtlUser) {
 		this.etlUser = inEtlUser;
 	}
 

@@ -1,8 +1,8 @@
-package edu.emory.cci.aiw.cvrg.eureka.common.comm;
+package edu.emory.cci.aiw.cvrg.eureka.etl.dao;
 
 /*
  * #%L
- * Eureka Common
+ * Eureka Protempa ETL
  * %%
  * Copyright (C) 2012 - 2014 Emory University
  * %%
@@ -24,20 +24,28 @@ package edu.emory.cci.aiw.cvrg.eureka.common.comm;
  *
  * @author Andrew Post
  */
-public class EtlCohortDestination extends EtlDestination {
-    private Cohort cohort;
+public class ResolvedPermissions {
+	private final boolean groupRead;
+	private final boolean groupWrite;
+	private final boolean groupExecute;
 	
-	public Cohort getCohort() {
-		return cohort;
+	public ResolvedPermissions(boolean groupRead, boolean groupWrite, boolean groupExecute) {
+		this.groupRead = groupRead;
+		this.groupWrite = groupWrite;
+		this.groupExecute = groupExecute;
 	}
 
-	public void setCohort(Cohort cohort) {
-		this.cohort = cohort;
-	}
-	
-	@Override
-	public void accept(EtlDestinationVisitor etlDestinationVisitor) {
-		etlDestinationVisitor.visit(this);
+	public boolean isGroupRead() {
+		return groupRead;
 	}
 
+	public boolean isGroupWrite() {
+		return groupWrite;
+	}
+
+	public boolean isGroupExecute() {
+		return groupExecute;
+	}
+	
+	
 }

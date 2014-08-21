@@ -100,6 +100,11 @@ public class Literal extends Node {
 		return false;
 	}
 
+	@Override
+	public void accept(NodeVisitor nodeVisitor) {
+		nodeVisitor.visit(this);
+	}
+
 	private class LiteralEvaluatePropositionVisitor extends AbstractPropositionVisitor {
 		private boolean result;
 

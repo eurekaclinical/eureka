@@ -387,7 +387,7 @@ public class ServicesClient extends EurekaClient {
 	}
 
 	public List<SourceConfig> getSourceConfigs() throws ClientException {
-		String path = "/api/protected/sourceconfig/list";
+		String path = "/api/protected/sourceconfig";
 		return doGet(path, SourceConfigList);
 	}
 	
@@ -402,14 +402,24 @@ public class ServicesClient extends EurekaClient {
 		String path = "/api/protected/sourceconfig/parameters/list";
 		return doGet(path, SourceConfigParamsList);
 	}
+	
+	public void createDestination(Destination destination) throws ClientException {
+		String path = "/api/protected/destinations";
+		doPost(path, destination);
+	}
+	
+	public void updateDestination(Destination destination) throws ClientException {
+		String path = "/api/protected/destinations";
+		doPut(path, destination);
+	}
 
 	public List<Destination> getDestinations() throws ClientException {
-		String path = "/api/protected/destination/list";
+		String path = "/api/protected/destinations";
 		return doGet(path, DestinationList);
 	}
 	
 	public Destination getDestination(String destinationId) throws ClientException {
-		String path = UriBuilder.fromPath("/api/protected/destination/")
+		String path = UriBuilder.fromPath("/api/protected/destinations/")
 				.segment(destinationId)
 				.build().toString();
 		return doGet(path, Destination.class);

@@ -20,25 +20,43 @@ package edu.emory.cci.aiw.cvrg.eureka.etl.queryresultshandler;
  * #L%
  */
 
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.DestinationType;
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.Cohort;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.CohortDestinationEntity;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.CohortEntity;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.DestinationEntity;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.I2B2DestinationEntity;
+import edu.emory.cci.aiw.cvrg.eureka.etl.config.EtlProperties;
+import edu.emory.cci.aiw.cvrg.eureka.etl.dao.DestinationDao;
 import edu.emory.cci.aiw.i2b2etl.I2b2Destination;
-import java.io.File;
 import org.protempa.dest.keyloader.KeyLoaderDestination;
 
 /**
  *
  * @author Andrew Post
  */
+@Singleton
 public class ProtempaDestinationFactory {
+	private final EtlProperties etlProperties;
+	private final DestinationDao destinationDao;
+
+	@Inject
+	public ProtempaDestinationFactory(DestinationDao inDestinationDao, EtlProperties etlProperties) {
+		this.destinationDao = inDestinationDao;
+		this.etlProperties = etlProperties;
+	}
 	
-	public org.protempa.dest.Destination getInstance(DestinationType type, File config) {
-		switch(type) {
-			case I2B2:
-				return new I2b2Destination(config);
-			case COHORT:
-				return new KeyLoaderDestination(new CohortCriteria(config));
-			default:
-				throw new AssertionError("Unexpected destination type " + type);
+	public org.protempa.dest.Destination getInstance(Long destId) {
+		DestinationEntity dest = this.destinationDao.retrieve(destId);
+		if (dest instanceof I2B2DestinationEntity) {
+			return new I2b2Destination(this.etlProperties.destinationConfigFile(dest.getName()));
+		} else if (dest instanceof CohortDestinationEntity) {
+			CohortEntity cohortEntity = ((CohortDestinationEntity) dest).getCohort();
+			Cohort cohort = cohortEntity.toCohort();
+			return new KeyLoaderDestination(new CohortCriteria(cohort));
+		} else {
+			throw new AssertionError("Invalid destination entity type " + dest.getClass());
 		}
 	}
 

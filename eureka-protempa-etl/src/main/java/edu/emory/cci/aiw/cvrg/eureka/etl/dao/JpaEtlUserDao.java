@@ -38,8 +38,8 @@ import com.google.inject.Inject;
 import com.google.inject.Provider;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.dao.GenericDao;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.EtlUser;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.EtlUser_;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.EtlUserEntity;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.EtlUserEntity_;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.UserEntity_;
 
 /**
@@ -48,7 +48,7 @@ import edu.emory.cci.aiw.cvrg.eureka.common.entity.UserEntity_;
  *
  * @author Andrew Post
  */
-public class JpaEtlUserDao extends GenericDao<EtlUser, Long> implements EtlUserDao {
+public class JpaEtlUserDao extends GenericDao<EtlUserEntity, Long> implements EtlUserDao {
 	/**
 	 * The class level logger.
 	 */
@@ -63,24 +63,24 @@ public class JpaEtlUserDao extends GenericDao<EtlUser, Long> implements EtlUserD
 	 */
 	@Inject
 	public JpaEtlUserDao(Provider<EntityManager> inEMProvider) {
-		super(EtlUser.class, inEMProvider);
+		super(EtlUserEntity.class, inEMProvider);
 	}
 
 	@Override
-	public EtlUser getByAttributePrincipal(AttributePrincipal principal) {
+	public EtlUserEntity getByAttributePrincipal(AttributePrincipal principal) {
 		return getByUsername(principal.getName());
 	}
 	
 	@Override
-	public EtlUser getByUsername(String username) {
+	public EtlUserEntity getByUsername(String username) {
 		EntityManager entityManager = getEntityManager();
 		CriteriaBuilder builder = entityManager.getCriteriaBuilder();
-		CriteriaQuery<EtlUser> criteriaQuery = builder.createQuery(EtlUser.class);
-		Root<EtlUser> root = criteriaQuery.from(EtlUser.class);
-		Path<String> usernamePath = root.get(EtlUser_.username);
-		TypedQuery<EtlUser> query = entityManager.createQuery(criteriaQuery.where(
+		CriteriaQuery<EtlUserEntity> criteriaQuery = builder.createQuery(EtlUserEntity.class);
+		Root<EtlUserEntity> root = criteriaQuery.from(EtlUserEntity.class);
+		Path<String> usernamePath = root.get(EtlUserEntity_.username);
+		TypedQuery<EtlUserEntity> query = entityManager.createQuery(criteriaQuery.where(
 				builder.equal(usernamePath, username)));
-		EtlUser result = null;
+		EtlUserEntity result = null;
 		try {
 			result = query.getSingleResult();
 		} catch (NonUniqueResultException nure) {

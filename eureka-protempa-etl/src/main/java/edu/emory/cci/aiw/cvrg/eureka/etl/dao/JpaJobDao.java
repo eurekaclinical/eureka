@@ -35,16 +35,13 @@ import org.slf4j.LoggerFactory;
 
 import com.google.inject.Inject;
 import com.google.inject.Provider;
-import edu.emory.cci.aiw.cvrg.eureka.common.authentication.AuthenticationMethod;
-import edu.emory.cci.aiw.cvrg.eureka.common.authentication.UserPrincipalAttributes;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.JobFilter;
 import edu.emory.cci.aiw.cvrg.eureka.common.dao.GenericDao;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.EtlUser_;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.EtlUserEntity_;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.JobEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.JobEntity_;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.JobEvent_;
-import javax.persistence.criteria.Order;
 
 /**
  * Implements the {@link JobDao} interface, with the use of JPA entity managers.
@@ -113,7 +110,7 @@ public class JpaJobDao extends GenericDao<JobEntity, Long> implements JobDao {
 			LOGGER.debug("Checking for user ID.");
 			if (jobFilter.getUserId() != null) {
 				LOGGER.debug("Found user ID: {}", jobFilter.getUserId());
-				predicates.add(builder.equal(root.get(JobEntity_.etlUser).get(EtlUser_.id),
+				predicates.add(builder.equal(root.get(JobEntity_.etlUser).get(EtlUserEntity_.id),
 						jobFilter.getUserId()));
 			}
 			LOGGER.debug("Checking for start time.");

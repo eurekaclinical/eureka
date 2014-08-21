@@ -19,17 +19,25 @@ package edu.emory.cci.aiw.cvrg.eureka.etl.resource;
  * limitations under the License.
  * #L%
  */
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.DestinationType;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.Cohort;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.EtlCohortDestination;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.EtlDestination;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.EtlI2B2Destination;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.Node;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.CohortDestinationEntity;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.CohortEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.DestinationEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.DestinationGroupMembership;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.EtlGroup;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.EtlUser;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.EtlUserEntity;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.I2B2DestinationEntity;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.NodeEntity;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.NodeToNodeEntityVisitor;
 import edu.emory.cci.aiw.cvrg.eureka.common.exception.HttpStatusException;
 import edu.emory.cci.aiw.cvrg.eureka.etl.config.EtlProperties;
 import edu.emory.cci.aiw.cvrg.eureka.etl.dao.DestinationDao;
+import edu.emory.cci.aiw.cvrg.eureka.etl.dao.EtlGroupDao;
+import edu.emory.cci.aiw.cvrg.eureka.etl.dao.ResolvedPermissions;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
@@ -42,7 +50,6 @@ import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpression;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
-import org.apache.commons.lang3.StringUtils;
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
@@ -52,74 +59,126 @@ import org.xml.sax.SAXException;
  */
 public final class Destinations extends Configs<EtlDestination, DestinationEntity> {
 
-	private final XPathExpression typeExpr;
 	private final XPathExpression displayNameExpr;
 	private final DocumentBuilderFactory docBuilderFactory;
+	private final EtlGroupDao groupDao;
+	private final EtlUserEntity etlUser;
+	private final DestinationDao destinationDao;
 
-	public Destinations(EtlProperties inEtlProperties, EtlUser inEtlUser, DestinationDao inDestinationDao) {
-		super("destination", inEtlProperties, inEtlUser, inEtlProperties.getDestinationConfigDirectory(), inDestinationDao);
+	public Destinations(EtlProperties inEtlProperties, EtlUserEntity inEtlUser, 
+			DestinationDao inDestinationDao, EtlGroupDao inGroupDao) {
+		super(inEtlProperties, inEtlUser, inDestinationDao);
 		XPathFactory xpathFactory = XPathFactory.newInstance();
 		XPath xpath = xpathFactory.newXPath();
 		try {
-			typeExpr = xpath.compile("/queryResultsHandler/type/text()");
 			displayNameExpr = xpath.compile("/queryResultsHandler/displayName/text()");
 		} catch (XPathExpressionException ex) {
 			throw new AssertionError("Invalid xpath expression: " + ex.getMessage());
 		}
 		this.docBuilderFactory = DocumentBuilderFactory.newInstance();
 		this.docBuilderFactory.setNamespaceAware(true); // never forget this!
+		this.groupDao = inGroupDao;
+		this.etlUser = inEtlUser;
+		this.destinationDao = inDestinationDao;
+	}
+	
+	public void create(EtlDestination etlDestination) {
+		if (etlDestination instanceof EtlCohortDestination) {
+			CohortDestinationEntity cde = new CohortDestinationEntity();
+			cde.setName(etlDestination.getName());
+			cde.setDescription(etlDestination.getDescription());
+			cde.setOwner(this.etlUser);
+			Cohort cohort = ((EtlCohortDestination) etlDestination).getCohort();
+			CohortEntity cohortEntity = new CohortEntity();
+			Node node = cohort.getNode();
+			NodeToNodeEntityVisitor v = new NodeToNodeEntityVisitor();
+			node.accept(v);
+			cohortEntity.setNode(v.getNodeEntity());
+			cde.setCohort(cohortEntity);
+			this.destinationDao.create(cde);
+		} else if (etlDestination instanceof EtlI2B2Destination) {
+			throw new HttpStatusException(Response.Status.BAD_REQUEST, "Can't create i2b2 destinations via web services yet");
+		} else {
+			throw new AssertionError("Unexpected destination type " + etlDestination.getClass());
+		}
+	}
+	
+	public void update(EtlDestination etlDestination) {
+		if (etlDestination instanceof EtlCohortDestination) {
+			if (!this.etlUser.getId().equals(etlDestination.getOwnerUserId())) {
+				throw new HttpStatusException(Response.Status.NOT_FOUND);
+			}
+			CohortDestinationEntity cde = new CohortDestinationEntity();
+			cde.setId(etlDestination.getId());
+			cde.setName(etlDestination.getName());
+			cde.setDescription(etlDestination.getDescription());
+			cde.setOwner(this.etlUser);
+			Cohort cohort = ((EtlCohortDestination) etlDestination).getCohort();
+			CohortEntity cohortEntity = new CohortEntity();
+			cohortEntity.setId(cohort.getId());
+			Node node = cohort.getNode();
+			NodeToNodeEntityVisitor v = new NodeToNodeEntityVisitor();
+			node.accept(v);
+			cohortEntity.setNode(v.getNodeEntity());
+			this.destinationDao.update(cde);
+		} else if (etlDestination instanceof EtlI2B2Destination) {
+			throw new HttpStatusException(Response.Status.BAD_REQUEST, "Can't update i2b2 destinations via web services yet");
+		} else {
+			throw new AssertionError("Unexpected destination type " + etlDestination.getClass());
+		}
 	}
 
 	@Override
-	EtlDestination config(String destId, Perm perm) {
-		DocumentBuilder builder;
+	EtlDestination extractDTO(Perm perm, 
+			DestinationEntity destinationEntity) {
 		try {
-			builder = this.docBuilderFactory.newDocumentBuilder();
-			Document doc = builder.parse(getEtlProperties().destinationConfigFile(destId));
-			String type = (String) typeExpr.evaluate(doc, XPathConstants.STRING);
 			EtlDestination dest;
-			switch (DestinationType.valueOf(type)) {
-				case I2B2:
-					dest = new EtlI2B2Destination();
-					break;
-				case COHORT:
-					dest = new EtlCohortDestination();
-					break;
-				default:
-					throw new AssertionError("Unexpected destination type " + type);
+			if (destinationEntity instanceof I2B2DestinationEntity) {
+				DocumentBuilder builder = this.docBuilderFactory.newDocumentBuilder();
+				dest = new EtlI2B2Destination();
+				Document doc = builder.parse(getEtlProperties().destinationConfigFile(destinationEntity.getName()));
+				String displayName = (String) displayNameExpr.evaluate(doc, XPathConstants.STRING);
+				dest.setName(displayName);
+			} else if (destinationEntity instanceof CohortDestinationEntity) {
+				EtlCohortDestination cohortDest = new EtlCohortDestination();
+				cohortDest.setName(destinationEntity.getName());
+				cohortDest.setDescription(destinationEntity.getDescription());
+				cohortDest.setCohort(((CohortDestinationEntity) destinationEntity).getCohort().toCohort());
+				dest = cohortDest;
+			} else {
+				throw new AssertionError("Unexpected destination type " + destinationEntity.getClass());
 			}
 			
-			dest.setId(destId);
+			dest.setId(destinationEntity.getId());
 			
 			dest.setRead(perm.read);
 			dest.setWrite(perm.write);
 			dest.setExecute(perm.execute);
 			
-			if (type == null) {
-				throw new HttpStatusException(Response.Status.INTERNAL_SERVER_ERROR, "No type specified in the configuration for destination '" + destId + "'");
-			}
-			String displayName = (String) displayNameExpr.evaluate(doc, XPathConstants.STRING);
-			dest.setDisplayName(displayName);
+			dest.setOwnerUserId(destinationEntity.getOwner().getId());
+			
+			
 			return dest;
 		} catch (XPathExpressionException | ParserConfigurationException | IOException | SAXException ex) {
 			throw new HttpStatusException(Response.Status.INTERNAL_SERVER_ERROR, ex);
 		}
 	}
 
-	@Override
-	List<DestinationEntity> configs(EtlUser user) {
+	List<DestinationEntity> configs(EtlUserEntity user) {
 		return user.getDestinations();
 	}
 
-	@Override
 	List<DestinationGroupMembership> groupConfigs(EtlGroup group) {
 		return group.getDestinations();
 	}
 
-	@Override
 	String toConfigId(File file) {
 		return FromConfigFile.toDestId(file);
 	}
-	
+
+	@Override
+	ResolvedPermissions resolvePermissions(EtlUserEntity owner, DestinationEntity entity) {
+		return this.groupDao.resolveDestinationPermissions(owner, entity);
+	}
 	
 }

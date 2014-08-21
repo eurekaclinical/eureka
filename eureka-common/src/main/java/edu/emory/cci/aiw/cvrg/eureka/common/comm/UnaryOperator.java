@@ -68,6 +68,11 @@ public class UnaryOperator extends Node {
 	}
 	
 	@Override
+	public void accept(NodeVisitor nodeVisitor) {
+		nodeVisitor.visit(this);
+	}
+	
+	@Override
 	public String toString() {
 		return ReflectionToStringBuilder.reflectionToString(this);
 	}

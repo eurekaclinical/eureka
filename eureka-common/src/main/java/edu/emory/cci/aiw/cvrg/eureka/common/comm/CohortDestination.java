@@ -25,19 +25,19 @@ package edu.emory.cci.aiw.cvrg.eureka.common.comm;
  * @author Andrew Post
  */
 public class CohortDestination extends Destination {
-	private String cohortName;
+	private Cohort cohort;
 	
-	public CohortDestination(EtlCohortDestination etlCohortDestination) {
-		super(etlCohortDestination);
-		this.cohortName = etlCohortDestination.getCohort().getName();
+	public Cohort getCohort() {
+		return cohort;
 	}
 
-	public String getCohortName() {
-		return cohortName;
+	public void setCohort(Cohort cohort) {
+		this.cohort = cohort;
 	}
 
-	public void setCohortName(String cohortName) {
-		this.cohortName = cohortName;
+	@Override
+	public void accept(DestinationVisitor destinationVisitor) {
+		destinationVisitor.visit(this);
 	}
-	
+
 }

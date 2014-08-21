@@ -26,8 +26,9 @@ package edu.emory.cci.aiw.cvrg.eureka.common.comm;
  */
 public class I2B2Destination extends Destination {
 
-	public I2B2Destination(EtlI2B2Destination etlDest) {
-		super(etlDest);
+	@Override
+	public void accept(DestinationVisitor destinationVisitor) {
+		destinationVisitor.visit(this);
 	}
 
 }

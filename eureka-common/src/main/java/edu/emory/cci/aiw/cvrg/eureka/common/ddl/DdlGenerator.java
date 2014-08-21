@@ -24,7 +24,7 @@ import edu.emory.cci.aiw.cvrg.eureka.common.entity.DataElementEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.DestinationEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.DestinationGroupMembership;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.EtlGroup;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.EtlUser;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.EtlUserEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.ExtendedDataElement;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.FrequencyEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.FrequencyType;
@@ -123,14 +123,14 @@ public final class DdlGenerator {
 		final List<Class<?>> backendClasses = new ArrayList<>();
 		backendClasses.add(JobEntity.class);
 		backendClasses.add(JobEvent.class);
-		backendClasses.add(EtlUser.class);
+		backendClasses.add(EtlUserEntity.class);
 		backendClasses.add(EtlGroup.class);
 		backendClasses.add(SourceConfigEntity.class);
 		backendClasses.add(DestinationEntity.class);
 		backendClasses.add(SourceConfigGroupMembership.class);
 		backendClasses.add(DestinationGroupMembership.class);
 		backendClasses.add(edu.emory.cci.aiw.cvrg.eureka.common.entity
-				.EtlUser.class);
+				.EtlUserEntity.class);
 		backendClasses.add(edu.emory.cci.aiw.cvrg.eureka.common.entity.EtlGroup
 				.class);
 		backendClasses.add(edu.emory.cci.aiw.cvrg.eureka.common.entity

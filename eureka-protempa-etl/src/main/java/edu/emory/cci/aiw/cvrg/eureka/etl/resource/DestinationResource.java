@@ -19,27 +19,27 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.etl.resource;
 
-import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
-
-
 import com.google.inject.Inject;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.EtlDestination;
-
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.EtlUser;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.EtlUserEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.exception.HttpStatusException;
 import edu.emory.cci.aiw.cvrg.eureka.etl.authentication.EtlAuthenticationSupport;
 import edu.emory.cci.aiw.cvrg.eureka.etl.config.EtlProperties;
 import edu.emory.cci.aiw.cvrg.eureka.etl.dao.DestinationDao;
+import edu.emory.cci.aiw.cvrg.eureka.etl.dao.EtlGroupDao;
 import edu.emory.cci.aiw.cvrg.eureka.etl.dao.EtlUserDao;
 import java.util.List;
 import javax.annotation.security.RolesAllowed;
 import javax.servlet.http.HttpServletRequest;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response.Status;
 
 @Path("/protected/destinations")
@@ -52,13 +52,27 @@ public class DestinationResource {
 	private final EtlUserDao userDao;
 	private final DestinationDao destinationDao;
 	private final EtlAuthenticationSupport authenticationSupport;
+	private final EtlGroupDao groupDao;
 
 	@Inject
-	public DestinationResource(EtlProperties inEtlProperties, EtlUserDao inEtlUserDao, DestinationDao inDestinationDao) {
+	public DestinationResource(EtlProperties inEtlProperties, EtlUserDao inEtlUserDao, DestinationDao inDestinationDao, EtlGroupDao inGroupDao) {
 		this.etlProperties = inEtlProperties;
 		this.userDao = inEtlUserDao;
 		this.destinationDao = inDestinationDao;
 		this.authenticationSupport = new EtlAuthenticationSupport(this.userDao);
+		this.groupDao = inGroupDao;
+	}
+	
+	@POST
+	public void create(@Context HttpServletRequest request, EtlDestination etlDestination) {
+		EtlUserEntity user = this.authenticationSupport.getEtlUser(request);
+		new Destinations(this.etlProperties, user, this.destinationDao, this.groupDao).create(etlDestination);
+	}
+	
+	@PUT
+	public void update(@Context HttpServletRequest request, EtlDestination etlDestination) {
+		EtlUserEntity user = this.authenticationSupport.getEtlUser(request);
+		new Destinations(this.etlProperties, user, this.destinationDao, this.groupDao).update(etlDestination);
 	}
 
 	@GET
@@ -66,9 +80,9 @@ public class DestinationResource {
 	public EtlDestination getDestination(
 			@Context HttpServletRequest request,
 			@PathParam("destId") String destId) {
-		EtlUser user = this.authenticationSupport.getEtlUser(request);
+		EtlUserEntity user = this.authenticationSupport.getEtlUser(request);
 		EtlDestination result 
-				= new Destinations(this.etlProperties, user, this.destinationDao).getOne(destId);
+				= new Destinations(this.etlProperties, user, this.destinationDao, this.groupDao).getOne(destId);
 		if (result != null) {
 			return result;
 		} else {
@@ -78,8 +92,8 @@ public class DestinationResource {
 
 	@GET
 	public List<EtlDestination> getAll(@Context HttpServletRequest request) {
-		EtlUser user = this.authenticationSupport.getEtlUser(request);
-		return new Destinations(this.etlProperties, user, this.destinationDao).getAll();
+		EtlUserEntity user = this.authenticationSupport.getEtlUser(request);
+		return new Destinations(this.etlProperties, user, this.destinationDao, this.groupDao).getAll();
 	}
 
 }

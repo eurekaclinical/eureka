@@ -4,7 +4,7 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.etl.resource;
 
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.EtlUser;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.EtlUserEntity;
 
 /*
  * #%L
@@ -31,12 +31,12 @@ import edu.emory.cci.aiw.cvrg.eureka.common.entity.EtlUser;
  * @author arpost
  */
 class Perm {
-	EtlUser owner;
+	EtlUserEntity owner;
 	boolean read;
 	boolean write;
 	boolean execute;
 
-	Perm(EtlUser owner, boolean read, boolean write, boolean execute) {
+	Perm(EtlUserEntity owner, boolean read, boolean write, boolean execute) {
 		this.owner = owner;
 		this.read = read;
 		this.write = write;

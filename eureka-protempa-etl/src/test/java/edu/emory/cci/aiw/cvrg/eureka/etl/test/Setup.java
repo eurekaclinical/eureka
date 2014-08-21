@@ -26,7 +26,7 @@ import javax.persistence.EntityManager;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.EtlUser;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.EtlUserEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.JobEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.JobEventType;
 import edu.emory.cci.aiw.cvrg.eureka.common.authentication.LoginType;
@@ -42,7 +42,7 @@ public class Setup implements TestDataProvider {
 
 	private final Provider<EntityManager> managerProvider;
 	private JobEntity job;
-	private EtlUser etlUser;
+	private EtlUserEntity etlUser;
 	private SourceConfigEntity sce;
 
 	/**
@@ -81,7 +81,7 @@ public class Setup implements TestDataProvider {
 	private void addJobs() {
 		EntityManager entityManager = this.getEntityManager();
 		entityManager.getTransaction().begin();
-		this.etlUser = new EtlUser();
+		this.etlUser = new EtlUserEntity();
 		this.etlUser.setUsername("user@emory.edu");
 		entityManager.persist(this.etlUser);
 		this.job = new JobEntity();

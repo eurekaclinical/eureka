@@ -26,11 +26,15 @@ import edu.emory.cci.aiw.cvrg.eureka.common.comm.EtlDestination;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ClientException;
 import edu.emory.cci.aiw.cvrg.eureka.common.exception.HttpStatusException;
 import edu.emory.cci.aiw.cvrg.eureka.services.config.EtlClient;
+import edu.emory.cci.aiw.cvrg.eureka.services.conversion.DestinationToEtlDestinationVisitor;
+import edu.emory.cci.aiw.cvrg.eureka.services.conversion.EtlDestinationToDestinationVisitor;
 import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.security.RolesAllowed;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -40,7 +44,7 @@ import javax.ws.rs.core.Response.Status;
 /**
  * @author Andrew Post
  */
-@Path("/protected/destination")
+@Path("/protected/destinations")
 @RolesAllowed({"researcher"})
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
@@ -52,6 +56,32 @@ public class DestinationResource {
 	public DestinationResource(EtlClient inEtlClient) {
 		this.etlClient = inEtlClient;
 	}
+	
+	@POST
+	public void create(Destination inDestination) {
+		DestinationToEtlDestinationVisitor v =
+				new DestinationToEtlDestinationVisitor();
+		inDestination.accept(v);
+		EtlDestination etlDest = v.getEtlDestination();
+		try {
+			this.etlClient.createDestination(etlDest);
+		} catch (ClientException ex) {
+			throw new HttpStatusException(Status.INTERNAL_SERVER_ERROR, ex);
+		}
+	}
+	
+	@PUT
+	public void update(Destination inDestination) {
+		DestinationToEtlDestinationVisitor v =
+				new DestinationToEtlDestinationVisitor();
+		inDestination.accept(v);
+		EtlDestination etlDest = v.getEtlDestination();
+		try {
+			this.etlClient.updateDestination(etlDest);
+		} catch (ClientException ex) {
+			throw new HttpStatusException(Status.INTERNAL_SERVER_ERROR, ex);
+		}
+	}
 
 	/**
 	 * Gets all of the destinations for a user
@@ -59,13 +89,15 @@ public class DestinationResource {
 	 * @return a {@link List} of {@link Destination}s
 	 */
 	@GET
-	@Path("/list")
 	public List<Destination> getAll() {
 		try {
 			List<EtlDestination> destinations = this.etlClient.getDestinations();
 			List<Destination> result = new ArrayList<>(destinations.size());
+			EtlDestinationToDestinationVisitor v = 
+					new EtlDestinationToDestinationVisitor();
 			for (EtlDestination etlDest : destinations) {
-				result.add(etlDest.toDestination());
+				etlDest.accept(v);
+				result.add(v.getDestination());
 			}
 			return result;
 		} catch (ClientException ex) {
@@ -76,8 +108,10 @@ public class DestinationResource {
 	@GET
 	@Path("/{id}")
 	public Destination get(@PathParam("id") String inId) {
+		EtlDestinationToDestinationVisitor v = 
+					new EtlDestinationToDestinationVisitor();
 		try {
-			return this.etlClient.getDestination(inId).toDestination();
+			this.etlClient.getDestination(inId).accept(v);
 		} catch (ClientException ex) {
 			if (ex.getResponseStatus() == ClientResponse.Status.NOT_FOUND) {
 				throw new HttpStatusException(Status.NOT_FOUND);
@@ -85,6 +119,7 @@ public class DestinationResource {
 				throw new HttpStatusException(Status.INTERNAL_SERVER_ERROR, ex);
 			}
 		}
+		return v.getDestination();
 	}
 
 }

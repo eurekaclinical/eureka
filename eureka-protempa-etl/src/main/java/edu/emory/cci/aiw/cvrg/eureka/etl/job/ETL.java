@@ -20,6 +20,7 @@
 package edu.emory.cci.aiw.cvrg.eureka.etl.job;
 
 import com.google.inject.Inject;
+import com.google.inject.Singleton;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.EtlDestination;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.JobEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.JobEvent;
@@ -27,6 +28,7 @@ import edu.emory.cci.aiw.cvrg.eureka.common.entity.JobEventType;
 import edu.emory.cci.aiw.cvrg.eureka.etl.config.EtlProperties;
 import edu.emory.cci.aiw.cvrg.eureka.etl.config.EurekaProtempaConfigurations;
 import edu.emory.cci.aiw.cvrg.eureka.etl.dao.DestinationDao;
+import edu.emory.cci.aiw.cvrg.eureka.etl.dao.EtlGroupDao;
 import edu.emory.cci.aiw.cvrg.eureka.etl.dao.JobDao;
 import edu.emory.cci.aiw.cvrg.eureka.etl.queryresultshandler.ProtempaDestinationFactory;
 import edu.emory.cci.aiw.cvrg.eureka.etl.resource.Destinations;
@@ -70,22 +72,23 @@ import org.slf4j.LoggerFactory;
  *
  * @author Andrew Post
  */
+@Singleton
 public class ETL {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(ETL.class);
 	private final EtlProperties etlProperties;
-	private PreventCloseKnowledgeSource knowledgeSource;
-	private PreventCloseDataSource dataSource;
-	private PreventCloseAlgorithmSource algorithmSource;
-	private PreventCloseTermSource termSource;
 	private final JobDao jobDao;
 	private final DestinationDao destinationDao;
+	private final ProtempaDestinationFactory protempaDestFactory;
+	private final EtlGroupDao groupDao;
 
 	@Inject
-	public ETL(EtlProperties inEtlProperties, JobDao inJobDao, DestinationDao inDestinationDao) {
+	public ETL(EtlProperties inEtlProperties, JobDao inJobDao, DestinationDao inDestinationDao, EtlGroupDao inGroupDao, ProtempaDestinationFactory inProtempaDestFactory) {
 		this.etlProperties = inEtlProperties;
 		this.jobDao = inJobDao;
 		this.destinationDao = inDestinationDao;
+		this.protempaDestFactory = inProtempaDestFactory;
+		this.groupDao = inGroupDao;
 	}
 
 	void run(JobEntity job, PropositionDefinition[] inPropositionDefinitions,
@@ -104,14 +107,11 @@ public class ETL {
 			q.setFilters(filter);
 			LOGGER.debug("Constructed Protempa query " + q);
 			Query query = protempa.buildQuery(q);
-			File configFile = 
-					this.etlProperties.destinationConfigFile(
-					job.getDestinationId());
 			EtlDestination eurekaDestination = 
-					new Destinations(this.etlProperties, job.getEtlUser(), this.destinationDao).getOne(job.getDestinationId());
+					new Destinations(this.etlProperties, job.getEtlUser(), this.destinationDao, this.groupDao).getOne(job.getDestinationId());
 			org.protempa.dest.Destination protempaDestination = 
-					new ProtempaDestinationFactory()
-					.getInstance(eurekaDestination.getType(), configFile);
+					this.protempaDestFactory
+					.getInstance(eurekaDestination.getId());
 			protempa.execute(query, protempaDestination);
 			protempa.close();
 		} catch (CloseException | BackendNewInstanceException | BackendInitializationException | ConfigurationsLoadException | BackendProviderSpecLoaderException | QueryBuildException | InvalidConfigurationException | ConfigurationsNotFoundException | DataSourceValidationIncompleteException ex) {
@@ -137,18 +137,6 @@ public class ETL {
 	}
 
 	void close() {
-		if (this.knowledgeSource != null) {
-			this.knowledgeSource.reallyClose();
-		}
-		if (this.dataSource != null) {
-			this.dataSource.reallyClose();
-		}
-		if (this.algorithmSource != null) {
-			this.algorithmSource.reallyClose();
-		}
-		if (this.termSource != null) {
-			this.termSource.reallyClose();
-		}
 	}
 
 	private void logValidationEvents(JobEntity job, DataValidationEvent[] events, DataSourceFailedDataValidationException ex) {

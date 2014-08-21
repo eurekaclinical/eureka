@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <!--
   #%L
   Eureka Protempa ETL
@@ -15,34 +16,36 @@
   limitations under the License.
   #L%
   -->
-<persistence xmlns="http://java.sun.com/xml/ns/persistence"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd"
-	version="2.0">
-	<persistence-unit name="backend-jpa-unit" transaction-type="RESOURCE_LOCAL">
-		<provider>org.hibernate.ejb.HibernatePersistence</provider>
-		<non-jta-data-source>java:comp/env/jdbc/EurekaBackend</non-jta-data-source>
-	<!--
+<persistence version="2.0" xmlns="http://java.sun.com/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd">
+  <persistence-unit name="backend-jpa-unit" transaction-type="RESOURCE_LOCAL">
+    <provider>org.hibernate.ejb.HibernatePersistence</provider>
+    <non-jta-data-source>java:comp/env/jdbc/EurekaBackend</non-jta-data-source>
+    <!--
 		<provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
 		<jta-data-source>jdbc/EurekaBackend</jta-data-source>
 	-->
-		<class>edu.emory.cci.aiw.cvrg.eureka.common.entity.JobEntity</class>
-		<class>edu.emory.cci.aiw.cvrg.eureka.common.entity.JobEvent</class>
-		<class>edu.emory.cci.aiw.cvrg.eureka.common.entity.EtlUser</class>
-		<class>edu.emory.cci.aiw.cvrg.eureka.common.entity.EtlGroup</class>
-		<class>edu.emory.cci.aiw.cvrg.eureka.common.entity.SourceConfigEntity</class>
-		<class>edu.emory.cci.aiw.cvrg.eureka.common.entity.DestinationEntity</class>
-		<class>edu.emory.cci.aiw.cvrg.eureka.common.entity.SourceConfigGroupMembership</class>
-		<class>edu.emory.cci.aiw.cvrg.eureka.common.entity.DestinationGroupMembership</class>
-
-		<properties>
-			<!-- Disable the second-level cache -->
-			<property name="hibernate.cache.provider_class" value="org.hibernate.cache.NoCacheProvider" />
-			<property name="hibernate.hbm2ddl.auto" value="validate" />
-			<!-- property name="hibernate.dialect" value="org.hibernate.dialect.Oracle10gDialect" / -->
-			<!-- Default is false for backwards compatibility. Should be used on all
+    <class>edu.emory.cci.aiw.cvrg.eureka.common.entity.JobEntity</class>
+    <class>edu.emory.cci.aiw.cvrg.eureka.common.entity.JobEvent</class>
+    <class>edu.emory.cci.aiw.cvrg.eureka.common.entity.EtlUserEntity</class>
+    <class>edu.emory.cci.aiw.cvrg.eureka.common.entity.EtlGroup</class>
+    <class>edu.emory.cci.aiw.cvrg.eureka.common.entity.SourceConfigEntity</class>
+    <class>edu.emory.cci.aiw.cvrg.eureka.common.entity.DestinationEntity</class>
+    <class>edu.emory.cci.aiw.cvrg.eureka.common.entity.SourceConfigGroupMembership</class>
+    <class>edu.emory.cci.aiw.cvrg.eureka.common.entity.DestinationGroupMembership</class>
+    <class>edu.emory.cci.aiw.cvrg.eureka.common.entity.BinaryOperatorEntity</class>
+    <class>edu.emory.cci.aiw.cvrg.eureka.common.entity.CohortDestinationEntity</class>
+    <class>edu.emory.cci.aiw.cvrg.eureka.common.entity.CohortEntity</class>
+    <class>edu.emory.cci.aiw.cvrg.eureka.common.entity.I2B2DestinationEntity</class>
+    <class>edu.emory.cci.aiw.cvrg.eureka.common.entity.LiteralEntity</class>
+    <class>edu.emory.cci.aiw.cvrg.eureka.common.entity.NodeEntity</class>
+    <properties>
+      <!-- Disable the second-level cache -->
+      <property name="hibernate.cache.provider_class" value="org.hibernate.cache.NoCacheProvider"/>
+      <property name="hibernate.hbm2ddl.auto" value="validate"/>
+      <!-- property name="hibernate.dialect" value="org.hibernate.dialect.Oracle10gDialect" / -->
+      <!-- Default is false for backwards compatibility. Should be used on all
 				new projects -->
-			<property name="hibernate.id.new_generator_mappings" value="true" />
-		</properties>
-	</persistence-unit>
+      <property name="hibernate.id.new_generator_mappings" value="true"/>
+    </properties>
+  </persistence-unit>
 </persistence>

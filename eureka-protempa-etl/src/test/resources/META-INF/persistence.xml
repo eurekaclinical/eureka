@@ -6,7 +6,7 @@
 		transaction-type="RESOURCE_LOCAL">
 		<class>edu.emory.cci.aiw.cvrg.eureka.common.entity.JobEntity</class>
 		<class>edu.emory.cci.aiw.cvrg.eureka.common.entity.JobEvent</class>
-		<class>edu.emory.cci.aiw.cvrg.eureka.common.entity.EtlUser</class>
+		<class>edu.emory.cci.aiw.cvrg.eureka.common.entity.EtlUserEntity</class>
 		<class>edu.emory.cci.aiw.cvrg.eureka.common.entity.EtlGroup</class>
 		<class>edu.emory.cci.aiw.cvrg.eureka.common.entity.SourceConfigEntity</class>
 		<class>edu.emory.cci.aiw.cvrg.eureka.common.entity.DestinationEntity</class>

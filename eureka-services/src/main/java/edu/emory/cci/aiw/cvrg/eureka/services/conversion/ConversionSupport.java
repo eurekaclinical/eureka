@@ -20,6 +20,9 @@ package edu.emory.cci.aiw.cvrg.eureka.services.conversion;
  * #L%
  */
 
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.Cohort;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.Literal;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.Node;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.DataElementEntity;
 import org.protempa.proposition.value.NominalValue;
 
@@ -65,4 +68,27 @@ public class ConversionSupport {
 	public NominalValue asValue(String dataElementKey) {
 		return NominalValue.getInstance(asValueString(dataElementKey));
 	}
+	
+	public Cohort etlCohortToServicesCohort(Cohort etlCohort) {
+		Cohort cohort = new Cohort();
+		cohort.setId(etlCohort.getId());
+		EtlNodeToServicesNodeVisitor v = 
+				new EtlNodeToServicesNodeVisitor();
+		etlCohort.getNode().accept(v);
+		cohort.setNode(v.getNode());
+		
+		return cohort;
+	}
+	
+	public Cohort servicesCohortToEtlCohort(Cohort servicesCohort) {
+		Cohort cohort = new Cohort();
+		cohort.setId(servicesCohort.getId());
+		ServicesNodeToEtlNodeVisitor v =
+				new ServicesNodeToEtlNodeVisitor();
+		servicesCohort.getNode().accept(v);
+		cohort.setNode(v.getNode());
+		
+		return cohort;
+	}
+
 }

@@ -23,10 +23,11 @@ import com.google.inject.Inject;
 import com.sun.jersey.core.header.FormDataContentDisposition;
 import com.sun.jersey.multipart.FormDataParam;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.SourceConfig;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.EtlUser;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.EtlUserEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.exception.HttpStatusException;
 import edu.emory.cci.aiw.cvrg.eureka.etl.authentication.EtlAuthenticationSupport;
 import edu.emory.cci.aiw.cvrg.eureka.etl.config.EtlProperties;
+import edu.emory.cci.aiw.cvrg.eureka.etl.dao.EtlGroupDao;
 import edu.emory.cci.aiw.cvrg.eureka.etl.dao.EtlUserDao;
 import edu.emory.cci.aiw.cvrg.eureka.etl.dao.SourceConfigDao;
 import java.io.File;
@@ -57,13 +58,15 @@ public class FileResource {
 	private final EtlUserDao userDao;
 	private final SourceConfigDao sourceConfigDao;
 	private final EtlAuthenticationSupport authenticationSupport;
+	private final EtlGroupDao groupDao;
 
 	@Inject
-	public FileResource(EtlProperties inEtlProperties, EtlUserDao inUserDao, SourceConfigDao inSourceConfigDao) {
+	public FileResource(EtlProperties inEtlProperties, EtlUserDao inUserDao, SourceConfigDao inSourceConfigDao, EtlGroupDao inGroupDao) {
 		this.etlProperties = inEtlProperties;
 		this.userDao = inUserDao;
 		this.sourceConfigDao = inSourceConfigDao;
 		this.authenticationSupport = new EtlAuthenticationSupport(this.userDao);
+		this.groupDao = inGroupDao;
 	}
 	
 	@POST
@@ -75,8 +78,8 @@ public class FileResource {
 			@PathParam("sourceId") String sourceId,
 			@FormDataParam("file") InputStream uploadingInputStream,
 			@FormDataParam("file") FormDataContentDisposition fileDetail) {
-		EtlUser user = this.authenticationSupport.getEtlUser(req);
-		SourceConfigs sources = new SourceConfigs(this.etlProperties, user, this.sourceConfigDao);
+		EtlUserEntity user = this.authenticationSupport.getEtlUser(req);
+		SourceConfigs sources = new SourceConfigs(this.etlProperties, user, this.sourceConfigDao, this.groupDao);
 
 		try {
 			SourceConfig sourceConfig = sources.getOne(sourceConfigId);

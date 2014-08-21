@@ -77,9 +77,9 @@ public class JobListServlet extends HttpServlet {
 				req.setAttribute("jobStatus", job.toJobStatus());
 				Destination destination = 
 						this.servicesClient.getDestination(job.getDestinationId());
-				String destName = destination.getDisplayName();
+				String destName = destination.getName();
 				if (destName == null) {
-					destName = destination.getId();
+					destName = destination.getName();
 				}
 				req.setAttribute("destination", destName);
 				SourceConfig sourceConfig =

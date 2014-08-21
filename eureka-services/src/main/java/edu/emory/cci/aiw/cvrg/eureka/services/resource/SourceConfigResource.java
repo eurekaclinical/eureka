@@ -64,7 +64,6 @@ public class SourceConfigResource {
 	 * @return a {@link List} of {@link SystemElement}s
 	 */
 	@GET
-	@Path("/list")
 	public List<SourceConfig> getAll() {
 		List<SourceConfig> sources;
 		try {

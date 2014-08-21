@@ -20,25 +20,14 @@ package edu.emory.cci.aiw.cvrg.eureka.common.comm;
  * #L%
  */
 
-import java.util.List;
-import java.util.Map;
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.codehaus.jackson.annotate.JsonSubTypes;
-import org.codehaus.jackson.annotate.JsonTypeInfo;
-import org.protempa.proposition.Proposition;
-
 /**
  *
  * @author Andrew Post
  */
-@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
-@JsonSubTypes({
-        @JsonSubTypes.Type(value = Literal.class, name = "Literal"),
-        @JsonSubTypes.Type(value = UnaryOperator.class, name = "UnaryOperator"),
-        @JsonSubTypes.Type(value = BinaryOperator.class, name = "BinaryOperator")})
-public abstract class Node {
+public class EtlUser {
 	private Long id;
-	
+	private String username;
+
 	public Long getId() {
 		return id;
 	}
@@ -46,14 +35,13 @@ public abstract class Node {
 	public void setId(Long id) {
 		this.id = id;
 	}
-	
-	@Override
-	public String toString() {
-		return ToStringBuilder.reflectionToString(this);
+
+	public String getUsername() {
+		return username;
 	}
 
-	abstract boolean evaluate(Map<String, List<Proposition>> propMap);
-	
-	public abstract void accept(NodeVisitor nodeVisitor);
+	public void setUsername(String username) {
+		this.username = username;
+	}
 	
 }

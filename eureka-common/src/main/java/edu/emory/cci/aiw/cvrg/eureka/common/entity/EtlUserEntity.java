@@ -25,9 +25,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
-import javax.xml.bind.annotation.XmlRootElement;
 
-import com.sun.xml.bind.CycleRecoverable;
 import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -42,9 +40,8 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
  *
  */
 @Entity
-@XmlRootElement
 @Table(name = "users")
-public class EtlUser implements CycleRecoverable {
+public class EtlUserEntity {
 
 	/**
 	 * The user's unique identifier.
@@ -77,7 +74,7 @@ public class EtlUser implements CycleRecoverable {
 	/**
 	 * Create an empty User object.
 	 */
-	public EtlUser() {
+	public EtlUserEntity() {
 	}
 
 	/**
@@ -148,11 +145,6 @@ public class EtlUser implements CycleRecoverable {
 		this.destinations = destinations;
 	}
 	
-	@Override
-	public Object onCycleDetected(final Context context) {
-		return null;
-	}
-
 	@Override
 	public String toString() {
 		return ToStringBuilder.reflectionToString(this);

@@ -19,8 +19,10 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.common.comm;
 
+import java.util.Date;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.codehaus.jackson.annotate.JsonIgnore;
+import org.codehaus.jackson.annotate.JsonProperty;
 import org.codehaus.jackson.annotate.JsonSubTypes;
 import org.codehaus.jackson.annotate.JsonTypeInfo;
 
@@ -41,9 +43,10 @@ public abstract class EtlDestination {
 	/**
 	 * The unique identifier for the configuration.
 	 */
-	private String id;
+	private Long id;
 	private DestinationType type;
-	private String displayName;
+	private String name;
+	private String description;
 	private DataElementField[] dataElementFields;
 	/**
 	 * The unique identifier for the owner of this configuration.
@@ -53,13 +56,40 @@ public abstract class EtlDestination {
 	private boolean read;
 	private boolean write;
 	private boolean execute;
+	
+	@JsonProperty("created_at")
+	private Date createdAt;
+
+	@JsonProperty("updated_at")
+	private Date updatedAt;
+	
+	public EtlDestination() {
+		
+	}
+	
+	public EtlDestination(Destination dest) {
+		if (dest != null) {
+			this.id = dest.getId();
+			this.type = dest.getType();
+			this.name = dest.getName();
+			DataElementField[] etlDestDataElementFields = 
+					dest.getDataElementFields();
+			if (etlDestDataElementFields != null) {
+				this.dataElementFields = etlDestDataElementFields.clone();
+			}
+			this.ownerUserId = dest.getOwnerUserId();
+			this.read = dest.isRead();
+			this.write = dest.isWrite();
+			this.execute = dest.isExecute();
+		}
+	}
 
 	/**
 	 * Get the unique identifier for the configuration.
 	 *
 	 * @return The unique identifier for the configuration.
 	 */
-	public String getId() {
+	public Long getId() {
 		return this.id;
 	}
 
@@ -68,7 +98,7 @@ public abstract class EtlDestination {
 	 *
 	 * @param inId The unique identifier for the configuration.
 	 */
-	public void setId(String inId) {
+	public void setId(Long inId) {
 		this.id = inId;
 	}
 
@@ -95,12 +125,20 @@ public abstract class EtlDestination {
 		this.ownerUserId = inUserId;
 	}
 
-	public String getDisplayName() {
-		return displayName;
+	public String getName() {
+		return name;
 	}
 
-	public void setDisplayName(String displayName) {
-		this.displayName = displayName;
+	public void setName(String name) {
+		this.name = name;
+	}
+	
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
 	}
 
 	public DataElementField[] getDataElementFields() {
@@ -135,11 +173,27 @@ public abstract class EtlDestination {
 		this.execute = execute;
 	}
 	
+	public Date getCreatedAt() {
+		return createdAt;
+	}
+
+	public void setCreatedAt(Date createdAt) {
+		this.createdAt = createdAt;
+	}
+
+	public Date getUpdatedAt() {
+		return updatedAt;
+	}
+
+	public void setUpdatedAt(Date updatedAt) {
+		this.updatedAt = updatedAt;
+	}
+	
+	public abstract void accept(EtlDestinationVisitor etlDestinationVisitor);
+	
 	@Override
 	public String toString() {
 		return ToStringBuilder.reflectionToString(this);
 	}
-	
-	public abstract Destination toDestination();
 	
 }

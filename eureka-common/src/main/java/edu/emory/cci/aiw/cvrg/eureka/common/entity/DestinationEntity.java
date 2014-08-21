@@ -20,6 +20,7 @@ package edu.emory.cci.aiw.cvrg.eureka.common.entity;
  * #L%
  */
 
+import java.util.Date;
 import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -27,10 +28,14 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
+import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
 
 /**
  *
@@ -38,7 +43,8 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "destinations")
-public class DestinationEntity implements ConfigEntity {
+@Inheritance(strategy = InheritanceType.JOINED)
+public abstract class DestinationEntity implements ConfigEntity {
 	@Id
 	@SequenceGenerator(name = "DEST_SEQ_GENERATOR", sequenceName = "DEST_SEQ",
 	allocationSize = 1)
@@ -49,8 +55,19 @@ public class DestinationEntity implements ConfigEntity {
 	@Column(nullable = false, unique = true)
 	private String name;
 	
+	@Lob
+	private String description;
+	
+	@Temporal(javax.persistence.TemporalType.TIMESTAMP)
+	@Column(name = "created_at")
+	private Date createdAt;
+	
+	@Temporal(javax.persistence.TemporalType.TIMESTAMP)
+	@Column(name = "updated_at")
+	private Date updatedAt;
+	
 	@ManyToOne
-	private EtlUser owner;
+	private EtlUserEntity owner;
 	
 	@OneToMany(cascade = CascadeType.ALL, mappedBy="destination")
 	private List<DestinationGroupMembership> groups;
@@ -72,12 +89,38 @@ public class DestinationEntity implements ConfigEntity {
 	public void setName(String name) {
 		this.name = name;
 	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	public Date getCreatedAt() {
+		return createdAt;
+	}
+
+	public void setCreatedAt(Date createdAt) {
+		this.createdAt = createdAt;
+	}
+
+	public Date getUpdatedAt() {
+		return updatedAt;
+	}
+
+	public void setUpdatedAt(Date updatedAt) {
+		this.updatedAt = updatedAt;
+	}
 	
-	public EtlUser getOwner() {
+	@Override
+	public EtlUserEntity getOwner() {
 		return owner;
 	}
 
-	public void setOwner(EtlUser owner) {
+	@Override
+	public void setOwner(EtlUserEntity owner) {
 		this.owner = owner;
 	}
 

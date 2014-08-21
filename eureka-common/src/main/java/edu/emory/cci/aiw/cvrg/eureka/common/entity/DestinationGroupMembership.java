@@ -36,7 +36,7 @@ import javax.persistence.UniqueConstraint;
  */
 @Entity
 @Table(name="destinations_groups", uniqueConstraints=@UniqueConstraint(columnNames={"destinations_id", "groups_id"}))
-public class DestinationGroupMembership extends GroupMembership {
+public class DestinationGroupMembership {
 	@Id
 	@SequenceGenerator(name = "DEST_GRP_SEQ_GENERATOR", sequenceName = "DEST_GRP_SEQ",
 	allocationSize = 1)
@@ -51,6 +51,12 @@ public class DestinationGroupMembership extends GroupMembership {
 	@ManyToOne
 	@JoinColumn(name="destinations_id", nullable = false)
 	private DestinationEntity destination;
+	
+	private boolean groupRead;
+	
+	private boolean groupWrite;
+	
+	private boolean groupExecute;
 	
 	public Long getId() {
 		return id;
@@ -75,8 +81,31 @@ public class DestinationGroupMembership extends GroupMembership {
 	public void setDestination(DestinationEntity destination) {
 		this.destination = destination;
 	}
+	
+	public boolean isGroupRead() {
+		return groupRead;
+	}
 
-	@Override
+	public void setGroupRead(boolean groupRead) {
+		this.groupRead = groupRead;
+	}
+
+	public boolean isGroupWrite() {
+		return groupWrite;
+	}
+
+	public void setGroupWrite(boolean groupWrite) {
+		this.groupWrite = groupWrite;
+	}
+
+	public boolean isGroupExecute() {
+		return groupExecute;
+	}
+
+	public void setGroupExecute(boolean groupExecute) {
+		this.groupExecute = groupExecute;
+	}
+
 	public final String configName() {
 		return this.destination != null ? this.destination.getName() : null;
 	}

@@ -24,20 +24,8 @@ package edu.emory.cci.aiw.cvrg.eureka.common.comm;
  *
  * @author Andrew Post
  */
-public class EtlCohortDestination extends EtlDestination {
-    private Cohort cohort;
-	
-	public Cohort getCohort() {
-		return cohort;
-	}
-
-	public void setCohort(Cohort cohort) {
-		this.cohort = cohort;
-	}
-	
-	@Override
-	public void accept(EtlDestinationVisitor etlDestinationVisitor) {
-		etlDestinationVisitor.visit(this);
-	}
-
+public interface NodeVisitor {
+	void visit(Literal literal);
+	void visit(UnaryOperator unaryOperator);
+	void visit(BinaryOperator binaryOperator);
 }

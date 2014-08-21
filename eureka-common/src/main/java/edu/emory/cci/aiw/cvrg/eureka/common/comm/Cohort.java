@@ -19,13 +19,11 @@ package edu.emory.cci.aiw.cvrg.eureka.common.comm;
  * limitations under the License.
  * #L%
  */
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.arp.javautil.collections.Collections;
-import org.codehaus.jackson.annotate.JsonProperty;
 import org.protempa.proposition.Proposition;
 
 /**
@@ -36,19 +34,7 @@ public class Cohort {
 
 	private Long id;
 
-	private String name;
-
-	private String description;
-
-	private String username;
-
 	private Node node;
-
-	@JsonProperty("created_at")
-	private Date createdAt;
-
-	@JsonProperty("updated_at")
-	private Date updatedAt;
 
 	public Long getId() {
 		return id;
@@ -58,52 +44,12 @@ public class Cohort {
 		this.id = id;
 	}
 
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	public String getDescription() {
-		return description;
-	}
-
-	public void setDescription(String description) {
-		this.description = description;
-	}
-
-	public String getUsername() {
-		return username;
-	}
-
-	public void setUsername(String username) {
-		this.username = username;
-	}
-
 	public Node getNode() {
 		return node;
 	}
 
 	public void setNode(Node node) {
 		this.node = node;
-	}
-
-	public Date getCreatedAt() {
-		return createdAt;
-	}
-
-	public void setCreatedAt(Date createdAt) {
-		this.createdAt = createdAt;
-	}
-
-	public Date getUpdatedAt() {
-		return updatedAt;
-	}
-
-	public void setUpdatedAt(Date updatedAt) {
-		this.updatedAt = updatedAt;
 	}
 
 	public boolean evaluate(List<Proposition> propositions) {
@@ -115,7 +61,7 @@ public class Cohort {
 		}
 		return this.node.evaluate(propMap);
 	}
-
+	
 	@Override
 	public String toString() {
 		return ToStringBuilder.reflectionToString(this);

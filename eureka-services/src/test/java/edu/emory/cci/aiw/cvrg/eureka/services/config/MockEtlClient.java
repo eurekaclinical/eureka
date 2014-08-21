@@ -112,5 +112,15 @@ public class MockEtlClient implements EtlClient {
 			throws ClientException {
 		throw new UnsupportedOperationException("Not supported yet.");
 	}
+
+	@Override
+	public void createDestination(EtlDestination etlDest) throws ClientException {
+		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+	}
+
+	@Override
+	public void updateDestination(EtlDestination etlDest) throws ClientException {
+		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+	}
 	
 }

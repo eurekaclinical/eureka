@@ -23,7 +23,7 @@ package edu.emory.cci.aiw.cvrg.eureka.etl.authentication;
 import edu.emory.cci.aiw.cvrg.eureka.common.authentication.AbstractAuthenticationSupport;
 import edu.emory.cci.aiw.cvrg.eureka.common.authentication.AuthenticationMethod;
 import edu.emory.cci.aiw.cvrg.eureka.common.authentication.UserPrincipalAttributes;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.EtlUser;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.EtlUserEntity;
 import edu.emory.cci.aiw.cvrg.eureka.etl.dao.EtlUserDao;
 import javax.servlet.http.HttpServletRequest;
 import org.jasig.cas.client.authentication.AttributePrincipal;
@@ -39,15 +39,15 @@ public class EtlAuthenticationSupport extends AbstractAuthenticationSupport {
 		this.etlUserDao = inEtlUserDao;
 	}
 
-	public boolean isSameUser(HttpServletRequest servletRequest, EtlUser user) {
+	public boolean isSameUser(HttpServletRequest servletRequest, EtlUserEntity user) {
 		return isSameUser(servletRequest, user.getUsername());
 	}
 	
-	public EtlUser getEtlUser(HttpServletRequest servletRequest) {
+	public EtlUserEntity getEtlUser(HttpServletRequest servletRequest) {
 		AttributePrincipal principal = getUserPrincipal(servletRequest);
-		EtlUser user = this.etlUserDao.getByAttributePrincipal(principal);
+		EtlUserEntity user = this.etlUserDao.getByAttributePrincipal(principal);
 		if (user == null) {
-			user = new EtlUser();
+			user = new EtlUserEntity();
 			user.setUsername(principal.getName());
 			this.etlUserDao.create(user);
 		}

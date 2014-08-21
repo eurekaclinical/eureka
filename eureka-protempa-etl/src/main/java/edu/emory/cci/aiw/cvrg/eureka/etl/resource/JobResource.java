@@ -42,7 +42,7 @@ import edu.emory.cci.aiw.cvrg.eureka.common.comm.Job;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.JobFilter;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.JobRequest;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.JobSpec;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.EtlUser;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.EtlUserEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.JobEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.exception.HttpStatusException;
 import edu.emory.cci.aiw.cvrg.eureka.etl.authentication.EtlAuthenticationSupport;
@@ -157,7 +157,7 @@ public class JobResource {
 		return jobs;
 	}
 
-	private JobEntity newJobEntity(JobSpec job, EtlUser etlUser) {
+	private JobEntity newJobEntity(JobSpec job, EtlUserEntity etlUser) {
 		JobEntity jobEntity = new JobEntity();
 		jobEntity.setSourceConfigId(job.getSourceConfigId());
 		jobEntity.setDestinationId(job.getDestinationId());
