@@ -31,57 +31,35 @@ import edu.emory.cci.aiw.cvrg.eureka.common.entity.DestinationGroupMembership;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.EtlGroup;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.EtlUserEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.I2B2DestinationEntity;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.NodeEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.NodeToNodeEntityVisitor;
 import edu.emory.cci.aiw.cvrg.eureka.common.exception.HttpStatusException;
 import edu.emory.cci.aiw.cvrg.eureka.etl.config.EtlProperties;
 import edu.emory.cci.aiw.cvrg.eureka.etl.dao.DestinationDao;
 import edu.emory.cci.aiw.cvrg.eureka.etl.dao.EtlGroupDao;
-import edu.emory.cci.aiw.cvrg.eureka.etl.dao.ResolvedPermissions;
 import java.io.File;
-import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import javax.ws.rs.core.Response;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.xpath.XPath;
-import javax.xml.xpath.XPathConstants;
-import javax.xml.xpath.XPathExpression;
-import javax.xml.xpath.XPathExpressionException;
-import javax.xml.xpath.XPathFactory;
-import org.w3c.dom.Document;
-import org.xml.sax.SAXException;
 
 /**
  *
  * @author Andrew Post
  */
-public final class Destinations extends Configs<EtlDestination, DestinationEntity> {
+public final class Destinations {
 
-	private final XPathExpression displayNameExpr;
-	private final DocumentBuilderFactory docBuilderFactory;
 	private final EtlGroupDao groupDao;
 	private final EtlUserEntity etlUser;
 	private final DestinationDao destinationDao;
+	private final EtlProperties etlProperties;
 
-	public Destinations(EtlProperties inEtlProperties, EtlUserEntity inEtlUser, 
+	public Destinations(EtlProperties inEtlProperties, EtlUserEntity inEtlUser,
 			DestinationDao inDestinationDao, EtlGroupDao inGroupDao) {
-		super(inEtlProperties, inEtlUser, inDestinationDao);
-		XPathFactory xpathFactory = XPathFactory.newInstance();
-		XPath xpath = xpathFactory.newXPath();
-		try {
-			displayNameExpr = xpath.compile("/queryResultsHandler/displayName/text()");
-		} catch (XPathExpressionException ex) {
-			throw new AssertionError("Invalid xpath expression: " + ex.getMessage());
-		}
-		this.docBuilderFactory = DocumentBuilderFactory.newInstance();
-		this.docBuilderFactory.setNamespaceAware(true); // never forget this!
 		this.groupDao = inGroupDao;
 		this.etlUser = inEtlUser;
 		this.destinationDao = inDestinationDao;
+		this.etlProperties = inEtlProperties;
 	}
-	
+
 	public void create(EtlDestination etlDestination) {
 		if (etlDestination instanceof EtlCohortDestination) {
 			CohortDestinationEntity cde = new CohortDestinationEntity();
@@ -96,13 +74,11 @@ public final class Destinations extends Configs<EtlDestination, DestinationEntit
 			cohortEntity.setNode(v.getNodeEntity());
 			cde.setCohort(cohortEntity);
 			this.destinationDao.create(cde);
-		} else if (etlDestination instanceof EtlI2B2Destination) {
-			throw new HttpStatusException(Response.Status.BAD_REQUEST, "Can't create i2b2 destinations via web services yet");
 		} else {
-			throw new AssertionError("Unexpected destination type " + etlDestination.getClass());
+			throw new HttpStatusException(Response.Status.BAD_REQUEST, "Can't create i2b2 destinations via web services yet");
 		}
 	}
-	
+
 	public void update(EtlDestination etlDestination) {
 		if (etlDestination instanceof EtlCohortDestination) {
 			if (!this.etlUser.getId().equals(etlDestination.getOwnerUserId())) {
@@ -121,46 +97,8 @@ public final class Destinations extends Configs<EtlDestination, DestinationEntit
 			node.accept(v);
 			cohortEntity.setNode(v.getNodeEntity());
 			this.destinationDao.update(cde);
-		} else if (etlDestination instanceof EtlI2B2Destination) {
-			throw new HttpStatusException(Response.Status.BAD_REQUEST, "Can't update i2b2 destinations via web services yet");
 		} else {
-			throw new AssertionError("Unexpected destination type " + etlDestination.getClass());
-		}
-	}
-
-	@Override
-	EtlDestination extractDTO(Perm perm, 
-			DestinationEntity destinationEntity) {
-		try {
-			EtlDestination dest;
-			if (destinationEntity instanceof I2B2DestinationEntity) {
-				DocumentBuilder builder = this.docBuilderFactory.newDocumentBuilder();
-				dest = new EtlI2B2Destination();
-				Document doc = builder.parse(getEtlProperties().destinationConfigFile(destinationEntity.getName()));
-				String displayName = (String) displayNameExpr.evaluate(doc, XPathConstants.STRING);
-				dest.setName(displayName);
-			} else if (destinationEntity instanceof CohortDestinationEntity) {
-				EtlCohortDestination cohortDest = new EtlCohortDestination();
-				cohortDest.setName(destinationEntity.getName());
-				cohortDest.setDescription(destinationEntity.getDescription());
-				cohortDest.setCohort(((CohortDestinationEntity) destinationEntity).getCohort().toCohort());
-				dest = cohortDest;
-			} else {
-				throw new AssertionError("Unexpected destination type " + destinationEntity.getClass());
-			}
-			
-			dest.setId(destinationEntity.getId());
-			
-			dest.setRead(perm.read);
-			dest.setWrite(perm.write);
-			dest.setExecute(perm.execute);
-			
-			dest.setOwnerUserId(destinationEntity.getOwner().getId());
-			
-			
-			return dest;
-		} catch (XPathExpressionException | ParserConfigurationException | IOException | SAXException ex) {
-			throw new HttpStatusException(Response.Status.INTERNAL_SERVER_ERROR, ex);
+			throw new HttpStatusException(Response.Status.BAD_REQUEST, "Can't update i2b2 destinations via web services yet");
 		}
 	}
 
@@ -176,9 +114,68 @@ public final class Destinations extends Configs<EtlDestination, DestinationEntit
 		return FromConfigFile.toDestId(file);
 	}
 
-	@Override
-	ResolvedPermissions resolvePermissions(EtlUserEntity owner, DestinationEntity entity) {
-		return this.groupDao.resolveDestinationPermissions(owner, entity);
+	public List<EtlI2B2Destination> getAllI2B2s() {
+		List<EtlI2B2Destination> result = new ArrayList<>();
+		I2B2DestinationsDTOExtractor extractor
+				= new I2B2DestinationsDTOExtractor(this.etlProperties, this.etlUser, this.groupDao);
+		for (I2B2DestinationEntity configEntity
+				: this.destinationDao.getAllI2B2Destinations()) {
+			EtlI2B2Destination dto = extractor.extractDTO(configEntity);
+			if (dto != null) {
+				result.add(dto);
+			}
+		}
+		return result;
 	}
-	
+
+	public List<EtlCohortDestination> getAllCohorts() {
+		List<EtlCohortDestination> result = new ArrayList<>();
+		CohortDestinationsDTOExtractor extractor
+				= new CohortDestinationsDTOExtractor(this.etlUser, this.groupDao);
+		for (CohortDestinationEntity configEntity
+				: this.destinationDao.getAllCohortDestinations()) {
+			EtlCohortDestination dto = extractor.extractDTO(configEntity);
+			if (dto != null) {
+				result.add(dto);
+			}
+		}
+		return result;
+	}
+
+	/**
+	 * Gets the specified source extractDTO. If it does not exist or the current
+	 * user lacks read permissions for it, this method returns
+	 * <code>null</code>.
+	 *
+	 * @return a extractDTO.
+	 */
+	public final EtlDestination getOne(String configId) {
+		if (configId == null) {
+			throw new IllegalArgumentException("configId cannot be null");
+		}
+		DestinationDTOExtractorVisitor visitor
+				= new DestinationDTOExtractorVisitor(this.etlProperties, this.etlUser, this.groupDao);
+		this.destinationDao.getByName(configId).accept(visitor);
+		return visitor.getEtlDestination();
+	}
+
+	/**
+	 * Gets all configs for which the current user has read permissions.
+	 *
+	 * @return a {@link List} of configs.
+	 */
+	public final List<EtlDestination> getAll() {
+		List<EtlDestination> result = new ArrayList<>();
+		DestinationDTOExtractorVisitor visitor
+				= new DestinationDTOExtractorVisitor(this.etlProperties, this.etlUser, this.groupDao);
+		for (DestinationEntity configEntity : this.destinationDao.getAll()) {
+			configEntity.accept(visitor);
+			EtlDestination dto = visitor.getEtlDestination();
+			if (dto != null) {
+				result.add(dto);
+			}
+		}
+		return result;
+	}
+
 }

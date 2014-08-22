@@ -20,33 +20,12 @@ package edu.emory.cci.aiw.cvrg.eureka.common.entity;
  * #L%
  */
 
-import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
-
 /**
  *
  * @author Andrew Post
  */
-@Entity
-@Table(name = "cohort_destinations")
-public class CohortDestinationEntity extends DestinationEntity {
-	@OneToOne
-	@JoinColumn(nullable = false)
-	private CohortEntity cohort;
-
-	public CohortEntity getCohort() {
-		return cohort;
-	}
-
-	public void setCohort(CohortEntity cohort) {
-		this.cohort = cohort;
-	}
-
-	@Override
-	public void accept(DestinationEntityVisitor visitor) {
-		visitor.visit(this);
-	}
+public interface DestinationEntityVisitor {
+	void visit(CohortDestinationEntity cohortDestination);
 	
+	void visit(I2B2DestinationEntity i2b2Destination);
 }

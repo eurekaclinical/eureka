@@ -46,6 +46,7 @@ public abstract class Destination {
 	private Long id;
 	private DestinationType type;
 	private String name;
+	private String description;
 	private DataElementField[] dataElementFields;
 	/**
 	 * The unique identifier for the owner of this configuration.
@@ -115,6 +116,14 @@ public abstract class Destination {
 		this.name = name;
 	}
 
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+	
 	public DataElementField[] getDataElementFields() {
 		return dataElementFields;
 	}

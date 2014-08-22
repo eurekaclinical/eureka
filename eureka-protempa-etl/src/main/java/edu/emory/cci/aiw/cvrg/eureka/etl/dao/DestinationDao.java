@@ -20,11 +20,17 @@ package edu.emory.cci.aiw.cvrg.eureka.etl.dao;
  * #L%
  */
 
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.CohortDestinationEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.DestinationEntity;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.I2B2DestinationEntity;
+import java.util.List;
 
 /**
  *
  * @author Andrew Post
  */
 public interface DestinationDao extends ConfigDao<DestinationEntity> {
+	List<CohortDestinationEntity> getAllCohortDestinations();
+
+	List<I2B2DestinationEntity> getAllI2B2Destinations();
 }

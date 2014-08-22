@@ -23,9 +23,15 @@ package edu.emory.cci.aiw.cvrg.eureka.etl.dao;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import edu.emory.cci.aiw.cvrg.eureka.common.dao.GenericDao;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.CohortDestinationEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.DestinationEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.DestinationEntity_;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.I2B2DestinationEntity;
+import java.util.List;
 import javax.persistence.EntityManager;
+import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
 
 /**
  *
@@ -43,6 +49,24 @@ public class JpaDestinationDao extends GenericDao<DestinationEntity, Long> imple
 		return getUniqueByAttribute(DestinationEntity_.name, name);
 	}
 	
-	
+	@Override
+	public List<CohortDestinationEntity> getAllCohortDestinations() {
+		EntityManager entityManager = getEntityManager();
+		CriteriaBuilder builder = entityManager.getCriteriaBuilder();
+		CriteriaQuery<CohortDestinationEntity> criteriaQuery = builder.createQuery(CohortDestinationEntity.class);
+		criteriaQuery.from(CohortDestinationEntity.class);
+		TypedQuery<CohortDestinationEntity> typedQuery = entityManager.createQuery(criteriaQuery);
+		return typedQuery.getResultList();
+	}
+
+	@Override
+	public List<I2B2DestinationEntity> getAllI2B2Destinations() {
+		EntityManager entityManager = getEntityManager();
+		CriteriaBuilder builder = entityManager.getCriteriaBuilder();
+		CriteriaQuery<I2B2DestinationEntity> criteriaQuery = builder.createQuery(I2B2DestinationEntity.class);
+		criteriaQuery.from(I2B2DestinationEntity.class);
+		TypedQuery<I2B2DestinationEntity> typedQuery = entityManager.createQuery(criteriaQuery);
+		return typedQuery.getResultList();
+	}
 	
 }

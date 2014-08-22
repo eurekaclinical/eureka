@@ -22,6 +22,7 @@ package edu.emory.cci.aiw.cvrg.eureka.services.resource;
 import com.google.inject.Inject;
 import com.sun.jersey.api.client.ClientResponse;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.Destination;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.DestinationType;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.EtlDestination;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ClientException;
 import edu.emory.cci.aiw.cvrg.eureka.common.exception.HttpStatusException;
@@ -38,6 +39,7 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response.Status;
 
@@ -89,9 +91,23 @@ public class DestinationResource {
 	 * @return a {@link List} of {@link Destination}s
 	 */
 	@GET
-	public List<Destination> getAll() {
+	public List<Destination> getAll(@QueryParam("type") DestinationType type) {
 		try {
-			List<EtlDestination> destinations = this.etlClient.getDestinations();
+			List<? extends EtlDestination> destinations;
+			if (type == null) {
+				destinations = this.etlClient.getDestinations();
+			} else {
+				switch (type) {
+					case I2B2:
+						destinations = this.etlClient.getI2B2Destinations();
+						break;
+					case COHORT:
+						destinations = this.etlClient.getCohortDestinations();
+						break;
+					default:
+						throw new AssertionError("Unexpected type " + type);
+				}
+			}
 			List<Destination> result = new ArrayList<>(destinations.size());
 			EtlDestinationToDestinationVisitor v = 
 					new EtlDestinationToDestinationVisitor();

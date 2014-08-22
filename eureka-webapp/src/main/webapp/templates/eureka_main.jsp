@@ -137,9 +137,15 @@ limitations under the License.
 		<div class="container sub-nav rounded-bottom">
 			<ul class="nav navbar-nav navbar-right menu-text">
 				<li>
+					<a href="${pageContext.request.contextPath}/protected/cohortHome">
+						<span class="glyphicon glyphicon-pencil"></span>
+						Cohorts
+					</a>
+				</li>
+				<li>
 					<a href="${pageContext.request.contextPath}/protected/editorhome">
 						<span class="glyphicon glyphicon-pencil"></span>
-						Editor
+						Phenotypes
 					</a>
 				</li>
 				<li>

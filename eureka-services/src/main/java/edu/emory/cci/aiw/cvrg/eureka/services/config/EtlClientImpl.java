@@ -19,27 +19,26 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.services.config;
 
-import java.io.InputStream;
-import java.net.URI;
-import java.util.List;
-
-import javax.ws.rs.core.MultivaluedMap;
-import javax.ws.rs.core.UriBuilder;
-
-import org.protempa.PropositionDefinition;
-
 import com.google.inject.Inject;
 import com.sun.jersey.api.client.GenericType;
 import com.sun.jersey.core.util.MultivaluedMapImpl;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.DestinationType;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.EtlCohortDestination;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.EtlDestination;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.EtlI2B2Destination;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.Job;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.JobFilter;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.JobRequest;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.SourceConfig;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.ValidationRequest;
-
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ClientException;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.EurekaClient;
+import java.io.InputStream;
+import java.net.URI;
+import java.util.List;
+import javax.ws.rs.core.MultivaluedMap;
+import javax.ws.rs.core.UriBuilder;
+import org.protempa.PropositionDefinition;
 
 /**
  * @author hrathod
@@ -55,6 +54,12 @@ public class EtlClientImpl extends EurekaClient implements EtlClient {
 			};
 	private static final GenericType<List<EtlDestination>> DestinationListType =
 			new GenericType<List<EtlDestination>>() {
+			};
+	private static final GenericType<List<EtlCohortDestination>> CohortDestinationListType =
+			new GenericType<List<EtlCohortDestination>>() {
+			};
+	private static final GenericType<List<EtlI2B2Destination>> I2B2DestinationListType =
+			new GenericType<List<EtlI2B2Destination>>() {
 			};
 	private static final GenericType<List<PropositionDefinition>> PropositionDefinitionList =
 			new GenericType<List<PropositionDefinition>>() {
@@ -95,6 +100,24 @@ public class EtlClientImpl extends EurekaClient implements EtlClient {
 			ClientException {
 		final String path = "/api/protected/destinations";
 		return doGet(path, DestinationListType);
+	}
+	
+	@Override
+	public List<EtlCohortDestination> getCohortDestinations() throws
+			ClientException {
+		final String path = "/api/protected/destinations/";
+		MultivaluedMap<String, String> queryParams = new MultivaluedMapImpl();
+		queryParams.add("type", DestinationType.COHORT.name());
+		return doGet(path, CohortDestinationListType, queryParams);
+	}
+	
+	@Override
+	public List<EtlI2B2Destination> getI2B2Destinations() throws
+			ClientException {
+		final String path = "/api/protected/destinations/";
+		MultivaluedMap<String, String> queryParams = new MultivaluedMapImpl();
+		queryParams.add("type", DestinationType.I2B2.name());
+		return doGet(path, I2B2DestinationListType, queryParams);
 	}
 
 	@Override

@@ -65,6 +65,7 @@ public class DestinationToEtlDestinationVisitor extends AbstractDestinationVisit
 	private void visitCommon(Destination destination, EtlDestination etlDestination) {
 		etlDestination.setId(destination.getId());
 		etlDestination.setName(destination.getName());
+		etlDestination.setDescription(destination.getDescription());
 		DataElementField[] etlDestDataElementFields
 				= destination.getDataElementFields();
 		if (etlDestDataElementFields != null) {

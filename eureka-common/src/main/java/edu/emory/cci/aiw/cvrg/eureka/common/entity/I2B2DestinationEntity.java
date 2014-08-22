@@ -30,5 +30,10 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "i2b2_destinations")
 public class I2B2DestinationEntity extends DestinationEntity {
+
+	@Override
+	public void accept(DestinationEntityVisitor visitor) {
+		visitor.visit(this);
+	}
 	
 }

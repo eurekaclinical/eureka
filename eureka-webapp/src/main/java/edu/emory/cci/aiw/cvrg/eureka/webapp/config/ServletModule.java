@@ -161,6 +161,13 @@ class ServletModule extends AbstractServletModule {
 
         bind(SearchSystemPropositionServlet.class).in(Singleton.class);
         serve("/protected/searchsystemlist").with(SearchSystemPropositionServlet.class);
+		
+		bind(CohortHomeServlet.class).in(Singleton.class);
+		serve("/protected/cohortHome").with(CohortHomeServlet.class);
+
+		bind(EditCohortServlet.class).in(Singleton.class);
+		serve("/protected/editCohort").with(EditCohortServlet.class);
+
 
 	}
 

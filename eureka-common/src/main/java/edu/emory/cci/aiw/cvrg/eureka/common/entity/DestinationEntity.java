@@ -131,4 +131,7 @@ public abstract class DestinationEntity implements ConfigEntity {
 	public void setGroups(List<DestinationGroupMembership> groups) {
 		this.groups = groups;
 	}
+	
+	public abstract void accept(DestinationEntityVisitor visitor);
+	
 }

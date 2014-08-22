@@ -19,21 +19,13 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.common.comm.clients;
 
-import java.io.InputStream;
-import java.net.URI;
-import java.util.List;
-
-import javax.ws.rs.core.MultivaluedMap;
-import javax.ws.rs.core.UriBuilder;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.sun.jersey.api.client.GenericType;
 import com.sun.jersey.core.util.MultivaluedMapImpl;
-
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.CohortDestination;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.DataElement;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.Destination;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.DestinationType;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.I2B2Destination;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.Job;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.JobSpec;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.PasswordChangeRequest;
@@ -49,6 +41,13 @@ import edu.emory.cci.aiw.cvrg.eureka.common.entity.Role;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.ThresholdsOperator;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.TimeUnit;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.ValueComparator;
+import java.io.InputStream;
+import java.net.URI;
+import java.util.List;
+import javax.ws.rs.core.MultivaluedMap;
+import javax.ws.rs.core.UriBuilder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author hrathod
@@ -83,6 +82,12 @@ public class ServicesClient extends EurekaClient {
 	};
 	private static final GenericType<List<Destination>> DestinationList = new GenericType<List<Destination>>() {
 	};
+	private static final GenericType<List<CohortDestination>> CohortDestinationListType =
+			new GenericType<List<CohortDestination>>() {
+			};
+	private static final GenericType<List<I2B2Destination>> I2B2DestinationListType =
+			new GenericType<List<I2B2Destination>>() {
+			};
 	private static final GenericType<List<String>> SystemElementSearchResultsList = new GenericType<List<String>>() {
 	};
 	private final String servicesUrl;
@@ -416,6 +421,22 @@ public class ServicesClient extends EurekaClient {
 	public List<Destination> getDestinations() throws ClientException {
 		String path = "/api/protected/destinations";
 		return doGet(path, DestinationList);
+	}
+	
+	public List<CohortDestination> getCohortDestinations() throws
+			ClientException {
+		final String path = "/api/protected/destinations/";
+		MultivaluedMap<String, String> queryParams = new MultivaluedMapImpl();
+		queryParams.add("type", DestinationType.COHORT.name());
+		return doGet(path, CohortDestinationListType, queryParams);
+	}
+	
+	public List<I2B2Destination> getI2B2Destinations() throws
+			ClientException {
+		final String path = "/api/protected/destinations/";
+		MultivaluedMap<String, String> queryParams = new MultivaluedMapImpl();
+		queryParams.add("type", DestinationType.I2B2.name());
+		return doGet(path, I2B2DestinationListType, queryParams);
 	}
 	
 	public Destination getDestination(String destinationId) throws ClientException {

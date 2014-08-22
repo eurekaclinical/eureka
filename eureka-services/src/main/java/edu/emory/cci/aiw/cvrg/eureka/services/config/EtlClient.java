@@ -20,18 +20,18 @@ package edu.emory.cci.aiw.cvrg.eureka.services.config;
  * #L%
  */
 
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.EtlCohortDestination;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.EtlDestination;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.EtlI2B2Destination;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.Job;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.JobFilter;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.JobRequest;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.SourceConfig;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.ValidationRequest;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ClientException;
 import java.io.InputStream;
 import java.util.List;
-
 import org.protempa.PropositionDefinition;
-
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ClientException;
 
 /**
  *
@@ -40,6 +40,10 @@ import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ClientException;
 public interface EtlClient {
 
 	EtlDestination getDestination(String destId) throws ClientException;
+	
+	List<EtlCohortDestination> getCohortDestinations() throws ClientException;
+	
+	List<EtlI2B2Destination> getI2B2Destinations() throws ClientException;
 
 	List<EtlDestination> getDestinations() throws ClientException;
 	
