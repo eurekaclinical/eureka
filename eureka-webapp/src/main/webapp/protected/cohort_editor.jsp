@@ -49,12 +49,12 @@
 				<form id="categorizationForm" class="vert-offset" role="form">
 					<div class="form-group">
 						<label for="patCohortDefName" class="control-label">Name</label>
-						<input type="text" id="patCohortDefName" value="lymphoma-iCD9"
+						<input type="text" id="patCohortDefName" value="${name}"
 							   class="form-control"/>
 					</div>
 					<div class="form-group">
 						<label for="patCohortDescription" class="control-label">Description</label>
-						<textarea id="patCohortDescription" class="form-control">The cohort defined for lymphoma based on ICD9 codes.</textarea>
+						<textarea id="patCohortDescription" class="form-control">${description}</textarea>
 					</div>
 					<div class="form-group">
 						<label for="patCohortDefinition" class="control-label">Members</label>
@@ -67,7 +67,7 @@
 							</ul>
 						</div>
 					</div>
-					<div class="form-group">
+					<!--<div class="form-group">
 						<div class="row">
 							<div class="col-xs-5">
 								<label for="earliestDate" class="control-label">Earliest Date</label>
@@ -90,7 +90,7 @@
 							<input type="text" id="latesttDate" name="latesttDate" class="form-control">
 						</div>
 						</div>
-					</div>
+					</div>-->
 					<div class="form-group text-centered vert-offset">
 						<button id="savePropositionButton" type="button" class="btn btn-primary">Save</button>
 					</div>

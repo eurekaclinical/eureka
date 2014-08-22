@@ -20,10 +20,18 @@ package edu.emory.cci.aiw.cvrg.eureka.servlet;
  * #L%
  */
 import com.google.inject.Inject;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.BinaryOperator;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.Cohort;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.CohortDestination;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.Literal;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.Node;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.NodeVisitor;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.UnaryOperator;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ClientException;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ServicesClient;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -54,10 +62,49 @@ public class EditCohortServlet extends HttpServlet {
 		String cohortName = req.getParameter("key");
 		try {
 			CohortDestination destination = (CohortDestination) this.servicesClient.getDestination(cohortName);
+			req.setAttribute("name", destination.getName());
+			req.setAttribute("description", destination.getDescription());
+			Cohort cohort = destination.getCohort();
+			Node node = cohort.getNode();
+			EditCohortNodeVisitor v = new EditCohortNodeVisitor();
+			node.accept(v);
+			req.setAttribute("phenotypes", v.getPhenotypes());
 		} catch (ClientException ex) {
 			throw new ServletException("Error setting up cohort editor", ex);
 		}
 		req.getRequestDispatcher("/protected/cohort_editor.jsp").forward(
 				req, resp);
+	}
+	
+	private static class EditCohortNodeVisitor implements NodeVisitor {
+		List<String> phenotypes = new ArrayList<>();
+
+		@Override
+		public void visit(Literal literal) {
+			if (literal.getStart() != null || literal.getFinish() != null) {
+				throw new UnsupportedOperationException("Literal start and finish not supported yet");
+			}
+			this.phenotypes.add(literal.getName());
+		}
+
+		@Override
+		public void visit(UnaryOperator unaryOperator) {
+			throw new UnsupportedOperationException("NOT is not supported yet");
+		}
+
+		@Override
+		public void visit(BinaryOperator binaryOperator) {
+			if (binaryOperator.getOp() == BinaryOperator.Op.AND) {
+				throw new UnsupportedOperationException("AND is not supported yet");
+			}
+			EditCohortNodeVisitor v = new EditCohortNodeVisitor();
+			binaryOperator.accept(v);
+			this.phenotypes.addAll(v.getPhenotypes());
+		}
+		
+		List<String> getPhenotypes() {
+			return this.phenotypes;
+		}
+		
 	}
 }
