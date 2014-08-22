@@ -137,7 +137,7 @@ limitations under the License.
 		<div class="container sub-nav rounded-bottom">
 			<ul class="nav navbar-nav navbar-right menu-text">
 				<li>
-					<a href="${pageContext.request.contextPath}/protected/cohortHome">
+					<a href="${pageContext.request.contextPath}/protected/cohorthome">
 						<span class="glyphicon glyphicon-pencil"></span>
 						Cohorts
 					</a>

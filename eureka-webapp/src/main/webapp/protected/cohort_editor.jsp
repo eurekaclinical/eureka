@@ -62,8 +62,9 @@
 							 class="jstree-drop tree-drop tree-drop-multiple"
 						 	title="Drop the system and/or user-defined data element members that define your patient cohort in here">
 							<ul class="sortable" data-drop-type="multiple" data-proptype="empty">
-								<li class="ui-state-default">Lymphoma Diagnosis category</li>
-								<li class="ui-state-default">Lymphoma Procedures category</li>
+								<c:forEach var="phenotype" items="${phenotypes}">
+									<li class="ui-state-default">${phenotype}</li>
+								</c:forEach>
 							</ul>
 						</div>
 					</div>

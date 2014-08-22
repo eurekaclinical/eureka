@@ -36,6 +36,7 @@ import java.util.List;
 import javax.annotation.security.RolesAllowed;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
@@ -112,6 +113,14 @@ public class DestinationResource {
 			default:
 				throw new AssertionError("Unexpected destination type " + type);
 		}
+	}
+	
+	@DELETE
+	@Path("/{destId}")
+	public void delete(@Context HttpServletRequest request,
+			@PathParam("destId") String destId) {
+		EtlUserEntity user = this.authenticationSupport.getEtlUser(request);
+		new Destinations(this.etlProperties, user, this.destinationDao, this.groupDao).delete(destId);
 	}
 
 }

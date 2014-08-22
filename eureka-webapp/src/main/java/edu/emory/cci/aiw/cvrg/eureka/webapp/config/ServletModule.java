@@ -21,21 +21,22 @@ package edu.emory.cci.aiw.cvrg.eureka.webapp.config;
  */
 
 
-import java.util.HashMap;
-import java.util.Map;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.google.inject.Singleton;
-
 import edu.emory.cci.aiw.cvrg.eureka.common.config.AbstractServletModule;
 import edu.emory.cci.aiw.cvrg.eureka.servlet.*;
+import edu.emory.cci.aiw.cvrg.eureka.servlet.cohort.CohortHomeServlet;
+import edu.emory.cci.aiw.cvrg.eureka.servlet.cohort.DeleteCohortServlet;
+import edu.emory.cci.aiw.cvrg.eureka.servlet.cohort.EditCohortServlet;
+import edu.emory.cci.aiw.cvrg.eureka.servlet.cohort.SaveCohortServlet;
 import edu.emory.cci.aiw.cvrg.eureka.servlet.filter.HaveUserRecordFilter;
 import edu.emory.cci.aiw.cvrg.eureka.servlet.filter.MessagesFilter;
 import edu.emory.cci.aiw.cvrg.eureka.servlet.filter.PasswordExpiredFilter;
 import edu.emory.cci.aiw.cvrg.eureka.servlet.filter.UserInfoFilter;
 import edu.emory.cci.aiw.cvrg.eureka.servlet.proposition.*;
+import java.util.HashMap;
+import java.util.Map;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 /**
  * 
  * @author hrathod
@@ -163,12 +164,16 @@ class ServletModule extends AbstractServletModule {
         serve("/protected/searchsystemlist").with(SearchSystemPropositionServlet.class);
 		
 		bind(CohortHomeServlet.class).in(Singleton.class);
-		serve("/protected/cohortHome").with(CohortHomeServlet.class);
+		serve("/protected/cohorthome").with(CohortHomeServlet.class);
 
 		bind(EditCohortServlet.class).in(Singleton.class);
-		serve("/protected/editCohort").with(EditCohortServlet.class);
+		serve("/protected/editcohort").with(EditCohortServlet.class);
+		
+		bind(SaveCohortServlet.class).in(Singleton.class);
+		serve("/protected/savecohort").with(SaveCohortServlet.class);
 
-
+		bind(DeleteCohortServlet.class).in(Singleton.class);
+		serve("/protected/deletecohort").with(DeleteCohortServlet.class);
 	}
 
 }

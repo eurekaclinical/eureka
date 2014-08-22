@@ -134,5 +134,10 @@ public class MockEtlClient implements EtlClient {
 	public List<EtlI2B2Destination> getI2B2Destinations() throws ClientException {
 		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
 	}
+
+	@Override
+	public void deleteDestination(String etlDestId) throws ClientException {
+		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+	}
 	
 }

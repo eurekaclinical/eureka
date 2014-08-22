@@ -50,6 +50,8 @@ public interface EtlClient {
 	void createDestination(EtlDestination etlDest) throws ClientException;
 
 	void updateDestination(EtlDestination etlDest) throws ClientException;
+	
+	void deleteDestination(String etlDestId) throws ClientException;
 
 	Job getJob(Long inJobId) throws ClientException;
 

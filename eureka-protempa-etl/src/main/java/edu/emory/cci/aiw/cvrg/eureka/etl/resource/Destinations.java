@@ -178,4 +178,12 @@ public final class Destinations {
 		return result;
 	}
 
+	void delete(String destId) {
+		DestinationEntity dest = this.destinationDao.getByName(destId);
+		if (dest == null || !this.etlUser.equals(dest.getOwner())) {
+			throw new HttpStatusException(Response.Status.NOT_FOUND);
+		}
+		this.destinationDao.remove(dest);
+	}
+
 }

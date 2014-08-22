@@ -1,4 +1,4 @@
-package edu.emory.cci.aiw.cvrg.eureka.servlet;
+package edu.emory.cci.aiw.cvrg.eureka.servlet.cohort;
 
 /*
  * #%L
@@ -60,17 +60,19 @@ public class EditCohortServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
 		String cohortName = req.getParameter("key");
-		try {
-			CohortDestination destination = (CohortDestination) this.servicesClient.getDestination(cohortName);
-			req.setAttribute("name", destination.getName());
-			req.setAttribute("description", destination.getDescription());
-			Cohort cohort = destination.getCohort();
-			Node node = cohort.getNode();
-			EditCohortNodeVisitor v = new EditCohortNodeVisitor();
-			node.accept(v);
-			req.setAttribute("phenotypes", v.getPhenotypes());
-		} catch (ClientException ex) {
-			throw new ServletException("Error setting up cohort editor", ex);
+		if (cohortName != null) {
+			try {
+				CohortDestination destination = (CohortDestination) this.servicesClient.getDestination(cohortName);
+				req.setAttribute("name", destination.getName());
+				req.setAttribute("description", destination.getDescription());
+				Cohort cohort = destination.getCohort();
+				Node node = cohort.getNode();
+				EditCohortNodeVisitor v = new EditCohortNodeVisitor();
+				node.accept(v);
+				req.setAttribute("phenotypes", v.getPhenotypes());
+			} catch (ClientException ex) {
+				throw new ServletException("Error setting up cohort editor", ex);
+			}
 		}
 		req.getRequestDispatcher("/protected/cohort_editor.jsp").forward(
 				req, resp);

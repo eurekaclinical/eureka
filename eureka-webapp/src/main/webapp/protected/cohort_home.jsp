@@ -28,20 +28,18 @@
 				<h3>Cohorts</h3>
 				<p>Define a cohort to identify the patient population in your datasets.
 				</p>
-				<a href="${pageContext.request.contextPath}/protected/editCohort" class="btn btn-primary">Define New Cohort
+				<a href="${pageContext.request.contextPath}/protected/editcohort" class="btn btn-primary"><span class="glyphicon glyphicon-plus-sign"></span>Define New Cohort
 				</a>
 				<table class="table table-responsive vert-offset">
 					<tr>
 						<th>Action</th>
 						<th>Name</th>
 						<th>Description</th>
-						<th>Currently in Use</th>
 						<th>Created Date</th>
 						<th>Last Modified</th>
-						<th></th>
 					</tr>
 					<c:forEach items="${cohorts}" var="cohort">
-						<c:url value="/protected/editCohort" var="editUrl">
+						<c:url value="/protected/editcohort" var="editUrl">
 							<c:param name="key" value="${cohort.attr['key']}"/>
 						</c:url>
 						<tr data-key="${cohort.attr['key']}"
@@ -65,5 +63,69 @@
 				</table>
 			</div>
 		</div>
+		<div id="deleteModal" class="modal fade" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+			<div class="modal-dialog modal-lg">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+						<h4 id="deleteModalLabel" class="modal-title">
+							Delete Element
+						</h4>
+					</div>
+					<div id="deleteContent" class="modal-body">
+					</div>
+					<div class="modal-footer">
+						<button id="deleteButton" type="button" class="btn btn-primary">Delete</button>
+						<button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div id="errorModal" class="modal fade" role="dialog" aria-labelledby="errorModalLabel" aria-hidden="true">
+			<div class="modal-dialog modal-lg">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+						<h4 id="errorModalLabel" class="modal-title">
+							Error
+						</h4>
+					</div>
+					<div id="errorContent" class="modal-body">
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		<script language="JavaScript">
+
+			$('span.delete-icon').on('click', function () {
+				var $tr = $(this).closest('tr');
+				var displayName = $tr.data('display-name');
+				var key = $tr.data('key');
+				var dialog = $('#deleteModal');
+				$(dialog).find('#deleteContent').html('Are you sure you want to remove cohort &quot;' + displayName.trim() + '&quot;?');
+				$(dialog).find('#deleteButton').on('click', function (e) {
+					$(dialog).modal('hide');
+					$.ajax({
+						type: "POST",
+						url: 'deletecohort?key=' + encodeURIComponent(key),
+						success: function (data) {
+							window.location.href = 'cohorthome'
+						},
+						error: function (data, statusCode, errorThrown) {
+							var content = 'Error while deleting &quot;' + displayName.trim() + '&quot;. ' + data.responseText + '. Status Code: ' + statusCode;
+							$('#errorModal').find('#errorContent').html(content);
+							$('#errorModal').modal('show');
+							if (errorThrown != null) {
+								console.log(errorThrown);
+							}
+						}
+					});
+				});
+				$(dialog).modal("show");
+			});
+		</script>
 	</template:content>
 </template:insert>

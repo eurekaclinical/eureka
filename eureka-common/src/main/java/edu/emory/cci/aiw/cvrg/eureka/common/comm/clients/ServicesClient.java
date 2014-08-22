@@ -446,6 +446,13 @@ public class ServicesClient extends EurekaClient {
 		return doGet(path, Destination.class);
 	}
 	
+	public void deleteDestination(Long id, String destinationId) throws ClientException {
+		String path = UriBuilder.fromPath("/api/protected/destinations/")
+				.segment(destinationId)
+				.build().toString();
+		doDelete(path);
+	}
+	
 	//Search Functionality
 	public List<String> getSystemElementSearchResults(String searchKey) throws ClientException {
 		final String path = UriBuilder.fromPath("/api/protected/systemelement/search/")
@@ -453,5 +460,5 @@ public class ServicesClient extends EurekaClient {
 			.build().toString();
 		return doGet(path, SystemElementSearchResultsList);
 	}
-	
+
 }

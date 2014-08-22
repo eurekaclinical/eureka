@@ -33,6 +33,7 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.security.RolesAllowed;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
@@ -136,6 +137,20 @@ public class DestinationResource {
 			}
 		}
 		return v.getDestination();
+	}
+	
+	@DELETE
+	@Path("/{id}")
+	public void delete(@PathParam("id") String inId) {
+		try {
+			this.etlClient.deleteDestination(inId);
+		} catch (ClientException ex) {
+			if (ex.getResponseStatus() == ClientResponse.Status.NOT_FOUND) {
+				throw new HttpStatusException(Status.NOT_FOUND);
+			} else {
+				throw new HttpStatusException(Status.INTERNAL_SERVER_ERROR, ex);
+			}
+		}
 	}
 
 }
