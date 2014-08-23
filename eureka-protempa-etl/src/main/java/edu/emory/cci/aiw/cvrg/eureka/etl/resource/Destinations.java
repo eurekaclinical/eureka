@@ -38,6 +38,7 @@ import edu.emory.cci.aiw.cvrg.eureka.etl.dao.DestinationDao;
 import edu.emory.cci.aiw.cvrg.eureka.etl.dao.EtlGroupDao;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import javax.ws.rs.core.Response;
 
@@ -66,6 +67,9 @@ public final class Destinations {
 			cde.setName(etlDestination.getName());
 			cde.setDescription(etlDestination.getDescription());
 			cde.setOwner(this.etlUser);
+			Date now = new Date();
+			cde.setCreatedAt(now);
+			cde.setUpdatedAt(now);
 			Cohort cohort = ((EtlCohortDestination) etlDestination).getCohort();
 			CohortEntity cohortEntity = new CohortEntity();
 			Node node = cohort.getNode();
@@ -89,6 +93,9 @@ public final class Destinations {
 			cde.setName(etlDestination.getName());
 			cde.setDescription(etlDestination.getDescription());
 			cde.setOwner(this.etlUser);
+			cde.setCreatedAt(etlDestination.getCreatedAt());
+			Date now = new Date();
+			cde.setUpdatedAt(now);
 			Cohort cohort = ((EtlCohortDestination) etlDestination).getCohort();
 			CohortEntity cohortEntity = new CohortEntity();
 			cohortEntity.setId(cohort.getId());
