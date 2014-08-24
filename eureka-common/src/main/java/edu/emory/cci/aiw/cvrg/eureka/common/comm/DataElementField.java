@@ -46,6 +46,21 @@ public class DataElementField {
 	private Type type;
 	private CategoricalType categoricalType;
 
+	public DataElementField() {
+
+	}
+
+	public DataElementField(DataElement dataElement) {
+		this.id = dataElement.getId();
+		this.dataElementKey = dataElement.getKey();
+		this.dataElementDescription = dataElement.getDescription();
+		this.dataElementDisplayName = dataElement.getDisplayName();
+		this.type = dataElement.getType();
+		if (dataElement instanceof Category) {
+			this.categoricalType = ((Category) dataElement).getCategoricalType();
+		}
+	}
+
 	public Long getId() {
 		return id;
 	}

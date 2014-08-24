@@ -74,6 +74,8 @@ public class EtlDestinationToDestinationVisitor extends AbstractEtlDestinationVi
 		destination.setRead(etlDestination.isRead());
 		destination.setWrite(etlDestination.isWrite());
 		destination.setExecute(etlDestination.isExecute());
+		destination.setCreatedAt(etlDestination.getCreatedAt());
+		destination.setUpdatedAt(etlDestination.getUpdatedAt());
 	}
 	
 }

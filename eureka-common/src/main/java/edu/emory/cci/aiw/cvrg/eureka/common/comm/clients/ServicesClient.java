@@ -214,7 +214,7 @@ public class ServicesClient extends EurekaClient {
 		queryParams.add("summarize", "true");
 		return doGet(path, DataElementList, queryParams);
 	}
-
+	
 	public DataElement getUserElement(String inKey) throws ClientException {
 		if (inKey == null) {
 			throw new IllegalArgumentException("inKey cannot be null");
@@ -230,6 +230,25 @@ public class ServicesClient extends EurekaClient {
 				.segment(inKey)
 				.build().toString();
 		return doGet(path, DataElement.class);
+	}
+	
+	public DataElement getSummarizedUserElement(String inKey) throws ClientException {
+		if (inKey == null) {
+			throw new IllegalArgumentException("inKey cannot be null");
+		}
+		MultivaluedMap<String, String> queryParams = new MultivaluedMapImpl();
+		queryParams.add("summarize", "true");
+		/*
+		 * The inKey parameter may contain spaces, slashes and other 
+		 * characters that are not allowed in URLs, so it needs to be
+		 * encoded. We use UriBuilder to guarantee a valid URL. The inKey
+		 * string can't be templated because the slashes won't be encoded!
+		 */
+		String path = UriBuilder
+				.fromPath("/api/protected/dataelement/")
+				.segment(inKey)
+				.build().toString();
+		return doGet(path, DataElement.class, queryParams);
 	}
 
 	public void deleteUserElement(Long inUserId, String inKey) throws

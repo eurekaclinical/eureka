@@ -85,6 +85,9 @@ class I2B2DestinationsDTOExtractor extends DestinationsDTOExtractor<EtlI2B2Desti
 			dest.setExecute(perm.execute);
 
 			dest.setOwnerUserId(destinationEntity.getOwner().getId());
+			
+			dest.setCreatedAt(destinationEntity.getCreatedAt());
+			dest.setUpdatedAt(destinationEntity.getUpdatedAt());
 
 			return dest;
 		} catch (XPathExpressionException | ParserConfigurationException | IOException | SAXException ex) {

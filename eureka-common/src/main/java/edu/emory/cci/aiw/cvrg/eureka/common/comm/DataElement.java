@@ -39,7 +39,7 @@ import org.codehaus.jackson.annotate.JsonTypeInfo;
         @JsonSubTypes.Type(value = ValueThresholds.class, 
 		        name = "VALUE_THRESHOLD") })
 public abstract class DataElement implements DataElementVisitable {
-
+	
 	public enum Type {
 		CATEGORIZATION, SEQUENCE, FREQUENCY, VALUE_THRESHOLD, SYSTEM
 	}

@@ -56,7 +56,7 @@ public class Literal extends Node {
 	public void setName(String name) {
 		this.name = name;
 	}
-
+	
 	public Date getStart() {
 		return start;
 	}

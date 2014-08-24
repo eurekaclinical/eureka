@@ -31,6 +31,7 @@ import edu.emory.cci.aiw.cvrg.eureka.common.entity.DestinationGroupMembership;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.EtlGroup;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.EtlUserEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.I2B2DestinationEntity;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.NodeEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.NodeToNodeEntityVisitor;
 import edu.emory.cci.aiw.cvrg.eureka.common.exception.HttpStatusException;
 import edu.emory.cci.aiw.cvrg.eureka.etl.config.EtlProperties;
@@ -85,6 +86,10 @@ public final class Destinations {
 
 	public void update(EtlDestination etlDestination) {
 		if (etlDestination instanceof EtlCohortDestination) {
+			DestinationEntity oldEntity = this.destinationDao.retrieve(etlDestination.getId());
+			if (oldEntity == null || !(oldEntity instanceof CohortDestinationEntity)) {
+				throw new HttpStatusException(Response.Status.NOT_FOUND);
+			}
 			if (!this.etlUser.getId().equals(etlDestination.getOwnerUserId())) {
 				throw new HttpStatusException(Response.Status.NOT_FOUND);
 			}
@@ -93,16 +98,19 @@ public final class Destinations {
 			cde.setName(etlDestination.getName());
 			cde.setDescription(etlDestination.getDescription());
 			cde.setOwner(this.etlUser);
-			cde.setCreatedAt(etlDestination.getCreatedAt());
+			cde.setCreatedAt(oldEntity.getCreatedAt());
 			Date now = new Date();
 			cde.setUpdatedAt(now);
+			
 			Cohort cohort = ((EtlCohortDestination) etlDestination).getCohort();
 			CohortEntity cohortEntity = new CohortEntity();
 			cohortEntity.setId(cohort.getId());
+			cde.setCohort(cohortEntity);
 			Node node = cohort.getNode();
 			NodeToNodeEntityVisitor v = new NodeToNodeEntityVisitor();
 			node.accept(v);
-			cohortEntity.setNode(v.getNodeEntity());
+			NodeEntity nodeEntity = v.getNodeEntity();
+			cohortEntity.setNode(nodeEntity);
 			this.destinationDao.update(cde);
 		} else {
 			throw new HttpStatusException(Response.Status.BAD_REQUEST, "Can't update i2b2 destinations via web services yet");

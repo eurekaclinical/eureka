@@ -20,6 +20,7 @@ package edu.emory.cci.aiw.cvrg.eureka.common.entity;
  * #L%
  */
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
@@ -32,7 +33,7 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "cohort_destinations")
 public class CohortDestinationEntity extends DestinationEntity {
-	@OneToOne
+	@OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
 	@JoinColumn(nullable = false)
 	private CohortEntity cohort;
 

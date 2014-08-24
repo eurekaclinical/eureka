@@ -83,6 +83,15 @@ public abstract class EurekaClient extends AbstractClient {
 		errorIfStatusNotEqualTo(response, ClientResponse.Status.OK);
 		return response.getEntity(cls);
 	}
+	
+	protected <T> T doGet(String path, Class<T> cls, MultivaluedMap<String, String> queryParams) throws ClientException {
+		ClientResponse response = getResourceWrapper().rewritten(path, HttpMethod.GET)
+				.accept(MediaType.APPLICATION_JSON)
+				.type(MediaType.APPLICATION_JSON)
+				.get(ClientResponse.class);
+		errorIfStatusNotEqualTo(response, ClientResponse.Status.OK);
+		return response.getEntity(cls);
+	}
 
 	protected <T> T doGet(String path, GenericType<T> genericType) throws ClientException {
 		ClientResponse response = getResourceWrapper().rewritten(path, HttpMethod.GET)

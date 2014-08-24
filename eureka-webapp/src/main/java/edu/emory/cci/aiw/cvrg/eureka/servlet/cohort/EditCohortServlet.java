@@ -21,8 +21,11 @@ package edu.emory.cci.aiw.cvrg.eureka.servlet.cohort;
  */
 import com.google.inject.Inject;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.BinaryOperator;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.Category;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.Cohort;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.CohortDestination;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.DataElement;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.DataElementField;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.Literal;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.Node;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.NodeVisitor;
@@ -41,14 +44,13 @@ import javax.servlet.http.HttpServletResponse;
  * Created by akshatha on 7/23/14.
  */
 public class EditCohortServlet extends HttpServlet {
+
 	private final ServicesClient servicesClient;
 
 	@Inject
 	public EditCohortServlet(ServicesClient servicesClient) {
 		this.servicesClient = servicesClient;
 	}
-	
-	
 
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp)
@@ -63,6 +65,7 @@ public class EditCohortServlet extends HttpServlet {
 		if (cohortName != null) {
 			try {
 				CohortDestination destination = (CohortDestination) this.servicesClient.getDestination(cohortName);
+				req.setAttribute("destId", destination.getId());
 				req.setAttribute("name", destination.getName());
 				req.setAttribute("description", destination.getDescription());
 				Cohort cohort = destination.getCohort();
@@ -77,16 +80,17 @@ public class EditCohortServlet extends HttpServlet {
 		req.getRequestDispatcher("/protected/cohort_editor.jsp").forward(
 				req, resp);
 	}
-	
-	private static class EditCohortNodeVisitor implements NodeVisitor {
-		List<String> phenotypes = new ArrayList<>();
+
+	private class EditCohortNodeVisitor implements NodeVisitor {
+
+		List<Literal> phenotypes = new ArrayList<>();
 
 		@Override
 		public void visit(Literal literal) {
 			if (literal.getStart() != null || literal.getFinish() != null) {
 				throw new UnsupportedOperationException("Literal start and finish not supported yet");
 			}
-			this.phenotypes.add(literal.getName());
+			this.phenotypes.add(literal);
 		}
 
 		@Override
@@ -100,12 +104,29 @@ public class EditCohortServlet extends HttpServlet {
 				throw new UnsupportedOperationException("AND is not supported yet");
 			}
 			EditCohortNodeVisitor v = new EditCohortNodeVisitor();
-			binaryOperator.accept(v);
-			this.phenotypes.addAll(v.getPhenotypes());
+			binaryOperator.getLeftNode().accept(v);
+			this.phenotypes.addAll(v.getPhenotypesInt());
+			v = new EditCohortNodeVisitor();
+			binaryOperator.getRightNode().accept(v);
+			this.phenotypes.addAll(v.getPhenotypesInt());
 		}
-		
-		List<String> getPhenotypes() {
+
+		private List<Literal> getPhenotypesInt() {
 			return this.phenotypes;
+		}
+
+		List<DataElementField> getPhenotypes() throws ClientException {
+			List<DataElementField> result = new ArrayList<>();
+			for (Literal literal : phenotypes) {
+				DataElement userElement;
+				if (literal.getName().startsWith("USER:")) {
+					userElement = servicesClient.getSummarizedUserElement(literal.getName());
+				} else {
+					userElement = servicesClient.getSystemElement(literal.getName());
+				}
+				result.add(new DataElementField(userElement));
+			}
+			return result;
 		}
 		
 	}
