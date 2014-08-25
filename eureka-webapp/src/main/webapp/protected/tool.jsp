@@ -133,7 +133,7 @@
 						</label>
 						<select name="destination" class="form-control">
 							<c:forEach var="destination" items="${destinations}">
-								<option value="${destination.id}">${destination.name}</option>
+								<option value="${destination.name}">${destination.name}</option>
 							</c:forEach>
 						</select>
 					</div>

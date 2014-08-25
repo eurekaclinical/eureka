@@ -28,10 +28,10 @@ import org.protempa.proposition.value.NominalValue;
  * @author Andrew Post
  */
 public class AbstractConverter {
-	private final ConversionSupport conversionSupport;
+	private final DataElementConversionSupport conversionSupport;
 
 	AbstractConverter() {
-		this.conversionSupport = new ConversionSupport();
+		this.conversionSupport = new DataElementConversionSupport();
 	}
 	
 	protected String asValueString(DataElementEntity dataElement) {

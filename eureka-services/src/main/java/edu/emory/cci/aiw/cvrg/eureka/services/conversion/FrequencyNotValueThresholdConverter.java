@@ -31,10 +31,8 @@ import static edu.emory.cci.aiw.cvrg.eureka.services.conversion.ConversionUtil.u
 import org.protempa.HighLevelAbstractionDefinition;
 import org.protempa.SimpleGapFunction;
 import org.protempa.SliceDefinition;
-import org.protempa.TemporalExtendedParameterDefinition;
 import org.protempa.TemporalExtendedPropositionDefinition;
 import org.protempa.proposition.interval.Relation;
-import org.protempa.proposition.value.NominalValue;
 
 public final class FrequencyNotValueThresholdConverter implements
 		FrequencyConverter {
@@ -42,10 +40,10 @@ public final class FrequencyNotValueThresholdConverter implements
 	private PropositionDefinitionConverterVisitor converterVisitor;
 	private HighLevelAbstractionDefinition primary;
 	private String primaryPropId;
-	private final ConversionSupport conversionSupport;
+	private final DataElementConversionSupport conversionSupport;
 
 	public FrequencyNotValueThresholdConverter() {
-		this.conversionSupport = new ConversionSupport();
+		this.conversionSupport = new DataElementConversionSupport();
 	}
 	
 	@Override

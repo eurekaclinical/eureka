@@ -21,9 +21,7 @@ package edu.emory.cci.aiw.cvrg.eureka.etl.resource;
 
 import com.google.inject.Inject;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.DestinationType;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.EtlCohortDestination;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.EtlDestination;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.EtlI2B2Destination;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.EtlUserEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.exception.HttpStatusException;
 import edu.emory.cci.aiw.cvrg.eureka.etl.authentication.EtlAuthenticationSupport;

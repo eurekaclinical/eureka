@@ -32,10 +32,10 @@ import edu.emory.cci.aiw.cvrg.eureka.common.comm.UnaryOperator;
  */
 class EtlNodeToServicesNodeVisitor extends AbstractNodeVisitor {
 	private Node node;
-	private ConversionSupport conversionSupport;
+	private final CohortConversionSupport conversionSupport;
 
 	public EtlNodeToServicesNodeVisitor() {
-		this.conversionSupport = new ConversionSupport();
+		this.conversionSupport = new CohortConversionSupport();
 	}
 	
 	@Override

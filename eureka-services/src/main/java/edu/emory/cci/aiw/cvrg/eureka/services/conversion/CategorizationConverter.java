@@ -39,10 +39,10 @@ public final class CategorizationConverter implements
 	private PropositionDefinitionConverterVisitor converterVisitor;
 	private PropositionDefinition primary;
 	private String primaryPropId;
-	private final ConversionSupport conversionSupport;
+	private final DataElementConversionSupport conversionSupport;
 
 	public CategorizationConverter() {
-		this.conversionSupport = new ConversionSupport();
+		this.conversionSupport = new DataElementConversionSupport();
 	}
 	
 	@Override

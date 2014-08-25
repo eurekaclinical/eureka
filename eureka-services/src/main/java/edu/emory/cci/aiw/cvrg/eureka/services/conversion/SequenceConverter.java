@@ -45,11 +45,11 @@ final class SequenceConverter
 	private HighLevelAbstractionDefinition primary;
 	private String primaryPropId;
 	private final Map<Long, TemporalExtendedPropositionDefinition> extendedProps;
-	private final ConversionSupport conversionSupport;
+	private final DataElementConversionSupport conversionSupport;
 
 	public SequenceConverter() {
 		this.extendedProps = new HashMap<>();
-		this.conversionSupport = new ConversionSupport();
+		this.conversionSupport = new DataElementConversionSupport();
 	}
 
 	@Override

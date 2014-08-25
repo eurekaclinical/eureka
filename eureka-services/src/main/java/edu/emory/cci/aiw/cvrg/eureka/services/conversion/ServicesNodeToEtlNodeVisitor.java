@@ -31,19 +31,19 @@ import edu.emory.cci.aiw.cvrg.eureka.common.comm.UnaryOperator;
  * @author Andrew Post
  */
 public class ServicesNodeToEtlNodeVisitor extends AbstractNodeVisitor {
-	private ConversionSupport conversionSupport;
+	private final CohortConversionSupport conversionSupport;
 	private Node node;
 
 	public ServicesNodeToEtlNodeVisitor() {
-		this.conversionSupport = new ConversionSupport();
+		this.conversionSupport = new CohortConversionSupport();
 	}
 	
 	@Override
 	public void visit(Literal literal) {
 		Literal etlLiteral = new Literal();
 		etlLiteral.setId(literal.getId());
-		etlLiteral.setName(
-				this.conversionSupport.toPropositionId(literal.getName()));
+		String key = literal.getName();
+		etlLiteral.setName(this.conversionSupport.toPropositionId(key));
 		etlLiteral.setStart(literal.getStart());
 		etlLiteral.setFinish(literal.getFinish());
 		this.node = etlLiteral;

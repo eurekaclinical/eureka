@@ -46,9 +46,10 @@ class ConversionUtil {
 	static final String PRIMARY_PROP_ID_SUFFIX = "_PRIMARY";
 	static final String VALUE_SUFFIX = "_VALUE";
 	static final String PROP_ID_WRAPPED_SUFFIX = "_WRAPPED";
+	static final String USER_KEY_PREFIX = "USER:";
 	
-	private static final ConversionSupport CONVERSION_SUPPORT =
-			new ConversionSupport();
+	private static final DataElementConversionSupport CONVERSION_SUPPORT =
+			new DataElementConversionSupport();
 
 	static AbsoluteTimeUnit unit(TimeUnit unit) {
 		return unit != null ? AbsoluteTimeUnit.nameToUnit(unit.getName())

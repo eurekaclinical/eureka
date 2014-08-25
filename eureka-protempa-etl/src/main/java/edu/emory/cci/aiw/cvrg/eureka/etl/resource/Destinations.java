@@ -42,12 +42,19 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import javax.ws.rs.core.Response;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
  * @author Andrew Post
  */
 public final class Destinations {
+	
+	/**
+	 * The class level logger.
+	 */
+	private static final Logger LOGGER = LoggerFactory.getLogger(Destinations.class);
 
 	private final EtlGroupDao groupDao;
 	private final EtlUserEntity etlUser;
@@ -170,7 +177,12 @@ public final class Destinations {
 		}
 		DestinationDTOExtractorVisitor visitor
 				= new DestinationDTOExtractorVisitor(this.etlProperties, this.etlUser, this.groupDao);
-		this.destinationDao.getByName(configId).accept(visitor);
+		
+		DestinationEntity byName = this.destinationDao.getByName(configId);
+		if (byName == null) {
+			throw new HttpStatusException(Response.Status.NOT_FOUND);
+		}
+		byName.accept(visitor);
 		return visitor.getEtlDestination();
 	}
 

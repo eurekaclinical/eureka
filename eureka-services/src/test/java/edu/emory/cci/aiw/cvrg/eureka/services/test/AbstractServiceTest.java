@@ -26,7 +26,7 @@ import edu.emory.cci.aiw.cvrg.eureka.common.test.AbstractTest;
 import edu.emory.cci.aiw.cvrg.eureka.common.test.TestDataException;
 import edu.emory.cci.aiw.cvrg.eureka.common.test.TestDataProvider;
 import edu.emory.cci.aiw.cvrg.eureka.services.config.AppTestModule;
-import edu.emory.cci.aiw.cvrg.eureka.services.conversion.ConversionSupport;
+import edu.emory.cci.aiw.cvrg.eureka.services.conversion.DataElementConversionSupport;
 import org.junit.After;
 import org.junit.Before;
 import org.protempa.proposition.value.NominalValue;
@@ -43,7 +43,7 @@ public class AbstractServiceTest extends AbstractTest {
 	 */
 	private PersistService persistService;
 	
-	private ConversionSupport conversionSupport;
+	private DataElementConversionSupport conversionSupport;
 
 	protected Class<? extends TestDataProvider> getDataProvider() {
 		return Setup.class;
@@ -69,7 +69,7 @@ public class AbstractServiceTest extends AbstractTest {
 			testDataProvider = getInstance(getDataProvider());
 			testDataProvider.setUp();
 		}
-		this.conversionSupport = new ConversionSupport();
+		this.conversionSupport = new DataElementConversionSupport();
 	}
 
 	/**
