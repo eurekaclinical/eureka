@@ -77,7 +77,6 @@ class CohortCriteria implements Criteria {
 				}
 			}
 		}
-		System.out.println("propMap: " + propMap);
 		return this.cohort.evaluate(propMap);
 	}
 

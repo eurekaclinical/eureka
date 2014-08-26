@@ -94,16 +94,13 @@ public class Literal extends Node {
 				for (Proposition prop : props) {
 					prop.accept(v);
 					if (v.evaluate()) {
-						System.out.println("literal: " + this.name + " 1: return true");
 						return true;
 					}
 				}
 			} else {
-				System.out.println("literal: " + this.name + " 2: return true");
 				return true;
 			}
 		}
-		System.out.println("literal: " + this.name + " 3: return false");
 		return false;
 	}
 
