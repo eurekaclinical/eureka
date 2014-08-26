@@ -30,6 +30,7 @@ import edu.emory.cci.aiw.cvrg.eureka.common.entity.I2B2DestinationEntity;
 import edu.emory.cci.aiw.cvrg.eureka.etl.config.EtlProperties;
 import edu.emory.cci.aiw.cvrg.eureka.etl.dao.DestinationDao;
 import edu.emory.cci.aiw.i2b2etl.I2b2Destination;
+import org.protempa.KnowledgeSource;
 import org.protempa.dest.keyloader.KeyLoaderDestination;
 
 /**
@@ -47,7 +48,7 @@ public class ProtempaDestinationFactory {
 		this.etlProperties = etlProperties;
 	}
 	
-	public org.protempa.dest.Destination getInstance(Long destId) {
+	public org.protempa.dest.Destination getInstance(Long destId, KnowledgeSource knowledgeSource) {
 		DestinationEntity dest = this.destinationDao.retrieve(destId);
 		if (dest instanceof I2B2DestinationEntity) {
 			return new I2b2Destination(this.etlProperties.destinationConfigFile(dest.getName()));

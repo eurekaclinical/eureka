@@ -19,7 +19,6 @@ package edu.emory.cci.aiw.cvrg.eureka.common.comm;
  * limitations under the License.
  * #L%
  */
-
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -41,14 +40,15 @@ import org.protempa.proposition.visitor.AbstractPropositionVisitor;
  * @author Andrew Post
  */
 public class Literal extends Node {
+
 	private String name;
-	
+
 	private Date start;
-	
+
 	private Date finish;
-	
+
 	private Interval interval;
-	
+
 	public String getName() {
 		return name;
 	}
@@ -56,7 +56,7 @@ public class Literal extends Node {
 	public void setName(String name) {
 		this.name = name;
 	}
-	
+
 	public Date getStart() {
 		return start;
 	}
@@ -72,7 +72,7 @@ public class Literal extends Node {
 	public void setFinish(Date finish) {
 		this.finish = finish;
 	}
-	
+
 	@Override
 	public String toString() {
 		return ReflectionToStringBuilder.reflectionToString(this);
@@ -80,23 +80,30 @@ public class Literal extends Node {
 
 	@Override
 	boolean evaluate(Map<String, List<Proposition>> propMap) {
-		if (this.interval == null) {
-			this.interval = 
-					new AbsoluteTimeIntervalFactory().getInstance(
-							start, null, 
-							finish, null);
-		}
 		List<Proposition> props = propMap.get(this.name);
 		if (props != null && !props.isEmpty()) {
-			LiteralEvaluatePropositionVisitor v = 
-					new LiteralEvaluatePropositionVisitor();
-			for (Proposition prop : props) {
-				prop.accept(v);
-				if (v.evaluate()) {
-					return true;
+			if (this.interval == null && (this.start != null || this.finish != null)) {
+				this.interval
+						= new AbsoluteTimeIntervalFactory().getInstance(
+								start, null,
+								finish, null);
+			}
+			if (this.interval != null) {
+				LiteralEvaluatePropositionVisitor v
+						= new LiteralEvaluatePropositionVisitor();
+				for (Proposition prop : props) {
+					prop.accept(v);
+					if (v.evaluate()) {
+						System.out.println("literal: " + this.name + " 1: return true");
+						return true;
+					}
 				}
+			} else {
+				System.out.println("literal: " + this.name + " 2: return true");
+				return true;
 			}
 		}
+		System.out.println("literal: " + this.name + " 3: return false");
 		return false;
 	}
 
@@ -106,6 +113,7 @@ public class Literal extends Node {
 	}
 
 	private class LiteralEvaluatePropositionVisitor extends AbstractPropositionVisitor {
+
 		private boolean result;
 
 		LiteralEvaluatePropositionVisitor() {
@@ -139,11 +147,11 @@ public class Literal extends Node {
 		public void visit(AbstractParameter abstractParameter) {
 			handleTemporalProposition(abstractParameter);
 		}
-		
+
 		private void handleTemporalProposition(TemporalProposition tempProp) {
 			Interval tempPropIval = tempProp.getInterval();
 			this.result = Relation.CONTAINS_OR_EQUALS.hasRelation(interval, tempPropIval);
 		}
-		
+
 	}
 }

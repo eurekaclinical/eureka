@@ -19,11 +19,9 @@ package edu.emory.cci.aiw.cvrg.eureka.common.comm;
  * limitations under the License.
  * #L%
  */
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.arp.javautil.collections.Collections;
 import org.protempa.proposition.Proposition;
 
 /**
@@ -52,13 +50,7 @@ public class Cohort {
 		this.node = node;
 	}
 
-	public boolean evaluate(List<Proposition> propositions) {
-		Map<String, List<Proposition>> propMap = new HashMap<>();
-		for (Map.Entry<String, List<Proposition>> me : propMap.entrySet()) {
-			for (Proposition prop : me.getValue()) {
-				Collections.putList(propMap, prop.getId(), prop);
-			}
-		}
+	public boolean evaluate(Map<String, List<Proposition>> propMap) {
 		return this.node.evaluate(propMap);
 	}
 	

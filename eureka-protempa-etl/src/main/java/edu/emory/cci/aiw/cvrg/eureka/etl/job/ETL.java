@@ -32,7 +32,6 @@ import edu.emory.cci.aiw.cvrg.eureka.etl.dao.EtlGroupDao;
 import edu.emory.cci.aiw.cvrg.eureka.etl.dao.JobDao;
 import edu.emory.cci.aiw.cvrg.eureka.etl.queryresultshandler.ProtempaDestinationFactory;
 import edu.emory.cci.aiw.cvrg.eureka.etl.resource.Destinations;
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import org.protempa.CloseException;
@@ -111,7 +110,7 @@ public class ETL {
 					new Destinations(this.etlProperties, job.getEtlUser(), this.destinationDao, this.groupDao).getOne(job.getDestinationId());
 			org.protempa.dest.Destination protempaDestination = 
 					this.protempaDestFactory
-					.getInstance(eurekaDestination.getId());
+					.getInstance(eurekaDestination.getId(), protempa.getKnowledgeSource());
 			protempa.execute(query, protempaDestination);
 			protempa.close();
 		} catch (CloseException | BackendNewInstanceException | BackendInitializationException | ConfigurationsLoadException | BackendProviderSpecLoaderException | QueryBuildException | InvalidConfigurationException | ConfigurationsNotFoundException | DataSourceValidationIncompleteException ex) {

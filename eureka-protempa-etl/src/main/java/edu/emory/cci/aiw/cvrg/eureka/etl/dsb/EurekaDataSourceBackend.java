@@ -19,6 +19,8 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.etl.dsb;
 
+import edu.emory.cci.aiw.cvrg.eureka.etl.config.EtlProperties;
+import edu.emory.cci.aiw.cvrg.eureka.etl.spreadsheet.*;
 import java.io.File;
 import java.io.FilenameFilter;
 import java.io.IOException;
@@ -27,7 +29,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
-
 import org.arp.javautil.io.FileUtil;
 import org.arp.javautil.io.IOUtil;
 import org.arp.javautil.sql.InvalidConnectionSpecArguments;
@@ -43,13 +44,11 @@ import org.protempa.backend.annotations.BackendProperty;
 import org.protempa.backend.dsb.DataValidationEvent;
 import org.protempa.backend.dsb.filter.Filter;
 import org.protempa.backend.dsb.relationaldb.*;
+import org.protempa.dest.QueryResultsHandler;
 import org.protempa.proposition.Proposition;
 import org.protempa.proposition.value.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import edu.emory.cci.aiw.cvrg.eureka.etl.config.EtlProperties;
-import edu.emory.cci.aiw.cvrg.eureka.etl.spreadsheet.*;
 
 /**
  * Data source backend for Eureka!.
@@ -196,21 +195,21 @@ public final class EurekaDataSourceBackend extends RelationalDbDataSourceBackend
 		this.mapper = new PropIdToSQLCodeMapper("/mappings/",
 				getClass());
 		setSchemaName("EUREKA");
-		setKeyIdTable("PATIENT");
-		setKeyIdColumn("PATIENT_KEY");
-		setKeyIdJoinKey("PATIENT_KEY");
+		setDefaultKeyIdTable("PATIENT");
+		setDefaultKeyIdColumn("PATIENT_KEY");
+		setDefaultKeyIdJoinKey("PATIENT_KEY");
 	}
 
 	@Override
-	public DataStreamingEventIterator<Proposition> readPropositions(Set<String> keyIds, Set<String> propIds, Filter filters, QuerySession qs) throws DataSourceReadException {
+	public DataStreamingEventIterator<Proposition> readPropositions(Set<String> keyIds, Set<String> propIds, Filter filters, QuerySession qs, QueryResultsHandler queryResultsHandler) throws DataSourceReadException {
 		if (!dataPopulated) {
 			populateDatabase();
 		}
-		return super.readPropositions(keyIds, propIds, filters, qs);
+		return super.readPropositions(keyIds, propIds, filters, qs, queryResultsHandler);
 	}
 
 	@Override
-	protected StagingSpec[] stagedSpecs() throws IOException {
+	protected StagingSpec[] stagedSpecs(String keyIdSchema, String keyIdTable, String keyIdColumn, String keyIdJoinKey) throws IOException {
 		return null;
 	}
 
@@ -288,26 +287,26 @@ public final class EurekaDataSourceBackend extends RelationalDbDataSourceBackend
 	}
 
 	@Override
-	protected EntitySpec[] constantSpecs() throws IOException {
+	protected EntitySpec[] constantSpecs(String keyIdSchema, String keyIdTable, String keyIdColumn, String keyIdJoinKey) throws IOException {
 		String schemaName = getSchemaName();
 		EntitySpec[] constantSpecs = new EntitySpec[]{
 			new EntitySpec("Patients", null, new String[]{"PatientAll"},
-			false, new ColumnSpec(getKeyIdSchema(),
-			getKeyIdTable(),
-			getKeyIdColumn()), new ColumnSpec[]{
-				new ColumnSpec(getKeyIdSchema(), getKeyIdTable(),
-				getKeyIdColumn())}, null, null,
+			false, new ColumnSpec(keyIdSchema,
+			keyIdTable,
+			keyIdColumn), new ColumnSpec[]{
+				new ColumnSpec(keyIdSchema, keyIdTable,
+				keyIdColumn)}, null, null,
 			new PropertySpec[]{
 				new PropertySpec("patientId", null,
-				new ColumnSpec(getKeyIdSchema(),
-				getKeyIdTable(),
+				new ColumnSpec(keyIdSchema,
+				keyIdTable,
 				"PATIENT_KEY"),
 				ValueType.NOMINALVALUE)},
 			new ReferenceSpec[]{
 				new ReferenceSpec("encounters", "Encounters",
 				new ColumnSpec[]{
-					new ColumnSpec(getKeyIdSchema(),
-					getKeyIdTable(),
+					new ColumnSpec(keyIdSchema,
+					keyIdTable,
 					new JoinSpec(
 					"PATIENT_KEY",
 					"PATIENT_KEY",
@@ -318,24 +317,24 @@ public final class EurekaDataSourceBackend extends RelationalDbDataSourceBackend
 				ReferenceSpec.Type.MANY),
 				new ReferenceSpec("patientDetails",
 				"Patient Details", new ColumnSpec[]{
-					new ColumnSpec(getKeyIdSchema(),
-					getKeyIdTable(),
+					new ColumnSpec(keyIdSchema,
+					keyIdTable,
 					"PATIENT_KEY")},
 				ReferenceSpec.Type.MANY)}, null, null,
 			null, null, null, null, null, null),
 			new EntitySpec("Patient Details", null, new String[]{"Patient"},
-			true, new ColumnSpec(getKeyIdSchema(), getKeyIdTable(),
-			getKeyIdColumn()), new ColumnSpec[]{
-				new ColumnSpec(schemaName, getKeyIdTable(),
+			true, new ColumnSpec(keyIdSchema, keyIdTable,
+			keyIdColumn), new ColumnSpec[]{
+				new ColumnSpec(schemaName, keyIdTable,
 				"PATIENT_KEY")}, null, null, new PropertySpec[]{
 				new PropertySpec("dateOfBirth", null,
-				new ColumnSpec(getKeyIdSchema(),
-				getKeyIdTable(), "DOB"),
+				new ColumnSpec(keyIdSchema,
+				keyIdTable, "DOB"),
 				ValueType.DATEVALUE,
 				new JDBCDateTimeTimestampDateValueFormat()),
 				new PropertySpec("patientId", null,
-				new ColumnSpec(getKeyIdSchema(),
-				getKeyIdTable(), "PATIENT_KEY"),
+				new ColumnSpec(keyIdSchema,
+				keyIdTable, "PATIENT_KEY"),
 				ValueType.NOMINALVALUE),
 				new PropertySpec("firstName", null,
 				new ColumnSpec(schemaName, "PATIENT",
@@ -407,8 +406,8 @@ public final class EurekaDataSourceBackend extends RelationalDbDataSourceBackend
 			null, null, null, null, null, null),
 			new EntitySpec("Providers", null,
 			new String[]{"AttendingPhysician"}, false,
-			new ColumnSpec(getKeyIdSchema(), getKeyIdTable(),
-			getKeyIdColumn(),
+			new ColumnSpec(keyIdSchema, keyIdTable,
+			keyIdColumn,
 			new JoinSpec("PATIENT_KEY", "PATIENT_KEY",
 			new ColumnSpec(schemaName, "ENCOUNTER",
 			new JoinSpec("PROVIDER_KEY",
@@ -433,12 +432,12 @@ public final class EurekaDataSourceBackend extends RelationalDbDataSourceBackend
 	}
 
 	@Override
-	protected EntitySpec[] eventSpecs() throws IOException {
+	protected EntitySpec[] eventSpecs(String keyIdSchema, String keyIdTable, String keyIdColumn, String keyIdJoinKey) throws IOException {
 		String schemaName = getSchemaName();
 		EntitySpec[] eventSpecs = new EntitySpec[]{
 			new EntitySpec("Encounters", null, new String[]{"Encounter"},
-			true, new ColumnSpec(getKeyIdSchema(), getKeyIdTable(),
-			getKeyIdColumn(),
+			true, new ColumnSpec(keyIdSchema, keyIdTable,
+			keyIdColumn,
 			new JoinSpec("PATIENT_KEY", "PATIENT_KEY",
 			new ColumnSpec(schemaName, "ENCOUNTER"))),
 			new ColumnSpec[]{
@@ -559,8 +558,8 @@ public final class EurekaDataSourceBackend extends RelationalDbDataSourceBackend
 			AbsoluteTimeGranularity.DAY, dtPositionParser, null),
 			new EntitySpec("Diagnosis Codes", null, this.mapper
 			.readCodes("icd9_diagnosis_08172011.txt", 0),
-			true, new ColumnSpec(getKeyIdSchema(), getKeyIdTable(),
-			getKeyIdColumn(),
+			true, new ColumnSpec(keyIdSchema, keyIdTable,
+			keyIdColumn,
 			new JoinSpec("PATIENT_KEY", "PATIENT_KEY",
 			new ColumnSpec(schemaName, "ENCOUNTER",
 			new JoinSpec("ENCOUNTER_KEY",
@@ -589,8 +588,8 @@ public final class EurekaDataSourceBackend extends RelationalDbDataSourceBackend
 			dtPositionParser, null),
 			new EntitySpec("ICD9 Procedure Codes", null, this.mapper
 			.readCodes("icd9_procedure_08172011.txt", 0),
-			true, new ColumnSpec(getKeyIdSchema(), getKeyIdTable(),
-			getKeyIdColumn(),
+			true, new ColumnSpec(keyIdSchema, keyIdTable,
+			keyIdColumn,
 			new JoinSpec("PATIENT_KEY", "PATIENT_KEY",
 			new ColumnSpec(schemaName, "ENCOUNTER",
 			new JoinSpec("ENCOUNTER_KEY",
@@ -618,8 +617,8 @@ public final class EurekaDataSourceBackend extends RelationalDbDataSourceBackend
 			dtPositionParser, null),
 			new EntitySpec("CPT Procedure Codes", null, this.mapper
 			.readCodes("cpt_procedure_08172011.txt", 0), true,
-			new ColumnSpec(getKeyIdSchema(), getKeyIdTable(),
-			getKeyIdColumn(),
+			new ColumnSpec(keyIdSchema, keyIdTable,
+			keyIdColumn,
 			new JoinSpec("PATIENT_KEY", "PATIENT_KEY",
 			new ColumnSpec(schemaName, "ENCOUNTER",
 			new JoinSpec("ENCOUNTER_KEY",
@@ -648,8 +647,8 @@ public final class EurekaDataSourceBackend extends RelationalDbDataSourceBackend
 			dtPositionParser, null),
 			new EntitySpec("Medication Orders", null,
 			this.mapper.readCodes("meds_08182011.txt", 0),
-			true, new ColumnSpec(getKeyIdSchema(), getKeyIdTable(),
-			getKeyIdColumn(),
+			true, new ColumnSpec(keyIdSchema, keyIdTable,
+			keyIdColumn,
 			new JoinSpec("PATIENT_KEY", "PATIENT_KEY",
 			new ColumnSpec(schemaName, "ENCOUNTER",
 			new JoinSpec("ENCOUNTER_KEY",
@@ -672,13 +671,13 @@ public final class EurekaDataSourceBackend extends RelationalDbDataSourceBackend
 	}
 
 	@Override
-	protected EntitySpec[] primitiveParameterSpecs() throws IOException {
+	protected EntitySpec[] primitiveParameterSpecs(String keyIdSchema, String keyIdTable, String keyIdColumn, String keyIdJoinKey) throws IOException {
 		String schemaName = getSchemaName();
 		EntitySpec[] primitiveParameterSpecs = new EntitySpec[]{
 			new EntitySpec("Labs", null,
 			this.mapper.readCodes("labs_08172011.txt", 0),
-			true, new ColumnSpec(getKeyIdSchema(), getKeyIdTable(),
-			getKeyIdColumn(),
+			true, new ColumnSpec(keyIdSchema, keyIdTable,
+			keyIdColumn,
 			new JoinSpec("PATIENT_KEY", "PATIENT_KEY",
 			new ColumnSpec(schemaName, "ENCOUNTER",
 			new JoinSpec("ENCOUNTER_KEY",
@@ -707,8 +706,8 @@ public final class EurekaDataSourceBackend extends RelationalDbDataSourceBackend
 			dtPositionParser, null), new EntitySpec("Vitals", null,
 			this.mapper
 			.readCodes("vitals_result_types_08172011.txt", 0),
-			true, new ColumnSpec(getKeyIdSchema(), getKeyIdTable(),
-			getKeyIdColumn(), new JoinSpec("PATIENT_KEY", "PATIENT_KEY",
+			true, new ColumnSpec(keyIdSchema, keyIdTable,
+			keyIdColumn, new JoinSpec("PATIENT_KEY", "PATIENT_KEY",
 			new ColumnSpec(schemaName, "ENCOUNTER",
 			new JoinSpec("ENCOUNTER_KEY", "ENCOUNTER_KEY",
 			new ColumnSpec(schemaName, "VITALS_EVENT"))))),
