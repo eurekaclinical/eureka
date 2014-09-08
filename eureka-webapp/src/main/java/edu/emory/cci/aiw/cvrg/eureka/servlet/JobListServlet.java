@@ -91,7 +91,7 @@ public class JobListServlet extends HttpServlet {
 				req.setAttribute("sourceConfig", sourceConfigName);
 			}
 
-			req.getRequestDispatcher("/protected/tool.jsp").forward(req, resp);
+			req.getRequestDispatcher("/protected/job_submission.jsp").forward(req, resp);
 		} catch (ClientException ex) {
 			throw new ServletException("Error getting job list", ex);
 		}

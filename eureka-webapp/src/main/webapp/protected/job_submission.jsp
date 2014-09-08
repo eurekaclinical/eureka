@@ -307,11 +307,11 @@
 		<div class="modal-content">
 			<div class="modal-header">
 				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-				<h4 id="searchModalLabel" class="modal-title">
+				<h4 id="searchVadlidationModalLabel" class="modal-title">
 					Search String Validation Failed
 				</h4>
 			</div>
-			<div id="searchContent" class="modal-body">
+			<div id="searchValidationContent" class="modal-body">
 			</div>
 			<div class="modal-footer">
 				<button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
@@ -324,11 +324,11 @@
 		<div class="modal-content">
 			<div class="modal-header">
 				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-				<h4 id="searchModalLabel" class="modal-title">
+				<h4 id="searchNoResultsModalLabel" class="modal-title">
 					No Search Results
 				</h4>
 			</div>
-			<div id="searchContent" class="modal-body">
+			<div id="searchNoResultsContent" class="modal-body">
 			</div>
 			<div class="modal-footer">
 				<button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
