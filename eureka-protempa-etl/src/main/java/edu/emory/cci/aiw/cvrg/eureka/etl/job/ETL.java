@@ -19,21 +19,9 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.etl.job;
 
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.EtlDestination;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.JobEntity;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.JobEvent;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.JobEventType;
-import edu.emory.cci.aiw.cvrg.eureka.etl.config.EtlProperties;
-import edu.emory.cci.aiw.cvrg.eureka.etl.config.EurekaProtempaConfigurations;
-import edu.emory.cci.aiw.cvrg.eureka.etl.dao.DestinationDao;
-import edu.emory.cci.aiw.cvrg.eureka.etl.dao.EtlGroupDao;
-import edu.emory.cci.aiw.cvrg.eureka.etl.dao.JobDao;
-import edu.emory.cci.aiw.cvrg.eureka.etl.queryresultshandler.ProtempaDestinationFactory;
-import edu.emory.cci.aiw.cvrg.eureka.etl.resource.Destinations;
 import java.util.ArrayList;
 import java.util.List;
+
 import org.protempa.CloseException;
 import org.protempa.DataSourceFailedDataValidationException;
 import org.protempa.DataSourceValidationIncompleteException;
@@ -56,6 +44,21 @@ import org.protempa.query.Query;
 import org.protempa.query.QueryBuildException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
+
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.EtlDestination;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.JobEntity;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.JobEvent;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.JobEventType;
+import edu.emory.cci.aiw.cvrg.eureka.etl.config.EtlProperties;
+import edu.emory.cci.aiw.cvrg.eureka.etl.config.EurekaProtempaConfigurations;
+import edu.emory.cci.aiw.cvrg.eureka.etl.dao.DestinationDao;
+import edu.emory.cci.aiw.cvrg.eureka.etl.dao.EtlGroupDao;
+import edu.emory.cci.aiw.cvrg.eureka.etl.dao.JobDao;
+import edu.emory.cci.aiw.cvrg.eureka.etl.queryresultshandler.ProtempaDestinationFactory;
+import edu.emory.cci.aiw.cvrg.eureka.etl.resource.Destinations;
 
 /**
  * This class actually runs Protempa.
@@ -91,7 +94,7 @@ public class ETL {
 	}
 
 	void run(JobEntity job, PropositionDefinition[] inPropositionDefinitions,
-			String[] inPropIdsToShow, Filter filter) throws EtlException {
+			String[] inPropIdsToShow, Filter filter, boolean appendData) throws EtlException {
 		assert inPropositionDefinitions != null :
 				"inPropositionDefinitions cannot be null";
 		assert job != null : "job cannot be null";

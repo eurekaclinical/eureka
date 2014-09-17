@@ -19,16 +19,18 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.etl.job;
 
-import com.google.inject.Inject;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.JobEntity;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.JobEventType;
-import edu.emory.cci.aiw.cvrg.eureka.etl.dao.JobDao;
+import java.util.List;
+
 import org.protempa.PropositionDefinition;
 import org.protempa.backend.dsb.filter.Filter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.List;
+import com.google.inject.Inject;
+
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.JobEntity;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.JobEventType;
+import edu.emory.cci.aiw.cvrg.eureka.etl.dao.JobDao;
 
 public final class Task implements Runnable {
 
@@ -39,6 +41,7 @@ public final class Task implements Runnable {
 	private List<PropositionDefinition> propositionDefinitions;
 	private List<String> propIdsToShow;
 	private Filter filter;
+	private boolean appendData;
 
 	@Inject
 	Task(JobDao inJobDao, ETL inEtl) {
@@ -78,6 +81,14 @@ public final class Task implements Runnable {
 		propositionDefinitions = inPropositionDefinitions;
 	}
 
+	public boolean isAppendData() {
+		return appendData;
+	}
+
+	public void setAppendData(boolean appendData) {
+		this.appendData = appendData;
+	}
+
 	@Override
 	public void run() {
 		JobEntity myJob = null;
@@ -100,7 +111,7 @@ public final class Task implements Runnable {
 					this.propIdsToShow.toArray(
 					new String[this.propIdsToShow.size()]);
 
-			this.etl.run(myJob, propDefArray, propIdsToShowArray, this.filter);
+			this.etl.run(myJob, propDefArray, propIdsToShowArray, this.filter, this.appendData);
 			this.etl.close();
 			myJob.newEvent(JobEventType.COMPLETED, "Processing completed without error", null);
 			this.jobDao.update(myJob);
