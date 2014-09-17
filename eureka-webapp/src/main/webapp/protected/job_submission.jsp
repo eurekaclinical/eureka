@@ -173,6 +173,19 @@
 				</fieldset>
 			</c:if>
 		</c:forEach>
+		<fieldset id="appendFieldSet">
+			<legend>Append Data</legend>
+			<div class="row">
+				<div class="col-xs-12">
+					<div class="form-group">
+						<label class="checkbox" for="appendData">
+							Append data instead of repopulating data</input>
+							<input type="checkbox" id="appendData" name="appendData" value="true">
+						</label>
+					</div>
+				</div>
+			</div>
+		</fieldset>
 		<fieldset id="dateRange">
 			<legend>Date range</legend>
 			<div class="row">

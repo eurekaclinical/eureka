@@ -36,6 +36,7 @@ public class JobSpec {
 	private Side earliestDateSide;
 	private Date latestDate;
 	private Side latestDateSide;
+	private boolean appendData;
 
 	public String getSourceConfigId() {
 		return sourceConfigId;
@@ -91,5 +92,13 @@ public class JobSpec {
 
 	public void setLatestDateSide(Side latestDateSide) {
 		this.latestDateSide = latestDateSide;
+	}
+
+	public boolean isAppendData() {
+		return appendData;
+	}
+
+	public void setAppendData(boolean appendData) {
+		this.appendData = appendData;
 	}
 }

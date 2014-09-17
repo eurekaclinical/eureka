@@ -161,9 +161,17 @@ public class CommonsFileUploadServlet extends HttpServlet {
 				}
 			}
 		}
+
+		boolean appendData = false;
+		String appendDataStr = fields.getProperty("appendData");
+		if (appendDataStr != null && appendDataStr.length() > 0) {
+			appendData = Boolean.parseBoolean(appendDataStr);
+		}
+
 		JobSpec jobSpec = new JobSpec();
 		jobSpec.setSourceConfigId(fields.getProperty("source"));
 		jobSpec.setDestinationId(fields.getProperty("destination"));
+		jobSpec.setAppendData(appendData);
 		jobSpec.setDateRangeDataElementKey(
 				fields.getProperty("dateRangeDataElementKey"));
 		DateFormat df = new SimpleDateFormat("MM/dd/yyyy");
