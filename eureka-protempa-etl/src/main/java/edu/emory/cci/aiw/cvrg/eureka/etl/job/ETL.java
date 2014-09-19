@@ -113,7 +113,7 @@ public class ETL {
 					new Destinations(this.etlProperties, job.getEtlUser(), this.destinationDao, this.groupDao).getOne(job.getDestinationId());
 			org.protempa.dest.Destination protempaDestination = 
 					this.protempaDestFactory
-					.getInstance(eurekaDestination.getId(), protempa.getKnowledgeSource());
+					.getInstance(eurekaDestination.getId(), protempa.getKnowledgeSource(), appendData);
 			protempa.execute(query, protempaDestination);
 			protempa.close();
 		} catch (CloseException | BackendNewInstanceException | BackendInitializationException | ConfigurationsLoadException | BackendProviderSpecLoaderException | QueryBuildException | InvalidConfigurationException | ConfigurationsNotFoundException | DataSourceValidationIncompleteException ex) {

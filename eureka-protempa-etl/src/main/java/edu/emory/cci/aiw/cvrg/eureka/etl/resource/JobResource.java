@@ -20,8 +20,12 @@
 package edu.emory.cci.aiw.cvrg.eureka.etl.resource;
 
 import java.net.URI;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
+import javax.annotation.security.RolesAllowed;
+import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -29,16 +33,21 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
 
+import org.apache.commons.lang3.StringUtils;
 import org.protempa.PropositionDefinition;
+import org.protempa.backend.dsb.filter.DateTimeFilter;
+import org.protempa.proposition.value.AbsoluteTimeGranularity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.inject.Inject;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.Job;
 
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.Job;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.JobFilter;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.JobRequest;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.JobSpec;
@@ -51,15 +60,6 @@ import edu.emory.cci.aiw.cvrg.eureka.etl.dao.JobDao;
 import edu.emory.cci.aiw.cvrg.eureka.etl.job.TaskManager;
 import edu.emory.cci.aiw.cvrg.eureka.etl.validator.PropositionValidator;
 import edu.emory.cci.aiw.cvrg.eureka.etl.validator.PropositionValidatorException;
-import java.util.ArrayList;
-import java.util.Date;
-import javax.annotation.security.RolesAllowed;
-import javax.servlet.http.HttpServletRequest;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.Response.Status;
-import org.apache.commons.lang3.StringUtils;
-import org.protempa.backend.dsb.filter.DateTimeFilter;
-import org.protempa.proposition.value.AbsoluteTimeGranularity;
 
 @Path("/protected/jobs")
 @RolesAllowed({"researcher"})
@@ -142,7 +142,8 @@ public class JobResource {
 				new String[]{job.getDateRangeDataElementKey()},
 				job.getEarliestDate(), AbsoluteTimeGranularity.DAY,
 				job.getLatestDate(), AbsoluteTimeGranularity.DAY,
-				job.getEarliestDateSide(), job.getLatestDateSide()));
+				job.getEarliestDateSide(), job.getLatestDateSide()),
+				job.isAppendData());
 		return jobEntity.getId();
 	}
 

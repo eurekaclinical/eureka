@@ -20,8 +20,12 @@ package edu.emory.cci.aiw.cvrg.eureka.etl.queryresultshandler;
  * #L%
  */
 
+import org.protempa.KnowledgeSource;
+import org.protempa.dest.keyloader.KeyLoaderDestination;
+
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.Cohort;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.CohortDestinationEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.CohortEntity;
@@ -30,8 +34,6 @@ import edu.emory.cci.aiw.cvrg.eureka.common.entity.I2B2DestinationEntity;
 import edu.emory.cci.aiw.cvrg.eureka.etl.config.EtlProperties;
 import edu.emory.cci.aiw.cvrg.eureka.etl.dao.DestinationDao;
 import edu.emory.cci.aiw.i2b2etl.I2b2Destination;
-import org.protempa.KnowledgeSource;
-import org.protempa.dest.keyloader.KeyLoaderDestination;
 
 /**
  *
@@ -48,10 +50,11 @@ public class ProtempaDestinationFactory {
 		this.etlProperties = etlProperties;
 	}
 	
-	public org.protempa.dest.Destination getInstance(Long destId, KnowledgeSource knowledgeSource) {
+	public org.protempa.dest.Destination getInstance(Long destId, KnowledgeSource knowledgeSource, boolean appendData) {
 		DestinationEntity dest = this.destinationDao.retrieve(destId);
 		if (dest instanceof I2B2DestinationEntity) {
-			return new I2b2Destination(this.etlProperties.destinationConfigFile(dest.getName()));
+			I2b2Destination.DataInsertMode insertMode = appendData ? I2b2Destination.DataInsertMode.APPEND : I2b2Destination.DataInsertMode.TRUNCATE;
+			return new I2b2Destination(this.etlProperties.destinationConfigFile(dest.getName()), insertMode);
 		} else if (dest instanceof CohortDestinationEntity) {
 			CohortEntity cohortEntity = ((CohortDestinationEntity) dest).getCohort();
 			Cohort cohort = cohortEntity.toCohort();
