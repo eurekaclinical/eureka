@@ -100,12 +100,15 @@ public class JpaEtlGroupDao extends GenericDao<EtlGroup, Long> implements EtlGro
 		q.where(
 				cb.and(
 						cb.equal(groupMembership.get(DestinationGroupMembership_.destination).get(DestinationEntity_.id), entity.getId()), 
-						cb.equal(groupMembership.get(DestinationGroupMembership_.group).get(EtlGroup_.users), etlUser.getUsername())));
+						cb.isMember(etlUser, groupMembership.get(DestinationGroupMembership_.group).get(EtlGroup_.users))));
 		q.groupBy(groupMembership.get(DestinationGroupMembership_.destination).get(DestinationEntity_.id));
 		List<Tuple> resultList = entityManager.createQuery(q).getResultList();
-		Tuple result = resultList.get(0);
-		ResolvedPermissions resolvedPermissions = new ResolvedPermissions(result.get(0, Boolean.class), result.get(1, Boolean.class), result.get(2, Boolean.class));
-		return resolvedPermissions;
+		if (resultList.isEmpty()) {
+			return new ResolvedPermissions(false, false, false);
+		} else {
+			Tuple result = resultList.get(0);
+			return new ResolvedPermissions(result.get(0, Boolean.class), result.get(1, Boolean.class), result.get(2, Boolean.class));
+		}
 	}
 	
 }
