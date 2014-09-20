@@ -29,14 +29,12 @@ package edu.emory.cci.aiw.cvrg.eureka.etl.resource;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.SourceConfig;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.EtlUserEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.SourceConfigEntity;
-import edu.emory.cci.aiw.cvrg.eureka.common.exception.HttpStatusException;
 import edu.emory.cci.aiw.cvrg.eureka.etl.config.EtlProperties;
 import edu.emory.cci.aiw.cvrg.eureka.etl.config.EurekaProtempaConfigurations;
 import edu.emory.cci.aiw.cvrg.eureka.etl.dao.EtlGroupDao;
 import edu.emory.cci.aiw.cvrg.eureka.etl.dao.ResolvedPermissions;
 import java.util.ArrayList;
 import java.util.List;
-import javax.ws.rs.core.Response;
 import org.apache.commons.lang3.StringUtils;
 import org.protempa.backend.Backend;
 import org.protempa.backend.BackendInstanceSpec;
@@ -53,12 +51,16 @@ import org.protempa.backend.asb.AlgorithmSourceBackend;
 import org.protempa.backend.dsb.DataSourceBackend;
 import org.protempa.backend.ksb.KnowledgeSourceBackend;
 import org.protempa.backend.tsb.TermSourceBackend;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
  * @author Andrew Post
  */
 public class SourceConfigsDTOExtractor extends ConfigsDTOExtractor<SourceConfig, SourceConfigEntity> {
+	private static final Logger LOGGER = LoggerFactory.getLogger(SourceConfigsDTOExtractor.class);
+	
 	private final EtlGroupDao groupDao;
 	private final EtlProperties etlProperties;
 
@@ -71,8 +73,9 @@ public class SourceConfigsDTOExtractor extends ConfigsDTOExtractor<SourceConfig,
 	@Override
 	SourceConfig extractDTO(Perm perm, SourceConfigEntity configEntity) {
 		String configId = configEntity.getName();
-		SourceConfig config = new SourceConfig();
+		
 		try {
+			SourceConfig config = new SourceConfig();
 			EurekaProtempaConfigurations configs =
 					new EurekaProtempaConfigurations(this.etlProperties);
 			BackendProvider backendProvider =
@@ -135,10 +138,11 @@ public class SourceConfigsDTOExtractor extends ConfigsDTOExtractor<SourceConfig,
 			config.setTermSourceBackends(
 					termSourceBackendSections.toArray(
 					new SourceConfig.Section[termSourceBackendSections.size()]));
+			return config;
 		} catch (ConfigurationsNotFoundException | ConfigurationsLoadException | BackendProviderSpecLoaderException | InvalidPropertyNameException ex) {
-			throw new HttpStatusException(Response.Status.INTERNAL_SERVER_ERROR, ex);
+			LOGGER.warn("Error getting INI file for source config {}. This source config will be ignored.", configEntity.getName(), ex);
+			return null;
 		}
-		return config;
 	}
 
 	@Override
