@@ -75,19 +75,21 @@ public class JobListServlet extends HttpServlet {
 			}
 			if (job != null) {
 				req.setAttribute("jobStatus", job.toJobStatus());
-				Destination destination = 
-						this.servicesClient.getDestination(job.getDestinationId());
-				String destName = destination.getName();
-				if (destName == null) {
-					destName = destination.getName();
-				}
+//				Destination destination = 
+//						this.servicesClient.getDestination(job.getDestinationId());
+//				String destName = destination.getName();
+//				if (destName == null) {
+//					destName = destination.getName();
+//				}
+				String destName = job.getDestinationId();
 				req.setAttribute("destination", destName);
-				SourceConfig sourceConfig =
-						this.servicesClient.getSourceConfig(job.getSourceConfigId());
-				String sourceConfigName = sourceConfig.getDisplayName();
-				if (sourceConfigName == null) {
-					sourceConfigName = sourceConfig.getId();
-				}
+//				SourceConfig sourceConfig =
+//						this.servicesClient.getSourceConfig(job.getSourceConfigId());
+//				String sourceConfigName = sourceConfig.getDisplayName();
+//				if (sourceConfigName == null) {
+//					sourceConfigName = sourceConfig.getId();
+//				}
+				String sourceConfigName = job.getSourceConfigId();
 				req.setAttribute("sourceConfig", sourceConfigName);
 			}
 

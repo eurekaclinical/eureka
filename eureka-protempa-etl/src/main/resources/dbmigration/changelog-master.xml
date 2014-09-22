@@ -286,4 +286,11 @@ limitations under the License.
 		<createSequence sequenceName="COHORT_SEQ"/>
 		<createSequence sequenceName="NODE_SEQ"/>
 	</changeSet>
+	<changeSet author="arpost (generated)" id="1361552652236-12">
+		<sql>
+			INSERT INTO I2B2_DESTINATIONS (SELECT ID FROM DESTINATIONS)
+		</sql>
+		<addForeignKeyConstraint baseColumnNames="ID" baseTableName="I2B2_DESTINATIONS" constraintName="FK_I2B2_DEST" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" referencedColumnNames="ID" referencedTableName="DESTINATIONS" referencesUniqueColumn="false"/>
+		<addForeignKeyConstraint baseColumnNames="ID" baseTableName="COHORT_DESTINATIONS" constraintName="FK_COHORT_DEST" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" referencedColumnNames="ID" referencedTableName="DESTINATIONS" referencesUniqueColumn="false"/>
+	</changeSet>
 </databaseChangeLog>
