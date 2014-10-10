@@ -79,11 +79,11 @@ public final class FrequencyValueThresholdConverter extends AbstractConverter
 			Collection<PropositionDefinition> intermediates =
 					this.converterVisitor.getPropositionDefinitions();
 			result.addAll(intermediates);
-			String abstractedFromPrimaryPropId =
-					this.converterVisitor.getPrimaryPropositionId();
 			String wrapperPropId = entity.getKey() + "_SUB";
 
 			if (entity.isConsecutive()) {
+				String abstractedFromPrimaryPropId =
+					this.converterVisitor.getPrimaryPropositionId();
 				CompoundLowLevelAbstractionDefinition frequencyWrapper =
 						new CompoundLowLevelAbstractionDefinition(
 						wrapperPropId);
@@ -140,8 +140,8 @@ public final class FrequencyValueThresholdConverter extends AbstractConverter
 
 				hlad.setDisplayName(entity.getDisplayName());
 				hlad.setDescription(entity.getDescription());
-				hlad.setGapFunction(
-						new SimpleGapFunction(Integer.valueOf(0), null));
+//				hlad.setGapFunction(
+//						new SimpleGapFunction(Integer.valueOf(0), null));
 				result.add(hlad);
 				this.primary = hlad;
 			} else {

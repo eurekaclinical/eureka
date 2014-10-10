@@ -36,20 +36,17 @@ public class PropositionDefinitionCollector {
 			List<DataElementEntity> dataElements) {
 		List<PropositionDefinition> userProps
 				= new ArrayList<>();
+		List<String> toShow = new ArrayList<>();
 		for (DataElementEntity de : dataElements) {
 			de.accept(converterVisitor);
 			Collection<PropositionDefinition> propDefs
 					= converterVisitor.getPropositionDefinitions();
 			userProps.addAll(propDefs);
+			toShow.add(converterVisitor.getPrimaryPropositionId());
 		}
 		PropositionDefinitionCollector result
 				= new PropositionDefinitionCollector();
 		result.userPropDefs = userProps;
-		
-		List<String> toShow = new ArrayList<>();
-		for (PropositionDefinition userProp : userProps) {
-			toShow.add(userProp.getId());
-		}
 		result.toShowPropDefs = toShow;
 		return result;
 	}

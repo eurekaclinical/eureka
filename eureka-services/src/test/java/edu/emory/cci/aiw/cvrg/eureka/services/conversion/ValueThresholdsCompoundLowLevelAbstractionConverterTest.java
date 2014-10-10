@@ -130,7 +130,7 @@ public class ValueThresholdsCompoundLowLevelAbstractionConverterTest extends
 		firstLlaDef = llaDefs.get(0);
 		secondLlaDef = llaDefs.get(1);
 		for (PropositionDefinition ld : propDefs) {
-			if (ld.getId().equals("test-valuethreshold_WRAPPED")) {
+			if (ld.getId().equals("test-valuethreshold_PRIMARY")) {
 				cllaDef = (CompoundLowLevelAbstractionDefinition) ld;
 				break;
 			}
@@ -143,7 +143,7 @@ public class ValueThresholdsCompoundLowLevelAbstractionConverterTest extends
 
 	@Test
 	public void testNumberOfPropositionDefinitionsCreated() {
-		assertEquals("wrong number of proposition definitions created", 4,
+		assertEquals("wrong number of proposition definitions created", 3,
 		        propDefs.size());
 	}
 	
@@ -368,7 +368,7 @@ public class ValueThresholdsCompoundLowLevelAbstractionConverterTest extends
 	@Test
 	public void testThresholdGroupId() {
 		assertEquals("wrong id", 
-				toPropositionIdWrapped(thresholdGroup), cllaDef.getId());
+				toPropositionId(thresholdGroup), cllaDef.getId());
 	}
 	
 	@Test

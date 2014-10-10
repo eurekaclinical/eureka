@@ -96,10 +96,9 @@ public class ValueThresholdsLowLevelAbstractionConverterTest extends
 		thresholdGroup.setValueThresholds(thresholds);
 		llaDefs = 
 				converter.convert(thresholdGroup);
-		System.err.println("llaDefs are: " + llaDefs);
-		String toPropositionIdWrapped = toPropositionIdWrapped("test-valuethreshold");
+		String toPropositionId = toPropositionId("test-valuethreshold");
 		for (PropositionDefinition propDef : llaDefs) {
-			if (propDef.getId().equals(toPropositionIdWrapped)) {
+			if (propDef.getId().equals(toPropositionId)) {
 				llaDef = (LowLevelAbstractionDefinition) propDef;
 				break;
 			}
@@ -108,14 +107,14 @@ public class ValueThresholdsLowLevelAbstractionConverterTest extends
 
 	@Test
 	public void testNumberOfPropositionDefinitionsCreated() {
-		assertEquals("wrong number of proposition definitions created", 2,
+		assertEquals("wrong number of proposition definitions created", 1,
 				llaDefs.size());
 	}
 	
 	@Test
 	public void testId() {
 		assertEquals("wrong id", 
-				toPropositionIdWrapped("test-valuethreshold"), llaDef.getId());
+				toPropositionId("test-valuethreshold"), llaDef.getId());
 	}
 	
 	@Test

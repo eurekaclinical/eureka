@@ -148,7 +148,7 @@ public class FrequencyAtLeastNotConsecutiveValueThresholdConverterTest extends A
 	@Test
 	public void testNumberOfPropositionDefinitionsCreated() {
 		assertEquals("wrong number of proposition definitions created", 
-				3, propDefs.size());
+				2, propDefs.size());
 	}
 	
 	@Test
@@ -160,7 +160,7 @@ public class FrequencyAtLeastNotConsecutiveValueThresholdConverterTest extends A
 	@Test
 	public void testLLAId() {
 		assertEquals("wrong id", 
-				toPropositionIdWrapped("test-valuethreshold"), 
+				toPropositionId("test-valuethreshold"), 
 				llaDef.getId());
 	}
 	

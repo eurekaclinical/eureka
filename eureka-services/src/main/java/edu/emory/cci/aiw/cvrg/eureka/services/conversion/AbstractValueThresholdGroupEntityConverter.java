@@ -43,7 +43,7 @@ public class AbstractValueThresholdGroupEntityConverter extends AbstractConverte
 		wrapper.setDescription(valueThresholdGroup.getDescription());
 		TemporalExtendedParameterDefinition tepd = 
 				new TemporalExtendedParameterDefinition(
-				toPropositionId(valueThresholdGroup));
+				toPropositionIdWrapped(valueThresholdGroup));
 		
 		tepd.setValue(asValue(valueThresholdGroup));
 		wrapper.add(tepd);

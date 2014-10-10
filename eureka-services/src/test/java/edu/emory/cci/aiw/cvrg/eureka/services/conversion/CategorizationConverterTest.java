@@ -431,7 +431,6 @@ public class CategorizationConverterTest extends AbstractServiceTest {
 		saCat1.setMembers(iia1);
 
 		List<PropositionDefinition> saDefs1 = this.converter.convert(saCat1);
-		System.err.println("saDefs1: " + saDefs1);
 		assertEquals("wrong number of proposition definitions created", 3,
 				saDefs1.size());
 		PropositionDefinition saDef1 = this.converter
@@ -530,7 +529,7 @@ public class CategorizationConverterTest extends AbstractServiceTest {
 		llaCat1.setMembers(iia1);
 
 		List<PropositionDefinition> llaDefs1 = this.converter.convert(llaCat1);
-		assertEquals("wrong number of proposition definitions created", 5,
+		assertEquals("wrong number of proposition definitions created", 3,
 				llaDefs1.size());
 		PropositionDefinition llaDef1 = this.converter
 				.getPrimaryPropositionDefinition();
@@ -640,7 +639,7 @@ public class CategorizationConverterTest extends AbstractServiceTest {
 		cllaCat1.setMembers(iia1);
 
 		List<PropositionDefinition> cllaDefs1 = this.converter.convert(cllaCat1);
-		assertEquals("wrong number of proposition definitions created", 9,
+		assertEquals("wrong number of proposition definitions created", 7,
 				cllaDefs1.size());
 		PropositionDefinition cllaDef1 = this.converter
 				.getPrimaryPropositionDefinition();
@@ -655,7 +654,6 @@ public class CategorizationConverterTest extends AbstractServiceTest {
 				cllaDef1.getDescription());
 		assertEquals("wrong inverse-is-a size", 2,
 				cllaDef1.getInverseIsA().length);
-		System.err.println("inverseIsA: " + java.util.Arrays.toString(cllaDef1.getInverseIsA()));
 		assertTrue(
 				"wrong inverse-is-a objects",
 				(cllaDef1.getInverseIsA()[0].equals(toPropositionId("test-clla1")) &&

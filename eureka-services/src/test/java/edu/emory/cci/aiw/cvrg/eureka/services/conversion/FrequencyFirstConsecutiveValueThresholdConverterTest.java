@@ -150,7 +150,7 @@ public class FrequencyFirstConsecutiveValueThresholdConverterTest extends Abstra
 	@Test
 	public void testNumberOfPropositionDefinitionsCreated() {
 		assertEquals("wrong number of proposition definitions created", 
-				5, propDefs.size());
+				4, propDefs.size());
 	}
 	
 	@Test
@@ -162,7 +162,7 @@ public class FrequencyFirstConsecutiveValueThresholdConverterTest extends Abstra
 	@Test
 	public void testLLAId() {
 		assertEquals("wrong id", 
-				toPropositionIdWrapped("test-valuethreshold"), 
+				toPropositionId("test-valuethreshold"), 
 				llaDef.getId());
 	}
 	
@@ -327,7 +327,8 @@ public class FrequencyFirstConsecutiveValueThresholdConverterTest extends Abstra
 	
 	@Test
 	public void testMaxGap() {
-		assertEquals("wrong max gap", Integer.valueOf(0), gf.getMaximumGap());
+		//assertEquals("wrong max gap", Integer.valueOf(0), gf.getMaximumGap());
+		assertEquals("wrong max gap", null, gf.getMaximumGap());
 	}
 	
 	@Test

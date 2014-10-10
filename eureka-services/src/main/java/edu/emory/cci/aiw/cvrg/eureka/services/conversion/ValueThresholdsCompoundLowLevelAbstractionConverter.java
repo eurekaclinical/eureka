@@ -37,10 +37,10 @@ import org.protempa.ValueClassification;
 public final class ValueThresholdsCompoundLowLevelAbstractionConverter
 		extends AbstractValueThresholdGroupEntityConverter
 		implements
-		PropositionDefinitionConverter<ValueThresholdGroupEntity, HighLevelAbstractionDefinition> {
+		PropositionDefinitionConverter<ValueThresholdGroupEntity, CompoundLowLevelAbstractionDefinition> {
 
 	private PropositionDefinitionConverterVisitor converterVisitor;
-	private HighLevelAbstractionDefinition primary;
+	private CompoundLowLevelAbstractionDefinition primary;
 	private String primaryPropId;
 
 	public void setConverterVisitor(PropositionDefinitionConverterVisitor inConverterVisitor) {
@@ -48,7 +48,7 @@ public final class ValueThresholdsCompoundLowLevelAbstractionConverter
 	}
 
 	@Override
-	public HighLevelAbstractionDefinition getPrimaryPropositionDefinition() {
+	public CompoundLowLevelAbstractionDefinition getPrimaryPropositionDefinition() {
 		return primary;
 	}
 
@@ -61,7 +61,8 @@ public final class ValueThresholdsCompoundLowLevelAbstractionConverter
 	public List<PropositionDefinition> convert(
 			ValueThresholdGroupEntity entity) {
 		List<PropositionDefinition> result = new ArrayList<>();
-		String propId = toPropositionIdWrapped(entity);
+		//String propId = toPropositionIdWrapped(entity);
+		String propId = toPropositionId(entity);
 		if (this.converterVisitor.addPropositionId(propId)) {
 			CompoundLowLevelAbstractionDefinition wrapped = new CompoundLowLevelAbstractionDefinition(
 					propId);
@@ -118,10 +119,8 @@ public final class ValueThresholdsCompoundLowLevelAbstractionConverter
 			}
 
 			result.add(wrapped);
-			HighLevelAbstractionDefinition wrapper = wrap(entity);
-			result.add(wrapper);
-			this.primary = wrapper;
-			this.primaryPropId = wrapper.getPropositionId();
+			this.primary = wrapped;
+			this.primaryPropId = wrapped.getPropositionId();
 		}
 
 		return result;
