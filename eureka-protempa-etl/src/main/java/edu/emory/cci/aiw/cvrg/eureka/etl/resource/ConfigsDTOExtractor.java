@@ -50,8 +50,8 @@ abstract class ConfigsDTOExtractor<E, F extends ConfigEntity>  {
 				return new Perm(owner, true, true, true);
 			}
 
-			ResolvedPermissions resolvedPermissions = resolvePermissions(owner, configEntity);
-			return new Perm(owner, resolvedPermissions.isGroupRead(), resolvedPermissions.isGroupWrite(), resolvedPermissions.isGroupExecute());
+			ResolvedPermissions resolvedPermissions = resolvePermissions(this.user, configEntity);
+			return new Perm(this.user, resolvedPermissions.isGroupRead(), resolvedPermissions.isGroupWrite(), resolvedPermissions.isGroupExecute());
 		} else {
 			return null;
 		}

@@ -30,6 +30,7 @@ import edu.emory.cci.aiw.cvrg.eureka.common.entity.DestinationGroupMembership_;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.EtlGroup;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.EtlGroup_;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.EtlUserEntity;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.EtlUserEntity_;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.SourceConfigEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.SourceConfigEntity_;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.SourceConfigGroupMembership;
@@ -37,15 +38,22 @@ import edu.emory.cci.aiw.cvrg.eureka.common.entity.SourceConfigGroupMembership_;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.Tuple;
+import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.ListJoin;
 import javax.persistence.criteria.Root;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
  * @author Andrew Post
  */
 public class JpaEtlGroupDao extends GenericDao<EtlGroup, Long> implements EtlGroupDao {
+	
+	private static Logger LOGGER =
+			LoggerFactory.getLogger(JpaEtlGroupDao.class);
 
 	@Inject
 	public JpaEtlGroupDao(Provider<EntityManager> inManagerProvider) {
@@ -70,10 +78,13 @@ public class JpaEtlGroupDao extends GenericDao<EtlGroup, Long> implements EtlGro
 						cb.greatest(groupMembership.get(SourceConfigGroupMembership_.groupRead)), 
 						cb.greatest(groupMembership.get(SourceConfigGroupMembership_.groupWrite)), 
 						cb.greatest(groupMembership.get(SourceConfigGroupMembership_.groupExecute))));
+		ListJoin<EtlGroup, EtlUserEntity> join = groupMembership.join(SourceConfigGroupMembership_.group).join(EtlGroup_.users);
 		q.where(
 				cb.and(
 						cb.equal(groupMembership.get(SourceConfigGroupMembership_.sourceConfig).get(SourceConfigEntity_.id), entity.getId()), 
-						cb.isMember(etlUser, groupMembership.get(SourceConfigGroupMembership_.group).get(EtlGroup_.users))));
+						cb.equal(join.get(EtlUserEntity_.id), etlUser.getId())
+				)
+		);
 		q.groupBy(groupMembership.get(SourceConfigGroupMembership_.sourceConfig).get(SourceConfigEntity_.id));
 		List<Tuple> resultList = entityManager.createQuery(q).getResultList();
 		if (resultList.isEmpty()) {
@@ -97,12 +108,16 @@ public class JpaEtlGroupDao extends GenericDao<EtlGroup, Long> implements EtlGro
 						cb.greatest(groupMembership.get(DestinationGroupMembership_.groupRead)), 
 						cb.greatest(groupMembership.get(DestinationGroupMembership_.groupWrite)), 
 						cb.greatest(groupMembership.get(DestinationGroupMembership_.groupExecute))));
+		ListJoin<EtlGroup, EtlUserEntity> join = groupMembership.join(DestinationGroupMembership_.group).join(EtlGroup_.users);
 		q.where(
 				cb.and(
 						cb.equal(groupMembership.get(DestinationGroupMembership_.destination).get(DestinationEntity_.id), entity.getId()), 
-						cb.isMember(etlUser, groupMembership.get(DestinationGroupMembership_.group).get(EtlGroup_.users))));
+						cb.equal(join.get(EtlUserEntity_.id), etlUser.getId())
+						)
+		);
 		q.groupBy(groupMembership.get(DestinationGroupMembership_.destination).get(DestinationEntity_.id));
-		List<Tuple> resultList = entityManager.createQuery(q).getResultList();
+		TypedQuery<Tuple> typedQuery = entityManager.createQuery(q);
+		List<Tuple> resultList = typedQuery.getResultList();
 		if (resultList.isEmpty()) {
 			return new ResolvedPermissions(false, false, false);
 		} else {
