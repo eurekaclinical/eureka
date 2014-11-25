@@ -293,4 +293,7 @@ limitations under the License.
 		<addForeignKeyConstraint baseColumnNames="ID" baseTableName="I2B2_DESTINATIONS" constraintName="FK_I2B2_DEST" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" referencedColumnNames="ID" referencedTableName="DESTINATIONS" referencesUniqueColumn="false"/>
 		<addForeignKeyConstraint baseColumnNames="ID" baseTableName="COHORT_DESTINATIONS" constraintName="FK_COHORT_DEST" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" referencedColumnNames="ID" referencedTableName="DESTINATIONS" referencesUniqueColumn="false"/>
 	</changeSet>
+	<changeSet author="arpost (generated)" id="1361552652236-13">
+		<dropForeignKeyConstraint baseTableName="DESTINATIONS_GROUPS" constraintName="FKCFD5552E387530A"/>
+	</changeSet>
 </databaseChangeLog>
