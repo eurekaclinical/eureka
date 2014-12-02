@@ -344,7 +344,7 @@ public final class EurekaDataSourceBackend extends RelationalDbDataSourceBackend
 				"LAST_NAME"), ValueType.NOMINALVALUE),
 				new PropertySpec("gender", null,
 				new ColumnSpec(schemaName, "PATIENT", "GENDER",
-				ColumnSpec.Constraint.EQUAL_TO,
+				Operator.EQUAL_TO,
 				this.mapper
 				.propertyNameOrPropIdToSqlCodeArray(
 				"gender_08172011.txt"),
@@ -356,7 +356,7 @@ public final class EurekaDataSourceBackend extends RelationalDbDataSourceBackend
 				schemaName,
 				"PATIENT",
 				"MARITAL_STATUS",
-				ColumnSpec.Constraint.EQUAL_TO,
+				Operator.EQUAL_TO,
 				this.mapper
 				.propertyNameOrPropIdToSqlCodeArray("marital_status_08172011.txt"),
 				true), ValueType.NOMINALVALUE),
@@ -367,20 +367,20 @@ public final class EurekaDataSourceBackend extends RelationalDbDataSourceBackend
 				schemaName,
 				"PATIENT",
 				"LANGUAGE",
-				ColumnSpec.Constraint.EQUAL_TO,
+				Operator.EQUAL_TO,
 				this.mapper
 				.propertyNameOrPropIdToSqlCodeArray("language_08152012.txt"),
 				true), ValueType.NOMINALVALUE),
 				new PropertySpec("race", null,
 				new ColumnSpec(schemaName, "PATIENT", "RACE",
-				ColumnSpec.Constraint.EQUAL_TO,
+				Operator.EQUAL_TO,
 				this.mapper
 				.propertyNameOrPropIdToSqlCodeArray(
 				"race_08172011.txt"),
 				true), ValueType.NOMINALVALUE),
 				new PropertySpec("ethnicity", null,
 				new ColumnSpec(schemaName, "PATIENT", "RACE",
-				ColumnSpec.Constraint.EQUAL_TO,
+				Operator.EQUAL_TO,
 				this.mapper
 				.propertyNameOrPropIdToSqlCodeArray(
 				"ethnicity_08172011.txt"),
@@ -453,20 +453,20 @@ public final class EurekaDataSourceBackend extends RelationalDbDataSourceBackend
 				new PropertySpec("type", null,
 				new ColumnSpec(schemaName, "ENCOUNTER",
 				"ENCOUNTER_TYPE",
-				ColumnSpec.Constraint.EQUAL_TO,
+				Operator.EQUAL_TO,
 				this.mapper
 				.propertyNameOrPropIdToSqlCodeArray(
 				"type_encounter_08172011.txt"),
 				true), ValueType.NOMINALVALUE),
-				/*new PropertySpec("healthcareEntity", null, new ColumnSpec(schemaName, "ENCOUNTER", "UNIVCODE", ColumnSpec.Constraint.EQUAL_TO, this.mapper.propertyNameOrPropIdToSqlCodeArray("entity_healthcare_07182011.txt"), true), ValueType.NOMINALVALUE), */
+				/*new PropertySpec("healthcareEntity", null, new ColumnSpec(schemaName, "ENCOUNTER", "UNIVCODE", ColumnSpec.Operator.EQUAL_TO, this.mapper.propertyNameOrPropIdToSqlCodeArray("entity_healthcare_07182011.txt"), true), ValueType.NOMINALVALUE), */
 				new PropertySpec("dischargeDisposition", null,
 				new ColumnSpec(schemaName, "ENCOUNTER",
 				"DISCHARGE_DISP",
-				ColumnSpec.Constraint.EQUAL_TO,
+				Operator.EQUAL_TO,
 				this.mapper
 				.propertyNameOrPropIdToSqlCodeArray(
 				"disposition_discharge_08172011.txt"),
-				true), ValueType.NOMINALVALUE), /*new PropertySpec("aprdrgRiskMortalityValue", null, new ColumnSpec(schemaName, "ENCOUNTER", "APRRISKOFMORTALITY"), ValueType.NUMERICALVALUE), new PropertySpec("aprdrgSeverityValue", null, new ColumnSpec(schemaName, "ENCOUNTER", "APRSEVERITYOFILLNESS"), ValueType.NOMINALVALUE), new PropertySpec("insuranceType", null, new ColumnSpec(schemaName, "ENCOUNTER", "HOSPITALPRIMARYPAYER", ColumnSpec.Constraint.EQUAL_TO, this.mapper.propertyNameOrPropIdToSqlCodeArray("insurance_types_07182011.txt")), ValueType.NOMINALVALUE)*/},
+				true), ValueType.NOMINALVALUE), /*new PropertySpec("aprdrgRiskMortalityValue", null, new ColumnSpec(schemaName, "ENCOUNTER", "APRRISKOFMORTALITY"), ValueType.NUMERICALVALUE), new PropertySpec("aprdrgSeverityValue", null, new ColumnSpec(schemaName, "ENCOUNTER", "APRSEVERITYOFILLNESS"), ValueType.NOMINALVALUE), new PropertySpec("insuranceType", null, new ColumnSpec(schemaName, "ENCOUNTER", "HOSPITALPRIMARYPAYER", ColumnSpec.Operator.EQUAL_TO, this.mapper.propertyNameOrPropIdToSqlCodeArray("insurance_types_07182011.txt")), ValueType.NOMINALVALUE)*/},
 			new ReferenceSpec[]{
 				new ReferenceSpec("patient", "Patients",
 				new ColumnSpec[]{
@@ -574,14 +574,14 @@ public final class EurekaDataSourceBackend extends RelationalDbDataSourceBackend
 				new PropertySpec("code", null,
 				new ColumnSpec(schemaName, "ICD9D_EVENT",
 				"ENTITY_ID",
-				ColumnSpec.Constraint.EQUAL_TO,
+				Operator.EQUAL_TO,
 				this.mapper
 				.propertyNameOrPropIdToSqlCodeArray(
 				"icd9_diagnosis_08172011.txt")),
-				ValueType.NOMINALVALUE), /*new PropertySpec("position", null, new ColumnSpec(schemaName, "ENCOUNTER", new JoinSpec("RECORD_ID", "RECORD_ID", new ColumnSpec(schemaName, "DIAGNOSIS", "SEQ_NBR", ColumnSpec.Constraint.EQUAL_TO, this.mapper.propertyNameOrPropIdToSqlCodeArray("icd9_diagnosis_position_07182011.txt")))), ValueType.NOMINALVALUE)*/},
+				ValueType.NOMINALVALUE), /*new PropertySpec("position", null, new ColumnSpec(schemaName, "ENCOUNTER", new JoinSpec("RECORD_ID", "RECORD_ID", new ColumnSpec(schemaName, "DIAGNOSIS", "SEQ_NBR", ColumnSpec.Operator.EQUAL_TO, this.mapper.propertyNameOrPropIdToSqlCodeArray("icd9_diagnosis_position_07182011.txt")))), ValueType.NOMINALVALUE)*/},
 			null, null,
 			new ColumnSpec(schemaName, "ICD9D_EVENT", "ENTITY_ID",
-			ColumnSpec.Constraint.EQUAL_TO, this.mapper
+			Operator.EQUAL_TO, this.mapper
 			.propertyNameOrPropIdToSqlCodeArray(
 			"icd9_diagnosis_08172011.txt"), true),
 			null, null, null, AbsoluteTimeGranularity.MINUTE,
@@ -604,13 +604,13 @@ public final class EurekaDataSourceBackend extends RelationalDbDataSourceBackend
 				new PropertySpec("code", null,
 				new ColumnSpec(schemaName, "ICD9P_EVENT",
 				"ENTITY_ID",
-				ColumnSpec.Constraint.EQUAL_TO,
+				Operator.EQUAL_TO,
 				this.mapper
 				.propertyNameOrPropIdToSqlCodeArray(
 				"icd9_procedure_08172011.txt")),
 				ValueType.NOMINALVALUE)}, null, null,
 			new ColumnSpec(schemaName, "ICD9P_EVENT", "ENTITY_ID",
-			ColumnSpec.Constraint.EQUAL_TO, this.mapper
+			Operator.EQUAL_TO, this.mapper
 			.propertyNameOrPropIdToSqlCodeArray(
 			"icd9_procedure_08172011.txt"), true),
 			null, null, null, AbsoluteTimeGranularity.MINUTE,
@@ -634,13 +634,13 @@ public final class EurekaDataSourceBackend extends RelationalDbDataSourceBackend
 				new PropertySpec("code", null,
 				new ColumnSpec(schemaName, "CPT_EVENT",
 				"ENTITY_ID",
-				ColumnSpec.Constraint.EQUAL_TO,
+				Operator.EQUAL_TO,
 				this.mapper
 				.propertyNameOrPropIdToSqlCodeArray(
 				"cpt_procedure_08172011.txt")),
 				ValueType.NOMINALVALUE)}, null, null,
 			new ColumnSpec(schemaName, "CPT_EVENT", "ENTITY_ID",
-			ColumnSpec.Constraint.EQUAL_TO, this.mapper
+			Operator.EQUAL_TO, this.mapper
 			.propertyNameOrPropIdToSqlCodeArray(
 			"cpt_procedure_08172011.txt"), true),
 			null, null, null, AbsoluteTimeGranularity.MINUTE,
@@ -659,10 +659,10 @@ public final class EurekaDataSourceBackend extends RelationalDbDataSourceBackend
 				new ColumnSpec(schemaName, "MEDS_EVENT",
 				"EVENT_KEY")},
 			new ColumnSpec(schemaName, "MEDS_EVENT", "TS_OBX"),
-			null, new PropertySpec[]{ /*new PropertySpec("orderDescription", null, new ColumnSpec(schemaName, "fact_history_medication", new JoinSpec("synonym_order_key", "synonym_order_key", new ColumnSpec(schemaName, "lkp_synonym_order", "synonym_order_desc"))), ValueType.NOMINALVALUE), new PropertySpec("orderContext", null, new ColumnSpec(schemaName, "fact_history_medication", new JoinSpec("context_medication_key", "context_medication_key", new ColumnSpec(schemaName, "lkp_context_medication", "context_medication_id", ColumnSpec.Constraint.EQUAL_TO, this.mapper.propertyNameOrPropIdToSqlCodeArray("order_context_03292011.txt"), true))), ValueType.NOMINALVALUE), new PropertySpec("continuingOrder", null, new ColumnSpec(schemaName, "fact_history_medication", "order_continuing_ind"), ValueType.BOOLEANVALUE), new PropertySpec("orderStatus", null, new ColumnSpec(schemaName, "fact_history_medication", new JoinSpec("order_status_key", "order_status_key", new ColumnSpec(schemaName, "lkp_order_status", "order_status_id", ColumnSpec.Constraint.EQUAL_TO, this.mapper.propertyNameOrPropIdToSqlCodeArray("order_status_03292011.txt"), true))), ValueType.NOMINALVALUE), new PropertySpec("orderAction", null, new ColumnSpec(schemaName, "fact_history_medication", new JoinSpec("action_order_key", "action_order_key", new ColumnSpec(schemaName, "lkp_action_order", "action_order_id", ColumnSpec.Constraint.EQUAL_TO, this.mapper.propertyNameOrPropIdToSqlCodeArray("order_action_03292011.txt"), false))), ValueType.NOMINALVALUE)*/},
+			null, new PropertySpec[]{ /*new PropertySpec("orderDescription", null, new ColumnSpec(schemaName, "fact_history_medication", new JoinSpec("synonym_order_key", "synonym_order_key", new ColumnSpec(schemaName, "lkp_synonym_order", "synonym_order_desc"))), ValueType.NOMINALVALUE), new PropertySpec("orderContext", null, new ColumnSpec(schemaName, "fact_history_medication", new JoinSpec("context_medication_key", "context_medication_key", new ColumnSpec(schemaName, "lkp_context_medication", "context_medication_id", ColumnSpec.Operator.EQUAL_TO, this.mapper.propertyNameOrPropIdToSqlCodeArray("order_context_03292011.txt"), true))), ValueType.NOMINALVALUE), new PropertySpec("continuingOrder", null, new ColumnSpec(schemaName, "fact_history_medication", "order_continuing_ind"), ValueType.BOOLEANVALUE), new PropertySpec("orderStatus", null, new ColumnSpec(schemaName, "fact_history_medication", new JoinSpec("order_status_key", "order_status_key", new ColumnSpec(schemaName, "lkp_order_status", "order_status_id", ColumnSpec.Operator.EQUAL_TO, this.mapper.propertyNameOrPropIdToSqlCodeArray("order_status_03292011.txt"), true))), ValueType.NOMINALVALUE), new PropertySpec("orderAction", null, new ColumnSpec(schemaName, "fact_history_medication", new JoinSpec("action_order_key", "action_order_key", new ColumnSpec(schemaName, "lkp_action_order", "action_order_id", ColumnSpec.Operator.EQUAL_TO, this.mapper.propertyNameOrPropIdToSqlCodeArray("order_action_03292011.txt"), false))), ValueType.NOMINALVALUE)*/},
 			null, null,
 			new ColumnSpec(schemaName, "MEDS_EVENT", "ENTITY_ID",
-			ColumnSpec.Constraint.EQUAL_TO, this.mapper
+			Operator.EQUAL_TO, this.mapper
 			.propertyNameOrPropIdToSqlCodeArray(
 			"meds_08182011.txt"), true), null, null,
 			null, AbsoluteTimeGranularity.MINUTE, dtPositionParser,
@@ -698,7 +698,7 @@ public final class EurekaDataSourceBackend extends RelationalDbDataSourceBackend
 				"FLAG"), ValueType.NOMINALVALUE)}, null,
 			null,
 			new ColumnSpec(schemaName, "LABS_EVENT", "ENTITY_ID",
-			ColumnSpec.Constraint.EQUAL_TO, this.mapper
+			Operator.EQUAL_TO, this.mapper
 			.propertyNameOrPropIdToSqlCodeArray(
 			"labs_08172011.txt"), true), null,
 			new ColumnSpec(schemaName, "LABS_EVENT", "RESULT_STR"),
@@ -723,7 +723,7 @@ public final class EurekaDataSourceBackend extends RelationalDbDataSourceBackend
 				new ColumnSpec(schemaName, "VITALS_EVENT",
 				"FLAG"), ValueType.NOMINALVALUE)}, null,
 			null, new ColumnSpec(schemaName, "VITALS_EVENT", "ENTITY_ID",
-			ColumnSpec.Constraint.EQUAL_TO, this.mapper
+			Operator.EQUAL_TO, this.mapper
 			.propertyNameOrPropIdToSqlCodeArray(
 			"vitals_result_types_08172011.txt"), true), null,
 			new ColumnSpec(schemaName, "VITALS_EVENT", "RESULT_STR"),
