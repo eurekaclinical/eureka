@@ -107,6 +107,7 @@ public final class ValueThresholdsCompoundLowLevelAbstractionConverter
 					result.add(cd);
 					def.setContextId(cd.getId());
 				}
+				def.setSourceId(sourceId(entity));
 				intermediates.add(def);
 			}
 			result.addAll(intermediates);
@@ -118,6 +119,7 @@ public final class ValueThresholdsCompoundLowLevelAbstractionConverter
 						def.getId(), entity.getKey() + "_VALUE_COMP"));
 			}
 
+			wrapped.setSourceId(sourceId(entity));
 			result.add(wrapped);
 			this.primary = wrapped;
 			this.primaryPropId = wrapped.getPropositionId();

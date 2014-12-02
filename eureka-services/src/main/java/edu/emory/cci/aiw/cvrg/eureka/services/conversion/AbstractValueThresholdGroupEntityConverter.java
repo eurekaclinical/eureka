@@ -52,6 +52,7 @@ public class AbstractValueThresholdGroupEntityConverter extends AbstractConverte
 		wrapper.setConcatenable(false);
 		wrapper.setGapFunction(new SimpleGapFunction(0, null));
 		wrapper.setSolid(false);
+		wrapper.setSourceId(sourceId(valueThresholdGroup));
 		return wrapper;
 	}
 	

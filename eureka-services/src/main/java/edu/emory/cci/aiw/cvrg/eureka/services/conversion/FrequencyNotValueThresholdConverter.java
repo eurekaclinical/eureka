@@ -34,8 +34,8 @@ import org.protempa.SliceDefinition;
 import org.protempa.TemporalExtendedPropositionDefinition;
 import org.protempa.proposition.interval.Relation;
 
-public final class FrequencyNotValueThresholdConverter implements
-		FrequencyConverter {
+public final class FrequencyNotValueThresholdConverter 
+		extends AbstractConverter implements FrequencyConverter {
 
 	private PropositionDefinitionConverterVisitor converterVisitor;
 	private HighLevelAbstractionDefinition primary;
@@ -117,6 +117,7 @@ public final class FrequencyNotValueThresholdConverter implements
 				sp.add(tepd);
 				sp.setMinIndex(0);
 				sp.setMaxIndex(entity.getCount());
+				sp.setSourceId(sourceId(entity));
 
 				TemporalExtendedPropositionDefinition tepds =
 						new TemporalExtendedPropositionDefinition(wrapperPropId);
@@ -127,6 +128,7 @@ public final class FrequencyNotValueThresholdConverter implements
 				throw new IllegalStateException("invalid frequency type: " + entity.getFrequencyType().getName());
 			}
 			
+			p.setSourceId(sourceId(entity));
 			this.primary = p;
 			result.add(p);
 		}

@@ -106,6 +106,7 @@ public final class FrequencyValueThresholdConverter extends AbstractConverter
 						unit(entity.getWithinAtLeastUnits()),
 						entity.getWithinAtMost(),
 						unit(entity.getWithinAtMostUnits())));
+				frequencyWrapper.setSourceId(sourceId(entity));
 				result.add(frequencyWrapper);
 				
 				TemporalExtendedPropositionDefinition tepdOuter;
@@ -124,6 +125,7 @@ public final class FrequencyValueThresholdConverter extends AbstractConverter
 							new TemporalExtendedParameterDefinition(wrapperPropId);
 					tepd2.setValue(asValue(entity));
 					sp.add(tepd2);
+					sp.setSourceId(sourceId(entity));
 					result.add(sp);
 
 					TemporalExtendedPropositionDefinition tepd =
@@ -140,6 +142,7 @@ public final class FrequencyValueThresholdConverter extends AbstractConverter
 
 				hlad.setDisplayName(entity.getDisplayName());
 				hlad.setDescription(entity.getDescription());
+				hlad.setSourceId(sourceId(entity));
 //				hlad.setGapFunction(
 //						new SimpleGapFunction(Integer.valueOf(0), null));
 				result.add(hlad);
@@ -184,6 +187,7 @@ public final class FrequencyValueThresholdConverter extends AbstractConverter
 					sp.add(tepd);
 					sp.setMinIndex(0);
 					sp.setMaxIndex(entity.getCount());
+					sp.setSourceId(sourceId(entity));
 					result.add(sp);
 					TemporalExtendedPropositionDefinition tepdForSlice =
 							new TemporalExtendedPropositionDefinition(wrapperPropId);
@@ -193,6 +197,7 @@ public final class FrequencyValueThresholdConverter extends AbstractConverter
 					throw new IllegalStateException("invalid frequency type: " + entity.getFrequencyType().getName());
 				}
 				p.setGapFunction(new SimpleGapFunction(0, null));
+				p.setSourceId(sourceId(entity));
 				this.primary = p;
 				result.add(p);
 			}

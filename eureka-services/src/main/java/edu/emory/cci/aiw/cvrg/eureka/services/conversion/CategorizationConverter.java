@@ -33,7 +33,7 @@ import java.util.ArrayList;
 import java.util.List;
 import org.protempa.SequentialTemporalPatternDefinition;
 
-public final class CategorizationConverter implements
+public final class CategorizationConverter extends AbstractConverter implements
 		PropositionDefinitionConverter<CategoryEntity, PropositionDefinition> {
 
 	private PropositionDefinitionConverterVisitor converterVisitor;
@@ -88,6 +88,7 @@ public final class CategorizationConverter implements
 					event.setDescription(category.getDescription());
 					event.setDisplayName(category.getDisplayName());
 					event.setInverseIsA(inverseIsA);
+					event.setSourceId(sourceId(category));
 					primary = event;
 					break;
 				case CONSTANT:
@@ -95,6 +96,7 @@ public final class CategorizationConverter implements
 					constant.setDescription(category.getDescription());
 					constant.setDisplayName(category.getDisplayName());
 					constant.setInverseIsA(inverseIsA);
+					constant.setSourceId(sourceId(category));
 					primary = constant;
 					break;
 				case PRIMITIVE_PARAMETER:
@@ -103,6 +105,7 @@ public final class CategorizationConverter implements
 					primParam.setDescription(category.getDescription());
 					primParam.setDisplayName(category.getDisplayName());
 					primParam.setInverseIsA(inverseIsA);
+					primParam.setSourceId(sourceId(category));
 					primary = primParam;
 					break;
 				case HIGH_LEVEL_ABSTRACTION:
@@ -112,6 +115,7 @@ public final class CategorizationConverter implements
 					hla.setDisplayName(category.getDisplayName());
 					hla.setInverseIsA(inverseIsA);
 					hla.setGapFunction(new SimpleGapFunction(0, null));
+					hla.setSourceId(sourceId(category));
 					primary = hla;
 					break;
 				case SEQUENTIAL_TEMPORAL_PATTERN_ABSTRACTION:
@@ -121,6 +125,7 @@ public final class CategorizationConverter implements
 					stpa.setDisplayName(category.getDisplayName());
 					stpa.setInverseIsA(inverseIsA);
 					stpa.setGapFunction(new SimpleGapFunction(0, null));
+					stpa.setSourceId(sourceId(category));
 					primary = stpa;
 					break;
 				case SLICE_ABSTRACTION:
@@ -128,6 +133,7 @@ public final class CategorizationConverter implements
 					sla.setDescription(category.getDescription());
 					sla.setDisplayName(category.getDisplayName());
 					sla.setInverseIsA(inverseIsA);
+					sla.setSourceId(sourceId(category));
 					primary = sla;
 					break;
 				case LOW_LEVEL_ABSTRACTION:
@@ -139,6 +145,7 @@ public final class CategorizationConverter implements
 					llad.setDisplayName(category.getDisplayName());
 					llad.setInverseIsA(inverseIsA);
 					llad.setGapFunction(new SimpleGapFunction(0, null));
+					llad.setSourceId(sourceId(category));
 					primary = llad;
 					break;
 				default:

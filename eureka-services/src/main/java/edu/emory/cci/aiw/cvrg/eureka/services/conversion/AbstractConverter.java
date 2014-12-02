@@ -21,6 +21,8 @@ package edu.emory.cci.aiw.cvrg.eureka.services.conversion;
  */
 
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.DataElementEntity;
+import org.protempa.DefaultSourceId;
+import org.protempa.SourceId;
 import org.protempa.proposition.value.NominalValue;
 
 /**
@@ -48,5 +50,9 @@ public class AbstractConverter {
 	
 	protected String toPropositionIdWrapped(DataElementEntity dataElement) {
 		return this.conversionSupport.toPropositionIdWrapped(dataElement);
+	}
+	
+	protected SourceId sourceId(DataElementEntity dataElement) {
+		return DefaultSourceId.getInstance("Eureka");
 	}
 }

@@ -118,7 +118,7 @@ public final class ValueThresholdsLowLevelAbstractionConverter
 			}
 			wrapped.setSlidingWindowWidthMode(SlidingWindowWidthMode.DEFAULT);
 			wrapped.setGapFunction(new SimpleGapFunction(0, null));
-
+			wrapped.setSourceId(sourceId(entity));
 			result.add(wrapped);
 			//HighLevelAbstractionDefinition wrapper = wrap(entity);
 			//result.add(wrapper);
