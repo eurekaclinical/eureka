@@ -111,7 +111,7 @@ ul.sortable {
 
 .form-control-inline-small {
 	display: inline-block;
-	width: 4em
+	width: 4em;
 	min-width: 4em;
 	max-width: 6em;
 }
