@@ -169,7 +169,7 @@ limitations under the License.
 <div class="container container-big">
 	<template:get name="content"/>
 </div>
-<div class="container footer">
+<div class="footer">
 	Copyright &copy; ${initParam['inception-year']}&ndash;${initParam['current-year']} ${initParam['eureka-organization-name']}. All rights reserved.
 </div>
 <c:if test="${userIsActivated}">
