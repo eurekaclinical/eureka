@@ -65,7 +65,7 @@
 						<div id="propDefinition"
 							 class="jstree-drop tree-drop tree-drop-multiple"
 							 title="Drop your category's system and/or user-defined data element members in here">
-							<div class="label-info text-centered">
+							<div class="label-info text-center">
 								Drop Here
 							</div>
 							<ul class="sortable" data-drop-type="multiple" data-proptype="empty">
@@ -84,7 +84,7 @@
 							</ul>
 						</div>
 					</div>
-					<div class="form-group text-centered vert-offset">
+					<div class="form-group text-center vert-offset">
 							<button id="savePropositionButton" type="button" class="btn btn-primary">Save</button>
 					</div>
 				</form>

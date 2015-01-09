@@ -67,7 +67,7 @@
 				</div>
 			</div>
 			<div class="form-group">
-				<div class="col-sm-1 col-sm-offset-3 text-centered">
+				<div class="col-sm-1 col-sm-offset-3 text-center">
 					<input type="hidden" name="targetURL" id="targetURL" value="${param.redirectURL}"/>
 					<input type="submit" value="Save" id="saveAcctBtnExp" class="btn btn-primary"/>
 				</div>

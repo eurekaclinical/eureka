@@ -82,7 +82,7 @@
 						<div id="thresholdedDataElement${status.count}"
 							 class="tree-drop tree-drop-single jstree-drop thresholdedDataElement"
 							 title="Drag and drop the system or user-defined data element with a numerical value to be thresholded">
-							<div class="label-info text-centered">
+							<div class="label-info text-center">
 								Drop Thresholded Data Element Here
 							</div>
 							<ul data-type="threshold1" data-drop-type="single" class="sortable">
@@ -135,7 +135,7 @@
 						<div id="thresholdRelatedDataElements${status.count}"
 							 class="tree-drop tree-drop-multiple jstree-drop thresholdedRelatedDataElements"
 							 title="Drag and drop a contextual system or user-defined data element, an interval of which must be present to match this threshold">
-							<div class="label-info text-centered">
+							<div class="label-info text-center">
 								Drop Contextual Data Element(s) Here
 							</div>
 							<ul data-proptype="empty" data-drop-type="multiple" class="sortable">
@@ -211,7 +211,7 @@
 				<div id="thresholdedDataElement1"
 					 class="tree-drop tree-drop-single jstree-drop thresholdedDataElement"
 					 title="Drag and drop the system or user-defined data element with a numerical value to be thresholded">
-					<div class="label-info text-centered">
+					<div class="label-info text-center">
 						Drop Thresholded Data Element Here
 					</div>
 					<ul data-type="threshold1" data-drop-type="single" class="sortable">
@@ -258,7 +258,7 @@
 				<div id="thresholdRelatedDataElements1"
 					 class="tree-drop tree-drop-multiple jstree-drop thresholdedRelatedDataElements"
 					 title="Drag and drop a contextual system or user-defined data element, an interval of which must be present to match this threshold">
-					<div class="label-info text-centered">
+					<div class="label-info text-center">
 						Drop Contextual Data Element(s) Here
 					</div>
 					<ul data-proptype="empty" data-drop-type="multiple" class="sortable">
@@ -319,7 +319,7 @@
 </div>
 </div>
 <div class="form-group">
-	<div class="col-sm-10 col-sm-offset-2 text-centered">
+	<div class="col-sm-10 col-sm-offset-2 text-center">
 		<button id="duplicateThresholdButton" type="button" class="btn btn-primary">
 			<span class="glyphicon glyphicon-plus"></span>
 			Add Threshold

@@ -63,7 +63,7 @@
 					<label class="sr-only" for="mainDataElement">Main data element</label>
 					<div id="mainDataElement" class="tree-drop tree-drop-single jstree-drop"
 						 title="Drag a system or user-defined data element in here">
-						<div class="label-info text-centered">Drop Here</div>
+						<div class="label-info text-center">Drop Here</div>
 						<ul data-type="main" data-drop-type="single" data-count="1" class="sortable"
 							style="width: 100%; height: 100%">
 							<c:if test="${not empty proposition and propositionType == 'SEQUENCE'}">
@@ -169,7 +169,7 @@
 						<div id="relatedDataElement${status.count}"
 							 class="tree-drop tree-drop-single jstree-drop sequencedDataElement"
 							 title="Drag another system or user-defined data element in here">
-							<div class="label-info text-centered">Drop Here</div>
+							<div class="label-info text-center">Drop Here</div>
 							<ul class="sortable" data-type="related" data-drop-type="single"
 								data-count="${status.count + 1}">
 								<li data-key="${relation.dataElementField.dataElementKey}"
@@ -327,7 +327,7 @@
 			<div id="relatedDataElement1"
 				 class="tree-drop tree-drop-single jstree-drop sequencedDataElement"
 				 title="Drag another system or user-defined data element in here">
-				<div class="label-info text-centered">Drop Here</div>
+				<div class="label-info text-center">Drop Here</div>
 				<ul class="sortable" data-type="related" data-drop-type="single"
 					data-count="2">
 				</ul>
@@ -464,7 +464,7 @@
 </c:choose>
 </div>
 <div class="form-group">
-	<div class="col-sm-12 text-centered">
+	<div class="col-sm-12 text-center">
 		<button id="duplicateRelatedButton" type="button" class="btn btn-primary">
 			<span class="glyphicon glyphicon-plus"></span> Add Related Data Element
 		</button>

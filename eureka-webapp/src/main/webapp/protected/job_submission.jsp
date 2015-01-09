@@ -217,7 +217,7 @@
 								</label>
 								<div id="dateRangeDataElementKey"
 									 class="tree-drop tree-drop-single jstree-drop form-control-static">
-									<div class="label-info text-centered">
+									<div class="label-info text-center">
 										Drop Here
 									</div>
 									<ul data-type="main" data-drop-type="single" class="sortable">
@@ -260,7 +260,7 @@
 						</div>
 					</div>
 					<div class="form-group">
-						<div class="col-sm-12 text-centered vert-offset-2x">
+						<div class="col-sm-12 text-center vert-offset-2x">
 							<c:choose>
 								<c:when test="${not required}">
 									<input type="submit" id="startButton" class="btn btn-primary" value="Start">

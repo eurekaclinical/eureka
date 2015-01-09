@@ -99,7 +99,7 @@
 						</div>
 						</div>
 					</div>-->
-					<div class="form-group text-centered vert-offset">
+					<div class="form-group text-center vert-offset">
 						<button id="savePropositionButton" type="button" class="btn btn-primary">Save</button>
 					</div>
 				</form>

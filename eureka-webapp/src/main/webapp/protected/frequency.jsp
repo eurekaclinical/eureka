@@ -224,7 +224,7 @@
 				</div>
 			</div>
 			</fieldset>
-			<div class="form-group text-centered">
+			<div class="form-group text-center">
 				<button id="savePropositionButton" type="button" class="btn btn-primary">
 					Save
 				</button>
