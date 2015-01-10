@@ -4,7 +4,7 @@ package edu.emory.cci.aiw.cvrg.eureka.common.entity;
  * #%L
  * Eureka Common
  * %%
- * Copyright (C) 2012 - 2014 Emory University
+ * Copyright (C) 2012 - 2015 Emory University
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,28 +20,37 @@ package edu.emory.cci.aiw.cvrg.eureka.common.entity;
  * #L%
  */
 
-import java.util.Arrays;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.Link;
 
 /**
  *
  * @author Andrew Post
  */
-@Entity
-@Table(name = "i2b2_destinations")
-public class I2B2DestinationEntity extends DestinationEntity {
+public class LinkEntity {
+	private String url;
+	private String displayName;
 
-	public I2B2DestinationEntity() {
-		LinkEntity link = new LinkEntity();
-		link.setUrl("/i2b2/");
-		link.setDisplayName("Go to i2b2");
-		setLinks(Arrays.asList(new LinkEntity[]{link}));
+	public String getUrl() {
+		return url;
+	}
+
+	public void setUrl(String url) {
+		this.url = url;
+	}
+
+	public String getDisplayName() {
+		return displayName;
+	}
+
+	public void setDisplayName(String displayName) {
+		this.displayName = displayName;
 	}
 	
-	@Override
-	public void accept(DestinationEntityVisitor visitor) {
-		visitor.visit(this);
+	public Link toLink() {
+		Link link = new Link();
+		link.setUrl(this.url);
+		link.setDisplayName(this.displayName);
+		return link;
 	}
 	
 }

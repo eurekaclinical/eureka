@@ -94,12 +94,14 @@
 		</div>
 		<div class="col-md-2 col-sm-4">
 			<div class="form-group">
-				<label class="control-label" for="messages">
-					Messages
+				<label class="control-label" for="links">
+					Links
 				</label>
-				<div id="messages">
+				<div id="links">
 					<c:if test="${not empty requestScope.jobStatus}">
-						${jobStatus.mostRecentMessage}
+						<c:forEach var="link" items="${requestScope.jobStatus.links}">
+							<a href="${link.url}">${link.displayName}</a><br>
+						</c:forEach>
 					</c:if>
 				</div>
 			</div>

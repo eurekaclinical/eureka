@@ -20,10 +20,14 @@ package edu.emory.cci.aiw.cvrg.eureka.etl.resource;
  * #L%
  */
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.EtlI2B2Destination;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.Link;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.EtlUserEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.I2B2DestinationEntity;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.LinkEntity;
 import edu.emory.cci.aiw.cvrg.eureka.etl.config.EtlProperties;
 import edu.emory.cci.aiw.cvrg.eureka.etl.dao.EtlGroupDao;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -51,6 +55,15 @@ class I2B2DestinationsDTOExtractor extends DestinationsDTOExtractor<EtlI2B2Desti
 
 		dest.setCreatedAt(destinationEntity.getCreatedAt());
 		dest.setUpdatedAt(destinationEntity.getUpdatedAt());
+		
+		List<LinkEntity> linkEntities = destinationEntity.getLinks();
+		if (linkEntities != null) {
+			List<Link> links = new ArrayList<>(linkEntities.size());
+			for (LinkEntity le : linkEntities) {
+				links.add(le.toLink());
+			}
+			dest.setLinks(links);
+		}
 
 		return dest;
 	}

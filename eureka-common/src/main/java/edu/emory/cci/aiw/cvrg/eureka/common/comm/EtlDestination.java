@@ -20,6 +20,7 @@
 package edu.emory.cci.aiw.cvrg.eureka.common.comm;
 
 import java.util.Date;
+import java.util.List;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.annotate.JsonProperty;
@@ -62,6 +63,8 @@ public abstract class EtlDestination {
 
 	@JsonProperty("updated_at")
 	private Date updatedAt;
+	
+	private List<Link> links;
 	
 	public EtlDestination() {
 		
@@ -187,6 +190,14 @@ public abstract class EtlDestination {
 
 	public void setUpdatedAt(Date updatedAt) {
 		this.updatedAt = updatedAt;
+	}
+
+	public List<Link> getLinks() {
+		return links;
+	}
+
+	public void setLinks(List<Link> links) {
+		this.links = links;
 	}
 	
 	public abstract void accept(EtlDestinationVisitor etlDestinationVisitor);

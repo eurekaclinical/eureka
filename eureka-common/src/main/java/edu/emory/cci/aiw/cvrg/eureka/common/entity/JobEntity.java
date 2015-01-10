@@ -20,6 +20,7 @@
 package edu.emory.cci.aiw.cvrg.eureka.common.entity;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.Job;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.Link;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.codehaus.jackson.annotate.JsonManagedReference;
@@ -75,8 +76,9 @@ public class JobEntity {
 	/**
 	 * The unique identifier of the configuration to use for this job.
 	 */
-	@Column(nullable = false)
-	private String destinationId;
+	@ManyToOne
+	@JoinColumn(name="destination_id", referencedColumnName = "id", nullable = false)
+	private DestinationEntity destination;
 	/**
 	 * The unique identifier of the user submitting the job request.
 	 */
@@ -143,12 +145,12 @@ public class JobEntity {
 		this.sourceConfigId = inSourceConfigId;
 	}
 
-	public String getDestinationId() {
-		return destinationId;
+	public DestinationEntity getDestination() {
+		return destination;
 	}
 
-	public void setDestinationId(String inDestinationId) {
-		this.destinationId = inDestinationId;
+	public void setDestination(DestinationEntity inDestination) {
+		this.destination = inDestination;
 	}
 
 	/**
@@ -238,7 +240,7 @@ public class JobEntity {
 
 	public Job toJob() {
 		Job job = new Job();
-		job.setDestinationId(this.destinationId);
+		job.setDestinationId(this.destination.getName());
 		job.setSourceConfigId(this.sourceConfigId);
 		job.setTimestamp(this.created);
 		job.setId(this.id);
@@ -247,6 +249,12 @@ public class JobEntity {
 		}
 		job.setState(getCurrentState());
 		job.setJobEvents(getJobEventsInOrder());
+		List<LinkEntity> linkEntities = this.destination.getLinks();
+		List<Link> links = new ArrayList<>(linkEntities.size());
+		for (LinkEntity le : linkEntities) {
+			links.add(le.toLink());
+		}
+		job.setLinks(links);
 		return job;
 	}
 

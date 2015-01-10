@@ -72,6 +72,26 @@ limitations under the License.
 		</div>
 		<div class="navbar-collapse collapse">
 			<ul class="nav navbar-nav navbar-right menu-text">
+				<c:if test="${userIsActivated}">
+					<li>
+						<a href="${pageContext.request.contextPath}/protected/cohorthome">
+							<span class="glyphicon glyphicon-pencil"></span>
+							Cohorts
+						</a>
+					</li>
+					<li>
+						<a href="${pageContext.request.contextPath}/protected/editorhome">
+							<span class="glyphicon glyphicon-pencil"></span>
+							Phenotypes
+						</a>
+					</li>
+					<li>
+						<a href="${pageContext.request.contextPath}/protected/jobs">
+							<span class="glyphicon glyphicon-cog"></span>
+							Jobs
+						</a>
+					</li>
+				</c:if>
 				<li>
 					<a href="${pageContext.request.contextPath}/help.jsp">
 						<span class="glyphicon glyphicon-question-sign"></span>
@@ -81,10 +101,33 @@ limitations under the License.
 				<c:choose>
 					<c:when test="${userIsActivated}">
 						<li>
-							<a href="${pageContext.request.contextPath}/logout" class="idletimeout-logout">
-								<span class="glyphicon glyphicon-log-out"></span>
-								Logout ${pageContext.request.remoteUser}
+							<a href="${pageContext.request.contextPath}/logout" 
+							   class="dropdown-toggle" data-toggle="dropdown" 
+							   role="button" aria-expanded="false">
+								<span class="glyphicon glyphicon-user"></span>
+								${pageContext.request.remoteUser} <span class="caret"></span>
 							</a>
+							<ul class="dropdown-menu" role="menu">
+								<li>
+									<a href="${pageContext.request.contextPath}/protected/user_acct?action=list">
+										<span class="glyphicon glyphicon-user"></span>
+										Account Settings
+									</a>
+								</li>
+								<c:if test="${myfn:isUserInRole(pageContext.request, 'admin')}">
+									<li>
+										<a href="${pageContext.request.contextPath}/protected/admin?action=list">
+											<span class="glyphicon glyphicon-wrench"></span>
+											Administration
+										</a>
+									</li>
+								</c:if>
+								<li><a href="${pageContext.request.contextPath}/logout" class="idletimeout-logout">
+									<span class="glyphicon glyphicon-log-out"></span>
+									Logout
+								</a></li>
+							</ul>
+							
 						</li>
 					</c:when>
 					<c:otherwise>
@@ -100,52 +143,6 @@ limitations under the License.
 		</div>
 	</div>
 </div>
-<c:if test="${userIsActivated}">
-	<div class="navbar navbar-static-top" role="navigation">
-		<div class="container sub-nav rounded-bottom">
-			<ul class="nav navbar-nav navbar-right menu-text">
-				<li>
-					<a href="${pageContext.request.contextPath}/protected/cohorthome">
-						<span class="glyphicon glyphicon-pencil"></span>
-						Cohorts
-					</a>
-				</li>
-				<li>
-					<a href="${pageContext.request.contextPath}/protected/editorhome">
-						<span class="glyphicon glyphicon-pencil"></span>
-						Phenotypes
-					</a>
-				</li>
-				<li>
-					<a href="/i2b2/" target="_blank">
-						<span class="glyphicon glyphicon-stats"></span>
-						i2b2
-					</a>
-				</li>
-				<li>
-					<a href="${pageContext.request.contextPath}/protected/jobs">
-						<span class="glyphicon glyphicon-cog"></span>
-						Submit Job
-					</a>
-				</li>
-				<li>
-					<a href="${pageContext.request.contextPath}/protected/user_acct?action=list">
-						<span class="glyphicon glyphicon-user"></span>
-						Account Settings
-					</a>
-				</li>
-				<c:if test="${pageContext.request.remoteUser != null and myfn:isUserInRole(pageContext.request, 'admin')}">
-					<li>
-						<a href="${pageContext.request.contextPath}/protected/admin?action=list">
-							<span class="glyphicon glyphicon-wrench"></span>
-							Administration
-						</a>
-					</li>
-				</c:if>
-			</ul>
-		</div>
-	</div>
-</c:if>
 <div class="container container-big">
 	<template:get name="content"/>
 </div>

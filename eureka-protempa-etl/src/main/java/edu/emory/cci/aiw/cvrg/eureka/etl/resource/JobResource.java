@@ -51,10 +51,12 @@ import edu.emory.cci.aiw.cvrg.eureka.common.comm.Job;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.JobFilter;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.JobRequest;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.JobSpec;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.DestinationEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.EtlUserEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.JobEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.exception.HttpStatusException;
 import edu.emory.cci.aiw.cvrg.eureka.etl.authentication.EtlAuthenticationSupport;
+import edu.emory.cci.aiw.cvrg.eureka.etl.dao.DestinationDao;
 import edu.emory.cci.aiw.cvrg.eureka.etl.dao.EtlUserDao;
 import edu.emory.cci.aiw.cvrg.eureka.etl.dao.JobDao;
 import edu.emory.cci.aiw.cvrg.eureka.etl.job.TaskManager;
@@ -74,15 +76,18 @@ public class JobResource {
 	private final PropositionValidator propositionValidator;
 	private final TaskManager taskManager;
 	private final EtlAuthenticationSupport authenticationSupport;
+	private final DestinationDao destinationDao;
 
 	@Inject
 	public JobResource(JobDao inJobDao, TaskManager inTaskManager,
-			PropositionValidator inValidator, EtlUserDao inEtlUserDao) {
+			PropositionValidator inValidator, EtlUserDao inEtlUserDao,
+			DestinationDao inDestinationDao) {
 		this.jobDao = inJobDao;
 		this.taskManager = inTaskManager;
 		this.propositionValidator = inValidator;
 		this.etlUserDao = inEtlUserDao;
 		this.authenticationSupport = new EtlAuthenticationSupport(this.etlUserDao);
+		this.destinationDao = inDestinationDao;
 	}
 
 	@GET
@@ -161,7 +166,9 @@ public class JobResource {
 	private JobEntity newJobEntity(JobSpec job, EtlUserEntity etlUser) {
 		JobEntity jobEntity = new JobEntity();
 		jobEntity.setSourceConfigId(job.getSourceConfigId());
-		jobEntity.setDestinationId(job.getDestinationId());
+		DestinationEntity destination = 
+				this.destinationDao.getByName(job.getDestinationId());
+		jobEntity.setDestination(destination);
 		jobEntity.setCreated(new Date());
 		jobEntity.setEtlUser(etlUser);
 		this.jobDao.create(jobEntity);

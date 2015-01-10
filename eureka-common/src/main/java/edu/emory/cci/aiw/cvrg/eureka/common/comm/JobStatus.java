@@ -21,6 +21,8 @@ package edu.emory.cci.aiw.cvrg.eureka.common.comm;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.JobEventType;
 import java.text.DateFormat;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -31,7 +33,7 @@ import java.util.List;
  *
  */
 public class JobStatus {
-
+	
 	private JobEventType state;
 	/**
 	 * The date of job start.
@@ -42,7 +44,13 @@ public class JobStatus {
 	 * A list of messages about the file or job processing status.
 	 */
 	private List<String> messages;
-
+	
+	private List<Link> links;
+	
+	public JobStatus() {
+		this.links = Collections.emptyList();
+	}
+	
 	public boolean isJobSubmitted() {
 		return this.state != JobEventType.COMPLETED && this.state != JobEventType.FAILED;
 	}
@@ -79,6 +87,18 @@ public class JobStatus {
 		this.state = state;
 	}
 
+	public List<Link> getLinks() {
+		return links;
+	}
+
+	public void setLinks(List<Link> links) {
+		if (links == null) {
+			this.links = Collections.emptyList();
+		} else {
+			this.links = links;
+		}
+	}
+	
 	public String getStartedDateFormatted() {
 		DateFormat df = DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.MEDIUM);
 		return df.format(this.startedDate);

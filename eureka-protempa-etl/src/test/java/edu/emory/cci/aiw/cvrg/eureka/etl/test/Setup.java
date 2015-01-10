@@ -25,11 +25,12 @@ import javax.persistence.EntityManager;
 
 import com.google.inject.Inject;
 import com.google.inject.Provider;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.DestinationEntity;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.EtlUserEntity;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.I2B2DestinationEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.JobEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.JobEventType;
-import edu.emory.cci.aiw.cvrg.eureka.common.authentication.LoginType;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.SourceConfigEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.test.TestDataException;
 import edu.emory.cci.aiw.cvrg.eureka.common.test.TestDataProvider;
@@ -42,6 +43,7 @@ public class Setup implements TestDataProvider {
 
 	private final Provider<EntityManager> managerProvider;
 	private JobEntity job;
+	private DestinationEntity destination;
 	private EtlUserEntity etlUser;
 	private SourceConfigEntity sce;
 
@@ -67,6 +69,7 @@ public class Setup implements TestDataProvider {
 		entityManager.getTransaction().begin();
 		entityManager.remove(this.sce);
 		entityManager.remove(this.job);
+		entityManager.remove(this.destination);
 		entityManager.remove(this.etlUser);
 		entityManager.getTransaction().commit();
 	}
@@ -84,10 +87,13 @@ public class Setup implements TestDataProvider {
 		this.etlUser = new EtlUserEntity();
 		this.etlUser.setUsername("user@emory.edu");
 		entityManager.persist(this.etlUser);
+		this.destination = new I2B2DestinationEntity();
+		this.destination.setName("0");
+		entityManager.persist(this.destination);
 		this.job = new JobEntity();
 		this.job.setCreated(new Date());
 		this.job.setSourceConfigId("0");
-		this.job.setDestinationId("0");
+		this.job.setDestination(this.destination);
 		this.job.setEtlUser(this.etlUser);
 		this.job.newEvent(JobEventType.VALIDATING, null, null);
 		entityManager.persist(this.job);

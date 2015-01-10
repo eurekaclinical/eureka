@@ -110,7 +110,7 @@ public class ETL {
 			LOGGER.debug("Constructed Protempa query " + q);
 			Query query = protempa.buildQuery(q);
 			EtlDestination eurekaDestination = 
-					new Destinations(this.etlProperties, job.getEtlUser(), this.destinationDao, this.groupDao).getOne(job.getDestinationId());
+					new Destinations(this.etlProperties, job.getEtlUser(), this.destinationDao, this.groupDao).getOne(job.getDestination().getName());
 			org.protempa.dest.Destination protempaDestination = 
 					this.protempaDestFactory
 					.getInstance(eurekaDestination.getId(), protempa.getKnowledgeSource(), appendData);

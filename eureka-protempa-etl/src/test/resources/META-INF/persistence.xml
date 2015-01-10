@@ -1,31 +1,28 @@
-<persistence xmlns="http://java.sun.com/xml/ns/persistence"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd"
-	version="2.0">
-	<persistence-unit name="backend-jpa-unit"
-		transaction-type="RESOURCE_LOCAL">
-		<class>edu.emory.cci.aiw.cvrg.eureka.common.entity.JobEntity</class>
-		<class>edu.emory.cci.aiw.cvrg.eureka.common.entity.JobEvent</class>
-		<class>edu.emory.cci.aiw.cvrg.eureka.common.entity.EtlUserEntity</class>
-		<class>edu.emory.cci.aiw.cvrg.eureka.common.entity.EtlGroup</class>
-		<class>edu.emory.cci.aiw.cvrg.eureka.common.entity.SourceConfigEntity</class>
-		<class>edu.emory.cci.aiw.cvrg.eureka.common.entity.DestinationEntity</class>
-		<class>edu.emory.cci.aiw.cvrg.eureka.common.entity.SourceConfigGroupMembership</class>
-		<class>edu.emory.cci.aiw.cvrg.eureka.common.entity.DestinationGroupMembership</class>
-		<properties>
-			<!-- Disable the second-level cache -->
-			<property name="hibernate.cache.provider_class" value="org.hibernate.cache.NoCacheProvider" />
-			<property name="hibernate.connection.driver_class" value="org.h2.Driver" />
-			<property name="hibernate.connection.url" value="jdbc:h2:mem:backend-test" />
-			<property name="hibernate.connection.username" value="sa" />
-			<property name="hibernate.connection.password" value="" />
-			<property name="hibernate.connection.pool_size" value="1" />
-			<property name="hibernate.dialect" value="org.hibernate.dialect.H2Dialect" />
-			<property name="hibernate.hbm2ddl.auto" value="create-drop" />
-
-			<!-- Default is false for backwards compatibility. Should be used on all 
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence version="2.0" xmlns="http://java.sun.com/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd">
+  <persistence-unit name="backend-jpa-unit" transaction-type="RESOURCE_LOCAL">
+    <class>edu.emory.cci.aiw.cvrg.eureka.common.entity.JobEntity</class>
+    <class>edu.emory.cci.aiw.cvrg.eureka.common.entity.JobEvent</class>
+    <class>edu.emory.cci.aiw.cvrg.eureka.common.entity.EtlUserEntity</class>
+    <class>edu.emory.cci.aiw.cvrg.eureka.common.entity.EtlGroup</class>
+    <class>edu.emory.cci.aiw.cvrg.eureka.common.entity.SourceConfigEntity</class>
+    <class>edu.emory.cci.aiw.cvrg.eureka.common.entity.DestinationEntity</class>
+    <class>edu.emory.cci.aiw.cvrg.eureka.common.entity.SourceConfigGroupMembership</class>
+    <class>edu.emory.cci.aiw.cvrg.eureka.common.entity.DestinationGroupMembership</class>
+    <class>edu.emory.cci.aiw.cvrg.eureka.common.entity.I2B2DestinationEntity</class>
+    <properties>
+      <!-- Disable the second-level cache -->
+      <property name="hibernate.cache.provider_class" value="org.hibernate.cache.NoCacheProvider"/>
+      <property name="hibernate.connection.driver_class" value="org.h2.Driver"/>
+      <property name="hibernate.connection.url" value="jdbc:h2:mem:backend-test"/>
+      <property name="hibernate.connection.username" value="sa"/>
+      <property name="hibernate.connection.password" value=""/>
+      <property name="hibernate.connection.pool_size" value="1"/>
+      <property name="hibernate.dialect" value="org.hibernate.dialect.H2Dialect"/>
+      <property name="hibernate.hbm2ddl.auto" value="create-drop"/>
+      <!-- Default is false for backwards compatibility. Should be used on all 
 				new projects -->
-			<property name="hibernate.id.new_generator_mappings" value="true" />
-		</properties>
-	</persistence-unit>
+      <property name="hibernate.id.new_generator_mappings" value="true"/>
+    </properties>
+  </persistence-unit>
 </persistence>
