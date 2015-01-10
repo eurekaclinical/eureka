@@ -139,3 +139,18 @@ legend {
     right: 0;
     z-index: 10000000;
 }
+
+.jumbotron #logo {
+	margin-right: auto;
+	margin-left: auto;
+	max-width: 50%;
+}
+
+#indexPanels .panel-body {
+	overflow: auto;
+	height: 10em;
+}
+
+#indexPanels .panel-heading, #indexPanels .alert {
+	font-size: larger;
+}

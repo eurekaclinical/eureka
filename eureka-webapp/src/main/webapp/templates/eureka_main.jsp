@@ -73,20 +73,6 @@ limitations under the License.
 		<div class="navbar-collapse collapse">
 			<ul class="nav navbar-nav navbar-right menu-text">
 				<li>
-					<a href="${initParam['aiw-site-url']}/overview.html" target="_blank">
-						<span class="glyphicon glyphicon-globe"></span>
-						About
-					</a>
-				</li>
-				<li>
-					<c:if test="${not userIsActivated}">
-						<a href="${pageContext.request.contextPath}/register.jsp">
-							<span class="glyphicon glyphicon-user"></span>
-							Register
-						</a>
-					</c:if>
-				</li>
-				<li>
 					<a href="${pageContext.request.contextPath}/help.jsp">
 						<span class="glyphicon glyphicon-question-sign"></span>
 						Help

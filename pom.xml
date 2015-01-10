@@ -516,6 +516,7 @@ and data into your own instance of the i2b2 data warehouse system.
 						<exclude>**/*.html</exclude>
 						<exclude>**/*.js</exclude>
 						<exclude>**/*.css</exclude>
+						<exclude>**/*.json</exclude>
 					</excludes>
 				</configuration>
 				<executions>

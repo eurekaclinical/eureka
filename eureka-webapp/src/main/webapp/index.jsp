@@ -23,146 +23,166 @@
 <template:insert template="/templates/eureka_main.jsp">
 	<template:content name="content">
 		<div class="jumbotron">
-			<div class="row">
-				<div class="col-sm-8">
-					<h1>Welcome to Eureka! Clinical Analytics</h1>
-				</div>
-				<div class="col-sm-1 vert-offset-2x">
-					<img src="${pageContext.request.contextPath}/assets/images/logo.jpg"/>
-				</div>
-			</div>
-			<p class="vert-offset">
-				Upload your spreadsheets, connect to your databases, define
-				patient features of interest, and compute them in millions of
-				patients. Then, explore!
-			</p>
-			<c:if test="${pageContext.request.remoteUser == null}">
+			<img id="logo" class="img-responsive" src="${pageContext.request.contextPath}/assets/images/logo.png"/>
 			<p class="vert-offset text-center">
-				<a href="${pageContext.request.contextPath}/register.jsp"
-				   class="btn btn-default btn-lg">
-					Register
-				</a>
+				Access to clinical data for quality improvement and research, simplified.
 			</p>
-			</c:if>
 		</div>
-		<c:if test="${applicationScope.webappProperties.demoMode}">
-			<h3>Want to try it out?</h3>
-
-			<p>This is our online demonstration site. Go to the
-				<a href="register.jsp">registration page</a> to get an
-				account. If you
-				already have an account, go ahead and <a
-						href="protected/login">login</a>.
-			</p>
-
-			<p>
-
-			<p><strong>NOTE: This demonstration website is NOT suitable for
-				use
-				with sensitive data including patient data that contains
-				identifiers.</strong>
-			</p>
-			</p>
-			<h3>Want to deploy Eureka! at your institution or lab?</h3>
-
-			<p>Go to our
-				<a href="http://aiw.sourceforge.net" target="_blank">Sourceforge
-					website</a>
-				to get your own copy.
-			</p>
-		</c:if>
-		<c:if test="${not applicationScope.webappProperties.demoMode and applicationScope.webappProperties.ephiProhibited}">
-			<p>
-				<strong>
-					NOTE: Loading real patient data into the system is
-					strictly prohibited.
-				</strong>
-			</p>
-		</c:if>
-
-		<p class="small">
-			The software powering this site has been supported in part by <a
-				href="http://www.emoryhealthcare.org" target="_blank"
-				rel="nofollow">Emory Healthcare</a>;
-			<a href="http://winshipcancer.emory.edu" target="_blank"
-			   rel="nofollow">Emory Winship Cancer Institute</a>;
-			NHLBI grant R24 HL085343; PHS Grant UL1 RR025008, KL2 RR025009 and
-			TL1 RR025010 from the CTSA program, NIH, NCRR; and NCMHD grant
-			RC4MD005964.
-		</p>
-
-		<h3>Release Notes</h3>
-		<div class="row">
-			<div class="col-sm-1">
-				2014.07.02
-			</div>
-			<div class="col-sm-11">
-				Version 1.9 out out! This version includes a brand
-				new UI, search functionality for data elements,
-				support for OAuth authentication providers, integration
-				with i2b2 version 1.7, and allows the use of BioPortal
-				as an ontology source.
-			</div>
+		<div id="indexPanels">
+			<c:choose>
+			<c:when test="${applicationScope.webappProperties.demoMode}">
+				<div class="container-fluid">
+					<div class="row">
+						<div class="alert alert-warning">NOTE: This demonstration web site is NOT suitable for
+										use with sensitive data including patient data that contains
+										identifiers.
+									</div>
+					</div>
+					<div class="row">
+						<div class="col-md-6">
+							<div class="panel panel-info">
+								<c:choose>
+									<c:when test="${not userIsActivated}">
+										<div class="panel-heading">Want to try it out?</div>
+										<div class="panel-body text-center">
+											<div class="container-fluid">
+												<div class="row">
+													<div class="col-xs-6">
+														<h4>Learn about Eureka!</h4>
+														<a href="${initParam['aiw-site-url']}/overview.html" target="_blank" 
+														   class="btn btn-primary btn-lg">
+															About Eureka!
+														</a>
+													</div>
+													<div class="col-xs-6">
+														<h4>Get an account</h4>
+														<a href="${pageContext.request.contextPath}/register.jsp"
+															class="btn btn-primary btn-lg">
+															Register
+														</a>
+													</div>
+												</div>
+											</div>
+										</div>
+									</c:when>
+									<c:otherwise>
+										<div class="panel-heading">Want to learn more?</div>
+										<div class="panel-body text-center">
+											<div class="container-fluid">
+												<div class="row">
+													<div class="col-xs-12">
+														<h4>Learn more about Eureka!</h4>
+														<a href="${initParam['aiw-site-url']}/overview.html" target="_blank" 
+														   class="btn btn-primary btn-lg">
+															About Eureka!
+														</a>
+													</div>
+												</div>
+											</div>
+										</div>
+									</c:otherwise>
+								</c:choose>
+							</div>
+						</div>
+						<div class="col-md-6">
+							<div class="panel panel-info">
+								<div class="panel-heading">Want to deploy Eureka! at your institution or lab?</div>
+								<div class="panel-body text-center">
+									<div class="container-fluid">
+										<div class="row">
+											<div class="col-xs-6">
+												<h4>Get your own copy</h4>
+												<a href="${initParam['aiw-site-url']}/get-it.html" target="_blank" 
+												   class="btn btn-primary btn-lg">
+													Download Eureka!
+												</a>
+											</div>
+											<div class="col-xs-6">
+												<h4>Contact us for help</h4>
+												<a href="${initParam['aiw-site-url']}/contact.html" target="_blank"
+													class="btn btn-primary btn-lg">
+													Contact Us
+												</a>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-md-6">
+							<div class="panel panel-info">
+								<div class="panel-heading">Funding</div>
+								<div class="panel-body text-center">
+									<p>The software powering this site has been supported in part by <span id="support"></span></p>
+								</div>
+							</div>
+						</div>
+						<div class="col-md-6">
+							<div class="panel panel-info">
+								<div class="panel-heading">Release Notes</div>
+								<div class="panel-body" id="versionHistory">
+								</div>
+							</div>
+						</div>
+					</div>
+					<div id="versionHistory"></div>
+				</div>
+			</c:when>
+			<c:otherwise>
+				<div class="container-fluid">
+					<div class="row">
+						<div class="col-md-6">
+							<div class="panel panel-info">
+								<div class="panel-heading">Request an Eureka! account</div>
+								<div class="panel-body text-center">
+									<div class="container">
+										<div class="row">
+											<div class="col-xs-6">
+												<h4>Learn about Eureka!</h4>
+												<a href="${initParam['aiw-site-url']}/overview.html" target="_blank" 
+												   class="btn btn-primary btn-lg">
+													About Eureka!
+												</a>
+											</div>
+											<div class="col-xs-6">
+												<h4>Get an account</h4>
+												<a href="${pageContext.request.contextPath}/register.jsp"
+													class="btn btn-primary btn-lg">
+													Register
+												</a>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-md-6">
+							<div class="panel panel-info">
+								<div class="panel-heading">Funding</div>
+								<div class="panel-body text-center">
+									<p>The software powering this site has been supported in part by <span id="support"></span></p>
+								</div>
+							</div>
+						</div>
+						
+					</div>
+				</div>
+			</c:otherwise>
+			</c:choose>
+			
 		</div>
-		<div class="row vert-offset">
-			<div class="col-sm-1">
-				2014.01.16
-			</div>
-			<div class="col-sm-11">
-				Version 1.8.2 is out! This version includes some 
-				minor bug fixes.
-			</div>
-		</div>
-		<div class="row vert-offset">
-			<div class="col-sm-1">
-				2013.12.13
-			</div>
-			<div class="col-sm-11">
-				Version 1.8.1 is out! This version includes some
-				minor bug fixes.
-			</div>
-		</div>
-		<div class="row vert-offset">
-			<div class="col-sm-1">
-				2013.11.11
-			</div>
-			<div class="col-sm-11">
-				Version 1.8 is out! This version provides the
-				ability to directly connect to a database as a data source, in
-				addition to uploading a spreadsheet. The phenotype editor UI
-				has also been improved.
-			</div>
-		</div>
-		<div class="row vert-offset">
-			<div class="col-sm-1">
-				2013.07.01
-			</div>
-			<div class="col-sm-11">
-				Version 1.7 is out! It provides
-				enhancements to the data element editor and integration with
-				jasig CAS (Central
-				Authentication Service).
-			</div>
-		</div>
-		<div class="row vert-offset">
-			<div class="col-sm-1">
-				2013.02.15
-			</div>
-			<div class="col-sm-11">
-				Version 1.6.1 is out! It fixes bugs in registration
-				verification and editing data elements with property
-				constraints.
-			</div>
-		</div>
-		<div class="row vert-offset">
-			<div class="col-sm-1">
-				2013.01.28
-			</div>
-			<div class="col-sm-11">
-				Version 1.6 is out! The user-defined data element
-				editor now supports four kinds of derived data elements for
-				specifying various temporal patterns.
-			</div>
-		</div>
+		<script type="text/javascript"
+			src="${pageContext.request.contextPath}/assets/js/eureka.util${initParam['eureka-build-timestamp']}.js"></script>
+		<script type="text/javascript"
+			src="${pageContext.request.contextPath}/assets/js/eureka.index${initParam['eureka-build-timestamp']}.js"></script>
+		<script type="text/javascript">
+			$(document).ready(function () {
+				eureka.index.setup("${pageContext.request.contextPath}");
+				eureka.index.writeSupport();
+				eureka.index.writeVersionHistory();
+			});
+		</script>
 	</template:content>
 </template:insert>
