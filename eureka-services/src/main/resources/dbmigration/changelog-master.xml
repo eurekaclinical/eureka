@@ -867,4 +867,16 @@ limitations under the License.
 				<column name="DESCRIPTION" value="Globus"/>
 			</insert>
 		</changeSet>
+		<changeSet author="arpost" id="1360440238345-97">
+			<alterSequence sequenceName="USER_SEQ" minValue="2"/>
+			<alterSequence sequenceName="ROLE_SEQ" minValue="4"/>
+			<alterSequence sequenceName="TIME_SEQ" minValue="4"/>
+			<alterSequence sequenceName="RELATION_OP_SEQ" minValue="4"/>
+			<alterSequence sequenceName="THRESHOLDS_OP_SEQ" minValue="3"/>
+			<alterSequence sequenceName="COMP_SEQ" minValue="7"/>
+			<alterSequence sequenceName="FREQUENCYTYPES_OP_SEQ" minValue="3"/>
+			<alterSequence sequenceName="OAUTH_PROV_SEQ" minValue="5"/>
+			<alterSequence sequenceName="LOGIN_TYPES_SEQ" minValue="3"/>
+			<alterSequence sequenceName="AUTHENTICATION_METHODS_SEQ" minValue="5"/>
+		</changeSet>
 </databaseChangeLog>
