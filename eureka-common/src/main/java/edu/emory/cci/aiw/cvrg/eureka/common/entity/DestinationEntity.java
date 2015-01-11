@@ -64,11 +64,7 @@ public abstract class DestinationEntity implements ConfigEntity {
 	private Date createdAt;
 	
 	@Temporal(javax.persistence.TemporalType.TIMESTAMP)
-	@Column(name = "updated_at")
-	private Date updatedAt;
-	
-	@Temporal(javax.persistence.TemporalType.TIMESTAMP)
-	@Column(name = "effective_st")
+	@Column(name = "effective_at")
 	private Date effectiveAt;
 	
 	@Temporal(javax.persistence.TemporalType.TIMESTAMP)
@@ -80,8 +76,6 @@ public abstract class DestinationEntity implements ConfigEntity {
 	
 	@OneToMany(cascade = CascadeType.ALL, mappedBy="destination")
 	private List<DestinationGroupMembership> groups;
-	
-	private Boolean activeRecord;
 	
 	@Transient
 	private List<LinkEntity> links;
@@ -112,22 +106,6 @@ public abstract class DestinationEntity implements ConfigEntity {
 		this.description = description;
 	}
 
-	public Date getCreatedAt() {
-		return createdAt;
-	}
-
-	public void setCreatedAt(Date createdAt) {
-		this.createdAt = createdAt;
-	}
-
-	public Date getUpdatedAt() {
-		return updatedAt;
-	}
-
-	public void setUpdatedAt(Date updatedAt) {
-		this.updatedAt = updatedAt;
-	}
-	
 	@Override
 	public EtlUserEntity getOwner() {
 		return owner;
@@ -154,6 +132,14 @@ public abstract class DestinationEntity implements ConfigEntity {
 		this.links = links;
 	}
 
+	public Date getCreatedAt() {
+		return createdAt;
+	}
+
+	public void setCreatedAt(Date createdAt) {
+		this.createdAt = createdAt;
+	}
+	
 	public Date getEffectiveAt() {
 		return effectiveAt;
 	}
@@ -168,14 +154,6 @@ public abstract class DestinationEntity implements ConfigEntity {
 
 	public void setExpiredAt(Date expiredAt) {
 		this.expiredAt = expiredAt;
-	}
-	
-	public Boolean getActiveRecord() {
-		return activeRecord;
-	}
-
-	public void setActiveRecord(Boolean activeRecord) {
-		this.activeRecord = activeRecord;
 	}
 	
 	public abstract void accept(DestinationEntityVisitor visitor);

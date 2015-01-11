@@ -297,33 +297,23 @@ limitations under the License.
 		<dropForeignKeyConstraint baseTableName="DESTINATIONS_GROUPS" constraintName="FKCFD5552E387530A"/>
 	</changeSet>
 	<changeSet author="arpost" id="1361552652236-14">
-		<addColumn tablName="DESTINATIONS">
+		<addColumn tableName="DESTINATIONS">
 			<column name="EFFECTIVE_AT" type="TIMESTAMP(6)"/>
 		</addColumn>
 		<addColumn tableName="DESTINATIONS">
 			<column name="EXPIRED_AT" type="TIMESTAMP(6)"/>
 		</addColumn>
 		<addColumn tableName="DESTINATIONS">
-			<column name="ACTIVERECORD" type="BOOLEAN"/>
-		</addColumn>
-		<addColumn tableName="DESTINATIONS">
-			<column name="TEMPNAME" type="VARCHAR(255)">
-				<constraints nullable="false"/>
-			</column>
+			<column name="TEMPNAME" type="VARCHAR(255)"/>
 		</addColumn>
 		<sql>
-			UPDATE DESTINATIONS D1 SET TEMPNAME=(SELECT NAME FROM DESTINATIONS D2 WHERE D1.ID=D2.ID)
+			UPDATE DESTINATIONS D1 SET D1.TEMPNAME=(SELECT NAME FROM DESTINATIONS D2 WHERE D1.ID=D2.ID)
 		</sql>
 		<dropColumn tableName="DESTINATIONS" columnName="NAME"/>
+		<addNotNullConstraint tableName="DESTINATIONS" columnName="TEMPNAME"/>
 		<renameColumn tableName="DESTINATIONS" oldColumnName="TEMPNAME" newColumnName="NAME"/>
-		<update tableName="DESTINATIONS">
-			<column name="TEMPNAME" valueComputed="(SELECT NAME FROM DESTINATIONS WHERE ID=ID)"/>
-		</update>
-		<update tableName="DESTINATIONS">
-			<column name="ACTIVERECORD" valueBoolean="true"/>
-		</update>
 		<sql>
-			UPDATE DESTINATIONS D1 SET EFFECTIVE_DT=(SELECT CREATED_AT FROM DESTINATIONS D2 WHERE D1.ID=D2.ID)
+			UPDATE DESTINATIONS D1 SET D1.EFFECTIVE_AT=(SELECT CREATED_AT FROM DESTINATIONS D2 WHERE D1.ID=D2.ID)
 		</sql>
 		<addColumn tableName="JOBS">
 			<column name="DESTINATION_ID" type="BIGINT"/>

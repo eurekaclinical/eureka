@@ -27,11 +27,13 @@ import edu.emory.cci.aiw.cvrg.eureka.common.entity.CohortDestinationEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.DestinationEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.DestinationEntity_;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.I2B2DestinationEntity;
+import java.util.Date;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
 
 /**
  *
@@ -46,7 +48,30 @@ public class JpaDestinationDao extends GenericDao<DestinationEntity, Long> imple
 
 	@Override
 	public DestinationEntity getByName(String name) {
-		return getUniqueByAttribute(DestinationEntity_.name, name);
+		EntityManager entityManager = getEntityManager();
+		CriteriaBuilder builder = entityManager.getCriteriaBuilder();
+		CriteriaQuery<DestinationEntity> criteriaQuery = builder.createQuery(DestinationEntity.class);
+		Root<DestinationEntity> root = criteriaQuery.from(DestinationEntity.class);
+		criteriaQuery.where(builder.and(
+						builder.equal(root.get(DestinationEntity_.name), name),
+						builder.or(
+							builder.isNull(root.get(DestinationEntity_.expiredAt)),
+							builder.greaterThanOrEqualTo(root.get(DestinationEntity_.expiredAt), new Date()))
+				));
+		return entityManager.createQuery(criteriaQuery).getSingleResult();
+	}
+
+	@Override
+	public List<DestinationEntity> getAll() {
+		EntityManager entityManager = getEntityManager();
+		CriteriaBuilder builder = entityManager.getCriteriaBuilder();
+		CriteriaQuery<DestinationEntity> criteriaQuery = builder.createQuery(DestinationEntity.class);
+		Root<DestinationEntity> root = criteriaQuery.from(DestinationEntity.class);
+		criteriaQuery.where(builder.or(
+							builder.isNull(root.get(DestinationEntity_.expiredAt)),
+							builder.greaterThanOrEqualTo(root.get(DestinationEntity_.expiredAt), new Date())));
+		TypedQuery<DestinationEntity> typedQuery = entityManager.createQuery(criteriaQuery);
+		return typedQuery.getResultList();
 	}
 	
 	@Override
@@ -54,7 +79,10 @@ public class JpaDestinationDao extends GenericDao<DestinationEntity, Long> imple
 		EntityManager entityManager = getEntityManager();
 		CriteriaBuilder builder = entityManager.getCriteriaBuilder();
 		CriteriaQuery<CohortDestinationEntity> criteriaQuery = builder.createQuery(CohortDestinationEntity.class);
-		criteriaQuery.from(CohortDestinationEntity.class);
+		Root<CohortDestinationEntity> root = criteriaQuery.from(CohortDestinationEntity.class);
+		criteriaQuery.where(builder.or(
+							builder.isNull(root.get(DestinationEntity_.expiredAt)),
+							builder.greaterThanOrEqualTo(root.get(DestinationEntity_.expiredAt), new Date())));
 		TypedQuery<CohortDestinationEntity> typedQuery = entityManager.createQuery(criteriaQuery);
 		return typedQuery.getResultList();
 	}
@@ -64,7 +92,10 @@ public class JpaDestinationDao extends GenericDao<DestinationEntity, Long> imple
 		EntityManager entityManager = getEntityManager();
 		CriteriaBuilder builder = entityManager.getCriteriaBuilder();
 		CriteriaQuery<I2B2DestinationEntity> criteriaQuery = builder.createQuery(I2B2DestinationEntity.class);
-		criteriaQuery.from(I2B2DestinationEntity.class);
+		Root<I2B2DestinationEntity> root = criteriaQuery.from(I2B2DestinationEntity.class);
+		criteriaQuery.where(builder.or(
+							builder.isNull(root.get(DestinationEntity_.expiredAt)),
+							builder.greaterThanOrEqualTo(root.get(DestinationEntity_.expiredAt), new Date())));
 		TypedQuery<I2B2DestinationEntity> typedQuery = entityManager.createQuery(criteriaQuery);
 		return typedQuery.getResultList();
 	}

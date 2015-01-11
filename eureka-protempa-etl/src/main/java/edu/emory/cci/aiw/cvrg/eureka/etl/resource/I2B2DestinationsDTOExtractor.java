@@ -54,7 +54,7 @@ class I2B2DestinationsDTOExtractor extends DestinationsDTOExtractor<EtlI2B2Desti
 		dest.setOwnerUserId(destinationEntity.getOwner().getId());
 
 		dest.setCreatedAt(destinationEntity.getCreatedAt());
-		dest.setUpdatedAt(destinationEntity.getUpdatedAt());
+		dest.setUpdatedAt(destinationEntity.getEffectiveAt());
 		
 		List<LinkEntity> linkEntities = destinationEntity.getLinks();
 		if (linkEntities != null) {

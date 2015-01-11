@@ -77,7 +77,7 @@ public final class Destinations {
 			cde.setOwner(this.etlUser);
 			Date now = new Date();
 			cde.setCreatedAt(now);
-			cde.setUpdatedAt(now);
+			cde.setEffectiveAt(now);
 			Cohort cohort = ((EtlCohortDestination) etlDestination).getCohort();
 			CohortEntity cohortEntity = new CohortEntity();
 			Node node = cohort.getNode();
@@ -100,25 +100,27 @@ public final class Destinations {
 			if (!this.etlUser.getId().equals(etlDestination.getOwnerUserId())) {
 				throw new HttpStatusException(Response.Status.NOT_FOUND);
 			}
+			Date now = new Date();
+			oldEntity.setExpiredAt(now);
+			this.destinationDao.update(oldEntity);
+			
 			CohortDestinationEntity cde = new CohortDestinationEntity();
-			cde.setId(etlDestination.getId());
 			cde.setName(etlDestination.getName());
 			cde.setDescription(etlDestination.getDescription());
 			cde.setOwner(this.etlUser);
+			cde.setEffectiveAt(now);
 			cde.setCreatedAt(oldEntity.getCreatedAt());
-			Date now = new Date();
-			cde.setUpdatedAt(now);
 			
 			Cohort cohort = ((EtlCohortDestination) etlDestination).getCohort();
 			CohortEntity cohortEntity = new CohortEntity();
-			cohortEntity.setId(cohort.getId());
 			cde.setCohort(cohortEntity);
 			Node node = cohort.getNode();
 			NodeToNodeEntityVisitor v = new NodeToNodeEntityVisitor();
 			node.accept(v);
 			NodeEntity nodeEntity = v.getNodeEntity();
 			cohortEntity.setNode(nodeEntity);
-			this.destinationDao.update(cde);
+			this.destinationDao.create(cde);
+			
 		} else {
 			throw new HttpStatusException(Response.Status.BAD_REQUEST, "Can't update i2b2 destinations via web services yet");
 		}
@@ -210,7 +212,8 @@ public final class Destinations {
 		if (dest == null || !this.etlUser.equals(dest.getOwner())) {
 			throw new HttpStatusException(Response.Status.NOT_FOUND);
 		}
-		this.destinationDao.remove(dest);
+		dest.setExpiredAt(new Date());
+		this.destinationDao.update(dest);
 	}
 
 }
