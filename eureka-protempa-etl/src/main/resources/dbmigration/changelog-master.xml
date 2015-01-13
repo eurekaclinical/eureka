@@ -300,31 +300,60 @@ limitations under the License.
 		<addColumn tableName="DESTINATIONS">
 			<column name="EFFECTIVE_AT" type="TIMESTAMP(6)"/>
 		</addColumn>
+	</changeSet>
+	<changeSet author="arpost" id="1361552652236-15">
 		<addColumn tableName="DESTINATIONS">
 			<column name="EXPIRED_AT" type="TIMESTAMP(6)"/>
 		</addColumn>
+	</changeSet>
+	<changeSet author="arpost" id="1361552652236-16">
 		<addColumn tableName="DESTINATIONS">
 			<column name="TEMPNAME" type="VARCHAR(255)"/>
 		</addColumn>
+	</changeSet>
+	<changeSet author="arpost" id="1361552652236-17">
 		<sql>
 			UPDATE DESTINATIONS D1 SET D1.TEMPNAME=(SELECT NAME FROM DESTINATIONS D2 WHERE D1.ID=D2.ID)
 		</sql>
+	</changeSet>
+	<changeSet author="arpost" id="1361552652236-18">
 		<dropColumn tableName="DESTINATIONS" columnName="NAME"/>
+	</changeSet>
+	<changeSet author="arpost" id="1361552652236-19">
 		<addNotNullConstraint tableName="DESTINATIONS" columnName="TEMPNAME"/>
+	</changeSet>
+	<changeSet author="arpost" id="1361552652236-20">
 		<renameColumn tableName="DESTINATIONS" oldColumnName="TEMPNAME" newColumnName="NAME"/>
+	</changeSet>
+	<changeSet author="arpost" id="1361552652236-21">
 		<sql>
 			UPDATE DESTINATIONS D1 SET D1.EFFECTIVE_AT=(SELECT CREATED_AT FROM DESTINATIONS D2 WHERE D1.ID=D2.ID)
 		</sql>
+	</changeSet>
+	<changeSet author="arpost" id="1361552652236-22">
 		<addColumn tableName="JOBS">
 			<column name="DESTINATION_ID" type="BIGINT"/>
 		</addColumn>
+	</changeSet>
+	<changeSet author="arpost" id="1361552652236-23">
 		<sql>
 			UPDATE JOBS J SET J.DESTINATION_ID=(SELECT ID FROM DESTINATIONS D WHERE D.NAME=J.DESTINATIONID)
 		</sql>
+	</changeSet>
+	<changeSet author="arpost" id="1361552652236-24">
+		<delete tableName="JOB_EVENTS">
+			<where>JOB_ID IN (SELECT ID FROM JOBS WHERE DESTINATION_ID IS NULL)</where>
+		</delete>
+	</changeSet>
+	<changeSet author="arpost" id="1361552652236-25">
 		<delete tableName="JOBS">
 			<where>DESTINATION_ID IS NULL</where>
 		</delete>
+	</changeSet>
+	<changeSet author="arpost" id="1361552652236-26">
 		<addForeignKeyConstraint baseColumnNames="DESTINATION_ID" baseTableName="JOBS" constraintName="FK_JOB_DEST" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" referencedColumnNames="ID" referencedTableName="DESTINATIONS" referencesUniqueColumn="false"/>
+	</changeSet>
+	<changeSet author="arpost" id="1361552652236-27">
 		<dropColumn tableName="JOBS" columnName="DESTINATIONID"/>
 	</changeSet>
 </databaseChangeLog>

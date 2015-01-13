@@ -113,16 +113,16 @@
 					<div class="row">
 						<div class="col-md-6">
 							<div class="panel panel-info">
-								<div class="panel-heading">Funding</div>
-								<div class="panel-body text-center">
-									<p>The software powering this site has been supported in part by <span id="support"></span></p>
+								<div class="panel-heading">News</div>
+								<div class="panel-body" id="versionHistory">
 								</div>
 							</div>
 						</div>
 						<div class="col-md-6">
 							<div class="panel panel-info">
-								<div class="panel-heading">Release Notes</div>
-								<div class="panel-body" id="versionHistory">
+								<div class="panel-heading">Funding</div>
+								<div class="panel-body text-center">
+									<p>The software powering this site has been supported in part by <span id="support"></span></p>
 								</div>
 							</div>
 						</div>
@@ -132,30 +132,47 @@
 			</c:when>
 			<c:otherwise>
 				<div class="container-fluid">
+					<c:if test="${applicationScope.webappProperties.ephiProhibited}">
+						<div class="row">
+							<div class="alert alert-warning">NOTE: This application is NOT suitable for
+											use with sensitive data including patient data that contains
+											identifiers.
+										</div>
+						</div>
+					</c:if>
 					<div class="row">
 						<div class="col-md-6">
 							<div class="panel panel-info">
-								<div class="panel-heading">Request an Eureka! account</div>
-								<div class="panel-body text-center">
-									<div class="container">
-										<div class="row">
-											<div class="col-xs-6">
-												<h4>Learn about Eureka!</h4>
-												<a href="${initParam['aiw-site-url']}/overview.html" target="_blank" 
-												   class="btn btn-primary btn-lg">
-													About Eureka!
-												</a>
-											</div>
-											<div class="col-xs-6">
-												<h4>Get an account</h4>
-												<a href="${pageContext.request.contextPath}/register.jsp"
-													class="btn btn-primary btn-lg">
-													Register
-												</a>
+								<c:choose>
+									<c:when test="${not userIsActivated}">
+										<div class="panel-heading">Request an Eureka! account</div>
+										<div class="panel-body text-center">
+											<div class="container-fluid">
+												<div class="row">
+													<div class="col-xs-6">
+														<h4>Learn about Eureka!</h4>
+														<a href="${initParam['aiw-site-url']}/overview.html" target="_blank" 
+														   class="btn btn-primary btn-lg">
+															About Eureka!
+														</a>
+													</div>
+													<div class="col-xs-6">
+														<h4>Get an account</h4>
+														<a href="${pageContext.request.contextPath}/register.jsp"
+															class="btn btn-primary btn-lg">
+															Register
+														</a>
+													</div>
+												</div>
 											</div>
 										</div>
-									</div>
-								</div>
+									</c:when>
+									<c:otherwise>
+										<div class="panel-heading">News</div>
+										<div class="panel-body" id="versionHistory">
+										</div>
+									</c:otherwise>
+								</c:choose>
 							</div>
 						</div>
 						<div class="col-md-6">
