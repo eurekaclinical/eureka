@@ -34,6 +34,7 @@ import edu.emory.cci.aiw.cvrg.eureka.common.entity.I2B2DestinationEntity;
 import edu.emory.cci.aiw.cvrg.eureka.etl.config.EtlProperties;
 import edu.emory.cci.aiw.cvrg.eureka.etl.dao.DestinationDao;
 import edu.emory.cci.aiw.i2b2etl.I2b2Destination;
+import edu.emory.cci.aiw.i2b2etl.configuration.XmlFileConfiguration;
 
 /**
  *
@@ -54,7 +55,7 @@ public class ProtempaDestinationFactory {
 		DestinationEntity dest = this.destinationDao.retrieve(destId);
 		if (dest instanceof I2B2DestinationEntity) {
 			I2b2Destination.DataInsertMode insertMode = appendData ? I2b2Destination.DataInsertMode.APPEND : I2b2Destination.DataInsertMode.TRUNCATE;
-			return new I2b2Destination(this.etlProperties.destinationConfigFile(dest.getName()), insertMode);
+			return new I2b2Destination(new EurekaConfiguration((I2B2DestinationEntity) dest, this.etlProperties), insertMode);
 		} else if (dest instanceof CohortDestinationEntity) {
 			CohortEntity cohortEntity = ((CohortDestinationEntity) dest).getCohort();
 			Cohort cohort = cohortEntity.toCohort();
