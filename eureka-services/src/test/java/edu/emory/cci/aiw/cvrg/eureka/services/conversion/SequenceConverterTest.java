@@ -19,6 +19,12 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.services.conversion;
 
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.DataElementEntity;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.ExtendedDataElement;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.Relation;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.SequenceEntity;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.SystemProposition;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.TimeUnit;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -31,7 +37,6 @@ import org.protempa.PropositionDefinition;
 import org.protempa.TemporalExtendedPropositionDefinition;
 import org.protempa.proposition.value.AbsoluteTimeUnit;
 
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.*;
 import edu.emory.cci.aiw.cvrg.eureka.services.test.AbstractServiceTest;
 
 import static org.junit.Assert.assertEquals;

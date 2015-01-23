@@ -19,6 +19,10 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.services.conversion;
 
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.ExtendedDataElement;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.FrequencyEntity;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.FrequencyType;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.SystemProposition;
 import java.util.List;
 
 import org.junit.Before;
@@ -27,8 +31,8 @@ import org.protempa.AbstractionDefinition;
 import org.protempa.PropositionDefinition;
 import org.protempa.SimpleGapFunction;
 
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.*;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.SystemProposition.SystemType;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.TimeUnit;
 import edu.emory.cci.aiw.cvrg.eureka.services.test.AbstractServiceTest;
 
 import static org.junit.Assert.assertEquals;

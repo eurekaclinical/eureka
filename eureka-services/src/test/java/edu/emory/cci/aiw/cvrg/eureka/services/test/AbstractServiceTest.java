@@ -46,10 +46,13 @@ public class AbstractServiceTest extends AbstractTest {
 	private DataElementConversionSupport conversionSupport;
 
 	protected Class<? extends TestDataProvider> getDataProvider() {
-		return Setup.class;
+		return null;
 	}
 
-	@Override
+	protected PersistService getPersistService() {
+		return null;
+	}
+
 	protected Module[] getModules() {
 		return new Module[]{new AppTestModule()};
 	}
@@ -63,8 +66,10 @@ public class AbstractServiceTest extends AbstractTest {
 	 */
 	@Before
 	public void beforeAbstractServiceTest() throws TestDataException {
-		persistService = getInstance(PersistService.class);
-		persistService.start();
+		persistService = getPersistService();
+		if (persistService != null) {
+			persistService.start();
+		}
 		if (getDataProvider() != null) {
 			testDataProvider = getInstance(getDataProvider());
 			testDataProvider.setUp();
@@ -84,7 +89,9 @@ public class AbstractServiceTest extends AbstractTest {
 		if (testDataProvider != null) {
 			testDataProvider.tearDown();
 		}
-		persistService.stop();
+		if (persistService != null) {
+			persistService.stop();
+		}
 		this.conversionSupport = null;
 	}
 	

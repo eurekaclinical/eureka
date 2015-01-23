@@ -19,6 +19,10 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.services.conversion;
 
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.ExtendedDataElement;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.FrequencyEntity;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.FrequencyType;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.SystemProposition;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
@@ -27,17 +31,24 @@ import org.apache.commons.lang3.StringUtils;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.protempa.*;
 import org.protempa.proposition.interval.Relation;
-import org.protempa.proposition.value.NominalValue;
 import org.protempa.proposition.value.NumberValue;
 
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.*;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.SystemProposition.SystemType;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.TimeUnit;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.ValueComparator;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.ValueThresholdEntity;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.ValueThresholdGroupEntity;
 import edu.emory.cci.aiw.cvrg.eureka.services.test.AbstractServiceTest;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import org.protempa.HighLevelAbstractionDefinition;
+import org.protempa.LowLevelAbstractionDefinition;
+import org.protempa.LowLevelAbstractionValueDefinition;
+import org.protempa.PropositionDefinition;
+import org.protempa.SimpleGapFunction;
+import org.protempa.TemporalExtendedParameterDefinition;
 
 /**
  *

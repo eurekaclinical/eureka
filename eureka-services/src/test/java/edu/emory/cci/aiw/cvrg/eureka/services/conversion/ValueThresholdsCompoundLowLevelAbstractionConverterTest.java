@@ -19,6 +19,7 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.services.conversion;
 
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.SystemProposition;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
@@ -32,8 +33,11 @@ import org.protempa.LowLevelAbstractionValueDefinition;
 import org.protempa.PropositionDefinition;
 import org.protempa.proposition.value.NumberValue;
 
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.*;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.SystemProposition.SystemType;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.ThresholdsOperator;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.ValueComparator;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.ValueThresholdEntity;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.ValueThresholdGroupEntity;
 import edu.emory.cci.aiw.cvrg.eureka.services.test.AbstractServiceTest;
 
 import static org.junit.Assert.assertEquals;

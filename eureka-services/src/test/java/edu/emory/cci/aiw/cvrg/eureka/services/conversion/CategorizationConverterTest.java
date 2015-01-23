@@ -33,7 +33,12 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import org.junit.Before;
 import org.junit.Test;
-import org.protempa.*;
+import org.protempa.ConstantDefinition;
+import org.protempa.EventDefinition;
+import org.protempa.HighLevelAbstractionDefinition;
+import org.protempa.PrimitiveParameterDefinition;
+import org.protempa.PropositionDefinition;
+import org.protempa.SliceDefinition;
 
 public class CategorizationConverterTest extends AbstractServiceTest {
 

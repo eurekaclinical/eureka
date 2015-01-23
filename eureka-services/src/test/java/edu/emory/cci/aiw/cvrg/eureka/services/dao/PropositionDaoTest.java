@@ -29,13 +29,13 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.DataElementEntity;
-import edu.emory.cci.aiw.cvrg.eureka.services.test.AbstractServiceTest;
+import edu.emory.cci.aiw.cvrg.eureka.services.test.AbstractServiceDataTest;
 
 /**
  *
  * @author hrathod
  */
-public class PropositionDaoTest extends AbstractServiceTest {
+public class PropositionDaoTest extends AbstractServiceDataTest {
 
 	@Test
 	public void testDao() {

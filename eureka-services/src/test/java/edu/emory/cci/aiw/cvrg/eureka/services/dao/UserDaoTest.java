@@ -20,7 +20,7 @@
 package edu.emory.cci.aiw.cvrg.eureka.services.dao;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.UserEntity;
-import edu.emory.cci.aiw.cvrg.eureka.services.test.AbstractServiceTest;
+import edu.emory.cci.aiw.cvrg.eureka.services.test.AbstractServiceDataTest;
 import org.junit.Test;
 
 import java.util.List;
@@ -32,7 +32,7 @@ import static org.junit.Assert.assertEquals;
  *
  * @author hrathod
  */
-public class UserDaoTest extends AbstractServiceTest {
+public class UserDaoTest extends AbstractServiceDataTest {
 
 	/**
 	 * Test the number of objects returned by the data access object. The number should match the number of users
