@@ -356,4 +356,218 @@ limitations under the License.
 	<changeSet author="arpost" id="1361552652236-27">
 		<dropColumn tableName="JOBS" columnName="DESTINATIONID"/>
 	</changeSet>
+	<changeSet author="arpost" id="1361552652236-28">
+		<createTable tableName="I2B2_DEST_IVAL_SIDES">
+			<column name="ID" type="BIGINT">
+				<constraints nullable="false" primaryKey="true" primaryKeyName="I2B2_DEST_IVAL_SIDE_PK"/>
+			</column>
+			<column name="NAME" type="VARCHAR(255)">
+				<constraints nullable="false"/>
+			</column>
+			<column name="DESCRIPTION" type="VARCHAR(255)"/>
+			<column name="ISDEFAULT" type="BOOLEAN">
+				<constraints nullable="false"/>
+			</column>
+			<column name="RANK" type="INT">
+				<constraints nullable="false"/>
+			</column>
+		</createTable>
+		<insert tableName="I2B2_DEST_IVAL_SIDES">
+			<column name="ID" valueNumeric="1"/>
+			<column name="NAME" value="START"/>
+			<column name="DESCRIPTION" value="The start or left-hand-side of the interval."/>
+			<column name="ISDEFAULT" valueBoolean="true"/>
+			<column name="RANK" valueNumeric="1"/>
+		</insert>
+		<insert tableName="I2B2_DEST_IVAL_SIDES">
+			<column name="ID" valueNumeric="2"/>
+			<column name="NAME" value="FINISH"/>
+			<column name="DESCRIPTION" value="The finish or right-hand-side of the interval."/>
+			<column name="ISDEFAULT" valueBoolean="false"/>
+			<column name="RANK" valueNumeric="2"/>
+		</insert>
+		<createSequence sequenceName="I2B2_IS_SEQ" startValue="3"/>
+		
+		<createTable tableName="I2B2_DEST_REMOVE_METHODS">
+			<column name="ID" type="BIGINT">
+				<constraints nullable="false" primaryKey="true" primaryKeyName="I2B2_DEST_REMOVE_METHOD_PK"/>
+			</column>
+			<column name="NAME" type="VARCHAR(255)">
+				<constraints nullable="false"/>
+			</column>
+			<column name="DESCRIPTION" type="VARCHAR(255)"/>
+			<column name="ISDEFAULT" type="BOOLEAN">
+				<constraints nullable="false"/>
+			</column>
+			<column name="RANK" type="INT">
+				<constraints nullable="false"/>
+			</column>
+		</createTable>
+		<insert tableName="I2B2_DEST_REMOVE_METHODS">
+			<column name="ID" valueNumeric="1"/>
+			<column name="NAME" value="TRUNCATE"/>
+			<column name="DESCRIPTION" value="Truncate tables."/>
+			<column name="ISDEFAULT" valueBoolean="true"/>
+			<column name="RANK" valueNumeric="1"/>
+		</insert>
+		<insert tableName="I2B2_DEST_REMOVE_METHODS">
+			<column name="ID" valueNumeric="2"/>
+			<column name="NAME" value="DELETE"/>
+			<column name="DESCRIPTION" value="Delete records from the same data source."/>
+			<column name="ISDEFAULT" valueBoolean="false"/>
+			<column name="RANK" valueNumeric="2"/>
+		</insert>
+		<createSequence sequenceName="I2B2_DR_SEQ" startValue="3"/>
+		
+		<addColumn tableName="I2B2_DESTINATIONS">
+			<column name="PROVIDERFULLNAME" type="VARCHAR(255)"/>
+		</addColumn>
+		<addColumn tableName="I2B2_DESTINATIONS">
+			<column name="PROVIDERFIRSTNAME" type="VARCHAR(255)"/>
+		</addColumn>
+		<addColumn tableName="I2B2_DESTINATIONS">
+			<column name="PROVIDERMIDDLENAME" type="VARCHAR(255)"/>
+		</addColumn>
+		<addColumn tableName="I2B2_DESTINATIONS">
+			<column name="PROVIDERLASTNAME" type="VARCHAR(255)"/>
+		</addColumn>
+		<addColumn tableName="I2B2_DESTINATIONS">
+			<column name="VISITDIMENSION" type="VARCHAR(255)"/>
+		</addColumn>
+		<addColumn tableName="I2B2_DESTINATIONS">
+			<column name="SKIPPROVIDERHIERARCHY" type="BOOLEAN"/>
+		</addColumn>
+		<addColumn tableName="I2B2_DESTINATIONS">
+			<column name="SKIPDEMOGRAPHICSHIERARCHY" type="BOOLEAN"/>
+		</addColumn>
+		<addColumn tableName="I2B2_DESTINATIONS">
+			<column name="DATAREMOVEMETHOD_ID" type="BIGINT"/>
+		</addColumn>
+		<addForeignKeyConstraint baseColumnNames="DATAREMOVEMETHOD_ID" baseTableName="I2B2_DESTINATIONS" constraintName="FK_I2B2_DEST_DATA_RM" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" referencedColumnNames="ID" referencedTableName="I2B2_DEST_REMOVE_METHODS" referencesUniqueColumn="true"/>
+		<addColumn tableName="I2B2_DESTINATIONS">
+			<column name="METAREMOVEMETHOD_ID" type="BIGINT"/>
+		</addColumn>
+		<addForeignKeyConstraint baseColumnNames="METAREMOVEMETHOD_ID" baseTableName="I2B2_DESTINATIONS" constraintName="FK_I2B2_DEST_META_RM" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" referencedColumnNames="ID" referencedTableName="I2B2_DEST_REMOVE_METHODS" referencesUniqueColumn="true"/>
+		<addColumn tableName="I2B2_DESTINATIONS">
+			<column name="SOURCESYSTEMCODE" type="VARCHAR(255)"/>
+		</addColumn>
+		<addColumn tableName="I2B2_DESTINATIONS">
+			<column name="PATIENTDIMENSIONMRN" type="VARCHAR(255)"/>
+		</addColumn>
+		<addColumn tableName="I2B2_DESTINATIONS">
+			<column name="PATIENTDIMENSIONVITAL" type="VARCHAR(255)"/>
+		</addColumn>
+		<addColumn tableName="I2B2_DESTINATIONS">
+			<column name="PATIENTDIMENSIONRELIGION" type="VARCHAR(255)"/>
+		</addColumn>
+		<addColumn tableName="I2B2_DESTINATIONS">
+			<column name="PATIENTDIMENSIONLANGUAGE" type="VARCHAR(255)"/>
+		</addColumn>
+		<addColumn tableName="I2B2_DESTINATIONS">
+			<column name="PATIENTDIMENSIONGENDER" type="VARCHAR(255)"/>
+		</addColumn>
+		<addColumn tableName="I2B2_DESTINATIONS">
+			<column name="PATIENTDIMENSIONBIRTHDATE" type="VARCHAR(255)"/>
+		</addColumn>
+		<addColumn tableName="I2B2_DESTINATIONS">
+			<column name="PATIENTDIMENSIONZIPCODE" type="VARCHAR(255)"/>
+		</addColumn>
+		<addColumn tableName="I2B2_DESTINATIONS">
+			<column name="PATIENTDIMENSIONMARITALSTATUS" type="VARCHAR(255)"/>
+		</addColumn>
+		<addColumn tableName="I2B2_DESTINATIONS">
+			<column name="PATIENTDIMENSIONRACE" type="VARCHAR(255)"/>
+		</addColumn>
+		<addColumn tableName="I2B2_DESTINATIONS">
+			<column name="ROOTNODENAME" type="VARCHAR(255)"/>
+		</addColumn>
+		<addColumn tableName="I2B2_DESTINATIONS">
+			<column name="VISITDIMENSIONDECIPHEREDID" type="VARCHAR(255)"/>
+		</addColumn>
+		<addColumn tableName="I2B2_DESTINATIONS">
+			<column name="AGECONCEPTCODEPREFIX" type="VARCHAR(255)"/>
+		</addColumn>
+		<addColumn tableName="I2B2_DESTINATIONS">
+			<column name="METATABLENAME" type="VARCHAR(255)"/>
+		</addColumn>
+		<addColumn tableName="I2B2_DESTINATIONS">
+			<column name="METACONNECT" type="VARCHAR(255)"/>
+		</addColumn>
+		<addColumn tableName="I2B2_DESTINATIONS">
+			<column name="METAUSER" type="VARCHAR(255)"/>
+		</addColumn>
+		<addColumn tableName="I2B2_DESTINATIONS">
+			<column name="METAPASSWORD" type="VARCHAR(255)"/>
+		</addColumn>
+		<addColumn tableName="I2B2_DESTINATIONS">
+			<column name="DATACONNECT" type="VARCHAR(255)"/>
+		</addColumn>
+		<addColumn tableName="I2B2_DESTINATIONS">
+			<column name="DATAUSER" type="VARCHAR(255)"/>
+		</addColumn>
+		<addColumn tableName="I2B2_DESTINATIONS">
+			<column name="DATAPASSWORD" type="VARCHAR(255)"/>
+		</addColumn>
+		<createTable tableName="I2B2_DEST_CONCEPTSPECS">
+			<column name="ID" type="BIGINT">
+				<constraints nullable="false" primaryKey="true" primaryKeyName="I2B2_DEST_CONCEPTSPEC_PK"/>
+			</column>
+			<column name="I2B2DESTINATIONS_ID" type="BIGINT">
+				<constraints nullable="false"/>
+			</column>
+			<column name="NAME" type="VARCHAR(255)">
+				<constraints nullable="false"/>
+			</column>
+			<column name="PROPOSITION" type="VARCHAR(255)"/>
+			<column name="PROPERTY" type="VARCHAR(255)"/>
+			<column name="REFERENCE" type="VARCHAR(255)"/>
+			<column name="SKIPGEN" type="TINYINT"/>
+		</createTable>
+		<addForeignKeyConstraint baseColumnNames="I2B2DESTINATIONS_ID" baseTableName="I2B2_DEST_CONCEPTSPECS" constraintName="FK_I2B2_DEST_CONCEPTSPEC" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" referencedColumnNames="ID" referencedTableName="I2B2_DESTINATIONS" referencesUniqueColumn="true"/>
+		<addForeignKeyConstraint baseTableName="I2B2DESTINATIONS_ID" baseColumnNames="START_ID" constraintName="FK_I2B2_DEST_START" referencedTableName="I2B2_DEST_IVAL_SIDES" referencedColumnNames="ID" referencesUniqueColumn="true"/>
+		<addForeignKeyConstraint baseTableName="I2B2DESTINATIONS_ID" baseColumnNames="FINISH_ID" constraintName="FK_I2B2_DEST_FINISH" referencedTableName="I2B2_DEST_IVAL_SIDES" referencedColumnNames="ID" referencesUniqueColumn="true"/>
+		<createSequence sequenceName="I2B2_CS_SEQ"/>
+		
+		<createTable tableName="I2B2_DEST_DATASPECS">
+			<column name="ID" type="BIGINT">
+				<constraints nullable="false" primaryKey="true" primaryKeyName="I2B2_DEST_DATASPEC_PK"/>
+			</column>
+			<column name="I2B2DESTINATIONS_ID" type="BIGINT">
+				<constraints nullable="false"/>
+			</column>
+			<column name="NAME" type="VARCHAR(255)">
+				<constraints nullable="false"/>
+			</column>
+			<column name="PROPERTY" type="VARCHAR(255)"/>
+			<column name="REFERENCE" type="VARCHAR(255)"/>
+			<column name="CONCEPTCODEPREFIX" type="VARCHAR(255)"/>
+			<column name="START_ID" type="BIGINT"/>
+			<column name="FINISH_ID" type="BIGINT"/>
+		</createTable>
+		<addForeignKeyConstraint baseColumnNames="I2B2DESTINATIONS_ID" baseTableName="I2B2_DEST_DATASPECS" constraintName="FK_I2B2_DEST_DATASPEC" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" referencedColumnNames="ID" referencedTableName="I2B2_DESTINATIONS" referencesUniqueColumn="true"/>
+		<addForeignKeyConstraint baseTableName="I2B2_DEST_DATASPECS" baseColumnNames="START_ID" constraintName="FK_I2B2_DEST_DATA_START" referencedTableName="I2B2_DEST_IVAL_SIDES" referencedColumnNames="ID" referencesUniqueColumn="true"/>
+		<addForeignKeyConstraint baseTableName="I2B2_DEST_DATASPECS" baseColumnNames="FINISH_ID" constraintName="FK_I2B2_DEST_DATA_FINISH" referencedTableName="I2B2_DEST_IVAL_SIDES" referencedColumnNames="ID" referencesUniqueColumn="true"/>
+		<createSequence sequenceName="I2B2_DS_SEQ"/>
+		
+		<createTable tableName="I2B2_DEST_MODIFIERSPECS">
+			<column name="ID" type="BIGINT">
+				<constraints nullable="false" primaryKey="true" primaryKeyName="I2B2_DEST_MODIFIERSPEC_PK"/>
+			</column>
+			<column name="I2B2DESTCONCEPTSPECS_ID" type="BIGINT">
+				<constraints nullable="false"/>
+			</column>
+			<column name="NAME" type="VARCHAR(255)">
+				<constraints nullable="false"/>
+			</column>
+			<column name="CODEPREFIX" type="VARCHAR(255)"/>
+			<column name="PROPERTY" type="VARCHAR(255)">
+				<constraints nullable="false"/>
+			</column>
+		</createTable>
+		<addForeignKeyConstraint baseColumnNames="I2B2DESTCONCEPTSPEC_ID" baseTableName="I2B2_DEST_MODIFIERSPECS" constraintName="FK_I2B2_DEST_MODIFIERSPEC" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" referencedColumnNames="ID" referencedTableName="I2B2_DEST_CONCEPTSPECS" referencesUniqueColumn="true"/>
+		<createSequence sequenceName="I2B2_MS_SEQ"/>
+		
+		<addUniqueConstraint tableName="I2B2_DEST_DATASPECS" columnNames="NAME, I2B2DESTINATIONS_ID"/>
+		<addUniqueConstraint tableName="I2B2_DEST_CONCEPTSPECS" columnNames="NAME, I2B2DESTINATIONS_ID"/>
+	</changeSet>
 </databaseChangeLog>

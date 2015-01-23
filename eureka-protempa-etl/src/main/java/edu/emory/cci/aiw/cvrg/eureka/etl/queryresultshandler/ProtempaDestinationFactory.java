@@ -55,7 +55,7 @@ public class ProtempaDestinationFactory {
 		DestinationEntity dest = this.destinationDao.retrieve(destId);
 		if (dest instanceof I2B2DestinationEntity) {
 			I2b2Destination.DataInsertMode insertMode = appendData ? I2b2Destination.DataInsertMode.APPEND : I2b2Destination.DataInsertMode.TRUNCATE;
-			return new I2b2Destination(new EurekaConfiguration((I2B2DestinationEntity) dest, this.etlProperties), insertMode);
+			return new I2b2Destination(new EurekaI2b2Configuration((I2B2DestinationEntity) dest, this.etlProperties), insertMode);
 		} else if (dest instanceof CohortDestinationEntity) {
 			CohortEntity cohortEntity = ((CohortDestinationEntity) dest).getCohort();
 			Cohort cohort = cohortEntity.toCohort();

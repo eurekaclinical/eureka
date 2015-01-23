@@ -10,6 +10,11 @@
     <class>edu.emory.cci.aiw.cvrg.eureka.common.entity.SourceConfigGroupMembership</class>
     <class>edu.emory.cci.aiw.cvrg.eureka.common.entity.DestinationGroupMembership</class>
     <class>edu.emory.cci.aiw.cvrg.eureka.common.entity.I2B2DestinationEntity</class>
+	<class>edu.emory.cci.aiw.cvrg.eureka.common.entity.I2B2DestinationConceptSpecEntity</class>
+	<class>edu.emory.cci.aiw.cvrg.eureka.common.entity.I2B2DestinationModifierSpecEntity</class>
+	<class>edu.emory.cci.aiw.cvrg.eureka.common.entity.I2B2DestinationDataSpecEntity</class>
+	<class>edu.emory.cci.aiw.cvrg.eureka.common.entity.I2B2DestinationIntervalSide</class>
+	<class>edu.emory.cci.aiw.cvrg.eureka.common.entity.I2B2DestinationRemoveMethod</class>
     <properties>
       <!-- Disable the second-level cache -->
       <property name="hibernate.cache.provider_class" value="org.hibernate.cache.NoCacheProvider"/>

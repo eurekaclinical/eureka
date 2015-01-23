@@ -1,0 +1,188 @@
+package edu.emory.cci.aiw.cvrg.eureka.etl.queryresultshandler;
+
+/*
+ * #%L
+ * Eureka Protempa ETL
+ * %%
+ * Copyright (C) 2012 - 2015 Emory University
+ * %%
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * #L%
+ */
+
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.I2B2DestinationEntity;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.I2B2DestinationRemoveMethod;
+import edu.emory.cci.aiw.i2b2etl.RemoveMethod;
+import edu.emory.cci.aiw.i2b2etl.configuration.Settings;
+import java.util.HashSet;
+import java.util.Set;
+
+/**
+ *
+ * @author Andrew Post
+ */
+class I2b2Settings implements Settings {
+	private final I2B2DestinationEntity entity;
+
+	I2b2Settings(I2B2DestinationEntity entity) {
+		this.entity = entity;
+	}
+
+	@Override
+	public String getProviderFullName() {
+		return entity.getProviderFullName();
+	}
+
+	@Override
+	public String getProviderFirstName() {
+		return entity.getProviderFirstName();
+	}
+
+	@Override
+	public String getProviderMiddleName() {
+		return entity.getProviderMiddleName();
+	}
+
+	@Override
+	public String getProviderLastName() {
+		return entity.getProviderLastName();
+	}
+
+	@Override
+	public String getVisitDimension() {
+		return entity.getVisitDimension();
+	}
+
+	@Override
+	public boolean getSkipProviderHierarchy() {
+		Boolean skipProviderHierarchy1 = entity.getSkipProviderHierarchy();
+		if (skipProviderHierarchy1 != null) {
+			return skipProviderHierarchy1;
+		} else {
+			return false;
+		}
+	}
+
+	@Override
+	public boolean getSkipDemographicsHierarchy() {
+		Boolean skipDemographicsHierarchy1 = entity.getSkipDemographicsHierarchy();
+		if (skipDemographicsHierarchy1 != null) {
+			return skipDemographicsHierarchy1;
+		} else {
+			return false;
+		}
+	}
+
+	@Override
+	public RemoveMethod getDataRemoveMethod() {
+		I2B2DestinationRemoveMethod dataRemoveMethod1 = entity.getDataRemoveMethod();
+		if (dataRemoveMethod1 != null) {
+			return RemoveMethod.valueOf(dataRemoveMethod1.getName());
+		} else {
+			return null;
+		}
+	}
+
+	@Override
+	public RemoveMethod getMetaRemoveMethod() {
+		I2B2DestinationRemoveMethod metaRemoveMethod1 = entity.getMetaRemoveMethod();
+		if (metaRemoveMethod1 != null) {
+			return RemoveMethod.valueOf(metaRemoveMethod1.getName());
+		} else {
+			return null;
+		}
+	}
+
+	@Override
+	public String getSourceSystemCode() {
+		return entity.getSourceSystemCode();
+	}
+
+	@Override
+	public String getPatientDimensionMRN() {
+		return entity.getPatientDimensionMRN();
+	}
+
+	@Override
+	public String getPatientDimensionZipCode() {
+		return entity.getPatientDimensionZipCode();
+	}
+
+	@Override
+	public String getPatientDimensionMaritalStatus() {
+		return entity.getPatientDimensionMaritalStatus();
+	}
+
+	@Override
+	public String getPatientDimensionRace() {
+		return entity.getPatientDimensionRace();
+	}
+
+	@Override
+	public String getPatientDimensionBirthdate() {
+		return entity.getPatientDimensionBirthdate();
+	}
+
+	@Override
+	public String getPatientDimensionGender() {
+		return entity.getPatientDimensionGender();
+	}
+
+	@Override
+	public String getPatientDimensionLanguage() {
+		return entity.getPatientDimensionLanguage();
+	}
+
+	@Override
+	public String getPatientDimensionReligion() {
+		return entity.getPatientDimensionReligion();
+	}
+
+	@Override
+	public String getPatientDimensionVital() {
+		return entity.getPatientDimensionVital();
+	}
+
+	@Override
+	public String getRootNodeName() {
+		return entity.getRootNodeName();
+	}
+
+	@Override
+	public String getVisitDimensionDecipheredId() {
+		return entity.getVisitDimensionDecipheredId();
+	}
+
+	@Override
+	public String getAgeConceptCodePrefix() {
+		return entity.getAgeConceptCodePrefix();
+	}
+
+	@Override
+	public String getMetaTableName() {
+		return entity.getMetaTableName();
+	}
+
+	@Override
+	public Set<String> getPatientDimensionDataTypes() {
+		Set<String> result = new HashSet<>();
+		result.add(getPatientDimensionMRN());
+		result.add(getPatientDimensionGender());
+		result.add(getPatientDimensionRace());
+		result.add(getPatientDimensionMaritalStatus());
+		result.add(getPatientDimensionLanguage());
+		result.add(getPatientDimensionReligion());
+		result.add(getPatientDimensionBirthdate());
+		return result;
+	}
+}

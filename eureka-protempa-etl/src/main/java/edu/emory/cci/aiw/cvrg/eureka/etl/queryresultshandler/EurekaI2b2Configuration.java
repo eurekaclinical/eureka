@@ -35,13 +35,16 @@ import java.io.File;
  *
  * @author Andrew Post
  */
-class EurekaConfiguration implements Configuration {
-	private boolean useOld;
+class EurekaI2b2Configuration implements Configuration {
 	private XmlFileConfiguration oldConfiguration;
 	private final I2B2DestinationEntity i2B2DestinationEntity;
 	private final EtlProperties etlProperties;
+	private I2b2Settings i2b2Settings;
+	private I2b2Database i2b2Database;
+	private I2b2Data i2b2Data;
+	private I2b2Concepts i2b2Concepts;
 
-	EurekaConfiguration(I2B2DestinationEntity inI2B2DestinationEntity, EtlProperties inEtlProperties) {
+	EurekaI2b2Configuration(I2B2DestinationEntity inI2B2DestinationEntity, EtlProperties inEtlProperties) {
 		this.i2B2DestinationEntity = inI2B2DestinationEntity;
 		this.etlProperties = inEtlProperties;
 	}
@@ -49,53 +52,63 @@ class EurekaConfiguration implements Configuration {
 	@Override
 	public void init() throws ConfigurationReadException {
 		File destinationConfigFile = this.etlProperties.destinationConfigFile(this.i2B2DestinationEntity.getName());
-		this.oldConfiguration = new XmlFileConfiguration(destinationConfigFile);
-		this.oldConfiguration.init();
-		this.useOld = true;
+		if (this.i2B2DestinationEntity.getDataConnect() == null && this.i2B2DestinationEntity.getMetaConnect() == null) {
+			this.oldConfiguration = new XmlFileConfiguration(destinationConfigFile);
+			this.oldConfiguration.init();
+		} else {
+			this.i2b2Settings = new I2b2Settings(this.i2B2DestinationEntity);
+			this.i2b2Database = new I2b2Database(this.i2B2DestinationEntity);
+		}
 	}
 
 	@Override
 	public Concepts getConcepts() {
-		if (this.useOld) {
+		if (this.oldConfiguration != null) {
 			return this.oldConfiguration.getConcepts();
 		} else {
-			throw new UnsupportedOperationException("Not supported yet.");
+			if (this.i2b2Concepts == null) {
+				this.i2b2Concepts = new I2b2Concepts(this.i2B2DestinationEntity.getConceptSpecs());
+			}
+			return this.i2b2Concepts;
 		}
 	}
 
 	@Override
 	public Data getData() {
-		if (this.useOld) {
+		if (this.oldConfiguration != null) {
 			return this.oldConfiguration.getData();
 		} else {
-			throw new UnsupportedOperationException("Not supported yet.");
+			if (this.i2b2Data == null) {
+				this.i2b2Data = new I2b2Data(this.i2B2DestinationEntity.getDataSpecs());
+			}
+			return this.i2b2Data;
 		}
 	}
 
 	@Override
 	public Database getDatabase() {
-		if (this.useOld) {
+		if (this.oldConfiguration != null) {
 			return this.oldConfiguration.getDatabase();
 		} else {
-			throw new UnsupportedOperationException("Not supported yet.");
+			return this.i2b2Database;
 		}
 	}
 
 	@Override
 	public Settings getSettings() {
-		if (this.useOld) {
+		if (this.oldConfiguration != null) {
 			return this.oldConfiguration.getSettings();
 		} else {
-			throw new UnsupportedOperationException("Not supported yet.");
+			return this.i2b2Settings;
 		}
 	}
 
 	@Override
 	public String getName() {
-		if (this.useOld) {
+		if (this.oldConfiguration != null) {
 			return this.oldConfiguration.getName();
 		} else {
-			throw new UnsupportedOperationException("Not supported yet.");
+			return this.i2B2DestinationEntity.getName();
 		}
 	}
 	
