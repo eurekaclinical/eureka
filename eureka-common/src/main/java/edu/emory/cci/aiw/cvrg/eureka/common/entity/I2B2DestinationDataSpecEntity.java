@@ -54,6 +54,8 @@ public class I2B2DestinationDataSpecEntity {
 	
 	private String conceptCodePrefix;
 	
+	private String units;
+	
 	@ManyToOne
 	@JoinColumn(name="i2b2destinations_id")
 	private I2B2DestinationEntity destination;
@@ -129,6 +131,13 @@ public class I2B2DestinationDataSpecEntity {
 	public void setDestination(I2B2DestinationEntity destination) {
 		this.destination = destination;
 	}
-	
+
+	public String getUnits() {
+		return units;
+	}
+
+	public void setUnits(String units) {
+		this.units = units;
+	}
 	
 }

@@ -362,27 +362,27 @@ limitations under the License.
 				<constraints nullable="false" primaryKey="true" primaryKeyName="I2B2_DEST_IVAL_SIDE_PK"/>
 			</column>
 			<column name="NAME" type="VARCHAR(255)">
-				<constraints nullable="false"/>
+				<constraints nullable="false" unique="true"/>
 			</column>
 			<column name="DESCRIPTION" type="VARCHAR(255)"/>
 			<column name="ISDEFAULT" type="BOOLEAN">
 				<constraints nullable="false"/>
 			</column>
 			<column name="RANK" type="INT">
-				<constraints nullable="false"/>
+				<constraints nullable="false" unique="true"/>
 			</column>
 		</createTable>
 		<insert tableName="I2B2_DEST_IVAL_SIDES">
 			<column name="ID" valueNumeric="1"/>
 			<column name="NAME" value="START"/>
-			<column name="DESCRIPTION" value="The start or left-hand-side of the interval."/>
+			<column name="DESCRIPTION" value="The start or left-hand-side of the interval"/>
 			<column name="ISDEFAULT" valueBoolean="true"/>
 			<column name="RANK" valueNumeric="1"/>
 		</insert>
 		<insert tableName="I2B2_DEST_IVAL_SIDES">
 			<column name="ID" valueNumeric="2"/>
 			<column name="NAME" value="FINISH"/>
-			<column name="DESCRIPTION" value="The finish or right-hand-side of the interval."/>
+			<column name="DESCRIPTION" value="The finish or right-hand-side of the interval"/>
 			<column name="ISDEFAULT" valueBoolean="false"/>
 			<column name="RANK" valueNumeric="2"/>
 		</insert>
@@ -393,31 +393,69 @@ limitations under the License.
 				<constraints nullable="false" primaryKey="true" primaryKeyName="I2B2_DEST_REMOVE_METHOD_PK"/>
 			</column>
 			<column name="NAME" type="VARCHAR(255)">
-				<constraints nullable="false"/>
+				<constraints nullable="false" unique="true"/>
 			</column>
 			<column name="DESCRIPTION" type="VARCHAR(255)"/>
 			<column name="ISDEFAULT" type="BOOLEAN">
 				<constraints nullable="false"/>
 			</column>
 			<column name="RANK" type="INT">
-				<constraints nullable="false"/>
+				<constraints nullable="false" unique="true"/>
 			</column>
 		</createTable>
 		<insert tableName="I2B2_DEST_REMOVE_METHODS">
 			<column name="ID" valueNumeric="1"/>
 			<column name="NAME" value="TRUNCATE"/>
-			<column name="DESCRIPTION" value="Truncate tables."/>
+			<column name="DESCRIPTION" value="Truncate tables"/>
 			<column name="ISDEFAULT" valueBoolean="true"/>
 			<column name="RANK" valueNumeric="1"/>
 		</insert>
 		<insert tableName="I2B2_DEST_REMOVE_METHODS">
 			<column name="ID" valueNumeric="2"/>
 			<column name="NAME" value="DELETE"/>
-			<column name="DESCRIPTION" value="Delete records from the same data source."/>
+			<column name="DESCRIPTION" value="Delete records from the same data source"/>
 			<column name="ISDEFAULT" valueBoolean="false"/>
 			<column name="RANK" valueNumeric="2"/>
 		</insert>
 		<createSequence sequenceName="I2B2_DR_SEQ" startValue="3"/>
+		
+		<createTable tableName="I2B2_DEST_VALUE_TYPE_CDS">
+			<column name="ID" type="BIGINT">
+				<constraints nullable="false" primaryKey="true" primaryKeyName="I2B2_DEST_VALUE_TYPE_CD_PK"/>
+			</column>
+			<column name="NAME" type="VARCHAR(255)">
+				<constraints nullable="false" unique="true"/>
+			</column>
+			<column name="DESCRIPTION" type="VARCHAR(255)"/>
+			<column name="ISDEFAULT" type="BOOLEAN">
+				<constraints nullable="false"/>
+			</column>
+			<column name="RANK" type="INT">
+				<constraints nullable="false" unique="true"/>
+			</column>
+		</createTable>
+		<insert tableName="I2B2_DEST_VALUE_TYPE_CDS">
+			<column name="ID" valueNumeric="1"/>
+			<column name="NAME" value="LABORATORY_TESTS"/>
+			<column name="DESCRIPTION" value="Numerically valued data"/>
+			<column name="ISDEFAULT" valueBoolean="false"/>
+			<column name="RANK" valueNumeric="1"/>
+		</insert>
+		<insert tableName="I2B2_DEST_VALUE_TYPE_CDS">
+			<column name="ID" valueNumeric="2"/>
+			<column name="NAME" value="DOCUMENTS"/>
+			<column name="DESCRIPTION" value="Documents"/>
+			<column name="ISDEFAULT" valueBoolean="false"/>
+			<column name="RANK" valueNumeric="2"/>
+		</insert>
+		<insert tableName="I2B2_DEST_VALUE_TYPE_CDS">
+			<column name="ID" valueNumeric="3"/>
+			<column name="NAME" value="UNSPECIFIED"/>
+			<column name="DESCRIPTION" value="Unspecified"/>
+			<column name="ISDEFAULT" valueBoolean="true"/>
+			<column name="RANK" valueNumeric="3"/>
+		</insert>
+		<createSequence sequenceName="I2B2_VTC_SEQ" startValue="4"/>
 		
 		<addColumn tableName="I2B2_DESTINATIONS">
 			<column name="PROVIDERFULLNAME" type="VARCHAR(255)"/>
@@ -522,10 +560,12 @@ limitations under the License.
 			<column name="PROPERTY" type="VARCHAR(255)"/>
 			<column name="REFERENCE" type="VARCHAR(255)"/>
 			<column name="SKIPGEN" type="TINYINT"/>
+			<column name="I2B2DESTVALUETYPECDS_ID" type="BIGINT">
+				<constraints nullable="false"/>
+			</column>
 		</createTable>
 		<addForeignKeyConstraint baseColumnNames="I2B2DESTINATIONS_ID" baseTableName="I2B2_DEST_CONCEPTSPECS" constraintName="FK_I2B2_DEST_CONCEPTSPEC" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" referencedColumnNames="ID" referencedTableName="I2B2_DESTINATIONS" referencesUniqueColumn="true"/>
-		<addForeignKeyConstraint baseTableName="I2B2DESTINATIONS_ID" baseColumnNames="START_ID" constraintName="FK_I2B2_DEST_START" referencedTableName="I2B2_DEST_IVAL_SIDES" referencedColumnNames="ID" referencesUniqueColumn="true"/>
-		<addForeignKeyConstraint baseTableName="I2B2DESTINATIONS_ID" baseColumnNames="FINISH_ID" constraintName="FK_I2B2_DEST_FINISH" referencedTableName="I2B2_DEST_IVAL_SIDES" referencedColumnNames="ID" referencesUniqueColumn="true"/>
+		<addForeignKeyConstraint baseTableName="I2B2_DEST_CONCEPTSPECS" baseColumnNames="VALUETYPECDS_ID" constraintName="FK_I2B2_CONCEPTS_VTC" referencedTableName="I2B2_DEST_VALUE_TYPE_CDS" referencedColumnNames="ID" referencesUniqueColumn="true"/>
 		<createSequence sequenceName="I2B2_CS_SEQ"/>
 		
 		<createTable tableName="I2B2_DEST_DATASPECS">
@@ -543,6 +583,7 @@ limitations under the License.
 			<column name="CONCEPTCODEPREFIX" type="VARCHAR(255)"/>
 			<column name="START_ID" type="BIGINT"/>
 			<column name="FINISH_ID" type="BIGINT"/>
+			<column name="UNITS" type="VARCHAR(255)"/>
 		</createTable>
 		<addForeignKeyConstraint baseColumnNames="I2B2DESTINATIONS_ID" baseTableName="I2B2_DEST_DATASPECS" constraintName="FK_I2B2_DEST_DATASPEC" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" referencedColumnNames="ID" referencedTableName="I2B2_DESTINATIONS" referencesUniqueColumn="true"/>
 		<addForeignKeyConstraint baseTableName="I2B2_DEST_DATASPECS" baseColumnNames="START_ID" constraintName="FK_I2B2_DEST_DATA_START" referencedTableName="I2B2_DEST_IVAL_SIDES" referencedColumnNames="ID" referencesUniqueColumn="true"/>

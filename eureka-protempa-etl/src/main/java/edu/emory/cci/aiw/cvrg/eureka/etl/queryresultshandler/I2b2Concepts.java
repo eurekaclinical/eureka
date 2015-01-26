@@ -51,7 +51,7 @@ class I2b2Concepts implements Concepts {
 					new String[]{conceptSpec.getProposition()}, 
 					conceptSpec.getProperty(), 
 					null, 
-					ValueTypeCode.UNSPECIFIED, 
+					ValueTypeCode.valueOf(conceptSpec.getValueTypeCode().getName()), 
 					false,
 					ms);
 		}

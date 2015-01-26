@@ -15,6 +15,7 @@
 	<class>edu.emory.cci.aiw.cvrg.eureka.common.entity.I2B2DestinationDataSpecEntity</class>
 	<class>edu.emory.cci.aiw.cvrg.eureka.common.entity.I2B2DestinationIntervalSide</class>
 	<class>edu.emory.cci.aiw.cvrg.eureka.common.entity.I2B2DestinationRemoveMethod</class>
+	<class>edu.emory.cci.aiw.cvrg.eureka.common.entity.I2B2DestinationValueTypeCode</class>
     <properties>
       <!-- Disable the second-level cache -->
       <property name="hibernate.cache.provider_class" value="org.hibernate.cache.NoCacheProvider"/>

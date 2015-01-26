@@ -60,6 +60,10 @@ public class I2B2DestinationConceptSpecEntity {
 	private int skipGen;
 	
 	@ManyToOne
+	@JoinColumn(name="i2b2destvaluetypecds_id")
+	private I2B2DestinationValueTypeCode valueTypeCode;
+	
+	@ManyToOne
 	@JoinColumn(name="i2b2destinations_id")
 	private I2B2DestinationEntity destination;
 	
@@ -129,6 +133,13 @@ public class I2B2DestinationConceptSpecEntity {
 	public void setDestination(I2B2DestinationEntity destination) {
 		this.destination = destination;
 	}
-	
+
+	public I2B2DestinationValueTypeCode getValueTypeCode() {
+		return valueTypeCode;
+	}
+
+	public void setValueTypeCode(I2B2DestinationValueTypeCode valueTypeCode) {
+		this.valueTypeCode = valueTypeCode;
+	}
 	
 }
