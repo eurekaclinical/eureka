@@ -46,7 +46,6 @@ class I2b2Concepts implements Concepts {
 				ms[j] = new ModifierSpec(mse.getName(), mse.getCodePrefix(), mse.getProperty());
 			}
 			this.folderSpecs[i] = new FolderSpec(
-					0, 
 					null, 
 					new String[]{conceptSpec.getProposition()}, 
 					conceptSpec.getProperty(), 
