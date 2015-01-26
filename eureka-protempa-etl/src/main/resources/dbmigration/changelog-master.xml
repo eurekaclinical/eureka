@@ -553,13 +553,9 @@ limitations under the License.
 			<column name="I2B2DESTINATIONS_ID" type="BIGINT">
 				<constraints nullable="false"/>
 			</column>
-			<column name="NAME" type="VARCHAR(255)">
-				<constraints nullable="false"/>
-			</column>
 			<column name="PROPOSITION" type="VARCHAR(255)"/>
 			<column name="PROPERTY" type="VARCHAR(255)"/>
 			<column name="REFERENCE" type="VARCHAR(255)"/>
-			<column name="SKIPGEN" type="TINYINT"/>
 			<column name="I2B2DESTVALUETYPECDS_ID" type="BIGINT">
 				<constraints nullable="false"/>
 			</column>
@@ -609,6 +605,6 @@ limitations under the License.
 		<createSequence sequenceName="I2B2_MS_SEQ"/>
 		
 		<addUniqueConstraint tableName="I2B2_DEST_DATASPECS" columnNames="NAME, I2B2DESTINATIONS_ID"/>
-		<addUniqueConstraint tableName="I2B2_DEST_CONCEPTSPECS" columnNames="NAME, I2B2DESTINATIONS_ID"/>
+		<addUniqueConstraint tableName="I2B2_DEST_CONCEPTSPECS" columnNames="PROPOSITION, PROPERTY, REFERENCE, I2B2DESTINATIONS_ID"/>
 	</changeSet>
 </databaseChangeLog>

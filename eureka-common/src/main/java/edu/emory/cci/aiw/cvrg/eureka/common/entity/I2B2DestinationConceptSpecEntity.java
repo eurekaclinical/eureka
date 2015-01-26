@@ -22,7 +22,6 @@ package edu.emory.cci.aiw.cvrg.eureka.common.entity;
 
 import java.util.List;
 import javax.persistence.CascadeType;
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -39,7 +38,7 @@ import javax.persistence.UniqueConstraint;
  * @author Andrew Post
  */
 @Entity
-@Table(name = "i2b2_dest_conceptspecs", uniqueConstraints = {@UniqueConstraint(columnNames = {"name", "i2b2destinations_id"})})
+@Table(name = "i2b2_dest_conceptspecs", uniqueConstraints = {@UniqueConstraint(columnNames = {"proposition", "reference", "property", "i2b2destinations_id"})})
 public class I2B2DestinationConceptSpecEntity {
 	@Id
 	@SequenceGenerator(name = "I2B2_CS_SEQ_GENERATOR",
@@ -48,16 +47,11 @@ public class I2B2DestinationConceptSpecEntity {
 		generator = "I2B2_CS_SEQ_GENERATOR")
 	private Long id;
 	
-	@Column(nullable = false)
-	private String name;
-	
 	private String proposition;
 	
 	private String reference;
 	
 	private String property;
-	
-	private int skipGen;
 	
 	@ManyToOne
 	@JoinColumn(name="i2b2destvaluetypecds_id")
@@ -76,14 +70,6 @@ public class I2B2DestinationConceptSpecEntity {
 
 	public void setId(Long id) {
 		this.id = id;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
 	}
 
 	public String getReference() {
@@ -108,14 +94,6 @@ public class I2B2DestinationConceptSpecEntity {
 
 	public void setProperty(String property) {
 		this.property = property;
-	}
-
-	public int getSkipGen() {
-		return skipGen;
-	}
-
-	public void setSkipGen(int skipGen) {
-		this.skipGen = skipGen;
 	}
 
 	public List<I2B2DestinationModifierSpecEntity> getModifierSpecs() {

@@ -50,7 +50,7 @@ class I2b2Data implements Data {
 							dataSpec.getConceptCodePrefix(), 
 							start != null ? start.getName() : null, 
 							finish != null ? finish.getName() : null, 
-							null));
+							dataSpec.getUnits()));
 		}
 	}
 
