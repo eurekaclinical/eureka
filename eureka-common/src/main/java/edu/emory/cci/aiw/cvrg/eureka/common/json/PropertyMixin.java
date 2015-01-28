@@ -20,13 +20,18 @@
 package edu.emory.cci.aiw.cvrg.eureka.common.json;
 
 import org.codehaus.jackson.annotate.JsonCreator;
+import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.annotate.JsonProperty;
 import org.protempa.proposition.value.ValueType;
 
 public abstract class PropertyMixin {
     @JsonCreator
-    public PropertyMixin(@JsonProperty("name") String name,
+    public PropertyMixin(@JsonProperty("propId") String propId, 
+			@JsonProperty("name") String name,
             @JsonProperty("valueType") ValueType valueType,
-            @JsonProperty("valueSetId") String valueSetId) {
+            @JsonProperty("valueSetId") String valueSetId,
+			@JsonProperty("declaringPropId") String declaringPropId) {
     }
+	
+	@JsonIgnore public abstract boolean isInherited();
 }
