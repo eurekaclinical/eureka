@@ -178,10 +178,10 @@ public class JobResource {
 	private Response throwHttpStatusExceptionIfInvalid(JobRequest jobRequest) {
 		JobSpec jobSpec = jobRequest.getJobSpec();
 		List<PropositionDefinition> definitions = jobRequest.getUserPropositions();
-		if (LOGGER.isDebugEnabled()) {
-			LOGGER.debug("Validating {} proposition definitions", definitions.size());
+		if (LOGGER.isTraceEnabled()) {
+			LOGGER.trace("Validating {} proposition definitions", definitions.size());
 			for (PropositionDefinition pd : definitions) {
-				LOGGER.debug("PropDef: {}", pd);
+				LOGGER.trace("PropDef: {}", pd);
 			}
 		}
 		propositionValidator.setConfigId(jobSpec.getSourceConfigId());

@@ -107,7 +107,7 @@ public class ETL {
 			q.setPropositionIds(inPropIdsToShow);
 			q.setId(job.getId().toString());
 			q.setFilters(filter);
-			LOGGER.debug("Constructed Protempa query " + q);
+			LOGGER.trace("Constructed Protempa query {}", q);
 			Query query = protempa.buildQuery(q);
 			EtlDestination eurekaDestination = 
 					new Destinations(this.etlProperties, job.getEtlUser(), this.destinationDao, this.groupDao).getOne(job.getDestination().getName());
