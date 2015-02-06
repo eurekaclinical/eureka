@@ -127,10 +127,10 @@ public class JobResource {
 				PropositionDefinitionCollector.getInstance(
 				this.converterVisitor, this.propositionDao
 				.getByUserId(user.getId()));
-		LOGGER.debug("Sending {} proposition definitions:", collector.getUserPropDefs().size());
-		if (LOGGER.isDebugEnabled()) {
+		if (LOGGER.isTraceEnabled()) {
+			LOGGER.trace("Sending {} proposition definitions:", collector.getUserPropDefs().size());
 			for (PropositionDefinition pd : collector.getUserPropDefs()) {
-				LOGGER.debug("PropDef: {}", pd);
+				LOGGER.trace("PropDef: {}", pd);
 			}
 		}
 		jobRequest.setJobSpec(jobSpec);
