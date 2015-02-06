@@ -32,7 +32,7 @@ import edu.emory.cci.aiw.cvrg.eureka.common.test.AbstractTest;
 import edu.emory.cci.aiw.cvrg.eureka.common.test.TestDataProvider;
 import edu.emory.cci.aiw.cvrg.eureka.etl.config.AppTestModule;
 import edu.emory.cci.aiw.cvrg.eureka.etl.test.Setup;
-import edu.stanford.smi.protege.util.Assert;
+import org.junit.Assert;
 
 import static org.junit.Assert.assertTrue;
 
