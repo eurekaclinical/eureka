@@ -63,38 +63,48 @@ public class SourceConfigsDTOExtractor extends ConfigsDTOExtractor<SourceConfig,
 	
 	private final EtlGroupDao groupDao;
 	private final EtlProperties etlProperties;
+	private final EurekaProtempaConfigurations configs;
+	private static final BackendSpecLoader<DataSourceBackend> dataSourceBackendSpecLoader;
+	private static final BackendSpecLoader<KnowledgeSourceBackend> knowledgeSourceBackendSpecLoader;
+	private static final BackendSpecLoader<AlgorithmSourceBackend> algorithmSourceBackendSpecLoader;
+	private static final BackendSpecLoader<TermSourceBackend> termSourceBackendSpecLoader;
+	
+	static {
+		BackendProvider backendProvider =
+					BackendProviderManager.getBackendProvider();
+		try {
+			dataSourceBackendSpecLoader =
+					backendProvider.getDataSourceBackendSpecLoader();
+			knowledgeSourceBackendSpecLoader =
+					backendProvider.getKnowledgeSourceBackendSpecLoader();
+			algorithmSourceBackendSpecLoader =
+					backendProvider.getAlgorithmSourceBackendSpecLoader();
+			termSourceBackendSpecLoader =
+					backendProvider.getTermSourceBackendSpecLoader();
+		} catch (BackendProviderSpecLoaderException ex) {
+			throw new AssertionError("Problem loading backend implementions classes", ex);
+		}
+	}
 
 	public SourceConfigsDTOExtractor(EtlUserEntity user, EtlGroupDao inGroupDao, EtlProperties inEtlProperties) {
 		super(user);
 		this.groupDao = inGroupDao;
 		this.etlProperties = inEtlProperties;
+		this.configs = new EurekaProtempaConfigurations(this.etlProperties);
 	}
 	
 	@Override
 	SourceConfig extractDTO(Perm perm, SourceConfigEntity configEntity) {
 		String configId = configEntity.getName();
-		
 		try {
 			SourceConfig config = new SourceConfig();
-			EurekaProtempaConfigurations configs =
-					new EurekaProtempaConfigurations(this.etlProperties);
-			BackendProvider backendProvider =
-					BackendProviderManager.getBackendProvider();
-			BackendSpecLoader<DataSourceBackend> dataSourceBackendSpecLoader =
-					backendProvider.getDataSourceBackendSpecLoader();
-			BackendSpecLoader<KnowledgeSourceBackend> knowledgeSourceBackendSpecLoader =
-					backendProvider.getKnowledgeSourceBackendSpecLoader();
-			BackendSpecLoader<AlgorithmSourceBackend> algorithmSourceBackendSpecLoader =
-					backendProvider.getAlgorithmSourceBackendSpecLoader();
-			BackendSpecLoader<TermSourceBackend> termSourceBackendSpecLoader =
-					backendProvider.getTermSourceBackendSpecLoader();
 
 			List<String> badConfigIds = new ArrayList<>();
 			for (String id : configs.loadConfigurationIds(configId)) {
-				if (!dataSourceBackendSpecLoader.hasSpec(id)
-						&& !knowledgeSourceBackendSpecLoader.hasSpec(id)
-						&& !algorithmSourceBackendSpecLoader.hasSpec(id)
-						&& !termSourceBackendSpecLoader.hasSpec(id)) {
+				if (!(dataSourceBackendSpecLoader != null && dataSourceBackendSpecLoader.hasSpec(id))
+						&& !(knowledgeSourceBackendSpecLoader != null && knowledgeSourceBackendSpecLoader.hasSpec(id))
+						&& !(algorithmSourceBackendSpecLoader != null && algorithmSourceBackendSpecLoader.hasSpec(id))
+						&& !(termSourceBackendSpecLoader != null && termSourceBackendSpecLoader.hasSpec(id))) {
 					badConfigIds.add(id);
 				}
 			}
@@ -139,7 +149,7 @@ public class SourceConfigsDTOExtractor extends ConfigsDTOExtractor<SourceConfig,
 					termSourceBackendSections.toArray(
 					new SourceConfig.Section[termSourceBackendSections.size()]));
 			return config;
-		} catch (ConfigurationsNotFoundException | ConfigurationsLoadException | BackendProviderSpecLoaderException | InvalidPropertyNameException ex) {
+		} catch (ConfigurationsNotFoundException | ConfigurationsLoadException | InvalidPropertyNameException ex) {
 			LOGGER.warn("Error getting INI file for source config {}. This source config will be ignored.", configEntity.getName(), ex);
 			return null;
 		}
@@ -156,24 +166,26 @@ public class SourceConfigsDTOExtractor extends ConfigsDTOExtractor<SourceConfig,
 			throws ConfigurationsNotFoundException,
 			ConfigurationsLoadException, InvalidPropertyNameException {
 		List<SourceConfig.Section> backendSections = new ArrayList<>();
-		for (BackendSpec<B> bs : backendSpecLoader) {
-			List<BackendInstanceSpec<B>> load = configs.load(sourceId, bs);
-			for (BackendInstanceSpec<B> bis : load) {
-				SourceConfig.Section section = new SourceConfig.Section();
-				section.setId(bs.getId());
-				section.setDisplayName(bs.getDisplayName());
-				List<BackendPropertySpec> backendPropertySpecs = bis.getBackendPropertySpecs();
-				SourceConfig.Option[] options = new SourceConfig.Option[backendPropertySpecs.size()];
-				for (int i = 0; i < options.length; i++) {
-					BackendPropertySpec property = backendPropertySpecs.get(i);
-					Object value = bis.getProperty(property.getName());
-					SourceConfig.Option option = new SourceConfig.Option();
-					option.setKey(property.getName());
-					option.setValue(value);
-					options[i] = option;
+		if (backendSpecLoader != null) {
+			for (BackendSpec<B> bs : backendSpecLoader) {
+				List<BackendInstanceSpec<B>> load = configs.load(sourceId, bs);
+				for (BackendInstanceSpec<B> bis : load) {
+					SourceConfig.Section section = new SourceConfig.Section();
+					section.setId(bs.getId());
+					section.setDisplayName(bs.getDisplayName());
+					List<BackendPropertySpec> backendPropertySpecs = bis.getBackendPropertySpecs();
+					SourceConfig.Option[] options = new SourceConfig.Option[backendPropertySpecs.size()];
+					for (int i = 0; i < options.length; i++) {
+						BackendPropertySpec property = backendPropertySpecs.get(i);
+						Object value = bis.getProperty(property.getName());
+						SourceConfig.Option option = new SourceConfig.Option();
+						option.setKey(property.getName());
+						option.setValue(value);
+						options[i] = option;
+					}
+					section.setOptions(options);
+					backendSections.add(section);
 				}
-				section.setOptions(options);
-				backendSections.add(section);
 			}
 		}
 		return backendSections;

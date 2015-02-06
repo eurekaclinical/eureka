@@ -31,7 +31,6 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import edu.emory.cci.aiw.cvrg.eureka.etl.ksb.PropositionSearcherException;
 import org.protempa.PropositionDefinition;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,10 +39,8 @@ import com.google.inject.Inject;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.ValidationRequest;
 import edu.emory.cci.aiw.cvrg.eureka.common.exception.HttpStatusException;
-import edu.emory.cci.aiw.cvrg.eureka.common.filter.SearchFilter;
 import edu.emory.cci.aiw.cvrg.eureka.etl.config.EtlProperties;
 import edu.emory.cci.aiw.cvrg.eureka.etl.ksb.PropositionDefinitionFinder;
-import edu.emory.cci.aiw.cvrg.eureka.etl.ksb.PropositionDefinitionSearcher;
 import edu.emory.cci.aiw.cvrg.eureka.etl.ksb.PropositionFinderException;
 import edu.emory.cci.aiw.cvrg.eureka.etl.validator.PropositionValidator;
 import edu.emory.cci.aiw.cvrg.eureka.etl.validator.PropositionValidatorException;
@@ -106,31 +103,30 @@ public class PropositionResource {
 	public PropositionDefinition getProposition(
 			@PathParam("configId") String inConfigId,
 			@PathParam("key") String inKey) {
-		try {
-			if (this.etlProperties.getConfigDir() != null) {
-				PropositionDefinitionFinder propositionFinder
-						= new PropositionDefinitionFinder(
-						inConfigId, this.etlProperties);
-				PropositionDefinition definition = propositionFinder
-						.find(inKey);
-				if (definition != null) {
-					return definition;
-				} else {
-					throw new HttpStatusException(
-							Response.Status.NOT_FOUND,
-							"No proposition with id " + inKey);
-				}
-			} else {
-				throw new HttpStatusException(
-						Response.Status.INTERNAL_SERVER_ERROR,
-						"No Protempa configuration directory is "
-								+ "specified in application.properties. "
-								+ "Proposition finding will not work without it. "
-								+ "Please create it and try again.");
-			}
-		} catch (PropositionFinderException e) {
+		if (this.etlProperties.getConfigDir() != null) {
+			try (PropositionDefinitionFinder propositionFinder
+					= new PropositionDefinitionFinder(
+							inConfigId, this.etlProperties)) {
+						PropositionDefinition definition = propositionFinder
+								.find(inKey);
+						if (definition != null) {
+							return definition;
+						} else {
+							throw new HttpStatusException(
+									Response.Status.NOT_FOUND,
+									"No proposition with id " + inKey);
+						}
+					} catch (PropositionFinderException e) {
+						throw new HttpStatusException(
+								Response.Status.INTERNAL_SERVER_ERROR, e);
+					}
+		} else {
 			throw new HttpStatusException(
-					Response.Status.INTERNAL_SERVER_ERROR, e);
+					Response.Status.INTERNAL_SERVER_ERROR,
+					"No Protempa configuration directory is "
+					+ "specified in application.properties. "
+					+ "Proposition finding will not work without it. "
+					+ "Please create it and try again.");
 		}
 	}
 
@@ -155,12 +151,11 @@ public class PropositionResource {
 	}
 
 	private List<PropositionDefinition> getPropositionsCommon(String inConfigId, List<String> inKeys, String withChildren) throws HttpStatusException {
-		try {
 			if (this.etlProperties.getConfigDir() != null) {
-				List<PropositionDefinition> result = new ArrayList<>();
-				PropositionDefinitionFinder propositionFinder
-						= new PropositionDefinitionFinder(inConfigId,
-						this.etlProperties);
+			List<PropositionDefinition> result = new ArrayList<>();
+			try (PropositionDefinitionFinder propositionFinder
+					= new PropositionDefinitionFinder(inConfigId,
+							this.etlProperties)) {
 				for (String key : inKeys) {
 					PropositionDefinition definition = propositionFinder
 							.find(key);
@@ -182,17 +177,17 @@ public class PropositionResource {
 					}
 				}
 				return result;
-			} else {
+			} catch (PropositionFinderException e) {
 				throw new HttpStatusException(
-						Response.Status.INTERNAL_SERVER_ERROR,
-						"No Protempa configuration directory is "
-								+ "specified in application.properties. "
-								+ "Proposition finding will not work without it. "
-								+ "Please create it and try again.");
+						Response.Status.INTERNAL_SERVER_ERROR, e);
 			}
-		} catch (PropositionFinderException e) {
+		} else {
 			throw new HttpStatusException(
-					Response.Status.INTERNAL_SERVER_ERROR, e);
+					Response.Status.INTERNAL_SERVER_ERROR,
+					"No Protempa configuration directory is "
+					+ "specified in application.properties. "
+					+ "Proposition finding will not work without it. "
+					+ "Please create it and try again.");
 		}
 	}
 
@@ -206,9 +201,9 @@ public class PropositionResource {
 			LOGGER.debug("Searching for String " + inSearchKey
 					+ " in the system element tree");
 			if (this.etlProperties.getConfigDir() != null) {
-				PropositionDefinitionSearcher propositionSearcher = new PropositionDefinitionSearcher(
+				PropositionDefinitionFinder propositionFinder = new PropositionDefinitionFinder(
 						inSourceConfigId, this.etlProperties);
-				return propositionSearcher.searchPropositions(inSearchKey);
+				return propositionFinder.searchPropositions(inSearchKey);
 			} else {
 				throw new HttpStatusException(
 						Response.Status.INTERNAL_SERVER_ERROR,

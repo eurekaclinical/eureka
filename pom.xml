@@ -57,7 +57,7 @@ and data into your own instance of the i2b2 data warehouse system.
 		<tomcat-plugin-version>1.1</tomcat-plugin-version>
 
 		<!-- properties for site creation -->
-		<javautil-version>2.3</javautil-version>
+		<javautil-version>2.4-SNAPSHOT</javautil-version>
 		<jaas-login-module-version>1.0.2</jaas-login-module-version>
 		<jaas-login-module-repo>aiw</jaas-login-module-repo>
 		<hibernate-hbm2ddl-auto>validate</hibernate-hbm2ddl-auto>
@@ -699,16 +699,6 @@ and data into your own instance of the i2b2 data warehouse system.
 			<dependency>
 				<groupId>org.protempa</groupId>
 				<artifactId>protempa-bconfigs-ini4j-ini</artifactId>
-				<version>${protempa-version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.protempa</groupId>
-				<artifactId>protempa-ksb-protege</artifactId>
-				<version>${protempa-version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.protempa</groupId>
-				<artifactId>protempa-ksb-bioportal</artifactId>
 				<version>${protempa-version}</version>
 			</dependency>
 			<dependency>

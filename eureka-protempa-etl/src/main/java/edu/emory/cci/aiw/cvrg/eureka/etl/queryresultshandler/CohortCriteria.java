@@ -97,7 +97,7 @@ class CohortCriteria implements Criteria {
 		@Override
 		public void visit(Literal literal) {
 			try {
-				Set<String> propIds = this.knowledgeSource.inDataSourcePropositionIds(literal.getName());
+				Set<String> propIds = this.knowledgeSource.collectPropIdDescendantsUsingAllNarrower(false, literal.getName());
 				for (String propId : propIds) {
 					Collections.putList(cache, propId, literal.getName());
 				}

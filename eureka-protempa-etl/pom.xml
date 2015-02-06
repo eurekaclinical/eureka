@@ -110,14 +110,6 @@ other export formats.
 		</dependency>
 		<dependency>
 			<groupId>org.protempa</groupId>
-			<artifactId>protempa-ksb-protege</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.protempa</groupId>
-			<artifactId>protempa-ksb-bioportal</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.protempa</groupId>
 			<artifactId>protempa-tsb-umls</artifactId>
 		</dependency>
 		<dependency>

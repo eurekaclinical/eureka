@@ -40,6 +40,7 @@ final class SourceConfigs {
 	private final EtlProperties etlProperties;
 	private final EtlUserEntity etlUser;
 	private final SourceConfigDao sourceConfigDao;
+	private final SourceConfigsDTOExtractor extractor;
 
 	SourceConfigs(EtlProperties inEtlProperties, EtlUserEntity inEtlUser, SourceConfigDao inSourceConfigDao, EtlGroupDao inGroupDao) {
 		File inConfigDir = inEtlProperties.getSourceConfigDirectory();
@@ -55,6 +56,7 @@ final class SourceConfigs {
 		this.etlProperties = inEtlProperties;
 		this.sourceConfigDao = inSourceConfigDao;
 		this.etlUser = inEtlUser;
+		this.extractor = new SourceConfigsDTOExtractor(this.etlUser, this.groupDao, this.etlProperties);
 	}
 
 	/**
@@ -68,7 +70,7 @@ final class SourceConfigs {
 		if (configId == null) {
 			throw new IllegalArgumentException("configId cannot be null");
 		}
-		SourceConfigsDTOExtractor extractor = new SourceConfigsDTOExtractor(this.etlUser, this.groupDao, this.etlProperties);
+		
 		return extractor.extractDTO(this.sourceConfigDao.getByName(configId));
 	}
 
@@ -79,7 +81,6 @@ final class SourceConfigs {
 	 */
 	public final List<SourceConfig> getAll() {
 		List<SourceConfig> result = new ArrayList<>();
-		SourceConfigsDTOExtractor extractor = new SourceConfigsDTOExtractor(this.etlUser, this.groupDao, this.etlProperties);
 		for (SourceConfigEntity configEntity : this.sourceConfigDao.getAll()) {
 			SourceConfig dto = extractor.extractDTO(configEntity);
 			if (dto != null) {
