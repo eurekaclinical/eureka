@@ -38,6 +38,7 @@ import edu.emory.cci.aiw.cvrg.eureka.common.comm.User;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ClientException;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ServicesClient;
 import edu.emory.cci.aiw.cvrg.eureka.webapp.authentication.WebappAuthenticationSupport;
+import javax.servlet.http.HttpSession;
 
 /**
  *
@@ -129,6 +130,12 @@ public class HaveUserRecordFilter implements Filter {
 						= uriBuilder.build().toString();
 
 				servletResponse.sendRedirect(redirectUrlWithQueryParams);
+			} else if (Status.UNAUTHORIZED.equals(ex.getResponseStatus())) {
+				HttpSession session = servletRequest.getSession(false);
+				if (session != null) {
+					session.invalidate();
+				}
+				inFilterChain.doFilter(inRequest, inResponse);
 			} else {
 				throw new ServletException("Error getting user "
 						+ servletRequest.getRemoteUser(), ex);

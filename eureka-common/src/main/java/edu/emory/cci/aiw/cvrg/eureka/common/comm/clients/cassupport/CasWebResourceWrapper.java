@@ -19,18 +19,14 @@ package edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.cassupport;
  * limitations under the License.
  * #L%
  */
-import java.util.List;
 
 import javax.ws.rs.core.MultivaluedMap;
-import javax.ws.rs.core.NewCookie;
 
 import org.jasig.cas.client.authentication.AttributePrincipal;
 import org.jasig.cas.client.util.AssertionHolder;
 import org.jasig.cas.client.validation.Assertion;
 
-import com.sun.jersey.api.client.ClientHandlerException;
 import com.sun.jersey.api.client.ClientResponse;
-import com.sun.jersey.api.client.UniformInterfaceException;
 import com.sun.jersey.api.client.WebResource;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.AbstractWebResourceWrapper;
@@ -65,7 +61,7 @@ public class CasWebResourceWrapper extends AbstractWebResourceWrapper {
 					webResource.getURI().toString());
 			if (proxyTicket == null) {
 				throw new ClientException(
-						ClientResponse.Status.INTERNAL_SERVER_ERROR, 
+						ClientResponse.Status.UNAUTHORIZED, 
 						"Could not get proxy ticket for service call " + webResource.getURI().toString());
 			}
 			return webResource.queryParam("ticket", proxyTicket);
