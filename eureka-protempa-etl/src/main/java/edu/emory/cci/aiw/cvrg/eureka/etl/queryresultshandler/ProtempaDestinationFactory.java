@@ -33,8 +33,8 @@ import edu.emory.cci.aiw.cvrg.eureka.common.entity.DestinationEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.I2B2DestinationEntity;
 import edu.emory.cci.aiw.cvrg.eureka.etl.config.EtlProperties;
 import edu.emory.cci.aiw.cvrg.eureka.etl.dao.DestinationDao;
-import edu.emory.cci.aiw.i2b2etl.I2b2Destination;
-import edu.emory.cci.aiw.i2b2etl.configuration.XmlFileConfiguration;
+import edu.emory.cci.aiw.i2b2etl.dest.I2b2Destination;
+import edu.emory.cci.aiw.i2b2etl.dest.config.xml.XmlFileConfiguration;
 
 /**
  *

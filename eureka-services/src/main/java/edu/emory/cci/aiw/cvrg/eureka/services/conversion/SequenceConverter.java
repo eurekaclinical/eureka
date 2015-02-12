@@ -37,7 +37,7 @@ import org.protempa.proposition.interval.Interval.Side;
 import org.protempa.SimpleGapFunction;
 import org.protempa.TemporalPatternOffset;
 
-final class SequenceConverter
+final class SequenceConverter extends AbstractConverter
 		implements
 		PropositionDefinitionConverter<SequenceEntity, HighLevelAbstractionDefinition> {
 
@@ -45,11 +45,9 @@ final class SequenceConverter
 	private HighLevelAbstractionDefinition primary;
 	private String primaryPropId;
 	private final Map<Long, TemporalExtendedPropositionDefinition> extendedProps;
-	private final DataElementConversionSupport conversionSupport;
 
 	public SequenceConverter() {
 		this.extendedProps = new HashMap<>();
-		this.conversionSupport = new DataElementConversionSupport();
 	}
 
 	@Override
@@ -69,10 +67,10 @@ final class SequenceConverter
 	@Override
 	public List<PropositionDefinition> convert(SequenceEntity sequenceEntity) {
 		List<PropositionDefinition> result = new ArrayList<>();
-		String propId = this.conversionSupport.toPropositionId(sequenceEntity);
+		String propId = toPropositionId(sequenceEntity);
 		this.primaryPropId = propId;
 		if (this.converterVisitor.addPropositionId(propId)) {
-			HighLevelAbstractionDefinition primary = new HighLevelAbstractionDefinition(
+			HighLevelAbstractionDefinition p = new HighLevelAbstractionDefinition(
 					propId);
 			TemporalExtendedPropositionDefinition primaryEP = 
 					buildExtendedProposition(
@@ -94,15 +92,15 @@ final class SequenceConverter
 					TemporalExtendedPropositionDefinition tepdRhs = buildExtendedProposition(rel
 							.getRhsExtendedDataElement());
 
-					primary.add(tepdLhs);
-					primary.add(tepdRhs);
-					primary.setRelation(tepdLhs, tepdRhs, buildRelation(rel));
+					p.add(tepdLhs);
+					p.add(tepdRhs);
+					p.setRelation(tepdLhs, tepdRhs, buildRelation(rel));
 				}
 			}
 			
-			primary.setConcatenable(false);
-			primary.setSolid(false);
-			primary.setGapFunction(new SimpleGapFunction(0, null));
+			p.setConcatenable(false);
+			p.setSolid(false);
+			p.setGapFunction(new SimpleGapFunction(0, null));
 			
 			TemporalPatternOffset temporalOffsets = new TemporalPatternOffset();
 			temporalOffsets.setStartTemporalExtendedPropositionDefinition(primaryEP);
@@ -113,11 +111,12 @@ final class SequenceConverter
 			temporalOffsets.setFinishIntervalSide(Side.FINISH);
 			temporalOffsets.setFinishOffset(0);
 			temporalOffsets.setFinishOffsetUnits(null);
-			primary.setTemporalOffset(temporalOffsets);
-			primary.setDisplayName(sequenceEntity.getDisplayName());
-			primary.setDescription(sequenceEntity.getDescription());
-			this.primary = primary;
-			result.add(primary);
+			p.setTemporalOffset(temporalOffsets);
+			p.setDisplayName(sequenceEntity.getDisplayName());
+			p.setDescription(sequenceEntity.getDescription());
+			p.setSourceId(sourceId(sequenceEntity));
+			this.primary = p;
+			result.add(p);
 		}
 		
 		

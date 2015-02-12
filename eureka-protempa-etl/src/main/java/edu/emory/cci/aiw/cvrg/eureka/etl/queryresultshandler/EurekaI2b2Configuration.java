@@ -22,17 +22,18 @@ package edu.emory.cci.aiw.cvrg.eureka.etl.queryresultshandler;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.I2B2DestinationEntity;
 import edu.emory.cci.aiw.cvrg.eureka.etl.config.EtlProperties;
-import edu.emory.cci.aiw.i2b2etl.configuration.Concepts;
-import edu.emory.cci.aiw.i2b2etl.configuration.Configuration;
-import edu.emory.cci.aiw.i2b2etl.configuration.ConfigurationReadException;
-import edu.emory.cci.aiw.i2b2etl.configuration.Data;
-import edu.emory.cci.aiw.i2b2etl.configuration.Database;
-import edu.emory.cci.aiw.i2b2etl.configuration.Settings;
-import edu.emory.cci.aiw.i2b2etl.configuration.XmlFileConfiguration;
+import edu.emory.cci.aiw.i2b2etl.dest.config.Concepts;
+import edu.emory.cci.aiw.i2b2etl.dest.config.Configuration;
+import edu.emory.cci.aiw.i2b2etl.dest.config.ConfigurationReadException;
+import edu.emory.cci.aiw.i2b2etl.dest.config.Data;
+import edu.emory.cci.aiw.i2b2etl.dest.config.Database;
+import edu.emory.cci.aiw.i2b2etl.dest.config.Settings;
+import edu.emory.cci.aiw.i2b2etl.dest.config.xml.XmlFileConfiguration;
 import java.io.File;
 
 /**
- *
+ * Database-based i2b2 loader configuration.
+ * 
  * @author Andrew Post
  */
 class EurekaI2b2Configuration implements Configuration {

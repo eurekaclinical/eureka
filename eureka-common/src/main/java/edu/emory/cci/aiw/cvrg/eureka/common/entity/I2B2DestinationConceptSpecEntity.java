@@ -53,6 +53,8 @@ public class I2B2DestinationConceptSpecEntity {
 	
 	private String property;
 	
+	private boolean alreadyLoaded;
+	
 	@ManyToOne
 	@JoinColumn(name="i2b2destvaluetypecds_id")
 	private I2B2DestinationValueTypeCode valueTypeCode;
@@ -118,6 +120,14 @@ public class I2B2DestinationConceptSpecEntity {
 
 	public void setValueTypeCode(I2B2DestinationValueTypeCode valueTypeCode) {
 		this.valueTypeCode = valueTypeCode;
+	}
+
+	public boolean isAlreadyLoaded() {
+		return alreadyLoaded;
+	}
+
+	public void setAlreadyLoaded(boolean alreadyLoaded) {
+		this.alreadyLoaded = alreadyLoaded;
 	}
 	
 }

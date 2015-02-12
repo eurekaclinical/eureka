@@ -43,7 +43,18 @@ import org.protempa.backend.annotations.BackendInfo;
 import org.protempa.backend.annotations.BackendProperty;
 import org.protempa.backend.dsb.DataValidationEvent;
 import org.protempa.backend.dsb.filter.Filter;
-import org.protempa.backend.dsb.relationaldb.*;
+import org.protempa.backend.dsb.relationaldb.ColumnSpec;
+import org.protempa.backend.dsb.relationaldb.EntitySpec;
+import org.protempa.backend.dsb.relationaldb.JDBCDateTimeTimestampDateValueFormat;
+import org.protempa.backend.dsb.relationaldb.JDBCDateTimeTimestampPositionParser;
+import org.protempa.backend.dsb.relationaldb.JDBCPositionFormat;
+import org.protempa.backend.dsb.relationaldb.JoinSpec;
+import org.protempa.backend.dsb.relationaldb.Operator;
+import org.protempa.backend.dsb.relationaldb.PropIdToSQLCodeMapper;
+import org.protempa.backend.dsb.relationaldb.PropertySpec;
+import org.protempa.backend.dsb.relationaldb.ReferenceSpec;
+import org.protempa.backend.dsb.relationaldb.RelationalDbDataSourceBackend;
+import org.protempa.backend.dsb.relationaldb.StagingSpec;
 import org.protempa.dest.QueryResultsHandler;
 import org.protempa.proposition.Proposition;
 import org.protempa.proposition.value.*;
@@ -65,6 +76,7 @@ public final class EurekaDataSourceBackend extends RelationalDbDataSourceBackend
 			new AbsoluteTimeGranularityFactory();
 	private static JDBCPositionFormat dtPositionParser =
 			new JDBCDateTimeTimestampPositionParser();
+	private static final String DEFAULT_ROOT_FULL_NAME = "Eureka";
 	private final PropIdToSQLCodeMapper mapper;
 	private XlsxDataProvider[] dataProviders = null;
 	private boolean dataPopulated;
@@ -74,7 +86,28 @@ public final class EurekaDataSourceBackend extends RelationalDbDataSourceBackend
 	private Boolean required = Boolean.FALSE;
 	private String databaseName;
 	private boolean exceptionOccurred;
+	private String labsRootFullName;
+	private String vitalsRootFullName;
+	private String diagnosisCodesRootFullName;
+	private String medicationOrdersRootFullName;
+	private String icd9ProcedureCodesRootFullName;
+	private String cptProcedureCodesRootFullName;
 	
+	public EurekaDataSourceBackend() {
+		this.mapper = new PropIdToSQLCodeMapper("/mappings/",
+				getClass());
+		setSchemaName("EUREKA");
+		setDefaultKeyIdTable("PATIENT");
+		setDefaultKeyIdColumn("PATIENT_KEY");
+		setDefaultKeyIdJoinKey("PATIENT_KEY");
+		this.labsRootFullName = DEFAULT_ROOT_FULL_NAME;
+		this.vitalsRootFullName = DEFAULT_ROOT_FULL_NAME;
+		this.diagnosisCodesRootFullName = DEFAULT_ROOT_FULL_NAME;
+		this.medicationOrdersRootFullName = DEFAULT_ROOT_FULL_NAME;
+		this.icd9ProcedureCodesRootFullName = DEFAULT_ROOT_FULL_NAME;
+		this.cptProcedureCodesRootFullName = DEFAULT_ROOT_FULL_NAME;
+	}
+
 	@Override
 	public void initialize(BackendInstanceSpec config) throws BackendInitializationException {
 		super.initialize(config);
@@ -191,15 +224,6 @@ public final class EurekaDataSourceBackend extends RelationalDbDataSourceBackend
 		}
 	}
 
-	public EurekaDataSourceBackend() {
-		this.mapper = new PropIdToSQLCodeMapper("/mappings/",
-				getClass());
-		setSchemaName("EUREKA");
-		setDefaultKeyIdTable("PATIENT");
-		setDefaultKeyIdColumn("PATIENT_KEY");
-		setDefaultKeyIdJoinKey("PATIENT_KEY");
-	}
-
 	@Override
 	public DataStreamingEventIterator<Proposition> readPropositions(Set<String> keyIds, Set<String> propIds, Filter filters, QuerySession qs, QueryResultsHandler queryResultsHandler) throws DataSourceReadException {
 		if (!dataPopulated) {
@@ -285,7 +309,85 @@ public final class EurekaDataSourceBackend extends RelationalDbDataSourceBackend
 			this.required = required;
 		}
 	}
+	
+	@BackendProperty
+	public void setLabsRootFullName(String labsRootFullName) {
+		if (labsRootFullName == null) {
+			this.labsRootFullName = DEFAULT_ROOT_FULL_NAME;
+		} else {
+			this.labsRootFullName = labsRootFullName;
+		}
+	}
 
+	public String getLabsRootFullName() {
+		return labsRootFullName;
+	}
+
+	public String getVitalsRootFullName() {
+		return vitalsRootFullName;
+	}
+
+	@BackendProperty
+	public void setVitalsRootFullName(String vitalsRootFullName) {
+		if (vitalsRootFullName == null) {
+			this.vitalsRootFullName = DEFAULT_ROOT_FULL_NAME;
+		} else {
+			this.vitalsRootFullName = vitalsRootFullName;
+		}
+	}
+
+	public String getDiagnosisCodesRootFullName() {
+		return diagnosisCodesRootFullName;
+	}
+
+	@BackendProperty
+	public void setDiagnosisCodesRootFullName(String diagnosisCodesRootFullName) {
+		if (diagnosisCodesRootFullName == null) {
+			this.diagnosisCodesRootFullName = DEFAULT_ROOT_FULL_NAME;
+		} else {
+			this.diagnosisCodesRootFullName = diagnosisCodesRootFullName;
+		}
+	}
+
+	public String getMedicationOrdersRootFullName() {
+		return medicationOrdersRootFullName;
+	}
+
+	@BackendProperty
+	public void setMedicationOrdersRootFullName(String medicationOrdersRootFullName) {
+		if (medicationOrdersRootFullName == null) {
+			this.medicationOrdersRootFullName = DEFAULT_ROOT_FULL_NAME;
+		} else {
+			this.medicationOrdersRootFullName = medicationOrdersRootFullName;
+		}
+	}
+
+	public String getIcd9ProcedureCodesRootFullName() {
+		return icd9ProcedureCodesRootFullName;
+	}
+
+	@BackendProperty
+	public void setIcd9ProcedureCodesRootFullName(String icd9ProcedureCodesRootFullName) {
+		if (icd9ProcedureCodesRootFullName == null) {
+			this.icd9ProcedureCodesRootFullName = DEFAULT_ROOT_FULL_NAME;
+		} else {
+			this.icd9ProcedureCodesRootFullName = icd9ProcedureCodesRootFullName;
+		}
+	}
+	
+	public String getCptProcedureCodesRootFullName() {
+		return cptProcedureCodesRootFullName;
+	}
+
+	@BackendProperty
+	public void setCptProcedureCodesRootFullName(String cptProcedureCodesRootFullName) {
+		if (cptProcedureCodesRootFullName == null) {
+			this.cptProcedureCodesRootFullName = DEFAULT_ROOT_FULL_NAME;
+		} else {
+			this.cptProcedureCodesRootFullName = cptProcedureCodesRootFullName;
+		}
+	}
+	
 	@Override
 	protected EntitySpec[] constantSpecs(String keyIdSchema, String keyIdTable, String keyIdColumn, String keyIdJoinKey) throws IOException {
 		String schemaName = getSchemaName();
@@ -468,13 +570,13 @@ public final class EurekaDataSourceBackend extends RelationalDbDataSourceBackend
 				"disposition_discharge_08172011.txt"),
 				true), ValueType.NOMINALVALUE), /*new PropertySpec("aprdrgRiskMortalityValue", null, new ColumnSpec(schemaName, "ENCOUNTER", "APRRISKOFMORTALITY"), ValueType.NUMERICALVALUE), new PropertySpec("aprdrgSeverityValue", null, new ColumnSpec(schemaName, "ENCOUNTER", "APRSEVERITYOFILLNESS"), ValueType.NOMINALVALUE), new PropertySpec("insuranceType", null, new ColumnSpec(schemaName, "ENCOUNTER", "HOSPITALPRIMARYPAYER", ColumnSpec.Operator.EQUAL_TO, this.mapper.propertyNameOrPropIdToSqlCodeArray("insurance_types_07182011.txt")), ValueType.NOMINALVALUE)*/},
 			new ReferenceSpec[]{
-				new ReferenceSpec("patient", "Patients",
+				new ReferenceSpec("\\Cardiovascular Registry\\", "Patients",
 				new ColumnSpec[]{
 					new ColumnSpec(schemaName,
 					"ENCOUNTER",
 					"PATIENT_KEY")},
 				ReferenceSpec.Type.ONE),
-				new ReferenceSpec("labs", "Labs",
+				new ReferenceSpec(this.labsRootFullName, "Labs",
 				new ColumnSpec[]{
 					new ColumnSpec(schemaName,
 					"ENCOUNTER",
@@ -486,7 +588,7 @@ public final class EurekaDataSourceBackend extends RelationalDbDataSourceBackend
 					"LABS_EVENT",
 					"EVENT_KEY")))},
 				ReferenceSpec.Type.MANY),
-				new ReferenceSpec("vitals", "Vitals",
+				new ReferenceSpec(this.vitalsRootFullName, "Vitals",
 				new ColumnSpec[]{
 					new ColumnSpec(schemaName,
 					"ENCOUNTER",
@@ -498,7 +600,7 @@ public final class EurekaDataSourceBackend extends RelationalDbDataSourceBackend
 					"VITALS_EVENT",
 					"EVENT_KEY")))},
 				ReferenceSpec.Type.MANY),
-				new ReferenceSpec("diagnosisCodes",
+				new ReferenceSpec(this.diagnosisCodesRootFullName,
 				"Diagnosis Codes", new ColumnSpec[]{
 					new ColumnSpec(schemaName, "ENCOUNTER",
 					new JoinSpec("ENCOUNTER_KEY",
@@ -508,7 +610,7 @@ public final class EurekaDataSourceBackend extends RelationalDbDataSourceBackend
 					"ICD9D_EVENT",
 					"EVENT_KEY")))},
 				ReferenceSpec.Type.MANY),
-				new ReferenceSpec("medicationHistory",
+				new ReferenceSpec(this.medicationOrdersRootFullName,
 				"Medication Orders", new ColumnSpec[]{
 					new ColumnSpec(schemaName, "ENCOUNTER",
 					new JoinSpec("ENCOUNTER_KEY",
@@ -518,7 +620,7 @@ public final class EurekaDataSourceBackend extends RelationalDbDataSourceBackend
 					"MEDS_EVENT",
 					"EVENT_KEY")))},
 				ReferenceSpec.Type.MANY),
-				new ReferenceSpec("procedures",
+				new ReferenceSpec(this.icd9ProcedureCodesRootFullName,
 				"ICD9 Procedure Codes",
 				new ColumnSpec[]{
 					new ColumnSpec(schemaName,
@@ -531,7 +633,7 @@ public final class EurekaDataSourceBackend extends RelationalDbDataSourceBackend
 					"ICD9P_EVENT",
 					"EVENT_KEY")))},
 				ReferenceSpec.Type.MANY),
-				new ReferenceSpec("procedures",
+				new ReferenceSpec(this.cptProcedureCodesRootFullName,
 				"CPT Procedure Codes", new ColumnSpec[]{
 					new ColumnSpec(schemaName, "ENCOUNTER",
 					new JoinSpec("ENCOUNTER_KEY",
@@ -572,13 +674,20 @@ public final class EurekaDataSourceBackend extends RelationalDbDataSourceBackend
 			new ColumnSpec(schemaName, "ICD9D_EVENT", "TS_OBX"),
 			null, new PropertySpec[]{
 				new PropertySpec("code", null,
-				new ColumnSpec(schemaName, "ICD9D_EVENT",
-				"ENTITY_ID",
-				Operator.EQUAL_TO,
-				this.mapper
-				.propertyNameOrPropIdToSqlCodeArray(
-				"icd9_diagnosis_08172011.txt")),
-				ValueType.NOMINALVALUE), /*new PropertySpec("position", null, new ColumnSpec(schemaName, "ENCOUNTER", new JoinSpec("RECORD_ID", "RECORD_ID", new ColumnSpec(schemaName, "DIAGNOSIS", "SEQ_NBR", ColumnSpec.Operator.EQUAL_TO, this.mapper.propertyNameOrPropIdToSqlCodeArray("icd9_diagnosis_position_07182011.txt")))), ValueType.NOMINALVALUE)*/},
+					new ColumnSpec(schemaName, "ICD9D_EVENT",
+					"ENTITY_ID",
+					Operator.EQUAL_TO,
+					this.mapper
+					.propertyNameOrPropIdToSqlCodeArray(
+					"icd9_diagnosis_08172011.txt")),
+					ValueType.NOMINALVALUE), 
+				new PropertySpec("DXPRIORITY", 
+						null, 
+						new ColumnSpec(schemaName, "ICD9D_EVENT", 
+								"RANK", 
+								Operator.EQUAL_TO, 
+								this.mapper.propertyNameOrPropIdToSqlCodeArray("icd9_diagnosis_position_07182011.txt")), 
+						ValueType.NOMINALVALUE)},
 			null, null,
 			new ColumnSpec(schemaName, "ICD9D_EVENT", "ENTITY_ID",
 			Operator.EQUAL_TO, this.mapper

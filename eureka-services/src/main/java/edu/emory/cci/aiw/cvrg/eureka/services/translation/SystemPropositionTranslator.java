@@ -97,7 +97,7 @@ public class SystemPropositionTranslator implements
 
 			List<String> properties = new ArrayList<>();
 			for (PropertyDefinition property : propDef.getPropertyDefinitions()) {
-				properties.add(property.getName());
+				properties.add(property.getId());
 			}
 			element.setProperties(properties);
 			element.setSystemType(proposition.getSystemType());

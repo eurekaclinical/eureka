@@ -559,6 +559,9 @@ limitations under the License.
 			<column name="I2B2DESTVALUETYPECDS_ID" type="BIGINT">
 				<constraints nullable="false"/>
 			</column>
+			<column name="ALREADYLOADED" type="BOOLEAN" defaultValueBoolean="false">
+				<constraints nullable="false"/>
+			</column>
 		</createTable>
 		<addForeignKeyConstraint baseColumnNames="I2B2DESTINATIONS_ID" baseTableName="I2B2_DEST_CONCEPTSPECS" constraintName="FK_I2B2_DEST_CONCEPTSPEC" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" referencedColumnNames="ID" referencedTableName="I2B2_DESTINATIONS" referencesUniqueColumn="true"/>
 		<addForeignKeyConstraint baseTableName="I2B2_DEST_CONCEPTSPECS" baseColumnNames="VALUETYPECDS_ID" constraintName="FK_I2B2_CONCEPTS_VTC" referencedTableName="I2B2_DEST_VALUE_TYPE_CDS" referencedColumnNames="ID" referencesUniqueColumn="true"/>

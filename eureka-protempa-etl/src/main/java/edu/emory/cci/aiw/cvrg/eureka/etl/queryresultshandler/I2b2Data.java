@@ -22,8 +22,8 @@ package edu.emory.cci.aiw.cvrg.eureka.etl.queryresultshandler;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.I2B2DestinationDataSpecEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.I2B2DestinationIntervalSide;
-import edu.emory.cci.aiw.i2b2etl.configuration.Data;
-import edu.emory.cci.aiw.i2b2etl.configuration.DataSpec;
+import edu.emory.cci.aiw.i2b2etl.dest.config.Data;
+import edu.emory.cci.aiw.i2b2etl.dest.config.DataSpec;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;

@@ -27,7 +27,8 @@ import org.protempa.proposition.value.ValueType;
 public abstract class PropertyMixin {
     @JsonCreator
     public PropertyMixin(@JsonProperty("propId") String propId, 
-			@JsonProperty("name") String name,
+			@JsonProperty("id") String id,
+			@JsonProperty("displayName") String displayName,
             @JsonProperty("valueType") ValueType valueType,
             @JsonProperty("valueSetId") String valueSetId,
 			@JsonProperty("declaringPropId") String declaringPropId) {

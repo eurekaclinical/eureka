@@ -22,14 +22,15 @@ package edu.emory.cci.aiw.cvrg.eureka.etl.queryresultshandler;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.I2B2DestinationConceptSpecEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.I2B2DestinationModifierSpecEntity;
-import edu.emory.cci.aiw.i2b2etl.configuration.Concepts;
-import edu.emory.cci.aiw.i2b2etl.configuration.FolderSpec;
-import edu.emory.cci.aiw.i2b2etl.configuration.ModifierSpec;
-import edu.emory.cci.aiw.i2b2etl.metadata.ValueTypeCode;
+import edu.emory.cci.aiw.i2b2etl.dest.config.Concepts;
+import edu.emory.cci.aiw.i2b2etl.dest.config.FolderSpec;
+import edu.emory.cci.aiw.i2b2etl.dest.config.ModifierSpec;
+import edu.emory.cci.aiw.i2b2etl.dest.metadata.ValueTypeCode;
 import java.util.List;
 
 /**
- *
+ * Database-based i2b2 loader concepts section.
+ * 
  * @author Andrew Post
  */
 class I2b2Concepts implements Concepts {
@@ -51,7 +52,7 @@ class I2b2Concepts implements Concepts {
 					conceptSpec.getProperty(), 
 					null, 
 					ValueTypeCode.valueOf(conceptSpec.getValueTypeCode().getName()), 
-					false,
+					conceptSpec.isAlreadyLoaded(),
 					ms);
 		}
 	}

@@ -21,8 +21,8 @@ package edu.emory.cci.aiw.cvrg.eureka.etl.queryresultshandler;
  */
 
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.I2B2DestinationEntity;
-import edu.emory.cci.aiw.i2b2etl.configuration.Database;
-import edu.emory.cci.aiw.i2b2etl.configuration.DatabaseSpec;
+import edu.emory.cci.aiw.i2b2etl.dest.config.Database;
+import edu.emory.cci.aiw.i2b2etl.dest.config.DatabaseSpec;
 
 /**
  *

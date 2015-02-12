@@ -26,5 +26,14 @@ package edu.emory.cci.aiw.cvrg.eureka.etl.spreadsheet;
  * 
  */
 public class Icd9Diagnosis extends ObservationImpl {
-	// no new fields to add, yet.
+	private int rank;
+
+	public int getRank() {
+		return rank;
+	}
+
+	public void setRank(int rank) {
+		this.rank = rank;
+	}
+	
 }

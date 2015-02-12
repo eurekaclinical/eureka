@@ -22,16 +22,14 @@ package edu.emory.cci.aiw.cvrg.eureka.etl.queryresultshandler;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.I2B2DestinationEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.I2B2DestinationRemoveMethod;
-import edu.emory.cci.aiw.i2b2etl.RemoveMethod;
-import edu.emory.cci.aiw.i2b2etl.configuration.Settings;
-import java.util.HashSet;
-import java.util.Set;
+import edu.emory.cci.aiw.i2b2etl.dest.RemoveMethod;
+import edu.emory.cci.aiw.i2b2etl.dest.config.AbstractSettings;
 
 /**
  *
  * @author Andrew Post
  */
-class I2b2Settings implements Settings {
+class I2b2Settings extends AbstractSettings {
 	private final I2B2DestinationEntity entity;
 
 	I2b2Settings(I2B2DestinationEntity entity) {
@@ -173,16 +171,4 @@ class I2b2Settings implements Settings {
 		return entity.getMetaTableName();
 	}
 
-	@Override
-	public Set<String> getPatientDimensionDataTypes() {
-		Set<String> result = new HashSet<>();
-		result.add(getPatientDimensionMRN());
-		result.add(getPatientDimensionGender());
-		result.add(getPatientDimensionRace());
-		result.add(getPatientDimensionMaritalStatus());
-		result.add(getPatientDimensionLanguage());
-		result.add(getPatientDimensionReligion());
-		result.add(getPatientDimensionBirthdate());
-		return result;
-	}
 }

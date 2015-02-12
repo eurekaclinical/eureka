@@ -83,7 +83,7 @@ public final class PropositionUtil {
 		List<String> properties = new ArrayList<>();
 		for (PropertyDefinition propertyDef : inDefinition
 				.getPropertyDefinitions()) {
-			properties.add(propertyDef.getName());
+			properties.add(propertyDef.getId());
 		}
 		systemElement.setProperties(properties);
 

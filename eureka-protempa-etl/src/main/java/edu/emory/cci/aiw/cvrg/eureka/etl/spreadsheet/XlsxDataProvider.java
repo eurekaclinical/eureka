@@ -395,15 +395,26 @@ public class XlsxDataProvider implements DataProvider {
 			String sheetName = sheet.getSheetName();
 			Iterator<Row> rows = sheet.rowIterator();
 			rows.next(); // skip header row
+			Map<Long, Integer> ranksByEncounter = new HashMap<>();
 			while (rows.hasNext()) {
 				Row row = rows.next();
 				Icd9Diagnosis diagnosis = new Icd9Diagnosis();
 				diagnosis.setId(readStringValue(sheetName, row.getCell(0)));
-				diagnosis.setEncounterId(readLongValue(sheetName, row.getCell(1)));
+				Long encId = readLongValue(sheetName, row.getCell(1));
+				diagnosis.setEncounterId(encId);
 				diagnosis.setTimestamp(readDateValue(sheetName, row
 						.getCell(2)));
 				diagnosis.setEntityId(readStringValue(sheetName, row
 						.getCell(3)));
+				Integer rank = ranksByEncounter.get(encId);
+				if (rank == null) {
+					diagnosis.setRank(1);
+					ranksByEncounter.put(encId, 1);
+				} else {
+					int newRank = rank + 1;
+					diagnosis.setRank(newRank);
+					ranksByEncounter.put(encId, newRank);
+				}
 				result.add(diagnosis);
 			}
 		}

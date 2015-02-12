@@ -214,7 +214,7 @@ public class DataInserter {
 	 */
 	public void insertIcd9Diagnoses(List<Icd9Diagnosis> diagnoses) throws
 			DataInserterException {
-		this.insertObservations(diagnoses, "icd9d_event");
+		this.insertDiagnoses(diagnoses);
 	}
 
 	/**
@@ -287,6 +287,28 @@ public class DataInserter {
 							getTimestamp().getTime()));
 					preparedStatement.setString(4, observation.getEntityId());
 
+					addBatch();
+				}
+			}
+		}.execute();
+	}
+	
+	private void insertDiagnoses(final List<Icd9Diagnosis> observations) throws DataInserterException {
+		new DatabaseExecutor("insert into icd9d_event values (?,?,?,?,?)") {
+			@Override
+			void doExecute(PreparedStatement preparedStatement) throws SQLException {
+				for (Icd9Diagnosis observation : observations) {
+					preparedStatement.setString(1, observation.getId());
+					preparedStatement.setLong(
+							2, observation.getEncounterId().
+							longValue());
+					preparedStatement.setTimestamp(
+							3, new Timestamp(
+							observation.
+							getTimestamp().getTime()));
+					preparedStatement.setString(4, observation.getEntityId());
+					preparedStatement.setInt(5, observation.getRank());
+					
 					addBatch();
 				}
 			}
