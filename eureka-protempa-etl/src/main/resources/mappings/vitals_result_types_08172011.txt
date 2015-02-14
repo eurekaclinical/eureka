@@ -12,3 +12,4 @@ TemperatureNOS	TemperatureNOS
 TemperatureOral	TemperatureOral
 TemperatureRectal	TemperatureRectal
 TemperatureTympanic	TemperatureTympanic
+VS:DescriptionMissing	*

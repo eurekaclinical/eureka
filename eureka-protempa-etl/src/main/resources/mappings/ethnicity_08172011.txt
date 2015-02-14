@@ -14,3 +14,4 @@ NotRecorded	Not Recorded
 NotHispanicOrLatino	Oriental
 NotHispanicOrLatino	Other
 NotHispanicOrLatino	White
+DescriptionMissing	*

@@ -3,5 +3,5 @@ Female	Female
 Unknown	Unknown
 NotRecorded	NotRecorded
 NotRecorded	NotRecorded
-DescriptionMissing	DescriptionMissing
 Unspecified	Unspecified
+DescriptionMissing	*

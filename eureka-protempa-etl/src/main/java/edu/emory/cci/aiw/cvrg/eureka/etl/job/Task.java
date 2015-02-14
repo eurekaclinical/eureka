@@ -95,9 +95,9 @@ public final class Task implements Runnable {
 		try {
 			myJob = this.jobDao.retrieve(this.jobId);
 			if (LOGGER.isInfoEnabled()) {
-				LOGGER.info("{} just got a job from user {}, id={}",
-						new Object[]{myJob.getEtlUser().getUsername(),
-					Thread.currentThread().getName(), myJob.toString()});
+				LOGGER.info("Just got job {} from user {}",
+						new Object[]{myJob.getId(), 
+							myJob.getEtlUser().getUsername()});
 			}
 			myJob.newEvent(JobEventType.STARTED, "Processing started", null);
 			this.jobDao.update(myJob);
@@ -116,8 +116,8 @@ public final class Task implements Runnable {
 			myJob.newEvent(JobEventType.COMPLETED, "Processing completed without error", null);
 			this.jobDao.update(myJob);
 			if (LOGGER.isInfoEnabled()) {
-				LOGGER.info("{} completed job {} for user {} without errors.",
-						new Object[]{Thread.currentThread().getName(), 
+				LOGGER.info("Completed job {} for user {} without errors.",
+						new Object[]{
 							myJob.getId(), myJob.getEtlUser().getUsername()});
 			}
 			myJob = null;
@@ -127,8 +127,8 @@ public final class Task implements Runnable {
 			if (myJob != null) {
 				try {
 					myJob.newEvent(JobEventType.FAILED, "Processing failed", null);
-					LOGGER.error("{} finished job {} for user {} with errors.",
-							new Object[]{Thread.currentThread().getName(), 
+					LOGGER.error("Finished job {} for user {} with errors.",
+							new Object[]{
 								myJob.getId(), myJob.getEtlUser().getUsername()});
 					this.jobDao.update(myJob);
 				} catch (Throwable ignore) {

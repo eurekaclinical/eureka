@@ -50,11 +50,12 @@ import org.protempa.backend.dsb.relationaldb.JDBCDateTimeTimestampPositionParser
 import org.protempa.backend.dsb.relationaldb.JDBCPositionFormat;
 import org.protempa.backend.dsb.relationaldb.JoinSpec;
 import org.protempa.backend.dsb.relationaldb.Operator;
-import org.protempa.backend.dsb.relationaldb.PropIdToSQLCodeMapper;
 import org.protempa.backend.dsb.relationaldb.PropertySpec;
 import org.protempa.backend.dsb.relationaldb.ReferenceSpec;
 import org.protempa.backend.dsb.relationaldb.RelationalDbDataSourceBackend;
 import org.protempa.backend.dsb.relationaldb.StagingSpec;
+import org.protempa.backend.dsb.relationaldb.mappings.Mappings;
+import org.protempa.backend.dsb.relationaldb.mappings.ResourceMappingsFactory;
 import org.protempa.dest.QueryResultsHandler;
 import org.protempa.proposition.Proposition;
 import org.protempa.proposition.value.*;
@@ -77,7 +78,6 @@ public final class EurekaDataSourceBackend extends RelationalDbDataSourceBackend
 	private static JDBCPositionFormat dtPositionParser =
 			new JDBCDateTimeTimestampPositionParser();
 	private static final String DEFAULT_ROOT_FULL_NAME = "Eureka";
-	private final PropIdToSQLCodeMapper mapper;
 	private XlsxDataProvider[] dataProviders = null;
 	private boolean dataPopulated;
 	private String dataFileDirectoryName;
@@ -94,8 +94,6 @@ public final class EurekaDataSourceBackend extends RelationalDbDataSourceBackend
 	private String cptProcedureCodesRootFullName;
 	
 	public EurekaDataSourceBackend() {
-		this.mapper = new PropIdToSQLCodeMapper("/mappings/",
-				getClass());
 		setSchemaName("EUREKA");
 		setDefaultKeyIdTable("PATIENT");
 		setDefaultKeyIdColumn("PATIENT_KEY");
@@ -106,6 +104,7 @@ public final class EurekaDataSourceBackend extends RelationalDbDataSourceBackend
 		this.medicationOrdersRootFullName = DEFAULT_ROOT_FULL_NAME;
 		this.icd9ProcedureCodesRootFullName = DEFAULT_ROOT_FULL_NAME;
 		this.cptProcedureCodesRootFullName = DEFAULT_ROOT_FULL_NAME;
+		setMappingsFactory(new ResourceMappingsFactory("/mappings/", getClass()));
 	}
 
 	@Override
@@ -392,7 +391,7 @@ public final class EurekaDataSourceBackend extends RelationalDbDataSourceBackend
 	protected EntitySpec[] constantSpecs(String keyIdSchema, String keyIdTable, String keyIdColumn, String keyIdJoinKey) throws IOException {
 		String schemaName = getSchemaName();
 		EntitySpec[] constantSpecs = new EntitySpec[]{
-			new EntitySpec("Patients", null, new String[]{"PatientAll"},
+			new EntitySpec("Patients", null, new String[]{"Patient"},
 			false, new ColumnSpec(keyIdSchema,
 			keyIdTable,
 			keyIdColumn), new ColumnSpec[]{
@@ -424,7 +423,7 @@ public final class EurekaDataSourceBackend extends RelationalDbDataSourceBackend
 					"PATIENT_KEY")},
 				ReferenceSpec.Type.MANY)}, null, null,
 			null, null, null, null, null, null),
-			new EntitySpec("Patient Details", null, new String[]{"Patient"},
+			new EntitySpec("Patient Details", null, new String[]{"PatientDetails"},
 			true, new ColumnSpec(keyIdSchema, keyIdTable,
 			keyIdColumn), new ColumnSpec[]{
 				new ColumnSpec(schemaName, keyIdTable,
@@ -447,8 +446,8 @@ public final class EurekaDataSourceBackend extends RelationalDbDataSourceBackend
 				new PropertySpec("gender", null,
 				new ColumnSpec(schemaName, "PATIENT", "GENDER",
 				Operator.EQUAL_TO,
-				this.mapper
-				.propertyNameOrPropIdToSqlCodeArray(
+				getMappingsFactory()
+				.getInstance(
 				"gender_08172011.txt"),
 				true), ValueType.NOMINALVALUE),
 				new PropertySpec(
@@ -459,8 +458,8 @@ public final class EurekaDataSourceBackend extends RelationalDbDataSourceBackend
 				"PATIENT",
 				"MARITAL_STATUS",
 				Operator.EQUAL_TO,
-				this.mapper
-				.propertyNameOrPropIdToSqlCodeArray("marital_status_08172011.txt"),
+				getMappingsFactory()
+				.getInstance("marital_status_08172011.txt"),
 				true), ValueType.NOMINALVALUE),
 				new PropertySpec(
 				"language",
@@ -470,21 +469,21 @@ public final class EurekaDataSourceBackend extends RelationalDbDataSourceBackend
 				"PATIENT",
 				"LANGUAGE",
 				Operator.EQUAL_TO,
-				this.mapper
-				.propertyNameOrPropIdToSqlCodeArray("language_08152012.txt"),
+				getMappingsFactory()
+				.getInstance("language_08152012.txt"),
 				true), ValueType.NOMINALVALUE),
 				new PropertySpec("race", null,
 				new ColumnSpec(schemaName, "PATIENT", "RACE",
 				Operator.EQUAL_TO,
-				this.mapper
-				.propertyNameOrPropIdToSqlCodeArray(
+				getMappingsFactory()
+				.getInstance(
 				"race_08172011.txt"),
 				true), ValueType.NOMINALVALUE),
 				new PropertySpec("ethnicity", null,
 				new ColumnSpec(schemaName, "PATIENT", "RACE",
 				Operator.EQUAL_TO,
-				this.mapper
-				.propertyNameOrPropIdToSqlCodeArray(
+				getMappingsFactory()
+				.getInstance(
 				"ethnicity_08172011.txt"),
 				true), ValueType.NOMINALVALUE)},
 			new ReferenceSpec[]{
@@ -536,6 +535,10 @@ public final class EurekaDataSourceBackend extends RelationalDbDataSourceBackend
 	@Override
 	protected EntitySpec[] eventSpecs(String keyIdSchema, String keyIdTable, String keyIdColumn, String keyIdJoinKey) throws IOException {
 		String schemaName = getSchemaName();
+		Mappings icd9DxMappings = getMappingsFactory().getInstance("icd9_diagnosis_08172011.txt");
+		Mappings icd9PxMappings = getMappingsFactory().getInstance("icd9_procedure_08172011.txt");
+		Mappings cptMappings = getMappingsFactory().getInstance("cpt_procedure_08172011.txt");
+		Mappings medsMappings = getMappingsFactory().getInstance("meds_08182011.txt");
 		EntitySpec[] eventSpecs = new EntitySpec[]{
 			new EntitySpec("Encounters", null, new String[]{"Encounter"},
 			true, new ColumnSpec(keyIdSchema, keyIdTable,
@@ -556,19 +559,19 @@ public final class EurekaDataSourceBackend extends RelationalDbDataSourceBackend
 				new ColumnSpec(schemaName, "ENCOUNTER",
 				"ENCOUNTER_TYPE",
 				Operator.EQUAL_TO,
-				this.mapper
-				.propertyNameOrPropIdToSqlCodeArray(
+				getMappingsFactory()
+				.getInstance(
 				"type_encounter_08172011.txt"),
 				true), ValueType.NOMINALVALUE),
-				/*new PropertySpec("healthcareEntity", null, new ColumnSpec(schemaName, "ENCOUNTER", "UNIVCODE", ColumnSpec.Operator.EQUAL_TO, this.mapper.propertyNameOrPropIdToSqlCodeArray("entity_healthcare_07182011.txt"), true), ValueType.NOMINALVALUE), */
+				/*new PropertySpec("healthcareEntity", null, new ColumnSpec(schemaName, "ENCOUNTER", "UNIVCODE", ColumnSpec.Operator.EQUAL_TO, this.mapper.read("entity_healthcare_07182011.txt"), true), ValueType.NOMINALVALUE), */
 				new PropertySpec("dischargeDisposition", null,
 				new ColumnSpec(schemaName, "ENCOUNTER",
 				"DISCHARGE_DISP",
 				Operator.EQUAL_TO,
-				this.mapper
-				.propertyNameOrPropIdToSqlCodeArray(
+				getMappingsFactory()
+				.getInstance(
 				"disposition_discharge_08172011.txt"),
-				true), ValueType.NOMINALVALUE), /*new PropertySpec("aprdrgRiskMortalityValue", null, new ColumnSpec(schemaName, "ENCOUNTER", "APRRISKOFMORTALITY"), ValueType.NUMERICALVALUE), new PropertySpec("aprdrgSeverityValue", null, new ColumnSpec(schemaName, "ENCOUNTER", "APRSEVERITYOFILLNESS"), ValueType.NOMINALVALUE), new PropertySpec("insuranceType", null, new ColumnSpec(schemaName, "ENCOUNTER", "HOSPITALPRIMARYPAYER", ColumnSpec.Operator.EQUAL_TO, this.mapper.propertyNameOrPropIdToSqlCodeArray("insurance_types_07182011.txt")), ValueType.NOMINALVALUE)*/},
+				true), ValueType.NOMINALVALUE), /*new PropertySpec("aprdrgRiskMortalityValue", null, new ColumnSpec(schemaName, "ENCOUNTER", "APRRISKOFMORTALITY"), ValueType.NUMERICALVALUE), new PropertySpec("aprdrgSeverityValue", null, new ColumnSpec(schemaName, "ENCOUNTER", "APRSEVERITYOFILLNESS"), ValueType.NOMINALVALUE), new PropertySpec("insuranceType", null, new ColumnSpec(schemaName, "ENCOUNTER", "HOSPITALPRIMARYPAYER", ColumnSpec.Operator.EQUAL_TO, this.mapper.read("insurance_types_07182011.txt")), ValueType.NOMINALVALUE)*/},
 			new ReferenceSpec[]{
 				new ReferenceSpec("\\Cardiovascular Registry\\", "Patients",
 				new ColumnSpec[]{
@@ -658,8 +661,7 @@ public final class EurekaDataSourceBackend extends RelationalDbDataSourceBackend
 				ReferenceSpec.Type.ONE), /*new ReferenceSpec("chargeAmount", "Hospital Charge Amount", new ColumnSpec[]{new ColumnSpec(schemaName, "ENCOUNTER", "RECORD_ID")}, ReferenceSpec.Type.ONE)*/},
 			null, null, null, null, null,
 			AbsoluteTimeGranularity.DAY, dtPositionParser, null),
-			new EntitySpec("Diagnosis Codes", null, this.mapper
-			.readCodes("icd9_diagnosis_08172011.txt", 0),
+			new EntitySpec("Diagnosis Codes", null, icd9DxMappings.readTargets(),
 			true, new ColumnSpec(keyIdSchema, keyIdTable,
 			keyIdColumn,
 			new JoinSpec("PATIENT_KEY", "PATIENT_KEY",
@@ -677,26 +679,21 @@ public final class EurekaDataSourceBackend extends RelationalDbDataSourceBackend
 					new ColumnSpec(schemaName, "ICD9D_EVENT",
 					"ENTITY_ID",
 					Operator.EQUAL_TO,
-					this.mapper
-					.propertyNameOrPropIdToSqlCodeArray(
-					"icd9_diagnosis_08172011.txt")),
+					icd9DxMappings),
 					ValueType.NOMINALVALUE), 
 				new PropertySpec("DXPRIORITY", 
 						null, 
 						new ColumnSpec(schemaName, "ICD9D_EVENT", 
 								"RANK", 
 								Operator.EQUAL_TO, 
-								this.mapper.propertyNameOrPropIdToSqlCodeArray("icd9_diagnosis_position_07182011.txt")), 
+								getMappingsFactory().getInstance("icd9_diagnosis_position_07182011.txt")), 
 						ValueType.NOMINALVALUE)},
 			null, null,
 			new ColumnSpec(schemaName, "ICD9D_EVENT", "ENTITY_ID",
-			Operator.EQUAL_TO, this.mapper
-			.propertyNameOrPropIdToSqlCodeArray(
-			"icd9_diagnosis_08172011.txt"), true),
+			Operator.EQUAL_TO, icd9DxMappings, true),
 			null, null, null, AbsoluteTimeGranularity.MINUTE,
 			dtPositionParser, null),
-			new EntitySpec("ICD9 Procedure Codes", null, this.mapper
-			.readCodes("icd9_procedure_08172011.txt", 0),
+			new EntitySpec("ICD9 Procedure Codes", null, icd9PxMappings.readTargets(),
 			true, new ColumnSpec(keyIdSchema, keyIdTable,
 			keyIdColumn,
 			new JoinSpec("PATIENT_KEY", "PATIENT_KEY",
@@ -714,18 +711,13 @@ public final class EurekaDataSourceBackend extends RelationalDbDataSourceBackend
 				new ColumnSpec(schemaName, "ICD9P_EVENT",
 				"ENTITY_ID",
 				Operator.EQUAL_TO,
-				this.mapper
-				.propertyNameOrPropIdToSqlCodeArray(
-				"icd9_procedure_08172011.txt")),
+				icd9PxMappings),
 				ValueType.NOMINALVALUE)}, null, null,
 			new ColumnSpec(schemaName, "ICD9P_EVENT", "ENTITY_ID",
-			Operator.EQUAL_TO, this.mapper
-			.propertyNameOrPropIdToSqlCodeArray(
-			"icd9_procedure_08172011.txt"), true),
+			Operator.EQUAL_TO, icd9PxMappings, true),
 			null, null, null, AbsoluteTimeGranularity.MINUTE,
 			dtPositionParser, null),
-			new EntitySpec("CPT Procedure Codes", null, this.mapper
-			.readCodes("cpt_procedure_08172011.txt", 0), true,
+			new EntitySpec("CPT Procedure Codes", null, cptMappings.readTargets(), true,
 			new ColumnSpec(keyIdSchema, keyIdTable,
 			keyIdColumn,
 			new JoinSpec("PATIENT_KEY", "PATIENT_KEY",
@@ -744,18 +736,14 @@ public final class EurekaDataSourceBackend extends RelationalDbDataSourceBackend
 				new ColumnSpec(schemaName, "CPT_EVENT",
 				"ENTITY_ID",
 				Operator.EQUAL_TO,
-				this.mapper
-				.propertyNameOrPropIdToSqlCodeArray(
-				"cpt_procedure_08172011.txt")),
+				cptMappings),
 				ValueType.NOMINALVALUE)}, null, null,
 			new ColumnSpec(schemaName, "CPT_EVENT", "ENTITY_ID",
-			Operator.EQUAL_TO, this.mapper
-			.propertyNameOrPropIdToSqlCodeArray(
-			"cpt_procedure_08172011.txt"), true),
+			Operator.EQUAL_TO, cptMappings, true),
 			null, null, null, AbsoluteTimeGranularity.MINUTE,
 			dtPositionParser, null),
 			new EntitySpec("Medication Orders", null,
-			this.mapper.readCodes("meds_08182011.txt", 0),
+			medsMappings.readTargets(),
 			true, new ColumnSpec(keyIdSchema, keyIdTable,
 			keyIdColumn,
 			new JoinSpec("PATIENT_KEY", "PATIENT_KEY",
@@ -768,12 +756,10 @@ public final class EurekaDataSourceBackend extends RelationalDbDataSourceBackend
 				new ColumnSpec(schemaName, "MEDS_EVENT",
 				"EVENT_KEY")},
 			new ColumnSpec(schemaName, "MEDS_EVENT", "TS_OBX"),
-			null, new PropertySpec[]{ /*new PropertySpec("orderDescription", null, new ColumnSpec(schemaName, "fact_history_medication", new JoinSpec("synonym_order_key", "synonym_order_key", new ColumnSpec(schemaName, "lkp_synonym_order", "synonym_order_desc"))), ValueType.NOMINALVALUE), new PropertySpec("orderContext", null, new ColumnSpec(schemaName, "fact_history_medication", new JoinSpec("context_medication_key", "context_medication_key", new ColumnSpec(schemaName, "lkp_context_medication", "context_medication_id", ColumnSpec.Operator.EQUAL_TO, this.mapper.propertyNameOrPropIdToSqlCodeArray("order_context_03292011.txt"), true))), ValueType.NOMINALVALUE), new PropertySpec("continuingOrder", null, new ColumnSpec(schemaName, "fact_history_medication", "order_continuing_ind"), ValueType.BOOLEANVALUE), new PropertySpec("orderStatus", null, new ColumnSpec(schemaName, "fact_history_medication", new JoinSpec("order_status_key", "order_status_key", new ColumnSpec(schemaName, "lkp_order_status", "order_status_id", ColumnSpec.Operator.EQUAL_TO, this.mapper.propertyNameOrPropIdToSqlCodeArray("order_status_03292011.txt"), true))), ValueType.NOMINALVALUE), new PropertySpec("orderAction", null, new ColumnSpec(schemaName, "fact_history_medication", new JoinSpec("action_order_key", "action_order_key", new ColumnSpec(schemaName, "lkp_action_order", "action_order_id", ColumnSpec.Operator.EQUAL_TO, this.mapper.propertyNameOrPropIdToSqlCodeArray("order_action_03292011.txt"), false))), ValueType.NOMINALVALUE)*/},
+			null, new PropertySpec[]{ /*new PropertySpec("orderDescription", null, new ColumnSpec(schemaName, "fact_history_medication", new JoinSpec("synonym_order_key", "synonym_order_key", new ColumnSpec(schemaName, "lkp_synonym_order", "synonym_order_desc"))), ValueType.NOMINALVALUE), new PropertySpec("orderContext", null, new ColumnSpec(schemaName, "fact_history_medication", new JoinSpec("context_medication_key", "context_medication_key", new ColumnSpec(schemaName, "lkp_context_medication", "context_medication_id", ColumnSpec.Operator.EQUAL_TO, this.mapper.read("order_context_03292011.txt"), true))), ValueType.NOMINALVALUE), new PropertySpec("continuingOrder", null, new ColumnSpec(schemaName, "fact_history_medication", "order_continuing_ind"), ValueType.BOOLEANVALUE), new PropertySpec("orderStatus", null, new ColumnSpec(schemaName, "fact_history_medication", new JoinSpec("order_status_key", "order_status_key", new ColumnSpec(schemaName, "lkp_order_status", "order_status_id", ColumnSpec.Operator.EQUAL_TO, this.mapper.read("order_status_03292011.txt"), true))), ValueType.NOMINALVALUE), new PropertySpec("orderAction", null, new ColumnSpec(schemaName, "fact_history_medication", new JoinSpec("action_order_key", "action_order_key", new ColumnSpec(schemaName, "lkp_action_order", "action_order_id", ColumnSpec.Operator.EQUAL_TO, this.mapper.read("order_action_03292011.txt"), false))), ValueType.NOMINALVALUE)*/},
 			null, null,
 			new ColumnSpec(schemaName, "MEDS_EVENT", "ENTITY_ID",
-			Operator.EQUAL_TO, this.mapper
-			.propertyNameOrPropIdToSqlCodeArray(
-			"meds_08182011.txt"), true), null, null,
+			Operator.EQUAL_TO, medsMappings, true), null, null,
 			null, AbsoluteTimeGranularity.MINUTE, dtPositionParser,
 			null),};
 		return eventSpecs;
@@ -782,9 +768,11 @@ public final class EurekaDataSourceBackend extends RelationalDbDataSourceBackend
 	@Override
 	protected EntitySpec[] primitiveParameterSpecs(String keyIdSchema, String keyIdTable, String keyIdColumn, String keyIdJoinKey) throws IOException {
 		String schemaName = getSchemaName();
+		Mappings labsMappings = getMappingsFactory().getInstance("labs_08172011.txt");
+		Mappings vitalsMappings = getMappingsFactory().getInstance("vitals_result_types_08172011.txt");
 		EntitySpec[] primitiveParameterSpecs = new EntitySpec[]{
 			new EntitySpec("Labs", null,
-			this.mapper.readCodes("labs_08172011.txt", 0),
+			labsMappings.readTargets(),
 			true, new ColumnSpec(keyIdSchema, keyIdTable,
 			keyIdColumn,
 			new JoinSpec("PATIENT_KEY", "PATIENT_KEY",
@@ -807,14 +795,11 @@ public final class EurekaDataSourceBackend extends RelationalDbDataSourceBackend
 				"FLAG"), ValueType.NOMINALVALUE)}, null,
 			null,
 			new ColumnSpec(schemaName, "LABS_EVENT", "ENTITY_ID",
-			Operator.EQUAL_TO, this.mapper
-			.propertyNameOrPropIdToSqlCodeArray(
-			"labs_08172011.txt"), true), null,
+			Operator.EQUAL_TO, labsMappings, true), null,
 			new ColumnSpec(schemaName, "LABS_EVENT", "RESULT_STR"),
 			ValueType.VALUE, AbsoluteTimeGranularity.MINUTE,
 			dtPositionParser, null), new EntitySpec("Vitals", null,
-			this.mapper
-			.readCodes("vitals_result_types_08172011.txt", 0),
+			vitalsMappings.readTargets(),
 			true, new ColumnSpec(keyIdSchema, keyIdTable,
 			keyIdColumn, new JoinSpec("PATIENT_KEY", "PATIENT_KEY",
 			new ColumnSpec(schemaName, "ENCOUNTER",
@@ -832,9 +817,7 @@ public final class EurekaDataSourceBackend extends RelationalDbDataSourceBackend
 				new ColumnSpec(schemaName, "VITALS_EVENT",
 				"FLAG"), ValueType.NOMINALVALUE)}, null,
 			null, new ColumnSpec(schemaName, "VITALS_EVENT", "ENTITY_ID",
-			Operator.EQUAL_TO, this.mapper
-			.propertyNameOrPropIdToSqlCodeArray(
-			"vitals_result_types_08172011.txt"), true), null,
+			Operator.EQUAL_TO, vitalsMappings, true), null,
 			new ColumnSpec(schemaName, "VITALS_EVENT", "RESULT_STR"),
 			ValueType.VALUE, AbsoluteTimeGranularity.MINUTE,
 			dtPositionParser, null),};
