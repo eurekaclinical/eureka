@@ -4,7 +4,7 @@ package edu.emory.cci.aiw.cvrg.eureka.common.entity;
  * #%L
  * Eureka Common
  * %%
- * Copyright (C) 2012 - 2014 Emory University
+ * Copyright (C) 2012 - 2015 Emory University
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,14 +20,32 @@ package edu.emory.cci.aiw.cvrg.eureka.common.entity;
  * #L%
  */
 
+import java.util.Arrays;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Table;
+
 /**
  *
  * @author Andrew Post
  */
-public interface DestinationEntityVisitor {
-	void visit(CohortDestinationEntity cohortDestination);
+@Entity
+@Table(name = "neo4j_destinations")
+public class Neo4jDestinationEntity extends DestinationEntity {
+	@Column(nullable=false)
+	private String dbHome;
+
+	public String getDbHome() {
+		return dbHome;
+	}
+
+	public void setDbHome(String dbHome) {
+		this.dbHome = dbHome;
+	}
 	
-	void visit(I2B2DestinationEntity i2b2Destination);
+	@Override
+	public void accept(DestinationEntityVisitor visitor) {
+		visitor.visit(this);
+	}
 	
-	void visit(Neo4jDestinationEntity neo4jDestination);
 }

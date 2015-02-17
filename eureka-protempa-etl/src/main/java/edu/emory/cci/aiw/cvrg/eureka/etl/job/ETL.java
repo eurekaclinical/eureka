@@ -59,6 +59,7 @@ import edu.emory.cci.aiw.cvrg.eureka.etl.dao.EtlGroupDao;
 import edu.emory.cci.aiw.cvrg.eureka.etl.dao.JobDao;
 import edu.emory.cci.aiw.cvrg.eureka.etl.queryresultshandler.ProtempaDestinationFactory;
 import edu.emory.cci.aiw.cvrg.eureka.etl.resource.Destinations;
+import org.protempa.query.QueryMode;
 
 /**
  * This class actually runs Protempa.
@@ -107,13 +108,14 @@ public class ETL {
 			q.setPropositionIds(inPropIdsToShow);
 			q.setId(job.getId().toString());
 			q.setFilters(filter);
+			q.setQueryMode(appendData ? QueryMode.UPDATE : QueryMode.REPLACE);
 			LOGGER.trace("Constructed Protempa query {}", q);
 			Query query = protempa.buildQuery(q);
 			EtlDestination eurekaDestination = 
 					new Destinations(this.etlProperties, job.getEtlUser(), this.destinationDao, this.groupDao).getOne(job.getDestination().getName());
 			org.protempa.dest.Destination protempaDestination = 
 					this.protempaDestFactory
-					.getInstance(eurekaDestination.getId(), protempa.getKnowledgeSource(), appendData);
+					.getInstance(eurekaDestination.getId(), protempa.getKnowledgeSource());
 			protempa.execute(query, protempaDestination);
 			protempa.close();
 		} catch (CloseException | BackendNewInstanceException | BackendInitializationException | ConfigurationsLoadException | BackendProviderSpecLoaderException | QueryBuildException | InvalidConfigurationException | ConfigurationsNotFoundException | DataSourceValidationIncompleteException ex) {

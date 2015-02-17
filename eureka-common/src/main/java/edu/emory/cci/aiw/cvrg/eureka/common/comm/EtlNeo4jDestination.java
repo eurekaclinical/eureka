@@ -1,4 +1,4 @@
-package edu.emory.cci.aiw.cvrg.eureka.common.entity;
+package edu.emory.cci.aiw.cvrg.eureka.common.comm;
 
 /*
  * #%L
@@ -24,10 +24,21 @@ package edu.emory.cci.aiw.cvrg.eureka.common.entity;
  *
  * @author Andrew Post
  */
-public interface DestinationEntityVisitor {
-	void visit(CohortDestinationEntity cohortDestination);
+public class EtlNeo4jDestination extends EtlDestination {
 	
-	void visit(I2B2DestinationEntity i2b2Destination);
+	private String dbPath;
+
+	public String getDbPath() {
+		return dbPath;
+	}
+
+	public void setDbPath(String dbPath) {
+		this.dbPath = dbPath;
+	}
 	
-	void visit(Neo4jDestinationEntity neo4jDestination);
+	@Override
+	public void accept(EtlDestinationVisitor etlDestinationVisitor) {
+		etlDestinationVisitor.visit(this);
+	}
+	
 }

@@ -38,7 +38,9 @@ import org.codehaus.jackson.annotate.JsonTypeInfo;
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
 @JsonSubTypes({
         @JsonSubTypes.Type(value = EtlCohortDestination.class, name = "COHORT"),
-        @JsonSubTypes.Type(value = EtlI2B2Destination.class, name = "I2B2") })
+        @JsonSubTypes.Type(value = EtlI2B2Destination.class, name = "I2B2"),
+		@JsonSubTypes.Type(value = EtlNeo4jDestination.class, name = "NEO4J")
+})
 public abstract class EtlDestination {
 
 	/**

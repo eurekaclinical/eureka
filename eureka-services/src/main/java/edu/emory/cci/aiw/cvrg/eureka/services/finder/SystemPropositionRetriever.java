@@ -86,9 +86,7 @@ public class SystemPropositionRetriever implements
 		} catch (ClientException e) {
 			LOGGER.error(e.getMessage(), e);
 			ClientResponse.Status status = e.getResponseStatus();
-			if (status == ClientResponse.Status.NOT_FOUND) {
-				result = null;
-			} else {
+			if (status != ClientResponse.Status.NOT_FOUND) {
 				throw new PropositionFindException(
 						"Could not retrieve proposition definitions " + StringUtils.join(inKeys, ", "), e);
 			}

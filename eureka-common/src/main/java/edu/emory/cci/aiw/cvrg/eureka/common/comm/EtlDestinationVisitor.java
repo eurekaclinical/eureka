@@ -28,4 +28,6 @@ public interface EtlDestinationVisitor {
 	void visit(EtlCohortDestination etlCohortDestination);
 	
 	void visit(EtlI2B2Destination etlI2B2Destination);
+	
+	void visit(EtlNeo4jDestination etlNeo4jDestination);
 }

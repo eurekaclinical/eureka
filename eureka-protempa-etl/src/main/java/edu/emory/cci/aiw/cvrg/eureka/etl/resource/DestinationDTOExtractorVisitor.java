@@ -25,6 +25,7 @@ import edu.emory.cci.aiw.cvrg.eureka.common.entity.CohortDestinationEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.DestinationEntityVisitor;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.EtlUserEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.I2B2DestinationEntity;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.Neo4jDestinationEntity;
 import edu.emory.cci.aiw.cvrg.eureka.etl.config.EtlProperties;
 import edu.emory.cci.aiw.cvrg.eureka.etl.dao.EtlGroupDao;
 
@@ -35,11 +36,13 @@ import edu.emory.cci.aiw.cvrg.eureka.etl.dao.EtlGroupDao;
 public class DestinationDTOExtractorVisitor implements ConfigDTOExtractorVisitor, DestinationEntityVisitor {
 	private final CohortDestinationsDTOExtractor cohortExtractor;
 	private final I2B2DestinationsDTOExtractor i2b2Extractor;
+	private final Neo4jDestinationsDTOExtractor neo4jExtractor;
 	private EtlDestination destDTO;
 
 	public DestinationDTOExtractorVisitor(EtlProperties inEtlProperties, EtlUserEntity user, EtlGroupDao inGroupDao) {
 		this.cohortExtractor = new CohortDestinationsDTOExtractor(user, inGroupDao);
 		this.i2b2Extractor = new I2B2DestinationsDTOExtractor(inEtlProperties, user, inGroupDao);
+		this.neo4jExtractor = new Neo4jDestinationsDTOExtractor(inEtlProperties, user, inGroupDao);
 	}
 	
 	@Override
@@ -50,6 +53,11 @@ public class DestinationDTOExtractorVisitor implements ConfigDTOExtractorVisitor
 	@Override
 	public void visit(I2B2DestinationEntity i2b2Destination) {
 		this.destDTO = i2b2Extractor.extractDTO(i2b2Destination);
+	}
+
+	@Override
+	public void visit(Neo4jDestinationEntity neo4jDestination) {
+		this.destDTO = this.neo4jExtractor.extractDTO(neo4jDestination);
 	}
 	
 	public EtlDestination getEtlDestination() {

@@ -250,9 +250,11 @@ public class JobEntity {
 		job.setState(getCurrentState());
 		job.setJobEvents(getJobEventsInOrder());
 		List<LinkEntity> linkEntities = this.destination.getLinks();
-		List<Link> links = new ArrayList<>(linkEntities.size());
-		for (LinkEntity le : linkEntities) {
-			links.add(le.toLink());
+		List<Link> links = new ArrayList<>(linkEntities != null ? linkEntities.size() : 0);
+		if (linkEntities != null) {
+			for (LinkEntity le : linkEntities) {
+				links.add(le.toLink());
+			}
 		}
 		job.setLinks(links);
 		return job;

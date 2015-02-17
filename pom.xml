@@ -49,10 +49,10 @@ and data into your own instance of the i2b2 data warehouse system.
 		<eureka-version>1.10-SNAPSHOT</eureka-version>
 		<protempa-version>2.4-SNAPSHOT</protempa-version>
 		<aiw-i2b2-etl-version>1.0.7-SNAPSHOT</aiw-i2b2-etl-version>
+		<aiw-neo4j-etl-version>1.0-SNAPSHOT</aiw-neo4j-etl-version>
 		<oracle-version>11.2.0.3</oracle-version>
 		<freemarker-version>2.3.20</freemarker-version>
 		<jpamodelgen-version>1.2.0.Final</jpamodelgen-version>
-		<mysql-version>5.1.27</mysql-version>
 		<ehcache-version>2.6.0</ehcache-version>
 		<tomcat-plugin-version>1.1</tomcat-plugin-version>
 
@@ -374,6 +374,11 @@ and data into your own instance of the i2b2 data warehouse system.
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-surefire-plugin</artifactId>
 					<version>2.16</version>
+					<configuration>
+						<systemProperties>
+							<java.awt.headless>true</java.awt.headless>
+						</systemProperties>
+					</configuration>
 				</plugin>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
@@ -444,6 +449,7 @@ and data into your own instance of the i2b2 data warehouse system.
 							<pattern>yyyy</pattern>
 							<units>year</units>
 							<offset>0</offset>
+							<locale>en,US</locale>
 						</configuration>
 					</execution>
 				</executions>
@@ -712,9 +718,14 @@ and data into your own instance of the i2b2 data warehouse system.
 				<version>${protempa-version}</version>
 			</dependency>
 			<dependency>
-				<groupId>edu.emory.cci</groupId>
+				<groupId>edu.emory.cci.aiw</groupId>
 				<artifactId>aiw-i2b2-etl</artifactId>
 				<version>${aiw-i2b2-etl-version}</version>
+			</dependency>
+			<dependency>
+				<groupId>edu.emory.cci.aiw</groupId>
+				<artifactId>aiw-neo4j-etl</artifactId>
+				<version>${aiw-neo4j-etl-version}</version>
 			</dependency>
 			<dependency>
 				<groupId>com.oracle</groupId>
@@ -736,12 +747,6 @@ and data into your own instance of the i2b2 data warehouse system.
 				<groupId>org.hibernate</groupId>
 				<artifactId>hibernate-jpamodelgen</artifactId>
 				<version>${jpamodelgen-version}</version>
-			</dependency>
-			<dependency>
-				<groupId>mysql</groupId>
-				<artifactId>mysql-connector-java</artifactId>
-				<version>${mysql-version}</version>
-				<scope>test</scope>
 			</dependency>
 			<dependency>
 				<groupId>net.sf.ehcache</groupId>

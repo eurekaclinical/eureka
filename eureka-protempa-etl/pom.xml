@@ -101,8 +101,12 @@ other export formats.
 			<artifactId>eureka-common</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>edu.emory.cci</groupId>
+			<groupId>edu.emory.cci.aiw</groupId>
 			<artifactId>aiw-i2b2-etl</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>edu.emory.cci.aiw</groupId>
+			<artifactId>aiw-neo4j-etl</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.protempa</groupId>
@@ -119,10 +123,6 @@ other export formats.
 		<dependency>
 			<groupId>org.protempa</groupId>
 			<artifactId>protempa-framework</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>mysql</groupId>
-			<artifactId>mysql-connector-java</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>edu.emory.cci.aiw.cvrg</groupId>

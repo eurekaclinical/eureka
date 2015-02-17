@@ -604,10 +604,36 @@ limitations under the License.
 				<constraints nullable="false"/>
 			</column>
 		</createTable>
-		<addForeignKeyConstraint baseColumnNames="I2B2DESTCONCEPTSPEC_ID" baseTableName="I2B2_DEST_MODIFIERSPECS" constraintName="FK_I2B2_DEST_MODIFIERSPEC" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" referencedColumnNames="ID" referencedTableName="I2B2_DEST_CONCEPTSPECS" referencesUniqueColumn="true"/>
+		<addForeignKeyConstraint baseColumnNames="I2B2DESTCONCEPTSPECS_ID" baseTableName="I2B2_DEST_MODIFIERSPECS" constraintName="FK_I2B2_DEST_MODIFIERSPEC" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" referencedColumnNames="ID" referencedTableName="I2B2_DEST_CONCEPTSPECS" referencesUniqueColumn="true"/>
 		<createSequence sequenceName="I2B2_MS_SEQ"/>
 		
 		<addUniqueConstraint tableName="I2B2_DEST_DATASPECS" columnNames="NAME, I2B2DESTINATIONS_ID"/>
 		<addUniqueConstraint tableName="I2B2_DEST_CONCEPTSPECS" columnNames="PROPOSITION, PROPERTY, REFERENCE, I2B2DESTINATIONS_ID"/>
+	</changeSet>
+	<changeSet author="arpost" id="1361552652236-29">
+		<createTable tableName="NEO4J_DESTINATIONS">
+			<column name="ID" type="BIGINT">
+				<constraints nullable="false" primaryKey="true" primaryKeyName="NEO4J_DEST_PK"/>
+			</column>
+			<column name="DBHOME" type="VARCHAR(255)">
+				<constraints nullable="false"/>
+			</column>
+		</createTable>
+	</changeSet>
+	<changeSet author="arpost" id="1361552652236-30">
+		<createTable tableName="DEST_LINKS">
+			<column name="ID" type="BIGINT">
+				<constraints nullable="false" primaryKey="true" primaryKeyName="DEST_LINK_PK"/>
+			</column>
+			<column name="DESTINATIONS_ID" type="BIGINT">
+				<constraints nullable="false"/>
+			</column>
+			<column name="URL" type="VARCHAR(255)">
+				<constraints nullable="false"/>
+			</column>
+			<column name="DISPLAYNAME" type="VARCHAR(255)"/>
+		</createTable>
+		<addForeignKeyConstraint baseColumnNames="DESTINATIONS_ID" baseTableName="DEST_LINKS" constraintName="FK_DEST_LINKS" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" referencedColumnNames="ID" referencedTableName="DESTINATIONS" referencesUniqueColumn="true"/>
+		<createSequence sequenceName="DEST_LINK_SEQ"/>
 	</changeSet>
 </databaseChangeLog>

@@ -28,4 +28,6 @@ public interface DestinationVisitor {
 	void visit(CohortDestination cohortDestination);
 	
 	void visit(I2B2Destination i2b2Destination);
+	
+	void visit(Neo4jDestination neo4jDestination);
 }

@@ -403,25 +403,7 @@ public final class EurekaDataSourceBackend extends RelationalDbDataSourceBackend
 				keyIdTable,
 				"PATIENT_KEY"),
 				ValueType.NOMINALVALUE)},
-			new ReferenceSpec[]{
-				new ReferenceSpec("encounters", "Encounters",
-				new ColumnSpec[]{
-					new ColumnSpec(keyIdSchema,
-					keyIdTable,
-					new JoinSpec(
-					"PATIENT_KEY",
-					"PATIENT_KEY",
-					new ColumnSpec(
-					schemaName,
-					"ENCOUNTER",
-					"ENCOUNTER_KEY")))},
-				ReferenceSpec.Type.MANY),
-				new ReferenceSpec("patientDetails",
-				"Patient Details", new ColumnSpec[]{
-					new ColumnSpec(keyIdSchema,
-					keyIdTable,
-					"PATIENT_KEY")},
-				ReferenceSpec.Type.MANY)}, null, null,
+			new ReferenceSpec[]{}, null, null,
 			null, null, null, null, null, null),
 			new EntitySpec("Patient Details", null, new String[]{"PatientDetails"},
 			true, new ColumnSpec(keyIdSchema, keyIdTable,
@@ -573,12 +555,6 @@ public final class EurekaDataSourceBackend extends RelationalDbDataSourceBackend
 				"disposition_discharge_08172011.txt"),
 				true), ValueType.NOMINALVALUE), /*new PropertySpec("aprdrgRiskMortalityValue", null, new ColumnSpec(schemaName, "ENCOUNTER", "APRRISKOFMORTALITY"), ValueType.NUMERICALVALUE), new PropertySpec("aprdrgSeverityValue", null, new ColumnSpec(schemaName, "ENCOUNTER", "APRSEVERITYOFILLNESS"), ValueType.NOMINALVALUE), new PropertySpec("insuranceType", null, new ColumnSpec(schemaName, "ENCOUNTER", "HOSPITALPRIMARYPAYER", ColumnSpec.Operator.EQUAL_TO, this.mapper.read("insurance_types_07182011.txt")), ValueType.NOMINALVALUE)*/},
 			new ReferenceSpec[]{
-				new ReferenceSpec("\\Cardiovascular Registry\\", "Patients",
-				new ColumnSpec[]{
-					new ColumnSpec(schemaName,
-					"ENCOUNTER",
-					"PATIENT_KEY")},
-				ReferenceSpec.Type.ONE),
 				new ReferenceSpec(this.labsRootFullName, "Labs",
 				new ColumnSpec[]{
 					new ColumnSpec(schemaName,

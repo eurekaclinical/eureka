@@ -28,7 +28,9 @@ import edu.emory.cci.aiw.cvrg.eureka.common.comm.Destination;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.EtlCohortDestination;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.EtlDestination;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.EtlI2B2Destination;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.EtlNeo4jDestination;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.I2B2Destination;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.Neo4jDestination;
 
 /**
  *
@@ -55,6 +57,14 @@ public class EtlDestinationToDestinationVisitor extends AbstractEtlDestinationVi
 		I2B2Destination i2b2Destination = new I2B2Destination();
 		visitCommon(etlI2B2Destination, i2b2Destination);
 		this.destination = i2b2Destination;
+	}
+
+	@Override
+	public void visit(EtlNeo4jDestination etlNeo4jDestination) {
+		Neo4jDestination neo4jDestination = new Neo4jDestination();
+		visitCommon(etlNeo4jDestination, neo4jDestination);
+		neo4jDestination.setDbPath(etlNeo4jDestination.getDbPath());
+		this.destination = neo4jDestination;
 	}
 	
 	public Destination getDestination() {

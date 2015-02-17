@@ -171,11 +171,6 @@ of the Eureka! Clinical Analytics web user interface.
 						<version>${h2-version}</version>
 					</dependency>
 					<dependency>
-						<groupId>mysql</groupId>
-						<artifactId>mysql-connector-java</artifactId>
-						<version>${mysql-version}</version>
-					</dependency>
-					<dependency>
 						<groupId>com.oracle</groupId>
 						<artifactId>ojdbc6</artifactId>
 						<version>${oracle-version}</version>

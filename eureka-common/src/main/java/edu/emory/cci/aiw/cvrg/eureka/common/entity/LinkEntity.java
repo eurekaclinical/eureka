@@ -21,15 +21,43 @@ package edu.emory.cci.aiw.cvrg.eureka.common.entity;
  */
 
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.Link;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
 
 /**
  *
  * @author Andrew Post
  */
+@Entity
+@Table(name = "dest_links")
 public class LinkEntity {
+	@Id
+	@SequenceGenerator(name = "LINK_SEQ_GENERATOR", sequenceName = "DEST_LINK_SEQ",
+	allocationSize = 1)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE,
+	generator = "LINK_SEQ_GENERATOR")
+	private Long id;
 	private String url;
 	private String displayName;
+	
+	@ManyToOne
+	@JoinColumn(name="destinations_id")
+	private DestinationEntity destination;
 
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+	
 	public String getUrl() {
 		return url;
 	}
@@ -44,6 +72,14 @@ public class LinkEntity {
 
 	public void setDisplayName(String displayName) {
 		this.displayName = displayName;
+	}
+
+	public DestinationEntity getDestination() {
+		return destination;
+	}
+
+	public void setDestination(DestinationEntity destination) {
+		this.destination = destination;
 	}
 	
 	public Link toLink() {

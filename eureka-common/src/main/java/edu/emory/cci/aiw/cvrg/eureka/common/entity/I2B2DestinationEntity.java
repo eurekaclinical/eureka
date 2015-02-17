@@ -79,13 +79,6 @@ public class I2B2DestinationEntity extends DestinationEntity {
 	@OneToMany(cascade = CascadeType.ALL, targetEntity = I2B2DestinationConceptSpecEntity.class, mappedBy="destination")
 	private List<I2B2DestinationConceptSpecEntity> conceptSpecs;
 
-	public I2B2DestinationEntity() {
-		LinkEntity link = new LinkEntity();
-		link.setUrl("/i2b2/");
-		link.setDisplayName("Go to i2b2");
-		setLinks(Arrays.asList(new LinkEntity[]{link}));
-	}
-	
 	@Override
 	public void accept(DestinationEntityVisitor visitor) {
 		visitor.visit(this);

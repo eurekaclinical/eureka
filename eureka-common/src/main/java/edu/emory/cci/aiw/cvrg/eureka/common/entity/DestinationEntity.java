@@ -36,7 +36,6 @@ import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
-import javax.persistence.Transient;
 
 /**
  *
@@ -77,7 +76,7 @@ public abstract class DestinationEntity implements ConfigEntity {
 	@OneToMany(cascade = CascadeType.ALL, mappedBy="destination")
 	private List<DestinationGroupMembership> groups;
 	
-	@Transient
+	@OneToMany(cascade = CascadeType.ALL, mappedBy="destination")
 	private List<LinkEntity> links;
 
 	public Long getId() {

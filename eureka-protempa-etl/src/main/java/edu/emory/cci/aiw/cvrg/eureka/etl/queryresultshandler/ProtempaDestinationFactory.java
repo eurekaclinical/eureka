@@ -31,10 +31,11 @@ import edu.emory.cci.aiw.cvrg.eureka.common.entity.CohortDestinationEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.CohortEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.DestinationEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.I2B2DestinationEntity;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.Neo4jDestinationEntity;
 import edu.emory.cci.aiw.cvrg.eureka.etl.config.EtlProperties;
 import edu.emory.cci.aiw.cvrg.eureka.etl.dao.DestinationDao;
 import edu.emory.cci.aiw.i2b2etl.dest.I2b2Destination;
-import edu.emory.cci.aiw.i2b2etl.dest.config.xml.XmlFileConfiguration;
+import edu.emory.cci.aiw.neo4jetl.Neo4jDestination;
 
 /**
  *
@@ -51,15 +52,16 @@ public class ProtempaDestinationFactory {
 		this.etlProperties = etlProperties;
 	}
 	
-	public org.protempa.dest.Destination getInstance(Long destId, KnowledgeSource knowledgeSource, boolean appendData) {
+	public org.protempa.dest.Destination getInstance(Long destId, KnowledgeSource knowledgeSource) {
 		DestinationEntity dest = this.destinationDao.retrieve(destId);
 		if (dest instanceof I2B2DestinationEntity) {
-			I2b2Destination.DataInsertMode insertMode = appendData ? I2b2Destination.DataInsertMode.APPEND : I2b2Destination.DataInsertMode.TRUNCATE;
-			return new I2b2Destination(new EurekaI2b2Configuration((I2B2DestinationEntity) dest, this.etlProperties), insertMode);
+			return new I2b2Destination(new EurekaI2b2Configuration((I2B2DestinationEntity) dest, this.etlProperties));
 		} else if (dest instanceof CohortDestinationEntity) {
 			CohortEntity cohortEntity = ((CohortDestinationEntity) dest).getCohort();
 			Cohort cohort = cohortEntity.toCohort();
 			return new KeyLoaderDestination(new CohortCriteria(cohort));
+		} else if (dest instanceof Neo4jDestinationEntity) {
+			return new Neo4jDestination(new EurekaNeo4jConfiguration((Neo4jDestinationEntity) dest));
 		} else {
 			throw new AssertionError("Invalid destination entity type " + dest.getClass());
 		}
