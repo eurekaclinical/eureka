@@ -37,6 +37,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
@@ -70,6 +71,14 @@ public class PropositionDefinitionFinder implements AutoCloseable {
 			LOGGER.debug("Done: configurations, source factory, and knowledge source created");
 		} catch (ConfigurationsNotFoundException | BackendInitializationException | BackendNewInstanceException | ConfigurationsLoadException | InvalidConfigurationException | BackendProviderSpecLoaderException ex) {
 			throw new PropositionFinderException(ex);
+		}
+	}
+	
+	public List<PropositionDefinition> findAll(Collection<String> propIds) throws PropositionFinderException {
+		try {
+			return this.knowledgeSource.readPropositionDefinitions(propIds.toArray(new String[propIds.size()]));
+		} catch (KnowledgeSourceReadException e) {
+			throw new PropositionFinderException(e);
 		}
 	}
 

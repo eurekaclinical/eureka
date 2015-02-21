@@ -1,1 +1,2 @@
 edu.emory.cci.aiw.cvrg.eureka.etl.dsb.EurekaDataSourceBackend
+edu.emory.cci.aiw.cvrg.eureka.etl.dsb.EurekaFixedWidthFileDataSourceBackend

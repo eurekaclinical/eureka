@@ -1,8 +1,10 @@
+package edu.emory.cci.aiw.cvrg.eureka.etl.dsb;
+
 /*
  * #%L
  * Eureka Protempa ETL
  * %%
- * Copyright (C) 2012 - 2013 Emory University
+ * Copyright (C) 2012 - 2015 Emory University
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,13 +19,25 @@
  * limitations under the License.
  * #L%
  */
-package edu.emory.cci.aiw.cvrg.eureka.etl.validator;
 
-public class PropositionValidatorException extends Exception {
-	public PropositionValidatorException(String  inMessage) {
-		super(inMessage);
-	}
-	public PropositionValidatorException(Throwable inThrowable) {
-		super(inThrowable);
-	}
+import org.protempa.backend.dsb.DataSourceBackend;
+
+/**
+ *
+ * @author Andrew Post
+ */
+public interface EurekaFileDataSourceBackend extends DataSourceBackend {
+	
+	void setDataFileDirectoryName(String dataFileDirectoryName);
+
+	String getDataFileDirectoryName();
+
+	String[] getMimetypes();
+
+	void setMimetypes(String[] mimetypes);
+	
+	void setRequired(Boolean required);
+	
+	Boolean isRequired();
+	
 }

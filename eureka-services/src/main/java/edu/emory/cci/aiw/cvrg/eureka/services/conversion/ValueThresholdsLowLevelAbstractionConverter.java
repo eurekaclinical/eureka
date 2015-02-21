@@ -38,7 +38,6 @@ import org.protempa.proposition.value.NominalValue;
 import static edu.emory.cci.aiw.cvrg.eureka.services.conversion.ConversionUtil.extractContextDefinition;
 import java.util.HashMap;
 import java.util.Map;
-import org.protempa.HighLevelAbstractionDefinition;
 
 public final class ValueThresholdsLowLevelAbstractionConverter 
 		extends AbstractValueThresholdGroupEntityConverter implements

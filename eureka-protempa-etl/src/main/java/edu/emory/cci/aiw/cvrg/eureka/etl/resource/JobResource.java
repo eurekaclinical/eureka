@@ -60,8 +60,6 @@ import edu.emory.cci.aiw.cvrg.eureka.etl.dao.DestinationDao;
 import edu.emory.cci.aiw.cvrg.eureka.etl.dao.EtlUserDao;
 import edu.emory.cci.aiw.cvrg.eureka.etl.dao.JobDao;
 import edu.emory.cci.aiw.cvrg.eureka.etl.job.TaskManager;
-import edu.emory.cci.aiw.cvrg.eureka.etl.validator.PropositionValidator;
-import edu.emory.cci.aiw.cvrg.eureka.etl.validator.PropositionValidatorException;
 
 @Path("/protected/jobs")
 @RolesAllowed({"researcher"})
@@ -73,18 +71,15 @@ public class JobResource {
 			.getLogger(JobResource.class);
 	private final JobDao jobDao;
 	private final EtlUserDao etlUserDao;
-	private final PropositionValidator propositionValidator;
 	private final TaskManager taskManager;
 	private final EtlAuthenticationSupport authenticationSupport;
 	private final DestinationDao destinationDao;
 
 	@Inject
 	public JobResource(JobDao inJobDao, TaskManager inTaskManager,
-			PropositionValidator inValidator, EtlUserDao inEtlUserDao,
-			DestinationDao inDestinationDao) {
+			EtlUserDao inEtlUserDao, DestinationDao inDestinationDao) {
 		this.jobDao = inJobDao;
 		this.taskManager = inTaskManager;
-		this.propositionValidator = inValidator;
 		this.etlUserDao = inEtlUserDao;
 		this.authenticationSupport = new EtlAuthenticationSupport(this.etlUserDao);
 		this.destinationDao = inDestinationDao;
@@ -130,7 +125,6 @@ public class JobResource {
 	@POST
 	public Response submit(@Context HttpServletRequest request,
 			JobRequest inJobRequest) {
-		throwHttpStatusExceptionIfInvalid(inJobRequest);
 		Long jobId = doCreateJob(inJobRequest, request);
 		return Response.created(URI.create("/" + jobId)).build();
 	}
@@ -175,25 +169,4 @@ public class JobResource {
 		return jobEntity;
 	}
 
-	private Response throwHttpStatusExceptionIfInvalid(JobRequest jobRequest) {
-		JobSpec jobSpec = jobRequest.getJobSpec();
-		List<PropositionDefinition> definitions = jobRequest.getUserPropositions();
-		if (LOGGER.isTraceEnabled()) {
-			LOGGER.trace("Validating {} proposition definitions", definitions.size());
-			for (PropositionDefinition pd : definitions) {
-				LOGGER.trace("PropDef: {}", pd);
-			}
-		}
-		propositionValidator.setConfigId(jobSpec.getSourceConfigId());
-		propositionValidator.setUserPropositions(definitions);
-		try {
-			if (!propositionValidator.validate()) {
-				throw new HttpStatusException(Status.BAD_REQUEST, 
-						StringUtils.join(propositionValidator.getMessages(), '\n'));
-			}
-		} catch (PropositionValidatorException e) {
-			throw new HttpStatusException(Status.INTERNAL_SERVER_ERROR, e);
-		}
-		return null;
-	}
 }

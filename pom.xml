@@ -425,6 +425,39 @@ and data into your own instance of the i2b2 data warehouse system.
 						<driver>oracle.jdbc.OracleDriver</driver>
 					</configuration>
 				</plugin>
+				<plugin>
+					<groupId>org.codehaus.mojo</groupId>
+					<artifactId>license-maven-plugin</artifactId>
+					<version>1.5</version>
+					<configuration>
+						<licenseName>apache_v2</licenseName>
+						<roots>
+							<root>src/main</root>
+							<root>src/test/java/</root>
+						</roots>
+						<extraExtensions>
+							<!-- .xsd files are not supported by default -->
+							<!-- but should be commented in XML style -->
+							<xsd>xml</xsd>
+						</extraExtensions>
+						<excludes>
+							<exclude>**/*.htm</exclude>
+							<exclude>**/*.html</exclude>
+							<exclude>**/*.js</exclude>
+							<exclude>**/*.css</exclude>
+							<exclude>**/*.json</exclude>
+						</excludes>
+					</configuration>
+					<executions>
+						<execution>
+							<id>first</id>
+							<goals>
+								<goal>update-file-header</goal>
+							</goals>
+							<phase>process-sources</phase>
+						</execution>
+					</executions>
+				</plugin>
 			</plugins>
 		</pluginManagement>
 		<plugins>
@@ -501,39 +534,6 @@ and data into your own instance of the i2b2 data warehouse system.
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-site-plugin</artifactId>
-			</plugin>
-			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>license-maven-plugin</artifactId>
-				<version>1.5</version>
-				<configuration>
-					<licenseName>apache_v2</licenseName>
-					<roots>
-						<root>src/main</root>
-						<root>src/test/java/</root>
-					</roots>
-					<extraExtensions>
-						<!-- .xsd files are not supported by default -->
-						<!-- but should be commented in XML style -->
-						<xsd>xml</xsd>
-					</extraExtensions>
-					<excludes>
-						<exclude>**/*.htm</exclude>
-						<exclude>**/*.html</exclude>
-						<exclude>**/*.js</exclude>
-						<exclude>**/*.css</exclude>
-						<exclude>**/*.json</exclude>
-					</excludes>
-				</configuration>
-				<executions>
-					<execution>
-						<id>first</id>
-						<goals>
-							<goal>update-file-header</goal>
-						</goals>
-						<phase>process-sources</phase>
-					</execution>
-				</executions>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -710,6 +710,11 @@ and data into your own instance of the i2b2 data warehouse system.
 			<dependency>
 				<groupId>org.protempa</groupId>
 				<artifactId>protempa-tsb-umls</artifactId>
+				<version>${protempa-version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.protempa</groupId>
+				<artifactId>protempa-dsb-file</artifactId>
 				<version>${protempa-version}</version>
 			</dependency>
 			<dependency>

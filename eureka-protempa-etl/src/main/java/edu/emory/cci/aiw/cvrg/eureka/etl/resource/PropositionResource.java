@@ -19,9 +19,7 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.etl.resource;
 
-import java.util.ArrayList;
 import java.util.List;
-import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -37,16 +35,16 @@ import org.slf4j.LoggerFactory;
 
 import com.google.inject.Inject;
 
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.ValidationRequest;
 import edu.emory.cci.aiw.cvrg.eureka.common.exception.HttpStatusException;
 import edu.emory.cci.aiw.cvrg.eureka.etl.config.EtlProperties;
 import edu.emory.cci.aiw.cvrg.eureka.etl.ksb.PropositionDefinitionFinder;
 import edu.emory.cci.aiw.cvrg.eureka.etl.ksb.PropositionFinderException;
-import edu.emory.cci.aiw.cvrg.eureka.etl.validator.PropositionValidator;
-import edu.emory.cci.aiw.cvrg.eureka.etl.validator.PropositionValidatorException;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.annotation.security.RolesAllowed;
 import javax.ws.rs.FormParam;
+import org.arp.javautil.arrays.Arrays;
 
 /**
  * @author hrathod
@@ -57,44 +55,11 @@ public class PropositionResource {
 
 	private static final Logger LOGGER = LoggerFactory
 			.getLogger(PropositionResource.class);
-	private final PropositionValidator propositionValidator;
 	private final EtlProperties etlProperties;
 
 	@Inject
-	public PropositionResource(PropositionValidator inValidator,
-							   EtlProperties inEtlProperties) {
-		this.propositionValidator = inValidator;
+	public PropositionResource(EtlProperties inEtlProperties) {
 		this.etlProperties = inEtlProperties;
-	}
-
-	@POST
-	@Path("/validate/{configId}")
-	@Consumes(MediaType.APPLICATION_JSON)
-	public Response validatePropositions(
-			@PathParam("configId") String inConfigId,
-			ValidationRequest inRequest) {
-
-		boolean result;
-		try {
-			propositionValidator.setConfigId(inConfigId);
-			propositionValidator.setPropositions(inRequest
-					.getPropositions());
-			propositionValidator.setTargetProposition(inRequest
-					.getTargetProposition());
-			result = propositionValidator.validate();
-		} catch (PropositionValidatorException e) {
-			LOGGER.error(e.getMessage(), e);
-			result = false;
-		}
-
-		Response response;
-		if (result) {
-			response = Response.ok().build();
-		} else {
-			response = Response.status(Response.Status.NOT_ACCEPTABLE)
-					.entity(propositionValidator.getMessages()).build();
-		}
-		return response;
 	}
 
 	@GET
@@ -152,30 +117,18 @@ public class PropositionResource {
 
 	private List<PropositionDefinition> getPropositionsCommon(String inConfigId, List<String> inKeys, String withChildren) throws HttpStatusException {
 			if (this.etlProperties.getConfigDir() != null) {
-			List<PropositionDefinition> result = new ArrayList<>();
 			try (PropositionDefinitionFinder propositionFinder
 					= new PropositionDefinitionFinder(inConfigId,
 							this.etlProperties)) {
-				for (String key : inKeys) {
-					PropositionDefinition definition = propositionFinder
-							.find(key);
-					if (definition != null) {
-						result.add(definition);
-						if (Boolean.parseBoolean(withChildren)) {
-							for (String childId : definition.getChildren()) {
-								PropositionDefinition child = propositionFinder
-										.find(childId);
-								if (child != null) {
-									result.add(child);
-								} else {
-									throw new HttpStatusException(
-											Response.Status.NOT_FOUND,
-											"No proposition with id " + childId);
-								}
-							}
-						}
+				List<PropositionDefinition> result = propositionFinder.findAll(inKeys);
+				if (Boolean.parseBoolean(withChildren)) {
+					Set<String> narrower = new HashSet<>();
+					for (PropositionDefinition propDef : result) {
+						Arrays.addAll(narrower, propDef.getChildren());
 					}
+					result.addAll(propositionFinder.findAll(narrower));
 				}
+				
 				return result;
 			} catch (PropositionFinderException e) {
 				throw new HttpStatusException(

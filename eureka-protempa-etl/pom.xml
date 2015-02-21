@@ -37,6 +37,10 @@ other export formats.
 				<groupId>org.apache.tomcat.maven</groupId>
 				<artifactId>tomcat7-maven-plugin</artifactId>
 			</plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>license-maven-plugin</artifactId>
+			</plugin>
 		</plugins>
 	</build>
 	<dependencies>
@@ -123,6 +127,10 @@ other export formats.
 		<dependency>
 			<groupId>org.protempa</groupId>
 			<artifactId>protempa-framework</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.protempa</groupId>
+			<artifactId>protempa-dsb-file</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>edu.emory.cci.aiw.cvrg</groupId>

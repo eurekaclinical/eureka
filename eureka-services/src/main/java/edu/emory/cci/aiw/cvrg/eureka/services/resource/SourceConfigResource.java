@@ -132,11 +132,11 @@ public class SourceConfigResource {
 			Boolean required = null;
 			for (Option option : section.getOptions()) {
 				if (option.getKey().equals("mimetypes")) {
-					Object val = option.getValue();
+					List<String> val = (List<String>) option.getValue();
 					if (val != null) {
 						upload = new Upload();
 						upload.setName(section.getDisplayName());
-						upload.setAcceptedMimetypes(val.toString().split("\\|"));
+						upload.setAcceptedMimetypes(val.toArray(new String[val.size()]));
 						if (sourceId != null) {
 							upload.setSourceId(sourceId);
 						}

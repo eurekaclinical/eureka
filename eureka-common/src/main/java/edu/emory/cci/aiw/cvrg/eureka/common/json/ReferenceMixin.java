@@ -24,7 +24,8 @@ import org.codehaus.jackson.annotate.JsonProperty;
 
 public abstract class ReferenceMixin {
     @JsonCreator
-    public ReferenceMixin(@JsonProperty("name") String name,
+    public ReferenceMixin(@JsonProperty("id") String id,
+			@JsonProperty("displayName") String displayName,
             @JsonProperty("propositionIds") String[] propositionIds) {
     }
 }

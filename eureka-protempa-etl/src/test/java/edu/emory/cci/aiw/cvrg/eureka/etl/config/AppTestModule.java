@@ -32,8 +32,6 @@ import edu.emory.cci.aiw.cvrg.eureka.etl.dao.JpaEtlUserDao;
 import edu.emory.cci.aiw.cvrg.eureka.etl.dao.JpaJobDao;
 import edu.emory.cci.aiw.cvrg.eureka.etl.dao.JpaSourceConfigDao;
 import edu.emory.cci.aiw.cvrg.eureka.etl.dao.SourceConfigDao;
-import edu.emory.cci.aiw.cvrg.eureka.etl.validator.PropositionValidator;
-import edu.emory.cci.aiw.cvrg.eureka.etl.validator.PropositionValidatorImpl;
 
 /**
  *
@@ -49,6 +47,5 @@ public class AppTestModule extends AbstractModule {
 		bind(EtlGroupDao.class).to(JpaEtlGroupDao.class);
 		bind(DestinationDao.class).to(JpaDestinationDao.class);
 		bind(SourceConfigDao.class).to(JpaSourceConfigDao.class);
-		bind(PropositionValidator.class).to(PropositionValidatorImpl.class);
 	}
 }

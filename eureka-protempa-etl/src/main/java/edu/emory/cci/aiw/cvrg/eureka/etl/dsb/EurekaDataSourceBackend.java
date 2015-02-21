@@ -19,10 +19,8 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.etl.dsb;
 
-import edu.emory.cci.aiw.cvrg.eureka.etl.config.EtlProperties;
 import edu.emory.cci.aiw.cvrg.eureka.etl.spreadsheet.*;
 import java.io.File;
-import java.io.FilenameFilter;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -33,7 +31,6 @@ import org.arp.javautil.io.FileUtil;
 import org.arp.javautil.io.IOUtil;
 import org.arp.javautil.sql.InvalidConnectionSpecArguments;
 import org.arp.javautil.sql.SQLExecutor;
-import org.drools.util.StringUtils;
 import org.protempa.*;
 import org.protempa.backend.BackendInitializationException;
 import org.protempa.backend.BackendInstanceSpec;
@@ -67,21 +64,16 @@ import org.slf4j.LoggerFactory;
  *
  * @author Andrew Post
  */
-@BackendInfo(displayName = "Spreadsheet Data Source Backend")
-public final class EurekaDataSourceBackend extends RelationalDbDataSourceBackend {
+@BackendInfo(displayName = "Eureka Spreadsheet Data Source Backend")
+public final class EurekaDataSourceBackend extends RelationalDbDataSourceBackend implements EurekaFileDataSourceBackend {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(EurekaDataSourceBackend.class);
-	private static AbsoluteTimeUnitFactory absTimeUnitFactory =
-			new AbsoluteTimeUnitFactory();
-	private static AbsoluteTimeGranularityFactory absTimeGranularityFactory =
-			new AbsoluteTimeGranularityFactory();
 	private static JDBCPositionFormat dtPositionParser =
 			new JDBCDateTimeTimestampPositionParser();
 	private static final String DEFAULT_ROOT_FULL_NAME = "Eureka";
 	private XlsxDataProvider[] dataProviders = null;
 	private boolean dataPopulated;
 	private String dataFileDirectoryName;
-	private String[] mimetypes;
 	private String sampleUrl;
 	private Boolean required = Boolean.FALSE;
 	private String databaseName;
@@ -92,6 +84,7 @@ public final class EurekaDataSourceBackend extends RelationalDbDataSourceBackend
 	private String medicationOrdersRootFullName;
 	private String icd9ProcedureCodesRootFullName;
 	private String cptProcedureCodesRootFullName;
+	private final FileDataSourceBackendSupport fileDataSourceBackendSupport;
 	
 	public EurekaDataSourceBackend() {
 		setSchemaName("EUREKA");
@@ -105,11 +98,14 @@ public final class EurekaDataSourceBackend extends RelationalDbDataSourceBackend
 		this.icd9ProcedureCodesRootFullName = DEFAULT_ROOT_FULL_NAME;
 		this.cptProcedureCodesRootFullName = DEFAULT_ROOT_FULL_NAME;
 		setMappingsFactory(new ResourceMappingsFactory("/mappings/", getClass()));
+		this.fileDataSourceBackendSupport = new FileDataSourceBackendSupport(nameForErrors());
 	}
 
 	@Override
 	public void initialize(BackendInstanceSpec config) throws BackendInitializationException {
+		LoggerFactory.getLogger(getClass()).error("In initialize for " + getClass().getName());
 		super.initialize(config);
+		LoggerFactory.getLogger(getClass()).error("Called superclass' initialize for " + getClass().getName());
 		try {
 			Class.forName("org.h2.Driver");
 		} catch (ClassNotFoundException ex) {
@@ -126,13 +122,9 @@ public final class EurekaDataSourceBackend extends RelationalDbDataSourceBackend
 			throw new DataSourceBackendInitializationException("Unable to create data schema (data source backend '" + nameForErrors() + "')");
 		}
 		super.setDatabaseId("jdbc:h2:mem:" + databaseName + ";INIT=RUNSCRIPT FROM '" + schemaFile + "';DB_CLOSE_DELAY=-1");
-		File dataFileDirectory = new EtlProperties().uploadedDirectory(getConfigurationsId(), this.dataFileDirectoryName);
-		File[] dataFiles = dataFileDirectory.listFiles(new FilenameFilter() {
-			@Override
-			public boolean accept(File file, String string) {
-				return string.endsWith(".uploaded");
-			}
-		});
+		this.fileDataSourceBackendSupport.setConfigurationsId(getConfigurationsId());
+		this.fileDataSourceBackendSupport.setDataFileDirectoryName(this.dataFileDirectoryName);
+		File[] dataFiles = this.fileDataSourceBackendSupport.getUploadedFiles();
 		if (dataFiles != null) {
 			this.dataProviders = new XlsxDataProvider[dataFiles.length];
 			for (int i = 0; i < dataFiles.length; i++) {
@@ -266,31 +258,26 @@ public final class EurekaDataSourceBackend extends RelationalDbDataSourceBackend
 		this.sampleUrl = sampleUrl;
 	}
 
+	@Override
 	public String[] getMimetypes() {
-		return mimetypes.clone();
+		return this.fileDataSourceBackendSupport.getMimetypes();
 	}
 
+	@BackendProperty
+	@Override
 	public void setMimetypes(String[] mimetypes) {
-		if (mimetypes == null) {
-			this.mimetypes = StringUtils.EMPTY_STRING_ARRAY;
-		} else {
-			this.mimetypes = mimetypes.clone();
-		}
+		this.fileDataSourceBackendSupport.setMimetypes(mimetypes);
 	}
 
-	@BackendProperty(propertyName = "mimetypes")
-	public void parseMimetypes(String mimetypesString) {
-		if (mimetypesString == null) {
-			setMimetypes(null);
-		} else {
-			setMimetypes(mimetypesString.split("\\|"));
-		}
-	}
-
+	@Override
 	public String getDataFileDirectoryName() {
 		return dataFileDirectoryName;
 	}
 
+	/**
+	 *
+	 * @param dataFileDirectoryName
+	 */
 	@BackendProperty
 	public void setDataFileDirectoryName(String dataFileDirectoryName) {
 		this.dataFileDirectoryName = dataFileDirectoryName;
@@ -801,16 +788,6 @@ public final class EurekaDataSourceBackend extends RelationalDbDataSourceBackend
 	}
 
 	@Override
-	public GranularityFactory getGranularityFactory() {
-		return absTimeGranularityFactory;
-	}
-
-	@Override
-	public UnitFactory getUnitFactory() {
-		return absTimeUnitFactory;
-	}
-
-	@Override
 	public void failureOccurred(Throwable protempaException) {
 		this.exceptionOccurred = true;
 	}
@@ -821,10 +798,7 @@ public final class EurekaDataSourceBackend extends RelationalDbDataSourceBackend
 		BackendCloseException exceptionToThrow = null;
 		try {
 			SQLExecutor.executeSQL(getConnectionSpecInstance(), "DROP ALL OBJECTS", null);
-		} catch (SQLException ex) {
-			this.exceptionOccurred = true;
-			exceptionToThrow = new DataSourceBackendCloseException("Error in data source backend " + nameForErrors() + ": could not drop the database", ex);
-		} catch (InvalidConnectionSpecArguments ex) {
+		} catch (SQLException | InvalidConnectionSpecArguments ex) {
 			this.exceptionOccurred = true;
 			exceptionToThrow = new DataSourceBackendCloseException("Error in data source backend " + nameForErrors() + ": could not drop the database", ex);
 		}
@@ -832,15 +806,12 @@ public final class EurekaDataSourceBackend extends RelationalDbDataSourceBackend
 			if (!this.exceptionOccurred) {
 				for (XlsxDataProvider dataProvider : dataProviders) {
 					File dataFile = dataProvider.getDataFile();
+					
 					try {
-						if (!dataFile.renameTo(FileUtil.replaceExtension(dataFile, ".processed"))) {
-							if (exceptionToThrow == null) {
-								exceptionToThrow = new DataSourceBackendCloseException("Error in data source backend " + nameForErrors() + ": failed to mark data file " + dataFile.getAbsolutePath() + " as processed");
-							}
-						}
-					} catch (SecurityException se) {
+						this.fileDataSourceBackendSupport.markProcessed(dataFile);
+					} catch (DataSourceBackendCloseException se) {
 						if (exceptionToThrow == null) {
-							exceptionToThrow = new DataSourceBackendCloseException("Error in data source backend " + nameForErrors() + ": failed to mark data file " + dataFile.getAbsolutePath() + " as processed", se);
+							exceptionToThrow = se;
 						}
 					}
 				}
@@ -848,14 +819,10 @@ public final class EurekaDataSourceBackend extends RelationalDbDataSourceBackend
 				for (XlsxDataProvider dataProvider : dataProviders) {
 					File dataFile = dataProvider.getDataFile();
 					try {
-						if (!dataFile.renameTo(FileUtil.replaceExtension(dataFile, ".failed"))) {
-							if (exceptionToThrow == null) {
-								exceptionToThrow = new DataSourceBackendCloseException("Error in data source backend " + nameForErrors() + ": could not mark data file " + dataFile.getAbsolutePath() + " as failed");
-							}
-						}
-					} catch (SecurityException se) {
+						this.fileDataSourceBackendSupport.markFailed(dataFile);
+					} catch (DataSourceBackendCloseException se) {
 						if (exceptionToThrow == null) {
-							exceptionToThrow = new DataSourceBackendCloseException("Error in data source backend " + nameForErrors() + ": could not mark data file " + dataFile.getAbsolutePath() + " as failed", se);
+							exceptionToThrow = se;
 						}
 					}
 				}
