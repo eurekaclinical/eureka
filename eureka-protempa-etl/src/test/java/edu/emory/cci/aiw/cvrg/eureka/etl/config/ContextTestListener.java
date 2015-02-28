@@ -21,10 +21,12 @@ package edu.emory.cci.aiw.cvrg.eureka.etl.config;
 
 import javax.servlet.ServletContextEvent;
 
-import com.google.inject.Guice;
 import com.google.inject.Injector;
+import com.google.inject.Module;
+import com.google.inject.Stage;
 import com.google.inject.persist.PersistService;
 import com.google.inject.servlet.GuiceServletContextListener;
+import edu.emory.cci.aiw.cvrg.eureka.common.config.InjectorSupport;
 
 import edu.emory.cci.aiw.cvrg.eureka.etl.job.TaskManager;
 
@@ -34,14 +36,8 @@ import edu.emory.cci.aiw.cvrg.eureka.etl.job.TaskManager;
  */
 public class ContextTestListener extends GuiceServletContextListener {
 
-	private final Injector injector = Guice.createInjector(new AppTestModule(),
-			new ServletTestModule());
 	private PersistService persistService;
-
-	@Override
-	protected final Injector getInjector() {
-		return this.injector;
-	}
+	private InjectorSupport injectorSupport;
 
 	@Override
 	public void contextInitialized(ServletContextEvent inServletContextEvent) {
@@ -50,6 +46,25 @@ public class ContextTestListener extends GuiceServletContextListener {
 				PersistService.class);
 		this.persistService.start();
 	}
+	
+	@Override
+	protected Injector getInjector() {
+		/**
+		 * This is called by super's contextInitialized.
+		 * 
+		 * Must be created here in order for the modules to be initialized
+		 * correctly.
+		 */
+		if (this.injectorSupport == null) {
+			this.injectorSupport = new InjectorSupport(
+				new Module[]{
+					new AppTestModule(),
+					new ServletTestModule()
+				},
+				Stage.DEVELOPMENT);
+		}
+		return this.injectorSupport.getInjector();
+	}
 
 	@Override
 	public void contextDestroyed(ServletContextEvent inServletContextEvent) {
@@ -57,7 +72,7 @@ public class ContextTestListener extends GuiceServletContextListener {
 		if (this.persistService != null) {
 			this.persistService.stop();
 		}
-		TaskManager taskManager = this.injector.getInstance(TaskManager.class);
+		TaskManager taskManager = this.injectorSupport.getInjector().getInstance(TaskManager.class);
 		taskManager.shutdown();
 	}
 }

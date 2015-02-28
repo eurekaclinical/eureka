@@ -19,15 +19,13 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.etl.config;
 
+import com.google.inject.Injector;
 import javax.servlet.ServletContextEvent;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.google.inject.Guice;
-import com.google.inject.Injector;
+import com.google.inject.Module;
 import com.google.inject.persist.jpa.JpaPersistModule;
 import com.google.inject.servlet.GuiceServletContextListener;
+import edu.emory.cci.aiw.cvrg.eureka.common.config.InjectorSupport;
 
 import edu.emory.cci.aiw.cvrg.eureka.etl.job.TaskManager;
 
@@ -40,46 +38,48 @@ import edu.emory.cci.aiw.cvrg.eureka.etl.job.TaskManager;
  */
 public class BackEndContextListener extends GuiceServletContextListener {
 
-	private static Logger LOGGER =
-			LoggerFactory.getLogger(BackEndContextListener.class);
-	static final String JPA_UNIT = "backend-jpa-unit";
-	/**
-	 * The Guice injector used to fetch instances of dependency injection
-	 * enabled classes.
-	 */
-	private Injector injector = null;
-
-	@Override
-	protected Injector getInjector() {
-		if (null == this.injector) {
-			this.injector = Guice.createInjector(
-								new AppModule(),
-								new ETLServletModule(new EtlProperties()),
-								new JpaPersistModule(JPA_UNIT));
-		}
-		return this.injector;
-	}
+	private static final String JPA_UNIT = "backend-jpa-unit";
+	private final EtlProperties etlProperties = new EtlProperties();
+	private InjectorSupport injectorSupport;
 
 	@Override
 	public void contextInitialized(ServletContextEvent inServletContextEvent) {
 		super.contextInitialized(inServletContextEvent);
 		initDatabase();
 	}
+	
+	@Override
+	protected Injector getInjector() {
+		/*
+		 * Must be created here in order for the modules to initialize 
+		 * correctly.
+		 */
+		if (this.injectorSupport == null) {
+			this.injectorSupport = new InjectorSupport(
+			new Module[]{
+				new AppModule(),
+				new ETLServletModule(this.etlProperties),
+				new JpaPersistModule(JPA_UNIT)
+			},
+			this.etlProperties);
+		}
+		return this.injectorSupport.getInjector();
+	}
 
 	@Override
 	public void contextDestroyed(ServletContextEvent servletContextEvent) {
 		super.contextDestroyed(servletContextEvent);
-		TaskManager taskManager =
-				this.getInjector().getInstance(TaskManager.class);
+		TaskManager taskManager
+				= getInjector().getInstance(TaskManager.class);
 		taskManager.shutdown();
 	}
 
 	private void initDatabase() {
-		final EtlProperties etlProperties = 
-				getInjector().getInstance(EtlProperties.class);
-		try (EtlJobRepairerExecutor executor = 
-				new EtlJobRepairerExecutor(JPA_UNIT, etlProperties)) {
+		try (EtlJobRepairerExecutor executor
+				= new EtlJobRepairerExecutor(JPA_UNIT, this.etlProperties)) {
 			executor.execute();
 		}
 	}
+
+
 }

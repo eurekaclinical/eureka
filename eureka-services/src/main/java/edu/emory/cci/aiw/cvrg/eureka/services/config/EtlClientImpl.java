@@ -20,6 +20,7 @@
 package edu.emory.cci.aiw.cvrg.eureka.services.config;
 
 import com.google.inject.Inject;
+import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.GenericType;
 import com.sun.jersey.core.util.MultivaluedMapImpl;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.DestinationType;
@@ -49,24 +50,24 @@ public class EtlClientImpl extends EurekaClient implements EtlClient {
 	};
 	private static final GenericType<Job> JobType = new GenericType<Job>() {
 	};
-	private static final GenericType<List<SourceConfig>> SourceConfigListType =
-			new GenericType<List<SourceConfig>>() {
+	private static final GenericType<List<SourceConfig>> SourceConfigListType
+			= new GenericType<List<SourceConfig>>() {
 			};
-	private static final GenericType<List<EtlDestination>> DestinationListType =
-			new GenericType<List<EtlDestination>>() {
+	private static final GenericType<List<EtlDestination>> DestinationListType
+			= new GenericType<List<EtlDestination>>() {
 			};
-	private static final GenericType<List<EtlCohortDestination>> CohortDestinationListType =
-			new GenericType<List<EtlCohortDestination>>() {
+	private static final GenericType<List<EtlCohortDestination>> CohortDestinationListType
+			= new GenericType<List<EtlCohortDestination>>() {
 			};
-	private static final GenericType<List<EtlI2B2Destination>> I2B2DestinationListType =
-			new GenericType<List<EtlI2B2Destination>>() {
+	private static final GenericType<List<EtlI2B2Destination>> I2B2DestinationListType
+			= new GenericType<List<EtlI2B2Destination>>() {
 			};
-	private static final GenericType<List<PropositionDefinition>> PropositionDefinitionList =
-			new GenericType<List<PropositionDefinition>>() {
+	private static final GenericType<List<PropositionDefinition>> PropositionDefinitionList
+			= new GenericType<List<PropositionDefinition>>() {
 			};
-	private static final GenericType<List<String>> PropositionSearchResultsList =
-				new GenericType<List<String>>() {
-				};
+	private static final GenericType<List<String>> PropositionSearchResultsList
+			= new GenericType<List<String>>() {
+			};
 	private final String resourceUrl;
 
 	@Inject
@@ -101,7 +102,7 @@ public class EtlClientImpl extends EurekaClient implements EtlClient {
 		final String path = "/api/protected/destinations";
 		return doGet(path, DestinationListType);
 	}
-	
+
 	@Override
 	public List<EtlCohortDestination> getCohortDestinations() throws
 			ClientException {
@@ -110,7 +111,7 @@ public class EtlClientImpl extends EurekaClient implements EtlClient {
 		queryParams.add("type", DestinationType.COHORT.name());
 		return doGet(path, CohortDestinationListType, queryParams);
 	}
-	
+
 	@Override
 	public List<EtlI2B2Destination> getI2B2Destinations() throws
 			ClientException {
@@ -148,7 +149,7 @@ public class EtlClientImpl extends EurekaClient implements EtlClient {
 				.build().toString();
 		doDelete(path);
 	}
-	
+
 	@Override
 	public Long submitJob(JobRequest inJobRequest) throws ClientException {
 		final String path = "/api/protected/jobs";
@@ -167,7 +168,7 @@ public class EtlClientImpl extends EurekaClient implements EtlClient {
 		final String path = "/api/protected/jobs";
 		return doGet(path, JobListType);
 	}
-	
+
 	@Override
 	public List<Job> getJobsDesc() throws ClientException {
 		final String path = "/api/protected/jobs";
@@ -202,10 +203,17 @@ public class EtlClientImpl extends EurekaClient implements EtlClient {
 	@Override
 	public PropositionDefinition getPropositionDefinition(
 			String sourceConfigId, String inKey) throws ClientException {
+		MultivaluedMap<String, String> formParams = new MultivaluedMapImpl();
+		formParams.add("key", inKey);
 		String path = UriBuilder.fromPath("/api/protected/proposition/")
-					.segment(sourceConfigId, inKey)
-					.build().toString();
-		return doGet(path, PropositionDefinition.class);
+				.segment(sourceConfigId)
+				.build().toString();
+		List<PropositionDefinition> propDefs = doPost(path, PropositionDefinitionList, formParams);
+		if (propDefs.isEmpty()) {
+			throw new ClientException(ClientResponse.Status.NOT_FOUND, null);
+		} else {
+			return propDefs.get(0);
+		}
 	}
 
 	/**
@@ -225,13 +233,13 @@ public class EtlClientImpl extends EurekaClient implements EtlClient {
 	public List<PropositionDefinition> getPropositionDefinitions(
 			String sourceConfigId, List<String> inKeys, Boolean withChildren) throws ClientException {
 		MultivaluedMap<String, String> formParams = new MultivaluedMapImpl();
-			for (String key : inKeys) {
-				formParams.add("key", key);
-			}
-			formParams.add("withChildren", withChildren.toString());
-			String path = UriBuilder.fromPath("/api/protected/proposition/")
-					.segment(sourceConfigId)
-					.build().toString();
+		for (String key : inKeys) {
+			formParams.add("key", key);
+		}
+		formParams.add("withChildren", withChildren.toString());
+		String path = UriBuilder.fromPath("/api/protected/proposition/")
+				.segment(sourceConfigId)
+				.build().toString();
 		return doPost(path, PropositionDefinitionList, formParams);
 	}
 
@@ -247,8 +255,9 @@ public class EtlClientImpl extends EurekaClient implements EtlClient {
 		doPostMultipart(path, fileName, inputStream);
 	}
 
+	@Override
 	public List<String> getPropositionSearchResults(String sourceConfigId,
-													String inSearchKey) throws ClientException {
+			String inSearchKey) throws ClientException {
 
 		String path = UriBuilder.fromPath("/api/protected/proposition/search/")
 				.segment(sourceConfigId)

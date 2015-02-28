@@ -520,7 +520,10 @@ limitations under the License.
 			<column name="ROOTNODENAME" type="VARCHAR(255)"/>
 		</addColumn>
 		<addColumn tableName="I2B2_DESTINATIONS">
-			<column name="VISITDIMENSIONDECIPHEREDID" type="VARCHAR(255)"/>
+			<column name="VISITDIMENSIONID" type="VARCHAR(255)"/>
+		</addColumn>
+		<addColumn tableName="I2B2_DESTINATIONS">
+			<column name="VISITDIMENSIONINOUT" type="VARCHAR(255)"/>
 		</addColumn>
 		<addColumn tableName="I2B2_DESTINATIONS">
 			<column name="AGECONCEPTCODEPREFIX" type="VARCHAR(255)"/>
@@ -564,7 +567,7 @@ limitations under the License.
 			</column>
 		</createTable>
 		<addForeignKeyConstraint baseColumnNames="I2B2DESTINATIONS_ID" baseTableName="I2B2_DEST_CONCEPTSPECS" constraintName="FK_I2B2_DEST_CONCEPTSPEC" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" referencedColumnNames="ID" referencedTableName="I2B2_DESTINATIONS" referencesUniqueColumn="true"/>
-		<addForeignKeyConstraint baseTableName="I2B2_DEST_CONCEPTSPECS" baseColumnNames="VALUETYPECDS_ID" constraintName="FK_I2B2_CONCEPTS_VTC" referencedTableName="I2B2_DEST_VALUE_TYPE_CDS" referencedColumnNames="ID" referencesUniqueColumn="true"/>
+		<addForeignKeyConstraint baseTableName="I2B2_DEST_CONCEPTSPECS" baseColumnNames="I2B2DESTVALUETYPECDS_ID" constraintName="FK_I2B2_CONCEPTS_VTC" referencedTableName="I2B2_DEST_VALUE_TYPE_CDS" referencedColumnNames="ID" referencesUniqueColumn="true"/>
 		<createSequence sequenceName="I2B2_CS_SEQ"/>
 		
 		<createTable tableName="I2B2_DEST_DATASPECS">

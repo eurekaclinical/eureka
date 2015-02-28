@@ -157,10 +157,15 @@ class I2b2Settings extends AbstractSettings {
 	}
 
 	@Override
-	public String getVisitDimensionDecipheredId() {
-		return entity.getVisitDimensionDecipheredId();
+	public String getVisitDimensionId() {
+		return entity.getVisitDimensionId();
 	}
 
+	@Override
+	public String getVisitDimensionInOut() {
+		return entity.getVisitDimensionInOut();
+	}
+	
 	@Override
 	public String getAgeConceptCodePrefix() {
 		return entity.getAgeConceptCodePrefix();

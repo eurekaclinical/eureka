@@ -278,14 +278,21 @@ public abstract class AbstractProperties {
 	public String getMinorVersion () {
 		return this.getValue("eureka.version.minor");
 	}
+	
 	public String getIncrementalVersion () {
 		return this.getValue("eureka.version.incremental");
 	}
+	
 	public String getQualifier () {
 		return this.getValue("eureka.version.qualifier");
 	}
+	
 	public String getBuildNumber () {
 		return this.getValue("eureka.version.buildNumber");
+	}
+	
+	public String getStage() {
+		return this.getValue("eureka.stage", "DEVELOPMENT");
 	}
 	
 		/**

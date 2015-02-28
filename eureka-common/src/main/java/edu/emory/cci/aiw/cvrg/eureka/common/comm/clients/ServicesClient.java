@@ -67,8 +67,8 @@ public class ServicesClient extends EurekaClient {
 	};
 	private static final GenericType<List<SystemElement>> SystemElementList = new GenericType<List<SystemElement>>() {
 	};
-	private static final GenericType<List<DataElement>> DataElementList =
-			new GenericType<List<DataElement>>() {
+	private static final GenericType<List<DataElement>> DataElementList
+			= new GenericType<List<DataElement>>() {
 			};
 	private static final GenericType<List<Role>> RoleList = new GenericType<List<Role>>() {
 	};
@@ -82,11 +82,11 @@ public class ServicesClient extends EurekaClient {
 	};
 	private static final GenericType<List<Destination>> DestinationList = new GenericType<List<Destination>>() {
 	};
-	private static final GenericType<List<CohortDestination>> CohortDestinationListType =
-			new GenericType<List<CohortDestination>>() {
+	private static final GenericType<List<CohortDestination>> CohortDestinationListType
+			= new GenericType<List<CohortDestination>>() {
 			};
-	private static final GenericType<List<I2B2Destination>> I2B2DestinationListType =
-			new GenericType<List<I2B2Destination>>() {
+	private static final GenericType<List<I2B2Destination>> I2B2DestinationListType
+			= new GenericType<List<I2B2Destination>>() {
 			};
 	private static final GenericType<List<String>> SystemElementSearchResultsList = new GenericType<List<String>>() {
 	};
@@ -122,12 +122,12 @@ public class ServicesClient extends EurekaClient {
 		final String path = "/api/userrequest/new";
 		doPost(path, inRequest);
 	}
-	
+
 	public void resetPassword(String username) throws ClientException {
 		final String path = "/api/passwordresetrequest/" + username;
 		doPost(path);
 	}
-	
+
 	public void verifyUser(String inCode) throws ClientException {
 		final String path = "/api/userrequest/verify/" + inCode;
 		doPut(path);
@@ -135,8 +135,8 @@ public class ServicesClient extends EurekaClient {
 
 	public void changePassword(String inOldPass, String inNewPass) throws ClientException {
 		final String path = "/api/protected/users/passwordchangerequest";
-		PasswordChangeRequest passwordChangeRequest =
-				new PasswordChangeRequest();
+		PasswordChangeRequest passwordChangeRequest
+				= new PasswordChangeRequest();
 		passwordChangeRequest.setOldPassword(inOldPass);
 		passwordChangeRequest.setNewPassword(inNewPass);
 		doPost(path, passwordChangeRequest);
@@ -173,7 +173,7 @@ public class ServicesClient extends EurekaClient {
 				.build().toString();
 		doPostMultipart(path, fileName, inputStream);
 	}
-	
+
 	public Job getJob(Long jobId) throws ClientException {
 		final String path = "/api/protected/jobs/" + jobId;
 		return doGet(path, Job.class);
@@ -183,7 +183,7 @@ public class ServicesClient extends EurekaClient {
 		final String path = "/api/protected/jobs";
 		return doGet(path, JobList);
 	}
-	
+
 	public List<Job> getJobsDesc() throws ClientException {
 		final String path = "/api/protected/jobs";
 		MultivaluedMap<String, String> queryParams = new MultivaluedMapImpl();
@@ -214,7 +214,7 @@ public class ServicesClient extends EurekaClient {
 		queryParams.add("summarize", "true");
 		return doGet(path, DataElementList, queryParams);
 	}
-	
+
 	public DataElement getUserElement(String inKey) throws ClientException {
 		if (inKey == null) {
 			throw new IllegalArgumentException("inKey cannot be null");
@@ -231,7 +231,7 @@ public class ServicesClient extends EurekaClient {
 				.build().toString();
 		return doGet(path, DataElement.class);
 	}
-	
+
 	public DataElement getSummarizedUserElement(String inKey) throws ClientException {
 		if (inKey == null) {
 			throw new IllegalArgumentException("inKey cannot be null");
@@ -272,7 +272,7 @@ public class ServicesClient extends EurekaClient {
 				.build(inUserId).toString();
 		doDelete(path);
 	}
-	
+
 	public List<SystemElement> getSystemElements() throws ClientException {
 		final String path = UriBuilder.fromPath("/api/protected/systemelement/").build().toString();
 		return doGet(path, SystemElementList);
@@ -282,16 +282,11 @@ public class ServicesClient extends EurekaClient {
 		if (inKey == null) {
 			throw new IllegalArgumentException("inKey cannot be null");
 		}
-		/*
-		 * The inKey parameter may contain spaces, slashes and other 
-		 * characters that are not allowed in URLs, so it needs to be
-		 * encoded. We use UriBuilder to guarantee a valid URL. The inKey
-		 * string can't be templated because the slashes won't be encoded!
-		 */
+		MultivaluedMap<String, String> formParams = new MultivaluedMapImpl();
+		formParams.add("key", inKey);
 		String path = UriBuilder.fromPath("/api/protected/systemelement/")
-				.segment(inKey)
 				.build().toString();
-		return doGet(path, SystemElement.class);
+		return doPost(path, SystemElement.class, formParams);
 	}
 
 	public List<TimeUnit> getTimeUnits() throws ClientException {
@@ -342,7 +337,7 @@ public class ServicesClient extends EurekaClient {
 				.build().toString();
 		return doGet(path, RelationOperator.class);
 	}
-	
+
 	public OAuthProvider getOAuthProvider(Long inId) throws ClientException {
 		final String path = "/api/protected/oauthprovider/" + inId;
 		return doGet(path, OAuthProvider.class);
@@ -414,7 +409,7 @@ public class ServicesClient extends EurekaClient {
 		String path = "/api/protected/sourceconfig";
 		return doGet(path, SourceConfigList);
 	}
-	
+
 	public SourceConfig getSourceConfig(String sourceConfigId) throws ClientException {
 		String path = UriBuilder.fromPath("/api/protected/sourceconfig/")
 				.segment(sourceConfigId)
@@ -426,12 +421,12 @@ public class ServicesClient extends EurekaClient {
 		String path = "/api/protected/sourceconfig/parameters/list";
 		return doGet(path, SourceConfigParamsList);
 	}
-	
+
 	public void createDestination(Destination destination) throws ClientException {
 		String path = "/api/protected/destinations";
 		doPost(path, destination);
 	}
-	
+
 	public void updateDestination(Destination destination) throws ClientException {
 		String path = "/api/protected/destinations";
 		doPut(path, destination);
@@ -441,7 +436,7 @@ public class ServicesClient extends EurekaClient {
 		String path = "/api/protected/destinations";
 		return doGet(path, DestinationList);
 	}
-	
+
 	public List<CohortDestination> getCohortDestinations() throws
 			ClientException {
 		final String path = "/api/protected/destinations/";
@@ -449,7 +444,7 @@ public class ServicesClient extends EurekaClient {
 		queryParams.add("type", DestinationType.COHORT.name());
 		return doGet(path, CohortDestinationListType, queryParams);
 	}
-	
+
 	public List<I2B2Destination> getI2B2Destinations() throws
 			ClientException {
 		final String path = "/api/protected/destinations/";
@@ -457,26 +452,26 @@ public class ServicesClient extends EurekaClient {
 		queryParams.add("type", DestinationType.I2B2.name());
 		return doGet(path, I2B2DestinationListType, queryParams);
 	}
-	
+
 	public Destination getDestination(String destinationId) throws ClientException {
 		String path = UriBuilder.fromPath("/api/protected/destinations/")
 				.segment(destinationId)
 				.build().toString();
 		return doGet(path, Destination.class);
 	}
-	
+
 	public void deleteDestination(Long id, String destinationId) throws ClientException {
 		String path = UriBuilder.fromPath("/api/protected/destinations/")
 				.segment(destinationId)
 				.build().toString();
 		doDelete(path);
 	}
-	
+
 	//Search Functionality
 	public List<String> getSystemElementSearchResults(String searchKey) throws ClientException {
 		final String path = UriBuilder.fromPath("/api/protected/systemelement/search/")
-			.segment(searchKey)
-			.build().toString();
+				.segment(searchKey)
+				.build().toString();
 		return doGet(path, SystemElementSearchResultsList);
 	}
 

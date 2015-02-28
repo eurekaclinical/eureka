@@ -111,6 +111,15 @@ public abstract class EurekaClient extends AbstractClient {
 		return response.getEntity(genericType);
 	}
 	
+	protected <T> T doPost(String path, Class<T> cls, MultivaluedMap<String, String> formParams) throws ClientException {
+		ClientResponse response = getResourceWrapper().rewritten(path, HttpMethod.POST)
+				.accept(MediaType.APPLICATION_JSON)
+				.type(MediaType.APPLICATION_FORM_URLENCODED_TYPE)
+				.post(ClientResponse.class, formParams);
+		errorIfStatusNotEqualTo(response, ClientResponse.Status.OK);
+		return response.getEntity(cls);
+	}
+	
 	protected <T> T doPost(String path, GenericType<T> genericType, MultivaluedMap<String, String> formParams) throws ClientException {
 		ClientResponse response = getResourceWrapper().rewritten(path, HttpMethod.POST)
 				.accept(MediaType.APPLICATION_JSON)

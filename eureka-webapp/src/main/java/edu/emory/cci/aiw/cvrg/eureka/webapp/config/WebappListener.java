@@ -19,13 +19,12 @@ package edu.emory.cci.aiw.cvrg.eureka.webapp.config;
  * limitations under the License.
  * #L%
  */
+import com.google.inject.Injector;
 import javax.servlet.ServletContextEvent;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import com.google.inject.Guice;
-import com.google.inject.Injector;
+import com.google.inject.Module;
 import com.google.inject.servlet.GuiceServletContextListener;
+import edu.emory.cci.aiw.cvrg.eureka.common.config.InjectorSupport;
 
 /**
  *
@@ -34,25 +33,17 @@ import com.google.inject.servlet.GuiceServletContextListener;
  */
 public class WebappListener extends GuiceServletContextListener {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(WebappListener.class);
-	private Injector injector = null;
+	private final WebappProperties webappProperties;
 
+	public WebappListener() {
+		this.webappProperties = new WebappProperties();
+	}
+	
 	@Override
 	public void contextInitialized(ServletContextEvent servletContextEvent) {
 		super.contextInitialized(servletContextEvent);
 		servletContextEvent.getServletContext().setAttribute(
-				"webappProperties", new WebappProperties());
-	}
-
-	@Override
-	protected Injector getInjector() {
-		if (null == injector) {
-			LOGGER.debug("Creating new Guice Injector");
-			injector = Guice.createInjector(
-					new AppModule(),
-					new ServletModule(new WebappProperties()));
-		}
-		return this.injector;
+				"webappProperties", this.webappProperties);
 	}
 
 	@Override
@@ -61,4 +52,15 @@ public class WebappListener extends GuiceServletContextListener {
 		servletContextEvent.getServletContext().removeAttribute(
 				"webappProperties");
 	}
+
+	@Override
+	protected Injector getInjector() {
+		return new InjectorSupport(
+				new Module[]{
+					new AppModule(this.webappProperties),
+					new ServletModule(this.webappProperties)
+				},
+				this.webappProperties).getInjector();
+	}
+
 }

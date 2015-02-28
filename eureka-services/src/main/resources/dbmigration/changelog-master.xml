@@ -868,15 +868,25 @@ limitations under the License.
 			</insert>
 		</changeSet>
 		<changeSet author="arpost" id="1360440238345-97">
-			<alterSequence sequenceName="USER_SEQ" minValue="2"/>
-			<alterSequence sequenceName="ROLE_SEQ" minValue="4"/>
-			<alterSequence sequenceName="TIME_SEQ" minValue="4"/>
-			<alterSequence sequenceName="RELATION_OP_SEQ" minValue="4"/>
-			<alterSequence sequenceName="THRESHOLDS_OP_SEQ" minValue="3"/>
-			<alterSequence sequenceName="COMP_SEQ" minValue="7"/>
-			<alterSequence sequenceName="FREQUENCYTYPES_OP_SEQ" minValue="3"/>
-			<alterSequence sequenceName="OAUTH_PROV_SEQ" minValue="5"/>
-			<alterSequence sequenceName="LOGIN_TYPES_SEQ" minValue="3"/>
-			<alterSequence sequenceName="AUTHENTICATION_METHODS_SEQ" minValue="5"/>
+			<dropSequence sequenceName="USER_SEQ"/>
+			<createSequence sequenceName="USER_SEQ" startValue="2"/>
+			<dropSequence sequenceName="ROLE_SEQ"/>
+			<createSequence sequenceName="ROLE_SEQ" startValue="4"/>
+			<dropSequence sequenceName="TIME_SEQ"/>
+			<createSequence sequenceName="TIME_SEQ" startValue="4"/>
+			<dropSequence sequenceName="RELATION_OP_SEQ"/>
+			<createSequence sequenceName="RELATION_OP_SEQ" startValue="4"/>
+			<dropSequence sequenceName="THRESHOLDS_OP_SEQ"/>
+			<createSequence sequenceName="THRESHOLDS_OP_SEQ" startValue="3"/>
+			<dropSequence sequenceName="COMP_SEQ"/>
+			<createSequence sequenceName="COMP_SEQ" startValue="7"/>
+			<dropSequence sequenceName="FREQUENCYTYPES_OP_SEQ"/>
+			<createSequence sequenceName="FREQUENCYTYPES_OP_SEQ" startValue="3"/>
+			<dropSequence sequenceName="OAUTH_PROV_SEQ"/>
+			<createSequence sequenceName="OAUTH_PROV_SEQ" startValue="5"/>
+			<dropSequence sequenceName="LOGIN_TYPES_SEQ"/>
+			<createSequence sequenceName="LOGIN_TYPES_SEQ" startValue="3"/>
+			<dropSequence sequenceName="AUTHENTICATION_METHODS_SEQ"/>
+			<createSequence sequenceName="AUTHENTICATION_METHODS_SEQ" startValue="5"/>
 		</changeSet>
 </databaseChangeLog>

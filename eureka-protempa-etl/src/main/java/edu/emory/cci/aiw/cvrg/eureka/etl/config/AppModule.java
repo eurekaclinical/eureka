@@ -21,7 +21,6 @@ package edu.emory.cci.aiw.cvrg.eureka.etl.config;
  */
 
 import com.google.inject.AbstractModule;
-import com.google.inject.Singleton;
 
 import edu.emory.cci.aiw.cvrg.eureka.etl.dao.DestinationDao;
 import edu.emory.cci.aiw.cvrg.eureka.etl.dao.EtlGroupDao;

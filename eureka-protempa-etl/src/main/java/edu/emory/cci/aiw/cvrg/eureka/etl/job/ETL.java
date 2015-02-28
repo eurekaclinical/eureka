@@ -99,9 +99,7 @@ public class ETL {
 		assert inPropositionDefinitions != null :
 				"inPropositionDefinitions cannot be null";
 		assert job != null : "job cannot be null";
-		Protempa protempa = null;
-		try {
-			protempa = getNewProtempa(job);
+		try (Protempa protempa = getNewProtempa(job)) {
 			logValidationEvents(job, protempa.validateDataSourceBackendData(), null);
 			DefaultQueryBuilder q = new DefaultQueryBuilder();
 			q.setPropositionDefinitions(inPropositionDefinitions);
@@ -117,7 +115,6 @@ public class ETL {
 					this.protempaDestFactory
 					.getInstance(eurekaDestination.getId(), protempa.getKnowledgeSource());
 			protempa.execute(query, protempaDestination);
-			protempa.close();
 		} catch (CloseException | BackendNewInstanceException | BackendInitializationException | ConfigurationsLoadException | BackendProviderSpecLoaderException | QueryBuildException | InvalidConfigurationException | ConfigurationsNotFoundException | DataSourceValidationIncompleteException ex) {
 			throw new EtlException(ex);
 		} catch (DataSourceFailedDataValidationException ex) {
@@ -130,13 +127,6 @@ public class ETL {
 			Throwable cause = e.getCause();
 			String msg = collectThrowableMessages(cause != null ? cause : e);
 			throw new EtlException(msg, e);
-		} finally {
-			if (protempa != null) {
-				try {
-					protempa.close();
-				} catch (CloseException ignore) {
-				}
-			}
 		}
 	}
 

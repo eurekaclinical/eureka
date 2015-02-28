@@ -165,6 +165,7 @@ public class ServiceProperties extends AbstractProperties {
 	 *
 	 * @return The default list of system propositions.
 	 */
+	@Override
 	public List<String> getDefaultSystemPropositions() {
 		return this.getStringListValue("eureka.services.defaultprops",
 				new ArrayList<String>());

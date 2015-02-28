@@ -27,7 +27,6 @@ package edu.emory.cci.aiw.cvrg.eureka.webapp.config;
  */
 
 import com.google.inject.AbstractModule;
-import com.google.inject.Singleton;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ServicesClient;
 import edu.emory.cci.aiw.cvrg.eureka.webapp.provider.ServicesClientProvider;
 
@@ -36,10 +35,16 @@ import edu.emory.cci.aiw.cvrg.eureka.webapp.provider.ServicesClientProvider;
  * @author hrathod
  */
 class AppModule extends AbstractModule {
+	private final WebappProperties webappProperties;
 
+	AppModule(WebappProperties webappProperties) {
+		assert webappProperties != null : "webappProperties cannot be null";
+		this.webappProperties = webappProperties;
+	}
+	
 	@Override
 	protected void configure() {
-		bind(WebappProperties.class).in(Singleton.class);
+		bind(WebappProperties.class).toInstance(this.webappProperties);
 		bind(ServicesClient.class).toProvider(ServicesClientProvider.class);
 	}
 	

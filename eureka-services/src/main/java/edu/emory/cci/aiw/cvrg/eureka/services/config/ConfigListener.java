@@ -19,13 +19,13 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.services.config;
 
-
+import com.google.inject.Injector;
 import javax.servlet.ServletContextEvent;
 
-import com.google.inject.Guice;
-import com.google.inject.Injector;
+import com.google.inject.Module;
 import com.google.inject.persist.jpa.JpaPersistModule;
 import com.google.inject.servlet.GuiceServletContextListener;
+import edu.emory.cci.aiw.cvrg.eureka.common.config.InjectorSupport;
 
 import edu.emory.cci.aiw.cvrg.eureka.services.finder.SystemPropositionFinder;
 
@@ -40,33 +40,24 @@ import edu.emory.cci.aiw.cvrg.eureka.services.finder.SystemPropositionFinder;
 public class ConfigListener extends GuiceServletContextListener {
 
 	private static final String JPA_UNIT = "services-jpa-unit";
-
-	/**
-	 * Make sure we always use the same injector
-	 */
-	private Injector injector;
+	private final ServiceProperties serviceProperties = new ServiceProperties();
 
 	@Override
 	protected Injector getInjector() {
-		if (this.injector == null) {
-			this.injector = Guice.createInjector(new AppModule(),
-					new ServletModule(new ServiceProperties()), new JpaPersistModule(
-							JPA_UNIT)
-			);
-		}
-		return this.injector;
-	}
-
-	@Override
-	public void contextInitialized(ServletContextEvent inServletContextEvent) {
-		super.contextInitialized(inServletContextEvent);
+		return new InjectorSupport(
+				new Module[]{
+					new AppModule(),
+					new ServletModule(this.serviceProperties),
+					new JpaPersistModule(JPA_UNIT)
+				},
+				this.serviceProperties).getInjector();
 	}
 
 	@Override
 	public void contextDestroyed(ServletContextEvent inServletContextEvent) {
 		super.contextDestroyed(inServletContextEvent);
-		SystemPropositionFinder finder =
-				this.getInjector().getInstance(SystemPropositionFinder.class);
+		SystemPropositionFinder finder
+				= this.getInjector().getInstance(SystemPropositionFinder.class);
 		finder.shutdown();
 	}
 }

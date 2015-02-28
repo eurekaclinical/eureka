@@ -63,7 +63,8 @@ public class I2B2DestinationEntity extends DestinationEntity {
 	private String patientDimensionMaritalStatus;
 	private String patientDimensionRace;
 	private String rootNodeName;
-	private String visitDimensionDecipheredId;
+	private String visitDimensionId;
+	private String visitDimensionInOut;
 	private String ageConceptCodePrefix;
 	private String metaTableName;
 	private String metaConnect;
@@ -163,8 +164,8 @@ public class I2B2DestinationEntity extends DestinationEntity {
 		return this.rootNodeName;
 	}
 	
-    public String getVisitDimensionDecipheredId() {
-		return this.visitDimensionDecipheredId;
+    public String getVisitDimensionId() {
+		return this.visitDimensionId;
 	}
 	
     public String getAgeConceptCodePrefix() {
@@ -255,8 +256,8 @@ public class I2B2DestinationEntity extends DestinationEntity {
 		this.rootNodeName = rootNodeName;
 	}
 
-	public void setVisitDimensionDecipheredId(String visitDimensionDecipheredId) {
-		this.visitDimensionDecipheredId = visitDimensionDecipheredId;
+	public void setVisitDimensionId(String visitDimensionId) {
+		this.visitDimensionId = visitDimensionId;
 	}
 
 	public void setAgeConceptCodePrefix(String ageConceptCodePrefix) {
@@ -330,7 +331,13 @@ public class I2B2DestinationEntity extends DestinationEntity {
 	public void setDataPassword(String dataPassword) {
 		this.dataPassword = dataPassword;
 	}
-	
-	
+
+	public String getVisitDimensionInOut() {
+		return this.visitDimensionInOut;
+	}
+
+	public void setVisitDimensionInOut(String visitDimensionInOut) {
+		this.visitDimensionInOut = visitDimensionInOut;
+	}
 	
 }

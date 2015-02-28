@@ -19,43 +19,10 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.etl.resource;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.ws.rs.core.MediaType;
-
-import org.junit.Test;
-import org.protempa.PropositionDefinition;
-
-import com.sun.jersey.api.client.ClientResponse;
-import com.sun.jersey.api.client.WebResource;
-
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.ValidationRequest;
-import org.junit.Assert;
-
 /**
  * @author hrathod
  */
 public class PropositionResourceTest extends AbstractEtlResourceTest {
 
-	private static final Long USER_ID = Long.valueOf(1);
-
-	@Test
-	public void testValidation() throws Exception {
-		WebResource webResource = this.resource();
-		List<PropositionDefinition> propositions =
-			new ArrayList<>();
-
-		ValidationRequest validationRequest = new ValidationRequest();
-		validationRequest.setUserId(USER_ID);
-		validationRequest.setPropositions(propositions);
-
-		ClientResponse response =
-			webResource.path("/api/protected/proposition/validate/0").type(
-				MediaType.APPLICATION_JSON).post(ClientResponse.class,
-				validationRequest);
-
-		Assert.assertEquals(ClientResponse.Status.OK,
-			response.getClientResponseStatus());
-	}
+	
 }

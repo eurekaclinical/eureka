@@ -32,9 +32,7 @@ import net.sf.ehcache.Cache;
 import net.sf.ehcache.CacheManager;
 
 @Singleton
-public class SystemPropositionFinder extends AbstractPropositionFinder<
-	String> {
-
+public class SystemPropositionFinder extends AbstractPropositionFinder<String> {
 	private static final String CACHE_NAME = "systemPropositions";
 	private final SystemPropositionRetriever retriever;
 	private final CacheManager cacheManager;

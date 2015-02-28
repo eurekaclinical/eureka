@@ -39,7 +39,6 @@ import com.google.inject.Singleton;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.LocalUser;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.User;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ClientException;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ServicesClient;
 import edu.emory.cci.aiw.cvrg.eureka.webapp.authentication.WebappAuthenticationSupport;
 

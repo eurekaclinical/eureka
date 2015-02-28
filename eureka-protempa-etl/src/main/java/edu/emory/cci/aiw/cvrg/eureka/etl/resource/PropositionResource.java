@@ -128,7 +128,6 @@ public class PropositionResource {
 					}
 					result.addAll(propositionFinder.findAll(narrower));
 				}
-				
 				return result;
 			} catch (PropositionFinderException e) {
 				throw new HttpStatusException(

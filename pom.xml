@@ -67,6 +67,9 @@ and data into your own instance of the i2b2 data warehouse system.
 		<!-- transitive dependencies that CAS needs certain versions of...-->
 		<commons-codec-version>1.4</commons-codec-version>
 		<commons-logging-version>1.1</commons-logging-version>
+		
+		<!-- Overridden by the release-stage profile below -->
+		<eureka.stage>DEVELOPMENT</eureka.stage>
 	</properties>
 
 	<scm>
@@ -373,7 +376,7 @@ and data into your own instance of the i2b2 data warehouse system.
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-surefire-plugin</artifactId>
-					<version>2.16</version>
+					<version>2.18.1</version>
 					<configuration>
 						<systemProperties>
 							<java.awt.headless>true</java.awt.headless>
@@ -458,6 +461,11 @@ and data into your own instance of the i2b2 data warehouse system.
 						</execution>
 					</executions>
 				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-war-plugin</artifactId>
+					<version>2.6</version>
+				</plugin>
 			</plugins>
 		</pluginManagement>
 		<plugins>
@@ -486,11 +494,6 @@ and data into your own instance of the i2b2 data warehouse system.
 						</configuration>
 					</execution>
 				</executions>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-war-plugin</artifactId>
-				<version>2.3</version>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -853,6 +856,12 @@ and data into your own instance of the i2b2 data warehouse system.
 	</pluginRepositories>
 
 	<profiles>
+		<profile>
+			<id>release-profile</id>
+			<properties>
+				<eureka.stage>PRODUCTION</eureka.stage>
+			</properties>
+		</profile>
 		<profile>
 			<id>eureka-tomcat-local</id>
 			<build>
