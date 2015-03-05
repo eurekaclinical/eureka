@@ -53,6 +53,8 @@ public class I2B2DestinationModifierSpecEntity {
 	@Column(nullable = false)
 	private String property;
 	
+	private String val;
+	
 	@ManyToOne
 	@JoinColumn(name = "i2b2destconceptspecs_id")
 	private I2B2DestinationConceptSpecEntity conceptSpec;
@@ -87,6 +89,14 @@ public class I2B2DestinationModifierSpecEntity {
 
 	public void setProperty(String property) {
 		this.property = property;
+	}
+
+	public String getVal() {
+		return val;
+	}
+
+	public void setVal(String val) {
+		this.val = val;
 	}
 
 	public I2B2DestinationConceptSpecEntity getConceptSpec() {

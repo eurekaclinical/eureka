@@ -606,6 +606,7 @@ limitations under the License.
 			<column name="PROPERTY" type="VARCHAR(255)">
 				<constraints nullable="false"/>
 			</column>
+			<column name="VAL" type="VARCHAR(255)"/>
 		</createTable>
 		<addForeignKeyConstraint baseColumnNames="I2B2DESTCONCEPTSPECS_ID" baseTableName="I2B2_DEST_MODIFIERSPECS" constraintName="FK_I2B2_DEST_MODIFIERSPEC" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" referencedColumnNames="ID" referencedTableName="I2B2_DEST_CONCEPTSPECS" referencesUniqueColumn="true"/>
 		<createSequence sequenceName="I2B2_MS_SEQ"/>
