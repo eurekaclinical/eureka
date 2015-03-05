@@ -54,11 +54,11 @@ public class DataElementConversionSupport {
 	}
 
 	public String asValueString(String dataElementKey) {
-		return dataElementKey + ConversionUtil.VALUE_SUFFIX;
+		return ConversionUtil.VALUE;
 	}
 	
 	public String asValueCompString(String dataElementKey) {
-		return dataElementKey + ConversionUtil.VALUE_COMP_SUFFIX;
+		return ConversionUtil.VALUE_COMP;
 	}
 
 	public String asValueString(DataElementEntity dataElement) {

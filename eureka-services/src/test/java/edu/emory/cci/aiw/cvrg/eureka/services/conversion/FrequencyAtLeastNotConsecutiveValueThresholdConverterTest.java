@@ -142,7 +142,7 @@ public class FrequencyAtLeastNotConsecutiveValueThresholdConverterTest extends A
 		hlad = converter.getPrimaryPropositionDefinition();
 		
 		userConstraintName = asValueString(thresholdGroupKey);
-		compConstraintName = thresholdGroupKey + "_VALUE_COMP";
+		compConstraintName = asValueCompString(thresholdGroupKey);
 		
 		tepd = (TemporalExtendedParameterDefinition) 
 				hlad.getExtendedPropositionDefinitions().iterator().next();

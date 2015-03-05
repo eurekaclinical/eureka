@@ -72,7 +72,7 @@ public class ValueThresholdsLowLevelAbstractionConverterTest extends
 		thresholdGroup.setId(2L);
 		thresholdGroup.setKey("test-valuethreshold");
 		userConstraintName = asValueString(thresholdGroup);
-		compConstraintName = thresholdGroup.getKey() + "_VALUE_COMP";
+		compConstraintName = asValueCompString(thresholdGroup);
 
 		ValueComparator lt = new ValueComparator();
 		lt.setName("<");

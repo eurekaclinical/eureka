@@ -140,9 +140,9 @@ public class ValueThresholdsCompoundLowLevelAbstractionConverterTest extends
 			}
 		}
 		userConstraintName = asValueString(thresholdGroup);
-		compConstraintName = userConstraintName + "_COMP";
+		compConstraintName = asValueCompString(thresholdGroup);
 		secondUserConstraintName = asValueString(thresholdGroup);
-		secondCompConstraintName = secondUserConstraintName + "_COMP";
+		secondCompConstraintName = asValueCompString(thresholdGroup);
 	}
 
 	@Test
