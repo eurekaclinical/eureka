@@ -40,6 +40,10 @@ public class AbstractConverter {
 		return this.conversionSupport.asValueString(dataElement);
 	}
 	
+	protected String asValueCompString(DataElementEntity dataElement) {
+		return this.conversionSupport.asValueCompString(dataElement);
+	}
+	
 	protected NominalValue asValue(DataElementEntity dataElement) {
 		return this.conversionSupport.asValue(dataElement);
 	}

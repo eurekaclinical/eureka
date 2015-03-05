@@ -23,10 +23,7 @@ import edu.emory.cci.aiw.cvrg.eureka.common.entity.ExtendedDataElement;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.ValueThresholdEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.ValueThresholdGroupEntity;
 import org.protempa.LowLevelAbstractionDefinition;
-import org.protempa.LowLevelAbstractionValueDefinition;
 import org.protempa.PropositionDefinition;
-import org.protempa.proposition.value.ValueComparator;
-import org.protempa.proposition.value.ValueType;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -34,25 +31,11 @@ import java.util.List;
 import org.protempa.ContextDefinition;
 import org.protempa.SimpleGapFunction;
 import org.protempa.SlidingWindowWidthMode;
-import org.protempa.proposition.value.NominalValue;
 import static edu.emory.cci.aiw.cvrg.eureka.services.conversion.ConversionUtil.extractContextDefinition;
-import java.util.HashMap;
-import java.util.Map;
 
 public final class ValueThresholdsLowLevelAbstractionConverter 
 		extends AbstractValueThresholdGroupEntityConverter implements
 		PropositionDefinitionConverter<ValueThresholdGroupEntity, LowLevelAbstractionDefinition> {
-	
-	private static final Map<String, ValueComparator> VC_MAP =
-			new HashMap<>();
-	static {
-		VC_MAP.put(">", ValueComparator.GREATER_THAN);
-		VC_MAP.put(">=", ValueComparator.GREATER_THAN_OR_EQUAL_TO);
-		VC_MAP.put("=", ValueComparator.EQUAL_TO);
-		VC_MAP.put("not=", ValueComparator.NOT_EQUAL_TO);
-		VC_MAP.put("<=", ValueComparator.LESS_THAN_OR_EQUAL_TO);
-		VC_MAP.put("<", ValueComparator.LESS_THAN);
-	}
 	
 	private PropositionDefinitionConverterVisitor converterVisitor;
 	private LowLevelAbstractionDefinition primary;
@@ -83,7 +66,6 @@ public final class ValueThresholdsLowLevelAbstractionConverter
 		}
 		List<PropositionDefinition> result =
 				new ArrayList<>();
-		//String propId = toPropositionIdWrapped(entity);
 		String propId = toPropositionId(entity);
 		if (this.converterVisitor.addPropositionId(propId)) {
 			LowLevelAbstractionDefinition wrapped =
@@ -104,7 +86,7 @@ public final class ValueThresholdsLowLevelAbstractionConverter
 
 				wrapped.addPrimitiveParameterId(
 						converterVisitor.getPrimaryPropositionId());
-				thresholdToValueDefinitions(asValueString(entity),
+				thresholdToValueDefinitions(entity,
 						threshold, wrapped);
 				List<ExtendedDataElement> extendedDataElements = threshold.getExtendedDataElements();
 				if (extendedDataElements != null && !extendedDataElements.isEmpty()) {
@@ -119,10 +101,6 @@ public final class ValueThresholdsLowLevelAbstractionConverter
 			wrapped.setGapFunction(new SimpleGapFunction(0, null));
 			wrapped.setSourceId(sourceId(entity));
 			result.add(wrapped);
-			//HighLevelAbstractionDefinition wrapper = wrap(entity);
-			//result.add(wrapper);
-			//this.primary = wrapper;
-			//this.primaryPropId = wrapper.getPropositionId();
 			this.primary = wrapped;
 			this.primaryPropId = wrapped.getPropositionId();
 		}
@@ -130,41 +108,4 @@ public final class ValueThresholdsLowLevelAbstractionConverter
 		return result;
 	}
 
-	static void thresholdToValueDefinitions(String value,
-			ValueThresholdEntity threshold,
-			LowLevelAbstractionDefinition def) {
-		LowLevelAbstractionValueDefinition valueDef =
-				new LowLevelAbstractionValueDefinition(
-				def, value);
-		valueDef.setValue(NominalValue.getInstance(value));
-		LowLevelAbstractionValueDefinition compValueDef =
-				new LowLevelAbstractionValueDefinition(def, value + "_COMP");
-		compValueDef.setValue(NominalValue.getInstance(value + "_COMP"));
-		if (threshold.getMinValueThreshold() != null
-				&& threshold.getMinValueComp() != null) {
-			valueDef.setParameterValue("minThreshold", ValueType.VALUE
-					.parse(threshold.getMinValueThreshold().toString()));
-			valueDef.setParameterComp("minThreshold", 
-					VC_MAP.get(threshold.getMinValueComp().getName()));
-			compValueDef.setParameterValue("maxThreshold", ValueType.VALUE
-					.parse(threshold.getMinValueThreshold().toString()));
-			compValueDef.setParameterComp("maxThreshold",
-					VC_MAP.get(threshold.getMinValueComp()
-					.getComplement().getName()));
-		}
-		if (threshold.getMaxValueThreshold() != null
-				&& threshold.getMaxValueComp() != null) {
-			valueDef.setParameterValue("maxThreshold", ValueType.VALUE
-					.parse(threshold.getMaxValueThreshold().toString()));
-			valueDef.setParameterComp("maxThreshold", 
-					VC_MAP.get(threshold.getMaxValueComp().getName()));
-			compValueDef.setParameterValue("minThreshold", ValueType.VALUE
-					.parse(threshold.getMaxValueThreshold().toString()));
-			compValueDef.setParameterComp("minThreshold",
-					VC_MAP.get(
-					threshold.getMaxValueComp().getComplement().getName()));
-		}
-	}
-	
-	
 }

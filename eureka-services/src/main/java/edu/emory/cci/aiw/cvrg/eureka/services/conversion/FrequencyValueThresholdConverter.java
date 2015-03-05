@@ -97,9 +97,9 @@ public final class FrequencyValueThresholdConverter extends AbstractConverter
 						asValueString(abstractedFrom));
 				frequencyWrapper.addValueClassification(vc);
 				ValueClassification vcComp = new ValueClassification(
-						entity.getKey() + "_VALUE_COMP",
+						asValueCompString(entity),
 						abstractedFromPrimaryPropId,
-						abstractedFrom.getKey() + "_VALUE_COMP");
+						asValueCompString(abstractedFrom));
 				frequencyWrapper.addValueClassification(vcComp);
 				frequencyWrapper.setGapFunctionBetweenValues(
 						new MinMaxGapFunction(entity.getWithinAtLeast(),

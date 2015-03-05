@@ -27,7 +27,6 @@ import java.util.ArrayList;
 import java.util.List;
 import org.protempa.CompoundLowLevelAbstractionDefinition;
 import org.protempa.ContextDefinition;
-import org.protempa.HighLevelAbstractionDefinition;
 import org.protempa.LowLevelAbstractionDefinition;
 import org.protempa.PropositionDefinition;
 import org.protempa.SimpleGapFunction;
@@ -61,7 +60,6 @@ public final class ValueThresholdsCompoundLowLevelAbstractionConverter
 	public List<PropositionDefinition> convert(
 			ValueThresholdGroupEntity entity) {
 		List<PropositionDefinition> result = new ArrayList<>();
-		//String propId = toPropositionIdWrapped(entity);
 		String propId = toPropositionId(entity);
 		if (this.converterVisitor.addPropositionId(propId)) {
 			CompoundLowLevelAbstractionDefinition wrapped = new CompoundLowLevelAbstractionDefinition(
@@ -94,8 +92,7 @@ public final class ValueThresholdsCompoundLowLevelAbstractionConverter
 				def.setMaximumNumberOfValues(1);
 				def.setAlgorithmId("stateDetector");
 				def.setGapFunction(new SimpleGapFunction(Integer.valueOf(0), null));
-				ValueThresholdsLowLevelAbstractionConverter
-						.thresholdToValueDefinitions(asValueString(entity), v, def);
+				thresholdToValueDefinitions(entity, v, def);
 				def.setSlidingWindowWidthMode(SlidingWindowWidthMode.DEFAULT);
 				def.setGapFunction(new SimpleGapFunction(0, null));
 				List<ExtendedDataElement> extendedDataElements =
@@ -115,8 +112,8 @@ public final class ValueThresholdsCompoundLowLevelAbstractionConverter
 			for (LowLevelAbstractionDefinition def : intermediates) {
 				wrapped.addValueClassification(new ValueClassification(asValueString(entity),
 						def.getId(), asValueString(entity)));
-				wrapped.addValueClassification(new ValueClassification(entity.getKey() + "_VALUE_COMP",
-						def.getId(), entity.getKey() + "_VALUE_COMP"));
+				wrapped.addValueClassification(new ValueClassification(asValueCompString(entity),
+						def.getId(), asValueCompString(entity)));
 			}
 
 			wrapped.setSourceId(sourceId(entity));

@@ -56,9 +56,17 @@ public class DataElementConversionSupport {
 	public String asValueString(String dataElementKey) {
 		return dataElementKey + ConversionUtil.VALUE_SUFFIX;
 	}
+	
+	public String asValueCompString(String dataElementKey) {
+		return dataElementKey + ConversionUtil.VALUE_COMP_SUFFIX;
+	}
 
 	public String asValueString(DataElementEntity dataElement) {
 		return asValueString(dataElement.getKey());
+	}
+	
+	public String asValueCompString(DataElementEntity dataElement) {
+		return asValueCompString(dataElement.getKey());
 	}
 
 	public NominalValue asValue(DataElementEntity dataElement) {

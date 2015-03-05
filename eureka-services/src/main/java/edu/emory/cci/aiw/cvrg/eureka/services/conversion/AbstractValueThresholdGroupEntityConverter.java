@@ -20,17 +20,36 @@ package edu.emory.cci.aiw.cvrg.eureka.services.conversion;
  * #L%
  */
 
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.ValueThresholdEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.ValueThresholdGroupEntity;
+import java.util.HashMap;
+import java.util.Map;
 import org.protempa.HighLevelAbstractionDefinition;
+import org.protempa.LowLevelAbstractionDefinition;
+import org.protempa.LowLevelAbstractionValueDefinition;
 import org.protempa.SimpleGapFunction;
 import org.protempa.TemporalExtendedParameterDefinition;
 import org.protempa.proposition.interval.Relation;
+import org.protempa.proposition.value.NominalValue;
+import org.protempa.proposition.value.ValueComparator;
+import org.protempa.proposition.value.ValueType;
 
 /**
  *
  * @author Andrew Post
  */
 public class AbstractValueThresholdGroupEntityConverter extends AbstractConverter {
+	
+	private static final Map<String, ValueComparator> VC_MAP =
+			new HashMap<>();
+	static {
+		VC_MAP.put(">", ValueComparator.GREATER_THAN);
+		VC_MAP.put(">=", ValueComparator.GREATER_THAN_OR_EQUAL_TO);
+		VC_MAP.put("=", ValueComparator.EQUAL_TO);
+		VC_MAP.put("not=", ValueComparator.NOT_EQUAL_TO);
+		VC_MAP.put("<=", ValueComparator.LESS_THAN_OR_EQUAL_TO);
+		VC_MAP.put("<", ValueComparator.LESS_THAN);
+	}
 
 	AbstractValueThresholdGroupEntityConverter() {
 	}
@@ -54,6 +73,42 @@ public class AbstractValueThresholdGroupEntityConverter extends AbstractConverte
 		wrapper.setSolid(false);
 		wrapper.setSourceId(sourceId(valueThresholdGroup));
 		return wrapper;
+	}
+	
+	void thresholdToValueDefinitions(ValueThresholdGroupEntity entity,
+			ValueThresholdEntity threshold,
+			LowLevelAbstractionDefinition def) {
+		LowLevelAbstractionValueDefinition valueDef =
+				new LowLevelAbstractionValueDefinition(
+				def, asValueString(entity));
+		valueDef.setValue(NominalValue.getInstance(asValueString(entity)));
+		LowLevelAbstractionValueDefinition compValueDef =
+				new LowLevelAbstractionValueDefinition(def, asValueCompString(entity));
+		compValueDef.setValue(NominalValue.getInstance(asValueCompString(entity)));
+		if (threshold.getMinValueThreshold() != null
+				&& threshold.getMinValueComp() != null) {
+			valueDef.setParameterValue("minThreshold", ValueType.VALUE
+					.parse(threshold.getMinValueThreshold().toString()));
+			valueDef.setParameterComp("minThreshold", 
+					VC_MAP.get(threshold.getMinValueComp().getName()));
+			compValueDef.setParameterValue("maxThreshold", ValueType.VALUE
+					.parse(threshold.getMinValueThreshold().toString()));
+			compValueDef.setParameterComp("maxThreshold",
+					VC_MAP.get(threshold.getMinValueComp()
+					.getComplement().getName()));
+		}
+		if (threshold.getMaxValueThreshold() != null
+				&& threshold.getMaxValueComp() != null) {
+			valueDef.setParameterValue("maxThreshold", ValueType.VALUE
+					.parse(threshold.getMaxValueThreshold().toString()));
+			valueDef.setParameterComp("maxThreshold", 
+					VC_MAP.get(threshold.getMaxValueComp().getName()));
+			compValueDef.setParameterValue("minThreshold", ValueType.VALUE
+					.parse(threshold.getMaxValueThreshold().toString()));
+			compValueDef.setParameterComp("minThreshold",
+					VC_MAP.get(
+					threshold.getMaxValueComp().getComplement().getName()));
+		}
 	}
 	
 }

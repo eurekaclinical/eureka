@@ -53,6 +53,7 @@ public class AbstractServiceTest extends AbstractTest {
 		return null;
 	}
 
+	@Override
 	protected Module[] getModules() {
 		return new Module[]{new AppTestModule()};
 	}
@@ -117,6 +118,14 @@ public class AbstractServiceTest extends AbstractTest {
 	
 	protected String asValueString(String dataElementKey) {
 		return this.conversionSupport.asValueString(dataElementKey);
+	}
+	
+	protected String asValueCompString(DataElementEntity dataElement) {
+		return this.conversionSupport.asValueCompString(dataElement);
+	}
+	
+	protected String asValueCompString(String dataElementKey) {
+		return this.conversionSupport.asValueCompString(dataElementKey);
 	}
 	
 	protected NominalValue asValue(DataElementEntity dataElement) {
