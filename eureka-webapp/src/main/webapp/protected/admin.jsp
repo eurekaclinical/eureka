@@ -32,7 +32,8 @@
 		</p>
 		<table class="table table-responsive">
 			<tr>
-				<th>User Name</th>
+				<th>Username</th>
+				<th>Name</th>
 				<th>Last Login</th>
 				<th>Role</th>
 				<th>Email</th>
@@ -72,7 +73,17 @@
 							</c:otherwise>
 						</c:choose>
 
-						<a href="${pageContext.request.contextPath}/protected/admin?id=${user.id}&action=edit">${user.firstName} ${user.lastName}</a>
+						<a href="${pageContext.request.contextPath}/protected/admin?id=${user.id}&action=edit">${user.username}</a>
+					</td>
+					<td>
+						<c:choose>
+							<c:when test="${not empty user.fullName}">
+								${user.fullName}
+							</c:when>
+							<c:otherwise>
+								${user.firstName} ${user.lastName}
+							</c:otherwise>
+						</c:choose>
 					</td>
 					<td>
 						<fmt:formatDate value="${user.lastLogin}"
