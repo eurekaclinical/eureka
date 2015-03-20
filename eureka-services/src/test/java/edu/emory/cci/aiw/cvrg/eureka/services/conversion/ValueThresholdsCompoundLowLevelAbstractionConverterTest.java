@@ -42,6 +42,7 @@ import edu.emory.cci.aiw.cvrg.eureka.services.test.AbstractServiceTest;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import org.protempa.proposition.value.Value;
 
 public class ValueThresholdsCompoundLowLevelAbstractionConverterTest extends
         AbstractServiceTest {
@@ -187,14 +188,14 @@ public class ValueThresholdsCompoundLowLevelAbstractionConverterTest extends
 		assertTrue("value def '" + userConstraintName + 
 				"' does not exist; value definition ids: " +
 				StringUtils.join(ids, ", "),
-		        firstLlaDef.getValueDefinition(userConstraintName) != null);
+		        firstLlaDef.getValueDefinitions(userConstraintName) != null);
 	}
 	
 	@Test
 	public void testValueDefMinValue() {
 		assertEquals("wrong min value for value def: '" + userConstraintName
 		        + "'", NumberValue.getInstance(100L),
-		        firstLlaDef.getValueDefinition(userConstraintName)
+		        firstLlaDef.getValueDefinitions(userConstraintName)[0]
 		                .getParameterValue("minThreshold"));
 	}
 	
@@ -204,15 +205,14 @@ public class ValueThresholdsCompoundLowLevelAbstractionConverterTest extends
 		        "wrong min value comp for value def: '" + userConstraintName
 		                + "'",
 		        ">",
-		        firstLlaDef.getValueDefinition(userConstraintName)
-				.getParameterComp("minThreshold").getComparatorString());
+		        firstUserCompStringFor("minThreshold"));
 	}
 	
 	@Test
 	public void testValueDefMaxValue() {
 		assertEquals("wrong max value for value def: '" + userConstraintName
 		        + "'", NumberValue.getInstance(200L),
-		        firstLlaDef.getValueDefinition(userConstraintName)
+		        firstLlaDef.getValueDefinitions(userConstraintName)[0]
 		                .getParameterValue("maxThreshold"));
 	}
 	
@@ -222,22 +222,20 @@ public class ValueThresholdsCompoundLowLevelAbstractionConverterTest extends
 		        "wrong max value comp for value def: '" + userConstraintName
 		                + "'",
 		        "<",
-		        firstLlaDef.getValueDefinition(userConstraintName)
-		        .getParameterComp("maxThreshold").getComparatorString());
+		        firstUserCompStringFor("maxThreshold"));
 	}
 	
 	@Test
 	public void testValueDefCompExists() {
 		assertTrue("value def '" + compConstraintName + "' does not exist",
-		        firstLlaDef.getValueDefinition(compConstraintName) != null);
+		        firstLlaDef.getValueDefinitions(compConstraintName) != null);
 	}
 	
 	@Test
 	public void testValueDefCompMinValue() {
 		assertEquals("wrong min value for value def: '" + compConstraintName
 		        + "'", NumberValue.getInstance(200L),
-		        firstLlaDef.getValueDefinition(compConstraintName)
-		                .getParameterValue("minThreshold"));
+		        firstValStringFor("minThreshold"));
 	}
 	
 	@Test
@@ -246,16 +244,14 @@ public class ValueThresholdsCompoundLowLevelAbstractionConverterTest extends
 		        "wrong min value comp for value def: '" + compConstraintName
 		                + "'",
 		        ">=",
-		        firstLlaDef.getValueDefinition(compConstraintName)
-		        .getParameterComp("minThreshold").getComparatorString());
+		        firstCompStringFor("minThreshold"));
 	}
 	
 	@Test
 	public void testValueDefCompMaxValue() {
 		assertEquals("wrong max value for value def: '" + compConstraintName
 		        + "'", NumberValue.getInstance(100L),
-		        firstLlaDef.getValueDefinition(compConstraintName)
-		                .getParameterValue("maxThreshold"));
+		        firstValStringFor("maxThreshold"));
 	}
 	
 	@Test
@@ -264,8 +260,7 @@ public class ValueThresholdsCompoundLowLevelAbstractionConverterTest extends
 		        "wrong max value comp for value def: '" + compConstraintName
 		                + "'",
 		        "<=",
-		        firstLlaDef.getValueDefinition(compConstraintName)
-		        .getParameterComp("maxThreshold").getComparatorString());
+		        firstCompStringFor("maxThreshold"));
 	}
 	
 	@Test
@@ -292,14 +287,14 @@ public class ValueThresholdsCompoundLowLevelAbstractionConverterTest extends
 	public void testSecondLLADValueDefExists() {
 		assertTrue("value def '" + secondUserConstraintName + "' does not exist",
 		        secondLlaDef
-				.getValueDefinition(secondUserConstraintName) != null);
+				.getValueDefinitions(secondUserConstraintName) != null);
 	}
 	
 	@Test
 	public void testSecondLLADMinValue() {
 		assertEquals("wrong min value for value def: '" + secondUserConstraintName
 		        + "'", NumberValue.getInstance(5L),
-		        secondLlaDef.getValueDefinition(secondUserConstraintName)
+		        secondLlaDef.getValueDefinitions(secondUserConstraintName)[0]
 		                .getParameterValue("minThreshold"));
 	}
 	
@@ -309,15 +304,14 @@ public class ValueThresholdsCompoundLowLevelAbstractionConverterTest extends
 		        "wrong min value comp for value def: '" + secondUserConstraintName
 		                + "'",
 		        "=",
-		        secondLlaDef.getValueDefinition(secondUserConstraintName)
-		        .getParameterComp("minThreshold").getComparatorString());
+		        secondUserCompStringFor("minThreshold"));
 	}
 	
 	@Test
 	public void testSecondLLADMaxThresholdParamExists() {
 		assertTrue("max value for value def: '" + secondUserConstraintName
 		        + "' exists",
-		        false == secondLlaDef.getValueDefinition(secondUserConstraintName)
+		        false == secondLlaDef.getValueDefinitions(secondUserConstraintName)[0]
 		                .getParameters().contains("maxThreshold"));
 	}
 	
@@ -325,21 +319,20 @@ public class ValueThresholdsCompoundLowLevelAbstractionConverterTest extends
 	public void testSecondLLADMaxThresholdCompParamExists() {
 		assertTrue("max value comp for value def: '" + secondUserConstraintName
 		        + "' exists",
-		        false == secondLlaDef.getValueDefinition(secondUserConstraintName)
-		                .getParameterComps().contains("maxThreshold"));
+		        secondUserCompStringFor("maxThreshold") == null);
 	}
 	
 	@Test
 	public void testSecondLLADCompValueDefExists() {
 		assertTrue("value def '" + secondCompConstraintName + "' does not exist",
-		        secondLlaDef.getValueDefinition(secondCompConstraintName) != null);
+		        secondLlaDef.getValueDefinitions(secondCompConstraintName) != null);
 	}
 	
 	@Test
 	public void testSecondLLADCompMinThresholdExists() {
 		assertTrue("min value for value def: '" + secondCompConstraintName
 		        + "' exists",
-		        false == secondLlaDef.getValueDefinition(secondCompConstraintName)
+		        false == secondLlaDef.getValueDefinitions(secondCompConstraintName)[0]
 		                .getParameters().contains("minThreshold"));
 	}
 	
@@ -347,15 +340,14 @@ public class ValueThresholdsCompoundLowLevelAbstractionConverterTest extends
 	public void testSecondLLADCompMinThresholdCompParamExists() {
 		assertTrue("min value comp for value def: '" + secondCompConstraintName
 		        + "' exists",
-		        false == secondLlaDef.getValueDefinition(secondCompConstraintName)
-		                .getParameterComps().contains("minThreshold"));
+		        secondCompStringFor("minThreshold") == null);
 	}
 	
 	@Test
 	public void testSecondLLADCompMaxValue() {
 		assertEquals("wrong max value for value def: '" + secondCompConstraintName
 		        + "'", NumberValue.getInstance(5L),
-		        secondLlaDef.getValueDefinition(secondCompConstraintName)
+		        secondLlaDef.getValueDefinitions(secondCompConstraintName)[0]
 		                .getParameterValue("maxThreshold"));
 	}
 	
@@ -365,8 +357,57 @@ public class ValueThresholdsCompoundLowLevelAbstractionConverterTest extends
 		        "wrong max value comp for value def: '" + secondCompConstraintName
 		                + "'",
 		        "!=",
-		        secondLlaDef.getValueDefinition(secondCompConstraintName)
-		                .getParameterComp("maxThreshold").getComparatorString());	
+		        secondCompStringFor("maxThreshold"));	
+	}
+	
+	private String secondCompStringFor(String threshold) {
+		for (LowLevelAbstractionValueDefinition valueDefinitions : secondLlaDef.getValueDefinitions(secondCompConstraintName)) {
+			org.protempa.proposition.value.ValueComparator parameterComp = valueDefinitions.getParameterComp(threshold);
+			if (parameterComp != null) {
+				return parameterComp.getComparatorString();
+			}
+		}
+		return null;
+	}
+	
+	private String secondUserCompStringFor(String threshold) {
+		for (LowLevelAbstractionValueDefinition valueDefinitions : secondLlaDef.getValueDefinitions(secondUserConstraintName)) {
+			org.protempa.proposition.value.ValueComparator parameterComp = valueDefinitions.getParameterComp(threshold);
+			if (parameterComp != null) {
+				return parameterComp.getComparatorString();
+			}
+		}
+		return null;
+	}
+	
+	private Value firstValStringFor(String threshold) {
+		for (LowLevelAbstractionValueDefinition valueDefinitions : firstLlaDef.getValueDefinitions(compConstraintName)) {
+			Value val = valueDefinitions.getParameterValue(threshold);
+			if (val != null) {
+				return val;
+			}
+		}
+		return null;
+	}
+	
+	private String firstCompStringFor(String threshold) {
+		for (LowLevelAbstractionValueDefinition valueDefinitions : firstLlaDef.getValueDefinitions(compConstraintName)) {
+			org.protempa.proposition.value.ValueComparator parameterComp = valueDefinitions.getParameterComp(threshold);
+			if (parameterComp != null) {
+				return parameterComp.getComparatorString();
+			}
+		}
+		return null;
+	}
+	
+	private String firstUserCompStringFor(String threshold) {
+		for (LowLevelAbstractionValueDefinition valueDefinitions : firstLlaDef.getValueDefinitions(userConstraintName)) {
+			org.protempa.proposition.value.ValueComparator parameterComp = valueDefinitions.getParameterComp(threshold);
+			if (parameterComp != null) {
+				return parameterComp.getComparatorString();
+			}
+		}
+		return null;
 	}
 	
 	@Test

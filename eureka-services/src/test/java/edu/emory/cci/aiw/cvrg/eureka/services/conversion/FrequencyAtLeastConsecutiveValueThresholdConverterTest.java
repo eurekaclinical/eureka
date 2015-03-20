@@ -49,6 +49,7 @@ import org.protempa.LowLevelAbstractionValueDefinition;
 import org.protempa.PropositionDefinition;
 import org.protempa.SimpleGapFunction;
 import org.protempa.TemporalExtendedParameterDefinition;
+import org.protempa.proposition.value.Value;
 
 /**
  *
@@ -205,7 +206,7 @@ public class FrequencyAtLeastConsecutiveValueThresholdConverterTest extends Abst
 	@Test
 	public void testNumberOfValueDefs() {
 		assertEquals("wrong number of value definitions", 
-				2, llaDef.getValueDefinitions().size());
+				3, llaDef.getValueDefinitions().size());
 	}
 	
 	@Test
@@ -218,7 +219,7 @@ public class FrequencyAtLeastConsecutiveValueThresholdConverterTest extends Abst
 		assertTrue("value def '" + userConstraintName +
 				"' does not exist; what does exist? " + 
 				StringUtils.join(vds, ", "), 
-				llaDef.getValueDefinition(userConstraintName) != null);
+				llaDef.getValueDefinitions(userConstraintName) != null);
 	}
 	
 	@Test
@@ -226,7 +227,7 @@ public class FrequencyAtLeastConsecutiveValueThresholdConverterTest extends Abst
 		assertEquals("wrong min value threshold for value def: '" 
 				+ userConstraintName + "'", 
 				NumberValue.getInstance(100L), 
-				llaDef.getValueDefinition(userConstraintName)
+				llaDef.getValueDefinitions(userConstraintName)[0]
 				.getParameterValue("minThreshold"));
 	}
 	
@@ -235,7 +236,7 @@ public class FrequencyAtLeastConsecutiveValueThresholdConverterTest extends Abst
 		assertEquals("wrong min value comp for value def: '" + 
 				userConstraintName + "'", 
 				">", 
-				llaDef.getValueDefinition(userConstraintName)
+				llaDef.getValueDefinitions(userConstraintName)[0]
 				.getParameterComp("minThreshold").getComparatorString());
 	}
 	
@@ -244,7 +245,7 @@ public class FrequencyAtLeastConsecutiveValueThresholdConverterTest extends Abst
 		assertEquals("wrong max value for value def: '" + 
 				userConstraintName + "'", 
 				NumberValue.getInstance(200L), 
-				llaDef.getValueDefinition(userConstraintName)
+				llaDef.getValueDefinitions(userConstraintName)[0]
 				.getParameterValue("maxThreshold"));
 	}
 	
@@ -253,14 +254,14 @@ public class FrequencyAtLeastConsecutiveValueThresholdConverterTest extends Abst
 		assertEquals("wrong max value comp for value def: '" + 
 				userConstraintName + "'", 
 				"<", 
-				llaDef.getValueDefinition(userConstraintName)
+				llaDef.getValueDefinitions(userConstraintName)[0]
 				.getParameterComp("maxThreshold").getComparatorString());
 	}
 	
 	@Test
 	public void testValueDefDoesNotExistComp() {
 		assertTrue("value def '" + compConstraintName +"' does not exist", 
-				llaDef.getValueDefinition(compConstraintName) != null);
+				llaDef.getValueDefinitions(compConstraintName).length > 0);
 	}
 	
 	@Test
@@ -268,17 +269,14 @@ public class FrequencyAtLeastConsecutiveValueThresholdConverterTest extends Abst
 		assertEquals("wrong min value comp for value def: '" + 
 				compConstraintName + "'", 
 				NumberValue.getInstance(200L), 
-				llaDef.getValueDefinition(compConstraintName)
-				.getParameterValue("minThreshold"));
+				valStringFor("minThreshold"));
 	}
 	
 	@Test
 	public void minValueCompGEForValueDef() {
 		assertEquals("wrong min value comp for value def: '" +
 				compConstraintName + "'", 
-				">=", 
-				llaDef.getValueDefinition(compConstraintName)
-				.getParameterComp("minThreshold").getComparatorString());
+				">=", compStringFor("minThreshold"));
 	}
 	
 	@Test
@@ -286,17 +284,34 @@ public class FrequencyAtLeastConsecutiveValueThresholdConverterTest extends Abst
 		assertEquals("wrong max value for value def: '" + 
 				compConstraintName + "'", 
 				NumberValue.getInstance(100L), 
-				llaDef.getValueDefinition(compConstraintName)
-				.getParameterValue("maxThreshold"));
+				valStringFor("maxThreshold"));
 	}
 	
 	@Test
 	public void testMaxValueCompLEForValueDef() {
 		assertEquals("wrong max value comp for value def: '" +
 				compConstraintName + "'", 
-				"<=", 
-				llaDef.getValueDefinition(compConstraintName)
-				.getParameterComp("maxThreshold").getComparatorString());
+				"<=", compStringFor("maxThreshold"));
+	}
+	
+	private Value valStringFor(String threshold) {
+		for (LowLevelAbstractionValueDefinition valueDefinitions : llaDef.getValueDefinitions(compConstraintName)) {
+			Value parameterValue = valueDefinitions.getParameterValue(threshold);
+			if (parameterValue != null) {
+				return parameterValue;
+			}
+		}
+		return null;
+	}
+	
+	private String compStringFor(String threshold) {
+		for (LowLevelAbstractionValueDefinition valueDefinitions : llaDef.getValueDefinitions(compConstraintName)) {
+			org.protempa.proposition.value.ValueComparator parameterComp = valueDefinitions.getParameterComp(threshold);
+			if (parameterComp != null) {
+				return parameterComp.getComparatorString();
+			}
+		}
+		return null;
 	}
 	
 	@Test

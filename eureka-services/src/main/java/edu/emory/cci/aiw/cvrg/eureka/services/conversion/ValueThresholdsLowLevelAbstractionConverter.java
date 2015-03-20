@@ -86,8 +86,7 @@ public final class ValueThresholdsLowLevelAbstractionConverter
 
 				wrapped.addPrimitiveParameterId(
 						converterVisitor.getPrimaryPropositionId());
-				thresholdToValueDefinitions(entity,
-						threshold, wrapped);
+				thresholdToValueDefinitions(entity, threshold, wrapped);
 				List<ExtendedDataElement> extendedDataElements = threshold.getExtendedDataElements();
 				if (extendedDataElements != null && !extendedDataElements.isEmpty()) {
 					ContextDefinition contextDefinition = extractContextDefinition(entity,

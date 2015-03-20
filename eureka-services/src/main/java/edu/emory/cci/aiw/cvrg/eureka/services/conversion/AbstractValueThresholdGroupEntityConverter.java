@@ -82,20 +82,12 @@ public class AbstractValueThresholdGroupEntityConverter extends AbstractConverte
 				new LowLevelAbstractionValueDefinition(
 				def, asValueString(entity));
 		valueDef.setValue(NominalValue.getInstance(asValueString(entity)));
-		LowLevelAbstractionValueDefinition compValueDef =
-				new LowLevelAbstractionValueDefinition(def, asValueCompString(entity));
-		compValueDef.setValue(NominalValue.getInstance(asValueCompString(entity)));
 		if (threshold.getMinValueThreshold() != null
 				&& threshold.getMinValueComp() != null) {
 			valueDef.setParameterValue("minThreshold", ValueType.VALUE
 					.parse(threshold.getMinValueThreshold().toString()));
 			valueDef.setParameterComp("minThreshold", 
 					VC_MAP.get(threshold.getMinValueComp().getName()));
-			compValueDef.setParameterValue("maxThreshold", ValueType.VALUE
-					.parse(threshold.getMinValueThreshold().toString()));
-			compValueDef.setParameterComp("maxThreshold",
-					VC_MAP.get(threshold.getMinValueComp()
-					.getComplement().getName()));
 		}
 		if (threshold.getMaxValueThreshold() != null
 				&& threshold.getMaxValueComp() != null) {
@@ -103,6 +95,43 @@ public class AbstractValueThresholdGroupEntityConverter extends AbstractConverte
 					.parse(threshold.getMaxValueThreshold().toString()));
 			valueDef.setParameterComp("maxThreshold", 
 					VC_MAP.get(threshold.getMaxValueComp().getName()));
+		}
+		if (threshold.getMinValueThreshold() != null
+				&& threshold.getMinValueComp() != null
+				&& threshold.getMaxValueThreshold() != null
+				&& threshold.getMaxValueComp() != null) {
+			LowLevelAbstractionValueDefinition comp1ValueDef =
+				new LowLevelAbstractionValueDefinition(def, asValueCompString(entity));
+			comp1ValueDef.setValue(NominalValue.getInstance(asValueCompString(entity)));
+			comp1ValueDef.setParameterValue("maxThreshold", ValueType.VALUE
+					.parse(threshold.getMinValueThreshold().toString()));
+			comp1ValueDef.setParameterComp("maxThreshold",
+					VC_MAP.get(threshold.getMinValueComp()
+					.getComplement().getName()));
+			
+			LowLevelAbstractionValueDefinition comp2ValueDef =
+				new LowLevelAbstractionValueDefinition(def, asValueCompString(entity));
+			comp2ValueDef.setValue(NominalValue.getInstance(asValueCompString(entity)));
+			comp2ValueDef.setParameterValue("minThreshold", ValueType.VALUE
+					.parse(threshold.getMaxValueThreshold().toString()));
+			comp2ValueDef.setParameterComp("minThreshold",
+					VC_MAP.get(
+					threshold.getMaxValueComp().getComplement().getName()));
+		} else if (threshold.getMinValueThreshold() != null
+				&& threshold.getMinValueComp() != null) {
+			LowLevelAbstractionValueDefinition compValueDef =
+				new LowLevelAbstractionValueDefinition(def, asValueCompString(entity));
+			compValueDef.setValue(NominalValue.getInstance(asValueCompString(entity)));
+			compValueDef.setParameterValue("maxThreshold", ValueType.VALUE
+					.parse(threshold.getMinValueThreshold().toString()));
+			compValueDef.setParameterComp("maxThreshold",
+					VC_MAP.get(threshold.getMinValueComp()
+					.getComplement().getName()));
+		} else if (threshold.getMaxValueThreshold() != null
+				&& threshold.getMaxValueComp() != null) {
+			LowLevelAbstractionValueDefinition compValueDef =
+				new LowLevelAbstractionValueDefinition(def, asValueCompString(entity));
+			compValueDef.setValue(NominalValue.getInstance(asValueCompString(entity)));
 			compValueDef.setParameterValue("minThreshold", ValueType.VALUE
 					.parse(threshold.getMaxValueThreshold().toString()));
 			compValueDef.setParameterComp("minThreshold",
