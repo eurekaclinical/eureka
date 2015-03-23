@@ -24,6 +24,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.attribute.BasicFileAttributeView;
 import java.nio.file.attribute.BasicFileAttributes;
+import java.nio.file.attribute.FileTime;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.util.Date;
@@ -36,7 +37,7 @@ import org.protempa.backend.BackendInitializationException;
 import org.protempa.backend.BackendInstanceSpec;
 import org.protempa.backend.annotations.BackendInfo;
 import org.protempa.backend.annotations.BackendProperty;
-import org.protempa.backend.dsb.file.FixedWidthFileDataSourceBackend;
+import org.protempa.backend.dsb.file.DelimitedFileDataSourceBackend;
 import org.protempa.backend.dsb.filter.Filter;
 import org.protempa.dest.QueryResultsHandler;
 import org.protempa.proposition.Proposition;
@@ -46,22 +47,24 @@ import org.protempa.proposition.value.AbsoluteTimeGranularityUtil;
  *
  * @author Andrew Post
  */
-@BackendInfo(displayName = "Eureka Fixed Width File Data Source Backend")
-public class EurekaFixedWidthFileDataSourceBackend extends FixedWidthFileDataSourceBackend implements EurekaFileDataSourceBackend {
+@BackendInfo(displayName = "Eureka Delimited File Data Source Backend")
+public class EurekaDelimitedFileDataSourceBackend extends DelimitedFileDataSourceBackend implements EurekaFileDataSourceBackend {
+
 	private final FileDataSourceBackendSupport fileDataSourceBackendSupport;
 	private String dataFileDirectoryName;
 	private Boolean required;
 	private boolean exceptionOccurred;
 	private boolean defaultTimestampIsFileUpdated;
 	private Date defaultDate;
+	
 
-	public EurekaFixedWidthFileDataSourceBackend() {
+	public EurekaDelimitedFileDataSourceBackend() {
 		this.fileDataSourceBackendSupport = new FileDataSourceBackendSupport(nameForErrors());
 	}
 	
 	@BackendProperty(propertyName="defaultTimestamp")
 	public void parseDefaultTimestamp(String timestampString) throws ParseException {
-		if ("FILE_UPDATED".equals(timestampString)) {
+		if ("FILE_LAST_MODIFIED".equals(timestampString)) {
 			this.defaultTimestampIsFileUpdated = true;
 			this.defaultDate = null;
 		} else {

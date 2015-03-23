@@ -25,6 +25,7 @@ import java.io.File;
 import java.io.FilenameFilter;
 import org.arp.javautil.io.FileUtil;
 import org.drools.util.StringUtils;
+import org.protempa.BackendCloseException;
 import org.protempa.DataSourceBackendCloseException;
 
 /**
@@ -98,6 +99,33 @@ class FileDataSourceBackendSupport {
 			}
 		} catch (SecurityException se) {
 			throw new DataSourceBackendCloseException("Error in data source backend " + this.nameForErrors + ": failed to mark data file " + dataFile.getAbsolutePath() + " as failed", se);
+		}
+	}
+	
+	void close(File[] files, boolean failed) throws BackendCloseException {
+		BackendCloseException exceptionToThrow = null;
+		for (File file : files) {
+			if (!failed) {
+				try {
+					markProcessed(file);
+				} catch (DataSourceBackendCloseException se) {
+					if (exceptionToThrow == null) {
+						exceptionToThrow = se;
+					}
+				}
+			} else {
+				try {
+					markFailed(file);
+				} catch (DataSourceBackendCloseException se) {
+					if (exceptionToThrow == null) {
+						exceptionToThrow = se;
+					}
+				}
+			}
+		}
+
+		if (exceptionToThrow != null) {
+			throw exceptionToThrow;
 		}
 	}
 }
