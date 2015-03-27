@@ -59,6 +59,9 @@ import edu.emory.cci.aiw.cvrg.eureka.etl.dao.EtlGroupDao;
 import edu.emory.cci.aiw.cvrg.eureka.etl.dao.JobDao;
 import edu.emory.cci.aiw.cvrg.eureka.etl.queryresultshandler.ProtempaDestinationFactory;
 import edu.emory.cci.aiw.cvrg.eureka.etl.resource.Destinations;
+import org.protempa.backend.Configuration;
+import org.protempa.backend.InvalidPropertyNameException;
+import org.protempa.backend.InvalidPropertyValueException;
 import org.protempa.query.QueryMode;
 
 /**
@@ -95,11 +98,12 @@ public class ETL {
 	}
 
 	void run(JobEntity job, PropositionDefinition[] inPropositionDefinitions,
-			String[] inPropIdsToShow, Filter filter, boolean appendData) throws EtlException {
+			String[] inPropIdsToShow, Filter filter, boolean appendData,
+			Configuration prompts) throws EtlException {
 		assert inPropositionDefinitions != null :
 				"inPropositionDefinitions cannot be null";
 		assert job != null : "job cannot be null";
-		try (Protempa protempa = getNewProtempa(job)) {
+		try (Protempa protempa = getNewProtempa(job, prompts)) {
 			logValidationEvents(job, protempa.validateDataSourceBackendData(), null);
 			DefaultQueryBuilder q = new DefaultQueryBuilder();
 			q.setPropositionDefinitions(inPropositionDefinitions);
@@ -110,12 +114,14 @@ public class ETL {
 			LOGGER.trace("Constructed Protempa query {}", q);
 			Query query = protempa.buildQuery(q);
 			EtlDestination eurekaDestination = 
-					new Destinations(this.etlProperties, job.getEtlUser(), this.destinationDao, this.groupDao).getOne(job.getDestination().getName());
+					new Destinations(this.etlProperties, job.getEtlUser(), 
+							this.destinationDao, this.groupDao)
+							.getOne(job.getDestination().getName());
 			org.protempa.dest.Destination protempaDestination = 
 					this.protempaDestFactory
 					.getInstance(eurekaDestination.getId(), protempa.getKnowledgeSource());
 			protempa.execute(query, protempaDestination);
-		} catch (CloseException | BackendNewInstanceException | BackendInitializationException | ConfigurationsLoadException | BackendProviderSpecLoaderException | QueryBuildException | InvalidConfigurationException | ConfigurationsNotFoundException | DataSourceValidationIncompleteException ex) {
+		} catch (InvalidPropertyNameException | InvalidPropertyValueException | CloseException | BackendNewInstanceException | BackendInitializationException | ConfigurationsLoadException | BackendProviderSpecLoaderException | QueryBuildException | InvalidConfigurationException | ConfigurationsNotFoundException | DataSourceValidationIncompleteException ex) {
 			throw new EtlException(ex);
 		} catch (DataSourceFailedDataValidationException ex) {
 			logValidationEvents(job, ex.getValidationEvents(), ex);
@@ -160,14 +166,17 @@ public class ETL {
 		this.jobDao.update(job);
 	}
 
-	private Protempa getNewProtempa(JobEntity job) throws
+	private Protempa getNewProtempa(JobEntity job, Configuration prompts) throws
 			ConfigurationsLoadException, BackendProviderSpecLoaderException,
 			InvalidConfigurationException, ProtempaStartupException,
-			BackendInitializationException, BackendNewInstanceException, ConfigurationsNotFoundException {
+			BackendInitializationException, BackendNewInstanceException, 
+			ConfigurationsNotFoundException, InvalidPropertyNameException, 
+			InvalidPropertyValueException {
 		Configurations configurations =
 				new EurekaProtempaConfigurations(this.etlProperties);
-		SourceFactory sf =
-				new SourceFactory(configurations, job.getSourceConfigId());
+		Configuration configuration = configurations.load(job.getSourceConfigId());
+		configuration.merge(prompts);
+		SourceFactory sf = new SourceFactory(configuration);
 		return Protempa.newInstance(sf);
 	}
 

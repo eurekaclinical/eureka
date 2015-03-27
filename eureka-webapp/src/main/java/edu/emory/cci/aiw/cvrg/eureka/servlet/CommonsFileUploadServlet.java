@@ -41,13 +41,14 @@ import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.commons.io.FileUtils;
-import org.protempa.proposition.interval.Interval.Side;
 
 import com.google.inject.Inject;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.JobSpec;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ClientException;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ServicesClient;
+import org.apache.commons.io.FilenameUtils;
+import org.codehaus.jackson.map.ObjectMapper;
 
 public class CommonsFileUploadServlet extends HttpServlet {
 	
@@ -133,6 +134,11 @@ public class CommonsFileUploadServlet extends HttpServlet {
 				fields.setProperty(item.getFieldName(), item.getString());
 			}
 		}
+		
+		ObjectMapper mapper = new ObjectMapper();
+		mapper.setDateFormat(new SimpleDateFormat("MM/dd/yyyy"));
+		JobSpec jobSpec = mapper.readValue(fields.getProperty("jobSpec"), JobSpec.class);
+		
 		for (Iterator itr = items.iterator(); itr.hasNext();) {
 			FileItem item = (FileItem) itr.next();
 			if (!item.isFormField()) {
@@ -144,8 +150,9 @@ public class CommonsFileUploadServlet extends HttpServlet {
 				if (item.getSize() > 0) {
 					InputStream is = item.getInputStream();
 					try {
-						this.servicesClient.upload(item.getName(),
-								fields.getProperty("source"),
+						this.servicesClient.upload(
+								FilenameUtils.getName(item.getName()),
+								jobSpec.getSourceConfigId(),
 								item.getFieldName(), is);
 						log("File '" + item.getName() + "' uploaded successfully");
 					} finally {
@@ -162,33 +169,7 @@ public class CommonsFileUploadServlet extends HttpServlet {
 			}
 		}
 
-		boolean appendData = false;
-		String appendDataStr = fields.getProperty("appendData");
-		if (appendDataStr != null && appendDataStr.length() > 0) {
-			appendData = Boolean.parseBoolean(appendDataStr);
-		}
-
-		JobSpec jobSpec = new JobSpec();
-		jobSpec.setSourceConfigId(fields.getProperty("source"));
-		jobSpec.setDestinationId(fields.getProperty("destination"));
-		jobSpec.setAppendData(appendData);
-		jobSpec.setDateRangeDataElementKey(
-				fields.getProperty("dateRangeDataElementKey"));
-		DateFormat df = new SimpleDateFormat("MM/dd/yyyy");
-		String earliestStr = fields.getProperty("earliestDate");
-		if (earliestStr != null && !earliestStr.trim().isEmpty()) {
-			jobSpec.setEarliestDate(df.parse(earliestStr));
-		}
-		jobSpec.setEarliestDateSide(
-				Side.valueOf(
-				fields.getProperty("dateRangeEarliestDateSide")));
-		String latestStr = fields.getProperty("latestDate");
-		if (latestStr != null && !latestStr.trim().isEmpty()) {
-			jobSpec.setLatestDate(df.parse(latestStr));
-		}
-		jobSpec.setLatestDateSide(
-				Side.valueOf(
-				fields.getProperty("dateRangeLatestDateSide")));
+		
 		Long jobId = this.servicesClient.submitJob(jobSpec);
 		log("Job " + jobId + " submitted for user " + principal.getName());
 		return jobId;

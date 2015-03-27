@@ -154,3 +154,7 @@ legend {
 #indexPanels .panel-heading, #indexPanels .alert {
 	font-size: larger;
 }
+
+.uploads {
+	display: none;
+}

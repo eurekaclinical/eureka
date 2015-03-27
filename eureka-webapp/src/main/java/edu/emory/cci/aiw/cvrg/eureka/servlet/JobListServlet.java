@@ -31,7 +31,7 @@ import com.google.inject.Inject;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.Destination;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.Job;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.SourceConfigParams;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.SourceConfig;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ClientException;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ServicesClient;
 
@@ -49,8 +49,8 @@ public class JobListServlet extends HttpServlet {
 			throws ServletException, IOException {
 
 		try {
-			List<SourceConfigParams> sourceConfigParams = this.servicesClient.getSourceConfigParams();
-			req.setAttribute("sources", sourceConfigParams);
+			List<SourceConfig> sourceConfigs = this.servicesClient.getSourceConfigs();
+			req.setAttribute("sources", sourceConfigs);
 
 			List<Destination> destinations = this.servicesClient.getDestinations();
 			req.setAttribute("destinations", destinations);

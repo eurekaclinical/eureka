@@ -27,18 +27,13 @@ import javax.persistence.EntityManager;
  * @author Andrew Post
  */
 class EtlJobRepairerExecutor extends JobRepairerExecutor {
-	private final EtlProperties etlProperties;
 
-	public EtlJobRepairerExecutor(String jpaUnit, EtlProperties inEtlProperties) {
+	public EtlJobRepairerExecutor(String jpaUnit) {
 		super(jpaUnit);
-		if (inEtlProperties == null) {
-			throw new IllegalArgumentException("inEtlProperties cannot be null");
-		}
-		this.etlProperties = inEtlProperties;
 	}
 	
 	@Override
 	public void doExecute(EntityManager entityManager) {
-		new EtlJobRepairer(entityManager, this.etlProperties).repairIfNeeded();
+		new JobRepairer(entityManager).repairIfNeeded();
 	}
 }

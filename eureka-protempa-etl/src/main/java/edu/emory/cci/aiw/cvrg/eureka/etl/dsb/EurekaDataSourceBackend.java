@@ -21,6 +21,7 @@ package edu.emory.cci.aiw.cvrg.eureka.etl.dsb;
 
 import edu.emory.cci.aiw.cvrg.eureka.etl.spreadsheet.*;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -66,18 +67,14 @@ import org.slf4j.LoggerFactory;
  */
 @BackendInfo(displayName = "Eureka Spreadsheet Data Source Backend")
 public final class EurekaDataSourceBackend extends RelationalDbDataSourceBackend implements EurekaFileDataSourceBackend {
-
-	private static final Logger LOGGER = LoggerFactory.getLogger(EurekaDataSourceBackend.class);
-	private static JDBCPositionFormat dtPositionParser =
-			new JDBCDateTimeTimestampPositionParser();
+	private static Logger LOGGER = LoggerFactory.getLogger(EurekaDataSourceBackend.class);
+	private static JDBCPositionFormat dtPositionParser
+			= new JDBCDateTimeTimestampPositionParser();
 	private static final String DEFAULT_ROOT_FULL_NAME = "Eureka";
 	private XlsxDataProvider[] dataProviders = null;
 	private boolean dataPopulated;
-	private String dataFileDirectoryName;
 	private String sampleUrl;
-	private Boolean required = Boolean.FALSE;
 	private String databaseName;
-	private boolean exceptionOccurred;
 	private String labsRootFullName;
 	private String vitalsRootFullName;
 	private String diagnosisCodesRootFullName;
@@ -85,7 +82,7 @@ public final class EurekaDataSourceBackend extends RelationalDbDataSourceBackend
 	private String icd9ProcedureCodesRootFullName;
 	private String cptProcedureCodesRootFullName;
 	private final FileDataSourceBackendSupport fileDataSourceBackendSupport;
-	
+
 	public EurekaDataSourceBackend() {
 		setSchemaName("EUREKA");
 		setDefaultKeyIdTable("PATIENT");
@@ -99,13 +96,14 @@ public final class EurekaDataSourceBackend extends RelationalDbDataSourceBackend
 		this.cptProcedureCodesRootFullName = DEFAULT_ROOT_FULL_NAME;
 		setMappingsFactory(new ResourceMappingsFactory("/mappings/", getClass()));
 		this.fileDataSourceBackendSupport = new FileDataSourceBackendSupport(nameForErrors());
+		this.fileDataSourceBackendSupport.setDataFileDirectoryName("filename");
 	}
 
 	@Override
 	public void initialize(BackendInstanceSpec config) throws BackendInitializationException {
-		LoggerFactory.getLogger(getClass()).error("In initialize for " + getClass().getName());
+		LOGGER.error("In initialize for " + getClass().getName());
 		super.initialize(config);
-		LoggerFactory.getLogger(getClass()).error("Called superclass' initialize for " + getClass().getName());
+		LOGGER.error("Called superclass' initialize for " + getClass().getName());
 		try {
 			Class.forName("org.h2.Driver");
 		} catch (ClassNotFoundException ex) {
@@ -123,11 +121,14 @@ public final class EurekaDataSourceBackend extends RelationalDbDataSourceBackend
 		}
 		super.setDatabaseId("jdbc:h2:mem:" + databaseName + ";INIT=RUNSCRIPT FROM '" + schemaFile + "';DB_CLOSE_DELAY=-1");
 		this.fileDataSourceBackendSupport.setConfigurationsId(getConfigurationsId());
-		this.fileDataSourceBackendSupport.setDataFileDirectoryName(this.dataFileDirectoryName);
 		File[] dataFiles = this.fileDataSourceBackendSupport.getUploadedFiles();
 		if (dataFiles != null) {
 			this.dataProviders = new XlsxDataProvider[dataFiles.length];
 			for (int i = 0; i < dataFiles.length; i++) {
+				LOGGER.info("Reading spreadsheet {}", dataFiles[i].getAbsolutePath());
+				if (!dataFiles[i].exists()) {
+					throw new DataSourceBackendInitializationException("Error initializing data source backend " + this.nameForErrors(), new FileNotFoundException(dataFiles[i].getAbsolutePath()));
+				}
 				try {
 					this.dataProviders[i] = new XlsxDataProvider(dataFiles[i], null);
 				} catch (DataProviderException ex) {
@@ -173,7 +174,7 @@ public final class EurekaDataSourceBackend extends RelationalDbDataSourceBackend
 		}
 		DataValidationEvent[] validationEvents = events.toArray(new DataValidationEvent[events.size()]);
 		if (failedValidation) {
-			throw new DataSourceBackendFailedDataValidationException("Invalid spreadsheet " + this.dataFileDirectoryName + " in data source backend " + nameForErrors(), validationEvents);
+			throw new DataSourceBackendFailedDataValidationException("Invalid spreadsheet " + this.fileDataSourceBackendSupport.getDataFileDirectoryName() + " in data source backend " + nameForErrors(), validationEvents);
 		} else {
 			return validationEvents;
 		}
@@ -182,12 +183,12 @@ public final class EurekaDataSourceBackend extends RelationalDbDataSourceBackend
 	private void populateDatabase() throws DataSourceReadException {
 		Connection dataInserterConnection = null;
 		try {
-			dataInserterConnection =
-					getConnectionSpecInstance().getOrCreate();
+			dataInserterConnection
+					= getConnectionSpecInstance().getOrCreate();
 			if (this.dataProviders != null) {
 				for (DataProvider dataProvider : this.dataProviders) {
-					DataInserter dataInserter =
-							new DataInserter(dataInserterConnection);
+					DataInserter dataInserter
+							= new DataInserter(dataInserterConnection);
 					dataInserter.insertPatients(dataProvider.getPatients());
 					dataInserter.insertEncounters(dataProvider.getEncounters());
 					dataInserter.insertProviders(dataProvider.getProviders());
@@ -204,7 +205,7 @@ public final class EurekaDataSourceBackend extends RelationalDbDataSourceBackend
 			this.dataPopulated = true;
 			dataInserterConnection.close();
 		} catch (SQLException | DataProviderException | DataInserterException | InvalidConnectionSpecArguments sqle) {
-			throw new DataSourceReadException("Error reading spreadsheets in " + this.dataFileDirectoryName + " in data source backend " + nameForErrors(), sqle);
+			throw new DataSourceReadException("Error reading spreadsheets in " + this.fileDataSourceBackendSupport.getDataFileDirectoryName() + " in data source backend " + nameForErrors(), sqle);
 		} finally {
 			if (dataInserterConnection != null) {
 				try {
@@ -238,10 +239,6 @@ public final class EurekaDataSourceBackend extends RelationalDbDataSourceBackend
 		return "patient";
 	}
 
-	public String getSampleUrl() {
-		return sampleUrl;
-	}
-
 	@Override
 	public String getDatabaseId() {
 		return this.databaseName;
@@ -253,49 +250,34 @@ public final class EurekaDataSourceBackend extends RelationalDbDataSourceBackend
 		this.databaseName = databaseId;
 	}
 
-	@BackendProperty
+	@BackendProperty(
+			displayName = "Download Sample",
+			description = "Use this sample spreadsheet to guide you in creating a spreadsheet containing your own data.",
+			validator = UriBackendPropertyValidator.class)
 	public void setSampleUrl(String sampleUrl) {
 		this.sampleUrl = sampleUrl;
 	}
-
-	@Override
-	public String[] getMimetypes() {
-		return this.fileDataSourceBackendSupport.getMimetypes();
-	}
-
-	@BackendProperty
-	@Override
-	public void setMimetypes(String[] mimetypes) {
-		this.fileDataSourceBackendSupport.setMimetypes(mimetypes);
-	}
-
-	@Override
-	public String getDataFileDirectoryName() {
-		return dataFileDirectoryName;
-	}
-
-	/**
-	 *
-	 * @param dataFileDirectoryName
-	 */
-	@BackendProperty
-	public void setDataFileDirectoryName(String dataFileDirectoryName) {
-		this.dataFileDirectoryName = dataFileDirectoryName;
-	}
-
-	public Boolean isRequired() {
-		return required;
-	}
-
-	@BackendProperty
-	public void setRequired(Boolean required) {
-		if (required == null) {
-			this.required = Boolean.FALSE;
-		} else {
-			this.required = required;
-		}
-	}
 	
+	public String getSampleUrl() {
+		return sampleUrl;
+	}
+
+	@BackendProperty(
+			displayName = "Excel Spreadsheet",
+			description = "An Excel spreadsheet as described in the provided sample (see Download Sample).",
+			validator = ExcelSpreadsheetBackendPropertyValidator.class,
+			required = true
+	)
+	@Override
+	public void setFilename(String filename) {
+		this.fileDataSourceBackendSupport.setFilename(filename);
+	}
+
+	@Override
+	public String getFilename() {
+		return this.fileDataSourceBackendSupport.getFilename();
+	}
+
 	@BackendProperty
 	public void setLabsRootFullName(String labsRootFullName) {
 		if (labsRootFullName == null) {
@@ -360,7 +342,7 @@ public final class EurekaDataSourceBackend extends RelationalDbDataSourceBackend
 			this.icd9ProcedureCodesRootFullName = icd9ProcedureCodesRootFullName;
 		}
 	}
-	
+
 	public String getCptProcedureCodesRootFullName() {
 		return cptProcedureCodesRootFullName;
 	}
@@ -373,7 +355,7 @@ public final class EurekaDataSourceBackend extends RelationalDbDataSourceBackend
 			this.cptProcedureCodesRootFullName = cptProcedureCodesRootFullName;
 		}
 	}
-	
+
 	@Override
 	protected EntitySpec[] constantSpecs(String keyIdSchema, String keyIdTable, String keyIdColumn, String keyIdJoinKey) throws IOException {
 		String schemaName = getSchemaName();
@@ -639,18 +621,18 @@ public final class EurekaDataSourceBackend extends RelationalDbDataSourceBackend
 			new ColumnSpec(schemaName, "ICD9D_EVENT", "TS_OBX"),
 			null, new PropertySpec[]{
 				new PropertySpec("code", null,
-					new ColumnSpec(schemaName, "ICD9D_EVENT",
-					"ENTITY_ID",
-					Operator.EQUAL_TO,
-					icd9DxMappings),
-					ValueType.NOMINALVALUE), 
-				new PropertySpec("DXPRIORITY", 
-						null, 
-						new ColumnSpec(schemaName, "ICD9D_EVENT", 
-								"RANK", 
-								Operator.EQUAL_TO, 
-								getMappingsFactory().getInstance("icd9_diagnosis_position_07182011.txt")), 
-						ValueType.NOMINALVALUE)},
+				new ColumnSpec(schemaName, "ICD9D_EVENT",
+				"ENTITY_ID",
+				Operator.EQUAL_TO,
+				icd9DxMappings),
+				ValueType.NOMINALVALUE),
+				new PropertySpec("DXPRIORITY",
+				null,
+				new ColumnSpec(schemaName, "ICD9D_EVENT",
+				"RANK",
+				Operator.EQUAL_TO,
+				getMappingsFactory().getInstance("icd9_diagnosis_position_07182011.txt")),
+				ValueType.NOMINALVALUE)},
 			null, null,
 			new ColumnSpec(schemaName, "ICD9D_EVENT", "ENTITY_ID",
 			Operator.EQUAL_TO, icd9DxMappings, true),
@@ -788,62 +770,26 @@ public final class EurekaDataSourceBackend extends RelationalDbDataSourceBackend
 	}
 
 	@Override
-	public void failureOccurred(Throwable protempaException) {
-		this.exceptionOccurred = true;
-	}
-
-	@Override
 	public void close() throws BackendCloseException {
 		super.close();
 		BackendCloseException exceptionToThrow = null;
 		try {
 			SQLExecutor.executeSQL(getConnectionSpecInstance(), "DROP ALL OBJECTS", null);
 		} catch (SQLException | InvalidConnectionSpecArguments ex) {
-			this.exceptionOccurred = true;
 			exceptionToThrow = new DataSourceBackendCloseException("Error in data source backend " + nameForErrors() + ": could not drop the database", ex);
 		}
-		try {
-			if (!this.exceptionOccurred) {
-				for (XlsxDataProvider dataProvider : dataProviders) {
-					File dataFile = dataProvider.getDataFile();
-					
-					try {
-						this.fileDataSourceBackendSupport.markProcessed(dataFile);
-					} catch (DataSourceBackendCloseException se) {
-						if (exceptionToThrow == null) {
-							exceptionToThrow = se;
-						}
-					}
-				}
-			} else {
-				for (XlsxDataProvider dataProvider : dataProviders) {
-					File dataFile = dataProvider.getDataFile();
-					try {
-						this.fileDataSourceBackendSupport.markFailed(dataFile);
-					} catch (DataSourceBackendCloseException se) {
-						if (exceptionToThrow == null) {
-							exceptionToThrow = se;
-						}
+		if (dataProviders != null) {
+			for (XlsxDataProvider dataProvider : dataProviders) {
+				try {
+					dataProvider.close();
+				} catch (IOException ex) {
+					if (exceptionToThrow == null) {
+						exceptionToThrow = new DataSourceBackendCloseException("Error in data source backend " + nameForErrors() + ": could not close Excel spreadsheet " + dataProvider.getDataFile().getName(), ex);
 					}
 				}
 			}
 			if (exceptionToThrow != null) {
 				throw exceptionToThrow;
-			}
-		} finally {
-			if (dataProviders != null) {
-				for (XlsxDataProvider dataProvider : dataProviders) {
-					try {
-						dataProvider.close();
-					} catch (IOException ex) {
-						if (exceptionToThrow == null) {
-							exceptionToThrow = new DataSourceBackendCloseException("Error in data source backend " + nameForErrors() + ": could not close Excel spreadsheet " + dataProvider.getDataFile().getName(), ex);
-						}
-					}
-				}
-				if (exceptionToThrow != null) {
-					throw exceptionToThrow;
-				}
 			}
 		}
 	}

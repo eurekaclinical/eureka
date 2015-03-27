@@ -25,11 +25,8 @@
 <template:content name="content">
 <h3>Submit Job</h3>
 <form id="uploadForm" name="uploadForm" role="form"
-	  method="post" action="${pageContext.request.contextPath}/protected/upload"
-	  ENCTYPE="multipart/form-data"
 	  <c:if test="${not empty param.jobId}">data-jobid="${param.jobId}"</c:if>
-	  <c:if test="${not empty requestScope.jobStatus and jobStatus.jobSubmitted}">data-job-running="true"</c:if>
-	  accept-charset="utf-8">
+	  <c:if test="${not empty requestScope.jobStatus and jobStatus.jobSubmitted}">data-job-running="true"</c:if>>
 <fieldset>
 	<legend>Job Information</legend>
 	<div class="row">
@@ -113,81 +110,111 @@
 		<p>No configurations are available.</p>
 	</c:when>
 	<c:otherwise>
-		<fieldset id="configuration">
-			<legend>Configuration</legend>
 			<div class="row">
 				<div class="col-md-6">
-					<div class="form-group">
-						<label>
-							Source
-						</label>
-						<select name="source" class="form-control">
-							<c:forEach var="source" items="${sources}">
-								<option value="${source.id}">${source.name}</option>
-							</c:forEach>
-						</select>
-					</div>
+					<fieldset id="data">
+						<legend>Data</legend>
+						<div class="form-group">
+							<select name="source" class="form-control">
+								<c:forEach var="source" items="${sources}">
+									<option value="${source.id}">${not empty source.displayName ? source.displayName : source.id}</option>
+								</c:forEach>
+							</select>
+						</div>
+						<c:set var="required" value="${false}"/>
+						<c:forEach var="source" items="${sources}">
+							<div class="uploads" data-source-id="${source.id}">
+								<c:forEach var="section" items="${source.dataSourceBackends}" varStatus="status">
+									<div class="help-inline section" data-section-id="${section.id}">
+										<c:forEach var="option" items="${section.options}">
+											<c:choose>
+												<c:when test="${option['class'].name == 'edu.emory.cci.aiw.cvrg.eureka.common.comm.UriSourceConfigOption'}">
+													<a href="${option.value}">${option.displayName}</a>
+												</c:when>
+												<c:otherwise>
+													<c:if test="${option.prompt}">
+														<div data-index="${status.index}" data-option-name="${option.name}" class="uploader form-group">
+															<c:choose>
+																<c:when test="${option['class'].name == 'edu.emory.cci.aiw.cvrg.eureka.common.comm.FileSourceConfigOption'}">
+																	<label>
+																		<c:if test="${option.required}">
+																			<span class="uploadRequired">*</span>
+																			<c:set var="required" value="${true}"/>
+																		</c:if>
+																		${option.displayName}
+																		<input type="file" class="form-control"
+																		   name="${status.index}_${option.name}"
+																		   <c:if test="${option.required}">data-required="true"</c:if>
+																		   value="Browse"
+																		   accept="${fn:join(option.acceptedMimetypes, '|')}">
+																	</label>
+																</c:when>
+																<c:when test="${option.propertyType == 'INTEGER' or option.propertyType == 'LONG' or option.propertyType == 'DOUBLE' or option.propertyType == 'FLOAT'}">
+																	<label>
+																		<c:if test="${option.required}">
+																			<span class="uploadRequired">*</span>
+																			<c:set var="required" value="${true}"/>
+																		</c:if>
+																		${option.displayName}
+																		<input type="number" class="form-control"
+																		   name="${status.index}_${option.name}"
+																		   <c:if test="${option.required}">data-required="true"</c:if>>
+																	</label>
+																</c:when>
+																<c:otherwise>
+																	<label>
+																		<c:if test="${option.required}">
+																			<span class="uploadRequired">*</span>
+																			<c:set var="required" value="${true}"/>
+																		</c:if>
+																		${option.displayName}
+																		<input type="text" class="form-control"
+																		   name="${status.index}_${option.name}"
+																		   <c:if test="${option.required}">data-required="true"</c:if>>
+																	</label>
+																</c:otherwise>
+															</c:choose>
+														</div>
+													</c:if>
+												</c:otherwise>
+											</c:choose>
+										</c:forEach>
+										<c:if test="${required}">
+											<div id="requiredFieldStmt">
+												* indicates field is required.
+											</div>
+										</c:if>
+									</div>
+								</c:forEach>
+							</div>
+						</c:forEach>
+					</fieldset>
 				</div>
 				<div class="col-md-6">
-					<div class="form-group">
-						<label>
-							Destination
-						</label>
-						<select name="destination" class="form-control">
-							<c:forEach var="destination" items="${destinations}">
-								<option value="${destination.name}">${destination.name}</option>
-							</c:forEach>
-						</select>
-					</div>
-				</div>
-			</div>
-		</fieldset>
-		<c:set var="required" value="${false}"/>
-		<c:forEach var="source" items="${sources}">
-			<c:if test="${not empty source.uploads}">
-				<fieldset id="uploads${source.id}" class="uploads">
-					<legend>File upload(s)</legend>
-					<c:forEach var="upload" items="${source.uploads}">
-						<div id="uploader${upload.sourceId}" class="uploader form-group">
-							<div class="control-label">
-								<label>
-									<c:if test="${upload.required}">
-										<span class="uploadRequired">*</span>
-										<c:set var="required" value="${true}"/>
-									</c:if>
-										${upload.sourceId}
+					<fieldset id="action">
+						<legend>Action</legend>
+						<div class="form-group">
+							<select name="destination" class="form-control">
+								<c:forEach var="destination" items="${destinations}">
+									<option value="${destination.name}">${destination.name}</option>
+								</c:forEach>
+							</select>
+						</div>
+						<div class="form-group">
+							<div class="form-control">
+								<label class="radio-inline">
+									Replace data
+									<input type="radio" id="appendDataFalse" name="appendData" value="false" checked>
+								</label>
+								<label class="radio-inline">
+									Append data
+									<input type="radio" id="appendDataTrue" name="appendData" value="true">
 								</label>
 							</div>
-							<div>
-								<input type="file" class="form-control-static"
-									   name="${upload.sourceId}"
-									   <c:if test="${upload.required}">data-required="true"</c:if>
-									   value="Browse"
-									   accept="${fn:join(upload.acceptedMimetypes, '|')}"/>
-							</div>
-							<c:if test="${not empty upload.sampleUrl}">
-								<div class="help-inline">
-									<a href="${upload.sampleUrl}">Download Sample</a>
-								</div>
-							</c:if>
 						</div>
-					</c:forEach>
-				</fieldset>
-			</c:if>
-		</c:forEach>
-		<fieldset id="appendFieldSet">
-			<legend>Append Data</legend>
-			<div class="row">
-				<div class="col-xs-12">
-					<div class="form-group">
-						<label class="checkbox" for="appendData">
-							Append data instead of repopulating data</input>
-							<input type="checkbox" id="appendData" name="appendData" value="true">
-						</label>
-					</div>
+					</fieldset>
 				</div>
 			</div>
-		</fieldset>
 		<fieldset id="dateRange">
 			<legend>Date range</legend>
 			<div class="row">
@@ -271,11 +298,6 @@
 									<input type="submit" id="startButton" class="btn btn-primary" value="Start" disabled>
 								</c:otherwise>
 							</c:choose>
-							<c:if test="${required}">
-								<div id="requiredFieldStmt">
-									* indicates field is required.
-								</div>
-							</c:if>
 						</div>
 					</div>
 				</div>
@@ -344,6 +366,21 @@
 				</h4>
 			</div>
 			<div id="searchNoResultsContent" class="modal-body">
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+			</div>
+		</div>
+	</div>
+</div>
+<div id="errorModal" class="modal fade" role="dialog" aria-labelledby="errorModalLabel" aria-hidden="true">
+	<div class="modal-dialog modal-lg">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+				<h4 id="errorModalLabel" class="modal-title">Error</h4>
+			</div>
+			<div id="errorContent" class="modal-body">
 			</div>
 			<div class="modal-footer">
 				<button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>

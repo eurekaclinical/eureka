@@ -38,8 +38,6 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
-import org.apache.commons.lang3.StringUtils;
-import org.protempa.PropositionDefinition;
 import org.protempa.backend.dsb.filter.DateTimeFilter;
 import org.protempa.proposition.value.AbsoluteTimeGranularity;
 import org.slf4j.Logger;
@@ -51,15 +49,26 @@ import edu.emory.cci.aiw.cvrg.eureka.common.comm.Job;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.JobFilter;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.JobRequest;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.JobSpec;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.SourceConfig;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.SourceConfigOption;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.DestinationEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.EtlUserEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.JobEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.exception.HttpStatusException;
 import edu.emory.cci.aiw.cvrg.eureka.etl.authentication.EtlAuthenticationSupport;
+import edu.emory.cci.aiw.cvrg.eureka.etl.config.EurekaProtempaConfigurations;
 import edu.emory.cci.aiw.cvrg.eureka.etl.dao.DestinationDao;
 import edu.emory.cci.aiw.cvrg.eureka.etl.dao.EtlUserDao;
 import edu.emory.cci.aiw.cvrg.eureka.etl.dao.JobDao;
 import edu.emory.cci.aiw.cvrg.eureka.etl.job.TaskManager;
+import java.util.logging.Level;
+import org.protempa.backend.BackendInstanceSpec;
+import org.protempa.backend.BackendProviderSpecLoaderException;
+import org.protempa.backend.BackendSpecNotFoundException;
+import org.protempa.backend.Configuration;
+import org.protempa.backend.InvalidPropertyNameException;
+import org.protempa.backend.InvalidPropertyValueException;
+import org.protempa.backend.dsb.DataSourceBackend;
 
 @Path("/protected/jobs")
 @RolesAllowed({"researcher"})
@@ -67,22 +76,23 @@ import edu.emory.cci.aiw.cvrg.eureka.etl.job.TaskManager;
 @Consumes(MediaType.APPLICATION_JSON)
 public class JobResource {
 
-	private static final Logger LOGGER = LoggerFactory
-			.getLogger(JobResource.class);
 	private final JobDao jobDao;
 	private final EtlUserDao etlUserDao;
 	private final TaskManager taskManager;
 	private final EtlAuthenticationSupport authenticationSupport;
 	private final DestinationDao destinationDao;
+	private final EurekaProtempaConfigurations configurations;
 
 	@Inject
 	public JobResource(JobDao inJobDao, TaskManager inTaskManager,
-			EtlUserDao inEtlUserDao, DestinationDao inDestinationDao) {
+			EtlUserDao inEtlUserDao, DestinationDao inDestinationDao,
+			EurekaProtempaConfigurations configurations) {
 		this.jobDao = inJobDao;
 		this.taskManager = inTaskManager;
 		this.etlUserDao = inEtlUserDao;
 		this.authenticationSupport = new EtlAuthenticationSupport(this.etlUserDao);
 		this.destinationDao = inDestinationDao;
+		this.configurations = configurations;
 	}
 
 	@GET
@@ -128,21 +138,23 @@ public class JobResource {
 		Long jobId = doCreateJob(inJobRequest, request);
 		return Response.created(URI.create("/" + jobId)).build();
 	}
-	
+
 	private Long doCreateJob(JobRequest inJobRequest, HttpServletRequest request) {
-		JobSpec job = inJobRequest.getJobSpec();
-		JobEntity jobEntity = 
-				newJobEntity(job, 
+		JobSpec jobSpec = inJobRequest.getJobSpec();
+		Configuration prompts = toConfiguration(jobSpec.getPrompts());
+		JobEntity jobEntity
+				= newJobEntity(jobSpec,
 						this.authenticationSupport.getEtlUser(request));
-		this.taskManager.queueTask(jobEntity.getId(), 
+		this.taskManager.queueTask(jobEntity.getId(),
 				inJobRequest.getUserPropositions(),
-				inJobRequest.getPropositionIdsToShow(), 
+				inJobRequest.getPropositionIdsToShow(),
 				new DateTimeFilter(
-				new String[]{job.getDateRangeDataElementKey()},
-				job.getEarliestDate(), AbsoluteTimeGranularity.DAY,
-				job.getLatestDate(), AbsoluteTimeGranularity.DAY,
-				job.getEarliestDateSide(), job.getLatestDateSide()),
-				job.isAppendData());
+						new String[]{jobSpec.getDateRangeDataElementKey()},
+						jobSpec.getEarliestDate(), AbsoluteTimeGranularity.DAY,
+						jobSpec.getLatestDate(), AbsoluteTimeGranularity.DAY,
+						jobSpec.getEarliestDateSide(), jobSpec.getLatestDateSide()),
+				jobSpec.isAppendData(),
+				prompts);
 		return jobEntity.getId();
 	}
 
@@ -160,13 +172,38 @@ public class JobResource {
 	private JobEntity newJobEntity(JobSpec job, EtlUserEntity etlUser) {
 		JobEntity jobEntity = new JobEntity();
 		jobEntity.setSourceConfigId(job.getSourceConfigId());
-		DestinationEntity destination = 
-				this.destinationDao.getByName(job.getDestinationId());
+		DestinationEntity destination
+				= this.destinationDao.getByName(job.getDestinationId());
 		jobEntity.setDestination(destination);
 		jobEntity.setCreated(new Date());
 		jobEntity.setEtlUser(etlUser);
 		this.jobDao.create(jobEntity);
 		return jobEntity;
+	}
+
+	private Configuration toConfiguration(SourceConfig prompts) {
+		if (prompts != null) {
+			Configuration result = new Configuration();
+			SourceConfig.Section[] dsbSections = prompts.getDataSourceBackends();
+			List<BackendInstanceSpec<DataSourceBackend>> sections = new ArrayList<>();
+			for (int i = 0; i < dsbSections.length; i++) {
+				SourceConfig.Section section = dsbSections[i];
+				try {
+					BackendInstanceSpec<DataSourceBackend> bis = this.configurations.newDataSourceBackendSection(section.getId());
+					SourceConfigOption[] options = section.getOptions();
+					for (SourceConfigOption option : options) {
+						bis.setProperty(option.getName(), option.getValue());
+					}
+					sections.add(bis);
+				} catch (BackendSpecNotFoundException | BackendProviderSpecLoaderException | InvalidPropertyNameException | InvalidPropertyValueException ex) {
+					throw new HttpStatusException(Status.BAD_REQUEST);
+				}
+			}
+			result.setDataSourceBackendSections(sections);
+			return result;
+		} else {
+			return null;
+		}
 	}
 
 }

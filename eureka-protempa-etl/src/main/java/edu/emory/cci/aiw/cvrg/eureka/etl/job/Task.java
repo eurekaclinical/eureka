@@ -31,17 +31,19 @@ import com.google.inject.Inject;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.JobEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.JobEventType;
 import edu.emory.cci.aiw.cvrg.eureka.etl.dao.JobDao;
+import org.protempa.backend.Configuration;
 
 public final class Task implements Runnable {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(Task.class);
 	private final JobDao jobDao;
-	private ETL etl;
+	private final ETL etl;
 	private Long jobId;
 	private List<PropositionDefinition> propositionDefinitions;
 	private List<String> propIdsToShow;
 	private Filter filter;
 	private boolean appendData;
+	private Configuration prompts;
 
 	@Inject
 	Task(JobDao inJobDao, ETL inEtl) {
@@ -89,6 +91,14 @@ public final class Task implements Runnable {
 		this.appendData = appendData;
 	}
 
+	public Configuration getPrompts() {
+		return prompts;
+	}
+
+	public void setPrompts(Configuration prompts) {
+		this.prompts = prompts;
+	}
+
 	@Override
 	public void run() {
 		JobEntity myJob = null;
@@ -111,7 +121,7 @@ public final class Task implements Runnable {
 					this.propIdsToShow.toArray(
 					new String[this.propIdsToShow.size()]);
 
-			this.etl.run(myJob, propDefArray, propIdsToShowArray, this.filter, this.appendData);
+			this.etl.run(myJob, propDefArray, propIdsToShowArray, this.filter, this.appendData, this.prompts);
 			this.etl.close();
 			myJob.newEvent(JobEventType.COMPLETED, "Processing completed without error", null);
 			this.jobDao.update(myJob);

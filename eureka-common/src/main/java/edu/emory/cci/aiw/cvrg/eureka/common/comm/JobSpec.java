@@ -37,6 +37,7 @@ public class JobSpec {
 	private Date latestDate;
 	private Side latestDateSide;
 	private boolean appendData;
+	private SourceConfig prompts;
 
 	public String getSourceConfigId() {
 		return sourceConfigId;
@@ -101,4 +102,13 @@ public class JobSpec {
 	public void setAppendData(boolean appendData) {
 		this.appendData = appendData;
 	}
+
+	public SourceConfig getPrompts() {
+		return prompts;
+	}
+
+	public void setPrompts(SourceConfig prompts) {
+		this.prompts = prompts;
+	}
+	
 }

@@ -1,5 +1,7 @@
 package edu.emory.cci.aiw.cvrg.eureka.common.comm;
 
+import org.protempa.backend.BackendPropertyType;
+
 /*
  * #%L
  * Eureka Common
@@ -28,36 +30,15 @@ public class SourceConfig {
 
 	public static final Section[] EMPTY_SECTION_ARRAY = new Section[0];
 
-	public static class Option {
-
-		private String key;
-		private Object value;
-
-		public String getKey() {
-			return key;
-		}
-
-		public void setKey(String key) {
-			this.key = key;
-		}
-
-		public Object getValue() {
-			return value;
-		}
-
-		public void setValue(Object value) {
-			this.value = value;
-		}
-	}
 
 	public static class Section {
 
 		private String id;
 		private String displayName;
-		private Option[] options;
+		private SourceConfigOption[] options;
 
 		public Section() {
-			this.options = new Option[0];
+			this.options = new SourceConfigOption[0];
 		}
 
 		public String getId() {
@@ -76,13 +57,13 @@ public class SourceConfig {
 			this.displayName = displayName;
 		}
 		
-		public Option[] getOptions() {
+		public SourceConfigOption[] getOptions() {
 			return options.clone();
 		}
 
-		public void setOptions(Option[] options) {
+		public void setOptions(SourceConfigOption[] options) {
 			if (options == null) {
-				this.options = new Option[0];
+				this.options = new SourceConfigOption[0];
 			} else {
 				this.options = options.clone();
 			}

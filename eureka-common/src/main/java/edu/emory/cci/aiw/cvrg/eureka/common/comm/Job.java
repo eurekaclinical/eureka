@@ -146,6 +146,8 @@ public class Job {
 		jobStatus.setMessages(messages());
 		jobStatus.setStartedDate(getTimestamp());
 		jobStatus.setLinks(getLinks());
+		jobStatus.setSourceConfigId(getSourceConfigId());
+		jobStatus.setDestinationId(getDestinationId());
 		if (this.jobEvents != null) {
 			for (JobEvent jobEvent : this.jobEvents) {
 				if (jobEvent.getState() == JobEventType.COMPLETED

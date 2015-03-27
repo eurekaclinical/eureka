@@ -20,16 +20,24 @@ package edu.emory.cci.aiw.cvrg.eureka.etl.dsb;
  * #L%
  */
 
-import org.protempa.backend.dsb.DataSourceBackend;
+import java.net.URI;
+import java.net.URISyntaxException;
+import org.protempa.backend.BackendPropertyValidator;
+import org.protempa.backend.InvalidPropertyValueException;
 
 /**
  *
  * @author Andrew Post
  */
-public interface EurekaFileDataSourceBackend extends DataSourceBackend {
-	
-	void setFilename(String name);
-	
-	String getFilename();
-	
+public class UriBackendPropertyValidator implements BackendPropertyValidator {
+
+	@Override
+	public void validate(String name, Object value) throws InvalidPropertyValueException {
+		try {
+			new URI((String) value);
+		} catch (URISyntaxException ex) {
+			throw new InvalidPropertyValueException(name, value, ex);
+		}
+	}
+
 }

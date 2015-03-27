@@ -44,7 +44,6 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import org.apache.commons.io.FileUtils;
-import org.arp.javautil.io.FileUtil;
 
 /**
  * 
@@ -88,18 +87,10 @@ public class FileResource {
 			}
 
 			File uploadedDir = this.etlProperties.uploadedDirectory(sourceConfigId, sourceId);
-			uploadedDir.mkdirs();
 			try {
-				File uploadingFile = File.createTempFile(
-						"eurekabackend", ".uploading", uploadedDir);
+				File uploadingFile = new File(uploadedDir, fileDetail.getFileName());
 				FileUtils.copyInputStreamToFile(uploadingInputStream, 
 						uploadingFile);
-				File renamedFile = FileUtil.replaceExtension(uploadingFile, ".uploaded");
-				if (!uploadingFile.renameTo(renamedFile)) {
-					throw new HttpStatusException(
-							Response.Status.INTERNAL_SERVER_ERROR, 
-							"Uploading file '" + fileDetail.getFileName() + "' failed: could not mark the file as uploaded");
-				}
 			} catch (IOException ex) {
 				throw new HttpStatusException(
 						Response.Status.INTERNAL_SERVER_ERROR, 

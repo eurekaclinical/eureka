@@ -20,16 +20,14 @@ package edu.emory.cci.aiw.cvrg.eureka.etl.dsb;
  * #L%
  */
 
-import org.protempa.backend.dsb.DataSourceBackend;
-
 /**
  *
  * @author Andrew Post
  */
-public interface EurekaFileDataSourceBackend extends DataSourceBackend {
-	
-	void setFilename(String name);
-	
-	String getFilename();
+public class ExcelSpreadsheetBackendPropertyValidator extends FileBackendPropertyValidator {
+
+	public ExcelSpreadsheetBackendPropertyValidator() {
+		setAcceptedMimetypes(new String[]{"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"});
+	}
 	
 }

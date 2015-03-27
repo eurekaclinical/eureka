@@ -76,7 +76,7 @@ public class BackEndContextListener extends GuiceServletContextListener {
 
 	private void initDatabase() {
 		try (EtlJobRepairerExecutor executor
-				= new EtlJobRepairerExecutor(JPA_UNIT, this.etlProperties)) {
+				= new EtlJobRepairerExecutor(JPA_UNIT)) {
 			executor.execute();
 		}
 	}

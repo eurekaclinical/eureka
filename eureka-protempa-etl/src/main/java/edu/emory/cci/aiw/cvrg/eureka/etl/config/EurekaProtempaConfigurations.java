@@ -20,11 +20,9 @@ package edu.emory.cci.aiw.cvrg.eureka.etl.config;
  * #L%
  */
 
+import com.google.inject.Inject;
 import edu.emory.cci.aiw.cvrg.eureka.etl.resource.ToConfigFile;
-import java.util.List;
-import org.protempa.backend.Backend;
-import org.protempa.backend.BackendInstanceSpec;
-import org.protempa.backend.BackendSpec;
+import org.protempa.backend.Configuration;
 import org.protempa.backend.ConfigurationsLoadException;
 import org.protempa.backend.ConfigurationsNotFoundException;
 import org.protempa.bconfigs.ini4j.INIConfigurations;
@@ -35,16 +33,16 @@ import org.protempa.bconfigs.ini4j.INIConfigurations;
  */
 public class EurekaProtempaConfigurations extends INIConfigurations {
 
+	@Inject
 	public EurekaProtempaConfigurations(EtlProperties etlProperties) {
 		super(etlProperties.getSourceConfigDirectory());
 	}
 
 	@Override
-	public <B extends Backend> List<BackendInstanceSpec<B>> load(
-			String configId, 
-			BackendSpec<B> backendSpec) 
+	public Configuration load(
+			String configId) 
 			throws ConfigurationsLoadException, 
 			ConfigurationsNotFoundException {
-		return super.load(ToConfigFile.fromSourceConfigId(configId), backendSpec);
+		return super.load(ToConfigFile.fromSourceConfigId(configId));
 	}
 }

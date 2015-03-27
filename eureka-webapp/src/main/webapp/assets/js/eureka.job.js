@@ -30,47 +30,45 @@ window.eureka.job = new function () {
 				self.updateSubmitButtonStatus();
 			});
 
-		var submitted = false;
 		$uploadForm.submit(function () {
 			$uploadForm.data('job-running', true);
 			var $dataElement = $uploadForm.find('ul[data-type="main"]').find('li').first();
 			$("input[name='dateRangeDataElementKey']").val($dataElement.data('key'));
 			self.updateSubmitButtonStatus();
-			submitted = true;
+			self.save($uploadForm)
+			return false;
 		});
 
 		var running = self.setInitialStatus();
 
 		function poll() {
-			if (!submitted) {
-				var jobId = $('form#uploadForm').data('jobid');
-				$.ajax({
-					url: "jobpoll" + (jobId != null ? "?jobId=" + jobId : ""),
-					success: function (data) {
-						if (!submitted) {
-							if (data) {
-								$(statusElem).text(data.status);
-								$('#startedDate').text(data.startedDateFormatted);
-								$('#finishedDate').text(data.finishedDateFormatted);
-								$('#messages').text(data.mostRecentMessage);
-								if (running && !data.jobSubmitted) {
-									self.onFinish();
-									running = false;
-								}
-							}
+			var jobId = $('form#uploadForm').data('jobid');
+			$.ajax({
+				url: "jobpoll" + (jobId != null ? "?jobId=" + jobId : ""),
+				success: function (data) {
+					if (data) {
+						$(statusElem).text(data.status);
+						$('#sourceConfig').text(data.sourceConfigId);
+						$('#destinationConfig').text(data.destinationId);
+						$('#startedDate').text(data.startedDateFormatted);
+						$('#finishedDate').text(data.finishedDateFormatted);
+						$('#messages').text(data.mostRecentMessage);
+						if (running && !data.jobSubmitted) {
+							self.onFinish();
+							running = false;
+						} else {
+							running = true;
 						}
-					},
-					error: function (/*xhr*/) {
-						if (!submitted) {
-							$(statusElem).text("Job status unavailable");
-							$('#startedDate').empty();
-							$('#finishedDate').empty();
-							$('#messages').empty();
-						}
-					},
-					dataType: "json"
-				});
-			}
+					}
+				},
+				error: function () {
+					$(statusElem).text("Job status unavailable");
+					$('#startedDate').empty();
+					$('#finishedDate').empty();
+					$('#messages').empty();
+				},
+				dataType: "json"
+			});
 		}
 
 		poll();
@@ -196,11 +194,11 @@ window.eureka.job = new function () {
 
 	self.updateInputFields = function (sourceId) {
 		$(".uploads").each(function (i, r) {
-			if ($(r).attr('id') === 'uploads' + sourceId) {
-				$(r).find("input[type='file']").prop('disabled', false);
+			if ($(r).data("source-id") === sourceId) {
+				$(r).find("input").prop('disabled', false);
 				$(r).show();
 			} else {
-				$(r).find("input[type='file']").prop('disabled', true);
+				$(r).find("input").prop('disabled', true);
 				$(r).hide();
 			}
 		});
@@ -212,7 +210,7 @@ window.eureka.job = new function () {
 		if ($('form#uploadForm').data('job-running')) {
 			doDisable = true;
 		} else {
-			$('input[type="file"]').each(function () {
+			$('input').each(function () {
 				if (!$(this).prop('disabled') && $(this).data('required') && !$(this).val()) {
 					doDisable = true;
 				}
@@ -223,5 +221,118 @@ window.eureka.job = new function () {
 		// doDisable = doDisable || (self.currentElement == null);
 
 		$('#startButton').prop('disabled', doDisable);
+	};
+	
+	self.postFormData = function (postData) {
+		$.ajax({
+			type: "POST",
+			url: 'upload',
+			data: postData,
+			contentType: false,
+			processData: false,
+			cache: false,
+			mimeType: "multipart/form-data",
+			success: function (data) {
+				//window.location.href = 'cohorthome'
+			},
+			error: function (data, statusCode, errorThrown) {
+				var content = 'Error submitting job: ' + errorThrown;
+				$('#errorModal').find('#errorContent').html(content);
+				$('#errorModal').modal('show');
+				if (errorThrown !== null) {
+					console.log('Error submitting job: ' + errorThrown + ' (status code: ' + statusCode + ')');
+				}
+				self.onFinish();
+			}
+		});
+	}
+	
+	self.save = function (uploadFormElem) {
+		var jobSpec = {
+			sourceConfigId: uploadFormElem.find('select[name="source"]').find(":selected").val(),
+			destinationId: uploadFormElem.find('select[name="destination"]').find(":selected").val(),
+			dateRangeDataElementKey: uploadFormElem.find('input[name="dateRangeDataElementKey"]').val(),
+			earliestDate: uploadFormElem.find('input[name="earliestDate"]').val(),
+			earliestDateSide: uploadFormElem.find('select[name="dateRangeEarliestDateSide"]').find(":selected").val(),
+			latestDate: uploadFormElem.find('input[name="latestDate"]').val(),
+			latestDateSide: uploadFormElem.find('select[name="dateRangeLatestDateSide"]').find(":selected").val(),
+			appendData: uploadFormElem.find('input[name="appendData"]:checked').val() === 'true' ? true : false,
+			prompts: {
+				id: uploadFormElem.find('select[name="source"]').find(":selected").val(),
+				dataSourceBackends: []
+			}
+		};
+		var prompts = null;
+		uploadFormElem.find('.uploads[data-source-id="' + jobSpec.sourceConfigId + '"]').each(function() {
+			prompts = $(this);
+		});
+		if (prompts) {
+			$(prompts).find(".section").each(function() {
+				var section = {
+					id: $(this).data('section-id'),
+					options: []
+				};
+				$(prompts).find(".uploader").each(function() {
+					var optionName = $(this).data("option-name");
+					$(this).find("input[type!='file']").each(function() {
+						section.options.push({
+							type: 'DEFAULT',
+							name: optionName,
+							value: $(this).val()
+						});
+					});
+					$(this).find("input[type='file']").each(function() {
+						section.options.push({
+							type: 'FILE',
+							name: optionName,
+							value: $(this)[0].files[0].name
+						});
+					});
+				});
+				jobSpec.prompts.dataSourceBackends.push(section);
+			});
+		}
+		if (window.FormData) {
+			var formData = new FormData();
+			$(prompts).find(".uploader").each(function() {
+				var optionName = $(this).data("option-name");
+				$(this).find("input[type='file']").each(function() {
+					formData.append(optionName, $(this)[0].files[0], $(this)[0].files[0].name);
+				});
+			});
+			formData.append("jobSpec", JSON.stringify(jobSpec));
+			this.postFormData(formData);
+		} else {
+			var iframeId = 'iframe' + (new Date().getTime());
+			var iframe = $('<iframe src="javascript:false;" name="'+iframeId+'" />');
+			iframe.hide();
+			
+			var theForm = $('<form id="form' + (new Date().getTime()) + '"></form>');
+			theForm.hide();
+			theForm.attr("action", "upload")
+            theForm.attr("method", "post")
+            theForm.attr("jobSpec", JSON.stringify(jobSpec));
+			if (prompts) {
+				$(prompts).find(".uploader").each(function() {
+					var optionName = $(this).data("option-name");
+					$(this).find("input[type='file']").each(function() {
+						theForm.attr(optionName, this, $(this)[0].files[0].name);
+					});
+				});
+			}
+            theForm.attr("enctype", "multipart/form-data")
+            theForm.attr("encoding", "multipart/form-data")
+            theForm.attr("target", iframeId);
+
+			theForm.appendTo('body');
+			iframe.appendTo('body');
+			iframe.load(function(e) {
+				var data = iframe[0].contentDocument.body.innerHTML;
+				
+				theForm.remove();
+				iframe.remove();
+			});
+			theForm.submit();
+		}
 	};
 };

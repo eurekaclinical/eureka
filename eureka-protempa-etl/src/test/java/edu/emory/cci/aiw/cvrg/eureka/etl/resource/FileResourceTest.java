@@ -34,7 +34,6 @@ import org.junit.Test;
 import javax.ws.rs.core.MediaType;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FilenameFilter;
 import java.io.IOException;
 
 import static org.junit.Assert.assertEquals;
@@ -74,12 +73,7 @@ public class FileResourceTest extends AbstractEtlResourceTest {
 		doUpload("foo", "bar");
 		EtlProperties etlProperties = new EtlProperties();
 		File dir = etlProperties.uploadedDirectory("foo", "bar");
-		File[] files = dir.listFiles(new FilenameFilter() {
-			@Override
-			public boolean accept(File directory, String filename) {
-				return filename.endsWith(".uploaded");
-			}
-		});
+		File[] files = dir.listFiles();
 		assertEquals(1, files == null ? 0 : files.length);
 	}
 

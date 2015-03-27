@@ -24,7 +24,6 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import javax.servlet.ServletException;
@@ -34,18 +33,11 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.google.inject.Inject;
 import org.codehaus.jackson.map.ObjectMapper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-import com.sleepycat.je.tree.SearchResult;
-
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.SystemElement;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ClientException;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ServicesClient;
 
 public class SearchSystemPropositionServlet extends HttpServlet {
-	private static final Logger LOGGER = LoggerFactory
-			.getLogger(SearchSystemPropositionServlet.class);
 	private final ServicesClient servicesClient;
 
 	@Inject

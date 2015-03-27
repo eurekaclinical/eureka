@@ -27,19 +27,11 @@ import java.nio.file.attribute.BasicFileAttributes;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.util.Date;
-import java.util.Set;
-import org.protempa.BackendCloseException;
-import org.protempa.DataSourceReadException;
-import org.protempa.DataStreamingEventIterator;
-import org.protempa.QuerySession;
 import org.protempa.backend.BackendInitializationException;
 import org.protempa.backend.BackendInstanceSpec;
 import org.protempa.backend.annotations.BackendInfo;
 import org.protempa.backend.annotations.BackendProperty;
 import org.protempa.backend.dsb.file.FixedWidthFileDataSourceBackend;
-import org.protempa.backend.dsb.filter.Filter;
-import org.protempa.dest.QueryResultsHandler;
-import org.protempa.proposition.Proposition;
 import org.protempa.proposition.value.AbsoluteTimeGranularityUtil;
 
 /**
@@ -48,18 +40,17 @@ import org.protempa.proposition.value.AbsoluteTimeGranularityUtil;
  */
 @BackendInfo(displayName = "Eureka Fixed Width File Data Source Backend")
 public class EurekaFixedWidthFileDataSourceBackend extends FixedWidthFileDataSourceBackend implements EurekaFileDataSourceBackend {
+
 	private final FileDataSourceBackendSupport fileDataSourceBackendSupport;
-	private String dataFileDirectoryName;
-	private Boolean required;
-	private boolean exceptionOccurred;
 	private boolean defaultTimestampIsFileUpdated;
 	private Date defaultDate;
 
 	public EurekaFixedWidthFileDataSourceBackend() {
 		this.fileDataSourceBackendSupport = new FileDataSourceBackendSupport(nameForErrors());
+		this.fileDataSourceBackendSupport.setDataFileDirectoryName("filename");
 	}
-	
-	@BackendProperty(propertyName="defaultTimestamp")
+
+	@BackendProperty(propertyName = "defaultTimestamp")
 	public void parseDefaultTimestamp(String timestampString) throws ParseException {
 		if ("FILE_UPDATED".equals(timestampString)) {
 			this.defaultTimestampIsFileUpdated = true;
@@ -69,13 +60,13 @@ public class EurekaFixedWidthFileDataSourceBackend extends FixedWidthFileDataSou
 			this.defaultDate = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT).parse(timestampString);
 		}
 	}
-	
+
 	@Override
 	protected Long getDefaultPositionPerFile(File file) throws IOException {
 		if (this.defaultTimestampIsFileUpdated) {
 			BasicFileAttributeView fileAttributeView = Files.getFileAttributeView(file.toPath(), BasicFileAttributeView.class);
-            BasicFileAttributes readAttributes = fileAttributeView.readAttributes();
-            return AbsoluteTimeGranularityUtil.asPosition(new Date(readAttributes.lastModifiedTime().toMillis()));
+			BasicFileAttributes readAttributes = fileAttributeView.readAttributes();
+			return AbsoluteTimeGranularityUtil.asPosition(new Date(readAttributes.lastModifiedTime().toMillis()));
 		} else if (this.defaultDate != null) {
 			return this.defaultDate.getTime();
 		} else {
@@ -83,64 +74,26 @@ public class EurekaFixedWidthFileDataSourceBackend extends FixedWidthFileDataSou
 		}
 	}
 
+	@BackendProperty(
+			displayName = "Fixed width flat file",
+			validator = TextPlainBackendPropertyValidator.class,
+			required = true
+	)
 	@Override
-	public String getDataFileDirectoryName() {
-		return dataFileDirectoryName;
-	}
-
-	@BackendProperty
-	@Override
-	public void setDataFileDirectoryName(String dataFileDirectoryName) {
-		this.dataFileDirectoryName = dataFileDirectoryName;
-	}
-
-	@Override
-	public String[] getMimetypes() {
-		return this.fileDataSourceBackendSupport.getMimetypes();
-	}
-
-	@BackendProperty
-	@Override
-	public void setMimetypes(String[] mimetypes) {
-		this.fileDataSourceBackendSupport.setMimetypes(mimetypes);
+	public void setFilename(String filename) {
+		this.fileDataSourceBackendSupport.setFilename(filename);
 	}
 
 	@Override
-	public Boolean isRequired() {
-		return required;
-	}
-
-	@BackendProperty
-	@Override
-	public void setRequired(Boolean required) {
-		if (required == null) {
-			this.required = Boolean.FALSE;
-		} else {
-			this.required = required;
-		}
+	public String getFilename() {
+		return this.fileDataSourceBackendSupport.getFilename();
 	}
 
 	@Override
 	public void initialize(BackendInstanceSpec config) throws BackendInitializationException {
 		super.initialize(config);
-		if (this.dataFileDirectoryName != null) {
-			this.fileDataSourceBackendSupport.setConfigurationsId(getConfigurationsId());
-			this.fileDataSourceBackendSupport.setDataFileDirectoryName(this.dataFileDirectoryName);
-			setFiles(this.fileDataSourceBackendSupport.getUploadedFiles());
-		}
-
-	}
-
-	@Override
-	public DataStreamingEventIterator<Proposition> readPropositions(Set<String> keyIds, Set<String> propIds, Filter filters, QuerySession qs, QueryResultsHandler queryResultsHandler) throws DataSourceReadException {
-		try {
-			DataStreamingEventIterator<Proposition> result = super.readPropositions(keyIds, propIds, filters, qs, queryResultsHandler);
-			this.exceptionOccurred = false;
-			return result;
-		} catch (DataSourceReadException ex) {
-			this.exceptionOccurred = true;
-			throw ex;
-		}
+		this.fileDataSourceBackendSupport.setConfigurationsId(getConfigurationsId());
+		setFiles(this.fileDataSourceBackendSupport.getUploadedFiles());
 	}
 
 	@Override
@@ -151,11 +104,6 @@ public class EurekaFixedWidthFileDataSourceBackend extends FixedWidthFileDataSou
 	@Override
 	public String getKeyTypeDisplayName() {
 		return "patient";
-	}
-
-	@Override
-	public void close() throws BackendCloseException {
-		this.fileDataSourceBackendSupport.close(getFiles(), this.exceptionOccurred);
 	}
 
 }

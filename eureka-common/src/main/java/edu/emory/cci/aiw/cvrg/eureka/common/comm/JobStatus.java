@@ -21,7 +21,6 @@ package edu.emory.cci.aiw.cvrg.eureka.common.comm;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.JobEventType;
 import java.text.DateFormat;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -46,6 +45,10 @@ public class JobStatus {
 	private List<String> messages;
 	
 	private List<Link> links;
+	
+	private String sourceConfigId;
+	
+	private String destinationId;
 	
 	public JobStatus() {
 		this.links = Collections.emptyList();
@@ -137,4 +140,21 @@ public class JobStatus {
 			return this.messages.get(this.messages.size() - 1);
 		}
 	}
+
+	public String getSourceConfigId() {
+		return sourceConfigId;
+	}
+
+	public void setSourceConfigId(String sourceConfigId) {
+		this.sourceConfigId = sourceConfigId;
+	}
+
+	public String getDestinationId() {
+		return destinationId;
+	}
+
+	public void setDestinationId(String destinationId) {
+		this.destinationId = destinationId;
+	}
+	
 }

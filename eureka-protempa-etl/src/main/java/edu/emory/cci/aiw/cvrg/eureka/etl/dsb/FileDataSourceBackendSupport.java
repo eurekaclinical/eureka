@@ -19,14 +19,8 @@ package edu.emory.cci.aiw.cvrg.eureka.etl.dsb;
  * limitations under the License.
  * #L%
  */
-
 import edu.emory.cci.aiw.cvrg.eureka.etl.config.EtlProperties;
 import java.io.File;
-import java.io.FilenameFilter;
-import org.arp.javautil.io.FileUtil;
-import org.drools.util.StringUtils;
-import org.protempa.BackendCloseException;
-import org.protempa.DataSourceBackendCloseException;
 
 /**
  *
@@ -37,7 +31,7 @@ class FileDataSourceBackendSupport {
 	private String dataFileDirectoryName;
 	private String configurationsId;
 	private final String nameForErrors;
-	private String[] mimetypes;
+	private String filename;
 
 	FileDataSourceBackendSupport(String nameForErrors) {
 		this.nameForErrors = nameForErrors;
@@ -58,74 +52,18 @@ class FileDataSourceBackendSupport {
 	void setDataFileDirectoryName(String dataFileDirectoryName) {
 		this.dataFileDirectoryName = dataFileDirectoryName;
 	}
-	
-	public String[] getMimetypes() {
-		return mimetypes.clone();
+
+	String getFilename() {
+		return filename;
 	}
 
-	public void setMimetypes(String[] mimetypes) {
-		if (mimetypes == null) {
-			this.mimetypes = StringUtils.EMPTY_STRING_ARRAY;
-		} else {
-			this.mimetypes = mimetypes.clone();
-		}
+	void setFilename(String filename) {
+		this.filename = filename;
 	}
 
 	File[] getUploadedFiles() {
 		File dataFileDirectory = new EtlProperties().uploadedDirectory(this.configurationsId, this.dataFileDirectoryName);
-		File[] dataFiles = dataFileDirectory.listFiles(new FilenameFilter() {
-			@Override
-			public boolean accept(File file, String string) {
-				return string.endsWith(".uploaded");
-			}
-		});
-		return dataFiles;
+		return new File[]{new File(dataFileDirectory, this.filename)};
 	}
 
-	void markProcessed(File dataFile) throws DataSourceBackendCloseException {
-		try {
-			if (!dataFile.renameTo(FileUtil.replaceExtension(dataFile, ".processed"))) {
-				throw new DataSourceBackendCloseException("Error in data source backend " + this.nameForErrors + ": failed to mark data file " + dataFile.getAbsolutePath() + " as processed");
-			}
-		} catch (SecurityException se) {
-			throw new DataSourceBackendCloseException("Error in data source backend " + this.nameForErrors + ": failed to mark data file " + dataFile.getAbsolutePath() + " as processed", se);
-		}
-	}
-
-	void markFailed(File dataFile) throws DataSourceBackendCloseException {
-		try {
-			if (!dataFile.renameTo(FileUtil.replaceExtension(dataFile, ".failed"))) {
-				throw new DataSourceBackendCloseException("Error in data source backend " + this.nameForErrors + ": could not mark data file " + dataFile.getAbsolutePath() + " as failed");
-			}
-		} catch (SecurityException se) {
-			throw new DataSourceBackendCloseException("Error in data source backend " + this.nameForErrors + ": failed to mark data file " + dataFile.getAbsolutePath() + " as failed", se);
-		}
-	}
-	
-	void close(File[] files, boolean failed) throws BackendCloseException {
-		BackendCloseException exceptionToThrow = null;
-		for (File file : files) {
-			if (!failed) {
-				try {
-					markProcessed(file);
-				} catch (DataSourceBackendCloseException se) {
-					if (exceptionToThrow == null) {
-						exceptionToThrow = se;
-					}
-				}
-			} else {
-				try {
-					markFailed(file);
-				} catch (DataSourceBackendCloseException se) {
-					if (exceptionToThrow == null) {
-						exceptionToThrow = se;
-					}
-				}
-			}
-		}
-
-		if (exceptionToThrow != null) {
-			throw exceptionToThrow;
-		}
-	}
 }

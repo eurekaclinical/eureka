@@ -31,9 +31,10 @@ import org.arp.javautil.string.StringUtil;
 
 import com.google.inject.Inject;
 import com.sun.jersey.api.client.ClientResponse;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.FileSourceConfigOption;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.SourceConfig;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.SourceConfig.Option;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.SourceConfigOption;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.SourceConfig.Section;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.SourceConfigParams;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.SourceConfigParams.Upload;
@@ -87,7 +88,7 @@ public class SourceConfigResource {
 			}
 		}
 	}
-	
+
 	@GET
 	@Path("/parameters/list")
 	public List<SourceConfigParams> getParamsList() {
@@ -129,25 +130,19 @@ public class SourceConfigResource {
 			Upload upload = null;
 			String sourceId = null;
 			String sampleUrl = null;
-			Boolean required = null;
-			for (Option option : section.getOptions()) {
-				if (option.getKey().equals("mimetypes")) {
-					List<String> val = (List<String>) option.getValue();
-					if (val != null) {
-						upload = new Upload();
-						upload.setName(section.getDisplayName());
-						upload.setAcceptedMimetypes(val.toArray(new String[val.size()]));
-						if (sourceId != null) {
-							upload.setSourceId(sourceId);
-						}
-						if (sampleUrl != null) {
-							upload.setSampleUrl(sampleUrl);
-						}
-						if (required != null) {
-							upload.setRequired(required);
-						}
+			for (SourceConfigOption option : section.getOptions()) {
+				if (option instanceof FileSourceConfigOption) {
+					upload = new Upload();
+					upload.setName(section.getDisplayName());
+					upload.setAcceptedMimetypes(((FileSourceConfigOption) option).getAcceptedMimetypes());
+					if (sourceId != null) {
+						upload.setSourceId(sourceId);
 					}
-				} else if (option.getKey().equals("dataFileDirectoryName")) {
+					if (sampleUrl != null) {
+						upload.setSampleUrl(sampleUrl);
+					}
+					upload.setRequired(option.isRequired());
+				} else if (option.getName().equals("dataFileDirectoryName")) {
 					Object val = option.getValue();
 					if (val != null) {
 						sourceId = val.toString();
@@ -155,20 +150,12 @@ public class SourceConfigResource {
 							upload.setSourceId(sourceId);
 						}
 					}
-				} else if (option.getKey().equals("sampleUrl")) {
+				} else if (option.getName().equals("sampleUrl")) {
 					Object val = option.getValue();
 					if (val != null) {
 						sampleUrl = val.toString();
 						if (upload != null) {
 							upload.setSampleUrl(sampleUrl);
-						}
-					}
-				} else if (option.getKey().equals("required")) {
-					Object val = option.getValue();
-					if (val != null) {
-						required = (Boolean) val;
-						if (upload != null) {
-							upload.setRequired(required);
 						}
 					}
 				}
