@@ -33,9 +33,9 @@ and data into your own instance of the i2b2 data warehouse system.
 		<guice-version>3.0</guice-version>
 		<annotation-version>1.0</annotation-version>
 		<hibernate-version>4.2.7.SP1</hibernate-version>
-        <hibernate-persistence-version>1.0.1.Final
+		<hibernate-persistence-version>1.0.1.Final
 		</hibernate-persistence-version>
-		<h2-version>1.3.174</h2-version>
+		<h2-version>1.4.186</h2-version>
 		<servlet-api-version>2.5</servlet-api-version>
 		<slf4j-version>1.7.5</slf4j-version>
 		<poi-version>3.9</poi-version>
@@ -70,6 +70,7 @@ and data into your own instance of the i2b2 data warehouse system.
 		
 		<!-- Overridden by the release-stage profile below -->
 		<eureka.stage>DEVELOPMENT</eureka.stage>
+		<tomcat.httpsPort>8443</tomcat.httpsPort>
 	</properties>
 
 	<scm>
@@ -391,7 +392,7 @@ and data into your own instance of the i2b2 data warehouse system.
 				<plugin>
 					<groupId>org.liquibase</groupId>
 					<artifactId>liquibase-maven-plugin</artifactId>
-					<version>3.3.1</version>
+					<version>3.3.2</version>
 					<dependencies>
 						<dependency>
 							<groupId>com.oracle</groupId>
@@ -425,13 +426,13 @@ and data into your own instance of the i2b2 data warehouse system.
 						</dependency>
 					</dependencies>
 					<configuration>
-						<driver>oracle.jdbc.OracleDriver</driver>
+						<outputFileEncoding>${project.build.sourceEncoding}</outputFileEncoding>
 					</configuration>
 				</plugin>
 				<plugin>
 					<groupId>org.codehaus.mojo</groupId>
 					<artifactId>license-maven-plugin</artifactId>
-					<version>1.5</version>
+					<version>1.8</version>
 					<configuration>
 						<licenseName>apache_v2</licenseName>
 						<roots>
@@ -465,6 +466,11 @@ and data into your own instance of the i2b2 data warehouse system.
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-war-plugin</artifactId>
 					<version>2.6</version>
+				</plugin>
+				<plugin>
+					<groupId>org.codehaus.mojo</groupId>
+					<artifactId>sql-maven-plugin</artifactId>
+					<version>1.5</version>
 				</plugin>
 			</plugins>
 		</pluginManagement>
@@ -542,6 +548,130 @@ and data into your own instance of the i2b2 data warehouse system.
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-release-plugin</artifactId>
 				<version>2.5</version>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-resources-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>copy-tomcat-configs</id>
+						<phase>compile</phase>
+						<goals>
+							<goal>copy-resources</goal>
+						</goals>
+						<configuration>
+							<outputDirectory>${project.build.directory}/tomcat-config</outputDirectory>
+							<resources>
+								<resource>
+									<directory>src/main/resources/tomcat-server-config</directory>
+									<filtering>true</filtering>
+									<includes>
+										<include>context.xml</include>
+										<include>logging.properties</include>
+									</includes>
+								</resource>
+								<resource>
+									<directory>src/main/resources/tomcat-server-config</directory>
+									<filtering>false</filtering>
+									<excludes>
+										<exclude>context.xml</exclude>
+										<exclude>logging.properties</exclude>
+									</excludes>
+								</resource>
+							</resources>
+						</configuration>
+					</execution>
+					<execution>
+						<id>copy-eureka-configs</id>
+						<phase>compile</phase>
+						<goals>
+							<goal>copy-resources</goal>
+						</goals>
+						<configuration>
+							<outputDirectory>${project.build.directory}/eureka-config</outputDirectory>
+							<resources>
+								<resource>
+									<directory>src/main/resources/tomcat-eureka-config</directory>
+									<filtering>true</filtering>
+								</resource>
+							</resources>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.tomcat.maven</groupId>
+				<artifactId>tomcat7-maven-plugin</artifactId>
+				<configuration>
+					<warSourceDirectory>${project.build.directory}/${project.build.finalName}</warSourceDirectory>
+					<port>${tomcat.port}</port>
+					<httpsPort>${tomcat.httpsPort}</httpsPort>
+					<keystorePass>changeit</keystorePass>
+					<keystoreFile>conf/localhost.keystore</keystoreFile>
+					<keystoreType>JKS</keystoreType>
+					<additionalConfigFilesDir>${project.build.directory}/tomcat-config</additionalConfigFilesDir>
+					<systemProperties>
+						<org.apache.tomcat.util.buf.UDecoder.ALLOW_ENCODED_SLASH>true</org.apache.tomcat.util.buf.UDecoder.ALLOW_ENCODED_SLASH>
+						<eureka.config.file>${project.build.directory}/eureka-config/eureka/application.properties</eureka.config.file>
+						<javax.net.ssl.trustStore>${project.build.directory}/tomcat/conf/localhost.truststore</javax.net.ssl.trustStore>
+						<javax.net.ssl.trustStorePassword>changeit</javax.net.ssl.trustStorePassword>
+					</systemProperties>
+					<webapps>
+						<webapp>
+							<groupId>edu.emory.cci.aiw.cvrg</groupId>
+							<artifactId>eureka-webapp</artifactId>
+							<version>${eureka-version}</version>
+							<type>war</type>
+							<asWebapp>true</asWebapp>
+						</webapp>
+						<webapp>
+							<groupId>edu.emory.cci.aiw.cvrg</groupId>
+							<artifactId>eureka-services</artifactId>
+							<version>${eureka-version}</version>
+							<type>war</type>
+							<asWebapp>true</asWebapp>
+						</webapp>
+						<webapp>
+							<groupId>edu.emory.cci.aiw.cvrg</groupId>
+							<artifactId>eureka-protempa-etl</artifactId>
+							<version>${eureka-version}</version>
+							<type>war</type>
+							<asWebapp>true</asWebapp>
+						</webapp>
+						<webapp>
+							<groupId>edu.emory.cci.cas</groupId>
+							<artifactId>cas-server</artifactId>
+							<version>1.0.3-SNAPSHOT</version>
+							<type>war</type>
+							<asWebapp>true</asWebapp>
+						</webapp>
+					</webapps>
+					<addContextWarDependencies>true</addContextWarDependencies>
+					<addWarDependenciesInClassloader>true</addWarDependenciesInClassloader>
+				</configuration>
+				<dependencies>
+					<dependency>
+						<groupId>com.h2database</groupId>
+						<artifactId>h2</artifactId>
+						<version>${h2-version}</version>
+					</dependency>
+					<dependency>
+						<groupId>com.sun.mail</groupId>
+						<artifactId>javax.mail</artifactId>
+						<version>${java-mail-version}</version>
+					</dependency>
+					<dependency>
+						<groupId>org.jasig.cas.client</groupId>
+						<artifactId>cas-client-core</artifactId>
+						<version>${cas-client-version}</version>
+						<exclusions>
+							<exclusion>
+								<groupId>commons-logging</groupId>
+								<artifactId>commons-logging</artifactId>
+							</exclusion>
+						</exclusions>
+					</dependency>
+				</dependencies>
 			</plugin>
 		</plugins>
 	</build>
@@ -803,14 +933,14 @@ and data into your own instance of the i2b2 data warehouse system.
 				<scope>provided</scope>
 			</dependency>
 			<!--<dependency>-->
-				<!--<groupId>edu.emory.cci.aiw</groupId>-->
-				<!--<artifactId>exist-dsb</artifactId>-->
-				<!--<version>${exist-dsb-version}</version>-->
+			<!--<groupId>edu.emory.cci.aiw</groupId>-->
+			<!--<artifactId>exist-dsb</artifactId>-->
+			<!--<version>${exist-dsb-version}</version>-->
 			<!--</dependency>-->
 			<!--<dependency>-->
-				<!--<groupId>edu.emory.cci</groupId>-->
-				<!--<artifactId>aiw-mimicii-dsb</artifactId>-->
-				<!--<version>${mimc-dsb-version}</version>-->
+			<!--<groupId>edu.emory.cci</groupId>-->
+			<!--<artifactId>aiw-mimicii-dsb</artifactId>-->
+			<!--<version>${mimc-dsb-version}</version>-->
 			<!--</dependency>-->
 		</dependencies>
 	</dependencyManagement>

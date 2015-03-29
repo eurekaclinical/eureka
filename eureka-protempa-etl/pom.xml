@@ -41,7 +41,57 @@ other export formats.
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>license-maven-plugin</artifactId>
 			</plugin>
+			<plugin>
+				<groupId>org.liquibase</groupId>
+				<artifactId>liquibase-maven-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>liquibase-generate-sql-file</id>
+						<phase>process-resources</phase>
+						<goals>
+							<goal>update</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<changeLogFile>${project.build.directory}/classes/dbmigration/changelog-master.xml</changeLogFile>
+					<url>jdbc:h2:file:${project.build.directory}/eureka-config/data/eureka-backend</url>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>sql-maven-plugin</artifactId>
+				<dependencies>
+					<dependency>
+						<groupId>com.h2database</groupId>
+						<artifactId>h2</artifactId>
+						<version>${h2-version}</version>
+					</dependency>
+				</dependencies>
+				<executions>
+					<execution>
+						<id>create-eureka-i2b2-ksb-ontology</id>
+						<phase>process-classes</phase>
+						<goals>
+							<goal>execute</goal>
+						</goals>
+						<configuration>
+							<driver>org.h2.Driver</driver>
+							<url>jdbc:h2:file:${project.build.directory}/eureka-config/eureka/ontologies/eureka-ontology;INIT=DROP ALL OBJECTS\;RUNSCRIPT FROM '${basedir}/etc/eureka-i2b2-ksb-h2.sql'</url>
+							<sqlCommand></sqlCommand>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
 		</plugins>
+		<resources>
+			<resource>
+				<directory>src/main/resources</directory>
+				<excludes>
+					<exclude>eureka-i2b2-ksb.sql</exclude>
+				</excludes>
+			</resource>
+		</resources>
 	</build>
 	<dependencies>
 		<dependency>

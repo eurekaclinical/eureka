@@ -27,6 +27,7 @@ import edu.emory.cci.aiw.cvrg.eureka.services.email.EmailException;
 import edu.emory.cci.aiw.cvrg.eureka.services.email.EmailSender;
 import edu.emory.cci.aiw.cvrg.eureka.services.util.PasswordGenerator;
 import edu.emory.cci.aiw.cvrg.eureka.common.util.StringUtil;
+import edu.emory.cci.aiw.cvrg.eureka.services.config.ServiceProperties;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.LocalUserDao;
 import java.security.NoSuchAlgorithmException;
 import java.util.Calendar;
@@ -62,15 +63,18 @@ public class PasswordResetResource {
 	private final PasswordGenerator passwordGenerator;
 	private final I2b2Client i2b2Client;
 	private final EmailSender emailSender;
-	
+	private final ServiceProperties properties;
+
 	@Inject
 	public PasswordResetResource(LocalUserDao inLocalUserDao,
 			EmailSender inEmailSender, I2b2Client inClient,
-			PasswordGenerator inPasswordGenerator) {
+			PasswordGenerator inPasswordGenerator,
+			ServiceProperties inProperties) {
 		this.localUserDao = inLocalUserDao;
 		this.emailSender = inEmailSender;
 		this.i2b2Client = inClient;
 		this.passwordGenerator = inPasswordGenerator;
+		this.properties = inProperties;
 	}
 
 	/**
@@ -100,7 +104,9 @@ public class PasswordResetResource {
 
 			user.setPassword(passwordHash);
 			user.setPasswordExpiration(Calendar.getInstance().getTime());
-			this.i2b2Client.changePassword(user.getEmail(), password);
+			if (this.properties.getI2b2URL() != null) {
+				this.i2b2Client.changePassword(user.getEmail(), password);
+			}
 			this.localUserDao.update(user);
 			try {
 				this.emailSender.sendPasswordResetMessage(user, password);

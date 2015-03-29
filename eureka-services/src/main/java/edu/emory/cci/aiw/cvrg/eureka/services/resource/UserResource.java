@@ -49,6 +49,7 @@ import edu.emory.cci.aiw.cvrg.eureka.common.exception.HttpStatusException;
 import edu.emory.cci.aiw.cvrg.eureka.common.util.StringUtil;
 import edu.emory.cci.aiw.cvrg.eureka.services.authentication.ServicesAuthenticationSupport;
 import edu.emory.cci.aiw.cvrg.eureka.services.clients.I2b2Client;
+import edu.emory.cci.aiw.cvrg.eureka.services.config.ServiceProperties;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.*;
 import edu.emory.cci.aiw.cvrg.eureka.services.email.EmailException;
 import edu.emory.cci.aiw.cvrg.eureka.services.email.EmailSender;
@@ -98,6 +99,7 @@ public class UserResource {
 	
 	private UserToUserEntityVisitor visitor;
 	private final ServicesAuthenticationSupport authenticationSupport;
+	private final ServiceProperties properties;
 
 	/**
 	 * Create a UserResource object with a User DAO and a Role DAO.
@@ -112,7 +114,8 @@ public class UserResource {
 			EmailSender inEmailSender, I2b2Client inClient,
 			OAuthProviderDao inOAuthProviderDao,
 			LoginTypeDao inLoginTypeDao,
-			AuthenticationMethodDao inAuthenticationMethodDao) {
+			AuthenticationMethodDao inAuthenticationMethodDao,
+			ServiceProperties inProperties) {
 		this.userDao = inUserDao;
 		this.localUserDao = inLocalUserDao;
 		this.roleDao = inRoleDao;
@@ -121,6 +124,7 @@ public class UserResource {
 		this.visitor = new UserToUserEntityVisitor(inOAuthProviderDao,
 				inRoleDao, inLoginTypeDao, inAuthenticationMethodDao);
 		this.authenticationSupport = new ServicesAuthenticationSupport();
+		this.properties = inProperties;
 	}
 
 	/**
@@ -255,7 +259,9 @@ public class UserResource {
 		if (user.getPassword().equals(oldPasswordHash)) {
 			user.setPassword(newPasswordHash);
 			user.setPasswordExpiration(this.getExpirationDate());
-			this.i2b2Client.changePassword(user.getEmail(), newPassword);
+			if (this.properties.getI2b2URL() != null) {
+				this.i2b2Client.changePassword(user.getEmail(), newPassword);
+			}
 			this.localUserDao.update(user);
 
 			try {

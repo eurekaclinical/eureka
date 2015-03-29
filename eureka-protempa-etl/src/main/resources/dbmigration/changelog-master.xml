@@ -74,7 +74,7 @@ limitations under the License.
 		<renameColumn tableName="JOBS" oldColumnName="CONFIGURATIONID" newColumnName="SOURCECONFIGID"/>
 		<renameColumn tableName="JOBS" oldColumnName="TIMESTAMP" newColumnName="CREATED"/>
 		<!--   <addNotNullConstraint tableName="JOBS" columnName="SOURCECONFIGID"/> --> 
-		<modifyDataType tableName="JOB_EVENTS" columnName="STATE" newDataType="TINYINT"/>
+		<modifyDataType tableName="JOB_EVENTS" columnName="STATE" newDataType="INT"/>
 		<addColumn tableName="JOB_EVENTS">
 			<column name="MESSAGE2" type="CLOB"/>
 		</addColumn>
@@ -88,8 +88,12 @@ limitations under the License.
 				<constraints  nullable="false"/>
 			</column>
 		</createTable>
+		<insert tableName="USERS">
+			<column name="ID" valueNumeric="1"/>
+			<column name="USERNAME" value="superuser"/>
+		</insert>
 		<addForeignKeyConstraint baseColumnNames="USER_ID" baseTableName="JOBS" constraintName="JOBS_USER_ID_CONSTRAINT" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" referencedColumnNames="ID" referencedTableName="USERS" referencesUniqueColumn="false"/>
-		<createSequence sequenceName="USER_SEQ"/>
+		<createSequence sequenceName="USER_SEQ" startValue="2"/>
 	</changeSet>
 	<changeSet author="arpost (generated)" id="1361552652236-9">
 		<createTable tableName="DESTINATIONS">
@@ -136,6 +140,11 @@ limitations under the License.
 			</column>
 			<column name="OWNER_ID" type="BIGINT"/>
 		</createTable>
+		<insert tableName="SOURCECONFIGS">
+			<column name="ID" valueNumeric="1"/>
+			<column name="NAME" value="Spreadsheet"/>
+			<column name="OWNER_ID" valueNumeric="1"/>
+		</insert>
 		<createTable tableName="SOURCECONFIGS_GROUPS">
 			<column name="ID" type="BIGINT">
 				<constraints nullable="false" primaryKey="true" primaryKeyName="SC_GRP_PK"/>
@@ -201,7 +210,7 @@ limitations under the License.
 		<createSequence sequenceName="DEST_SEQ"/>
 		<createSequence sequenceName="GROUPS_SEQ"/>
 		<createSequence sequenceName="SC_GRP_SEQ"/>
-		<createSequence sequenceName="SOURCECONFIG_SEQ"/>
+		<createSequence sequenceName="SOURCECONFIG_SEQ" startValue="2"/>
 	</changeSet>
 	<changeSet author="arpost (generated)" id="1361552652236-10">
 		<addUniqueConstraint tableName="USERS" columnNames="USERNAME"/>
@@ -320,7 +329,7 @@ limitations under the License.
 		<dropColumn tableName="DESTINATIONS" columnName="NAME"/>
 	</changeSet>
 	<changeSet author="arpost" id="1361552652236-19">
-		<addNotNullConstraint tableName="DESTINATIONS" columnName="TEMPNAME"/>
+		<addNotNullConstraint tableName="DESTINATIONS" columnName="TEMPNAME" columnDataType="VARCHAR(255)"/>
 	</changeSet>
 	<changeSet author="arpost" id="1361552652236-20">
 		<renameColumn tableName="DESTINATIONS" oldColumnName="TEMPNAME" newColumnName="NAME"/>

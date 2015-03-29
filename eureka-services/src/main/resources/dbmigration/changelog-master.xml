@@ -644,7 +644,7 @@ limitations under the License.
 			<column name="RANK" valueNumeric="3"/>
 			<column name="TYPE" value="OVERLAPPING"/>
 		</insert>
-		<addNotNullConstraint tableName="RELATION_OPS" columnName="TYPE"/>
+		<addNotNullConstraint tableName="RELATION_OPS" columnName="TYPE" columnDataType="VARCHAR(255)"/>
 		<addColumn tableName="TIME_UNITS">
 			<column name="ISDEFAULT" type="BOOLEAN" defaultValueBoolean="false">
 				<constraints nullable="false"/>
@@ -654,7 +654,7 @@ limitations under the License.
 			<column name="ISDEFAULT" valueBoolean="true"/>
 			<where>NAME='day'</where>
 		</update>
-		<addNotNullConstraint tableName="PROPERTY_CONSTRAINTS" columnName="VALUECOMPARATOR_ID"/>
+		<addNotNullConstraint tableName="PROPERTY_CONSTRAINTS" columnName="VALUECOMPARATOR_ID" columnDataType="BIGINT"/>
 	</changeSet>
 	<changeSet author="arpost" id="1360440238345-88">
 		<createTable tableName="FREQUENCY_TYPES">
@@ -689,7 +689,7 @@ limitations under the License.
 			<column name="ISDEFAULT" valueBoolean="false"/>
 		</insert>
 		<addColumn tableName="FREQUENCIES">
-			<column name="FREQUENCYTYPE_ID" type="INT" defaultValueNumeric="1">
+			<column name="FREQUENCYTYPE_ID" type="BIGINT" defaultValueNumeric="1">
 				<constraints nullable="false"/>
 			</column>
 		</addColumn>
@@ -741,7 +741,7 @@ limitations under the License.
 			<sql>
 				UPDATE USERS SET USERNAME=EMAIL WHERE USERNAME IS NULL
 			</sql>
-			<addNotNullConstraint tableName="USERS" columnName="USERNAME"/>
+			<addNotNullConstraint tableName="USERS" columnName="USERNAME" columnDataType="VARCHAR(255)"/>
 			<addColumn tableName="USERS">
 				<column name="FULLNAME" type="VARCHAR(255)"/>
 			</addColumn>
@@ -825,7 +825,7 @@ limitations under the License.
 			<update tableName="USERS">
 				<column name="LOGINTYPE_ID" value="1"/>
 			</update>
-			<addNotNullConstraint tableName="USERS" columnName="LOGINTYPE_ID"/>
+			<addNotNullConstraint tableName="USERS" columnName="LOGINTYPE_ID" columnDataType="BIGINT"/>
 			<addForeignKeyConstraint baseColumnNames="LOGINTYPE_ID" baseTableName="USERS" constraintName="FK_USERS_LOGINTYPE" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" referencedColumnNames="ID" referencedTableName="LOGIN_TYPES" referencesUniqueColumn="false"/>
 		</changeSet>
 		<changeSet author="arpost" id="1360440238345-95">
@@ -857,7 +857,7 @@ limitations under the License.
 			<update tableName="USERS">
 				<column name="AUTHENTICATIONMETHOD_ID" valueNumeric="1"/>
 			</update>
-			<addNotNullConstraint tableName="USERS" columnName="AUTHENTICATIONMETHOD_ID"/>
+			<addNotNullConstraint tableName="USERS" columnName="AUTHENTICATIONMETHOD_ID" columnDataType="BIGINT"/>
 			<addForeignKeyConstraint baseColumnNames="AUTHENTICATIONMETHOD_ID" baseTableName="USERS" constraintName="FK_USERS_AUTHENTMETHOD" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" referencedColumnNames="ID" referencedTableName="AUTHENTICATION_METHODS" referencesUniqueColumn="false"/>
 		</changeSet>
 		<changeSet author="arpost" id="1360440238345-96">
