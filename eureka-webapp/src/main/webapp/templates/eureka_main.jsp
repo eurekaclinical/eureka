@@ -75,7 +75,7 @@ limitations under the License.
 			<ul class="nav navbar-nav navbar-right menu-text">
 				<c:if test="${userIsActivated}">
 					<li>
-						<a href="${pageContext.request.contextPath}/protected/cohorthome">
+						<a href="${pageContext.request.contextPath}/#/cohort_home">
 							<span class="glyphicon glyphicon-pencil"></span>
 							Cohorts
 						</a>

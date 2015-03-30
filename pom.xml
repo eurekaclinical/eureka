@@ -512,7 +512,7 @@ and data into your own instance of the i2b2 data warehouse system.
 					<descriptors>
 						<descriptor>assembly/src.xml</descriptor>
 					</descriptors>
-					<tarLongFileMode>gnu</tarLongFileMode>
+					<tarLongFileMode>posix</tarLongFileMode>
 				</configuration>
 				<executions>
 					<execution>
