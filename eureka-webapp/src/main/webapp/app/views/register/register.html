@@ -1,0 +1,170 @@
+<div ng-controller="RegisterCtrl">
+<div class="alert alert-danger" role="alert" ng-if="errorMsg">
+    <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+    <span class="sr-only">Error:</span>
+    {{ errorMsg }}
+</div>
+<form angular-validator-submit="addNewAccount(newAcct)" id="registerForm" name="registerForm" novalidate angular-validator>
+   <div class="row">
+       <div class="col-sm-6">
+           <div class="form-group">
+               <label for="firstName" class="control-label">First Name</label>
+               <input id="firstName"
+                      name="firstName"
+                      type="text"
+                      class="form-control"
+                      ng-model="newAcct.firstName"
+                      required />
+               <span class="help-block default-hidden"></span>
+           </div>
+       </div>
+   </div>
+   <div class="row">
+       <div class="col-sm-6">
+           <div class="form-group">
+               <label for="lastName" class="control-label">Last Name</label>
+               <input id="lastName"
+                      name="lastName"
+                      type="text"
+                      class="form-control"
+                      ng-model="newAcct.lastName"
+                      required />
+               <span class="help-block default-hidden"></span>
+           </div>
+       </div>
+   </div>
+   <div class="row">
+       <div class="col-sm-6">
+           <div class="form-group">
+               <label for="organization" class="control-label">Organization</label>
+               <input id="organization"
+                      name="organization"
+                      type="text"
+                      class="form-control"
+                      ng-model="newAcct.organization"
+                      required />
+               <span class="help-block default-hidden"></span>
+           </div>
+       </div>
+   </div>
+   <div class="row">
+       <div class="col-sm-6">
+           <div class="form-group">
+               <label for="title" class="control-label">Title</label>
+               <input id="title"
+                      name="title"
+                      type="text"
+                      class="form-control"
+                      ng-model="newAcct.title"
+                      required />
+               <span class="help-block default-hidden"></span>
+           </div>
+       </div>
+   </div>
+   <div class="row">
+       <div class="col-sm-6">
+           <div class="form-group">
+               <label for="department" class="control-label">Department</label>
+               <input id="department"
+                      name="department"
+                      type="text"
+                      class="form-control"
+                      ng-model="newAcct.department"
+                      required />
+               <span class="help-block default-hidden"></span>
+           </div>
+       </div>
+   </div>
+   <div class="row">
+       <div class="col-sm-6">
+           <div class="form-group">
+               <label for="email" class="control-label">Email Address</label>
+               <input id="email"
+                      name="email"
+                      type="email"
+                      class="form-control"
+                      ng-model="newAcct.email"
+                      required />
+               <span class="help-block default-hidden"></span>
+           </div>
+       </div>
+   </div>
+   <div class="row">
+       <div class="col-sm-6">
+           <div class="form-group">
+               <label for="verifyEmail" class="control-label">Verify Email Address</label>
+               <input id="verifyEmail"
+                      name="verifyEmail"
+                      type="email"
+                      class="form-control"
+                      ng-model="newAcct.verifyEmail"
+                      required />
+               <span class="help-block default-hidden"></span>
+           </div>
+       </div>
+   </div>
+       <div class="row">
+           <div class="col-sm-6">
+               <div class="form-group">
+                   <label for="password" class="control-label">Password</label>
+                   <input id="password"
+                          name="password"
+                          type="password"
+                          class="form-control"
+                          ng-model="newAcct.password"
+                          required />
+                   <span class="help-block default-hidden"></span>
+               </div>
+           </div>
+       </div>
+       <div class="row">
+           <div class="col-sm-6">
+               <div class="form-group">
+                   <label for="verifyPassword" class="control-label">Confirm Password</label>
+                   <input id="verifyPassword"
+                          name="verifyPassword"
+                          type="password"
+                          class="form-control"
+                          ng-model="newAcct.verifyPassword"
+                          validator = "newAcct.password == newAcct.verifyPassword"
+                          required />
+                   <span class="help-block default-hidden"></span>
+               </div>
+           </div>
+       </div>
+       <div class="row">
+           <div class="col-sm-6">
+               <div class="form-group">
+                   <label for="agreement" class="control-label">
+                       <input type="checkbox"
+                              name="agreement"
+                              id="agreement"
+                              class="checkbox checkbox-inline"
+                              ng-model="agreement"
+                              required />
+                       I agree to the <a id="agreementAnchor" href="#">End User Agreement</a>
+                   </label>
+                   <span class="help-block default-hidden"></span>
+               </div>
+           </div>
+       </div>
+       <div class="row">
+           <div class="col-sm-12">
+               <div class="form-group">
+                   *Passwords must be at least 8 characters and contain at least
+                   one letter & digit
+               </div>
+           </div>
+       </div>
+   <div class="row">
+       <div id="passwordChangeFailure" class="default-hidden help-block has-error">
+           <div id="passwordErrorMessage"></div>
+       </div>
+   </div>
+    <button id="submit" type="submit"
+            class="btn btn-success"
+            >
+        Submit
+    </button>
+</form>
+</div>

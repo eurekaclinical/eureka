@@ -19,6 +19,7 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.common.comm.clients;
 
+import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.GenericType;
 import com.sun.jersey.core.util.MultivaluedMapImpl;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.CohortDestination;
@@ -44,7 +45,12 @@ import edu.emory.cci.aiw.cvrg.eureka.common.entity.ValueComparator;
 import java.io.InputStream;
 import java.net.URI;
 import java.util.List;
+import javax.ws.rs.GET;
+import javax.ws.rs.HttpMethod;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
+import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -195,6 +201,16 @@ public class ServicesClient extends EurekaClient {
 			throws ClientException {
 		final String path = "/api/protected/dataelement";
 		doPost(path, inDataElement);
+	}
+
+	public void proxyPost(final String path, final String json)
+			throws ClientException {
+		doPost(path, json);
+	}
+
+	public void proxyPut(final String path, final String json)
+			throws ClientException {
+		doPut(path, json);
 	}
 
 	public void updateUserElement(DataElement inDataElement) throws

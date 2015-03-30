@@ -9,7 +9,7 @@ window.eureka.tree = new function () {
 		$(userTreeElem).jstree({
 			"json_data": {
 				"ajax": {
-					"url": "userproplist?key=root"
+					"url": "protected/userproplist?key=root"
 				}
 			},
 			"dnd": {
@@ -25,7 +25,7 @@ window.eureka.tree = new function () {
 		$(systemTreeElem).jstree({
 			"json_data": {
 				"ajax": {
-					"url": "systemlist",
+					"url": "protected/systemlist",
 					"data": function (n) {
 						return {
 							key: n.attr ? n.attr("data-key") : "root"
