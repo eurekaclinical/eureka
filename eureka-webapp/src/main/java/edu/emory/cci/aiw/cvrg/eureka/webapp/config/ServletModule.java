@@ -32,6 +32,10 @@ import edu.emory.cci.aiw.cvrg.eureka.servlet.filter.HaveUserRecordFilter;
 import edu.emory.cci.aiw.cvrg.eureka.servlet.filter.MessagesFilter;
 import edu.emory.cci.aiw.cvrg.eureka.servlet.filter.PasswordExpiredFilter;
 import edu.emory.cci.aiw.cvrg.eureka.servlet.filter.UserInfoFilter;
+import edu.emory.cci.aiw.cvrg.eureka.servlet.oauth.GitHubRegistrationOAuthCallbackServlet;
+import edu.emory.cci.aiw.cvrg.eureka.servlet.oauth.GlobusRegistrationOAuthCallbackServlet;
+import edu.emory.cci.aiw.cvrg.eureka.servlet.oauth.GoogleRegistrationOAuthCallbackServlet;
+import edu.emory.cci.aiw.cvrg.eureka.servlet.oauth.TwitterRegistrationOAuthCallbackServlet;
 import edu.emory.cci.aiw.cvrg.eureka.servlet.proposition.*;
 import java.util.HashMap;
 import java.util.Map;
@@ -49,7 +53,6 @@ class ServletModule extends AbstractServletModule {
 	private static final String CONTAINER_PROTECTED_PATH = "/protected/*";
 	private static final String PASSWORD_EXPIRED_REDIRECT_URL = "/protected/password_expiration.jsp";
 	private static final String PASSWORD_SAVE_PATH = "/protected/user_acct";
-	private static final String NO_USER_RECORD_REDIRECT_URL = "/register.jsp";
 	private static final String LOGOUT_PATH = "/logout";
 	
 	private final WebappProperties properties;
@@ -67,10 +70,7 @@ class ServletModule extends AbstractServletModule {
 	
 	private void setupHaveUserRecordFilter() {
 		bind(HaveUserRecordFilter.class).in(Singleton.class);
-		Map<String, String> params = new HashMap<>();
-		params.put("redirect-url", NO_USER_RECORD_REDIRECT_URL);
-		filter(CONTAINER_PROTECTED_PATH).through(HaveUserRecordFilter.class,
-				params);
+		filter(CONTAINER_PROTECTED_PATH).through(HaveUserRecordFilter.class);
 	}
 
 	private void setupUserInfoFilter () {
@@ -174,6 +174,21 @@ class ServletModule extends AbstractServletModule {
 
 		bind(DeleteCohortServlet.class).in(Singleton.class);
 		serve("/protected/deletecohort").with(DeleteCohortServlet.class);
+		
+		bind(ChooseAccountTypeServlet.class).in(Singleton.class);
+		serve("/chooseaccounttype").with(ChooseAccountTypeServlet.class);
+		
+		bind(GitHubRegistrationOAuthCallbackServlet.class).in(Singleton.class);
+		serve("/registrationoauthgithubcallback").with(GitHubRegistrationOAuthCallbackServlet.class);
+		
+		bind(GoogleRegistrationOAuthCallbackServlet.class).in(Singleton.class);
+		serve("/registrationoauthgooglecallback").with(GoogleRegistrationOAuthCallbackServlet.class);
+		
+		bind(TwitterRegistrationOAuthCallbackServlet.class).in(Singleton.class);
+		serve("/registrationoauthtwittercallback").with(TwitterRegistrationOAuthCallbackServlet.class);
+		
+		bind(GlobusRegistrationOAuthCallbackServlet.class).in(Singleton.class);
+		serve("/registrationoauthglobuscallback").with(GlobusRegistrationOAuthCallbackServlet.class);
 	}
 
 }

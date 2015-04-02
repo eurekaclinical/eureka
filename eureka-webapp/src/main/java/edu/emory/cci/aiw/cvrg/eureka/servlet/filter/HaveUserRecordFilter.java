@@ -20,12 +20,10 @@ package edu.emory.cci.aiw.cvrg.eureka.servlet.filter;
  * #L%
  */
 import java.io.IOException;
-import java.util.Map;
 
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.ws.rs.core.UriBuilder;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,7 +35,6 @@ import com.sun.jersey.api.client.ClientResponse.Status;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.User;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ClientException;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ServicesClient;
-import edu.emory.cci.aiw.cvrg.eureka.webapp.authentication.WebappAuthenticationSupport;
 import javax.servlet.http.HttpSession;
 
 /**
@@ -50,23 +47,15 @@ public class HaveUserRecordFilter implements Filter {
 	private static final Logger LOGGER
 			= LoggerFactory.getLogger(MessagesFilter.class);
 
-	private String redirectUrl;
 	private final ServicesClient servicesClient;
-	private final WebappAuthenticationSupport authenticationSupport;
 
 	@Inject
 	public HaveUserRecordFilter(ServicesClient inServicesClient) {
 		this.servicesClient = inServicesClient;
-		this.authenticationSupport = new WebappAuthenticationSupport(this.servicesClient);
 	}
 
 	@Override
 	public void init(FilterConfig inFilterConfig) throws ServletException {
-		this.redirectUrl = inFilterConfig.getInitParameter("redirect-url");
-		if (this.redirectUrl == null) {
-			throw new ServletException("Parameter redirect-url must be set");
-		}
-		LOGGER.debug("redirect-url: {}", this.redirectUrl);
 	}
 
 	@Override
@@ -83,53 +72,11 @@ public class HaveUserRecordFilter implements Filter {
 			}
 		} catch (ClientException ex) {
 			if (Status.NOT_FOUND.equals(ex.getResponseStatus())) {
-				/*
-				 * CAS has authenticated the user, but we don't have a record
-				 * of the user. This means the user has been externally 
-				 * authenticated, so create a user request.
-				 */
-				String fullRedirectUrl = servletRequest.getContextPath()
-						+ this.redirectUrl;
-				Map<String, Object> attributes = this.authenticationSupport.getUserPrincipalAttributes(servletRequest);
-				UriBuilder uriBuilder = UriBuilder.fromUri(fullRedirectUrl);
-
-				Object firstName = attributes.get("firstName");
-				Object fullName = attributes.get("fullName");
-				Object lastName = attributes.get("lastName");
-				if ((firstName == null || lastName == null)
-						&& fullName instanceof String) {
-					PersonNameSplitter splitter
-							= new PersonNameSplitter((String) fullName);
-					if (firstName == null) {
-						firstName = splitter.getFirstName();
-					}
-					if (lastName == null) {
-						lastName = splitter.getLastName();
-					}
+				HttpSession session = servletRequest.getSession(false);
+				if (session != null) {
+					session.invalidate();
 				}
-				if (firstName != null) {
-					uriBuilder = uriBuilder.queryParam("firstName", firstName);
-				}
-				if (lastName != null) {
-					uriBuilder = uriBuilder.queryParam("lastName", lastName);
-				}
-				if (fullName != null) {
-					uriBuilder = uriBuilder.queryParam("fullName", fullName);
-				}
-
-				String[] attrNames = {
-					"title", "department", "organization", "email", 
-					"username"};
-				for (String attrName : attrNames) {
-					Object val = attributes.get(attrName);
-					if (val != null) {
-						uriBuilder = uriBuilder.queryParam(attrName, val);
-					}
-				}
-				String redirectUrlWithQueryParams
-						= uriBuilder.build().toString();
-
-				servletResponse.sendRedirect(redirectUrlWithQueryParams);
+				inFilterChain.doFilter(inRequest, inResponse);
 			} else if (Status.UNAUTHORIZED.equals(ex.getResponseStatus())) {
 				HttpSession session = servletRequest.getSession(false);
 				if (session != null) {

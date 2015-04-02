@@ -55,6 +55,7 @@ and data into your own instance of the i2b2 data warehouse system.
 		<jpamodelgen-version>1.2.0.Final</jpamodelgen-version>
 		<ehcache-version>2.6.0</ehcache-version>
 		<tomcat-plugin-version>1.1</tomcat-plugin-version>
+		<scripe-up-ext-version>1.0-SNAPSHOT</scripe-up-ext-version>
 
 		<!-- properties for site creation -->
 		<javautil-version>2.4-SNAPSHOT</javautil-version>
@@ -286,7 +287,7 @@ and data into your own instance of the i2b2 data warehouse system.
 				<plugin>
 					<groupId>net.alchim31.maven</groupId>
 					<artifactId>yuicompressor-maven-plugin</artifactId>
-					<version>1.3.3</version>
+					<version>1.5.1</version>
 					<executions>
 						<execution>
 							<phase>prepare-package</phase>
@@ -555,7 +556,7 @@ and data into your own instance of the i2b2 data warehouse system.
 				<executions>
 					<execution>
 						<id>copy-tomcat-configs</id>
-						<phase>compile</phase>
+						<phase>prepare-package</phase>
 						<goals>
 							<goal>copy-resources</goal>
 						</goals>
@@ -583,7 +584,7 @@ and data into your own instance of the i2b2 data warehouse system.
 					</execution>
 					<execution>
 						<id>copy-eureka-configs</id>
-						<phase>compile</phase>
+						<phase>prepare-package</phase>
 						<goals>
 							<goal>copy-resources</goal>
 						</goals>
@@ -931,6 +932,11 @@ and data into your own instance of the i2b2 data warehouse system.
 				<artifactId>commons-logging</artifactId>
 				<version>${commons-logging-version}</version>
 				<scope>provided</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.eurekaclinical</groupId>
+				<artifactId>scribe-up-ext</artifactId>
+				<version>${scripe-up-ext-version}</version>
 			</dependency>
 			<!--<dependency>-->
 			<!--<groupId>edu.emory.cci.aiw</groupId>-->

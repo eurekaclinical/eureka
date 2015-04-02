@@ -46,14 +46,14 @@
 	</c:if>
 </div>
 <form id="signupForm" action="#" method="POST" novalidate role="form">
-	<input type="hidden" name="fullName" id="fullName" value="${param.fullName}" />
-	<input type="hidden" name="username" id="username" value="${param.username}" />
+	<input type="hidden" name="fullName" id="fullName" value="${fullName}" />
+	<input type="hidden" name="username" id="username" value="${username}" />
 	<div class="row">
 		<div class="col-sm-6">
 			<div class="form-group">
 				<label for="firstName" class="control-label">First Name</label>
 				<input id="firstName" name="firstName" type="text"
-					   class="form-control" value="${param.firstName}"/>
+					   class="form-control" value="${firstName}"/>
 				<span class="help-block default-hidden"></span>
 			</div>
 		</div>
@@ -63,7 +63,7 @@
 			<div class="form-group">
 				<label for="lastName" class="control-label">Last Name</label>
 				<input id="lastName" name="lastName" type="text"
-					   class="form-control" value="${param.lastName}"/>
+					   class="form-control" value="${lastName}"/>
 				<span class="help-block default-hidden"></span>
 			</div>
 		</div>
@@ -73,7 +73,7 @@
 			<div class="form-group">
 				<label for="organization" class="control-label">Organization</label>
 				<input id="organization" name="organization" type="text"
-					   class="form-control" value="${param.organization}"/>
+					   class="form-control" value="${organization}"/>
 				<span class="help-block default-hidden"></span>
 			</div>
 		</div>
@@ -83,7 +83,7 @@
 			<div class="form-group">
 				<label for="title" class="control-label">Title</label>
 				<input id="title" name="title" type="text"
-					   class="form-control" value="${param.title}"/>
+					   class="form-control" value="${title}"/>
 				<span class="help-block default-hidden"></span>
 			</div>
 		</div>
@@ -93,7 +93,7 @@
 			<div class="form-group">
 				<label for="department" class="control-label">Department</label>
 				<input id="department" name="department" type="text"
-					   class="form-control" value="${param.department}"/>
+					   class="form-control" value="${department}"/>
 				<span class="help-block default-hidden"></span>
 			</div>
 		</div>
@@ -103,7 +103,7 @@
 			<div class="form-group">
 				<label for="email" class="control-label">Email Address</label>
 				<input id="email" name="email" type="text"
-					   class="form-control" value="${param.email}"/>
+					   class="form-control" value="${email}"/>
 				<span class="help-block default-hidden"></span>
 			</div>
 		</div>
@@ -113,7 +113,7 @@
 			<div class="form-group">
 				<label for="verifyEmail" class="control-label">Verify Email Address</label>
 				<input id="verifyEmail" name="verifyEmail" type="text"
-					   class="form-control" value="${param.email}"/>
+					   class="form-control" value="${email}"/>
 				<span class="help-block default-hidden"></span>
 			</div>
 		</div>

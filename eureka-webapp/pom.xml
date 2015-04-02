@@ -6,7 +6,7 @@
 	<packaging>war</packaging>
 	<name>Eureka WebApp</name>
 	<description>Eureka WebApp is the implementation 
-of the Eureka! Clinical Analytics web user interface.
+		of the Eureka! Clinical Analytics web user interface.
 	</description>
 
 	<parent>
@@ -28,13 +28,16 @@ of the Eureka! Clinical Analytics web user interface.
 			<plugin>
 				<groupId>net.alchim31.maven</groupId>
 				<artifactId>yuicompressor-maven-plugin</artifactId>
+				<executions>
+					<execution>
+						<goals>
+							<goal>compress</goal>
+						</goals>
+					</execution>
+				</executions>  
 				<configuration>
 					<suffix>${maven.build.timestamp}</suffix>
 					<includes>
-						<include>js/editor.js</include>
-						<include>js/eureka.js</include>
-						<include>css/editor.css</include>
-						<include>css/styles.css</include>
 						<include>assets/js/eureka.*.js</include>
 						<include>assets/css/eureka.css</include>
 					</includes>
@@ -51,14 +54,14 @@ of the Eureka! Clinical Analytics web user interface.
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-war-plugin</artifactId>
-				<version>2.4</version>
 				<configuration>
 					<filteringDeploymentDescriptors>true</filteringDeploymentDescriptors>
+					<packagingIncludes>
+						%regex[assets/js/eureka.*${maven.build.timestamp}.js],
+						%regex[^(?!assets/js/eureka).*$]
+					</packagingIncludes>
 					<packagingExcludes>
-						js/editor.js,
-						js/eureka.js,
-						css/editor.css,
-						css/styles.css,
+						assets/css/eureka.css
 					</packagingExcludes>
 				</configuration>
 			</plugin>
@@ -157,6 +160,10 @@ of the Eureka! Clinical Analytics web user interface.
 		<dependency>
 			<groupId>org.jasig.cas.client</groupId>
 			<artifactId>cas-client-core</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.eurekaclinical</groupId>
+			<artifactId>scribe-up-ext</artifactId>
 		</dependency>
 	</dependencies>
 </project>

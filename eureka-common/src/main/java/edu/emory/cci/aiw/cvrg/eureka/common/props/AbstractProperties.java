@@ -238,6 +238,7 @@ public abstract class AbstractProperties {
 
 	/**
 	 * Get the base URL for the application front-end for external users.
+	 * Always ends with a slash ("/").
 	 *
 	 * @param request the HTTP request, which will be used to generate a URL to
 	 * the website if none of the properties files contain an application URL
@@ -250,7 +251,11 @@ public abstract class AbstractProperties {
 		if (result == null) {
 			result = PublicUrlGenerator.generate(request);
 		}
-		return result;
+		if (result.endsWith("/")) {
+			return result;
+		} else {
+			return result + "/";
+		}
 	}
 
 	public abstract String getProxyCallbackServer ();
