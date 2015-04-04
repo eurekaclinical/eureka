@@ -210,7 +210,7 @@ other export formats.
 	</dependencies>
 	<profiles>
 		<profile>
-			<id>eureka-tomcat-local</id>
+			<id>liquibase</id>
 			<build>
 				<plugins>
 					<plugin>
@@ -222,26 +222,6 @@ other export formats.
 							<url>${local.protempaetl.db.jdbc.url}</url>
 							<username>${local.protempaetl.username}</username>
 							<password>${local.protempaetl.password}</password>
-							<referenceUrl>persistence:backend-jpa-unit</referenceUrl>
-							<promptOnNonLocalDatabase>false</promptOnNonLocalDatabase>
-						</configuration>
-					</plugin>
-				</plugins>
-			</build>
-		</profile>
-		<profile>
-			<id>eureka-tomcat-dev</id>
-			<build>
-				<plugins>
-					<plugin>
-						<groupId>org.liquibase</groupId>
-						<artifactId>liquibase-maven-plugin</artifactId>
-						<configuration>
-							<changeLogFile>src/main/resources/dbmigration/changelog-master.xml</changeLogFile>
-							<driver>${dev.protempaetl.db.jdbc.driver}</driver>
-							<url>${dev.protempaetl.db.jdbc.url}</url>
-							<username>${dev.protempaetl.username}</username>
-							<password>${dev.protempaetl.password}</password>
 							<referenceUrl>persistence:backend-jpa-unit</referenceUrl>
 							<promptOnNonLocalDatabase>false</promptOnNonLocalDatabase>
 						</configuration>
