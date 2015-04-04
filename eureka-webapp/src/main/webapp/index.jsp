@@ -205,7 +205,7 @@
 								<div class="panel panel-info">
 									<div class="panel-heading">Funding</div>
 									<div class="panel-body text-center">
-										<p>The software powering this site has been supported in part by <span id="support"></span></p>
+										<p>The software powering this site has been supported in part by <span id="support"></span>. Any publication(s), invention disclosures, patents, etc. that result from a project utilizing Eureka! should cite this grant support.</p>
 									</div>
 								</div>
 							</div>
