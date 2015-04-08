@@ -121,18 +121,11 @@ public class ETL {
 					this.protempaDestFactory
 					.getInstance(eurekaDestination.getId(), protempa.getKnowledgeSource());
 			protempa.execute(query, protempaDestination);
-		} catch (InvalidPropertyNameException | InvalidPropertyValueException | CloseException | BackendNewInstanceException | BackendInitializationException | ConfigurationsLoadException | BackendProviderSpecLoaderException | QueryBuildException | InvalidConfigurationException | ConfigurationsNotFoundException | DataSourceValidationIncompleteException ex) {
-			throw new EtlException(ex);
 		} catch (DataSourceFailedDataValidationException ex) {
 			logValidationEvents(job, ex.getValidationEvents(), ex);
 			throw new EtlException(ex);
-		} catch (FinderException e) {
-			String msg = collectThrowableMessages(e.getCause());
-			throw new EtlException(msg, e);
-		} catch (ProtempaStartupException e) {
-			Throwable cause = e.getCause();
-			String msg = collectThrowableMessages(cause != null ? cause : e);
-			throw new EtlException(msg, e);
+		} catch (Exception ex) {
+			throw new EtlException(ex);
 		}
 	}
 
