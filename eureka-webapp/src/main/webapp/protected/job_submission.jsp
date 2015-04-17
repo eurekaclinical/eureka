@@ -203,12 +203,12 @@
 						<div class="form-group">
 							<div class="form-control">
 								<label class="radio-inline">
-									Replace data
 									<input type="radio" id="appendDataFalse" name="appendData" value="false" checked>
+									Replace data
 								</label>
 								<label class="radio-inline">
-									Append data
 									<input type="radio" id="appendDataTrue" name="appendData" value="true">
+									Append data
 								</label>
 							</div>
 						</div>
