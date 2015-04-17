@@ -937,7 +937,7 @@ and data into your own instance of the i2b2 data warehouse system.
 			<dependency>
 				<groupId>org.eurekaclinical</groupId>
 				<artifactId>scribe-up-ext</artifactId>
-				<version>${scripe-up-ext-version}</version>
+				<version>${scribe-up-ext-version}</version>
 			</dependency>
 			<dependency>
 				<groupId>org.apache.commons</groupId>
