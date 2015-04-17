@@ -649,4 +649,9 @@ limitations under the License.
 		<addForeignKeyConstraint baseColumnNames="DESTINATIONS_ID" baseTableName="DEST_LINKS" constraintName="FK_DEST_LINKS" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" referencedColumnNames="ID" referencedTableName="DESTINATIONS" referencesUniqueColumn="true"/>
 		<createSequence sequenceName="DEST_LINK_SEQ"/>
 	</changeSet>
+	<changeSet author="arpost" id="1361552652236-31">
+		<addColumn tableName="I2B2_DESTINATIONS">
+			<column name="PATIENTDIMENSIONDEATHDATE" type="VARCHAR(255)"/>
+		</addColumn>
+	</changeSet>
 </databaseChangeLog>

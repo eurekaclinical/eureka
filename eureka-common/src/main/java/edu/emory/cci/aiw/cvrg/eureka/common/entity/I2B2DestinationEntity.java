@@ -20,7 +20,6 @@ package edu.emory.cci.aiw.cvrg.eureka.common.entity;
  * #L%
  */
 
-import java.util.Arrays;
 import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -59,6 +58,7 @@ public class I2B2DestinationEntity extends DestinationEntity {
 	private String patientDimensionLanguage;
 	private String patientDimensionGender;
 	private String patientDimensionBirthdate;
+	private String patientDimensionDeathDate;
 	private String patientDimensionZipCode;
 	private String patientDimensionMaritalStatus;
 	private String patientDimensionRace;
@@ -142,6 +142,14 @@ public class I2B2DestinationEntity extends DestinationEntity {
     
 	public String getPatientDimensionBirthdate() {
 		return this.patientDimensionBirthdate;
+	}
+
+	public String getPatientDimensionDeathDate() {
+		return patientDimensionDeathDate;
+	}
+
+	public void setPatientDimensionDeathDate(String patientDimensionDeathDate) {
+		this.patientDimensionDeathDate = patientDimensionDeathDate;
 	}
 	
     public String getPatientDimensionGender() {

@@ -176,4 +176,9 @@ class I2b2Settings extends AbstractSettings {
 		return entity.getMetaTableName();
 	}
 
+	@Override
+	public String getPatientDimensionDeathDate() {
+		return entity.getPatientDimensionDeathDate();
+	}
+
 }
