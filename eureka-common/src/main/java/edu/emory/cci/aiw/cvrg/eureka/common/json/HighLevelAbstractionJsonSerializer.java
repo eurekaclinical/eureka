@@ -124,6 +124,8 @@ public final class HighLevelAbstractionJsonSerializer extends JsonSerializer<Hig
 		}
 		jgen.writeEndObject();
 		
+		provider.defaultSerializeField("attributes", value.getAttributes(), jgen);
+		
 		jgen.writeEndObject();
 
 	}

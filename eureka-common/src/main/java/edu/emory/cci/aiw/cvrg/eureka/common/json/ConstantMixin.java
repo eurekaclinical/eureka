@@ -26,7 +26,7 @@ import org.codehaus.jackson.annotate.JsonProperty;
 public abstract class ConstantMixin {
     @JsonCreator
     public ConstantMixin(@JsonProperty("id") String id) { }
-    
+	
     @JsonIgnore public abstract boolean isConcatenable();
     @JsonIgnore public abstract boolean isSolid();
     @JsonIgnore public abstract String[] getChildren();

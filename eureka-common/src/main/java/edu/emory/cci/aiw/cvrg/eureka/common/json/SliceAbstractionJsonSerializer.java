@@ -75,6 +75,8 @@ public final class SliceAbstractionJsonSerializer extends
 		provider.defaultSerializeField("maxIndex", value.getMaxIndex(), jgen);
 		provider.defaultSerializeField("mergedInterval",
 		        value.isMergedInterval(), jgen);
+		
+		provider.defaultSerializeField("attributes", value.getAttributes(), jgen);
 
 		// end slice
 		jgen.writeEndObject();

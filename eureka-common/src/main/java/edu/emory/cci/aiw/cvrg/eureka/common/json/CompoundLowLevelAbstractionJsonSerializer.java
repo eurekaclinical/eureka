@@ -80,6 +80,8 @@ public final class CompoundLowLevelAbstractionJsonSerializer extends
 		}
 		jgen.writeEndObject();
 		
+		provider.defaultSerializeField("attributes", value.getAttributes(), jgen);
+		
 		// end LLA
 		jgen.writeEndObject();
 	}

@@ -21,7 +21,6 @@ package edu.emory.cci.aiw.cvrg.eureka.common.json;
 
 import java.io.IOException;
 import java.util.Set;
-import org.codehaus.jackson.JsonNode;
 
 import org.codehaus.jackson.JsonParseException;
 import org.codehaus.jackson.JsonParser;
@@ -29,6 +28,7 @@ import org.codehaus.jackson.JsonProcessingException;
 import org.codehaus.jackson.JsonToken;
 import org.codehaus.jackson.map.DeserializationContext;
 import org.codehaus.jackson.map.JsonDeserializer;
+import org.protempa.Attribute;
 import org.protempa.GapFunction;
 import org.protempa.LowLevelAbstractionDefinition;
 import org.protempa.LowLevelAbstractionValueDefinition;
@@ -235,6 +235,11 @@ public final class LowLevelAbstractionJsonDeserializer extends
 
 			nextToken();
 		}
+		nextToken();
+		
+		checkField("attributes");
+		value.setAttributes(this.parser.readValueAs(Attribute[].class));
+			
 		nextToken();
 
 		return value;

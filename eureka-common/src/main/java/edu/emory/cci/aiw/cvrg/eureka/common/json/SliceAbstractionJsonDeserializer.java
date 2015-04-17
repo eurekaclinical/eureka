@@ -29,6 +29,7 @@ import org.codehaus.jackson.JsonProcessingException;
 import org.codehaus.jackson.JsonToken;
 import org.codehaus.jackson.map.DeserializationContext;
 import org.codehaus.jackson.map.JsonDeserializer;
+import org.protempa.Attribute;
 import org.protempa.ExtendedPropositionDefinition;
 import org.protempa.PropertyDefinition;
 import org.protempa.ReferenceDefinition;
@@ -118,6 +119,10 @@ public final class SliceAbstractionJsonDeserializer extends
 		checkField("mergedInterval");
 		value.setMergedInterval(this.parser.getBooleanValue());
 		
+		nextToken();
+		checkField("attributes");
+		value.setAttributes(this.parser.readValueAs(Attribute[].class));
+			
 		nextToken();
 		
 		return value;

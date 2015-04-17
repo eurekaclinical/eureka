@@ -25,6 +25,7 @@ import javax.ws.rs.ext.Provider;
 import org.codehaus.jackson.Version;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.map.module.SimpleModule;
+import org.protempa.Attribute;
 import org.protempa.ConstantDefinition;
 import org.protempa.DefaultSourceId;
 import org.protempa.EventDefinition;
@@ -112,6 +113,7 @@ public class ObjectMapperProvider implements ContextResolver<ObjectMapper> {
 						SubsequentTemporalExtendedPropositionDefinitionMixin.class);
 				context.setMixInAnnotations(SequentialTemporalPatternDefinition.class,
 						SequentialTemporalPatternDefinitionMixin.class);
+				context.setMixInAnnotations(Attribute.class, AttributeMixin.class);
 			}
 		};
 

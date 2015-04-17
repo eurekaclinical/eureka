@@ -27,6 +27,7 @@ import org.codehaus.jackson.JsonProcessingException;
 import org.codehaus.jackson.JsonToken;
 import org.codehaus.jackson.map.DeserializationContext;
 import org.codehaus.jackson.map.JsonDeserializer;
+import org.protempa.Attribute;
 import org.protempa.CompoundLowLevelAbstractionDefinition;
 import org.protempa.CompoundLowLevelAbstractionDefinition.ValueDefinitionMatchOperator;
 import org.protempa.GapFunction;
@@ -144,9 +145,12 @@ public final class CompoundLowLevelAbstractionJsonDeserializer extends JsonDeser
 			nextToken();
 		}
 		
+		nextToken();
+		checkField("attributes");
+		value.setAttributes(this.parser.readValueAs(Attribute[].class));
 
 		nextToken();
-
+		
 		return value;
 	}
 

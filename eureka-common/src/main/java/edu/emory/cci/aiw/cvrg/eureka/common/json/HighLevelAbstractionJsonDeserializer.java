@@ -30,6 +30,7 @@ import org.codehaus.jackson.JsonToken;
 import org.codehaus.jackson.map.DeserializationContext;
 import org.codehaus.jackson.map.JsonDeserializer;
 import org.codehaus.jackson.map.JsonMappingException;
+import org.protempa.Attribute;
 import org.protempa.ExtendedPropositionDefinition;
 import org.protempa.GapFunction;
 import org.protempa.HighLevelAbstractionDefinition;
@@ -223,6 +224,11 @@ public final class HighLevelAbstractionJsonDeserializer extends
 			
 		}
 		
+		nextToken();
+		
+		checkField("attributes");
+		value.setAttributes(this.parser.readValueAs(Attribute[].class));
+			
 		nextToken();
 				
 		return value;
