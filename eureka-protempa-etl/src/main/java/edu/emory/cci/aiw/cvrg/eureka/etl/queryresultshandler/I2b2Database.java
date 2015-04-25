@@ -19,7 +19,6 @@ package edu.emory.cci.aiw.cvrg.eureka.etl.queryresultshandler;
  * limitations under the License.
  * #L%
  */
-
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.I2B2DestinationEntity;
 import edu.emory.cci.aiw.i2b2etl.dest.config.Database;
 import edu.emory.cci.aiw.i2b2etl.dest.config.DatabaseSpec;
@@ -29,21 +28,31 @@ import edu.emory.cci.aiw.i2b2etl.dest.config.DatabaseSpec;
  * @author Andrew Post
  */
 class I2b2Database implements Database {
+
 	private final DatabaseSpec metaSpec;
 	private final DatabaseSpec dataSpec;
 
 	I2b2Database(I2B2DestinationEntity entity) {
+		DatabaseSpecFactory databaseSpecFactory = new DatabaseSpecFactory();
 		String metaConnect = entity.getMetaConnect();
 		String metaUser = entity.getMetaUser();
 		String metaPassword = entity.getMetaPassword();
-		this.metaSpec = new DatabaseSpec("metaschema", metaUser, metaPassword, metaConnect);
-		
+		if (metaConnect != null) {
+			this.metaSpec = databaseSpecFactory.getInstance(metaConnect, metaUser, metaPassword);
+		} else {
+			this.metaSpec = null;
+		}
+
 		String dataConnect = entity.getDataConnect();
 		String dataUser = entity.getDataUser();
 		String dataPassword = entity.getDataPassword();
-		this.dataSpec = new DatabaseSpec("dataschema", dataUser, dataPassword, dataConnect);
+		if (dataConnect != null) {
+			this.dataSpec = databaseSpecFactory.getInstance(dataConnect, dataUser, dataPassword);
+		} else {
+			this.dataSpec = null;
+		}
 	}
-	
+
 	@Override
 	public DatabaseSpec getMetadataSpec() {
 		return this.metaSpec;
@@ -53,5 +62,5 @@ class I2b2Database implements Database {
 	public DatabaseSpec getDataSpec() {
 		return this.dataSpec;
 	}
-	
+
 }

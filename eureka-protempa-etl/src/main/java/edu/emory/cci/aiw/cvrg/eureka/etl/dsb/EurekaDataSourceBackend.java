@@ -101,9 +101,7 @@ public final class EurekaDataSourceBackend extends RelationalDbDataSourceBackend
 
 	@Override
 	public void initialize(BackendInstanceSpec config) throws BackendInitializationException {
-		LOGGER.error("In initialize for " + getClass().getName());
 		super.initialize(config);
-		LOGGER.error("Called superclass' initialize for " + getClass().getName());
 		try {
 			Class.forName("org.h2.Driver");
 		} catch (ClassNotFoundException ex) {
