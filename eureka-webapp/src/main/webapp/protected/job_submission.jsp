@@ -25,7 +25,6 @@
 <template:content name="content">
 <h3>Submit Job</h3>
 <form id="uploadForm" name="uploadForm" role="form"
-	  <c:if test="${not empty param.jobId}">data-jobid="${param.jobId}"</c:if>
 	  <c:if test="${not empty requestScope.jobStatus and jobStatus.jobSubmitted}">data-job-running="true"</c:if>>
 <fieldset>
 	<legend>Job Information</legend>
@@ -203,12 +202,12 @@
 						<div class="form-group">
 							<div class="form-control">
 								<label class="radio-inline">
-									<input type="radio" id="appendDataFalse" name="appendData" value="false" checked>
+									<input type="radio" id="updateDataFalse" name="updateData" value="false" checked>
 									Replace data
 								</label>
 								<label class="radio-inline">
-									<input type="radio" id="appendDataTrue" name="appendData" value="true">
-									Append data
+									<input type="radio" id="updateDataTrue" name="updateData" value="true">
+									Update data
 								</label>
 							</div>
 						</div>

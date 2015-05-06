@@ -38,12 +38,18 @@ import com.google.inject.Inject;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.UserEntity;
 import edu.emory.cci.aiw.cvrg.eureka.services.config.ServiceProperties;
-import edu.emory.cci.aiw.cvrg.eureka.common.props.PublicUrlGenerator;
 
 import freemarker.template.Configuration;
 import freemarker.template.DefaultObjectWrapper;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
+import java.io.ByteArrayOutputStream;
+import java.io.FileOutputStream;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+import java.util.logging.Level;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Implements the EmailSender interface with FreeMarker templates.
@@ -52,6 +58,8 @@ import freemarker.template.TemplateException;
  *
  */
 public class FreeMarkerEmailSender implements EmailSender {
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(FreeMarkerEmailSender.class);
 
 	/**
 	 * The FreeMarker configuration object.
@@ -65,15 +73,15 @@ public class FreeMarkerEmailSender implements EmailSender {
 	 * The application configuration properties.
 	 */
 	private final ServiceProperties serviceProperties;
-	
+
 	/**
 	 * The request object.
 	 */
 	private final HttpServletRequest request;
 
 	/**
-	 * Default constructor, creates a FreeMarker configuration object. Should
-	 * be called in the context of a request.
+	 * Default constructor, creates a FreeMarker configuration object. Should be
+	 * called in the context of a request.
 	 *
 	 * @param inServiceProperties The application configuration object.
 	 * @param inSession The mail session to use when sending a message.
@@ -91,14 +99,15 @@ public class FreeMarkerEmailSender implements EmailSender {
 		this.configuration.setObjectWrapper(new DefaultObjectWrapper());
 		this.request = request;
 	}
-	
+
 	/**
 	 * Sends a verification email.
+	 *
 	 * @param inUser The user to verify.
-	 * @throws EmailException 
+	 * @throws EmailException
 	 */
 	@Override
-	public void sendVerificationMessage(final UserEntity inUser) 
+	public void sendVerificationMessage(final UserEntity inUser)
 			throws EmailException {
 		Map<String, Object> params = new HashMap<>();
 		String verificationUrl = this.serviceProperties.getVerificationUrl(this.request);
@@ -106,7 +115,7 @@ public class FreeMarkerEmailSender implements EmailSender {
 		sendMessage(inUser, "verification.ftl",
 				this.serviceProperties.getVerificationEmailSubject(), params);
 	}
-	
+
 	@Override
 	public void sendActivationMessage(final UserEntity inUser) throws EmailException {
 		Map<String, Object> params = new HashMap<>();
@@ -115,13 +124,13 @@ public class FreeMarkerEmailSender implements EmailSender {
 		sendMessage(inUser, "activation.ftl",
 				this.serviceProperties.getActivationEmailSubject(), params);
 	}
-	
+
 	@Override
 	public void sendPasswordChangeMessage(UserEntity inUser) throws EmailException {
 		sendMessage(inUser, "password.ftl",
 				this.serviceProperties.getPasswordChangeEmailSubject());
 	}
-	
+
 	@Override
 	public void sendPasswordResetMessage(UserEntity inUser, String inNewPassword)
 			throws EmailException {
@@ -137,13 +146,12 @@ public class FreeMarkerEmailSender implements EmailSender {
 	 *
 	 * @param inUser The user to whom the message should be sent.
 	 * @param templateName The name of the template used to generate the
-	 *            contents of the email.
+	 * contents of the email.
 	 * @param subject The subject for the email being sent.
 	 * @param params The parameters to be used to substitute values in the email
-	 *            template.
+	 * template.
 	 * @throws EmailException Thrown if there are any errors in generating
-	 *             content from the template, composing the email, or sending
-	 *             the email.
+	 * content from the template, composing the email, or sending the email.
 	 */
 	private void sendMessage(final UserEntity inUser, final String templateName,
 			final String subject, Map<String, Object> params)
@@ -159,13 +167,12 @@ public class FreeMarkerEmailSender implements EmailSender {
 	 *
 	 * @param inUser The user to whom the message should be sent.
 	 * @param templateName The name of the template used to generate the
-	 *            contents of the email.
+	 * contents of the email.
 	 * @param subject The subject for the email being sent.
 	 * @throws EmailException Thrown if there are any errors in generating
-	 *             content from the template, composing the email, or sending
-	 *             the email.
+	 * content from the template, composing the email, or sending the email.
 	 */
-	private void sendMessage(final UserEntity inUser, 
+	private void sendMessage(final UserEntity inUser,
 			final String templateName,
 			final String subject) throws EmailException {
 		Map<String, Object> params = new HashMap<>();
@@ -177,14 +184,13 @@ public class FreeMarkerEmailSender implements EmailSender {
 	 * using contents generated from the given template and parameters.
 	 *
 	 * @param templateName The name of the template used to generate the
-	 *            contents of the email.
+	 * contents of the email.
 	 * @param subject The subject for the email being sent.
 	 * @param emailAddress Sends the email to this address.
 	 * @param params The template is merged with these parameters to generate
-	 *            the content of the email.
+	 * the content of the email.
 	 * @throws EmailException Thrown if there are any errors in generating
-	 *             content from the template, composing the email, or sending
-	 *             the email.
+	 * content from the template, composing the email, or sending the email.
 	 */
 	private void sendMessage(final String templateName, final String subject,
 			final String emailAddress, final Map<String, Object> params)
@@ -201,18 +207,22 @@ public class FreeMarkerEmailSender implements EmailSender {
 		MimeMessage message = new MimeMessage(this.session);
 		try {
 			InternetAddress fromEmailAddress = null;
-			String fromEmailAddressStr = 
-					this.serviceProperties.getFromEmailAddress();
+			String fromEmailAddressStr
+					= this.serviceProperties.getFromEmailAddress();
 			if (fromEmailAddressStr != null) {
 				fromEmailAddress = new InternetAddress(fromEmailAddressStr);
 			}
 			if (fromEmailAddress == null) {
-				fromEmailAddress = 
-						InternetAddress.getLocalAddress(this.session);
+				fromEmailAddress
+						= InternetAddress.getLocalAddress(this.session);
 			}
 			if (fromEmailAddress == null) {
-				fromEmailAddress = new InternetAddress("no-reply@" + 
-						PublicUrlGenerator.generate(this.request));
+				try {
+					fromEmailAddress = new InternetAddress("no-reply@"
+							+ InetAddress.getLocalHost().getCanonicalHostName());
+				} catch (UnknownHostException ex) {
+					fromEmailAddress = new InternetAddress("no-reply@localhost");
+				}
 			}
 			message.setFrom(fromEmailAddress);
 			message.setSubject(subject);
@@ -222,8 +232,20 @@ public class FreeMarkerEmailSender implements EmailSender {
 			message.setSender(fromEmailAddress);
 			Transport.send(message);
 		} catch (MessagingException e) {
+			LOGGER.error("Error sending the following email message:");
+			ByteArrayOutputStream out = new ByteArrayOutputStream();
+			try {
+				message.writeTo(out);
+				out.close();
+			} catch (IOException | MessagingException ex) {
+				try {
+					out.close();
+				} catch (IOException ignore) {
+				}
+			}
+			LOGGER.error(out.toString());
 			throw new EmailException(e);
 		}
 	}
-	
+
 }

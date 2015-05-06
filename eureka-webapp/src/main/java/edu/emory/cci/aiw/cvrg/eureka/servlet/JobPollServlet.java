@@ -81,10 +81,10 @@ public class JobPollServlet extends HttpServlet {
 			jobStatus = job.toJobStatus();
 		}
 		ObjectMapper mapper = new ObjectMapper();
-		resp.setContentLength(mapper.writeValueAsString(jobStatus)
-				.length());
+		String value = mapper.writeValueAsString(jobStatus);
+		resp.setContentLength(value.length());
 		PrintWriter out = resp.getWriter();
-		out.println(mapper.writeValueAsString(jobStatus));
+		out.println(value);
 
 	}
 }

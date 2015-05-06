@@ -41,40 +41,28 @@
     <!-- Default set of monitored resources -->
     <WatchedResource>WEB-INF/web.xml</WatchedResource>
 
-    <!-- Uncomment this to disable session persistence across Tomcat restarts -->
-    <!--
-    <Manager pathname="" />
-    -->
-
-    <!-- Uncomment this to enable Comet connection tacking (provides events
-         on session expiration as well as webapp lifecycle) -->
-    <!--
-    <Valve className="org.apache.catalina.valves.CometConnectionManagerValve" />
-    -->
 	<Resource name="jdbc/EurekaService" auth="Container"
 		type="javax.sql.DataSource" driverClassName="org.h2.Driver"
 		factory="org.apache.tomcat.jdbc.pool.DataSourceFactory"
-		url="jdbc:h2:file:${basedir}/eureka-services/target/eureka-config/data/eureka-services"
-		initialSize="3" maxActive="10" maxIdle="1" minIdle="1"
+		url="jdbc:h2:file:${basedir}/eureka-services/target/eureka-db/eureka-services"
+		initialSize="3" maxActive="20" maxIdle="1" minIdle="1"
 		maxWait="-1"/>
 	<Resource name="jdbc/EurekaBackend" auth="Container"
 		type="javax.sql.DataSource" driverClassName="org.h2.Driver"
 		factory="org.apache.tomcat.jdbc.pool.DataSourceFactory"
-		url="jdbc:h2:file:${basedir}/eureka-protempa-etl/target/eureka-config/data/eureka-backend"
-		initialSize="3" maxActive="10" maxIdle="3" minIdle="1"
+		url="jdbc:h2:file:${basedir}/eureka-protempa-etl/target/eureka-db/eureka-backend"
+		initialSize="3" maxActive="20" maxIdle="3" minIdle="1"
+		maxWait="-1"/>
+	<Resource name="jdbc/I2b2KS" auth="Container"
+		type="javax.sql.DataSource" driverClassName="org.h2.Driver"
+		factory="org.apache.tomcat.jdbc.pool.DataSourceFactory"
+		url="jdbc:h2:file:${basedir}/eureka-protempa-etl/target/eureka-db/eureka-ontology;DEFAULT_ESCAPE='';INIT=RUNSCRIPT FROM '${basedir}/eureka-protempa-etl/target/eureka-config/sql/eureka-i2b2-ksb-2-h2.sql';CACHE_SIZE=262400"
+		initialSize="3" maxActive="20" maxIdle="3" minIdle="1"
 		maxWait="-1"/>
 	<Resource name="jdbc/I2b2DS" auth="Container"
 		type="javax.sql.DataSource" driverClassName="org.h2.Driver"
 		factory="org.apache.tomcat.jdbc.pool.DataSourceFactory"
-		url="jdbc:h2:file:${basedir}/eureka-protempa-etl/target/eureka-config/eureka/ontologies/eureka-ontology;DEFAULT_ESCAPE='';INIT=RUNSCRIPT FROM '${basedir}/eureka-protempa-etl/etc/eureka-i2b2-ksb-2-h2.sql';CACHE_SIZE=262400"
-		initialSize="3" maxActive="10" maxIdle="3" minIdle="1"
+		url="jdbc:h2:file:${basedir}/eureka-protempa-etl/target/eureka-db/i2b2-data-schema"
+		initialSize="3" maxActive="20" maxIdle="3" minIdle="1"
 		maxWait="-1"/>
-	<!-- Change the mail.smtp.host attribute below to an appropriate value -->
-	<!--<Resource name="mail/Session" auth="Container"
-		type="javax.mail.Session"
-		mail.smtp.host="smtp.example.com"
-		mail.from="Eureka! DEV Admin &lt;no-reply@eureka-dev.cci.emory.edu&gt;" />-->
-	<Resource name="mail/Session" auth="Container"
-		type="javax.mail.Session"
-		mail.smtp.host="smtp.example.com" />
 </Context>

@@ -72,8 +72,14 @@ public class SaveCohortServlet extends HttpServlet {
 				this.servicesClient.updateDestination(cohortDestination);
 			}
 		} catch (ClientException e) {
-			resp.setStatus(e.getResponseStatus().getStatusCode());
-			resp.getWriter().write(e.getMessage());
+			switch (e.getResponseStatus()) {
+				case UNAUTHORIZED:
+					this.authenticationSupport.needsToLogin(req, resp);
+					break;
+				default:
+					resp.setStatus(e.getResponseStatus().getStatusCode());
+					resp.getWriter().write(e.getMessage());
+			}
 		}
 	}
 	

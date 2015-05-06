@@ -71,6 +71,9 @@ public class DeleteCohortServlet extends HttpServlet {
 		} catch (ClientException e) {
 			resp.setContentType(MediaType.TEXT_PLAIN);
 			switch (e.getResponseStatus()) {
+				case UNAUTHORIZED:
+					this.authenticationSupport.needsToLogin(req, resp);
+					break;
 				case INTERNAL_SERVER_ERROR:
 					resp.setStatus(
 							HttpServletResponse.SC_INTERNAL_SERVER_ERROR);

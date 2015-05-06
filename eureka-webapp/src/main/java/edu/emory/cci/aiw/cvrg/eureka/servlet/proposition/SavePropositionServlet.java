@@ -67,8 +67,14 @@ public class SavePropositionServlet extends HttpServlet {
 				this.servicesClient.updateUserElement(dataElement);
 			}
 		} catch (ClientException e) {
-			resp.setStatus(e.getResponseStatus().getStatusCode());
-			resp.getWriter().write(e.getMessage());
+			switch (e.getResponseStatus()) {
+				case UNAUTHORIZED:
+					this.authenticationSupport.needsToLogin(req, resp);
+					break;
+				default:
+					resp.setStatus(e.getResponseStatus().getStatusCode());
+					resp.getWriter().write(e.getMessage());
+			}
 		}
 	}
 

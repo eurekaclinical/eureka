@@ -62,6 +62,16 @@ class I2b2Settings extends AbstractSettings {
 	}
 
 	@Override
+	public boolean getMergeOnUpdate() {
+		Boolean mergeOnUpdate = entity.getMergeOnUpdate();
+        if (mergeOnUpdate != null) {
+            return mergeOnUpdate;
+        } else {
+            return true;
+        }
+	}
+
+	@Override
 	public boolean getSkipProviderHierarchy() {
 		Boolean skipProviderHierarchy1 = entity.getSkipProviderHierarchy();
 		if (skipProviderHierarchy1 != null) {

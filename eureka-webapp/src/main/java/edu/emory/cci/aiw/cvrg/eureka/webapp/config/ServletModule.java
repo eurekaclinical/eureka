@@ -112,10 +112,10 @@ class ServletModule extends AbstractServletModule {
 		bind(VerifyUserServlet.class).in(Singleton.class);
 		serve("/verify").with(VerifyUserServlet.class);
 
-		bind(CommonsFileUploadServlet.class).in(Singleton.class);
+		bind(JobSubmitServlet.class).in(Singleton.class);
 		Map<String, String> uploadParams = new HashMap<>();
 		uploadParams.put("dest_dir", this.properties.getUploadDir());
-		serve("/protected/upload").with(CommonsFileUploadServlet.class,
+		serve("/protected/upload").with(JobSubmitServlet.class,
 				uploadParams);
 
 		bind(LoginServlet.class).in(Singleton.class);

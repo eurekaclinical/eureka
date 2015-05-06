@@ -69,6 +69,40 @@
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>license-maven-plugin</artifactId>
 			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-resources-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>copy-tomcat-configs</id>
+						<phase>process-classes</phase>
+						<goals>
+							<goal>copy-resources</goal>
+						</goals>
+						<configuration>
+							<outputDirectory>${project.build.directory}/tomcat-config</outputDirectory>
+							<resources>
+								<resource>
+									<directory>${basedir}/src/main/resources/tomcat-server-config</directory>
+									<filtering>true</filtering>
+									<includes>
+										<include>context.xml</include>
+										<include>logging.properties</include>
+									</includes>
+								</resource>
+								<resource>
+									<directory>${basedir}/src/main/resources/tomcat-server-config</directory>
+									<filtering>false</filtering>
+									<excludes>
+										<exclude>context.xml</exclude>
+										<exclude>logging.properties</exclude>
+									</excludes>
+								</resource>
+							</resources>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
 		</plugins>
 	</build>
 	<dependencies>

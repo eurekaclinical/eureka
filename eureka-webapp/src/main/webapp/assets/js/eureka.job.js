@@ -25,26 +25,23 @@ window.eureka.job = new function () {
 			}
 		);
 
-		$('input:file').change(
+		$('input').change(
 			function () {
 				self.updateSubmitButtonStatus();
 			});
 
 		$uploadForm.submit(function () {
-			$uploadForm.data('job-running', true);
 			var $dataElement = $uploadForm.find('ul[data-type="main"]').find('li').first();
 			$("input[name='dateRangeDataElementKey']").val($dataElement.data('key'));
-			self.updateSubmitButtonStatus();
-			self.save($uploadForm)
+			self.save($uploadForm);
 			return false;
 		});
 
-		var running = self.setInitialStatus();
+		self.setInitialStatus();
 
 		function poll() {
-			var jobId = $('form#uploadForm').data('jobid');
 			$.ajax({
-				url: "jobpoll" + (jobId != null ? "?jobId=" + jobId : ""),
+				url: "jobpoll",
 				success: function (data) {
 					if (data) {
 						$(statusElem).text(data.status);
@@ -53,12 +50,11 @@ window.eureka.job = new function () {
 						$('#startedDate').text(data.startedDateFormatted);
 						$('#finishedDate').text(data.finishedDateFormatted);
 						$('#messages').text(data.mostRecentMessage);
-						if (running && !data.jobSubmitted) {
-							self.onFinish();
-							running = false;
-						} else {
-							running = true;
+						$('form#uploadForm').data('job-running', data.jobSubmitted);
+						if (data.jobSubmitted) {
+							this.submittingJob = false;
 						}
+						self.updateSubmitButtonStatus();
 					}
 				},
 				error: function () {
@@ -174,22 +170,8 @@ window.eureka.job = new function () {
 	};
 
 	self.setInitialStatus = function () {
-		var running = false;
-		if ($('form#uploadForm').data('job-running')) {
-			running = true;
-		} else {
-			//$('#jobUpload').hide();
-		}
 		var sourceId = $("form#uploadForm").find('select[name="source"]').val();
 		self.updateInputFields(sourceId);
-		return running;
-	};
-
-	self.onFinish = function () {
-		$('#uploadForm').prop('disabled', false);
-		//$('#jobUpload').hide();
-		$('form#uploadForm').data('job-running', false);
-		self.updateSubmitButtonStatus();
 	};
 
 	self.updateInputFields = function (sourceId) {
@@ -207,7 +189,7 @@ window.eureka.job = new function () {
 
 	self.updateSubmitButtonStatus = function () {
 		var doDisable = false;
-		if ($('form#uploadForm').data('job-running')) {
+		if ($('form#uploadForm').data('job-running') || self.submittingJob) {
 			doDisable = true;
 		} else {
 			$('input').each(function () {
@@ -232,22 +214,31 @@ window.eureka.job = new function () {
 			processData: false,
 			cache: false,
 			mimeType: "multipart/form-data",
-			success: function (data) {
-				//window.location.href = 'cohorthome'
-			},
 			error: function (data, statusCode, errorThrown) {
-				var content = 'Error submitting job: ' + errorThrown;
-				$('#errorModal').find('#errorContent').html(content);
-				$('#errorModal').modal('show');
-				if (errorThrown !== null) {
-					console.log('Error submitting job: ' + errorThrown + ' (status code: ' + statusCode + ')');
-				}
-				self.onFinish();
+				self.onError(errorThrown);
 			}
 		});
 	}
 	
+	self.onError = function (errorThrown) {
+		self.showErrorSubmittingJobDialog(errorThrown);
+		self.submittingJob = false;
+		$('form#uploadForm').data('job-running', false);
+		self.updateSubmitButtonStatus();
+	}
+	
+	self.showErrorSubmittingJobDialog = function (errorThrown) {
+		var content = 'Error submitting job: ' + errorThrown;
+		$('#errorModal').find('#errorContent').html(content);
+		$('#errorModal').modal('show');
+		if (errorThrown !== null) {
+			console.log('Error submitting job: ' + errorThrown);
+		}
+	}
+	
 	self.save = function (uploadFormElem) {
+		self.submittingJob = true;
+		self.updateSubmitButtonStatus();
 		var jobSpec = {
 			sourceConfigId: uploadFormElem.find('select[name="source"]').find(":selected").val(),
 			destinationId: uploadFormElem.find('select[name="destination"]').find(":selected").val(),
@@ -256,7 +247,7 @@ window.eureka.job = new function () {
 			earliestDateSide: uploadFormElem.find('select[name="dateRangeEarliestDateSide"]').find(":selected").val(),
 			latestDate: uploadFormElem.find('input[name="latestDate"]').val(),
 			latestDateSide: uploadFormElem.find('select[name="dateRangeLatestDateSide"]').find(":selected").val(),
-			appendData: uploadFormElem.find('input[name="appendData"]:checked').val() === 'true' ? true : false,
+			updateData: uploadFormElem.find('input[name="updateData"]:checked').val() === 'true' ? true : false,
 			prompts: {
 				id: uploadFormElem.find('select[name="source"]').find(":selected").val(),
 				dataSourceBackends: []
@@ -293,6 +284,7 @@ window.eureka.job = new function () {
 			});
 		}
 		if (window.FormData) {
+			alert("Using window.FormData");
 			var formData = new FormData();
 			$(prompts).find(".uploader").each(function() {
 				var optionName = $(this).data("option-name");
@@ -303,6 +295,7 @@ window.eureka.job = new function () {
 			formData.append("jobSpec", JSON.stringify(jobSpec));
 			this.postFormData(formData);
 		} else {
+			alert("Using iframe");
 			var iframeId = 'iframe' + (new Date().getTime());
 			var iframe = $('<iframe src="javascript:false;" name="'+iframeId+'" />');
 			iframe.hide();
@@ -328,7 +321,10 @@ window.eureka.job = new function () {
 			iframe.appendTo('body');
 			iframe.load(function(e) {
 				var data = iframe[0].contentDocument.body.innerHTML;
-				
+				alert("Response: " + data);
+				if (data.errorThrown) {
+					self.onError(data.errorThrown);
+				}
 				theForm.remove();
 				iframe.remove();
 			});

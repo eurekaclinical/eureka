@@ -38,7 +38,7 @@ public class WebappListener extends GuiceServletContextListener {
 	public WebappListener() {
 		this.webappProperties = new WebappProperties();
 	}
-	
+
 	@Override
 	public void contextInitialized(ServletContextEvent servletContextEvent) {
 		super.contextInitialized(servletContextEvent);
@@ -62,5 +62,5 @@ public class WebappListener extends GuiceServletContextListener {
 				},
 				this.webappProperties).getInjector();
 	}
-
+	
 }

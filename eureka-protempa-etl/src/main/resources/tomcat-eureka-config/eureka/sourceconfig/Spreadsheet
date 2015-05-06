@@ -11,7 +11,7 @@ cptProcedureCodesRootFullName = EK_CPT
 
 [edu.emory.cci.aiw.i2b2etl.ksb.I2b2KnowledgeSourceBackend]
 databaseAPI = DATASOURCE
-databaseId = java:/comp/env/jdbc/I2b2DS
+databaseId = java:/comp/env/jdbc/I2b2KS
 targetTable = EUREKAPHENOTYPEONTOLOGY
 
 [org.protempa.backend.asb.java.JavaAlgorithmBackend]

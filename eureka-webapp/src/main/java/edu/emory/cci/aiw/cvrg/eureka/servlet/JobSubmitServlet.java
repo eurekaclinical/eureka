@@ -23,7 +23,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.security.Principal;
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Iterator;
@@ -47,11 +46,12 @@ import com.google.inject.Inject;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.JobSpec;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ClientException;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ServicesClient;
+import java.io.PrintWriter;
 import org.apache.commons.io.FilenameUtils;
 import org.codehaus.jackson.map.ObjectMapper;
 
-public class CommonsFileUploadServlet extends HttpServlet {
-	
+public class JobSubmitServlet extends HttpServlet {
+
 	/**
 	 * Normal directory to save files to. TODO: set value
 	 */
@@ -59,7 +59,7 @@ public class CommonsFileUploadServlet extends HttpServlet {
 	private final ServicesClient servicesClient;
 
 	@Inject
-	public CommonsFileUploadServlet (ServicesClient inClient) {
+	public JobSubmitServlet(ServicesClient inClient) {
 		this.servicesClient = inClient;
 	}
 
@@ -72,6 +72,29 @@ public class CommonsFileUploadServlet extends HttpServlet {
 		}
 	}
 
+	private static final class SubmitJobResponse {
+
+		private Long jobId;
+		private String errorThrown;
+
+		public Long getJobId() {
+			return jobId;
+		}
+
+		public void setJobId(Long jobId) {
+			this.jobId = jobId;
+		}
+
+		public String getErrorThrown() {
+			return errorThrown;
+		}
+
+		public void setErrorThrown(String errorThrown) {
+			this.errorThrown = errorThrown;
+		}
+
+	}
+
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		Principal principal = request.getUserPrincipal();
@@ -79,35 +102,31 @@ public class CommonsFileUploadServlet extends HttpServlet {
 			throw new ServletException(
 					"Spreadsheet upload attempt: no user associated with the request");
 		}
+		SubmitJobResponse jobResponse = new SubmitJobResponse();
+		ObjectMapper mapper = new ObjectMapper();
+		String value;
 		try {
 			Long jobId = submitJob(request, principal);
-			response.sendRedirect(request.getContextPath() + "/protected/jobs?jobId=" + jobId);
+			jobResponse.setJobId(jobId);
 		} catch (ParseException ex) {
-			throw new ServletException("Invalid date range", ex);
-		} catch (ClientException ex) {
-			String msg = "Error encountered calling add job service";
-			log("Spreadsheet upload attempt for user " + principal.getName()
-					+ ": " + msg);
-			throw new ServletException(msg, ex);
-		} catch (FileUploadException ex) {
-			String msg =
-					"Error encountered while parsing the job upload request";
-			log("Spreadsheet upload attempt for user " + principal.getName()
-					+ ": " + msg);
-			throw new ServletException(msg, ex);
-		} catch (IOException ex) { //item.write, a third party library, throws Exception...
-			String msg =
-					"Error encountered while writing the uploaded file";
-			log("Spreadsheet upload attempt for user " + principal.getName()
-					+ ": " + msg);
-			throw new ServletException(msg, ex);
+			jobResponse.setErrorThrown("The date range you specified was invalid.");
+			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+		} catch (ClientException | FileUploadException | IOException ex) {
+			String msg = "Upload failed due to an internal error. Try again, or contact support for assistance.";
+			jobResponse.setErrorThrown(msg);
+			log("Upload failed for user " + principal.getName(), ex);
+			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 		}
+		value = mapper.writeValueAsString(jobResponse);
+		response.setContentLength(value.length());
+		PrintWriter out = response.getWriter();
+		out.println(value);
 	}
-	
+
 	private Long submitJob(
 			HttpServletRequest request, Principal principal)
 			throws FileUploadException, IOException, ClientException, ParseException {
-		
+
 		DiskFileItemFactory fileItemFactory = new DiskFileItemFactory();
 
 		/*
@@ -118,7 +137,7 @@ public class CommonsFileUploadServlet extends HttpServlet {
 		 * Set the temporary directory to store the uploaded files of size above threshold.
 		 */
 		fileItemFactory.setRepository(this.tmpDir);
-		
+
 		ServletFileUpload uploadHandler = new ServletFileUpload(fileItemFactory);
 		/*
 		 * Parse the request
@@ -134,11 +153,11 @@ public class CommonsFileUploadServlet extends HttpServlet {
 				fields.setProperty(item.getFieldName(), item.getString());
 			}
 		}
-		
+
 		ObjectMapper mapper = new ObjectMapper();
 		mapper.setDateFormat(new SimpleDateFormat("MM/dd/yyyy"));
 		JobSpec jobSpec = mapper.readValue(fields.getProperty("jobSpec"), JobSpec.class);
-		
+
 		for (Iterator itr = items.iterator(); itr.hasNext();) {
 			FileItem item = (FileItem) itr.next();
 			if (!item.isFormField()) {
@@ -169,7 +188,6 @@ public class CommonsFileUploadServlet extends HttpServlet {
 			}
 		}
 
-		
 		Long jobId = this.servicesClient.submitJob(jobSpec);
 		log("Job " + jobId + " submitted for user " + principal.getName());
 		return jobId;

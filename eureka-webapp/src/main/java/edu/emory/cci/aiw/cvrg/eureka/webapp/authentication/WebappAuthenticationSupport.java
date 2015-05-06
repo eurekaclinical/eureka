@@ -24,8 +24,9 @@ import edu.emory.cci.aiw.cvrg.eureka.common.authentication.AbstractAuthenticatio
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.User;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ClientException;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ServicesClient;
-import javax.servlet.ServletException;
+import java.io.IOException;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  *
@@ -42,13 +43,12 @@ public final class WebappAuthenticationSupport extends AbstractAuthenticationSup
 		this.servicesClient = inServicesClient;
 	}
 	
-	public User getMe(HttpServletRequest req) throws ServletException {
-		User user;
-		try {
-			user = this.servicesClient.getMe();
-		} catch (ClientException ex) {
-			throw new ServletException("Error getting user " + req.getRemoteUser(), ex);
-		}
-		return user;
+	public User getMe(HttpServletRequest req) throws ClientException {
+		return this.servicesClient.getMe();
+	}
+
+	public void needsToLogin(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+		req.getSession().invalidate();
+		resp.sendRedirect(req.getContextPath() + "/login");
 	}
 }

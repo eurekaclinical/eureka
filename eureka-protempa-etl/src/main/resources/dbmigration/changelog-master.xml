@@ -20,7 +20,7 @@ limitations under the License.
 -->
 
 <databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd" logicalFilePath="changelog-master.xml">
-	   <changeSet author="arpost (generated)" id="1361552652236-2">
+	<changeSet author="arpost (generated)" id="1361552652236-2">
 		<createTable tableName="JOB_EVENTS">
 			<column name="ID" type="BIGINT">
 				<constraints nullable="false" primaryKey="true" primaryKeyName="SYS_C0012512"/>
@@ -56,13 +56,13 @@ limitations under the License.
 		<createSequence sequenceName="JOBEVENT_SEQ"/>
 	</changeSet>
 	<changeSet author="arpost (generated)" id="1361552652236-7">
-		 <createSequence sequenceName="JOB_SEQ"/> 
+		<createSequence sequenceName="JOB_SEQ"/> 
 	</changeSet> 
 	<!-- 1.7 changes -->
 	<!-- WARNING: THE JOBS AND JOB_EVENTS TABLES WILL BE CLEARED OUT AS A RESULT OF
 	THIS CHANGELOG! -->
-	  <changeSet author="arpost (generated)" id="1361552652236-8">
-		 <delete tableName="JOB_EVENTS"/>
+	<changeSet author="arpost (generated)" id="1361552652236-8">
+		<delete tableName="JOB_EVENTS"/>
 		<delete tableName="JOBS"/>
 		<renameColumn tableName="JOBS" oldColumnName="USERID" newColumnName="USER_ID"/>
 		<addColumn tableName="JOBS">
@@ -97,14 +97,14 @@ limitations under the License.
 	</changeSet>
 	<changeSet author="arpost (generated)" id="1361552652236-9">
 		<createTable tableName="DESTINATIONS">
-            <column name="ID" type="BIGINT">
-                <constraints nullable="false" primaryKey="true" primaryKeyName="DEST_PK"/>
-            </column>
-            <column name="NAME" type="VARCHAR(255)">
-                <constraints nullable="false" unique="true"/>
-            </column>
-            <column name="OWNER_ID" type="BIGINT"/>
-        </createTable>
+			<column name="ID" type="BIGINT">
+				<constraints nullable="false" primaryKey="true" primaryKeyName="DEST_PK"/>
+			</column>
+			<column name="NAME" type="VARCHAR(255)">
+				<constraints nullable="false" unique="true"/>
+			</column>
+			<column name="OWNER_ID" type="BIGINT"/>
+		</createTable>
 		<createTable tableName="DESTINATIONS_GROUPS">
 			<column name="ID" type="BIGINT">
 				<constraints nullable="false" primaryKey="true" primaryKeyName="DEST_GRP_PK"/>
@@ -652,6 +652,11 @@ limitations under the License.
 	<changeSet author="arpost" id="1361552652236-31">
 		<addColumn tableName="I2B2_DESTINATIONS">
 			<column name="PATIENTDIMENSIONDEATHDATE" type="VARCHAR(255)"/>
+		</addColumn>
+	</changeSet>
+	<changeSet author="arpost" id="1361552652236-32">
+		<addColumn tableName="I2B2_DESTINATIONS">
+			<column name="MERGEONUPDATE" type="BOOLEAN"/>
 		</addColumn>
 	</changeSet>
 </databaseChangeLog>

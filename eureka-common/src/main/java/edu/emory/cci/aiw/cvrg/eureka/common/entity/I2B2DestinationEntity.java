@@ -42,6 +42,7 @@ public class I2B2DestinationEntity extends DestinationEntity {
 	private String visitDimension;
 	private Boolean skipProviderHierarchy;
 	private Boolean skipDemographicsHierarchy;
+	private Boolean mergeOnUpdate;
 	
 	@ManyToOne
 	@JoinColumn(referencedColumnName = "id")
@@ -346,6 +347,14 @@ public class I2B2DestinationEntity extends DestinationEntity {
 
 	public void setVisitDimensionInOut(String visitDimensionInOut) {
 		this.visitDimensionInOut = visitDimensionInOut;
+	}
+
+	public Boolean getMergeOnUpdate() {
+		return mergeOnUpdate;
+	}
+
+	public void setMergeOnUpdate(Boolean mergeOnUpdate) {
+		this.mergeOnUpdate = mergeOnUpdate;
 	}
 	
 }

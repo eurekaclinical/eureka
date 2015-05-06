@@ -233,7 +233,7 @@ public abstract class AbstractProperties {
 	 * INI configuration files.
 	 */
 	public final String getConfigDir() {
-		return this.getValue("eureka.etl.config.dir", getDefaultLocation());
+		return this.getValue("eureka.config.dir", getDefaultLocation());
 	}
 
 	/**

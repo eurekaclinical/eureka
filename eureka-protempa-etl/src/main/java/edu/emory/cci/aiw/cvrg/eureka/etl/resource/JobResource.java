@@ -153,7 +153,7 @@ public class JobResource {
 						jobSpec.getEarliestDate(), AbsoluteTimeGranularity.DAY,
 						jobSpec.getLatestDate(), AbsoluteTimeGranularity.DAY,
 						jobSpec.getEarliestDateSide(), jobSpec.getLatestDateSide()),
-				jobSpec.isAppendData(),
+				jobSpec.isUpdateData(),
 				prompts);
 		return jobEntity.getId();
 	}

@@ -6,10 +6,10 @@
 	<packaging>war</packaging>
 	<name>Eureka Protempa ETL</name>
 	<description>Eureka Protempa ETL is the backend data processing layer of
-Eureka! Clinical Analytics. It performs clinical phenotyping using the
-Protempa software framework. It currently loads data and found
-phenotypes into an i2b2 project, though ultimately it will support 
-other export formats.
+		Eureka! Clinical Analytics. It performs clinical phenotyping using the
+		Protempa software framework. It currently loads data and found
+		phenotypes into an i2b2 project, though ultimately it will support 
+		other export formats.
 	</description>
 
 	<parent>
@@ -42,21 +42,44 @@ other export formats.
 				<artifactId>license-maven-plugin</artifactId>
 			</plugin>
 			<plugin>
-				<groupId>org.liquibase</groupId>
-				<artifactId>liquibase-maven-plugin</artifactId>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-resources-plugin</artifactId>
 				<executions>
 					<execution>
-						<id>liquibase-generate-sql-file</id>
-						<phase>process-resources</phase>
+						<id>copy-eureka-configs</id>
+						<phase>process-classes</phase>
 						<goals>
-							<goal>update</goal>
+							<goal>copy-resources</goal>
 						</goals>
+						<configuration>
+							<outputDirectory>${project.build.directory}/eureka-config</outputDirectory>
+							<resources>
+								<resource>
+									<directory>${basedir}/src/main/resources/tomcat-eureka-config</directory>
+									<filtering>true</filtering>
+								</resource>
+							</resources>
+						</configuration>
 					</execution>
 				</executions>
-				<configuration>
-					<changeLogFile>${project.build.directory}/classes/dbmigration/changelog-master.xml</changeLogFile>
-					<url>jdbc:h2:file:${project.build.directory}/eureka-config/data/eureka-backend</url>
-				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-dependency-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>copy-sql-from-eureka-protempa-etl</id>
+						<phase>process-classes</phase>
+						<goals>
+							<goal>unpack-dependencies</goal>
+						</goals>
+						<configuration>
+							<includeArtifactIds>aiw-i2b2-etl</includeArtifactIds>
+							<includes>i2b2_data_tables_1_7_h2.sql,eureka_data_tables_h2.sql,mock_stored_procedures_h2.sql</includes>
+							<outputDirectory>${project.build.directory}/eureka-config/sql</outputDirectory>
+						</configuration>
+					</execution>
+				</executions>
 			</plugin>
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
@@ -77,21 +100,49 @@ other export formats.
 						</goals>
 						<configuration>
 							<driver>org.h2.Driver</driver>
-							<url>jdbc:h2:file:${project.build.directory}/eureka-config/eureka/ontologies/eureka-ontology;INIT=DROP ALL OBJECTS\;RUNSCRIPT FROM '${basedir}/etc/eureka-i2b2-ksb-h2.sql'</url>
+							<url>jdbc:h2:file:${project.build.directory}/eureka-db/eureka-ontology;INIT=DROP ALL OBJECTS\;RUNSCRIPT FROM '${basedir}/etc/tomcat-eureka-config/sql/eureka-i2b2-ksb-h2.sql'\;RUNSCRIPT FROM '${project.build.directory}/eureka-config/sql/eureka-i2b2-ksb-eureka-table-h2.sql'</url>
+							<sqlCommand></sqlCommand>
+						</configuration>
+					</execution>
+					<execution>
+						<id>create-eureka-i2b2-data-schema</id>
+						<phase>process-classes</phase>
+						<goals>
+							<goal>execute</goal>
+						</goals>
+						<configuration>
+							<driver>org.h2.Driver</driver>
+							<url>jdbc:h2:file:${project.build.directory}/eureka-db/i2b2-data-schema;INIT=DROP ALL OBJECTS\;RUNSCRIPT FROM '${project.build.directory}/eureka-config/sql/i2b2_data_tables_1_7_h2.sql'\;RUNSCRIPT FROM '${project.build.directory}/eureka-config/sql/eureka_data_tables_h2.sql'\;RUNSCRIPT FROM '${project.build.directory}/eureka-config/sql/mock_stored_procedures_h2.sql'</url>
 							<sqlCommand></sqlCommand>
 						</configuration>
 					</execution>
 				</executions>
 			</plugin>
+			<plugin>
+				<groupId>org.liquibase</groupId>
+				<artifactId>liquibase-maven-plugin</artifactId>
+				<dependencies>
+					<dependency>
+						<groupId>com.h2database</groupId>
+						<artifactId>h2</artifactId>
+						<version>${h2-version}</version>
+					</dependency>
+				</dependencies>
+				<executions>
+					<execution>
+						<id>liquibase-populate-backend-db</id>
+						<phase>process-classes</phase>
+						<goals>
+							<goal>update</goal>
+						</goals>
+						<configuration>
+							<changeLogFile>${project.build.directory}/eureka-config/dbmigration/eureka-protempa-etl-changelog.xml</changeLogFile>
+							<url>jdbc:h2:file:${project.build.directory}/eureka-db/eureka-backend</url>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
 		</plugins>
-		<resources>
-			<resource>
-				<directory>src/main/resources</directory>
-				<excludes>
-					<exclude>eureka-i2b2-ksb.sql</exclude>
-				</excludes>
-			</resource>
-		</resources>
 	</build>
 	<dependencies>
 		<dependency>
@@ -208,9 +259,9 @@ other export formats.
 			<artifactId>cas-client-core</artifactId>
 		</dependency>
 		<dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-csv</artifactId>
-        </dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-csv</artifactId>
+		</dependency>
 	</dependencies>
 	<profiles>
 		<profile>
@@ -221,7 +272,7 @@ other export formats.
 						<groupId>org.liquibase</groupId>
 						<artifactId>liquibase-maven-plugin</artifactId>
 						<configuration>
-							<changeLogFile>src/main/resources/dbmigration/changelog-master.xml</changeLogFile>
+							<changeLogFile>${basedir}/src/main/resources/dbmigration/changelog-master.xml</changeLogFile>
 							<driver>${local.protempaetl.db.jdbc.driver}</driver>
 							<url>${local.protempaetl.db.jdbc.url}</url>
 							<username>${local.protempaetl.username}</username>

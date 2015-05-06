@@ -28,6 +28,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.User;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ClientException;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ServicesClient;
 import edu.emory.cci.aiw.cvrg.eureka.servlet.worker.ServletWorker;
 import edu.emory.cci.aiw.cvrg.eureka.webapp.authentication.WebappAuthenticationSupport;
@@ -45,18 +46,29 @@ public class ListUserAcctWorker implements ServletWorker {
 	@Override
 	public void execute(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
-		User user = this.authenticationSupport.getMe(req);
-		Date now = new Date();
-		Date expiration = user instanceof LocalUser ? ((LocalUser) user).getPasswordExpiration() : null;
-		String passwordExpiration;
-		if (expiration != null && now.after(expiration)) {
-			passwordExpiration = "Your password has expired. Please change it below.";
-		} else {
-			passwordExpiration = "";
-		}
-		req.setAttribute("passwordExpiration", passwordExpiration);
+		try {
+			User user = this.authenticationSupport.getMe(req);
+			Date now = new Date();
+			Date expiration = user instanceof LocalUser ? ((LocalUser) user).getPasswordExpiration() : null;
+			String passwordExpiration;
+			if (expiration != null && now.after(expiration)) {
+				passwordExpiration = "Your password has expired. Please change it below.";
+			} else {
+				passwordExpiration = "";
+			}
+			req.setAttribute("passwordExpiration", passwordExpiration);
 
-		req.setAttribute("user", user);
-		req.getRequestDispatcher("/protected/acct.jsp").forward(req, resp);
+			req.setAttribute("user", user);
+			req.getRequestDispatcher("/protected/acct.jsp").forward(req, resp);
+		} catch (ClientException ex) {
+			switch (ex.getResponseStatus()) {
+				case UNAUTHORIZED:
+					this.authenticationSupport.needsToLogin(req, resp);
+					break;
+				default:
+					resp.setStatus(ex.getResponseStatus().getStatusCode());
+					resp.getWriter().write(ex.getMessage());
+			}
+		}
 	}
 }
