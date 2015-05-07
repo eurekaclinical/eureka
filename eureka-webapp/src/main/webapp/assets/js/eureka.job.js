@@ -42,7 +42,7 @@ window.eureka.job = new function () {
 			$.ajax({
 				url: "jobpoll",
 				success: function (data) {
-					if (data) {
+					if (!self.submittingJob && data) {
 						$(statusElem).text(data.status);
 						$('#sourceConfig').text(data.sourceConfigId);
 						$('#destinationConfig').text(data.destinationId);
