@@ -63,8 +63,8 @@ public class PropositionDefinitionFinder implements AutoCloseable {
 		this.validateConfigDir(etlProperties.getSourceConfigDirectory());
 		try {
 			LOGGER.debug("Creating new configurations, source factory, and knowledge source");
-			Configurations configurations = 
-					new EurekaProtempaConfigurations(etlProperties);
+			Configurations configurations
+					= new EurekaProtempaConfigurations(etlProperties);
 			SourceFactory sf = new SourceFactory(configurations, configId);
 			this.knowledgeSource = sf.newKnowledgeSourceInstance();
 			this.defaultProps = new HashSet<>(this.etlProperties.getDefaultSystemPropositions());
@@ -73,7 +73,7 @@ public class PropositionDefinitionFinder implements AutoCloseable {
 			throw new PropositionFinderException(ex);
 		}
 	}
-	
+
 	public List<PropositionDefinition> findAll(Collection<String> propIds) throws PropositionFinderException {
 		try {
 			return this.knowledgeSource.readPropositionDefinitions(propIds.toArray(new String[propIds.size()]));
@@ -92,7 +92,7 @@ public class PropositionDefinitionFinder implements AutoCloseable {
 		}
 		return definition;
 	}
-	
+
 	public List<String> searchPropositions(String inSearchKey) throws PropositionFinderException {
 		LinkedHashSet<String> nodesToLoad = new LinkedHashSet<>();
 		try {
@@ -111,7 +111,7 @@ public class PropositionDefinitionFinder implements AutoCloseable {
 		}
 		return new ArrayList<>(nodesToLoad);
 	}
-	
+
 	@Override
 	public void close() throws PropositionFinderException {
 		try {
@@ -128,10 +128,13 @@ public class PropositionDefinitionFinder implements AutoCloseable {
 			toProcessQueue.add(pf);
 			while (!toProcessQueue.isEmpty()) {
 				PropositionDefinition currentPropDef = toProcessQueue.remove();
-				List<PropositionDefinition> parents = parentsCache.get(currentPropDef.getId());
-				if (parents == null) {
-					parents = knowledgeSource.readParents(currentPropDef);
-					parentsCache.put(currentPropDef.getId(), parents);
+				List<PropositionDefinition> parents;
+				synchronized (parentsCache) {
+					parents = parentsCache.get(currentPropDef.getId());
+					if (parents == null) {
+						parents = knowledgeSource.readParents(currentPropDef);
+						parentsCache.put(currentPropDef.getId(), parents);
+					}
 				}
 				for (PropositionDefinition parent : parents) {
 					toProcessQueue.add(parent);
@@ -151,7 +154,10 @@ public class PropositionDefinitionFinder implements AutoCloseable {
 				if (defaultProps.contains(node)) {
 					nodesToLoad.add(node);
 				} else {
-					List<PropositionDefinition> parents = parentsCache.get(node);
+					List<PropositionDefinition> parents;
+					synchronized (parentsCache) {
+						parents = parentsCache.get(node);
+					}
 					if (parents != null) {
 						for (PropositionDefinition parent : parents) {
 							if (nodesToLoad.contains(parent.getId())) {
@@ -164,7 +170,7 @@ public class PropositionDefinitionFinder implements AutoCloseable {
 			}
 		}
 	}
-	
+
 	private void validateConfigDir(File inFile) {
 		if (LOGGER.isErrorEnabled()) {
 			if (!inFile.exists()) {

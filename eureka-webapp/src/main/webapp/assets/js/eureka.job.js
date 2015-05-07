@@ -51,9 +51,6 @@ window.eureka.job = new function () {
 						$('#finishedDate').text(data.finishedDateFormatted);
 						$('#messages').text(data.mostRecentMessage);
 						$('form#uploadForm').data('job-running', data.jobSubmitted);
-						if (data.jobSubmitted) {
-							this.submittingJob = false;
-						}
 						self.updateSubmitButtonStatus();
 					}
 				},
@@ -214,10 +211,19 @@ window.eureka.job = new function () {
 			processData: false,
 			cache: false,
 			mimeType: "multipart/form-data",
+			success: function (data) {
+				self.onSuccess();
+			},
 			error: function (data, statusCode, errorThrown) {
 				self.onError(errorThrown);
 			}
 		});
+	}
+	
+	self.onSuccess = function () {
+		$('form#uploadForm').data('job-running', true);
+		self.submittingJob = false;
+		self.updateSubmitButtonStatus();
 	}
 	
 	self.onError = function (errorThrown) {
@@ -324,6 +330,8 @@ window.eureka.job = new function () {
 				alert("Response: " + data);
 				if (data.errorThrown) {
 					self.onError(data.errorThrown);
+				} else {
+					self.onSuccess();
 				}
 				theForm.remove();
 				iframe.remove();

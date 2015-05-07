@@ -52,7 +52,7 @@ public abstract class AbstractEtlResourceTest extends AbstractResourceTest {
 			configFile.deleteOnExit();
 			File configDir = new TempDirectoryCreator().create("eureka", null, null);
 			Properties props = new Properties();
-			props.setProperty("eureka.etl.config.dir", configDir.getAbsolutePath());
+			props.setProperty("eureka.config.dir", configDir.getAbsolutePath());
 			try (FileWriter fw = new FileWriter(configFile)) {
 					props.store(fw, null);
 			}

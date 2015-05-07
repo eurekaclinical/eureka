@@ -53,12 +53,15 @@ public abstract class AbstractPropositionFinder<K> implements PropositionFinder<
 			throws PropositionFindException {
 		LOGGER.debug("Finding {}", inKey);
 		Cache cache = this.getCache();
-		Element element = cache.get(inKey);
-		if (element == null) {
-			PropositionDefinition propDef =
-					this.retriever.retrieve(sourceConfigId, inKey);
-			element = new Element(inKey, propDef);
-			cache.put(element);
+		Element element;
+		synchronized (cache) {
+			element = cache.get(inKey);
+			if (element == null) {
+				PropositionDefinition propDef
+						= this.retriever.retrieve(sourceConfigId, inKey);
+				element = new Element(inKey, propDef);
+				cache.put(element);
+			}
 		}
 
 		PropositionDefinition propDef = (PropositionDefinition) element.getValue();
