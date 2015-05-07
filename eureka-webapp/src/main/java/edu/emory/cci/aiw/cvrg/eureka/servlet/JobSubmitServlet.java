@@ -75,7 +75,9 @@ public class JobSubmitServlet extends HttpServlet {
 	private static final class SubmitJobResponse {
 
 		private Long jobId;
+		private int statusCode;
 		private String errorThrown;
+		private String message;
 
 		public Long getJobId() {
 			return jobId;
@@ -91,6 +93,22 @@ public class JobSubmitServlet extends HttpServlet {
 
 		public void setErrorThrown(String errorThrown) {
 			this.errorThrown = errorThrown;
+		}
+
+		public int getStatusCode() {
+			return statusCode;
+		}
+
+		public void setStatusCode(int statusCode) {
+			this.statusCode = statusCode;
+		}
+
+		public String getMessage() {
+			return message;
+		}
+
+		public void setMessage(String message) {
+			this.message = message;
 		}
 
 	}
@@ -109,16 +127,21 @@ public class JobSubmitServlet extends HttpServlet {
 			Long jobId = submitJob(request, principal);
 			jobResponse.setJobId(jobId);
 		} catch (ParseException ex) {
-			jobResponse.setErrorThrown("The date range you specified was invalid.");
+			jobResponse.setMessage("The date range you specified is invalid.");
+			jobResponse.setStatusCode(HttpServletResponse.SC_BAD_REQUEST);
+			jobResponse.setErrorThrown("Bad request");
 			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 		} catch (ClientException | FileUploadException | IOException ex) {
-			String msg = "Upload failed due to an internal error. Try again, or contact support for assistance.";
-			jobResponse.setErrorThrown(msg);
+			String msg = "Upload failed due to an internal error";
+			jobResponse.setMessage(msg);
+			jobResponse.setStatusCode(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+			jobResponse.setErrorThrown("Internal server error");
 			log("Upload failed for user " + principal.getName(), ex);
 			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 		}
 		value = mapper.writeValueAsString(jobResponse);
 		response.setContentLength(value.length());
+		response.setContentType("application/json");
 		PrintWriter out = response.getWriter();
 		out.println(value);
 	}

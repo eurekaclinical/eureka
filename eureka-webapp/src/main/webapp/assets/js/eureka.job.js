@@ -33,8 +33,7 @@ window.eureka.job = new function () {
 		$uploadForm.submit(function () {
 			var $dataElement = $uploadForm.find('ul[data-type="main"]').find('li').first();
 			$("input[name='dateRangeDataElementKey']").val($dataElement.data('key'));
-			self.save($uploadForm);
-			return false;
+			return self.save($uploadForm);
 		});
 
 		self.setInitialStatus();
@@ -211,11 +210,11 @@ window.eureka.job = new function () {
 			processData: false,
 			cache: false,
 			mimeType: "multipart/form-data",
-			success: function (data) {
+			success: function (jqXHR) {
 				self.onSuccess();
 			},
-			error: function (data, statusCode, errorThrown) {
-				self.onError(errorThrown);
+			error: function (jqXHR, statusCode, errorThrown) {
+				self.onError(JSON.parse(jqXHR.responseText).message);
 			}
 		});
 	}
@@ -237,9 +236,6 @@ window.eureka.job = new function () {
 		var content = 'Error submitting job: ' + errorThrown;
 		$('#errorModal').find('#errorContent').html(content);
 		$('#errorModal').modal('show');
-		if (errorThrown !== null) {
-			console.log('Error submitting job: ' + errorThrown);
-		}
 	}
 	
 	self.save = function (uploadFormElem) {
@@ -290,7 +286,6 @@ window.eureka.job = new function () {
 			});
 		}
 		if (window.FormData) {
-			alert("Using window.FormData");
 			var formData = new FormData();
 			$(prompts).find(".uploader").each(function() {
 				var optionName = $(this).data("option-name");
@@ -300,43 +295,26 @@ window.eureka.job = new function () {
 			});
 			formData.append("jobSpec", JSON.stringify(jobSpec));
 			this.postFormData(formData);
+			return false;
 		} else {
-			alert("Using iframe");
 			var iframeId = 'iframe' + (new Date().getTime());
 			var iframe = $('<iframe src="javascript:false;" name="'+iframeId+'" />');
 			iframe.hide();
-			
-			var theForm = $('<form id="form' + (new Date().getTime()) + '"></form>');
-			theForm.hide();
-			theForm.attr("action", "upload")
-            theForm.attr("method", "post")
-            theForm.attr("jobSpec", JSON.stringify(jobSpec));
-			if (prompts) {
-				$(prompts).find(".uploader").each(function() {
-					var optionName = $(this).data("option-name");
-					$(this).find("input[type='file']").each(function() {
-						theForm.attr(optionName, this, $(this)[0].files[0].name);
-					});
-				});
-			}
-            theForm.attr("enctype", "multipart/form-data")
-            theForm.attr("encoding", "multipart/form-data")
+			var theForm = $('#uploadForm');
+			var theJobSpec = $('input[name="jobSpec"]');
+			theJobSpec.val(JSON.stringify(jobSpec));
             theForm.attr("target", iframeId);
-
-			theForm.appendTo('body');
 			iframe.appendTo('body');
 			iframe.load(function(e) {
-				var data = iframe[0].contentDocument.body.innerHTML;
-				alert("Response: " + data);
+				var data = JSON.parse($(iframe[0].contentDocument.body).text());
 				if (data.errorThrown) {
-					self.onError(data.errorThrown);
+					self.onError(data.message);
 				} else {
 					self.onSuccess();
 				}
-				theForm.remove();
 				iframe.remove();
 			});
-			theForm.submit();
+			return true;
 		}
 	};
 };
