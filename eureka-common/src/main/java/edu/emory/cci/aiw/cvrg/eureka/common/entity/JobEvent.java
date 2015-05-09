@@ -21,7 +21,6 @@ package edu.emory.cci.aiw.cvrg.eureka.common.entity;
 
 import java.util.Date;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -32,7 +31,6 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import javax.xml.bind.annotation.XmlRootElement;
 
 import org.codehaus.jackson.annotate.JsonBackReference;
 
@@ -47,7 +45,6 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
  * @author hrathod
  *
  */
-@XmlRootElement
 @Entity
 @Table(name = "job_events")
 public class JobEvent implements CycleRecoverable {
@@ -64,25 +61,25 @@ public class JobEvent implements CycleRecoverable {
 	/**
 	 * The job for which the event was generated.
 	 */
-	@ManyToOne(cascade = CascadeType.ALL, targetEntity = JobEntity.class)
-	@JoinColumn(name = "job_id")
+	@ManyToOne
+	@JoinColumn(name = "job_id", nullable = false)
 	private JobEntity job;
 	/**
 	 * The state of the event.
 	 */
 	@Column(nullable = false)
 	private JobEventType state;
-	
+
 	/**
 	 * The exception stack trace. The name is prefixed with a z to force
-	 * hibernate to populate this field last in insert and update statements
-	 * to avoid the dreaded 
+	 * hibernate to populate this field last in insert and update statements to
+	 * avoid the dreaded
 	 * <code>ORA-24816: Expanded non LONG bind data supplied after actual LONG or LOB column</code>
-	 * error message from Oracle. Hibernate apparently orders fields 
+	 * error message from Oracle. Hibernate apparently orders fields
 	 * alphabetically.
 	 */
 	@Lob
-	@Column(name="exceptionstacktrace")
+	@Column(name = "exceptionstacktrace")
 	private String zExceptionStackTrace;
 	/**
 	 * The time stamp for the event.
@@ -95,6 +92,10 @@ public class JobEvent implements CycleRecoverable {
 	 */
 	@Lob
 	private String message;
+
+	public JobEvent() {
+		this.timeStamp = new Date();
+	}
 
 	/**
 	 * @return the id
@@ -122,7 +123,10 @@ public class JobEvent implements CycleRecoverable {
 	 * @param inJob the job to set
 	 */
 	public void setJob(JobEntity inJob) {
-		this.job = inJob;
+		if (this.job != inJob) {
+			this.job = inJob;
+			this.job.addJobEvent(this);
+		}
 	}
 
 	/**
@@ -164,7 +168,11 @@ public class JobEvent implements CycleRecoverable {
 	 * @param inTimeStamp the timeStamp to set
 	 */
 	public void setTimeStamp(Date inTimeStamp) {
-		this.timeStamp = new Date(inTimeStamp.getTime());
+		if (inTimeStamp == null) {
+			this.timeStamp = new Date();
+		} else {
+			this.timeStamp = new Date(inTimeStamp.getTime());
+		}
 	}
 
 	/**
@@ -196,7 +204,5 @@ public class JobEvent implements CycleRecoverable {
 	public String toString() {
 		return ToStringBuilder.reflectionToString(this);
 	}
-
-	
 
 }

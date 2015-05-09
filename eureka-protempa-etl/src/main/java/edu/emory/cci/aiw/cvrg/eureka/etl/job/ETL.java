@@ -19,13 +19,7 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.etl.job;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.protempa.CloseException;
 import org.protempa.DataSourceFailedDataValidationException;
-import org.protempa.DataSourceValidationIncompleteException;
-import org.protempa.FinderException;
 import org.protempa.PropositionDefinition;
 import org.protempa.Protempa;
 import org.protempa.ProtempaStartupException;
@@ -41,7 +35,6 @@ import org.protempa.backend.dsb.DataValidationEvent;
 import org.protempa.backend.dsb.filter.Filter;
 import org.protempa.query.DefaultQueryBuilder;
 import org.protempa.query.Query;
-import org.protempa.query.QueryBuildException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -59,6 +52,8 @@ import edu.emory.cci.aiw.cvrg.eureka.etl.dao.EtlGroupDao;
 import edu.emory.cci.aiw.cvrg.eureka.etl.dao.JobDao;
 import edu.emory.cci.aiw.cvrg.eureka.etl.queryresultshandler.ProtempaDestinationFactory;
 import edu.emory.cci.aiw.cvrg.eureka.etl.resource.Destinations;
+import java.util.ArrayList;
+import java.util.List;
 import org.protempa.backend.Configuration;
 import org.protempa.backend.InvalidPropertyNameException;
 import org.protempa.backend.InvalidPropertyValueException;
@@ -73,8 +68,7 @@ import org.protempa.query.QueryMode;
  * i2b2 query results handler configuration file (an XML file). They are
  * associated by name. An INI file named my_config.ini has an associated XML
  * file my_config.xml. The INI and XML files go into a directory specified in
- * this class' constructor. The default is
- * <code>/etc/eureka/etlconfig</code>.
+ * this class' constructor. The default is <code>/etc/eureka/etlconfig</code>.
  *
  * @author Andrew Post
  */
@@ -113,12 +107,12 @@ public class ETL {
 			q.setQueryMode(appendData ? QueryMode.UPDATE : QueryMode.REPLACE);
 			LOGGER.trace("Constructed Protempa query {}", q);
 			Query query = protempa.buildQuery(q);
-			EtlDestination eurekaDestination = 
-					new Destinations(this.etlProperties, job.getEtlUser(), 
+			EtlDestination eurekaDestination
+					= new Destinations(this.etlProperties, job.getEtlUser(),
 							this.destinationDao, this.groupDao)
-							.getOne(job.getDestination().getName());
-			org.protempa.dest.Destination protempaDestination = 
-					this.protempaDestFactory
+					.getOne(job.getDestination().getName());
+			org.protempa.dest.Destination protempaDestination
+					= this.protempaDestFactory
 					.getInstance(eurekaDestination.getId(), protempa.getKnowledgeSource());
 			protempa.execute(query, protempaDestination);
 		} catch (DataSourceFailedDataValidationException ex) {
@@ -133,6 +127,7 @@ public class ETL {
 	}
 
 	private void logValidationEvents(JobEntity job, DataValidationEvent[] events, DataSourceFailedDataValidationException ex) {
+		List<JobEvent> jobEvents = new ArrayList<>();
 		for (DataValidationEvent event : events) {
 			AbstractFileInfo fileInfo;
 			JobEventType jobEventType;
@@ -147,7 +142,12 @@ public class ETL {
 			fileInfo.setText(event.getMessage());
 			fileInfo.setType(event.getType());
 			fileInfo.setURI(event.getURI());
-			job.newEvent(jobEventType, fileInfo.toUserMessage(), collectThrowableMessages(ex), event.getTimestamp());
+			JobEvent validationJobEvent = new JobEvent();
+			validationJobEvent.setJob(job);
+			validationJobEvent.setTimeStamp(event.getTimestamp());
+			validationJobEvent.setState(jobEventType);
+			validationJobEvent.setMessage(fileInfo.toUserMessage());
+			validationJobEvent.setExceptionStackTrace(collectThrowableMessages(ex));
 		}
 		this.jobDao.update(job);
 	}
@@ -155,11 +155,11 @@ public class ETL {
 	private Protempa getNewProtempa(JobEntity job, Configuration prompts) throws
 			ConfigurationsLoadException, BackendProviderSpecLoaderException,
 			InvalidConfigurationException, ProtempaStartupException,
-			BackendInitializationException, BackendNewInstanceException, 
-			ConfigurationsNotFoundException, InvalidPropertyNameException, 
+			BackendInitializationException, BackendNewInstanceException,
+			ConfigurationsNotFoundException, InvalidPropertyNameException,
 			InvalidPropertyValueException {
-		Configurations configurations =
-				new EurekaProtempaConfigurations(this.etlProperties);
+		Configurations configurations
+				= new EurekaProtempaConfigurations(this.etlProperties);
 		Configuration configuration = configurations.load(job.getSourceConfigId());
 		configuration.merge(prompts);
 		SourceFactory sf = new SourceFactory(configuration);

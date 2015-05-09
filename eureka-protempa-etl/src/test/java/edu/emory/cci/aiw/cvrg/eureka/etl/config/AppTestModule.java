@@ -26,10 +26,12 @@ import edu.emory.cci.aiw.cvrg.eureka.etl.dao.EtlGroupDao;
 import edu.emory.cci.aiw.cvrg.eureka.etl.dao.EtlUserDao;
 
 import edu.emory.cci.aiw.cvrg.eureka.etl.dao.JobDao;
+import edu.emory.cci.aiw.cvrg.eureka.etl.dao.JobEventDao;
 import edu.emory.cci.aiw.cvrg.eureka.etl.dao.JpaDestinationDao;
 import edu.emory.cci.aiw.cvrg.eureka.etl.dao.JpaEtlGroupDao;
 import edu.emory.cci.aiw.cvrg.eureka.etl.dao.JpaEtlUserDao;
 import edu.emory.cci.aiw.cvrg.eureka.etl.dao.JpaJobDao;
+import edu.emory.cci.aiw.cvrg.eureka.etl.dao.JpaJobEventDao;
 import edu.emory.cci.aiw.cvrg.eureka.etl.dao.JpaSourceConfigDao;
 import edu.emory.cci.aiw.cvrg.eureka.etl.dao.SourceConfigDao;
 
@@ -43,6 +45,7 @@ public class AppTestModule extends AbstractModule {
 	protected void configure() {
 		install(new JpaPersistModule("backend-jpa-unit"));
 		bind(JobDao.class).to(JpaJobDao.class);
+		bind(JobEventDao.class).to(JpaJobEventDao.class);
 		bind(EtlUserDao.class).to(JpaEtlUserDao.class);
 		bind(EtlGroupDao.class).to(JpaEtlGroupDao.class);
 		bind(DestinationDao.class).to(JpaDestinationDao.class);

@@ -33,7 +33,9 @@ limitations under the License.
 			<column name="TIMESTAMP" type="TIMESTAMP(6)">
 				<constraints nullable="false"/>
 			</column>
-			<column name="JOB_ID" type="BIGINT"/>
+			<column name="JOB_ID" type="BIGINT">
+				<constraints nullable="false"/>
+			</column>
 		</createTable>
 	</changeSet>
 	<changeSet author="arpost (generated)" id="1361552652236-3">

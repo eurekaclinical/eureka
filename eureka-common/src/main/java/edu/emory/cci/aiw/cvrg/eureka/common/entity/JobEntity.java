@@ -88,11 +88,15 @@ public class JobEntity {
 	/**
 	 * The events generated for the job.
 	 */
-	@OneToMany(cascade = CascadeType.ALL, targetEntity = JobEvent.class,
-			mappedBy = "job")
-	private List<JobEvent> jobEvents = new ArrayList<>();
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "job")
+	private List<JobEvent> jobEvents;
+	
 	private static JobEventComparator JOB_EVENT_COMPARATOR = new JobEventComparator();
 
+	public JobEntity() {
+		this.jobEvents = new ArrayList<>();
+	}
+	
 	/**
 	 * Get the unique identifier for the job request.
 	 *
@@ -189,34 +193,19 @@ public class JobEntity {
 			this.jobEvents = inJobEvents;
 		}
 	}
+	
+	public void addJobEvent(JobEvent jobEvent) {
+		if (!this.jobEvents.contains(jobEvent)) {
+			this.jobEvents.add(jobEvent);
+			jobEvent.setJob(this);
+		}
+	}
 
 	public JobEventType getCurrentState() {
 		JobEvent jev = getJobEventsInReverseOrder().get(0);
 		return (jev == null) ? null : jev.getState();
 	}
 	
-	public void newEvent(JobEventType state, String message) {
-		newEvent(state, message, null);
-	}
-
-	public void newEvent(JobEventType state, String message, String exceptionStackTrace) {
-		Date date = new Date();
-		newEvent(state, message, exceptionStackTrace, date);
-	}
-	
-	public void newEvent(JobEventType state, String message, String exceptionStackTrace, Date timestamp) {
-		if (state == null) {
-			throw new IllegalArgumentException("state cannot be null");
-		}
-		JobEvent jev = new JobEvent();
-		jev.setJob(this);
-		jev.setTimeStamp(timestamp);
-		jev.setState(state);
-		jev.setMessage(message);
-		jev.setExceptionStackTrace(exceptionStackTrace);
-		this.jobEvents.add(jev);
-	}
-
 	/**
 	 * Gets job events sorted in reverse order of occurrence. Uses the
 	 * {@link JobEventComparator} to perform sorting.

@@ -23,21 +23,24 @@ import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
 import edu.emory.cci.aiw.cvrg.eureka.etl.dao.JobDao;
+import edu.emory.cci.aiw.cvrg.eureka.etl.dao.JobEventDao;
 
 @Singleton
 public class TaskProvider implements Provider<Task> {
 
 	private final JobDao jobDao;
 	private final ETL etl;
+	private final JobEventDao jobEventDao;
 
 	@Inject
-	public TaskProvider (JobDao inJobDao, ETL inETL) {
+	public TaskProvider (JobDao inJobDao, JobEventDao inJobEventDao, ETL inETL) {
 		this.jobDao = inJobDao;
+		this.jobEventDao = inJobEventDao;
 		this.etl = inETL;
 	}
 
 	@Override
 	public Task get() {
-		return new Task(this.jobDao, this.etl);
+		return new Task(this.jobDao, this.jobEventDao, this.etl);
 	}
 }

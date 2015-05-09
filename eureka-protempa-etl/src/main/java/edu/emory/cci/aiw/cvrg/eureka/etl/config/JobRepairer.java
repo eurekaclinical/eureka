@@ -19,26 +19,26 @@ package edu.emory.cci.aiw.cvrg.eureka.etl.config;
  * limitations under the License.
  * #L%
  */
-
 import edu.emory.cci.aiw.cvrg.eureka.common.dao.DatabaseSupport;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.JobEntity;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.JobEvent;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.JobEventType;
+import java.util.Date;
 import java.util.List;
 import javax.persistence.EntityManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * On startup, repairs jobs that were running when Eureka backend was shut 
- * down.
- * 
+ * On startup, repairs jobs that were running when Eureka backend was shut down.
+ *
  * @author Andrew
  */
 public class JobRepairer {
-	private static Logger LOGGER =
-			LoggerFactory.getLogger(JobRepairer.class);
-	
-	
+
+	private static Logger LOGGER
+			= LoggerFactory.getLogger(JobRepairer.class);
+
 	private final EntityManager entityManager;
 
 	public JobRepairer(EntityManager inEntityManager) {
@@ -47,7 +47,7 @@ public class JobRepairer {
 		}
 		this.entityManager = inEntityManager;
 	}
-	
+
 	public final void repairIfNeeded() {
 		this.entityManager.getTransaction().begin();
 		int numJobsRepaired = 0;
@@ -69,24 +69,32 @@ public class JobRepairer {
 			LOGGER.warn("Repaired {} job(s).", numJobsRepaired);
 		}
 	}
-	
+
 	private List<JobEntity> getAllJobs() {
 		DatabaseSupport dbSupport = new DatabaseSupport(this.entityManager);
 		return dbSupport.getAll(JobEntity.class);
 	}
-	
+
 	protected void doRepair(JobEntity job) {
 		repairDatabase(job, this.entityManager);
 	}
-	
+
 	private void repairDatabase(JobEntity job, EntityManager entityManager) {
 		LOGGER.warn("Repairing job {} with status {}", job.getId(), job.getCurrentState().name());
 		if (!JobEventType.ERROR.equals(job.getCurrentState())) {
-			job.newEvent(JobEventType.ERROR,
-					"Eureka! shut down during job", null);
+			JobEvent errorJobEvent = new JobEvent();
+			errorJobEvent.setJob(job);
+			errorJobEvent.setTimeStamp(new Date());
+			errorJobEvent.setState(JobEventType.ERROR);
+			errorJobEvent.setMessage("Eureka! shut down during job");
+			entityManager.persist(errorJobEvent);
 		}
-		job.newEvent(JobEventType.FAILED, null, null);
-		entityManager.merge(job);
+		JobEvent failedJobEvent = new JobEvent();
+		failedJobEvent.setJob(job);
+		failedJobEvent.setTimeStamp(new Date());
+		failedJobEvent.setState(JobEventType.FAILED);
+		failedJobEvent.setMessage("Processing failed");
+		entityManager.persist(failedJobEvent);
 		LOGGER.warn("After repair, the job {}'s status is {}",
 				job.getId(), job.getCurrentState().name());
 	}
