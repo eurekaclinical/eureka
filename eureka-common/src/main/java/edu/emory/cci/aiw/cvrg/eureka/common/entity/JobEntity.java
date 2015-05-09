@@ -180,7 +180,7 @@ public class JobEntity {
 	 */
 	@JsonManagedReference("job-event")
 	public List<JobEvent> getJobEvents() {
-		return this.jobEvents;
+		return new ArrayList<>(this.jobEvents);
 	}
 
 	/**
@@ -190,7 +190,10 @@ public class JobEntity {
 		if (inJobEvents == null) {
 			this.jobEvents = new ArrayList<>();
 		} else {
-			this.jobEvents = inJobEvents;
+			this.jobEvents = new ArrayList<>(inJobEvents);
+			for (JobEvent jobEvent : this.jobEvents) {
+				jobEvent.setJob(this);
+			}
 		}
 	}
 	
@@ -198,6 +201,12 @@ public class JobEntity {
 		if (!this.jobEvents.contains(jobEvent)) {
 			this.jobEvents.add(jobEvent);
 			jobEvent.setJob(this);
+		}
+	}
+	
+	public void removeJobEvent(JobEvent jobEvent) {
+		if (this.jobEvents.remove(jobEvent)) {
+			jobEvent.setJob(null);
 		}
 	}
 

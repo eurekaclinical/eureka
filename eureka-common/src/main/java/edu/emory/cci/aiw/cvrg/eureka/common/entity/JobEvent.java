@@ -124,8 +124,13 @@ public class JobEvent implements CycleRecoverable {
 	 */
 	public void setJob(JobEntity inJob) {
 		if (this.job != inJob) {
+			if (this.job != null) {
+				this.job.removeJobEvent(this);
+			}
 			this.job = inJob;
-			this.job.addJobEvent(this);
+			if (this.job != null) {
+				this.job.addJobEvent(this);
+			}
 		}
 	}
 
