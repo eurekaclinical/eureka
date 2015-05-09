@@ -615,7 +615,6 @@
 						<org.apache.tomcat.util.buf.UDecoder.ALLOW_ENCODED_SLASH>true</org.apache.tomcat.util.buf.UDecoder.ALLOW_ENCODED_SLASH>
 						<javax.net.ssl.trustStore>${project.build.directory}/tomcat/conf/localhost.truststore</javax.net.ssl.trustStore>
 						<javax.net.ssl.trustStorePassword>changeit</javax.net.ssl.trustStorePassword>
-						<JAVA_OPTS>-Xms512m -Xmx2G -XX:MaxPermSize=256m</JAVA_OPTS>
 						<eureka.config.file>${project.build.directory}/eureka-config/application.properties</eureka.config.file>
 						<java.util.logging.config.file>${project.build.directory}/eureka-config/logging.properties</java.util.logging.config.file>
 					</systemProperties>

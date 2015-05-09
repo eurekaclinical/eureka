@@ -133,29 +133,22 @@ public class ETL {
 	}
 
 	private void logValidationEvents(JobEntity job, DataValidationEvent[] events, DataSourceFailedDataValidationException ex) {
-		// if the validation caused any errors/warnings, we insert them into
-		// our file upload object, and amend our response.
-		List<JobEvent> jobEvents = new ArrayList<>();
 		for (DataValidationEvent event : events) {
-			JobEvent jobEvent = new JobEvent();
-			jobEvent.setJob(job);
-			jobEvent.setTimeStamp(event.getTimestamp());
 			AbstractFileInfo fileInfo;
+			JobEventType jobEventType;
 			if (event.isFatal()) {
 				fileInfo = new FileError();
-				jobEvent.setState(JobEventType.ERROR);
+				jobEventType = JobEventType.ERROR;
 			} else {
 				fileInfo = new FileWarning();
-				jobEvent.setState(JobEventType.WARNING);
+				jobEventType = JobEventType.WARNING;
 			}
 			fileInfo.setLineNumber(event.getLine());
 			fileInfo.setText(event.getMessage());
 			fileInfo.setType(event.getType());
 			fileInfo.setURI(event.getURI());
-			jobEvent.setMessage(fileInfo.toUserMessage());
-			jobEvent.setExceptionStackTrace(collectThrowableMessages(ex));
+			job.newEvent(jobEventType, fileInfo.toUserMessage(), collectThrowableMessages(ex), event.getTimestamp());
 		}
-		job.setJobEvents(jobEvents);
 		this.jobDao.update(job);
 	}
 

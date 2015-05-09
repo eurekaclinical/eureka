@@ -194,20 +194,26 @@ public class JobEntity {
 		JobEvent jev = getJobEventsInReverseOrder().get(0);
 		return (jev == null) ? null : jev.getState();
 	}
+	
+	public void newEvent(JobEventType state, String message) {
+		newEvent(state, message, null);
+	}
 
-	public void newEvent(JobEventType state, String message, String[] stackTrace) {
+	public void newEvent(JobEventType state, String message, String exceptionStackTrace) {
+		Date date = new Date();
+		newEvent(state, message, exceptionStackTrace, date);
+	}
+	
+	public void newEvent(JobEventType state, String message, String exceptionStackTrace, Date timestamp) {
 		if (state == null) {
 			throw new IllegalArgumentException("state cannot be null");
 		}
-		final Date date = new Date();
 		JobEvent jev = new JobEvent();
 		jev.setJob(this);
-		jev.setTimeStamp(date);
+		jev.setTimeStamp(timestamp);
 		jev.setState(state);
 		jev.setMessage(message);
-		if (stackTrace != null) {
-			jev.setExceptionStackTrace(StringUtils.join(stackTrace, '\n'));
-		}
+		jev.setExceptionStackTrace(exceptionStackTrace);
 		this.jobEvents.add(jev);
 	}
 

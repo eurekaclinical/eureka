@@ -31,6 +31,9 @@ import com.google.inject.Inject;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.JobEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.JobEventType;
 import edu.emory.cci.aiw.cvrg.eureka.etl.dao.JobDao;
+import java.io.PrintStream;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import org.protempa.backend.Configuration;
 
 public final class Task implements Runnable {
@@ -159,16 +162,16 @@ public final class Task implements Runnable {
 		if (job != null) {
 			LOGGER.error("Job " + job.getId() + " for user "
 					+ job.getEtlUser().getUsername() + " failed: " + e.getMessage(), e);
-			StackTraceElement[] ste = e.getStackTrace();
-			String[] st = new String[ste.length];
-			for (int i = 0; i < ste.length; i++) {
-				st[i] = ste[i].toString();
+			
+			StringWriter sw = new StringWriter();
+			try (PrintWriter ps = new PrintWriter(sw)) {
+				e.printStackTrace(ps);
 			}
 			String msg = e.getMessage();
 			if (msg == null) {
 				msg = e.getClass().getName();
 			}
-			job.newEvent(JobEventType.ERROR, msg, st);
+			job.newEvent(JobEventType.ERROR, msg, sw.toString());
 			this.jobDao.update(job);
 		} else {
 			LOGGER.error("Could not create job: " + e.getMessage(), e);
