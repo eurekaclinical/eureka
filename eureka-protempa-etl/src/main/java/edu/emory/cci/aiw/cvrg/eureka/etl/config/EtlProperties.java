@@ -61,11 +61,6 @@ public class EtlProperties extends AbstractProperties {
 				ToConfigFile.fromSourceConfigId(sourceId)), fileTypeId);
 	}
 	
-	public File sourceConfigFile(String sourceId) {
-		return new File(getSourceConfigDirectory(), 
-				ToConfigFile.fromSourceConfigId(sourceId));
-	}
-	
 	public File destinationConfigFile(String destId) {
 		return new File(getDestinationConfigDirectory(),
 				ToConfigFile.fromDestId(destId));

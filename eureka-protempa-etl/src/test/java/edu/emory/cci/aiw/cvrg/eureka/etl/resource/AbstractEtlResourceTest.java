@@ -33,45 +33,13 @@ import edu.emory.cci.aiw.cvrg.eureka.common.test.AbstractResourceTest;
 import edu.emory.cci.aiw.cvrg.eureka.common.test.TestDataProvider;
 import edu.emory.cci.aiw.cvrg.eureka.etl.config.AppTestModule;
 import edu.emory.cci.aiw.cvrg.eureka.etl.config.ContextTestListener;
-import edu.emory.cci.aiw.cvrg.eureka.etl.config.EtlProperties;
 import edu.emory.cci.aiw.cvrg.eureka.etl.test.Setup;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.util.Properties;
-import org.arp.javautil.io.TempDirectoryCreator;
 
 /**
  * @author hrathod
  */
 public abstract class AbstractEtlResourceTest extends AbstractResourceTest {
 	
-	static {
-		try {
-			File configFile = File.createTempFile("eureka", ".properties");
-			configFile.deleteOnExit();
-			File configDir = new TempDirectoryCreator().create("eureka", null, null);
-			Properties props = new Properties();
-			props.setProperty("eureka.config.dir", configDir.getAbsolutePath());
-			try (FileWriter fw = new FileWriter(configFile)) {
-					props.store(fw, null);
-			}
-			System.setProperty("eureka.config.file", configFile.getAbsolutePath());
-			
-			EtlProperties etlProps = new EtlProperties();
-			File protempaConfigDir = etlProps.getSourceConfigDirectory();
-			if (!protempaConfigDir.mkdirs()) {
-				throw new RuntimeException("Protempa config dir " + protempaConfigDir.getAbsolutePath() + " could not be created!");
-			}
-			File protempaConfigFile = etlProps.sourceConfigFile("foo");
-			if (!protempaConfigFile.createNewFile()) {
-				throw new RuntimeException("Protempa config file " + protempaConfigFile.getAbsolutePath() + " already exists!");
-			}
-		} catch (IOException ex) {
-			throw new RuntimeException(ex);
-		}
-	}
-
 	@Override
 	protected final Class<? extends ServletContextListener> getListener() {
 		return ContextTestListener.class;

@@ -59,7 +59,6 @@ public class JobResourceTest extends AbstractEtlResourceTest {
 		List<Job> jobs = resource.path("/api/protected/jobs").accept(
 				MediaType.APPLICATION_JSON).get(new GenericType<List<Job>>() {
 		});
-		System.err.println("jobs: " + jobs);
 		Assert.assertEquals(1, jobs.size());
 	}
 	

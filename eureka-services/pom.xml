@@ -71,7 +71,7 @@
 				<artifactId>maven-surefire-plugin</artifactId>
 				<configuration>
 					<systemPropertyVariables>
-						<eureka.config.file>${project.build.directory}/test-classes/application.properties</eureka.config.file>
+						<eureka.config.dir>${project.build.directory}/test-classes/eureka-config/eureka</eureka.config.dir>
 					</systemPropertyVariables>
 				</configuration>
 			</plugin>

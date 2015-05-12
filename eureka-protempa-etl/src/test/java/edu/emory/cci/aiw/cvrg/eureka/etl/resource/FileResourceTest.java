@@ -35,8 +35,10 @@ import javax.ws.rs.core.MediaType;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import org.apache.commons.io.FileUtils;
 
 import static org.junit.Assert.assertEquals;
+import org.junit.BeforeClass;
 
 /**
  * Tests related to the file upload resource.
@@ -47,6 +49,13 @@ import static org.junit.Assert.assertEquals;
 public class FileResourceTest extends AbstractEtlResourceTest {
 
 	private File tmpFile;
+	private static EtlProperties etlProperties;
+	
+	@BeforeClass
+	public static void setupClass() throws IOException {
+		etlProperties = new EtlProperties();
+		FileUtils.deleteDirectory(etlProperties.getUploadedDirectory());
+	}
 	
 	@Before
 	public void fileResourceSetUp() throws IOException {
@@ -54,8 +63,9 @@ public class FileResourceTest extends AbstractEtlResourceTest {
 	}
 
 	@After
-	public void fileResourceTearDown() {
+	public void fileResourceTearDown() throws IOException {
 		this.tmpFile.delete();
+		FileUtils.deleteDirectory(etlProperties.getUploadedDirectory());
 	}
 	
 	@Test
@@ -71,7 +81,6 @@ public class FileResourceTest extends AbstractEtlResourceTest {
 	@Test
 	public final void testFileUploadCreated2() throws IOException {
 		doUpload("foo", "bar");
-		EtlProperties etlProperties = new EtlProperties();
 		File dir = etlProperties.uploadedDirectory("foo", "bar");
 		File[] files = dir.listFiles();
 		assertEquals(1, files == null ? 0 : files.length);
@@ -89,8 +98,8 @@ public class FileResourceTest extends AbstractEtlResourceTest {
 					.type(MediaType.MULTIPART_FORM_DATA_TYPE)
 					.post(ClientResponse.class, part);
 			Status result = response.getClientResponseStatus();
-			System.err.println("RESULT: " + result);
 			is.close();
+			is = null;
 			return result;
 		} finally {
 			if (is != null) {

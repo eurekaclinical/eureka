@@ -583,7 +583,7 @@
 						</configuration>
 					</execution>
 					<execution>
-						<id>copy-logging.properties-files</id>
+						<id>copy-logging.properties-file</id>
 						<phase>process-classes</phase>
 						<goals>
 							<goal>copy-resources</goal>
@@ -593,6 +593,25 @@
 							<resources>
 								<resource>
 									<directory>${basedir}/src/main/resources/tomcat-eureka-config</directory>
+									<includes>
+										<include>logging.properties</include>
+									</includes>
+									<filtering>true</filtering>
+								</resource>
+							</resources>
+						</configuration>
+					</execution>
+					<execution>
+						<id>copy-application.properties-file</id>
+						<phase>process-classes</phase>
+						<goals>
+							<goal>copy-resources</goal>
+						</goals>
+						<configuration>
+							<outputDirectory>${project.build.directory}/eureka-config/eureka</outputDirectory>
+							<resources>
+								<resource>
+									<directory>${basedir}/src/main/resources/tomcat-eureka-config/eureka</directory>
 									<filtering>true</filtering>
 								</resource>
 							</resources>
@@ -615,7 +634,7 @@
 						<org.apache.tomcat.util.buf.UDecoder.ALLOW_ENCODED_SLASH>true</org.apache.tomcat.util.buf.UDecoder.ALLOW_ENCODED_SLASH>
 						<javax.net.ssl.trustStore>${project.build.directory}/tomcat/conf/localhost.truststore</javax.net.ssl.trustStore>
 						<javax.net.ssl.trustStorePassword>changeit</javax.net.ssl.trustStorePassword>
-						<eureka.config.file>${project.build.directory}/eureka-config/application.properties</eureka.config.file>
+						<eureka.config.dir>${project.build.directory}/eureka-config/eureka</eureka.config.dir>
 						<java.util.logging.config.file>${project.build.directory}/eureka-config/logging.properties</java.util.logging.config.file>
 					</systemProperties>
 					<webapps>
