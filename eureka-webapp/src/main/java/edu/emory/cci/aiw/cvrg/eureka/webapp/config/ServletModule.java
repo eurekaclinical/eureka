@@ -65,17 +65,17 @@ class ServletModule extends AbstractServletModule {
 	
 	private void setupMessageFilter() {
 		bind(MessagesFilter.class).in(Singleton.class);
-		filter("/*").through(MessagesFilter.class);
+		filterRegex("^/(?!assets).*").through(MessagesFilter.class);
 	}
 	
 	private void setupHaveUserRecordFilter() {
 		bind(HaveUserRecordFilter.class).in(Singleton.class);
-		filter("/*").through(HaveUserRecordFilter.class);
+		filterRegex("^/(?!assets).*").through(HaveUserRecordFilter.class);
 	}
 
 	private void setupUserInfoFilter () {
 		bind(UserInfoFilter.class).in(Singleton.class);
-		filter("/*").through(UserInfoFilter.class);
+		filterRegex("^/(?!assets).*").through(UserInfoFilter.class);
 	}
 
 	private void setupPasswordExpiredFilter() {
