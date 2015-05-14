@@ -131,17 +131,10 @@ public abstract class AbstractProperties {
 	 * Get the base URL for the application front-end for external users. Always
 	 * ends with a slash ("/").
 	 *
-	 * @param request the HTTP request, which will be used to generate a URL to
-	 * the website if none of the properties files contain an application URL
-	 * property.
-	 *
 	 * @return The base URL.
 	 */
-	public String getApplicationUrl(HttpServletRequest request) {
+	public String getApplicationUrl() {
 		String result = this.getValue("eureka.webapp.url");
-		if (result == null) {
-			result = PublicUrlGenerator.generate(request);
-		}
 		if (result.endsWith("/")) {
 			return result;
 		} else {

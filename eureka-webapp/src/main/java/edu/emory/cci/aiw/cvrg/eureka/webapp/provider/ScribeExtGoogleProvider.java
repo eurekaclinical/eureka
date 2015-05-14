@@ -1,4 +1,4 @@
-package edu.emory.cci.aiw.cvrg.eureka.servlet.oauth;
+package edu.emory.cci.aiw.cvrg.eureka.webapp.provider;
 
 /*
  * #%L
@@ -21,18 +21,28 @@ package edu.emory.cci.aiw.cvrg.eureka.servlet.oauth;
  */
 
 import com.google.inject.Inject;
-import org.eurekaclinical.scribeupext.profile.GoogleProfile;
+import com.google.inject.Provider;
+import edu.emory.cci.aiw.cvrg.eureka.webapp.config.WebappProperties;
 import org.eurekaclinical.scribeupext.provider.Google2Provider;
 
 /**
  *
  * @author Andrew Post
  */
-public class GoogleRegistrationOAuthCallbackServlet extends AbstractOAuthRegistrationCallbackServlet<GoogleProfile> {
+public class ScribeExtGoogleProvider implements Provider<Google2Provider> {
+	private final Google2Provider googleProvider;
 
 	@Inject
-	public GoogleRegistrationOAuthCallbackServlet(Google2Provider inProvider) {
-		super(inProvider);
+	public ScribeExtGoogleProvider(WebappProperties inProperties) {
+		this.googleProvider = new Google2Provider();
+		this.googleProvider.setKey(inProperties.getGoogleOAuthKey());
+		this.googleProvider.setSecret(inProperties.getGoogleOAuthSecret());
+		this.googleProvider.setCallbackUrl(inProperties.getApplicationUrl() + "registrationoauthgooglecallback");
+	}
+	
+	@Override
+	public Google2Provider get() {
+		return this.googleProvider;
 	}
 	
 }

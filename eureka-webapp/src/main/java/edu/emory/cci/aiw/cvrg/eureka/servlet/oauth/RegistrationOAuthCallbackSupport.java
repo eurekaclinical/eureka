@@ -19,7 +19,6 @@ package edu.emory.cci.aiw.cvrg.eureka.servlet.oauth;
  * limitations under the License.
  * #L%
  */
-
 import edu.emory.cci.aiw.cvrg.eureka.servlet.filter.PersonNameSplitter;
 import java.io.IOException;
 import javax.servlet.ServletException;
@@ -28,50 +27,67 @@ import javax.servlet.http.HttpServletResponse;
 import org.eurekaclinical.scribeupext.profile.EurekaProfile;
 import org.scribe.up.credential.OAuthCredential;
 import org.scribe.up.provider.OAuthProvider;
+import org.scribe.up.session.HttpUserSession;
 
 /**
  *
  * @author Andrew Post
  */
 class RegistrationOAuthCallbackSupport<E extends EurekaProfile> {
+
 	private final OAuthProvider provider;
 
 	RegistrationOAuthCallbackSupport(OAuthProvider provider) {
 		this.provider = provider;
 	}
-	
-	E getProfile(HttpServletRequest req) {
-		String verifier = req.getParameter(provider.getType());
-		OAuthCredential credential = new OAuthCredential(null, null, verifier, provider.getType());
 
-		return (E) provider.getUserProfile(credential);
-	}
-	
-	void setEurekaAttributeFromProfile(HttpServletRequest req) {
-		E userProfile = getProfile(req);
-		String fullName = userProfile.getDisplayName();
-		req.setAttribute("fullName", fullName);
-		String firstName = userProfile.getFirstName();
-		String lastName = userProfile.getFamilyName();
-		
-		if ((firstName == null || lastName == null) && fullName != null) {
-			PersonNameSplitter splitter
-					= new PersonNameSplitter(fullName);
-			if (firstName == null) {
-				firstName = splitter.getFirstName();
-			}
-			if (lastName == null) {
-				lastName = splitter.getLastName();
-			}
+	E getProfile(HttpServletRequest req) {
+		OAuthCredential credential
+				= provider.getCredential(
+						new HttpUserSession(req.getSession()),
+						req.getParameterMap());
+		if (credential != null) {
+			return (E) provider.getUserProfile(credential);
+		} else {
+			/* User rejected authorization request. */
+			return null;
 		}
-		req.setAttribute("firstName", firstName);
-		req.setAttribute("lastName", lastName);
-		req.setAttribute("email", userProfile.getEmail());
-		req.setAttribute("username", userProfile.getUsername());
+	}
+
+	boolean setEurekaAttributeFromProfile(HttpServletRequest req) {
+		E userProfile = getProfile(req);
+		if (userProfile != null) {
+			req.setAttribute("accountType", userProfile.getType());
+			String fullName = userProfile.getDisplayName();
+			req.setAttribute("fullName", fullName);
+			String firstName = userProfile.getFirstName();
+			String lastName = userProfile.getFamilyName();
+
+			if ((firstName == null || lastName == null) && fullName != null) {
+				PersonNameSplitter splitter
+						= new PersonNameSplitter(fullName);
+				if (firstName == null) {
+					firstName = splitter.getFirstName();
+				}
+				if (lastName == null) {
+					lastName = splitter.getLastName();
+				}
+			}
+			req.setAttribute("firstName", firstName);
+			req.setAttribute("lastName", lastName);
+			req.setAttribute("email", userProfile.getEmail());
+			req.setAttribute("username", userProfile.getUsername());
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 	void forwardProfileToRegisterPage(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		setEurekaAttributeFromProfile(req);
-		req.getRequestDispatcher("/register.jsp").forward(req, resp);
+		if (setEurekaAttributeFromProfile(req)) {
+			req.getRequestDispatcher("/register.jsp").forward(req, resp);
+		} else {
+			resp.sendRedirect(req.getContextPath() + "/chooseaccounttype");
+		}
 	}
 }

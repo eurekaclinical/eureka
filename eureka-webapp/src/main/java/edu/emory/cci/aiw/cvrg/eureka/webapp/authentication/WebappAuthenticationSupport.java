@@ -44,7 +44,7 @@ public final class WebappAuthenticationSupport extends AbstractAuthenticationSup
 	}
 	
 	public User getMe(HttpServletRequest req) throws ClientException {
-		return this.servicesClient.getMe();
+		return (User) req.getAttribute("user");
 	}
 
 	public void needsToLogin(HttpServletRequest req, HttpServletResponse resp) throws IOException {

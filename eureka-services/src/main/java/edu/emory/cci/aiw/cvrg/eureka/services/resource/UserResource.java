@@ -148,6 +148,7 @@ public class UserResource {
 	 * @param inId The identification number for the user to fetch.
 	 * @return The user referenced by the identification number.
 	 */
+	@RolesAllowed({"researcher", "admin"})
 	@Path("/byid/{id}")
 	@GET
 	public User getUserById(@Context HttpServletRequest req,
@@ -172,6 +173,7 @@ public class UserResource {
 	 *
 	 * @return The user corresponding to the given name.
 	 */
+	@RolesAllowed({"researcher", "admin"})
 	@Path("/me")
 	@GET
 	public User getMe(@Context HttpServletRequest req) {
@@ -233,6 +235,7 @@ public class UserResource {
 	 * @throws HttpStatusException Thrown when a password cannot be properly
 	 * hashed, or the passwords are mismatched.
 	 */
+	@RolesAllowed({"researcher", "admin"})
 	@Path("/passwordchangerequest")
 	@POST
 	public void changePassword(@Context HttpServletRequest request,
@@ -284,6 +287,7 @@ public class UserResource {
 	 * add.
 	 * @return A "Created" response with a link to the user page if successful.
 	 */
+	@RolesAllowed({"researcher", "admin"})
 	@PUT
 	public Response putUser(@Context HttpServletRequest req, User inUser) {
 		String username = req.getUserPrincipal().getName();

@@ -19,9 +19,9 @@ package edu.emory.cci.aiw.cvrg.eureka.webapp.taglib;
  * limitations under the License.
  * #L%
  */
-
 import edu.emory.cci.aiw.cvrg.eureka.common.props.SupportUri;
 import edu.emory.cci.aiw.cvrg.eureka.webapp.config.WebappProperties;
+import java.beans.IntrospectionException;
 import java.io.IOException;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.JspWriter;
@@ -33,8 +33,15 @@ import org.jboss.logging.Logger;
  * @author Andrew Post
  */
 public class SupportUriTag extends TagSupport {
+
 	private static final WebappProperties properties = new WebappProperties();
 	private static final Logger LOGGER = Logger.getLogger(SupportUriTag.class);
+
+	private String hyperlinkClass;
+
+	public SupportUriTag() throws IntrospectionException {
+		this.hyperlinkClass = "";
+	}
 
 	@Override
 	public int doStartTag() throws JspException {
@@ -47,20 +54,31 @@ public class SupportUriTag extends TagSupport {
 		}
 		return SKIP_BODY;
 	}
-	
-	private static String supportUri() {
+
+	public String getHyperlinkClass() {
+		return hyperlinkClass;
+	}
+
+	public void setHyperlinkClass(String hyperlinkClass) {
+		if (hyperlinkClass == null) {
+			this.hyperlinkClass = "";
+		} else {
+			this.hyperlinkClass = hyperlinkClass;
+		}
+	}
+
+	private String supportUri() {
 		SupportUri supportUri = properties.getSupportUri();
 		if (supportUri == null) {
 			return null;
 		} else if (supportUri.isHyperlinkable()) {
-			return "<a href=\"" + supportUri + "\">" + supportUri.getName() + "</a>";
+			return "<a href=\"" + supportUri + "\" class=\"" + this.hyperlinkClass + "\">" + supportUri.getName() + "</a>";
 		} else {
 			return supportUri.toString();
 		}
-		
 	}
-	
+
 	public static boolean isSupportUriDefined() {
-		return supportUri() != null;
+		return properties.getSupportUri() != null;
 	}
 }

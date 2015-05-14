@@ -40,10 +40,22 @@ import org.scribe.up.session.HttpUserSession;
  */
 public class ChooseAccountTypeServlet extends HttpServlet {
 	private final WebappProperties properties;
+	private final Google2Provider googleProvider;
+	private final SSLTwitterProvider twitterProvider;
+	private final GlobusProvider globusProvider;
+	private final GitHubProvider gitHubProvider;
 
 	@Inject
-	public ChooseAccountTypeServlet(WebappProperties inProperties) {
+	public ChooseAccountTypeServlet(WebappProperties inProperties, 
+			Google2Provider inGoogleProvider, 
+			GitHubProvider inGitHubProvider, 
+			SSLTwitterProvider inTwitterProvider, 
+			GlobusProvider inGlobusProvider) {
 		this.properties = inProperties;
+		this.googleProvider = inGoogleProvider;
+		this.twitterProvider = inTwitterProvider;
+		this.globusProvider = inGlobusProvider;
+		this.gitHubProvider = inGitHubProvider;
 	}
 	
 	
@@ -55,8 +67,6 @@ public class ChooseAccountTypeServlet extends HttpServlet {
 		
 		boolean localAccountRegistrationEnabled = this.properties.isLocalAccountRegistrationEnabled();
 		
-		String webappUrl = this.properties.getApplicationUrl(req);
-		
 		if (oauthRegistrationEnabled) {
 			HttpUserSession userSession = new HttpUserSession(req);
 			String authorizationUrl = null;
@@ -64,10 +74,6 @@ public class ChooseAccountTypeServlet extends HttpServlet {
 			boolean googleAuthEnabled = this.properties.isGoogleOAuthRegistrationEnabled();
 			req.setAttribute("googleAuthEnabled", googleAuthEnabled);
 			if (googleAuthEnabled) {
-				Google2Provider googleProvider = new Google2Provider();
-				googleProvider.setKey(this.properties.getGoogleOAuthKey());
-				googleProvider.setSecret(this.properties.getGoogleOAuthSecret());
-				googleProvider.setCallbackUrl(webappUrl + "registrationoauthgooglecallback");
 				authorizationUrl = googleProvider.getAuthorizationUrl(userSession);
 				req.setAttribute("Google2ProviderUrl", authorizationUrl);
 				countEnabled++;
@@ -76,10 +82,6 @@ public class ChooseAccountTypeServlet extends HttpServlet {
 			boolean gitHubAuthEnabled = this.properties.isGitHubOAuthRegistrationEnabled();
 			req.setAttribute("gitHubAuthEnabled", gitHubAuthEnabled);
 			if (gitHubAuthEnabled) {
-				GitHubProvider gitHubProvider = new GitHubProvider();
-				gitHubProvider.setKey(this.properties.getGitHubOAuthKey());
-				gitHubProvider.setSecret(this.properties.getGitHubOAuthSecret());
-				gitHubProvider.setCallbackUrl(webappUrl + "registrationoauthgithubcallback");
 				authorizationUrl = gitHubProvider.getAuthorizationUrl(userSession);
 				req.setAttribute("GitHubProviderUrl", authorizationUrl);
 				countEnabled++;
@@ -88,10 +90,6 @@ public class ChooseAccountTypeServlet extends HttpServlet {
 			boolean twitterAuthEnabled = this.properties.isTwitterOAuthRegistrationEnabled();
 			req.setAttribute("twitterAuthEnabled", twitterAuthEnabled);
 			if (twitterAuthEnabled) {
-				SSLTwitterProvider twitterProvider = new SSLTwitterProvider();
-				twitterProvider.setKey(this.properties.getTwitterOAuthKey());
-				twitterProvider.setSecret(this.properties.getTwitterOAuthSecret());
-				twitterProvider.setCallbackUrl(webappUrl + "registrationoauthtwittercallback");
 				authorizationUrl = twitterProvider.getAuthorizationUrl(userSession);
 				req.setAttribute("SSLTwitterProviderUrl", authorizationUrl);
 				countEnabled++;
@@ -100,10 +98,6 @@ public class ChooseAccountTypeServlet extends HttpServlet {
 			boolean globusAuthEnabled = this.properties.isGlobusOAuthRegistrationEnabled();
 			req.setAttribute("globusAuthEnabled", globusAuthEnabled);
 			if (globusAuthEnabled) {
-				GlobusProvider globusProvider = new GlobusProvider();
-				globusProvider.setKey(this.properties.getGlobusOAuthKey());
-				globusProvider.setSecret(this.properties.getGlobusOAuthSecret());
-				globusProvider.setCallbackUrl(webappUrl + "registrationoauthglobuscallback");
 				authorizationUrl = globusProvider.getAuthorizationUrl(userSession);
 				req.setAttribute("GlobusProviderUrl", authorizationUrl);
 				countEnabled++;

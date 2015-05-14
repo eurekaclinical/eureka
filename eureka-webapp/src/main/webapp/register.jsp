@@ -25,15 +25,17 @@
 <template:content name="content">
 <c:choose>
 <c:when test="${pageContext.request.remoteUser != null and myfn:isUserInRole(pageContext.request, 'researcher')}">
-	You are already registered with Eureka!.  If you would like to register a new user, please
-	<a href="${pageContext.request.contextPath}/logout">logout</a> and try again.  Thank you.
+	<div class="alert alert-danger">
+		You are already logged in!  If you would like to register a new user, please
+		<a href="${pageContext.request.contextPath}/logout">logout</a> and try again.
+	</div>
 </c:when>
 <c:otherwise>
 <div id="registerHeading">
 	<c:choose>
-		<c:when test="${not empty pageContext.request.remoteUser}">
-			<h3>Welcome to Eureka!</h3>
-			<p>Please complete and review your profile information.</p>
+		<c:when test="${not empty accountType}">
+			<h3>Register using your ${accountType} account</h3>
+			<p>Please review and complete your profile.</p>
 		</c:when>
 		<c:otherwise>
 			<h3>Register</h3>

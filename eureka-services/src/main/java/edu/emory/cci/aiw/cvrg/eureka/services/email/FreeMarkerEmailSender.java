@@ -44,10 +44,8 @@ import freemarker.template.DefaultObjectWrapper;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
 import java.io.ByteArrayOutputStream;
-import java.io.FileOutputStream;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
-import java.util.logging.Level;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -75,11 +73,6 @@ public class FreeMarkerEmailSender implements EmailSender {
 	private final ServiceProperties serviceProperties;
 
 	/**
-	 * The request object.
-	 */
-	private final HttpServletRequest request;
-
-	/**
 	 * Default constructor, creates a FreeMarker configuration object. Should be
 	 * called in the context of a request.
 	 *
@@ -89,15 +82,13 @@ public class FreeMarkerEmailSender implements EmailSender {
 	@Inject
 	public FreeMarkerEmailSender(
 			final ServiceProperties inServiceProperties,
-			final Session inSession,
-			@Context HttpServletRequest request) {
+			final Session inSession) {
 		this.serviceProperties = inServiceProperties;
 		this.session = inSession;
 		this.configuration = new Configuration();
 		this.configuration.setClassForTemplateLoading(this.getClass(),
 				"/templates/");
 		this.configuration.setObjectWrapper(new DefaultObjectWrapper());
-		this.request = request;
 	}
 
 	/**
@@ -110,7 +101,7 @@ public class FreeMarkerEmailSender implements EmailSender {
 	public void sendVerificationMessage(final UserEntity inUser)
 			throws EmailException {
 		Map<String, Object> params = new HashMap<>();
-		String verificationUrl = this.serviceProperties.getVerificationUrl(this.request);
+		String verificationUrl = this.serviceProperties.getVerificationUrl();
 		params.put("verificationUrl", verificationUrl);
 		sendMessage(inUser, "verification.ftl",
 				this.serviceProperties.getVerificationEmailSubject(), params);
@@ -119,7 +110,7 @@ public class FreeMarkerEmailSender implements EmailSender {
 	@Override
 	public void sendActivationMessage(final UserEntity inUser) throws EmailException {
 		Map<String, Object> params = new HashMap<>();
-		String applicationUrl = this.serviceProperties.getApplicationUrl(this.request);
+		String applicationUrl = this.serviceProperties.getApplicationUrl();
 		params.put("applicationUrl", applicationUrl);
 		sendMessage(inUser, "activation.ftl",
 				this.serviceProperties.getActivationEmailSubject(), params);

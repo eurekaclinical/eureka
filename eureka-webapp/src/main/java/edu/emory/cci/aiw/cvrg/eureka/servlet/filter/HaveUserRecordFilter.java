@@ -35,7 +35,9 @@ import com.sun.jersey.api.client.ClientResponse.Status;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.User;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ClientException;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ServicesClient;
+import edu.emory.cci.aiw.cvrg.eureka.webapp.config.WebappProperties;
 import javax.servlet.http.HttpSession;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  *
@@ -48,10 +50,12 @@ public class HaveUserRecordFilter implements Filter {
 			= LoggerFactory.getLogger(MessagesFilter.class);
 
 	private final ServicesClient servicesClient;
+	private final WebappProperties properties;
 
 	@Inject
-	public HaveUserRecordFilter(ServicesClient inServicesClient) {
+	public HaveUserRecordFilter(ServicesClient inServicesClient, WebappProperties inProperties) {
 		this.servicesClient = inServicesClient;
+		this.properties = inProperties;
 	}
 
 	@Override
@@ -62,36 +66,52 @@ public class HaveUserRecordFilter implements Filter {
 	public void doFilter(ServletRequest inRequest, ServletResponse inResponse, FilterChain inFilterChain) throws IOException, ServletException {
 		HttpServletRequest servletRequest = (HttpServletRequest) inRequest;
 		HttpServletResponse servletResponse = (HttpServletResponse) inResponse;
-		LOGGER.debug("username: {}", servletRequest.getRemoteUser());
-		try {
-			User user = this.servicesClient.getMe();
-			if (!user.isActive()) {
-				servletResponse.setStatus(HttpServletResponse.SC_FORBIDDEN);
-			} else {
-				inFilterChain.doFilter(inRequest, inResponse);
-			}
-		} catch (ClientException ex) {
-			if (Status.NOT_FOUND.equals(ex.getResponseStatus())) {
-				HttpSession session = servletRequest.getSession(false);
-				if (session != null) {
-					session.invalidate();
+		String remoteUser = servletRequest.getRemoteUser();
+		if (!StringUtils.isEmpty(remoteUser)) {
+			try {
+				User user = this.servicesClient.getMe();
+				if (!user.isActive()) {
+					HttpSession session = servletRequest.getSession(false);
+					if (session != null) {
+						session.invalidate();
+					}
+					sendForbiddenError(servletResponse, servletRequest, true);
+				} else {
+					inRequest.setAttribute("user", user);
+					inFilterChain.doFilter(inRequest, inResponse);
 				}
-				inFilterChain.doFilter(inRequest, inResponse);
-			} else if (Status.UNAUTHORIZED.equals(ex.getResponseStatus())) {
-				HttpSession session = servletRequest.getSession(false);
-				if (session != null) {
-					session.invalidate();
+			} catch (ClientException ex) {
+				if (Status.FORBIDDEN.equals(ex.getResponseStatus())) {
+					HttpSession session = servletRequest.getSession(false);
+					if (session != null) {
+						session.invalidate();
+					}
+					sendForbiddenError(servletResponse, servletRequest, false);
+				} else {
+					throw new ServletException("Error getting user "
+							+ servletRequest.getRemoteUser(), ex);
 				}
-				inFilterChain.doFilter(inRequest, inResponse);
-			} else {
-				throw new ServletException("Error getting user "
-						+ servletRequest.getRemoteUser(), ex);
 			}
+		} else {
+			inFilterChain.doFilter(inRequest, inResponse);
+		}
+	}
+
+	private void sendForbiddenError(HttpServletResponse servletResponse, HttpServletRequest servletRequest, boolean created) throws IOException {
+		if (this.properties.isRegistrationEnabled()) {
+			servletResponse.setStatus(HttpServletResponse.SC_FORBIDDEN);
+			if (created) {
+				servletResponse.sendRedirect(servletRequest.getContextPath() + "/logout?awaitingActivation=true");
+			} else {
+				servletResponse.sendRedirect(servletRequest.getContextPath() + "/logout?notRegistered=true");
+			}
+		} else {
+			servletResponse.sendError(HttpServletResponse.SC_FORBIDDEN);
 		}
 	}
 
 	@Override
 	public void destroy() {
 	}
-
+	
 }

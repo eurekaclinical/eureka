@@ -1,4 +1,4 @@
-package edu.emory.cci.aiw.cvrg.eureka.servlet.oauth;
+package edu.emory.cci.aiw.cvrg.eureka.webapp.provider;
 
 /*
  * #%L
@@ -21,18 +21,28 @@ package edu.emory.cci.aiw.cvrg.eureka.servlet.oauth;
  */
 
 import com.google.inject.Inject;
-import org.eurekaclinical.scribeupext.profile.GlobusProfile;
+import com.google.inject.Provider;
+import edu.emory.cci.aiw.cvrg.eureka.webapp.config.WebappProperties;
 import org.eurekaclinical.scribeupext.provider.GlobusProvider;
 
 /**
  *
  * @author Andrew Post
  */
-public class GlobusRegistrationOAuthCallbackServlet extends AbstractOAuthRegistrationCallbackServlet<GlobusProfile> {
-
+public class ScribeExtGlobusProvider implements Provider<GlobusProvider> {
+	private final GlobusProvider globusProvider;
+	
 	@Inject
-	public GlobusRegistrationOAuthCallbackServlet(GlobusProvider inProvider) {
-		super(inProvider);
+	public ScribeExtGlobusProvider(WebappProperties inProperties) {
+		this.globusProvider = new GlobusProvider();
+		this.globusProvider.setKey(inProperties.getGlobusOAuthKey());
+		this.globusProvider.setSecret(inProperties.getGlobusOAuthSecret());
+		this.globusProvider.setCallbackUrl(inProperties.getApplicationUrl() + "registrationoauthglobuscallback");
+	}
+
+	@Override
+	public GlobusProvider get() {
+		return this.globusProvider;
 	}
 	
 }

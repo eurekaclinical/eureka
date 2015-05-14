@@ -129,15 +129,11 @@ public class ServiceProperties extends AbstractProperties {
 	 * Get the verification base URL, to be used in sending a verification email
 	 * to the user.
 	 * 
-	 * @param request the HTTP request, which will be used to generate a
-	 * verification URL from server information if none of the properties files
-	 * contain an services layer URL property.
-	 *
 	 * @return The verification base URL, as found in the application
 	 * configuration file.
 	 */
-	public String getVerificationUrl(HttpServletRequest request) {
-		String verUrl = getApplicationUrl(request);
+	public String getVerificationUrl() {
+		String verUrl = getApplicationUrl();
 		return verUrl + (verUrl.endsWith("/") ? "" : "/") + "verify?code=";
 	}
 

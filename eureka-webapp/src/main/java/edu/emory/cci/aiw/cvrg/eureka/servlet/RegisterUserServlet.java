@@ -42,25 +42,21 @@ import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ClientException;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ServicesClient;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.OAuthProvider;
 import edu.emory.cci.aiw.cvrg.eureka.webapp.authentication.WebappAuthenticationSupport;
-import edu.emory.cci.aiw.cvrg.eureka.webapp.config.WebappProperties;
 import java.text.MessageFormat;
 import java.util.ResourceBundle;
 import org.jasig.cas.client.authentication.AttributePrincipal;
 
 public class RegisterUserServlet extends HttpServlet {
 
-	private static Logger LOGGER = LoggerFactory.getLogger(RegisterUserServlet.class);
-	private static final ResourceBundle messages
-			= ResourceBundle.getBundle("Messages");
+	private static final Logger LOGGER = LoggerFactory.getLogger(RegisterUserServlet.class);
+	private static final ResourceBundle messages = ResourceBundle.getBundle("Messages");
 	private final ServicesClient servicesClient;
 	private final WebappAuthenticationSupport authenticationSupport;
-	private final WebappProperties properties;
 
 	@Inject
 	public RegisterUserServlet(ServicesClient inClient) {
 		this.servicesClient = inClient;
 		this.authenticationSupport = new WebappAuthenticationSupport(inClient);
-		this.properties = new WebappProperties();
 	}
 
 	@Override
@@ -142,17 +138,12 @@ public class RegisterUserServlet extends HttpServlet {
 			Status responseStatus = e.getResponseStatus();
 			if (responseStatus.equals(Status.CONFLICT)) {
 				resp.setStatus(HttpServletResponse.SC_CONFLICT);
-				//This should only happen with local accounts.
-				if (!authenticationMethod.equals(AuthenticationMethod.LOCAL.name())) {
-					LOGGER.error("Attempted to register a non-local account ({}) that already exists!", principal.getName());
-					msg = MessageFormat.format(messages.getString("registerUserServlet.error.unspecified"), "help@eurekaclinical.org");
-				} else {
-					msg = messages.getString("registerUserServlet.error.localAccountConflict");
-				}
+				msg = messages.getString("registerUserServlet.error.conflict");
 			} else if (responseStatus.equals(Status.BAD_REQUEST)) {
 				resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+				msg = messages.getString("registerUserServlet.error.badRequest");
 			} else {
-				resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+				throw new ServletException();
 			}
 			resp.setContentType("text/plain");
 			LOGGER.debug("Error: {}", msg);

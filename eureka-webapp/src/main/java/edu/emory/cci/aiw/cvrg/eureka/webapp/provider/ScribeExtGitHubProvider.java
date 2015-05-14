@@ -1,4 +1,4 @@
-package edu.emory.cci.aiw.cvrg.eureka.servlet.oauth;
+package edu.emory.cci.aiw.cvrg.eureka.webapp.provider;
 
 /*
  * #%L
@@ -21,18 +21,28 @@ package edu.emory.cci.aiw.cvrg.eureka.servlet.oauth;
  */
 
 import com.google.inject.Inject;
-import org.eurekaclinical.scribeupext.profile.GitHubProfile;
+import com.google.inject.Provider;
+import edu.emory.cci.aiw.cvrg.eureka.webapp.config.WebappProperties;
 import org.eurekaclinical.scribeupext.provider.GitHubProvider;
 
 /**
  *
  * @author Andrew Post
  */
-public class GitHubRegistrationOAuthCallbackServlet extends AbstractOAuthRegistrationCallbackServlet<GitHubProfile> {
-
+public class ScribeExtGitHubProvider implements Provider<GitHubProvider> {
+	private final GitHubProvider gitHubProvider;
+	
 	@Inject
-	public GitHubRegistrationOAuthCallbackServlet(GitHubProvider inProvider) {
-		super(inProvider);
+	public ScribeExtGitHubProvider(WebappProperties inProperties) {
+		this.gitHubProvider = new GitHubProvider();
+		this.gitHubProvider.setKey(inProperties.getGitHubOAuthKey());
+		this.gitHubProvider.setSecret(inProperties.getGitHubOAuthSecret());
+		this.gitHubProvider.setCallbackUrl(inProperties.getApplicationUrl() + "registrationoauthgithubcallback");
+	}
+
+	@Override
+	public GitHubProvider get() {
+		return this.gitHubProvider;
 	}
 	
 }

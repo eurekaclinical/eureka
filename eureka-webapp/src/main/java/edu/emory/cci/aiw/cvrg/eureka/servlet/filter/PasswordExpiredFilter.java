@@ -84,41 +84,30 @@ public class PasswordExpiredFilter implements Filter {
 			HttpServletResponse servletResponse = (HttpServletResponse) response;
 			String name = servletRequest.getRemoteUser();
 			LOGGER.debug("username: {}", name);
-			try {
-				User user = this.authenticationSupport.getMe(servletRequest);
-				if (!(user instanceof LocalUser)) {
-					chain.doFilter(request, response);
-				} else {
-					Date now = new Date();
-					Date expiration = ((LocalUser) user).getPasswordExpiration();
-					LOGGER.debug("expiration date: {}", expiration);
-					if (expiration != null && now.after(expiration)) {
-						String targetUrl = servletRequest.getRequestURI();
-						String fullRedirectUrl = servletRequest.getContextPath()
-								+ this.redirectUrl;
-						String fullSaveUrl = servletRequest.getContextPath()
-								+ this.saveUrl;
-						LOGGER.debug("fullRedirectUrl: {}", fullRedirectUrl);
-						LOGGER.debug("fullSaveUrl: {}", fullSaveUrl);
-						LOGGER.debug("targetUrl: {}", targetUrl);
-						if (!targetUrl.equals(fullRedirectUrl) && !targetUrl
-								.equals(fullSaveUrl)) {
-							servletResponse.sendRedirect(fullRedirectUrl + "?firstLogin=" + (user.getLastLogin() == null) + "&redirectURL=" + targetUrl);
-						} else {
-							chain.doFilter(request, response);
-						}
+			User user = (User) request.getAttribute("user");
+			if (!(user instanceof LocalUser)) {
+				chain.doFilter(request, response);
+			} else {
+				Date now = new Date();
+				Date expiration = ((LocalUser) user).getPasswordExpiration();
+				LOGGER.debug("expiration date: {}", expiration);
+				if (expiration != null && now.after(expiration)) {
+					String targetUrl = servletRequest.getRequestURI();
+					String fullRedirectUrl = servletRequest.getContextPath()
+							+ this.redirectUrl;
+					String fullSaveUrl = servletRequest.getContextPath()
+							+ this.saveUrl;
+					LOGGER.debug("fullRedirectUrl: {}", fullRedirectUrl);
+					LOGGER.debug("fullSaveUrl: {}", fullSaveUrl);
+					LOGGER.debug("targetUrl: {}", targetUrl);
+					if (!targetUrl.equals(fullRedirectUrl) && !targetUrl
+							.equals(fullSaveUrl)) {
+						servletResponse.sendRedirect(fullRedirectUrl + "?firstLogin=" + (user.getLastLogin() == null) + "&redirectURL=" + targetUrl);
 					} else {
 						chain.doFilter(request, response);
 					}
-				}
-			} catch (ClientException ex) {
-				switch (ex.getResponseStatus()) {
-					case UNAUTHORIZED:
-						this.authenticationSupport.needsToLogin(servletRequest, servletResponse);
-						break;
-					default:
-						servletResponse.setStatus(ex.getResponseStatus().getStatusCode());
-						servletResponse.getWriter().write(ex.getMessage());
+				} else {
+					chain.doFilter(request, response);
 				}
 			}
 		} else {

@@ -28,18 +28,20 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.google.inject.Inject;
+import com.sun.jersey.api.client.ClientResponse.Status;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.User;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ClientException;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ServicesClient;
-import edu.emory.cci.aiw.cvrg.eureka.webapp.authentication.WebappAuthenticationSupport;
+import javax.servlet.http.HttpSession;
+import org.apache.commons.httpclient.HttpStatus;
 
 public class LoginServlet extends HttpServlet {
 
 	private final ServicesClient servicesClient;
 
 	@Inject
-	public LoginServlet (ServicesClient inClient) {
+	public LoginServlet(ServicesClient inClient) {
 		this.servicesClient = inClient;
 	}
 
@@ -47,13 +49,21 @@ public class LoginServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
 		try {
-			User user = this.servicesClient.getMe();
+			User user = (User) req.getAttribute("user");
 			user.setLastLogin(new Date());
 			this.servicesClient.updateUser(user);
+			resp.sendRedirect(req.getContextPath() + "/index.jsp");
 		} catch (ClientException e) {
-			throw new ServletException(e);
+			Status responseStatus = e.getResponseStatus();
+			if (responseStatus == Status.FORBIDDEN) {
+				HttpSession session = req.getSession(false);
+				if (session != null) {
+					session.invalidate();
+				}
+				resp.sendError(HttpStatus.SC_FORBIDDEN);
+			} else {
+				throw new ServletException(e);
+			}
 		}
-
-		resp.sendRedirect(req.getContextPath() + "/index.jsp");
 	}
 }

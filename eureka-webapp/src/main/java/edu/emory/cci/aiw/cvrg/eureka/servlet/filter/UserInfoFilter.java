@@ -19,11 +19,9 @@ package edu.emory.cci.aiw.cvrg.eureka.servlet.filter;
  * limitations under the License.
  * #L%
  */
-
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.User;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ClientException;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ServicesClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,6 +29,7 @@ import org.slf4j.LoggerFactory;
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * @author hrathod
@@ -55,19 +54,12 @@ public class UserInfoFilter implements Filter {
 	@Override
 	public void doFilter(ServletRequest inRequest, ServletResponse inResponse, FilterChain inFilterChain) throws IOException, ServletException {
 		HttpServletRequest servletRequest = (HttpServletRequest) inRequest;
-//		HttpServletResponse servletResponse = (HttpServletResponse) inResponse;
 		String remoteUser = servletRequest.getRemoteUser();
-		LOGGER.debug("username: {}", remoteUser);
 		boolean userIsActivated = false;
-		if (remoteUser != null && remoteUser.length() > 0) {
-			try {
-				User user = this.servicesClient.getMe();
-				if (user.isActive()) {
-					userIsActivated = true;
-				}
-			} catch (ClientException ex) {
-				// nothing to do here.  We assume that the user does not exist,
-				// and pass along 'false' in the request attribute below.
+		if (!StringUtils.isEmpty(remoteUser)) {
+			User user = (User) inRequest.getAttribute("user");
+			if (user != null && user.isActive()) {
+				userIsActivated = true;
 			}
 		}
 

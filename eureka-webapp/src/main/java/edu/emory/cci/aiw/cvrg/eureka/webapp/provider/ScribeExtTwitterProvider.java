@@ -1,4 +1,4 @@
-package edu.emory.cci.aiw.cvrg.eureka.servlet.oauth;
+package edu.emory.cci.aiw.cvrg.eureka.webapp.provider;
 
 /*
  * #%L
@@ -21,18 +21,28 @@ package edu.emory.cci.aiw.cvrg.eureka.servlet.oauth;
  */
 
 import com.google.inject.Inject;
-import org.eurekaclinical.scribeupext.profile.TwitterProfile;
+import com.google.inject.Provider;
+import edu.emory.cci.aiw.cvrg.eureka.webapp.config.WebappProperties;
 import org.eurekaclinical.scribeupext.provider.SSLTwitterProvider;
 
 /**
  *
  * @author Andrew Post
  */
-public class TwitterRegistrationOAuthCallbackServlet extends AbstractOAuthRegistrationCallbackServlet<TwitterProfile> {
+public class ScribeExtTwitterProvider implements Provider<SSLTwitterProvider> {
+	private final SSLTwitterProvider twitterProvider;
 
 	@Inject
-	public TwitterRegistrationOAuthCallbackServlet(SSLTwitterProvider inProvider) {
-		super(inProvider);
+	public ScribeExtTwitterProvider(WebappProperties inProperties) {
+		this.twitterProvider = new SSLTwitterProvider();
+		this.twitterProvider.setKey(inProperties.getTwitterOAuthKey());
+		this.twitterProvider.setSecret(inProperties.getTwitterOAuthSecret());
+		this.twitterProvider.setCallbackUrl(inProperties.getApplicationUrl() + "registrationoauthtwittercallback");
+	}
+	
+	@Override
+	public SSLTwitterProvider get() {
+		return this.twitterProvider;
 	}
 	
 }

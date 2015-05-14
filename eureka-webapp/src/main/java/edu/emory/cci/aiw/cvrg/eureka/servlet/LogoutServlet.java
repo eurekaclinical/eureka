@@ -30,13 +30,16 @@ import javax.servlet.http.HttpSession;
 import com.google.inject.Inject;
 
 import edu.emory.cci.aiw.cvrg.eureka.webapp.config.WebappProperties;
+import org.apache.commons.httpclient.HttpStatus;
+import org.apache.commons.lang3.BooleanUtils;
+import org.apache.commons.lang3.StringUtils;
 
 public class LogoutServlet extends HttpServlet {
 
 	private final WebappProperties webappProperties;
 
 	@Inject
-	public LogoutServlet (WebappProperties inProperties) {
+	public LogoutServlet(WebappProperties inProperties) {
 		this.webappProperties = inProperties;
 	}
 
@@ -52,6 +55,34 @@ public class LogoutServlet extends HttpServlet {
 		 * logout.jsp gets a request object without a user. Otherwise,
 		 * the button bar will think we're still logged in.
 		 */
-		resp.sendRedirect(webappProperties.getCasLogoutUrl());
+		StringBuilder buf = new StringBuilder();
+		String casLogoutUrl = webappProperties.getCasLogoutUrl();
+		buf.append(casLogoutUrl);
+		String awaitingActivation = req.getParameter("awaitingActivation");
+		boolean aaEmpty = StringUtils.isEmpty(awaitingActivation);
+		if (!aaEmpty && BooleanUtils.toBooleanObject(awaitingActivation) == null) {
+			resp.sendError(HttpStatus.SC_BAD_REQUEST);
+			return;
+		}
+		String notRegistered = req.getParameter("notRegistered");
+		boolean nrEmpty = StringUtils.isEmpty(notRegistered);
+		if (!nrEmpty && BooleanUtils.toBooleanObject(notRegistered) == null) {
+			resp.sendError(HttpStatus.SC_BAD_REQUEST);
+			return;
+		}
+		if (!aaEmpty || !nrEmpty) {
+			buf.append('?');
+		}
+		if (!aaEmpty) {
+			buf.append("awaitingActivation=").append(awaitingActivation);
+		}
+		if (!aaEmpty && !nrEmpty) {
+			buf.append('&');
+		}
+		if (!nrEmpty) {
+			buf.append("notRegistered=").append(notRegistered);
+		}
+		log("URL IS " + buf.toString());
+		resp.sendRedirect(buf.toString());
 	}
 }

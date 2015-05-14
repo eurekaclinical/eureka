@@ -70,7 +70,7 @@ class ServletModule extends AbstractServletModule {
 	
 	private void setupHaveUserRecordFilter() {
 		bind(HaveUserRecordFilter.class).in(Singleton.class);
-		filter(CONTAINER_PROTECTED_PATH).through(HaveUserRecordFilter.class);
+		filter("/*").through(HaveUserRecordFilter.class);
 	}
 
 	private void setupUserInfoFilter () {
@@ -93,8 +93,8 @@ class ServletModule extends AbstractServletModule {
 	@Override
 	protected void setupFilters() {
 		this.setupMessageFilter();
-		this.setupUserInfoFilter();
 		this.setupHaveUserRecordFilter();
+		this.setupUserInfoFilter();
 		this.setupPasswordExpiredFilter();
 	}
 	

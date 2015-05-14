@@ -9,6 +9,10 @@
 	<tag>
 		<name>supportUri</name>
 		<tagclass>edu.emory.cci.aiw.cvrg.eureka.webapp.taglib.SupportUriTag</tagclass>
+		<attribute>
+			<name>hyperlinkClass</name>
+			<required>false</required>
+		</attribute>
 	</tag>
 
 	<function>
