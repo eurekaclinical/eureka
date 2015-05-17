@@ -30,4 +30,6 @@ public interface DestinationEntityVisitor {
 	void visit(I2B2DestinationEntity i2b2Destination);
 	
 	void visit(Neo4jDestinationEntity neo4jDestination);
+	
+	void visit(PatientSetSenderDestinationEntity patientSetSenderDestination);
 }

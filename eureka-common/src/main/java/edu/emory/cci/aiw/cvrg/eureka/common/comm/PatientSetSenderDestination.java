@@ -24,12 +24,20 @@ package edu.emory.cci.aiw.cvrg.eureka.common.comm;
  *
  * @author Andrew Post
  */
-public interface EtlDestinationVisitor {
-	void visit(EtlCohortDestination etlCohortDestination);
+public class PatientSetSenderDestination extends Destination {
+	private String url;
+
+	public String getUrl() {
+		return url;
+	}
+
+	public void setUrl(String url) {
+		this.url = url;
+	}
 	
-	void visit(EtlI2B2Destination etlI2B2Destination);
-	
-	void visit(EtlNeo4jDestination etlNeo4jDestination);
-	
-	void visit(EtlPatientSetSenderDestination etlPatientSetSenderDestination);
+	@Override
+	public void accept(DestinationVisitor destinationVisitor) {
+		destinationVisitor.visit(this);
+	}
+
 }

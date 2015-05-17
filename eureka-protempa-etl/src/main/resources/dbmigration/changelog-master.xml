@@ -634,6 +634,7 @@ limitations under the License.
 				<constraints nullable="false"/>
 			</column>
 		</createTable>
+		<addForeignKeyConstraint baseColumnNames="ID" baseTableName="NEO4J_DESTINATIONS" constraintName="FK_NEO4J_DEST" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" referencedColumnNames="ID" referencedTableName="DESTINATIONS" referencesUniqueColumn="false"/>
 	</changeSet>
 	<changeSet author="arpost" id="1361552652236-30">
 		<createTable tableName="DEST_LINKS">
@@ -660,5 +661,28 @@ limitations under the License.
 		<addColumn tableName="I2B2_DESTINATIONS">
 			<column name="MERGEONUPDATE" type="BOOLEAN"/>
 		</addColumn>
+	</changeSet>
+	<changeSet author="arpost" id="1361552652236-33">
+		<createTable tableName="PS_SENDER_DESTINATIONS">
+			<column name="ID" type="BIGINT">
+				<constraints nullable="false" primaryKey="true" primaryKeyName="PS_SENDER_DEST_PK"/>
+			</column>
+			<column name="URL" type="VARCHAR(255)">
+				<constraints nullable="false"/>
+			</column>
+			<column name="ALIASPROPOSITIONID" type="VARCHAR(255)">
+				<constraints nullable="false"/>
+			</column>
+			<column name="ALIASFIELDNAMEPROPERTY" type="VARCHAR(255)">
+				<constraints nullable="false"/>
+			</column>
+			<column name="ALIASFIELDNAME" type="VARCHAR(255)">
+				<constraints nullable="false"/>
+			</column>
+			<column name="ALIASPATIENTIDPROPERTY" type="VARCHAR(255)">
+				<constraints nullable="false"/>
+			</column>
+		</createTable>
+		<addForeignKeyConstraint baseColumnNames="ID" baseTableName="PS_SENDER_DESTINATIONS" constraintName="FK_PS_SENDER_DEST" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" referencedColumnNames="ID" referencedTableName="DESTINATIONS" referencesUniqueColumn="false"/>
 	</changeSet>
 </databaseChangeLog>

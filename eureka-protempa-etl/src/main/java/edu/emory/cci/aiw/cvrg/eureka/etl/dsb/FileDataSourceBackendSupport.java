@@ -30,7 +30,6 @@ class FileDataSourceBackendSupport {
 
 	private String dataFileDirectoryName;
 	private String configurationsId;
-	private final String nameForErrors;
 	private String filename;
 
 	FileDataSourceBackendSupport(String nameForErrors) {

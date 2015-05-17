@@ -29,8 +29,10 @@ import edu.emory.cci.aiw.cvrg.eureka.common.comm.EtlCohortDestination;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.EtlDestination;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.EtlI2B2Destination;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.EtlNeo4jDestination;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.EtlPatientSetSenderDestination;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.I2B2Destination;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.Neo4jDestination;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.PatientSetSenderDestination;
 
 /**
  *
@@ -86,6 +88,14 @@ public class DestinationToEtlDestinationVisitor extends AbstractDestinationVisit
 		etlDestination.setWrite(destination.isWrite());
 		etlDestination.setExecute(destination.isExecute());
 		etlDestination.setLinks(destination.getLinks());
+	}
+
+	@Override
+	public void visit(PatientSetSenderDestination patientSetSenderDestination) {
+		EtlPatientSetSenderDestination etlPtSetSenderDest = new EtlPatientSetSenderDestination();
+		etlPtSetSenderDest.setUrl(patientSetSenderDestination.getUrl());
+		visitCommon(patientSetSenderDestination, etlPtSetSenderDest);
+		this.etlDestination = etlPtSetSenderDest;
 	}
 
 }

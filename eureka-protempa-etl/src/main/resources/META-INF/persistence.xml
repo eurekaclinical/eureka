@@ -36,6 +36,7 @@
     <class>edu.emory.cci.aiw.cvrg.eureka.common.entity.CohortDestinationEntity</class>
     <class>edu.emory.cci.aiw.cvrg.eureka.common.entity.CohortEntity</class>
     <class>edu.emory.cci.aiw.cvrg.eureka.common.entity.I2B2DestinationEntity</class>
+	<class>edu.emory.cci.aiw.cvrg.eureka.common.entity.PatientSetSenderDestinationEntity</class>
     <class>edu.emory.cci.aiw.cvrg.eureka.common.entity.LiteralEntity</class>
     <class>edu.emory.cci.aiw.cvrg.eureka.common.entity.NodeEntity</class>
     <class>edu.emory.cci.aiw.cvrg.eureka.common.entity.I2B2DestinationConceptSpecEntity</class>

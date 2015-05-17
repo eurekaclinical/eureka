@@ -40,8 +40,6 @@ import javax.ws.rs.core.Response.Status;
 
 import org.protempa.backend.dsb.filter.DateTimeFilter;
 import org.protempa.proposition.value.AbsoluteTimeGranularity;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.google.inject.Inject;
 
@@ -61,7 +59,6 @@ import edu.emory.cci.aiw.cvrg.eureka.etl.dao.DestinationDao;
 import edu.emory.cci.aiw.cvrg.eureka.etl.dao.EtlUserDao;
 import edu.emory.cci.aiw.cvrg.eureka.etl.dao.JobDao;
 import edu.emory.cci.aiw.cvrg.eureka.etl.job.TaskManager;
-import java.util.logging.Level;
 import org.protempa.backend.BackendInstanceSpec;
 import org.protempa.backend.BackendProviderSpecLoaderException;
 import org.protempa.backend.BackendSpecNotFoundException;

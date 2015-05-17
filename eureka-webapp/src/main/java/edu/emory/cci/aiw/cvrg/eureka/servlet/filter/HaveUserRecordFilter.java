@@ -87,6 +87,12 @@ public class HaveUserRecordFilter implements Filter {
 						session.invalidate();
 					}
 					sendForbiddenError(servletResponse, servletRequest, false);
+				} else if (Status.UNAUTHORIZED.equals(ex.getResponseStatus())) {
+					HttpSession session = servletRequest.getSession(false);
+					if (session != null) {
+						session.invalidate();
+					}
+					servletResponse.sendRedirect(servletRequest.getContextPath() + "/logout?goHome=true");
 				} else {
 					throw new ServletException("Error getting user "
 							+ servletRequest.getRemoteUser(), ex);

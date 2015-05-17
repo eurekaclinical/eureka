@@ -32,6 +32,7 @@ import edu.emory.cci.aiw.cvrg.eureka.common.entity.CohortEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.DestinationEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.I2B2DestinationEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.Neo4jDestinationEntity;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.PatientSetSenderDestinationEntity;
 import edu.emory.cci.aiw.cvrg.eureka.etl.config.EtlProperties;
 import edu.emory.cci.aiw.cvrg.eureka.etl.dao.DestinationDao;
 import edu.emory.cci.aiw.i2b2etl.dest.I2b2Destination;
@@ -62,6 +63,8 @@ public class ProtempaDestinationFactory {
 			return new KeyLoaderDestination(new CohortCriteria(cohort));
 		} else if (dest instanceof Neo4jDestinationEntity) {
 			return new Neo4jDestination(new EurekaNeo4jConfiguration((Neo4jDestinationEntity) dest));
+		} else if (dest instanceof PatientSetSenderDestinationEntity) {
+			return new PatientSetSenderDestination((PatientSetSenderDestinationEntity) dest);
 		} else {
 			throw new AssertionError("Invalid destination entity type " + dest.getClass());
 		}
