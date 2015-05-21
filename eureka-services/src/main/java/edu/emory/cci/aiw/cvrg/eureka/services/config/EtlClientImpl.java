@@ -27,6 +27,7 @@ import edu.emory.cci.aiw.cvrg.eureka.common.comm.DestinationType;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.EtlCohortDestination;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.EtlDestination;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.EtlI2B2Destination;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.EtlPatientSetSenderDestination;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.Job;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.JobFilter;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.JobRequest;
@@ -61,6 +62,9 @@ public class EtlClientImpl extends EurekaClient implements EtlClient {
 			};
 	private static final GenericType<List<EtlI2B2Destination>> I2B2DestinationListType
 			= new GenericType<List<EtlI2B2Destination>>() {
+			};
+	private static final GenericType<List<EtlPatientSetSenderDestination>> PatientSetSenderDestinationListType
+			= new GenericType<List<EtlPatientSetSenderDestination>>() {
 			};
 	private static final GenericType<List<PropositionDefinition>> PropositionDefinitionList
 			= new GenericType<List<PropositionDefinition>>() {
@@ -119,6 +123,14 @@ public class EtlClientImpl extends EurekaClient implements EtlClient {
 		MultivaluedMap<String, String> queryParams = new MultivaluedMapImpl();
 		queryParams.add("type", DestinationType.I2B2.name());
 		return doGet(path, I2B2DestinationListType, queryParams);
+	}
+
+	@Override
+	public List<EtlPatientSetSenderDestination> getPatientSetSenderDestinations() throws ClientException {
+		final String path = "/api/protected/destinations/";
+		MultivaluedMap<String, String> queryParams = new MultivaluedMapImpl();
+		queryParams.add("type", DestinationType.PATIENT_SET_SENDER.name());
+		return doGet(path, PatientSetSenderDestinationListType, queryParams);
 	}
 
 	@Override

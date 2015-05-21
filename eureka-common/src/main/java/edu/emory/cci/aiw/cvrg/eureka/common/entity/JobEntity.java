@@ -77,7 +77,7 @@ public class JobEntity {
 	 * The unique identifier of the configuration to use for this job.
 	 */
 	@ManyToOne
-	@JoinColumn(name="destination_id", referencedColumnName = "id", nullable = false)
+	@JoinColumn(name = "destination_id", referencedColumnName = "id", nullable = false)
 	private DestinationEntity destination;
 	/**
 	 * The unique identifier of the user submitting the job request.
@@ -90,13 +90,13 @@ public class JobEntity {
 	 */
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "job")
 	private List<JobEvent> jobEvents;
-	
+
 	private static JobEventComparator JOB_EVENT_COMPARATOR = new JobEventComparator();
 
 	public JobEntity() {
 		this.jobEvents = new ArrayList<>();
 	}
-	
+
 	/**
 	 * Get the unique identifier for the job request.
 	 *
@@ -196,31 +196,41 @@ public class JobEntity {
 			}
 		}
 	}
-	
+
 	public void addJobEvent(JobEvent jobEvent) {
 		if (!this.jobEvents.contains(jobEvent)) {
 			this.jobEvents.add(jobEvent);
 			jobEvent.setJob(this);
 		}
 	}
-	
+
 	public void removeJobEvent(JobEvent jobEvent) {
 		if (this.jobEvents.remove(jobEvent)) {
 			jobEvent.setJob(null);
 		}
 	}
 
-	public JobEventType getCurrentState() {
-		JobEvent jev = getJobEventsInReverseOrder().get(0);
-		return (jev == null) ? null : jev.getState();
+	public JobStatus getCurrentStatus() {
+		JobStatus result;
+		List<JobEvent> jobEventsInReverseOrder = getJobEventsInReverseOrder();
+		if (jobEventsInReverseOrder.isEmpty()) {
+			result = JobStatus.STARTING;
+		} else {
+			JobEvent jev = jobEventsInReverseOrder.get(0);
+			if (jev != null) {
+				result = jev.getStatus();
+			} else {
+				result = JobStatus.STARTING;
+			}
+		}
+		return result;
 	}
-	
+
 	/**
 	 * Gets job events sorted in reverse order of occurrence. Uses the
 	 * {@link JobEventComparator} to perform sorting.
 	 *
-	 * @return a {@link List} of {@link JobEvent}s in reverse
-	 * order of
+	 * @return a {@link List} of {@link JobEvent}s in reverse order of
 	 * occurrence.
 	 */
 	public List<JobEvent> getJobEventsInOrder() {
@@ -233,8 +243,8 @@ public class JobEntity {
 	 * Gets job events sorted in reverse order of occurrence. Uses the
 	 * {@link JobEventComparator} to perform sorting.
 	 *
-	 * @return a {@link List} of {@link JobEvent}s in reverse
-	 * order of occurrence.
+	 * @return a {@link List} of {@link JobEvent}s in reverse order of
+	 * occurrence.
 	 */
 	public List<JobEvent> getJobEventsInReverseOrder() {
 		List<JobEvent> ts = new ArrayList<>(this.jobEvents);
@@ -251,7 +261,7 @@ public class JobEntity {
 		if (this.etlUser != null) {
 			job.setUsername(this.etlUser.getUsername());
 		}
-		job.setState(getCurrentState());
+		job.setStatus(getCurrentStatus());
 		job.setJobEvents(getJobEventsInOrder());
 		List<LinkEntity> linkEntities = this.destination.getLinks();
 		List<Link> links = new ArrayList<>(linkEntities != null ? linkEntities.size() : 0);

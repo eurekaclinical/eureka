@@ -20,7 +20,7 @@ package edu.emory.cci.aiw.cvrg.eureka.common.comm;
  * #L%
  */
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.JobEvent;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.JobEventType;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.JobStatus;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import java.util.ArrayList;
@@ -47,7 +47,7 @@ public class Job {
 	 */
 	private String destinationId;
 	private String username;
-	private JobEventType state;
+	private JobStatus status;
 	private List<JobEvent> jobEvents;
 	
 	private List<Link> links;
@@ -92,12 +92,12 @@ public class Job {
 		this.username = username;
 	}
 
-	public JobEventType getState() {
-		return state;
+	public JobStatus getStatus() {
+		return status;
 	}
 
-	public void setState(JobEventType state) {
-		this.state = state;
+	public void setStatus(JobStatus status) {
+		this.status = status;
 	}
 
 	/**
@@ -140,9 +140,9 @@ public class Job {
 		return messages;
 	}
 
-	public JobStatus toJobStatus() {
-		JobStatus jobStatus = new JobStatus();
-		jobStatus.setState(getState());
+	public JobListRow toJobListRow() {
+		JobListRow jobStatus = new JobListRow();
+		jobStatus.setStatus(getStatus());
 		jobStatus.setMessages(messages());
 		jobStatus.setStartedDate(getTimestamp());
 		jobStatus.setLinks(getLinks());
@@ -150,8 +150,8 @@ public class Job {
 		jobStatus.setDestinationId(getDestinationId());
 		if (this.jobEvents != null) {
 			for (JobEvent jobEvent : this.jobEvents) {
-				if (jobEvent.getState() == JobEventType.COMPLETED
-						|| jobEvent.getState() == JobEventType.FAILED) {
+				if (jobEvent.getStatus() == JobStatus.COMPLETED
+						|| jobEvent.getStatus() == JobStatus.FAILED) {
 					jobStatus.setFinishedDate(jobEvent.getTimeStamp());
 					break;
 				}

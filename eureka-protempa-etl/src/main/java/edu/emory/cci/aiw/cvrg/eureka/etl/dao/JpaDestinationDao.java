@@ -27,6 +27,7 @@ import edu.emory.cci.aiw.cvrg.eureka.common.entity.CohortDestinationEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.DestinationEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.DestinationEntity_;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.I2B2DestinationEntity;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.PatientSetSenderDestinationEntity;
 import java.util.Date;
 import java.util.List;
 import javax.persistence.EntityManager;
@@ -99,5 +100,19 @@ public class JpaDestinationDao extends GenericDao<DestinationEntity, Long> imple
 		TypedQuery<I2B2DestinationEntity> typedQuery = entityManager.createQuery(criteriaQuery);
 		return typedQuery.getResultList();
 	}
+
+	@Override
+	public List<PatientSetSenderDestinationEntity> getAllPatientSetSenderDestinations() {
+		EntityManager entityManager = getEntityManager();
+		CriteriaBuilder builder = entityManager.getCriteriaBuilder();
+		CriteriaQuery<PatientSetSenderDestinationEntity> criteriaQuery = builder.createQuery(PatientSetSenderDestinationEntity.class);
+		Root<PatientSetSenderDestinationEntity> root = criteriaQuery.from(PatientSetSenderDestinationEntity.class);
+		criteriaQuery.where(builder.or(
+							builder.isNull(root.get(DestinationEntity_.expiredAt)),
+							builder.greaterThanOrEqualTo(root.get(DestinationEntity_.expiredAt), new Date())));
+		TypedQuery<PatientSetSenderDestinationEntity> typedQuery = entityManager.createQuery(criteriaQuery);
+		return typedQuery.getResultList();
+	}
+	
 	
 }

@@ -115,6 +115,9 @@ public class DestinationResource {
 					case COHORT:
 						destinations = this.etlClient.getCohortDestinations();
 						break;
+					case PATIENT_SET_SENDER:
+						destinations = this.etlClient.getPatientSetSenderDestinations();
+						break;
 					default:
 						throw new AssertionError("Unexpected type " + type);
 				}

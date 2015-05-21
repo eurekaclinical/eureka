@@ -24,6 +24,8 @@ package edu.emory.cci.aiw.cvrg.eureka.common.entity;
  * The different types of job events that are recorded. They are defined as
  * follows:
  * <dl>
+ *	 <dt>STARTING</dt>
+ *   <dd>Job just submitted</dd>
  *   <dt>VALIDATING</dt>
  *	 <dd>Job validation started (deprecated, no longer used).</dd>
  *   <dt>VALIDATED</dt>
@@ -41,7 +43,8 @@ package edu.emory.cci.aiw.cvrg.eureka.common.entity;
  * </dl>
  * @author Andrew Post
  */
-public enum JobEventType {
+public enum JobStatus {
+	STARTING,
 	VALIDATING,
 	VALIDATED,
 	STARTED,

@@ -31,6 +31,7 @@ class FileDataSourceBackendSupport {
 	private String dataFileDirectoryName;
 	private String configurationsId;
 	private String filename;
+	private final String nameForErrors;
 
 	FileDataSourceBackendSupport(String nameForErrors) {
 		this.nameForErrors = nameForErrors;

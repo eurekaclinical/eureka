@@ -20,7 +20,7 @@
 package edu.emory.cci.aiw.cvrg.eureka.services.config;
 
 
-import edu.emory.cci.aiw.cvrg.eureka.common.config.AbstractJerseyServletModule;
+import edu.emory.cci.aiw.cvrg.eureka.common.config.AbstractJerseyServletModuleWithPersist;
 
 /**
  * Configure web related items for Guice and Jersey.
@@ -28,7 +28,7 @@ import edu.emory.cci.aiw.cvrg.eureka.common.config.AbstractJerseyServletModule;
  * @author hrathod
  * 
  */
-class ServletModule extends AbstractJerseyServletModule {
+class ServletModule extends AbstractJerseyServletModuleWithPersist {
 
 	private static final String PACKAGE_NAMES = "edu.emory.cci.aiw.cvrg.eureka.services.resource;edu.emory.cci.aiw.cvrg.eureka.common.json";
 

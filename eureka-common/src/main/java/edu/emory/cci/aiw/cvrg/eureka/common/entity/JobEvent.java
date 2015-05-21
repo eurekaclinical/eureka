@@ -65,10 +65,10 @@ public class JobEvent implements CycleRecoverable {
 	@JoinColumn(name = "job_id", nullable = false)
 	private JobEntity job;
 	/**
-	 * The state of the event.
+	 * The status of the event.
 	 */
-	@Column(nullable = false)
-	private JobEventType state;
+	@Column(nullable = false, name="state")
+	private JobStatus status;
 
 	/**
 	 * The exception stack trace. The name is prefixed with a z to force
@@ -135,17 +135,17 @@ public class JobEvent implements CycleRecoverable {
 	}
 
 	/**
-	 * @return the state
+	 * @return the status
 	 */
-	public JobEventType getState() {
-		return this.state;
+	public JobStatus getStatus() {
+		return this.status;
 	}
 
 	/**
-	 * @param inState the state to set
+	 * @param inStatus the status to set
 	 */
-	public void setState(JobEventType inState) {
-		this.state = inState;
+	public void setStatus(JobStatus inStatus) {
+		this.status = inStatus;
 	}
 
 	/**

@@ -142,14 +142,21 @@ public class JobResource {
 		JobEntity jobEntity
 				= newJobEntity(jobSpec,
 						this.authenticationSupport.getEtlUser(request));
+		DateTimeFilter dateTimeFilter;
+		String dateRangeDataElementKey = jobSpec.getDateRangeDataElementKey();
+		if (dateRangeDataElementKey != null) {
+			dateTimeFilter = new DateTimeFilter(
+						new String[]{dateRangeDataElementKey},
+						jobSpec.getEarliestDate(), AbsoluteTimeGranularity.DAY,
+						jobSpec.getLatestDate(), AbsoluteTimeGranularity.DAY,
+						jobSpec.getEarliestDateSide(), jobSpec.getLatestDateSide());
+		} else {
+			dateTimeFilter = null;
+		}
 		this.taskManager.queueTask(jobEntity.getId(),
 				inJobRequest.getUserPropositions(),
 				inJobRequest.getPropositionIdsToShow(),
-				new DateTimeFilter(
-						new String[]{jobSpec.getDateRangeDataElementKey()},
-						jobSpec.getEarliestDate(), AbsoluteTimeGranularity.DAY,
-						jobSpec.getLatestDate(), AbsoluteTimeGranularity.DAY,
-						jobSpec.getEarliestDateSide(), jobSpec.getLatestDateSide()),
+				dateTimeFilter,
 				jobSpec.isUpdateData(),
 				prompts);
 		return jobEntity.getId();
@@ -193,7 +200,7 @@ public class JobResource {
 					}
 					sections.add(bis);
 				} catch (BackendSpecNotFoundException | BackendProviderSpecLoaderException | InvalidPropertyNameException | InvalidPropertyValueException ex) {
-					throw new HttpStatusException(Status.BAD_REQUEST);
+					throw new HttpStatusException(Status.BAD_REQUEST, ex);
 				}
 			}
 			result.setDataSourceBackendSections(sections);

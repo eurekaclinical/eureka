@@ -30,7 +30,7 @@ import com.google.inject.Inject;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.JobEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.JobEvent;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.JobEventType;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.JobStatus;
 import edu.emory.cci.aiw.cvrg.eureka.etl.dao.JobDao;
 import edu.emory.cci.aiw.cvrg.eureka.etl.dao.JobEventDao;
 import java.io.PrintWriter;
@@ -119,7 +119,7 @@ public final class Task implements Runnable {
 			JobEvent startedJobEvent = new JobEvent();
 			startedJobEvent.setJob(myJob);
 			startedJobEvent.setTimeStamp(new Date());
-			startedJobEvent.setState(JobEventType.STARTED);
+			startedJobEvent.setStatus(JobStatus.STARTED);
 			startedJobEvent.setMessage("Processing started");
 			this.jobEventDao.create(startedJobEvent);
 			this.jobDao.refresh(myJob);
@@ -138,7 +138,7 @@ public final class Task implements Runnable {
 			JobEvent completedJobEvent = new JobEvent();
 			completedJobEvent.setJob(myJob);
 			completedJobEvent.setTimeStamp(new Date());
-			completedJobEvent.setState(JobEventType.COMPLETED);
+			completedJobEvent.setStatus(JobStatus.COMPLETED);
 			completedJobEvent.setMessage("Processing completed without error");
 			this.jobEventDao.create(completedJobEvent);
 			if (LOGGER.isInfoEnabled()) {
@@ -155,7 +155,7 @@ public final class Task implements Runnable {
 					JobEvent failedJobEvent = new JobEvent();
 					failedJobEvent.setJob(myJob);
 					failedJobEvent.setTimeStamp(new Date());
-					failedJobEvent.setState(JobEventType.FAILED);
+					failedJobEvent.setStatus(JobStatus.FAILED);
 					failedJobEvent.setMessage("Processing failed");
 					LOGGER.error("Finished job {} for user {} with errors.",
 							new Object[]{
@@ -190,7 +190,7 @@ public final class Task implements Runnable {
 			JobEvent errorJobEvent = new JobEvent();
 			errorJobEvent.setJob(job);
 			errorJobEvent.setTimeStamp(new Date());
-			errorJobEvent.setState(JobEventType.ERROR);
+			errorJobEvent.setStatus(JobStatus.ERROR);
 			errorJobEvent.setMessage(msg);
 			errorJobEvent.setExceptionStackTrace(sw.toString());
 			this.jobEventDao.create(errorJobEvent);

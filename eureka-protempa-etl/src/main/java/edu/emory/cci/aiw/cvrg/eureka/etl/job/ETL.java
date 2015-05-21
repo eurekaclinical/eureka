@@ -44,7 +44,7 @@ import com.google.inject.Singleton;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.EtlDestination;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.JobEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.JobEvent;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.JobEventType;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.JobStatus;
 import edu.emory.cci.aiw.cvrg.eureka.etl.config.EtlProperties;
 import edu.emory.cci.aiw.cvrg.eureka.etl.config.EurekaProtempaConfigurations;
 import edu.emory.cci.aiw.cvrg.eureka.etl.dao.DestinationDao;
@@ -130,13 +130,13 @@ public class ETL {
 		List<JobEvent> jobEvents = new ArrayList<>();
 		for (DataValidationEvent event : events) {
 			AbstractFileInfo fileInfo;
-			JobEventType jobEventType;
+			JobStatus jobEventType;
 			if (event.isFatal()) {
 				fileInfo = new FileError();
-				jobEventType = JobEventType.ERROR;
+				jobEventType = JobStatus.ERROR;
 			} else {
 				fileInfo = new FileWarning();
-				jobEventType = JobEventType.WARNING;
+				jobEventType = JobStatus.WARNING;
 			}
 			fileInfo.setLineNumber(event.getLine());
 			fileInfo.setText(event.getMessage());
@@ -145,7 +145,7 @@ public class ETL {
 			JobEvent validationJobEvent = new JobEvent();
 			validationJobEvent.setJob(job);
 			validationJobEvent.setTimeStamp(event.getTimestamp());
-			validationJobEvent.setState(jobEventType);
+			validationJobEvent.setStatus(jobEventType);
 			validationJobEvent.setMessage(fileInfo.toUserMessage());
 			validationJobEvent.setExceptionStackTrace(collectThrowableMessages(ex));
 		}

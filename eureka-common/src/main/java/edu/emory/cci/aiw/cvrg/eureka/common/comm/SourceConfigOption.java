@@ -1,7 +1,9 @@
 package edu.emory.cci.aiw.cvrg.eureka.common.comm;
 
+import edu.emory.cci.aiw.cvrg.eureka.common.json.SourceConfigOptionValueDeserializer;
 import org.codehaus.jackson.annotate.JsonSubTypes;
 import org.codehaus.jackson.annotate.JsonTypeInfo;
+import org.codehaus.jackson.map.annotate.JsonDeserialize;
 import org.protempa.backend.BackendPropertyType;
 
 /**
@@ -16,7 +18,10 @@ import org.protempa.backend.BackendPropertyType;
 })
 public abstract class SourceConfigOption {
 	private String name;
+	
+	@JsonDeserialize(using = SourceConfigOptionValueDeserializer.class)
 	private Object value;
+	
 	private String displayName;
 	private String description;
 	private boolean required;

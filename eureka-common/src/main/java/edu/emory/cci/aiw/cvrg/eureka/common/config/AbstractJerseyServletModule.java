@@ -31,7 +31,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.inject.Singleton;
-import com.google.inject.persist.PersistFilter;
 import com.sun.jersey.api.container.filter.RolesAllowedResourceFilterFactory;
 import com.sun.jersey.api.core.PackagesResourceConfig;
 import com.sun.jersey.api.core.ResourceConfig;
@@ -135,7 +134,6 @@ public abstract class AbstractJerseyServletModule extends JerseyServletModule {
 		this.setupCasFilters();
 		this.setupAuthorizationFilter();
 		this.setupContainer();
-		filter(CONTAINER_PATH).through(PersistFilter.class);
 	}
 
 	/**

@@ -20,7 +20,7 @@
 package edu.emory.cci.aiw.cvrg.eureka.etl.config;
 
 
-import edu.emory.cci.aiw.cvrg.eureka.common.config.AbstractJerseyServletModule;
+import edu.emory.cci.aiw.cvrg.eureka.common.config.AbstractJerseyServletModuleWithPersist;
 
 /**
  * A Guice configuration module for setting up the web infrastructure and
@@ -29,7 +29,7 @@ import edu.emory.cci.aiw.cvrg.eureka.common.config.AbstractJerseyServletModule;
  * @author hrathod
  * 
  */
-public class ETLServletModule extends AbstractJerseyServletModule {
+public class ETLServletModule extends AbstractJerseyServletModuleWithPersist {
 
 	private static final String PACKAGE_NAMES = "edu.emory.cci.aiw.cvrg.eureka.etl.resource;edu.emory.cci.aiw.cvrg.eureka.common.json";
 

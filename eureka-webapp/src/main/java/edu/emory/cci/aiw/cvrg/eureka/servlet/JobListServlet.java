@@ -73,7 +73,7 @@ public class JobListServlet extends HttpServlet {
 				}
 			}
 			if (job != null) {
-				req.setAttribute("jobStatus", job.toJobStatus());
+				req.setAttribute("jobStatus", job.toJobListRow());
 				String destName = job.getDestinationId();
 				req.setAttribute("destination", destName);
 				String sourceConfigName = job.getSourceConfigId();

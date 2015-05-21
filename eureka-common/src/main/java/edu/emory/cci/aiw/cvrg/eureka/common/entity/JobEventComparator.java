@@ -33,21 +33,21 @@ public class JobEventComparator implements Comparator<JobEvent>,
 		Serializable {
 
 	private static final long serialVersionUID = -1597150892714722679L;
-	private static final Map<JobEventType, Integer> order = 
-			new EnumMap<>(JobEventType.class);
+	private static final Map<JobStatus, Integer> order = 
+			new EnumMap<>(JobStatus.class);
 
 	static {
-		order.put(JobEventType.VALIDATING, 0);
-		order.put(JobEventType.VALIDATED, 1);
-		order.put(JobEventType.STARTED, 2);
-		order.put(JobEventType.WARNING, 3);
-		order.put(JobEventType.ERROR, 4);
-		order.put(JobEventType.COMPLETED, 5);
-		order.put(JobEventType.FAILED, 6);
+		order.put(JobStatus.VALIDATING, 0);
+		order.put(JobStatus.VALIDATED, 1);
+		order.put(JobStatus.STARTED, 2);
+		order.put(JobStatus.WARNING, 3);
+		order.put(JobStatus.ERROR, 4);
+		order.put(JobStatus.COMPLETED, 5);
+		order.put(JobStatus.FAILED, 6);
 	}
 
 	@Override
 	public int compare(JobEvent a, JobEvent b) {
-		return order.get(a.getState()).compareTo(order.get(b.getState()));
+		return order.get(a.getStatus()).compareTo(order.get(b.getStatus()));
 	}
 }

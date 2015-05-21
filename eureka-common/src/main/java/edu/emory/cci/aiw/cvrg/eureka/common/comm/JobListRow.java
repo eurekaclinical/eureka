@@ -19,7 +19,7 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.common.comm;
 
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.JobEventType;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.JobStatus;
 import java.text.DateFormat;
 import java.util.Collections;
 import java.util.Date;
@@ -31,9 +31,9 @@ import java.util.List;
  * @author sagrava
  *
  */
-public class JobStatus {
+public class JobListRow {
 	
-	private JobEventType state;
+	private edu.emory.cci.aiw.cvrg.eureka.common.entity.JobStatus state;
 	/**
 	 * The date of job start.
 	 */
@@ -50,12 +50,12 @@ public class JobStatus {
 	
 	private String destinationId;
 	
-	public JobStatus() {
+	public JobListRow() {
 		this.links = Collections.emptyList();
 	}
 	
 	public boolean isJobSubmitted() {
-		return this.state != JobEventType.COMPLETED && this.state != JobEventType.FAILED;
+		return this.state != edu.emory.cci.aiw.cvrg.eureka.common.entity.JobStatus.COMPLETED && this.state != edu.emory.cci.aiw.cvrg.eureka.common.entity.JobStatus.FAILED;
 	}
 
 	public Date getStartedDate() {
@@ -82,11 +82,11 @@ public class JobStatus {
 		this.messages = messages;
 	}
 
-	public JobEventType getState() {
+	public JobStatus getState() {
 		return state;
 	}
 
-	public void setState(JobEventType state) {
+	public void setStatus(JobStatus state) {
 		this.state = state;
 	}
 
@@ -124,6 +124,7 @@ public class JobStatus {
 				return "Failed";
 			case VALIDATING:
 			case VALIDATED:
+			case STARTING:
 			case STARTED:
 			case WARNING:
 			case ERROR:

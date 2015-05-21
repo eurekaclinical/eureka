@@ -33,7 +33,7 @@ import org.codehaus.jackson.map.ObjectMapper;
 import com.google.inject.Inject;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.Job;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.JobStatus;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.JobListRow;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ClientException;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ServicesClient;
 
@@ -76,12 +76,12 @@ public class JobPollServlet extends HttpServlet {
 			throw new ServletException("Error polling job list", ex);
 		}
 
-		JobStatus jobStatus = null;
+		JobListRow jobListRow = null;
 		if (job != null) {
-			jobStatus = job.toJobStatus();
+			jobListRow = job.toJobListRow();
 		}
 		ObjectMapper mapper = new ObjectMapper();
-		String value = mapper.writeValueAsString(jobStatus);
+		String value = mapper.writeValueAsString(jobListRow);
 		resp.setContentLength(value.length());
 		PrintWriter out = resp.getWriter();
 		out.println(value);

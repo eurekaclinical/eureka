@@ -22,7 +22,7 @@ package edu.emory.cci.aiw.cvrg.eureka.etl.config;
 import edu.emory.cci.aiw.cvrg.eureka.common.dao.DatabaseSupport;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.JobEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.JobEvent;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.JobEventType;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.JobStatus;
 import java.util.Date;
 import java.util.List;
 import javax.persistence.EntityManager;
@@ -52,9 +52,9 @@ public class JobRepairer {
 		this.entityManager.getTransaction().begin();
 		int numJobsRepaired = 0;
 		for (JobEntity job : getAllJobs()) {
-			JobEventType currentState = job.getCurrentState();
-			if (!JobEventType.COMPLETED.equals(currentState)
-					&& !JobEventType.FAILED.equals(currentState)) {
+			JobStatus currentState = job.getCurrentStatus();
+			if (!JobStatus.COMPLETED.equals(currentState)
+					&& !JobStatus.FAILED.equals(currentState)) {
 				if (numJobsRepaired == 0) {
 					LOGGER.warn(
 							"Repairing jobs, probably because the "
@@ -80,22 +80,24 @@ public class JobRepairer {
 	}
 
 	private void repairDatabase(JobEntity job, EntityManager entityManager) {
-		LOGGER.warn("Repairing job {} with status {}", job.getId(), job.getCurrentState().name());
-		if (!JobEventType.ERROR.equals(job.getCurrentState())) {
+		JobStatus currentState = job.getCurrentStatus();
+		LOGGER.warn("Repairing job {} with status {}", job.getId(), currentState);
+		if (!JobStatus.ERROR.equals(job.getCurrentStatus())) {
 			JobEvent errorJobEvent = new JobEvent();
 			errorJobEvent.setJob(job);
 			errorJobEvent.setTimeStamp(new Date());
-			errorJobEvent.setState(JobEventType.ERROR);
+			errorJobEvent.setStatus(JobStatus.ERROR);
 			errorJobEvent.setMessage("Eureka! shut down during job");
 			entityManager.persist(errorJobEvent);
 		}
 		JobEvent failedJobEvent = new JobEvent();
 		failedJobEvent.setJob(job);
 		failedJobEvent.setTimeStamp(new Date());
-		failedJobEvent.setState(JobEventType.FAILED);
+		failedJobEvent.setStatus(JobStatus.FAILED);
 		failedJobEvent.setMessage("Processing failed");
 		entityManager.persist(failedJobEvent);
+		JobStatus updatedCurrentState = job.getCurrentStatus();
 		LOGGER.warn("After repair, the job {}'s status is {}",
-				job.getId(), job.getCurrentState().name());
+				job.getId(), updatedCurrentState);
 	}
 }

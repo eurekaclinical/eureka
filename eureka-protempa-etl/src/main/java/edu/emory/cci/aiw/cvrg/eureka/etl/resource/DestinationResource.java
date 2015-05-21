@@ -108,6 +108,8 @@ public class DestinationResource {
 				return new ArrayList<EtlDestination>(destinations.getAllI2B2s());
 			case COHORT:
 				return new ArrayList<EtlDestination>(destinations.getAllCohorts());
+			case PATIENT_SET_SENDER:
+				return new ArrayList<EtlDestination>(destinations.getAllPatientSetSenders());
 			default:
 				throw new AssertionError("Unexpected destination type " + type);
 		}

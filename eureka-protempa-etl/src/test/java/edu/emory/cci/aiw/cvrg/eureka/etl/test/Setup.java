@@ -31,7 +31,7 @@ import edu.emory.cci.aiw.cvrg.eureka.common.entity.EtlUserEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.I2B2DestinationEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.JobEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.JobEvent;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.JobEventType;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.JobStatus;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.SourceConfigEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.test.TestDataException;
 import edu.emory.cci.aiw.cvrg.eureka.common.test.TestDataProvider;
@@ -97,7 +97,7 @@ public class Setup implements TestDataProvider {
 		this.job.setDestination(this.destination);
 		this.job.setEtlUser(this.etlUser);
 		JobEvent jobEvent = new JobEvent();
-		jobEvent.setState(JobEventType.VALIDATING);
+		jobEvent.setStatus(JobStatus.VALIDATING);
 		this.job.addJobEvent(jobEvent);
 		entityManager.persist(this.job);
 		entityManager.getTransaction().commit();

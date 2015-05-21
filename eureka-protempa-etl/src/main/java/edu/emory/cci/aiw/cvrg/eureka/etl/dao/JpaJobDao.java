@@ -129,7 +129,7 @@ public class JpaJobDao extends GenericDao<JobEntity, Long> implements JobDao {
 			if (jobFilter.getState() != null) {
 				LOGGER.debug("Found state: {}", jobFilter.getState());
 				predicates.add(builder.equal(
-						root.join(JobEntity_.jobEvents).get(JobEvent_.state),
+						root.join(JobEntity_.jobEvents).get(JobEvent_.status),
 						jobFilter.getState()));
 			}
 		}
