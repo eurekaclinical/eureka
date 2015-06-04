@@ -6,7 +6,8 @@ eurekaApp.factory(
             getCohorts: getCohorts,
             getCohort: getCohort,
             getSystemElement: getSystemElement,
-            getPhenotypes: getPhenotypes
+            getPhenotypes: getPhenotypes,
+            removeCohort: removeCohort
         });
 
         function getCohorts() {
@@ -17,9 +18,16 @@ eurekaApp.factory(
 
         }
 
+        function removeCohort(key) {
+
+            return $http.delete("/eureka-webapp/proxy-resource/destinations/" + key)
+                .then(handleSuccess, handleError);
+
+        }
+
         function getSystemElement(key) {
 
-            return $http.get("/eureka-services/api/protected/systemelement/" + key)
+            return $http.get("/eureka-services/api/protected/systemelement/" + key + "?summary=true")
                 .then(handleSuccess, handleError);
 
         }
@@ -54,7 +62,7 @@ eurekaApp.factory(
 
             var promises = [];
             angular.forEach(cohorts, function(cohort){
-                var promise = $http.get("/eureka-services/api/protected/systemelement/" + cohort);
+                var promise = $http.get("/eureka-services/api/protected/systemelement/" + cohort + "?summary=true");
                 promises.push(promise);
 
             });

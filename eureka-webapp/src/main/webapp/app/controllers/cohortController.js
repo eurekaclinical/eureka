@@ -1,20 +1,29 @@
 
 eurekaApp.controller(
     "CohortController",
-    function( $scope, CohortService, $location) {
+    function( $scope, CohortService, $location, $route) {
 
         var vm = this;
 
-        CohortService.getCohorts().then(function(data) {
-            vm.cohorts = data;
+        var getCohorts = function() {
+            CohortService.getCohorts().then(function (data) {
+                vm.cohorts = data;
+            }, displayError);
 
-            /*
-            for (var key in vm.cohorts) {
-                console.log(key + " " + vm.cohorts[key]);
+        };
+        getCohorts();
+
+        $scope.remove = function (key) {
+            console.log(key);
+            CohortService.removeCohort(key);
+            for (var i = 0; i < vm.cohorts.length; i++) {
+                if (vm.cohorts[i].name == key) {
+                    vm.cohorts.splice(i);
+                    break;
+                }
             }
-            */
 
-        }, displayError);
+        };
 
         function displayError(msg) {
             vm.errorMsg = msg;

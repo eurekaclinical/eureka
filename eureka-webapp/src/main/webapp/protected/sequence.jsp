@@ -574,7 +574,7 @@
         	</div>
         </div>
 <script language="JavaScript" src="${pageContext.request.contextPath}/assets/js/jquery.jstree.js"></script>
-<script language="JavaScript" src="${pageContext.request.contextPath}/assets/js/eureka.tree${initParam['eureka-build-timestamp']}.js"></script>
+<script language="JavaScript" src="${pageContext.request.contextPath}/assets/js/eureka.tree-phenotype${initParam['eureka-build-timestamp']}.js"></script>
 <script language="JavaScript" src="${pageContext.request.contextPath}/assets/js/eureka.editor${initParam['eureka-build-timestamp']}.js"></script>
 <script language="JavaScript">
 	eureka.editor.setup('SEQUENCE', '', ${proposition != null ? proposition.id : 'null'},

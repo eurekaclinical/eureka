@@ -7,11 +7,20 @@ window.eureka.tree = new function () {
 
     self.setupUserTree = function (userTreeElem, dropFinishCallback) {
         $(userTreeElem).jstree({
-            "json_data": {
-                "ajax": {
-                    "url": "protected/userproplist?key=root"
-                }
+            "core": {
+                "data": {
+                    "url": "protected/userproplist?key=root",
+                    "dataType": 'json',
+                    //"url": "/eureka-services/api/protected/systemelement",
+                },
+
             },
+
+            //"json_data": {
+            //    "ajax": {
+            //        "url": "protected/userproplist?key=root"
+            //    }
+            //},
             "dnd": {
                 "drop_finish": function (data) {
                     dropFinishCallback(data)
@@ -64,19 +73,6 @@ window.eureka.tree = new function () {
                 },
 
             },
-
-            //"json_data": {
-            //	"ajax": {
-            //		"url": "protected/systemlist",
-            "url": "/eureka-services/api/protected/systemelement",
-            //"data": function (n) {
-            //	return {
-            //		key: n.attr ? n.attr("data-key") : "root"
-            //	};
-            //}
-            //
-            //}
-            //},
 
             "crrm": {
                 // prevent movement and reordering of nodes
@@ -155,18 +151,9 @@ window.eureka.tree = new function () {
             "plugins": [ "themes", "json_data", "ui", "crrm", "dnd", "search" ]
         });
 
-        $(systemTreeElem).bind("select_node.jstree", function (e, data) {
-            console.log("bind: " + data.node);
-            return data.instance.toggle_node(data.node);
-        });
-
         $(document).on('dnd_stop.vakata', function (e, data) {
-            var id = data.data.obj[0].id;
-            var target = data.event.target.children;
-            var sortable = $(target).find('ul.sortable');
-            eureka.editor.dropFinishCallbackNew(data);
+            eureka.editor.dropFinishCallback(data);
 
-            console.log(data);
         });
 
         $(systemTreeElem).before(
@@ -223,4 +210,3 @@ window.eureka.tree = new function () {
         );
     };
 };
-

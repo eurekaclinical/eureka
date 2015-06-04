@@ -55,7 +55,7 @@ public class SearchSystemPropositionServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
 
-		String searchKey = req.getParameter("searchKey");
+		String searchKey = req.getParameter("str");
 
 		if (searchKey == null) {
 			throw new ServletException("Search key is null");

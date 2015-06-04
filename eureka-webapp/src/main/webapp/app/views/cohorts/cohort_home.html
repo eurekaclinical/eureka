@@ -20,7 +20,7 @@
                         <a href="#/edit_cohort/{{cohortDestination.name}}" title="Edit">
                             <span class="glyphicon glyphicon-pencil edit-icon" title="Edit"></span>
                         </a>
-                        <span class="glyphicon glyphicon-remove delete-icon" title="Delete"></span>
+                        <span class="glyphicon glyphicon-remove delete-icon" title="Delete" ng-click="remove(cohortDestination.name)"></span>
                     </td>
                     <td>{{ cohortDestination.name }}</td>
                     <td>{{ cohortDestination.description }}</td>
@@ -76,10 +76,11 @@
         $(dialog).find('#deleteButton').on('click', function (e) {
             $(dialog).modal('hide');
             $.ajax({
-                type: "POST",
-                url: 'deletecohort?key=' + encodeURIComponent(key),
+                type: "DELETE",
+                //url: 'deletecohort?key=' + encodeURIComponent(key),
+                url: '/eureka-webapp/proxy-resource/destinations/' + encodeURIComponent(key),
                 success: function (data) {
-                    window.location.href = 'cohorthome'
+                    window.location.href = '#/cohort_home'
                 },
                 error: function (data, statusCode, errorThrown) {
                     var content = 'Error while deleting &quot;' + displayName.trim() + '&quot;. ' + data.responseText + '. Status Code: ' + statusCode;

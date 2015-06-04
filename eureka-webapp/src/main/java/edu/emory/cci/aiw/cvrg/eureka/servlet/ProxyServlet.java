@@ -84,21 +84,21 @@ public class ProxyServlet extends HttpServlet {
 
 	@Override
 	protected void doPut(HttpServletRequest servletRequest, HttpServletResponse servletResponse) throws ServletException, IOException {
-		LOGGER.debug("ProxyServlet");
+		LOGGER.debug("ProxyServlet - PUT");
 
 		StringBuilder stringBuilder = new StringBuilder(1000);
 		Scanner scanner = new Scanner(servletRequest.getInputStream());
 		while (scanner.hasNextLine()) {
 			stringBuilder.append(scanner.nextLine());
 		}
-		LOGGER.info("json: " + stringBuilder.toString());
+		LOGGER.debug("json: " + stringBuilder.toString());
 		StringBuilder uri = new StringBuilder(500);
 		uri.append(getTargetUri());
 		// Handle the path given to the servlet
 		if (servletRequest.getPathInfo() != null) {//ex: /my/path.html
 			uri.append(servletRequest.getPathInfo());
 		}
-		LOGGER.info("uri: " + uri.toString());
+		LOGGER.debug("uri: " + uri.toString());
 		try {
 			servicesClient.proxyPut(uri.toString(), stringBuilder.toString());
 		} catch (ClientException e) {
@@ -110,29 +110,50 @@ public class ProxyServlet extends HttpServlet {
 	protected void doPost(HttpServletRequest servletRequest, HttpServletResponse servletResponse)
 			throws ServletException, IOException {
 
-		LOGGER.debug("ProxyServlet");
+		LOGGER.debug("ProxyServlet - POST");
 
 		StringBuilder stringBuilder = new StringBuilder(1000);
 		Scanner scanner = new Scanner(servletRequest.getInputStream());
 		while (scanner.hasNextLine()) {
 			stringBuilder.append(scanner.nextLine());
 		}
-		LOGGER.info("json: " + stringBuilder.toString());
+		LOGGER.debug("json: " + stringBuilder.toString());
 		StringBuilder uri = new StringBuilder(500);
 		uri.append(getTargetUri());
 		// Handle the path given to the servlet
 		if (servletRequest.getPathInfo() != null) {//ex: /my/path.html
 			uri.append(servletRequest.getPathInfo());
 		}
-		LOGGER.info("uri: " + uri.toString());
+		LOGGER.debug("uri: " + uri.toString());
 		try {
 			servicesClient.proxyPost(uri.toString(), stringBuilder.toString());
 		} catch (ClientException e) {
 			e.printStackTrace();
 		}
 
-		//String path =
-		//		servletRequest.getRequestURI().substring(servletRequest.getContextPath().length());
+	}
+
+	@Override
+	protected void doDelete(HttpServletRequest servletRequest, HttpServletResponse servletResponse)
+			throws ServletException, IOException {
+
+		LOGGER.debug("ProxyServlet - DELETE");
+
+		StringBuilder uri = new StringBuilder(500);
+		uri.append(getTargetUri());
+		// Handle the path given to the servlet
+		if (servletRequest.getPathInfo() != null) {//ex: /my/path.html
+			uri.append(servletRequest.getPathInfo());
+		}
+		LOGGER.debug("uri: " + uri.toString());
+
+
+		try {
+			servicesClient.proxyDelete(uri.toString());
+		} catch (ClientException e) {
+			e.printStackTrace();
+		}
+
 	}
 
 	/** The target URI as configured. Not null. */

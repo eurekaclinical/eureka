@@ -9,7 +9,7 @@ window.eureka.tree = new function () {
         $(userTreeElem).jstree({
             "json_data": {
                 "ajax": {
-                    "url": "protected/userproplist?key=root"
+                    "url": "userproplist?key=root"
                 }
             },
             "dnd": {
@@ -51,32 +51,31 @@ window.eureka.tree = new function () {
 
     self.setupSystemTree = function (systemTreeElem, treeCssUrl, searchModalElem, dropFinishCallback,searchValidationModalElem,searchNoResultsModalElem,searchUpdateDivElem) {
         $(systemTreeElem).jstree({
-            "core": {
-                "data": {
-                    "url": "protected/systemlist",
-                    "dataType": 'json',
-                    //"url": "/eureka-services/api/protected/systemelement",
-                    "data": function (n) {
-                        return {
-                            key: n.id === "#" ? "root" : n.id
-                        };
-                    },
-                },
-
-            },
-
-            //"json_data": {
-            //	"ajax": {
-            //		"url": "protected/systemlist",
-            "url": "/eureka-services/api/protected/systemelement",
-            //"data": function (n) {
-            //	return {
-            //		key: n.attr ? n.attr("data-key") : "root"
-            //	};
-            //}
+            //"core": {
+            //    "data": {
+            //        "url": "protected/systemlist",
+            //        "dataType": 'json',
+            //        //"url": "/eureka-services/api/protected/systemelement",
+            //        "data": function (n) {
+            //            return {
+            //                key: n.id === "#" ? "root" : n.id
+            //            };
+            //        },
+            //    },
             //
-            //}
             //},
+
+            "json_data": {
+            	"ajax": {
+            		"url": "systemlist",
+            "data": function (n) {
+            	return {
+            		key: n.attr ? n.attr("data-key") : "root"
+            	};
+            }
+
+            }
+            },
 
             "crrm": {
                 // prevent movement and reordering of nodes
@@ -106,10 +105,10 @@ window.eureka.tree = new function () {
             "search": {
                 "show_only_matches": true,
                 "ajax": {
-                    "url": "protected/searchsystemlist",
+                    "url": "searchsystemlist",
                     "data": function (n) {
                         return {
-                            "searchKey": n
+                            "str": n
                         };
                     },
                     success: function (data) {
@@ -153,20 +152,6 @@ window.eureka.tree = new function () {
                 'url': treeCssUrl
             },
             "plugins": [ "themes", "json_data", "ui", "crrm", "dnd", "search" ]
-        });
-
-        $(systemTreeElem).bind("select_node.jstree", function (e, data) {
-            console.log("bind: " + data.node);
-            return data.instance.toggle_node(data.node);
-        });
-
-        $(document).on('dnd_stop.vakata', function (e, data) {
-            var id = data.data.obj[0].id;
-            var target = data.event.target.children;
-            var sortable = $(target).find('ul.sortable');
-            eureka.editor.dropFinishCallbackNew(data);
-
-            console.log(data);
         });
 
         $(systemTreeElem).before(

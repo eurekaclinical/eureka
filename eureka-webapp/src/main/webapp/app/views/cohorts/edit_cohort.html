@@ -3,31 +3,26 @@
     Select the system and user-defined elements from the ontology that will define the patient cohort.
 </p>
 <div class = "row" >
-    <div class="col-xs-4">
-        <!--
-        <js-tree
-                tree-events="select_node:nodeSelected"
-                tree-ajax="/eureka-webapp/protected/userproplist?key=root"
-                tree-core="tree_core"
-                tree-plugins="dnd"
-                ></js-tree>
-        -->
+    <div class="col-xs-4" ng-controller="TabController as tab">
 
         <ul class="nav nav-tabs">
-            <li class = "active">
-                <a href = "#systemElems" data-toggle="tab">System</a>
+            <li ng-class="{active:tab.isSet(1)}">
+                <!--<a href = "#systemElems" data-toggle="tab">System</a>-->
+                <a href ng-click="tab.setTab(1)" >System</a>
             </li>
-            <li>
-                <a href="#userElems" data-toggle="tab">User</a>
+            <li ng-class="{active:tab.isSet(2)}">
+                <a href ng-click="tab.setTab(2)" >User</a>
             </li>
         </ul>
         <div id="treeContent" class="tab-content proposition-tree">
-            <div id="systemElems" class="tab-pane fade active in">
+            <!--<div id="systemElems" class="tab-pane fade active in" ng-show="tab.isSet(1)">-->
+            <div id="systemElems" ng-show="tab.isSet(1)">
                 <div id="systemTree">
                 </div>
                 <div id="searchUpdateDiv" class="searchUpdateMessage"></div>
             </div>
-            <div id="userElems" class="tab-pane fade">
+            <!--<div id="userElems" class="tab-pane fade" ng-show="tab.isSet(2)">-->
+            <div id="userElems" ng-show="tab.isSet(2)">
                 <div id="userTree"></div>
             </div>
         </div>
@@ -157,10 +152,6 @@
     </div>
 </div>
 
-<script language="JavaScript"
-        src="assets/js/jquery.jstree.js"></script>
-<script language="JavaScript"
-        src="assets/js/eureka.tree.js"></script>
 <script language="JavaScript">
     eureka.editor.setup(null,
             '#systemTree', '#userTree', '#definitionContainer', '#savePropositionButton', 'span.delete-icon',
