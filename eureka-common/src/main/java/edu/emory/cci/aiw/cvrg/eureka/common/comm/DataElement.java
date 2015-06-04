@@ -54,6 +54,7 @@ public abstract class DataElement implements DataElementVisitable {
 	private Date lastModified;
 	private boolean summarized;
 	private Type type;
+	private boolean internalNode;
 
 	protected DataElement(Type inType) {
 		this.type = inType;
@@ -129,6 +130,14 @@ public abstract class DataElement implements DataElementVisitable {
 
 	public void setSummarized(boolean summarized) {
 		this.summarized = summarized;
+	}
+
+	public boolean isInternalNode() {
+		return internalNode;
+	}
+
+	public void setInternalNode(boolean internalNode) {
+		this.internalNode = internalNode;
 	}
 
 	@JsonIgnore

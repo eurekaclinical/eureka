@@ -208,6 +208,12 @@ public class ServicesClient extends EurekaClient {
 		doPost(path, json);
 	}
 
+	public void proxyDelete(final String path)
+			throws ClientException {
+
+		doDelete(path);
+	}
+
 	public void proxyPut(final String path, final String json)
 			throws ClientException {
 		doPut(path, json);

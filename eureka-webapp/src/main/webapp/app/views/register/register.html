@@ -1,4 +1,4 @@
-<div ng-controller="RegisterCtrl">
+<div ng-controller="RegisterController">
 <div class="alert alert-danger" role="alert" ng-if="errorMsg">
     <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
     <span class="sr-only">Error:</span>
@@ -111,6 +111,8 @@
                           name="password"
                           type="password"
                           class="form-control"
+                          ng-pattern="/(^.*(?=.*\d)(?=.*[a-z]).*$)/"
+                          ng-minlength="8"
                           ng-model="newAcct.password"
                           required />
                    <span class="help-block default-hidden"></span>

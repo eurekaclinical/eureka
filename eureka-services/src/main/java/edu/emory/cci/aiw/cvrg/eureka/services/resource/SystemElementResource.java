@@ -32,10 +32,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.annotation.security.RolesAllowed;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.ArrayList;
@@ -43,8 +40,6 @@ import java.util.List;
 import javax.ws.rs.core.Response.Status;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ClientException;
 import edu.emory.cci.aiw.cvrg.eureka.services.config.EtlClient;
-import javax.ws.rs.FormParam;
-import javax.ws.rs.POST;
 
 /**
  * @author hrathod
@@ -111,13 +106,15 @@ public class SystemElementResource {
 
 	@GET
 	@Path("/{key}")
-	public SystemElement get(@PathParam("key") String inKey) {
-		return getSystemElementCommon(inKey);
+	public SystemElement get(@PathParam("key") String inKey,
+							@DefaultValue("false") @QueryParam("summary") String summary) {
+		return getSystemElementCommon(inKey, summary);
 	}
 
 	@POST
-	public SystemElement getPropositionsPost(@FormParam("key") String inKey) {
-		return getSystemElementCommon(inKey);
+	public SystemElement getPropositionsPost(@FormParam("key") String inKey,
+											 @DefaultValue("false") @QueryParam("summary") String summary) {
+		return getSystemElementCommon(inKey, summary);
 	}
 	
 	@GET
@@ -148,7 +145,7 @@ public class SystemElementResource {
 
 	}
 	
-	private SystemElement getSystemElementCommon(String inKey) throws HttpStatusException {
+	private SystemElement getSystemElementCommon(String inKey, String summary) throws HttpStatusException {
 		LOGGER.info("Finding system element {}", inKey);
 		/*
 		* Hack to get an ontology source that assumes all Protempa configurations
@@ -164,7 +161,7 @@ public class SystemElementResource {
 			if (definition == null) {
 				throw new HttpStatusException(Response.Status.NOT_FOUND);
 			}
-			return PropositionUtil.toSystemElement(scps.get(0).getId(), definition, false,
+			return PropositionUtil.toSystemElement(scps.get(0).getId(), definition, summary.equals("true") ? true : false,
 					this.finder);
 		} catch (PropositionFindException ex) {
 			throw new HttpStatusException(
