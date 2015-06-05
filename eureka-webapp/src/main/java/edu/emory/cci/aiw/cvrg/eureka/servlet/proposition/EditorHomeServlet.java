@@ -88,7 +88,7 @@ public class EditorHomeServlet extends HttpServlet {
 		List<JsonTreeData> l = new ArrayList<>();
 		List<DataElement> props;
 		try {
-			props = this.servicesClient.getSummarizedUserElements();
+			props = this.servicesClient.getUserElements(true);
 		} catch (ClientException ex) {
 			throw new ServletException("Error getting user-defined data elements", ex);
 		}

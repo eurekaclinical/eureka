@@ -1,4 +1,4 @@
-package edu.emory.cci.aiw.cvrg.eureka.etl.queryresultshandler;
+package edu.emory.cci.aiw.cvrg.eureka.etl.dest;
 
 /*
  * #%L
@@ -19,7 +19,6 @@ package edu.emory.cci.aiw.cvrg.eureka.etl.queryresultshandler;
  * limitations under the License.
  * #L%
  */
-
 import org.protempa.KnowledgeSource;
 import org.protempa.dest.keyloader.KeyLoaderDestination;
 
@@ -44,6 +43,7 @@ import edu.emory.cci.aiw.neo4jetl.Neo4jDestination;
  */
 @Singleton
 public class ProtempaDestinationFactory {
+
 	private final EtlProperties etlProperties;
 	private final DestinationDao destinationDao;
 
@@ -52,9 +52,13 @@ public class ProtempaDestinationFactory {
 		this.destinationDao = inDestinationDao;
 		this.etlProperties = etlProperties;
 	}
-	
-	public org.protempa.dest.Destination getInstance(Long destId, KnowledgeSource knowledgeSource) {
+
+	public org.protempa.dest.Destination getInstance(Long destId) {
 		DestinationEntity dest = this.destinationDao.retrieve(destId);
+		return getInstance(dest);
+	}
+
+	public org.protempa.dest.Destination getInstance(DestinationEntity dest) {
 		if (dest instanceof I2B2DestinationEntity) {
 			return new I2b2Destination(new EurekaI2b2Configuration((I2B2DestinationEntity) dest, this.etlProperties));
 		} else if (dest instanceof CohortDestinationEntity) {

@@ -126,6 +126,12 @@ class ServletModule extends AbstractServletModule {
 
 		bind(JobListServlet.class).in(Singleton.class);
 		serve("/protected/jobs").with(JobListServlet.class);
+		
+		bind(JobStatsServlet.class).in(Singleton.class);
+		serve("/protected/jobstats").with(JobStatsServlet.class);
+		
+		bind(JobPatientCountsServlet.class).in(Singleton.class);
+		serve("/protected/jobpatcounts").with(JobPatientCountsServlet.class);
 
 		bind(AdminManagerServlet.class).in(Singleton.class);
 		serve("/protected/admin").with(AdminManagerServlet.class);

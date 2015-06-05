@@ -1,4 +1,4 @@
-package edu.emory.cci.aiw.cvrg.eureka.etl.queryresultshandler;
+package edu.emory.cci.aiw.cvrg.eureka.etl.dest;
 
 /*
  * #%L

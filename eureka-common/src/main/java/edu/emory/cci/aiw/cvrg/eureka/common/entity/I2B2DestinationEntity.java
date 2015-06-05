@@ -356,5 +356,10 @@ public class I2B2DestinationEntity extends DestinationEntity {
 	public void setMergeOnUpdate(Boolean mergeOnUpdate) {
 		this.mergeOnUpdate = mergeOnUpdate;
 	}
+
+	@Override
+	public boolean isGetStatisticsSupported() {
+		return true;
+	}
 	
 }

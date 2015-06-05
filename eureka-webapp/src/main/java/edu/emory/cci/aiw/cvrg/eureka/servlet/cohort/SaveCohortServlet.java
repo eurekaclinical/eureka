@@ -40,7 +40,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class SaveCohortServlet extends HttpServlet {
-
+	private static final ObjectMapper MAPPER = new ObjectMapper();
 	private static final Logger LOGGER = LoggerFactory
 			.getLogger(SaveCohortServlet.class);
 	private final ServicesClient servicesClient;
@@ -56,8 +56,7 @@ public class SaveCohortServlet extends HttpServlet {
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
 		LOGGER.debug("SaveCohortServlet");
-		ObjectMapper objectMapper = new ObjectMapper();
-		CohortJson cohortJson = objectMapper.readValue(req.getReader(), CohortJson.class);
+		CohortJson cohortJson = MAPPER.readValue(req.getReader(), CohortJson.class);
 		CohortDestination cohortDestination = new CohortDestination();
 		try {
 			User user = this.authenticationSupport.getMe(req);

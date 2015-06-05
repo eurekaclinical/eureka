@@ -88,6 +88,7 @@ public class DestinationToEtlDestinationVisitor extends AbstractDestinationVisit
 		etlDestination.setWrite(destination.isWrite());
 		etlDestination.setExecute(destination.isExecute());
 		etlDestination.setLinks(destination.getLinks());
+		etlDestination.setGetStatisticsSupported(destination.isGetStatisticsSupported());
 	}
 
 	@Override

@@ -55,6 +55,7 @@ class I2B2DestinationsDTOExtractor extends DestinationsDTOExtractor<EtlI2B2Desti
 
 		dest.setCreatedAt(destinationEntity.getCreatedAt());
 		dest.setUpdatedAt(destinationEntity.getEffectiveAt());
+		dest.setGetStatisticsSupported(destinationEntity.isGetStatisticsSupported());
 		
 		List<LinkEntity> linkEntities = destinationEntity.getLinks();
 		if (linkEntities != null) {

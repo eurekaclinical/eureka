@@ -50,7 +50,7 @@ import edu.emory.cci.aiw.cvrg.eureka.etl.config.EurekaProtempaConfigurations;
 import edu.emory.cci.aiw.cvrg.eureka.etl.dao.DestinationDao;
 import edu.emory.cci.aiw.cvrg.eureka.etl.dao.EtlGroupDao;
 import edu.emory.cci.aiw.cvrg.eureka.etl.dao.JobDao;
-import edu.emory.cci.aiw.cvrg.eureka.etl.queryresultshandler.ProtempaDestinationFactory;
+import edu.emory.cci.aiw.cvrg.eureka.etl.dest.ProtempaDestinationFactory;
 import edu.emory.cci.aiw.cvrg.eureka.etl.resource.Destinations;
 import java.util.ArrayList;
 import java.util.List;
@@ -112,8 +112,7 @@ public class ETL {
 							this.destinationDao, this.groupDao)
 					.getOne(job.getDestination().getName());
 			org.protempa.dest.Destination protempaDestination
-					= this.protempaDestFactory
-					.getInstance(eurekaDestination.getId(), protempa.getKnowledgeSource());
+					= this.protempaDestFactory.getInstance(eurekaDestination.getId());
 			protempa.execute(query, protempaDestination);
 		} catch (DataSourceFailedDataValidationException ex) {
 			logValidationEvents(job, ex.getValidationEvents(), ex);

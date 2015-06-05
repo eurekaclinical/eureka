@@ -21,45 +21,14 @@ package edu.emory.cci.aiw.cvrg.eureka.services.conversion;
  */
 
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.Cohort;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.DataElementEntity;
 
 /**
  *
  * @author Andrew Post
  */
-class CohortConversionSupport {
+class CohortConversionSupport extends ConversionSupport {
 	
 	CohortConversionSupport() {
-	}
-	
-	String toPropositionIdWrapped(String dataElementKey) {
-		return dataElementKey + ConversionUtil.PROP_ID_WRAPPED_SUFFIX;
-	}
-	
-	String toPropositionIdWrapped(DataElementEntity dataElement) {
-		return toPropositionIdWrapped(dataElement.getKey());
-	}
-	
-	String toPropositionId(String dataElementKey) {
-		if (!dataElementKey.startsWith(ConversionUtil.USER_KEY_PREFIX)) {
-			return dataElementKey;
-		} else {
-			return dataElementKey + ConversionUtil.PRIMARY_PROP_ID_SUFFIX;
-		}
-	}
-	
-	String toPropositionId(DataElementEntity dataElement) {
-		return toPropositionId(dataElement.getKey());
-	}
-	
-	String toDataElementKey(String propId) {
-		if (propId.startsWith(ConversionUtil.USER_KEY_PREFIX)) {
-			int lastIndexOf
-				= propId.lastIndexOf(ConversionUtil.PRIMARY_PROP_ID_SUFFIX);
-			return propId.substring(0, lastIndexOf);
-		} else {
-			return propId;
-		}
 	}
 	
 	Cohort etlCohortToServicesCohort(Cohort etlCohort) {

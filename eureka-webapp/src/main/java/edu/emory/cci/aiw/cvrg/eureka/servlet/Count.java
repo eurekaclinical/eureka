@@ -1,8 +1,8 @@
-package edu.emory.cci.aiw.cvrg.eureka.common.entity;
+package edu.emory.cci.aiw.cvrg.eureka.servlet;
 
 /*
  * #%L
- * Eureka Common
+ * Eureka WebApp
  * %%
  * Copyright (C) 2012 - 2015 Emory University
  * %%
@@ -20,37 +20,49 @@ package edu.emory.cci.aiw.cvrg.eureka.common.entity;
  * #L%
  */
 
-import java.util.Arrays;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
-
 /**
  *
  * @author Andrew Post
  */
-@Entity
-@Table(name = "neo4j_destinations")
-public class Neo4jDestinationEntity extends DestinationEntity {
-	@Column(nullable=false)
-	private String dbHome;
+public class Count {
+	private String key;
+	
+	private String parentKeyId;
+	
+	private String displayName;
+	
+	private Integer count;
 
-	public String getDbHome() {
-		return dbHome;
+	public String getKey() {
+		return key;
 	}
 
-	public void setDbHome(String dbHome) {
-		this.dbHome = dbHome;
+	public void setKey(String key) {
+		this.key = key;
 	}
 
-	@Override
-	public boolean isGetStatisticsSupported() {
-		return true;
+	public String getParentKeyId() {
+		return parentKeyId;
+	}
+
+	public void setParentKeyId(String parentKeyId) {
+		this.parentKeyId = parentKeyId;
 	}
 	
-	@Override
-	public void accept(DestinationEntityVisitor visitor) {
-		visitor.visit(this);
+	public String getDisplayName() {
+		return displayName;
+	}
+
+	public void setDisplayName(String displayName) {
+		this.displayName = displayName;
+	}
+
+	public Integer getCount() {
+		return count;
+	}
+
+	public void setCount(Integer count) {
+		this.count = count;
 	}
 	
 }

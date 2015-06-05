@@ -89,6 +89,7 @@ public class EtlDestinationToDestinationVisitor extends AbstractEtlDestinationVi
 		destination.setCreatedAt(etlDestination.getCreatedAt());
 		destination.setUpdatedAt(etlDestination.getUpdatedAt());
 		destination.setLinks(etlDestination.getLinks());
+		destination.setGetStatisticsSupported(etlDestination.isGetStatisticsSupported());
 	}
 
 	@Override

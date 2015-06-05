@@ -120,9 +120,9 @@ public class EditCohortServlet extends HttpServlet {
 			for (Literal literal : phenotypes) {
 				DataElement userElement;
 				if (literal.getName().startsWith("USER:")) {
-					userElement = servicesClient.getSummarizedUserElement(literal.getName());
+					userElement = servicesClient.getUserElement(literal.getName(), true);
 				} else {
-					userElement = servicesClient.getSystemElement(literal.getName());
+					userElement = servicesClient.getSystemElement(literal.getName(), true);
 				}
 				result.add(new DataElementField(userElement));
 			}

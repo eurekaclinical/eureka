@@ -49,6 +49,7 @@ class PatientSetSenderDestinationsDTOExtractor extends DestinationsDTOExtractor<
 		dest.setCreatedAt(destinationEntity.getCreatedAt());
 		dest.setUpdatedAt(destinationEntity.getEffectiveAt());
 		dest.setUrl(destinationEntity.getUrl());
+		dest.setGetStatisticsSupported(destinationEntity.isGetStatisticsSupported());
 
 		return dest;
 	}

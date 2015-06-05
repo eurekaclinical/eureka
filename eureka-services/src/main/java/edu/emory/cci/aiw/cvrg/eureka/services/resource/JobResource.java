@@ -29,6 +29,7 @@ import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ClientException;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.UserEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.exception.HttpStatusException;
 import edu.emory.cci.aiw.cvrg.eureka.services.config.EtlClient;
+import edu.emory.cci.aiw.cvrg.eureka.services.conversion.ConversionSupport;
 import edu.emory.cci.aiw.cvrg.eureka.services.conversion.PropositionDefinitionCollector;
 import edu.emory.cci.aiw.cvrg.eureka.services.conversion.PropositionDefinitionConverterVisitor;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.DataElementEntityDao;
@@ -51,8 +52,10 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import java.net.URI;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
-import org.jasig.cas.client.authentication.AttributePrincipal;
+import java.util.Map;
 
 /**
  * REST operations related to jobs submitted by the user.
@@ -85,17 +88,17 @@ public class JobResource {
 	 */
 	private final PropositionDefinitionConverterVisitor converterVisitor;
 	private final EtlClient etlClient;
+	private final ConversionSupport conversionSupport;
 
 	/**
 	 * Construct a new job resource with the given job update thread.
 	 *
 	 * @param inUserDao The data access object used to fetch information about
 	 * users.
-	 * @param inVisitor The proposition definition converter visitor that
-	 *                     will be used to determine how to convert
-	 *                     proposition definitions
-	 * @param inPropositionDao The data access object used to fetch
-	 *                            information about propositions.
+	 * @param inVisitor The proposition definition converter visitor that will
+	 * be used to determine how to convert proposition definitions
+	 * @param inPropositionDao The data access object used to fetch information
+	 * about propositions.
 	 * @param inEtlClient The ETL client to use to perform ETL operations.
 	 */
 	@Inject
@@ -107,6 +110,7 @@ public class JobResource {
 		this.propositionDao = inPropositionDao;
 		this.converterVisitor = inVisitor;
 		this.etlClient = inEtlClient;
+		this.conversionSupport = new ConversionSupport();
 	}
 
 	/**
@@ -114,8 +118,8 @@ public class JobResource {
 	 *
 	 * @param jobSpec The file upload to add.
 	 *
-	 * @return A {@link javax.ws.rs.core.Response} indicating the result of
-	 * the operation.
+	 * @return A {@link javax.ws.rs.core.Response} indicating the result of the
+	 * operation.
 	 */
 	@POST
 	@Consumes({MediaType.APPLICATION_JSON})
@@ -123,10 +127,10 @@ public class JobResource {
 		LOGGER.debug("Got job submission: {}", jobSpec);
 		UserEntity user = this.userDao.getByHttpServletRequest(request);
 		JobRequest jobRequest = new JobRequest();
-		PropositionDefinitionCollector collector =
-				PropositionDefinitionCollector.getInstance(
-				this.converterVisitor, this.propositionDao
-				.getByUserId(user.getId()));
+		PropositionDefinitionCollector collector
+				= PropositionDefinitionCollector.getInstance(
+						this.converterVisitor, this.propositionDao
+						.getByUserId(user.getId()));
 		if (LOGGER.isTraceEnabled()) {
 			LOGGER.trace("Sending {} proposition definitions:", collector.getUserPropDefs().size());
 			for (PropositionDefinition pd : collector.getUserPropDefs()) {
@@ -162,6 +166,54 @@ public class JobResource {
 		}
 	}
 
+	@GET
+	@Path("/{jobId}/stats/{key}")
+	@Produces({MediaType.APPLICATION_JSON})
+	public edu.emory.cci.aiw.cvrg.eureka.common.comm.Statistics getJobStats(@Context HttpServletRequest request,
+			@PathParam("jobId") Long inJobId, @PathParam("key") String key) {
+		try {
+			edu.emory.cci.aiw.cvrg.eureka.common.comm.Statistics stats = this.etlClient.getJobStats(inJobId, key != null ? this.conversionSupport.toPropositionId(key) : null);
+			edu.emory.cci.aiw.cvrg.eureka.common.comm.Statistics convertedStats = new edu.emory.cci.aiw.cvrg.eureka.common.comm.Statistics();
+
+			Map<String, String> childrenToParents = stats.getChildrenToParents();
+			Map<String, String> convertedChildrenToParents = new HashMap<>();
+			for (Map.Entry<String, String> me : childrenToParents.entrySet()) {
+				String dataElementKey = this.conversionSupport.toDataElementKey(me.getKey());
+				String parentKey = me.getValue();
+				if (dataElementKey != null) {
+					convertedChildrenToParents.put(dataElementKey, parentKey != null ? this.conversionSupport.toDataElementKey(parentKey) : null);
+				}
+			}
+			convertedStats.setChildrenToParents(convertedChildrenToParents);
+
+			Map<String, Integer> counts = stats.getCounts();
+			Map<String, Integer> convertedCounts = new HashMap<>();
+			for (Map.Entry<String, Integer> me : counts.entrySet()) {
+				String dataElementKey = this.conversionSupport.toDataElementKey(me.getKey());
+				if (dataElementKey != null) {
+					convertedCounts.put(dataElementKey, me.getValue());
+				}
+			}
+			convertedStats.setCounts(convertedCounts);
+			return convertedStats;
+		} catch (ClientException ex) {
+			ClientResponse.Status responseStatus = ex.getResponseStatus();
+			if (responseStatus == ClientResponse.Status.NOT_FOUND) {
+				throw new HttpStatusException(Status.NOT_FOUND);
+			} else {
+				throw new HttpStatusException(Status.INTERNAL_SERVER_ERROR, ex);
+			}
+		}
+	}
+
+	@GET
+	@Path("/{jobId}/stats")
+	@Produces({MediaType.APPLICATION_JSON})
+	public edu.emory.cci.aiw.cvrg.eureka.common.comm.Statistics getJobStatsRoot(@Context HttpServletRequest request,
+			@PathParam("jobId") Long inJobId) {
+		return getJobStats(request, inJobId, null);
+	}
+
 	/**
 	 * Get a list of jobs associated with user referred to by the given unique
 	 * identifier.
@@ -179,7 +231,7 @@ public class JobResource {
 			} else if (order.equals("desc")) {
 				return this.etlClient.getJobsDesc();
 			} else {
-				throw new HttpStatusException(Status.PRECONDITION_FAILED, 
+				throw new HttpStatusException(Status.PRECONDITION_FAILED,
 						"Invalid value for the order query parameter: " + order);
 			}
 		} catch (ClientException ex) {
@@ -191,8 +243,7 @@ public class JobResource {
 	 * Get the status of the most recent job process for the given user.
 	 *
 	 * @param inFilter The filter to use when fetching the job statuses.
-	 * @return A {@link List} of {@link Job}s containing the status
-	 * information.
+	 * @return A {@link List} of {@link Job}s containing the status information.
 	 */
 	@Path("/status")
 	@GET

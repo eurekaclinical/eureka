@@ -43,17 +43,20 @@ import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ServicesClient;
 public class UserPropositionListServlet extends HttpServlet {
 
 	private static final Logger LOGGER = LoggerFactory
-	        .getLogger(UserPropositionListServlet.class);
+			.getLogger(UserPropositionListServlet.class);
+	private static final ObjectMapper MAPPER = new ObjectMapper();
 	private final ServicesClient servicesClient;
+	private final PropositionListSupport propListSupport;
 
 	@Inject
-	public UserPropositionListServlet (ServicesClient inClient) {
+	public UserPropositionListServlet(ServicesClient inClient) {
 		this.servicesClient = inClient;
+		this.propListSupport = new PropositionListSupport();
 	}
 
 	private JsonTreeData createData(DataElement element) {
 		JsonTreeData d = new JsonTreeData();
-		d.setData(getDisplayName(element));
+		d.setData(this.propListSupport.getDisplayName(element));
 		d.setKeyVal("id", String.valueOf(element.getId()));
 
 		d.setKeyVal("data-key", element.getKey());
@@ -61,56 +64,41 @@ public class UserPropositionListServlet extends HttpServlet {
 		d.setKeyVal("data-type", element.getType().toString());
 		if (element.getType() == DataElement.Type.CATEGORIZATION) {
 			d.setKeyVal("data-subtype", ((Category) element)
-			        .getCategoricalType().toString());
+					.getCategoricalType().toString());
 		}
 
 		return d;
 	}
 
-	private String getDisplayName(DataElement p) {
-		String displayName = "";
-
-		if (p.getDisplayName() != null && !p.getDisplayName().equals("")) {
-
-			displayName = p.getDisplayName() + " (" + p.getKey() + ")";
-
-		} else {
-
-			displayName = p.getKey();
-
-		}
-
-		return displayName;
-	}
-
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp)
-	        throws ServletException, IOException {
+			throws ServletException, IOException {
 		doGet(req, resp);
 	}
 
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
-	        throws ServletException, IOException {
+			throws ServletException, IOException {
 
 		LOGGER.debug("doGet");
-		List<JsonTreeData> l = new ArrayList<>();
 		List<DataElement> props;
 		try {
-			props = this.servicesClient.getUserElements();
+			props = this.servicesClient.getUserElements(false);
 		} catch (ClientException ex) {
 			throw new ServletException("Error getting user-defined data element list", ex);
 		}
+		List<JsonTreeData> l = new ArrayList<>(props.size());
 		for (DataElement proposition : props) {
 			JsonTreeData d = createData(proposition);
 			l.add(d);
-			LOGGER.debug("Added user prop: " + d.getData());
+			if (LOGGER.isDebugEnabled()) {
+				LOGGER.debug("Added user prop: {}", d.getData());
+			}
 		}
 		LOGGER.debug("executed resource get");
 
-		ObjectMapper mapper = new ObjectMapper();
 		resp.setContentType("application/json");
 		PrintWriter out = resp.getWriter();
-		mapper.writeValue(out, l);
+		MAPPER.writeValue(out, l);
 	}
 }

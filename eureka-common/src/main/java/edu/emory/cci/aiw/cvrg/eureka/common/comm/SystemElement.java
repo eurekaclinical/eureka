@@ -72,7 +72,7 @@ public final class SystemElement extends DataElement {
 	public boolean isInSystem() {
 		return true;
 	}
-
+	
 	@Override
     public void accept(DataElementVisitor visitor) 
 			throws DataElementHandlingException{

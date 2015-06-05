@@ -38,6 +38,8 @@ import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ClientException;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ServicesClient;
 
 public class SearchSystemPropositionServlet extends HttpServlet {
+	private static final ObjectMapper MAPPER = new ObjectMapper();
+	private static final Pattern PATTERN = Pattern.compile("[^a-zA-Z0-9]");
 	private final ServicesClient servicesClient;
 
 	@Inject
@@ -68,10 +70,9 @@ public class SearchSystemPropositionServlet extends HttpServlet {
 					.getSystemElementSearchResults(searchKey);
 			processedSearchResult = convertResultsForJstreeRequirement(searchResult);
 
-			ObjectMapper mapper = new ObjectMapper();
 			resp.setContentType("application/json");
 			PrintWriter out = resp.getWriter();
-			mapper.writeValue(out, processedSearchResult);
+			MAPPER.writeValue(out, processedSearchResult);
 		} catch (ClientException e) {
 			throw new ServletException("Error getting search results", e);
 		}
@@ -82,11 +83,9 @@ public class SearchSystemPropositionServlet extends HttpServlet {
 	private List<String> convertResultsForJstreeRequirement(
 			List<String> searchResult) {
 		List<String> newResultSet = new ArrayList<>();
-		Pattern pattern = Pattern.compile("[^a-zA-Z0-9]");
-
 		newResultSet.add("#root");
 		for (String currentSearchResult : searchResult) {
-			newResultSet.add("#" + pattern.matcher(currentSearchResult).replaceAll("\\\\$0"));
+			newResultSet.add("#" + PATTERN.matcher(currentSearchResult).replaceAll("\\\\$0"));
 		}
 		return newResultSet;
 	}

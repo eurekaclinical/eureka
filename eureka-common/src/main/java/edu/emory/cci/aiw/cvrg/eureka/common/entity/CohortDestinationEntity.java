@@ -46,6 +46,11 @@ public class CohortDestinationEntity extends DestinationEntity {
 	}
 
 	@Override
+	public boolean isGetStatisticsSupported() {
+		return false;
+	}
+
+	@Override
 	public void accept(DestinationEntityVisitor visitor) {
 		visitor.visit(this);
 	}

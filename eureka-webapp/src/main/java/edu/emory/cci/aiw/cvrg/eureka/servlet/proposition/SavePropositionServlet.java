@@ -42,6 +42,7 @@ public class SavePropositionServlet extends HttpServlet {
 
 	private static final Logger LOGGER = LoggerFactory
 	        .getLogger(SavePropositionServlet.class);
+	private static final ObjectMapper MAPPER = new ObjectMapper();
 	private final ServicesClient servicesClient;
 	private final WebappAuthenticationSupport authenticationSupport;
 
@@ -55,8 +56,7 @@ public class SavePropositionServlet extends HttpServlet {
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp)
 	        throws ServletException, IOException {
 		LOGGER.debug("SavePropositionServlet");
-		ObjectMapper objectMapper = new ObjectMapper();
-		DataElement dataElement = objectMapper.readValue(req.getReader(),
+		DataElement dataElement = MAPPER.readValue(req.getReader(),
 				DataElement.class);
 		try {
 			User user = this.authenticationSupport.getMe(req);

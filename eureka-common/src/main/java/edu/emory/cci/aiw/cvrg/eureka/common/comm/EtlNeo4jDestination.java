@@ -35,7 +35,7 @@ public class EtlNeo4jDestination extends EtlDestination {
 	public void setDbPath(String dbPath) {
 		this.dbPath = dbPath;
 	}
-	
+
 	@Override
 	public void accept(EtlDestinationVisitor etlDestinationVisitor) {
 		etlDestinationVisitor.visit(this);

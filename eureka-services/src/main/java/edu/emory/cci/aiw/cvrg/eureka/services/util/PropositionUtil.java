@@ -75,10 +75,11 @@ public final class PropositionUtil {
 		systemElement.setDescription(inDefinition.getAbbreviatedDisplayName());
 		systemElement.setDisplayName(inDefinition.getDisplayName());
 		systemElement.setSummarized(summarize);
-		systemElement.setParent(inDefinition.getChildren().length > 0);
 		PropositionDefinitionTypeVisitor propDefTypeVisitor = new PropositionDefinitionTypeVisitor();
 		inDefinition.accept(propDefTypeVisitor);
 		systemElement.setSystemType(propDefTypeVisitor.getSystemType());
+		String[] inDefChildren = inDefinition.getChildren();
+		systemElement.setParent(inDefChildren.length > 0);
 
 		List<String> properties = new ArrayList<>();
 		for (PropertyDefinition propertyDef : inDefinition
@@ -91,7 +92,7 @@ public final class PropositionUtil {
 			List<SystemElement> children = new ArrayList<>();
 			List<PropositionDefinition> pds = inPropositionFinder.findAll(
 					sourceConfigId,
-			        Arrays.<String> asList(inDefinition.getChildren()),
+			        Arrays.<String> asList(inDefChildren),
 			        Boolean.FALSE);
 			for (PropositionDefinition pd : pds) {
 				children.add(toSystemElement(sourceConfigId, pd, true,

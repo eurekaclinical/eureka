@@ -73,9 +73,20 @@ public class JobListServlet extends HttpServlet {
 				}
 			}
 			if (job != null) {
+				req.setAttribute("jobId", job.getId());
 				req.setAttribute("jobStatus", job.toJobListRow());
 				String destName = job.getDestinationId();
-				req.setAttribute("destination", destName);
+				Destination destination = null;
+				for (Destination candidateDest : destinations) {
+					if (candidateDest.getName().equals(destName)) {
+						destination = candidateDest;
+						break;
+					}
+				}
+				if (destination == null) {
+					throw new ServletException("Can't find destination " + destName);
+				}
+				req.setAttribute("destination", destination);
 				String sourceConfigName = job.getSourceConfigId();
 				req.setAttribute("sourceConfig", sourceConfigName);
 			}

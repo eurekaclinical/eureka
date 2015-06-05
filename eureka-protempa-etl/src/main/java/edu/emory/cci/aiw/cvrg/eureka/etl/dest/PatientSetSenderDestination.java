@@ -1,4 +1,4 @@
-package edu.emory.cci.aiw.cvrg.eureka.etl.queryresultshandler;
+package edu.emory.cci.aiw.cvrg.eureka.etl.dest;
 
 /*
  * #%L
@@ -22,11 +22,9 @@ package edu.emory.cci.aiw.cvrg.eureka.etl.queryresultshandler;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.PatientSetSenderDestinationEntity;
 import org.protempa.DataSource;
 import org.protempa.KnowledgeSource;
-import org.protempa.dest.Destination;
+import org.protempa.dest.AbstractDestination;
 import org.protempa.dest.QueryResultsHandler;
 import org.protempa.dest.QueryResultsHandlerInitException;
-import org.protempa.dest.Statistics;
-import org.protempa.dest.StatisticsException;
 import org.protempa.query.Query;
 import org.protempa.query.QueryMode;
 
@@ -34,7 +32,7 @@ import org.protempa.query.QueryMode;
  *
  * @author Andrew Post
  */
-public class PatientSetSenderDestination implements Destination {
+public class PatientSetSenderDestination extends AbstractDestination {
 
 	private final String url;
 	private final String aliasPropId;
@@ -62,11 +60,6 @@ public class PatientSetSenderDestination implements Destination {
 				this.aliasFieldNameProperty,
 				this.aliasFieldName,
 				this.aliasPatientIdProperty);
-	}
-
-	@Override
-	public Statistics getStatistics() throws StatisticsException {
-		throw new StatisticsException("Not supported yet.");
 	}
 
 }

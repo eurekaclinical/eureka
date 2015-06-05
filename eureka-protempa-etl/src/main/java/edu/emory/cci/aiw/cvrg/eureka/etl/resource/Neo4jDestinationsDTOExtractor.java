@@ -54,6 +54,7 @@ class Neo4jDestinationsDTOExtractor extends DestinationsDTOExtractor<EtlNeo4jDes
 		neo4jDestination.setCreatedAt(destinationEntity.getCreatedAt());
 		neo4jDestination.setUpdatedAt(destinationEntity.getEffectiveAt());
 		neo4jDestination.setDbPath(destinationEntity.getDbHome());
+		neo4jDestination.setGetStatisticsSupported(destinationEntity.isGetStatisticsSupported());
 		List<LinkEntity> linkEntities = destinationEntity.getLinks();
 		if (linkEntities != null) {
 			List<Link> links = new ArrayList<>(linkEntities.size());
