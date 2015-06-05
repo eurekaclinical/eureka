@@ -191,4 +191,9 @@ class I2b2Settings extends AbstractSettings {
 		return entity.getPatientDimensionDeathDate();
 	}
 
+	@Override
+	public boolean getManageCTotalNum() {
+		return entity.getManageCTotalNum();
+	}
+
 }

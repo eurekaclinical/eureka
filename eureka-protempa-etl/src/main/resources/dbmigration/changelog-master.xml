@@ -685,4 +685,11 @@ limitations under the License.
 		</createTable>
 		<addForeignKeyConstraint baseColumnNames="ID" baseTableName="PS_SENDER_DESTINATIONS" constraintName="FK_PS_SENDER_DEST" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" referencedColumnNames="ID" referencedTableName="DESTINATIONS" referencesUniqueColumn="false"/>
 	</changeSet>
+	<changeSet author="arpost" id="1361552652236-34">
+		<addColumn tableName="I2B2_DESTINATIONS">
+			<column name="MANAGECTOTALNUM" type="BOOLEAN" defaultValueBoolean="false">
+				<constraints nullable="false"/>
+			</column>
+		</addColumn>
+	</changeSet>
 </databaseChangeLog>

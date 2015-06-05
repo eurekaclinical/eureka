@@ -19,9 +19,9 @@ package edu.emory.cci.aiw.cvrg.eureka.common.entity;
  * limitations under the License.
  * #L%
  */
-
 import java.util.List;
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -35,6 +35,7 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "i2b2_destinations")
 public class I2B2DestinationEntity extends DestinationEntity {
+
 	private String providerFullName;
 	private String providerFirstName;
 	private String providerMiddleName;
@@ -43,15 +44,15 @@ public class I2B2DestinationEntity extends DestinationEntity {
 	private Boolean skipProviderHierarchy;
 	private Boolean skipDemographicsHierarchy;
 	private Boolean mergeOnUpdate;
-	
+
 	@ManyToOne
 	@JoinColumn(referencedColumnName = "id")
 	private I2B2DestinationRemoveMethod dataRemoveMethod;
-	
+
 	@ManyToOne
 	@JoinColumn(referencedColumnName = "id")
 	private I2B2DestinationRemoveMethod metaRemoveMethod;
-	
+
 	private String sourceSystemCode;
 	private String patientDimensionMRN;
 	private String patientDimensionVital;
@@ -74,73 +75,77 @@ public class I2B2DestinationEntity extends DestinationEntity {
 	private String dataConnect;
 	private String dataUser;
 	private String dataPassword;
-	
-	@OneToMany(cascade = CascadeType.ALL, targetEntity = I2B2DestinationDataSpecEntity.class, mappedBy="destination")
+
+	@Column(nullable = false)
+	private Boolean manageCTotalNum = Boolean.FALSE;
+
+	@OneToMany(cascade = CascadeType.ALL, targetEntity = I2B2DestinationDataSpecEntity.class, mappedBy = "destination")
 	private List<I2B2DestinationDataSpecEntity> dataSpecs;
-	
-	@OneToMany(cascade = CascadeType.ALL, targetEntity = I2B2DestinationConceptSpecEntity.class, mappedBy="destination")
+
+	@OneToMany(cascade = CascadeType.ALL, targetEntity = I2B2DestinationConceptSpecEntity.class, mappedBy = "destination")
 	private List<I2B2DestinationConceptSpecEntity> conceptSpecs;
 
 	@Override
 	public void accept(DestinationEntityVisitor visitor) {
 		visitor.visit(this);
 	}
-	
+
 	public String getProviderFullName() {
 		return this.providerFullName;
 	}
-	
-    public String getProviderFirstName() {
+
+	public String getProviderFirstName() {
 		return this.providerFirstName;
 	}
-	
+
 	public String getProviderMiddleName() {
 		return this.providerMiddleName;
 	}
-	
+
 	public String getProviderLastName() {
 		return this.providerLastName;
 	}
-    
+
 	public String getVisitDimension() {
 		return this.visitDimension;
 	}
-    public Boolean getSkipProviderHierarchy() {
+
+	public Boolean getSkipProviderHierarchy() {
 		return this.skipProviderHierarchy;
 	}
-	
-    public Boolean getSkipDemographicsHierarchy() {
+
+	public Boolean getSkipDemographicsHierarchy() {
 		return this.skipDemographicsHierarchy;
 	}
-	
-    public I2B2DestinationRemoveMethod getDataRemoveMethod() {
+
+	public I2B2DestinationRemoveMethod getDataRemoveMethod() {
 		return this.dataRemoveMethod;
 	}
-	
-    public I2B2DestinationRemoveMethod getMetaRemoveMethod() {
+
+	public I2B2DestinationRemoveMethod getMetaRemoveMethod() {
 		return this.metaRemoveMethod;
 	}
-	
-    public String getSourceSystemCode() {
+
+	public String getSourceSystemCode() {
 		return this.sourceSystemCode;
 	}
-	
-    public String getPatientDimensionMRN() {
+
+	public String getPatientDimensionMRN() {
 		return this.patientDimensionMRN;
 	}
-	
-    public String getPatientDimensionZipCode() {
+
+	public String getPatientDimensionZipCode() {
 		return this.patientDimensionZipCode;
 	}
-	
-    public String getPatientDimensionMaritalStatus() {
+
+	public String getPatientDimensionMaritalStatus() {
 		return this.patientDimensionMaritalStatus;
 	}
-	
-    public String getPatientDimensionRace() {
+
+	public String getPatientDimensionRace() {
 		return this.patientDimensionRace;
 	}
-    
+
 	public String getPatientDimensionBirthdate() {
 		return this.patientDimensionBirthdate;
 	}
@@ -152,36 +157,36 @@ public class I2B2DestinationEntity extends DestinationEntity {
 	public void setPatientDimensionDeathDate(String patientDimensionDeathDate) {
 		this.patientDimensionDeathDate = patientDimensionDeathDate;
 	}
-	
-    public String getPatientDimensionGender() {
+
+	public String getPatientDimensionGender() {
 		return this.patientDimensionGender;
 	}
-	
-    public String getPatientDimensionLanguage() {
+
+	public String getPatientDimensionLanguage() {
 		return this.patientDimensionLanguage;
 	}
-	
-    public String getPatientDimensionReligion() {
+
+	public String getPatientDimensionReligion() {
 		return this.patientDimensionReligion;
 	}
-	
-    public String getPatientDimensionVital() {
+
+	public String getPatientDimensionVital() {
 		return this.patientDimensionVital;
 	}
-	
-    public String getRootNodeName() {
+
+	public String getRootNodeName() {
 		return this.rootNodeName;
 	}
-	
-    public String getVisitDimensionId() {
+
+	public String getVisitDimensionId() {
 		return this.visitDimensionId;
 	}
-	
-    public String getAgeConceptCodePrefix() {
+
+	public String getAgeConceptCodePrefix() {
 		return this.ageConceptCodePrefix;
 	}
-	
-    public String getMetaTableName() {
+
+	public String getMetaTableName() {
 		return this.metaTableName;
 	}
 
@@ -357,9 +362,21 @@ public class I2B2DestinationEntity extends DestinationEntity {
 		this.mergeOnUpdate = mergeOnUpdate;
 	}
 
+	public Boolean getManageCTotalNum() {
+		return manageCTotalNum;
+	}
+
+	public void setManageCTotalNum(Boolean manageCTotalNum) {
+		if (manageCTotalNum == null) {
+			this.manageCTotalNum = Boolean.FALSE;
+		} else {
+			this.manageCTotalNum = manageCTotalNum;
+		}
+	}
+
 	@Override
 	public boolean isGetStatisticsSupported() {
 		return true;
 	}
-	
+
 }
