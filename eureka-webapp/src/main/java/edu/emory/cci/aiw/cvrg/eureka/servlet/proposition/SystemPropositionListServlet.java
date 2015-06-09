@@ -57,22 +57,19 @@ public class SystemPropositionListServlet extends HttpServlet {
 	private JsonTreeData createData(SystemElement element) {
 		JsonTreeData d = new JsonTreeData();
 		d.setState("closed");
+		d.setId(element.getKey());
 		d.setData(this.propListSupport.getDisplayName(element));
+		d.setText(this.propListSupport.getDisplayName(element));
 		d.setKeyVal("id", element.getKey());
 
 		String properties = StringUtils.join(element.getProperties(), ",");
 		d.setKeyVal("data-properties", properties);
-		if (element.isParent()) {
-			d.setKeyVal("class", "jstree-closed");
-		}
-		// if (proposition.isParent() || proposition.getChildren().size() > 0) {
-		// d.setKeyVal("class", "jstree-closed");
-		// }
-//		d.setKeyVal("class", "jstree-closed");
+
 		d.setKeyVal("data-key", element.getKey());
 		d.setKeyVal("data-space", "system");
 		d.setKeyVal("data-type", element.getSystemType().toString());
 		d.setKeyVal("data-proposition", element.getKey());
+		d.setChildren(element.isInternalNode());
 
 		return d;
 	}

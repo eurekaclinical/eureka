@@ -47,7 +47,12 @@ import java.io.InputStream;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
+import javax.ws.rs.GET;
+import javax.ws.rs.HttpMethod;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
+import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
 import org.protempa.ProtempaUtil;
 import org.slf4j.Logger;
@@ -235,6 +240,22 @@ public class ServicesClient extends EurekaClient {
 			throws ClientException {
 		final String path = "/api/protected/dataelement";
 		doPost(path, inDataElement);
+	}
+
+	public void proxyPost(final String path, final String json)
+			throws ClientException {
+		doPost(path, json);
+	}
+
+	public void proxyDelete(final String path)
+			throws ClientException {
+
+		doDelete(path);
+	}
+
+	public void proxyPut(final String path, final String json)
+			throws ClientException {
+		doPut(path, json);
 	}
 
 	public void updateUserElement(DataElement inDataElement) throws

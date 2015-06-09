@@ -57,6 +57,7 @@ public class UserPropositionListServlet extends HttpServlet {
 	private JsonTreeData createData(DataElement element) {
 		JsonTreeData d = new JsonTreeData();
 		d.setData(this.propListSupport.getDisplayName(element));
+		d.setText(this.propListSupport.getDisplayName(element));
 		d.setKeyVal("id", String.valueOf(element.getId()));
 
 		d.setKeyVal("data-key", element.getKey());

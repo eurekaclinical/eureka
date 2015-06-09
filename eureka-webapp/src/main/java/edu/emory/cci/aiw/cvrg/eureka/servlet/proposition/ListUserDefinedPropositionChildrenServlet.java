@@ -87,7 +87,7 @@ public class ListUserDefinedPropositionChildrenServlet extends HttpServlet {
 							de.getDataElementKey());
 					newData.setType("system");
 					LOGGER.debug("add sysTarget {}", de.getDataElementKey());
-					d.addNodes(newData);
+					d.setChildren(true);
 
 				}
 			}
@@ -102,7 +102,7 @@ public class ListUserDefinedPropositionChildrenServlet extends HttpServlet {
 					newData.setType("user");
 					LOGGER.debug("add user defined {}",
 							userDataElement.getDataElementKey());
-					d.addNodes(newData);
+					d.setChildren(true);
 				}
 			}
 		}

@@ -103,6 +103,11 @@ class ServletModule extends AbstractServletModule {
 		bind(RegisterUserServlet.class).in(Singleton.class);
 		serve("/register").with(RegisterUserServlet.class);
 
+		bind(ProxyServlet.class).in(Singleton.class);
+		Map<String, String> proxyParams = new HashMap<String, String>();
+		proxyParams.put("targetUri", "api/protected");
+		serve("/proxy-resource/*").with(ProxyServlet.class, proxyParams);
+
 		bind(ForgotPasswordServlet.class).in(Singleton.class);
 		serve("/forgot_password").with(ForgotPasswordServlet.class);
 

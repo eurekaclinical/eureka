@@ -29,23 +29,20 @@ import java.util.Map;
 
 public class JsonTreeData {
 
-	private List<JsonTreeData> children = new ArrayList<>();
+	private boolean children;
 	private Map<String,String> attr = new HashMap<>();
 	private String id;
 	private String data;
+	private String text;
 	private String type;
     private String state;
 
-	public List<JsonTreeData> getChildren() {
+	public boolean isChildren() {
 		return children;
 	}
 
-	public void setChildren(List<JsonTreeData> nodes) {
-		this.children = nodes;
-	}
-
-	public void addNodes(JsonTreeData ...thechildren) {
-		Collections.addAll(this.children, thechildren);
+	public void setChildren(boolean children) {
+		this.children = children;
 	}
 
 	public String getId() {
@@ -93,4 +90,12 @@ public class JsonTreeData {
     public String getState() {
         return this.state;
     }
+
+	public String getText() {
+		return text;
+	}
+
+	public void setText(String text) {
+		this.text = text;
+	}
 }

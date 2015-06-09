@@ -1,0 +1,156 @@
+<div class="row">
+    <div class="col-sm-12">
+        <h3>Phenotype Editor</h3>
+        <p>Specify the phenotypes that you want to compute in your
+            datasets below.
+            Phenotypes are patient features inferred from sequence,
+            frequency and other temporal patterns in the events and
+            observations in your dataset.
+            These features are computed as intervals with a start time
+            and a stop time representing when they are present.
+        </p>
+
+        <div id="dialog" title="Delete Data Element"></div>
+        <div class="btn-group">
+            <div class="btn-group">
+                <button id="typeDropdown" class="btn btn-primary" data-toggle="dropdown">
+                    <span class="glyphicon glyphicon-plus-sign"></span>
+                    Create New Element
+                </button>
+                <ul class="dropdown-menu" role="menu" aria-labelledby="typeDropdown">
+                    <li>
+                        <a href="editprop?type=categorization">
+                            <dt>
+                                Categorization
+                            </dt>
+                            <dd>
+                               {{messages.CATEGORIZATION.description}}
+                            </dd>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/editprop?type=sequence">
+                            <dt>
+                                Sequence
+                            </dt>
+                            <dd>
+                                {{messages.SEQUENCE.description}}
+                            </dd>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/editprop?type=frequency">
+                            <dt>
+                                Frequency
+                            </dt>
+                            <dd>
+                                {{messages.FREQUENCY.description}}
+                            </dd>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/editprop?type=value_threshold">
+                            <dt>
+                                Value Threshold
+                            </dt>
+                            <dd>
+                                {{messages.VALUE_THRESHOLD.description}}
+                            </dd>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            <a class="btn btn-default" href="#"
+               target="eureka-help">
+                <span class="glyphicon glyphicon-question-sign"></span>
+            </a>
+        </div>
+        <table class="table table-responsive vert-offset">
+            <tr>
+                <th>Action</th>
+                <th>Name</th>
+                <th>Description</th>
+                <th>Type</th>
+                <th>Created Date</th>
+                <th>Last Modified</th>
+            </tr>
+                <tr ng-repeat="prop in editorController.props">
+                    <td>
+                        <a href="#" title="Edit">
+                            <span class="glyphicon glyphicon-pencil edit-icon" title="Edit"></span>
+                        </a>
+                        <span class="glyphicon glyphicon-remove delete-icon" title="Delete"></span>
+                    </td>
+                    <td>{{prop.displayName}}</td>
+                    <td>{{prop.description}}</td>
+                    <td>{{prop.type}}</td>
+                    <td>{{prop.created | date : shortDate}}</td>
+                    <td>{{prop.lastModified | date : shortDate}}</td>
+                </tr>
+        </table>
+    </div>
+</div>
+<div id="deleteModal" class="modal fade" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 id="deleteModalLabel" class="modal-title">
+                    Delete Element
+                </h4>
+            </div>
+            <div id="deleteContent" class="modal-body">
+            </div>
+            <div class="modal-footer">
+                <button id="deleteButton" type="button" class="btn btn-primary">Delete</button>
+                <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="errorModal" class="modal fade" role="dialog" aria-labelledby="errorModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 id="errorModalLabel" class="modal-title">
+                    Error
+                </h4>
+            </div>
+            <div id="errorContent" class="modal-body">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script language="JavaScript">
+
+    $('span.delete-icon').on('click', function () {
+        var $tr = $(this).closest('tr');
+        var displayName = $tr.data('display-name');
+        var key = $tr.data('key');
+        var dialog = $('#deleteModal');
+        $(dialog).find('#deleteContent').html('Are you sure you want to remove data element &quot;' + displayName.trim() + '&quot;?');
+        $(dialog).find('#deleteButton').on('click', function (e) {
+            $(dialog).modal('hide');
+            $.ajax({
+                type: "POST",
+                url: 'deleteprop?key=' + encodeURIComponent(key),
+                success: function (data) {
+                    window.location.href = 'editorhome'
+                },
+                error: function (data, statusCode, errorThrown) {
+                    var content = 'Error while deleting &quot;' + displayName.trim() + '&quot;. ' + data.responseText + '. Status Code: ' + statusCode;
+                    $('#errorModal').find('#errorContent').html(content);
+                    $('#errorModal').modal('show');
+                    if (errorThrown != null) {
+                        console.log(errorThrown);
+                    }
+                }
+            });
+        });
+        $(dialog).modal("show");
+    });
+</script>

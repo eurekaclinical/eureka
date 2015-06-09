@@ -75,6 +75,8 @@ public final class PropositionUtil {
 		systemElement.setDescription(inDefinition.getAbbreviatedDisplayName());
 		systemElement.setDisplayName(inDefinition.getDisplayName());
 		systemElement.setSummarized(summarize);
+		systemElement.setParent(inDefinition.getChildren().length > 0);
+		systemElement.setInternalNode(inDefinition.getChildren().length > 0);
 		PropositionDefinitionTypeVisitor propDefTypeVisitor = new PropositionDefinitionTypeVisitor();
 		inDefinition.accept(propDefTypeVisitor);
 		systemElement.setSystemType(propDefTypeVisitor.getSystemType());

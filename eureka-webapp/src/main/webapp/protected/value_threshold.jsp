@@ -431,7 +431,7 @@
 <script language="JavaScript"
 		src="${pageContext.request.contextPath}/assets/js/jquery.jstree.js"></script>
 <script language="JavaScript"
-		src="${pageContext.request.contextPath}/assets/js/eureka.tree${initParam['eureka-build-timestamp']}.js"></script>
+		src="${pageContext.request.contextPath}/assets/js/eureka.tree-phenotype${initParam['eureka-build-timestamp']}.js"></script>
 <script language="JavaScript"
 		src="${pageContext.request.contextPath}/assets/js/eureka.editor${initParam['eureka-build-timestamp']}.js"></script>
 <script language="JavaScript">

@@ -164,7 +164,6 @@
 				</div>
 			</div>
 		</div>
-		<script language="JavaScript" src="${pageContext.request.contextPath}/assets/js/eureka.editor${initParam['eureka-build-timestamp']}.js"></script>
 		<script language="JavaScript">
 
 			$('span.delete-icon').on('click', function () {
