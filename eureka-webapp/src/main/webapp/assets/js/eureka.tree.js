@@ -53,11 +53,11 @@ window.eureka.tree = new function () {
         $(systemTreeElem).jstree({
             "json_data": {
                 "ajax": {
-                    "url": "systemlist?key=root",
+                    "url": "systemlist",
                     "dataType": 'json',
                     "data": function (n) {
                         return {
-                            key: n.id === "#" ? "root" : n.id
+                            key: n.attr ? n.attr("data-key") : "root"
                         };
                     },
                 },
@@ -91,7 +91,7 @@ window.eureka.tree = new function () {
             "search": {
                 "show_only_matches": true,
                 "ajax": {
-                    "url": "protected/searchsystemlist",
+                    "url": "searchsystemlist",
                     "data": function (n) {
                         return {
                             "searchKey": n

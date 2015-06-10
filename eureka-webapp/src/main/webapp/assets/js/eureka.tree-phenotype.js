@@ -108,7 +108,7 @@ window.eureka.tree = new function () {
                     "url": "searchsystemlist",
                     "data": function (n) {
                         return {
-                            "str": n
+                            "searchKey": n
                         };
                     },
                     success: function (data) {
