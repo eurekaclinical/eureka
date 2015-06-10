@@ -68,13 +68,13 @@ window.eureka.tree = new function () {
             "json_data": {
             	"ajax": {
             		"url": "systemlist",
-            "data": function (n) {
-            	return {
-            		key: n.attr ? n.attr("data-key") : "root"
-            	};
-            }
+					"data": function (n) {
+						return {
+							key: n.attr ? n.attr("data-key") : "root"
+						};
+					}
 
-            }
+				}
             },
 
             "crrm": {
