@@ -19,7 +19,6 @@ package edu.emory.cci.aiw.cvrg.eureka.etl.dest;
  * limitations under the License.
  * #L%
  */
-import org.protempa.KnowledgeSource;
 import org.protempa.dest.keyloader.KeyLoaderDestination;
 
 import com.google.inject.Inject;
