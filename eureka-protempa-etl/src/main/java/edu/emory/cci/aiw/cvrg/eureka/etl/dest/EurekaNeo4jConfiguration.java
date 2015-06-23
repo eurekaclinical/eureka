@@ -19,7 +19,6 @@ package edu.emory.cci.aiw.cvrg.eureka.etl.dest;
  * limitations under the License.
  * #L%
  */
-
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.Neo4jDestinationEntity;
 import edu.emory.cci.aiw.neo4jetl.config.Configuration;
 
@@ -28,12 +27,13 @@ import edu.emory.cci.aiw.neo4jetl.config.Configuration;
  * @author Andrew Post
  */
 public class EurekaNeo4jConfiguration implements Configuration {
+
 	private final Neo4jDestinationEntity destination;
 
 	EurekaNeo4jConfiguration(Neo4jDestinationEntity destination) {
 		this.destination = destination;
 	}
-	
+
 	@Override
 	public String[] getPropositionIds() {
 		return new String[]{"Patient", "PatientDetails", "Encounter", "LAB:LabTest", "ICD9:Diagnoses", "ICD9:Procedures", "MED:medications", "CPTCode", "VitalSign"};
@@ -42,6 +42,27 @@ public class EurekaNeo4jConfiguration implements Configuration {
 	@Override
 	public String getNeo4jHome() {
 		return this.destination.getDbHome();
+	}
+
+	/**
+	 * Gets the value to set null properties. Must be one of the following 
+	 * types: 
+	 * <ul>
+	 * <li>boolean or boolean[] byte or byte[] 
+	 * <li>short or short[] 
+	 * <li>int or int[] 
+	 * <li>long or long[] 
+	 * <li>float or float[]
+	 * <li>double or double[] 
+	 * <li>char or char[] 
+	 * <li>java.lang.String or String[]
+	 * </ul>
+	 *
+	 * @return an instance of one of the valid types above.
+	 */
+	@Override
+	public Object getNullValue() {
+		return "N/A";
 	}
 
 }
