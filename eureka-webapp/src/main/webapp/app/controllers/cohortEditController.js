@@ -1,5 +1,5 @@
 eurekaApp.controller(
-    "CohortEditController",
+    "CohortEditController", ['$scope', 'CohortService', '$routeParams',
     function( $scope, CohortService, $routeParams) {
 
         var vm = this;
@@ -43,5 +43,5 @@ eurekaApp.controller(
             vm.errorMsg = msg;
         }
 
-    }
+    }]
 );

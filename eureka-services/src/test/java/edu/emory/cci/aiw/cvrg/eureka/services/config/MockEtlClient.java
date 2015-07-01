@@ -117,6 +117,11 @@ public class MockEtlClient implements EtlClient {
 	}
 
 	@Override
+	public List<PropositionDefinition> getPropositionSearchResultsBySearchKey(String sourceConfigID, String inSearchKey) throws ClientException {
+		throw new UnsupportedOperationException("Not supported yet.");
+	}
+
+	@Override
 	public void createDestination(EtlDestination etlDest) throws ClientException {
 		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
 	}
@@ -145,5 +150,6 @@ public class MockEtlClient implements EtlClient {
 	public List<EtlPatientSetSenderDestination> getPatientSetSenderDestinations() throws ClientException {
 		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
 	}
-	
+
+
 }

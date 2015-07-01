@@ -112,6 +112,18 @@ public class PropositionDefinitionFinder implements AutoCloseable {
 		return new ArrayList<>(nodesToLoad);
 	}
 
+
+	public List<PropositionDefinition> getPropositionsBySearchKey(String inSearchKey) throws PropositionFinderException {
+		List<PropositionDefinition> nodesToLoad = new ArrayList<PropositionDefinition>();
+		try {
+			nodesToLoad = knowledgeSource.getMatchingPropositionDefinitions(inSearchKey);
+
+		} catch (KnowledgeSourceReadException e) {
+			throw new PropositionFinderException(e);
+		}
+		return nodesToLoad;
+	}
+
 	@Override
 	public void close() throws PropositionFinderException {
 		try {

@@ -1,5 +1,5 @@
 eurekaApp.factory(
-    "CohortService",
+    "CohortService", ['$http', '$q',
     function( $http, $q ) {
 
         return ({
@@ -20,7 +20,7 @@ eurekaApp.factory(
 
         function removeCohort(key) {
 
-            return $http.delete("/eureka-webapp/proxy-resource/destinations/" + key)
+            return $http['delete']("/eureka-webapp/proxy-resource/destinations/" + key)
                 .then(handleSuccess, handleError);
 
         }
@@ -79,5 +79,5 @@ eurekaApp.factory(
             }
             return ($q.reject(response.data));
         }
-    }
+    }]
 );

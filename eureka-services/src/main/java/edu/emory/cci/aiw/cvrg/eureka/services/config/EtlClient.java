@@ -104,4 +104,6 @@ public interface EtlClient {
 	
 	public  List<String> getPropositionSearchResults(String sourceConfigID, String inSearchKey) throws ClientException;
 
+	public  List<PropositionDefinition> getPropositionSearchResultsBySearchKey(String sourceConfigID, String inSearchKey) throws ClientException;
+
 }

@@ -171,4 +171,34 @@ public class PropositionResource {
 		}
 
 	}
+
+
+	@GET
+	@Path("/propsearch/{sourceConfigId}/{searchKey}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public List<PropositionDefinition> getPropositionsInTheOntologyBySearchKey(
+			@PathParam("sourceConfigId") String inSourceConfigId,
+			@PathParam("searchKey") String inSearchKey) {
+		try {
+			LOGGER.debug("Searching for String " + inSearchKey
+					+ " in the system element tree");
+			if (this.etlProperties.getConfigDir() != null) {
+				PropositionDefinitionFinder propositionFinder = new PropositionDefinitionFinder(
+						inSourceConfigId, this.etlProperties);
+				return propositionFinder.getPropositionsBySearchKey(inSearchKey);
+			} else {
+				throw new HttpStatusException(
+						Response.Status.INTERNAL_SERVER_ERROR,
+						"No Protempa configuration directory is "
+								+ "specified in application.properties. "
+								+ "Proposition finding will not work without it. "
+								+ "Please create it and try again.");
+			}
+
+		} catch (PropositionFinderException e) {
+			throw new HttpStatusException(
+					Response.Status.INTERNAL_SERVER_ERROR, e);
+		}
+
+	}
 }

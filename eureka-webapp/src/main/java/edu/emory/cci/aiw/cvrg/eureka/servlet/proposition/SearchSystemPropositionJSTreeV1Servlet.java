@@ -20,33 +20,28 @@ package edu.emory.cci.aiw.cvrg.eureka.servlet.proposition;
  * #L%
  */
 
+import com.google.inject.Inject;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.SystemElement;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ClientException;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ServicesClient;
+import org.apache.commons.lang3.StringUtils;
+import org.codehaus.jackson.map.ObjectMapper;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import com.google.inject.Inject;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.SourceConfigParams;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.SystemElement;
-import org.apache.commons.lang3.StringUtils;
-import org.codehaus.jackson.map.ObjectMapper;
-
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ClientException;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ServicesClient;
-import org.protempa.PropositionDefinition;
-import org.protempa.proposition.PropositionUtil;
-
-public class SearchSystemPropositionServlet extends HttpServlet {
+public class SearchSystemPropositionJSTreeV1Servlet extends HttpServlet {
 	private final ServicesClient servicesClient;
 
 	@Inject
-	public SearchSystemPropositionServlet(ServicesClient inClient) {
+	public SearchSystemPropositionJSTreeV1Servlet(ServicesClient inClient) {
 		this.servicesClient = inClient;
 	}
 
@@ -102,28 +97,18 @@ public class SearchSystemPropositionServlet extends HttpServlet {
 		}
 
 		try {
-//			List<String> processedSearchResult = null;
-//			List<String> searchResult = null;
-//			searchResult = servicesClient
-//					.getSystemElementSearchResults(searchKey);
-//			processedSearchResult = searchResult; //convertResultsForJstreeRequirement(searchResult);
+			List<String> processedSearchResult = null;
+			List<String> searchResult = null;
+			searchResult = servicesClient
+					.getSystemElementSearchResults(searchKey);
+			processedSearchResult = convertResultsForJstreeRequirement(searchResult);
 
-//			ObjectMapper mapper = new ObjectMapper();
-//			resp.setContentType("application/json");
-//			PrintWriter out = resp.getWriter();
-//			mapper.writeValue(out, processedSearchResult);
-
-			List<SystemElement> props = servicesClient
-					.getSystemElementSearchResultsBySearchKey(searchKey);
-
-			for (SystemElement proposition : props) {
-				JsonTreeData d = createData(proposition);
-				l.add(d);
-			}
 			ObjectMapper mapper = new ObjectMapper();
 			resp.setContentType("application/json");
 			PrintWriter out = resp.getWriter();
-			mapper.writeValue(out, l);
+			mapper.writeValue(out, processedSearchResult);
+
+
 
 		} catch (ClientException e) {
 			throw new ServletException("Error getting search results", e);

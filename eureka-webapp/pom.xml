@@ -40,6 +40,10 @@
 					<includes>
 						<include>assets/js/eureka.*.js</include>
 						<include>assets/css/eureka.css</include>
+						<include>app/eurekaApp.js</include>
+						<include>app/eurekaApp.routes.js</include>
+						<include>app/controllers/*.js</include>
+						<include>app/services/*.js</include>
 					</includes>
 				</configuration>
 			</plugin>
@@ -58,6 +62,11 @@
 					<filteringDeploymentDescriptors>true</filteringDeploymentDescriptors>
 					<packagingIncludes>
 						%regex[assets/js/eureka.*${maven.build.timestamp}.js],
+						%regex[app/controllers/*${maven.build.timestamp}.js],
+						%regex[app/services/*${maven.build.timestamp}.js],
+						%regex[app/eurekaApp${maven.build.timestamp}.js],
+						%regex[app/eurekaApp.routes${maven.build.timestamp}.js],
+						%regex[app/controllers/js/*${maven.build.timestamp}.js],
 						%regex[^(?!assets/js/eureka).*$]
 					</packagingIncludes>
 					<packagingExcludes>

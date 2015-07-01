@@ -1,12 +1,7 @@
 
 eurekaApp.controller(
-    "MainController",
-    function( $scope, $location) {
-        $scope.goto = function(path) {
+    "MainController", ['$scope', '$location', function( $scope, $location) {
 
-            $location.path(path);
 
-        }
-
-    }
+    }]
 );

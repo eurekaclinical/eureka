@@ -1,7 +1,7 @@
 
 
 eurekaApp.factory(
-    "EditorService",
+    "EditorService",['$http', '$q',
     function( $http, $q ) {
 
         return ({
@@ -23,5 +23,5 @@ eurekaApp.factory(
             }
             return ($q.reject(response.data));
         }
-    }
+    }]
 );

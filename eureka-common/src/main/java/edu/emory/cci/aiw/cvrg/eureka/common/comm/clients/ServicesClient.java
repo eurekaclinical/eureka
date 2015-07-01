@@ -52,6 +52,8 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
+
+import org.protempa.PropositionDefinition;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -96,6 +98,9 @@ public class ServicesClient extends EurekaClient {
 			};
 	private static final GenericType<List<String>> SystemElementSearchResultsList = new GenericType<List<String>>() {
 	};
+
+
+
 	private final String servicesUrl;
 
 	public ServicesClient(String inServicesUrl) {
@@ -495,6 +500,14 @@ public class ServicesClient extends EurekaClient {
 				.segment(searchKey)
 				.build().toString();
 		return doGet(path, SystemElementSearchResultsList);
+	}
+
+	//Search Functionality
+	public List<SystemElement> getSystemElementSearchResultsBySearchKey(String searchKey) throws ClientException {
+		final String path = UriBuilder.fromPath("/api/protected/systemelement/propsearch/")
+				.segment(searchKey)
+				.build().toString();
+		return doGet(path, SystemElementList);
 	}
 
 }

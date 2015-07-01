@@ -1,7 +1,7 @@
 
 
 eurekaApp.controller(
-    "EditorController",
+    "EditorController", ['$scope', 'EditorService', '$location',
     function( $scope, EditorService, $location) {
 
         var vm = this;
@@ -38,7 +38,7 @@ eurekaApp.controller(
         function displayError(msg) {
             vm.errorMsg = msg;
         }
-    }
+    }]
     /*
 
      passwordChange.error.internalServerError=Error while changing password.

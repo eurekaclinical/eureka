@@ -144,6 +144,44 @@ public class SystemElementResource {
 		}
 
 	}
+
+	@GET
+	@Path("/propsearch/{searchKey}")
+	public List<SystemElement> getSystemElementsBySearchKey(
+			@PathParam("searchKey") String inSearchKey) {
+		LOGGER.info("Searching system element tree for the searchKey {}",
+				inSearchKey);
+		List<SystemElement> result = new ArrayList<>();
+		List<SourceConfigParams> scps = this.sourceConfigResource
+				.getParamsList();
+		if (scps.isEmpty()) {
+			throw new HttpStatusException(Status.INTERNAL_SERVER_ERROR,
+					"No source configs");
+		}
+
+		try {
+			List<PropositionDefinition> definitions = etlClient.getPropositionSearchResultsBySearchKey(
+					scps.get(0).getId(), inSearchKey);
+
+			for (PropositionDefinition definition : definitions) {
+
+				SystemElement element = PropositionUtil.toSystemElement(
+						scps.get(0).getId(), definition, true, this.finder);
+				result.add(element);
+			}
+			LOGGER.info("returning search results list of size"
+					+ definitions.size());
+			return result;
+		} catch (ClientException e) {
+			LOGGER.error(e.getMessage(), e);
+			throw new HttpStatusException(Status.INTERNAL_SERVER_ERROR, e);
+		} catch (PropositionFindException e) {
+			LOGGER.error(e.getMessage(), e);
+			throw new HttpStatusException(
+					Response.Status.INTERNAL_SERVER_ERROR, e);
+		}
+
+	}
 	
 	private SystemElement getSystemElementCommon(String inKey, String summary) throws HttpStatusException {
 		LOGGER.info("Finding system element {}", inKey);

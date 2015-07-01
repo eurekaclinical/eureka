@@ -1,5 +1,5 @@
 eurekaApp.controller(
-    "RegisterController",
+    "RegisterController",['$scope', 'RegisterService', '$location',
     function( $scope, RegisterService, $location) {
 
         $scope.addNewAccount = function (newAccount) {
@@ -13,5 +13,5 @@ eurekaApp.controller(
         function displayError(msg) {
             $scope.errorMsg = msg;
         }
-    }
+    }]
 );

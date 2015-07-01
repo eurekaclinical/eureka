@@ -1,4 +1,4 @@
-eurekaApp.config(function($routeProvider) {
+eurekaApp.config(['$routeProvider', function($routeProvider) {
     $routeProvider.
         when('/index', {
             templateUrl: "app/views/index_partial.jsp",
@@ -35,7 +35,7 @@ eurekaApp.config(function($routeProvider) {
         otherwise({
             redirectTo: '/index'
         });
-});
+}]);
 
 
 function processReq(_p, res) {

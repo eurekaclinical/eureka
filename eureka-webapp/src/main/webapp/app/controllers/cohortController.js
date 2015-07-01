@@ -1,6 +1,6 @@
 
 eurekaApp.controller(
-    "CohortController",
+    "CohortController",['$scope', 'CohortService', '$location', '$route',
     function( $scope, CohortService, $location, $route) {
 
         var vm = this;
@@ -14,7 +14,6 @@ eurekaApp.controller(
         getCohorts();
 
         $scope.remove = function (key) {
-            console.log(key);
             CohortService.removeCohort(key);
             for (var i = 0; i < vm.cohorts.length; i++) {
                 if (vm.cohorts[i].name == key) {
@@ -28,5 +27,5 @@ eurekaApp.controller(
         function displayError(msg) {
             vm.errorMsg = msg;
         }
-    }
+    }]
 );

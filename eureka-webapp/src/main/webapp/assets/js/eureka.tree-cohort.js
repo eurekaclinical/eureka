@@ -5,22 +5,18 @@ window.eureka = (typeof window.eureka == "undefined" || !window.eureka ) ? {} : 
 window.eureka.tree = new function () {
     var self = this;
 
+    var initData = null;
+
     self.setupUserTree = function (userTreeElem, dropFinishCallback) {
         $(userTreeElem).jstree({
             "core": {
                 "data": {
                     "url": "protected/userproplist?key=root",
                     "dataType": 'json',
-                    //"url": "/eureka-services/api/protected/systemelement",
                 },
 
             },
 
-            //"json_data": {
-            //    "ajax": {
-            //        "url": "protected/userproplist?key=root"
-            //    }
-            //},
             "dnd": {
                 "drop_finish": function (data) {
                     dropFinishCallback(data)
@@ -64,7 +60,6 @@ window.eureka.tree = new function () {
                 "data": {
                     "url": "protected/systemlist",
                     "dataType": 'json',
-                    //"url": "/eureka-services/api/protected/systemelement",
                     "data": function (n) {
                         return {
                             key: n.id === "#" ? "root" : n.id
@@ -74,75 +69,6 @@ window.eureka.tree = new function () {
 
             },
 
-            "crrm": {
-                // prevent movement and reordering of nodes
-                "move": {
-                    "check_move": function (/*m*/) {
-                        return false;
-                    }
-                }
-            },
-            "dnd": {
-                "drop_finish": function (data) {
-                    dropFinishCallback(data)
-                },
-                "drop_check": function (data) {
-                    var target = data.r;
-                    var sortable = $(target).find('ul.sortable');
-                    var datatype = $(sortable).data("proptype");
-                    var droppable = false;
-
-                    if (datatype == "empty" || datatype == $(data.o).data("type") || $(sortable).data('drop-type') === 'single') {
-                        droppable = true;
-                    }
-                    return droppable;
-                }
-            },
-
-            "search": {
-                "show_only_matches": true,
-                "ajax": {
-                    "url": "protected/searchsystemlist",
-                    "data": function (n) {
-                        return {
-                            "searchKey": n
-                        };
-                    },
-                    success: function (data) {
-                        console.log(data);
-                        $elem = $(searchUpdateDivElem);
-                        $elem.hide();
-                        $('#systemTree').show();
-                        $('#userTree').show();
-                        if(data.length==1){
-                            /*var dialog = $('<div></div>');
-                             $(dialog).dialog({
-                             'title': 'No Search Results',
-                             'modal': true,
-                             'resizable': false,
-                             'buttons': {
-                             "OK": function() {
-                             $(this).dialog("close");
-                             $(this).remove();
-                             }
-                             }
-                             });
-                             $(dialog).html("There are no entries in our database that matched your search criteria.");
-                             $(dialog).dialog("open");   */
-                            $elem = $(searchNoResultsModalElem);
-                            $elem.find('#searchContent').html("There are no entries in our database that matched your search criteria.");
-                            $elem.modal("toggle");
-                        }
-                        if (data != null && data.length > 200) {
-                            $elem = $(searchModalElem);
-                            $elem.find('#searchContent').html("The number of search results exceeded the  "+
-                                " maximum limit and all results might not be displayed."+
-                                " Please give a more specific search query to see all results.");
-                            $elem.modal("toggle");
-                        }
-                    }
-                }
-            },
             'themes': {
                 'name': 'default',
                 'theme': 'default',
@@ -153,6 +79,20 @@ window.eureka.tree = new function () {
 
         $(document).on('dnd_stop.vakata', function (e, data) {
             eureka.editor.dropFinishCallback(data);
+
+        });
+
+        $(document).on('dnd_move.vakata', function (e, data) {
+            var t = $(data.event.target);
+            if(!t.closest('.jstree').length) {
+                if (t.closest('.tree-drop').length) {
+                    data.helper.find('.jstree-icon').removeClass('jstree-er').addClass('jstree-ok');
+                }
+                else {
+                    data.helper.find('.jstree-icon').removeClass('jstree-ok').addClass('jstree-er');
+                }
+            }
+
 
         });
 
@@ -167,6 +107,8 @@ window.eureka.tree = new function () {
                 bind({
                     reset: function(evt){
                         $('#systemTree').jstree('clear_search');
+                        $(systemTreeElem).jstree(true).settings.core.data = initData;
+                        $(systemTreeElem).jstree(true).refresh();
                         $('#search span').html('');
                     },
                     submit: function(evt){
@@ -178,31 +120,50 @@ window.eureka.tree = new function () {
                             $elem = $(searchUpdateDivElem);
                             $elem.text("Search is in progress. Please wait...");
                             $elem.show();
-                            //$('#searchUpdateDivElem').text("Search is in progress. Please wait...");
-                            //$('#searchUpdateDivElem').show();
-                            $('#systemTree').jstree('search', searchvalue);
-                            $('#search span').html('');
+                            $.ajax({
+                                url: "protected/searchsystemlist?str="+searchvalue,
+                                success: function(result) {
+                                    initData = $(systemTreeElem).jstree(true).settings.core.data;
+                                    if (result.length == 0) {
+                                        $elem = $(searchNoResultsModalElem);
+                                        $elem.find('#searchContent').html("There are no entries in our database that matched your search criteria.");
+                                        $elem.modal("toggle");
+
+                                        $('#systemTree').show();
+                                        $('#userTree').show();
+
+                                        $elem = $(searchUpdateDivElem);
+                                        $elem.hide();
+                                    }
+                                    else if (result != null && result.length > 200) {
+                                        $elem = $(searchModalElem);
+                                        $elem.find('#searchContent').html("The number of search results exceeded the  "+
+                                            " maximum limit and all results might not be displayed."+
+                                            " Please give a more specific search query to see all results.");
+                                        $elem.modal("toggle");
+
+                                        $('#systemTree').show();
+                                        $('#userTree').show();
+
+                                        $elem = $(searchUpdateDivElem);
+                                        $elem.hide();
+                                    }
+                                    else {
+
+                                        $(systemTreeElem).jstree(true).settings.core.data = result;
+                                        $(systemTreeElem).jstree(true).refresh();
+                                        $elem.hide();
+                                        $('#systemTree').show();
+                                        $('#userTree').show();
+                                    }
+                                }
+                            });
+
                         } else if(searchvalue.length<4){
                             $elem = $(searchValidationModalElem);
                             $elem.find('#searchContent').html("Please enter a search value with length greater than 3.");
                             $elem.modal("toggle");
 
-                            /*var dialog = $('<div></div>');
-                             $(dialog).dialog({
-                             'title': 'Search String Validation Failed',
-                             'modal': true,
-                             'resizable': false,
-                             'buttons': {
-                             "OK": function() {
-                             $(this).dialog("close");
-                             $(this).remove();
-                             }
-                             }
-                             });
-                             $(dialog).html("Please enter a search value with length greater than 3.");
-                             $(dialog).dialog("open");        */
-
-                            //$('#search span').html('Please enter searchvalue');
                         }
                         return false;
                     }
@@ -210,3 +171,4 @@ window.eureka.tree = new function () {
         );
     };
 };
+

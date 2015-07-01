@@ -66,15 +66,15 @@ window.eureka.tree = new function () {
             //},
 
             "json_data": {
-            	"ajax": {
-            		"url": "systemlist",
-            "data": function (n) {
-            	return {
-            		key: n.attr ? n.attr("data-key") : "root"
-            	};
-            }
+                "ajax": {
+                    "url": "systemlist",
+                    "data": function (n) {
+                        return {
+                            key: n.attr ? n.attr("data-key") : "root"
+                        };
+                    }
 
-            }
+                }
             },
 
             "crrm": {
@@ -105,7 +105,7 @@ window.eureka.tree = new function () {
             "search": {
                 "show_only_matches": true,
                 "ajax": {
-                    "url": "searchsystemlist",
+                    "url": "jstreev1_searchsystemlist",
                     "data": function (n) {
                         return {
                             "str": n
@@ -118,20 +118,7 @@ window.eureka.tree = new function () {
                         $('#systemTree').show();
                         $('#userTree').show();
                         if(data.length==1){
-                            /*var dialog = $('<div></div>');
-                             $(dialog).dialog({
-                             'title': 'No Search Results',
-                             'modal': true,
-                             'resizable': false,
-                             'buttons': {
-                             "OK": function() {
-                             $(this).dialog("close");
-                             $(this).remove();
-                             }
-                             }
-                             });
-                             $(dialog).html("There are no entries in our database that matched your search criteria.");
-                             $(dialog).dialog("open");   */
+
                             $elem = $(searchNoResultsModalElem);
                             $elem.find('#searchContent').html("There are no entries in our database that matched your search criteria.");
                             $elem.modal("toggle");
@@ -158,9 +145,6 @@ window.eureka.tree = new function () {
             $('<form id="search">' +
                 '<span></span>' +
                 '<div class="input-group"><input class="form-control" type="text" /><div class="input-group-btn"><input class="btn btn-default" type=submit value="search" /><input class="btn btn-default" type="reset" value="X" /></div></div>' +
-//				'<div class="col-xs-6"><input class="form-control" type="text" value="" placeholder="Enter search term"></div>' +
-//				'<div class="col-xs-2"><input class="form-control" type="submit" value="search"></div>' +
-//				'<div class="col-xs-1"><input class="form-control" type="reset" value="X"></div>' +
                 '</form>').
                 bind({
                     reset: function(evt){
@@ -185,22 +169,6 @@ window.eureka.tree = new function () {
                             $elem.find('#searchContent').html("Please enter a search value with length greater than 3.");
                             $elem.modal("toggle");
 
-                            /*var dialog = $('<div></div>');
-                             $(dialog).dialog({
-                             'title': 'Search String Validation Failed',
-                             'modal': true,
-                             'resizable': false,
-                             'buttons': {
-                             "OK": function() {
-                             $(this).dialog("close");
-                             $(this).remove();
-                             }
-                             }
-                             });
-                             $(dialog).html("Please enter a search value with length greater than 3.");
-                             $(dialog).dialog("open");        */
-
-                            //$('#search span').html('Please enter searchvalue');
                         }
                         return false;
                     }

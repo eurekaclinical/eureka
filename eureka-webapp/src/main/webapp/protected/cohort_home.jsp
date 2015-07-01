@@ -28,7 +28,7 @@
 				<h3>Cohorts</h3>
 				<p>Define a cohort to identify the patient population in your datasets.
 				</p>
-				<a ng-click="goto('/edit_cohort')" class="btn btn-primary"><span class="glyphicon glyphicon-plus-sign"></span>Define New Cohort
+				<a href="#/edit_cohort" class="btn btn-primary"><span class="glyphicon glyphicon-plus-sign"></span>Define New Cohort
 				</a>
 				<table class="table table-responsive vert-offset">
 					<tr>

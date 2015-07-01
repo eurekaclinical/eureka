@@ -1,6 +1,6 @@
 
 eurekaApp.factory(
-    "RegisterService",
+    "RegisterService", ['$http', '$q',
     function( $http, $q ) {
 
         return ({
@@ -26,6 +26,6 @@ eurekaApp.factory(
             }
             return ($q.reject(response.data));
         }
-    }
+    }]
 
 );

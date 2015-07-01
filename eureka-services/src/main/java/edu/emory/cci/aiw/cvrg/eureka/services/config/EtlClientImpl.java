@@ -277,4 +277,17 @@ public class EtlClientImpl extends EurekaClient implements EtlClient {
 				.build().toString();
 		return doGet(path, PropositionSearchResultsList);
 	}
+
+	@Override
+	public List<PropositionDefinition> getPropositionSearchResultsBySearchKey(String sourceConfigId,
+			String inSearchKey) throws ClientException {
+
+		String path = UriBuilder.fromPath("/api/protected/proposition/propsearch/")
+				.segment(sourceConfigId)
+				.segment(inSearchKey)
+				.build().toString();
+		return doGet(path, PropositionDefinitionList);
+	}
+
+
 }
