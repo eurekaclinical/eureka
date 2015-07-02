@@ -49,16 +49,19 @@ import edu.emory.cci.aiw.cvrg.eureka.common.comm.JobRequest;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.JobSpec;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.SourceConfig;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.SourceConfigOption;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.Statistics;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.DestinationEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.EtlUserEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.JobEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.exception.HttpStatusException;
 import edu.emory.cci.aiw.cvrg.eureka.etl.authentication.EtlAuthenticationSupport;
+import edu.emory.cci.aiw.cvrg.eureka.etl.config.EtlProperties;
 import edu.emory.cci.aiw.cvrg.eureka.etl.config.EurekaProtempaConfigurations;
 import edu.emory.cci.aiw.cvrg.eureka.etl.dao.DestinationDao;
 import edu.emory.cci.aiw.cvrg.eureka.etl.dao.EtlUserDao;
 import edu.emory.cci.aiw.cvrg.eureka.etl.dao.JobDao;
 import edu.emory.cci.aiw.cvrg.eureka.etl.job.TaskManager;
+import edu.emory.cci.aiw.cvrg.eureka.etl.dest.ProtempaDestinationFactory;
 import org.protempa.backend.BackendInstanceSpec;
 import org.protempa.backend.BackendProviderSpecLoaderException;
 import org.protempa.backend.BackendSpecNotFoundException;
@@ -66,6 +69,8 @@ import org.protempa.backend.Configuration;
 import org.protempa.backend.InvalidPropertyNameException;
 import org.protempa.backend.InvalidPropertyValueException;
 import org.protempa.backend.dsb.DataSourceBackend;
+import org.protempa.dest.Destination;
+import org.protempa.dest.StatisticsException;
 
 @Path("/protected/jobs")
 @RolesAllowed({"researcher"})
@@ -79,17 +84,23 @@ public class JobResource {
 	private final EtlAuthenticationSupport authenticationSupport;
 	private final DestinationDao destinationDao;
 	private final EurekaProtempaConfigurations configurations;
+	private final ProtempaDestinationFactory protempaDestinationFactory;
+	private final EtlProperties etlProperties;
 
 	@Inject
 	public JobResource(JobDao inJobDao, TaskManager inTaskManager,
 			EtlUserDao inEtlUserDao, DestinationDao inDestinationDao,
-			EurekaProtempaConfigurations configurations) {
+			EurekaProtempaConfigurations configurations,
+			ProtempaDestinationFactory inProtempaDestinationFactory,
+			EtlProperties inEtlProperties) {
 		this.jobDao = inJobDao;
 		this.taskManager = inTaskManager;
 		this.etlUserDao = inEtlUserDao;
 		this.authenticationSupport = new EtlAuthenticationSupport(this.etlUserDao);
 		this.destinationDao = inDestinationDao;
 		this.configurations = configurations;
+		this.protempaDestinationFactory = inProtempaDestinationFactory;
+		this.etlProperties = inEtlProperties;
 	}
 
 	@GET
@@ -116,6 +127,50 @@ public class JobResource {
 	@Path("/{jobId}")
 	public Job getJob(@Context HttpServletRequest request,
 			@PathParam("jobId") Long inJobId) {
+		return getJobEntity(request, inJobId).toJob();
+	}
+	
+	@GET
+	@Path("/{jobId}/stats/{propId}")
+	public edu.emory.cci.aiw.cvrg.eureka.common.comm.Statistics getJobStats(@Context HttpServletRequest request,
+			@PathParam("jobId") Long inJobId, @PathParam("propId") String inPropId) {
+		Job job = getJob(request, inJobId);
+		String destinationId = job.getDestinationId();
+		DestinationEntity destEntity = this.destinationDao.getByName(destinationId);
+		if (destEntity != null) {
+			Destination dest = this.protempaDestinationFactory.getInstance(destEntity);
+			try {
+				Statistics result = new Statistics();
+				org.protempa.dest.Statistics statistics = dest.getStatistics();
+				if (statistics != null) {
+					result.setNumberOfKeys(statistics.getNumberOfKeys());
+					result.setCounts(statistics.getCounts(inPropId != null ? new String[]{inPropId} : null));
+					result.setChildrenToParents(statistics.getChildrenToParents(inPropId != null ? new String[]{inPropId} : null));
+				}
+				return result;
+			} catch (StatisticsException ex) {
+				throw new HttpStatusException(Status.INTERNAL_SERVER_ERROR, "Error getting stats", ex);
+			}
+		} else {
+			throw new HttpStatusException(Status.INTERNAL_SERVER_ERROR, "Invalid destination id " + destinationId);
+		}
+	}
+	
+	@GET
+	@Path("/{jobId}/stats")
+	public edu.emory.cci.aiw.cvrg.eureka.common.comm.Statistics getJobStatsRoot(@Context HttpServletRequest request,
+			@PathParam("jobId") Long inJobId) {
+		return getJobStats(request, inJobId, null);
+	}
+
+	@POST
+	public Response submit(@Context HttpServletRequest request,
+			JobRequest inJobRequest) {
+		Long jobId = doCreateJob(inJobRequest, request);
+		return Response.created(URI.create("/" + jobId)).build();
+	}
+	
+	private JobEntity getJobEntity(HttpServletRequest request, Long inJobId) {
 		JobFilter jobFilter = new JobFilter(inJobId,
 				this.authenticationSupport.getEtlUser(request).getId(), null, null, null);
 		List<JobEntity> jobEntities = this.jobDao.getWithFilter(jobFilter);
@@ -124,16 +179,8 @@ public class JobResource {
 		} else if (jobEntities.size() > 1) {
 			throw new HttpStatusException(Status.INTERNAL_SERVER_ERROR, jobEntities.size() + " jobs returned for job id " + inJobId);
 		} else {
-			JobEntity jobEntity = jobEntities.get(0);
-			return jobEntity.toJob();
+			return jobEntities.get(0);
 		}
-	}
-
-	@POST
-	public Response submit(@Context HttpServletRequest request,
-			JobRequest inJobRequest) {
-		Long jobId = doCreateJob(inJobRequest, request);
-		return Response.created(URI.create("/" + jobId)).build();
 	}
 
 	private Long doCreateJob(JobRequest inJobRequest, HttpServletRequest request) {
@@ -146,10 +193,10 @@ public class JobResource {
 		String dateRangeDataElementKey = jobSpec.getDateRangeDataElementKey();
 		if (dateRangeDataElementKey != null) {
 			dateTimeFilter = new DateTimeFilter(
-						new String[]{dateRangeDataElementKey},
-						jobSpec.getEarliestDate(), AbsoluteTimeGranularity.DAY,
-						jobSpec.getLatestDate(), AbsoluteTimeGranularity.DAY,
-						jobSpec.getEarliestDateSide(), jobSpec.getLatestDateSide());
+					new String[]{dateRangeDataElementKey},
+					jobSpec.getEarliestDate(), AbsoluteTimeGranularity.DAY,
+					jobSpec.getLatestDate(), AbsoluteTimeGranularity.DAY,
+					jobSpec.getEarliestDateSide(), jobSpec.getLatestDateSide());
 		} else {
 			dateTimeFilter = null;
 		}
@@ -209,5 +256,5 @@ public class JobResource {
 			return null;
 		}
 	}
-
+	
 }

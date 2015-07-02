@@ -105,7 +105,7 @@ window.eureka.tree = new function () {
             "search": {
                 "show_only_matches": true,
                 "ajax": {
-                    "url": "jstreev1_searchsystemlist",
+                    "url": "searchsystemlist",
                     "data": function (n) {
                         return {
                             "str": n

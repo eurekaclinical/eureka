@@ -28,6 +28,7 @@ import edu.emory.cci.aiw.cvrg.eureka.common.comm.Job;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.JobFilter;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.JobRequest;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.SourceConfig;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.Statistics;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.ValidationRequest;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ClientException;
 import java.io.InputStream;
@@ -57,6 +58,8 @@ public interface EtlClient {
 	void deleteDestination(String etlDestId) throws ClientException;
 
 	Job getJob(Long inJobId) throws ClientException;
+	
+	Statistics getJobStats(Long inJobId, String inPropId) throws ClientException;
 
 	List<Job> getJobStatus(JobFilter inFilter) throws ClientException;
 

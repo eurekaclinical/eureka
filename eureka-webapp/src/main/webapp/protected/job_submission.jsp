@@ -46,7 +46,7 @@
 								  Destination
 							  </label>
 							  <div id="destinationConfig">
-								  ${destination}
+								  ${destination.name}
 							  </div>
 						  </div>
 					  </div>
@@ -99,6 +99,9 @@
 									  <c:forEach var="link" items="${requestScope.jobStatus.links}">
 										  <a href="${link.url}">${link.displayName}</a><br>
 									  </c:forEach>
+									  <c:if test="${destination.getStatisticsSupported}">
+										<a href="${pageContext.request.contextPath}/protected/jobstats?jobId=${jobId}">Browse Output</a>
+									  </c:if>
 								  </c:if>
 							  </div>
 						  </div>

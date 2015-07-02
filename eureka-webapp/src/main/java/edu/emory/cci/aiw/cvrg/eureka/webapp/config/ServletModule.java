@@ -131,6 +131,12 @@ class ServletModule extends AbstractServletModule {
 
 		bind(JobListServlet.class).in(Singleton.class);
 		serve("/protected/jobs").with(JobListServlet.class);
+		
+		bind(JobStatsServlet.class).in(Singleton.class);
+		serve("/protected/jobstats").with(JobStatsServlet.class);
+		
+		bind(JobPatientCountsServlet.class).in(Singleton.class);
+		serve("/protected/jobpatcounts").with(JobPatientCountsServlet.class);
 
 		bind(AdminManagerServlet.class).in(Singleton.class);
 		serve("/protected/admin").with(AdminManagerServlet.class);
@@ -165,11 +171,11 @@ class ServletModule extends AbstractServletModule {
 		serve("/protected/destinationdataelements").with(
 				DateRangeDataElementServlet.class);
 
-        bind(SearchSystemPropositionServlet.class).in(Singleton.class);
-        serve("/protected/searchsystemlist").with(SearchSystemPropositionServlet.class);
+        bind(SearchSystemPropositionJSTreeV3Servlet.class).in(Singleton.class);
+        serve("/protected/jstree3_searchsystemlist").with(SearchSystemPropositionJSTreeV3Servlet.class);
 
         bind(SearchSystemPropositionJSTreeV1Servlet.class).in(Singleton.class);
-        serve("/protected/jstreev1_searchsystemlist").with(SearchSystemPropositionJSTreeV1Servlet.class);
+        serve("/protected/searchsystemlist").with(SearchSystemPropositionJSTreeV1Servlet.class);
 
 		bind(CohortHomeServlet.class).in(Singleton.class);
 		serve("/protected/cohorthome").with(CohortHomeServlet.class);

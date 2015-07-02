@@ -28,6 +28,7 @@ import edu.emory.cci.aiw.cvrg.eureka.common.comm.Job;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.JobFilter;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.JobRequest;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.SourceConfig;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.Statistics;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.ValidationRequest;
 import java.io.InputStream;
 import java.util.Collections;
@@ -151,5 +152,9 @@ public class MockEtlClient implements EtlClient {
 		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
 	}
 
-
+	@Override
+	public Statistics getJobStats(Long inJobId, String inPropId) throws ClientException {
+		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+	}
+	
 }

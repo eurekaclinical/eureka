@@ -42,19 +42,13 @@ import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ServicesClient;
 import org.protempa.PropositionDefinition;
 import org.protempa.proposition.PropositionUtil;
 
-/**
- * @deprecated  As of release 1.3, replaced by
- * 	{@link edu.emory.cci.aiw.cvrg.eureka.servlet.proposition.SearchSystemPropositionJSTreeV1Servlet or
- * 		edu.emory.cci.aiw.cvrg.eureka.servlet.proposition.SearchSystemPropositionJSTreeV3Servlet}
- */
-@Deprecated
-public class SearchSystemPropositionServlet extends HttpServlet {
+public class SearchSystemPropositionJSTreeV3Servlet extends HttpServlet {
 	private static final ObjectMapper MAPPER = new ObjectMapper();
 	private static final Pattern PATTERN = Pattern.compile("[^a-zA-Z0-9]");
 	private final ServicesClient servicesClient;
 
 	@Inject
-	public SearchSystemPropositionServlet(ServicesClient inClient) {
+	public SearchSystemPropositionJSTreeV3Servlet(ServicesClient inClient) {
 		this.servicesClient = inClient;
 	}
 
@@ -111,15 +105,17 @@ public class SearchSystemPropositionServlet extends HttpServlet {
 
 		try {
 
-			List<String> processedSearchResult = null;
-			List<String> searchResult = null;
-			searchResult = servicesClient
-					.getSystemElementSearchResults(searchKey);
-			processedSearchResult = convertResultsForJstreeRequirement(searchResult);
+			List<SystemElement> props = servicesClient
+					.getSystemElementSearchResultsBySearchKey(searchKey);
+
+			for (SystemElement proposition : props) {
+				JsonTreeData d = createData(proposition);
+				l.add(d);
+			}
 
 			resp.setContentType("application/json");
 			PrintWriter out = resp.getWriter();
-			MAPPER.writeValue(out, processedSearchResult);
+			MAPPER.writeValue(out, l);
 
 		} catch (ClientException e) {
 			throw new ServletException("Error getting search results", e);
@@ -128,14 +124,5 @@ public class SearchSystemPropositionServlet extends HttpServlet {
 
 	}
 
-	private List<String> convertResultsForJstreeRequirement(
-			List<String> searchResult) {
-		List<String> newResultSet = new ArrayList<>();
-		newResultSet.add("#root");
-		for (String currentSearchResult : searchResult) {
-			newResultSet.add("#" + PATTERN.matcher(currentSearchResult).replaceAll("\\\\$0"));
-		}
-		return newResultSet;
-	}
 
 }

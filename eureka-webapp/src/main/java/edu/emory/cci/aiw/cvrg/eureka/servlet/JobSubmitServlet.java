@@ -51,7 +51,10 @@ import org.apache.commons.io.FilenameUtils;
 import org.codehaus.jackson.map.ObjectMapper;
 
 public class JobSubmitServlet extends HttpServlet {
-
+	private static final ObjectMapper MAPPER = new ObjectMapper();
+	static {
+		MAPPER.setDateFormat(new SimpleDateFormat("MM/dd/yyyy"));
+	}
 	/**
 	 * Normal directory to save files to. TODO: set value
 	 */
@@ -121,7 +124,6 @@ public class JobSubmitServlet extends HttpServlet {
 					"Spreadsheet upload attempt: no user associated with the request");
 		}
 		SubmitJobResponse jobResponse = new SubmitJobResponse();
-		ObjectMapper mapper = new ObjectMapper();
 		String value;
 		try {
 			Long jobId = submitJob(request, principal);
@@ -139,7 +141,7 @@ public class JobSubmitServlet extends HttpServlet {
 			log("Upload failed for user " + principal.getName(), ex);
 			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 		}
-		value = mapper.writeValueAsString(jobResponse);
+		value = MAPPER.writeValueAsString(jobResponse);
 		response.setContentLength(value.length());
 		response.setContentType("application/json");
 		PrintWriter out = response.getWriter();
@@ -177,9 +179,7 @@ public class JobSubmitServlet extends HttpServlet {
 			}
 		}
 
-		ObjectMapper mapper = new ObjectMapper();
-		mapper.setDateFormat(new SimpleDateFormat("MM/dd/yyyy"));
-		JobSpec jobSpec = mapper.readValue(fields.getProperty("jobSpec"), JobSpec.class);
+		JobSpec jobSpec = MAPPER.readValue(fields.getProperty("jobSpec"), JobSpec.class);
 
 		for (Iterator itr = items.iterator(); itr.hasNext();) {
 			FileItem item = (FileItem) itr.next();

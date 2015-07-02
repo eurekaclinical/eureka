@@ -34,7 +34,7 @@ public class EtlPatientSetSenderDestination extends EtlDestination {
 	public void setUrl(String url) {
 		this.url = url;
 	}
-	
+
 	@Override
 	public void accept(EtlDestinationVisitor etlDestinationVisitor) {
 		etlDestinationVisitor.visit(this);

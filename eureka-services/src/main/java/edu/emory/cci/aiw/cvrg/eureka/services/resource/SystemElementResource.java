@@ -40,6 +40,10 @@ import java.util.List;
 import javax.ws.rs.core.Response.Status;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ClientException;
 import edu.emory.cci.aiw.cvrg.eureka.services.config.EtlClient;
+import javax.ws.rs.DefaultValue;
+import javax.ws.rs.FormParam;
+import javax.ws.rs.POST;
+import javax.ws.rs.QueryParam;
 
 /**
  * @author hrathod
@@ -106,15 +110,14 @@ public class SystemElementResource {
 
 	@GET
 	@Path("/{key}")
-	public SystemElement get(@PathParam("key") String inKey,
-							@DefaultValue("false") @QueryParam("summary") String summary) {
-		return getSystemElementCommon(inKey, summary);
+	public SystemElement get(@PathParam("key") String inKey, @DefaultValue("false") @QueryParam("summarize") boolean inSummarize) {
+		return getSystemElementCommon(inKey, inSummarize);
 	}
 
 	@POST
-	public SystemElement getPropositionsPost(@FormParam("key") String inKey,
-											 @DefaultValue("false") @QueryParam("summary") String summary) {
-		return getSystemElementCommon(inKey, summary);
+	public List<SystemElement> getPropositionsPost(@FormParam("key") List<String> inKeys, @DefaultValue("false") @FormParam("summarize") String inSummarize) {
+		return getSystemElementsCommon(inKeys, Boolean.parseBoolean(inSummarize));
+
 	}
 	
 	@GET
@@ -183,7 +186,33 @@ public class SystemElementResource {
 
 	}
 	
-	private SystemElement getSystemElementCommon(String inKey, String summary) throws HttpStatusException {
+	private List<SystemElement> getSystemElementsCommon(List<String> inKeys, boolean inSummarize) throws HttpStatusException {
+		LOGGER.info("Finding system element {}", inKeys);
+		/*
+		* Hack to get an ontology source that assumes all Protempa configurations
+		* for a user point to the same knowledge source backends. This will go away.
+		*/
+		List<SourceConfigParams> scps = this.sourceConfigResource.getParamsList();
+		if (scps.isEmpty()) {
+			throw new HttpStatusException(Status.INTERNAL_SERVER_ERROR, "No source configs");
+		}
+		String sourceConfigId = scps.get(0).getId();
+		List<PropositionDefinition> definition;
+		try {
+			definition = this.finder.findAll(sourceConfigId, inKeys, Boolean.FALSE);
+			List<SystemElement> result = new ArrayList<>(definition.size());
+			for (PropositionDefinition propDef : definition) {
+				result.add(PropositionUtil.toSystemElement(sourceConfigId, propDef, inSummarize,
+					this.finder));
+			}
+			return result;
+		} catch (PropositionFindException ex) {
+			throw new HttpStatusException(
+					Response.Status.INTERNAL_SERVER_ERROR, ex);
+		}
+	}
+
+	private SystemElement getSystemElementCommon(String inKey, boolean inSummarize) throws HttpStatusException {
 		LOGGER.info("Finding system element {}", inKey);
 		/*
 		* Hack to get an ontology source that assumes all Protempa configurations
@@ -199,7 +228,7 @@ public class SystemElementResource {
 			if (definition == null) {
 				throw new HttpStatusException(Response.Status.NOT_FOUND);
 			}
-			return PropositionUtil.toSystemElement(scps.get(0).getId(), definition, summary.equals("true") ? true : false,
+			return PropositionUtil.toSystemElement(scps.get(0).getId(), definition, inSummarize,
 					this.finder);
 		} catch (PropositionFindException ex) {
 			throw new HttpStatusException(

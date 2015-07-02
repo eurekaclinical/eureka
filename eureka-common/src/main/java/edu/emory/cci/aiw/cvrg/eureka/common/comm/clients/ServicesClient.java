@@ -19,43 +19,19 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.common.comm.clients;
 
-import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.GenericType;
 import com.sun.jersey.core.util.MultivaluedMapImpl;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.CohortDestination;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.DataElement;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.Destination;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.DestinationType;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.I2B2Destination;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.Job;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.JobSpec;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.PasswordChangeRequest;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.SourceConfig;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.SourceConfigParams;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.SystemElement;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.User;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.UserRequest;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.FrequencyType;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.OAuthProvider;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.RelationOperator;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.Role;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.ThresholdsOperator;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.TimeUnit;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.ValueComparator;
-import java.io.InputStream;
-import java.net.URI;
-import java.util.List;
-import javax.ws.rs.GET;
-import javax.ws.rs.HttpMethod;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.MultivaluedMap;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.UriBuilder;
-
-import org.protempa.PropositionDefinition;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.*;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import javax.ws.rs.core.MultivaluedMap;
+import javax.ws.rs.core.UriBuilder;
+import java.io.InputStream;
+import java.net.URI;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author hrathod
@@ -190,6 +166,18 @@ public class ServicesClient extends EurekaClient {
 		return doGet(path, Job.class);
 	}
 
+	public Statistics getJobStats(Long jobId, String propId) throws ClientException {
+		if (jobId == null) {
+			throw new IllegalArgumentException("jobId cannot be null");
+		}
+		UriBuilder uriBuilder = UriBuilder.fromPath("/api/protected/jobs/{arg1}/stats/");
+		if (propId != null) {
+			uriBuilder = uriBuilder.segment(propId);
+		}
+
+		return doGet(uriBuilder.build(jobId).toString(), Statistics.class);
+	}
+
 	public List<Job> getJobs() throws ClientException {
 		final String path = "/api/protected/jobs";
 		return doGet(path, JobList);
@@ -200,6 +188,30 @@ public class ServicesClient extends EurekaClient {
 		MultivaluedMap<String, String> queryParams = new MultivaluedMapImpl();
 		queryParams.add("order", "desc");
 		return doGet(path, JobList, queryParams);
+	}
+
+	public List<DataElement> getDataElements(String[] inKeys, boolean summarized) throws ClientException {
+		List<DataElement> result = new ArrayList<>();
+		if (inKeys != null) {
+			List<String> userElements = new ArrayList<>();
+			List<String> systemElements = new ArrayList<>();
+			for (String key : inKeys) {
+				if (key.startsWith("USER:")) {
+					userElements.add(key);
+				} else {
+					systemElements.add(key);
+				}
+			}
+			if (!userElements.isEmpty()) {
+				for (String userElement : userElements) {
+					result.add(getUserElement(userElement, summarized));
+				}
+			}
+			if (!systemElements.isEmpty()) {
+				result.addAll(getSystemElements(systemElements, summarized));
+			}
+		}
+		return result;
 	}
 
 	public void saveUserElement(DataElement inDataElement)
@@ -230,19 +242,18 @@ public class ServicesClient extends EurekaClient {
 		doPut(path, inDataElement);
 	}
 
-	public List<DataElement> getUserElements() throws ClientException {
+	public List<DataElement> getUserElements(boolean summarized) throws ClientException {
 		final String path = "/api/protected/dataelement/";
-		return doGet(path, DataElementList);
+		if (summarized) {
+			MultivaluedMap<String, String> queryParams = new MultivaluedMapImpl();
+			queryParams.add("summarize", "true");
+			return doGet(path, DataElementList, queryParams);
+		} else {
+			return doGet(path, DataElementList);
+		}
 	}
 
-	public List<DataElement> getSummarizedUserElements() throws ClientException {
-		final String path = "/api/protected/dataelement/";
-		MultivaluedMap<String, String> queryParams = new MultivaluedMapImpl();
-		queryParams.add("summarize", "true");
-		return doGet(path, DataElementList, queryParams);
-	}
-
-	public DataElement getUserElement(String inKey) throws ClientException {
+	public DataElement getUserElement(String inKey, boolean summarized) throws ClientException {
 		if (inKey == null) {
 			throw new IllegalArgumentException("inKey cannot be null");
 		}
@@ -256,26 +267,14 @@ public class ServicesClient extends EurekaClient {
 				.fromPath("/api/protected/dataelement/")
 				.segment(inKey)
 				.build().toString();
-		return doGet(path, DataElement.class);
-	}
 
-	public DataElement getSummarizedUserElement(String inKey) throws ClientException {
-		if (inKey == null) {
-			throw new IllegalArgumentException("inKey cannot be null");
+		if (summarized) {
+			MultivaluedMap<String, String> queryParams = new MultivaluedMapImpl();
+			queryParams.add("summarize", "true");
+			return doGet(path, DataElement.class, queryParams);
+		} else {
+			return doGet(path, DataElement.class);
 		}
-		MultivaluedMap<String, String> queryParams = new MultivaluedMapImpl();
-		queryParams.add("summarize", "true");
-		/*
-		 * The inKey parameter may contain spaces, slashes and other 
-		 * characters that are not allowed in URLs, so it needs to be
-		 * encoded. We use UriBuilder to guarantee a valid URL. The inKey
-		 * string can't be templated because the slashes won't be encoded!
-		 */
-		String path = UriBuilder
-				.fromPath("/api/protected/dataelement/")
-				.segment(inKey)
-				.build().toString();
-		return doGet(path, DataElement.class, queryParams);
 	}
 
 	public void deleteUserElement(Long inUserId, String inKey) throws
@@ -305,15 +304,29 @@ public class ServicesClient extends EurekaClient {
 		return doGet(path, SystemElementList);
 	}
 
-	public SystemElement getSystemElement(String inKey) throws ClientException {
+	public List<SystemElement> getSystemElements(List<String> inKeys, boolean summarize) throws ClientException {
+		if (inKeys == null) {
+			throw new IllegalArgumentException("inKeys cannot be null");
+		}
+		MultivaluedMap<String, String> formParams = new MultivaluedMapImpl();
+		for (String key : inKeys) {
+			formParams.add("key", key);
+		}
+		formParams.add("summarize", Boolean.toString(summarize));
+		String path = UriBuilder.fromPath("/api/protected/systemelement/")
+				.build().toString();
+		return doPost(path, SystemElementList, formParams);
+	}
+
+	public SystemElement getSystemElement(String inKey, boolean summarize) throws ClientException {
 		if (inKey == null) {
 			throw new IllegalArgumentException("inKey cannot be null");
 		}
-		MultivaluedMap<String, String> formParams = new MultivaluedMapImpl();
-		formParams.add("key", inKey);
-		String path = UriBuilder.fromPath("/api/protected/systemelement/")
+		String path = UriBuilder.fromPath("/api/protected/systemelement/").segment(inKey)
 				.build().toString();
-		return doPost(path, SystemElement.class, formParams);
+		MultivaluedMap<String, String> queryParams = new MultivaluedMapImpl();
+			queryParams.add("summarize", Boolean.toString(summarize));
+		return doGet(path, SystemElement.class, queryParams);
 	}
 
 	public List<TimeUnit> getTimeUnits() throws ClientException {

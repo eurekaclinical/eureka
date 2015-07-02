@@ -85,6 +85,11 @@ public class PatientSetSenderDestinationEntity extends DestinationEntity {
 	public void setAliasPatientIdProperty(String aliasPatientIdProperty) {
 		this.aliasPatientIdProperty = aliasPatientIdProperty;
 	}
+
+	@Override
+	public boolean isGetStatisticsSupported() {
+		return false;
+	}
 	
 	@Override
 	public void accept(DestinationEntityVisitor visitor) {

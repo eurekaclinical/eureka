@@ -43,48 +43,22 @@ import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ClientException;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ServicesClient;
 
 public class ListUserDefinedPropositionChildrenServlet extends HttpServlet {
-
 	private static final Logger LOGGER = LoggerFactory
 			.getLogger(ListUserDefinedPropositionChildrenServlet.class);
+	private static final ObjectMapper MAPPER = new ObjectMapper();
 	private final ServicesClient servicesClient;
+	private final PropositionListSupport propListSupport;
 
 	@Inject
 	public ListUserDefinedPropositionChildrenServlet(
 			ServicesClient inClient) {
 		this.servicesClient = inClient;
+		this.propListSupport = new PropositionListSupport();
 	}
 
 	@Override
 	public void init(ServletConfig config) throws ServletException {
 		super.init(config);
-	}
-
-	private String getDisplayName(DataElementField p) {
-		String displayName;
-		String dataEltDisplayName = p.getDataElementDisplayName();
-
-		if (dataEltDisplayName != null && !dataEltDisplayName.equals("")) {
-			displayName = dataEltDisplayName
-					+ " (" + p.getDataElementKey() + ")";
-		} else {
-			displayName = p.getDataElementKey();
-		}
-
-		return displayName;
-	}
-
-	private String getDisplayName(DataElement p) {
-		String displayName;
-		String dataEltDisplayName = p.getDisplayName();
-
-		if (dataEltDisplayName != null && !dataEltDisplayName.equals("")) {
-			displayName = dataEltDisplayName
-					+ " (" + p.getKey() + ")";
-		} else {
-			displayName = p.getKey();
-		}
-
-		return displayName;
 	}
 
 	private JsonTreeData createData(String data, String key) {
@@ -103,14 +77,13 @@ public class ListUserDefinedPropositionChildrenServlet extends HttpServlet {
 	}
 
 	private void getAllData(JsonTreeData d) throws ClientException {
-		DataElement dataElement = this.servicesClient.getUserElement(d.getAttr().get("data-key"));
+		DataElement dataElement = this.servicesClient.getUserElement(d.getAttr().get("data-key"), false);
 
 		if (dataElement.getType() == DataElement.Type.CATEGORIZATION) {
 			Category ce = (Category) dataElement;
 			for (DataElementField de : ce.getChildren()) {
 				if (de.isInSystem()) {
-
-					JsonTreeData newData = createData(this.getDisplayName(de),
+					JsonTreeData newData = createData(this.propListSupport.getDisplayName(de),
 							de.getDataElementKey());
 					newData.setType("system");
 					LOGGER.debug("add sysTarget {}", de.getDataElementKey());
@@ -144,17 +117,16 @@ public class ListUserDefinedPropositionChildrenServlet extends HttpServlet {
 
 		DataElement dataElement;
 		try {
-			dataElement = this.servicesClient.getUserElement(propKey);
+			dataElement = this.servicesClient.getUserElement(propKey, false);
 
-			JsonTreeData newData = createData(this.getDisplayName(dataElement),
+			JsonTreeData newData = createData(this.propListSupport.getDisplayName(dataElement),
 					propKey);
 			getAllData(newData);
 			l.add(newData);
 
-			ObjectMapper mapper = new ObjectMapper();
 			resp.setContentType("application/json");
 			PrintWriter out = resp.getWriter();
-			mapper.writeValue(out, l);
+			MAPPER.writeValue(out, l);
 		} catch (ClientException ex) {
 			throw new ServletException(
 					"error getting user defined data element " + propKey, ex);

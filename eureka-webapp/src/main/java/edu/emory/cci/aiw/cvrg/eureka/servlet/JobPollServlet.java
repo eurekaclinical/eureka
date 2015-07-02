@@ -38,7 +38,7 @@ import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ClientException;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ServicesClient;
 
 public class JobPollServlet extends HttpServlet {
-
+	private static final ObjectMapper MAPPER = new ObjectMapper();
 	private final ServicesClient servicesClient;
 
 	@Inject
@@ -80,8 +80,7 @@ public class JobPollServlet extends HttpServlet {
 		if (job != null) {
 			jobListRow = job.toJobListRow();
 		}
-		ObjectMapper mapper = new ObjectMapper();
-		String value = mapper.writeValueAsString(jobListRow);
+		String value = MAPPER.writeValueAsString(jobListRow);
 		resp.setContentLength(value.length());
 		PrintWriter out = resp.getWriter();
 		out.println(value);

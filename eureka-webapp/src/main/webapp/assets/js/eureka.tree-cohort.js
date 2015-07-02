@@ -121,7 +121,7 @@ window.eureka.tree = new function () {
                             $elem.text("Search is in progress. Please wait...");
                             $elem.show();
                             $.ajax({
-                                url: "protected/searchsystemlist?str="+searchvalue,
+                                url: "protected/jstree3_searchsystemlist?str="+searchvalue,
                                 success: function(result) {
                                     initData = $(systemTreeElem).jstree(true).settings.core.data;
                                     if (result.length == 0) {

@@ -44,19 +44,40 @@ public class SystemPropositionListServlet extends HttpServlet {
 
 	private static final Logger LOGGER = LoggerFactory
 			.getLogger(SystemPropositionListServlet.class);
+	private static final ObjectMapper MAPPER = new ObjectMapper();
 	private final ServicesClient servicesClient;
+	private final PropositionListSupport propListSupport;
 
 	@Inject
 	public SystemPropositionListServlet (ServicesClient inClient) {
 		this.servicesClient = inClient;
+		this.propListSupport = new PropositionListSupport();
 	}
 
 	private JsonTreeData createData(SystemElement element) {
+//		JsonTreeData d = new JsonTreeData();
+//		d.setState("closed");
+//		d.setId(element.getKey());
+//		d.setData(this.propListSupport.getDisplayName(element));
+//		d.setText(this.propListSupport.getDisplayName(element));
+//		d.setKeyVal("id", element.getKey());
+//		String properties = StringUtils.join(element.getProperties(), ",");
+//		d.setKeyVal("data-properties", properties);
+//		if (element.isParent()) {
+//			d.setKeyVal("class", "jstree-closed");
+//		}
+//
+//		d.setKeyVal("data-key", element.getKey());
+//		d.setKeyVal("data-space", "system");
+//		d.setKeyVal("data-type", element.getSystemType().toString());
+//		d.setKeyVal("data-proposition", element.getKey());
+//		d.setChildren(element.isInternalNode());
+
 		JsonTreeData d = new JsonTreeData();
 		d.setState("closed");
 		d.setId(element.getKey());
-		d.setData(this.getDisplayName(element));
-		d.setText(this.getDisplayName(element));
+		d.setData(this.propListSupport.getDisplayName(element));
+		d.setText(this.propListSupport.getDisplayName(element));
 		d.setKeyVal("id", element.getKey());
 
 		String properties = StringUtils.join(element.getProperties(), ",");
@@ -70,21 +91,6 @@ public class SystemPropositionListServlet extends HttpServlet {
 		return d;
 	}
 
-	private String getDisplayName(SystemElement p) {
-		String displayName = "";
-
-		if (p.getDisplayName() != null && !p.getDisplayName().equals("")) {
-			displayName = p.getDisplayName() + " (" + p.getKey() + ")";
-
-		} else {
-
-			displayName = p.getKey();
-
-		}
-
-		return displayName;
-	}
-
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
@@ -96,23 +102,25 @@ public class SystemPropositionListServlet extends HttpServlet {
 			throws ServletException, IOException {
 
 		LOGGER.debug("doGet");
-		List<JsonTreeData> l = new ArrayList<>();
 		String propKey = req.getParameter("key");
 
 		if (propKey == null) {
-			throw new ServletException("Invalid parameter id: " + propKey);
+			throw new ServletException("Invalid proposition id: " + propKey);
 		}
-
+		List<JsonTreeData> l;
 		try {
 			if (propKey.equals("root")) {
 				List<SystemElement> props = this.servicesClient.getSystemElements();
+				l = new ArrayList<>(props.size());
 				for (SystemElement proposition : props) {
 					JsonTreeData d = createData(proposition);
 					l.add(d);
 				}
 			} else {
-				SystemElement element = this.servicesClient.getSystemElement(propKey);
-				for (SystemElement propChild : element.getChildren()) {
+				SystemElement element = this.servicesClient.getSystemElement(propKey, false);
+				List<SystemElement> children = element.getChildren();
+				l = new ArrayList<>(children.size());
+				for (SystemElement propChild : children) {
 					JsonTreeData newData = createData(propChild);
 					newData.setType("system");
 					l.add(newData);
@@ -125,9 +133,8 @@ public class SystemPropositionListServlet extends HttpServlet {
 
 		LOGGER.debug("executed resource get");
 
-		ObjectMapper mapper = new ObjectMapper();
 		resp.setContentType("application/json");
 		PrintWriter out = resp.getWriter();
-		mapper.writeValue(out, l);
+		MAPPER.writeValue(out, l);
 	}
 }

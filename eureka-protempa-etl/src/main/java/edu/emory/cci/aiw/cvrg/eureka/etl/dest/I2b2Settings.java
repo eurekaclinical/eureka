@@ -1,4 +1,4 @@
-package edu.emory.cci.aiw.cvrg.eureka.etl.queryresultshandler;
+package edu.emory.cci.aiw.cvrg.eureka.etl.dest;
 
 /*
  * #%L
@@ -189,6 +189,11 @@ class I2b2Settings extends AbstractSettings {
 	@Override
 	public String getPatientDimensionDeathDate() {
 		return entity.getPatientDimensionDeathDate();
+	}
+
+	@Override
+	public boolean getManageCTotalNum() {
+		return entity.getManageCTotalNum();
 	}
 
 }

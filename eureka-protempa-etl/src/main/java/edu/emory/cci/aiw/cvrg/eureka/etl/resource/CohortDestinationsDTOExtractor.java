@@ -49,6 +49,7 @@ class CohortDestinationsDTOExtractor extends DestinationsDTOExtractor<EtlCohortD
 		cohortDest.setOwnerUserId(destinationEntity.getOwner().getId());
 		cohortDest.setCreatedAt(destinationEntity.getCreatedAt());
 		cohortDest.setUpdatedAt(destinationEntity.getEffectiveAt());
+		cohortDest.setGetStatisticsSupported(destinationEntity.isGetStatisticsSupported());
 
 		return cohortDest;
 	}

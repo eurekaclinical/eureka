@@ -123,7 +123,7 @@ public class EditPropositionServlet extends HttpServlet {
 
 			if ((propKey != null) && (!propKey.equals(""))) {
 				DataElement dataElement = this.servicesClient
-						.getUserElement(propKey);
+						.getUserElement(propKey, false);
 				PropertiesDataElementVisitor visitor = new PropertiesDataElementVisitor(
 						this.servicesClient);
 				try {
@@ -194,7 +194,7 @@ public class EditPropositionServlet extends HttpServlet {
 
 		private void handleDataElementField(DataElementField inField) throws ClientException {
 			SystemElement systemElement = this.servicesClient
-					.getSystemElement(inField.getDataElementKey());
+					.getSystemElement(inField.getDataElementKey(), false);
 			this.properties.put(
 					inField.getDataElementKey(), systemElement.getProperties());
 		}

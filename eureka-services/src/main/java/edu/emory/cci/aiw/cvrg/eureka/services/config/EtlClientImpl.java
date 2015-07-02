@@ -32,6 +32,7 @@ import edu.emory.cci.aiw.cvrg.eureka.common.comm.Job;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.JobFilter;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.JobRequest;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.SourceConfig;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.Statistics;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.ValidationRequest;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ClientException;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.EurekaClient;
@@ -50,6 +51,8 @@ public class EtlClientImpl extends EurekaClient implements EtlClient {
 	private static final GenericType<List<Job>> JobListType = new GenericType<List<Job>>() {
 	};
 	private static final GenericType<Job> JobType = new GenericType<Job>() {
+	};
+	private static final GenericType<Statistics> JobStatsType = new GenericType<Statistics>() {
 	};
 	private static final GenericType<List<SourceConfig>> SourceConfigListType
 			= new GenericType<List<SourceConfig>>() {
@@ -193,6 +196,15 @@ public class EtlClientImpl extends EurekaClient implements EtlClient {
 	public Job getJob(Long inJobId) throws ClientException {
 		final String path = "/api/protected/jobs/" + inJobId;
 		return doGet(path, JobType);
+	}
+
+	@Override
+	public Statistics getJobStats(Long inJobId, String inPropId) throws ClientException {
+		UriBuilder uriBuilder = UriBuilder.fromPath("/api/protected/jobs/{arg1}/stats/");
+		if (inPropId != null) {
+			uriBuilder = uriBuilder.segment(inPropId);
+		}
+		return doGet(uriBuilder.build(inJobId).toString(), JobStatsType);
 	}
 
 	@Override

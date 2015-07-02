@@ -34,7 +34,7 @@ public class PatientSetSenderDestination extends Destination {
 	public void setUrl(String url) {
 		this.url = url;
 	}
-	
+
 	@Override
 	public void accept(DestinationVisitor destinationVisitor) {
 		destinationVisitor.visit(this);

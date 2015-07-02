@@ -1,10 +1,10 @@
-package edu.emory.cci.aiw.cvrg.eureka.common.comm;
+package edu.emory.cci.aiw.cvrg.eureka.servlet;
 
 /*
  * #%L
- * Eureka Common
+ * Eureka WebApp
  * %%
- * Copyright (C) 2012 - 2014 Emory University
+ * Copyright (C) 2012 - 2015 Emory University
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,24 +20,21 @@ package edu.emory.cci.aiw.cvrg.eureka.common.comm;
  * #L%
  */
 
+import java.util.List;
+
 /**
  *
  * @author Andrew Post
  */
-public class EtlCohortDestination extends EtlDestination {
-    private Cohort cohort;
+public class Counts {
+	private List<Count> counts;
+
+	public List<Count> getCounts() {
+		return counts;
+	}
+
+	public void setCounts(List<Count> counts) {
+		this.counts = counts;
+	}
 	
-	public Cohort getCohort() {
-		return cohort;
-	}
-
-	public void setCohort(Cohort cohort) {
-		this.cohort = cohort;
-	}
-
-	@Override
-	public void accept(EtlDestinationVisitor etlDestinationVisitor) {
-		etlDestinationVisitor.visit(this);
-	}
-
 }

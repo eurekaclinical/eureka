@@ -69,6 +69,8 @@ public abstract class EtlDestination {
 	
 	private List<Link> links;
 	
+	private boolean getStatisticsSupported;
+	
 	public EtlDestination() {
 		
 	}
@@ -201,6 +203,14 @@ public abstract class EtlDestination {
 
 	public void setLinks(List<Link> links) {
 		this.links = links;
+	}
+
+	public boolean isGetStatisticsSupported() {
+		return getStatisticsSupported;
+	}
+
+	public void setGetStatisticsSupported(boolean getStatisticsSupported) {
+		this.getStatisticsSupported = getStatisticsSupported;
 	}
 	
 	public abstract void accept(EtlDestinationVisitor etlDestinationVisitor);

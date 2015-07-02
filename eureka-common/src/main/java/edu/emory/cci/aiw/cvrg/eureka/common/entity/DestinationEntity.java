@@ -155,6 +155,8 @@ public abstract class DestinationEntity implements ConfigEntity {
 		this.expiredAt = expiredAt;
 	}
 	
+	public abstract boolean isGetStatisticsSupported();
+	
 	public abstract void accept(DestinationEntityVisitor visitor);
 	
 }

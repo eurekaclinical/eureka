@@ -69,6 +69,8 @@ public abstract class Destination {
 	@JsonProperty("updated_at")
 	private Date updatedAt;
 	
+	private boolean getStatisticsSupported;
+	
 	public Destination() {
 		
 	}
@@ -184,6 +186,14 @@ public abstract class Destination {
 
 	public void setLinks(List<Link> links) {
 		this.links = links;
+	}
+
+	public boolean isGetStatisticsSupported() {
+		return getStatisticsSupported;
+	}
+
+	public void setGetStatisticsSupported(boolean getStatisticsSupported) {
+		this.getStatisticsSupported = getStatisticsSupported;
 	}
 	
 	public abstract void accept(DestinationVisitor destinationVisitor);
