@@ -20,6 +20,8 @@ package edu.emory.cci.aiw.cvrg.eureka.common.entity;
  * #L%
  */
 
+import java.util.Collections;
+import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
@@ -50,6 +52,11 @@ public class Neo4jDestinationEntity extends DestinationEntity {
 	@Override
 	public void accept(DestinationEntityVisitor visitor) {
 		visitor.visit(this);
+	}
+	
+	@Override
+	public boolean isAllowingQueryPropositionIds() {
+		return true;
 	}
 	
 }

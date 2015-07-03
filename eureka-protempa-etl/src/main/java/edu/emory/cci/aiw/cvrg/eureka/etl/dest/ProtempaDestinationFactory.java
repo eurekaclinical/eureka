@@ -34,7 +34,9 @@ import edu.emory.cci.aiw.cvrg.eureka.common.entity.PatientSetSenderDestinationEn
 import edu.emory.cci.aiw.cvrg.eureka.etl.config.EtlProperties;
 import edu.emory.cci.aiw.cvrg.eureka.etl.dao.DestinationDao;
 import edu.emory.cci.aiw.i2b2etl.dest.I2b2Destination;
+import edu.emory.cci.aiw.i2b2etl.dest.config.ConfigurationInitException;
 import edu.emory.cci.aiw.neo4jetl.Neo4jDestination;
+import org.protempa.dest.DestinationInitException;
 
 /**
  *
@@ -52,24 +54,28 @@ public class ProtempaDestinationFactory {
 		this.etlProperties = etlProperties;
 	}
 
-	public org.protempa.dest.Destination getInstance(Long destId) {
+	public org.protempa.dest.Destination getInstance(Long destId) throws DestinationInitException {
 		DestinationEntity dest = this.destinationDao.retrieve(destId);
 		return getInstance(dest);
 	}
 
-	public org.protempa.dest.Destination getInstance(DestinationEntity dest) {
-		if (dest instanceof I2B2DestinationEntity) {
-			return new I2b2Destination(new EurekaI2b2Configuration((I2B2DestinationEntity) dest, this.etlProperties));
-		} else if (dest instanceof CohortDestinationEntity) {
-			CohortEntity cohortEntity = ((CohortDestinationEntity) dest).getCohort();
-			Cohort cohort = cohortEntity.toCohort();
-			return new KeyLoaderDestination(new CohortCriteria(cohort));
-		} else if (dest instanceof Neo4jDestinationEntity) {
-			return new Neo4jDestination(new EurekaNeo4jConfiguration((Neo4jDestinationEntity) dest));
-		} else if (dest instanceof PatientSetSenderDestinationEntity) {
-			return new PatientSetSenderDestination((PatientSetSenderDestinationEntity) dest);
-		} else {
-			throw new AssertionError("Invalid destination entity type " + dest.getClass());
+	public org.protempa.dest.Destination getInstance(DestinationEntity dest) throws DestinationInitException {
+		try {
+			if (dest instanceof I2B2DestinationEntity) {
+				return new I2b2Destination(new EurekaI2b2Configuration((I2B2DestinationEntity) dest, this.etlProperties));
+			} else if (dest instanceof CohortDestinationEntity) {
+				CohortEntity cohortEntity = ((CohortDestinationEntity) dest).getCohort();
+				Cohort cohort = cohortEntity.toCohort();
+				return new KeyLoaderDestination(new CohortCriteria(cohort));
+			} else if (dest instanceof Neo4jDestinationEntity) {
+				return new Neo4jDestination(new EurekaNeo4jConfiguration((Neo4jDestinationEntity) dest));
+			} else if (dest instanceof PatientSetSenderDestinationEntity) {
+				return new PatientSetSenderDestination((PatientSetSenderDestinationEntity) dest);
+			} else {
+				throw new AssertionError("Invalid destination entity type " + dest.getClass());
+			}
+		} catch (ConfigurationInitException ex) {
+			throw new DestinationInitException(ex);
 		}
 	}
 

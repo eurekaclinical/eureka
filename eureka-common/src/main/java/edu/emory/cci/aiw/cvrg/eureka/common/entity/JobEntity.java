@@ -21,7 +21,6 @@ package edu.emory.cci.aiw.cvrg.eureka.common.entity;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.Job;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.Link;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.codehaus.jackson.annotate.JsonManagedReference;
 

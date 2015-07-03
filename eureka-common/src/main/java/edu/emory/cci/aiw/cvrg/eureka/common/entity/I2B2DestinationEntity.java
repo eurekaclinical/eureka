@@ -19,6 +19,7 @@ package edu.emory.cci.aiw.cvrg.eureka.common.entity;
  * limitations under the License.
  * #L%
  */
+import java.util.Collections;
 import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -376,6 +377,11 @@ public class I2B2DestinationEntity extends DestinationEntity {
 
 	@Override
 	public boolean isGetStatisticsSupported() {
+		return true;
+	}
+
+	@Override
+	public boolean isAllowingQueryPropositionIds() {
 		return true;
 	}
 

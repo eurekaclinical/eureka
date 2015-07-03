@@ -29,6 +29,7 @@ import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ClientException;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.UserEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.exception.HttpStatusException;
 import edu.emory.cci.aiw.cvrg.eureka.services.config.EtlClient;
+import edu.emory.cci.aiw.cvrg.eureka.services.config.ServiceProperties;
 import edu.emory.cci.aiw.cvrg.eureka.services.conversion.ConversionSupport;
 import edu.emory.cci.aiw.cvrg.eureka.services.conversion.PropositionDefinitionCollector;
 import edu.emory.cci.aiw.cvrg.eureka.services.conversion.PropositionDefinitionConverterVisitor;
@@ -52,8 +53,8 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -89,6 +90,7 @@ public class JobResource {
 	private final PropositionDefinitionConverterVisitor converterVisitor;
 	private final EtlClient etlClient;
 	private final ConversionSupport conversionSupport;
+	private final ServiceProperties properties;
 
 	/**
 	 * Construct a new job resource with the given job update thread.
@@ -105,12 +107,14 @@ public class JobResource {
 	public JobResource(UserDao inUserDao,
 			PropositionDefinitionConverterVisitor inVisitor,
 			DataElementEntityDao inPropositionDao,
-			EtlClient inEtlClient) {
+			EtlClient inEtlClient,
+			ServiceProperties inProperties) {
 		this.userDao = inUserDao;
 		this.propositionDao = inPropositionDao;
 		this.converterVisitor = inVisitor;
 		this.etlClient = inEtlClient;
 		this.conversionSupport = new ConversionSupport();
+		this.properties = inProperties;
 	}
 
 	/**
@@ -137,9 +141,16 @@ public class JobResource {
 				LOGGER.trace("PropDef: {}", pd);
 			}
 		}
+		
 		jobRequest.setJobSpec(jobSpec);
 		jobRequest.setUserPropositions(collector.getUserPropDefs());
-		jobRequest.setPropositionIdsToShow(collector.getToShowPropDefs());
+		List<String> conceptIds = jobSpec.getPropositionIds();
+		List<String> propIds = new ArrayList<>(conceptIds.size());
+		for (String conceptId : conceptIds) {
+			propIds.add(this.conversionSupport.toPropositionId(conceptId));
+		}
+		jobRequest.setPropositionIdsToShow(propIds);
+		
 		Long jobId;
 		try {
 			jobId = this.etlClient.submitJob(jobRequest);

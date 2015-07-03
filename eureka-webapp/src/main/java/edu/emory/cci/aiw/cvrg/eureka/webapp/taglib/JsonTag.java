@@ -1,8 +1,8 @@
-package edu.emory.cci.aiw.cvrg.eureka.common.comm;
+package edu.emory.cci.aiw.cvrg.eureka.webapp.taglib;
 
 /*
  * #%L
- * Eureka Common
+ * Eureka WebApp
  * %%
  * Copyright (C) 2012 - 2014 Emory University
  * %%
@@ -19,26 +19,19 @@ package edu.emory.cci.aiw.cvrg.eureka.common.comm;
  * limitations under the License.
  * #L%
  */
+import java.io.IOException;
+import javax.servlet.jsp.tagext.TagSupport;
+import org.codehaus.jackson.map.ObjectMapper;
 
 /**
  *
  * @author Andrew Post
  */
-public class EtlNeo4jDestination extends EtlDestination {
-	
-	private String dbPath;
+public class JsonTag extends TagSupport {
 
-	public String getDbPath() {
-		return dbPath;
+	private static final ObjectMapper objectMapper = new ObjectMapper();
+
+	public static String toJson(Object obj) throws IOException {
+		return objectMapper.writeValueAsString(obj).replace("\"", "&quot;");
 	}
-
-	public void setDbPath(String dbPath) {
-		this.dbPath = dbPath;
-	}
-
-	@Override
-	public void accept(EtlDestinationVisitor etlDestinationVisitor) {
-		etlDestinationVisitor.visit(this);
-	}
-
 }

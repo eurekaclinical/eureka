@@ -28,9 +28,9 @@ import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ClientException;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.UserEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.exception.HttpStatusException;
 import edu.emory.cci.aiw.cvrg.eureka.services.config.EtlClient;
+import edu.emory.cci.aiw.cvrg.eureka.services.conversion.ConversionSupport;
 import edu.emory.cci.aiw.cvrg.eureka.services.conversion.DestinationToEtlDestinationVisitor;
 import edu.emory.cci.aiw.cvrg.eureka.services.conversion.EtlDestinationToDestinationVisitor;
-import edu.emory.cci.aiw.cvrg.eureka.services.dao.DataElementEntityDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.UserDao;
 import java.util.ArrayList;
 import java.util.List;
@@ -60,18 +60,20 @@ public class DestinationResource {
 
 	private final EtlClient etlClient;
 	private final UserDao userDao;
+	private final ConversionSupport conversionSupport;
 
 	@Inject
-	public DestinationResource(EtlClient inEtlClient, UserDao inUserDao) {
+	public DestinationResource(EtlClient inEtlClient, UserDao inUserDao, ConversionSupport inConversionSupport) {
 		this.etlClient = inEtlClient;
 		this.userDao = inUserDao;
+		this.conversionSupport = inConversionSupport;
 	}
 	
 	@POST
 	public void create(@Context HttpServletRequest request, Destination inDestination) {
 		UserEntity user = this.userDao.getByUsername(request.getRemoteUser());
 		DestinationToEtlDestinationVisitor v =
-				new DestinationToEtlDestinationVisitor();
+				new DestinationToEtlDestinationVisitor(this.conversionSupport);
 		inDestination.accept(v);
 		EtlDestination etlDest = v.getEtlDestination();
 		try {
@@ -85,7 +87,7 @@ public class DestinationResource {
 	public void update(@Context HttpServletRequest request, Destination inDestination) {
 		UserEntity user = this.userDao.getByUsername(request.getRemoteUser());
 		DestinationToEtlDestinationVisitor v =
-				new DestinationToEtlDestinationVisitor();
+				new DestinationToEtlDestinationVisitor(this.conversionSupport);
 		inDestination.accept(v);
 		EtlDestination etlDest = v.getEtlDestination();
 		try {
@@ -124,7 +126,7 @@ public class DestinationResource {
 			}
 			List<Destination> result = new ArrayList<>(destinations.size());
 			EtlDestinationToDestinationVisitor v = 
-					new EtlDestinationToDestinationVisitor();
+					new EtlDestinationToDestinationVisitor(this.conversionSupport);
 			for (EtlDestination etlDest : destinations) {
 				etlDest.accept(v);
 				result.add(v.getDestination());
@@ -140,7 +142,7 @@ public class DestinationResource {
 	public Destination get(@Context HttpServletRequest request, @PathParam("id") String inId) {
 		UserEntity user = this.userDao.getByUsername(request.getRemoteUser());
 		EtlDestinationToDestinationVisitor v = 
-					new EtlDestinationToDestinationVisitor();
+					new EtlDestinationToDestinationVisitor(this.conversionSupport);
 		try {
 			this.etlClient.getDestination(inId).accept(v);
 		} catch (ClientException ex) {

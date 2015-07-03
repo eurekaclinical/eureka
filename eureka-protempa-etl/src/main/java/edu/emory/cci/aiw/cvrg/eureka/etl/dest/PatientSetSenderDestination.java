@@ -39,6 +39,7 @@ public class PatientSetSenderDestination extends AbstractDestination {
 	private final String aliasFieldNameProperty;
 	private final String aliasFieldName;
 	private final String aliasPatientIdProperty;
+	private final String[] propIdsSupported;
 
 	PatientSetSenderDestination(PatientSetSenderDestinationEntity patientSetSenderDestinationEntity) {
 		assert patientSetSenderDestinationEntity != null : "patientSetSenderDestinationEntity cannot be null";
@@ -47,6 +48,7 @@ public class PatientSetSenderDestination extends AbstractDestination {
 		this.aliasFieldNameProperty = patientSetSenderDestinationEntity.getAliasFieldNameProperty();
 		this.aliasFieldName = patientSetSenderDestinationEntity.getAliasFieldName();
 		this.aliasPatientIdProperty = patientSetSenderDestinationEntity.getAliasPatientIdProperty();
+		this.propIdsSupported = new String[] {this.aliasPropId};
 	}
 
 	@Override
@@ -60,6 +62,11 @@ public class PatientSetSenderDestination extends AbstractDestination {
 				this.aliasFieldNameProperty,
 				this.aliasFieldName,
 				this.aliasPatientIdProperty);
+	}
+	
+	@Override
+	public String[] getSupportedPropositionIds(DataSource dataSource, KnowledgeSource knowledgeSource) {
+		return this.propIdsSupported.clone();
 	}
 
 }

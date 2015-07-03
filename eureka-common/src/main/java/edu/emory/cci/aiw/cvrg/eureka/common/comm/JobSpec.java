@@ -20,6 +20,7 @@
 package edu.emory.cci.aiw.cvrg.eureka.common.comm;
 
 import java.util.Date;
+import java.util.List;
 import org.protempa.proposition.interval.Interval.Side;
 
 /**
@@ -38,6 +39,7 @@ public class JobSpec {
 	private Side latestDateSide;
 	private boolean updateData;
 	private SourceConfig prompts;
+	private List<String> propositionIds;
 
 	public String getSourceConfigId() {
 		return sourceConfigId;
@@ -109,6 +111,14 @@ public class JobSpec {
 
 	public void setPrompts(SourceConfig prompts) {
 		this.prompts = prompts;
+	}
+
+	public List<String> getPropositionIds() {
+		return propositionIds;
+	}
+
+	public void setPropositionIds(List<String> propositionIds) {
+		this.propositionIds = propositionIds;
 	}
 	
 }

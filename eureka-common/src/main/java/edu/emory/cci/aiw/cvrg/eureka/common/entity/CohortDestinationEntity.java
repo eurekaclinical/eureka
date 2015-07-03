@@ -20,11 +20,14 @@ package edu.emory.cci.aiw.cvrg.eureka.common.entity;
  * #L%
  */
 
+import java.util.Collections;
+import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import org.apache.commons.lang3.ArrayUtils;
 
 /**
  *
@@ -55,4 +58,9 @@ public class CohortDestinationEntity extends DestinationEntity {
 		visitor.visit(this);
 	}
 	
+	@Override
+	public boolean isAllowingQueryPropositionIds() {
+		return false;
+	}
+
 }

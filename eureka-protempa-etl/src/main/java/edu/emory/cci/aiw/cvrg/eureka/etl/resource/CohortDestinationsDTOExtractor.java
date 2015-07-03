@@ -24,6 +24,8 @@ import edu.emory.cci.aiw.cvrg.eureka.common.comm.EtlCohortDestination;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.CohortDestinationEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.EtlUserEntity;
 import edu.emory.cci.aiw.cvrg.eureka.etl.dao.EtlGroupDao;
+import java.util.ArrayList;
+import java.util.Collections;
 
 /**
  *
@@ -50,6 +52,8 @@ class CohortDestinationsDTOExtractor extends DestinationsDTOExtractor<EtlCohortD
 		cohortDest.setCreatedAt(destinationEntity.getCreatedAt());
 		cohortDest.setUpdatedAt(destinationEntity.getEffectiveAt());
 		cohortDest.setGetStatisticsSupported(destinationEntity.isGetStatisticsSupported());
+		cohortDest.setAllowingQueryPropositionIds(destinationEntity.isAllowingQueryPropositionIds());
+		cohortDest.setRequiredPropositionIds(new ArrayList<String>(0));
 
 		return cohortDest;
 	}
