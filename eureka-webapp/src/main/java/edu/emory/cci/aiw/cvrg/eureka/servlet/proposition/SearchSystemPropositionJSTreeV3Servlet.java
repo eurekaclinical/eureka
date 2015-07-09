@@ -72,7 +72,7 @@ public class SearchSystemPropositionJSTreeV3Servlet extends HttpServlet {
 		d.setKeyVal("data-space", "system");
 		d.setKeyVal("data-type", element.getSystemType().toString());
 		d.setKeyVal("data-proposition", element.getKey());
-		d.setChildren(false);
+		d.setChildren(element.isInternalNode());
 
 		return d;
 	}
