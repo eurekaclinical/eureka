@@ -35,6 +35,8 @@ import edu.emory.cci.aiw.cvrg.eureka.etl.dao.JobDao;
 import edu.emory.cci.aiw.cvrg.eureka.etl.dao.JobEventDao;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.util.ArrayList;
+import java.util.Collections;
 import org.protempa.backend.Configuration;
 import java.util.Date;
 
@@ -56,6 +58,7 @@ public final class Task implements Runnable {
 		this.jobDao = inJobDao;
 		this.jobEventDao = inJobEventDao;
 		this.etl = inEtl;
+		this.propIdsToShow = Collections.emptyList();
 	}
 
 	Long getJobId() {
@@ -75,11 +78,15 @@ public final class Task implements Runnable {
 	}
 
 	List<String> getPropositionIdsToShow() {
-		return propIdsToShow;
+		return new ArrayList<>(this.propIdsToShow);
 	}
 
 	void setPropositionIdsToShow(List<String> propIdsToShow) {
-		this.propIdsToShow = propIdsToShow;
+		if (propIdsToShow == null) {
+			this.propIdsToShow = Collections.emptyList();
+		} else {
+			this.propIdsToShow = new ArrayList<>(propIdsToShow);
+		}
 	}
 
 	List<PropositionDefinition> getPropositionDefinitions() {

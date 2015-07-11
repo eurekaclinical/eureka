@@ -1,10 +1,10 @@
-package edu.emory.cci.aiw.cvrg.eureka.common.comm;
+package edu.emory.cci.aiw.cvrg.eureka.etl.dest;
 
 /*
  * #%L
- * Eureka Common
+ * Eureka Protempa ETL
  * %%
- * Copyright (C) 2012 - 2014 Emory University
+ * Copyright (C) 2012 - 2015 Emory University
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,25 +20,25 @@ package edu.emory.cci.aiw.cvrg.eureka.common.comm;
  * #L%
  */
 
+import edu.emory.cci.aiw.neo4jetl.config.IndexOnProperty;
+
 /**
  *
  * @author Andrew Post
  */
-public class EtlNeo4jDestination extends EtlDestination {
+public class EurekaIndexOnProperty implements IndexOnProperty {
+	private String propertyName;
 	
-	private String dbPath;
-
-	public String getDbPath() {
-		return dbPath;
-	}
-
-	public void setDbPath(String dbPath) {
-		this.dbPath = dbPath;
+	EurekaIndexOnProperty(String inPropertyName) {
+		if (inPropertyName == null) {
+			throw new IllegalArgumentException("inPropertyName cannot be null");
+		}
+		this.propertyName = inPropertyName;
 	}
 
 	@Override
-	public void accept(EtlDestinationVisitor etlDestinationVisitor) {
-		etlDestinationVisitor.visit(this);
+	public String getPropertyName() {
+		return this.propertyName;
 	}
-
+	
 }

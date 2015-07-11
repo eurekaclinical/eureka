@@ -168,7 +168,7 @@
     <ng-view></ng-view>
 </div>
 <div class="footer">
-    Copyright &copy; All rights reserved.
+    Copyright &copy; ${initParam['inception-year']}&ndash;${initParam['current-year']} ${initParam['eureka-organization-name']}. All rights reserved.
 </div>
 </body>
 </html>

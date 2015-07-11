@@ -33,6 +33,8 @@ import edu.emory.cci.aiw.cvrg.eureka.common.comm.EtlPatientSetSenderDestination;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.I2B2Destination;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.Neo4jDestination;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.PatientSetSenderDestination;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -40,6 +42,11 @@ import edu.emory.cci.aiw.cvrg.eureka.common.comm.PatientSetSenderDestination;
  */
 public class EtlDestinationToDestinationVisitor extends AbstractEtlDestinationVisitor {
 	private Destination destination;
+	private final ConversionSupport conversionSupport;
+
+	public EtlDestinationToDestinationVisitor(ConversionSupport conversionSupport) {
+		this.conversionSupport = conversionSupport;
+	}
 
 	@Override
 	public void visit(EtlCohortDestination etlCohortDestination) {
@@ -90,6 +97,13 @@ public class EtlDestinationToDestinationVisitor extends AbstractEtlDestinationVi
 		destination.setUpdatedAt(etlDestination.getUpdatedAt());
 		destination.setLinks(etlDestination.getLinks());
 		destination.setGetStatisticsSupported(etlDestination.isGetStatisticsSupported());
+		destination.setJobConceptListSupported(etlDestination.isAllowingQueryPropositionIds());
+		List<String> requiredPropIds = etlDestination.getRequiredPropositionIds();
+		List<String> requiredConcepts = new ArrayList<>(requiredPropIds.size());
+		for (String requiredPropId : requiredPropIds) {
+			requiredConcepts.add(this.conversionSupport.toDataElementKey(requiredPropId));
+		}
+		destination.setRequiredConcepts(requiredConcepts);
 	}
 
 	@Override

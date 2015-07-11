@@ -1,17 +1,15 @@
 // get the namespace, or declare it here
-window.eureka = (typeof window.eureka == "undefined" || !window.eureka ) ? {} : window.eureka;
+window.eureka = (typeof window.eureka == "undefined" || !window.eureka) ? {} : window.eureka;
 
 // add in the namespace
 window.eureka.job = new function () {
 	var self = this;
 
-	self.currentElement = null;
-
 	self.setup = function (systemTreeElem, userTreeElem, treeCssUrl, uploadFormElem, earliestDateElem, latestDateElem, datePickerCssUrl, statusElem, searchModalElem,
-	searchValidationModalElem,searchNoResultsModalElem,searchUpdateDivElem) {
+			searchValidationModalElem, searchNoResultsModalElem, searchUpdateDivElem) {
 		// Initialize widgets
-		eureka.tree.setupSystemTree(systemTreeElem, treeCssUrl, searchModalElem, self.dropFinishCallback,searchValidationModalElem,searchNoResultsModalElem,searchUpdateDivElem);
-		eureka.tree.setupUserTree(userTreeElem, treeCssUrl, self.dropFinishCallback);
+		eureka.tree.setupSystemTree(systemTreeElem, treeCssUrl, searchModalElem, self.dropFinishCallback, searchValidationModalElem, searchNoResultsModalElem, searchUpdateDivElem);
+		eureka.tree.setupUserTree(userTreeElem, self.dropFinishCallback);
 		self.setupDatePicker(earliestDateElem);
 		self.setupDatePicker(latestDateElem);
 		self.setupDatePickerCss(datePickerCssUrl);
@@ -19,16 +17,16 @@ window.eureka.job = new function () {
 		// Create event handlers.
 		var $uploadForm = $(uploadFormElem);
 		$uploadForm.find('select[name="source"]').change(
-			function () {
-				var sourceId = $(this).find(":selected").val();
-				self.updateInputFields(sourceId);
-			}
+				function () {
+					var sourceId = $(this).find(":selected").val();
+					self.updateInputFields(sourceId);
+				}
 		);
 
 		$('input').change(
-			function () {
-				self.updateSubmitButtonStatus();
-			});
+				function () {
+					self.updateSubmitButtonStatus();
+				});
 
 		$uploadForm.submit(function () {
 			var $dataElement = $uploadForm.find('ul[data-type="main"]').find('li').first();
@@ -76,45 +74,48 @@ window.eureka.job = new function () {
 
 	self.dropFinishCallback = function (data) {
 		var target = data.e.currentTarget;
-		var textContent = data.o[0].children[1].childNodes[1].textContent;
 
-		if (self.currentElement != data.o[0].id) {
-			var infoLabel = $(target).find('div.label-info');
-			infoLabel.hide();
-
-			var sortable = $(target).find('ul.sortable');
-			var newItem = $('<li></li>')
-				.attr("data-space", $(data.o[0]).data("space"))
-				.attr("data-desc", textContent)
-				.attr("data-type", $(data.o[0]).data("type"))
-				.attr("data-subtype", $(data.o[0]).data("subtype") || '')
+		var sortable = $(target).find('ul.sortable');
+		var items = $(sortable).find('li');
+		var newItem = $('<li></li>')
 				.attr('data-key', $(data.o[0]).data("proposition") || $(data.o[0]).data('key'));
+		if (self.idIsInList(items, newItem)) {
+			return;
+		}
+		
+		var infoLabel = $(target).find('div.label-info');
+		infoLabel.hide();
 
-
-			//this loop is executed only during replacement of a system element when droptype==single. In all other
-			// cases(adding element to multiple droptype lists, adding a new element to an empty list) the else
-			// statement is executed.
-			if ($(sortable).data('drop-type') === 'single' && $(sortable).find('li').length > 0) {
-				var dialog = $('#deleteModal');
-				$(dialog).find('#deleteContent').html('Are you sure you want to remove data element ' + $toRemove.text() + '?');
-				$(dialog).find('#confirmButton').one('click', function (/*e*/) {
-					$(sortable).empty();
-					$(dialog).modal('toggle');
-					self.addNewItemToList(data, sortable, newItem);
-					self.currentElement = data.o[0].id;
-				});
-				$(dialog).modal("toggle");
-			}
-			else {
-				self.currentElement = data.o[0].id;
+		//this loop is executed only during replacement of a system element when droptype==single. In all other
+		// cases(adding element to multiple droptype lists, adding a new element to an empty list) the else
+		// statement is executed.
+		if ($(sortable).data('drop-type') === 'single' && items.length > 0) {
+			var toRemove = items[0];
+			var dialog = $('#deleteModal');
+			$(dialog).find('#deleteContent').html('Are you sure you want to remove data element ' + $(toRemove).text() + '?');
+			$(dialog).find('#confirmButton').one('click', function (/*e*/) {
+				$(sortable).empty();
+				$(dialog).modal('toggle');
 				self.addNewItemToList(data, sortable, newItem);
-			}
+			});
+			$(dialog).modal("toggle");
+		} else {
+			self.addNewItemToList(data, sortable, newItem);
 		}
 		self.updateSubmitButtonStatus();
 	};
+	
+	self.idIsInList = function (items, newItem) {
+		var retVal = false;
+		for (var i = 0; i < items.length; i++) {
+			if ($(items).data("key") === $(newItem).data("key")) {
+				retVal = true;
+			}
+		}
+		return retVal;
+	};
 
 	self.addNewItemToList = function (data, sortable, newItem) {
-		var target = $(sortable).parent();
 		var X = $("<span></span>", {
 			'class': 'glyphicon glyphicon-remove delete-icon',
 			'data-action': 'remove'
@@ -134,10 +135,7 @@ window.eureka.job = new function () {
 				var dialog = $('#deleteModal');
 				$(dialog).find('#deleteContent').html('Are you sure you want to remove data element ' + $toRemove.text() + '?');
 				$(dialog).find('#confirmButton').one('click', function (e) {
-					$sortable.empty();
-					self.currentElement = null;
-					self.updateSubmitButtonStatus();
-					$sortable.siblings('.label-info').show();
+					self.deleteItem($toRemove, $sortable);
 					$(dialog).modal('toggle');
 				});
 				$(dialog).modal("toggle");
@@ -145,12 +143,20 @@ window.eureka.job = new function () {
 		});
 	};
 
+	self.deleteItem = function (toRemove, sortable) {
+		toRemove.remove();
+		if (sortable.find('li').length == 0) {
+			var infoLabel = sortable.siblings('div.label-info');
+			infoLabel.show();
+		}
+	};
+
 	self.setupDatePickerCss = function (cssUrl) {
 		$('<link />')
-			.prop('rel', 'stylesheet')
-			.prop('type', 'text/css')
-			.prop('href', cssUrl)
-			.appendTo('head');
+				.prop('rel', 'stylesheet')
+				.prop('type', 'text/css')
+				.prop('href', cssUrl)
+				.appendTo('head');
 	};
 
 	self.setupDatePicker = function (pickerElem) {
@@ -200,7 +206,7 @@ window.eureka.job = new function () {
 
 		$('#startButton').prop('disabled', doDisable);
 	};
-	
+
 	self.postFormData = function (postData) {
 		$.ajax({
 			type: "POST",
@@ -218,32 +224,49 @@ window.eureka.job = new function () {
 			}
 		});
 	}
-	
+
 	self.onSuccess = function () {
 		$('form#uploadForm').data('job-running', true);
 		self.submittingJob = false;
 		self.updateSubmitButtonStatus();
 	}
-	
+
 	self.onError = function (errorThrown) {
 		self.showErrorSubmittingJobDialog(errorThrown);
 		self.submittingJob = false;
 		$('form#uploadForm').data('job-running', false);
 		self.updateSubmitButtonStatus();
 	}
-	
+
 	self.showErrorSubmittingJobDialog = function (errorThrown) {
 		var content = 'Error submitting job: ' + errorThrown;
 		$('#errorModal').find('#errorContent').html(content);
 		$('#errorModal').modal('show');
 	}
-	
+
+	self.collectDataElement = function (dataElementFromDropBox) {
+		return $(dataElementFromDropBox).data('key');
+	};
+
+	self.collectDataElements = function ($dataElementsFromDropBox) {
+		var childElements = new Array();
+
+		$dataElementsFromDropBox.each(function (i, p) {
+			childElements.push(self.collectDataElement(p));
+		});
+
+
+
+		return childElements;
+	};
+
 	self.save = function (uploadFormElem) {
 		self.submittingJob = true;
 		self.updateSubmitButtonStatus();
+		var $selectedDestination = uploadFormElem.find('select[name="destination"]').find(":selected");
 		var jobSpec = {
 			sourceConfigId: uploadFormElem.find('select[name="source"]').find(":selected").val(),
-			destinationId: uploadFormElem.find('select[name="destination"]').find(":selected").val(),
+			destinationId: $selectedDestination.val(),
 			dateRangeDataElementKey: uploadFormElem.find('input[name="dateRangeDataElementKey"]').val(),
 			earliestDate: uploadFormElem.find('input[name="earliestDate"]').val(),
 			earliestDateSide: uploadFormElem.find('select[name="dateRangeEarliestDateSide"]').find(":selected").val(),
@@ -253,28 +276,35 @@ window.eureka.job = new function () {
 			prompts: {
 				id: uploadFormElem.find('select[name="source"]').find(":selected").val(),
 				dataSourceBackends: []
-			}
+			},
+			propositionIds: $selectedDestination.data("jobConceptListSupported") ? self.collectDataElements(uploadFormElem.find('#conceptsList').find('li')) : null
 		};
+		if ($selectedDestination.data("jobConceptListSupported")) {
+			var requiredConcepts = $selectedDestination.data("jobRequiredConcepts");
+			for (var i = 0; i < requiredConcepts.length; i++) {
+				jobSpec.propositionIds.push(requiredConcepts[i]);
+			}
+		}
 		var prompts = null;
-		uploadFormElem.find('.uploads[data-source-id="' + jobSpec.sourceConfigId + '"]').each(function() {
+		uploadFormElem.find('.uploads[data-source-id="' + jobSpec.sourceConfigId + '"]').each(function () {
 			prompts = $(this);
 		});
 		if (prompts) {
-			$(prompts).find(".section").each(function() {
+			$(prompts).find(".section").each(function () {
 				var section = {
 					id: $(this).data('section-id'),
 					options: []
 				};
-				$(prompts).find(".uploader").each(function() {
+				$(prompts).find(".uploader").each(function () {
 					var optionName = $(this).data("option-name");
-					$(this).find("input[type!='file']").each(function() {
+					$(this).find("input[type!='file']").each(function () {
 						section.options.push({
 							type: 'DEFAULT',
 							name: optionName,
 							value: $(this).val()
 						});
 					});
-					$(this).find("input[type='file']").each(function() {
+					$(this).find("input[type='file']").each(function () {
 						section.options.push({
 							type: 'FILE',
 							name: optionName,
@@ -287,9 +317,9 @@ window.eureka.job = new function () {
 		}
 		if (window.FormData) {
 			var formData = new FormData();
-			$(prompts).find(".uploader").each(function() {
+			$(prompts).find(".uploader").each(function () {
 				var optionName = $(this).data("option-name");
-				$(this).find("input[type='file']").each(function() {
+				$(this).find("input[type='file']").each(function () {
 					formData.append(optionName, $(this)[0].files[0], $(this)[0].files[0].name);
 				});
 			});
@@ -298,14 +328,14 @@ window.eureka.job = new function () {
 			return false;
 		} else {
 			var iframeId = 'iframe' + (new Date().getTime());
-			var iframe = $('<iframe src="javascript:false;" name="'+iframeId+'" />');
+			var iframe = $('<iframe src="javascript:false;" name="' + iframeId + '" />');
 			iframe.hide();
 			var theForm = $('#uploadForm');
 			var theJobSpec = $('input[name="jobSpec"]');
 			theJobSpec.val(JSON.stringify(jobSpec));
-            theForm.attr("target", iframeId);
+			theForm.attr("target", iframeId);
 			iframe.appendTo('body');
-			iframe.load(function(e) {
+			iframe.load(function (e) {
 				var data = JSON.parse($(iframe[0].contentDocument.body).text());
 				if (data.errorThrown) {
 					self.onError(data.message);

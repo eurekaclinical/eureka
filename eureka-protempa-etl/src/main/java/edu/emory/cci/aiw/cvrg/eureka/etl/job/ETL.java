@@ -52,8 +52,6 @@ import edu.emory.cci.aiw.cvrg.eureka.etl.dao.EtlGroupDao;
 import edu.emory.cci.aiw.cvrg.eureka.etl.dao.JobDao;
 import edu.emory.cci.aiw.cvrg.eureka.etl.dest.ProtempaDestinationFactory;
 import edu.emory.cci.aiw.cvrg.eureka.etl.resource.Destinations;
-import java.util.ArrayList;
-import java.util.List;
 import org.protempa.backend.Configuration;
 import org.protempa.backend.InvalidPropertyNameException;
 import org.protempa.backend.InvalidPropertyValueException;
@@ -99,20 +97,27 @@ public class ETL {
 		assert job != null : "job cannot be null";
 		try (Protempa protempa = getNewProtempa(job, prompts)) {
 			logValidationEvents(job, protempa.validateDataSourceBackendData(), null);
-			DefaultQueryBuilder q = new DefaultQueryBuilder();
-			q.setPropositionDefinitions(inPropositionDefinitions);
-			q.setPropositionIds(inPropIdsToShow);
-			q.setId(job.getId().toString());
-			q.setFilters(filter);
-			q.setQueryMode(appendData ? QueryMode.UPDATE : QueryMode.REPLACE);
-			LOGGER.trace("Constructed Protempa query {}", q);
-			Query query = protempa.buildQuery(q);
+
 			EtlDestination eurekaDestination
 					= new Destinations(this.etlProperties, job.getEtlUser(),
 							this.destinationDao, this.groupDao)
 					.getOne(job.getDestination().getName());
 			org.protempa.dest.Destination protempaDestination
 					= this.protempaDestFactory.getInstance(eurekaDestination.getId());
+
+			DefaultQueryBuilder q = new DefaultQueryBuilder();
+			q.setPropositionDefinitions(inPropositionDefinitions);
+			if (!eurekaDestination.isAllowingQueryPropositionIds()) {
+				q.setPropositionIds(protempa.getSupportedPropositionIds(protempaDestination));
+			} else {
+				q.setPropositionIds(inPropIdsToShow);
+			}
+			q.setId(job.getId().toString());
+			q.setFilters(filter);
+			q.setQueryMode(appendData ? QueryMode.UPDATE : QueryMode.REPLACE);
+			LOGGER.trace("Constructed Protempa query {}", q);
+
+			Query query = protempa.buildQuery(q);
 			protempa.execute(query, protempaDestination);
 		} catch (DataSourceFailedDataValidationException ex) {
 			logValidationEvents(job, ex.getValidationEvents(), ex);
@@ -126,7 +131,6 @@ public class ETL {
 	}
 
 	private void logValidationEvents(JobEntity job, DataValidationEvent[] events, DataSourceFailedDataValidationException ex) {
-		List<JobEvent> jobEvents = new ArrayList<>();
 		for (DataValidationEvent event : events) {
 			AbstractFileInfo fileInfo;
 			JobStatus jobEventType;

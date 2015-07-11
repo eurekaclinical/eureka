@@ -27,7 +27,7 @@ eurekaApp.factory(
 
         function getSystemElement(key) {
 
-            return $http.get("/eureka-services/api/protected/systemelement/" + key + "?summary=true")
+            return $http.get("/eureka-services/api/protected/systemelement/" + key + "?summarize=true")
                 .then(handleSuccess, handleError);
 
         }
@@ -62,7 +62,7 @@ eurekaApp.factory(
 
             var promises = [];
             angular.forEach(cohorts, function(cohort){
-                var promise = $http.get("/eureka-services/api/protected/systemelement/" + cohort + "?summary=true");
+                var promise = $http.get("/eureka-services/api/protected/systemelement/" + cohort + "?summarize=true");
                 promises.push(promise);
 
             });
