@@ -75,8 +75,55 @@
 						</goals>
 						<configuration>
 							<includeArtifactIds>aiw-i2b2-etl</includeArtifactIds>
-							<includes>i2b2_data_tables_1_7_h2.sql,eureka_data_tables_h2.sql,mock_stored_procedures_h2.sql</includes>
-							<outputDirectory>${project.build.directory}/eureka-config/sql</outputDirectory>
+							<includes>sql/i2b2_data_tables_1_7_h2.sql,sql/mock_stored_procedures_h2.sql,sql/i2b2_meta_eureka_table_1_7_h2.sql,dbmigration/i2b2-data-schema-changelog.xml,dbmigration/i2b2-meta-schema-changelog.xml</includes>
+							<outputDirectory>${project.build.directory}/eureka-config</outputDirectory>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			
+			<plugin>
+				<groupId>org.liquibase</groupId>
+				<artifactId>liquibase-maven-plugin</artifactId>
+				<dependencies>
+					<dependency>
+						<groupId>com.h2database</groupId>
+						<artifactId>h2</artifactId>
+						<version>${h2-version}</version>
+					</dependency>
+				</dependencies>
+				<executions>
+					<execution>
+						<id>liquibase-populate-i2b2-data-schema</id>
+						<phase>process-classes</phase>
+						<goals>
+							<goal>update</goal>
+						</goals>
+						<configuration>
+							<changeLogFile>${project.build.directory}/eureka-config/dbmigration/i2b2-data-schema-changelog.xml</changeLogFile>
+							<url>jdbc:h2:file:${project.build.directory}/eureka-db/i2b2-data-schema;INIT=DROP ALL OBJECTS</url>
+						</configuration>
+					</execution>
+					<execution>
+						<id>liquibase-populate-backend-db</id>
+						<phase>process-classes</phase>
+						<goals>
+							<goal>update</goal>
+						</goals>
+						<configuration>
+							<changeLogFile>${project.build.directory}/eureka-config/dbmigration/eureka-protempa-etl-changelog.xml</changeLogFile>
+							<url>jdbc:h2:file:${project.build.directory}/eureka-db/eureka-backend</url>
+						</configuration>
+					</execution>
+					<execution>
+						<id>liquibase-populate-i2b2-meta-schema</id>
+						<phase>process-classes</phase>
+						<goals>
+							<goal>update</goal>
+						</goals>
+						<configuration>
+							<changeLogFile>${project.build.directory}/eureka-config/dbmigration/i2b2-meta-schema-changelog.xml</changeLogFile>
+							<url>jdbc:h2:file:${project.build.directory}/eureka-db/eureka-ontology;INIT=DROP ALL OBJECTS\;RUNSCRIPT FROM '${project.build.directory}/eureka-config/sql/i2b2_meta_eureka_table_1_7_h2.sql'</url>
 						</configuration>
 					</execution>
 				</executions>
@@ -100,7 +147,7 @@
 						</goals>
 						<configuration>
 							<driver>org.h2.Driver</driver>
-							<url>jdbc:h2:file:${project.build.directory}/eureka-db/eureka-ontology;INIT=DROP ALL OBJECTS\;RUNSCRIPT FROM '${basedir}/etc/tomcat-eureka-config/sql/eureka-i2b2-ksb-h2.sql'\;RUNSCRIPT FROM '${project.build.directory}/eureka-config/sql/eureka-i2b2-ksb-eureka-table-h2.sql'</url>
+							<url>jdbc:h2:file:${project.build.directory}/eureka-db/eureka-ontology;INIT=RUNSCRIPT FROM '${basedir}/etc/tomcat-eureka-config/sql/eureka-i2b2-ksb-h2.sql'</url>
 							<sqlCommand></sqlCommand>
 						</configuration>
 					</execution>
@@ -112,32 +159,8 @@
 						</goals>
 						<configuration>
 							<driver>org.h2.Driver</driver>
-							<url>jdbc:h2:file:${project.build.directory}/eureka-db/i2b2-data-schema;INIT=DROP ALL OBJECTS\;RUNSCRIPT FROM '${project.build.directory}/eureka-config/sql/i2b2_data_tables_1_7_h2.sql'\;RUNSCRIPT FROM '${project.build.directory}/eureka-config/sql/eureka_data_tables_h2.sql'\;RUNSCRIPT FROM '${project.build.directory}/eureka-config/sql/mock_stored_procedures_h2.sql'</url>
+							<url>jdbc:h2:file:${project.build.directory}/eureka-db/i2b2-data-schema;INIT=RUNSCRIPT FROM '${project.build.directory}/eureka-config/sql/i2b2_data_tables_1_7_h2.sql'\;RUNSCRIPT FROM '${project.build.directory}/eureka-config/sql/mock_stored_procedures_h2.sql'</url>
 							<sqlCommand></sqlCommand>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
-			<plugin>
-				<groupId>org.liquibase</groupId>
-				<artifactId>liquibase-maven-plugin</artifactId>
-				<dependencies>
-					<dependency>
-						<groupId>com.h2database</groupId>
-						<artifactId>h2</artifactId>
-						<version>${h2-version}</version>
-					</dependency>
-				</dependencies>
-				<executions>
-					<execution>
-						<id>liquibase-populate-backend-db</id>
-						<phase>process-classes</phase>
-						<goals>
-							<goal>update</goal>
-						</goals>
-						<configuration>
-							<changeLogFile>${project.build.directory}/eureka-config/dbmigration/eureka-protempa-etl-changelog.xml</changeLogFile>
-							<url>jdbc:h2:file:${project.build.directory}/eureka-db/eureka-backend</url>
 						</configuration>
 					</execution>
 				</executions>
