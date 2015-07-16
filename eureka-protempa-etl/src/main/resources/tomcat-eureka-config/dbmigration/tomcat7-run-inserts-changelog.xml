@@ -215,5 +215,10 @@
 			<column name="NAME" value="enctr_type"/>
 			<column name="PROPERTY" value="type"/>
 		</insert>
+		<insert tableName="SOURCECONFIGS">
+			<column name="ID" valueSequenceNext="SOURCECONFIG_SEQ"/>
+			<column name="NAME" value="Spreadsheet"/>
+			<column name="OWNER_ID" valueNumeric="1"/>
+		</insert>
 	</changeSet>
 </databaseChangeLog>
