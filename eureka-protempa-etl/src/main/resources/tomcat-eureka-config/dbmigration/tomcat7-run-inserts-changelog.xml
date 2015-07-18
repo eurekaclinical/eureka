@@ -78,14 +78,14 @@
 		<insert tableName="I2B2_DEST_CONCEPTSPECS">
 			<column name="ID" valueSequenceNext="I2B2_CS_SEQ"/>
 			<column name="I2B2DESTINATIONS_ID" valueSequenceCurrent="DEST_SEQ"/>
-			<column name="PROPOSITION" value="LAB:LabTest"/>
+			<column name="PROPOSITION" value="\ACT\Labs\"/>
 			<column name="I2B2DESTVALUETYPECDS_ID" valueNumeric="1"/>
 			<column name="ALREADYLOADED" valueNumeric="1"/>
 		</insert>
 		<insert tableName="I2B2_DEST_CONCEPTSPECS">
 			<column name="ID" valueSequenceNext="I2B2_CS_SEQ"/>
 			<column name="I2B2DESTINATIONS_ID" valueSequenceCurrent="DEST_SEQ"/>
-			<column name="PROPOSITION" value="MED:medications"/>
+			<column name="PROPOSITION" value="\ACT\Medications\"/>
 			<column name="I2B2DESTVALUETYPECDS_ID" valueNumeric="3"/>
 			<column name="ALREADYLOADED" valueNumeric="1"/>
 		</insert>
@@ -208,6 +208,18 @@
 			<column name="I2B2DESTINATIONS_ID" valueSequenceCurrent="DEST_SEQ"/>
 			<column name="NAME" value="vitals"/>
 			<column name="REFERENCE" value="EK_VITALS"/>
+		</insert>
+		<insert tableName="I2B2_DEST_DATASPECS">
+			<column name="ID" valueSequenceNext="I2B2_DS_SEQ"/>
+			<column name="I2B2DESTINATIONS_ID" valueSequenceCurrent="DEST_SEQ"/>
+			<column name="NAME" value="labs"/>
+			<column name="REFERENCE" value="EK_LABS"/>
+		</insert>
+		<insert tableName="I2B2_DEST_DATASPECS">
+			<column name="ID" valueSequenceNext="I2B2_DS_SEQ"/>
+			<column name="I2B2DESTINATIONS_ID" valueSequenceCurrent="DEST_SEQ"/>
+			<column name="NAME" value="medOrders"/>
+			<column name="REFERENCE" value="EK_MED_ORDERS"/>
 		</insert>
 		<insert tableName="I2B2_DEST_DATASPECS">
 			<column name="ID" valueSequenceNext="I2B2_DS_SEQ"/>
