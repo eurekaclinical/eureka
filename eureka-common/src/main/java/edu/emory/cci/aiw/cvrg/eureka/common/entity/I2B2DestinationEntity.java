@@ -19,7 +19,6 @@ package edu.emory.cci.aiw.cvrg.eureka.common.entity;
  * limitations under the License.
  * #L%
  */
-import java.util.Collections;
 import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;

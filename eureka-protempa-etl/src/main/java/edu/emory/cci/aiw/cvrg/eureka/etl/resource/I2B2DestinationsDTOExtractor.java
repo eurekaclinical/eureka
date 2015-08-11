@@ -54,7 +54,11 @@ class I2B2DestinationsDTOExtractor extends DestinationsDTOExtractor<EtlI2B2Desti
 		dest.setUpdatedAt(destinationEntity.getEffectiveAt());
 		dest.setGetStatisticsSupported(destinationEntity.isGetStatisticsSupported());
 		dest.setAllowingQueryPropositionIds(destinationEntity.isAllowingQueryPropositionIds());
-		dest.setRequiredPropositionIds(Collections.singletonList(destinationEntity.getVisitDimension()));
+		String visitDimension = destinationEntity.getVisitDimension();
+		if (visitDimension != null) {
+			dest.setRequiredPropositionIds(Collections.singletonList(visitDimension));
+		}
+		
 		
 		List<LinkEntity> linkEntities = destinationEntity.getLinks();
 		if (linkEntities != null) {

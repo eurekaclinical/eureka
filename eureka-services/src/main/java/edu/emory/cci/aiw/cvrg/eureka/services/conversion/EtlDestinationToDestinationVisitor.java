@@ -19,7 +19,6 @@ package edu.emory.cci.aiw.cvrg.eureka.services.conversion;
  * limitations under the License.
  * #L%
  */
-
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.AbstractEtlDestinationVisitor;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.Cohort;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.CohortDestination;
@@ -41,6 +40,7 @@ import java.util.List;
  * @author Andrew Post
  */
 public class EtlDestinationToDestinationVisitor extends AbstractEtlDestinationVisitor {
+
 	private Destination destination;
 	private final ConversionSupport conversionSupport;
 
@@ -75,11 +75,11 @@ public class EtlDestinationToDestinationVisitor extends AbstractEtlDestinationVi
 		neo4jDestination.setDbPath(etlNeo4jDestination.getDbPath());
 		this.destination = neo4jDestination;
 	}
-	
+
 	public Destination getDestination() {
 		return this.destination;
 	}
-	
+
 	private void visitCommon(EtlDestination etlDestination, Destination destination) {
 		destination.setId(etlDestination.getId());
 		destination.setName(etlDestination.getName());
@@ -99,9 +99,13 @@ public class EtlDestinationToDestinationVisitor extends AbstractEtlDestinationVi
 		destination.setGetStatisticsSupported(etlDestination.isGetStatisticsSupported());
 		destination.setJobConceptListSupported(etlDestination.isAllowingQueryPropositionIds());
 		List<String> requiredPropIds = etlDestination.getRequiredPropositionIds();
-		List<String> requiredConcepts = new ArrayList<>(requiredPropIds.size());
-		for (String requiredPropId : requiredPropIds) {
-			requiredConcepts.add(this.conversionSupport.toDataElementKey(requiredPropId));
+		List<String> requiredConcepts = new ArrayList<>(requiredPropIds != null ? requiredPropIds.size() : 0);
+		if (requiredPropIds != null) {
+			for (String requiredPropId : requiredPropIds) {
+				if (requiredPropId != null) {
+					requiredConcepts.add(this.conversionSupport.toDataElementKey(requiredPropId));
+				}
+			}
 		}
 		destination.setRequiredConcepts(requiredConcepts);
 	}
@@ -113,5 +117,5 @@ public class EtlDestinationToDestinationVisitor extends AbstractEtlDestinationVi
 		ptSetSenderDest.setUrl(etlPatientSetSenderDestination.getUrl());
 		this.destination = ptSetSenderDest;
 	}
-	
+
 }
