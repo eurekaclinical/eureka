@@ -1,0 +1,10 @@
+<li
+    data-key="{{item.dataElementKey}}"
+    data-desc="{{item.dataElementDisplayName}}" data-type="{{item.type}}"
+    data-subtype="{{item.type == 'CATEGORIZATION' ? item.categoricalType : ''}}">
+
+            <span class="glyphicon glyphicon-remove delete-icon"
+                  title="Remove this phenotype from the category"></span>
+
+    <span>{{item.dataElementDisplayName}} ({{item.dataElementKey}})</span>
+</li>

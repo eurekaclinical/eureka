@@ -23,8 +23,11 @@
         </ul>
         <div id="treeContent" class="tab-content proposition-tree">
             <div id="systemElems" class="tab-pane fade active in">
-                <div id="systemTree">
-                </div>
+                <!--<div id="systemTree">-->
+                <!--</div>-->
+                <jstree
+                        tree-url="protected/systemlist">
+                </jstree>
                 <div id="searchUpdateDiv" class="searchUpdateMessage"></div>
             </div>
             <div id="userElems" class="tab-pane fade">
@@ -48,18 +51,14 @@
                 <div id="patCohortDefinition"
                      class="jstree-drop tree-drop tree-drop-multiple"
                      title="Drop the system and/or user-defined data element members that define your patient cohort in here">
-                    <ul class="sortable" data-drop-type="multiple" data-proptype="empty">
-                        <li ng-repeat="phenotype in cohortEditController.cohortDestination.phenotypes"
-                            data-key="{{phenotype.dataElementKey}}"
-                            data-desc="{{phenotype.dataElementDisplayName}}" data-type="{{phenotype.type}}"
-                            data-subtype="{{phenotype.type == 'CATEGORIZATION' ? phenotype.categoricalType : ''}}"
-                         testdirective="">
-							    <span class="glyphicon glyphicon-remove delete-icon"
-                                      title="Remove this phenotype from the category"></span>
 
-                                <span>{{phenotype.dataElementDisplayName}} ({{phenotype.dataElementKey}})</span>
-                        </li>
-                    </ul>
+                    <ul class="sortable"
+                        data-drop-type="multiple"
+                        data-proptype="empty"
+                        ng-repeat="phenotype in cohortEditController.cohortDestination.phenotypes"
+                        editordirective="phenotype"
+                            />
+
                 </div>
             </div>
             <div class="form-group text-center vert-offset">
@@ -169,7 +168,7 @@
 
 
 <script language="JavaScript">
-   
+
 </script>
 <!--
 <script language="JavaScript"
