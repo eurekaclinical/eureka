@@ -17,11 +17,9 @@
         <div id="treeContent" class="tab-content proposition-tree">
             <!--<div id="systemElems" class="tab-pane fade active in" ng-show="tab.isSet(1)">-->
             <div id="systemElems" ng-show="tab.isSet(1)">
-                <div id="systemTree">
-                </div>
-                <!--<jstree
-                    tree-url="protected/systemlist"
-                </jstree>-->
+                <jstree
+                        tree-url="protected/systemlist">
+                </jstree>
                 <div id="searchUpdateDiv" class="searchUpdateMessage"></div>
             </div>
             <!--<div id="userElems" class="tab-pane fade" ng-show="tab.isSet(2)">-->

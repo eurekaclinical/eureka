@@ -41,7 +41,7 @@ eurekaApp.directive('editordirective', ['$http', '$templateCache', '$timeout', '
                         var parent = element.parent()
                         parent.append($('<ul></ul>').
                             attr("data-drop-type", "multiple").
-                            attr("data-proptype", "empty").    
+                            attr("data-proptype", "empty").
                             addClass('sortable').append(element.parent().children()));
 
                     };
@@ -124,21 +124,21 @@ eurekaApp.factory("listDragAndDropService", [ function() {
         var sourceId = $(dropTarget).data('count');
         var sourcePath = [self.propType, elementKey, 'sources', sourceId];
         var defPath = [self.propType, elementKey, 'definition'];
-        var definition = this.getIn(self.droppedElements, defPath);
+        var definition = getIn(self.droppedElements, defPath);
 
-        this.setIn(self.droppedElements, sourcePath, dropTarget);
+        setIn(self.droppedElements, sourcePath, dropTarget);
         if (!definition) {
             var properties = ['key', 'desc', 'type', 'subtype', 'space'];
             definition = {};
             $.each(properties, function (i, property) {
                 definition[property] = $(dropped).data(property);
             });
-            this.setIn(self.droppedElements, defPath, definition);
+            setIn(self.droppedElements, defPath, definition);
         }
 
         var allSourcesPath = [self.propType, elementKey, 'sources'];
-        var allSources = this.getIn(self.droppedElements, allSourcesPath);
-        var size = this.objSize(allSources);
+        var allSources = getIn(self.droppedElements, allSourcesPath);
+        var size = objSize(allSources);
         if (size > 1) {
             for (var key in allSources) {
                 if (allSources.hasOwnProperty(key)) {
@@ -205,11 +205,11 @@ eurekaApp.factory("listDragAndDropService", [ function() {
         var elementKey = $(removed).data('key');
         var sourceId = $(removeTarget).data('count');
         var path = [self.propType, elementKey, 'sources', sourceId];
-        this.removeIn(self.droppedElements, path);
+        removeIn(self.droppedElements, path);
 
         var allSourcesPath = [self.propType, elementKey, 'sources'];
-        var allSources = this.getIn(self.droppedElements, allSourcesPath);
-        var size = this.objSize(allSources);
+        var allSources = getIn(self.droppedElements, allSourcesPath);
+        var size = objSize(allSources);
         if (size <= 1) {
             for (var key in allSources) {
                 if (allSources.hasOwnProperty(key)) {
@@ -228,8 +228,8 @@ eurekaApp.factory("listDragAndDropService", [ function() {
     function deleteItem(toRemove, sortable, replace) {
         var infoLabel = sortable.siblings('div.label-info');
         var target = sortable.parent();
-        this.removeDroppedElement(toRemove, sortable);
-        this.setPropositionSelects(sortable.closest('[data-definition-container="true"]'));
+        removeDroppedElement(toRemove, sortable);
+        setPropositionSelects(sortable.closest('[data-definition-container="true"]'));
         toRemove.remove();
         if (sortable.find('li').length == 0 && replace == 0) {
             sortable.data('proptype', 'empty');
@@ -274,7 +274,7 @@ eurekaApp.factory("listDragAndDropService", [ function() {
             'data-action': 'remove'
         });
 
-        this.attachDeleteAction(X);
+        attachDeleteAction(X);
         var textContent = data.data.origin.get_node(data.data.obj[0].id).original.text;
 
         newItem.append(X);
@@ -302,8 +302,8 @@ eurekaApp.factory("listDragAndDropService", [ function() {
         }
 
         // add the newly dropped element to the set of dropped elements
-        this.addDroppedElement(newItem, sortable);
-        this.setPropositionSelects($(sortable).closest('[data-definition-container="true"]'));
+        addDroppedElement(newItem, sortable);
+        setPropositionSelects($(sortable).closest('[data-definition-container="true"]'));
 
         // finally, call any actions specific to the type of proposition being entered/edited
         if (self.dndActions && self.dndActions[self.propType]) {
@@ -364,7 +364,7 @@ eurekaApp.factory("listDragAndDropService", [ function() {
                 var dialog = $('#deleteModal');
                 $(dialog).find('#deleteContent').html('Are you sure you want to remove data element &quot;' + $toRemove.text().trim() + '&quot;?');
                 $(dialog).find('#deleteButton').on('click', function (e) {
-                    listDragAndDropService.deleteItem($toRemove, $sortable, 0);
+                    deleteItem($toRemove, $sortable, 0);
                     $(dialog).modal('hide');
                 });
                 $(dialog).modal('show');
@@ -396,6 +396,11 @@ eurekaApp.directive('jstree', [ 'listDragAndDropService', function (listDragAndD
             self.propId = null;
             self.propType = null;
             self.propSubType = null;
+            var initData = null;
+            var searchUpdateDivElem = "#searchUpdateDiv";
+            var searchValidationModalElem = "#searchValidationModal";
+            var searchNoResultsModal = "#searchNoResultsModal";
+            var treeCssUrl = "assets/css/jstree-themes/default/style.css";
 
             $(element).jstree({
                 "core": {
@@ -415,6 +420,122 @@ eurekaApp.directive('jstree', [ 'listDragAndDropService', function (listDragAndD
 
                 "plugins": [ "themes", "json_data", "ui", "crrm", "dnd", "search" ]
             });
+
+            $(element).before(
+                $('<form id="search">' +
+                    '<span></span>' +
+                    '<div class="input-group"><input id="searchText" class="form-control" type="text" /><div class="input-group-btn"><input id="searchTree" class="btn btn-default" type=submit value="search" /><input class="btn btn-default" type="reset" value="X" /></div></div>' +
+                    '</form>').
+                    bind({
+                        reset: function(evt){
+                            $(element).jstree('clear_search');
+                            $(element).jstree(true).settings.core.data = initData;
+                            $(element).jstree(true).refresh();
+                            $('#search span').html('');
+                        },
+
+                        submit: function(evt){
+                            $(element).jstree('clear_search');
+                            var searchvalue = $('#search input[type="text"]').val();
+                            initData = $(element).jstree(true).settings.core.data;
+                            if(searchvalue!='' && searchvalue.length>=4) {
+                                $(element).hide();
+                                $('#userTree').hide();
+                                var $elem = $(searchUpdateDivElem);
+                                $elem.text("Search is in progress. Please wait...");
+                                $elem.show();
+
+
+                                $(element).jstree("destroy");
+                                $(element).jstree({
+                                    'core' : {
+                                        'data': {
+                                            'url': function (node) {
+                                                return node.id === '#' ?
+                                                "protected/jstree3_searchsystemlist?str="+searchvalue :
+                                                    "protected/systemlist";
+
+                                            },
+                                            "dataType": 'json',
+                                            'data': function (node) {
+                                                return {
+                                                    //'id': node.id
+                                                    key: node.id === "#" ? "root" : node.id
+
+                                                };
+                                            }
+                                        }
+                                    },
+                                    'themes': {
+                                        'name': 'default',
+                                        'theme': 'default',
+                                        'url': treeCssUrl
+                                    },
+                                    "plugins": [ "themes", "json_data", "ui", "crrm", "dnd", "search" ]
+                                }).bind('loaded.jstree', function (e, data) {
+
+                                    if (data.instance._cnt == 0) {
+                                        console.log("empty");
+                                        var $elem = $(searchNoResultsModalElem);
+                                        $elem.find('#searchContent').html("There are no entries in our database that matched your search criteria.");
+                                        $elem.modal("toggle");
+
+                                        $elem.hide();
+                                        $(element).jstree('clear_search');
+                                        $(element).jstree(true).settings.core.data = initData;
+                                        $(element).jstree(true).refresh();
+                                        $('#searchText').val('');
+
+                                        $(element).show();
+                                        $('#userTree').show();
+
+                                        $elem = $(searchUpdateDivElem);
+                                        $elem.hide();
+
+                                    }
+                                    else if (data.instance._cnt > 200) {
+                                        var $elem = $(searchModalElem);
+                                        $elem.find('#searchContent').html("The number of search results exceeded the  "+
+                                            " maximum limit and all results might not be displayed."+
+                                            " Please give a more specific search query to see all results.");
+                                        $elem.modal("toggle");
+
+                                        $elem.hide();
+                                        $(element).jstree('clear_search');
+                                        $(element).jstree(true).settings.core.data = initData;
+                                        $(element).jstree(true).refresh();
+                                        $('#searchText').val('');
+
+                                        $(element).show();
+                                        $('#userTree').show();
+
+                                        $elem = $(searchUpdateDivElem);
+                                        $elem.hide();
+
+                                    }
+
+                                });
+
+
+                                $elem.hide();
+                                $(element).show();
+                                $('#userTree').show();
+
+
+                            } else if(searchvalue.length<4){
+                                var $elem = $(searchValidationModalElem);
+                                $elem.find('#searchContent').html("Please enter a search value with length greater than 3.");
+                                $elem.modal("toggle");
+                                $(element).show();
+                                $('#userTree').show();
+
+                            }
+                            return false;
+                        }
+
+
+                    })
+            );
 
             $(document).on('dnd_move.vakata', function (e, data) {
                 var t = $(data.event.target);
