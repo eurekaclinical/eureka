@@ -2,26 +2,26 @@
 
 var eurekaApp = angular.module('eurekaApp', ['ngRoute', 'angularValidator' ]);
 
-// the following factory creates a sharedDataService object
+// the following factory creates a listDragAndDropService object
 // which is created only oonce and holds some data, in this case
 // a property called "shared" which is empty
-eurekaApp.directive('editordirective', ['$http', '$templateCache', '$timeout', 'sharedDataService',
-    function (http, templateCache, timer, sharedDataService) {
+eurekaApp.directive('editordirective', ['$http', '$templateCache', '$timeout', 'listDragAndDropService',
+    function (http, templateCache, timer, listDragAndDropService) {
 
         return {
             scope: {
                 item: '=editordirective'
             },
-            replace:true,
+            replace: true,
             restrict: 'EA',
             templateUrl: 'app/views/phenotype-li-template.html',
-            link: function(scope, element, attrs, ctrl, transclude) {
-                scope.$watch('$last',function (v) {
+            link: function (scope, element, attrs, ctrl, transclude) {
+                scope.$watch('$last', function (v) {
                     var editorAction = function () {
 
                         $('ul.sortable').each(function (i, list) {
                             $(list).find('li').each(function (j, item) {
-                                sharedDataService.addDroppedElement(item, $(list));
+                                listDragAndDropService.addDroppedElement(item, $(list));
                             });
 
                             $('span.delete-icon').each(function (i, item) {
@@ -31,37 +31,31 @@ eurekaApp.directive('editordirective', ['$http', '$templateCache', '$timeout', '
                                     var dialog = $('#deleteModal');
                                     $(dialog).find('#deleteContent').html('Are you sure you want to remove data element &quot;' + $toRemove.text().trim() + '&quot;?');
                                     $(dialog).find('#deleteButton').on('click', function (e) {
-                                        sharedDataService.deleteItem($toRemove, $sortable, 0);
+                                        listDragAndDropService.deleteItem($toRemove, $sortable, 0);
                                         $(dialog).modal('hide');
                                     });
                                     $(dialog).modal('show');
                                 });
                             });
                         });
-                        //var children = element.children();
-                        //console.log(children);
                         var parent = element.parent()
-                        parent.append( $('<ul></ul>').addClass('sortable').append(element.parent().children()));
+                        parent.append($('<ul></ul>').
+                            attr("data-drop-type", "multiple").
+                            attr("data-proptype", "empty").    
+                            addClass('sortable').append(element.parent().children()));
 
                     };
 
                     timer(editorAction, 0);
 
                 });
-
-
             }
         }
 
+    }
+]);
 
-
-
-
-
-
-    }]);
-
-eurekaApp.factory("sharedDataService", [ function() {
+eurekaApp.factory("listDragAndDropService", [ function() {
 
 
     return ({
@@ -280,7 +274,6 @@ eurekaApp.factory("sharedDataService", [ function() {
             'data-action': 'remove'
         });
 
-        // TODO: figure this part out
         this.attachDeleteAction(X);
         var textContent = data.data.origin.get_node(data.data.obj[0].id).original.text;
 
@@ -317,8 +310,6 @@ eurekaApp.factory("sharedDataService", [ function() {
             self.dndActions[self.propType](data.data.obj[0]);
         }
     };
-
-
 
     function setPropositionSelects(elem) {
         var droppedElems = self.droppedElements[self.propType];
@@ -373,7 +364,7 @@ eurekaApp.factory("sharedDataService", [ function() {
                 var dialog = $('#deleteModal');
                 $(dialog).find('#deleteContent').html('Are you sure you want to remove data element &quot;' + $toRemove.text().trim() + '&quot;?');
                 $(dialog).find('#deleteButton').on('click', function (e) {
-                    sharedDataService.deleteItem($toRemove, $sortable, 0);
+                    listDragAndDropService.deleteItem($toRemove, $sortable, 0);
                     $(dialog).modal('hide');
                 });
                 $(dialog).modal('show');
@@ -389,7 +380,7 @@ eurekaApp.factory("sharedDataService", [ function() {
 }]);
 
 
-eurekaApp.directive('jstree', [ 'sharedDataService', function (sharedDataService) {
+eurekaApp.directive('jstree', [ 'listDragAndDropService', function (listDragAndDropService) {
 
     return {
         scope: {
@@ -469,7 +460,7 @@ eurekaApp.directive('jstree', [ 'sharedDataService', function (sharedDataService
                 target = $(target).closest('#patCohortDefinition');
                 var textContent = data.data.origin.get_node(data.data.obj[0].id).original.text;
 
-                if (sharedDataService.idIsNotInList(target, data.data.obj[0].id)) {
+                if (listDragAndDropService.idIsNotInList(target, data.data.obj[0].id)) {
                     var sortable = $(target).find('ul.sortable');
                     var elementKey = data.data.obj[0].id;
                     var newItem = $('<li></li>')
@@ -500,26 +491,19 @@ eurekaApp.directive('jstree', [ 'sharedDataService', function (sharedDataService
                         var dialog = $('#replaceModal');
                         $(dialog).find('#replaceContent').html('Are you sure you want to replace data element &quot;' + $toRemove.text().trim() + '&quot;?');
                         $(dialog).find('#replaceButton').on('click', function (e) {
-                            sharedDataService.deleteItem($toRemove, $(sortable), 0);
-                            sharedDataService.addNewItemToList(data, $(sortable), newItem);
+                            listDragAndDropService.deleteItem($toRemove, $(sortable), 0);
+                            listDragAndDropService.addNewItemToList(data, $(sortable), newItem);
                             $(dialog).modal('hide');
                         });
                         $(dialog).modal('show');
                     }
                     else {
-                        sharedDataService.addNewItemToList(data, sortable, newItem);
+                        listDragAndDropService.addNewItemToList(data, sortable, newItem);
                     }
                 }
             };
 
-
-
-
         }
     }
-
-
-
-
 
 }]);

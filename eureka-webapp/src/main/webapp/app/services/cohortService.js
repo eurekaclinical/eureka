@@ -58,7 +58,6 @@ eurekaApp.factory(
             }
 
             traverse(cohort.node);
-            console.log(cohorts);
 
             var promises = [];
             angular.forEach(cohorts, function(cohort){
