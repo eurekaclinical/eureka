@@ -41,7 +41,7 @@
                 <div class="panel panel-info">
                     <c:choose>
                         <c:when test="${not userIsActivated}">
-                            <div class="panel-heading">Want to try it out?</div>
+                            <div class="panel-heading">First Steps</div>
                             <div class="panel-body text-center">
                                 <div class="container-fluid">
                                     <div class="row">
@@ -156,18 +156,18 @@
             <div class="panel panel-info">
             <c:choose>
                 <c:when test="${not userIsActivated}">
-                    <div class="panel-heading">Request an Eureka! account</div>
-                    <div class="panel-body text-center">
-                    <div class="container-fluid">
-                    <div class="row">
+					<div class="panel-heading">First Steps</div>
+					<div class="panel-body text-center">
+					<div class="container-fluid">
+					<div class="row">
                     <c:choose>
                         <c:when test="${applicationScope.webappProperties.registrationEnabled}">
                             <div class="col-xs-6">
-                            <h4>Learn about Eureka!</h4>
-                            <a href="${initParam['aiw-site-url']}/overview.html" target="_blank"
-                               class="btn btn-primary btn-lg">
-                                About Eureka!
-                            </a>
+								<h4>Learn about Eureka!</h4>
+								<a href="${initParam['aiw-site-url']}/overview.html" target="_blank"
+								   class="btn btn-primary btn-lg">
+									About Eureka!
+								</a>
                             </div>
                             <div class="col-xs-6">
                                 <h4>Get an account</h4>
