@@ -29,7 +29,7 @@ import edu.emory.cci.aiw.cvrg.eureka.common.authentication.LoginType;
  */
 public final class OAuthUserRequest extends UserRequest {
     private String providerUsername;
-	private Long oauthProvider;
+	private String oauthProvider;
 
 	public OAuthUserRequest() {
 		setLoginType(LoginType.PROVIDER);
@@ -43,11 +43,11 @@ public final class OAuthUserRequest extends UserRequest {
 		this.providerUsername = providerUsername;
 	}
 
-	public Long getOAuthProvider() {
+	public String getOAuthProvider() {
 		return oauthProvider;
 	}
 
-	public void setOAuthProvider(Long oauthProvider) {
+	public void setOAuthProvider(String oauthProvider) {
 		this.oauthProvider = oauthProvider;
 	}
 	
