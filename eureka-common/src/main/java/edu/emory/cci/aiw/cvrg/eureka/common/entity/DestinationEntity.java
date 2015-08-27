@@ -19,9 +19,10 @@ package edu.emory.cci.aiw.cvrg.eureka.common.entity;
  * limitations under the License.
  * #L%
  */
-
+import java.security.Key;
 import java.util.Date;
 import java.util.List;
+import javax.crypto.spec.SecretKeySpec;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -36,6 +37,8 @@ import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
+import org.apache.commons.codec.binary.Base64;
+import org.protempa.dest.deid.DeidConfig;
 
 /**
  *
@@ -44,40 +47,46 @@ import javax.persistence.Temporal;
 @Entity
 @Table(name = "destinations")
 @Inheritance(strategy = InheritanceType.JOINED)
-public abstract class DestinationEntity implements ConfigEntity {
+public abstract class DestinationEntity implements ConfigEntity, DeidConfig {
+
+	private static final Base64 BASE64 = new Base64();
+
 	@Id
 	@SequenceGenerator(name = "DEST_SEQ_GENERATOR", sequenceName = "DEST_SEQ",
-	allocationSize = 1)
+			allocationSize = 1)
 	@GeneratedValue(strategy = GenerationType.SEQUENCE,
-	generator = "DEST_SEQ_GENERATOR")
+			generator = "DEST_SEQ_GENERATOR")
 	private Long id;
-	
+
 	@Column(nullable = false, unique = true)
 	private String name;
-	
+
 	@Lob
 	private String description;
-	
+
 	@Temporal(javax.persistence.TemporalType.TIMESTAMP)
 	@Column(name = "created_at")
 	private Date createdAt;
-	
+
 	@Temporal(javax.persistence.TemporalType.TIMESTAMP)
 	@Column(name = "effective_at")
 	private Date effectiveAt;
-	
+
 	@Temporal(javax.persistence.TemporalType.TIMESTAMP)
 	@Column(name = "expired_at")
 	private Date expiredAt;
-	
+
 	@ManyToOne
 	private EtlUserEntity owner;
-	
-	@OneToMany(cascade = CascadeType.ALL, mappedBy="destination")
+
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "destination")
 	private List<DestinationGroupMembership> groups;
-	
-	@OneToMany(cascade = CascadeType.ALL, mappedBy="destination")
+
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "destination")
 	private List<LinkEntity> links;
+
+	private String key;
+	private String keyAlgorithm;
 
 	public Long getId() {
 		return id;
@@ -138,7 +147,7 @@ public abstract class DestinationEntity implements ConfigEntity {
 	public void setCreatedAt(Date createdAt) {
 		this.createdAt = createdAt;
 	}
-	
+
 	public Date getEffectiveAt() {
 		return effectiveAt;
 	}
@@ -154,11 +163,44 @@ public abstract class DestinationEntity implements ConfigEntity {
 	public void setExpiredAt(Date expiredAt) {
 		this.expiredAt = expiredAt;
 	}
+
+	@Override
+	public void setKey(Key key) {
+		if (key == null) {
+			this.key = null;
+		} else {
+			this.key = BASE64.encodeToString(key.getEncoded());
+		}
+		this.keyAlgorithm = key.getAlgorithm();
+	}
+
+	/**
+	 * Returns a DES-encoded secret key used for de-identification.
+	 *
+	 * @return the key or <code>null</code> if no secret key has been stored.
+	 */
+	@Override
+	public Key getKey() {
+		if (this.key == null || this.keyAlgorithm == null) {
+			return null;
+		}
+		byte[] encoded = BASE64.decode(this.key);
+		return new SecretKeySpec(encoded, this.keyAlgorithm);
+	}
+
+	@Override
+	public Integer getOffset(String keyId) {
+	}
+
+	@Override
+	public void setOffset(String keyId, Integer offsetInSeconds) {
+		
+	}
 	
 	public abstract boolean isGetStatisticsSupported();
-	
+
 	public abstract boolean isAllowingQueryPropositionIds();
-	
+
 	public abstract void accept(DestinationEntityVisitor visitor);
-		
+
 }

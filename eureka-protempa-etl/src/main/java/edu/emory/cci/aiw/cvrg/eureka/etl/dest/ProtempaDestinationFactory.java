@@ -37,6 +37,7 @@ import edu.emory.cci.aiw.i2b2etl.dest.I2b2Destination;
 import edu.emory.cci.aiw.i2b2etl.dest.config.ConfigurationInitException;
 import edu.emory.cci.aiw.neo4jetl.Neo4jDestination;
 import org.protempa.dest.DestinationInitException;
+import org.protempa.dest.deid.DeidentifiedDestination;
 
 /**
  *
@@ -62,7 +63,11 @@ public class ProtempaDestinationFactory {
 	public org.protempa.dest.Destination getInstance(DestinationEntity dest) throws DestinationInitException {
 		try {
 			if (dest instanceof I2B2DestinationEntity) {
-				return new I2b2Destination(new EurekaI2b2Configuration((I2B2DestinationEntity) dest, this.etlProperties));
+				if (dest.getKey() != null) {
+					return new DeidentifiedDestination(new I2b2Destination(new EurekaI2b2Configuration((I2B2DestinationEntity) dest, this.etlProperties)), dest);
+				} else {
+					return new I2b2Destination(new EurekaI2b2Configuration((I2B2DestinationEntity) dest, this.etlProperties));
+				}
 			} else if (dest instanceof CohortDestinationEntity) {
 				CohortEntity cohortEntity = ((CohortDestinationEntity) dest).getCohort();
 				Cohort cohort = cohortEntity.toCohort();

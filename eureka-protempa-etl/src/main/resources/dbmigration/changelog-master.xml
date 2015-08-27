@@ -687,4 +687,12 @@ limitations under the License.
 			</column>
 		</addColumn>
 	</changeSet>
+	<changeSet author="arpost" id="1361552652236-35">
+		<addColumn tableName="DESTINATIONS">
+			<column name="KEY" type="VARCHAR(255)"/>
+		</addColumn>
+		<addColumn tableName="DESTINATIONS">
+			<column name="KEYALGORITHM" type="VARCHAR(255)"/>
+		</addColumn>
+	</changeSet>
 </databaseChangeLog>
