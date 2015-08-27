@@ -126,7 +126,7 @@
                                class="dropdown-toggle" data-toggle="dropdown"
                                role="button" aria-expanded="false">
                                 <span class="glyphicon glyphicon-user"></span>
-                                    ${pageContext.request.remoteUser} <span class="caret"></span>
+                                    ${user.fullName != null ? user.fullName : pageContext.request.remoteUser} <span class="caret"></span>
                             </a>
                             <ul class="dropdown-menu" role="menu">
                                 <li>
