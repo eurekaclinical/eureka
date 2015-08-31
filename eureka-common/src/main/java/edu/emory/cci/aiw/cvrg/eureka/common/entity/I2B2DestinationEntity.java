@@ -379,4 +379,9 @@ public class I2B2DestinationEntity extends DestinationEntity {
 		return true;
 	}
 
+	@Override
+	public boolean isAllowingQueryPropositionIds() {
+		return true;
+	}
+
 }

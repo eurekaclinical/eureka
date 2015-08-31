@@ -71,6 +71,10 @@ public abstract class EtlDestination {
 	
 	private boolean getStatisticsSupported;
 	
+	private boolean allowingQueryPropositionIds;
+	
+	private List<String> requiredPropositionIds;
+	
 	public EtlDestination() {
 		
 	}
@@ -218,6 +222,22 @@ public abstract class EtlDestination {
 	@Override
 	public String toString() {
 		return ToStringBuilder.reflectionToString(this);
+	}
+
+	public void setAllowingQueryPropositionIds(boolean allowingQueryPropositionIds) {
+		this.allowingQueryPropositionIds = allowingQueryPropositionIds;
+	}
+	
+	public boolean isAllowingQueryPropositionIds() {
+		return this.allowingQueryPropositionIds;
+	}
+
+	public List<String> getRequiredPropositionIds() {
+		return requiredPropositionIds;
+	}
+
+	public void setRequiredPropositionIds(List<String> requiredPropositionIds) {
+		this.requiredPropositionIds = requiredPropositionIds;
 	}
 	
 }

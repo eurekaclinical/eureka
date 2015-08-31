@@ -114,11 +114,17 @@ window.eureka.registration = new function () {
 			var verifyEmail = $('#verifyEmail').val();
 			var title = $('#title').val();
 			var department = $('#department').val();
+			var providerUsername = $('#providerUsername').val();
+			var authenticationMethod = $('#authenticationMethod').val();
+			var oauthProvider = $('#oauthProvider').val();
 
 			var dataString = 'firstName=' + firstName + '&lastName=' + lastName + '&organization=' + organization +
 				'&password=' + password + '&verifyPassword=' + verifyPassword +
 				'&email=' + email + '&verifyEmail=' + verifyEmail + '&title=' + title + '&department=' + department +
-				(username ? '&username=' + username : '');
+				(username ? '&username=' + username : '') + 
+				(providerUsername ? '&providerUsername=' + providerUsername : '') +
+				'&authenticationMethod=' + authenticationMethod + 
+				(oauthProvider ? '&oauthProvider=' + oauthProvider : '');
 			$.ajax({
 				type: 'POST',
 				url: 'register',

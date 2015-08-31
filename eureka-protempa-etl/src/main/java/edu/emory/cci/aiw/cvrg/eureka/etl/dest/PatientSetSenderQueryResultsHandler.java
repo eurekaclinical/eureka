@@ -43,7 +43,6 @@ public class PatientSetSenderQueryResultsHandler extends AbstractQueryResultsHan
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(PatientSetSenderQueryResultsHandler.class);
 	private final String url;
-	private final String[] propIdsNeeded;
 	private final String aliasPropId;
 	private final String aliasFieldNameProperty;
 	private final String aliasFieldName;
@@ -57,7 +56,6 @@ public class PatientSetSenderQueryResultsHandler extends AbstractQueryResultsHan
 		assert aliasPatientIdPropertyName != null : "aliasPatientIdPropertyName cannot be null";
 		
 		this.url = url;
-		this.propIdsNeeded = new String[]{aliasPropId};
 		this.aliasPropId = aliasPropId;
 		this.aliasFieldNameProperty = aliasFieldNameProperty;
 		this.aliasFieldName = aliasFieldName;
@@ -100,11 +98,6 @@ public class PatientSetSenderQueryResultsHandler extends AbstractQueryResultsHan
 	@Override
 	public void close() throws QueryResultsHandlerCloseException {
 		LOGGER.error("closing");
-	}
-
-	@Override
-	public String[] getPropositionIdsNeeded() throws QueryResultsHandlerProcessingException {
-		return this.propIdsNeeded.clone();
 	}
 
 }

@@ -24,7 +24,7 @@ import edu.emory.cci.aiw.cvrg.eureka.common.entity.I2B2DestinationEntity;
 import edu.emory.cci.aiw.cvrg.eureka.etl.config.EtlProperties;
 import edu.emory.cci.aiw.i2b2etl.dest.config.Concepts;
 import edu.emory.cci.aiw.i2b2etl.dest.config.Configuration;
-import edu.emory.cci.aiw.i2b2etl.dest.config.ConfigurationReadException;
+import edu.emory.cci.aiw.i2b2etl.dest.config.ConfigurationInitException;
 import edu.emory.cci.aiw.i2b2etl.dest.config.Data;
 import edu.emory.cci.aiw.i2b2etl.dest.config.Database;
 import edu.emory.cci.aiw.i2b2etl.dest.config.Settings;
@@ -45,23 +45,18 @@ class EurekaI2b2Configuration implements Configuration {
 	private I2b2Data i2b2Data;
 	private I2b2Concepts i2b2Concepts;
 
-	EurekaI2b2Configuration(I2B2DestinationEntity inI2B2DestinationEntity, EtlProperties inEtlProperties) {
+	EurekaI2b2Configuration(I2B2DestinationEntity inI2B2DestinationEntity, EtlProperties inEtlProperties) throws ConfigurationInitException {
 		this.i2B2DestinationEntity = inI2B2DestinationEntity;
 		this.etlProperties = inEtlProperties;
-	}
-	
-	@Override
-	public void init() throws ConfigurationReadException {
 		File destinationConfigFile = this.etlProperties.destinationConfigFile(this.i2B2DestinationEntity.getName());
 		if (this.i2B2DestinationEntity.getDataConnect() == null && this.i2B2DestinationEntity.getMetaConnect() == null) {
 			this.oldConfiguration = new XmlFileConfiguration(destinationConfigFile);
-			this.oldConfiguration.init();
 		} else {
 			this.i2b2Settings = new I2b2Settings(this.i2B2DestinationEntity);
 			this.i2b2Database = new I2b2Database(this.i2B2DestinationEntity);
 		}
 	}
-
+	
 	@Override
 	public Concepts getConcepts() {
 		if (this.oldConfiguration != null) {

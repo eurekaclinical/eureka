@@ -24,6 +24,7 @@ import edu.emory.cci.aiw.cvrg.eureka.common.comm.EtlPatientSetSenderDestination;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.EtlUserEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.PatientSetSenderDestinationEntity;
 import edu.emory.cci.aiw.cvrg.eureka.etl.dao.EtlGroupDao;
+import java.util.ArrayList;
 
 /**
  *
@@ -50,6 +51,8 @@ class PatientSetSenderDestinationsDTOExtractor extends DestinationsDTOExtractor<
 		dest.setUpdatedAt(destinationEntity.getEffectiveAt());
 		dest.setUrl(destinationEntity.getUrl());
 		dest.setGetStatisticsSupported(destinationEntity.isGetStatisticsSupported());
+		dest.setAllowingQueryPropositionIds(destinationEntity.isAllowingQueryPropositionIds());
+		dest.setRequiredPropositionIds(new ArrayList<String>(0));
 
 		return dest;
 	}

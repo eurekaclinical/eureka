@@ -20,6 +20,8 @@ package edu.emory.cci.aiw.cvrg.eureka.common.entity;
  * #L%
  */
 
+import java.util.Collections;
+import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
@@ -88,6 +90,11 @@ public class PatientSetSenderDestinationEntity extends DestinationEntity {
 
 	@Override
 	public boolean isGetStatisticsSupported() {
+		return false;
+	}
+	
+	@Override
+	public boolean isAllowingQueryPropositionIds() {
 		return false;
 	}
 	

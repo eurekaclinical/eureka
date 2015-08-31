@@ -30,5 +30,5 @@ public class EtlI2B2Destination extends EtlDestination {
 	public void accept(EtlDestinationVisitor etlDestinationVisitor) {
 		etlDestinationVisitor.visit(this);
 	}
-	
+
 }

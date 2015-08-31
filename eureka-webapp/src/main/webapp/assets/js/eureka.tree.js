@@ -9,7 +9,7 @@ window.eureka.tree = new function () {
         $(userTreeElem).jstree({
             "json_data": {
                 "ajax": {
-                    "url": "protected/userproplist?key=root"
+                    "url": "userproplist?key=root"
                 }
             },
             "dnd": {
@@ -51,33 +51,18 @@ window.eureka.tree = new function () {
 
     self.setupSystemTree = function (systemTreeElem, treeCssUrl, searchModalElem, dropFinishCallback,searchValidationModalElem,searchNoResultsModalElem,searchUpdateDivElem) {
         $(systemTreeElem).jstree({
-            "core": {
-                "data": {
-                    "url": "protected/systemlist",
+            "json_data": {
+                "ajax": {
+                    "url": "systemlist",
                     "dataType": 'json',
-                    //"url": "/eureka-services/api/protected/systemelement",
                     "data": function (n) {
                         return {
-                            key: n.id === "#" ? "root" : n.id
+                            key: n.attr ? n.attr("data-key") : "root"
                         };
                     },
                 },
 
             },
-
-            //"json_data": {
-            //	"ajax": {
-            //		"url": "protected/systemlist",
-            "url": "/eureka-services/api/protected/systemelement",
-            //"data": function (n) {
-            //	return {
-            //		key: n.attr ? n.attr("data-key") : "root"
-            //	};
-            //}
-            //
-            //}
-            //},
-
             "crrm": {
                 // prevent movement and reordering of nodes
                 "move": {
@@ -106,7 +91,7 @@ window.eureka.tree = new function () {
             "search": {
                 "show_only_matches": true,
                 "ajax": {
-                    "url": "protected/searchsystemlist",
+                    "url": "searchsystemlist",
                     "data": function (n) {
                         return {
                             "searchKey": n

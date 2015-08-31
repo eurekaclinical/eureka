@@ -70,6 +70,8 @@ public abstract class Destination {
 	private Date updatedAt;
 	
 	private boolean getStatisticsSupported;
+	private boolean jobConceptListSupported;
+	private List<String> requiredConcepts;
 	
 	public Destination() {
 		
@@ -194,6 +196,22 @@ public abstract class Destination {
 
 	public void setGetStatisticsSupported(boolean getStatisticsSupported) {
 		this.getStatisticsSupported = getStatisticsSupported;
+	}
+	
+	public boolean isJobConceptListSupported() {
+		return this.jobConceptListSupported;
+	}
+
+	public void setJobConceptListSupported(boolean jobConceptListSupported) {
+		this.jobConceptListSupported = jobConceptListSupported;
+	}
+
+	public List<String> getRequiredConcepts() {
+		return requiredConcepts;
+	}
+
+	public void setRequiredConcepts(List<String> requiredConcepts) {
+		this.requiredConcepts = requiredConcepts;
 	}
 	
 	public abstract void accept(DestinationVisitor destinationVisitor);

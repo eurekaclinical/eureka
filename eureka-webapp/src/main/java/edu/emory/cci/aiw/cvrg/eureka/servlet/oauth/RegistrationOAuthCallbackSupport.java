@@ -19,6 +19,7 @@ package edu.emory.cci.aiw.cvrg.eureka.servlet.oauth;
  * limitations under the License.
  * #L%
  */
+import edu.emory.cci.aiw.cvrg.eureka.common.authentication.AuthenticationMethod;
 import edu.emory.cci.aiw.cvrg.eureka.servlet.filter.PersonNameSplitter;
 import java.io.IOException;
 import javax.servlet.ServletException;
@@ -57,7 +58,10 @@ class RegistrationOAuthCallbackSupport<E extends EurekaProfile> {
 	boolean setEurekaAttributeFromProfile(HttpServletRequest req) {
 		E userProfile = getProfile(req);
 		if (userProfile != null) {
-			req.setAttribute("accountType", userProfile.getType());
+			req.setAttribute("accountTypeDisplayName", userProfile.getType());
+			req.setAttribute("authenticationMethod", 
+					AuthenticationMethod.OAUTH.name());
+			req.setAttribute("oauthProvider", userProfile.getType());
 			String fullName = userProfile.getDisplayName();
 			req.setAttribute("fullName", fullName);
 			String firstName = userProfile.getFirstName();
@@ -76,7 +80,8 @@ class RegistrationOAuthCallbackSupport<E extends EurekaProfile> {
 			req.setAttribute("firstName", firstName);
 			req.setAttribute("lastName", lastName);
 			req.setAttribute("email", userProfile.getEmail());
-			req.setAttribute("username", userProfile.getUsername());
+			req.setAttribute("username", userProfile.getTypedId());
+			req.setAttribute("providerUsername", userProfile.getUsername());
 			return true;
 		} else {
 			return false;

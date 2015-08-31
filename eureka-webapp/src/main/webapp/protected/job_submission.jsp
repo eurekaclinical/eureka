@@ -19,6 +19,7 @@
 --%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="/WEB-INF/tlds/template.tld" prefix="template" %>
+<%@ taglib uri="/WEB-INF/tlds/json.tld" prefix="json" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 
 <template:insert template="/templates/eureka_main.jsp">
@@ -100,7 +101,7 @@
 										  <a href="${link.url}">${link.displayName}</a><br>
 									  </c:forEach>
 									  <c:if test="${destination.getStatisticsSupported}">
-										<a href="${pageContext.request.contextPath}/protected/jobstats?jobId=${jobId}">Browse Output</a>
+										  <a href="${pageContext.request.contextPath}/protected/jobstats?jobId=${jobId}">Browse Output</a>
 									  </c:if>
 								  </c:if>
 							  </div>
@@ -199,7 +200,7 @@
 								  <div class="form-group">
 									  <select name="destination" class="form-control">
 										  <c:forEach var="destination" items="${destinations}">
-											  <option value="${destination.name}">${destination.name}</option>
+											  <option value="${destination.name}" data-job-concept-list-supported="${destination.jobConceptListSupported}" data-job-required-concepts="${json:toJson(destination.requiredConcepts)}">${destination.name}</option>
 										  </c:forEach>
 									  </select>
 								  </div>
@@ -218,29 +219,47 @@
 							  </fieldset>
 						  </div>
 					  </div>
-					  <fieldset id="dateRange">
-						  <legend>Date range</legend>
-						  <div class="row">
-							  <div class="col-xs-5">
-								  <ul class="nav nav-tabs">
-									  <li class="active">
-										  <a href="#systemElems" data-toggle="tab">System</a>
-									  </li>
-									  <li>
-										  <a href="#userElems" data-toggle="tab">User</a>
-									  </li>
-								  </ul>
-								  <div id="treeContent" class="tab-content proposition-tree">
-									  <div id="systemElems" class="tab-pane fade active in">
-										  <div id="systemTree"></div>
-										  <div id="searchUpdateDivJob" class="searchUpdateMessage"></div>
-									  </div>
-									  <div id="userElems" class="tab-pane fade">
-										  <div id="userTree"></div>
-									  </div>
+					  <div class="row vert-offset-2x">
+						  <div class="col-xs-5">
+							  <ul class="nav nav-tabs">
+								  <li class="active">
+									  <a href="#systemElems" data-toggle="tab">System</a>
+								  </li>
+								  <li>
+									  <a href="#userElems" data-toggle="tab">User</a>
+								  </li>
+							  </ul>
+							  <div id="treeContent" class="tab-content proposition-tree">
+								  <div id="systemElems" class="tab-pane fade active in">
+									  <div id="systemTree"></div>
+									  <div id="searchUpdateDivJob" class="searchUpdateMessage"></div>
+								  </div>
+								  <div id="userElems" class="tab-pane fade">
+									  <div id="userTree"></div>
 								  </div>
 							  </div>
-							  <div class="col-xs-7">
+						  </div>
+						  <div class="col-xs-7">
+							  <fieldset id="concepts">
+								  <legend>Concepts</legend>
+								  <div class="row">
+									  <div class="col-xs-12">
+										  <div class="form-group">
+											  <div id="conceptsList"
+												   class="jstree-drop tree-drop tree-drop-multiple"
+												   title="Drag and drop concepts to load here">
+												  <div class="label-info text-center">
+													  Drop Here
+												  </div>
+												  <ul class="sortable" data-drop-type="multiple" data-proptype="empty">
+												  </ul>
+											  </div>
+										  </div>
+									  </div>
+								  </div>
+							  </fieldset>
+							  <fieldset id="dateRange">
+								  <legend>Date range</legend>
 								  <div class="row">
 									  <div class="col-xs-12">
 										  <div class="form-group">
@@ -291,21 +310,22 @@
 										  </div>
 									  </div>
 								  </div>
-								  <div class="form-group">
-									  <div class="col-sm-12 text-center vert-offset-2x">
-										  <c:choose>
-											  <c:when test="${not required}">
-												  <input type="submit" id="startButton" class="btn btn-primary" value="Start">
-											  </c:when>
-											  <c:otherwise>
-												  <input type="submit" id="startButton" class="btn btn-primary" value="Start" disabled>
-											  </c:otherwise>
-										  </c:choose>
-									  </div>
+							  </fieldset>
+							  <div class="form-group">
+								  <div class="col-sm-12 text-center vert-offset-2x">
+									  <c:choose>
+										  <c:when test="${not required}">
+											  <input type="submit" id="startButton" class="btn btn-primary" value="Start">
+										  </c:when>
+										  <c:otherwise>
+											  <input type="submit" id="startButton" class="btn btn-primary" value="Start" disabled>
+										  </c:otherwise>
+									  </c:choose>
 								  </div>
 							  </div>
 						  </div>
-					  </fieldset>
+					  </div>
+
 				  </c:otherwise>
 			  </c:choose>
 		</form>

@@ -19,7 +19,6 @@ package edu.emory.cci.aiw.cvrg.eureka.services.conversion;
  * limitations under the License.
  * #L%
  */
-
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.DataElementEntity;
 
 /**
@@ -32,7 +31,11 @@ public class ConversionSupport {
 	}
 
 	public String toPropositionIdWrapped(String dataElementKey) {
-		return dataElementKey + ConversionUtil.PROP_ID_WRAPPED_SUFFIX;
+		if (dataElementKey == null) {
+			return null;
+		} else {
+			return dataElementKey + ConversionUtil.PROP_ID_WRAPPED_SUFFIX;
+		}
 	}
 
 	public String toPropositionIdWrapped(DataElementEntity dataElement) {
@@ -40,7 +43,7 @@ public class ConversionSupport {
 	}
 
 	public String toPropositionId(String dataElementKey) {
-		if (!dataElementKey.startsWith(ConversionUtil.USER_KEY_PREFIX)) {
+		if (dataElementKey == null || !dataElementKey.startsWith(ConversionUtil.USER_KEY_PREFIX)) {
 			return dataElementKey;
 		} else {
 			return dataElementKey + ConversionUtil.PRIMARY_PROP_ID_SUFFIX;
@@ -52,7 +55,7 @@ public class ConversionSupport {
 	}
 
 	public String toDataElementKey(String propId) {
-		if (propId.startsWith(ConversionUtil.USER_KEY_PREFIX)) {
+		if (propId != null && propId.startsWith(ConversionUtil.USER_KEY_PREFIX)) {
 			int lastIndexOf
 					= propId.lastIndexOf(ConversionUtil.PRIMARY_PROP_ID_SUFFIX);
 			if (lastIndexOf > -1) {

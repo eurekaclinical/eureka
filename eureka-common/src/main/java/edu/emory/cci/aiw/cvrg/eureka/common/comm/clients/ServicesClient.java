@@ -19,10 +19,12 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.common.comm.clients;
 
+import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.GenericType;
 import com.sun.jersey.core.util.MultivaluedMapImpl;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.*;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.*;
+import edu.emory.cci.aiw.cvrg.eureka.common.exception.HttpStatusException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -31,7 +33,9 @@ import javax.ws.rs.core.UriBuilder;
 import java.io.InputStream;
 import java.net.URI;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import javax.ws.rs.core.Response;
 
 /**
  * @author hrathod
@@ -319,14 +323,12 @@ public class ServicesClient extends EurekaClient {
 	}
 
 	public SystemElement getSystemElement(String inKey, boolean summarize) throws ClientException {
-		if (inKey == null) {
-			throw new IllegalArgumentException("inKey cannot be null");
+		List<SystemElement> result = getSystemElements(Collections.singletonList(inKey), summarize);
+		if (result.isEmpty()) {
+			throw new HttpStatusException(Response.Status.NOT_FOUND);
+		} else {
+			return result.get(0);
 		}
-		String path = UriBuilder.fromPath("/api/protected/systemelement/").segment(inKey)
-				.build().toString();
-		MultivaluedMap<String, String> queryParams = new MultivaluedMapImpl();
-			queryParams.add("summarize", Boolean.toString(summarize));
-		return doGet(path, SystemElement.class, queryParams);
 	}
 
 	public List<TimeUnit> getTimeUnits() throws ClientException {

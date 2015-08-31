@@ -113,7 +113,7 @@ public class SystemElementResource {
 	public SystemElement get(@PathParam("key") String inKey, @DefaultValue("false") @QueryParam("summarize") boolean inSummarize) {
 		return getSystemElementCommon(inKey, inSummarize);
 	}
-
+	
 	@POST
 	public List<SystemElement> getPropositionsPost(@FormParam("key") List<String> inKeys, @DefaultValue("false") @FormParam("summarize") String inSummarize) {
 		return getSystemElementsCommon(inKeys, Boolean.parseBoolean(inSummarize));
