@@ -33,12 +33,13 @@
 <c:otherwise>
 <div id="registerHeading">
 	<c:choose>
-		<c:when test="${not empty accountType}">
-			<h3>Register using your ${accountType} account</h3>
+		<c:when test="${not empty authenticationMethod}">
+			<h3>Register using your ${not empty accountTypeDisplayName ? accountTypeDisplayName : authenticationMethod} account</h3>
 			<p>Please review and complete your profile.</p>
 		</c:when>
 		<c:otherwise>
 			<h3>Register</h3>
+			<c:set var="authenticationMethod" value="LOCAL"/>
 		</c:otherwise>
 	</c:choose>
 	<c:if test="${applicationScope.webappProperties.demoMode or applicationScope.webappProperties.ephiProhibited}">
@@ -48,8 +49,13 @@
 	</c:if>
 </div>
 <form id="signupForm" action="#" method="POST" novalidate role="form">
+	<input type="hidden" name="authenticationMethod" id="authenticationMethod" value="${authenticationMethod}"/>
 	<input type="hidden" name="fullName" id="fullName" value="${fullName}" />
 	<input type="hidden" name="username" id="username" value="${username}" />
+	<c:if test="${authenticationMethod == 'OAUTH'}">
+		<input type="hidden" name="providerUsername" id="providerUsername" value="${providerUsername}" />
+		<input type="hidden" name="oauthProvider" id="oauthProvider" value="${oauthProvider}" />
+	</c:if>
 	<div class="row">
 		<div class="col-sm-6">
 			<div class="form-group">
@@ -120,7 +126,7 @@
 			</div>
 		</div>
 	</div>
-	<c:if test="${empty pageContext.request.remoteUser}">
+	<c:if test="${authenticationMethod == 'LOCAL'}">
 	<div class="row">
 		<div class="col-sm-6">
 			<div class="form-group">
@@ -155,7 +161,7 @@
 			</div>
 		</div>
 	</c:if>
-	<c:if test="${empty pageContext.request.remoteUser}">
+	<c:if test="${authenticationMethod == 'LOCAL'}">
 	<div class="row">
 		<div class="col-sm-12">
 			<div class="form-group">

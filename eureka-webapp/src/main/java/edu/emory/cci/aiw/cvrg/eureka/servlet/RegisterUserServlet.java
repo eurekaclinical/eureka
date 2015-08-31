@@ -32,7 +32,6 @@ import org.slf4j.LoggerFactory;
 
 import com.google.inject.Inject;
 import com.sun.jersey.api.client.ClientResponse.Status;
-import edu.emory.cci.aiw.cvrg.eureka.common.authentication.UserPrincipalAttributes;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.LdapUserRequest;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.LocalUserRequest;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.OAuthUserRequest;
@@ -41,36 +40,30 @@ import edu.emory.cci.aiw.cvrg.eureka.common.comm.UserRequest;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ClientException;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ServicesClient;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.OAuthProvider;
-import edu.emory.cci.aiw.cvrg.eureka.webapp.authentication.WebappAuthenticationSupport;
 import java.text.MessageFormat;
 import java.util.ResourceBundle;
-import org.jasig.cas.client.authentication.AttributePrincipal;
 
 public class RegisterUserServlet extends HttpServlet {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(RegisterUserServlet.class);
 	private static final ResourceBundle messages = ResourceBundle.getBundle("Messages");
 	private final ServicesClient servicesClient;
-	private final WebappAuthenticationSupport authenticationSupport;
 
 	@Inject
 	public RegisterUserServlet(ServicesClient inClient) {
 		this.servicesClient = inClient;
-		this.authenticationSupport = new WebappAuthenticationSupport(inClient);
 	}
 
 	@Override
 	public void doPost(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
-		AttributePrincipal principal
-				= this.authenticationSupport.getUserPrincipal(req);
-		String authenticationMethod;
-		if (principal != null) {
-			authenticationMethod
-					= (String) principal.getAttributes().get(
-							UserPrincipalAttributes.AUTHENTICATION_METHOD);
-		} else {
-			authenticationMethod = AuthenticationMethod.LOCAL.name();
+		
+		String authenticationMethodStr = req.getParameter("authenticationMethod");
+		AuthenticationMethod authenticationMethod;
+		try {
+			authenticationMethod = AuthenticationMethod.valueOf(authenticationMethodStr);
+		} catch (IllegalArgumentException ex) {
+			throw new ServletException("Invalid authentication method: " + authenticationMethodStr);
 		}
 
 		try {
@@ -80,16 +73,15 @@ public class RegisterUserServlet extends HttpServlet {
 			String firstName = req.getParameter("firstName");
 			String lastName = req.getParameter("lastName");
 			String organization = req.getParameter("organization");
-			String password = req.getParameter("password");
-			String verifyPassword = req.getParameter("verifyPassword");
 			String title = req.getParameter("title");
 			String department = req.getParameter("department");
 			String fullName = req.getParameter("fullName");
-			String remoteUser = req.getRemoteUser();
 			UserRequest userRequest;
 			try {
-				switch (AuthenticationMethod.valueOf(authenticationMethod)) {
+				switch (authenticationMethod) {
 					case LOCAL:
+						String password = req.getParameter("password");
+						String verifyPassword = req.getParameter("verifyPassword");
 						LocalUserRequest localUserRequest = new LocalUserRequest();
 						localUserRequest.setVerifyPassword(verifyPassword);
 						localUserRequest.setPassword(password);
@@ -98,15 +90,15 @@ public class RegisterUserServlet extends HttpServlet {
 						break;
 					case LDAP:
 						userRequest = new LdapUserRequest();
-						userRequest.setUsername(remoteUser);
+						userRequest.setUsername(username);
 						break;
 					case OAUTH:
-						OAuthProvider oauthProvider
-								= this.servicesClient.getOAuthProviderByName((String) principal.getAttributes().get("providerType"));
+						String providerUsername = req.getParameter("providerUsername");
+						String oauthProvider = req.getParameter("oauthProvider");
 						OAuthUserRequest oauthUserRequest = new OAuthUserRequest();
-						oauthUserRequest.setUsername(remoteUser);
-						oauthUserRequest.setProviderUsername(username);
-						oauthUserRequest.setOAuthProvider(oauthProvider.getId());
+						oauthUserRequest.setUsername(username);
+						oauthUserRequest.setProviderUsername(providerUsername);
+						oauthUserRequest.setOAuthProvider(oauthProvider);
 						userRequest = oauthUserRequest;
 						break;
 					default:

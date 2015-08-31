@@ -42,6 +42,7 @@ import org.protempa.backend.dsb.filter.DateTimeFilter;
 import org.protempa.proposition.value.AbsoluteTimeGranularity;
 
 import com.google.inject.Inject;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.EtlDestination;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.Job;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.JobFilter;
@@ -70,6 +71,7 @@ import org.protempa.backend.InvalidPropertyNameException;
 import org.protempa.backend.InvalidPropertyValueException;
 import org.protempa.backend.dsb.DataSourceBackend;
 import org.protempa.dest.Destination;
+import org.protempa.dest.DestinationInitException;
 import org.protempa.dest.StatisticsException;
 
 @Path("/protected/jobs")
@@ -138,8 +140,8 @@ public class JobResource {
 		String destinationId = job.getDestinationId();
 		DestinationEntity destEntity = this.destinationDao.getByName(destinationId);
 		if (destEntity != null) {
-			Destination dest = this.protempaDestinationFactory.getInstance(destEntity);
 			try {
+				Destination dest = this.protempaDestinationFactory.getInstance(destEntity);
 				Statistics result = new Statistics();
 				org.protempa.dest.Statistics statistics = dest.getStatistics();
 				if (statistics != null) {
@@ -148,7 +150,7 @@ public class JobResource {
 					result.setChildrenToParents(statistics.getChildrenToParents(inPropId != null ? new String[]{inPropId} : null));
 				}
 				return result;
-			} catch (StatisticsException ex) {
+			} catch (DestinationInitException | StatisticsException ex) {
 				throw new HttpStatusException(Status.INTERNAL_SERVER_ERROR, "Error getting stats", ex);
 			}
 		} else {

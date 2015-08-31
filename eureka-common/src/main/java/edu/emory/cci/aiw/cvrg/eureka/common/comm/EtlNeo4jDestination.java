@@ -40,5 +40,5 @@ public class EtlNeo4jDestination extends EtlDestination {
 	public void accept(EtlDestinationVisitor etlDestinationVisitor) {
 		etlDestinationVisitor.visit(this);
 	}
-	
+
 }

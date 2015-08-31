@@ -157,6 +157,8 @@ public abstract class DestinationEntity implements ConfigEntity {
 	
 	public abstract boolean isGetStatisticsSupported();
 	
-	public abstract void accept(DestinationEntityVisitor visitor);
+	public abstract boolean isAllowingQueryPropositionIds();
 	
+	public abstract void accept(DestinationEntityVisitor visitor);
+		
 }

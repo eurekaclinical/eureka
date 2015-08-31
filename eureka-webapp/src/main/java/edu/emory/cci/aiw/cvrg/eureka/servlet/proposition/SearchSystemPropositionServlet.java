@@ -102,7 +102,7 @@ public class SearchSystemPropositionServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
 
-		String searchKey = req.getParameter("str");
+		String searchKey = req.getParameter("searchKey");
 
 		List<JsonTreeData> l = new ArrayList<>();
 		if (searchKey == null) {

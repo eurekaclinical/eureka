@@ -24,7 +24,7 @@
 
 <template:insert template="/templates/eureka_main.jsp">
 	<template:content name="content">
-		<h3>Edit User ${user.email}</h3>
+		<h3>Edit User ${theUser.username}</h3>
 
 		<form id="userform" action="admin" method="GET" id="editUserForm" role="form" class="">
 			<div class="form-group">
@@ -32,7 +32,7 @@
 					Name
 				</label>
 				<div class="form-control-static">
-						${user.firstName} ${user.lastName}
+						${theUser.firstName} ${theUser.lastName}
 				</div>
 			</div>
 			<div class="form-group">
@@ -40,7 +40,7 @@
 					Organization
 				</label>
 				<div class="form-control-static">
-						${user.organization}
+						${theUser.organization}
 				</div>
 			</div>
 			<div class="form-group">
@@ -48,7 +48,7 @@
 					Title
 				</label>
 				<div class="form-control-static">
-						${user.title}
+						${theUser.title}
 				</div>
 			</div>
 			<div class="form-group">
@@ -56,7 +56,7 @@
 					Department
 				</label>
 				<div class="form-control-static">
-						${user.department}
+						${theUser.department}
 				</div>
 			</div>
 			<div class="form-group">
@@ -64,7 +64,7 @@
 					Email
 				</label>
 				<div class="form-control-static">
-						${user.email}
+						${theUser.email}
 				</div>
 			</div>
 			<div class="form-group">
@@ -75,7 +75,7 @@
 					<c:set var="isSuperUser" value="0"></c:set>
 					<c:forEach var="role" items="${roles}">
 						<c:set var="hasRole" value="0"></c:set>
-						<c:forEach var="userRole" items="${user.roles}">
+						<c:forEach var="userRole" items="${theUser.roles}">
 							<c:if test="${userRole ==  role.id}">
 								<c:set var="hasRole" value="1"></c:set>
 								<c:if test="${role.name eq 'superuser'}">
@@ -99,7 +99,7 @@
 				<div class="checkbox checkbox-inline">
 					<label>
 						<c:choose>
-							<c:when test="${user.active == true}">
+							<c:when test="${theUser.active == true}">
 								<input type="checkbox" name="active" id="active"
 									   checked ${isSuperUser ==  1 ? "disabled" : ''}/>
 							</c:when>
@@ -117,9 +117,9 @@
 				</label>
 				<div class="form-control-static">
 					<c:choose>
-						<c:when test="${user['class'].name == 'edu.emory.cci.aiw.cvrg.eureka.common.comm.LocalUser'}">
+						<c:when test="${theUser['class'].name == 'edu.emory.cci.aiw.cvrg.eureka.common.comm.LocalUser'}">
 							<c:choose>
-								<c:when test="${user.verified == true}">
+								<c:when test="${theUser.verified == true}">
 									Verified<span class="status"></span><br />
 								</c:when>
 								<c:otherwise>
@@ -134,7 +134,7 @@
 				</div>
 			</div>
 			<div class="form-group">
-				<input type="hidden" name="id" value="${user.id}"/>
+				<input type="hidden" name="id" value="${theUser.id}"/>
 				<input type="hidden" name="action" value="save"/>
 				<button type="submit" class="btn btn-primary">Save</button>
 			</div>

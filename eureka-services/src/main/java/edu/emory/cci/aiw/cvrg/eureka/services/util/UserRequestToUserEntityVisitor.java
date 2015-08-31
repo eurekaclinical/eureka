@@ -97,7 +97,7 @@ public class UserRequestToUserEntityVisitor implements UserRequestVisitor {
 		OAuthUserEntity oauthUserEntity = this.userEntityFactory.getOAuthUserEntityInstance();
 		populateUserEntityFields(oauthUserEntity, oauthUserRequest);
 		oauthUserEntity.setProviderUsername(oauthUserRequest.getProviderUsername());
-		oauthUserEntity.setOAuthProvider(this.oauthProviderDao.retrieve(oauthUserRequest.getOAuthProvider()));
+		oauthUserEntity.setOAuthProvider(this.oauthProviderDao.getByName(oauthUserRequest.getOAuthProvider()));
 		this.userEntity = oauthUserEntity;
 	}
 

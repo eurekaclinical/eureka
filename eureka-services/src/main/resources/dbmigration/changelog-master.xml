@@ -730,6 +730,8 @@ limitations under the License.
 			<addColumn tableName="USERS">
 				<column name="USERNAME" type="VARCHAR(255)"/>
 			</addColumn>
+			<dropUniqueConstraint tableName="USERS" constraintName="SYS_C0013038"/>
+			<addUniqueConstraint columnNames="USERNAME" constraintName="UNIQ_USERS_USERNAME" deferrable="false" disabled="false" initiallyDeferred="false" tableName="USERS"/>
 			<update tableName="USERS">
 				<column name="USERNAME" value="superuser"/>
 				<where>EMAIL='super.user@emory.edu'</where>

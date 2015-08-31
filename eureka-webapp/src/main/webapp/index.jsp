@@ -126,7 +126,7 @@
                                class="dropdown-toggle" data-toggle="dropdown"
                                role="button" aria-expanded="false">
                                 <span class="glyphicon glyphicon-user"></span>
-                                    ${pageContext.request.remoteUser} <span class="caret"></span>
+                                    ${user.fullName != null ? user.fullName : pageContext.request.remoteUser} <span class="caret"></span>
                             </a>
                             <ul class="dropdown-menu" role="menu">
                                 <li>
@@ -168,7 +168,7 @@
     <ng-view></ng-view>
 </div>
 <div class="footer">
-    Copyright &copy; All rights reserved.
+    Copyright &copy; ${initParam['inception-year']}&ndash;${initParam['current-year']} ${initParam['eureka-organization-name']}. All rights reserved.
 </div>
 </body>
 </html>

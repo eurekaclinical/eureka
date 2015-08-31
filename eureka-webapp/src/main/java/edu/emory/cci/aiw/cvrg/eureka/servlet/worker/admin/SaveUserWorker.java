@@ -56,11 +56,13 @@ public class SaveUserWorker implements ServletWorker {
 			User user = this.servicesClient.getUserById(Long.valueOf(id));
 			String[] roles = req.getParameterValues("role");
 			List<Long> userRoles = new ArrayList<>();
-			for (String roleId : roles) {
-				try {
-					userRoles.add(Long.valueOf(roleId));
-				} catch (NumberFormatException nfe) {
-					throw new ServletException(nfe);
+			if (roles != null) {
+				for (String roleId : roles) {
+					try {
+						userRoles.add(Long.valueOf(roleId));
+					} catch (NumberFormatException nfe) {
+						throw new ServletException(nfe);
+					}
 				}
 			}
 			user.setRoles(userRoles);

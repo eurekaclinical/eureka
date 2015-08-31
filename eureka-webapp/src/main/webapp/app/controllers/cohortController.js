@@ -17,7 +17,7 @@ eurekaApp.controller(
             CohortService.removeCohort(key);
             for (var i = 0; i < vm.cohorts.length; i++) {
                 if (vm.cohorts[i].name == key) {
-                    vm.cohorts.splice(i);
+                    vm.cohorts.splice(i, 1);
                     break;
                 }
             }
