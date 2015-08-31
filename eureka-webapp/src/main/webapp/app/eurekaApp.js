@@ -39,10 +39,13 @@ eurekaApp.directive('editordirective', ['$http', '$templateCache', '$timeout', '
                             });
                         });
                         var parent = element.parent()
-                        parent.append($('<ul></ul>').
-                            attr("data-drop-type", "multiple").
-                            attr("data-proptype", "empty").
-                            addClass('sortable').append(element.parent().children()));
+                        if (parent.is("div")) {
+                            parent.append($('<ul></ul>').
+                                attr("data-drop-type", "multiple").
+                                attr("data-proptype", "empty").
+                                addClass('sortable').append(element.parent().children()));
+
+                        }
 
                     };
 
@@ -397,10 +400,10 @@ eurekaApp.directive('jstree', [ 'listDragAndDropService', function (listDragAndD
             self.propType = null;
             self.propSubType = null;
             var initData = null;
-            var searchUpdateDivElem = "#searchUpdateDiv";
-            var searchValidationModalElem = "#searchValidationModal";
-            var searchNoResultsModal = "#searchNoResultsModal";
-            var treeCssUrl = "assets/css/jstree-themes/default/style.css";
+            var searchUpdateDivElem = attrs.searchUpdateDiv;
+            var searchValidationModalElem =  attrs.searchValidationModal;
+            var searchNoResultsModalElem = attrs.searchNoResultsModal;
+            var treeCssUrl = attrs.treeCssUrl;
 
             $(element).jstree({
                 "core": {
@@ -440,7 +443,6 @@ eurekaApp.directive('jstree', [ 'listDragAndDropService', function (listDragAndD
                             initData = $(element).jstree(true).settings.core.data;
                             if(searchvalue!='' && searchvalue.length>=4) {
                                 $(element).hide();
-                                $('#userTree').hide();
                                 var $elem = $(searchUpdateDivElem);
                                 $elem.text("Search is in progress. Please wait...");
                                 $elem.show();
@@ -452,14 +454,13 @@ eurekaApp.directive('jstree', [ 'listDragAndDropService', function (listDragAndD
                                         'data': {
                                             'url': function (node) {
                                                 return node.id === '#' ?
-                                                "protected/jstree3_searchsystemlist?str="+searchvalue :
-                                                    "protected/systemlist";
+                                                attrs.treeSearch + "?str="+searchvalue :
+                                                    attrs.treeUrl;
 
                                             },
                                             "dataType": 'json',
                                             'data': function (node) {
                                                 return {
-                                                    //'id': node.id
                                                     key: node.id === "#" ? "root" : node.id
 
                                                 };
@@ -487,7 +488,6 @@ eurekaApp.directive('jstree', [ 'listDragAndDropService', function (listDragAndD
                                         $('#searchText').val('');
 
                                         $(element).show();
-                                        $('#userTree').show();
 
                                         $elem = $(searchUpdateDivElem);
                                         $elem.hide();
@@ -507,7 +507,6 @@ eurekaApp.directive('jstree', [ 'listDragAndDropService', function (listDragAndD
                                         $('#searchText').val('');
 
                                         $(element).show();
-                                        $('#userTree').show();
 
                                         $elem = $(searchUpdateDivElem);
                                         $elem.hide();
@@ -519,7 +518,6 @@ eurekaApp.directive('jstree', [ 'listDragAndDropService', function (listDragAndD
 
                                 $elem.hide();
                                 $(element).show();
-                                $('#userTree').show();
 
 
                             } else if(searchvalue.length<4){
@@ -527,7 +525,6 @@ eurekaApp.directive('jstree', [ 'listDragAndDropService', function (listDragAndD
                                 $elem.find('#searchContent').html("Please enter a search value with length greater than 3.");
                                 $elem.modal("toggle");
                                 $(element).show();
-                                $('#userTree').show();
 
                             }
                             return false;

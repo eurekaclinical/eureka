@@ -4,15 +4,6 @@
 </p>
 <div class = "row" >
     <div class="col-xs-4">
-        <!--
-        <js-tree
-                tree-events="select_node:nodeSelected"
-                tree-ajax="/eureka-webapp/protected/userproplist?key=root"
-                tree-core="tree_core"
-                tree-plugins="dnd"
-                ></js-tree>
-        -->
-
         <ul class="nav nav-tabs">
             <li class = "active">
                 <a href = "#systemElems" data-toggle="tab">System</a>
@@ -23,11 +14,14 @@
         </ul>
         <div id="treeContent" class="tab-content proposition-tree">
             <div id="systemElems" class="tab-pane fade active in">
-                <!--<div id="systemTree">-->
-                <!--</div>-->
                 <jstree
-                        tree-url="protected/systemlist">
-                </jstree>
+                        tree-url="protected/systemlist"
+                        tree-search="protected/jstree3_searchsystemlist"
+                        search-update-div="#searchUpdateDiv"
+                        search-validation-modal="#searchValidationModal"
+                        search-no-results-modal="#searchNoResultsModal"
+                        tree-css-url="assets/css/jstree-themes/default/style.css"
+                        />
                 <div id="searchUpdateDiv" class="searchUpdateMessage"></div>
             </div>
             <div id="userElems" class="tab-pane fade">
@@ -166,21 +160,3 @@
     </div>
 </div>
 
-
-<script language="JavaScript">
-
-</script>
-<!--
-<script language="JavaScript"
-        src="${pageContext.request.contextPath}/assets/js/jquery.jstree.js"></script>
-<script language="JavaScript"
-        src="${pageContext.request.contextPath}/assets/js/eureka.tree${initParam['eureka-build-timestamp']}.js"></script>
-<script language="JavaScript"
-        src="${pageContext.request.contextPath}/assets/js/eureka.cohort${initParam['eureka-build-timestamp']}.js"></script>
-<script language="JavaScript">
-    eureka.editor.setup(${destId != null ? destId : 'null'},
-            '#systemTree', '#userTree', '#definitionContainer', '#savePropositionButton', 'span.delete-icon',
-            'ul.sortable', '${pageContext.request.contextPath}/assets/css/jstree-themes/default/style.css', '#searchModal',
-            '#searchValidationModal','#searchNoResultsModal','#searchUpdateDiv');
-</script>
--->

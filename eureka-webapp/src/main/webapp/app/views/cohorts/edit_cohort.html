@@ -18,8 +18,13 @@
             <!--<div id="systemElems" class="tab-pane fade active in" ng-show="tab.isSet(1)">-->
             <div id="systemElems" ng-show="tab.isSet(1)">
                 <jstree
-                        tree-url="protected/systemlist">
-                </jstree>
+                        tree-url="protected/systemlist"
+                        tree-search="protected/jstree3_searchsystemlist"
+                        search-update-div="#searchUpdateDiv"
+                        search-validation-modal="#searchValidationModal"
+                        search-no-results-modal="#searchNoResultsModal"
+                        tree-css-url="assets/css/jstree-themes/default/style.css"
+                        />
                 <div id="searchUpdateDiv" class="searchUpdateMessage"></div>
             </div>
             <!--<div id="userElems" class="tab-pane fade" ng-show="tab.isSet(2)">-->
@@ -154,22 +159,6 @@
 </div>
 
 <script language="JavaScript">
-    eureka.editor.setup(null,
-            '#systemTree', '#userTree', '#definitionContainer', '#savePropositionButton', 'span.delete-icon',
-            'ul.sortable', 'assets/css/jstree-themes/default/style.css', '#searchModal',
-            '#searchValidationModal','#searchNoResultsModal','#searchUpdateDiv');
+    eureka.editor.setup(null,'#userTree', '#definitionContainer', '#savePropositionButton');
 </script>
-<!--
-<script language="JavaScript"
-        src="${pageContext.request.contextPath}/assets/js/jquery.jstree.js"></script>
-<script language="JavaScript"
-        src="${pageContext.request.contextPath}/assets/js/eureka.tree${initParam['eureka-build-timestamp']}.js"></script>
-<script language="JavaScript"
-        src="${pageContext.request.contextPath}/assets/js/eureka.cohort${initParam['eureka-build-timestamp']}.js"></script>
-<script language="JavaScript">
-    eureka.editor.setup(${destId != null ? destId : 'null'},
-            '#systemTree', '#userTree', '#definitionContainer', '#savePropositionButton', 'span.delete-icon',
-            'ul.sortable', '${pageContext.request.contextPath}/assets/css/jstree-themes/default/style.css', '#searchModal',
-            '#searchValidationModal','#searchNoResultsModal','#searchUpdateDiv');
-</script>
--->
+
