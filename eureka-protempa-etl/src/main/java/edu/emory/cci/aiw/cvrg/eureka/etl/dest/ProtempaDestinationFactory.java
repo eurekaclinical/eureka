@@ -33,6 +33,7 @@ import edu.emory.cci.aiw.cvrg.eureka.common.entity.Neo4jDestinationEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.PatientSetSenderDestinationEntity;
 import edu.emory.cci.aiw.cvrg.eureka.etl.config.EtlProperties;
 import edu.emory.cci.aiw.cvrg.eureka.etl.dao.DestinationDao;
+import edu.emory.cci.aiw.cvrg.eureka.etl.dao.DeidPerPatientParamDao;
 import edu.emory.cci.aiw.i2b2etl.dest.I2b2Destination;
 import edu.emory.cci.aiw.i2b2etl.dest.config.ConfigurationInitException;
 import edu.emory.cci.aiw.neo4jetl.Neo4jDestination;
@@ -48,36 +49,46 @@ public class ProtempaDestinationFactory {
 
 	private final EtlProperties etlProperties;
 	private final DestinationDao destinationDao;
+	private final DeidPerPatientParamDao destinationOffsetDao;
 
 	@Inject
-	public ProtempaDestinationFactory(DestinationDao inDestinationDao, EtlProperties etlProperties) {
+	public ProtempaDestinationFactory(DestinationDao inDestinationDao, DeidPerPatientParamDao inDestinationOffsetDao, EtlProperties etlProperties) {
 		this.destinationDao = inDestinationDao;
+		this.destinationOffsetDao = inDestinationOffsetDao;
 		this.etlProperties = etlProperties;
 	}
 
-	public org.protempa.dest.Destination getInstance(Long destId) throws DestinationInitException {
+	public org.protempa.dest.Destination getInstance(Long destId, boolean updateData) throws DestinationInitException {
 		DestinationEntity dest = this.destinationDao.retrieve(destId);
-		return getInstance(dest);
+		return getInstance(dest, updateData);
 	}
 
-	public org.protempa.dest.Destination getInstance(DestinationEntity dest) throws DestinationInitException {
+	public org.protempa.dest.Destination getInstance(DestinationEntity dest, boolean updateData) throws DestinationInitException {
+		org.protempa.dest.Destination result;
 		try {
 			if (dest instanceof I2B2DestinationEntity) {
-				if (dest.getKey() != null) {
-					return new DeidentifiedDestination(new I2b2Destination(new EurekaI2b2Configuration((I2B2DestinationEntity) dest, this.etlProperties)), dest);
-				} else {
-					return new I2b2Destination(new EurekaI2b2Configuration((I2B2DestinationEntity) dest, this.etlProperties));
-				}
+				result = new I2b2Destination(new EurekaI2b2Configuration((I2B2DestinationEntity) dest, this.etlProperties));
 			} else if (dest instanceof CohortDestinationEntity) {
 				CohortEntity cohortEntity = ((CohortDestinationEntity) dest).getCohort();
 				Cohort cohort = cohortEntity.toCohort();
-				return new KeyLoaderDestination(new CohortCriteria(cohort));
+				result = new KeyLoaderDestination(new CohortCriteria(cohort));
 			} else if (dest instanceof Neo4jDestinationEntity) {
-				return new Neo4jDestination(new EurekaNeo4jConfiguration((Neo4jDestinationEntity) dest));
+				result = new Neo4jDestination(new EurekaNeo4jConfiguration((Neo4jDestinationEntity) dest));
 			} else if (dest instanceof PatientSetSenderDestinationEntity) {
-				return new PatientSetSenderDestination((PatientSetSenderDestinationEntity) dest);
+				result = new PatientSetSenderDestination((PatientSetSenderDestinationEntity) dest);
 			} else {
 				throw new AssertionError("Invalid destination entity type " + dest.getClass());
+			}
+
+			if (dest.isDeidentificationEnabled()) {
+				if (updateData) {
+					this.destinationOffsetDao.deleteAll(dest);
+				}
+				EurekaDeidConfigFactory deidConfigFactory = new EurekaDeidConfigFactory(dest, this.destinationOffsetDao);
+				EurekaDeidConfig deidConfig = deidConfigFactory.getInstance();
+				return new DeidentifiedDestination(result, deidConfig);
+			} else {
+				return result;
 			}
 		} catch (ConfigurationInitException ex) {
 			throw new DestinationInitException(ex);

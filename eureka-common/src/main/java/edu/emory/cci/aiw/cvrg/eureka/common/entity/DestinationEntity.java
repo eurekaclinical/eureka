@@ -19,10 +19,8 @@ package edu.emory.cci.aiw.cvrg.eureka.common.entity;
  * limitations under the License.
  * #L%
  */
-import java.security.Key;
 import java.util.Date;
 import java.util.List;
-import javax.crypto.spec.SecretKeySpec;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -37,8 +35,6 @@ import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
-import org.apache.commons.codec.binary.Base64;
-import org.protempa.dest.deid.DeidConfig;
 
 /**
  *
@@ -47,10 +43,8 @@ import org.protempa.dest.deid.DeidConfig;
 @Entity
 @Table(name = "destinations")
 @Inheritance(strategy = InheritanceType.JOINED)
-public abstract class DestinationEntity implements ConfigEntity, DeidConfig {
-
-	private static final Base64 BASE64 = new Base64();
-
+public abstract class DestinationEntity implements ConfigEntity {
+	
 	@Id
 	@SequenceGenerator(name = "DEST_SEQ_GENERATOR", sequenceName = "DEST_SEQ",
 			allocationSize = 1)
@@ -85,8 +79,13 @@ public abstract class DestinationEntity implements ConfigEntity, DeidConfig {
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "destination")
 	private List<LinkEntity> links;
 
-	private String key;
-	private String keyAlgorithm;
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "destination")
+	private List<DeidPerPatientParams> offsets;
+
+	private boolean deidentificationEnabled;
+
+	@ManyToOne
+	private EncryptionAlgorithm encryptionAlgorithm;
 
 	public Long getId() {
 		return id;
@@ -164,37 +163,28 @@ public abstract class DestinationEntity implements ConfigEntity, DeidConfig {
 		this.expiredAt = expiredAt;
 	}
 
-	@Override
-	public void setKey(Key key) {
-		if (key == null) {
-			this.key = null;
-		} else {
-			this.key = BASE64.encodeToString(key.getEncoded());
-		}
-		this.keyAlgorithm = key.getAlgorithm();
+	public List<DeidPerPatientParams> getOffsets() {
+		return offsets;
 	}
 
-	/**
-	 * Returns a DES-encoded secret key used for de-identification.
-	 *
-	 * @return the key or <code>null</code> if no secret key has been stored.
-	 */
-	@Override
-	public Key getKey() {
-		if (this.key == null || this.keyAlgorithm == null) {
-			return null;
-		}
-		byte[] encoded = BASE64.decode(this.key);
-		return new SecretKeySpec(encoded, this.keyAlgorithm);
+	public void setOffsets(List<DeidPerPatientParams> offsets) {
+		this.offsets = offsets;
 	}
 
-	@Override
-	public Integer getOffset(String keyId) {
+	public void setDeidentificationEnabled(boolean enabled) {
+		this.deidentificationEnabled = enabled;
 	}
 
-	@Override
-	public void setOffset(String keyId, Integer offsetInSeconds) {
-		
+	public boolean isDeidentificationEnabled() {
+		return this.deidentificationEnabled;
+	}
+
+	public EncryptionAlgorithm getEncryptionAlgorithm() {
+		return encryptionAlgorithm;
+	}
+
+	public void setEncryptionAlgorithm(EncryptionAlgorithm encryptionAlgorithm) {
+		this.encryptionAlgorithm = encryptionAlgorithm;
 	}
 	
 	public abstract boolean isGetStatisticsSupported();
