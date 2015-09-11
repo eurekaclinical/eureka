@@ -1,7 +1,9 @@
+(function() {
 
-eurekaApp.controller(
-    "MainController", ['$scope', '$location', function( $scope, $location) {
+'use strict';
 
+angular.module('eurekaApp').controller('MainController', function() {
 
-    }]
-);
+});
+
+}());

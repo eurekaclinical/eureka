@@ -1,4 +1,4 @@
-eurekaApp.controller(
+angular.module('eurekaApp').controller(
     "RegisterController",['$scope', 'RegisterService', '$location',
     function( $scope, RegisterService, $location) {
 
@@ -13,5 +13,6 @@ eurekaApp.controller(
         function displayError(msg) {
             $scope.errorMsg = msg;
         }
+
     }]
 );

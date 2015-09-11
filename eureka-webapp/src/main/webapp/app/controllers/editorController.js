@@ -1,6 +1,6 @@
 
 
-eurekaApp.controller(
+angular.module('eurekaApp').controller(
     "EditorController", ['$scope', 'EditorService', '$location',
     function( $scope, EditorService, $location) {
 

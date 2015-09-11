@@ -1,0 +1,125 @@
+<div class="jumbotron">
+    <img id="logo" class="img-responsive" src="assets/images/logo.png"/>
+    <p class="vert-offset text-center">
+        Access to clinical data for quality improvement and research, simplified.
+    </p>
+</div>
+<div id="indexPanels">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="alert alert-warning">NOTE: This demonstration web site is NOT suitable for
+                use with sensitive data including patient data that contains
+                identifiers.
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="panel panel-info" ng-if="!user">
+                    <div class="panel-heading">First Steps</div>
+                    <div class="panel-body text-center">
+                        <div class="container-fluid">
+                            <div class="row" ng-switch="app.registrationEnabled">
+                                <div ng-switch-when="true">
+                                    <div class="col-xs-6">
+                                        <h4>Learn about Eureka!</h4>
+                                        <a ng-href="{{app.aiwSiteUrl}}/overview.html" target="_blank"
+                                           class="btn btn-primary btn-lg">
+                                            About Eureka!
+                                        </a>
+                                    </div>
+                                    <div class="col-xs-6">
+                                        <h4>Get an account</h4>
+                                        <a href="#/register"
+                                           class="btn btn-primary btn-lg">
+                                            Register
+                                        </a>
+                                    </div>
+                                </div>
+                                <div ng-switch-default>
+                                    <div class="col-xs-12">
+                                        <h4>Learn about Eureka!</h4>
+                                        <a ng-href="{{app.aiwSiteUrl}}/overview.html" target="_blank"
+                                           class="btn btn-primary btn-lg">
+                                            About Eureka!
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel panel-info" ng-if="user">
+                    <div class="panel-heading">Want to learn more?</div>
+                    <div class="panel-body text-center">
+                        <div class="container-fluid">
+                            <div class="row">
+                                <div class="col-xs-12">
+                                    <h4>Learn more about Eureka!</h4>
+                                    <a ng-href="{{app.aiwSiteUrl}}/overview.html" target="_blank"
+                                       class="btn btn-primary btn-lg">
+                                        About Eureka!
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="panel panel-info">
+                    <div class="panel-heading">Want to deploy Eureka! at your institution or lab?</div>
+                    <div class="panel-body text-center">
+                        <div class="container-fluid">
+                            <div class="row">
+                                <div class="col-xs-6">
+                                    <h4>Get your own copy</h4>
+                                    <a ng-href="{{app.aiwSiteUrl}}/get-it.html" target="_blank"
+                                       class="btn btn-primary btn-lg">
+                                        Download Eureka!
+                                    </a>
+                                </div>
+                                <div class="col-xs-6">
+                                    <h4>Contact us for help</h4>
+                                    <a ng-href="{{app.aiwSiteUrl}}/contact.html" target="_blank"
+                                       class="btn btn-primary btn-lg">
+                                        Contact Us
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="panel panel-info">
+                    <div class="panel-heading">News</div>
+                    <div class="panel-body" id="versionHistory">
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="panel panel-info">
+                    <div class="panel-heading">Funding</div>
+                    <div class="panel-body text-center">
+                        <p>The software powering this site has been supported in part by <span id="support"></span></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="versionHistory"></div>
+    </div>
+
+</div>
+<script type="text/javascript"
+        src="assets/js/eureka.util.js"></script>
+<script type="text/javascript"
+        src="assets/js/eureka.index.js"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        eureka.index.setup("/eureka-webapp");
+        eureka.index.writeSupport();
+        eureka.index.writeVersionHistory();
+    });
+</script>

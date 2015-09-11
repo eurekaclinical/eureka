@@ -1,7 +1,7 @@
 
-eurekaApp.controller(
-    "CohortController",['$scope', 'CohortService', '$location', '$route',
-    function( $scope, CohortService, $location, $route) {
+angular.module('eurekaApp').controller(
+    "CohortController", ['$scope', 'CohortService',
+    function( $scope, CohortService) {
 
         var vm = this;
 

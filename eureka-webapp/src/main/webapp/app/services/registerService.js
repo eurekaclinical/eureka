@@ -1,5 +1,5 @@
 
-eurekaApp.factory(
+angular.module('eurekaApp').factory(
     "RegisterService", ['$http', '$q',
     function( $http, $q ) {
 

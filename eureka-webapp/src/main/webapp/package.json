@@ -1,0 +1,37 @@
+{
+  "name": "eureka",
+  "version": "1.8.0",
+  "description": "Eureka! Clinical Analytics",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "browser-sync": "^2.9.3",
+    "gulp": "^3.9.0",
+    "gulp-babel": "^5.2.1",
+    "gulp-concat": "^2.6.0",
+    "gulp-jasmine": "^2.0.1",
+    "gulp-jshint": "^1.11.2",
+    "gulp-load-plugins": "^0.10.0",
+    "gulp-sourcemaps": "^1.5.2",
+    "jasmine-core": "^2.3.4",
+    "jshint-stylish": "^2.0.1",
+    "karma": "^0.13.9",
+    "karma-jasmine": "^0.3.6",
+    "karma-phantomjs-launcher": "^0.2.1",
+    "karma-spec-reporter": "0.0.20",
+    "phantomjs": "^1.9.18",
+    "proxy-middleware": "^0.14.0",
+    "url": "^0.11.0",
+    "wiredep": "^2.2.2"
+  },
+  "dependencies": {
+    "opn": "^3.0.2"
+  }
+}

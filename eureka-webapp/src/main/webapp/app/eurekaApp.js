@@ -1,11 +1,28 @@
-"use strict";
+'use strict';
 
-var eurekaApp = angular.module('eurekaApp', ['ngRoute', 'angularValidator' ]);
+angular.module('eurekaApp', ['ui.router', 'angularValidator']);
+
+function appRun($rootScope, appProperties, users) {
+   $rootScope.app = appProperties;
+   $rootScope.user = {
+       isActivated: false
+   };
+   $rootScope.conceptionYear = '2012';
+   $rootScope.currentYear = new Date().getFullYear();
+   users.getUser().then(function(user) {
+       $rootScope.user = user;
+   });
+}
+
+appRun.$inject = ['$rootScope', 'appProperties', 'users'];
+
+angular.module('eurekaApp').run(appRun);
 
 // the following factory creates a listDragAndDropService object
 // which is created only oonce and holds some data, in this case
-// a property called "shared" which is empty
-eurekaApp.directive('editordirective', ['$http', '$templateCache', '$timeout', 'listDragAndDropService',
+// a property called 'shared' which is empty
+angular.module('eurekaApp').directive('editordirective', [
+    '$http', '$templateCache', '$timeout', 'listDragAndDropService',
     function (http, templateCache, timer, listDragAndDropService) {
 
         return {
@@ -29,7 +46,8 @@ eurekaApp.directive('editordirective', ['$http', '$templateCache', '$timeout', '
                                     var $toRemove = $(item).closest('li');
                                     var $sortable = $toRemove.closest('ul.sortable');
                                     var dialog = $('#deleteModal');
-                                    $(dialog).find('#deleteContent').html('Are you sure you want to remove data element &quot;' + $toRemove.text().trim() + '&quot;?');
+                                    $(dialog).find('#deleteContent').html('Are you sure you want to remove ' +
+                                    'data element &quot;' + $toRemove.text().trim() + '&quot;?');
                                     $(dialog).find('#deleteButton').on('click', function (e) {
                                         listDragAndDropService.deleteItem($toRemove, $sortable, 0);
                                         $(dialog).modal('hide');
@@ -38,11 +56,11 @@ eurekaApp.directive('editordirective', ['$http', '$templateCache', '$timeout', '
                                 });
                             });
                         });
-                        var parent = element.parent()
-                        if (parent.is("div")) {
+                        var parent = element.parent();
+                        if (parent.is('div')) {
                             parent.append($('<ul></ul>').
-                                attr("data-drop-type", "multiple").
-                                attr("data-proptype", "empty").
+                                attr('data-drop-type', 'multiple').
+                                attr('data-proptype', 'empty').
                                 addClass('sortable').append(element.parent().children()));
 
                         }
@@ -53,12 +71,12 @@ eurekaApp.directive('editordirective', ['$http', '$templateCache', '$timeout', '
 
                 });
             }
-        }
+        };
 
     }
 ]);
 
-eurekaApp.factory("listDragAndDropService", [ function() {
+angular.module('eurekaApp').factory('listDragAndDropService', [ function() {
 
 
     return ({
@@ -162,45 +180,45 @@ eurekaApp.factory("listDragAndDropService", [ function() {
             .html('Are you sure you want to delete cohort &quot;' +
             displayName.trim() + '&quot;? You cannot undo this action.')
             .dialog({
-                title: "Delete Data Element",
+                title: 'Delete Data Element',
                 modal: true,
                 resizable: false,
                 buttons: {
-                    "Delete": function () {
+                    'Delete': function () {
                         $.ajax({
                             type: 'POST',
                             url: 'deletecohort?key=' + encodeURIComponent(key),
                             success: function (data) {
-                                $(this).dialog("close");
-                                window.location.href = "editorhome";
+                                $(this).dialog('close');
+                                window.location.href = 'editorhome';
                             },
                             error: function (data, statusCode) {
                                 var $errorDialog = $('<div></div>')
                                     .html(data.responseText)
                                     .dialog({
-                                        title: "Error Deleting Data Element",
+                                        title: 'Error Deleting Data Element',
                                         buttons: {
-                                            "OK": function () {
-                                                $(this).dialog("close");
+                                            'OK': function () {
+                                                $(this).dialog('close');
                                             }
                                         },
                                         close: function () {
-                                            $dialog.dialog("close");
+                                            $dialog.dialog('close');
                                         }
                                     });
-                                $errorDialog.dialog("open");
+                                $errorDialog.dialog('open');
                             }
                         });
                     },
-                    "Cancel": function () {
-                        $(this).dialog("close");
+                    'Cancel': function () {
+                        $(this).dialog('close');
                     }
                 },
                 close: function () {
                     // do nothing here.
                 }
             });
-        $dialog.dialog("open");
+        $dialog.dialog('open');
     };
 
 
@@ -272,7 +290,7 @@ eurekaApp.factory("listDragAndDropService", [ function() {
 
         $(target).find('div.label-info').hide();
 
-        var X = $("<span></span>", {
+        var X = $('<span></span>', {
             'class': 'glyphicon glyphicon-remove delete-icon',
             'data-action': 'remove'
         });
@@ -288,7 +306,7 @@ eurekaApp.factory("listDragAndDropService", [ function() {
 
         // set the properties in the properties select
         if ($(data.data.obj[0]).data('properties')) {
-            var properties = $(data.data.obj[0]).data('properties').split(",");
+            var properties = $(data.data.obj[0]).data('properties').split(',');
             $('select[data-properties-provider=' + $(target).attr('id') + ']').each(function (i, item) {
                 $(item).empty();
                 $(properties).each(function (j, property) {
@@ -383,7 +401,7 @@ eurekaApp.factory("listDragAndDropService", [ function() {
 }]);
 
 
-eurekaApp.directive('jstree', [ 'listDragAndDropService', function (listDragAndDropService) {
+angular.module('eurekaApp').directive('jstree', [ 'listDragAndDropService', function (listDragAndDropService) {
 
     return {
         scope: {
@@ -406,13 +424,13 @@ eurekaApp.directive('jstree', [ 'listDragAndDropService', function (listDragAndD
             var treeCssUrl = attrs.treeCssUrl;
 
             $(element).jstree({
-                "core": {
-                    "data": {
-                        "url": attrs.treeUrl,
-                        "dataType": 'json',
-                        "data": function (n) {
+                core: {
+                    data: {
+                        url: attrs.treeUrl,
+                        dataType: 'json',
+                        data: function (n) {
                             return {
-                                key: n.id === "#" ? "root" : n.id
+                                key: n.id === '#' ? 'root' : n.id
                             };
                         },
 
@@ -421,13 +439,16 @@ eurekaApp.directive('jstree', [ 'listDragAndDropService', function (listDragAndD
                 },
 
 
-                "plugins": [ "themes", "json_data", "ui", "crrm", "dnd", "search" ]
+                plugins: [ 'themes', 'json_data', 'ui', 'crrm', 'dnd', 'search' ]
             });
 
             $(element).before(
                 $('<form id="search">' +
                     '<span></span>' +
-                    '<div class="input-group"><input id="searchText" class="form-control" type="text" /><div class="input-group-btn"><input id="searchTree" class="btn btn-default" type=submit value="search" /><input class="btn btn-default" type="reset" value="X" /></div></div>' +
+                    '<div class="input-group"><input id="searchText" class="form-control" type="text" />' +
+                    '<div class="input-group-btn">' +
+                    '<input id="searchTree" class="btn btn-default" type=submit value="search" />' +
+                    '<input class="btn btn-default" type="reset" value="X" /></div></div>' +
                     '</form>').
                     bind({
                         reset: function(evt){
@@ -444,24 +465,24 @@ eurekaApp.directive('jstree', [ 'listDragAndDropService', function (listDragAndD
                             if(searchvalue!='' && searchvalue.length>=4) {
                                 $(element).hide();
                                 var $elem = $(searchUpdateDivElem);
-                                $elem.text("Search is in progress. Please wait...");
+                                $elem.text('Search is in progress. Please wait...');
                                 $elem.show();
 
 
-                                $(element).jstree("destroy");
+                                $(element).jstree('destroy');
                                 $(element).jstree({
                                     'core' : {
                                         'data': {
                                             'url': function (node) {
                                                 return node.id === '#' ?
-                                                attrs.treeSearch + "?str="+searchvalue :
+                                                attrs.treeSearch + '?str='+searchvalue :
                                                     attrs.treeUrl;
 
                                             },
-                                            "dataType": 'json',
+                                            'dataType': 'json',
                                             'data': function (node) {
                                                 return {
-                                                    key: node.id === "#" ? "root" : node.id
+                                                    key: node.id === '#' ? 'root' : node.id
 
                                                 };
                                             }
@@ -472,14 +493,14 @@ eurekaApp.directive('jstree', [ 'listDragAndDropService', function (listDragAndD
                                         'theme': 'default',
                                         'url': treeCssUrl
                                     },
-                                    "plugins": [ "themes", "json_data", "ui", "crrm", "dnd", "search" ]
+                                    'plugins': [ 'themes', 'json_data', 'ui', 'crrm', 'dnd', 'search' ]
                                 }).bind('loaded.jstree', function (e, data) {
 
                                     if (data.instance._cnt == 0) {
-                                        console.log("empty");
+                                        console.log('empty');
                                         var $elem = $(searchNoResultsModalElem);
-                                        $elem.find('#searchContent').html("There are no entries in our database that matched your search criteria.");
-                                        $elem.modal("toggle");
+                                        $elem.find('#searchContent').html('There are no entries in our database that matched your search criteria.');
+                                        $elem.modal('toggle');
 
                                         $elem.hide();
                                         $(element).jstree('clear_search');
@@ -495,10 +516,10 @@ eurekaApp.directive('jstree', [ 'listDragAndDropService', function (listDragAndD
                                     }
                                     else if (data.instance._cnt > 200) {
                                         var $elem = $(searchModalElem);
-                                        $elem.find('#searchContent').html("The number of search results exceeded the  "+
-                                            " maximum limit and all results might not be displayed."+
-                                            " Please give a more specific search query to see all results.");
-                                        $elem.modal("toggle");
+                                        $elem.find('#searchContent').html('The number of search results exceeded the  '+
+                                            ' maximum limit and all results might not be displayed.'+
+                                            ' Please give a more specific search query to see all results.');
+                                        $elem.modal('toggle');
 
                                         $elem.hide();
                                         $(element).jstree('clear_search');
@@ -522,8 +543,8 @@ eurekaApp.directive('jstree', [ 'listDragAndDropService', function (listDragAndD
 
                             } else if(searchvalue.length<4){
                                 var $elem = $(searchValidationModalElem);
-                                $elem.find('#searchContent').html("Please enter a search value with length greater than 3.");
-                                $elem.modal("toggle");
+                                $elem.find('#searchContent').html('Please enter a search value with length greater than 3.');
+                                $elem.modal('toggle');
                                 $(element).show();
 
                             }
@@ -582,23 +603,23 @@ eurekaApp.directive('jstree', [ 'listDragAndDropService', function (listDragAndD
                     var sortable = $(target).find('ul.sortable');
                     var elementKey = data.data.obj[0].id;
                     var newItem = $('<li></li>')
-                        .attr("data-space", data.data.origin.get_node(elementKey).original.attr["data-space"])
-                        .attr("data-desc", textContent)
-                        .attr("data-type", data.data.origin.get_node(elementKey).original.attr["data-type"])
-                        .attr("data-subtype",data.data.origin.get_node(elementKey).original.attr["data-subtype"] || '')
-                        .attr('data-key', data.data.origin.get_node(elementKey).original.attr["data-proposition"] ||
-                        data.data.origin.get_node(elementKey).original.attr["data-key"]);
+                        .attr('data-space', data.data.origin.get_node(elementKey).original.attr['data-space'])
+                        .attr('data-desc', textContent)
+                        .attr('data-type', data.data.origin.get_node(elementKey).original.attr['data-type'])
+                        .attr('data-subtype',data.data.origin.get_node(elementKey).original.attr['data-subtype'] || '')
+                        .attr('data-key', data.data.origin.get_node(elementKey).original.attr['data-proposition'] ||
+                        data.data.origin.get_node(elementKey).original.attr['data-key']);
 
 
                     // check that all types in the categorization are the same
                     // SBA look here
-                    if ($(sortable).data('drop-type') === 'multiple' && $(sortable).data("proptype") !== 'empty') {
-                        if ($(sortable).data("proptype") !== $(newItem).data("type")) {
+                    if ($(sortable).data('drop-type') === 'multiple' && $(sortable).data('proptype') !== 'empty') {
+                        if ($(sortable).data('proptype') !== $(newItem).data('type')) {
                             return;
                         }
                     } else {
-                        var tmptype = $(newItem).data("type");
-                        $(sortable).data("proptype", tmptype);
+                        var tmptype = $(newItem).data('type');
+                        $(sortable).data('proptype', tmptype);
                     }
 
                     //this loop is executed only during replacement of a system element when droptype==single. In all other

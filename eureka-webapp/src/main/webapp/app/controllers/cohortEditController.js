@@ -1,12 +1,12 @@
-eurekaApp.controller(
-    "CohortEditController", ['$scope', 'CohortService', '$routeParams',
-        function( $scope, CohortService, $routeParams) {
+angular.module('eurekaApp').controller(
+    "CohortEditController", ['$scope', 'CohortService', '$stateParams',
+        function( $scope, CohortService, $stateParams) {
 
             var vm = this;
 
-            if ($routeParams.key) {
+            if ($stateParams.key) {
 
-                CohortService.getCohort($routeParams.key).then(function(data) {
+                CohortService.getCohort($stateParams.key).then(function(data) {
                     vm.cohortDestination = data;
                     vm.getPhenotypes = function() {
                         CohortService.getPhenotypes(data.cohort).then( function( promises ) {
