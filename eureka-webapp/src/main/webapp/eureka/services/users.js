@@ -10,7 +10,7 @@ users.$inject = ['$http', '$q', 'appProperties'];
 
 function users($http, $q, appProperties) {
 
-    var { apiEndpoint } = appProperties;
+    let { apiEndpoint } = appProperties;
 
     return {
         getUser: getCurrentUser,
@@ -31,7 +31,7 @@ function users($http, $q, appProperties) {
         {
             transformResponse: function (data) {
                 try {
-                    var jsonObject = JSON.parse(data); // verify that json is valid
+                    let jsonObject = JSON.parse(data); // verify that json is valid
                     return jsonObject;
                 }
                 catch (e) {
@@ -39,7 +39,7 @@ function users($http, $q, appProperties) {
                 }
             }
         }).then(function(res) {
-            var userInfo = res.data;
+            let userInfo = res.data;
             if (!userInfo) {
                 return $q.when(null);
             }
@@ -60,12 +60,12 @@ class User {
     }
 
     hasRole(name) {
-        var { roles } = this.info;
+        let { roles } = this.info;
         return roles.some(role => role.name === name);
     }
 
     getFullName() {
-        var { fullName, firstName, lastName } = this.info;
+        let { fullName, firstName, lastName } = this.info;
         return fullName || (firstName + ' ' + lastName);
     }
 }
