@@ -29,7 +29,7 @@ gulp.task('test', function (done) {
 });
 
 gulp.task('process-js', function () {
-  return gulp.src(['app/**/*.js', '!app/js/**/*.js', '!app/**/*-spec.js'])
+  return gulp.src(['eureka/**/*.js', '!eureka/js/**/*.js', '!eureka/**/*-spec.js'])
     .pipe(sourcemaps.init())
     .pipe(babel())
     .pipe(concat("all.js"))
@@ -38,13 +38,13 @@ gulp.task('process-js', function () {
 });
 
 gulp.task('lint', function() {
-    gulp.src(['app/**/*.js', '!app/js/**/*.js'])
+    gulp.src(['eureka/**/*.js', '!eureka/js/**/*.js'])
         .pipe(jshint('.jshintrc'))
         .pipe(jshint.reporter('jshint-stylish'));
 });
 
 gulp.task('autotest', function() {
-  return gulp.watch(['app/**/*.js'], ['test']);
+  return gulp.watch(['eureka/**/*.js'], ['test']);
 });
 
 gulp.task('watch-js', ['process-js'], function() {
@@ -61,7 +61,7 @@ gulp.task('browser-sync', function() {
         }
     });
 
-    gulp.watch("app/**/*.js", ['watch-js']);
+    gulp.watch("eureka/**/*.js", ['watch-js']);
     gulp.watch("./**/*.html").on("change", browserSync.reload);
 
 });
