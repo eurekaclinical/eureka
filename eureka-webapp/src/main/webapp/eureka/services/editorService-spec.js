@@ -3,7 +3,7 @@ describe('EditorService', function() {
     var EditorService;
 
     beforeEach(function() {
-        module('eurekaApp');
+        module('eureka');
     });
 
     beforeEach(inject(function(_EditorService_) {

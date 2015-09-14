@@ -1,4 +1,4 @@
-angular.module('eurekaApp').controller('TabController', function () {
+angular.module('eureka').controller('TabController', function () {
     this.tab = 1;
 
     this.setTab = function (tabId) {

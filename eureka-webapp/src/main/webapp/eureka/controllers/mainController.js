@@ -2,7 +2,7 @@
 
 'use strict';
 
-angular.module('eurekaApp').controller('MainController', function() {
+angular.module('eureka').controller('MainController', function() {
 
 });
 

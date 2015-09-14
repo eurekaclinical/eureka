@@ -11,6 +11,6 @@
         apiEndpoint: '/eureka-services/api/protected'
     };
 
-    angular.module('eurekaApp').value('appProperties', appProperties);
+    angular.module('eureka').value('appProperties', appProperties);
 
 }());

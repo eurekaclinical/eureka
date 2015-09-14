@@ -22,34 +22,34 @@
         $stateProvider
             .state('index', {
                 url: '/index',
-                templateUrl: 'app/views/main.html',
+                templateUrl: 'eureka/views/main.html',
                 controller: 'MainController'
             })
             .state('register', {
                 url: '/register',
-                templateUrl: 'app/views/register/register.html',
+                templateUrl: 'eureka/views/register/register.html',
                 controller: 'RegisterController'
             })
             .state('registerInfo', {
                 url: '/register_info',
-                templateUrl: 'app/views/register/registration_info.html',
+                templateUrl: 'eureka/views/register/registration_info.html',
                 controller: 'RegisterController'
             })
             .state('cohortHome', {
                 url: '/cohort_home',
-                templateUrl: 'app/views/cohorts/cohort_home.html',
-                controller: 'CohortController',
+                templateUrl: 'eureka/cohorts/views/main/cohort_home.html',
+                controller: 'MainController',
                 controllerAs: 'cohortController'
             })
             .state('newCohort', {
                 url: '/edit_cohort',
-                templateUrl: 'app/views/cohorts/edit_cohort.html',
+                templateUrl: 'eureka/views/cohorts/edit_cohort.html',
                 controller: 'CohortEditController',
                 controllerAs: 'cohortEditController'
             })
             .state('cohortEditKey', {
                 url: '/edit_cohort/:key',
-                templateUrl: 'app/views/cohorts/edit_cohort_key.html',
+                templateUrl: 'eureka/views/cohorts/edit_cohort_key.html',
                 controller: 'CohortEditController',
                 controllerAs: 'cohortEditController'
             });

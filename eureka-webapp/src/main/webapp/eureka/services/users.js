@@ -3,7 +3,7 @@
 'use strict';
 
 angular
-    .module('eurekaApp')
+    .module('eureka')
     .factory('users', users);
 
 users.$inject = ['$http', '$q', 'appProperties'];

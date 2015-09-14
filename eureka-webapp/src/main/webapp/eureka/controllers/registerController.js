@@ -21,7 +21,7 @@
     'use strict';
 
     angular
-        .module('eurekaApp')
+        .module('eureka')
         .controller('RegisterController', RegisterController);
         
     RegisterController.$inject = ['RegisterService', '$location'];

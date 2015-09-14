@@ -1,4 +1,4 @@
-angular.module('eurekaApp').factory(
+angular.module('eureka').factory(
     "CohortService", ['$http', '$q',
         function( $http, $q ) {
 

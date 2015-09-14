@@ -1,6 +1,6 @@
 
 
-angular.module('eurekaApp').factory(
+angular.module('eureka').factory(
     "EditorService",['$http', '$q',
     function( $http, $q ) {
 
