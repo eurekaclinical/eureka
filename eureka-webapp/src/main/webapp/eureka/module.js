@@ -1,7 +1,7 @@
 (function() {
     'use strict';
 
-    angular.module('eureka', ['ui.router', 'angularValidator', 'cohorts']);
+    angular.module('eureka', ['ui.router', 'angularValidator', 'cohorts', 'phenotypes', 'register']);
 
     angular.module('eureka').run(eurekaRun);
     angular.module('eureka').config(eurekaConfig);
