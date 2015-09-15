@@ -11,6 +11,14 @@
         apiEndpoint: '/eureka-services/api/protected'
     };
 
-    angular.module('eureka').value('appProperties', appProperties);
+    /**
+     * @ngdoc object
+     * @name eureka.appProperties
+     * @description
+     * Simple configuration object that stores application properties.
+     */
+
+    angular.module('eureka')
+        .value('appProperties', appProperties);
 
 }());

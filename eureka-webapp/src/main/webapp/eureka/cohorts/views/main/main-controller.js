@@ -1,8 +1,16 @@
 (function() {
     'use strict';
 
+    /**
+     * @ngdoc controller
+     * @name eureka.cohorts.controller:MainCtrl
+     * @description
+     * This is the main controller for the cohorts section of the application.
+     * @requires cohorts.CohortService
+     */
+
     angular
-        .module('cohorts')
+        .module('eureka.cohorts')
         .controller('cohorts.MainCtrl', MainCtrl);
         
     MainCtrl.$inject = ['CohortService'];

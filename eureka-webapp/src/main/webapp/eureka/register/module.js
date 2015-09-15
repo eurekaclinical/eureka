@@ -1,7 +1,15 @@
 (function() {
     'use strict';
 
-    angular.module('register', []);
+    /**
+     * @ngdoc overview
+     * @name eureka.register
+     * @description
+     * The module for the register section of the Eureka application.
+     */
+    angular.module('eureka.register', []);
+
+    angular.module('eureka.register').config(registerConfig);
 
     registerConfig.$inject = ['$stateProvider'];
 

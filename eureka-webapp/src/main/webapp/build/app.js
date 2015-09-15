@@ -3,7 +3,38 @@
 (function () {
     'use strict';
 
-    angular.module('eureka', ['ui.router', 'angularValidator', 'cohorts', 'phenotypes', 'register']);
+    /**
+     * @ngdoc overview
+     * @name index
+     * @description
+     *
+     * # Eureka Documentation
+     *
+     * Do you need help understanding the project structure or what services and directives you have available to you
+     * in the Eureka Angular application? You've come to the right place!
+     *
+     * ## How to use this documentation
+     *
+     * This code-base is self-documenting; this documentation is automatically generated from comments left throughout
+     * the code. If there is a problem with it, it is because the comments in the code were not updated.
+     *
+     * This project is broken down into several modules. Each module represents a section of the application. Inside
+     * each module you will find views, directives, and services specific to that module. This allows you to bite off
+     * code changes in smaller pieces and keeps everything organized in a sane manner.
+     */
+
+    /**
+     * @ngdoc overview
+     * @name eureka
+     * @description
+     * The main module for the Eureka Angular app.
+     * @requires ui.router
+     * @requires angularValidator
+     * @requires cohorts
+     * @requires phenotypes
+     * @requires register
+     */
+    angular.module('eureka', ['ui.router', 'angularValidator', 'eureka.cohorts', 'eureka.phenotypes', 'eureka.register']);
 
     angular.module('eureka').run(eurekaRun);
     angular.module('eureka').config(eurekaConfig);
@@ -38,9 +69,15 @@
 (function () {
     'use strict';
 
-    angular.module('cohorts', []);
+    /**
+     * @ngdoc overview
+     * @name eureka.cohorts
+     * @description
+     * The module for the cohorts section of the Eureka application.
+     */
+    angular.module('eureka.cohorts', []);
 
-    angular.module('cohorts').config(cohortsConfig);
+    angular.module('eureka.cohorts').config(cohortsConfig);
 
     cohortsConfig.$inject = ['$stateProvider'];
 
@@ -67,16 +104,30 @@
 'use strict';
 
 (function () {
-    'use strict';
+  'use strict';
 
-    angular.module('phenotypes', []);
+  /**
+   * @ngdoc overview
+   * @name eureka.phenotypes
+   * @description
+   * The module for the phenotypes section of the Eureka application.
+   */
+  angular.module('eureka.phenotypes', []);
 })();
 'use strict';
 
 (function () {
     'use strict';
 
-    angular.module('register', []);
+    /**
+     * @ngdoc overview
+     * @name eureka.register
+     * @description
+     * The module for the register section of the Eureka application.
+     */
+    angular.module('eureka.register', []);
+
+    angular.module('eureka.register').config(registerConfig);
 
     registerConfig.$inject = ['$stateProvider'];
 
@@ -105,6 +156,13 @@
         apiEndpoint: '/eureka-services/api/protected'
     };
 
+    /**
+     * @ngdoc object
+     * @name eureka.appProperties
+     * @description
+     * Simple configuration object that stores application properties.
+     */
+
     angular.module('eureka').value('appProperties', appProperties);
 })();
 /* globals self */
@@ -113,6 +171,15 @@
 (function () {
     'use strict';
 
+    /**
+     * @ngdoc directive
+     * @name eureka.directive:jstree
+     * @element *
+     * @function
+     * @description
+     * jstree wrapper directive
+     * @requires eureka.listDragAndDropService
+     */
     angular.module('eureka').directive('jstree', jstree);
 
     jstree.$inject = ['listDragAndDropService'];
@@ -326,6 +393,13 @@
 
 (function () {
     'use strict';
+
+    /**
+     * @ngdoc service
+     * @name eureka.listDragAndDropService
+     * @description
+     * This is the list drag and drop service.
+     */
 
     angular.module('eureka').factory('listDragAndDropService', listDragAndDropService);
 
@@ -654,6 +728,16 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
     'use strict';
 
+    /**
+     * @ngdoc service
+     * @name eureka.users
+     * @description
+     * This is the users service.
+     * @requires $http
+     * @requires $q
+     * @requires eureka.appProperties
+     */
+
     angular.module('eureka').factory('users', users);
 
     users.$inject = ['$http', '$q', 'appProperties'];
@@ -737,7 +821,16 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 (function () {
     'use strict';
 
-    angular.module('cohorts').factory('CohortService', CohortService);
+    /**
+     * @ngdoc service
+     * @name eureka.cohorts.CohortService
+     * @description
+     * This service provides an API to interact with the REST endpoint for cohorts.
+     * @requires $http
+     * @requires $q
+     */
+
+    angular.module('eureka.cohorts').factory('CohortService', CohortService);
 
     CohortService.$inject = ['$http', '$q'];
 
@@ -815,7 +908,16 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 (function () {
     'use strict';
 
-    angular.module('phenotypes').factory('PhenotypeService', PhenotypeService);
+    /**
+     * @ngdoc service
+     * @name eureka.phenotypes.PhenotypeService
+     * @description
+     * This service provides an API to interact with the REST endpoint for phenotypes.
+     * @requires $http
+     * @requires $q
+     */
+
+    angular.module('eureka.phenotypes').factory('PhenotypeService', PhenotypeService);
 
     PhenotypeService.$inject = ['$http', '$q'];
 
@@ -846,7 +948,16 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 (function () {
     'use strict';
 
-    angular.module('register').factory('RegisterService');
+    /**
+     * @ngdoc service
+     * @name eureka.register.RegisterService
+     * @description
+     * This service provides an API to interact with the REST endpoint for registration.
+     * @requires $http
+     * @requires $q
+     */
+
+    angular.module('eureka.register').factory('RegisterService');
 
     RegisterService.$inject = ['$http', '$q'];
 
@@ -881,7 +992,16 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 (function () {
     'use strict';
 
-    angular.module('cohorts').controller('cohorts.EditCtrl', EditCtrl);
+    /**
+     * @ngdoc controller
+     * @name eureka.cohorts.controller:EditCtrl
+     * @description
+     * This is the edit controller for the cohorts section of the application.
+     * @requires cohorts.CohortService
+     * @requires $stateParams
+     */
+
+    angular.module('eureka.cohorts').controller('cohorts.EditCtrl', EditCtrl);
 
     EditCtrl.$inject = ['CohortService', '$stateParams'];
 
@@ -924,7 +1044,15 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 (function () {
     'use strict';
 
-    angular.module('cohorts').controller('cohorts.MainCtrl', MainCtrl);
+    /**
+     * @ngdoc controller
+     * @name eureka.cohorts.controller:MainCtrl
+     * @description
+     * This is the main controller for the cohorts section of the application.
+     * @requires cohorts.CohortService
+     */
+
+    angular.module('eureka.cohorts').controller('cohorts.MainCtrl', MainCtrl);
 
     MainCtrl.$inject = ['CohortService'];
 
@@ -959,7 +1087,14 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 (function () {
     'use strict';
 
-    angular.module('cohorts').controller('cohorts.NewCtrl', NewCtrl);
+    /**
+     * @ngdoc controller
+     * @name eureka.cohorts.controller:NewCtrl
+     * @description
+     * This is the new controller for the cohorts section of the application.
+     */
+
+    angular.module('eureka.cohorts').controller('cohorts.NewCtrl', NewCtrl);
 
     NewCtrl.$inject = [];
 
@@ -970,7 +1105,20 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 (function () {
     'use strict';
 
-    angular.module('phenotypes').directive('phenotypeEditor', phenotypeEditor);
+    /**
+     * @ngdoc directive
+     * @name eureka.phenotypes.directive:phenotypeEditor
+     * @element *
+     * @function
+     * @description
+     * Phenotype editor directive.
+     * @requires $http
+     * @requires $templateCache
+     * @requires $timeout
+     * @requires eureka.listDragAndDropService
+     */
+
+    angular.module('eureka.phenotypes').directive('phenotypeEditor', phenotypeEditor);
 
     phenotypeEditor.$inject = ['$http', '$templateCache', '$timeout', 'listDragAndDropService'];
 
@@ -1023,7 +1171,17 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 (function () {
     'use strict';
 
-    angular.module('phenotypes').controller('phenotypes.MainCtrl');
+    /**
+     * @ngdoc controller
+     * @name eureka.phenotypes.controller:MainCtrl
+     * @description
+     * This is the main controller for the phenotypes section of the application.
+     * @requires $scope
+     * @requires $location
+     * @requires eureka.phenotypes.PhenotypeService
+     */
+
+    angular.module('eureka.phenotypes').controller('phenotypes.MainCtrl');
 
     MainCtrl.$inject = ['$scope', 'PhenotypeService', '$location'];
 
@@ -1077,7 +1235,16 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 (function () {
     'use strict';
 
-    angular.module('register').controller('register.MainCtrl', MainCtrl);
+    /**
+     * @ngdoc controller
+     * @name eureka.register.controller:MainCtrl
+     * @description
+     * This is the main controller for the register section of the application.
+     * @requires $location
+     * @requires eureka.register.RegisterService
+     */
+
+    angular.module('eureka.register').controller('register.MainCtrl', MainCtrl);
 
     MainCtrl.$inject = ['RegisterService', '$location'];
 

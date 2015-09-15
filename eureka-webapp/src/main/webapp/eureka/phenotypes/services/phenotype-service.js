@@ -1,8 +1,17 @@
 (function() {
     'use strict';
 
+    /**
+     * @ngdoc service
+     * @name eureka.phenotypes.PhenotypeService
+     * @description
+     * This service provides an API to interact with the REST endpoint for phenotypes.
+     * @requires $http
+     * @requires $q
+     */
+
     angular
-        .module('phenotypes')
+        .module('eureka.phenotypes')
         .factory('PhenotypeService', PhenotypeService);
 
     PhenotypeService.$inject = ['$http', '$q'];

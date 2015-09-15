@@ -1,8 +1,17 @@
 (function() {
     'use strict';
 
+    /**
+     * @ngdoc service
+     * @name eureka.register.RegisterService
+     * @description
+     * This service provides an API to interact with the REST endpoint for registration.
+     * @requires $http
+     * @requires $q
+     */
+
     angular
-        .module('register')
+        .module('eureka.register')
         .factory('RegisterService');
 
     RegisterService.$inject = ['$http', '$q'];

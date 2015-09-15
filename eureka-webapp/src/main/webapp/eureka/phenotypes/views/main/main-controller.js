@@ -1,8 +1,18 @@
 (function() {
     'use strict';
 
+    /**
+     * @ngdoc controller
+     * @name eureka.phenotypes.controller:MainCtrl
+     * @description
+     * This is the main controller for the phenotypes section of the application.
+     * @requires $scope
+     * @requires $location
+     * @requires eureka.phenotypes.PhenotypeService
+     */
+
     angular
-        .module('phenotypes')
+        .module('eureka.phenotypes')
         .controller('phenotypes.MainCtrl');
 
     MainCtrl.$inject = ['$scope', 'PhenotypeService', '$location'];

@@ -1,8 +1,21 @@
 (function(){
     'use strict';
 
+    /**
+     * @ngdoc directive
+     * @name eureka.phenotypes.directive:phenotypeEditor
+     * @element *
+     * @function
+     * @description
+     * Phenotype editor directive.
+     * @requires $http
+     * @requires $templateCache
+     * @requires $timeout
+     * @requires eureka.listDragAndDropService
+     */
+
     angular
-        .module('phenotypes')
+        .module('eureka.phenotypes')
         .directive('phenotypeEditor', phenotypeEditor);
 
     phenotypeEditor.$inject = ['$http', '$templateCache', '$timeout', 'listDragAndDropService'];

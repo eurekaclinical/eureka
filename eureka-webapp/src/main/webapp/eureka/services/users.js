@@ -2,6 +2,16 @@
 
     'use strict';
 
+    /**
+     * @ngdoc service
+     * @name eureka.users
+     * @description
+     * This is the users service.
+     * @requires $http
+     * @requires $q
+     * @requires eureka.appProperties
+     */
+
     angular
         .module('eureka')
         .factory('users', users);

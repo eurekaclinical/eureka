@@ -1,9 +1,15 @@
 (function(){
 	'use strict';
 
-	angular.module('cohorts',[]);
+    /**
+     * @ngdoc overview
+     * @name eureka.cohorts
+     * @description
+     * The module for the cohorts section of the Eureka application.
+     */
+	angular.module('eureka.cohorts',[]);
 
-    angular.module('cohorts').config(cohortsConfig);
+    angular.module('eureka.cohorts').config(cohortsConfig);
 
     cohortsConfig.$inject = ['$stateProvider'];
 

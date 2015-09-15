@@ -1,8 +1,17 @@
 (function() {
     'use strict';
 
+    /**
+     * @ngdoc service
+     * @name eureka.cohorts.CohortService
+     * @description
+     * This service provides an API to interact with the REST endpoint for cohorts.
+     * @requires $http
+     * @requires $q
+     */
+
     angular
-        .module('cohorts')
+        .module('eureka.cohorts')
         .factory('CohortService', CohortService);
 
     CohortService.$inject = ['$http', '$q'];

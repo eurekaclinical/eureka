@@ -9,6 +9,7 @@ var proxy = require('proxy-middleware');
 var browserSync = require('browser-sync').create();
 var wiredep = require('wiredep').stream;
 var opn = require('opn');
+var gulpDocs = require('gulp-ngdocs');
 
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 
@@ -18,7 +19,17 @@ gulp.task('bower', function () {
     .pipe(gulp.dest('./'));
 });
 
-gulp.task('test', ['process-js', 'bower'], function (done) {
+gulp.task('ngdocs', ['process-js'], function () {
+  var options = {
+    title: "Eureka Angular Documentation",
+    html5Mode: false
+  }
+  return gulp.src('build/app.js')
+    .pipe(gulpDocs.process(options))
+    .pipe(gulp.dest('./ng-docs'));
+});
+
+gulp.task('test', ['process-js', 'ngdocs', 'bower'], function (done) {
   new Server({
     configFile: __dirname + '/karma.conf.js',
     singleRun: true

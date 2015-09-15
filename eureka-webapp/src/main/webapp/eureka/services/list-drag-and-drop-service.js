@@ -2,6 +2,13 @@
 (function(){
     'use strict';
 
+    /**
+     * @ngdoc service
+     * @name eureka.listDragAndDropService
+     * @description
+     * This is the list drag and drop service.
+     */
+
     angular
         .module('eureka')
         .factory('listDragAndDropService', listDragAndDropService);

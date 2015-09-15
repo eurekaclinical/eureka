@@ -1,8 +1,17 @@
 (function() {
     'use strict';
 
+    /**
+     * @ngdoc controller
+     * @name eureka.cohorts.controller:EditCtrl
+     * @description
+     * This is the edit controller for the cohorts section of the application.
+     * @requires cohorts.CohortService
+     * @requires $stateParams
+     */
+
     angular
-        .module('cohorts')
+        .module('eureka.cohorts')
         .controller('cohorts.EditCtrl', EditCtrl);
         
     EditCtrl.$inject = ['CohortService', '$stateParams'];

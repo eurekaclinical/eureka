@@ -2,6 +2,15 @@
 (function(){
     'use strict';
 
+    /**
+     * @ngdoc directive
+     * @name eureka.directive:jstree
+     * @element *
+     * @function
+     * @description
+     * jstree wrapper directive
+     * @requires eureka.listDragAndDropService
+     */
     angular
         .module('eureka')
         .directive('jstree', jstree);

@@ -6,7 +6,7 @@
         var PhenotypeService;
 
         beforeEach(function() {
-            module('phenotypes');
+            module('eureka.phenotypes');
         });
 
         beforeEach(inject(function(_PhenotypeService_) {

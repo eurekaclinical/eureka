@@ -1,8 +1,17 @@
 (function() {
     'use strict';
 
+    /**
+     * @ngdoc controller
+     * @name eureka.register.controller:MainCtrl
+     * @description
+     * This is the main controller for the register section of the application.
+     * @requires $location
+     * @requires eureka.register.RegisterService
+     */
+
     angular
-        .module('register')
+        .module('eureka.register')
         .controller('register.MainCtrl', MainCtrl);
         
     MainCtrl.$inject = ['RegisterService', '$location'];
