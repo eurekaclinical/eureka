@@ -3,7 +3,7 @@
 (function () {
     'use strict';
 
-    angular.module('eureka', ['ui.router', 'angularValidator', 'cohorts']);
+    angular.module('eureka', ['ui.router', 'angularValidator', 'cohorts', 'phenotypes', 'register']);
 
     angular.module('eureka').run(eurekaRun);
     angular.module('eureka').config(eurekaConfig);
@@ -107,6 +107,7 @@
 
     angular.module('eureka').value('appProperties', appProperties);
 })();
+/* globals self */
 'use strict';
 
 (function () {
@@ -132,6 +133,7 @@
                 self.propSubType = null;
                 var initData = null;
                 var searchUpdateDivElem = attrs.searchUpdateDiv;
+                var searchModalElem = attrs.searchModal;
                 var searchValidationModalElem = attrs.searchValidationModal;
                 var searchNoResultsModalElem = attrs.searchNoResultsModal;
                 var treeCssUrl = attrs.treeCssUrl;
@@ -166,7 +168,7 @@
                         $(element).jstree('clear_search');
                         var searchvalue = $('#search input[type="text"]').val();
                         initData = $(element).jstree(true).settings.core.data;
-                        if (searchvalue != '' && searchvalue.length >= 4) {
+                        if (searchvalue !== '' && searchvalue.length >= 4) {
                             $(element).hide();
                             var $elem = $(searchUpdateDivElem);
                             $elem.text('Search is in progress. Please wait...');
@@ -196,13 +198,13 @@
                                 'plugins': ['themes', 'json_data', 'ui', 'crrm', 'dnd', 'search']
                             }).bind('loaded.jstree', function (e, data) {
 
-                                if (data.instance._cnt == 0) {
+                                if (data.instance._cnt === 0) {
                                     console.log('empty');
-                                    var $elem = $(searchNoResultsModalElem);
-                                    $elem.find('#searchContent').html('There are no entries in our database that matched your search criteria.');
-                                    $elem.modal('toggle');
+                                    var $elemNoResults = $(searchNoResultsModalElem);
+                                    $elemNoResults.find('#searchContent').html('There are no entries in our\n                                            database that matched your search criteria.');
+                                    $elemNoResults.modal('toggle');
 
-                                    $elem.hide();
+                                    $elemNoResults.hide();
                                     $(element).jstree('clear_search');
                                     $(element).jstree(true).settings.core.data = initData;
                                     $(element).jstree(true).refresh();
@@ -210,14 +212,14 @@
 
                                     $(element).show();
 
-                                    $elem = $(searchUpdateDivElem);
-                                    $elem.hide();
+                                    $elemNoResults = $(searchUpdateDivElem);
+                                    $elemNoResults.hide();
                                 } else if (data.instance._cnt > 200) {
-                                    var $elem = $(searchModalElem);
-                                    $elem.find('#searchContent').html('The number of search results exceeded the  ' + ' maximum limit and all results might not be displayed.' + ' Please give a more specific search query to see all results.');
-                                    $elem.modal('toggle');
+                                    var $elemSearchModal = $(searchModalElem);
+                                    $elemSearchModal.find('#searchContent').html('The number of search results\n                                                exceeded the maximum limit and all results might not be displayed.\n                                                Please give a more specific search query to see all results.');
+                                    $elemSearchModal.modal('toggle');
 
-                                    $elem.hide();
+                                    $elemSearchModal.hide();
                                     $(element).jstree('clear_search');
                                     $(element).jstree(true).settings.core.data = initData;
                                     $(element).jstree(true).refresh();
@@ -225,17 +227,17 @@
 
                                     $(element).show();
 
-                                    $elem = $(searchUpdateDivElem);
-                                    $elem.hide();
+                                    $elemSearchModal = $(searchUpdateDivElem);
+                                    $elemSearchModal.hide();
                                 }
                             });
 
                             $elem.hide();
                             $(element).show();
                         } else if (searchvalue.length < 4) {
-                            var $elem = $(searchValidationModalElem);
-                            $elem.find('#searchContent').html('Please enter a search value with length greater than 3.');
-                            $elem.modal('toggle');
+                            var $elemValidationModal = $(searchValidationModalElem);
+                            $elemValidationModal.find('#searchContent').html('Please enter a search value with\n                                        length greater than 3.');
+                            $elemValidationModal.modal('toggle');
                             $(element).show();
                         }
                         return false;
@@ -297,9 +299,9 @@
                             $(sortable).data('proptype', tmptype);
                         }
 
-                        //this loop is executed only during replacement of a system element when droptype==single. In all other
-                        // cases(adding element to multiple droptype lists, adding a new element to an empty list) the else
-                        // statement is executed.
+                        //this loop is executed only during replacement of a system element when droptype==single.
+                        // In all other cases(adding element to multiple droptype lists, adding a new element to an
+                        // empty list) the else statement is executed.
                         if ($(sortable).data('drop-type') === 'single' && $(sortable).find('li').length > 0) {
                             var $toRemove = $(sortable).find('li');
                             var dialog = $('#replaceModal');
@@ -319,6 +321,7 @@
         };
     }
 })();
+/* globals self */
 'use strict';
 
 (function () {
@@ -524,7 +527,7 @@
         function idIsNotInList(target, id) {
             var retVal = true;
             $(target).find('ul.sortable').find('li').each(function (i, item) {
-                if ($(item).data('key') == id) {
+                if ($(item).data('key') === id) {
                     retVal = false;
                 }
             });
@@ -597,10 +600,10 @@
                         var $items = $(sourceValue).find('li');
                         var selectedItem;
                         $items.each(function (i, item) {
-                            if ($(item).data('key') == elemKey) {
+                            if ($(item).data('key') === elemKey) {
                                 selectedItem = item;
                             }
-                            if (selectedItem && $sortable.data('count') != $(sourceValue).data('count')) {
+                            if (selectedItem && $sortable.data('count') !== $(sourceValue).data('count')) {
                                 var sourceId = $(sourceValue).data('count');
                                 var value = $(selectedItem).data('key') + '__' + sourceId;
                                 var desc = $(selectedItem).data('desc');
@@ -610,7 +613,7 @@
                                 var opt = $('<option></option>', {
                                     'value': value
                                 }).text(desc);
-                                if (value == $(selectedItem).data('key') + '__' + originalSource) {
+                                if (value === $(selectedItem).data('key') + '__' + originalSource) {
                                     opt.attr('selected', 'selected');
                                 }
                                 $(sel).append(opt);
@@ -750,38 +753,38 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
         function getCohorts() {
 
-            var type = "COHORT";
-            return $http.get("/eureka-services/api/protected/destinations?type=" + type).then(handleSuccess, handleError);
+            var type = 'COHORT';
+            return $http.get('/eureka-services/api/protected/destinations?type=' + type).then(handleSuccess, handleError);
         }
 
         function removeCohort(key) {
 
-            return $http['delete']("/eureka-webapp/proxy-resource/destinations/" + key).then(handleSuccess, handleError);
+            return $http['delete']('/eureka-webapp/proxy-resource/destinations/' + key).then(handleSuccess, handleError);
         }
 
         function getSystemElement(key) {
 
-            return $http.get("/eureka-services/api/protected/systemelement/" + key + "?summary=true").then(handleSuccess, handleError);
+            return $http.get('/eureka-services/api/protected/systemelement/' + key + '?summary=true').then(handleSuccess, handleError);
         }
         function getCohort(cohortId) {
 
-            return $http.get("/eureka-services/api/protected/destinations/" + cohortId).then(handleSuccess, handleError);
+            return $http.get('/eureka-services/api/protected/destinations/' + cohortId).then(handleSuccess, handleError);
         }
         function getPhenotypes(cohort) {
 
-            var cohorts = new Array();
+            var cohorts = [];
 
             function traverse(node) {
 
-                if (node.left_node != undefined) {
+                if (node.left_node !== undefined) {
                     traverse(node.left_node);
                 }
 
-                if (node.name != undefined) {
+                if (node.name !== undefined) {
                     cohorts.push(node.name);
                 }
 
-                if (node.right_node != undefined) {
+                if (node.right_node !== undefined) {
                     traverse(node.right_node);
                 }
             }
@@ -790,7 +793,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
             var promises = [];
             angular.forEach(cohorts, function (cohort) {
-                var promise = $http.get("/eureka-services/api/protected/systemelement/" + cohort + "?summary=true");
+                var promise = $http.get('/eureka-services/api/protected/systemelement/' + cohort + '?summary=true');
                 promises.push(promise);
             });
 
@@ -801,7 +804,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         }
         function handleError(response) {
             if (!angular.isObject(response.data) && !response.data) {
-                return $q.reject("An unknown error occurred.");
+                return $q.reject('An unknown error occurred.');
             }
             return $q.reject(response.data);
         }
@@ -823,7 +826,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         };
 
         function getSummarizedUserElements() {
-            return $http.get("/eureka-services/api/protected/dataelement?summarize=true").then(handleSuccess, handleError);
+            return $http.get('/eureka-services/api/protected/dataelement?summarize=true').then(handleSuccess, handleError);
         }
 
         function handleSuccess(response) {
@@ -832,7 +835,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
         function handleError(response) {
             if (!angular.isObject(response.data) && !response.data) {
-                return $q.reject("An unknown error occurred.");
+                return $q.reject('An unknown error occurred.');
             }
             return $q.reject(response.data);
         }
@@ -855,10 +858,10 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
         function addNewAccount(newAccount) {
             newAccount.username = newAccount.email;
-            newAccount.fullName = newAccount.firstName + " " + newAccount.lastName;
-            newAccount.type = "LOCAL";
-            newAccount.loginType = "INTERNAL";
-            return $http.post("/eureka-services/api/userrequest/new", newAccount).then(handleSuccess, handleError);
+            newAccount.fullName = newAccount.firstName + ' ' + newAccount.lastName;
+            newAccount.type = 'LOCAL';
+            newAccount.loginType = 'INTERNAL';
+            return $http.post('/eureka-services/api/userrequest/new', newAccount).then(handleSuccess, handleError);
         }
 
         function handleSuccess(response) {
@@ -867,9 +870,52 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
         function handleError(response) {
             if (!angular.isObject(response.data) && !response.data) {
-                return $q.reject("An unknown error occurred.");
+                return $q.reject('An unknown error occurred.');
             }
             return $q.reject(response.data);
+        }
+    }
+})();
+'use strict';
+
+(function () {
+    'use strict';
+
+    angular.module('cohorts').controller('cohorts.EditCtrl', EditCtrl);
+
+    EditCtrl.$inject = ['CohortService', '$stateParams'];
+
+    function EditCtrl(CohortService, $stateParams) {
+        var vm = this;
+
+        if ($stateParams.key) {
+
+            CohortService.getCohort($stateParams.key).then(function (data) {
+                vm.destination = data;
+                getPhenotypes(data);
+            }, displayError);
+        }
+
+        function getPhenotypes(data) {
+            CohortService.getPhenotypes(data.cohort).then(function (promises) {
+
+                var phenotypes = [];
+                for (var i = 0; i < promises.length; i++) {
+                    phenotypes.push(new Object({
+                        dataElementKey: promises[i].data.key,
+                        dataElementDisplayName: promises[i].data.displayName,
+                        type: 'SYSTEM'
+                    }));
+                }
+
+                vm.destination.phenotypes = phenotypes;
+
+                eureka.editor.setup(data.id !== null ? data.id : null, '#userTree', '#definitionContainer', '#savePropositionButton');
+            });
+        }
+
+        function displayError(msg) {
+            vm.errorMsg = msg;
         }
     }
 })();
@@ -896,54 +942,11 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         function remove(key) {
             CohortService.removeCohort(key);
             for (var i = 0; i < vm.list.length; i++) {
-                if (vm.list[i].name == key) {
+                if (vm.list[i].name === key) {
                     vm.list.splice(i, 1);
                     break;
                 }
             }
-        }
-
-        function displayError(msg) {
-            vm.errorMsg = msg;
-        }
-    }
-})();
-'use strict';
-
-(function () {
-    'use strict';
-
-    angular.module('cohorts').controller('cohorts.EditCtrl', EditCtrl);
-
-    EditCtrl.$inject = ['CohortService', '$stateParams'];
-
-    function EditCtrl(CohortService, $stateParams) {
-        var vm = this;
-
-        if ($stateParams.key) {
-
-            CohortService.getCohort($stateParams.key).then(function (data) {
-                vm.destination = data;
-                getPhenotypes();
-            }, displayError);
-        }
-
-        function getPhenotypes() {
-            CohortService.getPhenotypes(data.cohort).then(function (promises) {
-
-                var phenotypes = [];
-                for (var i = 0; i < promises.length; i++) {
-                    phenotypes.push(new Object({
-                        "dataElementKey": promises[i].data.key,
-                        "dataElementDisplayName": promises[i].data.displayName,
-                        "type": "SYSTEM"
-                    }));
-                }
-
-                vm.destination.phenotypes = phenotypes;
-
-                eureka.editor.setup(data.id !== null ? data.id : null, '#userTree', '#definitionContainer', '#savePropositionButton');
-            });
         }
 
         function displayError(msg) {
@@ -1029,24 +1032,24 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         var vm = this;
         var messages = {
             'CATEGORIZATION': {
-                'displayName': "Category",
-                'description': "For defining a significant category of codes or clinical events or observations."
+                'displayName': 'Category',
+                'description': 'For defining a significant category of codes or clinical events or observations.'
             },
             'TEMPORAL': {
-                'displayName': "Temporal",
-                'description': "For defining a disease, finding or patient care process to be reflected by codes,clinical events and/or observations in a specified frequency, sequential or other temporal patterns."
+                'displayName': 'Temporal',
+                'description': 'For defining a disease, finding or patient care process to be reflected by codes,\n                clinical events and/or observations in a specified frequency, sequential or other temporal patterns.'
             },
             'SEQUENCE': {
-                'displayName': "Sequence",
-                'description': "For defining a disease, finding or patient care process to be reflected by codes,clinical events and/or observations in a specified sequential temporal pattern."
+                'displayName': 'Sequence',
+                'description': 'For defining a disease, finding or patient care process to be reflected by codes,\n                clinical events and/or observations in a specified sequential temporal pattern.'
             },
             'FREQUENCY': {
-                'displayName': "Frequency",
-                'description': "For defining a disease, finding or patient care process to be reflected by codes,clinical events and/or observations in a specified frequency."
+                'displayName': 'Frequency',
+                'description': 'For defining a disease, finding or patient care process to be reflected by codes,\n                clinical events and/or observations in a specified frequency.'
             },
             'VALUE_THRESHOLD': {
-                'displayName': "Value Threshold",
-                'description': "For defining clinically significant thresholds on the value of an observation."
+                'displayName': 'Value Threshold',
+                'description': 'For defining clinically significant thresholds on the value of an observation.'
             }
         };
         vm.messages = messages;
@@ -1061,7 +1064,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
         /*
          passwordChange.error.internalServerError=Error while changing password.
-        deleteDataElement.error.internalServerError=Error trying to delete data element. There is a problem with Eureka!.
+        deleteDataElement.error.internalServerError=Error trying to delete data element.
+        There is a problem with Eureka!.
         registerUserServlet.fullName={0} {1}
         registerUserServlet.error.unspecified=Please contact {0} for assistance.
         registerUserServlet.error.localAccountConflict=An account with your email address already exists.
@@ -1094,4 +1098,4 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         }
     }
 })();
-//# sourceMappingURL=all.js.map
+//# sourceMappingURL=app.js.map

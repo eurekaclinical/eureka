@@ -1,3 +1,4 @@
+/* globals self */
 (function(){
     'use strict';
 
@@ -209,7 +210,7 @@
         function idIsNotInList(target, id) {
             var retVal = true;
             $(target).find('ul.sortable').find('li').each(function (i, item) {
-                if ($(item).data('key') == id) {
+                if ($(item).data('key') === id) {
                     retVal = false;
                 }
             });
@@ -285,10 +286,10 @@
                         var $items = $(sourceValue).find('li');
                         var selectedItem;
                         $items.each(function (i, item) {
-                            if ($(item).data('key') == elemKey) {
+                            if ($(item).data('key') === elemKey) {
                                 selectedItem = item;
                             }
-                            if (selectedItem && $sortable.data('count') != $(sourceValue).data('count')) {
+                            if (selectedItem && $sortable.data('count') !== $(sourceValue).data('count')) {
                                 var sourceId = $(sourceValue).data('count');
                                 var value = $(selectedItem).data('key') + '__' + sourceId;
                                 var desc = $(selectedItem).data('desc');
@@ -298,7 +299,7 @@
                                 var opt = $('<option></option>', {
                                     'value': value
                                 }).text(desc);
-                                if (value == $(selectedItem).data('key') + '__' + originalSource) {
+                                if (value === $(selectedItem).data('key') + '__' + originalSource) {
                                     opt.attr('selected', 'selected');
                                 }
                                 $(sel).append(opt);
@@ -315,7 +316,8 @@
                     var $toRemove = $(item).closest('li');
                     var $sortable = $toRemove.closest('ul.sortable');
                     var dialog = $('#deleteModal');
-                    $(dialog).find('#deleteContent').html('Are you sure you want to remove data element &quot;' + $toRemove.text().trim() + '&quot;?');
+                    $(dialog).find('#deleteContent').html('Are you sure you want to remove data element &quot;' +
+                        $toRemove.text().trim() + '&quot;?');
                     $(dialog).find('#deleteButton').on('click', function (e) {
                         deleteItem($toRemove, $sortable, 0);
                         $(dialog).modal('hide');

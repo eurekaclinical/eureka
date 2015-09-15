@@ -18,23 +18,20 @@ gulp.task('bower', function () {
     .pipe(gulp.dest('./'));
 });
 
-/**
-* Run test once and exit
-*/
-gulp.task('test', function (done) {
+gulp.task('test', ['process-js', 'bower'], function (done) {
   new Server({
     configFile: __dirname + '/karma.conf.js',
     singleRun: true
   }, done).start();
 });
 
-gulp.task('process-js', function () {
+gulp.task('process-js', ['lint'], function () {
   return gulp.src(['eureka/**/module.js', 'eureka/**/*.js', '!eureka/**/*-spec.js'])
     .pipe(sourcemaps.init())
     .pipe(babel())
-    .pipe(concat("all.js"))
-    .pipe(sourcemaps.write("."))
-    .pipe(gulp.dest("dist"));
+    .pipe(concat('app.js'))
+    .pipe(sourcemaps.write('.'))
+    .pipe(gulp.dest('build'));
 });
 
 gulp.task('lint', function() {
@@ -43,15 +40,11 @@ gulp.task('lint', function() {
         .pipe(jshint.reporter('jshint-stylish'));
 });
 
-gulp.task('autotest', function() {
-  return gulp.watch(['eureka/**/*.js'], ['test']);
-});
-
-gulp.task('watch-js', ['process-js'], function() {
+gulp.task('watch-js', ['test'], function() {
     browserSync.reload();
 });
 
-gulp.task('browser-sync', ['process-js'], function() {
+gulp.task('browser-sync', ['test'], function() {
 
     // Serve files from the root of this project
     browserSync.init({
@@ -62,7 +55,7 @@ gulp.task('browser-sync', ['process-js'], function() {
     });
 
     gulp.watch("eureka/**/*.js", ['watch-js']);
-    gulp.watch("./**/*.html").on("change", browserSync.reload);
+    gulp.watch("./**/*.html").on('change', browserSync.reload);
 
 });
 

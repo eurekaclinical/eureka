@@ -14,21 +14,21 @@
 
             CohortService.getCohort($stateParams.key).then(function(data) {
                 vm.destination = data;
-                getPhenotypes();
+                getPhenotypes(data);
 
             }, displayError);
 
         }
 
-        function getPhenotypes() {
+        function getPhenotypes(data) {
             CohortService.getPhenotypes(data.cohort).then( function( promises ) {
 
             var phenotypes = [];
             for (var i = 0; i < promises.length; i++) {
                 phenotypes.push(new Object({
-                    "dataElementKey": promises[i].data.key,
-                    "dataElementDisplayName": promises[i].data.displayName,
-                    "type": "SYSTEM"
+                    dataElementKey: promises[i].data.key,
+                    dataElementDisplayName: promises[i].data.displayName,
+                    type: 'SYSTEM'
                 }));
 
             }

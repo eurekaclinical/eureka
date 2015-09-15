@@ -21,7 +21,7 @@
         function remove(key) {
             CohortService.removeCohort(key);
             for (var i = 0; i < vm.list.length; i++) {
-                if (vm.list[i].name == key) {
+                if (vm.list[i].name === key) {
                     vm.list.splice(i, 1);
                     break;
                 }

@@ -14,7 +14,7 @@
         });
 
         function getSummarizedUserElements() {
-            return $http.get("/eureka-services/api/protected/dataelement?summarize=true")
+            return $http.get('/eureka-services/api/protected/dataelement?summarize=true')
                 .then(handleSuccess, handleError);
         }
 
@@ -24,7 +24,7 @@
 
         function handleError(response) {
             if (!angular.isObject(response.data) && !response.data) {
-                return ($q.reject("An unknown error occurred."));
+                return ($q.reject('An unknown error occurred.'));
             }
             return ($q.reject(response.data));
         }

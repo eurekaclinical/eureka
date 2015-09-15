@@ -1,3 +1,4 @@
+/* globals self */
 (function(){
     'use strict';
 
@@ -25,6 +26,7 @@
                 self.propSubType = null;
                 var initData = null;
                 var searchUpdateDivElem = attrs.searchUpdateDiv;
+                var searchModalElem = attrs.searchModal;
                 var searchValidationModalElem =  attrs.searchValidationModal;
                 var searchNoResultsModalElem = attrs.searchNoResultsModal;
                 var treeCssUrl = attrs.treeCssUrl;
@@ -68,7 +70,7 @@
                                 $(element).jstree('clear_search');
                                 var searchvalue = $('#search input[type="text"]').val();
                                 initData = $(element).jstree(true).settings.core.data;
-                                if(searchvalue!='' && searchvalue.length>=4) {
+                                if(searchvalue !== '' && searchvalue.length >= 4) {
                                     $(element).hide();
                                     var $elem = $(searchUpdateDivElem);
                                     $elem.text('Search is in progress. Please wait...');
@@ -102,13 +104,14 @@
                                         'plugins': [ 'themes', 'json_data', 'ui', 'crrm', 'dnd', 'search' ]
                                     }).bind('loaded.jstree', function (e, data) {
 
-                                        if (data.instance._cnt == 0) {
+                                        if (data.instance._cnt === 0) {
                                             console.log('empty');
-                                            var $elem = $(searchNoResultsModalElem);
-                                            $elem.find('#searchContent').html('There are no entries in our database that matched your search criteria.');
-                                            $elem.modal('toggle');
+                                            var $elemNoResults = $(searchNoResultsModalElem);
+                                            $elemNoResults.find('#searchContent').html(`There are no entries in our
+                                            database that matched your search criteria.`);
+                                            $elemNoResults.modal('toggle');
 
-                                            $elem.hide();
+                                            $elemNoResults.hide();
                                             $(element).jstree('clear_search');
                                             $(element).jstree(true).settings.core.data = initData;
                                             $(element).jstree(true).refresh();
@@ -116,18 +119,18 @@
 
                                             $(element).show();
 
-                                            $elem = $(searchUpdateDivElem);
-                                            $elem.hide();
+                                            $elemNoResults = $(searchUpdateDivElem);
+                                            $elemNoResults.hide();
 
                                         }
                                         else if (data.instance._cnt > 200) {
-                                            var $elem = $(searchModalElem);
-                                            $elem.find('#searchContent').html('The number of search results exceeded the  '+
-                                                ' maximum limit and all results might not be displayed.'+
-                                                ' Please give a more specific search query to see all results.');
-                                            $elem.modal('toggle');
+                                            var $elemSearchModal = $(searchModalElem);
+                                            $elemSearchModal.find('#searchContent').html(`The number of search results
+                                                exceeded the maximum limit and all results might not be displayed.
+                                                Please give a more specific search query to see all results.`);
+                                            $elemSearchModal.modal('toggle');
 
-                                            $elem.hide();
+                                            $elemSearchModal.hide();
                                             $(element).jstree('clear_search');
                                             $(element).jstree(true).settings.core.data = initData;
                                             $(element).jstree(true).refresh();
@@ -135,8 +138,8 @@
 
                                             $(element).show();
 
-                                            $elem = $(searchUpdateDivElem);
-                                            $elem.hide();
+                                            $elemSearchModal = $(searchUpdateDivElem);
+                                            $elemSearchModal.hide();
 
                                         }
 
@@ -148,9 +151,10 @@
 
 
                                 } else if(searchvalue.length<4){
-                                    var $elem = $(searchValidationModalElem);
-                                    $elem.find('#searchContent').html('Please enter a search value with length greater than 3.');
-                                    $elem.modal('toggle');
+                                    var $elemValidationModal = $(searchValidationModalElem);
+                                    $elemValidationModal.find('#searchContent').html(`Please enter a search value with
+                                        length greater than 3.`);
+                                    $elemValidationModal.modal('toggle');
                                     $(element).show();
 
                                 }
@@ -212,14 +216,17 @@
                             .attr('data-space', data.data.origin.get_node(elementKey).original.attr['data-space'])
                             .attr('data-desc', textContent)
                             .attr('data-type', data.data.origin.get_node(elementKey).original.attr['data-type'])
-                            .attr('data-subtype',data.data.origin.get_node(elementKey).original.attr['data-subtype'] || '')
-                            .attr('data-key', data.data.origin.get_node(elementKey).original.attr['data-proposition'] ||
+                            .attr('data-subtype',
+                                data.data.origin.get_node(elementKey).original.attr['data-subtype'] || '')
+                            .attr('data-key',
+                            data.data.origin.get_node(elementKey).original.attr['data-proposition'] ||
                             data.data.origin.get_node(elementKey).original.attr['data-key']);
 
 
                         // check that all types in the categorization are the same
                         // SBA look here
-                        if ($(sortable).data('drop-type') === 'multiple' && $(sortable).data('proptype') !== 'empty') {
+                        if ($(sortable).data('drop-type') === 'multiple' && $(sortable).data('proptype') !== 'empty')
+                        {
                             if ($(sortable).data('proptype') !== $(newItem).data('type')) {
                                 return;
                             }
@@ -228,13 +235,15 @@
                             $(sortable).data('proptype', tmptype);
                         }
 
-                        //this loop is executed only during replacement of a system element when droptype==single. In all other
-                        // cases(adding element to multiple droptype lists, adding a new element to an empty list) the else
-                        // statement is executed.
+                        //this loop is executed only during replacement of a system element when droptype==single.
+                        // In all other cases(adding element to multiple droptype lists, adding a new element to an
+                        // empty list) the else statement is executed.
                         if ($(sortable).data('drop-type') === 'single' && $(sortable).find('li').length > 0) {
                             var $toRemove = $(sortable).find('li');
                             var dialog = $('#replaceModal');
-                            $(dialog).find('#replaceContent').html('Are you sure you want to replace data element &quot;' + $toRemove.text().trim() + '&quot;?');
+                            $(dialog).find('#replaceContent').html(
+                                'Are you sure you want to replace data element &quot;' +
+                                $toRemove.text().trim() + '&quot;?');
                             $(dialog).find('#replaceButton').on('click', function (e) {
                                 listDragAndDropService.deleteItem($toRemove, $(sortable), 0);
                                 listDragAndDropService.addNewItemToList(data, $(sortable), newItem);
