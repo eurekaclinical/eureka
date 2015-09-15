@@ -1,6 +1,13 @@
 (function(){
     'use strict';
-    angular.module('eureka').directive('jstree', [ 'listDragAndDropService', function (listDragAndDropService) {
+
+    angular
+        .module('eureka')
+        .directive('jstree', jstree);
+
+    jstree.$inject = ['listDragAndDropService'];
+
+    function jstree(listDragAndDropService) {
 
         return {
             scope: {
@@ -243,5 +250,6 @@
 
             }
         };
-    }]);
+    }
+
 }());

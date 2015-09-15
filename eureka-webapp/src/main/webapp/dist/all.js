@@ -5,6 +5,12 @@
 
     angular.module('eureka', ['ui.router', 'angularValidator', 'cohorts']);
 
+    angular.module('eureka').run(eurekaRun);
+    angular.module('eureka').config(eurekaConfig);
+
+    eurekaRun.$inject = ['$rootScope', 'appProperties', 'users'];
+    eurekaConfig.$inject = ['$stateProvider', '$urlRouterProvider'];
+
     function eurekaRun($rootScope, appProperties, users) {
         $rootScope.app = appProperties;
         $rootScope.user = {
@@ -23,45 +29,66 @@
 
         $stateProvider.state('index', {
             url: '/index',
-            templateUrl: 'eureka/views/main.html',
-            controller: 'MainController'
-        }).state('register', {
-            url: '/register',
-            templateUrl: 'eureka/views/register/register.html',
-            controller: 'RegisterController'
-        }).state('registerInfo', {
-            url: '/register_info',
-            templateUrl: 'eureka/views/register/registration_info.html',
-            controller: 'RegisterController'
-        }).state('cohortHome', {
-            url: '/cohort_home',
-            templateUrl: 'eureka/cohorts/views/main/cohort_home.html',
-            controller: 'cohorts.MainController',
-            controllerAs: 'cohortController'
-        }).state('newCohort', {
-            url: '/edit_cohort',
-            templateUrl: 'eureka/views/cohorts/edit_cohort.html',
-            controller: 'cohorts.EditController',
-            controllerAs: 'cohortEditController'
-        }).state('cohortEditKey', {
-            url: '/edit_cohort/:key',
-            templateUrl: 'eureka/views/cohorts/edit_cohort_key.html',
-            controller: 'cohorts.EditController',
-            controllerAs: 'cohortEditController'
+            templateUrl: 'eureka/views/main/main.html'
         });
     }
-
-    eurekaRun.$inject = ['$rootScope', 'appProperties', 'users'];
-    eurekaConfig.$inject = ['$stateProvider', '$urlRouterProvider'];
-
-    angular.module('eureka').run(eurekaRun);
-    angular.module('eureka').config(eurekaConfig);
 })();
 'use strict';
 
 (function () {
-	'use strict';
-	angular.module('cohorts', []);
+    'use strict';
+
+    angular.module('cohorts', []);
+
+    angular.module('cohorts').config(cohortsConfig);
+
+    cohortsConfig.$inject = ['$stateProvider'];
+
+    function cohortsConfig($stateProvider) {
+
+        $stateProvider.state('cohorts', {
+            url: '/cohorts',
+            templateUrl: 'eureka/cohorts/views/main/main.html',
+            controller: 'cohorts.MainCtrl',
+            controllerAs: 'cohorts'
+        }).state('newCohort', {
+            url: '/cohorts/new',
+            templateUrl: 'eureka/cohorts/views/new/new.html',
+            controller: 'cohorts.NewCtrl',
+            controllerAs: 'newCohort'
+        }).state('editCohort', {
+            url: '/cohorts/:key',
+            templateUrl: 'eureka/cohorts/views/edit/edit.html',
+            controller: 'cohorts.EditCtrl',
+            controllerAs: 'editCohort'
+        });
+    }
+})();
+'use strict';
+
+(function () {
+    'use strict';
+
+    angular.module('phenotypes', []);
+})();
+'use strict';
+
+(function () {
+    'use strict';
+
+    angular.module('register', []);
+
+    registerConfig.$inject = ['$stateProvider'];
+
+    function registerConfig($stateProvider) {
+
+        $stateProvider.state('register', {
+            url: '/register',
+            templateUrl: 'eureka/register/views/main/main.html',
+            controller: 'register.MainCtrl',
+            controllerAs: 'register'
+        });
+    }
 })();
 'use strict';
 
@@ -82,167 +109,14 @@
 })();
 'use strict';
 
-angular.module('eureka').controller("EditorController", ['$scope', 'EditorService', '$location', function ($scope, EditorService, $location) {
-
-    var vm = this;
-    var messages = {
-        'CATEGORIZATION': {
-            'displayName': "Category",
-            'description': "For defining a significant category of codes or clinical events or observations."
-        },
-        'TEMPORAL': {
-            'displayName': "Temporal",
-            'description': "For defining a disease, finding or patient care process to be reflected by codes,clinical events and/or observations in a specified frequency, sequential or other temporal patterns."
-        },
-        'SEQUENCE': {
-            'displayName': "Sequence",
-            'description': "For defining a disease, finding or patient care process to be reflected by codes,clinical events and/or observations in a specified sequential temporal pattern."
-        },
-        'FREQUENCY': {
-            'displayName': "Frequency",
-            'description': "For defining a disease, finding or patient care process to be reflected by codes,clinical events and/or observations in a specified frequency."
-        },
-        'VALUE_THRESHOLD': {
-            'displayName': "Value Threshold",
-            'description': "For defining clinically significant thresholds on the value of an observation."
-        }
-    };
-    vm.messages = messages;
-
-    EditorService.getSummarizedUserElements().then(function (data) {
-        vm.props = data;
-    }, displayError);
-
-    function displayError(msg) {
-        vm.errorMsg = msg;
-    }
-}]
-/*
-  passwordChange.error.internalServerError=Error while changing password.
- deleteDataElement.error.internalServerError=Error trying to delete data element. There is a problem with Eureka!.
- registerUserServlet.fullName={0} {1}
- registerUserServlet.error.unspecified=Please contact {0} for assistance.
- registerUserServlet.error.localAccountConflict=An account with your email address already exists.
-  */
-);
-'use strict';
-
-(function () {
-
-  'use strict';
-
-  angular.module('eureka').controller('MainController', function () {});
-})();
-/*angular.module('eurekaApp').controller(
-    "RegisterController",['$scope', 'RegisterService', '$location',
-    function( $scope, RegisterService, $location) {
-
-        $scope.addNewAccount = function (newAccount) {
-            RegisterService.addNewAccount(newAccount).then(handleSuccess,displayError);
-        };
-
-        function handleSuccess(data) {
-            $location.path("/register_info");
-        }
-
-        function displayError(msg) {
-            $scope.errorMsg = msg;
-        }
-
-    }]
-); */
-
-'use strict';
-
 (function () {
     'use strict';
 
-    angular.module('eureka').controller('RegisterController', RegisterController);
+    angular.module('eureka').directive('jstree', jstree);
 
-    RegisterController.$inject = ['RegisterService', '$location'];
+    jstree.$inject = ['listDragAndDropService'];
 
-    function RegisterController(RegisterService, $location) {
-        var vm = this;
-        vm.addNewAccount = addNewAccount;
-
-        function addNewAccount(newAccount) {
-            RegisterService.addNewAccount(newAccount).then(handleSuccess, displayError);
-        }
-
-        function handleSuccess(data) {
-            $location.path("/register_info");
-        }
-
-        function displayError(msg) {
-            $scope.errorMsg = msg;
-        }
-    }
-})();
-'use strict';
-
-angular.module('eureka').controller('TabController', function () {
-    this.tab = 1;
-
-    this.setTab = function (tabId) {
-        this.tab = tabId;
-    };
-
-    this.isSet = function (tabId) {
-        return this.tab === tabId;
-    };
-});
-'use strict';
-
-(function () {
-    angular.module('eureka').directive('editordirective', ['$http', '$templateCache', '$timeout', 'listDragAndDropService', function (http, templateCache, timer, listDragAndDropService) {
-
-        return {
-            scope: {
-                item: '=editordirective'
-            },
-            replace: true,
-            restrict: 'EA',
-            templateUrl: 'app/views/phenotype-li-template.html',
-            link: function link(scope, element, attrs, ctrl, transclude) {
-                scope.$watch('$last', function (v) {
-                    var editorAction = function editorAction() {
-
-                        $('ul.sortable').each(function (i, list) {
-                            $(list).find('li').each(function (j, item) {
-                                listDragAndDropService.addDroppedElement(item, $(list));
-                            });
-
-                            $('span.delete-icon').each(function (i, item) {
-                                $(item).click(function () {
-                                    var $toRemove = $(item).closest('li');
-                                    var $sortable = $toRemove.closest('ul.sortable');
-                                    var dialog = $('#deleteModal');
-                                    $(dialog).find('#deleteContent').html('Are you sure you want to remove ' + 'data element &quot;' + $toRemove.text().trim() + '&quot;?');
-                                    $(dialog).find('#deleteButton').on('click', function (e) {
-                                        listDragAndDropService.deleteItem($toRemove, $sortable, 0);
-                                        $(dialog).modal('hide');
-                                    });
-                                    $(dialog).modal('show');
-                                });
-                            });
-                        });
-                        var parent = element.parent();
-                        if (parent.is('div')) {
-                            parent.append($('<ul></ul>').attr('data-drop-type', 'multiple').attr('data-proptype', 'empty').addClass('sortable').append(element.parent().children()));
-                        }
-                    };
-
-                    timer(editorAction, 0);
-                });
-            }
-        };
-    }]);
-})();
-'use strict';
-
-(function () {
-    'use strict';
-    angular.module('eureka').directive('jstree', ['listDragAndDropService', function (listDragAndDropService) {
+    function jstree(listDragAndDropService) {
 
         return {
             scope: {
@@ -443,106 +317,18 @@ angular.module('eureka').controller('TabController', function () {
                 };
             }
         };
-    }]);
+    }
 })();
-'use strict';
-
-angular.module('eureka').factory("CohortService", ['$http', '$q', function ($http, $q) {
-
-    return {
-        getCohorts: getCohorts,
-        getCohort: getCohort,
-        getSystemElement: getSystemElement,
-        getPhenotypes: getPhenotypes,
-        removeCohort: removeCohort
-    };
-
-    function getCohorts() {
-
-        var type = "COHORT";
-        return $http.get("/eureka-services/api/protected/destinations?type=" + type).then(handleSuccess, handleError);
-    }
-
-    function removeCohort(key) {
-
-        return $http['delete']("/eureka-webapp/proxy-resource/destinations/" + key).then(handleSuccess, handleError);
-    }
-
-    function getSystemElement(key) {
-
-        return $http.get("/eureka-services/api/protected/systemelement/" + key + "?summary=true").then(handleSuccess, handleError);
-    }
-    function getCohort(cohortId) {
-
-        return $http.get("/eureka-services/api/protected/destinations/" + cohortId).then(handleSuccess, handleError);
-    }
-    function getPhenotypes(cohort) {
-
-        var cohorts = new Array();
-
-        function traverse(node) {
-
-            if (node.left_node != undefined) {
-                traverse(node.left_node);
-            }
-
-            if (node.name != undefined) {
-                cohorts.push(node.name);
-            }
-
-            if (node.right_node != undefined) {
-                traverse(node.right_node);
-            }
-        }
-
-        traverse(cohort.node);
-
-        var promises = [];
-        angular.forEach(cohorts, function (cohort) {
-            var promise = $http.get("/eureka-services/api/protected/systemelement/" + cohort + "?summary=true");
-            promises.push(promise);
-        });
-
-        return $q.all(promises);
-    }
-    function handleSuccess(response) {
-        return response.data;
-    }
-    function handleError(response) {
-        if (!angular.isObject(response.data) && !response.data) {
-            return $q.reject("An unknown error occurred.");
-        }
-        return $q.reject(response.data);
-    }
-}]);
-'use strict';
-
-angular.module('eureka').factory("EditorService", ['$http', '$q', function ($http, $q) {
-
-    return {
-        getSummarizedUserElements: getSummarizedUserElements
-    };
-
-    function getSummarizedUserElements() {
-        return $http.get("/eureka-services/api/protected/dataelement?summarize=true").then(handleSuccess, handleError);
-    }
-
-    function handleSuccess(response) {
-        return response.data;
-    }
-
-    function handleError(response) {
-        if (!angular.isObject(response.data) && !response.data) {
-            return $q.reject("An unknown error occurred.");
-        }
-        return $q.reject(response.data);
-    }
-}]);
 'use strict';
 
 (function () {
     'use strict';
-    angular.module('eureka').factory('listDragAndDropService', [function () {
+
+    angular.module('eureka').factory('listDragAndDropService', listDragAndDropService);
+
+    listDragAndDropService.$inject = [];
+
+    function listDragAndDropService() {
 
         return {
             getIn: getIn,
@@ -853,35 +639,8 @@ angular.module('eureka').factory("EditorService", ['$http', '$q', function ($htt
 
         self.dndActions = {};
         self.deleteActions = {};
-    }]);
+    }
 })();
-'use strict';
-
-angular.module('eureka').factory("RegisterService", ['$http', '$q', function ($http, $q) {
-
-    return {
-        addNewAccount: addNewAccount
-    };
-
-    function addNewAccount(newAccount) {
-        newAccount.username = newAccount.email;
-        newAccount.fullName = newAccount.firstName + " " + newAccount.lastName;
-        newAccount.type = "LOCAL";
-        newAccount.loginType = "INTERNAL";
-        return $http.post("/eureka-services/api/userrequest/new", newAccount).then(handleSuccess, handleError);
-    }
-
-    function handleSuccess(response) {
-        return response.data;
-    }
-
-    function handleError(response) {
-        if (!angular.isObject(response.data) && !response.data) {
-            return $q.reject("An unknown error occurred.");
-        }
-        return $q.reject(response.data);
-    }
-}]);
 'use strict';
 
 var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
@@ -970,68 +729,201 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         return User;
     })();
 })();
-/*angular.module('eurekaApp').controller(
-    "CohortEditController", ['$scope', 'CohortService', '$stateParams',
-        function( $scope, CohortService, $stateParams) {
-
-            var vm = this;
-
-            if ($stateParams.key) {
-
-                CohortService.getCohort($stateParams.key).then(function(data) {
-                    vm.cohortDestination = data;
-                    vm.getPhenotypes = function() {
-                        CohortService.getPhenotypes(data.cohort).then( function( promises ) {
-
-                            var phenotypes = [];
-                            for (var i = 0; i < promises.length; i++) {
-                                phenotypes.push(new Object({
-                                    "dataElementKey": promises[i].data.key,
-                                    "dataElementDisplayName": promises[i].data.displayName,
-                                    "type": "SYSTEM"
-                                }));
-
-                            }
-
-                            vm.cohortDestination.phenotypes = phenotypes;
-
-                            eureka.editor.setup(data.id != null ? data.id : null,
-                                '#userTree', '#definitionContainer', '#savePropositionButton');
-
-                        });
-
-                    };
-
-                    vm.getPhenotypes();
-
-
-                }, displayError);
-
-            }
-
-            function displayError(msg) {
-                vm.errorMsg = msg;
-            }
-
-        }]
-); */
-
 'use strict';
 
 (function () {
     'use strict';
 
-    angular.module('cohorts').controller('cohorts.EditController', EditController);
+    angular.module('cohorts').factory('CohortService', CohortService);
 
-    EditController.$inject = ['CohortService', '$stateParams'];
+    CohortService.$inject = ['$http', '$q'];
 
-    function EditController(CohortService, $stateParams) {
+    function CohortService($http, $q) {
+
+        return {
+            getCohorts: getCohorts,
+            getCohort: getCohort,
+            getSystemElement: getSystemElement,
+            getPhenotypes: getPhenotypes,
+            removeCohort: removeCohort
+        };
+
+        function getCohorts() {
+
+            var type = "COHORT";
+            return $http.get("/eureka-services/api/protected/destinations?type=" + type).then(handleSuccess, handleError);
+        }
+
+        function removeCohort(key) {
+
+            return $http['delete']("/eureka-webapp/proxy-resource/destinations/" + key).then(handleSuccess, handleError);
+        }
+
+        function getSystemElement(key) {
+
+            return $http.get("/eureka-services/api/protected/systemelement/" + key + "?summary=true").then(handleSuccess, handleError);
+        }
+        function getCohort(cohortId) {
+
+            return $http.get("/eureka-services/api/protected/destinations/" + cohortId).then(handleSuccess, handleError);
+        }
+        function getPhenotypes(cohort) {
+
+            var cohorts = new Array();
+
+            function traverse(node) {
+
+                if (node.left_node != undefined) {
+                    traverse(node.left_node);
+                }
+
+                if (node.name != undefined) {
+                    cohorts.push(node.name);
+                }
+
+                if (node.right_node != undefined) {
+                    traverse(node.right_node);
+                }
+            }
+
+            traverse(cohort.node);
+
+            var promises = [];
+            angular.forEach(cohorts, function (cohort) {
+                var promise = $http.get("/eureka-services/api/protected/systemelement/" + cohort + "?summary=true");
+                promises.push(promise);
+            });
+
+            return $q.all(promises);
+        }
+        function handleSuccess(response) {
+            return response.data;
+        }
+        function handleError(response) {
+            if (!angular.isObject(response.data) && !response.data) {
+                return $q.reject("An unknown error occurred.");
+            }
+            return $q.reject(response.data);
+        }
+    }
+})();
+'use strict';
+
+(function () {
+    'use strict';
+
+    angular.module('phenotypes').factory('PhenotypeService', PhenotypeService);
+
+    PhenotypeService.$inject = ['$http', '$q'];
+
+    function PhenotypeService($http, $q) {
+
+        return {
+            getSummarizedUserElements: getSummarizedUserElements
+        };
+
+        function getSummarizedUserElements() {
+            return $http.get("/eureka-services/api/protected/dataelement?summarize=true").then(handleSuccess, handleError);
+        }
+
+        function handleSuccess(response) {
+            return response.data;
+        }
+
+        function handleError(response) {
+            if (!angular.isObject(response.data) && !response.data) {
+                return $q.reject("An unknown error occurred.");
+            }
+            return $q.reject(response.data);
+        }
+    }
+})();
+'use strict';
+
+(function () {
+    'use strict';
+
+    angular.module('register').factory('RegisterService');
+
+    RegisterService.$inject = ['$http', '$q'];
+
+    function RegisterService($http, $q) {
+
+        return {
+            addNewAccount: addNewAccount
+        };
+
+        function addNewAccount(newAccount) {
+            newAccount.username = newAccount.email;
+            newAccount.fullName = newAccount.firstName + " " + newAccount.lastName;
+            newAccount.type = "LOCAL";
+            newAccount.loginType = "INTERNAL";
+            return $http.post("/eureka-services/api/userrequest/new", newAccount).then(handleSuccess, handleError);
+        }
+
+        function handleSuccess(response) {
+            return response.data;
+        }
+
+        function handleError(response) {
+            if (!angular.isObject(response.data) && !response.data) {
+                return $q.reject("An unknown error occurred.");
+            }
+            return $q.reject(response.data);
+        }
+    }
+})();
+'use strict';
+
+(function () {
+    'use strict';
+
+    angular.module('cohorts').controller('cohorts.MainCtrl', MainCtrl);
+
+    MainCtrl.$inject = ['CohortService'];
+
+    function MainCtrl(CohortService) {
+        var vm = this;
+        vm.remove = remove;
+        getCohorts();
+
+        function getCohorts() {
+            CohortService.getCohorts().then(function (data) {
+                vm.list = data;
+            }, displayError);
+        }
+
+        function remove(key) {
+            CohortService.removeCohort(key);
+            for (var i = 0; i < vm.list.length; i++) {
+                if (vm.list[i].name == key) {
+                    vm.list.splice(i, 1);
+                    break;
+                }
+            }
+        }
+
+        function displayError(msg) {
+            vm.errorMsg = msg;
+        }
+    }
+})();
+'use strict';
+
+(function () {
+    'use strict';
+
+    angular.module('cohorts').controller('cohorts.EditCtrl', EditCtrl);
+
+    EditCtrl.$inject = ['CohortService', '$stateParams'];
+
+    function EditCtrl(CohortService, $stateParams) {
         var vm = this;
 
         if ($stateParams.key) {
 
             CohortService.getCohort($stateParams.key).then(function (data) {
-                vm.cohortDestination = data;
+                vm.destination = data;
                 getPhenotypes();
             }, displayError);
         }
@@ -1048,7 +940,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                     }));
                 }
 
-                vm.cohortDestination.phenotypes = phenotypes;
+                vm.destination.phenotypes = phenotypes;
 
                 eureka.editor.setup(data.id !== null ? data.id : null, '#userTree', '#definitionContainer', '#savePropositionButton');
             });
@@ -1059,66 +951,142 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         }
     }
 })();
-/*
-angular.module('eurekaApp').controller(
-    "CohortController", ['$scope', 'CohortService',
-    function( $scope, CohortService) {
-
-        var vm = this;
-
-        var getCohorts = function() {
-            CohortService.getCohorts().then(function (data) {
-                vm.cohorts = data;
-            }, displayError);
-
-        };
-        getCohorts();
-
-        $scope.remove = function (key) {
-            CohortService.removeCohort(key);
-            for (var i = 0; i < vm.cohorts.length; i++) {
-                if (vm.cohorts[i].name == key) {
-                    vm.cohorts.splice(i, 1);
-                    break;
-                }
-            }
-
-        };
-
-        function displayError(msg) {
-            vm.errorMsg = msg;
-        }
-    }]
-); */
-
 'use strict';
 
 (function () {
     'use strict';
 
-    angular.module('cohorts').controller('cohorts.MainController', MainController);
+    angular.module('cohorts').controller('cohorts.NewCtrl', NewCtrl);
 
-    MainController.$inject = ['CohortService'];
+    NewCtrl.$inject = [];
 
-    function MainController(CohortService) {
+    function NewCtrl() {}
+})();
+'use strict';
+
+(function () {
+    'use strict';
+
+    angular.module('phenotypes').directive('phenotypeEditor', phenotypeEditor);
+
+    phenotypeEditor.$inject = ['$http', '$templateCache', '$timeout', 'listDragAndDropService'];
+
+    function phenotypeEditor(http, templateCache, timer, listDragAndDropService) {
+
+        return {
+            scope: {
+                item: '=phenotypeEditor'
+            },
+            replace: true,
+            restrict: 'EA',
+            templateUrl: 'eureka/phenotypes/directives/phenotype-editor/phenotype-editor.html',
+            link: function link(scope, element, attrs, ctrl, transclude) {
+                scope.$watch('$last', function (v) {
+                    var editorAction = function editorAction() {
+
+                        $('ul.sortable').each(function (i, list) {
+                            $(list).find('li').each(function (j, item) {
+                                listDragAndDropService.addDroppedElement(item, $(list));
+                            });
+
+                            $('span.delete-icon').each(function (i, item) {
+                                $(item).click(function () {
+                                    var $toRemove = $(item).closest('li');
+                                    var $sortable = $toRemove.closest('ul.sortable');
+                                    var dialog = $('#deleteModal');
+                                    $(dialog).find('#deleteContent').html('Are you sure you want to remove ' + 'data element &quot;' + $toRemove.text().trim() + '&quot;?');
+                                    $(dialog).find('#deleteButton').on('click', function (e) {
+                                        listDragAndDropService.deleteItem($toRemove, $sortable, 0);
+                                        $(dialog).modal('hide');
+                                    });
+                                    $(dialog).modal('show');
+                                });
+                            });
+                        });
+                        var parent = element.parent();
+                        if (parent.is('div')) {
+                            parent.append($('<ul></ul>').attr('data-drop-type', 'multiple').attr('data-proptype', 'empty').addClass('sortable').append(element.parent().children()));
+                        }
+                    };
+
+                    timer(editorAction, 0);
+                });
+            }
+        };
+    }
+})();
+'use strict';
+
+(function () {
+    'use strict';
+
+    angular.module('phenotypes').controller('phenotypes.MainCtrl');
+
+    MainCtrl.$inject = ['$scope', 'PhenotypeService', '$location'];
+
+    function MainCtrl($scope, PhenotypeService, $location) {
+
         var vm = this;
-        vm.remove = remove;
-        getCohorts();
+        var messages = {
+            'CATEGORIZATION': {
+                'displayName': "Category",
+                'description': "For defining a significant category of codes or clinical events or observations."
+            },
+            'TEMPORAL': {
+                'displayName': "Temporal",
+                'description': "For defining a disease, finding or patient care process to be reflected by codes,clinical events and/or observations in a specified frequency, sequential or other temporal patterns."
+            },
+            'SEQUENCE': {
+                'displayName': "Sequence",
+                'description': "For defining a disease, finding or patient care process to be reflected by codes,clinical events and/or observations in a specified sequential temporal pattern."
+            },
+            'FREQUENCY': {
+                'displayName': "Frequency",
+                'description': "For defining a disease, finding or patient care process to be reflected by codes,clinical events and/or observations in a specified frequency."
+            },
+            'VALUE_THRESHOLD': {
+                'displayName': "Value Threshold",
+                'description': "For defining clinically significant thresholds on the value of an observation."
+            }
+        };
+        vm.messages = messages;
 
-        function getCohorts() {
-            CohortService.getCohorts().then(function (data) {
-                vm.cohorts = data;
-            }, displayError);
+        PhenotypeService.getSummarizedUserElements().then(function (data) {
+            vm.props = data;
+        }, displayError);
+
+        function displayError(msg) {
+            vm.errorMsg = msg;
         }
 
-        function remove(key) {
-            CohortService.removeCohort(key);
-            for (var i = 0; i < vm.cohorts.length; i++) {
-                if (vm.cohorts[i].name == key) {
-                    vm.cohorts.splice(i, 1);
-                    break;
-                }
-            }
+        /*
+         passwordChange.error.internalServerError=Error while changing password.
+        deleteDataElement.error.internalServerError=Error trying to delete data element. There is a problem with Eureka!.
+        registerUserServlet.fullName={0} {1}
+        registerUserServlet.error.unspecified=Please contact {0} for assistance.
+        registerUserServlet.error.localAccountConflict=An account with your email address already exists.
+         */
+    }
+})();
+'use strict';
+
+(function () {
+    'use strict';
+
+    angular.module('register').controller('register.MainCtrl', MainCtrl);
+
+    MainCtrl.$inject = ['RegisterService', '$location'];
+
+    function MainCtrl(RegisterService, $location) {
+        var vm = this;
+        vm.addNewAccount = addNewAccount;
+
+        function addNewAccount(newAccount) {
+            RegisterService.addNewAccount(newAccount).then(handleSuccess, displayError);
+        }
+
+        function handleSuccess(data) {
+            vm.showSuccess = true;
         }
 
         function displayError(msg) {

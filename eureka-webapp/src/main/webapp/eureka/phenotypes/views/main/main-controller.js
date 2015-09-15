@@ -1,8 +1,13 @@
+(function() {
+    'use strict';
 
+    angular
+        .module('phenotypes')
+        .controller('phenotypes.MainCtrl');
 
-angular.module('eureka').controller(
-    "EditorController", ['$scope', 'EditorService', '$location',
-    function( $scope, EditorService, $location) {
+    MainCtrl.$inject = ['$scope', 'PhenotypeService', '$location'];
+
+    function MainCtrl($scope, PhenotypeService, $location) {
 
         var vm = this;
         var messages = {
@@ -29,7 +34,7 @@ angular.module('eureka').controller(
         };
         vm.messages = messages;
 
-        EditorService.getSummarizedUserElements().then(function(data) {
+        PhenotypeService.getSummarizedUserElements().then(function(data) {
             vm.props = data;
 
 
@@ -38,14 +43,17 @@ angular.module('eureka').controller(
         function displayError(msg) {
             vm.errorMsg = msg;
         }
-    }]
-    /*
 
-     passwordChange.error.internalServerError=Error while changing password.
-     deleteDataElement.error.internalServerError=Error trying to delete data element. There is a problem with Eureka!.
-     registerUserServlet.fullName={0} {1}
-     registerUserServlet.error.unspecified=Please contact {0} for assistance.
-     registerUserServlet.error.localAccountConflict=An account with your email address already exists.
 
-     */
-);
+        /*
+
+        passwordChange.error.internalServerError=Error while changing password.
+        deleteDataElement.error.internalServerError=Error trying to delete data element. There is a problem with Eureka!.
+        registerUserServlet.fullName={0} {1}
+        registerUserServlet.error.unspecified=Please contact {0} for assistance.
+        registerUserServlet.error.localAccountConflict=An account with your email address already exists.
+
+        */
+
+    }
+}());

@@ -1,7 +1,13 @@
 (function(){
     'use strict';
-    angular.module('eureka').factory('listDragAndDropService', [ function() {
 
+    angular
+        .module('eureka')
+        .factory('listDragAndDropService', listDragAndDropService);
+
+    listDragAndDropService.$inject = [];
+
+    function listDragAndDropService() {
 
         return ({
             getIn: getIn,
@@ -324,5 +330,6 @@
         self.deleteActions = {
         };
 
-    }]);
+    }
+
 }());

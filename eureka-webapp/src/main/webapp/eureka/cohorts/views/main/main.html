@@ -15,9 +15,9 @@
                 <th>Created Date</th>
                 <th>Last Modified</th>
             </tr>
-            <tr ng-repeat="cohortDestination in cohortController.cohorts">
+            <tr ng-repeat="cohortDestination in cohorts.list">
                 <td>
-                    <a ui-sref="cohortEditKey({key: cohortDestination.name})" title="Edit">
+                    <a ui-sref="editCohort({key: cohortDestination.name})" title="Edit">
                         <span class="glyphicon glyphicon-pencil edit-icon" title="Edit"></span>
                     </a>
                     <span class="glyphicon glyphicon-remove delete-icon" title="Delete" ng-click="remove(cohortDestination.name)"></span>

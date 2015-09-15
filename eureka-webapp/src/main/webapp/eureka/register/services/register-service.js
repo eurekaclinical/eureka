@@ -1,7 +1,13 @@
+(function() {
+    'use strict';
 
-angular.module('eureka').factory(
-    "RegisterService", ['$http', '$q',
-    function( $http, $q ) {
+    angular
+        .module('register')
+        .factory('RegisterService');
+
+    RegisterService.$inject = ['$http', '$q'];
+
+    function RegisterService($http, $q) {
 
         return ({
             addNewAccount: addNewAccount
@@ -26,6 +32,6 @@ angular.module('eureka').factory(
             }
             return ($q.reject(response.data));
         }
-    }]
 
-);
+    }
+}());

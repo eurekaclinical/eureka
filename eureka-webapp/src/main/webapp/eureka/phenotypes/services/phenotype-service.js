@@ -1,8 +1,13 @@
+(function() {
+    'use strict';
 
+    angular
+        .module('phenotypes')
+        .factory('PhenotypeService', PhenotypeService);
 
-angular.module('eureka').factory(
-    "EditorService",['$http', '$q',
-    function( $http, $q ) {
+    PhenotypeService.$inject = ['$http', '$q'];
+
+    function PhenotypeService($http, $q) {
 
         return ({
             getSummarizedUserElements: getSummarizedUserElements
@@ -23,5 +28,7 @@ angular.module('eureka').factory(
             }
             return ($q.reject(response.data));
         }
-    }]
-);
+
+    }
+
+}());
