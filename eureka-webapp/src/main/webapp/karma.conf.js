@@ -15,20 +15,20 @@ module.exports = function(config) {
 
     // list of files / patterns to load in the browser
     files: [
-      'assets/js/jquery-2.1.3.min.js',
-      'assets/bootstrap-3.3.4-dist/js/bootstrap.min.js',
-      'app/js/angular.js',
+      'bower_components/jquery/dist/jquery.js',
+      'bower_components/angular/angular.js',
       'bower_components/angular-mocks/angular-mocks.js',
-      'app/js/angular-route.js',
-      'app/js/angular-messages.js',
-      'app/js/angular-validator.min.js',
+      'bower_components/ui-router/release/angular-ui-router.js',
+      'bower_components/angular-messages/angular-messages.js',
+      'bower_components/bootstrap/dist/js/bootstrap.js',
+      'bower_components/angular-mocks/angular-mocks.js',
+      'bower_components/tg-angular-validator/dist/angular-validator.js',
+      'bower_components/angular-ui-tree/dist/angular-ui-tree.js',
+      'bower_components/lodash/lodash.js',
       'assets/js/eureka.tree-cohort.js',
       'assets/js/eureka.cohort.js',
       'assets/js/jstree-3.1.1.min.js',
-      'app/eurekaApp.js',
-      'app/eurekaApp.routes.js',
-      'app/services/*.js',
-      'app/controllers/*.js',
+      'dist/all.js',
       'app/**/*-spec.js'
     ],
 
