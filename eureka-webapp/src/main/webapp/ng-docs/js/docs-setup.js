@@ -19,7 +19,7 @@ NG_DOCS={
       "type": "overview",
       "moduleName": "eureka",
       "shortDescription": "The main module for the Eureka Angular app.",
-      "keywords": "angular angularvalidator api app cohorts eureka main module overview phenotypes register router ui"
+      "keywords": "angular angularvalidator api app cohorts eureka main module overview phenotypes register router tree ui"
     },
     {
       "section": "api",

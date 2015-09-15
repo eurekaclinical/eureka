@@ -20,6 +20,7 @@
 
         return ({
             getCohorts: getCohorts,
+            getTableData: getTableData,
             getCohort: getCohort,
             getSystemElement: getSystemElement,
             getPhenotypes: getPhenotypes,
@@ -30,6 +31,13 @@
 
             var type = 'COHORT';
             return $http.get('/eureka-services/api/protected/destinations?type=' + type)
+                .then(handleSuccess, handleError);
+
+        }
+
+        function getTableData() {
+
+            return $http.get('eureka-webapp/protected/systemlist?key=root')
                 .then(handleSuccess, handleError);
 
         }

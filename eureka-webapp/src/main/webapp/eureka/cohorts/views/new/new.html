@@ -1,4 +1,4 @@
-<h3>Cohort Editor</h3>
+<h3>Cohort Editor3</h3>
 <p>
     Select the system and user-defined elements from the ontology that will define the patient cohort.
 </p>
@@ -32,6 +32,28 @@
                 <div id="userTree"></div>
             </div>
         </div>
+
+        <!-- begin angular-ui-tree -->
+        Angular UI tree  
+        <div ui-tree>
+          <ol ui-tree-nodes="" ng-model="newCohort.dummyTreeData">
+            <li ng-repeat="item in newCohort.dummyTreeData" ui-tree-node>
+              <div ui-tree-handle>
+                {{item.title}}
+              </div>
+              <ol ui-tree-nodes="" ng-model="item.nodes">
+                <li ng-repeat="subItem in item.nodes" ui-tree-node>
+                  <div ui-tree-handle>
+                    {{subItem.title}}
+                  </div>
+                </li>
+              </ol>
+            </li>
+          </ol>
+        </div>
+
+        <!--end angular-ui-tree  -->
+
     </div>
     <div id="definitionContainer" class="col-xs-8">
         <form id="categorizationForm" class="vert-offset" role="form">

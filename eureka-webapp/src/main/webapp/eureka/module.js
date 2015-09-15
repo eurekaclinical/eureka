@@ -27,6 +27,7 @@
      * @description
      * The main module for the Eureka Angular app.
      * @requires ui.router
+     * @requires ui.tree
      * @requires angularValidator
      * @requires cohorts
      * @requires phenotypes
@@ -34,6 +35,7 @@
      */
     angular.module('eureka', [
         'ui.router',
+        'ui.tree',
         'angularValidator',
         'eureka.cohorts', 'eureka.phenotypes', 'eureka.register']);
 
