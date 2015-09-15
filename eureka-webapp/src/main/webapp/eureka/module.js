@@ -35,9 +35,7 @@
     angular.module('eureka', [
         'ui.router',
         'angularValidator',
-        'eureka.cohorts',
-        'eureka.phenotypes',
-        'eureka.register']);
+        'eureka.cohorts', 'eureka.phenotypes', 'eureka.register']);
 
     angular.module('eureka').run(eurekaRun);
     angular.module('eureka').config(eurekaConfig);
