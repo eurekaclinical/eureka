@@ -51,7 +51,7 @@ gulp.task('watch-js', ['process-js'], function() {
     browserSync.reload();
 });
 
-gulp.task('browser-sync', function() {
+gulp.task('browser-sync', ['process-js'], function() {
 
     // Serve files from the root of this project
     browserSync.init({
