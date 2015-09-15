@@ -4,8 +4,6 @@ var gulp = require('gulp'),
     concat = require("gulp-concat"),
     jshint = require('gulp-jshint'),
     Server = require('karma').Server,
-    url = require('url'),
-    proxy = require('proxy-middleware'),
     browserSync = require('browser-sync').create(),
     wiredep = require('wiredep').stream,
     opn = require('opn'),
@@ -57,16 +55,6 @@ gulp.task('process-js', ['lint', 'cache-templates'], function () {
     .pipe(concat('app.js'))
     .pipe(sourcemaps.write('.'))
     .pipe(gulp.dest('build'));
-});
-
-gulp.task('vendor-js', function () {
-  return gulp.src([
-        'assets/js/eureka.tree-cohort.js',
-        'assets/js/eureka.cohort.js',
-        'assets/js/jstree-3.1.1.min.js'
-    ])
-    .pipe(concat('vendor.js'))
-    .pipe(gulp.dest('./dist'));
 });
 
 gulp.task('lint', function() {
