@@ -1,7 +1,7 @@
 (function() {
     'use strict';
 
-    angular.module('eureka', ['ui.router', 'angularValidator']);
+    angular.module('eureka', ['ui.router', 'angularValidator', 'cohorts']);
 
     function eurekaRun($rootScope, appProperties, users) {
        $rootScope.app = appProperties;
@@ -38,19 +38,19 @@
             .state('cohortHome', {
                 url: '/cohort_home',
                 templateUrl: 'eureka/cohorts/views/main/cohort_home.html',
-                controller: 'MainController',
+                controller: 'cohorts.MainController',
                 controllerAs: 'cohortController'
             })
             .state('newCohort', {
                 url: '/edit_cohort',
                 templateUrl: 'eureka/views/cohorts/edit_cohort.html',
-                controller: 'CohortEditController',
+                controller: 'cohorts.EditController',
                 controllerAs: 'cohortEditController'
             })
             .state('cohortEditKey', {
                 url: '/edit_cohort/:key',
                 templateUrl: 'eureka/views/cohorts/edit_cohort_key.html',
-                controller: 'CohortEditController',
+                controller: 'cohorts.EditController',
                 controllerAs: 'cohortEditController'
             });
     }

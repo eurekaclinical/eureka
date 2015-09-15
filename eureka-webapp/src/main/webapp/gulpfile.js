@@ -29,7 +29,7 @@ gulp.task('test', function (done) {
 });
 
 gulp.task('process-js', function () {
-  return gulp.src(['eureka/**/*.js', '!eureka/js/**/*.js', '!eureka/**/*-spec.js'])
+  return gulp.src(['eureka/**/module.js', 'eureka/**/*.js', '!eureka/**/*-spec.js'])
     .pipe(sourcemaps.init())
     .pipe(babel())
     .pipe(concat("all.js"))
