@@ -12,16 +12,16 @@
         .module('eureka.cohorts')
         .controller('cohorts.NewCtrl', NewCtrl);
 
-    NewCtrl.$inject = ['CohortService'];
+    NewCtrl.$inject = ['CohortService', 'CohortTreeService'];
 
-    function NewCtrl(CohortService) {
+    function NewCtrl(CohortService, CohortTreeService) {
         var vm = this;
-        vm.getChildren= getChildren;
+        vm.getSubData= getSubData;
 
-        getTableData();
+        getTreeData();
 
-        function getTableData() {
-            CohortService.getTableData('root').then(function (data) {
+        function getTreeData() {
+            CohortTreeService.getTreeData('root').then(function (data) {
                 console.log(data);
                 vm.dummyTreeData = data;
             }, displayError);
@@ -31,8 +31,8 @@
             vm.errorMsg = msg;
         }
 
-        function getChildren(node){
-            CohortService.getTableData(node.attr.id).then(function (data) {
+        function getSubData(node){
+            CohortTreeService.getTreeData(node.attr.id).then(function (data) {
                 console.log(data);
                 vm.dummyTreeData = data;
             }, displayError);

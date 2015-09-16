@@ -37,7 +37,7 @@
         Angular UI tree  
         <div ui-tree data-drag-enabled="false">
           <ol ui-tree-nodes="" ng-model="newCohort.dummyTreeData">
-            <li ng-repeat="item in newCohort.dummyTreeData" ng-click="newCohort.getChildren(item)" ui-tree-node>
+            <li ng-repeat="item in newCohort.dummyTreeData" ng-click="newCohort.getSubData(item)" ui-tree-node>
               <div ui-tree-handle>
                 {{item.text}}
               </div>
