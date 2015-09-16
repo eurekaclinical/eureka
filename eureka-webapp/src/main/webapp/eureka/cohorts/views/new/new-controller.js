@@ -15,15 +15,18 @@
     NewCtrl.$inject = ['CohortService', 'CohortTreeService'];
 
     function NewCtrl(CohortService, CohortTreeService) {
-        var vm = this;
-        vm.getSubData= getSubData;
+        let vm = this;
+        let getTreeData = CohortTreeService.getTreeData;
+        vm.toggleNode = toggleNode;
 
-        getTreeData();
+        initTree();
 
-        function getTreeData() {
-            CohortTreeService.getTreeData('root').then(function (data) {
+        function initTree() {
+            vm.loading = true;
+            getTreeData('root').then(data => {
                 console.log(data);
                 vm.dummyTreeData = data;
+                delete vm.loading;
             }, displayError);
         }
 
@@ -31,11 +34,15 @@
             vm.errorMsg = msg;
         }
 
-        function getSubData(node){
-            CohortTreeService.getTreeData(node.attr.id).then(function (data) {
-                console.log(data);
-                vm.dummyTreeData = data;
-            }, displayError);
+        function toggleNode(node) {
+            if (!node.nodes) {
+                node.loading = true;
+                getTreeData(node.attr.id).then(data => {
+                    console.log(data);
+                    node.nodes = data;
+                    delete node.loading;
+                }, displayError);
+            }
         }
       /*  vm.dummyTreeData = [{
             'id': 1,

@@ -16,12 +16,14 @@ var gulp = require('gulp'),
     templateCache = require('gulp-angular-templatecache'),
     map = require('map-stream'),
 
-    exitOnJshintError = map(function (file, cb) {
-      if (!file.jshint.success) {
-        console.error('JSHint failed, fix the issues and rerun task.');
-        process.exit(1);
-      }
-    });
+    exitOnJshintError = function() {
+        return map(function (file, cb) {
+            if (!file.jshint.success) {
+                console.error('JSHint failed, fix the issues and rerun task.');
+                process.exit(1);
+            }
+        });
+    };
 
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 
@@ -35,7 +37,7 @@ gulp.task('ngdocs', ['process-js'], function () {
   var options = {
     title: "Eureka Angular Documentation",
     html5Mode: false
-  }
+  };
   return gulp.src('build/app.js')
     .pipe(gulpDocs.process(options))
     .pipe(gulp.dest('./ng-docs'));
@@ -61,10 +63,14 @@ gulp.task('lint', function() {
     gulp.src(['eureka/**/*.js', '!eureka/js/**/*.js'])
         .pipe(jshint('.jshintrc'))
         .pipe(jshint.reporter('jshint-stylish'))
-        .pipe(exitOnJshintError);
+        .pipe(exitOnJshintError());
 });
 
 gulp.task('watch-js', ['test'], function() {
+    browserSync.reload();
+});
+
+gulp.task('watch-html', ['process-js'], function() {
     browserSync.reload();
 });
 
@@ -79,7 +85,7 @@ gulp.task('browser-sync', ['test'], function() {
     });
 
     gulp.watch("eureka/**/*.js", ['watch-js']);
-    gulp.watch("./**/*.html").on('change', browserSync.reload);
+    gulp.watch("./**/*.html", ['watch-html']);
 
 });
 
