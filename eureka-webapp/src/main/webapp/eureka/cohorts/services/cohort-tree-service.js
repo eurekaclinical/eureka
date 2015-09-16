@@ -1,21 +1,26 @@
 (function(){
-	'us strict';
+	'use strict';
 
 	angular
 			.module('eureka.cohorts')
 			.factory('CohortTreeService', CohortTreeService);
 
-	CohortTreeService.$inject = ['$http', '$q'];
+	CohortTreeService.$inject = ['$http', '$q', 'appProperties'];
 
-	function CohortTreeService($http, $q){
+	function CohortTreeService($http, $q, appProperties){
 
-		return ({
-            getTreeData: getTreeData,
-        });
+		return {
+            getTreeData: getTreeData
+        };
 
 		function getTreeData(id) {
-
-            return $http.get('/eureka-webapp/protected/systemlist?key='+id)
+            return $http
+                .get(`${appProperties.dataEndpoint}/systemlist`, {
+                    cache: true,
+                    params: {
+                        key: id
+                    }
+                })
                 .then(handleSuccess, handleError);
         }
 

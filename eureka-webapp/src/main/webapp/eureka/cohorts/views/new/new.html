@@ -34,24 +34,28 @@
         </div>
 
         <!-- begin angular-ui-tree -->
-        Angular UI tree  
+        Angular UI tree
+        <md-progress-circular md-mode="indeterminate" ng-if="newCohort.loading"></md-progress-circular>
         <div ui-tree data-drag-enabled="false">
-          <ol ui-tree-nodes="" ng-model="newCohort.dummyTreeData">
-            <li ng-repeat="item in newCohort.dummyTreeData" ng-click="newCohort.getSubData(item)" ui-tree-node>
-              <div ui-tree-handle>
-                {{item.text}}
-              </div>
-              <ol ui-tree-nodes="" ng-model="item.nodes">
-                <li ng-repeat="subItem in item.nodes" ui-tree-node>
-                  <div ui-tree-handle>
-                    {{subItem.title}}
-                  </div>
-                </li>
-              </ol>
-            </li>
-          </ol>
+            <ol ui-tree-nodes="" ng-model="newCohort.dummyTreeData" id="tree-root">
+                <li ng-repeat="node in newCohort.dummyTreeData" ui-tree-node ng-include="'nodes_renderer.html'" collapsed="true"></li>
+            </ol>
         </div>
-
+        <!-- Nested node template -->
+        <script type="text/ng-template" id="nodes_renderer.html">
+            <div ui-tree-handle ng-click="toggle(this); newCohort.toggleNode(node)">
+                <i class="fa" ng-if="node.children" ng-class="{
+                    'fa-plus-square-o': collapsed,
+                    'fa-minus-square-o': !collapsed
+                }"></i>
+                {{node.text}}
+            </div>
+            <md-progress-linear style="margin:5px 0;" md-mode="indeterminate" ng-if="node.loading"></md-progress-linear>
+            <ol ui-tree-nodes="" ng-class="{ 'hidden': collapsed }" ng-model="node.nodes">
+                <li ng-repeat="node in node.nodes" ui-tree-node ng-include="'nodes_renderer.html'" collapsed="true">
+                </li>
+            </ol>
+        </script>
         <!--end angular-ui-tree  -->
 
     </div>

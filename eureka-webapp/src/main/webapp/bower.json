@@ -22,7 +22,8 @@
     "bootstrap": "~3.3",
     "angular-ui-tree": "~2.9.0",
     "font-awesome": "~4.4.0",
-    "lodash": "~3.10.1"
+    "lodash": "~3.10.1",
+    "angular-material": "~0.11.0"
   },
   "resolutions": {
     "angular": "~1.3"

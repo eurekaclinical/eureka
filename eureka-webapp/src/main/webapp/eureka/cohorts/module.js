@@ -7,7 +7,7 @@
      * @description
      * The module for the cohorts section of the Eureka application.
      */
-	angular.module('eureka.cohorts',[]);
+	angular.module('eureka.cohorts', []);
 
     angular.module('eureka.cohorts').config(cohortsConfig);
 

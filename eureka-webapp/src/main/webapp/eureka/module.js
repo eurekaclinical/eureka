@@ -28,6 +28,7 @@
      * The main module for the Eureka Angular app.
      * @requires ui.router
      * @requires ui.tree
+     * @requires ngMaterial
      * @requires angularValidator
      * @requires cohorts
      * @requires phenotypes
@@ -37,13 +38,16 @@
         'ui.router',
         'ui.tree',
         'angularValidator',
-        'eureka.cohorts', 'eureka.phenotypes', 'eureka.register']);
+        'ngMaterial',
+        'eureka.cohorts',
+        'eureka.phenotypes',
+        'eureka.register']);
 
     angular.module('eureka').run(eurekaRun);
     angular.module('eureka').config(eurekaConfig);
 
     eurekaRun.$inject = ['$rootScope', 'appProperties', 'users'];
-    eurekaConfig.$inject = ['$stateProvider', '$urlRouterProvider'];
+    eurekaConfig.$inject = ['$stateProvider', '$urlRouterProvider', '$mdThemingProvider'];
 
     function eurekaRun($rootScope, appProperties, users) {
        $rootScope.app = appProperties;
@@ -57,7 +61,7 @@
        });
     }
 
-    function eurekaConfig($stateProvider, $urlRouterProvider){
+    function eurekaConfig($stateProvider, $urlRouterProvider, $mdThemingProvider){
 
         $urlRouterProvider.otherwise('/index');
 
@@ -66,6 +70,9 @@
                 url: '/index',
                 templateUrl: 'eureka/views/main/main.html'
             });
+
+        $mdThemingProvider.theme('default')
+            .primaryPalette('blue-grey');
     }
 
 }());
