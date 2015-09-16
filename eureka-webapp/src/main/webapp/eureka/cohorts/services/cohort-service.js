@@ -35,9 +35,9 @@
 
         }
 
-        function getTableData() {
+        function getTableData(id) {
 
-            return $http.get('eureka-webapp/protected/systemlist?key=root')
+            return $http.get('/eureka-webapp/protected/systemlist?key='+id)
                 .then(handleSuccess, handleError);
 
         }

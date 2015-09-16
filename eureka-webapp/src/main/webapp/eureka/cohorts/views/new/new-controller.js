@@ -16,11 +16,12 @@
 
     function NewCtrl(CohortService) {
         var vm = this;
+        vm.getChildren= getChildren;
 
         getTableData();
 
         function getTableData() {
-            CohortService.getTableData().then(function (data) {
+            CohortService.getTableData('root').then(function (data) {
                 console.log(data);
                 vm.dummyTreeData = data;
             }, displayError);
@@ -28,6 +29,13 @@
 
         function displayError(msg) {
             vm.errorMsg = msg;
+        }
+
+        function getChildren(node){
+            CohortService.getTableData(node.attr.id).then(function (data) {
+                console.log(data);
+                vm.dummyTreeData = data;
+            }, displayError);
         }
       /*  vm.dummyTreeData = [{
             'id': 1,
