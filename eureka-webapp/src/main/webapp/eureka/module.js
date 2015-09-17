@@ -71,8 +71,17 @@
                 templateUrl: 'eureka/views/main/main.html'
             });
 
+        // Extend the red theme with a few different colors
+        var darkBlueMap = $mdThemingProvider.extendPalette('blue', {
+            '900': '24497A'
+        });
+        // Register the new color palette map with the name <code>neonRed</code>
+        $mdThemingProvider.definePalette('darkBlue', darkBlueMap);
+        // Use that theme for the primary intentions
         $mdThemingProvider.theme('default')
-            .primaryPalette('blue-grey');
+            .primaryPalette('darkBlue', {
+                'hue-1': '900' // use shade 900 for the <code>md-hue-1</code> class
+            });
     }
 
 }());

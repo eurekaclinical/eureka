@@ -12,13 +12,18 @@
         .module('eureka.cohorts')
         .controller('cohorts.NewCtrl', NewCtrl);
 
-    NewCtrl.$inject = ['CohortService', 'CohortTreeService'];
+    NewCtrl.$inject = ['CohortTreeService'];
 
-    function NewCtrl(CohortService, CohortTreeService) {
+    function NewCtrl(CohortTreeService) {
         let vm = this;
         let getTreeData = CohortTreeService.getTreeData;
         vm.toggleNode = toggleNode;
+        vm.nodeAllowed = nodeAllowed;
         vm.memberList = [];
+
+        vm.treeOptions = {
+            accept: addMember
+        };
 
         initTree();
 
@@ -26,7 +31,7 @@
             vm.loading = true;
             getTreeData('root').then(data => {
                 console.log(data);
-                vm.dummyTreeData = data;
+                vm.treeData = data;
                 delete vm.loading;
             }, displayError);
         }
@@ -45,28 +50,23 @@
                 }, displayError);
             }
         }
-      /*  vm.dummyTreeData = [{
-            'id': 1,
-            'title': 'node1',
-            'nodes': [
-                {
-                    'id': 11,
-                    'title': 'node1.1',
-                    'nodes': [
-                        {
-                            'id': 111,
-                            'title': 'node1.1.1',
-                            'nodes': []
-                        }
-                    ]
-                },
-                {
-                    'id': 12,
-                    'title': 'node1.2',
-                    'nodes': []
-                }
-            ]
-        }];*/
+
+        function nodeAllowed(node, memberList) {
+            memberList = memberList || vm.memberList;
+            if (memberList.indexOf(node) !== -1) {
+                return false;
+            }
+            let differentType = vm.memberList.some(function(memberNode) {
+                return node.attr['data-type'] !== memberNode.attr['data-type'];
+            });
+            return !differentType;
+        }
+
+        function addMember(nodeScope, memberListScope) {
+            let node = nodeScope.$modelValue;
+            let memberList = memberListScope.$modelValue;
+            return nodeAllowed(node, memberList);
+        }
 
     }
 
