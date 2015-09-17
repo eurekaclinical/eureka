@@ -12,13 +12,15 @@
         .module('eureka.cohorts')
         .controller('cohorts.NewCtrl', NewCtrl);
 
-    NewCtrl.$inject = ['CohortTreeService'];
+    NewCtrl.$inject = ['CohortTreeService', 'CohortService', '$state'];
 
-    function NewCtrl(CohortTreeService) {
+    function NewCtrl(CohortTreeService, CohortService, $state) {
         let vm = this;
         let getTreeData = CohortTreeService.getTreeData;
+        let createCohort = CohortService.createCohort;
         vm.toggleNode = toggleNode;
         vm.nodeAllowed = nodeAllowed;
+        vm.submitCohortForm = submitCohortForm;
         vm.memberList = [];
 
         vm.treeOptions = {
@@ -34,10 +36,6 @@
                 vm.treeData = data;
                 delete vm.loading;
             }, displayError);
-        }
-
-        function displayError(msg) {
-            vm.errorMsg = msg;
         }
 
         function toggleNode(node) {
@@ -66,6 +64,25 @@
             let node = nodeScope.$modelValue;
             let memberList = memberListScope.$modelValue;
             return nodeAllowed(node, memberList);
+        }
+
+        function submitCohortForm(){
+            console.log('submitting form');
+            let cohortObject = {};
+            cohortObject.name = vm.cohort.name;
+            cohortObject.description = vm.cohort.description;
+            cohortObject.memberList = vm.memberList;
+
+            createCohort(cohortObject).then(data => {
+                // if successful we prob need to redirect back to the main table
+                console.log('we made it back ');
+                $state.transitionTo('cohorts');
+            }, displayError);
+
+        }
+
+        function displayError(msg) {
+            vm.errorMsg = msg;
         }
 
     }

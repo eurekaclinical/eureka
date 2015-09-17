@@ -23,7 +23,8 @@
             getCohort: getCohort,
             getSystemElement: getSystemElement,
             getPhenotypes: getPhenotypes,
-            removeCohort: removeCohort
+            removeCohort: removeCohort,
+            createCohort: createCohort
         });
 
         function getCohorts() {
@@ -85,6 +86,35 @@
             return $q.all(promises);
 
         }
+
+        function createCohort(cohort){
+            /*This is what the data looks like being sent to server.  Does not look valid
+            {"id":null,"type":"COHORT","ownerUserId":1,"name":"NameTest","description":"NameDescription",
+            "dataElementFields":null, "cohort":{"id":null,"node":{"id":null,"start":null,"finish":null,
+            "type":"Literal","name":"\\ACT\\Medications\\"}},"read":false,"write":false,"execute":false,
+            "created_at":null,"updated_at":null,"links":null}
+            */
+
+            console.log(cohort);
+            //lets build out a test obj
+            let cohortTemplateObj = {'id': null, 'type': 'COHORT', 'ownerUserId': 1, 
+            'name':'', 'description': '', 'dataElementFields': null, 
+            'cohort':{'id': null, 'node':{'id': null, 'start': null, 'finish': null, 'type': 'Literal', 'name': ''}},
+            'read': false, 'write': false, 'execute': false, 'created_at': null, 'updated_at': null, 'links': null};
+            //after building out test obj lets add some data from the first item in the array
+            if(cohort){
+                cohortTemplateObj.id = cohort.name +'id';
+                cohortTemplateObj.name = cohort.name;
+                cohortTemplateObj.description = cohort.description;
+                cohortTemplateObj.cohort.node.name = cohort.memberList[0].text;
+                cohortTemplateObj.cohort.node.id = cohort.memberList[0].id;
+            }
+
+            return $http.post('/eureka-webapp/proxy-resource/destinations/',cohortTemplateObj)
+            .then(handleSuccess, handleError);
+
+        }
+
         function handleSuccess(response) {
             return response.data;
         }
