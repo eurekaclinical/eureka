@@ -18,6 +18,7 @@
         let vm = this;
         let getTreeData = CohortTreeService.getTreeData;
         vm.toggleNode = toggleNode;
+        vm.memberList = [];
 
         initTree();
 

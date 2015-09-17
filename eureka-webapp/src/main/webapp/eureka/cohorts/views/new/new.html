@@ -38,7 +38,7 @@
             <md-tab label="System">
                 <md-content class="md-padding">
                 <md-progress-circular md-mode="indeterminate" ng-if="newCohort.loading"></md-progress-circular>
-                <div ui-tree data-drag-enabled="false">
+                <div ui-tree data-drag-enabled="true" data-drag-delay="100" data-clone-enabled="true">
                     <ol ui-tree-nodes="" ng-model="newCohort.dummyTreeData" id="tree-root">
                         <li ng-repeat="node in newCohort.dummyTreeData" ui-tree-node ng-include="'nodes_renderer.html'" collapsed="true"></li>
                     </ol>
@@ -93,6 +93,24 @@
             </div>
         </form>
     </div>
+
+    <!-- angular-ui-tree drop zone -->
+     <div class="col-xs-8">
+        <div class="form-group">
+            <label for="patCohortDefinition" class="control-label"> New Drop Zone</label>
+           <div ui-tree>
+              <ol ui-tree-nodes="" ng-model="newCohort.memberList" style="background-color:lightblue;">
+                <li ng-repeat="item in newCohort.memberList" ui-tree-node data-nodrag>
+                  <div ui-tree-handle>
+                    {{item.text}}
+                  </div>
+                </li>
+              </ol>
+            </div>
+        </div>
+    </div>
+     <!-- end of angular-ui-tree drop zone -->
+
 </div>
 <div id="deleteModal" class="modal fade" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
