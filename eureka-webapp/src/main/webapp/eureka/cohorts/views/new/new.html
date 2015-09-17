@@ -68,7 +68,7 @@
                 <md-tab label="System">
                     <md-content class="md-padding">
                         <md-input-container md-no-float>
-                            <input flex ng-model="newCohort.treeSearch" placeholder="Search">
+                            <input flex ng-model="newCohort.treeSearch" placeholder="Search" ng-model-options='{ debounce: 1000 }' ng-change="newCohort.filterCohortList()">
                         </md-input-container>
                         <md-progress-circular class="md-hue-1" md-mode="indeterminate" ng-if="newCohort.loading"></md-progress-circular>
                         <div ui-tree data-drag-enabled="true" data-drag-delay="200" data-clone-enabled="true">

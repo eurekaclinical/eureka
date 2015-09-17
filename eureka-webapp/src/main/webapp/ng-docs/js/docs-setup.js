@@ -41,6 +41,15 @@ NG_DOCS={
     },
     {
       "section": "api",
+      "id": "eureka.cohorts.CohortFilterService",
+      "shortName": "eureka.cohorts.CohortFilterService",
+      "type": "service",
+      "moduleName": "eureka.cohorts",
+      "shortDescription": "This service provides an API to interact with the REST endpoint for cohorts.",
+      "keywords": "$http $q api cohortfilterservice cohorts endpoint eureka interact rest service"
+    },
+    {
+      "section": "api",
       "id": "eureka.cohorts.CohortService",
       "shortName": "eureka.cohorts.CohortService",
       "type": "service",

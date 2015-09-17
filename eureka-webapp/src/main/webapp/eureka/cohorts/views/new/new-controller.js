@@ -12,15 +12,18 @@
         .module('eureka.cohorts')
         .controller('cohorts.NewCtrl', NewCtrl);
 
-    NewCtrl.$inject = ['CohortTreeService', 'CohortService', '$state'];
+    NewCtrl.$inject = ['CohortTreeService', 'CohortService', 'CohortFilterService', '$state'];
 
-    function NewCtrl(CohortTreeService, CohortService, $state) {
+    function NewCtrl(CohortTreeService, CohortService, CohortFilterService, $state) {
         let vm = this;
         let getTreeData = CohortTreeService.getTreeData;
         let createCohort = CohortService.createCohort;
+        let filterCohorts = CohortFilterService.filterCohorts;
+
         vm.toggleNode = toggleNode;
         vm.nodeAllowed = nodeAllowed;
         vm.submitCohortForm = submitCohortForm;
+        vm.filterCohortList = filterCohortList;
         vm.memberList = [];
 
         vm.treeOptions = {
@@ -67,7 +70,6 @@
         }
 
         function submitCohortForm(){
-            console.log('submitting form');
             let cohortObject = {};
             cohortObject.name = vm.cohort.name;
             cohortObject.description = vm.cohort.description;
@@ -79,6 +81,12 @@
                 $state.transitionTo('cohorts');
             }, displayError);
 
+        }
+
+        function filterCohortList(){
+            filterCohorts(vm.treeSearch).then(data => {
+                vm.treeData = data;
+            }, displayError);
         }
 
         function displayError(msg) {

@@ -9,7 +9,8 @@
         aiwSiteUrl: 'http://aiw.sourceforge.net',
         organizationName: 'Emory University',
         apiEndpoint: '/eureka-services/api/protected',
-        dataEndpoint: '/eureka-webapp/protected'
+        dataEndpoint: '/eureka-webapp/protected',
+        filterEndpoint: '/eureka-webapp/protected/jstree3_searchsystemlist'
     };
 
     /**
