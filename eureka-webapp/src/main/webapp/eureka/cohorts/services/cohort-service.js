@@ -94,25 +94,51 @@
             "type":"Literal","name":"\\ACT\\Medications\\"}},"read":false,"write":false,"execute":false,
             "created_at":null,"updated_at":null,"links":null}
             */
-
-            console.log(cohort);
-            //lets build out a test obj
-            let cohortTemplateObj = {'id': null, 'type': 'COHORT', 'ownerUserId': 1, 
-            'name':'', 'description': '', 'dataElementFields': null, 
-            'cohort':{'id': null, 'node':{'id': null, 'start': null, 'finish': null, 'type': 'Literal', 'name': ''}},
-            'read': false, 'write': false, 'execute': false, 'created_at': null, 'updated_at': null, 'links': null};
-            //after building out test obj lets add some data from the first item in the array
-            if(cohort){
-                cohortTemplateObj.id = cohort.name +'id';
-                cohortTemplateObj.name = cohort.name;
-                cohortTemplateObj.description = cohort.description;
-                cohortTemplateObj.cohort.node.name = cohort.memberList[0].text;
-                cohortTemplateObj.cohort.node.id = cohort.memberList[0].id;
+            let newCohort = {
+                id: null,
+                type: 'COHORT',
+                ownerUserId: 1,
+                dataElementFields: null,
+                cohort: {
+                    id: null
+                },
+                read: false,
+                write: false,
+                execute: false,
+                created_at: null,
+                updated_at: null,
+                links: null
+            };
+            let phenotypes = cohort.memberList;
+            let node = {id: null, start: null, finish: null, type: 'Literal'};
+            if (phenotypes.length === 1) {
+                node.name = phenotypes[0].id;
+            } else if (phenotypes.length > 1) {
+                let first = true;
+                let prev = null;
+                for (var i = phenotypes.length - 1; i >= 0; i--) {
+                    var literal = {id: null, start: null, finish: null, type: 'Literal'};
+                    literal.name = phenotypes[i].id;
+                    if (first) {
+                        first = false;
+                        prev = literal;
+                    } else {
+                        var binaryOperator = {id: null, type: 'BinaryOperator', op: 'OR'};
+                        binaryOperator.left_node = literal;
+                        binaryOperator.right_node = prev;
+                        prev = binaryOperator;
+                    }
+                }
+                node = prev;
+            } else {
+                node = null;
             }
-
-            return $http.post('/eureka-webapp/proxy-resource/destinations/',cohortTemplateObj)
-            .then(handleSuccess, handleError);
-
+            newCohort.name = cohort.name;
+            newCohort.description = cohort.description;
+            newCohort.cohort.id = null;
+            newCohort.cohort.node = node;
+            return $http.post('/eureka-webapp/proxy-resource/destinations/', newCohort)
+                .then(handleSuccess, handleError);
         }
 
         function handleSuccess(response) {

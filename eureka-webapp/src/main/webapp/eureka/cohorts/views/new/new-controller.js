@@ -84,8 +84,11 @@
         }
 
         function filterCohortList(){
+            vm.loading = true;
+            vm.treeData = [];
             filterCohorts(vm.treeSearch).then(data => {
                 vm.treeData = data;
+                delete vm.loading;
             }, displayError);
         }
 
