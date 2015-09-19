@@ -87,14 +87,12 @@ public class JobResource {
 	private final DestinationDao destinationDao;
 	private final EurekaProtempaConfigurations configurations;
 	private final ProtempaDestinationFactory protempaDestinationFactory;
-	private final EtlProperties etlProperties;
 
 	@Inject
 	public JobResource(JobDao inJobDao, TaskManager inTaskManager,
 			EtlUserDao inEtlUserDao, DestinationDao inDestinationDao,
 			EurekaProtempaConfigurations configurations,
-			ProtempaDestinationFactory inProtempaDestinationFactory,
-			EtlProperties inEtlProperties) {
+			ProtempaDestinationFactory inProtempaDestinationFactory) {
 		this.jobDao = inJobDao;
 		this.taskManager = inTaskManager;
 		this.etlUserDao = inEtlUserDao;
@@ -102,7 +100,6 @@ public class JobResource {
 		this.destinationDao = inDestinationDao;
 		this.configurations = configurations;
 		this.protempaDestinationFactory = inProtempaDestinationFactory;
-		this.etlProperties = inEtlProperties;
 	}
 
 	@GET
@@ -141,7 +138,7 @@ public class JobResource {
 		DestinationEntity destEntity = this.destinationDao.getByName(destinationId);
 		if (destEntity != null) {
 			try {
-				Destination dest = this.protempaDestinationFactory.getInstance(destEntity);
+				Destination dest = this.protempaDestinationFactory.getInstance(destEntity, false);
 				Statistics result = new Statistics();
 				org.protempa.dest.Statistics statistics = dest.getStatistics();
 				if (statistics != null) {

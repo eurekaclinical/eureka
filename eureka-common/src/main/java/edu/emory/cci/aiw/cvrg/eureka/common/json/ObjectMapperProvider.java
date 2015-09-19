@@ -53,6 +53,7 @@ import org.protempa.CompoundLowLevelAbstractionDefinition;
 import org.protempa.ContextDefinition;
 import org.protempa.SequentialTemporalPatternDefinition;
 import org.protempa.SequentialTemporalPatternDefinition.SubsequentTemporalExtendedPropositionDefinition;
+import org.protempa.proposition.value.BooleanValue;
 
 /**
  * Provides custom JSON serialization/deserialization from proposition
@@ -92,6 +93,8 @@ public class ObjectMapperProvider implements ContextResolver<ObjectMapper> {
 				context.setMixInAnnotations(Value.class, ValueMixin.class);
 				context.setMixInAnnotations(NominalValue.class,
 				        NominalValueMixin.class);
+				context.setMixInAnnotations(BooleanValue.class,
+						BooleanValueMixin.class);
 				context.setMixInAnnotations(NumberValue.class,
 				        NumberValueMixin.class);
 				context.setMixInAnnotations(Relation.class, RelationMixin.class);

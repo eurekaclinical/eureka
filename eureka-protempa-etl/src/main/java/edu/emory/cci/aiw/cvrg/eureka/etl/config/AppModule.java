@@ -23,11 +23,13 @@ package edu.emory.cci.aiw.cvrg.eureka.etl.config;
 import com.google.inject.AbstractModule;
 
 import edu.emory.cci.aiw.cvrg.eureka.etl.dao.DestinationDao;
+import edu.emory.cci.aiw.cvrg.eureka.etl.dao.DeidPerPatientParamDao;
 import edu.emory.cci.aiw.cvrg.eureka.etl.dao.EtlGroupDao;
 import edu.emory.cci.aiw.cvrg.eureka.etl.dao.EtlUserDao;
 import edu.emory.cci.aiw.cvrg.eureka.etl.dao.JobDao;
 import edu.emory.cci.aiw.cvrg.eureka.etl.dao.JobEventDao;
 import edu.emory.cci.aiw.cvrg.eureka.etl.dao.JpaDestinationDao;
+import edu.emory.cci.aiw.cvrg.eureka.etl.dao.JpaDestinationOffsetDao;
 import edu.emory.cci.aiw.cvrg.eureka.etl.dao.JpaEtlGroupDao;
 import edu.emory.cci.aiw.cvrg.eureka.etl.dao.JpaEtlUserDao;
 import edu.emory.cci.aiw.cvrg.eureka.etl.dao.JpaJobDao;
@@ -48,6 +50,7 @@ public class AppModule extends AbstractModule {
 		bind(EtlUserDao.class).to(JpaEtlUserDao.class);
 		bind(EtlGroupDao.class).to(JpaEtlGroupDao.class);
 		bind(DestinationDao.class).to(JpaDestinationDao.class);
+		bind(DeidPerPatientParamDao.class).to(JpaDestinationOffsetDao.class);
 		bind(SourceConfigDao.class).to(JpaSourceConfigDao.class);
 		bind(Task.class).toProvider(TaskProvider.class);
 	}

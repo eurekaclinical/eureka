@@ -48,14 +48,14 @@ public class TaskManager {
 
 	public void queueTask (Long inJobId, 
 			List<PropositionDefinition> inPropositionDefinitions, 
-			List<String> propIdsToShow, Filter filter, boolean appendData,
+			List<String> propIdsToShow, Filter filter, boolean updateData,
 			Configuration prompts) {
 		Task task = this.taskProvider.get();
 		task.setJobId(inJobId);
 		task.setPropositionDefinitions(inPropositionDefinitions);
 		task.setPropositionIdsToShow(propIdsToShow);
 		task.setFilter(filter);
-		task.setAppendData(appendData);
+		task.setUpdateData(updateData);
 		task.setPrompts(prompts);
 		this.executorService.execute(task);
 	}

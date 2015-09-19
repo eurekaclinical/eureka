@@ -19,7 +19,6 @@ package edu.emory.cci.aiw.cvrg.eureka.common.entity;
  * limitations under the License.
  * #L%
  */
-
 import java.util.Date;
 import java.util.List;
 import javax.persistence.CascadeType;
@@ -45,39 +44,48 @@ import javax.persistence.Temporal;
 @Table(name = "destinations")
 @Inheritance(strategy = InheritanceType.JOINED)
 public abstract class DestinationEntity implements ConfigEntity {
+	
 	@Id
 	@SequenceGenerator(name = "DEST_SEQ_GENERATOR", sequenceName = "DEST_SEQ",
-	allocationSize = 1)
+			allocationSize = 1)
 	@GeneratedValue(strategy = GenerationType.SEQUENCE,
-	generator = "DEST_SEQ_GENERATOR")
+			generator = "DEST_SEQ_GENERATOR")
 	private Long id;
-	
+
 	@Column(nullable = false, unique = true)
 	private String name;
-	
+
 	@Lob
 	private String description;
-	
+
 	@Temporal(javax.persistence.TemporalType.TIMESTAMP)
 	@Column(name = "created_at")
 	private Date createdAt;
-	
+
 	@Temporal(javax.persistence.TemporalType.TIMESTAMP)
 	@Column(name = "effective_at")
 	private Date effectiveAt;
-	
+
 	@Temporal(javax.persistence.TemporalType.TIMESTAMP)
 	@Column(name = "expired_at")
 	private Date expiredAt;
-	
+
 	@ManyToOne
 	private EtlUserEntity owner;
-	
-	@OneToMany(cascade = CascadeType.ALL, mappedBy="destination")
+
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "destination")
 	private List<DestinationGroupMembership> groups;
-	
-	@OneToMany(cascade = CascadeType.ALL, mappedBy="destination")
+
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "destination")
 	private List<LinkEntity> links;
+
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "destination")
+	private List<DeidPerPatientParams> offsets;
+
+	private boolean deidentificationEnabled;
+
+	@ManyToOne
+	private EncryptionAlgorithm encryptionAlgorithm;
 
 	public Long getId() {
 		return id;
@@ -138,7 +146,7 @@ public abstract class DestinationEntity implements ConfigEntity {
 	public void setCreatedAt(Date createdAt) {
 		this.createdAt = createdAt;
 	}
-	
+
 	public Date getEffectiveAt() {
 		return effectiveAt;
 	}
@@ -154,11 +162,35 @@ public abstract class DestinationEntity implements ConfigEntity {
 	public void setExpiredAt(Date expiredAt) {
 		this.expiredAt = expiredAt;
 	}
+
+	public List<DeidPerPatientParams> getOffsets() {
+		return offsets;
+	}
+
+	public void setOffsets(List<DeidPerPatientParams> offsets) {
+		this.offsets = offsets;
+	}
+
+	public void setDeidentificationEnabled(boolean enabled) {
+		this.deidentificationEnabled = enabled;
+	}
+
+	public boolean isDeidentificationEnabled() {
+		return this.deidentificationEnabled;
+	}
+
+	public EncryptionAlgorithm getEncryptionAlgorithm() {
+		return encryptionAlgorithm;
+	}
+
+	public void setEncryptionAlgorithm(EncryptionAlgorithm encryptionAlgorithm) {
+		this.encryptionAlgorithm = encryptionAlgorithm;
+	}
 	
 	public abstract boolean isGetStatisticsSupported();
-	
+
 	public abstract boolean isAllowingQueryPropositionIds();
-	
+
 	public abstract void accept(DestinationEntityVisitor visitor);
-		
+
 }
