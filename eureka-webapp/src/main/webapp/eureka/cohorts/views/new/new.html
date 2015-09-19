@@ -63,43 +63,7 @@
     <!-- begin angular-ui-tree -->
 
     <md-content flex flex-order="2" flex-order-gt-md="1" layout-padding>
-        <md-card>
-            <md-tabs md-dynamic-height md-border-bottom>
-                <md-tab label="System">
-                    <md-content class="md-padding">
-                        <md-input-container md-no-float>
-                            <input flex ng-model="newCohort.treeSearch" placeholder="Search" ng-model-options='{ debounce: 1000 }' ng-change="newCohort.filterCohortList()">
-                        </md-input-container>
-                        <md-progress-circular class="md-hue-1" md-mode="indeterminate" ng-if="newCohort.loading"></md-progress-circular>
-                        <div ui-tree data-empty-placeholder-enabled="false" data-drag-enabled="true" data-drag-delay="200" data-clone-enabled="true">
-                            <ol ui-tree-nodes="" data-nodrop-enabled="true" ng-model="newCohort.treeData" id="tree-root">
-                                <li ng-repeat="node in newCohort.treeData" ui-tree-node ng-include="'nodes_renderer.html'" collapsed="true"></li>
-                            </ol>
-                        </div>
-                        <!-- Nested node template -->
-                        <script type="text/ng-template" id="nodes_renderer.html">
-                            <div class="md-subhead" ng-class="{'node-disabled': !newCohort.nodeAllowed(node)}" style="padding-bottom: 3px;" ui-tree-handle ng-click="toggle(this); newCohort.toggleNode(node)">
-                                <i class="fa" ng-if="node.children" style="cursor: pointer; margin-right: 5px;" ng-class="{
-                                'fa-plus-square': collapsed,
-                                'fa-minus-square': !collapsed
-                            }"></i>
-                                <i class="fa fa-file-o" style="margin-right: 5px;" ng-if="!node.children"></i>
-                                {{node.text}}
-                            </div>
-                            <md-progress-linear class="md-hue-1" style="margin:5px 0;" md-mode="indeterminate" ng-if="node.loading"></md-progress-linear>
-                            <ol ui-tree-nodes="" data-nodrop-enabled="true" ng-class="{ 'hidden': collapsed }" ng-model="node.nodes">
-                                <li ng-repeat="node in node.nodes" ui-tree-node ng-include="'nodes_renderer.html'" collapsed="true">
-                                </li>
-                            </ol>
-                        </script>
-                    </md-content>
-                </md-tab>
-                <md-tab label="User">
-                    <md-content class="md-padding">
-                    </md-content>
-                </md-tab>
-            </md-tabs>
-        </md-card>
+        <cohort-members-tree member-list="newCohort.memberList"></cohort-members-tree>
     </md-content>
     <!--end angular-ui-tree  -->
 
@@ -119,21 +83,9 @@
                         <label>Description</label>
                         <textarea ng-model="newCohort.cohort.description" columns="1" md-maxlength="250"></textarea>
                     </md-input-container>
-                    <!-- angular-ui-tree drop zone -->
-                    <md-whiteframe flex class="md-whiteframe-z2" layout="column" layout-align="start start" style="margin-top: 30px;">
-                        <div layout-fill ui-tree="newCohort.treeOptions" data-empty-placeholder-enabled="false">
-                            <ol ui-tree-nodes="" ng-model="newCohort.memberList" class="member-tree-list">
-                                <li ui-tree-node data-nodrag layout-fill class="text-center" style="padding: 30px 20px;"
-                                    ng-if="!newCohort.memberList.length">
-                                    <h3 class="md-title">Drag Members Here</h3>
-                                </li>
-                                <li class="md-subhead" ng-repeat="item in newCohort.memberList" ui-tree-node data-nodrag layout-fill>
-                                    <i class="fa fa-times" ng-click="remove(this)"></i> {{item.text}}
-                                </li>
-                            </ol>
-                        </div>
-                    </md-whiteframe>
-                    <!-- end of angular-ui-tree drop zone -->
+
+                    <cohort-members-drop-zone member-list="newCohort.memberList"></cohort-members-drop-zone>
+
                 </form>
             </md-card-content>
             <div class="md-actions md-padding" layout="row" layout-align="start center">

@@ -15,6 +15,7 @@ var gulp = require('gulp'),
     minifyCss = require('gulp-minify-css'),
     templateCache = require('gulp-angular-templatecache'),
     map = require('map-stream'),
+    less = require('gulp-less'),
 
     exitOnJshintError = function() {
         return map(function (file, cb) {
@@ -59,6 +60,12 @@ gulp.task('process-js', ['lint', 'cache-templates'], function () {
     .pipe(gulp.dest('build'));
 });
 
+gulp.task('less', function () {
+    return gulp.src('./eureka/eureka.less')
+        .pipe(less())
+        .pipe(gulp.dest('./build'));
+});
+
 gulp.task('lint', function() {
     gulp.src(['eureka/**/*.js', '!eureka/js/**/*.js'])
         .pipe(jshint('.jshintrc'))
@@ -67,6 +74,10 @@ gulp.task('lint', function() {
 });
 
 gulp.task('watch-js', ['test'], function() {
+    browserSync.reload();
+});
+
+gulp.task('watch-less', ['less'], function() {
     browserSync.reload();
 });
 
@@ -85,6 +96,7 @@ gulp.task('browser-sync', ['test'], function() {
     });
 
     gulp.watch("eureka/**/*.js", ['watch-js']);
+    gulp.watch("eureka/**/*.less", ['watch-less']);
     gulp.watch("./**/*.html", ['watch-html']);
 
 });
@@ -99,11 +111,11 @@ gulp.task('cache-templates', function () {
 });
 
 // Watch scss AND html files, doing different things with each.
-gulp.task('serve', ['bower', 'browser-sync'], function () {
+gulp.task('serve', ['bower', 'browser-sync', 'less'], function () {
     opn('https://localhost:8443/eureka-angular/');
 });
 
-gulp.task('build-html', ['test'], function() {
+gulp.task('build-html', ['test', 'less'], function() {
     var assets = useref.assets();
     return gulp.src('./index.html')
         .pipe(assets)

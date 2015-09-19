@@ -1,0 +1,15 @@
+<!-- angular-ui-tree drop zone -->
+<md-whiteframe flex class="md-whiteframe-z2" layout="column" layout-align="start start" style="margin-top: 30px;">
+    <div layout-fill ui-tree="dropZone.treeOptions" data-empty-placeholder-enabled="false">
+        <ol ui-tree-nodes="" ng-model="dropZone.memberList" class="member-tree-list">
+            <li ui-tree-node data-nodrag layout-fill class="text-center" style="padding: 30px 20px;"
+                ng-if="!dropZone.memberList.length">
+                <h3 class="md-title">Drag Members Here</h3>
+            </li>
+            <li class="md-subhead" ng-repeat="item in dropZone.memberList" ui-tree-node data-nodrag layout-fill>
+                <i class="fa fa-times" ng-click="remove(this)"></i> {{item.text}}
+            </li>
+        </ol>
+    </div>
+</md-whiteframe>
+<!-- end of angular-ui-tree drop zone -->
