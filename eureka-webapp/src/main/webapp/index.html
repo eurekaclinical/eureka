@@ -23,7 +23,6 @@
     <link rel="stylesheet" href="bower_components/angular-material-data-table/dist/md-data-table.min.css" />
     <!-- endbower -->
     <link rel="stylesheet" type="text/css" href="assets/css/bootstrap-social-20150401.css">
-    <link rel="stylesheet" href="assets/css/jstree-themes/default-3.1.1/style.css"/>
     <!-- endbuild -->
 
     <!-- build:css app.min.css -->
@@ -47,7 +46,7 @@
                 </a>
             </div>
             <div class="navbar-collapse collapse">
-                <ul class="nav navbar-nav navbar-right menu-text" ng-if="user">
+                <ul class="nav navbar-nav navbar-right menu-text" ng-show="user">
                     <li>
                         <a ui-sref="cohorts" class="btn btn-lg">
                             <span class="glyphicon glyphicon-pencil"></span>
@@ -100,7 +99,7 @@
 
                     </li>
                 </ul>
-                <ul class="nav navbar-nav navbar-right menu-text" ng-if="!user">
+                <ul class="nav navbar-nav navbar-right menu-text" ng-hide="user">
                     <li>
                         <a href="/eureka-webapp/help.jsp">
                             <span class="glyphicon glyphicon-question-sign"></span>

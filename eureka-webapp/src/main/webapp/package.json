@@ -32,6 +32,7 @@
     "jshint-stylish": "^2.0.1",
     "karma": "^0.13.9",
     "karma-jasmine": "^0.3.6",
+    "karma-mocha-reporter": "^1.1.1",
     "karma-phantomjs-launcher": "^0.2.1",
     "karma-spec-reporter": "0.0.20",
     "map-stream": "0.0.6",
