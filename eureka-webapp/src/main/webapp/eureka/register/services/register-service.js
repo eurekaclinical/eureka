@@ -12,7 +12,7 @@
 
     angular
         .module('eureka.register')
-        .factory('RegisterService');
+        .factory('RegisterService', RegisterService);
 
     RegisterService.$inject = ['$http', '$q'];
 
