@@ -177,3 +177,70 @@
         You will be notified by e-mail when activation has occurred.
     </h3>
 </div>
+
+    <!-- starting point of new form -->
+    <md-content flex="60" flex-gt-lg="66" flex-order="1" flex-order-gt-md="2" layout-padding>
+        <md-card>
+            <md-card-content>
+                <h2 class="md-headline" style="margin-top: 0">Register</h2>
+ 
+                <form name="registerForm">
+                  <div layout="row">
+                    <md-input-container flex="50">
+                        <label>First Name</label>
+                        <input ng-model="newAcct.firstName">
+                    </md-input-container>
+                    <md-input-container flex="50">
+                        <label>Last Name</label>
+                        <input ng-model="newAcct.lastName">
+                    </md-input-container>
+                  </div>
+
+                  <div layout="row">
+                    <md-input-container flex="33">
+                        <label>Organization</label>
+                        <input ng-model="newAcct.organization">
+                    </md-input-container>
+         
+                  </div>
+
+                  <div layout="row">
+                    <md-input-container flex="33">
+                      <label>Title</label>
+                      <input ng-model="newAcct.title">
+                    </md-input-container>
+                  </div>
+
+                  <div layout="row">
+                    <md-input-container flex="33">
+                      <label>Department</label>
+                      <input ng-model="newAcct.department">
+                    </md-input-container>
+                  </div>
+
+                  <div layout="row">
+                    <md-input-container flex="50">
+                        <label>Email Address</label>
+                        <input ng-model="newAcct.email">
+                    </md-input-container>
+                    <md-input-container flex="50">
+                        <label>Confirm Email </label>
+                        <input ng-model="newAcct.verifyEmail">
+                    </md-input-container>
+                  </div>
+
+                   <div layout="row">
+                    <md-input-container flex="50">
+                        <label>Password</label>
+                        <input ng-model="newAcct.password" type="password">
+                    </md-input-container>
+                    <md-input-container flex="50">
+                        <label>Confirm Password </label>
+                        <input ng-model="newAcct.verifyPassword" type="password">
+                    </md-input-container>
+                  </div>
+
+                </form>
+            </md-card-content>
+        </md-card>
+    </md-content>
