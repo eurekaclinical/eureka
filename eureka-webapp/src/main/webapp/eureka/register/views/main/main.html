@@ -181,7 +181,7 @@
                 </div>
             </md-toolbar>
             <md-card-content>
-                <form name="registerForm" ng-hide="register.showSuccess">
+                <form name="registerForm" ng-hide="register.showSuccess" ng-submit="registerForm.$valid && register.addNewAccount(newAcct)">
                   <div layout="row">
                     <md-input-container flex="50">
                         <label>First Name (required)</label>
