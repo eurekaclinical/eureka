@@ -35,6 +35,7 @@
      * @requires register
      */
     angular.module('eureka', [
+        'ngMessages',
         'ui.router',
         'ui.tree',
         'angularValidator',

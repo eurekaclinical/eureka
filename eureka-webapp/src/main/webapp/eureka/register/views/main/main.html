@@ -1,198 +1,201 @@
-<div ng-if="!register.showSuccess">
-    <div class="alert alert-danger" role="alert" ng-if="register.errorMsg">
-        <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
-        <span class="sr-only">Error:</span>
-        {{ register.errorMsg }}
-    </div>
-    <form angular-validator-submit="register.addNewAccount(newAcct)" id="registerForm" name="registerForm" novalidate angular-validator>
-       <div class="row">
-           <div class="col-sm-6">
-               <div class="form-group">
-                   <label for="firstName" class="control-label">First Name</label>
-                   <input id="firstName"
-                          name="firstName"
-                          type="text"
-                          class="form-control"
-                          ng-model="newAcct.firstName"
-                          required />
-                   <span class="help-block default-hidden"></span>
-               </div>
-           </div>
-       </div>
-       <div class="row">
-           <div class="col-sm-6">
-               <div class="form-group">
-                   <label for="lastName" class="control-label">Last Name</label>
-                   <input id="lastName"
-                          name="lastName"
-                          type="text"
-                          class="form-control"
-                          ng-model="newAcct.lastName"
-                          required />
-                   <span class="help-block default-hidden"></span>
-               </div>
-           </div>
-       </div>
-       <div class="row">
-           <div class="col-sm-6">
-               <div class="form-group">
-                   <label for="organization" class="control-label">Organization</label>
-                   <input id="organization"
-                          name="organization"
-                          type="text"
-                          class="form-control"
-                          ng-model="newAcct.organization"
-                          required />
-                   <span class="help-block default-hidden"></span>
-               </div>
-           </div>
-       </div>
-       <div class="row">
-           <div class="col-sm-6">
-               <div class="form-group">
-                   <label for="title" class="control-label">Title</label>
-                   <input id="title"
-                          name="title"
-                          type="text"
-                          class="form-control"
-                          ng-model="newAcct.title"
-                          required />
-                   <span class="help-block default-hidden"></span>
-               </div>
-           </div>
-       </div>
-       <div class="row">
-           <div class="col-sm-6">
-               <div class="form-group">
-                   <label for="department" class="control-label">Department</label>
-                   <input id="department"
-                          name="department"
-                          type="text"
-                          class="form-control"
-                          ng-model="newAcct.department"
-                          required />
-                   <span class="help-block default-hidden"></span>
-               </div>
-           </div>
-       </div>
-       <div class="row">
-           <div class="col-sm-6">
-               <div class="form-group">
-                   <label for="email" class="control-label">Email Address</label>
-                   <input id="email"
-                          name="email"
-                          type="email"
-                          class="form-control"
-                          ng-model="newAcct.email"
-                          required />
-                   <span class="help-block default-hidden"></span>
-               </div>
-           </div>
-       </div>
-       <div class="row">
-           <div class="col-sm-6">
-               <div class="form-group">
-                   <label for="verifyEmail" class="control-label">Verify Email Address</label>
-                   <input id="verifyEmail"
-                          name="verifyEmail"
-                          type="email"
-                          class="form-control"
-                          ng-model="newAcct.verifyEmail"
-                          required />
-                   <span class="help-block default-hidden"></span>
-               </div>
-           </div>
-       </div>
-           <div class="row">
-               <div class="col-sm-6">
-                   <div class="form-group">
-                       <label for="password" class="control-label">Password</label>
-                       <input id="password"
-                              name="password"
-                              type="password"
-                              class="form-control"
-                              ng-pattern="/(^.*(?=.*\d)(?=.*[a-z]).*$)/"
-                              ng-minlength="8"
-                              ng-model="newAcct.password"
-                              required />
-                       <span class="help-block default-hidden"></span>
-                   </div>
-               </div>
-           </div>
-           <div class="row">
-               <div class="col-sm-6">
-                   <div class="form-group">
-                       <label for="verifyPassword" class="control-label">Confirm Password</label>
-                       <input id="verifyPassword"
-                              name="verifyPassword"
-                              type="password"
-                              class="form-control"
-                              ng-model="newAcct.verifyPassword"
-                              validator = "newAcct.password == newAcct.verifyPassword"
-                              required />
-                       <span class="help-block default-hidden"></span>
-                   </div>
-               </div>
-           </div>
-           <div class="row">
-               <div class="col-sm-6">
-                   <div class="form-group">
-                       <label for="agreement" class="control-label">
-                           <input type="checkbox"
-                                  name="agreement"
-                                  id="agreement"
-                                  class="checkbox checkbox-inline"
-                                  ng-model="agreement"
-                                  required />
-                           I agree to the <a id="agreementAnchor" href="#">End User Agreement</a>
-                       </label>
-                       <span class="help-block default-hidden"></span>
-                   </div>
-               </div>
-           </div>
-           <div class="row">
-               <div class="col-sm-12">
-                   <div class="form-group">
-                       *Passwords must be at least 8 characters and contain at least
-                       one letter & digit
-                   </div>
-               </div>
-           </div>
-       <div class="row">
-           <div id="passwordChangeFailure" class="default-hidden help-block has-error">
-               <div id="passwordErrorMessage"></div>
-           </div>
-       </div>
-        <button id="submit" type="submit"
-                class="btn btn-success"
-                >
-            Submit
-        </button>
-    </form>
-</div>
-
-<div ng-if="register.showSuccess">
-    <h3>
-        Your registration is now verified. Your account will be activated within the next 3 business days.
-        You will be notified by e-mail when activation has occurred.
-    </h3>
-</div>
+<!--<div ng-if="!register.showSuccess">-->
+    <!--<div class="alert alert-danger" role="alert" ng-if="register.errorMsg">-->
+        <!--<span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>-->
+        <!--<span class="sr-only">Error:</span>-->
+        <!--{{ register.errorMsg }}-->
+    <!--</div>-->
+    <!--<form angular-validator-submit="register.addNewAccount(newAcct)" id="registerFormOld" name="registerFormOld" novalidate angular-validator>-->
+       <!--<div class="row">-->
+           <!--<div class="col-sm-6">-->
+               <!--<div class="form-group">-->
+                   <!--<label for="firstName" class="control-label">First Name</label>-->
+                   <!--<input id="firstName"-->
+                          <!--name="firstName"-->
+                          <!--type="text"-->
+                          <!--class="form-control"-->
+                          <!--ng-model="newAcct.firstName"-->
+                          <!--required />-->
+                   <!--<span class="help-block default-hidden"></span>-->
+               <!--</div>-->
+           <!--</div>-->
+       <!--</div>-->
+       <!--<div class="row">-->
+           <!--<div class="col-sm-6">-->
+               <!--<div class="form-group">-->
+                   <!--<label for="lastName" class="control-label">Last Name</label>-->
+                   <!--<input id="lastName"-->
+                          <!--name="lastName"-->
+                          <!--type="text"-->
+                          <!--class="form-control"-->
+                          <!--ng-model="newAcct.lastName"-->
+                          <!--required />-->
+                   <!--<span class="help-block default-hidden"></span>-->
+               <!--</div>-->
+           <!--</div>-->
+       <!--</div>-->
+       <!--<div class="row">-->
+           <!--<div class="col-sm-6">-->
+               <!--<div class="form-group">-->
+                   <!--<label for="organization" class="control-label">Organization</label>-->
+                   <!--<input id="organization"-->
+                          <!--name="organization"-->
+                          <!--type="text"-->
+                          <!--class="form-control"-->
+                          <!--ng-model="newAcct.organization"-->
+                          <!--required />-->
+                   <!--<span class="help-block default-hidden"></span>-->
+               <!--</div>-->
+           <!--</div>-->
+       <!--</div>-->
+       <!--<div class="row">-->
+           <!--<div class="col-sm-6">-->
+               <!--<div class="form-group">-->
+                   <!--<label for="title" class="control-label">Title</label>-->
+                   <!--<input id="title"-->
+                          <!--name="title"-->
+                          <!--type="text"-->
+                          <!--class="form-control"-->
+                          <!--ng-model="newAcct.title"-->
+                          <!--required />-->
+                   <!--<span class="help-block default-hidden"></span>-->
+               <!--</div>-->
+           <!--</div>-->
+       <!--</div>-->
+       <!--<div class="row">-->
+           <!--<div class="col-sm-6">-->
+               <!--<div class="form-group">-->
+                   <!--<label for="department" class="control-label">Department</label>-->
+                   <!--<input id="department"-->
+                          <!--name="department"-->
+                          <!--type="text"-->
+                          <!--class="form-control"-->
+                          <!--ng-model="newAcct.department"-->
+                          <!--required />-->
+                   <!--<span class="help-block default-hidden"></span>-->
+               <!--</div>-->
+           <!--</div>-->
+       <!--</div>-->
+       <!--<div class="row">-->
+           <!--<div class="col-sm-6">-->
+               <!--<div class="form-group">-->
+                   <!--<label for="email" class="control-label">Email Address</label>-->
+                   <!--<input id="email"-->
+                          <!--name="email"-->
+                          <!--type="email"-->
+                          <!--class="form-control"-->
+                          <!--ng-model="newAcct.email"-->
+                          <!--required />-->
+                   <!--<span class="help-block default-hidden"></span>-->
+               <!--</div>-->
+           <!--</div>-->
+       <!--</div>-->
+       <!--<div class="row">-->
+           <!--<div class="col-sm-6">-->
+               <!--<div class="form-group">-->
+                   <!--<label for="verifyEmail" class="control-label">Verify Email Address</label>-->
+                   <!--<input id="verifyEmail"-->
+                          <!--name="verifyEmail"-->
+                          <!--type="email"-->
+                          <!--class="form-control"-->
+                          <!--ng-model="newAcct.verifyEmail"-->
+                          <!--required />-->
+                   <!--<span class="help-block default-hidden"></span>-->
+               <!--</div>-->
+           <!--</div>-->
+       <!--</div>-->
+           <!--<div class="row">-->
+               <!--<div class="col-sm-6">-->
+                   <!--<div class="form-group">-->
+                       <!--<label for="password" class="control-label">Password</label>-->
+                       <!--<input id="password"-->
+                              <!--name="password"-->
+                              <!--type="password"-->
+                              <!--class="form-control"-->
+                              <!--ng-pattern="/(^.*(?=.*\d)(?=.*[a-z]).*$)/"-->
+                              <!--ng-minlength="8"-->
+                              <!--ng-model="newAcct.password"-->
+                              <!--required />-->
+                       <!--<span class="help-block default-hidden"></span>-->
+                   <!--</div>-->
+               <!--</div>-->
+           <!--</div>-->
+           <!--<div class="row">-->
+               <!--<div class="col-sm-6">-->
+                   <!--<div class="form-group">-->
+                       <!--<label for="verifyPassword" class="control-label">Confirm Password</label>-->
+                       <!--<input id="verifyPassword"-->
+                              <!--name="verifyPassword"-->
+                              <!--type="password"-->
+                              <!--class="form-control"-->
+                              <!--ng-model="newAcct.verifyPassword"-->
+                              <!--validator = "newAcct.password == newAcct.verifyPassword"-->
+                              <!--required />-->
+                       <!--<span class="help-block default-hidden"></span>-->
+                   <!--</div>-->
+               <!--</div>-->
+           <!--</div>-->
+           <!--<div class="row">-->
+               <!--<div class="col-sm-6">-->
+                   <!--<div class="form-group">-->
+                       <!--<label for="agreement" class="control-label">-->
+                           <!--<input type="checkbox"-->
+                                  <!--name="agreement"-->
+                                  <!--id="agreement"-->
+                                  <!--class="checkbox checkbox-inline"-->
+                                  <!--ng-model="agreement"-->
+                                  <!--required />-->
+                           <!--I agree to the <a id="agreementAnchor" href="#">End User Agreement</a>-->
+                       <!--</label>-->
+                       <!--<span class="help-block default-hidden"></span>-->
+                   <!--</div>-->
+               <!--</div>-->
+           <!--</div>-->
+           <!--<div class="row">-->
+               <!--<div class="col-sm-12">-->
+                   <!--<div class="form-group">-->
+                       <!--*Passwords must be at least 8 characters and contain at least-->
+                       <!--one letter & digit-->
+                   <!--</div>-->
+               <!--</div>-->
+           <!--</div>-->
+       <!--<div class="row">-->
+           <!--<div id="passwordChangeFailure" class="default-hidden help-block has-error">-->
+               <!--<div id="passwordErrorMessage"></div>-->
+           <!--</div>-->
+       <!--</div>-->
+        <!--<button id="submit" type="submit"-->
+                <!--class="btn btn-success">-->
+            <!--Submit-->
+        <!--</button>-->
+    <!--</form>-->
+<!--</div>-->
 
     <!-- starting point of new form -->
     <md-content flex="60" flex-gt-lg="66" flex-order="1" flex-order-gt-md="2" layout-padding>
         <md-card>
+            <md-toolbar class="md-hue-1">
+                <div class="md-toolbar-tools">
+                    <h3>
+                        <span>Register</span>
+                    </h3>
+                </div>
+            </md-toolbar>
             <md-card-content>
-                <h2 class="md-headline" style="margin-top: 0">Register</h2>
- 
-                <form name="registerForm">
+                <form name="registerForm" ng-hide="register.showSuccess">
                   <div layout="row">
                     <md-input-container flex="50">
-                        <label>First Name</label>
-                        <input ng-model="newAcct.firstName">
+                        <label>First Name (required)</label>
+                        <input name="firstName" ng-model="newAcct.firstName" required>
+                        <div ng-if="registerForm.firstName.$dirty" ng-messages="registerForm.firstName.$error">
+                            <div ng-message="required">First name is required!</div>
+                        </div>
                     </md-input-container>
                     <md-input-container flex="50">
-                        <label>Last Name</label>
-                        <input ng-model="newAcct.lastName">
+                        <label>Last Name (required)</label>
+                        <input name="lastName" ng-model="newAcct.lastName" required>
+                        <div ng-if="registerForm.lastName.$dirty" ng-messages="registerForm.lastName.$error">
+                            <div ng-message="required">Last name is required!</div>
+                        </div>
                     </md-input-container>
                   </div>
 
@@ -201,46 +204,97 @@
                         <label>Organization</label>
                         <input ng-model="newAcct.organization">
                     </md-input-container>
-         
-                  </div>
-
-                  <div layout="row">
-                    <md-input-container flex="33">
-                      <label>Title</label>
-                      <input ng-model="newAcct.title">
-                    </md-input-container>
-                  </div>
-
-                  <div layout="row">
-                    <md-input-container flex="33">
-                      <label>Department</label>
-                      <input ng-model="newAcct.department">
-                    </md-input-container>
+                      <md-input-container flex="33">
+                          <label>Title</label>
+                          <input ng-model="newAcct.title">
+                      </md-input-container>
+                      <md-input-container flex="33">
+                          <label>Department</label>
+                          <input ng-model="newAcct.department">
+                      </md-input-container>
                   </div>
 
                   <div layout="row">
                     <md-input-container flex="50">
-                        <label>Email Address</label>
-                        <input ng-model="newAcct.email">
+                        <label>Email Address (required)</label>
+                        <input name="email"
+                               type="email"
+                               ng-model="newAcct.email"
+                               ng-required="true">
+                        <div ng-if="registerForm.email.$dirty" ng-messages="registerForm.email.$error">
+                            <div ng-message="required">Email is required!</div>
+                            <div ng-message="email">Must be a valid email address!</div>
+                        </div>
                     </md-input-container>
                     <md-input-container flex="50">
-                        <label>Confirm Email </label>
-                        <input ng-model="newAcct.verifyEmail">
+                        <label>Confirm Email (required)</label>
+                        <input name="verifyEmail"
+                               type="email"
+                               ng-model="newAcct.verifyEmail"
+                               compare-to="newAcct.email"
+                               ng-required="true">
+                        <div ng-if="registerForm.verifyEmail.$dirty" ng-messages="registerForm.verifyEmail.$error">
+                            <div ng-message="required">You must confirm your email!</div>
+                            <div ng-message="compareTo">Emails must match!</div>
+                        </div>
                     </md-input-container>
                   </div>
 
                    <div layout="row">
                     <md-input-container flex="50">
-                        <label>Password</label>
-                        <input ng-model="newAcct.password" type="password">
+                        <label>Password (required)</label>
+                        <input name="password"
+                               ng-model="newAcct.password"
+                               type="password"
+                               ng-pattern="/(^.*(?=.*\d)(?=.*[a-z]).*$)/"
+                               ng-minlength="8"
+                               ng-required="true">
+                        <div ng-if="registerForm.password.$dirty" ng-messages="registerForm.password.$error">
+                            <div ng-message="required">Password is required!</div>
+                            <div ng-message="minlength">Password must be at least 8 characters!</div>
+                            <div ng-message="pattern">Password must contain at least one letter and one number!</div>
+                        </div>
                     </md-input-container>
                     <md-input-container flex="50">
-                        <label>Confirm Password </label>
-                        <input ng-model="newAcct.verifyPassword" type="password">
+                        <label>Confirm Password (required)</label>
+                        <input name="verifyPassword"
+                               ng-model="newAcct.verifyPassword"
+                               type="password"
+                               compare-to="newAcct.password"
+                               ng-required="true">
+                        <div ng-if="registerForm.verifyPassword.$dirty" ng-messages="registerForm.verifyPassword.$error">
+                            <div ng-message="required">You must verify your password!</div>
+                            <div ng-message="compareTo">Passwords must match!</div>
+                        </div>
                     </md-input-container>
                   </div>
 
+                    <div layout="row">
+                        <div>
+                            <md-tooltip md-direction="top" ng-if="registerForm.endUserAgreement.$invalid">
+                                <div ng-messages="registerForm.endUserAgreement.$error">
+                                    <div ng-message="required">You must agree to the End User Agreement!</div>
+                                </div>
+                            </md-tooltip>
+                            <md-button class="md-raised md-primary md-hue-1" ng-disabled="registerForm.$invalid">
+                                Register
+                            </md-button>
+                        </div>
+                        <div flex>
+                            <md-checkbox name="endUserAgreement" ng-required="true" ng-model="agreement" aria-label="End User Agreement">
+                                I agree to the <a id="agreementAnchor" href="#">End User Agreement</a>
+                            </md-checkbox>
+                        </div>
+                    </div>
+
                 </form>
+
+                <div ng-if="register.showSuccess">
+                    <h3>
+                        Your registration is now verified. Your account will be activated within the next 3 business days.
+                        You will be notified by e-mail when activation has occurred.
+                    </h3>
+                </div>
             </md-card-content>
         </md-card>
     </md-content>

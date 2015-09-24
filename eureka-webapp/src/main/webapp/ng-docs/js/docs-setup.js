@@ -86,6 +86,15 @@ NG_DOCS={
     },
     {
       "section": "api",
+      "id": "eureka.directive:compareTo",
+      "shortName": "compareTo",
+      "type": "directive",
+      "moduleName": "eureka",
+      "shortDescription": "compareTo directive",
+      "keywords": "api compareto directive eureka"
+    },
+    {
+      "section": "api",
       "id": "eureka.directive:jstree",
       "shortName": "jstree",
       "type": "directive",
