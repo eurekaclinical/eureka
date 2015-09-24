@@ -35,7 +35,6 @@
      * @requires register
      */
     angular.module('eureka', [
-        'ngMessages',
         'ui.router',
         'ui.tree',
         'angularValidator',
@@ -43,7 +42,8 @@
         'md.data.table',
         'eureka.cohorts',
         'eureka.phenotypes',
-        'eureka.register']);
+        'eureka.register',
+        'eureka.account']);
 
     angular.module('eureka').run(eurekaRun);
     angular.module('eureka').config(eurekaConfig);
