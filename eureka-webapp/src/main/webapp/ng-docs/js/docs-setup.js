@@ -23,6 +23,42 @@ NG_DOCS={
     },
     {
       "section": "api",
+      "id": "eureka.account",
+      "shortName": "eureka.account",
+      "type": "overview",
+      "moduleName": "eureka.account",
+      "shortDescription": "The module for the account section of the Eureka application.",
+      "keywords": "account api application eureka module overview"
+    },
+    {
+      "section": "api",
+      "id": "eureka.account.AccountService",
+      "shortName": "eureka.account.AccountService",
+      "type": "service",
+      "moduleName": "eureka.account",
+      "shortDescription": "This service provides an API to interact with the REST endpoint for account.",
+      "keywords": "$http $q account accountservice api endpoint eureka interact rest service"
+    },
+    {
+      "section": "api",
+      "id": "eureka.account.administration.controller:MainCtrl",
+      "shortName": "MainCtrl",
+      "type": "controller",
+      "moduleName": "eureka.account.administration",
+      "shortDescription": "This is the main controller for the account administration section of the application.",
+      "keywords": "account accountservice administration api application controller eureka main"
+    },
+    {
+      "section": "api",
+      "id": "eureka.account.settings.controller:MainCtrl",
+      "shortName": "MainCtrl",
+      "type": "controller",
+      "moduleName": "eureka.account.settings",
+      "shortDescription": "This is the main controller for the account settings section of the application.",
+      "keywords": "account accountservice api application controller eureka main settings"
+    },
+    {
+      "section": "api",
       "id": "eureka.appProperties",
       "shortName": "eureka.appProperties",
       "type": "object",
