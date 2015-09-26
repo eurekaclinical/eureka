@@ -50,7 +50,7 @@ public final class Task implements Runnable {
 	private List<PropositionDefinition> propositionDefinitions;
 	private List<String> propIdsToShow;
 	private Filter filter;
-	private boolean updateData;
+	private boolean appendData;
 	private Configuration prompts;
 
 	@Inject
@@ -97,12 +97,12 @@ public final class Task implements Runnable {
 		propositionDefinitions = inPropositionDefinitions;
 	}
 
-	public boolean isUpdateData() {
-		return updateData;
+	public boolean isAppendData() {
+		return appendData;
 	}
 
-	public void setUpdateData(boolean updateData) {
-		this.updateData = updateData;
+	public void setAppendData(boolean appendData) {
+		this.appendData = appendData;
 	}
 
 	public Configuration getPrompts() {
@@ -140,7 +140,7 @@ public final class Task implements Runnable {
 					= this.propIdsToShow.toArray(
 							new String[this.propIdsToShow.size()]);
 
-			this.etl.run(myJob, propDefArray, propIdsToShowArray, this.filter, this.updateData, this.prompts);
+			this.etl.run(myJob, propDefArray, propIdsToShowArray, this.filter, this.appendData, this.prompts);
 			this.etl.close();
 			JobEvent completedJobEvent = new JobEvent();
 			completedJobEvent.setJob(myJob);
