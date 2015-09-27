@@ -1,0 +1,40 @@
+   <md-content flex="60" flex-gt-lg="66" flex-order="1" flex-order-gt-md="2" layout-padding>
+        <md-card>
+            <md-toolbar class="md-hue-1">
+                <div class="md-toolbar-tools">
+                    <h3>
+                        <span>Account Settings</span>
+                    </h3>
+                </div>
+            </md-toolbar>
+            <md-card-content>
+                <form name="settingsForm">
+                  <div layout="row">
+                    <md-input-container flex="50">
+                        <label>First Name</label>
+                        <input name="firstName" ng-model="settings.currentUser.info.firstName" required>
+                    </md-input-container>
+                    <md-input-container flex="50">
+                        <label>Last Name</label>
+                        <input name="lastName" ng-model="settings.currentUser.info.lastName" required>
+                    </md-input-container>
+                  </div>
+
+                  <div layout="row">
+                    <md-input-container flex="33">
+                        <label>Organization</label>
+                        <input ng-model="settings.currentUser.info.organization">
+                    </md-input-container>
+                      <md-input-container flex="33">
+                          <label>Title</label>
+                          <input ng-model="settings.currentUser.info.title">
+                      </md-input-container>
+                      <md-input-container flex="33">
+                          <label>Department</label>
+                          <input ng-model="settings.currentUser.info.department">
+                      </md-input-container>
+                  </div>
+                </form>
+            </md-card-content>
+        </md-card>
+    </md-content>

@@ -16,6 +16,23 @@
 
     AccountService.$inject = ['$http', '$q'];
 
-    function AccountService($http, $q) {}
+    function AccountService($http, $q) {
+
+        return ({
+
+        });
+
+        function handleSuccess(response) {
+            return response.data;
+        }
+
+        function handleError(response) {
+            if (!angular.isObject(response.data) && !response.data) {
+                return ($q.reject('An unknown error occurred.'));
+            }
+            return ($q.reject(response.data));
+        }
+
+    }
 
 }());
