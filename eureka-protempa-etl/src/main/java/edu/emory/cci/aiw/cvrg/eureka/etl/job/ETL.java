@@ -121,9 +121,9 @@ public class ETL {
 			protempa.execute(query, protempaDestination);
 		} catch (DataSourceFailedDataValidationException ex) {
 			logValidationEvents(job, ex.getValidationEvents(), ex);
-			throw new EtlException(ex);
+			throw new EtlException("ETL failed for job " + job.getId(), ex);
 		} catch (Exception ex) {
-			throw new EtlException(ex);
+			throw new EtlException("ETL failed for job " + job.getId(), ex);
 		}
 	}
 
