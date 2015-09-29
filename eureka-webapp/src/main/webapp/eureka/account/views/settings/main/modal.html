@@ -1,0 +1,56 @@
+<md-dialog>
+    <md-content flex="60" flex-gt-lg="66" flex-order="1" flex-order-gt-md="2" layout-padding>
+        <md-card>
+            <md-toolbar class="md-hue-1">
+                <div class="md-toolbar-tools">
+                    <h3>
+                        <span>Change Password</span>
+                    </h3>
+                </div>
+            </md-toolbar>
+            <md-card-content>
+                <form name="passwordForm">
+                  <div layout="row">
+                    <md-input-container flex="100">
+                        <label>Current Password</label>
+                        <input name="currentPassword"
+                               ng-model="newPassword.currentPassword"
+                               type="password"
+                               ng-pattern="/(^.*(?=.*\d)(?=.*[a-z]).*$)/"
+                               ng-minlength="8"
+                               ng-required="true">
+                    </md-input-container>
+                  </div>
+                   <div layout="row">
+                    <md-input-container flex="100">
+                        <label>New Password</label>
+                        <input name="password"
+                               ng-model="newPassword.password"
+                               type="password"
+                               ng-pattern="/(^.*(?=.*\d)(?=.*[a-z]).*$)/"
+                               ng-minlength="8"
+                               ng-required="true">
+                    </md-input-container>
+                  </div>
+                  <div layout="row">
+                    <md-input-container flex="100">
+                        <label>Confirm Password (required)</label>
+                        <input name="verifyPassword"
+                               ng-model="newPassword.verifyPassword"
+                               type="password"
+                               compare-to="newPassword.password"
+                               ng-required="true">
+                        <div ng-if="passwordForm.verifyPassword.$dirty" ng-messages="passwordForm.verifyPassword.$error">
+                            <div ng-message="required">You must verify your password!</div>
+                            <div ng-message="compareTo">Passwords must match!</div>
+                        </div>
+                    </md-input-container>
+                  </div>
+                </form>
+            </md-card-content>
+               <div class="md-actions md-padding" layout="row" layout-align="start center">
+                <md-button class="md-raised md-primary md-hue-1" ng-click="settings.resetPassword($event)"> Save </md-button>
+            </div>
+        </md-card>
+    </md-content>
+</md-dialog>
