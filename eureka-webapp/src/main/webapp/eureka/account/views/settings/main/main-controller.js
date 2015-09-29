@@ -42,12 +42,22 @@
             }, displayError);
         }
 
-        function ChangePasswordController($scope, $mdDialog) {
-            function hide() {
-                $mdDialog.hide();
-            }
-            function cancel() {
+        function ChangePasswordController($scope, $mdDialog, AccountService) {
+            $scope.test = 'HI';
+           
+
+            $scope.resetPassword = function(){
+                AccountService.changePassword($scope.newPassword).then(function (data) {
+                    console.log('WE DID it'+ data);
+                }, displayError);
+            };
+
+            $scope.cancel = function() {
                 $mdDialog.cancel();
+            };
+
+            function displayError(msg) {
+                $scope.errorMsg = msg;
             }
         }
 

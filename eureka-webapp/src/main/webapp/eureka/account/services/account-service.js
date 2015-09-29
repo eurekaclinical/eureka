@@ -14,13 +14,19 @@
         .module('eureka.account')
         .factory('AccountService', AccountService);
 
-    AccountService.$inject = ['$http', '$q'];
+    AccountService.$inject = ['$http', '$q', 'appProperties'];
 
-    function AccountService($http, $q) {
-
+    function AccountService($http, $q, appProperties) {
+        let { apiEndpoint } = appProperties;
         return ({
+            changePassword: changePassword
 
         });
+
+        function changePassword(passwordObject) {
+            return $http.post(apiEndpoint + '/users/passwordchangerequest', passwordObject)
+            .then(handleSuccess, handleError);
+        }
 
         function handleSuccess(response) {
             return response.data;
