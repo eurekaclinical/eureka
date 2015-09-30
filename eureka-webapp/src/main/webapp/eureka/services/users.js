@@ -24,7 +24,8 @@
 
         return {
             getUser: getCurrentUser,
-            getRole: getRole
+            getRole: getRole,
+            getUsers: getUsers
         };
 
         function getRole(roleId) {
@@ -62,6 +63,23 @@
                 console.error('error getting user:', err);
             });
         }
+
+        function getUsers() {
+            return $http.get(apiEndpoint + '/users')
+            .then(handleSuccess, handleError);
+        }
+
+        function handleSuccess(response) {
+            return response.data;
+        }
+
+        function handleError(response) {
+            if (!angular.isObject(response.data) && !response.data) {
+                return ($q.reject('An unknown error occurred.'));
+            }
+            return ($q.reject(response.data));
+        }
+
     }
 
     class User {

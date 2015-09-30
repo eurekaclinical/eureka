@@ -9,7 +9,7 @@
                 </div>
             </md-toolbar>
             <md-card-content style="width:450px;">
-                <form name="passwordForm">
+                <form name="passwordForm" novalidate ng-hide="showSuccess">
                   <div layout="row">
                     <md-input-container flex="100">
                         <label>Current Password</label>
@@ -46,12 +46,20 @@
                         </div>
                     </md-input-container>
                   </div>
-                </form>
-            </md-card-content>
-               <div class="md-actions md-padding" layout="row" layout-align="start center">
+                <div class="md-actions md-padding" layout="row" layout-align="start center">
                 <md-button class="md-raised md-primary md-hue-1" ng-click="resetPassword($event)"> Save </md-button>
                 <md-button class="md-raised md-hue-1" ng-click="cancel()"> Cancel </md-button>
             </div>
+            </form>
+               <div ng-if="showSuccess">
+                    <h3>
+                        Your password was sucessfully changed.
+                    </h3>
+                  <div class="md-actions md-padding" layout="row" layout-align="start center">
+                    <md-button class="md-raised md-primary md-hue-1" ng-click="cancel()"> Close </md-button>
+                  </div>
+                </div>
+            </md-card-content>
         </md-card>
     </md-content>
 </md-dialog>

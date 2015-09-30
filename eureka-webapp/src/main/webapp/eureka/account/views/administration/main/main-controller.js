@@ -13,9 +13,27 @@
         .module('eureka.account')
         .controller('account.administration.MainCtrl', MainCtrl);
         
-    MainCtrl.$inject = ['AccountService'];
+    MainCtrl.$inject = ['AccountService', 'users'];
     
-    function MainCtrl(AccountService) {
+    function MainCtrl(AccountService, users) {
         var vm = this;
+
+        getUsers();
+
+        function getUsers() {
+            users.getUsers().then(function (data) {
+                vm.list = data;
+            }, displayError);
+        }
+
+        function displayError(msg) {
+            vm.errorMsg = msg;
+        }
+
+        function success(users) {
+            vm.userslist = users;
+        }
+
+        users.getUsers().then(success);
     }
 })();
