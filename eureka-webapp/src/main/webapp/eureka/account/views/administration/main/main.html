@@ -1,9 +1,16 @@
 <div layout>
     <md-content flex layout-padding>
         <md-card>
-  
-
-
+         <md-data-table-toolbar>
+            <h2 class="md-title">Administration</h2>
+            <div flex></div>
+            <md-button class="md-icon-button" >
+                <i class="material-icons md-dark">search</i>
+            </md-button>
+            <md-button class="md-icon-button">
+                <i class="material-icons md-dark">add_circle</i>
+            </md-button>
+        </md-data-table-toolbar>
         <md-data-table-toolbar class="alternate" ng-show="administration.selected.length" layout-align="space-between">
             <div>{{administration.selected.length}} {{administration.selected.length > 1 ? 'items' : 'item'}} selected</div>
             <div flex></div>
@@ -21,13 +28,13 @@
                     <tr>
                         <th name="Username" order-by="userName"></th>
                         <th name="Name" order-by="name"></th>
-                        <th name="Last Login" unit="date" order-by="created_at"></th>
-                        <th name="Role" order-by="name"></th>
-                        <th name="Email" order-by="description"></th>
-                          <th name="Organization" order-by="name"></th>
-                        <th name="Status" order-by="description"></th>
-                          <th name="Title" order-by="name"></th>
-                        <th name="Department" order-by="description"></th>
+                        <th name="Last Login" unit="date"></th>
+                        <th name="Role"></th>
+                        <th name="Email"></th>
+                        <th name="Organization"></th>
+                        <th name="Status"></th>
+                        <th name="Title"></th>
+                        <th name="Department"></th>
                        
                     </tr>
                 </thead>

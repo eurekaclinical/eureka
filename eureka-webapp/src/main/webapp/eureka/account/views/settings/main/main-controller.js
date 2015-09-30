@@ -46,7 +46,6 @@
 
             $scope.resetPassword = function(){
                 AccountService.changePassword($scope.newPassword).then(function (data) {
-                    console.log('WE DID it'+ data);
                     $scope.showSuccess = true;
                 }, displayError);
             };
