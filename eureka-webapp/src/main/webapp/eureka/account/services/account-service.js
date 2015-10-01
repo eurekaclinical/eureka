@@ -19,12 +19,18 @@
     function AccountService($http, $q, appProperties) {
         let { apiEndpoint } = appProperties;
         return ({
-            changePassword: changePassword
+            changePassword: changePassword,
+            getUserById: getUserById
 
         });
 
         function changePassword(passwordObject) {
             return $http.post(apiEndpoint + '/users/passwordchangerequest', passwordObject)
+            .then(handleSuccess, handleError);
+        }
+
+        function getUserById(id) {
+            return $http.get(apiEndpoint + '/users/byid/'+id)
             .then(handleSuccess, handleError);
         }
 

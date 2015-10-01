@@ -20,11 +20,10 @@
 
         if ($stateParams.id) {
             console.log('we are editing now');
-           /* CohortService.getCohort($stateParams.key).then(function(data) {
-                vm.destination = data;
-                getPhenotypes(data);
+            AccountService.getUserById($stateParams.id).then(function(data) {
+                vm.user = data;
 
-            }, displayError); */
+            }, displayError); 
 
         }
 
