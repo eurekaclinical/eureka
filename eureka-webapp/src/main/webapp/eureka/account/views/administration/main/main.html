@@ -14,7 +14,7 @@
         <md-data-table-toolbar class="alternate" ng-show="administration.selected.length" layout-align="space-between">
             <div>{{administration.selected.length}} {{administration.selected.length > 1 ? 'items' : 'item'}} selected</div>
             <div flex></div>
-            <md-button class="md-icon-button" ng-show="administration.selected.length == 1" ui-sref="editCohort({ key: administration.selected[0].key })">
+            <md-button class="md-icon-button" ng-show="administration.selected.length == 1" ui-sref="editAdministrationUser({ id: administration.selected[0].id })">
                 <i class="material-icons md-dark">edit</i>
             </md-button>
             <md-button class="md-icon-button">
@@ -40,8 +40,8 @@
                 </thead>
                 <tbody>
                     <tr md-auto-select ng-repeat="admin in administration.userslist">
-                        <td>{{admin.fullName}}</td>
                         <td>{{admin.username}}</td>
+                        <td>{{admin.fullName}}</td>
                         <td>{{admin.lastLogin | date:'shortDate'}}</td>
                         <td>{{admin.roles}}</td>
                         <td>{{admin.email}}</td>

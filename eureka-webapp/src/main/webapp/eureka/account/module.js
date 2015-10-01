@@ -21,6 +21,12 @@
 				controller: 'account.administration.MainCtrl',
 				controllerAs: 'administration'
 			})
+			.state('editAdministrationUser', {
+                url: '/account/administation/user/:id',
+                templateUrl: 'eureka/account/views/administration/edit/edit.html',
+                controller: 'account.administration.EditCtrl',
+                controllerAs: 'editAdmin'
+            })
 			.state('accountSettings', {
 				url: '/account/settings/main',
 				templateUrl: 'eureka/account/views/settings/main/main.html',

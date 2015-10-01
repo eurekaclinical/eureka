@@ -41,6 +41,15 @@ NG_DOCS={
     },
     {
       "section": "api",
+      "id": "eureka.account.administration.controller:EditCtrl",
+      "shortName": "EditCtrl",
+      "type": "controller",
+      "moduleName": "eureka.account.administration",
+      "shortDescription": "This is the main controller for editng a user account in the administration section of the application.",
+      "keywords": "account accountservice administration api application controller editng eureka main user"
+    },
+    {
+      "section": "api",
       "id": "eureka.account.administration.controller:MainCtrl",
       "shortName": "MainCtrl",
       "type": "controller",
