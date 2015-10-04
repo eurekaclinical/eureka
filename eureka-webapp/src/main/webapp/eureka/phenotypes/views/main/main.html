@@ -125,32 +125,32 @@
         </div>
     </div>
 </div>
-<script language="JavaScript">
+<!--<script language="JavaScript">-->
 
-    $('span.delete-icon').on('click', function () {
-        var $tr = $(this).closest('tr');
-        var displayName = $tr.data('display-name');
-        var key = $tr.data('key');
-        var dialog = $('#deleteModal');
-        $(dialog).find('#deleteContent').html('Are you sure you want to remove data element &quot;' + displayName.trim() + '&quot;?');
-        $(dialog).find('#deleteButton').on('click', function (e) {
-            $(dialog).modal('hide');
-            $.ajax({
-                type: "POST",
-                url: 'deleteprop?key=' + encodeURIComponent(key),
-                success: function (data) {
-                    window.location.href = 'editorhome'
-                },
-                error: function (data, statusCode, errorThrown) {
-                    var content = 'Error while deleting &quot;' + displayName.trim() + '&quot;. ' + data.responseText + '. Status Code: ' + statusCode;
-                    $('#errorModal').find('#errorContent').html(content);
-                    $('#errorModal').modal('show');
-                    if (errorThrown != null) {
-                        console.log(errorThrown);
-                    }
-                }
-            });
-        });
-        $(dialog).modal("show");
-    });
-</script>
+    <!--$('span.delete-icon').on('click', function () {-->
+        <!--var $tr = $(this).closest('tr');-->
+        <!--var displayName = $tr.data('display-name');-->
+        <!--var key = $tr.data('key');-->
+        <!--var dialog = $('#deleteModal');-->
+        <!--$(dialog).find('#deleteContent').html('Are you sure you want to remove data element &quot;' + displayName.trim() + '&quot;?');-->
+        <!--$(dialog).find('#deleteButton').on('click', function (e) {-->
+            <!--$(dialog).modal('hide');-->
+            <!--$.ajax({-->
+                <!--type: "POST",-->
+                <!--url: 'deleteprop?key=' + encodeURIComponent(key),-->
+                <!--success: function (data) {-->
+                    <!--window.location.href = 'editorhome'-->
+                <!--},-->
+                <!--error: function (data, statusCode, errorThrown) {-->
+                    <!--var content = 'Error while deleting &quot;' + displayName.trim() + '&quot;. ' + data.responseText + '. Status Code: ' + statusCode;-->
+                    <!--$('#errorModal').find('#errorContent').html(content);-->
+                    <!--$('#errorModal').modal('show');-->
+                    <!--if (errorThrown != null) {-->
+                        <!--console.log(errorThrown);-->
+                    <!--}-->
+                <!--}-->
+            <!--});-->
+        <!--});-->
+        <!--$(dialog).modal("show");-->
+    <!--});-->
+<!--</script>-->

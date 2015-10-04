@@ -16,6 +16,7 @@ var gulp = require('gulp'),
     templateCache = require('gulp-angular-templatecache'),
     map = require('map-stream'),
     less = require('gulp-less'),
+    es = require('event-stream')
 
     exitOnJshintError = function() {
         return map(function (file, cb) {
@@ -115,7 +116,7 @@ gulp.task('serve', ['bower', 'browser-sync', 'less'], function () {
     opn('https://localhost:8443/eureka-angular/');
 });
 
-gulp.task('build-html', ['test', 'less'], function() {
+gulp.task('compile:html', ['test', 'less'], function() {
     var assets = useref.assets();
     return gulp.src('./index.html')
         .pipe(assets)
@@ -126,10 +127,19 @@ gulp.task('build-html', ['test', 'less'], function() {
         .pipe(gulp.dest('./build'));
 });
 
-gulp.task('build', ['build-html'], function() {
+gulp.task('build-html', ['compile:html'], function() {
     return gulp.src('./build/index.html')
         .pipe(htmlmin({collapseWhitespace: true}))
         .pipe(gulp.dest('./dist'));
+});
+
+gulp.task('build', ['build-html'], function() {
+    return es.concat(
+        gulp.src('assets/**/*', { base: './' })
+            .pipe(gulp.dest('./dist')),
+        gulp.src(['./build/*.min.js', './build/*.min.css'])
+            .pipe(gulp.dest('./dist'))
+    );
 });
 
 gulp.task('default', ['build']);
