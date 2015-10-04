@@ -44,6 +44,10 @@
                           <label>Type</label>
                           <input ng-model="editAdmin.user.type">
                       </md-input-container>
+                         <md-input-container flex="33">
+                          <label> Account Verified</label>
+                          <input ng-model="editAdmin.user.verified">
+                      </md-input-container>
                   </div>
                   <div layout="row">
                     <md-input-container flex="33">
@@ -66,7 +70,7 @@
                         <md-input-container flex="33">
                    
                           <md-checkbox ng-model="editAdmin.user.active">
-                          Verified
+                          Active
                         </md-checkbox>
                       </md-input-container>
                   </div>

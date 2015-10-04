@@ -13,9 +13,9 @@
         .module('eureka.account')
         .controller('account.administration.EditCtrl', EditCtrl);
         
-    EditCtrl.$inject = ['AccountService', '$stateParams'];
+    EditCtrl.$inject = ['AccountService', '$stateParams', '$state'];
     
-    function EditCtrl(AccountService, $stateParams) {
+    function EditCtrl(AccountService, $stateParams, $state) {
         var vm = this;
         vm.updateUser = updateUser;
 
@@ -30,7 +30,7 @@
         function updateUser(editAdmin){
 
             AccountService.updateUser(editAdmin.user).then(function(data) {
-                console.log('#### we saved!!!!!!');
+                $state.transitionTo('accountAdministration');
 
             }, displayError); 
         }
