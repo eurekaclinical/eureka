@@ -20,7 +20,8 @@
         let { apiEndpoint } = appProperties;
         return ({
             changePassword: changePassword,
-            getUserById: getUserById
+            getUserById: getUserById,
+            updateUser: updateUser
 
         });
 
@@ -31,6 +32,11 @@
 
         function getUserById(id) {
             return $http.get(apiEndpoint + '/users/byid/'+id)
+            .then(handleSuccess, handleError);
+        }
+
+        function updateUser(userObject) {
+            return $http.put(apiEndpoint + '/users/', userObject)
             .then(handleSuccess, handleError);
         }
 

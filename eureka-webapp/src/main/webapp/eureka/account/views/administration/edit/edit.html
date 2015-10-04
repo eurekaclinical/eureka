@@ -44,15 +44,36 @@
                           <label>Type</label>
                           <input ng-model="editAdmin.user.type">
                       </md-input-container>
+                  </div>
+                  <div layout="row">
+                    <md-input-container flex="33">
+                         <md-checkbox>
+                            Super User
+                        </md-checkbox>
+                    </md-input-container>
                       <md-input-container flex="33">
-                          <label>Verified</label>
-                          <input ng-model="editAdmin.user.verified">
+                              <md-checkbox>
+                            Reasearcher
+                        </md-checkbox>
+                      </md-input-container>
+                      <md-input-container flex="33">
+                      <md-checkbox>
+                            Admin
+                        </md-checkbox>
+                      </md-input-container>
+                  </div>
+                  <div layout="row">
+                        <md-input-container flex="33">
+                   
+                          <md-checkbox ng-model="editAdmin.user.active">
+                          Verified
+                        </md-checkbox>
                       </md-input-container>
                   </div>
                 </form>
             </md-card-content>
                <div class="md-actions md-padding" layout="row" layout-align="start center">
-                <md-button class="md-raised md-primary md-hue-1" > Save </md-button>
+                <md-button class="md-raised md-primary md-hue-1" ng-click="editAdmin.updateUser(editAdmin)" > Save </md-button>
                 <md-button class="md-raised md-hue-1" ui-sref="accountAdministration" > Cancel </md-button>
             </div>
         </md-card>

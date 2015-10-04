@@ -17,14 +17,22 @@
     
     function EditCtrl(AccountService, $stateParams) {
         var vm = this;
+        vm.updateUser = updateUser;
 
         if ($stateParams.id) {
-            console.log('we are editing now');
             AccountService.getUserById($stateParams.id).then(function(data) {
                 vm.user = data;
 
             }, displayError); 
 
+        }
+
+        function updateUser(editAdmin){
+
+            AccountService.updateUser(editAdmin.user).then(function(data) {
+                console.log('#### we saved!!!!!!');
+
+            }, displayError); 
         }
 
         function displayError(msg) {
