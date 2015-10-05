@@ -13,9 +13,54 @@
         .module('eureka.account')
         .controller('account.settings.MainCtrl', MainCtrl);
         
-    MainCtrl.$inject = ['AccountService'];
+    MainCtrl.$inject = ['AccountService', 'users', '$mdDialog'];
     
-    function MainCtrl(AccountService) {
+    function MainCtrl(AccountService, users, $mdDialog) {
         var vm = this;
+        vm.resetPassword = resetPassword;
+
+        getCurrentUser();
+
+        function resetPassword(ev) {
+            $mdDialog.show({
+                controller: ChangePasswordController,
+                templateUrl: 'eureka/account/views/settings/main/modal.html',
+                parent: angular.element(document.body),
+                targetEvent: ev,
+                clickOutsideToClose:true
+            })
+            .then(function(answer) {
+                console.log('*** Something happended');
+            }, function() {
+                console.log('dialog cancelded');
+            });
+        }
+
+        function getCurrentUser() {
+            users.getUser().then(function (data) {
+                vm.currentUser = data;
+            }, displayError);
+        }
+
+        function ChangePasswordController($scope, $mdDialog, AccountService) {
+
+            $scope.resetPassword = function(){
+                AccountService.changePassword($scope.newPassword).then(function (data) {
+                    $scope.showSuccess = true;
+                }, displayError);
+            };
+
+            $scope.cancel = function() {
+                $mdDialog.cancel();
+            };
+
+            function displayError(msg) {
+                $scope.errorMsg = msg;
+            }
+        }
+
+        function displayError(msg) {
+            vm.errorMsg = msg;
+        }
     }
 })();

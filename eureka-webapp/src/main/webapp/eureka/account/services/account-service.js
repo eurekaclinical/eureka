@@ -14,8 +14,43 @@
         .module('eureka.account')
         .factory('AccountService', AccountService);
 
-    AccountService.$inject = ['$http', '$q'];
+    AccountService.$inject = ['$http', '$q', 'appProperties'];
 
-    function AccountService($http, $q) {}
+    function AccountService($http, $q, appProperties) {
+        let { apiEndpoint } = appProperties;
+        return ({
+            changePassword: changePassword,
+            getUserById: getUserById,
+            updateUser: updateUser
+
+        });
+
+        function changePassword(passwordObject) {
+            return $http.post(apiEndpoint + '/users/passwordchangerequest', passwordObject)
+            .then(handleSuccess, handleError);
+        }
+
+        function getUserById(id) {
+            return $http.get(apiEndpoint + '/users/byid/'+id)
+            .then(handleSuccess, handleError);
+        }
+
+        function updateUser(userObject) {
+            return $http.put(apiEndpoint + '/users/', userObject)
+            .then(handleSuccess, handleError);
+        }
+
+        function handleSuccess(response) {
+            return response.data;
+        }
+
+        function handleError(response) {
+            if (!angular.isObject(response.data) && !response.data) {
+                return ($q.reject('An unknown error occurred.'));
+            }
+            return ($q.reject(response.data));
+        }
+
+    }
 
 }());

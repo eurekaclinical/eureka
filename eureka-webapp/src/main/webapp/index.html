@@ -80,13 +80,15 @@
                         </a>
                         <ul class="dropdown-menu" role="menu">
                             <li>
-                                <a href="/eureka-webapp/protected/user_acct?action=list">
+                                <!--<a href="/eureka-webapp/protected/user_acct?action=list">  -->
+                                <a ui-sref="accountSettings">
                                     <span class="glyphicon glyphicon-user"></span>
                                     Account Settings
                                 </a>
                             </li>
                             <li ng-if="user.hasRole('admin')">
-                                <a href="/eureka-webapp/protected/admin?action=list">
+                               <!-- <a href="/eureka-webapp/protected/admin?action=list">  -->
+                               <a ui-sref="accountAdministration">
                                     <span class="glyphicon glyphicon-wrench"></span>
                                     Administration
                                 </a>
