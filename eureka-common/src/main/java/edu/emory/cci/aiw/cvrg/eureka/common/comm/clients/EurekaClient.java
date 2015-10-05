@@ -31,6 +31,8 @@ import java.net.URI;
 import javax.ws.rs.HttpMethod;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
+
+import edu.emory.cci.aiw.cvrg.eureka.common.exception.HttpStatusException;
 import org.arp.javautil.arrays.Arrays;
 
 /**
@@ -138,10 +140,10 @@ public abstract class EurekaClient extends AbstractClient {
 	}
 
 	protected void doPost(String path, Object o) throws ClientException {
-		ClientResponse response = getResourceWrapper().rewritten(path, HttpMethod.POST)
-				.accept(MediaType.APPLICATION_JSON)
-				.type(MediaType.APPLICATION_JSON)
-				.post(ClientResponse.class, o);
+			ClientResponse response = getResourceWrapper().rewritten(path, HttpMethod.POST)
+					.accept(MediaType.APPLICATION_JSON)
+					.type(MediaType.APPLICATION_JSON)
+					.post(ClientResponse.class, o);
 		errorIfStatusNotEqualTo(response, ClientResponse.Status.NO_CONTENT);
 	}
 	

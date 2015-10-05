@@ -47,7 +47,7 @@ import edu.emory.cci.aiw.cvrg.eureka.services.util.UserRequestToUserEntityVisito
  *
  * @author hrathod
  */
-@Path("/userrequest")
+@Path("/userrequests")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public class UserRequestResource {
@@ -98,7 +98,6 @@ public class UserRequestResource {
 	 * @param userRequest Object containing all the information about the user
 	 * to add.
 	 */
-	@Path("/new")
 	@POST
 	public void addUser(@Context HttpServletRequest inRequest,
 			UserRequest userRequest) {

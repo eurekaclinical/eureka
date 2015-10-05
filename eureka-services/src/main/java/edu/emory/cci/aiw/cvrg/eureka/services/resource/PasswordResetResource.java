@@ -46,7 +46,7 @@ import org.slf4j.LoggerFactory;
  *
  * @author Andrew Post
  */
-@Path("/passwordresetrequest")
+@Path("/passwordreset")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public class PasswordResetResource {

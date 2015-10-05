@@ -105,27 +105,27 @@ public class ServicesClient extends EurekaClient {
 	}
 
 	public User getUserById(Long inUserId) throws ClientException {
-		final String path = "/api/protected/users/byid/" + inUserId;
+		final String path = "/api/protected/users/" + inUserId;
 		return doGet(path, User.class);
 	}
 
 	public void addUser(UserRequest inRequest) throws ClientException {
-		final String path = "/api/userrequest/new";
-		doPost(path, inRequest);
+		final String path = "/api/userrequests";
+		doPostCreate(path, inRequest);
 	}
 
 	public void resetPassword(String username) throws ClientException {
-		final String path = "/api/passwordresetrequest/" + username;
+		final String path = "/api/passwordreset/" + username;
 		doPost(path);
 	}
 
 	public void verifyUser(String inCode) throws ClientException {
-		final String path = "/api/userrequest/verify/" + inCode;
+		final String path = "/api/userrequests/verify/" + inCode;
 		doPut(path);
 	}
 
 	public void changePassword(String inOldPass, String inNewPass) throws ClientException {
-		final String path = "/api/protected/users/passwordchangerequest";
+		final String path = "/api/protected/users/passwordchange";
 		PasswordChangeRequest passwordChangeRequest
 				= new PasswordChangeRequest();
 		passwordChangeRequest.setOldPassword(inOldPass);
@@ -133,18 +133,18 @@ public class ServicesClient extends EurekaClient {
 		doPost(path, passwordChangeRequest);
 	}
 
-	public void updateUser(User inUser) throws ClientException {
-		final String path = "/api/protected/users";
+	public void updateUser(User inUser, Long userId) throws ClientException {
+		final String path = "/api/protected/users/"+userId;
 		doPut(path, inUser);
 	}
 
 	public List<Role> getRoles() throws ClientException {
-		final String path = "/api/protected/role/list";
+		final String path = "/api/protected/roles";
 		return doGet(path, RoleList);
 	}
 
 	public Role getRole(Long inRoleId) throws ClientException {
-		final String path = "/api/protected/role/" + inRoleId;
+		final String path = "/api/protected/roles/" + inRoleId;
 		return doGet(path, Role.class);
 	}
 
