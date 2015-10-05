@@ -7,6 +7,7 @@
         ephiProhibited: true,
         registrationEnabled: true,
         aiwSiteUrl: 'http://aiw.sourceforge.net',
+        helpSiteUrl: 'http://aiw.sourceforge.net/help/v1-10',
         organizationName: 'Emory University',
         apiEndpoint: '/eureka-services/api/protected',
         dataEndpoint: '/eureka-webapp/protected',

@@ -43,7 +43,8 @@
         'eureka.cohorts',
         'eureka.phenotypes',
         'eureka.register',
-        'eureka.account']);
+        'eureka.account',
+        'eureka.help']);
 
     angular.module('eureka').run(eurekaRun);
     angular.module('eureka').config(eurekaConfig);

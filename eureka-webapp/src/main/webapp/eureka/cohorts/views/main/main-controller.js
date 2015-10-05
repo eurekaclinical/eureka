@@ -18,19 +18,12 @@
     function MainCtrl(CohortService) {
         var vm = this;
         vm.remove = remove;
-        getCohorts();
-
-        function getCohorts() {
-            CohortService.getCohorts().then(function (data) {
-                vm.list = data;
-            }, displayError);
-        }
 
         function remove(key) {
             CohortService.removeCohort(key);
-            for (var i = 0; i < vm.list.length; i++) {
-                if (vm.list[i].name === key) {
-                    vm.list.splice(i, 1);
+            for (var i = 0; i < vm.cohortsList.length; i++) {
+                if (vm.cohortsList[i].name === key) {
+                    vm.cohortsList.splice(i, 1);
                     break;
                 }
             }
@@ -72,7 +65,7 @@
         // you can implement your own search header and do something like
         vm.search = function (predicate) {
             vm.filter = predicate;
-            vm.deferred = CohortService.getCohorts(vm.query).then(success);
+            vm.deferred = CohortService.getCohorts(vm.query).then(success, displayError);
         };
 
         vm.onOrderChange = function () {
@@ -83,7 +76,7 @@
             return CohortService.getCohorts(vm.query);
         };
 
-        CohortService.getCohorts().then(success);
+        CohortService.getCohorts().then(success, displayError);
 
      }
 })();

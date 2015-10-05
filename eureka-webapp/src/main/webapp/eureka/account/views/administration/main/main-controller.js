@@ -13,27 +13,60 @@
         .module('eureka.account')
         .controller('account.administration.MainCtrl', MainCtrl);
         
-    MainCtrl.$inject = ['AccountService', 'users'];
+    MainCtrl.$inject = ['users'];
     
-    function MainCtrl(AccountService, users) {
+    function MainCtrl(users) {
         var vm = this;
+        vm.userslist = [];
 
-        getUsers();
+        vm.filter = {
+            options: {
+                debounce: 500
+            }
+        };
 
-        function getUsers() {
-            users.getUsers().then(function (data) {
-                vm.list = data;
-            }, displayError);
-        }
+        vm.selected = [];
 
-        function displayError(msg) {
-            vm.errorMsg = msg;
-        }
+        vm.query = {
+            filter: '',
+            order: 'name',
+            limit: 5,
+            page: 1
+        };
 
         function success(users) {
             vm.userslist = users;
         }
 
-        users.getUsers().then(success);
+        users.getUsers().then(success, displayError);
+
+        function displayError(msg) {
+            vm.errorMsg = msg;
+        }
+
+        vm.removeFilter = function () {
+            vm.filter.show = false;
+            vm.query.filter = '';
+
+            if(vm.filter.form.$dirty) {
+                vm.filter.form.$setPristine();
+            }
+        };
+
+        // in the future we may see a few built in alternate headers but in the mean time
+        // you can implement your own search header and do something like
+        vm.search = function (predicate) {
+            vm.filter = predicate;
+            vm.deferred = users.getUsers(vm.query).then(success, displayError);
+        };
+
+        vm.onOrderChange = function () {
+            return users.getUsers(vm.query);
+        };
+
+        vm.onPaginationChange = function () {
+            return users.getUsers(vm.query);
+        };
+
     }
 })();

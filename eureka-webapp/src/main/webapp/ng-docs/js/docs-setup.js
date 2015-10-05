@@ -86,6 +86,15 @@ NG_DOCS={
     },
     {
       "section": "api",
+      "id": "eureka.cohorts",
+      "shortName": "eureka.cohorts",
+      "type": "overview",
+      "moduleName": "eureka.cohorts",
+      "shortDescription": "The module for the cohorts section of the Eureka application.",
+      "keywords": "api application cohorts eureka module overview"
+    },
+    {
+      "section": "api",
       "id": "eureka.cohorts.CohortFilterService",
       "shortName": "eureka.cohorts.CohortFilterService",
       "type": "service",

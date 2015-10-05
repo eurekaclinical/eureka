@@ -1,16 +1,24 @@
 <div layout>
     <md-content flex layout-padding>
         <md-card>
-         <md-data-table-toolbar>
+         <md-data-table-toolbar ng-hide="administration.selected.length || administration.filter.show">
             <h2 class="md-title">Administration</h2>
             <div flex></div>
-            <md-button class="md-icon-button" >
+            <md-button class="md-icon-button" ng-click="administration.filter.show = true">
                 <i class="material-icons md-dark">search</i>
             </md-button>
-            <md-button class="md-icon-button">
-                <i class="material-icons md-dark">add_circle</i>
+        </md-data-table-toolbar>
+
+        <md-data-table-toolbar ng-show="administration.filter.show && !administration.selected.length">
+            <i class="material-icons md-dark">search</i>
+            <form flex name="administration.filter.form">
+                <input type="text" ng-model="administration.query.filter" ng-model-options="administration.filter.options" placeholder="Search...">
+            </form>
+            <md-button class="md-icon-button" ng-click="administration.removeFilter()">
+                <i class="material-icons md-dark">close</i>
             </md-button>
         </md-data-table-toolbar>
+
         <md-data-table-toolbar class="alternate" ng-show="administration.selected.length" layout-align="space-between">
             <div>{{administration.selected.length}} {{administration.selected.length > 1 ? 'items' : 'item'}} selected</div>
             <div flex></div>
