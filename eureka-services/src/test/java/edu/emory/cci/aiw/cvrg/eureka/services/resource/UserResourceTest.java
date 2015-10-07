@@ -97,7 +97,7 @@ public class UserResourceTest extends AbstractServiceResourceTest {
 		userRequest.setDepartment(department);
 		userRequest.setTitle(title);
 
-		ClientResponse response = webResource.path("/api/userrequest/new")
+		ClientResponse response = webResource.path("/api/userrequests")
 				.type(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON)
 				.post(ClientResponse.class, userRequest);
 
@@ -115,7 +115,7 @@ public class UserResourceTest extends AbstractServiceResourceTest {
 		request.setOldPassword("testpassword");
 		request.setNewPassword("newPassword");
 		ClientResponse response = resource
-				.path("/api/protected/users/passwordchangerequest")
+				.path("/api/protected/users/passwordchange")
 				.type(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON)
 				.post(ClientResponse.class, request);
 		assertEquals(Status.NO_CONTENT, response.getClientResponseStatus());
@@ -132,7 +132,7 @@ public class UserResourceTest extends AbstractServiceResourceTest {
 		users = this.getUserList();
 		user = (LocalUser) users.get(0);
 		ClientResponse response = resource
-				.path("/api/passwordresetrequest/" + user.getEmail())
+				.path("/api/passwordreset/" + user.getEmail())
 				.post(ClientResponse.class);
 		assertEquals(Status.NO_CONTENT, response.getClientResponseStatus());
 
