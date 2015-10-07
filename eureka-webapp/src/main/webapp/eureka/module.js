@@ -39,6 +39,7 @@
         'ui.tree',
         'angularValidator',
         'ngMaterial',
+        'ngMessages',
         'md.data.table',
         'eureka.cohorts',
         'eureka.phenotypes',
