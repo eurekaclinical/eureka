@@ -16,7 +16,7 @@
     function accountConfig($stateProvider) {
 		$stateProvider
 			.state('accountAdministration', {
-				url: '/account/administration/main',
+				url: '/account/administration',
 				templateUrl: 'eureka/account/views/administration/main/main.html',
 				controller: 'account.administration.MainCtrl',
 				controllerAs: 'administration'
@@ -28,7 +28,7 @@
                 controllerAs: 'editAdmin'
             })
 			.state('accountSettings', {
-				url: '/account/settings/main',
+				url: '/account/settings',
 				templateUrl: 'eureka/account/views/settings/main/main.html',
 				controller: 'account.settings.MainCtrl',
 				controllerAs: 'settings'

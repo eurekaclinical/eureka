@@ -47,7 +47,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr md-auto-select ng-repeat="admin in administration.userslist">
+                    <tr md-auto-select ng-repeat="admin in administration.userslist | filter:administration.query.filter">
                         <td>{{admin.username}}</td>
                         <td>{{admin.fullName}}</td>
                         <td>{{admin.lastLogin | date:'shortDate'}}</td>
