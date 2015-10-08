@@ -180,6 +180,7 @@ public final class EurekaDataSourceBackend extends RelationalDbDataSourceBackend
 
 	private void populateDatabase() throws DataSourceReadException {
 		Connection dataInserterConnection = null;
+		Throwable exceptionThrown = null;
 		try {
 			dataInserterConnection
 					= getConnectionSpecInstance().getOrCreate();
@@ -188,27 +189,47 @@ public final class EurekaDataSourceBackend extends RelationalDbDataSourceBackend
 					DataInserter dataInserter
 							= new DataInserter(dataInserterConnection);
 					dataInserter.insertPatients(dataProvider.getPatients());
+					dataInserterConnection.commit();
 					dataInserter.insertEncounters(dataProvider.getEncounters());
+					dataInserterConnection.commit();
 					dataInserter.insertProviders(dataProvider.getProviders());
+					dataInserterConnection.commit();
 					dataInserter.insertCptCodes(dataProvider.getCptCodes());
+					dataInserterConnection.commit();
 					dataInserter.insertIcd9Diagnoses(dataProvider
 							.getIcd9Diagnoses());
+					dataInserterConnection.commit();
 					dataInserter.insertIcd9Procedures(dataProvider
 							.getIcd9Procedures());
+					dataInserterConnection.commit();
 					dataInserter.insertLabs(dataProvider.getLabs());
+					dataInserterConnection.commit();
 					dataInserter.insertMedications(dataProvider.getMedications());
+					dataInserterConnection.commit();
 					dataInserter.insertVitals(dataProvider.getVitals());
+					dataInserterConnection.commit();
 				}
 			}
 			this.dataPopulated = true;
 			dataInserterConnection.close();
 		} catch (SQLException | DataProviderException | DataInserterException | InvalidConnectionSpecArguments sqle) {
+			exceptionThrown = sqle;
+			if (dataInserterConnection != null) {
+				try {
+					dataInserterConnection.rollback();
+				} catch (SQLException ignore) {
+					sqle.addSuppressed(ignore);
+				}
+			}
 			throw new DataSourceReadException("Error reading spreadsheets in " + this.fileDataSourceBackendSupport.getDataFileDirectoryName() + " in data source backend " + nameForErrors(), sqle);
 		} finally {
 			if (dataInserterConnection != null) {
 				try {
 					dataInserterConnection.close();
 				} catch (SQLException ignore) {
+					if (exceptionThrown != null) {
+						exceptionThrown.addSuppressed(ignore);
+					}
 				}
 			}
 		}
