@@ -66,7 +66,18 @@
 
         function getUsers() {
             return $http.get(apiEndpoint + '/users')
-            .then(handleSuccess, handleError);
+            .then(handleSuccess, handleError)
+            .then(function(users){
+                
+                return $q.all( _.map(users, function(user){
+                    return $q.all(_.map(user.roles, getRole))
+                        .then(function(roleObjects){
+                            user.roles = roleObjects;
+                            return user;
+
+                        });
+                }));
+            });
         }
 
         function handleSuccess(response) {

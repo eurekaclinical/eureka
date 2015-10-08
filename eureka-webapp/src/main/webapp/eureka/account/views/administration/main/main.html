@@ -51,7 +51,7 @@
                         <td>{{admin.username}}</td>
                         <td>{{admin.fullName}}</td>
                         <td>{{admin.lastLogin | date:'shortDate'}}</td>
-                        <td>{{admin.roles}}</td>
+                        <td><span ng-repeat="role in admin.roles">{{role.name}}<span ng-if="!$last">, </span></span></td>
                         <td>{{admin.email}}</td>
                         <td>{{admin.organization}}</td>
                         <td>{{admin.active}}</td>
