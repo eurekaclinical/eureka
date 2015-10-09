@@ -32,6 +32,7 @@ import javax.crypto.spec.SecretKeySpec;
 import org.apache.commons.codec.binary.Base64;
 import org.protempa.dest.deid.CipherDeidConfig;
 import org.protempa.dest.deid.CipherEncryption;
+import org.protempa.dest.deid.EncryptionInitException;
 import org.protempa.dest.deid.KeyCreateException;
 
 /**
@@ -55,7 +56,7 @@ public class EurekaCipherDeidConfig extends EurekaDeidConfig implements CipherDe
 	}
 
 	@Override
-	public CipherEncryption getEncryptionInstance() {
+	public CipherEncryption getEncryptionInstance() throws EncryptionInitException {
 		return new CipherEncryption(this);
 	}
 
