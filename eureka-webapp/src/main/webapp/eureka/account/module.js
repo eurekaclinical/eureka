@@ -27,6 +27,12 @@
                 controller: 'account.administration.EditCtrl',
                 controllerAs: 'editAdmin'
             })
+            .state('passwordExpire', {
+                url: '/account/administation/passwordexpire',
+                templateUrl: 'eureka/account/views/administration/password/passwordExpire.html',
+                controller: 'account.administration.PasswordCtrl',
+                controllerAs: 'expiredPassword'
+            })
 			.state('accountSettings', {
 				url: '/account/settings',
 				templateUrl: 'eureka/account/views/settings/main/main.html',

@@ -59,6 +59,15 @@ NG_DOCS={
     },
     {
       "section": "api",
+      "id": "eureka.account.administration.controller:PasswordCtrl",
+      "shortName": "PasswordCtrl",
+      "type": "controller",
+      "moduleName": "eureka.account.administration",
+      "shortDescription": "This is the main controller for the password expiration section of the application.",
+      "keywords": "account administration api application controller eureka expiration main password"
+    },
+    {
+      "section": "api",
       "id": "eureka.account.settings.controller:MainCtrl",
       "shortName": "MainCtrl",
       "type": "controller",
