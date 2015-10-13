@@ -101,7 +101,7 @@ public class UserResourceTest extends AbstractServiceResourceTest {
 				.type(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON)
 				.post(ClientResponse.class, userRequest);
 
-		assertEquals(Status.NO_CONTENT, response.getClientResponseStatus());
+		assertEquals(Status.CREATED, response.getClientResponseStatus());
 
 	}
 

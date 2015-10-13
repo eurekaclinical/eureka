@@ -25,6 +25,7 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriInfo;
 
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -41,6 +42,8 @@ import edu.emory.cci.aiw.cvrg.eureka.services.dao.*;
 import edu.emory.cci.aiw.cvrg.eureka.services.email.EmailException;
 import edu.emory.cci.aiw.cvrg.eureka.services.email.EmailSender;
 import edu.emory.cci.aiw.cvrg.eureka.services.util.UserRequestToUserEntityVisitor;
+
+import java.net.URI;
 
 /**
  * RESTful end-point for new user registration-related methods.
@@ -99,8 +102,8 @@ public class UserRequestResource {
 	 * to add.
 	 */
 	@POST
-	public void addUser(@Context HttpServletRequest inRequest,
-			UserRequest userRequest) {
+	public Response addUser(
+			UserRequest userRequest, @Context UriInfo uriInfo) {
 		UserEntity user =
 				this.userDao.getByUsername(userRequest.getUsername());
 		if (user != null) {
@@ -129,6 +132,9 @@ public class UserRequestResource {
 			throw new HttpStatusException(
 					Response.Status.BAD_REQUEST, errorMsg);
 		}
+		UserEntity addedUser = this.userDao.getByUsername(userRequest.getUsername());
+		URI uri = uriInfo.getAbsolutePathBuilder().path(addedUser.getId().toString()).build();
+		return Response.created(uri).entity(user).build();
 	}
 
 	/**
