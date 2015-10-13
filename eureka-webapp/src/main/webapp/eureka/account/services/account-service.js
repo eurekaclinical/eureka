@@ -21,12 +21,20 @@
         return ({
             changePassword: changePassword,
             getUserById: getUserById,
-            updateUser: updateUser
+            updateUser: updateUser,
+            passwordExpiration: passwordExpiration
 
         });
 
         function changePassword(passwordObject) {
             return $http.post(apiEndpoint + '/users/passwordchangerequest', passwordObject)
+            .then(handleSuccess, handleError);
+        }
+
+        function passwordExpiration(passwordObj) {
+            return $http.post(
+                '/eureka-webapp/protected/passwordexpiration?firstLogin=true&redirectURL=/eureka-angular/',
+                passwordObj)
             .then(handleSuccess, handleError);
         }
 
