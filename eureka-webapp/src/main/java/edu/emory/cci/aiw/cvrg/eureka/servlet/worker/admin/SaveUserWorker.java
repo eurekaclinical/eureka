@@ -68,7 +68,7 @@ public class SaveUserWorker implements ServletWorker {
 			user.setRoles(userRoles);
 			user.setActive(isActivated);
 
-			this.servicesClient.updateUser(user);
+			this.servicesClient.updateUser(user,Long.valueOf(id));
 		} catch (ClientException e) {
 			throw new ServletException("Error saving user", e);
 		}
