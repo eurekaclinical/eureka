@@ -27,6 +27,9 @@
 	<listener>
         <listener-class>edu.emory.cci.aiw.cvrg.eureka.etl.config.BackEndContextListener</listener-class>
 	</listener>
+	<listener>
+		<listener-class>org.jasig.cas.client.session.SingleSignOutHttpSessionListener</listener-class>
+	</listener>
 
 	<filter>
 		<filter-name>Guice Filter</filter-name>
