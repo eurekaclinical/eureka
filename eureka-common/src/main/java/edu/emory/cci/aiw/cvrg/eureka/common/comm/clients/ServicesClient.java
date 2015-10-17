@@ -256,7 +256,7 @@ public class ServicesClient extends EurekaClient {
 	}
 
 	public List<DataElement> getUserElements(boolean summarized) throws ClientException {
-		final String path = "/api/protected/dataelement/";
+		final String path = "/api/protected/dataelement";
 		if (summarized) {
 			MultivaluedMap<String, String> queryParams = new MultivaluedMapImpl();
 			queryParams.add("summarize", "true");
