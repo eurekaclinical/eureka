@@ -57,7 +57,7 @@ public class ServicesClient extends EurekaClient {
 	};
 	private static final GenericType<List<DataElement>> DataElementList
 			= new GenericType<List<DataElement>>() {
-			};
+	};
 	private static final GenericType<List<Role>> RoleList = new GenericType<List<Role>>() {
 	};
 	private static final GenericType<List<Job>> JobList = new GenericType<List<Job>>() {
@@ -72,13 +72,12 @@ public class ServicesClient extends EurekaClient {
 	};
 	private static final GenericType<List<CohortDestination>> CohortDestinationListType
 			= new GenericType<List<CohortDestination>>() {
-			};
+	};
 	private static final GenericType<List<I2B2Destination>> I2B2DestinationListType
 			= new GenericType<List<I2B2Destination>>() {
-			};
+	};
 	private static final GenericType<List<String>> SystemElementSearchResultsList = new GenericType<List<String>>() {
 	};
-
 
 
 	private final String servicesUrl;
@@ -134,7 +133,7 @@ public class ServicesClient extends EurekaClient {
 	}
 
 	public void updateUser(User inUser, Long userId) throws ClientException {
-		final String path = "/api/protected/users/"+userId;
+		final String path = "/api/protected/users/" + userId;
 		doPut(path, inUser);
 	}
 
@@ -148,14 +147,14 @@ public class ServicesClient extends EurekaClient {
 		return doGet(path, Role.class);
 	}
 
-	public Long submitJob(JobSpec inUpload) throws ClientException {
+	public URI submitJob(JobSpec inUpload) throws ClientException {
 		final String path = "/api/protected/jobs";
 		URI jobUrl = doPostCreate(path, inUpload);
-		return extractId(jobUrl);
+		return jobUrl;
 	}
 
 	public void upload(String fileName, String sourceId,
-			String fileTypeId, InputStream inputStream)
+					   String fileTypeId, InputStream inputStream)
 			throws ClientException {
 		String path = UriBuilder
 				.fromPath("/api/protected/file/upload/")
@@ -226,7 +225,7 @@ public class ServicesClient extends EurekaClient {
 
 	public void proxyPost(final String path, final String json)
 			throws ClientException {
-		doPost(path, json);
+		doPostCreate(path, json);
 	}
 
 	public void proxyDelete(final String path)
@@ -238,6 +237,16 @@ public class ServicesClient extends EurekaClient {
 	public void proxyPut(final String path, final String json)
 			throws ClientException {
 		doPut(path, json);
+	}
+
+	public String proxyGet(final String path, MultivaluedMap queryParams)
+			throws ClientException {
+		if (queryParams == null) {
+			return doGet(path);
+		} else {
+			return doGet(path, queryParams);
+		}
+
 	}
 
 	public void updateUserElement(DataElement inDataElement) throws
