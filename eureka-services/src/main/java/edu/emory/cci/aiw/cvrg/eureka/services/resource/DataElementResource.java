@@ -81,7 +81,6 @@ public class DataElementResource {
 	}
 
 	@GET
-	@Path("/")
 	public List<DataElement> getAll(@Context HttpServletRequest inRequest,
 			@DefaultValue("false") @QueryParam("summarize") boolean inSummarize) {
 		UserEntity user = this.userDao.getByHttpServletRequest(inRequest);

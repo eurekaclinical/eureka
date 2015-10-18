@@ -41,11 +41,11 @@ import org.arp.javautil.arrays.Arrays;
 public abstract class EurekaClient extends AbstractClient {
 
 	private WebResourceWrapperFactory webResourceWrapperFactory;
-	
+
 	protected EurekaClient() {
 		this.webResourceWrapperFactory = new CasWebResourceWrapperFactory();
 	}
-	
+
 	protected WebResourceWrapper getResourceWrapper() {
 		return this.webResourceWrapperFactory.getInstance(getResource());
 	}
@@ -77,6 +77,27 @@ public abstract class EurekaClient extends AbstractClient {
 		errorIfStatusNotEqualTo(response, ClientResponse.Status.CREATED, ClientResponse.Status.OK, ClientResponse.Status.NO_CONTENT);
 	}
 
+	protected String doGet(String path) throws ClientException {
+
+		ClientResponse response = getResourceWrapper().rewritten(path, HttpMethod.GET)
+				.accept(MediaType.APPLICATION_JSON)
+				.type(MediaType.APPLICATION_JSON)
+				.get(ClientResponse.class);
+		errorIfStatusNotEqualTo(response, ClientResponse.Status.OK);
+
+		return response.getEntity(String.class);
+	}
+
+	protected String doGet(String path, MultivaluedMap<String, String> queryParams) throws ClientException {
+		ClientResponse response = getResourceWrapper().rewritten(path, HttpMethod.GET, queryParams)
+				.accept(MediaType.APPLICATION_JSON)
+				.type(MediaType.APPLICATION_JSON)
+				.get(ClientResponse.class);
+		errorIfStatusNotEqualTo(response, ClientResponse.Status.OK);
+
+		return response.getEntity(String.class);
+	}
+
 	protected <T> T doGet(String path, Class<T> cls) throws ClientException {
 		ClientResponse response = getResourceWrapper().rewritten(path, HttpMethod.GET)
 				.accept(MediaType.APPLICATION_JSON)
@@ -85,7 +106,7 @@ public abstract class EurekaClient extends AbstractClient {
 		errorIfStatusNotEqualTo(response, ClientResponse.Status.OK);
 		return response.getEntity(cls);
 	}
-	
+
 	protected <T> T doGet(String path, Class<T> cls, MultivaluedMap<String, String> queryParams) throws ClientException {
 		ClientResponse response = getResourceWrapper().rewritten(path, HttpMethod.GET)
 				.accept(MediaType.APPLICATION_JSON)
@@ -112,7 +133,7 @@ public abstract class EurekaClient extends AbstractClient {
 		errorIfStatusNotEqualTo(response, ClientResponse.Status.OK);
 		return response.getEntity(genericType);
 	}
-	
+
 	protected <T> T doPost(String path, Class<T> cls, MultivaluedMap<String, String> formParams) throws ClientException {
 		ClientResponse response = getResourceWrapper().rewritten(path, HttpMethod.POST)
 				.accept(MediaType.APPLICATION_JSON)
@@ -121,7 +142,7 @@ public abstract class EurekaClient extends AbstractClient {
 		errorIfStatusNotEqualTo(response, ClientResponse.Status.OK);
 		return response.getEntity(cls);
 	}
-	
+
 	protected <T> T doPost(String path, GenericType<T> genericType, MultivaluedMap<String, String> formParams) throws ClientException {
 		ClientResponse response = getResourceWrapper().rewritten(path, HttpMethod.POST)
 				.accept(MediaType.APPLICATION_JSON)
@@ -130,7 +151,7 @@ public abstract class EurekaClient extends AbstractClient {
 		errorIfStatusNotEqualTo(response, ClientResponse.Status.OK);
 		return response.getEntity(genericType);
 	}
-	
+
 	protected void doPost(String path) throws ClientException {
 		ClientResponse response = getResourceWrapper().rewritten(path, HttpMethod.POST)
 				.accept(MediaType.APPLICATION_JSON)
@@ -140,13 +161,13 @@ public abstract class EurekaClient extends AbstractClient {
 	}
 
 	protected void doPost(String path, Object o) throws ClientException {
-			ClientResponse response = getResourceWrapper().rewritten(path, HttpMethod.POST)
-					.accept(MediaType.APPLICATION_JSON)
-					.type(MediaType.APPLICATION_JSON)
-					.post(ClientResponse.class, o);
+		ClientResponse response = getResourceWrapper().rewritten(path, HttpMethod.POST)
+				.accept(MediaType.APPLICATION_JSON)
+				.type(MediaType.APPLICATION_JSON)
+				.post(ClientResponse.class, o);
 		errorIfStatusNotEqualTo(response, ClientResponse.Status.NO_CONTENT);
 	}
-	
+
 	protected <T> T doPost(String path, Object o, Class<T> cls) throws ClientException {
 		ClientResponse response = getResourceWrapper().rewritten(path, HttpMethod.POST)
 				.accept(MediaType.APPLICATION_JSON)
@@ -169,11 +190,11 @@ public abstract class EurekaClient extends AbstractClient {
 		FormDataMultiPart part = new FormDataMultiPart();
 		part.bodyPart(
 				new FormDataBodyPart(
-				FormDataContentDisposition
-				.name("file")
-				.fileName(filename)
-				.build(),
-				inputStream, MediaType.APPLICATION_OCTET_STREAM_TYPE));
+						FormDataContentDisposition
+								.name("file")
+								.fileName(filename)
+								.build(),
+						inputStream, MediaType.APPLICATION_OCTET_STREAM_TYPE));
 		ClientResponse response = getResourceWrapper()
 				.rewritten(path, HttpMethod.POST)
 				.type(MediaType.MULTIPART_FORM_DATA_TYPE)
@@ -182,22 +203,22 @@ public abstract class EurekaClient extends AbstractClient {
 	}
 
 	protected void errorIfStatusEqualTo(ClientResponse response,
-			ClientResponse.Status... status) throws ClientException {
+										ClientResponse.Status... status) throws ClientException {
 		errorIf(response, status, true);
 	}
 
 	protected void errorIfStatusNotEqualTo(ClientResponse response,
-			ClientResponse.Status... status) throws ClientException {
+										   ClientResponse.Status... status) throws ClientException {
 		errorIf(response, status, false);
 	}
-	
+
 	protected Long extractId(URI uri) {
 		String uriStr = uri.toString();
 		return Long.valueOf(uriStr.substring(uriStr.lastIndexOf("/") + 1));
 	}
 
 	private void errorIf(ClientResponse response,
-			ClientResponse.Status[] status, boolean bool)
+						 ClientResponse.Status[] status, boolean bool)
 			throws ClientException {
 		ClientResponse.Status clientResponseStatus =
 				response.getClientResponseStatus();

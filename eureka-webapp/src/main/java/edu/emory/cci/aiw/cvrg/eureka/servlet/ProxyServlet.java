@@ -21,9 +21,11 @@ package edu.emory.cci.aiw.cvrg.eureka.servlet;
  */
 
 import com.google.inject.Inject;
+import com.sun.jersey.core.util.MultivaluedMapImpl;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ClientException;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ServicesClient;
 import edu.emory.cci.aiw.cvrg.eureka.webapp.authentication.WebappAuthenticationSupport;
+import org.apache.commons.collections4.MapUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -31,10 +33,14 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.UriBuilder;
 import java.io.IOException;
 import java.net.URI;
+import java.util.Iterator;
+import java.util.Map;
 import java.util.Scanner;
+import java.util.Set;
 
 /**
  * Created by Sanjay Agravat on 4/21/15.
@@ -48,7 +54,9 @@ public class ProxyServlet extends HttpServlet {
 
 	protected String targetUri;
 	protected URI targetUriObj;//new URI(targetUri)
-	/** The parameter name for the target (destination) URI to proxy to. */
+	/**
+	 * The parameter name for the target (destination) URI to proxy to.
+	 */
 	protected static final String P_TARGET_URI = "targetUri";
 
 	@Inject
@@ -71,12 +79,12 @@ public class ProxyServlet extends HttpServlet {
 
 		targetUri = getConfigParam(P_TARGET_URI);
 		if (targetUri == null)
-			throw new ServletException(P_TARGET_URI+" is required.");
+			throw new ServletException(P_TARGET_URI + " is required.");
 		//test it's valid
 		try {
 			targetUriObj = new URI(targetUri);
 		} catch (Exception e) {
-			throw new ServletException("Trying to process targetUri init parameter: "+e,e);
+			throw new ServletException("Trying to process targetUri init parameter: " + e, e);
 		}
 
 	}
@@ -156,6 +164,46 @@ public class ProxyServlet extends HttpServlet {
 
 	}
 
-	/** The target URI as configured. Not null. */
-	public String getTargetUri() { return targetUri; }
+	@Override
+	protected void doGet(HttpServletRequest servletRequest, HttpServletResponse servletResponse)
+			throws ServletException, IOException {
+
+		LOGGER.debug("ProxyServlet - GET");
+
+		StringBuilder uri = new StringBuilder(500);
+		uri.append(getTargetUri());
+		// Handle the path given to the servlet
+		if (servletRequest.getPathInfo() != null) {//ex: /my/path.html
+			uri.append(servletRequest.getPathInfo());
+		}
+		LOGGER.debug("uri: " + uri.toString());
+		try {
+			String response = servicesClient.proxyGet(uri.toString(), getQueryParamsFromURI(servletRequest.getParameterMap()));
+			servletResponse.getWriter().write(response);
+		} catch (ClientException e) {
+			e.printStackTrace();
+		}
+	}
+
+
+	/**
+	 * The target URI as configured. Not null.
+	 */
+	public String getTargetUri() {
+		return targetUri;
+	}
+
+	public MultivaluedMap getQueryParamsFromURI(Map inQueryParameters) {
+		MultivaluedMap<String, String> queryParams = new MultivaluedMapImpl();
+		;
+		Iterator queryParamIterator = inQueryParameters.entrySet().iterator();
+		while (queryParamIterator.hasNext()) {
+			Map.Entry parameter = (Map.Entry) queryParamIterator.next();
+			parameter.getKey();
+			String[] values = (String[]) parameter.getValue();
+			queryParams.add((String) parameter.getKey(), values[0]);
+		}
+		return queryParams;
+
+	}
 }
