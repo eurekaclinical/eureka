@@ -46,7 +46,7 @@ import javax.ws.rs.core.Response.Status;
 import org.apache.commons.io.FileUtils;
 
 /**
- * 
+ *
  * @author Andrew Post
  */
 @Path("/protected/file")
@@ -67,7 +67,7 @@ public class FileResource {
 		this.authenticationSupport = new EtlAuthenticationSupport(this.userDao);
 		this.groupDao = inGroupDao;
 	}
-	
+
 	@POST
 	@Path("/upload/{sourceConfigId}/{sourceId}")
 	@Consumes(MediaType.MULTIPART_FORM_DATA)
@@ -75,11 +75,10 @@ public class FileResource {
 			@Context HttpServletRequest req,
 			@PathParam("sourceConfigId") String sourceConfigId,
 			@PathParam("sourceId") String sourceId,
-			@FormDataParam("file") InputStream uploadingInputStream,
+			@FormDataParam("file") InputStream inUploadingInputStream,
 			@FormDataParam("file") FormDataContentDisposition fileDetail) {
 		EtlUserEntity user = this.authenticationSupport.getEtlUser(req);
 		SourceConfigs sources = new SourceConfigs(this.etlProperties, user, this.sourceConfigDao, this.groupDao);
-
 		try {
 			SourceConfig sourceConfig = sources.getOne(sourceConfigId);
 			if (sourceConfig == null || !sourceConfig.isExecute()) {
@@ -89,23 +88,22 @@ public class FileResource {
 			File uploadedDir = this.etlProperties.uploadedDirectory(sourceConfigId, sourceId);
 			try {
 				File uploadingFile = new File(uploadedDir, fileDetail.getFileName());
-				FileUtils.copyInputStreamToFile(uploadingInputStream, 
+				FileUtils.copyInputStreamToFile(inUploadingInputStream,
 						uploadingFile);
 			} catch (IOException ex) {
 				throw new HttpStatusException(
-						Response.Status.INTERNAL_SERVER_ERROR, 
-						"Uploading file '" + fileDetail.getFileName() + "' failed", 
+						Response.Status.INTERNAL_SERVER_ERROR,
+						"Uploading file '" + fileDetail.getFileName() + "' failed",
 						ex);
 			}
 		} catch (SecurityException ex) {
 			throw new HttpStatusException(
-					Response.Status.INTERNAL_SERVER_ERROR, 
-					"Uploading file '" + fileDetail.getFileName() + "' failed", 
+					Response.Status.INTERNAL_SERVER_ERROR,
+					"Uploading file '" + fileDetail.getFileName() + "' failed",
 					ex);
 		}
 
 		return Response.status(Status.CREATED).build();
 	}
 
-	
 }

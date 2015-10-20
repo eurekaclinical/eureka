@@ -35,6 +35,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
+import javax.ws.rs.core.MediaType;
 
 /**
  *
@@ -44,7 +45,7 @@ import javax.persistence.Temporal;
 @Table(name = "destinations")
 @Inheritance(strategy = InheritanceType.JOINED)
 public abstract class DestinationEntity implements ConfigEntity {
-	
+
 	@Id
 	@SequenceGenerator(name = "DEST_SEQ_GENERATOR", sequenceName = "DEST_SEQ",
 			allocationSize = 1)
@@ -87,6 +88,14 @@ public abstract class DestinationEntity implements ConfigEntity {
 	@ManyToOne
 	private EncryptionAlgorithm encryptionAlgorithm;
 
+	private String outputName;
+
+	private String outputType;
+
+	public DestinationEntity() {
+		this.outputType = MediaType.APPLICATION_OCTET_STREAM;
+	}
+	
 	public Long getId() {
 		return id;
 	}
@@ -186,7 +195,27 @@ public abstract class DestinationEntity implements ConfigEntity {
 	public void setEncryptionAlgorithm(EncryptionAlgorithm encryptionAlgorithm) {
 		this.encryptionAlgorithm = encryptionAlgorithm;
 	}
-	
+
+	public String getOutputName() {
+		return this.outputName;
+	}
+
+	public void setOutputName(String outputName) {
+		this.outputName = outputName;
+	}
+
+	public String getOutputType() {
+		return outputType;
+	}
+
+	public void setOutputType(String outputType) {
+		if (outputType == null) {
+			this.outputType = MediaType.APPLICATION_OCTET_STREAM;
+		} else {
+			this.outputType = outputType;
+		}
+	}
+
 	public abstract boolean isGetStatisticsSupported();
 
 	public abstract boolean isAllowingQueryPropositionIds();

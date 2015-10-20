@@ -65,6 +65,25 @@ public class EtlProperties extends AbstractProperties {
 		return new File(getDestinationConfigDirectory(),
 				ToConfigFile.fromDestId(destId));
 	}
+	
+	public File getOutputDirectory() {
+		return new File(getConfigDir(), "etloutput");
+	}
+	
+	public File outputDirectory(String destId, String fileTypeId) {
+		return new File(new File(getOutputDirectory(), 
+				ToConfigFile.fromDestId(destId)), fileTypeId);
+	}
+	
+	public File outputFileDirectory(String destId) {
+		return new File(new File(getOutputDirectory(), 
+				ToConfigFile.fromDestId(destId)), "outputfile");
+	}
+	
+	public File outputTempDirectory(String destId) {
+		return new File(new File(getOutputDirectory(), 
+				ToConfigFile.fromDestId(destId)), "outputtemp");
+	}
 
 	@Override
 	public String getProxyCallbackServer() {

@@ -60,12 +60,6 @@ public class UserResourceTest extends AbstractServiceResourceTest {
 		assertEquals(3, users.size());
 	}
 	
-	@Test
-	public void getOptions () {
-		System.out.println(
-				this.resource().path("/api/protected/users").options(String.class));
-	}
-
 	/**
 	 * Test that a new user request sent to the resource returns a proper OK
 	 * response.

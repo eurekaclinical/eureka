@@ -26,6 +26,7 @@ import com.sun.jersey.multipart.FormDataParam;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ClientException;
 import edu.emory.cci.aiw.cvrg.eureka.common.exception.HttpStatusException;
 import edu.emory.cci.aiw.cvrg.eureka.services.config.EtlClient;
+import java.io.IOException;
 
 import javax.annotation.security.RolesAllowed;
 import javax.ws.rs.Consumes;
@@ -65,14 +66,14 @@ public class FileResource {
 	@Consumes(MediaType.MULTIPART_FORM_DATA)
 	public Response upload(@PathParam("sourceConfigId") String sourceConfigId,
 			@PathParam("sourceId") String sourceId,
-			@FormDataParam("file") InputStream uploadingInputStream,
+			@FormDataParam("file") InputStream inUploadingInputStream,
 			@FormDataParam("file") FormDataContentDisposition fileDetail) {
 		try {
 			etlClient.upload(fileDetail.getFileName(), sourceConfigId, 
-					sourceId, uploadingInputStream);
+					sourceId, inUploadingInputStream);
+			return Response.status(Status.CREATED).build();
 		} catch (ClientException ex) {
 			throw new HttpStatusException(Status.INTERNAL_SERVER_ERROR, ex);
 		}
-		return Response.status(Status.CREATED).build();
 	}
 }

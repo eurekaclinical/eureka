@@ -20,6 +20,7 @@ package edu.emory.cci.aiw.cvrg.eureka.services.config;
  * #L%
  */
 
+import com.sun.jersey.api.client.ClientResponse;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.EtlCohortDestination;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.EtlDestination;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.EtlI2B2Destination;
@@ -154,6 +155,16 @@ public class MockEtlClient implements EtlClient {
 
 	@Override
 	public Statistics getJobStats(Long inJobId, String inPropId) throws ClientException {
+		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+	}
+
+	@Override
+	public ClientResponse getOutput(String destinationId) throws ClientException {
+		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+	}
+
+	@Override
+	public void deleteOutput(String destinationId) throws ClientException {
 		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
 	}
 	

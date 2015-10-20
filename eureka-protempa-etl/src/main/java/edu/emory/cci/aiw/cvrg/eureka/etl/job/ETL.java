@@ -113,6 +113,7 @@ public class ETL {
 				q.setPropositionIds(inPropIdsToShow);
 			}
 			q.setId(job.getId().toString());
+			q.setUsername(job.getEtlUser().getUsername());
 			q.setFilters(filter);
 			q.setQueryMode(updateData ? QueryMode.UPDATE : QueryMode.REPLACE);
 			LOGGER.trace("Constructed Protempa query {}", q);

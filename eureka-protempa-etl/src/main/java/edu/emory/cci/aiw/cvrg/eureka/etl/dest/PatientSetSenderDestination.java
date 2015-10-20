@@ -33,22 +33,13 @@ import org.protempa.query.QueryMode;
  * @author Andrew Post
  */
 public class PatientSetSenderDestination extends AbstractDestination {
-
-	private final String url;
-	private final String aliasPropId;
-	private final String aliasFieldNameProperty;
-	private final String aliasFieldName;
-	private final String aliasPatientIdProperty;
+	private final PatientSetSenderDestinationEntity patientSetSenderDestinationEntity;
 	private final String[] propIdsSupported;
 
-	PatientSetSenderDestination(PatientSetSenderDestinationEntity patientSetSenderDestinationEntity) {
-		assert patientSetSenderDestinationEntity != null : "patientSetSenderDestinationEntity cannot be null";
-		this.url = patientSetSenderDestinationEntity.getUrl();
-		this.aliasPropId = patientSetSenderDestinationEntity.getAliasPropositionId();
-		this.aliasFieldNameProperty = patientSetSenderDestinationEntity.getAliasFieldNameProperty();
-		this.aliasFieldName = patientSetSenderDestinationEntity.getAliasFieldName();
-		this.aliasPatientIdProperty = patientSetSenderDestinationEntity.getAliasPatientIdProperty();
-		this.propIdsSupported = new String[] {this.aliasPropId};
+	PatientSetSenderDestination(PatientSetSenderDestinationEntity inPatientSetSenderDestinationEntity) {
+		assert inPatientSetSenderDestinationEntity != null : "inPatientSetSenderDestinationEntity cannot be null";
+		this.patientSetSenderDestinationEntity = inPatientSetSenderDestinationEntity;
+		this.propIdsSupported = new String[] {this.patientSetSenderDestinationEntity.getAliasPropositionId()};
 	}
 
 	@Override
@@ -56,12 +47,7 @@ public class PatientSetSenderDestination extends AbstractDestination {
 		if (query.getQueryMode() == QueryMode.UPDATE) {
 			throw new QueryResultsHandlerInitException("Update mode not supported");
 		}
-		return new PatientSetSenderQueryResultsHandler(
-				this.url,
-				this.aliasPropId,
-				this.aliasFieldNameProperty,
-				this.aliasFieldName,
-				this.aliasPatientIdProperty);
+		return new PatientSetSenderQueryResultsHandler(query, this.patientSetSenderDestinationEntity);
 	}
 	
 	@Override

@@ -19,11 +19,18 @@ package edu.emory.cci.aiw.cvrg.eureka.etl.dest;
  * limitations under the License.
  * #L%
  */
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.PatientSet;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.PatientSetSenderDestinationEntity;
+import edu.emory.cci.aiw.cvrg.eureka.etl.config.EtlProperties;
+import java.io.File;
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import org.codehaus.jackson.map.ObjectMapper;
 import org.protempa.PropositionDefinition;
 import org.protempa.dest.AbstractQueryResultsHandler;
 import org.protempa.dest.QueryResultsHandlerCloseException;
@@ -32,8 +39,7 @@ import org.protempa.dest.QueryResultsHandlerValidationFailedException;
 import org.protempa.proposition.Proposition;
 import org.protempa.proposition.UniqueId;
 import org.protempa.proposition.value.Value;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.protempa.query.Query;
 
 /**
  *
@@ -41,25 +47,41 @@ import org.slf4j.LoggerFactory;
  */
 public class PatientSetSenderQueryResultsHandler extends AbstractQueryResultsHandler {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(PatientSetSenderQueryResultsHandler.class);
+	private static final ObjectMapper MAPPER = new ObjectMapper();
+	private final String name;
 	private final String url;
 	private final String aliasPropId;
 	private final String aliasFieldNameProperty;
 	private final String aliasFieldName;
 	private final String aliasPatientIdPropertyName;
+	private final EtlProperties etlProperties;
+	private final String queryId;
+	private final String username;
+	private final String outputName;
 
-	PatientSetSenderQueryResultsHandler(String url, String aliasPropId, String aliasFieldNameProperty, String aliasFieldName, String aliasPatientIdPropertyName) {
+	PatientSetSenderQueryResultsHandler(Query query, PatientSetSenderDestinationEntity inPatientSetSenderDestinationEntity) {
+		assert inPatientSetSenderDestinationEntity != null : "inPatientSetSenderDestinationEntity cannot be null";
+		this.name = inPatientSetSenderDestinationEntity.getName();
+
+		this.url = inPatientSetSenderDestinationEntity.getUrl();
+		this.aliasPropId = inPatientSetSenderDestinationEntity.getAliasPropositionId();
+		this.aliasFieldNameProperty = inPatientSetSenderDestinationEntity.getAliasFieldNameProperty();
+		this.aliasFieldName = inPatientSetSenderDestinationEntity.getAliasFieldName();
+		this.aliasPatientIdPropertyName = inPatientSetSenderDestinationEntity.getAliasPatientIdProperty();
+
 		assert url != null : "url cannot be null";
 		assert aliasPropId != null : "aliasPropId cannot be null";
 		assert aliasFieldNameProperty != null : "aliasFieldNameProperty cannot be null";
 		assert aliasFieldName != null : "aliasFieldName cannot be null";
 		assert aliasPatientIdPropertyName != null : "aliasPatientIdPropertyName cannot be null";
-		
-		this.url = url;
-		this.aliasPropId = aliasPropId;
-		this.aliasFieldNameProperty = aliasFieldNameProperty;
-		this.aliasFieldName = aliasFieldName;
-		this.aliasPatientIdPropertyName = aliasPatientIdPropertyName;
+
+		this.outputName = new PatientSetSenderSupport().getOutputName(inPatientSetSenderDestinationEntity);
+
+		this.queryId = query.getId();
+		this.username = query.getUsername();
+
+		this.etlProperties = new EtlProperties();
+
 	}
 
 	@Override
@@ -73,31 +95,41 @@ public class PatientSetSenderQueryResultsHandler extends AbstractQueryResultsHan
 
 	@Override
 	public void start(Collection<PropositionDefinition> cache) throws QueryResultsHandlerProcessingException {
-		LOGGER.error("got url {}", this.url);
 	}
 
 	@Override
 	public void handleQueryResult(String keyId, List<Proposition> propositions, Map<Proposition, List<Proposition>> forwardDerivations, Map<Proposition, List<Proposition>> backwardDerivations, Map<UniqueId, Proposition> references) throws QueryResultsHandlerProcessingException {
-		LOGGER.error("got key id " + keyId);
-		for (Proposition proposition : propositions) {
-			String propId = proposition.getId();
-			if (propId.equals(this.aliasPropId)) {
-				Value aliasFieldNameVal = proposition.getProperty(this.aliasFieldNameProperty);
-				if (aliasFieldNameVal != null && aliasFieldNameVal.getFormatted().equals(this.aliasFieldName)) {
-					LOGGER.error("got patient id " + proposition.getProperty(this.aliasPatientIdPropertyName));
+		File outputFile = new File(etlProperties.outputFileDirectory(this.name), this.outputName);
+		PatientSet patientSet = new PatientSet();
+		patientSet.setName(this.queryId);
+		patientSet.setUsername(this.username);
+		List<String> keyIds = new ArrayList<>();
+		try {
+			for (Proposition proposition : propositions) {
+				String propId = proposition.getId();
+				if (propId.equals(this.aliasPropId)) {
+					Value aliasFieldNameVal = proposition.getProperty(this.aliasFieldNameProperty);
+					if (aliasFieldNameVal != null && aliasFieldNameVal.getFormatted().equals(this.aliasFieldName)) {
+						Value val = proposition.getProperty(this.aliasPatientIdPropertyName);
+						if (val != null) {
+							keyIds.add(val.getFormatted());
+						}
+					}
 				}
 			}
+			patientSet.setPatients(keyIds);
+			MAPPER.writeValue(outputFile, patientSet);
+		} catch (IOException ex) {
+			throw new QueryResultsHandlerProcessingException(ex);
 		}
 	}
 
 	@Override
 	public void finish() throws QueryResultsHandlerProcessingException {
-		LOGGER.error("all done!");
 	}
 
 	@Override
 	public void close() throws QueryResultsHandlerCloseException {
-		LOGGER.error("closing");
 	}
 
 }

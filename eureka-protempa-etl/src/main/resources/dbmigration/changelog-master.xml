@@ -772,4 +772,10 @@ limitations under the License.
 		<addForeignKeyConstraint baseColumnNames="DESTINATIONS_ID" baseTableName="DEID_PER_PATIENT_PARAMS" constraintName="FK_DEID_PER_PATIENT_PARAMS" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" referencedColumnNames="ID" referencedTableName="DESTINATIONS" referencesUniqueColumn="true"/>
 		<createSequence sequenceName="DEID_PER_PT_PARAMS_SEQ"/>
 	</changeSet>
+	<changeSet author="arpost" id="1361552652236-35">
+		<addColumn tableName="DESTINATIONS">
+			<column name="OUTPUTNAME" type="VARCHAR(255)"/>
+			<column name="OUTPUTTYPE" type="BOOLEAN" type="VARCHAR(255)" defaultValue="application/octet-stream"/>
+		</addColumn>
+	</changeSet>
 </databaseChangeLog>

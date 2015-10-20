@@ -301,5 +301,22 @@ public class EtlClientImpl extends EurekaClient implements EtlClient {
 		return doGet(path, PropositionDefinitionList);
 	}
 
+	@Override
+	public ClientResponse getOutput(String destinationId) throws ClientException {
+		String path = UriBuilder.fromPath("/api/protected/output/")
+				.segment(destinationId)
+				.build().toString();
+		return doGet(path);
+	}
+
+	@Override
+	public void deleteOutput(String destinationId) throws ClientException {
+		String path = UriBuilder.fromPath("/api/protected/output/")
+				.segment(destinationId)
+				.build().toString();
+		doDelete(path);
+	}
+	
+	
 
 }
