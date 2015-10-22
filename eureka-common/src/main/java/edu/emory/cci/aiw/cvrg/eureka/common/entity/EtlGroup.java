@@ -48,7 +48,7 @@ public class EtlGroup {
 	private String name;
 	
 	@ManyToMany(mappedBy="groups")
-	private List<EtlUserEntity> users;
+	private List<AuthorizedUserEntity> users;
 	
 	@OneToMany(cascade = CascadeType.ALL, mappedBy="group")
 	private List<SourceConfigGroupMembership> sourceConfigs;
@@ -72,11 +72,11 @@ public class EtlGroup {
 		this.name = name;
 	}
 
-	public List<EtlUserEntity> getUsers() {
+	public List<AuthorizedUserEntity> getUsers() {
 		return users;
 	}
 
-	public void setUsers(List<EtlUserEntity> users) {
+	public void setUsers(List<AuthorizedUserEntity> users) {
 		this.users = users;
 	}
 

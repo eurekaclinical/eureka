@@ -30,7 +30,7 @@ public interface ConfigEntity {
 	
 	public abstract void setName(String name);
 	
-	public abstract EtlUserEntity getOwner();
+	public abstract AuthorizedUserEntity getOwner();
 	
-	public abstract void setOwner(EtlUserEntity owner);
+	public abstract void setOwner(AuthorizedUserEntity owner);
 }

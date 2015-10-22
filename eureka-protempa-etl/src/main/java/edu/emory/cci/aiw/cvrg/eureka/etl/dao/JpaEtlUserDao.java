@@ -19,6 +19,7 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.etl.dao;
 
+import edu.emory.cci.aiw.cvrg.eureka.common.dao.AuthorizedUserDao;
 import java.text.MessageFormat;
 
 import javax.persistence.EntityManager;
@@ -38,17 +39,17 @@ import com.google.inject.Inject;
 import com.google.inject.Provider;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.dao.GenericDao;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.EtlUserEntity;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.EtlUserEntity_;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.AuthorizedUserEntity;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.AuthorizedUserEntity_;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.UserEntity_;
 
 /**
- * An implementation of the {@link EtlUserDao} interface, backed by JPA entities
+ * An implementation of the {@link AuthorizedUserDao} interface, backed by JPA entities
  * and queries.
  *
  * @author Andrew Post
  */
-public class JpaEtlUserDao extends GenericDao<EtlUserEntity, Long> implements EtlUserDao {
+public class JpaEtlUserDao extends GenericDao<AuthorizedUserEntity, Long> implements AuthorizedUserDao {
 	/**
 	 * The class level logger.
 	 */
@@ -63,24 +64,24 @@ public class JpaEtlUserDao extends GenericDao<EtlUserEntity, Long> implements Et
 	 */
 	@Inject
 	public JpaEtlUserDao(Provider<EntityManager> inEMProvider) {
-		super(EtlUserEntity.class, inEMProvider);
+		super(AuthorizedUserEntity.class, inEMProvider);
 	}
 
 	@Override
-	public EtlUserEntity getByAttributePrincipal(AttributePrincipal principal) {
+	public AuthorizedUserEntity getByAttributePrincipal(AttributePrincipal principal) {
 		return getByUsername(principal.getName());
 	}
 	
 	@Override
-	public EtlUserEntity getByUsername(String username) {
+	public AuthorizedUserEntity getByUsername(String username) {
 		EntityManager entityManager = getEntityManager();
 		CriteriaBuilder builder = entityManager.getCriteriaBuilder();
-		CriteriaQuery<EtlUserEntity> criteriaQuery = builder.createQuery(EtlUserEntity.class);
-		Root<EtlUserEntity> root = criteriaQuery.from(EtlUserEntity.class);
-		Path<String> usernamePath = root.get(EtlUserEntity_.username);
-		TypedQuery<EtlUserEntity> query = entityManager.createQuery(criteriaQuery.where(
+		CriteriaQuery<AuthorizedUserEntity> criteriaQuery = builder.createQuery(AuthorizedUserEntity.class);
+		Root<AuthorizedUserEntity> root = criteriaQuery.from(AuthorizedUserEntity.class);
+		Path<String> usernamePath = root.get(AuthorizedUserEntity_.username);
+		TypedQuery<AuthorizedUserEntity> query = entityManager.createQuery(criteriaQuery.where(
 				builder.equal(usernamePath, username)));
-		EtlUserEntity result = null;
+		AuthorizedUserEntity result = null;
 		try {
 			result = query.getSingleResult();
 		} catch (NonUniqueResultException nure) {

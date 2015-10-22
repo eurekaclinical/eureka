@@ -25,6 +25,8 @@ import com.google.inject.Singleton;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.props.AbstractProperties;
 import edu.emory.cci.aiw.cvrg.eureka.etl.resource.ToConfigFile;
+import java.io.IOException;
+import java.nio.file.Files;
 
 /**
  * Contains methods to fetch configuration information for the application.
@@ -44,45 +46,61 @@ public class EtlProperties extends AbstractProperties {
 		return this.getIntValue("eureka.etl.threadpool.size", 4);
 	}
 	
-	public File getSourceConfigDirectory() {
-		return new File(getConfigDir(), "sourceconfig");
+	public File getSourceConfigDirectory() throws IOException {
+		File file = new File(getConfigDir(), "sourceconfig");
+		Files.createDirectories(file.toPath());
+		return file;
 	}
 	
-	public File getDestinationConfigDirectory() {
-		return new File(getConfigDir(), "destconfig");
+	public File getDestinationConfigDirectory() throws IOException {
+		File file = new File(getConfigDir(), "destconfig");
+		Files.createDirectories(file.toPath());
+		return file;
 	}
 
-	public File getUploadedDirectory() {
-		return new File(getConfigDir(), "etluploaded");
+	public File getUploadedDirectory() throws IOException {
+		File file = new File(getConfigDir(), "etluploaded");
+		Files.createDirectories(file.toPath());
+		return file;
 	}
 	
-	public File uploadedDirectory(String sourceId, String fileTypeId) {
-		return new File(new File(getUploadedDirectory(), 
+	public File uploadedDirectory(String sourceId, String fileTypeId) throws IOException {
+		File file = new File(new File(getUploadedDirectory(), 
 				ToConfigFile.fromSourceConfigId(sourceId)), fileTypeId);
+		Files.createDirectories(file.toPath());
+		return file;
 	}
 	
-	public File destinationConfigFile(String destId) {
+	public File destinationConfigFile(String destId) throws IOException {
 		return new File(getDestinationConfigDirectory(),
 				ToConfigFile.fromDestId(destId));
 	}
 	
-	public File getOutputDirectory() {
-		return new File(getConfigDir(), "etloutput");
+	public File getOutputDirectory() throws IOException {
+		File file = new File(getConfigDir(), "etloutput");
+		Files.createDirectories(file.toPath());
+		return file;
 	}
 	
-	public File outputDirectory(String destId, String fileTypeId) {
-		return new File(new File(getOutputDirectory(), 
+	public File outputDirectory(String destId, String fileTypeId) throws IOException {
+		File file = new File(new File(getOutputDirectory(), 
 				ToConfigFile.fromDestId(destId)), fileTypeId);
+		Files.createDirectories(file.toPath());
+		return file;
 	}
 	
-	public File outputFileDirectory(String destId) {
-		return new File(new File(getOutputDirectory(), 
+	public File outputFileDirectory(String destId) throws IOException {
+		File file = new File(new File(getOutputDirectory(), 
 				ToConfigFile.fromDestId(destId)), "outputfile");
+		Files.createDirectories(file.toPath());
+		return file;
 	}
 	
-	public File outputTempDirectory(String destId) {
-		return new File(new File(getOutputDirectory(), 
+	public File outputTempDirectory(String destId) throws IOException {
+		File file = new File(new File(getOutputDirectory(), 
 				ToConfigFile.fromDestId(destId)), "outputtemp");
+		Files.createDirectories(file.toPath());
+		return file;
 	}
 
 	@Override

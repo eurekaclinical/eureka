@@ -24,13 +24,9 @@ import org.protempa.PropositionDefinition;
 import org.protempa.Protempa;
 import org.protempa.ProtempaStartupException;
 import org.protempa.SourceFactory;
-import org.protempa.backend.BackendInitializationException;
-import org.protempa.backend.BackendNewInstanceException;
-import org.protempa.backend.BackendProviderSpecLoaderException;
 import org.protempa.backend.Configurations;
 import org.protempa.backend.ConfigurationsLoadException;
 import org.protempa.backend.ConfigurationsNotFoundException;
-import org.protempa.backend.InvalidConfigurationException;
 import org.protempa.backend.dsb.DataValidationEvent;
 import org.protempa.backend.dsb.filter.Filter;
 import org.protempa.query.DefaultQueryBuilder;
@@ -52,6 +48,7 @@ import edu.emory.cci.aiw.cvrg.eureka.etl.dao.EtlGroupDao;
 import edu.emory.cci.aiw.cvrg.eureka.etl.dao.JobDao;
 import edu.emory.cci.aiw.cvrg.eureka.etl.dest.ProtempaDestinationFactory;
 import edu.emory.cci.aiw.cvrg.eureka.etl.resource.Destinations;
+import java.io.IOException;
 import org.protempa.backend.Configuration;
 import org.protempa.backend.InvalidPropertyNameException;
 import org.protempa.backend.InvalidPropertyValueException;
@@ -99,7 +96,7 @@ public class ETL {
 			logValidationEvents(job, protempa.validateDataSourceBackendData(), null);
 
 			EtlDestination eurekaDestination
-					= new Destinations(this.etlProperties, job.getEtlUser(),
+					= new Destinations(this.etlProperties, job.getUser(),
 							this.destinationDao, this.groupDao)
 					.getOne(job.getDestination().getName());
 			org.protempa.dest.Destination protempaDestination
@@ -113,7 +110,7 @@ public class ETL {
 				q.setPropositionIds(inPropIdsToShow);
 			}
 			q.setId(job.getId().toString());
-			q.setUsername(job.getEtlUser().getUsername());
+			q.setUsername(job.getUser().getUsername());
 			q.setFilters(filter);
 			q.setQueryMode(updateData ? QueryMode.UPDATE : QueryMode.REPLACE);
 			LOGGER.trace("Constructed Protempa query {}", q);
@@ -157,17 +154,16 @@ public class ETL {
 	}
 
 	private Protempa getNewProtempa(JobEntity job, Configuration prompts) throws
-			ConfigurationsLoadException, BackendProviderSpecLoaderException,
-			InvalidConfigurationException, ProtempaStartupException,
-			BackendInitializationException, BackendNewInstanceException,
-			ConfigurationsNotFoundException, InvalidPropertyNameException,
-			InvalidPropertyValueException {
-		Configurations configurations
-				= new EurekaProtempaConfigurations(this.etlProperties);
-		Configuration configuration = configurations.load(job.getSourceConfigId());
-		configuration.merge(prompts);
-		SourceFactory sf = new SourceFactory(configuration);
-		return Protempa.newInstance(sf);
+			NewProtempaException {
+		try {
+			Configurations configurations = new EurekaProtempaConfigurations(this.etlProperties);
+			Configuration configuration = configurations.load(job.getSourceConfigId());
+			configuration.merge(prompts);
+			SourceFactory sf = new SourceFactory(configuration);
+			return Protempa.newInstance(sf);
+		} catch (IOException | ConfigurationsLoadException | ProtempaStartupException | ConfigurationsNotFoundException | InvalidPropertyNameException | InvalidPropertyValueException ex) {
+			throw new NewProtempaException("Error creating Protempa for sourceconfig " + job.getSourceConfigId() + " for job " + job.getId(), ex);
+		}
 	}
 
 	private static String collectThrowableMessages(Throwable throwable) {

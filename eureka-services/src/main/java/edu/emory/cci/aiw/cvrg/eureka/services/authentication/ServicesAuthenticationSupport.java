@@ -20,12 +20,12 @@ package edu.emory.cci.aiw.cvrg.eureka.services.authentication;
  * #L%
  */
 
-import edu.emory.cci.aiw.cvrg.eureka.common.authentication.AbstractAuthenticationSupport;
+import edu.emory.cci.aiw.cvrg.eureka.common.authentication.AbstractUserSupport;
 
 /**
  *
  * @author Andrew Post
  */
-public final class ServicesAuthenticationSupport extends AbstractAuthenticationSupport {
+public final class ServicesAuthenticationSupport extends AbstractUserSupport {
 	
 }

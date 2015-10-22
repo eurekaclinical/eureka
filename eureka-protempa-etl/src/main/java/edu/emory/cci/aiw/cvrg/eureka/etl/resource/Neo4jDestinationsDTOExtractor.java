@@ -22,7 +22,7 @@ package edu.emory.cci.aiw.cvrg.eureka.etl.resource;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.EtlNeo4jDestination;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.Link;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.EtlUserEntity;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.AuthorizedUserEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.LinkEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.Neo4jDestinationEntity;
 import edu.emory.cci.aiw.cvrg.eureka.etl.config.EtlProperties;
@@ -36,7 +36,7 @@ import java.util.List;
  */
 class Neo4jDestinationsDTOExtractor extends DestinationsDTOExtractor<EtlNeo4jDestination, Neo4jDestinationEntity> {
 
-	public Neo4jDestinationsDTOExtractor(EtlProperties etlProperties, EtlUserEntity user, EtlGroupDao inGroupDao) {
+	public Neo4jDestinationsDTOExtractor(EtlProperties etlProperties, AuthorizedUserEntity user, EtlGroupDao inGroupDao) {
 		super(user, inGroupDao);
 	}
 

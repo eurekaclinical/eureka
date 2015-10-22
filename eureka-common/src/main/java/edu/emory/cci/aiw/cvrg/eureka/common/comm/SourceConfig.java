@@ -1,5 +1,7 @@
 package edu.emory.cci.aiw.cvrg.eureka.common.comm;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 import org.protempa.backend.BackendPropertyType;
 
 /*
@@ -181,5 +183,10 @@ public class SourceConfig {
 		} else {
 			this.termSourceBackends = termSourceBackends.clone();
 		}
+	}
+	
+	@Override
+	public String toString() {
+		return ToStringBuilder.reflectionToString(this);
 	}
 }

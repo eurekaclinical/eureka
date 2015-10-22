@@ -83,7 +83,7 @@ public class JobEntity {
 	 */
 	@ManyToOne
 	@JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false)
-	private EtlUserEntity etlUser;
+	private AuthorizedUserEntity user;
 	/**
 	 * The events generated for the job.
 	 */
@@ -161,8 +161,8 @@ public class JobEntity {
 	 *
 	 * @return The unique identifier for the user.
 	 */
-	public EtlUserEntity getEtlUser() {
-		return this.etlUser;
+	public AuthorizedUserEntity getUser() {
+		return this.user;
 	}
 
 	/**
@@ -170,8 +170,8 @@ public class JobEntity {
 	 *
 	 * @param inEtlUser The unique identifier for the user.
 	 */
-	public void setEtlUser(EtlUserEntity inEtlUser) {
-		this.etlUser = inEtlUser;
+	public void setUser(AuthorizedUserEntity inEtlUser) {
+		this.user = inEtlUser;
 	}
 
 	/**
@@ -257,8 +257,8 @@ public class JobEntity {
 		job.setSourceConfigId(this.sourceConfigId);
 		job.setTimestamp(this.created);
 		job.setId(this.id);
-		if (this.etlUser != null) {
-			job.setUsername(this.etlUser.getUsername());
+		if (this.user != null) {
+			job.setUsername(this.user.getUsername());
 		}
 		job.setStatus(getCurrentStatus());
 		job.setJobEvents(getJobEventsInOrder());

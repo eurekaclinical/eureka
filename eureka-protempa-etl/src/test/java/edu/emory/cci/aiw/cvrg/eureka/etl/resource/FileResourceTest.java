@@ -20,20 +20,14 @@
 package edu.emory.cci.aiw.cvrg.eureka.etl.resource;
 
 import com.sun.jersey.api.client.ClientHandlerException;
-import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.ClientResponse.Status;
 import com.sun.jersey.api.client.UniformInterfaceException;
-import com.sun.jersey.core.header.FormDataContentDisposition;
-import com.sun.jersey.multipart.FormDataBodyPart;
-import com.sun.jersey.multipart.FormDataMultiPart;
 import edu.emory.cci.aiw.cvrg.eureka.etl.config.EtlProperties;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import javax.ws.rs.core.MediaType;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import org.apache.commons.io.FileUtils;
 
@@ -50,13 +44,18 @@ public class FileResourceTest extends AbstractEtlResourceTest {
 
 	private File tmpFile;
 	private static EtlProperties etlProperties;
-	
+	private final FileUploadSupport fileUploadSupport;
+
+	public FileResourceTest() {
+		this.fileUploadSupport = new FileUploadSupport();
+	}
+
 	@BeforeClass
 	public static void setupClass() throws IOException {
 		etlProperties = new EtlProperties();
 		FileUtils.deleteDirectory(etlProperties.getUploadedDirectory());
 	}
-	
+
 	@Before
 	public void fileResourceSetUp() throws IOException {
 		this.tmpFile = File.createTempFile("mockdatafile", null);
@@ -64,10 +63,18 @@ public class FileResourceTest extends AbstractEtlResourceTest {
 
 	@After
 	public void fileResourceTearDown() throws IOException {
-		this.tmpFile.delete();
-		FileUtils.deleteDirectory(etlProperties.getUploadedDirectory());
+		if (this.tmpFile != null) {
+			this.tmpFile.delete();
+		}
 	}
 	
+	@After
+	public void uploadedDirectoryTearDown() throws IOException {
+		if (etlProperties != null) {
+			FileUtils.deleteDirectory(etlProperties.getUploadedDirectory());
+		}
+	}
+
 	@Test
 	public final void testFileUploadCreated1() throws IOException {
 		assertEquals(Status.CREATED, doUpload("foo", "oof"));
@@ -86,28 +93,9 @@ public class FileResourceTest extends AbstractEtlResourceTest {
 		assertEquals(1, files == null ? 0 : files.length);
 	}
 
-	private Status doUpload(String sourceId, String fileTypeId) throws UniformInterfaceException, 
+	private Status doUpload(String sourceId, String fileTypeId) throws UniformInterfaceException,
 			ClientHandlerException, IOException {
-		FileInputStream is = new FileInputStream(tmpFile);
-		try {
-			FormDataMultiPart part = 
-					new FormDataMultiPart();
-			part.bodyPart(new FormDataBodyPart(FormDataContentDisposition.name("file").fileName(tmpFile.getName()).build(), is, MediaType.APPLICATION_OCTET_STREAM_TYPE));
-			ClientResponse response = resource()
-					.path("/api/protected/file/upload/" + sourceId + "/" + fileTypeId)
-					.type(MediaType.MULTIPART_FORM_DATA_TYPE)
-					.post(ClientResponse.class, part);
-			Status result = response.getClientResponseStatus();
-			is.close();
-			is = null;
-			return result;
-		} finally {
-			if (is != null) {
-				try {
-					is.close();
-				} catch (IOException ignore) {
-				}
-			}
-		}
+		return this.fileUploadSupport.doUploadFile(resource(), this.tmpFile, sourceId, fileTypeId);
 	}
+
 }

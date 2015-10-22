@@ -27,8 +27,11 @@ import java.nio.file.attribute.BasicFileAttributes;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.protempa.backend.BackendInitializationException;
 import org.protempa.backend.BackendInstanceSpec;
+import org.protempa.backend.DataSourceBackendInitializationException;
 import org.protempa.backend.annotations.BackendInfo;
 import org.protempa.backend.annotations.BackendProperty;
 import org.protempa.backend.dsb.file.DelimitedFileDataSourceBackend;
@@ -94,7 +97,11 @@ public class EurekaDelimitedFileDataSourceBackend extends DelimitedFileDataSourc
 	public void initialize(BackendInstanceSpec config) throws BackendInitializationException {
 		super.initialize(config);
 		this.fileDataSourceBackendSupport.setConfigurationsId(getConfigurationsId());
-		setFiles(this.fileDataSourceBackendSupport.getUploadedFiles());
+		try {
+			setFiles(this.fileDataSourceBackendSupport.getUploadedFiles());
+		} catch (IOException ex) {
+			throw new DataSourceBackendInitializationException("Error initializing data source backend " + nameForErrors(), ex);
+		}
 	}
 
 	@Override

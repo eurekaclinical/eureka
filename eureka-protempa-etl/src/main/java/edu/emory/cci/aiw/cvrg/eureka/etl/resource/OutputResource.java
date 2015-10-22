@@ -19,7 +19,6 @@ package edu.emory.cci.aiw.cvrg.eureka.etl.resource;
  * limitations under the License.
  * #L%
  */
-
 import com.google.inject.Inject;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.DestinationEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.exception.HttpStatusException;
@@ -72,15 +71,20 @@ public class OutputResource {
 
 	@GET
 	@Path("/output/{destinationId}")
-	@Produces(MediaType.APPLICATION_OCTET_STREAM)
+	@Produces(MediaType.APPLICATION_JSON)
 	public Response doGet(@PathParam("destinationId") String inId) {
 		DestinationEntity dest = this.destinationDao.getByName(inId);
 		if (dest == null) {
 			throw new HttpStatusException(Status.PRECONDITION_FAILED);
 		}
-		final File outputFile = new File(
-				this.etlProperties.outputFileDirectory(inId), 
-				this.patientSetSenderSupport.getOutputName(inId));
+		final File outputFile;
+		try {
+			outputFile = new File(
+					this.etlProperties.outputFileDirectory(inId),
+					this.patientSetSenderSupport.getOutputName(inId));
+		} catch (IOException ex) {
+			throw new HttpStatusException(Status.INTERNAL_SERVER_ERROR, ex);
+		}
 		if (!outputFile.exists()) {
 			throw new HttpStatusException(Status.NOT_FOUND);
 		}
@@ -90,6 +94,7 @@ public class OutputResource {
 				try (InputStream inputStream = new FileInputStream(outputFile)) {
 					IOUtils.copy(inputStream, os);
 				}
+				os.flush();
 			}
 		};
 
@@ -104,14 +109,13 @@ public class OutputResource {
 	@DELETE
 	@Path("/output/{destinationId}")
 	public Response doDelete(@PathParam("destinationId") String inId) {
-		final File outputFile = new File(
-				this.etlProperties.outputFileDirectory(inId), 
-				this.patientSetSenderSupport.getOutputName(inId));
-		if (!outputFile.exists()) {
-			throw new HttpStatusException(Status.NOT_FOUND);
-		}
-
 		try {
+			final File outputFile = new File(
+					this.etlProperties.outputFileDirectory(inId),
+					this.patientSetSenderSupport.getOutputName(inId));
+			if (!outputFile.exists()) {
+				throw new HttpStatusException(Status.NOT_FOUND);
+			}
 			Files.delete(outputFile.toPath());
 			return Response.noContent().build();
 		} catch (IOException ex) {

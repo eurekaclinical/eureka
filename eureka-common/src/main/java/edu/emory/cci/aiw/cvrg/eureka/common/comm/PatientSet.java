@@ -1,6 +1,8 @@
 package edu.emory.cci.aiw.cvrg.eureka.common.comm;
 
-import java.util.List;
+import java.util.Objects;
+import java.util.Set;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 
 /**
  *
@@ -9,7 +11,7 @@ import java.util.List;
 public class PatientSet {
 	private String username;
 	private String name;
-	private List<String> patients;
+	private Set<String> patients;
 
 	public String getUsername() {
 		return username;
@@ -27,12 +29,49 @@ public class PatientSet {
 		this.name = name;
 	}
 
-	public List<String> getPatients() {
+	public Set<String> getPatients() {
 		return patients;
 	}
 
-	public void setPatients(List<String> patients) {
+	public void setPatients(Set<String> patients) {
 		this.patients = patients;
 	}
+	
+	@Override
+	public String toString() {
+		return ToStringBuilder.reflectionToString(this);
+	}
+
+	@Override
+	public int hashCode() {
+		int hash = 3;
+		hash = 53 * hash + Objects.hashCode(this.username);
+		hash = 53 * hash + Objects.hashCode(this.name);
+		hash = 53 * hash + Objects.hashCode(this.patients);
+		return hash;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (obj == null) {
+			return false;
+		}
+		if (getClass() != obj.getClass()) {
+			return false;
+		}
+		final PatientSet other = (PatientSet) obj;
+		if (!Objects.equals(this.username, other.username)) {
+			return false;
+		}
+		if (!Objects.equals(this.name, other.name)) {
+			return false;
+		}
+		if (!Objects.equals(this.patients, other.patients)) {
+			return false;
+		}
+		return true;
+	}
+	
+	
 	
 }

@@ -67,6 +67,7 @@ import org.slf4j.LoggerFactory;
  */
 @BackendInfo(displayName = "Eureka Spreadsheet Data Source Backend")
 public final class EurekaDataSourceBackend extends RelationalDbDataSourceBackend implements EurekaFileDataSourceBackend {
+
 	private static Logger LOGGER = LoggerFactory.getLogger(EurekaDataSourceBackend.class);
 	private static JDBCPositionFormat dtPositionParser
 			= new JDBCDateTimeTimestampPositionParser();
@@ -119,7 +120,12 @@ public final class EurekaDataSourceBackend extends RelationalDbDataSourceBackend
 		}
 		super.setDatabaseId("jdbc:h2:mem:" + databaseName + ";INIT=RUNSCRIPT FROM '" + schemaFile + "';DB_CLOSE_DELAY=-1");
 		this.fileDataSourceBackendSupport.setConfigurationsId(getConfigurationsId());
-		File[] dataFiles = this.fileDataSourceBackendSupport.getUploadedFiles();
+		File[] dataFiles;
+		try {
+			dataFiles = this.fileDataSourceBackendSupport.getUploadedFiles();
+		} catch (IOException ex) {
+			throw new DataSourceBackendInitializationException("Error initializing data source backend " + nameForErrors(), ex);
+		}
 		if (dataFiles != null) {
 			this.dataProviders = new XlsxDataProvider[dataFiles.length];
 			for (int i = 0; i < dataFiles.length; i++) {
@@ -276,7 +282,7 @@ public final class EurekaDataSourceBackend extends RelationalDbDataSourceBackend
 	public void setSampleUrl(String sampleUrl) {
 		this.sampleUrl = sampleUrl;
 	}
-	
+
 	public String getSampleUrl() {
 		return sampleUrl;
 	}

@@ -20,8 +20,8 @@ package edu.emory.cci.aiw.cvrg.eureka.etl.config;
  * #L%
  */
 
-import com.google.inject.Inject;
 import edu.emory.cci.aiw.cvrg.eureka.etl.resource.ToConfigFile;
+import java.io.IOException;
 import org.protempa.backend.Configuration;
 import org.protempa.backend.ConfigurationsLoadException;
 import org.protempa.backend.ConfigurationsNotFoundException;
@@ -33,8 +33,7 @@ import org.protempa.bconfigs.ini4j.INIConfigurations;
  */
 public class EurekaProtempaConfigurations extends INIConfigurations {
 
-	@Inject
-	public EurekaProtempaConfigurations(EtlProperties etlProperties) {
+	public EurekaProtempaConfigurations(EtlProperties etlProperties) throws IOException {
 		super(etlProperties.getSourceConfigDirectory());
 	}
 

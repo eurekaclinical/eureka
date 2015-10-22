@@ -25,6 +25,6 @@ package edu.emory.cci.aiw.cvrg.eureka.common.comm;
  * @author Andrew Post
  */
 public enum DestinationType {
-	I2B2, COHORT, PATIENT_SET_SENDER
+	I2B2, COHORT, PATIENT_SET_EXTRACTOR
     
 }

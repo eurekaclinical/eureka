@@ -19,7 +19,7 @@ package edu.emory.cci.aiw.cvrg.eureka.etl.dest;
  * limitations under the License.
  * #L%
  */
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.PatientSetSenderDestinationEntity;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.PatientSetExtractorDestinationEntity;
 import org.protempa.DataSource;
 import org.protempa.KnowledgeSource;
 import org.protempa.dest.AbstractDestination;
@@ -33,10 +33,10 @@ import org.protempa.query.QueryMode;
  * @author Andrew Post
  */
 public class PatientSetSenderDestination extends AbstractDestination {
-	private final PatientSetSenderDestinationEntity patientSetSenderDestinationEntity;
+	private final PatientSetExtractorDestinationEntity patientSetSenderDestinationEntity;
 	private final String[] propIdsSupported;
 
-	PatientSetSenderDestination(PatientSetSenderDestinationEntity inPatientSetSenderDestinationEntity) {
+	PatientSetSenderDestination(PatientSetExtractorDestinationEntity inPatientSetSenderDestinationEntity) {
 		assert inPatientSetSenderDestinationEntity != null : "inPatientSetSenderDestinationEntity cannot be null";
 		this.patientSetSenderDestinationEntity = inPatientSetSenderDestinationEntity;
 		this.propIdsSupported = new String[] {this.patientSetSenderDestinationEntity.getAliasPropositionId()};

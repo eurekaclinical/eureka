@@ -72,7 +72,7 @@ public abstract class DestinationEntity implements ConfigEntity {
 	private Date expiredAt;
 
 	@ManyToOne
-	private EtlUserEntity owner;
+	private AuthorizedUserEntity owner;
 
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "destination")
 	private List<DestinationGroupMembership> groups;
@@ -123,12 +123,12 @@ public abstract class DestinationEntity implements ConfigEntity {
 	}
 
 	@Override
-	public EtlUserEntity getOwner() {
+	public AuthorizedUserEntity getOwner() {
 		return owner;
 	}
 
 	@Override
-	public void setOwner(EtlUserEntity owner) {
+	public void setOwner(AuthorizedUserEntity owner) {
 		this.owner = owner;
 	}
 

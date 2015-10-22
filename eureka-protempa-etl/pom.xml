@@ -256,6 +256,19 @@
 				</configuration>
 			</plugin>
 		</plugins>
+		<testResources>
+			<testResource>
+				<directory>${project.basedir}/src/test/resources</directory>
+				<filtering>false</filtering>
+			</testResource>
+			<testResource>
+				<directory>${project.basedir}/src/test/resources</directory>
+				<includes>
+					<include>eureka-config/eureka/sourceconfig/foo</include>
+				</includes>
+				<filtering>true</filtering>
+			</testResource>
+		</testResources>
 	</build>
 	<dependencies>
 		<dependency>

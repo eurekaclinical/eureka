@@ -20,15 +20,15 @@
 package edu.emory.cci.aiw.cvrg.eureka.etl.resource;
 
 import com.google.inject.Inject;
+import edu.emory.cci.aiw.cvrg.eureka.common.authentication.AuthorizedUserSupport;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.DestinationType;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.EtlDestination;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.EtlUserEntity;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.AuthorizedUserEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.exception.HttpStatusException;
-import edu.emory.cci.aiw.cvrg.eureka.etl.authentication.EtlAuthenticationSupport;
 import edu.emory.cci.aiw.cvrg.eureka.etl.config.EtlProperties;
 import edu.emory.cci.aiw.cvrg.eureka.etl.dao.DestinationDao;
 import edu.emory.cci.aiw.cvrg.eureka.etl.dao.EtlGroupDao;
-import edu.emory.cci.aiw.cvrg.eureka.etl.dao.EtlUserDao;
+import edu.emory.cci.aiw.cvrg.eureka.common.dao.AuthorizedUserDao;
 import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.security.RolesAllowed;
@@ -53,29 +53,29 @@ import javax.ws.rs.core.Response.Status;
 public class DestinationResource {
 	
 	private final EtlProperties etlProperties;
-	private final EtlUserDao userDao;
+	private final AuthorizedUserDao userDao;
 	private final DestinationDao destinationDao;
-	private final EtlAuthenticationSupport authenticationSupport;
+	private final AuthorizedUserSupport authenticationSupport;
 	private final EtlGroupDao groupDao;
 
 	@Inject
-	public DestinationResource(EtlProperties inEtlProperties, EtlUserDao inEtlUserDao, DestinationDao inDestinationDao, EtlGroupDao inGroupDao) {
+	public DestinationResource(EtlProperties inEtlProperties, AuthorizedUserDao inEtlUserDao, DestinationDao inDestinationDao, EtlGroupDao inGroupDao) {
 		this.etlProperties = inEtlProperties;
 		this.userDao = inEtlUserDao;
 		this.destinationDao = inDestinationDao;
-		this.authenticationSupport = new EtlAuthenticationSupport(this.userDao);
+		this.authenticationSupport = new AuthorizedUserSupport(this.userDao);
 		this.groupDao = inGroupDao;
 	}
 	
 	@POST
 	public void create(@Context HttpServletRequest request, EtlDestination etlDestination) {
-		EtlUserEntity user = this.authenticationSupport.getEtlUser(request);
+		AuthorizedUserEntity user = this.authenticationSupport.getUser(request);
 		new Destinations(this.etlProperties, user, this.destinationDao, this.groupDao).create(etlDestination);
 	}
 	
 	@PUT
 	public void update(@Context HttpServletRequest request, EtlDestination etlDestination) {
-		EtlUserEntity user = this.authenticationSupport.getEtlUser(request);
+		AuthorizedUserEntity user = this.authenticationSupport.getUser(request);
 		new Destinations(this.etlProperties, user, this.destinationDao, this.groupDao).update(etlDestination);
 	}
 	
@@ -84,7 +84,7 @@ public class DestinationResource {
 	public EtlDestination getDestination(
 			@Context HttpServletRequest request,
 			@PathParam("destId") String destId) {
-		EtlUserEntity user = this.authenticationSupport.getEtlUser(request);
+		AuthorizedUserEntity user = this.authenticationSupport.getUser(request);
 		EtlDestination result 
 				= new Destinations(this.etlProperties, user, this.destinationDao, this.groupDao).getOne(destId);
 		if (result != null) {
@@ -98,7 +98,7 @@ public class DestinationResource {
 	public List<EtlDestination> getAll(
 			@Context HttpServletRequest request,
 			@QueryParam("type") DestinationType type) {
-		EtlUserEntity user = this.authenticationSupport.getEtlUser(request);
+		AuthorizedUserEntity user = this.authenticationSupport.getUser(request);
 		Destinations destinations = new Destinations(this.etlProperties, user, this.destinationDao, this.groupDao);
 		if (type == null) {
 			return destinations.getAll();
@@ -108,7 +108,7 @@ public class DestinationResource {
 				return new ArrayList<EtlDestination>(destinations.getAllI2B2s());
 			case COHORT:
 				return new ArrayList<EtlDestination>(destinations.getAllCohorts());
-			case PATIENT_SET_SENDER:
+			case PATIENT_SET_EXTRACTOR:
 				return new ArrayList<EtlDestination>(destinations.getAllPatientSetSenders());
 			default:
 				throw new AssertionError("Unexpected destination type " + type);
@@ -119,7 +119,7 @@ public class DestinationResource {
 	@Path("/{destId}")
 	public void delete(@Context HttpServletRequest request,
 			@PathParam("destId") String destId) {
-		EtlUserEntity user = this.authenticationSupport.getEtlUser(request);
+		AuthorizedUserEntity user = this.authenticationSupport.getUser(request);
 		new Destinations(this.etlProperties, user, this.destinationDao, this.groupDao).delete(destId);
 	}
 

@@ -21,7 +21,7 @@ package edu.emory.cci.aiw.cvrg.eureka.etl.resource;
  */
 
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.DestinationEntity;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.EtlUserEntity;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.AuthorizedUserEntity;
 import edu.emory.cci.aiw.cvrg.eureka.etl.dao.EtlGroupDao;
 import edu.emory.cci.aiw.cvrg.eureka.etl.dao.ResolvedPermissions;
 
@@ -32,7 +32,7 @@ import edu.emory.cci.aiw.cvrg.eureka.etl.dao.ResolvedPermissions;
 abstract class DestinationsDTOExtractor<E, F extends DestinationEntity> extends ConfigsDTOExtractor<E, F> {
 	private final EtlGroupDao groupDao;
 	
-	public DestinationsDTOExtractor(EtlUserEntity user, EtlGroupDao inGroupDao) {
+	public DestinationsDTOExtractor(AuthorizedUserEntity user, EtlGroupDao inGroupDao) {
 		super(user);
 		this.groupDao = inGroupDao;
 	}
@@ -41,7 +41,7 @@ abstract class DestinationsDTOExtractor<E, F extends DestinationEntity> extends 
 	abstract E extractDTO(Perm perm, F destinationEntity);
 	
 	@Override
-	ResolvedPermissions resolvePermissions(EtlUserEntity owner, DestinationEntity entity) {
+	ResolvedPermissions resolvePermissions(AuthorizedUserEntity owner, DestinationEntity entity) {
 		return this.groupDao.resolveDestinationPermissions(owner, entity);
 	}
 }
