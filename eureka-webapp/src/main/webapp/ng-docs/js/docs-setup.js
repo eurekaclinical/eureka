@@ -167,6 +167,33 @@ NG_DOCS={
     },
     {
       "section": "api",
+      "id": "eureka.jobs",
+      "shortName": "eureka.jobs",
+      "type": "overview",
+      "moduleName": "eureka.jobs",
+      "shortDescription": "The module for the jobs section of the Eureka application.",
+      "keywords": "api application eureka jobs module overview"
+    },
+    {
+      "section": "api",
+      "id": "eureka.jobs.controller:MainCtrl",
+      "shortName": "MainCtrl",
+      "type": "controller",
+      "moduleName": "eureka.jobs",
+      "shortDescription": "This is the main controller for the jobs section of the application.",
+      "keywords": "api application controller eureka jobs jobservice main"
+    },
+    {
+      "section": "api",
+      "id": "eureka.jobs.JobService",
+      "shortName": "eureka.jobs.JobService",
+      "type": "service",
+      "moduleName": "eureka.jobs",
+      "shortDescription": "This service provides an API to interact with the REST endpoint for jobs.",
+      "keywords": "$http $q api endpoint eureka interact jobs jobservice rest service"
+    },
+    {
+      "section": "api",
       "id": "eureka.listDragAndDropService",
       "shortName": "eureka.listDragAndDropService",
       "type": "service",

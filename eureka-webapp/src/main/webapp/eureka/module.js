@@ -45,7 +45,8 @@
         'eureka.phenotypes',
         'eureka.register',
         'eureka.account',
-        'eureka.help']);
+        'eureka.help',
+        'eureka.jobs']);
 
     angular.module('eureka').run(eurekaRun);
     angular.module('eureka').config(eurekaConfig);
