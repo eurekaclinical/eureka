@@ -17,7 +17,7 @@
     AccountService.$inject = ['$http', '$q', 'appProperties'];
 
     function AccountService($http, $q, appProperties) {
-        let { apiEndpoint } = appProperties;
+        let { dataEndpoint } = appProperties;
         return ({
             changePassword: changePassword,
             getUserById: getUserById,
@@ -27,7 +27,7 @@
         });
 
         function changePassword(passwordObject) {
-            return $http.post(apiEndpoint + '/users/passwordchangerequest', passwordObject)
+            return $http.post(dataEndpoint+'/users/passwordchange', passwordObject)
             .then(handleSuccess, handleError);
         }
 
@@ -39,12 +39,12 @@
         }
 
         function getUserById(id) {
-            return $http.get(apiEndpoint + '/users/byid/'+id)
+            return $http.get(dataEndpoint+'/users/'+id)
             .then(handleSuccess, handleError);
         }
 
         function updateUser(userObject) {
-            return $http.put(apiEndpoint + '/users/', userObject)
+            return $http.put(dataEndpoint + '/users/', userObject)
             .then(handleSuccess, handleError);
         }
 

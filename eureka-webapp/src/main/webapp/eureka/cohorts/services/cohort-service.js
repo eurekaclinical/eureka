@@ -14,10 +14,11 @@
         .module('eureka.cohorts')
         .factory('CohortService', CohortService);
 
-    CohortService.$inject = ['$http', '$q'];
+    CohortService.$inject = ['$http', '$q', 'appProperties'];
 
-    function CohortService($http, $q) {
+    function CohortService($http, $q, appProperties) {
 
+        let { dataEndpoint } = appProperties;
         return ({
             getCohorts: getCohorts,
             getCohort: getCohort,
@@ -30,27 +31,26 @@
         function getCohorts() {
 
             var type = 'COHORT';
-            return $http.get('/eureka-services/api/protected/destinations?type=' + type)
+            return $http.get(dataEndpoint+'/destinations?type=' + type)
                 .then(handleSuccess, handleError);
 
         }
 
         function removeCohort(key) {
 
-            return $http['delete']('/eureka-webapp/proxy-resource/destinations/' + key)
+            return $http['delete'](dataEndpoint+'/destinations/' + key)
                 .then(handleSuccess, handleError);
 
         }
 
         function getSystemElement(key) {
 
-            return $http.get('/eureka-services/api/protected/systemelement/' + key + '?summary=true')
+            return $http.get(dataEndpoint+'/systemelement/' + key + '?summary=true')
                 .then(handleSuccess, handleError);
 
         }
         function getCohort(cohortId) {
-
-            return $http.get('/eureka-services/api/protected/destinations/' + cohortId)
+            return $http.get(dataEndpoint+'/destinations/' + cohortId)
                 .then(handleSuccess, handleError);
 
         }
@@ -78,7 +78,7 @@
 
             var promises = [];
             angular.forEach(cohorts, function(cohort){
-                var promise = $http.get('/eureka-services/api/protected/systemelement/' + cohort + '?summary=true');
+                var promise = $http.get(dataEndpoint+'/systemelement/' + cohort + '?summary=true');
                 promises.push(promise);
 
             });
@@ -137,7 +137,7 @@
             newCohort.description = cohort.description;
             newCohort.cohort.id = null;
             newCohort.cohort.node = node;
-            return $http.post('/eureka-webapp/proxy-resource/destinations/', newCohort)
+            return $http.post(dataEndpoint+'/destinations/', newCohort)
                 .then(handleSuccess, handleError);
         }
 

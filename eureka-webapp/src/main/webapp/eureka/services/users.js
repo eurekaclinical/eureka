@@ -20,7 +20,7 @@
 
     function users($http, $q, appProperties) {
 
-        let { apiEndpoint } = appProperties;
+        let { dataEndpoint } = appProperties;
 
         return {
             getUser: getCurrentUser,
@@ -29,7 +29,7 @@
         };
 
         function getRole(roleId) {
-            return $http.get(apiEndpoint + '/role/' + roleId).then(function(res) {
+            return $http.get(dataEndpoint+'/role/' + roleId).then(function(res) {
                 return res.data;
             }, function(err) {
                 console.error('role retrieval failed:', err);
@@ -38,7 +38,7 @@
         }
 
         function getCurrentUser() {
-            return $http.get(apiEndpoint + '/users/me',
+            return $http.get(dataEndpoint+'/users/me',
             {
                 transformResponse: function (data) {
                     try {
@@ -65,7 +65,7 @@
         }
 
         function getUsers() {
-            return $http.get(apiEndpoint + '/users')
+            return $http.get(dataEndpoint+'/users')
             .then(handleSuccess, handleError)
             .then(function(users){
                 

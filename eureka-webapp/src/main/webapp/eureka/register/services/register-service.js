@@ -27,7 +27,7 @@
             newAccount.fullName = newAccount.firstName + ' ' + newAccount.lastName;
             newAccount.type = 'LOCAL';
             newAccount.loginType = 'INTERNAL';
-            return $http.post('/eureka-services/api/userrequest/new', newAccount)
+            return $http.post('/eureka-webapp/register/userrequests', newAccount)
                 .then(handleSuccess, handleError);
         }
 
