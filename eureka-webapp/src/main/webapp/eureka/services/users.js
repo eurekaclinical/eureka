@@ -29,7 +29,7 @@
         };
 
         function getRole(roleId) {
-            return $http.get(dataEndpoint+'/role/' + roleId).then(function(res) {
+            return $http.get(dataEndpoint+'/roles/' + roleId).then(function(res) {
                 return res.data;
             }, function(err) {
                 console.error('role retrieval failed:', err);
