@@ -48,7 +48,7 @@
                 return false;
             }
             let differentType = vm.memberList.some(function(memberNode) {
-                return node.attr['data-type'] !== memberNode.attr['data-type'];
+                return node.type !== memberNode.type;
             });
             return !differentType;
         }

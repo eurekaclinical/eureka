@@ -19,7 +19,7 @@
                                 'fa-minus-square': !collapsed
                             }"></i>
                         <i class="fa fa-file-o" style="margin-right: 5px;" ng-if="!node.children"></i>
-                        {{node.text}}
+                        {{node.displayName}}
                     </div>
                     <md-progress-linear class="md-hue-1" style="margin:5px 0;" md-mode="indeterminate" ng-if="node.loading"></md-progress-linear>
                     <ol ui-tree-nodes="" data-nodrop-enabled="true" ng-class="{ 'hidden': collapsed }" ng-model="node.nodes">

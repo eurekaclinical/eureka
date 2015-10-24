@@ -7,7 +7,7 @@
                 <h3 class="md-title">Drag Members Here</h3>
             </li>
             <li class="md-subhead" ng-repeat="item in dropZone.memberList" ui-tree-node data-nodrag layout-fill>
-                <i class="fa fa-times" ng-click="remove(this)"></i> {{item.text}}
+                <i class="fa fa-times" ng-click="remove(this)"></i> {{item.displayName}}
             </li>
         </ol>
     </div>

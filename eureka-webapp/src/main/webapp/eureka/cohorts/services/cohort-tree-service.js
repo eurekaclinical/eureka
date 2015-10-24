@@ -15,7 +15,7 @@
 
 		function getTreeData(id) {
             return $http
-                .get(`${appProperties.dataEndpoint}/systemlist`, {
+                .get(`/eureka-services/api/protected/systemelement/`, {
                     cache: true,
                     params: {
                         key: id
@@ -37,5 +37,3 @@
 
 	}
 }());
-
-
