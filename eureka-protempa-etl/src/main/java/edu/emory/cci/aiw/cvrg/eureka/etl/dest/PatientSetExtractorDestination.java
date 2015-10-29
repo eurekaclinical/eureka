@@ -32,11 +32,11 @@ import org.protempa.query.QueryMode;
  *
  * @author Andrew Post
  */
-public class PatientSetSenderDestination extends AbstractDestination {
+public class PatientSetExtractorDestination extends AbstractDestination {
 	private final PatientSetExtractorDestinationEntity patientSetSenderDestinationEntity;
 	private final String[] propIdsSupported;
 
-	PatientSetSenderDestination(PatientSetExtractorDestinationEntity inPatientSetSenderDestinationEntity) {
+	PatientSetExtractorDestination(PatientSetExtractorDestinationEntity inPatientSetSenderDestinationEntity) {
 		assert inPatientSetSenderDestinationEntity != null : "inPatientSetSenderDestinationEntity cannot be null";
 		this.patientSetSenderDestinationEntity = inPatientSetSenderDestinationEntity;
 		this.propIdsSupported = new String[] {this.patientSetSenderDestinationEntity.getAliasPropositionId()};
@@ -47,7 +47,7 @@ public class PatientSetSenderDestination extends AbstractDestination {
 		if (query.getQueryMode() == QueryMode.UPDATE) {
 			throw new QueryResultsHandlerInitException("Update mode not supported");
 		}
-		return new PatientSetSenderQueryResultsHandler(query, this.patientSetSenderDestinationEntity);
+		return new PatientSetExtractorQueryResultsHandler(query, this.patientSetSenderDestinationEntity);
 	}
 	
 	@Override

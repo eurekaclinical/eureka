@@ -238,6 +238,7 @@ public class JobResource {
 		jobEntity.setDestination(destination);
 		jobEntity.setCreated(new Date());
 		jobEntity.setUser(etlUser);
+		jobEntity.setName(job.getName());
 		this.jobDao.create(jobEntity);
 		return jobEntity;
 	}

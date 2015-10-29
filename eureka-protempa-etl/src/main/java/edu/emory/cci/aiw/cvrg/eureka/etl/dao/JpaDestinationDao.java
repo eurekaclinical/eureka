@@ -31,6 +31,7 @@ import edu.emory.cci.aiw.cvrg.eureka.common.entity.PatientSetExtractorDestinatio
 import java.util.Date;
 import java.util.List;
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -59,7 +60,11 @@ public class JpaDestinationDao extends GenericDao<DestinationEntity, Long> imple
 							builder.isNull(root.get(DestinationEntity_.expiredAt)),
 							builder.greaterThanOrEqualTo(root.get(DestinationEntity_.expiredAt), new Date()))
 				));
-		return entityManager.createQuery(criteriaQuery).getSingleResult();
+		try {
+			return entityManager.createQuery(criteriaQuery).getSingleResult();
+		} catch (NoResultException ex) {
+			return null;
+		}
 	}
 
 	@Override

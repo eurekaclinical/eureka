@@ -77,6 +77,7 @@ public class JobProcessingTest extends AbstractEtlResourceTest {
 		jobSpec.setPrompts(prompts);
 		
 		jobSpec.setPropositionIds(Arrays.asList(Constants.ALIAS_PROPOSITION_ID));
+		jobSpec.setName("test job");
 		jobRequest.setJobSpec(jobSpec);
 
 		ClientResponse response = this.resource()

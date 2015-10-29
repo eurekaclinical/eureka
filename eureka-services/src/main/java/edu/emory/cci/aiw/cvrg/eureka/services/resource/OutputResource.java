@@ -63,7 +63,7 @@ public class OutputResource {
 
 	@GET
 	@Path("/output/{destinationId}")
-	@Produces(MediaType.APPLICATION_OCTET_STREAM)
+	@Produces(MediaType.APPLICATION_JSON)
 	public Response doGet(@PathParam("destinationId") String inId) throws ClientException {
 		final ClientResponse response = this.etlClient.getOutput(inId);
 		StreamingOutput stream = new StreamingOutput() {

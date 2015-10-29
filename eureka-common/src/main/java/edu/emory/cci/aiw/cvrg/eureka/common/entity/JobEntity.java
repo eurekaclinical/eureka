@@ -89,6 +89,8 @@ public class JobEntity {
 	 */
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "job")
 	private List<JobEvent> jobEvents;
+	
+	private String name;
 
 	private static JobEventComparator JOB_EVENT_COMPARATOR = new JobEventComparator();
 
@@ -174,6 +176,14 @@ public class JobEntity {
 		this.user = inEtlUser;
 	}
 
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+	
 	/**
 	 * @return the jobEvents
 	 */

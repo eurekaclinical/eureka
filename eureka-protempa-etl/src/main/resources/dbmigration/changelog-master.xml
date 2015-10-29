@@ -771,4 +771,9 @@ limitations under the License.
 			<column name="OUTPUTTYPE" type="VARCHAR(255)" defaultValue="application/octet-stream"/>
 		</addColumn>
 	</changeSet>
+	<changeSet author="arpost" id="1361552652236-37">
+		<addColumn tableName="JOBS">
+			<column name="NAME" type="VARCHAR(255)"/>
+		</addColumn>
+	</changeSet>
 </databaseChangeLog>

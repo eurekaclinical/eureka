@@ -19,7 +19,6 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.common.comm.clients;
 
-import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.GenericType;
 import com.sun.jersey.core.util.MultivaluedMapImpl;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.*;
@@ -525,11 +524,11 @@ public class ServicesClient extends EurekaClient {
 		return doGet(path, SystemElementList);
 	}
 	
-	public ClientResponse getOutput(String destinationId) throws ClientException {
+	public InputStream getOutput(String destinationId) throws ClientException {
 		String path = UriBuilder.fromPath("/api/protected/output/")
 				.segment(destinationId)
 				.build().toString();
-		return doGet(path);
+		return doGet(path, InputStream.class);
 	}
 
 }

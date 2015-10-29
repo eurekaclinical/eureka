@@ -40,6 +40,7 @@ public class JobSpec {
 	private boolean updateData;
 	private SourceConfig prompts;
 	private List<String> propositionIds;
+	private String name;
 
 	public String getSourceConfigId() {
 		return sourceConfigId;
@@ -119,6 +120,14 @@ public class JobSpec {
 
 	public void setPropositionIds(List<String> propositionIds) {
 		this.propositionIds = propositionIds;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
 	}
 	
 }

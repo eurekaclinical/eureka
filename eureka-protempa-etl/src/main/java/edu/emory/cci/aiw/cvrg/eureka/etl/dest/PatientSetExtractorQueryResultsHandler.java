@@ -19,22 +19,15 @@ package edu.emory.cci.aiw.cvrg.eureka.etl.dest;
  * limitations under the License.
  * #L%
  */
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.PatientSet;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.PatientSetExtractorDestinationEntity;
 import edu.emory.cci.aiw.cvrg.eureka.etl.config.EtlProperties;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.codehaus.jackson.JsonEncoding;
 import org.codehaus.jackson.JsonGenerator;
 import org.codehaus.jackson.map.ObjectMapper;
@@ -52,7 +45,7 @@ import org.protempa.query.Query;
  *
  * @author Andrew Post
  */
-public class PatientSetSenderQueryResultsHandler extends AbstractQueryResultsHandler {
+public class PatientSetExtractorQueryResultsHandler extends AbstractQueryResultsHandler {
 
 	private final String name;
 	private final String aliasPropId;
@@ -68,7 +61,7 @@ public class PatientSetSenderQueryResultsHandler extends AbstractQueryResultsHan
 	private OutputStream outputFileOutputStream;
 	private JsonGenerator jsonGenerator;
 
-	PatientSetSenderQueryResultsHandler(Query query, PatientSetExtractorDestinationEntity inPatientSetSenderDestinationEntity) {
+	PatientSetExtractorQueryResultsHandler(Query query, PatientSetExtractorDestinationEntity inPatientSetSenderDestinationEntity) {
 		assert inPatientSetSenderDestinationEntity != null : "inPatientSetSenderDestinationEntity cannot be null";
 		this.name = inPatientSetSenderDestinationEntity.getName();
 
@@ -82,7 +75,7 @@ public class PatientSetSenderQueryResultsHandler extends AbstractQueryResultsHan
 
 		this.outputName = new PatientSetSenderSupport().getOutputName(inPatientSetSenderDestinationEntity);
 
-		this.queryId = query.getId();
+		this.queryId = query.getName();
 		this.username = query.getUsername();
 
 		this.etlProperties = new EtlProperties();

@@ -109,7 +109,7 @@ public class ETL {
 			} else {
 				q.setPropositionIds(inPropIdsToShow);
 			}
-			q.setId(job.getId().toString());
+			q.setName(job.getName());
 			q.setUsername(job.getUser().getUsername());
 			q.setFilters(filter);
 			q.setQueryMode(updateData ? QueryMode.UPDATE : QueryMode.REPLACE);

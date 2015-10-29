@@ -75,7 +75,7 @@ public class ProtempaDestinationFactory {
 			} else if (dest instanceof Neo4jDestinationEntity) {
 				result = new Neo4jDestination(new EurekaNeo4jConfiguration((Neo4jDestinationEntity) dest));
 			} else if (dest instanceof PatientSetExtractorDestinationEntity) {
-				result = new PatientSetSenderDestination((PatientSetExtractorDestinationEntity) dest);
+				result = new PatientSetExtractorDestination((PatientSetExtractorDestinationEntity) dest);
 			} else {
 				throw new AssertionError("Invalid destination entity type " + dest.getClass());
 			}
