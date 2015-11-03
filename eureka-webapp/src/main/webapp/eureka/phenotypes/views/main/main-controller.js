@@ -13,7 +13,7 @@
 
     angular
         .module('eureka.phenotypes')
-        .controller('phenotypes.MainCtrl');
+        .controller('phenotypes.MainCtrl', MainCtrl);
 
     MainCtrl.$inject = ['$scope', 'PhenotypeService', '$location'];
 
@@ -22,6 +22,10 @@
         var vm = this;
         var messages =  PhenotypeService.getPhenotypeMessages();
         vm.messages = messages;
+
+        vm.openMenu = function($mdOpenMenu, evt) {
+          $mdOpenMenu(evt);
+        };
 
         PhenotypeService.getSummarizedUserElements().then(function(data) {
             vm.props = data;
