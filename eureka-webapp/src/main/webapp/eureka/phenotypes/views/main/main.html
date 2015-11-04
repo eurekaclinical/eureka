@@ -10,56 +10,40 @@
             and a stop time representing when they are present.
         </p>
 
+        <md-menu>
+          <md-button class="md-primary md-hue-1" aria-label="Create a new element" ng-click="phenotypes.openMenu($mdOpenMenu, $event)">
+            <md-icon md-menu-origin>add_circle</md-icon> Create New Element
+          </md-button>
+          <md-menu-content width="4">
+            <md-menu-item>
+              <md-button>
+                <md-icon md-menu-align-target>view_module</md-icon>
+                Categorization
+              </md-button>
+            </md-menu-item>
+            <md-menu-item>
+              <md-button>
+                <md-icon>format_list_numbered</md-icon>
+                Sequence
+              </md-button>
+            </md-menu-item>
+            <md-menu-item>
+              <md-button>
+                <md-icon>blur_on</md-icon>
+                Frequency
+              </md-button>
+            </md-menu-item>
+            <md-menu-item>
+              <md-button>
+                <md-icon>thumbs_up_down</md-icon>
+                Value Threshold
+              </md-button>
+            </md-menu-item>
+          </md-menu-content>
+        </md-menu>
+
         <div id="dialog" title="Delete Data Element"></div>
         <div class="btn-group">
-            <div class="btn-group">
-                <button id="typeDropdown" class="btn btn-primary" data-toggle="dropdown">
-                    <span class="glyphicon glyphicon-plus-sign"></span>
-                    Create New Element
-                </button>
-                <ul class="dropdown-menu" role="menu" aria-labelledby="typeDropdown">
-                    <li>
-                        <a href="editprop?type=categorization">
-                            <dt>
-                                Categorization
-                            </dt>
-                            <dd>
-                               {{messages.CATEGORIZATION.description}}
-                            </dd>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="/editprop?type=sequence">
-                            <dt>
-                                Sequence
-                            </dt>
-                            <dd>
-                                {{messages.SEQUENCE.description}}
-                            </dd>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="/editprop?type=frequency">
-                            <dt>
-                                Frequency
-                            </dt>
-                            <dd>
-                                {{messages.FREQUENCY.description}}
-                            </dd>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="/editprop?type=value_threshold">
-                            <dt>
-                                Value Threshold
-                            </dt>
-                            <dd>
-                                {{messages.VALUE_THRESHOLD.description}}
-                            </dd>
-                        </a>
-                    </li>
-                </ul>
-            </div>
             <a class="btn btn-default" href="#"
                target="eureka-help">
                 <span class="glyphicon glyphicon-question-sign"></span>
