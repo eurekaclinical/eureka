@@ -212,6 +212,24 @@ NG_DOCS={
     },
     {
       "section": "api",
+      "id": "eureka.phenotypes.controller:CreateCtrl",
+      "shortName": "CreateCtrl",
+      "type": "controller",
+      "moduleName": "eureka.phenotypes",
+      "shortDescription": "This is the create controller for the phenotypes section of the application.",
+      "keywords": "$location $scope api application controller create eureka phenotypes phenotypeservice"
+    },
+    {
+      "section": "api",
+      "id": "eureka.phenotypes.controller:EditCtrl",
+      "shortName": "EditCtrl",
+      "type": "controller",
+      "moduleName": "eureka.phenotypes",
+      "shortDescription": "This is the edit controller for the phenotypes section of the application.",
+      "keywords": "$location $scope api application controller edit eureka phenotypes phenotypeservice"
+    },
+    {
+      "section": "api",
       "id": "eureka.phenotypes.controller:MainCtrl",
       "shortName": "MainCtrl",
       "type": "controller",
