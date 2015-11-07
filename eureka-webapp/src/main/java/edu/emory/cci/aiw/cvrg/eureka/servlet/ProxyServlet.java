@@ -157,6 +157,9 @@ public class ProxyServlet extends HttpServlet {
 
 	}
 
-	/** The target URI as configured. Not null. */
+	/** 
+	 * The target URI as configured. Not null.
+	 * @return the target URI.
+	 */
 	public String getTargetUri() { return targetUri; }
 }
