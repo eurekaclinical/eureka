@@ -59,6 +59,7 @@ public final class Task implements Runnable {
 		this.jobEventDao = inJobEventDao;
 		this.etl = inEtl;
 		this.propIdsToShow = Collections.emptyList();
+		this.propositionDefinitions = Collections.emptyList();
 	}
 
 	Long getJobId() {
@@ -94,7 +95,11 @@ public final class Task implements Runnable {
 	}
 
 	void setPropositionDefinitions(List<PropositionDefinition> inPropositionDefinitions) {
-		propositionDefinitions = inPropositionDefinitions;
+		if (inPropositionDefinitions != null) {
+			this.propositionDefinitions = inPropositionDefinitions;
+		} else {
+			propositionDefinitions = Collections.emptyList();
+		}
 	}
 
 	public boolean isUpdateData() {
@@ -121,7 +126,7 @@ public final class Task implements Runnable {
 			if (LOGGER.isInfoEnabled()) {
 				LOGGER.info("Just got job {} from user {}",
 						new Object[]{myJob.getId(),
-							myJob.getEtlUser().getUsername()});
+							myJob.getUser().getUsername()});
 			}
 			JobEvent startedJobEvent = new JobEvent();
 			startedJobEvent.setJob(myJob);
@@ -151,7 +156,7 @@ public final class Task implements Runnable {
 			if (LOGGER.isInfoEnabled()) {
 				LOGGER.info("Completed job {} for user {} without errors.",
 						new Object[]{
-							myJob.getId(), myJob.getEtlUser().getUsername()});
+							myJob.getId(), myJob.getUser().getUsername()});
 			}
 			myJob = null;
 		} catch (EtlException | Error | RuntimeException e) {
@@ -166,7 +171,7 @@ public final class Task implements Runnable {
 					failedJobEvent.setMessage("Processing failed");
 					LOGGER.error("Finished job {} for user {} with errors.",
 							new Object[]{
-								myJob.getId(), myJob.getEtlUser().getUsername()});
+								myJob.getId(), myJob.getUser().getUsername()});
 					this.jobEventDao.create(failedJobEvent);
 				} catch (Throwable ignore) {
 				}
@@ -184,7 +189,7 @@ public final class Task implements Runnable {
 	private void handleError(JobEntity job, Throwable e) {
 		if (job != null) {
 			LOGGER.error("Job " + job.getId() + " for user "
-					+ job.getEtlUser().getUsername() + " failed: " + e.getMessage(), e);
+					+ job.getUser().getUsername() + " failed: " + e.getMessage(), e);
 
 			StringWriter sw = new StringWriter();
 			try (PrintWriter ps = new PrintWriter(sw)) {

@@ -38,7 +38,7 @@ import com.google.inject.Provider;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.JobFilter;
 import edu.emory.cci.aiw.cvrg.eureka.common.dao.GenericDao;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.EtlUserEntity_;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.AuthorizedUserEntity_;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.JobEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.JobEntity_;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.JobEvent_;
@@ -110,7 +110,7 @@ public class JpaJobDao extends GenericDao<JobEntity, Long> implements JobDao {
 			LOGGER.debug("Checking for user ID.");
 			if (jobFilter.getUserId() != null) {
 				LOGGER.debug("Found user ID: {}", jobFilter.getUserId());
-				predicates.add(builder.equal(root.get(JobEntity_.etlUser).get(EtlUserEntity_.id),
+				predicates.add(builder.equal(root.get(JobEntity_.user).get(AuthorizedUserEntity_.id),
 						jobFilter.getUserId()));
 			}
 			LOGGER.debug("Checking for start time.");

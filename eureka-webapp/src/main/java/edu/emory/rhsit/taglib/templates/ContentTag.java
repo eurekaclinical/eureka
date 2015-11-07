@@ -34,9 +34,9 @@ import javax.servlet.jsp.tagext.BodyTagSupport;
  * specify content in between tags rather than hardcoding in an attribute 
  * from the PutTag.
  * 
- * Usage: <template:content name="some name">
+ * Usage: <pre>{@code <template:content name="some name">
  * 			content goes here
- * 		  </template:content>
+ * 		  </template:content>}</pre>
  * 
  */
 public class ContentTag extends BodyTagSupport {
@@ -48,6 +48,7 @@ public class ContentTag extends BodyTagSupport {
 
 
 
+	@Override
 	public int doAfterBody() throws JspException {
 		BodyContent body = getBodyContent();
 		if (body == null)

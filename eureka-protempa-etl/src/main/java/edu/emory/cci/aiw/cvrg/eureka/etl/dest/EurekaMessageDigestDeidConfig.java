@@ -24,6 +24,7 @@ import edu.emory.cci.aiw.cvrg.eureka.common.entity.DeidPerPatientParams;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.DestinationEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.MessageDigestEncryptionAlgorithm;
 import edu.emory.cci.aiw.cvrg.eureka.etl.dao.DeidPerPatientParamDao;
+import org.protempa.dest.deid.EncryptionInitException;
 import org.protempa.dest.deid.MessageDigestDeidConfig;
 import org.protempa.dest.deid.MessageDigestEncryption;
 
@@ -40,7 +41,7 @@ public class EurekaMessageDigestDeidConfig extends EurekaDeidConfig implements M
 	}
 
 	@Override
-	public MessageDigestEncryption getEncryptionInstance() {
+	public MessageDigestEncryption getEncryptionInstance() throws EncryptionInitException {
 		return new MessageDigestEncryption(this);
 	}
 

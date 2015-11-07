@@ -27,7 +27,7 @@ import edu.emory.cci.aiw.cvrg.eureka.common.comm.DestinationType;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.EtlCohortDestination;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.EtlDestination;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.EtlI2B2Destination;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.EtlPatientSetSenderDestination;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.EtlPatientSetExtractorDestination;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.Job;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.JobFilter;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.JobRequest;
@@ -66,8 +66,8 @@ public class EtlClientImpl extends EurekaClient implements EtlClient {
 	private static final GenericType<List<EtlI2B2Destination>> I2B2DestinationListType
 			= new GenericType<List<EtlI2B2Destination>>() {
 			};
-	private static final GenericType<List<EtlPatientSetSenderDestination>> PatientSetSenderDestinationListType
-			= new GenericType<List<EtlPatientSetSenderDestination>>() {
+	private static final GenericType<List<EtlPatientSetExtractorDestination>> PatientSetExtractorDestinationListType
+			= new GenericType<List<EtlPatientSetExtractorDestination>>() {
 			};
 	private static final GenericType<List<PropositionDefinition>> PropositionDefinitionList
 			= new GenericType<List<PropositionDefinition>>() {
@@ -129,11 +129,11 @@ public class EtlClientImpl extends EurekaClient implements EtlClient {
 	}
 
 	@Override
-	public List<EtlPatientSetSenderDestination> getPatientSetSenderDestinations() throws ClientException {
+	public List<EtlPatientSetExtractorDestination> getPatientSetExtractorDestinations() throws ClientException {
 		final String path = "/api/protected/destinations/";
 		MultivaluedMap<String, String> queryParams = new MultivaluedMapImpl();
-		queryParams.add("type", DestinationType.PATIENT_SET_SENDER.name());
-		return doGet(path, PatientSetSenderDestinationListType, queryParams);
+		queryParams.add("type", DestinationType.PATIENT_SET_EXTRACTOR.name());
+		return doGet(path, PatientSetExtractorDestinationListType, queryParams);
 	}
 
 	@Override
@@ -301,5 +301,22 @@ public class EtlClientImpl extends EurekaClient implements EtlClient {
 		return doGet(path, PropositionDefinitionList);
 	}
 
+	@Override
+	public ClientResponse getOutput(String destinationId) throws ClientException {
+		String path = UriBuilder.fromPath("/api/protected/output/")
+				.segment(destinationId)
+				.build().toString();
+		return doGet(path);
+	}
+
+	@Override
+	public void deleteOutput(String destinationId) throws ClientException {
+		String path = UriBuilder.fromPath("/api/protected/output/")
+				.segment(destinationId)
+				.build().toString();
+		doDelete(path);
+	}
+	
+	
 
 }

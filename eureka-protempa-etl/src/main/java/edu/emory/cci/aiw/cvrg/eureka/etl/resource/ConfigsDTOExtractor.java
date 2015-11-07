@@ -21,7 +21,7 @@ package edu.emory.cci.aiw.cvrg.eureka.etl.resource;
  */
 
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.ConfigEntity;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.EtlUserEntity;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.AuthorizedUserEntity;
 import edu.emory.cci.aiw.cvrg.eureka.etl.dao.ResolvedPermissions;
 
 /**
@@ -29,9 +29,9 @@ import edu.emory.cci.aiw.cvrg.eureka.etl.dao.ResolvedPermissions;
  * @author Andrew Post
  */
 abstract class ConfigsDTOExtractor<E, F extends ConfigEntity>  {
-	private final EtlUserEntity user;
+	private final AuthorizedUserEntity user;
 	
-	protected ConfigsDTOExtractor(EtlUserEntity user) {
+	protected ConfigsDTOExtractor(AuthorizedUserEntity user) {
 		this.user = user;
 	}
 	protected E extractDTO(F configEntity) {
@@ -45,7 +45,7 @@ abstract class ConfigsDTOExtractor<E, F extends ConfigEntity>  {
 	
 	private Perm perm(F configEntity) {
 		if (configEntity != null) {
-			EtlUserEntity owner = configEntity.getOwner();
+			AuthorizedUserEntity owner = configEntity.getOwner();
 			if (this.user.equals(owner)) {
 				return new Perm(owner, true, true, true);
 			}
@@ -59,5 +59,5 @@ abstract class ConfigsDTOExtractor<E, F extends ConfigEntity>  {
 	
 	abstract E extractDTO(Perm perm, F configEntity);
 	
-	abstract ResolvedPermissions resolvePermissions(EtlUserEntity owner, F entity);
+	abstract ResolvedPermissions resolvePermissions(AuthorizedUserEntity owner, F entity);
 }

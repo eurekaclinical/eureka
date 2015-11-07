@@ -21,6 +21,7 @@ package edu.emory.cci.aiw.cvrg.eureka.common.comm;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.JobStatus;
 import java.text.DateFormat;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -51,7 +52,7 @@ public class JobListRow {
 	private String destinationId;
 	
 	public JobListRow() {
-		this.links = Collections.emptyList();
+		this.links = new ArrayList<>();
 	}
 	
 	public boolean isJobSubmitted() {
@@ -96,7 +97,7 @@ public class JobListRow {
 
 	public void setLinks(List<Link> links) {
 		if (links == null) {
-			this.links = Collections.emptyList();
+			this.links = new ArrayList<>();
 		} else {
 			this.links = links;
 		}

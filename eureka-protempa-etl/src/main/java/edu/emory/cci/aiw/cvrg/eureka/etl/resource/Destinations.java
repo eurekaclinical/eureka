@@ -23,18 +23,18 @@ import edu.emory.cci.aiw.cvrg.eureka.common.comm.Cohort;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.EtlCohortDestination;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.EtlDestination;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.EtlI2B2Destination;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.EtlPatientSetSenderDestination;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.EtlPatientSetExtractorDestination;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.Node;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.CohortDestinationEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.CohortEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.DestinationEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.DestinationGroupMembership;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.EtlGroup;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.EtlUserEntity;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.AuthorizedUserEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.I2B2DestinationEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.NodeEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.NodeToNodeEntityVisitor;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.PatientSetSenderDestinationEntity;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.PatientSetExtractorDestinationEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.exception.HttpStatusException;
 import edu.emory.cci.aiw.cvrg.eureka.etl.config.EtlProperties;
 import edu.emory.cci.aiw.cvrg.eureka.etl.dao.DestinationDao;
@@ -59,11 +59,11 @@ public final class Destinations {
 	private static final Logger LOGGER = LoggerFactory.getLogger(Destinations.class);
 
 	private final EtlGroupDao groupDao;
-	private final EtlUserEntity etlUser;
+	private final AuthorizedUserEntity etlUser;
 	private final DestinationDao destinationDao;
 	private final EtlProperties etlProperties;
 
-	public Destinations(EtlProperties inEtlProperties, EtlUserEntity inEtlUser,
+	public Destinations(EtlProperties inEtlProperties, AuthorizedUserEntity inEtlUser,
 			DestinationDao inDestinationDao, EtlGroupDao inGroupDao) {
 		this.groupDao = inGroupDao;
 		this.etlUser = inEtlUser;
@@ -128,7 +128,7 @@ public final class Destinations {
 		}
 	}
 
-	List<DestinationEntity> configs(EtlUserEntity user) {
+	List<DestinationEntity> configs(AuthorizedUserEntity user) {
 		return user.getDestinations();
 	}
 
@@ -168,13 +168,13 @@ public final class Destinations {
 		return result;
 	}
 	
-	public List<EtlPatientSetSenderDestination> getAllPatientSetSenders() {
-		List<EtlPatientSetSenderDestination> result = new ArrayList<>();
-		PatientSetSenderDestinationsDTOExtractor extractor
-				= new PatientSetSenderDestinationsDTOExtractor(this.etlUser, this.groupDao);
-		for (PatientSetSenderDestinationEntity configEntity
+	public List<EtlPatientSetExtractorDestination> getAllPatientSetSenders() {
+		List<EtlPatientSetExtractorDestination> result = new ArrayList<>();
+		PatientSetExtractorDestinationsDTOExtractor extractor
+				= new PatientSetExtractorDestinationsDTOExtractor(this.etlUser, this.groupDao);
+		for (PatientSetExtractorDestinationEntity configEntity
 				: this.destinationDao.getAllPatientSetSenderDestinations()) {
-			EtlPatientSetSenderDestination dto = extractor.extractDTO(configEntity);
+			EtlPatientSetExtractorDestination dto = extractor.extractDTO(configEntity);
 			if (dto != null) {
 				result.add(dto);
 			}

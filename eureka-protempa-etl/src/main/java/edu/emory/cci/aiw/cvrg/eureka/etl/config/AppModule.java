@@ -25,7 +25,7 @@ import com.google.inject.AbstractModule;
 import edu.emory.cci.aiw.cvrg.eureka.etl.dao.DestinationDao;
 import edu.emory.cci.aiw.cvrg.eureka.etl.dao.DeidPerPatientParamDao;
 import edu.emory.cci.aiw.cvrg.eureka.etl.dao.EtlGroupDao;
-import edu.emory.cci.aiw.cvrg.eureka.etl.dao.EtlUserDao;
+import edu.emory.cci.aiw.cvrg.eureka.common.dao.AuthorizedUserDao;
 import edu.emory.cci.aiw.cvrg.eureka.etl.dao.JobDao;
 import edu.emory.cci.aiw.cvrg.eureka.etl.dao.JobEventDao;
 import edu.emory.cci.aiw.cvrg.eureka.etl.dao.JpaDestinationDao;
@@ -47,7 +47,7 @@ public class AppModule extends AbstractModule {
 	protected void configure() {
 		bind(JobDao.class).to(JpaJobDao.class);
 		bind(JobEventDao.class).to(JpaJobEventDao.class);
-		bind(EtlUserDao.class).to(JpaEtlUserDao.class);
+		bind(AuthorizedUserDao.class).to(JpaEtlUserDao.class);
 		bind(EtlGroupDao.class).to(JpaEtlGroupDao.class);
 		bind(DestinationDao.class).to(JpaDestinationDao.class);
 		bind(DeidPerPatientParamDao.class).to(JpaDestinationOffsetDao.class);

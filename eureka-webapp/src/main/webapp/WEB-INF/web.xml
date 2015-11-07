@@ -89,6 +89,9 @@ see implementation details http://jersey.java.net/nonav/documentation/latest/jax
 	<listener>
 		<listener-class>edu.emory.cci.aiw.cvrg.eureka.webapp.config.WebappListener</listener-class>
 	</listener>
+	<listener>
+		<listener-class>org.jasig.cas.client.session.SingleSignOutHttpSessionListener</listener-class>
+	</listener>
 
 	<filter>
 		<filter-name>guiceFilter</filter-name>

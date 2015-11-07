@@ -28,10 +28,10 @@ import edu.emory.cci.aiw.cvrg.eureka.common.comm.EtlCohortDestination;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.EtlDestination;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.EtlI2B2Destination;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.EtlNeo4jDestination;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.EtlPatientSetSenderDestination;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.EtlPatientSetExtractorDestination;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.I2B2Destination;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.Neo4jDestination;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.PatientSetSenderDestination;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.PatientSetExtractorDestination;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -111,10 +111,10 @@ public class EtlDestinationToDestinationVisitor extends AbstractEtlDestinationVi
 	}
 
 	@Override
-	public void visit(EtlPatientSetSenderDestination etlPatientSetSenderDestination) {
-		PatientSetSenderDestination ptSetSenderDest = new PatientSetSenderDestination();
+	public void visit(EtlPatientSetExtractorDestination etlPatientSetSenderDestination) {
+		PatientSetExtractorDestination ptSetSenderDest = new PatientSetExtractorDestination();
 		visitCommon(etlPatientSetSenderDestination, ptSetSenderDest);
-		ptSetSenderDest.setUrl(etlPatientSetSenderDestination.getUrl());
+		ptSetSenderDest.setAliasPropositionId(etlPatientSetSenderDestination.getAliasPropositionId());
 		this.destination = ptSetSenderDest;
 	}
 

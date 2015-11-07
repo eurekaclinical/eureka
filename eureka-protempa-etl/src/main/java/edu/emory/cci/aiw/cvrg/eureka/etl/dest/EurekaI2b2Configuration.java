@@ -19,7 +19,6 @@ package edu.emory.cci.aiw.cvrg.eureka.etl.dest;
  * limitations under the License.
  * #L%
  */
-
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.I2B2DestinationEntity;
 import edu.emory.cci.aiw.cvrg.eureka.etl.config.EtlProperties;
 import edu.emory.cci.aiw.i2b2etl.dest.config.Concepts;
@@ -30,13 +29,15 @@ import edu.emory.cci.aiw.i2b2etl.dest.config.Database;
 import edu.emory.cci.aiw.i2b2etl.dest.config.Settings;
 import edu.emory.cci.aiw.i2b2etl.dest.config.xml.XmlFileConfiguration;
 import java.io.File;
+import java.io.IOException;
 
 /**
  * Database-based i2b2 loader configuration.
- * 
+ *
  * @author Andrew Post
  */
 class EurekaI2b2Configuration implements Configuration {
+
 	private XmlFileConfiguration oldConfiguration;
 	private final I2B2DestinationEntity i2B2DestinationEntity;
 	private final EtlProperties etlProperties;
@@ -46,17 +47,21 @@ class EurekaI2b2Configuration implements Configuration {
 	private I2b2Concepts i2b2Concepts;
 
 	EurekaI2b2Configuration(I2B2DestinationEntity inI2B2DestinationEntity, EtlProperties inEtlProperties) throws ConfigurationInitException {
-		this.i2B2DestinationEntity = inI2B2DestinationEntity;
-		this.etlProperties = inEtlProperties;
-		File destinationConfigFile = this.etlProperties.destinationConfigFile(this.i2B2DestinationEntity.getName());
-		if (this.i2B2DestinationEntity.getDataConnect() == null && this.i2B2DestinationEntity.getMetaConnect() == null) {
-			this.oldConfiguration = new XmlFileConfiguration(destinationConfigFile);
-		} else {
-			this.i2b2Settings = new I2b2Settings(this.i2B2DestinationEntity);
-			this.i2b2Database = new I2b2Database(this.i2B2DestinationEntity);
+		try {
+			this.i2B2DestinationEntity = inI2B2DestinationEntity;
+			this.etlProperties = inEtlProperties;
+			File destinationConfigFile = this.etlProperties.destinationConfigFile(this.i2B2DestinationEntity.getName());
+			if (this.i2B2DestinationEntity.getDataConnect() == null && this.i2B2DestinationEntity.getMetaConnect() == null) {
+				this.oldConfiguration = new XmlFileConfiguration(destinationConfigFile);
+			} else {
+				this.i2b2Settings = new I2b2Settings(this.i2B2DestinationEntity);
+				this.i2b2Database = new I2b2Database(this.i2B2DestinationEntity);
+			}
+		} catch (IOException ex) {
+			throw new ConfigurationInitException("Error initializing configuration", ex);
 		}
 	}
-	
+
 	@Override
 	public Concepts getConcepts() {
 		if (this.oldConfiguration != null) {
@@ -107,5 +112,5 @@ class EurekaI2b2Configuration implements Configuration {
 			return this.i2B2DestinationEntity.getName();
 		}
 	}
-	
+
 }

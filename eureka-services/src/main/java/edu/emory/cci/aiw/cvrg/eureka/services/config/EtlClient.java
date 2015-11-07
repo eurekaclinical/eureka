@@ -20,10 +20,11 @@ package edu.emory.cci.aiw.cvrg.eureka.services.config;
  * #L%
  */
 
+import com.sun.jersey.api.client.ClientResponse;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.EtlCohortDestination;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.EtlDestination;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.EtlI2B2Destination;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.EtlPatientSetSenderDestination;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.EtlPatientSetExtractorDestination;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.Job;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.JobFilter;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.JobRequest;
@@ -47,7 +48,7 @@ public interface EtlClient {
 	
 	List<EtlI2B2Destination> getI2B2Destinations() throws ClientException;
 	
-	List<EtlPatientSetSenderDestination> getPatientSetSenderDestinations() throws ClientException;
+	List<EtlPatientSetExtractorDestination> getPatientSetExtractorDestinations() throws ClientException;
 
 	List<EtlDestination> getDestinations() throws ClientException;
 	
@@ -103,10 +104,14 @@ public interface EtlClient {
 
 	void validatePropositions(ValidationRequest inRequest) throws ClientException;
 
-	public List<Job> getJobsDesc() throws ClientException;
+	List<Job> getJobsDesc() throws ClientException;
 	
-	public  List<String> getPropositionSearchResults(String sourceConfigID, String inSearchKey) throws ClientException;
+	List<String> getPropositionSearchResults(String sourceConfigID, String inSearchKey) throws ClientException;
 
-	public  List<PropositionDefinition> getPropositionSearchResultsBySearchKey(String sourceConfigID, String inSearchKey) throws ClientException;
+	List<PropositionDefinition> getPropositionSearchResultsBySearchKey(String sourceConfigID, String inSearchKey) throws ClientException;
+	
+	ClientResponse getOutput(String destinationId) throws ClientException;
+	
+	void deleteOutput(String destinationId) throws ClientException;
 
 }

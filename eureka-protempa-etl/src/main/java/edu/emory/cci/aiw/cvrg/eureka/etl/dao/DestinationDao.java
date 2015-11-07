@@ -23,7 +23,7 @@ package edu.emory.cci.aiw.cvrg.eureka.etl.dao;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.CohortDestinationEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.DestinationEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.I2B2DestinationEntity;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.PatientSetSenderDestinationEntity;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.PatientSetExtractorDestinationEntity;
 import java.util.List;
 
 /**
@@ -35,5 +35,5 @@ public interface DestinationDao extends ConfigDao<DestinationEntity> {
 
 	List<I2B2DestinationEntity> getAllI2B2Destinations();
 	
-	List<PatientSetSenderDestinationEntity> getAllPatientSetSenderDestinations();
+	List<PatientSetExtractorDestinationEntity> getAllPatientSetSenderDestinations();
 }

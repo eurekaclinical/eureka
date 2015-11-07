@@ -20,13 +20,13 @@ package edu.emory.cci.aiw.cvrg.eureka.etl.resource;
  * #L%
  */
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.SourceConfig;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.EtlUserEntity;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.AuthorizedUserEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.SourceConfigEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.exception.HttpStatusException;
 import edu.emory.cci.aiw.cvrg.eureka.etl.config.EtlProperties;
 import edu.emory.cci.aiw.cvrg.eureka.etl.dao.EtlGroupDao;
 import edu.emory.cci.aiw.cvrg.eureka.etl.dao.SourceConfigDao;
-import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import javax.ws.rs.core.Response;
@@ -36,27 +36,25 @@ import javax.ws.rs.core.Response;
  * @author Andrew Post
  */
 final class SourceConfigs {
+
 	private final EtlGroupDao groupDao;
 	private final EtlProperties etlProperties;
-	private final EtlUserEntity etlUser;
+	private final AuthorizedUserEntity etlUser;
 	private final SourceConfigDao sourceConfigDao;
 	private final SourceConfigsDTOExtractor extractor;
 
-	SourceConfigs(EtlProperties inEtlProperties, EtlUserEntity inEtlUser, SourceConfigDao inSourceConfigDao, EtlGroupDao inGroupDao) {
-		File inConfigDir = inEtlProperties.getSourceConfigDirectory();
-		if (!inConfigDir.exists()) {
-			try {
-				inConfigDir.mkdir();
-			} catch (SecurityException ex) {
-				throw new HttpStatusException(Response.Status.INTERNAL_SERVER_ERROR,
-						"Could not create source config directory", ex);
-			}
+	SourceConfigs(EtlProperties inEtlProperties, AuthorizedUserEntity inEtlUser, SourceConfigDao inSourceConfigDao, EtlGroupDao inGroupDao) {
+		try {
+			inEtlProperties.getSourceConfigDirectory();
+			this.groupDao = inGroupDao;
+			this.etlProperties = inEtlProperties;
+			this.sourceConfigDao = inSourceConfigDao;
+			this.etlUser = inEtlUser;
+			this.extractor = new SourceConfigsDTOExtractor(this.etlUser, this.groupDao, this.etlProperties);
+		} catch (IOException ex) {
+			throw new HttpStatusException(Response.Status.INTERNAL_SERVER_ERROR,
+					"Could not create source config directory", ex);
 		}
-		this.groupDao = inGroupDao;
-		this.etlProperties = inEtlProperties;
-		this.sourceConfigDao = inSourceConfigDao;
-		this.etlUser = inEtlUser;
-		this.extractor = new SourceConfigsDTOExtractor(this.etlUser, this.groupDao, this.etlProperties);
 	}
 
 	/**
@@ -70,7 +68,7 @@ final class SourceConfigs {
 		if (configId == null) {
 			throw new IllegalArgumentException("configId cannot be null");
 		}
-		
+
 		return extractor.extractDTO(this.sourceConfigDao.getByName(configId));
 	}
 
@@ -89,5 +87,5 @@ final class SourceConfigs {
 		}
 		return result;
 	}
-	
+
 }

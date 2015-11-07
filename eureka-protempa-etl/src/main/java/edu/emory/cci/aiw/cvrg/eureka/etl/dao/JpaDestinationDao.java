@@ -27,10 +27,11 @@ import edu.emory.cci.aiw.cvrg.eureka.common.entity.CohortDestinationEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.DestinationEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.DestinationEntity_;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.I2B2DestinationEntity;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.PatientSetSenderDestinationEntity;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.PatientSetExtractorDestinationEntity;
 import java.util.Date;
 import java.util.List;
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -59,7 +60,11 @@ public class JpaDestinationDao extends GenericDao<DestinationEntity, Long> imple
 							builder.isNull(root.get(DestinationEntity_.expiredAt)),
 							builder.greaterThanOrEqualTo(root.get(DestinationEntity_.expiredAt), new Date()))
 				));
-		return entityManager.createQuery(criteriaQuery).getSingleResult();
+		try {
+			return entityManager.createQuery(criteriaQuery).getSingleResult();
+		} catch (NoResultException ex) {
+			return null;
+		}
 	}
 
 	@Override
@@ -102,15 +107,15 @@ public class JpaDestinationDao extends GenericDao<DestinationEntity, Long> imple
 	}
 
 	@Override
-	public List<PatientSetSenderDestinationEntity> getAllPatientSetSenderDestinations() {
+	public List<PatientSetExtractorDestinationEntity> getAllPatientSetSenderDestinations() {
 		EntityManager entityManager = getEntityManager();
 		CriteriaBuilder builder = entityManager.getCriteriaBuilder();
-		CriteriaQuery<PatientSetSenderDestinationEntity> criteriaQuery = builder.createQuery(PatientSetSenderDestinationEntity.class);
-		Root<PatientSetSenderDestinationEntity> root = criteriaQuery.from(PatientSetSenderDestinationEntity.class);
+		CriteriaQuery<PatientSetExtractorDestinationEntity> criteriaQuery = builder.createQuery(PatientSetExtractorDestinationEntity.class);
+		Root<PatientSetExtractorDestinationEntity> root = criteriaQuery.from(PatientSetExtractorDestinationEntity.class);
 		criteriaQuery.where(builder.or(
 							builder.isNull(root.get(DestinationEntity_.expiredAt)),
 							builder.greaterThanOrEqualTo(root.get(DestinationEntity_.expiredAt), new Date())));
-		TypedQuery<PatientSetSenderDestinationEntity> typedQuery = entityManager.createQuery(criteriaQuery);
+		TypedQuery<PatientSetExtractorDestinationEntity> typedQuery = entityManager.createQuery(criteriaQuery);
 		return typedQuery.getResultList();
 	}
 	

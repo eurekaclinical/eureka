@@ -21,6 +21,7 @@ package edu.emory.cci.aiw.cvrg.eureka.etl.dsb;
  */
 import edu.emory.cci.aiw.cvrg.eureka.etl.config.EtlProperties;
 import java.io.File;
+import java.io.IOException;
 
 /**
  *
@@ -61,7 +62,7 @@ class FileDataSourceBackendSupport {
 		this.filename = filename;
 	}
 
-	File[] getUploadedFiles() {
+	File[] getUploadedFiles() throws IOException {
 		File dataFileDirectory = new EtlProperties().uploadedDirectory(this.configurationsId, this.dataFileDirectoryName);
 		return new File[]{new File(dataFileDirectory, this.filename)};
 	}

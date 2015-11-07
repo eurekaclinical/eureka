@@ -22,13 +22,13 @@ package edu.emory.cci.aiw.cvrg.eureka.etl.resource;
 import com.google.inject.Inject;
 import com.sun.jersey.core.header.FormDataContentDisposition;
 import com.sun.jersey.multipart.FormDataParam;
+import edu.emory.cci.aiw.cvrg.eureka.common.authentication.AuthorizedUserSupport;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.SourceConfig;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.EtlUserEntity;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.AuthorizedUserEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.exception.HttpStatusException;
-import edu.emory.cci.aiw.cvrg.eureka.etl.authentication.EtlAuthenticationSupport;
 import edu.emory.cci.aiw.cvrg.eureka.etl.config.EtlProperties;
 import edu.emory.cci.aiw.cvrg.eureka.etl.dao.EtlGroupDao;
-import edu.emory.cci.aiw.cvrg.eureka.etl.dao.EtlUserDao;
+import edu.emory.cci.aiw.cvrg.eureka.common.dao.AuthorizedUserDao;
 import edu.emory.cci.aiw.cvrg.eureka.etl.dao.SourceConfigDao;
 import java.io.File;
 import java.io.IOException;
@@ -46,7 +46,7 @@ import javax.ws.rs.core.Response.Status;
 import org.apache.commons.io.FileUtils;
 
 /**
- * 
+ *
  * @author Andrew Post
  */
 @Path("/protected/file")
@@ -54,20 +54,20 @@ import org.apache.commons.io.FileUtils;
 public class FileResource {
 
 	private final EtlProperties etlProperties;
-	private final EtlUserDao userDao;
+	private final AuthorizedUserDao userDao;
 	private final SourceConfigDao sourceConfigDao;
-	private final EtlAuthenticationSupport authenticationSupport;
+	private final AuthorizedUserSupport authenticationSupport;
 	private final EtlGroupDao groupDao;
 
 	@Inject
-	public FileResource(EtlProperties inEtlProperties, EtlUserDao inUserDao, SourceConfigDao inSourceConfigDao, EtlGroupDao inGroupDao) {
+	public FileResource(EtlProperties inEtlProperties, AuthorizedUserDao inUserDao, SourceConfigDao inSourceConfigDao, EtlGroupDao inGroupDao) {
 		this.etlProperties = inEtlProperties;
 		this.userDao = inUserDao;
 		this.sourceConfigDao = inSourceConfigDao;
-		this.authenticationSupport = new EtlAuthenticationSupport(this.userDao);
+		this.authenticationSupport = new AuthorizedUserSupport(this.userDao);
 		this.groupDao = inGroupDao;
 	}
-	
+
 	@POST
 	@Path("/upload/{sourceConfigId}/{sourceId}")
 	@Consumes(MediaType.MULTIPART_FORM_DATA)
@@ -75,11 +75,10 @@ public class FileResource {
 			@Context HttpServletRequest req,
 			@PathParam("sourceConfigId") String sourceConfigId,
 			@PathParam("sourceId") String sourceId,
-			@FormDataParam("file") InputStream uploadingInputStream,
+			@FormDataParam("file") InputStream inUploadingInputStream,
 			@FormDataParam("file") FormDataContentDisposition fileDetail) {
-		EtlUserEntity user = this.authenticationSupport.getEtlUser(req);
+		AuthorizedUserEntity user = this.authenticationSupport.getUser(req);
 		SourceConfigs sources = new SourceConfigs(this.etlProperties, user, this.sourceConfigDao, this.groupDao);
-
 		try {
 			SourceConfig sourceConfig = sources.getOne(sourceConfigId);
 			if (sourceConfig == null || !sourceConfig.isExecute()) {
@@ -89,23 +88,22 @@ public class FileResource {
 			File uploadedDir = this.etlProperties.uploadedDirectory(sourceConfigId, sourceId);
 			try {
 				File uploadingFile = new File(uploadedDir, fileDetail.getFileName());
-				FileUtils.copyInputStreamToFile(uploadingInputStream, 
+				FileUtils.copyInputStreamToFile(inUploadingInputStream,
 						uploadingFile);
 			} catch (IOException ex) {
 				throw new HttpStatusException(
-						Response.Status.INTERNAL_SERVER_ERROR, 
-						"Uploading file '" + fileDetail.getFileName() + "' failed", 
+						Response.Status.INTERNAL_SERVER_ERROR,
+						"Uploading file '" + fileDetail.getFileName() + "' failed",
 						ex);
 			}
-		} catch (SecurityException ex) {
+		} catch (IOException | SecurityException ex) {
 			throw new HttpStatusException(
-					Response.Status.INTERNAL_SERVER_ERROR, 
-					"Uploading file '" + fileDetail.getFileName() + "' failed", 
+					Response.Status.INTERNAL_SERVER_ERROR,
+					"Uploading file '" + fileDetail.getFileName() + "' failed",
 					ex);
 		}
 
 		return Response.status(Status.CREATED).build();
 	}
 
-	
 }

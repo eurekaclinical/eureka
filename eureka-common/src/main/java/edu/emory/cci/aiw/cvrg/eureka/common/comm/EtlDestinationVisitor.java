@@ -31,5 +31,5 @@ public interface EtlDestinationVisitor {
 	
 	void visit(EtlNeo4jDestination etlNeo4jDestination);
 	
-	void visit(EtlPatientSetSenderDestination etlPatientSetSenderDestination);
+	void visit(EtlPatientSetExtractorDestination etlPatientSetSenderDestination);
 }

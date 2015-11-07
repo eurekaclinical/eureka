@@ -50,7 +50,7 @@ public class SourceConfigEntity implements ConfigEntity {
 	private String name;
 	
 	@ManyToOne
-	private EtlUserEntity owner;
+	private AuthorizedUserEntity owner;
 	
 	@OneToMany(cascade = CascadeType.ALL, mappedBy="sourceConfig")
 	private List<SourceConfigGroupMembership> groups;
@@ -73,11 +73,11 @@ public class SourceConfigEntity implements ConfigEntity {
 		this.name = name;
 	}
 	
-	public EtlUserEntity getOwner() {
+	public AuthorizedUserEntity getOwner() {
 		return owner;
 	}
 
-	public void setOwner(EtlUserEntity owner) {
+	public void setOwner(AuthorizedUserEntity owner) {
 		this.owner = owner;
 	}
 

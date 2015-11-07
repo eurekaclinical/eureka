@@ -42,7 +42,7 @@ import org.protempa.backend.dsb.filter.DateTimeFilter;
 import org.protempa.proposition.value.AbsoluteTimeGranularity;
 
 import com.google.inject.Inject;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.EtlDestination;
+import edu.emory.cci.aiw.cvrg.eureka.common.authentication.AuthorizedUserSupport;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.Job;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.JobFilter;
@@ -52,17 +52,17 @@ import edu.emory.cci.aiw.cvrg.eureka.common.comm.SourceConfig;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.SourceConfigOption;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.Statistics;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.DestinationEntity;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.EtlUserEntity;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.AuthorizedUserEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.JobEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.exception.HttpStatusException;
-import edu.emory.cci.aiw.cvrg.eureka.etl.authentication.EtlAuthenticationSupport;
-import edu.emory.cci.aiw.cvrg.eureka.etl.config.EtlProperties;
 import edu.emory.cci.aiw.cvrg.eureka.etl.config.EurekaProtempaConfigurations;
 import edu.emory.cci.aiw.cvrg.eureka.etl.dao.DestinationDao;
-import edu.emory.cci.aiw.cvrg.eureka.etl.dao.EtlUserDao;
+import edu.emory.cci.aiw.cvrg.eureka.common.dao.AuthorizedUserDao;
+import edu.emory.cci.aiw.cvrg.eureka.etl.config.EtlProperties;
 import edu.emory.cci.aiw.cvrg.eureka.etl.dao.JobDao;
 import edu.emory.cci.aiw.cvrg.eureka.etl.job.TaskManager;
 import edu.emory.cci.aiw.cvrg.eureka.etl.dest.ProtempaDestinationFactory;
+import java.io.IOException;
 import org.protempa.backend.BackendInstanceSpec;
 import org.protempa.backend.BackendProviderSpecLoaderException;
 import org.protempa.backend.BackendSpecNotFoundException;
@@ -79,26 +79,26 @@ import org.protempa.dest.StatisticsException;
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public class JobResource {
-
+	
 	private final JobDao jobDao;
-	private final EtlUserDao etlUserDao;
+	private final AuthorizedUserDao etlUserDao;
 	private final TaskManager taskManager;
-	private final EtlAuthenticationSupport authenticationSupport;
+	private final AuthorizedUserSupport authenticationSupport;
 	private final DestinationDao destinationDao;
-	private final EurekaProtempaConfigurations configurations;
 	private final ProtempaDestinationFactory protempaDestinationFactory;
+	private final EtlProperties etlProperties;
 
 	@Inject
 	public JobResource(JobDao inJobDao, TaskManager inTaskManager,
-			EtlUserDao inEtlUserDao, DestinationDao inDestinationDao,
-			EurekaProtempaConfigurations configurations,
+			AuthorizedUserDao inEtlUserDao, DestinationDao inDestinationDao,
+			EtlProperties inEtlProperties,
 			ProtempaDestinationFactory inProtempaDestinationFactory) {
 		this.jobDao = inJobDao;
 		this.taskManager = inTaskManager;
 		this.etlUserDao = inEtlUserDao;
-		this.authenticationSupport = new EtlAuthenticationSupport(this.etlUserDao);
+		this.authenticationSupport = new AuthorizedUserSupport(this.etlUserDao);
 		this.destinationDao = inDestinationDao;
-		this.configurations = configurations;
+		this.etlProperties = inEtlProperties;
 		this.protempaDestinationFactory = inProtempaDestinationFactory;
 	}
 
@@ -106,7 +106,7 @@ public class JobResource {
 	public List<Job> getAll(@Context HttpServletRequest request,
 			@QueryParam("order") String order) {
 		JobFilter jobFilter = new JobFilter(null,
-				this.authenticationSupport.getEtlUser(request).getId(), null, null, null);
+				this.authenticationSupport.getUser(request).getId(), null, null, null);
 		List<Job> jobs = new ArrayList<>();
 		List<JobEntity> jobEntities;
 		if (order == null) {
@@ -171,7 +171,7 @@ public class JobResource {
 	
 	private JobEntity getJobEntity(HttpServletRequest request, Long inJobId) {
 		JobFilter jobFilter = new JobFilter(inJobId,
-				this.authenticationSupport.getEtlUser(request).getId(), null, null, null);
+				this.authenticationSupport.getUser(request).getId(), null, null, null);
 		List<JobEntity> jobEntities = this.jobDao.getWithFilter(jobFilter);
 		if (jobEntities.isEmpty()) {
 			throw new HttpStatusException(Status.NOT_FOUND);
@@ -187,7 +187,7 @@ public class JobResource {
 		Configuration prompts = toConfiguration(jobSpec.getPrompts());
 		JobEntity jobEntity
 				= newJobEntity(jobSpec,
-						this.authenticationSupport.getEtlUser(request));
+						this.authenticationSupport.getUser(request));
 		DateTimeFilter dateTimeFilter;
 		String dateRangeDataElementKey = jobSpec.getDateRangeDataElementKey();
 		if (dateRangeDataElementKey != null) {
@@ -219,14 +219,26 @@ public class JobResource {
 		return jobs;
 	}
 
-	private JobEntity newJobEntity(JobSpec job, EtlUserEntity etlUser) {
+	private JobEntity newJobEntity(JobSpec job, AuthorizedUserEntity etlUser) {
 		JobEntity jobEntity = new JobEntity();
-		jobEntity.setSourceConfigId(job.getSourceConfigId());
+		String sourceConfigId = job.getSourceConfigId();
+		if (sourceConfigId == null) {
+			throw new HttpStatusException(Status.BAD_REQUEST, "Sourceconfig must be specified");
+		}
+		jobEntity.setSourceConfigId(sourceConfigId);
+		String destinationId = job.getDestinationId();
+		if (destinationId == null) {
+			throw new HttpStatusException(Status.BAD_REQUEST, "Destination must be specified");
+		}
 		DestinationEntity destination
-				= this.destinationDao.getByName(job.getDestinationId());
+				= this.destinationDao.getByName(destinationId);
+		if (destination == null) {
+			throw new HttpStatusException(Status.BAD_REQUEST, "Invalid destination " + job.getDestinationId());
+		}
 		jobEntity.setDestination(destination);
 		jobEntity.setCreated(new Date());
-		jobEntity.setEtlUser(etlUser);
+		jobEntity.setUser(etlUser);
+		jobEntity.setName(job.getName());
 		this.jobDao.create(jobEntity);
 		return jobEntity;
 	}
@@ -236,10 +248,16 @@ public class JobResource {
 			Configuration result = new Configuration();
 			SourceConfig.Section[] dsbSections = prompts.getDataSourceBackends();
 			List<BackendInstanceSpec<DataSourceBackend>> sections = new ArrayList<>();
+			EurekaProtempaConfigurations configurations;
+			try {
+				configurations = new EurekaProtempaConfigurations(this.etlProperties);
+			} catch (IOException ex) {
+				throw new HttpStatusException(Status.INTERNAL_SERVER_ERROR, ex);
+			}
 			for (int i = 0; i < dsbSections.length; i++) {
 				SourceConfig.Section section = dsbSections[i];
 				try {
-					BackendInstanceSpec<DataSourceBackend> bis = this.configurations.newDataSourceBackendSection(section.getId());
+					BackendInstanceSpec<DataSourceBackend> bis = configurations.newDataSourceBackendSection(section.getId());
 					SourceConfigOption[] options = section.getOptions();
 					for (SourceConfigOption option : options) {
 						bis.setProperty(option.getName(), option.getValue());

@@ -58,6 +58,7 @@ public class JobFilter {
 	 * to search between.
 	 *
 	 * @param inJobId Search for a specific job using a unique identifier.
+	 * @param inUserId The id of the user who requested the job.
 	 * @param inState Search for all jobs in a given state.
 	 * @param inFrom Search for all jobs with a timestamp after the given time.
 	 * @param inTo Search for all jobs with a timestamp before the given time.

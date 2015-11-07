@@ -23,7 +23,7 @@ package edu.emory.cci.aiw.cvrg.eureka.etl.dao;
 import edu.emory.cci.aiw.cvrg.eureka.common.dao.Dao;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.DestinationEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.EtlGroup;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.EtlUserEntity;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.AuthorizedUserEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.SourceConfigEntity;
 
 /**
@@ -33,7 +33,7 @@ import edu.emory.cci.aiw.cvrg.eureka.common.entity.SourceConfigEntity;
 public interface EtlGroupDao extends Dao<EtlGroup, Long> {
 	EtlGroup getByName(String name);
 	
-	ResolvedPermissions resolveSourceConfigPermissions(EtlUserEntity etlUser, SourceConfigEntity entity);
+	ResolvedPermissions resolveSourceConfigPermissions(AuthorizedUserEntity etlUser, SourceConfigEntity entity);
 	
-	ResolvedPermissions resolveDestinationPermissions(EtlUserEntity etlUser, DestinationEntity entity);
+	ResolvedPermissions resolveDestinationPermissions(AuthorizedUserEntity etlUser, DestinationEntity entity);
 }

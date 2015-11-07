@@ -36,6 +36,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
@@ -60,8 +61,8 @@ public class PropositionDefinitionFinder implements AutoCloseable {
 	public PropositionDefinitionFinder(String configId,
 			EtlProperties etlProperties) throws PropositionFinderException {
 		this.etlProperties = etlProperties;
-		this.validateConfigDir(etlProperties.getSourceConfigDirectory());
 		try {
+			this.validateConfigDir(etlProperties.getSourceConfigDirectory());
 			LOGGER.debug("Creating new configurations, source factory, and knowledge source");
 			Configurations configurations
 					= new EurekaProtempaConfigurations(etlProperties);
@@ -69,7 +70,7 @@ public class PropositionDefinitionFinder implements AutoCloseable {
 			this.knowledgeSource = sf.newKnowledgeSourceInstance();
 			this.defaultProps = new HashSet<>(this.etlProperties.getDefaultSystemPropositions());
 			LOGGER.debug("Done: configurations, source factory, and knowledge source created");
-		} catch (ConfigurationsNotFoundException | BackendInitializationException | BackendNewInstanceException | ConfigurationsLoadException | InvalidConfigurationException | BackendProviderSpecLoaderException ex) {
+		} catch (IOException | ConfigurationsNotFoundException | BackendInitializationException | BackendNewInstanceException | ConfigurationsLoadException | InvalidConfigurationException | BackendProviderSpecLoaderException ex) {
 			throw new PropositionFinderException(ex);
 		}
 	}

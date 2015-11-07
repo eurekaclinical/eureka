@@ -24,7 +24,7 @@ import edu.emory.cci.aiw.cvrg.eureka.common.comm.FileSourceConfigOption;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.SourceConfig;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.SourceConfigOption;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.UriSourceConfigOption;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.EtlUserEntity;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.AuthorizedUserEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.SourceConfigEntity;
 import edu.emory.cci.aiw.cvrg.eureka.etl.config.EtlProperties;
 import edu.emory.cci.aiw.cvrg.eureka.etl.config.EurekaProtempaConfigurations;
@@ -32,6 +32,7 @@ import edu.emory.cci.aiw.cvrg.eureka.etl.dao.EtlGroupDao;
 import edu.emory.cci.aiw.cvrg.eureka.etl.dao.ResolvedPermissions;
 import edu.emory.cci.aiw.cvrg.eureka.etl.dsb.FileBackendPropertyValidator;
 import edu.emory.cci.aiw.cvrg.eureka.etl.dsb.UriBackendPropertyValidator;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import org.protempa.backend.Backend;
@@ -53,7 +54,7 @@ import org.slf4j.LoggerFactory;
  *
  * @author Andrew Post
  */
-public class SourceConfigsDTOExtractor extends ConfigsDTOExtractor<SourceConfig, SourceConfigEntity> {
+class SourceConfigsDTOExtractor extends ConfigsDTOExtractor<SourceConfig, SourceConfigEntity> {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(SourceConfigsDTOExtractor.class);
 
@@ -61,7 +62,7 @@ public class SourceConfigsDTOExtractor extends ConfigsDTOExtractor<SourceConfig,
 	private final EtlProperties etlProperties;
 	private final EurekaProtempaConfigurations configs;
 
-	public SourceConfigsDTOExtractor(EtlUserEntity user, EtlGroupDao inGroupDao, EtlProperties inEtlProperties) {
+	SourceConfigsDTOExtractor(AuthorizedUserEntity user, EtlGroupDao inGroupDao, EtlProperties inEtlProperties) throws IOException {
 		super(user);
 		this.groupDao = inGroupDao;
 		this.etlProperties = inEtlProperties;
@@ -111,7 +112,7 @@ public class SourceConfigsDTOExtractor extends ConfigsDTOExtractor<SourceConfig,
 	}
 
 	@Override
-	ResolvedPermissions resolvePermissions(EtlUserEntity owner, SourceConfigEntity entity) {
+	ResolvedPermissions resolvePermissions(AuthorizedUserEntity owner, SourceConfigEntity entity) {
 		return this.groupDao.resolveSourceConfigPermissions(owner, entity);
 	}
 

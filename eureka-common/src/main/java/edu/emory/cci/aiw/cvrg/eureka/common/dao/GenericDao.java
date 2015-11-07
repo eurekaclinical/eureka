@@ -34,17 +34,20 @@ import org.slf4j.LoggerFactory;
 
 import com.google.inject.Provider;
 import com.google.inject.persist.Transactional;
+import javax.persistence.NoResultException;
 import javax.persistence.criteria.Predicate;
 
 /**
  * Implements the {@link Dao} interface in a generic way.
+ *
  * @param <T> The type of the entity.
  * @param <PK> The type of the unique identifier for the entity.
  * @author hrathod
  */
 public class GenericDao<T, PK> implements Dao<T, PK> {
-	
+
 	public enum SqlComparator {
+
 		LESS_THAN_OR_EQUAL_TO,
 		LESS_THAN,
 		EQUAL_TO,
@@ -122,11 +125,11 @@ public class GenericDao<T, PK> implements Dao<T, PK> {
 
 	@Override
 	public List<T> getAll() {
-		DatabaseSupport dbSupport = 
-				new DatabaseSupport(getEntityManager());
+		DatabaseSupport dbSupport
+				= new DatabaseSupport(getEntityManager());
 		return dbSupport.getAll(this.entityClass);
 	}
-	
+
 	protected List<T> getListAsc(SingularAttribute<T, ?> attribute) {
 		EntityManager entityManager = this.getEntityManager();
 		CriteriaBuilder builder = entityManager.getCriteriaBuilder();
@@ -137,8 +140,9 @@ public class GenericDao<T, PK> implements Dao<T, PK> {
 	}
 
 	/**
-	 * Provides a convenient way for subclasses to implement simple queries
-	 * that compare an attribute of the entity to a target value.
+	 * Provides a convenient way for subclasses to implement simple queries that
+	 * compare an attribute of the entity to a target value.
+	 *
 	 * @param attribute The attribute of the entity to compare.
 	 * @param value The target value of the given attribute.
 	 * @param <Y> The type of the attribute and target value.
@@ -146,25 +150,28 @@ public class GenericDao<T, PK> implements Dao<T, PK> {
 	 */
 	protected <Y> T getUniqueByAttribute(SingularAttribute<T, Y> attribute,
 			Y value) {
-		return new DatabaseSupport(getEntityManager())
-				.getUniqueByAttribute(this.entityClass, attribute, value);
+		try {
+			return new DatabaseSupport(getEntityManager())
+					.getUniqueByAttribute(this.entityClass, attribute, value);
+		} catch (NoResultException ex) {
+			return null;
+		}
 	}
-	
-	protected <Y> List<T> getListByAttribute(SingularAttribute<T,
-		Y> attribute, Y value) {
+
+	protected <Y> List<T> getListByAttribute(SingularAttribute<T, Y> attribute, Y value) {
 		return new DatabaseSupport(getEntityManager())
 				.getListByAttribute(this.entityClass, attribute, value);
 	}
-	
+
 	protected <Y extends Number> List<T> getListByAttribute(
-			SingularAttribute<T,Y> attribute, 
-			SqlComparator comparator, 
+			SingularAttribute<T, Y> attribute,
+			SqlComparator comparator,
 			Y value) {
 		TypedQuery<T> query = this.createTypedQuery(
 				attribute, comparator, value);
 		return query.getResultList();
 	}
-	
+
 	private <Y extends Number> TypedQuery<T> createTypedQuery(
 			SingularAttribute<T, Y> attribute,
 			SqlComparator comparator, Y value) {
@@ -174,7 +181,7 @@ public class GenericDao<T, PK> implements Dao<T, PK> {
 		Root<T> root = criteriaQuery.from(this.entityClass);
 		Path<Y> path = root.get(attribute);
 		Predicate pred;
-		switch(comparator) {
+		switch (comparator) {
 			case LESS_THAN:
 				pred = builder.lt(path, value);
 				break;
@@ -194,27 +201,28 @@ public class GenericDao<T, PK> implements Dao<T, PK> {
 				pred = builder.gt(path, value);
 				break;
 			default:
-				throw new AssertionError("Invalid SQLComparator: " + 
-						comparator);
+				throw new AssertionError("Invalid SQLComparator: "
+						+ comparator);
 		}
 		return entityManager.createQuery(criteriaQuery.where(
 				builder.equal(path, value)));
 	}
 
 	/**
-	 * Get a list of entities whose path value is the same as the given
-	 * target value.  The path is provided by the QueryPathProvider, and is
-	 * followed through to get the resulting value.  That resulting value is
-	 * compared to the given target value in the query.
+	 * Get a list of entities whose path value is the same as the given target
+	 * value. The path is provided by the QueryPathProvider, and is followed
+	 * through to get the resulting value. That resulting value is compared to
+	 * the given target value in the query.
+	 *
 	 * @param provider Provides the path from the entity to the target
-	 *                 attribute/column.
+	 * attribute/column.
 	 * @param value The target value to compare with the resulting attribute
-	 *              value.
+	 * value.
 	 * @param <Y> The type of the target value and resulting attribute/column
-	 *           value.
+	 * value.
 	 * @return A list of entities that match the given criteria.
 	 */
-	protected <Y> List<T> getListByAttribute(QueryPathProvider<T,Y> provider, Y value) {
+	protected <Y> List<T> getListByAttribute(QueryPathProvider<T, Y> provider, Y value) {
 		EntityManager entityManager = this.getEntityManager();
 		CriteriaBuilder builder = entityManager.getCriteriaBuilder();
 		CriteriaQuery<T> criteriaQuery = builder.createQuery(this.entityClass);
@@ -238,15 +246,18 @@ public class GenericDao<T, PK> implements Dao<T, PK> {
 
 	/**
 	 * Provides an interface for the subclasses to easily perform queries
-	 * without having to deal with a lot of boiler-plate code.  The subclasses
+	 * without having to deal with a lot of boiler-plate code. The subclasses
 	 * can simply provide the path to a value and the target value using this
 	 * interface, and have this superclass perform the query.
+	 *
 	 * @param <E> The entity type.
 	 * @param <P> The target value and target column type.
 	 */
-	protected static interface QueryPathProvider<E,P> {
+	protected static interface QueryPathProvider<E, P> {
+
 		/**
 		 * Provides a path from the entity to the target attribute.
+		 *
 		 * @param root The query root, used to build the path.
 		 * @param builder The criteria builder for the query.
 		 * @return The path from the entity to the target attribute.

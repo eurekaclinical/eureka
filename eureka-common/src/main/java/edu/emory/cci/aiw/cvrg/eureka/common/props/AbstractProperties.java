@@ -28,7 +28,6 @@ import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
-import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.core.UriBuilder;
 
 import org.slf4j.Logger;

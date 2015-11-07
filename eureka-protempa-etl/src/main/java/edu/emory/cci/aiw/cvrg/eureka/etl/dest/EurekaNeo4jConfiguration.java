@@ -40,7 +40,7 @@ class EurekaNeo4jConfiguration implements Configuration {
 			new String[]{
 				"Patient", "PatientDetails", "Encounter", "LAB:LabTest", 
 				"ICD9:Diagnoses", "ICD9:Procedures", "MED:medications", 
-				"CPTCode", "VitalSign"
+				"CPTCode", "VitalSign", "NLST"
 			};
 		this.propertiesToIndex =
 			new IndexOnProperty[]{

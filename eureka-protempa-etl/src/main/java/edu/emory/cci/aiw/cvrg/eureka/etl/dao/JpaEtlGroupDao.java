@@ -23,14 +23,14 @@ package edu.emory.cci.aiw.cvrg.eureka.etl.dao;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import edu.emory.cci.aiw.cvrg.eureka.common.dao.GenericDao;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.AuthorizedUserEntity_;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.DestinationEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.DestinationEntity_;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.DestinationGroupMembership;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.DestinationGroupMembership_;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.EtlGroup;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.EtlGroup_;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.EtlUserEntity;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.EtlUserEntity_;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.AuthorizedUserEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.SourceConfigEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.SourceConfigEntity_;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.SourceConfigGroupMembership;
@@ -67,7 +67,7 @@ public class JpaEtlGroupDao extends GenericDao<EtlGroup, Long> implements EtlGro
 	
 	@Override
 	public ResolvedPermissions resolveSourceConfigPermissions(
-			EtlUserEntity etlUser, SourceConfigEntity entity) {
+			AuthorizedUserEntity etlUser, SourceConfigEntity entity) {
 		EntityManager entityManager = getEntityManager();
 		CriteriaBuilder cb = entityManager.getCriteriaBuilder();
 		CriteriaQuery<Tuple> q = 
@@ -78,11 +78,11 @@ public class JpaEtlGroupDao extends GenericDao<EtlGroup, Long> implements EtlGro
 						cb.greatest(groupMembership.get(SourceConfigGroupMembership_.groupRead)), 
 						cb.greatest(groupMembership.get(SourceConfigGroupMembership_.groupWrite)), 
 						cb.greatest(groupMembership.get(SourceConfigGroupMembership_.groupExecute))));
-		ListJoin<EtlGroup, EtlUserEntity> join = groupMembership.join(SourceConfigGroupMembership_.group).join(EtlGroup_.users);
+		ListJoin<EtlGroup, AuthorizedUserEntity> join = groupMembership.join(SourceConfigGroupMembership_.group).join(EtlGroup_.users);
 		q.where(
 				cb.and(
 						cb.equal(groupMembership.get(SourceConfigGroupMembership_.sourceConfig).get(SourceConfigEntity_.id), entity.getId()), 
-						cb.equal(join.get(EtlUserEntity_.id), etlUser.getId())
+						cb.equal(join.get(AuthorizedUserEntity_.id), etlUser.getId())
 				)
 		);
 		q.groupBy(groupMembership.get(SourceConfigGroupMembership_.sourceConfig).get(SourceConfigEntity_.id));
@@ -97,7 +97,7 @@ public class JpaEtlGroupDao extends GenericDao<EtlGroup, Long> implements EtlGro
 	
 	@Override
 	public ResolvedPermissions resolveDestinationPermissions(
-			EtlUserEntity etlUser, DestinationEntity entity) {
+			AuthorizedUserEntity etlUser, DestinationEntity entity) {
 		EntityManager entityManager = getEntityManager();
 		CriteriaBuilder cb = entityManager.getCriteriaBuilder();
 		CriteriaQuery<Tuple> q = 
@@ -108,11 +108,11 @@ public class JpaEtlGroupDao extends GenericDao<EtlGroup, Long> implements EtlGro
 						cb.greatest(groupMembership.get(DestinationGroupMembership_.groupRead)), 
 						cb.greatest(groupMembership.get(DestinationGroupMembership_.groupWrite)), 
 						cb.greatest(groupMembership.get(DestinationGroupMembership_.groupExecute))));
-		ListJoin<EtlGroup, EtlUserEntity> join = groupMembership.join(DestinationGroupMembership_.group).join(EtlGroup_.users);
+		ListJoin<EtlGroup, AuthorizedUserEntity> join = groupMembership.join(DestinationGroupMembership_.group).join(EtlGroup_.users);
 		q.where(
 				cb.and(
 						cb.equal(groupMembership.get(DestinationGroupMembership_.destination).get(DestinationEntity_.id), entity.getId()), 
-						cb.equal(join.get(EtlUserEntity_.id), etlUser.getId())
+						cb.equal(join.get(AuthorizedUserEntity_.id), etlUser.getId())
 						)
 		);
 		q.groupBy(groupMembership.get(DestinationGroupMembership_.destination).get(DestinationEntity_.id));

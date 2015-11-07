@@ -74,8 +74,8 @@ public abstract class AbstractResourceTest extends JerseyTest {
 		clientConfig.getFeatures().put(JSONConfiguration.FEATURE_POJO_MAPPING,
 				Boolean.TRUE);
 		clientConfig.getClasses().add(ObjectMapperProvider.class);
-		 ;
-		
+		;
+
 		Builder builder = (new WebAppDescriptor.Builder())
 				.contextListenerClass(getListener())
 				.filterClass(getFilter())
@@ -87,17 +87,19 @@ public abstract class AbstractResourceTest extends JerseyTest {
 	 * Runs any test set up code before the actual test is run. The data for the
 	 * test is created from this method.
 	 *
-	 * @throws Exception Thrown if there are errors while creating test
-	 * data, or propagating exception from super.setUp().
+	 * @throws Exception Thrown if there are errors while creating test data, or
+	 * propagating exception from super.setUp().
 	 */
 	@Override
 	public final void setUp() throws Exception {
 		super.setUp();
-		this.persistService = this.injector.getInstance(PersistService.class);
-		this.persistService.start();
+		PersistService persistService = this.injector.getInstance(PersistService.class);
+		persistService.start();
+		this.persistService = persistService;
 
-		this.dataProvider = this.injector.getInstance(this.getDataProvider());
-		this.dataProvider.setUp();
+		TestDataProvider dataProvider = this.injector.getInstance(this.getDataProvider());
+		dataProvider.setUp();
+		this.dataProvider = dataProvider;
 	}
 
 	/**
@@ -109,8 +111,12 @@ public abstract class AbstractResourceTest extends JerseyTest {
 	 */
 	@Override
 	public final void tearDown() throws Exception {
-		this.dataProvider.tearDown();
-		this.persistService.stop();
+		if (this.dataProvider != null) {
+			this.dataProvider.tearDown();
+		}
+		if (this.persistService != null) {
+			this.persistService.stop();
+		}
 		super.tearDown();
 	}
 
@@ -161,6 +167,5 @@ public abstract class AbstractResourceTest extends JerseyTest {
 		resource.addFilter(new HTTPBasicAuthFilter("test", "test"));
 		return resource;
 	}
-	
-	
+
 }
