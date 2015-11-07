@@ -15,7 +15,7 @@
 	<parent>
 		<groupId>edu.emory.cci.aiw.cvrg</groupId>
 		<artifactId>eureka</artifactId>
-		<version>2.0-Alpha-1</version>
+		<version>1.10-SNAPSHOT</version>
 	</parent>
 
 	<properties>
@@ -229,7 +229,7 @@
 						<configuration>
 							<driver>org.h2.Driver</driver>
 							<url>jdbc:h2:file:${project.build.directory}/eureka-db/eureka-ontology;INIT=ANALYZE</url>
-							<sqlCommand />
+							<sqlCommand></sqlCommand>
 						</configuration>
 					</execution>
 					<execution>
@@ -241,7 +241,7 @@
 						<configuration>
 							<driver>org.h2.Driver</driver>
 							<url>jdbc:h2:file:${project.build.directory}/eureka-db/i2b2-data-schema;INIT=RUNSCRIPT FROM '${project.build.directory}/eureka-config/sql/i2b2_data_tables_1_7_h2.sql'\;RUNSCRIPT FROM '${project.build.directory}/eureka-config/sql/mock_stored_procedures_h2.sql'</url>
-							<sqlCommand />
+							<sqlCommand></sqlCommand>
 						</configuration>
 					</execution>
 				</executions>
