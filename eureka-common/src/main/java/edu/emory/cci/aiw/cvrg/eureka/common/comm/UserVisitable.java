@@ -28,7 +28,7 @@ public interface UserVisitable {
 	/**
      * Performs some processing on a user entity.
      *
-     * @param visitor a {@link UserVisitor}.
+     * @param userVisitor a {@link UserVisitor}.
      */
 	void accept(UserVisitor userVisitor);
 }

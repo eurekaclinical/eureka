@@ -18,7 +18,7 @@ public interface AuthorizedUserDao extends Dao<AuthorizedUserEntity, Long> {
 	/**
 	 * Get a user object, given the user name.
 	 *
-	 * @param name The name of the user to retrieve.
+	 * @param username The name of the user to retrieve.
 	 * @return The user object that corresponds to the given user name.
 	 */
 	AuthorizedUserEntity getByUsername(String username);
