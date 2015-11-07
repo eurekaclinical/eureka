@@ -31,7 +31,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.ws.rs.core.UriBuilder;
 import java.io.IOException;
 import java.net.URI;
 import java.util.Scanner;
@@ -61,6 +60,8 @@ public class ProxyServlet extends HttpServlet {
 	/**
 	 * Reads a configuration parameter. By default it reads servlet init parameters but
 	 * it can be overridden.
+	 * @param key the key.
+	 * @return the configuration parameter.
 	 */
 	protected String getConfigParam(String key) {
 		return getServletConfig().getInitParameter(key);
@@ -91,14 +92,14 @@ public class ProxyServlet extends HttpServlet {
 		while (scanner.hasNextLine()) {
 			stringBuilder.append(scanner.nextLine());
 		}
-		LOGGER.debug("json: " + stringBuilder.toString());
+		LOGGER.debug("json: {}", stringBuilder.toString());
 		StringBuilder uri = new StringBuilder(500);
 		uri.append(getTargetUri());
 		// Handle the path given to the servlet
 		if (servletRequest.getPathInfo() != null) {//ex: /my/path.html
 			uri.append(servletRequest.getPathInfo());
 		}
-		LOGGER.debug("uri: " + uri.toString());
+		LOGGER.debug("uri: {}", uri.toString());
 		try {
 			servicesClient.proxyPut(uri.toString(), stringBuilder.toString());
 		} catch (ClientException e) {
@@ -117,14 +118,14 @@ public class ProxyServlet extends HttpServlet {
 		while (scanner.hasNextLine()) {
 			stringBuilder.append(scanner.nextLine());
 		}
-		LOGGER.debug("json: " + stringBuilder.toString());
+		LOGGER.debug("json: {}", stringBuilder.toString());
 		StringBuilder uri = new StringBuilder(500);
 		uri.append(getTargetUri());
 		// Handle the path given to the servlet
 		if (servletRequest.getPathInfo() != null) {//ex: /my/path.html
 			uri.append(servletRequest.getPathInfo());
 		}
-		LOGGER.debug("uri: " + uri.toString());
+		LOGGER.debug("uri: {}", uri.toString());
 		try {
 			servicesClient.proxyPost(uri.toString(), stringBuilder.toString());
 		} catch (ClientException e) {
@@ -145,7 +146,7 @@ public class ProxyServlet extends HttpServlet {
 		if (servletRequest.getPathInfo() != null) {//ex: /my/path.html
 			uri.append(servletRequest.getPathInfo());
 		}
-		LOGGER.debug("uri: " + uri.toString());
+		LOGGER.debug("uri: {}", uri.toString());
 
 
 		try {
