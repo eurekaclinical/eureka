@@ -90,7 +90,7 @@ public class ETL {
 	}
 
 	void run(JobEntity job, PropositionDefinition[] inPropositionDefinitions,
-			String[] inPropIdsToShow, Filter filter, boolean appendData,
+			String[] inPropIdsToShow, Filter filter, boolean updateData,
 			Configuration prompts) throws EtlException {
 		assert inPropositionDefinitions != null :
 				"inPropositionDefinitions cannot be null";
@@ -103,7 +103,7 @@ public class ETL {
 							this.destinationDao, this.groupDao)
 					.getOne(job.getDestination().getName());
 			org.protempa.dest.Destination protempaDestination
-					= this.protempaDestFactory.getInstance(eurekaDestination.getId());
+					= this.protempaDestFactory.getInstance(eurekaDestination.getId(), updateData);
 
 			DefaultQueryBuilder q = new DefaultQueryBuilder();
 			q.setPropositionDefinitions(inPropositionDefinitions);
@@ -114,7 +114,7 @@ public class ETL {
 			}
 			q.setId(job.getId().toString());
 			q.setFilters(filter);
-			q.setQueryMode(appendData ? QueryMode.UPDATE : QueryMode.REPLACE);
+			q.setQueryMode(updateData ? QueryMode.UPDATE : QueryMode.REPLACE);
 			LOGGER.trace("Constructed Protempa query {}", q);
 
 			Query query = protempa.buildQuery(q);
