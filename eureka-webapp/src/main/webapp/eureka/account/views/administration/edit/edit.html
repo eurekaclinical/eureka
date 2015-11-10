@@ -1,0 +1,84 @@
+   <md-content flex="60" flex-gt-lg="66" flex-order="1" flex-order-gt-md="2" layout-padding>
+        <md-card>
+            <md-toolbar class="md-hue-1">
+                <div class="md-toolbar-tools">
+                    <h3>
+                        <span>Edit {{editAdmin.user.fullName}}</span>
+                    </h3>
+                </div>
+            </md-toolbar>
+            <md-card-content>
+                <form name="settingsForm">
+                  <div layout="row">
+                    <md-input-container flex="50">
+                        <label>First Name</label>
+                        <input name="firstName" ng-model="editAdmin.user.firstName" required>
+                    </md-input-container>
+                    <md-input-container flex="50">
+                        <label>Last Name</label>
+                        <input name="lastName" ng-model="editAdmin.user.lastName" required>
+                    </md-input-container>
+                  </div>
+
+                  <div layout="row">
+                    <md-input-container flex="33">
+                        <label>Organization</label>
+                        <input ng-model="editAdmin.user.organization">
+                    </md-input-container>
+                      <md-input-container flex="33">
+                          <label>Title</label>
+                          <input ng-model="editAdmin.user.title">
+                      </md-input-container>
+                      <md-input-container flex="33">
+                          <label>Department</label>
+                          <input ng-model="editAdmin.user.department">
+                      </md-input-container>
+                  </div>
+
+                   <div layout="row">
+                    <md-input-container flex="33">
+                        <label>Login Type</label>
+                        <input ng-model="editAdmin.user.loginType">
+                    </md-input-container>
+                      <md-input-container flex="33">
+                          <label>Type</label>
+                          <input ng-model="editAdmin.user.type">
+                      </md-input-container>
+                         <md-input-container flex="33">
+                          <label> Account Verified</label>
+                          <input ng-model="editAdmin.user.verified">
+                      </md-input-container>
+                  </div>
+                  <div layout="row">
+                    <md-input-container flex="33">
+                         <md-checkbox ng-model="editAdmin.role.superUser">
+                            Super User
+                        </md-checkbox>
+                    </md-input-container>
+                      <md-input-container flex="33">
+                              <md-checkbox ng-model="editAdmin.role.researcher" >
+                            Reasearcher
+                        </md-checkbox>
+                      </md-input-container>
+                      <md-input-container flex="33">
+                      <md-checkbox ng-model="editAdmin.role.admin" >
+                            Admin
+                        </md-checkbox>
+                      </md-input-container>
+                  </div>
+                  <div layout="row">
+                        <md-input-container flex="33">
+                   
+                          <md-checkbox ng-model="editAdmin.user.active">
+                          Active
+                        </md-checkbox>
+                      </md-input-container>
+                  </div>
+                </form>
+            </md-card-content>
+               <div class="md-actions md-padding" layout="row" layout-align="start center">
+                <md-button class="md-raised md-primary md-hue-1" ng-click="editAdmin.updateUser(editAdmin)" > Save </md-button>
+                <md-button class="md-raised md-hue-1" ui-sref="accountAdministration" > Cancel </md-button>
+            </div>
+        </md-card>
+    </md-content>

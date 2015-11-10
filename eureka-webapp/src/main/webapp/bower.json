@@ -1,0 +1,47 @@
+{
+  "name": "eureka",
+  "version": "1.8.2",
+  "authors": [
+    "Joel Kanzelmeyer <kanzelm3@gmail.com>"
+  ],
+  "description": "Eureka! Clinical Analytics",
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "angular": "~1.3",
+    "ui-router": "~0.2.15",
+    "angular-messages": "~1.3",
+    "tg-angular-validator": "~1.2.7",
+    "bootstrap": "~3.3",
+    "angular-ui-tree": "~2.9.0",
+    "font-awesome": "~4.4.0",
+    "lodash": "~3.10.1",
+    "angular-material": "~0.11.0",
+    "angular-material-data-table": "~0.8.11"
+  },
+  "resolutions": {
+    "angular": "~1.4",
+    "angular-material": "~0.11.0",
+    "lodash": "~3.10.1"
+  },
+  "overrides": {
+    "bootstrap": {
+      "main": [
+        "dist/css/bootstrap.css",
+        "dist/js/bootstrap.js"
+      ]
+    },
+    "font-awesome": {
+      "main": [
+        "css/font-awesome.css"
+      ]
+    }
+  }
+}

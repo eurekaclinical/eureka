@@ -97,11 +97,14 @@ public class DestinationToEtlDestinationVisitor extends AbstractDestinationVisit
 		etlDestination.setLinks(destination.getLinks());
 		etlDestination.setGetStatisticsSupported(destination.isGetStatisticsSupported());
 		List<String> requiredConcepts = destination.getRequiredConcepts();
-		List<String> requiredPropIds = new ArrayList<>(requiredConcepts.size());
-		for (String requiredConcept : requiredConcepts) {
-			requiredPropIds.add(this.conversionSupport.toPropositionId(requiredConcept));
+
+		if (requiredConcepts != null) {
+			List<String> requiredPropIds = new ArrayList<>(requiredConcepts.size());
+			for (String requiredConcept : requiredConcepts) {
+				requiredPropIds.add(this.conversionSupport.toPropositionId(requiredConcept));
+			}
+			etlDestination.setRequiredPropositionIds(requiredPropIds);
 		}
-		etlDestination.setRequiredPropositionIds(requiredPropIds);
 		etlDestination.setAllowingQueryPropositionIds(destination.isJobConceptListSupported());
 	}
 

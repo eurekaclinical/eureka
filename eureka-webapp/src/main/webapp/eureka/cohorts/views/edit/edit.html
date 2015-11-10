@@ -1,0 +1,195 @@
+<!--<h3>Cohort Editor</h3>-->
+<!--<p>-->
+    <!--Select the system and user-defined elements from the ontology that will define the patient cohort.-->
+<!--</p>-->
+<div layout="column" layout-gt-md="row" >
+    <!--<div class="col-xs-4">-->
+        <!--<ul class="nav nav-tabs">-->
+            <!--<li class = "active">-->
+                <!--<a href = "#systemElems" data-toggle="tab">System</a>-->
+            <!--</li>-->
+            <!--<li>-->
+                <!--<a href="#userElems" data-toggle="tab">User</a>-->
+            <!--</li>-->
+        <!--</ul>-->
+        <!--<div id="treeContent" class="tab-content proposition-tree">-->
+            <!--<div id="systemElems" class="tab-pane fade active in">-->
+                <!--<jstree-->
+                        <!--tree-url="protected/systemlist"-->
+                        <!--tree-search="protected/jstree3_searchsystemlist"-->
+                        <!--search-update-div="#searchUpdateDiv"-->
+                        <!--search-validation-modal="#searchValidationModal"-->
+                        <!--search-no-results-modal="#searchNoResultsModal"-->
+                        <!--tree-css-url="assets/css/jstree-themes/default/style.css"-->
+                        <!--/>-->
+                <!--<div id="searchUpdateDiv" class="searchUpdateMessage"></div>-->
+            <!--</div>-->
+            <!--<div id="userElems" class="tab-pane fade">-->
+                <!--<div id="userTree"></div>-->
+            <!--</div>-->
+        <!--</div>-->
+    <!--</div>-->
+
+    <md-content flex flex-order="2" flex-order-gt-md="1" layout-padding>
+        <cohort-members-tree member-list="newCohort.memberList"></cohort-members-tree>
+    </md-content>
+
+    <!--<div id="definitionContainer" class="col-xs-8">-->
+        <!--<form id="categorizationForm" class="vert-offset" role="form">-->
+            <!--<div class="form-group">-->
+                <!--<label for="patCohortDefName" class="control-label">Name</label>-->
+                <!--<input type="text" id="patCohortDefName" ng-model="editCohort.cohortDestination.name"-->
+                       <!--class="form-control"/>-->
+            <!--</div>-->
+            <!--<div class="form-group">-->
+                <!--<label for="patCohortDescription" class="control-label">Description</label>-->
+                <!--<textarea id="patCohortDescription" class="form-control" ng-model="editCohort.cohortDestination.description"></textarea>-->
+            <!--</div>-->
+            <!--<div class="form-group">-->
+                <!--<label for="patCohortDefinition" class="control-label">Members</label>-->
+                <!--<div id="patCohortDefinition"-->
+                     <!--class="jstree-drop tree-drop tree-drop-multiple"-->
+                     <!--title="Drop the system and/or user-defined data element members that define your patient cohort in here">-->
+
+                    <!--<ul class="sortable"-->
+                        <!--data-drop-type="multiple"-->
+                        <!--data-proptype="empty"-->
+                        <!--ng-repeat="phenotype in editCohort.cohortDestination.phenotypes"-->
+                        <!--phenotype-editor="phenotype"-->
+                            <!--/>-->
+
+                <!--</div>-->
+            <!--</div>-->
+            <!--<div class="form-group text-center vert-offset">-->
+                <!--<button id="savePropositionButton" type="button" class="btn btn-primary">Save</button>-->
+            <!--</div>-->
+        <!--</form>-->
+    <!--</div>-->
+
+    <md-content flex="60" flex-gt-lg="66" flex-order="1" flex-order-gt-md="2" layout-padding>
+        <md-card>
+            <md-card-content>
+                <h2 class="md-headline" style="margin-top: 0">Edit Cohort</h2>
+                <p>
+                    Select the system and user-defined elements from the ontology that will define the patient cohort.
+                </p>
+                <form name="userForm">
+                    <md-input-container flex>
+                        <label>Name</label>
+                        <input ng-model="newCohort.cohort.name">
+                    </md-input-container>
+                    <md-input-container flex>
+                        <label>Description</label>
+                        <textarea ng-model="newCohort.cohort.description" columns="1" md-maxlength="250"></textarea>
+                    </md-input-container>
+
+                    <cohort-members-drop-zone member-list="newCohort.memberList"></cohort-members-drop-zone>
+
+                </form>
+            </md-card-content>
+            <div class="md-actions md-padding" layout="row" layout-align="start center">
+                <md-button class="md-raised md-primary md-hue-1" ng-click="newCohort.submitCohortForm()"> Save </md-button>
+            </div>
+        </md-card>
+    </md-content>
+
+</div>
+<div id="deleteModal" class="modal fade" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 id="deleteModalLabel" class="modal-title">Delete Element</h4>
+            </div>
+            <div id="deleteContent" class="modal-body">
+            </div>
+            <div class="modal-footer">
+                <button id="deleteButton" type="button" class="btn btn-primary">Delete</button>
+                <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="replaceModal" class="modal fade" role="dialog" aria-labelledby="replaceModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 id="replaceModalLabel" class="modal-title">Replace Element</h4>
+            </div>
+            <div id="replaceContent" class="modal-body">
+            </div>
+            <div class="modal-footer">
+                <button id="replaceButton" type="button" class="btn btn-primary">Replace</button>
+                <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="errorModal" class="modal fade" role="dialog" aria-labelledby="errorModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 id="errorModalLabel" class="modal-title">Error</h4>
+            </div>
+            <div id="errorContent" class="modal-body">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="searchModal" class="modal fade" role="dialog" aria-labelledby="searchModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 id="searchModalLabel" class="modal-title">
+                    Broad Search Update
+                </h4>
+            </div>
+            <div id="searchContent" class="modal-body">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="searchValidationModal" class="modal fade" role="dialog" aria-labelledby="searchModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 id="searchModalLabel" class="modal-title">
+                    Search String Validation Failed
+                </h4>
+            </div>
+            <div id="searchContent" class="modal-body">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="searchNoResultsModal" class="modal fade" role="dialog" aria-labelledby="searchModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 id="searchModalLabel" class="modal-title">
+                    No Search Results
+                </h4>
+            </div>
+            <div id="searchContent" class="modal-body">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
