@@ -56,7 +56,7 @@ public class ServicesClient extends EurekaClient {
 	};
 	private static final GenericType<List<DataElement>> DataElementList
 			= new GenericType<List<DataElement>>() {
-			};
+	};
 	private static final GenericType<List<Role>> RoleList = new GenericType<List<Role>>() {
 	};
 	private static final GenericType<List<Job>> JobList = new GenericType<List<Job>>() {
@@ -71,13 +71,12 @@ public class ServicesClient extends EurekaClient {
 	};
 	private static final GenericType<List<CohortDestination>> CohortDestinationListType
 			= new GenericType<List<CohortDestination>>() {
-			};
+	};
 	private static final GenericType<List<I2B2Destination>> I2B2DestinationListType
 			= new GenericType<List<I2B2Destination>>() {
-			};
+	};
 	private static final GenericType<List<String>> SystemElementSearchResultsList = new GenericType<List<String>>() {
 	};
-
 
 
 	private final String servicesUrl;
@@ -104,27 +103,27 @@ public class ServicesClient extends EurekaClient {
 	}
 
 	public User getUserById(Long inUserId) throws ClientException {
-		final String path = "/api/protected/users/byid/" + inUserId;
+		final String path = "/api/protected/users/" + inUserId;
 		return doGet(path, User.class);
 	}
 
 	public void addUser(UserRequest inRequest) throws ClientException {
-		final String path = "/api/userrequest/new";
-		doPost(path, inRequest);
+		final String path = "/api/userrequests";
+		doPostCreate(path, inRequest);
 	}
 
 	public void resetPassword(String username) throws ClientException {
-		final String path = "/api/passwordresetrequest/" + username;
+		final String path = "/api/passwordreset/" + username;
 		doPost(path);
 	}
 
 	public void verifyUser(String inCode) throws ClientException {
-		final String path = "/api/userrequest/verify/" + inCode;
+		final String path = "/api/userrequests/verify/" + inCode;
 		doPut(path);
 	}
 
 	public void changePassword(String inOldPass, String inNewPass) throws ClientException {
-		final String path = "/api/protected/users/passwordchangerequest";
+		final String path = "/api/protected/users/passwordchange";
 		PasswordChangeRequest passwordChangeRequest
 				= new PasswordChangeRequest();
 		passwordChangeRequest.setOldPassword(inOldPass);
@@ -132,29 +131,29 @@ public class ServicesClient extends EurekaClient {
 		doPost(path, passwordChangeRequest);
 	}
 
-	public void updateUser(User inUser) throws ClientException {
-		final String path = "/api/protected/users";
+	public void updateUser(User inUser, Long userId) throws ClientException {
+		final String path = "/api/protected/users/" + userId;
 		doPut(path, inUser);
 	}
 
 	public List<Role> getRoles() throws ClientException {
-		final String path = "/api/protected/role/list";
+		final String path = "/api/protected/roles";
 		return doGet(path, RoleList);
 	}
 
 	public Role getRole(Long inRoleId) throws ClientException {
-		final String path = "/api/protected/role/" + inRoleId;
+		final String path = "/api/protected/roles/" + inRoleId;
 		return doGet(path, Role.class);
 	}
 
-	public Long submitJob(JobSpec inUpload) throws ClientException {
+	public URI submitJob(JobSpec inUpload) throws ClientException {
 		final String path = "/api/protected/jobs";
 		URI jobUrl = doPostCreate(path, inUpload);
-		return extractId(jobUrl);
+		return jobUrl;
 	}
 
 	public void upload(String fileName, String sourceId,
-			String fileTypeId, InputStream inputStream)
+					   String fileTypeId, InputStream inputStream)
 			throws ClientException {
 		String path = UriBuilder
 				.fromPath("/api/protected/file/upload/")
@@ -225,7 +224,7 @@ public class ServicesClient extends EurekaClient {
 
 	public void proxyPost(final String path, final String json)
 			throws ClientException {
-		doPost(path, json);
+		doPostCreate(path, json);
 	}
 
 	public void proxyDelete(final String path)
@@ -239,6 +238,16 @@ public class ServicesClient extends EurekaClient {
 		doPut(path, json);
 	}
 
+	public String proxyGet(final String path, MultivaluedMap queryParams)
+			throws ClientException {
+		if (queryParams == null) {
+			return doGet(path);
+		} else {
+			return doGet(path, queryParams);
+		}
+
+	}
+
 	public void updateUserElement(DataElement inDataElement) throws
 			ClientException {
 		final String path = "/api/protected/dataelement";
@@ -246,7 +255,7 @@ public class ServicesClient extends EurekaClient {
 	}
 
 	public List<DataElement> getUserElements(boolean summarized) throws ClientException {
-		final String path = "/api/protected/dataelement/";
+		final String path = "/api/protected/dataelement";
 		if (summarized) {
 			MultivaluedMap<String, String> queryParams = new MultivaluedMapImpl();
 			queryParams.add("summarize", "true");

@@ -25,6 +25,7 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriInfo;
 
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -42,12 +43,14 @@ import edu.emory.cci.aiw.cvrg.eureka.services.email.EmailException;
 import edu.emory.cci.aiw.cvrg.eureka.services.email.EmailSender;
 import edu.emory.cci.aiw.cvrg.eureka.services.util.UserRequestToUserEntityVisitor;
 
+import java.net.URI;
+
 /**
  * RESTful end-point for new user registration-related methods.
  *
  * @author hrathod
  */
-@Path("/userrequest")
+@Path("/userrequests")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public class UserRequestResource {
@@ -98,10 +101,9 @@ public class UserRequestResource {
 	 * @param userRequest Object containing all the information about the user
 	 * to add.
 	 */
-	@Path("/new")
 	@POST
-	public void addUser(@Context HttpServletRequest inRequest,
-			UserRequest userRequest) {
+	public Response addUser(
+			UserRequest userRequest, @Context UriInfo uriInfo) {
 		UserEntity user =
 				this.userDao.getByUsername(userRequest.getUsername());
 		if (user != null) {
@@ -130,6 +132,9 @@ public class UserRequestResource {
 			throw new HttpStatusException(
 					Response.Status.BAD_REQUEST, errorMsg);
 		}
+		UserEntity addedUser = this.userDao.getByUsername(userRequest.getUsername());
+		URI uri = uriInfo.getAbsolutePathBuilder().path(addedUser.getId().toString()).build();
+		return Response.created(uri).entity(user).build();
 	}
 
 	/**
