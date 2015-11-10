@@ -78,13 +78,8 @@ public abstract class EurekaClient extends AbstractClient {
 	}
 
 	protected String doGet(String path) throws ClientException {
-
-		ClientResponse response = getResourceWrapper().rewritten(path, HttpMethod.GET)
-				.accept(MediaType.APPLICATION_JSON)
-				.type(MediaType.APPLICATION_JSON)
-				.get(ClientResponse.class);
-		errorIfStatusNotEqualTo(response, ClientResponse.Status.OK);
-
+		ClientResponse response = doGetResponse(path);
+		
 		return response.getEntity(String.class);
 	}
 
@@ -116,7 +111,7 @@ public abstract class EurekaClient extends AbstractClient {
 		return response.getEntity(cls);
 	}
 	
-	protected ClientResponse doGet(String path) throws ClientException {
+	protected ClientResponse doGetResponse(String path) throws ClientException {
 		ClientResponse response = getResourceWrapper().rewritten(path, HttpMethod.GET)
 				.accept(MediaType.APPLICATION_JSON)
 				.type(MediaType.APPLICATION_JSON)
