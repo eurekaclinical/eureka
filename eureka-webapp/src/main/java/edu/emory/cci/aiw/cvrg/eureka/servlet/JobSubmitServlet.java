@@ -28,6 +28,7 @@ import java.text.SimpleDateFormat;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
+import java.net.URI;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -46,15 +47,19 @@ import com.google.inject.Inject;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.JobSpec;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ClientException;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ServicesClient;
+
 import java.io.PrintWriter;
+
 import org.apache.commons.io.FilenameUtils;
 import org.codehaus.jackson.map.ObjectMapper;
 
 public class JobSubmitServlet extends HttpServlet {
 	private static final ObjectMapper MAPPER = new ObjectMapper();
+
 	static {
 		MAPPER.setDateFormat(new SimpleDateFormat("MM/dd/yyyy"));
 	}
+
 	/**
 	 * Normal directory to save files to. TODO: set value
 	 */
@@ -169,7 +174,7 @@ public class JobSubmitServlet extends HttpServlet {
 		 */
 		List items = uploadHandler.parseRequest(request);
 		Properties fields = new Properties();
-		for (Iterator itr = items.iterator(); itr.hasNext();) {
+		for (Iterator itr = items.iterator(); itr.hasNext(); ) {
 			FileItem item = (FileItem) itr.next();
 			/*
 			 * Handle Form Fields.
@@ -181,7 +186,7 @@ public class JobSubmitServlet extends HttpServlet {
 
 		JobSpec jobSpec = MAPPER.readValue(fields.getProperty("jobSpec"), JobSpec.class);
 
-		for (Iterator itr = items.iterator(); itr.hasNext();) {
+		for (Iterator itr = items.iterator(); itr.hasNext(); ) {
 			FileItem item = (FileItem) itr.next();
 			if (!item.isFormField()) {
 				//Handle Uploaded files.
@@ -211,7 +216,9 @@ public class JobSubmitServlet extends HttpServlet {
 			}
 		}
 
-		Long jobId = this.servicesClient.submitJob(jobSpec);
+		URI uri = this.servicesClient.submitJob(jobSpec);
+		String uriStr = uri.toString();
+		Long jobId = Long.valueOf(uriStr.substring(uriStr.lastIndexOf("/") + 1));
 		log("Job " + jobId + " submitted for user " + principal.getName());
 		return jobId;
 	}

@@ -51,7 +51,7 @@ public class LoginServlet extends HttpServlet {
 		try {
 			User user = (User) req.getAttribute("user");
 			user.setLastLogin(new Date());
-			this.servicesClient.updateUser(user);
+			this.servicesClient.updateUser(user,user.getId());
 			resp.sendRedirect(req.getContextPath() + "/index.jsp");
 		} catch (ClientException e) {
 			Status responseStatus = e.getResponseStatus();

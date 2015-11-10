@@ -1,0 +1,200 @@
+<div layout="column" layout-gt-md="row" >
+
+  <md-content flex flex-order="2" flex-order-gt-md="1" layout-padding>
+    <cohort-members-tree member-list="newCohort.memberList"></cohort-members-tree>
+  </md-content>
+
+  <md-content flex="60" flex-gt-lg="66" flex-order="1" flex-order-gt-md="2" layout-padding>
+    <form name="userForm">
+      <md-card>
+        <md-card-content>
+          <h2 class="md-headline" style="margin-top: 0">New {{createPhenotype.type}} Phenotype</h2>
+          <p ng-bind="createPhenotype.description"></p>
+          <md-input-container flex>
+            <label>Name</label>
+            <input ng-model="createPhenotype.phenotype.name">
+          </md-input-container>
+          <md-input-container flex>
+            <label>Description</label>
+            <textarea ng-model="createPhenotype.phenotype.description" columns="1" md-maxlength="250"></textarea>
+          </md-input-container>
+        </md-card-content>
+        <md-toolbar class="md-primary md-hue-1">
+          <div class="md-toolbar-tools">
+            <h3 class="md-title">
+              <span>Main Data Element</span>
+            </h3>
+          </div>
+        </md-toolbar>
+        <md-card-content>
+          <cohort-members-drop-zone member-list="createPhenotype.memberList"></cohort-members-drop-zone>
+
+          <div layout layout-sm="column" layout-align="center center">
+            <md-checkbox ng-model="createPhenotype.duration.enabled" aria-label="Checkbox 1">
+              Duration
+            </md-checkbox>
+            <md-input-container flex>
+              <label>Min</label>
+              <input type="number" step="any" name="minDuration" ng-model="createPhenotype.duration.min" />
+            </md-input-container>
+            <md-input-container flex>
+              <label>Unit</label>
+              <md-select ng-model="createPhenotype.duration.minUnit">
+                <md-option ng-repeat="unit in createPhenotype.timeUnits" value="{{unit}}">
+                  {{unit}}
+                </md-option>
+              </md-select>
+            </md-input-container>
+            <div style="padding:20px"><b>to</b></div>
+            <md-input-container flex>
+              <label>Max</label>
+              <input type="number" step="any" name="maxDuration" ng-model="createPhenotype.duration.max" />
+            </md-input-container>
+            <md-input-container flex>
+              <label>Unit</label>
+              <md-select ng-model="createPhenotype.duration.maxUnit">
+                <md-option ng-repeat="unit in createPhenotype.timeUnits" value="{{unit}}">
+                  {{unit}}
+                </md-option>
+              </md-select>
+            </md-input-container>
+          </div>
+
+          <div layout layout-sm="column" layout-align="center center">
+            <md-checkbox ng-model="createPhenotype.property.enabled" aria-label="Checkbox 1">
+              Property Value
+            </md-checkbox>
+            <md-input-container flex>
+              <label>Property</label>
+              <md-select ng-model="createPhenotype.property.name">
+                <md-option ng-repeat="unit in createPhenotype.timeUnits" value="{{unit}}">
+                  {{unit}}
+                </md-option>
+              </md-select>
+            </md-input-container>
+            <md-input-container flex>
+              <label>Value</label>
+              <input type="number" step="any" name="propertyValue" ng-model="createPhenotype.property.value" />
+            </md-input-container>
+          </div>
+        </md-card-content>
+        <md-toolbar class="md-primary md-hue-1">
+          <div class="md-toolbar-tools">
+            <h3 class="md-title">
+              <span>Related Data Element 1</span>
+            </h3>
+          </div>
+        </md-toolbar>
+        <md-card-content>
+          <cohort-members-drop-zone member-list="createPhenotype.memberList"></cohort-members-drop-zone>
+
+          <div layout layout-sm="column" layout-align="center center">
+            <md-checkbox ng-model="createPhenotype.duration1.enabled" aria-label="Checkbox 1">
+              Duration
+            </md-checkbox>
+            <md-input-container flex>
+              <label>Min</label>
+              <input type="number" step="any" name="minDuration1" ng-model="createPhenotype.duration1.min" />
+            </md-input-container>
+            <md-input-container flex>
+              <label>Unit</label>
+              <md-select ng-model="createPhenotype.duration1.minUnit">
+                <md-option ng-repeat="unit in createPhenotype.timeUnits" value="{{unit}}">
+                  {{unit}}
+                </md-option>
+              </md-select>
+            </md-input-container>
+            <div style="padding:20px"><b>to</b></div>
+            <md-input-container flex>
+              <label>Max</label>
+              <input type="number" step="any" name="maxDuration" ng-model="createPhenotype.duration1.max" />
+            </md-input-container>
+            <md-input-container flex>
+              <label>Unit</label>
+              <md-select ng-model="createPhenotype.duration1.maxUnit">
+                <md-option ng-repeat="unit in createPhenotype.timeUnits" value="{{unit}}">
+                  {{unit}}
+                </md-option>
+              </md-select>
+            </md-input-container>
+          </div>
+
+          <div layout layout-sm="column" layout-align="center center">
+            <md-checkbox ng-model="createPhenotype.property1.enabled" aria-label="Checkbox 1">
+              Property Value
+            </md-checkbox>
+            <md-input-container flex>
+              <label>Property</label>
+              <md-select ng-model="createPhenotype.property1.name">
+                <md-option ng-repeat="unit in createPhenotype.timeUnits" value="{{unit}}">
+                  {{unit}}
+                </md-option>
+              </md-select>
+            </md-input-container>
+            <md-input-container flex>
+              <label>Value</label>
+              <input type="number" step="any" name="propertyValue1" ng-model="createPhenotype.property1.value" />
+            </md-input-container>
+          </div>
+
+          <div layout layout-sm="column" layout-align="center center">
+            <div style="padding:10px">
+              <b>Temporal Relationship</b>
+            </div>
+            <md-input-container flex>
+              <label>Order</label>
+              <md-select ng-model="createPhenotype.relationship.order">
+                <md-option ng-repeat="order in ['before', 'after']" value="{{order}}">
+                  {{order}}
+                </md-option>
+              </md-select>
+            </md-input-container>
+            <md-input-container flex>
+              <label>Element</label>
+              <md-select ng-model="createPhenotype.relationship.element">
+                <md-option ng-repeat="element in ['main element']" value="{{element}}">
+                  {{element}}
+                </md-option>
+              </md-select>
+            </md-input-container>
+          </div>
+
+          <div layout layout-sm="column" layout-align="center center">
+            <div style="padding:10px">
+              <b>by</b>
+            </div>
+            <md-input-container flex>
+              <label>Min</label>
+              <input type="number" step="any" name="minDuration1" ng-model="createPhenotype.duration1.min" />
+            </md-input-container>
+            <md-input-container flex>
+              <label>Unit</label>
+              <md-select ng-model="createPhenotype.duration1.minUnit">
+                <md-option ng-repeat="unit in createPhenotype.timeUnits" value="{{unit}}">
+                  {{unit}}
+                </md-option>
+              </md-select>
+            </md-input-container>
+            <div style="padding:20px"><b>to</b></div>
+            <md-input-container flex>
+              <label>Max</label>
+              <input type="number" step="any" name="maxDuration" ng-model="createPhenotype.duration1.max" />
+            </md-input-container>
+            <md-input-container flex>
+              <label>Unit</label>
+              <md-select ng-model="createPhenotype.duration1.maxUnit">
+                <md-option ng-repeat="unit in createPhenotype.timeUnits" value="{{unit}}">
+                  {{unit}}
+                </md-option>
+              </md-select>
+            </md-input-container>
+          </div>
+        </md-card-content>
+        <div class="md-actions md-padding" layout="row" layout-align="start center">
+          <md-button class="md-raised md-primary md-hue-1" ng-click="newCohort.submitCohortForm()"> Save </md-button>
+        </div>
+      </md-card>
+    </form>
+  </md-content>
+
+</div>

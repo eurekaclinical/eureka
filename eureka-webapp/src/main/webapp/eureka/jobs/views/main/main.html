@@ -1,0 +1,114 @@
+<div layout="column" layout-gt-md="row">
+	<md-content flex flex-order="2" flex-order-gt-md="1" layout-padding>
+	<cohort-members-tree member-list="newCohort.memberList"></cohort-members-tree>
+	</md-content>
+	<md-content flex="60" flex-gt-lg="66" flex-order="1" flex-order-gt-md="2" layout-padding>
+	<form name="userForm">
+		<md-card>
+		<md-toolbar class="md-primary md-hue-1">
+		<div class="md-toolbar-tools">
+			<h3 class="md-title">
+			<span>Submit Job</span>
+			</h3>
+		</div>
+		</md-toolbar>
+		<md-card-content>
+		</md-card-content>
+		<div class="md-toolbar-tools">
+			<h3 class="md-title">
+			<span>Data</span>
+			</h3>
+		</div>
+		<md-card-content>
+		<div layout layout-sm="column" layout-align="center center">
+			<md-input-container flex>
+			<label>Spreadsheet</label>
+			<md-select ng-model="createPhenotype.property.name">
+			<md-option ng-repeat="unit in createPhenotype.timeUnits" value="{{unit}}">
+			{{unit}}
+			</md-option>
+			</md-select>
+			</md-input-container>
+		</div>
+		</md-card-content>
+		<div class="md-toolbar-tools">
+			<h3 class="md-title">
+			<span>Action</span>
+			</h3>
+		</div>
+		<md-card-content>
+		<div layout layout-sm="column" layout-align="center center">
+			<md-input-container flex>
+			<label>Load into</label>
+			<md-select ng-model="createPhenotype.property.name">
+			<md-option ng-repeat="unit in createPhenotype.timeUnits" value="{{unit}}">
+			{{unit}}
+			</md-option>
+			</md-select>
+			</md-input-container>
+		</div>
+		<div layout layout-sm="column" layout-align="center center">
+			<md-input-container flex>
+			<label>Start</label>
+			<md-radio-group ng-model="data.group1">
+			<md-radio-button value="replace" aria-label="Label 1">Replace Data</md-radio-button>
+			<md-radio-button value="update"> Update Data </md-radio-button>
+			</md-radio-group>
+			</md-input-container>
+		</div>
+		</md-card-content>
+		<md-toolbar class="md-primary md-hue-1">
+		<div class="md-toolbar-tools">
+			<h3 class="md-title">
+			<span>Concepts</span>
+			</h3>
+		</div>
+		</md-toolbar>
+		<md-card-content>
+		<cohort-members-drop-zone member-list="createPhenotype.memberList"></cohort-members-drop-zone>
+		</md-card-content>
+		<md-toolbar class="md-primary md-hue-1">
+		<div class="md-toolbar-tools">
+			<h3 class="md-title">
+			<span>Date Range</span>
+			</h3>
+		</div>
+		</md-toolbar>
+		<md-card-content>
+		<cohort-members-drop-zone member-list="createPhenotype.memberList"></cohort-members-drop-zone>
+		<div layout layout-sm="column" layout-align="center center">
+			<md-input-container flex>
+			<label>Start</label>
+			<md-select ng-model="createPhenotype.property1.name">
+			<md-option ng-repeat="unit in createPhenotype.timeUnits" value="{{unit}}">
+			{{unit}}
+			</md-option>
+			</md-select>
+			</md-input-container>
+			<md-input-container flex>
+			<label>Has Earliest Date</label>
+			<input type="number" step="any" name="propertyValue1" ng-model="createPhenotype.property1.value" />
+			</md-input-container>
+		</div>
+		<div layout layout-sm="column" layout-align="center center">
+			<md-input-container flex>
+			<label>Start</label>
+			<md-select ng-model="createPhenotype.property1.name">
+			<md-option ng-repeat="unit in createPhenotype.timeUnits" value="{{unit}}">
+			{{unit}}
+			</md-option>
+			</md-select>
+			</md-input-container>
+			<md-input-container flex>
+			<label>Has Latest Date</label>
+			<input type="number" step="any" name="propertyValue1" ng-model="createPhenotype.property1.value" />
+			</md-input-container>
+		</div>
+		</md-card-content>
+		<div class="md-actions md-padding" layout="row" layout-align="start center">
+			<md-button class="md-raised md-primary md-hue-1" ng-click="newCohort.submitCohortForm()"> Save </md-button>
+		</div>
+		</md-card>
+	</form>
+	</md-content>
+</div>

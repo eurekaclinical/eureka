@@ -306,7 +306,7 @@ public class EtlClientImpl extends EurekaClient implements EtlClient {
 		String path = UriBuilder.fromPath("/api/protected/output/")
 				.segment(destinationId)
 				.build().toString();
-		return doGet(path);
+		return doGetResponse(path);
 	}
 
 	@Override

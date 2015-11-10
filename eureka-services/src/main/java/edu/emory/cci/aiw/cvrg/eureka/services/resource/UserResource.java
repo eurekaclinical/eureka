@@ -19,6 +19,7 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.services.resource;
 
+import java.net.URI;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -31,6 +32,7 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriInfo;
 
 import org.apache.commons.lang3.StringUtils;
 import org.jasig.cas.client.authentication.AttributePrincipal;
@@ -149,7 +151,7 @@ public class UserResource {
 	 * @return The user referenced by the identification number.
 	 */
 	@RolesAllowed({"researcher", "admin"})
-	@Path("/byid/{id}")
+	@Path("/{id}")
 	@GET
 	public User getUserById(@Context HttpServletRequest req,
 			@PathParam("id") Long inId) {
@@ -158,7 +160,7 @@ public class UserResource {
 			throw new HttpStatusException(Response.Status.NOT_FOUND);
 		}
 		if (!req.isUserInRole("admin") && !this.authenticationSupport.isSameUser(req, userEntity)) {
-			throw new HttpStatusException(Response.Status.NOT_FOUND);
+			throw new HttpStatusException(Response.Status.FORBIDDEN);
 		}
 		this.userDao.refresh(userEntity);
 		LOGGER.debug("Returning user for ID {}", inId);
@@ -200,7 +202,7 @@ public class UserResource {
 	 */
 	@RolesAllowed({"admin"})
 	@POST
-	public void addUser(final User user) {
+	public Response addUser(final User user, @Context UriInfo uriInfo) {
 		if (this.userDao.getByUsername(user.getUsername()) != null) {
 			throw new HttpStatusException(Response.Status.CONFLICT);
 		}
@@ -223,6 +225,9 @@ public class UserResource {
 			throw new HttpStatusException(
 					Response.Status.BAD_REQUEST, StringUtils.join(errors, ", "));
 		}
+		UserEntity addedUser = this.userDao.getByUsername(user.getUsername());
+		URI uri = uriInfo.getAbsolutePathBuilder().path(addedUser.getId().toString()).build();
+		return Response.created(uri).entity(user).build();
 	}
 
 	/**
@@ -236,7 +241,7 @@ public class UserResource {
 	 * hashed, or the passwords are mismatched.
 	 */
 	@RolesAllowed({"researcher", "admin"})
-	@Path("/passwordchangerequest")
+	@Path("/passwordchange")
 	@POST
 	public void changePassword(@Context HttpServletRequest request,
 			PasswordChangeRequest passwordChangeRequest) {
@@ -244,10 +249,10 @@ public class UserResource {
 		LocalUserEntity user = this.localUserDao.getByName(username);
 		if (user == null) {
 			LOGGER.error("User " + username + " not found");
-			throw new HttpStatusException(Response.Status.INTERNAL_SERVER_ERROR);
-		} else {
+			throw new HttpStatusException(Response.Status.NOT_FOUND);
+		} else
 			this.localUserDao.refresh(user);
-		}
+
 		String newPassword = passwordChangeRequest.getNewPassword();
 		String oldPasswordHash;
 		String newPasswordHash;
@@ -288,15 +293,17 @@ public class UserResource {
 	 * @return A "Created" response with a link to the user page if successful.
 	 */
 	@RolesAllowed({"researcher", "admin"})
+	@Path("/{id}")
 	@PUT
-	public Response putUser(@Context HttpServletRequest req, User inUser) {
+	public Response putUser(@Context HttpServletRequest req, User inUser,
+							@PathParam("id") Long inId) {
 		String username = req.getUserPrincipal().getName();
 		if (!req.isUserInRole("admin") && !username.equals(inUser.getUsername())) {
-			throw new HttpStatusException(Response.Status.BAD_REQUEST);
+			throw new HttpStatusException(Response.Status.FORBIDDEN);
 		}
 		LOGGER.debug("Received updated user: {}", inUser);
 		Response response;
-		UserEntity currentUser = this.userDao.retrieve(inUser.getId());
+		UserEntity currentUser = this.userDao.retrieve(inId);
 		boolean activation = (!currentUser.isActive()) && (inUser.isActive());
 		List<Role> updatedRoles = this.roleIdsToRoles(inUser.getRoles());
 
@@ -315,7 +322,9 @@ public class UserResource {
 					LOGGER.error(ee.getMessage(), ee);
 				}
 			}
-			response = Response.ok().build();
+			response = Response.ok().
+					entity(currentUser).
+					build();
 		} else {
 			response = Response.notModified(this.validationError).build();
 		}

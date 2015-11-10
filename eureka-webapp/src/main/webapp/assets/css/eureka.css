@@ -291,7 +291,7 @@ legend {
 }
 
 .container-big {
-	min-height: 500px;
+	min-height: calc(100vh - 130px);
 }
 
 .panel legend {
@@ -339,4 +339,63 @@ legend {
 
 #chooseAccountTypeHeading {
 	margin-bottom: 50px;
+}
+
+[ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
+  display: none !important;
+}
+
+.angular-ui-tree .angular-ui-tree-empty {
+	background: #FFFFFF;
+}
+
+.angular-ui-tree .node-disabled {
+	color: #e6e6e6;
+	text-decoration: line-through;
+}
+
+.member-tree-list > li {
+	padding: 5px 20px;
+}
+
+.member-tree-list > li:first-child {
+	padding-top: 20px;
+}
+
+.member-tree-list > li:last-child {
+	padding-bottom: 20px;
+}
+
+md-tabs {
+	background: #f6f6f6;
+}
+.md-button.md-icon-button > i {
+	margin: auto;
+	vertical-align: middle;
+}
+
+.material-icons.md-dark {
+	color: rgba(0, 0, 0, 0.54);
+}
+
+md-data-table-toolbar.alternate {
+	color: #1e88e5;
+	background-color: #e3f2fd;
+}
+md-data-table-toolbar > .md-button.md-icon-button:last-child {
+	margin-right: -12px;
+}
+md-data-table-toolbar > form {
+	margin-left: 16px;
+}
+
+md-data-table-toolbar > form > input {
+	width: 100%;
+	margin: 0;
+	border: none;
+	color: rgba(0, 0, 0, 0.87);
+}
+
+md-data-table-toolbar > form > input:focus {
+	outline: none;
 }
