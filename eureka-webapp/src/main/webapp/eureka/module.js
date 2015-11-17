@@ -46,7 +46,8 @@
         'eureka.register',
         'eureka.account',
         'eureka.help',
-        'eureka.jobs']);
+        'eureka.jobs',
+        'flow']);
 
     angular.module('eureka').run(eurekaRun);
     angular.module('eureka').config(eurekaConfig);
