@@ -49,11 +49,29 @@
 		</div>
 		<div layout layout-sm="column" layout-align="center center">
 			<md-input-container flex>
-			<label>Start</label>
+			<!--<label>Start</label>  -->
 			<md-radio-group ng-model="data.group1">
 			<md-radio-button value="replace" aria-label="Label 1">Replace Data</md-radio-button>
 			<md-radio-button value="update"> Update Data </md-radio-button>
 			</md-radio-group>
+			</md-input-container>
+		</div>
+		<div layout layout-sm="column" layout-align="center center">
+			<md-input-container flex>
+				<div flow-init="{target: '/upload'}"
+				     flow-files-submitted="$flow.upload()"
+				     flow-file-success="$file.msg = $message">
+
+				  <input type="file" flow-btn/>
+				
+				  <table>
+				    <tr ng-repeat="file in $flow.files">
+				        <td>{{$index+1}}</td>
+				        <td>{{file.name}}</td>
+				        <td>{{file.msg}}</td>
+				    </tr>
+				  </table>
+				</div>
 			</md-input-container>
 		</div>
 		</md-card-content>

@@ -25,7 +25,8 @@
     "lodash": "~3.10.1",
     "angular-material": "~0.11.0",
     "angular-material-data-table": "~0.8.11",
-    "angular-mocks": "~1.4.7"
+    "angular-mocks": "~1.4.7",
+    "ng-flow": "~2"
   },
   "resolutions": {
     "angular": "~1.4",
