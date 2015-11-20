@@ -21,6 +21,11 @@
 				<exclude>**/nbactions.xml</exclude>
 				<exclude>**/nb-configuration.xml</exclude>
 				<exclude>**/.DS_Store</exclude>
+				<exclude>src/main/webapp/node_modules/**</exclude>
+				<exclude>src/main/webapp/bower_components/**</exclude>
+				<exclude>src/main/webapp/build/**</exclude>
+				<exclude>src/main/webapp/dist/**</exclude>
+				<exclude>src/main/webapp/npm-debug.log</exclude>
 			</excludes>
 		</fileSet>
 	</fileSets>
