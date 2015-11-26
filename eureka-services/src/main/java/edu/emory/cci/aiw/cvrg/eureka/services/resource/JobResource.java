@@ -141,16 +141,18 @@ public class JobResource {
 				LOGGER.trace("PropDef: {}", pd);
 			}
 		}
-		
+
 		jobRequest.setJobSpec(jobSpec);
 		jobRequest.setUserPropositions(collector.getUserPropDefs());
 		List<String> conceptIds = jobSpec.getPropositionIds();
-		List<String> propIds = new ArrayList<>(conceptIds.size());
-		for (String conceptId : conceptIds) {
-			propIds.add(this.conversionSupport.toPropositionId(conceptId));
+		List<String> propIds = new ArrayList<>(conceptIds != null ? conceptIds.size() : 0);
+		if (conceptIds != null) {
+			for (String conceptId : conceptIds) {
+				propIds.add(this.conversionSupport.toPropositionId(conceptId));
+			}
 		}
 		jobRequest.setPropositionIdsToShow(propIds);
-		
+
 		Long jobId;
 		try {
 			jobId = this.etlClient.submitJob(jobRequest);

@@ -801,7 +801,7 @@ public final class EurekaDataSourceBackend extends RelationalDbDataSourceBackend
 		try {
 			SQLExecutor.executeSQL(getConnectionSpecInstance(), "DROP ALL OBJECTS", null);
 		} catch (SQLException | InvalidConnectionSpecArguments ex) {
-			exceptionToThrow = new DataSourceBackendCloseException("Error in data source backend " + nameForErrors() + ": could not drop the database", ex);
+			exceptionToThrow = new BackendCloseException("Error in data source backend " + nameForErrors() + ": could not drop the database", ex);
 		}
 		if (dataProviders != null) {
 			for (XlsxDataProvider dataProvider : dataProviders) {
@@ -809,7 +809,7 @@ public final class EurekaDataSourceBackend extends RelationalDbDataSourceBackend
 					dataProvider.close();
 				} catch (IOException ex) {
 					if (exceptionToThrow == null) {
-						exceptionToThrow = new DataSourceBackendCloseException("Error in data source backend " + nameForErrors() + ": could not close Excel spreadsheet " + dataProvider.getDataFile().getName(), ex);
+						exceptionToThrow = new BackendCloseException("Error in data source backend " + nameForErrors() + ": could not close Excel spreadsheet " + dataProvider.getDataFile().getName(), ex);
 					}
 				}
 			}
