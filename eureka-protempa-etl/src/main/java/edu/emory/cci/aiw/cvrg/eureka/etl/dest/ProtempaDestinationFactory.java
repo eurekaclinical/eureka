@@ -71,7 +71,7 @@ public class ProtempaDestinationFactory {
 			} else if (dest instanceof CohortDestinationEntity) {
 				CohortEntity cohortEntity = ((CohortDestinationEntity) dest).getCohort();
 				Cohort cohort = cohortEntity.toCohort();
-				result = new KeyLoaderDestination(new CohortCriteria(cohort));
+				result = new KeyLoaderDestination(dest.getName(), new CohortCriteria(cohort));
 			} else if (dest instanceof Neo4jDestinationEntity) {
 				result = new Neo4jDestination(new EurekaNeo4jConfiguration((Neo4jDestinationEntity) dest));
 			} else if (dest instanceof PatientSetExtractorDestinationEntity) {
