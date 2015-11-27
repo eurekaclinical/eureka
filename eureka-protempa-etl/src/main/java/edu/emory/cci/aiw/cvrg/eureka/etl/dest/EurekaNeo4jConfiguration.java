@@ -49,6 +49,11 @@ class EurekaNeo4jConfiguration implements Configuration {
 	}
 
 	@Override
+	public String getName() {
+		return this.destination.getName();
+	}
+
+	@Override
 	public String[] getPropositionIds() {
 		return this.propIds.clone();
 	}
