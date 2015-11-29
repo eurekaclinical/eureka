@@ -48,7 +48,7 @@
 		<commons-io-version>2.4</commons-io-version>
 		<commons-fileupload-version>1.3</commons-fileupload-version>
 		<commons-lang-version>3.3.2</commons-lang-version>
-		<eureka-version>${project.version}</eureka-version>
+		<eureka-version>2.0-Alpha-2</eureka-version>
 		<protempa-version>3.0-Alpha-3</protempa-version>
 		<aiw-i2b2-etl-version>2.0-Alpha-4</aiw-i2b2-etl-version>
 		<aiw-neo4j-etl-version>1.0-Alpha-2</aiw-neo4j-etl-version>
