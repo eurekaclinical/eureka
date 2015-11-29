@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>edu.emory.cci.aiw.cvrg</groupId>
 	<artifactId>eureka</artifactId>
-	<version>2.0-Alpha-2-SNAPSHOT</version>
+	<version>2.0-Alpha-2</version>
 	<packaging>pom</packaging>
 	<name>Eureka! Clinical Analytics</name>
 	<description>Eureka! Clinical Analytics is a web application that
@@ -79,7 +79,7 @@
 
 	<scm>
 		<developerConnection>scm:git:https://github.com/eurekaclinical/eureka.git</developerConnection>
-		<tag>eureka-2.0-Alpha-1</tag>
+		<tag>eureka-2.0-Alpha-2</tag>
 	</scm>
 
 	<issueManagement>
