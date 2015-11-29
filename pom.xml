@@ -48,7 +48,7 @@
 		<commons-io-version>2.4</commons-io-version>
 		<commons-fileupload-version>1.3</commons-fileupload-version>
 		<commons-lang-version>3.3.2</commons-lang-version>
-		<eureka-version>2.0-Alpha-2-SNAPSHOT</eureka-version>
+		<eureka-version>${project-version}</eureka-version>
 		<protempa-version>3.0-Alpha-3</protempa-version>
 		<aiw-i2b2-etl-version>2.0-Alpha-4</aiw-i2b2-etl-version>
 		<aiw-neo4j-etl-version>1.0-Alpha-2</aiw-neo4j-etl-version>
@@ -647,21 +647,21 @@
 						<webapp>
 							<groupId>edu.emory.cci.aiw.cvrg</groupId>
 							<artifactId>eureka-webapp</artifactId>
-							<version>${eureka-version}</version>
+							<version>${project.version}</version>
 							<type>war</type>
 							<asWebapp>true</asWebapp>
 						</webapp>
 						<webapp>
 							<groupId>edu.emory.cci.aiw.cvrg</groupId>
 							<artifactId>eureka-services</artifactId>
-							<version>${eureka-version}</version>
+							<version>${project.version}</version>
 							<type>war</type>
 							<asWebapp>true</asWebapp>
 						</webapp>
 						<webapp>
 							<groupId>edu.emory.cci.aiw.cvrg</groupId>
 							<artifactId>eureka-protempa-etl</artifactId>
-							<version>${eureka-version}</version>
+							<version>${project.version}</version>
 							<type>war</type>
 							<asWebapp>true</asWebapp>
 						</webapp>
@@ -842,12 +842,12 @@
 			<dependency>
 				<groupId>edu.emory.cci.aiw.cvrg</groupId>
 				<artifactId>eureka-common</artifactId>
-				<version>${eureka-version}</version>
+				<version>${project.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>edu.emory.cci.aiw.cvrg</groupId>
 				<artifactId>eureka-common</artifactId>
-				<version>${eureka-version}</version>
+				<version>${project.version}</version>
 				<scope>test</scope>
 				<type>test-jar</type>
 			</dependency>
@@ -855,19 +855,19 @@
 				<groupId>edu.emory.cci.aiw.cvrg</groupId>
 				<artifactId>eureka-services</artifactId>
 				<type>war</type>
-				<version>${eureka-version}</version>
+				<version>${project.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>edu.emory.cci.aiw.cvrg</groupId>
 				<artifactId>eureka-webapp</artifactId>
 				<type>war</type>
-				<version>${eureka-version}</version>
+				<version>${project.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>edu.emory.cci.aiw.cvrg</groupId>
 				<artifactId>eureka-protempa-etl</artifactId>
 				<type>war</type>
-				<version>${eureka-version}</version>
+				<version>${project.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>org.protempa</groupId>
