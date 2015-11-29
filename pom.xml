@@ -647,21 +647,21 @@
 						<webapp>
 							<groupId>edu.emory.cci.aiw.cvrg</groupId>
 							<artifactId>eureka-webapp</artifactId>
-							<version>${eureka-version}</version>
+							<version>${project.version}</version>
 							<type>war</type>
 							<asWebapp>true</asWebapp>
 						</webapp>
 						<webapp>
 							<groupId>edu.emory.cci.aiw.cvrg</groupId>
 							<artifactId>eureka-services</artifactId>
-							<version>${eureka-version}</version>
+							<version>${project.version}</version>
 							<type>war</type>
 							<asWebapp>true</asWebapp>
 						</webapp>
 						<webapp>
 							<groupId>edu.emory.cci.aiw.cvrg</groupId>
 							<artifactId>eureka-protempa-etl</artifactId>
-							<version>${eureka-version}</version>
+							<version>${project.version}</version>
 							<type>war</type>
 							<asWebapp>true</asWebapp>
 						</webapp>
@@ -842,12 +842,12 @@
 			<dependency>
 				<groupId>edu.emory.cci.aiw.cvrg</groupId>
 				<artifactId>eureka-common</artifactId>
-				<version>${eureka-version}</version>
+				<version>${project.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>edu.emory.cci.aiw.cvrg</groupId>
 				<artifactId>eureka-common</artifactId>
-				<version>${eureka-version}</version>
+				<version>${project.version}</version>
 				<scope>test</scope>
 				<type>test-jar</type>
 			</dependency>
@@ -855,19 +855,19 @@
 				<groupId>edu.emory.cci.aiw.cvrg</groupId>
 				<artifactId>eureka-services</artifactId>
 				<type>war</type>
-				<version>${eureka-version}</version>
+				<version>${project.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>edu.emory.cci.aiw.cvrg</groupId>
 				<artifactId>eureka-webapp</artifactId>
 				<type>war</type>
-				<version>${eureka-version}</version>
+				<version>${project.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>edu.emory.cci.aiw.cvrg</groupId>
 				<artifactId>eureka-protempa-etl</artifactId>
 				<type>war</type>
-				<version>${eureka-version}</version>
+				<version>${project.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>org.protempa</groupId>
