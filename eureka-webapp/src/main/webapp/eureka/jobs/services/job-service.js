@@ -20,7 +20,9 @@
 
         let { dataEndpoint } = appProperties;
         return ({
-
+            fileUpload: fileUpload,
+            getJobs: getJobs,
+            getJob: getJob
         });
 
         function handleSuccess(response) {
@@ -31,6 +33,27 @@
                 return ($q.reject('An unknown error occurred.'));
             }
             return ($q.reject(response.data));
+        }
+
+        function fileUpload(sourceId) {
+
+            return $http['post'](dataEndpoint+'/file/upload' + sourceId)
+                .then(handleSuccess, handleError);
+
+        }
+
+        function getJobs() {
+
+            return $http['post'](dataEndpoint+'/jobs')
+                .then(handleSuccess, handleError);
+
+        }
+
+        function getJob(id) {
+
+            return $http['post'](dataEndpoint+'/job/' + id)
+                .then(handleSuccess, handleError);
+
         }
 
     }
