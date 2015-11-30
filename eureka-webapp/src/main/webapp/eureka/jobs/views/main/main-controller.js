@@ -25,5 +25,15 @@
         function success(cohorts) {
             vm.cohortsList = cohorts;
         }
+        /*
+        function getJobs(){
+
+        }
+
+        function uploadfile(){
+            
+        } */
+
+
     }
 })();
