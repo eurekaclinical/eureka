@@ -80,7 +80,7 @@
 
 	<scm>
 		<developerConnection>scm:git:https://github.com/eurekaclinical/eureka.git</developerConnection>
-		<tag>eureka-2.0-Alpha-3-branch</tag>
+		<tag>eureka-2.0-Alpha-4-branch</tag>
 	</scm>
 
 	<issueManagement>
