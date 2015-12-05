@@ -38,7 +38,7 @@ import javax.ws.rs.core.Response;
 /**
  * @author hrathod
  */
-@Path("/protected/timeunit")
+@Path("/protected/timeunits")
 @Produces(MediaType.APPLICATION_JSON)
 public class TimeUnitResource {
 
@@ -48,15 +48,8 @@ public class TimeUnitResource {
 	public TimeUnitResource (TimeUnitDao inTimeUnitDao) {
 		this.timeUnitDao = inTimeUnitDao;
 	}
-
-	@GET
-	@Path("/list")
-	public List<TimeUnit> getAll () {
-		return this.timeUnitDao.getAll();
-	}
 	
 	@GET
-	@Path("/listasc")
 	public List<TimeUnit> getAllAsc () {
 		return this.timeUnitDao.getAllAsc();
 	}
@@ -80,14 +73,5 @@ public class TimeUnitResource {
 		}
 		return result;
 	}
-	
-	@GET
-	@Path("/default")
-	public TimeUnit getDefault() {
-		TimeUnit result = this.timeUnitDao.getDefault();
-		if (result == null) {
-			throw new HttpStatusException(Response.Status.NOT_FOUND);
-		}
-		return result;
-	}
+
 }
