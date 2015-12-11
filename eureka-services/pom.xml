@@ -10,14 +10,10 @@
 	</description>
 
 	<parent>
-		<groupId>edu.emory.cci.aiw.cvrg</groupId>
+		<groupId>org.eurekaclinical</groupId>
 		<artifactId>eureka</artifactId>
 		<version>2.0-Alpha-2-SNAPSHOT</version>
 	</parent>
-
-	<properties>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-	</properties>
 
 	<build>
 		<finalName>eureka-services</finalName>
@@ -43,15 +39,18 @@
 				<artifactId>license-maven-plugin</artifactId>
 			</plugin>
 			<plugin>
+				<groupId>org.jasig.maven</groupId>
+				<artifactId>maven-notice-plugin</artifactId>
+				<configuration>
+					<noticeTemplate>../etc/NOTICE.template</noticeTemplate>
+					<licenseMapping>
+						<param>../etc/license-mappings.xml</param>
+					</licenseMapping>
+				</configuration>
+			</plugin>
+			<plugin>
 				<groupId>org.liquibase</groupId>
 				<artifactId>liquibase-maven-plugin</artifactId>
-				<dependencies>
-					<dependency>
-						<groupId>com.h2database</groupId>
-						<artifactId>h2</artifactId>
-						<version>${h2-version}</version>
-					</dependency>
-				</dependencies>
 				<executions>
 					<execution>
 						<id>liquibase-populate-services-db</id>
@@ -144,10 +143,6 @@
 			<artifactId>hibernate-entitymanager</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>com.h2database</groupId>
-			<artifactId>h2</artifactId>
-		</dependency>
-		<dependency>
 			<groupId>javax.servlet</groupId>
 			<artifactId>servlet-api</artifactId>
 		</dependency>
@@ -160,17 +155,18 @@
 			<artifactId>jaxb-impl</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>edu.emory.cci.aiw.cvrg</groupId>
+			<groupId>org.eurekaclinical</groupId>
 			<artifactId>eureka-common</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>edu.emory.cci.aiw.cvrg</groupId>
+			<groupId>org.eurekaclinical</groupId>
 			<artifactId>eureka-common</artifactId>
 			<type>test-jar</type>
 		</dependency>
 		<dependency>
 			<groupId>com.sun.mail</groupId>
 			<artifactId>javax.mail</artifactId>
+			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.freemarker</groupId>
@@ -186,12 +182,17 @@
 			<type>pom</type>
 		</dependency>
 		<dependency>
-			<groupId>org.protempa</groupId>
+			<groupId>org.eurekaclinical</groupId>
 			<artifactId>protempa-framework</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.jasig.cas.client</groupId>
 			<artifactId>cas-client-core</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.h2database</groupId>
+			<artifactId>h2</artifactId>
+			<scope>test</scope>
 		</dependency>
 	</dependencies>
 	<profiles>

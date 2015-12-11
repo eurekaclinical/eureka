@@ -13,49 +13,63 @@ See the License for the specific language governing permissions and
 limitations under the License.
 
 This project includes:
-  AntLR under BSD License
+  A Hibernate Core Module under GNU Lesser General Public License
+  AntLR Parser Generator under BSD License
   AOP alliance under Public Domain
+  Apache Commons CLI under Apache License, Version 2.0
+  Apache Commons Codec under Apache License, Version 2.0
+  Apache Commons Collections under Apache License, Version 2.0
+  Apache Commons DBCP under The Apache Software License, Version 2.0
+  Apache Commons Lang under Apache License, Version 2.0
+  Apache Commons Pool under The Apache Software License, Version 2.0
   Apache ServiceMix :: Bundles :: xstream under The Apache Software License, Version 2.0
   ASM Core under Apache License, Version 2.0
-  Code Generation Library under ASF 2.0
-  Commons CLI under The Apache Software License, Version 2.0
-  Commons Collections under The Apache Software License, Version 2.0
   Commons IO under The Apache Software License, Version 2.0
-  Commons Lang under The Apache Software License, Version 2.0
   Data Mapper for Jackson under The Apache Software License, Version 2.0
   dom4j under BSD License
   Drools :: Rete-OO Core under The Apache Software License, Version 2.0
-  Eureka Common under Apache License, Version 2.0
-  Eureka EAR under Apache License, Version 2.0
-  Eureka Protempa ETL under Apache License, Version 2.0
-  Eureka Services under Apache License, Version 2.0
-  Eureka WebApp under Apache License, Version 2.0
+  Eureka Common under Apache License, Version 2.0 or GNU General Public License, Version 3
+  Eureka EAR under Apache License, Version 2.0 or GNU General Public License, Version 3
+  Eureka Protempa ETL under Apache License, Version 2.0 or GNU General Public License, Version 3
+  Eureka Services under Apache License, Version 2.0 or GNU General Public License, Version 3
+  Eureka WebApp under Apache License, Version 2.0 or GNU General Public License, Version 3
+  fastinfoset under Apache License, Version 2.0
   Google Guice - Core Library under The Apache Software License, Version 2.0
   Google Guice - Extensions - Persist under The Apache Software License, Version 2.0
+  Google Guice - Extensions - Servlet under The Apache Software License, Version 2.0
   Hibernate Commons Annotations under GNU LESSER GENERAL PUBLIC LICENSE
-  Hibernate Core under GNU Lesser General Public License
-  Hibernate Entity Manager under GNU Lesser General Public License
   Hibernate JPA 2 Metamodel Generator under Apache License, Version 2.0
+  HttpClient under Apache License
+  istack common utility code runtime under CDDL 1.1 or GPL2 w/ CPE
   Jackson under The Apache Software License, Version 2.0
-  Java Transaction API under Commons Development and Distribution License, Version 1.0
-  JavaBeans Activation Framework (JAF) under Common Development and Distribution License (CDDL) v1.0
-  Javassist under LGPL 2.1
+  Jasig CAS Client for Java - Core under Apache License Version 2.0
+  Java Architecture for XML Binding under CDDL 1.1 or GPL2 w/ CPE
+  Java Transaction API under Common Development and Distribution License or GNU General Public License, Version 2 with the Classpath Exception
+  Javassist under MPL 1.1 or LGPL 2.1 or Apache License 2.0
   JavaUtil under Apache License, Version 2.0
   javax.inject under The Apache Software License, Version 2.0
   JAX-RS provider for JSON content type under The Apache Software License, Version 2.0 or GNU Lesser General Public License (LGPL), Version 2.1
-  JAXB API bundle for GlassFish V3 under CDDL 1.1 or GPL2 w/ CPE
-  JAXB RI under CDDL 1.1 or GPL2 w/ CPE
+  JAXB CORE under CDDL 1.1 or GPL2 w/ CPE
+  JAXB Reference Implementation under CDDL 1.1 or GPL2 w/ CPE
+  JBoss Logging 3 under GNU Lesser General Public License, version 2.1
   je under Sleepycat License
+  Jersey Apache HTTP Client under CDDL 1.1 or GPL2 w/ CPE
   jersey-client under CDDL 1.1 or GPL2 w/ CPE
   jersey-core under CDDL 1.1 or GPL2 w/ CPE
+  jersey-guice under CDDL 1.1 or GPL2 w/ CPE
   jersey-json under CDDL 1.1 or GPL2 w/ CPE
+  jersey-multipart under CDDL 1.1 or GPL2 w/ CPE
+  jersey-server under CDDL 1.1 or GPL2 w/ CPE
+  jersey-servlet under CDDL 1.1 or GPL2 w/ CPE
   Jettison under Apache License, Version 2.0
   JPA 2.0 API under Sun Binary Code License
+  jsr173_api under Commons Development and Distribution License, Version 1.0
   kXML 2 is a small XML pull parser based on the common XML pull API under BSD style or Public Domain
+  Logging under The Apache Software License, Version 2.0
+  MIME streaming extension under Dual license consisting of the CDDL v1.1 and GPL v2
   mvel under The Apache Software License, Version 2.0
   Protempa Framework under Apache License, Version 2.0
   SLF4J API Module under MIT License
   SLF4J JDK14 Binding under MIT License
-  Streaming API for XML under GNU General Public Library or COMMON DEVELOPMENT AND DISTRIBUTION LICENSE (CDDL) Version 1.0
   Xml Compatibility extensions for Jackson under The Apache Software License, Version 2.0 or GNU Lesser General Public License (LGPL), Version 2.1
 
