@@ -6,18 +6,14 @@
 	<packaging>jar</packaging>
 	<name>Eureka Common</name>
 	<description>Eureka Common is a library of shared functionality for the
-other modules of the Eureka! Clinical Analytics project.
+		other modules of the Eureka! Clinical Analytics project.
 	</description>
 
 	<parent>
-		<groupId>edu.emory.cci.aiw.cvrg</groupId>
+		<groupId>org.eurekaclinical</groupId>
 		<artifactId>eureka</artifactId>
 		<version>2.0-Alpha-4-SNAPSHOT</version>
 	</parent>
-
-	<properties>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-	</properties>
 
 	<build>
 		<finalName>eureka-common</finalName>
@@ -37,6 +33,13 @@ other modules of the Eureka! Clinical Analytics project.
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-jar-plugin</artifactId>
+				<executions>
+					<execution>
+						<goals>
+							<goal>test-jar</goal>
+						</goals>
+					</execution>
+				</executions>
 			</plugin>
 		</plugins>
 		<resources>
@@ -64,6 +67,7 @@ other modules of the Eureka! Clinical Analytics project.
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
+			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.slf4j</groupId>
@@ -110,7 +114,7 @@ other modules of the Eureka! Clinical Analytics project.
 			<artifactId>guice-persist</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>org.protempa</groupId>
+			<groupId>org.eurekaclinical</groupId>
 			<artifactId>protempa-framework</artifactId>
 		</dependency>
 		<dependency>
