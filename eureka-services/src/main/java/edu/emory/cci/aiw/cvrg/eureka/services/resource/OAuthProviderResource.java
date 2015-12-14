@@ -55,7 +55,7 @@ import edu.emory.cci.aiw.cvrg.eureka.services.dao.OAuthProviderDao;
 /**
  * @author Andrew Post
  */
-@Path("/protected/oauthprovider")
+@Path("/protected/oauthproviders")
 @Produces(MediaType.APPLICATION_JSON)
 public class OAuthProviderResource {
 
@@ -68,7 +68,6 @@ public class OAuthProviderResource {
 	}
 
 	@GET
-	@Path("/list")
 	public List<OAuthProvider> getAll () {
 		return this.oauthProviderDao.getAll();
 	}

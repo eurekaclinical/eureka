@@ -55,7 +55,7 @@ import edu.emory.cci.aiw.cvrg.eureka.services.dao.RelationOperatorDao;
 /**
  * @author hrathod
  */
-@Path("/protected/relationop")
+@Path("/protected/relationops")
 @Produces(MediaType.APPLICATION_JSON)
 public class RelationOperatorResource {
 
@@ -68,13 +68,6 @@ public class RelationOperatorResource {
 	}
 
 	@GET
-	@Path("/list")
-	public List<RelationOperator> getAll () {
-		return this.relationOperatorDao.getAll();
-	}
-	
-	@GET
-	@Path("/listasc")
 	public List<RelationOperator> getAllAsc () {
 		return this.relationOperatorDao.getAllAsc();
 	}
@@ -90,10 +83,5 @@ public class RelationOperatorResource {
 	public RelationOperator getByName (@PathParam("name") String inName) {
 		return this.relationOperatorDao.getByName(inName);
 	}
-	
-	@GET
-	@Path("/default")
-	public RelationOperator getDefault() {
-		return this.relationOperatorDao.getDefault();
-	}
+
 }

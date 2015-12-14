@@ -67,13 +67,6 @@ public class ValueComparatorResource {
 	}
 	
 	@GET
-	@Path("/list")
-	public List<ValueComparator> getAll () {
-		return this.valueCompDao.getAll();
-	}
-	
-	@GET
-	@Path("/listasc")
 	public List<ValueComparator> getAllAsc () {
 		return this.valueCompDao.getAllAsc();
 	}
