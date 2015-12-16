@@ -37,7 +37,7 @@ import javax.ws.rs.core.Response.Status;
  *
  * @author Andrew Post
  */
-@Path("/protected/authenticationmethod")
+@Path("/protected/authenticationmethods")
 @Produces(MediaType.APPLICATION_JSON)
 public class AuthenticationMethodResource {
 
@@ -50,7 +50,6 @@ public class AuthenticationMethodResource {
 	}
 
 	@GET
-	@Path("")
 	public List<AuthenticationMethod> getAll() {
 		List<AuthenticationMethodEntity> authenticationMethodEntities = this.authenticationMethodDao.getAll();
 		List<AuthenticationMethod> authenticationMethods = new ArrayList<>(authenticationMethodEntities.size());

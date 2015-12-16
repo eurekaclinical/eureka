@@ -339,70 +339,50 @@ public class ServicesClient extends EurekaClient {
 		}
 	}
 
-	public List<TimeUnit> getTimeUnits() throws ClientException {
-		final String path = "/api/protected/timeunit/list";
-		return doGet(path, TimeUnitList);
-	}
-
 	public List<TimeUnit> getTimeUnitsAsc() throws ClientException {
-		final String path = "/api/protected/timeunit/listasc";
+		final String path = "/api/protected/timeunits";
 		return doGet(path, TimeUnitList);
 	}
 
 	public TimeUnit getTimeUnit(Long inId) throws ClientException {
-		final String path = "/api/protected/timeunit/" + inId;
+		final String path = "/api/protected/timeunits/" + inId;
 		return doGet(path, TimeUnit.class);
 	}
 
 	public TimeUnit getTimeUnitByName(String inName) throws ClientException {
-		final String path = UriBuilder.fromPath("/api/protected/timeunit/byname/")
+		final String path = UriBuilder.fromPath("/api/protected/timeunits/byname/")
 				.segment(inName)
 				.build().toString();
 		return doGet(path, TimeUnit.class);
 	}
 
-	public TimeUnit getDefaultTimeUnit() throws ClientException {
-		String path = "/api/protected/timeunit/default";
-		return doGet(path, TimeUnit.class);
-	}
-
-	public List<RelationOperator> getRelationOperators() throws ClientException {
-		final String path = "/api/protected/relationop/list";
-		return doGet(path, RelationOperatorList);
-	}
-
 	public List<RelationOperator> getRelationOperatorsAsc() throws ClientException {
-		final String path = "/api/protected/relationop/listasc";
+		final String path = "/api/protected/relationops";
 		return doGet(path, RelationOperatorList);
 	}
 
 	public RelationOperator getRelationOperator(Long inId) throws ClientException {
-		final String path = "/api/protected/relationop/" + inId;
+		final String path = "/api/protected/relationops/" + inId;
 		return doGet(path, RelationOperator.class);
 	}
 
 	public RelationOperator getRelationOperatorByName(String inName) throws ClientException {
-		final String path = UriBuilder.fromPath("/api/protected/relationop/byname/")
+		final String path = UriBuilder.fromPath("/api/protected/relationops/byname/")
 				.segment(inName)
 				.build().toString();
 		return doGet(path, RelationOperator.class);
 	}
 
 	public OAuthProvider getOAuthProvider(Long inId) throws ClientException {
-		final String path = "/api/protected/oauthprovider/" + inId;
+		final String path = "/api/protected/oauthproviders/" + inId;
 		return doGet(path, OAuthProvider.class);
 	}
 
 	public OAuthProvider getOAuthProviderByName(String inName) throws ClientException {
-		final String path = UriBuilder.fromPath("/api/protected/oauthprovider/byname/")
+		final String path = UriBuilder.fromPath("/api/protected/oauthproviders/byname/")
 				.segment(inName)
 				.build().toString();
 		return doGet(path, OAuthProvider.class);
-	}
-
-	public RelationOperator getDefaultRelationOperator() throws ClientException {
-		String path = "/api/protected/relationop/default";
-		return doGet(path, RelationOperator.class);
 	}
 
 	public List<ThresholdsOperator> getThresholdsOperators() throws ClientException {
@@ -423,13 +403,8 @@ public class ServicesClient extends EurekaClient {
 		return doGet(path, ThresholdsOperator.class);
 	}
 
-	public List<ValueComparator> getValueComparators() throws ClientException {
-		final String path = "/api/protected/valuecomps/list";
-		return doGet(path, ValueComparatorList);
-	}
-
 	public List<ValueComparator> getValueComparatorsAsc() throws ClientException {
-		final String path = "/api/protected/valuecomps/listasc";
+		final String path = "/api/protected/valuecomps";
 		return doGet(path, ValueComparatorList);
 	}
 
@@ -446,13 +421,8 @@ public class ServicesClient extends EurekaClient {
 	}
 
 	public List<FrequencyType> getFrequencyTypesAsc() throws ClientException {
-		final String path = "/api/protected/frequencytype/listasc";
+		final String path = "/api/protected/frequencytypes";
 		return doGet(path, FrequencyTypeList);
-	}
-
-	public FrequencyType getDefaultFrequencyType() throws ClientException {
-		String path = "/api/protected/frequencytype/default";
-		return doGet(path, FrequencyType.class);
 	}
 
 	public List<SourceConfig> getSourceConfigs() throws ClientException {

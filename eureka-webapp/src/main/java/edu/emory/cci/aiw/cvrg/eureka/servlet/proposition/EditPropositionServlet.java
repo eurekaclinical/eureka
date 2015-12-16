@@ -62,9 +62,23 @@ public class EditPropositionServlet extends HttpServlet {
         DataElement.Type propType = this.getPropTypeFromParam(req.getParameter("type"));
 		try {
 			List<FrequencyType> freqTypes = this.servicesClient.getFrequencyTypesAsc();
-			FrequencyType defaultFreqType = this.servicesClient.getDefaultFrequencyType();
-			List<TimeUnit> timeUnits = this.servicesClient.getTimeUnitsAsc();
-			TimeUnit defaultTimeUnit = this.servicesClient.getDefaultTimeUnit();
+			//Find the default frequency
+			FrequencyType defaultFreqType = null;
+			for (FrequencyType freqType : freqTypes){
+    				if(freqType.isDefault()){
+        				defaultFreqType = freqType;
+        				break;
+    				}
+			}
+			List<TimeUnit> timeUnits = this.servicesClient.getTimeUnitsAsc();                     
+			//Find the default timeUnit
+			TimeUnit defaultTimeUnit = null;
+			for (TimeUnit timeUnit : timeUnits){
+    				if(timeUnit.isDefault()){
+        				defaultTimeUnit = timeUnit;
+        				break;
+    				}
+			}    
 			List<RelationOperator> relOps =
 					this.servicesClient.getRelationOperatorsAsc();
 			List<RelationOperator> sequentialRelOps =
@@ -83,8 +97,14 @@ public class EditPropositionServlet extends HttpServlet {
 								"Unexpected relation type: " + relOp);
 				}
 			}
-			RelationOperator defaultRelOp =
-					this.servicesClient.getDefaultRelationOperator();
+                        //Find the default relationOp
+			RelationOperator defaultRelOp = null;
+			for (RelationOperator relOp : relOps){
+				if(relOp.isDefault()){
+					defaultRelOp = relOp;
+					break;
+				}
+			}       		
 			List<ThresholdsOperator> thresholdOps = this.servicesClient
 					.getThresholdsOperators();
 
