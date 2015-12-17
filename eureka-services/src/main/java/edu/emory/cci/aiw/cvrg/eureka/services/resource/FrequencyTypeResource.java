@@ -36,7 +36,7 @@ import javax.ws.rs.core.Response;
 /**
  * @author hrathod
  */
-@Path("/protected/frequencytype")
+@Path("/protected/frequencytypes")
 @Produces(MediaType.APPLICATION_JSON)
 public class FrequencyTypeResource {
 
@@ -46,15 +46,8 @@ public class FrequencyTypeResource {
 	public FrequencyTypeResource (FrequencyTypeDao inFrequencyTypeDao) {
 		this.frequencyTypeDao = inFrequencyTypeDao;
 	}
-
-	@GET
-	@Path("/list")
-	public List<FrequencyType> getAll () {
-		return this.frequencyTypeDao.getAll();
-	}
 	
 	@GET
-	@Path("/listasc")
 	public List<FrequencyType> getAllAsc () {
 		return this.frequencyTypeDao.getAllAsc();
 	}
@@ -73,16 +66,6 @@ public class FrequencyTypeResource {
 	@Path("/byname/{name}")
 	public FrequencyType getByName(@PathParam("name") String inName) {
 		FrequencyType result = this.frequencyTypeDao.getByName(inName);
-		if (result == null) {
-			throw new HttpStatusException(Response.Status.NOT_FOUND);
-		}
-		return result;
-	}
-	
-	@GET
-	@Path("/default")
-	public FrequencyType getDefault() {
-		FrequencyType result = this.frequencyTypeDao.getDefault();
 		if (result == null) {
 			throw new HttpStatusException(Response.Status.NOT_FOUND);
 		}
