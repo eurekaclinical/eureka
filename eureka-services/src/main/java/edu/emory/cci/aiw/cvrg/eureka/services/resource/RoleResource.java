@@ -59,7 +59,7 @@ import javax.annotation.security.RolesAllowed;
  * @author hrathod
  *
  */
-@Path("/protected/role")
+@Path("/protected/roles")
 @RolesAllowed({"admin"})
 public class RoleResource {
 	/**
@@ -98,7 +98,6 @@ public class RoleResource {
 	 */
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	@Path("/list")
 	public List<Role> getRoles() {
 		return this.roleDao.getAll();
 	}

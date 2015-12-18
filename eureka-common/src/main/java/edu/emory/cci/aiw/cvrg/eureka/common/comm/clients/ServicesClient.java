@@ -158,12 +158,12 @@ public class ServicesClient extends EurekaClient {
 	}
 
 	public List<Role> getRoles() throws ClientException {
-		final String path = "/api/protected/role/list";
+		final String path = "/api/protected/roles";
 		return doGet(path, RoleList);
 	}
 
 	public Role getRole(Long inRoleId) throws ClientException {
-		final String path = "/api/protected/role/" + inRoleId;
+		final String path = "/api/protected/roles/" + inRoleId;
 		return doGet(path, Role.class);
 	}
 
