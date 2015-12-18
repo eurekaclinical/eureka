@@ -332,6 +332,7 @@
 			<column name="EXPIRED_AT" type="TIMESTAMP(6)"/>
 		</addColumn>
 	</changeSet>
+	<!-- Drops unique constraint -->
 	<changeSet author="arpost" id="1361552652236-16">
 		<addColumn tableName="DESTINATIONS">
 			<column name="TEMPNAME" type="VARCHAR(255)"/>
@@ -339,7 +340,7 @@
 	</changeSet>
 	<changeSet author="arpost" id="1361552652236-17">
 		<sql>
-			UPDATE DESTINATIONS D1 SET D1.TEMPNAME=(SELECT NAME FROM DESTINATIONS D2 WHERE D1.ID=D2.ID)
+			UPDATE DESTINATIONS SET TEMPNAME=NAME
 		</sql>
 	</changeSet>
 	<changeSet author="arpost" id="1361552652236-18">
@@ -353,7 +354,7 @@
 	</changeSet>
 	<changeSet author="arpost" id="1361552652236-21">
 		<sql>
-			UPDATE DESTINATIONS D1 SET D1.EFFECTIVE_AT=(SELECT CREATED_AT FROM DESTINATIONS D2 WHERE D1.ID=D2.ID)
+			UPDATE DESTINATIONS SET EFFECTIVE_AT=CREATED_AT
 		</sql>
 	</changeSet>
 	<changeSet author="arpost" id="1361552652236-22">
@@ -363,7 +364,7 @@
 	</changeSet>
 	<changeSet author="arpost" id="1361552652236-23">
 		<sql>
-			UPDATE JOBS J SET J.DESTINATION_ID=(SELECT ID FROM DESTINATIONS D WHERE D.NAME=J.DESTINATIONID)
+			UPDATE JOBS J SET DESTINATION_ID=(SELECT ID FROM DESTINATIONS D WHERE D.NAME=J.DESTINATIONID)
 		</sql>
 	</changeSet>
 	<changeSet author="arpost" id="1361552652236-24">
