@@ -111,6 +111,11 @@
 			<url>http://www.apache.org/licenses/LICENSE-2.0.html</url>
 			<distribution>manual</distribution>
 		</license>
+		<license>
+            <name>GNU General Public License, Version 3</name>
+            <url>http://www.gnu.org/licenses/gpl-3.0-standalone.html</url>
+            <distribution>manual</distribution>
+        </license>
 	</licenses>
 
 	<developers>
@@ -434,7 +439,8 @@
 					<artifactId>license-maven-plugin</artifactId>
 					<version>1.8</version>
 					<configuration>
-						<licenseName>apache_v2</licenseName>
+						<licenseName>apache2_gpl3</licenseName>
+						<licenseResolver>file:src/license</licenseResolver>
 						<roots>
 							<root>src/main</root>
 							<root>src/test/java/</root>
