@@ -344,28 +344,28 @@
 					</systemProperties>
 					<webapps>
 						<webapp>
-							<groupId>edu.emory.cci.aiw.cvrg</groupId>
+							<groupId>org.eurekaclinical</groupId>
 							<artifactId>eureka-webapp</artifactId>
 							<version>${project.version}</version>
 							<type>war</type>
 							<asWebapp>true</asWebapp>
 						</webapp>
 						<webapp>
-							<groupId>edu.emory.cci.aiw.cvrg</groupId>
+							<groupId>org.eurekaclinical</groupId>
 							<artifactId>eureka-services</artifactId>
 							<version>${project.version}</version>
 							<type>war</type>
 							<asWebapp>true</asWebapp>
 						</webapp>
 						<webapp>
-							<groupId>edu.emory.cci.aiw.cvrg</groupId>
+							<groupId>org.eurekaclinical</groupId>
 							<artifactId>eureka-protempa-etl</artifactId>
 							<version>${project.version}</version>
 							<type>war</type>
 							<asWebapp>true</asWebapp>
 						</webapp>
 						<webapp>
-							<groupId>edu.emory.cci.cas</groupId>
+							<groupId>org.eurekaclinical</groupId>
 							<artifactId>cas-server</artifactId>
 							<version>${cas-server-version}</version>
 							<type>war</type>
