@@ -18,7 +18,7 @@
 	<parent>
 		<groupId>org.eurekaclinical</groupId>
 		<artifactId>eurekaclinical-parent</artifactId>
-		<version>1-Alpha-8</version>
+		<version>1-Alpha-9-SNAPSHOT</version>
 	</parent>
 	
 	<scm>
@@ -46,7 +46,6 @@
 		<annotation-version>1.0</annotation-version>
 		<hibernate-version>4.2.7.SP1</hibernate-version>
 		<hibernate-persistence-version>1.0.1.Final</hibernate-persistence-version>
-		<servlet-api-version>2.5</servlet-api-version>
 		<slf4j-version>1.7.5</slf4j-version>
 		<poi-version>3.9</poi-version>
 		<jstl-version>1.2</jstl-version>
@@ -136,11 +135,6 @@
 					<groupId>org.codehaus.mojo</groupId>
 					<artifactId>versions-maven-plugin</artifactId>
 					<version>2.1</version>
-				</plugin>
-				<plugin>
-					<groupId>org.apache.tomcat.maven</groupId>
-					<artifactId>tomcat7-maven-plugin</artifactId>
-					<version>2.2</version>
 				</plugin>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
@@ -327,6 +321,19 @@
 			<plugin>
 				<groupId>org.apache.tomcat.maven</groupId>
 				<artifactId>tomcat7-maven-plugin</artifactId>
+				<dependencies>
+					<dependency>
+						<groupId>org.jasig.cas.client</groupId>
+						<artifactId>cas-client-core</artifactId>
+						<version>${cas-client-version}</version>
+					</dependency>
+					<dependency>
+						<groupId>commons-codec</groupId>
+						<artifactId>commons-codec</artifactId>
+						<version>${commons-codec-version}</version>
+						<scope>compile</scope>
+					</dependency>
+				</dependencies>
 				<configuration>
 					<warSourceDirectory>${project.build.directory}/${project.build.finalName}</warSourceDirectory>
 					<port>${tomcat.port}</port>
@@ -374,18 +381,6 @@
 					</webapps>
 					<addContextWarDependencies>true</addContextWarDependencies>
 					<addWarDependenciesInClassloader>true</addWarDependenciesInClassloader>
-					<extraDependencies>
-						<dependency>
-							<groupId>org.slf4j</groupId>
-							<artifactId>slf4j-api</artifactId>
-							<version>${slf4j-version}</version>
-						</dependency>
-						<dependency>
-							<groupId>org.slf4j</groupId>
-							<artifactId>slf4j-jdk14</artifactId>
-							<version>${slf4j-version}</version>
-						</dependency>
-					</extraDependencies>
 				</configuration>
 			</plugin>
 		</plugins>
@@ -449,12 +444,6 @@
 				<groupId>org.hibernate</groupId>
 				<artifactId>hibernate-entitymanager</artifactId>
 				<version>${hibernate-version}</version>
-			</dependency>
-			<dependency>
-				<groupId>javax.servlet</groupId>
-				<artifactId>servlet-api</artifactId>
-				<version>${servlet-api-version}</version>
-				<scope>provided</scope>
 			</dependency>
 			<dependency>
 				<groupId>org.slf4j</groupId>
