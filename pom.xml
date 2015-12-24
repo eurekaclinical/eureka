@@ -18,7 +18,7 @@
 	<parent>
 		<groupId>org.eurekaclinical</groupId>
 		<artifactId>eurekaclinical-parent</artifactId>
-		<version>1-Alpha-10</version>
+		<version>1-Alpha-11</version>
 	</parent>
 	
 	<scm>
