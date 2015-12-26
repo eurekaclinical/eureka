@@ -72,28 +72,25 @@
                         </a>
                     </li>
                     <li>
-                        <a href="/eureka-webapp/logout"
-                           class="dropdown-toggle" data-toggle="dropdown"
+                        <a class="dropdown-toggle" data-toggle="dropdown"
                            role="button" aria-expanded="false">
                             <span class="glyphicon glyphicon-user"></span>
                             {{user.getFullName()}} <span class="caret"></span>
                         </a>
                         <ul class="dropdown-menu" role="menu">
                             <li>
-                                <!--<a href="/eureka-webapp/protected/user_acct?action=list">  -->
                                 <a ui-sref="accountSettings">
                                     <span class="glyphicon glyphicon-user"></span>
                                     Account Settings
                                 </a>
                             </li>
                             <li ng-if="user.hasRole('admin')">
-                               <!-- <a href="/eureka-webapp/protected/admin?action=list">  -->
                                <a ui-sref="accountAdministration">
                                     <span class="glyphicon glyphicon-wrench"></span>
                                     Administration
                                 </a>
                             </li>
-                            <li><a href="/eureka-webapp/logout" class="idletimeout-logout">
+                            <li><a href="logout" class="idletimeout-logout">
                                 <span class="glyphicon glyphicon-log-out"></span>
                                 Logout
                             </a></li>
@@ -109,7 +106,7 @@
                         </a>
                     </li>
                     <li>
-                        <a href="/cas-server/login">
+                        <a href="protected/login">
                             <span class="glyphicon glyphicon-log-in"></span>
                             Login
                         </a>

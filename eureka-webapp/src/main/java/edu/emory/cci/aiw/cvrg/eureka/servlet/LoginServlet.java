@@ -72,7 +72,7 @@ public class LoginServlet extends HttpServlet {
 			User user = (User) req.getAttribute("user");
 			user.setLastLogin(new Date());
 			this.servicesClient.updateUser(user,user.getId());
-			resp.sendRedirect(req.getContextPath() + "/index.jsp");
+			resp.sendRedirect(req.getContextPath() + "/index.html");
 		} catch (ClientException e) {
 			Status responseStatus = e.getResponseStatus();
 			if (responseStatus == Status.FORBIDDEN) {
