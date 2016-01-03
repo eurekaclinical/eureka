@@ -92,9 +92,9 @@
 								<c:if test="${not empty proposition}">
 									<c:forEach var="child" items="${proposition.children}">
 										<li data-key="${child.dataElementKey}"
-											data-desc="${child.dataElementDisplayName}" data-type="${child.type}"
-											data-subtype="${child.type == 'CATEGORIZATION' ? child.categoricalType : ''}"
-											data-space="${proposition.inSystem ? 'system' : 'user'}">
+                                                                                    data-desc="${child.dataElementDisplayName}" data-type="${child.type}"
+                                                                                    data-subtype="${child.type == 'CATEGORIZATION' ? child.categoricalType : ''}"
+                                                                                    data-space="${proposition.inSystem ? 'system' : 'user'}">
 												<span class="glyphicon glyphicon-remove delete-icon"
 													  title="Remove this data element from the category"></span>
 											<span>${child.dataElementDisplayName} (${child.dataElementKey})</span>

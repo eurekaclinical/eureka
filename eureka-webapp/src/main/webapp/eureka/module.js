@@ -57,13 +57,12 @@
 
     function eurekaRun($rootScope, appProperties, users) {
        $rootScope.app = appProperties;
-       $rootScope.user = {
-           isActivated: false
-       };
+       $rootScope.userVerficationPerformed = false;
        $rootScope.conceptionYear = '2012';
        $rootScope.currentYear = new Date().getFullYear();
        users.getUser().then(function(user) {
            $rootScope.user = user;
+           $rootScope.userVerficationPerformed = true;
        });
     }
 

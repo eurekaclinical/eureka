@@ -6,9 +6,9 @@ window.eureka.editor = new function () {
 
 	var self = this;
 
-	self.propId = null;
 	self.propType = null;
 	self.propSubType = null;
+        self.propId = null;
 	self.droppedElements = {};
 
 	self.setup = function (propType, propSubType, propId, systemTreeElem, userTreeElem, containerElem, saveButtonElem, deleteButtonElem, listElem, treeCssUrl, searchModalElem,

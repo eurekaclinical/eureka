@@ -85,11 +85,11 @@
 							<ul class="sortable" data-drop-type="multiple" data-proptype="empty">
 								<c:forEach var="phenotype" items="${phenotypes}">
 									<li data-key="${phenotype.dataElementKey}"
-										data-desc="${phenotype.dataElementDisplayName}" data-type="${phenotype.type}"
-										data-subtype="${phenotype.type == 'CATEGORIZATION' ? phenotype.categoricalType : ''}"
-										>
-										<span class="glyphicon glyphicon-remove delete-icon"
-											  title="Remove this phenotype from the category"></span><span>${phenotype.dataElementDisplayName} (${phenotype.dataElementKey})</span>
+                                                                            data-desc="${phenotype.dataElementDisplayName}" data-type="${phenotype.type}"
+                                                                            data-subtype="${phenotype.type == 'CATEGORIZATION' ? phenotype.categoricalType : ''}"
+									>
+									<span class="glyphicon glyphicon-remove delete-icon"
+									      title="Remove this phenotype from the category"></span><span>${phenotype.dataElementDisplayName} (${phenotype.dataElementKey})</span>
 									</li>
 								</c:forEach>
 							</ul>
@@ -230,7 +230,7 @@
 		<script language="JavaScript"
 				src="${pageContext.request.contextPath}/assets/js/eureka.cohort${initParam['eureka-build-timestamp']}.js"></script>
 		<script language="JavaScript">
-			eureka.editor.setup(${destId != null ? destId : 'null'},
+			eureka.editor.setup('','', ${destId != null ? destId : 'null'},
 					'#systemTree', '#userTree', '#definitionContainer', '#savePropositionButton', 'span.delete-icon',
 					'ul.sortable', '${pageContext.request.contextPath}/assets/css/jstree-themes/default/style.css', '#searchModal',
 					'#searchValidationModal','#searchNoResultsModal','#searchUpdateDiv');
