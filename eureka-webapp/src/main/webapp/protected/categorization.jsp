@@ -95,9 +95,10 @@
                                                                                     data-desc="${child.dataElementDisplayName}" data-type="${child.type}"
                                                                                     data-subtype="${child.type == 'CATEGORIZATION' ? child.categoricalType : ''}"
                                                                                     data-space="${proposition.inSystem ? 'system' : 'user'}">
-												<span class="glyphicon glyphicon-remove delete-icon"
-													  title="Remove this data element from the category"></span>
-											<span>${child.dataElementDisplayName} (${child.dataElementKey})</span>
+                                                                                    <span class="glyphicon glyphicon-remove delete-icon"
+                                                                                          title="Remove this data element from the category">
+                                                                                    </span>
+                                                                                    <span>${child.dataElementDisplayName} (${child.dataElementKey})</span>
 										</li>
 									</c:forEach>
 								</c:if>

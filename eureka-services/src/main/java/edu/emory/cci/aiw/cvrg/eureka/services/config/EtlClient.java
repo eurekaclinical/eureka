@@ -72,7 +72,7 @@ public interface EtlClient {
 
 	List<EtlDestination> getDestinations() throws ClientException;
 	
-	void createDestination(EtlDestination etlDest) throws ClientException;
+	Long createDestination(EtlDestination etlDest) throws ClientException;
 
 	void updateDestination(EtlDestination etlDest) throws ClientException;
 	

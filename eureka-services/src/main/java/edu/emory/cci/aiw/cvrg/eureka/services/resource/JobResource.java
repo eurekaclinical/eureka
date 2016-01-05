@@ -183,8 +183,8 @@ public class JobResource {
 		return Response.created(URI.create("/" + jobId)).build();
 	}
 
-	@Path("/{jobId}")
 	@GET
+        @Path("/{jobId}")
 	@Produces({MediaType.APPLICATION_JSON})
 	public Job getJob(@PathParam("jobId") Long inJobId) {
 		try {
@@ -278,8 +278,9 @@ public class JobResource {
 	 * @param inFilter The filter to use when fetching the job statuses.
 	 * @return A {@link List} of {@link Job}s containing the status information.
 	 */
-	@Path("/status")
+	
 	@GET
+        @Path("/status")
 	@RolesAllowed({"admin"})
 	@Produces({MediaType.APPLICATION_JSON})
 	public List<Job> getStatus(@QueryParam("filter") JobFilter inFilter) {

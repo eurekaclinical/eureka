@@ -118,10 +118,11 @@
 						<ul data-type="main" data-drop-type="single" class="sortable">
 							<c:if test="${not empty proposition and propositionType == 'FREQUENCY'}">
 								<li data-key="${proposition.dataElement.dataElementKey}"
-									data-desc="${proposition.dataElement.dataElementDisplayName}"
-									data-space="${proposition.dataElement.inSystem ? 'system' : 'user'}">
-									<span class="glyphicon glyphicon-remove delete-icon"></span>
-									<span class="desc">${empty proposition.dataElement.dataElementDisplayName ? '' : proposition.dataElement.dataElementDisplayName} (${proposition.dataElement.dataElementKey})</span>
+                                                                    data-desc="${proposition.dataElement.dataElementDisplayName}"
+                                                                    data-space="${proposition.dataElement.inSystem ? 'system' : 'user'}">
+                                                                    <span class="glyphicon glyphicon-remove delete-icon">
+                                                                    </span>
+                                                                    <span class="desc">${empty proposition.dataElement.dataElementDisplayName ? '' : proposition.dataElement.dataElementDisplayName} (${proposition.dataElement.dataElementKey})</span>
 								</li>
 							</c:if>
 						</ul>

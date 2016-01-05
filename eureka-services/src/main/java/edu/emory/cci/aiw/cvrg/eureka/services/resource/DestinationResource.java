@@ -52,6 +52,7 @@ import edu.emory.cci.aiw.cvrg.eureka.services.conversion.ConversionSupport;
 import edu.emory.cci.aiw.cvrg.eureka.services.conversion.DestinationToEtlDestinationVisitor;
 import edu.emory.cci.aiw.cvrg.eureka.services.conversion.EtlDestinationToDestinationVisitor;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.UserDao;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.security.RolesAllowed;
@@ -67,7 +68,9 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
+import javax.ws.rs.core.UriInfo;
 
 /**
  * @author Andrew Post
@@ -90,17 +93,20 @@ public class DestinationResource {
 	}
 	
 	@POST
-	public void create(@Context HttpServletRequest request, Destination inDestination) {
+	public Response create(@Context HttpServletRequest request, Destination inDestination) {
 		UserEntity user = this.userDao.getByUsername(request.getRemoteUser());
 		DestinationToEtlDestinationVisitor v =
 				new DestinationToEtlDestinationVisitor(this.conversionSupport);
 		inDestination.accept(v);
 		EtlDestination etlDest = v.getEtlDestination();
+                Long destId;
 		try {
-			this.etlClient.createDestination(etlDest);
+			destId = this.etlClient.createDestination(etlDest);
 		} catch (ClientException ex) {
 			throw new HttpStatusException(Status.INTERNAL_SERVER_ERROR, ex);
 		}
+
+                return Response.created(URI.create("/" + destId)).build();
 	}
 	
 	@PUT

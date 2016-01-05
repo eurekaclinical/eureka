@@ -424,7 +424,7 @@ window.eureka.editor = new function () {
         
         self.collectDataElement = function (dataElementFromDropBox) {
 		var system = $(dataElementFromDropBox).data('space') === 'system'
-			|| $(dataElementFromDropBox).data('space') === 'SYSTEM';
+                          || $(dataElementFromDropBox).data('space') === 'SYSTEM';
 		var child = {
 			'dataElementKey': $(dataElementFromDropBox).data('key')
 		};
@@ -490,16 +490,13 @@ window.eureka.editor = new function () {
 
             $.ajax({
                 type: type,
-                //url: 'savecohort',
                 url: '/eureka-webapp/proxy-resource/destinations',
                 data: JSON.stringify(cohortDestination),
-                //data: JSON.stringify(postData),
-                success: function (data) {
-                    //window.location.href = '/protected/cohort_home'
-                    window.location.href = '#/cohort_home'
+                success: function (postData) {
+                    window.location.href = 'cohorthome'
                 },
-                error: function (data, statusCode, errorThrown) {
-                    var content = 'Error while saving ' + postData.displayName + '. ' + data.responseText + '. Status Code: ' + statusCode;
+                error: function (postData, statusCode, errorThrown) {
+                    var content = 'Error while saving ' + postData.displayName + '. ' + postData.responseText + '. Status Code: ' + statusCode;
                     $('#errorModal').find('#errorContent').html(content);
                     $('#errorModal').modal('show');
                     if (errorThrown != null) {
@@ -546,17 +543,17 @@ window.eureka.editor = new function () {
         var $memberDataElements = $(elem).find('ul.sortable').find('li');
         var childElements = self.collectDataElements($memberDataElements);
 
-        var categorization = {
+        var cohort = {
             'name': $('input#patCohortDefName').val(),
             'description': $('textarea#patCohortDescription').val(),
             'phenotypes': childElements
         }
 
         if (self.propId) {
-            categorization.id = self.propId;
+            cohort.id = self.propId;
         }
 
-        self.post(categorization);
+        self.post(cohort);
     };
 
     self.validateCohort = function (elem) {

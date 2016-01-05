@@ -144,7 +144,8 @@ public class JobResource {
 
 	@GET
 	@Path("/{jobId}")
-	public Job getJob(@Context HttpServletRequest request,
+	public Job getJob(
+                        @Context HttpServletRequest request,
 			@PathParam("jobId") Long inJobId) {
 		return getJobEntity(request, inJobId).toJob();
 	}
