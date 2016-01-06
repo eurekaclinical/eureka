@@ -56,7 +56,7 @@
 						<a href="#userElems" data-toggle="tab">User</a>
 					</li>
 				</ul>
-				<div id="treeContent" class="tab-content proposition-tree">
+				<div id="treeContent" class="tab-content phenotype-tree">
 					<div id="systemElems" class="tab-pane fade active in">
 						<div id="systemTree"></div>
 						<div id="searchUpdateDiv" class="searchUpdateMessage"></div>
@@ -82,14 +82,18 @@
 						<div id="patCohortDefinition"
 							 class="jstree-drop tree-drop tree-drop-multiple"
 							 title="Drop the system and/or user-defined data element members that define your patient cohort in here">
-							<ul class="sortable" data-drop-type="multiple" data-proptype="empty">
+							<div class="label-info text-center">
+								Drop Here
+							</div>
+                                                        <ul class="sortable" data-drop-type="multiple" data-proptype="empty">
 								<c:forEach var="phenotype" items="${phenotypes}">
 									<li data-key="${phenotype.dataElementKey}"
-										data-desc="${phenotype.dataElementDisplayName}" data-type="${phenotype.type}"
-										data-subtype="${phenotype.type == 'CATEGORIZATION' ? phenotype.categoricalType : ''}"
-										>
-										<span class="glyphicon glyphicon-remove delete-icon"
-											  title="Remove this phenotype from the category"></span><span>${phenotype.dataElementDisplayName} (${phenotype.dataElementKey})</span>
+                                                                            data-desc="${phenotype.dataElementDisplayName}" data-type="${phenotype.type}"
+                                                                            data-space="${proposition.inSystem ? 'system' : 'user'}">
+									<span class="glyphicon glyphicon-remove delete-icon"
+                                                                              title="Remove this phenotype from the category">         
+                                                                        </span>
+                                                                        <span>${phenotype.dataElementDisplayName} (${phenotype.dataElementKey})</span>
 									</li>
 								</c:forEach>
 							</ul>
@@ -120,7 +124,7 @@
 						</div>
 					</div>-->
 					<div class="form-group text-center vert-offset">
-						<button id="savePropositionButton" type="button" class="btn btn-primary">Save</button>
+						<button id="savePhenotypeButton" type="button" class="btn btn-primary">Save</button>
 					</div>
 				</form>
 			</div>
@@ -230,8 +234,8 @@
 		<script language="JavaScript"
 				src="${pageContext.request.contextPath}/assets/js/eureka.cohort${initParam['eureka-build-timestamp']}.js"></script>
 		<script language="JavaScript">
-			eureka.editor.setup(${destId != null ? destId : 'null'},
-					'#systemTree', '#userTree', '#definitionContainer', '#savePropositionButton', 'span.delete-icon',
+			eureka.editor.setup('','', ${destId != null ? destId : 'null'},
+					'#systemTree', '#userTree', '#definitionContainer', '#savePhenotypeButton', 'span.delete-icon',
 					'ul.sortable', '${pageContext.request.contextPath}/assets/css/jstree-themes/default/style.css', '#searchModal',
 					'#searchValidationModal','#searchNoResultsModal','#searchUpdateDiv');
 		</script>

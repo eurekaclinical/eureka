@@ -49,6 +49,7 @@ import edu.emory.cci.aiw.cvrg.eureka.etl.config.EtlProperties;
 import edu.emory.cci.aiw.cvrg.eureka.etl.dao.DestinationDao;
 import edu.emory.cci.aiw.cvrg.eureka.etl.dao.EtlGroupDao;
 import edu.emory.cci.aiw.cvrg.eureka.common.dao.AuthorizedUserDao;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.security.RolesAllowed;
@@ -64,6 +65,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
 @Path("/protected/destinations")
@@ -88,9 +90,11 @@ public class DestinationResource {
 	}
 	
 	@POST
-	public void create(@Context HttpServletRequest request, EtlDestination etlDestination) {
+	public Response create(@Context HttpServletRequest request, EtlDestination etlDestination) {
 		AuthorizedUserEntity user = this.authenticationSupport.getUser(request);
-		new Destinations(this.etlProperties, user, this.destinationDao, this.groupDao).create(etlDestination);
+		Destinations destinations = new Destinations(this.etlProperties, user, this.destinationDao, this.groupDao);
+                Long destId = destinations.create(etlDestination);
+                return Response.created(URI.create("/" + destId)).build();
 	}
 	
 	@PUT

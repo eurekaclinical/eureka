@@ -231,7 +231,8 @@ a.list-group-item.active:focus {
 	overflow: scroll;
 }
 
-.proposition-tree {
+.proposition-tree,
+.phenotype-tree {
 	height: 500px;
 	overflow: auto;
 	border: 1px #CCCCCC solid;

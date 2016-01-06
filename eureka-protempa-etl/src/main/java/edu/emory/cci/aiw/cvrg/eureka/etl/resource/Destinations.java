@@ -91,7 +91,7 @@ public final class Destinations {
 		this.etlProperties = inEtlProperties;
 	}
 
-	public void create(EtlDestination etlDestination) {
+ 	public Long create(EtlDestination etlDestination) {
 		if (etlDestination instanceof EtlCohortDestination) {
 			CohortDestinationEntity cde = new CohortDestinationEntity();
 			cde.setName(etlDestination.getName());
@@ -107,7 +107,8 @@ public final class Destinations {
 			node.accept(v);
 			cohortEntity.setNode(v.getNodeEntity());
 			cde.setCohort(cohortEntity);
-			this.destinationDao.create(cde);
+			DestinationEntity destinationEntity = this.destinationDao.create(cde);
+                        return destinationEntity.getId();
 		} else {
 			throw new HttpStatusException(Response.Status.BAD_REQUEST, "Can't create i2b2 destinations via web services yet");
 		}

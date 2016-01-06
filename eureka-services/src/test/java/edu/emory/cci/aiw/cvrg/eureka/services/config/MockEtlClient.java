@@ -144,7 +144,7 @@ public class MockEtlClient implements EtlClient {
 	}
 
 	@Override
-	public void createDestination(EtlDestination etlDest) throws ClientException {
+	public Long createDestination(EtlDestination etlDest) throws ClientException {
 		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
 	}
 

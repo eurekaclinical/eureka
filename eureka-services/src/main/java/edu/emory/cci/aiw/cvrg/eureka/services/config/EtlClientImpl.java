@@ -166,9 +166,10 @@ public class EtlClientImpl extends EurekaClient implements EtlClient {
 	}
 
 	@Override
-	public void createDestination(EtlDestination etlDest) throws ClientException {
+	public Long createDestination(EtlDestination etlDest) throws ClientException {
 		String path = "/api/protected/destinations";
-		doPost(path, etlDest);
+		URI destURI = doPostCreate(path, etlDest);
+                return extractId(destURI);
 	}
 
 	@Override

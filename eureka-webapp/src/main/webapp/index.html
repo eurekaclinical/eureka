@@ -32,94 +32,101 @@
 <body ng-cloak>
 
     <div class="navbar navbar-inverse navbar-static-top" role="navigation">
-        <div class="container">
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle" data-toggle="collapse"
-                        data-target=".navbar-collapse">
-                    <span class="sr-only">Toggle navigation</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                <a ui-sref="index" class="navbar-brand">
-                    <span class="brand-text">Eureka!</span>
-                </a>
+            <div class="container">
+                    <div class="navbar-header">
+                        <button type="button" class="navbar-toggle" data-toggle="collapse"
+                                        data-target=".navbar-collapse">
+                                <span class="sr-only">Toggle navigation</span>
+                                <span class="icon-bar"></span>
+                                <span class="icon-bar"></span>
+                                <span class="icon-bar"></span>
+                        </button>
+                        <a ui-sref="index" class="navbar-brand">
+                                <span class="brand-text">Eureka!</span>
+                        </a>
+                    </div>
+                    <div class="navbar-collapse collapse">
+                            <ul class="nav navbar-nav navbar-right menu-text" ng-show="userVerficationPerformed ==true && user != null">
+                                     <li>
+                                            <a href="/eureka-webapp/protected/cohorthome" class="btn btn-lg">
+                                                    <i class="fa fa-pencil"></i>
+                                                    Cohorts
+                                            </a>
+                                    </li>
+                                    <li>
+                                            <a href="/eureka-webapp/protected/editorhome" class="btn btn-lg">
+                                                    <i class="fa fa-pencil"></i>
+                                                    Phenotypes
+                                            </a>
+                                    </li>
+                                    <li>
+                                            <a href="/eureka-webapp/protected/jobs">
+                                                    <i class="fa fa-cog"></i>
+                                                    Jobs
+                                            </a>
+                                    </li>
+                                
+                                    <li>
+                                            <a ui-sref="help" class="btn btn-lg">
+                                                    <i class="fa fa-question-circle"></i>
+                                                    Help
+                                            </a>
+                                    </li>
+                                    
+                                    <li>
+                                            <a class="dropdown-toggle" data-toggle="dropdown"
+                                                    role="button" aria-expanded="false">
+                                                    <span class="glyphicon glyphicon-user"></span>
+                                                            {{user.getFullName()}} 
+                                                    <span class="caret"></span>
+                                            </a>
+                                            <ul class="dropdown-menu" role="menu">
+                                                    <li>
+                                                            <a href="/eureka-webapp/protected/user_acct?action=list">
+                                                                    <span class="glyphicon glyphicon-user"></span>
+                                                                    Account Settings
+                                                            </a>
+                                                    </li>
+                                                    <li ng-if="user.hasRole('admin')">
+                                                            <a href="/eureka-webapp/protected/admin?action=list">
+                                                                    <span class="glyphicon glyphicon-wrench"></span>
+                                                                    Administration
+                                                            </a>
+                                                    </li>
+                                                    <li>
+                                                            <a href="logout" class="idletimeout-logout">
+                                                                    <span class="glyphicon glyphicon-log-out"></span>
+                                                                    Logout
+                                                            </a>
+                                                    </li>
+                                            </ul>
+                                    </li>
+                            </ul>
+                        
+                            <ul class="nav navbar-nav navbar-right menu-text" ng-show="userVerficationPerformed ==true && user == null">
+                                    <li>
+                                            <a ui-sref="help" class="btn btn-lg">
+                                                    <span class="glyphicon glyphicon-question-sign"></span>
+                                                    Help
+                                            </a>
+                                    </li>
+                                    <li>
+                                            <a href="protected/login">
+                                                    <span class="glyphicon glyphicon-log-in"></span>
+                                                    Login
+                                            </a>
+                                    </li>
+                            </ul>
+                    </div>
             </div>
-            <div class="navbar-collapse collapse">
-                <ul class="nav navbar-nav navbar-right menu-text" ng-show="user">
-                    <li>
-                        <a ui-sref="cohorts" class="btn btn-lg">
-                          <i class="fa fa-pencil"></i>
-                            Cohorts
-                        </a>
-                    </li>
-                    <li>
-                        <a ui-sref="phenotypes" class="btn btn-lg">
-                            <i class="fa fa-pencil"></i>
-                            Phenotypes
-                        </a>
-                    </li>
-                    <li>
-                        <a ui-sref="jobs">
-                          <i class="fa fa-cog"></i>
-                            Jobs
-                        </a>
-                    </li>
-                    <li>
-                        <a ui-sref="help" class="btn btn-lg">
-                          <i class="fa fa-question-circle"></i>
-                            Help
-                        </a>
-                    </li>
-                    <li>
-                        <a class="dropdown-toggle" data-toggle="dropdown"
-                           role="button" aria-expanded="false">
-                            <span class="glyphicon glyphicon-user"></span>
-                            {{user.getFullName()}} <span class="caret"></span>
-                        </a>
-                        <ul class="dropdown-menu" role="menu">
-                            <li>
-                                <a ui-sref="accountSettings">
-                                    <span class="glyphicon glyphicon-user"></span>
-                                    Account Settings
-                                </a>
-                            </li>
-                            <li ng-if="user.hasRole('admin')">
-                               <a ui-sref="accountAdministration">
-                                    <span class="glyphicon glyphicon-wrench"></span>
-                                    Administration
-                                </a>
-                            </li>
-                            <li><a href="logout" class="idletimeout-logout">
-                                <span class="glyphicon glyphicon-log-out"></span>
-                                Logout
-                            </a></li>
-                        </ul>
-
-                    </li>
-                </ul>
-                <ul class="nav navbar-nav navbar-right menu-text" ng-hide="user">
-                    <li>
-                        <a ui-sref="help" class="btn btn-lg">
-                            <span class="glyphicon glyphicon-question-sign"></span>
-                            Help
-                        </a>
-                    </li>
-                    <li>
-                        <a href="protected/login">
-                            <span class="glyphicon glyphicon-log-in"></span>
-                            Login
-                        </a>
-                    </li>
-                </ul>
-            </div>
-        </div>
     </div>
+    
     <div class="container container-big">
-        <ui-view></ui-view>
+            <ui-view></ui-view>
     </div>
+    
     <div class="footer">
-        Copyright &copy; {{conceptionYear}}&ndash;{{currentYear}} {{app.organizationName}}. All rights reserved.
+            Copyright &copy; {{conceptionYear}}&ndash;{{currentYear}} {{app.organizationName}}. All rights reserved.
     </div>
 
 
@@ -142,8 +149,8 @@
     <script src="bower_components/flow.js/dist/flow.js"></script>
     <script src="bower_components/ng-flow/dist/ng-flow.js"></script>
     <!-- endbower -->
-    <script src="assets/js/eureka.tree-cohort.js"></script>
-    <script src="assets/js/eureka.cohort.js"></script>
+    
+    <script src="assets/js/eureka.index.js"></script>
     <script src="assets/js/jstree-3.1.1.min.js"></script>
     <!-- endbuild -->
 
@@ -156,5 +163,14 @@
     <!-- build:js app.min.js -->
     <script src="build/app.js"></script>
     <!-- endbuild -->
+    
+    <!-- loading News and Funding, functions defined in eureka.index.js -->
+    <script>
+    
+        var contextPath=window.location.href.toString().split('//')[0] + '//'+window.location.host + '/eureka-webapp';
+        window.eureka.index.setup(contextPath);
+        window.eureka.index.writeSupport();
+        window.eureka.index.writeVersionHistory();   
+    </script>
 </body>
 </html>

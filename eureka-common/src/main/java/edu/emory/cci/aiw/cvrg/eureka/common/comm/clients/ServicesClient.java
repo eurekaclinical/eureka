@@ -462,9 +462,10 @@ public class ServicesClient extends EurekaClient {
 		return doGet(path, SourceConfigParamsList);
 	}
 
-	public void createDestination(Destination destination) throws ClientException {
+	public URI createDestination(Destination destination) throws ClientException {
 		String path = "/api/protected/destinations";
-		doPost(path, destination);
+                URI destURI = doPostCreate(path, destination);
+                return destURI;
 	}
 
 	public void updateDestination(Destination destination) throws ClientException {
