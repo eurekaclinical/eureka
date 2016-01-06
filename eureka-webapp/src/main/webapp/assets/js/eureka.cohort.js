@@ -490,7 +490,7 @@ window.eureka.editor = new function () {
 
             $.ajax({
                 type: type,
-                url: '/eureka-webapp/proxy-resource/destinations',
+                url: '../proxy-resource/destinations',
                 data: JSON.stringify(cohortDestination),
                 success: function (postData) {
                     window.location.href = 'cohorthome'

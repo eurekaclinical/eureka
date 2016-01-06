@@ -48,7 +48,7 @@
 				<h3>Cohorts</h3>
 				<p>Define a cohort to identify the patient population in your datasets.
 				</p>
-				<a href="/eureka-webapp/protected/editcohort" class="btn btn-primary"><span class="glyphicon glyphicon-plus-sign"></span>Define New Cohort
+				<a href="../protected/editcohort" class="btn btn-primary"><span class="glyphicon glyphicon-plus-sign"></span>Define New Cohort
 				</a>
 				<table class="table table-responsive vert-offset">
 					<tr>
