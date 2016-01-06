@@ -48,19 +48,19 @@
                     <div class="navbar-collapse collapse">
                             <ul class="nav navbar-nav navbar-right menu-text" ng-show="userVerficationPerformed ==true && user != null">
                                      <li>
-                                            <a href="/eureka-webapp/protected/cohorthome" class="btn btn-lg">
+                                            <a href="protected/cohorthome" class="btn btn-lg">
                                                     <i class="fa fa-pencil"></i>
                                                     Cohorts
                                             </a>
                                     </li>
                                     <li>
-                                            <a href="/eureka-webapp/protected/editorhome" class="btn btn-lg">
+                                            <a href="protected/editorhome" class="btn btn-lg">
                                                     <i class="fa fa-pencil"></i>
                                                     Phenotypes
                                             </a>
                                     </li>
                                     <li>
-                                            <a href="/eureka-webapp/protected/jobs">
+                                            <a href="protected/jobs">
                                                     <i class="fa fa-cog"></i>
                                                     Jobs
                                             </a>
@@ -82,13 +82,13 @@
                                             </a>
                                             <ul class="dropdown-menu" role="menu">
                                                     <li>
-                                                            <a href="/eureka-webapp/protected/user_acct?action=list">
+                                                            <a href="protected/user_acct?action=list">
                                                                     <span class="glyphicon glyphicon-user"></span>
                                                                     Account Settings
                                                             </a>
                                                     </li>
                                                     <li ng-if="user.hasRole('admin')">
-                                                            <a href="/eureka-webapp/protected/admin?action=list">
+                                                            <a href="protected/admin?action=list">
                                                                     <span class="glyphicon glyphicon-wrench"></span>
                                                                     Administration
                                                             </a>
