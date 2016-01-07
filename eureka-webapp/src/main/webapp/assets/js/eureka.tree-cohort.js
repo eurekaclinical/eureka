@@ -11,7 +11,7 @@ window.eureka.tree = new function () {
         $(userTreeElem).jstree({
             "core": {
                 "data": {
-                    "url": "/eureka-webapp/protected/userproplist?key=root",
+                    "url": "userproplist?key=root",
                     "dataType": 'json',
                 },
 
