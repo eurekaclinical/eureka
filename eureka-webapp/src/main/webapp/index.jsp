@@ -115,7 +115,7 @@
             <ul class="nav navbar-nav navbar-right menu-text">
                 <c:if test="${userIsActivated}">
                     <li>
-                        <a href="${pageContext.request.contextPath}/#/cohort_home" class="btn btn-lg">
+                        <a href="${pageContext.request.contextPath}/protected/cohorthome" class="btn btn-lg">
                             <span class="glyphicon glyphicon-pencil"></span>
                             Cohorts
                         </a>
@@ -134,7 +134,7 @@
                     </li>
                 </c:if>
                 <li>
-                    <a href="${pageContext.request.contextPath}/help.jsp">
+                    <a href="${pageContext.request.contextPath}/#/help">
                         <span class="glyphicon glyphicon-question-sign"></span>
                         Help
                     </a>
@@ -150,7 +150,7 @@
                             </a>
                             <ul class="dropdown-menu" role="menu">
                                 <li>
-                                    <a href="${pageContext.request.contextPath}/protected/user_acct?action=list">
+                                    <a href="${pageContext.request.contextPath}/#/account/settings">
                                         <span class="glyphicon glyphicon-user"></span>
                                         Account Settings
                                     </a>
