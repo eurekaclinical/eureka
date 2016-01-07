@@ -39,13 +39,10 @@ package edu.emory.cci.aiw.cvrg.eureka.servlet;
  * <http://www.gnu.org/licenses/gpl-3.0.html>.
  * #L%
  */
-
 import com.google.inject.Inject;
 import com.sun.jersey.core.util.MultivaluedMapImpl;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ClientException;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ServicesClient;
-import edu.emory.cci.aiw.cvrg.eureka.webapp.authentication.WebappAuthenticationSupport;
-import org.apache.commons.collections4.MapUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -56,24 +53,23 @@ import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.UriBuilder;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URI;
-import java.util.Iterator;
 import java.util.Map;
-import java.util.Scanner;
-import java.util.Set;
+import org.apache.commons.httpclient.HttpStatus;
+import org.apache.commons.io.IOUtils;
 
 /**
- * Created by Sanjay Agravat on 4/21/15.
+ * @author Sanjay Agravat
  */
 public class ProxyServlet extends HttpServlet {
 
 	private static final Logger LOGGER = LoggerFactory
 			.getLogger(ProxyServlet.class);
+	
 	private final ServicesClient servicesClient;
-	private final WebappAuthenticationSupport authenticationSupport;
-
-	protected String targetUri;
-	protected URI targetUriObj;//new URI(targetUri)
+	
+	protected URI targetUri;
 	/**
 	 * The parameter name for the target (destination) URI to proxy to.
 	 */
@@ -82,150 +78,119 @@ public class ProxyServlet extends HttpServlet {
 	@Inject
 	public ProxyServlet(ServicesClient inClient) {
 		this.servicesClient = inClient;
-		this.authenticationSupport = new WebappAuthenticationSupport(this.servicesClient);
-	}
-
-
-	/**
-	 * Reads a configuration parameter. By default it reads servlet init parameters but
-	 * it can be overridden.
-	 * @param key the key.
-	 * @return the configuration parameter.
-	 */
-	protected String getConfigParam(String key) {
-		return getServletConfig().getInitParameter(key);
 	}
 
 	@Override
 	public void init() throws ServletException {
-
-		targetUri = getConfigParam(P_TARGET_URI);
-		if (targetUri == null)
+		String targetUriStr = getServletConfig().getInitParameter(P_TARGET_URI);
+		if (targetUriStr == null)
 			throw new ServletException(P_TARGET_URI + " is required.");
-		//test it's valid
+		
 		try {
-			targetUriObj = new URI(targetUri);
+			this.targetUri = new URI(targetUriStr);
 		} catch (Exception e) {
 			throw new ServletException("Trying to process targetUri init parameter: " + e, e);
 		}
-
 	}
 
-
 	@Override
-	protected void doPut(HttpServletRequest servletRequest, HttpServletResponse servletResponse) throws ServletException, IOException {
+	protected void doPut(HttpServletRequest servletRequest, HttpServletResponse servletResponse) throws IOException {
 		LOGGER.debug("ProxyServlet - PUT");
 
-		StringBuilder stringBuilder = new StringBuilder(1000);
-		Scanner scanner = new Scanner(servletRequest.getInputStream());
-		while (scanner.hasNextLine()) {
-			stringBuilder.append(scanner.nextLine());
-		}
-		LOGGER.debug("json: {}", stringBuilder.toString());
-		StringBuilder uri = new StringBuilder(500);
-		uri.append(getTargetUri());
-		// Handle the path given to the servlet
-		if (servletRequest.getPathInfo() != null) {//ex: /my/path.html
-			uri.append(servletRequest.getPathInfo());
-		}
-		LOGGER.debug("uri: {}", uri.toString());
+		String content = extractContent(servletRequest);
+		String uri = doRoute(servletRequest);
+
 		try {
-			servicesClient.proxyPut(uri.toString(), stringBuilder.toString());
+			servicesClient.proxyPut(uri, content);
 		} catch (ClientException e) {
-			e.printStackTrace();
+			servletResponse.setStatus(e.getResponseStatus().getStatusCode());
+			servletResponse.getOutputStream().print(e.getMessage());
 		}
 	}
 
 	@Override
 	protected void doPost(HttpServletRequest servletRequest, HttpServletResponse servletResponse)
-			throws ServletException, IOException {
-
+			throws IOException {
 		LOGGER.debug("ProxyServlet - POST");
 
-		StringBuilder stringBuilder = new StringBuilder(1000);
-		Scanner scanner = new Scanner(servletRequest.getInputStream());
-		while (scanner.hasNextLine()) {
-			stringBuilder.append(scanner.nextLine());
-		}
-		LOGGER.debug("json: {}", stringBuilder.toString());
-		StringBuilder uri = new StringBuilder(500);
-		uri.append(getTargetUri());
-		// Handle the path given to the servlet
-		if (servletRequest.getPathInfo() != null) {//ex: /my/path.html
-			uri.append(servletRequest.getPathInfo());
-		}
-		LOGGER.debug("uri: {}", uri.toString());
+		String content = extractContent(servletRequest);
+		String uri = doRoute(servletRequest);
+
 		try {
-			servicesClient.proxyPost(uri.toString(), stringBuilder.toString());
+			URI created = servicesClient.proxyPost(uri, content);
+			if (created != null) {
+				servletResponse.setStatus(HttpStatus.SC_CREATED);
+				servletResponse.setHeader("Location", created.toString());
+			}
 		} catch (ClientException e) {
-			e.printStackTrace();
+			servletResponse.setStatus(e.getResponseStatus().getStatusCode());
+			servletResponse.getOutputStream().print(e.getMessage());
 		}
 
 	}
 
 	@Override
 	protected void doDelete(HttpServletRequest servletRequest, HttpServletResponse servletResponse)
-			throws ServletException, IOException {
-
+			throws IOException {
 		LOGGER.debug("ProxyServlet - DELETE");
 
-		StringBuilder uri = new StringBuilder(500);
-		uri.append(getTargetUri());
-		// Handle the path given to the servlet
-		if (servletRequest.getPathInfo() != null) {//ex: /my/path.html
-			uri.append(servletRequest.getPathInfo());
-		}
-		LOGGER.debug("uri: {}", uri.toString());
-
+		String uri = doRoute(servletRequest);
 
 		try {
-			servicesClient.proxyDelete(uri.toString());
+			servicesClient.proxyDelete(uri);
 		} catch (ClientException e) {
-			e.printStackTrace();
+			servletResponse.setStatus(e.getResponseStatus().getStatusCode());
+			servletResponse.getOutputStream().print(e.getMessage());
 		}
 
 	}
 
 	@Override
 	protected void doGet(HttpServletRequest servletRequest, HttpServletResponse servletResponse)
-			throws ServletException, IOException {
-
+			throws IOException {
 		LOGGER.debug("ProxyServlet - GET");
 
-		StringBuilder uri = new StringBuilder(500);
-		uri.append(getTargetUri());
-		// Handle the path given to the servlet
-		if (servletRequest.getPathInfo() != null) {//ex: /my/path.html
-			uri.append(servletRequest.getPathInfo());
-		}
-		LOGGER.debug("uri: " + uri.toString());
+		String uri = doRoute(servletRequest);
+
 		try {
-			String response = servicesClient.proxyGet(uri.toString(), getQueryParamsFromURI(servletRequest.getParameterMap()));
+			Map<String, String[]> parameterMap = servletRequest.getParameterMap();
+			MultivaluedMap multivaluedMap = toMultivaluedMap(parameterMap);
+			String response = servicesClient.proxyGet(uri, multivaluedMap);
 			servletResponse.getWriter().write(response);
 		} catch (ClientException e) {
-			e.printStackTrace();
+			servletResponse.setStatus(e.getResponseStatus().getStatusCode());
+			servletResponse.getOutputStream().print(e.getMessage());
 		}
 	}
-
-
-	/**
-	 * The target URI as configured. Not null.
-	 */
-	public String getTargetUri() {
-		return targetUri;
+	
+	private String doRoute(HttpServletRequest servletRequest) {
+		UriBuilder uriBuilder = UriBuilder.fromUri(this.targetUri);
+		String pathInfo = servletRequest.getPathInfo();
+		if (pathInfo != null) {
+			uriBuilder = uriBuilder.path(pathInfo);
+		}
+		String uri = uriBuilder.build().toString();
+		LOGGER.debug("uri: {}", uri);
+		return uri;
 	}
-
-	public MultivaluedMap getQueryParamsFromURI(Map inQueryParameters) {
+	
+	private static MultivaluedMap toMultivaluedMap(Map<String, String[]> inQueryParameters) {
 		MultivaluedMap<String, String> queryParams = new MultivaluedMapImpl();
-		;
-		Iterator queryParamIterator = inQueryParameters.entrySet().iterator();
-		while (queryParamIterator.hasNext()) {
-			Map.Entry parameter = (Map.Entry) queryParamIterator.next();
-			parameter.getKey();
-			String[] values = (String[]) parameter.getValue();
-			queryParams.add((String) parameter.getKey(), values[0]);
+		for (Map.Entry<String, String[]> parameter : inQueryParameters.entrySet()) {
+			String[] values = parameter.getValue();
+			for (String value : values) {
+				queryParams.add(parameter.getKey(), value);
+			}
 		}
 		return queryParams;
-
 	}
+
+	private static String extractContent(HttpServletRequest servletRequest) throws IOException {
+		InputStream inputStream = servletRequest.getInputStream();
+		String charEncoding = servletRequest.getCharacterEncoding();
+		String content = IOUtils.toString(inputStream, charEncoding);
+		LOGGER.debug("json: {}", content);
+		return content;
+	}
+	
 }

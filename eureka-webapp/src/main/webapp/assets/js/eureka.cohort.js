@@ -440,7 +440,7 @@ window.eureka.editor = new function () {
     self.post = function (postData) {
         var user = null;
         $.ajax({
-            url: '/eureka-services/api/protected/users/me',
+            url: '../proxy-resource/users/me',
             async: false,
             dataType: 'json',
             success: function(data) {
@@ -490,7 +490,7 @@ window.eureka.editor = new function () {
 
             $.ajax({
                 type: type,
-                url: '/eureka-webapp/proxy-resource/destinations',
+                url: '../proxy-resource/destinations',
                 data: JSON.stringify(cohortDestination),
                 success: function (postData) {
                     window.location.href = 'cohorthome'
