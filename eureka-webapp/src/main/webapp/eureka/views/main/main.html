@@ -91,11 +91,21 @@
                 </div>
             </div>
         </div>
-        <div class="row">
+        <div class="row" ng-controller="NewsAndFundingController">
             <div class="col-md-6">
                 <div class="panel panel-info">
                     <div class="panel-heading">News</div>
                     <div class="panel-body" id="versionHistory">
+                        
+                        <div class="row" ng-repeat-start="versionItem in versionHistory" ng-if="$first">
+                            <div class="col-sm-2" >{{versionItem.releaseDate}}</div>
+                            <div class="col-sm-10">{{versionItem.description}}</div>
+                        </div>
+                        <div class="row vert-offset" ng-repeat-end ng-if="!$first">
+                            <div class="col-sm-2" >{{versionItem.releaseDate}}</div>
+                            <div class="col-sm-10">{{versionItem.description}}</div>                            
+                        </div>
+                        
                     </div>
                 </div>
             </div>
@@ -104,12 +114,11 @@
                     <div class="panel-heading">Funding</div>
                     <div class="panel-body text-center">
                         <p>The software powering this site has been supported in part by 
-                            <span id="support"></span>
+                            <span ng-bind-html="supportedByHTML" id="supportBy"></span>
                         </p>
                     </div>
                 </div>
             </div>
         </div>
-        <!--<div id="versionHistory"></div>-->
     </div>
 </div>

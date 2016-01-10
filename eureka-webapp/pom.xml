@@ -67,7 +67,7 @@
 					<filteringDeploymentDescriptors>true</filteringDeploymentDescriptors>
 					<packagingIncludes>
 						%regex[assets/js/eureka.*${maven.build.timestamp}.js],
-                                                assets/js/eureka.index.js,
+                                            assets/js/eureka.homeController.js,
 						%regex[app/controllers/*${maven.build.timestamp}.js],
 						%regex[app/services/*${maven.build.timestamp}.js],
 						%regex[app/eurekaApp${maven.build.timestamp}.js],
