@@ -44,8 +44,9 @@
 		<jersey-version>1.17.1</jersey-version>
 		<guice-version>3.0</guice-version>
 		<annotation-version>1.0</annotation-version>
-		<hibernate-version>4.2.7.SP1</hibernate-version>
-		<hibernate-persistence-version>1.0.1.Final</hibernate-persistence-version>
+		<hibernate-version>5.0.6.Final</hibernate-version>
+                <javax-jta-version>1.1</javax-jta-version>
+		<hibernate-persistence-version>1.0.0.Final</hibernate-persistence-version>
 		<slf4j-version>1.7.5</slf4j-version>
 		<poi-version>3.9</poi-version>
 		<jstl-version>1.2</jstl-version>
@@ -56,7 +57,7 @@
 		<aiw-i2b2-etl-version>2.0-Alpha-5</aiw-i2b2-etl-version>
 		<aiw-neo4j-etl-version>1.0-Alpha-3</aiw-neo4j-etl-version>
 		<freemarker-version>2.3.20</freemarker-version>
-		<jpamodelgen-version>1.2.0.Final</jpamodelgen-version>
+		<jpamodelgen-version>5.0.6.Final</jpamodelgen-version>
 		<ehcache-version>2.6.0</ehcache-version>
 		<tomcat-plugin-version>1.1</tomcat-plugin-version>
 		<scribe-up-ext-version>1.0-Alpha-3</scribe-up-ext-version>
@@ -421,6 +422,11 @@
 				<artifactId>guice-persist</artifactId>
 				<version>${guice-version}</version>
 			</dependency>
+                        <dependency>
+                            <groupId>javax.transaction</groupId>
+                            <artifactId>jta</artifactId>
+                            <version>${javax-jta-version}</version>
+                        </dependency>                       
 			<dependency>
 				<groupId>javax.annotation</groupId>
 				<artifactId>jsr250-api</artifactId>
@@ -428,9 +434,10 @@
 			</dependency>
 			<dependency>
 				<groupId>org.hibernate.javax.persistence</groupId>
-				<artifactId>hibernate-jpa-2.0-api</artifactId>
+				<artifactId>hibernate-jpa-2.1-api</artifactId>
 				<version>${hibernate-persistence-version}</version>
 			</dependency>
+                        
 			<dependency>
 				<groupId>org.hibernate</groupId>
 				<artifactId>hibernate-entitymanager</artifactId>
