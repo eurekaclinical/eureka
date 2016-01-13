@@ -8,9 +8,9 @@ eurekaModule.controller('NewsAndFundingController',['$scope', '$sce', function($
             });
                      
             $.getJSON('assets/data/supported_by.json', function(data) {
-                    var result = data.supportedBy.slice(0, -1).join("; ");
+                    var result = data.supportedBy.slice(0, -1).join('; ');
                     if (data.supportedBy.length > 1) {
-                            result += "; and ";
+                            result += '; and ';
                     }
                     result += data.supportedBy[data.supportedBy.length - 1];
                     $scope.supportedBy = result;
