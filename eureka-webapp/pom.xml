@@ -68,6 +68,7 @@
 					<packagingIncludes>
 						%regex[assets/js/eureka.*${maven.build.timestamp}.js],
                                             eureka/views/main-controller.js,
+                                            eureka/views/main-service.js,
 						%regex[app/controllers/*${maven.build.timestamp}.js],
 						%regex[app/services/*${maven.build.timestamp}.js],
 						%regex[app/eurekaApp${maven.build.timestamp}.js],
