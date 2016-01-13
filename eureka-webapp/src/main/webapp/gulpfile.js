@@ -137,8 +137,6 @@ gulp.task('build', ['build-html'], function() {
     return es.concat(
         gulp.src('assets/**/*', { base: './' })
             .pipe(gulp.dest('./dist')),
-        gulp.src('eureka/**/*', { base: './' })
-            .pipe(gulp.dest('./dist')),
         gulp.src(['./build/*.min.js', './build/*.min.css'])
             .pipe(gulp.dest('./dist'))
     );
