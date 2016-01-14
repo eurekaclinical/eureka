@@ -67,7 +67,6 @@
 					<filteringDeploymentDescriptors>true</filteringDeploymentDescriptors>
 					<packagingIncludes>
 						%regex[assets/js/eureka.*${maven.build.timestamp}.js],
-                                                assets/js/eureka.index.js,
 						%regex[app/controllers/*${maven.build.timestamp}.js],
 						%regex[app/services/*${maven.build.timestamp}.js],
 						%regex[app/eurekaApp${maven.build.timestamp}.js],
@@ -232,7 +231,7 @@
 		</dependency>
 		<dependency>
 			<groupId>org.hibernate.javax.persistence</groupId>
-			<artifactId>hibernate-jpa-2.0-api</artifactId>
+			<artifactId>hibernate-jpa-2.1-api</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.hibernate</groupId>
