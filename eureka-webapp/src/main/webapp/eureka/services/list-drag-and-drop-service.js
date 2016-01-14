@@ -98,17 +98,16 @@
             var allSourcesPath = [self.propType, elementKey, 'sources'];
             var allSources = getIn(self.droppedElements, allSourcesPath);
             var size = objSize(allSources);
-            function iterateItems(i, item) {
-                var span = $(item).find('span.desc');
-                var newText = $(dropped).data('desc') + ' [' + $(source).data('count') + ']';
-                $(span).text(newText);
-            }
             if (size > 1) {
                 for (var key in allSources) {
                     if (allSources.hasOwnProperty(key)) {
                         var source = allSources[key];
                         var items = $(source).find('li');
-                        $(items).each(iterateItems);
+                        $(items).each(function(i, item) {
+                            var span = $(item).find('span.desc');
+                            var newText = $(dropped).data('desc') + ' [' + $(source).data('count') + ']';
+                            $(span).text(newText);
+                        });
                     }
                 }
             }
@@ -170,17 +169,16 @@
             var allSourcesPath = [self.propType, elementKey, 'sources'];
             var allSources = getIn(self.droppedElements, allSourcesPath);
             var size = objSize(allSources);
-            function iterateItems(i, item) {
-                var span = $(item).find('span.desc');
-                var newText = $(removed).data('desc');
-                $(span).text(newText);
-            }
             if (size <= 1) {
                 for (var key in allSources) {
                     if (allSources.hasOwnProperty(key)) {
                         var source = allSources[key];
                         var items = $(source).find('li');
-                        $(items).each(iterateItems);
+                        $(items).each(function(i, item) {
+                            var span = $(item).find('span.desc');
+                            var newText = $(removed).data('desc');
+                            $(span).text(newText);
+                        });
                     }
                 }
             }
