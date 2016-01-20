@@ -18,6 +18,22 @@
 
     users.$inject = ['$http', '$q', 'appProperties'];
 
+    class User {
+        constructor(info) {
+            this.info = info;
+        }
+
+        hasRole(name) {
+            let { roles } = this.info;
+            return roles.some(role => role.name === name);
+        }
+
+        getFullName() {
+            let { fullName, firstName, lastName } = this.info;
+            return fullName || (firstName + ' ' + lastName);
+        }
+    }
+
     function users($http, $q, appProperties) {
 
         let { dataEndpoint } = appProperties;
@@ -91,22 +107,6 @@
             return ($q.reject(response.data));
         }
 
-    }
-
-    class User {
-        constructor(info) {
-            this.info = info;
-        }
-
-        hasRole(name) {
-            let { roles } = this.info;
-            return roles.some(role => role.name === name);
-        }
-
-        getFullName() {
-            let { fullName, firstName, lastName } = this.info;
-            return fullName || (firstName + ' ' + lastName);
-        }
     }
 
 }());

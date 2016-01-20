@@ -98,6 +98,8 @@
             var allSourcesPath = [self.propType, elementKey, 'sources'];
             var allSources = getIn(self.droppedElements, allSourcesPath);
             var size = objSize(allSources);
+            var source='';
+            var items='';
             function iterateItems(i, item) {
                 var span = $(item).find('span.desc');
                 var newText = $(dropped).data('desc') + ' [' + $(source).data('count') + ']';
@@ -106,8 +108,8 @@
             if (size > 1) {
                 for (var key in allSources) {
                     if (allSources.hasOwnProperty(key)) {
-                        var source = allSources[key];
-                        var items = $(source).find('li');
+                        source = allSources[key];
+                        items = $(source).find('li');
                         $(items).each(iterateItems);
                     }
                 }
