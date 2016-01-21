@@ -24,7 +24,7 @@
         });
 
         function getSummarizedUserElements() {
-            return $http.get('/eureka-services/api/protected/dataelement?summarize=true')
+            return $http.get('proxy-resource/dataelement?summarize=true')
                 .then(handleSuccess, handleError);
         }
 

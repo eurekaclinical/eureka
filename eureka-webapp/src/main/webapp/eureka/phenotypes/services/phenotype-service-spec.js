@@ -26,7 +26,7 @@
                 userElements = {
                     blah: 'test'
                 };
-                $httpBackend.expectGET('/eureka-services/api/protected/dataelement?summarize=true')
+                $httpBackend.expectGET('proxy-resource/dataelement?summarize=true')
                     .respond(userElements);
             });
 

@@ -141,12 +141,13 @@
                 </li>
                 <c:choose>
                     <c:when test="${userIsActivated}">
+                        <c:set var="firstAndLastName" value="${user.firstName} ${user.lastName}"/>
                         <li>
                             <a href="${pageContext.request.contextPath}/logout"
                                class="dropdown-toggle" data-toggle="dropdown"
                                role="button" aria-expanded="false">
                                 <span class="glyphicon glyphicon-user"></span>
-                                    ${user.fullName != null ? user.fullName : pageContext.request.remoteUser} <span class="caret"></span>
+                                    ${user.fullName != null ? user.fullName : firstAndLastName} <span class="caret"></span>
                             </a>
                             <ul class="dropdown-menu" role="menu">
                                 <li>

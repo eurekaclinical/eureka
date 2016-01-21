@@ -242,9 +242,9 @@ public class ServicesClient extends EurekaClient {
 		doPost(path, inDataElement);
 	}
 
-	public void proxyPost(final String path, final String json)
+	public URI proxyPost(final String path, final String json)
 			throws ClientException {
-		doPostCreate(path, json);
+		return doPostCreate(path, json);
 	}
 
 	public void proxyDelete(final String path)

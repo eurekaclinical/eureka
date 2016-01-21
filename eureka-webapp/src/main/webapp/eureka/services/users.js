@@ -17,7 +17,7 @@
         .factory('users', users);
 
     users.$inject = ['$http', '$q', 'appProperties'];
-
+    
     class User {
         constructor(info) {
             this.info = info;
@@ -106,7 +106,7 @@
             }
             return ($q.reject(response.data));
         }
-
+        
     }
 
 }());
