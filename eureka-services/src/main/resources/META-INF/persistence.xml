@@ -45,7 +45,7 @@
     <!--
 		<provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
 		<jta-data-source>jdbc/EurekaService</jta-data-source>
-	-->
+    -->
     <class>edu.emory.cci.aiw.cvrg.eureka.common.entity.CategoryEntity</class>
     <class>edu.emory.cci.aiw.cvrg.eureka.common.entity.DataElementEntity</class>
     <class>edu.emory.cci.aiw.cvrg.eureka.common.entity.ExtendedDataElement</class>
