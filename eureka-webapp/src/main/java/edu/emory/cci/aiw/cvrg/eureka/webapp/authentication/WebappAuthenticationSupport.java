@@ -69,6 +69,6 @@ public final class WebappAuthenticationSupport extends AbstractUserSupport {
 
 	public void needsToLogin(HttpServletRequest req, HttpServletResponse resp) throws IOException {
 		req.getSession().invalidate();
-		resp.sendRedirect(req.getContextPath() + "/login");
+		resp.sendRedirect(req.getContextPath() + "/protected/login");
 	}
 }
