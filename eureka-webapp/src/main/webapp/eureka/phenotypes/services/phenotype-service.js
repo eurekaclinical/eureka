@@ -14,17 +14,17 @@
         .module('eureka.phenotypes')
         .factory('PhenotypeService', PhenotypeService);
 
-    PhenotypeService.$inject = ['$http', '$q'];
+    PhenotypeService.$inject = ['$http', '$q', 'appProperties'];
 
-    function PhenotypeService($http, $q) {
-
+    function PhenotypeService($http, $q, appProperties) {
+        let { dataEndpoint } = appProperties;
         return ({
             getSummarizedUserElements: getSummarizedUserElements,
             getPhenotypeMessages: getPhenotypeMessages
         });
 
         function getSummarizedUserElements() {
-            return $http.get('proxy-resource/dataelement?summarize=true')
+            return $http.get(dataEndpoint + '/dataelement?summarize=true')
                 .then(handleSuccess, handleError);
         }
 
