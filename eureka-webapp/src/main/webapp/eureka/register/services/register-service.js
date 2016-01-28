@@ -17,7 +17,7 @@
     RegisterService.$inject = ['$http', '$q'];
 
     function RegisterService($http, $q) {
-
+        let { dataEndpoint } = appProperties;
         return ({
             addNewAccount: addNewAccount
         });
@@ -27,7 +27,7 @@
             newAccount.fullName = newAccount.firstName + ' ' + newAccount.lastName;
             newAccount.type = 'LOCAL';
             newAccount.loginType = 'INTERNAL';
-            return $http.post('/eureka-webapp/proxy-resource/userrequests', newAccount)
+            return $http.post(dataEndpoint + '/userrequests', newAccount)
                 .then(handleSuccess, handleError);
         }
 

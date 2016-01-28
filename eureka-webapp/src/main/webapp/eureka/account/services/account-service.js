@@ -27,19 +27,19 @@
         });
 
         function changePassword(passwordObject) {
-            return $http.post(dataEndpoint+'/users/passwordchange', passwordObject)
+            return $http.post(dataEndpoint + '/users/passwordchange', passwordObject)
             .then(handleSuccess, handleError);
         }
 
         function passwordExpiration(passwordObj) {
             return $http.post(
-                '/eureka-webapp/protected/passwordexpiration?firstLogin=true&redirectURL=/eureka-angular/',
+                'protected/passwordexpiration?firstLogin=true&redirectURL=/eureka-angular/',
                 passwordObj)
             .then(handleSuccess, handleError);
         }
 
         function getUserById(id) {
-            return $http.get(dataEndpoint+'/users/'+id)
+            return $http.get(dataEndpoint + '/users/' + id)
             .then(handleSuccess, handleError);
         }
 
