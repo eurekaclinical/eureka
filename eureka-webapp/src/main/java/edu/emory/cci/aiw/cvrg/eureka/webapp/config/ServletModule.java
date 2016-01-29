@@ -191,11 +191,11 @@ class ServletModule extends AbstractServletModule {
 		serve("/protected/destinationdataelements").with(
 				DateRangeDataElementServlet.class);
 
-        bind(SearchSystemPropositionJSTreeV3Servlet.class).in(Singleton.class);
-        serve("/protected/jstree3_searchsystemlist").with(SearchSystemPropositionJSTreeV3Servlet.class);
+                bind(SearchSystemPropositionJSTreeV3Servlet.class).in(Singleton.class);
+                serve("/protected/jstree3_searchsystemlist").with(SearchSystemPropositionJSTreeV3Servlet.class);
 
-        bind(SearchSystemPropositionJSTreeV1Servlet.class).in(Singleton.class);
-        serve("/protected/searchsystemlist").with(SearchSystemPropositionJSTreeV1Servlet.class);
+                bind(SearchSystemPropositionJSTreeV1Servlet.class).in(Singleton.class);
+                serve("/protected/searchsystemlist").with(SearchSystemPropositionJSTreeV1Servlet.class);
 
 		bind(CohortHomeServlet.class).in(Singleton.class);
 		serve("/protected/cohorthome").with(CohortHomeServlet.class);

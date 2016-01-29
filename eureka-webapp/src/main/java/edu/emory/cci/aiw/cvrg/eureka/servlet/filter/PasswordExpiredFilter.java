@@ -122,8 +122,11 @@ public class PasswordExpiredFilter implements Filter {
 					LOGGER.debug("targetUrl: {}", targetUrl);
 					if (!targetUrl.equals(fullRedirectUrl) && !targetUrl
 							.equals(fullSaveUrl)) {
-						servletResponse.sendRedirect(fullRedirectUrl + "?firstLogin=" + (user.getLastLogin() == null) + "&redirectURL=" + targetUrl);
-					} else {
+						String encodeRedirectURL = servletResponse.encodeRedirectURL(fullRedirectUrl 
+ 								+ "?firstLogin=" + (user.getLastLogin() == null) + "&redirectURL=" + targetUrl);
+						LOGGER.debug("encodeRedirectURL: {}", encodeRedirectURL);
+						servletResponse.sendRedirect(encodeRedirectURL);
+                                        } else {
 						chain.doFilter(request, response);
 					}
 				} else {
