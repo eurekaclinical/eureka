@@ -47,6 +47,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 import javax.ws.rs.core.UriBuilder;
 
@@ -116,6 +117,7 @@ public abstract class AbstractProperties {
 		if (configFile.exists()) {
 			LOGGER.info("Trying to load default configuration from {}",
 				configFile.getAbsolutePath());
+                        //Trying to load default configuration from /Users/miaoai/NetBeansProjects/eureka/eureka-services/target/test-classes/eureka-config/eureka/application.properties
 			try (InputStream inputStream = new FileInputStream(configFile)) {
 				this.properties.load(inputStream);
 			} catch (IOException ex) {
@@ -132,6 +134,7 @@ public abstract class AbstractProperties {
 		}
 	}
 
+
 	public String getConfigDir() {
 		return configDir;
 	}
@@ -145,6 +148,9 @@ public abstract class AbstractProperties {
 	private static String getDefaultConfigDir() {
 		return "/etc/eureka";
 	}
+        
+        
+        
 
 	/**
 	 * Get the base URL for the application front-end for external users. Always
@@ -337,3 +343,4 @@ public abstract class AbstractProperties {
 				new ArrayList<String>());
 	}
 }
+

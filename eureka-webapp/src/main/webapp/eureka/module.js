@@ -52,11 +52,18 @@
     angular.module('eureka').run(eurekaRun);
     angular.module('eureka').config(eurekaConfig);
 
-    eurekaRun.$inject = ['$rootScope', 'appProperties', 'users'];
+    eurekaRun.$inject = ['$rootScope', 'AppPropertiesService', 'appProperties','users'];
     eurekaConfig.$inject = ['$stateProvider', '$urlRouterProvider', '$mdThemingProvider'];
 
-    function eurekaRun($rootScope, appProperties, users) {
-       $rootScope.app = appProperties;
+    function eurekaRun($rootScope, AppPropertiesService, appProperties, users) {
+        $rootScope.app=appProperties;
+        AppPropertiesService.getAppProperties()
+                .then(function(response) {
+            $rootScope.app = response.data;
+            $rootScope.app.dataEndpoint = appProperties.dataEndpoint;
+            $rootScope.app.filterEndpoint = appProperties.filterEndpoint;
+        });
+
        $rootScope.userVerficationPerformed = false;
        $rootScope.conceptionYear = '2012';
        $rootScope.currentYear = new Date().getFullYear();
