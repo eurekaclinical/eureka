@@ -5,11 +5,11 @@
     var eurekaModule = angular.module('eureka');
 
     eurekaModule.service('AppPropertiesService',['$http', function($http){
-            return {
+        return {
                     getAppProperties:function() {
-                                    return $http.get('/eureka-services/api/appproperties');
-                            }
-            };
+                        return $http.get('proxy-resource/appproperties/mode');
+            }
+        };
     }]);
 
     var appProperties = {

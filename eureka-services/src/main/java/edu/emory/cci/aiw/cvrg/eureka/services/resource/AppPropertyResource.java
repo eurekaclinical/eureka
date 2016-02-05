@@ -10,12 +10,11 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
-import edu.emory.cci.aiw.cvrg.eureka.common.props.AppProperties;
-import edu.emory.cci.aiw.cvrg.eureka.common.props.SupportUri;
-import java.util.HashMap;
-
-
-import java.util.Map;
+import edu.emory.cci.aiw.cvrg.eureka.common.props.AppPropertiesMode;
+import edu.emory.cci.aiw.cvrg.eureka.common.props.AppPropertiesRegistration;
+import edu.emory.cci.aiw.cvrg.eureka.common.props.AppPropertiesLinks;
+import java.util.ArrayList;
+import java.util.List;
 /**
  *
  * @author Miao Ai
@@ -25,34 +24,36 @@ import java.util.Map;
 @Produces(MediaType.APPLICATION_JSON)
 public class AppPropertyResource {
     
-	private final AppProperties appProperties;
+	private final AppPropertiesMode appPropertiesMode;
+	private final AppPropertiesLinks appPropertiesLinks;
+	private final AppPropertiesRegistration appPropertiesRegistration;
+        
 	@Inject
-	public AppPropertyResource( AppProperties inAppProperties){
-		this.appProperties = inAppProperties;
-	}
-        
-	@GET
-	public Map getAllAppProperties() {
-		return this.appProperties.getProperties();
-	}
-        
-	@GET
-	@Path("/registration")
-	public Boolean getAppPropertiesIsRegistrationEnabled() {  
-		return this.appProperties.isRegistrationEnabled();
-	}
-    
-	@GET
-	@Path("/support")
-	public SupportUri getAppPropertiesSupportUri() {
-		return this.appProperties.getSupportUri();
+	public AppPropertyResource( AppPropertiesMode inAppPropertiesMode, 
+                                                    AppPropertiesLinks inAppPropertiesLinks, 
+                                                    AppPropertiesRegistration inAppPropertiesRegistration){
+		this.appPropertiesMode = inAppPropertiesMode;
+		this.appPropertiesLinks = inAppPropertiesLinks;
+		this.appPropertiesRegistration = inAppPropertiesRegistration;
 	}
         
 	@GET
 	@Path("/mode")
-	public Map getAppPropertiesMode() {
-		return this.appProperties.getMode();
+	public AppPropertiesMode getAppPropertiesMode() {
+		return this.appPropertiesMode;
 	}
+    
+	@GET
+	@Path("/links")
+	public AppPropertiesLinks getAppPropertiesLinks() {
+		return this.appPropertiesLinks;
+	}
+
+	@GET
+	@Path("/registration")
+	public AppPropertiesRegistration getAppPropertiesRegistration() {  
+		return this.appPropertiesRegistration;
+	}        
 }
 
 

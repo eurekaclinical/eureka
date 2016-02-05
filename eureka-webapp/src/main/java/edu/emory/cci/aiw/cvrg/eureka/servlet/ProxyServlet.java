@@ -60,7 +60,7 @@ import org.apache.commons.httpclient.HttpStatus;
 import org.apache.commons.io.IOUtils;
 
 /**
- * @author Sanjay Agravat
+ * @author Sanjay Agravat, Miao Ai
  */
 public class ProxyServlet extends HttpServlet {
 
@@ -69,11 +69,8 @@ public class ProxyServlet extends HttpServlet {
 	
 	private final ServicesClient servicesClient;
 	
-	protected URI targetUri;
-	/**
-	 * The parameter name for the target (destination) URI to proxy to.
-	 */
-	protected static final String P_TARGET_URI = "targetUri";
+	protected URI targetProtectedUri;
+	protected URI targetUnprotectedUri;
 
 	@Inject
 	public ProxyServlet(ServicesClient inClient) {
@@ -82,14 +79,14 @@ public class ProxyServlet extends HttpServlet {
 
 	@Override
 	public void init() throws ServletException {
-		String targetUriStr = getServletConfig().getInitParameter(P_TARGET_URI);
-		if (targetUriStr == null)
-			throw new ServletException(P_TARGET_URI + " is required.");
-		
+		String targetPUriStr = "api/protected";
+		String targetUpUriStr = "api";
+
 		try {
-			this.targetUri = new URI(targetUriStr);
+			this.targetProtectedUri = new URI(targetPUriStr);
+			this.targetUnprotectedUri = new URI(targetUpUriStr);
 		} catch (Exception e) {
-			throw new ServletException("Trying to process targetUri init parameter: " + e, e);
+			throw new ServletException("Trying to process targetProtectedUri/targetUnprotectedUri init parameter: " + e, e);
 		}
 	}
 
@@ -164,12 +161,19 @@ public class ProxyServlet extends HttpServlet {
 	}
 	
 	private String doRoute(HttpServletRequest servletRequest) {
-		UriBuilder uriBuilder = UriBuilder.fromUri(this.targetUri);
 		String pathInfo = servletRequest.getPathInfo();
-		if (pathInfo != null) {
-			uriBuilder = uriBuilder.path(pathInfo);
+		UriBuilder uriBuilder;
+                
+		if(pathInfo.contains("appproperties")){
+			uriBuilder = UriBuilder.fromUri(this.targetUnprotectedUri);
 		}
+		else{
+			uriBuilder = UriBuilder.fromUri(this.targetProtectedUri);
+		}
+
+		uriBuilder = uriBuilder.path(pathInfo);
 		String uri = uriBuilder.build().toString();
+
 		LOGGER.debug("uri: {}", uri);
 		return uri;
 	}
