@@ -48,6 +48,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.inject.Singleton;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.AppPropertiesLinks;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.AppPropertiesModes;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.AppPropertiesRegistration;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.props.AbstractProperties;
 import edu.emory.cci.aiw.cvrg.eureka.common.props.PublicUrlGenerator;
@@ -61,13 +64,105 @@ import edu.emory.cci.aiw.cvrg.eureka.common.props.PublicUrlGenerator;
  */
 @Singleton
 public class ServiceProperties extends AbstractProperties {
-
-	/**
-	 * The class level logger.
-	 */
-	private static final Logger LOGGER = LoggerFactory.getLogger(
+        private AppPropertiesModes appPropertiesModes;
+        private AppPropertiesLinks appPropertiesLinks;
+        private AppPropertiesRegistration appPropertiesRegistration;
+        /**
+         * The class level logger.
+         */
+        private static final Logger LOGGER = LoggerFactory.getLogger(
 			ServiceProperties.class);
-
+        /**
+	 * Gets the appPropertiesModes.
+	 *
+	 * @return appPropertiesModes.
+	 */
+        public AppPropertiesModes getAppPropertiesModes() {
+		this.appPropertiesModes = new AppPropertiesModes();
+		this.appPropertiesModes.setDemoMode(Boolean.parseBoolean(this.getValue("eureka.common.demoMode")));
+		this.appPropertiesModes.setEphiProhibited(Boolean.parseBoolean(this.getValue("eureka.common.ephiProhibited")));
+		return this.appPropertiesModes;
+        }
+        /**
+	 * Gets the appPropertiesLinks.
+	 *
+	 * @return appPropertiesLinks.
+	 */
+        public AppPropertiesLinks getAppPropertiesLinks() {
+		this.appPropertiesLinks = new AppPropertiesLinks();
+		this.appPropertiesLinks.setSupportUri(this.getSupportUri());
+		this.appPropertiesLinks.setAiwUrl(this.getValue("aiw.site.url"));
+		this.appPropertiesLinks.setHelpSiteUrl(this.getValue("aiw.help.url"));
+		this.appPropertiesLinks.setOrganizationName(this.getValue("project.organization.name"));
+		return this.appPropertiesLinks;
+        }
+        /**
+	 * Gets the appPropertiesRegistration.
+	 *
+	 * @return appPropertiesRegistration.
+	 */
+        public AppPropertiesRegistration getAppPropertiesRegistration() {
+		this.appPropertiesRegistration = new AppPropertiesRegistration();
+		this.appPropertiesRegistration.setGoogleOAuthKey(this.getGoogleOAuthKey());
+		this.appPropertiesRegistration.setGoogleOAuthSecret(this.getGoogleOAuthSecret());
+		this.appPropertiesRegistration.setGitHubOAuthKey(this.getGitHubOAuthKey());
+		this.appPropertiesRegistration.setGitHubOAuthSecret(this.getGitHubOAuthSecret());
+		this.appPropertiesRegistration.setTwitterOAuthKey(this.getTwitterOAuthKey());
+		this.appPropertiesRegistration.setTwitterOAuthSecret(this.getTwitterOAuthSecret());
+		this.appPropertiesRegistration.setGlobusOAuthKey(this.getGlobusOAuthKey());
+		this.appPropertiesRegistration.setGlobusOAuthSecret(this.getGlobusOAuthSecret());
+		this.appPropertiesRegistration.setLocalAccountRegistrationEnabled(Boolean.parseBoolean(this.getValue("eureka.webapp.localregistrationenabled")));
+		return this.appPropertiesRegistration;
+	} 
+        
+	public String getGoogleOAuthKey() {
+		return this.getValue("eureka.webapp.googleoauthkey");
+	}   
+	public String getGoogleOAuthSecret() {
+		return this.getValue("eureka.webapp.googleoauthsecret");
+	}  
+	public String getGitHubOAuthKey() {
+		return this.getValue("eureka.webapp.githuboauthkey");
+	}  
+	public String getGitHubOAuthSecret() {
+		return this.getValue("eureka.webapp.githuboauthsecret");
+	}  
+	public String getTwitterOAuthKey() {
+		return this.getValue("eureka.webapp.twitteroauthkey");
+	}  
+	public String getTwitterOAuthSecret() {
+		return this.getValue("eureka.webapp.twitteroauthsecret");
+	}  
+	public String getGlobusOAuthKey() {
+		return this.getValue("eureka.webapp.globusoauthkey");
+	}  
+	public String getGlobusOAuthSecret() {
+		return this.getValue("eureka.webapp.globusoauthsecret");
+	}          
+	/**
+	 * Sets the appPropertiesModes.
+	 *
+	 * @param inAppPropertiesModes.
+	 */
+	public void setAppPropertiesModes(AppPropertiesModes inAppPropertiesModes) {
+		this.appPropertiesModes = inAppPropertiesModes;
+	}
+	/**
+	 * Sets the appPropertiesLinks.
+	 *
+	 * @param inAppPropertiesLinks.
+	 */
+	public void setAppPropertiesLinks(AppPropertiesLinks inAppPropertiesLinks) {
+		this.appPropertiesLinks=inAppPropertiesLinks;
+	}
+	/**
+	 * Sets the appPropertiesRegistration.
+	 *
+	 * @param inAppPropertiesRegistration.
+	 */
+	public void setAppPropertiesRegistration(AppPropertiesRegistration inAppPropertiesRegistration) {
+		this.appPropertiesRegistration=inAppPropertiesRegistration;
+	}         
 	/**
 	 * Get the URL for the eureka-protempa-etl application.
 	 *

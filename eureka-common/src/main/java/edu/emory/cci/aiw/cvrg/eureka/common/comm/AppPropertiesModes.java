@@ -1,8 +1,8 @@
-package edu.emory.cci.aiw.cvrg.eureka.services.resource;
+package edu.emory.cci.aiw.cvrg.eureka.common.comm;
 
 /*
  * #%L
- * Eureka Services
+ * Eureka Common
  * %%
  * Copyright (C) 2012 - 2016 Emory University
  * %%
@@ -40,47 +40,49 @@ package edu.emory.cci.aiw.cvrg.eureka.services.resource;
  * #L%
  */
 
-import com.google.inject.Inject;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.AppPropertiesModes;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.AppPropertiesRegistration;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.AppPropertiesLinks;
-import edu.emory.cci.aiw.cvrg.eureka.services.config.ServiceProperties;
 /**
  *
  * @author Miao Ai
  */
-
-@Path("/appproperties")
-@Produces(MediaType.APPLICATION_JSON)
-public class AppPropertyResource {
-	private final ServiceProperties serviceProperties;     
-        
-	@Inject
-	public AppPropertyResource( ServiceProperties inServiceProperties){
-		this.serviceProperties= inServiceProperties;
+public class AppPropertiesModes {
+	private boolean demoMode;
+	private boolean ephiProhibited;
+	/**
+	 * Constructor.
+	 *
+	 */
+	public AppPropertiesModes() {
+	} 
+	/**
+	 * Gets the demoMode status.
+	 *
+	 * @return true or false.
+	 */
+	public boolean isDemoMode() {
+		return this.demoMode;                
 	}
-       
-	@GET
-	@Path("/modes")
-	public AppPropertiesModes getAppPropertiesModes() {
-		return this.serviceProperties.getAppPropertiesModes();
+	/**
+	 * Sets the demoMode status.
+	 * 
+	 * @param inMode
+	 */
+	public void setDemoMode(boolean inMode) {
+		this.demoMode = inMode;           
 	}
-    
-	@GET
-	@Path("/links")
-	public AppPropertiesLinks getAppPropertiesLinks() {
-		return this.serviceProperties.getAppPropertiesLinks();
+	/**
+	 * Gets the ephiProhibited status.
+	 *
+	 * @return ture or false.
+	 */           
+	public boolean isEphiProhibited() {		
+		return this.ephiProhibited;
 	}
-
-	@GET
-	@Path("/registration")
-	public AppPropertiesRegistration getAppPropertiesRegistration() {
-		return this.serviceProperties.getAppPropertiesRegistration();
-	}        
+	/**
+	 * Sets the ephiProhibited status.
+	 *
+	 * @param inEphiProhibited
+	 */           
+	public void setEphiProhibited(boolean inEphiProhibited) {		
+		this.ephiProhibited = inEphiProhibited;
+	}         
 }
-
-
