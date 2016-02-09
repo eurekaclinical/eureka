@@ -44,9 +44,6 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.google.inject.Singleton;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.props.AbstractProperties;
@@ -63,28 +60,12 @@ import edu.emory.cci.aiw.cvrg.eureka.common.props.PublicUrlGenerator;
 public class ServiceProperties extends AbstractProperties {
 
 	/**
-	 * The class level logger.
-	 */
-	private static final Logger LOGGER = LoggerFactory.getLogger(
-			ServiceProperties.class);
-
-	/**
 	 * Get the URL for the eureka-protempa-etl application.
 	 *
 	 * @return A string containing the base URL for the ETL layer.
 	 */
 	public String getEtlUrl() {
 		return this.getValue("eureka.etl.url");
-	}
-
-	/**
-	 * Get the size of the job executor thread pool.
-	 *
-	 * @return The size of the job executor thread pool from the configuration
-	 * file, or 5 as the default if no value can be determined.
-	 */
-	public int getJobPoolSize() {
-		return this.getIntValue("eureka.services.jobpool.size", 5);
 	}
 
 	/**
