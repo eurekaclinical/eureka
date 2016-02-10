@@ -61,44 +61,43 @@ import edu.emory.cci.aiw.cvrg.eureka.common.props.PublicUrlGenerator;
  */
 @Singleton
 public class ServiceProperties extends AbstractProperties {
-        private AppPropertiesModes appPropertiesModes;
-        private AppPropertiesLinks appPropertiesLinks;
-        private AppPropertiesRegistration appPropertiesRegistration;
-        /**
-         * The class level logger.
-         */
-        private static final Logger LOGGER = LoggerFactory.getLogger(
-			ServiceProperties.class);
-        /**
+
+	private AppPropertiesModes appPropertiesModes;
+	private AppPropertiesLinks appPropertiesLinks;
+	private AppPropertiesRegistration appPropertiesRegistration;
+
+	/**
 	 * Gets the appPropertiesModes.
 	 *
 	 * @return appPropertiesModes.
 	 */
-        public AppPropertiesModes getAppPropertiesModes() {
+	public AppPropertiesModes getAppPropertiesModes() {
 		this.appPropertiesModes = new AppPropertiesModes();
 		this.appPropertiesModes.setDemoMode(Boolean.parseBoolean(this.getValue("eureka.common.demoMode")));
 		this.appPropertiesModes.setEphiProhibited(Boolean.parseBoolean(this.getValue("eureka.common.ephiProhibited")));
 		return this.appPropertiesModes;
-        }
-        /**
+	}
+
+	/**
 	 * Gets the appPropertiesLinks.
 	 *
 	 * @return appPropertiesLinks.
 	 */
-        public AppPropertiesLinks getAppPropertiesLinks() {
+	public AppPropertiesLinks getAppPropertiesLinks() {
 		this.appPropertiesLinks = new AppPropertiesLinks();
 		this.appPropertiesLinks.setSupportUri(this.getSupportUri());
 		this.appPropertiesLinks.setAiwUrl(this.getValue("aiw.site.url"));
 		this.appPropertiesLinks.setHelpSiteUrl(this.getValue("aiw.help.url"));
 		this.appPropertiesLinks.setOrganizationName(this.getValue("project.organization.name"));
 		return this.appPropertiesLinks;
-        }
-        /**
+	}
+
+	/**
 	 * Gets the appPropertiesRegistration.
 	 *
 	 * @return appPropertiesRegistration.
 	 */
-        public AppPropertiesRegistration getAppPropertiesRegistration() {
+	public AppPropertiesRegistration getAppPropertiesRegistration() {
 		this.appPropertiesRegistration = new AppPropertiesRegistration();
 		this.appPropertiesRegistration.setGoogleOAuthKey(this.getGoogleOAuthKey());
 		this.appPropertiesRegistration.setGoogleOAuthSecret(this.getGoogleOAuthSecret());
@@ -110,32 +109,40 @@ public class ServiceProperties extends AbstractProperties {
 		this.appPropertiesRegistration.setGlobusOAuthSecret(this.getGlobusOAuthSecret());
 		this.appPropertiesRegistration.setLocalAccountRegistrationEnabled(Boolean.parseBoolean(this.getValue("eureka.webapp.localregistrationenabled")));
 		return this.appPropertiesRegistration;
-	} 
-        
+	}
+
 	public String getGoogleOAuthKey() {
 		return this.getValue("eureka.webapp.googleoauthkey");
-	}   
+	}
+
 	public String getGoogleOAuthSecret() {
 		return this.getValue("eureka.webapp.googleoauthsecret");
-	}  
+	}
+
 	public String getGitHubOAuthKey() {
 		return this.getValue("eureka.webapp.githuboauthkey");
-	}  
+	}
+
 	public String getGitHubOAuthSecret() {
 		return this.getValue("eureka.webapp.githuboauthsecret");
-	}  
+	}
+
 	public String getTwitterOAuthKey() {
 		return this.getValue("eureka.webapp.twitteroauthkey");
-	}  
+	}
+
 	public String getTwitterOAuthSecret() {
 		return this.getValue("eureka.webapp.twitteroauthsecret");
-	}  
+	}
+
 	public String getGlobusOAuthKey() {
 		return this.getValue("eureka.webapp.globusoauthkey");
-	}  
+	}
+
 	public String getGlobusOAuthSecret() {
 		return this.getValue("eureka.webapp.globusoauthsecret");
-	}          
+	}
+
 	/**
 	 * Sets the appPropertiesModes.
 	 *
@@ -144,22 +151,25 @@ public class ServiceProperties extends AbstractProperties {
 	public void setAppPropertiesModes(AppPropertiesModes inAppPropertiesModes) {
 		this.appPropertiesModes = inAppPropertiesModes;
 	}
+
 	/**
 	 * Sets the appPropertiesLinks.
 	 *
 	 * @param inAppPropertiesLinks.
 	 */
 	public void setAppPropertiesLinks(AppPropertiesLinks inAppPropertiesLinks) {
-		this.appPropertiesLinks=inAppPropertiesLinks;
+		this.appPropertiesLinks = inAppPropertiesLinks;
 	}
+
 	/**
 	 * Sets the appPropertiesRegistration.
 	 *
 	 * @param inAppPropertiesRegistration.
 	 */
 	public void setAppPropertiesRegistration(AppPropertiesRegistration inAppPropertiesRegistration) {
-		this.appPropertiesRegistration=inAppPropertiesRegistration;
-	}         
+		this.appPropertiesRegistration = inAppPropertiesRegistration;
+	}
+
 	/**
 	 * Get the URL for the eureka-protempa-etl application.
 	 *
@@ -179,10 +189,10 @@ public class ServiceProperties extends AbstractProperties {
 	public int getRegistrationTimeout() {
 		return this.getIntValue("eureka.services.registration.timeout", 24);
 	}
-	
+
 	/**
 	 * Get email address in the From header.
-	 * 
+	 *
 	 * @return an email address.
 	 */
 	public String getFromEmailAddress() {
@@ -211,9 +221,9 @@ public class ServiceProperties extends AbstractProperties {
 
 	/**
 	 * Get the base URL for the services layer for external users.
-	 * 
+	 *
 	 * @param request the HTTP request, which will be used to generate a
-	 * services layer URL from server information if none of the properties 
+	 * services layer URL from server information if none of the properties
 	 * files contain an services layer URL property.
 	 *
 	 * @return The base URL.
@@ -230,7 +240,7 @@ public class ServiceProperties extends AbstractProperties {
 	/**
 	 * Get the verification base URL, to be used in sending a verification email
 	 * to the user.
-	 * 
+	 *
 	 * @return The verification base URL, as found in the application
 	 * configuration file.
 	 */
