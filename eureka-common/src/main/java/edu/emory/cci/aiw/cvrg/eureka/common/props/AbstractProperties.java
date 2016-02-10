@@ -103,7 +103,6 @@ public abstract class AbstractProperties {
 		} catch (IOException ioe) {
 			throw new AssertionError("Fallback configuration is unavailable: " + ioe.getMessage());
 		}
-
 		this.configDir = System.getProperty(CONFIG_DIR_SYS_PROP);
 		if (this.configDir == null) {
 			this.configDir = getDefaultConfigDir();
@@ -132,6 +131,7 @@ public abstract class AbstractProperties {
 		}
 	}
 
+
 	public String getConfigDir() {
 		return configDir;
 	}
@@ -145,6 +145,9 @@ public abstract class AbstractProperties {
 	private static String getDefaultConfigDir() {
 		return "/etc/eureka";
 	}
+        
+        
+        
 
 	/**
 	 * Get the base URL for the application front-end for external users. Always
@@ -337,3 +340,4 @@ public abstract class AbstractProperties {
 				new ArrayList<String>());
 	}
 }
+

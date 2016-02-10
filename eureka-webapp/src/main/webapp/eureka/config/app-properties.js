@@ -1,14 +1,18 @@
 (function() {
 
     'use strict';
+    
+    var eurekaModule = angular.module('eureka');
+
+    eurekaModule.service('AppPropertiesService',['$http', function($http){
+        return {
+                    getAppProperties:function() {
+                        return $http.get('proxy-resource/appproperties/modes');
+            }
+        };
+    }]);
 
     var appProperties = {
-        demoMode: true,
-        ephiProhibited: true,
-        registrationEnabled: true,
-        aiwSiteUrl: 'http://aiw.sourceforge.net',
-        helpSiteUrl: 'http://aiw.sourceforge.net/help/v1-10',
-        organizationName: 'Emory University',
         dataEndpoint: 'proxy-resource',
         filterEndpoint: 'protected/jstree3_searchsystemlist'
     };
