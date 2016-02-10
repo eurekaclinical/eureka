@@ -44,9 +44,6 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.google.inject.Singleton;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.AppPropertiesLinks;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.AppPropertiesModes;
@@ -170,16 +167,6 @@ public class ServiceProperties extends AbstractProperties {
 	 */
 	public String getEtlUrl() {
 		return this.getValue("eureka.etl.url");
-	}
-
-	/**
-	 * Get the size of the job executor thread pool.
-	 *
-	 * @return The size of the job executor thread pool from the configuration
-	 * file, or 5 as the default if no value can be determined.
-	 */
-	public int getJobPoolSize() {
-		return this.getIntValue("eureka.services.jobpool.size", 5);
 	}
 
 	/**
