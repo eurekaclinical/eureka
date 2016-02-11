@@ -8,11 +8,21 @@
         beforeEach(function() {
             module('eureka.phenotypes');
         });
-
+        
+        // Setup the mock service in an anonymous module.
+        beforeEach(module(function ($provide) {
+            $provide.value('appProperties',{
+                    dataEndpoint: 'proxy-resource',
+                    filterEndpoint: 'protected/jstree3_searchsystemlist'
+            });
+        }));
+        
         beforeEach(inject(function(_PhenotypeService_, _$httpBackend_) {
             PhenotypeService = _PhenotypeService_;
             $httpBackend = _$httpBackend_;
         }));
+
+
 
         it('should be defined', function() {
             expect(PhenotypeService).toBeDefined();
