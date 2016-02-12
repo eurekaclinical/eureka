@@ -14,9 +14,9 @@
         .module('eureka.register')
         .factory('RegisterService', RegisterService);
 
-    RegisterService.$inject = ['$http', '$q'];
+    RegisterService.$inject = ['$http', '$q','appProperties'];
 
-    function RegisterService($http, $q) {
+    function RegisterService($http, $q, appProperties) {
         let { dataEndpoint } = appProperties;
         return ({
             addNewAccount: addNewAccount
