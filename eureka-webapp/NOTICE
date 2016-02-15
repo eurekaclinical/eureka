@@ -13,6 +13,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 
 This project includes:
+  ant under The Apache Software License, Version 2.0
   AntLR Parser Generator under BSD License
   AOP alliance under Public Domain
   Apache Commons CLI under Apache License, Version 2.0
@@ -23,6 +24,7 @@ This project includes:
   Apache Commons Pool under The Apache Software License, Version 2.0
   Apache ServiceMix :: Bundles :: xstream under The Apache Software License, Version 2.0
   ASM Core under Apache License, Version 2.0
+  bcel under Apache License, Version 2.0
   Commons FileUpload under The Apache Software License, Version 2.0
   Commons IO under The Apache Software License, Version 2.0
   Core Hibernate O/RM functionality under GNU Lesser General Public License
@@ -50,6 +52,8 @@ This project includes:
   Jackson-annotations under The Apache Software License, Version 2.0
   Jackson-core under The Apache Software License, Version 2.0
   jackson-databind under The Apache Software License, Version 2.0 or Lesser Gnu Public License (LGPL), Version 2.1
+  jakarta-regexp under Apache License, Version 2.0
+  JarAnalyzer under Kirkk.com BSD License
   Jasig CAS Client for Java - Core under Apache License Version 2.0
   Java Annotation Indexer under Apache License, Version 2.0
   Java Architecture for XML Binding under CDDL 1.1 or GPL2 w/ CPE
@@ -63,6 +67,7 @@ This project includes:
   JAXB CORE under CDDL 1.1 or GPL2 w/ CPE
   JAXB Reference Implementation under CDDL 1.1 or GPL2 w/ CPE
   JBoss Logging 3 under Apache License, version 2.0
+  jdom under Apache style license
   je under Sleepycat License
   Jersey Apache HTTP Client under CDDL 1.1 or GPL2 w/ CPE
   Jersey Test Framework - Core under CDDL 1.1 or GPL2 w/ CPE
@@ -85,13 +90,19 @@ This project includes:
   kXML 2 is a small XML pull parser based on the common XML pull API under BSD style or Public Domain
   Logging under The Apache Software License, Version 2.0
   MIME streaming extension under Dual license consisting of the CDDL v1.1 and GPL v2
+  MockRunner-Core under Mockrunner License, based on Apache Software License, version 1.1
+  MockRunner-JDBC under Mockrunner License, based on Apache Software License, version 1.1
   mvel under The Apache Software License, Version 2.0
+  Neko HTML under Apache License, Version 2.0
+  oro under Apache License, Version 2.0
   Protempa Framework under Apache License, Version 2.0
+  regexp under Apache License, Version 2.0
   Scribe OAuth Library under MIT
   Scribe UP under The Apache Software License, Version 2.0
   ScribeUP Extensions under Apache License, Version 2.0
   SLF4J API Module under MIT License
   SLF4J JDK14 Binding under MIT License
+  xercesImpl under Apache License, Version 2.0
   XML Commons External Components XML APIs under The Apache Software License, Version 2.0
   Xml Compatibility extensions for Jackson under The Apache Software License, Version 2.0 or GNU Lesser General Public License (LGPL), Version 2.1
 
