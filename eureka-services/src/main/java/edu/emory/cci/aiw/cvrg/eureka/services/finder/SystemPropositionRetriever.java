@@ -76,11 +76,11 @@ public class SystemPropositionRetriever implements
 		try {
 			result = etlClient.getPropositionDefinition(sourceConfigId, inKey);
 		} catch (ClientException e) {
-			LOGGER.error(e.getMessage(), e);
 			ClientResponse.Status status = e.getResponseStatus();
 			if (status == ClientResponse.Status.NOT_FOUND) {
 				result = null;
 			} else {
+				LOGGER.error(e.getMessage(), e);
 				throw new PropositionFindException(
 						"Could not retrieve proposition definition " + inKey, e);
 			}
