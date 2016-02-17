@@ -70,7 +70,7 @@ import edu.emory.cci.aiw.cvrg.eureka.common.entity.DataElementEntity_;
 public class JpaDataElementEntityDao extends GenericDao<DataElementEntity, Long>
 		implements DataElementEntityDao {
 
-	private static Logger LOGGER
+	private static final Logger LOGGER
 			= LoggerFactory.getLogger(JpaDataElementEntityDao.class);
 
 	/**
@@ -95,7 +95,6 @@ public class JpaDataElementEntityDao extends GenericDao<DataElementEntity, Long>
 
 	@Override
 	public List<DataElementEntity> getByUserId(Long inUserId) {
-		List<DataElementEntity> result;
 		EntityManager entityManager = this.getEntityManager();
 		CriteriaBuilder builder = entityManager.getCriteriaBuilder();
 		CriteriaQuery<DataElementEntity> criteriaQuery = builder.createQuery(
@@ -108,10 +107,7 @@ public class JpaDataElementEntityDao extends GenericDao<DataElementEntity, Long>
 		TypedQuery<DataElementEntity> typedQuery = entityManager.createQuery(
 				criteriaQuery.where(
 						builder.and(userPredicate, notInSystemPredicate)));
-
-		result = typedQuery.getResultList();
-
-		return result;
+		return typedQuery.getResultList();
 	}
 
 	private DataElementEntity getByUserAndKey(Long inUserId, String inKey, boolean excludeSystemElements) {
@@ -122,7 +118,7 @@ public class JpaDataElementEntityDao extends GenericDao<DataElementEntity, Long>
 				DataElementEntity.class);
 		Root<DataElementEntity> root = criteriaQuery.from(DataElementEntity.class);
 		
-		List<Predicate> predicates = new ArrayList<Predicate>(3);
+		List<Predicate> predicates = new ArrayList<>(3);
 		Predicate userPredicate = builder.equal(
 				root.get(
 						DataElementEntity_.userId), inUserId);
@@ -147,8 +143,6 @@ public class JpaDataElementEntityDao extends GenericDao<DataElementEntity, Long>
 			LOGGER.warn("Result not unique for user id = {} and key = {}",
 					inUserId, inKey);
 		} catch (NoResultException nre) {
-			LOGGER.warn("Result not existent for user id = {} and key = {}",
-					inUserId, inKey);
 		}
 
 		return result;

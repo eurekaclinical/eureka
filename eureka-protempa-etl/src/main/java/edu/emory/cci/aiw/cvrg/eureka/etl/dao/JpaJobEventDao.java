@@ -42,8 +42,6 @@ package edu.emory.cci.aiw.cvrg.eureka.etl.dao;
 
 import javax.persistence.EntityManager;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.google.inject.Inject;
 import com.google.inject.Provider;
@@ -59,11 +57,6 @@ import edu.emory.cci.aiw.cvrg.eureka.common.entity.JobEvent;
  *
  */
 public class JpaJobEventDao extends GenericDao<JobEvent, Long> implements JobEventDao {
-
-	/**
-	 * The class level logger.
-	 */
-	private static final Logger LOGGER = LoggerFactory.getLogger(JpaJobEventDao.class);
 
 	/**
 	 * Construct instance with the given EntityManager provider.

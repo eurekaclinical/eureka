@@ -54,6 +54,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.inject.Inject;
+import com.google.inject.persist.Transactional;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.exception.HttpStatusException;
 import edu.emory.cci.aiw.cvrg.eureka.etl.config.EtlProperties;
@@ -71,6 +72,7 @@ import org.arp.javautil.arrays.Arrays;
  */
 @Path("/protected/proposition")
 @RolesAllowed({"researcher"})
+@Produces(MediaType.APPLICATION_JSON)
 public class PropositionResource {
 
 	private static final Logger LOGGER = LoggerFactory
@@ -84,7 +86,7 @@ public class PropositionResource {
 
 	@GET
 	@Path("/{configId}/{key}")
-	@Produces(MediaType.APPLICATION_JSON)
+	@Transactional
 	public PropositionDefinition getProposition(
 			@PathParam("configId") String inConfigId,
 			@PathParam("key") String inKey) {
@@ -117,7 +119,7 @@ public class PropositionResource {
 
 	@GET
 	@Path("/{configId}")
-	@Produces(MediaType.APPLICATION_JSON)
+	@Transactional
 	public List<PropositionDefinition> getPropositionsGet(
 			@PathParam("configId") String inConfigId,
 			@QueryParam("key") List<String> inKeys,
@@ -127,7 +129,7 @@ public class PropositionResource {
 
 	@POST
 	@Path("/{configId}")
-	@Produces(MediaType.APPLICATION_JSON)
+	@Transactional
 	public List<PropositionDefinition> getPropositionsPost(
 			@PathParam("configId") String inConfigId,
 			@FormParam("key") List<String> inKeys,
@@ -165,7 +167,6 @@ public class PropositionResource {
 
 	@GET
 	@Path("/search/{sourceConfigId}/{searchKey}")
-	@Produces(MediaType.APPLICATION_JSON)
 	public List<String> searchPropositionsInTheOntology(
 			@PathParam("sourceConfigId") String inSourceConfigId,
 			@PathParam("searchKey") String inSearchKey) {
@@ -195,7 +196,7 @@ public class PropositionResource {
 
 	@GET
 	@Path("/propsearch/{sourceConfigId}/{searchKey}")
-	@Produces(MediaType.APPLICATION_JSON)
+	@Transactional
 	public List<PropositionDefinition> getPropositionsInTheOntologyBySearchKey(
 			@PathParam("sourceConfigId") String inSourceConfigId,
 			@PathParam("searchKey") String inSearchKey) {

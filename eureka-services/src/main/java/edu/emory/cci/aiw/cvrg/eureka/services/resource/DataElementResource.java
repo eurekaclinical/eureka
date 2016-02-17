@@ -56,6 +56,7 @@ import javax.ws.rs.core.Response.Status;
 import org.apache.commons.lang3.StringUtils;
 
 import com.google.inject.Inject;
+import com.google.inject.persist.Transactional;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.DataElement;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.DataElementEntity;
@@ -101,6 +102,7 @@ public class DataElementResource {
 	}
 
 	@GET
+	@Transactional
 	public List<DataElement> getAll(@Context HttpServletRequest inRequest,
 			@DefaultValue("false") @QueryParam("summarize") boolean inSummarize) {
 		UserEntity user = this.userDao.getByHttpServletRequest(inRequest);
@@ -116,6 +118,7 @@ public class DataElementResource {
 
 	@GET
 	@Path("/{key}")
+	@Transactional
 	public DataElement get(@Context HttpServletRequest inRequest,
 			@PathParam("key") String inKey,
 			@DefaultValue("false") @QueryParam("summarize") boolean inSummarize) {

@@ -261,7 +261,6 @@ public class GenericDao<T, PK> implements Dao<T, PK> {
 	 */
 	protected final EntityManager getEntityManager() {
 		return this.managerProvider.get();
-		//return this.entityManager;
 	}
 
 	/**

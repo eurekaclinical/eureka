@@ -40,6 +40,7 @@
 package edu.emory.cci.aiw.cvrg.eureka.etl.resource;
 
 import com.google.inject.Inject;
+import com.google.inject.persist.Transactional;
 import edu.emory.cci.aiw.cvrg.eureka.common.authentication.AuthorizedUserSupport;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.DestinationType;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.EtlDestination;
@@ -105,6 +106,7 @@ public class DestinationResource {
 	
 	@GET
 	@Path("/{destId}")
+	@Transactional
 	public EtlDestination getDestination(
 			@Context HttpServletRequest request,
 			@PathParam("destId") String destId) {
@@ -119,6 +121,7 @@ public class DestinationResource {
 	}
 
 	@GET
+	@Transactional
 	public List<EtlDestination> getAll(
 			@Context HttpServletRequest request,
 			@QueryParam("type") DestinationType type) {
@@ -129,11 +132,11 @@ public class DestinationResource {
 		}
 		switch (type) {
 			case I2B2:
-				return new ArrayList<EtlDestination>(destinations.getAllI2B2s());
+				return new ArrayList<>(destinations.getAllI2B2s());
 			case COHORT:
-				return new ArrayList<EtlDestination>(destinations.getAllCohorts());
+				return new ArrayList<>(destinations.getAllCohorts());
 			case PATIENT_SET_EXTRACTOR:
-				return new ArrayList<EtlDestination>(destinations.getAllPatientSetSenders());
+				return new ArrayList<>(destinations.getAllPatientSetSenders());
 			default:
 				throw new AssertionError("Unexpected destination type " + type);
 		}

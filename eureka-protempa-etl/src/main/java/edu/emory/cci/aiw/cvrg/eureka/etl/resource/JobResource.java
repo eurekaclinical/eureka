@@ -62,6 +62,7 @@ import org.protempa.backend.dsb.filter.DateTimeFilter;
 import org.protempa.proposition.value.AbsoluteTimeGranularity;
 
 import com.google.inject.Inject;
+import com.google.inject.persist.Transactional;
 import edu.emory.cci.aiw.cvrg.eureka.common.authentication.AuthorizedUserSupport;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.Job;
@@ -123,6 +124,7 @@ public class JobResource {
 	}
 
 	@GET
+	@Transactional
 	public List<Job> getAll(@Context HttpServletRequest request,
 			@QueryParam("order") String order) {
 		JobFilter jobFilter = new JobFilter(null,
@@ -144,8 +146,8 @@ public class JobResource {
 
 	@GET
 	@Path("/{jobId}")
-	public Job getJob(
-                        @Context HttpServletRequest request,
+	@Transactional
+	public Job getJob(@Context HttpServletRequest request,
 			@PathParam("jobId") Long inJobId) {
 		return getJobEntity(request, inJobId).toJob();
 	}
@@ -190,6 +192,18 @@ public class JobResource {
 		return Response.created(URI.create("/" + jobId)).build();
 	}
 	
+	@GET
+	@RolesAllowed({"admin"})
+	@Path("/status")
+	@Transactional
+	public List<Job> getJobStatus(@QueryParam("filter") JobFilter inFilter) {
+		List<Job> jobs = new ArrayList<>();
+		for (JobEntity jobEntity : this.jobDao.getWithFilter(inFilter)) {
+			jobs.add(jobEntity.toJob());
+		}
+		return jobs;
+	}
+	
 	private JobEntity getJobEntity(HttpServletRequest request, Long inJobId) {
 		JobFilter jobFilter = new JobFilter(inJobId,
 				this.authenticationSupport.getUser(request).getId(), null, null, null);
@@ -227,17 +241,6 @@ public class JobResource {
 				jobSpec.isUpdateData(),
 				prompts);
 		return jobEntity.getId();
-	}
-
-	@GET
-	@RolesAllowed({"admin"})
-	@Path("/status")
-	public List<Job> getJobStatus(@QueryParam("filter") JobFilter inFilter) {
-		List<Job> jobs = new ArrayList<>();
-		for (JobEntity jobEntity : this.jobDao.getWithFilter(inFilter)) {
-			jobs.add(jobEntity.toJob());
-		}
-		return jobs;
 	}
 
 	private JobEntity newJobEntity(JobSpec job, AuthorizedUserEntity etlUser) {
