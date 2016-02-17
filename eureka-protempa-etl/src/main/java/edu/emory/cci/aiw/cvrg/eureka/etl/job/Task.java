@@ -52,7 +52,6 @@ import edu.emory.cci.aiw.cvrg.eureka.common.entity.JobEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.JobEvent;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.JobStatus;
 import edu.emory.cci.aiw.cvrg.eureka.etl.dao.JobDao;
-import edu.emory.cci.aiw.cvrg.eureka.etl.dao.JobEventDao;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.ArrayList;
@@ -64,7 +63,6 @@ public final class Task implements Runnable {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(Task.class);
 	private final JobDao jobDao;
-	private final JobEventDao jobEventDao;
 	private final ETL etl;
 	private Long jobId;
 	private List<PropositionDefinition> propositionDefinitions;
@@ -74,9 +72,8 @@ public final class Task implements Runnable {
 	private Configuration prompts;
 
 	@Inject
-	Task(JobDao inJobDao, JobEventDao inJobEventDao, ETL inEtl) {
+	Task(JobDao inJobDao, ETL inEtl) {
 		this.jobDao = inJobDao;
-		this.jobEventDao = inJobEventDao;
 		this.etl = inEtl;
 		this.propIdsToShow = Collections.emptyList();
 		this.propositionDefinitions = Collections.emptyList();
@@ -153,8 +150,7 @@ public final class Task implements Runnable {
 			startedJobEvent.setTimeStamp(new Date());
 			startedJobEvent.setStatus(JobStatus.STARTED);
 			startedJobEvent.setMessage("Processing started");
-			this.jobEventDao.create(startedJobEvent);
-			this.jobDao.refresh(myJob);
+			this.jobDao.update(myJob);
 
 			PropositionDefinition[] propDefArray
 					= new PropositionDefinition[this.getPropositionDefinitions()
@@ -172,7 +168,7 @@ public final class Task implements Runnable {
 			completedJobEvent.setTimeStamp(new Date());
 			completedJobEvent.setStatus(JobStatus.COMPLETED);
 			completedJobEvent.setMessage("Processing completed without error");
-			this.jobEventDao.create(completedJobEvent);
+			this.jobDao.update(myJob);
 			if (LOGGER.isInfoEnabled()) {
 				LOGGER.info("Completed job {} for user {} without errors.",
 						new Object[]{
@@ -192,7 +188,7 @@ public final class Task implements Runnable {
 					LOGGER.error("Finished job {} for user {} with errors.",
 							new Object[]{
 								myJob.getId(), myJob.getUser().getUsername()});
-					this.jobEventDao.create(failedJobEvent);
+					this.jobDao.update(myJob);
 				} catch (Throwable ignore) {
 				}
 			}
@@ -225,7 +221,7 @@ public final class Task implements Runnable {
 			errorJobEvent.setStatus(JobStatus.ERROR);
 			errorJobEvent.setMessage(msg);
 			errorJobEvent.setExceptionStackTrace(sw.toString());
-			this.jobEventDao.create(errorJobEvent);
+			this.jobDao.update(job);
 		} else {
 			LOGGER.error("Could not create job: " + e.getMessage(), e);
 		}

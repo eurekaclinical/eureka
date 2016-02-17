@@ -40,6 +40,7 @@
 package edu.emory.cci.aiw.cvrg.eureka.services.resource;
 
 import com.google.inject.Inject;
+import com.google.inject.persist.Transactional;
 import com.sun.jersey.api.client.ClientResponse;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.Job;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.JobFilter;
@@ -147,6 +148,7 @@ public class JobResource {
 	 */
 	@POST
 	@Consumes({MediaType.APPLICATION_JSON})
+	@Transactional
 	public Response submit(@Context HttpServletRequest request, JobSpec jobSpec) {
 		LOGGER.debug("Got job submission: {}", jobSpec);
 		UserEntity user = this.userDao.getByHttpServletRequest(request);

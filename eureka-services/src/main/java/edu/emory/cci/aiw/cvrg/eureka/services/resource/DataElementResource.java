@@ -132,6 +132,7 @@ public class DataElementResource {
 	}
 
 	@POST
+	@Transactional
 	public void create(DataElement inElement) {
 		if (inElement.getId() != null) {
 			throw new HttpStatusException(
@@ -174,6 +175,7 @@ public class DataElementResource {
 	}
 
 	@PUT
+	@Transactional
 	public void update(@Context HttpServletRequest inRequest,
 			DataElement inElement) {
 		if (inElement.getId() == null) {
@@ -238,6 +240,7 @@ public class DataElementResource {
 
 	@DELETE
 	@Path("/{userId}/{key}")
+	@Transactional
 	public void delete(@PathParam("userId") Long inUserId,
 			@PathParam("key") String inKey) {
 		DataElementEntity dataElementEntity

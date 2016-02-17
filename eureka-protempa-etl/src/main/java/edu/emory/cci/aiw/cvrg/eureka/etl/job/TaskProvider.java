@@ -50,17 +50,15 @@ public class TaskProvider implements Provider<Task> {
 
 	private final JobDao jobDao;
 	private final ETL etl;
-	private final JobEventDao jobEventDao;
 
 	@Inject
-	public TaskProvider (JobDao inJobDao, JobEventDao inJobEventDao, ETL inETL) {
+	public TaskProvider (JobDao inJobDao, ETL inETL) {
 		this.jobDao = inJobDao;
-		this.jobEventDao = inJobEventDao;
 		this.etl = inETL;
 	}
 
 	@Override
 	public Task get() {
-		return new Task(this.jobDao, this.jobEventDao, this.etl);
+		return new Task(this.jobDao, this.etl);
 	}
 }

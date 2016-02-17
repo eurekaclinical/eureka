@@ -91,6 +91,7 @@ public class DestinationResource {
 	}
 	
 	@POST
+	@Transactional
 	public Response create(@Context HttpServletRequest request, EtlDestination etlDestination) {
 		AuthorizedUserEntity user = this.authenticationSupport.getUser(request);
 		Destinations destinations = new Destinations(this.etlProperties, user, this.destinationDao, this.groupDao);
@@ -99,6 +100,7 @@ public class DestinationResource {
 	}
 	
 	@PUT
+	@Transactional
 	public void update(@Context HttpServletRequest request, EtlDestination etlDestination) {
 		AuthorizedUserEntity user = this.authenticationSupport.getUser(request);
 		new Destinations(this.etlProperties, user, this.destinationDao, this.groupDao).update(etlDestination);
@@ -144,6 +146,7 @@ public class DestinationResource {
 	
 	@DELETE
 	@Path("/{destId}")
+	@Transactional
 	public void delete(@Context HttpServletRequest request,
 			@PathParam("destId") String destId) {
 		AuthorizedUserEntity user = this.authenticationSupport.getUser(request);
