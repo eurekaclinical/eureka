@@ -40,8 +40,6 @@ package edu.emory.cci.aiw.cvrg.eureka.common.config;
  * #L%
  */
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.google.inject.persist.PersistFilter;
 import edu.emory.cci.aiw.cvrg.eureka.common.props.AbstractProperties;
@@ -55,8 +53,6 @@ import edu.emory.cci.aiw.cvrg.eureka.common.props.AbstractProperties;
  */
 public abstract class AbstractJerseyServletModuleWithPersist extends AbstractJerseyServletModule {
 
-	private static final Logger LOGGER = LoggerFactory
-			.getLogger(AbstractJerseyServletModuleWithPersist.class);
 	private static final String CONTAINER_PATH = "/api/*";
 
 	protected AbstractJerseyServletModuleWithPersist(AbstractProperties inProperties,
@@ -66,9 +62,12 @@ public abstract class AbstractJerseyServletModuleWithPersist extends AbstractJer
 	
 	@Override
 	protected void configureServlets() {
-		super.configureServlets();
-		
+		/**
+		 * Guice docs say that PersistFilter must be registered before any
+		 * other filter.
+		 */
 		filter(CONTAINER_PATH).through(PersistFilter.class);
+		super.configureServlets();
 	}
 
 }
