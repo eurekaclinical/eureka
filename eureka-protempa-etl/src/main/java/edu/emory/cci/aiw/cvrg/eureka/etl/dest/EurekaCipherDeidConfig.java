@@ -43,7 +43,6 @@ package edu.emory.cci.aiw.cvrg.eureka.etl.dest;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.CipherEncryptionAlgorithm;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.DeidPerPatientParams;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.DestinationEntity;
-import edu.emory.cci.aiw.cvrg.eureka.etl.dao.DeidPerPatientParamDao;
 import java.security.Key;
 import java.security.NoSuchAlgorithmException;
 import javax.crypto.KeyGenerator;
@@ -54,6 +53,7 @@ import org.protempa.dest.deid.CipherDeidConfig;
 import org.protempa.dest.deid.CipherEncryption;
 import org.protempa.dest.deid.EncryptionInitException;
 import org.protempa.dest.deid.KeyCreateException;
+import edu.emory.cci.aiw.cvrg.eureka.etl.dao.DeidPerPatientParamsDao;
 
 /**
  *
@@ -68,7 +68,7 @@ public class EurekaCipherDeidConfig extends EurekaDeidConfig implements CipherDe
 	private final CipherEncryptionAlgorithm encryptionAlgorithm;
 	private KeyGenerator keyGenerator;
 
-	public EurekaCipherDeidConfig(DestinationEntity inDestination, CipherEncryptionAlgorithm encryptionAlgorithm, DeidPerPatientParamDao inDestinationOffsetDao) {
+	public EurekaCipherDeidConfig(DestinationEntity inDestination, CipherEncryptionAlgorithm encryptionAlgorithm, DeidPerPatientParamsDao inDestinationOffsetDao) {
 		super(inDestination, inDestinationOffsetDao);
 		this.cipherAlgorithm = encryptionAlgorithm.getCipherAlgorithm();
 		this.keyAlgorithm = encryptionAlgorithm.getKeyAlgorithm();
@@ -105,7 +105,7 @@ public class EurekaCipherDeidConfig extends EurekaDeidConfig implements CipherDe
 				}
 			}
 		}
-		DeidPerPatientParamDao deidPerPatientParamDao = getDeidPerPatientParamDao();
+		DeidPerPatientParamsDao deidPerPatientParamDao = getDeidPerPatientParamDao();
 		DeidPerPatientParams byKeyId = getOrCreatePatientParams(keyId);
 		String keyStr = byKeyId.getCipherKey();
 		if (keyStr == null) {

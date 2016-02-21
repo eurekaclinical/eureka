@@ -44,7 +44,7 @@ import edu.emory.cci.aiw.cvrg.eureka.common.entity.CipherEncryptionAlgorithm;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.DestinationEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.EncryptionAlgorithm;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.MessageDigestEncryptionAlgorithm;
-import edu.emory.cci.aiw.cvrg.eureka.etl.dao.DeidPerPatientParamDao;
+import edu.emory.cci.aiw.cvrg.eureka.etl.dao.DeidPerPatientParamsDao;
 
 /**
  *
@@ -52,9 +52,9 @@ import edu.emory.cci.aiw.cvrg.eureka.etl.dao.DeidPerPatientParamDao;
  */
 public class EurekaDeidConfigFactory {
 	private final DestinationEntity destinationEntity;
-	private final DeidPerPatientParamDao destinationOffsetDao;
+	private final DeidPerPatientParamsDao destinationOffsetDao;
 	
-	public EurekaDeidConfigFactory(DestinationEntity inDestinationEntity, DeidPerPatientParamDao inDestinationOffsetDao) {
+	public EurekaDeidConfigFactory(DestinationEntity inDestinationEntity, DeidPerPatientParamsDao inDestinationOffsetDao) {
 		this.destinationEntity = inDestinationEntity;
 		this.destinationOffsetDao = inDestinationOffsetDao;
 	}

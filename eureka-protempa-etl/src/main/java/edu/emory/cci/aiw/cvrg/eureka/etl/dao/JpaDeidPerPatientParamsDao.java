@@ -62,7 +62,7 @@ import javax.persistence.criteria.Root;
  * @author Andrew Post
  *
  */
-public class JpaDestinationOffsetDao extends GenericDao<DeidPerPatientParams, Long> implements DeidPerPatientParamDao {
+public class JpaDeidPerPatientParamsDao extends GenericDao<DeidPerPatientParams, Long> implements DeidPerPatientParamsDao {
 
 	/**
 	 * Construct instance with the given EntityManager provider.
@@ -70,7 +70,7 @@ public class JpaDestinationOffsetDao extends GenericDao<DeidPerPatientParams, Lo
 	 * @param inEMProvider The entity manager provider.
 	 */
 	@Inject
-	public JpaDestinationOffsetDao(final Provider<EntityManager> inEMProvider) {
+	public JpaDeidPerPatientParamsDao(final Provider<EntityManager> inEMProvider) {
 		super(DeidPerPatientParams.class, inEMProvider);
 	}
 
@@ -79,7 +79,7 @@ public class JpaDestinationOffsetDao extends GenericDao<DeidPerPatientParams, Lo
 		// No bulk delete in JPA 2.0 for criteria queries, so we have to use
 		// a regular query. JPA 2.1 does support bulk delete.
 		EntityManager entityManager = getEntityManager();
-		Query query = entityManager.createQuery("DELETE FROM DestinationOffset do WHERE do.destination = :d");
+		Query query = entityManager.createQuery("DELETE FROM DeidPerPatientParams do WHERE do.destination = :d");
 		query.setParameter("d", destination);
 		query.executeUpdate();
 	}

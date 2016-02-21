@@ -53,12 +53,12 @@ import edu.emory.cci.aiw.cvrg.eureka.common.entity.Neo4jDestinationEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.PatientSetExtractorDestinationEntity;
 import edu.emory.cci.aiw.cvrg.eureka.etl.config.EtlProperties;
 import edu.emory.cci.aiw.cvrg.eureka.etl.dao.DestinationDao;
-import edu.emory.cci.aiw.cvrg.eureka.etl.dao.DeidPerPatientParamDao;
 import edu.emory.cci.aiw.i2b2etl.dest.I2b2Destination;
 import edu.emory.cci.aiw.i2b2etl.dest.config.ConfigurationInitException;
 import edu.emory.cci.aiw.neo4jetl.Neo4jDestination;
 import org.protempa.dest.DestinationInitException;
 import org.protempa.dest.deid.DeidentifiedDestination;
+import edu.emory.cci.aiw.cvrg.eureka.etl.dao.DeidPerPatientParamsDao;
 
 /**
  *
@@ -69,10 +69,10 @@ public class ProtempaDestinationFactory {
 
 	private final EtlProperties etlProperties;
 	private final DestinationDao destinationDao;
-	private final DeidPerPatientParamDao destinationOffsetDao;
+	private final DeidPerPatientParamsDao destinationOffsetDao;
 
 	@Inject
-	public ProtempaDestinationFactory(DestinationDao inDestinationDao, DeidPerPatientParamDao inDestinationOffsetDao, EtlProperties etlProperties) {
+	public ProtempaDestinationFactory(DestinationDao inDestinationDao, DeidPerPatientParamsDao inDestinationOffsetDao, EtlProperties etlProperties) {
 		this.destinationDao = inDestinationDao;
 		this.destinationOffsetDao = inDestinationOffsetDao;
 		this.etlProperties = etlProperties;

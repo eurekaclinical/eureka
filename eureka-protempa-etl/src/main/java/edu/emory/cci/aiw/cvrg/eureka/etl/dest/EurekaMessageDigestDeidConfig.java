@@ -43,10 +43,10 @@ package edu.emory.cci.aiw.cvrg.eureka.etl.dest;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.DeidPerPatientParams;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.DestinationEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.MessageDigestEncryptionAlgorithm;
-import edu.emory.cci.aiw.cvrg.eureka.etl.dao.DeidPerPatientParamDao;
 import org.protempa.dest.deid.EncryptionInitException;
 import org.protempa.dest.deid.MessageDigestDeidConfig;
 import org.protempa.dest.deid.MessageDigestEncryption;
+import edu.emory.cci.aiw.cvrg.eureka.etl.dao.DeidPerPatientParamsDao;
 
 /**
  *
@@ -55,7 +55,7 @@ import org.protempa.dest.deid.MessageDigestEncryption;
 public class EurekaMessageDigestDeidConfig extends EurekaDeidConfig implements MessageDigestDeidConfig {
 	private String algorithm;
 
-	public EurekaMessageDigestDeidConfig(DestinationEntity inDestination, MessageDigestEncryptionAlgorithm encryptionAlgorithm, DeidPerPatientParamDao inDestinationOffsetDao) {
+	public EurekaMessageDigestDeidConfig(DestinationEntity inDestination, MessageDigestEncryptionAlgorithm encryptionAlgorithm, DeidPerPatientParamsDao inDestinationOffsetDao) {
 		super(inDestination, inDestinationOffsetDao);
 		this.algorithm = encryptionAlgorithm.getAlgorithm();
 	}

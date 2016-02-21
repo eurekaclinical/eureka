@@ -41,11 +41,11 @@ package edu.emory.cci.aiw.cvrg.eureka.etl.dest;
  */
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.DeidPerPatientParams;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.DestinationEntity;
-import edu.emory.cci.aiw.cvrg.eureka.etl.dao.DeidPerPatientParamDao;
 import java.io.IOException;
 import java.security.SecureRandom;
 import java.util.Random;
 import org.protempa.dest.deid.DeidConfig;
+import edu.emory.cci.aiw.cvrg.eureka.etl.dao.DeidPerPatientParamsDao;
 
 /**
  *
@@ -55,12 +55,12 @@ public abstract class EurekaDeidConfig implements DeidConfig {
 
 	private static final int MAX_OFFSET_SECONDS = 364 * 24 * 60 * 60;
 
-	private final DeidPerPatientParamDao deidPerPatientParamDao;
+	private final DeidPerPatientParamsDao deidPerPatientParamDao;
 
 	private final Random random;
 	private final DestinationEntity destination;
 
-	EurekaDeidConfig(DestinationEntity inDestination, DeidPerPatientParamDao inDeidPerPatientParamDao) {
+	EurekaDeidConfig(DestinationEntity inDestination, DeidPerPatientParamsDao inDeidPerPatientParamDao) {
 		this.destination = inDestination;
 		this.deidPerPatientParamDao = inDeidPerPatientParamDao;
 		this.random = new SecureRandom();
@@ -101,7 +101,7 @@ public abstract class EurekaDeidConfig implements DeidConfig {
 	public void close() throws IOException {
 	}
 	
-	protected DeidPerPatientParamDao getDeidPerPatientParamDao() {
+	protected DeidPerPatientParamsDao getDeidPerPatientParamDao() {
 		return this.deidPerPatientParamDao;
 	}
 	

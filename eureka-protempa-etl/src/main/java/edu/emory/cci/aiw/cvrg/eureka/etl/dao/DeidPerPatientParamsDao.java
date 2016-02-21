@@ -48,7 +48,7 @@ import edu.emory.cci.aiw.cvrg.eureka.common.entity.DeidPerPatientParams;
  *
  * @author Andrew Post
  */
-public interface DeidPerPatientParamDao extends Dao<DeidPerPatientParams, Long> {
+public interface DeidPerPatientParamsDao extends Dao<DeidPerPatientParams, Long> {
 	void deleteAll(DestinationEntity destination);
 
 	DeidPerPatientParams getByKeyId(String keyId);
