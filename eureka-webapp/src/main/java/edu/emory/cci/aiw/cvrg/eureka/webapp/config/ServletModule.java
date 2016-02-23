@@ -39,8 +39,6 @@ package edu.emory.cci.aiw.cvrg.eureka.webapp.config;
  * <http://www.gnu.org/licenses/gpl-3.0.html>.
  * #L%
  */
-
-
 import com.google.inject.Singleton;
 import edu.emory.cci.aiw.cvrg.eureka.common.config.AbstractServletModule;
 import edu.emory.cci.aiw.cvrg.eureka.servlet.*;
@@ -61,12 +59,13 @@ import java.util.HashMap;
 import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 /**
- * 
+ *
  * @author hrathod
  */
 class ServletModule extends AbstractServletModule {
-	
+
 	private static final Logger LOGGER = LoggerFactory
 			.getLogger(ServletModule.class);
 	private static final String CONTAINER_PATH = "/site/*";
@@ -74,26 +73,26 @@ class ServletModule extends AbstractServletModule {
 	private static final String PASSWORD_EXPIRED_REDIRECT_URL = "/protected/password_expiration.jsp";
 	private static final String PASSWORD_SAVE_PATH = "/protected/user_acct";
 	private static final String LOGOUT_PATH = "/logout";
-	
+
 	private final WebappProperties properties;
 
 	public ServletModule(WebappProperties inProperties) {
-		super(inProperties, CONTAINER_PATH, CONTAINER_PROTECTED_PATH, 
+		super(inProperties, CONTAINER_PATH, CONTAINER_PROTECTED_PATH,
 				LOGOUT_PATH);
 		this.properties = inProperties;
 	}
-	
+
 	private void setupMessageFilter() {
 		bind(MessagesFilter.class).in(Singleton.class);
 		filterRegex("^/(?!assets).*").through(MessagesFilter.class);
 	}
-	
+
 	private void setupHaveUserRecordFilter() {
 		bind(HaveUserRecordFilter.class).in(Singleton.class);
 		filterRegex("^/(?!assets).*").through(HaveUserRecordFilter.class);
 	}
 
-	private void setupUserInfoFilter () {
+	private void setupUserInfoFilter() {
 		bind(UserInfoFilter.class).in(Singleton.class);
 		filterRegex("^/(?!assets).*").through(UserInfoFilter.class);
 	}
@@ -109,7 +108,7 @@ class ServletModule extends AbstractServletModule {
 		filter(CONTAINER_PROTECTED_PATH).through(
 				PasswordExpiredFilter.class, params);
 	}
-	
+
 	@Override
 	protected void setupFilters() {
 		this.setupMessageFilter();
@@ -117,13 +116,13 @@ class ServletModule extends AbstractServletModule {
 		this.setupUserInfoFilter();
 		this.setupPasswordExpiredFilter();
 	}
-	
+
 	@Override
 	protected void setupServlets() {
 		bind(RegisterUserServlet.class).in(Singleton.class);
 		serve("/register").with(RegisterUserServlet.class);
 
-		bind(ProxyServlet.class).in(Singleton.class);               
+		bind(ProxyServlet.class).in(Singleton.class);
 		serve("/proxy-resource/*").with(ProxyServlet.class);
 
 		bind(ForgotPasswordServlet.class).in(Singleton.class);
@@ -149,10 +148,10 @@ class ServletModule extends AbstractServletModule {
 
 		bind(JobListServlet.class).in(Singleton.class);
 		serve("/protected/jobs").with(JobListServlet.class);
-		
+
 		bind(JobStatsServlet.class).in(Singleton.class);
 		serve("/protected/jobstats").with(JobStatsServlet.class);
-		
+
 		bind(JobPatientCountsServlet.class).in(Singleton.class);
 		serve("/protected/jobpatcounts").with(JobPatientCountsServlet.class);
 
@@ -166,7 +165,8 @@ class ServletModule extends AbstractServletModule {
 		serve("/protected/editorhome").with(EditorHomeServlet.class);
 
 		bind(SystemPropositionListServlet.class).in(Singleton.class);
-		serve("/protected/systemlist").with(SystemPropositionListServlet.class);
+		serve("/protected/systemlist").with(
+				SystemPropositionListServlet.class);
 
 		bind(SavePropositionServlet.class).in(Singleton.class);
 		serve("/protected/saveprop").with(SavePropositionServlet.class);
@@ -175,7 +175,8 @@ class ServletModule extends AbstractServletModule {
 		serve("/protected/deleteprop").with(DeletePropositionServlet.class);
 
 		bind(UserPropositionListServlet.class).in(Singleton.class);
-		serve("/protected/userproplist").with(UserPropositionListServlet.class);
+		serve("/protected/userproplist").with(
+				UserPropositionListServlet.class);
 
 		bind(ListUserDefinedPropositionChildrenServlet.class).in(
 				Singleton.class);
@@ -189,38 +190,44 @@ class ServletModule extends AbstractServletModule {
 		serve("/protected/destinationdataelements").with(
 				DateRangeDataElementServlet.class);
 
-                bind(SearchSystemPropositionJSTreeV3Servlet.class).in(Singleton.class);
-                serve("/protected/jstree3_searchsystemlist").with(SearchSystemPropositionJSTreeV3Servlet.class);
+		bind(SearchSystemPropositionJSTreeV3Servlet.class).in(Singleton.class);
+		serve("/protected/jstree3_searchsystemlist").with(
+				SearchSystemPropositionJSTreeV3Servlet.class);
 
-                bind(SearchSystemPropositionJSTreeV1Servlet.class).in(Singleton.class);
-                serve("/protected/searchsystemlist").with(SearchSystemPropositionJSTreeV1Servlet.class);
+		bind(SearchSystemPropositionJSTreeV1Servlet.class).in(Singleton.class);
+		serve("/protected/searchsystemlist").with(
+				SearchSystemPropositionJSTreeV1Servlet.class);
 
 		bind(CohortHomeServlet.class).in(Singleton.class);
 		serve("/protected/cohorthome").with(CohortHomeServlet.class);
 
 		bind(EditCohortServlet.class).in(Singleton.class);
 		serve("/protected/editcohort").with(EditCohortServlet.class);
-		
+
 		bind(SaveCohortServlet.class).in(Singleton.class);
 		serve("/protected/savecohort").with(SaveCohortServlet.class);
 
 		bind(DeleteCohortServlet.class).in(Singleton.class);
 		serve("/protected/deletecohort").with(DeleteCohortServlet.class);
-		
+
 		bind(ChooseAccountTypeServlet.class).in(Singleton.class);
 		serve("/chooseaccounttype").with(ChooseAccountTypeServlet.class);
-		
+
 		bind(GitHubRegistrationOAuthCallbackServlet.class).in(Singleton.class);
-		serve("/registrationoauthgithubcallback").with(GitHubRegistrationOAuthCallbackServlet.class);
-		
+		serve("/registrationoauthgithubcallback").with(
+				GitHubRegistrationOAuthCallbackServlet.class);
+
 		bind(GoogleRegistrationOAuthCallbackServlet.class).in(Singleton.class);
-		serve("/registrationoauthgooglecallback").with(GoogleRegistrationOAuthCallbackServlet.class);
-		
+		serve("/registrationoauthgooglecallback").with(
+				GoogleRegistrationOAuthCallbackServlet.class);
+
 		bind(TwitterRegistrationOAuthCallbackServlet.class).in(Singleton.class);
-		serve("/registrationoauthtwittercallback").with(TwitterRegistrationOAuthCallbackServlet.class);
-		
+		serve("/registrationoauthtwittercallback").with(
+				TwitterRegistrationOAuthCallbackServlet.class);
+
 		bind(GlobusRegistrationOAuthCallbackServlet.class).in(Singleton.class);
-		serve("/registrationoauthglobuscallback").with(GlobusRegistrationOAuthCallbackServlet.class);
+		serve("/registrationoauthglobuscallback").with(
+				GlobusRegistrationOAuthCallbackServlet.class);
 	}
 
 }
