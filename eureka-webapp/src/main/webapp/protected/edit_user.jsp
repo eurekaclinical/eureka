@@ -93,6 +93,7 @@
 				</label>
 				<div class="form-control-static">
 					<c:set var="isSuperUser" value="0"></c:set>
+                                        
 					<c:forEach var="role" items="${roles}">
 						<c:set var="hasRole" value="0"></c:set>
 						<c:forEach var="userRole" items="${theUser.roles}">
@@ -105,11 +106,23 @@
 						</c:forEach>
 						<c:choose>
 							<c:when test="${hasRole == 1}">
-								<input type="checkbox" name="role" value="${role.id}"
-									   checked="checked" ${role.name eq  'superuser' ? 'disabled="disabled"' : ''}/>${role.name}
+                                                                <input type="checkbox" name="role" value="${role.id}"
+                                                                       checked="checked" 
+                                                                        <c:choose>
+                                                                                <c:when test="${ isSuperUser == 1 && (role.name eq 'superuser' || role.name eq 'admin') }">
+                                                                                     disabled="disabled"
+                                                                                </c:when>
+                                                                        </c:choose>
+                                                                 />${role.name}
 							</c:when>
 							<c:otherwise>
-								<input type="checkbox" name="role" value="${role.id}"/>${role.name}
+								<input type="checkbox" name="role" value="${role.id}"
+                                                                        <c:choose>
+                                                                                <c:when test="${ isSuperUser == 0 && (role.name eq 'superuser') }">
+                                                                                     disabled="disabled"
+                                                                                </c:when>
+                                                                        </c:choose>                                                                
+                                                                />${role.name}
 							</c:otherwise>
 						</c:choose>
 					</c:forEach>
