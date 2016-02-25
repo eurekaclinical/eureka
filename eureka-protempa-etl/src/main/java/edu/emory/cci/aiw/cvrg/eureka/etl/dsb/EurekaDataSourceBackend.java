@@ -502,7 +502,7 @@ public final class EurekaDataSourceBackend extends RelationalDbDataSourceBackend
 				ReferenceSpec.Type.ONE)}, null, null,
 			null, null, null, null, null, null),
 			new EntitySpec("Providers", null,
-			new String[]{"AttendingPhysician"}, false,
+			new String[]{"Provider"}, false,
 			new ColumnSpec(keyIdSchema, keyIdTable,
 			keyIdColumn,
 			new JoinSpec("PATIENT_KEY", "PATIENT_KEY",
