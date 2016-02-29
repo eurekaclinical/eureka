@@ -59,9 +59,9 @@
         $rootScope.app=appProperties;
         AppPropertiesService.getAppProperties()
                 .then(function(response) {
-            $rootScope.modes = response.data.modes;
-            $rootScope.links = response.data.links;
-            $rootScope.registration = response.data.registration;
+            $rootScope.modes = response.data.appPropertiesModes;
+            $rootScope.links = response.data.appPropertiesLinks;
+            $rootScope.registration = response.data.appPropertiesRegistration;                    
         });
         
        $rootScope.userVerficationPerformed = false;

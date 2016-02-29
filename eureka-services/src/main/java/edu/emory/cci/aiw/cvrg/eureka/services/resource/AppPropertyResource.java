@@ -41,6 +41,7 @@ package edu.emory.cci.aiw.cvrg.eureka.services.resource;
  */
 
 import com.google.inject.Inject;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.AppProperties;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -49,8 +50,6 @@ import edu.emory.cci.aiw.cvrg.eureka.common.comm.AppPropertiesModes;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.AppPropertiesRegistration;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.AppPropertiesLinks;
 import edu.emory.cci.aiw.cvrg.eureka.services.config.ServiceProperties;
-import java.util.HashMap;
-import java.util.Map;
 /**
  *
  * @author Miao Ai
@@ -67,14 +66,8 @@ public class AppPropertyResource {
 	}
 
 	@GET
-	public Map<String, Object> getAllAppProperties() {
-		Map<String, Object> propertiesMap;
-		propertiesMap = new HashMap();
-		propertiesMap.put("modes", this.serviceProperties.getAppPropertiesModes());
-		propertiesMap.put("links", this.serviceProperties.getAppPropertiesLinks());
-		propertiesMap.put("registration",this.serviceProperties.getAppPropertiesRegistration());
-                        
-		return propertiesMap;
+	public AppProperties getAppProperties() {
+		return this.serviceProperties.getAppProperties();
 	}        
         
 	@GET
