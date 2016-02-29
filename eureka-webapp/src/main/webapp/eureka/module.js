@@ -59,8 +59,11 @@
         $rootScope.app=appProperties;
         AppPropertiesService.getAppProperties()
                 .then(function(response) {
-            $rootScope.modes = response.data;
+            $rootScope.modes = response.data.modes;
+            $rootScope.links = response.data.links;
+            $rootScope.registration = response.data.registration;
         });
+        
        $rootScope.userVerficationPerformed = false;
        $rootScope.conceptionYear = '2012';
        $rootScope.currentYear = new Date().getFullYear();

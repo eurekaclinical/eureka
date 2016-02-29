@@ -9,12 +9,12 @@
                 </div>
             </md-toolbar>
             <md-card-content>
-                <p>The links on this page will open in a separate window in the <a ng-href="{{app.helpSiteUrl}}/index.html" target="eureka-help">Eureka! website's help pages</a>.
+                <p>The links on this page will open in a separate window in the <a ng-href="{{links.helpSiteUrl}}/index.html" target="eureka-help">Eureka! website's help pages</a>.
                 <div layout>
                     <div flex="50" layout layout-padding>
                         <div flex="50">
 				<span class="thumbnail text-center">
-					<a ng-href="{{app.helpSiteUrl}}/getting-started.html" class="imageAndCaption" target="eureka-help">
+					<a ng-href="{{links.helpSiteUrl}}/getting-started.html" class="imageAndCaption" target="eureka-help">
                         <img alt="Getting Started" src="assets/images/100px-Help-getting-started.png"/>
 						<span class="caption">
 							Getting Started
@@ -24,7 +24,7 @@
                         </div>
                         <div flex="50">
 				<span class="thumbnail text-center">
-					<a ng-href="{{app.aiwSiteUrl}}/user-faq.html" class="imageAndCaption" target="eureka-help">
+					<a ng-href="{{links.aiwUrl}}/user-faq.html" class="imageAndCaption" target="eureka-help">
                         <img alt="Frequently Asked Questions" src="assets/images/100px-Help-FAQ.png"/>
 						<span class="caption">
 							Frequently Asked Questions
@@ -38,13 +38,13 @@
                 <h4>Topics:</h4>
                 <ul>
                     <li>
-                        <a ng-href="{{app.helpSiteUrl}}/spreadsheets.html" target="eureka-help">Spreadsheet Data Upload</a>
+                        <a ng-href="{{links.helpSiteUrl}}/spreadsheets.html" target="eureka-help">Spreadsheet Data Upload</a>
                     </li>
                     <li>
-                        <a ng-href="{{app.helpSiteUrl}}/phenotypes.html" target="eureka-help">Working with Phenotypes</a>
+                        <a ng-href="{{links.helpSiteUrl}}/phenotypes.html" target="eureka-help">Working with Phenotypes</a>
                     </li>
                 </ul>
-                <p ng-if="app.demoMode">
+                <p ng-if="modes.demomode">
                     NOTE: For privacy, data retention and other policies regarding this
                     site, click on Frequently Asked Questions above.
                 </p>
