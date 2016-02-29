@@ -73,8 +73,8 @@ public class ServiceProperties extends AbstractProperties {
 	 */
 	public AppPropertiesModes getAppPropertiesModes() {
 		this.appPropertiesModes = new AppPropertiesModes();
-		this.appPropertiesModes.setDemoMode(Boolean.parseBoolean(this.getValue("eureka.common.demoMode")));
-		this.appPropertiesModes.setEphiProhibited(Boolean.parseBoolean(this.getValue("eureka.common.ephiProhibited")));
+		this.appPropertiesModes.setDemomode(Boolean.parseBoolean(this.getValue("eureka.common.demomode")));
+		this.appPropertiesModes.setEphiprohibited(Boolean.parseBoolean(this.getValue("eureka.common.ephiprohibited")));
 		return this.appPropertiesModes;
 	}
 

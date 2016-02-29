@@ -45,8 +45,8 @@ package edu.emory.cci.aiw.cvrg.eureka.common.comm;
  * @author Miao Ai
  */
 public class AppPropertiesModes {
-	private boolean demoMode;
-	private boolean ephiProhibited;
+	private boolean demomode;
+	private boolean ephiprohibited;
 	/**
 	 * Constructor.
 	 *
@@ -58,31 +58,31 @@ public class AppPropertiesModes {
 	 *
 	 * @return true or false.
 	 */
-	public boolean isDemoMode() {
-		return this.demoMode;                
+	public boolean isDemomode() {
+		return this.demomode;                
 	}
 	/**
 	 * Sets the demoMode status.
 	 * 
 	 * @param inMode
 	 */
-	public void setDemoMode(boolean inMode) {
-		this.demoMode = inMode;           
+	public void setDemomode(boolean inMode) {
+		this.demomode = inMode;           
 	}
 	/**
 	 * Gets the ephiProhibited status.
 	 *
 	 * @return ture or false.
 	 */           
-	public boolean isEphiProhibited() {		
-		return this.ephiProhibited;
+	public boolean isEphiprohibited() {		
+		return this.ephiprohibited;
 	}
 	/**
 	 * Sets the ephiProhibited status.
 	 *
 	 * @param inEphiProhibited
 	 */           
-	public void setEphiProhibited(boolean inEphiProhibited) {		
-		this.ephiProhibited = inEphiProhibited;
+	public void setEphiprohibited(boolean inEphiProhibited) {		
+		this.ephiprohibited = inEphiProhibited;
 	}         
 }
