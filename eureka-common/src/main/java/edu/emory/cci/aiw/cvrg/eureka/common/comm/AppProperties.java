@@ -44,45 +44,62 @@ package edu.emory.cci.aiw.cvrg.eureka.common.comm;
  *
  * @author Miao Ai
  */
-public class AppPropertiesModes {
-	private boolean demoMode;
-	private boolean ephiProhibited;
+public class AppProperties {
+	private AppPropertiesModes modes;
+	private AppPropertiesLinks links;
+	private AppPropertiesRegistration registration;
 	/**
 	 * Constructor.
 	 *
 	 */
-	public AppPropertiesModes() {
-	} 
-	/**
-	 * Gets the demoMode status.
+	public AppProperties() {
+	}     
+        /**
+	 * Gets the AppPropertiesModes.
 	 *
-	 * @return true or false.
+	 * @return modes.
 	 */
-	public boolean isDemoMode() {
-		return this.demoMode;                
-	}
-	/**
-	 * Sets the demoMode status.
+        public AppPropertiesModes getAppPropertiesModes() {
+                return this.modes;
+        }        
+        /**
+	 * Gets the AppPropertiesLinks.
+	 *
+	 * @return links.
+	 */
+        public AppPropertiesLinks getAppPropertiesLinks() {
+                return this.links;
+        }  
+        /**
+	 * Gets the AppPropertiesRegistration.
+	 *
+	 * @return registration.
+	 */
+        public AppPropertiesRegistration getAppPropertiesRegistration() {
+                return this.registration;
+        }    
+        /**
+	 * Sets the modes status.
 	 * 
-	 * @param inMode
+	 * @param inModes
 	 */
-	public void setDemoMode(boolean inMode) {
-		this.demoMode = inMode;           
-	}
+        public void setAppPropertiesModes(AppPropertiesModes inModes) {
+                this.modes = inModes;           
+        }    
 	/**
-	 * Gets the ephiProhibited status.
-	 *
-	 * @return ture or false.
-	 */           
-	public boolean isEphiProhibited() {		
-		return this.ephiProhibited;
-	}
+	 * Sets the links status.
+	 * 
+	 * @param inLinks
+	 */
+        public void setAppPropertiesLinks(AppPropertiesLinks inLinks) {
+                this.links = inLinks;           
+        }  
 	/**
-	 * Sets the ephiProhibited status.
-	 *
-	 * @param inEphiProhibited
-	 */           
-	public void setEphiProhibited(boolean inEphiProhibited) {		
-		this.ephiProhibited= inEphiProhibited;
-	}         
+	 * Sets the registration status.
+	 * 
+	 * @param inRegistration
+	 */
+        public void setAppPropertiesRegistration(AppPropertiesRegistration inRegistration) {
+                this.registration = inRegistration;           
+        }          
 }

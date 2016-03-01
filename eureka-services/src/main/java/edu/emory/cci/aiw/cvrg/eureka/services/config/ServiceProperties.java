@@ -45,6 +45,7 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 
 import com.google.inject.Singleton;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.AppProperties;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.AppPropertiesLinks;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.AppPropertiesModes;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.AppPropertiesRegistration;
@@ -65,7 +66,8 @@ public class ServiceProperties extends AbstractProperties {
 	private AppPropertiesModes appPropertiesModes;
 	private AppPropertiesLinks appPropertiesLinks;
 	private AppPropertiesRegistration appPropertiesRegistration;
-
+	private AppProperties appProperties;
+        
 	/**
 	 * Gets the appPropertiesModes.
 	 *
@@ -73,8 +75,8 @@ public class ServiceProperties extends AbstractProperties {
 	 */
 	public AppPropertiesModes getAppPropertiesModes() {
 		this.appPropertiesModes = new AppPropertiesModes();
-		this.appPropertiesModes.setDemoMode(Boolean.parseBoolean(this.getValue("eureka.common.demoMode")));
-		this.appPropertiesModes.setEphiProhibited(Boolean.parseBoolean(this.getValue("eureka.common.ephiProhibited")));
+		this.appPropertiesModes.setDemoMode(Boolean.parseBoolean(this.getValue("eureka.common.demomode")));
+		this.appPropertiesModes.setEphiProhibited(Boolean.parseBoolean(this.getValue("eureka.common.ephiprohibited")));
 		return this.appPropertiesModes;
 	}
 
@@ -111,6 +113,19 @@ public class ServiceProperties extends AbstractProperties {
 		return this.appPropertiesRegistration;
 	}
 
+	/**
+	 * Gets the appProperties.
+	 *
+	 * @return appProperties.
+	 */
+	public AppProperties getAppProperties() {
+		this.appProperties = new AppProperties();
+		this.appProperties.setAppPropertiesModes(this.getAppPropertiesModes());
+		this.appProperties.setAppPropertiesLinks(this.getAppPropertiesLinks());
+		this.appProperties.setAppPropertiesRegistration(this.getAppPropertiesRegistration());                
+		return this.appProperties;
+	}
+        
 	public String getGoogleOAuthKey() {
 		return this.getValue("eureka.webapp.googleoauthkey");
 	}

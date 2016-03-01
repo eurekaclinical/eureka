@@ -41,6 +41,7 @@ package edu.emory.cci.aiw.cvrg.eureka.services.resource;
  */
 
 import com.google.inject.Inject;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.AppProperties;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -63,7 +64,12 @@ public class AppPropertyResource {
 	public AppPropertyResource( ServiceProperties inServiceProperties){
 		this.serviceProperties= inServiceProperties;
 	}
-       
+
+	@GET
+	public AppProperties getAppProperties() {
+		return this.serviceProperties.getAppProperties();
+	}        
+        
 	@GET
 	@Path("/modes")
 	public AppPropertiesModes getAppPropertiesModes() {
