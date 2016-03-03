@@ -94,7 +94,7 @@ public class JobListServlet extends HttpServlet {
 			}
 			if (job != null) {
 				req.setAttribute("jobId", job.getId());
-				req.setAttribute("jobStatus", job.toJobListRow());
+				
 				String destName = job.getDestinationId();
 				Destination destination = null;
 				for (Destination candidateDest : destinations) {
@@ -109,6 +109,7 @@ public class JobListServlet extends HttpServlet {
 				req.setAttribute("destination", destination);
 				String sourceConfigName = job.getSourceConfigId();
 				req.setAttribute("sourceConfig", sourceConfigName);
+				req.setAttribute("jobStatus", job.toJobListRow(destination.isGetStatisticsSupported()));
 			}
 
 			req.getRequestDispatcher("/protected/job_submission.jsp").forward(req, resp);

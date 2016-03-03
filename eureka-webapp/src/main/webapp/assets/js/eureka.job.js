@@ -46,6 +46,15 @@ window.eureka.job = new function () {
 						$('#destinationConfig').text(data.destinationId);
 						$('#startedDate').text(data.startedDateFormatted);
 						$('#finishedDate').text(data.finishedDateFormatted);
+                                                if(data.status === "Completed" && data.getStatisticsSupported){
+                                                    var browseOutputLink='';
+                                                    browseOutputLink = '<a href="'+$('#getStatisticsSupported').attr('contextPath')+'/protected/jobstats?jobId='+data.jobId+'">Browse Output</a>';                                                 
+                                                    $('#getStatisticsSupported').html(browseOutputLink).show();
+
+                                                }else{
+                                                    $('#getStatisticsSupported').hide();
+                                                }
+                                                
 						$('#messages').text(data.mostRecentMessage);
 						$('form#uploadForm').data('job-running', data.jobSubmitted);
 						self.updateSubmitButtonStatus();
