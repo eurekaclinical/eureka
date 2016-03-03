@@ -42,7 +42,6 @@ package edu.emory.cci.aiw.cvrg.eureka.common.comm;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.JobStatus;
 import java.text.DateFormat;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -66,10 +65,13 @@ public class JobListRow {
 	private List<String> messages;
 	
 	private List<Link> links;
-	
+        
+	private boolean getStatisticsSupported;          
+	private Long jobId;
+        
 	private String sourceConfigId;
 	
-	private String destinationId;
+	private String destinationId;   
 	
 	public JobListRow() {
 		this.links = new ArrayList<>();
@@ -122,8 +124,24 @@ public class JobListRow {
 			this.links = links;
 		}
 	}
-	
-	public String getStartedDateFormatted() {
+        
+	public boolean isGetStatisticsSupported() {
+		return getStatisticsSupported;
+	}
+
+	public void setGetStatisticsSupported(boolean getStatisticsSupported) {
+		this.getStatisticsSupported = getStatisticsSupported;
+	}
+        
+	public void setJobId(Long jobId) {
+		this.jobId = jobId;
+	}
+        
+	public Long getJobId() {
+		return jobId;
+	}
+        
+        public String getStartedDateFormatted() {
 		DateFormat df = DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.MEDIUM);
 		return df.format(this.startedDate);
 	}

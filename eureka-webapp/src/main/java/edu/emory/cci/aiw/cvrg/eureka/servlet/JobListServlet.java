@@ -94,7 +94,10 @@ public class JobListServlet extends HttpServlet {
 			}
 			if (job != null) {
 				req.setAttribute("jobId", job.getId());
-				req.setAttribute("jobStatus", job.toJobListRow());
+                                
+				String sourceConfigName = job.getSourceConfigId();
+				req.setAttribute("sourceConfig", sourceConfigName);				
+                                
 				String destName = job.getDestinationId();
 				Destination destination = null;
 				for (Destination candidateDest : destinations) {
@@ -103,12 +106,14 @@ public class JobListServlet extends HttpServlet {
 						break;
 					}
 				}
-				if (destination == null) {
+                                
+				if (destination != null) {
+					req.setAttribute("destination", destination);
+					job.setGetStatisticsSupported(destination.isGetStatisticsSupported());
+					req.setAttribute("jobStatus", job.toJobListRow());
+				}else{
 					throw new ServletException("Can't find destination " + destName);
 				}
-				req.setAttribute("destination", destination);
-				String sourceConfigName = job.getSourceConfigId();
-				req.setAttribute("sourceConfig", sourceConfigName);
 			}
 
 			req.getRequestDispatcher("/protected/job_submission.jsp").forward(req, resp);

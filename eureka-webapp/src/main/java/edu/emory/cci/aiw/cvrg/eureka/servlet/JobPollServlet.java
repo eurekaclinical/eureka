@@ -51,6 +51,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.codehaus.jackson.map.ObjectMapper;
 
 import com.google.inject.Inject;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.Destination;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.Job;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.JobListRow;
@@ -83,21 +84,29 @@ public class JobPollServlet extends HttpServlet {
 		}
 
 		Job job = null;
+		Destination destination = null;
+		String destinationId = null;
 		try {
 			if (jobId != null) {
 				job = this.servicesClient.getJob(jobId);
+				destinationId = job.getDestinationId();
+				destination = this.servicesClient.getDestination(destinationId);
 			} else {
 				List<Job> jobs = this.servicesClient.getJobsDesc();
 				if (!jobs.isEmpty()) {
 					job = jobs.get(0);
+					destinationId = job.getDestinationId();
+					destination = this.servicesClient.getDestination(destinationId);
 				}
 			}
 		} catch (ClientException ex) {
 			throw new ServletException("Error polling job list", ex);
 		}
-
+		
+                
 		JobListRow jobListRow = null;
-		if (job != null) {
+		if (job != null && destination !=null ) {
+			job.setGetStatisticsSupported(destination.isGetStatisticsSupported());
 			jobListRow = job.toJobListRow();
 		}
 		String value = MAPPER.writeValueAsString(jobListRow);

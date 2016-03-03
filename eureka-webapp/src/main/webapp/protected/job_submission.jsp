@@ -115,16 +115,10 @@
 							  <label class="control-label" for="links">
 								  Links
 							  </label>
-							  <div id="links">
-								  <c:if test="${not empty requestScope.jobStatus}">
-									  <c:forEach var="link" items="${requestScope.jobStatus.links}">
-										  <a href="${link.url}">${link.displayName}</a><br>
-									  </c:forEach>
-									  <c:if test="${destination.getStatisticsSupported}">
-										  <a href="${pageContext.request.contextPath}/protected/jobstats?jobId=${jobId}">Browse Output</a>
-									  </c:if>
-								  </c:if>
+							  <div id="links" style="display: none">
 							  </div>
+                                                          <div id ="getStatisticsSupported" style="display: none" contextPath="${pageContext.request.contextPath}">
+                                                          </div>
 						  </div>
 					  </div>
 				  </div>
