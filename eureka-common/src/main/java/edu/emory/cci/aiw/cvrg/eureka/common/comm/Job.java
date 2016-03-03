@@ -168,14 +168,14 @@ public class Job {
 		return messages;
 	}
 
-	public JobListRow toJobListRow(boolean getStatisticsSupported) {
+	public JobListRow toJobListRow() {
 		JobListRow jobStatus = new JobListRow();
 		jobStatus.setStatus(getStatus());
 		jobStatus.setMessages(messages());
 		jobStatus.setStartedDate(getTimestamp());
                 
 		jobStatus.setLinks(getLinks());
-		jobStatus.setGetStatisticsSupported(getStatisticsSupported);
+		jobStatus.setGetStatisticsSupported(isGetStatisticsSupported());
 		jobStatus.setJobId(getId());
                 
 		jobStatus.setSourceConfigId(getSourceConfigId());

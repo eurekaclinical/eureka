@@ -105,8 +105,9 @@ public class JobPollServlet extends HttpServlet {
 		
                 
 		JobListRow jobListRow = null;
-		if (job != null) {
-			jobListRow = job.toJobListRow(destination.isGetStatisticsSupported());
+		if (job != null && destination !=null ) {
+			job.setGetStatisticsSupported(destination.isGetStatisticsSupported());
+			jobListRow = job.toJobListRow();
 		}
 		String value = MAPPER.writeValueAsString(jobListRow);
 		resp.setContentLength(value.length());

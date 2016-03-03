@@ -41,11 +41,26 @@ window.eureka.job = new function () {
 				url: "jobpoll",
 				success: function (data) {
 					if (!self.submittingJob && data) {
+                                            
 						$(statusElem).text(data.status);
 						$('#sourceConfig').text(data.sourceConfigId);
 						$('#destinationConfig').text(data.destinationId);
 						$('#startedDate').text(data.startedDateFormatted);
 						$('#finishedDate').text(data.finishedDateFormatted);
+                                                
+                                                if(data.status === "Completed" && data.links.length >0){
+                                                    
+                                                    var links = new Array();
+                                                    
+                                                    $.each(data.links, function(index, link){
+                                                       links.push('<a href="'+link.url+'">'+link.displayName+'</a></br>');
+                                                    })
+                                                    $('#links').html(links.join("")).show();
+                                                    
+                                                }else{
+                                                    $('#links').hide();
+                                                }
+                                                
                                                 if(data.status === "Completed" && data.getStatisticsSupported){
                                                     var browseOutputLink='';
                                                     browseOutputLink = '<a href="'+$('#getStatisticsSupported').attr('contextPath')+'/protected/jobstats?jobId='+data.jobId+'">Browse Output</a>';                                                 
