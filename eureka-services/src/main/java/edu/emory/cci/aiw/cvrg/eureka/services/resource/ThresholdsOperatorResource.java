@@ -55,7 +55,7 @@ import javax.ws.rs.core.Response.Status;
  *
  * @author Andrew Post
  */
-@Path("/protected/thresholdsop")
+@Path("/protected/thresholdsops")
 @Produces(MediaType.APPLICATION_JSON)
 public class ThresholdsOperatorResource {
 
@@ -68,7 +68,6 @@ public class ThresholdsOperatorResource {
 	}
 
 	@GET
-	@Path("/list")
 	public List<ThresholdsOperator> getAll() {
 		return this.thresholdsOpDao.getAll();
 	}

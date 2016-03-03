@@ -406,18 +406,18 @@ public class ServicesClient extends EurekaClient {
 	}
 
 	public List<ThresholdsOperator> getThresholdsOperators() throws ClientException {
-		final String path = "/api/protected/thresholdsop/list";
+		final String path = "/api/protected/thresholdsops/";
 		return doGet(path, ThresholdsOperatorList);
 	}
 
 	public ThresholdsOperator getThresholdsOperator(Long inId) throws ClientException {
-		final String path = "/api/protected/thresholdsop/" + inId;
+		final String path = "/api/protected/thresholdsops/" + inId;
 		return doGet(path, ThresholdsOperator.class);
 	}
 
 	public ThresholdsOperator getThresholdsOperatorByName(
 			String inName) throws ClientException {
-		final String path = UriBuilder.fromPath("/api/protected/thresholdsop/byname/")
+		final String path = UriBuilder.fromPath("/api/protected/thresholdsops/byname/")
 				.segment(inName)
 				.build().toString();
 		return doGet(path, ThresholdsOperator.class);
