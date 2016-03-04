@@ -238,7 +238,7 @@ public class ServicesClient extends EurekaClient {
 
 	public void saveUserElement(DataElement inDataElement)
 			throws ClientException {
-		final String path = "/api/protected/dataelement";
+		final String path = "/api/protected/phenotypes";
 		doPost(path, inDataElement);
 	}
 
@@ -270,12 +270,12 @@ public class ServicesClient extends EurekaClient {
 
 	public void updateUserElement(DataElement inDataElement) throws
 			ClientException {
-		final String path = "/api/protected/dataelement";
+		final String path = "/api/protected/phenotypes";
 		doPut(path, inDataElement);
 	}
 
 	public List<DataElement> getUserElements(boolean summarized) throws ClientException {
-		final String path = "/api/protected/dataelement";
+		final String path = "/api/protected/phenotypes";
 		if (summarized) {
 			MultivaluedMap<String, String> queryParams = new MultivaluedMapImpl();
 			queryParams.add("summarize", "true");
@@ -296,7 +296,7 @@ public class ServicesClient extends EurekaClient {
 		 * string can't be templated because the slashes won't be encoded!
 		 */
 		String path = UriBuilder
-				.fromPath("/api/protected/dataelement/")
+				.fromPath("/api/protected/phenotypes/")
 				.segment(inKey)
 				.build().toString();
 
@@ -324,7 +324,7 @@ public class ServicesClient extends EurekaClient {
 		 * string can't be templated because the slashes won't be encoded!
 		 */
 		String path = UriBuilder
-				.fromPath("/api/protected/dataelement/")
+				.fromPath("/api/protected/phenotypes/")
 				.segment("{arg1}")
 				.segment(inKey)
 				.build(inUserId).toString();

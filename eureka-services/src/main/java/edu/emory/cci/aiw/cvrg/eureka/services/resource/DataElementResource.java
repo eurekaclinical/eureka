@@ -75,7 +75,7 @@ import edu.emory.cci.aiw.cvrg.eureka.services.translation.SummarizingDataElement
  *
  * @author hrathod
  */
-@Path("/protected/dataelement")
+@Path("/protected/phenotypes")
 @RolesAllowed({"researcher"})
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)

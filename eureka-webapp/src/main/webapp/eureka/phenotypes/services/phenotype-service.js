@@ -24,7 +24,7 @@
         });
 
         function getSummarizedUserElements() {
-            return $http.get(dataEndpoint + '/dataelement?summarize=true')
+            return $http.get(dataEndpoint + '/phenotypes?summarize=true')
                 .then(handleSuccess, handleError);
         }
 
