@@ -17,7 +17,7 @@
 
     function getTreeData(id) {
       return $http
-        .get(`${dataEndpoint}/systemelement/`, {
+        .get(`${dataEndpoint}/concepts/`, {
           cache: true,
           params: {
             key: id
