@@ -70,7 +70,7 @@ import org.arp.javautil.arrays.Arrays;
 /**
  * @author hrathod
  */
-@Path("/protected/proposition")
+@Path("/protected/concepts")
 @RolesAllowed({"researcher"})
 @Produces(MediaType.APPLICATION_JSON)
 public class PropositionResource {
