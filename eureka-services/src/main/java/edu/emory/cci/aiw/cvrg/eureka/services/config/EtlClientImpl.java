@@ -250,7 +250,7 @@ public class EtlClientImpl extends EurekaClient implements EtlClient {
 			String sourceConfigId, String inKey) throws ClientException {
 		MultivaluedMap<String, String> formParams = new MultivaluedMapImpl();
 		formParams.add("key", inKey);
-		String path = UriBuilder.fromPath("/api/protected/proposition/")
+		String path = UriBuilder.fromPath("/api/protected/concepts/")
 				.segment(sourceConfigId)
 				.build().toString();
 		List<PropositionDefinition> propDefs = doPost(path, PropositionDefinitionList, formParams);
@@ -282,7 +282,7 @@ public class EtlClientImpl extends EurekaClient implements EtlClient {
 			formParams.add("key", key);
 		}
 		formParams.add("withChildren", withChildren.toString());
-		String path = UriBuilder.fromPath("/api/protected/proposition/")
+		String path = UriBuilder.fromPath("/api/protected/concepts/")
 				.segment(sourceConfigId)
 				.build().toString();
 		return doPost(path, PropositionDefinitionList, formParams);
@@ -304,7 +304,7 @@ public class EtlClientImpl extends EurekaClient implements EtlClient {
 	public List<String> getPropositionSearchResults(String sourceConfigId,
 			String inSearchKey) throws ClientException {
 
-		String path = UriBuilder.fromPath("/api/protected/proposition/search/")
+		String path = UriBuilder.fromPath("/api/protected/concepts/search/")
 				.segment(sourceConfigId)
 				.segment(inSearchKey)
 				.build().toString();
@@ -315,7 +315,7 @@ public class EtlClientImpl extends EurekaClient implements EtlClient {
 	public List<PropositionDefinition> getPropositionSearchResultsBySearchKey(String sourceConfigId,
 			String inSearchKey) throws ClientException {
 
-		String path = UriBuilder.fromPath("/api/protected/proposition/propsearch/")
+		String path = UriBuilder.fromPath("/api/protected/concepts/propsearch/")
 				.segment(sourceConfigId)
 				.segment(inSearchKey)
 				.build().toString();

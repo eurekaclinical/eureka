@@ -36,7 +36,7 @@
                 userElements = {
                     blah: 'test'
                 };
-                $httpBackend.expectGET('proxy-resource/dataelement?summarize=true')
+                $httpBackend.expectGET('proxy-resource/phenotypes?summarize=true')
                     .respond(userElements);
             });
 

@@ -68,7 +68,7 @@ import javax.ws.rs.QueryParam;
 /**
  * @author hrathod
  */
-@Path("/protected/systemelement")
+@Path("/protected/concepts")
 @RolesAllowed({"researcher"})
 @Produces(MediaType.APPLICATION_JSON)
 public class SystemElementResource {

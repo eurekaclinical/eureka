@@ -45,7 +45,7 @@
 
         function getSystemElement(key) {
 
-            return $http.get(dataEndpoint+'/systemelement/' + key + '?summary=true')
+            return $http.get(dataEndpoint+'/concepts/' + key + '?summary=true')
                 .then(handleSuccess, handleError);
 
         }
@@ -78,7 +78,7 @@
 
             var promises = [];
             angular.forEach(cohorts, function(cohort){
-                var promise = $http.get(dataEndpoint+'/systemelement/' + cohort + '?summary=true');
+                var promise = $http.get(dataEndpoint+'/concepts/' + cohort + '?summary=true');
                 promises.push(promise);
 
             });

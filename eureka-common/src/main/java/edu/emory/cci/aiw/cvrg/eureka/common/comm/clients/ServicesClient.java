@@ -238,7 +238,7 @@ public class ServicesClient extends EurekaClient {
 
 	public void saveUserElement(DataElement inDataElement)
 			throws ClientException {
-		final String path = "/api/protected/dataelement";
+		final String path = "/api/protected/phenotypes";
 		doPost(path, inDataElement);
 	}
 
@@ -270,12 +270,12 @@ public class ServicesClient extends EurekaClient {
 
 	public void updateUserElement(DataElement inDataElement) throws
 			ClientException {
-		final String path = "/api/protected/dataelement";
+		final String path = "/api/protected/phenotypes";
 		doPut(path, inDataElement);
 	}
 
 	public List<DataElement> getUserElements(boolean summarized) throws ClientException {
-		final String path = "/api/protected/dataelement";
+		final String path = "/api/protected/phenotypes";
 		if (summarized) {
 			MultivaluedMap<String, String> queryParams = new MultivaluedMapImpl();
 			queryParams.add("summarize", "true");
@@ -296,7 +296,7 @@ public class ServicesClient extends EurekaClient {
 		 * string can't be templated because the slashes won't be encoded!
 		 */
 		String path = UriBuilder
-				.fromPath("/api/protected/dataelement/")
+				.fromPath("/api/protected/phenotypes/")
 				.segment(inKey)
 				.build().toString();
 
@@ -324,7 +324,7 @@ public class ServicesClient extends EurekaClient {
 		 * string can't be templated because the slashes won't be encoded!
 		 */
 		String path = UriBuilder
-				.fromPath("/api/protected/dataelement/")
+				.fromPath("/api/protected/phenotypes/")
 				.segment("{arg1}")
 				.segment(inKey)
 				.build(inUserId).toString();
@@ -332,7 +332,7 @@ public class ServicesClient extends EurekaClient {
 	}
 
 	public List<SystemElement> getSystemElements() throws ClientException {
-		final String path = UriBuilder.fromPath("/api/protected/systemelement/").build().toString();
+		final String path = UriBuilder.fromPath("/api/protected/concepts/").build().toString();
 		return doGet(path, SystemElementList);
 	}
 
@@ -345,7 +345,7 @@ public class ServicesClient extends EurekaClient {
 			formParams.add("key", key);
 		}
 		formParams.add("summarize", Boolean.toString(summarize));
-		String path = UriBuilder.fromPath("/api/protected/systemelement/")
+		String path = UriBuilder.fromPath("/api/protected/concepts/")
 				.build().toString();
 		return doPost(path, SystemElementList, formParams);
 	}
@@ -510,7 +510,7 @@ public class ServicesClient extends EurekaClient {
 
 	//Search Functionality
 	public List<String> getSystemElementSearchResults(String searchKey) throws ClientException {
-		final String path = UriBuilder.fromPath("/api/protected/systemelement/search/")
+		final String path = UriBuilder.fromPath("/api/protected/concepts/search/")
 				.segment(searchKey)
 				.build().toString();
 		return doGet(path, SystemElementSearchResultsList);
@@ -518,7 +518,7 @@ public class ServicesClient extends EurekaClient {
 
 	//Search Functionality
 	public List<SystemElement> getSystemElementSearchResultsBySearchKey(String searchKey) throws ClientException {
-		final String path = UriBuilder.fromPath("/api/protected/systemelement/propsearch/")
+		final String path = UriBuilder.fromPath("/api/protected/concepts/propsearch/")
 				.segment(searchKey)
 				.build().toString();
 		return doGet(path, SystemElementList);
