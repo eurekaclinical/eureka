@@ -71,17 +71,17 @@ import javax.ws.rs.QueryParam;
 @Path("/protected/concepts")
 @RolesAllowed({"researcher"})
 @Produces(MediaType.APPLICATION_JSON)
-public class SystemElementResource {
+public class ConceptResource {
 
 	private static final Logger LOGGER = LoggerFactory
-			.getLogger(SystemElementResource.class);
+			.getLogger(ConceptResource.class);
 	private final SystemPropositionFinder finder;
 	private final ServiceProperties serviceProperties;
 	private final SourceConfigResource sourceConfigResource;
 	private final EtlClient etlClient;
 	
 	@Inject
-	public SystemElementResource(SystemPropositionFinder inFinder,
+	public ConceptResource(SystemPropositionFinder inFinder,
 			SourceConfigResource inSourceConfigResource,
 			ServiceProperties inServiceProperties,
 			EtlClient inEtlClient) {

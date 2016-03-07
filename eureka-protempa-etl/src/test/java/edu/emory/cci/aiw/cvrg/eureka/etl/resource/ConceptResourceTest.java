@@ -42,7 +42,7 @@ package edu.emory.cci.aiw.cvrg.eureka.etl.resource;
 /**
  * @author hrathod
  */
-public class PropositionResourceTest extends AbstractEtlResourceTest {
+public class ConceptResourceTest extends AbstractEtlResourceTest {
 
 	
 }
