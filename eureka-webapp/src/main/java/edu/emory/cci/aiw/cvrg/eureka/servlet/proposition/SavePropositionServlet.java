@@ -52,7 +52,7 @@ import org.slf4j.LoggerFactory;
 
 import com.google.inject.Inject;
 
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.DataElement;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.Phenotype;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.User;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ClientException;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ServicesClient;
@@ -76,15 +76,15 @@ public class SavePropositionServlet extends HttpServlet {
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp)
 	        throws ServletException, IOException {
 		LOGGER.debug("SavePropositionServlet");
-		DataElement dataElement = MAPPER.readValue(req.getReader(),
-				DataElement.class);
+		Phenotype dataElement = MAPPER.readValue(req.getReader(),
+				Phenotype.class);
 		try {
 			User user = this.authenticationSupport.getMe(req);
 			dataElement.setUserId(user.getId());
 			if (dataElement.getId() == null) {
 				this.servicesClient.saveUserElement(dataElement);
 			} else {
-				this.servicesClient.updateUserElement(dataElement);
+				this.servicesClient.updateUserElement(dataElement.getId(), dataElement);
 			}
 		} catch (ClientException e) {
 			switch (e.getResponseStatus()) {

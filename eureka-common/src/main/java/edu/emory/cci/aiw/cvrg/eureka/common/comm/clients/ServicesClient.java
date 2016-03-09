@@ -74,8 +74,8 @@ public class ServicesClient extends EurekaClient {
 	};
 	private static final GenericType<List<SystemElement>> SystemElementList = new GenericType<List<SystemElement>>() {
 	};
-	private static final GenericType<List<DataElement>> DataElementList
-			= new GenericType<List<DataElement>>() {
+	private static final GenericType<List<Phenotype>> DataElementList
+			= new GenericType<List<Phenotype>>() {
 	};
 	private static final GenericType<List<Role>> RoleList = new GenericType<List<Role>>() {
 	};
@@ -212,8 +212,8 @@ public class ServicesClient extends EurekaClient {
 		return doGet(path, JobList, queryParams);
 	}
 
-	public List<DataElement> getDataElements(String[] inKeys, boolean summarized) throws ClientException {
-		List<DataElement> result = new ArrayList<>();
+	public List<Phenotype> getDataElements(String[] inKeys, boolean summarized) throws ClientException {
+		List<Phenotype> result = new ArrayList<>();
 		if (inKeys != null) {
 			List<String> userElements = new ArrayList<>();
 			List<String> systemElements = new ArrayList<>();
@@ -234,12 +234,6 @@ public class ServicesClient extends EurekaClient {
 			}
 		}
 		return result;
-	}
-
-	public void saveUserElement(DataElement inDataElement)
-			throws ClientException {
-		final String path = "/api/protected/phenotypes";
-		doPost(path, inDataElement);
 	}
 
 	public URI proxyPost(final String path, final String json)
@@ -268,13 +262,7 @@ public class ServicesClient extends EurekaClient {
 
 	}
 
-	public void updateUserElement(DataElement inDataElement) throws
-			ClientException {
-		final String path = "/api/protected/phenotypes";
-		doPut(path, inDataElement);
-	}
-
-	public List<DataElement> getUserElements(boolean summarized) throws ClientException {
+	public List<Phenotype> getUserElements(boolean summarized) throws ClientException {
 		final String path = "/api/protected/phenotypes";
 		if (summarized) {
 			MultivaluedMap<String, String> queryParams = new MultivaluedMapImpl();
@@ -285,7 +273,7 @@ public class ServicesClient extends EurekaClient {
 		}
 	}
 
-	public DataElement getUserElement(String inKey, boolean summarized) throws ClientException {
+	public Phenotype getUserElement(String inKey, boolean summarized) throws ClientException {
 		if (inKey == null) {
 			throw new IllegalArgumentException("inKey cannot be null");
 		}
@@ -303,11 +291,26 @@ public class ServicesClient extends EurekaClient {
 		if (summarized) {
 			MultivaluedMap<String, String> queryParams = new MultivaluedMapImpl();
 			queryParams.add("summarize", "true");
-			return doGet(path, DataElement.class, queryParams);
+			return doGet(path, Phenotype.class, queryParams);
 		} else {
-			return doGet(path, DataElement.class);
+			return doGet(path, Phenotype.class);
 		}
 	}
+
+	public void saveUserElement(Phenotype inDataElement)
+			throws ClientException {
+		final String path = "/api/protected/phenotypes";
+		doPost(path, inDataElement);
+	}         
+        
+	public void updateUserElement(Long inId, Phenotype inDataElement) throws
+			ClientException {
+		if (inId == null) {
+			throw new IllegalArgumentException("inId cannot be null");
+		}                
+		final String path = "/api/protected/phenotypes/"+ inId;
+		doPut(path, inDataElement);
+	}        
 
 	public void deleteUserElement(Long inUserId, String inKey) throws
 			ClientException {
