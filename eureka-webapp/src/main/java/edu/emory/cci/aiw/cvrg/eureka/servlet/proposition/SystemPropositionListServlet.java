@@ -56,7 +56,7 @@ import org.slf4j.LoggerFactory;
 
 import com.google.inject.Inject;
 
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.SystemElement;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.SystemPhenotype;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ClientException;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ServicesClient;
 
@@ -74,39 +74,39 @@ public class SystemPropositionListServlet extends HttpServlet {
 		this.propListSupport = new PropositionListSupport();
 	}
 
-	private JsonTreeData createData(SystemElement element) {
+	private JsonTreeData createData(SystemPhenotype phenotype) {
 //		JsonTreeData d = new JsonTreeData();
 //		d.setState("closed");
-//		d.setId(element.getKey());
-//		d.setData(this.propListSupport.getDisplayName(element));
-//		d.setText(this.propListSupport.getDisplayName(element));
-//		d.setKeyVal("id", element.getKey());
-//		String properties = StringUtils.join(element.getProperties(), ",");
+//		d.setId(phenotype.getKey());
+//		d.setData(this.propListSupport.getDisplayName(phenotype));
+//		d.setText(this.propListSupport.getDisplayName(phenotype));
+//		d.setKeyVal("id", phenotype.getKey());
+//		String properties = StringUtils.join(phenotype.getProperties(), ",");
 //		d.setKeyVal("data-properties", properties);
-//		if (element.isParent()) {
+//		if (phenotype.isParent()) {
 //			d.setKeyVal("class", "jstree-closed");
 //		}
 //
-//		d.setKeyVal("data-key", element.getKey());
+//		d.setKeyVal("data-key", phenotype.getKey());
 //		d.setKeyVal("data-space", "system");
-//		d.setKeyVal("data-type", element.getSystemType().toString());
-//		d.setKeyVal("data-proposition", element.getKey());
-//		d.setChildren(element.isInternalNode());
+//		d.setKeyVal("data-type", phenotype.getSystemType().toString());
+//		d.setKeyVal("data-proposition", phenotype.getKey());
+//		d.setChildren(phenotype.isInternalNode());
 
 		JsonTreeData d = new JsonTreeData();
 		d.setState("closed");
-		d.setId(element.getKey());
-		d.setData(this.propListSupport.getDisplayName(element));
-		d.setText(this.propListSupport.getDisplayName(element));
-		d.setKeyVal("id", element.getKey());
+		d.setId(phenotype.getKey());
+		d.setData(this.propListSupport.getDisplayName(phenotype));
+		d.setText(this.propListSupport.getDisplayName(phenotype));
+		d.setKeyVal("id", phenotype.getKey());
 
-		String properties = StringUtils.join(element.getProperties(), ",");
+		String properties = StringUtils.join(phenotype.getProperties(), ",");
 		d.setKeyVal("data-properties", properties);
-		d.setKeyVal("data-key", element.getKey());
+		d.setKeyVal("data-key", phenotype.getKey());
 		d.setKeyVal("data-space", "system");
-		d.setKeyVal("data-type", element.getSystemType().toString());
-		d.setKeyVal("data-proposition", element.getKey());
-		d.setChildren(element.isInternalNode());
+		d.setKeyVal("data-type", phenotype.getSystemType().toString());
+		d.setKeyVal("data-proposition", phenotype.getKey());
+		d.setChildren(phenotype.isInternalNode());
 
 		return d;
 	}
@@ -130,17 +130,17 @@ public class SystemPropositionListServlet extends HttpServlet {
 		List<JsonTreeData> l;
 		try {
 			if (propKey.equals("root")) {
-				List<SystemElement> props = this.servicesClient.getSystemElements();
+				List<SystemPhenotype> props = this.servicesClient.getSystemPhenotypes();
 				l = new ArrayList<>(props.size());
-				for (SystemElement proposition : props) {
+				for (SystemPhenotype proposition : props) {
 					JsonTreeData d = createData(proposition);
 					l.add(d);
 				}
 			} else {
-				SystemElement element = this.servicesClient.getSystemElement(propKey, false);
-				List<SystemElement> children = element.getChildren();
+				SystemPhenotype phenotype = this.servicesClient.getSystemPhenotype(propKey, false);
+				List<SystemPhenotype> children = phenotype.getChildren();
 				l = new ArrayList<>(children.size());
-				for (SystemElement propChild : children) {
+				for (SystemPhenotype propChild : children) {
 					JsonTreeData newData = createData(propChild);
 					newData.setType("system");
 					l.add(newData);

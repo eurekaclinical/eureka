@@ -58,17 +58,19 @@ import org.apache.commons.lang3.StringUtils;
 import com.google.inject.Inject;
 import com.google.inject.persist.Transactional;
 
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.DataElement;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.DataElementEntity;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.Phenotype;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.PhenotypeEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.PropositionChildrenVisitor;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.UserEntity;
-import edu.emory.cci.aiw.cvrg.eureka.common.exception.DataElementHandlingException;
+import edu.emory.cci.aiw.cvrg.eureka.common.exception.PhenotypeHandlingException;
 import edu.emory.cci.aiw.cvrg.eureka.common.exception.HttpStatusException;
-import edu.emory.cci.aiw.cvrg.eureka.services.dao.DataElementEntityDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.UserDao;
-import edu.emory.cci.aiw.cvrg.eureka.services.translation.DataElementEntityTranslatorVisitor;
-import edu.emory.cci.aiw.cvrg.eureka.services.translation.DataElementTranslatorVisitor;
-import edu.emory.cci.aiw.cvrg.eureka.services.translation.SummarizingDataElementEntityTranslatorVisitor;
+import edu.emory.cci.aiw.cvrg.eureka.services.translation.PhenotypeEntityTranslatorVisitor;
+import edu.emory.cci.aiw.cvrg.eureka.services.translation.PhenotypeTranslatorVisitor;
+import edu.emory.cci.aiw.cvrg.eureka.services.translation.SummarizingPhenotypeEntityTranslatorVisitor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import edu.emory.cci.aiw.cvrg.eureka.services.dao.PhenotypeEntityDao;
 
 /**
  * PropositionCh
@@ -79,38 +81,41 @@ import edu.emory.cci.aiw.cvrg.eureka.services.translation.SummarizingDataElement
 @RolesAllowed({"researcher"})
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-public class DataElementResource {
-
+public class PhenotypeResource {
+    
+	private static final Logger LOGGER
+			= LoggerFactory.getLogger(PhenotypeResource.class);
+        
 	private static final ResourceBundle messages
 			= ResourceBundle.getBundle("Messages");
-	private final DataElementEntityDao dataElementEntityDao;
+	private final PhenotypeEntityDao phenotypeEntityDao;
 	private final UserDao userDao;
-	private final DataElementEntityTranslatorVisitor dEETranslatorVisitor;
-	private final DataElementTranslatorVisitor dataElementTranslatorVisitor;
-	private final SummarizingDataElementEntityTranslatorVisitor summDEETranslatorVisitor;
+	private final PhenotypeEntityTranslatorVisitor pETranslatorVisitor;
+	private final PhenotypeTranslatorVisitor phenotypeTranslatorVisitor;
+	private final SummarizingPhenotypeEntityTranslatorVisitor summpETranslatorVisitor;
 
 	@Inject
-	public DataElementResource(DataElementEntityDao inDao, UserDao inUserDao,
-			DataElementEntityTranslatorVisitor inDEETranslatorVisitor,
-			SummarizingDataElementEntityTranslatorVisitor inSummDEETranslatorVisitor,
-			DataElementTranslatorVisitor inDataElementTranslatorVisitor) {
-		this.dataElementEntityDao = inDao;
-		this.dEETranslatorVisitor = inDEETranslatorVisitor;
-		this.summDEETranslatorVisitor = inSummDEETranslatorVisitor;
-		this.dataElementTranslatorVisitor = inDataElementTranslatorVisitor;
+	public PhenotypeResource(PhenotypeEntityDao inDao, UserDao inUserDao,
+			PhenotypeEntityTranslatorVisitor inPETranslatorVisitor,
+			SummarizingPhenotypeEntityTranslatorVisitor inSummpETranslatorVisitor,
+			PhenotypeTranslatorVisitor inPhenotypeTranslatorVisitor) {
+		this.phenotypeEntityDao = inDao;
+		this.pETranslatorVisitor = inPETranslatorVisitor;
+		this.summpETranslatorVisitor = inSummpETranslatorVisitor;
+		this.phenotypeTranslatorVisitor = inPhenotypeTranslatorVisitor;
 		this.userDao = inUserDao;
 	}
 
 	@GET
 	@Transactional
-	public List<DataElement> getAll(@Context HttpServletRequest inRequest,
+	public List<Phenotype> getAll(@Context HttpServletRequest inRequest,
 			@DefaultValue("false") @QueryParam("summarize") boolean inSummarize) {
 		UserEntity user = this.userDao.getByHttpServletRequest(inRequest);
-		List<DataElement> result = new ArrayList<>();
-		List<DataElementEntity> dataElementEntities
-				= this.dataElementEntityDao.getByUserId(user.getId());
-		for (DataElementEntity dataElementEntity : dataElementEntities) {
-			result.add(convertToDataElement(dataElementEntity, inSummarize));
+		List<Phenotype> result = new ArrayList<>();
+		List<PhenotypeEntity> phenotypeEntities
+				= this.phenotypeEntityDao.getByUserId(user.getId());
+		for (PhenotypeEntity phenotypeEntity : phenotypeEntities) {
+			result.add(convertToPhenotype(phenotypeEntity, inSummarize));
 		}
 
 		return result;
@@ -119,11 +124,11 @@ public class DataElementResource {
 	@GET
 	@Path("/{key}")
 	@Transactional
-	public DataElement get(@Context HttpServletRequest inRequest,
+	public Phenotype get(@Context HttpServletRequest inRequest,
 			@PathParam("key") String inKey,
 			@DefaultValue("false") @QueryParam("summarize") boolean inSummarize) {
 		UserEntity user = this.userDao.getByHttpServletRequest(inRequest);
-		DataElement result = readDataElement(user, inKey, inSummarize);
+		Phenotype result = readPhenotype(user, inKey, inSummarize);
 		if (result == null) {
 			throw new HttpStatusException(Response.Status.NOT_FOUND);
 		} else {
@@ -133,109 +138,112 @@ public class DataElementResource {
 
 	@POST
 	@Transactional
-	public void create(DataElement inElement) {
+	public void create(Phenotype inElement) {
 		if (inElement.getId() != null) {
 			throw new HttpStatusException(
-					Response.Status.PRECONDITION_FAILED, "Data element to "
+					Response.Status.PRECONDITION_FAILED, "Phenotype to "
 					+ "be created should not have an identifier.");
 		}
 
 		if (inElement.getUserId() == null) {
 			throw new HttpStatusException(
-					Response.Status.PRECONDITION_FAILED, "Data element to "
+					Response.Status.PRECONDITION_FAILED, "Phenotype to "
 					+ "be created should have a user identifier.");
 		}
 
 		if (inElement.isSummarized()) {
 			throw new HttpStatusException(
-					Response.Status.PRECONDITION_FAILED, "Data element to "
+					Response.Status.PRECONDITION_FAILED, "Phenotype to "
 					+ "be created cannot be summarized.");
 		}
 
 		try {
-			inElement.accept(this.dataElementTranslatorVisitor);
-		} catch (DataElementHandlingException ex) {
+			inElement.accept(this.phenotypeTranslatorVisitor);
+		} catch (PhenotypeHandlingException ex) {
 			throw new HttpStatusException(ex.getStatus(), ex);
 		}
-		DataElementEntity dataElementEntity = this.dataElementTranslatorVisitor
-				.getDataElementEntity();
+		PhenotypeEntity phenotypeEntity = this.phenotypeTranslatorVisitor
+				.getPhenotypeEntity();
 
-		if (this.dataElementEntityDao.getByUserAndKey(
-				inElement.getUserId(), dataElementEntity.getKey()) != null) {
+		if (this.phenotypeEntityDao.getByUserAndKey(
+				inElement.getUserId(), phenotypeEntity.getKey()) != null) {
 			String msg = messages.getString(
-					"dataElementResource.create.error.duplicate");
+					"phenotypeResource.create.error.duplicate");
 			throw new HttpStatusException(Status.CONFLICT, msg);
 		}
 
 		Date now = new Date();
-		dataElementEntity.setCreated(now);
-		dataElementEntity.setLastModified(now);
+		phenotypeEntity.setCreated(now);
+		phenotypeEntity.setLastModified(now);
 
-		this.dataElementEntityDao.create(dataElementEntity);
+		this.phenotypeEntityDao.create(phenotypeEntity);
 	}
 
 	@PUT
+	@Path("/{id}")
 	@Transactional
 	public void update(@Context HttpServletRequest inRequest,
-			DataElement inElement) {
+			@PathParam("id") Long inId,
+			Phenotype inElement) {
+            
 		if (inElement.getId() == null) {
 			throw new HttpStatusException(Response.Status.PRECONDITION_FAILED,
-					"The data element to be updated must "
+					"The phenotype to be updated must "
 					+ "have a unique identifier.");
 		}
 
 		if (inElement.getUserId() == null) {
 			throw new HttpStatusException(Response.Status.PRECONDITION_FAILED,
-					"The data element to be updated must "
+					"The phenotype to be updated must "
 					+ "have a user identifier");
 		}
 
 		if (inElement.isSummarized()) {
 			throw new HttpStatusException(
-					Response.Status.PRECONDITION_FAILED, "Data element to "
+					Response.Status.PRECONDITION_FAILED, "Phenotype to "
 					+ "be updated cannot be summarized.");
 		}
 
 		try {
-			inElement.accept(this.dataElementTranslatorVisitor);
-		} catch (DataElementHandlingException ex) {
+			inElement.accept(this.phenotypeTranslatorVisitor);
+		} catch (PhenotypeHandlingException ex) {
 			throw new HttpStatusException(
 					Response.Status.INTERNAL_SERVER_ERROR, ex);
 		}
-		DataElementEntity dataElementEntity = this.dataElementTranslatorVisitor
-				.getDataElementEntity();
+		PhenotypeEntity phenotypeEntity = this.phenotypeTranslatorVisitor
+				.getPhenotypeEntity();
 		
-		DataElementEntity potentialConflict = 
-				this.dataElementEntityDao.getByUserAndKey(
-				inElement.getUserId(), dataElementEntity.getKey());
+		PhenotypeEntity potentialConflict = 
+				this.phenotypeEntityDao.getByUserAndKey(
+				inElement.getUserId(), phenotypeEntity.getKey());
 		if (potentialConflict != null && 
-				!potentialConflict.getId().equals(dataElementEntity.getId())) {
+				!potentialConflict.getId().equals(phenotypeEntity.getId())) {
 			String msg = messages.getString(
-					"dataElementResource.update.error.duplicate");
+					"phenotypeResource.update.error.duplicate");
 			throw new HttpStatusException(Status.CONFLICT, msg);
 		}
 		
-		DataElementEntity oldDataElementEntity
-				= this.dataElementEntityDao.retrieve(inElement.getId());
+		PhenotypeEntity oldPhenotypeEntity
+				= this.phenotypeEntityDao.retrieve(inElement.getId());
 
-		if (oldDataElementEntity == null) {
+		if (oldPhenotypeEntity == null) {
 			throw new HttpStatusException(Response.Status.NOT_FOUND);
-		} else if (!oldDataElementEntity.getUserId().equals(
+		} else if (!oldPhenotypeEntity.getUserId().equals(
 				inElement.getUserId())) {
 			throw new HttpStatusException(Response.Status.NOT_FOUND);
 		} else {
 			UserEntity user
 					= this.userDao.getByHttpServletRequest(inRequest);
-			if (!user.getId().equals(oldDataElementEntity.getUserId())) {
+			if (!user.getId().equals(oldPhenotypeEntity.getUserId())) {
 				throw new HttpStatusException(Response.Status.NOT_FOUND);
 			}
 		}
 
 		Date now = new Date();
-		dataElementEntity.setLastModified(now);
-		dataElementEntity.setCreated(oldDataElementEntity.getCreated());
-		dataElementEntity.setId(oldDataElementEntity.getId());
-		this.dataElementEntityDao.update(dataElementEntity);
+		phenotypeEntity.setLastModified(now);
+		phenotypeEntity.setCreated(oldPhenotypeEntity.getCreated());
+		phenotypeEntity.setId(oldPhenotypeEntity.getId());
+		this.phenotypeEntityDao.update(phenotypeEntity);
 	}
 
 	@DELETE
@@ -243,98 +251,98 @@ public class DataElementResource {
 	@Transactional
 	public void delete(@PathParam("userId") Long inUserId,
 			@PathParam("key") String inKey) {
-		DataElementEntity dataElementEntity
-				= this.dataElementEntityDao.getByUserAndKey(inUserId, inKey);
-		if (dataElementEntity == null) {
+		PhenotypeEntity phenotypeEntity
+				= this.phenotypeEntityDao.getByUserAndKey(inUserId, inKey);
+		if (phenotypeEntity == null) {
 			throw new HttpStatusException(Response.Status.NOT_FOUND);
 		}
-		List<String> dataElementsUsedIn
-				= getDataElementsUsedIn(inUserId, dataElementEntity);
-		if (!dataElementsUsedIn.isEmpty()) {
-			deleteFailed(dataElementsUsedIn, dataElementEntity);
+		List<String> phenotypesUsedIn
+				= getPhenotypesUsedIn(inUserId, phenotypeEntity);
+		if (!phenotypesUsedIn.isEmpty()) {
+			deleteFailed(phenotypesUsedIn, phenotypeEntity);
 		}
 
-		this.dataElementEntityDao.remove(dataElementEntity);
+		this.phenotypeEntityDao.remove(phenotypeEntity);
 	}
 
-	private void deleteFailed(List<String> dataElementsUsedIn,
-			DataElementEntity proposition) throws HttpStatusException {
-		String dataElementList;
-		int size = dataElementsUsedIn.size();
+	private void deleteFailed(List<String> phenotypesUsedIn,
+			PhenotypeEntity proposition) throws HttpStatusException {
+		String phenotypeList;
+		int size = phenotypesUsedIn.size();
 		if (size > 1) {
 			List<String> subList
-					= dataElementsUsedIn.subList(0,
-							dataElementsUsedIn.size() - 1);
-			dataElementList = StringUtils.join(subList, ", ")
+					= phenotypesUsedIn.subList(0,
+							phenotypesUsedIn.size() - 1);
+			phenotypeList = StringUtils.join(subList, ", ")
 					+ " and "
-					+ dataElementsUsedIn.get(size - 1);
+					+ phenotypesUsedIn.get(size - 1);
 		} else {
-			dataElementList = dataElementsUsedIn.get(0);
+			phenotypeList = phenotypesUsedIn.get(0);
 		}
-		MessageFormat usedByOtherDataElements
+		MessageFormat usedByOtherPhenotypes
 				= new MessageFormat(messages.getString(
-								"dataElementResource.delete.error.usedByOtherDataElements"));
-		String msg = usedByOtherDataElements.format(
+								"phenotypeResource.delete.error.usedByOtherPhenotypes"));
+		String msg = usedByOtherPhenotypes.format(
 				new Object[]{
 					proposition.getDisplayName(),
-					dataElementsUsedIn.size(),
-					dataElementList
+					phenotypesUsedIn.size(),
+					phenotypeList
 				});
 		throw new HttpStatusException(
 				Response.Status.PRECONDITION_FAILED, msg);
 	}
 
-	private List<String> getDataElementsUsedIn(Long inUserId,
-			DataElementEntity proposition) {
-		List<DataElementEntity> others
-				= this.dataElementEntityDao.getByUserId(inUserId);
-		List<String> dataElementsUsedIn = new ArrayList<>();
-		for (DataElementEntity other : others) {
+	private List<String> getPhenotypesUsedIn(Long inUserId,
+			PhenotypeEntity proposition) {
+		List<PhenotypeEntity> others
+				= this.phenotypeEntityDao.getByUserId(inUserId);
+		List<String> phenotypesUsedIn = new ArrayList<>();
+		for (PhenotypeEntity other : others) {
 			if (!other.getId().equals(proposition.getId())) {
 				PropositionChildrenVisitor visitor
 						= new PropositionChildrenVisitor();
 				other.accept(visitor);
-				for (DataElementEntity child : visitor.getChildren()) {
+				for (PhenotypeEntity child : visitor.getChildren()) {
 					if (child.getId().equals(proposition.getId())) {
-						dataElementsUsedIn.add(other.getDisplayName());
+						phenotypesUsedIn.add(other.getDisplayName());
 					}
 				}
 			}
 		}
-		return dataElementsUsedIn;
+		return phenotypesUsedIn;
 	}
 
-	private DataElement readDataElement(UserEntity userEntity, 
+	private Phenotype readPhenotype(UserEntity userEntity, 
 			String inKey, boolean summarize) {
-		DataElement result;
-		DataElementEntity dataElementEntity
-				= this.dataElementEntityDao.getByUserAndKey(
+		Phenotype result;
+		PhenotypeEntity phenotypeEntity
+				= this.phenotypeEntityDao.getByUserAndKey(
 						userEntity.getId(), inKey);
-		result = convertToDataElement(dataElementEntity, summarize);
+		result = convertToPhenotype(phenotypeEntity, summarize);
 		return result;
 	}
 
-	private DataElement convertToDataElement(
-			DataElementEntity dataElementEntity, boolean summarize) {
-		DataElement result = null;
-		if (dataElementEntity != null) {
+	private Phenotype convertToPhenotype(
+			PhenotypeEntity phenotypeEntity, boolean summarize) {
+		Phenotype result = null;
+		if (phenotypeEntity != null) {
 			if (summarize) {
-				result = toSummarizedDataElement(dataElementEntity);
+				result = toSummarizedPhenotype(phenotypeEntity);
 			} else {
-				result = toDataElement(dataElementEntity);
+				result = toPhenotype(phenotypeEntity);
 			}
 		}
 		return result;
 	}
 
-	private DataElement toDataElement(DataElementEntity dataElementEntity) {
-		dataElementEntity.accept(this.dEETranslatorVisitor);
-		return this.dEETranslatorVisitor.getDataElement();
+	private Phenotype toPhenotype(PhenotypeEntity phenotypeEntity) {
+		phenotypeEntity.accept(this.pETranslatorVisitor);
+		return this.pETranslatorVisitor.getPhenotype();
 	}
 
-	private DataElement toSummarizedDataElement(
-			DataElementEntity dataElementEntity) {
-		dataElementEntity.accept(this.summDEETranslatorVisitor);
-		return this.summDEETranslatorVisitor.getDataElement();
+	private Phenotype toSummarizedPhenotype(
+			PhenotypeEntity phenotypeEntity) {
+		phenotypeEntity.accept(this.summpETranslatorVisitor);
+		return this.summpETranslatorVisitor.getPhenotype();
 	}
 }

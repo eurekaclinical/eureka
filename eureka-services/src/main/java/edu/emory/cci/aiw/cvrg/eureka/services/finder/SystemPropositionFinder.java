@@ -46,7 +46,7 @@ import org.protempa.PropositionDefinition;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.SystemElement;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.SystemPhenotype;
 
 import net.sf.ehcache.Cache;
 import net.sf.ehcache.CacheManager;
@@ -72,7 +72,7 @@ public class SystemPropositionFinder extends AbstractPropositionFinder<String> {
 	 * @param sourceConfigId the ID of the source config to use for the look-up
 	 * @param inKeys the keys of the system elements to look up
 	 * @param withChildren whether to find the given system elements' children as well
-	 * @return a {@link List} of {@link SystemElement}s
+	 * @return a {@link List} of {@link SystemPhenotype}s
 	 * @throws PropositionFindException
 	 */
 	public List<PropositionDefinition> findAll(

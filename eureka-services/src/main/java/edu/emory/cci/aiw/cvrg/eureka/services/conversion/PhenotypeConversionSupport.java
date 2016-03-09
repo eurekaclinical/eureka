@@ -39,62 +39,62 @@ package edu.emory.cci.aiw.cvrg.eureka.services.conversion;
  * <http://www.gnu.org/licenses/gpl-3.0.html>.
  * #L%
  */
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.DataElementEntity;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.PhenotypeEntity;
 import org.protempa.proposition.value.NominalValue;
 
 /**
  *
  * @author Andrew Post
  */
-public class DataElementConversionSupport {
+public class PhenotypeConversionSupport {
 
-	public DataElementConversionSupport() {
+	public PhenotypeConversionSupport() {
 	}
 
-	public String toPropositionIdWrapped(String dataElementKey) {
-		return dataElementKey + ConversionUtil.PROP_ID_WRAPPED_SUFFIX;
+	public String toPropositionIdWrapped(String phenotypeKey) {
+		return phenotypeKey + ConversionUtil.PROP_ID_WRAPPED_SUFFIX;
 	}
 
-	public String toPropositionIdWrapped(DataElementEntity dataElement) {
-		return toPropositionIdWrapped(dataElement.getKey());
+	public String toPropositionIdWrapped(PhenotypeEntity phenotype) {
+		return toPropositionIdWrapped(phenotype.getKey());
 	}
 
-	public String toPropositionId(String dataElementKey) {
-		return dataElementKey + ConversionUtil.PRIMARY_PROP_ID_SUFFIX;
+	public String toPropositionId(String phenotypeKey) {
+		return phenotypeKey + ConversionUtil.PRIMARY_PROP_ID_SUFFIX;
 	}
 
-	public String toPropositionId(DataElementEntity dataElement) {
-		return toPropositionId(dataElement.getKey());
+	public String toPropositionId(PhenotypeEntity phenotype) {
+		return toPropositionId(phenotype.getKey());
 	}
 
-	public String toDataElementKey(String propId) {
+	public String toPhenotypeKey(String propId) {
 		int lastIndexOf
 				= propId.lastIndexOf(ConversionUtil.PRIMARY_PROP_ID_SUFFIX);
 		return propId.substring(0, lastIndexOf);
 	}
 
-	public String asValueString(String dataElementKey) {
+	public String asValueString(String phenotypeKey) {
 		return ConversionUtil.VALUE;
 	}
 	
-	public String asValueCompString(String dataElementKey) {
+	public String asValueCompString(String phenotypeKey) {
 		return ConversionUtil.VALUE_COMP;
 	}
 
-	public String asValueString(DataElementEntity dataElement) {
-		return asValueString(dataElement.getKey());
+	public String asValueString(PhenotypeEntity phenotype) {
+		return asValueString(phenotype.getKey());
 	}
 	
-	public String asValueCompString(DataElementEntity dataElement) {
-		return asValueCompString(dataElement.getKey());
+	public String asValueCompString(PhenotypeEntity phenotype) {
+		return asValueCompString(phenotype.getKey());
 	}
 
-	public NominalValue asValue(DataElementEntity dataElement) {
-		return NominalValue.getInstance(asValueString(dataElement));
+	public NominalValue asValue(PhenotypeEntity phenotype) {
+		return NominalValue.getInstance(asValueString(phenotype));
 	}
 
-	public NominalValue asValue(String dataElementKey) {
-		return NominalValue.getInstance(asValueString(dataElementKey));
+	public NominalValue asValue(String phenotypeKey) {
+		return NominalValue.getInstance(asValueString(phenotypeKey));
 	}
 
 }

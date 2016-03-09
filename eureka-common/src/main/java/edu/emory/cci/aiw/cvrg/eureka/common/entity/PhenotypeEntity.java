@@ -66,10 +66,10 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
  */
 @XmlRootElement
 @Entity
-@Table(name = "data_elements", uniqueConstraints = { @UniqueConstraint(columnNames = {
+@Table(name = "phenotypes", uniqueConstraints = { @UniqueConstraint(columnNames = {
         "key", "user_id" }) })
 @Inheritance(strategy = InheritanceType.JOINED)
-public abstract class DataElementEntity implements CycleRecoverable,
+public abstract class PhenotypeEntity implements CycleRecoverable,
         PropositionEntityVisitable, Serializable {
 
 	/**
@@ -89,21 +89,21 @@ public abstract class DataElementEntity implements CycleRecoverable,
 	@Column(nullable = false, name="user_id")
 	private Long userId;
 	/**
-	 * If proposition is system-level, this key identifies the data element in
+	 * If proposition is system-level, this key identifies the phenotype in
 	 * the system ontology
 	 */
 	@Column(nullable = false)
 	private String key;
 	/**
-	 * The display name for the data element.
+	 * The display name for the phenotype.
 	 */
 	private String displayName;
 	/**
-	 * A description of the data element.
+	 * A description of the phenotype.
 	 */
 	
 	/**
-	 * The data element's description. The name is prefixed with a z to force
+	 * The phenotype's description. The name is prefixed with a z to force
 	 * hibernate to populate this field last in insert and update statements
 	 * to avoid the dreaded 
 	 * <code>ORA-24816: Expanded non LONG bind data supplied after actual LONG or LOB column</code>
@@ -114,17 +114,17 @@ public abstract class DataElementEntity implements CycleRecoverable,
 	@Column(name="description")
 	private String zDescription;
 	/**
-	 * Is the proposition a system level data element?
+	 * Is the proposition a system level phenotype?
 	 */
 	private boolean inSystem;
 	/**
-	 * The date the data element was created.
+	 * The date the phenotype was created.
 	 */
 	/*@Column(nullable = false)*/
 	@Temporal(javax.persistence.TemporalType.TIMESTAMP)
 	private Date created;
 	/**
-	 * The date the data element was last modified.
+	 * The date the phenotype was last modified.
 	 */
 	@Temporal(javax.persistence.TemporalType.TIMESTAMP)
 	private Date lastModified;
@@ -132,85 +132,85 @@ public abstract class DataElementEntity implements CycleRecoverable,
 	@Column(nullable = false)
 	private CategoryType categoryType;
 	
-	protected DataElementEntity() {
+	protected PhenotypeEntity() {
 		this(null);
 	}
 
-	protected DataElementEntity(CategoryType categoryType) {
+	protected PhenotypeEntity(CategoryType categoryType) {
 		this.categoryType = categoryType;
 	}
 	
 	/**
-	 * Gets the data element's description.
+	 * Gets the phenotype's description.
 	 * 
-	 * @return The data element's description.
+	 * @return The phenotype's description.
 	 */
 	public String getDescription() {
 		return zDescription;
 	}
 
 	/**
-	 * Sets the data element's description.
+	 * Sets the phenotype's description.
 	 * 
 	 * @param inDescription
-	 *            The data element's description to set.
+	 *            The phenotype's description to set.
 	 */
 	public void setDescription(String inDescription) {
 		this.zDescription = inDescription;
 	}
 
 	/**
-	 * Gets the display name of the data element.
+	 * Gets the display name of the phenotype.
 	 * 
-	 * @return The display name of the data element.
+	 * @return The display name of the phenotype.
 	 */
 	public String getDisplayName() {
 		return displayName;
 	}
 
 	/**
-	 * Sets the display name of the data element.
+	 * Sets the display name of the phenotype.
 	 * 
 	 * @param inDisplayName
-	 *            The display name of the data element.
+	 *            The display name of the phenotype.
 	 */
 	public void setDisplayName(String inDisplayName) {
 		this.displayName = inDisplayName;
 	}
 
 	/**
-	 * Gets the user to which this data element belongs.
+	 * Gets the user to which this phenotype belongs.
 	 * 
-	 * @return The user to which this data element belongs.
+	 * @return The user to which this phenotype belongs.
 	 */
 	public Long getUserId() {
 		return this.userId;
 	}
 
 	/**
-	 * Sets the user to which this data element belongs.
+	 * Sets the user to which this phenotype belongs.
 	 * 
 	 * @param inUserId
-	 *            The user to which this data element belongs.
+	 *            The user to which this phenotype belongs.
 	 */
 	public void setUserId(Long inUserId) {
 		this.userId = inUserId;
 	}
 
 	/**
-	 * Gets the unique identifier for the data element.
+	 * Gets the unique identifier for the phenotype.
 	 * 
-	 * @return The unique identifier for the data element.
+	 * @return The unique identifier for the phenotype.
 	 */
 	public Long getId() {
 		return id;
 	}
 
 	/**
-	 * Sets the unique identifier for the data element.
+	 * Sets the unique identifier for the phenotype.
 	 * 
 	 * @param inId
-	 *            The unique identifier for the data element.
+	 *            The unique identifier for the phenotype.
 	 */
 	public void setId(Long inId) {
 		this.id = inId;
@@ -236,9 +236,9 @@ public abstract class DataElementEntity implements CycleRecoverable,
 	}
 
 	/**
-	 * Gets the key for the data element.
+	 * Gets the key for the phenotype.
 	 * 
-	 * @return Null if the data element is not system level, id in the system
+	 * @return Null if the phenotype is not system level, id in the system
 	 *         ontology otherwise.
 	 */
 	public String getKey() {
@@ -246,10 +246,10 @@ public abstract class DataElementEntity implements CycleRecoverable,
 	}
 
 	/**
-	 * Sets the key for the data element.
+	 * Sets the key for the phenotype.
 	 * 
 	 * @param inKey
-	 *            The id of the data element in the system ontology.
+	 *            The id of the phenotype in the system ontology.
 	 */
 	public void setKey(String inKey) {
 		key = inKey;

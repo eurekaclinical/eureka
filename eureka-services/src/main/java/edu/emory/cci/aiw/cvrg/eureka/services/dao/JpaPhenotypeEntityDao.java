@@ -58,20 +58,20 @@ import com.google.inject.Inject;
 import com.google.inject.Provider;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.dao.GenericDao;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.DataElementEntity;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.DataElementEntity_;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.PhenotypeEntity;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.PhenotypeEntity_;
 
 /**
- * An implementation of the {@link DataElementEntityDao} interface, backed by
+ * An implementation of the {@link PhenotypeEntityDao} interface, backed by
  * JPA entities and queries.
  *
  * @author hrathod
  */
-public class JpaDataElementEntityDao extends GenericDao<DataElementEntity, Long>
-		implements DataElementEntityDao {
+public class JpaPhenotypeEntityDao extends GenericDao<PhenotypeEntity, Long>
+		implements PhenotypeEntityDao {
 
 	private static final Logger LOGGER
-			= LoggerFactory.getLogger(JpaDataElementEntityDao.class);
+			= LoggerFactory.getLogger(JpaPhenotypeEntityDao.class);
 
 	/**
 	 * Create an object with the given entity manager provider.
@@ -79,60 +79,58 @@ public class JpaDataElementEntityDao extends GenericDao<DataElementEntity, Long>
 	 * @param inProvider An entity manager provider.
 	 */
 	@Inject
-	public JpaDataElementEntityDao(Provider<EntityManager> inProvider) {
-		super(DataElementEntity.class, inProvider);
+	public JpaPhenotypeEntityDao(Provider<EntityManager> inProvider) {
+		super(PhenotypeEntity.class, inProvider);
 	}
 
 	@Override
-	public DataElementEntity getByUserAndKey(Long inUserId, String inKey) {
+	public PhenotypeEntity getByUserAndKey(Long inUserId, String inKey) {
 		return getByUserAndKey(inUserId, inKey, true);
 	}
 
 	@Override
-	public DataElementEntity getUserOrSystemByUserAndKey(Long inUserId, String inKey) {
+	public PhenotypeEntity getUserOrSystemByUserAndKey(Long inUserId, String inKey) {
 		return getByUserAndKey(inUserId, inKey, false);
 	}
 
 	@Override
-	public List<DataElementEntity> getByUserId(Long inUserId) {
+	public List<PhenotypeEntity> getByUserId(Long inUserId) {
 		EntityManager entityManager = this.getEntityManager();
 		CriteriaBuilder builder = entityManager.getCriteriaBuilder();
-		CriteriaQuery<DataElementEntity> criteriaQuery = builder.createQuery(
-				DataElementEntity.class);
-		Root<DataElementEntity> root = criteriaQuery.from(DataElementEntity.class);
+		CriteriaQuery<PhenotypeEntity> criteriaQuery = builder.createQuery(PhenotypeEntity.class);
+		Root<PhenotypeEntity> root = criteriaQuery.from(PhenotypeEntity.class);
 		Predicate userPredicate = builder.equal(
 				root.get(
-						DataElementEntity_.userId), inUserId);
-		Predicate notInSystemPredicate = builder.equal(root.get(DataElementEntity_.inSystem), false);
-		TypedQuery<DataElementEntity> typedQuery = entityManager.createQuery(
+						PhenotypeEntity_.userId), inUserId);
+		Predicate notInSystemPredicate = builder.equal(root.get(PhenotypeEntity_.inSystem), false);
+		TypedQuery<PhenotypeEntity> typedQuery = entityManager.createQuery(
 				criteriaQuery.where(
 						builder.and(userPredicate, notInSystemPredicate)));
 		return typedQuery.getResultList();
 	}
 
-	private DataElementEntity getByUserAndKey(Long inUserId, String inKey, boolean excludeSystemElements) {
-		DataElementEntity result = null;
+	private PhenotypeEntity getByUserAndKey(Long inUserId, String inKey, boolean excludeSystemElements) {
+		PhenotypeEntity result = null;
 		EntityManager entityManager = this.getEntityManager();
 		CriteriaBuilder builder = entityManager.getCriteriaBuilder();
-		CriteriaQuery<DataElementEntity> criteriaQuery = builder.createQuery(
-				DataElementEntity.class);
-		Root<DataElementEntity> root = criteriaQuery.from(DataElementEntity.class);
+		CriteriaQuery<PhenotypeEntity> criteriaQuery = builder.createQuery(PhenotypeEntity.class);
+		Root<PhenotypeEntity> root = criteriaQuery.from(PhenotypeEntity.class);
 		
 		List<Predicate> predicates = new ArrayList<>(3);
 		Predicate userPredicate = builder.equal(
 				root.get(
-						DataElementEntity_.userId), inUserId);
+						PhenotypeEntity_.userId), inUserId);
 		predicates.add(userPredicate);
-		Predicate keyPredicate = builder.equal(root.get(DataElementEntity_.key),
+		Predicate keyPredicate = builder.equal(root.get(PhenotypeEntity_.key),
 				inKey);
 		predicates.add(keyPredicate);
 		if (excludeSystemElements) {
-			Predicate notInSystemPredicate = builder.equal(root.get(DataElementEntity_.inSystem),
+			Predicate notInSystemPredicate = builder.equal(root.get(PhenotypeEntity_.inSystem),
 					false);
 			predicates.add(notInSystemPredicate);
 		}
 		
-		TypedQuery<DataElementEntity> typedQuery = entityManager.createQuery(
+		TypedQuery<PhenotypeEntity> typedQuery = entityManager.createQuery(
 					criteriaQuery.where(
 							builder.and(predicates.toArray(
 									new Predicate[predicates.size()]))));

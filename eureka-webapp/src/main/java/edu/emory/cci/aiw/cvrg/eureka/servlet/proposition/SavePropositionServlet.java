@@ -76,15 +76,15 @@ public class SavePropositionServlet extends HttpServlet {
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp)
 	        throws ServletException, IOException {
 		LOGGER.debug("SavePropositionServlet");
-		Phenotype dataElement = MAPPER.readValue(req.getReader(),
+		Phenotype phenotype = MAPPER.readValue(req.getReader(),
 				Phenotype.class);
 		try {
 			User user = this.authenticationSupport.getMe(req);
-			dataElement.setUserId(user.getId());
-			if (dataElement.getId() == null) {
-				this.servicesClient.saveUserElement(dataElement);
+			phenotype.setUserId(user.getId());
+			if (phenotype.getId() == null) {
+				this.servicesClient.saveUserPhenotype(phenotype);
 			} else {
-				this.servicesClient.updateUserElement(dataElement.getId(), dataElement);
+				this.servicesClient.updateUserPhenotype(phenotype.getId(), phenotype);
 			}
 		} catch (ClientException e) {
 			switch (e.getResponseStatus()) {

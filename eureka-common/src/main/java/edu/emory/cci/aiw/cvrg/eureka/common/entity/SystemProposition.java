@@ -48,8 +48,8 @@ import javax.persistence.Table;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 @Entity
-@Table(name = "system_data_elements")
-public class SystemProposition extends DataElementEntity {
+@Table(name = "system_phenotypes")
+public class SystemProposition extends PhenotypeEntity {
 
 	public enum SystemType {
 
@@ -72,7 +72,7 @@ public class SystemProposition extends DataElementEntity {
 	}
 
 	@Override
-	public void accept(DataElementEntityVisitor visitor) {
+	public void accept(PhenotypeEntityVisitor visitor) {
 		visitor.visit(this);
 	}
 

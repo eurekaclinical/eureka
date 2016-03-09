@@ -39,9 +39,9 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.common.comm;
 
-import edu.emory.cci.aiw.cvrg.eureka.common.exception.DataElementHandlingException;
+import edu.emory.cci.aiw.cvrg.eureka.common.exception.PhenotypeHandlingException;
 
-public interface DataElementVisitable {
+public interface PhenotypeVisitable {
 
-	public void accept(DataElementVisitor visitor) throws DataElementHandlingException;
+	public void accept(PhenotypeVisitor visitor) throws PhenotypeHandlingException;
 }

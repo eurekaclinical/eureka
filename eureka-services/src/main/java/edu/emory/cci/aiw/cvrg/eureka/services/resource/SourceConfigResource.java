@@ -58,7 +58,7 @@ import edu.emory.cci.aiw.cvrg.eureka.common.comm.SourceConfigOption;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.SourceConfig.Section;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.SourceConfigParams;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.SourceConfigParams.Upload;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.SystemElement;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.SystemPhenotype;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ClientException;
 import edu.emory.cci.aiw.cvrg.eureka.common.exception.HttpStatusException;
 import edu.emory.cci.aiw.cvrg.eureka.services.config.EtlClient;
@@ -82,7 +82,7 @@ public class SourceConfigResource {
 	/**
 	 * Gets all of the system elements for a user
 	 *
-	 * @return a {@link List} of {@link SystemElement}s
+	 * @return a {@link List} of {@link SystemPhenotype}s
 	 */
 	@GET
 	public List<SourceConfig> getAll() {

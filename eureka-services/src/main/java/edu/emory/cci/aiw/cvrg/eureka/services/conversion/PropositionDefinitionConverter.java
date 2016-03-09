@@ -39,7 +39,7 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.services.conversion;
 
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.DataElementEntity;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.PhenotypeEntity;
 import org.protempa.PropositionDefinition;
 
 import java.util.List;
@@ -48,9 +48,9 @@ import java.util.List;
  * Converts Eureka! database entities into equivalent Protempa proposition
  * definitions.
  *
- * @param <E> The type of {@link DataElementEntity} to convert.
+ * @param <E> The type of {@link PhenotypeEntity} to convert.
  */
-interface PropositionDefinitionConverter<E extends DataElementEntity,
+interface PropositionDefinitionConverter<E extends PhenotypeEntity,
 		P extends PropositionDefinition> {
 
 	/**
@@ -64,7 +64,7 @@ interface PropositionDefinitionConverter<E extends DataElementEntity,
 
 	/**
 	 * Retrieves the primary proposition created by a call to
-	 * {@link #convert(edu.emory.cci.aiw.cvrg.eureka.common.entity.DataElementEntity)}.
+	 * {@link #convert(edu.emory.cci.aiw.cvrg.eureka.common.entity.PhenotypeEntity)}.
 	 * This is mostly for converters invoking each other and needing only
 	 * the final highest level (ie, primary) proposition that was created.
 	 *

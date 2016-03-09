@@ -44,7 +44,7 @@
 <template:insert template="/templates/eureka_main.jsp">
 <template:content name="content">
 <h3>Sequence Editor</h3>
-<p>Computes intervals with the same start and stop time as the Main data element below when the temporal
+<p>Computes intervals with the same start and stop time as the Main phenotype below when the temporal
 	relationships below are satisfied.
 </p>
 <div class="row">
@@ -77,22 +77,22 @@
 </div>
 <div class="row">
 	<div id="propDefinition" class="col-sm-12 panel panel-default">
-		<div class="row panel-heading"><h4 class="panel-title">Main Data Element</h4></div>
+		<div class="row panel-heading"><h4 class="panel-title">Main Phenotype</h4></div>
 			<div class="form-group">
 				<div class="col-sm-12">
-					<label class="sr-only" for="mainDataElement">Main data element</label>
-					<div id="mainDataElement" class="tree-drop tree-drop-single jstree-drop"
-						 title="Drag a system or user-defined data element in here">
+					<label class="sr-only" for="mainPhenotype">Main phenotype</label>
+					<div id="mainPhenotype" class="tree-drop tree-drop-single jstree-drop"
+						 title="Drag a system or user-defined phenotype in here">
 						<div class="label-info text-center">Drop Here</div>
 						<ul data-type="main" data-drop-type="single" data-count="1" class="sortable"
 							style="width: 100%; height: 100%">
 							<c:if test="${not empty proposition and propositionType == 'SEQUENCE'}">
-								<li data-key="${proposition.primaryDataElement.dataElementKey}"
-									data-desc="${proposition.primaryDataElement.dataElementDisplayName} (${proposition.primaryDataElement.dataElementKey})"
-									data-space="${proposition.primaryDataElement.inSystem ? 'system' : 'user'}"><span
+								<li data-key="${proposition.primaryPhenotype.phenotypeKey}"
+									data-desc="${proposition.primaryPhenotype.phenotypeDisplayName} (${proposition.primaryPhenotype.phenotypeKey})"
+									data-space="${proposition.primaryPhenotype.inSystem ? 'system' : 'user'}"><span
 										class="delete-icon glyphicon glyphicon-remove"></span> <span
-										class="desc">${empty proposition.primaryDataElement.dataElementDisplayName ? '' : proposition.primaryDataElement.dataElementDisplayName}
-																	(${proposition.primaryDataElement.dataElementKey})</span>
+										class="desc">${empty proposition.primaryPhenotype.phenotypeDisplayName ? '' : proposition.primaryPhenotype.phenotypeDisplayName}
+																	(${proposition.primaryPhenotype.phenotypeKey})</span>
 								</li>
 							</c:if>
 						</ul>
@@ -100,44 +100,44 @@
 				</div>
 			</div>
 			<fieldset>
-			<legend><input id="mainDataElementSpecifyDuration" type="checkbox"
+			<legend><input id="mainPhenotypeSpecifyDuration" type="checkbox"
 																value="true" class="checkbox-inline"
-																name="mainDataElementSpecifyDuration"
-																<c:if test="${propositionType == 'SEQUENCE' and proposition.primaryDataElement.hasDuration}">checked="checked"</c:if> />
+																name="mainPhenotypeSpecifyDuration"
+																<c:if test="${propositionType == 'SEQUENCE' and proposition.primaryPhenotype.hasDuration}">checked="checked"</c:if> />
 				Duration
 			</legend>
 			<div class="form-group">
 				<div class="col-md-2">
-					<label class="sr-only" id="mainDataElementMinDurationValue">From</label>
-					<input type="number" class="form-control" name="mainDataElementMinDurationValue"
-						   id="mainDataElementMinDurationValue"
+					<label class="sr-only" id="mainPhenotypeMinDurationValue">From</label>
+					<input type="number" class="form-control" name="mainPhenotypeMinDurationValue"
+						   id="mainPhenotypeMinDurationValue"
 						   placeholder="min"
-						   value="<c:if test="${propositionType == 'SEQUENCE'}">${proposition.primaryDataElement.minDuration}</c:if>"/>
+						   value="<c:if test="${propositionType == 'SEQUENCE'}">${proposition.primaryPhenotype.minDuration}</c:if>"/>
 				</div>
 				<div class="col-md-3">
-					<label class="sr-only" id="mainDataElementMinDurationUnits">From time units</label>
-					<select name="mainDataElementMinDurationUnits" id="mainDataElementMinDurationUnits" class="form-control">
+					<label class="sr-only" id="mainPhenotypeMinDurationUnits">From time units</label>
+					<select name="mainPhenotypeMinDurationUnits" id="mainPhenotypeMinDurationUnits" class="form-control">
 						<c:forEach var="unit" items="${timeUnits}">
 							<option value="${unit.id}"
-									<c:if test="${propositionType == 'SEQUENCE' ? unit.id == proposition.primaryDataElement.minDurationUnits : unit.id == defaultTimeUnit.id}">selected="selected"</c:if>>${unit.description}</option>
+									<c:if test="${propositionType == 'SEQUENCE' ? unit.id == proposition.primaryPhenotype.minDurationUnits : unit.id == defaultTimeUnit.id}">selected="selected"</c:if>>${unit.description}</option>
 						</c:forEach>
 					</select>
 				</div>
 				<div class="col-md-1 control-label" style="text-align: center">
-					<label for="mainDataElementMaxDurationValue">to</label>
+					<label for="mainPhenotypeMaxDurationValue">to</label>
 				</div>
 				<div class="col-md-2">
-					<input type="number" class="form-control" name="mainDataElementMaxDurationValue"
-						   id="mainDataElementMaxDurationValue"
+					<input type="number" class="form-control" name="mainPhenotypeMaxDurationValue"
+						   id="mainPhenotypeMaxDurationValue"
 						   placeholder="max"
-						   value="<c:if test="${propositionType == 'SEQUENCE'}">${proposition.primaryDataElement.maxDuration}</c:if>"/>
+						   value="<c:if test="${propositionType == 'SEQUENCE'}">${proposition.primaryPhenotype.maxDuration}</c:if>"/>
 				</div>
 				<div class="col-md-3">
-					<label class="sr-only" id="mainDataElementMaxDurationUnits">From time units</label>
-					<select name="mainDataElementMaxDurationUnits" id="mainDataElementMaxDurationUnits" class="form-control">
+					<label class="sr-only" id="mainPhenotypeMaxDurationUnits">From time units</label>
+					<select name="mainPhenotypeMaxDurationUnits" id="mainPhenotypeMaxDurationUnits" class="form-control">
 						<c:forEach var="unit" items="${timeUnits}">
 							<option value="${unit.id}"
-									<c:if test="${propositionType == 'SEQUENCE' ? unit.id == proposition.primaryDataElement.maxDurationUnits : unit.id == defaultTimeUnit.id}">selected="selected"</c:if>>${unit.description}</option>
+									<c:if test="${propositionType == 'SEQUENCE' ? unit.id == proposition.primaryPhenotype.maxDurationUnits : unit.id == defaultTimeUnit.id}">selected="selected"</c:if>>${unit.description}</option>
 						</c:forEach>
 					</select>
 				</div>
@@ -146,57 +146,57 @@
 			<fieldset>
 			<legend>
 				<input type="checkbox" class="checkbox-inline propertyValueConstraint" value="true"
-					   name="mainDataElementSpecifyProperty"
-					   <c:if test="${propositionType == 'SEQUENCE' and proposition.primaryDataElement.hasPropertyConstraint}">checked="checked"</c:if>
-					   <c:if test="${propositionType == 'SEQUENCE' and empty properties[proposition.primaryDataElement.dataElementKey]}">disabled="disabled"</c:if> />
+					   name="mainPhenotypeSpecifyProperty"
+					   <c:if test="${propositionType == 'SEQUENCE' and proposition.primaryPhenotype.hasPropertyConstraint}">checked="checked"</c:if>
+					   <c:if test="${propositionType == 'SEQUENCE' and empty properties[proposition.primaryPhenotype.phenotypeKey]}">disabled="disabled"</c:if> />
 				Property value
 			</legend>
 			<div class="form-group">
 				<div class="col-sm-6">
-					<label class="sr-only" for="mainDataElementPropertyName">Property name</label>
-					<select name="mainDataElementPropertyName" class="form-control"
-							id="mainDataElementPropertyName"
-							data-properties-provider="mainDataElement">
+					<label class="sr-only" for="mainPhenotypePropertyName">Property name</label>
+					<select name="mainPhenotypePropertyName" class="form-control"
+							id="mainPhenotypePropertyName"
+							data-properties-provider="mainPhenotype">
 						<c:if test="${propositionType == 'SEQUENCE'}">
 							<c:forEach var="property"
-									   items="${properties[proposition.primaryDataElement.dataElementKey]}">
+									   items="${properties[proposition.primaryPhenotype.phenotypeKey]}">
 								<option value="${property}"
-										<c:if test="${proposition.primaryDataElement.property == property}">selected="selected"</c:if>>${property}</option>
+										<c:if test="${proposition.primaryPhenotype.property == property}">selected="selected"</c:if>>${property}</option>
 							</c:forEach>
 						</c:if>
 					</select>
 				</div>
 				<div class="col-sm-6">
-					<label class="sr-only" for="mainDataElementPropertyValue">Property value</label>
-					<input type="text" class="form-control propertyValueField" name="mainDataElementPropertyValue" id="mainDataElementPropertyValue"
-						   value="<c:if test="${propositionType == 'SEQUENCE' and not empty proposition.primaryDataElement.propertyValue}">${proposition.primaryDataElement.propertyValue}</c:if>"
-						   <c:if test="${propositionType == 'SEQUENCE' and empty properties[proposition.primaryDataElement.dataElementKey]}">disabled="disabled"</c:if> />
+					<label class="sr-only" for="mainPhenotypePropertyValue">Property value</label>
+					<input type="text" class="form-control propertyValueField" name="mainPhenotypePropertyValue" id="mainPhenotypePropertyValue"
+						   value="<c:if test="${propositionType == 'SEQUENCE' and not empty proposition.primaryPhenotype.propertyValue}">${proposition.primaryPhenotype.propertyValue}</c:if>"
+						   <c:if test="${propositionType == 'SEQUENCE' and empty properties[proposition.primaryPhenotype.phenotypeKey]}">disabled="disabled"</c:if> />
 				</div>
 			</div>
 			</fieldset>
 	</div>
 </div>
 <div class="form-group">
-<div id="sequenceRelatedDataElements" class="sequence-relations-container">
+<div id="sequenceRelatedPhenotypes" class="sequence-relations-container">
 <c:choose>
-<c:when test="${not empty proposition and propositionType == 'SEQUENCE' and not empty proposition.relatedDataElements}">
-	<c:forEach var="relation" items="${proposition.relatedDataElements}" varStatus="status">
+<c:when test="${not empty proposition and propositionType == 'SEQUENCE' and not empty proposition.relatedPhenotypes}">
+	<c:forEach var="relation" items="${proposition.relatedPhenotypes}" varStatus="status">
 		<div class="sequence-relation drop-parent panel panel-default col-sm-12">
-			<div class="row panel-heading"><h4 class="panel-title">Related data element <span class="count">${status.count}</span></h4></div>
+			<div class="row panel-heading"><h4 class="panel-title">Related phenotype <span class="count">${status.count}</span></h4></div>
 				<div class="form-group">
 					<div class="col-sm-12">
-						<label class="sr-only" for="relatedDataElement${status.count}">Related data element ${status.count}</label>
-						<div id="relatedDataElement${status.count}"
-							 class="tree-drop tree-drop-single jstree-drop sequencedDataElement"
-							 title="Drag another system or user-defined data element in here">
+						<label class="sr-only" for="relatedPhenotype${status.count}">Related phenotype ${status.count}</label>
+						<div id="relatedPhenotype${status.count}"
+							 class="tree-drop tree-drop-single jstree-drop sequencedPhenotype"
+							 title="Drag another system or user-defined phenotype in here">
 							<div class="label-info text-center">Drop Here</div>
 							<ul class="sortable" data-type="related" data-drop-type="single"
 								data-count="${status.count + 1}">
-								<li data-key="${relation.dataElementField.dataElementKey}"
-									data-desc="${relation.dataElementField.dataElementDisplayName} (${relation.dataElementField.dataElementKey})"
-									data-space="${relation.dataElementField.inSystem ? 'system' : 'user'}">
+								<li data-key="${relation.phenotypeField.phenotypeKey}"
+									data-desc="${relation.phenotypeField.phenotypeDisplayName} (${relation.phenotypeField.phenotypeKey})"
+									data-space="${relation.phenotypeField.inSystem ? 'system' : 'user'}">
 									<span class="delete-icon glyphicon glyphicon-remove"></span>
-									<span class="desc">${empty relation.dataElementField.dataElementDisplayName ? '' : relation.dataElementField.dataElementDisplayName} (${relation.dataElementField.dataElementKey})</span>
+									<span class="desc">${empty relation.phenotypeField.phenotypeDisplayName ? '' : relation.phenotypeField.phenotypeDisplayName} (${relation.phenotypeField.phenotypeKey})</span>
 								</li>
 							</ul>
 						</div>
@@ -205,42 +205,42 @@
 				<fieldset>
 				<legend>
 					<input type="checkbox" value="true"
-						   name="sequenceRelDataElementSpecifyDuration"
-						   <c:if test="${relation.dataElementField.hasDuration}">checked="checked"</c:if> />
+						   name="sequenceRelPhenotypeSpecifyDuration"
+						   <c:if test="${relation.phenotypeField.hasDuration}">checked="checked"</c:if> />
 					Duration
 				</legend>
 				<div class="form-group">
 					<div class="col-md-2">
-						<label class="sr-only" for="sequenceRelDataElementMinDurationValue">From</label>
-						<input type="number" class="form-control" name="sequenceRelDataElementMinDurationValue"
-							   id="sequenceRelDataElementMinDurationValue"
+						<label class="sr-only" for="sequenceRelPhenotypeMinDurationValue">From</label>
+						<input type="number" class="form-control" name="sequenceRelPhenotypeMinDurationValue"
+							   id="sequenceRelPhenotypeMinDurationValue"
 							   placeholder="min"
-							   value="${relation.dataElementField.minDuration}"/>
+							   value="${relation.phenotypeField.minDuration}"/>
 					</div>
 					<div class="col-md-3">
-						<label class="sr-only" for="sequenceRelDataElementMinDurationUnits">From units</label>
-						<select name="sequenceRelDataElementMinDurationUnits" class="form-control">
+						<label class="sr-only" for="sequenceRelPhenotypeMinDurationUnits">From units</label>
+						<select name="sequenceRelPhenotypeMinDurationUnits" class="form-control">
 							<c:forEach var="unit" items="${timeUnits}">
 								<option value="${unit.id}"
-										<c:if test="${unit.id == relation.dataElementField.minDurationUnits}">selected="selected"</c:if>>${unit.description}</option>
+										<c:if test="${unit.id == relation.phenotypeField.minDurationUnits}">selected="selected"</c:if>>${unit.description}</option>
 							</c:forEach>
 						</select>
 					</div>
 					<div class="col-md-1 control-label" style="text-align: center">
-						<label for="sequenceRelDataElementMaxDurationValue">to</label>
+						<label for="sequenceRelPhenotypeMaxDurationValue">to</label>
 					</div>
 					<div class="col-md-2">
-						<input type="number" class="form-control" name="sequenceRelDataElementMaxDurationValue"
-							   id="sequenceRelDataElementMaxDurationValue"
+						<input type="number" class="form-control" name="sequenceRelPhenotypeMaxDurationValue"
+							   id="sequenceRelPhenotypeMaxDurationValue"
 							   placeholder="max"
-							   value="${relation.dataElementField.maxDuration}"/>
+							   value="${relation.phenotypeField.maxDuration}"/>
 					</div>
 					<div class="col-md-3">
-						<label class="sr-only" for="sequenceRelDataElementMaxDurationUnits">To units</label>
-						<select name="sequenceRelDataElementMaxDurationUnits" class="form-control">
+						<label class="sr-only" for="sequenceRelPhenotypeMaxDurationUnits">To units</label>
+						<select name="sequenceRelPhenotypeMaxDurationUnits" class="form-control">
 							<c:forEach var="unit" items="${timeUnits}">
 								<option value="${unit.id}"
-										<c:if test="${unit.id == relation.dataElementField.maxDurationUnits}">selected="selected"</c:if>>${unit.description}</option>
+										<c:if test="${unit.id == relation.phenotypeField.maxDurationUnits}">selected="selected"</c:if>>${unit.description}</option>
 							</c:forEach>
 						</select>
 					</div>
@@ -249,30 +249,30 @@
 				<fieldset>
 				<legend>
 					<input type="checkbox" class="checkbox-inline propertyValueConstraint" value="true"
-						   name="sequenceRelDataElementSpecifyProperty"
-						   <c:if test="${relation.dataElementField.hasPropertyConstraint}">checked="checked"</c:if>
-						   <c:if test="${propositionType == 'SEQUENCE' and empty properties[relation.dataElementField.dataElementKey]}">disabled="disabled"</c:if> />
+						   name="sequenceRelPhenotypeSpecifyProperty"
+						   <c:if test="${relation.phenotypeField.hasPropertyConstraint}">checked="checked"</c:if>
+						   <c:if test="${propositionType == 'SEQUENCE' and empty properties[relation.phenotypeField.phenotypeKey]}">disabled="disabled"</c:if> />
 					Property value
 				</legend>
 				<div class="form-group">
 					<div class="col-sm-6">
-						<label class="sr-only" for="sequenceRelDataElementPropertyName">Property name</label>
-						<select name="sequenceRelDataElementPropertyName" class="form-control"
-								id="sequenceRelDataElementPropertyName"
-								data-properties-provider="relatedDataElement${status.count}">
-							<c:forEach var="property" items="${properties[relation.dataElementField.dataElementKey]}">
+						<label class="sr-only" for="sequenceRelPhenotypePropertyName">Property name</label>
+						<select name="sequenceRelPhenotypePropertyName" class="form-control"
+								id="sequenceRelPhenotypePropertyName"
+								data-properties-provider="relatedPhenotype${status.count}">
+							<c:forEach var="property" items="${properties[relation.phenotypeField.phenotypeKey]}">
 								<option value="${property}"
-										<c:if test="${relation.dataElementField.property == property}">selected="selected"</c:if>>${property}</option>
+										<c:if test="${relation.phenotypeField.property == property}">selected="selected"</c:if>>${property}</option>
 							</c:forEach>
 						</select>
 					</div>
 					<div class="col-sm-6">
-						<label class="sr-only" for="sequenceRelDataElementPropertyValue">Property value</label>
+						<label class="sr-only" for="sequenceRelPhenotypePropertyValue">Property value</label>
 						<input type="text" class="form-control propertyValueField"
-							   name="sequenceRelDataElementPropertyValue"
-							   id="sequenceRelDataElementPropertyValue"
-							   value="<c:if test="${not empty relation.dataElementField.propertyValue}">${relation.dataElementField.propertyValue}</c:if>"
-							   <c:if test="${empty properties[relation.dataElementField.dataElementKey]}">disabled="disabled"</c:if> />
+							   name="sequenceRelPhenotypePropertyValue"
+							   id="sequenceRelPhenotypePropertyValue"
+							   value="<c:if test="${not empty relation.phenotypeField.propertyValue}">${relation.phenotypeField.propertyValue}</c:if>"
+							   <c:if test="${empty properties[relation.phenotypeField.phenotypeKey]}">disabled="disabled"</c:if> />
 					</div>
 				</div>
 				</fieldset>
@@ -280,9 +280,9 @@
 				<legend>Temporal Relationship</legend>
 				<div class="form-group">
 					<div class="col-sm-6">
-						<label class="sr-only" for="sequenceRelDataElementTemporalRelation">Temporal relation</label>
-						<select name="sequenceRelDataElementTemporalRelation"
-								id="sequenceRelDataElementTemporalRelation"
+						<label class="sr-only" for="sequenceRelPhenotypeTemporalRelation">Temporal relation</label>
+						<select name="sequenceRelPhenotypeTemporalRelation"
+								id="sequenceRelPhenotypeTemporalRelation"
 								class="form-control">
 							<c:forEach var="op" items="${sequentialRelationOps}">
 								<option value="${op.id}" <c:if test="${op.id == relation.relationOperator}">selected="selected"</c:if>>${op.description}</option>
@@ -290,24 +290,24 @@
 						</select>
 					</div>
 					<div class="col-sm-6">
-						<label class="sr-only" for="propositionSelect">Other data element</label>
+						<label class="sr-only" for="propositionSelect">Other phenotype</label>
 						<select name="propositionSelect" class="form-control"
-								data-sourceid="${relation.sequentialDataElementSource}"></select>
+								data-sourceid="${relation.sequentialPhenotypeSource}"></select>
 					</div>
 				</div>
 				<div class="form-group">
 					<div class="col-md-1 control-label" style="text-align: center">
-						<label for="sequenceRhsDataElementMinDistanceValue">by</label>
+						<label for="sequenceRhsPhenotypeMinDistanceValue">by</label>
 					</div>
 					<div class="col-md-2">
-						<input type="text" class="form-control" name="sequenceRhsDataElementMinDistanceValue"
-							   id="sequenceRhsDataElementMinDistanceValue"
+						<input type="text" class="form-control" name="sequenceRhsPhenotypeMinDistanceValue"
+							   id="sequenceRhsPhenotypeMinDistanceValue"
 							   placeholder="min"
 							   value="${relation.relationMinCount}"/>
 					</div>
 					<div class="col-md-3">
-						<label class="sr-only" for="sequenceRhsDataElementMinDistanceUnits">By units</label>
-						<select name="sequenceRhsDataElementMinDistanceUnits" id="sequenceRhsDataElementMinDistanceUnits" class="form-control">
+						<label class="sr-only" for="sequenceRhsPhenotypeMinDistanceUnits">By units</label>
+						<select name="sequenceRhsPhenotypeMinDistanceUnits" id="sequenceRhsPhenotypeMinDistanceUnits" class="form-control">
 							<c:forEach var="unit" items="${timeUnits}">
 								<option value="${unit.id}"
 										<c:if test="${unit.id == relation.relationMinUnits}">selected="selected"</c:if>>${unit.description}</option>
@@ -315,18 +315,18 @@
 						</select>
 					</div>
 					<div class="col-md-1 control-label" style="text-align: center">
-						<label for="sequenceRhsDataElementMaxDistanceValue">to</label>
+						<label for="sequenceRhsPhenotypeMaxDistanceValue">to</label>
 					</div>
 					<div class="col-md-2">
 						<input type="text" class="form-control"
 							   placeholder="max"
-							   name="sequenceRhsDataElementMaxDistanceValue"
-							   id="sequenceRhsDataElementMaxDistanceValue"
+							   name="sequenceRhsPhenotypeMaxDistanceValue"
+							   id="sequenceRhsPhenotypeMaxDistanceValue"
 							   value="${relation.relationMaxCount}" />
 					</div>
 					<div class="col-md-3">
-						<label class="sr-only" for="sequenceRhsDataElementMaxDistanceUnits">To units</label>
-						<select name="sequenceRhsDataElementMaxDistanceUnits" class="form-control">
+						<label class="sr-only" for="sequenceRhsPhenotypeMaxDistanceUnits">To units</label>
+						<select name="sequenceRhsPhenotypeMaxDistanceUnits" class="form-control">
 							<<c:forEach var="unit" items="${timeUnits}">
 							<option value="${unit.id}" <c:if test="${unit.id == relation.relationMaxUnits}">selected="selected"</c:if>>${unit.description}</option>
 						</c:forEach>
@@ -340,13 +340,13 @@
 <c:otherwise>
 <div class="sequence-relation drop-parent panel panel-default col-sm-12">
 	<div class="row panel-heading">
-		<h4 class="panel-title">Related data element <span class="count">1</span></h4>
+		<h4 class="panel-title">Related phenotype <span class="count">1</span></h4>
 	</div>
 	<div class="form-group">
 		<div class="col-sm-12">
-			<div id="relatedDataElement1"
-				 class="tree-drop tree-drop-single jstree-drop sequencedDataElement"
-				 title="Drag another system or user-defined data element in here">
+			<div id="relatedPhenotype1"
+				 class="tree-drop tree-drop-single jstree-drop sequencedPhenotype"
+				 title="Drag another system or user-defined phenotype in here">
 				<div class="label-info text-center">Drop Here</div>
 				<ul class="sortable" data-type="related" data-drop-type="single"
 					data-count="2">
@@ -357,20 +357,20 @@
 	<fieldset>
 		<legend>
 			<input type="checkbox" value="true"
-				   name="sequenceRelDataElementSpecifyDuration"/>
+				   name="sequenceRelPhenotypeSpecifyDuration"/>
 			Duration
 		</legend>
 		<div class="form-group">
 			<div class="col-md-2">
-				<label class="sr-only" for="sequenceRelDataElementMinDurationValue">Min duration</label>
+				<label class="sr-only" for="sequenceRelPhenotypeMinDurationValue">Min duration</label>
 				<input type="number" class="form-control"
 					   placeholder="min"
-					   name="sequenceRelDataElementMinDurationValue"/>
+					   name="sequenceRelPhenotypeMinDurationValue"/>
 			</div>
 			<div class="col-md-3">
-				<label class="sr-only" for="sequenceRelDataElementMinDurationUnits">Min duration time units</label>
-				<select name="sequenceRelDataElementMinDurationUnits" 
-						id="sequenceRelDataElementMinDurationUnits" class="form-control">
+				<label class="sr-only" for="sequenceRelPhenotypeMinDurationUnits">Min duration time units</label>
+				<select name="sequenceRelPhenotypeMinDurationUnits" 
+						id="sequenceRelPhenotypeMinDurationUnits" class="form-control">
 					<c:forEach var="unit" items="${timeUnits}">
 						<option value="${unit.id}"
 								<c:if test="${unit.id == defaultTimeUnit.id}">selected="selected"</c:if>>${unit.description}</option>
@@ -378,17 +378,17 @@
 				</select>
 			</div>
 			<div class="col-md-1 control-label" style="text-align: center">
-				<label for="sequenceRelDataElementMaxDurationValue">to</label>
+				<label for="sequenceRelPhenotypeMaxDurationValue">to</label>
 			</div>
 			<div class="col-md-2">
 				<input type="number" class="form-control"
 					   placeholder="max"
-					   name="sequenceRelDataElementMaxDurationValue"
-					   id="sequenceRelDataElementMaxDurationValue"/>
+					   name="sequenceRelPhenotypeMaxDurationValue"
+					   id="sequenceRelPhenotypeMaxDurationValue"/>
 			</div>
 			<div class="col-md-3">
-				<label class="sr-only" for="sequenceRelDataElementMaxDurationUnits">Max duration time units</label>
-				<select name="sequenceRelDataElementMaxDurationUnits" class="form-control">
+				<label class="sr-only" for="sequenceRelPhenotypeMaxDurationUnits">Max duration time units</label>
+				<select name="sequenceRelPhenotypeMaxDurationUnits" class="form-control">
 					<c:forEach var="unit" items="${timeUnits}">
 						<option value="${unit.id}"
 								<c:if test="${unit.id == defaultTimeUnit.id}">selected="selected"</c:if>>${unit.description}</option>
@@ -400,23 +400,23 @@
 	<fieldset>
 		<legend>
 			<input type="checkbox" class="checkbox-inline propertyValueConstraint" value="true"
-				   name="sequenceRelDataElementSpecifyProperty"/>
+				   name="sequenceRelPhenotypeSpecifyProperty"/>
 			Property value
 		</legend>
 		<div class="form-group">
 			<div class="col-sm-6">
-				<label class="sr-only" for="sequenceRelDataElementPropertyName">Property name</label>
-				<select name="sequenceRelDataElementPropertyName"
-						id="sequenceRelDataElementPropertyName"
+				<label class="sr-only" for="sequenceRelPhenotypePropertyName">Property name</label>
+				<select name="sequenceRelPhenotypePropertyName"
+						id="sequenceRelPhenotypePropertyName"
 						class="form-control"
-						data-properties-provider="relatedDataElement1">
+						data-properties-provider="relatedPhenotype1">
 				</select>
 			</div>
 			<div class="col-sm-6">
-				<label class="sr-only" for="sequenceRelDataElementPropertyValue">Property value</label>
+				<label class="sr-only" for="sequenceRelPhenotypePropertyValue">Property value</label>
 				<input type="text" class="form-control propertyValueField"
-					   name="sequenceRelDataElementPropertyValue"
-					   id="sequenceRelDataElementPropertyValue"/>
+					   name="sequenceRelPhenotypePropertyValue"
+					   id="sequenceRelPhenotypePropertyValue"/>
 			</div>
 		</div>
 	</fieldset>
@@ -424,9 +424,9 @@
 		<legend>Temporal relationship</legend>
 		<div class="form-group">
 			<div class="col-sm-6">
-				<label class="sr-only" for="sequenceRelDataElementTemporalRelation">Temporal relation</label>
-				<select name="sequenceRelDataElementTemporalRelation"
-						id="sequenceRelDataElementTemporalRelation"
+				<label class="sr-only" for="sequenceRelPhenotypeTemporalRelation">Temporal relation</label>
+				<select name="sequenceRelPhenotypeTemporalRelation"
+						id="sequenceRelPhenotypeTemporalRelation"
 						class="form-control">
 					<c:forEach var="op" items="${sequentialRelationOps}">
 						<option value="${op.id}"
@@ -435,23 +435,23 @@
 				</select>
 			</div>
 			<div class="col-sm-6">
-				<label class="sr-only" for="propositionSelect">Selected data element</label>
+				<label class="sr-only" for="propositionSelect">Selected phenotype</label>
 				<select name="propositionSelect" id="propositionSelect" class="form-control"></select>
 			</div>
 		</div>
 		<div class="form-group">
 			<div class="col-md-1 control-label" style="text-align: center">
-				<label for="sequenceRhsDataElementMinDistanceValue">by</label>
+				<label for="sequenceRhsPhenotypeMinDistanceValue">by</label>
 			</div>
 			<div class="col-md-2">
 				<input type="text" class="form-control"
 					   placeholder="min"
-					   name="sequenceRhsDataElementMinDistanceValue"
-					   id="sequenceRhsDataElementMinDistanceValue"/>
+					   name="sequenceRhsPhenotypeMinDistanceValue"
+					   id="sequenceRhsPhenotypeMinDistanceValue"/>
 			</div>
 			<div class="col-md-3">
-				<label class="sr-only" for="sequenceRhsDataElementMinDistanceUnits">By units</label>
-				<select name="sequenceRhsDataElementMinDistanceUnits" class="form-control">
+				<label class="sr-only" for="sequenceRhsPhenotypeMinDistanceUnits">By units</label>
+				<select name="sequenceRhsPhenotypeMinDistanceUnits" class="form-control">
 					<c:forEach var="unit" items="${timeUnits}">
 						<option value="${unit.id}"
 								<c:if test="${unit.id == defaultTimeUnit.id}">selected="selected"</c:if>>${unit.description}</option>
@@ -459,17 +459,17 @@
 				</select>
 			</div>
 			<div class="col-md-1 control-label" style="text-align: center">
-				<label for="sequenceRhsDataElementMaxDistanceValue">to</label>
+				<label for="sequenceRhsPhenotypeMaxDistanceValue">to</label>
 			</div>
 			<div class="col-md-2">
 				<input type="text" class="form-control"
 					   placeholder="max"
-					   name="sequenceRhsDataElementMaxDistanceValue"
-					   id="sequenceRhsDataElementMaxDistanceValue"/>
+					   name="sequenceRhsPhenotypeMaxDistanceValue"
+					   id="sequenceRhsPhenotypeMaxDistanceValue"/>
 			</div>
 			<div class="col-md-3">
-				<label class="sr-only" for="sequenceRhsDataElementMaxDistanceUnits">To units</label>
-				<select name="sequenceRhsDataElementMaxDistanceUnits" class="form-control">
+				<label class="sr-only" for="sequenceRhsPhenotypeMaxDistanceUnits">To units</label>
+				<select name="sequenceRhsPhenotypeMaxDistanceUnits" class="form-control">
 					<c:forEach var="unit" items="${timeUnits}">
 						<option value="${unit.id}"
 								<c:if test="${unit.id == defaultTimeUnit.id}">selected="selected"</c:if>>${unit.description}</option>
@@ -486,7 +486,7 @@
 <div class="form-group">
 	<div class="col-sm-12 text-center">
 		<button id="duplicateRelatedButton" type="button" class="btn btn-primary">
-			<span class="glyphicon glyphicon-plus"></span> Add Related Data Element
+			<span class="glyphicon glyphicon-plus"></span> Add Related Phenotype
 		</button>
 		<button id="savePropositionButton" type="button" class="btn btn-primary">Save</button>
 	</div>

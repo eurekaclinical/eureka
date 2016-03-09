@@ -39,7 +39,7 @@ package edu.emory.cci.aiw.cvrg.eureka.services.conversion;
  * <http://www.gnu.org/licenses/gpl-3.0.html>.
  * #L%
  */
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.DataElementEntity;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.PhenotypeEntity;
 
 /**
  *
@@ -50,31 +50,31 @@ public class ConversionSupport {
 	public ConversionSupport() {
 	}
 
-	public String toPropositionIdWrapped(String dataElementKey) {
-		if (dataElementKey == null) {
+	public String toPropositionIdWrapped(String phenotypeKey) {
+		if (phenotypeKey == null) {
 			return null;
 		} else {
-			return dataElementKey + ConversionUtil.PROP_ID_WRAPPED_SUFFIX;
+			return phenotypeKey + ConversionUtil.PROP_ID_WRAPPED_SUFFIX;
 		}
 	}
 
-	public String toPropositionIdWrapped(DataElementEntity dataElement) {
-		return toPropositionIdWrapped(dataElement.getKey());
+	public String toPropositionIdWrapped(PhenotypeEntity phenotype) {
+		return toPropositionIdWrapped(phenotype.getKey());
 	}
 
-	public String toPropositionId(String dataElementKey) {
-		if (dataElementKey == null || !dataElementKey.startsWith(ConversionUtil.USER_KEY_PREFIX)) {
-			return dataElementKey;
+	public String toPropositionId(String phenotypeKey) {
+		if (phenotypeKey == null || !phenotypeKey.startsWith(ConversionUtil.USER_KEY_PREFIX)) {
+			return phenotypeKey;
 		} else {
-			return dataElementKey + ConversionUtil.PRIMARY_PROP_ID_SUFFIX;
+			return phenotypeKey + ConversionUtil.PRIMARY_PROP_ID_SUFFIX;
 		}
 	}
 
-	public String toPropositionId(DataElementEntity dataElement) {
-		return toPropositionId(dataElement.getKey());
+	public String toPropositionId(PhenotypeEntity phenotype) {
+		return toPropositionId(phenotype.getKey());
 	}
 
-	public String toDataElementKey(String propId) {
+	public String toPhenotypeKey(String propId) {
 		if (propId != null && propId.startsWith(ConversionUtil.USER_KEY_PREFIX)) {
 			int lastIndexOf
 					= propId.lastIndexOf(ConversionUtil.PRIMARY_PROP_ID_SUFFIX);

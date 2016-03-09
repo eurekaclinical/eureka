@@ -44,7 +44,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 
 public final class ValueThreshold {
 	
-	private DataElementField dataElement;
+	private PhenotypeField phenotype;
 	private Long lowerComp;
 	private Long upperComp;
 	
@@ -55,18 +55,18 @@ public final class ValueThreshold {
 	private String lowerUnits;
 	private String upperUnits;
 	private Long relationOperator;
-	private List<DataElementField> relatedDataElements;
+	private List<PhenotypeField> relatedPhenotypes;
 	private Integer withinAtLeast;
 	private Long withinAtLeastUnit;
 	private Integer withinAtMost;
 	private Long withinAtMostUnit;
 
-	public DataElementField getDataElement() {
-		return dataElement;
+	public PhenotypeField getPhenotype() {
+		return phenotype;
 	}
 
-	public void setDataElement(DataElementField dataElement) {
-		this.dataElement = dataElement;
+	public void setPhenotype(PhenotypeField phenotype) {
+		this.phenotype = phenotype;
 	}
 
 	public Long getLowerComp() {
@@ -125,12 +125,12 @@ public final class ValueThreshold {
 		this.relationOperator = relationOperator;
 	}
 
-	public List<DataElementField> getRelatedDataElements() {
-		return relatedDataElements;
+	public List<PhenotypeField> getRelatedPhenotypes() {
+		return relatedPhenotypes;
 	}
 
-	public void setRelatedDataElements(List<DataElementField> relatedDataElements) {
-		this.relatedDataElements = relatedDataElements;
+	public void setRelatedPhenotypes(List<PhenotypeField> relatedPhenotypes) {
+		this.relatedPhenotypes = relatedPhenotypes;
 	}
 
 	public Integer getWithinAtLeast() {

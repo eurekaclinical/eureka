@@ -16,7 +16,7 @@ window.eureka.editor = new function () {
 		self.propId = propId;
 		self.propType = propType;
 		self.propSubType = (propSubType == '') ? null : propSubType;
-
+                console.log("Ai");
 		if (propId != null && propId != '') {
 			$('.label-info').hide();
 		}
@@ -123,10 +123,10 @@ window.eureka.editor = new function () {
 
 	self.deleteElement = function (displayName, key) {
 		var $dialog = $('<div></div>')
-			.html('Are you sure you want to delete data element &quot;' +
+			.html('Are you sure you want to delete phenotype &quot;' +
 				displayName.trim() + '&quot;? You cannot undo this action.')
 			.dialog({
-				title: "Delete Data Element",
+				title: "Delete Phenotype",
 				modal: true,
 				resizable: false,
 				buttons: {
@@ -142,7 +142,7 @@ window.eureka.editor = new function () {
 								var $errorDialog = $('<div></div>')
 									.html(data.responseText)
 									.dialog({
-										title: "Error Deleting Data Element",
+										title: "Error Deleting Phenotype",
 										buttons: {
 											"OK": function () {
 												$(this).dialog("close");
@@ -266,7 +266,7 @@ window.eureka.editor = new function () {
 			if ($(sortable).data('drop-type') === 'single' && $(sortable).find('li').length > 0) {
 				var $toRemove = $(sortable).find('li');
 				var dialog = $('#replaceModal');
-				$(dialog).find('#replaceContent').html('Are you sure you want to replace data element &quot;' + $toRemove.text().trim() + '&quot;?');
+				$(dialog).find('#replaceContent').html('Are you sure you want to replace phenotype &quot;' + $toRemove.text().trim() + '&quot;?');
 				$(dialog).find('#replaceButton').on('click', function (e) {
 					self.deleteItem($toRemove, $(sortable), 0);
 					self.addNewItemToList(data, $(sortable), newItem);
@@ -402,7 +402,7 @@ window.eureka.editor = new function () {
 				var $toRemove = $(item).closest('li');
 				var $sortable = $toRemove.closest('ul.sortable');
 				var dialog = $('#deleteModal');
-				$(dialog).find('#deleteContent').html('Are you sure you want to remove data element &quot;' + $toRemove.text().trim() + '&quot;?');
+				$(dialog).find('#deleteContent').html('Are you sure you want to remove phenotype &quot;' + $toRemove.text().trim() + '&quot;?');
 				$(dialog).find('#deleteButton').on('click', function (e) {
 					self.deleteItem($toRemove, $sortable, 0);
 					$(dialog).modal('hide');
@@ -412,27 +412,27 @@ window.eureka.editor = new function () {
 		});
 	};
 
-	self.collectDataElements = function ($dataElementsFromDropBox) {
+	self.collectPhenotypes = function ($phenotypesFromDropBox) {
 		var childElements = new Array();
 
-		$dataElementsFromDropBox.each(function (i, p) {
-			childElements.push(self.collectDataElement(p));
+		$phenotypesFromDropBox.each(function (i, p) {
+			childElements.push(self.collectPhenotype(p));
 		});
 
 		return childElements;
 	};
         
-        self.collectDataElement = function (dataElementFromDropBox) {
-		var system = $(dataElementFromDropBox).data('space') === 'system'
-                          || $(dataElementFromDropBox).data('space') === 'SYSTEM';
+        self.collectPhenotype = function (phenotypeFromDropBox) {
+		var system = $(phenotypeFromDropBox).data('space') === 'system'
+                          || $(phenotypeFromDropBox).data('space') === 'SYSTEM';
 		var child = {
-			'dataElementKey': $(dataElementFromDropBox).data('key')
+			'phenotypeKey': $(phenotypeFromDropBox).data('key')
 		};
 
 		if (system) {
 			child['type'] = 'SYSTEM';
 		} else {
-			child['type'] = $(dataElementFromDropBox).data('type');
+			child['type'] = $(phenotypeFromDropBox).data('type');
 		}
 		return child;
 	};
@@ -473,7 +473,7 @@ window.eureka.editor = new function () {
             cohortDestination.ownerUserId = user.id;
             cohortDestination.name = postData['name'];
             cohortDestination.description = postData['description'];
-            cohortDestination.dataElementFields = null;
+            cohortDestination.phenotypeFields = null;
             cohortDestination.cohort = self.toCohort(postData.phenotypes);
 
             cohortDestination.read = false;
@@ -513,13 +513,13 @@ window.eureka.editor = new function () {
         var cohort = {id: null};
         var node = {id: null, start: null, finish: null, type: 'Literal'};
         if (phenotypes.length == 1) {
-            node.name = phenotypes[0].dataElementKey;
+            node.name = phenotypes[0].phenotypeKey;
         } else if (phenotypes.length > 1) {
             first = true;
             prev = null;
             for (var i = phenotypes.length - 1; i >= 0; i--) {
                 var literal = {id: null, start: null, finish: null, type: 'Literal'};
-                literal.name = phenotypes[i].dataElementKey;
+                literal.name = phenotypes[i].phenotypeKey;
                 if (first) {
                     first = false;
                     prev = literal;
@@ -540,8 +540,8 @@ window.eureka.editor = new function () {
     }
 
     self.saveCohort = function (elem) {
-        var $memberDataElements = $(elem).find('ul.sortable').find('li');
-        var childElements = self.collectDataElements($memberDataElements);
+        var $memberPhenotypes = $(elem).find('ul.sortable').find('li');
+        var childElements = self.collectPhenotypes($memberPhenotypes);
 
         var cohort = {
             'name': $('input#patCohortDefName').val(),

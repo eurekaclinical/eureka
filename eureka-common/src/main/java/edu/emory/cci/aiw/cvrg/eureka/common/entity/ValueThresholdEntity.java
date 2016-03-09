@@ -69,7 +69,7 @@ public class ValueThresholdEntity {
 	@ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.REFRESH, 
 			CascadeType.MERGE})
 	@JoinColumn(nullable = false)
-	private DataElementEntity abstractedFrom; 
+	private PhenotypeEntity abstractedFrom; 
 
 	private BigDecimal minValueThreshold;
 	private String minTValueThreshold;
@@ -91,7 +91,7 @@ public class ValueThresholdEntity {
 	
 	@OneToMany(cascade = CascadeType.ALL)
 	@JoinColumn(name="valuethreshold_id")
-	private List<ExtendedDataElement> extendedDataElements;
+	private List<ExtendedPhenotype> extendedPhenotypes;
 	
 	@ManyToOne
 	@JoinColumn(name="relationop_id", referencedColumnName = "id", nullable = false)
@@ -116,11 +116,11 @@ public class ValueThresholdEntity {
 		this.id = id;
 	}
 
-	public DataElementEntity getAbstractedFrom() {
+	public PhenotypeEntity getAbstractedFrom() {
 		return abstractedFrom;
 	}
 
-	public void setAbstractedFrom(DataElementEntity abstractedFrom) {
+	public void setAbstractedFrom(PhenotypeEntity abstractedFrom) {
 		this.abstractedFrom = abstractedFrom;
 	}
 
@@ -188,12 +188,12 @@ public class ValueThresholdEntity {
 		this.maxValueComp = maxValueComp;
 	}
 
-	public List<ExtendedDataElement> getExtendedDataElements() {
-		return extendedDataElements;
+	public List<ExtendedPhenotype> getExtendedPhenotypes() {
+		return extendedPhenotypes;
 	}
 
-	public void setExtendedDataElements(List<ExtendedDataElement> extendedDataElements) {
-		this.extendedDataElements = extendedDataElements;
+	public void setExtendedPhenotypes(List<ExtendedPhenotype> extendedPhenotypes) {
+		this.extendedPhenotypes = extendedPhenotypes;
 	}
 	
 	@Override

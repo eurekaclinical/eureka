@@ -70,7 +70,7 @@
 										Categorization
 									</dt>
 									<dd>
-										<fmt:message key="dataelementtype.CATEGORIZATION.description"/>
+										<fmt:message key="phenotypetype.CATEGORIZATION.description"/>
 									</dd>
 								</a>
 							</li>
@@ -80,7 +80,7 @@
 										Sequence
 									</dt>
 									<dd>
-										<fmt:message key="dataelementtype.SEQUENCE.description"/>
+										<fmt:message key="phenotypetype.SEQUENCE.description"/>
 									</dd>
 								</a>
 							</li>
@@ -90,7 +90,7 @@
 										Frequency
 									</dt>
 									<dd>
-										<fmt:message key="dataelementtype.FREQUENCY.description"/>
+										<fmt:message key="phenotypetype.FREQUENCY.description"/>
 									</dd>
 								</a>
 							</li>
@@ -100,7 +100,7 @@
 										Value Threshold
 									</dt>
 									<dd>
-										<fmt:message key="dataelementtype.VALUE_THRESHOLD.description"/>
+										<fmt:message key="phenotypetype.VALUE_THRESHOLD.description"/>
 									</dd>
 								</a>
 							</li>

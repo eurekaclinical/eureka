@@ -55,7 +55,7 @@ import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
  */
 @Entity
 @Table(name = "frequencies")
-public class FrequencyEntity extends DataElementEntity {
+public class FrequencyEntity extends PhenotypeEntity {
 
 	@Column(nullable = false)
 	private Integer count;
@@ -76,7 +76,7 @@ public class FrequencyEntity extends DataElementEntity {
 
 	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(nullable = false)
-	private ExtendedDataElement extendedDataElement;
+	private ExtendedPhenotype extendedPhenotype;
 	
 	@ManyToOne
 	@JoinColumn(nullable = false)
@@ -102,17 +102,17 @@ public class FrequencyEntity extends DataElementEntity {
 		this.consecutive = consecutive;
 	}
 
-	public DataElementEntity getAbstractedFrom() {
-		return extendedDataElement != null ? extendedDataElement
-		        .getDataElementEntity() : null;
+	public PhenotypeEntity getAbstractedFrom() {
+		return extendedPhenotype != null ? extendedPhenotype
+		        .getPhenotypeEntity() : null;
 	}
 
-	public ExtendedDataElement getExtendedProposition() {
-		return extendedDataElement;
+	public ExtendedPhenotype getExtendedProposition() {
+		return extendedPhenotype;
 	}
 
-	public void setExtendedProposition(ExtendedDataElement extendedProposition) {
-		this.extendedDataElement = extendedProposition;
+	public void setExtendedProposition(ExtendedPhenotype extendedProposition) {
+		this.extendedPhenotype = extendedProposition;
 	}
 
 	public Integer getWithinAtLeast() {
@@ -156,7 +156,7 @@ public class FrequencyEntity extends DataElementEntity {
 	}
 	
 	@Override
-	public void accept(DataElementEntityVisitor visitor) {
+	public void accept(PhenotypeEntityVisitor visitor) {
 		visitor.visit(this);
 	}
 	

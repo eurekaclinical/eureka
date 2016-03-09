@@ -50,16 +50,16 @@ import org.protempa.PropositionDefinition;
 
 import com.google.inject.Inject;
 
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.DataElement;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.Phenotype;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.SourceConfigParams;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.DataElementEntity;
-import edu.emory.cci.aiw.cvrg.eureka.common.exception.DataElementHandlingException;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.PhenotypeEntity;
+import edu.emory.cci.aiw.cvrg.eureka.common.exception.PhenotypeHandlingException;
 import edu.emory.cci.aiw.cvrg.eureka.common.exception.HttpStatusException;
-import edu.emory.cci.aiw.cvrg.eureka.services.dao.DataElementEntityDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.finder.PropositionFindException;
 import edu.emory.cci.aiw.cvrg.eureka.services.finder.SystemPropositionFinder;
 import edu.emory.cci.aiw.cvrg.eureka.services.resource.SourceConfigResource;
 import edu.emory.cci.aiw.cvrg.eureka.services.util.PropositionUtil;
+import edu.emory.cci.aiw.cvrg.eureka.services.dao.PhenotypeEntityDao;
 
 /**
  *
@@ -69,12 +69,12 @@ final class TranslatorSupport {
 
 	private final SourceConfigResource sourceConfigResource;
 
-	private static final class DataElementMapKey {
+	private static final class PhenotypeMapKey {
 
 		private final Long userId;
 		private final String key;
 
-		DataElementMapKey(Long userId, String key) {
+		PhenotypeMapKey(Long userId, String key) {
 			this.userId = userId;
 			this.key = key;
 		}
@@ -103,7 +103,7 @@ final class TranslatorSupport {
 			if (getClass() != obj.getClass()) {
 				return false;
 			}
-			final DataElementMapKey other = (DataElementMapKey) obj;
+			final PhenotypeMapKey other = (PhenotypeMapKey) obj;
 			if (this.userId != other.userId && (this.userId == null || !this.userId.equals(other.userId))) {
 				return false;
 			}
@@ -113,17 +113,17 @@ final class TranslatorSupport {
 			return true;
 		}
 	}
-	private final Map<DataElementMapKey, DataElementEntity> dataElementEntities;
-	private final DataElementEntityDao dataElementEntityDao;
+	private final Map<PhenotypeMapKey, PhenotypeEntity> phenotypeEntities;
+	private final PhenotypeEntityDao phenotypeEntityDao;
 	private final SystemPropositionFinder finder;
 
 	@Inject
-	public TranslatorSupport(DataElementEntityDao dataElementEntityDao,
+	public TranslatorSupport(PhenotypeEntityDao phenotypeEntityDao,
 			SystemPropositionFinder finder,
 			SourceConfigResource inSourceConfigResource) {
-		this.dataElementEntityDao = dataElementEntityDao;
+		this.phenotypeEntityDao = phenotypeEntityDao;
 		this.finder = finder;
-		this.dataElementEntities
+		this.phenotypeEntities
 				= new HashMap<>();
 		this.sourceConfigResource = inSourceConfigResource;
 	}
@@ -135,14 +135,14 @@ final class TranslatorSupport {
 	 * @param userId
 	 * @param key
 	 * @return
-	 * @throws DataElementHandlingException
+	 * @throws PhenotypeHandlingException
 	 */
-	DataElementEntity getUserOrSystemEntityInstance(Long userId, String key)
-			throws DataElementHandlingException {
-		DataElementEntity dataElementEntity
-				= dataElementEntityDao.getUserOrSystemByUserAndKey(userId, key);
+	PhenotypeEntity getUserOrSystemEntityInstance(Long userId, String key)
+			throws PhenotypeHandlingException {
+		PhenotypeEntity phenotypeEntity
+				= phenotypeEntityDao.getUserOrSystemByUserAndKey(userId, key);
 		
-		if (dataElementEntity == null) {
+		if (phenotypeEntity == null) {
 			/*
 			 * Hack to get an ontology source that assumes all Protempa configurations
 			 * for a user point to the same knowledge source backends. This will go away.
@@ -152,39 +152,39 @@ final class TranslatorSupport {
 				throw new HttpStatusException(Response.Status.INTERNAL_SERVER_ERROR, "No source configs");
 			}
 			String sourceConfigId = scps.get(0).getId();
-			DataElementMapKey deMapKey = new DataElementMapKey(userId, key);
-			dataElementEntity = this.dataElementEntities.get(deMapKey);
-			if (dataElementEntity == null) {
+			PhenotypeMapKey deMapKey = new PhenotypeMapKey(userId, key);
+			phenotypeEntity = this.phenotypeEntities.get(deMapKey);
+			if (phenotypeEntity == null) {
 				try {
 					PropositionDefinition propDef
 							= this.finder.find(sourceConfigId, key);
-					dataElementEntity
+					phenotypeEntity
 							= PropositionUtil.toSystemProposition(propDef,
 									userId);
-					this.dataElementEntities.put(deMapKey, dataElementEntity);
+					this.phenotypeEntities.put(deMapKey, phenotypeEntity);
 				} catch (PropositionFindException ex) {
-					throw new DataElementHandlingException(
+					throw new PhenotypeHandlingException(
 							Response.Status.PRECONDITION_FAILED,
-							"No system data element with name " + key, ex);
+							"No system phenotype with name " + key, ex);
 				}
 			}
 		}
-		return dataElementEntity;
+		return phenotypeEntity;
 	}
 
 	/**
-	 * Creates a new user entity if one with the provided data element's id does
+	 * Creates a new user entity if one with the provided phenotype's id does
 	 * not already exist.
 	 *
 	 * @param <P>
 	 * @param element
 	 * @param cls
 	 * @return
-	 * @throws DataElementHandlingException if there already exists a system
-	 * data element with the same key as the candidate user data element.
+	 * @throws PhenotypeHandlingException if there already exists a system
+	 * phenotype with the same key as the candidate user phenotype.
 	 */
-	<P extends DataElementEntity> P getUserEntityInstance(DataElement element,
-			Class<P> cls) throws DataElementHandlingException {
+	<P extends PhenotypeEntity> P getUserEntityInstance(Phenotype element,
+			Class<P> cls) throws PhenotypeHandlingException {
 		String key;
 		if (element.getKey() != null) {
 			key = element.getKey();
@@ -195,9 +195,9 @@ final class TranslatorSupport {
 		Date now = new Date();
 
 		P result;
-		DataElementEntity oldEntity = null;
+		PhenotypeEntity oldEntity = null;
 		if (element.getId() != null) {
-			oldEntity = dataElementEntityDao.retrieve(element.getId());
+			oldEntity = phenotypeEntityDao.retrieve(element.getId());
 		}
 		if (cls.isInstance(oldEntity)) {
 			result = cls.cast(oldEntity);
@@ -223,23 +223,23 @@ final class TranslatorSupport {
 	 * Populates the fields common to all propositions based on the given
 	 * proposition.
 	 *
-	 * @param entity the {@link DataElementEntity} to populate. Modified as a
+	 * @param entity the {@link PhenotypeEntity} to populate. Modified as a
 	 * result of calling this method.
-	 * @param dataElement the {@link DataElement} to get the data from
+	 * @param phenotype the {@link Phenotype} to get the data from
 	 */
-	private static void populateCommonEntityFields(DataElementEntity entity,
-			DataElement dataElement) {
-		entity.setId(dataElement.getId());
-		entity.setDisplayName(dataElement.getDisplayName());
-		entity.setDescription(dataElement.getDescription());
-		//proposition.setCreated(dataElement.getCreated());
-		//proposition.setLastModified(dataElement.getLastModified());
-		entity.setUserId(dataElement.getUserId());
+	private static void populateCommonEntityFields(PhenotypeEntity entity,
+			Phenotype phenotype) {
+		entity.setId(phenotype.getId());
+		entity.setDisplayName(phenotype.getDisplayName());
+		entity.setDescription(phenotype.getDescription());
+		//proposition.setCreated(phenotype.getCreated());
+		//proposition.setLastModified(phenotype.getLastModified());
+		entity.setUserId(phenotype.getUserId());
 
-		if (dataElement.getKey() != null) {
-			entity.setKey(dataElement.getKey());
+		if (phenotype.getKey() != null) {
+			entity.setKey(phenotype.getKey());
 		} else {
-			entity.setKey("USER:" + dataElement.getDisplayName());
+			entity.setKey("USER:" + phenotype.getDisplayName());
 		}
 	}
 }

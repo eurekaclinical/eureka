@@ -122,7 +122,7 @@ window.eureka.editor = new function () {
 
 	self.deleteElement = function (displayName, key) {
 		var $dialog = $('<div></div>')
-			.html('Are you sure you want to delete data element &quot;' +
+			.html('Are you sure you want to delete phenotype &quot;' +
 				displayName.trim() + '&quot;? You cannot undo this action.')
 			.dialog({
 				title: "Delete Data Element",
@@ -265,7 +265,7 @@ window.eureka.editor = new function () {
 			if ($(sortable).data('drop-type') === 'single' && $(sortable).find('li').length > 0) {
 				var $toRemove = $(sortable).find('li');
 				var dialog = $('#replaceModal');
-				$(dialog).find('#replaceContent').html('Are you sure you want to replace data element &quot;' + $toRemove.text().trim() + '&quot;?');
+				$(dialog).find('#replaceContent').html('Are you sure you want to replace phenotype &quot;' + $toRemove.text().trim() + '&quot;?');
 				$(dialog).find('#replaceButton').on('click', function (e) {
 					self.deleteItem($toRemove, $(sortable), 0);
 					self.addNewItemToList(data, $(sortable), newItem);
@@ -401,7 +401,7 @@ window.eureka.editor = new function () {
 				var $toRemove = $(item).closest('li');
 				var $sortable = $toRemove.closest('ul.sortable');
 				var dialog = $('#deleteModal');
-				$(dialog).find('#deleteContent').html('Are you sure you want to remove data element &quot;' + $toRemove.text().trim() + '&quot;?');
+				$(dialog).find('#deleteContent').html('Are you sure you want to remove phenotype &quot;' + $toRemove.text().trim() + '&quot;?');
 				$(dialog).find('#deleteButton').on('click', function (e) {
 					self.deleteItem($toRemove, $sortable, 0);
 					$(dialog).modal('hide');
@@ -411,69 +411,25 @@ window.eureka.editor = new function () {
 		});
 	};
 
-	self.collectDataElements = function ($dataElementsFromDropBox) {
-		var childElements = new Array();
-
-		$dataElementsFromDropBox.each(function (i, p) {
-			childElements.push(self.collectDataElement(p));
-		});
-
-		return childElements;
-	};
-
-	self.post = function (postData) {
-		$.ajax({
-			type: "POST",
-			url: 'saveprop',
-			data: JSON.stringify(postData),
-			success: function (data) {
-				window.location.href = 'editorhome'
-			},
-			error: function (data, statusCode, errorThrown) {
-				var content = 'Error while saving ' + postData.displayName + '. ' + data.responseText + '. Status Code: ' + statusCode;
-				$('#errorModal').find('#errorContent').html(content);
-				$('#errorModal').modal('show');
-				if (errorThrown != null) {
-					console.log(errorThrown);
-				}
-			}
-		});
-	}
-
-	self.collectDataElement = function (dataElementFromDropBox) {
-		var system = $(dataElementFromDropBox).data('space') === 'system'
-			|| $(dataElementFromDropBox).data('space') === 'SYSTEM';
-		var child = {
-			'dataElementKey': $(dataElementFromDropBox).data('key')
-		};
-
-		if (system) {
-			child['type'] = 'SYSTEM';
-		} else {
-			child['type'] = $(dataElementFromDropBox).data('type');
-		}
-		return child;
-	};
-
 	self.collectValueThresholds = function ($valueThresholds) {
 		var valueThresholdsArr = new Array();
 
 		$valueThresholds.each(function (i, r) {
-			var dataEltFromDropBox = $(r).find('div.thresholdedDataElement').find('li');
-			var dataElt = self.collectDataElement(dataEltFromDropBox);
+			var dataEltFromDropBox = $(r).find('div.thresholdedPhenotype').find('li');
+			var dataElt = self.collectPhenotype(dataEltFromDropBox);
 
-			var $relatedDataElements = $(r).find('div.thresholdedRelatedDataElements').find('li');
+			var $relatedPhenotypes = $(r).find('div.thresholdedRelatedPhenotypes').find('li');
 
 			valueThresholdsArr.push({
-				'dataElement': dataElt,
+				'phenotype': dataElt,
 				'lowerComp': $(r).find('select[name="thresholdLowerComp"]').val(),
 				'lowerValue': $(r).find('input[name="thresholdLowerVal"]').val(),
 				'lowerUnits': null, //placeholder
 				'upperComp': $(r).find('select[name="thresholdUpperComp"]').val(),
 				'upperValue': $(r).find('input[name="thresholdUpperVal"]').val(),
 				'upperUnits': null, //placeholder
-				'relationOperator': $(r).find('select[name="thresholdDataElementTemporalRelation"]').val(),
-				'relatedDataElements': self.collectDataElements($relatedDataElements),
+				'relationOperator': $(r).find('select[name="thresholdPhenotypeTemporalRelation"]').val(),
+				'relatedPhenotypes': self.collectPhenotypes($relatedPhenotypes),
 				'withinAtLeast': $(r).find('input[name="thresholdWithinAtLeast"]').val(),
 				'withinAtLeastUnit': $(r).find('select[name="thresholdWithinAtLeastUnits"]').val(),
 				'withinAtMost': $(r).find('input[name="thresholdWithinAtMost"]').val(),
@@ -488,15 +444,15 @@ window.eureka.editor = new function () {
 		var $mainProposition = $sortable.find('li').first();
 		return {
 			'id': $sortable.data('count'),
-			'dataElementKey': $mainProposition.data('key'),
-			'hasDuration': $(elem).find('input[name="mainDataElementSpecifyDuration"]').is(':checked'),
-			'minDuration': $(elem).find('input[name="mainDataElementMinDurationValue"]').val(),
-			'minDurationUnits': $(elem).find('select[name="mainDataElementMinDurationUnits"]').val(),
-			'maxDuration': $(elem).find('input[name="mainDataElementMaxDurationValue"]').val(),
-			'maxDurationUnits': $(elem).find('select[name="mainDataElementMaxDurationUnits"]').val(),
-			'hasPropertyConstraint': $(elem).find('input[name="mainDataElementSpecifyProperty"]').is(':checked'),
-			'property': $(elem).find('select[name="mainDataElementPropertyName"]').val(),
-			'propertyValue': $(elem).find('input[name="mainDataElementPropertyValue"]').val()
+			'phenotypeKey': $mainProposition.data('key'),
+			'hasDuration': $(elem).find('input[name="mainPhenotypeSpecifyDuration"]').is(':checked'),
+			'minDuration': $(elem).find('input[name="mainPhenotypeMinDurationValue"]').val(),
+			'minDurationUnits': $(elem).find('select[name="mainPhenotypeMinDurationUnits"]').val(),
+			'maxDuration': $(elem).find('input[name="mainPhenotypeMaxDurationValue"]').val(),
+			'maxDurationUnits': $(elem).find('select[name="mainPhenotypeMaxDurationUnits"]').val(),
+			'hasPropertyConstraint': $(elem).find('input[name="mainPhenotypeSpecifyProperty"]').is(':checked'),
+			'property': $(elem).find('select[name="mainPhenotypePropertyName"]').val(),
+			'propertyValue': $(elem).find('input[name="mainPhenotypePropertyValue"]').val()
 		}
 	};
 
@@ -510,30 +466,30 @@ window.eureka.editor = new function () {
 			var key = $proposition.data('key');
 			var sequentialValue = $(r).find('select[name="propositionSelect"]').val();
 			var sequentialData = sequentialValue.split('__');
-			var sequentialDataElement = sequentialData[0];
-			var sequentialDataElementSource = sequentialData[1];
+			var sequentialPhenotype = sequentialData[0];
+			var sequentialPhenotypeSource = sequentialData[1];
 
 			if (key) {
 				relations.push({
-					'dataElementField': {
+					'phenotypeField': {
 						'id': id,
-						'dataElementKey': $proposition.data('key'),
-						'hasDuration': $(r).find('input[name="sequenceRelDataElementSpecifyDuration"]').is(':checked'),
-						'minDuration': $(r).find('input[name="sequenceRelDataElementMinDurationValue"]').val(),
-						'minDurationUnits':  $(r).find('select[name="sequenceRelDataElementMinDurationUnits"]').val(),
-						'maxDuration': $(r).find('input[name="sequenceRelDataElementMaxDurationValue"]').val(),
-						'maxDurationUnits':  $(r).find('select[name="sequenceRelDataElementMaxDurationUnits"]').val(),
-						'hasPropertyConstraint': $(r).find('input[name="sequenceRelDataElementSpecifyProperty"]').is(':checked'),
-						'property': $(r).find('select[name="sequenceRelDataElementPropertyName"]').val(),
-						'propertyValue': $(r).find('input[name="sequenceRelDataElementPropertyValue"]').val()
+						'phenotypeKey': $proposition.data('key'),
+						'hasDuration': $(r).find('input[name="sequenceRelPhenotypeSpecifyDuration"]').is(':checked'),
+						'minDuration': $(r).find('input[name="sequenceRelPhenotypeMinDurationValue"]').val(),
+						'minDurationUnits':  $(r).find('select[name="sequenceRelPhenotypeMinDurationUnits"]').val(),
+						'maxDuration': $(r).find('input[name="sequenceRelPhenotypeMaxDurationValue"]').val(),
+						'maxDurationUnits':  $(r).find('select[name="sequenceRelPhenotypeMaxDurationUnits"]').val(),
+						'hasPropertyConstraint': $(r).find('input[name="sequenceRelPhenotypeSpecifyProperty"]').is(':checked'),
+						'property': $(r).find('select[name="sequenceRelPhenotypePropertyName"]').val(),
+						'propertyValue': $(r).find('input[name="sequenceRelPhenotypePropertyValue"]').val()
 					},
-					'relationOperator': $(r).find('select[name="sequenceRelDataElementTemporalRelation"]').val(),
-					'sequentialDataElement': sequentialDataElement,
-					'sequentialDataElementSource': sequentialDataElementSource,
-					'relationMinCount': $(r).find('input[name="sequenceRhsDataElementMinDistanceValue"]').val(),
-					'relationMinUnits': $(r).find('select[name="sequenceRhsDataElementMinDistanceUnits"]').val(),
-					'relationMaxCount': $(r).find('input[name="sequenceRhsDataElementMaxDistanceValue"]').val(),
-					'relationMaxUnits': $(r).find('select[name="sequenceRhsDataElementMaxDistanceUnits"]').val()
+					'relationOperator': $(r).find('select[name="sequenceRelPhenotypeTemporalRelation"]').val(),
+					'sequentialPhenotype': sequentialPhenotype,
+					'sequentialPhenotypeSource': sequentialPhenotypeSource,
+					'relationMinCount': $(r).find('input[name="sequenceRhsPhenotypeMinDistanceValue"]').val(),
+					'relationMinUnits': $(r).find('select[name="sequenceRhsPhenotypeMinDistanceUnits"]').val(),
+					'relationMaxCount': $(r).find('input[name="sequenceRhsPhenotypeMaxDistanceValue"]').val(),
+					'relationMaxUnits': $(r).find('select[name="sequenceRhsPhenotypeMaxDistanceUnits"]').val()
 				});
 			}
 		});
@@ -558,9 +514,28 @@ window.eureka.editor = new function () {
 		self.post(valueThreshold);
 	};
 
+	self.post = function (postData) {
+		$.ajax({
+			type: "POST",
+			url: 'saveprop',
+			data: JSON.stringify(postData),
+			success: function (data) {
+				window.location.href = 'editorhome'
+			},
+			error: function (data, statusCode, errorThrown) {
+				var content = 'Error while saving ' + postData.displayName + '. ' + data.responseText + '. Status Code: ' + statusCode;
+				$('#errorModal').find('#errorContent').html(content);
+				$('#errorModal').modal('show');
+				if (errorThrown != null) {
+					console.log(errorThrown);
+				}
+			}
+		});
+	}
+
 	self.saveCategorization = function (elem) {
-		var $memberDataElements = $(elem).find('ul.sortable').find('li');
-		var childElements = self.collectDataElements($memberDataElements);
+		var $memberPhenotypes = $(elem).find('ul.sortable').find('li');
+		var childElements = self.collectPhenotypes($memberPhenotypes);
 
 		var categoricalType = self.propSubType;
 
@@ -578,8 +553,33 @@ window.eureka.editor = new function () {
 		self.post(categorization);
 	};
 
+	self.collectPhenotypes = function ($phenotypesFromDropBox) {
+		var childElements = new Array();
+
+		$phenotypesFromDropBox.each(function (i, p) {
+			childElements.push(self.collectPhenotype(p));
+		});
+
+		return childElements;
+	};
+
+	self.collectPhenotype = function (phenotypeFromDropBox) {
+		var system = $(phenotypeFromDropBox).data('space') === 'system'
+			|| $(phenotypeFromDropBox).data('space') === 'SYSTEM';
+		var child = {
+			'phenotypeKey': $(phenotypeFromDropBox).data('key')
+		};
+
+		if (system) {
+			child['type'] = 'SYSTEM';
+		} else {
+			child['type'] = $(phenotypeFromDropBox).data('type');
+		}
+		return child;
+	};
+        
 	self.saveFrequency = function (elem) {
-		var $dataElement = $(elem).find('ul[data-type="main"]').find('li').first();
+		var $phenotype = $(elem).find('ul[data-type="main"]').find('li').first();
 		var frequency = {
 			'type': 'FREQUENCY',
 			'frequencyType': $('select[name="freqTypes"]').val(),
@@ -587,16 +587,16 @@ window.eureka.editor = new function () {
 			'description': $('textarea#propDescription').val(),
 			'atLeast': $(elem).find('input[name=freqAtLeastField]').val(),
 			'isConsecutive': $(elem).find('input[name=freqIsConsecutive]').is(':checked'),
-			'dataElement': {
-				'dataElementKey': $dataElement.data('key'),
-				'hasDuration': $(elem).find('input[name="freqDataElementSpecifyDuration"]').is(':checked'),
-				'minDuration': $(elem).find('input[name="freqDataElementMinDurationValue"]').val(),
-				'minDurationUnits': $(elem).find('select[name="freqDataElementMinDurationUnits"]').val(),
-				'maxDuration': $(elem).find('input[name="freqDataElementMaxDurationValue"]').val(),
-				'maxDurationUnits': $(elem).find('select[name="freqDataElementMaxDurationUnits"]').val(),
-				'hasPropertyConstraint': $(elem).find('input[name="freqDataElementSpecifyProperty"]').is(':checked'),
-				'property': $(elem).find('select[name="freqDataElementPropertyName"]').val(),
-				'propertyValue': $(elem).find('input[name="freqDataElementPropertyValue"]').val()
+			'phenotype': {
+				'phenotypeKey': $phenotype.data('key'),
+				'hasDuration': $(elem).find('input[name="freqPhenotypeSpecifyDuration"]').is(':checked'),
+				'minDuration': $(elem).find('input[name="freqPhenotypeMinDurationValue"]').val(),
+				'minDurationUnits': $(elem).find('select[name="freqPhenotypeMinDurationUnits"]').val(),
+				'maxDuration': $(elem).find('input[name="freqPhenotypeMaxDurationValue"]').val(),
+				'maxDurationUnits': $(elem).find('select[name="freqPhenotypeMaxDurationUnits"]').val(),
+				'hasPropertyConstraint': $(elem).find('input[name="freqPhenotypeSpecifyProperty"]').is(':checked'),
+				'property': $(elem).find('select[name="freqPhenotypePropertyName"]').val(),
+				'propertyValue': $(elem).find('input[name="freqPhenotypePropertyValue"]').val()
 			},
 			'isWithin': $(elem).find('input[name=freqIsWithin]').is(':checked'),
 			'withinAtLeast': $(elem).find('input[name=freqWithinAtLeast]').val(),
@@ -622,8 +622,8 @@ window.eureka.editor = new function () {
 		sequence.type = 'SEQUENCE';
 		sequence.displayName = $('input#propDisplayName').val();
 		sequence.description = $('textarea#propDescription').val();
-		sequence.primaryDataElement = self.collectSequence(elem);
-		sequence.relatedDataElements = self.collectSequenceRelations($relationElems);
+		sequence.primaryPhenotype = self.collectSequence(elem);
+		sequence.relatedPhenotypes = self.collectSequenceRelations($relationElems);
 
 		self.post(sequence);
 	};
@@ -683,8 +683,8 @@ window.eureka.editor = new function () {
 		sortable.empty();
 		sortable.attr('data-count', newCount + 1);
 		data.find('span.count').text(newCount);
-		data.find('div.sequencedDataElement').attr('id', 'relatedDataElement' + newCount);
-		data.find('select[name="sequenceRelDataElementPropertyName"]').attr('data-properties-provider', 'relatedDataElement' + newCount);
+		data.find('div.sequencedPhenotype').attr('id', 'relatedPhenotype' + newCount);
+		data.find('select[name="sequenceRelPhenotypePropertyName"]').attr('data-properties-provider', 'relatedPhenotype' + newCount);
 //		eureka.trees.setPropositionSelects($(appendTo).closest('[data-definition-container="true"]'));
 		return data;
 	}

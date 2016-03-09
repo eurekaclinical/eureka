@@ -48,7 +48,7 @@ import java.util.List;
 import org.junit.Assert;
 import org.junit.Test;
 
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.DataElementEntity;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.PhenotypeEntity;
 import edu.emory.cci.aiw.cvrg.eureka.services.test.AbstractServiceDataTest;
 
 /**
@@ -59,8 +59,8 @@ public class PropositionDaoTest extends AbstractServiceDataTest {
 
 	@Test
 	public void testDao() {
-		DataElementEntityDao dao = this.getInstance(DataElementEntityDao.class);
-		List<DataElementEntity> propositions = dao.getAll();
+		PhenotypeEntityDao dao = this.getInstance(PhenotypeEntityDao.class);
+		List<PhenotypeEntity> propositions = dao.getAll();
 		Assert.assertEquals(6, propositions.size());
 	}
 }

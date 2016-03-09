@@ -43,7 +43,7 @@ import com.google.inject.Inject;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.BinaryOperator;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.Cohort;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.CohortDestination;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.DataElementField;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.PhenotypeField;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.Literal;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.Node;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.User;
@@ -106,7 +106,7 @@ public class SaveCohortServlet extends HttpServlet {
 		private Long id;
 		private String name;
 		private String description;
-		private DataElementField[] phenotypes;
+		private PhenotypeField[] phenotypes;
 
 		public Long getId() {
 			return id;
@@ -132,11 +132,11 @@ public class SaveCohortServlet extends HttpServlet {
 			this.description = description;
 		}
 
-		public DataElementField[] getPhenotypes() {
+		public PhenotypeField[] getPhenotypes() {
 			return phenotypes;
 		}
 
-		public void setPhenotypes(DataElementField[] phenotypes) {
+		public void setPhenotypes(PhenotypeField[] phenotypes) {
 			this.phenotypes = phenotypes;
 		}
 		
@@ -145,14 +145,14 @@ public class SaveCohortServlet extends HttpServlet {
 			Node node;
 			if (phenotypes.length == 1) {
 				Literal literal = new Literal();
-				literal.setName(phenotypes[0].getDataElementKey());
+				literal.setName(phenotypes[0].getPhenotypeKey());
 				node = literal;
 			} else if (phenotypes.length > 1) {
 				boolean first = true;
 				Node prev = null;
 				for (int i = phenotypes.length - 1; i >= 0; i--) {
 					Literal literal = new Literal();
-					literal.setName(phenotypes[i].getDataElementKey());
+					literal.setName(phenotypes[i].getPhenotypeKey());
 					if (first) {
 						first = false;
 						prev = literal;

@@ -81,19 +81,21 @@
 						<label for="patCohortDefinition" class="control-label">Members</label>
 						<div id="patCohortDefinition"
 							 class="jstree-drop tree-drop tree-drop-multiple"
-							 title="Drop the system and/or user-defined data element members that define your patient cohort in here">
+							 title="Drag and drop the system/user-defined phenotype members that define your patient cohort in here">
 							<div class="label-info text-center">
 								Drop Here
 							</div>
                                                         <ul class="sortable" data-drop-type="multiple" data-proptype="empty">
 								<c:forEach var="phenotype" items="${phenotypes}">
-									<li data-key="${phenotype.dataElementKey}"
-                                                                            data-desc="${phenotype.dataElementDisplayName}" data-type="${phenotype.type}"
+									<li data-key="${phenotype.phenotypeKey}"
+                                                                            data-desc="${phenotype.phenotypeDisplayName}" data-type="${phenotype.type}"
                                                                             data-space="${proposition.inSystem ? 'system' : 'user'}">
-									<span class="glyphicon glyphicon-remove delete-icon"
-                                                                              title="Remove this phenotype from the category">         
-                                                                        </span>
-                                                                        <span>${phenotype.dataElementDisplayName} (${phenotype.dataElementKey})</span>
+                                                                            <span class="glyphicon glyphicon-remove delete-icon"
+                                                                                  title="Remove this phenotype from the category">         
+                                                                            </span>
+                                                                            <span>${phenotype.phenotypeDisplayName} 
+                                                                                (${phenotype.phenotypeKey})
+                                                                            </span>
 									</li>
 								</c:forEach>
 							</ul>

@@ -71,7 +71,7 @@ public abstract class EtlDestination {
 	private DestinationType type;
 	private String name;
 	private String description;
-	private DataElementField[] dataElementFields;
+	private PhenotypeField[] phenotypeFields;
 	/**
 	 * The unique identifier for the owner of this configuration.
 	 */
@@ -104,10 +104,10 @@ public abstract class EtlDestination {
 			this.id = dest.getId();
 			this.type = dest.getType();
 			this.name = dest.getName();
-			DataElementField[] etlDestDataElementFields = 
-					dest.getDataElementFields();
-			if (etlDestDataElementFields != null) {
-				this.dataElementFields = etlDestDataElementFields.clone();
+			PhenotypeField[] etlDestPhenotypeFields = 
+					dest.getPhenotypeFields();
+			if (etlDestPhenotypeFields != null) {
+				this.phenotypeFields = etlDestPhenotypeFields.clone();
 			}
 			this.ownerUserId = dest.getOwnerUserId();
 			this.read = dest.isRead();
@@ -173,12 +173,12 @@ public abstract class EtlDestination {
 		this.description = description;
 	}
 
-	public DataElementField[] getDataElementFields() {
-		return dataElementFields;
+	public PhenotypeField[] getPhenotypeFields() {
+		return phenotypeFields;
 	}
 
-	public void setDataElementFields(DataElementField[] dataElementFields) {
-		this.dataElementFields = dataElementFields;
+	public void setPhenotypeFields(PhenotypeField[] phenotypeFields) {
+		this.phenotypeFields = phenotypeFields;
 	}
 
 	public boolean isRead() {

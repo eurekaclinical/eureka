@@ -43,8 +43,8 @@ package edu.emory.cci.aiw.cvrg.eureka.common.entity;
  *
  * @author Andrew Post
  */
-public abstract class AbstractDataElementEntityVisitor 
-		implements DataElementEntityVisitor{
+public abstract class AbstractPhenotypeEntityVisitor 
+		implements PhenotypeEntityVisitor{
 
 	@Override
 	public void visit(SystemProposition proposition) {

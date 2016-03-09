@@ -54,14 +54,13 @@ import edu.emory.cci.aiw.cvrg.eureka.services.clients.I2b2RestClient;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.AuthenticationMethodDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.FrequencyTypeDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.JpaFrequencyTypeDao;
-import edu.emory.cci.aiw.cvrg.eureka.services.dao.JpaDataElementEntityDao;
+import edu.emory.cci.aiw.cvrg.eureka.services.dao.JpaPhenotypeEntityDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.JpaRelationOperatorDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.JpaRoleDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.JpaThresholdsOperatorDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.JpaTimeUnitDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.JpaUserDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.JpaValueComparatorDao;
-import edu.emory.cci.aiw.cvrg.eureka.services.dao.DataElementEntityDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.JpaAuthenticationMethodDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.JpaLocalUserDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.JpaLoginTypeDao;
@@ -81,6 +80,7 @@ import edu.emory.cci.aiw.cvrg.eureka.services.finder.PropositionFinder;
 import edu.emory.cci.aiw.cvrg.eureka.services.finder.SystemPropositionFinder;
 import edu.emory.cci.aiw.cvrg.eureka.services.util.PasswordGenerator;
 import edu.emory.cci.aiw.cvrg.eureka.services.util.PasswordGeneratorImpl;
+import edu.emory.cci.aiw.cvrg.eureka.services.dao.PhenotypeEntityDao;
 
 /**
  * Configure all the non-web related binding for Guice.
@@ -95,7 +95,7 @@ class AppModule extends AbstractModule {
 		bind(UserDao.class).to(JpaUserDao.class);
 		bind(LocalUserDao.class).to(JpaLocalUserDao.class);
 		bind(RoleDao.class).to(JpaRoleDao.class);
-		bind(DataElementEntityDao.class).to(JpaDataElementEntityDao.class);
+		bind(PhenotypeEntityDao.class).to(JpaPhenotypeEntityDao.class);
 		bind(TimeUnitDao.class).to(JpaTimeUnitDao.class);
 		bind(RelationOperatorDao.class).to(JpaRelationOperatorDao.class);
 		bind(ValueComparatorDao.class).to(JpaValueComparatorDao.class);

@@ -47,18 +47,18 @@ import org.codehaus.jackson.annotate.JsonSubTypes;
 import org.codehaus.jackson.annotate.JsonTypeInfo;
 
 /**
- * A user-created data element from the UI. Contains fields common to all
- * user-created data elements.
+ * A user-created phenotype from the UI. Contains fields common to all
+ * user-created phenotypes.
  */
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
 @JsonSubTypes({
-        @JsonSubTypes.Type(value = SystemElement.class, name = "SYSTEM"),
+        @JsonSubTypes.Type(value = SystemPhenotype.class, name = "SYSTEM"),
         @JsonSubTypes.Type(value = Category.class, name = "CATEGORIZATION"),
         @JsonSubTypes.Type(value = Sequence.class, name = "SEQUENCE"),
         @JsonSubTypes.Type(value = Frequency.class, name = "FREQUENCY"),
         @JsonSubTypes.Type(value = ValueThresholds.class, 
 		        name = "VALUE_THRESHOLD") })
-public abstract class DataElement implements DataElementVisitable {
+public abstract class Phenotype implements PhenotypeVisitable {
 	
 	public enum Type {
 		CATEGORIZATION, SEQUENCE, FREQUENCY, VALUE_THRESHOLD, SYSTEM
@@ -76,7 +76,7 @@ public abstract class DataElement implements DataElementVisitable {
 	private Type type;
 	private boolean internalNode;
 
-	protected DataElement(Type inType) {
+	protected Phenotype(Type inType) {
 		this.type = inType;
 	}
 

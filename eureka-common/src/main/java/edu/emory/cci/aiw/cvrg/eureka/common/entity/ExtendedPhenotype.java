@@ -53,15 +53,15 @@ import javax.persistence.TableGenerator;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 /**
- * An ExtendedDataElement represents a data element with constraints on its
+ * An ExtendedPhenotype represents a phenotype with constraints on its
  * duration and one of its property values.
  * 
  * @author hrathod
  */
 @Entity
-@Table(name = "extended_data_elements")
+@Table(name = "extended_phenotypes")
 @TableGenerator(name = "EXT_DE_GENERATOR")
-public class ExtendedDataElement {
+public class ExtendedPhenotype {
 
 	@Id
 	@SequenceGenerator(name = "EXT_DE_SEQ_GENERATOR",
@@ -87,8 +87,8 @@ public class ExtendedDataElement {
 
 	@ManyToOne(cascade = { CascadeType.MERGE, CascadeType.REFRESH,
 	        CascadeType.PERSIST })
-	@JoinColumn(nullable = false, name = "dataelement_id")
-	private DataElementEntity dataElementEntity;
+	@JoinColumn(nullable = false, name = "phenotype_id")
+	private PhenotypeEntity phenotypeEntity;
 
 	public Long getId() {
 		return id;
@@ -138,12 +138,12 @@ public class ExtendedDataElement {
 		propertyConstraint = inPropertyConstraint;
 	}
 
-	public DataElementEntity getDataElementEntity() {
-		return dataElementEntity;
+	public PhenotypeEntity getPhenotypeEntity() {
+		return phenotypeEntity;
 	}
 
-	public void setDataElementEntity(DataElementEntity inDataElementEntity) {
-		dataElementEntity = inDataElementEntity;
+	public void setPhenotypeEntity(PhenotypeEntity inPhenotypeEntity) {
+		phenotypeEntity = inPhenotypeEntity;
 	}
 	
 	@Override

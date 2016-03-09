@@ -39,7 +39,7 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.services.conversion;
 
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.DataElementEntity;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.PhenotypeEntity;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -53,11 +53,11 @@ public class PropositionDefinitionCollector {
 
 	public static PropositionDefinitionCollector getInstance(
 			PropositionDefinitionConverterVisitor converterVisitor,
-			List<DataElementEntity> dataElements) {
+			List<PhenotypeEntity> phenotypes) {
 		List<PropositionDefinition> userProps
 				= new ArrayList<>();
 		List<String> toShow = new ArrayList<>();
-		for (DataElementEntity de : dataElements) {
+		for (PhenotypeEntity de : phenotypes) {
 			de.accept(converterVisitor);
 			Collection<PropositionDefinition> propDefs
 					= converterVisitor.getPropositionDefinitions();

@@ -224,10 +224,10 @@ public class JobResource {
 				= newJobEntity(jobSpec,
 						this.authenticationSupport.getUser(request));
 		DateTimeFilter dateTimeFilter;
-		String dateRangeDataElementKey = jobSpec.getDateRangeDataElementKey();
-		if (dateRangeDataElementKey != null) {
+		String dateRangePhenotypeKey = jobSpec.getDateRangePhenotypeKey();
+		if (dateRangePhenotypeKey != null) {
 			dateTimeFilter = new DateTimeFilter(
-					new String[]{dateRangeDataElementKey},
+					new String[]{dateRangePhenotypeKey},
 					jobSpec.getEarliestDate(), AbsoluteTimeGranularity.DAY,
 					jobSpec.getLatestDate(), AbsoluteTimeGranularity.DAY,
 					jobSpec.getEarliestDateSide(), jobSpec.getLatestDateSide());

@@ -44,8 +44,8 @@ import edu.emory.cci.aiw.cvrg.eureka.common.comm.BinaryOperator;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.Category;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.Cohort;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.CohortDestination;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.DataElement;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.DataElementField;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.Phenotype;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.PhenotypeField;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.Literal;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.Node;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.NodeVisitor;
@@ -135,16 +135,16 @@ public class EditCohortServlet extends HttpServlet {
 			return this.phenotypes;
 		}
 
-		List<DataElementField> getPhenotypes() throws ClientException {
-			List<DataElementField> result = new ArrayList<>();
+		List<PhenotypeField> getPhenotypes() throws ClientException {
+			List<PhenotypeField> result = new ArrayList<>();
 			for (Literal literal : phenotypes) {
-				DataElement userElement;
+				Phenotype userPhenotype;
 				if (literal.getName().startsWith("USER:")) {
-					userElement = servicesClient.getUserElement(literal.getName(), true);
+					userPhenotype = servicesClient.getUserPhenotype(literal.getName(), true);
 				} else {
-					userElement = servicesClient.getSystemElement(literal.getName(), true);
+					userPhenotype = servicesClient.getSystemPhenotype(literal.getName(), true);
 				}
-				result.add(new DataElementField(userElement));
+				result.add(new PhenotypeField(userPhenotype));
 			}
 			return result;
 		}

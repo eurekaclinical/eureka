@@ -41,65 +41,65 @@ package edu.emory.cci.aiw.cvrg.eureka.services.translation;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.Category;
 
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.DataElement;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.Phenotype;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.Frequency;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.Sequence;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.SystemElement;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.SystemPhenotype;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.ValueThresholds;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.CategoryEntity;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.DataElementEntity;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.PhenotypeEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.FrequencyEntity;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.DataElementEntityVisitor;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.SequenceEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.SystemProposition;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.ValueThresholdGroupEntity;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.PhenotypeEntityVisitor;
 
-public final class SummarizingDataElementEntityTranslatorVisitor implements
-		DataElementEntityVisitor {
+public final class SummarizingPhenotypeEntityTranslatorVisitor implements
+		PhenotypeEntityVisitor {
 
-	private DataElement dataElement;
+	private Phenotype phenotype;
 
-	public SummarizingDataElementEntityTranslatorVisitor() {
+	public SummarizingPhenotypeEntityTranslatorVisitor() {
 	}
 
-	public DataElement getDataElement() {
-		return dataElement;
+	public Phenotype getPhenotype() {
+		return phenotype;
 	}
 
 	@Override
 	public void visit(SystemProposition entity) {
-		this.dataElement = new SystemElement();
+		this.phenotype = new SystemPhenotype();
 		populate(entity);
 	}
 
 	@Override
 	public void visit(CategoryEntity entity) {
-		this.dataElement = new Category();
+		this.phenotype = new Category();
 		populate(entity);
 	}
 
 	@Override
 	public void visit(SequenceEntity entity) {
-		this.dataElement = new Sequence();
+		this.phenotype = new Sequence();
 		populate(entity);
 	}
 
 	@Override
 	public void visit(FrequencyEntity entity) {
-		this.dataElement = new Frequency();
+		this.phenotype = new Frequency();
 		populate(entity);
 	}
 
 	@Override
 	public void visit(ValueThresholdGroupEntity entity) {
-		this.dataElement = new ValueThresholds();
+		this.phenotype = new ValueThresholds();
 		populate(entity);
 	}
 
-	private void populate(DataElementEntity dataElementEntity) {
-		this.dataElement.setSummarized(true);
-		PropositionTranslatorUtil.populateCommonDataElementFields(dataElement, 
-				dataElementEntity);
+	private void populate(PhenotypeEntity phenotypeEntity) {
+		this.phenotype.setSummarized(true);
+		PropositionTranslatorUtil.populateCommonPhenotypeFields(phenotype, 
+				phenotypeEntity);
 	}
 	
 }

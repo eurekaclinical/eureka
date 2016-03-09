@@ -46,21 +46,21 @@ import javax.ws.rs.core.Response.Status;
  *
  * @author Andrew Post
  */
-public class DataElementHandlingException extends Exception {
+public class PhenotypeHandlingException extends Exception {
 
 	private Response.Status status;
 
-	public DataElementHandlingException(Response.Status status, String string) {
+	public PhenotypeHandlingException(Response.Status status, String string) {
 		super(string);
 		this.status = status;
 	}
 
-	public DataElementHandlingException(Response.Status status, String string, Throwable thrwbl) {
+	public PhenotypeHandlingException(Response.Status status, String string, Throwable thrwbl) {
 		super(string, thrwbl);
 		this.status = status;
 	}
 
-	public DataElementHandlingException(Response.Status status, Throwable thrwbl) {
+	public PhenotypeHandlingException(Response.Status status, Throwable thrwbl) {
 		super(thrwbl);
 		this.status = status;
 	}

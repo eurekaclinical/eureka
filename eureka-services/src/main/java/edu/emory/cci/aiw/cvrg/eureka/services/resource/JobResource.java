@@ -54,7 +54,6 @@ import edu.emory.cci.aiw.cvrg.eureka.services.config.ServiceProperties;
 import edu.emory.cci.aiw.cvrg.eureka.services.conversion.ConversionSupport;
 import edu.emory.cci.aiw.cvrg.eureka.services.conversion.PropositionDefinitionCollector;
 import edu.emory.cci.aiw.cvrg.eureka.services.conversion.PropositionDefinitionConverterVisitor;
-import edu.emory.cci.aiw.cvrg.eureka.services.dao.DataElementEntityDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.UserDao;
 import org.protempa.PropositionDefinition;
 import org.slf4j.Logger;
@@ -78,6 +77,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import edu.emory.cci.aiw.cvrg.eureka.services.dao.PhenotypeEntityDao;
 
 /**
  * REST operations related to jobs submitted by the user.
@@ -103,7 +103,7 @@ public class JobResource {
 	 * Used to fetch the user's Propositions, to be sent to the ETL layer when
 	 * submitting a new job request.
 	 */
-	private final DataElementEntityDao propositionDao;
+	private final PhenotypeEntityDao propositionDao;
 	/**
 	 * Used for converting the different types of Eureka data entities to
 	 * Protempa proposition definitions.
@@ -127,7 +127,7 @@ public class JobResource {
 	@Inject
 	public JobResource(UserDao inUserDao,
 			PropositionDefinitionConverterVisitor inVisitor,
-			DataElementEntityDao inPropositionDao,
+			PhenotypeEntityDao inPropositionDao,
 			EtlClient inEtlClient,
 			ServiceProperties inProperties) {
 		this.userDao = inUserDao;
@@ -213,10 +213,10 @@ public class JobResource {
 			Map<String, String> childrenToParents = stats.getChildrenToParents();
 			Map<String, String> convertedChildrenToParents = new HashMap<>();
 			for (Map.Entry<String, String> me : childrenToParents.entrySet()) {
-				String dataElementKey = this.conversionSupport.toDataElementKey(me.getKey());
+				String phenotypeKey = this.conversionSupport.toPhenotypeKey(me.getKey());
 				String parentKey = me.getValue();
-				if (dataElementKey != null) {
-					convertedChildrenToParents.put(dataElementKey, parentKey != null ? this.conversionSupport.toDataElementKey(parentKey) : null);
+				if (phenotypeKey != null) {
+					convertedChildrenToParents.put(phenotypeKey, parentKey != null ? this.conversionSupport.toPhenotypeKey(parentKey) : null);
 				}
 			}
 			convertedStats.setChildrenToParents(convertedChildrenToParents);
@@ -224,9 +224,9 @@ public class JobResource {
 			Map<String, Integer> counts = stats.getCounts();
 			Map<String, Integer> convertedCounts = new HashMap<>();
 			for (Map.Entry<String, Integer> me : counts.entrySet()) {
-				String dataElementKey = this.conversionSupport.toDataElementKey(me.getKey());
-				if (dataElementKey != null) {
-					convertedCounts.put(dataElementKey, me.getValue());
+				String phenotypeKey = this.conversionSupport.toPhenotypeKey(me.getKey());
+				if (phenotypeKey != null) {
+					convertedCounts.put(phenotypeKey, me.getValue());
 				}
 			}
 			convertedStats.setCounts(convertedCounts);

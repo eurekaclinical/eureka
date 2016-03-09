@@ -45,7 +45,7 @@
 	<template:content name="content">
 		<h3>Categorization Editor</h3>
 		<p>
-			This category data element may be used wherever its member data elements are accepted.
+			This category phenotype may be used wherever its member phenotype(s) are accepted.
 		</p>
 
 		<div class="row">
@@ -84,21 +84,23 @@
 						<label for="propDefinition" class="control-label">Members</label>
 						<div id="propDefinition"
 							 class="jstree-drop tree-drop tree-drop-multiple"
-							 title="Drop your category's system and/or user-defined data element members in here">
+							 title="Drag and drop your category's system/user-defined phenotype members in here">
 							<div class="label-info text-center">
 								Drop Here
 							</div>
 							<ul class="sortable" data-drop-type="multiple" data-proptype="empty">
 								<c:if test="${not empty proposition}">
 									<c:forEach var="child" items="${proposition.children}">
-										<li data-key="${child.dataElementKey}"
-                                                                                    data-desc="${child.dataElementDisplayName}" data-type="${child.type}"
+										<li data-key="${child.phenotypeKey}"
+                                                                                    data-desc="${child.phenotypeDisplayName}" data-type="${child.type}"
                                                                                     data-subtype="${child.type == 'CATEGORIZATION' ? child.categoricalType : ''}"
                                                                                     data-space="${proposition.inSystem ? 'system' : 'user'}">
                                                                                     <span class="glyphicon glyphicon-remove delete-icon"
-                                                                                          title="Remove this data element from the category">
+                                                                                          title="Remove this phenotype from the category">
                                                                                     </span>
-                                                                                    <span>${child.dataElementDisplayName} (${child.dataElementKey})</span>
+                                                                                    <span>${child.phenotypeDisplayName} 
+                                                                                        (${child.phenotypeKey})
+                                                                                    </span>
 										</li>
 									</c:forEach>
 								</c:if>

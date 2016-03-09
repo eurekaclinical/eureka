@@ -42,17 +42,17 @@ package edu.emory.cci.aiw.cvrg.eureka.common.comm;
 import java.util.List;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.SystemProposition.SystemType;
-import edu.emory.cci.aiw.cvrg.eureka.common.exception.DataElementHandlingException;
+import edu.emory.cci.aiw.cvrg.eureka.common.exception.PhenotypeHandlingException;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 
-public final class SystemElement extends DataElement {
+public final class SystemPhenotype extends Phenotype {
 
 	private SystemType systemType;
-	private List<SystemElement> children;
+	private List<SystemPhenotype> children;
 	private boolean isParent;
 	private List<String> properties;
 
-	public SystemElement () {
+	public SystemPhenotype () {
 		super(Type.SYSTEM);
 	}
 
@@ -64,11 +64,11 @@ public final class SystemElement extends DataElement {
 		this.systemType = systemType;
 	}
 
-	public List<SystemElement> getChildren() {
+	public List<SystemPhenotype> getChildren() {
 		return children;
 	}
 
-	public void setChildren(List<SystemElement> children) {
+	public void setChildren(List<SystemPhenotype> children) {
 		this.children = children;
 	}
 
@@ -94,8 +94,8 @@ public final class SystemElement extends DataElement {
 	}
 	
 	@Override
-    public void accept(DataElementVisitor visitor) 
-			throws DataElementHandlingException{
+    public void accept(PhenotypeVisitor visitor) 
+			throws PhenotypeHandlingException{
 		visitor.visit(this);
     }
 	

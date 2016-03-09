@@ -277,10 +277,10 @@
 								  <div class="row">
 									  <div class="col-xs-12">
 										  <div class="form-group">
-											  <label for="dateRangeDataElementKey">
+											  <label for="dateRangePhenotypeKey">
 												  Data element for date range
 											  </label>
-											  <div id="dateRangeDataElementKey"
+											  <div id="dateRangePhenotypeKey"
 												   class="tree-drop tree-drop-single jstree-drop form-control-static">
 												  <div class="label-info text-center">
 													  Drop Here
@@ -288,7 +288,7 @@
 												  <ul data-type="main" data-drop-type="single" class="sortable">
 												  </ul>
 											  </div>
-											  <input type="hidden" name="dateRangeDataElementKey">
+											  <input type="hidden" name="dateRangePhenotypeKey">
 										  </div>
 									  </div>
 								  </div>
@@ -300,7 +300,7 @@
 													  <option value="${dateRangeSide.id}">${dateRangeSide.displayName}</option>
 												  </c:forEach>
 											  </select>
-											  <span class="dateRangeDataElementName"/>
+											  <span class="dateRangePhenotypeName"/>
 											  <label>
 												  has earliest date:
 											  </label>
@@ -316,7 +316,7 @@
 													  <option value="${dateRangeSide.id}">${dateRangeSide.displayName}</option>
 												  </c:forEach>
 											  </select>
-											  <span class="dateRangeDataElementName"/>
+											  <span class="dateRangePhenotypeName"/>
 											  <label>
 												  has latest date:
 											  </label>

@@ -39,7 +39,7 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.common.entity;
 
-public interface DataElementEntityVisitor {
+public interface PhenotypeEntityVisitor {
 	
 	public void visit(SystemProposition proposition);
 	

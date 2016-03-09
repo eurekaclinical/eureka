@@ -41,12 +41,12 @@ package edu.emory.cci.aiw.cvrg.eureka.services.test;
 
 import com.google.inject.Module;
 import com.google.inject.persist.PersistService;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.DataElementEntity;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.PhenotypeEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.test.AbstractTest;
 import edu.emory.cci.aiw.cvrg.eureka.common.test.TestDataException;
 import edu.emory.cci.aiw.cvrg.eureka.common.test.TestDataProvider;
 import edu.emory.cci.aiw.cvrg.eureka.services.config.AppTestModule;
-import edu.emory.cci.aiw.cvrg.eureka.services.conversion.DataElementConversionSupport;
+import edu.emory.cci.aiw.cvrg.eureka.services.conversion.PhenotypeConversionSupport;
 import org.junit.After;
 import org.junit.Before;
 import org.protempa.proposition.value.NominalValue;
@@ -63,7 +63,7 @@ public class AbstractServiceTest extends AbstractTest {
 	 */
 	private PersistService persistService;
 	
-	private DataElementConversionSupport conversionSupport;
+	private PhenotypeConversionSupport conversionSupport;
 
 	protected Class<? extends TestDataProvider> getDataProvider() {
 		return null;
@@ -95,7 +95,7 @@ public class AbstractServiceTest extends AbstractTest {
 			testDataProvider = getInstance(getDataProvider());
 			testDataProvider.setUp();
 		}
-		this.conversionSupport = new DataElementConversionSupport();
+		this.conversionSupport = new PhenotypeConversionSupport();
 	}
 
 	/**
@@ -116,43 +116,43 @@ public class AbstractServiceTest extends AbstractTest {
 		this.conversionSupport = null;
 	}
 	
-	protected String toPropositionIdWrapped(String dataElementKey) {
-		return this.conversionSupport.toPropositionIdWrapped(dataElementKey);
+	protected String toPropositionIdWrapped(String phenotypeKey) {
+		return this.conversionSupport.toPropositionIdWrapped(phenotypeKey);
 	}
 	
-	protected String toPropositionIdWrapped(DataElementEntity dataElement) {
-		return this.conversionSupport.toPropositionIdWrapped(dataElement);
+	protected String toPropositionIdWrapped(PhenotypeEntity phenotype) {
+		return this.conversionSupport.toPropositionIdWrapped(phenotype);
 	}
 	
-	protected String toPropositionId(DataElementEntity dataElement) {
-		return this.conversionSupport.toPropositionId(dataElement);
+	protected String toPropositionId(PhenotypeEntity phenotype) {
+		return this.conversionSupport.toPropositionId(phenotype);
 	}
 	
-	protected String toPropositionId(String dataElementKey) {
-		return this.conversionSupport.toPropositionId(dataElementKey);
+	protected String toPropositionId(String phenotypeKey) {
+		return this.conversionSupport.toPropositionId(phenotypeKey);
 	}
 	
-	protected String asValueString(DataElementEntity dataElement) {
-		return this.conversionSupport.asValueString(dataElement);
+	protected String asValueString(PhenotypeEntity phenotype) {
+		return this.conversionSupport.asValueString(phenotype);
 	}
 	
-	protected String asValueString(String dataElementKey) {
-		return this.conversionSupport.asValueString(dataElementKey);
+	protected String asValueString(String phenotypeKey) {
+		return this.conversionSupport.asValueString(phenotypeKey);
 	}
 	
-	protected String asValueCompString(DataElementEntity dataElement) {
-		return this.conversionSupport.asValueCompString(dataElement);
+	protected String asValueCompString(PhenotypeEntity phenotype) {
+		return this.conversionSupport.asValueCompString(phenotype);
 	}
 	
-	protected String asValueCompString(String dataElementKey) {
-		return this.conversionSupport.asValueCompString(dataElementKey);
+	protected String asValueCompString(String phenotypeKey) {
+		return this.conversionSupport.asValueCompString(phenotypeKey);
 	}
 	
-	protected NominalValue asValue(DataElementEntity dataElement) {
-		return this.conversionSupport.asValue(dataElement);
+	protected NominalValue asValue(PhenotypeEntity phenotype) {
+		return this.conversionSupport.asValue(phenotype);
 	}
 	
-	protected NominalValue asValue(String dataElementKey) {
-		return this.conversionSupport.asValue(dataElementKey);
+	protected NominalValue asValue(String phenotypeKey) {
+		return this.conversionSupport.asValue(phenotypeKey);
 	}
 }

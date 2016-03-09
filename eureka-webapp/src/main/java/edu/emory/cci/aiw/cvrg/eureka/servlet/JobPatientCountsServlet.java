@@ -41,7 +41,7 @@ package edu.emory.cci.aiw.cvrg.eureka.servlet;
  */
 import com.google.inject.Inject;
 import com.sun.jersey.api.client.ClientResponse.Status;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.DataElement;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.Phenotype;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.Statistics;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ClientException;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ServicesClient;
@@ -91,9 +91,9 @@ public class JobPatientCountsServlet extends HttpServlet {
 					List<Count> countResults = new ArrayList<>();
 
 					Set<String> keySet = counts.keySet();
-					List<DataElement> summarizedConcepts = this.servicesClient.getDataElements(keySet.toArray(new String[keySet.size()]), true);
-					Map<String, DataElement> keyIdToDE = new HashMap<>();
-					for (DataElement de : summarizedConcepts) {
+					List<Phenotype> summarizedConcepts = this.servicesClient.getPhenotypes(keySet.toArray(new String[keySet.size()]), true);
+					Map<String, Phenotype> keyIdToDE = new HashMap<>();
+					for (Phenotype de : summarizedConcepts) {
 						keyIdToDE.put(de.getKey(), de);
 					}
 
@@ -102,7 +102,7 @@ public class JobPatientCountsServlet extends HttpServlet {
 						count.setKey(me.getKey());
 						count.setParentKeyId(childrenToParents.get(me.getKey()));
 						count.setCount(me.getValue());
-						DataElement de = keyIdToDE.get(me.getKey());
+						Phenotype de = keyIdToDE.get(me.getKey());
 						if (de != null) {
 							count.setDisplayName(de.getDisplayName());
 						}

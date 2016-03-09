@@ -39,38 +39,38 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.common.entity;
 
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.DataElement;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.Phenotype;
 
-public final class PropositionTypeVisitor implements DataElementEntityVisitor {
+public final class PropositionTypeVisitor implements PhenotypeEntityVisitor {
 
-	private DataElement.Type type;
+	private Phenotype.Type type;
 
-	public DataElement.Type getType() {
+	public Phenotype.Type getType() {
 		return type;
 	}
 
 	@Override
 	public void visit(SystemProposition proposition) {
-		this.type = DataElement.Type.SYSTEM;
+		this.type = Phenotype.Type.SYSTEM;
 	}
 
 	@Override
 	public void visit(CategoryEntity categorization) {
-		this.type = DataElement.Type.CATEGORIZATION;
+		this.type = Phenotype.Type.CATEGORIZATION;
 	}
 
 	@Override
 	public void visit(SequenceEntity highLevelAbstraction) {
-		this.type = DataElement.Type.SEQUENCE;
+		this.type = Phenotype.Type.SEQUENCE;
 	}
 
 	@Override
 	public void visit(ValueThresholdGroupEntity lowLevelAbstraction) {
-		this.type = DataElement.Type.VALUE_THRESHOLD;
+		this.type = Phenotype.Type.VALUE_THRESHOLD;
 	}
 
 	@Override
 	public void visit(FrequencyEntity sliceAbstraction) {
-		this.type = DataElement.Type.FREQUENCY;
+		this.type = Phenotype.Type.FREQUENCY;
 	}
 }

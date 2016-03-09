@@ -320,6 +320,7 @@
 		<dependency>
 			<groupId>org.eurekaclinical</groupId>
 			<artifactId>eureka-common</artifactId>
+		 <type>jar</type>
 		</dependency>
 		<dependency>
 			<groupId>org.eurekaclinical</groupId>

@@ -41,7 +41,7 @@ package edu.emory.cci.aiw.cvrg.eureka.services.resource;
 
 import com.google.inject.Inject;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.SourceConfigParams;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.SystemElement;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.SystemPhenotype;
 import edu.emory.cci.aiw.cvrg.eureka.common.exception.HttpStatusException;
 import edu.emory.cci.aiw.cvrg.eureka.services.config.ServiceProperties;
 import edu.emory.cci.aiw.cvrg.eureka.services.finder.PropositionFindException;
@@ -92,13 +92,13 @@ public class ConceptResource {
 	}
 
 	/**
-	 * Gets all of the system elements for a user
+	 * Gets all of the system phenotypes for a user
 	 *
-	 * @return a {@link List} of {@link SystemElement}s
+	 * @return a {@link List} of {@link SystemPhenotype}s
 	 */
 	@GET
-	public List<SystemElement> getAll() {
-		List<SystemElement> result = new ArrayList<>();
+	public List<SystemPhenotype> getAll() {
+		List<SystemPhenotype> result = new ArrayList<>();
 		/*
 		 * Hack to get an ontology source that assumes all Protempa configurations
 		 * for a user point to the same knowledge source backends. This will go away.
@@ -116,9 +116,9 @@ public class ConceptResource {
 				LOGGER.warn("No proposition definitions retrieved");
 			} else {
 				for (PropositionDefinition definition : definitions) {
-					SystemElement element = PropositionUtil.toSystemElement(
+					SystemPhenotype phenotype = PropositionUtil.toSystemPhenotype(
 							scps.get(0).getId(), definition, true, this.finder);
-					result.add(element);
+					result.add(phenotype);
 				}
 			}
 		} catch (PropositionFindException e) {
@@ -130,21 +130,21 @@ public class ConceptResource {
 
 	@GET
 	@Path("/{key}")
-	public SystemElement get(@PathParam("key") String inKey, @DefaultValue("false") @QueryParam("summarize") boolean inSummarize) {
-		return getSystemElementCommon(inKey, inSummarize);
+	public SystemPhenotype get(@PathParam("key") String inKey, @DefaultValue("false") @QueryParam("summarize") boolean inSummarize) {
+		return getSystemPhenotypeCommon(inKey, inSummarize);
 	}
 	
 	@POST
-	public List<SystemElement> getPropositionsPost(@FormParam("key") List<String> inKeys, @DefaultValue("false") @FormParam("summarize") String inSummarize) {
-		return getSystemElementsCommon(inKeys, Boolean.parseBoolean(inSummarize));
+	public List<SystemPhenotype> getPropositionsPost(@FormParam("key") List<String> inKeys, @DefaultValue("false") @FormParam("summarize") String inSummarize) {
+		return getSystemPhenotypesCommon(inKeys, Boolean.parseBoolean(inSummarize));
 
 	}
 	
 	@GET
 	@Path("/search/{searchKey}")
-	public List<String> searchSystemElements(
+	public List<String> searchSystemPhenotypes(
 			@PathParam("searchKey") String inSearchKey) {
-		LOGGER.info("Searching system element tree for the searchKey {}",
+		LOGGER.info("Searching system phenotype tree for the searchKey {}",
 				inSearchKey);
 
 		List<SourceConfigParams> scps = this.sourceConfigResource
@@ -170,11 +170,11 @@ public class ConceptResource {
 
 	@GET
 	@Path("/propsearch/{searchKey}")
-	public List<SystemElement> getSystemElementsBySearchKey(
+	public List<SystemPhenotype> getSystemPhenotypesBySearchKey(
 			@PathParam("searchKey") String inSearchKey) {
-		LOGGER.info("Searching system element tree for the searchKey {}",
+		LOGGER.info("Searching system phenotype tree for the searchKey {}",
 				inSearchKey);
-		List<SystemElement> result = new ArrayList<>();
+		List<SystemPhenotype> result = new ArrayList<>();
 		List<SourceConfigParams> scps = this.sourceConfigResource
 				.getParamsList();
 		if (scps.isEmpty()) {
@@ -188,9 +188,9 @@ public class ConceptResource {
 
 			for (PropositionDefinition definition : definitions) {
 
-				SystemElement element = PropositionUtil.toSystemElement(
+				SystemPhenotype phenotype = PropositionUtil.toSystemPhenotype(
 						scps.get(0).getId(), definition, true, this.finder);
-				result.add(element);
+				result.add(phenotype);
 			}
 			LOGGER.info("returning search results list of size"
 					+ definitions.size());
@@ -206,8 +206,8 @@ public class ConceptResource {
 
 	}
 	
-	private List<SystemElement> getSystemElementsCommon(List<String> inKeys, boolean inSummarize) throws HttpStatusException {
-		LOGGER.info("Finding system element {}", inKeys);
+	private List<SystemPhenotype> getSystemPhenotypesCommon(List<String> inKeys, boolean inSummarize) throws HttpStatusException {
+		LOGGER.info("Finding system phenotype {}", inKeys);
 		/*
 		* Hack to get an ontology source that assumes all Protempa configurations
 		* for a user point to the same knowledge source backends. This will go away.
@@ -220,9 +220,9 @@ public class ConceptResource {
 		List<PropositionDefinition> definition;
 		try {
 			definition = this.finder.findAll(sourceConfigId, inKeys, Boolean.FALSE);
-			List<SystemElement> result = new ArrayList<>(definition.size());
+			List<SystemPhenotype> result = new ArrayList<>(definition.size());
 			for (PropositionDefinition propDef : definition) {
-				result.add(PropositionUtil.toSystemElement(sourceConfigId, propDef, inSummarize,
+				result.add(PropositionUtil.toSystemPhenotype(sourceConfigId, propDef, inSummarize,
 					this.finder));
 			}
 			return result;
@@ -232,8 +232,8 @@ public class ConceptResource {
 		}
 	}
 
-	private SystemElement getSystemElementCommon(String inKey, boolean inSummarize) throws HttpStatusException {
-		LOGGER.info("Finding system element {}", inKey);
+	private SystemPhenotype getSystemPhenotypeCommon(String inKey, boolean inSummarize) throws HttpStatusException {
+		LOGGER.info("Finding system phenotype {}", inKey);
 		/*
 		* Hack to get an ontology source that assumes all Protempa configurations
 		* for a user point to the same knowledge source backends. This will go away.
@@ -248,7 +248,7 @@ public class ConceptResource {
 			if (definition == null) {
 				throw new HttpStatusException(Response.Status.NOT_FOUND);
 			}
-			return PropositionUtil.toSystemElement(scps.get(0).getId(), definition, inSummarize,
+			return PropositionUtil.toSystemPhenotype(scps.get(0).getId(), definition, inSummarize,
 					this.finder);
 		} catch (PropositionFindException ex) {
 			throw new HttpStatusException(

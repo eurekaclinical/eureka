@@ -72,9 +72,9 @@ public class ServicesClient extends EurekaClient {
 	};
 	private static final GenericType<List<ValueComparator>> ValueComparatorList = new GenericType<List<ValueComparator>>() {
 	};
-	private static final GenericType<List<SystemElement>> SystemElementList = new GenericType<List<SystemElement>>() {
+	private static final GenericType<List<SystemPhenotype>> SystemPhenotypeList = new GenericType<List<SystemPhenotype>>() {
 	};
-	private static final GenericType<List<Phenotype>> DataElementList
+	private static final GenericType<List<Phenotype>> PhenotypeList
 			= new GenericType<List<Phenotype>>() {
 	};
 	private static final GenericType<List<Role>> RoleList = new GenericType<List<Role>>() {
@@ -95,7 +95,7 @@ public class ServicesClient extends EurekaClient {
 	private static final GenericType<List<I2B2Destination>> I2B2DestinationListType
 			= new GenericType<List<I2B2Destination>>() {
 	};
-	private static final GenericType<List<String>> SystemElementSearchResultsList = new GenericType<List<String>>() {
+	private static final GenericType<List<String>> SystemPhenotypeSearchResultsList = new GenericType<List<String>>() {
 	};
 
 
@@ -212,25 +212,25 @@ public class ServicesClient extends EurekaClient {
 		return doGet(path, JobList, queryParams);
 	}
 
-	public List<Phenotype> getDataElements(String[] inKeys, boolean summarized) throws ClientException {
+	public List<Phenotype> getPhenotypes(String[] inKeys, boolean summarized) throws ClientException {
 		List<Phenotype> result = new ArrayList<>();
 		if (inKeys != null) {
-			List<String> userElements = new ArrayList<>();
-			List<String> systemElements = new ArrayList<>();
+			List<String> userPhenotypes = new ArrayList<>();
+			List<String> systemPhenotypes = new ArrayList<>();
 			for (String key : inKeys) {
 				if (key.startsWith("USER:")) {
-					userElements.add(key);
+					userPhenotypes.add(key);
 				} else {
-					systemElements.add(key);
+					systemPhenotypes.add(key);
 				}
 			}
-			if (!userElements.isEmpty()) {
-				for (String userElement : userElements) {
-					result.add(getUserElement(userElement, summarized));
+			if (!userPhenotypes.isEmpty()) {
+				for (String userPhenotype : userPhenotypes) {
+					result.add(getUserPhenotype(userPhenotype, summarized));
 				}
 			}
-			if (!systemElements.isEmpty()) {
-				result.addAll(getSystemElements(systemElements, summarized));
+			if (!systemPhenotypes.isEmpty()) {
+				result.addAll(getSystemPhenotypes(systemPhenotypes, summarized));
 			}
 		}
 		return result;
@@ -262,18 +262,18 @@ public class ServicesClient extends EurekaClient {
 
 	}
 
-	public List<Phenotype> getUserElements(boolean summarized) throws ClientException {
+	public List<Phenotype> getUserPhenotypes(boolean summarized) throws ClientException {
 		final String path = "/api/protected/phenotypes";
 		if (summarized) {
 			MultivaluedMap<String, String> queryParams = new MultivaluedMapImpl();
 			queryParams.add("summarize", "true");
-			return doGet(path, DataElementList, queryParams);
+			return doGet(path, PhenotypeList, queryParams);
 		} else {
-			return doGet(path, DataElementList);
+			return doGet(path, PhenotypeList);
 		}
 	}
 
-	public Phenotype getUserElement(String inKey, boolean summarized) throws ClientException {
+	public Phenotype getUserPhenotype(String inKey, boolean summarized) throws ClientException {
 		if (inKey == null) {
 			throw new IllegalArgumentException("inKey cannot be null");
 		}
@@ -297,22 +297,22 @@ public class ServicesClient extends EurekaClient {
 		}
 	}
 
-	public void saveUserElement(Phenotype inDataElement)
+	public void saveUserPhenotype(Phenotype inPhenotype)
 			throws ClientException {
 		final String path = "/api/protected/phenotypes";
-		doPost(path, inDataElement);
+		doPost(path, inPhenotype);
 	}         
         
-	public void updateUserElement(Long inId, Phenotype inDataElement) throws
+	public void updateUserPhenotype(Long inId, Phenotype inPhenotype) throws
 			ClientException {
 		if (inId == null) {
 			throw new IllegalArgumentException("inId cannot be null");
 		}                
 		final String path = "/api/protected/phenotypes/"+ inId;
-		doPut(path, inDataElement);
+		doPut(path, inPhenotype);
 	}        
 
-	public void deleteUserElement(Long inUserId, String inKey) throws
+	public void deleteUserPhenotype(Long inUserId, String inKey) throws
 			ClientException {
 		if (inUserId == null) {
 			throw new IllegalArgumentException("inUserId cannot be null");
@@ -334,12 +334,12 @@ public class ServicesClient extends EurekaClient {
 		doDelete(path);
 	}
 
-	public List<SystemElement> getSystemElements() throws ClientException {
+	public List<SystemPhenotype> getSystemPhenotypes() throws ClientException {
 		final String path = UriBuilder.fromPath("/api/protected/concepts/").build().toString();
-		return doGet(path, SystemElementList);
+		return doGet(path, SystemPhenotypeList);
 	}
 
-	public List<SystemElement> getSystemElements(List<String> inKeys, boolean summarize) throws ClientException {
+	public List<SystemPhenotype> getSystemPhenotypes(List<String> inKeys, boolean summarize) throws ClientException {
 		if (inKeys == null) {
 			throw new IllegalArgumentException("inKeys cannot be null");
 		}
@@ -350,11 +350,11 @@ public class ServicesClient extends EurekaClient {
 		formParams.add("summarize", Boolean.toString(summarize));
 		String path = UriBuilder.fromPath("/api/protected/concepts/")
 				.build().toString();
-		return doPost(path, SystemElementList, formParams);
+		return doPost(path, SystemPhenotypeList, formParams);
 	}
 
-	public SystemElement getSystemElement(String inKey, boolean summarize) throws ClientException {
-		List<SystemElement> result = getSystemElements(Collections.singletonList(inKey), summarize);
+	public SystemPhenotype getSystemPhenotype(String inKey, boolean summarize) throws ClientException {
+		List<SystemPhenotype> result = getSystemPhenotypes(Collections.singletonList(inKey), summarize);
 		if (result.isEmpty()) {
 			throw new HttpStatusException(Response.Status.NOT_FOUND);
 		} else {
@@ -512,19 +512,19 @@ public class ServicesClient extends EurekaClient {
 	}
 
 	//Search Functionality
-	public List<String> getSystemElementSearchResults(String searchKey) throws ClientException {
+	public List<String> getSystemPhenotypeSearchResults(String searchKey) throws ClientException {
 		final String path = UriBuilder.fromPath("/api/protected/concepts/search/")
 				.segment(searchKey)
 				.build().toString();
-		return doGet(path, SystemElementSearchResultsList);
+		return doGet(path, SystemPhenotypeSearchResultsList);
 	}
 
 	//Search Functionality
-	public List<SystemElement> getSystemElementSearchResultsBySearchKey(String searchKey) throws ClientException {
+	public List<SystemPhenotype> getSystemPhenotypeSearchResultsBySearchKey(String searchKey) throws ClientException {
 		final String path = UriBuilder.fromPath("/api/protected/concepts/propsearch/")
 				.segment(searchKey)
 				.build().toString();
-		return doGet(path, SystemElementList);
+		return doGet(path, SystemPhenotypeList);
 	}
 	
 	public InputStream getOutput(String destinationId) throws ClientException {

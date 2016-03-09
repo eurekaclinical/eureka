@@ -39,7 +39,7 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.services.conversion;
 
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.ExtendedDataElement;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.ExtendedPhenotype;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.FrequencyEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.FrequencyType;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.SystemProposition;
@@ -98,8 +98,8 @@ public class FrequencyFirstNotValueThresholdConverterTest extends
 		frequency.setWithinAtMostUnits(dayUnit);
 		frequency.setFrequencyType(ft);
 		
-		ExtendedDataElement af = new ExtendedDataElement();
-		af.setDataElementEntity(event);
+		ExtendedPhenotype af = new ExtendedPhenotype();
+		af.setPhenotypeEntity(event);
 		
 		frequency.setExtendedProposition(af);
 		propDefs = converter.convert(frequency);

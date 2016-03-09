@@ -42,15 +42,15 @@ package edu.emory.cci.aiw.cvrg.eureka.services.translation;
 
 import javax.ws.rs.core.Response;
 
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.DataElement;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.DataElementField;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.DataElementEntity;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.ExtendedDataElement;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.Phenotype;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.PhenotypeField;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.PhenotypeEntity;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.ExtendedPhenotype;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.PropertyConstraint;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.PropositionTypeVisitor;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.TimeUnit;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.ValueComparator;
-import edu.emory.cci.aiw.cvrg.eureka.common.exception.DataElementHandlingException;
+import edu.emory.cci.aiw.cvrg.eureka.common.exception.PhenotypeHandlingException;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.TimeUnitDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.ValueComparatorDao;
 
@@ -60,31 +60,31 @@ import edu.emory.cci.aiw.cvrg.eureka.services.dao.ValueComparatorDao;
  */
 class PropositionTranslatorUtil {
 
-	static void populateExtendedProposition(ExtendedDataElement ep, 
-			DataElementEntity proposition, DataElementField dataElement, 
+	static void populateExtendedProposition(ExtendedPhenotype ep, 
+			PhenotypeEntity proposition, PhenotypeField phenotype, 
 			TimeUnitDao timeUnitDao, ValueComparatorDao valCompDao) 
-			throws DataElementHandlingException {
-		ep.setDataElementEntity(proposition);
-		if (dataElement.getHasDuration() == Boolean.TRUE) {
-			ep.setMinDuration(dataElement.getMinDuration());
-			Long minDurationUnits = dataElement.getMinDurationUnits();
+			throws PhenotypeHandlingException {
+		ep.setPhenotypeEntity(proposition);
+		if (phenotype.getHasDuration() == Boolean.TRUE) {
+			ep.setMinDuration(phenotype.getMinDuration());
+			Long minDurationUnits = phenotype.getMinDurationUnits();
 			if (minDurationUnits == null) {
-				throw new DataElementHandlingException(
+				throw new PhenotypeHandlingException(
 						Response.Status.BAD_REQUEST, 
 						"Min duration units must be specified");
 			}
 			ep.setMinDurationTimeUnit(timeUnitDao.retrieve(minDurationUnits));
-			ep.setMaxDuration(dataElement.getMaxDuration());
-			Long maxDurationUnits = dataElement.getMaxDurationUnits();
+			ep.setMaxDuration(phenotype.getMaxDuration());
+			Long maxDurationUnits = phenotype.getMaxDurationUnits();
 			if (maxDurationUnits == null) {
-				throw new DataElementHandlingException(
+				throw new PhenotypeHandlingException(
 						Response.Status.BAD_REQUEST, 
 						"Max duration units must be specified");
 			}
 			ep.setMaxDurationTimeUnit(timeUnitDao.retrieve(maxDurationUnits));
 		} else {
 			ep.setMinDuration(null);
-			Long minDurationUnitsL = dataElement.getMinDurationUnits();
+			Long minDurationUnitsL = phenotype.getMinDurationUnits();
 			TimeUnit minDurationUnits;
 			if (minDurationUnitsL != null) {
 				minDurationUnits = timeUnitDao.retrieve(minDurationUnitsL);
@@ -93,7 +93,7 @@ class PropositionTranslatorUtil {
 			}
 			ep.setMinDurationTimeUnit(minDurationUnits);
 			ep.setMaxDuration(null);
-			Long maxDurationUnitsL = dataElement.getMaxDurationUnits();
+			Long maxDurationUnitsL = phenotype.getMaxDurationUnits();
 			TimeUnit maxDurationUnits;
 			if (maxDurationUnitsL != null) {
 				maxDurationUnits = timeUnitDao.retrieve(maxDurationUnitsL);
@@ -102,10 +102,10 @@ class PropositionTranslatorUtil {
 			}
 			ep.setMaxDurationTimeUnit(maxDurationUnits);
 		}
-		if (dataElement.getHasPropertyConstraint() == Boolean.TRUE) {
-			String propertyName = dataElement.getProperty();
+		if (phenotype.getHasPropertyConstraint() == Boolean.TRUE) {
+			String propertyName = phenotype.getProperty();
 			if (propertyName == null) {
-				throw new DataElementHandlingException(
+				throw new PhenotypeHandlingException(
 						Response.Status.BAD_REQUEST, 
 						"A property name must be specified");
 			}
@@ -114,7 +114,7 @@ class PropositionTranslatorUtil {
 				pc = new PropertyConstraint();
 			}
 			pc.setPropertyName(propertyName);
-			pc.setValue(dataElement.getPropertyValue());
+			pc.setValue(phenotype.getPropertyValue());
 			ValueComparator valComp = valCompDao.getByName("=");
 			if (valComp == null) {
 				throw new AssertionError("Invalid value comparator: =");
@@ -131,74 +131,74 @@ class PropositionTranslatorUtil {
 	}
 
 	/**
-	 * Populates the fields common to all data elements based on the given
+	 * Populates the fields common to all phenotypes based on the given
 	 * proposition.
 	 * 
-	 * @param dataElement
-	 *            the {@link DataElement} to populate. Modified as a result of
+	 * @param phenotype
+	 *            the {@link Phenotype} to populate. Modified as a result of
 	 *            calling this method.
 	 * @param proposition
-	 *            the {@link DataElementEntity} to get the data from
+	 *            the {@link PhenotypeEntity} to get the data from
 	 */
-	static void populateCommonDataElementFields(DataElement dataElement,
-	        DataElementEntity proposition) {
-		dataElement.setId(proposition.getId());
-		dataElement.setKey(proposition.getKey());
-		dataElement.setDisplayName(proposition.getDisplayName());
-		dataElement.setDescription(proposition.getDescription());
-		dataElement.setCreated(proposition.getCreated());
-		dataElement.setLastModified(proposition.getLastModified());
-		dataElement.setUserId(proposition.getUserId());
-		dataElement.setInSystem(proposition.isInSystem());
+	static void populateCommonPhenotypeFields(Phenotype phenotype,
+	        PhenotypeEntity proposition) {
+		phenotype.setId(proposition.getId());
+		phenotype.setKey(proposition.getKey());
+		phenotype.setDisplayName(proposition.getDisplayName());
+		phenotype.setDescription(proposition.getDescription());
+		phenotype.setCreated(proposition.getCreated());
+		phenotype.setLastModified(proposition.getLastModified());
+		phenotype.setUserId(proposition.getUserId());
+		phenotype.setInSystem(proposition.isInSystem());
 	}
 
-	static ExtendedDataElement createOrUpdateExtendedProposition(
-			ExtendedDataElement origEP,
-	        DataElementField dataElement, Long userId, 
+	static ExtendedPhenotype createOrUpdateExtendedProposition(
+			ExtendedPhenotype origEP,
+	        PhenotypeField phenotype, Long userId, 
 			TimeUnitDao timeUnitDao, 
 			TranslatorSupport translatorSupport,
-			ValueComparatorDao valCompDao) throws DataElementHandlingException {
+			ValueComparatorDao valCompDao) throws PhenotypeHandlingException {
 
-		ExtendedDataElement ep = origEP;
+		ExtendedPhenotype ep = origEP;
 		if (ep == null) {
-			ep = new ExtendedDataElement();
+			ep = new ExtendedPhenotype();
 		}
-		DataElementEntity proposition = 
+		PhenotypeEntity proposition = 
 				translatorSupport.getUserOrSystemEntityInstance(userId, 
-				dataElement.getDataElementKey());
-		populateExtendedProposition(ep, proposition, dataElement, timeUnitDao, valCompDao);
+				phenotype.getPhenotypeKey());
+		populateExtendedProposition(ep, proposition, phenotype, timeUnitDao, valCompDao);
 
 		return ep;
 	}
 	
-	static DataElementField createDataElementField(ExtendedDataElement ep) {
-		DataElementField dataElement = new DataElementField();
-		dataElement.setDataElementKey(ep.getDataElementEntity().getKey());
-		dataElement.setDataElementDescription(ep.getDataElementEntity()
+	static PhenotypeField createPhenotypeField(ExtendedPhenotype ep) {
+		PhenotypeField phenotype = new PhenotypeField();
+		phenotype.setPhenotypeKey(ep.getPhenotypeEntity().getKey());
+		phenotype.setPhenotypeDescription(ep.getPhenotypeEntity()
 				.getDescription());
-		dataElement.setDataElementDisplayName(ep.getDataElementEntity()
+		phenotype.setPhenotypeDisplayName(ep.getPhenotypeEntity()
 				.getDisplayName());
 		PropositionTypeVisitor v = new PropositionTypeVisitor();
-		ep.getDataElementEntity().accept(v);
-		dataElement.setType(v.getType());
+		ep.getPhenotypeEntity().accept(v);
+		phenotype.setType(v.getType());
 		if (ep.getMinDuration() != null) {
-			dataElement.setHasDuration(true);
-			dataElement.setMinDuration(ep.getMinDuration());
-			dataElement.setMinDurationUnits(ep.getMinDurationTimeUnit()
+			phenotype.setHasDuration(true);
+			phenotype.setMinDuration(ep.getMinDuration());
+			phenotype.setMinDurationUnits(ep.getMinDurationTimeUnit()
 			        .getId());
 		}
 		if (ep.getMaxDuration() != null) {
-			dataElement.setHasDuration(true);
-			dataElement.setMaxDuration(ep.getMaxDuration());
-			dataElement.setMaxDurationUnits(ep.getMaxDurationTimeUnit()
+			phenotype.setHasDuration(true);
+			phenotype.setMaxDuration(ep.getMaxDuration());
+			phenotype.setMaxDurationUnits(ep.getMaxDurationTimeUnit()
 			        .getId());
 		}
 		if (ep.getPropertyConstraint() != null) {
-			dataElement.setHasPropertyConstraint(true);
-			dataElement.setProperty(ep.getPropertyConstraint()
+			phenotype.setHasPropertyConstraint(true);
+			phenotype.setProperty(ep.getPropertyConstraint()
 			        .getPropertyName());
-			dataElement.setPropertyValue(ep.getPropertyConstraint().getValue());
+			phenotype.setPropertyValue(ep.getPropertyConstraint().getValue());
 		}
-		return dataElement;
+		return phenotype;
 	}
 }

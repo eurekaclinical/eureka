@@ -40,8 +40,8 @@ package edu.emory.cci.aiw.cvrg.eureka.servlet.proposition;
  * #L%
  */
 
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.DataElement;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.DataElementField;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.Phenotype;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.PhenotypeField;
 import org.apache.commons.lang3.StringUtils;
 
 /**
@@ -49,7 +49,7 @@ import org.apache.commons.lang3.StringUtils;
  * @author Andrew Post
  */
 class PropositionListSupport {
-	String getDisplayName(DataElement p) {
+	String getDisplayName(Phenotype p) {
 		String displayName = p.getDisplayName();
 		if (StringUtils.isNotEmpty(displayName)) {
 			return displayName + " (" + p.getKey() + ")";
@@ -58,13 +58,13 @@ class PropositionListSupport {
 		}
 	}
 	
-	String getDisplayName(DataElementField p) {
-		String dataEltDisplayName = p.getDataElementDisplayName();
+	String getDisplayName(PhenotypeField p) {
+		String dataEltDisplayName = p.getPhenotypeDisplayName();
 		if (StringUtils.isNotEmpty(dataEltDisplayName)) {
 			return dataEltDisplayName
-					+ " (" + p.getDataElementKey() + ")";
+					+ " (" + p.getPhenotypeKey() + ")";
 		} else {
-			return p.getDataElementKey();
+			return p.getPhenotypeKey();
 		}
 	}
 }

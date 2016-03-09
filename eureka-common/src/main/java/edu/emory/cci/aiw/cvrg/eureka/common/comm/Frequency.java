@@ -39,14 +39,14 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.common.comm;
 
-import edu.emory.cci.aiw.cvrg.eureka.common.exception.DataElementHandlingException;
+import edu.emory.cci.aiw.cvrg.eureka.common.exception.PhenotypeHandlingException;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 
-public final class Frequency extends DataElement {
+public final class Frequency extends Phenotype {
 
 	private Integer atLeast;
 	private Boolean isConsecutive;
-	private DataElementField dataElement;
+	private PhenotypeField phenotype;
 	private Boolean isWithin;
 	private Integer withinAtLeast;
 	private Long withinAtLeastUnits;
@@ -82,12 +82,12 @@ public final class Frequency extends DataElement {
 		this.isConsecutive = isConsecutive;
 	}
 
-	public DataElementField getDataElement() {
-		return dataElement;
+	public PhenotypeField getPhenotype() {
+		return phenotype;
 	}
 
-	public void setDataElement(DataElementField dataElement) {
-		this.dataElement = dataElement;
+	public void setPhenotype(PhenotypeField phenotype) {
+		this.phenotype = phenotype;
 	}
 
 	public Boolean getIsWithin() {
@@ -131,8 +131,8 @@ public final class Frequency extends DataElement {
 	}
 
 	@Override
-	public void accept(DataElementVisitor visitor) 
-			throws DataElementHandlingException {
+	public void accept(PhenotypeVisitor visitor) 
+			throws PhenotypeHandlingException {
 		visitor.visit(this);
 	}
 	

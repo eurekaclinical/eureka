@@ -39,8 +39,8 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.services.conversion;
 
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.DataElementEntity;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.ExtendedDataElement;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.PhenotypeEntity;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.ExtendedPhenotype;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.FrequencyEntity;
 
 import org.protempa.HighLevelAbstractionDefinition;
@@ -91,10 +91,10 @@ public final class FrequencyValueThresholdConverter extends AbstractConverter
 		this.primaryPropId = propId;
 
 		if (this.converterVisitor.addPropositionId(propId)) {
-			ExtendedDataElement extendedProposition =
+			ExtendedPhenotype extendedProposition =
 					entity.getExtendedProposition();
-			DataElementEntity abstractedFrom =
-					extendedProposition.getDataElementEntity();
+			PhenotypeEntity abstractedFrom =
+					extendedProposition.getPhenotypeEntity();
 			abstractedFrom.accept(this.converterVisitor);
 			Collection<PropositionDefinition> intermediates =
 					this.converterVisitor.getPropositionDefinitions();

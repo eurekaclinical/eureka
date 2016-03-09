@@ -38,83 +38,83 @@
  * #L%
  */
 /**
- * This package implements conversion of Eureka! derived data elements to
+ * This package implements conversion of Eureka! derived phenotypes to
  * Protempa proposition definitions.
  * 
  * The following conversions take place:
  * <dl>
- * <dt>Value threshold data elements</dt>
+ * <dt>Value threshold phenotypes</dt>
  * <dd>If single threshold, convert to a low-level abstraction definition with
- * id <code>data element key + "_PRIMARY"</code>. If
+ * id <code>phenotype key + "_PRIMARY"</code>. If
  * multiple thresholds, convert to a compound low-level abstraction definition
- * with id <code>data element key + "_PRIMARY"</code> that is abstracted from
+ * with id <code>phenotype key + "_PRIMARY"</code> that is abstracted from
  * low-level abstraction definitions with id 
- * <code>data element key + "_SUB" + the proposition id of the thresholded
+ * <code>phenotype key + "_SUB" + the proposition id of the thresholded
  * parameter</code>. Intervals satisfying the value threshold(s) are given the 
- * value <code>data element key + "_VALUE"</code>. Intervals not satisfying the
- * threshold(s) are given the value <code>data element key + "_VALUE_COMP"</code>.
+ * value <code>phenotype key + "_VALUE"</code>. Intervals not satisfying the
+ * threshold(s) are given the value <code>phenotype key + "_VALUE_COMP"</code>.
  * Before sending to the backend layer, all such abstraction definitions are
  * wrapped in a high-level abstraction definition with id 
- * <code>data element key + "_WRAPPER" that is abstracted from intervals with
- * value <code>data element key + "_VALUE"</code>.
+ * <code>phenotype key + "_WRAPPER" that is abstracted from intervals with
+ * value <code>phenotype key + "_VALUE"</code>.
  * 
- * <dt>Sequence data elements</dt>
+ * <dt>Sequence phenotypes</dt>
  * <dd>Convert to a high-level abstraction definition with id
- * <code>data element key + "_PRIMARY"</code>.
+ * <code>phenotype key + "_PRIMARY"</code>.
  * </dd>
  * 
- * <dt>Category data elements</dt>
+ * <dt>Category phenotypes</dt>
  * <dd>Convert to the same type of proposition definition as the children and 
- * with id <code>data element key + "_PRIMARY"</code>.
+ * with id <code>phenotype key + "_PRIMARY"</code>.
  * </dd>
  * 
- * <dt>Frequency data elements</dt>
+ * <dt>Frequency phenotypes</dt>
  * <dd>
  * <ul>
- * <li>If abstracted from a value threshold data element
+ * <li>If abstracted from a value threshold phenotype
  * <ul>
  * <li>If the value of the <code>consecutive</code> field has value 
  * <code>true</code>
  * <ul>
  * <li>If the frequency type is <code>at least</code>, then create a
  * compound low-level abstraction definition with id 
- * <code>data element key + "_SUB" that is wrapped by a high-level abstraction
- * definition with id <code>data element key + "_PRIMARY"</code>.</li>
+ * <code>phenotype key + "_SUB" that is wrapped by a high-level abstraction
+ * definition with id <code>phenotype key + "_PRIMARY"</code>.</li>
  * <li>If the frequency type is <code>first</code>, then create a
  * compound low-level abstraction definition with id
- * <code>data element key + "_SUB" that is wrapped by a slice definition with
- * id <code>data element key + "_SUBSUB"</code> for the first interval with
- * value <code>data element key + "_VALUE"</code>. The slice definition is
+ * <code>phenotype key + "_SUB" that is wrapped by a slice definition with
+ * id <code>phenotype key + "_SUBSUB"</code> for the first interval with
+ * value <code>phenotype key + "_VALUE"</code>. The slice definition is
  * in turn wrapped by a high-level abstraction definition with id
- * <code>data element key + "_PRIMARY".</code></li>
+ * <code>phenotype key + "_PRIMARY".</code></li>
  * </ul>
  * </li>
  * <li>Else
  * <ul>
  * <li>If the frequency type is <code>at least</code>, then create a high-
  * level abstraction definition with id 
- * <code>data element key + "_PRIMARY"</code> with <code>n</code> temporal 
+ * <code>phenotype key + "_PRIMARY"</code> with <code>n</code> temporal 
  * extended parameter definitions for the value threshold, where
  * <code>n</code> is the specified count.</li>
  * <li>If the frequency type is <code>first</code>, then create a slice
- * definition with id <code>data element key + "_SUB"</code> that is wrapped
+ * definition with id <code>phenotype key + "_SUB"</code> that is wrapped
  * by a high-level abstraction definition with id 
- * <code>data element key + "_PRIMARY"</code>.</li>
+ * <code>phenotype key + "_PRIMARY"</code>.</li>
  * </ul>
  * </li>
  * </ul>
  * </li>
- * <li>If not abstracted from a value threshold data element
+ * <li>If not abstracted from a value threshold phenotype
  * <ul>
  * <li>If the frequency type is <code>at least</code>, then create a high-
  * level abstraction definition with id 
- * <code>data element key + "_PRIMARY"</code> with <code>n</code> temporal 
+ * <code>phenotype key + "_PRIMARY"</code> with <code>n</code> temporal 
  * extended parameter definitions for the value threshold, where
  * <code>n</code> is the specified count.</li>
  * <li>If the frequency type is <code>first</code>, then create a slice
- * definition with id <code>data element key + "_SUB"</code> that is wrapped
+ * definition with id <code>phenotype key + "_SUB"</code> that is wrapped
  * by a high-level abstraction definition with id 
- * <code>data element key + "_PRIMARY"</code>.</li>
+ * <code>phenotype key + "_PRIMARY"</code>.</li>
  * </ul>
  * </li>
  * </ul>

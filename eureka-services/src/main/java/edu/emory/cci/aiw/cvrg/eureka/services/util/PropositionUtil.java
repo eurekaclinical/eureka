@@ -46,14 +46,14 @@ import org.arp.javautil.arrays.Arrays;
 import org.protempa.PropertyDefinition;
 import org.protempa.PropositionDefinition;
 
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.SystemElement;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.DataElementEntity;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.SystemPhenotype;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.PhenotypeEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.SystemProposition;
 import edu.emory.cci.aiw.cvrg.eureka.services.finder.PropositionFindException;
 import edu.emory.cci.aiw.cvrg.eureka.services.finder.SystemPropositionFinder;
 
 /**
- * Provides common utility functions operating on {@link DataElementEntity}s.
+ * Provides common utility functions operating on {@link PhenotypeEntity}s.
  */
 public final class PropositionUtil {
 
@@ -81,7 +81,7 @@ public final class PropositionUtil {
 	/**
 	 * Wraps a proposition definition into a proposition wrapper.
 	 */
-	public static SystemElement toSystemElement(
+	public static SystemPhenotype toSystemPhenotype(
 			String sourceConfigId,
 	        PropositionDefinition inDefinition, boolean summarize,
 	        SystemPropositionFinder inPropositionFinder)
@@ -89,40 +89,40 @@ public final class PropositionUtil {
 		if (inDefinition == null) {
 			throw new IllegalArgumentException("inDefinition cannot be null");
 		}
-		SystemElement systemElement = new SystemElement();
-		systemElement.setKey(inDefinition.getId());
-		systemElement.setInSystem(true);
-		systemElement.setInternalNode(inDefinition.getChildren().length > 0);
-		systemElement.setDescription(inDefinition.getAbbreviatedDisplayName());
-		systemElement.setDisplayName(inDefinition.getDisplayName());
-		systemElement.setSummarized(summarize);
+		SystemPhenotype systemPhenotype = new SystemPhenotype();
+		systemPhenotype.setKey(inDefinition.getId());
+		systemPhenotype.setInSystem(true);
+		systemPhenotype.setInternalNode(inDefinition.getChildren().length > 0);
+		systemPhenotype.setDescription(inDefinition.getAbbreviatedDisplayName());
+		systemPhenotype.setDisplayName(inDefinition.getDisplayName());
+		systemPhenotype.setSummarized(summarize);
 		PropositionDefinitionTypeVisitor propDefTypeVisitor = new PropositionDefinitionTypeVisitor();
 		inDefinition.accept(propDefTypeVisitor);
-		systemElement.setSystemType(propDefTypeVisitor.getSystemType());
+		systemPhenotype.setSystemType(propDefTypeVisitor.getSystemType());
 		String[] inDefChildren = inDefinition.getChildren();
-		systemElement.setParent(inDefChildren.length > 0);
+		systemPhenotype.setParent(inDefChildren.length > 0);
 
 		List<String> properties = new ArrayList<>();
 		for (PropertyDefinition propertyDef : inDefinition
 				.getPropertyDefinitions()) {
 			properties.add(propertyDef.getId());
 		}
-		systemElement.setProperties(properties);
+		systemPhenotype.setProperties(properties);
 
 		if (!summarize) {
-			List<SystemElement> children = new ArrayList<>();
+			List<SystemPhenotype> children = new ArrayList<>();
 			List<PropositionDefinition> pds = inPropositionFinder.findAll(
 					sourceConfigId,
 			        Arrays.<String> asList(inDefChildren),
 			        Boolean.FALSE);
 			for (PropositionDefinition pd : pds) {
-				children.add(toSystemElement(sourceConfigId, pd, true,
+				children.add(toSystemPhenotype(sourceConfigId, pd, true,
 				        inPropositionFinder));
 			}
-			systemElement.setChildren(children);
+			systemPhenotype.setChildren(children);
 
 		}
 
-		return systemElement;
+		return systemPhenotype;
 	}
 }

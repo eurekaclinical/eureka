@@ -71,7 +71,7 @@ public abstract class Destination {
 	private DestinationType type;
 	private String name;
 	private String description;
-	private DataElementField[] dataElementFields;
+	private PhenotypeField[] phenotypeFields;
 	private List<Link> links;
 	
 	/**
@@ -154,12 +154,12 @@ public abstract class Destination {
 		this.description = description;
 	}
 	
-	public DataElementField[] getDataElementFields() {
-		return dataElementFields;
+	public PhenotypeField[] getPhenotypeFields() {
+		return phenotypeFields;
 	}
 
-	public void setDataElementFields(DataElementField[] dataElementFields) {
-		this.dataElementFields = dataElementFields;
+	public void setPhenotypeFields(PhenotypeField[] phenotypeFields) {
+		this.phenotypeFields = phenotypeFields;
 	}
 
 	public boolean isRead() {
