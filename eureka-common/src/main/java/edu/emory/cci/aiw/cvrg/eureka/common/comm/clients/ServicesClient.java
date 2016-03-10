@@ -296,11 +296,11 @@ public class ServicesClient extends EurekaClient {
 			return doGet(path, Phenotype.class);
 		}
 	}
-
-	public void saveUserPhenotype(Phenotype inPhenotype)
-			throws ClientException {
+        
+	public URI saveUserPhenotype(Phenotype inPhenotype) throws ClientException {
 		final String path = "/api/protected/phenotypes";
-		doPost(path, inPhenotype);
+		URI phenotypeURI = doPostCreate(path, inPhenotype);
+		return phenotypeURI;
 	}         
         
 	public void updateUserPhenotype(Long inId, Phenotype inPhenotype) throws

@@ -59,6 +59,7 @@ import com.google.inject.Inject;
 import com.google.inject.persist.Transactional;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.Phenotype;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ClientException;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.PhenotypeEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.PropositionChildrenVisitor;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.UserEntity;
@@ -71,6 +72,7 @@ import edu.emory.cci.aiw.cvrg.eureka.services.translation.SummarizingPhenotypeEn
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.PhenotypeEntityDao;
+import java.net.URI;
 
 /**
  * PropositionCh
@@ -138,35 +140,36 @@ public class PhenotypeResource {
 
 	@POST
 	@Transactional
-	public void create(Phenotype inElement) {
-		if (inElement.getId() != null) {
+	public Response create(@Context HttpServletRequest request, Phenotype inPhenotype) {
+		if (inPhenotype.getId() != null) {
 			throw new HttpStatusException(
 					Response.Status.PRECONDITION_FAILED, "Phenotype to "
 					+ "be created should not have an identifier.");
 		}
 
-		if (inElement.getUserId() == null) {
+		if (inPhenotype.getUserId() == null) {
 			throw new HttpStatusException(
 					Response.Status.PRECONDITION_FAILED, "Phenotype to "
 					+ "be created should have a user identifier.");
 		}
 
-		if (inElement.isSummarized()) {
+		if (inPhenotype.isSummarized()) {
 			throw new HttpStatusException(
 					Response.Status.PRECONDITION_FAILED, "Phenotype to "
 					+ "be created cannot be summarized.");
 		}
 
 		try {
-			inElement.accept(this.phenotypeTranslatorVisitor);
+			inPhenotype.accept(this.phenotypeTranslatorVisitor);
 		} catch (PhenotypeHandlingException ex) {
 			throw new HttpStatusException(ex.getStatus(), ex);
 		}
+                
 		PhenotypeEntity phenotypeEntity = this.phenotypeTranslatorVisitor
 				.getPhenotypeEntity();
 
 		if (this.phenotypeEntityDao.getByUserAndKey(
-				inElement.getUserId(), phenotypeEntity.getKey()) != null) {
+				inPhenotype.getUserId(), phenotypeEntity.getKey()) != null) {
 			String msg = messages.getString(
 					"phenotypeResource.create.error.duplicate");
 			throw new HttpStatusException(Status.CONFLICT, msg);
@@ -177,6 +180,10 @@ public class PhenotypeResource {
 		phenotypeEntity.setLastModified(now);
 
 		this.phenotypeEntityDao.create(phenotypeEntity);
+                
+                Long id;
+                id = phenotypeEntity.getId();
+                return Response.created(URI.create("/" + id)).build();
 	}
 
 	@PUT

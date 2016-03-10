@@ -52,7 +52,6 @@ import javax.ws.rs.HttpMethod;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
 
-import edu.emory.cci.aiw.cvrg.eureka.common.exception.HttpStatusException;
 import org.arp.javautil.arrays.Arrays;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
