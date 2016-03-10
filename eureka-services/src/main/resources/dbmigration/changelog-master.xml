@@ -487,14 +487,14 @@
 		<insert tableName="USERS">
 			<column name="ID" valueNumeric="1"/>
 			<column name="ACTIVE" valueBoolean="true"/>
-			<column name="EMAIL" value="super.user@emory.edu"/>
-			<column name="FIRSTNAME" value="Super"/>
-			<column name="LASTNAME" value="User"/>
+			<column name="EMAIL" value="${superuser.email}"/>
+			<column name="FIRSTNAME" value="${superuser.firstname}"/>
+			<column name="LASTNAME" value="${superuser.lastname}"/>
 			<column name="ORGANIZATION" value="N/A"/>
 			<column name="VERIFIED" valueBoolean="true"/>
 			<column name="PASSWORDEXPIRATION" valueDate="1971-01-01T00:00:00"/>
 			<!-- the default password is defaultPassword -->
-			<column name="PASSWORD" value="4656fd365a7b2a27efb753bca9b9cf1"/>
+			<column name="PASSWORD" value="${superuser.password}"/>
 		</insert>
 		<insert tableName="USER_ROLE">
 			<column name="USER_ID" valueNumeric="1"/>
@@ -753,7 +753,7 @@
 			<dropUniqueConstraint tableName="USERS" constraintName="SYS_C0013038"/>
 			<addUniqueConstraint columnNames="USERNAME" constraintName="UNIQ_USERS_USERNAME" deferrable="false" disabled="false" initiallyDeferred="false" tableName="USERS"/>
 			<update tableName="USERS">
-				<column name="USERNAME" value="superuser"/>
+				<column name="USERNAME" value="${superuser.username}"/>
 				<where>EMAIL='super.user@emory.edu'</where>
 			</update>
 			<update tableName="USERS">

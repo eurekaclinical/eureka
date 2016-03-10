@@ -112,7 +112,7 @@
 		</createTable>
 		<insert tableName="USERS">
 			<column name="ID" valueNumeric="1"/>
-			<column name="USERNAME" value="superuser"/>
+			<column name="USERNAME" value="${superuser.username}"/>
 		</insert>
 		<addForeignKeyConstraint baseColumnNames="USER_ID" baseTableName="JOBS" constraintName="JOBS_USER_ID_CONSTRAINT" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" referencedColumnNames="ID" referencedTableName="USERS" referencesUniqueColumn="false"/>
 		<createSequence sequenceName="USER_SEQ" startValue="2"/>

@@ -69,7 +69,7 @@
 		<hibernate-hbm2ddl-auto>validate</hibernate-hbm2ddl-auto>
 
 		<cas-client-version>3.2.1</cas-client-version>
-		<cas-server-version>2.0-Alpha-4</cas-server-version>
+		<cas-server-version>2.0-Alpha-5-SNAPSHOT</cas-server-version>
 
 		<!-- transitive dependencies that CAS needs certain versions of...-->
 		<commons-codec-version>1.4</commons-codec-version>
