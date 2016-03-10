@@ -79,7 +79,7 @@ public class EditPropositionServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
 		String propKey = req.getParameter("key");
-        Phenotype.Type propType = this.getPropTypeFromParam(req.getParameter("type"));
+		Phenotype.Type propType = this.getPropTypeFromParam(req.getParameter("type"));
 		try {
 			List<FrequencyType> freqTypes = this.servicesClient.getFrequencyTypesAsc();
 			//Find the default frequency

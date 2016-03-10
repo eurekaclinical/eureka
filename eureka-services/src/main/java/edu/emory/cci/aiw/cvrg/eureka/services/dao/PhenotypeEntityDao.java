@@ -71,8 +71,15 @@ public interface PhenotypeEntityDao extends Dao<PhenotypeEntity, Long> {
 
 	/**
 	 * Gets a list of user-defined phenotype entities for the given user ID.
-	 * @param inId the unique identifier for the given user.
+	 * @param inUserId the unique identifier for the given user.
 	 * @return A list of propositions belonging to the given user.
 	 */
-	public List<PhenotypeEntity> getByUserId(Long inId);
+	public List<PhenotypeEntity> getByUserId(Long inUserId);
+	/**
+	 * Gets a user-defined phenotype entity based on the given id
+	 * 
+	 * @param inId The id to search for in the database.
+	 * @return A proposition if found, null otherwise.
+	 */        
+	public PhenotypeEntity getById(Long inId);
 }

@@ -13,7 +13,6 @@ window.eureka.job = new function () {
 		self.setupDatePicker(earliestDateElem);
 		self.setupDatePicker(latestDateElem);
 		self.setupDatePickerCss(datePickerCssUrl);
-                console.log("Miao ");
 		// Create event handlers.
 		var $uploadForm = $(uploadFormElem);
 		$uploadForm.find('select[name="source"]').change(

@@ -16,7 +16,6 @@ window.eureka.editor = new function () {
 		self.propId = propId;
 		self.propType = propType;
 		self.propSubType = (propSubType == '') ? null : propSubType;
-                console.log("Ai");
 		if (propId != null && propId != '') {
 			$('.label-info').hide();
 		}

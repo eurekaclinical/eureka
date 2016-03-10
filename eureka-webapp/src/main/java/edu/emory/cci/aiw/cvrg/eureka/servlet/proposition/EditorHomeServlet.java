@@ -112,6 +112,7 @@ public class EditorHomeServlet extends HttpServlet {
 		} catch (ClientException ex) {
 			throw new ServletException("Error getting user-defined phenotypes", ex);
 		}
+                
 		SimpleDateFormat df = new SimpleDateFormat("MM/dd/yyyy");
 		for (Phenotype proposition : props) {
 			JsonTreeData d = createData(
@@ -120,19 +121,23 @@ public class EditorHomeServlet extends HttpServlet {
 			d.setKeyVal("description",
 				proposition.getDescription());
 			d.setKeyVal("displayName", proposition.getDisplayName());
+			d.setKeyVal("id", proposition.getId().toString());
 
-			if (proposition.getType() == Phenotype.Type
-				.CATEGORIZATION) {
-				d.setKeyVal("type", "Categorical");
-			} else if (proposition.getType() == Phenotype.Type
-				.SEQUENCE) {
-				d.setKeyVal("type", "Sequence");
-			} else if (proposition.getType() == Phenotype.Type
-				.FREQUENCY) {
-				d.setKeyVal("type", "Frequency");
-			} else if (proposition.getType() == Phenotype.Type
-				.VALUE_THRESHOLD) {
-				d.setKeyVal("type", "Value Threshold");
+			if (null != proposition.getType()) switch (proposition.getType()) {
+				case CATEGORIZATION:
+					d.setKeyVal("type", "Categorical");
+					break;
+ 				case SEQUENCE:
+					d.setKeyVal("type", "Sequence");
+					break;
+				case FREQUENCY:
+					d.setKeyVal("type", "Frequency");
+					break;
+				case VALUE_THRESHOLD:
+					d.setKeyVal("type", "Value Threshold");
+					break;
+				default:
+					break;
 			}
 
 			if (proposition.getCreated() != null) {

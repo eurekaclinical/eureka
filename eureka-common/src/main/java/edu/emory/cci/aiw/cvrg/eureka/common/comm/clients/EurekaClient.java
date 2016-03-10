@@ -54,6 +54,8 @@ import javax.ws.rs.core.MultivaluedMap;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.exception.HttpStatusException;
 import org.arp.javautil.arrays.Arrays;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author hrathod
@@ -61,7 +63,9 @@ import org.arp.javautil.arrays.Arrays;
 public abstract class EurekaClient extends AbstractClient {
 
 	private WebResourceWrapperFactory webResourceWrapperFactory;
-
+	private static final Logger LOGGER
+			= LoggerFactory.getLogger(EurekaClient.class);
+        
 	protected EurekaClient() {
 		this.webResourceWrapperFactory = new CasWebResourceWrapperFactory();
 	}
@@ -190,6 +194,15 @@ public abstract class EurekaClient extends AbstractClient {
 				.type(MediaType.APPLICATION_JSON)
 				.post(ClientResponse.class, o);
 		errorIfStatusNotEqualTo(response, ClientResponse.Status.NO_CONTENT);
+	}
+        
+	protected void doDelete(String path, Object o) throws ClientException {
+		ClientResponse response = this.getResourceWrapper()
+				.rewritten(path, HttpMethod.PUT)
+				.accept(MediaType.APPLICATION_JSON)
+				.type(MediaType.APPLICATION_JSON)
+				.delete(ClientResponse.class, o);
+		errorIfStatusNotEqualTo(response, ClientResponse.Status.NO_CONTENT, ClientResponse.Status.ACCEPTED);
 	}
 
 	protected <T> T doPost(String path, Object o, Class<T> cls) throws ClientException {

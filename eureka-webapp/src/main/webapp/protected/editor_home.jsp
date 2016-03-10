@@ -124,7 +124,7 @@
 						<c:url value="/protected/editprop" var="editUrl">
 							<c:param name="key" value="${prop.attr['key']}"/>
 						</c:url>
-						<tr data-key="${prop.attr['key']}"
+						<tr data-key="${prop.attr['key']}" data-id ="${prop.attr['id']}"
 							data-display-name="${prop.attr['displayName']}">
 							<td>
 								<%--<span class="glyphicon glyphicon-eye-open view-icon" title="View"></span>--%>
@@ -188,15 +188,17 @@
 
 			$('span.delete-icon').on('click', function () {
 				var $tr = $(this).closest('tr');
+                                
 				var displayName = $tr.data('display-name');
-				var key = $tr.data('key');
+				var id = $tr.data('id');
+                                
 				var dialog = $('#deleteModal');
-				$(dialog).find('#deleteContent').html('Are you sure you want to remove data element &quot;' + displayName.trim() + '&quot;?');
+				$(dialog).find('#deleteContent').html('Are you sure you want to remove phenotype &quot;' + displayName.trim() + '&quot;?');
 				$(dialog).find('#deleteButton').on('click', function (e) {
 					$(dialog).modal('hide');
 					$.ajax({
 						type: "POST",
-						url: 'deleteprop?key=' + encodeURIComponent(key),
+						url: 'deleteprop?id=' + id,
 						success: function (data) {
 							window.location.href = 'editorhome'
 						},

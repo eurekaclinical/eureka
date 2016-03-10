@@ -247,12 +247,12 @@ public class PhenotypeResource {
 	}
 
 	@DELETE
-	@Path("/{userId}/{key}")
+	@Path("/{id}")
 	@Transactional
-	public void delete(@PathParam("userId") Long inUserId,
-			@PathParam("key") String inKey) {
+	public void delete(@PathParam("id") Long inId,
+			Long inUserId) {
 		PhenotypeEntity phenotypeEntity
-				= this.phenotypeEntityDao.getByUserAndKey(inUserId, inKey);
+				= this.phenotypeEntityDao.getById(inId);
 		if (phenotypeEntity == null) {
 			throw new HttpStatusException(Response.Status.NOT_FOUND);
 		}

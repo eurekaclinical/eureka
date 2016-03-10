@@ -312,13 +312,13 @@ public class ServicesClient extends EurekaClient {
 		doPut(path, inPhenotype);
 	}        
 
-	public void deleteUserPhenotype(Long inUserId, String inKey) throws
+	public void deleteUserPhenotype(Long inUserId, Long inId) throws
 			ClientException {
 		if (inUserId == null) {
 			throw new IllegalArgumentException("inUserId cannot be null");
 		}
-		if (inKey == null) {
-			throw new IllegalArgumentException("inKey cannot be null");
+		if (inId == null) {
+			throw new IllegalArgumentException("inId cannot be null");
 		}
 		/*
 		 * The inKey parameter may contain spaces, slashes and other 
@@ -326,12 +326,8 @@ public class ServicesClient extends EurekaClient {
 		 * encoded. We use UriBuilder to guarantee a valid URL. The inKey
 		 * string can't be templated because the slashes won't be encoded!
 		 */
-		String path = UriBuilder
-				.fromPath("/api/protected/phenotypes/")
-				.segment("{arg1}")
-				.segment(inKey)
-				.build(inUserId).toString();
-		doDelete(path);
+		final String path = "/api/protected/phenotypes/"+ inId;
+		doDelete(path, inUserId);
 	}
 
 	public List<SystemPhenotype> getSystemPhenotypes() throws ClientException {

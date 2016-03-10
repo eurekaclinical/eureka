@@ -92,17 +92,6 @@ window.eureka.editor = new function () {
 		current[path[path.length - 1]] = value;
 	};
 
-	self.removeIn = function (obj, path) {
-		var current = obj;
-		for (var i = 0; i < path.length - 1; i++) {
-			current = current[path[i]];
-			if (current == null) {
-				break;
-			}
-		}
-		delete current[path[path.length - 1]];
-	};
-
 	self.enableFrequencyFields = function (dropped) {
 		if ($(dropped).data('type') == 'VALUE_THRESHOLD') {
 			$('#valueThresholdConsecutiveLabel').removeClass('hide');
@@ -201,30 +190,6 @@ window.eureka.editor = new function () {
 		}
 	};
 
-	self.removeDroppedElement = function (removed, removeTarget) {
-		var elementKey = $(removed).data('key');
-		var sourceId = $(removeTarget).data('count');
-		var path = [self.propType, elementKey, 'sources', sourceId];
-		self.removeIn(self.droppedElements, path);
-
-		var allSourcesPath = [self.propType, elementKey, 'sources'];
-		var allSources = self.getIn(self.droppedElements, allSourcesPath);
-		var size = self.objSize(allSources);
-		if (size <= 1) {
-			for (var key in allSources) {
-				if (allSources.hasOwnProperty(key)) {
-					var source = allSources[key];
-					var items = $(source).find('li');
-					$(items).each(function (i, item) {
-						var span = $(item).find('span.desc');
-						var newText = $(removed).data('desc');
-						$(span).text(newText);
-					});
-				}
-			}
-		}
-	};
-
 	self.idIsNotInList = function (target, id) {
 		var retVal = true;
 		$(target).find('ul.sortable').find('li').each(function (i, item) {
@@ -306,47 +271,39 @@ window.eureka.editor = new function () {
 			self.deleteActions[self.propType]();
 		}
 	};
-
-	self.addNewItemToList = function (data, sortable, newItem) {
-		var target = $(sortable).parent();
-
-		$(target).find('div.label-info').hide();
-
-		var X = $("<span></span>", {
-			'class': 'glyphicon glyphicon-remove delete-icon',
-			'data-action': 'remove'
-		});
-		self.attachDeleteAction(X);
-
-		newItem.append(X);
-		newItem.append(data.o[0].children[1].childNodes[1].textContent);
-		sortable.append(newItem);
-
-		// set the properties in the properties select
-		if ($(data.o[0]).data('properties')) {
-			var properties = $(data.o[0]).data('properties').split(",");
-			$('select[data-properties-provider=' + $(target).attr('id') + ']').each(function (i, item) {
-				$(item).empty();
-				$(properties).each(function (j, property) {
-					$(item).append($('<option></option>').attr('value', property).text(property));
-				});
-			});
+        
+	self.removeIn = function (obj, path) {
+		var current = obj;
+		for (var i = 0; i < path.length - 1; i++) {
+			current = current[path[i]];
+			if (current == null) {
+				break;
+			}
 		}
-		else {
-			var parent = $(target).closest('.form-group').parent();
-			var inputProperty = $(parent).find('input.propertyValueField');
-			$(inputProperty).attr('disabled', 'disabled');
-			var inputPropertycheckbox = $(parent).find('input.propertyValueConstraint');
-			$(inputPropertycheckbox).attr('disabled', 'disabled');
-		}
+		delete current[path[path.length - 1]];
+	};
+        
+	self.removeDroppedElement = function (removed, removeTarget) {
+		var elementKey = $(removed).data('key');
+		var sourceId = $(removeTarget).data('count');
+		var path = [self.propType, elementKey, 'sources', sourceId];
+		self.removeIn(self.droppedElements, path);
 
-		// add the newly dropped element to the set of dropped elements
-		self.addDroppedElement(newItem, sortable);
-		self.setPropositionSelects($(sortable).closest('[data-definition-container="true"]'));
-
-		// finally, call any actions specific to the type of proposition being entered/edited
-		if (self.dndActions && self.dndActions[self.propType]) {
-			self.dndActions[self.propType](data.o[0]);
+		var allSourcesPath = [self.propType, elementKey, 'sources'];
+		var allSources = self.getIn(self.droppedElements, allSourcesPath);
+		var size = self.objSize(allSources);
+		if (size <= 1) {
+			for (var key in allSources) {
+				if (allSources.hasOwnProperty(key)) {
+					var source = allSources[key];
+					var items = $(source).find('li');
+					$(items).each(function (i, item) {
+						var span = $(item).find('span.desc');
+						var newText = $(removed).data('desc');
+						$(span).text(newText);
+					});
+				}
+			}
 		}
 	};
 
@@ -393,6 +350,49 @@ window.eureka.editor = new function () {
 				});
 			});
 		});
+	};
+
+	self.addNewItemToList = function (data, sortable, newItem) {
+		var target = $(sortable).parent();
+
+		$(target).find('div.label-info').hide();
+
+		var X = $("<span></span>", {
+			'class': 'glyphicon glyphicon-remove delete-icon',
+			'data-action': 'remove'
+		});
+		self.attachDeleteAction(X);
+
+		newItem.append(X);
+		newItem.append(data.o[0].children[1].childNodes[1].textContent);
+		sortable.append(newItem);
+
+		// set the properties in the properties select
+		if ($(data.o[0]).data('properties')) {
+			var properties = $(data.o[0]).data('properties').split(",");
+			$('select[data-properties-provider=' + $(target).attr('id') + ']').each(function (i, item) {
+				$(item).empty();
+				$(properties).each(function (j, property) {
+					$(item).append($('<option></option>').attr('value', property).text(property));
+				});
+			});
+		}
+		else {
+			var parent = $(target).closest('.form-group').parent();
+			var inputProperty = $(parent).find('input.propertyValueField');
+			$(inputProperty).attr('disabled', 'disabled');
+			var inputPropertycheckbox = $(parent).find('input.propertyValueConstraint');
+			$(inputPropertycheckbox).attr('disabled', 'disabled');
+		}
+
+		// add the newly dropped element to the set of dropped elements
+		self.addDroppedElement(newItem, sortable);
+		self.setPropositionSelects($(sortable).closest('[data-definition-container="true"]'));
+
+		// finally, call any actions specific to the type of proposition being entered/edited
+		if (self.dndActions && self.dndActions[self.propType]) {
+			self.dndActions[self.propType](data.o[0]);
+		}
 	};
 
 	self.attachDeleteAction = function (elem) {

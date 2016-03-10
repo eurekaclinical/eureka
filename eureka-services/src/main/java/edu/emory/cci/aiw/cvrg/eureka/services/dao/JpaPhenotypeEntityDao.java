@@ -109,8 +109,29 @@ public class JpaPhenotypeEntityDao extends GenericDao<PhenotypeEntity, Long>
 		return typedQuery.getResultList();
 	}
 
+	@Override
+	public PhenotypeEntity getById(Long inId) {
+		PhenotypeEntity result = null;
+            
+		EntityManager entityManager = this.getEntityManager();
+		CriteriaBuilder builder = entityManager.getCriteriaBuilder();
+		CriteriaQuery<PhenotypeEntity> criteriaQuery = builder.createQuery(PhenotypeEntity.class);
+		Root<PhenotypeEntity> root = criteriaQuery.from(PhenotypeEntity.class);
+                
+		Predicate idPredicate = builder.equal(
+				root.get(
+						PhenotypeEntity_.id), inId);
+		
+		TypedQuery<PhenotypeEntity> typedQuery = entityManager.createQuery(
+				criteriaQuery.where(
+						builder.and(idPredicate)));
+		result = typedQuery.getSingleResult();
+		return result;
+	}        
+        
 	private PhenotypeEntity getByUserAndKey(Long inUserId, String inKey, boolean excludeSystemElements) {
 		PhenotypeEntity result = null;
+                
 		EntityManager entityManager = this.getEntityManager();
 		CriteriaBuilder builder = entityManager.getCriteriaBuilder();
 		CriteriaQuery<PhenotypeEntity> criteriaQuery = builder.createQuery(PhenotypeEntity.class);

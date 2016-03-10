@@ -82,7 +82,7 @@ public class DeleteCohortServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
 
-		LOGGER.debug("DeletePropositionServlet");
+		LOGGER.debug("DeleteCohortServlet");
 		String propKey = req.getParameter("key");
 
 		try {
