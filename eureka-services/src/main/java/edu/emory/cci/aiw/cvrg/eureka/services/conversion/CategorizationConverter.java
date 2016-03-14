@@ -40,7 +40,7 @@
 package edu.emory.cci.aiw.cvrg.eureka.services.conversion;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.CategoryEntity;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.DataElementEntity;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.PhenotypeEntity;
 import org.protempa.ConstantDefinition;
 import org.protempa.EventDefinition;
 import org.protempa.HighLevelAbstractionDefinition;
@@ -59,10 +59,10 @@ public final class CategorizationConverter extends AbstractConverter implements
 	private PropositionDefinitionConverterVisitor converterVisitor;
 	private PropositionDefinition primary;
 	private String primaryPropId;
-	private final DataElementConversionSupport conversionSupport;
+	private final PhenotypeConversionSupport conversionSupport;
 
 	public CategorizationConverter() {
-		this.conversionSupport = new DataElementConversionSupport();
+		this.conversionSupport = new PhenotypeConversionSupport();
 	}
 	
 	@Override
@@ -91,7 +91,7 @@ public final class CategorizationConverter extends AbstractConverter implements
 					new ArrayList<>();
 			List<PropositionDefinition> inverseIsADefsIncludingSecondaries =
 					new ArrayList<>();
-			for (DataElementEntity e : category.getMembers()) {
+			for (PhenotypeEntity e : category.getMembers()) {
 				e.accept(this.converterVisitor);
 				inverseIsADefsIncludingSecondaries.addAll(this.converterVisitor
 						.getPropositionDefinitions());

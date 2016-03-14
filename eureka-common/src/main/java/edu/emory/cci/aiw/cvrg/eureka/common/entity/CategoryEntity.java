@@ -54,7 +54,7 @@ import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
  */
 @Entity
 @Table(name = "categories")
-public class CategoryEntity extends DataElementEntity {
+public class CategoryEntity extends PhenotypeEntity {
 
 	public enum CategoryType {
 		CONSTANT, EVENT, PRIMITIVE_PARAMETER, LOW_LEVEL_ABSTRACTION, 
@@ -70,17 +70,17 @@ public class CategoryEntity extends DataElementEntity {
 	@JoinTable(name = "category_members", 
 			joinColumns = { @JoinColumn(name = "category_id")},
 			inverseJoinColumns = { @JoinColumn(name = "member_id")})
-	private List<DataElementEntity> members;
+	private List<PhenotypeEntity> members;
 	
 	public CategoryEntity() {
 		super(CategoryType.EVENT);
 	}
 
-	public List<DataElementEntity> getMembers() {
+	public List<PhenotypeEntity> getMembers() {
 		return members;
 	}
 
-	public void setMembers(List<DataElementEntity> members) {
+	public void setMembers(List<PhenotypeEntity> members) {
 		this.members = members;
 	}
 	
@@ -89,7 +89,7 @@ public class CategoryEntity extends DataElementEntity {
 	}
 
 	@Override
-	public void accept(DataElementEntityVisitor visitor) {
+	public void accept(PhenotypeEntityVisitor visitor) {
 		visitor.visit(this);
 	}
 	

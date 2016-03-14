@@ -50,14 +50,13 @@ import edu.emory.cci.aiw.cvrg.eureka.services.clients.MockI2b2Client;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.AuthenticationMethodDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.FrequencyTypeDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.JpaFrequencyTypeDao;
-import edu.emory.cci.aiw.cvrg.eureka.services.dao.JpaDataElementEntityDao;
+import edu.emory.cci.aiw.cvrg.eureka.services.dao.JpaPhenotypeEntityDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.JpaRelationOperatorDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.JpaRoleDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.JpaThresholdsOperatorDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.JpaTimeUnitDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.JpaUserDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.JpaValueComparatorDao;
-import edu.emory.cci.aiw.cvrg.eureka.services.dao.DataElementEntityDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.JpaAuthenticationMethodDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.JpaLocalUserDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.JpaLoginTypeDao;
@@ -77,6 +76,7 @@ import edu.emory.cci.aiw.cvrg.eureka.services.finder.PropositionFinder;
 import edu.emory.cci.aiw.cvrg.eureka.services.finder.TestPropositionFinder;
 import edu.emory.cci.aiw.cvrg.eureka.services.util.PasswordGenerator;
 import edu.emory.cci.aiw.cvrg.eureka.services.util.PasswordGeneratorTestImpl;
+import edu.emory.cci.aiw.cvrg.eureka.services.dao.PhenotypeEntityDao;
 
 /**
  * Configure Guice for non-web application testing.
@@ -98,7 +98,7 @@ public class AppTestModule extends AbstractModule {
 		bind(ValueComparatorDao.class).to(JpaValueComparatorDao.class);
 		bind(FrequencyTypeDao.class).to(JpaFrequencyTypeDao.class);
 		bind(RelationOperatorDao.class).to(JpaRelationOperatorDao.class);
-		bind(DataElementEntityDao.class).to(JpaDataElementEntityDao.class);
+		bind(PhenotypeEntityDao.class).to(JpaPhenotypeEntityDao.class);
 		bind(OAuthProviderDao.class).to(JpaOAuthProviderDao.class);
 		bind(AuthenticationMethodDao.class).to(JpaAuthenticationMethodDao.class);
 		bind(LoginTypeDao.class).to(JpaLoginTypeDao.class);

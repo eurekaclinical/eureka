@@ -63,7 +63,7 @@ class EtlNodeToServicesNodeVisitor extends AbstractNodeVisitor {
 		Literal servicesLiteral = new Literal();
 		servicesLiteral.setId(literal.getId());
 		servicesLiteral.setName(
-				this.conversionSupport.toDataElementKey(literal.getName()));
+				this.conversionSupport.toPhenotypeKey(literal.getName()));
 		servicesLiteral.setStart(literal.getStart());
 		servicesLiteral.setFinish(literal.getFinish());
 		this.node = servicesLiteral;

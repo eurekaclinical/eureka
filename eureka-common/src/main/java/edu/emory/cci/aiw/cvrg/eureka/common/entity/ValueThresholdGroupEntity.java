@@ -58,7 +58,7 @@ import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
  */
 @Entity
 @Table(name = "value_threshold_groups")
-public class ValueThresholdGroupEntity extends DataElementEntity {
+public class ValueThresholdGroupEntity extends PhenotypeEntity {
 
 	/*
 	 * The allowed values of the low-level abstraction
@@ -92,7 +92,7 @@ public class ValueThresholdGroupEntity extends DataElementEntity {
 	}
 
 	@Override
-	public void accept(DataElementEntityVisitor visitor) {
+	public void accept(PhenotypeEntityVisitor visitor) {
 		visitor.visit(this);
 	}
 	

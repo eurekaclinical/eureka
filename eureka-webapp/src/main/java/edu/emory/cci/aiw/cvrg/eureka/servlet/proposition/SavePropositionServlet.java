@@ -52,11 +52,13 @@ import org.slf4j.LoggerFactory;
 
 import com.google.inject.Inject;
 
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.DataElement;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.Phenotype;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.User;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ClientException;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ServicesClient;
 import edu.emory.cci.aiw.cvrg.eureka.webapp.authentication.WebappAuthenticationSupport;
+import java.net.URI;
+import org.apache.commons.httpclient.HttpStatus;
 
 public class SavePropositionServlet extends HttpServlet {
 
@@ -76,15 +78,24 @@ public class SavePropositionServlet extends HttpServlet {
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp)
 	        throws ServletException, IOException {
 		LOGGER.debug("SavePropositionServlet");
-		DataElement dataElement = MAPPER.readValue(req.getReader(),
-				DataElement.class);
+		Phenotype phenotype = MAPPER.readValue(req.getReader(),
+				Phenotype.class);
 		try {
 			User user = this.authenticationSupport.getMe(req);
-			dataElement.setUserId(user.getId());
-			if (dataElement.getId() == null) {
-				this.servicesClient.saveUserElement(dataElement);
+			phenotype.setUserId(user.getId());
+			if (phenotype.getId() == null) {
+				try {
+					URI phenotypeURI = this.servicesClient.saveUserPhenotype(phenotype);
+					if (phenotypeURI != null) {
+						resp.setStatus(HttpStatus.SC_CREATED);
+						resp.setHeader("Location", phenotypeURI.toString());
+					}
+				}catch (ClientException e) {
+					resp.setStatus(e.getResponseStatus().getStatusCode());
+					resp.getOutputStream().print(e.getMessage());
+				}                        
 			} else {
-				this.servicesClient.updateUserElement(dataElement);
+				this.servicesClient.updateUserPhenotype(phenotype.getId(), phenotype);
 			}
 		} catch (ClientException e) {
 			switch (e.getResponseStatus()) {

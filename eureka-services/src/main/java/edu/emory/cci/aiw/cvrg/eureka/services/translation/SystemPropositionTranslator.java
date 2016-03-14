@@ -48,26 +48,26 @@ import org.protempa.PropositionDefinition;
 import com.google.inject.Inject;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.SourceConfigParams;
 
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.SystemElement;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.SystemPhenotype;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.SystemProposition;
-import edu.emory.cci.aiw.cvrg.eureka.common.exception.DataElementHandlingException;
+import edu.emory.cci.aiw.cvrg.eureka.common.exception.PhenotypeHandlingException;
 import edu.emory.cci.aiw.cvrg.eureka.common.exception.HttpStatusException;
-import edu.emory.cci.aiw.cvrg.eureka.services.dao.DataElementEntityDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.finder.PropositionFindException;
 import edu.emory.cci.aiw.cvrg.eureka.services.finder.SystemPropositionFinder;
 import edu.emory.cci.aiw.cvrg.eureka.services.resource.SourceConfigResource;
 import edu.emory.cci.aiw.cvrg.eureka.services.util.PropositionUtil;
 import javax.ws.rs.core.Response;
+import edu.emory.cci.aiw.cvrg.eureka.services.dao.PhenotypeEntityDao;
 
 public class SystemPropositionTranslator implements
-		PropositionTranslator<SystemElement, SystemProposition> {
+		PropositionTranslator<SystemPhenotype, SystemProposition> {
 
 	private final SystemPropositionFinder finder;
 	private final SourceConfigResource sourceConfigResource;
 	private final TranslatorSupport translatorSupport;
 
 	@Inject
-	public SystemPropositionTranslator(DataElementEntityDao inPropositionDao,
+	public SystemPropositionTranslator(PhenotypeEntityDao inPropositionDao,
 			SourceConfigResource inSourceConfigResource,
 			SystemPropositionFinder inFinder) {
 		finder = inFinder;
@@ -77,21 +77,21 @@ public class SystemPropositionTranslator implements
 	}
 
 	@Override
-	public SystemProposition translateFromElement(SystemElement element)
-			throws DataElementHandlingException {
+	public SystemProposition translateFromPhenotype(SystemPhenotype phenotype)
+			throws PhenotypeHandlingException {
 		SystemProposition proposition =
-				this.translatorSupport.getUserEntityInstance(element,
+				this.translatorSupport.getUserEntityInstance(phenotype,
 				SystemProposition.class);
-		proposition.setSystemType(element.getSystemType());
+		proposition.setSystemType(phenotype.getSystemType());
 		return proposition;
 	}
 
 	@Override
-	public SystemElement translateFromProposition(
+	public SystemPhenotype translateFromProposition(
 			SystemProposition proposition) {
-		SystemElement element = new SystemElement();
+		SystemPhenotype phenotype = new SystemPhenotype();
 		try {
-			PropositionTranslatorUtil.populateCommonDataElementFields(element,
+			PropositionTranslatorUtil.populateCommonPhenotypeFields(phenotype,
 					proposition);
 			/*
 			 * Hack to get an ontology source that assumes all Protempa configurations
@@ -103,29 +103,29 @@ public class SystemPropositionTranslator implements
 			}
 			PropositionDefinition propDef = finder.find(scps.get(0).getId(),
 					proposition.getKey());
-			List<SystemElement> children = new ArrayList<>();
+			List<SystemPhenotype> children = new ArrayList<>();
 			for (String child : propDef.getInverseIsA()) {
 				PropositionDefinition childDef = finder.find(
 						scps.get(0).getId(), child);
-				SystemElement childElement =
-						PropositionUtil.toSystemElement(scps.get(0).getId(), childDef, true,
+				SystemPhenotype childPhenotype =
+						PropositionUtil.toSystemPhenotype(scps.get(0).getId(), childDef, true,
 						finder);
 
-				children.add(childElement);
+				children.add(childPhenotype);
 			}
-			element.setChildren(children);
+			phenotype.setChildren(children);
 
 			List<String> properties = new ArrayList<>();
 			for (PropertyDefinition property : propDef.getPropertyDefinitions()) {
 				properties.add(property.getId());
 			}
-			element.setProperties(properties);
-			element.setSystemType(proposition.getSystemType());
+			phenotype.setProperties(properties);
+			phenotype.setSystemType(proposition.getSystemType());
 		} catch (PropositionFindException ex) {
 			throw new AssertionError(
 					"Error getting proposition definitions: " + ex.getMessage());
 		}
 
-		return element;
+		return phenotype;
 	}
 }

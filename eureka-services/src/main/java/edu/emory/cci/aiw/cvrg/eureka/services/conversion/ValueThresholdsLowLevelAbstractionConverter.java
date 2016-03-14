@@ -39,7 +39,7 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.services.conversion;
 
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.ExtendedDataElement;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.ExtendedPhenotype;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.ValueThresholdEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.ValueThresholdGroupEntity;
 import org.protempa.LowLevelAbstractionDefinition;
@@ -107,10 +107,10 @@ public final class ValueThresholdsLowLevelAbstractionConverter
 				wrapped.addPrimitiveParameterId(
 						converterVisitor.getPrimaryPropositionId());
 				thresholdToValueDefinitions(entity, threshold, wrapped);
-				List<ExtendedDataElement> extendedDataElements = threshold.getExtendedDataElements();
-				if (extendedDataElements != null && !extendedDataElements.isEmpty()) {
+				List<ExtendedPhenotype> extendedPhenotypes = threshold.getExtendedPhenotypes();
+				if (extendedPhenotypes != null && !extendedPhenotypes.isEmpty()) {
 					ContextDefinition contextDefinition = extractContextDefinition(entity,
-							threshold.getExtendedDataElements(), threshold);
+							threshold.getExtendedPhenotypes(), threshold);
 					result.add(contextDefinition);
 					wrapped.setContextId(contextDefinition.getId());
 				}

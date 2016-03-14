@@ -54,7 +54,7 @@ import org.slf4j.LoggerFactory;
 
 import com.google.inject.Inject;
 
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.DataElement;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.Phenotype;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ClientException;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ServicesClient;
 
@@ -78,7 +78,7 @@ public class EditorHomeServlet extends HttpServlet {
 		return d;
 	}
 
-	private String getDisplayName(DataElement e) {
+	private String getDisplayName(Phenotype e) {
 		String displayName = "";
 
 		if (e.getDisplayName() != null && !e.getDisplayName().equals
@@ -106,33 +106,38 @@ public class EditorHomeServlet extends HttpServlet {
 		throws ServletException, IOException {
 
 		List<JsonTreeData> l = new ArrayList<>();
-		List<DataElement> props;
+		List<Phenotype> props;
 		try {
-			props = this.servicesClient.getUserElements(true);
+			props = this.servicesClient.getUserPhenotypes(true);
 		} catch (ClientException ex) {
-			throw new ServletException("Error getting user-defined data elements", ex);
+			throw new ServletException("Error getting user-defined phenotypes", ex);
 		}
+                
 		SimpleDateFormat df = new SimpleDateFormat("MM/dd/yyyy");
-		for (DataElement proposition : props) {
+		for (Phenotype proposition : props) {
 			JsonTreeData d = createData(
 				proposition.getKey(),
 				this.getDisplayName(proposition));
 			d.setKeyVal("description",
 				proposition.getDescription());
 			d.setKeyVal("displayName", proposition.getDisplayName());
+			d.setKeyVal("id", proposition.getId().toString());
 
-			if (proposition.getType() == DataElement.Type
-				.CATEGORIZATION) {
-				d.setKeyVal("type", "Categorical");
-			} else if (proposition.getType() == DataElement.Type
-				.SEQUENCE) {
-				d.setKeyVal("type", "Sequence");
-			} else if (proposition.getType() == DataElement.Type
-				.FREQUENCY) {
-				d.setKeyVal("type", "Frequency");
-			} else if (proposition.getType() == DataElement.Type
-				.VALUE_THRESHOLD) {
-				d.setKeyVal("type", "Value Threshold");
+			if (null != proposition.getType()) switch (proposition.getType()) {
+				case CATEGORIZATION:
+					d.setKeyVal("type", "Categorical");
+					break;
+ 				case SEQUENCE:
+					d.setKeyVal("type", "Sequence");
+					break;
+				case FREQUENCY:
+					d.setKeyVal("type", "Frequency");
+					break;
+				case VALUE_THRESHOLD:
+					d.setKeyVal("type", "Value Threshold");
+					break;
+				default:
+					break;
 			}
 
 			if (proposition.getCreated() != null) {

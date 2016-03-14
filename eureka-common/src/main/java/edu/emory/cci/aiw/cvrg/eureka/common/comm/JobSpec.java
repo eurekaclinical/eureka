@@ -52,7 +52,7 @@ public class JobSpec {
 	
 	private String sourceConfigId;
 	private String destinationId;
-	private String dateRangeDataElementKey;
+	private String dateRangePhenotypeKey;
 	private Date earliestDate;
 	private Side earliestDateSide;
 	private Date latestDate;
@@ -78,12 +78,12 @@ public class JobSpec {
 		this.destinationId = destinationId;
 	}
 
-	public String getDateRangeDataElementKey() {
-		return dateRangeDataElementKey;
+	public String getDateRangePhenotypeKey() {
+		return dateRangePhenotypeKey;
 	}
 
-	public void setDateRangeDataElementKey(String dataElementKey) {
-		this.dateRangeDataElementKey = dataElementKey;
+	public void setDateRangePhenotypeKey(String phenotypeKey) {
+		this.dateRangePhenotypeKey = phenotypeKey;
 	}
 	
 	public Date getEarliestDate() {

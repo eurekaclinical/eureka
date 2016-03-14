@@ -60,13 +60,13 @@ import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ServicesClient;
  *
  * @author Andrew Post
  */
-public class DateRangeDataElementServlet extends HttpServlet {
+public class DateRangePhenotypeServlet extends HttpServlet {
 	private static final ObjectMapper MAPPER = new ObjectMapper();
 
 	private final ServicesClient servicesClient;
 
 	@Inject
-	public DateRangeDataElementServlet (ServicesClient inClient) {
+	public DateRangePhenotypeServlet (ServicesClient inClient) {
 		this.servicesClient = inClient;
 	}
 
@@ -84,7 +84,7 @@ public class DateRangeDataElementServlet extends HttpServlet {
 		} catch (ClientException ex) {
 			throw new ServletException("Error getting destination '" + destinationId + "'");
 		}
-		String json = MAPPER.writeValueAsString(destination.getDataElementFields());
+		String json = MAPPER.writeValueAsString(destination.getPhenotypeFields());
 		resp.setContentLength(json.length());
 		PrintWriter out = resp.getWriter();
 		out.println(json);

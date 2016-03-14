@@ -40,7 +40,7 @@ package edu.emory.cci.aiw.cvrg.eureka.services.conversion;
  * #L%
  */
 
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.DataElementEntity;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.PhenotypeEntity;
 import org.protempa.DefaultSourceId;
 import org.protempa.SourceId;
 import org.protempa.proposition.value.NominalValue;
@@ -50,33 +50,33 @@ import org.protempa.proposition.value.NominalValue;
  * @author Andrew Post
  */
 public class AbstractConverter {
-	private final DataElementConversionSupport conversionSupport;
+	private final PhenotypeConversionSupport conversionSupport;
 
 	AbstractConverter() {
-		this.conversionSupport = new DataElementConversionSupport();
+		this.conversionSupport = new PhenotypeConversionSupport();
 	}
 	
-	protected String asValueString(DataElementEntity dataElement) {
-		return this.conversionSupport.asValueString(dataElement);
+	protected String asValueString(PhenotypeEntity phenotype) {
+		return this.conversionSupport.asValueString(phenotype);
 	}
 	
-	protected String asValueCompString(DataElementEntity dataElement) {
-		return this.conversionSupport.asValueCompString(dataElement);
+	protected String asValueCompString(PhenotypeEntity phenotype) {
+		return this.conversionSupport.asValueCompString(phenotype);
 	}
 	
-	protected NominalValue asValue(DataElementEntity dataElement) {
-		return this.conversionSupport.asValue(dataElement);
+	protected NominalValue asValue(PhenotypeEntity phenotype) {
+		return this.conversionSupport.asValue(phenotype);
 	}
 	
-	protected String toPropositionId(DataElementEntity dataElement) {
-		return this.conversionSupport.toPropositionId(dataElement);
+	protected String toPropositionId(PhenotypeEntity phenotype) {
+		return this.conversionSupport.toPropositionId(phenotype);
 	}
 	
-	protected String toPropositionIdWrapped(DataElementEntity dataElement) {
-		return this.conversionSupport.toPropositionIdWrapped(dataElement);
+	protected String toPropositionIdWrapped(PhenotypeEntity phenotype) {
+		return this.conversionSupport.toPropositionIdWrapped(phenotype);
 	}
 	
-	protected SourceId sourceId(DataElementEntity dataElement) {
+	protected SourceId sourceId(PhenotypeEntity phenotype) {
 		return DefaultSourceId.getInstance("Eureka");
 	}
 }

@@ -37,38 +37,11 @@
  * <http://www.gnu.org/licenses/gpl-3.0.html>.
  * #L%
  */
-package edu.emory.cci.aiw.cvrg.eureka.common.entity;
+package edu.emory.cci.aiw.cvrg.eureka.common.comm;
 
-/**
- *
- * @author Andrew Post
- */
-public abstract class AbstractDataElementEntityVisitor 
-		implements DataElementEntityVisitor{
+import edu.emory.cci.aiw.cvrg.eureka.common.exception.PhenotypeHandlingException;
 
-	@Override
-	public void visit(SystemProposition proposition) {
-		throw new UnsupportedOperationException("Not supported yet.");
-	}
+public interface PhenotypeVisitable {
 
-	@Override
-	public void visit(CategoryEntity categorization) {
-		throw new UnsupportedOperationException("Not supported yet.");
-	}
-
-	@Override
-	public void visit(SequenceEntity highLevelAbstraction) {
-		throw new UnsupportedOperationException("Not supported yet.");
-	}
-
-	@Override
-	public void visit(ValueThresholdGroupEntity lowLevelAbstraction) {
-		throw new UnsupportedOperationException("Not supported yet.");
-	}
-
-	@Override
-	public void visit(FrequencyEntity sliceAbstraction) {
-		throw new UnsupportedOperationException("Not supported yet.");
-	}
-	
+	public void accept(PhenotypeVisitor visitor) throws PhenotypeHandlingException;
 }

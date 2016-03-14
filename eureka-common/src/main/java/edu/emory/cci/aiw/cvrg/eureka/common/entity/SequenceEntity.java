@@ -60,11 +60,11 @@ import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
  */
 @Entity
 @Table(name = "sequences")
-public class SequenceEntity extends DataElementEntity {
+public class SequenceEntity extends PhenotypeEntity {
 
 	@OneToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name="primaryextendeddataelement_id")
-	private ExtendedDataElement primaryExtendedDataElement;
+	@JoinColumn(name="primaryextendedphenotype_id")
+	private ExtendedPhenotype primaryExtendedPhenotype;
 
 	@OneToMany(cascade = CascadeType.ALL)
 	@JoinColumn(name = "sequence_id")
@@ -74,12 +74,12 @@ public class SequenceEntity extends DataElementEntity {
 		super(CategoryType.HIGH_LEVEL_ABSTRACTION);
 	}
 
-	public ExtendedDataElement getPrimaryExtendedDataElement() {
-		return primaryExtendedDataElement;
+	public ExtendedPhenotype getPrimaryExtendedPhenotype() {
+		return primaryExtendedPhenotype;
 	}
 
-	public void setPrimaryExtendedDataElement(ExtendedDataElement inExtendedDataElement) {
-		primaryExtendedDataElement = inExtendedDataElement;
+	public void setPrimaryExtendedPhenotype(ExtendedPhenotype inExtendedPhenotype) {
+		primaryExtendedPhenotype = inExtendedPhenotype;
 	}
 
 	public List<Relation> getRelations() {
@@ -96,16 +96,16 @@ public class SequenceEntity extends DataElementEntity {
 	 * @return The list of propositions the current proposition is abstracted
 	 *         from.
 	 */
-	public List<DataElementEntity> getAbstractedFrom() {
-		Map<Long, DataElementEntity> entities = 
+	public List<PhenotypeEntity> getAbstractedFrom() {
+		Map<Long, PhenotypeEntity> entities = 
 				new HashMap<>();
 		for (Relation relation : this.relations) {
-			DataElementEntity lhs = 
-					relation.getLhsExtendedDataElement()
-					.getDataElementEntity();
-			DataElementEntity rhs = 
-					relation.getRhsExtendedDataElement()
-					.getDataElementEntity();
+			PhenotypeEntity lhs = 
+					relation.getLhsExtendedPhenotype()
+					.getPhenotypeEntity();
+			PhenotypeEntity rhs = 
+					relation.getRhsExtendedPhenotype()
+					.getPhenotypeEntity();
 			entities.put(lhs.getId(), lhs);
 			entities.put(rhs.getId(), rhs);
 		}
@@ -113,7 +113,7 @@ public class SequenceEntity extends DataElementEntity {
 	}
 
 	@Override
-	public void accept(DataElementEntityVisitor visitor) {
+	public void accept(PhenotypeEntityVisitor visitor) {
 		visitor.visit(this);
 	}
 	

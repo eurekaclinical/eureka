@@ -39,7 +39,7 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.common.comm;
 
-import edu.emory.cci.aiw.cvrg.eureka.common.exception.DataElementHandlingException;
+import edu.emory.cci.aiw.cvrg.eureka.common.exception.PhenotypeHandlingException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -48,10 +48,10 @@ import javax.persistence.Enumerated;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 
 /**
- * Container class for the categorical user-created data element from the UI.
+ * Container class for the categorical user-created phenotype from the UI.
  * Essentially a direct mapping form the categorical element form fields.
  */
-public final class Category extends DataElement {
+public final class Category extends Phenotype {
 
 	public enum CategoricalType {
 		CONSTANT, EVENT, PRIMITIVE_PARAMETER, LOW_LEVEL_ABSTRACTION, 
@@ -59,21 +59,21 @@ public final class Category extends DataElement {
 		SEQUENTIAL_TEMPORAL_PATTERN_ABSTRACTION, MIXED, UNKNOWN
 	}
 
-	private List<DataElementField> children = 
+	private List<PhenotypeField> children = 
 			new ArrayList<>();
 
 	@Enumerated(EnumType.STRING)
 	private CategoricalType categoricalType;
 
 	public Category () {
-		super(DataElement.Type.CATEGORIZATION);
+		super(Phenotype.Type.CATEGORIZATION);
 	}
 
-	public List<DataElementField> getChildren() {
+	public List<PhenotypeField> getChildren() {
 		return children;
 	}
 
-	public void setChildren(List<DataElementField> children) {
+	public void setChildren(List<PhenotypeField> children) {
 		this.children = children;
 	}
 
@@ -86,8 +86,8 @@ public final class Category extends DataElement {
 	}
 
 	@Override
-	public void accept(DataElementVisitor visitor) 
-			throws DataElementHandlingException {
+	public void accept(PhenotypeVisitor visitor) 
+			throws PhenotypeHandlingException {
 		visitor.visit(this);
 	}
 	

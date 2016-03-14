@@ -1,6 +1,6 @@
 /*
  * #%L
- * Eureka Protempa ETL
+ * Eureka Common
  * %%
  * Copyright (C) 2012 - 2013 Emory University
  * %%
@@ -37,12 +37,70 @@
  * <http://www.gnu.org/licenses/gpl-3.0.html>.
  * #L%
  */
-package edu.emory.cci.aiw.cvrg.eureka.etl.resource;
+package edu.emory.cci.aiw.cvrg.eureka.common.comm;
 
-/**
- * @author hrathod
- */
-public class PropositionResourceTest extends AbstractEtlResourceTest {
+import java.util.List;
 
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.SystemProposition.SystemType;
+import edu.emory.cci.aiw.cvrg.eureka.common.exception.PhenotypeHandlingException;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+
+public final class SystemPhenotype extends Phenotype {
+
+	private SystemType systemType;
+	private List<SystemPhenotype> children;
+	private boolean isParent;
+	private List<String> properties;
+
+	public SystemPhenotype () {
+		super(Type.SYSTEM);
+	}
+
+	public SystemType getSystemType() {
+		return systemType;
+	}
+
+	public void setSystemType(SystemType systemType) {
+		this.systemType = systemType;
+	}
+
+	public List<SystemPhenotype> getChildren() {
+		return children;
+	}
+
+	public void setChildren(List<SystemPhenotype> children) {
+		this.children = children;
+	}
+
+	public boolean isParent() {
+		return isParent;
+	}
+
+	public void setParent(boolean isParent) {
+		this.isParent = isParent;
+	}
+
+	public List<String> getProperties() {
+		return properties;
+	}
+
+	public void setProperties(List<String> properties) {
+		this.properties = properties;
+	}
+
+	@Override
+	public boolean isInSystem() {
+		return true;
+	}
 	
+	@Override
+    public void accept(PhenotypeVisitor visitor) 
+			throws PhenotypeHandlingException{
+		visitor.visit(this);
+    }
+	
+	@Override
+	public String toString() {
+		return ReflectionToStringBuilder.reflectionToString(this);
+	}
 }

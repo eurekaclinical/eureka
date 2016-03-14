@@ -41,7 +41,7 @@ package edu.emory.cci.aiw.cvrg.eureka.servlet.proposition;
  */
 
 import com.google.inject.Inject;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.SystemElement;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.SystemPhenotype;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ClientException;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ServicesClient;
 import org.apache.commons.lang3.StringUtils;
@@ -71,26 +71,26 @@ public class SearchSystemPropositionJSTreeV1Servlet extends HttpServlet {
 		doGet(req, resp);
 	}
 
-	private JsonTreeData createData(SystemElement element) {
+	private JsonTreeData createData(SystemPhenotype phenotype) {
 		JsonTreeData d = new JsonTreeData();
 		d.setState("closed");
-		d.setId(element.getKey());
-		d.setData(this.getDisplayName(element));
-		d.setText(this.getDisplayName(element));
-		d.setKeyVal("id", element.getKey());
+		d.setId(phenotype.getKey());
+		d.setData(this.getDisplayName(phenotype));
+		d.setText(this.getDisplayName(phenotype));
+		d.setKeyVal("id", phenotype.getKey());
 
-		String properties = StringUtils.join(element.getProperties(), ",");
+		String properties = StringUtils.join(phenotype.getProperties(), ",");
 		d.setKeyVal("data-properties", properties);
-		d.setKeyVal("data-key", element.getKey());
+		d.setKeyVal("data-key", phenotype.getKey());
 		d.setKeyVal("data-space", "system");
-		d.setKeyVal("data-type", element.getSystemType().toString());
-		d.setKeyVal("data-proposition", element.getKey());
+		d.setKeyVal("data-type", phenotype.getSystemType().toString());
+		d.setKeyVal("data-proposition", phenotype.getKey());
 		d.setChildren(false);
 
 		return d;
 	}
 
-	private String getDisplayName(SystemElement p) {
+	private String getDisplayName(SystemPhenotype p) {
 		String displayName = "";
 
 		if (p.getDisplayName() != null && !p.getDisplayName().equals("")) {
@@ -120,7 +120,7 @@ public class SearchSystemPropositionJSTreeV1Servlet extends HttpServlet {
 			List<String> processedSearchResult = null;
 			List<String> searchResult = null;
 			searchResult = servicesClient
-					.getSystemElementSearchResults(searchKey);
+					.getSystemPhenotypeSearchResults(searchKey);
 			processedSearchResult = convertResultsForJstreeRequirement(searchResult);
 
 			ObjectMapper mapper = new ObjectMapper();

@@ -48,11 +48,11 @@ import org.slf4j.LoggerFactory;
 
 import com.google.inject.Inject;
 
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.DataElementField;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.PhenotypeField;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.ValueThreshold;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.ValueThresholds;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.*;
-import edu.emory.cci.aiw.cvrg.eureka.common.exception.DataElementHandlingException;
+import edu.emory.cci.aiw.cvrg.eureka.common.exception.PhenotypeHandlingException;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.RelationOperatorDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.ThresholdsOperatorDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.TimeUnitDao;
@@ -83,17 +83,17 @@ public final class ValueThresholdsTranslator implements
 	}
 
 	@Override
-	public ValueThresholdGroupEntity translateFromElement(
-			ValueThresholds element) throws DataElementHandlingException {
-		if (element == null) {
+	public ValueThresholdGroupEntity translateFromPhenotype(
+			ValueThresholds phenotype) throws PhenotypeHandlingException {
+		if (phenotype == null) {
 			throw new IllegalArgumentException("element cannot be null");
 		}
 
 		ValueThresholdGroupEntity result =
-				this.translatorSupport.getUserEntityInstance(element,
+				this.translatorSupport.getUserEntityInstance(phenotype,
 				ValueThresholdGroupEntity.class);
 
-		result.setThresholdsOperator(thresholdsOperatorDao.retrieve(element
+		result.setThresholdsOperator(thresholdsOperatorDao.retrieve(phenotype
 				.getThresholdsOperator()));
 
 		List<ValueThresholdEntity> thresholds = result.getValueThresholds();
@@ -103,7 +103,7 @@ public final class ValueThresholdsTranslator implements
 		}
 
 		int i = 0;
-		for (ValueThreshold vt : element.getValueThresholds()) {
+		for (ValueThreshold vt : phenotype.getValueThresholds()) {
 			ValueThresholdEntity vte;
 			if (thresholds.size() > i) {
 				vte = thresholds.get(i);
@@ -112,8 +112,8 @@ public final class ValueThresholdsTranslator implements
 				thresholds.add(vte);
 			}
 			vte.setAbstractedFrom(translatorSupport.getUserOrSystemEntityInstance(
-					element.getUserId(), vt.getDataElement()
-					.getDataElementKey()));
+					phenotype.getUserId(), vt.getPhenotype()
+					.getPhenotypeKey()));
 
 			String lowerValue = vt.getLowerValue();
 			vte.setMinTValueThreshold(lowerValue);
@@ -140,8 +140,8 @@ public final class ValueThresholdsTranslator implements
 			}
 			vte.setMaxValueComp(valueCompDao.retrieve(vt.getUpperComp()));
 			// vte.setMaxUnits(vt.getUpperUnits());
-			List<ExtendedDataElement> extendedDataElements =
-					vte.getExtendedDataElements();
+			List<ExtendedPhenotype> extendedPhenotypes =
+					vte.getExtendedPhenotypes();
 
 			vte.setRelationOperator(
 					relationOpDao.retrieve(vt.getRelationOperator()));
@@ -152,33 +152,33 @@ public final class ValueThresholdsTranslator implements
 			vte.setWithinAtMostUnits(
 					timeUnitDao.retrieve(vt.getWithinAtMostUnit()));
 
-			if (extendedDataElements == null) {
-				extendedDataElements = new ArrayList<>();
-				vte.setExtendedDataElements(extendedDataElements);
+			if (extendedPhenotypes == null) {
+				extendedPhenotypes = new ArrayList<>();
+				vte.setExtendedPhenotypes(extendedPhenotypes);
 			}
 			int j = 0;
-			for (DataElementField de : vt.getRelatedDataElements()) {
-				ExtendedDataElement ede = null;
-				if (extendedDataElements.size() > j) {
-					ede = extendedDataElements.get(j);
+			for (PhenotypeField de : vt.getRelatedPhenotypes()) {
+				ExtendedPhenotype ede = null;
+				if (extendedPhenotypes.size() > j) {
+					ede = extendedPhenotypes.get(j);
 					PropositionTranslatorUtil
 							.createOrUpdateExtendedProposition(
 							ede,
-							de, element.getUserId(),
+							de, phenotype.getUserId(),
 							timeUnitDao, translatorSupport,
 							valueCompDao);
 				} else {
-					extendedDataElements.add(PropositionTranslatorUtil
+					extendedPhenotypes.add(PropositionTranslatorUtil
 							.createOrUpdateExtendedProposition(
 							ede,
-							de, element.getUserId(),
+							de, phenotype.getUserId(),
 							timeUnitDao, translatorSupport,
 							valueCompDao));
 				}
 				j++;
 			}
-			for (int k = extendedDataElements.size() - 1; k >= j; k--) {
-				extendedDataElements.remove(k);
+			for (int k = extendedPhenotypes.size() - 1; k >= j; k--) {
+				extendedPhenotypes.remove(k);
 			}
 			
 			i++;
@@ -193,7 +193,7 @@ public final class ValueThresholdsTranslator implements
 			ValueThresholdGroupEntity entity) {
 		ValueThresholds result = new ValueThresholds();
 
-		PropositionTranslatorUtil.populateCommonDataElementFields(result,
+		PropositionTranslatorUtil.populateCommonPhenotypeFields(result,
 				entity);
 
 		result.setThresholdsOperator(entity.getThresholdsOperator().getId());
@@ -209,26 +209,26 @@ public final class ValueThresholdsTranslator implements
 			threshold.setUpperComp(vte.getMaxValueComp().getId());
 			// threshold.setUpperUnits(vte.getMaxUnits());
 
-			DataElementEntity dataElementEntity = vte.getAbstractedFrom();
-			DataElementField elementField = new DataElementField();
+			PhenotypeEntity phenotypeEntity = vte.getAbstractedFrom();
+			PhenotypeField elementField = new PhenotypeField();
 			PropositionTypeVisitor visitor = new PropositionTypeVisitor();
-			dataElementEntity.accept(visitor);
+			phenotypeEntity.accept(visitor);
 			elementField.setType(visitor.getType());
-			elementField.setDataElementDescription(dataElementEntity
+			elementField.setPhenotypeDescription(phenotypeEntity
 					.getDescription());
-			elementField.setDataElementDisplayName(dataElementEntity
+			elementField.setPhenotypeDisplayName(phenotypeEntity
 					.getDisplayName());
-			elementField.setDataElementKey(dataElementEntity.getKey());
-			threshold.setDataElement(elementField);
+			elementField.setPhenotypeKey(phenotypeEntity.getKey());
+			threshold.setPhenotype(elementField);
 			
-			List<DataElementField> relatedDataElements =
+			List<PhenotypeField> relatedPhenotypes =
 					new ArrayList<>();
-			for (ExtendedDataElement elt : vte.getExtendedDataElements()) {
-				DataElementField dataElementField =
-						PropositionTranslatorUtil.createDataElementField(elt);
-				relatedDataElements.add(dataElementField);
+			for (ExtendedPhenotype elt : vte.getExtendedPhenotypes()) {
+				PhenotypeField phenotypeField =
+						PropositionTranslatorUtil.createPhenotypeField(elt);
+				relatedPhenotypes.add(phenotypeField);
 			}
-			threshold.setRelatedDataElements(relatedDataElements);
+			threshold.setRelatedPhenotypes(relatedPhenotypes);
 			
 			threshold.setWithinAtLeast(vte.getWithinAtLeast());
 			threshold.setWithinAtLeastUnit(vte.getWithinAtLeastUnits().getId());

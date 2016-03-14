@@ -41,7 +41,7 @@ package edu.emory.cci.aiw.cvrg.eureka.services.finder;
 
 import com.google.inject.Inject;
 import com.sun.jersey.api.client.ClientResponse;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.SystemElement;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.SystemPhenotype;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ClientException;
 import edu.emory.cci.aiw.cvrg.eureka.services.config.EtlClient;
 import org.protempa.PropositionDefinition;
@@ -95,7 +95,7 @@ public class SystemPropositionRetriever implements
 	 * @param inKeys the keys of the system elements to retrieve
 	 * @param withChildren whether the children of the given elements should be
 	 * retrieved as well
-	 * @return a {@link List} of {@link SystemElement}s
+	 * @return a {@link List} of {@link SystemPhenotype}s
 	 * @throws PropositionFindException
 	 */
 	public List<PropositionDefinition> retrieveAll(

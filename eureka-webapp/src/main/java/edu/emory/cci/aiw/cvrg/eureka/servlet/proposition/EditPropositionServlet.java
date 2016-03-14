@@ -44,7 +44,7 @@ import edu.emory.cci.aiw.cvrg.eureka.common.comm.*;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ClientException;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ServicesClient;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.*;
-import edu.emory.cci.aiw.cvrg.eureka.common.exception.DataElementHandlingException;
+import edu.emory.cci.aiw.cvrg.eureka.common.exception.PhenotypeHandlingException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -79,7 +79,7 @@ public class EditPropositionServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
 		String propKey = req.getParameter("key");
-        DataElement.Type propType = this.getPropTypeFromParam(req.getParameter("type"));
+		Phenotype.Type propType = this.getPropTypeFromParam(req.getParameter("type"));
 		try {
 			List<FrequencyType> freqTypes = this.servicesClient.getFrequencyTypesAsc();
 			//Find the default frequency
@@ -162,22 +162,22 @@ public class EditPropositionServlet extends HttpServlet {
 			req.setAttribute("defaultFrequencyType", defaultFreqType);
 
 			if ((propKey != null) && (!propKey.equals(""))) {
-				DataElement dataElement = this.servicesClient
-						.getUserElement(propKey, false);
-				PropertiesDataElementVisitor visitor = new PropertiesDataElementVisitor(
+				Phenotype phenotype = this.servicesClient
+						.getUserPhenotype(propKey, false);
+				PropertiesPhenotypeVisitor visitor = new PropertiesPhenotypeVisitor(
 						this.servicesClient);
 				try {
-					LOGGER.debug("Visiting {}", dataElement.getKey());
-					dataElement.accept(visitor);
-				} catch (DataElementHandlingException e) {
-					LOGGER.error("Visiting {}", dataElement.getKey(), e);
-					throw new ServletException("Error getting data element properties", e.getCause());
+					LOGGER.debug("Visiting {}", phenotype.getKey());
+					phenotype.accept(visitor);
+				} catch (PhenotypeHandlingException e) {
+					LOGGER.error("Visiting {}", phenotype.getKey(), e);
+					throw new ServletException("Error getting phenotype properties", e.getCause());
 				}
 				req.setAttribute("properties", visitor.getProperties());
-				req.setAttribute("proposition", dataElement);
+				req.setAttribute("proposition", phenotype);
 				req.setAttribute(
-						"propositionType", dataElement.getType().toString());
-				propType = dataElement.getType();
+						"propositionType", phenotype.getType().toString());
+				propType = phenotype.getType();
 			}
 
 			String jsp = null;
@@ -198,94 +198,94 @@ public class EditPropositionServlet extends HttpServlet {
 			if (jsp != null) {
 				req.getRequestDispatcher("/protected/" + jsp + ".jsp").forward(req, resp);
 			} else {
-				throw new ServletException("Unknown data element type");
+				throw new ServletException("Unknown phenotype type");
 			}
 		} catch (ClientException ex) {
-			throw new ServletException("Error setting up data element editor", ex);
+			throw new ServletException("Error setting up phenotype editor", ex);
 		}
 	}
 
-	private DataElement.Type getPropTypeFromParam(String inType) {
-		DataElement.Type type = null;
+	private Phenotype.Type getPropTypeFromParam(String inType) {
+		Phenotype.Type type = null;
 		if ("categorization".equals(inType)) {
-			type = DataElement.Type.CATEGORIZATION;
+			type = Phenotype.Type.CATEGORIZATION;
 		} else if ("sequence".equals(inType)) {
-			type = DataElement.Type.SEQUENCE;
+			type = Phenotype.Type.SEQUENCE;
 		} else if ("frequency".equals(inType)) {
-			type = DataElement.Type.FREQUENCY;
+			type = Phenotype.Type.FREQUENCY;
 		} else if ("value_threshold".equals(inType)) {
-			type = DataElement.Type.VALUE_THRESHOLD;
+			type = Phenotype.Type.VALUE_THRESHOLD;
 		}
 		return type;
 	}
 
-	private static final class PropertiesDataElementVisitor
-			implements DataElementVisitor {
+	private static final class PropertiesPhenotypeVisitor
+			implements PhenotypeVisitor {
 
 		private final ServicesClient servicesClient;
 		private final Map<String, List<String>> properties;
 
-		private PropertiesDataElementVisitor(
+		private PropertiesPhenotypeVisitor(
 				ServicesClient inServicesClient) {
 
 			this.servicesClient = inServicesClient;
 			this.properties = new HashMap<>();
 		}
 
-		private void handleDataElementField(DataElementField inField) throws ClientException {
-			SystemElement systemElement = this.servicesClient
-					.getSystemElement(inField.getDataElementKey(), false);
+		private void handlePhenotypeField(PhenotypeField inField) throws ClientException {
+			SystemPhenotype systemPhenotype = this.servicesClient
+					.getSystemPhenotype(inField.getPhenotypeKey(), false);
 			this.properties.put(
-					inField.getDataElementKey(), systemElement.getProperties());
+					inField.getPhenotypeKey(), systemPhenotype.getProperties());
 		}
 
 		@Override
-		public void visit(SystemElement systemElement) {
+		public void visit(SystemPhenotype systemPhenotype) {
 			LOGGER.debug(
-					"visit system element -- {}", systemElement.getKey());
+					"visit system element -- {}", systemPhenotype.getKey());
 		}
 
 		@Override
-		public void visit(Category categoricalElement) {
+		public void visit(Category categoricalPhenotype) {
 			LOGGER.debug(
 					"visit category element -- {}",
-					categoricalElement.getKey());
+					categoricalPhenotype.getKey());
 		}
 
 		@Override
-		public void visit(Sequence sequence) throws DataElementHandlingException {
+		public void visit(Sequence sequence) throws PhenotypeHandlingException {
 			LOGGER.debug("visit sequence element -- {}", sequence.getKey());
-			DataElementField primary = sequence.getPrimaryDataElement();
-			if (primary.getType() == DataElement.Type.SYSTEM) {
+			PhenotypeField primary = sequence.getPrimaryPhenotype();
+			if (primary.getType() == Phenotype.Type.SYSTEM) {
 				try {
-					handleDataElementField(primary);
+					handlePhenotypeField(primary);
 				} catch (ClientException ex) {
-					throw new DataElementHandlingException(null, ex);
+					throw new PhenotypeHandlingException(null, ex);
 				}
 			}
 
-			for (RelatedDataElementField field : sequence
-					.getRelatedDataElements()) {
-				DataElementField element = field.getDataElementField();
-				if (element.getType() == DataElement.Type.SYSTEM) {
+			for (RelatedPhenotypeField field : sequence
+					.getRelatedPhenotypes()) {
+				PhenotypeField element = field.getPhenotypeField();
+				if (element.getType() == Phenotype.Type.SYSTEM) {
 					try {
-						handleDataElementField(element);
+						handlePhenotypeField(element);
 					} catch (ClientException ex) {
-						throw new DataElementHandlingException(null, ex);
+						throw new PhenotypeHandlingException(null, ex);
 					}
 				}
 			}
 		}
 
 		@Override
-		public void visit(Frequency frequency) throws DataElementHandlingException {
+		public void visit(Frequency frequency) throws PhenotypeHandlingException {
 			LOGGER.debug("visit frequency element -- {}", frequency.getKey());
-			DataElementField def = frequency.getDataElement();
-			if (def.getType() == DataElement.Type.SYSTEM) {
+			PhenotypeField def = frequency.getPhenotype();
+			if (def.getType() == Phenotype.Type.SYSTEM) {
 				try {
-					handleDataElementField(def);
+					handlePhenotypeField(def);
 				} catch (ClientException ex) {
-					throw new DataElementHandlingException(null, ex);
+					throw new PhenotypeHandlingException(null, ex);
 				}
 			}
 		}

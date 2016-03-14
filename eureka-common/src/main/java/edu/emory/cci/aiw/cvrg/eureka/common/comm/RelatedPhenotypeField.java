@@ -45,22 +45,22 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
  *
  * @author Andrew Post
  */
-public final class RelatedDataElementField {
-	private DataElementField dataElementField;
+public final class RelatedPhenotypeField {
+	private PhenotypeField phenotypeField;
 	private Long relationOperator;
-	private String sequentialDataElement;
-	private Long sequentialDataElementSource;
+	private String sequentialPhenotype;
+	private Long sequentialPhenotypeSource;
 	private Integer relationMinCount;
 	private Long relationMinUnits;
 	private Integer relationMaxCount;
 	private Long relationMaxUnits;
 
-	public DataElementField getDataElementField() {
-		return dataElementField;
+	public PhenotypeField getPhenotypeField() {
+		return phenotypeField;
 	}
 
-	public void setDataElementField(DataElementField dataElement) {
-		this.dataElementField = dataElement;
+	public void setPhenotypeField(PhenotypeField phenotype) {
+		this.phenotypeField = phenotype;
 	}
 
 	public Long getRelationOperator() {
@@ -71,24 +71,24 @@ public final class RelatedDataElementField {
 		this.relationOperator = relationOperator;
 	}
 
-	public String getSequentialDataElement() {
-		return sequentialDataElement;
+	public String getSequentialPhenotype() {
+		return sequentialPhenotype;
 	}
 
-	public void setSequentialDataElement(String rhsDataElement) {
-		this.sequentialDataElement = rhsDataElement;
+	public void setSequentialPhenotype(String rhsPhenotype) {
+		this.sequentialPhenotype = rhsPhenotype;
 	}
 
 	public Integer getRelationMinCount() {
 		return relationMinCount;
 	}
 
-	public Long getSequentialDataElementSource() {
-		return sequentialDataElementSource;
+	public Long getSequentialPhenotypeSource() {
+		return sequentialPhenotypeSource;
 	}
 
-	public void setSequentialDataElementSource(Long inSequentialDataElementSource) {
-		sequentialDataElementSource = inSequentialDataElementSource;
+	public void setSequentialPhenotypeSource(Long inSequentialPhenotypeSource) {
+		sequentialPhenotypeSource = inSequentialPhenotypeSource;
 	}
 
 	public void setRelationMinCount(Integer relationMinCount) {

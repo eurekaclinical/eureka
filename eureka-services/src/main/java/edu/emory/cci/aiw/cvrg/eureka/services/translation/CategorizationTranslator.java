@@ -42,13 +42,12 @@ package edu.emory.cci.aiw.cvrg.eureka.services.translation;
 import com.google.inject.Inject;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.Category;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.Category.CategoricalType;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.DataElementField;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.PhenotypeField;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.CategoryEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.CategoryEntity.CategoryType;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.DataElementEntity;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.PhenotypeEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.PropositionTypeVisitor;
-import edu.emory.cci.aiw.cvrg.eureka.common.exception.DataElementHandlingException;
-import edu.emory.cci.aiw.cvrg.eureka.services.dao.DataElementEntityDao;
+import edu.emory.cci.aiw.cvrg.eureka.common.exception.PhenotypeHandlingException;
 import edu.emory.cci.aiw.cvrg.eureka.services.finder.SystemPropositionFinder;
 import edu.emory.cci.aiw.cvrg.eureka.services.resource.SourceConfigResource;
 
@@ -58,9 +57,10 @@ import java.util.List;
 import java.util.Set;
 import javax.ws.rs.core.Response;
 import org.apache.commons.lang3.StringUtils;
+import edu.emory.cci.aiw.cvrg.eureka.services.dao.PhenotypeEntityDao;
 
 /**
- * Translates categorical data elements (UI element) into categorization
+ * Translates categorical phenotypes (UI phenotype) into categorization
  * propositions.
  */
 public final class CategorizationTranslator implements
@@ -70,7 +70,7 @@ public final class CategorizationTranslator implements
 
 	@Inject
 	public CategorizationTranslator(
-			DataElementEntityDao inPropositionDao,
+			PhenotypeEntityDao inPropositionDao,
 			SystemPropositionFinder inFinder,
 			SourceConfigResource inSourceConfigResource) {
 		this.translatorSupport =
@@ -78,45 +78,45 @@ public final class CategorizationTranslator implements
 	}
 
 	@Override
-	public CategoryEntity translateFromElement(Category element)
-			throws DataElementHandlingException {
+	public CategoryEntity translateFromPhenotype(Category phenotype)
+			throws PhenotypeHandlingException {
 		CategoryEntity result =
-				this.translatorSupport.getUserEntityInstance(element,
+				this.translatorSupport.getUserEntityInstance(phenotype,
 				CategoryEntity.class);
 
-		List<DataElementEntity> inverseIsA = new ArrayList<>();
-		if (element.getChildren() != null) {
-			for (DataElementField de : element.getChildren()) {
-				DataElementEntity proposition =
+		List<PhenotypeEntity> inverseIsA = new ArrayList<>();
+		if (phenotype.getChildren() != null) {
+			for (PhenotypeField de : phenotype.getChildren()) {
+				PhenotypeEntity proposition =
 						this.translatorSupport.getUserOrSystemEntityInstance(
-						element.getUserId(), de.getDataElementKey());
+						phenotype.getUserId(), de.getPhenotypeKey());
 				inverseIsA.add(proposition);
 			}
 		}
 		result.setMembers(inverseIsA);
-		result.setCategoryType(checkPropositionType(element, inverseIsA));
+		result.setCategoryType(checkPropositionType(phenotype, inverseIsA));
 
 		return result;
 	}
 
-	private CategoryType checkPropositionType(Category element,
-			List<DataElementEntity> inverseIsA)
-			throws DataElementHandlingException {
+	private CategoryType checkPropositionType(Category phenotype,
+			List<PhenotypeEntity> inverseIsA)
+			throws PhenotypeHandlingException {
 		if (inverseIsA.isEmpty()) {
-			throw new DataElementHandlingException(
+			throw new PhenotypeHandlingException(
 					Response.Status.PRECONDITION_FAILED, "Category "
-					+ element.getKey()
+					+ phenotype.getKey()
 					+ " is invalid because it has no children");
 		}
 		Set<CategoryType> categorizationTypes =
 				EnumSet.noneOf(CategoryType.class);
-		for (DataElementEntity dataElement : inverseIsA) {
-			categorizationTypes.add(dataElement.getCategoryType());
+		for (PhenotypeEntity phenotypeEntity : inverseIsA) {
+			categorizationTypes.add(phenotypeEntity.getCategoryType());
 		}
 		if (categorizationTypes.size() > 1) {
-			throw new DataElementHandlingException(
+			throw new PhenotypeHandlingException(
 					Response.Status.PRECONDITION_FAILED, "Category "
-					+ element.getKey()
+					+ phenotype.getKey()
 					+ " has children with inconsistent types: "
 					+ StringUtils.join(categorizationTypes, ", "));
 		}
@@ -128,14 +128,14 @@ public final class CategorizationTranslator implements
 			CategoryEntity proposition) {
 		Category result = new Category();
 
-		PropositionTranslatorUtil.populateCommonDataElementFields(result,
+		PropositionTranslatorUtil.populateCommonPhenotypeFields(result,
 				proposition);
-		List<DataElementField> children = new ArrayList<>();
-		for (DataElementEntity p : proposition.getMembers()) {
-			DataElementField def = new DataElementField();
-			def.setDataElementKey(p.getKey());
-			def.setDataElementDisplayName(p.getDisplayName());
-			def.setDataElementDescription(p.getDescription());
+		List<PhenotypeField> children = new ArrayList<>();
+		for (PhenotypeEntity p : proposition.getMembers()) {
+			PhenotypeField def = new PhenotypeField();
+			def.setPhenotypeKey(p.getKey());
+			def.setPhenotypeDisplayName(p.getDisplayName());
+			def.setPhenotypeDescription(p.getDescription());
 			PropositionTypeVisitor visitor = new PropositionTypeVisitor();
 			p.accept(visitor);
 			def.setType(visitor.getType());

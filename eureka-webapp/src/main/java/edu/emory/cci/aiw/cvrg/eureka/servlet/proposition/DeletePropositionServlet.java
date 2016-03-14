@@ -81,13 +81,12 @@ public class DeletePropositionServlet extends HttpServlet {
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
-
 		LOGGER.debug("DeletePropositionServlet");
-		String propKey = req.getParameter("key");
+		Long propId =Long.parseLong(req.getParameter("id"));
 
 		try {
 			User user = this.authenticationSupport.getMe(req);
-			this.servicesClient.deleteUserElement(user.getId(), propKey);
+			this.servicesClient.deleteUserPhenotype(user.getId(), propId);
 		} catch (ClientException e) {
 			resp.setContentType(MediaType.TEXT_PLAIN);
 			switch (e.getResponseStatus()) {
@@ -97,15 +96,15 @@ public class DeletePropositionServlet extends HttpServlet {
 				case INTERNAL_SERVER_ERROR:
 					resp.setStatus(
 							HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-					LOGGER.error("Error deleting data element " + propKey, e);
+					LOGGER.error("Error deleting phenotype " + propId, e);
 					ResourceBundle messages = 
 							(ResourceBundle) req.getAttribute("messages");
 					String msg = 
-							messages.getString("deleteDataElement.error.internalServerError");
+							messages.getString("deletePhenotype.error.internalServerError");
 					resp.getWriter().write(msg);
 					break;
 				default:
-					LOGGER.debug("Deleting data element {} failed", propKey, e);
+					LOGGER.debug("Deleting phenotype {} failed", propId, e);
 					resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 					resp.getWriter().write(e.getMessage());
 			}

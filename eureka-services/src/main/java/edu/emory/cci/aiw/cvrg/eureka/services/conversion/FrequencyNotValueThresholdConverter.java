@@ -39,8 +39,8 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.services.conversion;
 
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.DataElementEntity;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.ExtendedDataElement;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.PhenotypeEntity;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.ExtendedPhenotype;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.FrequencyEntity;
 import org.protempa.PropositionDefinition;
 
@@ -60,10 +60,10 @@ public final class FrequencyNotValueThresholdConverter
 	private PropositionDefinitionConverterVisitor converterVisitor;
 	private HighLevelAbstractionDefinition primary;
 	private String primaryPropId;
-	private final DataElementConversionSupport conversionSupport;
+	private final PhenotypeConversionSupport conversionSupport;
 
 	public FrequencyNotValueThresholdConverter() {
-		this.conversionSupport = new DataElementConversionSupport();
+		this.conversionSupport = new PhenotypeConversionSupport();
 	}
 	
 	@Override
@@ -89,14 +89,14 @@ public final class FrequencyNotValueThresholdConverter
 		String propId = this.conversionSupport.toPropositionId(entity);
 		this.primaryPropId = propId;
 		if (this.converterVisitor.addPropositionId(propId)) {
-			ExtendedDataElement extendedProposition = entity.getExtendedProposition();
+			ExtendedPhenotype extendedProposition = entity.getExtendedProposition();
 			HighLevelAbstractionDefinition p =
 					new HighLevelAbstractionDefinition(propId);
 			p.setDisplayName(entity.getDisplayName());
 			p.setDescription(entity.getDescription());
 			p.setGapFunction(new SimpleGapFunction(0, null));
 			if (entity.getFrequencyType().getName().equals("at least")) {
-				DataElementEntity abstractedFrom = extendedProposition.getDataElementEntity();
+				PhenotypeEntity abstractedFrom = extendedProposition.getPhenotypeEntity();
 				abstractedFrom.accept(converterVisitor);
 				result.addAll(converterVisitor.getPropositionDefinitions());
 				TemporalExtendedPropositionDefinition[] tepds =
@@ -126,7 +126,7 @@ public final class FrequencyNotValueThresholdConverter
 				SliceDefinition sp = new SliceDefinition(wrapperPropId);
 				sp.setDisplayName(entity.getDisplayName());
 				sp.setDescription(entity.getDescription());
-				DataElementEntity abstractedFrom = extendedProposition.getDataElementEntity();
+				PhenotypeEntity abstractedFrom = extendedProposition.getPhenotypeEntity();
 				abstractedFrom.accept(converterVisitor);
 				result.addAll(converterVisitor.getPropositionDefinitions());
 				sp.setMergedInterval(true);

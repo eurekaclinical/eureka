@@ -40,7 +40,7 @@
 package edu.emory.cci.aiw.cvrg.eureka.common.comm;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.Category.CategoricalType;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.DataElement.Type;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.Phenotype.Type;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 
@@ -49,12 +49,12 @@ import org.codehaus.jackson.annotate.JsonIgnoreProperties;
  * @author hrathod
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class DataElementField {
+public class PhenotypeField {
 
 	private Long id;
-	private String dataElementKey;
-	private String dataElementDescription;
-	private String dataElementDisplayName;
+	private String phenotypeKey;
+	private String phenotypeDescription;
+	private String phenotypeDisplayName;
 	private Boolean hasDuration;
 	private Integer minDuration;
 	private Long minDurationUnits;
@@ -66,18 +66,18 @@ public class DataElementField {
 	private Type type;
 	private CategoricalType categoricalType;
 
-	public DataElementField() {
+	public PhenotypeField() {
 
 	}
 
-	public DataElementField(DataElement dataElement) {
-		this.id = dataElement.getId();
-		this.dataElementKey = dataElement.getKey();
-		this.dataElementDescription = dataElement.getDescription();
-		this.dataElementDisplayName = dataElement.getDisplayName();
-		this.type = dataElement.getType();
-		if (dataElement instanceof Category) {
-			this.categoricalType = ((Category) dataElement).getCategoricalType();
+	public PhenotypeField(Phenotype phenotype) {
+		this.id = phenotype.getId();
+		this.phenotypeKey = phenotype.getKey();
+		this.phenotypeDescription = phenotype.getDescription();
+		this.phenotypeDisplayName = phenotype.getDisplayName();
+		this.type = phenotype.getType();
+		if (phenotype instanceof Category) {
+			this.categoricalType = ((Category) phenotype).getCategoricalType();
 		}
 	}
 
@@ -89,12 +89,12 @@ public class DataElementField {
 		id = inId;
 	}
 
-	public String getDataElementKey() {
-		return dataElementKey;
+	public String getPhenotypeKey() {
+		return phenotypeKey;
 	}
 
-	public void setDataElementKey(String dataElement) {
-		this.dataElementKey = dataElement;
+	public void setPhenotypeKey(String phenotype) {
+		this.phenotypeKey = phenotype;
 	}
 
 	public Boolean getHasDuration() {
@@ -161,20 +161,20 @@ public class DataElementField {
 		this.propertyValue = propertyValue;
 	}
 
-	public String getDataElementDescription() {
-		return dataElementDescription;
+	public String getPhenotypeDescription() {
+		return phenotypeDescription;
 	}
 
-	public void setDataElementDescription(String inDataElementDescription) {
-		dataElementDescription = inDataElementDescription;
+	public void setPhenotypeDescription(String inPhenotypeDescription) {
+		phenotypeDescription = inPhenotypeDescription;
 	}
 
-	public String getDataElementDisplayName() {
-		return dataElementDisplayName;
+	public String getPhenotypeDisplayName() {
+		return phenotypeDisplayName;
 	}
 
-	public void setDataElementDisplayName(String inDataElementDisplayName) {
-		dataElementDisplayName = inDataElementDisplayName;
+	public void setPhenotypeDisplayName(String inPhenotypeDisplayName) {
+		phenotypeDisplayName = inPhenotypeDisplayName;
 	}
 
 	public Type getType() {

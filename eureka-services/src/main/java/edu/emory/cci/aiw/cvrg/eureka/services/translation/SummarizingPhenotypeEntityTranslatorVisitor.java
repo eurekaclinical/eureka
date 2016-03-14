@@ -39,72 +39,67 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.services.translation;
 
-import com.google.inject.Inject;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.Category;
 
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.DataElement;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.Phenotype;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.Frequency;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.Sequence;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.SystemPhenotype;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.ValueThresholds;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.CategoryEntity;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.PhenotypeEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.FrequencyEntity;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.DataElementEntityVisitor;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.SequenceEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.SystemProposition;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.ValueThresholdGroupEntity;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.PhenotypeEntityVisitor;
 
-public final class DataElementEntityTranslatorVisitor implements
-		DataElementEntityVisitor {
+public final class SummarizingPhenotypeEntityTranslatorVisitor implements
+		PhenotypeEntityVisitor {
 
-	private final SystemPropositionTranslator systemPropositionTranslator;
-	private final SequenceTranslator sequenceTranslator;
-	private final CategorizationTranslator categorizationTranslator;
-	private final FrequencyTranslator frequencyTranslator;
-	private final ValueThresholdsTranslator valueThresholdsTranslator;
-	
-	private DataElement dataElement;
+	private Phenotype phenotype;
 
-	@Inject
-	public DataElementEntityTranslatorVisitor(
-			SystemPropositionTranslator inSystemPropositionTranslator,
-			SequenceTranslator inSequenceTranslator,
-			CategorizationTranslator inCategorizationTranslator,
-			FrequencyTranslator inFrequencyTranslator,
-			ValueThresholdsTranslator inValueThresholdsTranslator) {
-		this.systemPropositionTranslator = inSystemPropositionTranslator;
-		this.categorizationTranslator = inCategorizationTranslator;
-		this.sequenceTranslator = inSequenceTranslator;
-		this.frequencyTranslator = inFrequencyTranslator;
-		this.valueThresholdsTranslator = inValueThresholdsTranslator;
+	public SummarizingPhenotypeEntityTranslatorVisitor() {
 	}
 
-	public DataElement getDataElement() {
-		return dataElement;
+	public Phenotype getPhenotype() {
+		return phenotype;
 	}
 
 	@Override
 	public void visit(SystemProposition entity) {
-		dataElement = this.systemPropositionTranslator
-				.translateFromProposition(entity);
+		this.phenotype = new SystemPhenotype();
+		populate(entity);
 	}
 
 	@Override
 	public void visit(CategoryEntity entity) {
-		dataElement = this.categorizationTranslator
-				.translateFromProposition(entity);
+		this.phenotype = new Category();
+		populate(entity);
 	}
 
 	@Override
 	public void visit(SequenceEntity entity) {
-		dataElement = this.sequenceTranslator
-				.translateFromProposition(entity);
+		this.phenotype = new Sequence();
+		populate(entity);
 	}
 
 	@Override
 	public void visit(FrequencyEntity entity) {
-		dataElement = this.frequencyTranslator
-				.translateFromProposition(entity);
+		this.phenotype = new Frequency();
+		populate(entity);
 	}
 
 	@Override
 	public void visit(ValueThresholdGroupEntity entity) {
-		dataElement = this.valueThresholdsTranslator
-				.translateFromProposition(entity);
+		this.phenotype = new ValueThresholds();
+		populate(entity);
 	}
+
+	private void populate(PhenotypeEntity phenotypeEntity) {
+		this.phenotype.setSummarized(true);
+		PropositionTranslatorUtil.populateCommonPhenotypeFields(phenotype, 
+				phenotypeEntity);
+	}
+	
 }

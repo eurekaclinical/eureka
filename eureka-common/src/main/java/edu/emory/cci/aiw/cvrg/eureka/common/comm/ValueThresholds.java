@@ -41,10 +41,10 @@ package edu.emory.cci.aiw.cvrg.eureka.common.comm;
 
 import java.util.List;
 
-import edu.emory.cci.aiw.cvrg.eureka.common.exception.DataElementHandlingException;
+import edu.emory.cci.aiw.cvrg.eureka.common.exception.PhenotypeHandlingException;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 
-public class ValueThresholds extends DataElement {
+public class ValueThresholds extends Phenotype {
 
 	private String name;
 	private Long thresholdsOperator;
@@ -79,8 +79,8 @@ public class ValueThresholds extends DataElement {
 	}
 
 	@Override
-	public void accept(DataElementVisitor visitor) 
-			throws DataElementHandlingException{
+	public void accept(PhenotypeVisitor visitor) 
+			throws PhenotypeHandlingException{
 		visitor.visit(this);
 	}
 	

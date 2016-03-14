@@ -43,7 +43,7 @@ package edu.emory.cci.aiw.cvrg.eureka.services.conversion;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.AbstractDestinationVisitor;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.Cohort;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.CohortDestination;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.DataElementField;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.PhenotypeField;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.Destination;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.EtlCohortDestination;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.EtlDestination;
@@ -105,10 +105,10 @@ public class DestinationToEtlDestinationVisitor extends AbstractDestinationVisit
 		etlDestination.setId(destination.getId());
 		etlDestination.setName(destination.getName());
 		etlDestination.setDescription(destination.getDescription());
-		DataElementField[] etlDestDataElementFields
-				= destination.getDataElementFields();
-		if (etlDestDataElementFields != null) {
-			etlDestination.setDataElementFields(etlDestDataElementFields);
+		PhenotypeField[] etlDestPhenotypeFields
+				= destination.getPhenotypeFields();
+		if (etlDestPhenotypeFields != null) {
+			etlDestination.setPhenotypeFields(etlDestPhenotypeFields);
 		}
 		etlDestination.setOwnerUserId(destination.getOwnerUserId());
 		etlDestination.setRead(destination.isRead());

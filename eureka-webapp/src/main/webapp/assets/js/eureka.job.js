@@ -13,7 +13,6 @@ window.eureka.job = new function () {
 		self.setupDatePicker(earliestDateElem);
 		self.setupDatePicker(latestDateElem);
 		self.setupDatePickerCss(datePickerCssUrl);
-
 		// Create event handlers.
 		var $uploadForm = $(uploadFormElem);
 		$uploadForm.find('select[name="source"]').change(
@@ -29,8 +28,8 @@ window.eureka.job = new function () {
 				});
 
 		$uploadForm.submit(function () {
-			var $dataElement = $uploadForm.find('ul[data-type="main"]').find('li').first();
-			$("input[name='dateRangeDataElementKey']").val($dataElement.data('key'));
+			var $phenotype = $uploadForm.find('ul[data-type="main"]').find('li').first();
+			$("input[name='dateRangePhenotypeKey']").val($phenotype.data('key'));
 			return self.save($uploadForm);
 		});
 
@@ -116,7 +115,7 @@ window.eureka.job = new function () {
 		if ($(sortable).data('drop-type') === 'single' && items.length > 0) {
 			var toRemove = items[0];
 			var dialog = $('#deleteModal');
-			$(dialog).find('#deleteContent').html('Are you sure you want to remove data element ' + $(toRemove).text() + '?');
+			$(dialog).find('#deleteContent').html('Are you sure you want to remove phenotype ' + $(toRemove).text() + '?');
 			$(dialog).find('#confirmButton').one('click', function (/*e*/) {
 				$(sortable).empty();
 				$(dialog).modal('toggle');
@@ -157,7 +156,7 @@ window.eureka.job = new function () {
 				var $toRemove = $(item).closest('li');
 				var $sortable = $toRemove.closest('ul.sortable');
 				var dialog = $('#deleteModal');
-				$(dialog).find('#deleteContent').html('Are you sure you want to remove data element ' + $toRemove.text() + '?');
+				$(dialog).find('#deleteContent').html('Are you sure you want to remove phenotype ' + $toRemove.text() + '?');
 				$(dialog).find('#confirmButton').one('click', function (e) {
 					self.deleteItem($toRemove, $sortable);
 					$(dialog).modal('toggle');
@@ -225,7 +224,7 @@ window.eureka.job = new function () {
 			});
 		}
 
-		// enable this if we want to disallow job submission without a data element selected
+		// enable this if we want to disallow job submission without a phenotype selected
 		// doDisable = doDisable || (self.currentElement == null);
 
 		$('#startButton').prop('disabled', doDisable);
@@ -268,15 +267,15 @@ window.eureka.job = new function () {
 		$('#errorModal').modal('show');
 	}
 
-	self.collectDataElement = function (dataElementFromDropBox) {
-		return $(dataElementFromDropBox).data('key');
+	self.collectPhenotype = function (phenotypeFromDropBox) {
+		return $(phenotypeFromDropBox).data('key');
 	};
 
-	self.collectDataElements = function ($dataElementsFromDropBox) {
+	self.collectPhenotypes = function ($phenotypesFromDropBox) {
 		var childElements = new Array();
 
-		$dataElementsFromDropBox.each(function (i, p) {
-			childElements.push(self.collectDataElement(p));
+		$phenotypesFromDropBox.each(function (i, p) {
+			childElements.push(self.collectPhenotype(p));
 		});
 
 
@@ -291,7 +290,7 @@ window.eureka.job = new function () {
 		var jobSpec = {
 			sourceConfigId: uploadFormElem.find('select[name="source"]').find(":selected").val(),
 			destinationId: $selectedDestination.val(),
-			dateRangeDataElementKey: uploadFormElem.find('input[name="dateRangeDataElementKey"]').val(),
+			dateRangePhenotypeKey: uploadFormElem.find('input[name="dateRangePhenotypeKey"]').val(),
 			earliestDate: uploadFormElem.find('input[name="earliestDate"]').val(),
 			earliestDateSide: uploadFormElem.find('select[name="dateRangeEarliestDateSide"]').find(":selected").val(),
 			latestDate: uploadFormElem.find('input[name="latestDate"]').val(),
@@ -301,7 +300,7 @@ window.eureka.job = new function () {
 				id: uploadFormElem.find('select[name="source"]').find(":selected").val(),
 				dataSourceBackends: []
 			},
-			propositionIds: $selectedDestination.data("jobConceptListSupported") ? self.collectDataElements(uploadFormElem.find('#conceptsList').find('li')) : null
+			propositionIds: $selectedDestination.data("jobConceptListSupported") ? self.collectPhenotypes(uploadFormElem.find('#conceptsList').find('li')) : null
 		};
 		if ($selectedDestination.data("jobConceptListSupported")) {
 			var requiredConcepts = $selectedDestination.data("jobRequiredConcepts");

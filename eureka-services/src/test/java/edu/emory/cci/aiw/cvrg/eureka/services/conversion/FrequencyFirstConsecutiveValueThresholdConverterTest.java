@@ -39,7 +39,7 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.services.conversion;
 
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.ExtendedDataElement;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.ExtendedPhenotype;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.FrequencyEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.FrequencyType;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.SystemProposition;
@@ -149,8 +149,8 @@ public class FrequencyFirstConsecutiveValueThresholdConverterTest extends Abstra
 		frequency.setConsecutive(true);
 		
 		
-		ExtendedDataElement af = new ExtendedDataElement();
-		af.setDataElementEntity(thresholdGroup);
+		ExtendedPhenotype af = new ExtendedPhenotype();
+		af.setPhenotypeEntity(thresholdGroup);
 		frequency.setExtendedProposition(af);
 		
 		propDefs = converter.convert(frequency);

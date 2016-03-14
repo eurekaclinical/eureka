@@ -90,7 +90,7 @@
         function createCohort(cohort){
             /*This is what the data looks like being sent to server.  Does not look valid
             {"id":null,"type":"COHORT","ownerUserId":1,"name":"NameTest","description":"NameDescription",
-            "dataElementFields":null, "cohort":{"id":null,"node":{"id":null,"start":null,"finish":null,
+            "phenotypeFields":null, "cohort":{"id":null,"node":{"id":null,"start":null,"finish":null,
             "type":"Literal","name":"\\ACT\\Medications\\"}},"read":false,"write":false,"execute":false,
             "created_at":null,"updated_at":null,"links":null}
             */
@@ -98,7 +98,7 @@
                 id: null,
                 type: 'COHORT',
                 ownerUserId: 1,
-                dataElementFields: null,
+                phenotypeFields: null,
                 cohort: {
                     id: null
                 },

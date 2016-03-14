@@ -41,15 +41,15 @@ package edu.emory.cci.aiw.cvrg.eureka.services.translation;
 
 import com.google.inject.Inject;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.Category;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.DataElementVisitor;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.Frequency;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.Sequence;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.SystemElement;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.SystemPhenotype;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.ValueThresholds;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.DataElementEntity;
-import edu.emory.cci.aiw.cvrg.eureka.common.exception.DataElementHandlingException;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.PhenotypeEntity;
+import edu.emory.cci.aiw.cvrg.eureka.common.exception.PhenotypeHandlingException;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.PhenotypeVisitor;
 
-public final class DataElementTranslatorVisitor implements DataElementVisitor {
+public final class PhenotypeTranslatorVisitor implements PhenotypeVisitor {
 
 	private final SystemPropositionTranslator systemPropositionTranslator;
 	private final SequenceTranslator sequenceTranslator;
@@ -57,10 +57,10 @@ public final class DataElementTranslatorVisitor implements DataElementVisitor {
 	private final FrequencyTranslator frequencyTranslator;
 	private final ValueThresholdsTranslator valueThresholdsTranslator;
 
-	private DataElementEntity dataElementEntity;
+	private PhenotypeEntity phenotypeEntity;
 
 	@Inject
-	public DataElementTranslatorVisitor(
+	public PhenotypeTranslatorVisitor(
 	        SystemPropositionTranslator inSystemPropositionTranslator,
 	        SequenceTranslator inSequenceTranslator,
 	        CategorizationTranslator inCategorizationTranslator,
@@ -73,40 +73,40 @@ public final class DataElementTranslatorVisitor implements DataElementVisitor {
 		this.valueThresholdsTranslator = inValueThresholdsTranslator;
 	}
 
-	public DataElementEntity getDataElementEntity() {
-		return dataElementEntity;
+	public PhenotypeEntity getPhenotypeEntity() {
+		return phenotypeEntity;
 	}
 
 	@Override
-	public void visit(SystemElement systemElement)
-	        throws DataElementHandlingException {
-		dataElementEntity = this.systemPropositionTranslator
-		        .translateFromElement(systemElement);
+	public void visit(SystemPhenotype systemElement)
+	        throws PhenotypeHandlingException {
+		phenotypeEntity = this.systemPropositionTranslator
+		        .translateFromPhenotype(systemElement);
 
 
 	}
 
 	@Override
-	public void visit(Category categoricalElement)
-	        throws DataElementHandlingException {
-		dataElementEntity = this.categorizationTranslator
-		        .translateFromElement(categoricalElement);
+	public void visit(Category categoricalPhenotype)
+	        throws PhenotypeHandlingException {
+		phenotypeEntity = this.categorizationTranslator
+		        .translateFromPhenotype(categoricalPhenotype);
 	}
 
 	@Override
-	public void visit(Sequence sequence) throws DataElementHandlingException {
-		dataElementEntity = this.sequenceTranslator.translateFromElement(sequence);
+	public void visit(Sequence sequence) throws PhenotypeHandlingException {
+		phenotypeEntity = this.sequenceTranslator.translateFromPhenotype(sequence);
 	}
 
 	@Override
-	public void visit(Frequency frequency) throws DataElementHandlingException {
-		dataElementEntity = this.frequencyTranslator.translateFromElement(frequency);
+	public void visit(Frequency frequency) throws PhenotypeHandlingException {
+		phenotypeEntity = this.frequencyTranslator.translateFromPhenotype(frequency);
 	}
 
 	@Override
 	public void visit(ValueThresholds thresholds)
-	        throws DataElementHandlingException {
-		dataElementEntity = this.valueThresholdsTranslator.translateFromElement(thresholds);
+	        throws PhenotypeHandlingException {
+		phenotypeEntity = this.valueThresholdsTranslator.translateFromPhenotype(thresholds);
 	}
 
 }

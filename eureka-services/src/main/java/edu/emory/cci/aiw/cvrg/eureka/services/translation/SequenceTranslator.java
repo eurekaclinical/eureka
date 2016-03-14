@@ -48,39 +48,39 @@ import javax.ws.rs.core.Response;
 
 import com.google.inject.Inject;
 
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.DataElementField;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.PhenotypeField;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.Sequence;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.RelatedDataElementField;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.DataElementEntity;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.ExtendedDataElement;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.RelatedPhenotypeField;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.PhenotypeEntity;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.ExtendedPhenotype;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.PropositionTypeVisitor;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.Relation;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.RelationOperator;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.SequenceEntity;
-import edu.emory.cci.aiw.cvrg.eureka.common.exception.DataElementHandlingException;
-import edu.emory.cci.aiw.cvrg.eureka.services.dao.DataElementEntityDao;
+import edu.emory.cci.aiw.cvrg.eureka.common.exception.PhenotypeHandlingException;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.RelationOperatorDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.TimeUnitDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.ValueComparatorDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.finder.SystemPropositionFinder;
 import edu.emory.cci.aiw.cvrg.eureka.services.resource.SourceConfigResource;
+import edu.emory.cci.aiw.cvrg.eureka.services.dao.PhenotypeEntityDao;
 
 /**
- * Translates from sequences (UI data element) to high-level abstractions.
+ * Translates from sequences (UI phenotype) to high-level abstractions.
  * Creates extended propositions and relations as needed.
  */
 public class SequenceTranslator implements
 		PropositionTranslator<Sequence, SequenceEntity> {
 
-	private Map<Long, ExtendedDataElement> extendedProps;
-	private final Map<String, DataElementEntity> propositions;
+	private Map<Long, ExtendedPhenotype> extendedProps;
+	private final Map<String, PhenotypeEntity> propositions;
 	private final TimeUnitDao timeUnitDao;
 	private final RelationOperatorDao relationOperatorDao;
 	private final TranslatorSupport translatorSupport;
 	private final ValueComparatorDao valueComparatorDao;
 
 	@Inject
-	public SequenceTranslator(DataElementEntityDao inPropositionDao,
+	public SequenceTranslator(PhenotypeEntityDao inPropositionDao,
 			TimeUnitDao inTimeUnitDao, RelationOperatorDao inRelationOperatorDao,
 			SystemPropositionFinder inFinder,
 			ValueComparatorDao inValueComparatorDao,
@@ -95,24 +95,24 @@ public class SequenceTranslator implements
 	}
 
 	@Override
-	public SequenceEntity translateFromElement(Sequence element)
-			throws DataElementHandlingException {
-		if (element == null) {
-			throw new IllegalArgumentException("element cannot be null");
+	public SequenceEntity translateFromPhenotype(Sequence phenotype)
+			throws PhenotypeHandlingException {
+		if (phenotype == null) {
+			throw new IllegalArgumentException("phenotype cannot be null");
 		}
-		Long userId = element.getUserId();
+		Long userId = phenotype.getUserId();
 		SequenceEntity result =
-				this.translatorSupport.getUserEntityInstance(element,
+				this.translatorSupport.getUserEntityInstance(phenotype,
 				SequenceEntity.class);
 
-		Map<String, DataElementField> dataElementsMap =
+		Map<String, PhenotypeField> phenotypesMap =
 				new HashMap<>();
-		DataElementField primaryDataElementField = element.getPrimaryDataElement();
-		ExtendedDataElement ep =
-				createExtendedProposition(result.getPrimaryExtendedDataElement(),
-				primaryDataElementField, Long.valueOf(1), userId);
-		dataElementsMap.put(primaryDataElementField.getDataElementKey(), primaryDataElementField);
-		result.setPrimaryExtendedDataElement(ep);
+		PhenotypeField primaryPhenotypeField = phenotype.getPrimaryPhenotype();
+		ExtendedPhenotype ep =
+				createExtendedProposition(result.getPrimaryExtendedPhenotype(),
+				primaryPhenotypeField, Long.valueOf(1), userId);
+		phenotypesMap.put(primaryPhenotypeField.getPhenotypeKey(), primaryPhenotypeField);
+		result.setPrimaryExtendedPhenotype(ep);
 
 		List<Relation> relations = result.getRelations();
 		if (relations == null) {
@@ -121,33 +121,33 @@ public class SequenceTranslator implements
 		}
 
 		int i = 0;
-		for (RelatedDataElementField rde : element.getRelatedDataElements()) {
-			ExtendedDataElement lhsEP = null;
-			ExtendedDataElement rhsEP = null;
+		for (RelatedPhenotypeField rde : phenotype.getRelatedPhenotypes()) {
+			ExtendedPhenotype lhsEP = null;
+			ExtendedPhenotype rhsEP = null;
 			Relation relation;
 			if (relations.size() > i) {
 				relation = relations.get(i);
-				lhsEP = relation.getLhsExtendedDataElement();
-				rhsEP = relation.getRhsExtendedDataElement();
+				lhsEP = relation.getLhsExtendedPhenotype();
+				rhsEP = relation.getRhsExtendedPhenotype();
 			} else {
 				relation = new Relation();
 				relations.add(relation);
 			}
 
-			DataElementField lhsDEF = rde.getDataElementField();
+			PhenotypeField lhsDEF = rde.getPhenotypeField();
 			lhsEP = createExtendedProposition(lhsEP,
-					rde.getDataElementField(), Long.valueOf(i + 2), userId);
-			dataElementsMap.put(lhsDEF.getDataElementKey(), lhsDEF);
-			DataElementField rhsDEF = dataElementsMap.get(
-					rde.getSequentialDataElement());
+					rde.getPhenotypeField(), Long.valueOf(i + 2), userId);
+			phenotypesMap.put(lhsDEF.getPhenotypeKey(), lhsDEF);
+			PhenotypeField rhsDEF = phenotypesMap.get(
+					rde.getSequentialPhenotype());
 			if (rhsDEF == null) {
-				throw new DataElementHandlingException(
+				throw new PhenotypeHandlingException(
 						Response.Status.PRECONDITION_FAILED,
-						"Invalid data element "
-						+ rde.getSequentialDataElement());
+						"Invalid phenotype "
+						+ rde.getSequentialPhenotype());
 			}
 			rhsEP = createExtendedProposition(rhsEP, rhsDEF,
-					rde.getSequentialDataElementSource(), userId);
+					rde.getSequentialPhenotypeSource(), userId);
 
 			RelationOperator relationOperator =
 					this.relationOperatorDao.retrieve(
@@ -163,13 +163,13 @@ public class SequenceTranslator implements
 
 			String relOpName = relationOperator.getName();
 			if (relOpName.equals("before")) {
-				relation.setLhsExtendedDataElement(lhsEP);
-				relation.setRhsExtendedDataElement(rhsEP);
+				relation.setLhsExtendedPhenotype(lhsEP);
+				relation.setRhsExtendedPhenotype(rhsEP);
 			} else if (relOpName.equals("after")) {
-				relation.setLhsExtendedDataElement(rhsEP);
-				relation.setRhsExtendedDataElement(lhsEP);
+				relation.setLhsExtendedPhenotype(rhsEP);
+				relation.setRhsExtendedPhenotype(lhsEP);
 			} else {
-				throw new DataElementHandlingException(
+				throw new PhenotypeHandlingException(
 						Response.Status.BAD_REQUEST,
 						"Invalid temporal relationship '" + relOpName + "'");
 			}
@@ -180,10 +180,10 @@ public class SequenceTranslator implements
 		return result;
 	}
 
-	private DataElementEntity getOrCreateProposition(Long userId, String key)
-			throws DataElementHandlingException {
+	private PhenotypeEntity getOrCreateProposition(Long userId, String key)
+			throws PhenotypeHandlingException {
 
-		DataElementEntity proposition = null;
+		PhenotypeEntity proposition = null;
 
 		// first see if we already have the proposition
 		if (this.propositions.containsKey(key)) {
@@ -200,22 +200,22 @@ public class SequenceTranslator implements
 		return proposition;
 	}
 
-	private ExtendedDataElement createExtendedProposition(
-			ExtendedDataElement origExtendedProposition,
-			DataElementField dataElement, Long sequenceNumber, Long userId)
-			throws DataElementHandlingException {
-		ExtendedDataElement result =
+	private ExtendedPhenotype createExtendedProposition(
+			ExtendedPhenotype origExtendedProposition,
+			PhenotypeField phenotype, Long sequenceNumber, Long userId)
+			throws PhenotypeHandlingException {
+		ExtendedPhenotype result =
 				this.extendedProps.get(sequenceNumber);
 		if (result == null) {
-			ExtendedDataElement ep = origExtendedProposition;
+			ExtendedPhenotype ep = origExtendedProposition;
 			if (origExtendedProposition == null) {
-				ep = new ExtendedDataElement();
+				ep = new ExtendedPhenotype();
 			}
-			DataElementEntity proposition =
+			PhenotypeEntity proposition =
 					getOrCreateProposition(userId,
-					dataElement.getDataElementKey());
+					phenotype.getPhenotypeKey());
 			PropositionTranslatorUtil.populateExtendedProposition(ep,
-					proposition, dataElement, timeUnitDao, valueComparatorDao);
+					proposition, phenotype, timeUnitDao, valueComparatorDao);
 
 			this.extendedProps.put(sequenceNumber, ep);
 			result = ep;
@@ -226,102 +226,102 @@ public class SequenceTranslator implements
 	@Override
 	public Sequence translateFromProposition(SequenceEntity proposition) {
 		Sequence result = new Sequence();
-		PropositionTranslatorUtil.populateCommonDataElementFields(result,
+		PropositionTranslatorUtil.populateCommonPhenotypeFields(result,
 				proposition);
 
-		if (proposition.getPrimaryExtendedDataElement() != null) {
-			// identify the primary data element
-			result.setPrimaryDataElement(createDataElementField(proposition
-					.getPrimaryExtendedDataElement()));
+		if (proposition.getPrimaryExtendedPhenotype() != null) {
+			// identify the primary phenotype
+			result.setPrimaryPhenotype(createPhenotypeField(proposition
+					.getPrimaryExtendedPhenotype()));
 
 			List<Relation> relations = proposition.getRelations();
-			Long pId = proposition.getPrimaryExtendedDataElement().getId();
+			Long pId = proposition.getPrimaryExtendedPhenotype().getId();
 			Map<Long, Long> sequentialSources =
 					assignSources(pId, proposition);
 
-			List<RelatedDataElementField> relatedFields =
+			List<RelatedPhenotypeField> relatedFields =
 					new ArrayList<>();
 			for (Relation relation : relations) {
-				RelatedDataElementField field =
-						createRelatedDataElementField(relation);
-				field.setSequentialDataElementSource(
+				RelatedPhenotypeField field =
+						createRelatedPhenotypeField(relation);
+				field.setSequentialPhenotypeSource(
 						sequentialSources.get(
-						relation.getRhsExtendedDataElement().getId()));
+						relation.getRhsExtendedPhenotype().getId()));
 				relatedFields.add(field);
 			}
-			result.setRelatedDataElements(relatedFields);
+			result.setRelatedPhenotypes(relatedFields);
 		}
 
 		return result;
 	}
 
-	private RelatedDataElementField createRelatedDataElementField(
+	private RelatedPhenotypeField createRelatedPhenotypeField(
 			Relation relation) {
-		RelatedDataElementField relatedDataElement =
-				new RelatedDataElementField();
+		RelatedPhenotypeField relatedPhenotype =
+				new RelatedPhenotypeField();
 
-		relatedDataElement.setRelationMinCount(relation.getMinf1s2());
-		relatedDataElement.setRelationMinUnits(relation.getMinf1s2TimeUnit()
+		relatedPhenotype.setRelationMinCount(relation.getMinf1s2());
+		relatedPhenotype.setRelationMinUnits(relation.getMinf1s2TimeUnit()
 				.getId());
-		relatedDataElement.setRelationMaxCount(relation.getMaxf1s2());
-		relatedDataElement.setRelationMaxUnits(relation.getMaxf1s2TimeUnit()
+		relatedPhenotype.setRelationMaxCount(relation.getMaxf1s2());
+		relatedPhenotype.setRelationMaxUnits(relation.getMaxf1s2TimeUnit()
 				.getId());
-		relatedDataElement.setRelationOperator(relation.getRelationOperator().getId());
+		relatedPhenotype.setRelationOperator(relation.getRelationOperator().getId());
 
 		if (relation.getRelationOperator().getName().equalsIgnoreCase("before")) {
-			relatedDataElement
-					.setDataElementField(createDataElementField(relation
-					.getLhsExtendedDataElement()));
-			relatedDataElement.setSequentialDataElement(relation
-					.getRhsExtendedDataElement().getDataElementEntity().getKey());
+			relatedPhenotype
+					.setPhenotypeField(createPhenotypeField(relation
+					.getLhsExtendedPhenotype()));
+			relatedPhenotype.setSequentialPhenotype(relation
+					.getRhsExtendedPhenotype().getPhenotypeEntity().getKey());
 		} else if (relation.getRelationOperator().getName().equalsIgnoreCase("after")) {
-			relatedDataElement
-					.setDataElementField(createDataElementField(relation
-					.getRhsExtendedDataElement()));
-			relatedDataElement.setSequentialDataElement(relation
-					.getLhsExtendedDataElement().getDataElementEntity().getKey());
+			relatedPhenotype
+					.setPhenotypeField(createPhenotypeField(relation
+					.getRhsExtendedPhenotype()));
+			relatedPhenotype.setSequentialPhenotype(relation
+					.getLhsExtendedPhenotype().getPhenotypeEntity().getKey());
 		}
 
-		return relatedDataElement;
+		return relatedPhenotype;
 	}
 
-	private DataElementField createDataElementField(ExtendedDataElement ep) {
+	private PhenotypeField createPhenotypeField(ExtendedPhenotype ep) {
 
-		DataElementField dataElement = new DataElementField();
-		DataElementEntity entity = ep.getDataElementEntity();
+		PhenotypeField phenotype = new PhenotypeField();
+		PhenotypeEntity entity = ep.getPhenotypeEntity();
 		PropositionTypeVisitor visitor = new PropositionTypeVisitor();
 
 		entity.accept(visitor);
-		dataElement.setType(visitor.getType());
-		dataElement.setDataElementKey(entity.getKey());
-		dataElement.setDataElementDescription(entity.getDescription());
-		dataElement.setDataElementDisplayName(entity.getDisplayName());
+		phenotype.setType(visitor.getType());
+		phenotype.setPhenotypeKey(entity.getKey());
+		phenotype.setPhenotypeDescription(entity.getDescription());
+		phenotype.setPhenotypeDisplayName(entity.getDisplayName());
 		if (ep.getMinDuration() != null) {
-			dataElement.setHasDuration(true);
-			dataElement.setMinDuration(ep.getMinDuration());
-			dataElement.setMinDurationUnits(ep.getMinDurationTimeUnit().getId());
+			phenotype.setHasDuration(true);
+			phenotype.setMinDuration(ep.getMinDuration());
+			phenotype.setMinDurationUnits(ep.getMinDurationTimeUnit().getId());
 		}
 		if (ep.getMaxDuration() != null) {
-			dataElement.setHasDuration(true);
-			dataElement.setMaxDuration(ep.getMaxDuration());
-			dataElement.setMaxDurationUnits(ep.getMaxDurationTimeUnit().getId());
+			phenotype.setHasDuration(true);
+			phenotype.setMaxDuration(ep.getMaxDuration());
+			phenotype.setMaxDurationUnits(ep.getMaxDurationTimeUnit().getId());
 		}
 		if (ep.getPropertyConstraint() != null) {
-			dataElement.setHasPropertyConstraint(true);
-			dataElement.setProperty(ep.getPropertyConstraint()
+			phenotype.setHasPropertyConstraint(true);
+			phenotype.setProperty(ep.getPropertyConstraint()
 					.getPropertyName());
-			dataElement.setPropertyValue(ep.getPropertyConstraint().getValue());
+			phenotype.setPropertyValue(ep.getPropertyConstraint().getValue());
 		}
-		return dataElement;
+		return phenotype;
 	}
 
 	private Map<Long, Long> assignSources(Long pId, SequenceEntity proposition) {
-		// determine the correct source for each sequential data element
+		// determine the correct source for each sequential phenotype
 		Map<Long, Long> sequentialSources = new HashMap<>();
 		sequentialSources.put(pId, Long.valueOf(1));
 		int i = 2;
 		for (Relation relation : proposition.getRelations()) {
-			Long epId = relation.getRhsExtendedDataElement().getId();
+			Long epId = relation.getRhsExtendedPhenotype().getId();
 			if (!sequentialSources.containsKey(epId)) {
 				sequentialSources.put(epId, Long.valueOf(i++));
 			}

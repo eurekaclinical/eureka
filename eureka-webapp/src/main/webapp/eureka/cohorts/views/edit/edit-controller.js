@@ -35,8 +35,8 @@
             var phenotypes = [];
             for (var i = 0; i < promises.length; i++) {
                 phenotypes.push(new Object({
-                    dataElementKey: promises[i].data.key,
-                    dataElementDisplayName: promises[i].data.displayName,
+                    phenotypeKey: promises[i].data.key,
+                    phenotypeDisplayName: promises[i].data.displayName,
                     type: 'SYSTEM'
                 }));
 

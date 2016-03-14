@@ -39,16 +39,36 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.common.entity;
 
-public interface DataElementEntityVisitor {
-	
-	public void visit(SystemProposition proposition);
-	
-	public void visit(CategoryEntity categorization);
-	
-	public void visit(SequenceEntity highLevelAbstraction);
+/**
+ *
+ * @author Andrew Post
+ */
+public abstract class AbstractPhenotypeEntityVisitor 
+		implements PhenotypeEntityVisitor{
 
-	public void visit(ValueThresholdGroupEntity lowLevelAbstraction);
+	@Override
+	public void visit(SystemProposition proposition) {
+		throw new UnsupportedOperationException("Not supported yet.");
+	}
 
-	public void visit(FrequencyEntity sliceAbstraction);
+	@Override
+	public void visit(CategoryEntity categorization) {
+		throw new UnsupportedOperationException("Not supported yet.");
+	}
 
+	@Override
+	public void visit(SequenceEntity highLevelAbstraction) {
+		throw new UnsupportedOperationException("Not supported yet.");
+	}
+
+	@Override
+	public void visit(ValueThresholdGroupEntity lowLevelAbstraction) {
+		throw new UnsupportedOperationException("Not supported yet.");
+	}
+
+	@Override
+	public void visit(FrequencyEntity sliceAbstraction) {
+		throw new UnsupportedOperationException("Not supported yet.");
+	}
+	
 }

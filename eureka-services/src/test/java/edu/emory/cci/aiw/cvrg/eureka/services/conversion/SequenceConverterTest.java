@@ -39,8 +39,8 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.services.conversion;
 
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.DataElementEntity;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.ExtendedDataElement;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.PhenotypeEntity;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.ExtendedPhenotype;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.Relation;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.SequenceEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.SystemProposition;
@@ -77,7 +77,7 @@ public class SequenceConverterTest extends AbstractServiceTest {
 		this.timeUnit.setRank(1);
 	}
 
-	private DataElementEntity createDataElement(long id, String suffix) {
+	private PhenotypeEntity createPhenotype(long id, String suffix) {
 		SystemProposition entity = new SystemProposition();
 		entity.setId(id);
 		entity.setSystemType(SystemProposition.SystemType.EVENT);
@@ -87,25 +87,25 @@ public class SequenceConverterTest extends AbstractServiceTest {
 		return entity;
 	}
 
-	private ExtendedDataElement createPrimaryExtendedProposition() {
-		ExtendedDataElement proposition = new ExtendedDataElement();
+	private ExtendedPhenotype createPrimaryExtendedProposition() {
+		ExtendedPhenotype proposition = new ExtendedPhenotype();
 		proposition.setId(counter++);
 		proposition
-				.setDataElementEntity(this.createDataElement(counter++, "Primary"));
+				.setPhenotypeEntity(this.createPhenotype(counter++, "Primary"));
 		return proposition;
 	}
 
-	private ExtendedDataElement createLhsProposition() {
-		ExtendedDataElement lhs = new ExtendedDataElement();
+	private ExtendedPhenotype createLhsProposition() {
+		ExtendedPhenotype lhs = new ExtendedPhenotype();
 		lhs.setId(counter++);
-		lhs.setDataElementEntity(this.createDataElement(counter++, "LHS"));
+		lhs.setPhenotypeEntity(this.createPhenotype(counter++, "LHS"));
 		return lhs;
 	}
 
-	private ExtendedDataElement createRhsProposition() {
-		ExtendedDataElement rhs = new ExtendedDataElement();
+	private ExtendedPhenotype createRhsProposition() {
+		ExtendedPhenotype rhs = new ExtendedPhenotype();
 		rhs.setId(counter++);
-		rhs.setDataElementEntity(this.createDataElement(counter++, "RHS"));
+		rhs.setPhenotypeEntity(this.createPhenotype(counter++, "RHS"));
 		return rhs;
 	}
 
@@ -117,8 +117,8 @@ public class SequenceConverterTest extends AbstractServiceTest {
 		relation.setMinf1s2TimeUnit(this.timeUnit);
 		relation.setMaxf1s2(MAX);
 		relation.setMaxf1s2TimeUnit(this.timeUnit);
-		relation.setLhsExtendedDataElement(this.createLhsProposition());
-		relation.setRhsExtendedDataElement((this.createRhsProposition()));
+		relation.setLhsExtendedPhenotype(this.createLhsProposition());
+		relation.setRhsExtendedPhenotype((this.createRhsProposition()));
 		relations.add(relation);
 		return relations;
 	}
@@ -131,7 +131,7 @@ public class SequenceConverterTest extends AbstractServiceTest {
 		result.setDisplayName("test-sequence");
 		result.setInSystem(false);
 		result.setRelations(this.createRelations());
-		result.setPrimaryExtendedDataElement(this.createPrimaryExtendedProposition());
+		result.setPrimaryExtendedPhenotype(this.createPrimaryExtendedProposition());
 		return result;
 	}
 

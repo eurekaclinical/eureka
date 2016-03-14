@@ -186,9 +186,9 @@ class ServletModule extends AbstractServletModule {
 		bind(EditPropositionServlet.class).in(Singleton.class);
 		serve("/protected/editprop").with(EditPropositionServlet.class);
 
-		bind(DateRangeDataElementServlet.class).in(Singleton.class);
-		serve("/protected/destinationdataelements").with(
-				DateRangeDataElementServlet.class);
+		bind(DateRangePhenotypeServlet.class).in(Singleton.class);
+		serve("/protected/destinationphenotypes").with(
+				DateRangePhenotypeServlet.class);
 
 		bind(SearchSystemPropositionJSTreeV3Servlet.class).in(Singleton.class);
 		serve("/protected/jstree3_searchsystemlist").with(

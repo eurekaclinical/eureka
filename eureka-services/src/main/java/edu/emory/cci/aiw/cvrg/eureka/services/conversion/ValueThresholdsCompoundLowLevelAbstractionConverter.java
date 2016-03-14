@@ -39,7 +39,7 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.services.conversion;
 
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.ExtendedDataElement;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.ExtendedPhenotype;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.ValueThresholdEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.ValueThresholdGroupEntity;
 import static edu.emory.cci.aiw.cvrg.eureka.services.conversion.ConversionUtil.extractContextDefinition;
@@ -115,12 +115,12 @@ public final class ValueThresholdsCompoundLowLevelAbstractionConverter
 				thresholdToValueDefinitions(entity, v, def);
 				def.setSlidingWindowWidthMode(SlidingWindowWidthMode.DEFAULT);
 				def.setGapFunction(new SimpleGapFunction(0, null));
-				List<ExtendedDataElement> extendedDataElements =
-						v.getExtendedDataElements();
-				if (extendedDataElements != null && !extendedDataElements.isEmpty()) {
+				List<ExtendedPhenotype> extendedPhenotypes =
+						v.getExtendedPhenotypes();
+				if (extendedPhenotypes != null && !extendedPhenotypes.isEmpty()) {
 					ContextDefinition cd = 
 							extractContextDefinition(entity, 
-							extendedDataElements, v);
+							extendedPhenotypes, v);
 					result.add(cd);
 					def.setContextId(cd.getId());
 				}

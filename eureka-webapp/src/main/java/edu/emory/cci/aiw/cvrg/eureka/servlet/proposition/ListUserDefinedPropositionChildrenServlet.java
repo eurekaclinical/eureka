@@ -57,8 +57,8 @@ import org.slf4j.LoggerFactory;
 import com.google.inject.Inject;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.Category;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.DataElement;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.DataElementField;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.Phenotype;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.PhenotypeField;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ClientException;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ServicesClient;
 
@@ -97,31 +97,31 @@ public class ListUserDefinedPropositionChildrenServlet extends HttpServlet {
 	}
 
 	private void getAllData(JsonTreeData d) throws ClientException {
-		DataElement dataElement = this.servicesClient.getUserElement(d.getAttr().get("data-key"), false);
+		Phenotype phenotype = this.servicesClient.getUserPhenotype(d.getAttr().get("data-key"), false);
 
-		if (dataElement.getType() == DataElement.Type.CATEGORIZATION) {
-			Category ce = (Category) dataElement;
-			for (DataElementField de : ce.getChildren()) {
+		if (phenotype.getType() == Phenotype.Type.CATEGORIZATION) {
+			Category ce = (Category) phenotype;
+			for (PhenotypeField de : ce.getChildren()) {
 				if (de.isInSystem()) {
 					JsonTreeData newData = createData(this.propListSupport.getDisplayName(de),
-							de.getDataElementKey());
+							de.getPhenotypeKey());
 					newData.setType("system");
-					LOGGER.debug("add sysTarget {}", de.getDataElementKey());
+					LOGGER.debug("add sysTarget {}", de.getPhenotypeKey());
 					d.setChildren(true);
 
 				}
 			}
 
-			for (DataElementField userDataElement : ce.getChildren()) {
-				if (!userDataElement.isInSystem()) {
+			for (PhenotypeField userPhenotype : ce.getChildren()) {
+				if (!userPhenotype.isInSystem()) {
 
 					JsonTreeData newData = createData(
-							userDataElement.getDataElementDescription(),
-							userDataElement.getDataElementKey());
+							userPhenotype.getPhenotypeDescription(),
+							userPhenotype.getPhenotypeKey());
 					getAllData(newData);
 					newData.setType("user");
 					LOGGER.debug("add user defined {}",
-							userDataElement.getDataElementKey());
+							userPhenotype.getPhenotypeKey());
 					d.setChildren(true);
 				}
 			}
@@ -135,11 +135,11 @@ public class ListUserDefinedPropositionChildrenServlet extends HttpServlet {
 		List<JsonTreeData> l = new ArrayList<>();
 		String propKey = req.getParameter("propKey");
 
-		DataElement dataElement;
+		Phenotype phenotype;
 		try {
-			dataElement = this.servicesClient.getUserElement(propKey, false);
+			phenotype = this.servicesClient.getUserPhenotype(propKey, false);
 
-			JsonTreeData newData = createData(this.propListSupport.getDisplayName(dataElement),
+			JsonTreeData newData = createData(this.propListSupport.getDisplayName(phenotype),
 					propKey);
 			getAllData(newData);
 			l.add(newData);
@@ -149,7 +149,7 @@ public class ListUserDefinedPropositionChildrenServlet extends HttpServlet {
 			MAPPER.writeValue(out, l);
 		} catch (ClientException ex) {
 			throw new ServletException(
-					"error getting user defined data element " + propKey, ex);
+					"error getting user defined phenotype " + propKey, ex);
 		}
 	}
 }

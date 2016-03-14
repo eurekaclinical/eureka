@@ -39,8 +39,8 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.services.conversion;
 
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.DataElementEntity;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.ExtendedDataElement;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.PhenotypeEntity;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.ExtendedPhenotype;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.Relation;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.SequenceEntity;
 import org.protempa.HighLevelAbstractionDefinition;
@@ -94,23 +94,23 @@ final class SequenceConverter extends AbstractConverter
 					propId);
 			TemporalExtendedPropositionDefinition primaryEP = 
 					buildExtendedProposition(
-					sequenceEntity.getPrimaryExtendedDataElement());
+					sequenceEntity.getPrimaryExtendedPhenotype());
 			if (sequenceEntity.getRelations() != null) {
 				for (Relation rel : sequenceEntity.getRelations()) {
-					DataElementEntity lhs =
-							rel.getLhsExtendedDataElement().getDataElementEntity();
+					PhenotypeEntity lhs =
+							rel.getLhsExtendedPhenotype().getPhenotypeEntity();
 					lhs.accept(converterVisitor);
 					result.addAll(
 							converterVisitor.getPropositionDefinitions());
 					TemporalExtendedPropositionDefinition tepdLhs = buildExtendedProposition(rel
-							.getLhsExtendedDataElement());
+							.getLhsExtendedPhenotype());
 
-					DataElementEntity rhs =
-							rel.getRhsExtendedDataElement().getDataElementEntity();
+					PhenotypeEntity rhs =
+							rel.getRhsExtendedPhenotype().getPhenotypeEntity();
 					rhs.accept(converterVisitor);
 					result.addAll(converterVisitor.getPropositionDefinitions());
 					TemporalExtendedPropositionDefinition tepdRhs = buildExtendedProposition(rel
-							.getRhsExtendedDataElement());
+							.getRhsExtendedPhenotype());
 
 					p.add(tepdLhs);
 					p.add(tepdRhs);
@@ -144,7 +144,7 @@ final class SequenceConverter extends AbstractConverter
 	}
 
 	private TemporalExtendedPropositionDefinition buildExtendedProposition(
-			ExtendedDataElement ep) {
+			ExtendedPhenotype ep) {
 		TemporalExtendedPropositionDefinition tepd =
 				this.extendedProps.get(ep.getId());
 		if (tepd == null) {

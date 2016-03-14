@@ -56,7 +56,7 @@ import org.slf4j.LoggerFactory;
 import com.google.inject.Inject;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.Category;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.DataElement;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.Phenotype;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ClientException;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ServicesClient;
 
@@ -74,7 +74,7 @@ public class UserPropositionListServlet extends HttpServlet {
 		this.propListSupport = new PropositionListSupport();
 	}
 
-	private JsonTreeData createData(DataElement element) {
+	private JsonTreeData createData(Phenotype element) {
 		JsonTreeData d = new JsonTreeData();
 		d.setData(this.propListSupport.getDisplayName(element));
 		d.setText(this.propListSupport.getDisplayName(element));
@@ -82,7 +82,7 @@ public class UserPropositionListServlet extends HttpServlet {
 		d.setKeyVal("data-key", element.getKey());
 		d.setKeyVal("data-space", "user");
 		d.setKeyVal("data-type", element.getType().toString());
-		if (element.getType() == DataElement.Type.CATEGORIZATION) {
+		if (element.getType() == Phenotype.Type.CATEGORIZATION) {
 			d.setKeyVal("data-subtype", ((Category) element)
 					.getCategoricalType().toString());
 		}
@@ -101,14 +101,14 @@ public class UserPropositionListServlet extends HttpServlet {
 			throws ServletException, IOException {
 
 		LOGGER.debug("doGet");
-		List<DataElement> props;
+		List<Phenotype> props;
 		try {
-			props = this.servicesClient.getUserElements(false);
+			props = this.servicesClient.getUserPhenotypes(false);
 		} catch (ClientException ex) {
-			throw new ServletException("Error getting user-defined data element list", ex);
+			throw new ServletException("Error getting user-defined phenotype list", ex);
 		}
 		List<JsonTreeData> l = new ArrayList<>(props.size());
-		for (DataElement proposition : props) {
+		for (Phenotype proposition : props) {
 			JsonTreeData d = createData(proposition);
 			l.add(d);
 			if (LOGGER.isDebugEnabled()) {

@@ -39,43 +39,43 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.services.translation;
 
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.DataElement;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.DataElementEntity;
-import edu.emory.cci.aiw.cvrg.eureka.common.exception.DataElementHandlingException;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.Phenotype;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.PhenotypeEntity;
+import edu.emory.cci.aiw.cvrg.eureka.common.exception.PhenotypeHandlingException;
 
 /**
- * Translates a UI data element into a proposition as understood by the service
+ * Translates a UI phenotype into a proposition as understood by the service
  * layer data model.
  * 
- * @param <E>
- *            The data element type to translate from, a subclass of
- *            {@link DataElement}..
  * @param <P>
+ *            The phenotype type to translate from, a subclass of
+ *            {@link Phenotype}..
+ * @param <PE>
  *            The proposition type to translate to, an implementation of
- *            {@link DataElementEntity}.
+ *            {@link PhenotypeEntity}.
  */
-public interface PropositionTranslator<E extends DataElement, P extends DataElementEntity> {
+public interface PropositionTranslator<P extends Phenotype, PE extends PhenotypeEntity> {
 
 	/**
-	 * Translates the given data element to a proposition understood by the
-	 * services layer data model. The inverse of {@link #translateFromProposition(DataElementEntity)}
+	 * Translates the given phenotype to a proposition understood by the
+	 * services layer data model. The inverse of {@link #translateFromProposition(PhenotypeEntity)}
 	 * .
 	 * 
-	 * @param element
-	 *            the data element to translate from
-	 * @return A {@link DataElementEntity} equivalent to the data element.
-	 * @throws DataElementHandlingException if an error occurred retrieving
+	 * @param phenotype
+	 *            the phenotype to translate from
+	 * @return A {@link PhenotypeEntity} equivalent to the phenotype.
+	 * @throws PhenotypeHandlingException if an error occurred retrieving
 	 * proposition definitions.
 	 */
-	P translateFromElement(E element) throws DataElementHandlingException;
+	PE translateFromPhenotype(P phenotype) throws PhenotypeHandlingException;
 
 	/**
-	 * Translates the given proposition entity into a data element understood by
-	 * the webapp layer. The inverse of {@link #translateFromElement(DataElement)}.
+	 * Translates the given proposition entity into a phenotype understood by
+	 * the webapp layer. The inverse of {@link #translateFromPhenotype(Phenotype)}.
 	 * 
 	 * @param proposition
 	 *            the proposition to translate from
-	 * @return A {@link DataElement} equivalent to the proposition.
+	 * @return A {@link Phenotype} equivalent to the proposition.
 	 */
-	E translateFromProposition(P proposition);
+	P translateFromProposition(PE proposition);
 }

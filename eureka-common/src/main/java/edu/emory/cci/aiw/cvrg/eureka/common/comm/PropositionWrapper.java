@@ -45,7 +45,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Represents messages containing data element definitions.
+ * Represents messages containing phenotype definitions.
  *
  * @author hrathod
  */
@@ -77,7 +77,7 @@ public class PropositionWrapper implements Serializable {
 	}
 
 	/**
-	 * Returns a user data element definition's id.
+	 * Returns a user phenotype definition's id.
 	 *
 	 * @return a {@link Long}. Will be <code>null</code> for a system data
 	 *         element definition.
@@ -87,7 +87,7 @@ public class PropositionWrapper implements Serializable {
 	}
 
 	/**
-	 * Sets a user data element definition's id.
+	 * Sets a user phenotype definition's id.
 	 *
 	 * @param id
 	 *            a {@link Long}.
@@ -97,7 +97,7 @@ public class PropositionWrapper implements Serializable {
 	}
 
 	/**
-	 * Returns a system data element definition's id string.
+	 * Returns a system phenotype definition's id string.
 	 *
 	 * @return a {@link String}. Will be <code>null</code> for a user data
 	 *         element definition.
@@ -107,7 +107,7 @@ public class PropositionWrapper implements Serializable {
 	}
 
 	/**
-	 * Sets a system data element definition's id string.
+	 * Sets a system phenotype definition's id string.
 	 *
 	 * @param inKey
 	 *            a {@link String}.
@@ -117,7 +117,7 @@ public class PropositionWrapper implements Serializable {
 	}
 
 	/**
-	 * Returns a user data element definition's user id.
+	 * Returns a user phenotype definition's user id.
 	 *
 	 * @return a {@link Long}.
 	 */
@@ -126,7 +126,7 @@ public class PropositionWrapper implements Serializable {
 	}
 
 	/**
-	 * Sets a user data element definition's user id.
+	 * Sets a user phenotype definition's user id.
 	 *
 	 * @param userId
 	 *            a {@link Long}.
@@ -136,7 +136,7 @@ public class PropositionWrapper implements Serializable {
 	}
 
 	/**
-	 * Gets the data element definition's abbreviated display name.
+	 * Gets the phenotype definition's abbreviated display name.
 	 *
 	 * @return a {@link String}. May be <code>null</code> if no abbreviated
 	 *         display name is specified.
@@ -146,7 +146,7 @@ public class PropositionWrapper implements Serializable {
 	}
 
 	/**
-	 * Sets the data element definition's abbreviated display name.
+	 * Sets the phenotype definition's abbreviated display name.
 	 *
 	 * @param abbrevDisplayName
 	 *            a {@link String}. Passing in <code>null</code> will set the
@@ -157,7 +157,7 @@ public class PropositionWrapper implements Serializable {
 	}
 
 	/**
-	 * Gets the data element definition's display name.
+	 * Gets the phenotype definition's display name.
 	 *
 	 * @return a {@link String}. A value of <code>null</code> means that no
 	 *         display name is specified.
@@ -167,7 +167,7 @@ public class PropositionWrapper implements Serializable {
 	}
 
 	/**
-	 * Sets the data element definition's display name.
+	 * Sets the phenotype definition's display name.
 	 *
 	 * @param displayName
 	 *            a {@link String}. Passing in <code>null</code> will set the
@@ -178,7 +178,7 @@ public class PropositionWrapper implements Serializable {
 	}
 
 	/**
-	 * Gets the type of a user data element definition.
+	 * Gets the type of a user phenotype definition.
 	 *
 	 * @return a {@link Type}. Will be <code>null</code> if a system data
 	 *         element definition.
@@ -188,7 +188,7 @@ public class PropositionWrapper implements Serializable {
 	}
 
 	/**
-	 * Sets the type of a user data element definition.
+	 * Sets the type of a user phenotype definition.
 	 *
 	 * @param type
 	 *            a {@link Type}. Should be <code>null</code> for a system data
@@ -199,30 +199,30 @@ public class PropositionWrapper implements Serializable {
 	}
 
 	/**
-	 * Gets whether this data element definition is a system or user data
+	 * Gets whether this phenotype definition is a system or user data
 	 * element definition.
 	 *
-	 * @return <code>true</code> if a system data element definition,
-	 *         <code>false</code> if a user data element definition.
+	 * @return <code>true</code> if a system phenotype definition,
+	 *         <code>false</code> if a user phenotype definition.
 	 */
 	public boolean isInSystem() {
 		return inSystem;
 	}
 
 	/**
-	 * Sets whether this data element definition is a aystem or user data
+	 * Sets whether this phenotype definition is a aystem or user data
 	 * element definition.
 	 *
 	 * @param inSystem
-	 *            <code>true</code> if a system data element definition,
-	 *            <code>false</code> if a user data element definition.
+	 *            <code>true</code> if a system phenotype definition,
+	 *            <code>false</code> if a user phenotype definition.
 	 */
 	public void setInSystem(boolean inSystem) {
 		this.inSystem = inSystem;
 	}
 
 	/**
-	 * Gets the creation date of this data element definition.
+	 * Gets the creation date of this phenotype definition.
 	 *
 	 * @return the creation {@link Date}, or <code>null</code> if the creation
 	 *         date is unspecified.
@@ -232,7 +232,7 @@ public class PropositionWrapper implements Serializable {
 	}
 
 	/**
-	 * Sets the creation date of this data element definition.
+	 * Sets the creation date of this phenotype definition.
 	 *
 	 * @param inCreated
 	 *            the creation {@link Date}, or <code>null</code> if the
@@ -243,7 +243,7 @@ public class PropositionWrapper implements Serializable {
 	}
 
 	/**
-	 * Gets the last modified date of this data element definition.
+	 * Gets the last modified date of this phenotype definition.
 	 *
 	 * @return the last modified {@link Date}, or <code>null</code> if the last
 	 *         modified date is unspecified.
@@ -253,7 +253,7 @@ public class PropositionWrapper implements Serializable {
 	}
 
 	/**
-	 * Sets the last modified date of this data element definition.
+	 * Sets the last modified date of this phenotype definition.
 	 *
 	 * @param inLastModified
 	 *            the last modified {@link Date}, or <code>null</code> if the
@@ -287,9 +287,9 @@ public class PropositionWrapper implements Serializable {
 	}
 
 	/**
-	 * Gets this data element definition's children, if any.
+	 * Gets this phenotype definition's children, if any.
 	 *
-	 * @return a {@link List} of this data element definition's children, if
+	 * @return a {@link List} of this phenotype definition's children, if
 	 *         any.
 	 */
 	public List<PropositionWrapper> getChildren() {
@@ -297,19 +297,19 @@ public class PropositionWrapper implements Serializable {
 	}
 
 	/**
-	 * Sets this data element definition's children.
+	 * Sets this phenotype definition's children.
 	 *
 	 * @param inChildren
-	 *            a {@link List} of this data element definition's children.
+	 *            a {@link List} of this phenotype definition's children.
 	 */
 	public void setChildren(List<PropositionWrapper> inChildren) {
 		children = inChildren;
 	}
 
 	/**
-	 * Gets this data element definition's properties, if any.
+	 * Gets this phenotype definition's properties, if any.
 	 *
-	 * @return a {@link List} of this data element definition's properties, if
+	 * @return a {@link List} of this phenotype definition's properties, if
 	 *         any
 	 */
 	public List<String> getProperties() {
@@ -317,19 +317,19 @@ public class PropositionWrapper implements Serializable {
 	}
 
 	/**
-	 * Sets this data element definition's properties.
+	 * Sets this phenotype definition's properties.
 	 *
 	 * @param inProperties
-	 *            a {@link List} of this data element definition's properties.
+	 *            a {@link List} of this phenotype definition's properties.
 	 */
 	public void setProperties(List<String> inProperties) {
 		properties = inProperties;
 	}
 
 	/**
-	 * Returns whether this data element definition has children.
+	 * Returns whether this phenotype definition has children.
 	 *
-	 * @return <code>true</code> if this data element definition has children,
+	 * @return <code>true</code> if this phenotype definition has children,
 	 *         <code>false</code> otherwise.
 	 */
 	public boolean isParent() {
@@ -337,10 +337,10 @@ public class PropositionWrapper implements Serializable {
 	}
 
 	/**
-	 * Sets whether this data element definition has children.
+	 * Sets whether this phenotype definition has children.
 	 *
 	 * @param inParent
-	 *            <code>true</code> if this data element definition has
+	 *            <code>true</code> if this phenotype definition has
 	 *            children, <code>false</code> otherwise.
 	 */
 	public void setParent(boolean inParent) {

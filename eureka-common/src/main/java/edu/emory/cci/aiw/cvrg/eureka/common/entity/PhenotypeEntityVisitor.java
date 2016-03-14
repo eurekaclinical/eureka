@@ -37,70 +37,18 @@
  * <http://www.gnu.org/licenses/gpl-3.0.html>.
  * #L%
  */
-package edu.emory.cci.aiw.cvrg.eureka.common.comm;
+package edu.emory.cci.aiw.cvrg.eureka.common.entity;
 
-import java.util.List;
-
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.SystemProposition.SystemType;
-import edu.emory.cci.aiw.cvrg.eureka.common.exception.DataElementHandlingException;
-import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
-
-public final class SystemElement extends DataElement {
-
-	private SystemType systemType;
-	private List<SystemElement> children;
-	private boolean isParent;
-	private List<String> properties;
-
-	public SystemElement () {
-		super(Type.SYSTEM);
-	}
-
-	public SystemType getSystemType() {
-		return systemType;
-	}
-
-	public void setSystemType(SystemType systemType) {
-		this.systemType = systemType;
-	}
-
-	public List<SystemElement> getChildren() {
-		return children;
-	}
-
-	public void setChildren(List<SystemElement> children) {
-		this.children = children;
-	}
-
-	public boolean isParent() {
-		return isParent;
-	}
-
-	public void setParent(boolean isParent) {
-		this.isParent = isParent;
-	}
-
-	public List<String> getProperties() {
-		return properties;
-	}
-
-	public void setProperties(List<String> properties) {
-		this.properties = properties;
-	}
-
-	@Override
-	public boolean isInSystem() {
-		return true;
-	}
+public interface PhenotypeEntityVisitor {
 	
-	@Override
-    public void accept(DataElementVisitor visitor) 
-			throws DataElementHandlingException{
-		visitor.visit(this);
-    }
+	public void visit(SystemProposition proposition);
 	
-	@Override
-	public String toString() {
-		return ReflectionToStringBuilder.reflectionToString(this);
-	}
+	public void visit(CategoryEntity categorization);
+	
+	public void visit(SequenceEntity highLevelAbstraction);
+
+	public void visit(ValueThresholdGroupEntity lowLevelAbstraction);
+
+	public void visit(FrequencyEntity sliceAbstraction);
+
 }

@@ -74,17 +74,17 @@
 			<div class="form-group">
 				<label for="propDisplayName">Name</label>
 				<input type="text" id="propDisplayName" value="${proposition.displayName}"
-					   class="form-control"/>
+                                        class="form-control"/>
 			</div>
 			<div class="form-group">
 				<label for="propDescription">Description</label>
 				<textarea id="propDescription" class="form-control"><c:if
-						test="${not empty proposition}">${proposition.description}</c:if></textarea>
+                                        test="${not empty proposition}">${proposition.description}</c:if></textarea>
 			</div>
 			<!--<label>Definition</label>-->
 			<fieldset>
 			<legend>Threshold</legend>
-			<div class="form-group">
+                        <div class="form-group">
 				<div class="col-sm-4">
 					<label class="sr-only" for="freqTypes">Type</label>
 					<select id="freqTypes" class="form-control" name="freqTypes" id="freqTypes"
@@ -102,27 +102,31 @@
 						   title="Specify the frequency count" class="form-control"/>
 				</div>
 				<div class="col-sm-4">
-						<label id="valueThresholdConsecutiveLabel" class="checkbox-inline<c:if test="${empty proposition or proposition.dataElement.type != 'VALUE_THRESHOLD'}"> hide</c:if>">
+						<label id="valueThresholdConsecutiveLabel" class="checkbox-inline<c:if test="${empty proposition or proposition.phenotype.type != 'VALUE_THRESHOLD'}"> hide</c:if>">
 						<input type="checkbox" value="true" name="freqIsConsecutive"
-								  title="For value threshold data elements, specifies whether no intervening values are present that do not match the threshold or any duration or property constraints specified below"
+								  title="For value threshold phenotypes, specifies whether no intervening values are present that do not match the threshold or any duration or property constraints specified below"
 							   <c:if test="${propositionType == 'FREQUENCY' and proposition.isConsecutive}">checked="checked"</c:if> />consecutive
 					</label>
 				</div>
 			</div>
 			<div class="form-group">
 				<div class="col-sm-12">
-					<label class="sr-only" for="freqMainDataElement">Data element</label>
-					<div id="freqMainDataElement" class="tree-drop tree-drop-single jstree-drop"
-						 title="Specify a system or user-defined data element">
-						<div class="label-info text-center">Drop Here</div>
+					<label class="sr-only" for="freqMainPhenotype">Phenotype</label>
+					<div id="freqMainPhenotype" class="tree-drop tree-drop-single jstree-drop"
+						 title="Drag and drop the system/user-defined phenotype member in here">
+						<div class="label-info text-center">
+                                                	Drop Here
+                                                </div>
 						<ul data-type="main" data-drop-type="single" class="sortable">
 							<c:if test="${not empty proposition and propositionType == 'FREQUENCY'}">
-								<li data-key="${proposition.dataElement.dataElementKey}"
-                                                                    data-desc="${proposition.dataElement.dataElementDisplayName}"
-                                                                    data-space="${proposition.dataElement.inSystem ? 'system' : 'user'}">
+								<li data-key="${proposition.phenotype.phenotypeKey}"
+                                                                    data-desc="${proposition.phenotype.phenotypeDisplayName}"
+                                                                    data-space="${proposition.phenotype.inSystem ? 'system' : 'user'}">
                                                                     <span class="glyphicon glyphicon-remove delete-icon">
                                                                     </span>
-                                                                    <span class="desc">${empty proposition.dataElement.dataElementDisplayName ? '' : proposition.dataElement.dataElementDisplayName} (${proposition.dataElement.dataElementKey})</span>
+                                                                    <span class="desc">${empty proposition.phenotype.phenotypeDisplayName ? '' : proposition.phenotype.phenotypeDisplayName} 
+                                                                        (${proposition.phenotype.phenotypeKey})
+                                                                    </span>
 								</li>
 							</c:if>
 						</ul>
@@ -132,118 +136,127 @@
 			</fieldset>
 			<fieldset>
 				<legend><input class="checkbox-inline" type="checkbox" value="true"
-					   name="freqDataElementSpecifyDuration"
-					   <c:if test="${propositionType == 'FREQUENCY' and proposition.dataElement.hasDuration}">checked="checked"</c:if>>
+					   name="freqPhenotypeSpecifyDuration"
+					   <c:if test="${propositionType == 'FREQUENCY' and proposition.phenotype.hasDuration}">checked="checked"</c:if>>
 				Duration</legend>
-			<div class="form-group">
-				<div class="col-md-2">
-					<label class="sr-only" for="freqDataElementMinDurationValue">From</label>
-					<input type="text" class="form-control"
-						   name="freqDataElementMinDurationValue"
-						   id="freqDataElementMinDurationValue"
-						   placeholder="min"
-						   value="<c:if test="${propositionType == 'FREQUENCY'}">${proposition.dataElement.minDuration}</c:if>"/>
-				</div>
-				<div class="col-md-3">
-					<label class="sr-only" for="freqDataElementMinDurationUnits">From units</label>
-					<select name="freqDataElementMinDurationUnits" id="freqDataElementMinDurationUnits" class="form-control">
-						<c:forEach var="unit" items="${timeUnits}">
-							<option value="${unit.id}"
-									<c:if test="${propositionType == 'FREQUENCY' ? unit.id == proposition.dataElement.minDurationUnits : unit.id == defaultTimeUnit.id}">selected="selected"</c:if>>${unit.description}</option>
-						</c:forEach>
-					</select>
-				</div>
-				<div class="col-md-1 control-label" style="text-align: center">
-					<label for="freqDataElementMaxDurationValue">to</label>
-				</div>
-				<div class="col-md-2">
-					<input type="text" class="form-control"
-						   name="freqDataElementMaxDurationValue"
-						   placeholder="max"
-						   value="<c:if test="${propositionType == 'FREQUENCY'}">${proposition.dataElement.maxDuration}</c:if>"/>
-				</div>
-				<div class="col-md-3">
-					<label class="sr-only" for="freqDataElementMaxDurationUnits">To units</label>
-					<select name="freqDataElementMaxDurationUnits" id="freqDataElementMaxDurationUnits" class="form-control">
-						<c:forEach var="unit" items="${timeUnits}">
-							<option value="${unit.id}"
-									<c:if test="${propositionType == 'FREQUENCY' ? unit.id == proposition.dataElement.maxDurationUnits : unit.id == defaultTimeUnit.id}">selected="selected"</c:if>>${unit.description}</option>
-						</c:forEach>
-					</select>
-				</div>
-			</div>
+                                <div class="form-group">
+                                        <div class="col-md-2">
+                                                <label class="sr-only" for="freqPhenotypeMinDurationValue">From</label>
+                                                <input type="text" class="form-control"
+                                                           name="freqPhenotypeMinDurationValue"
+                                                           id="freqPhenotypeMinDurationValue"
+                                                           placeholder="min"
+                                                           value="<c:if test="${propositionType == 'FREQUENCY'}">${proposition.phenotype.minDuration}</c:if>"/>
+                                        </div>
+                                        <div class="col-md-3">
+                                                <label class="sr-only" for="freqPhenotypeMinDurationUnits">From units</label>
+                                                <select name="freqPhenotypeMinDurationUnits" id="freqPhenotypeMinDurationUnits" class="form-control">
+                                                        <c:forEach var="unit" items="${timeUnits}">
+                                                                <option value="${unit.id}"
+                                                                                <c:if test="${propositionType == 'FREQUENCY' ? unit.id == proposition.phenotype.minDurationUnits : unit.id == defaultTimeUnit.id}">selected="selected"</c:if>>${unit.description}</option>
+                                                        </c:forEach>
+                                                </select>
+                                        </div>
+                                        <div class="col-md-1 control-label" style="text-align: center">
+                                                <label for="freqPhenotypeMaxDurationValue">to</label>
+                                        </div>
+                                        <div class="col-md-2">
+                                                <input type="text" class="form-control"
+                                                           name="freqPhenotypeMaxDurationValue"
+                                                           placeholder="max"
+                                                           value="<c:if test="${propositionType == 'FREQUENCY'}">${proposition.phenotype.maxDuration}</c:if>"/>
+                                        </div>
+                                        <div class="col-md-3">
+                                                <label class="sr-only" for="freqPhenotypeMaxDurationUnits">To units</label>
+                                                <select name="freqPhenotypeMaxDurationUnits" id="freqPhenotypeMaxDurationUnits" class="form-control">
+                                                        <c:forEach var="unit" items="${timeUnits}">
+                                                                <option value="${unit.id}"
+                                                                                <c:if test="${propositionType == 'FREQUENCY' ? unit.id == proposition.phenotype.maxDurationUnits : unit.id == defaultTimeUnit.id}">selected="selected"</c:if>>${unit.description}</option>
+                                                        </c:forEach>
+                                                </select>
+                                        </div>
+                                </div>
 			</fieldset>
 			<fieldset>
 			<legend>
 				<input type="checkbox" class="checkbox-inline propertyValueConstraint"
-					   <c:if test="${propositionType == 'FREQUENCY' and proposition.dataElement.hasPropertyConstraint}">checked="checked"</c:if>
-					   name="freqDataElementSpecifyProperty"/>
-				Property value
+                                        <c:if test="${propositionType == 'FREQUENCY' and proposition.phenotype.hasPropertyConstraint}">
+                                            checked="checked"
+                                        </c:if>
+                                        name="freqPhenotypeSpecifyProperty"
+                                />Property value
 			</legend>
 			<div class="form-group">
 				<div class="col-sm-6">
-					<label class="sr-only" for="freqDataElementPropertyName">Property name</label>
-					<select name="freqDataElementPropertyName" id="freqDataElementPropertyName" class="form-control"
-							data-properties-provider="freqMainDataElement">
+					<label class="sr-only" for="freqPhenotypePropertyName">Property name</label>
+					<select name="freqPhenotypePropertyName" id="freqPhenotypePropertyName" class="form-control"
+							data-properties-provider="freqMainPhenotype">
 						<c:if test="${propositionType == 'FREQUENCY'}">
 							<c:forEach var="property"
-									   items="${properties[proposition.dataElement.dataElementKey]}">
+                                                                items="${properties[proposition.phenotype.phenotypeKey]}">
 								<option value="${property}"
-										<c:if test="${proposition.dataElement.property == property}">selected="selected"</c:if>>${property}</option>
+                                                                        <c:if test="${proposition.phenotype.property == property}">
+                                                                            selected="selected"
+                                                                        </c:if>>${property}
+                                                                </option>
 							</c:forEach>
 						</c:if>
 					</select>
 				</div>
 				<div class="col-sm-6">
-					<label class="sr-only" for="freqDataElementPropertyValue">Property value</label>
+					<label class="sr-only" for="freqPhenotypePropertyValue">Property value</label>
 					<input type="text" class="form-control propertyValueField"
-						   name="freqDataElementPropertyValue"
-						   id="freqDataElementPropertyValue"
-						   value="<c:if test="${propositionType == 'FREQUENCY' and not empty proposition.dataElement.propertyValue}">${proposition.dataElement.propertyValue}</c:if>"/>
+						   name="freqPhenotypePropertyValue"
+						   id="freqPhenotypePropertyValue"
+						   value="
+                                                   <c:if test="${propositionType == 'FREQUENCY' and not empty proposition.phenotype.propertyValue}">
+                                                       ${proposition.phenotype.propertyValue}
+                                                   </c:if>"
+                                        />
 				</div>
 			</div>
 			</fieldset>
 			<fieldset>
-			<legend>
-				<input type="checkbox" value="true" name="freqIsWithin" class="checkbox-inline"
-					   <c:if test="${propositionType == 'FREQUENCY' and proposition.isWithin}">checked="checked"</c:if>>
-				Distance between
-			</legend>
-			<div class="form-group">
-				<div class="col-md-2">
-					<label class="sr-only" for="freqWithinAtLeast">From</label>
-					<input type="text" class="form-control" name="freqWithinAtLeast"
-						   id="freqWithinAtLeast"
-						   placeholder="min"
-						   value="<c:if test="${propositionType == 'FREQUENCY'}">${proposition.withinAtLeast}</c:if>"/>
-				</div>
-				<div class="col-md-3">
-					<label class="sr-only" for="freqWithinAtLeastUnits">Time units</label>
-					<select name="freqWithinAtLeastUnits" id="freqWithinAtLeastUnits" class="form-control">
-						<c:forEach var="unit" items="${timeUnits}">
-							<option value="${unit.id}"
-									<c:if test="${propositionType == 'FREQUENCY' ? unit.id == proposition.withinAtLeastUnits : unit.id == defaultTimeUnit.id}">selected="selected"</c:if>>${unit.description}</option>
-						</c:forEach>
-					</select>
-				</div>
-				<div class="col-md-1 control-label" style="text-align: center">
-					<label for="freqWithinAtMost">to</label>
-				</div>
-				<div class="col-md-2">
-					<input type="text" class="form-control" name="freqWithinAtMost"
-						   placeholder="max" id="freqWithinAtMost"
-						   value="<c:if test="${propositionType == 'FREQUENCY'}">${proposition.withinAtMost}</c:if>"/>
-				</div>
-				<div class="col-md-3">
-					<label class="sr-only" for="freqWithinAtMostUnits">Time units</label>
-					<select name="freqWithinAtMostUnits" class="form-control" id="freqWithinAtMostUnits">
-						<c:forEach var="unit" items="${timeUnits}">
-							<option value="${unit.id}"
-									<c:if test="${propositionType == 'FREQUENCY' ? unit.id == proposition.withinAtMostUnits : unit.id == defaultTimeUnit.id}">selected="selected"</c:if>>${unit.description}</option>
-						</c:forEach>
-					</select>
-				</div>
-			</div>
+                                <legend>
+                                        <input type="checkbox" value="true" name="freqIsWithin" class="checkbox-inline"
+                                                   <c:if test="${propositionType == 'FREQUENCY' and proposition.isWithin}">checked="checked"</c:if>>
+                                        Distance between
+                                </legend>
+                                <div class="form-group">
+                                        <div class="col-md-2">
+                                                <label class="sr-only" for="freqWithinAtLeast">From</label>
+                                                <input type="text" class="form-control" name="freqWithinAtLeast"
+                                                           id="freqWithinAtLeast"
+                                                           placeholder="min"
+                                                           value="<c:if test="${propositionType == 'FREQUENCY'}">${proposition.withinAtLeast}</c:if>"/>
+                                        </div>
+                                        <div class="col-md-3">
+                                                <label class="sr-only" for="freqWithinAtLeastUnits">Time units</label>
+                                                <select name="freqWithinAtLeastUnits" id="freqWithinAtLeastUnits" class="form-control">
+                                                        <c:forEach var="unit" items="${timeUnits}">
+                                                                <option value="${unit.id}"
+                                                                                <c:if test="${propositionType == 'FREQUENCY' ? unit.id == proposition.withinAtLeastUnits : unit.id == defaultTimeUnit.id}">selected="selected"</c:if>>${unit.description}</option>
+                                                        </c:forEach>
+                                                </select>
+                                        </div>
+                                        <div class="col-md-1 control-label" style="text-align: center">
+                                                <label for="freqWithinAtMost">to</label>
+                                        </div>
+                                        <div class="col-md-2">
+                                                <input type="text" class="form-control" name="freqWithinAtMost"
+                                                           placeholder="max" id="freqWithinAtMost"
+                                                           value="<c:if test="${propositionType == 'FREQUENCY'}">${proposition.withinAtMost}</c:if>"/>
+                                        </div>
+                                        <div class="col-md-3">
+                                                <label class="sr-only" for="freqWithinAtMostUnits">Time units</label>
+                                                <select name="freqWithinAtMostUnits" class="form-control" id="freqWithinAtMostUnits">
+                                                        <c:forEach var="unit" items="${timeUnits}">
+                                                                <option value="${unit.id}"
+                                                                                <c:if test="${propositionType == 'FREQUENCY' ? unit.id == proposition.withinAtMostUnits : unit.id == defaultTimeUnit.id}">selected="selected"</c:if>>${unit.description}</option>
+                                                        </c:forEach>
+                                                </select>
+                                        </div>
+                                </div>
 			</fieldset>
 			<div class="form-group text-center">
 				<button id="savePropositionButton" type="button" class="btn btn-primary">

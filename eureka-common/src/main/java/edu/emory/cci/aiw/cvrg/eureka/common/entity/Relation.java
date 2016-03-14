@@ -67,12 +67,12 @@ public class Relation {
 	
 	@ManyToOne(cascade = CascadeType.ALL)
 	@JoinColumn(nullable = false)
-	private ExtendedDataElement lhsExtendedDataElement;
+	private ExtendedPhenotype lhsExtendedPhenotype;
 	
 	@ManyToOne(cascade = { CascadeType.MERGE, CascadeType.REFRESH,
 	        CascadeType.PERSIST })
 	@JoinColumn(nullable = false)
-	private ExtendedDataElement rhsExtendedDataElement;
+	private ExtendedPhenotype rhsExtendedPhenotype;
 
 	@ManyToOne
 	@JoinColumn(name="relationop_id", referencedColumnName = "id", 
@@ -111,22 +111,22 @@ public class Relation {
 		id = inId;
 	}
 
-	public ExtendedDataElement getLhsExtendedDataElement() {
-		return lhsExtendedDataElement;
+	public ExtendedPhenotype getLhsExtendedPhenotype() {
+		return lhsExtendedPhenotype;
 	}
 
-	public void setLhsExtendedDataElement(ExtendedDataElement
-		inLhsExtendedDataElement) {
-		lhsExtendedDataElement = inLhsExtendedDataElement;
+	public void setLhsExtendedPhenotype(ExtendedPhenotype
+		inLhsExtendedPhenotype) {
+		lhsExtendedPhenotype = inLhsExtendedPhenotype;
 	}
 
-	public ExtendedDataElement getRhsExtendedDataElement() {
-		return rhsExtendedDataElement;
+	public ExtendedPhenotype getRhsExtendedPhenotype() {
+		return rhsExtendedPhenotype;
 	}
 
-	public void setRhsExtendedDataElement(ExtendedDataElement
-		inRhsExtendedDataElement) {
-		rhsExtendedDataElement = inRhsExtendedDataElement;
+	public void setRhsExtendedPhenotype(ExtendedPhenotype
+		inRhsExtendedPhenotype) {
+		rhsExtendedPhenotype = inRhsExtendedPhenotype;
 	}
 
 	public RelationOperator getRelationOperator() {

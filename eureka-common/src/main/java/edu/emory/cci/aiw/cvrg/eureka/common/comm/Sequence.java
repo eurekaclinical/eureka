@@ -41,38 +41,38 @@ package edu.emory.cci.aiw.cvrg.eureka.common.comm;
 
 import java.util.List;
 
-import edu.emory.cci.aiw.cvrg.eureka.common.exception.DataElementHandlingException;
+import edu.emory.cci.aiw.cvrg.eureka.common.exception.PhenotypeHandlingException;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 /**
- * Container class for the sequence user-created data element from the UI.
+ * Container class for the sequence user-created phenotype from the UI.
  * Essentially a direct mapping from the sequence element form fields.
  */
-public final class Sequence extends DataElement {
+public final class Sequence extends Phenotype {
 
-	private DataElementField primaryDataElement;
-	private List<RelatedDataElementField> relatedDataElements;
+	private PhenotypeField primaryPhenotype;
+	private List<RelatedPhenotypeField> relatedPhenotypes;
 
 	public Sequence () {
 		super(Type.SEQUENCE);
 	}
 
-	public DataElementField getPrimaryDataElement() {
-		return primaryDataElement;
+	public PhenotypeField getPrimaryPhenotype() {
+		return primaryPhenotype;
 	}
 
-	public void setPrimaryDataElement(DataElementField primaryDataElement) {
-		this.primaryDataElement = primaryDataElement;
+	public void setPrimaryPhenotype(PhenotypeField primaryPhenotype) {
+		this.primaryPhenotype = primaryPhenotype;
 	}
 
-	public List<RelatedDataElementField> getRelatedDataElements() {
-		return relatedDataElements;
+	public List<RelatedPhenotypeField> getRelatedPhenotypes() {
+		return relatedPhenotypes;
 	}
 
-	public void setRelatedDataElements(
-	        List<RelatedDataElementField> relatedDataElements) {
-		this.relatedDataElements = relatedDataElements;
+	public void setRelatedPhenotypes(
+	        List<RelatedPhenotypeField> relatedPhenotypes) {
+		this.relatedPhenotypes = relatedPhenotypes;
 	}
 
 	@Override
@@ -81,8 +81,8 @@ public final class Sequence extends DataElement {
 	}
 
 	@Override
-	public void accept(DataElementVisitor visitor) 
-			throws DataElementHandlingException{
+	public void accept(PhenotypeVisitor visitor) 
+			throws PhenotypeHandlingException{
 		visitor.visit(this);
 	}
 }

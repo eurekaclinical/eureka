@@ -108,14 +108,14 @@ public class Setup implements TestDataProvider {
 		UserEntity researcherUser = this.createResearcherUser();
 		UserEntity adminUser = this.createAdminUser();
 		UserEntity superUser = this.createSuperUser();
-		this.createDataElements(researcherUser, adminUser, superUser);
+		this.createPhenotypes(researcherUser, adminUser, superUser);
 		this.createTimeUnits();
 		this.createFrequencyTypes();
 	}
 
 	@Override
 	public void tearDown() throws TestDataException {
-		this.remove(DataElementEntity.class);
+		this.remove(PhenotypeEntity.class);
 		this.remove(UserEntity.class);
 		this.remove(Role.class);
 		this.remove(TimeUnit.class);
@@ -142,9 +142,9 @@ public class Setup implements TestDataProvider {
 		entityManager.getTransaction().commit();
 	}
 	
-	private List<DataElementEntity> createDataElements(UserEntity... users) {
-		System.out.println("Creating data elements...");
-		List<DataElementEntity> dataElements =
+	private List<PhenotypeEntity> createPhenotypes(UserEntity... users) {
+		System.out.println("Creating phenotypes...");
+		List<PhenotypeEntity> phenotypes =
 				new ArrayList<>(users.length);
 		EntityManager entityManager = this.getEntityManager();
 		Date now = new Date();
@@ -166,7 +166,7 @@ public class Setup implements TestDataProvider {
 			proposition1.setCategoryType(CategoryType.EVENT);
 			proposition1.setCreated(now);
 			entityManager.persist(proposition1);
-			dataElements.add(proposition1);
+			phenotypes.add(proposition1);
 			
 			SystemProposition sysProp = new SystemProposition();
 			sysProp.setUserId(u.getId());
@@ -183,12 +183,12 @@ public class Setup implements TestDataProvider {
 			lowLevelAbstraction.setThresholdsOperator(any);
 			lowLevelAbstraction.setUserId(u.getId());
 			entityManager.persist(lowLevelAbstraction);
-			dataElements.add(lowLevelAbstraction);
+			phenotypes.add(lowLevelAbstraction);
 			entityManager.getTransaction().commit();
 		}
 		
-		System.err.println("Done creating data elements!");
-		return dataElements;
+		System.err.println("Done creating phenotypes!");
+		return phenotypes;
 	}
 
 	private UserEntity createResearcherUser() throws TestDataException {

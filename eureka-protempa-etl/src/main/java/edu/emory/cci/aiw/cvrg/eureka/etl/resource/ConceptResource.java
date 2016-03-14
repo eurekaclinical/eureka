@@ -73,14 +73,14 @@ import org.arp.javautil.arrays.Arrays;
 @Path("/protected/concepts")
 @RolesAllowed({"researcher"})
 @Produces(MediaType.APPLICATION_JSON)
-public class PropositionResource {
+public class ConceptResource {
 
 	private static final Logger LOGGER = LoggerFactory
-			.getLogger(PropositionResource.class);
+			.getLogger(ConceptResource.class);
 	private final EtlProperties etlProperties;
 
 	@Inject
-	public PropositionResource(EtlProperties inEtlProperties) {
+	public ConceptResource(EtlProperties inEtlProperties) {
 		this.etlProperties = inEtlProperties;
 	}
 

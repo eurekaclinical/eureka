@@ -39,8 +39,8 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.services.conversion;
 
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.DataElementEntity;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.ExtendedDataElement;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.PhenotypeEntity;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.ExtendedPhenotype;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.RelationOperator;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.TimeUnit;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.ValueThresholdEntity;
@@ -69,18 +69,18 @@ class ConversionUtil {
 	static final String PROP_ID_WRAPPED_SUFFIX = "_WRAPPED";
 	static final String USER_KEY_PREFIX = "USER:";
 	
-	private static final DataElementConversionSupport CONVERSION_SUPPORT =
-			new DataElementConversionSupport();
+	private static final PhenotypeConversionSupport CONVERSION_SUPPORT =
+			new PhenotypeConversionSupport();
 
 	static AbsoluteTimeUnit unit(TimeUnit unit) {
 		return unit != null ? AbsoluteTimeUnit.nameToUnit(unit.getName())
 				: null;
 	}
 
-	static TemporalExtendedPropositionDefinition buildExtendedPropositionDefinition(ExtendedDataElement ep) {
-		DataElementEntity dataElementEntity = ep.getDataElementEntity();
+	static TemporalExtendedPropositionDefinition buildExtendedPropositionDefinition(ExtendedPhenotype ep) {
+		PhenotypeEntity phenotypeEntity = ep.getPhenotypeEntity();
 		TemporalExtendedPropositionDefinition tepd =
-				buildExtendedPropositionDefinition(dataElementEntity);
+				buildExtendedPropositionDefinition(phenotypeEntity);
 		if (ep.getPropertyConstraint() != null) {
 			PropertyConstraint pc = new PropertyConstraint();
 			pc.setPropertyName(
@@ -100,16 +100,16 @@ class ConversionUtil {
 
 	static ContextDefinition extractContextDefinition(
 			ValueThresholdGroupEntity entity,
-			List<ExtendedDataElement> extendedDataElements,
+			List<ExtendedPhenotype> extendedPhenotypes,
 			ValueThresholdEntity v) {
 		ContextDefinition cd = new ContextDefinition(
 				entity.getKey() + "_SUB_CONTEXT");
 		cd.setGapFunction(new SimpleGapFunction(0, null));
 		TemporalExtendedPropositionDefinition[] tepds =
-				new TemporalExtendedPropositionDefinition[extendedDataElements.size()];
+				new TemporalExtendedPropositionDefinition[extendedPhenotypes.size()];
 		int i = 0;
-		for (ExtendedDataElement ede : extendedDataElements) {
-			DataElementEntity dee = ede.getDataElementEntity();
+		for (ExtendedPhenotype ede : extendedPhenotypes) {
+			PhenotypeEntity dee = ede.getPhenotypeEntity();
 			TemporalExtendedPropositionDefinition tepd;
 			String tepdId = dee.getKey();
 			if (!dee.isInSystem()) {
@@ -169,7 +169,7 @@ class ConversionUtil {
 	}
 
 	private static TemporalExtendedPropositionDefinition buildExtendedPropositionDefinition(String propId,
-			DataElementEntity entity) {
+			PhenotypeEntity entity) {
 		TemporalExtendedPropositionDefinition tepd;
 		if (entity instanceof ValueThresholdGroupEntity) {
 			TemporalExtendedParameterDefinition tepvDef =
@@ -183,13 +183,13 @@ class ConversionUtil {
 	}
 
 	private static TemporalExtendedPropositionDefinition buildExtendedPropositionDefinition(
-			DataElementEntity dataElementEntity) {
+			PhenotypeEntity phenotypeEntity) {
 		String propId;
-		if (dataElementEntity.isInSystem()) {
-			propId = dataElementEntity.getKey();
+		if (phenotypeEntity.isInSystem()) {
+			propId = phenotypeEntity.getKey();
 		} else {
-			propId = CONVERSION_SUPPORT.toPropositionId(dataElementEntity);
+			propId = CONVERSION_SUPPORT.toPropositionId(phenotypeEntity);
 		}
-		return buildExtendedPropositionDefinition(propId, dataElementEntity);
+		return buildExtendedPropositionDefinition(propId, phenotypeEntity);
 	}
 }

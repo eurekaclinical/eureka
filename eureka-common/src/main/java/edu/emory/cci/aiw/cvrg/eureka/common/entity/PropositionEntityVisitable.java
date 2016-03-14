@@ -40,5 +40,5 @@
 package edu.emory.cci.aiw.cvrg.eureka.common.entity;
 
 public interface PropositionEntityVisitable {
-	public void accept(DataElementEntityVisitor visitor);
+	public void accept(PhenotypeEntityVisitor visitor);
 }

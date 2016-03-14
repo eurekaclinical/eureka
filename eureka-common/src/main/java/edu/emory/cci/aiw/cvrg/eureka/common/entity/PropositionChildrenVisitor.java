@@ -44,11 +44,11 @@ import java.util.Collections;
 import java.util.List;
 
 public final class PropositionChildrenVisitor implements
-        DataElementEntityVisitor {
+        PhenotypeEntityVisitor {
 
-	private List<? extends DataElementEntity> children;
+	private List<? extends PhenotypeEntity> children;
 
-	public List<? extends DataElementEntity> getChildren() {
+	public List<? extends PhenotypeEntity> getChildren() {
 		return children;
 	}
 
@@ -69,7 +69,7 @@ public final class PropositionChildrenVisitor implements
 
 	@Override
 	public void visit(ValueThresholdGroupEntity lowLevelAbstraction) {
-		List<DataElementEntity> cs = new ArrayList<>();
+		List<PhenotypeEntity> cs = new ArrayList<>();
 		for (ValueThresholdEntity v : lowLevelAbstraction.getValueThresholds()) {
 			cs.add(v.getAbstractedFrom());
 		}

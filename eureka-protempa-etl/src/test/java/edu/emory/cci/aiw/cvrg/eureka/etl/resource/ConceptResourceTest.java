@@ -1,6 +1,6 @@
 /*
  * #%L
- * Eureka Common
+ * Eureka Protempa ETL
  * %%
  * Copyright (C) 2012 - 2013 Emory University
  * %%
@@ -37,20 +37,12 @@
  * <http://www.gnu.org/licenses/gpl-3.0.html>.
  * #L%
  */
-package edu.emory.cci.aiw.cvrg.eureka.common.comm;
+package edu.emory.cci.aiw.cvrg.eureka.etl.resource;
 
-import edu.emory.cci.aiw.cvrg.eureka.common.exception.DataElementHandlingException;
+/**
+ * @author hrathod
+ */
+public class ConceptResourceTest extends AbstractEtlResourceTest {
 
-public interface DataElementVisitor {
 	
-	public void visit(SystemElement systemElement) throws DataElementHandlingException;
-	
-	public void visit(Category categoricalElement) 
-			throws DataElementHandlingException;
-	
-	public void visit(Sequence sequence) throws DataElementHandlingException;
-	
-	public void visit(Frequency frequency) throws DataElementHandlingException;
-	
-	public void visit(ValueThresholds thresholds) throws DataElementHandlingException;
 }
