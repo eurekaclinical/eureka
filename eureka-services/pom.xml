@@ -58,23 +58,23 @@
 						<configuration>
 							<expressionVars>
 								<property>
-									<name>superuser.email</name>
-									<value>super.user@emory.edu</value>
+									<name>eureka.superuser.email</name>
+									<value>no-reply@localhost</value>
 								</property>
 								<property>
-									<name>superuser.firstname</name>
+									<name>eureka.superuser.firstname</name>
 									<value>super</value>
 								</property>
 								<property>
-									<name>superuser.lastname</name>
+									<name>eureka.superuser.lastname</name>
 									<value>user</value>
 								</property>
 								<property>
-									<name>superuser.password</name>
+									<name>eureka.superuser.password</name>
 									<value>4656fd365a7b2a27efb753bca9b9cf1</value>
 								</property>
 								<property>
-									<name>superuser.username</name>
+									<name>eureka.superuser.username</name>
 									<value>superuser</value>
 								</property>
 							</expressionVars>

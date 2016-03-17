@@ -487,14 +487,14 @@
 		<insert tableName="USERS">
 			<column name="ID" valueNumeric="1"/>
 			<column name="ACTIVE" valueBoolean="true"/>
-			<column name="EMAIL" value="${superuser.email}"/>
-			<column name="FIRSTNAME" value="${superuser.firstname}"/>
-			<column name="LASTNAME" value="${superuser.lastname}"/>
+			<column name="EMAIL" value="${eureka.superuser.email}"/>
+			<column name="FIRSTNAME" value="${eureka.superuser.firstname}"/>
+			<column name="LASTNAME" value="${eureka.superuser.lastname}"/>
 			<column name="ORGANIZATION" value="N/A"/>
 			<column name="VERIFIED" valueBoolean="true"/>
 			<column name="PASSWORDEXPIRATION" valueDate="1971-01-01T00:00:00"/>
 			<!-- the default password is defaultPassword -->
-			<column name="PASSWORD" value="${superuser.password}"/>
+			<column name="PASSWORD" value="${eureka.superuser.password}"/>
 		</insert>
 		<insert tableName="USER_ROLE">
 			<column name="USER_ID" valueNumeric="1"/>
@@ -753,12 +753,12 @@
 			<dropUniqueConstraint tableName="USERS" constraintName="SYS_C0013038"/>
 			<addUniqueConstraint columnNames="USERNAME" constraintName="UNIQ_USERS_USERNAME" deferrable="false" disabled="false" initiallyDeferred="false" tableName="USERS"/>
 			<update tableName="USERS">
-				<column name="USERNAME" value="${superuser.username}"/>
-				<where>EMAIL='super.user@emory.edu'</where>
+				<column name="USERNAME" value="${eureka.superuser.username}"/>
+				<where>EMAIL='${eureka.superuser.email}'</where>
 			</update>
 			<update tableName="USERS">
 				<column name="EMAIL" value="no-reply@localhost"/>
-				<where>EMAIL='super.user@emory.edu'</where>
+				<where>EMAIL='${eureka.superuser.email}'</where>
 			</update>
 			<sql>
 				UPDATE USERS SET USERNAME=EMAIL WHERE USERNAME IS NULL
