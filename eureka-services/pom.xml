@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
 	<modelVersion>4.0.0</modelVersion>
 	<artifactId>eureka-services</artifactId>
 	<packaging>war</packaging>
 	<name>Eureka Services</name>
-	<description>Eureka Services is the middle services layer 
+	<description>Eureka Services is the middle services layer
 		of the Eureka! Clinical Analytics application.
 	</description>
 
@@ -55,6 +56,28 @@
 							<goal>update</goal>
 						</goals>
 						<configuration>
+							<expressionVars>
+								<property>
+									<name>eureka.superuser.email</name>
+									<value>no-reply@localhost</value>
+								</property>
+								<property>
+									<name>eureka.superuser.firstname</name>
+									<value>super</value>
+								</property>
+								<property>
+									<name>eureka.superuser.lastname</name>
+									<value>user</value>
+								</property>
+								<property>
+									<name>eureka.superuser.password</name>
+									<value>4656fd365a7b2a27efb753bca9b9cf1</value>
+								</property>
+								<property>
+									<name>eureka.superuser.username</name>
+									<value>superuser</value>
+								</property>
+							</expressionVars>
 							<changeLogFile>${project.build.directory}/classes/dbmigration/changelog-master.xml</changeLogFile>
 							<url>jdbc:h2:file:${project.build.directory}/eureka-db/eureka-services</url>
 						</configuration>
@@ -88,7 +111,7 @@
 			</resource>
 		</resources>
 	</build>
-	
+
 	<dependencies>
 		<dependency>
 			<groupId>junit</groupId>
@@ -127,9 +150,9 @@
 			<artifactId>guice-persist</artifactId>
 		</dependency>
 		<dependency>
-                            <groupId>javax.transaction</groupId>
-                            <artifactId>jta</artifactId>
-		</dependency>               
+			<groupId>javax.transaction</groupId>
+			<artifactId>jta</artifactId>
+		</dependency>
 		<dependency>
 			<groupId>javax.annotation</groupId>
 			<artifactId>jsr250-api</artifactId>
@@ -196,27 +219,5 @@
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
-	<profiles>
-		<profile>
-			<id>liquibase</id>
-			<build>
-				<plugins>
-					<plugin>
-						<groupId>org.liquibase</groupId>
-						<artifactId>liquibase-maven-plugin</artifactId>
-						<configuration>
-							<changeLogFile>src/main/resources/dbmigration/changelog-master.xml</changeLogFile>
-							<driver>${local.services.db.jdbc.driver}</driver>
-							<url>${local.services.db.jdbc.url}</url>
-							<username>${local.services.username}</username>
-							<password>${local.services.password}</password>
-							<referenceUrl>persistence:services-jpa-unit</referenceUrl>
-							<promptOnNonLocalDatabase>false</promptOnNonLocalDatabase>
-						</configuration>
-					</plugin>
-				</plugins>
-			</build>
-		</profile>
-	</profiles>
 </project>
 
