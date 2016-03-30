@@ -36,19 +36,20 @@ window.eureka.password = new function () {
 				}
 			},
 			messages: {
-				oldExpPassword: "Please enter your old password",
+				oldExpPassword: "Please enter your old password.",
 				newExpPassword: {
-					required: "Provide a password",
-					rangelength: $.validator.format("Please enter at least {0} characters")
+					required: "Provide a password.",
+					rangelength: $.validator.format("Please enter at least {0} characters.")
 				},
 				verifyExpPassword: {
-					required: "Repeat your password",
-					minlength: $.validator.format("Please enter at least {0} characters"),
-					equalTo: "Enter the same password as above"
+					required: "Repeat your password.",
+					minlength: $.validator.format("Please enter at least {0} characters."),
+					equalTo: "Enter the same password as above."
 				}
 			},
 			errorPlacement: function (error, element) {
-				error.appendTo($(element).closest('.form-group').find('.help-block .help-inline'));
+				error.appendTo($(element).closest('.form-group').find('.help-inline'));
+                                $('.help-inline').css("color", "#b94a48");
 			},
 			highlight: function (element) {
 				$(element).closest('.form-group').addClass('has-error');
