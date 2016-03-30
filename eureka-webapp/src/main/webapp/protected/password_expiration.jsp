@@ -54,38 +54,27 @@
 
 		<form id="passwordExpirationfrm" action="#" method="post" role="form" class="form-horizontal">
 			<div class="form-group">
-				<div class="col-sm-3 control-label">
-					<label for="oldExpPassword">Old Password</label>
-				</div>
+				<label for="oldExpPassword" class="control-label col-sm-3">Old Password</label>
 				<div class="col-sm-3">
 					<input type="password" name="oldExpPassword" id="oldExpPassword" class="form-control"/>
 				</div>
-				<div class="col-sm-6 help-block">
-					<div class="help-inline"></div>
-				</div>
+				<span class="col-sm-6 help-inline"></span>                               
 			</div>
 			<div class="form-group">
-				<div class="col-sm-3 control-label">
-					<label for="newExpPassword">New Password</label>
-				</div>
+				<label for="newExpPassword" class="control-label col-sm-3">New Password</label>
 				<div class="col-sm-3">
 					<input type="password" name="newExpPassword" id="newExpPassword" class="form-control"/>
 				</div>
-				<div class="col-sm-6 help-block">
-					<div class="help-inline"></div>
-				</div>
+				<span class="col-sm-6 help-inline"></span>
 			</div>
 			<div class="form-group">
-				<div class="col-sm-3 control-label">
-					<label for="verifyExpPassword">Re-enter New Password</label>
-				</div>
+				<label for="verifyExpPassword" class="control-label col-sm-3">Re-enter New Password</label>
 				<div class="col-sm-3">
 					<input type="password" name="verifyExpPassword" id="verifyExpPassword" class="form-control"/>
 				</div>
-				<div class="col-sm-6 help-block">
-					<div class="help-inline"></div>
-				</div>
+				<span class="col-sm-6 help-inline"></span>
 			</div>
+
 			<div class="form-group">
 				<div class="col-sm-1 col-sm-offset-3 text-center">
 					<input type="hidden" name="targetURL" id="targetURL" value="${param.redirectURL}"/>
