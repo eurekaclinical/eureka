@@ -1,39 +1,27 @@
-<div class="help" layout>
-    <md-content flex layout-padding>
-        <md-card>
-            <md-toolbar class="md-hue-1">
-                <div class="md-toolbar-tools">
-                    <h3>
-                        <span>Help</span>
-                    </h3>
-                </div>
-            </md-toolbar>
-            <md-card-content>
+<div class="help">
+                <h3>Help</h3>
                 <p>The links on this page will open in a separate window in the <a ng-href="{{links.helpSiteUrl}}/index.html" target="eureka-help">Eureka! website's help pages</a>.
-                <div layout>
-                    <div flex="50" layout layout-padding>
-                        <div flex="50">
+                <div class="row">
+                        <div class="col-sm-3">
 				<span class="thumbnail text-center">
 					<a ng-href="{{links.helpSiteUrl}}/getting-started.html" class="imageAndCaption" target="eureka-help">
-                        <img alt="Getting Started" src="assets/images/100px-Help-getting-started.png"/>
+						<img alt="Getting Started" src="assets/images/100px-Help-getting-started.png"/>
 						<span class="caption">
 							Getting Started
 						</span>
-                    </a>
+                                        </a>
 				</span>
                         </div>
-                        <div flex="50">
+                        <div class="col-sm-3">
 				<span class="thumbnail text-center">
 					<a ng-href="{{links.aiwUrl}}/user-faq.html" class="imageAndCaption" target="eureka-help">
-                        <img alt="Frequently Asked Questions" src="assets/images/100px-Help-FAQ.png"/>
+						<img alt="Frequently Asked Questions" src="assets/images/100px-Help-FAQ.png"/>
 						<span class="caption">
 							Frequently Asked Questions
 						</span>
-                    </a>
+                                        </a>
 				</span>
                         </div>
-                    </div>
-                    <span flex></span>
                 </div>
                 <h4>Topics:</h4>
                 <ul>
@@ -48,7 +36,4 @@
                     NOTE: For privacy, data retention and other policies regarding this
                     site, click on Frequently Asked Questions above.
                 </p>
-            </md-card-content>
-        </md-card>
-    </md-content>
 </div>
