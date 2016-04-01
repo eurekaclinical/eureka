@@ -14,30 +14,57 @@
         </div>
         <div class="row">
             <div class="col-md-6">
-                <div class="panel panel-info" ng-if="!user">
-                    <div class="panel-heading">First Steps</div>
-                    <div class="panel-body text-center">
-                        <div class="container-fluid">
-                            <div class="row" ng-switch="registration.registrationEnabled">
-                                <div ng-switch-when="true">
-                                    <div class="col-xs-6">
-                                        <h4>Learn about Eureka!</h4>
-                                        <a ng-href="{{links.aiwUrl}}/overview.html" target="_blank"
-                                           class="btn btn-primary btn-lg">
-                                            About Eureka!
-                                        </a>
-                                    </div>
-                                    <div class="col-xs-6">
-                                        <h4>Get an account</h4>
-                                        <a href="chooseaccounttype"
-                                           class="btn btn-primary btn-lg">
-                                            Register
-                                        </a>
-                                    </div>
-                                </div>
-                                <div ng-switch-default>
+                <div class="panel panel-info">
+                    <div class="panel-heading">Getting Started</div>
+                    
+                        <div class="panel-body text-center" ng-show="userVerficationPerformed == false ">
+                            <div class="container-fluid">
+                                <div class="row">
                                     <div class="col-xs-12">
-                                        <h4>Learn about Eureka!</h4>
+                                        <h4><i class="fa fa-refresh fa-spin fa-2x"></i>
+                                        </h4>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="panel-body text-center" ng-show="userVerficationPerformed == true && !user">
+                            <div class="container-fluid">
+                                <div class="row" ng-switch="registration.registrationEnabled">
+                                    <div ng-switch-when="true">
+                                        <div class="col-xs-6">
+                                            <h4>Learn about Eureka!</h4>
+                                            <a ng-href="{{links.aiwUrl}}/overview.html" target="_blank"
+                                               class="btn btn-primary btn-lg">
+                                                About Eureka!
+                                            </a>
+                                        </div>
+                                        <div class="col-xs-6">
+                                            <h4>Get an account</h4>
+                                            <a href="chooseaccounttype"
+                                               class="btn btn-primary btn-lg">
+                                                Register
+                                            </a>
+                                        </div>
+                                    </div>
+                                    <div ng-switch-default>
+                                        <div class="col-xs-12">
+                                            <h4>Learn about Eureka!</h4>
+                                            <a ng-href="{{links.aiwUrl}}/overview.html" target="_blank"
+                                               class="btn btn-primary btn-lg">
+                                                About Eureka!
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>        
+                    
+                        <div class="panel-body text-center" ng-show="userVerficationPerformed == true && user">
+                            <div class="container-fluid">
+                                <div class="row">
+                                    <div class="col-xs-12">
+                                        <h4>Learn more about Eureka!</h4>
                                         <a ng-href="{{links.aiwUrl}}/overview.html" target="_blank"
                                            class="btn btn-primary btn-lg">
                                             About Eureka!
@@ -46,24 +73,8 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
-                </div>
-                <div class="panel panel-info" ng-if="user">
-                    <div class="panel-heading">Want to learn more?</div>
-                    <div class="panel-body text-center">
-                        <div class="container-fluid">
-                            <div class="row">
-                                <div class="col-xs-12">
-                                    <h4>Learn more about Eureka!</h4>
-                                    <a ng-href="{{links.aiwUrl}}/overview.html" target="_blank"
-                                       class="btn btn-primary btn-lg">
-                                        About Eureka!
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                    
+                </div>               
             </div>
             <div class="col-md-6">
                 <div class="panel panel-info">
