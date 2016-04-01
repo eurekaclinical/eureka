@@ -45,7 +45,16 @@
                         <span class="brand-text">Eureka!</span>
                     </a>
                 </div>
+                
                 <div class="navbar-collapse collapse">
+                    <ul class="nav navbar-nav navbar-right menu-text" ng-show="userVerficationPerformed == false ">
+                        <li>
+                            <a class="btn btn-lg">                            
+                                <span class="fa fa-refresh fa-spin"></span>
+                                Loading...
+                            </a>
+                        </li>
+                    </ul>
                     <ul class="nav navbar-nav navbar-right menu-text" ng-show="userVerficationPerformed == true && user != null">
                         <li>
                             <a href="protected/cohorthome" class="btn btn-lg">
@@ -106,7 +115,7 @@
                         <li>
                             <a ui-sref="help" class="btn btn-lg">
                                 <span class="glyphicon glyphicon-question-sign"></span>
-                                    Help
+                                Help
                             </a>
                         </li>
                         <li>
