@@ -107,6 +107,7 @@
 								dbmigration/eureka-ontology-EK_ICD10CM-changelog.3.xml,
 								dbmigration/eureka-ontology-EK_ICD10CM-changelog.4.xml,
 								dbmigration/eureka-ontology-EK_ICD10CM-changelog.5.xml,
+								dbmigration/eureka-ontology-EK_ICD10CM-changelog.6.xml,
 								dbmigration/eureka-ontology-EK_ICD10PCS-changelog.xml,
 								dbmigration/eureka-ontology-EK_ICD10PCS-changelog.DDL.xml,
 								dbmigration/eureka-ontology-EK_ICD10PCS-changelog.00.xml,
