@@ -58,7 +58,7 @@
 		</createTable>
 	</changeSet>
 	<changeSet author="arpost (generated)" id="1360440238345-3">
-		<createTable tableName="PHENOTYPES">
+		<createTable tableName="DATA_ELEMENTS">
 			<column name="ID" type="BIGINT">
 				<constraints nullable="false" primaryKey="true" primaryKeyName="SYS_C0013396"/>
 			</column>
@@ -81,13 +81,13 @@
 		</createTable>
 	</changeSet>
 	<changeSet author="arpost (generated)" id="1360440238345-4">
-		<createTable tableName="EXTENDED_PHENOTYPES">
+		<createTable tableName="EXTENDED_DATA_ELEMENTS">
 			<column name="ID" type="BIGINT">
 				<constraints nullable="false" primaryKey="true" primaryKeyName="SYS_C0013402"/>
 			</column>
 			<column name="MAXDURATION" type="INT"/>
 			<column name="MINDURATION" type="INT"/>
-			<column name="PHENOTYPE_ID" type="BIGINT">
+			<column name="DATAELEMENT_ID" type="BIGINT">
 				<constraints nullable="false"/>
 			</column>
 			<column name="MAXDURATIONTIMEUNIT_ID" type="BIGINT">
@@ -112,7 +112,7 @@
 			<column name="ID" type="BIGINT">
 				<constraints nullable="false" primaryKey="true" primaryKeyName="SYS_C0013419"/>
 			</column>
-			<column name="EXTENDEDPHENOTYPE_ID" type="BIGINT">
+			<column name="EXTENDEDDATAELEMENT_ID" type="BIGINT">
 				<constraints nullable="false"/>
 			</column>
 			<column name="WITHINATLEASTUNITS_ID" type="BIGINT"/>
@@ -910,5 +910,11 @@
 			<createSequence sequenceName="LOGIN_TYPES_SEQ" startValue="3"/>
 			<dropSequence sequenceName="AUTHENTICATION_METHODS_SEQ"/>
 			<createSequence sequenceName="AUTHENTICATION_METHODS_SEQ" startValue="5"/>
+		</changeSet>
+		<changeSet author="arpost" id="1360440238345-98">
+			<renameTable oldTableName="DATA_ELEMENTS" newTableName="PHENOTYPES"/>
+			<renameTable oldTableName="EXTENDED_DATA_ELEMENTS" newTableName="EXTENDED_PHENOTYPES"/>
+			<renameColumn tableName="EXTENDED_PHENOTYPES" oldColumnName="DATAELEMENT_ID" newColumnName="PHENOTYPE_ID"/>
+			<renameColumn tableName="FREQUENCIES" oldColumnName="EXTENDEDDATAELEMENT_ID" newColumnName="EXTENDEDPHENOTYPE_ID"/>
 		</changeSet>
 </databaseChangeLog>
