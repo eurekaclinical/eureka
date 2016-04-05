@@ -15,21 +15,17 @@ limitations under the License.
 This project includes:
   AIW i2b2 ETL under Apache License, Version 2.0
   AIW Neo4j ETL under GNU General Public License, Version 3
-  ant under The Apache Software License, Version 2.0
   AntLR Parser Generator under BSD License
   AOP alliance under Public Domain
   Apache Commons CLI under Apache License, Version 2.0
   Apache Commons Codec under Apache License, Version 2.0
   Apache Commons Collections under Apache License, Version 2.0
   Apache Commons CSV under Apache License, Version 2.0
-  Apache Commons DBCP under The Apache Software License, Version 2.0
   Apache Commons Exec under Apache License, Version 2.0
   Apache Commons Lang under Apache License, Version 2.0
-  Apache Commons Pool under The Apache Software License, Version 2.0
   Apache POI under The Apache Software License, Version 2.0
   Apache ServiceMix :: Bundles :: xstream under The Apache Software License, Version 2.0
   ASM Core under Apache License, Version 2.0
-  bcel under Apache License, Version 2.0
   Commons FileUpload under The Apache Software License, Version 2.0
   Commons IO under The Apache Software License, Version 2.0
   ConcurrentLinkedHashMap under The Apache Software License, Version 2.0
@@ -68,8 +64,6 @@ This project includes:
   Jackson-annotations under The Apache Software License, Version 2.0
   Jackson-core under The Apache Software License, Version 2.0
   jackson-databind under The Apache Software License, Version 2.0 or Lesser Gnu Public License (LGPL), Version 2.1
-  jakarta-regexp under Apache License, Version 2.0
-  JarAnalyzer under Kirkk.com BSD License
   Jasig CAS Client for Java - Core under Apache License Version 2.0
   Java Annotation Indexer under Apache License, Version 2.0
   Java Architecture for XML Binding under CDDL 1.1 or GPL2 w/ CPE
@@ -86,8 +80,6 @@ This project includes:
   JAXB CORE under CDDL 1.1 or GPL2 w/ CPE
   JAXB Reference Implementation under CDDL 1.1 or GPL2 w/ CPE
   JBoss Logging 3 under Apache License, version 2.0
-  jdom under Apache style license
-  je under Sleepycat License
   Jersey Apache HTTP Client under CDDL 1.1 or GPL2 w/ CPE
   Jersey Test Framework - Core under CDDL 1.1 or GPL2 w/ CPE
   Jersey Test Framework - Grizzly 2 Module under CDDL 1.1 or GPL2 w/ CPE
@@ -110,10 +102,7 @@ This project includes:
   Logging under The Apache Software License, Version 2.0
   Lucene Core under Apache 2
   MIME streaming extension under Dual license consisting of the CDDL v1.1 and GPL v2
-  MockRunner-Core under Mockrunner License, based on Apache Software License, version 1.1
-  MockRunner-JDBC under Mockrunner License, based on Apache Software License, version 1.1
   mvel under The Apache Software License, Version 2.0
-  Neko HTML under Apache License, Version 2.0
   Neo4j - Community under GNU General Public License, Version 3
   Neo4j - Consistency Checker under GNU General Public License, Version 3
   Neo4j - CSV reading and parsing under GNU General Public License, Version 3
@@ -134,7 +123,6 @@ This project includes:
   net.sf.ehcache:ehcache-terracotta under Apache License, Version 2.0
   opencsv under Apache 2
   org.terracotta:terracotta-toolkit-1.6-runtime under Apache License, Version 2.0
-  oro under Apache License, Version 2.0
   parboiled-core under Apache 2
   parboiled-scala under Apache 2
   Protempa File Data Source Backend under Apache License, Version 2.0
@@ -144,7 +132,6 @@ This project includes:
   Protempa ServiceLoader Backend Configurations Provider under Apache License, Version 2.0
   Protempa ServiceLoader Backend Provider under Apache License, Version 2.0
   Protempa UMLS Term Source Backend under Apache License, Version 2.0
-  regexp under Apache License, Version 2.0
   Scala Compiler under BSD-like
   Scala Library under BSD-like
   Scribe OAuth Library under MIT
@@ -154,7 +141,6 @@ This project includes:
   SLF4J JDK14 Binding under MIT License
   StAX API under The Apache Software License, Version 2.0
   UMLSQuery under Apache License, Version 2.0
-  xercesImpl under Apache License, Version 2.0
   XML Commons External Components XML APIs under The Apache Software License, Version 2.0
   Xml Compatibility extensions for Jackson under The Apache Software License, Version 2.0 or GNU Lesser General Public License (LGPL), Version 2.1
   XmlBeans under The Apache Software License, Version 2.0
