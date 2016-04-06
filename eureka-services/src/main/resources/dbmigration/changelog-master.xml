@@ -40,7 +40,15 @@
 -->
 
 <databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd" logicalFilePath="changelog-master.xml">
-	    <changeSet author="arpost (generated)" id="1360440238345-1">
+	
+	<property name="eureka.superuser.email" value="no-reply@localhost"/>
+	<property name="eureka.superuser.username" value="superuser"/>
+	<property name="eureka.superuser.firstname" value="NULL"/>
+	<property name="eureka.superuser.lastname" value="NULL"/>
+	<property name="eureka.superuser.password" value="4656fd365a7b2a27efb753bca9b9cf1"/>
+	<property name="eureka.superuser.fullname" value="Superuser"/>
+	
+	<changeSet author="arpost (generated)" id="1360440238345-1">
 		<createTable tableName="CATEGORIES">
 			<column name="ID" type="BIGINT">
 				<constraints nullable="false" primaryKey="true" primaryKeyName="SYS_C0013388"/>
@@ -487,14 +495,14 @@
 		<insert tableName="USERS">
 			<column name="ID" valueNumeric="1"/>
 			<column name="ACTIVE" valueBoolean="true"/>
-			<column name="EMAIL" value="${eureka.superuser.email}"/>
-			<column name="FIRSTNAME" value="${eureka.superuser.firstname}"/>
-			<column name="LASTNAME" value="${eureka.superuser.lastname}"/>
+			<column name="EMAIL" value="super.user@emory.edu"/>
+			<column name="FIRSTNAME" value="Super"/>
+			<column name="LASTNAME" value="User"/>
 			<column name="ORGANIZATION" value="N/A"/>
 			<column name="VERIFIED" valueBoolean="true"/>
 			<column name="PASSWORDEXPIRATION" valueDate="1971-01-01T00:00:00"/>
 			<!-- the default password is defaultPassword -->
-			<column name="PASSWORD" value="${eureka.superuser.password}"/>
+			<column name="PASSWORD" value="4656fd365a7b2a27efb753bca9b9cf1"/>
 		</insert>
 		<insert tableName="USER_ROLE">
 			<column name="USER_ID" valueNumeric="1"/>
@@ -753,12 +761,12 @@
 			<dropUniqueConstraint tableName="USERS" constraintName="SYS_C0013038"/>
 			<addUniqueConstraint columnNames="USERNAME" constraintName="UNIQ_USERS_USERNAME" deferrable="false" disabled="false" initiallyDeferred="false" tableName="USERS"/>
 			<update tableName="USERS">
-				<column name="USERNAME" value="${eureka.superuser.username}"/>
-				<where>EMAIL='${eureka.superuser.email}'</where>
+				<column name="USERNAME" value="superuser"/>
+				<where>EMAIL='super.user@emory.edu'</where>
 			</update>
 			<update tableName="USERS">
 				<column name="EMAIL" value="no-reply@localhost"/>
-				<where>EMAIL='${eureka.superuser.email}'</where>
+				<where>EMAIL='super.user@emory.edu'</where>
 			</update>
 			<sql>
 				UPDATE USERS SET USERNAME=EMAIL WHERE USERNAME IS NULL
@@ -920,5 +928,33 @@
 			<renameColumn tableName="RELATIONS" oldColumnName="RHSEXTENDEDDATAELEMENT_ID" newColumnName="RHSEXTENDEDPHENOTYPE_ID"/>
 			<renameColumn tableName="SEQUENCES" oldColumnName="PRIMARYEXTENDEDDATAELEMENT_ID" newColumnName="PRIMARYEXTENDEDPHENOTYPE_ID"/>
 			<renameTable oldTableName="SYSTEM_DATA_ELEMENTS" newTableName="SYSTEM_PHENOTYPES"/>
+		</changeSet>
+		<!-- Update the superuser to the values of the eureka.super variables
+			 only if the values are still the defaults. -->
+		<changeSet author="arpost" id="1360440238345-99">
+			<update tableName="USERS">
+				<column name="EMAIL" value="${eureka.superuser.email}"/>
+				<where>ID=1 AND EMAIL='no-reply@localhost'</where>
+			</update>
+			<update tableName="USERS">
+				<column name="USERNAME" value="${eureka.superuser.username}"/>
+				<where>ID=1 AND USERNAME='superuser'</where>
+			</update>
+			<update tableName="USERS">
+				<column name="FULLNAME" value="${eureka.superuser.fullname}"/>
+				<where>ID=1 AND FULLNAME IS NULL AND FIRSTNAME='Super' AND LASTNAME='User'</where>
+			</update>
+			<update tableName="USERS">
+				<column name="FIRSTNAME" value="${eureka.superuser.firstname}"/>
+				<where>ID=1 AND FIRSTNAME='Super'</where>
+			</update>
+			<update tableName="USERS">
+				<column name="LASTNAME" value="${eureka.superuser.lastname}"/>
+				<where>ID=1 AND LASTNAME='User'</where>
+			</update>
+			<update tableName="LOCAL_USERS">
+				<column name="PASSWORD" value="${eureka.superuser.password}"/>
+				<where>ID=1 AND PASSWORD='4656fd365a7b2a27efb753bca9b9cf1'</where>
+			</update>
 		</changeSet>
 </databaseChangeLog>
