@@ -61,6 +61,7 @@ import javax.persistence.Tuple;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Expression;
 import javax.persistence.criteria.ListJoin;
 import javax.persistence.criteria.Root;
 import org.slf4j.Logger;
@@ -95,9 +96,10 @@ public class JpaEtlGroupDao extends GenericDao<EtlGroup, Long> implements EtlGro
 		Root<SourceConfigGroupMembership> groupMembership = q.from(SourceConfigGroupMembership.class);
 		q.select(
 				cb.tuple(
-						cb.greatest(groupMembership.get(SourceConfigGroupMembership_.groupRead)), 
-						cb.greatest(groupMembership.get(SourceConfigGroupMembership_.groupWrite)), 
-						cb.greatest(groupMembership.get(SourceConfigGroupMembership_.groupExecute))));
+						cb.greatest(cb.selectCase().when(cb.equal(groupMembership.get(SourceConfigGroupMembership_.groupRead), true), 1).otherwise(0).as(Integer.class)),
+						cb.greatest(cb.selectCase().when(cb.equal(groupMembership.get(SourceConfigGroupMembership_.groupWrite), true), 1).otherwise(0).as(Integer.class)),
+						cb.greatest(cb.selectCase().when(cb.equal(groupMembership.get(SourceConfigGroupMembership_.groupExecute), true), 1).otherwise(0).as(Integer.class))
+				));
 		ListJoin<EtlGroup, AuthorizedUserEntity> join = groupMembership.join(SourceConfigGroupMembership_.group).join(EtlGroup_.users);
 		q.where(
 				cb.and(
@@ -111,7 +113,7 @@ public class JpaEtlGroupDao extends GenericDao<EtlGroup, Long> implements EtlGro
 			return new ResolvedPermissions(false, false, false);
 		} else {
 			Tuple result = resultList.get(0);
-			return new ResolvedPermissions(result.get(0, Boolean.class), result.get(1, Boolean.class), result.get(2, Boolean.class));
+			return new ResolvedPermissions(result.get(0, Integer.class) == 1, result.get(1, Integer.class) == 1, result.get(2, Integer.class) == 1);
 		}
 	}
 	
@@ -125,9 +127,10 @@ public class JpaEtlGroupDao extends GenericDao<EtlGroup, Long> implements EtlGro
 		Root<DestinationGroupMembership> groupMembership = q.from(DestinationGroupMembership.class);
 		q.select(
 				cb.tuple(
-						cb.greatest(groupMembership.get(DestinationGroupMembership_.groupRead)), 
-						cb.greatest(groupMembership.get(DestinationGroupMembership_.groupWrite)), 
-						cb.greatest(groupMembership.get(DestinationGroupMembership_.groupExecute))));
+						cb.greatest(cb.selectCase().when(cb.equal(groupMembership.get(DestinationGroupMembership_.groupRead), true), 1).otherwise(0).as(Integer.class)),
+						cb.greatest(cb.selectCase().when(cb.equal(groupMembership.get(DestinationGroupMembership_.groupWrite), true), 1).otherwise(0).as(Integer.class)),
+						cb.greatest(cb.selectCase().when(cb.equal(groupMembership.get(DestinationGroupMembership_.groupExecute), true), 1).otherwise(0).as(Integer.class))
+				));
 		ListJoin<EtlGroup, AuthorizedUserEntity> join = groupMembership.join(DestinationGroupMembership_.group).join(EtlGroup_.users);
 		q.where(
 				cb.and(
@@ -142,7 +145,7 @@ public class JpaEtlGroupDao extends GenericDao<EtlGroup, Long> implements EtlGro
 			return new ResolvedPermissions(false, false, false);
 		} else {
 			Tuple result = resultList.get(0);
-			return new ResolvedPermissions(result.get(0, Boolean.class), result.get(1, Boolean.class), result.get(2, Boolean.class));
+			return new ResolvedPermissions(result.get(0, Integer.class) == 1, result.get(1, Integer.class) == 1, result.get(2, Integer.class) == 1);
 		}
 	}
 	

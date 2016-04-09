@@ -23,6 +23,7 @@ This project includes:
   ASM Core under Apache License, Version 2.0
   Core Hibernate O/RM functionality under GNU Lesser General Public License
   Data Mapper for Jackson under The Apache Software License, Version 2.0
+  Datastore under Apache License, Version 2.0
   dom4j under BSD License
   Drools :: Rete-OO Core under The Apache Software License, Version 2.0
   Eureka Common under Apache License, Version 2.0 or GNU General Public License, Version 3
@@ -55,6 +56,7 @@ This project includes:
   JAXB CORE under CDDL 1.1 or GPL2 w/ CPE
   JAXB Reference Implementation under CDDL 1.1 or GPL2 w/ CPE
   JBoss Logging 3 under Apache License, version 2.0
+  je under Sleepycat License
   Jersey Apache HTTP Client under CDDL 1.1 or GPL2 w/ CPE
   Jersey Test Framework - Core under CDDL 1.1 or GPL2 w/ CPE
   Jersey Test Framework - Grizzly 2 Module under CDDL 1.1 or GPL2 w/ CPE
