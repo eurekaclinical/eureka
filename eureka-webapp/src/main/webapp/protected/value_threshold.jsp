@@ -137,10 +137,7 @@
 						<label class="sr-only" for="thresholdLowerVal">From value</label>
 						<input class="form-control" type="text"
                                                         name="thresholdLowerVal" id="thresholdLowerVal"
-                                                        value="
-                                                             <c:if test="${propositionType == 'VALUE_THRESHOLD'}">
-                                                                      ${threshold.lowerValue}
-                                                             </c:if>" 
+                                                        value="<c:if test="${propositionType == 'VALUE_THRESHOLD'}">${threshold.lowerValue}</c:if>" 
                                                 />
 					</div>
 					<div class="col-md-1 control-label" style="text-align: center">
@@ -161,10 +158,7 @@
 						<label class="sr-only" for="thresholdUpperVal">To value</label>
 						<input class="form-control" type="text" class="valueField"
                                                         name="thresholdUpperVal" id="thresholdUpperVal"
-                                                        value="
-                                                        <c:if test="${propositionType == 'VALUE_THRESHOLD'}">
-                                                                 ${threshold.upperValue}
-                                                        </c:if>" 
+                                                        value="<c:if test="${propositionType == 'VALUE_THRESHOLD'}">${threshold.upperValue}</c:if>" 
                                                 />
 					</div>
 				</div>
