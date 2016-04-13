@@ -59,7 +59,6 @@ import edu.emory.cci.aiw.cvrg.eureka.common.comm.OAuthUserRequest;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.UserRequest;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ClientException;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ServicesClient;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.OAuthProvider;
 import java.text.MessageFormat;
 import java.util.ResourceBundle;
 
@@ -148,14 +147,17 @@ public class RegisterUserServlet extends HttpServlet {
 		} catch (ClientException e) {
 			String msg = e.getMessage();
 			Status responseStatus = e.getResponseStatus();
-			if (responseStatus.equals(Status.CONFLICT)) {
-				resp.setStatus(HttpServletResponse.SC_CONFLICT);
-				msg = messages.getString("registerUserServlet.error.conflict");
-			} else if (responseStatus.equals(Status.BAD_REQUEST)) {
-				resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-				msg = messages.getString("registerUserServlet.error.badRequest");
-			} else {
-				throw new ServletException();
+			switch (responseStatus) {
+                        	case CONFLICT:
+                            		resp.setStatus(HttpServletResponse.SC_CONFLICT);
+                            		msg = messages.getString("registerUserServlet.error.conflict");
+                            		break;
+                        	case BAD_REQUEST:
+                            		resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                            		msg = messages.getString("registerUserServlet.error.badRequest");
+                            		break;
+                        	default:
+                            		throw new ServletException();
 			}
 			resp.setContentType("text/plain");
 			LOGGER.debug("Error: {}", msg);

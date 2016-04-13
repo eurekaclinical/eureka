@@ -132,7 +132,7 @@
 							</a>
 							<ul class="dropdown-menu" role="menu">
 								<li>
-									<a href="${pageContext.request.contextPath}/#/account/settings">
+									<a href="user_acct">
 										<span class="glyphicon glyphicon-user"></span>
 										Account Settings
 									</a>

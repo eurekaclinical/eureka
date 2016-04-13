@@ -324,9 +324,18 @@ public class UserResource {
 		LOGGER.debug("Received updated user: {}", inUser);
 		Response response;
 		UserEntity currentUser = this.userDao.retrieve(inId);
-		boolean activation = (!currentUser.isActive()) && (inUser.isActive());
-		List<Role> updatedRoles = this.roleIdsToRoles(inUser.getRoles());
 
+		boolean activation = (!currentUser.isActive()) && (inUser.isActive());
+
+		currentUser.setFirstName(inUser.getFirstName());
+		currentUser.setLastName(inUser.getLastName());
+		currentUser.setEmail(inUser.getEmail());
+		currentUser.setOrganization(inUser.getOrganization());
+		currentUser.setTitle(inUser.getTitle());
+		currentUser.setDepartment(inUser.getDepartment());
+		currentUser.setFullName(inUser.getFullName());                
+ 
+		List<Role> updatedRoles = this.roleIdsToRoles(inUser.getRoles());                
 		currentUser.setRoles(updatedRoles);
 		currentUser.setActive(inUser.isActive());
 		currentUser.setLastLogin(inUser.getLastLogin());
@@ -342,13 +351,15 @@ public class UserResource {
 					LOGGER.error(ee.getMessage(), ee);
 				}
 			}
+                      
 			response = Response.ok().
 					entity(currentUser).
 					build();
 		} else {
 			response = Response.notModified(this.validationError).build();
-		}
-		return response;
+		}               
+
+		return response; 
 	}
 
 	/**

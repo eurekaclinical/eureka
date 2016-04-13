@@ -1,3 +1,5 @@
+/* global self */
+
 // get the namespace, or declare it here
 window.eureka = (typeof window.eureka == "undefined" || !window.eureka ) ? {} : window.eureka;
 
@@ -5,15 +7,15 @@ window.eureka = (typeof window.eureka == "undefined" || !window.eureka ) ? {} : 
 window.eureka.account = new function () {
 	var self = this;
 
-	self.setup = function (changePasswordButton, contentModal, newPasswordForm, notificationArea, passwordExpirationMsg) {
-		self.setupSubmit(newPasswordForm, self.createValidator(newPasswordForm), notificationArea, passwordExpirationMsg);
-
+	self.setup = function (changePasswordButton, newInfoForm, notificationFailure, notificationFailureMsg, notificationSuccess, contentModal, newPasswordForm, notificationArea, passwordExpirationMsg) {
+		$(newInfoForm).submit(this.submit);
+                self.setupPasswordSubmit(newPasswordForm, self.createPasswordValidator(newPasswordForm), notificationArea, passwordExpirationMsg);
 		$(contentModal).modal({
 			keyboard: true,
 			backdrop: 'static',
 			show: false
 		});
-
+                
 		$(changePasswordButton).click(function (e) {
 			e.preventDefault();
 			$(contentModal).modal('show');
@@ -27,8 +29,100 @@ window.eureka.account = new function () {
 			"Please enter at least 8 characters with at least 1 digit."
 		);
 	};
+        
+        self.validator = $("#userInfoForm").validate({ 
+                        errorElement: 'span',
+                        errorClass: null,                        
+                        rules: {
+                                firstName: "required",
+                                lastName: "required",
+                                organization: {
+                                        required: true
+                                },
+                                email: {
+                                        required: true,
+                                        email: true
+                                },
+                                title: {
+                                        required: true
+                                },
+                                department: {
+                                        required: true
+                                }
+                        },
+                        messages: {
+                                firstName: "Enter your firstname",
+                                lastName: "Enter your lastname",
+                                organization: "Enter your organization",
+                                email: {
+                                        required: "Please enter a valid email address",
+                                        minlength: "Please enter a valid email address"
+                                },
+                                title: "Enter your title",
+                                department: "Enter your department"
+                        },
+                        errorPlacement: function (error, element) {
+                                $(element).closest('.form-group').find('.help-block').empty();
+                                error.appendTo($(element).closest('.form-group').find('.help-block'));
+                        },
+                        highlight: function (element) {
+                                $(element).closest('.form-group').addClass('has-error');
+                                $(element).closest('.form-group').find('.help-block').removeClass('default-hidden');
+                        },
+                        unhighlight: function (element) {
+                                $(element).closest('.form-group').removeClass('has-error');
+                                $(element).closest('.form-group').find('.help-block').addClass('default-hidden');
+                        },
+                        success: function (label) {
+                                label.html("&nbsp;").addClass("checked");
+                        }
+                });
+                
+    	self.submit = function () {
+		if (self.validator.valid()) {                  
+                        var id = $('#id').val();
+                        var firstName = $('#firstName').val();
+                        var lastName = $('#lastName').val();
+                        var organization = $('#organization').val(); 
+                        var email = $('#email').val();
+                        var title;
+                        var department;
+                        if ($('#username').val() === 'superuser') {
+                                title = $('#title_superuser').val();
+                                department = $('#department_superuser').val();                             
+                        } else {
+                                title = $('#title').val();
+                                department = $('#department').val();                            
+                        }
+                        
+                        var dataString ='action=save' +
+                                '&id=' + id +
+                                '&firstName=' + firstName + 
+                                '&lastName=' + lastName + 
+                                '&organization=' + organization +
+                                '&email=' + email + 
+                                '&title=' + title + 
+                                '&department=' + department;   
+                        $.ajax({
+                                type: 'POST',
+                                url: 'user_acct',
+                                data: dataString,                    
+                                success: function () {
+                                        console.log("success1");
+                                        $('#infoNotificationFailure').hide();
+                                        $('#userInfoForm').hide();
+                                        $('#infoNotificationSuccess').show();                                     
+                                },
+                                error: function (xhr){
+                                        $('#infoNotificationFailure').show();
+                                        $('#infoNotificationFailureMsg').text(xhr.responseText);
+                                }
+                        });                        
+		}
+		return false;
+	};
 
-	self.setupSubmit = function (newPasswordForm, validator, notificationArea, passwordExpirationMsg) {
+	self.setupPasswordSubmit = function (newPasswordForm, passwordValidator, notificationArea, passwordExpirationMsg) {
 		$(newPasswordForm).submit(function () {
 			var oldPassword = $('#oldPassword').val();
 			var newPassword = $('#newPassword').val();
@@ -38,7 +132,7 @@ window.eureka.account = new function () {
 				'&newPassword=' + newPassword +
 				'&verifyPassword=' + verifyPassword;
 
-			if (validator.valid()) {
+			if (passwordValidator.valid()) {                          
 				$.ajax({
 					type: 'POST',
 					url: 'user_acct',
@@ -60,7 +154,7 @@ window.eureka.account = new function () {
 		});
 	};
 
-	self.createValidator = function (newPasswordForm) {
+	self.createPasswordValidator = function (newPasswordForm) {
 		return $(newPasswordForm).validate({
 			errorElement: 'span',
 			rules: {
@@ -91,7 +185,8 @@ window.eureka.account = new function () {
 				}
 			},
 			errorPlacement: function (error, element) {
-				error.appendTo($(element).closest('.form-group').find('.help-block .help-inline'));
+				error.appendTo($(element).closest('.form-group').find('.help-inline'));
+				$('.help-inline').css("color", "#b94a48");                                
 			},
 			highlight: function (element) {
 				$(element).closest('.form-group').addClass('has-error');
@@ -101,9 +196,7 @@ window.eureka.account = new function () {
 				$(element).closest('.form-group').removeClass('has-error');
 				$(element).closest('.form-group').find('.help-block').addClass('default-hidden');
 			},
-			// set this class to error-labels to indicate valid fields
 			success: function (label) {
-				// set &nbsp; as text for IE
 				label.html("&nbsp;").addClass("checked");
 			}
 		});
