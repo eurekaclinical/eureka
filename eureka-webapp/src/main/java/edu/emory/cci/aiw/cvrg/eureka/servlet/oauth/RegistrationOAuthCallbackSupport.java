@@ -59,16 +59,18 @@ class RegistrationOAuthCallbackSupport<E extends EurekaProfile> {
 	private final OAuthProvider provider;
 
 	RegistrationOAuthCallbackSupport(OAuthProvider provider) {
+		assert provider != null : "provider cannot be null";
 		this.provider = provider;
 	}
 
 	E getProfile(HttpServletRequest req) {
+		assert req != null : "request cannot be null";
 		OAuthCredential credential
-				= provider.getCredential(
+				= this.provider.getCredential(
 						new HttpUserSession(req.getSession()),
 						req.getParameterMap());
 		if (credential != null) {
-			return (E) provider.getUserProfile(credential);
+			return (E) this.provider.getUserProfile(credential);
 		} else {
 			/* User rejected authorization request. */
 			return null;
@@ -76,12 +78,13 @@ class RegistrationOAuthCallbackSupport<E extends EurekaProfile> {
 	}
 
 	boolean setEurekaAttributeFromProfile(HttpServletRequest req) {
+		assert req != null : "request cannot be null";
 		E userProfile = getProfile(req);
 		if (userProfile != null) {
 			req.setAttribute("accountTypeDisplayName", userProfile.getType());
 			req.setAttribute("authenticationMethod", 
 					AuthenticationMethod.OAUTH.name());
-			req.setAttribute("oauthProvider", userProfile.getType());
+			req.setAttribute("oauthProvider", this.provider.getType());
 			String fullName = userProfile.getDisplayName();
 			req.setAttribute("fullName", fullName);
 			String firstName = userProfile.getFirstName();
