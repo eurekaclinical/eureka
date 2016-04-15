@@ -12,7 +12,7 @@ var gulp = require('gulp'),
     useref = require('gulp-useref'),
     gulpif = require('gulp-if'),
     uglify = require('gulp-uglify'),
-    minifyCss = require('gulp-minify-css'),
+    cleanCSS = require('gulp-clean-css'),
     templateCache = require('gulp-angular-templatecache'),
     map = require('map-stream'),
     less = require('gulp-less'),
@@ -121,7 +121,7 @@ gulp.task('compile:html', ['test', 'less'], function() {
     return gulp.src('./index.html')
         .pipe(assets)
         .pipe(gulpif('*.js', uglify()))
-        .pipe(gulpif('*.css', minifyCss()))
+        .pipe(gulpif('*.css', cleanCSS()))
         .pipe(assets.restore())
         .pipe(useref())
         .pipe(gulp.dest('./build'));
