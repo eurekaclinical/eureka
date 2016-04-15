@@ -92,6 +92,9 @@ public class SaveUserAcctInfoWorker implements ServletWorker {
 			user = this.servicesClient.getUserById(Long.valueOf(id));
 		} catch (ClientException ex) {
 			LOGGER.error("Error getting user by id at {}", SaveUserAcctInfoWorker.class.getName(), ex);
+                        resp.setContentType("text/plain");
+                        resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                        resp.getWriter().write(ex.getMessage());                        
 		}
                         user.setFirstName(firstName);
                         user.setLastName(lastName);
@@ -104,6 +107,9 @@ public class SaveUserAcctInfoWorker implements ServletWorker {
 			this.servicesClient.updateUser(user,Long.valueOf(id));
 		} catch (ClientException ex) {
 			LOGGER.error("Error updating user at {}", SaveUserAcctInfoWorker.class.getName(), ex);
+                        resp.setContentType("text/plain");
+                        resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                        resp.getWriter().write(ex.getMessage());                          
 		}
 		resp.setStatus(HttpServletResponse.SC_OK);
                 
