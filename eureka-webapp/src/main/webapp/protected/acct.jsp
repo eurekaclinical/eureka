@@ -44,12 +44,12 @@
 
 <template:insert template="/templates/eureka_main.jsp">
 	<template:content name="content">
-		<h3>Account Setting ${user.username}</h3>
+		<h3>Account Settings ${user.username}</h3>
 		<div id="passwordExpirationMsg" class="passwordExpirationMsg">
 			<%=request.getAttribute("passwordExpiration")%>
 			<br>
 		</div>
-		<form id="userInfoForm" action="#" method="POST" role="form" class="form-horizontal">                 
+		<form id="userInfoForm" action="#" method="POST" role="form">                 
                         <input type="hidden" name="fullName" id="fullName" value="${user.fullName}" />
                         <input type="hidden" name="username" id="username" value="${user.username}" />                        
                         <div class="row">

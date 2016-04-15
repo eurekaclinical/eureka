@@ -108,7 +108,6 @@ window.eureka.account = new function () {
                                 url: 'user_acct',
                                 data: dataString,                    
                                 success: function () {
-                                        console.log("success1");
                                         $('#infoNotificationFailure').hide();
                                         $('#userInfoForm').hide();
                                         $('#infoNotificationSuccess').show();                                     
