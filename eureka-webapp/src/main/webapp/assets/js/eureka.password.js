@@ -73,7 +73,7 @@ window.eureka.password = new function () {
 			var userId = '';
 			var targetURL = $('#targetURL').val();
 
-			var dataString = 'action=save' +
+			var dataString = 'action=savepassword' +
 				'&id=' + userId +
 				'&oldPassword=' + oldPassword +
 				'&newPassword=' + newPassword +

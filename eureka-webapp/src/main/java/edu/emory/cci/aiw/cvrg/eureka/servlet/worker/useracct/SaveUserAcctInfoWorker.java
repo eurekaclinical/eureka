@@ -51,14 +51,12 @@ import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.sun.jersey.api.client.ClientResponse;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.User;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ClientException;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ServicesClient;
 import edu.emory.cci.aiw.cvrg.eureka.servlet.worker.ServletWorker;
 import edu.emory.cci.aiw.cvrg.eureka.webapp.config.WebappProperties;
-import java.util.logging.Level;
 
 public class SaveUserAcctInfoWorker implements ServletWorker {
 
@@ -79,39 +77,44 @@ public class SaveUserAcctInfoWorker implements ServletWorker {
 	public void execute(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {   
 		String id = req.getParameter("id");
-		String firstName = req.getParameter("firstName");
-		String lastName = req.getParameter("lastName");
-		String email = req.getParameter("email");                
-		String organization = req.getParameter("organization");
-		String title = req.getParameter("title");
-		String department = req.getParameter("department");
-		String fullName = firstName+' '+lastName;               
+		if(id!=null && !id.isEmpty()){
+                        String firstName = req.getParameter("firstName");
+                        String lastName = req.getParameter("lastName");
+                        String email = req.getParameter("email");                
+                        String organization = req.getParameter("organization");
+                        String title = req.getParameter("title");
+                        String department = req.getParameter("department");
+                        String fullName = firstName+' '+lastName;               
 
-		User user = null;
-		try {
-			user = this.servicesClient.getUserById(Long.valueOf(id));
-		} catch (ClientException ex) {
-			LOGGER.error("Error getting user by id at {}", SaveUserAcctInfoWorker.class.getName(), ex);
-                        resp.setContentType("text/plain");
-                        resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-                        resp.getWriter().write(ex.getMessage());                        
-		}
-                        user.setFirstName(firstName);
-                        user.setLastName(lastName);
-                        user.setEmail(email);
-                        user.setOrganization(organization);
-                        user.setTitle(title);
-                        user.setDepartment(department);
-                        user.setFullName(fullName);
-		try {     
-			this.servicesClient.updateUser(user,Long.valueOf(id));
-		} catch (ClientException ex) {
-			LOGGER.error("Error updating user at {}", SaveUserAcctInfoWorker.class.getName(), ex);
-                        resp.setContentType("text/plain");
-                        resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-                        resp.getWriter().write(ex.getMessage());                          
-		}
-		resp.setStatus(HttpServletResponse.SC_OK);
+                        User user = null;
+                        try {
+                                user = this.servicesClient.getUserById(Long.valueOf(id));
+                        } catch (ClientException ex) {
+                                LOGGER.error("Error getting user by id at {}", SaveUserAcctInfoWorker.class.getName(), ex);
+                                resp.setContentType("text/plain");
+                                resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                                resp.getWriter().write(ex.getMessage());                        
+                        }
+                                user.setFirstName(firstName);
+                                user.setLastName(lastName);
+                                user.setEmail(email);
+                                user.setOrganization(organization);
+                                user.setTitle(title);
+                                user.setDepartment(department);
+                                user.setFullName(fullName);
+                        try {     
+                                this.servicesClient.updateUser(user,Long.valueOf(id));
+                        } catch (ClientException ex) {
+                                LOGGER.error("Error updating user at {}", SaveUserAcctInfoWorker.class.getName(), ex);
+                                resp.setContentType("text/plain");
+                                resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                                resp.getWriter().write(ex.getMessage());                          
+                        }
+                        resp.setStatus(HttpServletResponse.SC_OK);
+                } else {
+                                LOGGER.error("Error getting user by id at {}, id is invalid", SaveUserAcctInfoWorker.class.getName());               
+                                resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);                               
+                }
                 
 	}
 }

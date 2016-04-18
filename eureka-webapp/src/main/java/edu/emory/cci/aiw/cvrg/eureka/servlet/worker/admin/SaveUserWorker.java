@@ -90,7 +90,7 @@ public class SaveUserWorker implements ServletWorker {
 
 			this.servicesClient.updateUser(user,Long.valueOf(id));
 		} catch (ClientException e) {
-			throw new ServletException("Error saving user's activate status and/or role", e);
+			throw new ServletException("Error saving user", e);
 		}
 
 		resp.sendRedirect(req.getContextPath() + "/protected/admin?action=list");

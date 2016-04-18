@@ -84,16 +84,12 @@ public class UserAcctManagerServlet extends HttpServlet {
 		String action = req.getParameter("action");
 		ServletWorker worker;
 
-		if (action != null && action.equals("save")) {
-			String id = req.getParameter("id");  
-			if(id!=null && !id.isEmpty()){   
-				LOGGER.info("Saving user info");
-				worker = new SaveUserAcctInfoWorker(this.getServletContext(), this.servicesClient);                             
-			} else {
-				LOGGER.info("Saving user password");
-				worker = new SaveUserAcctWorker(this.getServletContext(), this.servicesClient);                    
-			}
-
+		if (action != null && action.equals("savepassword")) {
+                        LOGGER.info("Saving user password");
+                        worker = new SaveUserAcctWorker(this.getServletContext(), this.servicesClient);     
+		} else if (action != null && action.equals("saveinfo")) {
+                        LOGGER.info("Saving user info");                    
+                        worker = new SaveUserAcctInfoWorker(this.getServletContext(), this.servicesClient);                     
 		} else {
 			LOGGER.info("Listing user");
 			worker = new ListUserAcctWorker(this.servicesClient);

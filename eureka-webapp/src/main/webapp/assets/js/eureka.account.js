@@ -95,7 +95,7 @@ window.eureka.account = new function () {
                                 department = $('#department').val();                            
                         }
                         
-                        var dataString ='action=save' +
+                        var dataString ='action=saveinfo' +
                                 '&id=' + id +
                                 '&firstName=' + firstName + 
                                 '&lastName=' + lastName + 
@@ -126,7 +126,7 @@ window.eureka.account = new function () {
 			var oldPassword = $('#oldPassword').val();
 			var newPassword = $('#newPassword').val();
 			var verifyPassword = $('#verifyPassword').val();
-			var dataString = 'action=save' +
+			var dataString = 'action=savepassword' +
 				'&oldPassword=' + oldPassword +
 				'&newPassword=' + newPassword +
 				'&verifyPassword=' + verifyPassword;

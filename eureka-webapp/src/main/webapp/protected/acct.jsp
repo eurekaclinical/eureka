@@ -172,7 +172,7 @@
                                                         Cancel
                                                 </a>
                                                 <input type="hidden" name="id" id="id" value="${user.id}" /> 
-                                                <input type="hidden" name="action" value="save"/>
+                                                <input type="hidden" name="action" value="saveinfo"/>
                                                 <input type="submit" value="Save Changes" id="saveEditBtn" class="btn btn-primary text-center"/>  
                                         </div>
                                 </div>
@@ -236,7 +236,7 @@
                                                                 </div>
                                                         </div>
                                                         <div class="modal-footer">
-                                                                <input type="hidden" name="action" value="save"/>
+                                                                <input type="hidden" name="action" value="savepassword"/>
                                                                 <input type="submit" value="Save Password" id="savePasswordBtn" class="btn btn-primary"/>
                                                                 <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
                                                         </div>
