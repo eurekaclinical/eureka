@@ -76,6 +76,10 @@
 									<name>eureka.superuser.username</name>
 									<value>superuser</value>
 								</property>
+								<property>
+									<name>eureka.superuser.fullname</name>
+									<value>Superuser</value>
+								</property>
 							</expressionVars>
 							<changeLogFile>${project.build.directory}/classes/dbmigration/changelog-master.xml</changeLogFile>
 							<url>jdbc:h2:file:${project.build.directory}/eureka-db/eureka-services</url>
