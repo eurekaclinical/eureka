@@ -76,36 +76,31 @@ public class SaveUserAcctWorker implements ServletWorker {
 	@Override
 	public void execute(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
+                        resp.setContentType("text/html");                     
+                        String oldPassword = req.getParameter("oldPassword");
+                        String newPassword = req.getParameter("newPassword");
+                        String verifyPassword = req.getParameter("verifyPassword");
+                        if (!verifyPassword.equals(newPassword)) {
+                                resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                                return;
+                        }
 
-		String oldPassword = req.getParameter("oldPassword");
-		String newPassword = req.getParameter("newPassword");
-		
-		// validate verifyPassword equals newPassword
-		String verifyPassword = req.getParameter("verifyPassword");
-		if (!verifyPassword.equals(newPassword)) {
-			resp.setContentType("text/html");
-			resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-			return;
-		}
+                        try {
+                                this.servicesClient.changePassword(oldPassword, newPassword);
+                                resp.setStatus(HttpServletResponse.SC_OK);
+                                resp.getWriter().write(HttpServletResponse.SC_OK);
+                        } catch (ClientException e) {
+                                LOGGER.error("Error trying to change password for user {}", req.getUserPrincipal().getName(), e);
+                                resp.setContentType("text/plain");
+                                if (ClientResponse.Status.PRECONDITION_FAILED.equals(e.getResponseStatus())) {
+                                        resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                                        resp.getWriter().write(e.getMessage());
+                                } else {
+                                        resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+                                        resp.getWriter().write(
+                                                        messages.getString("passwordChange.error.internalServerError"));
+                                }
 
-		resp.setContentType("text/html");
-		try {
-			this.servicesClient.changePassword(oldPassword, newPassword);
-			resp.setStatus(HttpServletResponse.SC_OK);
-			resp.getWriter().write(HttpServletResponse.SC_OK);
-		} catch (ClientException e) {
-			LOGGER.error("Error trying to change password for user {}", req.getUserPrincipal().getName(), e);
-			resp.setContentType("text/plain");
-			if (ClientResponse.Status.PRECONDITION_FAILED.equals(e.getResponseStatus())) {
-				resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-				resp.getWriter().write(e.getMessage());
-			} else {
-				resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-				resp.getWriter().write(
-						messages.getString("passwordChange.error.internalServerError"));
-			}
-			
-		}
-
+                        }   
 	}
 }

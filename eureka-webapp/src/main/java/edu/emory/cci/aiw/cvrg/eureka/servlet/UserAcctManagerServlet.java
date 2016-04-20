@@ -55,6 +55,7 @@ import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ServicesClient;
 import edu.emory.cci.aiw.cvrg.eureka.servlet.worker.ServletWorker;
 import edu.emory.cci.aiw.cvrg.eureka.servlet.worker.useracct
 		.ListUserAcctWorker;
+import edu.emory.cci.aiw.cvrg.eureka.servlet.worker.useracct.SaveUserAcctInfoWorker;
 import edu.emory.cci.aiw.cvrg.eureka.servlet.worker.useracct
 		.SaveUserAcctWorker;
 
@@ -83,9 +84,12 @@ public class UserAcctManagerServlet extends HttpServlet {
 		String action = req.getParameter("action");
 		ServletWorker worker;
 
-		if (action != null && action.equals("save")) {
-			LOGGER.info("Saving user");
-			worker = new SaveUserAcctWorker(this.getServletContext(), this.servicesClient);
+		if (action != null && action.equals("savepassword")) {
+                        LOGGER.info("Saving user password");
+                        worker = new SaveUserAcctWorker(this.getServletContext(), this.servicesClient);     
+		} else if (action != null && action.equals("saveinfo")) {
+                        LOGGER.info("Saving user info");                    
+                        worker = new SaveUserAcctInfoWorker(this.getServletContext(), this.servicesClient);                     
 		} else {
 			LOGGER.info("Listing user");
 			worker = new ListUserAcctWorker(this.servicesClient);
