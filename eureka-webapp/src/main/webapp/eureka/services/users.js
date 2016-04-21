@@ -33,8 +33,10 @@
             if (fullName) {
                 return fullName;
             } else if (firstName || lastName) {
-                return (firstName + ' ' + lastName);
-            } else {
+                return [firstName, lastName]
+                .filter(function (val) {return val && val.length > 0 ? val : undefined;})
+                .join(' ');
+            }else{
                 return username;
             }
         }
