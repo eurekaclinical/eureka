@@ -122,13 +122,24 @@
 				</li>
 				<c:choose>
 					<c:when test="${userIsActivated}">
-                                            <c:set var="firstAndLastName" value="${user.firstName} ${user.lastName}"/>
+					<c:set var="firstAndLastName" value="${user.firstName} ${user.lastName}"/>
 						<li>
 							<a href="${pageContext.request.contextPath}/logout" 
 							   class="dropdown-toggle" data-toggle="dropdown" 
 							   role="button" aria-expanded="false">
 								<span class="glyphicon glyphicon-user"></span>
-								${user.fullName != null ? user.fullName : firstAndLastName} <span class="caret"></span>
+								<c:choose>
+									<c:when test="${not empty user.fullName}">
+										${user.fullName}
+									</c:when>
+									<c:when test="${(not empty user.firstName) || (not empty user.lastName)}">
+										${user.firstName} ${user.lastName}
+									</c:when>
+									<c:otherwise>
+										${user.username}
+									</c:otherwise>
+								</c:choose>
+								<span class="caret"></span>
 							</a>
 							<ul class="dropdown-menu" role="menu">
 								<li>

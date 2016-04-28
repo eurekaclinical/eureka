@@ -28,9 +28,17 @@
             return roles.some(role => role.name === name);
         }
 
-        getFullName() {
-            let { fullName, firstName, lastName } = this.info;
-            return fullName || (firstName + ' ' + lastName);
+        getDisplayName() {
+            let { fullName, firstName, lastName, username } = this.info;
+            if (fullName) {
+                return fullName;
+            } else if (firstName || lastName) {
+                return [firstName, lastName]
+                .filter(function (val) {return val && val.length > 0 ? val : undefined;})
+                .join(' ');
+            }else{
+                return username;
+            }
         }
     }
 
