@@ -39,6 +39,7 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.common.entity;
 
+import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -46,6 +47,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
@@ -56,7 +58,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
  * An ExtendedPhenotype represents a phenotype with constraints on its
  * duration and one of its property values.
  * 
- * @author hrathod
+ * @author hrathod, Miao Ai
  */
 @Entity
 @Table(name = "extended_phenotypes")
@@ -72,6 +74,12 @@ public class ExtendedPhenotype {
 
 	private Integer minDuration;
 
+        @OneToMany(cascade = CascadeType.REMOVE,mappedBy = "lhsExtendedPhenotype")   
+        private List<Relation> lhsExtendedPhenotype_relations;
+        
+        @OneToMany(cascade = CascadeType.REMOVE,mappedBy = "rhsExtendedPhenotype")        
+        private List<Relation> rhsExtendedPhenotype_relations;
+                
 	@ManyToOne
 	@JoinColumn(referencedColumnName = "id", nullable=false)
 	private TimeUnit minDurationTimeUnit;
@@ -106,6 +114,22 @@ public class ExtendedPhenotype {
 		this.minDuration = minDuration;
 	}
 
+	public List<Relation> getLRelations() {
+		return lhsExtendedPhenotype_relations;
+	}
+
+	public void setLRelations(List<Relation> inLRelations) {
+		lhsExtendedPhenotype_relations = inLRelations;
+	}
+
+	public List<Relation> getRRelations() {
+		return rhsExtendedPhenotype_relations;
+	}
+
+	public void setRRelations(List<Relation> inRRelations) {
+		rhsExtendedPhenotype_relations = inRRelations;
+	}        
+        
 	public TimeUnit getMinDurationTimeUnit() {
 		return minDurationTimeUnit;
 	}

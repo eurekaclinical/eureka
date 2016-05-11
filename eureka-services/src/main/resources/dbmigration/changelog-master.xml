@@ -957,4 +957,10 @@
 				<where>ID=1 AND PASSWORD='4656fd365a7b2a27efb753bca9b9cf1'</where>
 			</update>
 		</changeSet>
+		<changeSet author="mai" id="1360440238345-100">
+			<addColumn tableName="EXTENDED_PHENOTYPES">
+				<column name="SEQUENCES_ID" type="BIGINT"/>
+			</addColumn>
+			<addForeignKeyConstraint baseColumnNames="SEQUENCES_ID" baseTableName="EXTENDED_PHENOTYPES" constraintName="FK_EXTENDED_PHENOTYPES_TO_SEQUENCES" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" referencedColumnNames="ID" referencedTableName="SEQUENCES" referencesUniqueColumn="false"/>
+		</changeSet>
 </databaseChangeLog>

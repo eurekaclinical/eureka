@@ -43,7 +43,6 @@ import java.util.List;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.exception.PhenotypeHandlingException;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringBuilder;
 
 /**
  * Container class for the sequence user-created phenotype from the UI.
