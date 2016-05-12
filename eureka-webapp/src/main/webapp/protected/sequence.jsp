@@ -207,7 +207,7 @@
                                                 <c:when test="${not empty proposition and propositionType == 'SEQUENCE' and not empty proposition.relatedPhenotypes}">
                                                         <c:forEach var="relation" items="${proposition.relatedPhenotypes}" varStatus="status">
                                                                 <div class="sequence-relation drop-parent panel panel-default col-sm-12">
-                                                                        <div class="row panel-heading"><h4 class="panel-title">Related phenotypeMiao <span class="count">${status.count}</span></h4></div>
+                                                                        <div class="row panel-heading"><h4 class="panel-title">Related phenotype <span class="count">${status.count}</span></h4></div>
                                                                                 <div class="form-group">
                                                                                         <div class="col-sm-12">
                                                                                                 <label class="sr-only" for="relatedPhenotype${status.count}">Related phenotype ${status.count}</label>
@@ -365,7 +365,7 @@
                                                 <c:otherwise>
                                                 <div class="sequence-relation drop-parent panel panel-default col-sm-12">
                                                         <div class="row panel-heading">
-                                                                <h4 class="panel-title">Related phenotype Ai<span class="count">1</span></h4>
+                                                                <h4 class="panel-title">Related phenotype<span class="count">1</span></h4>
                                                         </div>
                                                         <div class="form-group">
                                                                 <div class="col-sm-12">
@@ -449,7 +449,7 @@
                                                                 <legend>Temporal relationship</legend>
                                                                 <div class="form-group">
                                                                         <div class="col-sm-6">
-                                                                                <label class="sr-only" for="sequenceRelPhenotypeTemporalRelation">Temporal relationtest</label>
+                                                                                <label class="sr-only" for="sequenceRelPhenotypeTemporalRelation">Temporal relation</label>
                                                                                 <select name="sequenceRelPhenotypeTemporalRelation"
                                                                                                 id="sequenceRelPhenotypeTemporalRelation"
                                                                                                 class="form-control">
@@ -511,7 +511,7 @@
                         <div class="form-group">
                                 <div class="col-sm-12 text-center">
                                         <button id="duplicateRelatedButton" type="button" class="btn btn-primary">
-                                                <span class="glyphicon glyphicon-plus"></span> Add Related Phenotypetest
+                                                <span class="glyphicon glyphicon-plus"></span> Add Related Phenotype
                                         </button>
                                         <button id="savePropositionButton" type="button" class="btn btn-primary">Save</button>
                                 </div>
