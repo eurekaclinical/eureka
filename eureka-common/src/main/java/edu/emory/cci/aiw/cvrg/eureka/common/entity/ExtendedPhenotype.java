@@ -112,23 +112,7 @@ public class ExtendedPhenotype {
 
 	public void setMinDuration(Integer minDuration) {
 		this.minDuration = minDuration;
-	}
-
-	public List<Relation> getLRelations() {
-		return lhsExtendedPhenotype_relations;
-	}
-
-	public void setLRelations(List<Relation> inLRelations) {
-		lhsExtendedPhenotype_relations = inLRelations;
-	}
-
-	public List<Relation> getRRelations() {
-		return rhsExtendedPhenotype_relations;
-	}
-
-	public void setRRelations(List<Relation> inRRelations) {
-		rhsExtendedPhenotype_relations = inRRelations;
-	}        
+	}   
         
 	public TimeUnit getMinDurationTimeUnit() {
 		return minDurationTimeUnit;

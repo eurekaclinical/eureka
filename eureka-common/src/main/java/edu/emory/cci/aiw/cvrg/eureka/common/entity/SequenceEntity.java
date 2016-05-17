@@ -58,24 +58,19 @@ import org.slf4j.LoggerFactory;
 /**
  * Contains attributes which describe a Protempa high level abstraction.
  *
- * @author hrathod, Miao Ai
+ * @author hrathod
  */
 @Entity
 @Table(name = "sequences")
 public class SequenceEntity extends PhenotypeEntity {
 	private static final Logger LOGGER
 			= LoggerFactory.getLogger(SequenceEntity.class);
-        
-	@OneToMany(cascade = CascadeType.REMOVE)
-	@JoinColumn(name="sequences_id")
-	private List<ExtendedPhenotype> extendedPhenotypes;                
-        
+
 	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name="primaryextendedphenotype_id")
 	private ExtendedPhenotype primaryExtendedPhenotype;
         
-	@OneToMany(cascade = { CascadeType.MERGE, CascadeType.REFRESH, 
-	        CascadeType.PERSIST })
+	@OneToMany(cascade = CascadeType.ALL)
 	@JoinColumn(name = "sequence_id")
 	private List<Relation> relations;
 	
@@ -89,15 +84,6 @@ public class SequenceEntity extends PhenotypeEntity {
 
 	public void setPrimaryExtendedPhenotype(ExtendedPhenotype inExtendedPhenotype) {
 		primaryExtendedPhenotype = inExtendedPhenotype;
-	}
-        
-        
-	public List<ExtendedPhenotype> getExtendedPhenotypes() {
-		return extendedPhenotypes;
-	}
-
-	public void setExtendedPhenotypes(List<ExtendedPhenotype> inExtendedPhenotypes) {
-		extendedPhenotypes = inExtendedPhenotypes;
 	}
         
 	public List<Relation> getRelations() {
