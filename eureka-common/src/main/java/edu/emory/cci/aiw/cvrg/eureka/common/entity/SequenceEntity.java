@@ -52,6 +52,8 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Contains attributes which describe a Protempa high level abstraction.
@@ -61,11 +63,13 @@ import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 @Entity
 @Table(name = "sequences")
 public class SequenceEntity extends PhenotypeEntity {
+	private static final Logger LOGGER
+			= LoggerFactory.getLogger(SequenceEntity.class);
 
 	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name="primaryextendedphenotype_id")
 	private ExtendedPhenotype primaryExtendedPhenotype;
-
+        
 	@OneToMany(cascade = CascadeType.ALL)
 	@JoinColumn(name = "sequence_id")
 	private List<Relation> relations;
@@ -81,7 +85,7 @@ public class SequenceEntity extends PhenotypeEntity {
 	public void setPrimaryExtendedPhenotype(ExtendedPhenotype inExtendedPhenotype) {
 		primaryExtendedPhenotype = inExtendedPhenotype;
 	}
-
+        
 	public List<Relation> getRelations() {
 		return relations;
 	}
@@ -96,7 +100,7 @@ public class SequenceEntity extends PhenotypeEntity {
 	 * @return The list of propositions the current proposition is abstracted
 	 *         from.
 	 */
-	public List<PhenotypeEntity> getAbstractedFrom() {
+	public List<PhenotypeEntity> getAbstractedFrom() {    
 		Map<Long, PhenotypeEntity> entities = 
 				new HashMap<>();
 		for (Relation relation : this.relations) {
@@ -106,9 +110,11 @@ public class SequenceEntity extends PhenotypeEntity {
 			PhenotypeEntity rhs = 
 					relation.getRhsExtendedPhenotype()
 					.getPhenotypeEntity();
+                        
 			entities.put(lhs.getId(), lhs);
 			entities.put(rhs.getId(), rhs);
 		}
+             
 		return new ArrayList<>(entities.values());
 	}
 

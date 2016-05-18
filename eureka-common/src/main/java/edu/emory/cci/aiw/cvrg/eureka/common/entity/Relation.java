@@ -52,7 +52,7 @@ import javax.persistence.Table;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 /**
- * @author hrathod
+ * @author hrathod, Miao Ai
  */
 @Entity
 @Table(name = "relations")
@@ -69,8 +69,7 @@ public class Relation {
 	@JoinColumn(nullable = false)
 	private ExtendedPhenotype lhsExtendedPhenotype;
 	
-	@ManyToOne(cascade = { CascadeType.MERGE, CascadeType.REFRESH,
-	        CascadeType.PERSIST })
+	@ManyToOne(cascade = CascadeType.ALL)
 	@JoinColumn(nullable = false)
 	private ExtendedPhenotype rhsExtendedPhenotype;
 
