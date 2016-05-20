@@ -163,16 +163,13 @@
                         </div>                                                    
                         <div class="row">
                                 <div class="col-sm-6">
-                                        <div class="form-group">  
+                                        <div class="form-group">                                                
                                                 <c:if test="${user['class'].name == 'edu.emory.cci.aiw.cvrg.eureka.common.comm.LocalUser'}">                        
                                                         <button id="changePasswordBtn" class="btn btn-primary text-center">Change Password</button>
-                                                </c:if>
-                                                <a href="${pageContext.request.contextPath}/#/index" class="btn btn-primary">
-                                                        <span></span>
-                                                        Cancel
-                                                </a>
+                                                </c:if>                                                
+                                                <button id="cancelBtn" class="btn btn-primary text-center">Cancel</button>     
                                                 <input type="hidden" name="id" id="id" value="${user.id}" /> 
-                                                <input type="hidden" name="action" value="saveinfo"/>
+                                                <input type="hidden" name="action" value="saveinfo"/>                                                        
                                                 <input type="submit" value="Save Changes" id="saveEditBtn" class="btn btn-primary text-center"/>  
                                         </div>
                                 </div>
@@ -247,9 +244,11 @@
 		</c:if>
 		<script type="text/javascript" src="${pageContext.request.contextPath}/assets/js/jquery.validate.js"></script>
 		<script type="text/javascript" src="${pageContext.request.contextPath}/assets/js/eureka.account${initParam['eureka-build-timestamp']}.js"></script>
+                <script>var ctx = "${pageContext.request.contextPath}/#/index"</script>
 		<script type="text/javascript">
 			$(document).ready(function () {
-				eureka.account.setup('#changePasswordBtn', '#userInfoForm', '#infoNotificationFailure', '#infoNotificationFailureMsg', '#infoNotificationSuccess', '#newPasswordModal', '#userCredentialForm', '#passwordChangeNotificationMsg', '#passwordExpirationMsg');
+                                
+				eureka.account.setup('#changePasswordBtn', '#cancelBtn', '#userInfoForm', '#infoNotificationFailure', '#infoNotificationFailureMsg', '#infoNotificationSuccess', '#newPasswordModal', '#userCredentialForm', '#passwordChangeNotificationMsg', '#passwordExpirationMsg');
 			});
 		</script>
 	</template:content>
