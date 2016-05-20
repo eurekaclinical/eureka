@@ -7,7 +7,7 @@ window.eureka = (typeof window.eureka == "undefined" || !window.eureka ) ? {} : 
 window.eureka.account = new function () {
 	var self = this;
 
-	self.setup = function (changePasswordButton, newInfoForm, notificationFailure, notificationFailureMsg, notificationSuccess, contentModal, newPasswordForm, notificationArea, passwordExpirationMsg) {
+	self.setup = function (changePasswordButton, cancelButton, newInfoForm, notificationFailure, notificationFailureMsg, notificationSuccess, contentModal, newPasswordForm, notificationArea, passwordExpirationMsg) {
 		$(newInfoForm).submit(this.submit);
                 self.setupPasswordSubmit(newPasswordForm, self.createPasswordValidator(newPasswordForm), notificationArea, passwordExpirationMsg);
 		$(contentModal).modal({
@@ -22,6 +22,12 @@ window.eureka.account = new function () {
 			return false;
 		});
 
+		$(cancelButton).click(function (e) {
+			e.preventDefault();
+			e.stopPropagation();
+			window.location.href =ctx;
+		});
+                
 		$.validator.addMethod("passwordCheck",
 			function (value, element) {
 				return value.length >= 8 && /[0-9]+/.test(value) && /[a-zA-Z]+/.test(value);
