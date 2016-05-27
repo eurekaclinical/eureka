@@ -1,5 +1,7 @@
 var gulp = require('gulp'),
     sourcemaps = require("gulp-sourcemaps"),
+    rev = require('gulp-rev'),
+    inject = require('gulp-inject')
     babel = require("gulp-babel"),
     concat = require("gulp-concat"),
     jshint = require('gulp-jshint'),
@@ -40,7 +42,7 @@ gulp.task('ngdocs', ['process-js'], function () {
     title: "Eureka Angular Documentation",
     html5Mode: false
   };
-  return gulp.src('build/app.js')
+  return gulp.src('build/app-*.js')
     .pipe(gulpDocs.process(options))
     .pipe(gulp.dest('./ng-docs'));
 });
@@ -57,8 +59,17 @@ gulp.task('process-js', ['lint', 'cache-templates'], function () {
     .pipe(sourcemaps.init())
     .pipe(babel())
     .pipe(concat('app.js'))
+    .pipe(rev())
     .pipe(sourcemaps.write('.'))
     .pipe(gulp.dest('build'));
+});
+
+gulp.task('inject-hash', ['process-js'], function () {
+  var target = gulp.src('./index.html');
+  var sources = gulp.src(['./build/app-*.js'], {read: false});
+ 
+    return target.pipe(inject(sources,{relative: true}))
+        .pipe(gulp.dest('./'));
 });
 
 gulp.task('less', function () {
@@ -116,7 +127,7 @@ gulp.task('serve', ['bower', 'browser-sync', 'less'], function () {
     opn('https://localhost:8443/eureka-angular/');
 });
 
-gulp.task('compile:html', ['test', 'less'], function() {
+gulp.task('compile:html', ['test', 'less', 'inject-hash'], function() {
     var assets = useref.assets();
     return gulp.src('./index.html')
         .pipe(assets)
