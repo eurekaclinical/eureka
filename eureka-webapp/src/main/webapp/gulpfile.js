@@ -64,12 +64,12 @@ gulp.task('process-js', ['lint', 'cache-templates'], function () {
     .pipe(gulp.dest('build'));
 });
 
-gulp.task('inject-hash', ['process-js'], function () {
+gulp.task('inject-hash', ['test'], function () {
   var target = gulp.src('./index.html');
   var sources = gulp.src(['./build/app-*.js'], {read: false});
  
     return target.pipe(inject(sources,{relative: true}))
-        .pipe(gulp.dest('./'));
+        .pipe(gulp.dest('./build/injected'));
 });
 
 gulp.task('less', function () {
@@ -127,15 +127,12 @@ gulp.task('serve', ['bower', 'browser-sync', 'less'], function () {
     opn('https://localhost:8443/eureka-angular/');
 });
 
-gulp.task('compile:html', ['test', 'less', 'inject-hash'], function() {
-    var assets = useref.assets();
-    return gulp.src('./index.html')
-        .pipe(assets)
+gulp.task('compile:html', ['less', 'inject-hash'], function() {
+    return gulp.src('build/injected/index.html')
+        .pipe(useref({ searchPath: ['bower_components', 'assets', 'build', '.'] }))
         .pipe(gulpif('*.js', uglify()))
         .pipe(gulpif('*.css', cleanCSS()))
-        .pipe(assets.restore())
-        .pipe(useref())
-        .pipe(gulp.dest('./build'));
+        .pipe(gulp.dest('build'));
 });
 
 gulp.task('build-html', ['compile:html'], function() {
