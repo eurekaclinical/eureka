@@ -259,17 +259,24 @@ public class JobResource {
 	 */
 	@GET
 	@Produces({MediaType.APPLICATION_JSON})
-	public List<Job> getJobsByUser(@QueryParam("order") String order) {
+	public List<Job> getJobsByUser(@QueryParam("order") String order,
+								   @QueryParam("recent") boolean recent) {
 		try {
-			if (order == null) {
-				return this.etlClient.getJobs();
-			} else if (order.equals("desc")) {
-				return this.etlClient.getJobsDesc();
-			} else {
-				throw new HttpStatusException(Status.PRECONDITION_FAILED,
-						"Invalid value for the order query parameter: " + order);
+			if(recent){
+				return this.etlClient.getRecentJobs();
 			}
-		} catch (ClientException ex) {
+			else {
+				if (order == null) {
+					return this.etlClient.getJobs();
+				} else if (order.equals("desc")) {
+					return this.etlClient.getJobsDesc();
+				} else {
+					throw new HttpStatusException(Status.PRECONDITION_FAILED,
+							"Invalid value for the order query parameter: " + order);
+				}
+			}
+			}
+		 catch (ClientException ex) {
 			throw new HttpStatusException(Status.INTERNAL_SERVER_ERROR, ex);
 		}
 	}

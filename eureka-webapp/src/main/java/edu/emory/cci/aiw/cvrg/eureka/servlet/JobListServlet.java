@@ -87,7 +87,7 @@ public class JobListServlet extends HttpServlet {
 				}
 				job = this.servicesClient.getJob(jobId);
 			} else {
-				List<Job> jobs = this.servicesClient.getJobsDesc();
+				List<Job> jobs = this.servicesClient.getRecentJobs();
 				if (!jobs.isEmpty()) {
 					job = jobs.get(0);
 				}

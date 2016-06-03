@@ -92,7 +92,7 @@ public class JobPollServlet extends HttpServlet {
 				destinationId = job.getDestinationId();
 				destination = this.servicesClient.getDestination(destinationId);
 			} else {
-				List<Job> jobs = this.servicesClient.getJobsDesc();
+				List<Job> jobs = this.servicesClient.getRecentJobs();
 				if (!jobs.isEmpty()) {
 					job = jobs.get(0);
 					destinationId = job.getDestinationId();

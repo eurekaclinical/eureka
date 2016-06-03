@@ -72,6 +72,8 @@ public class JobFilter {
 	 */
 	private final Date to;
 
+	private final boolean recent;
+
 	/**
 	 * Create an instance with the given parameters. Null parameters are
 	 * allowed. The inFrom and inTo parameters can be used to create date range
@@ -85,13 +87,14 @@ public class JobFilter {
 	 */
 	public JobFilter(final Long inJobId, final Long inUserId,
 			final String inState, final Date inFrom,
-			final Date inTo) {
+			final Date inTo, final boolean recent) {
 
 		this.jobId = inJobId;
 		this.userId = inUserId;
 		this.state = inState;
 		this.from = (null == inFrom) ? null : new Date(inFrom.getTime());
 		this.to = (null == inTo) ? null : new Date(inTo.getTime());
+		this.recent = recent;
 	}
 	
 	/**
@@ -124,6 +127,8 @@ public class JobFilter {
 				get("from")));
 		this.to = params.get("to") == null ? null : new Date(Long.valueOf(params.
 				get("to")));
+		this.recent = params.get("recent") == null ? null : Boolean.valueOf(params.
+				get("userId"));
 	}
 
 	/**
@@ -159,6 +164,13 @@ public class JobFilter {
 	 */
 	public final Date getTo() {
 		return this.to == null ? null : new Date(this.to.getTime());
+	}
+
+	/**
+	 * @return the recent
+	 */
+	public boolean getRecent() {
+		return recent;
 	}
 
 	/**

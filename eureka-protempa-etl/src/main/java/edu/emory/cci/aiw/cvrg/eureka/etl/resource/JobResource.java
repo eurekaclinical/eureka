@@ -126,17 +126,27 @@ public class JobResource {
 	@GET
 	@Transactional
 	public List<Job> getAll(@Context HttpServletRequest request,
-			@QueryParam("order") String order) {
-		JobFilter jobFilter = new JobFilter(null,
-				this.authenticationSupport.getUser(request).getId(), null, null, null);
+							@QueryParam("order") String order,
+							@QueryParam("recent") boolean recent) {
+		JobFilter jobFilter = null;
+
 		List<Job> jobs = new ArrayList<>();
 		List<JobEntity> jobEntities;
-		if (order == null) {
-			jobEntities = this.jobDao.getWithFilter(jobFilter);
-		} else if (order.equals("desc")) {
-			jobEntities = this.jobDao.getWithFilterDesc(jobFilter);
+		if (recent) {
+			jobFilter = new JobFilter(null,
+					this.authenticationSupport.getUser(request).getId(), null, null, null, true);
+			jobEntities = new ArrayList<>();
+			jobEntities.add(this.jobDao.getRecentWithFilter(jobFilter));
 		} else {
-			throw new HttpStatusException(Response.Status.PRECONDITION_FAILED, "Invalid value for the order parameter: " + order);
+			jobFilter = new JobFilter(null,
+					this.authenticationSupport.getUser(request).getId(), null, null, null, false);
+			if (order == null) {
+				jobEntities = this.jobDao.getWithFilter(jobFilter);
+			} else if (order.equals("desc")) {
+				jobEntities = this.jobDao.getWithFilterDesc(jobFilter);
+			} else {
+				throw new HttpStatusException(Response.Status.PRECONDITION_FAILED, "Invalid value for the order parameter: " + order);
+			}
 		}
 		for (JobEntity jobEntity : jobEntities) {
 			jobs.add(jobEntity.toJob());
@@ -206,7 +216,7 @@ public class JobResource {
 	
 	private JobEntity getJobEntity(HttpServletRequest request, Long inJobId) {
 		JobFilter jobFilter = new JobFilter(inJobId,
-				this.authenticationSupport.getUser(request).getId(), null, null, null);
+				this.authenticationSupport.getUser(request).getId(), null, null, null,false);
 		List<JobEntity> jobEntities = this.jobDao.getWithFilter(jobFilter);
 		if (jobEntities.isEmpty()) {
 			throw new HttpStatusException(Status.NOT_FOUND);

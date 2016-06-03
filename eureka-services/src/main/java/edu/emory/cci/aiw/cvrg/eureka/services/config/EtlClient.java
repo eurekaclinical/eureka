@@ -134,4 +134,6 @@ public interface EtlClient {
 	
 	void deleteOutput(String destinationId) throws ClientException;
 
+	List<Job> getRecentJobs()  throws ClientException;
+
 }

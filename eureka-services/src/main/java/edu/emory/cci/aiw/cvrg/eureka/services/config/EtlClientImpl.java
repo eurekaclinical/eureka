@@ -214,6 +214,14 @@ public class EtlClientImpl extends EurekaClient implements EtlClient {
 	}
 
 	@Override
+	public List<Job> getRecentJobs() throws ClientException {
+		final String path = "/api/protected/jobs";
+		MultivaluedMap<String, String> queryParams = new MultivaluedMapImpl();
+		queryParams.add("recent", "true");
+		return doGet(path, JobListType, queryParams);
+	}
+
+	@Override
 	public Job getJob(Long inJobId) throws ClientException {
 		final String path = "/api/protected/jobs/" + inJobId;
 		return doGet(path, JobType);

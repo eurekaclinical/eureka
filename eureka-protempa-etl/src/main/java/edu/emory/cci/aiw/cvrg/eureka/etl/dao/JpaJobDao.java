@@ -45,10 +45,9 @@ import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
+import javax.persistence.criteria.*;
+import javax.persistence.metamodel.EntityType;
+import javax.persistence.metamodel.SingularAttribute;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -93,7 +92,7 @@ public class JpaJobDao extends GenericDao<JobEntity, Long> implements JobDao {
 		CriteriaBuilder builder = entityManager.getCriteriaBuilder();
 		CriteriaQuery<JobEntity> query = builder.createQuery(JobEntity.class);
 		Root<JobEntity> root = query.from(JobEntity.class);
-		Predicate[] predicatesArray = buildWhere(jobFilter, builder, root);
+		Predicate[] predicatesArray = buildWhere(jobFilter, builder, root, entityManager);
 		query.where(predicatesArray);
 		query.orderBy(builder.desc(root.get(JobEntity_.created)));
 		LOGGER.debug("Creating typed query.");
@@ -101,8 +100,20 @@ public class JpaJobDao extends GenericDao<JobEntity, Long> implements JobDao {
 		LOGGER.debug("Returning results.");
 		return typedQuery.getResultList();
 	}
-	
-	
+
+	@Override
+	public JobEntity getRecentWithFilter(JobFilter jobFilter) {
+		EntityManager entityManager = this.getEntityManager();
+		CriteriaBuilder builder = entityManager.getCriteriaBuilder();
+		CriteriaQuery<JobEntity> query = builder.createQuery(JobEntity.class);
+		Root<JobEntity> root = query.from(JobEntity.class);
+		Predicate[] predicatesArray = buildWhere(jobFilter, builder, root,entityManager);
+		query.where(predicatesArray);
+		LOGGER.debug("Creating typed query.");
+		TypedQuery<JobEntity> typedQuery = entityManager.createQuery(query);
+		LOGGER.debug("Returning results.");
+		return typedQuery.getSingleResult();
+	}
 
 	@Override
 	public List<JobEntity> getWithFilter(final JobFilter jobFilter) {
@@ -110,7 +121,7 @@ public class JpaJobDao extends GenericDao<JobEntity, Long> implements JobDao {
 		CriteriaBuilder builder = entityManager.getCriteriaBuilder();
 		CriteriaQuery<JobEntity> query = builder.createQuery(JobEntity.class);
 		Root<JobEntity> root = query.from(JobEntity.class);
-		Predicate[] predicatesArray = buildWhere(jobFilter, builder, root);
+		Predicate[] predicatesArray = buildWhere(jobFilter, builder, root, entityManager);
 		query.where(predicatesArray);
 		LOGGER.debug("Creating typed query.");
 		TypedQuery<JobEntity> typedQuery = entityManager.createQuery(query);
@@ -118,7 +129,8 @@ public class JpaJobDao extends GenericDao<JobEntity, Long> implements JobDao {
 		return typedQuery.getResultList();
 	}
 
-	private Predicate[] buildWhere(JobFilter jobFilter, CriteriaBuilder builder, Root<JobEntity> root) {
+
+	private Predicate[] buildWhere(JobFilter jobFilter, CriteriaBuilder builder, Root<JobEntity> root,EntityManager entityManager) {
 		List<Predicate> predicates = new ArrayList<>();
 		if (jobFilter != null) {
 			LOGGER.debug("Checking for job ID.");
@@ -151,6 +163,15 @@ public class JpaJobDao extends GenericDao<JobEntity, Long> implements JobDao {
 				predicates.add(builder.equal(
 						root.join(JobEntity_.jobEvents).get(JobEvent_.status),
 						jobFilter.getState()));
+			}
+			LOGGER.debug("Checking for recent.");
+			if (jobFilter.getRecent()) {
+				LOGGER.debug("Get recent job");
+				CriteriaQuery<Date> maxQuery = builder.createQuery(Date.class);
+				Root<JobEntity> rootForMax = maxQuery.from(JobEntity.class);
+				maxQuery.select(builder.greatest(rootForMax.get(JobEntity_.created)));
+				Date maxCreatedDate = entityManager.createQuery(maxQuery).getSingleResult();
+				predicates.add(builder.equal(root.<Date>get(JobEntity_.created),maxCreatedDate));
 			}
 		}
 		LOGGER.debug("{} predicates found from filter", predicates.size());

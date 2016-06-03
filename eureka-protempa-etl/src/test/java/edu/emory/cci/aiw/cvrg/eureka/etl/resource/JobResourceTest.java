@@ -65,7 +65,7 @@ public class JobResourceTest extends AbstractEtlResourceTest {
 	@Test
 	public void testJobListWithFilter() {
 		WebResource resource = this.resource();
-		JobFilter jobFilter = new JobFilter(null, null, null, null, null);
+		JobFilter jobFilter = new JobFilter(null, null, null, null, null,false);
 		List<Job> jobs = resource.path("/api/protected/jobs/status").queryParam("filter",
 				jobFilter.toQueryParam()).accept(
 				MediaType.APPLICATION_JSON).get(new GenericType<List<Job>>() {
