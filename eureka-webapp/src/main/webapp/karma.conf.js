@@ -29,7 +29,7 @@ module.exports = function(config) {
       'assets/js/eureka.tree-cohort.js',
       'assets/js/eureka.cohort.js',
       'assets/js/jstree-3.1.1.min.js',
-      'build/app.js',
+      'build/app-*.js',
       'eureka/**/*-spec.js'
     ],
 
