@@ -212,11 +212,9 @@ public class ServicesClient extends EurekaClient {
 		return doGet(path, JobList, queryParams);
 	}
 
-	public List<Job> getRecentJobs() throws ClientException {
-		final String path = "/api/protected/jobs";
-		MultivaluedMap<String, String> queryParams = new MultivaluedMapImpl();
-		queryParams.add("recent", "true");
-		return doGet(path, JobList, queryParams);
+	public Job getLatestJob() throws ClientException {
+		final String path = "/api/protected/jobs/latest";
+		return doGet(path, Job.class);
 	}
 
 	public List<Phenotype> getPhenotypes(String[] inKeys, boolean summarized) throws ClientException {

@@ -259,24 +259,17 @@ public class JobResource {
 	 */
 	@GET
 	@Produces({MediaType.APPLICATION_JSON})
-	public List<Job> getJobsByUser(@QueryParam("order") String order,
-								   @QueryParam("recent") boolean recent) {
+	public List<Job> getJobsByUser(@QueryParam("order") String order) {
 		try {
-			if(recent){
-				return this.etlClient.getRecentJobs();
+			if (order == null) {
+				return this.etlClient.getJobs();
+			} else if (order.equals("desc")) {
+				return this.etlClient.getJobsDesc();
+			} else {
+				throw new HttpStatusException(Status.PRECONDITION_FAILED,
+						"Invalid value for the order query parameter: " + order);
 			}
-			else {
-				if (order == null) {
-					return this.etlClient.getJobs();
-				} else if (order.equals("desc")) {
-					return this.etlClient.getJobsDesc();
-				} else {
-					throw new HttpStatusException(Status.PRECONDITION_FAILED,
-							"Invalid value for the order query parameter: " + order);
-				}
-			}
-			}
-		 catch (ClientException ex) {
+		} catch (ClientException ex) {
 			throw new HttpStatusException(Status.INTERNAL_SERVER_ERROR, ex);
 		}
 	}
@@ -295,6 +288,17 @@ public class JobResource {
 	public List<Job> getStatus(@QueryParam("filter") JobFilter inFilter) {
 		try {
 			return this.etlClient.getJobStatus(inFilter);
+		} catch (ClientException ex) {
+			throw new HttpStatusException(Status.INTERNAL_SERVER_ERROR, ex);
+		}
+	}
+
+	@GET
+	@Path("/latest")
+	@Produces({MediaType.APPLICATION_JSON})
+	public Job getLatestJob() {
+		try {
+			return this.etlClient.getLatestJob();
 		} catch (ClientException ex) {
 			throw new HttpStatusException(Status.INTERNAL_SERVER_ERROR, ex);
 		}

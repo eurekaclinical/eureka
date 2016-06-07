@@ -189,7 +189,7 @@ public class MockEtlClient implements EtlClient {
 	}
 
 	@Override
-	public List<Job> getRecentJobs() throws ClientException {
+	public Job getLatestJob() throws ClientException {
 		throw new UnsupportedOperationException("Not supported yet.");
 	}
 	

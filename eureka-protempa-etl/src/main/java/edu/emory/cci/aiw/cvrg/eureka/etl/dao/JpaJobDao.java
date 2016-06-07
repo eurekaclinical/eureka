@@ -44,6 +44,8 @@ import java.util.Date;
 import java.util.List;
 
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
+import javax.persistence.NonUniqueResultException;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.*;
 import javax.persistence.metamodel.EntityType;
@@ -92,7 +94,7 @@ public class JpaJobDao extends GenericDao<JobEntity, Long> implements JobDao {
 		CriteriaBuilder builder = entityManager.getCriteriaBuilder();
 		CriteriaQuery<JobEntity> query = builder.createQuery(JobEntity.class);
 		Root<JobEntity> root = query.from(JobEntity.class);
-		Predicate[] predicatesArray = buildWhere(jobFilter, builder, root, entityManager);
+		Predicate[] predicatesArray = buildWhere(jobFilter, builder, root, null);
 		query.where(predicatesArray);
 		query.orderBy(builder.desc(root.get(JobEntity_.created)));
 		LOGGER.debug("Creating typed query.");
@@ -102,17 +104,25 @@ public class JpaJobDao extends GenericDao<JobEntity, Long> implements JobDao {
 	}
 
 	@Override
-	public JobEntity getRecentWithFilter(JobFilter jobFilter) {
+	public JobEntity getLatestWithFilter(JobFilter jobFilter) {
 		EntityManager entityManager = this.getEntityManager();
 		CriteriaBuilder builder = entityManager.getCriteriaBuilder();
 		CriteriaQuery<JobEntity> query = builder.createQuery(JobEntity.class);
 		Root<JobEntity> root = query.from(JobEntity.class);
-		Predicate[] predicatesArray = buildWhere(jobFilter, builder, root,entityManager);
+		Subquery<Date> subQuery = query.subquery(Date.class);
+		Root subQueryRoot = subQuery.from(JobEntity.class);
+		subQuery.select(builder.greatest(subQueryRoot.get(JobEntity_.created)));
+		Predicate[] predicatesArray = buildWhere(jobFilter, builder, root,subQuery);
 		query.where(predicatesArray);
 		LOGGER.debug("Creating typed query.");
 		TypedQuery<JobEntity> typedQuery = entityManager.createQuery(query);
 		LOGGER.debug("Returning results.");
-		return typedQuery.getSingleResult();
+		List<JobEntity> jobs=typedQuery.getResultList();
+		if (jobs.isEmpty()) {
+			return null;
+		} else {
+			return jobs.get(0);
+		}
 	}
 
 	@Override
@@ -121,7 +131,7 @@ public class JpaJobDao extends GenericDao<JobEntity, Long> implements JobDao {
 		CriteriaBuilder builder = entityManager.getCriteriaBuilder();
 		CriteriaQuery<JobEntity> query = builder.createQuery(JobEntity.class);
 		Root<JobEntity> root = query.from(JobEntity.class);
-		Predicate[] predicatesArray = buildWhere(jobFilter, builder, root, entityManager);
+		Predicate[] predicatesArray = buildWhere(jobFilter, builder, root, null);
 		query.where(predicatesArray);
 		LOGGER.debug("Creating typed query.");
 		TypedQuery<JobEntity> typedQuery = entityManager.createQuery(query);
@@ -130,7 +140,7 @@ public class JpaJobDao extends GenericDao<JobEntity, Long> implements JobDao {
 	}
 
 
-	private Predicate[] buildWhere(JobFilter jobFilter, CriteriaBuilder builder, Root<JobEntity> root,EntityManager entityManager) {
+	private Predicate[] buildWhere(JobFilter jobFilter, CriteriaBuilder builder, Root<JobEntity> root,Subquery subQuery) {
 		List<Predicate> predicates = new ArrayList<>();
 		if (jobFilter != null) {
 			LOGGER.debug("Checking for job ID.");
@@ -165,13 +175,14 @@ public class JpaJobDao extends GenericDao<JobEntity, Long> implements JobDao {
 						jobFilter.getState()));
 			}
 			LOGGER.debug("Checking for recent.");
-			if (jobFilter.getRecent()) {
-				LOGGER.debug("Get recent job");
-				CriteriaQuery<Date> maxQuery = builder.createQuery(Date.class);
-				Root<JobEntity> rootForMax = maxQuery.from(JobEntity.class);
-				maxQuery.select(builder.greatest(rootForMax.get(JobEntity_.created)));
-				Date maxCreatedDate = entityManager.createQuery(maxQuery).getSingleResult();
-				predicates.add(builder.equal(root.<Date>get(JobEntity_.created),maxCreatedDate));
+			if (jobFilter.getLatest()) {
+				LOGGER.debug("Get latest job");
+				if(subQuery!=null) {
+					predicates.add(builder.equal(root.<Date>get(JobEntity_.created), subQuery));
+				}else{
+					LOGGER.debug("Subquery is null");
+
+				}
 			}
 		}
 		LOGGER.debug("{} predicates found from filter", predicates.size());
