@@ -957,4 +957,36 @@
 				<where>ID=1 AND PASSWORD='4656fd365a7b2a27efb753bca9b9cf1'</where>
 			</update>
 		</changeSet>
+                <changeSet author="mai" id="1360440238345-100">
+                        <dropForeignKeyConstraint baseTableName="USER_ROLE" constraintName="FK143BF46A2EE17E2D"/>                         
+                </changeSet>             
+                <changeSet author="mai" id="1360440238345-101">  
+                        <delete tableName="USER_ROLE">
+                            <where>USER_ID=1 AND ROLE_ID=1 </where>
+                        </delete>                    
+                        <delete tableName="ROLES">
+                            <where>NAME='superuser'</where>
+                        </delete>   
+                </changeSet>   
+                <changeSet author="mai" id="1360440238345-102">                                           
+			<update tableName="USER_ROLE">
+				<column name="ROLE_ID" value="1"/>
+				<where>ROLE_ID=2</where>
+			</update>     
+			<update tableName="USER_ROLE">
+				<column name="ROLE_ID" value="2"/>
+				<where>ROLE_ID=3</where>
+			</update>                      
+			<update tableName="ROLES">
+				<column name="ID" value="1"/>
+				<where>NAME='researcher'</where>
+			</update>     
+			<update tableName="ROLES">
+				<column name="ID" value="2"/>
+				<where>NAME='admin'</where>
+			</update>                                       
+                </changeSet>   
+                <changeSet author="mai" id="1360440238345-103">
+                        <addForeignKeyConstraint baseColumnNames="ROLE_ID" baseTableName="USER_ROLE" constraintName="FK_USER_ROLE_TO_ROLES" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" referencedColumnNames="ID" referencedTableName="ROLES" referencesUniqueColumn="false"/>
+                </changeSet>                
 </databaseChangeLog>

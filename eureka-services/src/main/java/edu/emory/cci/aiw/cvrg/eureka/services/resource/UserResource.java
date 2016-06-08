@@ -323,7 +323,9 @@ public class UserResource {
 		}
 		LOGGER.debug("Received updated user: {}", inUser);
 		Response response;
+                
 		UserEntity currentUser = this.userDao.retrieve(inId);
+		User me = getMe(req);
 
 		boolean activation = (!currentUser.isActive()) && (inUser.isActive());
 
@@ -339,8 +341,8 @@ public class UserResource {
 		currentUser.setRoles(updatedRoles);
 		currentUser.setActive(inUser.isActive());
 		currentUser.setLastLogin(inUser.getLastLogin());
-
-		if (this.validateUpdatedUser(currentUser)) {
+                
+		if (this.validateUpdatedUser(currentUser, me)) {
 			LOGGER.debug("Saving updated user: {}", currentUser.getEmail());
 			this.userDao.update(currentUser);
 
@@ -368,22 +370,21 @@ public class UserResource {
 	 * @param updatedUser The user to be validate.
 	 * @return True if the user is valid, false otherwise.
 	 */
-	private boolean validateUpdatedUser(UserEntity updatedUser) {
+	private boolean validateUpdatedUser(UserEntity updatedUser, User me) {
 		boolean result = true;
-
+		boolean updateByMe = true;
 		// the roles to check
-		Role superUserRole = this.roleDao.getRoleByName("superuser");
-
-		// a super user can not be stripped of admin rights, 
-		// or be de-activated.
-		if (updatedUser.getRoles().contains(superUserRole)) {
-			if (!updatedUser.isActive()) {
-				this.validationError = "Superuser can not be de-activated";
+		Role adminUserRole = this.roleDao.getRoleByName("admin");
+		updateByMe = me.getUsername().equals(updatedUser.getUsername());
+		// a admin user can not be stripped of admin rights, 
+		// or be de-activated by him/herself.
+		if (updatedUser.getRoles().contains(adminUserRole)) {
+			if (!updatedUser.isActive() && updateByMe) {
+				this.validationError = "admin user can not be de-activated by him/herself";
 				result = false;
 			}
-			Role adminRole = this.roleDao.getRoleByName("admin");
-			if (!updatedUser.getRoles().contains(adminRole)) {
-				this.validationError = "Superuser can not lose admin rights";
+			if (!updatedUser.getRoles().contains(adminUserRole) && updateByMe) {
+				this.validationError = "admin user can not be stripped of admin rights by him/herself ";
 				result = false;
 			}
 		}

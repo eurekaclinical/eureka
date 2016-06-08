@@ -63,7 +63,7 @@ public class UserDaoTest extends AbstractServiceDataTest {
 	public void testDao() {
 		UserDao dao = this.getInstance(UserDao.class);
 		List<UserEntity> users = dao.getAll();
-		assertEquals(3, users.size());
+		assertEquals(2, users.size());
 	}
 
 	/**

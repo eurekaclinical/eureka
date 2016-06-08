@@ -26,12 +26,9 @@
                 vm.user = data;
                 angular.forEach(data.roles, function(value) {
                     if(value === 1){
-                        vm.role.superUser = true;
-                    }
-                    if(value === 2){
                         vm.role.researcher = true;  
                     }
-                    if(value === 3){
+                    if(value === 2){
                         vm.role.admin = true;
                     }
                 });
@@ -45,13 +42,10 @@
             if(!_.isEmpty(editAdmin.role)){
                 angular.forEach(editAdmin.role, function(value, key) {
                     if(key === 'researcher' && value === true){
-                        roleArray.push(2);
-                    }
-                    if(key === 'superUser' && value === true){
                         roleArray.push(1);
                     }
                     if(key === 'admin' && value === true){
-                        roleArray.push(3);
+                        roleArray.push(2);
                     }
                 });
             }
