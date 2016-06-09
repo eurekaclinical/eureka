@@ -128,7 +128,7 @@ public class JobFilter {
 		this.to = params.get("to") == null ? null : new Date(Long.valueOf(params.
 				get("to")));
 		this.latest = params.get("latest") == null ? null : Boolean.valueOf(params.
-				get("userId"));
+				get("latest"));
 	}
 
 	/**
@@ -197,6 +197,7 @@ public class JobFilter {
 		if (this.to != null) {
 			builder.append("|to=").append(to.getTime());
 		}
+		builder.append("|latest=").append(latest);
 		return builder.toString();
 	}
 }
