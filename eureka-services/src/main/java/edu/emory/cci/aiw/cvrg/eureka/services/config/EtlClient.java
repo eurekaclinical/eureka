@@ -134,4 +134,11 @@ public interface EtlClient {
 	
 	void deleteOutput(String destinationId) throws ClientException;
 
+	/**
+	 * gets the latest job submitted by the logged in user
+	 * @return
+	 * @throws ClientException
+	 */
+	Job getLatestJob()  throws ClientException;
+
 }

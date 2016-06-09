@@ -214,6 +214,12 @@ public class EtlClientImpl extends EurekaClient implements EtlClient {
 	}
 
 	@Override
+	public Job getLatestJob() throws ClientException {
+		final String path = "/api/protected/jobs/latest";
+		return doGet(path, JobType);
+	}
+
+	@Override
 	public Job getJob(Long inJobId) throws ClientException {
 		final String path = "/api/protected/jobs/" + inJobId;
 		return doGet(path, JobType);

@@ -292,4 +292,15 @@ public class JobResource {
 			throw new HttpStatusException(Status.INTERNAL_SERVER_ERROR, ex);
 		}
 	}
+
+	@GET
+	@Path("/latest")
+	@Produces({MediaType.APPLICATION_JSON})
+	public Job getLatestJob() {
+		try {
+			return this.etlClient.getLatestJob();
+		} catch (ClientException ex) {
+			throw new HttpStatusException(Status.INTERNAL_SERVER_ERROR, ex);
+		}
+	}
 }

@@ -126,9 +126,9 @@ public class JobResource {
 	@GET
 	@Transactional
 	public List<Job> getAll(@Context HttpServletRequest request,
-			@QueryParam("order") String order) {
+							@QueryParam("order") String order) {
 		JobFilter jobFilter = new JobFilter(null,
-				this.authenticationSupport.getUser(request).getId(), null, null, null);
+				this.authenticationSupport.getUser(request).getId(), null, null, null,false);
 		List<Job> jobs = new ArrayList<>();
 		List<JobEntity> jobEntities;
 		if (order == null) {
@@ -203,10 +203,18 @@ public class JobResource {
 		}
 		return jobs;
 	}
-	
+
+	@GET
+	@Path("/latest")
+	public Job getLatestJob(@Context HttpServletRequest request) {
+		JobFilter jobFilter = new JobFilter(null,
+				this.authenticationSupport.getUser(request).getId(), null, null, null, true);
+		 return this.jobDao.getLatestWithFilter(jobFilter).toJob();
+	}
+
 	private JobEntity getJobEntity(HttpServletRequest request, Long inJobId) {
 		JobFilter jobFilter = new JobFilter(inJobId,
-				this.authenticationSupport.getUser(request).getId(), null, null, null);
+				this.authenticationSupport.getUser(request).getId(), null, null, null,false);
 		List<JobEntity> jobEntities = this.jobDao.getWithFilter(jobFilter);
 		if (jobEntities.isEmpty()) {
 			throw new HttpStatusException(Status.NOT_FOUND);

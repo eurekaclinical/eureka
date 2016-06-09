@@ -187,5 +187,10 @@ public class MockEtlClient implements EtlClient {
 	public void deleteOutput(String destinationId) throws ClientException {
 		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
 	}
+
+	@Override
+	public Job getLatestJob() throws ClientException {
+		throw new UnsupportedOperationException("Not supported yet.");
+	}
 	
 }
