@@ -77,7 +77,7 @@ public class UserResourceTest extends AbstractServiceResourceTest {
 	@Test
 	public void testUserList() {
 		List<User> users = this.getUserList();
-		assertEquals(3, users.size());
+		assertEquals(2, users.size());
 	}
 	
 	/**

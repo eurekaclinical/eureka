@@ -44,15 +44,14 @@
 
 <template:insert template="/templates/eureka_main.jsp">
 	<template:content name="content">
-		<h3>Edit User ${theUser.username}</h3>
-
+		<h3>Edit User ${currentUser.username}</h3>
 		<form id="userform" action="admin" method="GET" id="editUserForm" role="form" class="">
 			<div class="form-group">
 				<label>
 					Name
 				</label>
 				<div class="form-control-static">
-						${theUser.firstName} ${theUser.lastName}
+						${currentUser.firstName} ${currentUser.lastName}
 				</div>
 			</div>
 			<div class="form-group">
@@ -60,7 +59,7 @@
 					Organization
 				</label>
 				<div class="form-control-static">
-						${theUser.organization}
+						${currentUser.organization}
 				</div>
 			</div>
 			<div class="form-group">
@@ -68,7 +67,7 @@
 					Title
 				</label>
 				<div class="form-control-static">
-						${theUser.title}
+						${currentUser.title}
 				</div>
 			</div>
 			<div class="form-group">
@@ -76,7 +75,7 @@
 					Department
 				</label>
 				<div class="form-control-static">
-						${theUser.department}
+						${currentUser.department}
 				</div>
 			</div>
 			<div class="form-group">
@@ -84,7 +83,7 @@
 					Email
 				</label>
 				<div class="form-control-static">
-						${theUser.email}
+						${currentUser.email}
 				</div>
 			</div>
 			<div class="form-group">
@@ -92,39 +91,44 @@
 					Role
 				</label>
 				<div class="form-control-static">
-					<c:set var="isSuperUser" value="0"></c:set>
-                                        
+                                        <c:set var="userHasResearcherRole" value="0"></c:set>                                    
+					<c:set var="userHasAdminRole" value="0"></c:set>
+
+                                        <c:forEach var="userRole" items="${currentUser.roles}">
+
+                                                <c:if test="${userRole == 1}">
+                                                        <c:set var="userHasResearcherRole" value="1"></c:set>
+                                                </c:if>                                                      
+                                                <c:if test="${userRole == 2}">
+                                                        <c:set var="userHasAdminRole" value="1"></c:set>
+                                                </c:if>
+
+                                        </c:forEach>
+                                                
 					<c:forEach var="role" items="${roles}">
-						<c:set var="hasRole" value="0"></c:set>
-						<c:forEach var="userRole" items="${theUser.roles}">
-							<c:if test="${userRole ==  role.id}">
-								<c:set var="hasRole" value="1"></c:set>
-								<c:if test="${role.name eq 'superuser'}">
-									<c:set var="isSuperUser" value="1"></c:set>
-								</c:if>
-							</c:if>
-						</c:forEach>
-						<c:choose>
-							<c:when test="${hasRole == 1}">
+						<c:if test="${role.name eq 'researcher'}">
                                                                 <input type="checkbox" name="role" value="${role.id}"
-                                                                       checked="checked" 
                                                                         <c:choose>
-                                                                                <c:when test="${ isSuperUser == 1 && (role.name eq 'superuser' || role.name eq 'admin') }">
+                                                                                <c:when test="${ userHasResearcherRole == 1}">
+                                                                                     checked="checked"
+                                                                                </c:when>
+                                                                        </c:choose>
+                                                                 />${role.name}                                                    
+                                                </c:if>
+						<c:if test="${role.name eq 'admin'}">
+                                                                <input type="checkbox" name="role" value="${role.id}"
+                                                                        <c:choose>
+                                                                                <c:when test="${ userHasAdminRole == 1}">
+                                                                                     checked="checked"
+                                                                                </c:when>
+                                                                        </c:choose>
+                                                                        <c:choose>
+                                                                                <c:when test="${ (userHasAdminRole == 1) && (currentUser.username eq me.username )}">
                                                                                      disabled="disabled"
                                                                                 </c:when>
                                                                         </c:choose>
-                                                                 />${role.name}
-							</c:when>
-							<c:otherwise>
-								<input type="checkbox" name="role" value="${role.id}"
-                                                                        <c:choose>
-                                                                                <c:when test="${ isSuperUser == 0 && (role.name eq 'superuser') }">
-                                                                                     disabled="disabled"
-                                                                                </c:when>
-                                                                        </c:choose>                                                                
-                                                                />${role.name}
-							</c:otherwise>
-						</c:choose>
+                                                                 />${role.name}                                                    
+                                                </c:if>                                            
 					</c:forEach>
 				</div>
 			</div>
@@ -132,9 +136,9 @@
 				<div class="checkbox checkbox-inline">
 					<label>
 						<c:choose>
-							<c:when test="${theUser.active == true}">
+							<c:when test="${currentUser.active == true}">
 								<input type="checkbox" name="active" id="active"
-									   checked ${isSuperUser ==  1 ? "disabled" : ''}/>
+									   checked ${((userHasAdminRole == 1) && (currentUser.username eq me.username )) ? "disabled" : ''}/>
 							</c:when>
 							<c:otherwise>
 								<input type="checkbox" name="active" id="active"/>
@@ -150,9 +154,9 @@
 				</label>
 				<div class="form-control-static">
 					<c:choose>
-						<c:when test="${theUser['class'].name == 'edu.emory.cci.aiw.cvrg.eureka.common.comm.LocalUser'}">
+						<c:when test="${currentUser['class'].name == 'edu.emory.cci.aiw.cvrg.eureka.common.comm.LocalUser'}">
 							<c:choose>
-								<c:when test="${theUser.verified == true}">
+								<c:when test="${currentUser.verified == true}">
 									Verified<span class="status"></span><br />
 								</c:when>
 								<c:otherwise>
@@ -167,7 +171,7 @@
 				</div>
 			</div>
 			<div class="form-group">
-				<input type="hidden" name="id" value="${theUser.id}"/>
+				<input type="hidden" name="id" value="${currentUser.id}"/>
 				<input type="hidden" name="action" value="save"/>
 				<button type="submit" class="btn btn-primary">Save</button>
 			</div>

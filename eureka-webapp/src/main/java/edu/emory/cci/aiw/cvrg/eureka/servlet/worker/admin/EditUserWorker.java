@@ -66,11 +66,13 @@ public class EditUserWorker implements ServletWorker {
 
 		String id = req.getParameter("id");
 		try {
-			User user = this.servicesClient.getUserById(Long.valueOf(id));
+			User me = this.servicesClient.getMe();
+			User user = this.servicesClient.getUserById(Long.valueOf(id)); 
 			List<Role> roles = this.servicesClient.getRoles();
 
+			req.setAttribute("me", me);
 			req.setAttribute("roles", roles);
-			req.setAttribute("theUser", user);
+			req.setAttribute("currentUser", user);
 			req.getRequestDispatcher("/protected/edit_user.jsp").forward(req,
 					resp);
 		} catch (ClientException ex) {

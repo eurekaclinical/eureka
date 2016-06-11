@@ -77,7 +77,6 @@ public class Setup implements TestDataProvider {
 	private final Provider<EntityManager> managerProvider;
 	private Role researcherRole;
 	private Role adminRole;
-	private Role superRole;
 	private final UserEntityFactory userEntityFactory;
 	private List<LoginTypeEntity> loginTypes;
 	private List<AuthenticationMethodEntity> authenticationMethods;
@@ -102,13 +101,11 @@ public class Setup implements TestDataProvider {
 	public void setUp() throws TestDataException {
 		this.researcherRole = this.createResearcherRole();
 		this.adminRole = this.createAdminRole();
-		this.superRole = this.createSuperRole();
 		this.loginTypes = createLoginTypes();
 		this.authenticationMethods = createAuthenticationMethods();
 		UserEntity researcherUser = this.createResearcherUser();
 		UserEntity adminUser = this.createAdminUser();
-		UserEntity superUser = this.createSuperUser();
-		this.createPhenotypes(researcherUser, adminUser, superUser);
+		this.createPhenotypes(researcherUser, adminUser);
 		this.createTimeUnits();
 		this.createFrequencyTypes();
 	}
@@ -201,12 +198,6 @@ public class Setup implements TestDataProvider {
 				"User", this.researcherRole, this.adminRole);
 	}
 
-	private UserEntity createSuperUser() throws TestDataException {
-		return this.createAndPersistUser("super.user@emory.edu", "Super",
-				"User", this.researcherRole, this.adminRole,
-				this.superRole);
-	}
-
 	private UserEntity createAndPersistUser(String email, String firstName,
 	                                  String lastName,
 	                                  Role... roles) throws
@@ -244,10 +235,6 @@ public class Setup implements TestDataProvider {
 
 	private Role createAdminRole() {
 		return this.createAndPersistRole("admin", Boolean.FALSE);
-	}
-
-	private Role createSuperRole() {
-		return this.createAndPersistRole("superuser", Boolean.FALSE);
 	}
 
 	private Role createAndPersistRole(String name, Boolean isDefault) {

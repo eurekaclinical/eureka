@@ -61,6 +61,6 @@ public class PropositionDaoTest extends AbstractServiceDataTest {
 	public void testDao() {
 		PhenotypeEntityDao dao = this.getInstance(PhenotypeEntityDao.class);
 		List<PhenotypeEntity> propositions = dao.getAll();
-		Assert.assertEquals(6, propositions.size());
+		Assert.assertEquals(4, propositions.size());
 	}
 }
