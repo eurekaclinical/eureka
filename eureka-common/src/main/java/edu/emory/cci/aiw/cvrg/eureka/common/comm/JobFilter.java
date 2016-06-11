@@ -197,7 +197,9 @@ public class JobFilter {
 		if (this.to != null) {
 			builder.append("|to=").append(to.getTime());
 		}
-		builder.append("|latest=").append(latest);
+		if(this.latest == true) {
+			builder.append("|latest=").append(latest);
+		}
 		return builder.toString();
 	}
 }
