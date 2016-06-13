@@ -326,23 +326,24 @@ public class UserResource {
                 
 		UserEntity currentUser = this.userDao.retrieve(inId);
 		User me = getMe(req);
-
-		boolean activation = (!currentUser.isActive()) && (inUser.isActive());
-
-		currentUser.setFirstName(inUser.getFirstName());
-		currentUser.setLastName(inUser.getLastName());
-		currentUser.setEmail(inUser.getEmail());
-		currentUser.setOrganization(inUser.getOrganization());
-		currentUser.setTitle(inUser.getTitle());
-		currentUser.setDepartment(inUser.getDepartment());
-		currentUser.setFullName(inUser.getFullName());                
- 
-		List<Role> updatedRoles = this.roleIdsToRoles(inUser.getRoles());                
-		currentUser.setRoles(updatedRoles);
-		currentUser.setActive(inUser.isActive());
-		currentUser.setLastLogin(inUser.getLastLogin());
                 
-		if (this.validateUpdatedUser(currentUser, me)) {
+		boolean activation = (!currentUser.isActive()) && (inUser.isActive());
+                
+		if (this.validateUpdatedUser(currentUser, inUser, me)) {               
+
+			currentUser.setFirstName(inUser.getFirstName());
+			currentUser.setLastName(inUser.getLastName());
+			currentUser.setEmail(inUser.getEmail());
+			currentUser.setOrganization(inUser.getOrganization());
+			currentUser.setTitle(inUser.getTitle());
+			currentUser.setDepartment(inUser.getDepartment());
+			currentUser.setFullName(inUser.getFullName());                
+
+			List<Role> updatedRoles = this.roleIdsToRoles(inUser.getRoles());                
+			currentUser.setRoles(updatedRoles);
+			currentUser.setActive(inUser.isActive());
+			currentUser.setLastLogin(inUser.getLastLogin());
+
 			LOGGER.debug("Saving updated user: {}", currentUser.getEmail());
 			this.userDao.update(currentUser);
 
@@ -353,7 +354,7 @@ public class UserResource {
 					LOGGER.error(ee.getMessage(), ee);
 				}
 			}
-                      
+
 			response = Response.ok().
 					entity(currentUser).
 					build();
@@ -367,27 +368,33 @@ public class UserResource {
 	/**
 	 * Validate that a user being updated does not violate any rules.
 	 *
-	 * @param updatedUser The user to be validate.
+	 * @param currentUser The user before update.
+	 * @param inUser The updated user that to be validate.
+	 * @param me The current login user.
 	 * @return True if the user is valid, false otherwise.
 	 */
-	private boolean validateUpdatedUser(UserEntity updatedUser, User me) {
+	private boolean validateUpdatedUser(UserEntity currentUser, User inUser, User me) {
 		boolean result = true;
 		boolean updateByMe = true;
 		// the roles to check
 		Role adminUserRole = this.roleDao.getRoleByName("admin");
-		updateByMe = me.getUsername().equals(updatedUser.getUsername());
+
+		updateByMe = me.getUsername().equals(currentUser.getUsername());
+                
 		// a admin user can not be stripped of admin rights, 
 		// or be de-activated by him/herself.
-		if (updatedUser.getRoles().contains(adminUserRole)) {
-			if (!updatedUser.isActive() && updateByMe) {
-				this.validationError = "admin user can not be de-activated by him/herself";
-				result = false;
-			}
-			if (!updatedUser.getRoles().contains(adminUserRole) && updateByMe) {
+		if(currentUser.getRoles().contains(adminUserRole) && updateByMe){
+			if ( !inUser.getRoles().contains(Long.valueOf(2))) {
 				this.validationError = "admin user can not be stripped of admin rights by him/herself ";
 				result = false;
+			} else {
+				if (currentUser.isActive() && !inUser.isActive()){
+					this.validationError = "admin user can not be de-activated by him/herself";				
+					result = false;                                    
+				}
 			}
 		}
+                
 		return result;
 	}
 
