@@ -104,7 +104,7 @@ public class JpaJobDao extends GenericDao<JobEntity, Long> implements JobDao {
 	}
 
 	@Override
-	public JobEntity getLatestWithFilter(JobFilter jobFilter) {
+	public List<JobEntity> getLatestWithFilter(JobFilter jobFilter) {
 		EntityManager entityManager = this.getEntityManager();
 		CriteriaBuilder builder = entityManager.getCriteriaBuilder();
 		CriteriaQuery<JobEntity> query = builder.createQuery(JobEntity.class);
@@ -117,12 +117,8 @@ public class JpaJobDao extends GenericDao<JobEntity, Long> implements JobDao {
 		LOGGER.debug("Creating typed query.");
 		TypedQuery<JobEntity> typedQuery = entityManager.createQuery(query);
 		LOGGER.debug("Returning results.");
-		List<JobEntity> jobs=typedQuery.getResultList();
-		if (jobs.isEmpty()) {
-			return null;
-		} else {
-			return jobs.get(0);
-		}
+		return typedQuery.getResultList();
+
 	}
 
 	@Override
@@ -175,7 +171,7 @@ public class JpaJobDao extends GenericDao<JobEntity, Long> implements JobDao {
 						jobFilter.getState()));
 			}
 			LOGGER.debug("Checking for recent.");
-			if (jobFilter.getLatest()) {
+			if (jobFilter.getLatest()!=null && jobFilter.getLatest()) {
 				LOGGER.debug("Get latest job");
 				if(subQuery!=null) {
 					predicates.add(builder.equal(root.<Date>get(JobEntity_.created), subQuery));
