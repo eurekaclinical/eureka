@@ -64,6 +64,6 @@ public interface JobDao extends Dao<JobEntity, Long> {
 	
 	public List<JobEntity> getWithFilterDesc(JobFilter jobFilter);
 
-	public JobEntity getLatestWithFilter(JobFilter jobFilter);
+	public List<JobEntity> getLatestWithFilter(JobFilter jobFilter);
 
 }

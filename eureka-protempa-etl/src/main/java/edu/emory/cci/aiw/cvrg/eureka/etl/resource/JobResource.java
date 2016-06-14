@@ -128,7 +128,7 @@ public class JobResource {
 	public List<Job> getAll(@Context HttpServletRequest request,
 							@QueryParam("order") String order) {
 		JobFilter jobFilter = new JobFilter(null,
-				this.authenticationSupport.getUser(request).getId(), null, null, null,false);
+				this.authenticationSupport.getUser(request).getId(), null, null, null,null);
 		List<Job> jobs = new ArrayList<>();
 		List<JobEntity> jobEntities;
 		if (order == null) {
@@ -206,15 +206,21 @@ public class JobResource {
 
 	@GET
 	@Path("/latest")
-	public Job getLatestJob(@Context HttpServletRequest request) {
+	public List<Job> getLatestJob(@Context HttpServletRequest request) {
+		List<Job> jobs = new ArrayList<>();
+		List<JobEntity> jobEntities;
 		JobFilter jobFilter = new JobFilter(null,
 				this.authenticationSupport.getUser(request).getId(), null, null, null, true);
-		 return this.jobDao.getLatestWithFilter(jobFilter).toJob();
+		jobEntities = this.jobDao.getLatestWithFilter(jobFilter);
+		for (JobEntity jobEntity : jobEntities) {
+			jobs.add(jobEntity.toJob());
+		}
+		return jobs;
 	}
 
 	private JobEntity getJobEntity(HttpServletRequest request, Long inJobId) {
 		JobFilter jobFilter = new JobFilter(inJobId,
-				this.authenticationSupport.getUser(request).getId(), null, null, null,false);
+				this.authenticationSupport.getUser(request).getId(), null, null, null,null);
 		List<JobEntity> jobEntities = this.jobDao.getWithFilter(jobFilter);
 		if (jobEntities.isEmpty()) {
 			throw new HttpStatusException(Status.NOT_FOUND);

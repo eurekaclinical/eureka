@@ -139,6 +139,6 @@ public interface EtlClient {
 	 * @return
 	 * @throws ClientException
 	 */
-	Job getLatestJob()  throws ClientException;
+	List<Job> getLatestJob()  throws ClientException;
 
 }

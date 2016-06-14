@@ -87,14 +87,17 @@ public class JobListServlet extends HttpServlet {
 				}
 				job = this.servicesClient.getJob(jobId);
 			} else {
-				job = this.servicesClient.getLatestJob();
+				List<Job> jobs = this.servicesClient.getLatestJob();
+				if(!jobs.isEmpty()){
+					job = jobs.get(0);
+				}
 			}
 			if (job != null) {
 				req.setAttribute("jobId", job.getId());
-                                
+
 				String sourceConfigName = job.getSourceConfigId();
-				req.setAttribute("sourceConfig", sourceConfigName);				
-                                
+				req.setAttribute("sourceConfig", sourceConfigName);
+
 				String destName = job.getDestinationId();
 				Destination destination = null;
 				for (Destination candidateDest : destinations) {
@@ -103,12 +106,12 @@ public class JobListServlet extends HttpServlet {
 						break;
 					}
 				}
-                                
+
 				if (destination != null) {
 					req.setAttribute("destination", destination);
 					job.setGetStatisticsSupported(destination.isGetStatisticsSupported());
 					req.setAttribute("jobStatus", job.toJobListRow());
-				}else{
+				} else {
 					throw new ServletException("Can't find destination " + destName);
 				}
 			}

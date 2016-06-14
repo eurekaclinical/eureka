@@ -296,7 +296,7 @@ public class JobResource {
 	@GET
 	@Path("/latest")
 	@Produces({MediaType.APPLICATION_JSON})
-	public Job getLatestJob() {
+	public List<Job> getLatestJob() {
 		try {
 			return this.etlClient.getLatestJob();
 		} catch (ClientException ex) {

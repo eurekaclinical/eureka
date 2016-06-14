@@ -72,7 +72,7 @@ public class JobFilter {
 	 */
 	private final Date to;
 
-	private final boolean latest;
+	private final Boolean latest;
 
 	/**
 	 * Create an instance with the given parameters. Null parameters are
@@ -87,7 +87,7 @@ public class JobFilter {
 	 */
 	public JobFilter(final Long inJobId, final Long inUserId,
 			final String inState, final Date inFrom,
-			final Date inTo, final boolean latest) {
+			final Date inTo, final Boolean latest) {
 
 		this.jobId = inJobId;
 		this.userId = inUserId;
@@ -169,7 +169,7 @@ public class JobFilter {
 	/**
 	 * @return the latest
 	 */
-	public boolean getLatest() {
+	public Boolean getLatest() {
 		return latest;
 	}
 
@@ -197,7 +197,10 @@ public class JobFilter {
 		if (this.to != null) {
 			builder.append("|to=").append(to.getTime());
 		}
-		builder.append("|latest=").append(latest);
+		if (this.to != null) {
+			builder.append("|latest=").append(latest);
+		}
+
 		return builder.toString();
 	}
 }

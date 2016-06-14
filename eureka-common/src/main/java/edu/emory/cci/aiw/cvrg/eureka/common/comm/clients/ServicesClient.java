@@ -212,9 +212,9 @@ public class ServicesClient extends EurekaClient {
 		return doGet(path, JobList, queryParams);
 	}
 
-	public Job getLatestJob() throws ClientException {
+	public List<Job> getLatestJob() throws ClientException {
 		final String path = "/api/protected/jobs/latest";
-		return doGet(path, Job.class);
+		return doGet(path, JobList);
 	}
 
 	public List<Phenotype> getPhenotypes(String[] inKeys, boolean summarized) throws ClientException {
