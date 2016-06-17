@@ -110,9 +110,11 @@ public class JobRepairer {
 			errorJobEvent.setMessage("Eureka! shut down during job");
 			entityManager.persist(errorJobEvent);
 		}
+		Date jobFinishedDate = new Date();
+		job.setFinished(jobFinishedDate);
 		JobEvent failedJobEvent = new JobEvent();
 		failedJobEvent.setJob(job);
-		failedJobEvent.setTimeStamp(new Date());
+		failedJobEvent.setTimeStamp(jobFinishedDate);
 		failedJobEvent.setStatus(JobStatus.FAILED);
 		failedJobEvent.setMessage("Processing failed");
 		entityManager.persist(failedJobEvent);

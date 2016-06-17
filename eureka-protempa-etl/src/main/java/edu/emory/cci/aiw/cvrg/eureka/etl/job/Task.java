@@ -164,8 +164,10 @@ public final class Task implements Runnable {
 			this.etl.run(myJob, propDefArray, propIdsToShowArray, this.filter, this.updateData, this.prompts);
 			this.etl.close();
 			JobEvent completedJobEvent = new JobEvent();
+			Date jobFinishedDate = new Date();
+			myJob.setFinished(jobFinishedDate);
 			completedJobEvent.setJob(myJob);
-			completedJobEvent.setTimeStamp(new Date());
+			completedJobEvent.setTimeStamp(jobFinishedDate);
 			completedJobEvent.setStatus(JobStatus.COMPLETED);
 			completedJobEvent.setMessage("Processing completed without error");
 			this.jobDao.update(myJob);
@@ -180,6 +182,8 @@ public final class Task implements Runnable {
 		} finally {
 			if (myJob != null) {
 				try {
+					Date jobFinishedDate = new Date();
+					myJob.setFinished(jobFinishedDate);
 					JobEvent failedJobEvent = new JobEvent();
 					failedJobEvent.setJob(myJob);
 					failedJobEvent.setTimeStamp(new Date());

@@ -797,4 +797,9 @@
 			<column name="NAME" type="VARCHAR(255)"/>
 		</addColumn>
 	</changeSet>
+	<changeSet author="akalsan" id="1361552652236-38">
+	<addColumn tableName="JOBS">
+		<column name="FINISHED" type="TIMESTAMP(6)"/>
+	</addColumn>
+</changeSet>
 </databaseChangeLog>
