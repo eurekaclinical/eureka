@@ -802,4 +802,9 @@
 		<column name="FINISHED" type="TIMESTAMP(6)"/>
 	</addColumn>
 </changeSet>
+	<changeSet author="akalsan" id="1361552652236-39">
+		<sql>
+			UPDATE JOBS J SET FINISHED=(SELECT MAX(TIMESTAMP) FROM JOB_EVENTS E WHERE J.ID=E.JOB_ID)
+		</sql>
+	</changeSet>
 </databaseChangeLog>
