@@ -112,6 +112,20 @@ public class JobEntity {
 	
 	private String name;
 
+	/**
+	 * The timestamp when the job ended.
+	 */
+	@Temporal(TemporalType.TIMESTAMP)
+	private Date finished;
+
+	public Date getFinished() {
+		return finished;
+	}
+
+	public void setFinished(Date finished) {
+		this.finished = finished;
+	}
+
 	private static JobEventComparator JOB_EVENT_COMPARATOR = new JobEventComparator();
 
 	public JobEntity() {
@@ -285,13 +299,14 @@ public class JobEntity {
 		Job job = new Job();
 		job.setDestinationId(this.destination.getName());
 		job.setSourceConfigId(this.sourceConfigId);
-		job.setTimestamp(this.created);
+		job.setStartTimestamp(this.created);
 		job.setId(this.id);
 		if (this.user != null) {
 			job.setUsername(this.user.getUsername());
 		}
 		job.setStatus(getCurrentStatus());
 		job.setJobEvents(getJobEventsInOrder());
+		job.setFinishTimestamp(this.finished);
 		List<LinkEntity> linkEntities = this.destination.getLinks();
 		List<Link> links = new ArrayList<>(linkEntities != null ? linkEntities.size() : 0);
 		if (linkEntities != null) {
