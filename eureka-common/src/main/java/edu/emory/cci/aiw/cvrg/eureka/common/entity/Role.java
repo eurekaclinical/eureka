@@ -45,9 +45,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
-import javax.xml.bind.annotation.XmlRootElement;
 
-import com.sun.xml.bind.CycleRecoverable;
 import javax.persistence.Column;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
@@ -58,9 +56,8 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
  *
  */
 @Entity
-@XmlRootElement
 @Table(name = "roles")
-public class Role implements CycleRecoverable {
+public class Role {
 
 	/**
 	 * The role's unique identifier.
@@ -143,11 +140,6 @@ public class Role implements CycleRecoverable {
 		this.defaultRole = inDefaultRole;
 	}
 
-	@Override
-	public Object onCycleDetected(Context context) {
-		return null;
-	}
-	
 	@Override
 	public String toString() {
 		return ToStringBuilder.reflectionToString(this);

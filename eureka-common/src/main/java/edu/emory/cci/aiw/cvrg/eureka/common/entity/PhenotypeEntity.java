@@ -51,9 +51,7 @@ import javax.persistence.InheritanceType;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
-import javax.xml.bind.annotation.XmlRootElement;
 
-import com.sun.xml.bind.CycleRecoverable;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.CategoryEntity.CategoryType;
 import javax.persistence.Lob;
 import javax.persistence.Temporal;
@@ -64,13 +62,11 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
  * 
  * @author hrathod
  */
-@XmlRootElement
 @Entity
 @Table(name = "phenotypes", uniqueConstraints = { @UniqueConstraint(columnNames = {
         "key", "user_id" }) })
 @Inheritance(strategy = InheritanceType.JOINED)
-public abstract class PhenotypeEntity implements CycleRecoverable,
-        PropositionEntityVisitable, Serializable {
+public abstract class PhenotypeEntity implements PropositionEntityVisitable, Serializable {
 
 	/**
 	 * Needed for the Serializable implementation.
@@ -293,11 +289,6 @@ public abstract class PhenotypeEntity implements CycleRecoverable,
 		lastModified = inLastModified;
 	}
 
-	@Override
-	public Object onCycleDetected(Context context) {
-		return null;
-	}
-	
 	protected void setCatType(CategoryType categoryType) {
 		this.categoryType = categoryType;
 	}

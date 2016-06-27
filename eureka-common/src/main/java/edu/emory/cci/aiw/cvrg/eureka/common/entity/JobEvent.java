@@ -54,7 +54,6 @@ import javax.persistence.TemporalType;
 
 import org.codehaus.jackson.annotate.JsonBackReference;
 
-import com.sun.xml.bind.CycleRecoverable;
 import javax.persistence.Column;
 import javax.persistence.Lob;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -67,7 +66,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
  */
 @Entity
 @Table(name = "job_events")
-public class JobEvent implements CycleRecoverable {
+public class JobEvent {
 
 	/**
 	 * The unique identifier for the job event.
@@ -212,17 +211,6 @@ public class JobEvent implements CycleRecoverable {
 	 */
 	public void setMessage(String inMessage) {
 		this.message = inMessage;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see com.sun.xml.bind.CycleRecoverable#onCycleDetected(com.sun.xml.bind.
-	 * CycleRecoverable.Context)
-	 */
-	@Override
-	public Object onCycleDetected(Context inContext) {
-		return null;
 	}
 
 	@Override
