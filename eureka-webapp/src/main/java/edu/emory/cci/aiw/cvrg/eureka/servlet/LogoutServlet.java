@@ -50,7 +50,6 @@ import javax.servlet.http.HttpSession;
 import com.google.inject.Inject;
 
 import edu.emory.cci.aiw.cvrg.eureka.webapp.config.WebappProperties;
-import org.apache.commons.httpclient.HttpStatus;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
 
@@ -81,13 +80,13 @@ public class LogoutServlet extends HttpServlet {
 		String awaitingActivation = req.getParameter("awaitingActivation");
 		boolean aaEmpty = StringUtils.isEmpty(awaitingActivation);
 		if (!aaEmpty && BooleanUtils.toBooleanObject(awaitingActivation) == null) {
-			resp.sendError(HttpStatus.SC_BAD_REQUEST);
+			resp.sendError(HttpServletResponse.SC_BAD_REQUEST);
 			return;
 		}
 		String notRegistered = req.getParameter("notRegistered");
 		boolean nrEmpty = StringUtils.isEmpty(notRegistered);
 		if (!nrEmpty && BooleanUtils.toBooleanObject(notRegistered) == null) {
-			resp.sendError(HttpStatus.SC_BAD_REQUEST);
+			resp.sendError(HttpServletResponse.SC_BAD_REQUEST);
 			return;
 		}
 		if (!aaEmpty || !nrEmpty) {

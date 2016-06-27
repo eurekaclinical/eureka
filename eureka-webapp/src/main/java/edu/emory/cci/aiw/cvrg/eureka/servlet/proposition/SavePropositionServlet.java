@@ -58,7 +58,6 @@ import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ClientException;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ServicesClient;
 import edu.emory.cci.aiw.cvrg.eureka.webapp.authentication.WebappAuthenticationSupport;
 import java.net.URI;
-import org.apache.commons.httpclient.HttpStatus;
 
 public class SavePropositionServlet extends HttpServlet {
 
@@ -87,7 +86,7 @@ public class SavePropositionServlet extends HttpServlet {
 				try {
 					URI phenotypeURI = this.servicesClient.saveUserPhenotype(phenotype);
 					if (phenotypeURI != null) {
-						resp.setStatus(HttpStatus.SC_CREATED);
+						resp.setStatus(HttpServletResponse.SC_CREATED);
 						resp.setHeader("Location", phenotypeURI.toString());
 					}
 				}catch (ClientException e) {

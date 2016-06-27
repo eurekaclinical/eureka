@@ -54,7 +54,6 @@ import edu.emory.cci.aiw.cvrg.eureka.common.comm.User;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ClientException;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ServicesClient;
 import javax.servlet.http.HttpSession;
-import org.apache.commons.httpclient.HttpStatus;
 
 public class LoginServlet extends HttpServlet {
 
@@ -80,7 +79,7 @@ public class LoginServlet extends HttpServlet {
 				if (session != null) {
 					session.invalidate();
 				}
-				resp.sendError(HttpStatus.SC_FORBIDDEN);
+				resp.sendError(HttpServletResponse.SC_FORBIDDEN);
 			} else {
 				throw new ServletException(e);
 			}

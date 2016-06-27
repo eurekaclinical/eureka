@@ -56,7 +56,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
 import java.util.Map;
-import org.apache.commons.httpclient.HttpStatus;
 import org.apache.commons.io.IOUtils;
 
 /**
@@ -116,7 +115,7 @@ public class ProxyServlet extends HttpServlet {
 		try {
 			URI created = servicesClient.proxyPost(uri, content);
 			if (created != null) {
-				servletResponse.setStatus(HttpStatus.SC_CREATED);
+				servletResponse.setStatus(HttpServletResponse.SC_CREATED);
 				servletResponse.setHeader("Location", created.toString());
 			}
 		} catch (ClientException e) {
