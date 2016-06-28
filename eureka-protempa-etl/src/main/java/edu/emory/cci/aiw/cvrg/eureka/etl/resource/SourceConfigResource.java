@@ -40,11 +40,11 @@
 package edu.emory.cci.aiw.cvrg.eureka.etl.resource;
 
 import com.google.inject.Inject;
+import com.google.inject.persist.Transactional;
 import edu.emory.cci.aiw.cvrg.eureka.common.authentication.AuthorizedUserSupport;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.SourceConfig;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.AuthorizedUserEntity;
-import edu.emory.cci.aiw.cvrg.eureka.common.exception.HttpStatusException;
 import edu.emory.cci.aiw.cvrg.eureka.etl.config.EtlProperties;
 import edu.emory.cci.aiw.cvrg.eureka.etl.dao.EtlGroupDao;
 import edu.emory.cci.aiw.cvrg.eureka.common.dao.AuthorizedUserDao;
@@ -60,7 +60,9 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response.Status;
+import org.eurekaclinical.standardapis.exception.HttpStatusException;
 
+@Transactional
 @Path("/protected/sourceconfigs")
 @RolesAllowed({"researcher"})
 @Produces(MediaType.APPLICATION_JSON)

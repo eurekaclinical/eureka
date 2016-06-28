@@ -41,6 +41,7 @@ package edu.emory.cci.aiw.cvrg.eureka.services.resource;
  */
 
 import com.google.inject.Inject;
+import com.google.inject.persist.Transactional;
 import com.sun.jersey.api.client.ClientResponse;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ClientException;
 import edu.emory.cci.aiw.cvrg.eureka.services.config.EtlClient;

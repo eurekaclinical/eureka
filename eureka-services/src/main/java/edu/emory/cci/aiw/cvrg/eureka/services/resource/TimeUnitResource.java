@@ -48,16 +48,17 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
 import com.google.inject.Inject;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.ThresholdsOperator;
+import com.google.inject.persist.Transactional;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.TimeUnit;
-import edu.emory.cci.aiw.cvrg.eureka.common.exception.HttpStatusException;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.TimeUnitDao;
 import javax.ws.rs.core.Response;
+import org.eurekaclinical.standardapis.exception.HttpStatusException;
 
 /**
  * @author hrathod
  */
+@Transactional
 @Path("/protected/timeunits")
 @Produces(MediaType.APPLICATION_JSON)
 public class TimeUnitResource {

@@ -40,8 +40,8 @@
 package edu.emory.cci.aiw.cvrg.eureka.services.resource;
 
 import com.google.inject.Inject;
+import com.google.inject.persist.Transactional;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.ThresholdsOperator;
-import edu.emory.cci.aiw.cvrg.eureka.common.exception.HttpStatusException;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.ThresholdsOperatorDao;
 import java.util.List;
 import javax.ws.rs.GET;
@@ -50,11 +50,13 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response.Status;
+import org.eurekaclinical.standardapis.exception.HttpStatusException;
 
 /**
  *
  * @author Andrew Post
  */
+@Transactional
 @Path("/protected/thresholdsops")
 @Produces(MediaType.APPLICATION_JSON)
 public class ThresholdsOperatorResource {

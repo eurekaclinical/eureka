@@ -39,14 +39,12 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.services.config;
 
-import javax.servlet.ServletContextEvent;
 
 import com.google.inject.Injector;
 import com.google.inject.Module;
 import com.google.inject.Stage;
-import com.google.inject.persist.PersistService;
 import com.google.inject.servlet.GuiceServletContextListener;
-import edu.emory.cci.aiw.cvrg.eureka.common.config.InjectorSupport;
+import org.eurekaclinical.common.config.InjectorSupport;
 
 /**
  * Create a Guice injector for testing.
@@ -55,15 +53,6 @@ import edu.emory.cci.aiw.cvrg.eureka.common.config.InjectorSupport;
  *
  */
 public class ContextTestListener extends GuiceServletContextListener {
-
-	/**
-	 * The persistence service for the application.
-	 */
-	private PersistService persistService = null;
-
-	public ContextTestListener() {
-
-	}
 
 	@Override
 	protected Injector getInjector() {
@@ -75,29 +64,4 @@ public class ContextTestListener extends GuiceServletContextListener {
 				Stage.DEVELOPMENT).getInjector();
 	}
 
-	/*
-	 * @see
-	 * com.google.inject.servlet.GuiceServletContextListener#contextInitialized
-	 * (javax.servlet.ServletContextEvent)
-	 */
-	@Override
-	public void contextInitialized(ServletContextEvent inServletContextEvent) {
-		super.contextInitialized(inServletContextEvent);
-		this.persistService = this.getInjector().getInstance(
-				PersistService.class);
-		this.persistService.start();
-	}
-
-	/*
-	 * @see
-	 * com.google.inject.servlet.GuiceServletContextListener#contextDestroyed
-	 * (javax.servlet.ServletContextEvent)
-	 */
-	@Override
-	public void contextDestroyed(ServletContextEvent inServletContextEvent) {
-		super.contextDestroyed(inServletContextEvent);
-		if (this.persistService != null) {
-			this.persistService.stop();
-		}
-	}
 }

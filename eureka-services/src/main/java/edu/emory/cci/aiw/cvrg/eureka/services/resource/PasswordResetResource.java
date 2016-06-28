@@ -40,8 +40,8 @@ package edu.emory.cci.aiw.cvrg.eureka.services.resource;
  * #L%
  */
 import com.google.inject.Inject;
+import com.google.inject.persist.Transactional;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.LocalUserEntity;
-import edu.emory.cci.aiw.cvrg.eureka.common.exception.HttpStatusException;
 import edu.emory.cci.aiw.cvrg.eureka.services.clients.I2b2Client;
 import edu.emory.cci.aiw.cvrg.eureka.services.email.EmailException;
 import edu.emory.cci.aiw.cvrg.eureka.services.email.EmailSender;
@@ -59,6 +59,7 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import org.eurekaclinical.standardapis.exception.HttpStatusException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -66,6 +67,7 @@ import org.slf4j.LoggerFactory;
  *
  * @author Andrew Post
  */
+@Transactional
 @Path("/passwordreset")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)

@@ -42,8 +42,8 @@ package edu.emory.cci.aiw.cvrg.eureka.etl.dao;
 import java.util.List;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.JobFilter;
-import edu.emory.cci.aiw.cvrg.eureka.common.dao.Dao;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.JobEntity;
+import org.eurekaclinical.standardapis.dao.Dao;
 
 /**
  * A data access object interface to retrieve and store information about

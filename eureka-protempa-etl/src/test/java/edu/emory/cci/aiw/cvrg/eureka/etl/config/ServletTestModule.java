@@ -37,40 +37,27 @@
  * <http://www.gnu.org/licenses/gpl-3.0.html>.
  * #L%
  */
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package edu.emory.cci.aiw.cvrg.eureka.etl.config;
 
-import com.sun.jersey.api.container.filter.RolesAllowedResourceFilterFactory;
-import java.util.HashMap;
-import java.util.Map;
-
-import com.sun.jersey.api.core.PackagesResourceConfig;
-import com.sun.jersey.api.core.ResourceConfig;
-import com.sun.jersey.guice.JerseyServletModule;
-import com.sun.jersey.guice.spi.container.servlet.GuiceContainer;
 import edu.emory.cci.aiw.cvrg.eureka.common.test.UserRoleAdderFilter;
+import org.eurekaclinical.common.config.AbstractTestJerseyServletModuleWithPersist;
 
 /**
  *
  * @author hrathod
  */
-public class ServletTestModule extends JerseyServletModule {
+class ServletTestModule extends AbstractTestJerseyServletModuleWithPersist {
+	
+	private static final String PACKAGE_NAMES = "edu.emory.cci.aiw.cvrg.eureka.etl.resource;edu.emory.cci.aiw.cvrg.eureka.common.json";
 
+	ServletTestModule() {
+		super(PACKAGE_NAMES);
+	}
+	
 	@Override
 	protected void configureServlets() {
-		
-		Map<String, String> params = new HashMap<>();
-		params.put("com.sun.jersey.api.json.POJOMappingFeature", "true");
-		params.put(PackagesResourceConfig.PROPERTY_PACKAGES,
-				"edu.emory.cci.aiw.cvrg.eureka.etl.resource;edu.emory.cci.aiw.cvrg.eureka.common.json");
-		params.put(ResourceConfig.PROPERTY_RESOURCE_FILTER_FACTORIES,
-				RolesAllowedResourceFilterFactory.class.getName());
-		
-		filter("/api/*").through(UserRoleAdderFilter.class);
-
-		serve("/api/*").with(GuiceContainer.class, params);
+		super.configureServlets();
+		filter(getContainerPath()).through(UserRoleAdderFilter.class);
 	}
+
 }

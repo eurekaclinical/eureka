@@ -39,9 +39,9 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.services.dao;
 
-import edu.emory.cci.aiw.cvrg.eureka.common.dao.Dao;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.RelationOperator;
 import java.util.List;
+import org.eurekaclinical.standardapis.dao.Dao;
 
 /**
  * @author hrathod

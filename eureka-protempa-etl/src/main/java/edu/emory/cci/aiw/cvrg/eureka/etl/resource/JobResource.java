@@ -62,6 +62,7 @@ import org.protempa.backend.dsb.filter.DateTimeFilter;
 import org.protempa.proposition.value.AbsoluteTimeGranularity;
 
 import com.google.inject.Inject;
+import com.google.inject.Provider;
 import com.google.inject.persist.Transactional;
 import edu.emory.cci.aiw.cvrg.eureka.common.authentication.AuthorizedUserSupport;
 
@@ -75,7 +76,6 @@ import edu.emory.cci.aiw.cvrg.eureka.common.comm.Statistics;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.DestinationEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.AuthorizedUserEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.JobEntity;
-import edu.emory.cci.aiw.cvrg.eureka.common.exception.HttpStatusException;
 import edu.emory.cci.aiw.cvrg.eureka.etl.config.EurekaProtempaConfigurations;
 import edu.emory.cci.aiw.cvrg.eureka.etl.dao.DestinationDao;
 import edu.emory.cci.aiw.cvrg.eureka.common.dao.AuthorizedUserDao;
@@ -84,6 +84,9 @@ import edu.emory.cci.aiw.cvrg.eureka.etl.dao.JobDao;
 import edu.emory.cci.aiw.cvrg.eureka.etl.job.TaskManager;
 import edu.emory.cci.aiw.cvrg.eureka.etl.dest.ProtempaDestinationFactory;
 import java.io.IOException;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityTransaction;
+import org.eurekaclinical.standardapis.exception.HttpStatusException;
 import org.protempa.backend.BackendInstanceSpec;
 import org.protempa.backend.BackendProviderSpecLoaderException;
 import org.protempa.backend.BackendSpecNotFoundException;
@@ -100,7 +103,7 @@ import org.protempa.dest.StatisticsException;
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public class JobResource {
-	
+
 	private final JobDao jobDao;
 	private final AuthorizedUserDao etlUserDao;
 	private final TaskManager taskManager;
@@ -108,12 +111,14 @@ public class JobResource {
 	private final DestinationDao destinationDao;
 	private final ProtempaDestinationFactory protempaDestinationFactory;
 	private final EtlProperties etlProperties;
+	private final Provider<EntityManager> entityManagerProvider;
 
 	@Inject
 	public JobResource(JobDao inJobDao, TaskManager inTaskManager,
 			AuthorizedUserDao inEtlUserDao, DestinationDao inDestinationDao,
 			EtlProperties inEtlProperties,
-			ProtempaDestinationFactory inProtempaDestinationFactory) {
+			ProtempaDestinationFactory inProtempaDestinationFactory,
+			Provider<EntityManager> inEntityManagerProvider) {
 		this.jobDao = inJobDao;
 		this.taskManager = inTaskManager;
 		this.etlUserDao = inEtlUserDao;
@@ -121,14 +126,15 @@ public class JobResource {
 		this.destinationDao = inDestinationDao;
 		this.etlProperties = inEtlProperties;
 		this.protempaDestinationFactory = inProtempaDestinationFactory;
+		this.entityManagerProvider = inEntityManagerProvider;
 	}
 
-	@GET
 	@Transactional
+	@GET
 	public List<Job> getAll(@Context HttpServletRequest request,
-							@QueryParam("order") String order) {
+			@QueryParam("order") String order) {
 		JobFilter jobFilter = new JobFilter(null,
-				this.authenticationSupport.getUser(request).getId(), null, null, null,null);
+				this.authenticationSupport.getUser(request).getId(), null, null, null, null);
 		List<Job> jobs = new ArrayList<>();
 		List<JobEntity> jobEntities;
 		if (order == null) {
@@ -144,14 +150,15 @@ public class JobResource {
 		return jobs;
 	}
 
+	@Transactional
 	@GET
 	@Path("/{jobId}")
-	@Transactional
 	public Job getJob(@Context HttpServletRequest request,
 			@PathParam("jobId") Long inJobId) {
 		return getJobEntity(request, inJobId).toJob();
 	}
-	
+
+	@Transactional
 	@GET
 	@Path("/{jobId}/stats/{propId}")
 	public edu.emory.cci.aiw.cvrg.eureka.common.comm.Statistics getJobStats(@Context HttpServletRequest request,
@@ -177,7 +184,8 @@ public class JobResource {
 			throw new HttpStatusException(Status.INTERNAL_SERVER_ERROR, "Invalid destination id " + destinationId);
 		}
 	}
-	
+
+	@Transactional
 	@GET
 	@Path("/{jobId}/stats")
 	public edu.emory.cci.aiw.cvrg.eureka.common.comm.Statistics getJobStatsRoot(@Context HttpServletRequest request,
@@ -185,17 +193,18 @@ public class JobResource {
 		return getJobStats(request, inJobId, null);
 	}
 
+	//Finer grained transactions in the implementation
 	@POST
 	public Response submit(@Context HttpServletRequest request,
 			JobRequest inJobRequest) {
 		Long jobId = doCreateJob(inJobRequest, request);
 		return Response.created(URI.create("/" + jobId)).build();
 	}
-	
+
+	@Transactional
 	@GET
 	@RolesAllowed({"admin"})
 	@Path("/status")
-	@Transactional
 	public List<Job> getJobStatus(@QueryParam("filter") JobFilter inFilter) {
 		List<Job> jobs = new ArrayList<>();
 		for (JobEntity jobEntity : this.jobDao.getWithFilter(inFilter)) {
@@ -204,6 +213,7 @@ public class JobResource {
 		return jobs;
 	}
 
+	@Transactional
 	@GET
 	@Path("/latest")
 	public List<Job> getLatestJob(@Context HttpServletRequest request) {
@@ -220,7 +230,7 @@ public class JobResource {
 
 	private JobEntity getJobEntity(HttpServletRequest request, Long inJobId) {
 		JobFilter jobFilter = new JobFilter(inJobId,
-				this.authenticationSupport.getUser(request).getId(), null, null, null,null);
+				this.authenticationSupport.getUser(request).getId(), null, null, null, null);
 		List<JobEntity> jobEntities = this.jobDao.getWithFilter(jobFilter);
 		if (jobEntities.isEmpty()) {
 			throw new HttpStatusException(Status.NOT_FOUND);
@@ -268,9 +278,12 @@ public class JobResource {
 		if (destinationId == null) {
 			throw new HttpStatusException(Status.BAD_REQUEST, "Destination must be specified");
 		}
+		EntityTransaction transaction = this.entityManagerProvider.get().getTransaction();
+		transaction.begin();
 		DestinationEntity destination
 				= this.destinationDao.getByName(destinationId);
 		if (destination == null) {
+			transaction.rollback();
 			throw new HttpStatusException(Status.BAD_REQUEST, "Invalid destination " + job.getDestinationId());
 		}
 		jobEntity.setDestination(destination);
@@ -278,6 +291,7 @@ public class JobResource {
 		jobEntity.setUser(etlUser);
 		jobEntity.setName(job.getName());
 		this.jobDao.create(jobEntity);
+		transaction.commit();
 		return jobEntity;
 	}
 
@@ -311,5 +325,5 @@ public class JobResource {
 			return null;
 		}
 	}
-	
+
 }

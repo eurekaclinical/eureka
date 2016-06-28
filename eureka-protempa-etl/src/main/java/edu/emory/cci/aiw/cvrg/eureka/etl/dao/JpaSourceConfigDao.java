@@ -42,10 +42,10 @@ package edu.emory.cci.aiw.cvrg.eureka.etl.dao;
 
 import com.google.inject.Inject;
 import com.google.inject.Provider;
-import edu.emory.cci.aiw.cvrg.eureka.common.dao.GenericDao;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.SourceConfigEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.SourceConfigEntity_;
 import javax.persistence.EntityManager;
+import org.eurekaclinical.standardapis.dao.GenericDao;
 
 /**
  *

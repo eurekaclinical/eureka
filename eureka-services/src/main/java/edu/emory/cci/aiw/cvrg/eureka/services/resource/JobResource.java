@@ -48,7 +48,6 @@ import edu.emory.cci.aiw.cvrg.eureka.common.comm.JobRequest;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.JobSpec;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ClientException;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.UserEntity;
-import edu.emory.cci.aiw.cvrg.eureka.common.exception.HttpStatusException;
 import edu.emory.cci.aiw.cvrg.eureka.services.config.EtlClient;
 import edu.emory.cci.aiw.cvrg.eureka.services.config.ServiceProperties;
 import edu.emory.cci.aiw.cvrg.eureka.services.conversion.ConversionSupport;
@@ -78,6 +77,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.PhenotypeEntityDao;
+import org.eurekaclinical.standardapis.exception.HttpStatusException;
 
 /**
  * REST operations related to jobs submitted by the user.
@@ -148,7 +148,6 @@ public class JobResource {
 	 */
 	@POST
 	@Consumes({MediaType.APPLICATION_JSON})
-	@Transactional
 	public Response submit(@Context HttpServletRequest request, JobSpec jobSpec) {
 		LOGGER.debug("Got job submission: {}", jobSpec);
 		UserEntity user = this.userDao.getByHttpServletRequest(request);
@@ -186,7 +185,7 @@ public class JobResource {
 	}
 
 	@GET
-        @Path("/{jobId}")
+	@Path("/{jobId}")
 	@Produces({MediaType.APPLICATION_JSON})
 	public Job getJob(@PathParam("jobId") Long inJobId) {
 		try {
@@ -280,9 +279,8 @@ public class JobResource {
 	 * @param inFilter The filter to use when fetching the job statuses.
 	 * @return A {@link List} of {@link Job}s containing the status information.
 	 */
-	
 	@GET
-        @Path("/status")
+	@Path("/status")
 	@RolesAllowed({"admin"})
 	@Produces({MediaType.APPLICATION_JSON})
 	public List<Job> getStatus(@QueryParam("filter") JobFilter inFilter) {

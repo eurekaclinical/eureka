@@ -40,7 +40,6 @@ package edu.emory.cci.aiw.cvrg.eureka.webapp.config;
  * #L%
  */
 import com.google.inject.Singleton;
-import edu.emory.cci.aiw.cvrg.eureka.common.config.AbstractServletModule;
 import edu.emory.cci.aiw.cvrg.eureka.servlet.*;
 import edu.emory.cci.aiw.cvrg.eureka.servlet.cohort.CohortHomeServlet;
 import edu.emory.cci.aiw.cvrg.eureka.servlet.cohort.DeleteCohortServlet;
@@ -57,6 +56,7 @@ import edu.emory.cci.aiw.cvrg.eureka.servlet.oauth.TwitterRegistrationOAuthCallb
 import edu.emory.cci.aiw.cvrg.eureka.servlet.proposition.*;
 import java.util.HashMap;
 import java.util.Map;
+import org.eurekaclinical.common.config.AbstractServletModule;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

@@ -44,7 +44,6 @@ import javax.persistence.EntityManager;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 
-import edu.emory.cci.aiw.cvrg.eureka.common.dao.GenericDao;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.DestinationEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.DeidPerPatientParams;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.DeidPerPatientParams_;
@@ -55,6 +54,7 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Root;
+import org.eurekaclinical.standardapis.dao.GenericDao;
 
 /**
  * Implements the {@link JobDao} interface, with the use of JPA entity managers.

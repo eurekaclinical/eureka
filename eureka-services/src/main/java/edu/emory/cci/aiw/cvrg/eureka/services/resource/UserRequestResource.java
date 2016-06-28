@@ -39,8 +39,6 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.services.resource;
 
-
-import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
@@ -52,24 +50,26 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.inject.Inject;
+import com.google.inject.persist.Transactional;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.UserRequest;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.LocalUserEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.Role;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.UserEntity;
-import edu.emory.cci.aiw.cvrg.eureka.common.exception.HttpStatusException;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.*;
 import edu.emory.cci.aiw.cvrg.eureka.services.email.EmailException;
 import edu.emory.cci.aiw.cvrg.eureka.services.email.EmailSender;
 import edu.emory.cci.aiw.cvrg.eureka.services.util.UserRequestToUserEntityVisitor;
 
 import java.net.URI;
+import org.eurekaclinical.standardapis.exception.HttpStatusException;
 
 /**
  * RESTful end-point for new user registration-related methods.
  *
  * @author hrathod
  */
+@Transactional
 @Path("/userrequests")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
@@ -124,8 +124,8 @@ public class UserRequestResource {
 	@POST
 	public Response addUser(
 			UserRequest userRequest, @Context UriInfo uriInfo) {
-		UserEntity user =
-				this.userDao.getByUsername(userRequest.getUsername());
+		UserEntity user
+				= this.userDao.getByUsername(userRequest.getUsername());
 		if (user != null) {
 			throw new HttpStatusException(Response.Status.CONFLICT,
 					"That username is already taken");
@@ -136,6 +136,7 @@ public class UserRequestResource {
 			UserEntity userEntity = visitor.getUserEntity();
 			LOGGER.debug("Saving new user {}", userEntity.getUsername());
 			this.userDao.create(userEntity);
+			
 			if (userEntity instanceof LocalUserEntity) {
 				try {
 					LOGGER.debug("Sending email to {}", userEntity.getEmail());
@@ -144,6 +145,8 @@ public class UserRequestResource {
 					LOGGER.error("Error sending email to {}", userEntity.getEmail(), e);
 				}
 			}
+			URI uri = uriInfo.getAbsolutePathBuilder().path(userEntity.getId().toString()).build();
+			return Response.created(uri).entity(user).build();
 		} else {
 			String errorMsg = StringUtils.join(errors, ", ");
 			LOGGER.info(
@@ -152,9 +155,6 @@ public class UserRequestResource {
 			throw new HttpStatusException(
 					Response.Status.BAD_REQUEST, errorMsg);
 		}
-		UserEntity addedUser = this.userDao.getByUsername(userRequest.getUsername());
-		URI uri = uriInfo.getAbsolutePathBuilder().path(addedUser.getId().toString()).build();
-		return Response.created(uri).entity(user).build();
 	}
 
 	/**

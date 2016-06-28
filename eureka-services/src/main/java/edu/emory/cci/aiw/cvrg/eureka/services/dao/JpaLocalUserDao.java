@@ -43,7 +43,6 @@ import javax.persistence.EntityManager;
 
 import com.google.inject.Inject;
 import com.google.inject.Provider;
-import edu.emory.cci.aiw.cvrg.eureka.common.dao.GenericDao;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.LocalUserEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.LocalUserEntity_;
@@ -55,6 +54,7 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Root;
 import javax.persistence.criteria.Subquery;
+import org.eurekaclinical.standardapis.dao.GenericDao;
 
 /**
  * An implementation of the {@link UserDao} interface, backed by JPA entities

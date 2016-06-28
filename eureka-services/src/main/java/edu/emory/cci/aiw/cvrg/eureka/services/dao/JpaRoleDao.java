@@ -45,9 +45,9 @@ import javax.persistence.EntityManager;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 
-import edu.emory.cci.aiw.cvrg.eureka.common.dao.GenericDao;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.Role;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.Role_;
+import org.eurekaclinical.standardapis.dao.GenericDao;
 
 /**
  * A {@link RoleDao} implementation, backed by JPA entities and queries.

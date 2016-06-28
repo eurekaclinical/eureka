@@ -39,8 +39,8 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.etl.config;
 
+import org.eurekaclinical.common.config.AbstractJerseyServletModuleWithPersist;
 
-import edu.emory.cci.aiw.cvrg.eureka.common.config.AbstractJerseyServletModuleWithPersist;
 
 /**
  * A Guice configuration module for setting up the web infrastructure and

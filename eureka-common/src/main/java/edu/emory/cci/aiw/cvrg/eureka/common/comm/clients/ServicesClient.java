@@ -43,7 +43,6 @@ import com.sun.jersey.api.client.GenericType;
 import com.sun.jersey.core.util.MultivaluedMapImpl;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.*;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.*;
-import edu.emory.cci.aiw.cvrg.eureka.common.exception.HttpStatusException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -55,6 +54,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import javax.ws.rs.core.Response;
+import org.eurekaclinical.standardapis.exception.HttpStatusException;
 
 /**
  * @author hrathod

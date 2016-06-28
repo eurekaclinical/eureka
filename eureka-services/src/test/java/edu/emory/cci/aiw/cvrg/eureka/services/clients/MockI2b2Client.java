@@ -39,7 +39,7 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.services.clients;
 
-import edu.emory.cci.aiw.cvrg.eureka.common.exception.HttpStatusException;
+import org.eurekaclinical.standardapis.exception.HttpStatusException;
 
 /**
  * @author hrathod

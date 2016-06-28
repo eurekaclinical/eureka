@@ -42,6 +42,7 @@ package edu.emory.cci.aiw.cvrg.eureka.common.dao;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.AuthorizedUserEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.UserEntity;
+import org.eurekaclinical.standardapis.dao.Dao;
 import org.jasig.cas.client.authentication.AttributePrincipal;
 
 /**

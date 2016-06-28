@@ -41,7 +41,6 @@ package edu.emory.cci.aiw.cvrg.eureka.etl.resource;
  */
 import com.google.inject.Inject;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.DestinationEntity;
-import edu.emory.cci.aiw.cvrg.eureka.common.exception.HttpStatusException;
 import edu.emory.cci.aiw.cvrg.eureka.etl.config.EtlProperties;
 import edu.emory.cci.aiw.cvrg.eureka.etl.dao.DestinationDao;
 import edu.emory.cci.aiw.cvrg.eureka.etl.dest.PatientSetSenderSupport;
@@ -63,6 +62,7 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.StreamingOutput;
 import org.apache.commons.io.IOUtils;
+import org.eurekaclinical.standardapis.exception.HttpStatusException;
 
 /**
  * Operations related to a data file (doPost, status, etc)

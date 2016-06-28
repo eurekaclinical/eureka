@@ -40,9 +40,9 @@
 package edu.emory.cci.aiw.cvrg.eureka.services.resource;
 
 import com.google.inject.Inject;
+import com.google.inject.persist.Transactional;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.AuthenticationMethod;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.AuthenticationMethodEntity;
-import edu.emory.cci.aiw.cvrg.eureka.common.exception.HttpStatusException;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.AuthenticationMethodDao;
 import java.util.ArrayList;
 import java.util.List;
@@ -52,11 +52,13 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response.Status;
+import org.eurekaclinical.standardapis.exception.HttpStatusException;
 
 /**
  *
  * @author Andrew Post
  */
+@Transactional
 @Path("/protected/authenticationmethods")
 @Produces(MediaType.APPLICATION_JSON)
 public class AuthenticationMethodResource {

@@ -48,6 +48,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
 import com.google.inject.Inject;
+import com.google.inject.persist.Transactional;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.Role;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.RoleDao;
@@ -59,6 +60,7 @@ import javax.annotation.security.RolesAllowed;
  * @author hrathod
  *
  */
+@Transactional
 @Path("/protected/roles")
 @RolesAllowed({"admin"})
 public class RoleResource {

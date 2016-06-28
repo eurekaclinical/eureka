@@ -40,18 +40,15 @@ package edu.emory.cci.aiw.cvrg.eureka.services.util;
  * #L%
  */
 
-import com.google.inject.Inject;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.LdapUserRequest;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.LocalUserRequest;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.OAuthUserRequest;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.UserRequest;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.UserRequestVisitor;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.LdapUserEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.LocalUserEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.OAuthUserEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.Role;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.UserEntity;
-import edu.emory.cci.aiw.cvrg.eureka.common.exception.HttpStatusException;
 import edu.emory.cci.aiw.cvrg.eureka.common.util.StringUtil;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.AuthenticationMethodDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.LoginTypeDao;
@@ -65,6 +62,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 import javax.ws.rs.core.Response;
+import org.eurekaclinical.standardapis.exception.HttpStatusException;
 
 /**
  *

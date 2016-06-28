@@ -44,11 +44,10 @@ import javax.servlet.ServletContextEvent;
 import com.google.inject.Injector;
 import com.google.inject.Module;
 import com.google.inject.Stage;
-import com.google.inject.persist.PersistService;
 import com.google.inject.servlet.GuiceServletContextListener;
-import edu.emory.cci.aiw.cvrg.eureka.common.config.InjectorSupport;
 
 import edu.emory.cci.aiw.cvrg.eureka.etl.job.TaskManager;
+import org.eurekaclinical.common.config.InjectorSupport;
 
 /**
  *
@@ -56,17 +55,8 @@ import edu.emory.cci.aiw.cvrg.eureka.etl.job.TaskManager;
  */
 public class ContextTestListener extends GuiceServletContextListener {
 
-	private PersistService persistService;
 	private InjectorSupport injectorSupport;
 
-	@Override
-	public void contextInitialized(ServletContextEvent inServletContextEvent) {
-		super.contextInitialized(inServletContextEvent);
-		this.persistService = this.getInjector().getInstance(
-				PersistService.class);
-		this.persistService.start();
-	}
-	
 	@Override
 	protected Injector getInjector() {
 		/**
@@ -89,9 +79,6 @@ public class ContextTestListener extends GuiceServletContextListener {
 	@Override
 	public void contextDestroyed(ServletContextEvent inServletContextEvent) {
 		super.contextDestroyed(inServletContextEvent);
-		if (this.persistService != null) {
-			this.persistService.stop();
-		}
 		TaskManager taskManager = this.injectorSupport.getInjector().getInstance(TaskManager.class);
 		taskManager.shutdown();
 	}

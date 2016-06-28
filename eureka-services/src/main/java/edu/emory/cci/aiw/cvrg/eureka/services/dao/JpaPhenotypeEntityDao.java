@@ -57,9 +57,9 @@ import org.slf4j.LoggerFactory;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 
-import edu.emory.cci.aiw.cvrg.eureka.common.dao.GenericDao;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.PhenotypeEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.PhenotypeEntity_;
+import org.eurekaclinical.standardapis.dao.GenericDao;
 
 /**
  * An implementation of the {@link PhenotypeEntityDao} interface, backed by

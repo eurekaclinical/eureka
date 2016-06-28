@@ -45,9 +45,9 @@ import javax.servlet.ServletContextEvent;
 import com.google.inject.Module;
 import com.google.inject.persist.jpa.JpaPersistModule;
 import com.google.inject.servlet.GuiceServletContextListener;
-import edu.emory.cci.aiw.cvrg.eureka.common.config.InjectorSupport;
 
 import edu.emory.cci.aiw.cvrg.eureka.services.finder.SystemPropositionFinder;
+import org.eurekaclinical.common.config.InjectorSupport;
 
 /**
  * Set up the Guice dependency injection engine. Uses two modules:

@@ -45,7 +45,6 @@ import edu.emory.cci.aiw.cvrg.eureka.common.authentication.AuthorizedUserSupport
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.DestinationType;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.EtlDestination;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.AuthorizedUserEntity;
-import edu.emory.cci.aiw.cvrg.eureka.common.exception.HttpStatusException;
 import edu.emory.cci.aiw.cvrg.eureka.etl.config.EtlProperties;
 import edu.emory.cci.aiw.cvrg.eureka.etl.dao.DestinationDao;
 import edu.emory.cci.aiw.cvrg.eureka.etl.dao.EtlGroupDao;
@@ -68,7 +67,9 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
+import org.eurekaclinical.standardapis.exception.HttpStatusException;
 
+@Transactional
 @Path("/protected/destinations")
 @RolesAllowed({"researcher"})
 @Produces(MediaType.APPLICATION_JSON)
@@ -91,7 +92,6 @@ public class DestinationResource {
 	}
 	
 	@POST
-	@Transactional
 	public Response create(@Context HttpServletRequest request, EtlDestination etlDestination) {
 		AuthorizedUserEntity user = this.authenticationSupport.getUser(request);
 		Destinations destinations = new Destinations(this.etlProperties, user, this.destinationDao, this.groupDao);
@@ -100,7 +100,6 @@ public class DestinationResource {
 	}
 	
 	@PUT
-	@Transactional
 	public void update(@Context HttpServletRequest request, EtlDestination etlDestination) {
 		AuthorizedUserEntity user = this.authenticationSupport.getUser(request);
 		new Destinations(this.etlProperties, user, this.destinationDao, this.groupDao).update(etlDestination);
@@ -108,7 +107,6 @@ public class DestinationResource {
 	
 	@GET
 	@Path("/{destId}")
-	@Transactional
 	public EtlDestination getDestination(
 			@Context HttpServletRequest request,
 			@PathParam("destId") String destId) {
@@ -123,7 +121,6 @@ public class DestinationResource {
 	}
 
 	@GET
-	@Transactional
 	public List<EtlDestination> getAll(
 			@Context HttpServletRequest request,
 			@QueryParam("type") DestinationType type) {
@@ -146,7 +143,6 @@ public class DestinationResource {
 	
 	@DELETE
 	@Path("/{destId}")
-	@Transactional
 	public void delete(@Context HttpServletRequest request,
 			@PathParam("destId") String destId) {
 		AuthorizedUserEntity user = this.authenticationSupport.getUser(request);

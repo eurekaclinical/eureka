@@ -48,6 +48,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
 import com.google.inject.Inject;
+import com.google.inject.persist.Transactional;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.OAuthProvider;
 
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.OAuthProviderDao;
@@ -55,6 +56,7 @@ import edu.emory.cci.aiw.cvrg.eureka.services.dao.OAuthProviderDao;
 /**
  * @author Andrew Post
  */
+@Transactional
 @Path("/protected/oauthproviders")
 @Produces(MediaType.APPLICATION_JSON)
 public class OAuthProviderResource {

@@ -18,7 +18,7 @@
 	<parent>
 		<groupId>org.eurekaclinical</groupId>
 		<artifactId>eurekaclinical-parent-standard-deps</artifactId>
-		<version>1-Alpha-1</version>
+		<version>1-Alpha-3</version>
 	</parent>
 	
 	<scm>
@@ -41,13 +41,6 @@
 		<eureka.build.timestamp>${maven.build.timestamp}</eureka.build.timestamp>
 		<eureka.dev.site.url>${project.url}</eureka.dev.site.url>
 		<currentStableVersion>1.8</currentStableVersion>
-		<jersey-version>1.17.1</jersey-version>
-		<guice-version>3.0</guice-version>
-		<annotation-version>1.0</annotation-version>
-		<hibernate-version>5.0.6.Final</hibernate-version>
-		<javax-jta-version>1.1</javax-jta-version>
-		<hibernate-persistence-version>1.0.0.Final</hibernate-persistence-version>
-		<slf4j-version>1.7.5</slf4j-version>
 		<poi-version>3.9</poi-version>
 		<jstl-version>1.2</jstl-version>
 		<jsp-api-version>2.0</jsp-api-version>
@@ -57,26 +50,22 @@
 		<aiw-i2b2-etl-version>2.0-Alpha-23</aiw-i2b2-etl-version>
 		<aiw-neo4j-etl-version>1.0-Alpha-3</aiw-neo4j-etl-version>
 		<freemarker-version>2.3.20</freemarker-version>
-		<jpamodelgen-version>5.0.6.Final</jpamodelgen-version>
 		<ehcache-version>2.6.0</ehcache-version>
 		<tomcat-plugin-version>1.1</tomcat-plugin-version>
 		<scribe-up-ext-version>1.0-Alpha-4</scribe-up-ext-version>
 
 		<!-- properties for site creation -->
 		<javautil-version>3.0-Alpha-7</javautil-version>
-		<jaas-login-module-version>1.0.2</jaas-login-module-version>
-		<jaas-login-module-repo>aiw</jaas-login-module-repo>
 		<hibernate-hbm2ddl-auto>validate</hibernate-hbm2ddl-auto>
 
-		<cas-client-version>3.2.1</cas-client-version>
 		<cas-server-version>2.0-Alpha-5</cas-server-version>
 
 		<!-- transitive dependencies that CAS needs certain versions of...-->
 		<commons-codec-version>1.4</commons-codec-version>
 		
-		<!-- Overridden by the release-stage profile below -->
-		<eureka.stage>DEVELOPMENT</eureka.stage>
 		<tomcat.httpsPort>8443</tomcat.httpsPort>
+		
+		<eurekaclinical-common-version>1.0-Alpha-1-SNAPSHOT</eurekaclinical-common-version>
 	</properties>
 
 	<licenses>
@@ -390,72 +379,6 @@
 	<dependencyManagement>
 		<dependencies>
 			<dependency>
-				<groupId>com.sun.jersey.jersey-test-framework</groupId>
-				<artifactId>jersey-test-framework-grizzly2</artifactId>
-				<version>${jersey-version}</version>
-				<scope>test</scope>
-			</dependency>
-			<dependency>
-				<groupId>com.sun.jersey</groupId>
-				<artifactId>jersey-server</artifactId>
-				<version>${jersey-version}</version>
-			</dependency>
-			<dependency>
-				<groupId>com.sun.jersey</groupId>
-				<artifactId>jersey-json</artifactId>
-				<version>${jersey-version}</version>
-			</dependency>
-			<dependency>
-				<groupId>com.sun.jersey</groupId>
-				<artifactId>jersey-client</artifactId>
-				<version>${jersey-version}</version>
-			</dependency>
-			<dependency>
-				<groupId>com.sun.jersey.contribs</groupId>
-				<artifactId>jersey-guice</artifactId>
-				<version>${jersey-version}</version>
-			</dependency>
-			<dependency>
-				<groupId>com.google.inject</groupId>
-				<artifactId>guice</artifactId>
-				<version>${guice-version}</version>
-			</dependency>
-			<dependency>
-				<groupId>com.google.inject.extensions</groupId>
-				<artifactId>guice-servlet</artifactId>
-				<version>${guice-version}</version>
-			</dependency>
-			<dependency>
-				<groupId>com.google.inject.extensions</groupId>
-				<artifactId>guice-persist</artifactId>
-				<version>${guice-version}</version>
-			</dependency>
-			<dependency>
-				<groupId>javax.transaction</groupId>
-				<artifactId>jta</artifactId>
-				<version>${javax-jta-version}</version>
-			</dependency>                       
-			<dependency>
-				<groupId>javax.annotation</groupId>
-				<artifactId>jsr250-api</artifactId>
-				<version>${annotation-version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.hibernate.javax.persistence</groupId>
-				<artifactId>hibernate-jpa-2.1-api</artifactId>
-				<version>${hibernate-persistence-version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.hibernate</groupId>
-				<artifactId>hibernate-entitymanager</artifactId>
-				<version>${hibernate-version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.slf4j</groupId>
-				<artifactId>slf4j-jdk14</artifactId>
-				<version>${slf4j-version}</version>
-			</dependency>
-			<dependency>
 				<groupId>org.apache.poi</groupId>
 				<artifactId>poi-ooxml</artifactId>
 				<version>${poi-version}</version>
@@ -558,16 +481,6 @@
 				<version>${freemarker-version}</version>
 			</dependency>
 			<dependency>
-				<groupId>com.google.inject.extensions</groupId>
-				<artifactId>guice-jndi</artifactId>
-				<version>${guice-version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.hibernate</groupId>
-				<artifactId>hibernate-jpamodelgen</artifactId>
-				<version>${jpamodelgen-version}</version>
-			</dependency>
-			<dependency>
 				<groupId>net.sf.ehcache</groupId>
 				<artifactId>ehcache</artifactId>
 				<version>${ehcache-version}</version>
@@ -587,18 +500,6 @@
 				<groupId>org.eurekaclinical</groupId>
 				<artifactId>javautil</artifactId>
 				<version>${javautil-version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.jasig.cas.client</groupId>
-				<artifactId>cas-client-core</artifactId>
-				<version>${cas-client-version}</version>
-				<scope>provided</scope>
-				<exclusions>
-					<exclusion>
-						<groupId>javax.servlet</groupId>
-						<artifactId>servlet-api</artifactId>
-					</exclusion>
-				</exclusions>
 			</dependency>
 			<!-- These are pulled into eureka-services and eureka-protempa-etl
 			by other dependencies, but CAS requires them to be in
@@ -627,8 +528,9 @@
 	
 	<dependencies>
 		<dependency>
-			<groupId>org.jasig.cas.client</groupId>
-			<artifactId>cas-client-core</artifactId>
+			<groupId>org.eurekaclinical</groupId>
+			<artifactId>eurekaclinical-common</artifactId>
+			<version>${eurekaclinical-common-version}</version>
 		</dependency>
 	</dependencies>
 

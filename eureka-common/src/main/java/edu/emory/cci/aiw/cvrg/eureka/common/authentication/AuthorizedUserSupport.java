@@ -41,10 +41,10 @@ package edu.emory.cci.aiw.cvrg.eureka.common.authentication;
  */
 
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.AuthorizedUserEntity;
-import edu.emory.cci.aiw.cvrg.eureka.common.exception.HttpStatusException;
 import edu.emory.cci.aiw.cvrg.eureka.common.dao.AuthorizedUserDao;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.core.Response.Status;
+import org.eurekaclinical.standardapis.exception.HttpStatusException;
 import org.jasig.cas.client.authentication.AttributePrincipal;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -44,7 +44,7 @@ import javax.servlet.ServletContextEvent;
 
 import com.google.inject.Module;
 import com.google.inject.servlet.GuiceServletContextListener;
-import edu.emory.cci.aiw.cvrg.eureka.common.config.InjectorSupport;
+import org.eurekaclinical.common.config.InjectorSupport;
 
 /**
  *

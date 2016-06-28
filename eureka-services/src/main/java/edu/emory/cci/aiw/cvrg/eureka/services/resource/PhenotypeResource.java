@@ -59,12 +59,10 @@ import com.google.inject.Inject;
 import com.google.inject.persist.Transactional;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.Phenotype;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ClientException;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.PhenotypeEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.PropositionChildrenVisitor;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.UserEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.exception.PhenotypeHandlingException;
-import edu.emory.cci.aiw.cvrg.eureka.common.exception.HttpStatusException;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.UserDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.translation.PhenotypeEntityTranslatorVisitor;
 import edu.emory.cci.aiw.cvrg.eureka.services.translation.PhenotypeTranslatorVisitor;
@@ -73,12 +71,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.PhenotypeEntityDao;
 import java.net.URI;
+import org.eurekaclinical.standardapis.exception.HttpStatusException;
 
 /**
  * PropositionCh
  *
  * @author hrathod
  */
+@Transactional
 @Path("/protected/phenotypes")
 @RolesAllowed({"researcher"})
 @Produces(MediaType.APPLICATION_JSON)
@@ -109,7 +109,6 @@ public class PhenotypeResource {
 	}
 
 	@GET
-	@Transactional
 	public List<Phenotype> getAll(@Context HttpServletRequest inRequest,
 			@DefaultValue("false") @QueryParam("summarize") boolean inSummarize) {
 		UserEntity user = this.userDao.getByHttpServletRequest(inRequest);
@@ -125,7 +124,6 @@ public class PhenotypeResource {
 
 	@GET
 	@Path("/{key}")
-	@Transactional
 	public Phenotype get(@Context HttpServletRequest inRequest,
 			@PathParam("key") String inKey,
 			@DefaultValue("false") @QueryParam("summarize") boolean inSummarize) {
@@ -139,7 +137,6 @@ public class PhenotypeResource {
 	}
 
 	@POST
-	@Transactional
 	public Response create(@Context HttpServletRequest request, Phenotype inPhenotype) {
 		if (inPhenotype.getId() != null) {
 			throw new HttpStatusException(
@@ -188,7 +185,6 @@ public class PhenotypeResource {
 
 	@PUT
 	@Path("/{id}")
-	@Transactional
 	public void update(@Context HttpServletRequest inRequest,
 			@PathParam("id") Long inId,
 			Phenotype inElement) {
@@ -255,7 +251,6 @@ public class PhenotypeResource {
 
 	@DELETE
 	@Path("/{id}")
-	@Transactional
 	public void delete(@PathParam("id") Long inId,
 			Long inUserId) {
 		PhenotypeEntity phenotypeEntity

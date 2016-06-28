@@ -60,6 +60,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.inject.Inject;
+import com.google.inject.persist.Transactional;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.PasswordChangeRequest;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.User;
@@ -67,7 +68,6 @@ import edu.emory.cci.aiw.cvrg.eureka.common.entity.LocalUserEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.Role;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.UserEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.UserEntityToUserVisitor;
-import edu.emory.cci.aiw.cvrg.eureka.common.exception.HttpStatusException;
 import edu.emory.cci.aiw.cvrg.eureka.common.util.StringUtil;
 import edu.emory.cci.aiw.cvrg.eureka.services.authentication.ServicesAuthenticationSupport;
 import edu.emory.cci.aiw.cvrg.eureka.services.clients.I2b2Client;
@@ -76,12 +76,14 @@ import edu.emory.cci.aiw.cvrg.eureka.services.dao.*;
 import edu.emory.cci.aiw.cvrg.eureka.services.email.EmailException;
 import edu.emory.cci.aiw.cvrg.eureka.services.email.EmailSender;
 import edu.emory.cci.aiw.cvrg.eureka.services.util.UserToUserEntityVisitor;
+import org.eurekaclinical.standardapis.exception.HttpStatusException;
 
 /**
  * RESTful end-point for {@link UserEntity} related methods.
  *
  * @author hrathod
  */
+@Transactional
 @Path("/protected/users")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)

@@ -46,8 +46,8 @@ import javax.persistence.EntityManager;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 
-import edu.emory.cci.aiw.cvrg.eureka.common.dao.GenericDao;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.JobEvent;
+import org.eurekaclinical.standardapis.dao.GenericDao;
 
 /**
  * Implements the {@link JobDao} interface, with the use of JPA entity managers.

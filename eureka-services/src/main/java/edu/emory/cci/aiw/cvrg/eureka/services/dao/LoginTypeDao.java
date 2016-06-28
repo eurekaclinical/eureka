@@ -40,9 +40,9 @@
 package edu.emory.cci.aiw.cvrg.eureka.services.dao;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.authentication.LoginType;
-import edu.emory.cci.aiw.cvrg.eureka.common.dao.Dao;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.LoginTypeEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.ThresholdsOperator;
+import org.eurekaclinical.standardapis.dao.Dao;
 
 /**
  *

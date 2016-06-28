@@ -39,13 +39,13 @@ package edu.emory.cci.aiw.cvrg.eureka.etl.config;
  * <http://www.gnu.org/licenses/gpl-3.0.html>.
  * #L%
  */
-import edu.emory.cci.aiw.cvrg.eureka.common.dao.DatabaseSupport;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.JobEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.JobEvent;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.JobStatus;
 import java.util.Date;
 import java.util.List;
 import javax.persistence.EntityManager;
+import org.eurekaclinical.standardapis.dao.DatabaseSupport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

@@ -26,8 +26,10 @@ This project includes:
   Apache POI under The Apache Software License, Version 2.0
   Apache ServiceMix :: Bundles :: xstream under The Apache Software License, Version 2.0
   ASM Core under Apache License, Version 2.0
+  Commons Codec under The Apache Software License, Version 2.0
   Commons FileUpload under The Apache Software License, Version 2.0
   Commons IO under The Apache Software License, Version 2.0
+  Commons Logging under The Apache Software License, Version 2.0
   ConcurrentLinkedHashMap under The Apache Software License, Version 2.0
   Core Hibernate O/RM functionality under GNU Lesser General Public License
   Data Mapper for Jackson under The Apache Software License, Version 2.0
@@ -42,6 +44,8 @@ This project includes:
   Eureka Services under Apache License, Version 2.0 or GNU General Public License, Version 3
   Eureka WebApp under Apache License, Version 2.0 or GNU General Public License, Version 3
   Eureka! Clinical Analytics under Apache License, Version 2.0 or GNU General Public License, Version 3
+  Eureka! Clinical Common under Apache License, Version 2.0
+  Eureka! Clinical Standard APIs under Apache License, Version 2.0
   fastinfoset under Apache License, Version 2.0
   FreeMarker under BSD-style license
   Google Guice - Core Library under The Apache Software License, Version 2.0
@@ -59,6 +63,7 @@ This project includes:
   Hibernate JPA 2 Metamodel Generator under GNU Lesser General Public License
   Hibernate JPA Support under GNU Lesser General Public License
   HttpClient under Apache License
+  HttpCore under Apache License
   ini4j under Apache 2
   istack common utility code runtime under CDDL 1.1 or GPL2 w/ CPE
   Jackson under The Apache Software License, Version 2.0
@@ -82,7 +87,7 @@ This project includes:
   JAXB Reference Implementation under CDDL 1.1 or GPL2 w/ CPE
   JBoss Logging 3 under Apache License, version 2.0
   je under Sleepycat License
-  Jersey Apache HTTP Client under CDDL 1.1 or GPL2 w/ CPE
+  Jersey Apache HTTP Client 4.x under CDDL 1.1 or GPL2 w/ CPE
   Jersey Test Framework - Core under CDDL 1.1 or GPL2 w/ CPE
   Jersey Test Framework - Grizzly 2 Module under CDDL 1.1 or GPL2 w/ CPE
   jersey-client under CDDL 1.1 or GPL2 w/ CPE

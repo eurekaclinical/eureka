@@ -41,12 +41,12 @@ package edu.emory.cci.aiw.cvrg.eureka.services.dao;
 
 import com.google.inject.Inject;
 import com.google.inject.Provider;
-import edu.emory.cci.aiw.cvrg.eureka.common.dao.GenericDao;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.FrequencyType;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.FrequencyType_;
 import java.util.List;
 
 import javax.persistence.EntityManager;
+import org.eurekaclinical.standardapis.dao.GenericDao;
 
 /**
  *

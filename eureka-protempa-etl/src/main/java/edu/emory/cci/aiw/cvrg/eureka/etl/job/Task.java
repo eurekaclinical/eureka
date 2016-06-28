@@ -47,6 +47,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.inject.Inject;
+import com.google.inject.Provider;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.JobEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.JobEvent;
@@ -58,6 +59,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import org.protempa.backend.Configuration;
 import java.util.Date;
+import javax.persistence.EntityManager;
 
 public final class Task implements Runnable {
 
@@ -70,13 +72,15 @@ public final class Task implements Runnable {
 	private Filter filter;
 	private boolean updateData;
 	private Configuration prompts;
+	private final Provider<EntityManager> entityManagerProvider;
 
 	@Inject
-	Task(JobDao inJobDao, ETL inEtl) {
+	Task(JobDao inJobDao, ETL inEtl, Provider<EntityManager> inEntityManagerProvider) {
 		this.jobDao = inJobDao;
 		this.etl = inEtl;
 		this.propIdsToShow = Collections.emptyList();
 		this.propositionDefinitions = Collections.emptyList();
+		this.entityManagerProvider = inEntityManagerProvider;
 	}
 
 	Long getJobId() {
@@ -138,7 +142,9 @@ public final class Task implements Runnable {
 	@Override
 	public void run() {
 		JobEntity myJob = null;
+		EntityManager entityManager = this.entityManagerProvider.get();
 		try {
+			entityManager.getTransaction().begin();
 			myJob = this.jobDao.retrieve(this.jobId);
 			if (LOGGER.isInfoEnabled()) {
 				LOGGER.info("Just got job {} from user {}",
@@ -151,6 +157,7 @@ public final class Task implements Runnable {
 			startedJobEvent.setStatus(JobStatus.STARTED);
 			startedJobEvent.setMessage("Processing started");
 			this.jobDao.update(myJob);
+			entityManager.getTransaction().commit();
 
 			PropositionDefinition[] propDefArray
 					= new PropositionDefinition[this.getPropositionDefinitions()
@@ -170,7 +177,9 @@ public final class Task implements Runnable {
 			completedJobEvent.setTimeStamp(jobFinishedDate);
 			completedJobEvent.setStatus(JobStatus.COMPLETED);
 			completedJobEvent.setMessage("Processing completed without error");
+			entityManager.getTransaction().begin();
 			this.jobDao.update(myJob);
+			entityManager.getTransaction().commit();
 			if (LOGGER.isInfoEnabled()) {
 				LOGGER.info("Completed job {} for user {} without errors.",
 						new Object[]{
@@ -181,6 +190,9 @@ public final class Task implements Runnable {
 			handleError(myJob, e);
 		} finally {
 			if (myJob != null) {
+				if (entityManager.getTransaction().isActive()) {
+					entityManager.getTransaction().rollback();
+				}
 				try {
 					Date jobFinishedDate = new Date();
 					myJob.setFinished(jobFinishedDate);
@@ -192,8 +204,13 @@ public final class Task implements Runnable {
 					LOGGER.error("Finished job {} for user {} with errors.",
 							new Object[]{
 								myJob.getId(), myJob.getUser().getUsername()});
+					entityManager.getTransaction().begin();
 					this.jobDao.update(myJob);
+					entityManager.getTransaction().commit();
 				} catch (Throwable ignore) {
+					if (entityManager.getTransaction().isActive()) {
+						entityManager.getTransaction().rollback();
+					}
 				}
 			}
 			if (this.etl != null) {

@@ -48,6 +48,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
 import com.google.inject.Inject;
+import com.google.inject.persist.Transactional;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.RelationOperator;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.RelationOperatorDao;
@@ -55,6 +56,7 @@ import edu.emory.cci.aiw.cvrg.eureka.services.dao.RelationOperatorDao;
 /**
  * @author hrathod
  */
+@Transactional
 @Path("/protected/relationops")
 @Produces(MediaType.APPLICATION_JSON)
 public class RelationOperatorResource {

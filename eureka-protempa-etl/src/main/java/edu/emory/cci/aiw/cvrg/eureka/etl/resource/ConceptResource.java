@@ -56,7 +56,6 @@ import org.slf4j.LoggerFactory;
 import com.google.inject.Inject;
 import com.google.inject.persist.Transactional;
 
-import edu.emory.cci.aiw.cvrg.eureka.common.exception.HttpStatusException;
 import edu.emory.cci.aiw.cvrg.eureka.etl.config.EtlProperties;
 import edu.emory.cci.aiw.cvrg.eureka.etl.ksb.PropositionDefinitionFinder;
 import edu.emory.cci.aiw.cvrg.eureka.etl.ksb.PropositionFinderException;
@@ -66,10 +65,12 @@ import java.util.Set;
 import javax.annotation.security.RolesAllowed;
 import javax.ws.rs.FormParam;
 import org.arp.javautil.arrays.Arrays;
+import org.eurekaclinical.standardapis.exception.HttpStatusException;
 
 /**
  * @author hrathod
  */
+@Transactional
 @Path("/protected/concepts")
 @RolesAllowed({"researcher"})
 @Produces(MediaType.APPLICATION_JSON)
@@ -86,7 +87,6 @@ public class ConceptResource {
 
 	@GET
 	@Path("/{configId}/{key}")
-	@Transactional
 	public PropositionDefinition getProposition(
 			@PathParam("configId") String inConfigId,
 			@PathParam("key") String inKey) {
@@ -119,7 +119,6 @@ public class ConceptResource {
 
 	@GET
 	@Path("/{configId}")
-	@Transactional
 	public List<PropositionDefinition> getPropositionsGet(
 			@PathParam("configId") String inConfigId,
 			@QueryParam("key") List<String> inKeys,
@@ -129,7 +128,6 @@ public class ConceptResource {
 
 	@POST
 	@Path("/{configId}")
-	@Transactional
 	public List<PropositionDefinition> getPropositionsPost(
 			@PathParam("configId") String inConfigId,
 			@FormParam("key") List<String> inKeys,

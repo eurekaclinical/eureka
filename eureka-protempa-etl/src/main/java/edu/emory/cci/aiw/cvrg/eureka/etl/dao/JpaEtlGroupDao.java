@@ -42,7 +42,6 @@ package edu.emory.cci.aiw.cvrg.eureka.etl.dao;
 
 import com.google.inject.Inject;
 import com.google.inject.Provider;
-import edu.emory.cci.aiw.cvrg.eureka.common.dao.GenericDao;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.AuthorizedUserEntity_;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.DestinationEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.DestinationEntity_;
@@ -61,9 +60,9 @@ import javax.persistence.Tuple;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Expression;
 import javax.persistence.criteria.ListJoin;
 import javax.persistence.criteria.Root;
+import org.eurekaclinical.standardapis.dao.GenericDao;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

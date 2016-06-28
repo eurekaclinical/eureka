@@ -43,8 +43,8 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.jasig.cas.client.authentication.AttributePrincipal;
 
-import edu.emory.cci.aiw.cvrg.eureka.common.dao.Dao;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.UserEntity;
+import org.eurekaclinical.standardapis.dao.Dao;
 
 /**
  * A data access object interface for working with {@link UserEntity} objects in the
