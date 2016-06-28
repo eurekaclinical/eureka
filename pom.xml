@@ -18,7 +18,7 @@
 	<parent>
 		<groupId>org.eurekaclinical</groupId>
 		<artifactId>eurekaclinical-parent-standard-deps</artifactId>
-		<version>1-Alpha-3</version>
+		<version>1-Alpha-4</version>
 	</parent>
 	
 	<scm>
@@ -65,7 +65,7 @@
 		
 		<tomcat.httpsPort>8443</tomcat.httpsPort>
 		
-		<eurekaclinical-common-version>1.0-Alpha-1</eurekaclinical-common-version>
+		<eurekaclinical-common-version>1.0-Alpha-2</eurekaclinical-common-version>
 	</properties>
 
 	<licenses>
