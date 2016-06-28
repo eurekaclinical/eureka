@@ -16,7 +16,7 @@
 	</parent>
 	
 	<properties>
-		<eurekaclinical-common-version>1.0-Alpha-1-SNAPSHOT</eurekaclinical-common-version>
+		<eurekaclinical-common-version>1.0-Alpha-2</eurekaclinical-common-version>
 	</properties>
 
 	<build>
