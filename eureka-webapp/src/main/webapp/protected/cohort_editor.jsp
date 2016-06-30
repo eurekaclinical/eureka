@@ -235,6 +235,8 @@
 				src="${pageContext.request.contextPath}/assets/js/eureka.tree${initParam['eureka-build-timestamp']}.js"></script>
 		<script language="JavaScript"
 				src="${pageContext.request.contextPath}/assets/js/eureka.cohort${initParam['eureka-build-timestamp']}.js"></script>
+		<script language="JavaScript"
+				src="${pageContext.request.contextPath}/assets/js/eureka.util${initParam['eureka-build-timestamp']}.js"></script>
 		<script language="JavaScript">
 			eureka.editor.setup('','', ${destId != null ? destId : 'null'},
 					'#systemTree', '#userTree', '#definitionContainer', '#savePhenotypeButton', 'span.delete-icon',
