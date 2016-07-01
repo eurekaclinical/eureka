@@ -146,6 +146,7 @@ public class JobResource {
 	 * @return A {@link javax.ws.rs.core.Response} indicating the result of the
 	 * operation.
 	 */
+	@Transactional
 	@POST
 	@Consumes({MediaType.APPLICATION_JSON})
 	public Response submit(@Context HttpServletRequest request, JobSpec jobSpec) {
