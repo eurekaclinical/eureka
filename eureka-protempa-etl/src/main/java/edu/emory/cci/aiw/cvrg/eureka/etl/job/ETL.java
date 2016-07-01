@@ -55,6 +55,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.inject.Inject;
+import com.google.inject.Provider;
 import com.google.inject.Singleton;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.EtlDestination;
@@ -69,6 +70,8 @@ import edu.emory.cci.aiw.cvrg.eureka.etl.dao.JobDao;
 import edu.emory.cci.aiw.cvrg.eureka.etl.dest.ProtempaDestinationFactory;
 import edu.emory.cci.aiw.cvrg.eureka.etl.resource.Destinations;
 import java.io.IOException;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityTransaction;
 import org.protempa.backend.Configuration;
 import org.protempa.backend.InvalidPropertyNameException;
 import org.protempa.backend.InvalidPropertyValueException;
@@ -96,14 +99,16 @@ public class ETL {
 	private final DestinationDao destinationDao;
 	private final ProtempaDestinationFactory protempaDestFactory;
 	private final EtlGroupDao groupDao;
+	private final Provider<EntityManager> entityManagerProvider;
 
 	@Inject
-	public ETL(EtlProperties inEtlProperties, JobDao inJobDao, DestinationDao inDestinationDao, EtlGroupDao inGroupDao, ProtempaDestinationFactory inProtempaDestFactory) {
+	public ETL(EtlProperties inEtlProperties, JobDao inJobDao, DestinationDao inDestinationDao, EtlGroupDao inGroupDao, ProtempaDestinationFactory inProtempaDestFactory, Provider<EntityManager> inEntityManagerProvider) {
 		this.etlProperties = inEtlProperties;
 		this.jobDao = inJobDao;
 		this.destinationDao = inDestinationDao;
 		this.protempaDestFactory = inProtempaDestFactory;
 		this.groupDao = inGroupDao;
+		this.entityManagerProvider = inEntityManagerProvider;
 	}
 
 	void run(JobEntity job, PropositionDefinition[] inPropositionDefinitions,
@@ -115,12 +120,23 @@ public class ETL {
 		try (Protempa protempa = getNewProtempa(job, prompts)) {
 			logValidationEvents(job, protempa.validateDataSourceBackendData(), null);
 
-			EtlDestination eurekaDestination
-					= new Destinations(this.etlProperties, job.getUser(),
-							this.destinationDao, this.groupDao)
-					.getOne(job.getDestination().getName());
-			org.protempa.dest.Destination protempaDestination
-					= this.protempaDestFactory.getInstance(eurekaDestination.getId(), updateData);
+			EntityTransaction transaction = this.entityManagerProvider.get().getTransaction();
+			transaction.begin();
+			EtlDestination eurekaDestination;
+			org.protempa.dest.Destination protempaDestination;
+			try {
+				eurekaDestination
+						= new Destinations(this.etlProperties, job.getUser(),
+								this.destinationDao, this.groupDao)
+						.getOne(job.getDestination().getName());
+				protempaDestination
+						= this.protempaDestFactory.getInstance(eurekaDestination.getId(), updateData);
+				transaction.commit();
+			} finally {
+				if (transaction.isActive()) {
+					transaction.rollback();
+				}
+			}
 
 			DefaultQueryBuilder q = new DefaultQueryBuilder();
 			q.setPropositionDefinitions(inPropositionDefinitions);
