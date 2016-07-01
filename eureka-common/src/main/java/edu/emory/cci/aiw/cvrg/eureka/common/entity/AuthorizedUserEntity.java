@@ -40,7 +40,6 @@
 package edu.emory.cci.aiw.cvrg.eureka.common.entity;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -51,9 +50,12 @@ import javax.persistence.Table;
 import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.eurekaclinical.standardapis.entity.UserEntity;
 
 /**
  * A bean class to hold information about users in the system.
@@ -63,7 +65,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
  */
 @Entity
 @Table(name = "users")
-public class AuthorizedUserEntity {
+public class AuthorizedUserEntity implements UserEntity<AuthorizedRoleEntity> {
 
 	/**
 	 * The user's unique identifier.
@@ -93,11 +95,18 @@ public class AuthorizedUserEntity {
 	@OneToMany(mappedBy = "owner")
 	private List<DestinationEntity> destinations;
 
+	@ManyToMany(cascade = {CascadeType.REFRESH, CascadeType.MERGE})
+	@JoinTable(joinColumns=@JoinColumn(name="user_id"), inverseJoinColumns=@JoinColumn(name="role_id"))
+	private List<AuthorizedRoleEntity> roles;
+
 	/**
 	 * Create an empty User object.
 	 */
 	public AuthorizedUserEntity() {
 		this.jobs = new ArrayList<>();
+		this.roles = new ArrayList<>();
+		this.sourceConfigs = new ArrayList<>();
+		this.destinations = new ArrayList<>();
 	}
 
 	/**
@@ -105,6 +114,7 @@ public class AuthorizedUserEntity {
 	 *
 	 * @return A {@link Long} representing the user's unique identifier.
 	 */
+	@Override
 	public Long getId() {
 		return this.id;
 	}
@@ -114,6 +124,7 @@ public class AuthorizedUserEntity {
 	 *
 	 * @param inId A {@link Long} representing the user's unique identifier.
 	 */
+	@Override
 	public void setId(final Long inId) {
 		this.id = inId;
 	}
@@ -123,6 +134,7 @@ public class AuthorizedUserEntity {
 	 *
 	 * @return A String containing the user's email address.
 	 */
+	@Override
 	public String getUsername() {
 		return this.username;
 	}
@@ -132,6 +144,7 @@ public class AuthorizedUserEntity {
 	 *
 	 * @param inUsername A String containing the user's email address.
 	 */
+	@Override
 	public void setUsername(final String inUsername) {
 		this.username = inUsername;
 	}
@@ -161,7 +174,11 @@ public class AuthorizedUserEntity {
 	}
 
 	public void setSourceConfigs(List<SourceConfigEntity> sourceConfigs) {
-		this.sourceConfigs = sourceConfigs;
+		if (sourceConfigs == null) {
+			this.sourceConfigs = new ArrayList<>();
+		} else {
+			this.sourceConfigs = sourceConfigs;
+		}
 	}
 
 	public List<DestinationEntity> getDestinations() {
@@ -169,11 +186,29 @@ public class AuthorizedUserEntity {
 	}
 
 	public void setDestinations(List<DestinationEntity> destinations) {
-		this.destinations = destinations;
+		if (destinations == null) {
+			this.destinations = new ArrayList<>();
+		} else {
+			this.destinations = destinations;
+		}
 	}
 
 	@Override
 	public String toString() {
 		return ToStringBuilder.reflectionToString(this);
+	}
+
+	@Override
+	public List<AuthorizedRoleEntity> getRoles() {
+		return this.roles;
+	}
+
+	@Override
+	public void setRoles(List<AuthorizedRoleEntity> inRoles) {
+		if (inRoles == null) {
+			this.roles = new ArrayList<>();
+		} else {
+			this.roles = inRoles;
+		}
 	}
 }

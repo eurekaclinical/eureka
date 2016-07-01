@@ -70,7 +70,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 @Entity
 @Table(name = "users")
 @Inheritance(strategy = InheritanceType.JOINED)
-public abstract class UserEntity implements UserEntityVisitable {
+public abstract class UserEntity implements org.eurekaclinical.standardapis.entity.UserEntity<Role>, UserEntityVisitable {
 
 	/**
 	 * The user's unique identifier.
@@ -177,6 +177,7 @@ public abstract class UserEntity implements UserEntityVisitable {
 	 *
 	 * @return A {@link Long} representing the user's unique identifier.
 	 */
+	@Override
 	public Long getId() {
 		return this.id;
 	}
@@ -186,6 +187,7 @@ public abstract class UserEntity implements UserEntityVisitable {
 	 *
 	 * @param inId A {@link Long} representing the user's unique identifier.
 	 */
+	@Override
 	public void setId(final Long inId) {
 		this.id = inId;
 	}
@@ -208,10 +210,12 @@ public abstract class UserEntity implements UserEntityVisitable {
 		this.active = inActive;
 	}
 
+	@Override
 	public String getUsername() {
 		return username;
 	}
 
+	@Override
 	public void setUsername(String username) {
 		this.username = username;
 	}
@@ -332,6 +336,7 @@ public abstract class UserEntity implements UserEntityVisitable {
 	 *
 	 * @return A list of {@link Role} objects.
 	 */
+	@Override
 	public List<Role> getRoles() {
 		return this.roles;
 	}
@@ -341,6 +346,7 @@ public abstract class UserEntity implements UserEntityVisitable {
 	 *
 	 * @param inRoles A Set of roles to be assigned to the user.
 	 */
+	@Override
 	public void setRoles(final List<Role> inRoles) {
 		this.roles = inRoles;
 	}

@@ -48,6 +48,7 @@ import javax.persistence.Table;
 
 import javax.persistence.Column;
 import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.eurekaclinical.standardapis.entity.RoleEntity;
 
 /**
  * A bean class to hold information related to roles in the system.
@@ -57,7 +58,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
  */
 @Entity
 @Table(name = "roles")
-public class Role {
+public class Role implements RoleEntity {
 
 	/**
 	 * The role's unique identifier.
@@ -90,6 +91,7 @@ public class Role {
 	 *
 	 * @return A {@link Long} representing the role's id.
 	 */
+	@Override
 	public Long getId() {
 		return this.id;
 	}
@@ -99,6 +101,7 @@ public class Role {
 	 *
 	 * @param inId The number representing the role's id.
 	 */
+	@Override
 	public void setId(Long inId) {
 		this.id = inId;
 	}
@@ -108,6 +111,7 @@ public class Role {
 	 *
 	 * @return A String containing the role's name.
 	 */
+	@Override
 	public String getName() {
 		return this.name;
 	}
@@ -117,6 +121,7 @@ public class Role {
 	 *
 	 * @param inName A string containing the role's name.
 	 */
+	@Override
 	public void setName(String inName) {
 		this.name = inName;
 	}
@@ -126,6 +131,7 @@ public class Role {
 	 *
 	 * @return True if the role is a default role, false otherwise.
 	 */
+	@Override
 	public boolean isDefaultRole() {
 		return this.defaultRole;
 	}
@@ -136,6 +142,7 @@ public class Role {
 	 * @param inDefaultRole True or False, True indicating a default role, False
 	 *            indicating a non-default role.
 	 */
+	@Override
 	public void setDefaultRole(boolean inDefaultRole) {
 		this.defaultRole = inDefaultRole;
 	}

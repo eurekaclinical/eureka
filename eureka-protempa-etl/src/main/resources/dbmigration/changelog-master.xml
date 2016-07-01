@@ -39,7 +39,9 @@
   #L%
 -->
 
-<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd" logicalFilePath="changelog-master.xml">
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" 
+				   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+				   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.3.xsd" logicalFilePath="changelog-master.xml">
 	<changeSet author="arpost (generated)" id="1361552652236-2">
 		<createTable tableName="JOB_EVENTS">
 			<column name="ID" type="BIGINT">
@@ -798,13 +800,77 @@
 		</addColumn>
 	</changeSet>
 	<changeSet author="akalsan" id="1361552652236-38">
-	<addColumn tableName="JOBS">
-		<column name="FINISHED" type="TIMESTAMP(6)"/>
-	</addColumn>
-</changeSet>
+		<addColumn tableName="JOBS">
+			<column name="FINISHED" type="TIMESTAMP(6)"/>
+		</addColumn>
+	</changeSet>
 	<changeSet author="akalsan" id="1361552652236-39">
 		<sql>
 			UPDATE JOBS J SET FINISHED=(SELECT MAX(TIMESTAMP) FROM JOB_EVENTS E WHERE J.ID=E.JOB_ID)
 		</sql>
+	</changeSet>
+	<changeSet author="arpost" id="1361552652236-40">
+		<comment>The researcher and admin roles cannot be deleted, or subsequent changeSets may fail.</comment>
+		<createTable tableName="ROLES">
+			<column name="ID" type="BIGINT">
+				<constraints nullable="false" primaryKey="true" primaryKeyName="ROLES_PK"/>
+			</column>
+			<column name="DEFAULTROLE" type="BOOLEAN">
+				<constraints nullable="false"/>
+			</column>
+			<column name="NAME" type="VARCHAR(255)">
+				<constraints nullable="false" unique="true" uniqueConstraintName="ROLES_NAME_UNIQ"/>
+			</column>
+		</createTable>
+		<createSequence sequenceName="ROLE_SEQ"/>
+		<createTable tableName="USERS_ROLES">
+			<column name="USER_ID" type="BIGINT">
+				<constraints nullable="false" foreignKeyName="ROLES_USER_FK" referencedTableName="USERS" referencedColumnNames="ID"/>
+			</column>
+			<column name="ROLE_ID" type="BIGINT">
+				<constraints nullable="false" foreignKeyName="ROLES_ROLE_FK" referencedTableName="ROLES" referencedColumnNames="ID"/>
+			</column>
+		</createTable>
+		<insert tableName="ROLES">
+			<column name="ID" valueSequenceNext="ROLE_SEQ"/>
+			<column name="NAME" value="researcher"/>
+			<column name="DEFAULTROLE" valueBoolean="true"/>
+		</insert>
+		<insert tableName="ROLES">
+			<column name="ID" valueSequenceNext="ROLE_SEQ"/>
+			<column name="NAME" value="admin"/>
+			<column name="DEFAULTROLE" valueBoolean="false"/>
+		</insert>
+		<rollback>
+			<delete tableName="ROLES"/>
+		</rollback>
+	</changeSet>
+	<changeSet author="arpost" id="1361552652236-41">
+		<preConditions onFail="MARK_RAN">
+			<sqlCheck expectedResult="1">SELECT COUNT(*) FROM USERS WHERE USERNAME='${eureka.superuser.username}'</sqlCheck>
+		</preConditions>
+		<comment>This changeSet only runs if the original superuser account is still present.</comment>
+		<insert tableName="USERS_ROLES">
+			<column name="USER_ID" valueComputed="(SELECT ID FROM USERS WHERE USERNAME='${eureka.superuser.username}')"/>
+			<column name="ROLE_ID" valueComputed="(SELECT ID FROM ROLES WHERE NAME='researcher')"/>
+		</insert>
+		<insert tableName="USERS_ROLES">
+			<column name="USER_ID" valueComputed="(SELECT ID FROM USERS WHERE USERNAME='${eureka.superuser.username}')"/>
+			<column name="ROLE_ID" valueComputed="(SELECT ID FROM ROLES WHERE NAME='admin')"/>
+		</insert>
+		<rollback>
+			<delete tableName="USERS_ROLES">
+				<whereParams>
+					<param name="USER_ID" valueComputed="(SELECT ID FROM USERS WHERE USERNAME='${eureka.superuser.username}')"/>
+					<param name="ROLE_ID" valueComputed="(SELECT ID FROM ROLES WHERE NAME='researcher')"/>
+				</whereParams>
+			</delete>
+			<delete tableName="USERS_ROLES">
+				<whereParams>
+					<param name="USER_ID" valueComputed="(SELECT ID FROM USERS WHERE USERNAME='${eureka.superuser.username}')"/>
+					<param name="ROLE_ID" valueComputed="(SELECT ID FROM ROLES WHERE NAME='admin')"/>
+				</whereParams>
+			</delete>
+		</rollback>
 	</changeSet>
 </databaseChangeLog>

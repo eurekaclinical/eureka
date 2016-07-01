@@ -42,8 +42,7 @@ package edu.emory.cci.aiw.cvrg.eureka.common.dao;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.AuthorizedUserEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.UserEntity;
-import org.eurekaclinical.standardapis.dao.Dao;
-import org.jasig.cas.client.authentication.AttributePrincipal;
+import org.eurekaclinical.standardapis.dao.UserDao;
 
 /**
  * A data access object interface for working with {@link UserEntity} objects in the
@@ -52,15 +51,6 @@ import org.jasig.cas.client.authentication.AttributePrincipal;
  * @author hrathod
  *
  */
-public interface AuthorizedUserDao extends Dao<AuthorizedUserEntity, Long> {
+public interface AuthorizedUserDao extends UserDao<AuthorizedUserEntity> {
 	
-	AuthorizedUserEntity getByAttributePrincipal(AttributePrincipal principal);
-
-	/**
-	 * Get a user object, given the user name.
-	 *
-	 * @param username The name of the user to retrieve.
-	 * @return The user object that corresponds to the given user name.
-	 */
-	AuthorizedUserEntity getByUsername(String username);
 }

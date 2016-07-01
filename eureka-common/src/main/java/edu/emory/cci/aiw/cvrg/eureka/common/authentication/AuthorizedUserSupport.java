@@ -78,7 +78,7 @@ public class AuthorizedUserSupport extends AbstractUserSupport {
 	 */
 	public AuthorizedUserEntity getUser(HttpServletRequest servletRequest) {
 		AttributePrincipal principal = getUserPrincipal(servletRequest);
-		AuthorizedUserEntity result = this.userDao.getByAttributePrincipal(principal);
+		AuthorizedUserEntity result = this.userDao.getByPrincipal(principal);
 		if (result == null) {
 			throw new HttpStatusException(Status.FORBIDDEN, "User " + principal.getName() + " is unauthorized to use this resource");
 		}

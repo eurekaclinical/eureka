@@ -92,6 +92,7 @@ public class AppTestModule extends AbstractModule {
 		install(new JpaPersistModule("services-jpa-unit"));
 
 		bind(UserDao.class).to(JpaUserDao.class);
+		bind(org.eurekaclinical.standardapis.dao.UserDao.class).to(JpaUserDao.class);
 		bind(LocalUserDao.class).to(JpaLocalUserDao.class);
 		bind(RoleDao.class).to(JpaRoleDao.class);
 		bind(TimeUnitDao.class).to(JpaTimeUnitDao.class);

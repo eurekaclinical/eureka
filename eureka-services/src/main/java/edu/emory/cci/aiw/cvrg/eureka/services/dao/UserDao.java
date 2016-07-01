@@ -39,12 +39,8 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.services.dao;
 
-import javax.servlet.http.HttpServletRequest;
-
-import org.jasig.cas.client.authentication.AttributePrincipal;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.UserEntity;
-import org.eurekaclinical.standardapis.dao.Dao;
 
 /**
  * A data access object interface for working with {@link UserEntity} objects in the
@@ -53,17 +49,6 @@ import org.eurekaclinical.standardapis.dao.Dao;
  * @author hrathod
  *
  */
-public interface UserDao extends Dao<UserEntity, Long> {
+public interface UserDao extends org.eurekaclinical.standardapis.dao.UserDao<UserEntity> {
 	
-	UserEntity getByHttpServletRequest(HttpServletRequest request);
-
-	/**
-	 * Get a user object, given the user name.
-	 *
-	 * @param principal The name of the user to retrieve.
-	 * @return The user object that corresponds to the given user name.
-	 */
-	UserEntity getByAttributePrincipal(AttributePrincipal principal);
-	
-	UserEntity getByUsername(String username);
 }

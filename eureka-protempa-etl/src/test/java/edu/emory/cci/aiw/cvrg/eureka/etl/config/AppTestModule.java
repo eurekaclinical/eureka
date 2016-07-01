@@ -56,6 +56,7 @@ import edu.emory.cci.aiw.cvrg.eureka.etl.dao.JpaJobEventDao;
 import edu.emory.cci.aiw.cvrg.eureka.etl.dao.JpaSourceConfigDao;
 import edu.emory.cci.aiw.cvrg.eureka.etl.dao.SourceConfigDao;
 import edu.emory.cci.aiw.cvrg.eureka.etl.dao.DeidPerPatientParamsDao;
+import org.eurekaclinical.standardapis.dao.UserDao;
 
 /**
  *
@@ -69,6 +70,7 @@ public class AppTestModule extends AbstractModule {
 		bind(JobDao.class).to(JpaJobDao.class);
 		bind(JobEventDao.class).to(JpaJobEventDao.class);
 		bind(AuthorizedUserDao.class).to(JpaEtlUserDao.class);
+		bind(UserDao.class).to(JpaEtlUserDao.class);
 		bind(EtlGroupDao.class).to(JpaEtlGroupDao.class);
 		bind(DestinationDao.class).to(JpaDestinationDao.class);
 		bind(DeidPerPatientParamsDao.class).to(JpaDeidPerPatientParamsDao.class);

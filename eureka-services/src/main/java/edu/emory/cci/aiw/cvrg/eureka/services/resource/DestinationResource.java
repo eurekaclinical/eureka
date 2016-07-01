@@ -125,6 +125,8 @@ public class DestinationResource {
 	/**
 	 * Gets all of the destinations for a user
 	 *
+	 * @param request
+	 * @param type
 	 * @return a {@link List} of {@link Destination}s
 	 */
 	@GET

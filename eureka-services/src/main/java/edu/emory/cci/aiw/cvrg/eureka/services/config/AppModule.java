@@ -39,11 +39,11 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.services.config;
 
+import com.google.inject.AbstractModule;
 import javax.mail.Session;
 import javax.naming.Context;
 import javax.naming.InitialContext;
 
-import com.google.inject.AbstractModule;
 import com.google.inject.TypeLiteral;
 import com.google.inject.jndi.JndiIntegration;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.cassupport.CasWebResourceWrapperFactory;
@@ -59,12 +59,12 @@ import edu.emory.cci.aiw.cvrg.eureka.services.dao.JpaRelationOperatorDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.JpaRoleDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.JpaThresholdsOperatorDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.JpaTimeUnitDao;
-import edu.emory.cci.aiw.cvrg.eureka.services.dao.JpaUserDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.JpaValueComparatorDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.JpaAuthenticationMethodDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.JpaLocalUserDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.JpaLoginTypeDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.JpaOAuthProviderDao;
+import edu.emory.cci.aiw.cvrg.eureka.services.dao.JpaUserDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.LocalUserDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.LoginTypeDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.OAuthProviderDao;
@@ -72,7 +72,6 @@ import edu.emory.cci.aiw.cvrg.eureka.services.dao.RelationOperatorDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.RoleDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.ThresholdsOperatorDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.TimeUnitDao;
-import edu.emory.cci.aiw.cvrg.eureka.services.dao.UserDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.ValueComparatorDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.email.EmailSender;
 import edu.emory.cci.aiw.cvrg.eureka.services.email.FreeMarkerEmailSender;
@@ -81,6 +80,9 @@ import edu.emory.cci.aiw.cvrg.eureka.services.finder.SystemPropositionFinder;
 import edu.emory.cci.aiw.cvrg.eureka.services.util.PasswordGenerator;
 import edu.emory.cci.aiw.cvrg.eureka.services.util.PasswordGeneratorImpl;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.PhenotypeEntityDao;
+import org.eurekaclinical.standardapis.dao.UserDao;
+import org.eurekaclinical.standardapis.entity.RoleEntity;
+import org.eurekaclinical.standardapis.entity.UserEntity;
 
 /**
  * Configure all the non-web related binding for Guice.
@@ -89,10 +91,14 @@ import edu.emory.cci.aiw.cvrg.eureka.services.dao.PhenotypeEntityDao;
  *
  */
 class AppModule extends AbstractModule {
+	
+	AppModule() {
+	}
 
 	@Override
 	protected void configure() {
-		bind(UserDao.class).to(JpaUserDao.class);
+		bind(new TypeLiteral<UserDao<? extends UserEntity<? extends RoleEntity>>>() {}).to(JpaUserDao.class);
+		bind(edu.emory.cci.aiw.cvrg.eureka.services.dao.UserDao.class).to(JpaUserDao.class);
 		bind(LocalUserDao.class).to(JpaLocalUserDao.class);
 		bind(RoleDao.class).to(JpaRoleDao.class);
 		bind(PhenotypeEntityDao.class).to(JpaPhenotypeEntityDao.class);

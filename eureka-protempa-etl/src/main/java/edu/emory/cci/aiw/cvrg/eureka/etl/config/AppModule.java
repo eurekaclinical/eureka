@@ -40,11 +40,12 @@ package edu.emory.cci.aiw.cvrg.eureka.etl.config;
  * #L%
  */
 
-import com.google.inject.AbstractModule;
 
+import com.google.inject.AbstractModule;
+import com.google.inject.TypeLiteral;
+import edu.emory.cci.aiw.cvrg.eureka.common.dao.AuthorizedUserDao;
 import edu.emory.cci.aiw.cvrg.eureka.etl.dao.DestinationDao;
 import edu.emory.cci.aiw.cvrg.eureka.etl.dao.EtlGroupDao;
-import edu.emory.cci.aiw.cvrg.eureka.common.dao.AuthorizedUserDao;
 import edu.emory.cci.aiw.cvrg.eureka.etl.dao.JobDao;
 import edu.emory.cci.aiw.cvrg.eureka.etl.dao.JobEventDao;
 import edu.emory.cci.aiw.cvrg.eureka.etl.dao.JpaDestinationDao;
@@ -58,16 +59,24 @@ import edu.emory.cci.aiw.cvrg.eureka.etl.dao.SourceConfigDao;
 import edu.emory.cci.aiw.cvrg.eureka.etl.job.Task;
 import edu.emory.cci.aiw.cvrg.eureka.etl.job.TaskProvider;
 import edu.emory.cci.aiw.cvrg.eureka.etl.dao.DeidPerPatientParamsDao;
+import org.eurekaclinical.standardapis.dao.UserDao;
+import org.eurekaclinical.standardapis.entity.RoleEntity;
+import org.eurekaclinical.standardapis.entity.UserEntity;
 
 /**
  * @author hrathod
  */
 public class AppModule extends AbstractModule {
+	
+	AppModule() {
+	}
+	
 	@Override
 	protected void configure() {
+		bind(new TypeLiteral<UserDao<? extends UserEntity<? extends RoleEntity>>>() {}).to(JpaEtlUserDao.class);
+		bind(AuthorizedUserDao.class).to(JpaEtlUserDao.class);
 		bind(JobDao.class).to(JpaJobDao.class);
 		bind(JobEventDao.class).to(JpaJobEventDao.class);
-		bind(AuthorizedUserDao.class).to(JpaEtlUserDao.class);
 		bind(EtlGroupDao.class).to(JpaEtlGroupDao.class);
 		bind(DestinationDao.class).to(JpaDestinationDao.class);
 		bind(DeidPerPatientParamsDao.class).to(JpaDeidPerPatientParamsDao.class);

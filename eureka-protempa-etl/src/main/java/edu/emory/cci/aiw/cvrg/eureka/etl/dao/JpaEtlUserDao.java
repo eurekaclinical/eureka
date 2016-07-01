@@ -1,8 +1,10 @@
-/*
+package edu.emory.cci.aiw.cvrg.eureka.etl.dao;
+
+/*-
  * #%L
- * Eureka Services
+ * Eureka Protempa ETL
  * %%
- * Copyright (C) 2012 - 2013 Emory University
+ * Copyright (C) 2012 - 2016 Emory University
  * %%
  * This program is dual licensed under the Apache 2 and GPLv3 licenses.
  * 
@@ -37,7 +39,6 @@
  * <http://www.gnu.org/licenses/gpl-3.0.html>.
  * #L%
  */
-package edu.emory.cci.aiw.cvrg.eureka.etl.dao;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.dao.AuthorizedUserDao;
 import java.text.MessageFormat;
@@ -51,7 +52,6 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Root;
 
-import org.jasig.cas.client.authentication.AttributePrincipal;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -61,7 +61,7 @@ import com.google.inject.Provider;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.AuthorizedUserEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.AuthorizedUserEntity_;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.UserEntity_;
-import org.eurekaclinical.standardapis.dao.GenericDao;
+import org.eurekaclinical.standardapis.dao.JpaUserDao;
 
 /**
  * An implementation of the {@link AuthorizedUserDao} interface, backed by JPA entities
@@ -69,7 +69,7 @@ import org.eurekaclinical.standardapis.dao.GenericDao;
  *
  * @author Andrew Post
  */
-public class JpaEtlUserDao extends GenericDao<AuthorizedUserEntity, Long> implements AuthorizedUserDao {
+public class JpaEtlUserDao extends JpaUserDao<AuthorizedUserEntity> implements AuthorizedUserDao {
 	/**
 	 * The class level logger.
 	 */
@@ -87,11 +87,6 @@ public class JpaEtlUserDao extends GenericDao<AuthorizedUserEntity, Long> implem
 		super(AuthorizedUserEntity.class, inEMProvider);
 	}
 
-	@Override
-	public AuthorizedUserEntity getByAttributePrincipal(AttributePrincipal principal) {
-		return getByUsername(principal.getName());
-	}
-	
 	@Override
 	public AuthorizedUserEntity getByUsername(String username) {
 		EntityManager entityManager = getEntityManager();

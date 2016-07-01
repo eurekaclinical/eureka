@@ -46,9 +46,6 @@ import com.google.inject.Provider;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.UserEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.UserEntity_;
-import javax.servlet.http.HttpServletRequest;
-import org.eurekaclinical.standardapis.dao.GenericDao;
-import org.jasig.cas.client.authentication.AttributePrincipal;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -58,7 +55,7 @@ import org.slf4j.LoggerFactory;
  *
  * @author hrathod
  */
-public class JpaUserDao extends GenericDao<UserEntity, Long> implements UserDao {
+public class JpaUserDao extends org.eurekaclinical.standardapis.dao.JpaUserDao<UserEntity> implements UserDao {
 	/**
 	 * The class level logger.
 	 */
@@ -74,19 +71,6 @@ public class JpaUserDao extends GenericDao<UserEntity, Long> implements UserDao 
 	@Inject
 	public JpaUserDao(Provider<EntityManager> inEMProvider) {
 		super(UserEntity.class, inEMProvider);
-	}
-	
-	@Override
-	public UserEntity getByHttpServletRequest(HttpServletRequest request) {
-		AttributePrincipal principal = 
-				(AttributePrincipal) request.getUserPrincipal();
-		return getByAttributePrincipal(principal);
-	}
-
-	@Override
-	public UserEntity getByAttributePrincipal(AttributePrincipal principal) {
-		String name = principal.getName();
-		return getByUsername(name);
 	}
 	
 	@Override
