@@ -15,10 +15,6 @@
 		<version>2.0-Alpha-27-SNAPSHOT</version>
 	</parent>
 	
-	<properties>
-		<eurekaclinical-common-version>1.0-Alpha-2</eurekaclinical-common-version>
-	</properties>
-
 	<build>
 		<finalName>eureka-common</finalName>
 		<plugins>
