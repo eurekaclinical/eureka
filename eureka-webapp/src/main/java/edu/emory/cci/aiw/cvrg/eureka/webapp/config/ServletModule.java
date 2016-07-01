@@ -45,10 +45,10 @@ import edu.emory.cci.aiw.cvrg.eureka.servlet.cohort.CohortHomeServlet;
 import edu.emory.cci.aiw.cvrg.eureka.servlet.cohort.DeleteCohortServlet;
 import edu.emory.cci.aiw.cvrg.eureka.servlet.cohort.EditCohortServlet;
 import edu.emory.cci.aiw.cvrg.eureka.servlet.cohort.SaveCohortServlet;
-import edu.emory.cci.aiw.cvrg.eureka.servlet.filter.HaveUserRecordFilter;
+import edu.emory.cci.aiw.cvrg.eureka.servlet.filter.UserFilter;
 import edu.emory.cci.aiw.cvrg.eureka.servlet.filter.MessagesFilter;
 import edu.emory.cci.aiw.cvrg.eureka.servlet.filter.PasswordExpiredFilter;
-import edu.emory.cci.aiw.cvrg.eureka.servlet.filter.UserInfoFilter;
+import edu.emory.cci.aiw.cvrg.eureka.servlet.filter.RolesFilter;
 import edu.emory.cci.aiw.cvrg.eureka.servlet.oauth.GitHubRegistrationOAuthCallbackServlet;
 import edu.emory.cci.aiw.cvrg.eureka.servlet.oauth.GlobusRegistrationOAuthCallbackServlet;
 import edu.emory.cci.aiw.cvrg.eureka.servlet.oauth.GoogleRegistrationOAuthCallbackServlet;
@@ -70,6 +70,7 @@ class ServletModule extends AbstractServletModule {
 			.getLogger(ServletModule.class);
 	private static final String CONTAINER_PATH = "/site/*";
 	private static final String CONTAINER_PROTECTED_PATH = "/protected/*";
+	private static final String FILTER_PATH = "^/(?!(assets|bower_components)).*";
 	private static final String PASSWORD_EXPIRED_REDIRECT_URL = "/protected/password_expiration.jsp";
 	private static final String PASSWORD_SAVE_PATH = "/protected/user_acct";
 	private static final String LOGOUT_PATH = "/logout";
@@ -84,17 +85,16 @@ class ServletModule extends AbstractServletModule {
 
 	private void setupMessageFilter() {
 		bind(MessagesFilter.class).in(Singleton.class);
-		filterRegex("^/(?!assets).*").through(MessagesFilter.class);
+		filterRegex(FILTER_PATH).through(MessagesFilter.class);
 	}
 
-	private void setupHaveUserRecordFilter() {
-		bind(HaveUserRecordFilter.class).in(Singleton.class);
-		filterRegex("^/(?!assets).*").through(HaveUserRecordFilter.class);
+	private void setupUserFilter() {
+		bind(UserFilter.class).in(Singleton.class);
+		filterRegex(FILTER_PATH).through(UserFilter.class);
 	}
-
-	private void setupUserInfoFilter() {
-		bind(UserInfoFilter.class).in(Singleton.class);
-		filterRegex("^/(?!assets).*").through(UserInfoFilter.class);
+	
+	private void setupRolesFilter() {
+		filterRegex(FILTER_PATH).through(RolesFilter.class);
 	}
 
 	private void setupPasswordExpiredFilter() {
@@ -112,8 +112,8 @@ class ServletModule extends AbstractServletModule {
 	@Override
 	protected void setupFilters() {
 		this.setupMessageFilter();
-		this.setupHaveUserRecordFilter();
-		this.setupUserInfoFilter();
+		this.setupUserFilter();
+		this.setupRolesFilter();
 		this.setupPasswordExpiredFilter();
 	}
 

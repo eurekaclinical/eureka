@@ -52,7 +52,6 @@ import com.google.inject.persist.Transactional;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.Role;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.RoleDao;
-import javax.annotation.security.RolesAllowed;
 
 /**
  * A RESTful end-point for working with {@link Role} objects.
@@ -62,7 +61,6 @@ import javax.annotation.security.RolesAllowed;
  */
 @Transactional
 @Path("/protected/roles")
-@RolesAllowed({"admin"})
 public class RoleResource {
 	/**
 	 * The data access object used to work with Role objects in the data store.
@@ -91,6 +89,19 @@ public class RoleResource {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Role getRole(@PathParam("id") Long inId) {
 		return this.roleDao.retrieve(inId);
+	}
+	
+	/**
+	 * Get a role by the role's name.
+	 *
+	 * @param inName The name of the role to fetch.
+	 * @return The role with the given name.
+	 */
+	@Path("/byname/{name}")
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	public Role getRole(@PathParam("name") String inName) {
+		return this.roleDao.getRoleByName(inName);
 	}
 
 	/**

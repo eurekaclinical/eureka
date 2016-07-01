@@ -55,6 +55,7 @@ import com.sun.jersey.api.client.ClientResponse.Status;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.User;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ClientException;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ServicesClient;
+import edu.emory.cci.aiw.cvrg.eureka.webapp.config.RequestAttributes;
 import edu.emory.cci.aiw.cvrg.eureka.webapp.config.WebappProperties;
 import javax.servlet.http.HttpSession;
 import org.apache.commons.lang3.StringUtils;
@@ -64,7 +65,7 @@ import org.apache.commons.lang3.StringUtils;
  * @author Andrew Post
  */
 @Singleton
-public class HaveUserRecordFilter implements Filter {
+public class UserFilter implements Filter {
 
 	private static final Logger LOGGER
 			= LoggerFactory.getLogger(MessagesFilter.class);
@@ -73,7 +74,7 @@ public class HaveUserRecordFilter implements Filter {
 	private final WebappProperties properties;
 
 	@Inject
-	public HaveUserRecordFilter(ServicesClient inServicesClient, WebappProperties inProperties) {
+	public UserFilter(ServicesClient inServicesClient, WebappProperties inProperties) {
 		this.servicesClient = inServicesClient;
 		this.properties = inProperties;
 	}
@@ -89,38 +90,52 @@ public class HaveUserRecordFilter implements Filter {
 		String remoteUser = servletRequest.getRemoteUser();
 		if (!StringUtils.isEmpty(remoteUser)) {
 			try {
-				User user = this.servicesClient.getMe();
-				if (!user.isActive()) {
-					HttpSession session = servletRequest.getSession(false);
-					if (session != null) {
+				HttpSession session = servletRequest.getSession(false);
+				if (session != null) {
+					User user = this.servicesClient.getMe();
+					if (!user.isActive()) {
 						session.invalidate();
+						sendForbiddenError(servletResponse, servletRequest, true);
+					} else {
+						inRequest.setAttribute(RequestAttributes.USER, user);
+						inRequest.setAttribute(RequestAttributes.USER_IS_ACTIVATED, user.isActive());
+						inFilterChain.doFilter(inRequest, inResponse);
 					}
-					sendForbiddenError(servletResponse, servletRequest, true);
 				} else {
-					inRequest.setAttribute("user", user);
-					inFilterChain.doFilter(inRequest, inResponse);
+					goHome(servletRequest, servletResponse);
 				}
 			} catch (ClientException ex) {
-				if (Status.FORBIDDEN.equals(ex.getResponseStatus())) {
-					HttpSession session = servletRequest.getSession(false);
-					if (session != null) {
-						session.invalidate();
+				if (null != ex.getResponseStatus()) {
+					switch (ex.getResponseStatus()) {
+						case FORBIDDEN: {
+							HttpSession session = servletRequest.getSession(false);
+							if (session != null) {
+								session.invalidate();
+							}
+							sendForbiddenError(servletResponse, servletRequest, false);
+							break;
+						}
+						case UNAUTHORIZED: {
+							HttpSession session = servletRequest.getSession(false);
+							if (session != null) {
+								session.invalidate();
+							}
+							goHome(servletRequest, servletResponse);
+							break;
+						}
+						default:
+							throw new ServletException("Error getting user "
+									+ servletRequest.getRemoteUser(), ex);
 					}
-					sendForbiddenError(servletResponse, servletRequest, false);
-				} else if (Status.UNAUTHORIZED.equals(ex.getResponseStatus())) {
-					HttpSession session = servletRequest.getSession(false);
-					if (session != null) {
-						session.invalidate();
-					}
-					servletResponse.sendRedirect(servletRequest.getContextPath() + "/logout?goHome=true");
-				} else {
-					throw new ServletException("Error getting user "
-							+ servletRequest.getRemoteUser(), ex);
 				}
 			}
 		} else {
 			inFilterChain.doFilter(inRequest, inResponse);
 		}
+	}
+
+	private void goHome(HttpServletRequest inRequest, HttpServletResponse inResponse) throws IOException {
+		inResponse.sendRedirect(inRequest.getContextPath() + "/logout?goHome=true");
 	}
 
 	private void sendForbiddenError(HttpServletResponse servletResponse, HttpServletRequest servletRequest, boolean created) throws IOException {
@@ -139,5 +154,5 @@ public class HaveUserRecordFilter implements Filter {
 	@Override
 	public void destroy() {
 	}
-	
+
 }

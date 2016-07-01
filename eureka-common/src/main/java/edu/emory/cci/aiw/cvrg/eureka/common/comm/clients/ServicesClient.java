@@ -165,6 +165,10 @@ public class ServicesClient extends EurekaClient {
 		final String path = "/api/protected/roles/" + inRoleId;
 		return doGet(path, Role.class);
 	}
+	
+	public Role getRoleByName(String name) throws ClientException {
+		return doGet("/api/protected/roles/byname/" + name, Role.class);
+	}
 
 	public URI submitJob(JobSpec inUpload) throws ClientException {
 		final String path = "/api/protected/jobs";

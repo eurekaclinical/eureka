@@ -54,15 +54,11 @@ import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.LocalUser;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.User;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ClientException;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ServicesClient;
-import edu.emory.cci.aiw.cvrg.eureka.webapp.authentication.WebappAuthenticationSupport;
-import java.util.logging.Level;
+import edu.emory.cci.aiw.cvrg.eureka.webapp.config.RequestAttributes;
 
 /**
  * @author hrathod
@@ -71,15 +67,10 @@ import java.util.logging.Level;
 public class PasswordExpiredFilter implements Filter {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(PasswordExpiredFilter.class);
-	private final ServicesClient servicesClient;
-	private final WebappAuthenticationSupport authenticationSupport;
 	private String redirectUrl;
 	private String saveUrl;
 
-	@Inject
-	public PasswordExpiredFilter(ServicesClient inClient) {
-		this.servicesClient = inClient;
-		this.authenticationSupport = new WebappAuthenticationSupport(this.servicesClient);
+	public PasswordExpiredFilter() {
 	}
 
 	@Override
@@ -99,42 +90,36 @@ public class PasswordExpiredFilter implements Filter {
 	@Override
 	public void doFilter(ServletRequest request, ServletResponse response,
 			FilterChain chain) throws IOException, ServletException {
-		if (request instanceof HttpServletRequest && response instanceof HttpServletResponse) {
-			HttpServletRequest servletRequest = (HttpServletRequest) request;
-			HttpServletResponse servletResponse = (HttpServletResponse) response;
-			String name = servletRequest.getRemoteUser();
-			LOGGER.debug("username: {}", name);
-			User user = (User) request.getAttribute("user");
-			if (!(user instanceof LocalUser)) {
-				chain.doFilter(request, response);
-			} else {
-				Date now = new Date();
-				Date expiration = ((LocalUser) user).getPasswordExpiration();
-				LOGGER.debug("expiration date: {}", expiration);
-				if (expiration != null && now.after(expiration)) {
-					String targetUrl = servletRequest.getRequestURI();
-					String fullRedirectUrl = servletRequest.getContextPath()
-							+ this.redirectUrl;
-					String fullSaveUrl = servletRequest.getContextPath()
-							+ this.saveUrl;
-					LOGGER.debug("fullRedirectUrl: {}", fullRedirectUrl);
-					LOGGER.debug("fullSaveUrl: {}", fullSaveUrl);
-					LOGGER.debug("targetUrl: {}", targetUrl);
-					if (!targetUrl.equals(fullRedirectUrl) && !targetUrl
-							.equals(fullSaveUrl)) {
-						String encodeRedirectURL = servletResponse.encodeRedirectURL(fullRedirectUrl 
- 								+ "?firstLogin=" + (user.getLastLogin() == null) + "&redirectURL=" + targetUrl);
-						LOGGER.debug("encodeRedirectURL: {}", encodeRedirectURL);
-						servletResponse.sendRedirect(encodeRedirectURL);
-                                        } else {
-						chain.doFilter(request, response);
-					}
+		HttpServletRequest servletRequest = (HttpServletRequest) request;
+		HttpServletResponse servletResponse = (HttpServletResponse) response;
+		User user = (User) request.getAttribute(RequestAttributes.USER);
+		if (!(user instanceof LocalUser)) {
+			chain.doFilter(request, response);
+		} else {
+			Date now = new Date();
+			Date expiration = ((LocalUser) user).getPasswordExpiration();
+			LOGGER.debug("expiration date: {}", expiration);
+			if (expiration != null && now.after(expiration)) {
+				String targetUrl = servletRequest.getRequestURI();
+				String fullRedirectUrl = servletRequest.getContextPath()
+						+ this.redirectUrl;
+				String fullSaveUrl = servletRequest.getContextPath()
+						+ this.saveUrl;
+				LOGGER.debug("fullRedirectUrl: {}", fullRedirectUrl);
+				LOGGER.debug("fullSaveUrl: {}", fullSaveUrl);
+				LOGGER.debug("targetUrl: {}", targetUrl);
+				if (!targetUrl.equals(fullRedirectUrl) && !targetUrl
+						.equals(fullSaveUrl)) {
+					String encodeRedirectURL = servletResponse.encodeRedirectURL(fullRedirectUrl
+							+ "?firstLogin=" + (user.getLastLogin() == null) + "&redirectURL=" + targetUrl);
+					LOGGER.debug("encodeRedirectURL: {}", encodeRedirectURL);
+					servletResponse.sendRedirect(encodeRedirectURL);
 				} else {
 					chain.doFilter(request, response);
 				}
+			} else {
+				chain.doFilter(request, response);
 			}
-		} else {
-			chain.doFilter(request, response);
 		}
 	}
 
