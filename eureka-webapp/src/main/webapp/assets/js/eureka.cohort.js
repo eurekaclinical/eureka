@@ -446,8 +446,8 @@ window.eureka.editor = new function () {
                 user = data;
             },
             error: function (data, statusCode, errorThrown) {
-                var content = 'Error while saving ' + postData.displayName + '. ' + data.responseText + '. Status Code: ' + statusCode;
-                $('#errorModal').find('#errorContent').html(content);
+                var content = 'Error while saving ' + postData.displayName + '. ' + data.responseText + '. Status Code: ' + data.status;
+                $('#errorModal').find('#errorContent').html(eureka.util.getUserMessage(data.status,content));
                 $('#errorModal').modal('show');
                 if (errorThrown != null) {
                     console.log(errorThrown);
@@ -495,8 +495,8 @@ window.eureka.editor = new function () {
                     window.location.href = 'cohorthome'
                 },
                 error: function (postData, statusCode, errorThrown) {
-                    var content = 'Error while saving ' + postData.displayName + '. ' + postData.responseText + '. Status Code: ' + statusCode;
-                    $('#errorModal').find('#errorContent').html(content);
+                    var content = 'Error while saving ' + postData.displayName + '. ' + postData.responseText + '. Status Code: ' + postData.status;
+                    $('#errorModal').find('#errorContent').html(eureka.util.getUserMessage(postData.status,content));
                     $('#errorModal').modal('show');
                     if (errorThrown != null) {
                         console.log(errorThrown);
