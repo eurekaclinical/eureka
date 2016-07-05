@@ -184,6 +184,7 @@
 	Copyright &copy; ${initParam['inception-year']}&ndash;${initParam['current-year']} ${initParam['eureka-organization-name']}. All rights reserved.
 </div>
 <c:if test="${userIsActivated}">
+	<script language="JavaScript" src="${pageContext.request.contextPath}/assets/js/eureka.util${initParam['eureka-build-timestamp']}.js"></script>
 	<script src="${pageContext.request.contextPath}/assets/js/eureka.idletimeout${initParam['eureka-build-timestamp']}.js" type="text/javascript"></script>
 	<script type="text/javascript">
 		$(document).ready(function (){
