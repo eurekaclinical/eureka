@@ -211,13 +211,13 @@
         		</div>
         	</div>
         </div>
-		<script language="JavaScript"
+		<script type="text/javascript"
 				src="${pageContext.request.contextPath}/assets/js/jquery.jstree.js"></script>
-		<script language="JavaScript"
+		<script type="text/javascript"
 				src="${pageContext.request.contextPath}/assets/js/eureka.tree-phenotype${initParam['eureka-build-timestamp']}.js"></script>
-		<script language="JavaScript"
+		<script type="text/javascript"
 				src="${pageContext.request.contextPath}/assets/js/eureka.editor${initParam['eureka-build-timestamp']}.js"></script>
-		<script language="JavaScript">
+		<script type="text/javascript">
 			eureka.editor.setup('CATEGORIZATION', '${propositionType == 'CATEGORIZATION' ? proposition.categoricalType : ''}',
 					${proposition != null ? proposition.id : 'null'},
 					'#systemTree', '#userTree', '#definitionContainer', '#savePropositionButton', 'span.delete-icon',

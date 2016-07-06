@@ -184,7 +184,7 @@
 				</div>
 			</div>
 		</div>
-		<script language="JavaScript">
+		<script type="text/javascript">
 
 			$('span.delete-icon').on('click', function () {
 				var $tr = $(this).closest('tr');
