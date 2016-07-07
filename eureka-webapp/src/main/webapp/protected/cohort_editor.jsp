@@ -229,13 +229,13 @@
         		</div>
         	</div>
         </div>
-		<script language="JavaScript"
+		<script type="text/javascript"
 				src="${pageContext.request.contextPath}/assets/js/jquery.jstree.js"></script>
-		<script language="JavaScript"
+		<script type="text/javascript"
 				src="${pageContext.request.contextPath}/assets/js/eureka.tree${initParam['eureka-build-timestamp']}.js"></script>
-		<script language="JavaScript"
+		<script type="text/javascript"
 				src="${pageContext.request.contextPath}/assets/js/eureka.cohort${initParam['eureka-build-timestamp']}.js"></script>
-		<script language="JavaScript">
+		<script type="text/javascript">
 			eureka.editor.setup('','', ${destId != null ? destId : 'null'},
 					'#systemTree', '#userTree', '#definitionContainer', '#savePhenotypeButton', 'span.delete-icon',
 					'ul.sortable', '${pageContext.request.contextPath}/assets/css/jstree-themes/default/style.css', '#searchModal',
