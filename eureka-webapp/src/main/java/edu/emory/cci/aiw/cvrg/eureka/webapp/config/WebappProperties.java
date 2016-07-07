@@ -41,6 +41,8 @@ package edu.emory.cci.aiw.cvrg.eureka.webapp.config;
  */
 
 import edu.emory.cci.aiw.cvrg.eureka.common.props.AbstractProperties;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  *

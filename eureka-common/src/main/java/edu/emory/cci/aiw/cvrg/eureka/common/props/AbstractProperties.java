@@ -76,13 +76,12 @@ public abstract class AbstractProperties extends EurekaClinicalProperties {
 		super("/etc/eureka");
 	}
 
-
 	/**
-	 * Get the base URL for the application front-end for external users. Always
-	 * ends with a slash ("/").
-	 *
-	 * @return The base URL.
-	 */
+     * Get the base URL for the application for external users. Always
+     * ends with a slash ("/").
+     *
+     * @return The base URL.
+     */
 	public String getApplicationUrl() {
 		String result = this.getValue("eureka.webapp.url");
 		if (result.endsWith("/")) {

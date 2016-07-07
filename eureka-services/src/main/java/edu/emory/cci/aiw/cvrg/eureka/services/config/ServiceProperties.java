@@ -52,6 +52,8 @@ import edu.emory.cci.aiw.cvrg.eureka.common.comm.AppPropertiesRegistration;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.props.AbstractProperties;
 import edu.emory.cci.aiw.cvrg.eureka.common.props.PublicUrlGenerator;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Looks up the application properties file (application.properties) and
@@ -334,4 +336,5 @@ public class ServiceProperties extends AbstractProperties {
 	public String getProxyCallbackServer() {
 		return this.getValue("eureka.services.callbackserver");
 	}
+
 }
