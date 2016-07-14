@@ -50,20 +50,20 @@
                     <ul class="nav navbar-nav navbar-right menu-text" ng-show="userVerficationPerformed == false ">
                         <li>
                             <a class="btn btn-lg">                            
-                                <span class="fa fa-refresh fa-spin"></span>
+                                <i class="fa fa-refresh fa-spin"></i>
                                 Loading...
                             </a>
                         </li>
                     </ul>
                     <ul class="nav navbar-nav navbar-right menu-text" ng-show="userVerficationPerformed == true && user != null">
                         <li>
-                            <a href="protected/cohorthome" class="btn btn-lg">
+                            <a href="protected/cohorthome">
                                 <i class="fa fa-pencil"></i>
                                 Cohorts
                             </a>
                         </li>
                         <li>
-                            <a href="protected/editorhome" class="btn btn-lg">
+                            <a href="protected/editorhome">
                                 <i class="fa fa-pencil"></i>
                                 Phenotypes
                             </a>
@@ -76,7 +76,7 @@
                         </li>
                                 
                         <li>
-                            <a ui-sref="help" class="btn btn-lg">
+                            <a ui-sref="help">
                                 <i class="fa fa-question-circle"></i>
                                 Help
                             </a>
@@ -85,26 +85,26 @@
                         <li>
                             <a class="dropdown-toggle" data-toggle="dropdown"
                                role="button" aria-expanded="false">
-                                <span class="glyphicon glyphicon-user"></span>
+                                <i class="fa fa-user"></i>
                                 {{user.getDisplayName()}}
                                 <span class="caret"></span>
                             </a>
                             <ul class="dropdown-menu" role="menu">
                                 <li>
                                     <a href="protected/user_acct">
-                                        <span class="glyphicon glyphicon-user"></span>
+                                        <i class="fa fa-user"></i>
                                         Account Settings
                                     </a>
                                 </li>
                                 <li ng-if="user.hasRole('admin')">
                                     <a href="protected/admin?action=list">
-                                        <span class="glyphicon glyphicon-wrench"></span>
+                                        <i class="fa fa-wrench"></i>
                                         Administration
                                     </a>
                                 </li>
                                 <li>
                                     <a href="logout" class="idletimeout-logout">
-                                        <span class="glyphicon glyphicon-log-out"></span>
+                                        <i class="fa fa-sign-out"></i>
                                         Logout
                                     </a>
                                 </li>
@@ -113,14 +113,14 @@
                     </ul>
                     <ul class="nav navbar-nav navbar-right menu-text" ng-show="userVerficationPerformed ==true && user == null">
                         <li>
-                            <a ui-sref="help" class="btn btn-lg">
-                                <span class="glyphicon glyphicon-question-sign"></span>
+                            <a ui-sref="help">
+                                <i class="fa fa-question-circle"></i>
                                 Help
                             </a>
                         </li>
                         <li>
                             <a href="protected/login">
-                                <span class="glyphicon glyphicon-log-in"></span>
+                                <i class="fa fa-sign-in"></i>
                                 Login
                             </a>
                         </li>
