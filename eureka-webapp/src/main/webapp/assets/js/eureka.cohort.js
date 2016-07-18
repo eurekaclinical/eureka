@@ -556,17 +556,21 @@ window.eureka.editor = new function () {
     };
 
     self.validateCohort = function (elem) {
-        var name = $('input#patCohortDefName').val()
-        return name != null && name.length > 0;
-    }
-
-    self.save = function (containerElem) {
-        if (self.validateCohort(containerElem)) {
-            self.saveCohort(containerElem);
-        } else {
+        var name = $('input#patCohortDefName').val();
+        var membersCount = $(elem).find('ul.sortable').find('li').length;
+        if(name == null || name.length == 0){
             var content = 'Please ensure that the cohort name is filled out.';
             $('#errorModal').find('#errorContent').html(content);
             $('#errorModal').modal('show');
+        }else if(membersCount==0){
+            var content = 'Please ensure that the cohort members are filled out.';
+            $('#errorModal').find('#errorContent').html(content);
+            $('#errorModal').modal('show');
+        }else return true;
+    }
+    self.save = function (containerElem) {
+        if (self.validateCohort(containerElem)) {
+            self.saveCohort(containerElem);
         }
     };
 
