@@ -36,7 +36,7 @@
 	<!-- define the package versions for various project we will use -->
 	<properties>
 		<!-- Populates links to the website from Eureka. -->
-		<aiw.site.url>http://eurekaclinical.org</aiw.site.url>
+		<aiw.site.url>http://www.eurekaclinical.org</aiw.site.url>
 		<eureka.support.email>help@eurekaclinical.org</eureka.support.email>
 		<eureka.build.timestamp>${maven.build.timestamp}</eureka.build.timestamp>
 		<eureka.dev.site.url>${project.url}</eureka.dev.site.url>
