@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.eurekaclinical</groupId>
 	<artifactId>eureka</artifactId>
-	<version>2.0-Alpha-30-SNAPSHOT</version>
+	<version>2.0-Alpha-33-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<name>Eureka! Clinical Analytics</name>
 	<description>Eureka! Clinical Analytics is a web application that
@@ -36,7 +36,7 @@
 	<!-- define the package versions for various project we will use -->
 	<properties>
 		<!-- Populates links to the website from Eureka. -->
-		<aiw.site.url>http://eurekaclinical.org</aiw.site.url>
+		<aiw.site.url>http://www.eurekaclinical.org</aiw.site.url>
 		<eureka.support.email>help@eurekaclinical.org</eureka.support.email>
 		<eureka.build.timestamp>${maven.build.timestamp}</eureka.build.timestamp>
 		<eureka.dev.site.url>${project.url}</eureka.dev.site.url>
@@ -46,8 +46,8 @@
 		<jsp-api-version>2.0</jsp-api-version>
 		<jaxb-version>2.2.7</jaxb-version>
 		<commons-fileupload-version>1.3</commons-fileupload-version>
-		<protempa-version>3.0-Alpha-13</protempa-version>
-		<aiw-i2b2-etl-version>2.0-Alpha-27</aiw-i2b2-etl-version>
+		<protempa-version>3.0-Alpha-14</protempa-version>
+		<aiw-i2b2-etl-version>2.0-Alpha-29</aiw-i2b2-etl-version>
 		<aiw-neo4j-etl-version>1.0-Alpha-3</aiw-neo4j-etl-version>
 		<freemarker-version>2.3.20</freemarker-version>
 		<ehcache-version>2.6.0</ehcache-version>
@@ -65,7 +65,7 @@
 		
 		<tomcat.httpsPort>8443</tomcat.httpsPort>
 		
-		<eurekaclinical-common-version>1.0-Alpha-3</eurekaclinical-common-version>
+		<eurekaclinical-common-version>1.0-Alpha-4</eurekaclinical-common-version>
 	</properties>
 
 	<licenses>

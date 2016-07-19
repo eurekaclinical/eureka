@@ -425,17 +425,17 @@
 				</div>
 			</div>
 		</div>
-		<script language="JavaScript"
+		<script type="text/javascript"
 		src="${pageContext.request.contextPath}/assets/js/jquery.jstree.js"></script>
-		<script language="JavaScript"
+		<script type="text/javascript"
 		src="${pageContext.request.contextPath}/assets/js/eureka.tree${initParam['eureka-build-timestamp']}.js"></script>
-		<script language="JavaScript"
+		<script type="text/javascript"
 		src="${pageContext.request.contextPath}/assets/js/eureka.job${initParam['eureka-build-timestamp']}.js"></script>
-		<script language="JavaScript"
+		<script type="text/javascript"
 		src="${pageContext.request.contextPath}/assets/js/moment.min.js"></script>
-		<script language="JavaScript"
+		<script type="text/javascript"
 		src="${pageContext.request.contextPath}/assets/js/bootstrap-datetimepicker.min.js"></script>
-		<script language="JavaScript">
+		<script type="text/javascript">
 			eureka.job.setup('#systemTree', '#userTree', '${pageContext.request.contextPath}/assets/css/jstree-themes/default/style.css',
 					'form#uploadForm', '#earliestDate', '#latestDate', '${pageContext.request.contextPath}/assets/css/bootstrap-datetimepicker.min.css',
 					'#jobStatus', '#searchModal', '#searchValidationModal', '#searchNoResultsModal', '#searchUpdateDivJob');

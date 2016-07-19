@@ -49,7 +49,7 @@
 		</div>
 		<div id="loading"><p>Please wait while treemap is loading...</p></div>
 		<div id="infovis" style="width: 900px; height: 500px;"></div>
-		<!--[if IE]><script language="javascript" type="text/javascript" src="${pageContext.request.contextPath}/assets/infoviz-2.0.1/Extras/excanvas.js"></script><![endif]-->
+		<!--[if IE]><script type="text/javascript" src="${pageContext.request.contextPath}/assets/infoviz-2.0.1/Extras/excanvas.js"></script><![endif]-->
 		<script type="text/javascript" src="${pageContext.request.contextPath}/assets/infoviz-2.0.1/jit-yc.js"></script>
 		<script type="text/javascript" src="${pageContext.request.contextPath}/assets/js/eureka.stats${initParam['eureka-build-timestamp']}.js"></script>
 		<script type="text/javascript">init(${param['jobId']});</script>

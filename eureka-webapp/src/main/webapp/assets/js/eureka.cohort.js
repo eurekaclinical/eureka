@@ -446,8 +446,8 @@ window.eureka.editor = new function () {
                 user = data;
             },
             error: function (data, statusCode, errorThrown) {
-                var content = 'Error while saving ' + postData.displayName + '. ' + data.responseText + '. Status Code: ' + statusCode;
-                $('#errorModal').find('#errorContent').html(content);
+                var content = 'Error while saving ' + postData.displayName + '. ' + data.responseText + '. Status Code: ' + data.status;
+                $('#errorModal').find('#errorContent').html(eureka.util.getUserMessage(data.status,content));
                 $('#errorModal').modal('show');
                 if (errorThrown != null) {
                     console.log(errorThrown);
@@ -495,8 +495,8 @@ window.eureka.editor = new function () {
                     window.location.href = 'cohorthome'
                 },
                 error: function (postData, statusCode, errorThrown) {
-                    var content = 'Error while saving ' + postData.displayName + '. ' + postData.responseText + '. Status Code: ' + statusCode;
-                    $('#errorModal').find('#errorContent').html(content);
+                    var content = 'Error while saving ' + postData.displayName + '. ' + postData.responseText + '. Status Code: ' + postData.status;
+                    $('#errorModal').find('#errorContent').html(eureka.util.getUserMessage(postData.status,content));
                     $('#errorModal').modal('show');
                     if (errorThrown != null) {
                         console.log(errorThrown);
@@ -556,17 +556,21 @@ window.eureka.editor = new function () {
     };
 
     self.validateCohort = function (elem) {
-        var name = $('input#patCohortDefName').val()
-        return name != null && name.length > 0;
-    }
-
-    self.save = function (containerElem) {
-        if (self.validateCohort(containerElem)) {
-            self.saveCohort(containerElem);
-        } else {
+        var name = $('input#patCohortDefName').val();
+        var membersCount = $(elem).find('ul.sortable').find('li').length;
+        if(name == null || name.length == 0){
             var content = 'Please ensure that the cohort name is filled out.';
             $('#errorModal').find('#errorContent').html(content);
             $('#errorModal').modal('show');
+        }else if(membersCount==0){
+            var content = 'Please ensure that the cohort members are filled out.';
+            $('#errorModal').find('#errorContent').html(content);
+            $('#errorModal').modal('show');
+        }else return true;
+    }
+    self.save = function (containerElem) {
+        if (self.validateCohort(containerElem)) {
+            self.saveCohort(containerElem);
         }
     };
 

@@ -39,7 +39,9 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.services.config;
 
-import org.eurekaclinical.common.config.AbstractJerseyServletModuleWithPersist;
+import java.util.HashMap;
+import java.util.Map;
+import org.eurekaclinical.common.config.AbstractAuthorizingJerseyServletModuleWithPersist;
 
 
 /**
@@ -48,12 +50,26 @@ import org.eurekaclinical.common.config.AbstractJerseyServletModuleWithPersist;
  * @author hrathod
  * 
  */
-class ServletModule extends AbstractJerseyServletModuleWithPersist {
+class ServletModule extends AbstractAuthorizingJerseyServletModuleWithPersist {
 
 	private static final String PACKAGE_NAMES = "edu.emory.cci.aiw.cvrg.eureka.services.resource;edu.emory.cci.aiw.cvrg.eureka.common.json";
+	private final ServiceProperties properties;
 
 	public ServletModule(ServiceProperties inProperties) {
 		super(inProperties, PACKAGE_NAMES);
+		this.properties = inProperties;
+	}
+	
+	@Override
+	public Map<String, String> getCasValidationFilterInitParams() {
+		Map<String, String> params = new HashMap<>();
+        params.put("casServerUrlPrefix", this.properties.getCasUrl());
+        params.put("serverName", this.properties.getProxyCallbackServer());
+		params.put("redirectAfterValidation", "false");
+        params.put("acceptAnyProxy", "true");
+		params.put("proxyCallbackUrl", getCasProxyCallbackUrl());
+        params.put("proxyReceptorUrl", getCasProxyCallbackPath());
+		return params;
 	}
 
 }

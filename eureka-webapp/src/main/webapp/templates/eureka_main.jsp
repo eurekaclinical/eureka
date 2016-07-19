@@ -97,26 +97,26 @@
 				<c:if test="${userIsActivated}">
 					<li>
 						<a href="${pageContext.request.contextPath}/protected/cohorthome">
-							<span class="glyphicon glyphicon-pencil"></span>
+							<i class="fa fa-pencil"></i>
 							Cohorts
 						</a>
 					</li>
 					<li>
 						<a href="${pageContext.request.contextPath}/protected/editorhome">
-							<span class="glyphicon glyphicon-pencil"></span>
+							<i class="fa fa-pencil"></i>
 							Phenotypes
 						</a>
 					</li>
 					<li>
 						<a href="${pageContext.request.contextPath}/protected/jobs">
-							<span class="glyphicon glyphicon-cog"></span>
+							<i class="fa fa-cog"></i>
 							Jobs
 						</a>
 					</li>
 				</c:if>
 				<li>
 					<a href="${pageContext.request.contextPath}/#/help">
-						<span class="glyphicon glyphicon-question-sign"></span>
+						<i class="fa fa-question-circle"></i>
 						Help
 					</a>
 				</li>
@@ -127,7 +127,7 @@
 							<a href="${pageContext.request.contextPath}/logout" 
 							   class="dropdown-toggle" data-toggle="dropdown" 
 							   role="button" aria-expanded="false">
-								<span class="glyphicon glyphicon-user"></span>
+								<i class="fa fa-user"></i>
 								<c:choose>
 									<c:when test="${not empty user.fullName}">
 										${user.fullName}
@@ -144,20 +144,20 @@
 							<ul class="dropdown-menu" role="menu">
 								<li>
 									<a href="user_acct">
-										<span class="glyphicon glyphicon-user"></span>
+										<i class="fa fa-user"></i>
 										Account Settings
 									</a>
 								</li>
 								<c:if test="${myfn:isUserInRole(pageContext.request, 'admin')}">
 									<li>
 										<a href="${pageContext.request.contextPath}/protected/admin?action=list">
-											<span class="glyphicon glyphicon-wrench"></span>
+											<i class="fa fa-wrench"></i>
 											Administration
 										</a>
 									</li>
 								</c:if>
 								<li><a href="${pageContext.request.contextPath}/logout" class="idletimeout-logout">
-									<span class="glyphicon glyphicon-log-out"></span>
+									<i class="fa fa-sign-out"></i>
 									Logout
 								</a></li>
 							</ul>
@@ -167,7 +167,7 @@
 					<c:otherwise>
 						<li>
 							<a href="${pageContext.request.contextPath}/protected/login">
-								<span class="glyphicon glyphicon-log-in"></span>
+								<i class="fa fa-sign-in"></i>
 								Login
 							</a>
 						</li>
@@ -184,6 +184,7 @@
 	Copyright &copy; ${initParam['inception-year']}&ndash;${initParam['current-year']} ${initParam['eureka-organization-name']}. All rights reserved.
 </div>
 <c:if test="${userIsActivated}">
+	<script type="text/javascript" src="${pageContext.request.contextPath}/assets/js/eureka.util${initParam['eureka-build-timestamp']}.js"></script>
 	<script src="${pageContext.request.contextPath}/assets/js/eureka.idletimeout${initParam['eureka-build-timestamp']}.js" type="text/javascript"></script>
 	<script type="text/javascript">
 		$(document).ready(function (){

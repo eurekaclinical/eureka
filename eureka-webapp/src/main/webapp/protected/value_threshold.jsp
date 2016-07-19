@@ -500,13 +500,13 @@
                 		</div>
                 	</div>
                 </div>
-<script language="JavaScript"
+<script type="text/javascript"
 		src="${pageContext.request.contextPath}/assets/js/jquery.jstree.js"></script>
-<script language="JavaScript"
+<script type="text/javascript"
 		src="${pageContext.request.contextPath}/assets/js/eureka.tree-phenotype${initParam['eureka-build-timestamp']}.js"></script>
-<script language="JavaScript"
+<script type="text/javascript"
 		src="${pageContext.request.contextPath}/assets/js/eureka.editor${initParam['eureka-build-timestamp']}.js"></script>
-<script language="JavaScript">
+<script type="text/javascript">
 	eureka.editor.setup('VALUE_THRESHOLD', '', ${proposition != null ? proposition.id : 'null'},
 			'#systemTree', '#userTree', '#definitionContainer', '#savePropositionButton', 'span.delete-icon',
 			'ul.sortable', '${pageContext.request.contextPath}/assets/css/jstree-themes/default/style.css',
