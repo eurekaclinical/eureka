@@ -137,7 +137,10 @@ window.eureka.registration = new function () {
 				},
 				error: function (xhr, err) {
 					$('#passwordChangeFailure').show();
-					$('#passwordErrorMessage').text(xhr.responseText)
+					$('#passwordErrorMessage').text(xhr.responseText);
+					$("#passwordErrorMessage:contains('login')").html(function(_, html) {
+                                            return html.replace(/(login)/g, '<a href="/login">$1</a>');
+					});                                        
 				}
 			});
 		}
