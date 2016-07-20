@@ -137,10 +137,14 @@ window.eureka.registration = new function () {
 				},
 				error: function (xhr, err) {
 					$('#passwordChangeFailure').show();
-					$('#passwordErrorMessage').text(xhr.responseText);
-					$("#passwordErrorMessage:contains('login')").html(function(_, html) {
-                                            return html.replace(/(login)/g, '<a href="/login">$1</a>');
-					});                                        
+                                        if (xhr.status == "409") {
+                                                $('#passwordErrorMessage').html("Account already exists! You may go ahead and <a href='protected/login'>login</a>.");                                            
+                                        } else if (xhr.status == "400"){
+                                                $('#passwordErrorMessage').html("Please review your profile and complete all required fields.");
+                                        } else {
+                                                $('#passwordErrorMessage').html("An internal error has occurred. Please contact the technical team for further assistance.");
+                                        }
+                                      
 				}
 			});
 		}
