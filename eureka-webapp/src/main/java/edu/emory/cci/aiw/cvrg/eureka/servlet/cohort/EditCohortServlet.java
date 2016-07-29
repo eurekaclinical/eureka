@@ -41,7 +41,6 @@ package edu.emory.cci.aiw.cvrg.eureka.servlet.cohort;
  */
 import com.google.inject.Inject;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.BinaryOperator;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.Category;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.Cohort;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.CohortDestination;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.Phenotype;
@@ -50,7 +49,7 @@ import edu.emory.cci.aiw.cvrg.eureka.common.comm.Literal;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.Node;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.NodeVisitor;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.UnaryOperator;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ClientException;
+import org.eurekaclinical.common.comm.clients.ClientException;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ServicesClient;
 import java.io.IOException;
 import java.util.ArrayList;

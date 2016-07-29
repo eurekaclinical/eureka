@@ -54,10 +54,10 @@ import edu.emory.cci.aiw.cvrg.eureka.common.comm.ValidationRequest;
 import java.io.InputStream;
 import java.util.Collections;
 import java.util.List;
+import org.eurekaclinical.common.comm.Role;
+import org.eurekaclinical.common.comm.clients.ClientException;
 
 import org.protempa.PropositionDefinition;
-
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ClientException;
 
 /**
  *
@@ -191,6 +191,21 @@ public class MockEtlClient implements EtlClient {
 	@Override
 	public List<Job> getLatestJob() throws ClientException {
 		throw new UnsupportedOperationException("Not supported yet.");
+	}
+
+	@Override
+	public List<Role> getRoles() throws ClientException {
+		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+	}
+
+	@Override
+	public Role getRole(Long inRoleId) throws ClientException {
+		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+	}
+
+	@Override
+	public Role getRoleByName(String name) throws ClientException {
+		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
 	}
 	
 }

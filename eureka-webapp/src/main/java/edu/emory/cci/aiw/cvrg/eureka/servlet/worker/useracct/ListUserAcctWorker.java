@@ -48,10 +48,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.User;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ClientException;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ServicesClient;
 import edu.emory.cci.aiw.cvrg.eureka.servlet.worker.ServletWorker;
 import edu.emory.cci.aiw.cvrg.eureka.webapp.authentication.WebappAuthenticationSupport;
+import org.eurekaclinical.common.comm.clients.ClientException;
 
 public class ListUserAcctWorker implements ServletWorker {
 

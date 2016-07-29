@@ -54,7 +54,7 @@ import com.google.inject.persist.Transactional;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.UserRequest;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.LocalUserEntity;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.Role;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.RoleEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.UserEntity;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.*;
 import edu.emory.cci.aiw.cvrg.eureka.services.email.EmailException;
@@ -98,7 +98,7 @@ public class UserRequestResource {
 	 * functionality.
 	 * @param inLocalUserDao DAO used to access {@link LocalUserEntity} related
 	 * functionality.
-	 * @param inRoleDao DAO used to access {@link Role} related functionality.
+	 * @param inRoleDao DAO used to access {@link RoleEntity} related functionality.
 	 * @param inEmailSender Used to send emails to the user when necessary.
 	 */
 	@Inject

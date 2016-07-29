@@ -65,7 +65,7 @@ import org.xml.sax.SAXException;
 import com.google.inject.Inject;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.ClientResponse.Status;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.AbstractClient;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.EurekaClient;
 
 import edu.emory.cci.aiw.cvrg.eureka.services.config.ServiceProperties;
 
@@ -75,7 +75,7 @@ import freemarker.template.Template;
 import freemarker.template.TemplateException;
 import org.eurekaclinical.standardapis.exception.HttpStatusException;
 
-public class I2b2RestClient extends AbstractClient implements I2b2Client {
+public class I2b2RestClient extends EurekaClient implements I2b2Client {
 
 	private Configuration cfg;
 	private static final Logger LOGGER = LoggerFactory

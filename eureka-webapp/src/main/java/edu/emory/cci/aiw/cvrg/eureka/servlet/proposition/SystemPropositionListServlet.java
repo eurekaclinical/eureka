@@ -57,7 +57,7 @@ import org.slf4j.LoggerFactory;
 import com.google.inject.Inject;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.SystemPhenotype;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ClientException;
+import org.eurekaclinical.common.comm.clients.ClientException;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ServicesClient;
 
 public class SystemPropositionListServlet extends HttpServlet {

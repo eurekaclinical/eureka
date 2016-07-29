@@ -43,7 +43,6 @@ import com.google.inject.Inject;
 import com.sun.jersey.api.client.ClientResponse.Status;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.Phenotype;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.Statistics;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ClientException;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ServicesClient;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -58,6 +57,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.lang3.StringUtils;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.map.ObjectWriter;
+import org.eurekaclinical.common.comm.clients.ClientException;
 
 /**
  *

@@ -41,27 +41,14 @@ package edu.emory.cci.aiw.cvrg.eureka.etl.dao;
  */
 
 import edu.emory.cci.aiw.cvrg.eureka.common.dao.AuthorizedUserDao;
-import java.text.MessageFormat;
 
 import javax.persistence.EntityManager;
-import javax.persistence.NoResultException;
-import javax.persistence.NonUniqueResultException;
-import javax.persistence.TypedQuery;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Path;
-import javax.persistence.criteria.Root;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.google.inject.Inject;
 import com.google.inject.Provider;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.AuthorizedUserEntity;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.AuthorizedUserEntity_;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.UserEntity_;
-import org.eurekaclinical.standardapis.dao.JpaUserDao;
+import javax.inject.Inject;
+import org.eurekaclinical.standardapis.dao.AbstractJpaUserDao;
 
 /**
  * An implementation of the {@link AuthorizedUserDao} interface, backed by JPA entities
@@ -69,12 +56,7 @@ import org.eurekaclinical.standardapis.dao.JpaUserDao;
  *
  * @author Andrew Post
  */
-public class JpaEtlUserDao extends JpaUserDao<AuthorizedUserEntity> implements AuthorizedUserDao {
-	/**
-	 * The class level logger.
-	 */
-	private static final Logger LOGGER = LoggerFactory.getLogger(
-			JpaEtlUserDao.class);
+public class JpaEtlUserDao extends AbstractJpaUserDao<AuthorizedUserEntity> implements AuthorizedUserDao {
 
 	/**
 	 * Create an object with the give entity manager.
@@ -87,28 +69,4 @@ public class JpaEtlUserDao extends JpaUserDao<AuthorizedUserEntity> implements A
 		super(AuthorizedUserEntity.class, inEMProvider);
 	}
 
-	@Override
-	public AuthorizedUserEntity getByUsername(String username) {
-		EntityManager entityManager = getEntityManager();
-		CriteriaBuilder builder = entityManager.getCriteriaBuilder();
-		CriteriaQuery<AuthorizedUserEntity> criteriaQuery = builder.createQuery(AuthorizedUserEntity.class);
-		Root<AuthorizedUserEntity> root = criteriaQuery.from(AuthorizedUserEntity.class);
-		Path<String> usernamePath = root.get(AuthorizedUserEntity_.username);
-		TypedQuery<AuthorizedUserEntity> query = entityManager.createQuery(criteriaQuery.where(
-				builder.equal(usernamePath, username)));
-		AuthorizedUserEntity result = null;
-		try {
-			result = query.getSingleResult();
-		} catch (NonUniqueResultException nure) {
-			String msg = MessageFormat.format(
-					"More than one user with {0} = {1}", 
-					UserEntity_.username, username);
-			LOGGER.error(msg);
-			throw new AssertionError(msg);
-		} catch (NoResultException nre) {
-			LOGGER.debug("No user with {} = {} and {} = {}", 
-					UserEntity_.username, username);
-		}
-		return result;
-	}
 }

@@ -1,8 +1,6 @@
-package edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.cassupport;
-
 /*
  * #%L
- * Eureka Common
+ * Eureka Services
  * %%
  * Copyright (C) 2012 - 2013 Emory University
  * %%
@@ -39,20 +37,45 @@ package edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.cassupport;
  * <http://www.gnu.org/licenses/gpl-3.0.html>.
  * #L%
  */
+package edu.emory.cci.aiw.cvrg.eureka.etl.resource;
 
-import com.sun.jersey.api.client.WebResource;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.WebResourceWrapper;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.WebResourceWrapperFactory;
+import javax.ws.rs.Path;
+import com.google.inject.persist.Transactional;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.AuthorizedRoleEntity;
+
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.RoleEntity;
+import edu.emory.cci.aiw.cvrg.eureka.etl.dao.RoleDao;
+import javax.inject.Inject;
+import org.eurekaclinical.common.comm.Role;
+import org.eurekaclinical.common.resource.AbstractRoleResource;
 
 /**
+ * A RESTful end-point for working with {@link RoleEntity} objects.
  *
- * @author Andrew Post
+ * @author hrathod
+ *
  */
-public class CasWebResourceWrapperFactory implements WebResourceWrapperFactory{
+@Transactional
+@Path("/protected/roles")
+public class RoleResource extends AbstractRoleResource<AuthorizedRoleEntity, Role> {
+
+	/**
+	 * Create a RoleResource object with the given {@link RoleDao}
+	 *
+	 * @param inRoleDao The RoleDao object used to work with role objects in the
+	 *            data store.
+	 */
+	@Inject
+	public RoleResource(RoleDao inRoleDao) {
+		super(inRoleDao);
+	}
 
 	@Override
-	public WebResourceWrapper getInstance(WebResource webResource) {
-		return new CasWebResourceWrapper(webResource);
+	protected Role toRole(AuthorizedRoleEntity roleEntity) {
+		Role role = new Role();
+		role.setId(roleEntity.getId());
+		role.setName(roleEntity.getName());
+		return role;
 	}
-	
+
 }

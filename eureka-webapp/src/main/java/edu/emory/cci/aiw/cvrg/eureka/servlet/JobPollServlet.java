@@ -55,8 +55,8 @@ import edu.emory.cci.aiw.cvrg.eureka.common.comm.Destination;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.Job;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.JobListRow;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ClientException;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ServicesClient;
+import org.eurekaclinical.common.comm.clients.ClientException;
 
 public class JobPollServlet extends HttpServlet {
 	private static final ObjectMapper MAPPER = new ObjectMapper();

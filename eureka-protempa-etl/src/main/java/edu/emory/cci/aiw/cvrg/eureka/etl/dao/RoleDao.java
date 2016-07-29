@@ -1,8 +1,6 @@
-package edu.emory.cci.aiw.cvrg.eureka.common.comm.clients;
-
 /*
  * #%L
- * Eureka Common
+ * Eureka Services
  * %%
  * Copyright (C) 2012 - 2013 Emory University
  * %%
@@ -39,38 +37,17 @@ package edu.emory.cci.aiw.cvrg.eureka.common.comm.clients;
  * <http://www.gnu.org/licenses/gpl-3.0.html>.
  * #L%
  */
+package edu.emory.cci.aiw.cvrg.eureka.etl.dao;
 
-import com.sun.jersey.api.client.Client;
-import com.sun.jersey.api.client.WebResource;
-import com.sun.jersey.api.client.config.ClientConfig;
-import com.sun.jersey.api.client.config.DefaultClientConfig;
-import com.sun.jersey.api.json.JSONConfiguration;
-import edu.emory.cci.aiw.cvrg.eureka.common.json.ObjectMapperProvider;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.AuthorizedRoleEntity;
 
 /**
+ * A data access object interface for working with {@link RoleEntity} objects in the
+ * data store.
  *
- * @author Andrew Post
+ * @author hrathod
+ *
  */
-public abstract class AbstractClient {
-	
-	protected AbstractClient() {
-		
-	}
-	
-	protected Client getRestClient() {
-		ClientConfig clientConfig = new DefaultClientConfig();
-		//ApacheHttpClientConfig clientConfig = new DefaultApacheHttpClientConfig();
-		//clientConfig.getProperties().put(ApacheHttpClientConfig.PROPERTY_HANDLE_COOKIES, true);
-		clientConfig.getFeatures().put(
-				JSONConfiguration.FEATURE_POJO_MAPPING, Boolean.TRUE);
-		clientConfig.getClasses().add(ObjectMapperProvider.class);
-		return Client.create(clientConfig);
-		//return ApacheHttpClient.create(clientConfig);
-	}
+public interface RoleDao extends org.eurekaclinical.standardapis.dao.RoleDao<AuthorizedRoleEntity> {
 
-	public WebResource getResource() {
-		return this.getRestClient().resource(this.getResourceUrl());
-	}
-
-	protected abstract String getResourceUrl();
 }

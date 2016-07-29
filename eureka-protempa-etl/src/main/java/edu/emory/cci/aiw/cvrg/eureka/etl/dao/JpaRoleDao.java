@@ -1,12 +1,6 @@
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-package edu.emory.cci.aiw.cvrg.eureka.common.comm.clients;
-
-/*
  * #%L
- * Eureka Common
+ * Eureka Services
  * %%
  * Copyright (C) 2012 - 2013 Emory University
  * %%
@@ -43,33 +37,33 @@ package edu.emory.cci.aiw.cvrg.eureka.common.comm.clients;
  * <http://www.gnu.org/licenses/gpl-3.0.html>.
  * #L%
  */
-import com.sun.jersey.api.client.WebResource;
-import javax.ws.rs.core.MultivaluedMap;
+package edu.emory.cci.aiw.cvrg.eureka.etl.dao;
+
+import javax.persistence.EntityManager;
+
+
+import com.google.inject.Inject;
+import com.google.inject.Provider;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.AuthorizedRoleEntity;
+
+import org.eurekaclinical.standardapis.dao.AbstractJpaRoleDao;
 
 /**
+ * A {@link RoleDao} implementation, backed by JPA entities and queries.
  *
- * @author Andrew Post
+ * @author hrathod
+ *
  */
-public abstract class AbstractWebResourceWrapper implements WebResourceWrapper {
+public class JpaRoleDao extends AbstractJpaRoleDao<AuthorizedRoleEntity> implements RoleDao {
 
-	private WebResource webResource;
-
-	public AbstractWebResourceWrapper(WebResource webResource) {
-		this.webResource = webResource;
-	}
-
-	protected WebResource getWebResource() {
-		return webResource;
-	}
-	
-	@Override
-	public WebResource rewritten(String path, String method) throws ClientException {
-		return rewritten(path, method, null);
-	}
-
-	@Override
-	public WebResource rewritten(String path, String method, MultivaluedMap<String, String> queryParams) throws ClientException {
-		return webResource.path(path);
+	/**
+	 * Create a new object with the given entity manager.
+	 *
+	 * @param inManagerProvider A provider for entity manager instances.
+	 */
+	@Inject
+	public JpaRoleDao(Provider<EntityManager> inManagerProvider) {
+		super(AuthorizedRoleEntity.class, inManagerProvider);
 	}
 
 }

@@ -54,13 +54,14 @@ import edu.emory.cci.aiw.cvrg.eureka.common.comm.JobRequest;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.SourceConfig;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.Statistics;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.ValidationRequest;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ClientException;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.EurekaClient;
 import java.io.InputStream;
 import java.net.URI;
 import java.util.List;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.UriBuilder;
+import org.eurekaclinical.common.comm.Role;
+import org.eurekaclinical.common.comm.clients.ClientException;
 import org.protempa.PropositionDefinition;
 
 /**
@@ -95,6 +96,8 @@ public class EtlClientImpl extends EurekaClient implements EtlClient {
 	private static final GenericType<List<String>> PropositionSearchResultsList
 			= new GenericType<List<String>>() {
 			};
+	private static final GenericType<List<Role>> RoleList = new GenericType<List<Role>>() {
+	};
 	private final String resourceUrl;
 
 	@Inject
@@ -344,6 +347,21 @@ public class EtlClientImpl extends EurekaClient implements EtlClient {
 		doDelete(path);
 	}
 	
+	@Override
+	public List<Role> getRoles() throws ClientException {
+		final String path = "/api/protected/roles";
+		return doGet(path, RoleList);
+	}
+
+	@Override
+	public Role getRole(Long inRoleId) throws ClientException {
+		final String path = "/api/protected/roles/" + inRoleId;
+		return doGet(path, Role.class);
+	}
 	
+	@Override
+	public Role getRoleByName(String name) throws ClientException {
+		return doGet("/api/protected/roles/byname/" + name, Role.class);
+	}
 
 }

@@ -42,8 +42,6 @@ package edu.emory.cci.aiw.cvrg.eureka.services.config;
 import com.google.inject.AbstractModule;
 import com.google.inject.TypeLiteral;
 import com.google.inject.persist.jpa.JpaPersistModule;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.cassupport.CasWebResourceWrapperFactory;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.WebResourceWrapperFactory;
 
 import edu.emory.cci.aiw.cvrg.eureka.services.clients.I2b2Client;
 import edu.emory.cci.aiw.cvrg.eureka.services.clients.MockI2b2Client;
@@ -77,6 +75,8 @@ import edu.emory.cci.aiw.cvrg.eureka.services.finder.TestPropositionFinder;
 import edu.emory.cci.aiw.cvrg.eureka.services.util.PasswordGenerator;
 import edu.emory.cci.aiw.cvrg.eureka.services.util.PasswordGeneratorTestImpl;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.PhenotypeEntityDao;
+import org.eurekaclinical.common.comm.clients.WebResourceWrapperFactory;
+import org.eurekaclinical.common.comm.clients.cassupport.CasWebResourceWrapperFactory;
 
 /**
  * Configure Guice for non-web application testing.

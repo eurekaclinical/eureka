@@ -65,7 +65,7 @@ import com.google.inject.persist.Transactional;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.PasswordChangeRequest;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.User;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.LocalUserEntity;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.Role;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.RoleEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.UserEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.UserEntityToUserVisitor;
 import edu.emory.cci.aiw.cvrg.eureka.common.util.StringUtil;
@@ -129,7 +129,7 @@ public class UserResource {
 	 * Create a UserResource object with a User DAO and a Role DAO.
 	 *
 	 * @param inUserDao DAO used to access {@link UserEntity} related functionality.
-	 * @param inRoleDao DAO used to access {@link Role} related functionality.
+	 * @param inRoleDao DAO used to access {@link RoleEntity} related functionality.
 	 * @param inEmailSender Used to send emails to the user when necessary.
 	 */
 	@Inject
@@ -341,7 +341,7 @@ public class UserResource {
 			currentUser.setDepartment(inUser.getDepartment());
 			currentUser.setFullName(inUser.getFullName());                
 
-			List<Role> updatedRoles = this.roleIdsToRoles(inUser.getRoles());                
+			List<RoleEntity> updatedRoles = this.roleIdsToRoles(inUser.getRoles());                
 			currentUser.setRoles(updatedRoles);
 			currentUser.setActive(inUser.isActive());
 			currentUser.setLastLogin(inUser.getLastLogin());
@@ -379,7 +379,7 @@ public class UserResource {
 		boolean result = true;
 		boolean updateByMe = true;
 		// the roles to check
-		Role adminUserRole = this.roleDao.getRoleByName("admin");
+		RoleEntity adminUserRole = this.roleDao.getRoleByName("admin");
 
 		updateByMe = me.getUsername().equals(currentUser.getUsername());
                 
@@ -406,8 +406,8 @@ public class UserResource {
 		return calendar.getTime();
 	}
 
-	private List<Role> roleIdsToRoles(List<Long> inRoleIds) {
-		List<Role> roles = new ArrayList<>(inRoleIds.size());
+	private List<RoleEntity> roleIdsToRoles(List<Long> inRoleIds) {
+		List<RoleEntity> roles = new ArrayList<>(inRoleIds.size());
 		for (Long roleId : inRoleIds) {
 			roles.add(this.roleDao.retrieve(roleId));
 		}

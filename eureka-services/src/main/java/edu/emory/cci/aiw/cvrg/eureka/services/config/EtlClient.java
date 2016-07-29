@@ -51,9 +51,10 @@ import edu.emory.cci.aiw.cvrg.eureka.common.comm.JobRequest;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.SourceConfig;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.Statistics;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.ValidationRequest;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ClientException;
 import java.io.InputStream;
 import java.util.List;
+import org.eurekaclinical.common.comm.Role;
+import org.eurekaclinical.common.comm.clients.ClientException;
 import org.protempa.PropositionDefinition;
 
 /**
@@ -140,5 +141,11 @@ public interface EtlClient {
 	 * @throws ClientException
 	 */
 	List<Job> getLatestJob()  throws ClientException;
+	
+	List<Role> getRoles() throws ClientException;
+	
+	Role getRole(Long inRoleId) throws ClientException;
+	
+	Role getRoleByName(String name) throws ClientException;
 
 }

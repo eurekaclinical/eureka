@@ -59,8 +59,8 @@ import edu.emory.cci.aiw.cvrg.eureka.common.comm.SourceConfig.Section;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.SourceConfigParams;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.SourceConfigParams.Upload;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.SystemPhenotype;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ClientException;
 import edu.emory.cci.aiw.cvrg.eureka.services.config.EtlClient;
+import org.eurekaclinical.common.comm.clients.ClientException;
 import org.eurekaclinical.standardapis.exception.HttpStatusException;
 
 /**

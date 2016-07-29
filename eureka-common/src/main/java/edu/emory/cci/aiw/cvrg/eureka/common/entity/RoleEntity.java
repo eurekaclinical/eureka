@@ -48,7 +48,6 @@ import javax.persistence.Table;
 
 import javax.persistence.Column;
 import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.eurekaclinical.standardapis.entity.RoleEntity;
 
 /**
  * A bean class to hold information related to roles in the system.
@@ -58,7 +57,7 @@ import org.eurekaclinical.standardapis.entity.RoleEntity;
  */
 @Entity
 @Table(name = "roles")
-public class Role implements RoleEntity {
+public class RoleEntity implements org.eurekaclinical.standardapis.entity.RoleEntity {
 
 	/**
 	 * The role's unique identifier.
@@ -78,13 +77,6 @@ public class Role implements RoleEntity {
 	 * Is this role a default role? Default roles are assigned to all new users.
 	 */
 	private boolean defaultRole;
-
-	/**
-	 * Create an empty role.
-	 */
-	public Role() {
-		super();
-	}
 
 	/**
 	 * Get the role's identification number.
@@ -155,9 +147,9 @@ public class Role implements RoleEntity {
 	@Override
 	public boolean equals(Object o) {
 		if (this == o) return true;
-		if (!(o instanceof Role)) return false;
+		if (!(o instanceof RoleEntity)) return false;
 
-		Role role = (Role) o;
+		RoleEntity role = (RoleEntity) o;
 
 		if (defaultRole != role.defaultRole) return false;
 		if (!id.equals(role.id)) return false;

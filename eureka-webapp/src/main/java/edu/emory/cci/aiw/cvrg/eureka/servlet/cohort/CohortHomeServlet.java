@@ -43,7 +43,7 @@ package edu.emory.cci.aiw.cvrg.eureka.servlet.cohort;
 import com.google.inject.Inject;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.CohortDestination;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.Destination;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ClientException;
+import org.eurekaclinical.common.comm.clients.ClientException;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ServicesClient;
 import edu.emory.cci.aiw.cvrg.eureka.servlet.proposition.JsonTreeData;
 import java.io.IOException;

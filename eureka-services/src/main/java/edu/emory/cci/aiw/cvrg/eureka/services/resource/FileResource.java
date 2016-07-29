@@ -43,7 +43,7 @@ package edu.emory.cci.aiw.cvrg.eureka.services.resource;
 import com.google.inject.Inject;
 import com.sun.jersey.core.header.FormDataContentDisposition;
 import com.sun.jersey.multipart.FormDataParam;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ClientException;
+import org.eurekaclinical.common.comm.clients.ClientException;
 import edu.emory.cci.aiw.cvrg.eureka.services.config.EtlClient;
 
 import javax.annotation.security.RolesAllowed;

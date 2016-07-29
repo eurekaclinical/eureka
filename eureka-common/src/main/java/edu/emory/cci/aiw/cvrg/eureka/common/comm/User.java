@@ -56,9 +56,7 @@ import org.codehaus.jackson.annotate.JsonTypeInfo;
         @JsonSubTypes.Type(value = OAuthUser.class, name = "OAUTH"),
         @JsonSubTypes.Type(value = LdapUser.class, name = "LDAP")
 })
-public abstract class User implements UserVisitable {
-	private Long id;
-	private String username;
+public abstract class User extends org.eurekaclinical.common.comm.User implements UserVisitable {
 	private Date created;
 	private boolean active;
 	private String firstName;
@@ -67,18 +65,9 @@ public abstract class User implements UserVisitable {
 	private String email;
 	private String organization;
 	private Date lastLogin;
-	private List<Long> roles = new ArrayList<>();
 	private String title;
 	private String department;
 	private LoginType loginType;
-
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long inId) {
-		id = inId;
-	}
 
 	public Date getCreated() {
 		return created;
@@ -86,14 +75,6 @@ public abstract class User implements UserVisitable {
 
 	public void setCreated(Date created) {
 		this.created = created;
-	}
-	
-	public String getUsername() {
-		return username;
-	}
-
-	public void setUsername(String username) {
-		this.username = username;
 	}
 	
 	public boolean isActive() {
@@ -152,14 +133,6 @@ public abstract class User implements UserVisitable {
 		lastLogin = inLastLogin;
 	}
 
-	public List<Long> getRoles() {
-		return roles;
-	}
-
-	public void setRoles(List<Long> inRoles) {
-		roles = inRoles;
-	}
-
 	public String getTitle() {
 		return title;
 	}
@@ -195,7 +168,7 @@ public abstract class User implements UserVisitable {
 	public String[] validate() {
 		List<String> result = new ArrayList<>();
 
-		if (this.username == null) {
+		if (getUsername() == null) {
 			result.add("Username unspecified");
 		}
 		if (this.email == null) {

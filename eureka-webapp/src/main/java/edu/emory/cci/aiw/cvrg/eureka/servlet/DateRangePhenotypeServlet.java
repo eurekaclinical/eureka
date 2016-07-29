@@ -53,8 +53,8 @@ import org.codehaus.jackson.map.ObjectMapper;
 import com.google.inject.Inject;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.Destination;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ClientException;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ServicesClient;
+import org.eurekaclinical.common.comm.clients.ClientException;
 
 /**
  *

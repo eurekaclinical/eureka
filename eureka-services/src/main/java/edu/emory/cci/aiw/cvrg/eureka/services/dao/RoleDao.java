@@ -39,23 +39,15 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.services.dao;
 
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.Role;
-import org.eurekaclinical.standardapis.dao.Dao;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.RoleEntity;
 
 /**
- * A data access object interface for working with {@link Role} objects in the
+ * A data access object interface for working with {@link RoleEntity} objects in the
  * data store.
  *
  * @author hrathod
  *
  */
-public interface RoleDao extends Dao<Role, Long> {
+public interface RoleDao extends org.eurekaclinical.standardapis.dao.RoleDao<RoleEntity> {
 
-	/**
-	 * Get a role, given the name of that role.
-	 *
-	 * @param name The name of the role to search for.
-	 * @return A {@link Role} object with a name matching the given name.
-	 */
-	Role getRoleByName(String name);
 }

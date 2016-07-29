@@ -46,8 +46,6 @@ import javax.naming.InitialContext;
 
 import com.google.inject.TypeLiteral;
 import com.google.inject.jndi.JndiIntegration;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.cassupport.CasWebResourceWrapperFactory;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.WebResourceWrapperFactory;
 
 import edu.emory.cci.aiw.cvrg.eureka.services.clients.I2b2Client;
 import edu.emory.cci.aiw.cvrg.eureka.services.clients.I2b2RestClient;
@@ -80,6 +78,8 @@ import edu.emory.cci.aiw.cvrg.eureka.services.finder.SystemPropositionFinder;
 import edu.emory.cci.aiw.cvrg.eureka.services.util.PasswordGenerator;
 import edu.emory.cci.aiw.cvrg.eureka.services.util.PasswordGeneratorImpl;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.PhenotypeEntityDao;
+import org.eurekaclinical.common.comm.clients.WebResourceWrapperFactory;
+import org.eurekaclinical.common.comm.clients.cassupport.CasWebResourceWrapperFactory;
 import org.eurekaclinical.standardapis.dao.UserDao;
 import org.eurekaclinical.standardapis.entity.RoleEntity;
 import org.eurekaclinical.standardapis.entity.UserEntity;

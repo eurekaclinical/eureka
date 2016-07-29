@@ -118,9 +118,9 @@ public class UserEntityToUserVisitor implements UserEntityVisitor {
 		}
 	}
 
-	private List<Long> rolesToRoleIds(List<Role> inRoles) {
+	private List<Long> rolesToRoleIds(List<RoleEntity> inRoles) {
 		List<Long> roleIds = new ArrayList<>(inRoles.size());
-		for (Role role : inRoles) {
+		for (RoleEntity role : inRoles) {
 			roleIds.add(role.getId());
 		}
 		return roleIds;

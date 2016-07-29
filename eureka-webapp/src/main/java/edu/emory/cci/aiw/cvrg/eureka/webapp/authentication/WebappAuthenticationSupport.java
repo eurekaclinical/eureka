@@ -42,7 +42,7 @@ package edu.emory.cci.aiw.cvrg.eureka.webapp.authentication;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.authentication.AbstractUserSupport;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.User;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ClientException;
+import org.eurekaclinical.common.comm.clients.ClientException;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ServicesClient;
 import java.io.IOException;
 import javax.servlet.http.HttpServletRequest;
@@ -53,14 +53,8 @@ import javax.servlet.http.HttpServletResponse;
  * @author Andrew Post
  */
 public final class WebappAuthenticationSupport extends AbstractUserSupport {
-	private final ServicesClient servicesClient;
 	
 	public WebappAuthenticationSupport(ServicesClient inServicesClient) {
-		if (inServicesClient == null) {
-			throw new IllegalArgumentException("inServicesClient cannot be null");
-		}
-		
-		this.servicesClient = inServicesClient;
 	}
 	
 	public User getMe(HttpServletRequest req) throws ClientException {

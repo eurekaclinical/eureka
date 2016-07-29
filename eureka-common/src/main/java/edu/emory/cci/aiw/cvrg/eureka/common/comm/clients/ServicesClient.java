@@ -41,8 +41,27 @@ package edu.emory.cci.aiw.cvrg.eureka.common.comm.clients;
 
 import com.sun.jersey.api.client.GenericType;
 import com.sun.jersey.core.util.MultivaluedMapImpl;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.*;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.*;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.CohortDestination;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.Destination;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.DestinationType;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.I2B2Destination;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.Job;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.JobSpec;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.PasswordChangeRequest;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.Phenotype;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.SourceConfig;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.SourceConfigParams;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.Statistics;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.SystemPhenotype;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.User;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.UserRequest;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.FrequencyType;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.OAuthProvider;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.RelationOperator;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.RoleEntity;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.ThresholdsOperator;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.TimeUnit;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.ValueComparator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -54,6 +73,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import javax.ws.rs.core.Response;
+import org.eurekaclinical.common.comm.Role;
+import org.eurekaclinical.common.comm.clients.ClientException;
 import org.eurekaclinical.standardapis.exception.HttpStatusException;
 
 /**

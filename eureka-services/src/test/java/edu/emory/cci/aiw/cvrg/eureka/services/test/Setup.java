@@ -75,8 +75,8 @@ public class Setup implements TestDataProvider {
 	public static final String TESTING_FREQ_TYPE_NAME = "at least";
 	
 	private final Provider<EntityManager> managerProvider;
-	private Role researcherRole;
-	private Role adminRole;
+	private RoleEntity researcherRole;
+	private RoleEntity adminRole;
 	private final UserEntityFactory userEntityFactory;
 	private List<LoginTypeEntity> loginTypes;
 	private List<AuthenticationMethodEntity> authenticationMethods;
@@ -114,7 +114,7 @@ public class Setup implements TestDataProvider {
 	public void tearDown() throws TestDataException {
 		this.remove(PhenotypeEntity.class);
 		this.remove(UserEntity.class);
-		this.remove(Role.class);
+		this.remove(RoleEntity.class);
 		this.remove(TimeUnit.class);
 		this.remove(ThresholdsOperator.class);
 		this.remove(FrequencyType.class);
@@ -200,7 +200,7 @@ public class Setup implements TestDataProvider {
 
 	private UserEntity createAndPersistUser(String email, String firstName,
 	                                  String lastName,
-	                                  Role... roles) throws
+	                                  RoleEntity... roles) throws
 			TestDataException {
 		EntityManager entityManager = this.getEntityManager();
 		LocalUserEntity user = this.userEntityFactory.getLocalUserEntityInstance();
@@ -229,17 +229,17 @@ public class Setup implements TestDataProvider {
 		return user;
 	}
 
-	private Role createResearcherRole() {
+	private RoleEntity createResearcherRole() {
 		return this.createAndPersistRole("researcher", Boolean.TRUE);
 	}
 
-	private Role createAdminRole() {
+	private RoleEntity createAdminRole() {
 		return this.createAndPersistRole("admin", Boolean.FALSE);
 	}
 
-	private Role createAndPersistRole(String name, Boolean isDefault) {
+	private RoleEntity createAndPersistRole(String name, Boolean isDefault) {
 		EntityManager entityManager = this.getEntityManager();
-		Role role = new Role();
+		RoleEntity role = new RoleEntity();
 		role.setName(name);
 		role.setDefaultRole(isDefault);
 		entityManager.getTransaction().begin();

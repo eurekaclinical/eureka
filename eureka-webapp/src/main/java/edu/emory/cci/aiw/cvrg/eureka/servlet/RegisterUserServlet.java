@@ -57,7 +57,7 @@ import edu.emory.cci.aiw.cvrg.eureka.common.comm.LocalUserRequest;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.OAuthUserRequest;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.UserRequest;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ClientException;
+import org.eurekaclinical.common.comm.clients.ClientException;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ServicesClient;
 import java.text.MessageFormat;
 import java.util.ResourceBundle;

@@ -45,9 +45,7 @@ import com.google.inject.Inject;
 import com.google.inject.Provider;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.UserEntity;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.UserEntity_;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.eurekaclinical.standardapis.dao.AbstractJpaUserDao;
 
 /**
  * An implementation of the {@link UserDao} interface, backed by JPA entities
@@ -55,12 +53,7 @@ import org.slf4j.LoggerFactory;
  *
  * @author hrathod
  */
-public class JpaUserDao extends org.eurekaclinical.standardapis.dao.JpaUserDao<UserEntity> implements UserDao {
-	/**
-	 * The class level logger.
-	 */
-	private static final Logger LOGGER = LoggerFactory.getLogger(
-			JpaUserDao.class);
+public class JpaUserDao extends AbstractJpaUserDao<UserEntity> implements UserDao {
 
 	/**
 	 * Create an object with the give entity manager.
@@ -71,11 +64,6 @@ public class JpaUserDao extends org.eurekaclinical.standardapis.dao.JpaUserDao<U
 	@Inject
 	public JpaUserDao(Provider<EntityManager> inEMProvider) {
 		super(UserEntity.class, inEMProvider);
-	}
-	
-	@Override
-	public UserEntity getByUsername(String username) {
-		return this.getUniqueByAttribute(UserEntity_.username, username);
 	}
 	
 }

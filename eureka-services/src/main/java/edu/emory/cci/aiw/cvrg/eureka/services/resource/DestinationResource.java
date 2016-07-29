@@ -44,7 +44,6 @@ import com.sun.jersey.api.client.ClientResponse;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.Destination;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.DestinationType;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.EtlDestination;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ClientException;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.UserEntity;
 import edu.emory.cci.aiw.cvrg.eureka.services.config.EtlClient;
 import edu.emory.cci.aiw.cvrg.eureka.services.conversion.ConversionSupport;
@@ -69,6 +68,7 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
+import org.eurekaclinical.common.comm.clients.ClientException;
 import org.eurekaclinical.standardapis.exception.HttpStatusException;
 
 /**

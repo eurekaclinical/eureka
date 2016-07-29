@@ -41,7 +41,7 @@ package edu.emory.cci.aiw.cvrg.eureka.servlet.proposition;
 
 import com.google.inject.Inject;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.*;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ClientException;
+import org.eurekaclinical.common.comm.clients.ClientException;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ServicesClient;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.*;
 import edu.emory.cci.aiw.cvrg.eureka.common.exception.PhenotypeHandlingException;
