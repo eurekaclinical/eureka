@@ -1,5 +1,7 @@
 package edu.emory.cci.aiw.cvrg.eureka.common.comm;
 
+import org.eurekaclinical.eureka.client.comm.Cohort;
+
 /*
  * #%L
  * Eureka Common

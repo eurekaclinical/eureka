@@ -40,8 +40,8 @@ package edu.emory.cci.aiw.cvrg.eureka.common.entity;
  * #L%
  */
 
-import edu.emory.cci.aiw.cvrg.eureka.common.authentication.LoginType;
-import edu.emory.cci.aiw.cvrg.eureka.common.authentication.AuthenticationMethod;
+import org.eurekaclinical.eureka.client.comm.authentication.LoginType;
+import org.eurekaclinical.eureka.client.comm.authentication.AuthenticationMethod;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 

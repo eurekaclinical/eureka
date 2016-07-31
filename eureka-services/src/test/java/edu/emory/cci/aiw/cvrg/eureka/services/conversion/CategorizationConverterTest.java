@@ -42,12 +42,12 @@ package edu.emory.cci.aiw.cvrg.eureka.services.conversion;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.*;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.CategoryEntity.CategoryType;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.SystemProposition.SystemType;
 import edu.emory.cci.aiw.cvrg.eureka.services.test.AbstractServiceTest;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import org.arp.javautil.arrays.Arrays;
+import org.eurekaclinical.eureka.client.comm.SystemType;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;

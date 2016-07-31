@@ -39,13 +39,12 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.services.translation;
 
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.Category;
-
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.Phenotype;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.Frequency;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.Sequence;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.SystemPhenotype;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.ValueThresholds;
+import org.eurekaclinical.eureka.client.comm.Category;
+import org.eurekaclinical.eureka.client.comm.Phenotype;
+import org.eurekaclinical.eureka.client.comm.Frequency;
+import org.eurekaclinical.eureka.client.comm.Sequence;
+import org.eurekaclinical.eureka.client.comm.SystemPhenotype;
+import org.eurekaclinical.eureka.client.comm.ValueThresholds;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.CategoryEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.PhenotypeEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.FrequencyEntity;

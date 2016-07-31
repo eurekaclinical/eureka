@@ -39,23 +39,37 @@ package edu.emory.cci.aiw.cvrg.eureka.etl.dest;
  * <http://www.gnu.org/licenses/gpl-3.0.html>.
  * #L%
  */
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.AbstractNodeVisitor;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.BinaryOperator;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.Cohort;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.Literal;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.UnaryOperator;
+import edu.emory.cci.aiw.cvrg.eureka.common.util.AbstractNodeVisitor;
+import java.util.Date;
+import org.eurekaclinical.eureka.client.comm.BinaryOperator;
+import org.eurekaclinical.eureka.client.comm.Cohort;
+import org.eurekaclinical.eureka.client.comm.Literal;
+import org.eurekaclinical.eureka.client.comm.UnaryOperator;
+import org.eurekaclinical.eureka.client.comm.Node;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import org.arp.javautil.collections.Collections;
+import org.eurekaclinical.eureka.client.comm.BinaryOperator.Op;
+import static org.neo4j.ext.udc.UdcSettings.interval;
 import org.protempa.KnowledgeSource;
 import org.protempa.KnowledgeSourceReadException;
 import org.protempa.dest.keyloader.Criteria;
 import org.protempa.dest.keyloader.CriteriaEvaluateException;
 import org.protempa.dest.keyloader.CriteriaInitException;
+import org.protempa.proposition.AbstractParameter;
+import org.protempa.proposition.Constant;
+import org.protempa.proposition.Context;
+import org.protempa.proposition.Event;
+import org.protempa.proposition.PrimitiveParameter;
 import org.protempa.proposition.Proposition;
+import org.protempa.proposition.TemporalProposition;
+import org.protempa.proposition.interval.AbsoluteTimeIntervalFactory;
+import org.protempa.proposition.interval.Interval;
+import org.protempa.proposition.interval.Relation;
+import org.protempa.proposition.visitor.AbstractPropositionVisitor;
 
 /**
  *
@@ -97,9 +111,118 @@ class CohortCriteria implements Criteria {
 				}
 			}
 		}
-		return this.cohort.evaluate(propMap);
+		return evaluate(this.cohort.getNode(), propMap);
 	}
+	
+	private boolean evaluate(Node node, Map<String, List<Proposition>> propMap) {
+		if (node instanceof UnaryOperator) {
+			return evaluateUnaryOperator((UnaryOperator) node, propMap);
+		} else if (node instanceof BinaryOperator) {
+			return evaluateBinaryOperator((BinaryOperator) node, propMap);
+		} else if (node instanceof Literal) {
+			return evaluateLiteral((Literal) node, propMap);
+		} else {
+			throw new AssertionError("Unexpected node type " + node.getClass().getName());
+		}
+    }
+	
+    private boolean evaluateUnaryOperator(UnaryOperator unaryOperator, Map<String, List<Proposition>> propMap) {
+		UnaryOperator.Op op = unaryOperator.getOp();
+        switch (op) {
+            case NOT:
+                return !evaluate(unaryOperator.getNode(), propMap);
+            default:
+                throw new AssertionError("Invalid op " + op);
+        }
+    }
+	
+    private boolean evaluateBinaryOperator(BinaryOperator binaryOperator, Map<String, List<Proposition>> propMap) {
+		Node leftNode = binaryOperator.getLeftNode();
+		Node rightNode = binaryOperator.getRightNode();
+		Op op = binaryOperator.getOp();
+        switch (op) {
+            case AND:
+                return evaluate(leftNode, propMap) && evaluate(rightNode, propMap);
+            case OR:
+                return evaluate(leftNode, propMap) || evaluate(rightNode, propMap);
+            default:
+                throw new AssertionError("Invalid op " + op);
+        }
+    }
+	
+	private boolean evaluateLiteral(Literal literal, Map<String, List<Proposition>> propMap) {
+        List<Proposition> props = propMap.get(literal.getName());
+		Date start = literal.getStart();
+		Date finish = literal.getFinish();
+		Interval interval = null;
+        if (props != null && !props.isEmpty()) {
+            if ((start != null || finish != null)) {
+                interval
+                        = new AbsoluteTimeIntervalFactory().getInstance(
+                                start, null,
+                                finish, null);
+            }
+            if (interval != null) {
+                LiteralEvaluatePropositionVisitor v
+                        = new LiteralEvaluatePropositionVisitor(interval);
+                for (Proposition prop : props) {
+                    prop.accept(v);
+                    if (v.evaluate()) {
+                        return true;
+                    }
+                }
+            } else {
+                return true;
+            }
+        }
+        return false;
+    }
 
+    private class LiteralEvaluatePropositionVisitor extends AbstractPropositionVisitor {
+
+        private boolean result;
+		private final Interval interval;
+
+        LiteralEvaluatePropositionVisitor(Interval interval) {
+			this.interval = interval;
+        }
+
+        boolean evaluate() {
+            return result;
+        }
+
+        @Override
+        public void visit(Context context) {
+            handleTemporalProposition(context);
+        }
+
+        @Override
+        public void visit(Constant constant) {
+            this.result = true;
+        }
+
+        @Override
+        public void visit(PrimitiveParameter primitiveParameter) {
+            handleTemporalProposition(primitiveParameter);
+        }
+
+        @Override
+        public void visit(Event event) {
+            handleTemporalProposition(event);
+        }
+
+        @Override
+        public void visit(AbstractParameter abstractParameter) {
+            handleTemporalProposition(abstractParameter);
+        }
+
+        private void handleTemporalProposition(TemporalProposition tempProp) {
+            Interval tempPropIval = tempProp.getInterval();
+            this.result = Relation.CONTAINS_OR_EQUALS.hasRelation(interval, tempPropIval);
+        }
+
+    }
+	
 	@Override
 	public String[] getPropositionIdsSpecified() {
 		return this.propIdsSpecified;

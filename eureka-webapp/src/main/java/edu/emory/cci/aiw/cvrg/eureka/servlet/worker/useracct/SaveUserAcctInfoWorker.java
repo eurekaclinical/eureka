@@ -50,7 +50,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.User;
+import org.eurekaclinical.eureka.client.comm.User;
 
 import org.eurekaclinical.common.comm.clients.ClientException;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ServicesClient;

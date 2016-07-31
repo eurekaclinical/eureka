@@ -66,13 +66,13 @@ import com.google.inject.Provider;
 import com.google.inject.persist.Transactional;
 import edu.emory.cci.aiw.cvrg.eureka.common.authentication.AuthorizedUserSupport;
 
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.Job;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.JobFilter;
+import org.eurekaclinical.eureka.client.comm.Job;
+import org.eurekaclinical.eureka.client.comm.JobFilter;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.JobRequest;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.JobSpec;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.SourceConfig;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.SourceConfigOption;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.Statistics;
+import org.eurekaclinical.eureka.client.comm.JobSpec;
+import org.eurekaclinical.eureka.client.comm.SourceConfig;
+import org.eurekaclinical.eureka.client.comm.SourceConfigOption;
+import org.eurekaclinical.eureka.client.comm.Statistics;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.DestinationEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.AuthorizedUserEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.JobEntity;
@@ -86,6 +86,7 @@ import edu.emory.cci.aiw.cvrg.eureka.etl.dest.ProtempaDestinationFactory;
 import java.io.IOException;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
+import org.eurekaclinical.eureka.client.comm.JobSpec.Side;
 import org.eurekaclinical.standardapis.exception.HttpStatusException;
 import org.protempa.backend.BackendInstanceSpec;
 import org.protempa.backend.BackendProviderSpecLoaderException;
@@ -97,6 +98,7 @@ import org.protempa.backend.dsb.DataSourceBackend;
 import org.protempa.dest.Destination;
 import org.protempa.dest.DestinationInitException;
 import org.protempa.dest.StatisticsException;
+import org.protempa.proposition.interval.Interval;
 
 @Path("/protected/jobs")
 @RolesAllowed({"researcher"})
@@ -161,7 +163,7 @@ public class JobResource {
 	@Transactional
 	@GET
 	@Path("/{jobId}/stats/{propId}")
-	public edu.emory.cci.aiw.cvrg.eureka.common.comm.Statistics getJobStats(@Context HttpServletRequest request,
+	public org.eurekaclinical.eureka.client.comm.Statistics getJobStats(@Context HttpServletRequest request,
 			@PathParam("jobId") Long inJobId, @PathParam("propId") String inPropId) {
 		Job job = getJob(request, inJobId);
 		String destinationId = job.getDestinationId();
@@ -188,7 +190,7 @@ public class JobResource {
 	@Transactional
 	@GET
 	@Path("/{jobId}/stats")
-	public edu.emory.cci.aiw.cvrg.eureka.common.comm.Statistics getJobStatsRoot(@Context HttpServletRequest request,
+	public org.eurekaclinical.eureka.client.comm.Statistics getJobStatsRoot(@Context HttpServletRequest request,
 			@PathParam("jobId") Long inJobId) {
 		return getJobStats(request, inJobId, null);
 	}
@@ -254,7 +256,7 @@ public class JobResource {
 					new String[]{dateRangePhenotypeKey},
 					jobSpec.getEarliestDate(), AbsoluteTimeGranularity.DAY,
 					jobSpec.getLatestDate(), AbsoluteTimeGranularity.DAY,
-					jobSpec.getEarliestDateSide(), jobSpec.getLatestDateSide());
+					toProtempaSide(jobSpec.getEarliestDateSide()), toProtempaSide(jobSpec.getLatestDateSide()));
 		} else {
 			dateTimeFilter = null;
 		}
@@ -265,6 +267,17 @@ public class JobResource {
 				jobSpec.isUpdateData(),
 				prompts);
 		return jobEntity.getId();
+	}
+	
+	private static Interval.Side toProtempaSide(Side side) {
+		switch (side) {
+			case START:
+				return Interval.Side.START;
+			case FINISH:
+				return Interval.Side.FINISH;
+			default:
+				throw new AssertionError("Unexpected side " + side);
+		}
 	}
 
 	private JobEntity newJobEntity(JobSpec job, AuthorizedUserEntity etlUser) {

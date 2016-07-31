@@ -40,7 +40,7 @@ package edu.emory.cci.aiw.cvrg.eureka.services.conversion;
  * #L%
  */
 
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.Cohort;
+import org.eurekaclinical.eureka.client.comm.Cohort;
 
 /**
  *

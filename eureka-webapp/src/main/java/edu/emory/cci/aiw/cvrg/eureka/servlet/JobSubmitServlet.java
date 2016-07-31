@@ -64,7 +64,7 @@ import org.apache.commons.io.FileUtils;
 
 import com.google.inject.Inject;
 
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.JobSpec;
+import org.eurekaclinical.eureka.client.comm.JobSpec;
 import org.eurekaclinical.common.comm.clients.ClientException;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ServicesClient;
 

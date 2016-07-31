@@ -50,14 +50,14 @@ import edu.emory.cci.aiw.cvrg.eureka.common.entity.DestinationEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.AuthorizedUserEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.I2B2DestinationEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.JobEntity;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.JobEvent;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.JobStatus;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.JobEventEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.PatientSetExtractorDestinationEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.SourceConfigEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.test.TestDataException;
 import edu.emory.cci.aiw.cvrg.eureka.common.test.TestDataProvider;
 import edu.emory.cci.aiw.cvrg.eureka.etl.Constants;
 import javax.ws.rs.core.MediaType;
+import org.eurekaclinical.eureka.client.comm.JobStatus;
 
 /**
  *
@@ -129,7 +129,7 @@ public class Setup implements TestDataProvider {
 		this.job.setSourceConfigId("0");
 		this.job.setDestination(this.i2b2DE);
 		this.job.setUser(this.user);
-		JobEvent jobEvent = new JobEvent();
+		JobEventEntity jobEvent = new JobEventEntity();
 		jobEvent.setStatus(JobStatus.VALIDATING);
 		this.job.addJobEvent(jobEvent);
 		entityManager.persist(this.job);

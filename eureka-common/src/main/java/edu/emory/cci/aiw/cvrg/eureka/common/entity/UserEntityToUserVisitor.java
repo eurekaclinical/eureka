@@ -40,10 +40,10 @@ package edu.emory.cci.aiw.cvrg.eureka.common.entity;
  * #L%
  */
 
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.LdapUser;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.LocalUser;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.OAuthUser;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.User;
+import org.eurekaclinical.eureka.client.comm.LdapUser;
+import org.eurekaclinical.eureka.client.comm.LocalUser;
+import org.eurekaclinical.eureka.client.comm.OAuthUser;
+import org.eurekaclinical.eureka.client.comm.User;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;

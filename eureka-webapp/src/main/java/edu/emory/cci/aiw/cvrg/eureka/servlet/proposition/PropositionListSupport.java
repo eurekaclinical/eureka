@@ -40,8 +40,8 @@ package edu.emory.cci.aiw.cvrg.eureka.servlet.proposition;
  * #L%
  */
 
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.Phenotype;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.PhenotypeField;
+import org.eurekaclinical.eureka.client.comm.Phenotype;
+import org.eurekaclinical.eureka.client.comm.PhenotypeField;
 import org.apache.commons.lang3.StringUtils;
 
 /**

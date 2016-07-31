@@ -50,8 +50,6 @@ import javax.persistence.criteria.CriteriaQuery;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 
-import edu.emory.cci.aiw.cvrg.eureka.common.authentication.AuthenticationMethod;
-import edu.emory.cci.aiw.cvrg.eureka.common.authentication.LoginType;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.*;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.CategoryEntity.CategoryType;
 import edu.emory.cci.aiw.cvrg.eureka.common.test.TestDataException;
@@ -60,6 +58,9 @@ import edu.emory.cci.aiw.cvrg.eureka.common.util.StringUtil;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.AuthenticationMethodDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.LoginTypeDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.entity.UserEntityFactory;
+import org.eurekaclinical.eureka.client.comm.SystemType;
+import org.eurekaclinical.eureka.client.comm.authentication.AuthenticationMethod;
+import org.eurekaclinical.eureka.client.comm.authentication.LoginType;
 
 /**
  * Sets up the environment for testing, by bootstrapping the data store with
@@ -167,7 +168,7 @@ public class Setup implements TestDataProvider {
 			
 			SystemProposition sysProp = new SystemProposition();
 			sysProp.setUserId(u.getId());
-			sysProp.setSystemType(SystemProposition.SystemType.PRIMITIVE_PARAMETER);
+			sysProp.setSystemType(SystemType.PRIMITIVE_PARAMETER);
 			sysProp.setInSystem(true);
 			sysProp.setKey("test-prim-param");
 			sysProp.setCreated(now);

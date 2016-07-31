@@ -40,15 +40,15 @@ package edu.emory.cci.aiw.cvrg.eureka.servlet.cohort;
  * #L%
  */
 import com.google.inject.Inject;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.BinaryOperator;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.Cohort;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.CohortDestination;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.Phenotype;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.PhenotypeField;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.Literal;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.Node;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.NodeVisitor;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.UnaryOperator;
+import org.eurekaclinical.eureka.client.comm.BinaryOperator;
+import org.eurekaclinical.eureka.client.comm.Cohort;
+import org.eurekaclinical.eureka.client.comm.CohortDestination;
+import org.eurekaclinical.eureka.client.comm.Phenotype;
+import org.eurekaclinical.eureka.client.comm.PhenotypeField;
+import org.eurekaclinical.eureka.client.comm.Literal;
+import org.eurekaclinical.eureka.client.comm.Node;
+import org.eurekaclinical.eureka.client.comm.NodeVisitor;
+import org.eurekaclinical.eureka.client.comm.UnaryOperator;
 import org.eurekaclinical.common.comm.clients.ClientException;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ServicesClient;
 import java.io.IOException;

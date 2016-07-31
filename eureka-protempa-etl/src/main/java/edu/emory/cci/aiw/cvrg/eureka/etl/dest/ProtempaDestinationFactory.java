@@ -44,7 +44,7 @@ import org.protempa.dest.keyloader.KeyLoaderDestination;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.Cohort;
+import org.eurekaclinical.eureka.client.comm.Cohort;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.CohortDestinationEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.CohortEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.DestinationEntity;

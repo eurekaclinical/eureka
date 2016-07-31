@@ -39,6 +39,10 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.common.comm;
 
+import org.eurekaclinical.eureka.client.comm.DestinationType;
+import org.eurekaclinical.eureka.client.comm.Link;
+import org.eurekaclinical.eureka.client.comm.PhenotypeField;
+import org.eurekaclinical.eureka.client.comm.Destination;
 import java.util.Date;
 import java.util.List;
 import org.apache.commons.lang3.builder.ToStringBuilder;

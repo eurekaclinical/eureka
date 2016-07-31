@@ -42,10 +42,10 @@ package edu.emory.cci.aiw.cvrg.eureka.services.resource;
 import com.google.inject.Inject;
 import com.google.inject.persist.Transactional;
 import com.sun.jersey.api.client.ClientResponse;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.Job;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.JobFilter;
+import org.eurekaclinical.eureka.client.comm.Job;
+import org.eurekaclinical.eureka.client.comm.JobFilter;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.JobRequest;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.JobSpec;
+import org.eurekaclinical.eureka.client.comm.JobSpec;
 import org.eurekaclinical.common.comm.clients.ClientException;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.UserEntity;
 import edu.emory.cci.aiw.cvrg.eureka.services.config.EtlClient;
@@ -204,11 +204,11 @@ public class JobResource {
 	@GET
 	@Path("/{jobId}/stats/{key}")
 	@Produces({MediaType.APPLICATION_JSON})
-	public edu.emory.cci.aiw.cvrg.eureka.common.comm.Statistics getJobStats(@Context HttpServletRequest request,
+	public org.eurekaclinical.eureka.client.comm.Statistics getJobStats(@Context HttpServletRequest request,
 			@PathParam("jobId") Long inJobId, @PathParam("key") String key) {
 		try {
-			edu.emory.cci.aiw.cvrg.eureka.common.comm.Statistics stats = this.etlClient.getJobStats(inJobId, key != null ? this.conversionSupport.toPropositionId(key) : null);
-			edu.emory.cci.aiw.cvrg.eureka.common.comm.Statistics convertedStats = new edu.emory.cci.aiw.cvrg.eureka.common.comm.Statistics();
+			org.eurekaclinical.eureka.client.comm.Statistics stats = this.etlClient.getJobStats(inJobId, key != null ? this.conversionSupport.toPropositionId(key) : null);
+			org.eurekaclinical.eureka.client.comm.Statistics convertedStats = new org.eurekaclinical.eureka.client.comm.Statistics();
 
 			Map<String, String> childrenToParents = stats.getChildrenToParents();
 			Map<String, String> convertedChildrenToParents = new HashMap<>();
@@ -244,7 +244,7 @@ public class JobResource {
 	@GET
 	@Path("/{jobId}/stats")
 	@Produces({MediaType.APPLICATION_JSON})
-	public edu.emory.cci.aiw.cvrg.eureka.common.comm.Statistics getJobStatsRoot(@Context HttpServletRequest request,
+	public org.eurekaclinical.eureka.client.comm.Statistics getJobStatsRoot(@Context HttpServletRequest request,
 			@PathParam("jobId") Long inJobId) {
 		return getJobStats(request, inJobId, null);
 	}

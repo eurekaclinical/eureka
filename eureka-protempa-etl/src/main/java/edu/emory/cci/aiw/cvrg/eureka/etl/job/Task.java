@@ -50,8 +50,8 @@ import com.google.inject.Inject;
 import com.google.inject.Provider;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.JobEntity;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.JobEvent;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.JobStatus;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.JobEventEntity;
+import org.eurekaclinical.eureka.client.comm.JobStatus;
 import edu.emory.cci.aiw.cvrg.eureka.etl.dao.JobDao;
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -151,7 +151,7 @@ public final class Task implements Runnable {
 						new Object[]{myJob.getId(),
 							myJob.getUser().getUsername()});
 			}
-			JobEvent startedJobEvent = new JobEvent();
+			JobEventEntity startedJobEvent = new JobEventEntity();
 			startedJobEvent.setJob(myJob);
 			startedJobEvent.setTimeStamp(new Date());
 			startedJobEvent.setStatus(JobStatus.STARTED);
@@ -170,7 +170,7 @@ public final class Task implements Runnable {
 
 			this.etl.run(myJob, propDefArray, propIdsToShowArray, this.filter, this.updateData, this.prompts);
 			this.etl.close();
-			JobEvent completedJobEvent = new JobEvent();
+			JobEventEntity completedJobEvent = new JobEventEntity();
 			Date jobFinishedDate = new Date();
 			myJob.setFinished(jobFinishedDate);
 			completedJobEvent.setJob(myJob);
@@ -196,7 +196,7 @@ public final class Task implements Runnable {
 				try {
 					Date jobFinishedDate = new Date();
 					myJob.setFinished(jobFinishedDate);
-					JobEvent failedJobEvent = new JobEvent();
+					JobEventEntity failedJobEvent = new JobEventEntity();
 					failedJobEvent.setJob(myJob);
 					failedJobEvent.setTimeStamp(new Date());
 					failedJobEvent.setStatus(JobStatus.FAILED);
@@ -236,7 +236,7 @@ public final class Task implements Runnable {
 			if (msg == null) {
 				msg = e.getClass().getName();
 			}
-			JobEvent errorJobEvent = new JobEvent();
+			JobEventEntity errorJobEvent = new JobEventEntity();
 			errorJobEvent.setJob(job);
 			errorJobEvent.setTimeStamp(new Date());
 			errorJobEvent.setStatus(JobStatus.ERROR);

@@ -1,13 +1,10 @@
-package edu.emory.cci.aiw.cvrg.eureka.common.comm;
-
-import edu.emory.cci.aiw.cvrg.eureka.common.authentication.AuthenticationMethod;
-import edu.emory.cci.aiw.cvrg.eureka.common.authentication.LoginType;
+package edu.emory.cci.aiw.cvrg.eureka.common.entity;
 
 /*
  * #%L
  * Eureka Common
  * %%
- * Copyright (C) 2012 - 2014 Emory University
+ * Copyright (C) 2012 - 2013 Emory University
  * %%
  * This program is dual licensed under the Apache 2 and GPLv3 licenses.
  * 
@@ -43,57 +40,35 @@ import edu.emory.cci.aiw.cvrg.eureka.common.authentication.LoginType;
  * #L%
  */
 
+import java.io.Serializable;
+import java.util.Comparator;
+import java.util.EnumMap;
+import java.util.Map;
+import org.eurekaclinical.eureka.client.comm.JobStatus;
+
 /**
  *
  * @author Andrew Post
  */
-public final class OAuthUser extends User {
-	private String providerUsername;
-	private Long oauthProvider;
+public class JobEventEntityComparator implements Comparator<JobEventEntity>,
+		Serializable {
 
-	public OAuthUser() {
-		setLoginType(LoginType.PROVIDER);
-	}
+	private static final long serialVersionUID = 1;
+	private static final Map<JobStatus, Integer> ORDER = 
+			new EnumMap<>(JobStatus.class);
 
-	public String getProviderUsername() {
-		return providerUsername;
-	}
-
-	public void setProviderUsername(String providerUsername) {
-		this.providerUsername = providerUsername;
-	}
-
-	public Long getOAuthProvider() {
-		return oauthProvider;
-	}
-
-	public void setOAuthProvider(Long oauthProvider) {
-		this.oauthProvider = oauthProvider;
-	}
-	
-	@Override
-	public String[] validate() {
-		String[] results = super.validate();
-		
-		if (this.oauthProvider == null) {
-			String[] newResults = new String[results.length + 1];
-			System.arraycopy(results, 0, newResults, 0, results.length);
-			newResults[results.length] = "OAuth provider unspecified";
-			results = newResults;
-		}
-		return results;
-	}
-	
-	@Override
-	public void accept(UserVisitor userVisitor) {
-		userVisitor.visit(this);
+	static {
+		ORDER.put(JobStatus.VALIDATING, 0);
+		ORDER.put(JobStatus.VALIDATED, 1);
+		ORDER.put(JobStatus.STARTED, 2);
+		ORDER.put(JobStatus.WARNING, 3);
+		ORDER.put(JobStatus.ERROR, 4);
+		ORDER.put(JobStatus.COMPLETED, 5);
+		ORDER.put(JobStatus.FAILED, 6);
 	}
 
 	@Override
-	public AuthenticationMethod authenticationMethod() {
-		return AuthenticationMethod.OAUTH;
+	public int compare(JobEventEntity a, JobEventEntity b) {
+		return ORDER.get(a.getStatus()).compareTo(ORDER.get(b.getStatus()));
 	}
-	
-	
-	
 }

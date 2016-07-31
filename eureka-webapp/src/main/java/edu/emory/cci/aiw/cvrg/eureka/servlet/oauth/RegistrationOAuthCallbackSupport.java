@@ -39,7 +39,7 @@ package edu.emory.cci.aiw.cvrg.eureka.servlet.oauth;
  * <http://www.gnu.org/licenses/gpl-3.0.html>.
  * #L%
  */
-import edu.emory.cci.aiw.cvrg.eureka.common.authentication.AuthenticationMethod;
+import org.eurekaclinical.eureka.client.comm.authentication.AuthenticationMethod;
 import edu.emory.cci.aiw.cvrg.eureka.servlet.filter.PersonNameSplitter;
 import java.io.IOException;
 import javax.servlet.ServletException;

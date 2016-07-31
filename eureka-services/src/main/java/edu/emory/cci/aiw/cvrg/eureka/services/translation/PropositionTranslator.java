@@ -39,9 +39,9 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.services.translation;
 
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.Phenotype;
+import org.eurekaclinical.eureka.client.comm.Phenotype;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.PhenotypeEntity;
-import edu.emory.cci.aiw.cvrg.eureka.common.exception.PhenotypeHandlingException;
+import org.eurekaclinical.eureka.client.comm.exception.PhenotypeHandlingException;
 
 /**
  * Translates a UI phenotype into a proposition as understood by the service

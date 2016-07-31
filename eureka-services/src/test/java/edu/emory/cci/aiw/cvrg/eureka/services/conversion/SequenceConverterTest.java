@@ -58,6 +58,7 @@ import org.protempa.TemporalExtendedPropositionDefinition;
 import org.protempa.proposition.value.AbsoluteTimeUnit;
 
 import edu.emory.cci.aiw.cvrg.eureka.services.test.AbstractServiceTest;
+import org.eurekaclinical.eureka.client.comm.SystemType;
 
 import static org.junit.Assert.assertEquals;
 
@@ -80,7 +81,7 @@ public class SequenceConverterTest extends AbstractServiceTest {
 	private PhenotypeEntity createPhenotype(long id, String suffix) {
 		SystemProposition entity = new SystemProposition();
 		entity.setId(id);
-		entity.setSystemType(SystemProposition.SystemType.EVENT);
+		entity.setSystemType(SystemType.EVENT);
 		entity.setKey("Encounter" + suffix);
 		entity.setDescription("Encounter" + suffix);
 		entity.setDisplayName("Encounter" + suffix);

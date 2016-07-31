@@ -40,8 +40,8 @@ package edu.emory.cci.aiw.cvrg.eureka.services.entity;
  * #L%
  */
 
-import edu.emory.cci.aiw.cvrg.eureka.common.authentication.AuthenticationMethod;
-import edu.emory.cci.aiw.cvrg.eureka.common.authentication.LoginType;
+import org.eurekaclinical.eureka.client.comm.authentication.AuthenticationMethod;
+import org.eurekaclinical.eureka.client.comm.authentication.LoginType;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.AuthenticationMethodEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.LdapUserEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.LocalUserEntity;

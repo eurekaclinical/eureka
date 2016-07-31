@@ -48,9 +48,8 @@ import org.junit.Test;
 
 import com.sun.jersey.api.client.GenericType;
 import com.sun.jersey.api.client.WebResource;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.Job;
-
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.JobFilter;
+import org.eurekaclinical.eureka.client.comm.Job;
+import org.eurekaclinical.eureka.client.comm.JobFilter;
 
 /**
  *

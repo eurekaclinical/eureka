@@ -46,7 +46,7 @@ import javax.persistence.EntityManager;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.JobEvent;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.JobEventEntity;
 import org.eurekaclinical.standardapis.dao.GenericDao;
 
 /**
@@ -56,7 +56,7 @@ import org.eurekaclinical.standardapis.dao.GenericDao;
  * @author hrathod
  *
  */
-public class JpaJobEventDao extends GenericDao<JobEvent, Long> implements JobEventDao {
+public class JpaJobEventDao extends GenericDao<JobEventEntity, Long> implements JobEventDao {
 
 	/**
 	 * Construct instance with the given EntityManager provider.
@@ -65,7 +65,7 @@ public class JpaJobEventDao extends GenericDao<JobEvent, Long> implements JobEve
 	 */
 	@Inject
 	public JpaJobEventDao(final Provider<EntityManager> inEMProvider) {
-		super(JobEvent.class, inEMProvider);
+		super(JobEventEntity.class, inEMProvider);
 	}
 
 }

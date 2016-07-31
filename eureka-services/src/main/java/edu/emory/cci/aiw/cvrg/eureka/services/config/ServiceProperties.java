@@ -52,8 +52,6 @@ import edu.emory.cci.aiw.cvrg.eureka.common.comm.AppPropertiesRegistration;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.props.AbstractProperties;
 import edu.emory.cci.aiw.cvrg.eureka.common.props.PublicUrlGenerator;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Looks up the application properties file (application.properties) and

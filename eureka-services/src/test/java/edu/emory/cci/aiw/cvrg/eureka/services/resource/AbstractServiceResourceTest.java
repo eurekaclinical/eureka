@@ -50,12 +50,12 @@ import com.google.inject.servlet.GuiceFilter;
 import com.sun.jersey.api.client.GenericType;
 import com.sun.jersey.api.client.WebResource;
 
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.User;
 import edu.emory.cci.aiw.cvrg.eureka.common.test.AbstractResourceTest;
 import edu.emory.cci.aiw.cvrg.eureka.common.test.TestDataProvider;
 import edu.emory.cci.aiw.cvrg.eureka.services.config.AppTestModule;
 import edu.emory.cci.aiw.cvrg.eureka.services.config.ContextTestListener;
 import edu.emory.cci.aiw.cvrg.eureka.services.test.Setup;
+import org.eurekaclinical.eureka.client.comm.User;
 
 /**
  * @author hrathod

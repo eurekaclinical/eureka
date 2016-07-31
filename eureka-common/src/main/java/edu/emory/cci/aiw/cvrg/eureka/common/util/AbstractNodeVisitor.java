@@ -1,4 +1,6 @@
-package edu.emory.cci.aiw.cvrg.eureka.common.comm;
+package edu.emory.cci.aiw.cvrg.eureka.common.util;
+
+import org.eurekaclinical.eureka.client.comm.NodeVisitor;
 
 /*
  * #%L
@@ -44,7 +46,8 @@ package edu.emory.cci.aiw.cvrg.eureka.common.comm;
  *
  * @author Andrew Post
  */
-public enum DestinationType {
-	I2B2, COHORT, PATIENT_SET_EXTRACTOR
-    
+public abstract class AbstractNodeVisitor implements NodeVisitor {
+	protected AbstractNodeVisitor() {
+		
+	}
 }

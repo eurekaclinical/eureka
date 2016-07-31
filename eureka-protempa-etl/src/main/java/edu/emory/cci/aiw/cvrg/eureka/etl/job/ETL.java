@@ -60,8 +60,7 @@ import com.google.inject.Singleton;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.EtlDestination;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.JobEntity;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.JobEvent;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.JobStatus;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.JobEventEntity;
 import edu.emory.cci.aiw.cvrg.eureka.etl.config.EtlProperties;
 import edu.emory.cci.aiw.cvrg.eureka.etl.config.EurekaProtempaConfigurations;
 import edu.emory.cci.aiw.cvrg.eureka.etl.dao.DestinationDao;
@@ -72,6 +71,7 @@ import edu.emory.cci.aiw.cvrg.eureka.etl.resource.Destinations;
 import java.io.IOException;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
+import org.eurekaclinical.eureka.client.comm.JobStatus;
 import org.protempa.backend.Configuration;
 import org.protempa.backend.InvalidPropertyNameException;
 import org.protempa.backend.InvalidPropertyValueException;
@@ -179,7 +179,7 @@ public class ETL {
 			fileInfo.setText(event.getMessage());
 			fileInfo.setType(event.getType());
 			fileInfo.setURI(event.getURI());
-			JobEvent validationJobEvent = new JobEvent();
+			JobEventEntity validationJobEvent = new JobEventEntity();
 			validationJobEvent.setJob(job);
 			validationJobEvent.setTimeStamp(event.getTimestamp());
 			validationJobEvent.setStatus(jobEventType);

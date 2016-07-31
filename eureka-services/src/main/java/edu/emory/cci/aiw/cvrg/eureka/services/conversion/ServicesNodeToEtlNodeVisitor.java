@@ -40,11 +40,11 @@ package edu.emory.cci.aiw.cvrg.eureka.services.conversion;
  * #L%
  */
 
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.AbstractNodeVisitor;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.BinaryOperator;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.Literal;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.Node;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.UnaryOperator;
+import edu.emory.cci.aiw.cvrg.eureka.common.util.AbstractNodeVisitor;
+import org.eurekaclinical.eureka.client.comm.BinaryOperator;
+import org.eurekaclinical.eureka.client.comm.Literal;
+import org.eurekaclinical.eureka.client.comm.Node;
+import org.eurekaclinical.eureka.client.comm.UnaryOperator;
 
 /**
  *

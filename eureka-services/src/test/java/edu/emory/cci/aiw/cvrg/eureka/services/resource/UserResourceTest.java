@@ -42,10 +42,6 @@ package edu.emory.cci.aiw.cvrg.eureka.services.resource;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.ClientResponse.Status;
 import com.sun.jersey.api.client.WebResource;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.LocalUser;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.LocalUserRequest;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.PasswordChangeRequest;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.User;
 import edu.emory.cci.aiw.cvrg.eureka.services.util.PasswordGenerator;
 import edu.emory.cci.aiw.cvrg.eureka.common.util.StringUtil;
 import org.junit.Test;
@@ -53,6 +49,10 @@ import org.junit.Test;
 import javax.ws.rs.core.MediaType;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
+import org.eurekaclinical.eureka.client.comm.LocalUser;
+import org.eurekaclinical.eureka.client.comm.LocalUserRequest;
+import org.eurekaclinical.eureka.client.comm.PasswordChangeRequest;
+import org.eurekaclinical.eureka.client.comm.User;
 
 import static org.junit.Assert.assertEquals;
 

@@ -39,7 +39,7 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.services.util;
 
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.SystemProposition.SystemType;
+import org.eurekaclinical.eureka.client.comm.SystemType;
 import java.util.Collection;
 import org.protempa.CompoundLowLevelAbstractionDefinition;
 import org.protempa.ConstantDefinition;

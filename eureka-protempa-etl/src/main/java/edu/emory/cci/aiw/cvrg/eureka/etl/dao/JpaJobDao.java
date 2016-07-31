@@ -53,11 +53,11 @@ import org.slf4j.LoggerFactory;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.JobFilter;
+import org.eurekaclinical.eureka.client.comm.JobFilter;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.AuthorizedUserEntity_;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.JobEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.JobEntity_;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.JobEvent_;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.JobEventEntity_;
 import org.eurekaclinical.standardapis.dao.GenericDao;
 
 /**
@@ -163,7 +163,7 @@ public class JpaJobDao extends GenericDao<JobEntity, Long> implements JobDao {
 			if (jobFilter.getState() != null) {
 				LOGGER.debug("Found state: {}", jobFilter.getState());
 				predicates.add(builder.equal(
-						root.join(JobEntity_.jobEvents).get(JobEvent_.status),
+						root.join(JobEntity_.jobEvents).get(JobEventEntity_.status),
 						jobFilter.getState()));
 			}
 			LOGGER.debug("Checking for recent.");

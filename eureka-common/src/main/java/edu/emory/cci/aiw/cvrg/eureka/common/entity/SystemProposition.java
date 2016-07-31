@@ -39,6 +39,7 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.common.entity;
 
+import org.eurekaclinical.eureka.client.comm.SystemType;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.CategoryEntity.CategoryType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -51,13 +52,6 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 @Table(name = "system_phenotypes")
 public class SystemProposition extends PhenotypeEntity {
 
-	public enum SystemType {
-
-		CONSTANT, EVENT, PRIMITIVE_PARAMETER, LOW_LEVEL_ABSTRACTION,
-		COMPOUND_LOW_LEVEL_ABSTRACTION, HIGH_LEVEL_ABSTRACTION,
-		SLICE_ABSTRACTION, SEQUENTIAL_TEMPORAL_PATTERN_ABSTRACTION,
-		CONTEXT
-	}
 	@Enumerated(EnumType.STRING)
 	@Column(nullable = false)
 	private SystemType systemType;

@@ -39,12 +39,21 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.servlet.proposition;
 
+import org.eurekaclinical.eureka.client.comm.PhenotypeVisitor;
+import org.eurekaclinical.eureka.client.comm.ValueThresholds;
+import org.eurekaclinical.eureka.client.comm.SystemPhenotype;
+import org.eurekaclinical.eureka.client.comm.Sequence;
+import org.eurekaclinical.eureka.client.comm.RelatedPhenotypeField;
+import org.eurekaclinical.eureka.client.comm.PhenotypeField;
+import org.eurekaclinical.eureka.client.comm.Phenotype;
+import org.eurekaclinical.eureka.client.comm.Frequency;
+import org.eurekaclinical.eureka.client.comm.Category;
 import com.google.inject.Inject;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.*;
 import org.eurekaclinical.common.comm.clients.ClientException;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ServicesClient;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.*;
-import edu.emory.cci.aiw.cvrg.eureka.common.exception.PhenotypeHandlingException;
+import org.eurekaclinical.eureka.client.comm.exception.PhenotypeHandlingException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

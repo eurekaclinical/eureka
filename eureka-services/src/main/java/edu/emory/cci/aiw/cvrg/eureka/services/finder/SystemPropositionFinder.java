@@ -46,7 +46,7 @@ import org.protempa.PropositionDefinition;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.SystemPhenotype;
+import org.eurekaclinical.eureka.client.comm.SystemPhenotype;
 
 import net.sf.ehcache.Cache;
 import net.sf.ehcache.CacheManager;

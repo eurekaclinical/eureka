@@ -41,7 +41,7 @@ package edu.emory.cci.aiw.cvrg.eureka.services.dao;
 
 import com.google.inject.Inject;
 import com.google.inject.Provider;
-import edu.emory.cci.aiw.cvrg.eureka.common.authentication.AuthenticationMethod;
+import org.eurekaclinical.eureka.client.comm.authentication.AuthenticationMethod;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.AuthenticationMethodEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.AuthenticationMethodEntity_;
 

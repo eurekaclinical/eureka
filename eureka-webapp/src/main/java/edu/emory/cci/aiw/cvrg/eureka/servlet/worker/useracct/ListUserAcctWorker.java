@@ -39,7 +39,7 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.servlet.worker.useracct;
 
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.LocalUser;
+import org.eurekaclinical.eureka.client.comm.LocalUser;
 import java.io.IOException;
 import java.util.Date;
 
@@ -47,7 +47,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.User;
+import org.eurekaclinical.eureka.client.comm.User;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ServicesClient;
 import edu.emory.cci.aiw.cvrg.eureka.servlet.worker.ServletWorker;
 import edu.emory.cci.aiw.cvrg.eureka.webapp.authentication.WebappAuthenticationSupport;

@@ -40,19 +40,19 @@ package edu.emory.cci.aiw.cvrg.eureka.services.conversion;
  * #L%
  */
 
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.AbstractDestinationVisitor;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.Cohort;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.CohortDestination;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.PhenotypeField;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.Destination;
+import org.eurekaclinical.eureka.client.comm.AbstractDestinationVisitor;
+import org.eurekaclinical.eureka.client.comm.Cohort;
+import org.eurekaclinical.eureka.client.comm.CohortDestination;
+import org.eurekaclinical.eureka.client.comm.PhenotypeField;
+import org.eurekaclinical.eureka.client.comm.Destination;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.EtlCohortDestination;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.EtlDestination;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.EtlI2B2Destination;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.EtlNeo4jDestination;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.EtlPatientSetExtractorDestination;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.I2B2Destination;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.Neo4jDestination;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.PatientSetExtractorDestination;
+import org.eurekaclinical.eureka.client.comm.I2B2Destination;
+import org.eurekaclinical.eureka.client.comm.Neo4jDestination;
+import org.eurekaclinical.eureka.client.comm.PatientSetExtractorDestination;
 import java.util.ArrayList;
 import java.util.List;
 

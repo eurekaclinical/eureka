@@ -18,7 +18,7 @@
 	<parent>
 		<groupId>org.eurekaclinical</groupId>
 		<artifactId>eurekaclinical-parent-standard-deps</artifactId>
-		<version>1-Alpha-4</version>
+		<version>1-Alpha-5-SNAPSHOT</version>
 	</parent>
 	
 	<scm>
@@ -49,7 +49,6 @@
 		<protempa-version>3.0-Alpha-14</protempa-version>
 		<aiw-i2b2-etl-version>2.0-Alpha-29</aiw-i2b2-etl-version>
 		<aiw-neo4j-etl-version>1.0-Alpha-3</aiw-neo4j-etl-version>
-		<freemarker-version>2.3.20</freemarker-version>
 		<ehcache-version>2.6.0</ehcache-version>
 		<tomcat-plugin-version>1.1</tomcat-plugin-version>
 		<scribe-up-ext-version>1.0-Alpha-4</scribe-up-ext-version>
@@ -65,7 +64,8 @@
 		
 		<tomcat.httpsPort>8443</tomcat.httpsPort>
 		
-		<eurekaclinical-common-version>1.0-Alpha-5</eurekaclinical-common-version>
+		<eurekaclinical-common-version>1.0-Alpha-6-SNAPSHOT</eurekaclinical-common-version>
+		<eureka-client-version>1.0-SNAPSHOT</eureka-client-version>
 	</properties>
 
 	<licenses>
@@ -485,11 +485,6 @@
 				<version>${aiw-neo4j-etl-version}</version>
 			</dependency>
 			<dependency>
-				<groupId>org.freemarker</groupId>
-				<artifactId>freemarker</artifactId>
-				<version>${freemarker-version}</version>
-			</dependency>
-			<dependency>
 				<groupId>net.sf.ehcache</groupId>
 				<artifactId>ehcache</artifactId>
 				<version>${ehcache-version}</version>
@@ -509,6 +504,11 @@
 				<groupId>org.eurekaclinical</groupId>
 				<artifactId>javautil</artifactId>
 				<version>${javautil-version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eurekaclinical</groupId>
+				<artifactId>eureka-client</artifactId>
+				<version>${eureka-client-version}</version>
 			</dependency>
 			<!-- These are pulled into eureka-services and eureka-protempa-etl
 			by other dependencies, but CAS requires them to be in

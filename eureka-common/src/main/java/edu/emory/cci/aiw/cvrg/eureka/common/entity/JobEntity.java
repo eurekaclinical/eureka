@@ -39,8 +39,8 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.common.entity;
 
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.Job;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.Link;
+import org.eurekaclinical.eureka.client.comm.Job;
+import org.eurekaclinical.eureka.client.comm.Link;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.codehaus.jackson.annotate.JsonManagedReference;
 
@@ -61,6 +61,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import org.eurekaclinical.eureka.client.comm.JobEvent;
+import org.eurekaclinical.eureka.client.comm.JobStatus;
 
 /**
  * Holds information about a job that is sent from the services layer to the
@@ -108,7 +110,7 @@ public class JobEntity {
 	 * The events generated for the job.
 	 */
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "job")
-	private List<JobEvent> jobEvents;
+	private List<JobEventEntity> jobEvents;
 	
 	private String name;
 
@@ -127,6 +129,7 @@ public class JobEntity {
 	}
 
 	private static JobEventComparator JOB_EVENT_COMPARATOR = new JobEventComparator();
+	private static JobEventEntityComparator JOB_EVENT_ENTITY_COMPARATOR = new JobEventEntityComparator();
 
 	public JobEntity() {
 		this.jobEvents = new ArrayList<>();
@@ -222,32 +225,32 @@ public class JobEntity {
 	 * @return the jobEvents
 	 */
 	@JsonManagedReference("job-event")
-	public List<JobEvent> getJobEvents() {
+	public List<JobEventEntity> getJobEvents() {
 		return new ArrayList<>(this.jobEvents);
 	}
 
 	/**
 	 * @param inJobEvents the jobEvents to set
 	 */
-	public void setJobEvents(List<JobEvent> inJobEvents) {
+	public void setJobEvents(List<JobEventEntity> inJobEvents) {
 		if (inJobEvents == null) {
 			this.jobEvents = new ArrayList<>();
 		} else {
 			this.jobEvents = new ArrayList<>(inJobEvents);
-			for (JobEvent jobEvent : this.jobEvents) {
+			for (JobEventEntity jobEvent : this.jobEvents) {
 				jobEvent.setJob(this);
 			}
 		}
 	}
 
-	public void addJobEvent(JobEvent jobEvent) {
+	public void addJobEvent(JobEventEntity jobEvent) {
 		if (!this.jobEvents.contains(jobEvent)) {
 			this.jobEvents.add(jobEvent);
 			jobEvent.setJob(this);
 		}
 	}
 
-	public void removeJobEvent(JobEvent jobEvent) {
+	public void removeJobEvent(JobEventEntity jobEvent) {
 		if (this.jobEvents.remove(jobEvent)) {
 			jobEvent.setJob(null);
 		}
@@ -255,11 +258,11 @@ public class JobEntity {
 
 	public JobStatus getCurrentStatus() {
 		JobStatus result;
-		List<JobEvent> jobEventsInReverseOrder = getJobEventsInReverseOrder();
+		List<JobEventEntity> jobEventsInReverseOrder = getJobEventsInReverseOrder();
 		if (jobEventsInReverseOrder.isEmpty()) {
 			result = JobStatus.STARTING;
 		} else {
-			JobEvent jev = jobEventsInReverseOrder.get(0);
+			JobEventEntity jev = jobEventsInReverseOrder.get(0);
 			if (jev != null) {
 				result = jev.getStatus();
 			} else {
@@ -273,26 +276,35 @@ public class JobEntity {
 	 * Gets job events sorted in reverse order of occurrence. Uses the
 	 * {@link JobEventComparator} to perform sorting.
 	 *
-	 * @return a {@link List} of {@link JobEvent}s in reverse order of
+	 * @return a {@link List} of {@link JobEventEntity}s in reverse order of
 	 * occurrence.
 	 */
-	public List<JobEvent> getJobEventsInOrder() {
-		List<JobEvent> ts = new ArrayList<>(this.jobEvents);
-		Collections.sort(ts, JOB_EVENT_COMPARATOR);
-		return ts;
+	private List<JobEvent> jobEventsSorted() {
+		List<JobEvent> jobEvents = new ArrayList<>();
+		for (JobEventEntity jee : this.jobEvents) {
+			jobEvents.add(jee.toJobEvent());
+		}
+		Collections.sort(jobEvents, JOB_EVENT_COMPARATOR);
+		return jobEvents;
+	}
+	
+	public List<JobEventEntity> getJobEventsInOrder() {
+		List<JobEventEntity> jobEvents = new ArrayList<>(this.jobEvents);
+		Collections.sort(jobEvents, JOB_EVENT_ENTITY_COMPARATOR);
+		return jobEvents;
 	}
 
 	/**
 	 * Gets job events sorted in reverse order of occurrence. Uses the
 	 * {@link JobEventComparator} to perform sorting.
 	 *
-	 * @return a {@link List} of {@link JobEvent}s in reverse order of
+	 * @return a {@link List} of {@link JobEventEntity}s in reverse order of
 	 * occurrence.
 	 */
-	public List<JobEvent> getJobEventsInReverseOrder() {
-		List<JobEvent> ts = new ArrayList<>(this.jobEvents);
-		Collections.sort(ts, Collections.reverseOrder(JOB_EVENT_COMPARATOR));
-		return ts;
+	public List<JobEventEntity> getJobEventsInReverseOrder() {
+		List<JobEventEntity> jobEvents = new ArrayList<>(this.jobEvents);
+		Collections.sort(jobEvents, Collections.reverseOrder(JOB_EVENT_ENTITY_COMPARATOR));
+		return jobEvents;
 	}
 
 	public Job toJob() {
@@ -305,7 +317,7 @@ public class JobEntity {
 			job.setUsername(this.user.getUsername());
 		}
 		job.setStatus(getCurrentStatus());
-		job.setJobEvents(getJobEventsInOrder());
+		job.setJobEvents(jobEventsSorted());
 		job.setFinishTimestamp(this.finished);
 		List<LinkEntity> linkEntities = this.destination.getLinks();
 		List<Link> links = new ArrayList<>(linkEntities != null ? linkEntities.size() : 0);

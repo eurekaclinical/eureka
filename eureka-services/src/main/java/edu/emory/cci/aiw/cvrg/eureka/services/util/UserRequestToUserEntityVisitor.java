@@ -40,11 +40,11 @@ package edu.emory.cci.aiw.cvrg.eureka.services.util;
  * #L%
  */
 
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.LdapUserRequest;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.LocalUserRequest;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.OAuthUserRequest;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.UserRequest;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.UserRequestVisitor;
+import org.eurekaclinical.eureka.client.comm.LdapUserRequest;
+import org.eurekaclinical.eureka.client.comm.LocalUserRequest;
+import org.eurekaclinical.eureka.client.comm.OAuthUserRequest;
+import org.eurekaclinical.eureka.client.comm.UserRequest;
+import org.eurekaclinical.eureka.client.comm.UserRequestVisitor;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.LocalUserEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.OAuthUserEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.RoleEntity;

@@ -41,7 +41,7 @@ package edu.emory.cci.aiw.cvrg.eureka.webapp.authentication;
  */
 
 import edu.emory.cci.aiw.cvrg.eureka.common.authentication.AbstractUserSupport;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.User;
+import org.eurekaclinical.eureka.client.comm.User;
 import org.eurekaclinical.common.comm.clients.ClientException;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ServicesClient;
 import java.io.IOException;
