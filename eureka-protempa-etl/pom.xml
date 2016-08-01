@@ -122,7 +122,9 @@
 								dbmigration/eureka-ontology-EK_ICD10PCS-changelog.09.xml,
 								dbmigration/eureka-ontology-EK_ICD10PCS-changelog.10.xml,
 								dbmigration/eureka-ontology-EK_ICD10PCS-changelog.11.xml,
-								dbmigration/eureka-ontology-EK_ICD10PCS-changelog.12.xml
+								dbmigration/eureka-ontology-EK_ICD10PCS-changelog.12.xml,
+								dbmigration/create-QT_BREAKDOWN_PATH-changelog.xml,
+								dbmigration/eureka-ontology-QT_BREAKDOWN_PATH-changelog.xml
 							</includes>
 							<outputDirectory>${project.build.directory}/eureka-config</outputDirectory>
 						</configuration>
@@ -265,6 +267,28 @@
 						<configuration>
 							<changeLogFile>${project.build.directory}/eureka-config/dbmigration/eureka-ontology-EK_ICD10PCS-changelog.xml</changeLogFile>
 							<url>jdbc:h2:file:${project.build.directory}/eureka-db/eureka-ontology</url>
+						</configuration>
+					</execution>
+					<execution>
+						<id>liquibase-create-QT_BREAKDOWN_PATH-data-schema</id>
+						<phase>process-classes</phase>
+						<goals>
+						<goal>update</goal>
+						</goals>
+						<configuration>
+							<changeLogFile>${project.build.directory}/eureka-config/dbmigration/create-QT_BREAKDOWN_PATH-changelog.xml</changeLogFile>
+							<url>jdbc:h2:file:${project.build.directory}/eureka-db/i2b2-data-schema</url>
+						</configuration>
+					</execution>
+					<execution>
+						<id>liquibase-populate-QT_BREAKDOWN_PATH-data-schema</id>
+						<phase>process-classes</phase>
+						<goals>
+						<goal>update</goal>
+						</goals>
+						<configuration>
+							<changeLogFile>${project.build.directory}/eureka-config/dbmigration/eureka-ontology-QT_BREAKDOWN_PATH-changelog.xml</changeLogFile>
+							<url>jdbc:h2:file:${project.build.directory}/eureka-db/i2b2-data-schema</url>
 						</configuration>
 					</execution>
 				</executions>
