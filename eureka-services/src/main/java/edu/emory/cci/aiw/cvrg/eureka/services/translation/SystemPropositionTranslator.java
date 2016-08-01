@@ -46,11 +46,10 @@ import org.protempa.PropertyDefinition;
 import org.protempa.PropositionDefinition;
 
 import com.google.inject.Inject;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.SourceConfigParams;
-
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.SystemPhenotype;
+import org.eurekaclinical.eureka.client.comm.SourceConfigParams;
+import org.eurekaclinical.eureka.client.comm.SystemPhenotype;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.SystemProposition;
-import edu.emory.cci.aiw.cvrg.eureka.common.exception.PhenotypeHandlingException;
+import org.eurekaclinical.eureka.client.comm.exception.PhenotypeHandlingException;
 import edu.emory.cci.aiw.cvrg.eureka.services.finder.PropositionFindException;
 import edu.emory.cci.aiw.cvrg.eureka.services.finder.SystemPropositionFinder;
 import edu.emory.cci.aiw.cvrg.eureka.services.resource.SourceConfigResource;

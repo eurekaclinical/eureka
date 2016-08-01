@@ -39,10 +39,7 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.etl.config;
 
-import java.util.HashMap;
-import java.util.Map;
 import org.eurekaclinical.common.config.AbstractAuthorizingJerseyServletModuleWithPersist;
-
 
 /**
  * A Guice configuration module for setting up the web infrastructure and
@@ -54,21 +51,9 @@ import org.eurekaclinical.common.config.AbstractAuthorizingJerseyServletModuleWi
 public class ETLServletModule extends AbstractAuthorizingJerseyServletModuleWithPersist {
 
 	private static final String PACKAGE_NAMES = "edu.emory.cci.aiw.cvrg.eureka.etl.resource;edu.emory.cci.aiw.cvrg.eureka.common.json";
-	private final EtlProperties properties;
 
 	public ETLServletModule(EtlProperties inProperties) {
 		super(inProperties, PACKAGE_NAMES);
-		this.properties = inProperties;
-	}
-	
-	@Override
-	public Map<String, String> getCasValidationFilterInitParams() {
-		Map<String, String> params = new HashMap<>();
-		params.put("casServerUrlPrefix", this.properties.getCasUrl());
-		params.put("serverName", this.properties.getProxyCallbackServer());
-		params.put("redirectAfterValidation", "false");
-		params.put("acceptAnyProxy", "true");
-		return params;
 	}
 
 }

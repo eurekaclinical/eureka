@@ -39,33 +39,24 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.services.resource;
 
-import java.util.List;
-
-import javax.ws.rs.GET;
 import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
-
-import com.google.inject.Inject;
 import com.google.inject.persist.Transactional;
 
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.Role;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.RoleEntity;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.RoleDao;
+import javax.inject.Inject;
+import org.eurekaclinical.common.comm.Role;
+import org.eurekaclinical.common.resource.AbstractRoleResource;
 
 /**
- * A RESTful end-point for working with {@link Role} objects.
+ * A RESTful end-point for working with {@link RoleEntity} objects.
  *
  * @author hrathod
  *
  */
 @Transactional
 @Path("/protected/roles")
-public class RoleResource {
-	/**
-	 * The data access object used to work with Role objects in the data store.
-	 */
-	private final RoleDao roleDao;
+public class RoleResource extends AbstractRoleResource<RoleEntity, Role> {
 
 	/**
 	 * Create a RoleResource object with the given {@link RoleDao}
@@ -75,43 +66,15 @@ public class RoleResource {
 	 */
 	@Inject
 	public RoleResource(RoleDao inRoleDao) {
-		this.roleDao = inRoleDao;
+		super(inRoleDao);
 	}
 
-	/**
-	 * Get a role by the role's identification number.
-	 *
-	 * @param inId The identification number for the role to fetch.
-	 * @return The role referenced by the identification number.
-	 */
-	@Path("/{id}")
-	@GET
-	@Produces(MediaType.APPLICATION_JSON)
-	public Role getRole(@PathParam("id") Long inId) {
-		return this.roleDao.retrieve(inId);
-	}
-	
-	/**
-	 * Get a role by the role's name.
-	 *
-	 * @param inName The name of the role to fetch.
-	 * @return The role with the given name.
-	 */
-	@Path("/byname/{name}")
-	@GET
-	@Produces(MediaType.APPLICATION_JSON)
-	public Role getRole(@PathParam("name") String inName) {
-		return this.roleDao.getRoleByName(inName);
+	@Override
+	protected Role toRole(RoleEntity roleEntity) {
+		Role role = new Role();
+		role.setId(roleEntity.getId());
+		role.setName(roleEntity.getName());
+		return role;
 	}
 
-	/**
-	 * Get a list of all the roles available in the system.
-	 *
-	 * @return A list of {@link Role} objects.
-	 */
-	@GET
-	@Produces(MediaType.APPLICATION_JSON)
-	public List<Role> getRoles() {
-		return this.roleDao.getAll();
-	}
 }

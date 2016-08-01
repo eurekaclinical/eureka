@@ -1,6 +1,6 @@
 /*
  * #%L
- * Eureka Common
+ * Eureka Services
  * %%
  * Copyright (C) 2012 - 2013 Emory University
  * %%
@@ -37,38 +37,33 @@
  * <http://www.gnu.org/licenses/gpl-3.0.html>.
  * #L%
  */
-package edu.emory.cci.aiw.cvrg.eureka.common.comm;
+package edu.emory.cci.aiw.cvrg.eureka.etl.dao;
+
+import javax.persistence.EntityManager;
+
+
+import com.google.inject.Inject;
+import com.google.inject.Provider;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.AuthorizedRoleEntity;
+
+import org.eurekaclinical.standardapis.dao.AbstractJpaRoleDao;
 
 /**
- * Utility methods related to dealing with communication between different
- * layers of the application.
+ * A {@link RoleDao} implementation, backed by JPA entities and queries.
  *
  * @author hrathod
  *
  */
-public final class CommUtils {
+public class JpaRoleDao extends AbstractJpaRoleDao<AuthorizedRoleEntity> implements RoleDao {
 
 	/**
-	 * A private default constructor, to disallow instantiation of this class.
-	 */
-	private CommUtils() {
-		// do not allow instantiation of this class.
-	}
-
-	/**
-	 * Get a Jersey client capable of making HTTPS requests. NOTE: This method
-	 * returns a client with a trust manager that trusts all certificates. This
-	 * is very bad form. This should be removed as soon as possible (when a real
-	 * certificate is available for the machine).
+	 * Create a new object with the given entity manager.
 	 *
-	 * @return A Jersey client capable of making SSL requests.
+	 * @param inManagerProvider A provider for entity manager instances.
 	 */
-//	public static Client getClient() {
-//		ClientConfig clientConfig = new DefaultClientConfig();
-//		clientConfig.getFeatures().put(JSONConfiguration.FEATURE_POJO_MAPPING,
-//				Boolean.TRUE);
-//		clientConfig.getClasses().add(ObjectMapperProvider.class);
-//		return Client.create(clientConfig);
-//	}
+	@Inject
+	public JpaRoleDao(Provider<EntityManager> inManagerProvider) {
+		super(AuthorizedRoleEntity.class, inManagerProvider);
+	}
 
 }

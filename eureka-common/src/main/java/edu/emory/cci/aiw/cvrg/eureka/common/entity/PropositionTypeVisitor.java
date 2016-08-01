@@ -39,7 +39,7 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.common.entity;
 
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.Phenotype;
+import org.eurekaclinical.eureka.client.comm.Phenotype;
 
 public final class PropositionTypeVisitor implements PhenotypeEntityVisitor {
 

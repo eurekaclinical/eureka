@@ -39,7 +39,7 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.servlet;
 
-import edu.emory.cci.aiw.cvrg.eureka.common.authentication.AuthenticationMethod;
+import org.eurekaclinical.eureka.client.comm.authentication.AuthenticationMethod;
 import java.io.IOException;
 
 import javax.servlet.ServletException;
@@ -52,12 +52,11 @@ import org.slf4j.LoggerFactory;
 
 import com.google.inject.Inject;
 import com.sun.jersey.api.client.ClientResponse.Status;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.LdapUserRequest;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.LocalUserRequest;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.OAuthUserRequest;
-
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.UserRequest;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ClientException;
+import org.eurekaclinical.eureka.client.comm.LdapUserRequest;
+import org.eurekaclinical.eureka.client.comm.LocalUserRequest;
+import org.eurekaclinical.eureka.client.comm.OAuthUserRequest;
+import org.eurekaclinical.eureka.client.comm.UserRequest;
+import org.eurekaclinical.common.comm.clients.ClientException;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ServicesClient;
 import java.text.MessageFormat;
 import java.util.ResourceBundle;

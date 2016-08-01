@@ -70,7 +70,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 @Entity
 @Table(name = "users")
 @Inheritance(strategy = InheritanceType.JOINED)
-public abstract class UserEntity implements org.eurekaclinical.standardapis.entity.UserEntity<Role>, UserEntityVisitable {
+public abstract class UserEntity implements org.eurekaclinical.standardapis.entity.UserEntity<RoleEntity>, UserEntityVisitable {
 
 	/**
 	 * The user's unique identifier.
@@ -149,13 +149,13 @@ public abstract class UserEntity implements org.eurekaclinical.standardapis.enti
 	 * A list of roles assigned to the user.
 	 */
 	@ManyToMany(cascade = {CascadeType.REFRESH, CascadeType.MERGE},
-			targetEntity = Role.class)
+			targetEntity = RoleEntity.class)
 	@JoinTable(name = "user_role",
 			joinColumns = {
 				@JoinColumn(name = "user_id")},
 			inverseJoinColumns = {
 				@JoinColumn(name = "role_id")})
-	private List<Role> roles = new ArrayList<>();
+	private List<RoleEntity> roles = new ArrayList<>();
 
 	/**
 	 * Create an empty User object.
@@ -334,10 +334,10 @@ public abstract class UserEntity implements org.eurekaclinical.standardapis.enti
 	/**
 	 * Get all the roles assigned to the user.
 	 *
-	 * @return A list of {@link Role} objects.
+	 * @return A list of {@link RoleEntity} objects.
 	 */
 	@Override
-	public List<Role> getRoles() {
+	public List<RoleEntity> getRoles() {
 		return this.roles;
 	}
 
@@ -347,7 +347,7 @@ public abstract class UserEntity implements org.eurekaclinical.standardapis.enti
 	 * @param inRoles A Set of roles to be assigned to the user.
 	 */
 	@Override
-	public void setRoles(final List<Role> inRoles) {
+	public void setRoles(final List<RoleEntity> inRoles) {
 		this.roles = inRoles;
 	}
 

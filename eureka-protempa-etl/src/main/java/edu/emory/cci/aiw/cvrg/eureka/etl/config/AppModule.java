@@ -59,6 +59,8 @@ import edu.emory.cci.aiw.cvrg.eureka.etl.dao.SourceConfigDao;
 import edu.emory.cci.aiw.cvrg.eureka.etl.job.Task;
 import edu.emory.cci.aiw.cvrg.eureka.etl.job.TaskProvider;
 import edu.emory.cci.aiw.cvrg.eureka.etl.dao.DeidPerPatientParamsDao;
+import edu.emory.cci.aiw.cvrg.eureka.etl.dao.JpaRoleDao;
+import edu.emory.cci.aiw.cvrg.eureka.etl.dao.RoleDao;
 import org.eurekaclinical.standardapis.dao.UserDao;
 import org.eurekaclinical.standardapis.entity.RoleEntity;
 import org.eurekaclinical.standardapis.entity.UserEntity;
@@ -75,6 +77,7 @@ public class AppModule extends AbstractModule {
 	protected void configure() {
 		bind(new TypeLiteral<UserDao<? extends UserEntity<? extends RoleEntity>>>() {}).to(JpaEtlUserDao.class);
 		bind(AuthorizedUserDao.class).to(JpaEtlUserDao.class);
+		bind(RoleDao.class).to(JpaRoleDao.class);
 		bind(JobDao.class).to(JpaJobDao.class);
 		bind(JobEventDao.class).to(JpaJobEventDao.class);
 		bind(EtlGroupDao.class).to(JpaEtlGroupDao.class);

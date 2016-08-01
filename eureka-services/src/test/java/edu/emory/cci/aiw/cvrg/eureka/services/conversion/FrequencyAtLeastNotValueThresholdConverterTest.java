@@ -51,9 +51,9 @@ import org.protempa.AbstractionDefinition;
 import org.protempa.PropositionDefinition;
 import org.protempa.SimpleGapFunction;
 
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.SystemProposition.SystemType;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.TimeUnit;
 import edu.emory.cci.aiw.cvrg.eureka.services.test.AbstractServiceTest;
+import org.eurekaclinical.eureka.client.comm.SystemType;
 
 import static org.junit.Assert.assertEquals;
 

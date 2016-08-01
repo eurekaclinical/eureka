@@ -40,11 +40,11 @@ package edu.emory.cci.aiw.cvrg.eureka.etl.config;
  * #L%
  */
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.JobEntity;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.JobEvent;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.JobStatus;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.JobEventEntity;
 import java.util.Date;
 import java.util.List;
 import javax.persistence.EntityManager;
+import org.eurekaclinical.eureka.client.comm.JobStatus;
 import org.eurekaclinical.standardapis.dao.DatabaseSupport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -103,7 +103,7 @@ public class JobRepairer {
 		JobStatus currentState = job.getCurrentStatus();
 		LOGGER.warn("Repairing job {} with status {}", job.getId(), currentState);
 		if (!JobStatus.ERROR.equals(job.getCurrentStatus())) {
-			JobEvent errorJobEvent = new JobEvent();
+			JobEventEntity errorJobEvent = new JobEventEntity();
 			errorJobEvent.setJob(job);
 			errorJobEvent.setTimeStamp(new Date());
 			errorJobEvent.setStatus(JobStatus.ERROR);
@@ -112,7 +112,7 @@ public class JobRepairer {
 		}
 		Date jobFinishedDate = new Date();
 		job.setFinished(jobFinishedDate);
-		JobEvent failedJobEvent = new JobEvent();
+		JobEventEntity failedJobEvent = new JobEventEntity();
 		failedJobEvent.setJob(job);
 		failedJobEvent.setTimeStamp(jobFinishedDate);
 		failedJobEvent.setStatus(JobStatus.FAILED);

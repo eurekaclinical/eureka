@@ -40,8 +40,8 @@ package edu.emory.cci.aiw.cvrg.eureka.common.entity;
  * #L%
  */
 
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.Literal;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.Node;
+import org.eurekaclinical.eureka.client.comm.Literal;
+import org.eurekaclinical.eureka.client.comm.Node;
 import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;

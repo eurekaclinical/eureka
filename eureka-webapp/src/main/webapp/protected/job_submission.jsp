@@ -153,7 +153,7 @@
 															  <c:if test="${option.prompt}">
 																  <div data-index="${status.index}" data-option-name="${option.name}" class="uploader form-group">
 																	  <c:choose>
-																		  <c:when test="${option['class'].name == 'edu.emory.cci.aiw.cvrg.eureka.common.comm.FileSourceConfigOption'}">
+																		  <c:when test="${option['class'].name == 'org.eurekaclinical.eureka.client.comm.FileSourceConfigOption'}">
 																			  <label>
 																				  <c:if test="${option.required}">
 																					  <span class="uploadRequired">*</span>

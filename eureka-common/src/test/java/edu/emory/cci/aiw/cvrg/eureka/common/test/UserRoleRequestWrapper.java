@@ -40,7 +40,7 @@ package edu.emory.cci.aiw.cvrg.eureka.common.test;
  * #L%
  */
 
-import edu.emory.cci.aiw.cvrg.eureka.common.authentication.AuthenticationMethod;
+import org.eurekaclinical.eureka.client.comm.authentication.AuthenticationMethod;
 import edu.emory.cci.aiw.cvrg.eureka.common.authentication.UserPrincipalAttributes;
 import java.security.Principal;
 import java.util.Collections;

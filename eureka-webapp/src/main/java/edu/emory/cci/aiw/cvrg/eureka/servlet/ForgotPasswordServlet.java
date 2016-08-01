@@ -52,8 +52,8 @@ import org.slf4j.LoggerFactory;
 import com.google.inject.Inject;
 import com.sun.jersey.api.client.ClientResponse;
 
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ClientException;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ServicesClient;
+import org.eurekaclinical.common.comm.clients.ClientException;
 
 /**
  * Servlet implementation class ForgotPasswordServlet

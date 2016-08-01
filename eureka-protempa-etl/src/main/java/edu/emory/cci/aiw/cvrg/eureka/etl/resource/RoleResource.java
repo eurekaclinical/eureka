@@ -1,10 +1,8 @@
-package edu.emory.cci.aiw.cvrg.eureka.common.comm;
-
 /*
  * #%L
- * Eureka Common
+ * Eureka Services
  * %%
- * Copyright (C) 2012 - 2015 Emory University
+ * Copyright (C) 2012 - 2013 Emory University
  * %%
  * This program is dual licensed under the Apache 2 and GPLv3 licenses.
  * 
@@ -39,21 +37,45 @@ package edu.emory.cci.aiw.cvrg.eureka.common.comm;
  * <http://www.gnu.org/licenses/gpl-3.0.html>.
  * #L%
  */
+package edu.emory.cci.aiw.cvrg.eureka.etl.resource;
+
+import javax.ws.rs.Path;
+import com.google.inject.persist.Transactional;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.AuthorizedRoleEntity;
+
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.RoleEntity;
+import edu.emory.cci.aiw.cvrg.eureka.etl.dao.RoleDao;
+import javax.inject.Inject;
+import org.eurekaclinical.common.comm.Role;
+import org.eurekaclinical.common.resource.AbstractRoleResource;
 
 /**
+ * A RESTful end-point for working with {@link RoleEntity} objects.
  *
- * @author Andrew Post
+ * @author hrathod
+ *
  */
-public class FileSourceConfigOption extends SourceConfigOption {
+@Transactional
+@Path("/protected/roles")
+public class RoleResource extends AbstractRoleResource<AuthorizedRoleEntity, Role> {
 
-	private String[] acceptedMimetypes;
-
-	public String[] getAcceptedMimetypes() {
-		return acceptedMimetypes;
+	/**
+	 * Create a RoleResource object with the given {@link RoleDao}
+	 *
+	 * @param inRoleDao The RoleDao object used to work with role objects in the
+	 *            data store.
+	 */
+	@Inject
+	public RoleResource(RoleDao inRoleDao) {
+		super(inRoleDao);
 	}
 
-	public void setAcceptedMimetypes(String[] acceptedMimetypes) {
-		this.acceptedMimetypes = acceptedMimetypes;
+	@Override
+	protected Role toRole(AuthorizedRoleEntity roleEntity) {
+		Role role = new Role();
+		role.setId(roleEntity.getId());
+		role.setName(roleEntity.getName());
+		return role;
 	}
 
 }

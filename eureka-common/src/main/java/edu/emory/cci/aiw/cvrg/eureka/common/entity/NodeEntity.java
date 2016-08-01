@@ -40,7 +40,7 @@ package edu.emory.cci.aiw.cvrg.eureka.common.entity;
  * #L%
  */
 
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.Node;
+import org.eurekaclinical.eureka.client.comm.Node;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;

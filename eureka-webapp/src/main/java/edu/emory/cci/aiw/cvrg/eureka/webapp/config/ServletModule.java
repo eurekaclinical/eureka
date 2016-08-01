@@ -57,6 +57,7 @@ import edu.emory.cci.aiw.cvrg.eureka.servlet.proposition.*;
 import java.util.HashMap;
 import java.util.Map;
 import org.eurekaclinical.common.config.AbstractServletModule;
+import org.eurekaclinical.common.servlet.LogoutServlet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

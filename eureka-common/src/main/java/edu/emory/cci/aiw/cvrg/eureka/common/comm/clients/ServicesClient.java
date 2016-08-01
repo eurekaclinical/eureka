@@ -41,8 +41,27 @@ package edu.emory.cci.aiw.cvrg.eureka.common.comm.clients;
 
 import com.sun.jersey.api.client.GenericType;
 import com.sun.jersey.core.util.MultivaluedMapImpl;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.*;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.*;
+import org.eurekaclinical.eureka.client.comm.CohortDestination;
+import org.eurekaclinical.eureka.client.comm.Destination;
+import org.eurekaclinical.eureka.client.comm.DestinationType;
+import org.eurekaclinical.eureka.client.comm.I2B2Destination;
+import org.eurekaclinical.eureka.client.comm.Job;
+import org.eurekaclinical.eureka.client.comm.JobSpec;
+import org.eurekaclinical.eureka.client.comm.PasswordChangeRequest;
+import org.eurekaclinical.eureka.client.comm.Phenotype;
+import org.eurekaclinical.eureka.client.comm.SourceConfig;
+import org.eurekaclinical.eureka.client.comm.SourceConfigParams;
+import org.eurekaclinical.eureka.client.comm.Statistics;
+import org.eurekaclinical.eureka.client.comm.SystemPhenotype;
+import org.eurekaclinical.eureka.client.comm.User;
+import org.eurekaclinical.eureka.client.comm.UserRequest;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.FrequencyType;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.OAuthProvider;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.RelationOperator;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.RoleEntity;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.ThresholdsOperator;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.TimeUnit;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.ValueComparator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -54,6 +73,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import javax.ws.rs.core.Response;
+import org.eurekaclinical.common.comm.Role;
+import org.eurekaclinical.common.comm.clients.ClientException;
 import org.eurekaclinical.standardapis.exception.HttpStatusException;
 
 /**

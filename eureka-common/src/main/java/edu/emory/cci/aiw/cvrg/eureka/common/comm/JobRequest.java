@@ -40,45 +40,46 @@
 package edu.emory.cci.aiw.cvrg.eureka.common.comm;
 
 import java.util.List;
+import org.eurekaclinical.eureka.client.comm.JobSpec;
 
 import org.protempa.PropositionDefinition;
 
 public class JobRequest {
 
-	private JobSpec job;
-	private List<PropositionDefinition> userPropositions;
-	private List<String> propIdsToShow;
+    private JobSpec job;
+    private List<PropositionDefinition> userPropositions;
+    private List<String> propIdsToShow;
 
-	public JobRequest() {
-		this.job = new JobSpec();
-	}
+    public JobRequest() {
+        this.job = new JobSpec();
+    }
 
-	public JobSpec getJobSpec() {
-		return job;
-	}
+    public JobSpec getJobSpec() {
+        return job;
+    }
 
-	public void setJobSpec(JobSpec inJob) {
-		if (inJob == null) {
-			this.job = new JobSpec();
-		} else {
-			this.job = inJob;
-		}
-	}
+    public void setJobSpec(JobSpec inJob) {
+        if (inJob == null) {
+            this.job = new JobSpec();
+        } else {
+            this.job = inJob;
+        }
+    }
 
-	public List<PropositionDefinition> getUserPropositions() {
-		return userPropositions;
-	}
+    public List<PropositionDefinition> getUserPropositions() {
+        return userPropositions;
+    }
 
-	public void setUserPropositions(
-			List<PropositionDefinition> inUserPropositions) {
-		this.userPropositions = inUserPropositions;
-	}
+    public void setUserPropositions(
+            List<PropositionDefinition> inUserPropositions) {
+        this.userPropositions = inUserPropositions;
+    }
 
-	public List<String> getPropositionIdsToShow() {
-		return propIdsToShow;
-	}
+    public List<String> getPropositionIdsToShow() {
+        return propIdsToShow;
+    }
 
-	public void setPropositionIdsToShow(List<String> inPropositionIds) {
-		this.propIdsToShow = inPropositionIds;
-	}
+    public void setPropositionIdsToShow(List<String> inPropositionIds) {
+        this.propIdsToShow = inPropositionIds;
+    }
 }

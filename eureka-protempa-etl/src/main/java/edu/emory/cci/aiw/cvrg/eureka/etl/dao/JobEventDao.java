@@ -45,13 +45,13 @@ package edu.emory.cci.aiw.cvrg.eureka.etl.dao;
  * #L%
  */
 
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.JobEvent;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.JobEventEntity;
 import org.eurekaclinical.standardapis.dao.Dao;
 
 /**
  *
  * @author arpost
  */
-public interface JobEventDao extends Dao<JobEvent, Long> {
+public interface JobEventDao extends Dao<JobEventEntity, Long> {
 	
 }

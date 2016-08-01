@@ -46,7 +46,7 @@ import org.arp.javautil.arrays.Arrays;
 import org.protempa.PropertyDefinition;
 import org.protempa.PropositionDefinition;
 
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.SystemPhenotype;
+import org.eurekaclinical.eureka.client.comm.SystemPhenotype;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.PhenotypeEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.SystemProposition;
 import edu.emory.cci.aiw.cvrg.eureka.services.finder.PropositionFindException;

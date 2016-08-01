@@ -40,8 +40,8 @@ package edu.emory.cci.aiw.cvrg.eureka.common.authentication;
  * #L%
  */
 
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.User;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.UserRequest;
+import org.eurekaclinical.eureka.client.comm.User;
+import org.eurekaclinical.eureka.client.comm.UserRequest;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.UserEntity;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;

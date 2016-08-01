@@ -51,6 +51,7 @@ import org.eurekaclinical.scribeupext.provider.GitHubProvider;
 import org.eurekaclinical.scribeupext.provider.GlobusProvider;
 import org.eurekaclinical.scribeupext.provider.Google2Provider;
 import org.eurekaclinical.scribeupext.provider.SSLTwitterProvider;
+import org.eurekaclinical.standardapis.props.EurekaClinicalProperties;
 
 /**
  *
@@ -67,6 +68,7 @@ class AppModule extends AbstractModule {
 	@Override
 	protected void configure() {
 		bind(WebappProperties.class).toInstance(this.webappProperties);
+		bind(EurekaClinicalProperties.class).toInstance(this.webappProperties);
 		bind(ServicesClient.class).toProvider(ServicesClientProvider.class);
 		bind(GitHubProvider.class).toProvider(ScribeExtGitHubProvider.class);
 		bind(GlobusProvider.class).toProvider(ScribeExtGlobusProvider.class);

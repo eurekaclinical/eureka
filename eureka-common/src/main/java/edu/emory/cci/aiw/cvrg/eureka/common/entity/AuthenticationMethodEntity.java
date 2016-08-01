@@ -39,7 +39,7 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.common.entity;
 
-import edu.emory.cci.aiw.cvrg.eureka.common.authentication.AuthenticationMethod;
+import org.eurekaclinical.eureka.client.comm.authentication.AuthenticationMethod;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -101,8 +101,8 @@ public class AuthenticationMethodEntity {
 		return ToStringBuilder.reflectionToString(this);
 	}
 	
-	public edu.emory.cci.aiw.cvrg.eureka.common.comm.AuthenticationMethod toAuthenticationMethod() {
-		edu.emory.cci.aiw.cvrg.eureka.common.comm.AuthenticationMethod authenticationMethod = new edu.emory.cci.aiw.cvrg.eureka.common.comm.AuthenticationMethod();
+	public org.eurekaclinical.eureka.client.comm.AuthenticationMethod toAuthenticationMethod() {
+		org.eurekaclinical.eureka.client.comm.AuthenticationMethod authenticationMethod = new org.eurekaclinical.eureka.client.comm.AuthenticationMethod();
 		authenticationMethod.setId(this.id);
 		authenticationMethod.setName(this.name);
 		authenticationMethod.setDescription(this.description);

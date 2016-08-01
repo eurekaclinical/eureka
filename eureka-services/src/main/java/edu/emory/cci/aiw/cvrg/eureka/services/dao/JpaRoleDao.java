@@ -45,9 +45,8 @@ import javax.persistence.EntityManager;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.Role;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.Role_;
-import org.eurekaclinical.standardapis.dao.GenericDao;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.RoleEntity;
+import org.eurekaclinical.standardapis.dao.AbstractJpaRoleDao;
 
 /**
  * A {@link RoleDao} implementation, backed by JPA entities and queries.
@@ -55,7 +54,7 @@ import org.eurekaclinical.standardapis.dao.GenericDao;
  * @author hrathod
  *
  */
-public class JpaRoleDao extends GenericDao<Role, Long> implements RoleDao {
+public class JpaRoleDao extends AbstractJpaRoleDao<RoleEntity> implements RoleDao {
 
 	/**
 	 * Create a new object with the given entity manager.
@@ -64,11 +63,7 @@ public class JpaRoleDao extends GenericDao<Role, Long> implements RoleDao {
 	 */
 	@Inject
 	public JpaRoleDao(Provider<EntityManager> inManagerProvider) {
-		super(Role.class, inManagerProvider);
+		super(RoleEntity.class, inManagerProvider);
 	}
 
-	@Override
-	public Role getRoleByName(String name) {
-		return this.getUniqueByAttribute(Role_.name, name);
-	}
 }

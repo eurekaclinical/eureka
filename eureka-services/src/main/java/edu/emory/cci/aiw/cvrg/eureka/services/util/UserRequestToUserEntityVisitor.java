@@ -40,14 +40,14 @@ package edu.emory.cci.aiw.cvrg.eureka.services.util;
  * #L%
  */
 
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.LdapUserRequest;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.LocalUserRequest;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.OAuthUserRequest;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.UserRequest;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.UserRequestVisitor;
+import org.eurekaclinical.eureka.client.comm.LdapUserRequest;
+import org.eurekaclinical.eureka.client.comm.LocalUserRequest;
+import org.eurekaclinical.eureka.client.comm.OAuthUserRequest;
+import org.eurekaclinical.eureka.client.comm.UserRequest;
+import org.eurekaclinical.eureka.client.comm.UserRequestVisitor;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.LocalUserEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.OAuthUserEntity;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.Role;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.RoleEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.UserEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.util.StringUtil;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.AuthenticationMethodDao;
@@ -142,9 +142,9 @@ public class UserRequestToUserEntityVisitor implements UserRequestVisitor {
 	 *
 	 * @return A list of default roles.
 	 */
-	private List<Role> getDefaultRoles() {
-		List<Role> defaultRoles = new ArrayList<>();
-		for (Role role : this.roleDao.getAll()) {
+	private List<RoleEntity> getDefaultRoles() {
+		List<RoleEntity> defaultRoles = new ArrayList<>();
+		for (RoleEntity role : this.roleDao.getAll()) {
 			if (Boolean.TRUE.equals(role.isDefaultRole())) {
 				defaultRoles.add(role);
 			}

@@ -44,31 +44,32 @@ import java.util.List;
 import org.protempa.PropositionDefinition;
 
 public class ValidationRequest {
-	private Long userId;
-	private PropositionDefinition targetProposition;
-	private List<PropositionDefinition> propositions;
 
-	public Long getUserId() {
-		return userId;
-	}
+    private Long userId;
+    private PropositionDefinition targetProposition;
+    private List<PropositionDefinition> propositions;
 
-	public void setUserId(Long inUserId) {
-		userId = inUserId;
-	}
+    public Long getUserId() {
+        return userId;
+    }
 
-	public PropositionDefinition getTargetProposition() {
-		return targetProposition;
-	}
+    public void setUserId(Long inUserId) {
+        userId = inUserId;
+    }
 
-	public void setTargetProposition(PropositionDefinition inTargetProposition) {
-		targetProposition = inTargetProposition;
-	}
+    public PropositionDefinition getTargetProposition() {
+        return targetProposition;
+    }
 
-	public List<PropositionDefinition> getPropositions() {
-		return propositions;
-	}
+    public void setTargetProposition(PropositionDefinition inTargetProposition) {
+        targetProposition = inTargetProposition;
+    }
 
-	public void setPropositions(List<PropositionDefinition> inPropositions) {
-		propositions = inPropositions;
-	}
+    public List<PropositionDefinition> getPropositions() {
+        return propositions;
+    }
+
+    public void setPropositions(List<PropositionDefinition> inPropositions) {
+        propositions = inPropositions;
+    }
 }

@@ -41,12 +41,12 @@ package edu.emory.cci.aiw.cvrg.eureka.services.resource;
 
 import com.sun.jersey.api.client.GenericType;
 import com.sun.jersey.api.client.WebResource;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.Role;
 import org.junit.Assert;
 import org.junit.Test;
 
 import javax.ws.rs.core.MediaType;
 import java.util.List;
+import org.eurekaclinical.common.comm.Role;
 
 /**
  * Tests for the {@link RoleResource} class.

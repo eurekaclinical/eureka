@@ -42,6 +42,9 @@
 <databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" 
 				   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
 				   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.3.xsd" logicalFilePath="changelog-master.xml">
+	
+	<property name="eureka.superuser.username" value="superuser"/>
+	
 	<changeSet author="arpost (generated)" id="1361552652236-2">
 		<createTable tableName="JOB_EVENTS">
 			<column name="ID" type="BIGINT">

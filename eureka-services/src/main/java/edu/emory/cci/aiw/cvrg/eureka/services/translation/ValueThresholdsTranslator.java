@@ -48,11 +48,11 @@ import org.slf4j.LoggerFactory;
 
 import com.google.inject.Inject;
 
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.PhenotypeField;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.ValueThreshold;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.ValueThresholds;
+import org.eurekaclinical.eureka.client.comm.PhenotypeField;
+import org.eurekaclinical.eureka.client.comm.ValueThreshold;
+import org.eurekaclinical.eureka.client.comm.ValueThresholds;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.*;
-import edu.emory.cci.aiw.cvrg.eureka.common.exception.PhenotypeHandlingException;
+import org.eurekaclinical.eureka.client.comm.exception.PhenotypeHandlingException;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.RelationOperatorDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.ThresholdsOperatorDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.TimeUnitDao;

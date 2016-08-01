@@ -55,9 +55,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.inject.Singleton;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.LocalUser;
-
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.User;
+import org.eurekaclinical.eureka.client.comm.LocalUser;
+import org.eurekaclinical.eureka.client.comm.User;
 import edu.emory.cci.aiw.cvrg.eureka.webapp.config.RequestAttributes;
 
 /**

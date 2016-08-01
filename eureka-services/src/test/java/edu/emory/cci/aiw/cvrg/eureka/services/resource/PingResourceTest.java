@@ -40,10 +40,10 @@
 package edu.emory.cci.aiw.cvrg.eureka.services.resource;
 
 import com.sun.jersey.api.client.ClientResponse;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.User;
 import org.junit.Assert;
 
 import java.util.List;
+import org.eurekaclinical.eureka.client.comm.User;
 
 /**
  * @author hrathod

@@ -40,7 +40,6 @@
 package edu.emory.cci.aiw.cvrg.eureka.servlet.worker.useracct;
 
 import java.io.IOException;
-import java.text.MessageFormat;
 import java.util.ResourceBundle;
 
 import javax.servlet.ServletContext;
@@ -51,9 +50,9 @@ import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.User;
+import org.eurekaclinical.eureka.client.comm.User;
 
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ClientException;
+import org.eurekaclinical.common.comm.clients.ClientException;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ServicesClient;
 import edu.emory.cci.aiw.cvrg.eureka.servlet.worker.ServletWorker;
 import edu.emory.cci.aiw.cvrg.eureka.webapp.config.WebappProperties;

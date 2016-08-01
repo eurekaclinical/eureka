@@ -1,10 +1,10 @@
-package edu.emory.cci.aiw.cvrg.eureka.common.comm;
+package edu.emory.cci.aiw.cvrg.eureka.common.entity;
 
 /*
  * #%L
  * Eureka Common
  * %%
- * Copyright (C) 2012 - 2015 Emory University
+ * Copyright (C) 2012 - 2013 Emory University
  * %%
  * This program is dual licensed under the Apache 2 and GPLv3 licenses.
  * 
@@ -40,78 +40,35 @@ package edu.emory.cci.aiw.cvrg.eureka.common.comm;
  * #L%
  */
 
-import java.util.Objects;
-import java.util.Set;
-import org.apache.commons.lang3.builder.ToStringBuilder;
+import java.io.Serializable;
+import java.util.Comparator;
+import java.util.EnumMap;
+import java.util.Map;
+import org.eurekaclinical.eureka.client.comm.JobStatus;
 
 /**
  *
  * @author Andrew Post
  */
-public class PatientSet {
-	private String username;
-	private String name;
-	private Set<String> patients;
+public class JobEventEntityComparator implements Comparator<JobEventEntity>,
+		Serializable {
 
-	public String getUsername() {
-		return username;
-	}
+	private static final long serialVersionUID = 1;
+	private static final Map<JobStatus, Integer> ORDER = 
+			new EnumMap<>(JobStatus.class);
 
-	public void setUsername(String username) {
-		this.username = username;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	public Set<String> getPatients() {
-		return patients;
-	}
-
-	public void setPatients(Set<String> patients) {
-		this.patients = patients;
-	}
-	
-	@Override
-	public String toString() {
-		return ToStringBuilder.reflectionToString(this);
+	static {
+		ORDER.put(JobStatus.VALIDATING, 0);
+		ORDER.put(JobStatus.VALIDATED, 1);
+		ORDER.put(JobStatus.STARTED, 2);
+		ORDER.put(JobStatus.WARNING, 3);
+		ORDER.put(JobStatus.ERROR, 4);
+		ORDER.put(JobStatus.COMPLETED, 5);
+		ORDER.put(JobStatus.FAILED, 6);
 	}
 
 	@Override
-	public int hashCode() {
-		int hash = 3;
-		hash = 53 * hash + Objects.hashCode(this.username);
-		hash = 53 * hash + Objects.hashCode(this.name);
-		hash = 53 * hash + Objects.hashCode(this.patients);
-		return hash;
+	public int compare(JobEventEntity a, JobEventEntity b) {
+		return ORDER.get(a.getStatus()).compareTo(ORDER.get(b.getStatus()));
 	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (obj == null) {
-			return false;
-		}
-		if (getClass() != obj.getClass()) {
-			return false;
-		}
-		final PatientSet other = (PatientSet) obj;
-		if (!Objects.equals(this.username, other.username)) {
-			return false;
-		}
-		if (!Objects.equals(this.name, other.name)) {
-			return false;
-		}
-		if (!Objects.equals(this.patients, other.patients)) {
-			return false;
-		}
-		return true;
-	}
-	
-	
-	
 }

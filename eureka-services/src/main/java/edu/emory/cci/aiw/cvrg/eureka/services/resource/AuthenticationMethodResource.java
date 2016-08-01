@@ -41,7 +41,7 @@ package edu.emory.cci.aiw.cvrg.eureka.services.resource;
 
 import com.google.inject.Inject;
 import com.google.inject.persist.Transactional;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.AuthenticationMethod;
+import org.eurekaclinical.eureka.client.comm.AuthenticationMethod;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.AuthenticationMethodEntity;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.AuthenticationMethodDao;
 import java.util.ArrayList;
@@ -94,7 +94,7 @@ public class AuthenticationMethodResource {
 	@GET
 	@Path("/byname/{name}")
 	public AuthenticationMethod getByName(@PathParam("name") String inName) {
-		AuthenticationMethodEntity authenticationMethodEntity = this.authenticationMethodDao.getByName(edu.emory.cci.aiw.cvrg.eureka.common.authentication.AuthenticationMethod.valueOf(inName));
+		AuthenticationMethodEntity authenticationMethodEntity = this.authenticationMethodDao.getByName(org.eurekaclinical.eureka.client.comm.authentication.AuthenticationMethod.valueOf(inName));
 		if (authenticationMethodEntity == null) {
 			throw new HttpStatusException(Status.NOT_FOUND);
 		}

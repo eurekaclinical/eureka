@@ -39,7 +39,7 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.common.entity;
 
-import edu.emory.cci.aiw.cvrg.eureka.common.authentication.LoginType;
+import org.eurekaclinical.eureka.client.comm.authentication.LoginType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -101,8 +101,8 @@ public class LoginTypeEntity {
 		return ToStringBuilder.reflectionToString(this);
 	}
 	
-	public edu.emory.cci.aiw.cvrg.eureka.common.comm.LoginType toLoginType() {
-		edu.emory.cci.aiw.cvrg.eureka.common.comm.LoginType loginType = new edu.emory.cci.aiw.cvrg.eureka.common.comm.LoginType();
+	public org.eurekaclinical.eureka.client.comm.LoginType toLoginType() {
+		org.eurekaclinical.eureka.client.comm.LoginType loginType = new org.eurekaclinical.eureka.client.comm.LoginType();
 		loginType.setDescription(this.description);
 		loginType.setName(this.name);
 		loginType.setId(this.id);

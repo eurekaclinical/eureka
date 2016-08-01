@@ -57,6 +57,8 @@ import org.codehaus.jackson.annotate.JsonBackReference;
 import javax.persistence.Column;
 import javax.persistence.Lob;
 import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.eurekaclinical.eureka.client.comm.JobEvent;
+import org.eurekaclinical.eureka.client.comm.JobStatus;
 
 /**
  * An event associated with a job.
@@ -66,7 +68,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
  */
 @Entity
 @Table(name = "job_events")
-public class JobEvent {
+public class JobEventEntity {
 
 	/**
 	 * The unique identifier for the job event.
@@ -112,7 +114,7 @@ public class JobEvent {
 	@Lob
 	private String message;
 
-	public JobEvent() {
+	public JobEventEntity() {
 		this.timeStamp = new Date();
 	}
 
@@ -216,6 +218,16 @@ public class JobEvent {
 	@Override
 	public String toString() {
 		return ToStringBuilder.reflectionToString(this);
+	}
+	
+	public JobEvent toJobEvent() {
+		JobEvent jobEvent = new JobEvent();
+		jobEvent.setId(this.id);
+		jobEvent.setMessage(this.message);
+		jobEvent.setStatus(this.status);
+		jobEvent.setTimeStamp(this.timeStamp);
+		jobEvent.setExceptionStackTrace(this.zExceptionStackTrace);
+		return jobEvent;
 	}
 
 }

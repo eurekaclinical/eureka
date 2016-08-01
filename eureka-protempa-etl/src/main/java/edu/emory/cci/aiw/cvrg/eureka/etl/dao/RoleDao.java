@@ -1,13 +1,8 @@
-package edu.emory.cci.aiw.cvrg.eureka.common.comm;
-
-import edu.emory.cci.aiw.cvrg.eureka.common.authentication.AuthenticationMethod;
-import edu.emory.cci.aiw.cvrg.eureka.common.authentication.LoginType;
-
 /*
  * #%L
- * Eureka Common
+ * Eureka Services
  * %%
- * Copyright (C) 2012 - 2014 Emory University
+ * Copyright (C) 2012 - 2013 Emory University
  * %%
  * This program is dual licensed under the Apache 2 and GPLv3 licenses.
  * 
@@ -42,58 +37,17 @@ import edu.emory.cci.aiw.cvrg.eureka.common.authentication.LoginType;
  * <http://www.gnu.org/licenses/gpl-3.0.html>.
  * #L%
  */
+package edu.emory.cci.aiw.cvrg.eureka.etl.dao;
+
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.AuthorizedRoleEntity;
 
 /**
+ * A data access object interface for working with {@link RoleEntity} objects in the
+ * data store.
  *
- * @author Andrew Post
+ * @author hrathod
+ *
  */
-public final class OAuthUser extends User {
-	private String providerUsername;
-	private Long oauthProvider;
+public interface RoleDao extends org.eurekaclinical.standardapis.dao.RoleDao<AuthorizedRoleEntity> {
 
-	public OAuthUser() {
-		setLoginType(LoginType.PROVIDER);
-	}
-
-	public String getProviderUsername() {
-		return providerUsername;
-	}
-
-	public void setProviderUsername(String providerUsername) {
-		this.providerUsername = providerUsername;
-	}
-
-	public Long getOAuthProvider() {
-		return oauthProvider;
-	}
-
-	public void setOAuthProvider(Long oauthProvider) {
-		this.oauthProvider = oauthProvider;
-	}
-	
-	@Override
-	public String[] validate() {
-		String[] results = super.validate();
-		
-		if (this.oauthProvider == null) {
-			String[] newResults = new String[results.length + 1];
-			System.arraycopy(results, 0, newResults, 0, results.length);
-			newResults[results.length] = "OAuth provider unspecified";
-			results = newResults;
-		}
-		return results;
-	}
-	
-	@Override
-	public void accept(UserVisitor userVisitor) {
-		userVisitor.visit(this);
-	}
-
-	@Override
-	public AuthenticationMethod authenticationMethod() {
-		return AuthenticationMethod.OAUTH;
-	}
-	
-	
-	
 }

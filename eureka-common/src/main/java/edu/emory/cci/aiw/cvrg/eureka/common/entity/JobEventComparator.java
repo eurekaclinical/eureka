@@ -44,6 +44,8 @@ import java.io.Serializable;
 import java.util.Comparator;
 import java.util.EnumMap;
 import java.util.Map;
+import org.eurekaclinical.eureka.client.comm.JobEvent;
+import org.eurekaclinical.eureka.client.comm.JobStatus;
 
 /**
  *
@@ -53,21 +55,21 @@ public class JobEventComparator implements Comparator<JobEvent>,
 		Serializable {
 
 	private static final long serialVersionUID = -1597150892714722679L;
-	private static final Map<JobStatus, Integer> order = 
+	private static final Map<JobStatus, Integer> ORDER = 
 			new EnumMap<>(JobStatus.class);
 
 	static {
-		order.put(JobStatus.VALIDATING, 0);
-		order.put(JobStatus.VALIDATED, 1);
-		order.put(JobStatus.STARTED, 2);
-		order.put(JobStatus.WARNING, 3);
-		order.put(JobStatus.ERROR, 4);
-		order.put(JobStatus.COMPLETED, 5);
-		order.put(JobStatus.FAILED, 6);
+		ORDER.put(JobStatus.VALIDATING, 0);
+		ORDER.put(JobStatus.VALIDATED, 1);
+		ORDER.put(JobStatus.STARTED, 2);
+		ORDER.put(JobStatus.WARNING, 3);
+		ORDER.put(JobStatus.ERROR, 4);
+		ORDER.put(JobStatus.COMPLETED, 5);
+		ORDER.put(JobStatus.FAILED, 6);
 	}
 
 	@Override
 	public int compare(JobEvent a, JobEvent b) {
-		return order.get(a.getStatus()).compareTo(order.get(b.getStatus()));
+		return ORDER.get(a.getStatus()).compareTo(ORDER.get(b.getStatus()));
 	}
 }

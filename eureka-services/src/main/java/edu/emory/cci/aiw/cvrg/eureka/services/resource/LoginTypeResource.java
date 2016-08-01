@@ -41,7 +41,7 @@ package edu.emory.cci.aiw.cvrg.eureka.services.resource;
 
 import com.google.inject.Inject;
 import com.google.inject.persist.Transactional;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.LoginType;
+import org.eurekaclinical.eureka.client.comm.LoginType;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.LoginTypeEntity;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.LoginTypeDao;
 import java.util.ArrayList;
@@ -95,7 +95,7 @@ public class LoginTypeResource {
 	@GET
 	@Path("/byname/{name}")
 	public LoginType getByName(@PathParam("name") String inName) {
-		LoginTypeEntity loginTypeEntity = this.loginTypeDao.getByName(edu.emory.cci.aiw.cvrg.eureka.common.authentication.LoginType.valueOf(inName));
+		LoginTypeEntity loginTypeEntity = this.loginTypeDao.getByName(org.eurekaclinical.eureka.client.comm.authentication.LoginType.valueOf(inName));
 		if (loginTypeEntity == null) {
 			throw new HttpStatusException(Status.NOT_FOUND);
 		}

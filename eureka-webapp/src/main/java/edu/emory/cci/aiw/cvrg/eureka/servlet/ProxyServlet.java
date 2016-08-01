@@ -41,7 +41,6 @@ package edu.emory.cci.aiw.cvrg.eureka.servlet;
  */
 import com.google.inject.Inject;
 import com.sun.jersey.core.util.MultivaluedMapImpl;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ClientException;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ServicesClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -57,6 +56,7 @@ import java.io.InputStream;
 import java.net.URI;
 import java.util.Map;
 import org.apache.commons.io.IOUtils;
+import org.eurekaclinical.common.comm.clients.ClientException;
 
 /**
  * @author Sanjay Agravat, Miao Ai

@@ -39,11 +39,11 @@ package edu.emory.cci.aiw.cvrg.eureka.etl.resource;
  * <http://www.gnu.org/licenses/gpl-3.0.html>.
  * #L%
  */
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.DefaultSourceConfigOption;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.FileSourceConfigOption;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.SourceConfig;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.SourceConfigOption;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.UriSourceConfigOption;
+import org.eurekaclinical.eureka.client.comm.DefaultSourceConfigOption;
+import org.eurekaclinical.eureka.client.comm.FileSourceConfigOption;
+import org.eurekaclinical.eureka.client.comm.SourceConfig;
+import org.eurekaclinical.eureka.client.comm.SourceConfigOption;
+import org.eurekaclinical.eureka.client.comm.UriSourceConfigOption;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.AuthorizedUserEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.SourceConfigEntity;
 import edu.emory.cci.aiw.cvrg.eureka.etl.config.EtlProperties;
@@ -58,6 +58,7 @@ import java.util.List;
 import org.protempa.backend.Backend;
 import org.protempa.backend.BackendInstanceSpec;
 import org.protempa.backend.BackendPropertySpec;
+import org.protempa.backend.BackendPropertyType;
 import org.protempa.backend.BackendPropertyValidator;
 import org.protempa.backend.Configuration;
 import org.protempa.backend.ConfigurationsLoadException;
@@ -198,11 +199,46 @@ class SourceConfigsDTOExtractor extends ConfigsDTOExtractor<SourceConfig, Source
 			option.setDescription(property.getDescription());
 			option.setValue(value);
 			option.setRequired(bis.isRequired(property.getName()));
-			option.setPropertyType(property.getType());
+			option.setPropertyType(toEurekaBackendPropertyType(property.getType()));
 			option.setPrompt(bis.isRequired(property.getName()) && value == null);
 			options[i] = option;
 		}
 		section.setOptions(options);
 		return section;
+	}
+
+	private SourceConfigOption.BackendPropertyType toEurekaBackendPropertyType(BackendPropertyType type) {
+		switch (type) {
+			case STRING:
+				return SourceConfigOption.BackendPropertyType.STRING;
+			case BOOLEAN:
+				return SourceConfigOption.BackendPropertyType.BOOLEAN;
+			case INTEGER:
+				return SourceConfigOption.BackendPropertyType.INTEGER;
+			case LONG:
+				return SourceConfigOption.BackendPropertyType.LONG;
+			case FLOAT:
+				return SourceConfigOption.BackendPropertyType.FLOAT;
+			case DOUBLE:
+				return SourceConfigOption.BackendPropertyType.DOUBLE;
+			case CHARACTER:
+				return SourceConfigOption.BackendPropertyType.CHARACTER;
+			case STRING_ARRAY:
+				return SourceConfigOption.BackendPropertyType.STRING_ARRAY;
+			case DOUBLE_ARRAY:
+				return SourceConfigOption.BackendPropertyType.DOUBLE_ARRAY;
+			case FLOAT_ARRAY:
+				return SourceConfigOption.BackendPropertyType.FLOAT_ARRAY;
+			case INTEGER_ARRAY:
+				return SourceConfigOption.BackendPropertyType.INTEGER_ARRAY;
+			case LONG_ARRAY:
+				return SourceConfigOption.BackendPropertyType.LONG_ARRAY;
+			case BOOLEAN_ARRAY:
+				return SourceConfigOption.BackendPropertyType.BOOLEAN_ARRAY;
+			case CHARACTER_ARRAY:
+				return SourceConfigOption.BackendPropertyType.CHARACTER_ARRAY;
+			default:
+				throw new AssertionError("unexepcted backend property type " + type);
+		}
 	}
 }

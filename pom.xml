@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.eurekaclinical</groupId>
 	<artifactId>eureka</artifactId>
-	<version>2.0-Alpha-33-SNAPSHOT</version>
+	<version>2.0-Alpha-35-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<name>Eureka! Clinical Analytics</name>
 	<description>Eureka! Clinical Analytics is a web application that
@@ -51,7 +51,6 @@
 		<protempa-version>3.0-Alpha-14</protempa-version>
 		<aiw-i2b2-etl-version>2.0-Alpha-29</aiw-i2b2-etl-version>
 		<aiw-neo4j-etl-version>1.0-Alpha-3</aiw-neo4j-etl-version>
-		<freemarker-version>2.3.20</freemarker-version>
 		<ehcache-version>2.6.0</ehcache-version>
 		<tomcat-plugin-version>1.1</tomcat-plugin-version>
 		<scribe-up-ext-version>1.0-Alpha-5-SNAPSHOT</scribe-up-ext-version>
@@ -60,7 +59,7 @@
 		<javautil-version>3.0-Alpha-7</javautil-version>
 		<hibernate-hbm2ddl-auto>validate</hibernate-hbm2ddl-auto>
 
-		<cas-server-version>2.0-Alpha-5</cas-server-version>
+		<cas-server-version>2.0-Alpha-6</cas-server-version>
 		<user-webapp-version>1-Alpha-1</user-webapp-version>
 		<user-services-version>1-Alpha-1</user-services-version>
 		<!-- transitive dependencies that CAS needs certain versions of...-->
@@ -68,7 +67,9 @@
 		
 		<tomcat.httpsPort>8443</tomcat.httpsPort>
 		
-		<eurekaclinical-common-version>1.0-Alpha-6</eurekaclinical-common-version>
+
+		<eurekaclinical-common-version>1.0-Alpha-7</eurekaclinical-common-version>
+		<eureka-client-version>1.0-Alpha-1</eureka-client-version>
 	</properties>
 
 	<licenses>
@@ -502,11 +503,6 @@
 				<version>${aiw-neo4j-etl-version}</version>
 			</dependency>
 			<dependency>
-				<groupId>org.freemarker</groupId>
-				<artifactId>freemarker</artifactId>
-				<version>${freemarker-version}</version>
-			</dependency>
-			<dependency>
 				<groupId>net.sf.ehcache</groupId>
 				<artifactId>ehcache</artifactId>
 				<version>${ehcache-version}</version>
@@ -526,6 +522,11 @@
 				<groupId>org.eurekaclinical</groupId>
 				<artifactId>javautil</artifactId>
 				<version>${javautil-version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eurekaclinical</groupId>
+				<artifactId>eureka-client</artifactId>
+				<version>${eureka-client-version}</version>
 			</dependency>
 			<!-- These are pulled into eureka-services and eureka-protempa-etl
 			by other dependencies, but CAS requires them to be in

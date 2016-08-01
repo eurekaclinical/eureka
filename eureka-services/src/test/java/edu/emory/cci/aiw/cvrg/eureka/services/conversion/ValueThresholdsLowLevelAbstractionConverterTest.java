@@ -57,6 +57,7 @@ import org.protempa.PropositionDefinition;
 import org.protempa.proposition.value.NumberValue;
 
 import edu.emory.cci.aiw.cvrg.eureka.services.test.AbstractServiceTest;
+import org.eurekaclinical.eureka.client.comm.SystemType;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -82,8 +83,7 @@ public class ValueThresholdsLowLevelAbstractionConverterTest extends
 		primParam.setId(1L);
 		primParam.setKey("test-primparam1");
 		primParam.setInSystem(true);
-		primParam.setSystemType(
-				SystemProposition.SystemType.PRIMITIVE_PARAMETER);
+		primParam.setSystemType(SystemType.PRIMITIVE_PARAMETER);
 
 		TimeUnit dayUnit = new TimeUnit();
 		dayUnit.setName("day");
