@@ -63,12 +63,12 @@ class ServletModule extends AbstractAuthorizingJerseyServletModuleWithPersist {
 	@Override
 	public Map<String, String> getCasValidationFilterInitParams() {
 		Map<String, String> params = new HashMap<>();
-        params.put("casServerUrlPrefix", this.properties.getCasUrl());
-        params.put("serverName", this.properties.getProxyCallbackServer());
+		params.put("casServerUrlPrefix", this.properties.getCasUrl());
+		params.put("serverName", this.properties.getProxyCallbackServer());
 		params.put("redirectAfterValidation", "false");
-        params.put("acceptAnyProxy", "true");
+		params.put("acceptAnyProxy", "true");
 		params.put("proxyCallbackUrl", getCasProxyCallbackUrl());
-        params.put("proxyReceptorUrl", getCasProxyCallbackPath());
+		params.put("proxyReceptorUrl", getCasProxyCallbackPath());
 		return params;
 	}
 

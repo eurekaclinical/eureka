@@ -41,15 +41,15 @@ package edu.emory.cci.aiw.cvrg.eureka.webapp.config;
  */
 
 import edu.emory.cci.aiw.cvrg.eureka.common.props.AbstractProperties;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  *
  * @author Andrew Post
  */
 public class WebappProperties extends AbstractProperties {
-
+	public String getUserWebappUrl() {
+		return this.getValue("user.webapp.url");
+	}
 	public boolean isEphiProhibited() {
 		return Boolean.parseBoolean(getValue("eureka.webapp.ephiprohibited"));
 	}

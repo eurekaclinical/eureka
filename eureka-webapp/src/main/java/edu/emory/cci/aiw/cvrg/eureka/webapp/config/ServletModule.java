@@ -233,11 +233,11 @@ class ServletModule extends AbstractServletModule {
 	@Override
 	protected Map<String, String> getCasValidationFilterInitParams() {
 		Map<String, String> params = new HashMap<>();
-        params.put("casServerUrlPrefix", this.properties.getCasUrl());
-        params.put("serverName", this.properties.getProxyCallbackServer());
-        params.put("proxyCallbackUrl", getCasProxyCallbackUrl());
-        params.put("proxyReceptorUrl", getCasProxyCallbackPath());
-        return params;
+		params.put("casServerUrlPrefix", this.properties.getCasUrl());
+		params.put("serverName", this.properties.getProxyCallbackServer());
+		params.put("proxyCallbackUrl", getCasProxyCallbackUrl());
+		params.put("proxyReceptorUrl", getCasProxyCallbackPath());
+		return params;
 	}
 
 }
