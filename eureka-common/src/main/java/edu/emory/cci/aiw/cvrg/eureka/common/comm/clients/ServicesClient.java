@@ -58,7 +58,6 @@ import org.eurekaclinical.eureka.client.comm.UserRequest;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.FrequencyType;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.OAuthProvider;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.RelationOperator;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.RoleEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.ThresholdsOperator;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.TimeUnit;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.ValueComparator;

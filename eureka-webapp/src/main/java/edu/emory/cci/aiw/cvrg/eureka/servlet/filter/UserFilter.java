@@ -67,7 +67,7 @@ import org.apache.commons.lang3.StringUtils;
 public class UserFilter implements Filter {
 
 	private static final Logger LOGGER
-			= LoggerFactory.getLogger(MessagesFilter.class);
+			= LoggerFactory.getLogger(UserFilter.class);
 
 	private final ServicesClient servicesClient;
 	private final WebappProperties properties;

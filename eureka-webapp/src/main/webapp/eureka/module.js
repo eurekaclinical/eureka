@@ -52,25 +52,33 @@
     angular.module('eureka').run(eurekaRun);
     angular.module('eureka').config(eurekaConfig);
 
-    eurekaRun.$inject = ['$rootScope', 'AppPropertiesService', 'appProperties','users'];
+    eurekaRun.$inject = ['$rootScope', 'AppPropertiesService', 'appProperties', 'users', '$location'];
     eurekaConfig.$inject = ['$stateProvider', '$urlRouterProvider', '$mdThemingProvider'];
 
-    function eurekaRun($rootScope, AppPropertiesService, appProperties, users) {
-        $rootScope.app=appProperties;
-        AppPropertiesService.getAppProperties()
-                .then(function(response) {
+    function eurekaRun($rootScope, AppPropertiesService, appProperties, users, $location) {
+            $rootScope.app=appProperties;
+            AppPropertiesService.getAppProperties()
+                    .then(function(response) {
             $rootScope.modes = response.data.appPropertiesModes;
             $rootScope.links = response.data.appPropertiesLinks;
             $rootScope.registration = response.data.appPropertiesRegistration;                    
         });
         
        $rootScope.userVerficationPerformed = false;
+ 
        $rootScope.inceptionYear = '2012';
        $rootScope.currentYear = new Date().getFullYear();
        users.getUser().then(function(user) {
            $rootScope.user = user;
            $rootScope.userVerficationPerformed = true;
        });
+       
+       
+        var protocol = $location.protocol();
+        var host = $location.host();
+        var port = $location.port();
+        
+        $rootScope.userUrl = protocol+'://'+host+':'+port;       
     }
 
     function eurekaConfig($stateProvider, $urlRouterProvider, $mdThemingProvider){
@@ -83,6 +91,7 @@
                 templateUrl: 'eureka/views/main/main.html'
             });
 
+        
         // Extend the red theme with a few different colors
         var darkBlueMap = $mdThemingProvider.extendPalette('blue', {
             '900': '24497A'

@@ -47,7 +47,7 @@ This project includes:
   Eureka! Clinical Analytics under Apache License, Version 2.0 or GNU General Public License, Version 3
   Eureka! Clinical Common under Apache License, Version 2.0
   Eureka! Clinical Standard APIs under Apache License, Version 2.0
-  FreeMarker under Apache License, Version 2.0
+  FreeMarker under BSD-style license
   Google Guice - Core Library under The Apache Software License, Version 2.0
   Google Guice - Extensions - JNDI under The Apache Software License, Version 2.0
   Google Guice - Extensions - Persist under The Apache Software License, Version 2.0

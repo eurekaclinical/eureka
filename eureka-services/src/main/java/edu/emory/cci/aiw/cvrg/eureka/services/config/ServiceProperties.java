@@ -87,7 +87,8 @@ public class ServiceProperties extends AbstractProperties {
 	 */
 	public AppPropertiesLinks getAppPropertiesLinks() {
 		this.appPropertiesLinks = new AppPropertiesLinks();
-		this.appPropertiesLinks.setUserWebappUrl(this.getValue("user.webapp.url"));                
+		this.appPropertiesLinks.setUserWebappUrl(this.getValue("user.webapp.url"));   
+		this.appPropertiesLinks.setUserWebappUrl(this.getValue("user.services.url")); 
 		this.appPropertiesLinks.setSupportUri(this.getSupportUri());
 		this.appPropertiesLinks.setAiwUrl(this.getValue("aiw.site.url"));
 		this.appPropertiesLinks.setHelpSiteUrl(this.getValue("aiw.help.url"));
@@ -331,7 +332,6 @@ public class ServiceProperties extends AbstractProperties {
 		return this.getValue("eureka.services.i2b2.domain");
 	}
 
-	@Override
 	public String getProxyCallbackServer() {
 		return this.getValue("eureka.services.callbackserver");
 	}

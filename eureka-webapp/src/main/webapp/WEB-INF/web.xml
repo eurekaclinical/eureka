@@ -41,7 +41,10 @@
 
 <!-- This web.xml file is not required when using Servlet 3.0 container,
 see implementation details http://jersey.java.net/nonav/documentation/latest/jax-rs.html#d4e194 -->
-<web-app xmlns="http://java.sun.com/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.5" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
+<web-app xmlns="http://java.sun.com/xml/ns/javaee" 
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+         version="2.5" 
+         xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
 
 	<context-param>
 		<description>Is populated with the site URL from the maven pom.xml from which Eureka! was compiled. The developer documention URL on the Eureka! index page is constructed by appending '/dev' to this URL.</description>
@@ -53,7 +56,14 @@ see implementation details http://jersey.java.net/nonav/documentation/latest/jax
 		<param-name>javax.servlet.jsp.jstl.fmt.localizationContext</param-name>
 		<param-value>Messages</param-value>
 	</context-param>
-
+        <context-param>
+		<param-name>user.webapp.url</param-name>
+		<param-value>${user.webapp.url}</param-value>
+	</context-param>
+        <context-param>
+		<param-name>user.services.url</param-name>
+		<param-value>${user.services.url}</param-value>
+	</context-param>        
 	<!-- Populates links to the AIW website from Eureka. -->
 	<context-param>
 		<param-name>aiw-site-url</param-name>
