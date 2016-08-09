@@ -54,21 +54,21 @@
 
 		<form id="passwordExpirationfrm" action="#" method="post" role="form" class="form-horizontal">
 			<div class="form-group">
-				<label for="oldExpPassword" class="control-label col-sm-3">Old Password</label>
+				<label for="oldExpPassword" class="control-label col-sm-3">Old Password miao</label>
 				<div class="col-sm-3">
 					<input type="password" name="oldExpPassword" id="oldExpPassword" class="form-control"/>
 				</div>
 				<span class="col-sm-6 help-inline"></span>                               
 			</div>
 			<div class="form-group">
-				<label for="newExpPassword" class="control-label col-sm-3">New Password</label>
+				<label for="newExpPassword" class="control-label col-sm-3">New Password miao</label>
 				<div class="col-sm-3">
 					<input type="password" name="newExpPassword" id="newExpPassword" class="form-control"/>
 				</div>
 				<span class="col-sm-6 help-inline"></span>
 			</div>
 			<div class="form-group">
-				<label for="verifyExpPassword" class="control-label col-sm-3">Re-enter New Password</label>
+				<label for="verifyExpPassword" class="control-label col-sm-3">Re-enter New Password miao</label>
 				<div class="col-sm-3">
 					<input type="password" name="verifyExpPassword" id="verifyExpPassword" class="form-control"/>
 				</div>

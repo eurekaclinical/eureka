@@ -70,11 +70,11 @@ import org.eurekaclinical.standardapis.filter.RolesRequestWrapper;
 @Singleton
 public class RolesFilter implements Filter {
 
-	private final ServicesClient client;
+	private final ServicesClient servicesClient;
 
 	@Inject
 	public RolesFilter(ServicesClient inClient) {
-		this.client = inClient;
+		this.servicesClient = inClient;
 	}
 
 	@Override
@@ -94,7 +94,7 @@ public class RolesFilter implements Filter {
 				assert principal != null : "principal should not be null";
 
 				Set<Long> userRoleIds = new HashSet<>(user.getRoles());
-				List<Role> roles = this.client.getRoles();
+				List<Role> roles = this.servicesClient.getRoles();
 				Map<Long, Role> idsToRoles = new HashMap<>();
 				for (Role role : roles) {
 					if (userRoleIds.contains(role.getId())) {
