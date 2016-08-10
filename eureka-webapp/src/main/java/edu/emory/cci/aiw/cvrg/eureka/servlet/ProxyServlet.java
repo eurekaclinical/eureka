@@ -41,6 +41,7 @@ package edu.emory.cci.aiw.cvrg.eureka.servlet;
  */
 import com.google.inject.Inject;
 import com.sun.jersey.core.util.MultivaluedMapImpl;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ProxyClient;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ServicesClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -67,23 +68,29 @@ public class ProxyServlet extends HttpServlet {
 			.getLogger(ProxyServlet.class);
 	
 	private final ServicesClient servicesClient;
+        private final ProxyClient proxyClient;
 	
 	protected URI targetProtectedUri;
 	protected URI targetUnprotectedUri;
+        protected URI userProtectedUri;
 
 	@Inject
-	public ProxyServlet(ServicesClient inClient) {
+	public ProxyServlet(ServicesClient inClient,ProxyClient inProxyClient) {
 		this.servicesClient = inClient;
+                this.proxyClient = inProxyClient;
 	}
 
 	@Override
 	public void init() throws ServletException {
 		String targetPUriStr = "api/protected";
 		String targetUpUriStr = "api";
-
+                String userProtectedUri = "api/protected";
+                
 		try {
 			this.targetProtectedUri = new URI(targetPUriStr);
 			this.targetUnprotectedUri = new URI(targetUpUriStr);
+                        this.userProtectedUri = new URI(userProtectedUri);
+                        
 		} catch (Exception e) {
 			throw new ServletException("Trying to process targetProtectedUri/targetUnprotectedUri init parameter: " + e, e);
 		}
@@ -93,15 +100,27 @@ public class ProxyServlet extends HttpServlet {
 	protected void doPut(HttpServletRequest servletRequest, HttpServletResponse servletResponse) throws IOException {
 		LOGGER.debug("ProxyServlet - PUT");
 
-		String content = extractContent(servletRequest);
-		String uri = doRoute(servletRequest);
+                String content = extractContent(servletRequest);
+                LOGGER.info("doPut content**** "+content);
 
-		try {
-			servicesClient.proxyPut(uri, content);
-		} catch (ClientException e) {
-			servletResponse.setStatus(e.getResponseStatus().getStatusCode());
-			servletResponse.getOutputStream().print(e.getMessage());
-		}
+                String uri = doRoute(servletRequest);
+                        
+                /*if(servletRequest.getPathInfo().contains("users")){
+                        try {
+                                //servletResponse.sendRedirect("/user-services/api/protected/users");
+                                proxyClient.updateUser(inUser, Long.MIN_VALUE);
+                        } catch (ClientException e) {
+                                servletResponse.setStatus(e.getResponseStatus().getStatusCode());
+                                servletResponse.getOutputStream().print(e.getMessage());
+                        }
+                }else{*/
+                        try {
+                                servicesClient.proxyPut(uri, content);
+                        } catch (ClientException e) {
+                                servletResponse.setStatus(e.getResponseStatus().getStatusCode());
+                                servletResponse.getOutputStream().print(e.getMessage());
+                        }
+                /*}*/
 	}
 
 	@Override
@@ -146,26 +165,45 @@ public class ProxyServlet extends HttpServlet {
 			throws IOException {
 		LOGGER.debug("ProxyServlet - GET");
 
-		String uri = doRoute(servletRequest);
+                LOGGER.info("serveletRequest.getPathInfo()**** "+servletRequest.getPathInfo());
+                
+                String uri = doRoute(servletRequest);
 
-		try {
-			Map<String, String[]> parameterMap = servletRequest.getParameterMap();
-			MultivaluedMap multivaluedMap = toMultivaluedMap(parameterMap);
-			String response = servicesClient.proxyGet(uri, multivaluedMap);
-			servletResponse.getWriter().write(response);
-		} catch (ClientException e) {
-			servletResponse.setStatus(e.getResponseStatus().getStatusCode());
-			servletResponse.getOutputStream().print(e.getMessage());
-		}
+                Map<String, String[]> parameterMap = servletRequest.getParameterMap();
+                MultivaluedMap multivaluedMap = toMultivaluedMap(parameterMap);     
+                        
+                /*if(servletRequest.getPathInfo().contains("users")){
+                        //servletResponse.sendRedirect("/user-services/api/protected/users/me");
+                        try {
+                                    String response = proxyClient.proxyGet(uri, multivaluedMap);
+                                    servletResponse.getWriter().write(response);
+                        } catch (ClientException e) {
+                                    servletResponse.setStatus(e.getResponseStatus().getStatusCode());
+                                    servletResponse.getOutputStream().print(e.getMessage());
+                        }
+                }else {*/
+                        try {
+                                String response = servicesClient.proxyGet(uri, multivaluedMap);
+                                LOGGER.info("response***** is"+response );
+                                servletResponse.getWriter().write(response);
+                        } catch (ClientException e) {
+                                servletResponse.setStatus(e.getResponseStatus().getStatusCode());
+                                servletResponse.getOutputStream().print(e.getMessage());
+                        }
+                /*}*/
 	}
 	
 	private String doRoute(HttpServletRequest servletRequest) {
 		String pathInfo = servletRequest.getPathInfo();
+                LOGGER.info("pathInfo is**** "+pathInfo);
+                
 		UriBuilder uriBuilder;
                 
 		if(pathInfo.contains("appproperties")){
 			uriBuilder = UriBuilder.fromUri(this.targetUnprotectedUri);
-		}
+		}else if(pathInfo.contains("users")){
+                        uriBuilder = UriBuilder.fromUri(this.userProtectedUri);
+                }
 		else{
 			uriBuilder = UriBuilder.fromUri(this.targetProtectedUri);
 		}
@@ -173,6 +211,7 @@ public class ProxyServlet extends HttpServlet {
 		uriBuilder = uriBuilder.path(pathInfo);
 		String uri = uriBuilder.build().toString();
 
+                LOGGER.info("uri is**** "+uri);
 		LOGGER.debug("uri: {}", uri);
 		return uri;
 	}

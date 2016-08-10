@@ -50,10 +50,12 @@ import org.slf4j.LoggerFactory;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ProxyClient;
 
 import org.eurekaclinical.eureka.client.comm.User;
 import org.eurekaclinical.common.comm.clients.ClientException;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ServicesClient;
+//import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ServicesClient;
+import org.eurekaclinical.eureka.client.EurekaClient;
 import edu.emory.cci.aiw.cvrg.eureka.webapp.config.RequestAttributes;
 import edu.emory.cci.aiw.cvrg.eureka.webapp.config.WebappProperties;
 import javax.servlet.http.HttpSession;
@@ -69,12 +71,14 @@ public class UserFilter implements Filter {
 	private static final Logger LOGGER
 			= LoggerFactory.getLogger(UserFilter.class);
 
-	private final ServicesClient servicesClient;
+	//private final ServicesClient servicesClient;
+        private final ProxyClient proxyClient;
 	private final WebappProperties properties;
 
 	@Inject
-	public UserFilter(ServicesClient inServicesClient, WebappProperties inProperties) {
-		this.servicesClient = inServicesClient;
+	public UserFilter(ProxyClient inProxyClient, WebappProperties inProperties) {
+		//this.servicesClient = inServicesClient;
+                this.proxyClient = inProxyClient;
 		this.properties = inProperties;
 	}
 
@@ -87,11 +91,12 @@ public class UserFilter implements Filter {
 		HttpServletRequest servletRequest = (HttpServletRequest) inRequest;
 		HttpServletResponse servletResponse = (HttpServletResponse) inResponse;
 		String remoteUser = servletRequest.getRemoteUser();
+                LOGGER.info("remoteUser is****"+remoteUser);
 		if (!StringUtils.isEmpty(remoteUser)) {
 			try {
 				HttpSession session = servletRequest.getSession(false);
 				if (session != null) {
-					User user = this.servicesClient.getMe();
+					User user = this.proxyClient.getMe();
 					if (!user.isActive()) {
 						session.invalidate();
 						sendForbiddenError(servletResponse, servletRequest, true);

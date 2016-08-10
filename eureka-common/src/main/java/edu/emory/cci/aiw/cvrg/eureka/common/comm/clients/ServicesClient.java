@@ -123,7 +123,7 @@ public class ServicesClient extends EurekaClient {
 
 	public ServicesClient(String inServicesUrl) {
 		super();
-		LOGGER.debug("Using services URL {}", inServicesUrl);
+		LOGGER.info("Using eureka-services URL {}", inServicesUrl);
 		this.servicesUrl = inServicesUrl;
 	}
 
