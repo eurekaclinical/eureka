@@ -1,11 +1,5 @@
 {
-  "name": "eureka",
-  "version": "1.8.2",
-  "authors": [
-    "Joel Kanzelmeyer <kanzelm3@gmail.com>"
-  ],
-  "description": "Eureka! Clinical Analytics",
-  "license": "MIT",
+  "name": "eureka-webapp",
   "private": true,
   "ignore": [
     "**/.*",
