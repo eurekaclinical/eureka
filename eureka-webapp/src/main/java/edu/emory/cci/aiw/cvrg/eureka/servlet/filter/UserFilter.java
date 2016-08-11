@@ -54,8 +54,7 @@ import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ProxyClient;
 
 import org.eurekaclinical.eureka.client.comm.User;
 import org.eurekaclinical.common.comm.clients.ClientException;
-//import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ServicesClient;
-import org.eurekaclinical.eureka.client.EurekaClient;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ToUserClient;
 import edu.emory.cci.aiw.cvrg.eureka.webapp.config.RequestAttributes;
 import edu.emory.cci.aiw.cvrg.eureka.webapp.config.WebappProperties;
 import javax.servlet.http.HttpSession;
@@ -71,14 +70,12 @@ public class UserFilter implements Filter {
 	private static final Logger LOGGER
 			= LoggerFactory.getLogger(UserFilter.class);
 
-	//private final ServicesClient servicesClient;
-        private final ProxyClient proxyClient;
+	private final ToUserClient toUserClient;
 	private final WebappProperties properties;
 
 	@Inject
-	public UserFilter(ProxyClient inProxyClient, WebappProperties inProperties) {
-		//this.servicesClient = inServicesClient;
-                this.proxyClient = inProxyClient;
+	public UserFilter(ToUserClient inToUserClient, WebappProperties inProperties) {
+		this.toUserClient = inToUserClient;
 		this.properties = inProperties;
 	}
 
@@ -96,7 +93,7 @@ public class UserFilter implements Filter {
 			try {
 				HttpSession session = servletRequest.getSession(false);
 				if (session != null) {
-					User user = this.proxyClient.getMe();
+					User user = this.toUserClient.getMe();
 					if (!user.isActive()) {
 						session.invalidate();
 						sendForbiddenError(servletResponse, servletRequest, true);

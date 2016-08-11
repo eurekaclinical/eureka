@@ -61,7 +61,7 @@
 
 		<cas-server-version>2.0-Alpha-7-SNAPSHOT</cas-server-version>
                 <user-common-version>1-Alpha-15</user-common-version>
-		<user-webapp-version>1-Alpha-21</user-webapp-version>
+		<user-webapp-version>1-Alpha-23</user-webapp-version>
 		<user-services-version>1-Alpha-17</user-services-version>
 		<!-- transitive dependencies that CAS needs certain versions of...-->
 		<commons-codec-version>1.4</commons-codec-version>

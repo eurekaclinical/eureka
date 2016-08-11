@@ -84,7 +84,7 @@ public class RolesFilter implements Filter {
 	@Override
 	public void doFilter(ServletRequest inRequest, ServletResponse inResponse, FilterChain inChain) throws IOException, ServletException {
 		HttpServletRequest servletRequest = (HttpServletRequest) inRequest;
-		User user = (User) servletRequest.getAttribute(RequestAttributes.USER);
+		User user = (User) servletRequest.getAttribute(RequestAttributes.USER);//set up eureka_main.jsp user value
 		if (user != null) {
 			try {
 				HttpSession session = servletRequest.getSession(false);
@@ -93,14 +93,18 @@ public class RolesFilter implements Filter {
 				Principal principal = servletRequest.getUserPrincipal();
 				assert principal != null : "principal should not be null";
 
-				Set<Long> userRoleIds = new HashSet<>(user.getRoles());
-				List<Role> roles = this.servicesClient.getRoles();
+				Set<Long> userRoleIds = new HashSet<>(user.getRoles());//user project user'role info
+                                
+				List<Role> roles = this.servicesClient.getRoles();//eureka project roles table
+                                
 				Map<Long, Role> idsToRoles = new HashMap<>();
+                                
 				for (Role role : roles) {
 					if (userRoleIds.contains(role.getId())) {
 						idsToRoles.put(role.getId(), role);
 					}
 				}
+                                
 				Set<String> roleNames = new HashSet<>();
 				for (Map.Entry<Long, Role> idToRole : idsToRoles.entrySet()) {
 					roleNames.add(idToRole.getValue().getName());
