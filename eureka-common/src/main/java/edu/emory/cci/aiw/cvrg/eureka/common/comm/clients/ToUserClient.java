@@ -72,5 +72,10 @@ public class ToUserClient extends EurekaClient {
 	public User getMe() throws ClientException {
 		String path = "/api/protected/users/me";
 		return doGet(path, User.class);
+	}    
+        
+	public void updateUser(User inUser, Long userId) throws ClientException {
+		final String path = "/api/protected/users/" + userId;
+		doPut(path, inUser);
 	}        
 }

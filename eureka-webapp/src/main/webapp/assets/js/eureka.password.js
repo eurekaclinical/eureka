@@ -80,10 +80,10 @@ window.eureka.password = new function () {
 				'&verifyPassword=' + verifyPassword;
 
 			if (self.pwValidator.valid()) {
+                            console.log("user_acct:"+dataString);
 				$.ajax({
-					type: 'POST',
-					url: 'user_acct',
-					data: dataString,
+					type: 'GET',
+					url: 'https://localhost:8443/user-webapp/protected/user_acct?'+dataString,
 					success: function () {
 						window.location.href = targetURL;
 					},

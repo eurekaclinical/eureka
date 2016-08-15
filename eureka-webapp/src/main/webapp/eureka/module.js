@@ -56,8 +56,10 @@
     eurekaConfig.$inject = ['$stateProvider', '$urlRouterProvider', '$mdThemingProvider'];
 
     function eurekaRun($rootScope, AppPropertiesService, appProperties, users, $location) {
-            $rootScope.app=appProperties;
-            AppPropertiesService.getAppProperties()
+        $rootScope.appVerification = false;       
+        $rootScope.app=appProperties;
+        
+        AppPropertiesService.getAppProperties()
                     .then(function(response) {
             $rootScope.modes = response.data.appPropertiesModes;
             $rootScope.links = response.data.appPropertiesLinks;
