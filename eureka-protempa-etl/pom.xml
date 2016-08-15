@@ -268,7 +268,7 @@
 							<changeLogFile>${project.build.directory}/eureka-config/dbmigration/eureka-ontology-EK_ICD10PCS-changelog.xml</changeLogFile>
 							<url>jdbc:h2:file:${project.build.directory}/eureka-db/eureka-ontology</url>
 						</configuration>
-					</execution>
+					</execution>          
 					<execution>
 						<id>liquibase-create-QT_BREAKDOWN_PATH-data-schema</id>
 						<phase>process-classes</phase>
