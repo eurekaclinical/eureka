@@ -56,7 +56,7 @@
     eurekaConfig.$inject = ['$stateProvider', '$urlRouterProvider', '$mdThemingProvider'];
 
     function eurekaRun($rootScope, AppPropertiesService, appProperties, users, $location) {
-        $rootScope.appVerification = false;       
+      
         $rootScope.app=appProperties;
         
         AppPropertiesService.getAppProperties()
@@ -73,14 +73,7 @@
        users.getUser().then(function(user) {
            $rootScope.user = user;
            $rootScope.userVerficationPerformed = true;
-       });
-       
-       
-        var protocol = $location.protocol();
-        var host = $location.host();
-        var port = $location.port();
-        
-        $rootScope.userUrl = protocol+'://'+host+':'+port;       
+       });  
     }
 
     function eurekaConfig($stateProvider, $urlRouterProvider, $mdThemingProvider){
