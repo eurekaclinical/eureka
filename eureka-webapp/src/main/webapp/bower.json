@@ -1,11 +1,5 @@
 {
-  "name": "eureka",
-  "version": "1.8.2",
-  "authors": [
-    "Joel Kanzelmeyer <kanzelm3@gmail.com>"
-  ],
-  "description": "Eureka! Clinical Analytics",
-  "license": "MIT",
+  "name": "eureka-webapp",
   "private": true,
   "ignore": [
     "**/.*",
@@ -26,7 +20,8 @@
     "angular-material": "~0.11.0",
     "angular-material-data-table": "~0.8.11",
     "angular-mocks": "~1.4.7",
-    "ng-flow": "~2"
+    "ng-flow": "~2",
+    "jquery": "~2.2.4"
   },
   "resolutions": {
     "angular": "~1.4"

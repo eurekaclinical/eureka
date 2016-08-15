@@ -15,7 +15,7 @@
 	<parent>
 		<groupId>org.eurekaclinical</groupId>
 		<artifactId>eureka</artifactId>
-		<version>2.0-Alpha-35-SNAPSHOT</version>
+		<version>2.0-Alpha-38-SNAPSHOT</version>
 	</parent>
 	
 	<build>
@@ -80,53 +80,26 @@
 							<includes>
 								sql/i2b2_data_tables_1_7_h2.sql,
 								sql/mock_stored_procedures_h2.sql,
-								sql/i2b2_meta_eureka_table_1_7_h2.sql,
-								dbmigration/create-table-access-changelog.xml,
 								dbmigration/i2b2-data-schema-changelog.xml,
-								dbmigration/i2b2-meta-schema-changelog.xml,
-								dbmigration/eureka-ontology-EK_DEMOG-changelog.xml,
-								dbmigration/eureka-ontology-EK_ICD9D-changelog.xml,
-								dbmigration/eureka-ontology-EK_ICD9P-changelog.xml,
-								dbmigration/eureka-ontology-EK_LABS-changelog.xml,
-								dbmigration/eureka-ontology-EK_MED_ORDERS-changelog.xml,
-								dbmigration/eureka-ontology-EK_MED_ORDERS-changelog.DDL.xml,
-								dbmigration/eureka-ontology-EK_MED_ORDERS-changelog.0.xml,
-								dbmigration/eureka-ontology-EK_MED_ORDERS-changelog.1.xml,
-								dbmigration/eureka-ontology-EK_MED_ORDERS-changelog.2.xml,
-								dbmigration/eureka-ontology-EK_MED_ORDERS-changelog.3.xml,
-								dbmigration/eureka-ontology-EK_MED_ORDERS-changelog.4.xml,
-								dbmigration/eureka-ontology-EK_MED_ORDERS-changelog.5.xml,
-								dbmigration/eureka-ontology-EK_MED_ORDERS-changelog.6.xml,
-								dbmigration/eureka-ontology-EK_MED_ORDERS-changelog.7.xml,
-								dbmigration/eureka-ontology-EK_VITALS-changelog.xml,
-								dbmigration/eureka-ontology-EK_ICD10CM-changelog.xml,
-								dbmigration/eureka-ontology-EK_ICD10CM-changelog.DDL.xml,
-								dbmigration/eureka-ontology-EK_ICD10CM-changelog.0.xml,
-								dbmigration/eureka-ontology-EK_ICD10CM-changelog.1.xml,
-								dbmigration/eureka-ontology-EK_ICD10CM-changelog.2.xml,
-								dbmigration/eureka-ontology-EK_ICD10CM-changelog.3.xml,
-								dbmigration/eureka-ontology-EK_ICD10CM-changelog.4.xml,
-								dbmigration/eureka-ontology-EK_ICD10CM-changelog.5.xml,
-								dbmigration/eureka-ontology-EK_ICD10CM-changelog.6.xml,
-								dbmigration/eureka-ontology-EK_ICD10PCS-changelog.xml,
-								dbmigration/eureka-ontology-EK_ICD10PCS-changelog.DDL.xml,
-								dbmigration/eureka-ontology-EK_ICD10PCS-changelog.00.xml,
-								dbmigration/eureka-ontology-EK_ICD10PCS-changelog.01.xml,
-								dbmigration/eureka-ontology-EK_ICD10PCS-changelog.02.xml,
-								dbmigration/eureka-ontology-EK_ICD10PCS-changelog.03.xml,
-								dbmigration/eureka-ontology-EK_ICD10PCS-changelog.04.xml,
-								dbmigration/eureka-ontology-EK_ICD10PCS-changelog.05.xml,
-								dbmigration/eureka-ontology-EK_ICD10PCS-changelog.06.xml,
-								dbmigration/eureka-ontology-EK_ICD10PCS-changelog.07.xml,
-								dbmigration/eureka-ontology-EK_ICD10PCS-changelog.08.xml,
-								dbmigration/eureka-ontology-EK_ICD10PCS-changelog.09.xml,
-								dbmigration/eureka-ontology-EK_ICD10PCS-changelog.10.xml,
-								dbmigration/eureka-ontology-EK_ICD10PCS-changelog.11.xml,
-								dbmigration/eureka-ontology-EK_ICD10PCS-changelog.12.xml,
 								dbmigration/create-QT_BREAKDOWN_PATH-changelog.xml,
 								dbmigration/eureka-ontology-QT_BREAKDOWN_PATH-changelog.xml
 							</includes>
 							<outputDirectory>${project.build.directory}/eureka-config</outputDirectory>
+						</configuration>
+					</execution>
+					<execution>
+						<id>extract-eureka-ontology-h2-db</id>
+						<phase>process-classes</phase>
+						<goals>
+							<goal>unpack-dependencies</goal>
+						</goals>
+						<configuration>
+							<includeArtifactIds>eurekaclinical-ontology</includeArtifactIds>
+							<includes>
+								eureka-db/eureka-ontology.mv.db,
+								eureka-db/eureka-ontology.trace.db
+							</includes>
+							<outputDirectory>${project.build.directory}</outputDirectory>
 						</configuration>
 					</execution>
 				</executions>
@@ -159,117 +132,6 @@
 						</configuration>
 					</execution>
 					<execution>
-						<id>liquibase-create-table-access-meta-schema</id>
-						<phase>process-classes</phase>
-						<goals>
-							<goal>update</goal>
-						</goals>
-						<configuration>
-							<changeLogFile>${project.build.directory}/eureka-config/dbmigration/create-table-access-changelog.xml</changeLogFile>
-							<url>jdbc:h2:file:${project.build.directory}/eureka-db/eureka-ontology</url>
-							<dropFirst>true</dropFirst>
-						</configuration>
-					</execution>
-					<execution>
-						<id>liquibase-populate-i2b2-meta-schema</id>
-						<phase>process-classes</phase>
-						<goals>
-							<goal>update</goal>
-						</goals>
-						<configuration>
-							<changeLogFile>${project.build.directory}/eureka-config/dbmigration/i2b2-meta-schema-changelog.xml</changeLogFile>
-							<url>jdbc:h2:file:${project.build.directory}/eureka-db/eureka-ontology</url>
-						</configuration>
-					</execution>
-					<execution>
-						<id>liquibase-populate-eureka-ontology-EK_DEMOG</id>
-						<phase>process-classes</phase>
-						<goals>
-							<goal>update</goal>
-						</goals>
-						<configuration>
-							<changeLogFile>${project.build.directory}/eureka-config/dbmigration/eureka-ontology-EK_DEMOG-changelog.xml</changeLogFile>
-							<url>jdbc:h2:file:${project.build.directory}/eureka-db/eureka-ontology</url>
-						</configuration>
-					</execution>
-					<execution>
-						<id>liquibase-populate-eureka-ontology-EK_ICD9D</id>
-						<phase>process-classes</phase>
-						<goals>
-							<goal>update</goal>
-						</goals>
-						<configuration>
-							<changeLogFile>${project.build.directory}/eureka-config/dbmigration/eureka-ontology-EK_ICD9D-changelog.xml</changeLogFile>
-							<url>jdbc:h2:file:${project.build.directory}/eureka-db/eureka-ontology</url>
-						</configuration>
-					</execution>
-					<execution>
-						<id>liquibase-populate-eureka-ontology-EK_ICD9P</id>
-						<phase>process-classes</phase>
-						<goals>
-							<goal>update</goal>
-						</goals>
-						<configuration>
-							<changeLogFile>${project.build.directory}/eureka-config/dbmigration/eureka-ontology-EK_ICD9P-changelog.xml</changeLogFile>
-							<url>jdbc:h2:file:${project.build.directory}/eureka-db/eureka-ontology</url>
-						</configuration>
-					</execution>
-					<execution>
-						<id>liquibase-populate-eureka-ontology-EK_LABS</id>
-						<phase>process-classes</phase>
-						<goals>
-							<goal>update</goal>
-						</goals>
-						<configuration>
-							<changeLogFile>${project.build.directory}/eureka-config/dbmigration/eureka-ontology-EK_LABS-changelog.xml</changeLogFile>
-							<url>jdbc:h2:file:${project.build.directory}/eureka-db/eureka-ontology</url>
-						</configuration>
-					</execution>
-					<execution>
-						<id>liquibase-populate-eureka-ontology-EK_MED_ORDERS</id>
-						<phase>process-classes</phase>
-						<goals>
-							<goal>update</goal>
-						</goals>
-						<configuration>
-							<changeLogFile>${project.build.directory}/eureka-config/dbmigration/eureka-ontology-EK_MED_ORDERS-changelog.xml</changeLogFile>
-							<url>jdbc:h2:file:${project.build.directory}/eureka-db/eureka-ontology</url>
-						</configuration>
-					</execution>
-					<execution>
-						<id>liquibase-populate-eureka-ontology-EK_VITALS</id>
-						<phase>process-classes</phase>
-						<goals>
-							<goal>update</goal>
-						</goals>
-						<configuration>
-							<changeLogFile>${project.build.directory}/eureka-config/dbmigration/eureka-ontology-EK_VITALS-changelog.xml</changeLogFile>
-							<url>jdbc:h2:file:${project.build.directory}/eureka-db/eureka-ontology</url>
-						</configuration>
-					</execution>
-					<execution>
-						<id>liquibase-populate-eureka-ontology-EK_ICD10CM</id>
-						<phase>process-classes</phase>
-						<goals>
-							<goal>update</goal>
-						</goals>
-						<configuration>
-							<changeLogFile>${project.build.directory}/eureka-config/dbmigration/eureka-ontology-EK_ICD10CM-changelog.xml</changeLogFile>
-							<url>jdbc:h2:file:${project.build.directory}/eureka-db/eureka-ontology</url>
-						</configuration>
-					</execution>
-					<execution>
-						<id>liquibase-populate-eureka-ontology-EK_ICD10PCS</id>
-						<phase>process-classes</phase>
-						<goals>
-							<goal>update</goal>
-						</goals>
-						<configuration>
-							<changeLogFile>${project.build.directory}/eureka-config/dbmigration/eureka-ontology-EK_ICD10PCS-changelog.xml</changeLogFile>
-							<url>jdbc:h2:file:${project.build.directory}/eureka-db/eureka-ontology</url>
-						</configuration>
-					</execution>          
-					<execution>
 						<id>liquibase-create-QT_BREAKDOWN_PATH-data-schema</id>
 						<phase>process-classes</phase>
 						<goals>
@@ -297,18 +159,6 @@
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>sql-maven-plugin</artifactId>
 				<executions>
-					<execution>
-						<id>analyze-eureka-ontology-schema</id>
-						<phase>process-classes</phase>
-						<goals>
-							<goal>execute</goal>
-						</goals>
-						<configuration>
-							<driver>org.h2.Driver</driver>
-							<url>jdbc:h2:file:${project.build.directory}/eureka-db/eureka-ontology;INIT=ANALYZE</url>
-							<sqlCommand />
-						</configuration>
-					</execution>
 					<execution>
 						<id>create-eureka-i2b2-data-schema</id>
 						<phase>process-classes</phase>
@@ -417,6 +267,12 @@
 			<groupId>com.h2database</groupId>
 			<artifactId>h2</artifactId>
 			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.eurekaclinical</groupId>
+			<artifactId>eurekaclinical-ontology</artifactId>
+			<version>${eurekaclinical-ontology-version}</version>
+			<scope>provided</scope>
 		</dependency>
 	</dependencies>
 </project>

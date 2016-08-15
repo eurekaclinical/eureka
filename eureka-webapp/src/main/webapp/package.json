@@ -1,7 +1,4 @@
 {
-  "name": "eureka",
-  "version": "1.8.0",
-  "description": "Eureka! Clinical Analytics",
   "main": "index.js",
   "directories": {
     "doc": "docs"
@@ -9,8 +6,6 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "",
-  "license": "MIT",
   "devDependencies": {
     "bower": "^1.5.3",
     "browser-sync": "^2.9.3",
