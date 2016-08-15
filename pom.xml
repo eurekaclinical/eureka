@@ -36,9 +36,7 @@
 	<!-- define the package versions for various project we will use -->
 	<properties>
 		<!-- Populates links to the website from Eureka. -->
-		<aiw.site.url>http://www.eurekaclinical.org</aiw.site.url>
-		<user.webapp.url>user-webapp</user.webapp.url>   
-		<user.services.url>user-services</user.services.url>              
+		<aiw.site.url>http://www.eurekaclinical.org</aiw.site.url>           
 		<eureka.support.email>help@eurekaclinical.org</eureka.support.email>
 		<eureka.build.timestamp>${maven.build.timestamp}</eureka.build.timestamp>
 		<eureka.dev.site.url>${project.url}</eureka.dev.site.url>
@@ -60,9 +58,9 @@
 		<hibernate-hbm2ddl-auto>validate</hibernate-hbm2ddl-auto>
 
 		<cas-server-version>2.0-Alpha-7-SNAPSHOT</cas-server-version>
-                <user-common-version>1-Alpha-15</user-common-version>
-		<user-webapp-version>1-Alpha-21</user-webapp-version>
-		<user-services-version>1-Alpha-17</user-services-version>
+                <user-common-version>1-Alpha-16</user-common-version>
+		<user-webapp-version>1-Alpha-22</user-webapp-version>
+		<user-services-version>1-Alpha-18</user-services-version>
 		<!-- transitive dependencies that CAS needs certain versions of...-->
 		<commons-codec-version>1.4</commons-codec-version>
 		

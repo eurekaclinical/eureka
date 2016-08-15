@@ -143,10 +143,9 @@
 							</a>
 							<ul class="dropdown-menu" role="menu">
 								<li>
-									<!--<a href="user_acct">-->
                                                                         <a href="https://localhost:8443/user-webapp/protected/user_acct">
 										<i class="fa fa-user"></i>
-										Account Settings2222
+										Account Settings
 									</a>
 								</li>
 								<c:if test="${myfn:isUserInRole(pageContext.request, 'admin')}">

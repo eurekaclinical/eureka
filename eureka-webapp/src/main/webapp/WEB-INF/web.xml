@@ -55,15 +55,7 @@ see implementation details http://jersey.java.net/nonav/documentation/latest/jax
 		<description>Various string messages.</description>
 		<param-name>javax.servlet.jsp.jstl.fmt.localizationContext</param-name>
 		<param-value>Messages</param-value>
-	</context-param>
-        <context-param>
-		<param-name>user.webapp.url</param-name>
-		<param-value>${user.webapp.url}</param-value>
-	</context-param>
-        <context-param>
-		<param-name>user.services.url</param-name>
-		<param-value>${user.services.url}</param-value>
-	</context-param>        
+	</context-param>       
 	<!-- Populates links to the AIW website from Eureka. -->
 	<context-param>
 		<param-name>aiw-site-url</param-name>

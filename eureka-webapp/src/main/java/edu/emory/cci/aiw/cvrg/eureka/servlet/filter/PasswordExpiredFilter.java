@@ -115,8 +115,7 @@ public class PasswordExpiredFilter implements Filter {
 				if (!targetUrl.equals(fullRedirectUrl) && !targetUrl
 						.equals(fullSaveUrl)) {
 					String encodeRedirectURL = servletResponse.encodeRedirectURL(fullRedirectUrl
-							+ "?firstLogin=" + (user.getLastLogin() == null) + "&redirectURL=" + targetUrl);
-                    //https://localhost:8443/eureka-webapp/protected/password_expiration.jsp?firstLogin=true&redirectURL=/eureka-webapp/protected/login                                        
+							+ "?firstLogin=" + (user.getLastLogin() == null) + "&redirectURL=" + targetUrl);                                     
 					LOGGER.debug("encodeRedirectURL: {}", encodeRedirectURL);
 					servletResponse.sendRedirect(encodeRedirectURL);
 				} else {

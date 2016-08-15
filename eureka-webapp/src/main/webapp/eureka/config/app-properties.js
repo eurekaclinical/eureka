@@ -13,9 +13,7 @@
     }]);
 
     var appProperties = {
-        /*dataEndpoint: 'proxy-resource',*/
         dataEndpoint: 'https://localhost:8443/user-services/api/protected',
-        
         filterEndpoint: 'protected/jstree3_searchsystemlist'
     };
 

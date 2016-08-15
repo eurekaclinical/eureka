@@ -50,7 +50,6 @@ import org.slf4j.LoggerFactory;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ProxyClient;
 
 import org.eurekaclinical.eureka.client.comm.User;
 import org.eurekaclinical.common.comm.clients.ClientException;
@@ -88,7 +87,6 @@ public class UserFilter implements Filter {
 		HttpServletRequest servletRequest = (HttpServletRequest) inRequest;
 		HttpServletResponse servletResponse = (HttpServletResponse) inResponse;
 		String remoteUser = servletRequest.getRemoteUser();
-                LOGGER.info("remoteUser is****"+remoteUser);
 		if (!StringUtils.isEmpty(remoteUser)) {
 			try {
 				HttpSession session = servletRequest.getSession(false);

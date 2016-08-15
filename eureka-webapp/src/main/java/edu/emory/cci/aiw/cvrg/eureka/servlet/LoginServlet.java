@@ -53,13 +53,11 @@ import com.sun.jersey.api.client.ClientResponse.Status;
 
 import org.eurekaclinical.eureka.client.comm.User;
 import org.eurekaclinical.common.comm.clients.ClientException;
-//import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ServicesClient;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ToUserClient;
 import javax.servlet.http.HttpSession;
 
 public class LoginServlet extends HttpServlet {
-
-	//private final ServicesClient servicesClient;
+    
 	private final ToUserClient toUserClient;
 
 	@Inject
