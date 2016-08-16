@@ -64,25 +64,25 @@
 	<Resource name="jdbc/EurekaService" auth="Container"
 		type="javax.sql.DataSource" driverClassName="org.h2.Driver"
 		factory="org.apache.tomcat.jdbc.pool.DataSourceFactory"
-		url="jdbc:h2:file:${basedir}/eureka-services/target/eureka-db/eureka-services"
+		url="jdbc:h2:file:${basedir}/eureka-services/target/eureka-db/eureka-services;LOG=1"
 		initialSize="3" maxActive="20" maxIdle="1" minIdle="1"
 		maxWait="-1"/>
 	<Resource name="jdbc/EurekaBackend" auth="Container"
 		type="javax.sql.DataSource" driverClassName="org.h2.Driver"
 		factory="org.apache.tomcat.jdbc.pool.DataSourceFactory"
-		url="jdbc:h2:file:${basedir}/eureka-protempa-etl/target/eureka-db/eureka-backend"
+		url="jdbc:h2:file:${basedir}/eureka-protempa-etl/target/eureka-db/eureka-backend;LOG=1"
 		initialSize="3" maxActive="20" maxIdle="3" minIdle="1"
 		maxWait="-1"/>
 	<Resource name="jdbc/I2b2KS" auth="Container"
 		type="javax.sql.DataSource" driverClassName="org.h2.Driver"
 		factory="org.apache.tomcat.jdbc.pool.DataSourceFactory"
-		url="jdbc:h2:file:${basedir}/eureka-protempa-etl/target/eureka-db/eureka-ontology;DEFAULT_ESCAPE='';INIT=RUNSCRIPT FROM '${basedir}/eureka-protempa-etl/target/eureka-config/sql/eureka-i2b2-ksb-2-h2.sql';CACHE_SIZE=262400"
+		url="jdbc:h2:file:${basedir}/eureka-protempa-etl/target/eureka-db/eureka-ontology;DEFAULT_ESCAPE='';INIT=RUNSCRIPT FROM '${basedir}/eureka-protempa-etl/target/eureka-config/sql/eureka-i2b2-ksb-2-h2.sql';CACHE_SIZE=262400;LOG=1"
 		initialSize="3" maxActive="20" maxIdle="3" minIdle="1"
 		maxWait="-1"/>
 	<Resource name="jdbc/I2b2DS" auth="Container"
 		type="javax.sql.DataSource" driverClassName="org.h2.Driver"
 		factory="org.apache.tomcat.jdbc.pool.DataSourceFactory"
-		url="jdbc:h2:file:${basedir}/eureka-protempa-etl/target/eureka-db/i2b2-data-schema"
+		url="jdbc:h2:file:${basedir}/eureka-protempa-etl/target/eureka-db/i2b2-data-schema;LOG=1"
 		initialSize="3" maxActive="20" maxIdle="3" minIdle="1"
 		maxWait="-1"/>
 </Context>
