@@ -53,7 +53,7 @@ public class AppPropertiesLinks {
         private String organizationName;
         private String helpSiteUrl;
         private String userWebappUrl;
-        private String userServicesUrl;
+        private String userServiceUrl;
         /**
 	 * Constructor.
 	 */
@@ -76,20 +76,20 @@ public class AppPropertiesLinks {
                 this.userWebappUrl = inUserWebappUrl;    
         }        
         /**
-	 * Gets the userServicesUrl.
+	 * Gets the userServiceUrl.
 	 *
-	 * @return userServicesUrl.
+	 * @return userServiceUrl.
 	 */
-        public String getUserServicesUrl() {
-                return this.userServicesUrl;
+        public String getUserServiceUrl() {
+                return this.userServiceUrl;
         }
         /**
-	 * Sets the userServicesUrl.
+	 * Sets the userServiceUrl.
 	 * 
-	 * @param inUserServicesUrl
+	 * @param inUserServiceUrl
 	 */
-        public void setUserServicesUrl(String inUserServicesUrl) {
-                this.userServicesUrl = inUserServicesUrl;    
+        public void setUserServiceUrl(String inUserServiceUrl) {
+                this.userServiceUrl = inUserServiceUrl;    
         }          
         /**
 	 * Gets the supportUri.

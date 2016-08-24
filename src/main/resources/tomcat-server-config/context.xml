@@ -67,10 +67,10 @@
 		url="jdbc:h2:file:${basedir}/eureka-services/target/eureka-db/eureka-services;LOG=1"
 		initialSize="3" maxActive="20" maxIdle="1" minIdle="1"
 		maxWait="-1"/>
-	<Resource name="jdbc/UserServices" auth="Container"
+	<Resource name="jdbc/UserService" auth="Container"
 		type="javax.sql.DataSource" driverClassName="org.h2.Driver"
 		factory="org.apache.tomcat.jdbc.pool.DataSourceFactory"
-		url="jdbc:h2:file:${basedir}/../user-services/target/user-services-db/user-services"
+		url="jdbc:h2:file:${basedir}/../eurekaclinical-user-service/target/eurekaclinical-user-service-db/eurekaclinical-user-service"
 		initialSize="3" maxActive="20" maxIdle="1" minIdle="1"
 		maxWait="-1"/>        
 	<Resource name="jdbc/EurekaBackend" auth="Container"

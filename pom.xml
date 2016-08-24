@@ -60,7 +60,7 @@
 		<cas-server-version>2.0-Alpha-7-SNAPSHOT</cas-server-version>
 		<user-common-version>1.0-Alpha-2</user-common-version>
 		<user-webapp-version>1.0-Alpha-2</user-webapp-version>
-		<user-services-version>1.0-Alpha-2</user-services-version>
+		<user-service-version>1.0-Alpha-2</user-service-version>
 		<!-- transitive dependencies that CAS needs certain versions of...-->
 		<commons-codec-version>1.4</commons-codec-version>
 		
@@ -370,15 +370,15 @@
 						</webapp>
 						<webapp>
 							<groupId>org.eurekaclinical</groupId>
-							<artifactId>user-webapp</artifactId>
+							<artifactId>eurekaclinical-user-webapp</artifactId>
 							<version>${user-webapp-version}</version>
 							<type>war</type>
 							<asWebapp>true</asWebapp>
 						</webapp>          
 						<webapp>
 							<groupId>org.eurekaclinical</groupId>
-							<artifactId>user-services</artifactId>
-							<version>${user-services-version}</version>
+							<artifactId>eurekaclinical-user-service</artifactId>
+							<version>${user-service-version}</version>
 							<type>war</type>
 							<asWebapp>true</asWebapp>
 						</webapp>                                                                                       
@@ -464,20 +464,20 @@
 			</dependency>
 			<dependency>
 				<groupId>org.eurekaclinical</groupId>
-				<artifactId>user-common</artifactId>
+				<artifactId>eurekaclinical-user-common</artifactId>
 				<version>${user-common-version}</version>
 			</dependency>                        
 			<dependency>
 				<groupId>org.eurekaclinical</groupId>
-				<artifactId>user-webapp</artifactId>
+				<artifactId>eurekaclinical-user-webapp</artifactId>
 				<type>war</type>
 				<version>${user-webapp-version}</version>
 			</dependency>    
 			<dependency>
 				<groupId>org.eurekaclinical</groupId>
-				<artifactId>user-services</artifactId>
+				<artifactId>eurekaclinical-user-service</artifactId>
 				<type>war</type>
-				<version>${user-services-version}</version>
+				<version>${user-service-version}</version>
 			</dependency>                                             
 			<dependency>
 				<groupId>org.eurekaclinical</groupId>

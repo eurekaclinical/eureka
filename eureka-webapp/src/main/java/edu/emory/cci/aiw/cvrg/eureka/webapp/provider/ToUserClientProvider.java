@@ -64,7 +64,7 @@ public class ToUserClientProvider  implements Provider<ToUserClient> {
 
 	@Inject
 	public ToUserClientProvider(WebappProperties inProperties) {
-		LOGGER.info("user service url = {}", inProperties.getUserServiceUrl());
+		LOGGER.info("eurekaclinical user service url = {}", inProperties.getUserServiceUrl());
 		this.toUserClient = new ToUserClient(inProperties.getUserServiceUrl());
 	}
 

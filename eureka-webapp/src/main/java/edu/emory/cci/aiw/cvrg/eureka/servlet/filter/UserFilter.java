@@ -90,7 +90,7 @@ public class UserFilter implements Filter {
 		String remoteUser = servletRequest.getRemoteUser();
                 
 		inRequest.setAttribute(RequestAttributes.User_Webapp_URL, this.properties.getUserWebappUrl());    
-		inRequest.setAttribute(RequestAttributes.User_Services_URL, this.properties.getUserServiceUrl()); 
+		inRequest.setAttribute(RequestAttributes.User_Service_URL, this.properties.getUserServiceUrl()); 
 
 		if (!StringUtils.isEmpty(remoteUser)) {
 			try {

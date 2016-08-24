@@ -88,7 +88,7 @@ public class ServiceProperties extends AbstractProperties {
 	public AppPropertiesLinks getAppPropertiesLinks() {
 		this.appPropertiesLinks = new AppPropertiesLinks();
 		this.appPropertiesLinks.setUserWebappUrl(this.getValue("user.webapp.url"));   
-		this.appPropertiesLinks.setUserServicesUrl(this.getValue("user.services.url")); 
+		this.appPropertiesLinks.setUserServiceUrl(this.getValue("user.service.url")); 
 		this.appPropertiesLinks.setSupportUri(this.getSupportUri());
 		this.appPropertiesLinks.setAiwUrl(this.getValue("aiw.site.url"));
 		this.appPropertiesLinks.setHelpSiteUrl(this.getValue("aiw.help.url"));

@@ -56,17 +56,17 @@ import org.slf4j.LoggerFactory;
  */
 public class ToUserClient extends EurekaClient {
 	private static final Logger LOGGER = LoggerFactory.getLogger(ToUserClient.class);    
-	private final String userServicesUrl;
+	private final String userServiceUrl;
 
-	public ToUserClient(String inUserServicesUrl) {
+	public ToUserClient(String inUserServiceUrl) {
 		super();
-		LOGGER.info("Using user services URL {}", inUserServicesUrl);
-		this.userServicesUrl = inUserServicesUrl;
+		LOGGER.info("Using eurekaclinical user service URL {}", inUserServiceUrl);
+		this.userServiceUrl = inUserServiceUrl;
 	}
 
 	@Override
 	protected String getResourceUrl() {
-		return this.userServicesUrl;
+		return this.userServiceUrl;
 	}    
 
 	public User getMe() throws ClientException {
