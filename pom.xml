@@ -58,9 +58,9 @@
 		<hibernate-hbm2ddl-auto>validate</hibernate-hbm2ddl-auto>
 
 		<cas-server-version>2.0-Alpha-7-SNAPSHOT</cas-server-version>
-                <user-common-version>1.0-Alpha-1</user-common-version>
-		<user-webapp-version>1.0-Alpha-1</user-webapp-version>
-		<user-services-version>1.0-Alpha-1</user-services-version>
+		<user-common-version>1.0-Alpha-2</user-common-version>
+		<user-webapp-version>1.0-Alpha-2</user-webapp-version>
+		<user-services-version>1.0-Alpha-2</user-services-version>
 		<!-- transitive dependencies that CAS needs certain versions of...-->
 		<commons-codec-version>1.4</commons-codec-version>
 		
