@@ -91,14 +91,13 @@
                             </a>
                             <ul class="dropdown-menu" role="menu">
                                 <li>
-                                    <!--<a href="protected/user_acct">-->
-                                    <a href="https://localhost:8443/user-webapp/protected/user_acct">
+                                    <a href="{{links.userWebappUrl}}/protected/user_acct">
                                         <i class="fa fa-user"></i>
                                         Account Settings
                                     </a>
                                 </li>
                                 <li ng-if="user.hasRole('admin')">
-                                    <a href="https://localhost:8443/user-webapp/protected/admin?action=list">
+                                    <a href="{{links.userWebappUrl}}/protected/admin?action=list">
                                         <i class="fa fa-wrench"></i>
                                         Administration
                                     </a>

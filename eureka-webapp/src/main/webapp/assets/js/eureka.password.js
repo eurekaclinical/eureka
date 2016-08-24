@@ -83,7 +83,7 @@ window.eureka.password = new function () {
                             console.log("user_acct:"+dataString);
 				$.ajax({
 					type: 'GET',
-					url: 'https://localhost:8443/user-webapp/protected/user_acct?'+dataString,
+					url: ctx+'/protected/user_acct?'+dataString,
 					success: function () {
 						window.location.href = targetURL;
 					},

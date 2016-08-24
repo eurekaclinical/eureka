@@ -84,9 +84,14 @@ public class UserFilter implements Filter {
 
 	@Override
 	public void doFilter(ServletRequest inRequest, ServletResponse inResponse, FilterChain inFilterChain) throws IOException, ServletException {
+            
 		HttpServletRequest servletRequest = (HttpServletRequest) inRequest;
 		HttpServletResponse servletResponse = (HttpServletResponse) inResponse;
 		String remoteUser = servletRequest.getRemoteUser();
+                
+		inRequest.setAttribute(RequestAttributes.User_Webapp_URL, this.properties.getUserWebappUrl());    
+		inRequest.setAttribute(RequestAttributes.User_Services_URL, this.properties.getUserServiceUrl()); 
+
 		if (!StringUtils.isEmpty(remoteUser)) {
 			try {
 				HttpSession session = servletRequest.getSession(false);
