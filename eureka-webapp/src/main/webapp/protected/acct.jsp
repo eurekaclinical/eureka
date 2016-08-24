@@ -44,7 +44,7 @@
 
 <template:insert template="/templates/eureka_main.jsp">
 	<template:content name="content">
-		<h3>Account Settings1111 ${user.username}</h3>
+		<h3>Account Settings ${user.username}</h3>
 		<div id="passwordExpirationMsg" class="passwordExpirationMsg">
 			<%=request.getAttribute("passwordExpiration")%>
 			<br>
