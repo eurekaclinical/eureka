@@ -106,7 +106,7 @@ public class JpaJobDao extends GenericDao<JobEntity, Long> implements JobDao {
 		CriteriaQuery<JobEntity> query = builder.createQuery(JobEntity.class);
 		Root<JobEntity> root = query.from(JobEntity.class);
 		Subquery<Date> subQuery = query.subquery(Date.class);
-		Root subQueryRoot = subQuery.from(JobEntity.class);
+		Root<JobEntity> subQueryRoot = subQuery.from(JobEntity.class);
 		subQuery.select(builder.greatest(subQueryRoot.get(JobEntity_.created)));
 		Predicate[] predicatesArray = buildWhere(jobFilter, builder, root,subQuery);
 		query.where(predicatesArray);
@@ -132,7 +132,7 @@ public class JpaJobDao extends GenericDao<JobEntity, Long> implements JobDao {
 	}
 
 
-	private Predicate[] buildWhere(JobFilter jobFilter, CriteriaBuilder builder, Root<JobEntity> root,Subquery subQuery) {
+	private Predicate[] buildWhere(JobFilter jobFilter, CriteriaBuilder builder, Root<JobEntity> root, Subquery<Date> subQuery) {
 		List<Predicate> predicates = new ArrayList<>();
 		if (jobFilter != null) {
 			LOGGER.debug("Checking for job ID.");
@@ -144,8 +144,11 @@ public class JpaJobDao extends GenericDao<JobEntity, Long> implements JobDao {
 			LOGGER.debug("Checking for user ID.");
 			if (jobFilter.getUserId() != null) {
 				LOGGER.debug("Found user ID: {}", jobFilter.getUserId());
-				predicates.add(builder.equal(root.get(JobEntity_.user).get(AuthorizedUserEntity_.id),
-						jobFilter.getUserId()));
+				Path<Long> userId = root.get(JobEntity_.user).get(AuthorizedUserEntity_.id);
+				predicates.add(builder.equal(userId, jobFilter.getUserId()));
+				if (subQuery != null) {
+					subQuery.where(builder.equal(userId, jobFilter.getUserId()));
+				}
 			}
 			LOGGER.debug("Checking for start time.");
 			if (jobFilter.getFrom() != null) {
