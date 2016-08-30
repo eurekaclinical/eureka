@@ -791,6 +791,11 @@
 		<addForeignKeyConstraint baseColumnNames="DESTINATIONS_ID" baseTableName="DEID_PER_PATIENT_PARAMS" constraintName="FK_DEID_PER_PATIENT_PARAMS" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" referencedColumnNames="ID" referencedTableName="DESTINATIONS" referencesUniqueColumn="true"/>
 		<createSequence sequenceName="DEID_PER_PT_PARAMS_SEQ"/>
 	</changeSet>
+	<changeSet author="arpost" id="1361552652236-35b">
+		<update tableName="JOB_EVENTS">
+			<column name="STATE" type="INT" valueComputed="STATE+1"/>
+		</update>
+	</changeSet>
 	<changeSet author="arpost" id="1361552652236-36">
 		<addColumn tableName="DESTINATIONS">
 			<column name="OUTPUTNAME" type="VARCHAR(255)"/>
