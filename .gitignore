@@ -3,6 +3,7 @@ pom.xml.tag
 pom.xml.releaseBackup
 pom.xml.next
 release.properties
+eureka-webapp/src/main/webapp/ng-docs
 eureka-webapp/src/main/webapp/node
 eureka-webapp/src/main/webapp/node_modules
 eureka-webapp/src/main/webapp/build

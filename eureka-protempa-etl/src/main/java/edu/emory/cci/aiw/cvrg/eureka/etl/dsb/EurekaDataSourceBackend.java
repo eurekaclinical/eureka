@@ -138,7 +138,7 @@ public final class EurekaDataSourceBackend extends RelationalDbDataSourceBackend
 		} catch (IOException ex) {
 			throw new DataSourceBackendInitializationException("Unable to create data schema (data source backend '" + nameForErrors() + "')");
 		}
-		super.setDatabaseId("jdbc:h2:mem:" + databaseName + ";INIT=RUNSCRIPT FROM '" + schemaFile + "';DB_CLOSE_DELAY=-1");
+		super.setDatabaseId("jdbc:h2:mem:" + databaseName + ";INIT=RUNSCRIPT FROM '" + schemaFile + "';DB_CLOSE_DELAY=-1;LOG=0;LOCK_MODE=0;UNDO_LOG=0");
 		this.fileDataSourceBackendSupport.setConfigurationsId(getConfigurationsId());
 		File[] dataFiles;
 		try {
