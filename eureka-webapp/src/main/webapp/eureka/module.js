@@ -28,7 +28,6 @@
      * The main module for the Eureka Angular app.
      * @requires ui.router
      * @requires ui.tree
-     * @requires ngMaterial
      * @requires angularValidator
      * @requires cohorts
      * @requires phenotypes
@@ -38,9 +37,7 @@
         'ui.router',
         'ui.tree',
         'angularValidator',
-        'ngMaterial',
         'ngMessages',
-        'md.data.table',
         'eureka.cohorts',
         'eureka.phenotypes',
         'eureka.register',
@@ -53,7 +50,7 @@
     angular.module('eureka').config(eurekaConfig);
 
     eurekaRun.$inject = ['$rootScope', 'AppPropertiesService', 'appProperties', 'users', '$location'];
-    eurekaConfig.$inject = ['$stateProvider', '$urlRouterProvider', '$mdThemingProvider'];
+    eurekaConfig.$inject = ['$stateProvider', '$urlRouterProvider'];
 
     function eurekaRun($rootScope, AppPropertiesService, appProperties, users, $location) {
       
@@ -76,7 +73,7 @@
        });  
     }
 
-    function eurekaConfig($stateProvider, $urlRouterProvider, $mdThemingProvider){
+    function eurekaConfig($stateProvider, $urlRouterProvider){
 
         $urlRouterProvider.otherwise('/index');
 
@@ -84,19 +81,6 @@
             .state('index', {
                 url: '/index',
                 templateUrl: 'eureka/views/main/main.html'
-            });
-
-        
-        // Extend the red theme with a few different colors
-        var darkBlueMap = $mdThemingProvider.extendPalette('blue', {
-            '900': '24497A'
-        });
-        // Register the new color palette map with the name <code>neonRed</code>
-        $mdThemingProvider.definePalette('darkBlue', darkBlueMap);
-        // Use that theme for the primary intentions
-        $mdThemingProvider.theme('default')
-            .primaryPalette('darkBlue', {
-                'hue-1': '900' // use shade 900 for the <code>md-hue-1</code> class
             });
     }
 
