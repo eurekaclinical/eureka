@@ -1,10 +1,20 @@
-package edu.emory.cci.aiw.cvrg.eureka.webapp.provider;
-
 /*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package edu.emory.cci.aiw.cvrg.eureka.common.comm.clients;
+
+import org.eurekaclinical.common.comm.clients.ClientException;
+import org.eurekaclinical.eureka.client.comm.User;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+/*-
  * #%L
- * Eureka WebApp
+ * Eureka Common
  * %%
- * Copyright (C) 2012 - 2013 Emory University
+ * Copyright (C) 2012 - 2016 Emory University
  * %%
  * This program is dual licensed under the Apache 2 and GPLv3 licenses.
  * 
@@ -40,36 +50,32 @@ package edu.emory.cci.aiw.cvrg.eureka.webapp.provider;
  * #L%
  */
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.google.inject.Inject;
-import com.google.inject.Provider;
-import com.google.inject.Singleton;
-
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ServicesClient;
-import edu.emory.cci.aiw.cvrg.eureka.webapp.config.WebappProperties;
-
 /**
- * 
- * @author hrathod
+ *
+ * @author miaoai
  */
-@Singleton
-public class ServicesClientProvider implements Provider<ServicesClient> {
+public class ToUserClient extends EurekaClient {
+	private static final Logger LOGGER = LoggerFactory.getLogger(ToUserClient.class);    
+	private final String userServiceUrl;
 
-	private static final Logger LOGGER = LoggerFactory
-			.getLogger(ServicesClientProvider.class);
-	private final ServicesClient client;
-
-	@Inject
-	public ServicesClientProvider(WebappProperties inProperties) {
-		LOGGER.debug("service url = {}", inProperties.getServiceUrl());
-		this.client = new ServicesClient(inProperties.getServiceUrl());
+	public ToUserClient(String inUserServiceUrl) {
+		super();
+		LOGGER.info("Using eurekaclinical user service URL {}", inUserServiceUrl);
+		this.userServiceUrl = inUserServiceUrl;
 	}
 
 	@Override
-	public ServicesClient get() {
-		return this.client;
-	}
+	protected String getResourceUrl() {
+		return this.userServiceUrl;
+	}    
 
+	public User getMe() throws ClientException {
+		String path = "/api/protected/users/me";
+		return doGet(path, User.class);
+	}    
+        
+	public void updateUser(User inUser, Long userId) throws ClientException {
+		final String path = "/api/protected/users/" + userId;
+		doPut(path, inUser);
+	}        
 }

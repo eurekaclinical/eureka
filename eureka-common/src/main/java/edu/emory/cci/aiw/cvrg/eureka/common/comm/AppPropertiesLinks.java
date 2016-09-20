@@ -52,11 +52,45 @@ public class AppPropertiesLinks {
         private String aiwSiteUrl;
         private String organizationName;
         private String helpSiteUrl;
+        private String userWebappUrl;
+        private String userServiceUrl;
         /**
 	 * Constructor.
 	 */
         public AppPropertiesLinks(){
         }
+        /**
+	 * Gets the userWebappUrl.
+	 *
+	 * @return userWebappUrl.
+	 */
+        public String getUserWebappUrl() {
+                return this.userWebappUrl;
+        }
+        /**
+	 * Sets the userWebappUrl.
+	 * 
+	 * @param inUserWebappUrl
+	 */
+        public void setUserWebappUrl(String inUserWebappUrl) {
+                this.userWebappUrl = inUserWebappUrl;    
+        }        
+        /**
+	 * Gets the userServiceUrl.
+	 *
+	 * @return userServiceUrl.
+	 */
+        public String getUserServiceUrl() {
+                return this.userServiceUrl;
+        }
+        /**
+	 * Sets the userServiceUrl.
+	 * 
+	 * @param inUserServiceUrl
+	 */
+        public void setUserServiceUrl(String inUserServiceUrl) {
+                this.userServiceUrl = inUserServiceUrl;    
+        }          
         /**
 	 * Gets the supportUri.
 	 *

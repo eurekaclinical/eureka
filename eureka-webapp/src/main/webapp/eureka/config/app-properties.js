@@ -13,7 +13,7 @@
     }]);
 
     var appProperties = {
-        dataEndpoint: 'proxy-resource',
+        dataEndpoint: 'https://localhost:8443/eurekaclinical-user-service/api/protected',
         filterEndpoint: 'protected/jstree3_searchsystemlist'
     };
 

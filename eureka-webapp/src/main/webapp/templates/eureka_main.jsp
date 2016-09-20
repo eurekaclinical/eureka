@@ -143,14 +143,14 @@
 							</a>
 							<ul class="dropdown-menu" role="menu">
 								<li>
-									<a href="user_acct">
+                                                                        <a href="${userWebappURL}/protected/user_acct">
 										<i class="fa fa-user"></i>
 										Account Settings
 									</a>
 								</li>
 								<c:if test="${myfn:isUserInRole(pageContext.request, 'admin')}">
 									<li>
-										<a href="${pageContext.request.contextPath}/protected/admin?action=list">
+										<a href="${userWebappURL}/protected/admin?action=list">
 											<i class="fa fa-wrench"></i>
 											Administration
 										</a>

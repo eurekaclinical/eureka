@@ -47,7 +47,12 @@ import edu.emory.cci.aiw.cvrg.eureka.common.props.AbstractProperties;
  * @author Andrew Post
  */
 public class WebappProperties extends AbstractProperties {
-
+	public String getUserWebappUrl() {
+		return this.getValue("user.webapp.url");
+	}
+	public String getUserServiceUrl() {
+		return this.getValue("user.service.url");
+	}         
 	public boolean isEphiProhibited() {
 		return Boolean.parseBoolean(getValue("eureka.webapp.ephiprohibited"));
 	}

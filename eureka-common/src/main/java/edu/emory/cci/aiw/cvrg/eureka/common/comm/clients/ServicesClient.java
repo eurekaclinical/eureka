@@ -58,7 +58,6 @@ import org.eurekaclinical.eureka.client.comm.UserRequest;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.FrequencyType;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.OAuthProvider;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.RelationOperator;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.RoleEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.ThresholdsOperator;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.TimeUnit;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.ValueComparator;
@@ -124,7 +123,7 @@ public class ServicesClient extends EurekaClient {
 
 	public ServicesClient(String inServicesUrl) {
 		super();
-		LOGGER.debug("Using services URL {}", inServicesUrl);
+		LOGGER.info("Using eureka-services URL {}", inServicesUrl);
 		this.servicesUrl = inServicesUrl;
 	}
 

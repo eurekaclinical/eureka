@@ -55,5 +55,5 @@ public class ETLServletModule extends AbstractAuthorizingJerseyServletModuleWith
 	public ETLServletModule(EtlProperties inProperties) {
 		super(inProperties, PACKAGE_NAMES);
 	}
-	
+
 }

@@ -89,9 +89,13 @@ public class PasswordExpiredFilter implements Filter {
 	@Override
 	public void doFilter(ServletRequest request, ServletResponse response,
 			FilterChain chain) throws IOException, ServletException {
+            
 		HttpServletRequest servletRequest = (HttpServletRequest) request;
+                
 		HttpServletResponse servletResponse = (HttpServletResponse) response;
+                
 		User user = (User) request.getAttribute(RequestAttributes.USER);
+                
 		if (!(user instanceof LocalUser)) {
 			chain.doFilter(request, response);
 		} else {
@@ -107,10 +111,11 @@ public class PasswordExpiredFilter implements Filter {
 				LOGGER.debug("fullRedirectUrl: {}", fullRedirectUrl);
 				LOGGER.debug("fullSaveUrl: {}", fullSaveUrl);
 				LOGGER.debug("targetUrl: {}", targetUrl);
+                                LOGGER.info("targetUrl is: "+targetUrl+ " fullRedirectUrl is: "+ fullRedirectUrl+ " fullSaveUrl is: "+fullSaveUrl);                                
 				if (!targetUrl.equals(fullRedirectUrl) && !targetUrl
 						.equals(fullSaveUrl)) {
 					String encodeRedirectURL = servletResponse.encodeRedirectURL(fullRedirectUrl
-							+ "?firstLogin=" + (user.getLastLogin() == null) + "&redirectURL=" + targetUrl);
+							+ "?firstLogin=" + (user.getLastLogin() == null) + "&redirectURL=" + targetUrl);                                     
 					LOGGER.debug("encodeRedirectURL: {}", encodeRedirectURL);
 					servletResponse.sendRedirect(encodeRedirectURL);
 				} else {

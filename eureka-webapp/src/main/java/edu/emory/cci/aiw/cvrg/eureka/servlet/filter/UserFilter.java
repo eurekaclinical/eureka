@@ -53,7 +53,7 @@ import com.google.inject.Singleton;
 
 import org.eurekaclinical.eureka.client.comm.User;
 import org.eurekaclinical.common.comm.clients.ClientException;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ServicesClient;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ToUserClient;
 import edu.emory.cci.aiw.cvrg.eureka.webapp.config.RequestAttributes;
 import edu.emory.cci.aiw.cvrg.eureka.webapp.config.WebappProperties;
 import javax.servlet.http.HttpSession;
@@ -67,14 +67,14 @@ import org.apache.commons.lang3.StringUtils;
 public class UserFilter implements Filter {
 
 	private static final Logger LOGGER
-			= LoggerFactory.getLogger(MessagesFilter.class);
+			= LoggerFactory.getLogger(UserFilter.class);
 
-	private final ServicesClient servicesClient;
+	private final ToUserClient toUserClient;
 	private final WebappProperties properties;
 
 	@Inject
-	public UserFilter(ServicesClient inServicesClient, WebappProperties inProperties) {
-		this.servicesClient = inServicesClient;
+	public UserFilter(ToUserClient inToUserClient, WebappProperties inProperties) {
+		this.toUserClient = inToUserClient;
 		this.properties = inProperties;
 	}
 
@@ -84,14 +84,19 @@ public class UserFilter implements Filter {
 
 	@Override
 	public void doFilter(ServletRequest inRequest, ServletResponse inResponse, FilterChain inFilterChain) throws IOException, ServletException {
+            
 		HttpServletRequest servletRequest = (HttpServletRequest) inRequest;
 		HttpServletResponse servletResponse = (HttpServletResponse) inResponse;
 		String remoteUser = servletRequest.getRemoteUser();
+                
+		inRequest.setAttribute(RequestAttributes.User_Webapp_URL, this.properties.getUserWebappUrl());    
+		inRequest.setAttribute(RequestAttributes.User_Service_URL, this.properties.getUserServiceUrl()); 
+
 		if (!StringUtils.isEmpty(remoteUser)) {
 			try {
 				HttpSession session = servletRequest.getSession(false);
 				if (session != null) {
-					User user = this.servicesClient.getMe();
+					User user = this.toUserClient.getMe();
 					if (!user.isActive()) {
 						session.invalidate();
 						sendForbiddenError(servletResponse, servletRequest, true);

@@ -39,7 +39,6 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.services.config;
 
-import java.util.HashMap;
 import java.util.Map;
 import org.eurekaclinical.common.config.AbstractAuthorizingJerseyServletModuleWithPersist;
 
@@ -64,7 +63,7 @@ class ServletModule extends AbstractAuthorizingJerseyServletModuleWithPersist {
 	public Map<String, String> getCasValidationFilterInitParams() {
 		Map<String, String> params = super.getCasValidationFilterInitParams();
 		params.put("proxyCallbackUrl", getCasProxyCallbackUrl());
-        params.put("proxyReceptorUrl", getCasProxyCallbackPath());
+		params.put("proxyReceptorUrl", getCasProxyCallbackPath());
 		return params;
 	}
 

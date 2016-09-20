@@ -41,12 +41,15 @@ package edu.emory.cci.aiw.cvrg.eureka.webapp.config;
  */
 
 import com.google.inject.AbstractModule;
+
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ServicesClient;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ToUserClient;
 import edu.emory.cci.aiw.cvrg.eureka.webapp.provider.ScribeExtGitHubProvider;
 import edu.emory.cci.aiw.cvrg.eureka.webapp.provider.ScribeExtGlobusProvider;
 import edu.emory.cci.aiw.cvrg.eureka.webapp.provider.ScribeExtGoogleProvider;
 import edu.emory.cci.aiw.cvrg.eureka.webapp.provider.ScribeExtTwitterProvider;
 import edu.emory.cci.aiw.cvrg.eureka.webapp.provider.ServicesClientProvider;
+import edu.emory.cci.aiw.cvrg.eureka.webapp.provider.ToUserClientProvider;
 import org.eurekaclinical.scribeupext.provider.GitHubProvider;
 import org.eurekaclinical.scribeupext.provider.GlobusProvider;
 import org.eurekaclinical.scribeupext.provider.Google2Provider;
@@ -70,6 +73,7 @@ class AppModule extends AbstractModule {
 		bind(WebappProperties.class).toInstance(this.webappProperties);
 		bind(EurekaClinicalProperties.class).toInstance(this.webappProperties);
 		bind(ServicesClient.class).toProvider(ServicesClientProvider.class);
+                bind(ToUserClient.class).toProvider(ToUserClientProvider.class);
 		bind(GitHubProvider.class).toProvider(ScribeExtGitHubProvider.class);
 		bind(GlobusProvider.class).toProvider(ScribeExtGlobusProvider.class);
 		bind(Google2Provider.class).toProvider(ScribeExtGoogleProvider.class);

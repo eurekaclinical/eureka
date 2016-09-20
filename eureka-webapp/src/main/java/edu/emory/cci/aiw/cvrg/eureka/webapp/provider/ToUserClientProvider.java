@@ -1,10 +1,15 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
 package edu.emory.cci.aiw.cvrg.eureka.webapp.provider;
 
-/*
+/*-
  * #%L
  * Eureka WebApp
  * %%
- * Copyright (C) 2012 - 2013 Emory University
+ * Copyright (C) 2012 - 2016 Emory University
  * %%
  * This program is dual licensed under the Apache 2 and GPLv3 licenses.
  * 
@@ -40,36 +45,32 @@ package edu.emory.cci.aiw.cvrg.eureka.webapp.provider;
  * #L%
  */
 
+import com.google.inject.Inject;
+import com.google.inject.Provider;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ToUserClient;
+import edu.emory.cci.aiw.cvrg.eureka.webapp.config.WebappProperties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.google.inject.Inject;
-import com.google.inject.Provider;
-import com.google.inject.Singleton;
-
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ServicesClient;
-import edu.emory.cci.aiw.cvrg.eureka.webapp.config.WebappProperties;
-
 /**
- * 
- * @author hrathod
+ *
+ * @author miaoai
  */
-@Singleton
-public class ServicesClientProvider implements Provider<ServicesClient> {
+public class ToUserClientProvider  implements Provider<ToUserClient> {
 
 	private static final Logger LOGGER = LoggerFactory
-			.getLogger(ServicesClientProvider.class);
-	private final ServicesClient client;
+			.getLogger(ToUserClientProvider.class);
+	private final ToUserClient toUserClient;
 
 	@Inject
-	public ServicesClientProvider(WebappProperties inProperties) {
-		LOGGER.debug("service url = {}", inProperties.getServiceUrl());
-		this.client = new ServicesClient(inProperties.getServiceUrl());
+	public ToUserClientProvider(WebappProperties inProperties) {
+		LOGGER.info("eurekaclinical user service url = {}", inProperties.getUserServiceUrl());
+		this.toUserClient = new ToUserClient(inProperties.getUserServiceUrl());
 	}
 
 	@Override
-	public ServicesClient get() {
-		return this.client;
+	public ToUserClient get() {
+		return this.toUserClient;
 	}
-
+    
 }
