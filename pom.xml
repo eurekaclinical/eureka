@@ -92,7 +92,6 @@
 		<module>eureka-webapp</module>
 		<module>eureka-services</module>
 		<module>eureka-protempa-etl</module>
-		<module>eureka-ear</module>
 	</modules>
 
 	<!-- make sure our code complies with Java 1.6 specifications, and define
@@ -444,42 +443,7 @@
 				<version>${project.version}</version>
 				<scope>test</scope>
 				<type>test-jar</type>
-			</dependency>
-			<dependency>
-				<groupId>org.eurekaclinical</groupId>
-				<artifactId>eureka-services</artifactId>
-				<type>war</type>
-				<version>${project.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.eurekaclinical</groupId>
-				<artifactId>eureka-webapp</artifactId>
-				<type>war</type>
-				<version>${project.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.eurekaclinical</groupId>
-				<artifactId>eureka-protempa-etl</artifactId>
-				<type>war</type>
-				<version>${project.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.eurekaclinical</groupId>
-				<artifactId>eurekaclinical-user-common</artifactId>
-				<version>${user-common-version}</version>
-			</dependency>                        
-			<dependency>
-				<groupId>org.eurekaclinical</groupId>
-				<artifactId>eurekaclinical-user-webapp</artifactId>
-				<type>war</type>
-				<version>${user-webapp-version}</version>
-			</dependency>    
-			<dependency>
-				<groupId>org.eurekaclinical</groupId>
-				<artifactId>eurekaclinical-user-service</artifactId>
-				<type>war</type>
-				<version>${user-service-version}</version>
-			</dependency>                                             
+			</dependency>                                
 			<dependency>
 				<groupId>org.eurekaclinical</groupId>
 				<artifactId>protempa-framework</artifactId>
