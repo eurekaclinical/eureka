@@ -103,23 +103,29 @@ public class PasswordExpiredFilter implements Filter {
 			Date expiration = ((LocalUser) user).getPasswordExpiration();
 			LOGGER.debug("expiration date: {}", expiration);
 			if (expiration != null && now.after(expiration)) {
-				String targetUrl = servletRequest.getRequestURI();
-				String fullRedirectUrl = servletRequest.getContextPath()
-						+ this.redirectUrl;
-				String fullSaveUrl = servletRequest.getContextPath()
-						+ this.saveUrl;
+				String targetUrl = servletRequest.getServletPath(); 
+                                
+				String fullRedirectUrl = this.redirectUrl; 
+				String fullSaveUrl = this.saveUrl;
+                                
 				LOGGER.debug("fullRedirectUrl: {}", fullRedirectUrl);
 				LOGGER.debug("fullSaveUrl: {}", fullSaveUrl);
 				LOGGER.debug("targetUrl: {}", targetUrl);
-                                LOGGER.info("targetUrl is: "+targetUrl+ " fullRedirectUrl is: "+ fullRedirectUrl+ " fullSaveUrl is: "+fullSaveUrl);                                
+                                
 				if (!targetUrl.equals(fullRedirectUrl) && !targetUrl
 						.equals(fullSaveUrl)) {
+                                    
+					fullRedirectUrl = "/cas-server"+fullRedirectUrl;
+					targetUrl = servletRequest.getContextPath()+targetUrl;
+                                        
 					String encodeRedirectURL = servletResponse.encodeRedirectURL(fullRedirectUrl
-							+ "?firstLogin=" + (user.getLastLogin() == null) + "&redirectURL=" + targetUrl);                                     
+							+ "?firstLogin=" + (user.getLastLogin() == null) + "&redirectURL=" + targetUrl); 
+                                        
 					LOGGER.debug("encodeRedirectURL: {}", encodeRedirectURL);
+                                        
 					servletResponse.sendRedirect(encodeRedirectURL);
 				} else {
-					chain.doFilter(request, response);
+					chain.doFilter(request, response);                                   
 				}
 			} else {
 				chain.doFilter(request, response);
