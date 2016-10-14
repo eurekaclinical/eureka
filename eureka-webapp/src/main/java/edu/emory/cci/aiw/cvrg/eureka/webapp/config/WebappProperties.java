@@ -135,5 +135,14 @@ public class WebappProperties extends AbstractProperties {
 	public String getGlobusOAuthSecret() {
 		return getValue("eureka.webapp.globusoauthsecret");
 	}
+	
+	/**
+     * A URL representing the domain in which Eureka Clinical is installed.
+     * 
+     * @return a URL string.
+     */
+    public String getDomainUrl() {
+        return getValue("eurekaclinical.domain.url", "https://localhost");
+    }
 
 }

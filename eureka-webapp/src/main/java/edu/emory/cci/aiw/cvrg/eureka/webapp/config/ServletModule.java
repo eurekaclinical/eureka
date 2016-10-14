@@ -120,6 +120,9 @@ class ServletModule extends AbstractServletModule {
 
 	@Override
 	protected void setupServlets() {
+		serve("/protected/get-session").with(PostMessageLoginServlet.class);
+        serve("/destroy-session").with(DestroySessionServlet.class);
+		
 		bind(RegisterUserServlet.class).in(Singleton.class);
 		serve("/register").with(RegisterUserServlet.class);
 
