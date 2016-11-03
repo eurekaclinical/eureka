@@ -38,6 +38,7 @@ This project includes:
   Drools :: Rete-OO Core under The Apache Software License, Version 2.0
   ehcache under The Apache Software License, Version 2.0 or Terracotta Public License
   Ehcache Core under The Apache Software License, Version 2.0
+  ehcache-terracotta under Apache License, Version 2.0
   Eureka Common under Apache License, Version 2.0 or GNU General Public License, Version 3
   Eureka EAR under Apache License, Version 2.0 or GNU General Public License, Version 3
   Eureka Protempa ETL under Apache License, Version 2.0 or GNU General Public License, Version 3
@@ -123,9 +124,7 @@ This project includes:
   Neo4j - Primitive Collections under GNU General Public License, Version 3
   Neo4j - Unsafe Access under GNU General Public License, Version 3
   Neo4j - Usage Data Collection under GNU General Public License, Version 3
-  net.sf.ehcache:ehcache-terracotta under Apache License, Version 2.0
   opencsv under Apache 2
-  org.terracotta:terracotta-toolkit-1.6-runtime under Apache License, Version 2.0
   parboiled-core under Apache 2
   parboiled-scala under Apache 2
   Protempa File Data Source Backend under Apache License, Version 2.0
@@ -143,6 +142,7 @@ This project includes:
   SLF4J API Module under MIT License
   SLF4J JDK14 Binding under MIT License
   StAX API under The Apache Software License, Version 2.0
+  terracotta-toolkit-runtime under Apache License, Version 2.0
   UMLSQuery under Apache License, Version 2.0
   XML Commons External Components XML APIs under The Apache Software License, Version 2.0
   Xml Compatibility extensions for Jackson under The Apache Software License, Version 2.0 or GNU Lesser General Public License (LGPL), Version 2.1

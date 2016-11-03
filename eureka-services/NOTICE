@@ -30,6 +30,7 @@ This project includes:
   Drools :: Rete-OO Core under The Apache Software License, Version 2.0
   ehcache under The Apache Software License, Version 2.0 or Terracotta Public License
   Ehcache Core under The Apache Software License, Version 2.0
+  ehcache-terracotta under Apache License, Version 2.0
   Eureka Common under Apache License, Version 2.0 or GNU General Public License, Version 3
   Eureka Services under Apache License, Version 2.0 or GNU General Public License, Version 3
   Eureka! Client under Apache License, Version 2.0
@@ -85,11 +86,10 @@ This project includes:
   kXML 2 is a small XML pull parser based on the common XML pull API under BSD style or Public Domain
   MIME streaming extension under Dual license consisting of the CDDL v1.1 and GPL v2
   mvel under The Apache Software License, Version 2.0
-  net.sf.ehcache:ehcache-terracotta under Apache License, Version 2.0
-  org.terracotta:terracotta-toolkit-1.6-runtime under Apache License, Version 2.0
   Protempa Framework under Apache License, Version 2.0
   SLF4J API Module under MIT License
   SLF4J JDK14 Binding under MIT License
+  terracotta-toolkit-runtime under Apache License, Version 2.0
   XML Commons External Components XML APIs under The Apache Software License, Version 2.0
   Xml Compatibility extensions for Jackson under The Apache Software License, Version 2.0 or GNU Lesser General Public License (LGPL), Version 2.1
 
