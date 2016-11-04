@@ -49,7 +49,7 @@ This project includes:
   grizzly-http-server under CDDL+GPL
   grizzly-http-servlet under CDDL+GPL
   grizzly-rcm under CDDL+GPL
-  H2 Database Engine under MPL 2.0, and EPL 1.0
+  H2 Database Engine under MPL 2.0 or EPL 1.0
   Hamcrest Core under New BSD License
   Hibernate Commons Annotations under GNU Lesser General Public License
   Hibernate JPA 2 Metamodel Generator under GNU Lesser General Public License
