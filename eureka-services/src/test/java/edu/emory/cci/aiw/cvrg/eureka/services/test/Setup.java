@@ -39,7 +39,6 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.services.test;
 
-import java.security.NoSuchAlgorithmException;
 import java.util.*;
 
 import javax.persistence.EntityManager;
@@ -54,13 +53,8 @@ import edu.emory.cci.aiw.cvrg.eureka.common.entity.*;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.CategoryEntity.CategoryType;
 import edu.emory.cci.aiw.cvrg.eureka.common.test.TestDataException;
 import edu.emory.cci.aiw.cvrg.eureka.common.test.TestDataProvider;
-import edu.emory.cci.aiw.cvrg.eureka.common.util.StringUtil;
-import edu.emory.cci.aiw.cvrg.eureka.services.dao.AuthenticationMethodDao;
-import edu.emory.cci.aiw.cvrg.eureka.services.dao.LoginTypeDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.entity.UserEntityFactory;
 import org.eurekaclinical.eureka.client.comm.SystemType;
-import org.eurekaclinical.eureka.client.comm.authentication.AuthenticationMethod;
-import org.eurekaclinical.eureka.client.comm.authentication.LoginType;
 
 /**
  * Sets up the environment for testing, by bootstrapping the data store with
@@ -79,19 +73,15 @@ public class Setup implements TestDataProvider {
 	private RoleEntity researcherRole;
 	private RoleEntity adminRole;
 	private final UserEntityFactory userEntityFactory;
-	private List<LoginTypeEntity> loginTypes;
-	private List<AuthenticationMethodEntity> authenticationMethods;
 
 
 	/**
 	 * Create a Bootstrap class with an EntityManager.
 	 */
 	@Inject
-	Setup(Provider<EntityManager> inManagerProvider,
-			LoginTypeDao inLoginTypeDao,
-			AuthenticationMethodDao inAuthenticationMethodDao) {
+	Setup(Provider<EntityManager> inManagerProvider) {
 		this.managerProvider = inManagerProvider;
-		this.userEntityFactory = new UserEntityFactory(inLoginTypeDao, inAuthenticationMethodDao);
+		this.userEntityFactory = new UserEntityFactory();
 	}
 
 	private EntityManager getEntityManager() {
@@ -102,8 +92,6 @@ public class Setup implements TestDataProvider {
 	public void setUp() throws TestDataException {
 		this.researcherRole = this.createResearcherRole();
 		this.adminRole = this.createAdminRole();
-		this.loginTypes = createLoginTypes();
-		this.authenticationMethods = createAuthenticationMethods();
 		UserEntity researcherUser = this.createResearcherUser();
 		UserEntity adminUser = this.createAdminUser();
 		this.createPhenotypes(researcherUser, adminUser);
@@ -155,7 +143,7 @@ public class Setup implements TestDataProvider {
 		
 		for (UserEntity u : users) {
 			entityManager.getTransaction().begin();
-			System.out.println("Loading user " + u.getEmail());
+			System.out.println("Loading user " + u.getUsername());
 			CategoryEntity proposition1 = new CategoryEntity();
 			proposition1.setKey("test-cat");
 			proposition1.setDescription("test");
@@ -204,21 +192,11 @@ public class Setup implements TestDataProvider {
 	                                  RoleEntity... roles) throws
 			TestDataException {
 		EntityManager entityManager = this.getEntityManager();
-		LocalUserEntity user = this.userEntityFactory.getLocalUserEntityInstance();
-		try {
-			user.setActive(true);
-			user.setVerified(true);
-			user.setEmail(email);
-			user.setUsername(email);
-			user.setFirstName(firstName);
-			user.setLastName(lastName);
-			user.setOrganization(ORGANIZATION);
-			user.setPassword(StringUtil.md5(PASSWORD));
-			user.setLastLogin(new Date());
-			user.setRoles(Arrays.asList(roles));
-		} catch (NoSuchAlgorithmException nsaex) {
-			throw new TestDataException(nsaex);
-		}
+		UserEntity user = this.userEntityFactory.getUserEntityInstance();
+
+                user.setUsername(email);
+                user.setRoles(Arrays.asList(roles));
+
 		entityManager.getTransaction().begin();
 		entityManager.persist(user);
 		entityManager.flush();
@@ -273,27 +251,5 @@ public class Setup implements TestDataProvider {
 		entityManager.persist(freqType);
 		entityManager.getTransaction().commit();
 		return Collections.singletonList(freqType);
-	}
-	
-	private List<LoginTypeEntity> createLoginTypes() {
-		EntityManager entityManager = getEntityManager();
-		LoginTypeEntity loginType = new LoginTypeEntity();
-		loginType.setName(LoginType.INTERNAL);
-		loginType.setDescription(LoginType.INTERNAL.name());
-		entityManager.getTransaction().begin();
-		entityManager.persist(loginType);
-		entityManager.getTransaction().commit();
-		return Collections.singletonList(loginType);
-	}
-	
-	private List<AuthenticationMethodEntity> createAuthenticationMethods() {
-		EntityManager entityManager = getEntityManager();
-		AuthenticationMethodEntity authenticationMethod = new AuthenticationMethodEntity();
-		authenticationMethod.setName(AuthenticationMethod.LOCAL);
-		authenticationMethod.setDescription(AuthenticationMethod.LOCAL.name());
-		entityManager.getTransaction().begin();
-		entityManager.persist(authenticationMethod);
-		entityManager.getTransaction().commit();
-		return Collections.singletonList(authenticationMethod);
 	}
 }

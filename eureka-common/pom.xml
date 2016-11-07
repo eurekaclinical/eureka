@@ -84,13 +84,13 @@
 			<artifactId>protempa-framework</artifactId>
 		</dependency>
 		<dependency>
-            <groupId>org.jasig.cas.client</groupId>
-            <artifactId>cas-client-core</artifactId>
-        </dependency>
-		<dependency>
-			<groupId>org.eurekaclinical</groupId>
-			<artifactId>eureka-client</artifactId>
-		</dependency>
+                    <groupId>org.jasig.cas.client</groupId>
+                    <artifactId>cas-client-core</artifactId>
+                </dependency>
+                <dependency>
+                        <groupId>org.eurekaclinical</groupId>
+                        <artifactId>eureka-client</artifactId>
+                </dependency>
 	</dependencies>
 </project>
 

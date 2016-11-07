@@ -43,9 +43,7 @@ import com.google.inject.AbstractModule;
 import com.google.inject.TypeLiteral;
 import com.google.inject.persist.jpa.JpaPersistModule;
 
-import edu.emory.cci.aiw.cvrg.eureka.services.clients.I2b2Client;
-import edu.emory.cci.aiw.cvrg.eureka.services.clients.MockI2b2Client;
-import edu.emory.cci.aiw.cvrg.eureka.services.dao.AuthenticationMethodDao;
+
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.FrequencyTypeDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.JpaFrequencyTypeDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.JpaPhenotypeEntityDao;
@@ -55,25 +53,14 @@ import edu.emory.cci.aiw.cvrg.eureka.services.dao.JpaThresholdsOperatorDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.JpaTimeUnitDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.JpaUserDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.JpaValueComparatorDao;
-import edu.emory.cci.aiw.cvrg.eureka.services.dao.JpaAuthenticationMethodDao;
-import edu.emory.cci.aiw.cvrg.eureka.services.dao.JpaLocalUserDao;
-import edu.emory.cci.aiw.cvrg.eureka.services.dao.JpaLoginTypeDao;
-import edu.emory.cci.aiw.cvrg.eureka.services.dao.JpaOAuthProviderDao;
-import edu.emory.cci.aiw.cvrg.eureka.services.dao.LocalUserDao;
-import edu.emory.cci.aiw.cvrg.eureka.services.dao.LoginTypeDao;
-import edu.emory.cci.aiw.cvrg.eureka.services.dao.OAuthProviderDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.RelationOperatorDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.RoleDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.ThresholdsOperatorDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.TimeUnitDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.UserDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.ValueComparatorDao;
-import edu.emory.cci.aiw.cvrg.eureka.services.email.EmailSender;
-import edu.emory.cci.aiw.cvrg.eureka.services.email.MockEmailSender;
 import edu.emory.cci.aiw.cvrg.eureka.services.finder.PropositionFinder;
 import edu.emory.cci.aiw.cvrg.eureka.services.finder.TestPropositionFinder;
-import edu.emory.cci.aiw.cvrg.eureka.services.util.PasswordGenerator;
-import edu.emory.cci.aiw.cvrg.eureka.services.util.PasswordGeneratorTestImpl;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.PhenotypeEntityDao;
 import org.eurekaclinical.common.comm.clients.WebResourceWrapperFactory;
 import org.eurekaclinical.common.comm.clients.cassupport.CasWebResourceWrapperFactory;
@@ -93,21 +80,14 @@ public class AppTestModule extends AbstractModule {
 
 		bind(UserDao.class).to(JpaUserDao.class);
 		bind(org.eurekaclinical.standardapis.dao.UserDao.class).to(JpaUserDao.class);
-		bind(LocalUserDao.class).to(JpaLocalUserDao.class);
 		bind(RoleDao.class).to(JpaRoleDao.class);
 		bind(TimeUnitDao.class).to(JpaTimeUnitDao.class);
 		bind(ValueComparatorDao.class).to(JpaValueComparatorDao.class);
 		bind(FrequencyTypeDao.class).to(JpaFrequencyTypeDao.class);
 		bind(RelationOperatorDao.class).to(JpaRelationOperatorDao.class);
 		bind(PhenotypeEntityDao.class).to(JpaPhenotypeEntityDao.class);
-		bind(OAuthProviderDao.class).to(JpaOAuthProviderDao.class);
-		bind(AuthenticationMethodDao.class).to(JpaAuthenticationMethodDao.class);
-		bind(LoginTypeDao.class).to(JpaLoginTypeDao.class);
-		bind(EmailSender.class).to(MockEmailSender.class);
-		bind(I2b2Client.class).to(MockI2b2Client.class);
 		bind(ThresholdsOperatorDao.class).to(JpaThresholdsOperatorDao.class);
 		bind(new TypeLiteral<PropositionFinder<String>>(){}).to(TestPropositionFinder.class);
-		bind(PasswordGenerator.class).to(PasswordGeneratorTestImpl.class);
 		bind(EtlClient.class).to(MockEtlClient.class);
 		bind(WebResourceWrapperFactory.class).to(CasWebResourceWrapperFactory.class);
 	}

@@ -39,54 +39,16 @@ package edu.emory.cci.aiw.cvrg.eureka.services.entity;
  * <http://www.gnu.org/licenses/gpl-3.0.html>.
  * #L%
  */
-
-import org.eurekaclinical.eureka.client.comm.authentication.AuthenticationMethod;
-import org.eurekaclinical.eureka.client.comm.authentication.LoginType;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.AuthenticationMethodEntity;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.LdapUserEntity;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.LocalUserEntity;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.LoginTypeEntity;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.OAuthUserEntity;
-import edu.emory.cci.aiw.cvrg.eureka.services.dao.AuthenticationMethodDao;
-import edu.emory.cci.aiw.cvrg.eureka.services.dao.LoginTypeDao;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.UserEntity;
 
 /**
  *
  * @author Andrew Post
  */
 public final class UserEntityFactory {
-	private final LoginTypeDao loginTypeDao;
-	private final AuthenticationMethodDao authenticationMethodDao;
 	
-	public UserEntityFactory(LoginTypeDao inLoginTypeDao, AuthenticationMethodDao inAuthenticationMethodDao) {
-		if (inLoginTypeDao == null) {
-			throw new IllegalArgumentException("inLoginTypeDao cannot be null");
-		}
-		if (inAuthenticationMethodDao == null) {
-			throw new IllegalArgumentException("inAuthenticationMethodDao cannot be null");
-		}
-		this.loginTypeDao = inLoginTypeDao;
-		this.authenticationMethodDao = inAuthenticationMethodDao;
-	}
 	
-	public LocalUserEntity getLocalUserEntityInstance() {
-		LoginTypeEntity loginType = this.loginTypeDao.getByName(LoginType.INTERNAL);
-		AuthenticationMethodEntity authenticationMethod = 
-				this.authenticationMethodDao.getByName(AuthenticationMethod.LOCAL);
-		return new LocalUserEntity(loginType, authenticationMethod);
-	}
-	
-	public LdapUserEntity getLdapUserEntityInstance() {
-		LoginTypeEntity loginType = this.loginTypeDao.getByName(LoginType.INTERNAL);
-		AuthenticationMethodEntity authenticationMethod = 
-				this.authenticationMethodDao.getByName(AuthenticationMethod.LDAP);
-		return new LdapUserEntity(loginType, authenticationMethod);
-	}
-	
-	public OAuthUserEntity getOAuthUserEntityInstance() {
-		LoginTypeEntity loginType = this.loginTypeDao.getByName(LoginType.PROVIDER);
-		AuthenticationMethodEntity authenticationMethod = 
-				this.authenticationMethodDao.getByName(AuthenticationMethod.OAUTH);
-		return new OAuthUserEntity(loginType, authenticationMethod);
+	public UserEntity getUserEntityInstance() {
+		return new UserEntity();
 	}
 }

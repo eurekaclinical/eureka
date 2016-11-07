@@ -39,9 +39,6 @@ package edu.emory.cci.aiw.cvrg.eureka.common.test;
  * <http://www.gnu.org/licenses/gpl-3.0.html>.
  * #L%
  */
-
-import org.eurekaclinical.eureka.client.comm.authentication.AuthenticationMethod;
-import edu.emory.cci.aiw.cvrg.eureka.common.authentication.UserPrincipalAttributes;
 import java.security.Principal;
 import java.util.Collections;
 import java.util.HashMap;
@@ -81,9 +78,6 @@ public class UserRoleRequestWrapper extends HttpServletRequestWrapper {
 			@Override
 			public Map<String, Object> getAttributes() {
 				Map<String, Object> attrs = new HashMap<>();
-				attrs.put(
-						UserPrincipalAttributes.AUTHENTICATION_METHOD, 
-						AuthenticationMethod.LOCAL.name());
 				return Collections.unmodifiableMap(attrs);
 			}
 		};

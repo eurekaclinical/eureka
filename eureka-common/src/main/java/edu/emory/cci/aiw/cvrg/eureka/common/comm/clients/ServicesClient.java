@@ -47,16 +47,13 @@ import org.eurekaclinical.eureka.client.comm.DestinationType;
 import org.eurekaclinical.eureka.client.comm.I2B2Destination;
 import org.eurekaclinical.eureka.client.comm.Job;
 import org.eurekaclinical.eureka.client.comm.JobSpec;
-import org.eurekaclinical.eureka.client.comm.PasswordChangeRequest;
 import org.eurekaclinical.eureka.client.comm.Phenotype;
 import org.eurekaclinical.eureka.client.comm.SourceConfig;
 import org.eurekaclinical.eureka.client.comm.SourceConfigParams;
 import org.eurekaclinical.eureka.client.comm.Statistics;
 import org.eurekaclinical.eureka.client.comm.SystemPhenotype;
 import org.eurekaclinical.eureka.client.comm.User;
-import org.eurekaclinical.eureka.client.comm.UserRequest;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.FrequencyType;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.OAuthProvider;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.RelationOperator;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.ThresholdsOperator;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.TimeUnit;
@@ -132,48 +129,9 @@ public class ServicesClient extends EurekaClient {
 		return this.servicesUrl;
 	}
 
-	public List<User> getUsers() throws ClientException {
-		final String path = "/api/protected/users";
-		return doGet(path, UserList);
-	}
-
-	public User getMe() throws ClientException {
-		String path = "/api/protected/users/me";
-		return doGet(path, User.class);
-	}
-
-	public User getUserById(Long inUserId) throws ClientException {
-		final String path = "/api/protected/users/" + inUserId;
-		return doGet(path, User.class);
-	}
-
-	public void addUser(UserRequest inRequest) throws ClientException {
-		final String path = "/api/userrequests";
-		doPostCreate(path, inRequest);
-	}
-
-	public void resetPassword(String username) throws ClientException {
-		final String path = "/api/passwordreset/" + username;
-		doPost(path);
-	}
-
 	public void verifyUser(String inCode) throws ClientException {
 		final String path = "/api/userrequests/verify/" + inCode;
 		doPut(path);
-	}
-
-	public void changePassword(String inOldPass, String inNewPass) throws ClientException {
-		final String path = "/api/protected/users/passwordchange";
-		PasswordChangeRequest passwordChangeRequest
-				= new PasswordChangeRequest();
-		passwordChangeRequest.setOldPassword(inOldPass);
-		passwordChangeRequest.setNewPassword(inNewPass);
-		doPost(path, passwordChangeRequest);
-	}
-
-	public void updateUser(User inUser, Long userId) throws ClientException {
-		final String path = "/api/protected/users/" + userId;
-		doPut(path, inUser);
 	}
 
 	public List<Role> getRoles() throws ClientException {
@@ -419,18 +377,6 @@ public class ServicesClient extends EurekaClient {
 				.segment(inName)
 				.build().toString();
 		return doGet(path, RelationOperator.class);
-	}
-
-	public OAuthProvider getOAuthProvider(Long inId) throws ClientException {
-		final String path = "/api/protected/oauthproviders/" + inId;
-		return doGet(path, OAuthProvider.class);
-	}
-
-	public OAuthProvider getOAuthProviderByName(String inName) throws ClientException {
-		final String path = UriBuilder.fromPath("/api/protected/oauthproviders/byname/")
-				.segment(inName)
-				.build().toString();
-		return doGet(path, OAuthProvider.class);
 	}
 
 	public List<ThresholdsOperator> getThresholdsOperators() throws ClientException {
