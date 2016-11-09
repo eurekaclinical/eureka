@@ -436,142 +436,134 @@ window.eureka.editor = new function () {
 		return child;
 	};
 
-    self.post = function (postData) {
-        var user = null;
-        $.ajax({
-            url: '../proxy-resource/users/me',
-            async: false,
-            dataType: 'json',
-            success: function(data) {
-                user = data;
-            },
-            error: function (data, statusCode, errorThrown) {
-                var content = 'Error while saving ' + postData.displayName + '. ' + data.responseText + '. Status Code: ' + data.status;
-                $('#errorModal').find('#errorContent').html(eureka.util.getUserMessage(data.status,content));
-                $('#errorModal').modal('show');
-                if (errorThrown != null) {
-                    console.log(errorThrown);
-                }
-            }
-        });
+        self.post = function (postData) {
+                var user = null;
+                $.ajax({
+                    url: 'https://localhost:8443/eurekaclinical-user-service/api/protected/users/me',
+                    dataType: 'json',
+                    success: function(data) {
+                        user = data;
+                        if (user != null) {
+                            var cohortDestination = {};
+                            var type = "";
+                            if (postData.id != null) {
+                                    cohortDestination.id = postData.id;
+                                    type = "PUT";
+                            }
+                            else {
+                                    cohortDestination.id = null;
+                                    type = "POST";
+                            }
 
-        if (user != null) {
+                            cohortDestination.type = 'COHORT';
+                            cohortDestination.ownerUserId = user.id;
+                            cohortDestination.name = postData['name'];
+                            cohortDestination.description = postData['description'];
+                            cohortDestination.phenotypeFields = null;
+                            cohortDestination.cohort = self.toCohort(postData.phenotypes);
 
-            var cohortDestination = {};
-            var type = "";
-            if (postData.id != null) {
-                cohortDestination.id = postData.id;
-                type = "PUT";
-            }
-            else {
-                cohortDestination.id = null;
-                type = "POST";
-            }
+                            cohortDestination.read = false;
+                            cohortDestination.write = false;
+                            cohortDestination.execute = false;
 
-            cohortDestination.type = 'COHORT';
-            cohortDestination.ownerUserId = user.id;
-            cohortDestination.name = postData['name'];
-            cohortDestination.description = postData['description'];
-            cohortDestination.phenotypeFields = null;
-            cohortDestination.cohort = self.toCohort(postData.phenotypes);
+                            cohortDestination.created_at = null;
+                            cohortDestination.updated_at = null;
 
-            cohortDestination.read = false;
-            cohortDestination.write = false;
-            cohortDestination.execute = false;
-
-            cohortDestination.created_at = null;
-            cohortDestination.updated_at = null;
-
-            cohortDestination.links = null;
-            console.log(JSON.stringify(cohortDestination));
-
-
-
-            $.ajax({
-                type: type,
-                url: '../proxy-resource/destinations',
-                data: JSON.stringify(cohortDestination),
-                success: function (postData) {
-                    window.location.href = 'cohorthome'
-                },
-                error: function (postData, statusCode, errorThrown) {
-                    var content = 'Error while saving ' + postData.displayName + '. ' + postData.responseText + '. Status Code: ' + postData.status;
-                    $('#errorModal').find('#errorContent').html(eureka.util.getUserMessage(postData.status,content));
-                    $('#errorModal').modal('show');
-                    if (errorThrown != null) {
-                        console.log(errorThrown);
+                            cohortDestination.links = null;
+                            console.log(JSON.stringify(cohortDestination));
+                            $.ajax({
+                                type: type,
+                                url: '../proxy-resource/destinations',
+                                data: JSON.stringify(cohortDestination),
+                                success: function (postData) {
+                                    window.location.href = 'cohorthome'
+                                },
+                                error: function (postData, statusCode, errorThrown) {
+                                    var content = 'Error while saving ' + postData.displayName + '. ' + postData.responseText + '. Status Code: ' + postData.status;
+                                    $('#errorModal').find('#errorContent').html(eureka.util.getUserMessage(postData.status,content));
+                                    $('#errorModal').modal('show');
+                                    if (errorThrown != null) {
+                                        console.log(errorThrown);
+                                    }
+                                }
+                            });
+                        }                        
+                    },
+                    error: function (data, statusCode, errorThrown) {
+                        var content = 'Error while saving ' + postData.displayName + '. ' + data.responseText + '. Status Code: ' + data.status;
+                        $('#errorModal').find('#errorContent').html(eureka.util.getUserMessage(data.status,content));
+                        $('#errorModal').modal('show');
+                        if (errorThrown != null) {
+                            console.log(errorThrown);
+                        }
+                    }
+                });
+        }
+    
+        self.toCohort = function (phenotypes) {
+            var cohort = {id: null};
+            var node = {id: null, start: null, finish: null, type: 'Literal'};
+            if (phenotypes.length == 1) {
+                node.name = phenotypes[0].phenotypeKey;
+            } else if (phenotypes.length > 1) {
+                first = true;
+                prev = null;
+                for (var i = phenotypes.length - 1; i >= 0; i--) {
+                    var literal = {id: null, start: null, finish: null, type: 'Literal'};
+                    literal.name = phenotypes[i].phenotypeKey;
+                    if (first) {
+                        first = false;
+                        prev = literal;
+                    } else {
+                        var binaryOperator = {id: null, type: 'BinaryOperator', op: 'OR'};
+                        binaryOperator.left_node = literal;
+                        binaryOperator.right_node = prev;
+                        prev = binaryOperator;
                     }
                 }
-            });
-
-
-        }
-    }
-    
-    self.toCohort = function (phenotypes) {
-        var cohort = {id: null};
-        var node = {id: null, start: null, finish: null, type: 'Literal'};
-        if (phenotypes.length == 1) {
-            node.name = phenotypes[0].phenotypeKey;
-        } else if (phenotypes.length > 1) {
-            first = true;
-            prev = null;
-            for (var i = phenotypes.length - 1; i >= 0; i--) {
-                var literal = {id: null, start: null, finish: null, type: 'Literal'};
-                literal.name = phenotypes[i].phenotypeKey;
-                if (first) {
-                    first = false;
-                    prev = literal;
-                } else {
-                    var binaryOperator = {id: null, type: 'BinaryOperator', op: 'OR'};
-                    binaryOperator.left_node = literal;
-                    binaryOperator.right_node = prev;
-                    prev = binaryOperator;
-                }
+                node = prev;
+            } else {
+                node = null;
             }
-            node = prev;
-        } else {
-            node = null;
-        }
-        cohort.node = node;
-        return cohort;
+            cohort.node = node;
+            return cohort;
 
-    }
-
-    self.saveCohort = function (elem) {
-        var $memberPhenotypes = $(elem).find('ul.sortable').find('li');
-        var childElements = self.collectPhenotypes($memberPhenotypes);
-
-        var cohort = {
-            'name': $('input#patCohortDefName').val(),
-            'description': $('textarea#patCohortDescription').val(),
-            'phenotypes': childElements
         }
 
-        if (self.propId) {
-            cohort.id = self.propId;
-        }
+        self.saveCohort = function (elem) {
+            var $memberPhenotypes = $(elem).find('ul.sortable').find('li');
+            var childElements = self.collectPhenotypes($memberPhenotypes);
 
-        self.post(cohort);
-    };
+            var cohort = {
+                'name': $('input#patCohortDefName').val(),
+                'description': $('textarea#patCohortDescription').val(),
+                'phenotypes': childElements
+            }
 
-    self.validateCohort = function (elem) {
-        var name = $('input#patCohortDefName').val();
-        var membersCount = $(elem).find('ul.sortable').find('li').length;
-        if(name == null || name.length == 0){
-            var content = 'Please ensure that the cohort name is filled out.';
-            $('#errorModal').find('#errorContent').html(content);
-            $('#errorModal').modal('show');
-        }else if(membersCount==0){
-            var content = 'Please ensure that the cohort members are filled out.';
-            $('#errorModal').find('#errorContent').html(content);
-            $('#errorModal').modal('show');
-        }else return true;
-    }
-    self.save = function (containerElem) {
-        if (self.validateCohort(containerElem)) {
-            self.saveCohort(containerElem);
+            if (self.propId) {
+                cohort.id = self.propId;
+            }
+
+            self.post(cohort);
+        };
+
+        self.validateCohort = function (elem) {
+            var name = $('input#patCohortDefName').val();
+            var membersCount = $(elem).find('ul.sortable').find('li').length;
+            if(name == null || name.length == 0){
+                var content = 'Please ensure that the cohort name is filled out.';
+                $('#errorModal').find('#errorContent').html(content);
+                $('#errorModal').modal('show');
+            }else if(membersCount==0){
+                var content = 'Please ensure that the cohort members are filled out.';
+                $('#errorModal').find('#errorContent').html(content);
+                $('#errorModal').modal('show');
+            }else return true;
         }
-    };
+        self.save = function (containerElem) {
+            if (self.validateCohort(containerElem)) {
+                self.saveCohort(containerElem);
+            }
+        };
 
 };
