@@ -988,5 +988,42 @@
                 </changeSet>   
                 <changeSet author="mai" id="1360440238345-103">
                         <addForeignKeyConstraint baseColumnNames="ROLE_ID" baseTableName="USER_ROLE" constraintName="FK_USER_ROLE_TO_ROLES" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" referencedColumnNames="ID" referencedTableName="ROLES" referencesUniqueColumn="false"/>
-                </changeSet>                
+                </changeSet>   
+                <changeSet author="mai" id="1360440238345-104">
+                    
+                        <dropTable tableName="LOCAL_USERS"/> 
+                        
+                        <dropTable tableName="LDAP_USERS"/> 
+                        
+                        <dropForeignKeyConstraint baseTableName="OAUTH_USERS" constraintName="FK_OAUTH_USERS_PROV"/>                        
+                        <dropTable tableName="OAUTH_USERS"/>
+                           
+			<dropSequence sequenceName="OAUTH_PROV_SEQ"/>                        
+                        <dropTable tableName="OAUTH_PROVIDERS"/>  
+                        
+                        <dropForeignKeyConstraint baseTableName="USERS" constraintName="FK_USERS_AUTHENTMETHOD"/> 
+                        <dropNotNullConstraint tableName="USERS" columnName="AUTHENTICATIONMETHOD_ID" columnDataType="BIGINT"/>                                                                          
+                        <dropColumn tableName="USERS" columnName="AUTHENTICATIONMETHOD_ID"/>    
+			<dropSequence sequenceName="AUTHENTICATION_METHODS_SEQ"/> 
+                        <dropTable tableName="AUTHENTICATION_METHODS"/>
+                                                                        
+                        <dropForeignKeyConstraint baseTableName="USERS" constraintName="FK_USERS_LOGINTYPE"/> 
+                        <dropNotNullConstraint tableName="USERS" columnName="LOGINTYPE_ID" columnDataType="BIGINT"/>                               
+                        <dropColumn tableName="USERS" columnName="LOGINTYPE_ID"/> 
+			<dropSequence sequenceName="LOGIN_TYPES_SEQ"/> 
+                        <dropTable tableName="LOGIN_TYPES"/>  
+                             
+
+                        
+                        <dropColumn tableName="USERS" columnName="ACTIVE"/>   
+                        <dropColumn tableName="USERS" columnName="EMAIL"/> 
+                        <dropColumn tableName="USERS" columnName="FIRSTNAME"/> 
+                        <dropColumn tableName="USERS" columnName="LASTNAME"/>                         
+                        <dropColumn tableName="USERS" columnName="LASTLOGIN"/>  
+                        <dropColumn tableName="USERS" columnName="ORGANIZATION"/> 
+                        <dropColumn tableName="USERS" columnName="TITLE"/>    
+                        <dropColumn tableName="USERS" columnName="DEPARTMENT"/> 
+                        <dropColumn tableName="USERS" columnName="FULLNAME"/>  
+                        <dropColumn tableName="USERS" columnName="CREATED"/>                                                                                                                                                                                                                                                            
+                </changeSet>             
 </databaseChangeLog>

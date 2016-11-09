@@ -79,11 +79,11 @@ public class ForgotPasswordServlet extends HttpServlet {
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String email = request.getParameter("email");
-		try {
-			this.servicesClient.resetPassword(email);
+		//try {
+			//this.servicesClient.resetPassword(email);
 			response.setStatus(HttpServletResponse.SC_OK);
 			response.getWriter().write(HttpServletResponse.SC_OK);
-		} catch (ClientException ex) {
+		/*} catch (ClientException ex) {
 			LOGGER.error("Error resetting password for user {}", email, ex);
 			if (ClientResponse.Status.NOT_FOUND.equals(ex.getResponseStatus())) {
 				response.setStatus(HttpServletResponse.SC_NOT_FOUND);
@@ -91,6 +91,6 @@ public class ForgotPasswordServlet extends HttpServlet {
 				response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 				response.getWriter().write(ex.getMessage());
 			}
-		}
+		}*/
 	}
 }

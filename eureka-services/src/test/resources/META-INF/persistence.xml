@@ -19,14 +19,9 @@
 		<class>edu.emory.cci.aiw.cvrg.eureka.common.entity.TimeUnit</class>
 		<class>edu.emory.cci.aiw.cvrg.eureka.common.entity.UserEntity</class>
 		<class>edu.emory.cci.aiw.cvrg.eureka.common.entity.LocalUserEntity</class>
-		<class>edu.emory.cci.aiw.cvrg.eureka.common.entity.OAuthUserEntity</class>
-		<class>edu.emory.cci.aiw.cvrg.eureka.common.entity.LdapUserEntity</class>
 		<class>edu.emory.cci.aiw.cvrg.eureka.common.entity.ValueComparator</class>
 		<class>edu.emory.cci.aiw.cvrg.eureka.common.entity.ValueThresholdEntity</class>
 		<class>edu.emory.cci.aiw.cvrg.eureka.common.entity.ValueThresholdGroupEntity</class>
-		<class>edu.emory.cci.aiw.cvrg.eureka.common.entity.OAuthProvider</class>
-		<class>edu.emory.cci.aiw.cvrg.eureka.common.entity.AuthenticationMethodEntity</class>
-		<class>edu.emory.cci.aiw.cvrg.eureka.common.entity.LoginTypeEntity</class>
 		
 		<properties>
 			<!-- Disable the second-level cache -->

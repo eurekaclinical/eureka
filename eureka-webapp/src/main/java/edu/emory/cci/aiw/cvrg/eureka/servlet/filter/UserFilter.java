@@ -91,18 +91,20 @@ public class UserFilter implements Filter {
                 
 		inRequest.setAttribute(RequestAttributes.User_Webapp_URL, this.properties.getUserWebappUrl());    
 		inRequest.setAttribute(RequestAttributes.User_Service_URL, this.properties.getUserServiceUrl()); 
-
+                
+                Boolean userIsActive = true;
 		if (!StringUtils.isEmpty(remoteUser)) {
 			try {
 				HttpSession session = servletRequest.getSession(false);
 				if (session != null) {
 					User user = this.toUserClient.getMe();
-					if (!user.isActive()) {
+                                        userIsActive = this.toUserClient.getMe().isActive();
+					if (!userIsActive) {
 						session.invalidate();
 						sendForbiddenError(servletResponse, servletRequest, true);
 					} else {
 						inRequest.setAttribute(RequestAttributes.USER, user);
-						inRequest.setAttribute(RequestAttributes.USER_IS_ACTIVATED, user.isActive());
+						inRequest.setAttribute(RequestAttributes.USER_IS_ACTIVATED, userIsActive);
 						inFilterChain.doFilter(inRequest, inResponse);
 					}
 				} else {

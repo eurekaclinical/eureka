@@ -67,7 +67,7 @@ public class UserDaoTest extends AbstractServiceDataTest {
 	}
 
 	/**
-	 * Tests the ability to get a User by their email address from the DAO.
+	 * Tests the ability to get a User by their username from the DAO.
 	 */
 	@Test
 	public void testGetByName() {
@@ -75,7 +75,7 @@ public class UserDaoTest extends AbstractServiceDataTest {
 		List<UserEntity> users = dao.getAll();
 		UserEntity user = users.get(0);
 		UserEntity testUser = dao.getByUsername(user.getUsername());
-		assertEquals(user.getEmail(), testUser.getEmail());
+		assertEquals(user.getUsername(), testUser.getUsername());
 	}
 
 }

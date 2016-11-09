@@ -40,8 +40,6 @@
         'ngMessages',
         'eureka.cohorts',
         'eureka.phenotypes',
-        'eureka.register',
-        'eureka.account',
         'eureka.help',
         'eureka.jobs',
         'flow']);

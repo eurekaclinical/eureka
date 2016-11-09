@@ -47,12 +47,7 @@ import edu.emory.cci.aiw.cvrg.eureka.servlet.cohort.EditCohortServlet;
 import edu.emory.cci.aiw.cvrg.eureka.servlet.cohort.SaveCohortServlet;
 import edu.emory.cci.aiw.cvrg.eureka.servlet.filter.UserFilter;
 import edu.emory.cci.aiw.cvrg.eureka.servlet.filter.MessagesFilter;
-import edu.emory.cci.aiw.cvrg.eureka.servlet.filter.PasswordExpiredFilter;
 import edu.emory.cci.aiw.cvrg.eureka.servlet.filter.RolesFilter;
-import edu.emory.cci.aiw.cvrg.eureka.servlet.oauth.GitHubRegistrationOAuthCallbackServlet;
-import edu.emory.cci.aiw.cvrg.eureka.servlet.oauth.GlobusRegistrationOAuthCallbackServlet;
-import edu.emory.cci.aiw.cvrg.eureka.servlet.oauth.GoogleRegistrationOAuthCallbackServlet;
-import edu.emory.cci.aiw.cvrg.eureka.servlet.oauth.TwitterRegistrationOAuthCallbackServlet;
 import edu.emory.cci.aiw.cvrg.eureka.servlet.proposition.*;
 import java.util.HashMap;
 import java.util.Map;
@@ -71,9 +66,7 @@ class ServletModule extends AbstractServletModule {
 			.getLogger(ServletModule.class);
 	private static final String CONTAINER_PATH = "/site/*";
 	private static final String CONTAINER_PROTECTED_PATH = "/protected/*";
-	private static final String FILTER_PATH = "^/(?!(assets|bower_components)).*";
-	private static final String PASSWORD_EXPIRED_REDIRECT_URL = "/protected/password_expiration.jsp";
-	private static final String PASSWORD_SAVE_PATH = "/protected/user_acct";
+	private static final String FILTER_PATH = "^/(?!(assets|bower_components)).*"; 
 	private static final String LOGOUT_PATH = "/logout";
 
 	private final WebappProperties properties;
@@ -98,30 +91,15 @@ class ServletModule extends AbstractServletModule {
 		filterRegex(FILTER_PATH).through(RolesFilter.class);
 	}
 
-	private void setupPasswordExpiredFilter() {
-		bind(PasswordExpiredFilter.class).in(Singleton.class);
-		Map<String, String> params = new HashMap<>();
-		params.put("redirect-url", PASSWORD_EXPIRED_REDIRECT_URL);
-		params.put("save-url", PASSWORD_SAVE_PATH);
-		if (LOGGER.isDebugEnabled()) {
-			this.printParams(params);
-		}
-		filter(CONTAINER_PROTECTED_PATH).through(
-				PasswordExpiredFilter.class, params);
-	}
-
 	@Override
 	protected void setupFilters() {
 		this.setupMessageFilter();
 		this.setupUserFilter();
 		this.setupRolesFilter();
-		this.setupPasswordExpiredFilter();
 	}
 
 	@Override
 	protected void setupServlets() {
-		bind(RegisterUserServlet.class).in(Singleton.class);
-		serve("/register").with(RegisterUserServlet.class);
 
 		bind(ProxyServlet.class).in(Singleton.class);
 		serve("/proxy-resource/*").with(ProxyServlet.class);
@@ -131,9 +109,6 @@ class ServletModule extends AbstractServletModule {
 
 		bind(LogoutServlet.class).in(Singleton.class);
 		serve(LOGOUT_PATH).with(LogoutServlet.class);
-
-		bind(VerifyUserServlet.class).in(Singleton.class);
-		serve("/verify").with(VerifyUserServlet.class);
 
 		bind(JobSubmitServlet.class).in(Singleton.class);
 		Map<String, String> uploadParams = new HashMap<>();
@@ -155,12 +130,6 @@ class ServletModule extends AbstractServletModule {
 
 		bind(JobPatientCountsServlet.class).in(Singleton.class);
 		serve("/protected/jobpatcounts").with(JobPatientCountsServlet.class);
-
-		bind(AdminManagerServlet.class).in(Singleton.class);
-		serve("/protected/admin").with(AdminManagerServlet.class);
-
-		bind(UserAcctManagerServlet.class).in(Singleton.class);
-		serve("/protected/user_acct").with(UserAcctManagerServlet.class);
 
 		bind(EditorHomeServlet.class).in(Singleton.class);
 		serve("/protected/editorhome").with(EditorHomeServlet.class);
@@ -210,25 +179,6 @@ class ServletModule extends AbstractServletModule {
 
 		bind(DeleteCohortServlet.class).in(Singleton.class);
 		serve("/protected/deletecohort").with(DeleteCohortServlet.class);
-
-		bind(ChooseAccountTypeServlet.class).in(Singleton.class);
-		serve("/chooseaccounttype").with(ChooseAccountTypeServlet.class);
-
-		bind(GitHubRegistrationOAuthCallbackServlet.class).in(Singleton.class);
-		serve("/registrationoauthgithubcallback").with(
-				GitHubRegistrationOAuthCallbackServlet.class);
-
-		bind(GoogleRegistrationOAuthCallbackServlet.class).in(Singleton.class);
-		serve("/registrationoauthgooglecallback").with(
-				GoogleRegistrationOAuthCallbackServlet.class);
-
-		bind(TwitterRegistrationOAuthCallbackServlet.class).in(Singleton.class);
-		serve("/registrationoauthtwittercallback").with(
-				TwitterRegistrationOAuthCallbackServlet.class);
-
-		bind(GlobusRegistrationOAuthCallbackServlet.class).in(Singleton.class);
-		serve("/registrationoauthglobuscallback").with(
-				GlobusRegistrationOAuthCallbackServlet.class);
 	}
 	
 	@Override

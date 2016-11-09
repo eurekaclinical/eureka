@@ -47,23 +47,9 @@ package edu.emory.cci.aiw.cvrg.eureka.common.entity;
 public interface UserEntityVisitor {
 	
 	/**
-	 * Processes a local user entity.
-	 * @param localUserEntity a local user entity. Cannot be 
+	 * Processes an user entity.
+	 * @param userEntity an user entity. Cannot be 
 	 * <code>null</code>.
 	 */
-	void visit(LocalUserEntity localUserEntity);
-	
-	/**
-	 * Processes an LDAP user entity.
-	 * @param ldapUserEntity an LDAP user entity. Cannot be 
-	 * <code>null</code>.
-	 */
-	void visit(LdapUserEntity ldapUserEntity);
-	
-	/**
-	 * Processes an OAuth user entity.
-	 * @param oauthUserEntity an OAuth user entity. Cannot be 
-	 * <code>null</code>.
-	 */
-	void visit(OAuthUserEntity oauthUserEntity);
+	void visit(UserEntity userEntity);
 }
