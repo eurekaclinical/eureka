@@ -58,7 +58,7 @@
 		<hibernate-hbm2ddl-auto>validate</hibernate-hbm2ddl-auto>
 
 
-		<cas-server-version>3.0-Alpha-4</cas-server-version>
+		<cas-server-version>3.0-Alpha-3</cas-server-version>
 		<user-common-version>1.0-Alpha-2</user-common-version>
 		<user-webapp-version>1.0-Alpha-2</user-webapp-version>
 		<user-service-version>1.0-Alpha-2</user-service-version>
