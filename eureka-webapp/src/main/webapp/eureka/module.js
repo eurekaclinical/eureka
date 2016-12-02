@@ -47,10 +47,10 @@
     angular.module('eureka').run(eurekaRun);
     angular.module('eureka').config(eurekaConfig);
 
-    eurekaRun.$inject = ['$rootScope', 'AppPropertiesService', 'appProperties', 'users', '$location'];
-    eurekaConfig.$inject = ['$stateProvider', '$urlRouterProvider'];
+    eurekaRun.$inject = ['$rootScope', 'AppPropertiesService', 'appProperties', 'users'];
+    eurekaConfig.$inject = ['$stateProvider', '$urlRouterProvider', '$httpProvider'];
 
-    function eurekaRun($rootScope, AppPropertiesService, appProperties, users, $location) {
+    function eurekaRun($rootScope, AppPropertiesService, appProperties, users) {
       
         $rootScope.app=appProperties;
         
@@ -71,8 +71,15 @@
        });  
     }
 
-    function eurekaConfig($stateProvider, $urlRouterProvider){
+    function eurekaConfig($stateProvider, $urlRouterProvider, $httpProvider){
 
+        if (!$httpProvider.defaults.headers.get) {
+            $httpProvider.defaults.headers.get = {};    
+        }    
+        $httpProvider.defaults.headers.get['If-Modified-Since'] = 'Mon, 26 Jul 1997 05:00:00 GMT';
+        $httpProvider.defaults.headers.get['Cache-Control'] = 'no-cache, no-store, must-revalidate';
+        $httpProvider.defaults.headers.get['Pragma'] = 'no-cache';
+        
         $urlRouterProvider.otherwise('/index');
 
         $stateProvider
