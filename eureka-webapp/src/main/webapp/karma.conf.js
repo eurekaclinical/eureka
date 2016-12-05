@@ -24,7 +24,6 @@ module.exports = function(config) {
       'bower_components/angular-mocks/angular-mocks.js',
       'bower_components/tg-angular-validator/dist/angular-validator.js',
       'bower_components/angular-ui-tree/dist/angular-ui-tree.js',
-      'bower_components/angular-material-data-table/dist/md-data-table.min.js',
       'bower_components/lodash/lodash.js',
       'assets/js/eureka.tree-cohort.js',
       'assets/js/eureka.cohort.js',

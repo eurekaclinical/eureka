@@ -63,7 +63,6 @@
 	<link rel="stylesheet"
 		  href="${pageContext.request.contextPath}/bower_components/bootstrap/dist/css/bootstrap.css"/>
 	<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/bower_components/font-awesome/css/font-awesome.css">
-        <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/bower_components/angular-material/angular-material.css" />
 	<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/assets/css/bootstrap-social-20150401.css">
 	<link rel="stylesheet"
 		  href="${pageContext.request.contextPath}/assets/css/eureka${initParam['eureka-build-timestamp']}.css"/>
