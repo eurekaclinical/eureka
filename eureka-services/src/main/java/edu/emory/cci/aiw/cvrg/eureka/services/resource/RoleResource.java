@@ -45,6 +45,7 @@ import com.google.inject.persist.Transactional;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.RoleEntity;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.RoleDao;
 import javax.inject.Inject;
+import javax.servlet.http.HttpServletRequest;
 import org.eurekaclinical.common.comm.Role;
 import org.eurekaclinical.common.resource.AbstractRoleResource;
 
@@ -70,7 +71,7 @@ public class RoleResource extends AbstractRoleResource<RoleEntity, Role> {
 	}
 
 	@Override
-	protected Role toRole(RoleEntity roleEntity) {
+	protected Role toComm(RoleEntity roleEntity, HttpServletRequest request) {
 		Role role = new Role();
 		role.setId(roleEntity.getId());
 		role.setName(roleEntity.getName());

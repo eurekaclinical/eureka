@@ -135,7 +135,7 @@
 						<id>liquibase-create-QT_BREAKDOWN_PATH-data-schema</id>
 						<phase>process-classes</phase>
 						<goals>
-						<goal>update</goal>
+							<goal>update</goal>
 						</goals>
 						<configuration>
 							<changeLogFile>${project.build.directory}/eureka-config/dbmigration/create-QT_BREAKDOWN_PATH-changelog.xml</changeLogFile>
@@ -146,7 +146,7 @@
 						<id>liquibase-populate-QT_BREAKDOWN_PATH-data-schema</id>
 						<phase>process-classes</phase>
 						<goals>
-						<goal>update</goal>
+							<goal>update</goal>
 						</goals>
 						<configuration>
 							<changeLogFile>${project.build.directory}/eureka-config/dbmigration/eureka-ontology-QT_BREAKDOWN_PATH-changelog.xml</changeLogFile>
@@ -199,17 +199,14 @@
 	</build>
 	<dependencies>
 		<dependency>
-			<groupId>javax.servlet</groupId>
-			<artifactId>javax.servlet-api</artifactId>
-		</dependency>
-		<dependency>
 			<groupId>com.sun.jersey.jersey-test-framework</groupId>
 			<artifactId>jersey-test-framework-grizzly2</artifactId>
+			<scope>test</scope>
 		</dependency>
 		<dependency>
-            <groupId>org.jasig.cas.client</groupId>
-            <artifactId>cas-client-core</artifactId>
-        </dependency>
+			<groupId>org.jasig.cas.client</groupId>
+			<artifactId>cas-client-core</artifactId>
+		</dependency>
 		<dependency>
 			<groupId>org.eurekaclinical</groupId>
 			<artifactId>eureka-common</artifactId>
@@ -218,6 +215,7 @@
 			<groupId>org.eurekaclinical</groupId>
 			<artifactId>eureka-common</artifactId>
 			<type>test-jar</type>
+			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.eurekaclinical</groupId>
@@ -266,7 +264,7 @@
 		<dependency>
 			<groupId>com.h2database</groupId>
 			<artifactId>h2</artifactId>
-                        <version>1.4.193</version>
+			<version>1.4.193</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>

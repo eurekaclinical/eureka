@@ -1,5 +1,7 @@
 package edu.emory.cci.aiw.cvrg.eureka.webapp.config;
 
+import edu.emory.cci.aiw.cvrg.eureka.common.props.AbstractProperties;
+
 /*
  * #%L
  * Eureka WebApp
@@ -40,13 +42,17 @@ package edu.emory.cci.aiw.cvrg.eureka.webapp.config;
  * #L%
  */
 
-import edu.emory.cci.aiw.cvrg.eureka.common.props.AbstractProperties;
-
 /**
  *
  * @author Andrew Post
  */
 public class WebappProperties extends AbstractProperties {
+
+	@Override
+	public String getUrl() {
+		return this.getValue("eureka.webapp.url");
+	}
+	
 	public String getUserWebappUrl() {
 		return this.getValue("user.webapp.url");
 	}

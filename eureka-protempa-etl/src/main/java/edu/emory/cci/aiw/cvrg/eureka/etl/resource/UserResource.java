@@ -49,6 +49,7 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.security.RolesAllowed;
 import javax.inject.Inject;
+import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import org.eurekaclinical.common.comm.User;
@@ -72,6 +73,7 @@ public class UserResource extends AbstractUserResource<User, AuthorizedUserEntit
 	 * Create a UserResource object with a User DAO and a Role DAO.
 	 *
 	 * @param inUserDao DAO used to access {@link UserEntity} related functionality.
+	 * @param inRoleDao
 	 */
 	@Inject
 	public UserResource(AuthorizedUserDao inUserDao, RoleDao inRoleDao) {
@@ -80,7 +82,7 @@ public class UserResource extends AbstractUserResource<User, AuthorizedUserEntit
 	}
 
 	@Override
-    protected User toUser(AuthorizedUserEntity userEntity) {
+    protected User toComm(AuthorizedUserEntity userEntity, HttpServletRequest request) {
         User user = new User();
         user.setId(userEntity.getId());
         user.setUsername(userEntity.getUsername());
@@ -93,7 +95,7 @@ public class UserResource extends AbstractUserResource<User, AuthorizedUserEntit
     }
     
     @Override
-    protected AuthorizedUserEntity toUserEntity(User user) {
+    protected AuthorizedUserEntity toEntity(User user) {
         List<AuthorizedRoleEntity> roleEntities = this.roleDao.getAll();
         AuthorizedUserEntity userEntity = new AuthorizedUserEntity();
         userEntity.setId(user.getId());

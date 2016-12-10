@@ -43,17 +43,16 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
+import org.eurekaclinical.standardapis.props.CasEurekaClinicalProperties;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import org.eurekaclinical.standardapis.props.EurekaClinicalProperties;
 
 /**
  *
  * @author hrathod
  */
-public abstract class AbstractProperties extends EurekaClinicalProperties {
+public abstract class AbstractProperties extends CasEurekaClinicalProperties {
 
 	/**
 	 * The class level logger.

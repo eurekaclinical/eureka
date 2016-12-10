@@ -93,7 +93,7 @@ public class DestinationResource {
 
 	@POST
 	public Response create(@Context HttpServletRequest request, Destination inDestination) {
-		UserEntity user = this.userDao.getByUsername(request.getRemoteUser());
+		UserEntity user = this.userDao.getByName(request.getRemoteUser());
 		DestinationToEtlDestinationVisitor v
 				= new DestinationToEtlDestinationVisitor(this.conversionSupport);
 		inDestination.accept(v);
@@ -110,7 +110,7 @@ public class DestinationResource {
 
 	@PUT
 	public void update(@Context HttpServletRequest request, Destination inDestination) {
-		UserEntity user = this.userDao.getByUsername(request.getRemoteUser());
+		UserEntity user = this.userDao.getByName(request.getRemoteUser());
 		DestinationToEtlDestinationVisitor v
 				= new DestinationToEtlDestinationVisitor(this.conversionSupport);
 		inDestination.accept(v);
@@ -131,7 +131,7 @@ public class DestinationResource {
 	 */
 	@GET
 	public List<Destination> getAll(@Context HttpServletRequest request, @QueryParam("type") DestinationType type) {
-		UserEntity user = this.userDao.getByUsername(request.getRemoteUser());
+		UserEntity user = this.userDao.getByName(request.getRemoteUser());
 		try {
 			List<? extends EtlDestination> destinations;
 			if (type == null) {
@@ -167,7 +167,7 @@ public class DestinationResource {
 	@GET
 	@Path("/{id}")
 	public Destination get(@Context HttpServletRequest request, @PathParam("id") String inId) {
-		UserEntity user = this.userDao.getByUsername(request.getRemoteUser());
+		UserEntity user = this.userDao.getByName(request.getRemoteUser());
 		EtlDestinationToDestinationVisitor v
 				= new EtlDestinationToDestinationVisitor(this.conversionSupport);
 		try {

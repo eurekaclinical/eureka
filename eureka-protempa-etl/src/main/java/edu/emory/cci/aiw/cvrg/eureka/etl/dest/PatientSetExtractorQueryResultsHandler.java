@@ -52,7 +52,6 @@ import org.codehaus.jackson.JsonEncoding;
 import org.codehaus.jackson.JsonGenerator;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.protempa.PropositionDefinition;
-import org.protempa.dest.AbstractQueryResultsHandler;
 import org.protempa.dest.QueryResultsHandlerCloseException;
 import org.protempa.dest.QueryResultsHandlerProcessingException;
 import org.protempa.dest.QueryResultsHandlerValidationFailedException;
@@ -65,25 +64,20 @@ import org.protempa.query.Query;
  *
  * @author Andrew Post
  */
-public class PatientSetExtractorQueryResultsHandler extends AbstractQueryResultsHandler {
+public class PatientSetExtractorQueryResultsHandler extends AbstractFileQueryResultsHandler {
 
-	private final String name;
 	private final String aliasPropId;
 	private final String aliasFieldNameProperty;
 	private final String aliasFieldName;
 	private final String aliasPatientIdPropertyName;
-	private final EtlProperties etlProperties;
 	private final String queryId;
 	private final String username;
-	private final String outputName;
-	private File outputFile;
 	private ObjectMapper mapper;
-	private OutputStream outputFileOutputStream;
 	private JsonGenerator jsonGenerator;
 
 	PatientSetExtractorQueryResultsHandler(Query query, PatientSetExtractorDestinationEntity inPatientSetSenderDestinationEntity) {
+		super(inPatientSetSenderDestinationEntity, new PatientSetSenderSupport().getOutputName(inPatientSetSenderDestinationEntity));
 		assert inPatientSetSenderDestinationEntity != null : "inPatientSetSenderDestinationEntity cannot be null";
-		this.name = inPatientSetSenderDestinationEntity.getName();
 
 		this.aliasPropId = inPatientSetSenderDestinationEntity.getAliasPropositionId();
 		this.aliasFieldNameProperty = inPatientSetSenderDestinationEntity.getAliasFieldNameProperty();
@@ -93,12 +87,8 @@ public class PatientSetExtractorQueryResultsHandler extends AbstractQueryResults
 		assert aliasPropId != null : "aliasPropId cannot be null";
 		assert aliasPatientIdPropertyName != null : "aliasPatientIdPropertyName cannot be null";
 
-		this.outputName = new PatientSetSenderSupport().getOutputName(inPatientSetSenderDestinationEntity);
-
 		this.queryId = query.getName();
 		this.username = query.getUsername();
-
-		this.etlProperties = new EtlProperties();
 
 	}
 
@@ -107,12 +97,10 @@ public class PatientSetExtractorQueryResultsHandler extends AbstractQueryResults
 	}
 
 	@Override
-	public void start(Collection<PropositionDefinition> cache) throws QueryResultsHandlerProcessingException {
+	public void start(OutputStream outputFileOutputStream, Collection<PropositionDefinition> cache) throws QueryResultsHandlerProcessingException {
 		try {
-			this.outputFile = new File(etlProperties.outputFileDirectory(this.name), this.outputName);
-			this.outputFileOutputStream = new FileOutputStream(this.outputFile);
 			this.mapper = new ObjectMapper();
-			this.jsonGenerator = this.mapper.getJsonFactory().createJsonGenerator(this.outputFileOutputStream, JsonEncoding.UTF8);
+			this.jsonGenerator = this.mapper.getJsonFactory().createJsonGenerator(outputFileOutputStream, JsonEncoding.UTF8);
 			this.jsonGenerator.writeStartObject();
 			this.jsonGenerator.writeFieldName("name");
 			this.jsonGenerator.writeString(this.queryId);
@@ -161,17 +149,13 @@ public class PatientSetExtractorQueryResultsHandler extends AbstractQueryResults
 	}
 
 	@Override
-	public void close() throws QueryResultsHandlerCloseException {
-		try {
-			this.jsonGenerator.close();
-			this.outputFileOutputStream.close();
-		} catch (IOException ex) {
+	public void cleanup() throws QueryResultsHandlerCloseException {
+		if (this.jsonGenerator != null) {
 			try {
-				this.outputFileOutputStream.close();
-			} catch (IOException suppress) {
-				ex.addSuppressed(suppress);
+				this.jsonGenerator.close();
+			} catch (IOException ex) {
+				throw new QueryResultsHandlerCloseException("Error closing", ex);
 			}
-			throw new QueryResultsHandlerCloseException("Error closing", ex);
 		}
 	}
 

@@ -72,8 +72,7 @@ class ServletModule extends AbstractServletModule {
 	private final WebappProperties properties;
 
 	public ServletModule(WebappProperties inProperties) {
-		super(inProperties, CONTAINER_PATH, CONTAINER_PROTECTED_PATH,
-				LOGOUT_PATH);
+		super(inProperties, CONTAINER_PATH, CONTAINER_PROTECTED_PATH);
 		this.properties = inProperties;
 	}
 

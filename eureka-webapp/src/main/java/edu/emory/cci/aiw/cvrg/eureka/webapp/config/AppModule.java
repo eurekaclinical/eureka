@@ -46,7 +46,7 @@ import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ServicesClient;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ToUserClient;
 import edu.emory.cci.aiw.cvrg.eureka.webapp.provider.ServicesClientProvider;
 import edu.emory.cci.aiw.cvrg.eureka.webapp.provider.ToUserClientProvider;
-import org.eurekaclinical.standardapis.props.EurekaClinicalProperties;
+import org.eurekaclinical.standardapis.props.CasEurekaClinicalProperties;
 
 /**
  *
@@ -63,9 +63,9 @@ class AppModule extends AbstractModule {
 	@Override
 	protected void configure() {
 		bind(WebappProperties.class).toInstance(this.webappProperties);
-		bind(EurekaClinicalProperties.class).toInstance(this.webappProperties);
+		bind(CasEurekaClinicalProperties.class).toInstance(this.webappProperties);
 		bind(ServicesClient.class).toProvider(ServicesClientProvider.class);
-                bind(ToUserClient.class).toProvider(ToUserClientProvider.class);
+        bind(ToUserClient.class).toProvider(ToUserClientProvider.class);
 	}
 	
 }

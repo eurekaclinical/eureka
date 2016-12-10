@@ -59,38 +59,31 @@
 	</build>
 	<dependencies>
 		<dependency>
-            <groupId>org.eurekaclinical</groupId>
-            <artifactId>eurekaclinical-common</artifactId>
-            <version>${eurekaclinical-common-version}</version>
-        </dependency>
+			<groupId>com.sun.jersey.jersey-test-framework</groupId>
+			<artifactId>jersey-test-framework-grizzly2</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.eurekaclinical</groupId>
+			<artifactId>eurekaclinical-common</artifactId>
+			<version>${eurekaclinical-common-version}</version>
+		</dependency>
 		<dependency>
 			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-lang3</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>javax.servlet</groupId>
-			<artifactId>javax.servlet-api</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>com.sun.jersey.jersey-test-framework</groupId>
-			<artifactId>jersey-test-framework-grizzly2</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.eurekaclinical</groupId>
 			<artifactId>protempa-framework</artifactId>
 		</dependency>
 		<dependency>
-                    <groupId>org.jasig.cas.client</groupId>
-                    <artifactId>cas-client-core</artifactId>
-                </dependency>
-                <dependency>
-                        <groupId>org.eurekaclinical</groupId>
-                        <artifactId>eureka-client</artifactId>
-                </dependency>
+			<groupId>org.eurekaclinical</groupId>
+			<artifactId>eureka-client</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.jasig.cas.client</groupId>
+			<artifactId>cas-client-core</artifactId>
+		</dependency>
 	</dependencies>
 </project>
 

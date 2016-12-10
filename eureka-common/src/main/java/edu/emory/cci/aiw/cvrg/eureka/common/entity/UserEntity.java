@@ -149,4 +149,14 @@ public class UserEntity implements org.eurekaclinical.standardapis.entity.UserEn
 	public void accept(UserEntityVisitor userEntityVisitor) {
 		userEntityVisitor.visit(this);
 	}        
+
+	@Override
+	public void addRole(RoleEntity role) {
+		this.roles.add(role);
+	}
+
+	@Override
+	public void removeRole(RoleEntity role) {
+		this.roles.remove(role);
+	}
 }

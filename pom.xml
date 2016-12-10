@@ -69,9 +69,9 @@
 		<tomcat.httpsPort>8443</tomcat.httpsPort>
 		
 
-		<eurekaclinical-common-version>1.0-Alpha-7</eurekaclinical-common-version>
-		<eureka-client-version>1.0</eureka-client-version>
-		<eurekaclinical-ontology-version>1.1</eurekaclinical-ontology-version>
+		<eurekaclinical-common-version>1.0</eurekaclinical-common-version>
+		<eureka-client-version>1.1.1</eureka-client-version>
+		<eurekaclinical-ontology-version>1.1.1</eurekaclinical-ontology-version>
 	</properties>
 
 	<licenses>
@@ -486,16 +486,6 @@
 				<type>pom</type>
 			</dependency>
 			<dependency>
-				<groupId>com.sun.jersey.contribs</groupId>
-				<artifactId>jersey-multipart</artifactId>
-				<version>${jersey-version}</version>
-			</dependency>
-			<dependency>
-				<groupId>com.sun.jersey.contribs</groupId>
-				<artifactId>jersey-apache-client</artifactId>
-				<version>${jersey-version}</version>
-			</dependency>
-			<dependency>
 				<groupId>org.eurekaclinical</groupId>
 				<artifactId>javautil</artifactId>
 				<version>${javautil-version}</version>
@@ -530,14 +520,6 @@
 		</dependencies>
 	</dependencyManagement>
 	
-	<dependencies>
-		<dependency>
-			<groupId>org.eurekaclinical</groupId>
-			<artifactId>eurekaclinical-common</artifactId>
-			<version>${eurekaclinical-common-version}</version>
-		</dependency>
-	</dependencies>
-
 	<profiles>
 		<profile>
 			<id>release-profile</id>

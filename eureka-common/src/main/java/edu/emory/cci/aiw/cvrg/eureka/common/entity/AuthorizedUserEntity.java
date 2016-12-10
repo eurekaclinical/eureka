@@ -211,4 +211,16 @@ public class AuthorizedUserEntity implements UserEntity<AuthorizedRoleEntity> {
 			this.roles = inRoles;
 		}
 	}
+
+	@Override
+	public void addRole(AuthorizedRoleEntity role) {
+		this.roles.add(role);
+	}
+
+	@Override
+	public void removeRole(AuthorizedRoleEntity role) {
+		this.roles.remove(role);
+	}
+	
+	
 }

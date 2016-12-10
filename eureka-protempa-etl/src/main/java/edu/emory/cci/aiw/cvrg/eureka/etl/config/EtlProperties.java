@@ -47,8 +47,6 @@ import edu.emory.cci.aiw.cvrg.eureka.common.props.AbstractProperties;
 import edu.emory.cci.aiw.cvrg.eureka.etl.resource.ToConfigFile;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Contains methods to fetch configuration information for the application.
@@ -133,5 +131,10 @@ public class EtlProperties extends AbstractProperties {
     public int getSearchLimit() {
         return this.getIntValue("eureka.jstree.searchlimit",200);
     }
+
+	@Override
+	public String getUrl() {
+		return this.getValue("eureka.etl.url");
+	}
 	
 }

@@ -46,6 +46,7 @@ import edu.emory.cci.aiw.cvrg.eureka.common.entity.AuthorizedRoleEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.RoleEntity;
 import edu.emory.cci.aiw.cvrg.eureka.etl.dao.RoleDao;
 import javax.inject.Inject;
+import javax.servlet.http.HttpServletRequest;
 import org.eurekaclinical.common.comm.Role;
 import org.eurekaclinical.common.resource.AbstractRoleResource;
 
@@ -71,7 +72,7 @@ public class RoleResource extends AbstractRoleResource<AuthorizedRoleEntity, Rol
 	}
 
 	@Override
-	protected Role toRole(AuthorizedRoleEntity roleEntity) {
+	protected Role toComm(AuthorizedRoleEntity roleEntity, HttpServletRequest request) {
 		Role role = new Role();
 		role.setId(roleEntity.getId());
 		role.setName(roleEntity.getName());

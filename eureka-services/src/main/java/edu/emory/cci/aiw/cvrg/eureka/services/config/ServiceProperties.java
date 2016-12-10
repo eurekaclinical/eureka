@@ -301,8 +301,14 @@ public class ServiceProperties extends AbstractProperties {
 	 *
 	 * @return admin username.
 	 */
+	@Override
 	public String getProxyCallbackServer() {
 		return this.getValue("eureka.services.callbackserver");
 	}   
+	
+	@Override
+	public String getUrl() {
+		return this.getValue("eureka.services.url");
+	}
 
 }

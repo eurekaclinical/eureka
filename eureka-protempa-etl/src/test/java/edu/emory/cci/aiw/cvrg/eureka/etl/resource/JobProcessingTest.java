@@ -80,7 +80,7 @@ public class JobProcessingTest extends AbstractEtlResourceTest {
 	}
 
 	@Test
-	public void submitPatientSetSenderJob() throws IOException {
+	public void submitPatientSetExtractorJob() throws IOException {
 		JobRequest jobRequest = new JobRequest();
 		JobSpec jobSpec = new JobSpec();
 		jobSpec.setSourceConfigId(Constants.SOURCECONFIG_NAME);
