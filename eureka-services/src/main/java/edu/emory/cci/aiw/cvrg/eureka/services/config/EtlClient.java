@@ -45,6 +45,7 @@ import edu.emory.cci.aiw.cvrg.eureka.common.comm.EtlCohortDestination;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.EtlDestination;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.EtlI2B2Destination;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.EtlPatientSetExtractorDestination;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.EtlPatientSetSenderDestination;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.JobRequest;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.ValidationRequest;
 import java.io.InputStream;
@@ -70,6 +71,8 @@ public interface EtlClient {
 	List<EtlI2B2Destination> getI2B2Destinations() throws ClientException;
 	
 	List<EtlPatientSetExtractorDestination> getPatientSetExtractorDestinations() throws ClientException;
+	
+	List<EtlPatientSetSenderDestination> getPatientSetSenderDestinations() throws ClientException;
 
 	List<EtlDestination> getDestinations() throws ClientException;
 	

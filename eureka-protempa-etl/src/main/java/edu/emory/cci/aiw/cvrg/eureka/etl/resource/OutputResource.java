@@ -43,7 +43,7 @@ import com.google.inject.Inject;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.DestinationEntity;
 import edu.emory.cci.aiw.cvrg.eureka.etl.config.EtlProperties;
 import edu.emory.cci.aiw.cvrg.eureka.etl.dao.DestinationDao;
-import edu.emory.cci.aiw.cvrg.eureka.etl.dest.PatientSetSenderSupport;
+import edu.emory.cci.aiw.cvrg.eureka.etl.dest.FileSupport;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -76,14 +76,14 @@ public class OutputResource {
 
 	private final EtlProperties etlProperties;
 	private final DestinationDao destinationDao;
-	private final PatientSetSenderSupport patientSetSenderSupport;
+	private final FileSupport patientSetSenderSupport;
 
 	/**
 	 * Create an object with the give data access object.
 	 *
 	 */
 	@Inject
-	public OutputResource(EtlProperties inEtlProperties, DestinationDao inDestinationDao, PatientSetSenderSupport inPatientSetSenderSupport) {
+	public OutputResource(EtlProperties inEtlProperties, DestinationDao inDestinationDao, FileSupport inPatientSetSenderSupport) {
 		this.etlProperties = inEtlProperties;
 		this.destinationDao = inDestinationDao;
 		this.patientSetSenderSupport = inPatientSetSenderSupport;

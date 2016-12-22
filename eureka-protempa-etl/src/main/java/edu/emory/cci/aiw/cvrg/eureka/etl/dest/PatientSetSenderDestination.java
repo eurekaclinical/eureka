@@ -39,7 +39,7 @@ package edu.emory.cci.aiw.cvrg.eureka.etl.dest;
  * <http://www.gnu.org/licenses/gpl-3.0.html>.
  * #L%
  */
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.PatientSetExtractorDestinationEntity;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.PatientSetSenderDestinationEntity;
 import edu.emory.cci.aiw.cvrg.eureka.etl.config.EtlProperties;
 import org.protempa.DataSource;
 import org.protempa.KnowledgeSource;
@@ -53,15 +53,15 @@ import org.protempa.query.QueryMode;
  *
  * @author Andrew Post
  */
-public class PatientSetExtractorDestination extends AbstractDestination {
-	private final PatientSetExtractorDestinationEntity patientSetExtractorDestinationEntity;
+public class PatientSetSenderDestination extends AbstractDestination {
+	private final PatientSetSenderDestinationEntity patientSetSenderDestinationEntity;
 	private final String[] propIdsSupported;
 	private final EtlProperties etlProperties;
 
-	PatientSetExtractorDestination(EtlProperties inEtlProperties, PatientSetExtractorDestinationEntity inPatientSetExtractorDestinationEntity) {
-		assert inPatientSetExtractorDestinationEntity != null : "inPatientSetExtractorDestinationEntity cannot be null";
-		this.patientSetExtractorDestinationEntity = inPatientSetExtractorDestinationEntity;
-		this.propIdsSupported = new String[] {this.patientSetExtractorDestinationEntity.getAliasPropositionId()};
+	PatientSetSenderDestination(EtlProperties inEtlProperties, PatientSetSenderDestinationEntity inPatientSetSenderDestinationEntity) {
+		assert inPatientSetSenderDestinationEntity != null : "inPatientSetSenderDestinationEntity cannot be null";
+		this.patientSetSenderDestinationEntity = inPatientSetSenderDestinationEntity;
+		this.propIdsSupported = new String[] {this.patientSetSenderDestinationEntity.getAliasPropositionId()};
 		this.etlProperties = inEtlProperties;
 	}
 
@@ -70,7 +70,7 @@ public class PatientSetExtractorDestination extends AbstractDestination {
 		if (query.getQueryMode() == QueryMode.UPDATE) {
 			throw new QueryResultsHandlerInitException("Update mode not supported");
 		}
-		return new PatientSetExtractorQueryResultsHandler(query, this.patientSetExtractorDestinationEntity, this.etlProperties);
+		return new PatientSetSenderQueryResultsHandler(query, this.patientSetSenderDestinationEntity, this.etlProperties);
 	}
 	
 	@Override

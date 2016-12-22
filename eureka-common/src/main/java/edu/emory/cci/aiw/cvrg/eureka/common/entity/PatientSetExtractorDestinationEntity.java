@@ -50,7 +50,7 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "ps_extractor_destinations")
-public class PatientSetExtractorDestinationEntity extends DestinationEntity {
+public class PatientSetExtractorDestinationEntity extends DestinationEntity implements PatientSetExtractionConfig {
 	@Column(nullable = false)
 	private String aliasPropositionId;
 	
@@ -61,6 +61,7 @@ public class PatientSetExtractorDestinationEntity extends DestinationEntity {
 	
 	private String aliasFieldName;
 
+	@Override
 	public String getAliasPropositionId() {
 		return aliasPropositionId;
 	}
@@ -69,6 +70,7 @@ public class PatientSetExtractorDestinationEntity extends DestinationEntity {
 		this.aliasPropositionId = aliasPropositionId;
 	}
 
+	@Override
 	public String getAliasFieldNameProperty() {
 		return aliasFieldNameProperty;
 	}
@@ -77,6 +79,7 @@ public class PatientSetExtractorDestinationEntity extends DestinationEntity {
 		this.aliasFieldNameProperty = aliasFieldNameProperty;
 	}
 
+	@Override
 	public String getAliasFieldName() {
 		return aliasFieldName;
 	}
@@ -85,6 +88,7 @@ public class PatientSetExtractorDestinationEntity extends DestinationEntity {
 		this.aliasFieldName = aliasFieldName;
 	}
 
+	@Override
 	public String getAliasPatientIdProperty() {
 		return aliasPatientIdProperty;
 	}

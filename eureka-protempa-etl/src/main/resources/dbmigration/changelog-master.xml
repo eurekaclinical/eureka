@@ -881,4 +881,23 @@
 			</delete>
 		</rollback>
 	</changeSet>
+	<changeSet author="arpost" id="1361552652236-42">
+		<createTable tableName="PS_SENDER_DESTINATIONS">
+			<column name="ID" type="BIGINT">
+				<constraints nullable="false" primaryKey="true" primaryKeyName="PS_SENDER_DEST_PK"/>
+			</column>
+			<column name="ALIASPROPOSITIONID" type="VARCHAR(255)">
+				<constraints nullable="false"/>
+			</column>
+			<column name="ALIASFIELDNAMEPROPERTY" type="VARCHAR(255)"/>
+			<column name="ALIASFIELDNAME" type="VARCHAR(255)"/>
+			<column name="ALIASPATIENTIDPROPERTY" type="VARCHAR(255)">
+				<constraints nullable="false"/>
+			</column>
+			<column name="PATIENTSETSERVICE" type="VARCHAR(255)">
+				<constraints nullable="false"/>
+			</column>
+		</createTable>
+		<addForeignKeyConstraint baseColumnNames="ID" baseTableName="PS_SENDER_DESTINATIONS" constraintName="FK_PS_SENDER_DEST" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" referencedColumnNames="ID" referencedTableName="DESTINATIONS" referencesUniqueColumn="false"/>
+	</changeSet>
 </databaseChangeLog>

@@ -44,6 +44,7 @@ import edu.emory.cci.aiw.cvrg.eureka.common.comm.EtlCohortDestination;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.EtlDestination;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.EtlI2B2Destination;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.EtlPatientSetExtractorDestination;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.EtlPatientSetSenderDestination;
 import org.eurekaclinical.eureka.client.comm.Node;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.CohortDestinationEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.CohortEntity;
@@ -55,6 +56,7 @@ import edu.emory.cci.aiw.cvrg.eureka.common.entity.I2B2DestinationEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.NodeEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.NodeToNodeEntityVisitor;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.PatientSetExtractorDestinationEntity;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.PatientSetSenderDestinationEntity;
 import edu.emory.cci.aiw.cvrg.eureka.etl.config.EtlProperties;
 import edu.emory.cci.aiw.cvrg.eureka.etl.dao.DestinationDao;
 import edu.emory.cci.aiw.cvrg.eureka.etl.dao.EtlGroupDao;
@@ -189,13 +191,27 @@ public final class Destinations {
 		return result;
 	}
 	
-	public List<EtlPatientSetExtractorDestination> getAllPatientSetSenders() {
+	public List<EtlPatientSetExtractorDestination> getAllPatientSetExtractors() {
 		List<EtlPatientSetExtractorDestination> result = new ArrayList<>();
 		PatientSetExtractorDestinationsDTOExtractor extractor
 				= new PatientSetExtractorDestinationsDTOExtractor(this.etlUser, this.groupDao);
 		for (PatientSetExtractorDestinationEntity configEntity
-				: this.destinationDao.getAllPatientSetSenderDestinations()) {
+				: this.destinationDao.getAllPatientSetExtractorDestinations()) {
 			EtlPatientSetExtractorDestination dto = extractor.extractDTO(configEntity);
+			if (dto != null) {
+				result.add(dto);
+			}
+		}
+		return result;
+	}
+	
+	public List<EtlPatientSetSenderDestination> getAllPatientSetSenders() {
+		List<EtlPatientSetSenderDestination> result = new ArrayList<>();
+		PatientSetSenderDestinationsDTOExtractor extractor
+				= new PatientSetSenderDestinationsDTOExtractor(this.etlUser, this.groupDao);
+		for (PatientSetSenderDestinationEntity configEntity
+				: this.destinationDao.getAllPatientSetSenderDestinations()) {
+			EtlPatientSetSenderDestination dto = extractor.extractDTO(configEntity);
 			if (dto != null) {
 				result.add(dto);
 			}

@@ -1,10 +1,10 @@
-package edu.emory.cci.aiw.cvrg.eureka.etl.dao;
+package edu.emory.cci.aiw.cvrg.eureka.etl.dest;
 
 /*
  * #%L
  * Eureka Protempa ETL
  * %%
- * Copyright (C) 2012 - 2013 Emory University
+ * Copyright (C) 2012 - 2015 Emory University
  * %%
  * This program is dual licensed under the Apache 2 and GPLv3 licenses.
  * 
@@ -40,23 +40,29 @@ package edu.emory.cci.aiw.cvrg.eureka.etl.dao;
  * #L%
  */
 
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.CohortDestinationEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.DestinationEntity;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.I2B2DestinationEntity;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.PatientSetExtractorDestinationEntity;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.PatientSetSenderDestinationEntity;
-import java.util.List;
 
 /**
  *
  * @author Andrew Post
  */
-public interface DestinationDao extends ConfigDao<DestinationEntity> {
-	List<CohortDestinationEntity> getAllCohortDestinations();
-
-	List<I2B2DestinationEntity> getAllI2B2Destinations();
+public class FileSupport {
+	public FileSupport() {
+	}
 	
-	List<PatientSetExtractorDestinationEntity> getAllPatientSetExtractorDestinations();
+	public String getOutputName(DestinationEntity inDestinationEntity) {
+		String outputName = inDestinationEntity.getOutputName();
+		if (outputName == null) {
+			outputName = outputName(inDestinationEntity.getName());
+		}
+		return outputName;
+	}
 	
-	List<PatientSetSenderDestinationEntity> getAllPatientSetSenderDestinations();
+	public String getOutputName(String destinationId) {
+		return outputName(destinationId);
+	}
+	
+	private String outputName(String destinationName) {
+		return destinationName + "_out";
+	}
 }

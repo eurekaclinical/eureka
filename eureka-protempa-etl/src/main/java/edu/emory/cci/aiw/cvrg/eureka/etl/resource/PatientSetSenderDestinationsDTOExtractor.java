@@ -40,9 +40,9 @@ package edu.emory.cci.aiw.cvrg.eureka.etl.resource;
  * #L%
  */
 
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.EtlPatientSetExtractorDestination;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.EtlPatientSetSenderDestination;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.AuthorizedUserEntity;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.PatientSetExtractorDestinationEntity;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.PatientSetSenderDestinationEntity;
 import edu.emory.cci.aiw.cvrg.eureka.etl.dao.EtlGroupDao;
 import java.util.ArrayList;
 
@@ -50,16 +50,16 @@ import java.util.ArrayList;
  *
  * @author Andrew Post
  */
-class PatientSetExtractorDestinationsDTOExtractor extends DestinationsDTOExtractor<EtlPatientSetExtractorDestination, PatientSetExtractorDestinationEntity> {
+class PatientSetSenderDestinationsDTOExtractor extends DestinationsDTOExtractor<EtlPatientSetSenderDestination, PatientSetSenderDestinationEntity> {
 
-	PatientSetExtractorDestinationsDTOExtractor(AuthorizedUserEntity user, EtlGroupDao inGroupDao) {
+	PatientSetSenderDestinationsDTOExtractor(AuthorizedUserEntity user, EtlGroupDao inGroupDao) {
 		super(user, inGroupDao);
 	}
 
 	@Override
-	EtlPatientSetExtractorDestination extractDTO(Perm perm,
-			PatientSetExtractorDestinationEntity destinationEntity) {
-		EtlPatientSetExtractorDestination dest = new EtlPatientSetExtractorDestination();
+	EtlPatientSetSenderDestination extractDTO(Perm perm,
+			PatientSetSenderDestinationEntity destinationEntity) {
+		EtlPatientSetSenderDestination dest = new EtlPatientSetSenderDestination();
 		dest.setName(destinationEntity.getName());
 		dest.setDescription(destinationEntity.getDescription());
 		dest.setId(destinationEntity.getId());
@@ -76,6 +76,7 @@ class PatientSetExtractorDestinationsDTOExtractor extends DestinationsDTOExtract
 		dest.setAliasFieldName(destinationEntity.getAliasFieldName());
 		dest.setAliasFieldNameProperty(destinationEntity.getAliasFieldNameProperty());
 		dest.setAliasPatientIdProperty(destinationEntity.getAliasPatientIdProperty());
+		dest.setPatientSetService(destinationEntity.getPatientSetService());
 		return dest;
 	}
 

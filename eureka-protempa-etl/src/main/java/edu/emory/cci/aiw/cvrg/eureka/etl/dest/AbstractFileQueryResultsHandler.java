@@ -47,14 +47,10 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Collection;
-import java.util.List;
-import java.util.Map;
 import org.protempa.PropositionDefinition;
 import org.protempa.dest.AbstractQueryResultsHandler;
 import org.protempa.dest.QueryResultsHandlerCloseException;
 import org.protempa.dest.QueryResultsHandlerProcessingException;
-import org.protempa.proposition.Proposition;
-import org.protempa.proposition.UniqueId;
 
 /**
  *
@@ -66,11 +62,13 @@ public abstract class AbstractFileQueryResultsHandler extends AbstractQueryResul
     private final String name;
     private final EtlProperties etlProperties;
     private final String fileName;
+	private final FileSupport fileSupport;
     
-    protected AbstractFileQueryResultsHandler(DestinationEntity destinationEntity, String fileName) {
+    protected AbstractFileQueryResultsHandler(DestinationEntity destinationEntity, EtlProperties etlProperties) {
+		this.fileSupport = new FileSupport();
         this.name = destinationEntity.getName();
-        this.fileName = fileName;
-        this.etlProperties = new EtlProperties();
+        this.fileName = this.fileSupport.getOutputName(destinationEntity);
+        this.etlProperties = etlProperties;
     }
 
     /**
@@ -81,7 +79,7 @@ public abstract class AbstractFileQueryResultsHandler extends AbstractQueryResul
     @Override
     public final void start(Collection<PropositionDefinition> cache) throws QueryResultsHandlerProcessingException {
         try {
-            File outputFile = new File(etlProperties.outputFileDirectory(this.name), this.fileName);
+            File outputFile = new File(this.etlProperties.outputFileDirectory(this.name), this.fileName);
             this.outputFileOutputStream = new FileOutputStream(outputFile);
             start(this.outputFileOutputStream, cache);
         } catch (IOException ex) {
@@ -114,11 +112,11 @@ public abstract class AbstractFileQueryResultsHandler extends AbstractQueryResul
      * Called by {@link #start(java.util.Collection) } to given subclasses an opportunity to create
      * resources and access the output stream.
      * 
-     * @param outputFileOutputStream
+     * @param outputStream
      * @param cache
      * @throws QueryResultsHandlerProcessingException 
      */
-    protected abstract void start(OutputStream outputFileOutputStream, Collection<PropositionDefinition> cache) throws QueryResultsHandlerProcessingException;
+    protected abstract void start(OutputStream outputStream, Collection<PropositionDefinition> cache) throws QueryResultsHandlerProcessingException;
 
     /**
      * Called by {@link #close()} to give subclasses an opportunity to clean up

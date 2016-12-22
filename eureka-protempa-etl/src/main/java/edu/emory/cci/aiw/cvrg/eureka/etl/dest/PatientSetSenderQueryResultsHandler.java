@@ -39,7 +39,7 @@ package edu.emory.cci.aiw.cvrg.eureka.etl.dest;
  * <http://www.gnu.org/licenses/gpl-3.0.html>.
  * #L%
  */
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.PatientSetExtractorDestinationEntity;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.PatientSetSenderDestinationEntity;
 import edu.emory.cci.aiw.cvrg.eureka.etl.config.EtlProperties;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -59,18 +59,20 @@ import org.protempa.query.Query;
  *
  * @author Andrew Post
  */
-public class PatientSetExtractorQueryResultsHandler extends AbstractFileQueryResultsHandler {
+public class PatientSetSenderQueryResultsHandler extends AbstractFileQueryResultsHandler {
 
 	private final String queryId;
 	private final String username;
 	private final PatientIdExtractor patientIdExtractor;
+	private final PatientSetSender patientSetSender;
 	private PatientSetJsonWriter jsonGenerator;
 
-	PatientSetExtractorQueryResultsHandler(Query query, PatientSetExtractorDestinationEntity inPatientSetSenderDestinationEntity, EtlProperties inEtlProperties) {
+	PatientSetSenderQueryResultsHandler(Query query, PatientSetSenderDestinationEntity inPatientSetSenderDestinationEntity, EtlProperties inEtlProperties) {
 		super(inPatientSetSenderDestinationEntity, inEtlProperties);
 		assert inPatientSetSenderDestinationEntity != null : "inPatientSetSenderDestinationEntity cannot be null";
-		
+
 		this.patientIdExtractor = new PatientIdExtractor(inPatientSetSenderDestinationEntity);
+		this.patientSetSender = new PatientSetSender(inEtlProperties, inPatientSetSenderDestinationEntity);
 
 		this.queryId = query.getName();
 		this.username = query.getUsername();
@@ -81,9 +83,9 @@ public class PatientSetExtractorQueryResultsHandler extends AbstractFileQueryRes
 	}
 
 	@Override
-	public void start(OutputStream outputFileOutputStream, Collection<PropositionDefinition> cache) throws QueryResultsHandlerProcessingException {
+	public void start(OutputStream outputStream, Collection<PropositionDefinition> cache) throws QueryResultsHandlerProcessingException {
 		try {
-			this.jsonGenerator = new PatientSetJsonWriter(outputFileOutputStream, this.queryId, this.username);
+			this.jsonGenerator = new PatientSetJsonWriter(outputStream, this.queryId, this.username);
 		} catch (IOException ex) {
 			throw new QueryResultsHandlerProcessingException("Error starting output", ex);
 		}
@@ -104,6 +106,17 @@ public class PatientSetExtractorQueryResultsHandler extends AbstractFileQueryRes
 			this.jsonGenerator.finish();
 		} catch (IOException ex) {
 			throw new QueryResultsHandlerProcessingException(ex);
+		}
+		try {
+			this.jsonGenerator.close();
+		} catch (IOException ex) {
+			throw new QueryResultsHandlerProcessingException("Error closing patient set JSON output stream", ex);
+		}
+		this.jsonGenerator = null;
+		try {
+			this.patientSetSender.doSend();
+		} catch (IOException ex) {
+			throw new QueryResultsHandlerProcessingException("Error sending patient set", ex);
 		}
 	}
 

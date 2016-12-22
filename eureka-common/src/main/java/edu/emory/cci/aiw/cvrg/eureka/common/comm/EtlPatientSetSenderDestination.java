@@ -1,10 +1,10 @@
-package edu.emory.cci.aiw.cvrg.eureka.etl.dest;
+package edu.emory.cci.aiw.cvrg.eureka.common.comm;
 
 /*
  * #%L
- * Eureka Protempa ETL
+ * Eureka Common
  * %%
- * Copyright (C) 2012 - 2015 Emory University
+ * Copyright (C) 2012 - 2014 Emory University
  * %%
  * This program is dual licensed under the Apache 2 and GPLv3 licenses.
  * 
@@ -40,29 +40,60 @@ package edu.emory.cci.aiw.cvrg.eureka.etl.dest;
  * #L%
  */
 
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.DestinationEntity;
-
 /**
  *
  * @author Andrew Post
  */
-public class PatientSetSenderSupport {
-	public PatientSetSenderSupport() {
+public class EtlPatientSetSenderDestination extends EtlDestination {
+	private String aliasPropositionId;
+	private String aliasFieldNameProperty;
+	private String aliasFieldName;
+	private String aliasPatientIdProperty;
+	private String patientSetService;
+
+	@Override
+	public void accept(EtlDestinationVisitor etlDestinationVisitor) {
+		etlDestinationVisitor.visit(this);
+	}
+
+	public void setAliasPropositionId(String aliasPropositionId) {
+		this.aliasPropositionId = aliasPropositionId;
+	}
+
+	public String getAliasPropositionId() {
+		return aliasPropositionId;
+	}
+
+	public String getAliasFieldNameProperty() {
+		return aliasFieldNameProperty;
+	}
+
+	public void setAliasFieldNameProperty(String aliasFieldNameProperty) {
+		this.aliasFieldNameProperty = aliasFieldNameProperty;
+	}
+
+	public String getAliasFieldName() {
+		return aliasFieldName;
+	}
+
+	public void setAliasFieldName(String aliasFieldName) {
+		this.aliasFieldName = aliasFieldName;
+	}
+
+	public String getAliasPatientIdProperty() {
+		return aliasPatientIdProperty;
+	}
+
+	public void setAliasPatientIdProperty(String aliasPatientIdProperty) {
+		this.aliasPatientIdProperty = aliasPatientIdProperty;
 	}
 	
-	public String getOutputName(DestinationEntity inDestinationEntity) {
-		String outputName = inDestinationEntity.getOutputName();
-		if (outputName == null) {
-			outputName = outputName(inDestinationEntity.getName());
-		}
-		return outputName;
+	public String getPatientSetService() {
+		return patientSetService;
+	}
+
+	public void setPatientSetService(String patientSetService) {
+		this.patientSetService = patientSetService;
 	}
 	
-	public String getOutputName(String destinationId) {
-		return outputName(destinationId);
-	}
-	
-	private String outputName(String destinationName) {
-		return destinationName + "_out";
-	}
 }

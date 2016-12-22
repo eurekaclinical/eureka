@@ -50,11 +50,13 @@ import edu.emory.cci.aiw.cvrg.eureka.common.comm.EtlDestination;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.EtlI2B2Destination;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.EtlNeo4jDestination;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.EtlPatientSetExtractorDestination;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.EtlPatientSetSenderDestination;
 import org.eurekaclinical.eureka.client.comm.I2B2Destination;
 import org.eurekaclinical.eureka.client.comm.Neo4jDestination;
 import org.eurekaclinical.eureka.client.comm.PatientSetExtractorDestination;
 import java.util.ArrayList;
 import java.util.List;
+import org.eurekaclinical.eureka.client.comm.PatientSetSenderDestination;
 
 /**
  *
@@ -129,9 +131,24 @@ public class DestinationToEtlDestinationVisitor extends AbstractDestinationVisit
 	}
 
 	@Override
-	public void visit(PatientSetExtractorDestination patientSetSenderDestination) {
-		EtlPatientSetExtractorDestination etlPtSetSenderDest = new EtlPatientSetExtractorDestination();
+	public void visit(PatientSetExtractorDestination patientSetExtractorDestination) {
+		EtlPatientSetExtractorDestination etlPtSetExtractorDest = new EtlPatientSetExtractorDestination();
+		etlPtSetExtractorDest.setAliasPropositionId(patientSetExtractorDestination.getAliasPropositionId());
+		etlPtSetExtractorDest.setAliasFieldName(patientSetExtractorDestination.getAliasFieldName());
+		etlPtSetExtractorDest.setAliasFieldNameProperty(patientSetExtractorDestination.getAliasFieldNameProperty());
+		etlPtSetExtractorDest.setAliasPatientIdProperty(patientSetExtractorDestination.getAliasPatientIdProperty());
+		visitCommon(patientSetExtractorDestination, etlPtSetExtractorDest);
+		this.etlDestination = etlPtSetExtractorDest;
+	}
+	
+	@Override
+	public void visit(PatientSetSenderDestination patientSetSenderDestination) {
+		EtlPatientSetSenderDestination etlPtSetSenderDest = new EtlPatientSetSenderDestination();
 		etlPtSetSenderDest.setAliasPropositionId(patientSetSenderDestination.getAliasPropositionId());
+		etlPtSetSenderDest.setAliasFieldName(patientSetSenderDestination.getAliasFieldName());
+		etlPtSetSenderDest.setAliasFieldNameProperty(patientSetSenderDestination.getAliasFieldNameProperty());
+		etlPtSetSenderDest.setAliasPatientIdProperty(patientSetSenderDestination.getAliasPatientIdProperty());
+		etlPtSetSenderDest.setPatientSetService(patientSetSenderDestination.getPatientSetService());
 		visitCommon(patientSetSenderDestination, etlPtSetSenderDest);
 		this.etlDestination = etlPtSetSenderDest;
 	}

@@ -273,6 +273,10 @@
 			<version>${eurekaclinical-ontology-version}</version>
 			<scope>provided</scope>
 		</dependency>
+		<dependency>
+			<groupId>org.eurekaclinical</groupId>
+			<artifactId>eurekaclinical-patient-set-client</artifactId>
+		</dependency>
 	</dependencies>
 </project>
 

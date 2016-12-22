@@ -1,4 +1,4 @@
-package edu.emory.cci.aiw.cvrg.eureka.common.comm;
+package edu.emory.cci.aiw.cvrg.eureka.common.entity;
 
 /*
  * #%L
@@ -40,29 +40,40 @@ package edu.emory.cci.aiw.cvrg.eureka.common.comm;
  * #L%
  */
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Table;
+
 /**
  *
  * @author Andrew Post
  */
-public class EtlPatientSetExtractorDestination extends EtlDestination {
+@Entity
+@Table(name = "ps_sender_destinations")
+public class PatientSetSenderDestinationEntity extends DestinationEntity implements PatientSetExtractionConfig {
+	@Column(nullable = false)
 	private String aliasPropositionId;
-	private String aliasFieldNameProperty;
-	private String aliasFieldName;
+	
+	@Column(nullable = false)
 	private String aliasPatientIdProperty;
+	
+	private String aliasFieldNameProperty;
+	
+	private String aliasFieldName;
+	
+	@Column(nullable = false)
+	private String patientSetService;
 
 	@Override
-	public void accept(EtlDestinationVisitor etlDestinationVisitor) {
-		etlDestinationVisitor.visit(this);
+	public String getAliasPropositionId() {
+		return aliasPropositionId;
 	}
 
 	public void setAliasPropositionId(String aliasPropositionId) {
 		this.aliasPropositionId = aliasPropositionId;
 	}
 
-	public String getAliasPropositionId() {
-		return aliasPropositionId;
-	}
-
+	@Override
 	public String getAliasFieldNameProperty() {
 		return aliasFieldNameProperty;
 	}
@@ -71,6 +82,7 @@ public class EtlPatientSetExtractorDestination extends EtlDestination {
 		this.aliasFieldNameProperty = aliasFieldNameProperty;
 	}
 
+	@Override
 	public String getAliasFieldName() {
 		return aliasFieldName;
 	}
@@ -79,6 +91,7 @@ public class EtlPatientSetExtractorDestination extends EtlDestination {
 		this.aliasFieldName = aliasFieldName;
 	}
 
+	@Override
 	public String getAliasPatientIdProperty() {
 		return aliasPatientIdProperty;
 	}
@@ -86,7 +99,28 @@ public class EtlPatientSetExtractorDestination extends EtlDestination {
 	public void setAliasPatientIdProperty(String aliasPatientIdProperty) {
 		this.aliasPatientIdProperty = aliasPatientIdProperty;
 	}
+
+	public String getPatientSetService() {
+		return patientSetService;
+	}
+
+	public void setPatientSetService(String patientSetService) {
+		this.patientSetService = patientSetService;
+	}
 	
+	@Override
+	public boolean isGetStatisticsSupported() {
+		return false;
+	}
 	
+	@Override
+	public boolean isAllowingQueryPropositionIds() {
+		return false;
+	}
+	
+	@Override
+	public void accept(DestinationEntityVisitor visitor) {
+		visitor.visit(this);
+	}
 	
 }

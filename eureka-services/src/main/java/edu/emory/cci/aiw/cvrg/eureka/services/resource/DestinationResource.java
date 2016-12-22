@@ -147,6 +147,9 @@ public class DestinationResource {
 					case PATIENT_SET_EXTRACTOR:
 						destinations = this.etlClient.getPatientSetExtractorDestinations();
 						break;
+					case PATIENT_SET_SENDER:
+						destinations = this.etlClient.getPatientSetSenderDestinations();
+						break;
 					default:
 						throw new AssertionError("Unexpected type " + type);
 				}

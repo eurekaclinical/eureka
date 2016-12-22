@@ -51,5 +51,7 @@ public interface DestinationEntityVisitor {
 	
 	void visit(Neo4jDestinationEntity neo4jDestination);
 	
-	void visit(PatientSetExtractorDestinationEntity patientSetSenderDestination);
+	void visit(PatientSetExtractorDestinationEntity patientSetExtractorDestination);
+	
+	void visit(PatientSetSenderDestinationEntity patientSetSenderDestination);
 }
