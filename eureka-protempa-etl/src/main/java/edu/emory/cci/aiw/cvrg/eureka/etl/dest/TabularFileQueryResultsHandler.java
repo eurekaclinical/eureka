@@ -40,10 +40,18 @@ package edu.emory.cci.aiw.cvrg.eureka.etl.dest;
  * #L%
  */
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.TabularFileDestinationEntity;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.TabularFileDestinationTableColumnEntity;
 import edu.emory.cci.aiw.cvrg.eureka.etl.config.EtlProperties;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 import org.protempa.PropositionDefinition;
 import org.protempa.dest.AbstractQueryResultsHandler;
 import org.protempa.dest.QueryResultsHandlerCloseException;
@@ -61,12 +69,16 @@ public class TabularFileQueryResultsHandler extends AbstractQueryResultsHandler 
 
 	private final String queryId;
 	private final String username;
+	private final TabularFileDestinationEntity config;
+	private Map<String, BufferedWriter> writers;
+	private final EtlProperties etlProperties;
 
 	TabularFileQueryResultsHandler(Query query, TabularFileDestinationEntity inTabularFileDestinationEntity, EtlProperties inEtlProperties) {
 		assert inTabularFileDestinationEntity != null : "inTabularFileDestinationEntity cannot be null";
-
+		this.etlProperties = inEtlProperties;
 		this.queryId = query.getName();
 		this.username = query.getUsername();
+		this.config = inTabularFileDestinationEntity;
 	}
 
 	@Override
@@ -75,6 +87,22 @@ public class TabularFileQueryResultsHandler extends AbstractQueryResultsHandler 
 
 	@Override
 	public void start(Collection<PropositionDefinition> cache) throws QueryResultsHandlerProcessingException {
+		try {
+			File outputFileDirectory = this.etlProperties.outputFileDirectory(this.config.getName());
+			List<String> tableNames = this.config.getTableColumns()
+					.stream()
+					.map(TabularFileDestinationTableColumnEntity::getTableName)
+					.distinct()
+					.collect(Collectors.toCollection(ArrayList::new));
+			this.writers = new HashMap<>();
+			for (int i = 0, n = tableNames.size(); i < n; i++) {
+				String tableName = tableNames.get(i);
+				File file = new File(outputFileDirectory, tableName);
+				this.writers.put(tableName, new BufferedWriter(new FileWriter(file)));
+			}
+		} catch (IOException ex) {
+			throw new QueryResultsHandlerProcessingException(ex);
+		}
 	}
 
 	@Override
@@ -87,6 +115,24 @@ public class TabularFileQueryResultsHandler extends AbstractQueryResultsHandler 
 
 	@Override
 	public void close() throws QueryResultsHandlerCloseException {
+		QueryResultsHandlerCloseException exception = null;
+		if (this.writers != null) {
+			for (BufferedWriter writer : this.writers.values()) {
+				try {
+					writer.close();
+				} catch (IOException ex) {
+					if (exception != null) {
+						exception.addSuppressed(ex);
+					} else {
+						exception = new QueryResultsHandlerCloseException(ex);
+					}
+				}
+				this.writers = null;
+			}
+		}
+		if (exception != null) {
+			throw exception;
+		}
 	}
-	
+
 }
