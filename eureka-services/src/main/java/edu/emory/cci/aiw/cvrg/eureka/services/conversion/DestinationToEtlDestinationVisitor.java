@@ -51,12 +51,16 @@ import edu.emory.cci.aiw.cvrg.eureka.common.comm.EtlI2B2Destination;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.EtlNeo4jDestination;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.EtlPatientSetExtractorDestination;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.EtlPatientSetSenderDestination;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.EtlTableColumn;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.EtlTabularFileDestination;
 import org.eurekaclinical.eureka.client.comm.I2B2Destination;
 import org.eurekaclinical.eureka.client.comm.Neo4jDestination;
 import org.eurekaclinical.eureka.client.comm.PatientSetExtractorDestination;
 import java.util.ArrayList;
 import java.util.List;
 import org.eurekaclinical.eureka.client.comm.PatientSetSenderDestination;
+import org.eurekaclinical.eureka.client.comm.TableColumn;
+import org.eurekaclinical.eureka.client.comm.TabularFileDestination;
 
 /**
  *
@@ -151,6 +155,23 @@ public class DestinationToEtlDestinationVisitor extends AbstractDestinationVisit
 		etlPtSetSenderDest.setPatientSetService(patientSetSenderDestination.getPatientSetService());
 		visitCommon(patientSetSenderDestination, etlPtSetSenderDest);
 		this.etlDestination = etlPtSetSenderDest;
+	}
+
+	@Override
+	public void visit(TabularFileDestination tabularFileDestination) {
+		EtlTabularFileDestination etlTabularFileDest = new EtlTabularFileDestination();
+		List<EtlTableColumn> etlTableColumns = new ArrayList<>();
+		for (TableColumn tableColumn : tabularFileDestination.getTableColumns()) {
+			EtlTableColumn etlTableColumn = new EtlTableColumn();
+			etlTableColumn.setTableName(tableColumn.getTableName());
+			etlTableColumn.setColumnName(tableColumn.getColumnName());
+			etlTableColumn.setPath(tableColumn.getPath());
+			etlTableColumn.setFormat(tableColumn.getFormat());
+			etlTableColumns.add(etlTableColumn);
+		}
+		etlTabularFileDest.setTableColumns(etlTableColumns);
+		visitCommon(tabularFileDestination, etlTabularFileDest);
+		this.etlDestination = etlTabularFileDest;
 	}
 
 }

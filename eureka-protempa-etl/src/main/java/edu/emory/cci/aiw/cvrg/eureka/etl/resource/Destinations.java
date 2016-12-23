@@ -45,6 +45,7 @@ import edu.emory.cci.aiw.cvrg.eureka.common.comm.EtlDestination;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.EtlI2B2Destination;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.EtlPatientSetExtractorDestination;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.EtlPatientSetSenderDestination;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.EtlTabularFileDestination;
 import org.eurekaclinical.eureka.client.comm.Node;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.CohortDestinationEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.CohortEntity;
@@ -57,6 +58,7 @@ import edu.emory.cci.aiw.cvrg.eureka.common.entity.NodeEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.NodeToNodeEntityVisitor;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.PatientSetExtractorDestinationEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.PatientSetSenderDestinationEntity;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.TabularFileDestinationEntity;
 import edu.emory.cci.aiw.cvrg.eureka.etl.config.EtlProperties;
 import edu.emory.cci.aiw.cvrg.eureka.etl.dao.DestinationDao;
 import edu.emory.cci.aiw.cvrg.eureka.etl.dao.EtlGroupDao;
@@ -212,6 +214,20 @@ public final class Destinations {
 		for (PatientSetSenderDestinationEntity configEntity
 				: this.destinationDao.getAllPatientSetSenderDestinations()) {
 			EtlPatientSetSenderDestination dto = extractor.extractDTO(configEntity);
+			if (dto != null) {
+				result.add(dto);
+			}
+		}
+		return result;
+	}
+	
+	public List<EtlTabularFileDestination> getAllTabularFiles() {
+		List<EtlTabularFileDestination> result = new ArrayList<>();
+		TabularFileDestinationsDTOExtractor extractor
+				= new TabularFileDestinationsDTOExtractor(this.etlUser, this.groupDao);
+		for (TabularFileDestinationEntity configEntity
+				: this.destinationDao.getAllTabularFileDestinations()) {
+			EtlTabularFileDestination dto = extractor.extractDTO(configEntity);
 			if (dto != null) {
 				result.add(dto);
 			}

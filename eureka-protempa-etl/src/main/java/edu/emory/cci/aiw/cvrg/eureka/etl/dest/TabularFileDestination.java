@@ -1,10 +1,10 @@
-package edu.emory.cci.aiw.cvrg.eureka.etl.dao;
+package edu.emory.cci.aiw.cvrg.eureka.etl.dest;
 
 /*
  * #%L
  * Eureka Protempa ETL
  * %%
- * Copyright (C) 2012 - 2013 Emory University
+ * Copyright (C) 2012 - 2015 Emory University
  * %%
  * This program is dual licensed under the Apache 2 and GPLv3 licenses.
  * 
@@ -39,27 +39,36 @@ package edu.emory.cci.aiw.cvrg.eureka.etl.dao;
  * <http://www.gnu.org/licenses/gpl-3.0.html>.
  * #L%
  */
-
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.CohortDestinationEntity;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.DestinationEntity;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.I2B2DestinationEntity;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.PatientSetExtractorDestinationEntity;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.PatientSetSenderDestinationEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.TabularFileDestinationEntity;
-import java.util.List;
+import edu.emory.cci.aiw.cvrg.eureka.etl.config.EtlProperties;
+import org.protempa.DataSource;
+import org.protempa.KnowledgeSource;
+import org.protempa.dest.AbstractDestination;
+import org.protempa.dest.QueryResultsHandler;
+import org.protempa.dest.QueryResultsHandlerInitException;
+import org.protempa.query.Query;
+import org.protempa.query.QueryMode;
 
 /**
  *
  * @author Andrew Post
  */
-public interface DestinationDao extends ConfigDao<DestinationEntity> {
-	List<CohortDestinationEntity> getAllCohortDestinations();
+public class TabularFileDestination extends AbstractDestination {
+	private final TabularFileDestinationEntity tabularFileDestinationEntity;
+	private final EtlProperties etlProperties;
 
-	List<I2B2DestinationEntity> getAllI2B2Destinations();
+	TabularFileDestination(EtlProperties inEtlProperties, TabularFileDestinationEntity inTabularFileDestinationEntity) {
+		assert inTabularFileDestinationEntity != null : "inTabularFileDestinationEntity cannot be null";
+		this.tabularFileDestinationEntity = inTabularFileDestinationEntity;
+		this.etlProperties = inEtlProperties;
+	}
+
+	@Override
+	public QueryResultsHandler getQueryResultsHandler(Query query, DataSource dataSource, KnowledgeSource knowledgeSource) throws QueryResultsHandlerInitException {
+		if (query.getQueryMode() == QueryMode.UPDATE) {
+			throw new QueryResultsHandlerInitException("Update mode not supported");
+		}
+		return new TabularFileQueryResultsHandler(query, this.tabularFileDestinationEntity, this.etlProperties);
+	}
 	
-	List<PatientSetExtractorDestinationEntity> getAllPatientSetExtractorDestinations();
-	
-	List<PatientSetSenderDestinationEntity> getAllPatientSetSenderDestinations();
-	
-	List<TabularFileDestinationEntity> getAllTabularFileDestinations();
 }

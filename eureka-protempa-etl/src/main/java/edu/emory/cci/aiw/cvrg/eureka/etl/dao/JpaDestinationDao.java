@@ -47,6 +47,7 @@ import edu.emory.cci.aiw.cvrg.eureka.common.entity.DestinationEntity_;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.I2B2DestinationEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.PatientSetExtractorDestinationEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.PatientSetSenderDestinationEntity;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.TabularFileDestinationEntity;
 import java.util.Date;
 import java.util.List;
 import javax.persistence.EntityManager;
@@ -158,6 +159,20 @@ public class JpaDestinationDao extends GenericDao<DestinationEntity, Long> imple
 				builder.isNull(root.get(DestinationEntity_.expiredAt)),
 				builder.greaterThanOrEqualTo(expiredAt, new Date())));
 		TypedQuery<PatientSetSenderDestinationEntity> typedQuery = entityManager.createQuery(criteriaQuery);
+		return typedQuery.getResultList();
+	}
+	
+	@Override
+	public List<TabularFileDestinationEntity> getAllTabularFileDestinations() {
+		EntityManager entityManager = getEntityManager();
+		CriteriaBuilder builder = entityManager.getCriteriaBuilder();
+		CriteriaQuery<TabularFileDestinationEntity> criteriaQuery = builder.createQuery(TabularFileDestinationEntity.class);
+		Root<TabularFileDestinationEntity> root = criteriaQuery.from(TabularFileDestinationEntity.class);
+		Path<Date> expiredAt = root.get(DestinationEntity_.expiredAt);
+		criteriaQuery.where(builder.or(
+				builder.isNull(root.get(DestinationEntity_.expiredAt)),
+				builder.greaterThanOrEqualTo(expiredAt, new Date())));
+		TypedQuery<TabularFileDestinationEntity> typedQuery = entityManager.createQuery(criteriaQuery);
 		return typedQuery.getResultList();
 	}
 

@@ -138,6 +138,8 @@ public class DestinationResource {
 				return new ArrayList<>(destinations.getAllPatientSetExtractors());
 			case PATIENT_SET_SENDER:
 				return new ArrayList<>(destinations.getAllPatientSetSenders());
+			case TABULAR_FILE:
+				return new ArrayList<>(destinations.getAllTabularFiles());
 			default:
 				throw new AssertionError("Unexpected destination type " + type);
 		}

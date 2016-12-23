@@ -50,12 +50,16 @@ import edu.emory.cci.aiw.cvrg.eureka.common.comm.EtlI2B2Destination;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.EtlNeo4jDestination;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.EtlPatientSetExtractorDestination;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.EtlPatientSetSenderDestination;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.EtlTableColumn;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.EtlTabularFileDestination;
 import org.eurekaclinical.eureka.client.comm.I2B2Destination;
 import org.eurekaclinical.eureka.client.comm.Neo4jDestination;
 import org.eurekaclinical.eureka.client.comm.PatientSetExtractorDestination;
 import java.util.ArrayList;
 import java.util.List;
 import org.eurekaclinical.eureka.client.comm.PatientSetSenderDestination;
+import org.eurekaclinical.eureka.client.comm.TableColumn;
+import org.eurekaclinical.eureka.client.comm.TabularFileDestination;
 
 /**
  *
@@ -153,6 +157,23 @@ public class EtlDestinationToDestinationVisitor extends AbstractEtlDestinationVi
 		ptSetExtractorDest.setAliasPatientIdProperty(etlPatientSetSenderDestination.getAliasPatientIdProperty());
 		ptSetExtractorDest.setPatientSetService(etlPatientSetSenderDestination.getPatientSetService());
 		this.destination = ptSetExtractorDest;
+	}
+	
+	@Override
+	public void visit(EtlTabularFileDestination etlTabularFileDestination) {
+		TabularFileDestination tabularFileDest = new TabularFileDestination();
+		visitCommon(etlTabularFileDestination, tabularFileDest);
+		List<TableColumn> tableColumns = new ArrayList<>();
+		for (EtlTableColumn etlTableColumn : etlTabularFileDestination.getTableColumns()) {
+			TableColumn tableColumn = new TableColumn();
+			tableColumn.setTableName(etlTableColumn.getTableName());
+			tableColumn.setColumnName(etlTableColumn.getColumnName());
+			tableColumn.setPath(etlTableColumn.getPath());
+			tableColumn.setFormat(etlTableColumn.getFormat());
+			tableColumns.add(tableColumn);
+		}
+		tabularFileDest.setTableColumns(tableColumns);
+		this.destination = tabularFileDest;
 	}
 
 }

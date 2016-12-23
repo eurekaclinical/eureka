@@ -150,6 +150,9 @@ public class DestinationResource {
 					case PATIENT_SET_SENDER:
 						destinations = this.etlClient.getPatientSetSenderDestinations();
 						break;
+					case TABULAR_FILE:
+						destinations = this.etlClient.getTabularFileDestinations();
+						break;
 					default:
 						throw new AssertionError("Unexpected type " + type);
 				}

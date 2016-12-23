@@ -54,4 +54,6 @@ public interface DestinationEntityVisitor {
 	void visit(PatientSetExtractorDestinationEntity patientSetExtractorDestination);
 	
 	void visit(PatientSetSenderDestinationEntity patientSetSenderDestination);
+	
+	void visit(TabularFileDestinationEntity tabularFileDestinationEntity);
 }
