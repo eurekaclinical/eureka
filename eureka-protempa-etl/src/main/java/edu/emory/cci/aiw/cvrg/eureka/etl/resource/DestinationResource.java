@@ -135,6 +135,8 @@ public class DestinationResource {
 			case COHORT:
 				return new ArrayList<>(destinations.getAllCohorts());
 			case PATIENT_SET_EXTRACTOR:
+				return new ArrayList<>(destinations.getAllPatientSetExtractors());
+			case PATIENT_SET_SENDER:
 				return new ArrayList<>(destinations.getAllPatientSetSenders());
 			default:
 				throw new AssertionError("Unexpected destination type " + type);
