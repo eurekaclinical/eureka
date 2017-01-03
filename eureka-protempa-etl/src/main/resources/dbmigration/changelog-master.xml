@@ -901,13 +901,13 @@
 		<addForeignKeyConstraint baseColumnNames="ID" baseTableName="PS_SENDER_DESTINATIONS" constraintName="FK_PS_SENDER_DEST" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" referencedColumnNames="ID" referencedTableName="DESTINATIONS" referencesUniqueColumn="false"/>
 	</changeSet>
 	<changeSet author="arpost" id="1361552652236-43">
-		<createTable tableName="TABULARFILE_DESTINATIONS">
+		<createTable tableName="TABULAR_FILE_DESTINATIONS">
 			<column name="ID" type="BIGINT">
 				<constraints nullable="false" primaryKey="true" primaryKeyName="TF_DEST_PK"/>
 			</column>
 		</createTable>
-		<addForeignKeyConstraint baseColumnNames="ID" baseTableName="TABULARFILE_DESTINATIONS" constraintName="FK_TF_DEST" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" referencedColumnNames="ID" referencedTableName="DESTINATIONS" referencesUniqueColumn="false"/>
-		<createTable tableName="TABULARFILE_DEST_TABLECOLUMNS">
+		<addForeignKeyConstraint baseColumnNames="ID" baseTableName="TABULAR_FILE_DESTINATIONS" constraintName="FK_TF_DEST" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" referencedColumnNames="ID" referencedTableName="DESTINATIONS" referencesUniqueColumn="false"/>
+		<createTable tableName="TF_DEST_TABLECOLUMNS">
 			<column name="ID" type="BIGINT">
 				<constraints nullable="false" primaryKey="true" primaryKeyName="TF_DEST_TC_PK"/>
 			</column>
@@ -929,6 +929,6 @@
 			<column name="FORMAT" type="VARCHAR(255)"/>
 		</createTable>
 		<createSequence sequenceName="TF_DEST_TC_SEQ"/>
-		<addForeignKeyConstraint baseColumnNames="TABULARFILEDESTINATIONS_ID" baseTableName="TABULARFILE_DEST_TABLECOLUMNS" constraintName="FK_TF_DEST_TC" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" referencedColumnNames="ID" referencedTableName="TABULARFILE_DESTINATIONS" referencesUniqueColumn="false"/>
+		<addForeignKeyConstraint baseColumnNames="TABULARFILEDESTINATIONS_ID" baseTableName="TF_DEST_TABLECOLUMNS" constraintName="FK_TF_DEST_TC" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" referencedColumnNames="ID" referencedTableName="TABULAR_FILE_DESTINATIONS" referencesUniqueColumn="false"/>
 	</changeSet>
 </databaseChangeLog>

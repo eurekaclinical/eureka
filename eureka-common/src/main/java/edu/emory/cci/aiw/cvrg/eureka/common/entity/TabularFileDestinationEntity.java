@@ -90,6 +90,10 @@ public class TabularFileDestinationEntity extends DestinationEntity {
 		}
 	}
 	
+	public Character getDelimiter() {
+		return '\t';
+	}
+	
 	@Override
 	public boolean isGetStatisticsSupported() {
 		return false;

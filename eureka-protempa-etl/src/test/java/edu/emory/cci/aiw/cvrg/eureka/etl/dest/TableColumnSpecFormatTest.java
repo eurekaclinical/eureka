@@ -1,10 +1,10 @@
 package edu.emory.cci.aiw.cvrg.eureka.etl.dest;
 
-/*
+/*-
  * #%L
  * Eureka Protempa ETL
  * %%
- * Copyright (C) 2012 - 2015 Emory University
+ * Copyright (C) 2012 - 2016 Emory University
  * %%
  * This program is dual licensed under the Apache 2 and GPLv3 licenses.
  * 
@@ -39,36 +39,53 @@ package edu.emory.cci.aiw.cvrg.eureka.etl.dest;
  * <http://www.gnu.org/licenses/gpl-3.0.html>.
  * #L%
  */
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.TabularFileDestinationEntity;
-import edu.emory.cci.aiw.cvrg.eureka.etl.config.EtlProperties;
-import org.protempa.DataSource;
-import org.protempa.KnowledgeSource;
-import org.protempa.dest.AbstractDestination;
-import org.protempa.dest.QueryResultsHandler;
-import org.protempa.dest.QueryResultsHandlerInitException;
-import org.protempa.query.Query;
-import org.protempa.query.QueryMode;
+
+import java.text.ParseException;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 
 /**
  *
  * @author Andrew Post
  */
-public class TabularFileDestination extends AbstractDestination {
-	private final TabularFileDestinationEntity tabularFileDestinationEntity;
-	private final EtlProperties etlProperties;
+public class TableColumnSpecFormatTest {
 
-	TabularFileDestination(EtlProperties inEtlProperties, TabularFileDestinationEntity inTabularFileDestinationEntity) {
-		assert inTabularFileDestinationEntity != null : "inTabularFileDestinationEntity cannot be null";
-		this.tabularFileDestinationEntity = inTabularFileDestinationEntity;
-		this.etlProperties = inEtlProperties;
+	private TableColumnSpecFormat format;
+
+	@Before
+	public void setUp() {
+		this.format = new TableColumnSpecFormat("FOO");
 	}
 
-	@Override
-	public QueryResultsHandler getQueryResultsHandler(Query query, DataSource dataSource, KnowledgeSource knowledgeSource) throws QueryResultsHandlerInitException {
-		if (query.getQueryMode() == QueryMode.UPDATE) {
-			throw new QueryResultsHandlerInitException("Update mode not supported");
+	@Test
+	public void testParseObjectNull() throws ParseException {
+		Object parseObject = this.format.parseObject("[PatientDetails Constant 0].patientId$NOMINALVALUE");
+		Assert.assertNotNull(parseObject);
+	}
+
+	@Test
+	public void testParseObjectType() throws ParseException {
+		Object parseObject = this.format.parseObject("[PatientDetails Constant 0].patientId$NOMINALVALUE");
+		if (parseObject != null) {
+			Assert.assertEquals(TableColumnSpecWrapper.class.getName(), parseObject.getClass().getName());
 		}
-		return new TabularFileQueryResultsHandler(query, this.tabularFileDestinationEntity, this.etlProperties, knowledgeSource);
 	}
 	
+	@Test
+	public void testParseObjectPropId() throws ParseException {
+		Object parseObject = this.format.parseObject("[PatientDetails Constant 0].patientId$NOMINALVALUE");
+		if (parseObject != null && parseObject instanceof TableColumnSpecWrapper) {
+			Assert.assertEquals("PatientDetails", ((TableColumnSpecWrapper) parseObject).getPropId());
+		}
+	}
+	
+	@Test
+	public void testParseObjectPropIdWithColon() throws ParseException {
+		Object parseObject = this.format.parseObject("[ICD9:Diagnoses Event 0].code$NOMINALVALUE");
+		if (parseObject != null && parseObject instanceof TableColumnSpecWrapper) {
+			Assert.assertEquals("ICD9:Diagnoses", ((TableColumnSpecWrapper) parseObject).getPropId());
+		}
+	}
+
 }

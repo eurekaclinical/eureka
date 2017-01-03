@@ -57,8 +57,13 @@ import java.util.List;
  */
 class TabularFileDestinationsDTOExtractor extends DestinationsDTOExtractor<EtlTabularFileDestination, TabularFileDestinationEntity> {
 
-	private static final Comparator<TabularFileDestinationTableColumnEntity> TABLE_COLUMN_COMPARATOR = 
-			(TabularFileDestinationTableColumnEntity o1, TabularFileDestinationTableColumnEntity o2) -> o1.getRank().compareTo(o2.getRank());
+	private static final Comparator<TabularFileDestinationTableColumnEntity> TABLE_COLUMN_COMPARATOR = new Comparator<TabularFileDestinationTableColumnEntity>() {
+		@Override
+		public int compare(TabularFileDestinationTableColumnEntity o1, TabularFileDestinationTableColumnEntity o2) {
+			return o1.getRank().compareTo(o2.getRank());
+		}
+		
+	};
 	
 	TabularFileDestinationsDTOExtractor(AuthorizedUserEntity user, EtlGroupDao inGroupDao) {
 		super(user, inGroupDao);

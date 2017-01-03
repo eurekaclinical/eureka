@@ -678,7 +678,9 @@ public final class EurekaDataSourceBackend extends RelationalDbDataSourceBackend
 				Operator.EQUAL_TO,
 				getMappingsFactory().getInstance("icd9_diagnosis_position_07182011.txt")),
 				ValueType.NOMINALVALUE)},
-			null, null,
+			new ReferenceSpec[]{
+				new ReferenceSpec("encounter", "Encounters", new ColumnSpec[]{new ColumnSpec(schemaName, "ICD9D_EVENT", "ENCOUNTER_KEY")}, ReferenceSpec.Type.ONE)
+			}, null,
 			new ColumnSpec(schemaName, "ICD9D_EVENT", "ENTITY_ID",
 			Operator.EQUAL_TO, icd9DxMappings, true),
 			null, null, null, AbsoluteTimeGranularity.MINUTE,
@@ -702,7 +704,10 @@ public final class EurekaDataSourceBackend extends RelationalDbDataSourceBackend
 				"ENTITY_ID",
 				Operator.EQUAL_TO,
 				icd9PxMappings),
-				ValueType.NOMINALVALUE)}, null, null,
+				ValueType.NOMINALVALUE)}, 
+			new ReferenceSpec[]{
+				new ReferenceSpec("encounter", "Encounters", new ColumnSpec[]{new ColumnSpec(schemaName, "ICD9P_EVENT", "ENCOUNTER_KEY")}, ReferenceSpec.Type.ONE)
+			}, null,
 			new ColumnSpec(schemaName, "ICD9P_EVENT", "ENTITY_ID",
 			Operator.EQUAL_TO, icd9PxMappings, true),
 			null, null, null, AbsoluteTimeGranularity.MINUTE,
@@ -727,7 +732,10 @@ public final class EurekaDataSourceBackend extends RelationalDbDataSourceBackend
 				"ENTITY_ID",
 				Operator.EQUAL_TO,
 				cptMappings),
-				ValueType.NOMINALVALUE)}, null, null,
+				ValueType.NOMINALVALUE)}, 
+			new ReferenceSpec[]{
+				new ReferenceSpec("encounter", "Encounters", new ColumnSpec[]{new ColumnSpec(schemaName, "CPT_EVENT", "ENCOUNTER_KEY")}, ReferenceSpec.Type.ONE)
+			}, null,
 			new ColumnSpec(schemaName, "CPT_EVENT", "ENTITY_ID",
 			Operator.EQUAL_TO, cptMappings, true),
 			null, null, null, AbsoluteTimeGranularity.MINUTE,
@@ -747,7 +755,9 @@ public final class EurekaDataSourceBackend extends RelationalDbDataSourceBackend
 				"EVENT_KEY")},
 			new ColumnSpec(schemaName, "MEDS_EVENT", "TS_OBX"),
 			null, new PropertySpec[]{ /*new PropertySpec("orderDescription", null, new ColumnSpec(schemaName, "fact_history_medication", new JoinSpec("synonym_order_key", "synonym_order_key", new ColumnSpec(schemaName, "lkp_synonym_order", "synonym_order_desc"))), ValueType.NOMINALVALUE), new PropertySpec("orderContext", null, new ColumnSpec(schemaName, "fact_history_medication", new JoinSpec("context_medication_key", "context_medication_key", new ColumnSpec(schemaName, "lkp_context_medication", "context_medication_id", ColumnSpec.Operator.EQUAL_TO, this.mapper.read("order_context_03292011.txt"), true))), ValueType.NOMINALVALUE), new PropertySpec("continuingOrder", null, new ColumnSpec(schemaName, "fact_history_medication", "order_continuing_ind"), ValueType.BOOLEANVALUE), new PropertySpec("orderStatus", null, new ColumnSpec(schemaName, "fact_history_medication", new JoinSpec("order_status_key", "order_status_key", new ColumnSpec(schemaName, "lkp_order_status", "order_status_id", ColumnSpec.Operator.EQUAL_TO, this.mapper.read("order_status_03292011.txt"), true))), ValueType.NOMINALVALUE), new PropertySpec("orderAction", null, new ColumnSpec(schemaName, "fact_history_medication", new JoinSpec("action_order_key", "action_order_key", new ColumnSpec(schemaName, "lkp_action_order", "action_order_id", ColumnSpec.Operator.EQUAL_TO, this.mapper.read("order_action_03292011.txt"), false))), ValueType.NOMINALVALUE)*/},
-			null, null,
+			new ReferenceSpec[]{
+				new ReferenceSpec("encounter", "Encounters", new ColumnSpec[]{new ColumnSpec(schemaName, "MEDS_EVENT", "ENCOUNTER_KEY")}, ReferenceSpec.Type.ONE)
+			}, null,
 			new ColumnSpec(schemaName, "MEDS_EVENT", "ENTITY_ID",
 			Operator.EQUAL_TO, medsMappings, true), null, null,
 			null, AbsoluteTimeGranularity.MINUTE, dtPositionParser,
@@ -775,14 +785,18 @@ public final class EurekaDataSourceBackend extends RelationalDbDataSourceBackend
 				new ColumnSpec(schemaName, "LABS_EVENT",
 				"EVENT_KEY")},
 			new ColumnSpec(schemaName, "LABS_EVENT", "TS_OBX"),
-			null, new PropertySpec[]{
+			null, 
+			new PropertySpec[]{
 				new PropertySpec("unitOfMeasure", null,
 				new ColumnSpec(schemaName, "LABS_EVENT",
 				"UNITS"), ValueType.NOMINALVALUE),
 				/*new PropertySpec("referenceRangeLow", null, new ColumnSpec(schemaName, "fact_result_lab", "reference_range_low_val"), ValueType.NUMBERVALUE), new PropertySpec("referenceRangeHigh", null, new ColumnSpec(schemaName, "fact_result_lab", "reference_range_high_val"), ValueType.NUMBERVALUE), */
 				new PropertySpec("interpretation", null,
 				new ColumnSpec(schemaName, "LABS_EVENT",
-				"FLAG"), ValueType.NOMINALVALUE)}, null,
+				"FLAG"), ValueType.NOMINALVALUE)}, 
+			new ReferenceSpec[]{
+				new ReferenceSpec("encounter", "Encounters", new ColumnSpec[]{new ColumnSpec(schemaName, "LABS_EVENT", "ENCOUNTER_KEY")}, ReferenceSpec.Type.ONE)
+			},
 			null,
 			new ColumnSpec(schemaName, "LABS_EVENT", "ENTITY_ID",
 			Operator.EQUAL_TO, labsMappings, true), null,
@@ -805,7 +819,10 @@ public final class EurekaDataSourceBackend extends RelationalDbDataSourceBackend
 				"UNITS"), ValueType.NOMINALVALUE),
 				new PropertySpec("interpretation", null,
 				new ColumnSpec(schemaName, "VITALS_EVENT",
-				"FLAG"), ValueType.NOMINALVALUE)}, null,
+				"FLAG"), ValueType.NOMINALVALUE)}, 
+			new ReferenceSpec[]{
+				new ReferenceSpec("encounter", "Encounters", new ColumnSpec[]{new ColumnSpec(schemaName, "VITALS_EVENT", "ENCOUNTER_KEY")}, ReferenceSpec.Type.ONE)
+			},
 			null, new ColumnSpec(schemaName, "VITALS_EVENT", "ENTITY_ID",
 			Operator.EQUAL_TO, vitalsMappings, true), null,
 			new ColumnSpec(schemaName, "VITALS_EVENT", "RESULT_STR"),
