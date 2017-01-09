@@ -59,9 +59,9 @@
 
 
 		<cas-server-version>3.0-Alpha-4</cas-server-version>
-		<user-common-version>1.0-Alpha-2</user-common-version>
-		<user-webapp-version>1.0-Alpha-2</user-webapp-version>
-		<user-service-version>1.0-Alpha-2</user-service-version>
+		<user-common-version>1.0-Alpha-4</user-common-version>
+		<user-webapp-version>1.0-Alpha-3</user-webapp-version>
+		<user-service-version>1.0-Alpha-3</user-service-version>
 
 		<!-- transitive dependencies that CAS needs certain versions of...-->
 		<commons-codec-version>1.4</commons-codec-version>
@@ -72,8 +72,7 @@
 		<eurekaclinical-common-version>1.0</eurekaclinical-common-version>
 		<eureka-client-version>2.0-Alpha-3-SNAPSHOT</eureka-client-version>
 		<eurekaclinical-patient-set-client-version>1.0-Alpha-1</eurekaclinical-patient-set-client-version>
-		<eurekaclinical-ontology-version>1.1.1</eurekaclinical-ontology-version>
-		<eurekaclinical-user-service-version>1.0-Alpha-2</eurekaclinical-user-service-version>
+		<eurekaclinical-ontology-version>1.2</eurekaclinical-ontology-version>
 	</properties>
 
 	<licenses>
@@ -319,7 +318,7 @@
 								<artifactItem>
 									<groupId>org.eurekaclinical</groupId>
 									<artifactId>eurekaclinical-user-service</artifactId>
-									<version>${eurekaclinical-user-service-version}</version>
+									<version>${user-service-version}</version>
 									<type>war</type>
 								</artifactItem>
 							</artifactItems>
