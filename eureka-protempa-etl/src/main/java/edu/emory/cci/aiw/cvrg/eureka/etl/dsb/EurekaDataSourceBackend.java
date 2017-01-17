@@ -262,11 +262,11 @@ public final class EurekaDataSourceBackend extends RelationalDbDataSourceBackend
 	}
 
 	@Override
-	public DataStreamingEventIterator<Proposition> readPropositions(Set<String> keyIds, Set<String> propIds, Filter filters, QuerySession qs, QueryResultsHandler queryResultsHandler) throws DataSourceReadException {
+	public DataStreamingEventIterator<Proposition> readPropositions(Set<String> keyIds, Set<String> propIds, Filter filters, QueryResultsHandler queryResultsHandler) throws DataSourceReadException {
 		if (!dataPopulated) {
 			populateDatabase();
 		}
-		return super.readPropositions(keyIds, propIds, filters, qs, queryResultsHandler);
+		return super.readPropositions(keyIds, propIds, filters, queryResultsHandler);
 	}
 
 	@Override
@@ -667,9 +667,7 @@ public final class EurekaDataSourceBackend extends RelationalDbDataSourceBackend
 			null, new PropertySpec[]{
 				new PropertySpec("code", null,
 				new ColumnSpec(schemaName, "ICD9D_EVENT",
-				"ENTITY_ID",
-				Operator.EQUAL_TO,
-				icd9DxMappings),
+				"ENTITY_ID"),
 				ValueType.NOMINALVALUE),
 				new PropertySpec("DXPRIORITY",
 				null,
@@ -701,9 +699,7 @@ public final class EurekaDataSourceBackend extends RelationalDbDataSourceBackend
 			null, new PropertySpec[]{
 				new PropertySpec("code", null,
 				new ColumnSpec(schemaName, "ICD9P_EVENT",
-				"ENTITY_ID",
-				Operator.EQUAL_TO,
-				icd9PxMappings),
+				"ENTITY_ID"),
 				ValueType.NOMINALVALUE)}, 
 			new ReferenceSpec[]{
 				new ReferenceSpec("encounter", "Encounters", new ColumnSpec[]{new ColumnSpec(schemaName, "ICD9P_EVENT", "ENCOUNTER_KEY")}, ReferenceSpec.Type.ONE)
@@ -729,9 +725,7 @@ public final class EurekaDataSourceBackend extends RelationalDbDataSourceBackend
 			new PropertySpec[]{
 				new PropertySpec("code", null,
 				new ColumnSpec(schemaName, "CPT_EVENT",
-				"ENTITY_ID",
-				Operator.EQUAL_TO,
-				cptMappings),
+				"ENTITY_ID"),
 				ValueType.NOMINALVALUE)}, 
 			new ReferenceSpec[]{
 				new ReferenceSpec("encounter", "Encounters", new ColumnSpec[]{new ColumnSpec(schemaName, "CPT_EVENT", "ENCOUNTER_KEY")}, ReferenceSpec.Type.ONE)

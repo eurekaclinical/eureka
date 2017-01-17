@@ -80,7 +80,7 @@ import org.slf4j.LoggerFactory;
  * @author Andrew Post
  */
 public class TabularFileQueryResultsHandler extends AbstractQueryResultsHandler {
-	
+
 	private static final Logger LOGGER = LoggerFactory.getLogger(TabularFileQueryResultsHandler.class);
 
 	private final String queryId;
@@ -93,6 +93,7 @@ public class TabularFileQueryResultsHandler extends AbstractQueryResultsHandler 
 	private KnowledgeSource knowledgeSource;
 	private KnowledgeSourceCache ksCache;
 	private final char delimiter;
+	private Map<String, String> replace;
 
 	TabularFileQueryResultsHandler(Query query, TabularFileDestinationEntity inTabularFileDestinationEntity, EtlProperties inEtlProperties, KnowledgeSource inKnowledgeSource) {
 		assert inTabularFileDestinationEntity != null : "inTabularFileDestinationEntity cannot be null";
@@ -134,8 +135,7 @@ public class TabularFileQueryResultsHandler extends AbstractQueryResultsHandler 
 		}
 
 		List<TabularFileDestinationTableColumnEntity> tableColumns = this.config.getTableColumns();
-		Collections.sort(tableColumns,
-				new Comparator<TabularFileDestinationTableColumnEntity>() {
+		Collections.sort(tableColumns, new Comparator<TabularFileDestinationTableColumnEntity>() {
 			@Override
 			public int compare(TabularFileDestinationTableColumnEntity o1, TabularFileDestinationTableColumnEntity o2) {
 				return o1.getRank().compareTo(o2.getRank());
@@ -157,7 +157,7 @@ public class TabularFileQueryResultsHandler extends AbstractQueryResultsHandler 
 			}
 			org.arp.javautil.collections.Collections.putList(this.tableColumnSpecs, tableColumn.getTableName(), tableColumnSpecWrapper.getTableColumnSpec());
 		}
-		
+
 		LOGGER.debug("Row concepts: {}", this.rowPropositionIdMap);
 
 		for (Map.Entry<String, List<TableColumnSpec>> me : this.tableColumnSpecs.entrySet()) {
@@ -187,11 +187,17 @@ public class TabularFileQueryResultsHandler extends AbstractQueryResultsHandler 
 		} catch (KnowledgeSourceReadException ex) {
 			throw new QueryResultsHandlerProcessingException(ex);
 		}
+
+		this.replace = new HashMap<>();
+		this.replace.put(null, "NULL");
 	}
 
 	@Override
 	public void handleQueryResult(String keyId, List<Proposition> propositions, Map<Proposition, List<Proposition>> forwardDerivations, Map<Proposition, List<Proposition>> backwardDerivations, Map<UniqueId, Proposition> references) throws QueryResultsHandlerProcessingException {
-		LOGGER.error("Data for keyId {}: {}", new Object[]{keyId, propositions});
+		if (LOGGER.isDebugEnabled()) {
+			LOGGER.debug("Data for keyId {}: {}", new Object[]{keyId, propositions});
+		}
+
 		for (Map.Entry<String, List<TableColumnSpec>> me : this.tableColumnSpecs.entrySet()) {
 			String tableName = me.getKey();
 			List<TableColumnSpec> columnSpecs = me.getValue();
@@ -204,7 +210,7 @@ public class TabularFileQueryResultsHandler extends AbstractQueryResultsHandler 
 						try {
 							for (int i = 0; i < n; i++) {
 								TableColumnSpec columnSpec = columnSpecs.get(i);
-								columnSpec.columnValues(keyId, prop, forwardDerivations, backwardDerivations, references, this.ksCache, null, this.delimiter, writer);
+								columnSpec.columnValues(keyId, prop, forwardDerivations, backwardDerivations, references, this.ksCache, this.replace, this.delimiter, writer);
 								if (i < n - 1) {
 									writer.write(this.delimiter);
 								} else {
