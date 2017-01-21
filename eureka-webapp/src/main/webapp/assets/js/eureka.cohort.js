@@ -473,13 +473,15 @@ window.eureka.editor = new function () {
                             console.log(JSON.stringify(cohortDestination));
                             $.ajax({
                                 type: type,
+								processData: false,
+								contentType: 'application/json; charset=UTF-8',
                                 url: '../proxy-resource/destinations',
                                 data: JSON.stringify(cohortDestination),
                                 success: function (postData) {
                                     window.location.href = 'cohorthome'
                                 },
                                 error: function (postData, statusCode, errorThrown) {
-                                    var content = 'Error while saving ' + postData.displayName + '. ' + postData.responseText + '. Status Code: ' + postData.status;
+                                    var content = 'Error while saving ' + postData.displayName + '. ' + window.eureka.util.sanitizeResponseText(postData.responseText) + '. Status Code: ' + postData.status;
                                     $('#errorModal').find('#errorContent').html(eureka.util.getUserMessage(postData.status,content));
                                     $('#errorModal').modal('show');
                                     if (errorThrown != null) {
