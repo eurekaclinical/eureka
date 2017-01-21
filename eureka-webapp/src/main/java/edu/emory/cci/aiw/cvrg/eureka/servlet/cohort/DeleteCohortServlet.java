@@ -67,7 +67,7 @@ public class DeleteCohortServlet extends HttpServlet {
 	private final WebappAuthenticationSupport authenticationSupport;
 
 	@Inject
-	public DeleteCohortServlet (ServicesClient inClient) {
+	public DeleteCohortServlet(ServicesClient inClient) {
 		this.servicesClient = inClient;
 		this.authenticationSupport = new WebappAuthenticationSupport(this.servicesClient);
 	}
@@ -79,8 +79,7 @@ public class DeleteCohortServlet extends HttpServlet {
 	}
 
 	@Override
-	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
-			throws ServletException, IOException {
+	protected void doGet(HttpServletRequest req, HttpServletResponse resp) {
 
 		LOGGER.debug("DeleteCohortServlet");
 		String propKey = req.getParameter("key");
@@ -90,24 +89,34 @@ public class DeleteCohortServlet extends HttpServlet {
 			this.servicesClient.deleteDestination(user.getId(), propKey);
 		} catch (ClientException e) {
 			resp.setContentType(MediaType.TEXT_PLAIN);
-			switch (e.getResponseStatus()) {
-				case UNAUTHORIZED:
-					this.authenticationSupport.needsToLogin(req, resp);
-					break;
-				case INTERNAL_SERVER_ERROR:
-					resp.setStatus(
-							HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-					LOGGER.error("Error deleting cohort " + propKey, e);
-					ResourceBundle messages = 
-							(ResourceBundle) req.getAttribute("messages");
-					String msg = 
-							messages.getString("deleteCohort.error.internalServerError");
-					resp.getWriter().write(msg);
-					break;
-				default:
-					LOGGER.debug("Deleting cohort {} failed", propKey, e);
-					resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-					resp.getWriter().write(e.getMessage());
+			try {
+				switch (e.getResponseStatus()) {
+					case UNAUTHORIZED:
+						this.authenticationSupport.needsToLogin(req, resp);
+						break;
+					case INTERNAL_SERVER_ERROR:
+						resp.setStatus(
+								HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+						LOGGER.error("Error deleting cohort " + propKey, e);
+						ResourceBundle messages
+								= (ResourceBundle) req.getAttribute("messages");
+						String msg
+								= messages.getString("deleteCohort.error.internalServerError");
+						resp.getWriter().write(msg);
+						break;
+					default:
+						LOGGER.debug("Deleting cohort {} failed", propKey, e);
+						resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+						resp.getWriter().write(e.getMessage());
+				}
+			} catch (IOException ex) {
+				resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+				LOGGER.error("IO Error writing response status", ex);
+				try {
+					resp.getWriter().write("Internal server error.");
+				} catch (IOException ignore) {
+					LOGGER.error("Error writing the internal server error message: {}", ignore);
+				}
 			}
 		}
 	}
