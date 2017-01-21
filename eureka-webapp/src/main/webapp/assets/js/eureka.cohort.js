@@ -139,7 +139,7 @@ window.eureka.editor = new function () {
 							},
 							error: function (data, statusCode) {
 								var $errorDialog = $('<div></div>')
-									.html(data.responseText)
+									.html(window.eureka.util.sanitizeResponseText(data.responseText))
 									.dialog({
 										title: "Error Deleting Phenotype",
 										buttons: {
