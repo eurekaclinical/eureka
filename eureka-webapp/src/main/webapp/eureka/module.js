@@ -35,6 +35,7 @@
      */
     angular.module('eureka', [
         'ui.router',
+        'ui.bootstrap',
         'ui.tree',
         'angularValidator',
         'ngMessages',
