@@ -47,6 +47,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -56,7 +57,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
-import org.arp.javautil.arrays.Arrays;
 import org.arp.javautil.string.StringUtil;
 import org.protempa.KnowledgeSource;
 import org.protempa.KnowledgeSourceCache;
@@ -67,7 +67,6 @@ import org.protempa.dest.AbstractQueryResultsHandler;
 import org.protempa.dest.QueryResultsHandlerCloseException;
 import org.protempa.dest.QueryResultsHandlerProcessingException;
 import org.protempa.dest.QueryResultsHandlerValidationFailedException;
-import org.protempa.dest.table.Link;
 import org.protempa.dest.table.TableColumnSpec;
 import org.protempa.proposition.Proposition;
 import org.protempa.proposition.UniqueId;
@@ -144,16 +143,20 @@ public class TabularFileQueryResultsHandler extends AbstractQueryResultsHandler 
 		});
 		this.tableColumnSpecs = new HashMap<>();
 		for (TabularFileDestinationTableColumnEntity tableColumn : tableColumns) {
-			TableColumnSpecFormat linksFormat = new TableColumnSpecFormat(tableColumn.getColumnName());
+			String format = tableColumn.getFormat();
+			TableColumnSpecFormat linksFormat = new TableColumnSpecFormat(tableColumn.getColumnName(), format != null ? new SimpleDateFormat(format) : null);
 			TableColumnSpecWrapper tableColumnSpecWrapper = toTableColumnSpec(tableColumn, linksFormat);
-			Set<String> propIds;
-			try {
-				propIds = this.knowledgeSource.collectPropIdDescendantsUsingInverseIsA(tableColumnSpecWrapper.getPropId());
-			} catch (KnowledgeSourceReadException ex) {
-				throw new QueryResultsHandlerProcessingException(ex);
-			}
-			for (String propId : propIds) {
-				org.arp.javautil.collections.Collections.putSet(this.rowPropositionIdMap, tableColumn.getTableName(), propId);
+			String pid = tableColumnSpecWrapper.getPropId();
+			if (pid != null) {
+				Set<String> propIds;
+				try {
+					propIds = this.knowledgeSource.collectPropIdDescendantsUsingInverseIsA(pid);
+				} catch (KnowledgeSourceReadException ex) {
+					throw new QueryResultsHandlerProcessingException(ex);
+				}
+				for (String propId : propIds) {
+					org.arp.javautil.collections.Collections.putSet(this.rowPropositionIdMap, tableColumn.getTableName(), propId);
+				}
 			}
 			org.arp.javautil.collections.Collections.putList(this.tableColumnSpecs, tableColumn.getTableName(), tableColumnSpecWrapper.getTableColumnSpec());
 		}
