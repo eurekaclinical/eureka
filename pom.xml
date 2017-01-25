@@ -59,9 +59,9 @@
 
 
 		<cas-server-version>3.0-Alpha-4</cas-server-version>
-		<user-common-version>1.0-Alpha-4</user-common-version>
-		<user-webapp-version>1.0-Alpha-3</user-webapp-version>
-		<user-service-version>1.0-Alpha-3</user-service-version>
+		<user-client-version>1.0-Alpha-3</user-client-version>
+		<user-webapp-version>1.0-Alpha-5</user-webapp-version>
+		<user-service-version>1.0-Alpha-5</user-service-version>
 
 		<!-- transitive dependencies that CAS needs certain versions of...-->
 		<commons-codec-version>1.4</commons-codec-version>
@@ -592,6 +592,11 @@
 				<groupId>org.eurekaclinical</groupId>
 				<artifactId>scribe-up-ext</artifactId>
 				<version>${scribe-up-ext-version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eurekaclinical</groupId>
+				<artifactId>eurekaclinical-user-client</artifactId>
+				<version>${user-client-version}</version>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>

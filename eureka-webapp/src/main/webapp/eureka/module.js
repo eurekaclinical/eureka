@@ -58,7 +58,6 @@
                     .then(function(response) {
             $rootScope.modes = response.data.appPropertiesModes;
             $rootScope.links = response.data.appPropertiesLinks;
-            $rootScope.registration = response.data.appPropertiesRegistration;                    
         });
         
        $rootScope.userVerficationPerformed = false;

@@ -40,134 +40,32 @@ package edu.emory.cci.aiw.cvrg.eureka.common.comm;
  * #L%
  */
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  *
  * @author Miao Ai
  */
 public class AppPropertiesRegistration {
-	private boolean localAccountRegistrationEnabled = false;
+
 	private boolean registrationEnabled = false;
-	private String googleOAuthKey;
-	private String googleOAuthSecret;
-	private String gitHubOAuthKey;
-	private String gitHubOAuthSecret;
-	private String twitterOAuthKey;
-	private String twitterOAuthSecret;
-	private String globusOAuthKey;
-	private String globusOAuthSecret;        
+
 	/**
 	 * Constructor.
 	 *
-	 */         
-	public AppPropertiesRegistration(){        
+	 */
+	public AppPropertiesRegistration() {
 	}
-        
+
 	public boolean isRegistrationEnabled() {
-		return isLocalAccountRegistrationEnabled() || !getOAuthRegistrationProviders().isEmpty();
-	}   
-	/**
-	 * Gets the localAccountRegistrationEnabled.
-	 *
-	 * @return localAccountRegistrationEnabled.
-	 */        
-	public boolean isLocalAccountRegistrationEnabled() {
-		return localAccountRegistrationEnabled;
-	}        
+		return this.registrationEnabled;
+	}
+
 	/**
 	 * Sets the localAccountRegistrationEnabled status.
 	 *
-	 * @param inLocalAccountRegistrationEnabled.
-	 */  
-	public void setLocalAccountRegistrationEnabled(boolean inLocalAccountRegistrationEnabled) {
-                this.localAccountRegistrationEnabled = inLocalAccountRegistrationEnabled;
-	}   
-        
-	public enum OAuths{
-            GOOGLE, GITHUB, TWITTER, GLOBUS
-	} 
-        
-	public List<OAuths> getOAuthRegistrationProviders(){
-		List<OAuths> providers;
-		providers = new ArrayList<>();
-		if(getGoogleOAuthKey() != null && getGoogleOAuthSecret() != null){
-			providers.add(OAuths.GOOGLE);
-		}
-		if(getGitHubOAuthKey() != null && getGitHubOAuthSecret() != null){
-			providers.add(OAuths.GITHUB);
-		} 
-		if(getTwitterOAuthKey() != null && getTwitterOAuthSecret() != null){
-			providers.add(OAuths.TWITTER);
-		}
-		if(getGlobusOAuthKey() != null && getGlobusOAuthSecret() != null){
-			providers.add(OAuths.GLOBUS);
-		}             
- 		return providers;
-	}
-        
-	protected String getGoogleOAuthKey() {
-		return googleOAuthKey;
+	 * @param inRegistrationEnabled.
+	 */
+	public void setRegistrationEnabled(boolean inRegistrationEnabled) {
+		this.registrationEnabled = inRegistrationEnabled;
 	}
 
-	public void setGoogleOAuthKey(String inGoogleOAuthKey) {
-		this.googleOAuthKey = inGoogleOAuthKey;
-	}        
-        
-	protected String getGoogleOAuthSecret() {
-		return googleOAuthSecret;
-	}
-
-	public void setGoogleOAuthSecret(String inGoogleOAuthSecret) {
-		this.googleOAuthSecret = inGoogleOAuthSecret;
-	}          
-        
-	protected String getGitHubOAuthKey() {
-		return gitHubOAuthKey;
-	}
-
-	public void setGitHubOAuthKey(String inGitHubOAuthKey) {
-		this.gitHubOAuthKey = inGitHubOAuthKey;
-	}          
-        
-	protected String getGitHubOAuthSecret() {
-		return gitHubOAuthSecret;
-	}
-
-	public void setGitHubOAuthSecret(String inGitHubOAuthSecret) {
-		this.gitHubOAuthSecret = inGitHubOAuthSecret;
-	}          
-        
-	protected String getTwitterOAuthKey() {
-		return twitterOAuthKey;
-	}
-
-	public void setTwitterOAuthKey(String inTwitterOAuthKey) {
-		this.twitterOAuthKey = inTwitterOAuthKey;
-	}         
-        
-	protected String getTwitterOAuthSecret() {
-		return twitterOAuthSecret;
-	}
-
-	public void setTwitterOAuthSecret(String inTwitterOAuthSecret) {
-		this.twitterOAuthSecret = inTwitterOAuthSecret;
-	}           
-        
-	protected String getGlobusOAuthKey() {
-		return globusOAuthKey;
-	}
-
-	public void setGlobusOAuthKey(String inGlobusOAuthKey) {
-		this.globusOAuthKey = inGlobusOAuthKey;
-	}           
-        
-	protected String getGlobusOAuthSecret() {
-		return globusOAuthSecret;
-	}
-        
-	public void setGlobusOAuthSecret(String inGlobusOAuthSecret) {
-		this.globusOAuthSecret = inGlobusOAuthSecret;
-	}           
 }

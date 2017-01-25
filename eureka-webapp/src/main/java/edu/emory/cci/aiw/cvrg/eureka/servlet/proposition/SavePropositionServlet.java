@@ -71,7 +71,7 @@ public class SavePropositionServlet extends HttpServlet {
 	@Inject
 	public SavePropositionServlet(ServicesClient inClient) {
 		this.servicesClient = inClient;
-		this.authenticationSupport = new WebappAuthenticationSupport(this.servicesClient);
+		this.authenticationSupport = new WebappAuthenticationSupport();
 	}
 
 	@Override

@@ -47,8 +47,8 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.AppPropertiesModes;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.AppPropertiesRegistration;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.AppPropertiesLinks;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.AppPropertiesRegistration;
 import edu.emory.cci.aiw.cvrg.eureka.services.config.ServiceProperties;
 /**
  *
@@ -61,7 +61,7 @@ public class AppPropertyResource {
 	private final ServiceProperties serviceProperties;     
         
 	@Inject
-	public AppPropertyResource( ServiceProperties inServiceProperties){
+	public AppPropertyResource(ServiceProperties inServiceProperties){
 		this.serviceProperties= inServiceProperties;
 	}
 
@@ -86,7 +86,7 @@ public class AppPropertyResource {
 	@Path("/registration")
 	public AppPropertiesRegistration getAppPropertiesRegistration() {
 		return this.serviceProperties.getAppPropertiesRegistration();
-	}        
+	}
 }
 
 

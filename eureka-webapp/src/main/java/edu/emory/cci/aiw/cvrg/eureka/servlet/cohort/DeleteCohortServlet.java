@@ -69,7 +69,7 @@ public class DeleteCohortServlet extends HttpServlet {
 	@Inject
 	public DeleteCohortServlet(ServicesClient inClient) {
 		this.servicesClient = inClient;
-		this.authenticationSupport = new WebappAuthenticationSupport(this.servicesClient);
+		this.authenticationSupport = new WebappAuthenticationSupport();
 	}
 
 	@Override

@@ -69,7 +69,7 @@ public class DeletePropositionServlet extends HttpServlet {
 	@Inject
 	public DeletePropositionServlet(ServicesClient inClient) {
 		this.servicesClient = inClient;
-		this.authenticationSupport = new WebappAuthenticationSupport(this.servicesClient);
+		this.authenticationSupport = new WebappAuthenticationSupport();
 	}
 
 	@Override

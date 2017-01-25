@@ -70,7 +70,7 @@ public class SaveCohortServlet extends HttpServlet {
 	@Inject
 	public SaveCohortServlet(ServicesClient inClient) {
 		this.servicesClient = inClient;
-		this.authenticationSupport = new WebappAuthenticationSupport(this.servicesClient);
+		this.authenticationSupport = new WebappAuthenticationSupport();
 	}
 
 	@Override
