@@ -79,7 +79,6 @@
                 }
                 return $q.all(_.map(userInfo.roles, getRole)).then(function(roles) {
                     userInfo.roles = roles;
-                    console.log('user info!', userInfo);
                     return new User(userInfo);
                 });
             }, function(err) {
