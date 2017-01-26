@@ -67,6 +67,7 @@ public class ServiceClientRouterTable implements RouterTable {
 		return new Route[]{
 			new Route("/users/", "/api/protected/users/", this.userClient),
 			new Route("/roles/", "/api/protected/roles/", this.userClient),
+			new Route("/appproperties/", "/api/appproperties/", this.client),
 			new Route("/", "/api/protected/", this.client)
 		};
 	}
