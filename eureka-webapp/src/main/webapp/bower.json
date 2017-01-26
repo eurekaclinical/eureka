@@ -9,6 +9,7 @@
     "tests"
   ],
   "dependencies": {
+    "jquery": "~2.2.4",
     "angular": "~1.5.0",
     "ui-router": "~0.2.15",
     "angular-messages": "~1.4.14",
@@ -18,8 +19,8 @@
     "font-awesome": "~4.4.0",
     "lodash": "~3.10.1",
     "angular-mocks": "~1.4.14",
-    "ng-flow": "~2.7.4",
-    "jquery": "~2.2.4"
+    "ng-flow": "~2.7.4"
+    
   },
   "overrides": {
     "bootstrap": {
