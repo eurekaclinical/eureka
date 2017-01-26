@@ -7,7 +7,7 @@
     eurekaModule.service('AppPropertiesService',['$http', function($http){
         return {
                     getAppProperties:function() {
-                        return $http.get('proxy-resource/appproperties');
+                        return $http.get('proxy-resource/appproperties/');
             }
         };
     }]);
