@@ -84,8 +84,7 @@ public class DeletePropositionServlet extends HttpServlet {
 		Long propId = Long.parseLong(req.getParameter("id"));
 
 		try {
-			User user = this.authenticationSupport.getMe(req);
-			this.servicesClient.deleteUserPhenotype(user.getId(), propId);
+			this.servicesClient.deleteUserPhenotype(propId);
 		} catch (ClientException e) {
 			resp.setContentType(MediaType.TEXT_PLAIN);
 			try {

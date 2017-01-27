@@ -296,11 +296,8 @@ public class ServicesClient extends EurekaClient {
 		doPut(path, inPhenotype);
 	}        
 
-	public void deleteUserPhenotype(Long inUserId, Long inId) throws
+	public void deleteUserPhenotype(Long inId) throws
 			ClientException {
-		if (inUserId == null) {
-			throw new IllegalArgumentException("inUserId cannot be null");
-		}
 		if (inId == null) {
 			throw new IllegalArgumentException("inId cannot be null");
 		}
@@ -472,7 +469,7 @@ public class ServicesClient extends EurekaClient {
 		return doGet(path, Destination.class);
 	}
 
-	public void deleteDestination(Long id, String destinationId) throws ClientException {
+	public void deleteDestination(String destinationId) throws ClientException {
 		String path = UriBuilder.fromPath("/api/protected/destinations/")
 				.segment(destinationId)
 				.build().toString();

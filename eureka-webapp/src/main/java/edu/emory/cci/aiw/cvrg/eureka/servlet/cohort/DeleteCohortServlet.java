@@ -85,8 +85,7 @@ public class DeleteCohortServlet extends HttpServlet {
 		String propKey = req.getParameter("key");
 
 		try {
-			User user = this.authenticationSupport.getMe(req);
-			this.servicesClient.deleteDestination(user.getId(), propKey);
+			this.servicesClient.deleteDestination(propKey);
 		} catch (ClientException e) {
 			resp.setContentType(MediaType.TEXT_PLAIN);
 			try {
