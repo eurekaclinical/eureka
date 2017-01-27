@@ -439,7 +439,7 @@ window.eureka.editor = new function () {
         self.post = function (postData) {
                 var user = null;
                 $.ajax({
-                    url: 'https://localhost:8443/eurekaclinical-user-service/api/protected/users/me',
+                    url: '../proxy-resource/users/me',
                     dataType: 'json',
                     success: function(data) {
                         user = data;
