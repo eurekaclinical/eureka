@@ -492,7 +492,7 @@ window.eureka.editor = new function () {
                         }                        
                     },
                     error: function (data, statusCode, errorThrown) {
-                        var content = 'Error while saving ' + postData.displayName + '. ' + data.responseText + '. Status Code: ' + data.status;
+                        var content = 'Error while saving ' + postData.displayName + '. ' + window.eureka.util.sanitizeResponseText(data.responseText) + '. Status Code: ' + data.status;
                         $('#errorModal').find('#errorContent').html(eureka.util.getUserMessage(data.status,content));
                         $('#errorModal').modal('show');
                         if (errorThrown != null) {
