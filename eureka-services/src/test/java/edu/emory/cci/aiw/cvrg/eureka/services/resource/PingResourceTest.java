@@ -43,7 +43,7 @@ import com.sun.jersey.api.client.ClientResponse;
 import org.junit.Assert;
 
 import java.util.List;
-import org.eurekaclinical.eureka.client.comm.User;
+import org.eurekaclinical.common.comm.User;
 
 /**
  * @author hrathod

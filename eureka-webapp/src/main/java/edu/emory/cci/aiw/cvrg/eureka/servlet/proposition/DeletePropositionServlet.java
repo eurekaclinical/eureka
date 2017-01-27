@@ -53,10 +53,10 @@ import org.slf4j.LoggerFactory;
 
 import com.google.inject.Inject;
 
-import org.eurekaclinical.eureka.client.comm.User;
 import org.eurekaclinical.common.comm.clients.ClientException;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ServicesClient;
 import edu.emory.cci.aiw.cvrg.eureka.webapp.authentication.WebappAuthenticationSupport;
+import org.eurekaclinical.common.comm.User;
 
 public class DeletePropositionServlet extends HttpServlet {
 

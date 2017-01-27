@@ -52,7 +52,6 @@ import org.eurekaclinical.eureka.client.comm.SourceConfig;
 import org.eurekaclinical.eureka.client.comm.SourceConfigParams;
 import org.eurekaclinical.eureka.client.comm.Statistics;
 import org.eurekaclinical.eureka.client.comm.SystemPhenotype;
-import org.eurekaclinical.eureka.client.comm.User;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.FrequencyType;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.RelationOperator;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.ThresholdsOperator;
@@ -97,8 +96,6 @@ public class ServicesClient extends EurekaClient {
 	private static final GenericType<List<Role>> RoleList = new GenericType<List<Role>>() {
 	};
 	private static final GenericType<List<Job>> JobList = new GenericType<List<Job>>() {
-	};
-	private static final GenericType<List<User>> UserList = new GenericType<List<User>>() {
 	};
 	private static final GenericType<List<SourceConfig>> SourceConfigList = new GenericType<List<SourceConfig>>() {
 	};

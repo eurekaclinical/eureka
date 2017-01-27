@@ -41,11 +41,11 @@ package edu.emory.cci.aiw.cvrg.eureka.webapp.authentication;
  */
 
 import edu.emory.cci.aiw.cvrg.eureka.common.authentication.AbstractUserSupport;
-import org.eurekaclinical.eureka.client.comm.User;
 import org.eurekaclinical.common.comm.clients.ClientException;
 import java.io.IOException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import org.eurekaclinical.common.comm.User;
 
 /**
  *
