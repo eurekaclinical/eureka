@@ -61,8 +61,8 @@ public class LoginServlet extends HttpServlet {
 	private final EurekaClinicalUserProxyClient userClient;
 
 	@Inject
-	public LoginServlet(EurekaClinicalUserProxyClient inToUserClient) {
-		this.userClient = inToUserClient;
+	public LoginServlet(EurekaClinicalUserProxyClient inUserClient) {
+		this.userClient = inUserClient;
 	}
 
 	@Override

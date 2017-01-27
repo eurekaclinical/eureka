@@ -67,11 +67,6 @@ public abstract class AbstractUserSupport implements UserSupport {
 	}
 		
 	@Override
-	public boolean isSameUser(HttpServletRequest servletRequest, UserRequest userRequest) {
-		return isSameUser(servletRequest, userRequest.getUsername());
-	}
-	
-	@Override
 	public boolean isSameUser(HttpServletRequest servletRequest, User user) {
 		return isSameUser(servletRequest, user.getUsername());
 	}

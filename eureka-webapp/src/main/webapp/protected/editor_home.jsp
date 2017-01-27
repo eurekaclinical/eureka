@@ -203,7 +203,7 @@
 							window.location.href = 'editorhome'
 						},
 						error: function (data, statusCode, errorThrown) {
-							var content = 'Error while deleting &quot;' + displayName.trim() + '&quot;. ' + data.responseText + '. Status Code: ' + statusCode;
+							var content = 'Error while deleting &quot;' + displayName.trim() + '&quot;. ' + window.eureka.util.sanitizeResponseText(data.responseText) + '. Status Code: ' + statusCode;
 							$('#errorModal').find('#errorContent').html(content);
 							$('#errorModal').modal('show');
 							if (errorThrown != null) {

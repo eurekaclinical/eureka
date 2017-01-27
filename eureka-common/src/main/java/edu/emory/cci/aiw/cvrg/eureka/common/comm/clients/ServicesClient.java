@@ -311,7 +311,7 @@ public class ServicesClient extends EurekaClient {
 		 * string can't be templated because the slashes won't be encoded!
 		 */
 		final String path = "/api/protected/phenotypes/"+ inId;
-		doDelete(path, inUserId);
+		doDelete(path);
 	}
 
 	public List<SystemPhenotype> getSystemPhenotypes() throws ClientException {
