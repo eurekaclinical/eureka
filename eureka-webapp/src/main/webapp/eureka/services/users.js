@@ -48,8 +48,7 @@
 
         return {
             getUser: getCurrentUser,
-            getRole: getRole,
-            getUsers: getUsers
+            getRole: getRole
         };
 
         function getRole(roleId) {
@@ -80,27 +79,10 @@
                 }
                 return $q.all(_.map(userInfo.roles, getRole)).then(function(roles) {
                     userInfo.roles = roles;
-                    console.log('user info!', userInfo);
                     return new User(userInfo);
                 });
             }, function(err) {
                 console.error('error getting user:', err);
-            });
-        }
-
-        function getUsers() {
-            return $http.get(dataEndpoint+'/users')
-            .then(handleSuccess, handleError)
-            .then(function(users){
-                
-                return $q.all( _.map(users, function(user){
-                    return $q.all(_.map(user.roles, getRole))
-                        .then(function(roleObjects){
-                            user.roles = roleObjects;
-                            return user;
-
-                        });
-                }));
             });
         }
 

@@ -46,7 +46,6 @@ import org.eurekaclinical.eureka.client.comm.CohortDestination;
 import org.eurekaclinical.eureka.client.comm.PhenotypeField;
 import org.eurekaclinical.eureka.client.comm.Literal;
 import org.eurekaclinical.eureka.client.comm.Node;
-import org.eurekaclinical.eureka.client.comm.User;
 import org.eurekaclinical.common.comm.clients.ClientException;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ServicesClient;
 import edu.emory.cci.aiw.cvrg.eureka.webapp.authentication.WebappAuthenticationSupport;
@@ -56,10 +55,12 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.codehaus.jackson.map.ObjectMapper;
+import org.eurekaclinical.common.comm.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class SaveCohortServlet extends HttpServlet {
+
 	private static final ObjectMapper MAPPER = new ObjectMapper();
 	private static final Logger LOGGER = LoggerFactory
 			.getLogger(SaveCohortServlet.class);
@@ -69,16 +70,16 @@ public class SaveCohortServlet extends HttpServlet {
 	@Inject
 	public SaveCohortServlet(ServicesClient inClient) {
 		this.servicesClient = inClient;
-		this.authenticationSupport = new WebappAuthenticationSupport(this.servicesClient);
+		this.authenticationSupport = new WebappAuthenticationSupport();
 	}
 
 	@Override
-	protected void doPost(HttpServletRequest req, HttpServletResponse resp)
-			throws ServletException, IOException {
+	protected void doPost(HttpServletRequest req, HttpServletResponse resp) {
 		LOGGER.debug("SaveCohortServlet");
-		CohortJson cohortJson = MAPPER.readValue(req.getReader(), CohortJson.class);
-		CohortDestination cohortDestination = new CohortDestination();
+
 		try {
+			CohortJson cohortJson = MAPPER.readValue(req.getReader(), CohortJson.class);
+			CohortDestination cohortDestination = new CohortDestination();
 			User user = this.authenticationSupport.getMe(req);
 			cohortDestination.setId(cohortJson.getId());
 			cohortDestination.setOwnerUserId(user.getId());
@@ -91,18 +92,37 @@ public class SaveCohortServlet extends HttpServlet {
 				this.servicesClient.updateDestination(cohortDestination);
 			}
 		} catch (ClientException e) {
-			switch (e.getResponseStatus()) {
-				case UNAUTHORIZED:
-					this.authenticationSupport.needsToLogin(req, resp);
-					break;
-				default:
-					resp.setStatus(e.getResponseStatus().getStatusCode());
-					resp.getWriter().write(e.getMessage());
+			try {
+				switch (e.getResponseStatus()) {
+					case UNAUTHORIZED:
+						this.authenticationSupport.needsToLogin(req, resp);
+						break;
+					default:
+						resp.setStatus(e.getResponseStatus().getStatusCode());
+						resp.getWriter().write(e.getMessage());
+				}
+			} catch (IOException ex) {
+				resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+				LOGGER.error("IO Error writing response status", ex);
+				try {
+					resp.getWriter().write("Internal server error");
+				} catch (IOException ignore) {
+					LOGGER.error("Error writing the internal server error message: {}", ignore);
+				}
+			}
+		} catch (IOException t) {
+			resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+			LOGGER.error("IO Error saving cohort", t);
+			try {
+				resp.getWriter().write("Internal server error");
+			} catch (IOException ignore) {
+				LOGGER.error("Error writing the internal server error message: {}", ignore);
 			}
 		}
 	}
-	
+
 	private static class CohortJson {
+
 		private Long id;
 		private String name;
 		private String description;
@@ -115,7 +135,7 @@ public class SaveCohortServlet extends HttpServlet {
 		public void setId(Long id) {
 			this.id = id;
 		}
-		
+
 		public String getName() {
 			return name;
 		}
@@ -139,7 +159,7 @@ public class SaveCohortServlet extends HttpServlet {
 		public void setPhenotypes(PhenotypeField[] phenotypes) {
 			this.phenotypes = phenotypes;
 		}
-		
+
 		private Cohort toCohort() {
 			Cohort cohort = new Cohort();
 			Node node;
@@ -172,8 +192,6 @@ public class SaveCohortServlet extends HttpServlet {
 			return cohort;
 		}
 	}
-
-	
 
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp)

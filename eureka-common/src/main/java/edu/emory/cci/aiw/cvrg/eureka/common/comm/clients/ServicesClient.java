@@ -52,7 +52,6 @@ import org.eurekaclinical.eureka.client.comm.SourceConfig;
 import org.eurekaclinical.eureka.client.comm.SourceConfigParams;
 import org.eurekaclinical.eureka.client.comm.Statistics;
 import org.eurekaclinical.eureka.client.comm.SystemPhenotype;
-import org.eurekaclinical.eureka.client.comm.User;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.FrequencyType;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.RelationOperator;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.ThresholdsOperator;
@@ -97,8 +96,6 @@ public class ServicesClient extends EurekaClient {
 	private static final GenericType<List<Role>> RoleList = new GenericType<List<Role>>() {
 	};
 	private static final GenericType<List<Job>> JobList = new GenericType<List<Job>>() {
-	};
-	private static final GenericType<List<User>> UserList = new GenericType<List<User>>() {
 	};
 	private static final GenericType<List<SourceConfig>> SourceConfigList = new GenericType<List<SourceConfig>>() {
 	};
@@ -299,11 +296,8 @@ public class ServicesClient extends EurekaClient {
 		doPut(path, inPhenotype);
 	}        
 
-	public void deleteUserPhenotype(Long inUserId, Long inId) throws
+	public void deleteUserPhenotype(Long inId) throws
 			ClientException {
-		if (inUserId == null) {
-			throw new IllegalArgumentException("inUserId cannot be null");
-		}
 		if (inId == null) {
 			throw new IllegalArgumentException("inId cannot be null");
 		}
@@ -314,7 +308,7 @@ public class ServicesClient extends EurekaClient {
 		 * string can't be templated because the slashes won't be encoded!
 		 */
 		final String path = "/api/protected/phenotypes/"+ inId;
-		doDelete(path, inUserId);
+		doDelete(path);
 	}
 
 	public List<SystemPhenotype> getSystemPhenotypes() throws ClientException {
@@ -475,7 +469,7 @@ public class ServicesClient extends EurekaClient {
 		return doGet(path, Destination.class);
 	}
 
-	public void deleteDestination(Long id, String destinationId) throws ClientException {
+	public void deleteDestination(String destinationId) throws ClientException {
 		String path = UriBuilder.fromPath("/api/protected/destinations/")
 				.segment(destinationId)
 				.build().toString();

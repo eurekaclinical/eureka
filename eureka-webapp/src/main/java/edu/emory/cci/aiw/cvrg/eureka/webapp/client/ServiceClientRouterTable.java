@@ -1,20 +1,10 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-package edu.emory.cci.aiw.cvrg.eureka.common.comm.clients;
-
-import org.eurekaclinical.common.comm.clients.ClientException;
-import org.eurekaclinical.eureka.client.comm.User;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+package edu.emory.cci.aiw.cvrg.eureka.webapp.client;
 
 /*-
  * #%L
- * Eureka Common
+ * Eureka WebApp
  * %%
- * Copyright (C) 2012 - 2016 Emory University
+ * Copyright (C) 2012 - 2017 Emory University
  * %%
  * This program is dual licensed under the Apache 2 and GPLv3 licenses.
  * 
@@ -50,32 +40,36 @@ import org.slf4j.LoggerFactory;
  * #L%
  */
 
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ServicesClient;
+import javax.inject.Inject;
+import org.eurekaclinical.common.comm.clients.Route;
+import org.eurekaclinical.common.comm.clients.RouterTable;
+import org.eurekaclinical.common.comm.clients.RouterTableLoadException;
+import org.eurekaclinical.user.client.EurekaClinicalUserProxyClient;
+
 /**
  *
- * @author miaoai
+ * @author Andrew Post
  */
-public class ToUserClient extends EurekaClient {
-	private static final Logger LOGGER = LoggerFactory.getLogger(ToUserClient.class);    
-	private final String userServiceUrl;
+public class ServiceClientRouterTable implements RouterTable {
+	
+	private final EurekaClinicalUserProxyClient userClient;
+	private final ServicesClient client;
 
-	public ToUserClient(String inUserServiceUrl) {
-		super();
-		LOGGER.info("Using eurekaclinical user service URL {}", inUserServiceUrl);
-		this.userServiceUrl = inUserServiceUrl;
-	}
+    @Inject
+    public ServiceClientRouterTable(ServicesClient inClient, EurekaClinicalUserProxyClient inUserClient) {
+        this.client = inClient;
+		this.userClient = inUserClient;
+    }
 
 	@Override
-	protected String getResourceUrl() {
-		return this.userServiceUrl;
-	}    
-
-	public User getMe() throws ClientException {
-		String path = "/api/protected/users/me";
-		return doGet(path, User.class);
-	}    
-        
-	public void updateUser(User inUser, Long userId) throws ClientException {
-		final String path = "/api/protected/users/" + userId;
-		doPut(path, inUser);
-	}        
+	public Route[] load() throws RouterTableLoadException {
+		return new Route[]{
+			new Route("/users/", "/api/protected/users/", this.userClient),
+			new Route("/roles/", "/api/protected/roles/", this.userClient),
+			new Route("/appproperties/", "/api/appproperties/", this.client),
+			new Route("/", "/api/protected/", this.client)
+		};
+	}
+	
 }

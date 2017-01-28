@@ -52,7 +52,6 @@ class TableColumnSpecWrapper {
 	private final String propId;
 	
 	TableColumnSpecWrapper(String propId, TableColumnSpec tableColumnSpec) {
-		assert propId != null : "propId cannot be null";
 		assert tableColumnSpec != null : "tableColumnSpec cannot be null";
 		this.tableColumnSpec = tableColumnSpec;
 		this.propId = propId;

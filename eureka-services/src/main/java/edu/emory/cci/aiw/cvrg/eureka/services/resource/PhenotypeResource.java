@@ -82,7 +82,6 @@ import org.eurekaclinical.standardapis.exception.HttpStatusException;
 @Path("/protected/phenotypes")
 @RolesAllowed({"researcher"})
 @Produces(MediaType.APPLICATION_JSON)
-@Consumes(MediaType.APPLICATION_JSON)
 public class PhenotypeResource {
     
 	private static final Logger LOGGER
@@ -137,6 +136,7 @@ public class PhenotypeResource {
 	}
 
 	@POST
+	@Consumes(MediaType.APPLICATION_JSON)
 	public Response create(@Context HttpServletRequest request, Phenotype inPhenotype) {
 		if (inPhenotype.getId() != null) {
 			throw new HttpStatusException(
@@ -185,6 +185,7 @@ public class PhenotypeResource {
 
 	@PUT
 	@Path("/{id}")
+	@Consumes(MediaType.APPLICATION_JSON)
 	public void update(@Context HttpServletRequest inRequest,
 			@PathParam("id") Long inId,
 			Phenotype inElement) {
@@ -251,15 +252,15 @@ public class PhenotypeResource {
 
 	@DELETE
 	@Path("/{id}")
-	public void delete(@PathParam("id") Long inId,
-			Long inUserId) {
+	public void delete(@PathParam("id") Long inId, @Context HttpServletRequest inRequest) {
+		UserEntity user = this.userDao.getByHttpServletRequest(inRequest);
 		PhenotypeEntity phenotypeEntity
 				= this.phenotypeEntityDao.getById(inId);
 		if (phenotypeEntity == null) {
 			throw new HttpStatusException(Response.Status.NOT_FOUND);
 		}
 		List<String> phenotypesUsedIn
-				= getPhenotypesUsedIn(inUserId, phenotypeEntity);
+				= getPhenotypesUsedIn(user.getId(), phenotypeEntity);
 		if (!phenotypesUsedIn.isEmpty()) {
 			deleteFailed(phenotypesUsedIn, phenotypeEntity);
 		}

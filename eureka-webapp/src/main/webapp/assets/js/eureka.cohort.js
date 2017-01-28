@@ -139,7 +139,7 @@ window.eureka.editor = new function () {
 							},
 							error: function (data, statusCode) {
 								var $errorDialog = $('<div></div>')
-									.html(data.responseText)
+									.html(window.eureka.util.sanitizeResponseText(data.responseText))
 									.dialog({
 										title: "Error Deleting Phenotype",
 										buttons: {
@@ -439,7 +439,7 @@ window.eureka.editor = new function () {
         self.post = function (postData) {
                 var user = null;
                 $.ajax({
-                    url: 'https://localhost:8443/eurekaclinical-user-service/api/protected/users/me',
+                    url: '../proxy-resource/users/me',
                     dataType: 'json',
                     success: function(data) {
                         user = data;
@@ -473,13 +473,15 @@ window.eureka.editor = new function () {
                             console.log(JSON.stringify(cohortDestination));
                             $.ajax({
                                 type: type,
+								processData: false,
+								contentType: 'application/json; charset=UTF-8',
                                 url: '../proxy-resource/destinations',
                                 data: JSON.stringify(cohortDestination),
                                 success: function (postData) {
                                     window.location.href = 'cohorthome'
                                 },
                                 error: function (postData, statusCode, errorThrown) {
-                                    var content = 'Error while saving ' + postData.displayName + '. ' + postData.responseText + '. Status Code: ' + postData.status;
+                                    var content = 'Error while saving ' + postData.displayName + '. ' + window.eureka.util.sanitizeResponseText(postData.responseText) + '. Status Code: ' + postData.status;
                                     $('#errorModal').find('#errorContent').html(eureka.util.getUserMessage(postData.status,content));
                                     $('#errorModal').modal('show');
                                     if (errorThrown != null) {
@@ -490,7 +492,7 @@ window.eureka.editor = new function () {
                         }                        
                     },
                     error: function (data, statusCode, errorThrown) {
-                        var content = 'Error while saving ' + postData.displayName + '. ' + data.responseText + '. Status Code: ' + data.status;
+                        var content = 'Error while saving ' + postData.displayName + '. ' + window.eureka.util.sanitizeResponseText(data.responseText) + '. Status Code: ' + data.status;
                         $('#errorModal').find('#errorContent').html(eureka.util.getUserMessage(data.status,content));
                         $('#errorModal').modal('show');
                         if (errorThrown != null) {

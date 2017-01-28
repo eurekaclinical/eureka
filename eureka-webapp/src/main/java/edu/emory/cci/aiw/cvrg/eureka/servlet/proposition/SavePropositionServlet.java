@@ -53,33 +53,33 @@ import org.slf4j.LoggerFactory;
 import com.google.inject.Inject;
 
 import org.eurekaclinical.eureka.client.comm.Phenotype;
-import org.eurekaclinical.eureka.client.comm.User;
 import org.eurekaclinical.common.comm.clients.ClientException;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ServicesClient;
 import edu.emory.cci.aiw.cvrg.eureka.webapp.authentication.WebappAuthenticationSupport;
 import java.net.URI;
+import org.eurekaclinical.common.comm.User;
 
 public class SavePropositionServlet extends HttpServlet {
 
 	private static final Logger LOGGER = LoggerFactory
-	        .getLogger(SavePropositionServlet.class);
+			.getLogger(SavePropositionServlet.class);
 	private static final ObjectMapper MAPPER = new ObjectMapper();
 	private final ServicesClient servicesClient;
 	private final WebappAuthenticationSupport authenticationSupport;
 
 	@Inject
-	public SavePropositionServlet (ServicesClient inClient) {
+	public SavePropositionServlet(ServicesClient inClient) {
 		this.servicesClient = inClient;
-		this.authenticationSupport = new WebappAuthenticationSupport(this.servicesClient);
+		this.authenticationSupport = new WebappAuthenticationSupport();
 	}
 
 	@Override
-	protected void doPost(HttpServletRequest req, HttpServletResponse resp)
-	        throws ServletException, IOException {
+	protected void doPost(HttpServletRequest req, HttpServletResponse resp) {
 		LOGGER.debug("SavePropositionServlet");
-		Phenotype phenotype = MAPPER.readValue(req.getReader(),
-				Phenotype.class);
+
 		try {
+			Phenotype phenotype = MAPPER.readValue(req.getReader(),
+					Phenotype.class);
 			User user = this.authenticationSupport.getMe(req);
 			phenotype.setUserId(user.getId());
 			if (phenotype.getId() == null) {
@@ -89,28 +89,46 @@ public class SavePropositionServlet extends HttpServlet {
 						resp.setStatus(HttpServletResponse.SC_CREATED);
 						resp.setHeader("Location", phenotypeURI.toString());
 					}
-				}catch (ClientException e) {
+				} catch (ClientException e) {
 					resp.setStatus(e.getResponseStatus().getStatusCode());
 					resp.getOutputStream().print(e.getMessage());
-				}                        
+				}
 			} else {
 				this.servicesClient.updateUserPhenotype(phenotype.getId(), phenotype);
 			}
 		} catch (ClientException e) {
-			switch (e.getResponseStatus()) {
-				case UNAUTHORIZED:
-					this.authenticationSupport.needsToLogin(req, resp);
-					break;
-				default:
-					resp.setStatus(e.getResponseStatus().getStatusCode());
-					resp.getWriter().write(e.getMessage());
+			try {
+				switch (e.getResponseStatus()) {
+					case UNAUTHORIZED:
+						this.authenticationSupport.needsToLogin(req, resp);
+						break;
+					default:
+						resp.setStatus(e.getResponseStatus().getStatusCode());
+						resp.getWriter().write(e.getMessage());
+				}
+			} catch (IOException ex) {
+				resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+				LOGGER.error("IO Error writing response status", ex);
+				try {
+					resp.getWriter().write("Internal server error");
+				} catch (IOException ignore) {
+					LOGGER.error("Error writing the internal server error message: {}", ignore);
+				}
+			}
+		} catch (IOException t) {
+			resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+			LOGGER.error("IO Error saving phenotype", t);
+			try {
+				resp.getWriter().write("Internal server error");
+			} catch (IOException ignore) {
+				LOGGER.error("Error writing the internal server error message: {}", ignore);
 			}
 		}
 	}
 
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
-	        throws ServletException, IOException {
+			throws ServletException, IOException {
 
 		doPost(req, resp);
 	}

@@ -20,4 +20,7 @@ window.eureka.util = new function () {
 				return content;
 			}
 	};
+	this.sanitizeResponseText = function (responseText) {
+		return responseText ? responseText.replace(/<script[^>]*>([\S\s]*?)<\/script>/gmi, '').replace(/<\/?\w(?:[^"'>]|"[^"]*"|'[^']*')*>/gmi, '') : ''
+	};
 };

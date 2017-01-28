@@ -47,6 +47,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -56,7 +57,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
-import org.arp.javautil.arrays.Arrays;
 import org.arp.javautil.string.StringUtil;
 import org.protempa.KnowledgeSource;
 import org.protempa.KnowledgeSourceCache;
@@ -67,7 +67,6 @@ import org.protempa.dest.AbstractQueryResultsHandler;
 import org.protempa.dest.QueryResultsHandlerCloseException;
 import org.protempa.dest.QueryResultsHandlerProcessingException;
 import org.protempa.dest.QueryResultsHandlerValidationFailedException;
-import org.protempa.dest.table.Link;
 import org.protempa.dest.table.TableColumnSpec;
 import org.protempa.proposition.Proposition;
 import org.protempa.proposition.UniqueId;
@@ -80,7 +79,7 @@ import org.slf4j.LoggerFactory;
  * @author Andrew Post
  */
 public class TabularFileQueryResultsHandler extends AbstractQueryResultsHandler {
-	
+
 	private static final Logger LOGGER = LoggerFactory.getLogger(TabularFileQueryResultsHandler.class);
 
 	private final String queryId;
@@ -93,6 +92,7 @@ public class TabularFileQueryResultsHandler extends AbstractQueryResultsHandler 
 	private KnowledgeSource knowledgeSource;
 	private KnowledgeSourceCache ksCache;
 	private final char delimiter;
+	private Map<String, String> replace;
 
 	TabularFileQueryResultsHandler(Query query, TabularFileDestinationEntity inTabularFileDestinationEntity, EtlProperties inEtlProperties, KnowledgeSource inKnowledgeSource) {
 		assert inTabularFileDestinationEntity != null : "inTabularFileDestinationEntity cannot be null";
@@ -134,8 +134,7 @@ public class TabularFileQueryResultsHandler extends AbstractQueryResultsHandler 
 		}
 
 		List<TabularFileDestinationTableColumnEntity> tableColumns = this.config.getTableColumns();
-		Collections.sort(tableColumns,
-				new Comparator<TabularFileDestinationTableColumnEntity>() {
+		Collections.sort(tableColumns, new Comparator<TabularFileDestinationTableColumnEntity>() {
 			@Override
 			public int compare(TabularFileDestinationTableColumnEntity o1, TabularFileDestinationTableColumnEntity o2) {
 				return o1.getRank().compareTo(o2.getRank());
@@ -144,20 +143,24 @@ public class TabularFileQueryResultsHandler extends AbstractQueryResultsHandler 
 		});
 		this.tableColumnSpecs = new HashMap<>();
 		for (TabularFileDestinationTableColumnEntity tableColumn : tableColumns) {
-			TableColumnSpecFormat linksFormat = new TableColumnSpecFormat(tableColumn.getColumnName());
+			String format = tableColumn.getFormat();
+			TableColumnSpecFormat linksFormat = new TableColumnSpecFormat(tableColumn.getColumnName(), format != null ? new SimpleDateFormat(format) : null);
 			TableColumnSpecWrapper tableColumnSpecWrapper = toTableColumnSpec(tableColumn, linksFormat);
-			Set<String> propIds;
-			try {
-				propIds = this.knowledgeSource.collectPropIdDescendantsUsingInverseIsA(tableColumnSpecWrapper.getPropId());
-			} catch (KnowledgeSourceReadException ex) {
-				throw new QueryResultsHandlerProcessingException(ex);
-			}
-			for (String propId : propIds) {
-				org.arp.javautil.collections.Collections.putSet(this.rowPropositionIdMap, tableColumn.getTableName(), propId);
+			String pid = tableColumnSpecWrapper.getPropId();
+			if (pid != null) {
+				Set<String> propIds;
+				try {
+					propIds = this.knowledgeSource.collectPropIdDescendantsUsingInverseIsA(pid);
+				} catch (KnowledgeSourceReadException ex) {
+					throw new QueryResultsHandlerProcessingException(ex);
+				}
+				for (String propId : propIds) {
+					org.arp.javautil.collections.Collections.putSet(this.rowPropositionIdMap, tableColumn.getTableName(), propId);
+				}
 			}
 			org.arp.javautil.collections.Collections.putList(this.tableColumnSpecs, tableColumn.getTableName(), tableColumnSpecWrapper.getTableColumnSpec());
 		}
-		
+
 		LOGGER.debug("Row concepts: {}", this.rowPropositionIdMap);
 
 		for (Map.Entry<String, List<TableColumnSpec>> me : this.tableColumnSpecs.entrySet()) {
@@ -187,11 +190,17 @@ public class TabularFileQueryResultsHandler extends AbstractQueryResultsHandler 
 		} catch (KnowledgeSourceReadException ex) {
 			throw new QueryResultsHandlerProcessingException(ex);
 		}
+
+		this.replace = new HashMap<>();
+		this.replace.put(null, "NULL");
 	}
 
 	@Override
 	public void handleQueryResult(String keyId, List<Proposition> propositions, Map<Proposition, List<Proposition>> forwardDerivations, Map<Proposition, List<Proposition>> backwardDerivations, Map<UniqueId, Proposition> references) throws QueryResultsHandlerProcessingException {
-		LOGGER.error("Data for keyId {}: {}", new Object[]{keyId, propositions});
+		if (LOGGER.isDebugEnabled()) {
+			LOGGER.debug("Data for keyId {}: {}", new Object[]{keyId, propositions});
+		}
+
 		for (Map.Entry<String, List<TableColumnSpec>> me : this.tableColumnSpecs.entrySet()) {
 			String tableName = me.getKey();
 			List<TableColumnSpec> columnSpecs = me.getValue();
@@ -204,7 +213,7 @@ public class TabularFileQueryResultsHandler extends AbstractQueryResultsHandler 
 						try {
 							for (int i = 0; i < n; i++) {
 								TableColumnSpec columnSpec = columnSpecs.get(i);
-								columnSpec.columnValues(keyId, prop, forwardDerivations, backwardDerivations, references, this.ksCache, null, this.delimiter, writer);
+								columnSpec.columnValues(keyId, prop, forwardDerivations, backwardDerivations, references, this.ksCache, this.replace, this.delimiter, writer);
 								if (i < n - 1) {
 									writer.write(this.delimiter);
 								} else {

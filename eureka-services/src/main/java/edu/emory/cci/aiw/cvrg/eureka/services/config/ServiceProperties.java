@@ -87,8 +87,8 @@ public class ServiceProperties extends AbstractProperties {
 	 */
 	public AppPropertiesLinks getAppPropertiesLinks() {
 		this.appPropertiesLinks = new AppPropertiesLinks();
-		this.appPropertiesLinks.setUserWebappUrl(this.getValue("user.webapp.url"));   
-		this.appPropertiesLinks.setUserServiceUrl(this.getValue("user.service.url")); 
+		this.appPropertiesLinks.setUserWebappUrl(this.getValue("eurekaclinical.userwebapp.url"));   
+		this.appPropertiesLinks.setUserServiceUrl(this.getValue("eurekaclinical.userservice.url")); 
 		this.appPropertiesLinks.setSupportUri(this.getSupportUri());
 		this.appPropertiesLinks.setAiwUrl(this.getValue("aiw.site.url"));
 		this.appPropertiesLinks.setHelpSiteUrl(this.getValue("aiw.help.url"));
@@ -103,15 +103,7 @@ public class ServiceProperties extends AbstractProperties {
 	 */
 	public AppPropertiesRegistration getAppPropertiesRegistration() {
 		this.appPropertiesRegistration = new AppPropertiesRegistration();
-		this.appPropertiesRegistration.setGoogleOAuthKey(this.getGoogleOAuthKey());
-		this.appPropertiesRegistration.setGoogleOAuthSecret(this.getGoogleOAuthSecret());
-		this.appPropertiesRegistration.setGitHubOAuthKey(this.getGitHubOAuthKey());
-		this.appPropertiesRegistration.setGitHubOAuthSecret(this.getGitHubOAuthSecret());
-		this.appPropertiesRegistration.setTwitterOAuthKey(this.getTwitterOAuthKey());
-		this.appPropertiesRegistration.setTwitterOAuthSecret(this.getTwitterOAuthSecret());
-		this.appPropertiesRegistration.setGlobusOAuthKey(this.getGlobusOAuthKey());
-		this.appPropertiesRegistration.setGlobusOAuthSecret(this.getGlobusOAuthSecret());
-		this.appPropertiesRegistration.setLocalAccountRegistrationEnabled(Boolean.parseBoolean(this.getValue("eureka.webapp.localregistrationenabled")));
+		this.appPropertiesRegistration.setRegistrationEnabled(Boolean.parseBoolean(this.getValue("eureka.webapp.registrationenabled")));
 		return this.appPropertiesRegistration;
 	}
 

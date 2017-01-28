@@ -262,11 +262,11 @@ public final class EurekaDataSourceBackend extends RelationalDbDataSourceBackend
 	}
 
 	@Override
-	public DataStreamingEventIterator<Proposition> readPropositions(Set<String> keyIds, Set<String> propIds, Filter filters, QuerySession qs, QueryResultsHandler queryResultsHandler) throws DataSourceReadException {
+	public DataStreamingEventIterator<Proposition> readPropositions(Set<String> keyIds, Set<String> propIds, Filter filters, QueryResultsHandler queryResultsHandler) throws DataSourceReadException {
 		if (!dataPopulated) {
 			populateDatabase();
 		}
-		return super.readPropositions(keyIds, propIds, filters, qs, queryResultsHandler);
+		return super.readPropositions(keyIds, propIds, filters, queryResultsHandler);
 	}
 
 	@Override
@@ -667,9 +667,7 @@ public final class EurekaDataSourceBackend extends RelationalDbDataSourceBackend
 			null, new PropertySpec[]{
 				new PropertySpec("code", null,
 				new ColumnSpec(schemaName, "ICD9D_EVENT",
-				"ENTITY_ID",
-				Operator.EQUAL_TO,
-				icd9DxMappings),
+				"ENTITY_ID"),
 				ValueType.NOMINALVALUE),
 				new PropertySpec("DXPRIORITY",
 				null,
@@ -701,9 +699,7 @@ public final class EurekaDataSourceBackend extends RelationalDbDataSourceBackend
 			null, new PropertySpec[]{
 				new PropertySpec("code", null,
 				new ColumnSpec(schemaName, "ICD9P_EVENT",
-				"ENTITY_ID",
-				Operator.EQUAL_TO,
-				icd9PxMappings),
+				"ENTITY_ID"),
 				ValueType.NOMINALVALUE)}, 
 			new ReferenceSpec[]{
 				new ReferenceSpec("encounter", "Encounters", new ColumnSpec[]{new ColumnSpec(schemaName, "ICD9P_EVENT", "ENCOUNTER_KEY")}, ReferenceSpec.Type.ONE)
@@ -729,9 +725,7 @@ public final class EurekaDataSourceBackend extends RelationalDbDataSourceBackend
 			new PropertySpec[]{
 				new PropertySpec("code", null,
 				new ColumnSpec(schemaName, "CPT_EVENT",
-				"ENTITY_ID",
-				Operator.EQUAL_TO,
-				cptMappings),
+				"ENTITY_ID"),
 				ValueType.NOMINALVALUE)}, 
 			new ReferenceSpec[]{
 				new ReferenceSpec("encounter", "Encounters", new ColumnSpec[]{new ColumnSpec(schemaName, "CPT_EVENT", "ENCOUNTER_KEY")}, ReferenceSpec.Type.ONE)
@@ -754,7 +748,10 @@ public final class EurekaDataSourceBackend extends RelationalDbDataSourceBackend
 				new ColumnSpec(schemaName, "MEDS_EVENT",
 				"EVENT_KEY")},
 			new ColumnSpec(schemaName, "MEDS_EVENT", "TS_OBX"),
-			null, new PropertySpec[]{ /*new PropertySpec("orderDescription", null, new ColumnSpec(schemaName, "fact_history_medication", new JoinSpec("synonym_order_key", "synonym_order_key", new ColumnSpec(schemaName, "lkp_synonym_order", "synonym_order_desc"))), ValueType.NOMINALVALUE), new PropertySpec("orderContext", null, new ColumnSpec(schemaName, "fact_history_medication", new JoinSpec("context_medication_key", "context_medication_key", new ColumnSpec(schemaName, "lkp_context_medication", "context_medication_id", ColumnSpec.Operator.EQUAL_TO, this.mapper.read("order_context_03292011.txt"), true))), ValueType.NOMINALVALUE), new PropertySpec("continuingOrder", null, new ColumnSpec(schemaName, "fact_history_medication", "order_continuing_ind"), ValueType.BOOLEANVALUE), new PropertySpec("orderStatus", null, new ColumnSpec(schemaName, "fact_history_medication", new JoinSpec("order_status_key", "order_status_key", new ColumnSpec(schemaName, "lkp_order_status", "order_status_id", ColumnSpec.Operator.EQUAL_TO, this.mapper.read("order_status_03292011.txt"), true))), ValueType.NOMINALVALUE), new PropertySpec("orderAction", null, new ColumnSpec(schemaName, "fact_history_medication", new JoinSpec("action_order_key", "action_order_key", new ColumnSpec(schemaName, "lkp_action_order", "action_order_id", ColumnSpec.Operator.EQUAL_TO, this.mapper.read("order_action_03292011.txt"), false))), ValueType.NOMINALVALUE)*/},
+			null, new PropertySpec[]{ new PropertySpec("code", null,
+				new ColumnSpec(schemaName, "MEDS_EVENT",
+				"ENTITY_ID"),
+				ValueType.NOMINALVALUE),/*new PropertySpec("orderDescription", null, new ColumnSpec(schemaName, "fact_history_medication", new JoinSpec("synonym_order_key", "synonym_order_key", new ColumnSpec(schemaName, "lkp_synonym_order", "synonym_order_desc"))), ValueType.NOMINALVALUE), new PropertySpec("orderContext", null, new ColumnSpec(schemaName, "fact_history_medication", new JoinSpec("context_medication_key", "context_medication_key", new ColumnSpec(schemaName, "lkp_context_medication", "context_medication_id", ColumnSpec.Operator.EQUAL_TO, this.mapper.read("order_context_03292011.txt"), true))), ValueType.NOMINALVALUE), new PropertySpec("continuingOrder", null, new ColumnSpec(schemaName, "fact_history_medication", "order_continuing_ind"), ValueType.BOOLEANVALUE), new PropertySpec("orderStatus", null, new ColumnSpec(schemaName, "fact_history_medication", new JoinSpec("order_status_key", "order_status_key", new ColumnSpec(schemaName, "lkp_order_status", "order_status_id", ColumnSpec.Operator.EQUAL_TO, this.mapper.read("order_status_03292011.txt"), true))), ValueType.NOMINALVALUE), new PropertySpec("orderAction", null, new ColumnSpec(schemaName, "fact_history_medication", new JoinSpec("action_order_key", "action_order_key", new ColumnSpec(schemaName, "lkp_action_order", "action_order_id", ColumnSpec.Operator.EQUAL_TO, this.mapper.read("order_action_03292011.txt"), false))), ValueType.NOMINALVALUE)*/},
 			new ReferenceSpec[]{
 				new ReferenceSpec("encounter", "Encounters", new ColumnSpec[]{new ColumnSpec(schemaName, "MEDS_EVENT", "ENCOUNTER_KEY")}, ReferenceSpec.Type.ONE)
 			}, null,
@@ -787,6 +784,9 @@ public final class EurekaDataSourceBackend extends RelationalDbDataSourceBackend
 			new ColumnSpec(schemaName, "LABS_EVENT", "TS_OBX"),
 			null, 
 			new PropertySpec[]{
+				new PropertySpec("code", null,
+				new ColumnSpec(schemaName, "LABS_EVENT",
+				"ENTITY_ID"), ValueType.NOMINALVALUE),
 				new PropertySpec("unitOfMeasure", null,
 				new ColumnSpec(schemaName, "LABS_EVENT",
 				"UNITS"), ValueType.NOMINALVALUE),

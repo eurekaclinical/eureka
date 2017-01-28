@@ -41,12 +41,11 @@ package edu.emory.cci.aiw.cvrg.eureka.webapp.authentication;
  */
 
 import edu.emory.cci.aiw.cvrg.eureka.common.authentication.AbstractUserSupport;
-import org.eurekaclinical.eureka.client.comm.User;
 import org.eurekaclinical.common.comm.clients.ClientException;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ServicesClient;
 import java.io.IOException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import org.eurekaclinical.common.comm.User;
 
 /**
  *
@@ -54,7 +53,7 @@ import javax.servlet.http.HttpServletResponse;
  */
 public final class WebappAuthenticationSupport extends AbstractUserSupport {
 	
-	public WebappAuthenticationSupport(ServicesClient inServicesClient) {
+	public WebappAuthenticationSupport() {
 	}
 	
 	public User getMe(HttpServletRequest req) throws ClientException {

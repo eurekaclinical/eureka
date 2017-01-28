@@ -40,13 +40,14 @@ package edu.emory.cci.aiw.cvrg.eureka.webapp.config;
  * #L%
  */
 
+import edu.emory.cci.aiw.cvrg.eureka.webapp.client.ServiceClientRouterTable;
 import com.google.inject.AbstractModule;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ServicesClient;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ToUserClient;
 import edu.emory.cci.aiw.cvrg.eureka.webapp.provider.ServicesClientProvider;
-import edu.emory.cci.aiw.cvrg.eureka.webapp.provider.ToUserClientProvider;
+import org.eurekaclinical.common.comm.clients.RouterTable;
 import org.eurekaclinical.standardapis.props.CasEurekaClinicalProperties;
+import org.eurekaclinical.user.client.EurekaClinicalUserProxyClient;
 
 /**
  *
@@ -54,18 +55,21 @@ import org.eurekaclinical.standardapis.props.CasEurekaClinicalProperties;
  */
 class AppModule extends AbstractModule {
 	private final WebappProperties webappProperties;
-
+	private final EurekaClinicalUserProxyClient userClient;
+	
 	AppModule(WebappProperties webappProperties) {
 		assert webappProperties != null : "webappProperties cannot be null";
 		this.webappProperties = webappProperties;
+		this.userClient = new EurekaClinicalUserProxyClient(this.webappProperties.getUserServiceUrl());
 	}
 	
 	@Override
 	protected void configure() {
+		bind(RouterTable.class).to(ServiceClientRouterTable.class);
 		bind(WebappProperties.class).toInstance(this.webappProperties);
 		bind(CasEurekaClinicalProperties.class).toInstance(this.webappProperties);
 		bind(ServicesClient.class).toProvider(ServicesClientProvider.class);
-        bind(ToUserClient.class).toProvider(ToUserClientProvider.class);
+		bind(EurekaClinicalUserProxyClient.class).toInstance(this.userClient);
 	}
 	
 }

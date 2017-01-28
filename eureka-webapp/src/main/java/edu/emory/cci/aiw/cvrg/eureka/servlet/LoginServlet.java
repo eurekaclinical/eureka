@@ -51,18 +51,18 @@ import com.google.inject.Inject;
 import com.sun.jersey.api.client.ClientResponse.Status;
 
 
-import org.eurekaclinical.eureka.client.comm.User;
 import org.eurekaclinical.common.comm.clients.ClientException;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ToUserClient;
 import javax.servlet.http.HttpSession;
+import org.eurekaclinical.user.client.EurekaClinicalUserProxyClient;
+import org.eurekaclinical.user.client.comm.User;
 
 public class LoginServlet extends HttpServlet {
     
-	private final ToUserClient toUserClient;
+	private final EurekaClinicalUserProxyClient userClient;
 
 	@Inject
-	public LoginServlet(ToUserClient inToUserClient) {
-		this.toUserClient = inToUserClient;
+	public LoginServlet(EurekaClinicalUserProxyClient inUserClient) {
+		this.userClient = inUserClient;
 	}
 
 	@Override
@@ -71,7 +71,7 @@ public class LoginServlet extends HttpServlet {
 		try {
 			User user = (User) req.getAttribute("user");
 			user.setLastLogin(new Date());
-			this.toUserClient.updateUser(user,user.getId());
+			this.userClient.updateUser(user,user.getId());
 			resp.sendRedirect(req.getContextPath() + "/#/index");
 		} catch (ClientException e) {
 			Status responseStatus = e.getResponseStatus();

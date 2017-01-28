@@ -53,10 +53,10 @@ import org.slf4j.LoggerFactory;
 
 import com.google.inject.Inject;
 
-import org.eurekaclinical.eureka.client.comm.User;
 import org.eurekaclinical.common.comm.clients.ClientException;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ServicesClient;
 import edu.emory.cci.aiw.cvrg.eureka.webapp.authentication.WebappAuthenticationSupport;
+import org.eurekaclinical.common.comm.User;
 
 public class DeletePropositionServlet extends HttpServlet {
 
@@ -67,9 +67,9 @@ public class DeletePropositionServlet extends HttpServlet {
 	private final WebappAuthenticationSupport authenticationSupport;
 
 	@Inject
-	public DeletePropositionServlet (ServicesClient inClient) {
+	public DeletePropositionServlet(ServicesClient inClient) {
 		this.servicesClient = inClient;
-		this.authenticationSupport = new WebappAuthenticationSupport(this.servicesClient);
+		this.authenticationSupport = new WebappAuthenticationSupport();
 	}
 
 	@Override
@@ -79,34 +79,42 @@ public class DeletePropositionServlet extends HttpServlet {
 	}
 
 	@Override
-	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
-			throws ServletException, IOException {
+	protected void doGet(HttpServletRequest req, HttpServletResponse resp) {
 		LOGGER.debug("DeletePropositionServlet");
-		Long propId =Long.parseLong(req.getParameter("id"));
+		Long propId = Long.parseLong(req.getParameter("id"));
 
 		try {
-			User user = this.authenticationSupport.getMe(req);
-			this.servicesClient.deleteUserPhenotype(user.getId(), propId);
+			this.servicesClient.deleteUserPhenotype(propId);
 		} catch (ClientException e) {
 			resp.setContentType(MediaType.TEXT_PLAIN);
-			switch (e.getResponseStatus()) {
-				case UNAUTHORIZED:
-					this.authenticationSupport.needsToLogin(req, resp);
-					break;
-				case INTERNAL_SERVER_ERROR:
-					resp.setStatus(
-							HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-					LOGGER.error("Error deleting phenotype " + propId, e);
-					ResourceBundle messages = 
-							(ResourceBundle) req.getAttribute("messages");
-					String msg = 
-							messages.getString("deletePhenotype.error.internalServerError");
-					resp.getWriter().write(msg);
-					break;
-				default:
-					LOGGER.debug("Deleting phenotype {} failed", propId, e);
-					resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-					resp.getWriter().write(e.getMessage());
+			try {
+				switch (e.getResponseStatus()) {
+					case UNAUTHORIZED:
+						this.authenticationSupport.needsToLogin(req, resp);
+						break;
+					case INTERNAL_SERVER_ERROR:
+						resp.setStatus(
+								HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+						LOGGER.error("Error deleting phenotype " + propId, e);
+						ResourceBundle messages
+								= (ResourceBundle) req.getAttribute("messages");
+						String msg
+								= messages.getString("deletePhenotype.error.internalServerError");
+						resp.getWriter().write(msg);
+						break;
+					default:
+						LOGGER.debug("Deleting phenotype {} failed", propId, e);
+						resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+						resp.getWriter().write(e.getMessage());
+				}
+			} catch (IOException ex) {
+				resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+				LOGGER.error("IO Error writing response status", ex);
+				try {
+					resp.getWriter().write("Internal server error.");
+				} catch (IOException ignore) {
+					LOGGER.error("Error writing the internal server error message: {}", ignore);
+				}
 			}
 		}
 	}

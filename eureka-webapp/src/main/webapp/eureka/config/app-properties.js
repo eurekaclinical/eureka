@@ -7,13 +7,13 @@
     eurekaModule.service('AppPropertiesService',['$http', function($http){
         return {
                     getAppProperties:function() {
-                        return $http.get('proxy-resource/appproperties');
+                        return $http.get('proxy-resource/appproperties/');
             }
         };
     }]);
 
     var appProperties = {
-        dataEndpoint: 'https://localhost:8443/eurekaclinical-user-service/api/protected',
+        dataEndpoint: 'proxy-resource',
         filterEndpoint: 'protected/jstree3_searchsystemlist'
     };
 

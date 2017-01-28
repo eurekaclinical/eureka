@@ -128,7 +128,7 @@ window.eureka.editor = new function () {
 							},
 							error: function (data, statusCode) {
 								var $errorDialog = $('<div></div>')
-									.html(data.responseText)
+									.html(window.eureka.util.sanitizeResponseText(data.responseText))
 									.dialog({
 										title: "Error Deleting Data Element",
 										buttons: {
@@ -518,12 +518,14 @@ window.eureka.editor = new function () {
 		$.ajax({
 			type: "POST",
 			url: 'saveprop',
+			processData: false,
+            contentType: 'application/json; charset=UTF-8',
 			data: JSON.stringify(postData),
 			success: function (data) {
 				window.location.href = 'editorhome'
 			},
 			error: function (data, statusCode, errorThrown) {
-				var content = 'Error while saving ' + postData.displayName + '. ' + data.responseText + '. Status Code: ' + statusCode;
+				var content = 'Error while saving ' + postData.displayName + '. ' + window.eureka.util.sanitizeResponseText(data.responseText) + '. Status Code: ' + statusCode;
 				$('#errorModal').find('#errorContent').html(content);
 				$('#errorModal').modal('show');
 				if (errorThrown != null) {

@@ -40,11 +40,10 @@ package edu.emory.cci.aiw.cvrg.eureka.common.authentication;
  * #L%
  */
 
-import org.eurekaclinical.eureka.client.comm.User;
-import org.eurekaclinical.eureka.client.comm.UserRequest;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.UserEntity;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
+import org.eurekaclinical.common.comm.User;
 import org.jasig.cas.client.authentication.AttributePrincipal;
 
 /**
@@ -56,8 +55,6 @@ public interface UserSupport {
 	AttributePrincipal getUserPrincipal(HttpServletRequest request);
 
 	Map<String, Object> getUserPrincipalAttributes(HttpServletRequest request);
-
-	boolean isSameUser(HttpServletRequest servletRequest, UserRequest userRequest);
 
 	boolean isSameUser(HttpServletRequest servletRequest, User user);
 

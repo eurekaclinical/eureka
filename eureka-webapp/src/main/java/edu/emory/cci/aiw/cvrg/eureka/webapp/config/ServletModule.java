@@ -52,7 +52,9 @@ import edu.emory.cci.aiw.cvrg.eureka.servlet.proposition.*;
 import java.util.HashMap;
 import java.util.Map;
 import org.eurekaclinical.common.config.AbstractServletModule;
+import org.eurekaclinical.common.servlet.DestroySessionServlet;
 import org.eurekaclinical.common.servlet.LogoutServlet;
+import org.eurekaclinical.common.servlet.ProxyServlet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -100,8 +102,9 @@ class ServletModule extends AbstractServletModule {
 	@Override
 	protected void setupServlets() {
 
-		bind(ProxyServlet.class).in(Singleton.class);
 		serve("/proxy-resource/*").with(ProxyServlet.class);
+		
+		serve("/destroy-session").with(DestroySessionServlet.class);  
 
 		bind(ForgotPasswordServlet.class).in(Singleton.class);
 		serve("/forgot_password").with(ForgotPasswordServlet.class);

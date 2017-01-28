@@ -39,67 +39,75 @@ package edu.emory.cci.aiw.cvrg.eureka.common.comm;
  * <http://www.gnu.org/licenses/gpl-3.0.html>.
  * #L%
  */
-
 /**
  *
  * @author Miao Ai
  */
 public class AppProperties {
+
 	private AppPropertiesModes modes;
 	private AppPropertiesLinks links;
 	private AppPropertiesRegistration registration;
+
 	/**
 	 * Constructor.
 	 *
 	 */
 	public AppProperties() {
-	}     
-        /**
+	}
+
+	/**
 	 * Gets the AppPropertiesModes.
 	 *
 	 * @return modes.
 	 */
-        public AppPropertiesModes getAppPropertiesModes() {
-                return this.modes;
-        }        
-        /**
+	public AppPropertiesModes getAppPropertiesModes() {
+		return this.modes;
+	}
+
+	/**
 	 * Gets the AppPropertiesLinks.
 	 *
 	 * @return links.
 	 */
-        public AppPropertiesLinks getAppPropertiesLinks() {
-                return this.links;
-        }  
-        /**
+	public AppPropertiesLinks getAppPropertiesLinks() {
+		return this.links;
+	}
+
+	/**
+	 * Sets the modes status.
+	 *
+	 * @param inModes
+	 */
+	public void setAppPropertiesModes(AppPropertiesModes inModes) {
+		this.modes = inModes;
+	}
+
+	/**
+	 * Sets the links status.
+	 *
+	 * @param inLinks
+	 */
+	public void setAppPropertiesLinks(AppPropertiesLinks inLinks) {
+		this.links = inLinks;
+	}
+
+	/**
+	 * 	Sets the registration status. 	
+	 * 	@param inRegistration Gets the AppPropertiesRegistration. 
+	 *	@return registration.
+	 */
+	public void setAppPropertiesRegistration(AppPropertiesRegistration inRegistration) {
+		this.registration = inRegistration;
+	}
+
+	/**
 	 * Gets the AppPropertiesRegistration.
 	 *
 	 * @return registration.
 	 */
-        public AppPropertiesRegistration getAppPropertiesRegistration() {
-                return this.registration;
-        }    
-        /**
-	 * Sets the modes status.
-	 * 
-	 * @param inModes
-	 */
-        public void setAppPropertiesModes(AppPropertiesModes inModes) {
-                this.modes = inModes;           
-        }    
-	/**
-	 * Sets the links status.
-	 * 
-	 * @param inLinks
-	 */
-        public void setAppPropertiesLinks(AppPropertiesLinks inLinks) {
-                this.links = inLinks;           
-        }  
-	/**
-	 * Sets the registration status.
-	 * 
-	 * @param inRegistration
-	 */
-        public void setAppPropertiesRegistration(AppPropertiesRegistration inRegistration) {
-                this.registration = inRegistration;           
-        }          
+	public AppPropertiesRegistration getAppPropertiesRegistration() {
+		return this.registration;
+	}
+
 }
