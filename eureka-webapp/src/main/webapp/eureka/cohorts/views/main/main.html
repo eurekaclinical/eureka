@@ -1,3 +1,26 @@
+<style>
+.myGrid {
+    width: 800px;
+    height: 250px;
+  }
+</style>		
+        
+        
+        <div class="row">
+			<div class="col-sm-12">
+				<h3>Cohorts</h3>
+				<p>Define a cohort to identify the patient population in your datasets.
+				</p>
+				<a href="editcohort" class="btn btn-primary"><span class="glyphicon glyphicon-plus-sign"></span>Define New Cohort
+				</a>
+
+                <div ui-grid="cohorts.gridOptions" ui-grid-edit class="grid"></div>
+
+			</div>
+		</div>
+
+
+
 <div layout>
     <md-content flex layout-padding>
         <md-card>
@@ -32,7 +55,7 @@
 
         <!-- begin md-data-table -->
         <md-data-table-toolbar ng-hide="cohorts.selected.length || cohorts.filter.show">
-            <h2 class="md-title">Cohorts</h2>
+            <h2 class="md-title">Cohortsxx</h2>
             <div flex></div>
             <md-button class="md-icon-button" ng-click="cohorts.filter.show = true">
                 <i class="material-icons md-dark">search</i>

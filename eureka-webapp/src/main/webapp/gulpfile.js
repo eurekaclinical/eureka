@@ -129,7 +129,7 @@ gulp.task('serve', ['bower', 'browser-sync', 'less'], function () {
 
 gulp.task('compile:html', ['less', 'inject-hash'], function() {
     return gulp.src('build/injected/index.html')
-        .pipe(useref({ searchPath: ['bower_components', 'assets', 'build', '.'] }))
+        .pipe(useref({ searchPath: ['bower_components', 'eureka', 'assets', 'build', '.'] }))
         .pipe(gulpif('*.js', uglify()))
         .pipe(gulpif('*.css', cleanCSS()))
         .pipe(gulp.dest('build'));

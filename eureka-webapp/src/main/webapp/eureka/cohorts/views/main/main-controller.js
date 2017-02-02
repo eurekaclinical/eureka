@@ -50,6 +50,7 @@
 
         function success(cohorts) {
             vm.cohortsList = cohorts;
+            vm.gridOptions.data = cohorts;
         }
 
         vm.removeFilter = function () {
@@ -75,6 +76,18 @@
         vm.onPaginationChange = function () {
             return CohortService.getCohorts(vm.query);
         };
+
+        // table options JS
+        vm.gridOptions = {
+        enableSorting: true,
+        columnDefs: [
+          { name:'Name', field: 'name' },
+          { name:'Descripton', field: 'descripton' },
+          { name:'Type', field: 'type'},
+          { name:'Created', field: 'created_at', enableCellEdit:false}
+        ],
+        data: []
+      };
 
         CohortService.getCohorts().then(success, displayError);
 

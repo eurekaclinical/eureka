@@ -39,6 +39,7 @@
         'ui.tree',
         'angularValidator',
         'ngMessages',
+        'ui.grid',
         'eureka.cohorts',
         'eureka.phenotypes',
         'eureka.help',
