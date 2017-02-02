@@ -71,13 +71,15 @@ public class ProtempaDestinationFactory {
 
 	private final EtlProperties etlProperties;
 	private final DestinationDao destinationDao;
-	private final DeidPerPatientParamsDao destinationOffsetDao;
+	private final DeidPerPatientParamsDao deidPerPatientParamsDao;
+	private final EurekaDeidConfigFactory eurekaDeidConfigFactory;
 
 	@Inject
-	public ProtempaDestinationFactory(DestinationDao inDestinationDao, DeidPerPatientParamsDao inDestinationOffsetDao, EtlProperties etlProperties) {
+	public ProtempaDestinationFactory(DestinationDao inDestinationDao, DeidPerPatientParamsDao inDeidPerPatientParamsDao, EtlProperties etlProperties, EurekaDeidConfigFactory inEurekaDeidConfigFactory) {
 		this.destinationDao = inDestinationDao;
-		this.destinationOffsetDao = inDestinationOffsetDao;
+		this.deidPerPatientParamsDao = inDeidPerPatientParamsDao;
 		this.etlProperties = etlProperties;
+		this.eurekaDeidConfigFactory = inEurekaDeidConfigFactory;
 	}
 
 	public org.protempa.dest.Destination getInstance(Long destId, boolean updateData) throws DestinationInitException {
@@ -108,10 +110,9 @@ public class ProtempaDestinationFactory {
 
 			if (dest.isDeidentificationEnabled()) {
 				if (updateData) {
-					this.destinationOffsetDao.deleteAll(dest);
+					this.deidPerPatientParamsDao.deleteAll(dest);
 				}
-				EurekaDeidConfigFactory deidConfigFactory = new EurekaDeidConfigFactory(dest, this.destinationOffsetDao);
-				EurekaDeidConfig deidConfig = deidConfigFactory.getInstance();
+				EurekaDeidConfig deidConfig = this.eurekaDeidConfigFactory.getInstance(dest);
 				return new DeidentifiedDestination(result, deidConfig);
 			} else {
 				return result;

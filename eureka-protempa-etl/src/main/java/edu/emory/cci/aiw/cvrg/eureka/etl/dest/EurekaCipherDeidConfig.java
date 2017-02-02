@@ -43,6 +43,7 @@ package edu.emory.cci.aiw.cvrg.eureka.etl.dest;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.CipherEncryptionAlgorithm;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.DeidPerPatientParams;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.DestinationEntity;
+import edu.emory.cci.aiw.cvrg.eureka.etl.dao.EurekaDeidConfigDao;
 import java.security.Key;
 import java.security.NoSuchAlgorithmException;
 import javax.crypto.KeyGenerator;
@@ -53,26 +54,26 @@ import org.protempa.dest.deid.CipherDeidConfig;
 import org.protempa.dest.deid.CipherEncryption;
 import org.protempa.dest.deid.EncryptionInitException;
 import org.protempa.dest.deid.KeyCreateException;
-import edu.emory.cci.aiw.cvrg.eureka.etl.dao.DeidPerPatientParamsDao;
 
 /**
  *
  * @author Andrew Post
  */
-public class EurekaCipherDeidConfig extends EurekaDeidConfig implements CipherDeidConfig {
+class EurekaCipherDeidConfig implements EurekaDeidConfig, CipherDeidConfig {
 
 	private static final Base64 BASE64 = new Base64();
 
-	private final String cipherAlgorithm;
-	private final String keyAlgorithm;
 	private final CipherEncryptionAlgorithm encryptionAlgorithm;
 	private KeyGenerator keyGenerator;
+	private final EurekaDeidConfigDao eurekaDeidConfigDao;
+	private final DestinationEntity destination;
 
-	public EurekaCipherDeidConfig(DestinationEntity inDestination, CipherEncryptionAlgorithm encryptionAlgorithm, DeidPerPatientParamsDao inDestinationOffsetDao) {
-		super(inDestination, inDestinationOffsetDao);
-		this.cipherAlgorithm = encryptionAlgorithm.getCipherAlgorithm();
-		this.keyAlgorithm = encryptionAlgorithm.getKeyAlgorithm();
-		this.encryptionAlgorithm = encryptionAlgorithm;
+	EurekaCipherDeidConfig(DestinationEntity inDestination, EurekaDeidConfigDao inEurekaDeidConfigDao) {
+		assert inDestination != null : "inDestination cannot be null";
+		assert inEurekaDeidConfigDao != null : "inEurekaDeidConfigDao cannot be null";
+		this.destination = inDestination;
+		this.encryptionAlgorithm = (CipherEncryptionAlgorithm) inDestination.getEncryptionAlgorithm();
+		this.eurekaDeidConfigDao = inEurekaDeidConfigDao;
 	}
 
 	@Override
@@ -82,20 +83,16 @@ public class EurekaCipherDeidConfig extends EurekaDeidConfig implements CipherDe
 
 	@Override
 	public String getCipherAlgorithm() {
-		return cipherAlgorithm;
+		return this.encryptionAlgorithm.getCipherAlgorithm();
 	}
 
 	@Override
 	public String getKeyAlgorithm() {
-		return keyAlgorithm;
+		return this.encryptionAlgorithm.getKeyAlgorithm();
 	}
 
 	@Override
 	public Key getKey(String keyId) throws KeyCreateException {
-		if (this.keyAlgorithm == null) {
-			return null;
-		}
-
 		synchronized (this.encryptionAlgorithm) {
 			if (this.keyGenerator == null) {
 				try {
@@ -105,19 +102,28 @@ public class EurekaCipherDeidConfig extends EurekaDeidConfig implements CipherDe
 				}
 			}
 		}
-		DeidPerPatientParamsDao deidPerPatientParamDao = getDeidPerPatientParamDao();
-		DeidPerPatientParams byKeyId = getOrCreatePatientParams(keyId);
+		DeidPerPatientParams byKeyId = this.eurekaDeidConfigDao.getOrCreatePatientParams(keyId, this.destination);
 		String keyStr = byKeyId.getCipherKey();
 		if (keyStr == null) {
 			SecretKey generatedKey = this.keyGenerator.generateKey();
 			byte[] encoded = generatedKey.getEncoded();
 			byKeyId.setCipherKey(BASE64.encodeToString(encoded));
-			deidPerPatientParamDao.update(byKeyId);
+			this.eurekaDeidConfigDao.update(byKeyId);
 			return generatedKey;
 		} else {
 			byte[] encoded = BASE64.decode(keyStr);
-			return new SecretKeySpec(encoded, this.keyAlgorithm);
+			return new SecretKeySpec(encoded, this.encryptionAlgorithm.getKeyAlgorithm());
 		}
+	}
+
+	@Override
+	public Integer getOffset(String keyId) {
+		return this.eurekaDeidConfigDao.getOffset(keyId, this.destination);
+	}
+
+	@Override
+	public void close() throws Exception {
+		this.eurekaDeidConfigDao.close();
 	}
 
 }

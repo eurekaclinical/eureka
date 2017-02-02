@@ -1,5 +1,7 @@
 package edu.emory.cci.aiw.cvrg.eureka.etl.dest;
 
+import org.protempa.dest.deid.DeidConfig;
+
 /*
  * #%L
  * Eureka Protempa ETL
@@ -39,74 +41,11 @@ package edu.emory.cci.aiw.cvrg.eureka.etl.dest;
  * <http://www.gnu.org/licenses/gpl-3.0.html>.
  * #L%
  */
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.DeidPerPatientParams;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.DestinationEntity;
-import java.io.IOException;
-import java.security.SecureRandom;
-import java.util.Random;
-import org.protempa.dest.deid.DeidConfig;
-import edu.emory.cci.aiw.cvrg.eureka.etl.dao.DeidPerPatientParamsDao;
 
 /**
  *
  * @author Andrew Post
  */
-public abstract class EurekaDeidConfig implements DeidConfig {
-
-	private static final int MAX_OFFSET_SECONDS = 364 * 24 * 60 * 60;
-
-	private final DeidPerPatientParamsDao deidPerPatientParamDao;
-
-	private final Random random;
-	private final DestinationEntity destination;
-
-	EurekaDeidConfig(DestinationEntity inDestination, DeidPerPatientParamsDao inDeidPerPatientParamDao) {
-		this.destination = inDestination;
-		this.deidPerPatientParamDao = inDeidPerPatientParamDao;
-		this.random = new SecureRandom();
-		this.random.setSeed(System.currentTimeMillis());
-	}
-
-	@Override
-	public Integer getOffset(String keyId) {
-		DeidPerPatientParams deidPerPatientParams = getOrCreatePatientParams(keyId);
-		Integer offset = deidPerPatientParams.getOffset();
-		if (offset != null) {
-			return offset;
-		} else {
-			int offsetInSeconds = this.random.nextInt(MAX_OFFSET_SECONDS);
-			if (!this.random.nextBoolean()) {
-				offsetInSeconds = offsetInSeconds * -1;
-			}
-			deidPerPatientParams.setOffset(offsetInSeconds);
-			this.deidPerPatientParamDao.update(deidPerPatientParams);
-			return offsetInSeconds;
-		}
-	}
-
-	protected DeidPerPatientParams getOrCreatePatientParams(String keyId) {
-		synchronized (this.deidPerPatientParamDao) {
-			DeidPerPatientParams offset = this.deidPerPatientParamDao.getByKeyId(keyId);
-			if (offset == null) {
-				offset = new DeidPerPatientParams();
-				offset.setKeyId(keyId);
-				offset.setDestination(this.destination);
-				this.deidPerPatientParamDao.create(offset);
-			}
-			return offset;
-		}
-	}
-	
-	@Override
-	public void close() throws IOException {
-	}
-	
-	protected DeidPerPatientParamsDao getDeidPerPatientParamDao() {
-		return this.deidPerPatientParamDao;
-	}
-	
-	protected Random getRandom() {
-		return this.random;
-	}
+public interface EurekaDeidConfig extends DeidConfig {
 
 }
