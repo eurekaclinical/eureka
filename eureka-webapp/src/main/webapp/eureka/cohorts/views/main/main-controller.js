@@ -13,10 +13,11 @@
         .module('eureka.cohorts')
         .controller('cohorts.MainCtrl', MainCtrl);
         
-    MainCtrl.$inject = ['CohortService'];
+    MainCtrl.$inject = ['CohortService', 'NgTableParams'];
     
-    function MainCtrl(CohortService) {
+    function MainCtrl(CohortService, NgTableParams) {
         var vm = this;
+        var copyData = [];
         vm.remove = remove;
 
         function remove(key) {
@@ -51,6 +52,9 @@
         function success(cohorts) {
             vm.cohortsList = cohorts;
             vm.gridOptions.data = cohorts;
+            copyData = cohorts;
+             // NG Table
+        vm.tableParams = new NgTableParams({}, { dataset: copyData});
         }
 
         vm.removeFilter = function () {
@@ -77,17 +81,18 @@
             return CohortService.getCohorts(vm.query);
         };
 
-        // table options JS
+        // UI-Grid
         vm.gridOptions = {
-        enableSorting: true,
-        columnDefs: [
-          { name:'Name', field: 'name' },
-          { name:'Descripton', field: 'descripton' },
-          { name:'Type', field: 'type'},
-          { name:'Created', field: 'created_at', enableCellEdit:false}
-        ],
-        data: []
-      };
+            enableSorting: true,
+            columnDefs: [
+                { name:'Name', field: 'name' },
+                { name:'Descripton', field: 'descripton' },
+                { name:'Type', field: 'type'},
+                { name:'Created', field: 'created_at', enableCellEdit:false}
+            ],
+            data: []
+        };
+       
 
         CohortService.getCohorts().then(success, displayError);
 

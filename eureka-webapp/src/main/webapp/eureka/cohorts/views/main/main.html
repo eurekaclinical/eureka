@@ -19,6 +19,19 @@
 			</div>
 		</div>
 
+        <div class="row">
+            <div class="col-md-12">
+            <table ng-table="cohorts.tableParams" class="table" show-filter="true">
+                <tr ng-repeat="user in $data">
+                    <td title="'Name'" filter="{ name: 'text'}" sortable="'name'">
+                        {{user.name}}</td>
+                    <td title="'Description'" filter="{ description: 'text'}" sortable="'description'">
+                        {{user.description}}</td>
+                </tr>
+</table>        
+            </div>
+        </div>
+
 
 
 <div layout>
