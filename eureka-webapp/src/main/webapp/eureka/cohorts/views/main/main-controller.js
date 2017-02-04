@@ -54,7 +54,7 @@
             vm.gridOptions.data = cohorts;
             copyData = cohorts;
              // NG Table
-        vm.tableParams = new NgTableParams({}, { dataset: copyData});
+            vm.tableParams = new NgTableParams({}, { dataset: copyData});
         }
 
         vm.removeFilter = function () {
@@ -86,9 +86,14 @@
             enableSorting: true,
             columnDefs: [
                 { name:'Name', field: 'name' },
-                { name:'Descripton', field: 'descripton' },
+                { name:'Descripton', field: 'description' },
                 { name:'Type', field: 'type'},
-                { name:'Created', field: 'created_at', enableCellEdit:false}
+                { name:'Created', field: 'created_at', enableCellEdit:false},
+                { name: ' ',  field: 'edit',
+                  cellTemplate: '<a href="${editUrl}" title="Edit">'+
+                  '<span class="glyphicon glyphicon-pencil edit-icon" title="Edit"></span></a> '+
+                  '<span class="glyphicon glyphicon-remove delete-icon" title="Delete"></span>'
+                }
             ],
             data: []
         };
