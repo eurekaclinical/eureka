@@ -18,6 +18,146 @@
     function MainCtrl(CohortService, NgTableParams) {
         var vm = this;
         var copyData = [];
+        var testData = [
+            {
+                'name': 'Vital1',
+                'description': 'Description Data',
+                'type': 'COHORT',
+                'created_at': 1486327831997
+            },
+            {
+                'name': 'Vital2',
+                'description': 'Description Data',
+                'type': 'COHORT',
+                'created_at': 1486327831997
+            },
+            {
+                'name': 'Vital3',
+                'description': 'Description Data',
+                'type': 'COHORT',
+                'created_at': 1486327831997
+            },
+            {
+                'name': 'Test1',
+                'description': 'Description Data',
+                'type': 'COHORT',
+                'created_at': 1486327831997
+            },
+            {
+                'name': 'Test2',
+                'description': 'Description Data',
+                'type': 'COHORT',
+                'created_at': 1486327831997
+            },
+            {
+                'name': 'Patient Test',
+                'description': 'Description Data',
+                'type': 'COHORT',
+                'created_at': 1486327831997
+            },
+            {
+                'name': 'Updated Patient',
+                'description': 'Description Data',
+                'type': 'COHORT',
+                'created_at': 1486327831997
+            },
+            {
+                'name': 'Procedure Codes',
+                'description': 'Description Data',
+                'type': 'COHORT',
+                'created_at': 1486327831997
+            },
+            {
+                'name': 'Procedure 12',
+                'description': 'Description Data',
+                'type': 'COHORT',
+                'created_at': 1486327831997
+            },
+            {
+                'name': 'Test1',
+                'description': 'Description Data',
+                'type': 'COHORT',
+                'created_at': 1486327831997
+            },
+            {
+                'name': 'ICD9',
+                'description': 'Description Data',
+                'type': 'COHORT',
+                'created_at': 1486327831997
+            },
+            {
+                'name': 'ICD10',
+                'description': 'Description Data',
+                'type': 'COHORT',
+                'created_at': 1486327831997
+            },
+            {
+                'name': 'Test ICD10',
+                'description': 'Description Data',
+                'type': 'COHORT',
+                'created_at': 1486327831997
+            },
+            {
+                'name': 'Test ICD9',
+                'description': 'Description Data',
+                'type': 'COHORT',
+                'created_at': 1486327831997
+            },
+            {
+                'name': 'Test1',
+                'description': 'Description Data',
+                'type': 'COHORT',
+                'created_at': 1486327831997
+            },
+            {
+                'name': 'Test1',
+                'description': 'Description Data',
+                'type': 'COHORT',
+                'created_at': 1486327831997
+            },
+            {
+                'name': 'Test1',
+                'description': 'Description Data',
+                'type': 'COHORT',
+                'created_at': 1486327831997
+            },
+            {
+                'name': 'Test1',
+                'description': 'Description Data',
+                'type': 'COHORT',
+                'created_at': 1486327831997
+            },
+            {
+                'name': 'Test1',
+                'description': 'Description Data',
+                'type': 'COHORT',
+                'created_at': 1486327831997
+            },
+            {
+                'name': 'Test1',
+                'description': 'Description Data',
+                'type': 'COHORT',
+                'created_at': 1486327831997
+            },
+            {
+                'name': 'Test1',
+                'description': 'Description Data Test',
+                'type': 'COHORT',
+                'created_at': 1486327831997
+            },
+            {
+                'name': 'Test1',
+                'description': 'Description Data',
+                'type': 'COHORT',
+                'created_at': 1486327831997
+            },
+            {
+                'name': 'Test1',
+                'description': 'Description Data',
+                'type': 'COHORT',
+                'created_at': 1486327831997
+            }
+            ];
         vm.remove = remove;
 
         function remove(key) {
@@ -51,9 +191,10 @@
 
         function success(cohorts) {
             vm.cohortsList = cohorts;
-            vm.gridOptions.data = cohorts;
-            copyData = cohorts;
-             // NG Table
+            //using dummy data
+            vm.gridOptions.data = testData.concat(cohorts);
+            copyData = testData.concat(cohorts);
+            // NG Table
             vm.tableParams = new NgTableParams({}, { dataset: copyData});
         }
 
@@ -84,6 +225,8 @@
         // UI-Grid
         vm.gridOptions = {
             enableSorting: true,
+            paginationPageSizes: [25, 50, 75],
+            paginationPageSize: 25,
             columnDefs: [
                 { name: ' ',  field: 'edit',
                   cellTemplate: '<a href="${editUrl}" title="Edit">'+
@@ -93,7 +236,7 @@
                 { name:'Name', field: 'name' },
                 { name:'Descripton', field: 'description' },
                 { name:'Type', field: 'type'},
-                { name:'Created', field: 'created_at', enableCellEdit:false}
+                { name:'Created', field: 'created_at', enableCellEdit:false, cellFilter: 'date:"longDate"'}
             ],
             data: []
         };

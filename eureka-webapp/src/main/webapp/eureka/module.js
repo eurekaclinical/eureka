@@ -40,6 +40,7 @@
         'angularValidator',
         'ngMessages',
         'ui.grid',
+        'ui.grid.pagination',
         'ngTable',
         'eureka.cohorts',
         'eureka.phenotypes',

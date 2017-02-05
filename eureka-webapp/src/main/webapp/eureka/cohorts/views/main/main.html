@@ -17,7 +17,7 @@
 				</a>
                 </p>
                 <!-- ui-grid -->
-                <div ui-grid="cohorts.gridOptions" ui-grid-edit class="grid"></div>
+                <div ui-grid="cohorts.gridOptions" ui-grid-pagination ui-grid-edit class="grid"></div>
 			</div>
 		</div>
         <br><br><br>
@@ -42,7 +42,7 @@
                             {{user.type}}
                         </td>
                         <td title="'Created'" filter="{ created_at: 'text'}" sortable="'created_at'">
-                            {{user.created_at}}
+                            {{user.created_at | date:'MM/dd/yyyy'}}
                         </td>
                     </tr>
                 </table>        
