@@ -1,4 +1,4 @@
-package edu.emory.cci.aiw.cvrg.eureka.etl.dest;
+package edu.emory.cci.aiw.cvrg.eureka.etl.dao;
 
 /*-
  * #%L
@@ -40,14 +40,22 @@ package edu.emory.cci.aiw.cvrg.eureka.etl.dest;
  * #L%
  */
 
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.DeidPerPatientParams;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.DestinationEntity;
+import java.util.Random;
 
 /**
  *
  * @author Andrew Post
  */
-public interface EurekaDeidConfigFactory {
+public interface EurekaDeidConfigDao extends AutoCloseable {
 
-	EurekaDeidConfig getInstance(DestinationEntity inDestination);
+	Integer getOffset(String inKeyId, DestinationEntity inDestination);
+	
+	DeidPerPatientParams getOrCreatePatientParams(String inKeyId, DestinationEntity inDestination);
+	
+	void update(DeidPerPatientParams inDeidPerPatientParams);
+	
+	Random getRandom();
     
 }

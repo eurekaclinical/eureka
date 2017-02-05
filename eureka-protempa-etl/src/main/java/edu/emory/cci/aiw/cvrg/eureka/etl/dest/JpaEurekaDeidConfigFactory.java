@@ -40,62 +40,36 @@ package edu.emory.cci.aiw.cvrg.eureka.etl.dest;
  * #L%
  */
 
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.DeidPerPatientParams;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.CipherEncryptionAlgorithm;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.DestinationEntity;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.EncryptionAlgorithm;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.MessageDigestEncryptionAlgorithm;
 import edu.emory.cci.aiw.cvrg.eureka.etl.dao.EurekaDeidConfigDao;
-import org.protempa.dest.deid.EncryptionInitException;
-import org.protempa.dest.deid.MessageDigestDeidConfig;
-import org.protempa.dest.deid.MessageDigestEncryption;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
 /**
  *
  * @author Andrew Post
  */
-class EurekaMessageDigestDeidConfig implements EurekaDeidConfig, MessageDigestDeidConfig {
-	private final String algorithm;
+@Singleton
+public class JpaEurekaDeidConfigFactory implements EurekaDeidConfigFactory {
 	private final EurekaDeidConfigDao eurekaDeidConfigDao;
-	private final DestinationEntity destination;
-
-	EurekaMessageDigestDeidConfig(DestinationEntity inDestination, EurekaDeidConfigDao inEurekaDeidConfigDao) {
-		assert inDestination != null : "inDestination cannot be null";
-		assert inEurekaDeidConfigDao != null : "inEurekaDeidConfigDao cannot be null";
-		this.destination = inDestination;
-		this.algorithm = ((MessageDigestEncryptionAlgorithm) inDestination.getEncryptionAlgorithm()).getAlgorithm();
+	
+	@Inject
+	public JpaEurekaDeidConfigFactory(EurekaDeidConfigDao inEurekaDeidConfigDao) {
 		this.eurekaDeidConfigDao = inEurekaDeidConfigDao;
-	}
-
-	@Override
-	public MessageDigestEncryption getEncryptionInstance() throws EncryptionInitException {
-		return new MessageDigestEncryption(this);
-	}
-
-	@Override
-	public String getAlgorithm() {
-		return this.algorithm;
 	}
 	
 	@Override
-	public byte[] getSalt(String keyId) {
-		DeidPerPatientParams deidPerPatientParams = this.eurekaDeidConfigDao.getOrCreatePatientParams(keyId, this.destination);
-		byte[] salt = deidPerPatientParams.getSalt();
-		if (salt == null) {
-			salt = new byte[20];
-			this.eurekaDeidConfigDao.getRandom().nextBytes(salt);
-			deidPerPatientParams.setSalt(salt);
-			this.eurekaDeidConfigDao.update(deidPerPatientParams);
+	public EurekaDeidConfig getInstance(DestinationEntity inDestination) {
+		EncryptionAlgorithm encryptionAlgorithm = inDestination.getEncryptionAlgorithm();
+		if (encryptionAlgorithm instanceof MessageDigestEncryptionAlgorithm) {
+			return new EurekaMessageDigestDeidConfig(inDestination, this.eurekaDeidConfigDao);
+		} else if (encryptionAlgorithm instanceof CipherEncryptionAlgorithm) {
+			return new EurekaCipherDeidConfig(inDestination, this.eurekaDeidConfigDao);
+		} else {
+			return null;
 		}
-		return salt;
 	}
-
-	@Override
-	public Integer getOffset(String inKeyId) {
-		return this.eurekaDeidConfigDao.getOffset(inKeyId, this.destination);
-	}
-
-	@Override
-	public void close() throws Exception {
-		this.eurekaDeidConfigDao.close();
-	}
-
 }
