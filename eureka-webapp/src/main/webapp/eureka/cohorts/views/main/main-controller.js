@@ -85,15 +85,15 @@
         vm.gridOptions = {
             enableSorting: true,
             columnDefs: [
-                { name:'Name', field: 'name' },
-                { name:'Descripton', field: 'description' },
-                { name:'Type', field: 'type'},
-                { name:'Created', field: 'created_at', enableCellEdit:false},
                 { name: ' ',  field: 'edit',
                   cellTemplate: '<a href="${editUrl}" title="Edit">'+
                   '<span class="glyphicon glyphicon-pencil edit-icon" title="Edit"></span></a> '+
                   '<span class="glyphicon glyphicon-remove delete-icon" title="Delete"></span>'
-                }
+                },
+                { name:'Name', field: 'name' },
+                { name:'Descripton', field: 'description' },
+                { name:'Type', field: 'type'},
+                { name:'Created', field: 'created_at', enableCellEdit:false}
             ],
             data: []
         };
