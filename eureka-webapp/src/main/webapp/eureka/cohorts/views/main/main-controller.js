@@ -225,8 +225,8 @@
         // UI-Grid
         vm.gridOptions = {
             enableSorting: true,
-            paginationPageSizes: [25, 50, 75],
-            paginationPageSize: 25,
+            paginationPageSizes: [10, 20, 30],
+            paginationPageSize: 10,
             columnDefs: [
                 { name: ' ',  field: 'edit',
                   cellTemplate: '<a href="${editUrl}" title="Edit">'+
