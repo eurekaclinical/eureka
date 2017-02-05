@@ -7,7 +7,7 @@ var gulp = require('gulp'),
     jshint = require('gulp-jshint'),
     Server = require('karma').Server,
     browserSync = require('browser-sync').create(),
-    wiredep = require('wiredep').stream,
+    //wiredep = require('wiredep').stream,
     opn = require('opn'),
     gulpDocs = require('gulp-ngdocs'),
     htmlmin = require('gulp-htmlmin'),
@@ -33,7 +33,7 @@ process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 
 gulp.task('bower', function () {
   gulp.src('./index.html')
-    .pipe(wiredep())
+    //.pipe(wiredep())
     .pipe(gulp.dest('./'));
 });
 
