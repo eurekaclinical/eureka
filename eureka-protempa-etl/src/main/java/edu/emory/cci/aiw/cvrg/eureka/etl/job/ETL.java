@@ -130,7 +130,7 @@ public class ETL {
 				eurekaDestination
 						= new Destinations(this.etlProperties, job.getUser(),
 								this.destinationDao, this.groupDao)
-						.getOne(job.getDestination().getName());
+								.getOne(job.getDestination().getName());
 				protempaDestination
 						= this.protempaDestFactory.getInstance(eurekaDestination.getId(), updateData);
 				transaction.commit();
@@ -157,12 +157,12 @@ public class ETL {
 			protempa.addEventListener(new ProtempaEventListener() {
 				@Override
 				public void eventFired(ProtempaEvent protempaEvent) {
-					JobEventEntity protempaEvt = new JobEventEntity();
-					protempaEvt.setJob(job);
-					protempaEvt.setTimeStamp(protempaEvent.getTimestamp());
-					protempaEvt.setStatus(JobStatus.STARTED);
-					protempaEvt.setMessage(protempaEvent.getDescription());
 					synchronized (job) {
+						JobEventEntity protempaEvt = new JobEventEntity();
+						protempaEvt.setJob(job);
+						protempaEvt.setTimeStamp(protempaEvent.getTimestamp());
+						protempaEvt.setStatus(JobStatus.STARTED);
+						protempaEvt.setMessage(protempaEvent.getType() + " " + protempaEvent.getDescription());
 						jobDao.update(job);
 					}
 				}
