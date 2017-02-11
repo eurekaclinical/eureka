@@ -40,8 +40,10 @@ package edu.emory.cci.aiw.cvrg.eureka.etl.dest;
  * #L%
  */
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.PatientSetExtractorDestinationEntity;
+import java.util.List;
 import org.protempa.DataSource;
 import org.protempa.KnowledgeSource;
+import org.protempa.ProtempaEventListener;
 import org.protempa.dest.AbstractDestination;
 import org.protempa.dest.QueryResultsHandler;
 import org.protempa.dest.QueryResultsHandlerInitException;
@@ -63,7 +65,7 @@ public class PatientSetExtractorDestination extends AbstractDestination {
 	}
 
 	@Override
-	public QueryResultsHandler getQueryResultsHandler(Query query, DataSource dataSource, KnowledgeSource knowledgeSource) throws QueryResultsHandlerInitException {
+	public QueryResultsHandler getQueryResultsHandler(Query query, DataSource dataSource, KnowledgeSource knowledgeSource, List<? extends ProtempaEventListener> eventListeners) throws QueryResultsHandlerInitException {
 		if (query.getQueryMode() == QueryMode.UPDATE) {
 			throw new QueryResultsHandlerInitException("Update mode not supported");
 		}

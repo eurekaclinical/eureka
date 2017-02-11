@@ -72,6 +72,8 @@ import java.io.IOException;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 import org.eurekaclinical.eureka.client.comm.JobStatus;
+import org.protempa.ProtempaEvent;
+import org.protempa.ProtempaEventListener;
 import org.protempa.backend.Configuration;
 import org.protempa.backend.InvalidPropertyNameException;
 import org.protempa.backend.InvalidPropertyValueException;
@@ -152,6 +154,19 @@ public class ETL {
 			LOGGER.trace("Constructed Protempa query {}", q);
 
 			Query query = protempa.buildQuery(q);
+			protempa.addEventListener(new ProtempaEventListener() {
+				@Override
+				public void eventFired(ProtempaEvent protempaEvent) {
+					JobEventEntity protempaEvt = new JobEventEntity();
+					protempaEvt.setJob(job);
+					protempaEvt.setTimeStamp(protempaEvent.getTimestamp());
+					protempaEvt.setStatus(JobStatus.STARTED);
+					protempaEvt.setMessage(protempaEvent.getDescription());
+					synchronized (job) {
+						jobDao.update(job);
+					}
+				}
+			});
 			protempa.execute(query, protempaDestination);
 		} catch (DataSourceFailedDataValidationException ex) {
 			logValidationEvents(job, ex.getValidationEvents(), ex);
