@@ -1,0 +1,22 @@
+             <table ng-table="tableParameters" class="table" show-filter="true">
+                    <tr ng-repeat="user in tableData">
+                        <td>
+                            <a href="#" title="Edit">
+                                <span class="glyphicon glyphicon-pencil edit-icon" title="Edit"></span>
+                            </a>
+                            <span class="glyphicon glyphicon-remove delete-icon" title="Delete"></span>
+                        </td>
+                        <td title="'Name'" filter="{ name: 'text'}" sortable="'name'">
+                            {{user.name}}
+                        </td>
+                        <td title="'Description'" filter="{ description: 'text'}" sortable="'description'">
+                            {{user.description}}
+                        </td>
+                        <td title="'Type'" filter="{ type: 'text'}" sortable="'type'">
+                            {{user.type}}
+                        </td>
+                        <td title="'Created'" filter="{ created_at: 'text'}" sortable="'created_at'">
+                            {{user.created_at | date:'MM/dd/yyyy'}}
+                        </td>
+                    </tr>
+                </table>  
