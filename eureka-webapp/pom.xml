@@ -65,6 +65,7 @@
 						build/**,
 						bower_components/**,
 						WEB-INF/**,
+						eureka/**,
 						META-INF/**,
 						*.jsp,
 						protected/**,
@@ -160,21 +161,12 @@
 						</configuration>
 					</execution>
 					<execution>
-						<id>bower install</id>
-						<goals>
-							<goal>bower</goal>
-						</goals>
-						<configuration>
-							<arguments>install</arguments>
-						</configuration>
-					</execution>
-					<execution>
-						<id>gulp build</id>
+						<id>gulp less</id>
 						<goals>
 							<goal>gulp</goal>
 						</goals>
 						<configuration>
-							<arguments>build</arguments>
+							<arguments>less</arguments>
 						</configuration>
 					</execution>
 				</executions>

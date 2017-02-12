@@ -13,15 +13,12 @@
         <link href="//fonts.googleapis.com/css?family=Source+Sans+Pro:400,600,700,400italic,600italic,700italic" rel="stylesheet" type="text/css">
         <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
-        <!-- build:css vendor.min.css -->
-        <!--<link rel="stylesheet" href="assets/css/normalize.css"/>-->
-        <!-- bower:css -->
-        <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css" />
-        <link rel="stylesheet" href="bower_components/angular-ui-tree/dist/angular-ui-tree.min.css" />
-        <link rel="stylesheet" href="bower_components/font-awesome/css/font-awesome.css" />
-        <!-- endbower -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"/>
+         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-tree/2.22.2/angular-ui-tree.min.css" />
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
+
         <link rel="stylesheet" type="text/css" href="assets/css/bootstrap-social-20150401.css">
-        <!-- endbuild -->
+
 
           <link rel="stylesheet" href="https://cdn.rawgit.com/angular-ui/bower-ui-grid/master/ui-grid.min.css"/>
 
@@ -64,7 +61,7 @@
                                 Cohorts
                             </a>
                             <!-- Remove to test new Angular tables
-                            <a ui-sref="cohorts">
+                            <a ui-sref="testCohorts">
                                 <i class="fa fa-pencil"></i>
                                 Angular Cohorts
                             </a>  -->
@@ -154,37 +151,84 @@
         </div>
 
 
+    
         <script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
-        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.0/angular.min.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.7/angular.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-router/0.2.15/angular-ui-router.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-messages/1.4.14/angular-messages.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-validator/1.2.9/angular-validator.min.js"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-tree/2.9.0/angular-ui-tree.js"></script>
-         <script src="https://cdn.jsdelivr.net/lodash/3.10.1/lodash.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/lodash/3.10.1/lodash.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.1/angular-mocks.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/ng-flow/2.7.4/ng-flow-standalone.min.js"></script>
-        <script src="https://use.fontawesome.com/5e808755b2.js"></script>
+        
+        
+        
+        <!-- main module -->
+        <script src="eureka/module.js"></script>
+        
+        
+        <!-- Cohorts  -->
+        <script src="eureka/cohorts/module.js"></script>
+        <script src="eureka/cohorts/services/cohort-filter-service.js"></script>
+        <script src="eureka/cohorts/services/cohort-service.js"></script>
+        <script src="eureka/cohorts/services/cohort-tree-service.js"></script>
+        <script src="eureka/cohorts/views/edit/edit-controller.js"></script>
+        <script src="eureka/cohorts/views/main/main-controller.js"></script>
+        <script src="eureka/cohorts/views/new/new-controller.js"></script>
+        
+        
+        <!-- config -->
+        <script src="eureka/config/app-properties.js"></script>
+        
+        
+        <!-- Jobs -->
+        <script src="eureka/jobs/module.js"></script>
+        <script src="eureka/jobs/services/job-service.js"></script>
+        <script src="eureka/jobs/views/main/main-controller.js"></script>
+
+        <!-- Phenotypes  -->
+        <script src="eureka/phenotypes/module.js"></script>
+        <script src="eureka/phenotypes/directives/phenotype-editor/phenotype-editor.js"></script>
+        <script src="eureka/phenotypes/services/phenotype-service.js"></script>
+        <!--<script src="eureka/phenotypes/services/phenotype-service-spec.js"></script> -->
+        <script src="eureka/phenotypes/views/create/create-controller.js"></script>
+        <script src="eureka/phenotypes/views/edit/edit-controller.js"></script>
+        <script src="eureka/phenotypes/views/main/main-controller.js"></script>
+
+        <!--Directives -->
+        <script src="eureka/directives/cohort-members-drop-zone/cohort-members-drop-zone.js"></script>
+        <script src="eureka/directives/cohort-members-drop-zone/cohort-members-drop-zone-ctrl.js"></script>
+        <script src="eureka/directives/cohort-members-tree/cohort-members-tree.js"></script>
+        <script src="eureka/directives/cohort-members-tree/cohort-members-tree-ctrl.js"></script>
+        <script src="eureka/directives/compare-to.js"></script>
+        <script src="eureka/directives/jstree.js"></script>
+        
+        <!--help -->
+        <script src="eureka/help/module.js"></script>
+        
+        <!-- Services  -->
+        <script src="eureka/services/list-drag-and-drop-service.js"></script>
+        <script src="eureka/services/users.js"></script>
+        
+        <!-- Main Views -->
+        <script src="eureka/views/main-controller.js"></script>
+        <script src="eureka/views/main-service.js"></script>
+        
+        <!-- Bootstrap UI -->   
         <script src="//angular-ui.github.io/bootstrap/ui-bootstrap-tpls-2.4.0.js"></script>
+
         <!-- UI Grid-->
         <script src="https://cdn.rawgit.com/angular-ui/bower-ui-grid/master/ui-grid.min.js"></script>
+
         <!-- NG Table  -->
         <script src="https://unpkg.com/ng-table@2.0.2/bundles/ng-table.min.js"></script>
 
-        <!-- build:js vendor.min.js -->
-        <!-- bower:js -->
-
-        <script src="bower_components/tg-angular-validator/dist/angular-validator.js"></script>
-        <!-- endbower -->
-
-
+        <!-- JS tree -->
         <script src="assets/js/jstree-3.1.1.min.js"></script>
         
-        <!-- endbuild -->
 
-        <!-- build:js app.min.js -->
-        <!-- inject:js -->
-        <!-- endinject -->
-        <!-- endbuild -->
 
         <!-- CDN entires leaving angular-validator as bower for now
         <script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
