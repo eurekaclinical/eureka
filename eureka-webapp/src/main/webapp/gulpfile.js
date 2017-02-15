@@ -4,7 +4,6 @@ var gulp = require('gulp'),
     inject = require('gulp-inject')
     babel = require("gulp-babel"),
     concat = require("gulp-concat"),
-    Server = require('karma').Server,
     //wiredep = require('wiredep').stream,
     opn = require('opn'),
     gulpDocs = require('gulp-ngdocs'),
@@ -55,7 +54,7 @@ gulp.task('process-js', ['cache-templates'], function () {
     .pipe(gulp.dest('build'));
 });
 
-gulp.task('inject-hash', ['test'], function () {
+gulp.task('inject-hash', ['ngdocs', 'bower'], function () {
   var target = gulp.src('./index.html');
   var sources = gulp.src(['./build/app-*.js'], {read: false});
  
