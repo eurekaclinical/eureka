@@ -65,7 +65,6 @@
 						build/**,
 						bower_components/**,
 						WEB-INF/**,
-						eureka/**,
 						META-INF/**,
 						*.jsp,
 						protected/**,
@@ -161,12 +160,12 @@
 						</configuration>
 					</execution>
 					<execution>
-						<id>gulp less</id>
+						<id>gulp build</id>
 						<goals>
 							<goal>gulp</goal>
 						</goals>
 						<configuration>
-							<arguments>less</arguments>
+							<arguments>build</arguments>
 						</configuration>
 					</execution>
 				</executions>
