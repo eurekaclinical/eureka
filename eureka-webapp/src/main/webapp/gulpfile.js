@@ -4,9 +4,6 @@ var gulp = require('gulp'),
     inject = require('gulp-inject')
     babel = require("gulp-babel"),
     concat = require("gulp-concat"),
-    jshint = require('gulp-jshint'),
-    Server = require('karma').Server,
-    browserSync = require('browser-sync').create(),
     //wiredep = require('wiredep').stream,
     opn = require('opn'),
     gulpDocs = require('gulp-ngdocs'),
@@ -20,14 +17,7 @@ var gulp = require('gulp'),
     less = require('gulp-less'),
     es = require('event-stream')
 
-    exitOnJshintError = function() {
-        return map(function (file, cb) {
-            if (!file.jshint.success) {
-                console.error('JSHint failed, fix the issues and rerun task.');
-                process.exit(1);
-            }
-        });
-    };
+
 
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 
@@ -54,7 +44,7 @@ gulp.task('test', ['process-js', 'ngdocs', 'bower'], function (done) {
   }, done).start();
 });
 
-gulp.task('process-js', ['lint', 'cache-templates'], function () {
+gulp.task('process-js', ['cache-templates'], function () {
   return gulp.src(['eureka/**/module.js', './build/templates.js', 'eureka/**/*.js', '!eureka/**/*-spec.js'])
     .pipe(sourcemaps.init())
     .pipe(babel())
@@ -64,7 +54,7 @@ gulp.task('process-js', ['lint', 'cache-templates'], function () {
     .pipe(gulp.dest('build'));
 });
 
-gulp.task('inject-hash', ['test'], function () {
+gulp.task('inject-hash', ['ngdocs', 'bower'], function () {
   var target = gulp.src('./index.html');
   var sources = gulp.src(['./build/app-*.js'], {read: false});
  
@@ -78,40 +68,12 @@ gulp.task('less', function () {
         .pipe(gulp.dest('./build'));
 });
 
-gulp.task('lint', function() {
-    gulp.src(['eureka/**/*.js', '!eureka/js/**/*.js'])
-        .pipe(jshint('.jshintrc'))
-        .pipe(jshint.reporter('jshint-stylish'))
-        .pipe(exitOnJshintError());
-});
-
-gulp.task('watch-js', ['test'], function() {
-    browserSync.reload();
-});
-
-gulp.task('watch-less', ['less'], function() {
-    browserSync.reload();
-});
-
-gulp.task('watch-html', ['process-js'], function() {
-    browserSync.reload();
-});
-
-gulp.task('browser-sync', ['test'], function() {
-
-    // Serve files from the root of this project
-    browserSync.init({
-        open: false,
-        server: {
-            baseDir: "./"
-        }
-    });
-
-    gulp.watch("eureka/**/*.js", ['watch-js']);
-    gulp.watch("eureka/**/*.less", ['watch-less']);
-    gulp.watch("./**/*.html", ['watch-html']);
-
-});
+//gulp.task('lint', function() {
+//    gulp.src(['eureka/**/*.js', '!eureka/js/**/*.js'])
+//        .pipe(jshint('.jshintrc'))
+//        .pipe(jshint.reporter('jshint-stylish'))
+//        .pipe(exitOnJshintError());
+//}); */
 
 gulp.task('cache-templates', function () {
   return gulp.src('eureka/**/*.html')
@@ -120,11 +82,6 @@ gulp.task('cache-templates', function () {
         root: 'eureka/'
     }))
     .pipe(gulp.dest('./build'));
-});
-
-// Watch scss AND html files, doing different things with each.
-gulp.task('serve', ['bower', 'browser-sync', 'less'], function () {
-    opn('https://localhost:8443/eureka-angular/');
 });
 
 gulp.task('compile:html', ['less', 'inject-hash'], function() {

@@ -22,6 +22,12 @@
         controller: 'cohorts.MainCtrl',
         controllerAs: 'cohorts'
       })
+      .state('testCohorts', {
+        url: '/test/cohorts',
+        templateUrl: 'eureka/cohorts/views/test/test.html',
+        controller: 'cohorts.TestCtrl',
+        controllerAs: 'cohorts'
+      })
       .state('newCohort', {
         url: '/cohorts/new',
         templateUrl: 'eureka/cohorts/views/new/new.html',
