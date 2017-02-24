@@ -99,15 +99,13 @@ public class ETL {
 	private final DestinationDao destinationDao;
 	private final ProtempaDestinationFactory protempaDestFactory;
 	private final EtlGroupDao groupDao;
-	private final Provider<EntityManager> entityManagerProvider;
 
 	@Inject
-	public ETL(EtlProperties inEtlProperties, DestinationDao inDestinationDao, EtlGroupDao inGroupDao, ProtempaDestinationFactory inProtempaDestFactory, Provider<EntityManager> inEntityManagerProvider) {
+	public ETL(EtlProperties inEtlProperties, DestinationDao inDestinationDao, EtlGroupDao inGroupDao, ProtempaDestinationFactory inProtempaDestFactory) {
 		this.etlProperties = inEtlProperties;
 		this.destinationDao = inDestinationDao;
 		this.protempaDestFactory = inProtempaDestFactory;
 		this.groupDao = inGroupDao;
-		this.entityManagerProvider = inEntityManagerProvider;
 	}
 
 	void run(JobEntity job, PropositionDefinition[] inPropositionDefinitions,
@@ -119,23 +117,14 @@ public class ETL {
 		try (Protempa protempa = getNewProtempa(job, prompts)) {
 			logValidationEvents(job, protempa.validateDataSourceBackendData(), null);
 
-			EntityTransaction transaction = this.entityManagerProvider.get().getTransaction();
-			transaction.begin();
 			EtlDestination eurekaDestination;
 			org.protempa.dest.Destination protempaDestination;
-			try {
-				eurekaDestination
-						= new Destinations(this.etlProperties, job.getUser(),
-								this.destinationDao, this.groupDao)
-								.getOne(job.getDestination().getName());
-				protempaDestination
-						= this.protempaDestFactory.getInstance(eurekaDestination.getId(), updateData);
-				transaction.commit();
-			} finally {
-				if (transaction.isActive()) {
-					transaction.rollback();
-				}
-			}
+			eurekaDestination
+					= new Destinations(this.etlProperties, job.getUser(),
+							this.destinationDao, this.groupDao)
+							.getOne(job.getDestination().getName());
+			protempaDestination
+					= this.protempaDestFactory.getInstance(eurekaDestination.getId(), updateData);
 
 			DefaultQueryBuilder q = new DefaultQueryBuilder();
 			q.setPropositionDefinitions(inPropositionDefinitions);
