@@ -65,13 +65,14 @@ import edu.emory.cci.aiw.cvrg.eureka.etl.config.EtlProperties;
 import edu.emory.cci.aiw.cvrg.eureka.etl.config.EurekaProtempaConfigurations;
 import edu.emory.cci.aiw.cvrg.eureka.etl.dao.DestinationDao;
 import edu.emory.cci.aiw.cvrg.eureka.etl.dao.EtlGroupDao;
-import edu.emory.cci.aiw.cvrg.eureka.etl.dao.JobDao;
 import edu.emory.cci.aiw.cvrg.eureka.etl.dest.ProtempaDestinationFactory;
 import edu.emory.cci.aiw.cvrg.eureka.etl.resource.Destinations;
 import java.io.IOException;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 import org.eurekaclinical.eureka.client.comm.JobStatus;
+import org.protempa.ProtempaEvent;
+import org.protempa.ProtempaEventListener;
 import org.protempa.backend.Configuration;
 import org.protempa.backend.InvalidPropertyNameException;
 import org.protempa.backend.InvalidPropertyValueException;
@@ -95,20 +96,16 @@ public class ETL {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(ETL.class);
 	private final EtlProperties etlProperties;
-	private final JobDao jobDao;
 	private final DestinationDao destinationDao;
 	private final ProtempaDestinationFactory protempaDestFactory;
 	private final EtlGroupDao groupDao;
-	private final Provider<EntityManager> entityManagerProvider;
 
 	@Inject
-	public ETL(EtlProperties inEtlProperties, JobDao inJobDao, DestinationDao inDestinationDao, EtlGroupDao inGroupDao, ProtempaDestinationFactory inProtempaDestFactory, Provider<EntityManager> inEntityManagerProvider) {
+	public ETL(EtlProperties inEtlProperties, DestinationDao inDestinationDao, EtlGroupDao inGroupDao, ProtempaDestinationFactory inProtempaDestFactory) {
 		this.etlProperties = inEtlProperties;
-		this.jobDao = inJobDao;
 		this.destinationDao = inDestinationDao;
 		this.protempaDestFactory = inProtempaDestFactory;
 		this.groupDao = inGroupDao;
-		this.entityManagerProvider = inEntityManagerProvider;
 	}
 
 	void run(JobEntity job, PropositionDefinition[] inPropositionDefinitions,
@@ -120,23 +117,14 @@ public class ETL {
 		try (Protempa protempa = getNewProtempa(job, prompts)) {
 			logValidationEvents(job, protempa.validateDataSourceBackendData(), null);
 
-			EntityTransaction transaction = this.entityManagerProvider.get().getTransaction();
-			transaction.begin();
 			EtlDestination eurekaDestination;
 			org.protempa.dest.Destination protempaDestination;
-			try {
-				eurekaDestination
-						= new Destinations(this.etlProperties, job.getUser(),
-								this.destinationDao, this.groupDao)
-						.getOne(job.getDestination().getName());
-				protempaDestination
-						= this.protempaDestFactory.getInstance(eurekaDestination.getId(), updateData);
-				transaction.commit();
-			} finally {
-				if (transaction.isActive()) {
-					transaction.rollback();
-				}
-			}
+			eurekaDestination
+					= new Destinations(this.etlProperties, job.getUser(),
+							this.destinationDao, this.groupDao)
+							.getOne(job.getDestination().getName());
+			protempaDestination
+					= this.protempaDestFactory.getInstance(eurekaDestination.getId(), updateData);
 
 			DefaultQueryBuilder q = new DefaultQueryBuilder();
 			q.setPropositionDefinitions(inPropositionDefinitions);
@@ -152,6 +140,18 @@ public class ETL {
 			LOGGER.trace("Constructed Protempa query {}", q);
 
 			Query query = protempa.buildQuery(q);
+			protempa.addEventListener(new ProtempaEventListener() {
+				@Override
+				public void eventFired(ProtempaEvent protempaEvent) {
+					synchronized (job) {
+						JobEventEntity protempaEvt = new JobEventEntity();
+						protempaEvt.setJob(job);
+						protempaEvt.setTimeStamp(protempaEvent.getTimestamp());
+						protempaEvt.setStatus(JobStatus.STARTED);
+						protempaEvt.setMessage(protempaEvent.getType() + " " + protempaEvent.getDescription());
+					}
+				}
+			});
 			protempa.execute(query, protempaDestination);
 		} catch (DataSourceFailedDataValidationException ex) {
 			logValidationEvents(job, ex.getValidationEvents(), ex);
@@ -186,7 +186,6 @@ public class ETL {
 			validationJobEvent.setMessage(fileInfo.toUserMessage());
 			validationJobEvent.setExceptionStackTrace(collectThrowableMessages(ex));
 		}
-		this.jobDao.update(job);
 	}
 
 	private Protempa getNewProtempa(JobEntity job, Configuration prompts) throws

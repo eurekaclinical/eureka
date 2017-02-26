@@ -168,7 +168,10 @@ public final class Task implements Runnable {
 					= this.propIdsToShow.toArray(
 							new String[this.propIdsToShow.size()]);
 
+			entityManager.getTransaction().begin();
 			this.etl.run(myJob, propDefArray, propIdsToShowArray, this.filter, this.updateData, this.prompts);
+			this.jobDao.update(myJob);
+			entityManager.getTransaction().commit();
 			this.etl.close();
 			JobEventEntity completedJobEvent = new JobEventEntity();
 			Date jobFinishedDate = new Date();
