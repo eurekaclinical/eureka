@@ -8,7 +8,7 @@
     function TableDirectiveTwo() {
         return {
             restrict: 'E',
-            scope: true,
+            //scope: true,
             templateUrl: 'eureka/directives/table-directive-two/table-directive-two.html',
             scope: {
                 options : '=',
@@ -170,7 +170,7 @@
                 'created_at': 1486327831997
             }
             ]
-        };
+            }; 
             }
         };
     }

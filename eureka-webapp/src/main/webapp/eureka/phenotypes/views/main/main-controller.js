@@ -15,13 +15,13 @@
     .module('eureka.phenotypes')
     .controller('phenotypes.MainCtrl', MainCtrl);
 
-  MainCtrl.$inject = ['$state', 'PhenotypeService'];
+  MainCtrl.$inject = ['$state', 'PhenotypeService', 'NgTableParams'];
 
-  function MainCtrl($state, PhenotypeService) {
+  function MainCtrl($state, PhenotypeService, NgTableParams) {
 
     var vm = this;
-
     vm.remove = remove;
+    var copyData = [];
 
     function remove(key) {
       PhenotypeService.removeCohort(key);
@@ -50,6 +50,9 @@
 
     function success(data) {
       vm.props = data;
+      copyData = data;
+      // NG Table
+      vm.tableParams = new NgTableParams({}, { dataset: copyData});
     }
 
     function displayError(msg) {
