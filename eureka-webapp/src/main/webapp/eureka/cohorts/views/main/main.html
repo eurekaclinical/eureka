@@ -3,51 +3,49 @@
     width: 800px;
     height: 250px;
   }
-</style>		
-        
-        
-        <div class="row">
-			<div class="col-sm-12">
-				<h3>Cohorts</h3>
-				<p>Define a cohort to identify the patient population in your datasets.
-				</p>
-                <p>
-                <a href="editcohort" class="btn btn-primary"
-                ><span class="glyphicon glyphicon-plus-sign"></span>Define New Cohort
-				</a>
-                </p>
-                <!-- ui-grid -->
-                <div ui-grid="cohorts.gridOptions" ui-grid-pagination ui-grid-edit class="grid"></div>
-			</div>
-		</div>
-        <br><br><br>
-        <!-- ng-table -->
-        <div class="row">
-            <div class="col-md-12">
-                <table ng-table="cohorts.tableParams" class="table" show-filter="true">
-                    <tr ng-repeat="user in $data">
-                        <td>
-                            <a href="#" title="Edit">
-                                <span class="glyphicon glyphicon-pencil edit-icon" title="Edit"></span>
-                            </a>
-                            <span class="glyphicon glyphicon-remove delete-icon" title="Delete"></span>
-                        </td>
-                        <td title="'Name'" filter="{ name: 'text'}" sortable="'name'">
-                            {{user.name}}
-                        </td>
-                        <td title="'Description'" filter="{ description: 'text'}" sortable="'description'">
-                            {{user.description}}
-                        </td>
-                        <td title="'Type'" filter="{ type: 'text'}" sortable="'type'">
-                            {{user.type}}
-                        </td>
-                        <td title="'Created'" filter="{ created_at: 'text'}" sortable="'created_at'">
-                            {{user.created_at | date:'MM/dd/yyyy'}}
-                        </td>
-                    </tr>
-                </table>        
-            </div>
-        </div>
+</style>
+
+<div class="row">
+    <div class="col-sm-12">
+        <h3>Cohorts</h3>
+        <p>Define a cohort to identify the patient population in your datasets.
+        </p>
+        <p>
+            <a href="editcohort" class="btn btn-primary"><span class="glyphicon glyphicon-plus-sign"></span>
+            Define New Cohort
+			</a>
+        </p>
+        <!-- removing ui-grid for now -->
+        <!-- <div ui-grid="cohorts.gridOptions" ui-grid-pagination ui-grid-edit class="grid"></div> -->
+    </div>
+</div>
+<!-- ng-table -->
+<div class="row">
+    <div class="col-md-12">
+        <table ng-table="cohorts.tableParams" class="table" show-filter="true">
+            <tr ng-repeat="user in $data">
+                <td>
+                    <a href="#" title="Edit">
+                        <span class="glyphicon glyphicon-pencil edit-icon" title="Edit"></span>
+                    </a>
+                    <span class="glyphicon glyphicon-remove delete-icon" title="Delete"></span>
+                </td>
+                <td title="'Name'" filter="{ name: 'text'}" sortable="'name'">
+                    {{user.name}}
+                </td>
+                <td title="'Description'" filter="{ description: 'text'}" sortable="'description'">
+                    {{user.description}}
+                </td>
+                <td title="'Type'" filter="{ type: 'text'}" sortable="'type'">
+                    {{user.type}}
+                </td>
+                <td title="'Created'" filter="{ created_at: 'text'}" sortable="'created_at'">
+                    {{user.created_at | date:'MM/dd/yyyy'}}
+                </td>
+            </tr>
+        </table>
+    </div>
+</div>
 
 
 <!--
