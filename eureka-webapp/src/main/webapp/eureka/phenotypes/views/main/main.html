@@ -1,8 +1,53 @@
+
+<div class="row">
+  <div class="col-sm-12">
+    <h3>Phenotype Editor</h3>
+    <p> Specify the phenotypes that you want to compute in your datasets below. Phenotypes are patient features inferred from
+      sequence, frequency and other temporal patterns in the events and observations in your dataset. These features are
+      computed as intervals with a start time and a stop time representing when they are present.
+    </p>
+    <p>
+      <a href="edit" class="btn btn-primary"><span class="glyphicon glyphicon-plus-sign"></span>Define New Phenotype
+				</a>
+    </p>
+  </div>
+</div>
+<!-- ng-table -->
+<div class="row">
+  <div class="col-md-12">
+    <table ng-table="phenotypes.tableParams" class="table" show-filter="true">
+      <tr ng-repeat="user in $data">
+        <td>
+          <a href="#" title="Edit">
+            <span class="glyphicon glyphicon-pencil edit-icon" title="Edit"></span>
+          </a>
+          <span class="glyphicon glyphicon-remove delete-icon" title="Delete"></span>
+        </td>
+        <td title="'Name'" filter="{ displayName: 'text'}" sortable="'displayName'">
+          {{user.displayName}}
+        </td>
+        <td title="'Description'" filter="{ description: 'text'}" sortable="'description'">
+          {{user.description}}
+        </td>
+        <td title="'Type'" filter="{ type: 'text'}" sortable="'type'">
+          {{user.type}}
+        </td>
+        <td title="'Created'" filter="{ created: 'text'}" sortable="'created'">
+          {{user.created | date:'MM/dd/yyyy'}}
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+
+
+
+<!--
 <div layout>
   <md-content flex layout-padding>
     <md-card>
 
-      <!-- begin md-data-table -->
+   
       <md-data-table-toolbar ng-hide="phenotypes.selected.length || phenotypes.filter.show">
         <h2 class="md-title">Phenotype Editor</h2>
         <div flex></div>
@@ -99,8 +144,8 @@
       </md-data-table-container>
 
       <md-data-table-pagination md-limit="phenotypes.query.limit" md-page="phenotypes.query.page" md-total="{{phenotypes.props.length}}" md-trigger="phenotypes.onPaginationChange"></md-data-table-pagination>
-      <!-- end md-data-table -->
+     
 
     </md-card>
   </md-content>
-</div>
+</div>    -->
