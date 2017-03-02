@@ -26,9 +26,9 @@
             <tr ng-repeat="user in $data">
                 <td>
                     <a href="#" title="Edit">
-                        <span class="glyphicon glyphicon-pencil edit-icon" title="Edit"></span>
+                        <span class="glyphicon glyphicon-pencil edit-icon" title="Edit" ui-sref="editCohort({key: user.name})"></span>
                     </a>
-                    <span class="glyphicon glyphicon-remove delete-icon" title="Delete"></span>
+                    <span class="glyphicon glyphicon-remove delete-icon" title="Delete" ng-click="cohorts.remove(user.name)"></span>
                 </td>
                 <td title="'Name'" filter="{ name: 'text'}" sortable="'name'">
                     {{user.name}}
