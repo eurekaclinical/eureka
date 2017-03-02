@@ -31,7 +31,7 @@
         function getPhenotypeMessages(){
             return {
                 'CATEGORIZATION': {
-                    'displayName': 'Category',
+                    'displayName': 'Categorization',
                     'description': `For defining a significant category of codes or clinical events or observations.`
                 },
                 'TEMPORAL': {
