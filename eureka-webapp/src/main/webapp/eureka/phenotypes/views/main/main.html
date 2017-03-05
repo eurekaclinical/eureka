@@ -30,10 +30,10 @@
     <table ng-table="phenotypes.tableParams" class="table" show-filter="true">
       <tr ng-repeat="user in $data">
         <td>
-          <a href="#" title="Edit">
+          <a  title="Edit" ui-sref="editPhenotype({ id: phenotypes.selected[0].id })">
             <span class="glyphicon glyphicon-pencil edit-icon" title="Edit"></span>
           </a>
-          <span class="glyphicon glyphicon-remove delete-icon" title="Delete"></span>
+          <span class="glyphicon glyphicon-remove delete-icon"  ng-click="phenotypes.remove(user.displayName)" title="Delete"></span>
         </td>
         <td title="'Name'" filter="{ displayName: 'text'}" sortable="'displayName'">
           {{user.displayName}}
@@ -46,6 +46,9 @@
         </td>
         <td title="'Created'" filter="{ created: 'text'}" sortable="'created'">
           {{user.created | date:'MM/dd/yyyy'}}
+        </td>
+         <td title="'lastModified'" filter="{ lastModified: 'text'}" sortable="'lastModified'">
+          {{user.lastModified | date:'MM/dd/yyyy'}}
         </td>
       </tr>
     </table>

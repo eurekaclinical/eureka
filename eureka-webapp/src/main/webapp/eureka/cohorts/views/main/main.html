@@ -11,7 +11,7 @@
         <p>Define a cohort to identify the patient population in your datasets.
         </p>
         <p>
-            <a href="editcohort" class="btn btn-primary"><span class="glyphicon glyphicon-plus-sign"></span>
+            <a ui-sref="newCohort" class="btn btn-primary"><span class="glyphicon glyphicon-plus-sign"></span>
             Define New Cohort
 			</a>
         </p>
@@ -25,8 +25,8 @@
         <table ng-table="cohorts.tableParams" class="table" show-filter="true">
             <tr ng-repeat="user in $data">
                 <td>
-                    <a href="#" title="Edit">
-                        <span class="glyphicon glyphicon-pencil edit-icon" title="Edit" ui-sref="editCohort({key: user.name})"></span>
+                    <a ui-sref="editCohort({key: user.name})" title="Edit">
+                        <span class="glyphicon glyphicon-pencil edit-icon" title="Edit"></span>
                     </a>
                     <span class="glyphicon glyphicon-remove delete-icon" title="Delete" ng-click="cohorts.remove(user.name)"></span>
                 </td>
