@@ -37,6 +37,7 @@
 
         function remove(key) {
             CohortService.removeCohort(key);
+            vm.tableParams.filter({});
             for (var i = 0; i < vm.copyData.length; i++) {
                 if (vm.copyData[i].name === key) {
                     vm.copyData.splice(i, 1);
