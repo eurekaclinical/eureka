@@ -11,160 +11,35 @@
 
     angular
         .module('eureka.cohorts')
-        .controller('cohorts.MainCtrl', MainCtrl);
+        .controller('cohorts.MainCtrl', MainCtrl)
+        .controller('cohorts.ModalCtrl', ModalCtrl);
         
-    MainCtrl.$inject = ['CohortService', 'NgTableParams'];
+    MainCtrl.$inject = ['CohortService', 'NgTableParams','$uibModal'];
+    ModalCtrl.$inject = ['$uibModalInstance'];
+    function ModalCtrl($uibModalInstance, currentUser){
+        var mo = this;
+        mo.currentUser = currentUser;
+        mo.ok = function () {
+            $uibModalInstance.close();
+        };
+
+        mo.cancel = function () {
+            $uibModalInstance.dismiss('cancel');
+        };
+
+    }
     
-    function MainCtrl(CohortService, NgTableParams) {
+    function MainCtrl(CohortService, NgTableParams, $uibModal) {
         var vm = this;
         var copyData = [];
-        var testData = [
-            {
-                'name': 'Vital1',
-                'description': 'Description Data',
-                'type': 'COHORT',
-                'created_at': 1486327831997
-            },
-            {
-                'name': 'Vital2',
-                'description': 'Description Data',
-                'type': 'COHORT',
-                'created_at': 1486327831997
-            },
-            {
-                'name': 'Vital3',
-                'description': 'Description Data',
-                'type': 'COHORT',
-                'created_at': 1486327831997
-            },
-            {
-                'name': 'Test1',
-                'description': 'Description Data',
-                'type': 'COHORT',
-                'created_at': 1486327831997
-            },
-            {
-                'name': 'Test2',
-                'description': 'Description Data',
-                'type': 'COHORT',
-                'created_at': 1486327831997
-            },
-            {
-                'name': 'Patient Test',
-                'description': 'Description Data',
-                'type': 'COHORT',
-                'created_at': 1486327831997
-            },
-            {
-                'name': 'Updated Patient',
-                'description': 'Description Data',
-                'type': 'COHORT',
-                'created_at': 1486327831997
-            },
-            {
-                'name': 'Procedure Codes',
-                'description': 'Description Data',
-                'type': 'COHORT',
-                'created_at': 1486327831997
-            },
-            {
-                'name': 'Procedure 12',
-                'description': 'Description Data',
-                'type': 'COHORT',
-                'created_at': 1486327831997
-            },
-            {
-                'name': 'Test1',
-                'description': 'Description Data',
-                'type': 'COHORT',
-                'created_at': 1486327831997
-            },
-            {
-                'name': 'ICD9',
-                'description': 'Description Data',
-                'type': 'COHORT',
-                'created_at': 1486327831997
-            },
-            {
-                'name': 'ICD10',
-                'description': 'Description Data',
-                'type': 'COHORT',
-                'created_at': 1486327831997
-            },
-            {
-                'name': 'Test ICD10',
-                'description': 'Description Data',
-                'type': 'COHORT',
-                'created_at': 1486327831997
-            },
-            {
-                'name': 'Test ICD9',
-                'description': 'Description Data',
-                'type': 'COHORT',
-                'created_at': 1486327831997
-            },
-            {
-                'name': 'Test1',
-                'description': 'Description Data',
-                'type': 'COHORT',
-                'created_at': 1486327831997
-            },
-            {
-                'name': 'Test1',
-                'description': 'Description Data',
-                'type': 'COHORT',
-                'created_at': 1486327831997
-            },
-            {
-                'name': 'Test1',
-                'description': 'Description Data',
-                'type': 'COHORT',
-                'created_at': 1486327831997
-            },
-            {
-                'name': 'Test1',
-                'description': 'Description Data',
-                'type': 'COHORT',
-                'created_at': 1486327831997
-            },
-            {
-                'name': 'Test1',
-                'description': 'Description Data',
-                'type': 'COHORT',
-                'created_at': 1486327831997
-            },
-            {
-                'name': 'Test1',
-                'description': 'Description Data',
-                'type': 'COHORT',
-                'created_at': 1486327831997
-            },
-            {
-                'name': 'Test1',
-                'description': 'Description Data Test',
-                'type': 'COHORT',
-                'created_at': 1486327831997
-            },
-            {
-                'name': 'Test1',
-                'description': 'Description Data',
-                'type': 'COHORT',
-                'created_at': 1486327831997
-            },
-            {
-                'name': 'Test1',
-                'description': 'Description Data',
-                'type': 'COHORT',
-                'created_at': 1486327831997
-            }
-            ];
+
         vm.remove = remove;
 
         function remove(key) {
             CohortService.removeCohort(key);
-            for (var i = 0; i < vm.cohortsList.length; i++) {
-                if (vm.cohortsList[i].name === key) {
-                    vm.cohortsList.splice(i, 1);
+            for (var i = 0; i < vm.copyData.length; i++) {
+                if (vm.copyData[i].name === key) {
+                    vm.copyData.splice(i, 1);
                     break;
                 }
             }
@@ -191,11 +66,10 @@
 
         function success(cohorts) {
             vm.cohortsList = cohorts;
-            //using dummy data
-            vm.gridOptions.data = testData.concat(cohorts);
-            copyData = testData.concat(cohorts);
+            vm.gridOptions.data = cohorts;
+            vm.copyData = cohorts;
             // NG Table
-            vm.tableParams = new NgTableParams({}, { dataset: copyData});
+            vm.tableParams = new NgTableParams({}, { dataset: vm.copyData});
         }
 
         vm.removeFilter = function () {
@@ -206,6 +80,32 @@
                 vm.filter.form.$setPristine();
             }
         };
+
+        vm.showModal = function(user, indexOfRow){
+            var currentItem = user;
+            var currentRow = indexOfRow;
+            $uibModal.open({
+                templateUrl: 'myModal.html',
+                controller: 'cohorts.ModalCtrl',
+                controllerAs: 'mo',
+                resolve: {
+                    currentUser: function () {
+                        return user;
+                    }
+                }
+            })
+            .result.then(
+                function () {
+                    remove(currentItem);
+                    //   vm.copyData.splice(currentRow, 1);
+                     vm.tableParams.reload();
+                    ;
+                }, 
+                function () {
+                    //do nothing but cancel
+                }
+            );
+        }
 
         // in the future we may see a few built in alternate headers but in the mean time
         // you can implement your own search header and do something like
