@@ -7,8 +7,20 @@
       computed as intervals with a start time and a stop time representing when they are present.
     </p>
     <p>
-      <a href="edit" class="btn btn-primary"><span class="glyphicon glyphicon-plus-sign"></span>Define New Phenotype
-				</a>
+      <div class="btn-group" uib-dropdown keyboard-nav>
+        <button id="simple-btn-keyboard-nav" type="button" class="btn btn-primary" uib-dropdown-toggle>
+          <span class="glyphicon glyphicon-plus-sign"></span>
+            <span>Create New Element</span> 
+            <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu" uib-dropdown-menu role="menu" aria-labelledby="simple-btn-keyboard-nav">
+            <li role="menuitem"><a ng-click="phenotypes.navigateTo('categorization')">{{phenotypes.messages.CATEGORIZATION.displayName}} <p>{{phenotypes.messages.CATEGORIZATION.description}}</p></a></li>
+            <li role="menuitem"><a ng-click="phenotypes.navigateTo('sequence')">{{phenotypes.messages.SEQUENCE.displayName}} <p>{{phenotypes.messages.SEQUENCE.description}}</p></a></li>
+            <li role="menuitem"><a ng-click="phenotypes.navigateTo('frequency')">{{phenotypes.messages.FREQUENCY.displayName}} <p>{{phenotypes.messages.FREQUENCY.description}}</p></a></li>
+            <li role="menuitem"><a ng-click="phenotypes.navigateTo('value-threshold')">{{phenotypes.messages.VALUE_THRESHOLD.displayName}} <p>{{phenotypes.messages.VALUE_THRESHOLD.description}}</p></a></li>
+            <li role="menuitem"><a ng-click="phenotypes.navigateTo('temporal')">{{phenotypes.messages.TEMPORAL.displayName}} <p>{{phenotypes.messages.TEMPORAL.description}}</p></a></li>
+        </ul>
+    </div>
     </p>
   </div>
 </div>
@@ -18,10 +30,10 @@
     <table ng-table="phenotypes.tableParams" class="table" show-filter="true">
       <tr ng-repeat="user in $data">
         <td>
-          <a href="#" title="Edit">
+          <a  title="Edit" ui-sref="editPhenotype({ id: phenotypes.selected[0].id })">
             <span class="glyphicon glyphicon-pencil edit-icon" title="Edit"></span>
           </a>
-          <span class="glyphicon glyphicon-remove delete-icon" title="Delete"></span>
+          <span class="glyphicon glyphicon-remove delete-icon"  ng-click="phenotypes.remove(user.displayName)" title="Delete"></span>
         </td>
         <td title="'Name'" filter="{ displayName: 'text'}" sortable="'displayName'">
           {{user.displayName}}
@@ -34,6 +46,9 @@
         </td>
         <td title="'Created'" filter="{ created: 'text'}" sortable="'created'">
           {{user.created | date:'MM/dd/yyyy'}}
+        </td>
+         <td title="'lastModified'" filter="{ lastModified: 'text'}" sortable="'lastModified'">
+          {{user.lastModified | date:'MM/dd/yyyy'}}
         </td>
       </tr>
     </table>

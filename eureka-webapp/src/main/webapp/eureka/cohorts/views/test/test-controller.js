@@ -18,6 +18,16 @@
     function TestCtrl(CohortService, NgTableParams) {
         var vm = this;
         var copyData = [];
+        vm.columnDefs = [{
+            name: ' ', field: 'edit',
+            cellTemplate: '<a href="${editUrl}" title="Edit">' +
+            '<span class="glyphicon glyphicon-pencil edit-icon" title="Edit"></span></a> ' +
+            '<span class="glyphicon glyphicon-remove delete-icon" title="Delete"></span>'
+        },
+        { name: 'Name', field: 'name' },
+        { name: 'Descripton', field: 'description' },
+        { name: 'Type', field: 'type' },
+        { name: 'Created', field: 'created_at', enableCellEdit: false, cellFilter: 'date:"longDate"' }]
          vm.testData = [
             {
                 'name': 'Vital1',
