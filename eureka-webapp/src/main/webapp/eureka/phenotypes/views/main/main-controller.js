@@ -1,5 +1,5 @@
 (function() {
-  'use strict';
+
 
   /**
    * @ngdoc controller
@@ -13,18 +13,33 @@
 
   angular
     .module('eureka.phenotypes')
-    .controller('phenotypes.MainCtrl', MainCtrl);
+    .controller('phenotypes.MainCtrl', MainCtrl)
+    .controller('phenotypes.ModalCtrl', ModalCtrl);
 
-  MainCtrl.$inject = ['$state', 'PhenotypeService', 'NgTableParams'];
+  MainCtrl.$inject = ['$state', 'PhenotypeService', 'NgTableParams', '$uibModal'];
+  ModalCtrl.$inject = ['$uibModalInstance'];
 
-  function MainCtrl($state, PhenotypeService, NgTableParams) {
+  function ModalCtrl($uibModalInstance, currentUser){
+      var mo = this;
+      mo.currentUser = currentUser;
+      mo.ok = function () {
+          $uibModalInstance.close();
+      };
+
+      mo.cancel = function () {
+          $uibModalInstance.dismiss('cancel');
+      };
+
+    }
+  function MainCtrl($state, PhenotypeService, NgTableParams, $uibModal) {
 
     var vm = this;
     vm.remove = remove;
     var copyData = [];
 
     function remove(key) {
-      PhenotypeService.removeCohort(key);
+      PhenotypeService.removePhenotype(key.userId, key.key);
+      vm.tableParams.filter({});
       for (var i = 0; i < vm.props.length; i++) {
         if (vm.props[i].name === key) {
           vm.props.splice(i, 1);
@@ -68,6 +83,32 @@
       }
     };
 
+    vm.showModal = function(user, indexOfRow){
+        var currentItem = user;
+        var currentRow = indexOfRow;
+        $uibModal.open({
+            templateUrl: 'myModal.html',
+            controller: 'cohorts.ModalCtrl',
+            controllerAs: 'mo',
+            resolve: {
+                currentUser: function () {
+                    return user;
+                }
+            }
+        })
+        .result.then(
+            function () {
+                remove(currentItem);
+                //   vm.copyData.splice(currentRow, 1);
+                 vm.tableParams.reload();
+                ;
+            }, 
+            function () {
+                //do nothing but cancel
+            }
+        );
+    }
+
     // in the future we may see a few built in alternate headers but in the mean time
     // you can implement your own search header and do something like
     vm.search = function (predicate) {
@@ -99,4 +140,4 @@
     };
 
   }
-}());
+})();
