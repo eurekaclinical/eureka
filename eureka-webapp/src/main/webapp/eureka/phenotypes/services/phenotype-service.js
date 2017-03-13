@@ -20,7 +20,8 @@
         let { dataEndpoint } = appProperties;
         return ({
             getSummarizedUserElements: getSummarizedUserElements,
-            getPhenotypeMessages: getPhenotypeMessages
+            getPhenotypeMessages: getPhenotypeMessages,
+            removePhenotype: removePhenotype
         });
 
         function getSummarizedUserElements() {
@@ -57,6 +58,13 @@
             };
         }
 
+        function removePhenotype(userId, key) {
+
+         return $http['delete'](dataEndpoint+'/phenotypes/'+userId+'/'+key)
+                .then(handleSuccess, handleError);
+
+        }
+        // DELETE /api/protected/phenotypes/{userId}/{key} deleteprop?id=' + id,
         function handleSuccess(response) {
             return response.data;
         }
