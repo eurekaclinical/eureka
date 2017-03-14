@@ -38,10 +38,10 @@
     var copyData = [];
 
     function remove(key) {
-      PhenotypeService.removePhenotype(key.userId, key.key);
+      PhenotypeService.removePhenotype(key.id);
       vm.tableParams.filter({});
       for (var i = 0; i < vm.props.length; i++) {
-        if (vm.props[i].name === key) {
+        if (vm.props[i].displayName === key.displayName) {
           vm.props.splice(i, 1);
           break;
         }
