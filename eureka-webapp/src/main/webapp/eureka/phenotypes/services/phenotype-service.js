@@ -58,13 +58,13 @@
             };
         }
 
-        function removePhenotype(userId, key) {
+        function removePhenotype(id) {
 
-         return $http['delete'](dataEndpoint+'/phenotypes/'+userId+'/'+key)
+         return $http['delete'](dataEndpoint+'/phenotypes/'+id)
                 .then(handleSuccess, handleError);
 
         }
-        // DELETE /api/protected/phenotypes/{userId}/{key} deleteprop?id=' + id,
+
         function handleSuccess(response) {
             return response.data;
         }
