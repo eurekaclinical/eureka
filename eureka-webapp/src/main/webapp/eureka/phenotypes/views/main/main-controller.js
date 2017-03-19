@@ -1,4 +1,4 @@
-(function() {
+(function () {
 
 
   /**
@@ -13,41 +13,47 @@
 
   angular
     .module('eureka.phenotypes')
-    .controller('phenotypes.MainCtrl', MainCtrl)
-    .controller('phenotypes.ModalCtrl', ModalCtrl);
+    .controller('phenotypes.ModalCtrl', ModalCtrl)
+    .controller('phenotypes.DeleteModalCtrl', DeleteModalCtrl)
+    .controller('phenotypes.MainCtrl', MainCtrl);
 
-  MainCtrl.$inject = ['$state', 'PhenotypeService', 'NgTableParams', '$uibModal'];
+
+
   ModalCtrl.$inject = ['$uibModalInstance'];
+  DeleteModalCtrl.$inject = ['$uibModalInstance', 'data'];
+  MainCtrl.$inject = ['$state', 'PhenotypeService', 'NgTableParams', '$uibModal'];
 
-  function ModalCtrl($uibModalInstance, currentUser){
-      var mo = this;
-      mo.currentUser = currentUser;
-      mo.ok = function () {
-          $uibModalInstance.close();
-      };
+  function ModalCtrl($uibModalInstance, currentUser) {
+    var mo = this;
+    mo.currentUser = currentUser;
+    mo.ok = function () {
+      $uibModalInstance.close();
+    };
 
-      mo.cancel = function () {
-          $uibModalInstance.dismiss('cancel');
-      };
+    mo.cancel = function () {
+      $uibModalInstance.dismiss('cancel');
+    };
 
-    }
+  }
+
+  function DeleteModalCtrl($uibModalInstance, data) {
+    var mo = this;
+    mo.data = data;
+    mo.ok = function () {
+      $uibModalInstance.close();
+    };
+
+    mo.cancel = function () {
+      $uibModalInstance.dismiss('cancel');
+    };
+
+  }
   function MainCtrl($state, PhenotypeService, NgTableParams, $uibModal) {
 
     var vm = this;
-    vm.remove = remove;
     var copyData = [];
 
-    function remove(key) {
-      PhenotypeService.removePhenotype(key.id);
-      vm.tableParams.filter({});
-      for (var i = 0; i < vm.props.length; i++) {
-        if (vm.props[i].displayName === key.displayName) {
-          vm.props.splice(i, 1);
-          break;
-        }
-      }
-    }
-
+    vm.currentSelectedItem = {};
     vm.selected = [];
 
     vm.filter = {
@@ -67,7 +73,7 @@
       vm.props = data;
       copyData = data;
       // NG Table
-      vm.tableParams = new NgTableParams({}, { dataset: copyData});
+      vm.tableParams = new NgTableParams({}, { dataset: copyData });
     }
 
     function displayError(msg) {
@@ -78,43 +84,71 @@
       vm.filter.show = false;
       vm.query.filter = '';
 
-      if(vm.filter.form.$dirty) {
+      if (vm.filter.form.$dirty) {
         vm.filter.form.$setPristine();
       }
     };
 
-    vm.showModal = function(user, indexOfRow){
-        var currentItem = user;
-        var currentRow = indexOfRow;
-        $uibModal.open({
-            templateUrl: 'myModal.html',
-            controller: 'cohorts.ModalCtrl',
-            controllerAs: 'mo',
-            resolve: {
-                currentUser: function () {
-                    return user;
-                }
-            }
-        })
+    vm.deletePhenotype = function (user, indexOfRow) {
+      var currentItem = user;
+      var currentRow = indexOfRow;
+
+      $uibModal.open({
+        templateUrl: 'myModal.html',
+        controller: 'phenotypes.ModalCtrl',
+        controllerAs: 'mo',
+        resolve: {
+          currentUser: function () {
+            return user;
+          }
+        }
+      })
         .result.then(
-            function () {
-                remove(currentItem);
-                //   vm.copyData.splice(currentRow, 1);
-                 vm.tableParams.reload();
-                ;
-            }, 
-            function () {
-                //do nothing but cancel
-            }
+        function () {
+          removePhenotype(currentItem);
+        },
+        function (arg) {
+          console.log(arg);
+        }
         );
     }
 
-    // in the future we may see a few built in alternate headers but in the mean time
-    // you can implement your own search header and do something like
-    vm.search = function (predicate) {
-      vm.filter = predicate;
-      vm.deferred = PhenotypeService.getSummarizedUserElements(vm.query).then(success, displayError);
-    };
+    function deleteSuccess() {
+      vm.tableParams.filter({});
+      for (var i = 0; i < vm.props.length; i++) {
+        if (vm.props[i].displayName === vm.currentSelectedItem.displayName) {
+          vm.props.splice(i, 1);
+          break;
+        }
+      }
+      vm.tableParams.reload();
+    }
+
+    function deleteError(data) {
+      $uibModal.open({
+        templateUrl: 'errorModal.html',
+        controller: 'phenotypes.DeleteModalCtrl',
+        controllerAs: 'mod',
+        resolve: {
+          data: function () {
+            return data;
+          }
+        }
+      })
+        .result.then(
+        function () {
+
+        },
+        function (arg) {
+
+        }
+        );
+    }
+
+    function removePhenotype(data) {
+      vm.currentSelectedItem = data;
+      vm.deferred = PhenotypeService.removePhenotype(data.id).then(deleteSuccess, deleteError);
+    }
 
     vm.onOrderChange = function () {
       return PhenotypeService.getSummarizedUserElements(vm.query);
@@ -126,14 +160,14 @@
 
     PhenotypeService.getSummarizedUserElements().then(success, displayError);
 
-    var messages =  PhenotypeService.getPhenotypeMessages();
+    var messages = PhenotypeService.getPhenotypeMessages();
     vm.messages = messages;
 
-    vm.openMenu = function($mdOpenMenu, evt) {
+    vm.openMenu = function ($mdOpenMenu, evt) {
       $mdOpenMenu(evt);
     };
 
-    vm.navigateTo = function(phenotypeType) {
+    vm.navigateTo = function (phenotypeType) {
       $state.transitionTo('createPhenotype', {
         type: phenotypeType
       });
