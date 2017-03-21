@@ -21,7 +21,8 @@
         return ({
             getSummarizedUserElements: getSummarizedUserElements,
             getPhenotypeMessages: getPhenotypeMessages,
-            removePhenotype: removePhenotype
+            removePhenotype: removePhenotype,
+            getPhenotype: getPhenotype
         });
 
         function getSummarizedUserElements() {
@@ -61,6 +62,12 @@
         function removePhenotype(id) {
 
          return $http['delete'](dataEndpoint+'/phenotypes/'+id)
+                .then(handleSuccess, handleError);
+
+        }
+
+        function getPhenotype(key) {
+            return $http.get(dataEndpoint+'/phenotypes/' + key+'?summarize=true')
                 .then(handleSuccess, handleError);
 
         }

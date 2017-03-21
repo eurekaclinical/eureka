@@ -28,7 +28,7 @@
                     <a ui-sref="editCohort({key: user.name})" title="Edit">
                         <span class="glyphicon glyphicon-pencil edit-icon" title="Edit"></span>
                     </a>
-                    <span class="glyphicon glyphicon-remove delete-icon" title="Delete" ng-click="cohorts.showModal(user.name, $index)"></span>
+                    <span class="glyphicon glyphicon-remove delete-icon" title="Delete" ng-click="cohorts.deleteCohort(user.name, $index)"></span>
                 </td>
                 <td title="'Name'" filter="{ name: 'text'}" sortable="'name'">
                     {{user.name}}
@@ -58,6 +58,18 @@
             <button class="btn btn-primary" ng-click="mo.cancel()">Close</button>
         </div>
     </script>
+
+    <script type="text/ng-template" id="errorModal.html">
+    <div class="modal-header">
+        <h3 class="modal-title">Error</h3>
+    </div>
+    <div class="modal-body">
+       {{mod.data}}
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-primary" ng-click="mod.cancel()">Close</button>
+    </div>
+</script>
 
 
 <!--
