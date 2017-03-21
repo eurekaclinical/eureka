@@ -36,7 +36,7 @@
         vm.description = 'Computes an interval over the temporal extent of the intervals contributing to the ' +
           'specified frequency count below.';
         break;
-      case 'value threshold':
+      case 'value-threshold':
         vm.description = 'Computes intervals corresponding to when the specified thresholds below are present.';
         break;
     }
