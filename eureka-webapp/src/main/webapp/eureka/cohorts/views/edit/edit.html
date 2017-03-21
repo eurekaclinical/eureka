@@ -10,11 +10,11 @@
             <form id="categorizationForm" class="vert-offset" role="form">
                 <div class="form-group">
                     <label for="patCohortDefName" class="control-label">Name</label>
-                    <input type="text" id="patCohortDefName" class="form-control" />
+                    <input type="text" id="patCohortDefName" class="form-control" ng-model="editCohort.destination.name" />
                 </div>
                 <div class="form-group">
                     <label for="patCohortDescription" class="control-label">Description</label>
-                    <textarea id="patCohortDescription" class="form-control"></textarea>
+                    <textarea id="patCohortDescription" class="form-control" ng-model="editCohort.destination.description"></textarea>
 					</div>
 					<div class="form-group">
 						<label for="patCohortDefinition" class="control-label">Members</label>

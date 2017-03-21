@@ -30,7 +30,7 @@
     <table ng-table="phenotypes.tableParams" class="table" show-filter="true">
       <tr ng-repeat="user in $data">
         <td>
-          <a  title="Edit" ui-sref="editPhenotype({ id: phenotypes.selected[0].id })">
+          <a  title="Edit" ui-sref="editPhenotype({ id: user.key })">
             <span class="glyphicon glyphicon-pencil edit-icon" title="Edit"></span>
           </a>
           <span class="glyphicon glyphicon-remove delete-icon"  ng-click="phenotypes.deletePhenotype(user, $index)" title="Delete"></span>
