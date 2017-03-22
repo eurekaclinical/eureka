@@ -18,11 +18,14 @@
 
     function PhenotypeService($http, $q, appProperties) {
         let { dataEndpoint } = appProperties;
+        let { dataProtectedEndPoint } = appProperties;
         return ({
             getSummarizedUserElements: getSummarizedUserElements,
             getPhenotypeMessages: getPhenotypeMessages,
             removePhenotype: removePhenotype,
-            getPhenotype: getPhenotype
+            getPhenotype: getPhenotype,
+            getTreeRoot: getTreeRoot,
+            getTreeNode: getTreeNode
         });
 
         function getSummarizedUserElements() {
@@ -30,7 +33,21 @@
                 .then(handleSuccess, handleError);
         }
 
-        function getPhenotypeMessages(){
+        function getTreeRoot() {
+            return $http.get(dataProtectedEndPoint + '/systemlist?key=root')
+                .then(handleSuccess, handleError)
+                // https://localhost:8443/eureka-webapp/protected/systemlist?key=root
+                //https://localhost:8443/eureka-webapp/proxy-resource/systemlist?key=root
+        }
+
+        function getTreeNode(id) {
+            return $http.get(dataProtectedEndPoint + '/systemlist?key=' + id)
+                .then(handleSuccess, handleError)
+                // https://localhost:8443/eureka-webapp/protected/systemlist?key=root
+                //https://localhost:8443/eureka-webapp/proxy-resource/systemlist?key=root
+        }
+
+        function getPhenotypeMessages() {
             return {
                 'CATEGORIZATION': {
                     'displayName': 'Categorization',
@@ -61,13 +78,13 @@
 
         function removePhenotype(id) {
 
-         return $http['delete'](dataEndpoint+'/phenotypes/'+id)
+            return $http['delete'](dataEndpoint + '/phenotypes/' + id)
                 .then(handleSuccess, handleError);
 
         }
 
         function getPhenotype(key) {
-            return $http.get(dataEndpoint+'/phenotypes/' + key+'?summarize=true')
+            return $http.get(dataEndpoint + '/phenotypes/' + key + '?summarize=true')
                 .then(handleSuccess, handleError);
 
         }

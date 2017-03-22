@@ -1,3 +1,8 @@
+<style>
+    .ng-table-pager {
+        display: none;
+    }
+</style>
 <div class="row">
     <div class="col-sm-12">
         <h3>{{createPhenotype.type}} Editor</h3>
@@ -21,76 +26,99 @@
                 </div>
                 <div class="form-group">
                     <label for="patCohortDefinition" class="control-label">Members</label>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="row">
+                                <ol class="breadcrumb">
+                                    <li class="breadcrumb-item" ng-repeat="x in createPhenotype.breadCrumbs"><a href ng-click="createPhenotype.setBreadCrumbs(x)">{{x.text}}</a></li>
+                                </ol>
+                            </div>
+                            <table ng-table="createPhenotype.tableParams" class="table" show-filter="true">
+                                <tr ng-repeat="user in $data" class="animate">
+                                    <td>
+                                        <a title="Edit" ng-click="createPhenotype.selectNode(user) ">
+                                            <span ng-class="{true: 'glyphicon glyphicon-folder-close', false: 'glyphicon glyphicon-file'}[user.children]" title=""></span>
+
+                                        </a>
+                                    </td>
+                                    <td title=" 'Name' ">
+                                        {{user.text}}
+                                    </td>
+
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
 
                 </div>
 
-                <div class="form-group text-center vert-offset">
-                    <button id="savePhenotypeButton" type="button" class="btn btn-primary">Save</button>
+                <div class="form-group text-center vert-offset ">
+                    <button id="savePhenotypeButton " type="button " class="btn btn-primary ">Save</button>
                 </div>
             </form>
         </div>
     </div>
 </div>
 
-<div class="row" ng-if="createPhenotype.type === 'Frequency'">
-    <div class="col-md-12">
-        <div id="definitionContainer" class="col-md-8">
-            <form id="categorizationForm" class="vert-offset" role="form">
-                <div class="form-group">
-                    <label for="patCohortDefName" class="control-label">Name</label>
-                    <input type="text" id="patCohortDefName" class="form-control" />
+<div class="row " ng-if="createPhenotype.type==='Frequency' ">
+    <div class="col-md-12 ">
+        <div id="definitionContainer " class="col-md-8 ">
+            <form id="categorizationForm " class="vert-offset " role="form ">
+                <div class="form-group ">
+                    <label for="patCohortDefName " class="control-label ">Name</label>
+                    <input type="text " id="patCohortDefName " class="form-control " />
                 </div>
-                <div class="form-group">
-                    <label for="patCohortDescription" class="control-label">Description</label>
-                    <textarea id="patCohortDescription" class="form-control"></textarea>
+                <div class="form-group ">
+                    <label for="patCohortDescription " class="control-label ">Description</label>
+                    <textarea id="patCohortDescription " class="form-control "></textarea>
                 </div>
-                <div class="form-group">
+                <div class="form-group ">
 
 
                 </div>
 
                 <fieldset>
                     <legend>Threshold</legend>
-                    <div class="form-group">
-                        <div class="col-sm-4">
-                            <label class="sr-only" for="freqTypes">Type</label>
-                            <select id="freqTypes" class="form-control" name="freqTypes" id="freqTypes" title="Specify whether only the first n intervals will be matched (First) or any n intervals (At least)"></select>
+                    <div class="form-group ">
+                        <div class="col-sm-4 ">
+                            <label class="sr-only " for="freqTypes ">Type</label>
+                            <select id="freqTypes " class="form-control " name="freqTypes " id="freqTypes " title="Specify whether only the first n intervals will be matched (First) or any n intervals (At least) "></select>
                         </div>
-                        <div class="col-sm-4">
-                            <label class="sr-only" for="freqAtLeastField">Count</label>
-                            <input type="number" id="frequencyCountField" name="freqAtLeastField" id="freqAtLeastField" min="1" value="" title="Specify the frequency count" class="form-control" />
+                        <div class="col-sm-4 ">
+                            <label class="sr-only " for="freqAtLeastField ">Count</label>
+                            <input type="number " id="frequencyCountField " name="freqAtLeastField " id="freqAtLeastField " min="1 " value=" " title="Specify the frequency count " class="form-control " />
                         </div>
-                        <div class="col-sm-4">
-                            <label id="valueThresholdConsecutiveLabel" class="checkbox-inline">
-						<input type="checkbox" value="true" name="freqIsConsecutive"
-								  title="For value threshold phenotypes, specifies whether no intervening values are present that do not match the threshold or any duration or property constraints specified below"
+                        <div class="col-sm-4 ">
+                            <label id="valueThresholdConsecutiveLabel " class="checkbox-inline ">
+						<input type="checkbox " value="true " name="freqIsConsecutive "
+								  title="For value threshold phenotypes, specifies whether no intervening values are present that do not match the threshold or any duration or property constraints specified below "
 							   />consecutive
 					</label>
                         </div>
                     </div>
                 </fieldset>
                 <fieldset>
-                    <legend><input class="checkbox-inline" type="checkbox" value="true" name="freqPhenotypeSpecifyDuration" /> Duration
+                    <legend><input class="checkbox-inline " type="checkbox " value="true " name="freqPhenotypeSpecifyDuration " /> Duration
                     </legend>
-                    <div class="form-group">
-                        <div class="col-md-2">
-                            <label class="sr-only" for="freqPhenotypeMinDurationValue">From</label>
-                            <input type="text" class="form-control" name="freqPhenotypeMinDurationValue" id="freqPhenotypeMinDurationValue" placeholder="min" value="" />
+                    <div class="form-group ">
+                        <div class="col-md-2 ">
+                            <label class="sr-only " for="freqPhenotypeMinDurationValue ">From</label>
+                            <input type="text " class="form-control " name="freqPhenotypeMinDurationValue " id="freqPhenotypeMinDurationValue " placeholder="min " value=" " />
                         </div>
-                        <div class="col-md-3">
-                            <label class="sr-only" for="freqPhenotypeMinDurationUnits">From units</label>
-                            <select name="freqPhenotypeMinDurationUnits" id="freqPhenotypeMinDurationUnits" class="form-control">
+                        <div class="col-md-3 ">
+                            <label class="sr-only " for="freqPhenotypeMinDurationUnits ">From units</label>
+                            <select name="freqPhenotypeMinDurationUnits " id="freqPhenotypeMinDurationUnits " class="form-control ">
                                                 </select>
                         </div>
-                        <div class="col-md-1 control-label" style="text-align: center">
-                            <label for="freqPhenotypeMaxDurationValue">to</label>
+                        <div class="col-md-1 control-label " style="text-align: center ">
+                            <label for="freqPhenotypeMaxDurationValue ">to</label>
                         </div>
-                        <div class="col-md-2">
-                            <input type="text" class="form-control" name="freqPhenotypeMaxDurationValue" placeholder="max" value="" />
+                        <div class="col-md-2 ">
+                            <input type="text " class="form-control " name="freqPhenotypeMaxDurationValue " placeholder="max " value=" " />
                         </div>
-                        <div class="col-md-3">
-                            <label class="sr-only" for="freqPhenotypeMaxDurationUnits">To units</label>
-                            <select name="freqPhenotypeMaxDurationUnits" id="freqPhenotypeMaxDurationUnits" class="form-control">
+                        <div class="col-md-3 ">
+                            <label class="sr-only " for="freqPhenotypeMaxDurationUnits ">To units</label>
+                            <select name="freqPhenotypeMaxDurationUnits " id="freqPhenotypeMaxDurationUnits " class="form-control ">
         
                                                 </select>
                         </div>
@@ -98,50 +126,50 @@
                 </fieldset>
                 <fieldset>
                     <legend>
-                        <input type="checkbox" class="checkbox-inline propertyValueConstraint" name="freqPhenotypeSpecifyProperty"> Property value
+                        <input type="checkbox " class="checkbox-inline propertyValueConstraint " name="freqPhenotypeSpecifyProperty "> Property value
                     </legend>
-                    <div class="form-group">
-                        <div class="col-sm-6">
-                            <label class="sr-only" for="freqPhenotypePropertyName">Property name</label>
-                            <select name="freqPhenotypePropertyName" id="freqPhenotypePropertyName" class="form-control" data-properties-provider="freqMainPhenotype">
+                    <div class="form-group ">
+                        <div class="col-sm-6 ">
+                            <label class="sr-only " for="freqPhenotypePropertyName ">Property name</label>
+                            <select name="freqPhenotypePropertyName " id="freqPhenotypePropertyName " class="form-control " data-properties-provider="freqMainPhenotype ">
 					</select>
                         </div>
-                        <div class="col-sm-6">
-                            <label class="sr-only" for="freqPhenotypePropertyValue">Property value</label>
-                            <input type="text" class="form-control propertyValueField" name="freqPhenotypePropertyValue" id="freqPhenotypePropertyValue" value="" />
+                        <div class="col-sm-6 ">
+                            <label class="sr-only " for="freqPhenotypePropertyValue ">Property value</label>
+                            <input type="text " class="form-control propertyValueField " name="freqPhenotypePropertyValue " id="freqPhenotypePropertyValue " value=" " />
                         </div>
                     </div>
                 </fieldset>
                 <fieldset>
                     <legend>
-                        <input type="checkbox" value="true" name="freqIsWithin" class="checkbox-inline"> Distance between
+                        <input type="checkbox " value="true " name="freqIsWithin " class="checkbox-inline "> Distance between
                     </legend>
-                    <div class="form-group">
-                        <div class="col-md-2">
-                            <label class="sr-only" for="freqWithinAtLeast">From</label>
-                            <input type="text" class="form-control" name="freqWithinAtLeast" id="freqWithinAtLeast" placeholder="min" value="" />
+                    <div class="form-group ">
+                        <div class="col-md-2 ">
+                            <label class="sr-only " for="freqWithinAtLeast ">From</label>
+                            <input type="text " class="form-control " name="freqWithinAtLeast " id="freqWithinAtLeast " placeholder="min " value=" " />
                         </div>
-                        <div class="col-md-3">
-                            <label class="sr-only" for="freqWithinAtLeastUnits">Time units</label>
-                            <select name="freqWithinAtLeastUnits" id="freqWithinAtLeastUnits" class="form-control">
+                        <div class="col-md-3 ">
+                            <label class="sr-only " for="freqWithinAtLeastUnits ">Time units</label>
+                            <select name="freqWithinAtLeastUnits " id="freqWithinAtLeastUnits " class="form-control ">
                                                 </select>
                         </div>
-                        <div class="col-md-1 control-label" style="text-align: center">
-                            <label for="freqWithinAtMost">to</label>
+                        <div class="col-md-1 control-label " style="text-align: center ">
+                            <label for="freqWithinAtMost ">to</label>
                         </div>
-                        <div class="col-md-2">
-                            <input type="text" class="form-control" name="freqWithinAtMost" placeholder="max" id="freqWithinAtMost" value="" />
+                        <div class="col-md-2 ">
+                            <input type="text " class="form-control " name="freqWithinAtMost " placeholder="max " id="freqWithinAtMost " value=" " />
                         </div>
-                        <div class="col-md-3">
-                            <label class="sr-only" for="freqWithinAtMostUnits">Time units</label>
-                            <select name="freqWithinAtMostUnits" class="form-control" id="freqWithinAtMostUnits">
+                        <div class="col-md-3 ">
+                            <label class="sr-only " for="freqWithinAtMostUnits ">Time units</label>
+                            <select name="freqWithinAtMostUnits " class="form-control " id="freqWithinAtMostUnits ">
                                                 </select>
                         </div>
                     </div>
                 </fieldset>
 
-                <div class="form-group text-center vert-offset">
-                    <button id="savePhenotypeButton" type="button" class="btn btn-primary">Save</button>
+                <div class="form-group text-center vert-offset ">
+                    <button id="savePhenotypeButton " type="button " class="btn btn-primary ">Save</button>
                 </div>
             </form>
         </div>
@@ -150,163 +178,163 @@
 
 
 <!-- sequence  -->
-<div class="row" ng-if="createPhenotype.type === 'Sequence'">
-    <div class="col-md-12">
-        <div id="definitionContainer" class="col-md-8">
-            <form id="categorizationForm" class="vert-offset" role="form">
-                <div class="form-group">
-                    <label for="patCohortDefName" class="control-label">Name</label>
-                    <input type="text" id="patCohortDefName" class="form-control" />
+<div class="row " ng-if="createPhenotype.type==='Sequence' ">
+    <div class="col-md-12 ">
+        <div id="definitionContainer " class="col-md-8 ">
+            <form id="categorizationForm " class="vert-offset " role="form ">
+                <div class="form-group ">
+                    <label for="patCohortDefName " class="control-label ">Name</label>
+                    <input type="text " id="patCohortDefName " class="form-control " />
                 </div>
-                <div class="form-group">
-                    <label for="patCohortDescription" class="control-label">Description</label>
-                    <textarea id="patCohortDescription" class="form-control"></textarea>
+                <div class="form-group ">
+                    <label for="patCohortDescription " class="control-label ">Description</label>
+                    <textarea id="patCohortDescription " class="form-control "></textarea>
                 </div>
 
-                <div class="form-group">
-                    <div id="propDefinition" class="col-sm-12 panel panel-default">
-                        <div class="row panel-heading">
-                            <h4 class="panel-title">Main Phenotype</h4>
+                <div class="form-group ">
+                    <div id="propDefinition " class="col-sm-12 panel panel-default ">
+                        <div class="row panel-heading ">
+                            <h4 class="panel-title ">Main Phenotype</h4>
                         </div>
-                        <div class="form-group">
-                            <div class="col-sm-12">
-                                <label class="sr-only" for="mainPhenotype">Main phenotype</label>
+                        <div class="form-group ">
+                            <div class="col-sm-12 ">
+                                <label class="sr-only " for="mainPhenotype ">Main phenotype</label>
 
                             </div>
                         </div>
                         <fieldset>
-                            <legend><input id="mainPhenotypeSpecifyDuration" type="checkbox" value="true" class="checkbox-inline" name="mainPhenotypeSpecifyDuration" /> Duration
+                            <legend><input id="mainPhenotypeSpecifyDuration " type="checkbox " value="true " class="checkbox-inline " name="mainPhenotypeSpecifyDuration " /> Duration
                             </legend>
-                            <div class="form-group">
-                                <div class="col-md-2">
-                                    <label class="sr-only" id="mainPhenotypeMinDurationValue">From</label>
-                                    <input type="number" class="form-control" name="mainPhenotypeMinDurationValue" id="mainPhenotypeMinDurationValue" placeholder="min" value="" />
+                            <div class="form-group ">
+                                <div class="col-md-2 ">
+                                    <label class="sr-only " id="mainPhenotypeMinDurationValue ">From</label>
+                                    <input type="number " class="form-control " name="mainPhenotypeMinDurationValue " id="mainPhenotypeMinDurationValue " placeholder="min " value=" " />
                                 </div>
-                                <div class="col-md-3">
-                                    <label class="sr-only" id="mainPhenotypeMinDurationUnits">From time units</label>
-                                    <select name="mainPhenotypeMinDurationUnits" id="mainPhenotypeMinDurationUnits" class="form-control"></select>
+                                <div class="col-md-3 ">
+                                    <label class="sr-only " id="mainPhenotypeMinDurationUnits ">From time units</label>
+                                    <select name="mainPhenotypeMinDurationUnits " id="mainPhenotypeMinDurationUnits " class="form-control "></select>
                                 </div>
-                                <div class="col-md-1 control-label" style="text-align: center">
-                                    <label for="mainPhenotypeMaxDurationValue">to</label>
+                                <div class="col-md-1 control-label " style="text-align: center ">
+                                    <label for="mainPhenotypeMaxDurationValue ">to</label>
                                 </div>
-                                <div class="col-md-2">
-                                    <input type="number" class="form-control" name="mainPhenotypeMaxDurationValue" id="mainPhenotypeMaxDurationValue" placeholder="max" value="" />
+                                <div class="col-md-2 ">
+                                    <input type="number " class="form-control " name="mainPhenotypeMaxDurationValue " id="mainPhenotypeMaxDurationValue " placeholder="max " value=" " />
                                 </div>
-                                <div class="col-md-3">
-                                    <label class="sr-only" id="mainPhenotypeMaxDurationUnits">From time units</label>
-                                    <select name="mainPhenotypeMaxDurationUnits" id="mainPhenotypeMaxDurationUnits" class="form-control"> </select>
+                                <div class="col-md-3 ">
+                                    <label class="sr-only " id="mainPhenotypeMaxDurationUnits ">From time units</label>
+                                    <select name="mainPhenotypeMaxDurationUnits " id="mainPhenotypeMaxDurationUnits " class="form-control "> </select>
                                 </div>
                             </div>
                         </fieldset>
                         <fieldset>
                             <legend>
-                                <input type="checkbox" class="checkbox-inline propertyValueConstraint" value="true" name="mainPhenotypeSpecifyProperty" /> Property value
+                                <input type="checkbox " class="checkbox-inline propertyValueConstraint " value="true " name="mainPhenotypeSpecifyProperty " /> Property value
                             </legend>
-                            <div class="form-group">
-                                <div class="col-sm-6">
-                                    <label class="sr-only" for="mainPhenotypePropertyName">Property name</label>
-                                    <select name="mainPhenotypePropertyName" class="form-control" id="mainPhenotypePropertyName" data-properties-provider="mainPhenotype">  </select>
+                            <div class="form-group ">
+                                <div class="col-sm-6 ">
+                                    <label class="sr-only " for="mainPhenotypePropertyName ">Property name</label>
+                                    <select name="mainPhenotypePropertyName " class="form-control " id="mainPhenotypePropertyName " data-properties-provider="mainPhenotype ">  </select>
                                 </div>
-                                <div class="col-sm-6">
-                                    <label class="sr-only" for="mainPhenotypePropertyValue">Property value</label>
-                                    <input type="text" class="form-control propertyValueField" name="mainPhenotypePropertyValue" id="mainPhenotypePropertyValue" value="" />
+                                <div class="col-sm-6 ">
+                                    <label class="sr-only " for="mainPhenotypePropertyValue ">Property value</label>
+                                    <input type="text " class="form-control propertyValueField " name="mainPhenotypePropertyValue " id="mainPhenotypePropertyValue " value=" " />
                                 </div>
                             </div>
                         </fieldset>
                     </div>
                 </div>
 
-                <div class="form-group">
-                    <div id="sequenceRelatedPhenotypes" class="sequence-relations-container">
+                <div class="form-group ">
+                    <div id="sequenceRelatedPhenotypes " class="sequence-relations-container ">
 
-                        <div class="sequence-relation drop-parent panel panel-default col-sm-12">
-                            <div class="row panel-heading">
-                                <h4 class="panel-title">Related phenotype <span class="count">1</span></h4>
+                        <div class="sequence-relation drop-parent panel panel-default col-sm-12 ">
+                            <div class="row panel-heading ">
+                                <h4 class="panel-title ">Related phenotype <span class="count ">1</span></h4>
                             </div>
-                            <div class="form-group">
-                                <div class="col-sm-12">
-                                    <label class="sr-only" for="relatedPhenotype${status.count}">Related phenotype </label>
+                            <div class="form-group ">
+                                <div class="col-sm-12 ">
+                                    <label class="sr-only " for="relatedPhenotype${status.count} ">Related phenotype </label>
 
                                 </div>
                             </div>
                             <fieldset>
                                 <legend>
-                                    <input type="checkbox" value="true" name="sequenceRelPhenotypeSpecifyDuration" /> Duration
+                                    <input type="checkbox " value="true " name="sequenceRelPhenotypeSpecifyDuration " /> Duration
                                 </legend>
-                                <div class="form-group">
-                                    <div class="col-md-2">
-                                        <label class="sr-only" for="sequenceRelPhenotypeMinDurationValue">From</label>
-                                        <input type="number" class="form-control" name="sequenceRelPhenotypeMinDurationValue" id="sequenceRelPhenotypeMinDurationValue" placeholder="min" value="" />
+                                <div class="form-group ">
+                                    <div class="col-md-2 ">
+                                        <label class="sr-only " for="sequenceRelPhenotypeMinDurationValue ">From</label>
+                                        <input type="number " class="form-control " name="sequenceRelPhenotypeMinDurationValue " id="sequenceRelPhenotypeMinDurationValue " placeholder="min " value=" " />
                                     </div>
-                                    <div class="col-md-3">
-                                        <label class="sr-only" for="sequenceRelPhenotypeMinDurationUnits">From units</label>
-                                        <select name="sequenceRelPhenotypeMinDurationUnits" class="form-control"></select>
+                                    <div class="col-md-3 ">
+                                        <label class="sr-only " for="sequenceRelPhenotypeMinDurationUnits ">From units</label>
+                                        <select name="sequenceRelPhenotypeMinDurationUnits " class="form-control "></select>
                                     </div>
-                                    <div class="col-md-1 control-label" style="text-align: center">
-                                        <label for="sequenceRelPhenotypeMaxDurationValue">to</label>
+                                    <div class="col-md-1 control-label " style="text-align: center ">
+                                        <label for="sequenceRelPhenotypeMaxDurationValue ">to</label>
                                     </div>
-                                    <div class="col-md-2">
-                                        <input type="number" class="form-control" name="sequenceRelPhenotypeMaxDurationValue" id="sequenceRelPhenotypeMaxDurationValue" placeholder="max" value="" />
+                                    <div class="col-md-2 ">
+                                        <input type="number " class="form-control " name="sequenceRelPhenotypeMaxDurationValue " id="sequenceRelPhenotypeMaxDurationValue " placeholder="max " value=" " />
                                     </div>
-                                    <div class="col-md-3">
-                                        <label class="sr-only" for="sequenceRelPhenotypeMaxDurationUnits">To units</label>
-                                        <select name="sequenceRelPhenotypeMaxDurationUnits" class="form-control"></select>
+                                    <div class="col-md-3 ">
+                                        <label class="sr-only " for="sequenceRelPhenotypeMaxDurationUnits ">To units</label>
+                                        <select name="sequenceRelPhenotypeMaxDurationUnits " class="form-control "></select>
                                     </div>
                                 </div>
                             </fieldset>
                             <fieldset>
                                 <legend>
-                                    <input type="checkbox" class="checkbox-inline propertyValueConstraint" value="true" name="sequenceRelPhenotypeSpecifyProperty" /> Property value
+                                    <input type="checkbox " class="checkbox-inline propertyValueConstraint " value="true " name="sequenceRelPhenotypeSpecifyProperty " /> Property value
                                 </legend>
-                                <div class="form-group">
-                                    <div class="col-sm-6">
-                                        <label class="sr-only" for="sequenceRelPhenotypePropertyName">Property name</label>
-                                        <select name="sequenceRelPhenotypePropertyName" class="form-control" id="sequenceRelPhenotypePropertyName">
+                                <div class="form-group ">
+                                    <div class="col-sm-6 ">
+                                        <label class="sr-only " for="sequenceRelPhenotypePropertyName ">Property name</label>
+                                        <select name="sequenceRelPhenotypePropertyName " class="form-control " id="sequenceRelPhenotypePropertyName ">
                                                                                                 
                                                                                                 </select>
                                     </div>
-                                    <div class="col-sm-6">
-                                        <label class="sr-only" for="sequenceRelPhenotypePropertyValue">Property value</label>
-                                        <input type="text" class="form-control propertyValueField" name="sequenceRelPhenotypePropertyValue" id="sequenceRelPhenotypePropertyValue" value="" />
+                                    <div class="col-sm-6 ">
+                                        <label class="sr-only " for="sequenceRelPhenotypePropertyValue ">Property value</label>
+                                        <input type="text " class="form-control propertyValueField " name="sequenceRelPhenotypePropertyValue " id="sequenceRelPhenotypePropertyValue " value=" " />
                                     </div>
                                 </div>
                             </fieldset>
                             <fieldset>
                                 <legend>Temporal Relationship</legend>
-                                <div class="form-group">
-                                    <div class="col-sm-6">
-                                        <label class="sr-only" for="sequenceRelPhenotypeTemporalRelation">Temporal relation</label>
-                                        <select name="sequenceRelPhenotypeTemporalRelation" id="sequenceRelPhenotypeTemporalRelation" class="form-control">
+                                <div class="form-group ">
+                                    <div class="col-sm-6 ">
+                                        <label class="sr-only " for="sequenceRelPhenotypeTemporalRelation ">Temporal relation</label>
+                                        <select name="sequenceRelPhenotypeTemporalRelation " id="sequenceRelPhenotypeTemporalRelation " class="form-control ">
                                                                                          
                                                                                                 </select>
                                     </div>
-                                    <div class="col-sm-6">
-                                        <label class="sr-only" for="propositionSelect">Other phenotype</label>
-                                        <select name="propositionSelect" class="form-control"></select>
+                                    <div class="col-sm-6 ">
+                                        <label class="sr-only " for="propositionSelect ">Other phenotype</label>
+                                        <select name="propositionSelect " class="form-control "></select>
                                     </div>
                                 </div>
-                                <div class="form-group">
-                                    <div class="col-md-1 control-label" style="text-align: center">
-                                        <label for="sequenceRhsPhenotypeMinDistanceValue">by</label>
+                                <div class="form-group ">
+                                    <div class="col-md-1 control-label " style="text-align: center ">
+                                        <label for="sequenceRhsPhenotypeMinDistanceValue ">by</label>
                                     </div>
-                                    <div class="col-md-2">
-                                        <input type="text" class="form-control" name="sequenceRhsPhenotypeMinDistanceValue" id="sequenceRhsPhenotypeMinDistanceValue" placeholder="min" value="" />
+                                    <div class="col-md-2 ">
+                                        <input type="text " class="form-control " name="sequenceRhsPhenotypeMinDistanceValue " id="sequenceRhsPhenotypeMinDistanceValue " placeholder="min " value=" " />
                                     </div>
-                                    <div class="col-md-3">
-                                        <label class="sr-only" for="sequenceRhsPhenotypeMinDistanceUnits">By units</label>
-                                        <select name="sequenceRhsPhenotypeMinDistanceUnits" id="sequenceRhsPhenotypeMinDistanceUnits" class="form-control">
+                                    <div class="col-md-3 ">
+                                        <label class="sr-only " for="sequenceRhsPhenotypeMinDistanceUnits ">By units</label>
+                                        <select name="sequenceRhsPhenotypeMinDistanceUnits " id="sequenceRhsPhenotypeMinDistanceUnits " class="form-control ">
                                                                              
                                                                                                 </select>
                                     </div>
-                                    <div class="col-md-1 control-label" style="text-align: center">
-                                        <label for="sequenceRhsPhenotypeMaxDistanceValue">to</label>
+                                    <div class="col-md-1 control-label " style="text-align: center ">
+                                        <label for="sequenceRhsPhenotypeMaxDistanceValue ">to</label>
                                     </div>
-                                    <div class="col-md-2">
-                                        <input type="text" class="form-control" placeholder="max" name="sequenceRhsPhenotypeMaxDistanceValue" id="sequenceRhsPhenotypeMaxDistanceValue" value=" " />
+                                    <div class="col-md-2 ">
+                                        <input type="text " class="form-control " placeholder="max " name="sequenceRhsPhenotypeMaxDistanceValue " id="sequenceRhsPhenotypeMaxDistanceValue " value=" " />
                                     </div>
                                     <div class=" col-md-3 ">
-                                        <label class="sr-only" for="sequenceRhsPhenotypeMaxDistanceUnits ">To units</label>
-                                        <select name="sequenceRhsPhenotypeMaxDistanceUnits" class="form-control "></select>
+                                        <label class="sr-only " for="sequenceRhsPhenotypeMaxDistanceUnits ">To units</label>
+                                        <select name="sequenceRhsPhenotypeMaxDistanceUnits " class="form-control "></select>
                                     </div>
                                 </div>
                             </fieldset>

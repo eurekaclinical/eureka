@@ -1,15 +1,15 @@
 <div class="row" ng-cloak>
-  <div class="col-sm-12">
-    <h3>{{editPhenotype.name}} Editor</h3>
-      <p>
-      {{editPhenotype.description}}
-    </p>
-  </div>
+    <div class="col-sm-12">
+        <h3>{{editPhenotype.name}} Editor</h3>
+        <p>
+            {{editPhenotype.description}}
+        </p>
+    </div>
 </div>
 
 <div class="row">
-  <div class="col-md-12">
-  </div>
+    <div class="col-md-12">
+    </div>
 </div>
 <div class="row">
     <div class="col-md-12">
@@ -17,23 +17,23 @@
             <form id="categorizationForm" class="vert-offset" role="form">
                 <div class="form-group">
                     <label for="patCohortDefName" class="control-label">Name</label>
-                    <input type="text" id="patCohortDefName" class="form-control" ng-model="editPhenotype.destination.displayName"/>
+                    <input type="text" id="patCohortDefName" class="form-control" ng-model="editPhenotype.destination.displayName" />
                 </div>
                 <div class="form-group">
                     <label for="patCohortDescription" class="control-label">Description</label>
                     <textarea id="patCohortDescription" class="form-control" ng-model="editPhenotype.destination.description"></textarea>
-					</div>
-					<div class="form-group">
-						<label for="patCohortDefinition" class="control-label">Members</label>
+                </div>
+                <div class="form-group">
+                    <label for="patCohortDefinition" class="control-label">Members</label>
 
-					</div>
+                </div>
 
-					<div class="form-group text-center vert-offset">
-						<button id="savePhenotypeButton" type="button" class="btn btn-primary">Save</button>
-					</div>
-				</form>
-			</div>
-  </div>
+                <div class="form-group text-center vert-offset">
+                    <button id="savePhenotypeButton" type="button" class="btn btn-primary">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
 </div>
 
 <!--<div layout="column" layout-gt-md="row" >
