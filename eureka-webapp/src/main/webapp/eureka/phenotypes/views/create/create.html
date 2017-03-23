@@ -1,13 +1,18 @@
+<style>
+    .ng-table-pager {
+        display: none;
+    }
+</style>
 <div class="row">
-  <div class="col-sm-12">
-    <h3>New {{createPhenotype.type}} Phenotype</h3>
-    <p>
-      {{createPhenotype.description}}
-    </p>
-  </div>
+    <div class="col-sm-12">
+        <h3>{{createPhenotype.type}} Editor</h3>
+        <p>
+            {{createPhenotype.description}}
+        </p>
+    </div>
 </div>
 
-<div class="row">
+<div class="row" ng-if="createPhenotype.type === 'Categorization'">
     <div class="col-md-12">
         <div id="definitionContainer" class="col-md-8">
             <form id="categorizationForm" class="vert-offset" role="form">
@@ -18,215 +23,534 @@
                 <div class="form-group">
                     <label for="patCohortDescription" class="control-label">Description</label>
                     <textarea id="patCohortDescription" class="form-control"></textarea>
-					</div>
-					<div class="form-group">
-						<label for="patCohortDefinition" class="control-label">Members</label>
+                </div>
+                <div class="form-group">
+                    <label for="patCohortDefinition" class="control-label">Members</label>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="row">
+                                <ol class="breadcrumb">
+                                    <li class="breadcrumb-item" ng-repeat="x in createPhenotype.breadCrumbs"><a href ng-click="createPhenotype.setBreadCrumbs(x)">{{x.text}}</a></li>
+                                </ol>
+                            </div>
+                            <table ng-table="createPhenotype.tableParams" class="table" show-filter="true">
+                                <tr ng-repeat="user in $data" class="animate">
+                                    <td>
+                                        <a title="Edit" ng-click="createPhenotype.selectNode(user) ">
+                                            <span ng-class="{true: 'glyphicon glyphicon-folder-close', false: 'glyphicon glyphicon-file'}[user.children]" title=""></span>
 
-					</div>
+                                        </a>
+                                    </td>
+                                    <td title=" 'Name' ">
+                                        {{user.text}}
+                                    </td>
 
-					<div class="form-group text-center vert-offset">
-						<button id="savePhenotypeButton" type="button" class="btn btn-primary">Save</button>
-					</div>
-				</form>
-			</div>
-  </div>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="form-group text-center vert-offset ">
+                    <button id="savePhenotypeButton " type="button " class="btn btn-primary ">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
 </div>
 
-<!--
-<div layout="column" layout-gt-md="row" >
+<div class="row " ng-if="createPhenotype.type==='Frequency' ">
+    <div class="col-md-12 ">
+        <div id="definitionContainer " class="col-md-8 ">
+            <form id="categorizationForm " class="vert-offset " role="form ">
+                <div class="form-group ">
+                    <label for="patCohortDefName " class="control-label ">Name</label>
+                    <input type="text " id="patCohortDefName " class="form-control " />
+                </div>
+                <div class="form-group ">
+                    <label for="patCohortDescription " class="control-label ">Description</label>
+                    <textarea id="patCohortDescription " class="form-control "></textarea>
+                </div>
+                <div class="form-group ">
 
-  <md-content flex flex-order="2" flex-order-gt-md="1" layout-padding>
-    <cohort-members-tree member-list="newCohort.memberList"></cohort-members-tree>
+
+                </div>
+
+                <fieldset>
+                    <legend>Threshold</legend>
+                    <div class="form-group ">
+                        <div class="col-sm-4 ">
+                            <label class="sr-only " for="freqTypes ">Type</label>
+                            <select id="freqTypes " class="form-control " name="freqTypes " id="freqTypes " title="Specify whether only the first n intervals will be matched (First) or any n intervals (At least) "></select>
+                        </div>
+                        <div class="col-sm-4 ">
+                            <label class="sr-only " for="freqAtLeastField ">Count</label>
+                            <input type="number " id="frequencyCountField " name="freqAtLeastField " id="freqAtLeastField " min="1 " value=" " title="Specify the frequency count " class="form-control " />
+                        </div>
+                        <div class="col-sm-4 ">
+                            <label id="valueThresholdConsecutiveLabel " class="checkbox-inline ">
+						<input type="checkbox " value="true " name="freqIsConsecutive "
+								  title="For value threshold phenotypes, specifies whether no intervening values are present that do not match the threshold or any duration or property constraints specified below "
+							   />consecutive
+					</label>
+                        </div>
+                    </div>
+                </fieldset>
+                <fieldset>
+                    <legend><input class="checkbox-inline " type="checkbox " value="true " name="freqPhenotypeSpecifyDuration " /> Duration
+                    </legend>
+                    <div class="form-group ">
+                        <div class="col-md-2 ">
+                            <label class="sr-only " for="freqPhenotypeMinDurationValue ">From</label>
+                            <input type="text " class="form-control " name="freqPhenotypeMinDurationValue " id="freqPhenotypeMinDurationValue " placeholder="min " value=" " />
+                        </div>
+                        <div class="col-md-3 ">
+                            <label class="sr-only " for="freqPhenotypeMinDurationUnits ">From units</label>
+                            <select name="freqPhenotypeMinDurationUnits " id="freqPhenotypeMinDurationUnits " class="form-control ">
+                                                </select>
+                        </div>
+                        <div class="col-md-1 control-label " style="text-align: center ">
+                            <label for="freqPhenotypeMaxDurationValue ">to</label>
+                        </div>
+                        <div class="col-md-2 ">
+                            <input type="text " class="form-control " name="freqPhenotypeMaxDurationValue " placeholder="max " value=" " />
+                        </div>
+                        <div class="col-md-3 ">
+                            <label class="sr-only " for="freqPhenotypeMaxDurationUnits ">To units</label>
+                            <select name="freqPhenotypeMaxDurationUnits " id="freqPhenotypeMaxDurationUnits " class="form-control ">
+        
+                                                </select>
+                        </div>
+                    </div>
+                </fieldset>
+                <fieldset>
+                    <legend>
+                        <input type="checkbox " class="checkbox-inline propertyValueConstraint " name="freqPhenotypeSpecifyProperty "> Property value
+                    </legend>
+                    <div class="form-group ">
+                        <div class="col-sm-6 ">
+                            <label class="sr-only " for="freqPhenotypePropertyName ">Property name</label>
+                            <select name="freqPhenotypePropertyName " id="freqPhenotypePropertyName " class="form-control " data-properties-provider="freqMainPhenotype ">
+					</select>
+                        </div>
+                        <div class="col-sm-6 ">
+                            <label class="sr-only " for="freqPhenotypePropertyValue ">Property value</label>
+                            <input type="text " class="form-control propertyValueField " name="freqPhenotypePropertyValue " id="freqPhenotypePropertyValue " value=" " />
+                        </div>
+                    </div>
+                </fieldset>
+                <fieldset>
+                    <legend>
+                        <input type="checkbox " value="true " name="freqIsWithin " class="checkbox-inline "> Distance between
+                    </legend>
+                    <div class="form-group ">
+                        <div class="col-md-2 ">
+                            <label class="sr-only " for="freqWithinAtLeast ">From</label>
+                            <input type="text " class="form-control " name="freqWithinAtLeast " id="freqWithinAtLeast " placeholder="min " value=" " />
+                        </div>
+                        <div class="col-md-3 ">
+                            <label class="sr-only " for="freqWithinAtLeastUnits ">Time units</label>
+                            <select name="freqWithinAtLeastUnits " id="freqWithinAtLeastUnits " class="form-control ">
+                                                </select>
+                        </div>
+                        <div class="col-md-1 control-label " style="text-align: center ">
+                            <label for="freqWithinAtMost ">to</label>
+                        </div>
+                        <div class="col-md-2 ">
+                            <input type="text " class="form-control " name="freqWithinAtMost " placeholder="max " id="freqWithinAtMost " value=" " />
+                        </div>
+                        <div class="col-md-3 ">
+                            <label class="sr-only " for="freqWithinAtMostUnits ">Time units</label>
+                            <select name="freqWithinAtMostUnits " class="form-control " id="freqWithinAtMostUnits ">
+                                                </select>
+                        </div>
+                    </div>
+                </fieldset>
+
+                <div class="form-group text-center vert-offset ">
+                    <button id="savePhenotypeButton " type="button " class="btn btn-primary ">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+<!-- sequence  -->
+<div class="row " ng-if="createPhenotype.type==='Sequence' ">
+    <div class="col-md-12 ">
+        <div id="definitionContainer " class="col-md-8 ">
+            <form id="categorizationForm " class="vert-offset " role="form ">
+                <div class="form-group ">
+                    <label for="patCohortDefName " class="control-label ">Name</label>
+                    <input type="text " id="patCohortDefName " class="form-control " />
+                </div>
+                <div class="form-group ">
+                    <label for="patCohortDescription " class="control-label ">Description</label>
+                    <textarea id="patCohortDescription " class="form-control "></textarea>
+                </div>
+
+                <div class="form-group ">
+                    <div id="propDefinition " class="col-sm-12 panel panel-default ">
+                        <div class="row panel-heading ">
+                            <h4 class="panel-title ">Main Phenotype</h4>
+                        </div>
+                        <div class="form-group ">
+                            <div class="col-sm-12 ">
+                                <label class="sr-only " for="mainPhenotype ">Main phenotype</label>
+
+                            </div>
+                        </div>
+                        <fieldset>
+                            <legend><input id="mainPhenotypeSpecifyDuration " type="checkbox " value="true " class="checkbox-inline " name="mainPhenotypeSpecifyDuration " /> Duration
+                            </legend>
+                            <div class="form-group ">
+                                <div class="col-md-2 ">
+                                    <label class="sr-only " id="mainPhenotypeMinDurationValue ">From</label>
+                                    <input type="number " class="form-control " name="mainPhenotypeMinDurationValue " id="mainPhenotypeMinDurationValue " placeholder="min " value=" " />
+                                </div>
+                                <div class="col-md-3 ">
+                                    <label class="sr-only " id="mainPhenotypeMinDurationUnits ">From time units</label>
+                                    <select name="mainPhenotypeMinDurationUnits " id="mainPhenotypeMinDurationUnits " class="form-control "></select>
+                                </div>
+                                <div class="col-md-1 control-label " style="text-align: center ">
+                                    <label for="mainPhenotypeMaxDurationValue ">to</label>
+                                </div>
+                                <div class="col-md-2 ">
+                                    <input type="number " class="form-control " name="mainPhenotypeMaxDurationValue " id="mainPhenotypeMaxDurationValue " placeholder="max " value=" " />
+                                </div>
+                                <div class="col-md-3 ">
+                                    <label class="sr-only " id="mainPhenotypeMaxDurationUnits ">From time units</label>
+                                    <select name="mainPhenotypeMaxDurationUnits " id="mainPhenotypeMaxDurationUnits " class="form-control "> </select>
+                                </div>
+                            </div>
+                        </fieldset>
+                        <fieldset>
+                            <legend>
+                                <input type="checkbox " class="checkbox-inline propertyValueConstraint " value="true " name="mainPhenotypeSpecifyProperty " /> Property value
+                            </legend>
+                            <div class="form-group ">
+                                <div class="col-sm-6 ">
+                                    <label class="sr-only " for="mainPhenotypePropertyName ">Property name</label>
+                                    <select name="mainPhenotypePropertyName " class="form-control " id="mainPhenotypePropertyName " data-properties-provider="mainPhenotype ">  </select>
+                                </div>
+                                <div class="col-sm-6 ">
+                                    <label class="sr-only " for="mainPhenotypePropertyValue ">Property value</label>
+                                    <input type="text " class="form-control propertyValueField " name="mainPhenotypePropertyValue " id="mainPhenotypePropertyValue " value=" " />
+                                </div>
+                            </div>
+                        </fieldset>
+                    </div>
+                </div>
+
+                <div class="form-group ">
+                    <div id="sequenceRelatedPhenotypes " class="sequence-relations-container ">
+
+                        <div class="sequence-relation drop-parent panel panel-default col-sm-12 ">
+                            <div class="row panel-heading ">
+                                <h4 class="panel-title ">Related phenotype <span class="count ">1</span></h4>
+                            </div>
+                            <div class="form-group ">
+                                <div class="col-sm-12 ">
+                                    <label class="sr-only " for="relatedPhenotype${status.count} ">Related phenotype </label>
+
+                                </div>
+                            </div>
+                            <fieldset>
+                                <legend>
+                                    <input type="checkbox " value="true " name="sequenceRelPhenotypeSpecifyDuration " /> Duration
+                                </legend>
+                                <div class="form-group ">
+                                    <div class="col-md-2 ">
+                                        <label class="sr-only " for="sequenceRelPhenotypeMinDurationValue ">From</label>
+                                        <input type="number " class="form-control " name="sequenceRelPhenotypeMinDurationValue " id="sequenceRelPhenotypeMinDurationValue " placeholder="min " value=" " />
+                                    </div>
+                                    <div class="col-md-3 ">
+                                        <label class="sr-only " for="sequenceRelPhenotypeMinDurationUnits ">From units</label>
+                                        <select name="sequenceRelPhenotypeMinDurationUnits " class="form-control "></select>
+                                    </div>
+                                    <div class="col-md-1 control-label " style="text-align: center ">
+                                        <label for="sequenceRelPhenotypeMaxDurationValue ">to</label>
+                                    </div>
+                                    <div class="col-md-2 ">
+                                        <input type="number " class="form-control " name="sequenceRelPhenotypeMaxDurationValue " id="sequenceRelPhenotypeMaxDurationValue " placeholder="max " value=" " />
+                                    </div>
+                                    <div class="col-md-3 ">
+                                        <label class="sr-only " for="sequenceRelPhenotypeMaxDurationUnits ">To units</label>
+                                        <select name="sequenceRelPhenotypeMaxDurationUnits " class="form-control "></select>
+                                    </div>
+                                </div>
+                            </fieldset>
+                            <fieldset>
+                                <legend>
+                                    <input type="checkbox " class="checkbox-inline propertyValueConstraint " value="true " name="sequenceRelPhenotypeSpecifyProperty " /> Property value
+                                </legend>
+                                <div class="form-group ">
+                                    <div class="col-sm-6 ">
+                                        <label class="sr-only " for="sequenceRelPhenotypePropertyName ">Property name</label>
+                                        <select name="sequenceRelPhenotypePropertyName " class="form-control " id="sequenceRelPhenotypePropertyName ">
+                                                                                                
+                                                                                                </select>
+                                    </div>
+                                    <div class="col-sm-6 ">
+                                        <label class="sr-only " for="sequenceRelPhenotypePropertyValue ">Property value</label>
+                                        <input type="text " class="form-control propertyValueField " name="sequenceRelPhenotypePropertyValue " id="sequenceRelPhenotypePropertyValue " value=" " />
+                                    </div>
+                                </div>
+                            </fieldset>
+                            <fieldset>
+                                <legend>Temporal Relationship</legend>
+                                <div class="form-group ">
+                                    <div class="col-sm-6 ">
+                                        <label class="sr-only " for="sequenceRelPhenotypeTemporalRelation ">Temporal relation</label>
+                                        <select name="sequenceRelPhenotypeTemporalRelation " id="sequenceRelPhenotypeTemporalRelation " class="form-control ">
+                                                                                         
+                                                                                                </select>
+                                    </div>
+                                    <div class="col-sm-6 ">
+                                        <label class="sr-only " for="propositionSelect ">Other phenotype</label>
+                                        <select name="propositionSelect " class="form-control "></select>
+                                    </div>
+                                </div>
+                                <div class="form-group ">
+                                    <div class="col-md-1 control-label " style="text-align: center ">
+                                        <label for="sequenceRhsPhenotypeMinDistanceValue ">by</label>
+                                    </div>
+                                    <div class="col-md-2 ">
+                                        <input type="text " class="form-control " name="sequenceRhsPhenotypeMinDistanceValue " id="sequenceRhsPhenotypeMinDistanceValue " placeholder="min " value=" " />
+                                    </div>
+                                    <div class="col-md-3 ">
+                                        <label class="sr-only " for="sequenceRhsPhenotypeMinDistanceUnits ">By units</label>
+                                        <select name="sequenceRhsPhenotypeMinDistanceUnits " id="sequenceRhsPhenotypeMinDistanceUnits " class="form-control ">
+                                                                             
+                                                                                                </select>
+                                    </div>
+                                    <div class="col-md-1 control-label " style="text-align: center ">
+                                        <label for="sequenceRhsPhenotypeMaxDistanceValue ">to</label>
+                                    </div>
+                                    <div class="col-md-2 ">
+                                        <input type="text " class="form-control " placeholder="max " name="sequenceRhsPhenotypeMaxDistanceValue " id="sequenceRhsPhenotypeMaxDistanceValue " value=" " />
+                                    </div>
+                                    <div class=" col-md-3 ">
+                                        <label class="sr-only " for="sequenceRhsPhenotypeMaxDistanceUnits ">To units</label>
+                                        <select name="sequenceRhsPhenotypeMaxDistanceUnits " class="form-control "></select>
+                                    </div>
+                                </div>
+                            </fieldset>
+                        </div>
+                        <div class="form-group text-center vert-offset ">
+                            <button id="duplicateRelatedButton " type="button " class="btn btn-primary ">
+                                                <span class="glyphicon glyphicon-plus "></span> Add Related Phenotype
+                                        </button>
+                            <button id="savePhenotypeButton " type="button " class="btn btn-primary ">Save</button>
+                        </div>
+            </form>
+
+
+            </div>
+            </div>
+        </div>
+
+
+
+
+
+        <!--
+<div layout="column " layout-gt-md="row " >
+
+  <md-content flex flex-order="2 " flex-order-gt-md="1 " layout-padding>
+    <cohort-members-tree member-list="newCohort.memberList "></cohort-members-tree>
   </md-content>
 
-  <md-content flex="60" flex-gt-lg="66" flex-order="1" flex-order-gt-md="2" layout-padding>
-    <form name="userForm">
+  <md-content flex="60 " flex-gt-lg="66 " flex-order="1 " flex-order-gt-md="2 " layout-padding>
+    <form name="userForm ">
       <md-card>
         <md-card-content>
-          <h2 class="md-headline" style="margin-top: 0">New {{createPhenotype.type}} Phenotype</h2>
-          <p ng-bind="createPhenotype.description"></p>
+          <h2 class="md-headline " style="margin-top: 0 ">New {{createPhenotype.type}} Phenotype</h2>
+          <p ng-bind="createPhenotype.description "></p>
           <md-input-container flex>
             <label>Name</label>
-            <input ng-model="createPhenotype.phenotype.name">
+            <input ng-model="createPhenotype.phenotype.name ">
           </md-input-container>
           <md-input-container flex>
             <label>Description</label>
-            <textarea ng-model="createPhenotype.phenotype.description" columns="1" md-maxlength="250"></textarea>
+            <textarea ng-model="createPhenotype.phenotype.description " columns="1 " md-maxlength="250 "></textarea>
           </md-input-container>
         </md-card-content>
-        <md-toolbar class="md-primary md-hue-1">
-          <div class="md-toolbar-tools">
-            <h3 class="md-title">
+        <md-toolbar class="md-primary md-hue-1 ">
+          <div class="md-toolbar-tools ">
+            <h3 class="md-title ">
               <span>Main Data Element</span>
             </h3>
           </div>
         </md-toolbar>
         <md-card-content>
-          <cohort-members-drop-zone member-list="createPhenotype.memberList"></cohort-members-drop-zone>
+          <cohort-members-drop-zone member-list="createPhenotype.memberList "></cohort-members-drop-zone>
 
-          <div layout layout-sm="column" layout-align="center center">
-            <md-checkbox ng-model="createPhenotype.duration.enabled" aria-label="Checkbox 1">
+          <div layout layout-sm="column " layout-align="center center ">
+            <md-checkbox ng-model="createPhenotype.duration.enabled " aria-label="Checkbox 1 ">
               Duration
             </md-checkbox>
             <md-input-container flex>
               <label>Min</label>
-              <input type="number" step="any" name="minDuration" ng-model="createPhenotype.duration.min" />
+              <input type="number " step="any " name="minDuration " ng-model="createPhenotype.duration.min " />
             </md-input-container>
             <md-input-container flex>
               <label>Unit</label>
-              <md-select ng-model="createPhenotype.duration.minUnit">
-                <md-option ng-repeat="unit in createPhenotype.timeUnits" value="{{unit}}">
+              <md-select ng-model="createPhenotype.duration.minUnit ">
+                <md-option ng-repeat="unit in createPhenotype.timeUnits " value="{{unit}} ">
                   {{unit}}
                 </md-option>
               </md-select>
             </md-input-container>
-            <div style="padding:20px"><b>to</b></div>
+            <div style="padding:20px "><b>to</b></div>
             <md-input-container flex>
               <label>Max</label>
-              <input type="number" step="any" name="maxDuration" ng-model="createPhenotype.duration.max" />
+              <input type="number " step="any " name="maxDuration " ng-model="createPhenotype.duration.max " />
             </md-input-container>
             <md-input-container flex>
               <label>Unit</label>
-              <md-select ng-model="createPhenotype.duration.maxUnit">
-                <md-option ng-repeat="unit in createPhenotype.timeUnits" value="{{unit}}">
+              <md-select ng-model="createPhenotype.duration.maxUnit ">
+                <md-option ng-repeat="unit in createPhenotype.timeUnits " value="{{unit}} ">
                   {{unit}}
                 </md-option>
               </md-select>
             </md-input-container>
           </div>
 
-          <div layout layout-sm="column" layout-align="center center">
-            <md-checkbox ng-model="createPhenotype.property.enabled" aria-label="Checkbox 1">
+          <div layout layout-sm="column " layout-align="center center ">
+            <md-checkbox ng-model="createPhenotype.property.enabled " aria-label="Checkbox 1 ">
               Property Value
             </md-checkbox>
             <md-input-container flex>
               <label>Property</label>
-              <md-select ng-model="createPhenotype.property.name">
-                <md-option ng-repeat="unit in createPhenotype.timeUnits" value="{{unit}}">
+              <md-select ng-model="createPhenotype.property.name ">
+                <md-option ng-repeat="unit in createPhenotype.timeUnits " value="{{unit}} ">
                   {{unit}}
                 </md-option>
               </md-select>
             </md-input-container>
             <md-input-container flex>
               <label>Value</label>
-              <input type="number" step="any" name="propertyValue" ng-model="createPhenotype.property.value" />
+              <input type="number " step="any " name="propertyValue " ng-model="createPhenotype.property.value " />
             </md-input-container>
           </div>
         </md-card-content>
-        <md-toolbar class="md-primary md-hue-1">
-          <div class="md-toolbar-tools">
-            <h3 class="md-title">
+        <md-toolbar class="md-primary md-hue-1 ">
+          <div class="md-toolbar-tools ">
+            <h3 class="md-title ">
               <span>Related Data Element 1</span>
             </h3>
           </div>
         </md-toolbar>
         <md-card-content>
-          <cohort-members-drop-zone member-list="createPhenotype.memberList"></cohort-members-drop-zone>
+          <cohort-members-drop-zone member-list="createPhenotype.memberList "></cohort-members-drop-zone>
 
-          <div layout layout-sm="column" layout-align="center center">
-            <md-checkbox ng-model="createPhenotype.duration1.enabled" aria-label="Checkbox 1">
+          <div layout layout-sm="column " layout-align="center center ">
+            <md-checkbox ng-model="createPhenotype.duration1.enabled " aria-label="Checkbox 1 ">
               Duration
             </md-checkbox>
             <md-input-container flex>
               <label>Min</label>
-              <input type="number" step="any" name="minDuration1" ng-model="createPhenotype.duration1.min" />
+              <input type="number " step="any " name="minDuration1 " ng-model="createPhenotype.duration1.min " />
             </md-input-container>
             <md-input-container flex>
               <label>Unit</label>
-              <md-select ng-model="createPhenotype.duration1.minUnit">
-                <md-option ng-repeat="unit in createPhenotype.timeUnits" value="{{unit}}">
+              <md-select ng-model="createPhenotype.duration1.minUnit ">
+                <md-option ng-repeat="unit in createPhenotype.timeUnits " value="{{unit}} ">
                   {{unit}}
                 </md-option>
               </md-select>
             </md-input-container>
-            <div style="padding:20px"><b>to</b></div>
+            <div style="padding:20px "><b>to</b></div>
             <md-input-container flex>
               <label>Max</label>
-              <input type="number" step="any" name="maxDuration" ng-model="createPhenotype.duration1.max" />
+              <input type="number " step="any " name="maxDuration " ng-model="createPhenotype.duration1.max " />
             </md-input-container>
             <md-input-container flex>
               <label>Unit</label>
-              <md-select ng-model="createPhenotype.duration1.maxUnit">
-                <md-option ng-repeat="unit in createPhenotype.timeUnits" value="{{unit}}">
+              <md-select ng-model="createPhenotype.duration1.maxUnit ">
+                <md-option ng-repeat="unit in createPhenotype.timeUnits " value="{{unit}} ">
                   {{unit}}
                 </md-option>
               </md-select>
             </md-input-container>
           </div>
 
-          <div layout layout-sm="column" layout-align="center center">
-            <md-checkbox ng-model="createPhenotype.property1.enabled" aria-label="Checkbox 1">
+          <div layout layout-sm="column " layout-align="center center ">
+            <md-checkbox ng-model="createPhenotype.property1.enabled " aria-label="Checkbox 1 ">
               Property Value
             </md-checkbox>
             <md-input-container flex>
               <label>Property</label>
-              <md-select ng-model="createPhenotype.property1.name">
-                <md-option ng-repeat="unit in createPhenotype.timeUnits" value="{{unit}}">
+              <md-select ng-model="createPhenotype.property1.name ">
+                <md-option ng-repeat="unit in createPhenotype.timeUnits " value="{{unit}} ">
                   {{unit}}
                 </md-option>
               </md-select>
             </md-input-container>
             <md-input-container flex>
               <label>Value</label>
-              <input type="number" step="any" name="propertyValue1" ng-model="createPhenotype.property1.value" />
+              <input type="number " step="any " name="propertyValue1 " ng-model="createPhenotype.property1.value " />
             </md-input-container>
           </div>
 
-          <div layout layout-sm="column" layout-align="center center">
-            <div style="padding:10px">
+          <div layout layout-sm="column " layout-align="center center ">
+            <div style="padding:10px ">
               <b>Temporal Relationship</b>
             </div>
             <md-input-container flex>
               <label>Order</label>
-              <md-select ng-model="createPhenotype.relationship.order">
-                <md-option ng-repeat="order in ['before', 'after']" value="{{order}}">
+              <md-select ng-model="createPhenotype.relationship.order ">
+                <md-option ng-repeat="order in [ 'before', 'after'] " value="{{order}} ">
                   {{order}}
                 </md-option>
               </md-select>
             </md-input-container>
             <md-input-container flex>
               <label>Element</label>
-              <md-select ng-model="createPhenotype.relationship.element">
-                <md-option ng-repeat="element in ['main element']" value="{{element}}">
+              <md-select ng-model="createPhenotype.relationship.element ">
+                <md-option ng-repeat="element in [ 'main element'] " value="{{element}} ">
                   {{element}}
                 </md-option>
               </md-select>
             </md-input-container>
           </div>
 
-          <div layout layout-sm="column" layout-align="center center">
-            <div style="padding:10px">
+          <div layout layout-sm="column " layout-align="center center ">
+            <div style="padding:10px ">
               <b>by</b>
             </div>
             <md-input-container flex>
               <label>Min</label>
-              <input type="number" step="any" name="minDuration1" ng-model="createPhenotype.duration1.min" />
+              <input type="number " step="any " name="minDuration1 " ng-model="createPhenotype.duration1.min " />
             </md-input-container>
             <md-input-container flex>
               <label>Unit</label>
-              <md-select ng-model="createPhenotype.duration1.minUnit">
-                <md-option ng-repeat="unit in createPhenotype.timeUnits" value="{{unit}}">
+              <md-select ng-model="createPhenotype.duration1.minUnit ">
+                <md-option ng-repeat="unit in createPhenotype.timeUnits " value="{{unit}} ">
                   {{unit}}
                 </md-option>
               </md-select>
             </md-input-container>
-            <div style="padding:20px"><b>to</b></div>
+            <div style="padding:20px "><b>to</b></div>
             <md-input-container flex>
               <label>Max</label>
-              <input type="number" step="any" name="maxDuration" ng-model="createPhenotype.duration1.max" />
+              <input type="number " step="any " name="maxDuration " ng-model="createPhenotype.duration1.max " />
             </md-input-container>
             <md-input-container flex>
               <label>Unit</label>
-              <md-select ng-model="createPhenotype.duration1.maxUnit">
-                <md-option ng-repeat="unit in createPhenotype.timeUnits" value="{{unit}}">
+              <md-select ng-model="createPhenotype.duration1.maxUnit ">
+                <md-option ng-repeat="unit in createPhenotype.timeUnits " value="{{unit}} ">
                   {{unit}}
                 </md-option>
               </md-select>
             </md-input-container>
           </div>
         </md-card-content>
-        <div class="md-actions md-padding" layout="row" layout-align="start center">
-          <md-button class="md-raised md-primary md-hue-1" ng-click="newCohort.submitCohortForm()"> Save </md-button>
+        <div class="md-actions md-padding " layout="row " layout-align="start center ">
+          <md-button class="md-raised md-primary md-hue-1 " ng-click="newCohort.submitCohortForm() "> Save </md-button>
         </div>
       </md-card>
     </form>

@@ -1,19 +1,20 @@
 (function() {
 
     'use strict';
-    
+
     var eurekaModule = angular.module('eureka');
 
-    eurekaModule.service('AppPropertiesService',['$http', function($http){
+    eurekaModule.service('AppPropertiesService', ['$http', function($http) {
         return {
-                    getAppProperties:function() {
-                        return $http.get('proxy-resource/appproperties/');
+            getAppProperties: function() {
+                return $http.get('proxy-resource/appproperties/');
             }
         };
     }]);
 
     var appProperties = {
         dataEndpoint: 'proxy-resource',
+        dataProtectedEndPoint: 'protected',
         filterEndpoint: 'protected/jstree3_searchsystemlist'
     };
 
