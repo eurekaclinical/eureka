@@ -30,23 +30,43 @@
                         <div class="col-md-6">
                             <div class="row">
                                 <ol class="breadcrumb">
-                                    <li class="breadcrumb-item" ng-repeat="x in createPhenotype.breadCrumbs"><a href ng-click="createPhenotype.setBreadCrumbs(x)">{{x.text}}</a></li>
+                                    <li class="breadcrumb-item" ng-repeat="x in createPhenotype.breadCrumbs"><a href ng-click="createPhenotype.setBreadCrumbs(x)">{{x.displayName}}</a></li>
                                 </ol>
                             </div>
                             <table ng-table="createPhenotype.tableParams" class="table" show-filter="true">
                                 <tr ng-repeat="user in $data" class="animate">
                                     <td>
                                         <a title="Edit" ng-click="createPhenotype.selectNode(user) ">
-                                            <span ng-class="{true: 'glyphicon glyphicon-folder-close', false: 'glyphicon glyphicon-file'}[user.children]" title=""></span>
+                                            <span ng-class="{true: 'glyphicon glyphicon-folder-close', false: 'glyphicon glyphicon-file'}[user.parent]" title=""></span>
 
                                         </a>
                                     </td>
                                     <td title=" 'Name' ">
-                                        {{user.text}}
+                                        {{user.displayName}}
+                                    </td>
+                                    <td>
+                                        <a title="Edit" ng-click="createPhenotype.addNode(user) ">
+                                            <span class="glyphicon glyphicon-plus" title=""></span>
+
+                                        </a>
                                     </td>
 
                                 </tr>
                             </table>
+                        </div>
+                        <div class="col-md-6">
+                            <form>
+                                <fieldset>
+                                    <legend style="padding-top:61px;">Items Added&nbsp;</legend>
+                                    <p ng-repeat="selectedNode in createPhenotype.currentMemeberList">
+                                        <span>{{selectedNode.displayName}}</span>
+                                        <a title="remove" ng-click="createPhenotype.removeNode(selectedNode) ">
+                                            <span class="glyphicon glyphicon-remove" title=""></span>
+
+                                        </a>
+                                        <p>
+                                </fieldset>
+                            </form>
                         </div>
                     </div>
 

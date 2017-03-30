@@ -34,14 +34,14 @@
         }
 
         function getTreeRoot() {
-            return $http.get(dataProtectedEndPoint + '/systemlist?key=root')
+            return $http.get(dataEndpoint + '/concepts')
                 .then(handleSuccess, handleError)
                 // https://localhost:8443/eureka-webapp/protected/systemlist?key=root
                 //https://localhost:8443/eureka-webapp/proxy-resource/systemlist?key=root
         }
 
-        function getTreeNode(id) {
-            return $http.get(dataProtectedEndPoint + '/systemlist?key=' + id)
+        function getTreeNode(key) {
+            return $http.get(dataEndpoint + '/concepts?key=' + key)
                 .then(handleSuccess, handleError)
                 // https://localhost:8443/eureka-webapp/protected/systemlist?key=root
                 //https://localhost:8443/eureka-webapp/proxy-resource/systemlist?key=root
