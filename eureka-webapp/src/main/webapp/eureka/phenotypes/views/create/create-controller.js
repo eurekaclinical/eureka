@@ -50,9 +50,9 @@
                 //copyData = data;
                 // NG Table
                 if (hasChildren) {
-                    vm.breadCrumbs.push({ key: currentNode.key, displayName: currentNode.displayName });
+                    vm.breadCrumbs.push({ key: currentNode.key, displayName: currentNode.displayName, parent: currentNode.parent });
                 }
-                vm.tableParams = new NgTableParams({}, { dataset: data });
+                vm.tableParams = new NgTableParams({}, { dataset: data.children });
 
 
 
@@ -78,18 +78,25 @@
             var currentNode = node;
             var hasChildren = node.parent;
             var pos = 0;
+            var returnedData = [];
+
             PhenotypeService.getTreeNode(currentNode.key).then(function(data) {
                 //  vm.treeData = data;
 
                 //vm.props = data;
                 //copyData = data;
                 // NG Table
+                if (data.hasOwnProperty('parent') && data['parent']) {
+                    returnedData = data.children;
+                } else {
+                    returnedData = data;
+                }
                 if (hasChildren) {
                     vm.breadCrumbs.push({ key: currentNode.key, displayName: currentNode.displayName });
 
                 }
 
-                vm.tableParams = new NgTableParams({}, { dataset: data });
+                vm.tableParams = new NgTableParams({}, { dataset: returnedData });
 
                 pos = vm.breadCrumbs.map(function(e) { return e.key; }).indexOf(currentNode.key);
                 vm.breadCrumbs.length = pos + 1;

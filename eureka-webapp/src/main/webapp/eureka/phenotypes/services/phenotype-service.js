@@ -41,10 +41,15 @@
         }
 
         function getTreeNode(key) {
-            return $http.get(dataEndpoint + '/concepts?key=' + key)
-                .then(handleSuccess, handleError)
-                // https://localhost:8443/eureka-webapp/protected/systemlist?key=root
-                //https://localhost:8443/eureka-webapp/proxy-resource/systemlist?key=root
+            if (key === 'root') {
+                return $http.get(dataEndpoint + '/concepts/')
+                    .then(handleSuccess, handleError)
+            } else {
+                return $http.get(dataEndpoint + '/concepts/' + key)
+                    .then(handleSuccess, handleError)
+                    // https://localhost:8443/eureka-webapp/protected/systemlist?key=root
+                    //https://localhost:8443/eureka-webapp/proxy-resource/systemlist?key=root
+            }
         }
 
         function getPhenotypeMessages() {
