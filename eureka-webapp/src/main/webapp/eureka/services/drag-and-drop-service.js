@@ -24,18 +24,30 @@
 
         });
 
-
-
         function getNodes() {
 
             return currentNodes;
         }
 
         function setNodes(obj) {
-
-            if (obj) {
+            let currentList = currentNodes;
+            let isDuplicate = false;
+            //lets do it the long way first then we will refactor.  Lets see if there are duplicates JS
+            if (currentList.length < 1) {
                 currentNodes.push(obj);
+            } else {
+                for (var i = 0; i < currentList.length; i++) {
+                    if (currentList[i].key === obj.key) {
+                        isDuplicate = true;
+                    }
+
+                }
+                if (isDuplicate !== true) {
+                    currentNodes.push(obj);
+                }
+
             }
+
 
         }
 
