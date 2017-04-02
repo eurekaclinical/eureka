@@ -15,9 +15,9 @@
         .module('eureka.phenotypes')
         .controller('phenotypes.CreateCtrl', CreateCtrl);
 
-    CreateCtrl.$inject = ['$stateParams', 'PhenotypeService', 'NgTableParams', 'dragAndDropService'];
+    CreateCtrl.$inject = ['$stateParams', 'PhenotypeService', 'NgTableParams', 'dragAndDropService', 'TreeService'];
 
-    function CreateCtrl($stateParams, PhenotypeService, NgTableParams, dragAndDropService) {
+    function CreateCtrl($stateParams, PhenotypeService, NgTableParams, dragAndDropService, TreeService) {
 
         var vm = this;
 
@@ -28,7 +28,7 @@
 
 
 
-        PhenotypeService.getTreeRoot().then(function(data) {
+        TreeService.getTreeRoot().then(function(data) {
             //  vm.treeData = data;
 
             //vm.props = data;
@@ -37,13 +37,26 @@
             vm.tableParams = new NgTableParams({}, { dataset: data });
 
 
-
+            callUserRoot();
         }, displayError);
 
+        function callUserRoot() {
+            TreeService.getUserListRoot().then(function(data) {
+                //  vm.treeData = data;
+
+                //vm.props = data;
+                //copyData = data;
+                // NG Table
+                vm.tableParamsUser = new NgTableParams({}, { dataset: data });
+
+
+
+            }, displayError);
+        }
         vm.selectNode = function(node) {
             var currentNode = node;
             var hasChildren = node.parent;
-            PhenotypeService.getTreeNode(currentNode.key).then(function(data) {
+            TreeService.getTreeNode(currentNode.key).then(function(data) {
                 //  vm.treeData = data;
 
                 //vm.props = data;
@@ -80,7 +93,7 @@
             var pos = 0;
             var returnedData = [];
 
-            PhenotypeService.getTreeNode(currentNode.key).then(function(data) {
+            TreeService.getTreeNode(currentNode.key).then(function(data) {
                 //  vm.treeData = data;
 
                 //vm.props = data;

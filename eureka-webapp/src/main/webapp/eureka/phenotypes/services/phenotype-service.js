@@ -21,11 +21,7 @@
         let { dataProtectedEndPoint } = appProperties;
         return ({
             getSummarizedUserElements: getSummarizedUserElements,
-            getPhenotypeMessages: getPhenotypeMessages,
-            removePhenotype: removePhenotype,
-            getPhenotype: getPhenotype,
-            getTreeRoot: getTreeRoot,
-            getTreeNode: getTreeNode
+            getPhenotypeMessages: getPhenotypeMessages
         });
 
         function getSummarizedUserElements() {
@@ -33,24 +29,7 @@
                 .then(handleSuccess, handleError);
         }
 
-        function getTreeRoot() {
-            return $http.get(dataEndpoint + '/concepts')
-                .then(handleSuccess, handleError)
-                // https://localhost:8443/eureka-webapp/protected/systemlist?key=root
-                //https://localhost:8443/eureka-webapp/proxy-resource/systemlist?key=root
-        }
 
-        function getTreeNode(key) {
-            if (key === 'root') {
-                return $http.get(dataEndpoint + '/concepts/')
-                    .then(handleSuccess, handleError)
-            } else {
-                return $http.get(dataEndpoint + '/concepts/' + key)
-                    .then(handleSuccess, handleError)
-                    // https://localhost:8443/eureka-webapp/protected/systemlist?key=root
-                    //https://localhost:8443/eureka-webapp/proxy-resource/systemlist?key=root
-            }
-        }
 
         function getPhenotypeMessages() {
             return {
@@ -81,29 +60,7 @@
             };
         }
 
-        function removePhenotype(id) {
 
-            return $http['delete'](dataEndpoint + '/phenotypes/' + id)
-                .then(handleSuccess, handleError);
-
-        }
-
-        function getPhenotype(key) {
-            return $http.get(dataEndpoint + '/phenotypes/' + key + '?summarize=true')
-                .then(handleSuccess, handleError);
-
-        }
-
-        function handleSuccess(response) {
-            return response.data;
-        }
-
-        function handleError(response) {
-            if (!angular.isObject(response.data) && !response.data) {
-                return ($q.reject('An unknown error occurred.'));
-            }
-            return ($q.reject(response.data));
-        }
 
     }
 
