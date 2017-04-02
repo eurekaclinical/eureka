@@ -29,8 +29,6 @@
                 .then(handleSuccess, handleError);
         }
 
-
-
         function getPhenotypeMessages() {
             return {
                 'CATEGORIZATION': {
@@ -58,6 +56,17 @@
                     'description': `For defining clinically significant thresholds on the value of an observation.`
                 }
             };
+        }
+
+        function handleSuccess(response) {
+            return response.data;
+        }
+
+        function handleError(response) {
+            if (!angular.isObject(response.data) && !response.data) {
+                return ($q.reject('An unknown error occurred.'));
+            }
+            return ($q.reject(response.data));
         }
 
 
