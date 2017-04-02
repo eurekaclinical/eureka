@@ -47,7 +47,7 @@
                 //vm.props = data;
                 //copyData = data;
                 // NG Table
-                vm.tableParamsUser = new NgTableParams({}, { dataset: data });
+                vm.tableParamsUser = new NgTableParams({}, { dataset: data.data });
 
 
 
