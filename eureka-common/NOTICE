@@ -19,7 +19,6 @@ This project includes:
   Apache Commons Codec under Apache License, Version 2.0
   Apache Commons Collections under Apache License, Version 2.0
   Apache Commons Lang under Apache License, Version 2.0
-  Apache ServiceMix :: Bundles :: xstream under The Apache Software License, Version 2.0
   ASM Core under Apache License, Version 2.0
   Core Hibernate O/RM functionality under GNU Lesser General Public License
   Data Mapper for Jackson under The Apache Software License, Version 2.0
@@ -73,7 +72,6 @@ This project includes:
   Jettison under Apache License, Version 2.0
   JSR-250 Common Annotations for the JavaTM Platform under COMMON DEVELOPMENT AND DISTRIBUTION LICENSE (CDDL) Version 1.0
   JUnit under Eclipse Public License 1.0
-  kXML 2 is a small XML pull parser based on the common XML pull API under BSD style or Public Domain
   Logging under The Apache Software License, Version 2.0
   MIME streaming extension under Dual license consisting of the CDDL v1.1 and GPL v2
   mvel under The Apache Software License, Version 2.0

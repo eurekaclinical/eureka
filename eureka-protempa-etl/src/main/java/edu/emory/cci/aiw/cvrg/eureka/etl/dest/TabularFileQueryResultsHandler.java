@@ -57,7 +57,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
-import org.arp.javautil.string.StringUtil;
 import org.protempa.KnowledgeSource;
 import org.protempa.KnowledgeSourceCache;
 import org.protempa.KnowledgeSourceCacheFactory;
@@ -68,7 +67,6 @@ import org.protempa.dest.QueryResultsHandlerCloseException;
 import org.protempa.dest.QueryResultsHandlerProcessingException;
 import org.protempa.dest.QueryResultsHandlerValidationFailedException;
 import org.protempa.dest.table.FileTabularWriter;
-import org.protempa.dest.table.StringMapReplacer;
 import org.protempa.dest.table.TableColumnSpec;
 import org.protempa.dest.table.TabularWriterException;
 import org.protempa.proposition.Proposition;
@@ -95,7 +93,6 @@ public class TabularFileQueryResultsHandler extends AbstractQueryResultsHandler 
 	private KnowledgeSource knowledgeSource;
 	private KnowledgeSourceCache ksCache;
 	private final char delimiter;
-	private StringMapReplacer replacer;
 
 	TabularFileQueryResultsHandler(Query query, TabularFileDestinationEntity inTabularFileDestinationEntity, EtlProperties inEtlProperties, KnowledgeSource inKnowledgeSource) {
 		assert inTabularFileDestinationEntity != null : "inTabularFileDestinationEntity cannot be null";
@@ -119,9 +116,6 @@ public class TabularFileQueryResultsHandler extends AbstractQueryResultsHandler 
 
 	@Override
 	public void start(Collection<PropositionDefinition> cache) throws QueryResultsHandlerProcessingException {
-		Map<String, String> replace = new HashMap<>();
-		replace.put(null, "NULL");
-		this.replacer = new StringMapReplacer(replace);
 		try {
 			File outputFileDirectory = this.etlProperties.outputFileDirectory(this.config.getName());
 			List<String> tableNames = this.config.getTableColumns()
@@ -133,7 +127,7 @@ public class TabularFileQueryResultsHandler extends AbstractQueryResultsHandler 
 			for (int i = 0, n = tableNames.size(); i < n; i++) {
 				String tableName = tableNames.get(i);
 				File file = new File(outputFileDirectory, tableName);
-				this.writers.put(tableName, new FileTabularWriter(new BufferedWriter(new FileWriter(file)), this.delimiter, this.replacer));
+				this.writers.put(tableName, new FileTabularWriter(new BufferedWriter(new FileWriter(file)), this.delimiter));
 			}
 		} catch (IOException ex) {
 			throw new QueryResultsHandlerProcessingException(ex);
