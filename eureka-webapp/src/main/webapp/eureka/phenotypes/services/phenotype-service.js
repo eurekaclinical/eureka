@@ -21,30 +21,12 @@
         let { dataProtectedEndPoint } = appProperties;
         return ({
             getSummarizedUserElements: getSummarizedUserElements,
-            getPhenotypeMessages: getPhenotypeMessages,
-            removePhenotype: removePhenotype,
-            getPhenotype: getPhenotype,
-            getTreeRoot: getTreeRoot,
-            getTreeNode: getTreeNode
+            getPhenotypeMessages: getPhenotypeMessages
         });
 
         function getSummarizedUserElements() {
             return $http.get(dataEndpoint + '/phenotypes?summarize=true')
                 .then(handleSuccess, handleError);
-        }
-
-        function getTreeRoot() {
-            return $http.get(dataProtectedEndPoint + '/systemlist?key=root')
-                .then(handleSuccess, handleError)
-                // https://localhost:8443/eureka-webapp/protected/systemlist?key=root
-                //https://localhost:8443/eureka-webapp/proxy-resource/systemlist?key=root
-        }
-
-        function getTreeNode(id) {
-            return $http.get(dataProtectedEndPoint + '/systemlist?key=' + id)
-                .then(handleSuccess, handleError)
-                // https://localhost:8443/eureka-webapp/protected/systemlist?key=root
-                //https://localhost:8443/eureka-webapp/proxy-resource/systemlist?key=root
         }
 
         function getPhenotypeMessages() {
@@ -76,19 +58,6 @@
             };
         }
 
-        function removePhenotype(id) {
-
-            return $http['delete'](dataEndpoint + '/phenotypes/' + id)
-                .then(handleSuccess, handleError);
-
-        }
-
-        function getPhenotype(key) {
-            return $http.get(dataEndpoint + '/phenotypes/' + key + '?summarize=true')
-                .then(handleSuccess, handleError);
-
-        }
-
         function handleSuccess(response) {
             return response.data;
         }
@@ -99,6 +68,8 @@
             }
             return ($q.reject(response.data));
         }
+
+
 
     }
 
