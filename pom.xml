@@ -72,7 +72,7 @@
 		<tomcat.httpsPort>8443</tomcat.httpsPort>
 		
 		<eurekaclinical-common-version>2.0-Alpha-8</eurekaclinical-common-version>
-		<eurekaclinical-ontology-version>1.2</eurekaclinical-ontology-version>
+		<eurekaclinical-ontology-version>2.0-Beta-1</eurekaclinical-ontology-version>
 	</properties>
 
 	<licenses>
