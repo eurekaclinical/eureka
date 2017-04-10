@@ -1,7 +1,7 @@
 <div class="row">
-  <div class="col-sm-12">
-    <h3>Cohort Editor</h3>
-  </div>
+    <div class="col-sm-12">
+        <h3>Cohort Editor</h3>
+    </div>
 </div>
 
 <div class="row">
@@ -15,87 +15,92 @@
                 <div class="form-group">
                     <label for="patCohortDescription" class="control-label">Description</label>
                     <textarea id="patCohortDescription" class="form-control" ng-model="editCohort.destination.description"></textarea>
-					</div>
-					<div class="form-group">
-						<label for="patCohortDefinition" class="control-label">Members</label>
+                </div>
+                <div class="form-group">
+                    <label for="patCohortDefinition" class="control-label">Members</label>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <tree-component current-memeber-list="editCohort.memberList"></tree-component>
+                        </div>
+                    </div>
 
-					</div>
+                </div>
 
-					<div class="form-group text-center vert-offset">
-						<button id="savePhenotypeButton" type="button" class="btn btn-primary">Save</button>
-					</div>
-				</form>
-			</div>
-  </div>
+                <div class="form-group text-center vert-offset">
+                    <button id="savePhenotypeButton" type="button" class="btn btn-primary">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
 </div>
 
 <!--<h3>Cohort Editor</h3>-->
 <!--<p>-->
-    <!--Select the system and user-defined elements from the ontology that will define the patient cohort.-->
+<!--Select the system and user-defined elements from the ontology that will define the patient cohort.-->
 <!--</p>-->
 <!--<div layout="column" layout-gt-md="row" >  -->
-    <!--<div class="col-xs-4">-->
-        <!--<ul class="nav nav-tabs">-->
-            <!--<li class = "active">-->
-                <!--<a href = "#systemElems" data-toggle="tab">System</a>-->
-            <!--</li>-->
-            <!--<li>-->
-                <!--<a href="#userElems" data-toggle="tab">User</a>-->
-            <!--</li>-->
-        <!--</ul>-->
-        <!--<div id="treeContent" class="tab-content proposition-tree">-->
-            <!--<div id="systemElems" class="tab-pane fade active in">-->
-                <!--<jstree-->
-                        <!--tree-url="protected/systemlist"-->
-                        <!--tree-search="protected/jstree3_searchsystemlist"-->
-                        <!--search-update-div="#searchUpdateDiv"-->
-                        <!--search-validation-modal="#searchValidationModal"-->
-                        <!--search-no-results-modal="#searchNoResultsModal"-->
-                        <!--tree-css-url="assets/css/jstree-themes/default/style.css"-->
-                        <!--/>-->
-                <!--<div id="searchUpdateDiv" class="searchUpdateMessage"></div>-->
-            <!--</div>-->
-            <!--<div id="userElems" class="tab-pane fade">-->
-                <!--<div id="userTree"></div>-->
-            <!--</div>-->
-        <!--</div>-->
-    <!--</div>-->
+<!--<div class="col-xs-4">-->
+<!--<ul class="nav nav-tabs">-->
+<!--<li class = "active">-->
+<!--<a href = "#systemElems" data-toggle="tab">System</a>-->
+<!--</li>-->
+<!--<li>-->
+<!--<a href="#userElems" data-toggle="tab">User</a>-->
+<!--</li>-->
+<!--</ul>-->
+<!--<div id="treeContent" class="tab-content proposition-tree">-->
+<!--<div id="systemElems" class="tab-pane fade active in">-->
+<!--<jstree-->
+<!--tree-url="protected/systemlist"-->
+<!--tree-search="protected/jstree3_searchsystemlist"-->
+<!--search-update-div="#searchUpdateDiv"-->
+<!--search-validation-modal="#searchValidationModal"-->
+<!--search-no-results-modal="#searchNoResultsModal"-->
+<!--tree-css-url="assets/css/jstree-themes/default/style.css"-->
+<!--/>-->
+<!--<div id="searchUpdateDiv" class="searchUpdateMessage"></div>-->
+<!--</div>-->
+<!--<div id="userElems" class="tab-pane fade">-->
+<!--<div id="userTree"></div>-->
+<!--</div>-->
+<!--</div>-->
+<!--</div>-->
 <!--
     <md-content flex flex-order="2" flex-order-gt-md="1" layout-padding>
         <cohort-members-tree member-list="newCohort.memberList"></cohort-members-tree>
     </md-content> -->
 
-    <!--<div id="definitionContainer" class="col-xs-8">-->
-        <!--<form id="categorizationForm" class="vert-offset" role="form">-->
-            <!--<div class="form-group">-->
-                <!--<label for="patCohortDefName" class="control-label">Name</label>-->
-                <!--<input type="text" id="patCohortDefName" ng-model="editCohort.cohortDestination.name"-->
-                       <!--class="form-control"/>-->
-            <!--</div>-->
-            <!--<div class="form-group">-->
-                <!--<label for="patCohortDescription" class="control-label">Description</label>-->
-                <!--<textarea id="patCohortDescription" class="form-control" ng-model="editCohort.cohortDestination.description"></textarea>-->
-            <!--</div>-->
-            <!--<div class="form-group">-->
-                <!--<label for="patCohortDefinition" class="control-label">Members</label>-->
-                <!--<div id="patCohortDefinition"-->
-                     <!--class="jstree-drop tree-drop tree-drop-multiple"-->
-                     <!--title="Drop the system and/or user-defined data element members that define your patient cohort in here">-->
+<!--<div id="definitionContainer" class="col-xs-8">-->
+<!--<form id="categorizationForm" class="vert-offset" role="form">-->
+<!--<div class="form-group">-->
+<!--<label for="patCohortDefName" class="control-label">Name</label>-->
+<!--<input type="text" id="patCohortDefName" ng-model="editCohort.cohortDestination.name"-->
+<!--class="form-control"/>-->
+<!--</div>-->
+<!--<div class="form-group">-->
+<!--<label for="patCohortDescription" class="control-label">Description</label>-->
+<!--<textarea id="patCohortDescription" class="form-control" ng-model="editCohort.cohortDestination.description"></textarea>-->
+<!--</div>-->
+<!--<div class="form-group">-->
+<!--<label for="patCohortDefinition" class="control-label">Members</label>-->
+<!--<div id="patCohortDefinition"-->
+<!--class="jstree-drop tree-drop tree-drop-multiple"-->
+<!--title="Drop the system and/or user-defined data element members that define your patient cohort in here">-->
 
-                    <!--<ul class="sortable"-->
-                        <!--data-drop-type="multiple"-->
-                        <!--data-proptype="empty"-->
-                        <!--ng-repeat="phenotype in editCohort.cohortDestination.phenotypes"-->
-                        <!--phenotype-editor="phenotype"-->
-                            <!--/>-->
+<!--<ul class="sortable"-->
+<!--data-drop-type="multiple"-->
+<!--data-proptype="empty"-->
+<!--ng-repeat="phenotype in editCohort.cohortDestination.phenotypes"-->
+<!--phenotype-editor="phenotype"-->
+<!--/>-->
 
-                <!--</div>-->
-            <!--</div>-->
-            <!--<div class="form-group text-center vert-offset">-->
-                <!--<button id="savePropositionButton" type="button" class="btn btn-primary">Save</button>-->
-            <!--</div>-->
-        <!--</form>-->
-    <!--</div>-->
+<!--</div>-->
+<!--</div>-->
+<!--<div class="form-group text-center vert-offset">-->
+<!--<button id="savePropositionButton" type="button" class="btn btn-primary">Save</button>-->
+<!--</div>-->
+<!--</form>-->
+<!--</div>-->
 <!--
     <md-content flex="60" flex-gt-lg="66" flex-order="1" flex-order-gt-md="2" layout-padding>
         <md-card>
@@ -223,4 +228,3 @@
         </div>
     </div>
 </div>  -->
-

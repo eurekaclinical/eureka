@@ -1,0 +1,75 @@
+<style>
+    .ng-table-pager {
+        display: none;
+    }
+</style>
+<div class="col-md-8">
+    <div class="row">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item" ng-repeat="x in vm.breadCrumbs"><a href ng-click="vm.setBreadCrumbs(x)">{{x.displayName}}</a></li>
+        </ol>
+    </div>
+    <uib-tabset active="activeJustified" justified="true">
+        <uib-tab index="0" heading="System">
+            <table ng-table="vm.tableParams" class="table" show-filter="true">
+                <tr ng-repeat="user in $data" class="animate">
+                    <td>
+                        <a title="Edit" ng-click="vm.selectNode(user) ">
+                            <span ng-class="{true: 'glyphicon glyphicon-folder-close', false: 'glyphicon glyphicon-file'}[user.parent]" title=""></span>
+
+                        </a>
+                    </td>
+                    <td title=" 'Name' ">
+                        {{user.displayName}}
+                    </td>
+                    <td>
+                        <a title="Edit" ng-click="vm.addNode(user) ">
+                            <span class="glyphicon glyphicon-plus" title=""></span>
+
+                        </a>
+                    </td>
+
+                </tr>
+            </table>
+        </uib-tab>
+        <uib-tab index="1" heading="User">
+
+            <table ng-table="vm.tableParamsUser" class="table" show-filter="true">
+                <tr ng-repeat="user1 in $data" class="animate">
+                    <td>
+                        <a title="Edit" ng-click="vm.selectNode(user1) ">
+                            <span ng-class="{true: 'glyphicon glyphicon-folder-close', false: 'glyphicon glyphicon-file'}[user1.children]" title=""></span>
+
+                        </a>
+                    </td>
+                    <td title=" 'Name' ">
+                        {{user1.text}}
+                    </td>
+                    <td>
+                        <a title="Edit" ng-click="vm.addNode(user1) ">
+                            <span class="glyphicon glyphicon-plus" title=""></span>
+
+                        </a>
+                    </td>
+
+                </tr>
+            </table>
+        </uib-tab>
+    </uib-tabset>
+</div>
+<div class="col-md-4">
+
+    <form>
+        <fieldset>
+            <legend style="padding-top:61px;">Items Added&nbsp;</legend>
+            <p ng-repeat="selectedNode in vm.currentMemeberList">
+                <span>{{selectedNode.displayName}}</span>
+                <a title="remove" ng-click="vm.removeNode(selectedNode) ">
+                    <span class="glyphicon glyphicon-remove" title="" style="color:red;"></span>
+
+                </a>
+                <p>
+        </fieldset>
+    </form>
+
+</div>

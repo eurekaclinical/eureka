@@ -20,8 +20,9 @@
 
         vm.submitCohortForm = submitCohortForm;
         vm.memberList = [];
+        vm.currentMemeberList = [];
 
-        function submitCohortForm(){
+        function submitCohortForm() {
             let cohortObject = {};
             cohortObject.name = vm.cohort.name;
             cohortObject.description = vm.cohort.description;
