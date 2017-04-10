@@ -29,6 +29,8 @@
 
                 } */
 
+        vm.memberList = [];
+
         function getPhenotypes(data) {
             CohortService.getPhenotypes(data.cohort).then(function(promises) {
 

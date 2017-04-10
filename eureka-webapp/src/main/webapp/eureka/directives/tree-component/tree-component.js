@@ -8,10 +8,11 @@
     function TreeComponent() {
         return {
             restrict: 'E',
-            bindToController: {
-                memberList: '='
+            scope: {
+                currentMemeberList: '='
             },
-            scope: {},
+            bindToController: true,
+
             replace: false,
             templateUrl: 'eureka/directives/tree-component/tree-component.html',
             controller: 'TreeComponentCtrl',

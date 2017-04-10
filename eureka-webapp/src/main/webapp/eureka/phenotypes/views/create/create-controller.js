@@ -23,6 +23,7 @@
 
         vm.type = _.startCase($stateParams.type);
         vm.timeUnits = ['minutes', 'hours', 'days'];
+        vm.memberList = [];
 
         switch ($stateParams.type) {
             case 'categorization':
