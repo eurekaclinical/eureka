@@ -36,6 +36,7 @@
 
         vm.type = _.startCase($stateParams.type);
         vm.timeUnits = ['minutes', 'hours', 'days'];
+        vm.memberList = [];
 
         function setType() {
             switch (currentType) {

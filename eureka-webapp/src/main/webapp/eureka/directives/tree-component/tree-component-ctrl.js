@@ -14,7 +14,7 @@
         vm.breadCrumbs = [{ key: 'root', displayName: 'root' }];
         //start get tree list
         vm.currentMemeberList = [];
-        getMemberList();
+        init();
 
 
 
@@ -29,6 +29,10 @@
 
             callUserRoot();
         }, displayError);
+
+        function init() {
+            dragAndDropService.clearNodes
+        }
 
         function callUserRoot() {
             TreeService.getUserListRoot().then(function(data) {

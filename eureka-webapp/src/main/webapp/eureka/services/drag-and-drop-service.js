@@ -19,7 +19,8 @@
         let currentNodes = [];
         return ({
             setNodes: setNodes,
-            getNodes: getNodes
+            getNodes: getNodes,
+            clearNodes: clearNodes
 
 
         });
@@ -37,8 +38,9 @@
                 currentNodes.push(obj);
             } else {
                 for (var i = 0; i < currentList.length; i++) {
-                    if (currentList[i].key === obj.key) {
+                    if (currentList[i].displayName === obj.displayName) {
                         isDuplicate = true;
+                        break;
                     }
 
                 }
@@ -49,6 +51,10 @@
             }
 
 
+        }
+
+        function clearNodes() {
+            currentNodes = [];
         }
 
 

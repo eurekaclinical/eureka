@@ -18,38 +18,18 @@
 
     function EditCtrl(CohortService, $stateParams) {
         var vm = this;
-        /*
-                if ($stateParams.key) {
-
-                    CohortService.getCohort($stateParams.key).then(function(data) {
-                        vm.destination = data;
-                        getPhenotypes(data);
-
-                    }, displayError);
-
-                } */
-
         vm.memberList = [];
 
-        function getPhenotypes(data) {
-            CohortService.getPhenotypes(data.cohort).then(function(promises) {
+        if ($stateParams.key) {
+            vm.memberList = [];
+            CohortService.getCohort($stateParams.key).then(function(data) {
+                var test = [];
+                vm.destination = data;
+                data.cohort.node.displayName = data.cohort.node.name;
+                test.push(data.cohort.node)
+                vm.memberList = test;
 
-                var phenotypes = [];
-                for (var i = 0; i < promises.length; i++) {
-                    phenotypes.push(new Object({
-                        phenotypeKey: promises[i].data.key,
-                        phenotypeDisplayName: promises[i].data.displayName,
-                        type: 'SYSTEM'
-                    }));
-
-                }
-
-                vm.destination.phenotypes = phenotypes;
-
-                eureka.editor.setup(data.id !== null ? data.id : null,
-                    '#userTree', '#definitionContainer', '#savePropositionButton');
-
-            });
+            }, displayError);
 
         }
 
