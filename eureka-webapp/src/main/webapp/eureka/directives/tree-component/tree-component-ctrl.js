@@ -5,17 +5,17 @@
         .module('eureka')
         .controller('TreeComponentCtrl', TreeComponentCtrl);
 
-    TreeComponentCtrl.$inject = ['PhenotypeService', 'NgTableParams', 'dragAndDropService', 'TreeService'];
+    TreeComponentCtrl.$inject = ['PhenotypeService', 'NgTableParams', 'dragAndDropService', 'TreeService', '$scope'];
 
-    function TreeComponentCtrl(PhenotypeService, NgTableParams, dragAndDropService, TreeService) {
+    function TreeComponentCtrl(PhenotypeService, NgTableParams, dragAndDropService, TreeService, $scope) {
         let vm = this;
 
 
         vm.breadCrumbs = [{ key: 'root', displayName: 'root' }];
         //start get tree list
         vm.currentMemeberList = [];
-        init();
 
+        init();
 
 
         TreeService.getTreeRoot().then(function(data) {
@@ -31,7 +31,12 @@
         }, displayError);
 
         function init() {
-            dragAndDropService.clearNodes
+
+            dragAndDropService.clearNodes();
+            if (vm.currentMemeberList) {
+                dragAndDropService.setNodes(vm.currentMemeberList[0])
+            }
+
         }
 
         function callUserRoot() {

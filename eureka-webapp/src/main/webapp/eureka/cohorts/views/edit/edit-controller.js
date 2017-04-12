@@ -14,9 +14,9 @@
         .module('eureka.cohorts')
         .controller('cohorts.EditCtrl', EditCtrl);
 
-    EditCtrl.$inject = ['CohortService', '$stateParams'];
+    EditCtrl.$inject = ['CohortService', '$stateParams', 'dragAndDropService'];
 
-    function EditCtrl(CohortService, $stateParams) {
+    function EditCtrl(CohortService, $stateParams, dragAndDropService) {
         var vm = this;
         vm.memberList = [];
 
@@ -28,6 +28,7 @@
                 data.cohort.node.displayName = data.cohort.node.name;
                 test.push(data.cohort.node)
                 vm.memberList = test;
+                dragAndDropService.setNodes(data.cohort.node)
 
             }, displayError);
 
