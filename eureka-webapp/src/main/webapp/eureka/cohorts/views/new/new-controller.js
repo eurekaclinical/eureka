@@ -12,11 +12,12 @@
         .module('eureka.cohorts')
         .controller('cohorts.NewCtrl', NewCtrl);
 
-    NewCtrl.$inject = ['CohortService', '$state'];
+    NewCtrl.$inject = ['CohortService', '$state', '$rootScope'];
 
-    function NewCtrl(CohortService, $state) {
+    function NewCtrl(CohortService, $state, $rootScope) {
         let vm = this;
         let createCohort = CohortService.createCohort;
+        let userId = $rootScope.user.info.id;
 
         vm.submitCohortForm = submitCohortForm;
         vm.memberList = [];
@@ -24,8 +25,8 @@
 
         function submitCohortForm() {
             let cohortObject = {};
-            cohortObject.name = vm.cohort.name;
-            cohortObject.description = vm.cohort.description;
+            cohortObject.name = vm.name;
+            cohortObject.description = vm.description;
             cohortObject.memberList = vm.memberList;
 
             createCohort(cohortObject).then(data => {
