@@ -30,26 +30,31 @@
             return currentNodes;
         }
 
-        function setNodes(obj) {
-            if (obj !== undefined) {
-                let currentList = currentNodes;
-                let isDuplicate = false;
-                //lets do it the long way first then we will refactor.  Lets see if there are duplicates JS
-                if (currentList.length < 1) {
-                    currentNodes.push(obj);
-                } else {
-                    for (var i = 0; i < currentList.length; i++) {
-                        if (currentList[i].displayName === obj.displayName) {
-                            isDuplicate = true;
-                            break;
+        function setNodes(obj, arg2) {
+            if (arg2 == undefined || arg2 === null) {
+                if (obj !== undefined) {
+                    let currentList = [];
+                    currentList = currentNodes;
+                    let isDuplicate = false;
+                    //lets do it the long way first then we will refactor.  Lets see if there are duplicates JS
+                    if (currentList.length < 1) {
+                        currentNodes.push(obj);
+                    } else {
+                        for (var i = 0; i < currentList.length; i++) {
+                            if (currentList[i].displayName === obj.displayName) {
+                                isDuplicate = true;
+                                break;
+                            }
+
+                        }
+                        if (isDuplicate !== true) {
+                            currentNodes.push(obj);
                         }
 
                     }
-                    if (isDuplicate !== true) {
-                        currentNodes.push(obj);
-                    }
-
                 }
+            } else {
+                currentNodes = obj;
             }
 
         }

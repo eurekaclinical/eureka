@@ -25,7 +25,8 @@
             getSystemElement: getSystemElement,
             getPhenotypes: getPhenotypes,
             removeCohort: removeCohort,
-            createCohort: createCohort
+            createCohort: createCohort,
+            updateCohort: updateCohort
         });
 
         function getCohorts() {
@@ -142,6 +143,63 @@
             console.log(newCohort);
             let testCohort = { "id": null, "type": "COHORT", "ownerUserId": 1, "name": "jay23333", "description": "description 234", "phenotypeFields": null, "cohort": { "id": null, "node": { "id": null, "start": null, "finish": null, "type": "Literal", "name": "Encounter" } }, "read": false, "write": false, "execute": false, "created_at": null, "updated_at": null, "links": null }
             return $http.post(dataEndpoint + '/destinations/', newCohort)
+                .then(handleSuccess, handleError);
+        }
+
+
+        function updateCohort(cohort) {
+            // will need to clean up after getting it to work; JS
+            let newCohort = {
+                id: null,
+                type: 'COHORT',
+                ownerUserId: 1,
+                phenotypeFields: null,
+                cohort: {
+                    id: null
+                },
+                read: false,
+                write: false,
+                execute: false,
+                created_at: null,
+                updated_at: null,
+                links: null
+            };
+
+            let existingList = [];
+
+            let phenotypes = cohort.memberList;
+
+            let node = { id: null, start: null, finish: null, type: 'Literal' };
+            if (phenotypes.length === 1) {
+                node.name = phenotypes[0].displayName;
+            } else if (phenotypes.length > 1) {
+                let first = true;
+                let prev = null;
+                for (var i = phenotypes.length - 1; i >= 0; i--) {
+                    var literal = { id: null, start: null, finish: null, type: 'Literal' };
+                    literal.name = phenotypes[i].displayName;
+                    if (first) {
+                        first = false;
+                        prev = literal;
+                    } else {
+                        var binaryOperator = { id: null, type: 'BinaryOperator', op: 'OR' };
+                        binaryOperator.left_node = literal;
+                        binaryOperator.right_node = prev;
+                        prev = binaryOperator;
+                    }
+                }
+                node = prev;
+            } else {
+                node = null;
+            }
+
+
+            newCohort.name = cohort.name;
+            newCohort.description = cohort.description;
+            newCohort.id = cohort.id;
+            newCohort.cohort.node = node;
+
+            return $http.put(dataEndpoint + '/destinations/', newCohort)
                 .then(handleSuccess, handleError);
         }
 

@@ -33,9 +33,9 @@
         function init() {
 
             dragAndDropService.clearNodes();
-            if (vm.currentMemeberList) {
-                dragAndDropService.setNodes(vm.currentMemeberList[0])
-            }
+            /*if (vm.currentMemeberList) {
+                dragAndDropService.setNodes(vm.currentMemeberList)
+            }*/
 
         }
 
