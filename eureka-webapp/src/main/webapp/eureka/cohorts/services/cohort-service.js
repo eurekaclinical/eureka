@@ -115,13 +115,13 @@
             let phenotypes = cohort.memberList;
             let node = { id: null, start: null, finish: null, type: 'Literal' };
             if (phenotypes.length === 1) {
-                node.name = phenotypes[0].displayName;
+                node.name = phenotypes[0].key;
             } else if (phenotypes.length > 1) {
                 let first = true;
                 let prev = null;
                 for (var i = phenotypes.length - 1; i >= 0; i--) {
                     var literal = { id: null, start: null, finish: null, type: 'Literal' };
-                    literal.name = phenotypes[i].displayName;
+                    literal.name = phenotypes[i].key;
                     if (first) {
                         first = false;
                         prev = literal;

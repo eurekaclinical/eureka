@@ -931,4 +931,7 @@
 		<createSequence sequenceName="TF_DEST_TC_SEQ"/>
 		<addForeignKeyConstraint baseColumnNames="TABULARFILEDESTINATIONS_ID" baseTableName="TF_DEST_TABLECOLUMNS" constraintName="FK_TF_DEST_TC" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" referencedColumnNames="ID" referencedTableName="TABULAR_FILE_DESTINATIONS" referencesUniqueColumn="false"/>
 	</changeSet>
+	<changeSet author="arpost" id="1361552652236-44">
+		<addUniqueConstraint tableName="DESTINATIONS" columnNames="NAME, EXPIRED_AT" constraintName="UNIQ_DEST_NAME_EXP"/>
+	</changeSet>
 </databaseChangeLog>
