@@ -55,25 +55,36 @@
         vm.selectNode = function(node) {
             var currentNode = node;
             var hasChildren = node.parent;
-            TreeService.getTreeNode(currentNode.key).then(function(data) {
-                //  vm.treeData = data;
+            if (hasChildren !== false) {
+                TreeService.getTreeNode(currentNode.key).then(function(data) {
+                    //  vm.treeData = data;
 
-                //vm.props = data;
-                //copyData = data;
-                // NG Table
-                if (hasChildren) {
-                    vm.breadCrumbs.push({ key: currentNode.key, displayName: currentNode.displayName, parent: currentNode.parent });
-                }
-                vm.tableParams = new NgTableParams({}, { dataset: data.children });
+                    //vm.props = data;
+                    //copyData = data;
+                    // NG Table
+                    if (hasChildren) {
+                        vm.breadCrumbs.push({ key: currentNode.key, displayName: currentNode.displayName, parent: currentNode.parent });
+                    }
+                    vm.tableParams = new NgTableParams({}, { dataset: data.children });
 
 
 
-            }, displayError);
+                }, displayError);
+            } else {
+                //do nothing it is a document
+            }
 
         }
         vm.addNode = function(node) {
 
             if (node) {
+                dragAndDropService.setNodes(node);
+            }
+            getMemberList()
+        }
+        vm.addUserNode = function(node) {
+            if (node) {
+                node.displayName = node.text;
                 dragAndDropService.setNodes(node);
             }
             getMemberList()
