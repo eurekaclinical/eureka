@@ -14,11 +14,11 @@
         .module('eureka.cohorts')
         .controller('cohorts.EditCtrl', EditCtrl);
 
-    EditCtrl.$inject = ['CohortService', '$stateParams', 'dragAndDropService'];
+    EditCtrl.$inject = ['CohortService', '$stateParams', '$state', 'dragAndDropService'];
 
-    function EditCtrl(CohortService, $stateParams, dragAndDropService) {
+    function EditCtrl(CohortService, $stateParams, $state, dragAndDropService) {
         var vm = this;
-        let updateCohort = CohortService.updateCohort;
+        let updateCohortCall = CohortService.updateCohort;
         vm.memberList = [];
         vm.description;
         vm.name;
@@ -34,14 +34,8 @@
                 vm.currentCohort.id = data.id;
                 console.log(data.cohort.node);
 
-                // lets test
-                testFunction(data.cohort.node);
-
-                //end of test
-                /*  data.cohort.node.displayName = data.cohort.node.name;
-                  test.push(data.cohort.node)
-                  vm.memberList = test;
-                  dragAndDropService.setNodes(data.cohort.node) */
+                // lets call the traverse function to go through the returned nodes structure
+                traverseNodes(data.cohort.node);
 
             }, displayError);
 
@@ -50,12 +44,16 @@
         vm.updateCohort = function() {
             vm.currentCohort.name = vm.destination.name;
             vm.currentCohort.description = vm.destination.description;
-            CohortService.updateCohort(vm.currentCohort);
+
+            updateCohortCall(vm.currentCohort).then(data => {
+                console.log('we made it back', data);
+                $state.transitionTo('cohorts');
+            }, displayError);
 
         }
 
-        // will need to clean up this test function after I get it working JS
-        function testFunction(data) {
+        // This function takes the saved nodes and goes through the tree and plucks all with a valid id. Then adds to membelist which populates the dropzone
+        function traverseNodes(data) {
 
             const reducer = (results, node) => {
                 //         console.log(results);
@@ -70,14 +68,11 @@
 
             for (var i = 0; i < fullResults.length; i++) {
                 fullResults[i].displayName = fullResults[i].name
-
             }
             vm.memberList = fullResults;
             dragAndDropService.setNodes(fullResults, 'arg2');
 
             vm.currentCohort.memberList = vm.memberList;
-
-
         }
 
         function displayError(msg) {

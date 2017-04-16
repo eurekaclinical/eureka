@@ -26,7 +26,6 @@
         });
 
         function getNodes() {
-
             return currentNodes;
         }
 
@@ -41,11 +40,10 @@
                         currentNodes.push(obj);
                     } else {
                         for (var i = 0; i < currentList.length; i++) {
-                            if (currentList[i].displayName === obj.displayName) {
+                            if (currentList[i].name === obj.key || currentList[i].key === obj.key) {
                                 isDuplicate = true;
                                 break;
                             }
-
                         }
                         if (isDuplicate !== true) {
                             currentNodes.push(obj);
@@ -62,7 +60,6 @@
         function clearNodes() {
             currentNodes = [];
         }
-
 
     }
 
