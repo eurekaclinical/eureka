@@ -83,18 +83,28 @@
             getMemberList()
         }
         vm.addUserNode = function(node) {
+            /* After changes add user node will need to be refactored will take care of later in week.
             if (node) {
                 node.displayName = node.text;
                 dragAndDropService.setNodes(node);
             }
-            getMemberList()
+            getMemberList() */
         }
         vm.removeNode = function(node) {
             for (var i = 0; i < vm.currentMemeberList.length; i++) {
-                if (vm.currentMemeberList[i].key === node.key) {
-                    vm.currentMemeberList.splice(i, 1);
-                    break;
+                // we will need to look for both key and name.  name is key in update, but key is present on create.
+                if (node.key === undefined) {
+                    if (vm.currentMemeberList[i].name === node.name) {
+                        vm.currentMemeberList.splice(i, 1);
+                        break;
+                    }
+                } else {
+                    if (vm.currentMemeberList[i].key === node.key) {
+                        vm.currentMemeberList.splice(i, 1);
+                        break;
+                    }
                 }
+
             }
         }
         vm.setBreadCrumbs = function(node) {

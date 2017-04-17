@@ -177,7 +177,13 @@
                 let prev = null;
                 for (var i = phenotypes.length - 1; i >= 0; i--) {
                     var literal = { id: null, start: null, finish: null, type: 'Literal' };
-                    literal.name = phenotypes[i].displayName;
+                    // if a key is there use the key else use the name, because the name is already the key
+                    if (phenotypes[i].key === undefined) {
+                        literal.name = phenotypes[i].name;
+                    } else {
+                        literal.name = phenotypes[i].key;
+                    }
+
                     if (first) {
                         first = false;
                         prev = literal;
