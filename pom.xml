@@ -63,7 +63,7 @@
 		<eurekaclinical-patient-set-client-version>1.0-Alpha-4</eurekaclinical-patient-set-client-version>
 
 		<cas-server-version>3.0-Alpha-5</cas-server-version>
-		<user-webapp-version>1.0-Alpha-7</user-webapp-version>
+		<user-webapp-version>1.0-Alpha-8</user-webapp-version>
 		<user-service-version>1.0-Alpha-7</user-service-version>
 
 		<!-- transitive dependencies that CAS needs certain versions of...-->
