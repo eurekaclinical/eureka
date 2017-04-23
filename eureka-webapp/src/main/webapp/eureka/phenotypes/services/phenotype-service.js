@@ -21,7 +21,10 @@
         let { dataProtectedEndPoint } = appProperties;
         return ({
             getSummarizedUserElements: getSummarizedUserElements,
-            getPhenotypeMessages: getPhenotypeMessages
+            getPhenotypeMessages: getPhenotypeMessages,
+            createPhenotype: createPhenotype,
+            getPhenotype: getPhenotype,
+            updatePhenotype: updatePhenotype
         });
 
         function getSummarizedUserElements() {
@@ -56,6 +59,26 @@
                     'description': `For defining clinically significant thresholds on the value of an observation.`
                 }
             };
+        }
+
+        function createPhenotype(newObject) {
+
+            return $http.post(dataEndpoint + '/phenotypes', newObject)
+                .then(handleSuccess, handleError);
+        }
+
+        function updatePhenotype(updateObject) {
+
+            return $http.put(dataEndpoint + '/phenotypes/' + updateObject.id, updateObject)
+                .then(handleSuccess, handleError);
+
+        }
+
+
+        function getPhenotype(id) {
+            return $http.get(dataEndpoint + '/phenotypes/' + id)
+                .then(handleSuccess, handleError);
+
         }
 
         function handleSuccess(response) {

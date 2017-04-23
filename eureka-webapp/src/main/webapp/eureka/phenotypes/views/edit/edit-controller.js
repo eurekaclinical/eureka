@@ -15,28 +15,47 @@
         .module('eureka.phenotypes')
         .controller('phenotypes.EditCtrl', EditCtrl);
 
-    EditCtrl.$inject = ['$stateParams', 'PhenotypeService'];
+    EditCtrl.$inject = ['$stateParams', 'PhenotypeService', 'dragAndDropService', 'TreeService', 'users', '$state'];
 
-    function EditCtrl($stateParams, PhenotypeService) {
+    function EditCtrl($stateParams, PhenotypeService, dragAndDropService, TreeService, users, $state) {
 
-        var vm = this;
-        var currentType = '';
-        /*
-            if ($stateParams.id) {
+        let vm = this;
+        let currentUser;
+        let currentList = [];
+        let currentType = '';
+        let updatePhenotype = PhenotypeService.updatePhenotype;
 
-                    PhenotypeService.getPhenotype($stateParams.id).then(function(data) {
-                        vm.destination = data;
-                        currentType = data.type;
-                        setType();
-                        //getPhenotypes(data);
+        // doing this on every page to make sure the user is authenticated if he/she refresh.  Will need to be changed but for now no time to refactor JS
+        users.getUser().then(function(user) {
+            currentUser = user;
+        });
 
-                    }, displayError);
-
-            } */
-
+        vm.currentObject = {};
+        vm.memberList = [];
         vm.type = _.startCase($stateParams.type);
         vm.timeUnits = ['minutes', 'hours', 'days'];
-        vm.memberList = [];
+
+        if ($stateParams.id) {
+            PhenotypeService.getPhenotype($stateParams.id).then(function(data) {
+                vm.currentObject = data;
+                currentType = vm.currentObject.type;
+                setType();
+                // have to set the member list for the drop area
+                for (var i = 0; i < data.children.length; i++) {
+                    var myChildren = {};
+                    myChildren.key = data.children[i].phenotypeKey;
+                    myChildren.displayName = data.children[i].phenotypeKey;
+                    myChildren.type = data.children[i].type;
+                    currentList.push(myChildren);
+                }
+                //dragAndDropService.setNodes(currentList);
+                vm.memberList = currentList;
+                console.log(vm.currentObject);
+            }, displayError);
+
+        }
+
+        // vm.memberList = [];
 
         function setType() {
             switch (currentType) {
@@ -63,6 +82,43 @@
         vm.openMenu = function($mdOpenMenu, evt) {
             $mdOpenMenu(evt);
         };
+
+        vm.updateCategorization = function() {
+
+            var updateObject = {};
+            updateObject.type = vm.currentObject.type;
+            updateObject.displayName = vm.currentObject.displayName;
+            updateObject.description = vm.currentObject.description;
+            updateObject.categoricalType = vm.currentObject.categoricalType;
+            updateObject.id = vm.currentObject.id;
+            updateObject.userId = currentUser.info.id;
+            updateObject.children = [];
+
+            // {"type":"CATEGORIZATION","displayName":"ONEMORETIME901","description":"description","categoricalType":"CONSTANT","children":[{"phenotypeKey":"Patient","type":"SYSTEM"}],"id":13}
+
+            var children = [];
+            for (var i = 0; i < vm.memberList.length; i++) {
+                var childrenObject = {};
+                // if (vm.memberList[i].key === undefined) {
+                childrenObject.phenotypeKey = vm.memberList[i].key;
+                childrenObject.type = vm.memberList[i].type;
+                children.push(childrenObject)
+                    // }
+
+            }
+            updateObject.children = children;
+            // vm.currentObject.type = "CATEGORIZATION";
+            //vm.currentObject.categoricalType = null;
+            vm.currentObject.userId = 1;
+            console.log('######    ' + vm.currentObject);
+
+            PhenotypeService.updatePhenotype(updateObject);
+            updatePhenotype(updateObject).then(data => {
+                console.log('we made it back', data);
+                $state.transitionTo('phenotypes');
+            }, displayError);
+
+        }
 
         function displayError(msg) {
             vm.errorMsg = msg;
