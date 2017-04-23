@@ -5,17 +5,19 @@
         .module('eureka')
         .controller('TreeComponentCtrl', TreeComponentCtrl);
 
-    TreeComponentCtrl.$inject = ['PhenotypeService', 'NgTableParams', 'dragAndDropService', 'TreeService', '$scope'];
+    TreeComponentCtrl.$inject = ['PhenotypeService', 'NgTableParams', 'TreeService', '$scope'];
 
-    function TreeComponentCtrl(PhenotypeService, NgTableParams, dragAndDropService, TreeService, $scope) {
+    function TreeComponentCtrl(PhenotypeService, NgTableParams, TreeService, $scope) {
         let vm = this;
 
 
         vm.breadCrumbs = [{ key: 'root', displayName: 'root' }];
         //start get tree list
-        vm.currentMemeberList = [];
+        //vm.currentMemeberList = [];
 
-        init();
+        let currentNodes = [];
+
+        // init();
 
 
         TreeService.getTreeRoot().then(function(data) {
@@ -31,11 +33,8 @@
         }, displayError);
 
         function init() {
+            // clearNodes();
 
-            dragAndDropService.clearNodes();
-            /*if (vm.currentMemeberList) {
-                dragAndDropService.setNodes(vm.currentMemeberList)
-            }*/
 
         }
 
@@ -76,9 +75,11 @@
 
         }
         vm.addNode = function(node) {
-
+            console.log(vm.currentMemeberList + '  1');
+            console.log(currentNodes + '@@');
             if (node) {
-                dragAndDropService.setNodes(node);
+
+                setNodes(node)
             }
             getMemberList()
         }
@@ -139,11 +140,59 @@
         }
 
         function getMemberList() {
-            vm.currentMemeberList = dragAndDropService.getNodes()
+            vm.currentMemeberList = getNodes()
         }
 
         function displayError(msg) {
             vm.errorMsg = msg;
+        }
+
+        function setNodes(obj, arg2) {
+            currentNodes = vm.currentMemeberList;
+            if (arg2 == undefined || arg2 === null) {
+                if (obj !== undefined) {
+                    let currentList = [];
+                    currentList = currentNodes;
+                    let isDuplicate = false;
+                    //lets do it the long way first then we will refactor.  Lets see if there are duplicates JS
+                    if (currentList.length < 1) {
+                        currentNodes.push(obj);
+                    } else {
+                        for (var i = 0; i < currentList.length; i++) {
+                            if (currentList[i].hasOwnProperty('name')) {
+                                if (currentList[i].name === obj.key) {
+                                    isDuplicate = true;
+                                    break;
+                                }
+
+                            } else if (currentList[i].hasOwnProperty('key')) {
+                                if (currentList[i].key === obj.key) {
+                                    isDuplicate = true;
+                                    break;
+                                }
+
+                            }
+
+
+                        }
+                        if (isDuplicate !== true) {
+                            currentNodes.push(obj);
+                        }
+
+                    }
+                }
+            } else {
+                currentNodes = obj;
+            }
+        }
+
+
+        function getNodes() {
+            return currentNodes;
+        }
+
+        function clearNodes() {
+            currentNodes = [];
         }
 
 
