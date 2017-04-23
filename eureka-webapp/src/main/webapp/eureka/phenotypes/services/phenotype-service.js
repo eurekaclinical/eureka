@@ -74,7 +74,6 @@
 
         }
 
-
         function getPhenotype(id) {
             return $http.get(dataEndpoint + '/phenotypes/' + id)
                 .then(handleSuccess, handleError);
