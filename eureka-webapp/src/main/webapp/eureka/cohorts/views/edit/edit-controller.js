@@ -70,7 +70,7 @@
                 fullResults[i].displayName = fullResults[i].name
             }
             vm.memberList = fullResults;
-            dragAndDropService.setNodes(fullResults, 'arg2');
+            //dragAndDropService.setNodes(fullResults, 'arg2');
 
             vm.currentCohort.memberList = vm.memberList;
         }

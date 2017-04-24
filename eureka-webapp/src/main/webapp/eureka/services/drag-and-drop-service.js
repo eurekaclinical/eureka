@@ -40,10 +40,21 @@
                         currentNodes.push(obj);
                     } else {
                         for (var i = 0; i < currentList.length; i++) {
-                            if (currentList[i].name === obj.key || currentList[i].key === obj.key) {
-                                isDuplicate = true;
-                                break;
+                            if (currentList[i].hasOwnProperty('name')) {
+                                if (currentList[i].name === obj.key) {
+                                    isDuplicate = true;
+                                    break;
+                                }
+
+                            } else if (currentList[i].hasOwnProperty('key')) {
+                                if (currentList[i].key === obj.key) {
+                                    isDuplicate = true;
+                                    break;
+                                }
+
                             }
+
+
                         }
                         if (isDuplicate !== true) {
                             currentNodes.push(obj);
