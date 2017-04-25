@@ -72,7 +72,7 @@
 	<![endif]-->
 	<script src="https://code.jquery.com/jquery-2.2.4.min.js" type="text/javascript"></script>
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" type="text/javascript"></script>
-	<script src="${pageContext.request.contextPath}/assets/js/eureka.bootbar${initParam['eureka-build-timestamp']}.js" type="text/javascript"></script>
+	<script src="https://assets.eurekaclinical.org/v1.1/js/ec.bootbar.min.js" type="text/javascript"></script>
 	<title>Eureka! Clinical Analytics</title>
 </head>
 <body>
@@ -183,7 +183,7 @@
 </div>
 <c:if test="${userIsActivated}">
 	<script type="text/javascript" src="${pageContext.request.contextPath}/assets/js/eureka.util${initParam['eureka-build-timestamp']}.js"></script>
-	<script src="${pageContext.request.contextPath}/assets/js/eureka.idletimeout${initParam['eureka-build-timestamp']}.js" type="text/javascript"></script>
+	<script src="https://assets.eurekaclinical/org/v1.1/js/ec.idletimeout.min.js" type="text/javascript"></script>
 	<script type="text/javascript">
 		$(document).ready(function (){
 		$(document).idleTimeout({
