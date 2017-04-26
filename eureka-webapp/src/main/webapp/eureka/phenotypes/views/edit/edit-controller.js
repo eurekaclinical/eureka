@@ -17,6 +17,7 @@
 
     EditCtrl.$inject = ['$stateParams', 'PhenotypeService', 'dragAndDropService', 'TreeService', 'users', '$state'];
 
+
     function EditCtrl($stateParams, PhenotypeService, dragAndDropService, TreeService, users, $state) {
 
         let vm = this;
@@ -35,22 +36,59 @@
         vm.type = _.startCase($stateParams.type);
         vm.timeUnits = ['minutes', 'hours', 'days'];
 
+        //frequency
+        vm.frequencyObject = {};
+        vm.frequencyObject.phenotype = {};
+        vm.timeUnits = [{ name: 'minutes', value: 3 }, { name: 'hours', value: 2 }, { name: 'days', value: 1 }];
+        vm.thresholdUnits = ['at least', 'first'];
+
+        //Sequence
+        vm.seqObject = {};
+
         if ($stateParams.id) {
             PhenotypeService.getPhenotype($stateParams.id).then(function(data) {
-                vm.currentObject = data;
-                currentType = vm.currentObject.type;
-                setType();
-                // have to set the member list for the drop area
-                for (var i = 0; i < data.children.length; i++) {
+                if (data.type === "FREQUENCY") {
+                    vm.frequencyObject = data;
+                    currentType = vm.frequencyObject.type;
+                    setType();
+                    // have to set the member list for the drop area
+
                     var myChildren = {};
-                    myChildren.key = data.children[i].phenotypeKey;
-                    myChildren.displayName = data.children[i].phenotypeKey;
-                    myChildren.type = data.children[i].type;
+                    myChildren.key = data.phenotype.phenotypeKey;
+                    myChildren.displayName = data.phenotype.phenotypeKey;
+                    myChildren.type = data.phenotype.type;
                     currentList.push(myChildren);
+
+                    //dragAndDropService.setNodes(currentList);
+                    vm.memberList = currentList;
+                    console.log(vm.currentObject);
+
+                } else if (data.type === "CATEGORIZATION") {
+
+                    vm.currentObject = data;
+                    currentType = vm.currentObject.type;
+                    setType();
+                    // have to set the member list for the drop area
+                    for (var i = 0; i < data.children.length; i++) {
+                        var myChildren = {};
+                        myChildren.key = data.children[i].phenotypeKey;
+                        myChildren.displayName = data.children[i].phenotypeKey;
+                        myChildren.type = data.children[i].type;
+                        currentList.push(myChildren);
+                    }
+                    //dragAndDropService.setNodes(currentList);
+                    vm.memberList = currentList;
+                    console.log(vm.currentObject);
+
+                } else if (data.type === "SEQUENCE") {
+
+                    vm.seqObject = data;
+                    currentType = vm.seqObject.type;
+                    setType();
+
+
                 }
-                //dragAndDropService.setNodes(currentList);
-                vm.memberList = currentList;
-                console.log(vm.currentObject);
+
             }, displayError);
 
         }

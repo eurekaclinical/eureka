@@ -49,10 +49,11 @@
         vm.frequencyObject.phenotype.propertyValue = '';
         vm.frequencyObject.isWithin = false;
         vm.frequencyObject.withinAtLeast = "";
+        vm.frequencyObject.frequencyType = "1";
         vm.frequencyObject.withinAtLeastUnits = "1";
         vm.frequencyObject.withinAtMost = "";
         vm.frequencyObject.withinAtMostUnits = "1";
-        vm.timeUnits = [{ name: 'minutes', value: 3 }, { name: 'hours', value: 2 }, { name: 'days', value: 1 }];
+        vm.timeUnits = [{ name: 'minutes', value: "3" }, { name: 'hours', value: "2" }, { name: 'days', value: "1" }];
         vm.thresholdUnits = ['at least', 'first'];
 
 
