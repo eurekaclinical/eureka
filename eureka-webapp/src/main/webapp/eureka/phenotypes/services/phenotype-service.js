@@ -24,7 +24,8 @@
             getPhenotypeMessages: getPhenotypeMessages,
             createPhenotype: createPhenotype,
             getPhenotype: getPhenotype,
-            updatePhenotype: updatePhenotype
+            updatePhenotype: updatePhenotype,
+            removePhenotype: removePhenotype
         });
 
         function getSummarizedUserElements() {
@@ -76,6 +77,12 @@
 
         function getPhenotype(id) {
             return $http.get(dataEndpoint + '/phenotypes/' + id)
+                .then(handleSuccess, handleError);
+
+        }
+
+        function removePhenotype(id) {
+            return $http['delete'](dataEndpoint + '/phenotypes/' + id)
                 .then(handleSuccess, handleError);
 
         }
