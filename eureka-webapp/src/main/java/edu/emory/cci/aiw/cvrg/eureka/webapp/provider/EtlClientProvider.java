@@ -1,10 +1,10 @@
-package edu.emory.cci.aiw.cvrg.eureka.webapp.client;
+package edu.emory.cci.aiw.cvrg.eureka.webapp.provider;
 
-/*-
+/*
  * #%L
  * Eureka WebApp
  * %%
- * Copyright (C) 2012 - 2017 Emory University
+ * Copyright (C) 2012 - 2013 Emory University
  * %%
  * This program is dual licensed under the Apache 2 and GPLv3 licenses.
  * 
@@ -40,36 +40,36 @@ package edu.emory.cci.aiw.cvrg.eureka.webapp.client;
  * #L%
  */
 
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ServicesClient;
-import javax.inject.Inject;
-import org.eurekaclinical.common.comm.clients.Route;
-import org.eurekaclinical.common.comm.clients.RouterTable;
-import org.eurekaclinical.common.comm.clients.RouterTableLoadException;
-import org.eurekaclinical.user.client.EurekaClinicalUserProxyClient;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.google.inject.Inject;
+import com.google.inject.Provider;
+import com.google.inject.Singleton;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.EtlClient;
+
+import edu.emory.cci.aiw.cvrg.eureka.webapp.config.WebappProperties;
 
 /**
- *
- * @author Andrew Post
+ * 
+ * @author hrathod
  */
-public class ServiceClientRouterTable implements RouterTable {
-	
-	private final EurekaClinicalUserProxyClient userClient;
-	private final ServicesClient client;
+@Singleton
+public class EtlClientProvider implements Provider<EtlClient> {
 
-    @Inject
-    public ServiceClientRouterTable(ServicesClient inClient, EurekaClinicalUserProxyClient inUserClient) {
-        this.client = inClient;
-		this.userClient = inUserClient;
-    }
+	private static final Logger LOGGER = LoggerFactory
+			.getLogger(EtlClientProvider.class);
+	private final EtlClient client;
+
+	@Inject
+	public EtlClientProvider(WebappProperties inProperties) {
+		LOGGER.debug("ETL url = {}", inProperties.getEtlUrl());
+		this.client = new EtlClient(inProperties.getEtlUrl());
+	}
 
 	@Override
-	public Route[] load() throws RouterTableLoadException {
-		return new Route[]{
-			new Route("/users/", "/api/protected/users/", this.userClient),
-			new Route("/roles/", "/api/protected/roles/", this.userClient),
-			new Route("/appproperties/", "/api/appproperties/", this.client),
-			new Route("/", "/api/protected/", this.client)
-		};
+	public EtlClient get() {
+		return this.client;
 	}
-	
+
 }

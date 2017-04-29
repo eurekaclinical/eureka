@@ -74,6 +74,15 @@ public class WebappProperties extends AbstractProperties {
 		return this.getValue("eureka.services.url");
 	}
 	
+	/**
+	 * Get the URL for the eureka-protempa-etl application.
+	 *
+	 * @return A string containing the base URL for the ETL layer.
+	 */
+	public String getEtlUrl() {
+		return this.getValue("eureka.etl.url");
+	}
+	
 	public String getCohortsUrl() {
 		return this.getValue("eureka.cohorts.url");
 	}
