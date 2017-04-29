@@ -37,7 +37,7 @@
  * <http://www.gnu.org/licenses/gpl-3.0.html>.
  * #L%
  */
-package edu.emory.cci.aiw.cvrg.eureka.services.config;
+package edu.emory.cci.aiw.cvrg.eureka.common.comm.clients;
 
 import com.google.inject.Inject;
 import com.sun.jersey.api.client.ClientResponse;
@@ -56,7 +56,6 @@ import edu.emory.cci.aiw.cvrg.eureka.common.comm.JobRequest;
 import org.eurekaclinical.eureka.client.comm.SourceConfig;
 import org.eurekaclinical.eureka.client.comm.Statistics;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.ValidationRequest;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.EurekaClient;
 import java.io.InputStream;
 import java.net.URI;
 import java.util.List;
@@ -69,7 +68,7 @@ import org.protempa.PropositionDefinition;
 /**
  * @author hrathod
  */
-public class EtlClientImpl extends EurekaClient implements EtlClient {
+public class EtlClient extends EurekaClient {
 
 	private static final GenericType<List<Job>> JobListType = new GenericType<List<Job>>() {
 	};
@@ -109,8 +108,8 @@ public class EtlClientImpl extends EurekaClient implements EtlClient {
 	private final String resourceUrl;
 
 	@Inject
-	public EtlClientImpl(ServiceProperties serviceProperties) {
-		this.resourceUrl = serviceProperties.getEtlUrl();
+	public EtlClient(String inEtlUrl) {
+		this.resourceUrl = inEtlUrl;
 	}
 
 	@Override
@@ -118,14 +117,12 @@ public class EtlClientImpl extends EurekaClient implements EtlClient {
 		return this.resourceUrl;
 	}
 
-	@Override
 	public List<SourceConfig> getSourceConfigs() throws
 			ClientException {
 		final String path = "/api/protected/sourceconfigs";
 		return doGet(path, SourceConfigListType);
 	}
 
-	@Override
 	public SourceConfig getSourceConfig(String sourceConfigId) throws
 			ClientException {
 		String path = UriBuilder.fromPath("/api/protected/sourceconfigs/")
@@ -134,14 +131,12 @@ public class EtlClientImpl extends EurekaClient implements EtlClient {
 		return doGet(path, SourceConfig.class);
 	}
 
-	@Override
 	public List<EtlDestination> getDestinations() throws
 			ClientException {
 		final String path = "/api/protected/destinations";
 		return doGet(path, DestinationListType);
 	}
 
-	@Override
 	public List<EtlCohortDestination> getCohortDestinations() throws
 			ClientException {
 		final String path = "/api/protected/destinations/";
@@ -150,7 +145,6 @@ public class EtlClientImpl extends EurekaClient implements EtlClient {
 		return doGet(path, CohortDestinationListType, queryParams);
 	}
 
-	@Override
 	public List<EtlI2B2Destination> getI2B2Destinations() throws
 			ClientException {
 		final String path = "/api/protected/destinations/";
@@ -159,7 +153,6 @@ public class EtlClientImpl extends EurekaClient implements EtlClient {
 		return doGet(path, I2B2DestinationListType, queryParams);
 	}
 
-	@Override
 	public List<EtlPatientSetExtractorDestination> getPatientSetExtractorDestinations() throws ClientException {
 		final String path = "/api/protected/destinations/";
 		MultivaluedMap<String, String> queryParams = new MultivaluedMapImpl();
@@ -167,7 +160,6 @@ public class EtlClientImpl extends EurekaClient implements EtlClient {
 		return doGet(path, PatientSetExtractorDestinationListType, queryParams);
 	}
 	
-	@Override
 	public List<EtlPatientSetSenderDestination> getPatientSetSenderDestinations() throws ClientException {
 		final String path = "/api/protected/destinations/";
 		MultivaluedMap<String, String> queryParams = new MultivaluedMapImpl();
@@ -175,7 +167,6 @@ public class EtlClientImpl extends EurekaClient implements EtlClient {
 		return doGet(path, PatientSetSenderDestinationListType, queryParams);
 	}
 	
-	@Override
 	public List<EtlTabularFileDestination> getTabularFileDestinations() throws ClientException {
 		final String path = "/api/protected/destinations/";
 		MultivaluedMap<String, String> queryParams = new MultivaluedMapImpl();
@@ -183,7 +174,6 @@ public class EtlClientImpl extends EurekaClient implements EtlClient {
 		return doGet(path, TabularFileDestinationListType, queryParams);
 	}
 
-	@Override
 	public EtlDestination getDestination(String destId) throws
 			ClientException {
 		String path = UriBuilder.fromPath("/api/protected/destinations/")
@@ -192,20 +182,17 @@ public class EtlClientImpl extends EurekaClient implements EtlClient {
 		return doGet(path, EtlDestination.class);
 	}
 
-	@Override
 	public Long createDestination(EtlDestination etlDest) throws ClientException {
 		String path = "/api/protected/destinations";
 		URI destURI = doPostCreate(path, etlDest);
                 return extractId(destURI);
 	}
 
-	@Override
 	public void updateDestination(EtlDestination etlDest) throws ClientException {
 		String path = "/api/protected/destinations";
 		doPut(path, etlDest);
 	}
 
-	@Override
 	public void deleteDestination(String etlDestId) throws ClientException {
 		String path = UriBuilder.fromPath("/api/protected/destinations/")
 				.segment(etlDestId)
@@ -213,26 +200,22 @@ public class EtlClientImpl extends EurekaClient implements EtlClient {
 		doDelete(path);
 	}
 
-	@Override
 	public Long submitJob(JobRequest inJobRequest) throws ClientException {
 		final String path = "/api/protected/jobs";
 		URI jobUri = doPostCreate(path, inJobRequest);
 		return extractId(jobUri);
 	}
 
-	@Override
 	public List<Job> getJobStatus(JobFilter inFilter) throws ClientException {
 		final String path = "/api/protected/jobs/status";
 		return doGet(path, JobListType);
 	}
 
-	@Override
 	public List<Job> getJobs() throws ClientException {
 		final String path = "/api/protected/jobs";
 		return doGet(path, JobListType);
 	}
 
-	@Override
 	public List<Job> getJobsDesc() throws ClientException {
 		final String path = "/api/protected/jobs";
 		MultivaluedMap<String, String> queryParams = new MultivaluedMapImpl();
@@ -240,19 +223,16 @@ public class EtlClientImpl extends EurekaClient implements EtlClient {
 		return doGet(path, JobListType, queryParams);
 	}
 
-	@Override
 	public List<Job> getLatestJob() throws ClientException {
 		final String path = "/api/protected/jobs/latest";
 		return doGet(path, JobListType);
 	}
 
-	@Override
 	public Job getJob(Long inJobId) throws ClientException {
 		final String path = "/api/protected/jobs/" + inJobId;
 		return doGet(path, JobType);
 	}
 
-	@Override
 	public Statistics getJobStats(Long inJobId, String inPropId) throws ClientException {
 		UriBuilder uriBuilder = UriBuilder.fromPath("/api/protected/jobs/{arg1}/stats/");
 		if (inPropId != null) {
@@ -261,7 +241,6 @@ public class EtlClientImpl extends EurekaClient implements EtlClient {
 		return doGet(uriBuilder.build(inJobId).toString(), JobStatsType);
 	}
 
-	@Override
 	public void validatePropositions(ValidationRequest inRequest) throws
 			ClientException {
 		final String path = "/api/protected/validate";
@@ -278,7 +257,6 @@ public class EtlClientImpl extends EurekaClient implements EtlClient {
 	 * @throws ClientException if an error occurred looking for the proposition
 	 * definition.
 	 */
-	@Override
 	public PropositionDefinition getPropositionDefinition(
 			String sourceConfigId, String inKey) throws ClientException {
 		MultivaluedMap<String, String> formParams = new MultivaluedMapImpl();
@@ -307,7 +285,6 @@ public class EtlClientImpl extends EurekaClient implements EtlClient {
 	 * @throws ClientException if an error occurred looking for the proposition
 	 * definitions
 	 */
-	@Override
 	public List<PropositionDefinition> getPropositionDefinitions(
 			String sourceConfigId, List<String> inKeys, Boolean withChildren) throws ClientException {
 		MultivaluedMap<String, String> formParams = new MultivaluedMapImpl();
@@ -321,7 +298,6 @@ public class EtlClientImpl extends EurekaClient implements EtlClient {
 		return doPost(path, PropositionDefinitionList, formParams);
 	}
 
-	@Override
 	public void upload(String fileName, String sourceId,
 			String fileTypeId, InputStream inputStream)
 			throws ClientException {
@@ -333,7 +309,6 @@ public class EtlClientImpl extends EurekaClient implements EtlClient {
 		doPostMultipart(path, fileName, inputStream);
 	}
 
-	@Override
 	public List<String> getPropositionSearchResults(String sourceConfigId,
 			String inSearchKey) throws ClientException {
 
@@ -344,7 +319,6 @@ public class EtlClientImpl extends EurekaClient implements EtlClient {
 		return doGet(path, PropositionSearchResultsList);
 	}
 
-	@Override
 	public List<PropositionDefinition> getPropositionSearchResultsBySearchKey(String sourceConfigId,
 			String inSearchKey) throws ClientException {
 
@@ -355,7 +329,6 @@ public class EtlClientImpl extends EurekaClient implements EtlClient {
 		return doGet(path, PropositionDefinitionList);
 	}
 
-	@Override
 	public ClientResponse getOutput(String destinationId) throws ClientException {
 		String path = UriBuilder.fromPath("/api/protected/output/")
 				.segment(destinationId)
@@ -363,7 +336,6 @@ public class EtlClientImpl extends EurekaClient implements EtlClient {
 		return doGetResponse(path);
 	}
 
-	@Override
 	public void deleteOutput(String destinationId) throws ClientException {
 		String path = UriBuilder.fromPath("/api/protected/output/")
 				.segment(destinationId)
@@ -371,19 +343,16 @@ public class EtlClientImpl extends EurekaClient implements EtlClient {
 		doDelete(path);
 	}
 	
-	@Override
 	public List<Role> getRoles() throws ClientException {
 		final String path = "/api/protected/roles";
 		return doGet(path, RoleList);
 	}
 
-	@Override
 	public Role getRole(Long inRoleId) throws ClientException {
 		final String path = "/api/protected/roles/" + inRoleId;
 		return doGet(path, Role.class);
 	}
 	
-	@Override
 	public Role getRoleByName(String name) throws ClientException {
 		return doGet("/api/protected/roles/byname/" + name, Role.class);
 	}
