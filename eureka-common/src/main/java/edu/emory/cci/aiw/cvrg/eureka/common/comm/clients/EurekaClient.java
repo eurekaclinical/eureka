@@ -41,17 +41,12 @@ package edu.emory.cci.aiw.cvrg.eureka.common.comm.clients;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.json.ObjectMapperProvider;
 import org.eurekaclinical.common.comm.clients.EurekaClinicalClient;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * @author hrathod
  */
 public abstract class EurekaClient extends EurekaClinicalClient {
 
-	private static final Logger LOGGER
-			= LoggerFactory.getLogger(EurekaClient.class);
-        
 	protected EurekaClient() {
 		super(ObjectMapperProvider.class);
 	}

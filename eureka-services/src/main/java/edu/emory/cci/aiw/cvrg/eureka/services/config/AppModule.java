@@ -46,6 +46,7 @@ import javax.naming.InitialContext;
 
 import com.google.inject.TypeLiteral;
 import com.google.inject.jndi.JndiIntegration;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.EtlClient;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.FrequencyTypeDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.JpaFrequencyTypeDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.JpaPhenotypeEntityDao;
@@ -63,6 +64,7 @@ import edu.emory.cci.aiw.cvrg.eureka.services.dao.ValueComparatorDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.finder.PropositionFinder;
 import edu.emory.cci.aiw.cvrg.eureka.services.finder.SystemPropositionFinder;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.PhenotypeEntityDao;
+import edu.emory.cci.aiw.cvrg.eureka.services.provider.EtlClientProvider;
 import org.eurekaclinical.common.comm.clients.WebResourceWrapperFactory;
 import org.eurekaclinical.common.comm.clients.cassupport.CasWebResourceWrapperFactory;
 import org.eurekaclinical.standardapis.dao.UserDao;
@@ -101,8 +103,8 @@ class AppModule extends AbstractModule {
 				JndiIntegration.fromJndi(Session.class,
 						"java:comp/env/mail/Session"));
 
-		bind(EtlClient.class).to(EtlClientImpl.class);
 		bind(WebResourceWrapperFactory.class).to(CasWebResourceWrapperFactory.class);
+		bind(EtlClient.class).toProvider(EtlClientProvider.class);
 	}
 
 }

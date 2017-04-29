@@ -88,7 +88,6 @@ public class AppTestModule extends AbstractModule {
 		bind(PhenotypeEntityDao.class).to(JpaPhenotypeEntityDao.class);
 		bind(ThresholdsOperatorDao.class).to(JpaThresholdsOperatorDao.class);
 		bind(new TypeLiteral<PropositionFinder<String>>(){}).to(TestPropositionFinder.class);
-		bind(EtlClient.class).to(MockEtlClient.class);
 		bind(WebResourceWrapperFactory.class).to(CasWebResourceWrapperFactory.class);
 	}
 }

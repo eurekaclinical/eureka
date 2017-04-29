@@ -1,10 +1,10 @@
-package edu.emory.cci.aiw.cvrg.eureka.webapp.config;
+package edu.emory.cci.aiw.cvrg.eureka.webapp.client;
 
-/*
+/*-
  * #%L
  * Eureka WebApp
  * %%
- * Copyright (C) 2012 - 2013 Emory University
+ * Copyright (C) 2012 - 2017 Emory University
  * %%
  * This program is dual licensed under the Apache 2 and GPLv3 licenses.
  * 
@@ -40,39 +40,40 @@ package edu.emory.cci.aiw.cvrg.eureka.webapp.config;
  * #L%
  */
 
-import edu.emory.cci.aiw.cvrg.eureka.webapp.client.WebappRouterTable;
-import com.google.inject.AbstractModule;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.EtlClient;
-
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ServicesClient;
-import edu.emory.cci.aiw.cvrg.eureka.webapp.provider.EtlClientProvider;
-import edu.emory.cci.aiw.cvrg.eureka.webapp.provider.ServicesClientProvider;
+import javax.inject.Inject;
+import org.eurekaclinical.common.comm.clients.Route;
 import org.eurekaclinical.common.comm.clients.RouterTable;
-import org.eurekaclinical.standardapis.props.CasEurekaClinicalProperties;
+import org.eurekaclinical.common.comm.clients.RouterTableLoadException;
 import org.eurekaclinical.user.client.EurekaClinicalUserProxyClient;
 
 /**
  *
- * @author hrathod
+ * @author Andrew Post
  */
-class AppModule extends AbstractModule {
-	private final WebappProperties webappProperties;
+public class WebappRouterTable implements RouterTable {
+	
 	private final EurekaClinicalUserProxyClient userClient;
-	
-	AppModule(WebappProperties webappProperties) {
-		assert webappProperties != null : "webappProperties cannot be null";
-		this.webappProperties = webappProperties;
-		this.userClient = new EurekaClinicalUserProxyClient(this.webappProperties.getUserServiceUrl());
-	}
-	
+	private final ServicesClient servicesClient;
+	private final EtlClient etlClient;
+
+    @Inject
+    public WebappRouterTable(ServicesClient inServices, EurekaClinicalUserProxyClient inUserClient, EtlClient inEtlClient) {
+        this.servicesClient = inServices;
+		this.userClient = inUserClient;
+		this.etlClient = inEtlClient;
+    }
+
 	@Override
-	protected void configure() {
-		bind(RouterTable.class).to(WebappRouterTable.class);
-		bind(WebappProperties.class).toInstance(this.webappProperties);
-		bind(CasEurekaClinicalProperties.class).toInstance(this.webappProperties);
-		bind(ServicesClient.class).toProvider(ServicesClientProvider.class);
-		bind(EtlClient.class).toProvider(EtlClientProvider.class);
-		bind(EurekaClinicalUserProxyClient.class).toInstance(this.userClient);
+	public Route[] load() throws RouterTableLoadException {
+		return new Route[]{
+			new Route("/users/", "/api/protected/users/", this.userClient),
+			new Route("/roles/", "/api/protected/roles/", this.userClient),
+			new Route("/appproperties/", "/api/appproperties/", this.servicesClient),
+			new Route("/file/", "/api/protected/file/", this.etlClient),
+			new Route("/", "/api/protected/", this.servicesClient)
+		};
 	}
 	
 }
