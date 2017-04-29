@@ -42,7 +42,7 @@ package edu.emory.cci.aiw.cvrg.eureka.services.finder;
 import com.google.inject.Inject;
 import com.sun.jersey.api.client.ClientResponse;
 import org.eurekaclinical.eureka.client.comm.SystemPhenotype;
-import edu.emory.cci.aiw.cvrg.eureka.services.config.EtlClient;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.EtlClient;
 import org.protempa.PropositionDefinition;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
