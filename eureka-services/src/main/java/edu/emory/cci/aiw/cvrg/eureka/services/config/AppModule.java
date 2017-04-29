@@ -64,6 +64,7 @@ import edu.emory.cci.aiw.cvrg.eureka.services.dao.ValueComparatorDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.finder.PropositionFinder;
 import edu.emory.cci.aiw.cvrg.eureka.services.finder.SystemPropositionFinder;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.PhenotypeEntityDao;
+import edu.emory.cci.aiw.cvrg.eureka.services.provider.EtlClientProvider;
 import org.eurekaclinical.common.comm.clients.WebResourceWrapperFactory;
 import org.eurekaclinical.common.comm.clients.cassupport.CasWebResourceWrapperFactory;
 import org.eurekaclinical.standardapis.dao.UserDao;
