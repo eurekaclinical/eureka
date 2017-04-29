@@ -63,6 +63,7 @@ import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.commons.io.FileUtils;
 
 import com.google.inject.Inject;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.EtlClient;
 
 import org.eurekaclinical.eureka.client.comm.JobSpec;
 import org.eurekaclinical.common.comm.clients.ClientException;
@@ -85,10 +86,12 @@ public class JobSubmitServlet extends HttpServlet {
 	 */
 	private File tmpDir;
 	private final ServicesClient servicesClient;
+	private final EtlClient etlClient;
 
 	@Inject
-	public JobSubmitServlet(ServicesClient inClient) {
-		this.servicesClient = inClient;
+	public JobSubmitServlet(ServicesClient inServicesClient, EtlClient inEtlClient) {
+		this.servicesClient = inServicesClient;
+		this.etlClient = inEtlClient;
 	}
 
 	@Override
@@ -217,7 +220,7 @@ public class JobSubmitServlet extends HttpServlet {
 				if (item.getSize() > 0) {
 					InputStream is = item.getInputStream();
 					try {
-						this.servicesClient.upload(
+						this.etlClient.upload(
 								FilenameUtils.getName(item.getName()),
 								jobSpec.getSourceConfigId(),
 								item.getFieldName(), is);
