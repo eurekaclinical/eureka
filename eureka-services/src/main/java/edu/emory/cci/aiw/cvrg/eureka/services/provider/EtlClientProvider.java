@@ -1,4 +1,4 @@
-package edu.emory.cci.aiw.cvrg.eureka.webapp.config;
+package edu.emory.cci.aiw.cvrg.eureka.services.provider;
 
 /*
  * #%L
@@ -39,43 +39,31 @@ package edu.emory.cci.aiw.cvrg.eureka.webapp.config;
  * <http://www.gnu.org/licenses/gpl-3.0.html>.
  * #L%
  */
-import edu.emory.cci.aiw.cvrg.eureka.webapp.client.WebappRouterTable;
-import com.google.inject.AbstractModule;
+
+
+import com.google.inject.Inject;
+import com.google.inject.Provider;
+import com.google.inject.Singleton;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.EtlClient;
-
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ServicesClient;
-
-import org.eurekaclinical.common.comm.clients.RouterTable;
-import org.eurekaclinical.standardapis.props.CasEurekaClinicalProperties;
-import org.eurekaclinical.user.client.EurekaClinicalUserProxyClient;
+import edu.emory.cci.aiw.cvrg.eureka.services.config.ServiceProperties;
 
 /**
- *
+ * 
  * @author hrathod
  */
-class AppModule extends AbstractModule {
+@Singleton
+public class EtlClientProvider implements Provider<EtlClient> {
 
-	private final WebappProperties webappProperties;
-	private final EurekaClinicalUserProxyClient userClient;
-	private final EtlClient etlClient;
-	private final ServicesClient servicesClient;
+	private final EtlClient client;
 
-	AppModule(WebappProperties webappProperties, ServicesClient inServicesClient, EtlClient inEtlClient, EurekaClinicalUserProxyClient inUserClient) {
-		assert webappProperties != null : "webappProperties cannot be null";
-		this.webappProperties = webappProperties;
-		this.userClient = inUserClient;
-		this.servicesClient = inServicesClient;
-		this.etlClient = inEtlClient;
+	@Inject
+	public EtlClientProvider(ServiceProperties inProperties) {
+		this.client = new EtlClient(inProperties.getEtlUrl());
 	}
 
 	@Override
-	protected void configure() {
-		bind(RouterTable.class).to(WebappRouterTable.class);
-		bind(WebappProperties.class).toInstance(this.webappProperties);
-		bind(CasEurekaClinicalProperties.class).toInstance(this.webappProperties);
-		bind(ServicesClient.class).toInstance(this.servicesClient);
-		bind(EtlClient.class).toInstance(this.etlClient);
-		bind(EurekaClinicalUserProxyClient.class).toInstance(this.userClient);
+	public EtlClient get() {
+		return this.client;
 	}
 
 }
