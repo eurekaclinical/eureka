@@ -45,8 +45,6 @@ import com.google.inject.AbstractModule;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.EtlClient;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ServicesClient;
-import edu.emory.cci.aiw.cvrg.eureka.webapp.provider.EtlClientProvider;
-import edu.emory.cci.aiw.cvrg.eureka.webapp.provider.ServicesClientProvider;
 import org.eurekaclinical.common.comm.clients.RouterTable;
 import org.eurekaclinical.standardapis.props.CasEurekaClinicalProperties;
 import org.eurekaclinical.user.client.EurekaClinicalUserProxyClient;
@@ -58,11 +56,15 @@ import org.eurekaclinical.user.client.EurekaClinicalUserProxyClient;
 class AppModule extends AbstractModule {
 	private final WebappProperties webappProperties;
 	private final EurekaClinicalUserProxyClient userClient;
+	private final EtlClient etlClient;
+	private final ServicesClient servicesClient;
 	
-	AppModule(WebappProperties webappProperties) {
+	AppModule(WebappProperties webappProperties, ServicesClient inServicesClient, EtlClient inEtlClient, EurekaClinicalUserProxyClient inUserClient) {
 		assert webappProperties != null : "webappProperties cannot be null";
 		this.webappProperties = webappProperties;
-		this.userClient = new EurekaClinicalUserProxyClient(this.webappProperties.getUserServiceUrl());
+		this.userClient = inUserClient;
+		this.servicesClient = inServicesClient;
+		this.etlClient = inEtlClient;
 	}
 	
 	@Override
@@ -70,8 +72,8 @@ class AppModule extends AbstractModule {
 		bind(RouterTable.class).to(WebappRouterTable.class);
 		bind(WebappProperties.class).toInstance(this.webappProperties);
 		bind(CasEurekaClinicalProperties.class).toInstance(this.webappProperties);
-		bind(ServicesClient.class).toProvider(ServicesClientProvider.class);
-		bind(EtlClient.class).toProvider(EtlClientProvider.class);
+		bind(ServicesClient.class).toInstance(this.servicesClient);
+		bind(EtlClient.class).toInstance(this.etlClient);
 		bind(EurekaClinicalUserProxyClient.class).toInstance(this.userClient);
 	}
 	
