@@ -39,12 +39,6 @@
                     'displayName': 'Categorization',
                     'description': `For defining a significant category of codes or clinical events or observations.`
                 },
-                'TEMPORAL': {
-                    'displayName': 'Temporal',
-                    'description': `For defining a disease, finding or patient care process to be reflected by codes
-                    ,clinical events and/or observations in a specified frequency, sequential or other temporal 
-                    patterns.`
-                },
                 'SEQUENCE': {
                     'displayName': 'Sequence',
                     'description': `For defining a disease, finding or patient care process to be reflected by codes,
@@ -55,8 +49,8 @@
                     'description': `For defining a disease, finding or patient care process to be reflected by codes,
                     clinical events and/or observations in a specified frequency.`
                 },
-                'VALUE_THRESHOLD': {
-                    'displayName': 'Value Threshold',
+                'THRESHOLD': {
+                    'displayName': 'Threshold',
                     'description': `For defining clinically significant thresholds on the value of an observation.`
                 }
             };

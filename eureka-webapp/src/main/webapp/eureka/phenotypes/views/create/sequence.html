@@ -1,0 +1,191 @@
+<form id="sequenceForm " class="vert-offset " role="form ">
+    <div class="form-group ">
+        <label for="patCohortDefName " class="control-label ">Name</label>
+        <input type="text " id="patCohortDefName " class="form-control " ng-model="createPhenotype.seqObject.displayName" />
+    </div>
+    <div class="form-group ">
+        <label for="patCohortDescription " class="control-label ">Description</label>
+        <textarea id="patCohortDescription " class="form-control " ng-model="createPhenotype.seqObject.description"></textarea>
+    </div>
+    <div class="form-group ">
+        <div id="propDefinition " class="col-sm-12 panel panel-default ">
+            <div class="row panel-heading ">
+                <h4 class="panel-title ">Main Phenotype</h4>
+            </div>
+            <div class="form-group ">
+                <div class="col-sm-12 ">
+                    <label class="sr-only " for="mainPhenotype ">Main phenotype</label>
+                </div>
+            </div>
+            <div class="form-group text-center vert-offset ">
+                <button id="addMainPhenotype " type="button " class="btn btn-primary " ng-click="createPhenotype.addMainPhenotype();">Add Members</button>
+            </div>
+            <div class="row" style="padding-top: 10px;">
+                <div class="col-md-12">
+                    <div class="col-md-5" style="background:#f5f5f5">
+                        <form>
+                            <fieldset>
+                                <legend>Items Added&nbsp;</legend>
+                                <p>
+                                    <span>{{createPhenotype.seqObject.primaryPhenotype.phenotypeKey}}</span>
+                                    <p>
+                            </fieldset>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <fieldset>
+                <legend style="padding-top:20px;">
+                    <input type="checkbox" value="" ng-model="createPhenotype.seqObject.primaryPhenotype.hasDuration"></input>&nbsp; Duration</legend>
+                <div class="form-group ">
+                    <div class="col-md-2">
+                        <input type="number " min="1 " value=" " title="Specify the frequency count " class="form-control " placeholder="min" ng-model="createPhenotype.seqObject.primaryPhenotype.minDuration" />
+                    </div>
+                    <div class="col-md-3">
+                        <select class="selectpicker" title="Specify whether only the first n intervals will be matched (First) or any n intervals (At least) " style="height: 33px;" ng-model="createPhenotype.seqObject.primaryPhenotype.minDurationUnits">
+                            <option ng-repeat="tu in createPhenotype.timeUnits" value="{{tu.value}}">{{tu.name}}</option>
+                        </select>
+                    </div>
+                    <div class="col-md-2">
+                        <span>to</span>
+                    </div>
+                    <div class="col-md-2">
+                        <input type="number " min="1 " value=" " title="Specify the frequency count " class="form-control " placeholder="max" ng-model="createPhenotype.seqObject.primaryPhenotype.maxDuration" />
+                    </div>
+                    <div class="col-md-3">
+                        <select class="selectpicker" title="Specify whether only the first n intervals will be matched (First) or any n intervals (At least) " style="    height: 33px;" ng-model="createPhenotype.seqObject.primaryPhenotype.maxDurationUnits">
+                            <option ng-repeat="tu in createPhenotype.timeUnits" value="{{tu.value}}">{{tu.name}}</option>
+                        </select>
+                    </div>
+                </div>
+            </fieldset>
+            <fieldset style="padding-bottom:10px">
+                <legend style="padding-top:20px;">
+                    <input type="checkbox" value="" ng-model="createPhenotype.seqObject.primaryPhenotype.hasPropertyConstraint"></input>&nbsp; Property Value</legend>
+                <div class="form-group ">
+                    <div class="col-md-4">
+                        <select class="selectpicker" ng-model="createPhenotype.seqObject.primaryPhenotype.property" style="    height: 33px; width: 190px;">
+                            <option ng-repeat="pp in createPhenotype.phenotypeProperties" value="{{pp}}">{{pp}}</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <input type="number " min="1 " value=" " title="Specify the frequency count " class="form-control " ng-model="createPhenotype.seqObject.primaryPhenotype.propertyValue" />
+                    </div>
+                </div>
+            </fieldset>
+        </div>
+    </div>
+    <div class="form-group " ng-repeat="relatedPhenotype in createPhenotype.seqObject.relatedPhenotypes">
+        <div id="sequenceRelatedPhenotypes " class="sequence-relations-container ">
+            <div class="sequence-relation drop-parent panel panel-default col-sm-12 ">
+                <div class="row panel-heading ">
+                    <h4 class="panel-title ">Related phenotype <span class="count ">{{$index + 1}}</span></h4>
+                </div>
+                <div class="form-group ">
+                    <div class="col-sm-12 ">
+                        <label class="sr-only " for="relatedPhenotype${status.count} ">Related phenotype </label>
+                    </div>
+                </div>
+                <div class="form-group text-center vert-offset ">
+                    <button id="addMainPhenotype " type="button " class="btn btn-primary " ng-click="createPhenotype.addPhenotypeToRelated($index+1);">Add Members</button>
+                </div>
+                <div class="row" style="padding-top: 10px;">
+                    <div class="col-md-12">
+                        <div class="col-md-5" style="background:#f5f5f5">
+                            <form>
+                                <fieldset>
+                                    <legend>Items Added&nbsp;</legend>
+                                    <p>
+                                        <span>{{relatedPhenotype.phenotypeField.phenotypeKey}}</span>
+                                        <p>
+                                </fieldset>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <fieldset>
+                    <legend style="padding-top:20px;">
+                        <input type="checkbox" value="" ng-model="relatedPhenotype.phenotypeField.hasDuration"></input>&nbsp; Duration</legend>
+                    <div class="form-group ">
+                        <div class="col-md-2">
+                            <input type="number " min="1 " value=" " title="Specify the frequency count " class="form-control " placeholder="min" ng-model="relatedPhenotype.phenotypeField.minDuration" />
+                        </div>
+                        <div class="col-md-3">
+                            <select class="selectpicker" title="Specify whether only the first n intervals will be matched (First) or any n intervals (At least) " style="height: 33px;" ng-model="relatedPhenotype.phenotypeField.minDurationUnits">
+                                <option ng-repeat="tu in createPhenotype.timeUnits" value="{{tu.value}}">{{tu.name}}</option>
+                            </select>
+                        </div>
+                        <div class="col-md-2">
+                            <span>to</span>
+                        </div>
+                        <div class="col-md-2">
+                            <input type="number " min="1 " value=" " title="Specify the frequency count " class="form-control " placeholder="max" ng-model="relatedPhenotype.phenotypeField.maxDuration" />
+                        </div>
+                        <div class="col-md-3">
+                            <select class="selectpicker" title="Specify whether only the first n intervals will be matched (First) or any n intervals (At least) " style="    height: 33px;" ng-model="relatedPhenotype.phenotypeField.maxDurationUnits">
+                                <option ng-repeat="tu in createPhenotype.timeUnits" value="{{tu.value}}">{{tu.name}}</option>
+                            </select>
+                        </div>
+                    </div>
+                </fieldset>
+                <fieldset>
+                    <legend style="padding-top:20px;">
+                        <input type="checkbox" value="" ng-model="relatedPhenotype.phenotypeField.hasPropertyConstraint"></input>&nbsp; Property Value</legend>
+                    <div class="form-group ">
+                        <div class="col-md-4">
+                            <select class="selectpicker" ng-model="relatedPhenotype.phenotypeField.property" style="    height: 33px; width: 190px;">
+                                <option ng-repeat="pp in relatedPhenotype.phenotypeField.properties" value="{{pp}}">{{pp}}</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <input type="number " min="1 " value=" " title="Specify the frequency count " class="form-control " ng-model="relatedPhenotype.phenotypeField.propertyValue" />
+                        </div>
+                    </div>
+                </fieldset>
+                <fieldset style="padding-bottom:10px">
+                    <legend style="padding-top:20px;"> Temporal relationship</legend>
+                    <div class="form-group ">
+                        <div class="col-md-6">
+                            <select class="selectpicker" title="Specify whether only the first n intervals will be matched (First) or any n intervals (At least) " style="height: 33px; width:100%" ng-model="relatedPhenotype.relationOperator">
+                                <option ng-repeat="sr in createPhenotype.sequenceRelations" value="{{sr.value}}">{{sr.name}}</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6" style="padding-bottom: 24px;">
+                            <select class="selectpicker" title="Specify whether only the first n intervals will be matched (First) or any n intervals (At least) " style="height: 33px; width:100%" ng-model="relatedPhenotype.sequentialPhenotype">
+                                <option ng-repeat="rtp in createPhenotype.releatedTemporalArray">{{rtp}}</option>
+                            </select>
+                        </div>
+                        <div class="col-md-2">
+                            <span>by</span>
+                        </div>
+                        <div class="col-md-2">
+                            <input type="number " min="1 " value=" " title="Specify the frequency count " class="form-control " placeholder="max" ng-model="relatedPhenotype.relationMinCount" />
+                        </div>
+                        <div class="col-md-2">
+                            <select class="selectpicker" title="Specify whether only the first n intervals will be matched (First) or any n intervals (At least) " style="    height: 33px;" ng-model="relatedPhenotype.relationMinUnits">
+                                <option ng-repeat="tu in createPhenotype.timeUnits" value="{{tu.value}}">{{tu.name}}</option>
+                            </select>
+                        </div>
+                        <div class="col-md-2">
+                            <span>to</span>
+                        </div>
+                        <div class="col-md-2">
+                            <input type="number " min="1 " value=" " title="Specify the frequency count " class="form-control " placeholder="max" ng-model="relatedPhenotype.relationMaxCount" />
+                        </div>
+                        <div class="col-md-2">
+                            <select class="selectpicker" title="Specify whether only the first n intervals will be matched (First) or any n intervals (At least) " style="    height: 33px;" ng-model="relatedPhenotype.relationMaxUnits">
+                                <option ng-repeat="tu in createPhenotype.timeUnits" value="{{tu.value}}">{{tu.name}}</option>
+                            </select>
+                        </div>
+                    </div>
+                </fieldset>
+            </div>
+        </div>
+    </div>
+    <div class="form-group text-center vert-offset ">
+        <button id="addRelatedPhenotype" type="button " class="btn btn-primary " ng-click="createPhenotype.addRelatedPhenotypes();">
+            <span class="glyphicon glyphicon-plus "></span> Add Related Phenotype
+        </button>
+        <button id="savePhenotypeButton " type="button " class="btn btn-primary " ng-click="createPhenotype.createSequence();">Save</button>
+    </div>
+</form>

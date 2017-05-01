@@ -1,0 +1,34 @@
+<!-- Categorization  -->
+<form id="categorizationForm" class="vert-offset" role="form">
+    <div class="form-group">
+        <label for="patCohortDefName" class="control-label">Name</label>
+        <input type="text" id="patCohortDefName" class="form-control" ng-model="createPhenotype.currentObject.displayName" />
+    </div>
+    <div class="form-group">
+        <label for="patCohortDescription" class="control-label">Description</label>
+        <textarea id="patCohortDescription" class="form-control" ng-model="createPhenotype.currentObject.description"></textarea>
+    </div>
+    <div class="form-group">
+        <label for="patCohortDefinition" class="control-label">Members</label>
+        <div class="form-group text-center vert-offset ">
+            <button id="addMainPhenotype " type="button " class="btn btn-primary " ng-click="createPhenotype.addCategorizationPhenotype();">Add Members</button>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="col-md-5" style="background:#f5f5f5">
+                    <form>
+                        <fieldset>
+                            <legend>Items Added&nbsp;</legend>
+                            <p ng-repeat="selectedNode in createPhenotype.myList">
+                                <span>{{selectedNode.displayName}}</span>
+                                <p>
+                        </fieldset>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="form-group text-center vert-offset " ng-if="createPhenotype.type === 'Categorization'">
+        <button id="savePhenotypeButton " type="button " class="btn btn-primary " ng-click="createPhenotype.createCategorization()">Save</button>
+    </div>
+</form>

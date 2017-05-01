@@ -12,9 +12,9 @@
     angular
         .module('eureka.jobs')
         .controller('jobs.MainCtrl', MainCtrl);
-        
+
     MainCtrl.$inject = ['JobService'];
-    
+
     function MainCtrl(JobService) {
         var vm = this;
 
