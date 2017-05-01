@@ -151,17 +151,6 @@ public class ServicesClient extends EurekaClient {
 		return jobUrl;
 	}
 
-	public void upload(String fileName, String sourceId,
-					   String fileTypeId, InputStream inputStream)
-			throws ClientException {
-		String path = UriBuilder
-				.fromPath("/api/protected/file/upload/")
-				.segment(sourceId)
-				.segment(fileTypeId)
-				.build().toString();
-		doPostMultipart(path, fileName, inputStream);
-	}
-
 	public Job getJob(Long jobId) throws ClientException {
 		final String path = "/api/protected/jobs/" + jobId;
 		return doGet(path, Job.class);
