@@ -481,11 +481,4 @@ public class ServicesClient extends EurekaClient {
 		return doGet(path, SystemPhenotypeList);
 	}
 	
-	public InputStream getOutput(String destinationId) throws ClientException {
-		String path = UriBuilder.fromPath("/api/protected/output/")
-				.segment(destinationId)
-				.build().toString();
-		return doGet(path, InputStream.class);
-	}
-
 }
