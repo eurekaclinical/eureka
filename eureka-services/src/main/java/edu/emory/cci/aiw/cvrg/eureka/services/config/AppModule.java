@@ -78,8 +78,11 @@ import org.eurekaclinical.standardapis.entity.UserEntity;
  *
  */
 class AppModule extends AbstractModule {
+
+	private final EtlClient etlClient;
 	
-	AppModule() {
+	AppModule(EtlClient inEtlClient) {
+		this.etlClient = inEtlClient;
 	}
 
 	@Override
@@ -104,7 +107,7 @@ class AppModule extends AbstractModule {
 						"java:comp/env/mail/Session"));
 
 		bind(WebResourceWrapperFactory.class).to(CasWebResourceWrapperFactory.class);
-		bind(EtlClient.class).toProvider(EtlClientProvider.class);
+		bind(EtlClient.class).toInstance(this.etlClient);
 	}
 
 }
