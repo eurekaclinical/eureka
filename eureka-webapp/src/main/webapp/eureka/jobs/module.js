@@ -7,9 +7,10 @@
      * @description
      * The module for the jobs section of the Eureka application.
      */
-	angular.module('eureka.jobs', []);
+    
+    angular.module('eureka.jobs', []);
 
-    angular.module('eureka.cohorts').config(jobsConfig);
+    angular.module('eureka.jobs').config(jobsConfig);
 
     jobsConfig.$inject = ['$stateProvider'];
 

@@ -473,8 +473,8 @@ window.eureka.editor = new function () {
                             console.log(JSON.stringify(cohortDestination));
                             $.ajax({
                                 type: type,
-								processData: false,
-								contentType: 'application/json; charset=UTF-8',
+				processData: false,
+				contentType: 'application/json; charset=UTF-8',
                                 url: '../proxy-resource/destinations',
                                 data: JSON.stringify(cohortDestination),
                                 success: function (postData) {
