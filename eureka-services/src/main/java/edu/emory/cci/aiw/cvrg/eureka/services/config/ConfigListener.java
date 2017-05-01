@@ -45,6 +45,7 @@ import javax.servlet.ServletContextEvent;
 import com.google.inject.Module;
 import com.google.inject.persist.jpa.JpaPersistModule;
 import com.google.inject.servlet.GuiceServletContextListener;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.EtlClient;
 
 import edu.emory.cci.aiw.cvrg.eureka.services.finder.SystemPropositionFinder;
 import org.eurekaclinical.common.config.InjectorSupport;
@@ -61,12 +62,13 @@ public class ConfigListener extends GuiceServletContextListener {
 
 	private static final String JPA_UNIT = "services-jpa-unit";
 	private final ServiceProperties serviceProperties = new ServiceProperties();
+	private final EtlClient etlClient = new EtlClient(serviceProperties.getEtlUrl());
 
 	@Override
 	protected Injector getInjector() {
 		return new InjectorSupport(
 				new Module[]{
-					new AppModule(),
+					new AppModule(this.etlClient),
 					new ServletModule(this.serviceProperties),
 					new JpaPersistModule(JPA_UNIT)
 				},
@@ -79,5 +81,6 @@ public class ConfigListener extends GuiceServletContextListener {
 		SystemPropositionFinder finder
 				= this.getInjector().getInstance(SystemPropositionFinder.class);
 		finder.shutdown();
+		this.etlClient.close();
 	}
 }
