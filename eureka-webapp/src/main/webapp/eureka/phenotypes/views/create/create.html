@@ -2,6 +2,15 @@
     .ng-table-pager {
         display: none;
     }
+    
+    table.ng-table td {
+        text-align: left;
+        width: 94%;
+    }
+    
+    a.add-node {
+        color: green;
+    }
 </style>
 <div class="row">
     <div class="col-sm-12">
@@ -11,555 +20,79 @@
         </p>
     </div>
 </div>
+<div class="col-md-12">
+    <div class="col-md-5">
+        <div ng-show="createPhenotype.viewObject.showTree">
+            <!--  <tree-component current-memeber-list="createPhenotype.memberList"></tree-component>  -->
+            <!-- tree -->
 
-<div class="row" ng-if="createPhenotype.type === 'Categorization'">
-    <div class="col-md-12">
-        <div id="definitionContainer" class="col-md-8">
-            <form id="categorizationForm" class="vert-offset" role="form">
-                <div class="form-group">
-                    <label for="patCohortDefName" class="control-label">Name</label>
-                    <input type="text" id="patCohortDefName" class="form-control" ng-model="createPhenotype.currentObject.displayName" />
+            <div class="col-md-12">
+                <div class="row">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item" ng-repeat="x in createPhenotype.breadCrumbs"><a href ng-click="createPhenotype.setBreadCrumbs(x)">{{x.displayName}}</a></li>
+                    </ol>
                 </div>
-                <div class="form-group">
-                    <label for="patCohortDescription" class="control-label">Description</label>
-                    <textarea id="patCohortDescription" class="form-control" ng-model="createPhenotype.currentObject.description"></textarea>
-                </div>
-                <div class="form-group">
-                    <label for="patCohortDefinition" class="control-label">Members</label>
-                    <div class="row">
-                        <div class="col-md-12">
-
-                            <tree-component current-memeber-list="createPhenotype.memberList"></tree-component>
-
-                        </div>
-                    </div>
-                </div>
-
-                <div class="form-group text-center vert-offset ">
-                    <button id="savePhenotypeButton " type="button " class="btn btn-primary " ng-click="createPhenotype.createCategorization()">Save</button>
-                </div>
-            </form>
+            </div>
+            <div class="col-md-7">
+                <table ng-table="createPhenotype.tableParams" class="table" show-filter="true">
+                    <tr>
+                        <div style="font-size: 21px; color:#333">System</div>
+                    </tr>
+                    <tr ng-repeat="user in $data" class="animate">
+                        <td>
+                            <span ng-if="user.parent === false" ng-class="{true: 'glyphicon glyphicon-folder-close', false: 'glyphicon glyphicon-file'}[user.parent]" title=""> {{user.displayName}}</span>
+                            <a title="Edit" ng-click="createPhenotype.selectNode(user) " ng-if="user.parent===true">
+                                <span ng-class="{true: 'glyphicon glyphicon-folder-close', false: 'glyphicon glyphicon-file'}[user.parent]" title=""></span> {{user.displayName}}
+                            </a>
+                        </td>
+                        <td>
+                            <a title="Edit" ng-click="createPhenotype.addNode(user) " class="add-node">
+                                <span class="glyphicon glyphicon-plus" title=""></span>
+                            </a>
+                        </td>
+                    </tr>
+                </table>
+                <table ng-table="createPhenotype.tableParamsUser" class="table" show-filter="true">
+                    <tr>
+                        <div style="font-size: 21px; color:#333">User</div>
+                    </tr>
+                    <tr ng-repeat="user1 in $data" class="animate">
+                        <td>
+                            <span ng-if="user1.children === false" ng-class="{true: 'glyphicon glyphicon-folder-close', false: 'glyphicon glyphicon-file'}[user1.children]" title=""> {{user1.text}} </span>
+                            <a title="Edit" ng-if="user1.children === true" ng-click="createPhenotype.selectNode(user1) ">
+                                <span ng-class="{true: 'glyphicon glyphicon-folder-close', false: 'glyphicon glyphicon-file'}[user1.children]" title=""></span> {{user1.text}}
+                            </a>
+                        </td>
+                        <td>
+                            <a title="Edit" ng-click="createPhenotype.addUserNode(user1) " class="add-node">
+                                <span class="glyphicon glyphicon-plus" title=""></span>
+                            </a>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <div class="col-md-5" style="background:#f5f5f5">
+                <form>
+                    <fieldset>
+                        <legend>Items Added&nbsp;</legend>
+                        <p ng-repeat="selectedNode in createPhenotype.currentMemeberList">
+                            <span>{{selectedNode.displayName}}</span>
+                            <a title="remove" ng-click="createPhenotype.removeNode(selectedNode) ">
+                                <span class="glyphicon glyphicon-remove" title="" style="color:red;"></span>
+                            </a>
+                            <p>
+                    </fieldset>
+                </form>
+            </div>
+            <div class="form-group text-center vert-offset ">
+                <button id="savePhenotypeButton " type="button " class="btn btn-primary " ng-click="createPhenotype.addMembers()">Add</button>
+            </div>
         </div>
+        <!-- end of tree -->
     </div>
-</div>
-
-
-<!-- Frequency  -->
-<div class="row " ng-if="createPhenotype.type==='Frequency'">
-    <div class="col-md-12 ">
-        <div id="definitionContainer " class="col-md-8 ">
-            <form id="categorizationForm " class="vert-offset " role="form ">
-                <div class="form-group ">
-                    <label for="patCohortDefName " class="control-label ">Name</label>
-                    <input type="text " id="patCohortDefName " class="form-control " ng-model="createPhenotype.frequencyObject.displayName" />
-                </div>
-                <div class="form-group ">
-                    <label for="patCohortDescription " class="control-label ">Description</label>
-                    <textarea id="patCohortDescription " class="form-control " ng-model="createPhenotype.frequencyObject.description"></textarea>
-                </div>
-                <div class="form-group ">
-
-
-                </div>
-
-                <fieldset>
-                    <legend>Threshold</legend>
-                    <div class="form-group ">
-                        <div class="col-md-4">
-                            <select ng-model="createPhenotype.frequencyThreshold" class="selectpicker" title="Specify whether only the first n intervals will be matched (First) or any n intervals (At least) " style="    height: 33px;
-    width: 190px;">
-                            <option ng-repeat="threshold in createPhenotype.thresholdUnits">{{threshold}}</option>
-                        
-                            </select>
-                        </div>
-
-                        <div class="col-md-4">
-                            <input type="number " min="1 " value=" " title="Specify the frequency count " class="form-control " ng-model="createPhenotype.frequencyThresholdValue" />
-                        </div>
-                        <div class="row" style="padding-top: 10px;">
-                            <div class="col-md-12">
-
-                                <tree-component current-memeber-list="createPhenotype.memberList"></tree-component>
-
-                            </div>
-                        </div>
-
-                    </div>
-                </fieldset>
-
-
-                <fieldset>
-                    <legend style="padding-top:20px;"><input type="checkbox" value="" ng-model="createPhenotype.frequencyObject.phenotype.hasDuration"></input>&nbsp; Duration</legend>
-                    <div class="form-group ">
-                        <div class="col-md-2">
-                            <input type="number " min="1 " value=" " title="Specify the frequency count " class="form-control " placeholder="min" ng-model="createPhenotype.frequencyObject.phenotype.minDuration" />
-                        </div>
-                        <div class="col-md-3">
-                            <select class="selectpicker" title="Specify whether only the first n intervals will be matched (First) or any n intervals (At least) " style="height: 33px;" ng-model="createPhenotype.frequencyObject.phenotype.minDurationUnits">
-          <option ng-repeat="tu in createPhenotype.timeUnits" value="{{tu.value}}">{{tu.name}}</option>
-                            </select>
-                        </div>
-
-                        <div class="col-md-2">
-                            <span>to</span>
-                        </div>
-                        <div class="col-md-2">
-                            <input type="number " min="1 " value=" " title="Specify the frequency count " class="form-control " placeholder="max" ng-model="createPhenotype.frequencyObject.phenotype.maxDuration" />
-
-                        </div>
-
-                        <div class="col-md-3">
-                            <select class="selectpicker" title="Specify whether only the first n intervals will be matched (First) or any n intervals (At least) " style="    height: 33px;" ng-model="createPhenotype.frequencyObject.phenotype.maxDurationUnits">
-          <option ng-repeat="tu in createPhenotype.timeUnits" value="{{tu.value}}">{{tu.name}}</option>
-                            </select>
-                        </div>
-
-                    </div>
-                </fieldset>
-                <fieldset>
-                    <legend style="padding-top:20px;"><input type="checkbox" value="" ng-model="createPhenotype.frequencyObject.phenotype.hasPropertyConstraint"></input>&nbsp; Property Value</legend>
-                    <div class="form-group ">
-
-                        <div class="col-md-4">
-                            <select class="selectpicker" ng-model="createPhenotype.frequencyObject.phenotype.property" style="    height: 33px; width: 190px;">
-                  
-                            </select>
-                        </div>
-                        <div class="col-md-4">
-                            <input type="number " min="1 " value=" " title="Specify the frequency count " class="form-control " ng-model="createPhenotype.frequencyObject.phenotype.propertyValue" />
-
-                        </div>
-
-                    </div>
-                </fieldset>
-
-                <fieldset>
-                    <legend style="padding-top:20px;"><input type="checkbox" value="" ng-model="createPhenotype.frequencyObject.isWithin"></input>&nbsp; Disatance value</legend>
-                    <div class="form-group ">
-                        <div class="col-md-2">
-                            <input type="number " min="1 " value=" " title="Specify the frequency count " class="form-control " placeholder="min" ng-model="createPhenotype.frequencyObject.withinAtLeast" />
-                        </div>
-                        <div class="col-md-3">
-                            <select class="selectpicker" ng-model="createPhenotype.frequencyObject.withinAtLeastUnits" style="    height: 33px;">
-                        <option ng-repeat="tu in createPhenotype.timeUnits" value="{{tu.value}}">{{tu.name}}</option>
-                            </select>
-                        </div>
-
-                        <div class="col-md-2">
-                            <span>to</span>
-                        </div>
-                        <div class="col-md-2">
-                            <input type="number " min="1 " value=" " title="Specify the frequency count " class="form-control " placeholder="max" ng-model="createPhenotype.frequencyObject.withinAtMost" />
-
-                        </div>
-
-                        <div class="col-md-3">
-                            <select class="selectpicker" ng-model="createPhenotype.frequencyObject.withinAtMostUnits" style="    height: 33px;">
-                        <option ng-repeat="tu in createPhenotype.timeUnits" value="{{tu.value}}">{{tu.name}}</option>
-                            </select>
-                        </div>
-
-                    </div>
-                </fieldset>
-
-                <div class="form-group text-center vert-offset ">
-                    <button id="savePhenotypeButton " type="button " class="btn btn-primary " ng-click="createPhenotype.createFrequency();">Save</button>
-                </div>
-            </form>
-        </div>
+    <div id="definitionContainer" class="col-md-7">
+        <div ng-if="createPhenotype.type === 'Threshold'" ng-include="'eureka/phenotypes/views/create/threshold.html'"></div>
+        <div ng-if="createPhenotype.type === 'Categorization'" ng-include="'eureka/phenotypes/views/create/categorization.html'"></div>
+        <div ng-if="createPhenotype.type === 'Frequency'" ng-include="'eureka/phenotypes/views/create/frequency.html'"></div>
+        <div ng-if="createPhenotype.type === 'Sequence'" ng-include="'eureka/phenotypes/views/create/sequence.html'"></div>
     </div>
-</div>
-
-
-<!-- sequence seqObject -->
-<div class="row " ng-if="createPhenotype.type==='Sequence' ">
-    <div class="col-md-12 ">
-        <div id="definitionContainer " class="col-md-8 ">
-            <form id="categorizationForm " class="vert-offset " role="form ">
-                <div class="form-group ">
-                    <label for="patCohortDefName " class="control-label ">Name</label>
-                    <input type="text " id="patCohortDefName " class="form-control " />
-                </div>
-                <div class="form-group ">
-                    <label for="patCohortDescription " class="control-label ">Description</label>
-                    <textarea id="patCohortDescription " class="form-control "></textarea>
-                </div>
-
-                <div class="form-group ">
-                    <div id="propDefinition " class="col-sm-12 panel panel-default ">
-                        <div class="row panel-heading ">
-                            <h4 class="panel-title ">Main Phenotype</h4>
-                        </div>
-                        <div class="form-group ">
-                            <div class="col-sm-12 ">
-                                <label class="sr-only " for="mainPhenotype ">Main phenotype</label>
-
-                            </div>
-                        </div>
-                        <div class="row" style="padding-top: 10px;">
-                            <div class="col-md-12">
-
-                                <tree-component current-memeber-list="createPhenotype.memberList"></tree-component>
-
-                            </div>
-                        </div>
-                        <fieldset>
-
-                            <legend style="padding-top:20px;"><input type="checkbox" value="" ng-model="createPhenotype.seqObject.phenotype.hasDuration"></input>&nbsp; Duration</legend>
-                            <div class="form-group ">
-
-                                <div class="col-md-2">
-                                    <input type="number " min="1 " value=" " title="Specify the frequency count " class="form-control " placeholder="min" ng-model="createPhenotype.seqObject.phenotype.minDuration" />
-                                </div>
-                                <div class="col-md-3">
-                                    <select class="selectpicker" title="Specify whether only the first n intervals will be matched (First) or any n intervals (At least) " style="height: 33px;" ng-model="createPhenotype.seqObject.phenotype.minDurationUnits">
-          <option ng-repeat="tu in createPhenotype.timeUnits" value="{{tu.value}}">{{tu.name}}</option>
-                            </select>
-                                </div>
-
-                                <div class="col-md-2">
-                                    <span>to</span>
-                                </div>
-                                <div class="col-md-2">
-                                    <input type="number " min="1 " value=" " title="Specify the frequency count " class="form-control " placeholder="max" ng-model="createPhenotype.seqObject.phenotype.maxDuration" />
-
-                                </div>
-
-                                <div class="col-md-3">
-                                    <select class="selectpicker" title="Specify whether only the first n intervals will be matched (First) or any n intervals (At least) " style="    height: 33px;" ng-model="createPhenotype.seqObject.phenotype.maxDurationUnits">
-          <option ng-repeat="tu in createPhenotype.timeUnits" value="{{tu.value}}">{{tu.name}}</option>
-                            </select>
-                                </div>
-
-                            </div>
-                        </fieldset>
-                        <fieldset style="padding-bottom:10px">
-                            <legend style="padding-top:20px;"><input type="checkbox" value="" ng-model="createPhenotype.seqObject.phenotype.hasPropertyConstraint"></input>&nbsp; Property Value</legend>
-                            <div class="form-group ">
-
-                                <div class="col-md-4">
-                                    <select class="selectpicker" ng-model="createPhenotype.seqObject.phenotype.property" style="    height: 33px; width: 190px;">
-                  
-                            </select>
-                                </div>
-                                <div class="col-md-4">
-                                    <input type="number " min="1 " value=" " title="Specify the frequency count " class="form-control " ng-model="createPhenotype.seqObject.phenotype.propertyValue" />
-
-                                </div>
-
-                            </div>
-                        </fieldset>
-                    </div>
-                </div>
-
-                <div class="form-group ">
-                    <div id="sequenceRelatedPhenotypes " class="sequence-relations-container ">
-
-                        <div class="sequence-relation drop-parent panel panel-default col-sm-12 ">
-                            <div class="row panel-heading ">
-                                <h4 class="panel-title ">Related phenotype <span class="count ">1</span></h4>
-                            </div>
-                            <div class="form-group ">
-                                <div class="col-sm-12 ">
-                                    <label class="sr-only " for="relatedPhenotype${status.count} ">Related phenotype </label>
-
-                                </div>
-                            </div>
-                            <div class="row" style="padding-top: 10px;">
-                                <div class="col-md-12">
-
-                                    <tree-component current-memeber-list="createPhenotype.memberList"></tree-component>
-
-                                </div>
-                            </div>
-                            <fieldset>
-                                <legend style="padding-top:20px;"><input type="checkbox" value="" ng-model="createPhenotype.seqObject.phenotype.hasDuration"></input>&nbsp; Duration</legend>
-                                <div class="form-group ">
-                                    <div class="col-md-2">
-                                        <input type="number " min="1 " value=" " title="Specify the frequency count " class="form-control " placeholder="min" ng-model="createPhenotype.seqObject.phenotype.minDuration" />
-                                    </div>
-                                    <div class="col-md-3">
-                                        <select class="selectpicker" title="Specify whether only the first n intervals will be matched (First) or any n intervals (At least) " style="height: 33px;" ng-model="createPhenotype.seqObject.phenotype.minDurationUnits">
-                                        <option ng-repeat="tu in createPhenotype.timeUnits" value="{{tu.value}}">{{tu.name}}</option>
-                            </select>
-                                    </div>
-
-                                    <div class="col-md-2">
-                                        <span>to</span>
-                                    </div>
-                                    <div class="col-md-2">
-                                        <input type="number " min="1 " value=" " title="Specify the frequency count " class="form-control " placeholder="max" ng-model="createPhenotype.seqObject.phenotype.maxDuration" />
-
-                                    </div>
-
-                                    <div class="col-md-3">
-                                        <select class="selectpicker" title="Specify whether only the first n intervals will be matched (First) or any n intervals (At least) " style="    height: 33px;" ng-model="createPhenotype.seqObject.phenotype.maxDurationUnits">
-                                        <option ng-repeat="tu in createPhenotype.timeUnits" value="{{tu.value}}">{{tu.name}}</option>
-                            </select>
-                                    </div>
-
-                                </div>
-                            </fieldset>
-                            <fieldset>
-                                <legend style="padding-top:20px;"><input type="checkbox" value="" ng-model="createPhenotype.seqObject.phenotype.hasPropertyConstraint"></input>&nbsp; Property Value</legend>
-                                <div class="form-group ">
-
-                                    <div class="col-md-4">
-                                        <select class="selectpicker" ng-model="createPhenotype.seqObject.phenotype.property" style="    height: 33px; width: 190px;">
-                  
-                            </select>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <input type="number " min="1 " value=" " title="Specify the frequency count " class="form-control " ng-model="createPhenotype.seqObject.phenotype.propertyValue" />
-
-                                    </div>
-
-                                </div>
-                            </fieldset>
-                            <fieldset style="padding-bottom:10px">
-                                <legend style="padding-top:20px;"> Temporal relationship</legend>
-                                <div class="form-group ">
-                                    <div class="col-md-2">
-                                        <input type="number " min="1 " value=" " title="Specify the frequency count " class="form-control " placeholder="min" ng-model="createPhenotype.seqObject.phenotype.minDuration" />
-                                    </div>
-                                    <div class="col-md-3">
-                                        <select class="selectpicker" title="Specify whether only the first n intervals will be matched (First) or any n intervals (At least) " style="height: 33px;" ng-model="createPhenotype.seqObject.phenotype.minDurationUnits">
-                                        <option ng-repeat="tu in createPhenotype.timeUnits" value="{{tu.value}}">{{tu.name}}</option>
-                            </select>
-                                    </div>
-
-                                    <div class="col-md-2">
-                                        <span>to</span>
-                                    </div>
-                                    <div class="col-md-2">
-                                        <input type="number " min="1 " value=" " title="Specify the frequency count " class="form-control " placeholder="max" ng-model="createPhenotype.seqObject.phenotype.maxDuration" />
-
-                                    </div>
-
-                                    <div class="col-md-3">
-                                        <select class="selectpicker" title="Specify whether only the first n intervals will be matched (First) or any n intervals (At least) " style="    height: 33px;" ng-model="createPhenotype.seqObject.phenotype.maxDurationUnits">
-                                        <option ng-repeat="tu in createPhenotype.timeUnits" value="{{tu.value}}">{{tu.name}}</option>
-                            </select>
-                                    </div>
-
-                                </div>
-                            </fieldset>
-                        </div>
-                        <div class="form-group text-center vert-offset ">
-                            <button id="duplicateRelatedButton " type="button " class="btn btn-primary ">
-                                                <span class="glyphicon glyphicon-plus "></span> Add Related Phenotype
-                                        </button>
-                            <button id="savePhenotypeButton " type="button " class="btn btn-primary ">Save</button>
-                        </div>
-            </form>
-
-
-            </div>
-            </div>
-        </div>
-        <!-- end of sequence  -->
-
-
-
-
-        <!--
-<div layout="column " layout-gt-md="row " >
-
-  <md-content flex flex-order="2 " flex-order-gt-md="1 " layout-padding>
-    <cohort-members-tree member-list="newCohort.memberList "></cohort-members-tree>
-  </md-content>
-
-  <md-content flex="60 " flex-gt-lg="66 " flex-order="1 " flex-order-gt-md="2 " layout-padding>
-    <form name="userForm ">
-      <md-card>
-        <md-card-content>
-          <h2 class="md-headline " style="margin-top: 0 ">New {{createPhenotype.type}} Phenotype</h2>
-          <p ng-bind="createPhenotype.description "></p>
-          <md-input-container flex>
-            <label>Name</label>
-            <input ng-model="createPhenotype.phenotype.name ">
-          </md-input-container>
-          <md-input-container flex>
-            <label>Description</label>
-            <textarea ng-model="createPhenotype.phenotype.description " columns="1 " md-maxlength="250 "></textarea>
-          </md-input-container>
-        </md-card-content>
-        <md-toolbar class="md-primary md-hue-1 ">
-          <div class="md-toolbar-tools ">
-            <h3 class="md-title ">
-              <span>Main Data Element</span>
-            </h3>
-          </div>
-        </md-toolbar>
-        <md-card-content>
-          <cohort-members-drop-zone member-list="createPhenotype.memberList "></cohort-members-drop-zone>
-
-          <div layout layout-sm="column " layout-align="center center ">
-            <md-checkbox ng-model="createPhenotype.duration.enabled " aria-label="Checkbox 1 ">
-              Duration
-            </md-checkbox>
-            <md-input-container flex>
-              <label>Min</label>
-              <input type="number " step="any " name="minDuration " ng-model="createPhenotype.duration.min " />
-            </md-input-container>
-            <md-input-container flex>
-              <label>Unit</label>
-              <md-select ng-model="createPhenotype.duration.minUnit ">
-                <md-option ng-repeat="unit in createPhenotype.timeUnits " value="{{unit}} ">
-                  {{unit}}
-                </md-option>
-              </md-select>
-            </md-input-container>
-            <div style="padding:20px "><b>to</b></div>
-            <md-input-container flex>
-              <label>Max</label>
-              <input type="number " step="any " name="maxDuration " ng-model="createPhenotype.duration.max " />
-            </md-input-container>
-            <md-input-container flex>
-              <label>Unit</label>
-              <md-select ng-model="createPhenotype.duration.maxUnit ">
-                <md-option ng-repeat="unit in createPhenotype.timeUnits " value="{{unit}} ">
-                  {{unit}}
-                </md-option>
-              </md-select>
-            </md-input-container>
-          </div>
-
-          <div layout layout-sm="column " layout-align="center center ">
-            <md-checkbox ng-model="createPhenotype.property.enabled " aria-label="Checkbox 1 ">
-              Property Value
-            </md-checkbox>
-            <md-input-container flex>
-              <label>Property</label>
-              <md-select ng-model="createPhenotype.property.name ">
-                <md-option ng-repeat="unit in createPhenotype.timeUnits " value="{{unit}} ">
-                  {{unit}}
-                </md-option>
-              </md-select>
-            </md-input-container>
-            <md-input-container flex>
-              <label>Value</label>
-              <input type="number " step="any " name="propertyValue " ng-model="createPhenotype.property.value " />
-            </md-input-container>
-          </div>
-        </md-card-content>
-        <md-toolbar class="md-primary md-hue-1 ">
-          <div class="md-toolbar-tools ">
-            <h3 class="md-title ">
-              <span>Related Data Element 1</span>
-            </h3>
-          </div>
-        </md-toolbar>
-        <md-card-content>
-          <cohort-members-drop-zone member-list="createPhenotype.memberList "></cohort-members-drop-zone>
-
-          <div layout layout-sm="column " layout-align="center center ">
-            <md-checkbox ng-model="createPhenotype.duration1.enabled " aria-label="Checkbox 1 ">
-              Duration
-            </md-checkbox>
-            <md-input-container flex>
-              <label>Min</label>
-              <input type="number " step="any " name="minDuration1 " ng-model="createPhenotype.duration1.min " />
-            </md-input-container>
-            <md-input-container flex>
-              <label>Unit</label>
-              <md-select ng-model="createPhenotype.duration1.minUnit ">
-                <md-option ng-repeat="unit in createPhenotype.timeUnits " value="{{unit}} ">
-                  {{unit}}
-                </md-option>
-              </md-select>
-            </md-input-container>
-            <div style="padding:20px "><b>to</b></div>
-            <md-input-container flex>
-              <label>Max</label>
-              <input type="number " step="any " name="maxDuration " ng-model="createPhenotype.duration1.max " />
-            </md-input-container>
-            <md-input-container flex>
-              <label>Unit</label>
-              <md-select ng-model="createPhenotype.duration1.maxUnit ">
-                <md-option ng-repeat="unit in createPhenotype.timeUnits " value="{{unit}} ">
-                  {{unit}}
-                </md-option>
-              </md-select>
-            </md-input-container>
-          </div>
-
-          <div layout layout-sm="column " layout-align="center center ">
-            <md-checkbox ng-model="createPhenotype.property1.enabled " aria-label="Checkbox 1 ">
-              Property Value
-            </md-checkbox>
-            <md-input-container flex>
-              <label>Property</label>
-              <md-select ng-model="createPhenotype.property1.name ">
-                <md-option ng-repeat="unit in createPhenotype.timeUnits " value="{{unit}} ">
-                  {{unit}}
-                </md-option>
-              </md-select>
-            </md-input-container>
-            <md-input-container flex>
-              <label>Value</label>
-              <input type="number " step="any " name="propertyValue1 " ng-model="createPhenotype.property1.value " />
-            </md-input-container>
-          </div>
-
-          <div layout layout-sm="column " layout-align="center center ">
-            <div style="padding:10px ">
-              <b>Temporal Relationship</b>
-            </div>
-            <md-input-container flex>
-              <label>Order</label>
-              <md-select ng-model="createPhenotype.relationship.order ">
-                <md-option ng-repeat="order in [ 'before', 'after'] " value="{{order}} ">
-                  {{order}}
-                </md-option>
-              </md-select>
-            </md-input-container>
-            <md-input-container flex>
-              <label>Element</label>
-              <md-select ng-model="createPhenotype.relationship.element ">
-                <md-option ng-repeat="element in [ 'main element'] " value="{{element}} ">
-                  {{element}}
-                </md-option>
-              </md-select>
-            </md-input-container>
-          </div>
-
-          <div layout layout-sm="column " layout-align="center center ">
-            <div style="padding:10px ">
-              <b>by</b>
-            </div>
-            <md-input-container flex>
-              <label>Min</label>
-              <input type="number " step="any " name="minDuration1 " ng-model="createPhenotype.duration1.min " />
-            </md-input-container>
-            <md-input-container flex>
-              <label>Unit</label>
-              <md-select ng-model="createPhenotype.duration1.minUnit ">
-                <md-option ng-repeat="unit in createPhenotype.timeUnits " value="{{unit}} ">
-                  {{unit}}
-                </md-option>
-              </md-select>
-            </md-input-container>
-            <div style="padding:20px "><b>to</b></div>
-            <md-input-container flex>
-              <label>Max</label>
-              <input type="number " step="any " name="maxDuration " ng-model="createPhenotype.duration1.max " />
-            </md-input-container>
-            <md-input-container flex>
-              <label>Unit</label>
-              <md-select ng-model="createPhenotype.duration1.maxUnit ">
-                <md-option ng-repeat="unit in createPhenotype.timeUnits " value="{{unit}} ">
-                  {{unit}}
-                </md-option>
-              </md-select>
-            </md-input-container>
-          </div>
-        </md-card-content>
-        <div class="md-actions md-padding " layout="row " layout-align="start center ">
-          <md-button class="md-raised md-primary md-hue-1 " ng-click="newCohort.submitCohortForm() "> Save </md-button>
-        </div>
-      </md-card>
-    </form>
-  </md-content>
-
-</div>  -->

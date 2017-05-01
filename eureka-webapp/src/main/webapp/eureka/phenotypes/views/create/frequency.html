@@ -1,0 +1,117 @@
+<form id="categorizationForm " class="vert-offset " role="form ">
+    <div class="form-group ">
+        <label for="patCohortDefName " class="control-label ">Name</label>
+        <input type="text " id="patCohortDefName " class="form-control " ng-model="createPhenotype.frequencyObject.displayName" />
+    </div>
+    <div class="form-group ">
+        <label for="patCohortDescription " class="control-label ">Description</label>
+        <textarea id="patCohortDescription " class="form-control " ng-model="createPhenotype.frequencyObject.description"></textarea>
+    </div>
+    <div class="form-group ">
+    </div>
+    <fieldset>
+        <legend>Threshold</legend>
+        <div class="form-group ">
+            <div class="col-md-4">
+                <select ng-model="createPhenotype.frequencyThreshold" class="selectpicker" title="Specify whether only the first n intervals will be matched (First) or any n intervals (At least) " style="    height: 33px;
+    width: 190px;">
+                    <option ng-repeat="threshold in createPhenotype.thresholdUnits">{{threshold}}</option>
+                </select>
+            </div>
+            <div class="col-md-4">
+                <input type="number " min="1 " value=" " title="Specify the frequency count " class="form-control " ng-model="createPhenotype.frequencyThresholdValue" />
+            </div>
+            <div class="row" style="padding-top: 10px;">
+                <div class="col-md-12">
+                </div>
+            </div>
+        </div>
+    </fieldset>
+    <div class="form-group">
+        <label for="patCohortDefinition" class="control-label">Members</label>
+        <div class="form-group text-center vert-offset ">
+            <button id="addMainPhenotype " type="button " class="btn btn-primary " ng-click="createPhenotype.addFrequencyPhenotype();">Add Members</button>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="col-md-5" style="background:#f5f5f5">
+                    <form>
+                        <fieldset>
+                            <legend>Items Added&nbsp;</legend>
+                            <p ng-repeat="selectedNode in createPhenotype.myList">
+                                <span>{{selectedNode.displayName}}</span>
+                                <p>
+                        </fieldset>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <fieldset>
+        <legend style="padding-top:20px;">
+            <input type="checkbox" value="" ng-model="createPhenotype.frequencyObject.phenotype.hasDuration"></input>&nbsp; Duration</legend>
+        <div class="form-group ">
+            <div class="col-md-2">
+                <input type="number " min="1 " value=" " title="Specify the frequency count " class="form-control " placeholder="min" ng-model="createPhenotype.frequencyObject.phenotype.minDuration" />
+            </div>
+            <div class="col-md-3">
+                <select class="selectpicker" title="Specify whether only the first n intervals will be matched (First) or any n intervals (At least) " style="height: 33px;" ng-model="createPhenotype.frequencyObject.phenotype.minDurationUnits">
+                    <option ng-repeat="tu in createPhenotype.timeUnits" value="{{tu.value}}">{{tu.name}}</option>
+                </select>
+            </div>
+            <div class="col-md-2">
+                <span>to</span>
+            </div>
+            <div class="col-md-2">
+                <input type="number " min="1 " value=" " title="Specify the frequency count " class="form-control " placeholder="max" ng-model="createPhenotype.frequencyObject.phenotype.maxDuration" />
+            </div>
+            <div class="col-md-3">
+                <select class="selectpicker" title="Specify whether only the first n intervals will be matched (First) or any n intervals (At least) " style="    height: 33px;" ng-model="createPhenotype.frequencyObject.phenotype.maxDurationUnits">
+                    <option ng-repeat="tu in createPhenotype.timeUnits" value="{{tu.value}}">{{tu.name}}</option>
+                </select>
+            </div>
+        </div>
+    </fieldset>
+    <fieldset>
+        <legend style="padding-top:20px;">
+            <input type="checkbox" value="" ng-model="createPhenotype.frequencyObject.phenotype.hasPropertyConstraint"></input>&nbsp; Property Value</legend>
+        <div class="form-group ">
+            <div class="col-md-4">
+                <select class="selectpicker" ng-model="createPhenotype.frequencyObject.phenotype.property" style="    height: 33px; width: 190px;">
+                    <option ng-repeat="pp in createPhenotype.phenotypeProperties">{{pp}}</option>
+                </select>
+            </div>
+            <div class="col-md-4">
+                <input type="number " min="1 " value=" " title="Specify the frequency count " class="form-control " ng-model="createPhenotype.frequencyObject.phenotype.propertyValue" />
+            </div>
+        </div>
+    </fieldset>
+    <fieldset>
+        <legend style="padding-top:20px;">
+            <input type="checkbox" value="" ng-model="createPhenotype.frequencyObject.isWithin"></input>&nbsp; Disatance value</legend>
+        <div class="form-group ">
+            <div class="col-md-2">
+                <input type="number " min="1 " value=" " title="Specify the frequency count " class="form-control " placeholder="min" ng-model="createPhenotype.frequencyObject.withinAtLeast" />
+            </div>
+            <div class="col-md-3">
+                <select class="selectpicker" ng-model="createPhenotype.frequencyObject.withinAtLeastUnits" style="    height: 33px;">
+                    <option ng-repeat="tu in createPhenotype.timeUnits" value="{{tu.value}}">{{tu.name}}</option>
+                </select>
+            </div>
+            <div class="col-md-2">
+                <span>to</span>
+            </div>
+            <div class="col-md-2">
+                <input type="number " min="1 " value=" " title="Specify the frequency count " class="form-control " placeholder="max" ng-model="createPhenotype.frequencyObject.withinAtMost" />
+            </div>
+            <div class="col-md-3">
+                <select class="selectpicker" ng-model="createPhenotype.frequencyObject.withinAtMostUnits" style="    height: 33px;">
+                    <option ng-repeat="tu in createPhenotype.timeUnits" value="{{tu.value}}">{{tu.name}}</option>
+                </select>
+            </div>
+        </div>
+    </fieldset>
+    <div class="form-group text-center vert-offset " ng-if="createPhenotype.type==='Frequency'">
+        <button id="savePhenotypeButton " type="button " class="btn btn-primary " ng-click="createPhenotype.createFrequency();">Save</button>
+    </div>
+</form>
