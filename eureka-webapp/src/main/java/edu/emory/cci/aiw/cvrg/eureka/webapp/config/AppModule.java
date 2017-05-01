@@ -44,7 +44,10 @@ import com.google.inject.AbstractModule;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.EtlClient;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ServicesClient;
+<<<<<<< HEAD
 
+=======
+>>>>>>> Updated eurekaclinical-common dependency, and use the new close method for clients.
 import org.eurekaclinical.common.comm.clients.RouterTable;
 import org.eurekaclinical.standardapis.props.CasEurekaClinicalProperties;
 import org.eurekaclinical.user.client.EurekaClinicalUserProxyClient;
@@ -59,7 +62,11 @@ class AppModule extends AbstractModule {
 	private final EurekaClinicalUserProxyClient userClient;
 	private final EtlClient etlClient;
 	private final ServicesClient servicesClient;
+<<<<<<< HEAD
 
+=======
+	
+>>>>>>> Updated eurekaclinical-common dependency, and use the new close method for clients.
 	AppModule(WebappProperties webappProperties, ServicesClient inServicesClient, EtlClient inEtlClient, EurekaClinicalUserProxyClient inUserClient) {
 		assert webappProperties != null : "webappProperties cannot be null";
 		this.webappProperties = webappProperties;
