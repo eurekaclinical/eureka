@@ -1,128 +1,237 @@
-<div layout="column" layout-gt-md="row">
-	<md-content flex flex-order="2" flex-order-gt-md="1" layout-padding>
-	<cohort-members-tree member-list="newCohort.memberList"></cohort-members-tree>
-	</md-content>
-	<md-content flex="60" flex-gt-lg="66" flex-order="1" flex-order-gt-md="2" layout-padding>
-	<form name="userForm">
-		<md-card>
-		<md-toolbar class="md-primary md-hue-1">
-		<div class="md-toolbar-tools">
-			<h3 class="md-title">
-			<span>Submit Job</span>
-			</h3>
-		</div>
-		</md-toolbar>
-		<md-card-content>
-		</md-card-content>
-		<div class="md-toolbar-tools">
-			<h3 class="md-title">
-			<span>Data</span>
-			</h3>
-		</div>
-		<md-card-content>
-		<div layout layout-sm="column" layout-align="center center">
-			<md-input-container flex>
-			<label>Spreadsheet</label>
-			<md-select ng-model="createPhenotype.property.name">
-			<md-option ng-repeat="unit in createPhenotype.timeUnits" value="{{unit}}">
-			{{unit}}
-			</md-option>
-			</md-select>
-			</md-input-container>
-		</div>
-		</md-card-content>
-		<div class="md-toolbar-tools">
-			<h3 class="md-title">
-			<span>Action</span>
-			</h3>
-		</div>
-		<md-card-content>
-		<div layout layout-sm="column" layout-align="center center">
-			<md-input-container flex>
-			<label>Load into</label>
-			<md-select ng-model="createPhenotype.property.name">
-			<md-option ng-repeat="unit in createPhenotype.timeUnits" value="{{unit}}">
-			{{unit}}
-			</md-option>
-			</md-select>
-			</md-input-container>
-		</div>
-		<div layout layout-sm="column" layout-align="center center">
-			<md-input-container flex>
-			<!--<label>Start</label>  -->
-			<md-radio-group ng-model="data.group1">
-			<md-radio-button value="replace" aria-label="Label 1">Replace Data</md-radio-button>
-			<md-radio-button value="update"> Update Data </md-radio-button>
-			</md-radio-group>
-			</md-input-container>
-		</div>
-		<div layout layout-sm="column" layout-align="center center">
-			<md-input-container flex>
-			<div flow-init="{target: '/upload'}" flow-files-submitted="$flow.upload()" flow-file-success="$file.msg = $message">
-				<input type="file" flow-btn/>
-				<table>
-					<tr ng-repeat="file in $flow.files">
-						<td>{{$index+1}}</td>
-						<td>{{file.name}}</td>
-						<td>{{file.msg}}</td>
-					</tr>
-				</table>
-			</div>
-			</md-input-container>
-		</div>
-		</md-card-content>
-		<md-toolbar class="md-primary md-hue-1">
-		<div class="md-toolbar-tools">
-			<h3 class="md-title">
-			<span>Concepts</span>
-			</h3>
-		</div>
-		</md-toolbar>
-		<md-card-content>
-		<cohort-members-drop-zone member-list="createPhenotype.memberList"></cohort-members-drop-zone>
-		</md-card-content>
-		<md-toolbar class="md-primary md-hue-1">
-		<div class="md-toolbar-tools">
-			<h3 class="md-title">
-			<span>Date Range</span>
-			</h3>
-		</div>
-		</md-toolbar>
-		<md-card-content>
-		<cohort-members-drop-zone member-list="createPhenotype.memberList"></cohort-members-drop-zone>
-		<div layout layout-sm="column" layout-align="center center">
-			<md-input-container flex>
-			<label>Start</label>
-			<md-select ng-model="createPhenotype.property1.name">
-			<md-option ng-repeat="unit in createPhenotype.timeUnits" value="{{unit}}">
-			{{unit}}
-			</md-option>
-			</md-select>
-			</md-input-container>
-			<md-input-container flex>
-			<label>Has Earliest Date</label>
-			<input type="number" step="any" name="propertyValue1" ng-model="createPhenotype.property1.value" />
-			</md-input-container>
-		</div>
-		<div layout layout-sm="column" layout-align="center center">
-			<md-input-container flex>
-			<label>Start</label>
-			<md-select ng-model="createPhenotype.property1.name">
-			<md-option ng-repeat="unit in createPhenotype.timeUnits" value="{{unit}}">
-			{{unit}}
-			</md-option>
-			</md-select>
-			</md-input-container>
-			<md-input-container flex>
-			<label>Has Latest Date</label>
-			<input type="number" step="any" name="propertyValue1" ng-model="createPhenotype.property1.value" />
-			</md-input-container>
-		</div>
-		</md-card-content>
-		<div class="md-actions md-padding" layout="row" layout-align="start center">
-			<md-button class="md-raised md-primary md-hue-1" ng-click="newCohort.submitCohortForm()"> Save </md-button>
-		</div>
-		</md-card>
-	</form>
-	</md-content>
+
+<div class="row">
+    <div class="col-sm-12">
+        <h3>Submit Job</h3>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-sm-12">
+        <div id="statusDefinitionContainer" class="col-md-12">
+            <form id="uploadForm" name="uploadForm" role="form" method="POST" action="upload" enctype="multipart/form-data">
+                
+                <fieldset>
+                    <legend>Job Information</legend>
+                    <div class="row">
+                        <div class="col-md-2 col-sm-4">
+                            <div class="form-group">
+                                    <label class="control-label" for="sourceConfig">
+                                            Source
+                                    </label>
+                                    <div id="sourceConfig"> 
+                                            {{jobs.jobInfoSourceConfig}}
+                                    </div>
+                            </div>
+                        </div>
+                        <div class="col-md-2 col-sm-4">
+                            <div class="form-group">
+                                    <label class="control-label" for="destinationConfig">
+                                            Destination
+                                    </label>
+                                    <div id="destinationConfig">
+                                            {{jobs.jobInfoDestination}}
+                                    </div>
+                            </div>
+                        </div>   
+                        <div class="col-md-2 col-sm-4">
+                            <div class="form-group">
+                                    <label class="control-label">Job Status</label>
+                                    <div id="jobStatus" ng-show="jobs.jobInfoStatus!=null">
+                                            {{jobs.jobInfoStatus}}
+                                    </div>
+                                    <div id ="noJobStatus" ng-show="jobs.jobInfoStatus == null">
+                                            No jobs have been submitted
+
+                                    </div>
+                            </div>
+                        </div>
+                        <div class="col-md-2 col-sm-4">
+                            <div class="form-group">
+                                    <label class="control-label" for="startedDate">
+                                            Started
+                                    </label>
+                                    <div id="startedDate" ng-show="jobs.jobInfoStatus!=null">
+                                            {{jobs.jobInfoStartTimestamp}} 
+                                    </div>
+                            </div>
+                        </div>
+                        <div class="col-md-2 col-sm-4">
+                            <div class="form-group">
+                                    <label class="control-label" for="finishedDate">
+                                            Finished
+                                    </label>
+                                    <div id="finishedDate" ng-show="jobs.jobInfoStatus!=null">
+                                            {{jobs.jobInfoFinishTimestamp}}
+                                    </div>
+                            </div>
+                        </div>
+                        <div class="col-md-2 col-sm-4">
+                            <div class="form-group">
+                                    <label class="control-label" for="links">
+                                            Links
+                                    </label>
+                                    <div id="links" style="display: none">
+                                    </div>
+                                    <div id ="getStatisticsSupported" style="display: none">
+                                    </div>
+                            </div>
+                        </div>
+                    </div>
+                </fieldset>
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <fieldset id ="data">
+                            <legend>Data</legend>
+                            
+                            <div>{{jobs.jobSourceConfig.displayName}}</div>
+                            
+                            <div class="form-group">
+                                <select class="form-control" ng-model="jobs.jobSourceConfig" ng-options="sc.displayName for sc in jobs.sourceConfigs ">
+                                </select>
+                            </div>  
+                            <div class="form-group">
+                                <div flow-init="{target: '/upload'}" flow-files-submitted="$flow.upload()" flow-file-success="$file.msg = $message">
+                                    <input type="file" flow-btn/>
+                                    <table>
+                                      <tr ng-repeat="file in $flow.files">
+                                          <td>{{$index+1}}</td>
+                                          <td>{{file.name}}</td>
+                                          <td>{{file.msg}}</td>
+                                      </tr>
+                                    </table>
+                                </div>
+                            </div>
+                        </fieldset>
+                    </div>
+                    
+                    <div class="col-md-6">
+                        <fieldset id ="data">
+                            <legend>Action</legend>
+                            
+                            <div>{{jobs.jobDestination.name}}</div>
+                            
+                            <div class="form-group">
+                                <select class="form-control" ng-model="jobs.jobDestination" ng-options="d.name for d in jobs.destinations">
+                                </select>                                
+                            </div>  
+
+                            <div class="form-group">
+                                <label>
+                                    <input type ="radio" ng-model="jobs.radioData" value="1">Replace Data
+                                </label>
+                                <label>
+                                    <input type ="radio" ng-model="jobs.radioData" value="2">Update Data
+                                </label> 
+                            </div>
+                        </fieldset>
+                    </div>                    
+                </div>
+                   
+                <div class="row">
+                    <div class="col-md-6">
+                        <fieldset id ="concepts">
+                            <legend>Concepts</legend>
+                            <div class="row">
+                                <div class="col-xs-9">
+                                    <div class="form-group">
+                                        <div id="conceptsList"
+                                                 class="jstree-drop tree-drop tree-drop-multiple"
+                                                 title="Drag and drop concepts to load here">
+                                                <div class="label-info text-center">
+                                                        Drop Here
+                                                </div>
+                                                <ul class="sortable" data-drop-type="multiple" data-proptype="empty">
+                                                </ul>
+                                        </div>
+                                    </div>
+                                </div>                                
+                            </div>
+                        </fieldset>
+                        
+                        <fieldset id ="dateRange">
+                            <legend>Date range</legend>
+                            <div class="row">
+                                <div class="col-xs-9">
+                                    <div class="form-group">
+                                        <label for="dateRangePhenotypeKey">
+                                                Data element for date range
+                                        </label>
+                                        <div id="dateRangePhenotypeKey"
+                                                 class="tree-drop tree-drop-single jstree-drop form-control-static">
+                                                <div class="label-info text-center">
+                                                        Drop Here
+                                                </div>
+                                                <ul data-type="main" data-drop-type="single" class="sortable">
+                                                </ul>
+                                        </div>
+                                        <input type="hidden" name="dateRangePhenotypeKey">
+                                    </div>
+                                </div>                                
+                            </div>
+                            <div class="row form-inline vert-offset">
+                                    <div class="col-xs-12">
+                                            <div class="form-group">
+                                                    <select name="dateRangeEarliestDateSide" class="form-control">
+                                                        <option value="START">start</option>
+                                                        <option value="FINISH">finish</option>
+                                                    </select>
+                                                    <span class="dateRangePhenotypeName"></span>
+                                                    <label>
+                                                            has earliest date:
+                                                    </label>
+                                                    
+                                                    <div class="dropdown">
+                                                        <div class="input-group">
+                                                            <input type="text" class="form-control" data-ng-model="jobs.eDate" id="dropdown1">
+                                                            <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+                                                        </div>
+                                                        <ul class="dropdown-menu" role="menu">
+                                                            <datetimepicker data-ng-model="jobs.eDate"
+                                                                            data-on-set-time="earliestDate(newDate)"
+                                                                            data-datetimepicker-config="{ dropdownSelector: '#dropdown1' }"></datetimepicker>
+                                                        </ul>
+                                                    </div>
+                                            </div>
+                                    </div>
+                            </div> 
+                            <div class="row form-inline vert-offset">
+                                    <div class="col-xs-12">
+                                            <div class="form-group">
+                                                    <select name="dateRangeLatestDateSide" class="form-control">
+                                                        <option value="START">start</option>
+                                                        <option value="FINISH">finish</option>
+                                                    </select>
+                                                    <span class="dateRangePhenotypeName"></span>
+                                                    <label>
+                                                            has latest date:
+                                                    </label>
+                                                    <div class="dropdown">
+                                                        <div class="input-group">
+                                                            <input type="text" class="form-control" data-ng-model="jobs.lDate" id="dropdown2">
+                                                            <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+                                                        </div>
+                                                        <ul class="dropdown-menu" role="menu">
+                                                            <datetimepicker data-ng-model="jobs.lDate"
+                                                                            data-on-set-time="latestDate(newDate)"
+                                                                            data-datetimepicker-config="{ dropdownSelector: '#dropdown2' }"></datetimepicker>
+                                                        </ul>
+                                                    </div>                                                    
+                                            </div>
+                                    </div>
+                            </div>                            
+                        </fieldset>
+
+                        <div class="form-group">
+                              <input type="submit" id="startButton" class="btn btn-primary" value="Start">
+                        </div>                        
+                    </div>
+                </div>
+                
+            </form>
+        </div>
+    </div>
+</div>
+<div class="row">
+
 </div>

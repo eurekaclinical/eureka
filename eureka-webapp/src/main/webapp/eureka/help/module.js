@@ -3,7 +3,7 @@
 
     /**
      * @ngdoc overview
-     * @name eureka.cohorts
+     * @name eureka.help
      * @description
      * The module for the cohorts section of the Eureka application.
      */

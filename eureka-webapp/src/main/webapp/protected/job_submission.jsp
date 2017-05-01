@@ -47,82 +47,82 @@
 		<h3>Submit Job</h3>
 		<form id="uploadForm" name="uploadForm" role="form" method="POST" action="upload" enctype="multipart/form-data" encoding="multipart/form-data"
 			  <c:if test="${not empty requestScope.jobStatus and jobStatus.jobSubmitted}">data-job-running="true"</c:if>>
-				  <input type="hidden" name="jobSpec">
-				  <fieldset>
-					  <legend>Job Information</legend>
-					  <div class="row">
-						  <div class="col-md-2 col-sm-4">
-							  <div class="form-group">
-								  <label class="control-label" for="sourceConfig">
-									  Source
-								  </label>
-								  <div id="sourceConfig">
-								  ${sourceConfig}
-							  </div>
-						  </div>
-					  </div>
-					  <div class="col-md-2 col-sm-4">
-						  <div class="form-group">
-							  <label class="control-label" for="destinationConfig">
-								  Destination
-							  </label>
-							  <div id="destinationConfig">
-								  ${destination.name}
-							  </div>
-						  </div>
-					  </div>
-					  <div class="col-md-2 col-sm-4">
-						  <div class="form-group">
-							  <label class="control-label" for="jobStatus">Job Status</label>
-							  <div id="jobStatus">
-								  <c:choose>
-									  <c:when test="${not empty requestScope.jobStatus}">
-										  ${jobStatus.status}
-									  </c:when>
-									  <c:otherwise>
-										  No jobs have been submitted
-									  </c:otherwise>
-								  </c:choose>
-							  </div>
-						  </div>
-					  </div>
-					  <div class="col-md-2 col-sm-4">
-						  <div class="form-group">
-							  <label class="control-label" for="startedDate">
-								  Started
-							  </label>
-							  <div id="startedDate">
-								  <c:if test="${not empty requestScope.jobStatus}">
-									  ${jobStatus.startedDateFormatted}
-								  </c:if>
-							  </div>
-						  </div>
-					  </div>
-					  <div class="col-md-2 col-sm-4">
-						  <div class="form-group">
-							  <label class="control-label" for="finishedDate">
-								  Finished
-							  </label>
-							  <div id="finishedDate">
-								  <c:if test="${not empty requestScope.jobStatus}">
-									  ${jobStatus.finishedDateFormatted}
-								  </c:if>
-							  </div>
-						  </div>
-					  </div>
-					  <div class="col-md-2 col-sm-4">
-						  <div class="form-group">
-							  <label class="control-label" for="links">
-								  Links
-							  </label>
-							  <div id="links" style="display: none">
-							  </div>
-                                                          <div id ="getStatisticsSupported" style="display: none" contextPath="${pageContext.request.contextPath}">
-                                                          </div>
-						  </div>
-					  </div>
-				  </div>
-			  </fieldset>
+                                <input type="hidden" name="jobSpec">
+                                <fieldset>
+                                        <legend>Job Information</legend>
+                                        <div class="row">
+                                            <div class="col-md-2 col-sm-4">
+                                                    <div class="form-group">
+                                                                      <label class="control-label" for="sourceConfig">
+                                                                              Source
+                                                                      </label>
+                                                                      <div id="sourceConfig">
+                                                                      ${sourceConfig}
+                                                              </div>
+                                                    </div>
+                                            </div>
+                                            <div class="col-md-2 col-sm-4">
+                                                    <div class="form-group">
+                                                            <label class="control-label" for="destinationConfig">
+                                                                    Destination
+                                                            </label>
+                                                            <div id="destinationConfig">
+                                                                    ${destination.name}
+                                                            </div>
+                                                    </div>
+                                            </div>
+                                            <div class="col-md-2 col-sm-4">
+                                                    <div class="form-group">
+                                                            <label class="control-label" for="jobStatus">Job Status</label>
+                                                            <div id="jobStatus">
+                                                                    <c:choose>
+                                                                            <c:when test="${not empty requestScope.jobStatus}">
+                                                                                    ${jobStatus.status}
+                                                                            </c:when>
+                                                                            <c:otherwise>
+                                                                                    No jobs have been submitted
+                                                                            </c:otherwise>
+                                                                    </c:choose>
+                                                            </div>
+                                                    </div>
+                                            </div>
+                                            <div class="col-md-2 col-sm-4">
+                                                    <div class="form-group">
+                                                            <label class="control-label" for="startedDate">
+                                                                    Started
+                                                            </label>
+                                                            <div id="startedDate">
+                                                                    <c:if test="${not empty requestScope.jobStatus}">
+                                                                            ${jobStatus.startedDateFormatted}
+                                                                    </c:if>
+                                                            </div>
+                                                    </div>
+                                            </div>
+                                            <div class="col-md-2 col-sm-4">
+                                                    <div class="form-group">
+                                                            <label class="control-label" for="finishedDate">
+                                                                    Finished
+                                                            </label>
+                                                            <div id="finishedDate">
+                                                                    <c:if test="${not empty requestScope.jobStatus}">
+                                                                            ${jobStatus.finishedDateFormatted}
+                                                                    </c:if>
+                                                            </div>
+                                                    </div>
+                                            </div>
+                                            <div class="col-md-2 col-sm-4">
+                                                    <div class="form-group">
+                                                            <label class="control-label" for="links">
+                                                                    Links
+                                                            </label>
+                                                            <div id="links" style="display: none">
+                                                            </div>
+                                                            <div id ="getStatisticsSupported" style="display: none" contextPath="${pageContext.request.contextPath}">
+                                                            </div>
+                                                    </div>
+                                            </div>
+                                        </div>
+                            </fieldset>
 			  <c:choose>
 				  <c:when test="${empty sources or empty destinations}">
 					  <p>No configurations are available.</p>

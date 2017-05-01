@@ -1,0 +1,11 @@
+{
+    "elements": {},
+    "attributes": {
+        "flow-btn": {
+            "context": "input"
+        },
+        "flow-init": {
+            "context": "div"
+        }
+    }
+}
