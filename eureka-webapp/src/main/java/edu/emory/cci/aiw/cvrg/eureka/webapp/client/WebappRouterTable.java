@@ -72,6 +72,7 @@ public class WebappRouterTable implements RouterTable {
 			new Route("/roles/", "/api/protected/roles/", this.userClient),
 			new Route("/appproperties/", "/api/appproperties/", this.servicesClient),
 			new Route("/file/", "/api/protected/file/", this.etlClient),
+			new Route("/output/", "/api/protected/output/", this.etlClient),
 			new Route("/", "/api/protected/", this.servicesClient)
 		};
 	}
