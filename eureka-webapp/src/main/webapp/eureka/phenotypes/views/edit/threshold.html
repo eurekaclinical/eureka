@@ -1,0 +1,124 @@
+<form id="thresholdForm" class="vert-offset" role="form">
+    <div class="form-group">
+        <label for="patCohortDefName" class="control-label">Name</label>
+        <input type="text" id="patCohortDefName" class="form-control" ng-model="editPhenotype.thresholdObject.displayName" />
+    </div>
+    <div class="form-group">
+        <label for="patCohortDescription" class="control-label">Description</label>
+        <textarea id="patCohortDescription" class="form-control" ng-model="editPhenotype.thresholdObject.description"></textarea>
+    </div>
+    <div class="form-group">
+        <div>
+            <select class="selectpicker" title="Specify whether only the first n intervals will be matched (First) or any n intervals (At least) " style="width:50%; height: 33px;" ng-model="editPhenotype.thresholdObject.thresholdsOperator">
+                <option ng-repeat="tt in editPhenotype.thresholdtypes" value="{{tt.value}}">{{tt.display}}</option>
+            </select>
+        </div>
+    </div>
+    <div class="form-group " ng-repeat="valueThreshold in editPhenotype.thresholdObject.valueThresholds">
+        <div id="propDefinition " class="col-sm-12 panel panel-default ">
+            <div class="row panel-heading ">
+                <h4 class="panel-title ">Value Threshold <span class="count ">{{$index + 1}}</span></h4>
+            </div>
+            <div class="form-group ">
+                <div class="col-sm-12 ">
+                    <label class="sr-only " for="mainPhenotype ">Main phenotype</label>
+                </div>
+            </div>
+            <div class="row" style="padding-top: 10px;">
+                <div class="col-md-12">
+                    <div class="form-group text-center vert-offset ">
+                        <button id="addMainPhenotype " type="button " class="btn btn-primary " ng-click="editPhenotype.addPhenotypeToThreshold($index+1);">Add Members</button>
+                    </div>
+                    <div class="row" style="padding-top: 10px;">
+                        <div class="col-md-12">
+                            <div class="col-md-5" style="background:#f5f5f5">
+                                <form>
+                                    <fieldset>
+                                        <legend>Items Added&nbsp;</legend>
+                                        <p>
+                                            <span>{{valueThreshold.phenotype.phenotypeKey}}</span>
+                                            <p>
+                                    </fieldset>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <fieldset>
+                <legend style="padding-top:20px;">&nbsp;</legend>
+                <div class="form-group ">
+                    <div class="col-md-2">
+                        <input type="number " min="1 " value=" " title="Specify the frequency count " class="form-control " placeholder="min" ng-model="editPhenotype.seqObject.phenotype.minDuration" />
+                    </div>
+                    <div class="col-md-3">
+                        <select class="selectpicker" title="Specify whether only the first n intervals will be matched (First) or any n intervals (At least) " style="height: 33px;" ng-model="editPhenotype.valueThreshold.phenotype.lowerValue">
+                            <option ng-repeat="th in editPhenotype.thresholdCompValues" value="{{th.value}}">{{th.display}}</option>
+                        </select>
+                    </div>
+                    <div class="col-md-2">
+                        <span>to</span>
+                    </div>
+                    <div class="col-md-2">
+                        <input type="number " min="1 " value=" " title="Specify the frequency count " class="form-control " placeholder="max" ng-model="editPhenotype.seqObject.phenotype.maxDuration" />
+                    </div>
+                    <div class="col-md-3">
+                        <select class="selectpicker" title="Specify whether only the first n intervals will be matched (First) or any n intervals (At least) " style="    height: 33px;" ng-model="editPhenotype.valueThreshold.phenotype.upperValue">
+                            <option ng-repeat="th in editPhenotype.thresholdCompValues" value="{{th.value}}">{{th.display}}</option>
+                        </select>
+                    </div>
+                </div>
+                <legend style="padding-top:20px;">Context(s)</legend>
+                <div class="form-group text-center vert-offset ">
+                    <button id="addMainPhenotype " type="button " class="btn btn-primary " ng-click="editPhenotype.addPhenotypeToThreshold($index+1, 'relatedPhenotypes');">Add Members</button>
+                </div>
+                <div class="row" style="padding-top: 10px; padding-bottom: 10px;">
+                    <div class="col-md-12">
+                        <div class="col-md-5" style="background:#f5f5f5">
+                            <form>
+                                <fieldset>
+                                    <legend>Items Added&nbsp;</legend>
+                                    <p>
+                                        <span>{{valueThreshold.phenotype.relatedPhenotypeKey}}</span>
+                                        <p>
+                                </fieldset>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group ">
+                    <div class="col-md-2">
+                        <input type="number " min="1 " value=" " title="Specify the frequency count " class="form-control " placeholder="min" ng-model="editPhenotype.valueThreshold.phenotype.withinAtLeast" />
+                    </div>
+                    <div class="col-md-3">
+                        <select class="selectpicker" title="Specify whether only the first n intervals will be matched (First) or any n intervals (At least) " style="height: 33px;" ng-model="editPhenotype.valueThreshold.phenotype.withinAtLeastUnit">
+                            <option ng-repeat="tu in editPhenotype.timeUnits" value="{{tu.value}}">{{tu.name}}</option>
+                        </select>
+                    </div>
+                    <div class="col-md-2">
+                        <span>to</span>
+                    </div>
+                    <div class="col-md-2">
+                        <input type="number " min="1 " value=" " title="Specify the frequency count " class="form-control " placeholder="max" ng-model="editPhenotype.valueThreshold.phenotype.withinAtMost" />
+                    </div>
+                    <div class="col-md-3">
+                        <select class="selectpicker" title="Specify whether only the first n intervals will be matched (First) or any n intervals (At least) " style="    height: 33px;" ng-model="editPhenotype.valueThreshold.phenotype.withinAtMostUnit">
+                            <option ng-repeat="tu in editPhenotype.timeUnits" value="{{tu.value}}">{{tu.name}}</option>
+                        </select>
+                    </div>
+                    <div class="col-md-12" style="padding-top: 10px; padding-bottom: 10px;">
+                        <select class="selectpicker" title="Specify whether only the first n intervals will be matched (First) or any n intervals (At least) " style=" width:50%;   height: 33px;" ng-model="editPhenotype.valueThreshold.phenotype.relationOperator">
+                            <option ng-repeat="tt in editPhenotype.thresholdRelationTypes" value="{{tt.value}}">{{tt.display}}</option>
+                        </select>
+                    </div>
+                </div>
+            </fieldset>
+        </div>
+    </div>
+    <div class="form-group text-center vert-offset ">
+        <button id="addRelatedPhenotype" type="button " class="btn btn-primary " ng-click="editPhenotype.addNewThreshold();">
+            <span class="glyphicon glyphicon-plus "></span> Add Threshold
+        </button>
+        <button id="savePhenotypeButton " type="button " class="btn btn-primary " ng-click="editPhenotype.createThreshold();">Save</button>
+    </div>
+</form>
