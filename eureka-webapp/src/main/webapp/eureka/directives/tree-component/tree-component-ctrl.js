@@ -10,25 +10,12 @@
     function TreeComponentCtrl(PhenotypeService, NgTableParams, TreeService, $scope) {
         let vm = this;
 
-
         vm.breadCrumbs = [{ key: 'root', displayName: 'root' }];
-        //start get tree list
-        //vm.currentMemeberList = [];
-
         let currentNodes = [];
 
-        // init();
-
-
         TreeService.getTreeRoot().then(function(data) {
-            //  vm.treeData = data;
-
-            //vm.props = data;
-            //copyData = data;
             // NG Table
             vm.tableParams = new NgTableParams({}, { dataset: data });
-
-
             callUserRoot();
         }, displayError);
 
@@ -40,15 +27,8 @@
 
         function callUserRoot() {
             TreeService.getUserListRoot().then(function(data) {
-                //  vm.treeData = data;
-
-                //vm.props = data;
-                //copyData = data;
                 // NG Table
                 vm.tableParamsUser = new NgTableParams({}, { dataset: data.data });
-
-
-
             }, displayError);
         }
         vm.selectNode = function(node) {
@@ -56,18 +36,11 @@
             var hasChildren = node.parent;
             if (hasChildren !== false) {
                 TreeService.getTreeNode(currentNode.key).then(function(data) {
-                    //  vm.treeData = data;
-
-                    //vm.props = data;
-                    //copyData = data;
                     // NG Table
                     if (hasChildren) {
                         vm.breadCrumbs.push({ key: currentNode.key, displayName: currentNode.displayName, parent: currentNode.parent });
                     }
                     vm.tableParams = new NgTableParams({}, { dataset: data.children });
-
-
-
                 }, displayError);
             } else {
                 //do nothing it is a document
@@ -194,9 +167,6 @@
         function clearNodes() {
             currentNodes = [];
         }
-
-
-
 
     }
 }());
