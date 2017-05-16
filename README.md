@@ -6,10 +6,10 @@ Latest release: [![Latest release](https://maven-badges.herokuapp.com/maven-cent
 Version 3 will break Eureka up into microservices.
 
 ## Version history
-Version 2.5.2
+### Version 2.5.2
 As compared with version 1 of Eureka, version 2 primarily differs in much more efficient backend code for processing data from relational databases. The performance of spreadsheet data processing is also much better.
 
-Version 1.9
+### Version 1.9
 Version 1.9 includes an update to the UI, now using Bootstrap 3, 
 to make the application more usable on mobile devices.  It also 
 includes support for i2b2 1.7.  A new feature to allow usage of 
