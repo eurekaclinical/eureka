@@ -22,7 +22,7 @@ to log into the system.  Finally, many improvements were made
 to ease the process of installing and configuring the software.
 
 ## What does it do
-See http://eurekaclinical.org
+Analytics provides tools for electronic health record (EHR) phenotyping, that is, finding patients of interest that match specified patterns in clinical and administrative EHR data. Eureka stores these patterns in computable form, and it computes them rapidly in clinical datasets and databases, including i2b2 clinical data warehouses. It supports building a repository of phenotypes representing best practices in how to find patient populations of interest. See http://www.eurekaclinical.org/docs/analytics/ for more information.
 
 ## Build requirements
 * [Oracle Java JDK 8](http://www.oracle.com/technetwork/java/javase/overview/index.html)
