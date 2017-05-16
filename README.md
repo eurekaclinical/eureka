@@ -57,43 +57,28 @@ You can run this project in an embedded tomcat by executing `mvn tomcat7:run` af
 
 ## Configuration
 Eureka is configured using a properties file located at `/etc/eureka/application.properties`. It supports the following properties:
-`eurekaclinical.userwebapp.url`: https://hostname.of.eurekaclinicaluserwebapp:port/eurekaclinical-user-webapp
-`eurekaclinical.userservice.url`: https://hostname.of.eurekaclinicaluserservice:port/eurekaclinical-user-service
-`cas.url`: https://hostname.of.casserver:port/cas-server
-`eureka.common.callbackserver`: https://hostname:port
-`eureka.common.demomode`: true or false depending on whether to act like a demonstration; default is false.
-`eureka.common.ephiprohibited`: true or false depending on whether to display that managing ePHI is prohibited; default is true.
-`eureka.webapp.registrationenabled`: true or false to enable/disable registering for an account managed by this project; default is true.
-
-#eureka.support.uri
-#eureka.support.uri.name
-
-eureka.webapp.callbackserver = https://localhost:8443
-eureka.webapp.url=https://localhost:8443
-eureka.webapp.uploaddir=uploads
-eureka.webapp.ephiprohibited=true
-eureka.webapp.demomode=false
-eureka.etl.url=https://localhost:8443/eureka-protempa-etl
-eureka.etl.threadpool.size=4
-eureka.etl.callbackserver = https://localhost:8443
-eureka.services.url=https://localhost:8443/eureka-services
-eureka.services.callbackserver = https://localhost:8443
-eureka.services.email.verify.subject=Eureka! Clinical Analytics Registration Verification
-eureka.services.email.activation.subject=Eureka! Clinical Analytics Account Activation
-eureka.services.email.password.subject=Password changed on Eureka! Clinical Analytics
-eureka.services.email.reset.subject=Password reset on Eureka! Clinical Analytics
-eureka.services.jobpool.size=5
-eureka.services.registration.timeout=72
-eureka.jstree.searchlimit=200;
-eureka.services.defaultprops=Patient \
- PatientDetails \
- Encounter \
- ICD9:Diagnoses \
- ICD9:Procedures \
- LAB:LabTest \
- MED:medications \
- VitalSign
-eureka.cohorts.url=http://localhost:8443/eureka-cohorts
+* `eurekaclinical.userwebapp.url`: https://hostname.of.eurekaclinicaluserwebapp:port/eurekaclinical-user-webapp
+* `eurekaclinical.userservice.url`: https://hostname.of.eurekaclinicaluserservice:port/eurekaclinical-user-service
+* `cas.url`: https://hostname.of.casserver:port/cas-server
+* `eureka.common.callbackserver`: https://hostname:port
+* `eureka.common.demomode`: true or false depending on whether to act like a demonstration; default is false.
+* `eureka.common.ephiprohibited`: true or false depending on whether to display that managing ePHI is prohibited; default is true.
+* `eureka.webapp.registrationenabled`: true or false to enable/disable registering for an account managed by this project; default is true.
+* `eureka.support.uri`: URI link for contacting support. Could be http, https, or mailto.
+* `eureka.support.uri.name`: Display name of the URI link for contacting support.
+* `eureka.webapp.callbackserver`: URL of the server running the webapp; default is https://localhost:8443.
+* `eureka.webapp.url`: the URL of the webapp; default is https://localhost:8443/eureka-webapp.
+* `eureka.webapp.ephiprohibited`: true or false depending on whether to display that managing ePHI is prohibited; default is true.
+* `eureka.webapp.demomode`: true or false depending on whether to act like a demonstration; default is false.
+* `eureka.etl.url`: URL of the server running the backend; default is https://localhost:8443/eureka-protempa-etl.
+* `eureka.etl.threadpool.size`: the number of threads in the ETL threadpool; default is 4.
+* `eureka.etl.callbackserver`: URL of the server running the backend; default is https://localhost:8443.
+* `eureka.services.url`: URL of the server running the services layer; default is https://localhost:8443/eureka-services.
+* `eureka.services.callbackserver`: URL of the server running the services layer; default is https://localhost:8443.
+* `eureka.services.jobpool.size`: the number of threads in the ETL threadpool; default is 5.
+* `eureka.services.registration.timeout`: timeout in hours for registration request verification; default is 72.
+* `eureka.jstree.searchlimit`: max number of results returned from a concept search; default is 200.
+* `eureka.services.defaultprops`: concept subtrees to show in the concept tree: default is Patient PatientDetails Encounter  ICD9:Diagnoses ICD9:Procedures ICD10:Diagnoses ICD10:Procedures LAB:LabTest MED:medications VitalSign
 
 ## Getting help
 Feel free to contact us at help@eurekaclinical.org.
