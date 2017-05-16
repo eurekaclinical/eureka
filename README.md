@@ -1,5 +1,5 @@
 # Eureka! Clinical Analytics
-Atlanta Clinical and Translational Science Institute, Emory University, Atlanta, GA
+[Atlanta Clinical and Translational Science Institute (ACTSI)](http://www.actsi.org), [Emory University](http://www.emory.edu), Atlanta, GA
 
 ## What does it do?
 It provides tools for electronic health record (EHR) phenotyping, that is, finding patients of interest that match specified patterns in clinical and administrative EHR data. Eureka stores these patterns in computable form, and it computes them rapidly in clinical datasets and databases, including i2b2 clinical data warehouses. It supports building a repository of phenotypes representing best practices in how to find patient populations of interest. See http://www.eurekaclinical.org/docs/analytics/ for more information.
@@ -80,6 +80,9 @@ Eureka is configured using a properties file located at `/etc/eureka/application
 * `eureka.services.registration.timeout`: timeout in hours for registration request verification; default is 72.
 * `eureka.jstree.searchlimit`: max number of results returned from a concept search; default is 200.
 * `eureka.services.defaultprops`: concept subtrees to show in the concept tree: default is Patient PatientDetails Encounter  ICD9:Diagnoses ICD9:Procedures ICD10:Diagnoses ICD10:Procedures LAB:LabTest MED:medications VitalSign
+
+## Note on licensing
+Out of the box, Eureka! Clinical Analytics is available under the Apache License. If you use the neo4j capability provided by the [aiw-neo4j-etl](https://github.com/eurekaclinical/aiw-neo4j-etl) project, due to the licensing of Neo4j, you cannot use the Apache license anymore. For that reason, Eureka! Clinical Analytics is optionally available under the GPL version 3.
 
 ## Getting help
 Feel free to contact us at help@eurekaclinical.org.
