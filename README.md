@@ -82,7 +82,7 @@ Eureka is configured using a properties file located at `/etc/eureka/application
 * `eureka.services.defaultprops`: concept subtrees to show in the concept tree: default is Patient PatientDetails Encounter  ICD9:Diagnoses ICD9:Procedures ICD10:Diagnoses ICD10:Procedures LAB:LabTest MED:medications VitalSign
 
 ## Note on licensing
-Out of the box, Eureka! Clinical Analytics is available under the Apache License. If you use the neo4j capability provided by the [aiw-neo4j-etl](https://github.com/eurekaclinical/aiw-neo4j-etl) project, due to the licensing of Neo4j, you cannot use the Apache license anymore. For that reason, Eureka! Clinical Analytics is optionally available under the GPL version 3.
+Out of the box, Eureka! Clinical Analytics is available under the Apache License. If you use the Neo4j plugin provided by the [aiw-neo4j-etl](https://github.com/eurekaclinical/aiw-neo4j-etl) project, due to the licensing of Neo4j, you cannot use the Apache license anymore. For that reason, Eureka! Clinical Analytics is optionally available under the GPL version 3.
 
 ## Getting help
 Feel free to contact us at help@eurekaclinical.org.
