@@ -54,3 +54,9 @@ You can run this project in an embedded tomcat by executing `mvn tomcat7:run` af
 
 ## Developer documentation
 * [Javadoc for latest development release](http://javadoc.io/doc/org.eurekaclinical/eureka-webapp) [![Javadocs](http://javadoc.io/badge/org.eurekaclinical/eureka-webapp.svg)](http://javadoc.io/doc/org.eurekaclinical/eureka-webapp)
+
+## Configuration
+Eureka is configured using a properties file located at `/etc/eureka/application.properties`. It supports the following properties:
+
+## Getting help
+Feel free to contact us at help@eurekaclinical.org.
