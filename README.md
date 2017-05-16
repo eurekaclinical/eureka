@@ -48,3 +48,9 @@ export MAVEN_OPTS='-Xmx4g`
 ```
 
 Typically, you build it by invoking `mvn clean install` at the command line. For simple file changes, not additions or deletions, you can usually use `mvn install`. See https://github.com/eurekaclinical/dev-wiki/wiki/Building-Eureka!-Clinical-projects for more details.
+
+## Performing system tests
+You can run this project in an embedded tomcat by executing `mvn tomcat7:run` after you have built it. It will be accessible in your web browser at https://localhost:8443/eureka-webapp/. Your username will be `superuser`.
+
+## Developer documentation
+* [Javadoc for latest development release](http://javadoc.io/doc/org.eurekaclinical/eureka-webapp) [![Javadocs](http://javadoc.io/badge/org.eurekaclinical/eureka-webapp.svg)](http://javadoc.io/doc/org.eurekaclinical/eureka-webapp)
