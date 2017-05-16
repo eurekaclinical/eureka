@@ -1,11 +1,25 @@
 # Eureka! Clinical Analytics
 
-Version 2.0 development series
+Version 3.0 development series
 Latest release: [![Latest release](https://maven-badges.herokuapp.com/maven-central/org.eurekaclinical/eureka/badge.svg)](https://maven-badges.herokuapp.com/maven-central/org.eurekaclinical/eureka)
 
-Version 2 will break Eureka up into microservices.
+Version 3 will break Eureka up into microservices.
 
 ## Version history
+Version 2.5.2
+As compared with version 1 of Eureka, version 2 primarily differs in much more efficient backend code for processing data from relational databases. The performance of spreadsheet data processing is also much better.
+
+Version 1.9
+Version 1.9 includes an update to the UI, now using Bootstrap 3, 
+to make the application more usable on mobile devices.  It also 
+includes support for i2b2 1.7.  A new feature to allow usage of 
+BioPortal for ontologies was added.  The codebase was also updated 
+to utilize Java 7.  A data element search functionality was 
+added to the phenotype editor and job submission screens.  Eureka! 
+can now utilize OAuth as an authentication mechanism, allowing 
+the use of services like Facebook, Twitter, Google Plus, and other 
+to log into the system.  Finally, many improvements were made 
+to ease the process of installing and configuring the software.
 
 ## What does it do
 See http://eurekaclinical.org
