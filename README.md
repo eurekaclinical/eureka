@@ -50,13 +50,13 @@ export MAVEN_OPTS='-Xmx4g`
 
 Typically, you build it by invoking `mvn clean install` at the command line. For simple file changes, not additions or deletions, you can usually use `mvn install`. See https://github.com/eurekaclinical/dev-wiki/wiki/Building-Eureka!-Clinical-projects for more details.
 
+You can build any of the modules separately by appending `-pl <module-name>` to your maven command, where `<module-name>` is the artifact id of the module.
+
 ## Performing system tests
 You can run this project in an embedded tomcat by executing `mvn tomcat7:run` after you have built it. It will be accessible in your web browser at https://localhost:8443/eureka-webapp/. Your username will be `superuser`.
 
-## Developer documentation
-* [Javadoc for latest development release](http://javadoc.io/doc/org.eurekaclinical/eureka-webapp) [![Javadocs](http://javadoc.io/badge/org.eurekaclinical/eureka-webapp.svg)](http://javadoc.io/doc/org.eurekaclinical/eureka-webapp)
-
-## Configuration
+## Installation
+### Configuration
 Eureka is configured using a properties file located at `/etc/eureka/application.properties`. It supports the following properties:
 * `eurekaclinical.userwebapp.url`: https://hostname.of.eurekaclinicaluserwebapp:port/eurekaclinical-user-webapp
 * `eurekaclinical.userservice.url`: https://hostname.of.eurekaclinicaluserservice:port/eurekaclinical-user-service
@@ -80,6 +80,15 @@ Eureka is configured using a properties file located at `/etc/eureka/application
 * `eureka.services.registration.timeout`: timeout in hours for registration request verification; default is 72.
 * `eureka.jstree.searchlimit`: max number of results returned from a concept search; default is 200.
 * `eureka.services.defaultprops`: concept subtrees to show in the concept tree: default is Patient PatientDetails Encounter  ICD9:Diagnoses ICD9:Procedures ICD10:Diagnoses ICD10:Procedures LAB:LabTest MED:medications VitalSign
+
+### WAR installation
+1) Stop Tomcat
+2) Remove any old copies of Eureka's three unpacked wars from Tomcat's webapps directory
+3) Copy new warfiles into the tomcat webapps directory
+4) Start Tomcat
+
+## Developer documentation
+* [Javadoc for latest development release](http://javadoc.io/doc/org.eurekaclinical/eureka-webapp) [![Javadocs](http://javadoc.io/badge/org.eurekaclinical/eureka-webapp.svg)](http://javadoc.io/doc/org.eurekaclinical/eureka-webapp)
 
 ## Note on licensing
 Out of the box, Eureka! Clinical Analytics is available under the Apache License. If you use the Neo4j plugin provided by the [aiw-neo4j-etl](https://github.com/eurekaclinical/aiw-neo4j-etl) project, due to the licensing of Neo4j, you cannot use the Apache license anymore. For that reason, Eureka! Clinical Analytics is optionally available under the GPL version 3.
