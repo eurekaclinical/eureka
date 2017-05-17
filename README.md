@@ -153,10 +153,10 @@ Eureka is configured using a properties file located at `/etc/eureka/application
 * `eureka.services.defaultprops`: concept subtrees to show in the concept tree: default is Patient PatientDetails Encounter  ICD9:Diagnoses ICD9:Procedures ICD10:Diagnoses ICD10:Procedures LAB:LabTest MED:medications VitalSign
 
 ### WAR installation
-1) Stop Tomcat
-2) Remove any old copies of Eureka's three unpacked wars from Tomcat's webapps directory
-3) Copy new warfiles into the tomcat webapps directory
-4) Start Tomcat
+1) Stop Tomcat.
+2) Remove any old copies of Eureka's three unpacked wars from Tomcat's webapps directory.
+3) Copy new warfiles into the tomcat webapps directory.
+4) Start Tomcat.
 
 ## Developer documentation
 * [Javadoc for latest development release](http://javadoc.io/doc/org.eurekaclinical/eureka-webapp) [![Javadocs](http://javadoc.io/badge/org.eurekaclinical/eureka-webapp.svg)](http://javadoc.io/doc/org.eurekaclinical/eureka-webapp)
