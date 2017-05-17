@@ -56,7 +56,7 @@ You can build any of the modules separately by appending `-pl <module-name>` to 
 You can run this project in an embedded tomcat by executing `mvn tomcat7:run` after you have built it. It will be accessible in your web browser at https://localhost:8443/eureka-webapp/. Your username will be `superuser`.
 
 ## Installation
-NOTE: we have [Ansible](http://www.ansible.com) provisioning scripts that automate the installation process. Contact use for details. The following provides detail on the steps that those scripts perform.
+NOTE: we have [Ansible](http://www.ansible.com) provisioning scripts that automate the installation process. Contact use for details. The following provides detail on the steps that those scripts perform. We have omitted general steps such as installation of Tomcat, SSL certificates, and the like.
 
 ### Database schema creation
 The `eureka-services` and `eureka-protempa-etl` modules each have a database schema. Each has a [Liquibase](http://www.liquibase.org) changelog at `src/main/resources/dbmigration/changelog-master.xml` for creating the schema's objects. [Liquibase 3.3 or greater](http://www.liquibase.org/download/index.html) is required.
