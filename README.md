@@ -152,6 +152,18 @@ Eureka is configured using a properties file located at `/etc/eureka/application
 * `eureka.jstree.searchlimit`: max number of results returned from a concept search; default is 200.
 * `eureka.services.defaultprops`: concept subtrees to show in the concept tree: default is Patient PatientDetails Encounter  ICD9:Diagnoses ICD9:Procedures ICD10:Diagnoses ICD10:Procedures LAB:LabTest MED:medications VitalSign
 
+A Tomcat restart is required to detect any changes to the configuration file.
+
+### Tomcat configuration
+In the `$CATALINA_HOME/bin/setenv.sh` file, add the following:
+```
+CATALINA_OPTS="${CATALINA_OPTS} -Dorg.apache.tomcat.util.buf.UDecoder.ALLOW_ENCODED_SLASH=true 
+-Doracle.jdbc.ReadTimeout=43200000 -Djava.security.egd=file:///dev/urandom"
+JAVA_OPTS="${JAVA_OPTS} -Xms512m -Xmx6G"
+```
+
+The `oracle.jdbc.ReadTimeout` system property is only needed if using an Oracle database with Eureka. The max heap size may need to be adjusted up depending on the data volume being processed.
+
 ### WAR installation
 1) Stop Tomcat.
 2) Remove any old copies of Eureka's three unpacked wars from Tomcat's webapps directory.
