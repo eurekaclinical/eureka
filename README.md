@@ -162,7 +162,7 @@ CATALINA_OPTS="${CATALINA_OPTS} -Dorg.apache.tomcat.util.buf.UDecoder.ALLOW_ENCO
 JAVA_OPTS="${JAVA_OPTS} -Xms512m -Xmx6G"
 ```
 
-The `oracle.jdbc.ReadTimeout` system property is only needed if using an Oracle database with Eureka. The max heap size may need to be adjusted up depending on the data volume being processed.
+The `oracle.jdbc.ReadTimeout` system property is only needed if using an Oracle database with Eureka. The max heap size may need to be  increased more depending on the data volume being processed.
 
 ### WAR installation
 1) Stop Tomcat.
