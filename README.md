@@ -56,6 +56,75 @@ You can build any of the modules separately by appending `-pl <module-name>` to 
 You can run this project in an embedded tomcat by executing `mvn tomcat7:run` after you have built it. It will be accessible in your web browser at https://localhost:8443/eureka-webapp/. Your username will be `superuser`.
 
 ## Installation
+### Database schema creation
+The `eureka-services` and `eureka-protempa-etl` modules each have a database schema. Each has a [Liquibase](http://www.liquibase.org) changelog at `src/main/resources/dbmigration/changelog-master.xml` for creating the schema's objects. [Liquibase 3.3 or greater](http://www.liquibase.org/download/index.html) is required.
+
+For `eureka-services`, perform the following steps:
+1) Create a schema for i2b2-export-service in your database.
+2) Get a JDBC driver for your database and put it the liquibase lib directory.
+3) Run the following:
+```
+./liquibase \
+      --driver=JDBC_DRIVER_CLASS_NAME \
+      --classpath=/path/to/jdbcdriver.jar:/path/to/eureka-services.war \
+      --changeLogFile=dbmigration/changelog-master.xml \
+      --url="JDBC_CONNECTION_URL" \
+      --username=DB_USER \
+      --password=DB_PASS \
+      update
+```
+4) Add the following Resource tag to Tomcat's `context.xml` file:
+```
+<Context>
+...
+    <Resource name="jdbc/EurekaService" auth="Container"
+            type="javax.sql.DataSource"
+            driverClassName="JDBC_DRIVER_CLASS_NAME"
+            factory="org.apache.tomcat.jdbc.pool.DataSourceFactory"
+            url="JDBC_CONNECTION_URL"
+            username="DB_USER" password="DB_PASS"
+            initialSize="3" maxActive="20" maxIdle="3" minIdle="1"
+            maxWait="-1" validationQuery="SELECT 1" testOnBorrow="true"/>
+...
+</Context>
+```
+
+The validation query above is suitable for PostgreSQL. For Oracle and H2, use
+`SELECT 1 FROM DUAL`.
+
+For `eureka-protempa-etl`, perform the following steps:
+1) Create a schema for i2b2-export-service in your database.
+2) Get a JDBC driver for your database and put it the liquibase lib directory.
+3) Run the following:
+```
+./liquibase \
+      --driver=JDBC_DRIVER_CLASS_NAME \
+      --classpath=/path/to/jdbcdriver.jar:/path/to/eureka-protempa-etl.war \
+      --changeLogFile=dbmigration/changelog-master.xml \
+      --url="JDBC_CONNECTION_URL" \
+      --username=DB_USER \
+      --password=DB_PASS \
+      update
+```
+4) Add the following Resource tag to Tomcat's `context.xml` file:
+```
+<Context>
+...
+    <Resource name="jdbc/EurekaBackend" auth="Container"
+            type="javax.sql.DataSource"
+            driverClassName="JDBC_DRIVER_CLASS_NAME"
+            factory="org.apache.tomcat.jdbc.pool.DataSourceFactory"
+            url="JDBC_CONNECTION_URL"
+            username="DB_USER" password="DB_PASS"
+            initialSize="3" maxActive="20" maxIdle="3" minIdle="1"
+            maxWait="-1" validationQuery="SELECT 1" testOnBorrow="true"/>
+...
+</Context>
+```
+
+The validation query above is suitable for PostgreSQL. For Oracle and H2, use
+`SELECT 1 FROM DUAL`.
+
 ### Configuration
 Eureka is configured using a properties file located at `/etc/eureka/application.properties`. It supports the following properties:
 * `eurekaclinical.userwebapp.url`: https://hostname.of.eurekaclinicaluserwebapp:port/eurekaclinical-user-webapp
