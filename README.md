@@ -59,7 +59,8 @@ You can run this project in an embedded tomcat by executing `mvn tomcat7:run` af
 ### Database schema creation
 The `eureka-services` and `eureka-protempa-etl` modules each have a database schema. Each has a [Liquibase](http://www.liquibase.org) changelog at `src/main/resources/dbmigration/changelog-master.xml` for creating the schema's objects. [Liquibase 3.3 or greater](http://www.liquibase.org/download/index.html) is required.
 
-For `eureka-services`, perform the following steps:
+#### eureka-services
+Perform the following steps:
 1) Create a schema for i2b2-export-service in your database.
 2) Get a JDBC driver for your database and put it the liquibase lib directory.
 3) Run the following:
@@ -92,7 +93,8 @@ For `eureka-services`, perform the following steps:
 The validation query above is suitable for PostgreSQL. For Oracle and H2, use
 `SELECT 1 FROM DUAL`.
 
-For `eureka-protempa-etl`, perform the following steps:
+#### eureka-protempa-etl
+Perform the following steps:
 1) Create a schema for i2b2-export-service in your database.
 2) Get a JDBC driver for your database and put it the liquibase lib directory.
 3) Run the following:
