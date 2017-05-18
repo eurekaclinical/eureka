@@ -83,6 +83,7 @@ Properties:
   * `FAILED`: job has completed in error.
 * `jobEvents`: an array of JobEvent objects indicating job status (see below).
 * `links`: an array of Link objects that point to resources created by the job (see below).
+* `getStatisticsSupported`: boolean indicating whether the `/api/protected/jobs/{id}/stats` call is supported for this job.
 
 #### JobEvent object
 Represents events occurring during the execution of a job. This object is read-only.
@@ -187,14 +188,12 @@ Return:
         "status":"STARTED",
         "exceptionStackTrace":null,
         "timeStamp":1483992452303,
-        "message":"Processing started"
-      },
+        "message":"Processing started"},
       { "id":2,
         "status":"COMPLETED",
         "exceptionStackTrace":null,
         "timeStamp":1483992511412,
-        "message":"Processing completed without error"
-      }
+        "message":"Processing completed without error"}
     ],
     "links":[],
     "getStatisticsSupported":false,
@@ -203,19 +202,44 @@ Return:
 ]
 ```
 
-### GET /api/protected/jobs/status?jobId=jobId&userId=userId&state=foo&from=bar&to=baz
-Gets all jobs for the current user, optionally filtered by job id, user id, state and/or date range (from date, to date).
+##### GET /api/protected/jobs/status?jobId=jobId&userId=userId&state=foo&from=bar&to=baz
+Gets an array of all Jobs for the current user, optionally filtered by job id, user id, state (status) and/or date range (from date, to date).
 
-### GET /api/protected/jobs/{jobId}/stats/{key}
-Gets summary statistics for the specified job.
+##### GET /api/protected/jobs/{jobId}/stats/{key}
+Gets summary statistics for the specified Job.
 
-### GET /api/protected/jobs/latest
-Gets the latest submitted job for the user.
-#### Example:
-#### URL: 
-https://localhost:8443/eureka-services/api/protected/jobs/latest
-#### Return: 
-[{"id":2,"startTimestamp":1483992674788,"sourceConfigId":"Spreadsheet","destinationId":"Load into i2b2 on localhost with Eureka ontology","username":"superuser","status":"COMPLETED","jobEvents":[{"id":3,"status":"STARTED","exceptionStackTrace":null,"timeStamp":1483992674792,"message":"Processing started"},{"id":4,"status":"COMPLETED","exceptionStackTrace":null,"timeStamp":1483992752190,"message":"Processing completed without error"}],"links":[],"getStatisticsSupported":false,"finishTimestamp":1483992752190}]
+##### GET /api/protected/jobs/latest
+Gets the latest submitted Job for the user.
+
+###### Example:
+URL: https://localhost:8443/eureka-services/api/protected/jobs/latest
+
+Returns:
+```
+[
+  { "id":2,
+    "startTimestamp":1483992674788,
+    "sourceConfigId":"Spreadsheet",
+    "destinationId":"Load into i2b2 on localhost with Eureka ontology",
+    "username":"superuser",
+    "status":"COMPLETED",
+    "jobEvents":[
+      { "id":3,
+        "status":"STARTED",
+        "exceptionStackTrace":null,
+        "timeStamp":1483992674792,
+        "message":"Processing started" },
+        { "id":4,
+          "status":"COMPLETED",
+          "exceptionStackTrace":null,
+          "timeStamp":1483992752190,
+          "message":"Processing completed without error" }
+    ],
+    "links":[],
+    "getStatisticsSupported":false,
+    "finishTimestamp":1483992752190}
+]
+```
 
 ## File uploads
 
