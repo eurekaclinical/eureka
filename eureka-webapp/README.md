@@ -32,13 +32,13 @@ to make the application more usable on mobile devices.
   * The [cas-server](https://github.com/eurekaclinical/cas) war
 
 ## Proxied REST APIs
-See the parent project's README for details.
+See the parent project's [README.md](https://github.com/eurekaclinical/eureka/blob/master/README.md).
 
 ## Building it
-See the parent project's README for details.
+See the parent project's [README.md](https://github.com/eurekaclinical/eureka/blob/master/README.md).
 
 ## Performing system tests
-See the parent project's README for details.
+See the parent project's [README.md](https://github.com/eurekaclinical/eureka/blob/master/README.md).
 
 ## Installation
 ### Configuration
