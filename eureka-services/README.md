@@ -35,10 +35,29 @@ The initial version of the Eureka backend is implemented as a layer architecture
 Manages phenotyping jobs.
 
 #### Role-based authorization
-No
+Must have `research` role.
 
 #### Requires successful authentication
 Yes
+
+#### JobSpec object
+Used to submit a job request.
+
+Properties:
+* `sourceConfigId`: required string containing the name of the data source.
+* `destinationId`: required string containing the name of the action.
+* `dateRangePhenotypeKey`: optional unique numerical id of a phenotype on which to constrain the date range.
+* `earliestDate`: optional timestamp, as milliseconds since the epoch, indicating the lower bound of the date range.
+* `earliestDateSide`: optional string indicating on which side of the date range phenotype's interval to apply the earliest date; may be:
+  * `START`: the beginning of the interval.
+  * `FINISH`: the end of the interval.
+* `latestDate`: optional timestamp, as milliseconds since the epoch, indicating the upper bound of the date range.
+* `latestDateSide`: optional string indicating on which side of the date range phenotype's interval to apply the latest date; may be:
+  * `START`: the beginning of the interval.
+  * `FINISH`: the end of the interval.
+* `updateDate`: boolean indicating whether to update or replace data:
+  * `true`: update data
+  * `false`: replace data
 
 #### Job object
 Created internally when a job is created. This object is read-only.
@@ -81,10 +100,10 @@ Properties:
 * `timeStamp`: the timestamp, as milliseconds since the epoch, when this event occurred.
 
 #### Link object
-Represents a resource created by the job.
+Represents a hyperlink to a resource created by the job.
 
 Properties:
-* `url`: required URL of the link.
+* `url`: required URL of the hyperlink.
 * `displayName`: optional name for the link to display in a user interface.
 
 #### POST /api/protected/jobs
