@@ -109,8 +109,9 @@ Properties:
 * `url`: required URL of the hyperlink.
 * `displayName`: optional name for the link to display in a user interface.
 
-#### POST /api/protected/jobs
-Submits a job. If successful, returns URL representing the job.
+#### Calls
+##### POST /api/protected/jobs
+Submits a job. A JobSpec object is passed in as the body of the request. Returns the URI representing the job. Uses status codes as specified in the [Eureka! Clinical microservice specification](https://github.com/eurekaclinical/dev-wiki/wiki/Eureka%21-Clinical-microservice-specification).
 
 #### GET /api/protected/jobs/{id}
 Gets the job with the specified numerical unique id.
