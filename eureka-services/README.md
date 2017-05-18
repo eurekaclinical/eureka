@@ -72,7 +72,7 @@ A Tomcat restart is required to detect any changes to the configuration file.
 ```
 
 ## Developer documentation
-* [Javadoc for latest development release](http://javadoc.io/doc/org.eurekaclinical/eureka-webapp) [![Javadocs](http://javadoc.io/badge/org.eurekaclinical/eureka-webapp.svg)](http://javadoc.io/doc/org.eurekaclinical/eureka-webapp)
+* [Javadoc for latest development release](http://javadoc.io/doc/org.eurekaclinical/eureka-services) [![Javadocs](http://javadoc.io/badge/org.eurekaclinical/eureka-services.svg)](http://javadoc.io/doc/org.eurekaclinical/eureka-services)
 
 ## Getting help
 Feel free to contact us at help@eurekaclinical.org.
