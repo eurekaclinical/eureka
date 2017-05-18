@@ -919,16 +919,59 @@ URL: https://localhost:8443/eureka-services/api/protected/phenotypes/USER:testCa
 
 Returns:
 ```
-{"type":"CATEGORIZATION","id":2,"key":"USER:testCategorization","userId":1,"description":"test","displayName":"testCategorization","inSystem":false,"created":1484772736590,"lastModified":1484772736590,"summarized":false,"internalNode":false,"children":[{"id":null,"phenotypeKey":"Patient","phenotypeDescription":"","phenotypeDisplayName":"Patient","hasDuration":null,"minDuration":null,"minDurationUnits":null,"maxDuration":null,"maxDurationUnits":null,"hasPropertyConstraint":null,"property":null,"propertyValue":null,"type":"SYSTEM","categoricalType":null,"inSystem":true},{"id":null,"phenotypeKey":"PatientDetails","phenotypeDescription":"","phenotypeDisplayName":"Patient Details","hasDuration":null,"minDuration":null,"minDurationUnits":null,"maxDuration":null,"maxDurationUnits":null,"hasPropertyConstraint":null,"property":null,"propertyValue":null,"type":"SYSTEM","categoricalType":null,"inSystem":true}],"categoricalType":"CONSTANT"}
+{ "type":"CATEGORIZATION",
+  "id":2,
+  "key":"USER:testCategorization",
+  "userId":1,
+  "description":"test",
+  "displayName":"testCategorization",
+  "inSystem":false,
+  "created":1484772736590,
+  "lastModified":1484772736590,
+  "summarized":false,
+  "internalNode":false,
+  "children": [
+    { "id":null,
+      "phenotypeKey":"Patient",
+      "phenotypeDescription":"",
+      "phenotypeDisplayName":"Patient",
+      "hasDuration":null,
+      "minDuration":null,
+      "minDurationUnits":null,
+      "maxDuration":null,
+      "maxDurationUnits":null,
+      "hasPropertyConstraint":null,
+      "property":null,
+      "propertyValue":null,
+      "type":"SYSTEM",
+      "categoricalType":null,
+      "inSystem":true},
+    { "id":null,
+      "phenotypeKey":"PatientDetails",
+      "phenotypeDescription":"",
+      "phenotypeDisplayName":"Patient Details",
+      "hasDuration":null,
+      "minDuration":null,
+      "minDurationUnits":null,
+      "maxDuration":null,
+      "maxDurationUnits":null,
+      "hasPropertyConstraint":null,
+      "property":null,
+      "propertyValue":null,
+      "type":"SYSTEM",
+      "categoricalType":null,
+      "inSystem":true}
+  ],
+  "categoricalType":"CONSTANT"}
 ```
 
-##### POST /api/protected/phenotypes
+##### POST `/api/protected/phenotypes`
 Creates a new concept.
 
-##### PUT /api/protected/phenotypes
+##### PUT `/api/protected/phenotypes`
 Saves an existing concept.
 
-##### DELETE /api/protected/phenotypes/{userId}/{key}
+##### DELETE `/api/protected/phenotypes/{userId}/{key}`
 Deletes the specified concept.
 
 ### `/api/protected/concepts`
