@@ -42,22 +42,19 @@ See the parent project's README for details.
 
 ## Installation
 ### Configuration
-This webapp is configured using a properties file located at `/etc/ec-user/application.properties`. It supports the following properties:
-* `eurekaclinical.userwebapp.callbackserver`: https://hostname:port
-* `eurekaclinical.userwebapp.url`: https://hostname:port/eurekaclinical-user-webapp
-* `eurekaclinical.userservice.url`: https://hostname.of.userservice:port/eurekaclinical-user-service
+This webapp is configured using a properties file located at `/etc/eureka/application.properties`. It supports the following properties:
 * `cas.url`: https://hostname.of.casserver:port/cas-server
-* `eurekaclinical.userwebapp.localregistrationenabled`: true or false to enable/disable registering for an account managed by this project; default is true.
-* `eurekaclinical.userwebapp.githuboauthkey`: the key for registering using a GitHub OAuth account.
-* `eurekaclinical.userwebapp.githuboauthsecret`:  the secret for registering using a GitHub OAuth account.
-* `eurekaclinical.userwebapp.globusoauthkey`:  the key for registering using a GitHub OAuth account.
-* `eurekaclinical.userwebapp.globusoauthsecret`:  the secret for registering using a Globus OAuth account.
-* `eurekaclinical.userwebapp.googleoauthkey`:  the key for registering using a Google OAuth account.
-* `eurekaclinical.userwebapp.googleoauthsecret`:  the secret for registering using a Google OAuth account.
-* `eurekaclinical.userwebapp.twitteroauthkey`:   the key for registering using a Twitter OAuth account.
-* `eurekaclinical.userwebapp.twitteroauthsecret`:  the secret for registering using a Google OAuth account.
-* `eurekaclinical.userwebapp.demomode`: true or false depending on whether to act like a demonstration; default is false.
-* `eurekaclinical.userwebapp.ephiprohibited`: true or false depending on whether to display that managing ePHI is prohibited; default is true.
+* `eureka.common.callbackserver`: https://hostname:port
+* `eureka.common.demomode`: true or false depending on whether to act like a demonstration; default is false.
+* `eureka.common.ephiprohibited`: true or false depending on whether to display that managing ePHI is prohibited; default is true.
+* `eureka.webapp.registrationenabled`: true or false to enable/disable registering for an account managed by this project; default is true.
+* `eureka.support.uri`: URI link for contacting support. Could be http, https, or mailto.
+* `eureka.support.uri.name`: Display name of the URI link for contacting support.
+* `eureka.webapp.callbackserver`: URL of the server running the webapp; default is https://localhost:8443.
+* `eureka.webapp.url`: the URL of the webapp; default is https://localhost:8443/eureka-webapp.
+* `eureka.webapp.ephiprohibited`: true or false depending on whether to display that managing ePHI is prohibited; default is true.
+* `eureka.webapp.demomode`: true or false depending on whether to act like a demonstration; default is false.
+* `eureka.services.url`: URL of the server running the services layer; default is https://localhost:8443/eureka-services.
 
 A Tomcat restart is required to detect any changes to the configuration file.
 
