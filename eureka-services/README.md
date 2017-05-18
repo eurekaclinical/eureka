@@ -850,7 +850,108 @@ Must have `researcher` role.
 Yes
 
 #### Phenotype object
-Fully specifies a data source configuration.
+Phenotypes are computable descriptions of a type of patient. They all have the following properties:
+* `id`: unique id number of the phenotype (set by the server on object creation, and required thereafter).
+* `key`: required unique name of the phenotype.
+* `userId`: required username of the owner of the phenotype.
+* `description`: optional description of the phenotype.
+* `displayName`: optional user-visible name for the phenotype.
+* `inSystem`: required boolean indicating whether it is a concept provided by the system. For user-defined phenotypes, the value should be set to `false`.
+* `created`: required timestamp, in milliseconds since the epoch, indicating when the phenotype was created (set by the server).
+* `lastModified`: timestamp, in milliseconds since the epoch, indicating when the phenotype was last modified (set by the server).
+* `summarized`: read-only boolean indicating whether the phenotype was retrieved with the `summarize` query parameter set to `true`.
+* `type`: the type of phenotype, one of:
+  * `SYSTEM`: a Concept provided by the system.
+  * `CATEGORIZATION`: a category phenotype.
+  * `SEQUENCE`: a sequence phenotype.
+  * `FREQUENCY`: a frequency phenotype.
+  * `VALUE_THRESHOLD`: a value threshold phenotype.
+* `internalNode`: read-only boolean indicating whether the phenotype has any children.
+
+#### PhenotypeField
+Used in phenotype definitions for referring to dependent phenotypes.
+
+Properties:
+* `id`: numerical id of the phenotype (set by the server on phenotype creation), or `null` if a system concept.
+* `phenotypeKey`: the unique key for the phenotype or concept.
+* `phenotypeDescription`: the phenotype's description.
+* `phenotypeDisplayName`: the phenotype's display name.
+* `hasDuration`: field indicating whether to apply a duration constraint to the phenotype. Default is `false`.
+* `minDuration`: the lower limit of the duration constraint.
+* `minDurationUnits`: the units string for the lower limit of the duration constraint.
+* `maxDuration`: the upper limit of the duration constraint.
+* `maxDurationUnits`: the units string for the upper limit of the duration constraint.
+* `hasPropertyConstraint`: required field indicating whether to apply a property constraint to the phenotype. Default is `false`.
+* `property`: the name of the property.
+* `propertyValue`: the value of the property as a string.
+* `type`: the type of the phenotype, one of `CATEGORIZATION`, `SEQUENCE`, `FREQUENCY`, `VALUE_THRESHOLD`, `SYSTEM`.
+* `categoricalType`: for category phenotypes, the categorical type, one of `CONSTANT`, `EVENT`, `PRIMITIVE_PARAMETER`, `LOW_LEVEL_ABSTRACTION`, `COMPOUND_LOW_LEVEL_ABSTRACTION`, `HIGH_LEVEL_ABSTRACTION`, `SLICE_ABSTRACTION`, `SEQUENTIAL_TEMPORAL_PATTERN_ABSTRACTION`, `MIXED`, `UNKNOWN`.
+
+#### SystemPhenotype object
+Represents Concepts on which a phenotype depends. It is read-only.
+
+Additional properties:
+* `systemType`: required, one of `CONSTANT`, `EVENT`, `PRIMITIVE_PARAMETER`, `LOW_LEVEL_ABSTRACTION`, `COMPOUND_LOW_LEVEL_ABSTRACTION`, `HIGH_LEVEL_ABSTRACTION`, `SLICE_ABSTRACTION`, `SEQUENTIAL_TEMPORAL_PATTERN_ABSTRACTION`, `CONTEXT`.
+* `children`: an array of SystemPhenotype objects.
+* `isParent`: whether this phenotype has any children.
+* `properties`: array of property names.
+
+#### CategoryPhenotype object
+Represents category phenotypes.
+
+Additional properties:
+* `children`: an array of PhenotypeField objects.
+* `categoricalType`: required, one of `CONSTANT`, `EVENT`, `PRIMITIVE_PARAMETER`, `LOW_LEVEL_ABSTRACTION`, `COMPOUND_LOW_LEVEL_ABSTRACTION`, `HIGH_LEVEL_ABSTRACTION`, `SLICE_ABSTRACTION`, `SEQUENTIAL_TEMPORAL_PATTERN_ABSTRACTION`, `MIXED`, `UNKNOWN`.
+
+#### Sequence object
+Represents sequence phenotypes.
+
+Additional properties:
+* `primaryPhenotype`: required PhenotypeField object.
+* `relatedPhenotypes`: array of related phenotypes and their temporal relationships to each other and the primary phenotype:
+  * `phenotypeField`: the phenotype on the left-hand-side of the relation as a PhenotypeField object.
+  * `relationOperator`: the numerical id of the relation operator.
+  * `sequentialPhenotype`: the key of the phenotype or concept on the right-hand-side of the relation.
+  * `sequentialPhenotypeSource`: 
+  * `relationMinCount`: the lower time limit of the temporal relation.
+  * `relationMinUnits`: numerical id of the time units of the lower time limit.
+  * `relationMaxCount`: the upper time limit of the temporal relation.
+  * `relationMaxUnits`: numerical id of the time units of the upper time limit.
+
+#### Frequency object
+Represents frequency phenotypes.
+
+Additional properties:
+* `atLeast`: required minimum count.
+* `isConsecutive`: required boolean indicating whether only consecutive values should be considered (only can be `true` for observations with values).
+* `phenotype`: required PhenotypeField object representing the phenotype or concept for which you want to threshold its frequency.
+* `isWithin`: required boolean indicating whether to apply a time amount between matching phenotypes or concepts.
+* `withinAtLeast`: optional lower limit of a time amount between matching phenotypes or concepts.
+* `withinAtLeastUnits`: optional time units for the lower limit.
+* `withinAtMost`: optional upper limit of a time amount between matching phenotypes or concepts.
+* `withinAtMostUnits`: optional time units for the upper limit.
+* `frequencyType`: id value of the frequency type to apply.
+
+#### ValueThresholds object
+Represents value threshold phenotypes.
+
+Additional properties:
+* `name`: name of the value threshold.
+* `thresholdsOperator`: id value of the thresholds operator to apply.
+* `valueThresholds`: an array of ValueThreshold objects:
+  * `phenotype`: the valued phenotype or concept to threshold as a PhenotypeField
+  * `lowerComp`: id value of the comparator of the lower limit of the threshold.
+  * `lowerValue`: the value of the lower limit of the threshold.
+  * `lowerUnits`: value units string for the lower limit.
+  * `upperComp`: id value of the comparator of the upper limit of the threshold.
+  * `upperValue`: value of the upper limit of the threshold.
+  * `upperUnits`: value units string for the upper limit.
+  * `relationOperator`: id value of the relation operator to apply for any context phenotypes or concepts.
+  * `relatedPhenotypes`: an array of any context phenotypes or concepts as PhenotypeFields.
+  * `withinAtLeast`: optional lower limit of a time amount between matching phenotypes or concepts.
+  * `withinAtLeastUnits`: optional time units for the lower limit.
+  * `withinAtMost`: optional upper limit of a time amount between matching phenotypes or concepts.
+  * `withinAtMostUnits`: optional time units for the upper limit.
 
 #### Calls
 Uses status codes as specified in the [Eureka! Clinical microservice specification](https://github.com/eurekaclinical/dev-wiki/wiki/Eureka%21-Clinical-microservice-specification).
