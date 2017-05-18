@@ -69,9 +69,9 @@ Properties:
 * `id`: the unique id string of the source config.
 * `dataSourceBackends`: an array representing the data source backends that are being parameterized:
   * `id`: the id string of the data source backend.
-  * `options`: an array of the parameters to set
-    * `name`: the unique name of the parameter
-    * `value`: the value of the parameter
+  * `options`: an array of the parameters to set:
+    * `name`: the unique name of the parameter.
+    * `value`: the value of the parameter.
 
 #### Job object
 Created internally when a job is created. This object is read-only.
@@ -275,7 +275,65 @@ Uses status codes as specified in the [Eureka! Clinical microservice specificati
 ##### POST /protected/file/upload/{sourceConfigId}/{sourceId}
 Submit a multipart form containing a file with form parameter name `file` for the source config with the specified unique name (`sourceConfigId`). The sourceId is a source config-specific identifier for the file.
 
-## Destinations
+### `/api/protected/destinations`
+Manages job actions.
+
+#### Role-based authorization
+Must have `research` role.
+
+#### Requires successful authentication
+Yes
+
+#### Destination object
+Destinations are job actions that create a resource. They all have the following properties:
+
+Properties:
+`id`: unique number identifying the cohort (set by the server on object creation, and required thereafter).
+`type`: always must have value `COHORT`.
+`name`: required unique name of the cohort.
+`description`: an optional description of the cohort.
+`links`: an array of Link objects that point to resources related to the cohort see Link object above.
+`ownerUserId`: required username string of the owning user.
+`read`: required boolean indicating whether the user may read this object.
+`write`: required boolean indicating whether the user may update this object.
+`execute`: required boolean indicating whether the user may use this cohort specification as an action.
+`createdAt`: timestamp, in milliseconds since the epoch, indicating when this cohort specification was created; populated server-side.
+`updatedAt`: timestamp, in milliseconds since the epoch, indicating when this cohort specification was updated; populated server-side.
+`getStatisticsSupported`: required boolean indicating whether the resource created by a job executing this action supports getting statistics.
+`jobConceptListSupported`: required boolean indicating whether a job executing this action has a concept/phenotype list.
+`requiredConcepts`: any concepts or phenotypes that must be in the concept list.
+
+#### Cohort destination object
+A specification of a patient cohort in terms of concepts and phenotypes. Creates a patient set containing only patients who match the specified criteria.
+
+Properties:
+* `cohort`: a required Cohort object (see below)
+
+#### Cohort object
+A specification of a patient cohort in terms of concepts and phenotypes.
+
+Properties:
+* `id`: unique numerical id of the cohort (set by the server on object creation, and required thereafter).
+* `node`: required Literal or BinaryOperator object (see below). Use a Literal object if the cohort is defined by a single concept or phenotype. If the cohort is defined by multiple concepts or phenotypes, use a chain of BinaryOperator objects ending with a Literal object.
+
+#### BinaryOperator object
+`ANDs` two nodes together.
+
+Properties:
+`leftNode`: required Literal object.
+`op`: the operator, always `AND`.
+`rightNode`: required BinaryOperator or Literal object.
+
+#### Literal object
+Represents a concept or phenotype included in a cohort definition.
+
+Properties:
+* `name`: required unique key of the concept or phenotype.
+* `start`: always `null`.
+* `finish`: always `null`.
+
+#### Calls
+Uses status codes as specified in the [Eureka! Clinical microservice specification](https://github.com/eurekaclinical/dev-wiki/wiki/Eureka%21-Clinical-microservice-specification).
 
 ### GET /api/protected/destinations[?type=[I2B2,COHORT,PATIENT_SET_SENDER]
 Gets all data destinations visible to the current user.  Optionally, filter the returned destinations by type (I2B2=i2b2 database destination, COHORT=cohort specified in the cohorts screens, PATIENT_SET_SENDER=patient set sender for the i2b2 patient set sender plugin).
