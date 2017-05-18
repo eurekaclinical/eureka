@@ -482,29 +482,56 @@ Properties:
 #### Calls
 Uses status codes as specified in the [Eureka! Clinical microservice specification](https://github.com/eurekaclinical/dev-wiki/wiki/Eureka%21-Clinical-microservice-specification).
 
-### GET /api/protected/relationops
+##### GET /api/protected/relationops
 Gets a list of the possible temporal relation operators in rank order.
-#### Example:
-#### URL: 
-https://localhost:8443/eureka-services/api/protected/relationops
-#### Return: 
-[{"id":1,"name":"before","description":"before","rank":1,"type":"SEQUENTIAL","default":true},{"id":2,"name":"after","description":"after","rank":2,"type":"SEQUENTIAL","default":false},{"id":3,"name":"around","description":"around","rank":3,"type":"OVERLAPPING","default":false}]
+###### Example:
+URL: https://localhost:8443/eureka-services/api/protected/relationops
 
-### GET /api/protected/relationops/{id}
-Returns the temporal relation operator with the specified numerical unique id, or a 404 (NOT FOUND) status code if no temporal relation operator exists with the specified id.
-#### Example:
-#### URL: 
-https://localhost:8443/eureka-services/api/protected/relationops/1
-#### Return: 
-{"id":1,"name":"before","description":"before","rank":1,"type":"SEQUENTIAL","default":true}
+Returns: 
+```
+[
+  { "id":1,
+    "name":"before",
+    "description":"before",
+    "rank":1,
+    "type":"SEQUENTIAL",
+    "default":true},
+  { "id":2,
+    "name":"after",
+    "description":"after",
+    "rank":2,
+    "type":"SEQUENTIAL",
+    "default":false},
+  { "id":3,
+    "name":"around",
+    "description":"around",
+    "rank":3,
+    "type":"OVERLAPPING",
+    "default":false}
+]
+```
 
-### GET /api/protected/relationops/byname/{name}
-Returns the temporal relation operator with the specified unique name, or a 404 (NOT FOUND) status code if no temporal relation operator with the specified name is supported.
-#### Example:
-#### URL: 
-https://localhost:8443/eureka-services/api/protected/relationops/byname/before
-#### Return: 
+##### GET /api/protected/relationops/{id}
+Returns the temporal relation operator with the specified numerical unique id.
+
+###### Example:
+URL: https://localhost:8443/eureka-services/api/protected/relationops/1
+
+Returns:
+```
 {"id":1,"name":"before","description":"before","rank":1,"type":"SEQUENTIAL","default":true}
+```
+
+##### GET /api/protected/relationops/byname/{name}
+Returns the temporal relation operator with the specified unique name.
+
+###### Example:
+URL: https://localhost:8443/eureka-services/api/protected/relationops/byname/before
+
+Returns: 
+```
+{"id":1,"name":"before","description":"before","rank":1,"type":"SEQUENTIAL","default":true}
+```
 
 ## Value threshold operators
 
