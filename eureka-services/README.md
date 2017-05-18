@@ -1067,53 +1067,197 @@ Returns:
 ```
 
 ##### POST `/api/protected/phenotypes`
-Creates a new concept.
+Stores a new phenotype.
 
 ##### PUT `/api/protected/phenotypes`
-Saves an existing concept.
+Saves an existing phenotype.
 
 ##### DELETE `/api/protected/phenotypes/{userId}/{key}`
-Deletes the specified concept.
+Deletes the specified phenotype.
 
 ### `/api/protected/concepts`
+System concepts provided by the system.
 
-### GET /api/protected/concepts
+#### Role-based authorization
+Must have `researcher` role.
+
+#### Requires successful authentication
+Yes
+
+#### Concept object
+Representation of concepts provided by the system. They are read-only.
+
+Properties:
+* `id`: always `null`.
+* `key`: required unique name of the concept.
+* `userId`: always `null`.
+* `description`: optional description of the concept.
+* `displayName`: optional user-visible name for the concept.
+* `inSystem`: required boolean indicating whether it is a concept provided by the system. Always `true`.
+* `created`: required timestamp, in milliseconds since the epoch, indicating when the concept was created (set by the server).
+* `lastModified`: timestamp, in milliseconds since the epoch, indicating when the concept was last modified (set by the server).
+* `summarized`: read-only boolean indicating whether the concept was retrieved with the `summarize` query parameter set to `true`.
+* `type`: the type of concept, always `SYSTEM`.
+* `internalNode`: read-only boolean indicating whether the concept has any children.
+* `systemType`: required, one of `CONSTANT`, `EVENT`, `PRIMITIVE_PARAMETER`, `LOW_LEVEL_ABSTRACTION`, `COMPOUND_LOW_LEVEL_ABSTRACTION`, `HIGH_LEVEL_ABSTRACTION`, `SLICE_ABSTRACTION`, `SEQUENTIAL_TEMPORAL_PATTERN_ABSTRACTION`, `CONTEXT`.
+* `children`: an array of Concept objects.
+* `isParent`: whether this concept has any children.
+* `properties`: array of property names.
+
+#### Calls
+Uses status codes as specified in the [Eureka! Clinical microservice specification](https://github.com/eurekaclinical/dev-wiki/wiki/Eureka%21-Clinical-microservice-specification).
+
+##### GET `/api/protected/concepts[?summarize=true]`
 Returns the top-level system concepts accessible by the current user. Optionally, return each concept in a summarized form suitable for listing.
-#### Example:
-#### URL: 
-https://localhost:8443/eureka-services/api/protected/concepts
-#### Return: 
-[{"type":"SYSTEM","id":null,"key":"Patient","userId":null,"description":"","displayName":"Patient","inSystem":true,"created":null,"lastModified":null,"summarized":true,"internalNode":false,"systemType":"CONSTANT","children":null,"properties":["patientId"],"parent":false},{"type":"SYSTEM","id":null,"key":"PatientDetails","userId":null,"description":"","displayName":"Patient Details","inSystem":true,"created":null,"lastModified":null,"summarized":true,"internalNode":false,"systemType":"CONSTANT","children":null,"properties":["ageInYears","dateOfBirth","dateOfDeath","gender","language","maritalStatus","race","vitalStatus","patientId"],"parent":false},{"type":"SYSTEM","id":null,"key":"Encounter","userId":null,"description":"","displayName":"Encounter","inSystem":true,"created":null,"lastModified":null,"summarized":true,"internalNode":false,"systemType":"EVENT","children":null,"properties":["age","type","encounterId"],"parent":false},{"type":"SYSTEM","id":null,"key":"VitalSign","userId":null,"description":"","displayName":"Vital Sign","inSystem":true,"created":null,"lastModified":null,"summarized":true,"internalNode":true,"systemType":"PRIMITIVE_PARAMETER","children":null,"properties":[],"parent":true},{"type":"SYSTEM","id":null,"key":"\\ACT\\Medications\\","userId":null,"description":"","displayName":"Medications","inSystem":true,"created":null,"lastModified":null,"summarized":true,"internalNode":true,"systemType":"EVENT","children":null,"properties":[],"parent":true},{"type":"SYSTEM","id":null,"key":"ICD9:Diagnoses","userId":null,"description":"","displayName":"ICD9 Diagnosis Codes","inSystem":true,"created":null,"lastModified":null,"summarized":true,"internalNode":true,"systemType":"EVENT","children":null,"properties":["DXPRIORITY"],"parent":true},{"type":"SYSTEM","id":null,"key":"\\ACT\\Labs\\","userId":null,"description":"","displayName":"Lab Test Results","inSystem":true,"created":null,"lastModified":null,"summarized":true,"internalNode":true,"systemType":"PRIMITIVE_PARAMETER","children":null,"properties":[],"parent":true},{"type":"SYSTEM","id":null,"key":"ICD9:Procedures","userId":null,"description":"","displayName":"ICD9 Procedure Codes","inSystem":true,"created":null,"lastModified":null,"summarized":true,"internalNode":true,"systemType":"EVENT","children":null,"properties":[],"parent":true},{"type":"SYSTEM","id":null,"key":"ICD10PCS:Procedures","userId":null,"description":"","displayName":"ICD10 Procedure Codes","inSystem":true,"created":null,"lastModified":null,"summarized":true,"internalNode":true,"systemType":"EVENT","children":null,"properties":[],"parent":true},{"type":"SYSTEM","id":null,"key":"ICD10:Diagnoses","userId":null,"description":"","displayName":"ICD10 Diagnosis Codes","inSystem":true,"created":null,"lastModified":null,"summarized":true,"internalNode":true,"systemType":"EVENT","children":null,"properties":[],"parent":true}]
 
-### POST /api/protected/concepts
+###### Example:
+URL: https://localhost:8443/eureka-services/api/protected/concepts
+
+Returns: 
+```
+[
+  { "type":"SYSTEM",
+    "id":null,
+    "key":"Patient",
+    "userId":null,
+    "description":"",
+    "displayName":"Patient",
+    "inSystem":true,
+    "created":null,
+    "lastModified":null,
+    "summarized":true,
+    "internalNode":false,
+    "systemType":"CONSTANT",
+    "children":null,
+    "properties":["patientId"],
+    "parent":false},
+  { "type":"SYSTEM",
+    "id":null,
+    "key":"PatientDetails",
+    "userId":null,
+    "description":"",
+    "displayName":"Patient Details",
+    "inSystem":true,
+    "created":null,
+    "lastModified":null,
+    "summarized":true,
+    "internalNode":false,
+    "systemType":"CONSTANT",
+    "children":null,
+    "properties": [
+      "ageInYears",
+      "dateOfBirth",
+      "dateOfDeath",
+      "gender",
+      "language",
+      "maritalStatus",
+      "race",
+      "vitalStatus",
+      "patientId"
+    ],
+    "parent":false},
+  { "type":"SYSTEM",
+    "id":null,
+    "key":"Encounter",
+    "userId":null,
+    "description":"",
+    "displayName":"Encounter",
+    "inSystem":true,
+    "created":null,
+    "lastModified":null,
+    "summarized":true,
+    "internalNode":false,
+    "systemType":"EVENT",
+    "children":null,
+    "properties": ["age","type","encounterId"],
+    "parent":false},
+  { "type":"SYSTEM",
+    "id":null,
+    "key":"VitalSign",
+    "userId":null,
+    "description":"",
+    "displayName":"Vital Sign",
+    "inSystem":true,
+    "created":null,
+    "lastModified":null,
+    "summarized":true,
+    "internalNode":true,
+    "systemType":"PRIMITIVE_PARAMETER",
+    "children":null,
+    "properties":[],
+    "parent":true}
+]
+```
+
+##### POST `/api/protected/concepts[?summarize=true]`
+Retrieves the concepts enumerated in the form body. Optionally, returns each concept in a summarized form suitable for listing.
+
 Form parameters:
 * key: The keys of the system concepts of interest (optional). If omitted, the empty list is returned.
 * summarize: yes or no if you want returned concepts in a summarized form suitable for listing (optional).
-Returns the requested system concepts that are accessible by the current user. Optionally, returns each concept in a summarized form suitable for listing.
 
-### GET /api/protected/concepts/{key}
+##### GET `/api/protected/concepts/{key}`
 Gets the requested system concept with the specified key or the 404 (NOT FOUND) status code if no such system concept exists and is accessible to the current user. 
-#### Example:
-#### URL: 
-https://localhost:8443/eureka-services/api/protected/concepts/Patient
-#### Return: 
-{"type":"SYSTEM","id":null,"key":"Patient","userId":null,"description":"","displayName":"Patient","inSystem":true,"created":null,"lastModified":null,"summarized":false,"internalNode":false,"systemType":"CONSTANT","children":[],"properties":["patientId"],"parent":false}
 
-### GET /api/protected/concepts/propsearch/{searchKey}
-Gets the system concepts with the specified text in their display name, case insensitive.
-#### Example:
-#### URL: 
-https://localhost:8443/eureka-services/api/protected/concepts/propsearch/ICD9%20Procedure%20Codes
-#### Return: 
-[{"type":"SYSTEM","id":null,"key":"ICD9:Procedures","userId":null,"description":"","displayName":"ICD9 Procedure Codes","inSystem":true,"created":null,"lastModified":null,"summarized":true,"internalNode":true,"systemType":"EVENT","children":null,"properties":[],"parent":true}]
+###### Example:
+URL: https://localhost:8443/eureka-services/api/protected/concepts/Patient
 
-### GET /api/protected/concepts/search/{searchKey}
-Gets a list of the keys of the system concepts with the specified text in their display name, case insensitive.
-#### Example:
-#### URL: 
-https://localhost:8443/eureka-services/api/protected/concepts/search/Patient
-#### Return: 
-["ICD10:Diagnoses","ICD10:S00-T88","ICD10:S00-S09","ICD10:S06","ICD10:S06.3","ICD10:S06.37","ICD10:S06.376","ICD10:S06.6","ICD10:S06.6X","ICD10:S06.6X6","ICD10:S06.33","ICD10:S06.336","ICD10:S06.8","ICD10:S06.81","ICD9:Diagnoses","ICD9:V-codes","ICD9:V70-V82","ICD9:V76","ICD9:V76.1","ICD10:Z00-Z99","ICD10:Z40-Z53","ICD10:Z53","ICD10:Z53.2","ICD10:T30-T32","ICD10:T30","ICD9:E-codes","ICD9:E870-E879","ICD10:S06.89","ICD10:S06.82","ICD10:S06.30","ICD10:V00-Y99","ICD10:Y83-Y84","ICD10:Y84","ICD10:S06.38","ICD10:S06.386","ICD10:S06.306","ICD10:S06.0","ICD10:S06.0X","ICD10:S06.0X6","ICD10:S06.34","ICD10:S06.346","ICD10:S06.4","ICD10:S06.4X","ICD10:S06.4X6","ICD10:Y90-Y99","ICD10:Y92","ICD10:Y92.2","ICD10:Y92.23","ICD10:S06.32","ICD10:S06.326","ICD10:S06.31","ICD10:S06.36","ICD10:S06.366","ICD10:F01-F99","ICD10:F60-F69","ICD10:F68","ICD10:S06.2","ICD10:S06.2X","ICD10:S06.9","ICD10:S06.9X","ICD10:S06.9X6","ICD10:S06.1","ICD10:S06.1X","ICD10:S06.1X6","ICD10:Z77-Z99","ICD10:Z91","ICD10:Z91.1","ICD10:S06.826","ICD9:V60-V69","ICD9:V68","ICD9:V68.8","ICD10:O00-O9A","ICD10:O20-O29","ICD10:O26","ICD10:Y62-Y69","ICD10:Y65","ICD10:Y65.5","ICD10:R00-R99","ICD10:R90-R94","ICD10:R93","ICD10:Y92.5","ICD10:Y92.53","ICD10:S06.2X6","ICD10:Z20-Z28","ICD10:Z28","ICD10:Z28.2","ICD10:S06.316","ICD10:S06.35","ICD10:S06.356","ICD9:E878","ICD10:S06.5","ICD10:S06.5X","ICD10:Z91.13","ICD9:V64","ICD10:S06.896","ICD10:S06.816","ICD9:E873","ICD10:Y63","ICD10:Z91.12","ICD10:Z30-Z39","ICD10:Z31","ICD10:Z31.4","ICD10:Z31.44","ICD10:Z28.0","ICD9:E879","ICD9:E875","ICD10:Z69-Z76","ICD10:Z76","ICD10:Z76.8","ICD10:Z53.0","ICD10:S06.5X6","ICD10:O26.2","ICD10:Z70","ICD10:Y83","ICD10:Z28.8","ICD10:Z31.8"]
+Returns:
+```
+{ "type":"SYSTEM",
+  "id":null,
+  "key":"Patient",
+  "userId":null,
+  "description":"",
+  "displayName":"Patient",
+  "inSystem":true,
+  "created":null,
+  "lastModified":null,
+  "summarized":false,
+  "internalNode":false,
+  "systemType":"CONSTANT",
+  "children":[],
+  "properties":["patientId"],
+  "parent":false }
+```
+
+##### GET `/api/protected/concepts/propsearch/{searchKey}`
+Gets the concepts with the specified text in their display name, case insensitive.
+
+###### Example:
+URL: https://localhost:8443/eureka-services/api/protected/concepts/propsearch/ICD9%20Procedure%20Codes
+
+Returns: 
+```
+[
+  { "type":"SYSTEM",
+    "id":null,
+    "key":"ICD9:Procedures",
+    "userId":null,
+    "description":"",
+    "displayName":"ICD9 Procedure Codes",
+    "inSystem":true,
+    "created":null,
+    "lastModified":null,
+    "summarized":true,
+    "internalNode":true,
+    "systemType":"EVENT",
+    "children":null,
+    "properties":[],
+    "parent":true}
+]
+```
+
+##### GET `/api/protected/concepts/search/{searchKey}`
+Gets an array of the keys of the system concepts with the specified text in their display name, case insensitive.
+
+###### Example:
+URL: https://localhost:8443/eureka-services/api/protected/concepts/search/ICD10:Diagnoses
+
+Returns:
+```
+["ICD10:Diagnoses", "ICD10:S00-T88", "ICD10:S00-S09", ...]
+```
 
 ## Building it
 See the parent project's [README.md](https://github.com/eurekaclinical/eureka/blob/master/README.md).
