@@ -41,7 +41,7 @@ We build Eureka regularly on Mac and Linux. It may also build on Windows.
   * The [cas-server](https://github.com/eurekaclinical/cas) war
 
 ## Proxied REST APIs
-You can call all of [eureka](https://github.com/eurekaclinical/eurekaclinical-user-service)'s REST APIs through a proxy provided by `eureka-webapp`. The proxy will forward selected calls to `eureka-protempa-etl` and [eurekaclinical-user-service](https://github.com/eurekaclinical/eurekaclinical-user-service). All other valid URLs will be forwarded to `eureka-services`. Replace `/protected/api` with `/proxy-resource` in your URLs. See the documentation 
+You can call all of [eureka](https://github.com/eurekaclinical/eurekaclinical-user-service)'s REST APIs through a proxy provided by `eureka-webapp`. The proxy will forward selected calls to `eureka-protempa-etl` and [eurekaclinical-user-service](https://github.com/eurekaclinical/eurekaclinical-user-service). All other valid URLs will be forwarded to `eureka-services`. Replace `/protected/api` with `/proxy-resource` in your URLs. See the READMEs for each of these service projects for REST endpoint documentation.
 ### Proxy calls that are forwarded to `eureka-protempa-etl`
 * `/proxy-resource/file`
 * `/proxy-resource/output`
