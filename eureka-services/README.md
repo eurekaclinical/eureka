@@ -151,7 +151,8 @@ Gets all jobs for the current user. Optionally, you can specify whether jobs wil
 ###### Example:
 URL: https://localhost:8443/eureka-services/api/protected/jobs?order=desc
 
-Return: 
+Return:
+```
 [
   { "id":2,
     "startTimestamp":1483992674788,
@@ -200,6 +201,7 @@ Return:
     "finishTimestamp":1483992511412
   }
 ]
+```
 
 ### GET /api/protected/jobs/status?jobId=jobId&userId=userId&state=foo&from=bar&to=baz
 Gets all jobs for the current user, optionally filtered by job id, user id, state and/or date range (from date, to date).
