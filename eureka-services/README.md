@@ -58,9 +58,20 @@ Properties:
 * `updateDate`: boolean indicating whether to update or replace data:
   * `true`: update data
   * `false`: replace data
-* `prompts`: an array of SourceConfig objects containing any parameters for accessing the specified data source.
+* `prompts`: an array of SourceConfig objects containing any parameters for accessing the specified data source (see below).
 * `propositionIds`: the keys of the data and/or phenotypes to retrieve from the data source.
 * `name`: optional name for the job.
+
+#### SourceConfig object
+For specifying values of a source config's parameters.
+
+Properties:
+* `id`: the unique id string of the source config.
+* `dataSourceBackends`: an array representing the data source backends that are being parameterized:
+  * `id`: the id string of the data source backend.
+  * `options`: an array of the parameters to set
+    * `name`: the unique name of the parameter
+    * `value`: the value of the parameter
 
 #### Job object
 Created internally when a job is created. This object is read-only.
