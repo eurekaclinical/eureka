@@ -532,58 +532,131 @@ Returns:
 ```
 {"id":1,"name":"before","description":"before","rank":1,"type":"SEQUENTIAL","default":true}
 ```
+### `/api/protected/thresholdops`
+Read-only, enumerates the allows types of value threshold operations.
 
-## Value threshold operators
+#### Role-based authorization
+None
 
-### GET /api/protected/thresholdsops
+#### Requires successful authentication
+Yes
+
+#### ThresholdOp object
+
+#### Calls
+Uses status codes as specified in the [Eureka! Clinical microservice specification](https://github.com/eurekaclinical/dev-wiki/wiki/Eureka%21-Clinical-microservice-specification).
+
+##### GET /api/protected/thresholdops
 Gets a list of the supported value threshold operators.
-#### Example:
-#### URL: 
-https://localhost:8443/eureka-services/api/protected/thresholdsops
-#### Return: 
+
+###### Example:
+URL: https://localhost:8443/eureka-services/api/protected/thresholdsops
+
+Returns:
+```
 [{"id":1,"name":"any","description":"any"},{"id":2,"name":"all","description":"all"}]
+```
 
-### GET /api/protected/thresholdsops/{id}
-Returns the value threshold operator with the specified numerical unique id, or a 404 (NOT FOUND) status code if no value threshold operator exists with the specified id.
-#### Example:
-#### URL: 
-https://localhost:8443/eureka-services/api/protected/thresholdsops/1
-#### Return: 
+##### GET /api/protected/thresholdsops/{id}
+Returns the value threshold operator with the specified numerical unique id.
+
+###### Example:
+URL: https://localhost:8443/eureka-services/api/protected/thresholdsops/1
+
+Returns:
+```
 {"id":1,"name":"any","description":"any"}
+```
 
-### GET /api/protected/thresholdsops/byname/{name}
-Returns the value threshold operator with the specified unique name, or a 404 (NOT FOUND) status code if no value threshold operator with the specified name is supported.
-#### Example:
-#### URL: 
-https://localhost:8443/eureka-services/api/protected/thresholdsops/byname/any
-#### Return: 
+##### GET /api/protected/thresholdsops/byname/{name}
+Returns the value threshold operator with the specified unique name.
+
+###### Example:
+URL: https://localhost:8443/eureka-services/api/protected/thresholdsops/byname/any
+
+Returns:
+```
 {"id":1,"name":"any","description":"any"}
+```
 
-## Value comparators
+### `/api/protected/valuecomps`
+Read-only, enumerates the allows types of value comparators.
 
-### GET /api/protected/valuecomps
+#### Role-based authorization
+None
+
+#### Requires successful authentication
+Yes
+
+#### ValueComparator object
+Properties:
+* `id`: unique numerical id of the relation operator.
+* `name`: unique name of the relation operator.
+* `description`: unique description of the relation operator.
+
+#### Calls
+##### GET /api/protected/valuecomps
 Gets a list of the supported value comparators in rank order.
-#### Example:
-#### URL: 
-https://localhost:8443/eureka-services/api/protected/valuecomps
-#### Return: 
-[{"id":5,"name":"<","description":"less than","threshold":"UPPER_ONLY","rank":1},{"id":6,"name":"<=","description":"less than or equal to","threshold":"UPPER_ONLY","rank":2},{"id":1,"name":"=","description":"equals","threshold":"BOTH","rank":3},{"id":2,"name":"not=","description":"not equals","threshold":"BOTH","rank":4},{"id":3,"name":">","description":"greater than","threshold":"LOWER_ONLY","rank":5},{"id":4,"name":">=","description":"greater than or equal to","threshold":"LOWER_ONLY","rank":6}]
 
-### GET /api/protected/valuecomps/{id}
-Returns the value comparator operator with the specified numerical unique id, or a 404 (NOT FOUND) status code if no value comparator operator exists with the specified id.
-#### Example:
-#### URL: 
-https://localhost:8443/eureka-services/api/protected/valuecomps/1
-#### Return: 
-{"id":1,"name":"=","description":"equals","threshold":"BOTH","rank":3}
+###### Example:
+URL: https://localhost:8443/eureka-services/api/protected/valuecomps
 
-### GET /api/protected/valuecomps/byname/{name}
-Returns the value comparator operator with the specified unique name, or a 404 (NOT FOUND) status code if no value comparator operator with the specified name is supported.
-#### Example:
-#### URL: 
-https://localhost:8443/eureka-services/api/protected/valuecomps/byname/=
-#### Return: 
+Returns:
+```
+[
+  { "id":5,
+    "name":"<",
+    "description":"less than",
+    "threshold":"UPPER_ONLY","rank":1}, 
+  { "id":6,
+    "name":"<=",
+    "description":"less than or equal to",
+    "threshold":"UPPER_ONLY",
+    "rank":2},
+  { "id":1,
+    "name":"=",
+    "description":"equals",
+    "threshold":"BOTH",
+    "rank":3},
+  { "id":2,
+    "name":"not=",
+    "description":"not equals",
+    "threshold":"BOTH",
+    "rank":4},
+  { "id":3,
+    "name":">",
+    "description":"greater than",
+    "threshold":"LOWER_ONLY",
+    "rank":5},
+  { "id":4,
+    "name":">=",
+    "description":"greater than or equal to",
+    "threshold":"LOWER_ONLY",
+    "rank":6}
+]
+```
+
+##### GET /api/protected/valuecomps/{id}
+Returns the value comparator operator with the specified numerical unique id.
+
+###### Example:
+URL: https://localhost:8443/eureka-services/api/protected/valuecomps/1
+
+Returns:
+```
 {"id":1,"name":"=","description":"equals","threshold":"BOTH","rank":3}
+```
+
+##### GET /api/protected/valuecomps/byname/{name}
+Returns the value comparator operator with the specified unique name.
+
+###### Example:
+URL: https://localhost:8443/eureka-services/api/protected/valuecomps/byname/=
+
+Returns:
+```
+{"id":1,"name":"=","description":"equals","threshold":"BOTH","rank":3}
+```
 
 ## Time units
 
