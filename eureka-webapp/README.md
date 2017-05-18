@@ -25,8 +25,8 @@ to make the application more usable on mobile devices.
 * [Oracle Java JRE 8](http://www.oracle.com/technetwork/java/javase/overview/index.html)
 * [Tomcat 7](https://tomcat.apache.org)
 * Also running
-  * The [eureka-services](https://github.com/eurekaclinical/eureka/eureka-services) war
-  * The [eureka-protempa-etl](https://github.com/eurekaclinical/eureka/eureka-protempa-etl) war
+  * The [eureka-services](https://github.com/eurekaclinical/eureka/tree/master/eureka-services) war
+  * The [eureka-protempa-etl](https://github.com/eurekaclinical/eureka/tree/master/eureka-protempa-etl) war
   * The [eurekaclinical-user-webapp](https://github.com/eurekaclinical/eurekaclinical-user-webapp) war
   * The [eurekaclinical-user-service](https://github.com/eurekaclinical/eurekaclinical-user-service) war
   * The [cas-server](https://github.com/eurekaclinical/cas) war
@@ -64,20 +64,20 @@ A Tomcat restart is required to detect any changes to the configuration file.
 ### WAR installation
 1) Stop Tomcat.
 2) Remove any old copies of the unpacked war from Tomcat's webapps directory.
-3) Copy the warfile into the Tomcat webapps directory, renaming it to remove the version. For example, rename `eurekaclinical-user-webapp-1.0.war` to `eurekaclinical-user-webapp.war`.
+3) Copy the warfile into the Tomcat webapps directory, renaming it to remove the version if necessary. For example, rename `eureka-webapp-1.0.war` to `eureka-webapp.war`.
 4) Start Tomcat.
 
 ## Maven dependency
 ```
 <dependency>
     <groupId>org.eurekaclinical</groupId>
-    <artifactId>eurekaclinical-user-webapp</artifactId>
+    <artifactId>eureka-webapp</artifactId>
     <version>version</version>
 </dependency>
 ```
 
 ## Developer documentation
-* [Javadoc for latest development release](http://javadoc.io/doc/org.eurekaclinical/eurekaclinical-user-webapp) [![Javadocs](http://javadoc.io/badge/org.eurekaclinical/eurekaclinical-user-webapp.svg)](http://javadoc.io/doc/org.eurekaclinical/eurekaclinical-user-webapp)
+* [Javadoc for latest development release](http://javadoc.io/doc/org.eurekaclinical/eureka-webapp) [![Javadocs](http://javadoc.io/badge/org.eurekaclinical/eureka-webapp.svg)](http://javadoc.io/doc/org.eurekaclinical/eureka-webapp)
 
 ## Getting help
 Feel free to contact us at help@eurekaclinical.org.
