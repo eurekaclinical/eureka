@@ -110,24 +110,26 @@ Properties:
 * `displayName`: optional name for the link to display in a user interface.
 
 #### Calls
+Uses status codes as specified in the [Eureka! Clinical microservice specification](https://github.com/eurekaclinical/dev-wiki/wiki/Eureka%21-Clinical-microservice-specification).
+
 ##### POST /api/protected/jobs
-Submits a job. A JobSpec object is passed in as the body of the request. Returns the URI representing the job. Uses status codes as specified in the [Eureka! Clinical microservice specification](https://github.com/eurekaclinical/dev-wiki/wiki/Eureka%21-Clinical-microservice-specification).
+Submits a job. A JobSpec object is passed in as the body of the request. Returns the URI representing the corresponding Job object.
 
-#### GET /api/protected/jobs/{id}
-Gets the job with the specified numerical unique id.
-##### Example:
-##### URL: 
-https://localhost:8443/eureka-services/api/protected/jobs/1
-##### Return: 
+##### GET /api/protected/jobs/{id}
+Gets the Job with the specified numerical unique id.
+###### Example:
+URL: https://localhost:8443/eureka-services/api/protected/jobs/1
+Return: 
+```
 {"id":1,"startTimestamp":1483992452240,"sourceConfigId":"Spreadsheet","destinationId":"Load into i2b2 on localhost with Eureka ontology","username":"superuser","status":"COMPLETED","jobEvents":[{"id":1,"status":"STARTED","exceptionStackTrace":null,"timeStamp":1483992452303,"message":"Processing started"},{"id":2,"status":"COMPLETED","exceptionStackTrace":null,"timeStamp":1483992511412,"message":"Processing completed without error"}],"links":[],"getStatisticsSupported":false,"finishTimestamp":1483992511412}
+```
 
-### GET /api/protected/jobs[?order=asc|desc]
-Gets all jobs for the current user.
-Optionally, specify whether jobs will be returned in ascending or descending order.
-#### Example:
-#### URL: 
-https://localhost:8443/eureka-services/api/protected/jobs?order=desc
-#### Return: 
+##### GET /api/protected/jobs[?order=asc|desc]
+Gets all jobs for the current user. Optionally, you can specify whether jobs will be returned in ascending or descending order.
+
+###### Example:
+URL: https://localhost:8443/eureka-services/api/protected/jobs?order=desc
+Return: 
 [{"id":2,"startTimestamp":1483992674788,"sourceConfigId":"Spreadsheet","destinationId":"Load into i2b2 on localhost with Eureka ontology","username":"superuser","status":"COMPLETED","jobEvents":[{"id":3,"status":"STARTED","exceptionStackTrace":null,"timeStamp":1483992674792,"message":"Processing started"},{"id":4,"status":"COMPLETED","exceptionStackTrace":null,"timeStamp":1483992752190,"message":"Processing completed without error"}],"links":[],"getStatisticsSupported":false,"finishTimestamp":1483992752190},{"id":1,"startTimestamp":1483992452240,"sourceConfigId":"Spreadsheet","destinationId":"Load into i2b2 on localhost with Eureka ontology","username":"superuser","status":"COMPLETED","jobEvents":[{"id":1,"status":"STARTED","exceptionStackTrace":null,"timeStamp":1483992452303,"message":"Processing started"},{"id":2,"status":"COMPLETED","exceptionStackTrace":null,"timeStamp":1483992511412,"message":"Processing completed without error"}],"links":[],"getStatisticsSupported":false,"finishTimestamp":1483992511412}]
 
 ### GET /api/protected/jobs/status?jobId=jobId&userId=userId&state=foo&from=bar&to=baz
