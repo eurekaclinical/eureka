@@ -7,7 +7,7 @@ It provides backend services for managing phenotypes, cohorts and running phenot
 ## Version 3.0 development series
 Latest release: [![Latest release](https://maven-badges.herokuapp.com/maven-central/org.eurekaclinical/eureka-services/badge.svg)](https://maven-badges.herokuapp.com/maven-central/org.eurekaclinical/eureka-services)
 
-Version 3 will refactor the `eureka-services` and `eureka-protempa` modules to migrate from a layer architecture to a microservice architecture. It also will improve performance.
+Version 3 will refactor the `eureka-services` and `eureka-protempa-etl` modules to migrate from a layer architecture to a microservice architecture. It also will improve performance.
 
 ## Version history
 ### Version 2.5.2
