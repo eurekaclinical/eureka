@@ -25,8 +25,8 @@ to make the application more usable on mobile devices.
 * [Oracle Java JRE 8](http://www.oracle.com/technetwork/java/javase/overview/index.html)
 * [Tomcat 7](https://tomcat.apache.org)
 * Also running
-  * The [eureka-services](https://github.com/eurekaclinical/eureka-services) war
-  * The [eureka-protempa-etl](https://github.com/eurekaclinical/eureka-protempa-etl) war
+  * The [eureka-services](https://github.com/eurekaclinical/eureka/eureka-services) war
+  * The [eureka-protempa-etl](https://github.com/eurekaclinical/eureka/eureka-protempa-etl) war
   * The [eurekaclinical-user-webapp](https://github.com/eurekaclinical/eurekaclinical-user-webapp) war
   * The [eurekaclinical-user-service](https://github.com/eurekaclinical/eurekaclinical-user-service) war
   * The [cas-server](https://github.com/eurekaclinical/cas) war
