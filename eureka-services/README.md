@@ -288,26 +288,26 @@ Yes
 Destinations are job actions that create a resource. They all have the following properties:
 
 Properties:
-`id`: unique number identifying the cohort (set by the server on object creation, and required thereafter).
-`type`: always must have value `COHORT`.
-`name`: required unique name of the cohort.
-`description`: an optional description of the cohort.
-`links`: an array of Link objects that point to resources related to the cohort see Link object above.
-`ownerUserId`: required username string of the owning user.
-`read`: required boolean indicating whether the user may read this object.
-`write`: required boolean indicating whether the user may update this object.
-`execute`: required boolean indicating whether the user may use this cohort specification as an action.
-`createdAt`: timestamp, in milliseconds since the epoch, indicating when this cohort specification was created; populated server-side.
-`updatedAt`: timestamp, in milliseconds since the epoch, indicating when this cohort specification was updated; populated server-side.
-`getStatisticsSupported`: required boolean indicating whether the resource created by a job executing this action supports getting statistics.
-`jobConceptListSupported`: required boolean indicating whether a job executing this action has a concept/phenotype list.
-`requiredConcepts`: any concepts or phenotypes that must be in the concept list.
+* `id`: unique number identifying the cohort (set by the server on object creation, and required thereafter).
+* `type`: always must have value `COHORT`.
+* `name`: required unique name of the cohort.
+* `description`: an optional description of the cohort.
+* `links`: an array of Link objects that point to resources related to the cohort see Link object above.
+* `ownerUserId`: required username string of the owning user.
+* `read`: required boolean indicating whether the user may read this object.
+* `write`: required boolean indicating whether the user may update this object.
+* `execute`: required boolean indicating whether the user may use this cohort specification as an action.
+* `createdAt`: timestamp, in milliseconds since the epoch, indicating when this cohort specification was created; populated server-side.
+* `updatedAt`: timestamp, in milliseconds since the epoch, indicating when this cohort specification was updated; populated server-side.
+* `getStatisticsSupported`: required boolean indicating whether the resource created by a job executing this action supports getting statistics.
+* `jobConceptListSupported`: required boolean indicating whether a job executing this action has a concept/phenotype list.
+* `requiredConcepts`: any concepts or phenotypes that must be in the concept list.
 
-#### Cohort destination object
-A specification of a patient cohort in terms of concepts and phenotypes. Creates a patient set containing only patients who match the specified criteria.
+#### CohortDestination object
+Creates a patient set containing only patients who match the specified criteria.
 
 Properties:
-* `cohort`: a required Cohort object (see below)
+* `cohort`: a required Cohort object (see below).
 
 #### Cohort object
 A specification of a patient cohort in terms of concepts and phenotypes.
@@ -331,6 +331,18 @@ Properties:
 * `name`: required unique key of the concept or phenotype.
 * `start`: always `null`.
 * `finish`: always `null`.
+
+#### I2b2Destination object
+Populates an i2b2 data warehouse.
+
+Properties:
+No additional properties
+
+#### Neo4jDestination object
+Populates a Neo4j database.
+
+Properties:
+No additional properties.
 
 #### Calls
 Uses status codes as specified in the [Eureka! Clinical microservice specification](https://github.com/eurekaclinical/dev-wiki/wiki/Eureka%21-Clinical-microservice-specification).
