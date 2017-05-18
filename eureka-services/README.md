@@ -347,13 +347,35 @@ No additional properties.
 #### Calls
 Uses status codes as specified in the [Eureka! Clinical microservice specification](https://github.com/eurekaclinical/dev-wiki/wiki/Eureka%21-Clinical-microservice-specification).
 
-### GET /api/protected/destinations[?type=[I2B2,COHORT,PATIENT_SET_SENDER]
-Gets all data destinations visible to the current user.  Optionally, filter the returned destinations by type (I2B2=i2b2 database destination, COHORT=cohort specified in the cohorts screens, PATIENT_SET_SENDER=patient set sender for the i2b2 patient set sender plugin).
-#### Example:
-#### URL: 
-https://localhost:8443/eureka-services/api/protected/destinations?type=I2B2
-#### Return: 
-[{"type":"I2B2","id":1,"name":"Load into i2b2 on localhost with Eureka ontology","description":null,"phenotypeFields":null,"links":[],"ownerUserId":1,"read":true,"write":true,"execute":true,"getStatisticsSupported":true,"jobConceptListSupported":true,"requiredConcepts":["Encounter"],"created_at":1430774820000,"updated_at":1430774820000}]
+##### GET /api/protected/destinations[?type=[I2B2,COHORT,PATIENT_SET_SENDER]
+Gets all data destinations visible to the current user.  Optionally, filter the returned destinations by type:
+* `I2B2`: i2b2 database destination.
+* `COHORT`: Cohort specified in the cohorts screens.
+* `PATIENT_SET_SENDER`: patient set sender.
+
+###### Example:
+URL: https://localhost:8443/eureka-services/api/protected/destinations?type=I2B2
+
+Returns:
+```
+[
+  { "type":"I2B2",
+    "id":1,
+    "name":"Load into i2b2 on localhost with Eureka ontology",
+    "description":null,
+    "phenotypeFields":null,
+    "links[],
+    "ownerUserId":1,
+    "read":true,
+    "write":true,
+    "execute":true,
+    "getStatisticsSupported":true,
+    "jobConceptListSupported":true,
+    "requiredConcepts":["Encounter"],
+    "created_at":1430774820000,
+    "updated_at":1430774820000 }
+]
+```
 
 ### GET /api/protected/destinations/{id}
 Gets the data destination with the specified unique name (id), if it is visible to the current user.
