@@ -595,6 +595,8 @@ Properties:
 * `description`: unique description of the relation operator.
 
 #### Calls
+Uses status codes as specified in the [Eureka! Clinical microservice specification](https://github.com/eurekaclinical/dev-wiki/wiki/Eureka%21-Clinical-microservice-specification).
+
 ##### GET /api/protected/valuecomps
 Gets a list of the supported value comparators in rank order.
 
@@ -658,33 +660,62 @@ Returns:
 {"id":1,"name":"=","description":"equals","threshold":"BOTH","rank":3}
 ```
 
-## Time units
+### `/api/protected/timeunits`
+Read-only, enumerates the allowed time units.
 
-### GET /api/protected/timeunits
-Gets a list of the supported time units in rank order.
-#### Example:
-#### URL: 
-https://localhost:8443/eureka-services/api/protected/timeunits
-#### Return: 
-[{"id":3,"name":"minute","description":"minutes","rank":1,"default":false},{"id":2,"name":"hour","description":"hours","rank":2,"default":false},{"id":1,"name":"day","description":"days","rank":3,"default":true}]
+#### Role-based authorization
+None
 
-### GET /api/protected/timeunits/{id}
-Returns the time unit with the specified numerical unique id, or a 404 (NOT FOUND) status code if no time unit exists with the specified id.
-#### Example:
-#### URL: 
-https://localhost:8443/eureka-services/api/protected/timeunits/1
-#### Return: 
+#### Requires successful authentication
+Yes
+
+#### TimeUnit object
+Properties:
+* `id`: unique numerical id of the time unit.
+* `name`: unique name of the time unit.
+* `description`: unique description of the time unit.
+
+#### Calls
+Uses status codes as specified in the [Eureka! Clinical microservice specification](https://github.com/eurekaclinical/dev-wiki/wiki/Eureka%21-Clinical-microservice-specification).
+
+##### GET `/api/protected/timeunits`
+Gets an array of the supported time units in rank order.
+
+###### Example:
+URL: https://localhost:8443/eureka-services/api/protected/timeunits
+
+Returns:
+```
+[
+  {"id":3,"name":"minute","description":"minutes","rank":1,"default":false},
+  {"id":2,"name":"hour","description":"hours","rank":2,"default":false},
+  {"id":1,"name":"day","description":"days","rank":3,"default":true}
+]
+```
+
+##### GET /api/protected/timeunits/{id}
+Returns the time unit with the specified numerical unique id.
+
+###### Example:
+URL: https://localhost:8443/eureka-services/api/protected/timeunits/1
+
+Returns:
+```
 {"id":1,"name":"day","description":"days","rank":3,"default":true}
+```
 
-### GET /api/protected/timeunits/byname/{name}
-Returns the time unit with the specified unique name, or a 404 (NOT FOUND) status code if no time unit with the specified name is supported.
-#### Example:
-#### URL: 
-https://localhost:8443/eureka-services/api/protected/timeunits/byname/day
-#### Return: 
+##### GET /api/protected/timeunits/byname/{name}
+Returns the time unit with the specified unique name.
+
+###### Example:
+URL: https://localhost:8443/eureka-services/api/protected/timeunits/byname/day
+
+Returns:
+```
 {"id":1,"name":"day","description":"days","rank":3,"default":true}
+```
 
-## Source configs
+### `/api/protected/sourceconfig`
 
 ### GET /api/protected/sourceconfig
 Gets a list of the available source configurations.
@@ -703,7 +734,7 @@ https://localhost:8443/eureka-services/api/protected/sourceconfig/parameters/lis
 ### GET /api/protected/sourceconfig/parameters/{id}
 Returns the parameter names and values for the source configuration with the specified numerical unique id, or the 404 (NOT FOUND) status code if no source configuration with that id exists that is accessible by the current user.
 
-## User-defined concepts
+### `/api/protected/phenotypes`
 
 ### GET /api/protected/phenotypes[?summarize=yes|no]
 Returns the concepts accessible by the current user. Optionally, return each concept in a summarized form suitable for listing.
@@ -730,7 +761,7 @@ Saves an existing concept.
 ### DELETE /api/protected/phenotypes/{userId}/{key}
 Deletes the specified concept.
 
-## System concepts
+### `/api/protected/concepts`
 
 ### GET /api/protected/concepts
 Returns the top-level system concepts accessible by the current user. Optionally, return each concept in a summarized form suitable for listing.
