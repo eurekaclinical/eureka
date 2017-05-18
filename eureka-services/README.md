@@ -31,17 +31,39 @@ The initial version of the Eureka backend is implemented as a layer architecture
   * The [cas-server](https://github.com/eurekaclinical/cas) war
 
 ## REST APIs
-## Job information
+### `/api/protected/jobs`
+Manages phenotyping jobs.
 
-### POST /api/protected/jobs
+#### Role-based authorization
+No
+
+#### Requires successful authentication
+Yes
+
+#### Job object
+Properties:
+* `id`: unique number identifying the job (set by the server on object creation, and required thereafter).
+* `startTimestamp`: read-only timestamp, as milliseconds since the epoch, representing when the job began execution.
+* `finishTimestamp`: read-only timestamp, as milliseconds since the epoch, representing when job execution ended.
+* `sourceConfigId`: required string containing the name of the data source.
+* `destinationId`: required string containing the name of the action.
+* `username`: required string containing the username of who created the job.
+* `status`: required unique string indicating the current status of the job:
+  * `STARTED`: job has started execution.
+  * `COMPLETED`: job has completed without error.
+* `jobEvents`: an array of JobEvent objects (see below).
+* `links`: an array of Link objects (see below).
+* `getStatisticsSupported`: whether 
+
+#### POST /api/protected/jobs
 Submits a job. If successful, returns URL representing the job.
 
-### GET /api/protected/jobs/{id}
+#### GET /api/protected/jobs/{id}
 Gets the job with the specified numerical unique id.
-#### Example:
-#### URL: 
+##### Example:
+##### URL: 
 https://localhost:8443/eureka-services/api/protected/jobs/1
-#### Return: 
+##### Return: 
 {"id":1,"startTimestamp":1483992452240,"sourceConfigId":"Spreadsheet","destinationId":"Load into i2b2 on localhost with Eureka ontology","username":"superuser","status":"COMPLETED","jobEvents":[{"id":1,"status":"STARTED","exceptionStackTrace":null,"timeStamp":1483992452303,"message":"Processing started"},{"id":2,"status":"COMPLETED","exceptionStackTrace":null,"timeStamp":1483992511412,"message":"Processing completed without error"}],"links":[],"getStatisticsSupported":false,"finishTimestamp":1483992511412}
 
 ### GET /api/protected/jobs[?order=asc|desc]
