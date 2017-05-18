@@ -377,48 +377,110 @@ Returns:
 ]
 ```
 
-### GET /api/protected/destinations/{id}
+##### GET /api/protected/destinations/{id}
 Gets the data destination with the specified unique name (id), if it is visible to the current user.
 
-### POST /api/protected/destinations
-Create a new data destination.
-Returns nothing.
+##### POST /api/protected/destinations
+Create a new data destination, returning a URI representing the created destination object.
 
-### PUT /api/protected/destinations
+##### PUT /api/protected/destinations
 Updates an existing data destination
 Returns nothing.
 
-### DELETE /api/protected/destinations/{id}
-Deletes the data destination with the specified unique numerical id.
-Returns nothing.
+##### DELETE /api/protected/destinations/{id}
+Deletes the destination with the specified unique numerical id. Returns nothing.
 
-## Frequency types
+### `/api/protected/frequencytypes`
+Read-only, enumerates the allows types of frequency phenotypes.
 
-### GET /api/protected/frequencytypes
+#### Role-based authorization
+None
+
+#### Requires successful authentication
+Yes
+
+#### FrequencyType object
+Names and describes a frequency type.
+
+Properties:
+* `id`: unique numerical id of the frequency type.
+* `name`: unique name of the frequency type.
+* `description`: unique description of the frequency type.
+
+#### Calls
+Uses status codes as specified in the [Eureka! Clinical microservice specification](https://github.com/eurekaclinical/dev-wiki/wiki/Eureka%21-Clinical-microservice-specification).
+
+##### GET /api/protected/frequencytypes
 Returns a list of possible frequency types in ascending order.
-#### Example:
-#### URL: 
-https://localhost:8443/eureka-services/api/protected/frequencytypes
-#### Return: 
-[{"id":1,"name":"at least","description":"at least","rank":1,"default":true},{"id":2,"name":"first","description":"first","rank":2,"default":false}]
 
-### GET /api/protected/frequencytypes/{id}
-Returns the frequency type with the specified numerical unique id, or a 404 (NOT FOUND) status code if no frequency type with the specified id is supported.
-#### Example:
-#### URL: 
-https://localhost:8443/eureka-services/api/protected/frequencytypes/1
-#### Return: 
-{"id":1,"name":"at least","description":"at least","rank":1,"default":true}
+##### Example:
+URL: https://localhost:8443/eureka-services/api/protected/frequencytypes
 
-### GET /api/protected/frequencytypes/byname/{name}
-Returns the frequency type with the specified unique name, or a 404 (NOT FOUND) status code if no frequency type exists with the specified name.
-#### Example:
-#### URL: 
-https://localhost:8443/eureka-services/api/protected/frequencytypes/byname/at%20least
-#### Return: 
-{"id":1,"name":"at least","description":"at least","rank":1,"default":true}
+Returns:
+```
+[
+  { "id":1,
+    "name":"at least",
+    "description":"at least",
+    "rank":1,
+    "default":true},
+  { "id":2,
+    "name":"first",
+    "description":"first",
+    "rank":2,
+    "default":false}
+]
+```
 
-## Temporal relation operators
+##### GET /api/protected/frequencytypes/{id}
+Returns the frequency type with the specified numerical unique id.
+
+###### Example:
+URL: https://localhost:8443/eureka-services/api/protected/frequencytypes/1
+
+Returns:
+```
+{ "id":1,
+  "name":"at least",
+  "description":"at least",
+  "rank":1,
+  "default":true }
+```
+
+##### GET /api/protected/frequencytypes/byname/{name}
+Returns the frequency type with the specified unique name.
+
+###### Example:
+URL: https://localhost:8443/eureka-services/api/protected/frequencytypes/byname/at%20least
+
+Returns:
+```
+{ "id":1,
+  "name":"at least",
+  "description":"at least",
+  "rank":1,
+  "default":true }
+```
+
+### `/api/protected/relationops`
+Read-only, enumerates the allows types of relation operations.
+
+#### Role-based authorization
+None
+
+#### Requires successful authentication
+Yes
+
+#### RelationOp object
+Names and describes a relation operator.
+
+Properties:
+* `id`: unique numerical id of the relation operator.
+* `name`: unique name of the relation operator.
+* `description`: unique description of the relation operator.
+
+#### Calls
+Uses status codes as specified in the [Eureka! Clinical microservice specification](https://github.com/eurekaclinical/dev-wiki/wiki/Eureka%21-Clinical-microservice-specification).
 
 ### GET /api/protected/relationops
 Gets a list of the possible temporal relation operators in rank order.
