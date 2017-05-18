@@ -48,16 +48,19 @@ Properties:
 * `destinationId`: required string containing the name of the action.
 * `dateRangePhenotypeKey`: optional unique numerical id of a phenotype on which to constrain the date range.
 * `earliestDate`: optional timestamp, as milliseconds since the epoch, indicating the lower bound of the date range.
-* `earliestDateSide`: optional string indicating on which side of the date range phenotype's interval to apply the earliest date; may be:
+* `earliestDateSide`: optional string indicating on which side of the date range phenotype's interval to apply the earliest date; required if a value for `earliestDate` is specified; may be:
   * `START`: the beginning of the interval.
   * `FINISH`: the end of the interval.
 * `latestDate`: optional timestamp, as milliseconds since the epoch, indicating the upper bound of the date range.
-* `latestDateSide`: optional string indicating on which side of the date range phenotype's interval to apply the latest date; may be:
+* `latestDateSide`: string indicating on which side of the date range phenotype's interval to apply the latest date; required if a value for `latestDate` is specified; may be:
   * `START`: the beginning of the interval.
   * `FINISH`: the end of the interval.
 * `updateDate`: boolean indicating whether to update or replace data:
   * `true`: update data
   * `false`: replace data
+* `prompts`: an array of SourceConfig objects containing any parameters for accessing the specified data source.
+* `propositionIds`: the data and/or phenotypes to retrieve from the data source.
+* `name`: optional name for the job.
 
 #### Job object
 Created internally when a job is created. This object is read-only.
