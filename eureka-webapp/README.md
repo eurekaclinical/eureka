@@ -55,6 +55,7 @@ This webapp is configured using a properties file located at `/etc/eureka/applic
 * `eureka.webapp.ephiprohibited`: true or false depending on whether to display that managing ePHI is prohibited; default is true.
 * `eureka.webapp.demomode`: true or false depending on whether to act like a demonstration; default is false.
 * `eureka.services.url`: URL of the server running the services layer; default is https://localhost:8443/eureka-services.
+* `eureka.jstree.searchlimit`: max number of results returned from a concept search; default is 200.
 
 A Tomcat restart is required to detect any changes to the configuration file.
 
