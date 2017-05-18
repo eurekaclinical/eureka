@@ -46,7 +46,7 @@ Used to submit a job request.
 Properties:
 * `sourceConfigId`: required string containing the name of the data source.
 * `destinationId`: required string containing the name of the action.
-* `dateRangePhenotypeKey`: optional unique numerical id of a phenotype on which to constrain the date range.
+* `dateRangePhenotypeKey`: optional unique key of a phenotype or concept on which to constrain the date range.
 * `earliestDate`: optional timestamp, as milliseconds since the epoch, indicating the lower bound of the date range.
 * `earliestDateSide`: optional string indicating on which side of the date range phenotype's interval to apply the earliest date; required if a value for `earliestDate` is specified; may be:
   * `START`: the beginning of the interval.
@@ -59,7 +59,7 @@ Properties:
   * `true`: update data
   * `false`: replace data
 * `prompts`: an array of SourceConfig objects containing any parameters for accessing the specified data source.
-* `propositionIds`: the data and/or phenotypes to retrieve from the data source.
+* `propositionIds`: the keys of the data and/or phenotypes to retrieve from the data source.
 * `name`: optional name for the job.
 
 #### Job object
@@ -109,6 +109,14 @@ Represents a hyperlink to a resource created by the job.
 Properties:
 * `url`: required URL of the hyperlink.
 * `displayName`: optional name for the link to display in a user interface.
+
+#### Statistics object
+Represents summary statistics of the resource created by the job.
+
+Properties:
+* `numberOfKeys`: the number of patients in the resource.
+* `counts`: a map of concept or phenotype to the number of times it appears in the resource.
+* `childrenToParents`: a map from each concept or phenotype to its parent concepts or phenotypes.
 
 #### Calls
 Uses status codes as specified in the [Eureka! Clinical microservice specification](https://github.com/eurekaclinical/dev-wiki/wiki/Eureka%21-Clinical-microservice-specification).
@@ -205,11 +213,11 @@ Return:
 ##### GET /api/protected/jobs/status?jobId=jobId&userId=userId&state=foo&from=bar&to=baz
 Gets an array of all Jobs for the current user, optionally filtered by job id, user id, state (status) and/or date range (from date, to date).
 
-##### GET /api/protected/jobs/{jobId}/stats/{key}
-Gets summary statistics for the specified Job.
+##### GET /api/protected/jobs/{jobId}/stats[/{key}]
+Gets a Statistics object for the specified Job, optionally constraining the results to statistics about the concept or phenotype with the specified key.
 
 ##### GET /api/protected/jobs/latest
-Gets the latest submitted Job for the user.
+Gets the most recently submitted Job for the user.
 
 ###### Example:
 URL: https://localhost:8443/eureka-services/api/protected/jobs/latest
