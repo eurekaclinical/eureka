@@ -41,19 +41,51 @@ No
 Yes
 
 #### Job object
+Created internally when a job is created. This object is read-only.
+
 Properties:
-* `id`: unique number identifying the job (set by the server on object creation, and required thereafter).
-* `startTimestamp`: read-only timestamp, as milliseconds since the epoch, representing when the job began execution.
-* `finishTimestamp`: read-only timestamp, as milliseconds since the epoch, representing when job execution ended.
+* `id`: unique number identifying the job.
+* `startTimestamp`: required timestamp, as milliseconds since the epoch, representing when the job began execution.
+* `finishTimestamp`: required timestamp, as milliseconds since the epoch, representing when job execution ended.
 * `sourceConfigId`: required string containing the name of the data source.
 * `destinationId`: required string containing the name of the action.
 * `username`: required string containing the username of who created the job.
-* `status`: required unique string indicating the current status of the job:
+* `status`: required string indicating the current status of the job:
+  * `STARTING`: job is received but has not started yet.
+  * `VALIDATING`: job is being validated.
+  * `VALIDATED`: job has passed validation.
   * `STARTED`: job has started execution.
   * `COMPLETED`: job has completed without error.
-* `jobEvents`: an array of JobEvent objects (see below).
-* `links`: an array of Link objects (see below).
-* `getStatisticsSupported`: whether 
+  * `WARNING`: job has thrown a non-fatal warning.
+  * `ERROR`: job has thrown a fatal error.
+  * `FAILED`: job has completed in error.
+* `jobEvents`: an array of JobEvent objects indicating job status (see below).
+* `links`: an array of Link objects that point to resources created by the job (see below).
+
+#### JobEvent object
+Represents events occurring during the execution of a job. This object is read-only.
+
+Properties:
+* `id`: unique number identifying the job event.
+* `status`: the status of the job.
+  * `STARTING`: job is received but has not started yet.
+  * `VALIDATING`: job is being validated.
+  * `VALIDATED`: job has passed validation.
+  * `STARTED`: job has started execution.
+  * `COMPLETED`: job has completed without error.
+  * `WARNING`: job has thrown a non-fatal warning.
+  * `ERROR`: job has thrown a fatal error.
+  * `FAILED`: job has completed in error.
+* `message`: optionally provides additional descriptive information for the job event.
+* `exceptionStackTrace`: populated in job events with `ERROR` status with a stack trace.
+* `timeStamp`: the timestamp, as milliseconds since the epoch, when this event occurred.
+
+#### Link object
+Represents a resource created by the job.
+
+Properties:
+* `url`: required URL of the link.
+* `displayName`: optional name for the link to display in a user interface.
 
 #### POST /api/protected/jobs
 Submits a job. If successful, returns URL representing the job.
