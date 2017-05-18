@@ -132,10 +132,10 @@ Properties:
 #### Calls
 Uses status codes as specified in the [Eureka! Clinical microservice specification](https://github.com/eurekaclinical/dev-wiki/wiki/Eureka%21-Clinical-microservice-specification).
 
-##### POST /api/protected/jobs
+##### POST `/api/protected/jobs`
 Submits a job. A JobSpec object is passed in as the body of the request. Returns the URI representing the corresponding Job object.
 
-##### GET /api/protected/jobs/{id}
+##### GET `/api/protected/jobs/{id}`
 Gets the Job with the specified numerical unique id.
 ###### Example:
 URL: https://localhost:8443/eureka-services/api/protected/jobs/1
@@ -165,7 +165,7 @@ Return:
 }
 ```
 
-##### GET /api/protected/jobs[?order=asc|desc]
+##### GET `/api/protected/jobs[?order=asc|desc]`
 Gets all jobs for the current user. Optionally, you can specify whether jobs will be returned in ascending or descending order.
 
 ###### Example:
@@ -221,13 +221,13 @@ Return:
 ]
 ```
 
-##### GET /api/protected/jobs/status?jobId=jobId&userId=userId&state=foo&from=bar&to=baz
+##### GET `/api/protected/jobs/status?jobId=jobId&userId=userId&state=foo&from=bar&to=baz`
 Gets an array of all Jobs for the current user, optionally filtered by job id, user id, state (status) and/or date range (from date, to date).
 
-##### GET /api/protected/jobs/{jobId}/stats[/{key}]
+##### GET `/api/protected/jobs/{jobId}/stats[/{key}]`
 Gets a Statistics object for the specified Job, optionally constraining the results to statistics about the concept or phenotype with the specified key.
 
-##### GET /api/protected/jobs/latest
+##### GET `/api/protected/jobs/latest`
 Gets the most recently submitted Job for the user.
 
 ###### Example:
@@ -347,7 +347,7 @@ No additional properties.
 #### Calls
 Uses status codes as specified in the [Eureka! Clinical microservice specification](https://github.com/eurekaclinical/dev-wiki/wiki/Eureka%21-Clinical-microservice-specification).
 
-##### GET /api/protected/destinations[?type=[I2B2,COHORT,PATIENT_SET_SENDER]
+##### GET `/api/protected/destinations[?type=[I2B2,COHORT,PATIENT_SET_SENDER]`
 Gets all data destinations visible to the current user.  Optionally, filter the returned destinations by type:
 * `I2B2`: i2b2 database destination.
 * `COHORT`: Cohort specified in the cohorts screens.
@@ -377,17 +377,17 @@ Returns:
 ]
 ```
 
-##### GET /api/protected/destinations/{id}
+##### GET `/api/protected/destinations/{id}`
 Gets the data destination with the specified unique name (id), if it is visible to the current user.
 
-##### POST /api/protected/destinations
+##### POST `/api/protected/destinations`
 Create a new data destination, returning a URI representing the created destination object.
 
-##### PUT /api/protected/destinations
+##### PUT `/api/protected/destinations`
 Updates an existing data destination
 Returns nothing.
 
-##### DELETE /api/protected/destinations/{id}
+##### DELETE `/api/protected/destinations/{id}`
 Deletes the destination with the specified unique numerical id. Returns nothing.
 
 ### `/api/protected/frequencytypes`
@@ -410,7 +410,7 @@ Properties:
 #### Calls
 Uses status codes as specified in the [Eureka! Clinical microservice specification](https://github.com/eurekaclinical/dev-wiki/wiki/Eureka%21-Clinical-microservice-specification).
 
-##### GET /api/protected/frequencytypes
+##### GET `/api/protected/frequencytypes`
 Returns a list of possible frequency types in ascending order.
 
 ##### Example:
@@ -432,7 +432,7 @@ Returns:
 ]
 ```
 
-##### GET /api/protected/frequencytypes/{id}
+##### GET `/api/protected/frequencytypes/{id}`
 Returns the frequency type with the specified numerical unique id.
 
 ###### Example:
@@ -447,7 +447,7 @@ Returns:
   "default":true }
 ```
 
-##### GET /api/protected/frequencytypes/byname/{name}
+##### GET `/api/protected/frequencytypes/byname/{name}`
 Returns the frequency type with the specified unique name.
 
 ###### Example:
@@ -482,7 +482,7 @@ Properties:
 #### Calls
 Uses status codes as specified in the [Eureka! Clinical microservice specification](https://github.com/eurekaclinical/dev-wiki/wiki/Eureka%21-Clinical-microservice-specification).
 
-##### GET /api/protected/relationops
+##### GET `/api/protected/relationops`
 Gets a list of the possible temporal relation operators in rank order.
 ###### Example:
 URL: https://localhost:8443/eureka-services/api/protected/relationops
@@ -511,7 +511,7 @@ Returns:
 ]
 ```
 
-##### GET /api/protected/relationops/{id}
+##### GET `/api/protected/relationops/{id}`
 Returns the temporal relation operator with the specified numerical unique id.
 
 ###### Example:
@@ -546,7 +546,7 @@ Yes
 #### Calls
 Uses status codes as specified in the [Eureka! Clinical microservice specification](https://github.com/eurekaclinical/dev-wiki/wiki/Eureka%21-Clinical-microservice-specification).
 
-##### GET /api/protected/thresholdops
+##### GET `/api/protected/thresholdops`
 Gets a list of the supported value threshold operators.
 
 ###### Example:
@@ -557,7 +557,7 @@ Returns:
 [{"id":1,"name":"any","description":"any"},{"id":2,"name":"all","description":"all"}]
 ```
 
-##### GET /api/protected/thresholdsops/{id}
+##### GET `/api/protected/thresholdsops/{id}`
 Returns the value threshold operator with the specified numerical unique id.
 
 ###### Example:
@@ -568,7 +568,7 @@ Returns:
 {"id":1,"name":"any","description":"any"}
 ```
 
-##### GET /api/protected/thresholdsops/byname/{name}
+##### GET `/api/protected/thresholdsops/byname/{name}`
 Returns the value threshold operator with the specified unique name.
 
 ###### Example:
@@ -597,7 +597,7 @@ Properties:
 #### Calls
 Uses status codes as specified in the [Eureka! Clinical microservice specification](https://github.com/eurekaclinical/dev-wiki/wiki/Eureka%21-Clinical-microservice-specification).
 
-##### GET /api/protected/valuecomps
+##### GET `/api/protected/valuecomps`
 Gets a list of the supported value comparators in rank order.
 
 ###### Example:
@@ -638,7 +638,7 @@ Returns:
 ]
 ```
 
-##### GET /api/protected/valuecomps/{id}
+##### GET `/api/protected/valuecomps/{id}`
 Returns the value comparator operator with the specified numerical unique id.
 
 ###### Example:
@@ -649,7 +649,7 @@ Returns:
 {"id":1,"name":"=","description":"equals","threshold":"BOTH","rank":3}
 ```
 
-##### GET /api/protected/valuecomps/byname/{name}
+##### GET `/api/protected/valuecomps/byname/{name}`
 Returns the value comparator operator with the specified unique name.
 
 ###### Example:
@@ -725,7 +725,7 @@ Must have `researcher` role.
 Yes
 
 #### SourceConfig object
-Fully specifies a data source configuration.
+Fully specifies a source configuration.
 
 Properties:
 * `id`: unique id number of the source config (set by the server on object creation, and required thereafter).
@@ -821,7 +821,8 @@ Gets a list of the available source configurations' parameter names and values.
 ###### Example:
 URL: https://localhost:8443/eureka-services/api/protected/sourceconfig/parameters/list
 
-Returns: 
+Returns:
+```
 [
   { "id":"Spreadsheet",
     "name":"Spreadsheet",
@@ -834,6 +835,7 @@ Returns:
     ]
   }
 ]
+```
 
 ##### GET /api/protected/sourceconfig/parameters/{id}
 Returns the parameter names and values for the source configuration with the specified numerical unique id.
@@ -841,29 +843,92 @@ Returns the parameter names and values for the source configuration with the spe
 ### `/api/protected/phenotypes`
 Manages user-defined phenotypes.
 
-### GET /api/protected/phenotypes[?summarize=yes|no]
+#### Role-based authorization
+Must have `researcher` role.
+
+#### Requires successful authentication
+Yes
+
+#### Phenotype object
+Fully specifies a data source configuration.
+
+#### Calls
+Uses status codes as specified in the [Eureka! Clinical microservice specification](https://github.com/eurekaclinical/dev-wiki/wiki/Eureka%21-Clinical-microservice-specification).
+
+##### GET `/api/protected/phenotypes[?summarize=yes|no]`
 Returns the concepts accessible by the current user. Optionally, return each concept in a summarized form suitable for listing.
-#### Example:
-#### URL: 
-https://localhost:8443/eureka-services/api/protected/phenotypes?summarize=yes
-#### Return: 
-[{"type":"CATEGORIZATION","id":2,"key":"USER:testCategorization","userId":1,"description":"test","displayName":"testCategorization","inSystem":false,"created":1484772736590,"lastModified":1484772736590,"summarized":false,"internalNode":false,"children":[{"id":null,"phenotypeKey":"Patient","phenotypeDescription":"","phenotypeDisplayName":"Patient","hasDuration":null,"minDuration":null,"minDurationUnits":null,"maxDuration":null,"maxDurationUnits":null,"hasPropertyConstraint":null,"property":null,"propertyValue":null,"type":"SYSTEM","categoricalType":null,"inSystem":true},{"id":null,"phenotypeKey":"PatientDetails","phenotypeDescription":"","phenotypeDisplayName":"Patient Details","hasDuration":null,"minDuration":null,"minDurationUnits":null,"maxDuration":null,"maxDurationUnits":null,"hasPropertyConstraint":null,"property":null,"propertyValue":null,"type":"SYSTEM","categoricalType":null,"inSystem":true}],"categoricalType":"CONSTANT"}]
 
-### GET /api/protected/phenotypes/{key}[?summarize=yes|no]
-Returns the concept with the specified key, or the 404 (NOT FOUND) status code if no such concept exists. Optionally, return each concept in a summarized form suitable for listing.
-#### Example:
-#### URL: 
-https://localhost:8443/eureka-services/api/protected/phenotypes/USER:testCategorization?summarize=yes
-#### Return: 
+###### Example:
+URL: https://localhost:8443/eureka-services/api/protected/phenotypes?summarize=yes
+
+Return:
+```
+[
+  { "type":"CATEGORIZATION",
+    "id":2,
+    "key":"USER:testCategorization",
+    "userId":1,
+    "description":"test",
+    "displayName":"testCategorization",
+    "inSystem":false,
+    "created":1484772736590,
+    "lastModified":1484772736590,
+    "summarized":false,
+    "internalNode":false,
+    "children": [
+      { "id":null,
+        "phenotypeKey":"Patient",
+        "phenotypeDescription":"",
+        "phenotypeDisplayName":"Patient",
+        "hasDuration":null,
+        "minDuration":null,
+        "minDurationUnits":null,
+        "maxDuration":null,
+        "maxDurationUnits":null,
+        "hasPropertyConstraint":null,
+        "property":null,
+        "propertyValue":null,
+        "type":"SYSTEM",
+        "categoricalType":null,
+        "inSystem":true},
+      { "id":null,
+        "phenotypeKey":"PatientDetails",
+        "phenotypeDescription":"",
+        "phenotypeDisplayName":"Patient Details",
+        "hasDuration":null,
+        "minDuration":null,
+        "minDurationUnits":null,
+        "maxDuration":null,
+        "maxDurationUnits":null,
+        "hasPropertyConstraint":null,
+        "property":null,
+        "propertyValue":null,
+        "type":"SYSTEM",
+        "categoricalType":null,
+        "inSystem":true}
+    ],
+    "categoricalType":"CONSTANT"}
+]
+```
+
+##### GET /api/protected/phenotypes/{key}[?summarize=yes|no]
+Returns the concept with the specified key. Optionally, return each concept in a summarized form suitable for listing.
+
+###### Example:
+URL: https://localhost:8443/eureka-services/api/protected/phenotypes/USER:testCategorization?summarize=yes
+
+Returns:
+```
 {"type":"CATEGORIZATION","id":2,"key":"USER:testCategorization","userId":1,"description":"test","displayName":"testCategorization","inSystem":false,"created":1484772736590,"lastModified":1484772736590,"summarized":false,"internalNode":false,"children":[{"id":null,"phenotypeKey":"Patient","phenotypeDescription":"","phenotypeDisplayName":"Patient","hasDuration":null,"minDuration":null,"minDurationUnits":null,"maxDuration":null,"maxDurationUnits":null,"hasPropertyConstraint":null,"property":null,"propertyValue":null,"type":"SYSTEM","categoricalType":null,"inSystem":true},{"id":null,"phenotypeKey":"PatientDetails","phenotypeDescription":"","phenotypeDisplayName":"Patient Details","hasDuration":null,"minDuration":null,"minDurationUnits":null,"maxDuration":null,"maxDurationUnits":null,"hasPropertyConstraint":null,"property":null,"propertyValue":null,"type":"SYSTEM","categoricalType":null,"inSystem":true}],"categoricalType":"CONSTANT"}
+```
 
-### POST /api/protected/phenotypes
+##### POST /api/protected/phenotypes
 Creates a new concept.
 
-### PUT /api/protected/phenotypes
+##### PUT /api/protected/phenotypes
 Saves an existing concept.
 
-### DELETE /api/protected/phenotypes/{userId}/{key}
+##### DELETE /api/protected/phenotypes/{userId}/{key}
 Deletes the specified concept.
 
 ### `/api/protected/concepts`
