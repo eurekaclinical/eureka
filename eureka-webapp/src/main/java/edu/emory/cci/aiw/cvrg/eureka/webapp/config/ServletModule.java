@@ -106,9 +106,6 @@ class ServletModule extends AbstractServletModule {
 		
 		serve("/destroy-session").with(DestroySessionServlet.class);  
 
-		bind(ForgotPasswordServlet.class).in(Singleton.class);
-		serve("/forgot_password").with(ForgotPasswordServlet.class);
-
 		bind(LogoutServlet.class).in(Singleton.class);
 		serve(LOGOUT_PATH).with(LogoutServlet.class);
 
