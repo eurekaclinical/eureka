@@ -73,7 +73,7 @@ import org.protempa.SourceCloseException;
 public class PropositionDefinitionFinder implements AutoCloseable {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(PropositionDefinitionFinder.class);
-	private static final Map<String, List<PropositionDefinition>> parentsCache = new ReferenceMap<>();
+	private static final Map<String, List<String>> parentsCache = new ReferenceMap<>();
 	private final KnowledgeSource knowledgeSource;
 	private final EtlProperties etlProperties;
 	private final Set<String> defaultProps;
@@ -114,11 +114,11 @@ public class PropositionDefinitionFinder implements AutoCloseable {
 		return definition;
 	}
 
-	public List<String> searchPropositions(String inSearchKey) throws PropositionFinderException {
+	public List<String> getPropIdsBySearchKey(String inSearchKey) throws PropositionFinderException {
 		LinkedHashSet<String> nodesToLoad = new LinkedHashSet<>();
 		try {
-			List<PropositionDefinition> searchResults = knowledgeSource.getMatchingPropositionDefinitions(inSearchKey);
-			for (PropositionDefinition pf : searchResults) {
+			List<String> searchResults = knowledgeSource.getMatchingPropIds(inSearchKey);
+			for (String pf : searchResults) {
 				if (nodesToLoad.size() > etlProperties.getSearchLimit()) {
 					break;
 				} else {
@@ -134,11 +134,12 @@ public class PropositionDefinitionFinder implements AutoCloseable {
 	}
 
 
-	public List<PropositionDefinition> getPropositionsBySearchKey(String inSearchKey) throws PropositionFinderException {
-		List<PropositionDefinition> nodesToLoad = new ArrayList<PropositionDefinition>();
+	public List<PropositionDefinition> getPropositionDefinitionsBySearchKey(String inSearchKey) throws PropositionFinderException {
+		List<PropositionDefinition> nodesToLoad = new ArrayList<>();
+		List<String> propIds = getPropIdsBySearchKey(inSearchKey);
+		
 		try {
-			nodesToLoad = knowledgeSource.getMatchingPropositionDefinitions(inSearchKey);
-
+			nodesToLoad = knowledgeSource.readPropositionDefinitions(propIds.toArray(new String[propIds.size()]));
 		} catch (KnowledgeSourceReadException e) {
 			throw new PropositionFinderException(e);
 		}
@@ -154,24 +155,24 @@ public class PropositionDefinitionFinder implements AutoCloseable {
 		}
 	}
 
-	private void readParentsForSearchResult(PropositionDefinition pf, LinkedHashSet<String> nodesToLoad) throws PropositionFinderException {
+	private void readParentsForSearchResult(String propId, LinkedHashSet<String> nodesToLoad) throws PropositionFinderException {
 		try {
-			Queue<PropositionDefinition> toProcessQueue = new LinkedList<>();
+			Queue<String> toProcessQueue = new LinkedList<>();
 			Stack<String> processedStack = new Stack<>();
-			toProcessQueue.add(pf);
+			toProcessQueue.add(propId);
 			while (!toProcessQueue.isEmpty()) {
-				PropositionDefinition currentPropDef = toProcessQueue.remove();
-				List<PropositionDefinition> parents;
+				String currentPropId = toProcessQueue.remove();
+				List<String> parents;
 				synchronized (parentsCache) {
-					parents = parentsCache.get(currentPropDef.getId());
+					parents = parentsCache.get(currentPropId);
 					if (parents == null) {
-						parents = knowledgeSource.readParents(currentPropDef);
-						parentsCache.put(currentPropDef.getId(), parents);
+						parents = knowledgeSource.readParentPropIds(currentPropId);
+						parentsCache.put(currentPropId, parents);
 					}
 				}
-				for (PropositionDefinition parent : parents) {
+				for (String parent : parents) {
 					toProcessQueue.add(parent);
-					processedStack.add(parent.getId());
+					processedStack.add(parent);
 				}
 			}
 			getNodesToLoad(processedStack, nodesToLoad);
@@ -187,13 +188,13 @@ public class PropositionDefinitionFinder implements AutoCloseable {
 				if (defaultProps.contains(node)) {
 					nodesToLoad.add(node);
 				} else {
-					List<PropositionDefinition> parents;
+					List<String> parents;
 					synchronized (parentsCache) {
 						parents = parentsCache.get(node);
 					}
 					if (parents != null) {
-						for (PropositionDefinition parent : parents) {
-							if (nodesToLoad.contains(parent.getId())) {
+						for (String parent : parents) {
+							if (nodesToLoad.contains(parent)) {
 								nodesToLoad.add(node);
 								break;
 							}

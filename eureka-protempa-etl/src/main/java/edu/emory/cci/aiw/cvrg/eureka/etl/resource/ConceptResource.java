@@ -174,7 +174,7 @@ public class ConceptResource {
 			if (this.etlProperties.getConfigDir() != null) {
 				PropositionDefinitionFinder propositionFinder = new PropositionDefinitionFinder(
 						inSourceConfigId, this.etlProperties);
-				return propositionFinder.searchPropositions(inSearchKey);
+				return propositionFinder.getPropIdsBySearchKey(inSearchKey);
 			} else {
 				throw new HttpStatusException(
 						Response.Status.INTERNAL_SERVER_ERROR,
@@ -204,7 +204,7 @@ public class ConceptResource {
 			if (this.etlProperties.getConfigDir() != null) {
 				PropositionDefinitionFinder propositionFinder = new PropositionDefinitionFinder(
 						inSourceConfigId, this.etlProperties);
-				return propositionFinder.getPropositionsBySearchKey(inSearchKey);
+				return propositionFinder.getPropositionDefinitionsBySearchKey(inSearchKey);
 			} else {
 				throw new HttpStatusException(
 						Response.Status.INTERNAL_SERVER_ERROR,
