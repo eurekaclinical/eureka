@@ -115,6 +115,7 @@ public class ETL {
 				"inPropositionDefinitions cannot be null";
 		assert job != null : "job cannot be null";
 		try (Protempa protempa = getNewProtempa(job, prompts)) {
+			LOGGER.debug("Validating the data source backend data for job {}", job.getId());
 			logValidationEvents(job, protempa.validateDataSourceBackendData(), null);
 
 			EtlDestination eurekaDestination;
@@ -126,9 +127,11 @@ public class ETL {
 			protempaDestination
 					= this.protempaDestFactory.getInstance(eurekaDestination.getId(), updateData);
 
+			LOGGER.debug("Constructing Protempa query for job {}", job.getId());
 			DefaultQueryBuilder q = new DefaultQueryBuilder();
 			q.setPropositionDefinitions(inPropositionDefinitions);
 			if (!eurekaDestination.isAllowingQueryPropositionIds()) {
+				LOGGER.debug("Querying the concepts specified by the destination for job {}", job.getId());
 				q.setPropositionIds(protempa.getSupportedPropositionIds(protempaDestination));
 			} else {
 				q.setPropositionIds(inPropIdsToShow);
@@ -137,7 +140,6 @@ public class ETL {
 			q.setUsername(job.getUser().getUsername());
 			q.setFilters(filter);
 			q.setQueryMode(updateData ? QueryMode.UPDATE : QueryMode.REPLACE);
-			LOGGER.trace("Constructed Protempa query {}", q);
 
 			Query query = protempa.buildQuery(q);
 			protempa.addEventListener(new ProtempaEventListener() {
@@ -152,6 +154,7 @@ public class ETL {
 					}
 				}
 			});
+			LOGGER.debug("Executing Protempa query {}", q);
 			protempa.execute(query, protempaDestination);
 		} catch (DataSourceFailedDataValidationException ex) {
 			logValidationEvents(job, ex.getValidationEvents(), ex);
