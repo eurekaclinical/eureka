@@ -14,9 +14,6 @@ var gulp = require('gulp'),
     es = require('event-stream')
 
 
-
-process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
-
 gulp.task('ngdocs', ['process-js'], function () {
   var options = {
     title: "Eureka Angular Documentation",
