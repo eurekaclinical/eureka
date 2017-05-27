@@ -48,7 +48,6 @@
 					<suffix>${maven.build.timestamp}</suffix>
 					<includes>
 						<include>assets/js/eureka.*.js</include>
-						<include>assets/css/eureka.css</include>
 					</includes>
 				</configuration>
 			</plugin>

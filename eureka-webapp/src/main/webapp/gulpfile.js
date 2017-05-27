@@ -5,13 +5,8 @@ var gulp = require('gulp'),
     babel = require("gulp-babel"),
     concat = require("gulp-concat"),
     gulpDocs = require('gulp-ngdocs'),
-    htmlmin = require('gulp-htmlmin'),
-    useref = require('gulp-useref'),
-    gulpif = require('gulp-if'),
     uglify = require('gulp-uglify'),
-    cleanCSS = require('gulp-clean-css'),
     templateCache = require('gulp-angular-templatecache'),
-    es = require('event-stream')
 
 
 gulp.task('ngdocs', ['process-js'], function () {
@@ -46,6 +41,7 @@ gulp.task('process-js', ['cache-templates'], function () {
     .pipe(babel({presets: ['es2015']}))
     .pipe(concat('app.js'))
     .pipe(rev())
+    .pipe(uglify())
     .pipe(sourcemaps.write('.'))
     .pipe(gulp.dest('build'));
 });
@@ -58,27 +54,4 @@ gulp.task('inject-hash', ['ngdocs'], function () {
         .pipe(gulp.dest('./build/injected'));
 });
 
-gulp.task('compile:html', ['inject-hash'], function() {
-    return gulp.src('build/injected/index.html')
-        .pipe(useref({ searchPath: ['eureka', 'assets', 'build', '.'] }))
-        .pipe(gulpif('*.js', uglify()))
-        .pipe(gulpif('*.css', cleanCSS()))
-        .pipe(gulp.dest('build'));
-});
-
-gulp.task('build-html', ['compile:html'], function() {
-    return gulp.src('./build/index.html')
-        .pipe(htmlmin({collapseWhitespace: true}))
-        .pipe(gulp.dest('./dist'));
-});
-
-gulp.task('build', ['build-html'], function() {
-    return es.concat(
-        gulp.src('assets/**/*', { base: './' })
-            .pipe(gulp.dest('./dist')),
-        gulp.src(['./build/*.min.js', './build/*.min.css'])
-            .pipe(gulp.dest('./dist'))
-    );
-});
-
-gulp.task('default', ['build']);
+gulp.task('default', ['inject-hash']);
