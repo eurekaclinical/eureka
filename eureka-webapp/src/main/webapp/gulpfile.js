@@ -11,7 +11,6 @@ var gulp = require('gulp'),
     uglify = require('gulp-uglify'),
     cleanCSS = require('gulp-clean-css'),
     templateCache = require('gulp-angular-templatecache'),
-    less = require('gulp-less'),
     es = require('event-stream')
 
 
@@ -35,6 +34,15 @@ gulp.task('test', ['process-js', 'ngdocs'], function (done) {
   }, done).start();
 });
 
+gulp.task('cache-templates', function () {
+  return gulp.src('eureka/**/*.html')
+    .pipe(templateCache('templates.js', {
+        module: 'eureka',
+        root: 'eureka/'
+    }))
+    .pipe(gulp.dest('./build'));
+});
+
 gulp.task('process-js', ['cache-templates'], function () {
   return gulp.src(['eureka/**/module.js', './build/templates.js', 'eureka/**/*.js', '!eureka/**/*-spec.js'])
     .pipe(sourcemaps.init())
@@ -53,22 +61,7 @@ gulp.task('inject-hash', ['ngdocs'], function () {
         .pipe(gulp.dest('./build/injected'));
 });
 
-gulp.task('less', function () {
-    return gulp.src('./eureka/eureka.less')
-        .pipe(less())
-        .pipe(gulp.dest('./build'));
-});
-
-gulp.task('cache-templates', function () {
-  return gulp.src('eureka/**/*.html')
-    .pipe(templateCache('templates.js', {
-        module: 'eureka',
-        root: 'eureka/'
-    }))
-    .pipe(gulp.dest('./build'));
-});
-
-gulp.task('compile:html', ['less', 'inject-hash'], function() {
+gulp.task('compile:html', ['inject-hash'], function() {
     return gulp.src('build/injected/index.html')
         .pipe(useref({ searchPath: ['eureka', 'assets', 'build', '.'] }))
         .pipe(gulpif('*.js', uglify()))

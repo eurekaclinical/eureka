@@ -431,8 +431,7 @@
 		src="${pageContext.request.contextPath}/assets/js/eureka.tree${initParam['eureka-build-timestamp']}.js"></script>
 		<script type="text/javascript"
 		src="${pageContext.request.contextPath}/assets/js/eureka.job${initParam['eureka-build-timestamp']}.js"></script>
-		<script type="text/javascript"
-		src="${pageContext.request.contextPath}/assets/js/moment.min.js"></script>
+		<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
 		<script type="text/javascript"
 		src="${pageContext.request.contextPath}/assets/js/bootstrap-datetimepicker.min.js"></script>
 		<script type="text/javascript">
