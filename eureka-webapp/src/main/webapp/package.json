@@ -7,27 +7,22 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "devDependencies": {
-    "event-stream": "^3.3.1",
-    "gulp": "^3.9.0",
+    "event-stream": "^3.3.4",
+    "gulp": "^3.9.1",
     "gulp-angular-templatecache": "^2.0.0",
-    "gulp-babel": "^5.2.1",
-    "gulp-clean-css": "^2.0.6",
-    "gulp-concat": "^2.6.0",
+    "gulp-babel": "^6.1.2",
+    "babel-preset-es2015": "^6.24.1",
+    "gulp-clean-css": "^3.4.0",
+    "gulp-concat": "^2.6.1",
     "gulp-htmlmin": "^3.0.0",
     "gulp-if": "^2.0.2",
-    "gulp-inject": "^4.1.0",
-    "gulp-less": "^3.0.3",
-    "gulp-load-plugins": "^1.4.0",
-    "gulp-ngdocs": "^0.2.13",
-    "gulp-rev": "^7.0.0",
-    "gulp-sourcemaps": "^2.4.0",
-    "gulp-uglify": "^1.4.1",
-    "gulp-useref": "^3.1.0",
-    "map-stream": "0.0.6",
-    "proxy-middleware": "^0.15.0",
-    "url": "^0.11.0"
-  },
-  "dependencies": {
-    "opn": "^4.0.2"
+    "gulp-inject": "^4.2.0",
+    "gulp-less": "^3.3.0",
+    "gulp-load-plugins": "^1.5.0",
+    "gulp-ngdocs": "^0.3.0",
+    "gulp-rev": "^7.1.2",
+    "gulp-sourcemaps": "^2.6.0",
+    "gulp-uglify": "^3.0.0",
+    "gulp-useref": "^3.1.2"
   }
 }
