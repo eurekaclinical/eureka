@@ -1,5 +1,9 @@
 {
 	"versionHistory": [
+        {
+			"releaseDate": "2016.09.16",
+			"description": "Version 2.0 is out! The data processing code is now multithreaded for enhanced performance and has gotten lots of bug fixes."
+        },
 		{
 			"releaseDate": "2014.07.02",
 			"description": "Version 1.9 is out! This version includes a brand new UI, search functionality for data elements, support for OAuth authentication providers, integration with i2b2 version 1.7, and allows the use of BioPortal as an ontology source."
