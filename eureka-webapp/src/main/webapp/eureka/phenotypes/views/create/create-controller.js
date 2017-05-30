@@ -45,18 +45,18 @@
         vm.frequencyObject.phenotype = {};
         vm.frequencyObject.phenotype.hasDuration = false;
         vm.frequencyObject.phenotype.minDuration = '';
-        vm.frequencyObject.phenotype.minDurationUnits = "1";
+        vm.frequencyObject.phenotype.minDurationUnits = '1';
         vm.frequencyObject.phenotype.maxDuration = '';
-        vm.frequencyObject.phenotype.maxDurationUnits = "1";
+        vm.frequencyObject.phenotype.maxDurationUnits = '1';
         vm.frequencyObject.phenotype.hasPropertyConstraint = false;
-        vm.frequencyObject.phenotype.property = "patientId";
+        vm.frequencyObject.phenotype.property = 'patientId';
         vm.frequencyObject.phenotype.propertyValue = '';
         vm.frequencyObject.isWithin = false;
-        vm.frequencyObject.withinAtLeast = "";
-        vm.frequencyObject.frequencyType = "1";
-        vm.frequencyObject.withinAtLeastUnits = "1";
-        vm.frequencyObject.withinAtMost = "";
-        vm.frequencyObject.withinAtMostUnits = "1";
+        vm.frequencyObject.withinAtLeast = '';
+        vm.frequencyObject.frequencyType = '1';
+        vm.frequencyObject.withinAtLeastUnits = '1';
+        vm.frequencyObject.withinAtMost = '';
+        vm.frequencyObject.withinAtMostUnits = '1';
 
         // Sequence
         vm.seqObject = {};
@@ -68,7 +68,7 @@
         vm.seqObject.primaryPhenotype.maxDuration = '';
         vm.seqObject.primaryPhenotype.maxDurationUnits = '1';
         vm.seqObject.primaryPhenotype.hasPropertyConstraint = false;
-        vm.seqObject.primaryPhenotype.property = "patientId";
+        vm.seqObject.primaryPhenotype.property = 'patientId';
         vm.seqObject.primaryPhenotype.propertyValue = '';
         // vm.seqObject.relatedPhenotypes = [];
         vm.seqMainPhenotype = [];
@@ -83,18 +83,18 @@
         vm.thresholdObject = {};
         vm.thresholdObject.thresholdsOperator = '1';
         vm.thresholdObject.valueThresholds = [];
-        vm.thresholdCompValues = [{ value: "1", display: "=" }, { value: "2", display: "not=" }, { value: "3", display: ">" }, { value: "4", display: ">=" }]
-        vm.thresholdtypes = [{ value: "1", display: "any" }, { value: "2", display: "all" }]
-        vm.thresholdRelationTypes = [{ value: "1", display: "before" }, { value: "2", display: "after" }, { value: "2", display: "around" }]
+        vm.thresholdCompValues = [{ value: '1', display: '=' }, { value: '2', display: 'not=' }, { value: '3', display: '>' }, { value: '4', display: '>=' }];
+        vm.thresholdtypes = [{ value: '1', display: 'any' }, { value: '2', display: 'all' }];
+        vm.thresholdRelationTypes = [{ value: '1', display: 'before' }, { value: '2', display: 'after' }, { value: '2', display: 'around' }];
 
         // Show hide tree on right side
         vm.viewObject = {};
         vm.viewObject.showTree = false
 
         // More global items
-        vm.timeUnits = [{ name: 'minutes', value: "3" }, { name: 'hours', value: "2" }, { name: 'days', value: "1" }];
+        vm.timeUnits = [{ name: 'minutes', value: '3' }, { name: 'hours', value: '2' }, { name: 'days', value: '1' }];
         vm.thresholdUnits = ['at least', 'first'];
-        vm.sequenceRelations = [{ name: 'after', value: "2" }, { name: 'before', value: "1" }];
+        vm.sequenceRelations = [{ name: 'after', value: '2' }, { name: 'before', value: '1' }];
 
 
         switch ($stateParams.type) {
@@ -121,7 +121,7 @@
         // Categorization
         vm.addCategorizationPhenotype = function() {
             vm.viewObject.showTree = true;
-        }
+        };
 
         vm.createCategorization = function() {
             var children = [];
@@ -130,9 +130,9 @@
                 childrenObject.phenotypeKey = vm.myList[i].key;
                 childrenObject.type = vm.myList[i].type;
 
-                vm.currentObject.children.push(childrenObject)
+                vm.currentObject.children.push(childrenObject);
             }
-            vm.currentObject.type = "CATEGORIZATION";
+            vm.currentObject.type = 'CATEGORIZATION';
             vm.currentObject.categoricalType = null;
             vm.currentObject.userId = currentUser.info.id;
             // PhenotypeService.createPhenotype(vm.currentObject);
@@ -142,16 +142,16 @@
                 $state.transitionTo('phenotypes');
             }, displayError);
 
-        }
+        };
 
 
         // Frequency
         vm.addFrequencyPhenotype = function() {
             vm.viewObject.showTree = true;
-        }
+        };
 
         vm.createFrequency = function() {
-            vm.frequencyObject.type = "FREQUENCY";
+            vm.frequencyObject.type = 'FREQUENCY';
             vm.frequencyObject.isConsecutive = false;
             vm.frequencyObject.phenotype.phenotypeKey = vm.myList[0].key;
 
@@ -166,13 +166,13 @@
             createPhenotype(vm.frequencyObject).then(data => {
                 $state.transitionTo('phenotypes');
             }, displayError);
-        }
+        };
 
 
         // Threshold
         vm.createThreshold = function() {
             // This type is wrong.  Needs to be changed
-            vm.thresholdObject.type = "VALUE_THRESHOLD";
+            vm.thresholdObject.type = 'VALUE_THRESHOLD';
             vm.thresholdObject.userId = currentUser.info.id;
             // We need to loop through the objects and build the correct item to pass back
             for (var i = 0; i < vm.thresholdObject.valueThresholds.length; i++) {
@@ -180,28 +180,28 @@
 
                 delete vm.thresholdObject.valueThresholds[i].$$hashKey;
 
-                let currentItem = vm.thresholdObject.valueThresholds[i].phenotype.relatedPhenotypeKey
+                let currentItem = vm.thresholdObject.valueThresholds[i].phenotype.relatedPhenotypeKey;
 
 
-                delete vm.thresholdObject.valueThresholds[i].relatedPhenotypeKey
+                delete vm.thresholdObject.valueThresholds[i].relatedPhenotypeKey;
 
                 let myNewObject = {};
-                myNewObject.phenotypeKey = currentItem
-                myNewObject.type = "SYSTEM"
+                myNewObject.phenotypeKey = currentItem;
+                myNewObject.type = 'SYSTEM';
                 vm.thresholdObject.valueThresholds[i].relatedPhenotypes.push(myNewObject);
 
             }
 
             console.log(JSON.stringify(vm.thresholdObject));
-            //var testObj = { "primaryPhenotype": { "hasDuration": true, "minDuration": 1, "minDurationUnits": "1", "maxDuration": 1, "maxDurationUnits": "1", "hasPropertyConstraint": true, "property": "patientId", "propertyValue": null, "phenotypeKey": "Patient" }, "relatedPhenotypes": [{ "phenotypeField": { "phenotypeKey": "Patient", "hasDuration": true, "minDuration": 2, "minDurationUnits": "1", "maxDuration": 2, "maxDurationUnits": "1", "hasPropertyConstraint": true, "property": "patientId" }, "relationOperator": "2", "sequentialPhenotype": "Patient", "sequentialPhenotypeSource": "1", "relationMinCount": 2, "relationMinUnits": "1", "relationMaxCount": 4, "relationMaxUnits": "1" }], "displayName": "ONETIME0987", "description": "test", "type": "SEQUENCE", "userId": 1 };
+            //var testObj = { 'primaryPhenotype': { 'hasDuration': true, 'minDuration': 1, 'minDurationUnits': '1', 'maxDuration': 1, 'maxDurationUnits': '1', 'hasPropertyConstraint': true, 'property': 'patientId', 'propertyValue': null, 'phenotypeKey': 'Patient' }, 'relatedPhenotypes': [{ 'phenotypeField': { 'phenotypeKey': 'Patient', 'hasDuration': true, 'minDuration': 2, 'minDurationUnits': '1', 'maxDuration': 2, 'maxDurationUnits': '1', 'hasPropertyConstraint': true, 'property': 'patientId' }, 'relationOperator': '2', 'sequentialPhenotype': 'Patient', 'sequentialPhenotypeSource': '1', 'relationMinCount': 2, 'relationMinUnits': '1', 'relationMaxCount': 4, 'relationMaxUnits': '1' }], 'displayName': 'ONETIME0987', 'description': 'test', 'type': 'SEQUENCE', 'userId': 1 };
             createPhenotype(vm.thresholdObject).then(data => {
                 $state.transitionTo('phenotypes');
             }, displayError);
 
-        }
+        };
 
         vm.addPhenotypeToThreshold = function(indexPanel, isRelational) {
-            vm.currentPanel = indexPanel
+            vm.currentPanel = indexPanel;
             vm.viewObject.showTree = true;
             if (isRelational === undefined) {
                 // do nothing
@@ -210,7 +210,7 @@
                 vm.isRelationalPhenotype = true;
             }
 
-        }
+        };
 
         vm.addNewThreshold = function() {
             let openObject = {};
@@ -219,7 +219,7 @@
 
             openObject.relatedPhenotypes = [];
             vm.thresholdObject.valueThresholds.push(openObject);
-        }
+        };
 
         function addMembersThreshold() {
             // adding related items
@@ -231,38 +231,38 @@
         function addRelationalThreshold() {
             // if it is primary phenotype do this
             //else it is a related item
-            vm.thresholdObject.valueThresholds[vm.currentPanel - 1].phenotype.type = "SYSTEM";
+            vm.thresholdObject.valueThresholds[vm.currentPanel - 1].phenotype.type = 'SYSTEM';
             vm.thresholdObject.valueThresholds[vm.currentPanel - 1].phenotype.relatedPhenotypeKey = vm.currentMemeberList[0].key;
             vm.currentPanel = '';
         }
 
         // Sequence
         vm.createSequence = function() {
-            vm.seqObject.type = "SEQUENCE";
+            vm.seqObject.type = 'SEQUENCE';
             vm.seqObject.userId = currentUser.info.id;
             if (vm.seqObject.relatedPhenotypes.length > 0) {
                 delete vm.seqObject.relatedPhenotypes[0].$$hashKey;
-                delete vm.seqObject.relatedPhenotypes[0].phenotypeField.properties
+                delete vm.seqObject.relatedPhenotypes[0].phenotypeField.properties;
             }
 
             console.log(JSON.stringify(vm.seqObject));
-            //var testObj = { "primaryPhenotype": { "hasDuration": true, "minDuration": 1, "minDurationUnits": "1", "maxDuration": 1, "maxDurationUnits": "1", "hasPropertyConstraint": true, "property": "patientId", "propertyValue": null, "phenotypeKey": "Patient" }, "relatedPhenotypes": [{ "phenotypeField": { "phenotypeKey": "Patient", "hasDuration": true, "minDuration": 2, "minDurationUnits": "1", "maxDuration": 2, "maxDurationUnits": "1", "hasPropertyConstraint": true, "property": "patientId" }, "relationOperator": "2", "sequentialPhenotype": "Patient", "sequentialPhenotypeSource": "1", "relationMinCount": 2, "relationMinUnits": "1", "relationMaxCount": 4, "relationMaxUnits": "1" }], "displayName": "ONETIME0987", "description": "test", "type": "SEQUENCE", "userId": 1 };
+            //var testObj = { 'primaryPhenotype': { 'hasDuration': true, 'minDuration': 1, 'minDurationUnits': '1', 'maxDuration': 1, 'maxDurationUnits': '1', 'hasPropertyConstraint': true, 'property': 'patientId', 'propertyValue': null, 'phenotypeKey': 'Patient' }, 'relatedPhenotypes': [{ 'phenotypeField': { 'phenotypeKey': 'Patient', 'hasDuration': true, 'minDuration': 2, 'minDurationUnits': '1', 'maxDuration': 2, 'maxDurationUnits': '1', 'hasPropertyConstraint': true, 'property': 'patientId' }, 'relationOperator': '2', 'sequentialPhenotype': 'Patient', 'sequentialPhenotypeSource': '1', 'relationMinCount': 2, 'relationMinUnits': '1', 'relationMaxCount': 4, 'relationMaxUnits': '1' }], 'displayName': 'ONETIME0987', 'description': 'test', 'type': 'SEQUENCE', 'userId': 1 };
             createPhenotype(vm.seqObject).then(data => {
                 $state.transitionTo('phenotypes');
             }, displayError);
 
-        }
+        };
 
         vm.addMainPhenotype = function() {
             vm.currentPanel = 'primaryPhenotype';
             vm.viewObject.showTree = true;
             vm.showPhenotypes = true;
-        }
+        };
 
         vm.addPhenotypeToRelated = function(indexPanel) {
-            vm.currentPanel = indexPanel
+            vm.currentPanel = indexPanel;
             vm.viewObject.showTree = true;
-        }
+        };
 
         // add related phenotypes
         vm.addRelatedPhenotypes = function() {
@@ -271,7 +271,7 @@
             openObject.phenotypeField.properties = [];
             vm.seqObject.relatedPhenotypes.push(openObject);
 
-        }
+        };
 
         // private function to add sequence related phenotypes
         function addNewMembersRelated() {
@@ -280,7 +280,7 @@
                 console.log(vm.currentPanel);
                 vm.phenotypeProperties = [];
                 vm.phenotypeProperties = vm.currentMemeberList[0].properties;
-                vm.seqObject.primaryPhenotype.phenotypeKey = vm.currentMemeberList[0].key
+                vm.seqObject.primaryPhenotype.phenotypeKey = vm.currentMemeberList[0].key;
                 vm.releatedTemporalArray.push(vm.currentMemeberList[0].key);
             } else {
                 //else it is a related item
@@ -301,7 +301,7 @@
                 } else if (vm.type === 'Frequency') {
                     vm.myList = [];
                     for (var i = 0; i < vm.currentMemeberList.length; i++) {
-                        vm.myList.push(vm.currentMemeberList[i])
+                        vm.myList.push(vm.currentMemeberList[i]);
                     }
                     // now add the properties to the dropdown
                     vm.phenotypeProperties = vm.myList[0].properties;
@@ -315,7 +315,7 @@
                 } else {
 
                     for (var i = 0; i < vm.currentMemeberList.length; i++) {
-                        vm.myList.push(vm.currentMemeberList[i])
+                        vm.myList.push(vm.currentMemeberList[i]);
                     }
                 }
 
@@ -323,7 +323,7 @@
                 vm.viewObject.showTree = false;
 
             }
-        }
+        };
 
         // End of logic for creting Phenotypes
 
@@ -372,17 +372,17 @@
             } else {
                 //do nothing it is a document
             }
-        }
+        };
 
         vm.addNode = function(node) {
             console.log(vm.currentMemeberList + '  1');
             console.log(currentNodes + '@@');
             if (node) {
 
-                setNodes(node)
+                setNodes(node);
             }
-            getMemberList()
-        }
+            getMemberList();
+        };
 
         vm.addUserNode = function(node) {
             /* After changes add user node will need to be refactored will take care of later in week.
@@ -391,7 +391,7 @@
                 dragAndDropService.setNodes(node);
             }
             getMemberList() */
-        }
+        };
         vm.removeNode = function(node) {
             for (var i = 0; i < vm.currentMemeberList.length; i++) {
                 // we will need to look for both key and name.  name is key in update, but key is present on create.
@@ -408,7 +408,7 @@
                 }
 
             }
-        }
+        };
         vm.setBreadCrumbs = function(node) {
             var currentNode = node;
             var hasChildren = node.parent;
@@ -438,10 +438,10 @@
 
             }, displayError);
 
-        }
+        };
 
         function getMemberList() {
-            vm.currentMemeberList = getNodes()
+            vm.currentMemeberList = getNodes();
         }
 
         function setNodes(obj, arg2) {

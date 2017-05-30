@@ -9,6 +9,7 @@ var gulp = require('gulp'),
     templateCache = require('gulp-angular-templatecache'),
     addStream = require('add-stream'),
     Server = require('karma').Server,
+    jshint = require('gulp-jshint');
 
 gulp.task('test', function (done) {
   new Server({
@@ -44,4 +45,11 @@ gulp.task('ngdocs', function () {
     .pipe(gulp.dest('./ng-docs'));
 });
 
-gulp.task('default', ['ngdocs', 'compile']);
+gulp.task('lint', ['ngdocs'], function() {
+    gulp.src(['eureka/**/*.js', '!eureka/js/**/*.js'])
+        .pipe(jshint('.jshintrc'))
+        .pipe(jshint.reporter('jshint-stylish'))
+        .pipe(jshint.reporter('fail', {'ignoreWarning': true}));
+});
+
+gulp.task('default', ['lint', 'compile']);
