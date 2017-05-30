@@ -117,11 +117,9 @@
 						<fileset>
 							<directory>src/main/webapp</directory>
 							<includes>
-								<include>bower_components/**</include>
 								<include>build/**</include>
-								<include>node_modules/**</include>
 								<include>npm-debug.log</include>
-								<include>dist/**</include>
+								<include>ng-docs/**</include>
 							</includes>
 						</fileset>
 					</filesets>
