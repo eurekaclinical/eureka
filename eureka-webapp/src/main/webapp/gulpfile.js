@@ -8,6 +8,7 @@ var gulp = require('gulp'),
     uglify = require('gulp-uglify'),
     templateCache = require('gulp-angular-templatecache'),
     addStream = require('add-stream'),
+    Server = require('karma').Server,
 
 gulp.task('test', function (done) {
   new Server({
@@ -16,7 +17,7 @@ gulp.task('test', function (done) {
   }, done).start();
 });
 
-gulp.task('compile', function () {
+gulp.task('compile', ['test'], function () {
   var target = gulp.src('./index.html');
   var sources = gulp.src(['eureka/**/module.js', 'eureka/**/*.js', '!eureka/**/*-spec.js'])
     .pipe(sourcemaps.init())
