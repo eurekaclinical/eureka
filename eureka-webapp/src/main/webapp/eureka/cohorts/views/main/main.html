@@ -1,8 +1,8 @@
 <style>
-.myGrid {
-    width: 800px;
-    height: 250px;
-  }
+	.myGrid {
+		width: 800px;
+		height: 250px;
+	}
 </style>
 
 <div class="row">
@@ -12,7 +12,7 @@
         </p>
         <p>
             <a ui-sref="newCohort" class="btn btn-primary"><span class="glyphicon glyphicon-plus-sign"></span>
-            Define New Cohort
+				Define New Cohort
 			</a>
         </p>
         <!-- removing ui-grid for now -->
@@ -46,122 +46,28 @@
         </table>
     </div>
 </div>
-    <script type="text/ng-template" id="myModal.html">
-        <div class="modal-header">
-            <h3 class="modal-title">Delete Element</h3>
-        </div>
-        <div class="modal-body">
-            Are you sure you would like to remove this item?
-        </div>
-        <div class="modal-footer">
-            <button class="btn btn-primary" ng-click="mo.ok()">Delete</button>
-            <button class="btn btn-primary" ng-click="mo.cancel()">Close</button>
-        </div>
-    </script>
-
-    <script type="text/ng-template" id="errorModal.html">
-    <div class="modal-header">
-        <h3 class="modal-title">Error</h3>
-    </div>
-    <div class="modal-body">
-       {{mod.data}}
-    </div>
-    <div class="modal-footer">
-        <button class="btn btn-primary" ng-click="mod.cancel()">Close</button>
-    </div>
+<script type="text/ng-template" id="myModal.html">
+	<div class="modal-header">
+	<h3 class="modal-title">Delete Element</h3>
+	</div>
+	<div class="modal-body">
+	Are you sure you would like to remove this item?
+	</div>
+	<div class="modal-footer">
+	<button class="btn btn-primary" ng-click="mo.ok()">Delete</button>
+	<button class="btn btn-primary" ng-click="mo.cancel()">Close</button>
+	</div>
 </script>
 
-
-<!--
-<div layout>
-    <md-content flex layout-padding>
-        <md-card>  -->
-        <!--<h3>Cohorts</h3>-->
-
-        <!--<p>Define a cohort to identify the patient population in your datasets.-->
-        <!--</p>-->
-        <!--<a ui-sref="newCohort" class="btn btn-primary"><span-->
-                <!--class="glyphicon glyphicon-plus-sign"></span>Define New Cohort-->
-        <!--</a>-->
-        <!--<table class="table table-responsive vert-offset">-->
-            <!--<tr>-->
-                <!--<th>Action</th>-->
-                <!--<th>Name</th>-->
-                <!--<th>Description</th>-->
-                <!--<th>Created Date</th>-->
-                <!--<th>Last Modified</th>-->
-            <!--</tr>-->
-            <!--<tr ng-repeat="cohortDestination in cohorts.list">-->
-                <!--<td>-->
-                    <!--<a ui-sref="editCohort({key: cohortDestination.name})" title="Edit">-->
-                        <!--<span class="glyphicon glyphicon-pencil edit-icon" title="Edit"></span>-->
-                    <!--</a>-->
-                    <!--<span class="glyphicon glyphicon-remove delete-icon" title="Delete" ng-click="remove(cohortDestination.name)"></span>-->
-                <!--</td>-->
-                <!--<td>{{ cohortDestination.name }}</td>-->
-                <!--<td>{{ cohortDestination.description }}</td>-->
-                <!--<td>{{ cohortDestination.created_at | date : shortDate }}</td>-->
-                <!--<td>{{ cohortDestination.updated_at | date : shortDate }}</td>-->
-            <!--</tr>-->
-        <!--</table>-->
-
-        <!-- begin md-data-table 
-        <md-data-table-toolbar ng-hide="cohorts.selected.length || cohorts.filter.show">
-            <h2 class="md-title">Cohortsxx</h2>
-            <div flex></div>
-            <md-button class="md-icon-button" ng-click="cohorts.filter.show = true">
-                <i class="material-icons md-dark">search</i>
-            </md-button>
-            <md-button class="md-icon-button" ui-sref="newCohort">
-                <i class="material-icons md-dark">add_circle</i>
-            </md-button>
-        </md-data-table-toolbar>
-
-        <md-data-table-toolbar ng-show="cohorts.filter.show && !cohorts.selected.length">
-            <i class="material-icons md-dark">search</i>
-            <form flex name="cohorts.filter.form">
-                <input type="text" ng-model="cohorts.query.filter" ng-model-options="cohorts.filter.options" placeholder="Search...">
-            </form>
-            <md-button class="md-icon-button" ng-click="cohorts.removeFilter()">
-                <i class="material-icons md-dark">close</i>
-            </md-button>
-        </md-data-table-toolbar>
-
-        <md-data-table-toolbar class="alternate" ng-show="cohorts.selected.length" layout-align="space-between">
-            <div>{{cohorts.selected.length}} {{cohorts.selected.length > 1 ? 'items' : 'item'}} selected</div>
-            <div flex></div>
-            <md-button class="md-icon-button" ng-show="cohorts.selected.length == 1" ui-sref="editCohort({ key: cohorts.selected[0].key })">
-                <i class="material-icons md-dark">edit</i>
-            </md-button>
-            <md-button class="md-icon-button">
-                <i class="material-icons md-dark">delete</i>
-            </md-button>
-        </md-data-table-toolbar>
-
-        <md-data-table-container>
-            <table md-data-table md-row-select="cohorts.selected" md-progress="cohorts.deferred">
-                <thead md-order="cohorts.query.order" md-trigger="cohorts.onOrderChange">
-                    <tr>
-                        <th name="Name" order-by="name"></th>
-                        <th name="Description" order-by="description"></th>
-                        <th name="Created" unit="date" order-by="created_at"></th>
-                        <th name="Last Modified" unit="date" order-by="updated_at"></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr md-auto-select ng-repeat="cohort in cohorts.cohortsList">
-                        <td>{{cohort.name}}</td>
-                        <td>{{cohort.description}}</td>
-                        <td>{{cohort.created_at | date:'shortDate'}}</td>
-                        <td>{{cohort.updated_at | date:'shortDate'}}</td>
-                    </tr>
-                </tbody>
-            </table>
-        </md-data-table-container>
-
-        <md-data-table-pagination md-limit="cohorts.query.limit" md-page="cohorts.query.page" md-total="{{cohorts.cohortsList.length}}" md-trigger="cohorts.onPaginationChange"></md-data-table-pagination>
-        end md-data-table 
-
-        </md-card>
-    </md-content>  -->
+<script type="text/ng-template" id="errorModal.html">
+    <div class="modal-header">
+	<h3 class="modal-title">Error</h3>
+    </div>
+    <div class="modal-body">
+	{{mod.data}}
+    </div>
+    <div class="modal-footer">
+	<button class="btn btn-primary" ng-click="mod.cancel()">Close</button>
+    </div>
+</script>
 </div>
