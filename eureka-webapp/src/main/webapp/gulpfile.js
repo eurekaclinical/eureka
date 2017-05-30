@@ -11,14 +11,14 @@ var gulp = require('gulp'),
     Server = require('karma').Server,
     jshint = require('gulp-jshint');
 
-gulp.task('test', function (done) {
-  new Server({
-    configFile: __dirname + '/karma.conf.js',
-    singleRun: true
-  }, done).start();
+gulp.task('lint', function() {
+    gulp.src(['eureka/**/*.js', '!eureka/js/**/*.js'])
+        .pipe(jshint('.jshintrc'))
+        .pipe(jshint.reporter('jshint-stylish'))
+        .pipe(jshint.reporter('fail', {'ignoreWarning': true}));
 });
 
-gulp.task('compile', ['test'], function () {
+gulp.task('compile', ['lint'], function () {
   var target = gulp.src('./index.html');
   var sources = gulp.src(['eureka/**/module.js', 'eureka/**/*.js', '!eureka/**/*-spec.js'])
     .pipe(sourcemaps.init())
@@ -35,6 +35,13 @@ gulp.task('compile', ['test'], function () {
         .pipe(gulp.dest('./build'));
 });
 
+gulp.task('test', ['compile'], function (done) {
+  new Server({
+    configFile: __dirname + '/karma.conf.js',
+    singleRun: true
+  }, done).start();
+});
+
 gulp.task('ngdocs', function () {
   var options = {
     title: "Eureka! Clinical Analytics Web Client Documentation",
@@ -45,11 +52,4 @@ gulp.task('ngdocs', function () {
     .pipe(gulp.dest('./ng-docs'));
 });
 
-gulp.task('lint', ['ngdocs'], function() {
-    gulp.src(['eureka/**/*.js', '!eureka/js/**/*.js'])
-        .pipe(jshint('.jshintrc'))
-        .pipe(jshint.reporter('jshint-stylish'))
-        .pipe(jshint.reporter('fail', {'ignoreWarning': true}));
-});
-
-gulp.task('default', ['lint', 'compile']);
+gulp.task('default', ['ngdocs', 'test']);
