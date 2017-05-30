@@ -131,6 +131,6 @@ see implementation details http://jersey.java.net/nonav/documentation/latest/jax
                 <tracking-mode>COOKIE</tracking-mode>
         </session-config>
         <welcome-file-list>  
-                <welcome-file>build/injected/index.html</welcome-file>  
+                <welcome-file>build/index.html</welcome-file>  
         </welcome-file-list>              
 </web-app>

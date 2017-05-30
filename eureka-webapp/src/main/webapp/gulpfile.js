@@ -16,7 +16,7 @@ gulp.task('test', function (done) {
   }, done).start();
 });
 
-gulp.task('compile-app.js', function () {
+gulp.task('compile', function () {
   var target = gulp.src('./index.html');
   var sources = gulp.src(['eureka/**/module.js', 'eureka/**/*.js', '!eureka/**/*-spec.js'])
     .pipe(sourcemaps.init())
@@ -30,7 +30,7 @@ gulp.task('compile-app.js', function () {
     .pipe(gulp.dest('build'));
  
     return target.pipe(inject(sources,{relative: true}))
-        .pipe(gulp.dest('./build/injected'));
+        .pipe(gulp.dest('./build'));
 });
 
 gulp.task('ngdocs', function () {
@@ -43,4 +43,4 @@ gulp.task('ngdocs', function () {
     .pipe(gulp.dest('./ng-docs'));
 });
 
-gulp.task('default', ['ngdocs', 'compile-app.js']);
+gulp.task('default', ['ngdocs', 'compile']);

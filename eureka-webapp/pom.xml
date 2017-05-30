@@ -61,14 +61,12 @@
 				<configuration>
 					<filteringDeploymentDescriptors>true</filteringDeploymentDescriptors>
 					<packagingIncludes>
+						favicon.ico,
 						build/**,
-						bower_components/**,
 						WEB-INF/**,
 						META-INF/**,
-						*.jsp,
 						protected/**,
 						templates/**,
-						index.html,
 						assets/**
 					</packagingIncludes>
 				</configuration>
