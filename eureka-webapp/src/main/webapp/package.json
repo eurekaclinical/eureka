@@ -17,6 +17,7 @@
     "gulp-ngdocs": "^0.3.0",
     "gulp-rev": "^7.1.2",
     "gulp-sourcemaps": "^2.6.0",
-    "gulp-uglify": "^3.0.0"
+    "gulp-uglify": "^3.0.0",
+    "add-stream": "^1.0.0"
   }
 }
