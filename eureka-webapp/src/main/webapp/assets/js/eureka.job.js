@@ -184,9 +184,7 @@ window.eureka.job = new function () {
 
 	self.setupDatePicker = function (pickerElem) {
 		$(pickerElem).datetimepicker({
-			'pickTime': false,
-			'showToday': true,
-			'useCurrent': false
+			'format': 'MM/DD/YYYY' //L for locale-specific date only, LT for date and time.
 		});
 		$(pickerElem).on('dp.change', function () {
 			$(pickerElem).datetimepicker('hide');

@@ -432,11 +432,10 @@
 		<script type="text/javascript"
 		src="${pageContext.request.contextPath}/assets/js/eureka.job${initParam['eureka-build-timestamp']}.js"></script>
 		<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
-		<script type="text/javascript"
-		src="${pageContext.request.contextPath}/assets/js/bootstrap-datetimepicker.min.js"></script>
+		<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js"></script>
 		<script type="text/javascript">
 			eureka.job.setup('#systemTree', '#userTree', '${pageContext.request.contextPath}/assets/css/jstree-themes/default/style.css',
-					'form#uploadForm', '#earliestDate', '#latestDate', '${pageContext.request.contextPath}/assets/css/bootstrap-datetimepicker.min.css',
+					'form#uploadForm', '#earliestDate', '#latestDate', 'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/css/bootstrap-datetimepicker.min.css',
 					'#jobStatus', '#searchModal', '#searchValidationModal', '#searchNoResultsModal', '#searchUpdateDivJob');
 		</script>
 	</template:content>
