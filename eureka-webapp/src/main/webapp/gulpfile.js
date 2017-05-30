@@ -12,7 +12,7 @@ var gulp = require('gulp'),
     jshint = require('gulp-jshint');
 
 gulp.task('lint', function() {
-    gulp.src(['eureka/**/*.js', '!eureka/js/**/*.js'])
+    gulp.src('eureka/**/*.js')
         .pipe(jshint('.jshintrc'))
         .pipe(jshint.reporter('jshint-stylish'))
         .pipe(jshint.reporter('fail', {'ignoreWarning': true}));
