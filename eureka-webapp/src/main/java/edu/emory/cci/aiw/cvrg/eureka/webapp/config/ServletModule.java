@@ -41,10 +41,6 @@ package edu.emory.cci.aiw.cvrg.eureka.webapp.config;
  */
 import com.google.inject.Singleton;
 import edu.emory.cci.aiw.cvrg.eureka.servlet.*;
-import edu.emory.cci.aiw.cvrg.eureka.servlet.cohort.CohortHomeServlet;
-import edu.emory.cci.aiw.cvrg.eureka.servlet.cohort.DeleteCohortServlet;
-import edu.emory.cci.aiw.cvrg.eureka.servlet.cohort.EditCohortServlet;
-import edu.emory.cci.aiw.cvrg.eureka.servlet.cohort.SaveCohortServlet;
 import edu.emory.cci.aiw.cvrg.eureka.servlet.filter.UserFilter;
 import edu.emory.cci.aiw.cvrg.eureka.servlet.filter.MessagesFilter;
 import edu.emory.cci.aiw.cvrg.eureka.servlet.filter.RolesFilter;
@@ -167,17 +163,6 @@ class ServletModule extends AbstractServletModule {
 		serve("/protected/searchsystemlist").with(
 				SearchSystemPropositionJSTreeV1Servlet.class);
 
-		bind(CohortHomeServlet.class).in(Singleton.class);
-		serve("/protected/cohorthome").with(CohortHomeServlet.class);
-
-		bind(EditCohortServlet.class).in(Singleton.class);
-		serve("/protected/editcohort").with(EditCohortServlet.class);
-
-		bind(SaveCohortServlet.class).in(Singleton.class);
-		serve("/protected/savecohort").with(SaveCohortServlet.class);
-
-		bind(DeleteCohortServlet.class).in(Singleton.class);
-		serve("/protected/deletecohort").with(DeleteCohortServlet.class);
 	}
 	
 	@Override

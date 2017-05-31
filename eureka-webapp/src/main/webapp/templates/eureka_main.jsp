@@ -93,7 +93,7 @@
 			<ul class="nav navbar-nav navbar-right menu-text">
 				<c:if test="${userIsActivated}">
 					<li>
-						<a href="${pageContext.request.contextPath}/protected/cohorthome">
+						<a href="${pageContext.request.contextPath}/#/cohorts">
 							<i class="fa fa-pencil"></i>
 							Cohorts
 						</a>

@@ -30,9 +30,9 @@
       })
       .state('newCohort', {
         url: '/cohorts/new',
-        templateUrl: 'eureka/cohorts/views/new/new.html',
-        controller: 'cohorts.NewCtrl',
-        controllerAs: 'newCohort'
+        templateUrl: 'eureka/cohorts/views/edit/edit.html',
+        controller: 'cohorts.EditCtrl',
+        controllerAs: 'editCohort'
       })
       .state('editCohort', {
         url: '/cohorts/:key',
