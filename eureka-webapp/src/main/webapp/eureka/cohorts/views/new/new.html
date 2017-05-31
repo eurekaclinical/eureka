@@ -1,16 +1,11 @@
-<div class="row">
-    <div class="col-sm-12">
-        <h3> New Cohort Editor</h3>
-    </div>
-</div>
-
+<h3>New Cohort</h3>
+<p>Select the data and phenotypes that will define the patient cohort.</p>
 <div class="row">
     <div class="col-md-12">
-    </div>
-</div>
-<div class="row">
-    <div class="col-md-12">
-        <div id="definitionContainer" class="col-md-8">
+		<div class="alert alert-danger" role="alert" ng-if="newCohort.errorMsg">
+			<strong>Error saving cohort!</strong> {{newCohort.errorMsg}}
+		</div>
+        <div id="definitionContainer">
             <form id="categorizationForm" class="vert-offset" role="form">
                 <div class="form-group">
                     <label for="patCohortDefName" class="control-label">Name</label>
@@ -20,13 +15,17 @@
                     <label for="patCohortDescription" class="control-label">Description</label>
                     <textarea id="patCohortDescription" class="form-control" ng-model="newCohort.description"></textarea>
                 </div>
-                <div class="form-group">
-                    <label for="patCohortDefinition" class="control-label">Members</label>
-                    <div class="row">
-                        <tree-component current-memeber-list="newCohort.memberList"></tree-component>
-                    </div>
-                </div>
-
+				<div class="form-group">
+					<label for="patCohortDefinition" class="control-label">Criteria</label>
+					<div id="patCohortDefinition">
+						<button id="addCriteriaButton" type="button" class="btn btn-primary" ng-click="newCohort.addCriteria()">Add criteria</button>
+						<div class="tree-drop">
+							<ul class="sortable" ng-repeat="criterion in newCohort.criteria">
+								<li>{{criterion.displayName}}<a title="remove" ng-click="newCohort.removeCriterion(criterion) "><span class="glyphicon glyphicon-remove" title="" style="color:red;"></span></a>
+							</ul>
+						</div>
+					</div>
+				</div>
                 <div class="form-group text-center vert-offset">
                     <button id="savePhenotypeButton" type="button" class="btn btn-primary" ng-click="newCohort.submitCohortForm()">Save</button>
                 </div>
@@ -34,3 +33,26 @@
         </div>
     </div>
 </div>
+<script type="text/ng-template" id="addCriteriaModal.html">
+	<div class="modal-header">
+		<h3 class="modal-title">Add Criteria</h3>
+	</div>
+	<div class="modal-body">
+		<tree-component current-memeber-list="mo.criteria"></tree-component>
+	</div>
+	<div class="modal-footer">
+		<button class="btn btn-primary" ng-click="mo.ok()">Add criteria and close</button>
+	</div>
+</script>
+<script type="text/ng-template" id="deleteCriterionModal.html">
+	<div class="modal-header">
+	<h3 class="modal-title">Remove Criterion</h3>
+	</div>
+	<div class="modal-body">
+	Are you sure you want to remove "{{mo.criterionName}}"?
+	</div>
+	<div class="modal-footer">
+	<button class="btn btn-primary" ng-click="mo.ok()">Remove</button>
+	<button class="btn btn-primary" ng-click="mo.cancel()">Close</button>
+	</div>
+</script>

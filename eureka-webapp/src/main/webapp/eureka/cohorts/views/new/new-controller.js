@@ -10,36 +10,111 @@
 
     angular
         .module('eureka.cohorts')
-        .controller('cohorts.NewCtrl', NewCtrl);
+        .controller('cohorts.NewCtrl', NewCtrl)
+        .controller('cohorts.AddCriteriaModalCtrl', AddCriteriaModalCtrl)
+        .controller('cohorts.DeleteCriterionModalCtrl', DeleteCriterionModalCtrl);
 
-    NewCtrl.$inject = ['CohortService', '$state', '$rootScope'];
+    NewCtrl.$inject = ['CohortService', '$state', '$rootScope', '$uibModal'];
+    AddCriteriaModalCtrl.$inject = ['$uibModalInstance', 'criteria'];
+    DeleteCriterionModalCtrl.$inject = ['$uibModalInstance', 'criterionName'];
 
-    function NewCtrl(CohortService, $state, $rootScope) {
+    function NewCtrl(CohortService, $state, $rootScope, $uibModal) {
         let vm = this;
-        let createCohort = CohortService.createCohort;
         let userId = $rootScope.user.info.id;
 
-        vm.submitCohortForm = submitCohortForm;
+        vm.criteria = [];
         vm.memberList = [];
-        vm.currentMemeberList = [];
 
-        function submitCohortForm() {
+        vm.addCriteria = function () {
+            $uibModal.open({
+                templateUrl: 'addCriteriaModal.html',
+                controller: 'cohorts.AddCriteriaModalCtrl',
+                controllerAs: 'mo',
+                resolve: {
+                    criteria: function () {
+                        return vm.memberList;
+                    }
+                }
+            }).result.then(
+                function () {
+                  for (let i = 0; i < vm.memberList.length; i++) {
+                      let newMember = vm.memberList[i];
+                      let found = false;
+                      for (let j = 0; j < vm.criteria.length; j++) {
+                          if (newMember.key === vm.criteria[j].key) {
+                              found = true;
+                              break;
+                          }
+                      }
+                      if (!found) {
+                          vm.criteria.push(newMember);
+                      }
+                  }
+                  vm.memberList = [];
+                },
+                function () {
+                }
+            )
+        }
+
+		vm.removeCriterion = function(criterion) {
+			$uibModal.open({
+                templateUrl: 'deleteCriterionModal.html',
+                controller: 'cohorts.DeleteCriterionModalCtrl',
+                controllerAs: 'mo',
+                resolve: {
+                    criterionName: function () {
+                        return criterion.displayName;
+                    }
+                }
+            }).result.then(
+                function () {
+                    let indexOfCriterion = vm.criteria.indexOf(criterion);
+                    if (indexOfCriterion > -1) {
+                        vm.criteria.splice(indexOfCriterion, 1);
+                    }
+                },
+                function (arg) {
+                }
+            );
+		}
+
+        vm.submitCohortForm = function () {
             let cohortObject = {};
             cohortObject.name = vm.name;
             cohortObject.description = vm.description;
-            cohortObject.memberList = vm.memberList;
+            cohortObject.memberList = vm.criteria;
 
-            createCohort(cohortObject).then(data => {
-                // if successful we prob need to redirect back to the main table
-                console.log('we made it back', data);
+            CohortService.createCohort(cohortObject).then(data => {
                 $state.transitionTo('cohorts');
             }, displayError);
 
-        }
+        };
 
         function displayError(msg) {
             vm.errorMsg = msg;
         }
+    }
+
+    function AddCriteriaModalCtrl($uibModalInstance, criteria) {
+        var mo = this;
+        mo.criteria = criteria;
+        mo.ok = function () {
+            $uibModalInstance.close();
+        };
+    }
+
+    function DeleteCriterionModalCtrl($uibModalInstance, criterionName) {
+        var mo = this;
+        mo.criterionName = criterionName;
+        mo.ok = function () {
+            $uibModalInstance.close();
+        };
+
+        mo.cancel = function () {
+            $uibModalInstance.dismiss('cancel');
+        };
+
     }
 
 }());

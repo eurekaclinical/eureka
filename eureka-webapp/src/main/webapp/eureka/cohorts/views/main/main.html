@@ -1,23 +1,9 @@
-<style>
-	.myGrid {
-		width: 800px;
-		height: 250px;
-	}
-</style>
-
+<h3>Cohorts</h3>
+<p>Define cohorts within your datasets.</p>
 <div class="row">
-    <div class="col-sm-12">
-        <h3>Cohorts</h3>
-        <p>Define a cohort to identify the patient population in your datasets.
-        </p>
-        <p>
-            <a ui-sref="newCohort" class="btn btn-primary"><span class="glyphicon glyphicon-plus-sign"></span>
-				Define New Cohort
-			</a>
-        </p>
-        <!-- removing ui-grid for now -->
-        <!-- <div ui-grid="cohorts.gridOptions" ui-grid-pagination ui-grid-edit class="grid"></div> -->
-    </div>
+	<a ui-sref="newCohort" class="btn btn-primary"><span class="glyphicon glyphicon-plus-sign"></span>
+		Define New Cohort
+	</a>
 </div>
 <!-- ng-table -->
 <div class="row">
@@ -36,9 +22,6 @@
                 <td title="'Description'" filter="{ description: 'text'}" sortable="'description'">
                     {{user.description}}
                 </td>
-                <td title="'Type'" filter="{ type: 'text'}" sortable="'type'">
-                    {{user.type}}
-                </td>
                 <td title="'Created'" filter="{ created_at: 'text'}" sortable="'created_at'">
                     {{user.created_at | date:'MM/dd/yyyy'}}
                 </td>
@@ -48,7 +31,7 @@
 </div>
 <script type="text/ng-template" id="myModal.html">
 	<div class="modal-header">
-	<h3 class="modal-title">Delete Element</h3>
+	<h3 class="modal-title">Delete Cohort</h3>
 	</div>
 	<div class="modal-body">
 	Are you sure you would like to remove this item?
@@ -70,4 +53,3 @@
 	<button class="btn btn-primary" ng-click="mod.cancel()">Close</button>
     </div>
 </script>
-</div>
