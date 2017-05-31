@@ -38,7 +38,7 @@
         vm.criteria = [];
         vm.memberList = [];
 
-        let onRouteChangeOff = $rootScope.$on('$locationChangeStart', routeChange);
+        let onRouteChangeOff = $scope.$on('$stateChangeStart', routeChange);
 
         vm.addCriteria = function () {
             $uibModal.open({
@@ -101,11 +101,13 @@
             cohortObject.memberList = vm.criteria;
 			if (vm.nowEditing) {
                 cohortObject.id = vm.id;
-                CohortService.updateCohort(cohortObject).then(data => {
+                CohortService.updateCohort(cohortObject).then(function() {
+                    onRouteChangeOff();
 					$state.transitionTo('cohorts');
 				}, displayError);
             } else {
-				CohortService.createCohort(cohortObject).then(data => {
+				CohortService.createCohort(cohortObject).then(function() {
+                    onRouteChangeOff();
 					$state.transitionTo('cohorts');
 				}, displayError);
             }
@@ -113,38 +115,8 @@
         };
 
         vm.cancelCohortForm = function() {
-            if (!$scope.patCohortForm || !$scope.patCohortForm.$dirty) {
-                $state.transitionTo('cohorts');
-            } else if (vm.id) {
-                $uibModal.open({
-					templateUrl: 'cancelEditCohortModal.html',
-					controller: 'cohorts.CancelEditModalCtrl',
-					controllerAs: 'mo',
-					resolve: {
-						cohortName: function () {
-							return vm.name;
-						}
-					}
-				}).result.then(
-					data => {
-						$state.transitionTo('cohorts');
-					},
-					function (arg) {
-					}
-				);
-            } else {
-                $uibModal.open({
-					templateUrl: 'cancelCreateCohortModal.html',
-					controller: 'cohorts.CancelCreateModalCtrl',
-					controllerAs: 'mo'
-				}).result.then(
-					data => {
-						$state.transitionTo('cohorts');
-					},
-					function (arg) {
-					}
-				);
-            }
+            //Triggers $stateChangeStart event, so we get a confirm modal.
+            $state.transitionTo('cohorts');
         }
 
         function displayError(msg) {
@@ -168,8 +140,8 @@
             vm.criteria = fullResults;
         }
 
-        function routeChange(event, newUrl, oldUrl) {
-            if (!$scope.patCohortForm || !$scope.patCohortForm.$dirty) return;
+        function routeChange(event, toState, toParams, fromState, fromParams) {
+            if (!event.currentScope.patCohortForm || !event.currentScope.patCohortForm.$dirty) return;
             event.preventDefault();
             if (vm.id) {
                 $uibModal.open({
@@ -184,7 +156,7 @@
 				}).result.then(
 					function () {
                         onRouteChangeOff();
-                        $location.path($location.url(newUrl).hash());
+                        $state.transitionTo(toState);
 					},
 					function () {}
 				);
@@ -196,7 +168,7 @@
 				}).result.then(
 					function () {
                         onRouteChangeOff();
-                        $location.path($location.url(newUrl).hash());
+                        $state.transitionTo(toState);
                     },
 					function () {}
 				);
