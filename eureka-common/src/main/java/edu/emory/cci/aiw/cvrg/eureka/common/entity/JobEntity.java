@@ -327,6 +327,7 @@ public class JobEntity {
 			}
 		}
 		job.setLinks(links);
+		job.setGetStatisticsSupported(this.destination.isGetStatisticsSupported());
 		return job;
 	}
 

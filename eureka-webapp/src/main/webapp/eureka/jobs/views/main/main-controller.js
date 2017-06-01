@@ -13,14 +13,27 @@
         .module('eureka.jobs')
         .controller('jobs.MainCtrl', MainCtrl);
 
-    MainCtrl.$inject = ['JobService'];
+    MainCtrl.$inject = ['JobService', '$interval'];
 
-    function MainCtrl(JobService) {
+    function MainCtrl(JobService, $interval) {
         var vm = this;
         vm.radioData = 1;
         
-        vm.earliestDate = earliestDate;
-        vm.latestDate = latestDate;
+        vm.earliestDatePopup = {
+			opened: false
+		};
+
+        vm.openEarliestDatePopup = function() {
+			vm.earliestDatePopup.opened = true;
+		};
+
+        vm.latestDatePopup = {
+			opened: false
+		};
+
+        vm.openLatestDatePopup = function() {
+			vm.latestDatePopup.opened = true;
+		};
         
         function displayError(msg) {
             console.log(msg);
@@ -31,23 +44,29 @@
             vm.successMsg = msg;
         }    
 
-        JobService.getLatestJobs()
-                .then(function(data){
-            
-            vm.jobsLatest = data;
-            
-            vm.jobLatest = vm.jobsLatest[0];
-            
-            vm.jobInfoSourceConfig = vm.jobLatest.sourceConfigId;
-            
-            vm.jobInfoDestination = vm.jobLatest.destinationId;
-            
-            vm.jobInfoStatus = vm.jobLatest.status;
-            
-            vm.jobInfoStartTimestamp = vm.jobLatest.startTimestamp;
-            
-            vm.jobInfoFinishTimestamp = vm.jobLatest.finishTimeStamp;
-        });          
+        function getLatestJobs() {
+			JobService.getLatestJobs()
+					.then(function(data){
+				vm.jobsLatest = data;
+				vm.jobLatest = vm.jobsLatest[0];
+                vm.jobId = vm.jobLatest.id;
+				vm.jobInfoSourceConfig = vm.jobLatest.sourceConfigId;
+				vm.jobInfoDestination = vm.jobLatest.destinationId;
+				vm.jobInfoStatus = vm.jobLatest.status;
+				vm.jobInfoStartTimestamp = vm.jobLatest.startTimestamp;
+				vm.jobInfoFinishTimestamp = vm.jobLatest.finishTimestamp;
+                vm.jobLinks = vm.jobLatest.status === 'COMPLETED' ? vm.jobLatest.links : [];
+				vm.jobStatisticsSupported = vm.jobLatest.status === 'COMPLETED' ? vm.jobLatest.getStatisticsSupported : false;
+			});
+        }
+
+        getLatestJobs();
+        let stopTime = $interval(function () {
+            getLatestJobs();
+        }, 5000);
+        angular.element('#jobInformation').on('$destroy', function () {
+            $interval.cancel(stopTime);
+        });
         
         JobService.getDestinations()
                 .then(function(data){

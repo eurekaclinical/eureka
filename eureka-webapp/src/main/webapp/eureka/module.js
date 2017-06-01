@@ -36,7 +36,7 @@
     angular.module('eureka', [
         'ui.router',
         'ui.bootstrap',
-        'ui.bootstrap.datetimepicker',
+        'ui.bootstrap.datepickerPopup',
         'ui.tree',
         'angularValidator',
         'ngMessages',
