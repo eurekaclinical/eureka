@@ -13,9 +13,9 @@
         .module('eureka.jobs')
         .controller('jobs.MainCtrl', MainCtrl);
 
-    MainCtrl.$inject = ['JobService', '$interval'];
+    MainCtrl.$inject = ['JobService', '$interval', '$scope'];
 
-    function MainCtrl(JobService, $interval) {
+    function MainCtrl(JobService, $interval, $scope) {
         var vm = this;
         vm.radioData = 1;
         
@@ -64,9 +64,7 @@
         let stopTime = $interval(function () {
             getLatestJobs();
         }, 5000);
-        angular.element('#jobInformation').on('$destroy', function () {
-            $interval.cancel(stopTime);
-        });
+        let onRouteChangeOff = $scope.$on('$stateChangeStart', routeChange);
         
         JobService.getDestinations()
                 .then(function(data){
@@ -83,7 +81,12 @@
             vm.sourceConfigs = data;
             
             vm.jobSourceConfig = vm.sourceConfigs[0];
-        });      
+        });
+ 
+        function routeChange(event, toState, toParams, fromState, fromParams) {
+            $interval.cancel(stopTime);
+            onRouteChangeOff();
+        };
         
         function earliestDate(ed){
             console.log(ed);
