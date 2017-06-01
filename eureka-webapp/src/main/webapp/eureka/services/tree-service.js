@@ -29,26 +29,30 @@
 
         function getTreeRoot() {
             return $http.get(dataEndpoint + '/concepts')
-                .then(handleSuccess, handleError)
-                // https://localhost:8443/eureka-webapp/protected/systemlist?key=root
-                //https://localhost:8443/eureka-webapp/proxy-resource/systemlist?key=root
+                .then(handleSuccess, handleError);
         }
 
         function getTreeNode(key) {
             if (key === 'root') {
                 return $http.get(dataEndpoint + '/concepts/')
-                    .then(handleSuccess, handleError)
+                    .then(handleSuccess, handleError);
             } else {
-                return $http.get(dataEndpoint + '/concepts/' + key)
-                    .then(handleSuccess, handleError)
-                    // https://localhost:8443/eureka-webapp/protected/systemlist?key=root
-                    //https://localhost:8443/eureka-webapp/proxy-resource/systemlist?key=root
+                return $http.post(dataEndpoint + '/concepts/', 'key=' + key)
+                    .then(
+                        function(response) {
+                            if (response.data.length > 0) {
+                                return response.data[0];
+                            } else {
+							    $q.reject('Not found');
+							}
+                        }, 
+                        handleError);
             }
         }
 
         function getUserListRoot() {
-            return $http.get(dataProtectedEndPoint + '/userproplist?key=root')
-                //https://localhost:8443/eureka-webapp/protected/systemlist?key=root
+            return $http.get(dataEndpoint + '/phenotypes')
+                .then(handleSuccess, handleError);
         }
 
         function removePhenotype(id) {
@@ -70,7 +74,7 @@
 
         function handleError(response) {
             if (!angular.isObject(response.data) && !response.data) {
-                return ($q.reject('An unknown error occurred.'));
+                return ($q.reject(response.statusText));
             }
             return ($q.reject(response.data));
         }
