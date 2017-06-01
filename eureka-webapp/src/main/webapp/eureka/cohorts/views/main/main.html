@@ -9,21 +9,21 @@
 <div class="row">
     <div class="col-md-12">
         <table ng-table="cohorts.tableParams" class="table" show-filter="true">
-            <tr ng-repeat="user in $data">
+            <tr ng-repeat="cohort in $data">
                 <td>
-                    <a ui-sref="editCohort({key: user.name})" title="Edit">
+                    <a ui-sref="editCohort({key: cohort.name})" title="Edit">
                         <span class="glyphicon glyphicon-pencil edit-icon" title="Edit"></span>
                     </a>
-                    <span class="glyphicon glyphicon-remove delete-icon" title="Delete" ng-click="cohorts.deleteCohort(user.name, $index)"></span>
+                    <span class="glyphicon glyphicon-remove delete-icon" title="Delete" ng-click="cohorts.deleteCohort(cohort.name)"></span>
                 </td>
                 <td title="'Name'" filter="{ name: 'text'}" sortable="'name'">
-                    {{user.name}}
+                    {{cohort.name}}
                 </td>
                 <td title="'Description'" filter="{ description: 'text'}" sortable="'description'">
-                    {{user.description}}
+                    {{cohort.description}}
                 </td>
                 <td title="'Created'" filter="{ created_at: 'text'}" sortable="'created_at'">
-                    {{user.created_at | date:'MM/dd/yyyy'}}
+                    {{cohort.created_at | date:'MM/dd/yyyy'}}
                 </td>
             </tr>
         </table>
@@ -34,11 +34,12 @@
 	<h3 class="modal-title">Delete Cohort</h3>
 	</div>
 	<div class="modal-body">
-	Are you sure you would like to remove this item?
+	<p><strong>Are you sure you would like to delete "{{mo.cohortName}}"?</strong></p>
+	<p>This operation cannot be undone.</p>
 	</div>
 	<div class="modal-footer">
-	<button class="btn btn-primary" ng-click="mo.ok()">Delete</button>
-	<button class="btn btn-primary" ng-click="mo.cancel()">Close</button>
+	<button type="submit" class="btn btn-default" ng-click="mo.cancel()">Cancel</button>
+	<button type="button" class="btn btn-primary" ng-click="mo.ok()">Delete</button>
 	</div>
 </script>
 
@@ -50,6 +51,6 @@
 	{{mod.data}}
     </div>
     <div class="modal-footer">
-	<button class="btn btn-primary" ng-click="mod.cancel()">Close</button>
+	<button type="button" class="btn btn-primary" ng-click="mod.cancel()">Close</button>
     </div>
 </script>

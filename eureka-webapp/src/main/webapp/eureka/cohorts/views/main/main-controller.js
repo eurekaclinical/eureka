@@ -17,7 +17,7 @@
 
 
     ModalCtrl.$inject = ['$uibModalInstance'];
-    DeleteModalCtrl.$inject = ['$uibModalInstance', 'data'];
+    DeleteModalCtrl.$inject = ['$uibModalInstance', 'cohortName'];
     MainCtrl.$inject = ['CohortService', 'NgTableParams', '$uibModal'];
 
     function ModalCtrl($uibModalInstance, currentUser) {
@@ -32,9 +32,9 @@
         };
     }
 
-    function DeleteModalCtrl($uibModalInstance, data) {
+    function DeleteModalCtrl($uibModalInstance, cohortName) {
         var mo = this;
-        mo.data = data;
+        mo.cohortName = cohortName;
         mo.ok = function () {
             $uibModalInstance.close();
         };
@@ -99,17 +99,14 @@
             }
         };
 
-        vm.deleteCohort = function (user, indexOfRow) {
-            var currentItem = user;
-            var currentRow = indexOfRow;
-
+        vm.deleteCohort = function (currentItem) {
             $uibModal.open({
                 templateUrl: 'myModal.html',
                 controller: 'cohorts.ModalCtrl',
                 controllerAs: 'mo',
                 resolve: {
-                    currentUser: function () {
-                        return user;
+                    cohortName: function () {
+                        return currentItem;
                     }
                 }
             })

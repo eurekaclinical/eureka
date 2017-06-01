@@ -16,21 +16,13 @@
         TreeService.getTreeRoot().then(function(data) {
             // NG Table
             vm.tableParams = new NgTableParams({}, { dataset: data });
-            callUserRoot();
         }, displayError);
 
-        function init() {
-            // clearNodes();
+		TreeService.getUserListRoot().then(function(data) {
+			// NG Table
+			vm.tableParamsUser = new NgTableParams({}, { dataset: data });
+		}, displayError);
 
-
-        }
-
-        function callUserRoot() {
-            TreeService.getUserListRoot().then(function(data) {
-                // NG Table
-                vm.tableParamsUser = new NgTableParams({}, { dataset: data.data });
-            }, displayError);
-        }
         vm.selectNode = function(node) {
             var currentNode = node;
             var hasChildren = node.parent;
@@ -47,22 +39,18 @@
             }
 
         }
-        vm.addNode = function(node) {
-            console.log(vm.currentMemeberList + '  1');
-            console.log(currentNodes + '@@');
-            if (node) {
 
+        vm.addNode = function(node) {
+            if (node) {
                 setNodes(node)
             }
             getMemberList()
         }
         vm.addUserNode = function(node) {
-            /* After changes add user node will need to be refactored will take care of later in week.
             if (node) {
-                node.displayName = node.text;
-                dragAndDropService.setNodes(node);
+                setNodes(node);
             }
-            getMemberList() */
+            getMemberList();
         }
         vm.removeNode = function(node) {
             for (var i = 0; i < vm.currentMemeberList.length; i++) {

@@ -20,51 +20,38 @@
     </div>
 </div>
 <div class="col-md-7">
+	<h4>Concepts</h4>
     <table ng-table="vm.tableParams" class="table" show-filter="true">
-        <tr>
-            <div style="font-size: 21px; color:#333">System</div>
-        </tr>
         <tr ng-repeat="user in $data" class="animate">
             <td>
-
-                <span ng-if="user.parent === false" ng-class="{true: 'glyphicon glyphicon-folder-close', false: 'glyphicon glyphicon-file'}[user.parent]" title=""> {{user.displayName}}</span>
-
+				<span ng-if="user.parent === false">
+					<i ng-class="{true: 'fa fa-folder-o', false: 'glyphicon glyphicon-file'}[user.parent]" aria-hidden="true"></i> {{user.displayName}}
+				</span>
                 <a title="Edit" ng-click="vm.selectNode(user) " ng-if="user.parent===true">
-                    <span ng-class="{true: 'glyphicon glyphicon-folder-close', false: 'glyphicon glyphicon-file'}[user.parent]" title=""></span> {{user.displayName}}
+                    <i ng-class="{true: 'fa fa-folder-o', false: 'glyphicon glyphicon-file'}[user.parent]" aria-hidden="true"></i> {{user.displayName}}
                 </a>
-
             </td>
-
             <td>
                 <a title="Edit" ng-click="vm.addNode(user) " class="add-node">
                     <span class="glyphicon glyphicon-plus" title=""></span>
-
                 </a>
             </td>
-
         </tr>
-
     </table>
+	
+	<h4>Phenotypes</h4>
     <table ng-table="vm.tableParamsUser" class="table" show-filter="true">
-        <tr>
-            <div style="font-size: 21px; color:#333">User</div>
-        </tr>
         <tr ng-repeat="user1 in $data" class="animate">
             <td>
-                <span ng-if="user1.children === false" ng-class="{true: 'glyphicon glyphicon-folder-close', false: 'glyphicon glyphicon-file'}[user1.children]" title=""> {{user1.text}} </span>
-                <a title="Edit" ng-if="user1.children === true" ng-click="vm.selectNode(user1) ">
-                    <span ng-class="{true: 'glyphicon glyphicon-folder-close', false: 'glyphicon glyphicon-file'}[user1.children]" title=""></span> {{user1.text}}
-                </a>
-
+				<span>
+					<i class="glyphicon glyphicon-file" aria-hidden="true"></i> {{user1.displayName}}
+				</span>
             </td>
-
             <td>
                 <a title="Edit" ng-click="vm.addUserNode(user1) " class="add-node">
                     <span class="glyphicon glyphicon-plus" title=""></span>
-
                 </a>
             </td>
-
         </tr>
     </table>
 </div>
@@ -76,7 +63,6 @@
                 <span>{{selectedNode.displayName}}</span>
                 <a title="remove" ng-click="vm.removeNode(selectedNode) ">
                     <span class="glyphicon glyphicon-remove" title="" style="color:red;"></span>
-
                 </a>
                 <p>
         </fieldset>
