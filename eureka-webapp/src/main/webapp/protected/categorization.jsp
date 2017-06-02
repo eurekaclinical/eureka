@@ -43,8 +43,8 @@
 
 <template:insert template="/templates/eureka_main.jsp">
 	<template:content name="content">
-		<h3>Categorization Editor</h3>
-		<p>
+		<h1>Categorization Editor</h1>
+		<p class="lead">
 			This category phenotype may be used wherever its member phenotype(s) are accepted.
 		</p>
 

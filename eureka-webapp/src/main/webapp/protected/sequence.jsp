@@ -43,8 +43,8 @@
 
 <template:insert template="/templates/eureka_main.jsp">
 <template:content name="content">
-<h3>Sequence Editor</h3>
-<p>Computes intervals with the same start and stop time as the Main phenotype below when the temporal
+<h1>Sequence Editor</h1>
+<p class="lead">Computes intervals with the same start and stop time as the Main phenotype below when the temporal
 	relationships below are satisfied.
 </p>
 <div class="row">

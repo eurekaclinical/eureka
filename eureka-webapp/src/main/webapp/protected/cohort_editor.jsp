@@ -42,8 +42,8 @@
 <%@ taglib uri="/WEB-INF/tlds/template.tld" prefix="template" %>
 <template:insert template="/templates/eureka_main.jsp">
 	<template:content name="content">
-		<h3>Cohort Editor</h3>
-		<p>
+		<h1>Cohort Editor</h1>
+		<p class="lead">
 			Select the system and user-defined elements from the ontology that will define the patient cohort.
 		</p>
 		<div class = "row">

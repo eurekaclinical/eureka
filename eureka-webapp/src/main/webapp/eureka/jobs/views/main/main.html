@@ -1,145 +1,141 @@
-<h3>Submit Job</h3>
+<h1>Submit Job</h1>
 
-<div class="row">
-	<div class="col-md-12">
-		<form id="uploadForm" name="uploadForm" role="form" method="POST" action="upload" enctype="multipart/form-data">
-			<fieldset>
-				<legend>Job Information</legend>
-				<table id="jobInformation" class="table table-responsive">
-					<thead>
-						<tr>
-							<td>Source</td>
-							<td>Destination</td>
-							<td>Job Status</td>
-							<td>Started</td>
-							<td>Finished</td>
-							<td>Links</td>
-						</tr>
-					</thead>
-					<tbody>
-						<tr>
-							<td id="sourceConfig"> 
-								{{jobs.jobInfoSourceConfig}}
-							</td>
-							<td id="destinationConfig">
-								{{jobs.jobInfoDestination}}
-							</td>
-							<td id="jobStatus">
-								{{jobs.jobInfoStatus!=null ? jobs.jobInfoStatus : 'No jobs have been submitted'}}
-							</td>
-							<td id="startedDate">
-								{{jobs.jobInfoStatus != null ? (jobs.jobInfoStartTimestamp | date: 'medium') : ''}} 
-							</td>
-							<td id="finishedDate">
-								{{jobs.jobInfoStatus != null ? (jobs.jobInfoFinishTimestamp | date: 'medium') : ''}}
-							</td>
-							<td>
-								<div id="links" ng-repeat="link in jobs.jobLinks">
-									<a href="{{link.url}}">{{link.displayName}}</a></br>
-								</div>
-								<div id ="getStatisticsSupported" ng-if="jobs.jobStatisticsSupported">
-									<a href="/protected/jobstats?jobId={{jobs.jobId}}">Browse Output</a>
-								</div>
-							</td>
-						</tr>
-					</tbody>
+<form id="uploadForm" name="uploadForm" role="form" method="POST" action="upload" enctype="multipart/form-data">
+	<fieldset>
+		<legend>Job Information</legend>
+		<table id="jobInformation" class="table table-responsive">
+			<thead>
+				<tr>
+					<td>Source</td>
+					<td>Destination</td>
+					<td>Job Status</td>
+					<td>Started</td>
+					<td>Finished</td>
+					<td>Links</td>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td id="sourceConfig"> 
+						{{jobs.jobInfoSourceConfig}}
+					</td>
+					<td id="destinationConfig">
+						{{jobs.jobInfoDestination}}
+					</td>
+					<td id="jobStatus">
+						{{jobs.jobInfoStatus!=null ? jobs.jobInfoStatus : 'No jobs have been submitted'}}
+					</td>
+					<td id="startedDate">
+						{{jobs.jobInfoStatus != null ? (jobs.jobInfoStartTimestamp | date: 'medium') : ''}} 
+					</td>
+					<td id="finishedDate">
+						{{jobs.jobInfoStatus != null ? (jobs.jobInfoFinishTimestamp | date: 'medium') : ''}}
+					</td>
+					<td>
+						<div id="links" ng-repeat="link in jobs.jobLinks">
+							<a href="{{link.url}}">{{link.displayName}}</a></br>
+						</div>
+						<div id ="getStatisticsSupported" ng-if="jobs.jobStatisticsSupported">
+							<a href="/protected/jobstats?jobId={{jobs.jobId}}">Browse Output</a>
+						</div>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</fieldset>
+	<fieldset id ="data">
+		<legend>Data</legend>
+		<div class="form-group">
+			<select class="form-control" ng-model="jobs.jobSourceConfig" ng-options="sc.displayName for sc in jobs.sourceConfigs ">
+			</select>
+		</div>  
+		<div class="form-group">
+			<div flow-init="{target: '/upload'}" flow-files-submitted="$flow.upload()" flow-file-success="$file.msg = $message">
+				<input type="file" flow-btn/>
+				<table>
+					<tr ng-repeat="file in $flow.files">
+						<td>{{$index+1}}</td>
+						<td>{{file.name}}</td>
+						<td>{{file.msg}}</td>
+					</tr>
 				</table>
-			</fieldset>
-			<fieldset id ="data">
-				<legend>Data</legend>
-				<div class="form-group">
-					<select class="form-control" ng-model="jobs.jobSourceConfig" ng-options="sc.displayName for sc in jobs.sourceConfigs ">
-					</select>
-				</div>  
-				<div class="form-group">
-					<div flow-init="{target: '/upload'}" flow-files-submitted="$flow.upload()" flow-file-success="$file.msg = $message">
-						<input type="file" flow-btn/>
-						<table>
-							<tr ng-repeat="file in $flow.files">
-								<td>{{$index+1}}</td>
-								<td>{{file.name}}</td>
-								<td>{{file.msg}}</td>
-							</tr>
-						</table>
-					</div>
-				</div>
-			</fieldset>
-			<fieldset id ="data">
-				<legend>Action</legend>
-				<div class="form-group">
-					<select class="form-control" ng-model="jobs.jobDestination" ng-options="d.name for d in jobs.destinations">
-					</select>                                
-				</div>  
+			</div>
+		</div>
+	</fieldset>
+	<fieldset id ="data">
+		<legend>Action</legend>
+		<div class="form-group">
+			<select class="form-control" ng-model="jobs.jobDestination" ng-options="d.name for d in jobs.destinations">
+			</select>                                
+		</div>  
 
-				<div class="form-group">
-					<label class="radio-inline">
-						<input type="radio" name="updateData" ng-model="jobs.radioData" value="1">Replace Data
-					</label>
-					<label class="radio-inline">
-						<input type="radio" name="updateData" ng-model="jobs.radioData" value="2">Update Data
-					</label> 
+		<div class="form-group">
+			<label class="radio-inline">
+				<input type="radio" name="updateData" ng-model="jobs.radioData" value="1">Replace Data
+			</label>
+			<label class="radio-inline">
+				<input type="radio" name="updateData" ng-model="jobs.radioData" value="2">Update Data
+			</label> 
+		</div>
+	</fieldset>
+	<fieldset id ="concepts">
+		<legend>Concepts</legend>
+		<div class="form-group">
+			<div id="conceptsList"
+				 class="jstree-drop tree-drop tree-drop-multiple"
+				 title="Drag and drop concepts to load here">
+				<div class="label-info text-center">
+					Drop Here
 				</div>
-			</fieldset>
-			<fieldset id ="concepts">
-				<legend>Concepts</legend>
-				<div class="form-group">
-					<div id="conceptsList"
-						 class="jstree-drop tree-drop tree-drop-multiple"
-						 title="Drag and drop concepts to load here">
-						<div class="label-info text-center">
-							Drop Here
-						</div>
-						<ul class="sortable" data-drop-type="multiple" data-proptype="empty">
-						</ul>
-					</div>
-				</div>                                
-			</fieldset>
-			<fieldset id ="dateRange">
-				<legend>Date range</legend>
-				<div class="form-group">
-					<label class="control-label" for="dateRangePhenotypeKey">Concept</label>
-					<div id="dateRangePhenotypeKey"
-						 class="tree-drop tree-drop-single jstree-drop form-control-static">
-						<div class="label-info text-center">
-							Drop Here
-						</div>
-						<ul data-type="main" data-drop-type="single" class="sortable">
-						</ul>
-					</div>
-					<input type="hidden" name="dateRangePhenotypeKey">
+				<ul class="sortable" data-drop-type="multiple" data-proptype="empty">
+				</ul>
+			</div>
+		</div>                                
+	</fieldset>
+	<fieldset id ="dateRange">
+		<legend>Date range</legend>
+		<div class="form-group">
+			<label class="control-label" for="dateRangePhenotypeKey">Concept</label>
+			<div id="dateRangePhenotypeKey"
+				 class="tree-drop tree-drop-single jstree-drop form-control-static">
+				<div class="label-info text-center">
+					Drop Here
 				</div>
-				<div class="form-group">
-					<label for="earliestDateSelector" class="control-label">Earliest date</label>
-					<div class="input-group">
-						<span class="input-group-addon">
-							<select name="dateRangeEarliestDateSide" ng-model="jobs.earliestDateSide">
-								<option value="START">start</option>
-								<option value="FINISH">finish</option>
-							</select>
-						</span>
-						<input type="text" name="earliestDateSelector" class="form-control" uib-datepicker-popup is-open="jobs.earliestDatePopup.opened" ng-model="jobs.earliestDate" />
-						<span class="input-group-btn">
-							<button type="button" class="btn btn-default" ng-click="jobs.openEarliestDatePopup()"><i class="glyphicon glyphicon-calendar"></i></button>
-						</span>
-					</div>
-				</div>
-				<div class="form-group">
-					<label for="latestDateSelector" class="control-label">Latest date</label>
-					<div class="input-group">
-						<span class="input-group-addon">
-							<select name="dateRangeLatestDateSide" ng-model="jobs.latestDateSide">
-								<option value="START">start</option>
-								<option value="FINISH">finish</option>
-							</select>
-						</span>
-						<input type="text" name="latestDateSelector" class="form-control" uib-datepicker-popup is-open="jobs.latestDatePopup.opened" ng-model="jobs.latestDate" />
-						<span class="input-group-btn">
-							<button type="button" class="btn btn-default" ng-click="jobs.openLatestDatePopup()"><i class="glyphicon glyphicon-calendar"></i></button>
-						</span>
-					</div>
-				</div>
-			</fieldset>
-			<input type="submit" id="startButton" class="btn btn-primary" value="Start">
-		</form>
-	</div>
-</div>
+				<ul data-type="main" data-drop-type="single" class="sortable">
+				</ul>
+			</div>
+			<input type="hidden" name="dateRangePhenotypeKey">
+		</div>
+		<div class="form-group">
+			<label for="earliestDateSelector" class="control-label">Earliest date</label>
+			<div class="input-group">
+				<span class="input-group-addon">
+					<select name="dateRangeEarliestDateSide" ng-model="jobs.earliestDateSide">
+						<option value="START">start</option>
+						<option value="FINISH">finish</option>
+					</select>
+				</span>
+				<input type="text" name="earliestDateSelector" class="form-control" uib-datepicker-popup is-open="jobs.earliestDatePopup.opened" ng-model="jobs.earliestDate" />
+				<span class="input-group-btn">
+					<button type="button" class="btn btn-default" ng-click="jobs.openEarliestDatePopup()"><i class="glyphicon glyphicon-calendar"></i></button>
+				</span>
+			</div>
+		</div>
+		<div class="form-group">
+			<label for="latestDateSelector" class="control-label">Latest date</label>
+			<div class="input-group">
+				<span class="input-group-addon">
+					<select name="dateRangeLatestDateSide" ng-model="jobs.latestDateSide">
+						<option value="START">start</option>
+						<option value="FINISH">finish</option>
+					</select>
+				</span>
+				<input type="text" name="latestDateSelector" class="form-control" uib-datepicker-popup is-open="jobs.latestDatePopup.opened" ng-model="jobs.latestDate" />
+				<span class="input-group-btn">
+					<button type="button" class="btn btn-default" ng-click="jobs.openLatestDatePopup()"><i class="glyphicon glyphicon-calendar"></i></button>
+				</span>
+			</div>
+		</div>
+	</fieldset>
+	<input type="submit" id="startButton" class="btn btn-primary" value="Start">
+</form>

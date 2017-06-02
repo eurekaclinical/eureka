@@ -44,111 +44,100 @@
 <template:insert template="/templates/eureka_main.jsp">
 
 	<template:content name="content">
-		<div class="row">
-			<div class="col-sm-12">
-				<h3>Phenotype Editor</h3>
-				<p>Specify the phenotypes that you want to compute in your
-					datasets below.
-					Phenotypes are patient features inferred from sequence,
-					frequency and other temporal patterns in the events and
-					observations in your dataset.
-					These features are computed as intervals with a start time
-					and a stop time representing when they are present.
-				</p>
+		<h1>Phenotype Editor</h1>
+		<p class="lead">Specify the phenotypes that you want to compute in your
+			datasets.
+		<p>Phenotypes are patient features inferred from sequence,
+			frequency and other temporal patterns in the events and
+			observations in your dataset.
+			These features are computed as intervals with a start time
+			and a stop time representing when they are present.
 
-				<div id="dialog" title="Delete Data Element"></div>
-				<div class="btn-group">
-					<div class="btn-group">
-						<button id="typeDropdown" class="btn btn-primary" data-toggle="dropdown">
-							<span class="glyphicon glyphicon-plus-sign"></span>
-							Create New Element
-						</button>
-						<ul class="dropdown-menu" role="menu" aria-labelledby="typeDropdown">
-							<li>
-								<a href="${pageContext.request.contextPath}/protected/editprop?type=categorization">
-									<dt>
-										Categorization
-									</dt>
-									<dd>
-										<fmt:message key="phenotypetype.CATEGORIZATION.description"/>
-									</dd>
-								</a>
-							</li>
-							<li>
-								<a href="${pageContext.request.contextPath}/protected/editprop?type=sequence">
-									<dt>
-										Sequence
-									</dt>
-									<dd>
-										<fmt:message key="phenotypetype.SEQUENCE.description"/>
-									</dd>
-								</a>
-							</li>
-							<li>
-								<a href="${pageContext.request.contextPath}/protected/editprop?type=frequency">
-									<dt>
-										Frequency
-									</dt>
-									<dd>
-										<fmt:message key="phenotypetype.FREQUENCY.description"/>
-									</dd>
-								</a>
-							</li>
-							<li>
-								<a href="${pageContext.request.contextPath}/protected/editprop?type=value_threshold">
-									<dt>
-										Value Threshold
-									</dt>
-									<dd>
-										<fmt:message key="phenotypetype.VALUE_THRESHOLD.description"/>
-									</dd>
-								</a>
-							</li>
-						</ul>
-					</div>
-					<a class="btn btn-default" href="http://eurekaclinical.org/docs/analytics/phenotypes/"
-					   target="eurekaclinical-analytics-help">
-						<span class="glyphicon glyphicon-question-sign"></span>
-					</a>
-				</div>
-				<table class="table table-responsive vert-offset">
-					<tr>
-						<th>Action</th>
-						<th>Name</th>
-						<th>Description</th>
-						<th>Type</th>
-						<th>Created Date</th>
-						<th>Last Modified</th>
-					</tr>
-					<c:forEach items="${props}" var="prop">
-						<c:url value="/protected/editprop" var="editUrl">
-							<c:param name="key" value="${prop.attr['key']}"/>
-						</c:url>
-						<tr data-key="${prop.attr['key']}" data-id ="${prop.attr['id']}"
-							data-display-name="${prop.attr['displayName']}">
-							<td>
-								<%--<span class="glyphicon glyphicon-eye-open view-icon" title="View"></span>--%>
-								<a href="${editUrl}" title="Edit">
-									<span class="glyphicon glyphicon-pencil edit-icon" title="Edit"></span>
-								</a>
-								<span class="glyphicon glyphicon-remove delete-icon" title="Delete"></span>
-							</td>
-							<td>${prop.attr['displayName']}</td>
-							<td>${prop.attr['description']}</td>
-							<td>${prop.attr['type']}</td>
-							<td>${prop.attr['created']}</td>
-							<td>${prop.attr['lastModified']}</td>
-						</tr>
-					</c:forEach>
-				</table>
+		<div id="dialog" title="Delete Data Element"></div>
+		<div class="btn-group">
+			<div class="btn-group">
+				<button id="typeDropdown" class="btn btn-primary" data-toggle="dropdown">
+					<span class="glyphicon glyphicon-plus-sign"></span>
+					Create New Element
+				</button>
+				<ul class="dropdown-menu" role="menu" aria-labelledby="typeDropdown">
+					<li>
+						<a href="${pageContext.request.contextPath}/protected/editprop?type=categorization">
+							<dt>
+								Categorization
+							</dt>
+							<dd>
+								<fmt:message key="phenotypetype.CATEGORIZATION.description"/>
+							</dd>
+						</a>
+					</li>
+					<li>
+						<a href="${pageContext.request.contextPath}/protected/editprop?type=sequence">
+							<dt>
+								Sequence
+							</dt>
+							<dd>
+								<fmt:message key="phenotypetype.SEQUENCE.description"/>
+							</dd>
+						</a>
+					</li>
+					<li>
+						<a href="${pageContext.request.contextPath}/protected/editprop?type=frequency">
+							<dt>
+								Frequency
+							</dt>
+							<dd>
+								<fmt:message key="phenotypetype.FREQUENCY.description"/>
+							</dd>
+						</a>
+					</li>
+					<li>
+						<a href="${pageContext.request.contextPath}/protected/editprop?type=value_threshold">
+							<dt>
+								Value Threshold
+							</dt>
+							<dd>
+								<fmt:message key="phenotypetype.VALUE_THRESHOLD.description"/>
+							</dd>
+						</a>
+					</li>
+				</ul>
 			</div>
-			<%--<div class="col-sm-2">--%>
-				<%--<div class="tooltip" id="tooltip" style="text-align: left">--%>
-					<%--<div id="tree">--%>
-					<%--</div>--%>
-				<%--</div>--%>
-			<%--</div>--%>
+			<a class="btn btn-default" href="http://eurekaclinical.org/docs/analytics/phenotypes/"
+			   target="eurekaclinical-analytics-help">
+				<span class="glyphicon glyphicon-question-sign"></span>
+			</a>
 		</div>
+		<table class="table table-responsive vert-offset">
+			<tr>
+				<th>Action</th>
+				<th>Name</th>
+				<th>Description</th>
+				<th>Type</th>
+				<th>Created Date</th>
+				<th>Last Modified</th>
+			</tr>
+			<c:forEach items="${props}" var="prop">
+				<c:url value="/protected/editprop" var="editUrl">
+					<c:param name="key" value="${prop.attr['key']}"/>
+				</c:url>
+				<tr data-key="${prop.attr['key']}" data-id ="${prop.attr['id']}"
+					data-display-name="${prop.attr['displayName']}">
+					<td>
+						<%--<span class="glyphicon glyphicon-eye-open view-icon" title="View"></span>--%>
+						<a href="${editUrl}" title="Edit">
+							<span class="glyphicon glyphicon-pencil edit-icon" title="Edit"></span>
+						</a>
+						<span class="glyphicon glyphicon-remove delete-icon" title="Delete"></span>
+					</td>
+					<td>${prop.attr['displayName']}</td>
+					<td>${prop.attr['description']}</td>
+					<td>${prop.attr['type']}</td>
+					<td>${prop.attr['created']}</td>
+					<td>${prop.attr['lastModified']}</td>
+				</tr>
+			</c:forEach>
+		</table>
 		<div id="deleteModal" class="modal fade" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
 			<div class="modal-dialog modal-lg">
 				<div class="modal-content">

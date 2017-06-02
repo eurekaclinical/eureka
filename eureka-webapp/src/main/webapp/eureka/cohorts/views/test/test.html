@@ -1,24 +1,20 @@
 <style>
-.myGrid {
-    width: 800px;
-    height: 250px;
-  }
+	.myGrid {
+		width: 800px;
+		height: 250px;
+	}
 </style>
 
 
-<div class="row">
-    <div class="col-sm-12">
-        <h3>Cohorts</h3>
-        <p>Define a cohort to identify the patient population in your datasets.
-        </p>
-        <p>
-            <a href="editcohort" class="btn btn-primary"><span class="glyphicon glyphicon-plus-sign"></span>Define New Cohort
-				</a>
-        </p>
-        <!-- ui-grid -->
-        <global-grid grid-options={{cohorts.columnDefs}} grid-data={{cohorts.testData}} class="grid"></global-grid>
-    </div>
-</div>
+<h1>Cohorts</h1>
+<p>Define a cohort to identify the patient population in your datasets.
+</p>
+<p>
+	<a href="editcohort" class="btn btn-primary"><span class="glyphicon glyphicon-plus-sign"></span>Define New Cohort
+	</a>
+</p>
+<!-- ui-grid -->
+<global-grid grid-options={{cohorts.columnDefs}} grid-data={{cohorts.testData}} class="grid"></global-grid>
 <br><br><br>
 <!-- ng-table -->
 

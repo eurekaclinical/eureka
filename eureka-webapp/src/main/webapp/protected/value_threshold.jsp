@@ -43,8 +43,8 @@
 
 <template:insert template="/templates/eureka_main.jsp">
 <template:content name="content">
-<h3>Value Threshold Editor</h3>
-<p>
+<h1>Value Threshold Editor</h1>
+<p class="lead">
 	Computes intervals corresponding to when the specified thresholds below are present.
 </p>
 

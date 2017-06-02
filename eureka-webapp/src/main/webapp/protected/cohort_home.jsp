@@ -43,46 +43,42 @@
 
 <template:insert template="/templates/eureka_main.jsp">
 	<template:content name="content">
-		<div class="row">
-			<div class="col-sm-12">
-				<h3>Cohorts</h3>
-				<p>Define a cohort to identify the patient population in your datasets.
-				</p>
-				<a href="editcohort" class="btn btn-primary"><span class="glyphicon glyphicon-plus-sign"></span>Define New Cohort
-				</a>
-				<table class="table table-responsive vert-offset">
-					<tr>
-						<th>Action</th>
-						<th>Name</th>
-						<th>Description</th>
-						<th>Created Date</th>
-						<th>Last Modified</th>
-					</tr>
-					<c:forEach items="${cohorts}" var="cohort">
-						<c:url value="/protected/editcohort" var="editUrl">
-							<c:param name="key" value="${cohort.attr['key']}"/>
-						</c:url>
-						<tr data-key="${cohort.attr['key']}"
-							data-display-name="${cohort.attr['displayName']}">
-							<td>
-								<%--<span class="glyphicon glyphicon-eye-open view-icon" title="View"></span>--%>
-								<a href="${editUrl}" title="Edit">
-									<span class="glyphicon glyphicon-pencil edit-icon" title="Edit"></span>
-								</a>
-								<span class="glyphicon glyphicon-remove delete-icon" title="Delete"></span>
-							</td>
-							<td>${cohort.attr['displayName']}</td>
-							<td>${cohort.attr['description']}</td>
-							<td>${cohort.attr['createdDate']}</td>
-							<td>${cohort.attr['lastModifiedDate']}</td>
-							<%-- <td><a href="${pageContext.request.contextPath}/protected/editCohort" class="btn btn-primary"
-							title="The generated patient list will be the patient population for the next job that is submitted through the Submit Job page.">Generate Patient List
-							</a></td>--%>
-						</tr>
-					</c:forEach>
-				</table>
-			</div>
-		</div>
+		<h1>Cohorts</h1>
+		<p class="lead">Define a cohort to identify the patient population in your datasets.
+		</p>
+		<a href="editcohort" class="btn btn-primary"><span class="glyphicon glyphicon-plus-sign"></span>Define New Cohort
+		</a>
+		<table class="table table-responsive vert-offset">
+			<tr>
+				<th>Action</th>
+				<th>Name</th>
+				<th>Description</th>
+				<th>Created Date</th>
+				<th>Last Modified</th>
+			</tr>
+			<c:forEach items="${cohorts}" var="cohort">
+				<c:url value="/protected/editcohort" var="editUrl">
+					<c:param name="key" value="${cohort.attr['key']}"/>
+				</c:url>
+				<tr data-key="${cohort.attr['key']}"
+					data-display-name="${cohort.attr['displayName']}">
+					<td>
+						<%--<span class="glyphicon glyphicon-eye-open view-icon" title="View"></span>--%>
+						<a href="${editUrl}" title="Edit">
+							<span class="glyphicon glyphicon-pencil edit-icon" title="Edit"></span>
+						</a>
+						<span class="glyphicon glyphicon-remove delete-icon" title="Delete"></span>
+					</td>
+					<td>${cohort.attr['displayName']}</td>
+					<td>${cohort.attr['description']}</td>
+					<td>${cohort.attr['createdDate']}</td>
+					<td>${cohort.attr['lastModifiedDate']}</td>
+					<%-- <td><a href="${pageContext.request.contextPath}/protected/editCohort" class="btn btn-primary"
+					title="The generated patient list will be the patient population for the next job that is submitted through the Submit Job page.">Generate Patient List
+					</a></td>--%>
+				</tr>
+			</c:forEach>
+		</table>
 		<div id="deleteModal" class="modal fade" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
 			<div class="modal-dialog modal-lg">
 				<div class="modal-content">

@@ -2,97 +2,95 @@
     .ng-table-pager {
         display: none;
     }
-    
+
     table.ng-table td {
         text-align: left;
         width: 94%;
     }
-    
+
     a.add-node {
         color: green;
     }
 </style>
-<div class="row">
-    <div class="col-sm-12">
-        <h3>{{createPhenotype.type}} Editor</h3>
-        <p>
-            {{createPhenotype.description}}
-        </p>
-    </div>
-</div>
-<div class="col-md-12">
-    <div class="col-md-5">
-        <div ng-show="createPhenotype.viewObject.showTree">
-            <!--  <tree-component current-memeber-list="createPhenotype.memberList"></tree-component>  -->
-            <!-- tree -->
 
-            <div class="col-md-12">
-                <div class="row">
-                    <ol class="breadcrumb">
-                        <li class="breadcrumb-item" ng-repeat="x in createPhenotype.breadCrumbs"><a href ng-click="createPhenotype.setBreadCrumbs(x)">{{x.displayName}}</a></li>
-                    </ol>
-                </div>
-            </div>
-            <div class="col-md-7">
-                <table ng-table="createPhenotype.tableParams" class="table" show-filter="true">
-                    <tr>
-                        <div style="font-size: 21px; color:#333">System</div>
-                    </tr>
-                    <tr ng-repeat="user in $data" class="animate">
-                        <td>
-                            <span ng-if="user.parent === false" ng-class="{true: 'glyphicon glyphicon-folder-close', false: 'glyphicon glyphicon-file'}[user.parent]" title=""> {{user.displayName}}</span>
-                            <a title="Edit" ng-click="createPhenotype.selectNode(user) " ng-if="user.parent===true">
-                                <span ng-class="{true: 'glyphicon glyphicon-folder-close', false: 'glyphicon glyphicon-file'}[user.parent]" title=""></span> {{user.displayName}}
-                            </a>
-                        </td>
-                        <td>
-                            <a title="Edit" ng-click="createPhenotype.addNode(user) " class="add-node">
-                                <span class="glyphicon glyphicon-plus" title=""></span>
-                            </a>
-                        </td>
-                    </tr>
-                </table>
-                <table ng-table="createPhenotype.tableParamsUser" class="table" show-filter="true">
-                    <tr>
-                        <div style="font-size: 21px; color:#333">User</div>
-                    </tr>
-                    <tr ng-repeat="user1 in $data" class="animate">
-                        <td>
-                            <span ng-if="user1.children === false" ng-class="{true: 'glyphicon glyphicon-folder-close', false: 'glyphicon glyphicon-file'}[user1.children]" title=""> {{user1.text}} </span>
-                            <a title="Edit" ng-if="user1.children === true" ng-click="createPhenotype.selectNode(user1) ">
-                                <span ng-class="{true: 'glyphicon glyphicon-folder-close', false: 'glyphicon glyphicon-file'}[user1.children]" title=""></span> {{user1.text}}
-                            </a>
-                        </td>
-                        <td>
-                            <a title="Edit" ng-click="createPhenotype.addUserNode(user1) " class="add-node">
-                                <span class="glyphicon glyphicon-plus" title=""></span>
-                            </a>
-                        </td>
-                    </tr>
-                </table>
-            </div>
-            <div class="col-md-5" style="background:#f5f5f5">
-                <form>
-                    <fieldset>
-                        <legend>Items Added&nbsp;</legend>
-                        <p ng-repeat="selectedNode in createPhenotype.currentMemeberList">
-                            <span>{{selectedNode.displayName}}</span>
-                            <a title="remove" ng-click="createPhenotype.removeNode(selectedNode) ">
-                                <span class="glyphicon glyphicon-remove" title="" style="color:red;"></span>
-                            </a>
-                            <p>
-                    </fieldset>
-                </form>
-            </div>
-            <div class="form-group text-center vert-offset ">
-                <button id="savePhenotypeButton " type="button " class="btn btn-primary " ng-click="createPhenotype.addMembers()">Add</button>
-            </div>
-        </div>
-        <!-- end of tree -->
-    </div>
-    <div id="definitionContainer" class="col-md-7">
-        <div ng-if="createPhenotype.type === 'Threshold'" ng-include="'eureka/phenotypes/views/create/threshold.html'"></div>
-        <div ng-if="createPhenotype.type === 'Categorization'" ng-include="'eureka/phenotypes/views/create/categorization.html'"></div>
-        <div ng-if="createPhenotype.type === 'Frequency'" ng-include="'eureka/phenotypes/views/create/frequency.html'"></div>
-        <div ng-if="createPhenotype.type === 'Sequence'" ng-include="'eureka/phenotypes/views/create/sequence.html'"></div>
-    </div>
+<h1>{{createPhenotype.type}} Editor</h1>
+<p>
+	{{createPhenotype.description}}
+</p>
+<div class="row">
+	<div class="col-md-5">
+		<div ng-show="createPhenotype.viewObject.showTree">
+			<!--  <tree-component current-memeber-list="createPhenotype.memberList"></tree-component>  -->
+			<!-- tree -->
+
+			<div class="col-md-12">
+				<div class="row">
+					<ol class="breadcrumb">
+						<li class="breadcrumb-item" ng-repeat="x in createPhenotype.breadCrumbs"><a href ng-click="createPhenotype.setBreadCrumbs(x)">{{x.displayName}}</a></li>
+					</ol>
+				</div>
+			</div>
+			<div class="col-md-7">
+				<table ng-table="createPhenotype.tableParams" class="table" show-filter="true">
+					<tr>
+					<div style="font-size: 21px; color:#333">System</div>
+					</tr>
+					<tr ng-repeat="user in $data" class="animate">
+						<td>
+							<span ng-if="user.parent === false" ng-class="{true: 'glyphicon glyphicon-folder-close', false: 'glyphicon glyphicon-file'}[user.parent]" title=""> {{user.displayName}}</span>
+							<a title="Edit" ng-click="createPhenotype.selectNode(user) " ng-if="user.parent===true">
+								<span ng-class="{true: 'glyphicon glyphicon-folder-close', false: 'glyphicon glyphicon-file'}[user.parent]" title=""></span> {{user.displayName}}
+							</a>
+						</td>
+						<td>
+							<a title="Edit" ng-click="createPhenotype.addNode(user) " class="add-node">
+								<span class="glyphicon glyphicon-plus" title=""></span>
+							</a>
+						</td>
+					</tr>
+				</table>
+				<table ng-table="createPhenotype.tableParamsUser" class="table" show-filter="true">
+					<tr>
+					<div style="font-size: 21px; color:#333">User</div>
+					</tr>
+					<tr ng-repeat="user1 in $data" class="animate">
+						<td>
+							<span ng-if="user1.children === false" ng-class="{true: 'glyphicon glyphicon-folder-close', false: 'glyphicon glyphicon-file'}[user1.children]" title=""> {{user1.text}} </span>
+							<a title="Edit" ng-if="user1.children === true" ng-click="createPhenotype.selectNode(user1) ">
+								<span ng-class="{true: 'glyphicon glyphicon-folder-close', false: 'glyphicon glyphicon-file'}[user1.children]" title=""></span> {{user1.text}}
+							</a>
+						</td>
+						<td>
+							<a title="Edit" ng-click="createPhenotype.addUserNode(user1) " class="add-node">
+								<span class="glyphicon glyphicon-plus" title=""></span>
+							</a>
+						</td>
+					</tr>
+				</table>
+			</div>
+			<div class="col-md-5" style="background:#f5f5f5">
+				<form>
+					<fieldset>
+						<legend>Items Added&nbsp;</legend>
+						<p ng-repeat="selectedNode in createPhenotype.currentMemeberList">
+							<span>{{selectedNode.displayName}}</span>
+							<a title="remove" ng-click="createPhenotype.removeNode(selectedNode) ">
+								<span class="glyphicon glyphicon-remove" title="" style="color:red;"></span>
+							</a>
+						<p>
+					</fieldset>
+				</form>
+			</div>
+			<div class="form-group text-center vert-offset ">
+				<button id="savePhenotypeButton " type="button " class="btn btn-primary " ng-click="createPhenotype.addMembers()">Add</button>
+			</div>
+		</div>
+		<!-- end of tree -->
+	</div>
+	<div id="definitionContainer" class="col-md-7">
+		<div ng-if="createPhenotype.type === 'Threshold'" ng-include="'eureka/phenotypes/views/create/threshold.html'"></div>
+		<div ng-if="createPhenotype.type === 'Categorization'" ng-include="'eureka/phenotypes/views/create/categorization.html'"></div>
+		<div ng-if="createPhenotype.type === 'Frequency'" ng-include="'eureka/phenotypes/views/create/frequency.html'"></div>
+		<div ng-if="createPhenotype.type === 'Sequence'" ng-include="'eureka/phenotypes/views/create/sequence.html'"></div>
+	</div>
+</div>

@@ -43,7 +43,7 @@
 
 <template:insert template="/templates/eureka_main.jsp">
 	<template:content name="content">
-		<h3>Browse Population</h3>
+		<h1>Browse Population</h1>
 		<div id="msg" class="alert alert-danger" role="alert">
 			<p><strong>No data!</strong> This job did not output any data.</p>
 		</div>

@@ -44,7 +44,7 @@
 
 <template:insert template="/templates/eureka_main.jsp">
 	<template:content name="content">
-		<h3>Submit Job</h3>
+		<h1>Submit Job</h1>
 		<form id="uploadForm" name="uploadForm" role="form" method="POST" action="upload" enctype="multipart/form-data" encoding="multipart/form-data"
 			  <c:if test="${not empty requestScope.jobStatus and jobStatus.jobSubmitted}">data-job-running="true"</c:if>>
                                 <input type="hidden" name="jobSpec">

@@ -43,8 +43,8 @@
 
 <template:insert template="/templates/eureka_main.jsp">
 <template:content name="content">
-<h3>Frequency Editor</h3>
-<p>
+<h1>Frequency Editor</h1>
+<p class="lead">
 	Computes an interval over the temporal extent of the intervals contributing to the specified frequency
 	count below.
 </p>

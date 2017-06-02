@@ -1,34 +1,30 @@
-<h3>Cohorts</h3>
-<p>Define cohorts within your datasets.</p>
+<h1>Cohorts</h1>
+<p class="lead">Define cohorts within your datasets.</p>
 <div>
 	<a ui-sref="newCohort" class="btn btn-primary"><span class="glyphicon glyphicon-plus-sign"></span>
 		Define New Cohort
 	</a>
 </div>
 <!-- ng-table -->
-<div class="row">
-    <div class="col-md-12">
-        <table ng-table="cohorts.tableParams" class="table" show-filter="true">
-            <tr ng-repeat="cohort in $data">
-                <td>
-                    <a ui-sref="editCohort({key: cohort.name})" title="Edit">
-                        <span class="glyphicon glyphicon-pencil edit-icon" title="Edit"></span>
-                    </a>
-                    <span class="glyphicon glyphicon-remove delete-icon" title="Delete" ng-click="cohorts.deleteCohort(cohort.name)"></span>
-                </td>
-                <td title="'Name'" filter="{ name: 'text'}" sortable="'name'">
-                    {{cohort.name}}
-                </td>
-                <td title="'Description'" filter="{ description: 'text'}" sortable="'description'">
-                    {{cohort.description}}
-                </td>
-                <td title="'Created'" filter="{ created_at: 'text'}" sortable="'created_at'">
-                    {{cohort.created_at | date:'MM/dd/yyyy'}}
-                </td>
-            </tr>
-        </table>
-    </div>
-</div>
+<table ng-table="cohorts.tableParams" class="table" show-filter="true">
+	<tr ng-repeat="cohort in $data">
+		<td>
+			<a ui-sref="editCohort({key: cohort.name})" title="Edit">
+				<span class="glyphicon glyphicon-pencil edit-icon" title="Edit"></span>
+			</a>
+			<span class="glyphicon glyphicon-remove delete-icon" title="Delete" ng-click="cohorts.deleteCohort(cohort.name)"></span>
+		</td>
+		<td title="'Name'" filter="{ name: 'text'}" sortable="'name'">
+			{{cohort.name}}
+		</td>
+		<td title="'Description'" filter="{ description: 'text'}" sortable="'description'">
+			{{cohort.description}}
+		</td>
+		<td title="'Created'" filter="{ created_at: 'text'}" sortable="'created_at'">
+			{{cohort.created_at | date:'MM/dd/yyyy'}}
+		</td>
+	</tr>
+</table>
 <script type="text/ng-template" id="myModal.html">
 	<div class="modal-header">
 	<h3 class="modal-title">Delete Cohort</h3>
