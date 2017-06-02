@@ -1,5 +1,11 @@
 <h1>Cohorts</h1>
 <p class="lead">Define cohorts within your datasets.</p>
+<div class="alert alert-danger" role="alert" ng-if="cohorts.deleteErrorMsg">
+	<strong>Error deleting cohort!</strong> {{cohorts.deleteErrorMsg}}
+</div>
+<div class="alert alert-danger" role="alert" ng-if="cohorts.loadErrorMsg">
+	<strong>Error loading cohorts!</strong> {{cohorts.loadErrorMsg}}
+</div>
 <div>
 	<a ui-sref="newCohort" class="btn btn-primary"><span class="glyphicon glyphicon-plus-sign"></span>
 		Define New Cohort
@@ -25,28 +31,16 @@
 		</td>
 	</tr>
 </table>
-<script type="text/ng-template" id="myModal.html">
+<script type="text/ng-template" id="deleteModal.html">
 	<div class="modal-header">
 	<h3 class="modal-title">Delete Cohort</h3>
 	</div>
 	<div class="modal-body">
-	<p><strong>Are you sure you would like to delete "{{mo.cohortName}}"?</strong></p>
+	<p><strong>Are you sure you want to delete "{{mo.cohortName}}"?</strong></p>
 	<p>This operation cannot be undone.</p>
 	</div>
 	<div class="modal-footer">
 	<button type="submit" class="btn btn-default" ng-click="mo.cancel()">Cancel</button>
 	<button type="button" class="btn btn-primary" ng-click="mo.ok()">Delete</button>
 	</div>
-</script>
-
-<script type="text/ng-template" id="errorModal.html">
-    <div class="modal-header">
-	<h3 class="modal-title">Error</h3>
-    </div>
-    <div class="modal-body">
-	{{mod.data}}
-    </div>
-    <div class="modal-footer">
-	<button type="button" class="btn btn-primary" ng-click="mod.cancel()">Close</button>
-    </div>
 </script>

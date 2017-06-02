@@ -11,16 +11,14 @@
 
     angular
         .module('eureka.cohorts')
-        .controller('cohorts.ModalCtrl', ModalCtrl)
         .controller('cohorts.DeleteModalCtrl', DeleteModalCtrl)
         .controller('cohorts.MainCtrl', MainCtrl);
 
 
-    ModalCtrl.$inject = ['$uibModalInstance'];
     DeleteModalCtrl.$inject = ['$uibModalInstance', 'cohortName'];
     MainCtrl.$inject = ['CohortService', 'NgTableParams', '$uibModal'];
 
-    function ModalCtrl($uibModalInstance, currentUser) {
+    function ErrorModalCtrl($uibModalInstance, currentUser) {
         var mo = this;
         mo.currentUser = currentUser;
         mo.ok = function () {
@@ -63,8 +61,12 @@
             }
         }
 
-        function displayError(msg) {
-            vm.errorMsg = msg;
+        function displayDeleteError(msg) {
+            vm.deleteErrorMsg = msg;
+        }
+
+        function displayLoadError(msg) {
+            vm.loadErrorMsg = msg;
         }
 
         vm.selected = [];
@@ -101,8 +103,8 @@
 
         vm.deleteCohort = function (currentItem) {
             $uibModal.open({
-                templateUrl: 'myModal.html',
-                controller: 'cohorts.ModalCtrl',
+                templateUrl: 'deleteModal.html',
+                controller: 'cohorts.DeleteModalCtrl',
                 controllerAs: 'mo',
                 resolve: {
                     cohortName: function () {
@@ -113,9 +115,7 @@
                 .result.then(
                 function () {
                     removeCohort(currentItem);
-                },
-                function (arg) {
-                    console.log(arg);
+					displayDeleteError('');
                 }
                 );
         }
@@ -131,30 +131,9 @@
             vm.tableParams.reload();
         }
 
-        function deleteError(data) {
-            $uibModal.open({
-                templateUrl: 'errorModal.html',
-                controller: 'phenotypes.DeleteModalCtrl',
-                controllerAs: 'mod',
-                resolve: {
-                    data: function () {
-                        return data;
-                    }
-                }
-            })
-                .result.then(
-                function () {
-                    // nothing to do here
-                },
-                function (arg) {
-                    // nothing to do here
-                }
-                );
-        }
-
         function removeCohort(data) {
             vm.currentSelectedItem = data;
-            vm.deferred = CohortService.removeCohort(data).then(deleteSuccess, deleteError);
+            vm.deferred = CohortService.removeCohort(data).then(deleteSuccess, displayDeleteError);
         }
 
         vm.onOrderChange = function () {
@@ -185,6 +164,6 @@
             data: []
         };
 
-        CohortService.getCohorts().then(success, displayError);
+        CohortService.getCohorts().then(success, displayLoadError);
     }
 })();
