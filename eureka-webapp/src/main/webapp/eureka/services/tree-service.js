@@ -74,7 +74,11 @@
 
         function handleError(response) {
             if (!angular.isObject(response.data) && !response.data) {
-                return ($q.reject(response.statusText));
+				if (response.statusText) {
+                    return ($q.reject(response.statusText));
+                } else {
+                    return ($q.reject('The server may be down.'));
+                }
             }
             return ($q.reject(response.data));
         }

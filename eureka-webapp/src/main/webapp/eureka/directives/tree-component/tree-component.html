@@ -12,13 +12,13 @@
         color: green;
     }
 </style>
-<div class="col-md-12">
-    <div class="row">
-        <ol class="breadcrumb">
-            <li class="breadcrumb-item" ng-repeat="x in vm.breadCrumbs"><a href ng-click="vm.setBreadCrumbs(x)">{{x.displayName}}</a></li>
-        </ol>
-    </div>
+<div class="alert alert-danger alert-dismissible" role="alert" ng-if="vm.errorMsg">
+	<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+	<strong>Error loading concepts!</strong> {{vm.errorMsg}}
 </div>
+<ol class="breadcrumb">
+	<li class="breadcrumb-item" ng-repeat="x in vm.breadCrumbs"><a href ng-click="vm.setBreadCrumbs(x)">{{x.displayName}}</a></li>
+</ol>
 <div class="col-md-7">
 	<h4>Data</h4>
     <table ng-table="vm.tableParams" class="table" show-filter="true">

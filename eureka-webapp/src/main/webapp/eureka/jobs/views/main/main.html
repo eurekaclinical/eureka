@@ -1,5 +1,10 @@
 <h1>Submit Job</h1>
-
+<div class="alert alert-danger" role="alert" ng-if="cohorts.jobStatusErrorMsg">
+	<strong>Error getting job status!</strong> {{cohorts.jobStatusErrorMsg}}
+</div>
+<div class="alert alert-danger" role="alert" ng-if="cohorts.jobSubmitErrorMsg">
+	<strong>Error submitting job!</strong> {{cohorts.jobSubmitErrorMsg}}
+</div>
 <form id="uploadForm" name="uploadForm" role="form" method="POST" action="upload" enctype="multipart/form-data">
 	<fieldset>
 		<legend>Job Information</legend>
