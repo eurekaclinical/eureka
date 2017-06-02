@@ -106,8 +106,8 @@
 							</li>
 						</ul>
 					</div>
-					<a class="btn btn-default" href="${initParam['eureka-help-url']}/phenotypes.html#select-type"
-					   target="eureka-help">
+					<a class="btn btn-default" href="http://eurekaclinical.org/docs/analytics/phenotypes/"
+					   target="eurekaclinical-analytics-help">
 						<span class="glyphicon glyphicon-question-sign"></span>
 					</a>
 				</div>

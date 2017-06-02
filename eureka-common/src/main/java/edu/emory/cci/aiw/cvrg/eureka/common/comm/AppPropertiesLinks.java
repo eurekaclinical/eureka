@@ -48,9 +48,7 @@ import edu.emory.cci.aiw.cvrg.eureka.common.props.SupportUri;
 public class AppPropertiesLinks {
 
 	private SupportUri supportUri;
-	private String aiwSiteUrl;
 	private String organizationName;
-	private String helpSiteUrl;
 	private String userWebappUrl;
 	private String userServiceUrl;
 
@@ -115,24 +113,6 @@ public class AppPropertiesLinks {
 	}
 
 	/**
-	 * Gets the aiwSiteUrl.
-	 *
-	 * @return aiwSiteUrl.
-	 */
-	public String getAiwUrl() {
-		return this.aiwSiteUrl;
-	}
-
-	/**
-	 * Sets the aiwSiteUrl.
-	 *
-	 * @param inAiwUrl
-	 */
-	public void setAiwUrl(String inAiwUrl) {
-		this.aiwSiteUrl = inAiwUrl;
-	}
-
-	/**
 	 * Gets the organizationName.
 	 *
 	 * @return organizationName.
@@ -148,23 +128,5 @@ public class AppPropertiesLinks {
 	 */
 	public void setOrganizationName(String inOrganizationName) {
 		this.organizationName = inOrganizationName;
-	}
-
-	/**
-	 * Gets the helpSiteUrl.
-	 *
-	 * @return helpSiteUrl.
-	 */
-	public String getHelpSiteUrl() {
-		return this.helpSiteUrl;
-	}
-
-	/**
-	 * Sets the helpSiteUrl.
-	 *
-	 * @param inHelpSiteUrl
-	 */
-	public void setHelpSiteUrl(String inHelpSiteUrl) {
-		this.helpSiteUrl = inHelpSiteUrl;
 	}
 }
