@@ -111,7 +111,7 @@
           console.log(arg);
         }
         );
-    }
+    };
 
     function deleteSuccess() {
       vm.tableParams.filter({});

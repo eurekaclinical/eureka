@@ -26,7 +26,6 @@ module.exports = function(config) {
       'https://cdn.jsdelivr.net/lodash/3.10.1/lodash.min.js',
       'assets/js/eureka.tree-cohort.js',
       'assets/js/eureka.cohort.js',
-      'assets/js/jstree-3.1.1.min.js',
       'build/app-*.js',
       'eureka/**/*-spec.js'
     ],

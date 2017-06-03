@@ -68,9 +68,10 @@
                   vm.memberList = [];
                 },
                 function () {
+                    vm.memberList = [];
                 }
-            )
-        }
+            );
+        };
 
 		vm.removeCriterion = function(criterion) {
 			$uibModal.open({
@@ -92,7 +93,7 @@
                 function (arg) {
                 }
             );
-		}
+		};
 
         vm.submitCohortForm = function () {
             let cohortObject = {};
@@ -117,7 +118,7 @@
         vm.cancelCohortForm = function() {
             //Triggers $stateChangeStart event, so we get a confirm modal.
             $state.transitionTo('cohorts');
-        }
+        };
 
         function displayError(msg) {
             vm.errorMsg = msg;
@@ -131,17 +132,18 @@
                 node.id && results.push(node);
                 _.without([node.left_node, node.right_node], undefined).reduce(reducer, results);
                 return results;
-            }
+            };
             const fullResults = [data].reduce(reducer, []);
-            console.log(fullResults + '%%%%%%%%%')
             for (var i = 0; i < fullResults.length; i++) {
-                fullResults[i].displayName = fullResults[i].name
+                fullResults[i].displayName = fullResults[i].name;
             }
             vm.criteria = fullResults;
         }
 
         function routeChange(event, toState, toParams, fromState, fromParams) {
-            if (!event.currentScope.patCohortForm || !event.currentScope.patCohortForm.$dirty) return;
+            if (!event.currentScope.patCohortForm || !event.currentScope.patCohortForm.$dirty) {
+				return;
+			}
             event.preventDefault();
             if (vm.id) {
                 $uibModal.open({
@@ -181,6 +183,9 @@
         mo.criteria = criteria;
         mo.ok = function () {
             $uibModalInstance.close();
+        };
+        mo.cancel = function () {
+            $uibModalInstance.dismiss('cancel');
         };
     }
 

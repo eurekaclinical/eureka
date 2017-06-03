@@ -43,20 +43,26 @@
             vm.jobSubmitErrorMsg = msg;
         }
 
+        function displayLoadError(msg) {
+            vm.loadErrorMsg = msg;
+        }
+
         function getLatestJobs() {
 			JobService.getLatestJobs()
 					.then(function(data){
                 vm.jobStatusErrorMsg = null;
 				vm.jobsLatest = data;
-				vm.jobLatest = vm.jobsLatest[0];
-                vm.jobId = vm.jobLatest.id;
-				vm.jobInfoSourceConfig = vm.jobLatest.sourceConfigId;
-				vm.jobInfoDestination = vm.jobLatest.destinationId;
-				vm.jobInfoStatus = vm.jobLatest.status;
-				vm.jobInfoStartTimestamp = vm.jobLatest.startTimestamp;
-				vm.jobInfoFinishTimestamp = vm.jobLatest.finishTimestamp;
-                vm.jobLinks = vm.jobLatest.status === 'COMPLETED' ? vm.jobLatest.links : [];
-				vm.jobStatisticsSupported = vm.jobLatest.status === 'COMPLETED' ? vm.jobLatest.getStatisticsSupported : false;
+                if (vm.jobsLatest && vm.jobsLatest.length > 0) {
+					vm.jobLatest = vm.jobsLatest[0];
+					vm.jobId = vm.jobLatest.id;
+					vm.jobInfoSourceConfig = vm.jobLatest.sourceConfigId;
+					vm.jobInfoDestination = vm.jobLatest.destinationId;
+					vm.jobInfoStatus = vm.jobLatest.status;
+					vm.jobInfoStartTimestamp = vm.jobLatest.startTimestamp;
+					vm.jobInfoFinishTimestamp = vm.jobLatest.finishTimestamp;
+					vm.jobLinks = vm.jobLatest.status === 'COMPLETED' ? vm.jobLatest.links : [];
+					vm.jobStatisticsSupported = vm.jobLatest.status === 'COMPLETED' ? vm.jobLatest.getStatisticsSupported : false;
+                }
 			}, displayJobStatusError);
         }
 
@@ -72,7 +78,7 @@
             vm.destinations = data;
             
             vm.jobDestination = vm.destinations[0];
-        }); 
+        }, displayLoadError); 
         
         
         JobService.getSourceConfigs()
@@ -81,12 +87,12 @@
             vm.sourceConfigs = data;
             
             vm.jobSourceConfig = vm.sourceConfigs[0];
-        });
+        }, displayLoadError);
  
         function routeChange(event, toState, toParams, fromState, fromParams) {
             $interval.cancel(stopTime);
             onRouteChangeOff();
-        };
+        }
         
         function earliestDate(ed){
             console.log(ed);

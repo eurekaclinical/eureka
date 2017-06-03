@@ -27,7 +27,7 @@
         { name: 'Name', field: 'name' },
         { name: 'Descripton', field: 'description' },
         { name: 'Type', field: 'type' },
-        { name: 'Created', field: 'created_at', enableCellEdit: false, cellFilter: 'date:"longDate"' }]
+        { name: 'Created', field: 'created_at', enableCellEdit: false, cellFilter: 'date:"longDate"' }];
          vm.testData = [
             {
                 'name': 'Vital1',
@@ -223,34 +223,6 @@
             vm.filter = predicate;
             vm.deferred = CohortService.getCohorts(vm.query).then(success, displayError);
         };
-
-        vm.onOrderChange = function () {
-            return CohortService.getCohorts(vm.query);
-        };
-
-        vm.onPaginationChange = function () {
-            return CohortService.getCohorts(vm.query);
-        };
-
-        // UI-Grid
-        vm.gridOptions = {
-            enableSorting: true,
-            paginationPageSizes: [10, 20, 30],
-            paginationPageSize: 10,
-            columnDefs: [
-                { name: ' ',  field: 'edit',
-                  cellTemplate: '<a href="${editUrl}" title="Edit">'+
-                  '<span class="glyphicon glyphicon-pencil edit-icon" title="Edit"></span></a> '+
-                  '<span class="glyphicon glyphicon-remove delete-icon" title="Delete"></span>'
-                },
-                { name:'Name', field: 'name' },
-                { name:'Descripton', field: 'description' },
-                { name:'Type', field: 'type'},
-                { name:'Created', field: 'created_at', enableCellEdit:false, cellFilter: 'date:"longDate"'}
-            ],
-            data: []
-        };
-       
 
         CohortService.getCohorts().then(success, displayError);
 

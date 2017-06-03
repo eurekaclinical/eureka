@@ -20,7 +20,7 @@
         <link rel="stylesheet" type="text/css" href="https://cdn.rawgit.com/angular-ui/bower-ui-grid/master/ui-grid.min.css"/>
         <link rel="stylesheet" type="text/css" href="https://unpkg.com/ng-table@2.0.2/bundles/ng-table.min.css">
 		
-	    <link rel="stylesheet" type="text/css" href="https://assets.eurekaclinical.org/v1.1/css/eurekaclinical.css">
+	    <link rel="stylesheet" type="text/css" href="https://assets.eurekaclinical.org/v2.0a1/css/eurekaclinical.css">
     </head>
     <body ng-cloak>
 
@@ -152,23 +152,21 @@
         <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/angular-messages/1.4.14/angular-messages.min.js"></script>
         <script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
         <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
-        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/angular-bootstrap-datetimepicker/1.1.4/js/datetimepicker.min.js"></script>
         <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-tree/2.9.0/angular-ui-tree.js"></script>
         <script type="text/javascript" src="https://cdn.jsdelivr.net/lodash/3.10.1/lodash.min.js"></script>
         <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.1/angular-mocks.js"></script>
         <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/ng-flow/2.7.4/ng-flow-standalone.min.js"></script>
         <script type="text/javascript" src="https://use.fontawesome.com/5e808755b2.js"></script>
-		<script type="text/javascript" src="https://assets.eurekaclinical.org/v1.1/js/ec.bootbar.min.js"></script>
-		<script type="text/javascript" src="https://assets.eurekaclinical.org/v1.1/js/ec.idletimeout.min.js"></script>
+		<script type="text/javascript" src="https://assets.eurekaclinical.org/v2.0a1/js/ec.bootbar.min.js"></script>
+		<script type="text/javascript" src="https://assets.eurekaclinical.org/v2.0a1/js/ec.idletimeout.min.js"></script>
         <script type="text/javascript" src="//angular-ui.github.io/bootstrap/ui-bootstrap-tpls-2.4.0.js"></script>
-        <!-- UI Grid-->
-        <script type="text/javascript" src="https://cdn.rawgit.com/angular-ui/bower-ui-grid/master/ui-grid.min.js"></script>
-        <!-- NG Table  -->
         <script type="text/javascript" src="https://unpkg.com/ng-table@2.0.2/bundles/ng-table.min.js"></script>
         <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/angular-validator/1.2.9/angular-validator.min.js"></script>
 		
         <!-- inject:js -->
         <!-- endinject -->
+		
+		<div idle-timeout ng-if="userVerficationPerformed == true && user != null"/>
 
     </body>
 </html>

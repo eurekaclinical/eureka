@@ -34,24 +34,21 @@
                     }
                     vm.tableParams = new NgTableParams({}, { dataset: data.children });
                 }, displayError);
-            } else {
-                //do nothing it is a document
             }
-
-        }
+        };
 
         vm.addNode = function(node) {
             if (node) {
-                setNodes(node)
+                setNodes(node);
             }
-            getMemberList()
-        }
+            getMemberList();
+        };
         vm.addUserNode = function(node) {
             if (node) {
                 setNodes(node);
             }
             getMemberList();
-        }
+        };
         vm.removeNode = function(node) {
             for (var i = 0; i < vm.currentMemeberList.length; i++) {
                 // we will need to look for both key and name.  name is key in update, but key is present on create.
@@ -68,7 +65,7 @@
                 }
 
             }
-        }
+        };
         vm.setBreadCrumbs = function(node) {
             var currentNode = node;
             var hasChildren = node.parent;
@@ -97,11 +94,10 @@
                 vm.breadCrumbs.length = pos + 1;
 
             }, displayError);
-
-        }
+        };
 
         function getMemberList() {
-            vm.currentMemeberList = getNodes()
+            vm.currentMemeberList = getNodes();
         }
 
         function displayError(msg) {

@@ -118,7 +118,7 @@
 					displayDeleteError('');
                 }
                 );
-        }
+        };
 
         function deleteSuccess() {
             vm.tableParams.filter({});

@@ -92,10 +92,10 @@
 
         function createCohort(cohort) {
             /*This is what the data looks like being sent to server.  Does not look valid
-            {"id":null,"type":"COHORT","ownerUserId":1,"name":"NameTest","description":"NameDescription",
-            "phenotypeFields":null, "cohort":{"id":null,"node":{"id":null,"start":null,"finish":null,
-            "type":"Literal","name":"\\ACT\\Medications\\"}},"read":false,"write":false,"execute":false,
-            "created_at":null,"updated_at":null,"links":null}
+            {'id':null,'type':'COHORT','ownerUserId':1,'name':'NameTest','description':'NameDescription',
+            'phenotypeFields':null, 'cohort':{'id':null,'node':{'id':null,'start':null,'finish':null,
+            'type':'Literal','name':'\\ACT\\Medications\\'}},'read':false,'write':false,'execute':false,
+            'created_at':null,'updated_at':null,'links':null}
             */
             let newCohort = {
                 id: null,
@@ -141,7 +141,7 @@
             newCohort.cohort.id = null;
             newCohort.cohort.node = node;
             console.log(newCohort);
-            let testCohort = { "id": null, "type": "COHORT", "ownerUserId": 1, "name": "jay23333", "description": "description 234", "phenotypeFields": null, "cohort": { "id": null, "node": { "id": null, "start": null, "finish": null, "type": "Literal", "name": "Encounter" } }, "read": false, "write": false, "execute": false, "created_at": null, "updated_at": null, "links": null }
+            let testCohort = { 'id': null, 'type': 'COHORT', 'ownerUserId': 1, 'name': 'jay23333', 'description': 'description 234', 'phenotypeFields': null, 'cohort': { 'id': null, 'node': { 'id': null, 'start': null, 'finish': null, 'type': 'Literal', 'name': 'Encounter' } }, 'read': false, 'write': false, 'execute': false, 'created_at': null, 'updated_at': null, 'links': null };
             return $http.post(dataEndpoint + '/destinations/', newCohort)
                 .then(handleSuccess, handleError);
         }

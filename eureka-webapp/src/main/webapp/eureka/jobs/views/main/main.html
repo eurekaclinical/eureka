@@ -1,8 +1,11 @@
 <h1>Submit Job</h1>
-<div class="alert alert-danger" role="alert" ng-if="cohorts.jobStatusErrorMsg">
+<div class="alert alert-danger" role="alert" ng-if="jobs.loadErrorMsg">
+	<strong>Error loading page data!</strong> {{cohorts.loadErrorMsg}}
+</div>
+<div class="alert alert-danger" role="alert" ng-if="jobs.jobStatusErrorMsg">
 	<strong>Error getting job status!</strong> {{cohorts.jobStatusErrorMsg}}
 </div>
-<div class="alert alert-danger" role="alert" ng-if="cohorts.jobSubmitErrorMsg">
+<div class="alert alert-danger" role="alert" ng-if="jobs.jobSubmitErrorMsg">
 	<strong>Error submitting job!</strong> {{cohorts.jobSubmitErrorMsg}}
 </div>
 <form id="uploadForm" name="uploadForm" role="form" method="POST" action="upload" enctype="multipart/form-data">

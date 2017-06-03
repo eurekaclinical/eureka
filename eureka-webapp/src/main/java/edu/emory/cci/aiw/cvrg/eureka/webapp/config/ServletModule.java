@@ -50,6 +50,7 @@ import java.util.Map;
 import org.eurekaclinical.common.config.AbstractServletModule;
 import org.eurekaclinical.common.servlet.DestroySessionServlet;
 import org.eurekaclinical.common.servlet.LogoutServlet;
+import org.eurekaclinical.common.servlet.PostMessageLoginServlet;
 import org.eurekaclinical.common.servlet.ProxyServlet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -99,6 +100,9 @@ class ServletModule extends AbstractServletModule {
 	protected void setupServlets() {
 
 		serve("/proxy-resource/*").with(ProxyServlet.class);
+		
+		bind(SessionPropertiesServlet.class).in(Singleton.class);
+		serve("/protected/get-session-properties").with(SessionPropertiesServlet.class);
 		
 		serve("/destroy-session").with(DestroySessionServlet.class);  
 
