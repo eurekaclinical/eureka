@@ -40,9 +40,9 @@ package edu.emory.cci.aiw.cvrg.eureka.services.config;
  * #L%
  */
 
-import com.google.inject.ConfigurationException;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
+import com.google.inject.ProvisionException;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.EtlClient;
 import javax.servlet.http.HttpSessionEvent;
 import javax.servlet.http.HttpSessionListener;
@@ -70,7 +70,7 @@ public class ClientSessionListener implements HttpSessionListener {
 		LOGGER.info("Destroying session for " + hse.getSession().getServletContext().getContextPath());
 		try {
 			this.injector.getInstance(EtlClient.class).close();
-		} catch (ConfigurationException ce) {}
+		} catch (ProvisionException ce) {}
 	}
 	
 }
