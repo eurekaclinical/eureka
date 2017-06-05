@@ -91,8 +91,4 @@ public class TestPropositionFinder implements PropositionFinder<String> {
 		return null;
 	}
 
-	@Override
-	public void shutdown() {
-
-	}
 }

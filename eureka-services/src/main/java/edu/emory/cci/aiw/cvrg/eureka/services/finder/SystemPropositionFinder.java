@@ -48,22 +48,14 @@ import com.google.inject.Singleton;
 
 import org.eurekaclinical.eureka.client.comm.SystemPhenotype;
 
-import net.sf.ehcache.Cache;
-import net.sf.ehcache.CacheManager;
-
 @Singleton
 public class SystemPropositionFinder extends AbstractPropositionFinder<String> {
-	private static final String CACHE_NAME = "systemPropositions";
 	private final SystemPropositionRetriever retriever;
-	private final CacheManager cacheManager;
-	private final Cache cache;
 
 	@Inject
 	public SystemPropositionFinder(SystemPropositionRetriever inRetriever) {
 		super(inRetriever);
 		this.retriever = inRetriever;
-		this.cacheManager = CacheManager.create();
-		this.cache = this.cacheManager.getCache(CACHE_NAME);
 	}
 	
 	/**
@@ -80,13 +72,4 @@ public class SystemPropositionFinder extends AbstractPropositionFinder<String> {
 		return this.retriever.retrieveAll(sourceConfigId, inKeys, withChildren);
 	}
 
-	@Override
-	protected Cache getCache() {
-		return cache;
-	}
-
-	@Override
-	protected CacheManager getCacheManager() {
-		return cacheManager;
-	}
 }

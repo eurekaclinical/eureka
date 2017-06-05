@@ -43,10 +43,6 @@ import org.protempa.PropositionDefinition;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import net.sf.ehcache.Cache;
-import net.sf.ehcache.CacheManager;
-import net.sf.ehcache.Element;
-
 public abstract class AbstractPropositionFinder<K> implements PropositionFinder<K> {
 
 	private static Logger LOGGER = LoggerFactory.getLogger(AbstractPropositionFinder.class);
@@ -71,30 +67,7 @@ public abstract class AbstractPropositionFinder<K> implements PropositionFinder<
 	@Override
 	public PropositionDefinition find(String sourceConfigId, K inKey)
 			throws PropositionFindException {
-		LOGGER.debug("Finding {}", inKey);
-		Cache cache = this.getCache();
-		Element element;
-		synchronized (cache) {
-			element = cache.get(inKey);
-			if (element == null) {
-				PropositionDefinition propDef
-						= this.retriever.retrieve(sourceConfigId, inKey);
-				element = new Element(inKey, propDef);
-				cache.put(element);
-			}
-		}
-
-		PropositionDefinition propDef = (PropositionDefinition) element.getValue();
-		return propDef;
+		return this.retriever.retrieve(sourceConfigId, inKey);
 	}
 
-	@Override
-	public void shutdown() {
-		this.getCacheManager().removalAll();
-		this.getCacheManager().shutdown();
-	}
-
-	abstract protected CacheManager getCacheManager();
-
-	abstract protected Cache getCache();
 }

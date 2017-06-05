@@ -47,7 +47,6 @@ import com.google.inject.persist.jpa.JpaPersistModule;
 import com.google.inject.servlet.GuiceServletContextListener;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.EtlClientProvider;
 
-import edu.emory.cci.aiw.cvrg.eureka.services.finder.SystemPropositionFinder;
 import javax.servlet.ServletContext;
 import org.eurekaclinical.common.config.InjectorSupport;
 
@@ -84,14 +83,5 @@ public class ConfigListener extends GuiceServletContextListener {
 		ServletContext servletContext = servletContextEvent.getServletContext();
 		servletContext.addListener(this.injector.getInstance(ClientSessionListener.class));
 	}
-	
-	
 
-	@Override
-	public void contextDestroyed(ServletContextEvent inServletContextEvent) {
-		super.contextDestroyed(inServletContextEvent);
-		SystemPropositionFinder finder
-				= this.injector.getInstance(SystemPropositionFinder.class);
-		finder.shutdown();
-	}
 }

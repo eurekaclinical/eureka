@@ -118,8 +118,9 @@ public class PropositionDefinitionFinder implements AutoCloseable {
 		LinkedHashSet<String> nodesToLoad = new LinkedHashSet<>();
 		try {
 			List<String> searchResults = knowledgeSource.getMatchingPropIds(inSearchKey);
+			int searchLimit = etlProperties.getSearchLimit();
 			for (String pf : searchResults) {
-				if (nodesToLoad.size() > etlProperties.getSearchLimit()) {
+				if (nodesToLoad.size() > searchLimit) {
 					break;
 				} else {
 					if (pf != null) {

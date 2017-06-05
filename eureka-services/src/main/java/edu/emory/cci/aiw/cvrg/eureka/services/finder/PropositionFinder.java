@@ -60,8 +60,4 @@ public interface PropositionFinder<K> {
 	public PropositionDefinition find(String sourceConfigId, 
 									  K inKey) throws PropositionFindException;
 
-	/**
-	 * Performs any clean-up operations for the finder.
-	 */
-	public void shutdown();
 }
