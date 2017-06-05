@@ -16,15 +16,14 @@
         .controller('cohorts.CancelCreateModalCtrl', CancelCreateModalCtrl)
         .controller('cohorts.CancelEditModalCtrl', CancelEditModalCtrl);
 
-    EditCtrl.$inject = ['CohortService', '$stateParams', '$state', '$scope', '$rootScope', '$uibModal'];
+    EditCtrl.$inject = ['CohortService', 'TreeService', '$stateParams', '$state', '$scope', '$uibModal'];
     AddCriteriaModalCtrl.$inject = ['$uibModalInstance', 'criteria'];
     DeleteCriterionModalCtrl.$inject = ['$uibModalInstance', 'criterionName'];
     CancelCreateModalCtrl.$inject = ['$uibModalInstance'];
     CancelEditModalCtrl.$inject = ['$uibModalInstance', 'cohortName'];
 
-    function EditCtrl(CohortService, $stateParams, $state, $scope, $rootScope, $uibModal) {
+    function EditCtrl(CohortService, TreeService, $stateParams, $state, $scope, $uibModal) {
         let vm = this;
-        let userId = $rootScope.user.info.id;
         vm.nowEditing = $stateParams.key;
 
         if (vm.nowEditing) {
@@ -56,13 +55,16 @@
                       let editMember = vm.memberList[i];
                       let found = false;
                       for (let j = 0; j < vm.criteria.length; j++) {
-                          if (editMember.key === vm.criteria[j].key) {
+                          if (editMember.key === vm.criteria[j].name) {
                               found = true;
                               break;
                           }
                       }
                       if (!found) {
-                          vm.criteria.push(editMember);
+                          vm.criteria.push({
+						      name: editMember.key,
+                              displayName: editMember.displayName,
+						  });
                       }
                   }
                   vm.memberList = [];
@@ -127,17 +129,69 @@
         // This function takes the saved nodes and goes through the tree and plucks all with a valid id. Then adds to criteria which populates the dropzone
         function traverseNodes(data) {
             const reducer = (results, node) => {
-                //         console.log(results);
-                //console.log(node, !_.isEmpty(node.id), node.id, _.isEmpty(node.id));
                 node.id && results.push(node);
                 _.without([node.left_node, node.right_node], undefined).reduce(reducer, results);
                 return results;
             };
             const fullResults = [data].reduce(reducer, []);
-            for (var i = 0; i < fullResults.length; i++) {
-                fullResults[i].displayName = fullResults[i].name;
+            let keys = [];
+            for (let i = 0; i < fullResults.length; i++) {
+                keys.push(fullResults[i].name);
             }
-            vm.criteria = fullResults;
+
+            let phenotypeKeys = [];
+            let conceptKeys = [];
+            for (let i = 0; i < keys.length; i++) {
+                let key = keys[i];
+                if (key.startsWith('USER:')) {
+                    phenotypeKeys.push(key);
+                } else {
+                    conceptKeys.push(key);
+                }
+            }
+            vm.criteria = [];
+            if (conceptKeys.length > 0) {
+				TreeService.getTreeNodes(conceptKeys).then(function(concepts) {
+                    let keyToDisplayName = {};
+                    for (let i = 0; i < conceptKeys.length; i++) {
+						for (let j = 0; j < concepts.length; j++) {
+							if (concepts[j].key === conceptKeys[i]) {
+								keyToDisplayName[keys[i]] = concepts[j].displayName;
+								break;
+							}
+						}
+					}
+					for (var i = 0; i < conceptKeys.length; i++) {
+						let dn = keyToDisplayName[conceptKeys[i]];
+						if (!dn) {
+                            vm.criteria.push({
+								name: conceptKeys[i],
+								displayName: conceptKeys[i]
+							});
+							displayError('Unknown concept id ' + conceptKeys[i]);
+						} else {
+							vm.criteria.push({
+								name: conceptKeys[i],
+								displayName: dn
+							});
+                        }
+					}
+                    if (phenotypeKeys.length > 0) {
+                        for (let i = 0; i < phenotypeKeys.length; i++) {
+						    TreeService.getPhenotype(phenotypeKeys[i]).then(function(phenotype) {
+								vm.criteria.push({name: phenotype.key, displayName: phenotype.displayName});
+							}, function(msg) {
+                                vm.criteria.push({
+									name: phenotypeKeys[i],
+									displayName: phenotypeKeys[i]
+								});
+								displayError('Unknown phenotype id ' + phenotypeKeys[i]);
+                            });
+                        }
+					}
+				}, displayError);
+			}
+			
         }
 
         function routeChange(event, toState, toParams, fromState, fromParams) {

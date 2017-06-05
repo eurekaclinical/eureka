@@ -171,19 +171,12 @@
 
             let node = { id: null, start: null, finish: null, type: 'Literal' };
             if (phenotypes.length === 1) {
-                node.name = phenotypes[0].displayName;
+                node.name = phenotypes[0].name;
             } else if (phenotypes.length > 1) {
                 let first = true;
                 let prev = null;
                 for (var i = phenotypes.length - 1; i >= 0; i--) {
-                    var literal = { id: null, start: null, finish: null, type: 'Literal' };
-                    // if a key is there use the key else use the name, because the name is already the key
-                    if (phenotypes[i].key === undefined) {
-                        literal.name = phenotypes[i].name;
-                    } else {
-                        literal.name = phenotypes[i].key;
-                    }
-
+                    var literal = { id: null, name: phenotypes[i].name, start: null, finish: null, type: 'Literal' };
                     if (first) {
                         first = false;
                         prev = literal;

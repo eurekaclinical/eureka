@@ -17,11 +17,13 @@
 		<div class="form-group">
 			<label for="patCohortDefinition" class="control-label">Criteria</label>
 			<div id="patCohortDefinition">
-				<button id="addCriteriaButton" type="button" class="btn btn-primary" ng-click="editCohort.addCriteria()">Add criteria</button>
 				<div class="tree-drop">
 					<ul class="sortable" ng-repeat="criterion in editCohort.criteria">
 						<li>{{criterion.displayName}}<a title="remove" ng-click="editCohort.removeCriterion(criterion) "><span class="glyphicon glyphicon-remove" title="" style="color:red;"></span></a>
 					</ul>
+					<a class="label-info text-center" href="" ng-click="editCohort.addCriteria()" style="display: block">
+						Add concepts...
+					</a>
 				</div>
 			</div>
 		</div>

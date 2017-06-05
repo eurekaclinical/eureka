@@ -24,6 +24,7 @@
             getPhenotype: getPhenotype,
             getTreeRoot: getTreeRoot,
             getTreeNode: getTreeNode,
+            getTreeNodes: getTreeNodes,
             getUserListRoot: getUserListRoot
         });
 
@@ -37,17 +38,31 @@
                 return $http.get(dataEndpoint + '/concepts/')
                     .then(handleSuccess, handleError);
             } else {
-                return $http.post(dataEndpoint + '/concepts/', 'key=' + key)
-                    .then(
-                        function(response) {
-                            if (response.data.length > 0) {
-                                return response.data[0];
-                            } else {
-							    $q.reject('Not found');
-							}
-                        }, 
-                        handleError);
+                return getTreeNodes([key]);
             }
+        }
+
+        function getTreeNodes(keys, summarize) {
+            if (summarize === undefined) {
+                summarize = false;
+            }
+		    let postBody = '';
+			for (let i = 0; i < keys.length; i++) {
+				if (i > 0) {
+					postBody += '&';
+				}
+				postBody += 'key=' + keys[i]
+			}
+			return $http.post(dataEndpoint + '/concepts' + '?summarize=' + summarize, postBody)
+				.then(
+					function(response) {
+						if (response.data.length > 0) {
+							return response.data;
+						} else {
+							return $q.reject('Not found');
+						}
+					}, 
+					handleError);
         }
 
         function getUserListRoot() {
@@ -65,9 +80,8 @@
         function getPhenotype(key) {
             return $http.get(dataEndpoint + '/phenotypes/' + key + '?summarize=true')
                 .then(handleSuccess, handleError);
-
         }
-
+		
         function handleSuccess(response) {
             return response.data;
         }
