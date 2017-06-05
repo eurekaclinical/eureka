@@ -1,4 +1,4 @@
-package edu.emory.cci.aiw.cvrg.eureka.webapp.client;
+package edu.emory.cci.aiw.cvrg.eureka.webapp.config;
 
 /*-
  * #%L
@@ -40,43 +40,45 @@ package edu.emory.cci.aiw.cvrg.eureka.webapp.client;
  * #L%
  */
 
-import com.google.inject.servlet.SessionScoped;
+import com.google.inject.ConfigurationException;
+import com.google.inject.Inject;
+import com.google.inject.Injector;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.EtlClient;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ServicesClient;
-import javax.inject.Inject;
-import org.eurekaclinical.common.comm.clients.Route;
-import org.eurekaclinical.common.comm.clients.RouterTable;
-import org.eurekaclinical.common.comm.clients.RouterTableLoadException;
+import javax.servlet.http.HttpSessionEvent;
+import javax.servlet.http.HttpSessionListener;
 import org.eurekaclinical.user.client.EurekaClinicalUserProxyClient;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
  * @author Andrew Post
  */
-@SessionScoped
-public class WebappRouterTable implements RouterTable {
+public class ClientSessionListener implements HttpSessionListener {
 	
-	private final EurekaClinicalUserProxyClient userClient;
-	private final ServicesClient servicesClient;
-	private final EtlClient etlClient;
-
-    @Inject
-    public WebappRouterTable(ServicesClient inServices, EurekaClinicalUserProxyClient inUserClient, EtlClient inEtlClient) {
-        this.servicesClient = inServices;
-		this.userClient = inUserClient;
-		this.etlClient = inEtlClient;
-    }
+	private Logger LOGGER = LoggerFactory.getLogger(ClientSessionListener.class);
+	
+	@Inject
+    private Injector injector;
 
 	@Override
-	public Route[] load() throws RouterTableLoadException {
-		return new Route[]{
-			new Route("/users/", "/api/protected/users/", this.userClient),
-			new Route("/roles/", "/api/protected/roles/", this.userClient),
-			new Route("/appproperties/", "/api/appproperties/", this.servicesClient),
-			new Route("/file/", "/api/protected/file/", this.etlClient),
-			new Route("/output/", "/api/protected/output/", this.etlClient),
-			new Route("/", "/api/protected/", this.servicesClient)
-		};
+	public void sessionCreated(HttpSessionEvent hse) {
+		LOGGER.info("Creating session for " + hse.getSession().getServletContext().getContextPath());
+	}
+
+	@Override
+	public void sessionDestroyed(HttpSessionEvent hse) {
+		LOGGER.info("Destroying session for " + hse.getSession().getServletContext().getContextPath());
+		try {
+			this.injector.getInstance(EurekaClinicalUserProxyClient.class).close();
+		} catch (ConfigurationException ce) {}
+		try {
+			this.injector.getInstance(ServicesClient.class).close();
+		} catch (ConfigurationException ce) {}
+		try {
+			this.injector.getInstance(EtlClient.class).close();
+		} catch (ConfigurationException ce) {}
 	}
 	
 }

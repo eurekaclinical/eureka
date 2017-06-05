@@ -48,7 +48,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.google.inject.Inject;
+import com.google.inject.Injector;
 import com.sun.jersey.api.client.ClientResponse.Status;
+import javax.inject.Singleton;
 
 
 import org.eurekaclinical.common.comm.clients.ClientException;
@@ -56,22 +58,24 @@ import javax.servlet.http.HttpSession;
 import org.eurekaclinical.user.client.EurekaClinicalUserProxyClient;
 import org.eurekaclinical.user.client.comm.User;
 
+@Singleton
 public class LoginServlet extends HttpServlet {
     
-	private final EurekaClinicalUserProxyClient userClient;
+	private final Injector injector;
 
 	@Inject
-	public LoginServlet(EurekaClinicalUserProxyClient inUserClient) {
-		this.userClient = inUserClient;
+	public LoginServlet(Injector inInjector) {
+		this.injector = inInjector;
 	}
 
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
+		EurekaClinicalUserProxyClient userClient = this.injector.getInstance(EurekaClinicalUserProxyClient.class);
 		try {
 			User user = (User) req.getAttribute("user");
 			user.setLastLogin(new Date());
-			this.userClient.updateUser(user,user.getId());
+			userClient.updateUser(user,user.getId());
 			resp.sendRedirect(req.getContextPath() + "/#/index");
 		} catch (ClientException e) {
 			Status responseStatus = e.getResponseStatus();

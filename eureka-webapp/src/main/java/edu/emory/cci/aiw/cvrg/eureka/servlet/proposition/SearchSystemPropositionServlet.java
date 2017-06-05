@@ -52,12 +52,14 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.google.inject.Inject;
+import com.google.inject.Injector;
 import org.eurekaclinical.eureka.client.comm.SystemPhenotype;
 import org.apache.commons.lang3.StringUtils;
 import org.codehaus.jackson.map.ObjectMapper;
 
 import org.eurekaclinical.common.comm.clients.ClientException;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ServicesClient;
+import javax.inject.Singleton;
 
 /**
  * @deprecated  As of release 1.3, replaced by
@@ -65,14 +67,16 @@ import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ServicesClient;
  * 		edu.emory.cci.aiw.cvrg.eureka.servlet.proposition.SearchSystemPropositionJSTreeV3Servlet}
  */
 @Deprecated
+@Singleton
 public class SearchSystemPropositionServlet extends HttpServlet {
 	private static final ObjectMapper MAPPER = new ObjectMapper();
 	private static final Pattern PATTERN = Pattern.compile("[^a-zA-Z0-9]");
-	private final ServicesClient servicesClient;
+	private static final long serialVersionUID = 1L;
+	private final Injector injector;
 
 	@Inject
-	public SearchSystemPropositionServlet(ServicesClient inClient) {
-		this.servicesClient = inClient;
+	public SearchSystemPropositionServlet(Injector inInjector) {
+		this.injector = inInjector;
 	}
 
 	@Override
@@ -125,7 +129,7 @@ public class SearchSystemPropositionServlet extends HttpServlet {
 		if (searchKey == null) {
 			throw new ServletException("Search key is null");
 		}
-
+		ServicesClient servicesClient = this.injector.getInstance(ServicesClient.class);
 		try {
 
 			List<String> processedSearchResult = null;

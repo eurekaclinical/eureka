@@ -48,31 +48,36 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.google.inject.Inject;
+import com.google.inject.Injector;
 
 import org.eurekaclinical.eureka.client.comm.Destination;
 import org.eurekaclinical.eureka.client.comm.Job;
 import org.eurekaclinical.eureka.client.comm.SourceConfig;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ServicesClient;
+import javax.inject.Singleton;
 import org.eurekaclinical.common.comm.clients.ClientException;
 
+@Singleton
 public class JobListServlet extends HttpServlet {
 
-	private final ServicesClient servicesClient;
+	private static final long serialVersionUID = 1L;
+
+	private final Injector injector;
 
 	@Inject
-	public JobListServlet (ServicesClient inClient) {
-		this.servicesClient = inClient;
+	public JobListServlet (Injector inInjector) {
+		this.injector = inInjector;
 	}
 
 	@Override
 	public void doGet(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
-
+		ServicesClient servicesClient = this.injector.getInstance(ServicesClient.class);
 		try {
-			List<SourceConfig> sourceConfigs = this.servicesClient.getSourceConfigs();
+			List<SourceConfig> sourceConfigs = servicesClient.getSourceConfigs();
 			req.setAttribute("sources", sourceConfigs);
 
-			List<Destination> destinations = this.servicesClient.getDestinations();
+			List<Destination> destinations = servicesClient.getDestinations();
 			req.setAttribute("destinations", destinations);
 			req.setAttribute("dateRangeSides", DateRangeSide.values());
 			
@@ -85,9 +90,9 @@ public class JobListServlet extends HttpServlet {
 				} catch (NumberFormatException ex) {
 					throw new ServletException("Query parameter jobId must be a long, was " + jobIdStr);
 				}
-				job = this.servicesClient.getJob(jobId);
+				job = servicesClient.getJob(jobId);
 			} else {
-				List<Job> jobs = this.servicesClient.getLatestJob();
+				List<Job> jobs = servicesClient.getLatestJob();
 				if(!jobs.isEmpty()){
 					job = jobs.get(0);
 				}

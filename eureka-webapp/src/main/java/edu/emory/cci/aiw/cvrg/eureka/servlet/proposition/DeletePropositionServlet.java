@@ -52,23 +52,26 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.inject.Inject;
+import com.google.inject.Injector;
 
 import org.eurekaclinical.common.comm.clients.ClientException;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ServicesClient;
 import edu.emory.cci.aiw.cvrg.eureka.webapp.authentication.WebappAuthenticationSupport;
-import org.eurekaclinical.common.comm.User;
+import javax.inject.Singleton;
 
+@Singleton
 public class DeletePropositionServlet extends HttpServlet {
 
 	private static final Logger LOGGER = LoggerFactory
 			.getLogger(DeletePropositionServlet.class);
+	private static final long serialVersionUID = 1L;
 
-	private final ServicesClient servicesClient;
+	private final Injector injector;
 	private final WebappAuthenticationSupport authenticationSupport;
 
 	@Inject
-	public DeletePropositionServlet(ServicesClient inClient) {
-		this.servicesClient = inClient;
+	public DeletePropositionServlet(Injector inInjector) {
+		this.injector = inInjector;
 		this.authenticationSupport = new WebappAuthenticationSupport();
 	}
 
@@ -82,9 +85,9 @@ public class DeletePropositionServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) {
 		LOGGER.debug("DeletePropositionServlet");
 		Long propId = Long.parseLong(req.getParameter("id"));
-
+		ServicesClient servicesClient = this.injector.getInstance(ServicesClient.class);
 		try {
-			this.servicesClient.deleteUserPhenotype(propId);
+			servicesClient.deleteUserPhenotype(propId);
 		} catch (ClientException e) {
 			resp.setContentType(MediaType.TEXT_PLAIN);
 			try {

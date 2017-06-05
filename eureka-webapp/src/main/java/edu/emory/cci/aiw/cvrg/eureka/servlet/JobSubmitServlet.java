@@ -63,6 +63,7 @@ import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.commons.io.FileUtils;
 
 import com.google.inject.Inject;
+import com.google.inject.Injector;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.EtlClient;
 
 import org.eurekaclinical.eureka.client.comm.JobSpec;
@@ -70,12 +71,15 @@ import org.eurekaclinical.common.comm.clients.ClientException;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ServicesClient;
 
 import java.io.PrintWriter;
+import javax.inject.Singleton;
 
 import org.apache.commons.io.FilenameUtils;
 import org.codehaus.jackson.map.ObjectMapper;
 
+@Singleton
 public class JobSubmitServlet extends HttpServlet {
 	private static final ObjectMapper MAPPER = new ObjectMapper();
+	private static final long serialVersionUID = 1L;
 
 	static {
 		MAPPER.setDateFormat(new SimpleDateFormat("MM/dd/yyyy"));
@@ -85,13 +89,11 @@ public class JobSubmitServlet extends HttpServlet {
 	 * Normal directory to save files to. TODO: set value
 	 */
 	private File tmpDir;
-	private final ServicesClient servicesClient;
-	private final EtlClient etlClient;
+	private final Injector injector;
 
 	@Inject
-	public JobSubmitServlet(ServicesClient inServicesClient, EtlClient inEtlClient) {
-		this.servicesClient = inServicesClient;
-		this.etlClient = inEtlClient;
+	public JobSubmitServlet(Injector inInjector) {
+		this.injector = inInjector;
 	}
 
 	@Override
@@ -219,8 +221,9 @@ public class JobSubmitServlet extends HttpServlet {
 						+ ", File Size = " + item.getSize());
 				if (item.getSize() > 0) {
 					InputStream is = item.getInputStream();
+					EtlClient etlClient = this.injector.getInstance(EtlClient.class);
 					try {
-						this.etlClient.upload(
+						etlClient.upload(
 								FilenameUtils.getName(item.getName()),
 								jobSpec.getSourceConfigId(),
 								item.getFieldName(), is);
@@ -238,8 +241,8 @@ public class JobSubmitServlet extends HttpServlet {
 				}
 			}
 		}
-
-		URI uri = this.servicesClient.submitJob(jobSpec);
+		ServicesClient servicesClient = this.injector.getInstance(ServicesClient.class);
+		URI uri = servicesClient.submitJob(jobSpec);
 		String uriStr = uri.toString();
 		Long jobId = Long.valueOf(uriStr.substring(uriStr.lastIndexOf("/") + 1));
 		log("Job " + jobId + " submitted for user " + principal.getName());

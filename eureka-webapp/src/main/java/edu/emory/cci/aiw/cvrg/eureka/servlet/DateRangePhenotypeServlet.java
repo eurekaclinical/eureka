@@ -50,24 +50,28 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.codehaus.jackson.map.ObjectMapper;
 
-import com.google.inject.Inject;
+import com.google.inject.Injector;
 
 import org.eurekaclinical.eureka.client.comm.Destination;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ServicesClient;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import org.eurekaclinical.common.comm.clients.ClientException;
 
 /**
  *
  * @author Andrew Post
  */
+@Singleton
 public class DateRangePhenotypeServlet extends HttpServlet {
 	private static final ObjectMapper MAPPER = new ObjectMapper();
+	private static final long serialVersionUID = 1L;
 
-	private final ServicesClient servicesClient;
+	private final Injector injector;
 
 	@Inject
-	public DateRangePhenotypeServlet (ServicesClient inClient) {
-		this.servicesClient = inClient;
+	public DateRangePhenotypeServlet(Injector inInjector) {
+		this.injector = inInjector;
 	}
 
 	@Override
@@ -80,7 +84,7 @@ public class DateRangePhenotypeServlet extends HttpServlet {
 		}
 		Destination destination;
 		try {
-			destination = this.servicesClient.getDestination(destinationId);
+			destination = this.injector.getInstance(ServicesClient.class).getDestination(destinationId);
 		} catch (ClientException ex) {
 			throw new ServletException("Error getting destination '" + destinationId + "'");
 		}

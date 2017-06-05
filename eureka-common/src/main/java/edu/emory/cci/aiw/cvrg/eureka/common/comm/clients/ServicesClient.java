@@ -113,16 +113,16 @@ public class ServicesClient extends EurekaClient {
 	};
 
 
-	private final String servicesUrl;
+	private final URI servicesUrl;
 
 	public ServicesClient(String inServicesUrl) {
 		super();
 		LOGGER.info("Using eureka-services URL {}", inServicesUrl);
-		this.servicesUrl = inServicesUrl;
+		this.servicesUrl = URI.create(inServicesUrl);
 	}
 
 	@Override
-	protected String getResourceUrl() {
+	protected URI getResourceUrl() {
 		return this.servicesUrl;
 	}
 

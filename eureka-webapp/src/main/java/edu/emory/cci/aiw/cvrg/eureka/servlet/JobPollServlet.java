@@ -51,19 +51,23 @@ import javax.servlet.http.HttpServletResponse;
 import org.codehaus.jackson.map.ObjectMapper;
 
 import com.google.inject.Inject;
+import com.google.inject.Injector;
 import org.eurekaclinical.eureka.client.comm.Destination;
 import org.eurekaclinical.eureka.client.comm.Job;
 import org.eurekaclinical.eureka.client.comm.JobListRow;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ServicesClient;
+import javax.inject.Singleton;
 import org.eurekaclinical.common.comm.clients.ClientException;
 
+@Singleton
 public class JobPollServlet extends HttpServlet {
 	private static final ObjectMapper MAPPER = new ObjectMapper();
-	private final ServicesClient servicesClient;
+	private static final long serialVersionUID = 1L;
+	private final Injector injector;
 
 	@Inject
-	public JobPollServlet (ServicesClient inClient) {
-		this.servicesClient = inClient;
+	public JobPollServlet (Injector inInjector) {
+		this.injector = inInjector;
 	}
 
 	@Override
@@ -85,17 +89,18 @@ public class JobPollServlet extends HttpServlet {
 		Job job = null;
 		Destination destination = null;
 		String destinationId = null;
+		ServicesClient servicesClient = this.injector.getInstance(ServicesClient.class);
 		try {
 			if (jobId != null) {
-				job = this.servicesClient.getJob(jobId);
+				job = servicesClient.getJob(jobId);
 				destinationId = job.getDestinationId();
-				destination = this.servicesClient.getDestination(destinationId);
+				destination = servicesClient.getDestination(destinationId);
 			} else {
-				List<Job> jobs = this.servicesClient.getLatestJob();
+				List<Job> jobs = servicesClient.getLatestJob();
 				if (!jobs.isEmpty()) {
 					job = jobs.get(0);
 					destinationId = job.getDestinationId();
-					destination = this.servicesClient.getDestination(destinationId);
+					destination = servicesClient.getDestination(destinationId);
 				}
 			}
 		} catch (ClientException ex) {

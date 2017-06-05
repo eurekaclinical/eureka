@@ -44,7 +44,6 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Pattern;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -52,21 +51,24 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.google.inject.Inject;
+import com.google.inject.Injector;
 import org.eurekaclinical.eureka.client.comm.SystemPhenotype;
 import org.apache.commons.lang3.StringUtils;
 import org.codehaus.jackson.map.ObjectMapper;
 
 import org.eurekaclinical.common.comm.clients.ClientException;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ServicesClient;
+import javax.inject.Singleton;
 
+@Singleton
 public class SearchSystemPropositionJSTreeV3Servlet extends HttpServlet {
 	private static final ObjectMapper MAPPER = new ObjectMapper();
-	private static final Pattern PATTERN = Pattern.compile("[^a-zA-Z0-9]");
-	private final ServicesClient servicesClient;
+	private static final long serialVersionUID = 1L;
+	private final Injector injector;
 
 	@Inject
-	public SearchSystemPropositionJSTreeV3Servlet(ServicesClient inClient) {
-		this.servicesClient = inClient;
+	public SearchSystemPropositionJSTreeV3Servlet(Injector inInjector) {
+		this.injector = inInjector;
 	}
 
 	@Override
@@ -119,9 +121,8 @@ public class SearchSystemPropositionJSTreeV3Servlet extends HttpServlet {
 		if (searchKey == null) {
 			throw new ServletException("Search key is null");
 		}
-
+		ServicesClient servicesClient = this.injector.getInstance(ServicesClient.class);
 		try {
-
 			List<SystemPhenotype> props = servicesClient
 					.getSystemPhenotypeSearchResultsBySearchKey(searchKey);
 

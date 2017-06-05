@@ -62,8 +62,6 @@ import edu.emory.cci.aiw.cvrg.eureka.services.dao.ValueComparatorDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.finder.PropositionFinder;
 import edu.emory.cci.aiw.cvrg.eureka.services.finder.TestPropositionFinder;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.PhenotypeEntityDao;
-import org.eurekaclinical.common.comm.clients.WebResourceWrapperFactory;
-import org.eurekaclinical.common.comm.clients.cassupport.CasWebResourceWrapperFactory;
 
 /**
  * Configure Guice for non-web application testing.
@@ -88,6 +86,5 @@ public class AppTestModule extends AbstractModule {
 		bind(PhenotypeEntityDao.class).to(JpaPhenotypeEntityDao.class);
 		bind(ThresholdsOperatorDao.class).to(JpaThresholdsOperatorDao.class);
 		bind(new TypeLiteral<PropositionFinder<String>>(){}).to(TestPropositionFinder.class);
-		bind(WebResourceWrapperFactory.class).to(CasWebResourceWrapperFactory.class);
 	}
 }

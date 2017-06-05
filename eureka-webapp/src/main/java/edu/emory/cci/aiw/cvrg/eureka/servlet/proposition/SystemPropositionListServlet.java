@@ -55,44 +55,30 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.inject.Inject;
+import com.google.inject.Injector;
 
 import org.eurekaclinical.eureka.client.comm.SystemPhenotype;
 import org.eurekaclinical.common.comm.clients.ClientException;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ServicesClient;
+import javax.inject.Singleton;
 
+@Singleton
 public class SystemPropositionListServlet extends HttpServlet {
 
 	private static final Logger LOGGER = LoggerFactory
 			.getLogger(SystemPropositionListServlet.class);
 	private static final ObjectMapper MAPPER = new ObjectMapper();
-	private final ServicesClient servicesClient;
+	private static final long serialVersionUID = 1L;
+	private final Injector injector;
 	private final PropositionListSupport propListSupport;
 
 	@Inject
-	public SystemPropositionListServlet (ServicesClient inClient) {
-		this.servicesClient = inClient;
+	public SystemPropositionListServlet (Injector inInjector) {
+		this.injector = inInjector;
 		this.propListSupport = new PropositionListSupport();
 	}
 
 	private JsonTreeData createData(SystemPhenotype phenotype) {
-//		JsonTreeData d = new JsonTreeData();
-//		d.setState("closed");
-//		d.setId(phenotype.getKey());
-//		d.setData(this.propListSupport.getDisplayName(phenotype));
-//		d.setText(this.propListSupport.getDisplayName(phenotype));
-//		d.setKeyVal("id", phenotype.getKey());
-//		String properties = StringUtils.join(phenotype.getProperties(), ",");
-//		d.setKeyVal("data-properties", properties);
-//		if (phenotype.isParent()) {
-//			d.setKeyVal("class", "jstree-closed");
-//		}
-//
-//		d.setKeyVal("data-key", phenotype.getKey());
-//		d.setKeyVal("data-space", "system");
-//		d.setKeyVal("data-type", phenotype.getSystemType().toString());
-//		d.setKeyVal("data-proposition", phenotype.getKey());
-//		d.setChildren(phenotype.isInternalNode());
-
 		JsonTreeData d = new JsonTreeData();
 		d.setState("closed");
 		d.setId(phenotype.getKey());
@@ -121,23 +107,23 @@ public class SystemPropositionListServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
 
-		LOGGER.debug("doGet");
 		String propKey = req.getParameter("key");
 
 		if (propKey == null) {
 			throw new ServletException("Invalid proposition id: " + propKey);
 		}
+		ServicesClient servicesClient = this.injector.getInstance(ServicesClient.class);
 		List<JsonTreeData> l;
 		try {
 			if (propKey.equals("root")) {
-				List<SystemPhenotype> props = this.servicesClient.getSystemPhenotypes();
+				List<SystemPhenotype> props = servicesClient.getSystemPhenotypes();
 				l = new ArrayList<>(props.size());
 				for (SystemPhenotype proposition : props) {
 					JsonTreeData d = createData(proposition);
 					l.add(d);
 				}
 			} else {
-				SystemPhenotype phenotype = this.servicesClient.getSystemPhenotype(propKey, false);
+				SystemPhenotype phenotype = servicesClient.getSystemPhenotype(propKey, false);
 				List<SystemPhenotype> children = phenotype.getChildren();
 				l = new ArrayList<>(children.size());
 				for (SystemPhenotype propChild : children) {

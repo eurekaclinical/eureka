@@ -54,23 +54,27 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.inject.Inject;
+import com.google.inject.Injector;
 
 import org.eurekaclinical.eureka.client.comm.Category;
 import org.eurekaclinical.eureka.client.comm.Phenotype;
 import org.eurekaclinical.common.comm.clients.ClientException;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ServicesClient;
+import javax.inject.Singleton;
 
+@Singleton
 public class UserPropositionListServlet extends HttpServlet {
 
 	private static final Logger LOGGER = LoggerFactory
 			.getLogger(UserPropositionListServlet.class);
 	private static final ObjectMapper MAPPER = new ObjectMapper();
-	private final ServicesClient servicesClient;
+	private static final long serialVersionUID = 1L;
+	private final Injector injector;
 	private final PropositionListSupport propListSupport;
 
 	@Inject
-	public UserPropositionListServlet(ServicesClient inClient) {
-		this.servicesClient = inClient;
+	public UserPropositionListServlet(Injector inInjector) {
+		this.injector = inInjector;
 		this.propListSupport = new PropositionListSupport();
 	}
 
@@ -100,10 +104,10 @@ public class UserPropositionListServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
 
-		LOGGER.debug("doGet");
+		ServicesClient servicesClient = this.injector.getInstance(ServicesClient.class);
 		List<Phenotype> props;
 		try {
-			props = this.servicesClient.getUserPhenotypes(false);
+			props = servicesClient.getUserPhenotypes(false);
 		} catch (ClientException ex) {
 			throw new ServletException("Error getting user-defined phenotype list", ex);
 		}
@@ -115,7 +119,6 @@ public class UserPropositionListServlet extends HttpServlet {
 				LOGGER.debug("Added user prop: {}", d.getData());
 			}
 		}
-		LOGGER.debug("executed resource get");
 
 		resp.setContentType("application/json");
 		PrintWriter out = resp.getWriter();

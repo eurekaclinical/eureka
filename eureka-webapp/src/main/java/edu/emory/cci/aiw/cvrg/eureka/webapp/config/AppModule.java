@@ -39,8 +39,10 @@ package edu.emory.cci.aiw.cvrg.eureka.webapp.config;
  * <http://www.gnu.org/licenses/gpl-3.0.html>.
  * #L%
  */
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.EtlClientProvider;
 import edu.emory.cci.aiw.cvrg.eureka.webapp.client.WebappRouterTable;
 import com.google.inject.AbstractModule;
+import com.google.inject.servlet.SessionScoped;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.EtlClient;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ServicesClient;
@@ -55,16 +57,16 @@ import org.eurekaclinical.user.client.EurekaClinicalUserProxyClient;
 class AppModule extends AbstractModule {
 
 	private final WebappProperties webappProperties;
-	private final EurekaClinicalUserProxyClient userClient;
-	private final EtlClient etlClient;
-	private final ServicesClient servicesClient;
+	private final EurekaClinicalUserProxyClientProvider userClientProvider;
+	private final EtlClientProvider etlClientProvider;
+	private final ServicesClientProvider servicesClientProvider;
 
-	AppModule(WebappProperties webappProperties, ServicesClient inServicesClient, EtlClient inEtlClient, EurekaClinicalUserProxyClient inUserClient) {
+	AppModule(WebappProperties webappProperties, ServicesClientProvider inServicesClientProvider, EtlClientProvider inEtlClientProvider, EurekaClinicalUserProxyClientProvider inUserClient) {
 		assert webappProperties != null : "webappProperties cannot be null";
 		this.webappProperties = webappProperties;
-		this.userClient = inUserClient;
-		this.servicesClient = inServicesClient;
-		this.etlClient = inEtlClient;
+		this.userClientProvider = inUserClient;
+		this.servicesClientProvider = inServicesClientProvider;
+		this.etlClientProvider = inEtlClientProvider;
 	}
 
 	@Override
@@ -72,9 +74,9 @@ class AppModule extends AbstractModule {
 		bind(RouterTable.class).to(WebappRouterTable.class);
 		bind(WebappProperties.class).toInstance(this.webappProperties);
 		bind(CasEurekaClinicalProperties.class).toInstance(this.webappProperties);
-		bind(ServicesClient.class).toInstance(this.servicesClient);
-		bind(EtlClient.class).toInstance(this.etlClient);
-		bind(EurekaClinicalUserProxyClient.class).toInstance(this.userClient);
+		bind(ServicesClient.class).toProvider(this.servicesClientProvider).in(SessionScoped.class);
+		bind(EtlClient.class).toProvider(this.etlClientProvider).in(SessionScoped.class);
+		bind(EurekaClinicalUserProxyClient.class).toProvider(this.userClientProvider).in(SessionScoped.class);
 	}
 
 }

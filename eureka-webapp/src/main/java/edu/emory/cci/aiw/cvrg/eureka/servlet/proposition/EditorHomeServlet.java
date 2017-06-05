@@ -53,21 +53,25 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.inject.Inject;
+import com.google.inject.Injector;
 
 import org.eurekaclinical.eureka.client.comm.Phenotype;
 import org.eurekaclinical.common.comm.clients.ClientException;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ServicesClient;
+import javax.inject.Singleton;
 
+@Singleton
 public class EditorHomeServlet extends HttpServlet {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger
 		(EditorHomeServlet.class);
+	private static final long serialVersionUID = 1L;
 
-	private final ServicesClient servicesClient;
+	private final Injector injector;
 
 	@Inject
-	public EditorHomeServlet (ServicesClient inClient) {
-		this.servicesClient = inClient;
+	public EditorHomeServlet (Injector inInjector) {
+		this.injector = inInjector;
 	}
 
 	private JsonTreeData createData(String key, String data) {
@@ -104,11 +108,11 @@ public class EditorHomeServlet extends HttpServlet {
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
 		throws ServletException, IOException {
-
+		ServicesClient servicesClient = this.injector.getInstance(ServicesClient.class);
 		List<JsonTreeData> l = new ArrayList<>();
 		List<Phenotype> props;
 		try {
-			props = this.servicesClient.getUserPhenotypes(true);
+			props = servicesClient.getUserPhenotypes(true);
 		} catch (ClientException ex) {
 			throw new ServletException("Error getting user-defined phenotypes", ex);
 		}

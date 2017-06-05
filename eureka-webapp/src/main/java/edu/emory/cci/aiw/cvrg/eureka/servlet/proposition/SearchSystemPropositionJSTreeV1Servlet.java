@@ -41,6 +41,7 @@ package edu.emory.cci.aiw.cvrg.eureka.servlet.proposition;
  */
 
 import com.google.inject.Inject;
+import com.google.inject.Injector;
 import org.eurekaclinical.eureka.client.comm.SystemPhenotype;
 import org.eurekaclinical.common.comm.clients.ClientException;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ServicesClient;
@@ -56,13 +57,17 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
+import javax.inject.Singleton;
 
+@Singleton
 public class SearchSystemPropositionJSTreeV1Servlet extends HttpServlet {
-	private final ServicesClient servicesClient;
+
+	private static final long serialVersionUID = 1L;
+	private final Injector injector;
 
 	@Inject
-	public SearchSystemPropositionJSTreeV1Servlet(ServicesClient inClient) {
-		this.servicesClient = inClient;
+	public SearchSystemPropositionJSTreeV1Servlet(Injector inInjector) {
+		this.injector = inInjector;
 	}
 
 	@Override
@@ -115,7 +120,7 @@ public class SearchSystemPropositionJSTreeV1Servlet extends HttpServlet {
 		if (searchKey == null) {
 			throw new ServletException("Search key is null");
 		}
-
+		ServicesClient servicesClient = this.injector.getInstance(ServicesClient.class);
 		try {
 			List<String> processedSearchResult = null;
 			List<String> searchResult = null;

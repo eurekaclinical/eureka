@@ -40,6 +40,7 @@ package edu.emory.cci.aiw.cvrg.eureka.servlet;
  * #L%
  */
 import com.google.inject.Inject;
+import com.google.inject.Injector;
 import com.sun.jersey.api.client.ClientResponse.Status;
 import org.eurekaclinical.eureka.client.comm.Phenotype;
 import org.eurekaclinical.eureka.client.comm.Statistics;
@@ -50,6 +51,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import javax.inject.Singleton;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -63,14 +65,17 @@ import org.eurekaclinical.common.comm.clients.ClientException;
  *
  * @author Andrew Post
  */
+@Singleton
 public class JobPatientCountsServlet extends HttpServlet {
 
-	private final ServicesClient servicesClient;
+	private static final long serialVersionUID = 1L;
+
+	private final Injector injector;
 	private final ObjectWriter writer;
 
 	@Inject
-	public JobPatientCountsServlet(ServicesClient inClient) {
-		this.servicesClient = inClient;
+	public JobPatientCountsServlet(Injector inInjector) {
+		this.injector = inInjector;
 		this.writer = new ObjectMapper().writer();
 	}
 
@@ -82,8 +87,9 @@ public class JobPatientCountsServlet extends HttpServlet {
 		if (StringUtils.isNotEmpty(jobIdStr)) {
 			try {
 				jobId = Long.valueOf(jobIdStr);
+				ServicesClient servicesClient = this.injector.getInstance(ServicesClient.class);
 				try {
-					Statistics jobStats = this.servicesClient.getJobStats(jobId, key);
+					Statistics jobStats = servicesClient.getJobStats(jobId, key);
 					Map<String, String> childrenToParents = jobStats.getChildrenToParents();
 					Map<String, Integer> counts = jobStats.getCounts();
 
@@ -91,7 +97,7 @@ public class JobPatientCountsServlet extends HttpServlet {
 					List<Count> countResults = new ArrayList<>();
 
 					Set<String> keySet = counts.keySet();
-					List<Phenotype> summarizedConcepts = this.servicesClient.getPhenotypes(keySet.toArray(new String[keySet.size()]), true);
+					List<Phenotype> summarizedConcepts = servicesClient.getPhenotypes(keySet.toArray(new String[keySet.size()]), true);
 					Map<String, Phenotype> keyIdToDE = new HashMap<>();
 					for (Phenotype de : summarizedConcepts) {
 						keyIdToDE.put(de.getKey(), de);

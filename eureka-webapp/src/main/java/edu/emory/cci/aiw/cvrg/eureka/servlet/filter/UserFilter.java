@@ -46,6 +46,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.google.inject.Inject;
+import com.google.inject.Injector;
 import com.google.inject.Singleton;
 
 import org.eurekaclinical.common.comm.clients.ClientException;
@@ -63,12 +64,12 @@ import org.eurekaclinical.user.client.comm.User;
 @Singleton
 public class UserFilter implements Filter {
 
-	private final EurekaClinicalUserProxyClient inUserClient;
+	private final Injector injector;
 	private final WebappProperties properties;
 
 	@Inject
-	public UserFilter(EurekaClinicalUserProxyClient inToUserClient, WebappProperties inProperties) {
-		this.inUserClient = inToUserClient;
+	public UserFilter(Injector inInjector, WebappProperties inProperties) {
+		this.injector = inInjector;
 		this.properties = inProperties;
 	}
 
@@ -78,7 +79,7 @@ public class UserFilter implements Filter {
 
 	@Override
 	public void doFilter(ServletRequest inRequest, ServletResponse inResponse, FilterChain inFilterChain) throws IOException, ServletException {
-
+		EurekaClinicalUserProxyClient userClient = this.injector.getInstance(EurekaClinicalUserProxyClient.class);
 		HttpServletRequest servletRequest = (HttpServletRequest) inRequest;
 		HttpServletResponse servletResponse = (HttpServletResponse) inResponse;
 		String remoteUser = servletRequest.getRemoteUser();
@@ -91,8 +92,8 @@ public class UserFilter implements Filter {
 			try {
 				HttpSession session = servletRequest.getSession(false);
 				if (session != null) {
-					User user = this.inUserClient.getMe();
-					userIsActive = this.inUserClient.getMe().isActive();
+					User user = userClient.getMe();
+					userIsActive = userClient.getMe().isActive();
 					if (!userIsActive) {
 						session.invalidate();
 						sendForbiddenError(servletResponse, servletRequest, true);

@@ -1,4 +1,6 @@
-package edu.emory.cci.aiw.cvrg.eureka.webapp.client;
+package edu.emory.cci.aiw.cvrg.eureka.common.comm.clients;
+
+import com.google.inject.Provider;
 
 /*-
  * #%L
@@ -40,43 +42,21 @@ package edu.emory.cci.aiw.cvrg.eureka.webapp.client;
  * #L%
  */
 
-import com.google.inject.servlet.SessionScoped;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.EtlClient;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ServicesClient;
-import javax.inject.Inject;
-import org.eurekaclinical.common.comm.clients.Route;
-import org.eurekaclinical.common.comm.clients.RouterTable;
-import org.eurekaclinical.common.comm.clients.RouterTableLoadException;
-import org.eurekaclinical.user.client.EurekaClinicalUserProxyClient;
-
 /**
  *
  * @author Andrew Post
  */
-@SessionScoped
-public class WebappRouterTable implements RouterTable {
-	
-	private final EurekaClinicalUserProxyClient userClient;
-	private final ServicesClient servicesClient;
-	private final EtlClient etlClient;
+public class EtlClientProvider implements Provider<EtlClient> {
 
-    @Inject
-    public WebappRouterTable(ServicesClient inServices, EurekaClinicalUserProxyClient inUserClient, EtlClient inEtlClient) {
-        this.servicesClient = inServices;
-		this.userClient = inUserClient;
-		this.etlClient = inEtlClient;
-    }
+	private final String etlUrl;
 
-	@Override
-	public Route[] load() throws RouterTableLoadException {
-		return new Route[]{
-			new Route("/users/", "/api/protected/users/", this.userClient),
-			new Route("/roles/", "/api/protected/roles/", this.userClient),
-			new Route("/appproperties/", "/api/appproperties/", this.servicesClient),
-			new Route("/file/", "/api/protected/file/", this.etlClient),
-			new Route("/output/", "/api/protected/output/", this.etlClient),
-			new Route("/", "/api/protected/", this.servicesClient)
-		};
+	public EtlClientProvider(String inEtlUrl) {
+		this.etlUrl = inEtlUrl;
 	}
 	
+	@Override
+	public EtlClient get() {
+		return new EtlClient(this.etlUrl);
+	}
+
 }

@@ -51,25 +51,29 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.inject.Inject;
+import com.google.inject.Injector;
 
 import org.eurekaclinical.eureka.client.comm.Phenotype;
 import org.eurekaclinical.common.comm.clients.ClientException;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ServicesClient;
 import edu.emory.cci.aiw.cvrg.eureka.webapp.authentication.WebappAuthenticationSupport;
 import java.net.URI;
+import javax.inject.Singleton;
 import org.eurekaclinical.common.comm.User;
 
+@Singleton
 public class SavePropositionServlet extends HttpServlet {
 
 	private static final Logger LOGGER = LoggerFactory
 			.getLogger(SavePropositionServlet.class);
 	private static final ObjectMapper MAPPER = new ObjectMapper();
-	private final ServicesClient servicesClient;
+	private static final long serialVersionUID = 1L;
+	private final Injector injector;
 	private final WebappAuthenticationSupport authenticationSupport;
 
 	@Inject
-	public SavePropositionServlet(ServicesClient inClient) {
-		this.servicesClient = inClient;
+	public SavePropositionServlet(Injector inInjector) {
+		this.injector = inInjector;
 		this.authenticationSupport = new WebappAuthenticationSupport();
 	}
 
@@ -82,9 +86,10 @@ public class SavePropositionServlet extends HttpServlet {
 					Phenotype.class);
 			User user = this.authenticationSupport.getMe(req);
 			phenotype.setUserId(user.getId());
+			ServicesClient servicesClient = this.injector.getInstance(ServicesClient.class);
 			if (phenotype.getId() == null) {
 				try {
-					URI phenotypeURI = this.servicesClient.saveUserPhenotype(phenotype);
+					URI phenotypeURI = servicesClient.saveUserPhenotype(phenotype);
 					if (phenotypeURI != null) {
 						resp.setStatus(HttpServletResponse.SC_CREATED);
 						resp.setHeader("Location", phenotypeURI.toString());
@@ -94,7 +99,7 @@ public class SavePropositionServlet extends HttpServlet {
 					resp.getOutputStream().print(e.getMessage());
 				}
 			} else {
-				this.servicesClient.updateUserPhenotype(phenotype.getId(), phenotype);
+				servicesClient.updateUserPhenotype(phenotype.getId(), phenotype);
 			}
 		} catch (ClientException e) {
 			try {

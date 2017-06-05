@@ -55,24 +55,27 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.inject.Inject;
+import com.google.inject.Injector;
 
 import org.eurekaclinical.eureka.client.comm.Category;
 import org.eurekaclinical.eureka.client.comm.Phenotype;
 import org.eurekaclinical.eureka.client.comm.PhenotypeField;
 import org.eurekaclinical.common.comm.clients.ClientException;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ServicesClient;
+import javax.inject.Singleton;
 
+@Singleton
 public class ListUserDefinedPropositionChildrenServlet extends HttpServlet {
 	private static final Logger LOGGER = LoggerFactory
 			.getLogger(ListUserDefinedPropositionChildrenServlet.class);
 	private static final ObjectMapper MAPPER = new ObjectMapper();
-	private final ServicesClient servicesClient;
+	private static final long serialVersionUID = 1L;
+	private final Injector injector;
 	private final PropositionListSupport propListSupport;
 
 	@Inject
-	public ListUserDefinedPropositionChildrenServlet(
-			ServicesClient inClient) {
-		this.servicesClient = inClient;
+	public ListUserDefinedPropositionChildrenServlet(Injector inInjector) {
+		this.injector = inInjector;
 		this.propListSupport = new PropositionListSupport();
 	}
 
@@ -97,7 +100,8 @@ public class ListUserDefinedPropositionChildrenServlet extends HttpServlet {
 	}
 
 	private void getAllData(JsonTreeData d) throws ClientException {
-		Phenotype phenotype = this.servicesClient.getUserPhenotype(d.getAttr().get("data-key"), false);
+		ServicesClient servicesClient = this.injector.getInstance(ServicesClient.class);
+		Phenotype phenotype = servicesClient.getUserPhenotype(d.getAttr().get("data-key"), false);
 
 		if (phenotype.getType() == Phenotype.Type.CATEGORIZATION) {
 			Category ce = (Category) phenotype;
@@ -134,10 +138,10 @@ public class ListUserDefinedPropositionChildrenServlet extends HttpServlet {
 
 		List<JsonTreeData> l = new ArrayList<>();
 		String propKey = req.getParameter("propKey");
-
+		ServicesClient servicesClient = this.injector.getInstance(ServicesClient.class);
 		Phenotype phenotype;
 		try {
-			phenotype = this.servicesClient.getUserPhenotype(propKey, false);
+			phenotype = servicesClient.getUserPhenotype(propKey, false);
 
 			JsonTreeData newData = createData(this.propListSupport.getDisplayName(phenotype),
 					propKey);

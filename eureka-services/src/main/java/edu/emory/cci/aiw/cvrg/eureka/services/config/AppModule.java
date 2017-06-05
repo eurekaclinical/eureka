@@ -46,7 +46,9 @@ import javax.naming.InitialContext;
 
 import com.google.inject.TypeLiteral;
 import com.google.inject.jndi.JndiIntegration;
+import com.google.inject.servlet.SessionScoped;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.EtlClient;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.EtlClientProvider;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.FrequencyTypeDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.JpaFrequencyTypeDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.JpaPhenotypeEntityDao;
@@ -64,8 +66,6 @@ import edu.emory.cci.aiw.cvrg.eureka.services.dao.ValueComparatorDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.finder.PropositionFinder;
 import edu.emory.cci.aiw.cvrg.eureka.services.finder.SystemPropositionFinder;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.PhenotypeEntityDao;
-import org.eurekaclinical.common.comm.clients.WebResourceWrapperFactory;
-import org.eurekaclinical.common.comm.clients.cassupport.CasWebResourceWrapperFactory;
 import org.eurekaclinical.standardapis.dao.UserDao;
 import org.eurekaclinical.standardapis.entity.RoleEntity;
 import org.eurekaclinical.standardapis.entity.UserEntity;
@@ -78,10 +78,10 @@ import org.eurekaclinical.standardapis.entity.UserEntity;
  */
 class AppModule extends AbstractModule {
 
-	private final EtlClient etlClient;
+	private final EtlClientProvider etlClientProvider;
 	
-	AppModule(EtlClient inEtlClient) {
-		this.etlClient = inEtlClient;
+	AppModule(EtlClientProvider inEtlClientProvider) {
+		this.etlClientProvider = inEtlClientProvider;
 	}
 
 	@Override
@@ -105,8 +105,7 @@ class AppModule extends AbstractModule {
 				JndiIntegration.fromJndi(Session.class,
 						"java:comp/env/mail/Session"));
 
-		bind(WebResourceWrapperFactory.class).to(CasWebResourceWrapperFactory.class);
-		bind(EtlClient.class).toInstance(this.etlClient);
+		bind(EtlClient.class).toProvider(this.etlClientProvider).in(SessionScoped.class);
 	}
 
 }

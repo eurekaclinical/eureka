@@ -50,7 +50,6 @@ import java.util.Map;
 import org.eurekaclinical.common.config.AbstractServletModule;
 import org.eurekaclinical.common.servlet.DestroySessionServlet;
 import org.eurekaclinical.common.servlet.LogoutServlet;
-import org.eurekaclinical.common.servlet.PostMessageLoginServlet;
 import org.eurekaclinical.common.servlet.ProxyServlet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -63,25 +62,21 @@ class ServletModule extends AbstractServletModule {
 
 	private static final Logger LOGGER = LoggerFactory
 			.getLogger(ServletModule.class);
-	private static final String CONTAINER_PATH = "/site/*";
-	private static final String CONTAINER_PROTECTED_PATH = "/protected/*";
 	private static final String FILTER_PATH = "^/(?!(assets|bower_components)).*"; 
 	private static final String LOGOUT_PATH = "/logout";
 
 	private final WebappProperties properties;
 
 	public ServletModule(WebappProperties inProperties) {
-		super(inProperties, CONTAINER_PATH, CONTAINER_PROTECTED_PATH);
+		super(inProperties);
 		this.properties = inProperties;
 	}
 
 	private void setupMessageFilter() {
-		bind(MessagesFilter.class).in(Singleton.class);
 		filterRegex(FILTER_PATH).through(MessagesFilter.class);
 	}
 
 	private void setupUserFilter() {
-		bind(UserFilter.class).in(Singleton.class);
 		filterRegex(FILTER_PATH).through(UserFilter.class);
 	}
 	
@@ -106,7 +101,6 @@ class ServletModule extends AbstractServletModule {
 		
 		serve("/destroy-session").with(DestroySessionServlet.class);  
 
-		bind(LogoutServlet.class).in(Singleton.class);
 		serve(LOGOUT_PATH).with(LogoutServlet.class);
 
 		bind(JobSubmitServlet.class).in(Singleton.class);
@@ -115,7 +109,6 @@ class ServletModule extends AbstractServletModule {
 		serve("/protected/upload").with(JobSubmitServlet.class,
 				uploadParams);
 
-		bind(LoginServlet.class).in(Singleton.class);
 		serve("/protected/login").with(LoginServlet.class);
 
 		bind(JobPollServlet.class).in(Singleton.class);

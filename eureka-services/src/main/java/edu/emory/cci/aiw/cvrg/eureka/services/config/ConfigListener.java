@@ -45,9 +45,10 @@ import javax.servlet.ServletContextEvent;
 import com.google.inject.Module;
 import com.google.inject.persist.jpa.JpaPersistModule;
 import com.google.inject.servlet.GuiceServletContextListener;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.EtlClient;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.EtlClientProvider;
 
 import edu.emory.cci.aiw.cvrg.eureka.services.finder.SystemPropositionFinder;
+import javax.servlet.ServletContext;
 import org.eurekaclinical.common.config.InjectorSupport;
 
 /**
@@ -62,25 +63,35 @@ public class ConfigListener extends GuiceServletContextListener {
 
 	private static final String JPA_UNIT = "services-jpa-unit";
 	private final ServiceProperties serviceProperties = new ServiceProperties();
-	private final EtlClient etlClient = new EtlClient(serviceProperties.getEtlUrl());
+	private Injector injector;
+	private final EtlClientProvider etlClientProvider = new EtlClientProvider(this.serviceProperties.getEtlUrl());
 
 	@Override
 	protected Injector getInjector() {
-		return new InjectorSupport(
+		this.injector = new InjectorSupport(
 				new Module[]{
-					new AppModule(this.etlClient),
+					new AppModule(this.etlClientProvider),
 					new ServletModule(this.serviceProperties),
 					new JpaPersistModule(JPA_UNIT)
 				},
 				this.serviceProperties).getInjector();
+		return this.injector;
 	}
+
+	@Override
+	public void contextInitialized(ServletContextEvent servletContextEvent) {
+		super.contextInitialized(servletContextEvent);
+		ServletContext servletContext = servletContextEvent.getServletContext();
+		servletContext.addListener(this.injector.getInstance(ClientSessionListener.class));
+	}
+	
+	
 
 	@Override
 	public void contextDestroyed(ServletContextEvent inServletContextEvent) {
 		super.contextDestroyed(inServletContextEvent);
 		SystemPropositionFinder finder
-				= this.getInjector().getInstance(SystemPropositionFinder.class);
+				= this.injector.getInstance(SystemPropositionFinder.class);
 		finder.shutdown();
-		this.etlClient.close();
 	}
 }

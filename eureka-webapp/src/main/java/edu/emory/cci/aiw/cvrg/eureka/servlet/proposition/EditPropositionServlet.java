@@ -49,6 +49,7 @@ import org.eurekaclinical.eureka.client.comm.Phenotype;
 import org.eurekaclinical.eureka.client.comm.Frequency;
 import org.eurekaclinical.eureka.client.comm.Category;
 import com.google.inject.Inject;
+import com.google.inject.Injector;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.*;
 import org.eurekaclinical.common.comm.clients.ClientException;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ServicesClient;
@@ -66,16 +67,19 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import javax.inject.Singleton;
 
+@Singleton
 public class EditPropositionServlet extends HttpServlet {
 
 	private static final Logger LOGGER = LoggerFactory
 			.getLogger(EditPropositionServlet.class);
-	private final ServicesClient servicesClient;
+	private static final long serialVersionUID = 1L;
+	private final Injector injector;
 
 	@Inject
-	public EditPropositionServlet(ServicesClient inClient) {
-		this.servicesClient = inClient;
+	public EditPropositionServlet(Injector inInjector) {
+		this.injector = inInjector;
 	}
 
 	@Override
@@ -89,8 +93,9 @@ public class EditPropositionServlet extends HttpServlet {
 			throws ServletException, IOException {
 		String propKey = req.getParameter("key");
 		Phenotype.Type propType = this.getPropTypeFromParam(req.getParameter("type"));
+		ServicesClient servicesClient = this.injector.getInstance(ServicesClient.class);
 		try {
-			List<FrequencyType> freqTypes = this.servicesClient.getFrequencyTypesAsc();
+			List<FrequencyType> freqTypes = servicesClient.getFrequencyTypesAsc();
 			//Find the default frequency
 			FrequencyType defaultFreqType = null;
 			for (FrequencyType freqType : freqTypes){
@@ -99,7 +104,7 @@ public class EditPropositionServlet extends HttpServlet {
         				break;
     				}
 			}
-			List<TimeUnit> timeUnits = this.servicesClient.getTimeUnitsAsc();                     
+			List<TimeUnit> timeUnits = servicesClient.getTimeUnitsAsc();                     
 			//Find the default timeUnit
 			TimeUnit defaultTimeUnit = null;
 			for (TimeUnit timeUnit : timeUnits){
@@ -109,7 +114,7 @@ public class EditPropositionServlet extends HttpServlet {
     				}
 			}    
 			List<RelationOperator> relOps =
-					this.servicesClient.getRelationOperatorsAsc();
+					servicesClient.getRelationOperatorsAsc();
 			List<RelationOperator> sequentialRelOps =
 					new ArrayList<>();
 			List<RelationOperator> contextRelOps =
@@ -134,10 +139,10 @@ public class EditPropositionServlet extends HttpServlet {
 					break;
 				}
 			}       		
-			List<ThresholdsOperator> thresholdOps = this.servicesClient
+			List<ThresholdsOperator> thresholdOps = servicesClient
 					.getThresholdsOperators();
 
-			List<ValueComparator> valueComparators = this.servicesClient
+			List<ValueComparator> valueComparators = servicesClient
 					.getValueComparatorsAsc();
 			List<ValueComparator> valueCompsUpper = new ArrayList<>();
 			List<ValueComparator> valueCompsLower = new ArrayList<>();
@@ -171,10 +176,10 @@ public class EditPropositionServlet extends HttpServlet {
 			req.setAttribute("defaultFrequencyType", defaultFreqType);
 
 			if ((propKey != null) && (!propKey.equals(""))) {
-				Phenotype phenotype = this.servicesClient
+				Phenotype phenotype = servicesClient
 						.getUserPhenotype(propKey, false);
 				PropertiesPhenotypeVisitor visitor = new PropertiesPhenotypeVisitor(
-						this.servicesClient);
+						servicesClient);
 				try {
 					LOGGER.debug("Visiting {}", phenotype.getKey());
 					phenotype.accept(visitor);

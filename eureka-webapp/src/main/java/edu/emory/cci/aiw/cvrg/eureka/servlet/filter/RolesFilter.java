@@ -40,6 +40,7 @@ package edu.emory.cci.aiw.cvrg.eureka.servlet.filter;
  * #L%
  */
 import com.google.inject.Inject;
+import com.google.inject.Injector;
 import org.eurekaclinical.common.comm.clients.ClientException;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ServicesClient;
 import edu.emory.cci.aiw.cvrg.eureka.webapp.config.RequestAttributes;
@@ -70,11 +71,11 @@ import org.eurekaclinical.user.client.comm.User;
 @Singleton
 public class RolesFilter implements Filter {
 
-	private final ServicesClient servicesClient;
+	private final Injector injector;
 
 	@Inject
-	public RolesFilter(ServicesClient inClient) {
-		this.servicesClient = inClient;
+	public RolesFilter(Injector inInjector) {
+		this.injector = inInjector;
 	}
 
 	@Override
@@ -86,6 +87,7 @@ public class RolesFilter implements Filter {
 		HttpServletRequest servletRequest = (HttpServletRequest) inRequest;
 		User user = (User) servletRequest.getAttribute(RequestAttributes.USER);//set up eureka_main.jsp user value
 		if (user != null) {
+			ServicesClient servicesClient = this.injector.getInstance(ServicesClient.class);
 			try {
 				HttpSession session = servletRequest.getSession(false);
 				assert session != null : "session should not be null";
@@ -95,7 +97,7 @@ public class RolesFilter implements Filter {
 
 				Set<Long> userRoleIds = new HashSet<>(user.getRoles());//user project user'role info
                                 
-				List<Role> roles = this.servicesClient.getRoles();//eureka project roles table
+				List<Role> roles = servicesClient.getRoles();//eureka project roles table
                                 
 				Map<Long, Role> idsToRoles = new HashMap<>();
                                 

@@ -60,37 +60,32 @@ public class BackEndContextListener extends GuiceServletContextListener {
 
 	private static final String JPA_UNIT = "backend-jpa-unit";
 	private final EtlProperties etlProperties = new EtlProperties();
-	private InjectorSupport injectorSupport;
+	private Injector injector;
 
 	@Override
 	public void contextInitialized(ServletContextEvent inServletContextEvent) {
 		super.contextInitialized(inServletContextEvent);
 		initDatabase();
 	}
-	
+
 	@Override
 	protected Injector getInjector() {
-		/*
-		 * Must be created here in order for the modules to initialize 
-		 * correctly.
-		 */
-		if (this.injectorSupport == null) {
-			this.injectorSupport = new InjectorSupport(
-			new Module[]{
-				new AppModule(),
-				new ETLServletModule(this.etlProperties),
-				new JpaPersistModule(JPA_UNIT)
-			},
-			this.etlProperties);
-		}
-		return this.injectorSupport.getInjector();
+		this.injector = new InjectorSupport(
+				new Module[]{
+					new AppModule(),
+					new ETLServletModule(this.etlProperties),
+					new JpaPersistModule(JPA_UNIT)
+				},
+				this.etlProperties).getInjector();
+		return this.injector;
 	}
 
 	@Override
 	public void contextDestroyed(ServletContextEvent servletContextEvent) {
 		super.contextDestroyed(servletContextEvent);
 		TaskManager taskManager
-				= getInjector().getInstance(TaskManager.class);
+				= this.injector.getInstance(TaskManager.class
+				);
 		taskManager.shutdown();
 	}
 
@@ -100,6 +95,5 @@ public class BackEndContextListener extends GuiceServletContextListener {
 			executor.execute();
 		}
 	}
-
 
 }

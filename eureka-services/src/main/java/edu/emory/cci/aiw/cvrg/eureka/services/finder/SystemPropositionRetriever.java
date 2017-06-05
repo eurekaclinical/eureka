@@ -40,6 +40,7 @@
 package edu.emory.cci.aiw.cvrg.eureka.services.finder;
 
 import com.google.inject.Inject;
+import com.google.inject.Injector;
 import com.sun.jersey.api.client.ClientResponse;
 import org.eurekaclinical.eureka.client.comm.SystemPhenotype;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.EtlClient;
@@ -62,16 +63,17 @@ public class SystemPropositionRetriever implements
 
 	private static final Logger LOGGER = LoggerFactory
 			.getLogger(SystemPropositionRetriever.class);
-	private final EtlClient etlClient;
+	private final Injector injector;
 
 	@Inject
-	public SystemPropositionRetriever(EtlClient inEtlClient) {
-		this.etlClient = inEtlClient;
+	public SystemPropositionRetriever(Injector inInjector) {
+		this.injector = inInjector;
 	}
 
 	@Override
 	public PropositionDefinition retrieve(String sourceConfigId, String inKey)
 			throws PropositionFindException {
+		EtlClient etlClient = this.injector.getInstance(EtlClient.class);
 		PropositionDefinition result;
 		try {
 			result = etlClient.getPropositionDefinition(sourceConfigId, inKey);
@@ -101,6 +103,7 @@ public class SystemPropositionRetriever implements
 	public List<PropositionDefinition> retrieveAll(
 			String sourceConfigId, List<String> inKeys, Boolean withChildren) throws PropositionFindException {
 		List<PropositionDefinition> result = new ArrayList<>();
+		EtlClient etlClient = this.injector.getInstance(EtlClient.class);
 		try {
 			result = etlClient.getPropositionDefinitions(sourceConfigId, inKeys, withChildren);
 		} catch (ClientException e) {

@@ -105,15 +105,15 @@ public class EtlClient extends EurekaClient {
 			};
 	private static final GenericType<List<Role>> RoleList = new GenericType<List<Role>>() {
 	};
-	private final String resourceUrl;
+	private final URI resourceUrl;
 
 	@Inject
 	public EtlClient(String inEtlUrl) {
-		this.resourceUrl = inEtlUrl;
+		this.resourceUrl = URI.create(inEtlUrl);
 	}
 
 	@Override
-	protected String getResourceUrl() {
+	protected URI getResourceUrl() {
 		return this.resourceUrl;
 	}
 
