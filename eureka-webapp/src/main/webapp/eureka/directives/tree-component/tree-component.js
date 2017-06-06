@@ -7,12 +7,11 @@
 
     function TreeComponent() {
         return {
-            restrict: 'E',
+            restrict: 'AE',
             scope: {
-                currentMemeberList: '='
+                selectedItems: '='
             },
             bindToController: true,
-
             replace: false,
             templateUrl: 'eureka/directives/tree-component/tree-component.html',
             controller: 'TreeComponentCtrl',

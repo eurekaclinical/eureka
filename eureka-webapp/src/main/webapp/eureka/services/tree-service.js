@@ -17,15 +17,11 @@
 
     function TreeService($http, $q, appProperties) {
         let { dataEndpoint } = appProperties;
-        let { dataProtectedEndPoint } = appProperties;
 
         return ({
-            removePhenotype: removePhenotype,
-            getPhenotype: getPhenotype,
             getTreeRoot: getTreeRoot,
             getTreeNode: getTreeNode,
-            getTreeNodes: getTreeNodes,
-            getUserListRoot: getUserListRoot
+            getTreeNodes: getTreeNodes
         });
 
         function getTreeRoot() {
@@ -38,7 +34,17 @@
                 return $http.get(dataEndpoint + '/concepts/')
                     .then(handleSuccess, handleError);
             } else {
-                return getTreeNodes([key]);
+				let postBody = 'key=' + key;
+                return $http.post(dataEndpoint + '/concepts', postBody)
+					.then(
+						function(response) {
+							if (response.data.length > 0) {
+								return response.data[0];
+							} else {
+								return $q.reject('Not found');
+							}
+						}, 
+						handleError);
             }
         }
 
@@ -46,42 +52,19 @@
             if (summarize === undefined) {
                 summarize = false;
             }
-		    let postBody = '';
+		    let postBody = 'summarize=' + summarize;
 			for (let i = 0; i < keys.length; i++) {
-				if (i > 0) {
-					postBody += '&';
-				}
-				postBody += 'key=' + keys[i]
+				postBody += '&';
+				postBody += 'key=' + keys[i];
 			}
-			return $http.post(dataEndpoint + '/concepts' + '?summarize=' + summarize, postBody)
+			return $http.post(dataEndpoint + '/concepts', postBody)
 				.then(
 					function(response) {
-						if (response.data.length > 0) {
-							return response.data;
-						} else {
-							return $q.reject('Not found');
-						}
+						return response.data;
 					}, 
 					handleError);
         }
 
-        function getUserListRoot() {
-            return $http.get(dataEndpoint + '/phenotypes')
-                .then(handleSuccess, handleError);
-        }
-
-        function removePhenotype(id) {
-
-            return $http['delete'](dataEndpoint + '/phenotypes/' + id)
-                .then(handleSuccess, handleError);
-
-        }
-
-        function getPhenotype(key) {
-            return $http.get(dataEndpoint + '/phenotypes/' + key + '?summarize=true')
-                .then(handleSuccess, handleError);
-        }
-		
         function handleSuccess(response) {
             return response.data;
         }

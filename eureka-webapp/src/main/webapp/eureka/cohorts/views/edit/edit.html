@@ -16,69 +16,48 @@
 		</div>
 		<div class="form-group">
 			<label for="patCohortDefinition" class="control-label">Criteria</label>
-			<div id="patCohortDefinition">
-				<div class="tree-drop">
-					<ul class="sortable" ng-repeat="criterion in editCohort.criteria">
-						<li>{{criterion.displayName}}<a title="remove" ng-click="editCohort.removeCriterion(criterion) "><span class="glyphicon glyphicon-remove" title="" style="color:red;"></span></a>
-					</ul>
-					<a class="label-info text-center" href="" ng-click="editCohort.addCriteria()" style="display: block">
-						Add concepts...
-					</a>
-				</div>
-			</div>
+			<tree-multi-drop-zone items="editCohort.treeMultiDropZoneItems" keys="editCohort.treeMultiDropZoneInitialKeys" display-error="editCohort.displayError" delete-modal-template-url="treeMultiDropZoneDeleteModal.html"></tree-multi-drop-zone>
 		</div>
 		<button id="patCohortEditCancelButton" type="button" class="btn" ng-click="editCohort.cancelCohortForm()">Cancel</button>
 		<button id="patCohortEditSaveButton" type="submit" class="btn btn-primary">Save</button>
 	</form>
 </div>
-<script type="text/ng-template" id="addCriteriaModal.html">
+<script type="text/ng-template" id="treeMultiDropZoneDeleteModal.html">
 	<div class="modal-header">
-	<h3 class="modal-title">Add Criteria</h3>
+		<h3 class="modal-title">Remove Criterion</h3>
 	</div>
 	<div class="modal-body">
-	<tree-component current-memeber-list="mo.criteria"></tree-component>
-	</div>
-	<div class="modal-footer">
-	<button type="submit" class="btn" ng-click="mo.cancel()">Cancel</button>
-	<button class="btn btn-primary" ng-click="mo.ok()">Add criteria and close</button>
-	</div>
-</script>
-<script type="text/ng-template" id="deleteCriterionModal.html">
-	<div class="modal-header">
-	<h3 class="modal-title">Remove Criterion</h3>
-	</div>
-	<div class="modal-body">
-	<p><strong>Are you sure you want to remove "{{mo.criterionName}}"?</strong></p>
+		<p><strong>Are you sure you want to remove "{{mo.displayName}}"?</strong></p>
 	<p>This operation cannot be undone.</p>
 	</div>
 	<div class="modal-footer">
-	<button type="submit" class="btn" ng-click="mo.cancel()">Cancel</button>
-	<button type="button" class="btn btn-primary" ng-click="mo.ok()">Remove</button>
+		<button type="submit" class="btn" ng-click="mo.cancel()">Cancel</button>
+		<button type="button" class="btn btn-primary" ng-click="mo.ok()">Remove</button>
 	</div>
 </script>
 <script type="text/ng-template" id="cancelEditCohortModal.html">
 	<div class="modal-header">
-	<h3 class="modal-title">Unsaved Changes</h3>
+		<h3 class="modal-title">Unsaved Changes</h3>
 	</div>
 	<div class="modal-body">
-	<p><strong>Are you sure you want to discard your changes to "{{mo.cohortName}}"?</strong></p>
-	<p>This operation cannot be undone.</p>
+		<p><strong>Are you sure you want to discard your changes to "{{mo.cohortName}}"?</strong></p>
+		<p>This operation cannot be undone.</p>
 	</div>
 	<div class="modal-footer">
-	<button type="submit" class="btn" ng-click="mo.cancel()">Continue</button>
-	<button type="button" class="btn btn-primary" ng-click="mo.ok()">Discard</button>
+		<button type="submit" class="btn" ng-click="mo.cancel()">Continue</button>
+		<button type="button" class="btn btn-primary" ng-click="mo.ok()">Discard</button>
 	</div>
 </script>
 <script type="text/ng-template" id="cancelCreateCohortModal.html">
 	<div class="modal-header">
-	<h3 class="modal-title">Unsaved Changes</h3>
+		<h3 class="modal-title">Unsaved Changes</h3>
 	</div>
 	<div class="modal-body">
-	<p><strong>Are you sure you want to discard your new cohort?</strong></p>
-	<p>This operation cannot be undone.</p>
+		<p><strong>Are you sure you want to discard your new cohort?</strong></p>
+		<p>This operation cannot be undone.</p>
 	</div>
 	<div class="modal-footer">
-	<button type="submit" class="btn" ng-click="mo.cancel()">Continue</button>
-	<button type="button" class="btn btn-primary" ng-click="mo.ok()">Discard</button>
+		<button type="submit" class="btn" ng-click="mo.cancel()">Continue</button>
+		<button type="button" class="btn btn-primary" ng-click="mo.ok()">Discard</button>
 	</div>
 </script>

@@ -18,6 +18,7 @@
     function MainCtrl(JobService, $interval, $scope) {
         var vm = this;
         vm.radioData = 1;
+		vm.treeMultiDropZoneItems = [];
         
         vm.earliestDatePopup = {
 			opened: false
@@ -46,6 +47,10 @@
         function displayLoadError(msg) {
             vm.loadErrorMsg = msg;
         }
+		
+		function displayTreeMultiDropZoneItemsError(msg) {
+			vm.treeMultiDropZoneItemsErrorMsg = msg;
+		}
 
         function getLatestJobs() {
 			JobService.getLatestJobs()

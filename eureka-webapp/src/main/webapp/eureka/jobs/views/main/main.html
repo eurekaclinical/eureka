@@ -1,12 +1,15 @@
 <h1>Submit Job</h1>
 <div class="alert alert-danger" role="alert" ng-if="jobs.loadErrorMsg">
-	<strong>Error loading page data!</strong> {{cohorts.loadErrorMsg}}
+	<strong>Error loading page data!</strong> {{jobs.loadErrorMsg}}
 </div>
 <div class="alert alert-danger" role="alert" ng-if="jobs.jobStatusErrorMsg">
-	<strong>Error getting job status!</strong> {{cohorts.jobStatusErrorMsg}}
+	<strong>Error getting job status!</strong> {{jobs.jobStatusErrorMsg}}
 </div>
 <div class="alert alert-danger" role="alert" ng-if="jobs.jobSubmitErrorMsg">
-	<strong>Error submitting job!</strong> {{cohorts.jobSubmitErrorMsg}}
+	<strong>Error submitting job!</strong> {{jobs.jobSubmitErrorMsg}}
+</div>
+<div class="alert alert-danger" role="alert" ng-if="jobs.treeMultiDropZoneItemsErrorMsg">
+	<strong>Error selecting concepts!</strong> {{jobs.treeMultiDropZoneItemsErrorMsg}}
 </div>
 <form id="uploadForm" name="uploadForm" role="form" method="POST" action="upload" enctype="multipart/form-data">
 	<fieldset>
@@ -89,15 +92,7 @@
 	<fieldset id ="concepts">
 		<legend>Concepts</legend>
 		<div class="form-group">
-			<div id="conceptsList"
-				 class="jstree-drop tree-drop tree-drop-multiple"
-				 title="Click to add concepts here">
-				<ul class="sortable" data-drop-type="multiple" data-proptype="empty">
-				</ul>
-				<div class="label-info text-center">
-					Add concepts...
-				</div>
-			</div>
+			<tree-multi-drop-zone items="jobs.treeMultiDropZoneItems" display-error="jobs.displayTreeMultiDropZoneItemsError" delete-modal-template-url="treeMultiDropZoneDeleteModal.html"></tree-multi-drop-zone>
 		</div>                                
 	</fieldset>
 	<fieldset id ="dateRange">
@@ -147,3 +142,16 @@
 	</fieldset>
 	<input type="submit" id="startButton" class="btn btn-primary" value="Start">
 </form>
+<script type="text/ng-template" id="treeMultiDropZoneDeleteModal.html">
+	<div class="modal-header">
+		<h3 class="modal-title">Remove Concept</h3>
+	</div>
+	<div class="modal-body">
+		<p><strong>Are you sure you want to remove "{{mo.displayName}}"?</strong></p>
+		<p>This operation cannot be undone.</p>
+	</div>
+	<div class="modal-footer">
+		<button type="submit" class="btn" ng-click="mo.cancel()">Cancel</button>
+		<button type="button" class="btn btn-primary" ng-click="mo.ok()">Remove</button>
+	</div>
+</script>

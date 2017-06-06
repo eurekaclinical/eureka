@@ -1,0 +1,20 @@
+<div class="tree-drop">
+	<ul class="sortable" ng-repeat="item in vm.items">
+		<li>{{item.displayName}}<a title="remove" ng-click="vm.remove(item) "><span class="glyphicon glyphicon-remove" title="" style="color:red;"></span></a>
+	</ul>
+	<a class="label-info text-center" href="" ng-click="vm.add()" style="display: block">
+		Add...
+	</a>
+</div>
+<script type="text/ng-template" id="addItemsModal.html">
+	<div class="modal-header">
+		<h3 class="modal-title">Add Concepts and Phenotypes</h3>
+	</div>
+	<div class="modal-body">
+		<tree-component selected-items="mo.itemsToAdd"></tree-component>
+	</div>
+	<div class="modal-footer">
+		<button type="submit" class="btn" ng-click="mo.cancel()">Cancel</button>
+		<button class="btn btn-primary" ng-click="mo.ok()">Add criteria and close</button>
+	</div>
+</script>

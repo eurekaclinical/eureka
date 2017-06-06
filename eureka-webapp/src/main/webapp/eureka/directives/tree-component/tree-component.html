@@ -16,16 +16,19 @@
 	<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
 	<strong>Error loading concepts!</strong> {{vm.errorMsg}}
 </div>
-<ul class="list-inline" ng-repeat="selectedNode in vm.currentMemeberList" style="display: inline-block">
-	<li style="background: #C3D9FF">{{selectedNode.displayName}}
-		<a title="remove" ng-click="vm.removeNode(selectedNode) ">
+<ul class="list-inline" ng-repeat="item in vm.selectedItems" style="display: inline-block">
+	<li style="background: #C3D9FF">{{item.displayName}}
+		<a title="remove" ng-click="vm.removeNode(item) ">
 			<span class="glyphicon glyphicon-remove" title="" style="color:red;"></span>
 		</a>
 	</li>
 </ul>
 <uib-tabset active="active">
 	<uib-tab index="0" heading="Data">
-		<ol class="breadcrumb">
+		<div class="text-center" ng-if="!vm.tableParams && !vm.errorMsg">
+			<i class="fa fa-refresh fa-spin"></i> Loading...
+		</div>
+		<ol class="breadcrumb" ng-if="vm.tableParams">
 			<li class="breadcrumb-item" ng-repeat="x in vm.breadCrumbs"><a href ng-click="vm.setBreadCrumbs(x)">{{x.displayName}}</a></li>
 		</ol>
 		<table ng-table="vm.tableParams" class="table" show-filter="true">
@@ -50,6 +53,9 @@
 		</table>
 	</uib-tab>
 	<uib-tab index="1" heading="Phenotypes">
+		<div class="text-center" ng-if="!vm.tableParamsUser">
+			<i class="fa fa-refresh fa-spin"></i> Loading...
+		</div>
 		<table ng-table="vm.tableParamsUser" class="table" show-filter="true">
 			<thead class="hidden"/>
 			<tbody>
