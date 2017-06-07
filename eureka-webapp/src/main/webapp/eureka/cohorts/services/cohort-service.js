@@ -91,20 +91,17 @@
         }
 
         function createCohort(cohort) {
-            /*This is what the data looks like being sent to server.  Does not look valid
-            {'id':null,'type':'COHORT','ownerUserId':1,'name':'NameTest','description':'NameDescription',
-            'phenotypeFields':null, 'cohort':{'id':null,'node':{'id':null,'start':null,'finish':null,
-            'type':'Literal','name':'\\ACT\\Medications\\'}},'read':false,'write':false,'execute':false,
-            'created_at':null,'updated_at':null,'links':null}
-            */
             let newCohort = {
                 id: null,
+				name: cohort.name,
+				description: cohort.description,
                 type: 'COHORT',
-                ownerUserId: 1,
+				ownerUserId: cohort.userId,
                 phenotypeFields: null,
                 cohort: {
                     id: null
                 },
+				ownerUserId: null,
                 read: false,
                 write: false,
                 execute: false,
@@ -115,13 +112,13 @@
             let phenotypes = cohort.memberList;
             let node = { id: null, start: null, finish: null, type: 'Literal' };
             if (phenotypes.length === 1) {
-                node.name = phenotypes[0].key;
+                node.name = phenotypes[0].name;
             } else if (phenotypes.length > 1) {
                 let first = true;
                 let prev = null;
                 for (var i = phenotypes.length - 1; i >= 0; i--) {
                     var literal = { id: null, start: null, finish: null, type: 'Literal' };
-                    literal.name = phenotypes[i].key;
+                    literal.name = phenotypes[i].name;
                     if (first) {
                         first = false;
                         prev = literal;
@@ -136,12 +133,7 @@
             } else {
                 node = null;
             }
-            newCohort.name = cohort.name;
-            newCohort.description = cohort.description;
-            newCohort.cohort.id = null;
             newCohort.cohort.node = node;
-            console.log(newCohort);
-            let testCohort = { 'id': null, 'type': 'COHORT', 'ownerUserId': 1, 'name': 'jay23333', 'description': 'description 234', 'phenotypeFields': null, 'cohort': { 'id': null, 'node': { 'id': null, 'start': null, 'finish': null, 'type': 'Literal', 'name': 'Encounter' } }, 'read': false, 'write': false, 'execute': false, 'created_at': null, 'updated_at': null, 'links': null };
             return $http.post(dataEndpoint + '/destinations/', newCohort)
                 .then(handleSuccess, handleError);
         }

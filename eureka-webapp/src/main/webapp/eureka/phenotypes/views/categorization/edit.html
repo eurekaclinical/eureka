@@ -1,0 +1,66 @@
+<h1 ng-if="editPhenotype.nowEditing === undefined">New Categorization</h1>
+<h1 ng-if="editPhenotype.nowEditing !== undefined">Edit Categorization</h1>
+<p class="lead">This category phenotype may be used wherever its member phenotype(s) are accepted.</p>
+<div class="alert alert-danger" role="alert" ng-if="editPhenotype.treeMultiDropZoneItemsErrorMsg">
+	<strong>Error selecting concepts!</strong> {{editPhenotype.treeMultiDropZoneItemsErrorMsg}}
+</div>
+<div class="alert alert-danger" role="alert" ng-if="editPhenotype.errorMsg">
+	<strong>Error saving phenotype!</strong> {{editPhenotype.errorMsg}}
+</div>
+<form id="categorizationForm" name="categorizationForm" class="vert-offset" role="form" novalidate angular-validator angular-validator-submit="editPhenotype.save()">
+    <div class="form-group">
+        <label for="defName" class="control-label">Name</label>
+        <input type="text" id="defName" name="defName" class="form-control" ng-model="editPhenotype.name" required required-message="'Name is required'" />
+    </div>
+    <div class="form-group">
+        <label for="description" class="control-label">Description</label>
+        <textarea id="description" name="description" class="form-control" ng-model="editPhenotype.description"></textarea>
+    </div>
+    <div class="form-group">
+        <label for="definition" class="control-label">Members</label>
+        <tree-multi-drop-zone id="definition" name="definition" keys="editPhenotype.treeMultiDropZoneInitialKeys" items="editPhenotype.treeMultiDropZoneItems" display-error="editPhenotype.displayTreeMultiDropZoneItemsError" delete-modal-template-url="treeMultiDropZoneDeleteModal.html"></tree-multi-drop-zone>
+    </div>
+    <div class="form-group text-center vert-offset ">
+		<button id="cancelButton" type="button" class="btn" ng-click="editPhenotype.cancel()">Cancel</button>
+        <button id="saveButton " type="button " class="btn btn-primary ">Save</button>
+    </div>
+</form>
+<script type="text/ng-template" id="treeMultiDropZoneDeleteModal.html">
+	<div class="modal-header">
+		<h3 class="modal-title">Remove Concept</h3>
+	</div>
+	<div class="modal-body">
+		<p><strong>Are you sure you want to remove "{{mo.displayName}}"?</strong></p>
+		<p>This operation cannot be undone.</p>
+	</div>
+	<div class="modal-footer">
+		<button type="submit" class="btn" ng-click="mo.cancel()">Cancel</button>
+		<button type="button" class="btn btn-primary" ng-click="mo.ok()">Remove</button>
+	</div>
+</script>
+<script type="text/ng-template" id="cancelEditModal.html">
+	<div class="modal-header">
+		<h3 class="modal-title">Unsaved Changes</h3>
+	</div>
+	<div class="modal-body">
+		<p><strong>Are you sure you want to discard your changes to "{{mo.displayName}}"?</strong></p>
+		<p>This operation cannot be undone.</p>
+	</div>
+	<div class="modal-footer">
+		<button type="submit" class="btn" ng-click="mo.cancel()">Continue</button>
+		<button type="button" class="btn btn-primary" ng-click="mo.ok()">Discard</button>
+	</div>
+</script>
+<script type="text/ng-template" id="cancelCreateModal.html">
+	<div class="modal-header">
+		<h3 class="modal-title">Unsaved Changes</h3>
+	</div>
+	<div class="modal-body">
+		<p><strong>Are you sure you want to discard your new phenotype?</strong></p>
+		<p>This operation cannot be undone.</p>
+	</div>
+	<div class="modal-footer">
+		<button type="submit" class="btn" ng-click="mo.cancel()">Continue</button>
+		<button type="button" class="btn btn-primary" ng-click="mo.ok()">Discard</button>
+	</div>
+</script>

@@ -2,7 +2,6 @@
     'use strict';
 
     describe('PhenotypeService', function() {
-
         var PhenotypeService, $httpBackend;
 
         beforeEach(function() {
@@ -28,7 +27,7 @@
             expect(PhenotypeService).toBeDefined();
         });
 
-        describe('getSummarizedUserElements', function() {
+        describe('getPhenotypeRoot', function() {
 
             var userElements;
 
@@ -40,8 +39,8 @@
                     .respond(userElements);
             });
 
-            it('should get the user elements', function() {
-                PhenotypeService.getSummarizedUserElements().then(function(res) {
+            it('should get the user phenotypes', function() {
+                PhenotypeService.getPhenotypeRoot().then(function(res) {
                     expect(res).toEqual(userElements);
                 });
                 $httpBackend.flush();

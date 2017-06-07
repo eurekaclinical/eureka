@@ -36,7 +36,8 @@
 							if (!found) {
 								vm.items.push({
 									name: selectedItem.key,
-									displayName: selectedItem.displayName
+									displayName: selectedItem.displayName,
+									type: selectedItem.type
 								});
 							}
 						}
@@ -87,7 +88,10 @@
 						for (let i = 0; i < conceptKeys.length; i++) {
 							for (let j = 0; j < concepts.length; j++) {
 								if (concepts[j].key === conceptKeys[i]) {
-									keyToDisplayName[vm.keys[i]] = concepts[j].displayName;
+									keyToDisplayName[vm.keys[i]] = {
+										displayName: concepts[j].displayName, 
+										type: concepts[j].type
+									};
 									break;
 								}
 							}
@@ -97,13 +101,15 @@
 							if (!dn) {
 								vm.items.push({
 									name: conceptKeys[i],
-									displayName: conceptKeys[i]
+									displayName: conceptKeys[i],
+									type: null
 								});
 								vm.displayError('Unknown concept id ' + conceptKeys[i]);
 							} else {
 								vm.items.push({
 									name: conceptKeys[i],
-									displayName: dn
+									displayName: dn.displayName,
+									type: dn.type
 								});
 							}
 						}

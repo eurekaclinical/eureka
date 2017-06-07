@@ -16,8 +16,8 @@
 	<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
 	<strong>Error loading concepts!</strong> {{vm.errorMsg}}
 </div>
-<ul class="list-inline" ng-repeat="item in vm.selectedItems" style="display: inline-block">
-	<li style="background: #C3D9FF">{{item.displayName}}
+<ul class="list-inline" style="display: inline-block">
+	<li ng-repeat="item in vm.selectedItems" style="background: #C3D9FF">{{item.displayName}}
 		<a title="remove" ng-click="vm.removeNode(item) ">
 			<span class="glyphicon glyphicon-remove" title="" style="color:red;"></span>
 		</a>
