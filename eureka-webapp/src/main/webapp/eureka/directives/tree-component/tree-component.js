@@ -9,7 +9,8 @@
         return {
             restrict: 'AE',
             scope: {
-                selectedItems: '='
+                selectedItems: '=',
+				multipleSelectStr: '@?multipleSelect'
             },
             bindToController: true,
             replace: false,

@@ -28,21 +28,6 @@
             getSourceConfigs: getSourceConfigs
         });
 
-        function handleSuccess(response) {
-            return response.data;
-        }
-        
-        function handleError(response) {
-            if (!angular.isObject(response.data) && !response.data) {
-				if (response.statusText) {
-                    return ($q.reject(response.statusText));
-                } else {
-                    return ($q.reject('The server may be down.'));
-                }
-            }
-            return ($q.reject(response.data));
-        }
-
         function fileUpload(sourceId) {
 
             return $http.post(dataEndpoint+'/file/upload' + sourceId)
@@ -85,6 +70,21 @@
             return $http.get(dataEndpoint+'/sourceconfig')
                 .then(handleSuccess, handleError);
             
+        }
+		
+		function handleSuccess(response) {
+            return response.data;
+        }
+        
+        function handleError(response) {
+            if (!angular.isObject(response.data) && !response.data) {
+				if (response.statusText) {
+                    return ($q.reject(response.statusText));
+                } else {
+                    return ($q.reject('The server may be down.'));
+                }
+            }
+            return ($q.reject(response.data));
         }
     }
 

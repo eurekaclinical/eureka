@@ -11,10 +11,10 @@
 		<h3 class="modal-title">Add Concepts and Phenotypes</h3>
 	</div>
 	<div class="modal-body">
-		<tree-component selected-items="mo.itemsToAdd"></tree-component>
+		<tree-component multiple-select="true" selected-items="mo.itemsToAdd"></tree-component>
 	</div>
 	<div class="modal-footer">
 		<button type="submit" class="btn" ng-click="mo.cancel()">Cancel</button>
-		<button class="btn btn-primary" ng-click="mo.ok()">Add criteria and close</button>
+		<button class="btn btn-primary" ng-click="mo.ok()">Add and close</button>
 	</div>
 </script>

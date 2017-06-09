@@ -51,6 +51,10 @@
 		function displayTreeMultiDropZoneItemsError(msg) {
 			vm.treeMultiDropZoneItemsErrorMsg = msg;
 		}
+		
+		function displayDateRangeDropZoneItemError(msg) {
+			vm.dateRangeDropZoneItemErrorMsg = msg;
+		}
 
         function getLatestJobs() {
 			JobService.getLatestJobs()

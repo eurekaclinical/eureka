@@ -5,7 +5,7 @@
 			.module('eureka')
 			.controller('TreeMultiDropZoneCtrl', TreeMultiDropZoneCtrl)
 			.controller('TreeMultiDropZoneDeleteModalCtrl', DeleteModalCtrl)
-	        .controller('TreeAddModalCtrl', AddModalCtrl);
+			.controller('TreeAddModalCtrl', AddModalCtrl);
 
 	TreeMultiDropZoneCtrl.$inject = ['$scope', 'PhenotypeService', 'TreeService', '$uibModal'];
 	DeleteModalCtrl.$inject = ['$uibModalInstance', 'displayName'];
@@ -46,7 +46,7 @@
 					}
 			);
 		};
-		
+
 		vm.remove = function (itemToRemove) {
 			$uibModal.open({
 				templateUrl: vm.deleteModalTemplateUrl,
@@ -82,52 +82,52 @@
 					}
 				}
 				vm.items = [];
-				if (conceptKeys.length > 0) {
-					TreeService.getTreeNodes(conceptKeys).then(function (concepts) {
-						let keyToDisplayName = {};
-						for (let i = 0; i < conceptKeys.length; i++) {
-							for (let j = 0; j < concepts.length; j++) {
-								if (concepts[j].key === conceptKeys[i]) {
-									keyToDisplayName[vm.keys[i]] = {
-										displayName: concepts[j].displayName, 
-										type: concepts[j].type
-									};
-									break;
-								}
+				TreeService.getTreeNodes(conceptKeys).then(function (concepts) {
+					let keyToDisplayName = {};
+					for (let i = 0; i < conceptKeys.length; i++) {
+						for (let j = 0; j < concepts.length; j++) {
+							if (concepts[j].key === conceptKeys[i]) {
+								keyToDisplayName[vm.keys[i]] = {
+									displayName: concepts[j].displayName,
+									type: concepts[j].type
+								};
+								break;
 							}
 						}
-						for (var i = 0; i < conceptKeys.length; i++) {
-							let dn = keyToDisplayName[conceptKeys[i]];
-							if (!dn) {
-								vm.items.push({
-									name: conceptKeys[i],
-									displayName: conceptKeys[i],
-									type: null
-								});
-								vm.displayError('Unknown concept id ' + conceptKeys[i]);
-							} else {
-								vm.items.push({
-									name: conceptKeys[i],
-									displayName: dn.displayName,
-									type: dn.type
-								});
-							}
+					}
+					for (var i = 0; i < conceptKeys.length; i++) {
+						let dn = keyToDisplayName[conceptKeys[i]];
+						if (!dn) {
+							vm.items.push({
+								name: conceptKeys[i],
+								displayName: conceptKeys[i],
+								type: null
+							});
+							vm.displayError('Unknown concept ' + conceptKeys[i]);
+						} else {
+							vm.items.push({
+								name: conceptKeys[i],
+								displayName: dn.displayName,
+								type: dn.type
+							});
 						}
-						if (phenotypeKeys.length > 0) {
-							for (let i = 0; i < phenotypeKeys.length; i++) {
-								PhenotypeService.getPhenotype(phenotypeKeys[i]).then(function (phenotype) {
-									vm.items.push({name: phenotype.key, displayName: phenotype.displayName});
-								}, function (msg) {
-									vm.items.push({
-										name: phenotypeKeys[i],
-										displayName: phenotypeKeys[i]
-									});
-									vm.displayError('Unknown phenotype id ' + phenotypeKeys[i]);
-								});
-							}
-						}
-					}, vm.displayError);
-				}
+					}
+					for (let i = 0; i < phenotypeKeys.length; i++) {
+						PhenotypeService.getPhenotype(phenotypeKeys[i]).then(function (phenotype) {
+							vm.items.push({
+								name: phenotype.key, 
+								displayName: phenotype.displayName,
+								type: phenotype.type
+							});
+						}, function (msg) {
+							vm.items.push({
+								name: phenotypeKeys[i],
+								displayName: phenotypeKeys[i]
+							});
+							vm.displayError('Unknown phenotype ' + phenotypeKeys[i]);
+						});
+					}
+				}, vm.displayError);
 			}
 		};
 
@@ -150,15 +150,15 @@
 		};
 
 	}
-	
+
 	function AddModalCtrl($uibModalInstance) {
-        var mo = this;
+		var mo = this;
 		mo.itemsToAdd = [];
-        mo.ok = function () {
+		mo.ok = function () {
             $uibModalInstance.close(mo.itemsToAdd);
-        };
-        mo.cancel = function () {
-            $uibModalInstance.dismiss('cancel');
-        };
-    }
+		};
+		mo.cancel = function () {
+			$uibModalInstance.dismiss('cancel');
+		};
+	}
 }());

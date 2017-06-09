@@ -11,6 +11,9 @@
 <div class="alert alert-danger" role="alert" ng-if="jobs.treeMultiDropZoneItemsErrorMsg">
 	<strong>Error selecting concepts!</strong> {{jobs.treeMultiDropZoneItemsErrorMsg}}
 </div>
+<div class="alert alert-danger" role="alert" ng-if="jobs.dateRangeDropZoneItemsErrorMsg">
+	<strong>Error selecting a date range concept!</strong> {{jobs.dateRangeDropZoneItemErrorMsg}}
+</div>
 <form id="uploadForm" name="uploadForm" role="form" method="POST" action="upload" enctype="multipart/form-data">
 	<fieldset>
 		<legend>Job Information</legend>
@@ -92,22 +95,14 @@
 	<fieldset id ="concepts">
 		<legend>Concepts</legend>
 		<div class="form-group">
-			<tree-multi-drop-zone items="jobs.treeMultiDropZoneItems" display-error="jobs.displayTreeMultiDropZoneItemsError" delete-modal-template-url="treeMultiDropZoneDeleteModal.html"></tree-multi-drop-zone>
+			<tree-multi-drop-zone items="jobs.treeMultiDropZoneItems" display-error="jobs.displayTreeMultiDropZoneItemsError" delete-modal-template-url="dropZoneDeleteModal.html"></tree-multi-drop-zone>
 		</div>                                
 	</fieldset>
 	<fieldset id ="dateRange">
 		<legend>Date range</legend>
 		<div class="form-group">
 			<label class="control-label" for="dateRangePhenotypeKey">Concept</label>
-			<div id="dateRangePhenotypeKey"
-				 class="tree-drop tree-drop-single jstree-drop form-control-static">
-				<ul data-type="main" data-drop-type="single" class="sortable">
-				</ul>
-				<div class="label-info text-center">
-					Set concept...
-				</div>
-			</div>
-			<input type="hidden" name="dateRangePhenotypeKey">
+			<tree-single-drop-zone item="jobs.dateRangeDropZoneItem" display-error="jobs.displayDateRangeDropZoneItemError" delete-modal-template-url="dropZoneDeleteModal.html"></tree-single-drop-zone>
 		</div>
 		<div class="form-group">
 			<label for="earliestDateSelector" class="control-label">Earliest date</label>
@@ -142,7 +137,7 @@
 	</fieldset>
 	<input type="submit" id="startButton" class="btn btn-primary" value="Start">
 </form>
-<script type="text/ng-template" id="treeMultiDropZoneDeleteModal.html">
+<script type="text/ng-template" id="dropZoneDeleteModal.html">
 	<div class="modal-header">
 		<h3 class="modal-title">Remove Concept</h3>
 	</div>
