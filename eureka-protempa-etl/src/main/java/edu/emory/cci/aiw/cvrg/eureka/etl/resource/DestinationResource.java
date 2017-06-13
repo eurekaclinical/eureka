@@ -72,7 +72,6 @@ import org.eurekaclinical.standardapis.exception.HttpStatusException;
 @Transactional
 @Path("/protected/destinations")
 @RolesAllowed({"researcher"})
-@Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public class DestinationResource {
 	
@@ -106,6 +105,7 @@ public class DestinationResource {
 	}
 	
 	@GET
+	@Produces(MediaType.APPLICATION_JSON)
 	@Path("/{destId}")
 	public EtlDestination getDestination(
 			@Context HttpServletRequest request,
@@ -121,6 +121,7 @@ public class DestinationResource {
 	}
 
 	@GET
+	@Produces(MediaType.APPLICATION_JSON)
 	public List<EtlDestination> getAll(
 			@Context HttpServletRequest request,
 			@QueryParam("type") DestinationType type) {

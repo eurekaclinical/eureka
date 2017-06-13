@@ -42,7 +42,10 @@ package edu.emory.cci.aiw.cvrg.eureka.common.comm.clients;
 import com.google.inject.Inject;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.GenericType;
+import com.sun.jersey.core.header.FormDataContentDisposition;
 import com.sun.jersey.core.util.MultivaluedMapImpl;
+import com.sun.jersey.multipart.FormDataBodyPart;
+import com.sun.jersey.multipart.FormDataMultiPart;
 import org.eurekaclinical.eureka.client.comm.DestinationType;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.EtlCohortDestination;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.EtlDestination;
@@ -59,6 +62,7 @@ import edu.emory.cci.aiw.cvrg.eureka.common.comm.ValidationRequest;
 import java.io.InputStream;
 import java.net.URI;
 import java.util.List;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.UriBuilder;
 import org.eurekaclinical.common.comm.Role;
@@ -142,7 +146,7 @@ public class EtlClient extends EurekaClient {
 		final String path = "/api/protected/destinations/";
 		MultivaluedMap<String, String> queryParams = new MultivaluedMapImpl();
 		queryParams.add("type", DestinationType.COHORT.name());
-		return doGet(path, CohortDestinationListType, queryParams);
+		return doGet(path, queryParams, CohortDestinationListType);
 	}
 
 	public List<EtlI2B2Destination> getI2B2Destinations() throws
@@ -150,28 +154,28 @@ public class EtlClient extends EurekaClient {
 		final String path = "/api/protected/destinations/";
 		MultivaluedMap<String, String> queryParams = new MultivaluedMapImpl();
 		queryParams.add("type", DestinationType.I2B2.name());
-		return doGet(path, I2B2DestinationListType, queryParams);
+		return doGet(path, queryParams, I2B2DestinationListType);
 	}
 
 	public List<EtlPatientSetExtractorDestination> getPatientSetExtractorDestinations() throws ClientException {
 		final String path = "/api/protected/destinations/";
 		MultivaluedMap<String, String> queryParams = new MultivaluedMapImpl();
 		queryParams.add("type", DestinationType.PATIENT_SET_EXTRACTOR.name());
-		return doGet(path, PatientSetExtractorDestinationListType, queryParams);
+		return doGet(path, queryParams, PatientSetExtractorDestinationListType);
 	}
 	
 	public List<EtlPatientSetSenderDestination> getPatientSetSenderDestinations() throws ClientException {
 		final String path = "/api/protected/destinations/";
 		MultivaluedMap<String, String> queryParams = new MultivaluedMapImpl();
 		queryParams.add("type", DestinationType.PATIENT_SET_SENDER.name());
-		return doGet(path, PatientSetSenderDestinationListType, queryParams);
+		return doGet(path, queryParams, PatientSetSenderDestinationListType);
 	}
 	
 	public List<EtlTabularFileDestination> getTabularFileDestinations() throws ClientException {
 		final String path = "/api/protected/destinations/";
 		MultivaluedMap<String, String> queryParams = new MultivaluedMapImpl();
 		queryParams.add("type", DestinationType.TABULAR_FILE.name());
-		return doGet(path, TabularFileDestinationListType, queryParams);
+		return doGet(path, queryParams, TabularFileDestinationListType);
 	}
 
 	public EtlDestination getDestination(String destId) throws
@@ -220,7 +224,7 @@ public class EtlClient extends EurekaClient {
 		final String path = "/api/protected/jobs";
 		MultivaluedMap<String, String> queryParams = new MultivaluedMapImpl();
 		queryParams.add("order", "desc");
-		return doGet(path, JobListType, queryParams);
+		return doGet(path, queryParams, JobListType);
 	}
 
 	public List<Job> getLatestJob() throws ClientException {
@@ -264,7 +268,7 @@ public class EtlClient extends EurekaClient {
 		String path = UriBuilder.fromPath("/api/protected/concepts/")
 				.segment(sourceConfigId)
 				.build().toString();
-		List<PropositionDefinition> propDefs = doPost(path, PropositionDefinitionList, formParams);
+		List<PropositionDefinition> propDefs = doPost(path, formParams, PropositionDefinitionList);
 		if (propDefs.isEmpty()) {
 			throw new ClientException(ClientResponse.Status.NOT_FOUND, null);
 		} else {
@@ -295,7 +299,7 @@ public class EtlClient extends EurekaClient {
 		String path = UriBuilder.fromPath("/api/protected/concepts/")
 				.segment(sourceConfigId)
 				.build().toString();
-		return doPost(path, PropositionDefinitionList, formParams);
+		return doPost(path, formParams, PropositionDefinitionList);
 	}
 
 	public void upload(String fileName, String sourceId,
@@ -306,7 +310,15 @@ public class EtlClient extends EurekaClient {
 				.segment(sourceId)
 				.segment(fileTypeId)
 				.build().toString();
-		doPostMultipart(path, fileName, inputStream);
+		FormDataMultiPart part = new FormDataMultiPart();
+        part.bodyPart(
+                new FormDataBodyPart(
+                        FormDataContentDisposition
+                                .name("file")
+                                .fileName(fileName)
+                                .build(),
+                        inputStream, MediaType.APPLICATION_OCTET_STREAM_TYPE));
+		doPostMultipart(path, part);
 	}
 
 	public List<String> getPropositionSearchResults(String sourceConfigId,

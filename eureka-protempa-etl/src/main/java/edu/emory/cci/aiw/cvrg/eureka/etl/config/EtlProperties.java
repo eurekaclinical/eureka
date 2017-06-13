@@ -77,6 +77,19 @@ public class EtlProperties extends AbstractProperties {
 		Files.createDirectories(file.toPath());
 		return file;
 	}
+	
+	public File getTempUploadedDirectory() throws IOException {
+		File file = new File(getConfigDir(), "etluploadedtemp");
+		Files.createDirectories(file.toPath());
+		return file;
+	}
+	
+	public File tempUploadedDirectory(String sourceId, String fileTypeId) throws IOException {
+		File file = new File(new File(getTempUploadedDirectory(), 
+				ToConfigFile.fromSourceConfigId(sourceId)), fileTypeId);
+		Files.createDirectories(file.toPath());
+		return file;
+	}
 
 	public File getUploadedDirectory() throws IOException {
 		File file = new File(getConfigDir(), "etluploaded");

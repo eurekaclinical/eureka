@@ -62,7 +62,6 @@ import org.slf4j.LoggerFactory;
 
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.UriBuilder;
-import java.io.InputStream;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -177,7 +176,7 @@ public class ServicesClient extends EurekaClient {
 		final String path = "/api/protected/jobs";
 		MultivaluedMap<String, String> queryParams = new MultivaluedMapImpl();
 		queryParams.add("order", "desc");
-		return doGet(path, JobList, queryParams);
+		return doGet(path, queryParams, JobList);
 	}
 
 	public List<Job> getLatestJob() throws ClientException {
@@ -209,38 +208,12 @@ public class ServicesClient extends EurekaClient {
 		return result;
 	}
 
-	public URI proxyPost(final String path, final String json)
-			throws ClientException {
-		return doPostCreate(path, json);
-	}
-
-	public void proxyDelete(final String path)
-			throws ClientException {
-
-		doDelete(path);
-	}
-
-	public void proxyPut(final String path, final String json)
-			throws ClientException {
-		doPut(path, json);
-	}
-
-	public String proxyGet(final String path, MultivaluedMap queryParams)
-			throws ClientException {
-		if (queryParams == null) {
-			return doGet(path);
-		} else {
-			return doGet(path, queryParams);
-		}
-
-	}
-
 	public List<Phenotype> getUserPhenotypes(boolean summarized) throws ClientException {
 		final String path = "/api/protected/phenotypes";
 		if (summarized) {
 			MultivaluedMap<String, String> queryParams = new MultivaluedMapImpl();
 			queryParams.add("summarize", "true");
-			return doGet(path, PhenotypeList, queryParams);
+			return doGet(path, queryParams, PhenotypeList);
 		} else {
 			return doGet(path, PhenotypeList);
 		}
@@ -264,7 +237,7 @@ public class ServicesClient extends EurekaClient {
 		if (summarized) {
 			MultivaluedMap<String, String> queryParams = new MultivaluedMapImpl();
 			queryParams.add("summarize", "true");
-			return doGet(path, Phenotype.class, queryParams);
+			return doGet(path, queryParams, Phenotype.class);
 		} else {
 			return doGet(path, Phenotype.class);
 		}
@@ -316,7 +289,7 @@ public class ServicesClient extends EurekaClient {
 		formParams.add("summarize", Boolean.toString(summarize));
 		String path = UriBuilder.fromPath("/api/protected/concepts/")
 				.build().toString();
-		return doPost(path, SystemPhenotypeList, formParams);
+		return doPost(path, formParams, SystemPhenotypeList);
 	}
 
 	public SystemPhenotype getSystemPhenotype(String inKey, boolean summarize) throws ClientException {
@@ -440,7 +413,7 @@ public class ServicesClient extends EurekaClient {
 		final String path = "/api/protected/destinations/";
 		MultivaluedMap<String, String> queryParams = new MultivaluedMapImpl();
 		queryParams.add("type", DestinationType.COHORT.name());
-		return doGet(path, CohortDestinationListType, queryParams);
+		return doGet(path, queryParams, CohortDestinationListType);
 	}
 
 	public List<I2B2Destination> getI2B2Destinations() throws
@@ -448,7 +421,7 @@ public class ServicesClient extends EurekaClient {
 		final String path = "/api/protected/destinations/";
 		MultivaluedMap<String, String> queryParams = new MultivaluedMapImpl();
 		queryParams.add("type", DestinationType.I2B2.name());
-		return doGet(path, I2B2DestinationListType, queryParams);
+		return doGet(path, queryParams, I2B2DestinationListType);
 	}
 
 	public Destination getDestination(String destinationId) throws ClientException {

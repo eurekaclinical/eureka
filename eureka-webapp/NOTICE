@@ -20,7 +20,6 @@ This project includes:
   Apache Commons Collections under Apache License, Version 2.0
   Apache Commons Lang under Apache License, Version 2.0
   ASM Core under Apache License, Version 2.0
-  Commons FileUpload under The Apache Software License, Version 2.0
   Commons IO under The Apache Software License, Version 2.0
   Commons Logging under The Apache Software License, Version 2.0
   Core Hibernate O/RM functionality under GNU Lesser General Public License

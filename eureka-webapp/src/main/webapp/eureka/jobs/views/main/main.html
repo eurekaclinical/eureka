@@ -14,7 +14,7 @@
 <div class="alert alert-danger" role="alert" ng-if="jobs.dateRangeDropZoneItemsErrorMsg">
 	<strong>Error selecting a date range concept!</strong> {{jobs.dateRangeDropZoneItemErrorMsg}}
 </div>
-<form id="uploadForm" name="uploadForm" role="form" method="POST" action="upload" enctype="multipart/form-data">
+<form id="uploadForm" name="uploadForm" novalidate angular-validator angular-validator-submit="jobs.submitJob()" role="form" method="POST" action="upload" enctype="multipart/form-data">
 	<fieldset>
 		<legend>Job Information</legend>
 		<table id="jobInformation" class="table table-responsive">
@@ -37,7 +37,7 @@
 						{{jobs.jobInfoDestination}}
 					</td>
 					<td id="jobStatus">
-						{{jobs.jobInfoStatus!=null ? jobs.jobInfoStatus : 'No jobs have been submitted'}}
+						{{jobs.jobInfoStatus != null && !jobs.jobStatusErrorMsg ? jobs.jobInfoStatus : 'No jobs have been submitted'}}
 					</td>
 					<td id="startedDate">
 						{{jobs.jobInfoStatus != null ? (jobs.jobInfoStartTimestamp | date: 'medium') : ''}} 
@@ -60,32 +60,21 @@
 	<fieldset id ="data">
 		<legend>Data</legend>
 		<div class="form-group">
-			<select class="form-control" ng-model="jobs.jobSourceConfig" ng-options="sc.displayName for sc in jobs.sourceConfigs ">
+			<select class="form-control" ng-model="jobs.jobSourceConfig" ng-options="sc.displayName for sc in jobs.sourceConfigs " required required-message="'Data is required'">
 			</select>
 		</div>  
-		<div class="form-group">
-			<div flow-init="{target: '/upload'}" flow-files-submitted="$flow.upload()" flow-file-success="$file.msg = $message">
-				<input type="file" flow-btn/>
-				<table>
-					<tr ng-repeat="file in $flow.files">
-						<td>{{$index+1}}</td>
-						<td>{{file.name}}</td>
-						<td>{{file.msg}}</td>
-					</tr>
-				</table>
-			</div>
-		</div>
+		<source-config-prompts source-config="jobs.jobSourceConfig" prompts="jobs.sourceConfigPrompts" file-upload-success="jobs.fileUploadSuccess(file)" file-upload-error="jobs.fileUploadError(file, message)"></source-config-prompts>
 	</fieldset>
-	<fieldset id ="data">
+	<fieldset id ="actions">
 		<legend>Action</legend>
 		<div class="form-group">
-			<select class="form-control" ng-model="jobs.jobDestination" ng-options="d.name for d in jobs.destinations">
+			<select class="form-control" ng-model="jobs.jobDestination" ng-options="d.name for d in jobs.destinations" required required-message="'Action is required'">
 			</select>                                
 		</div>  
 
 		<div class="form-group">
 			<label class="radio-inline">
-				<input type="radio" name="updateData" ng-model="jobs.radioData" value="1">Replace Data
+				<input type="radio" name="updateData" ng-model="jobs.radioData" value="1" required required-message="'Must select Replace or Update'">Replace Data
 			</label>
 			<label class="radio-inline">
 				<input type="radio" name="updateData" ng-model="jobs.radioData" value="2">Update Data

@@ -1,0 +1,8 @@
+<div class="form-group" ng-repeat="prompt in vm.prompts">
+	<label for="prompt_{{$index}}">{{prompt.displayName}} <span ng-if="prompt.required">(required)</span></label>
+	<div flow-init="{singleFile: true, allowDuplicateUploads: true}" flow-name="prompt.fileInput" ng-if="prompt.option.type === 'FILE'" flow-file-success="prompt.onUploadSuccess($file)" flow-file-error="prompt.onUploadError($file, $message)">
+		<input id="prompt_{{$index}}" name="prompt_{{$index}}" type="file" flow-btn class="form-control" accept="{{prompt.option.acceptedMimetypes.join('|')}}" ng-required="prompt.option.required">
+	</div>
+	<input ng-if="['INTEGER', 'LONG', 'DOUBLE', 'FLOAT'].includes(prompt.option.propertyType)" id="prompt_{{$index}}" name="prompt_{{$index}}" type="number" class="form-control" ng-model="prompt.value" value="{{prompt.option.value}}" ng-required="prompt.option.required">
+	<input ng-if="!['INTEGER', 'LONG', 'DOUBLE', 'FLOAT'].includes(prompt.option.propertyType) && prompt.option.type !== 'FILE'" id="prompt_{{$index}}" name="prompt_{{$index}}" type="text" class="form-control" ng-model="prompt.value" value="{{prompt.option.value}}" ng-required="prompt.option.required">
+</div>

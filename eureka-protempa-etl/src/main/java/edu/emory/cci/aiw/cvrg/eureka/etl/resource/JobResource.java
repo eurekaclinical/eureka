@@ -102,7 +102,6 @@ import org.protempa.proposition.interval.Interval;
 
 @Path("/protected/jobs")
 @RolesAllowed({"researcher"})
-@Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public class JobResource {
 
@@ -133,6 +132,7 @@ public class JobResource {
 
 	@Transactional
 	@GET
+	@Produces(MediaType.APPLICATION_JSON)
 	public List<Job> getAll(@Context HttpServletRequest request,
 			@QueryParam("order") String order) {
 		JobFilter jobFilter = new JobFilter(null,
@@ -154,6 +154,7 @@ public class JobResource {
 
 	@Transactional
 	@GET
+	@Produces(MediaType.APPLICATION_JSON)
 	@Path("/{jobId}")
 	public Job getJob(@Context HttpServletRequest request,
 			@PathParam("jobId") Long inJobId) {
@@ -162,6 +163,7 @@ public class JobResource {
 
 	@Transactional
 	@GET
+	@Produces(MediaType.APPLICATION_JSON)
 	@Path("/{jobId}/stats/{propId}")
 	public org.eurekaclinical.eureka.client.comm.Statistics getJobStats(@Context HttpServletRequest request,
 			@PathParam("jobId") Long inJobId, @PathParam("propId") String inPropId) {
@@ -189,6 +191,7 @@ public class JobResource {
 
 	@Transactional
 	@GET
+	@Produces(MediaType.APPLICATION_JSON)
 	@Path("/{jobId}/stats")
 	public org.eurekaclinical.eureka.client.comm.Statistics getJobStatsRoot(@Context HttpServletRequest request,
 			@PathParam("jobId") Long inJobId) {
@@ -205,6 +208,7 @@ public class JobResource {
 
 	@Transactional
 	@GET
+	@Produces(MediaType.APPLICATION_JSON)
 	@RolesAllowed({"admin"})
 	@Path("/status")
 	public List<Job> getJobStatus(@QueryParam("filter") JobFilter inFilter) {
@@ -217,6 +221,7 @@ public class JobResource {
 
 	@Transactional
 	@GET
+	@Produces(MediaType.APPLICATION_JSON)
 	@Path("/latest")
 	public List<Job> getLatestJob(@Context HttpServletRequest request) {
 		List<Job> jobs = new ArrayList<>();

@@ -50,11 +50,17 @@ import edu.emory.cci.aiw.cvrg.eureka.etl.dao.EtlGroupDao;
 import edu.emory.cci.aiw.cvrg.eureka.common.dao.AuthorizedUserDao;
 import edu.emory.cci.aiw.cvrg.eureka.etl.dao.SourceConfigDao;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
+import java.nio.file.Files;
+import java.util.Arrays;
+import java.util.Comparator;
 import javax.annotation.security.RolesAllowed;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DefaultValue;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -96,7 +102,9 @@ public class FileResource {
 			@PathParam("sourceConfigId") String sourceConfigId,
 			@PathParam("sourceId") String sourceId,
 			@FormDataParam("file") InputStream inUploadingInputStream,
-			@FormDataParam("file") FormDataContentDisposition fileDetail) {
+			@FormDataParam("file") FormDataContentDisposition fileDetail,
+			@DefaultValue("1") @FormDataParam("flowChunkNumber") int chunkNumber,
+			@DefaultValue("1") @FormDataParam("flowTotalChunks") int totalChunks) {
 		AuthorizedUserEntity user = this.authenticationSupport.getUser(req);
 		SourceConfigs sources = new SourceConfigs(this.etlProperties, user, this.sourceConfigDao, this.groupDao);
 		try {
@@ -104,12 +112,21 @@ public class FileResource {
 			if (sourceConfig == null || !sourceConfig.isExecute()) {
 				throw new HttpStatusException(Status.NOT_FOUND);
 			}
-
 			File uploadedDir = this.etlProperties.uploadedDirectory(sourceConfigId, sourceId);
 			try {
-				File uploadingFile = new File(uploadedDir, fileDetail.getFileName());
-				FileUtils.copyInputStreamToFile(inUploadingInputStream,
-						uploadingFile);
+				File tempDir = this.etlProperties.tempUploadedDirectory(sourceConfigId, sourceId);
+				File partialFile = new File(tempDir, String.format(fileDetail.getFileName() + "%05d", chunkNumber));
+				FileUtils.copyInputStreamToFile(inUploadingInputStream, partialFile);
+				File[] partialFiles = tempDir.listFiles();
+				if (partialFiles.length == totalChunks) {
+					Arrays.sort(partialFiles, fileComparator);
+					try (OutputStream out = new FileOutputStream(new File(uploadedDir, fileDetail.getFileName()))) {
+						for (int i = 0; i < totalChunks; i++) {
+							FileUtils.copyFile(partialFiles[i], out);
+						}
+					}
+					FileUtils.deleteDirectory(tempDir);
+				};
 			} catch (IOException ex) {
 				throw new HttpStatusException(
 						Response.Status.INTERNAL_SERVER_ERROR,
@@ -125,5 +142,12 @@ public class FileResource {
 
 		return Response.status(Status.CREATED).build();
 	}
+
+	private static final Comparator<File> fileComparator = new Comparator<File>() {
+		@Override
+		public int compare(File o1, File o2) {
+			return o1.getName().compareTo(o2.getName());
+		}
+	};
 
 }

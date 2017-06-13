@@ -103,19 +103,7 @@ class ServletModule extends AbstractServletModule {
 
 		serve(LOGOUT_PATH).with(LogoutServlet.class);
 
-		bind(JobSubmitServlet.class).in(Singleton.class);
-		Map<String, String> uploadParams = new HashMap<>();
-		uploadParams.put("dest_dir", this.properties.getUploadDir());
-		serve("/protected/upload").with(JobSubmitServlet.class,
-				uploadParams);
-
 		serve("/protected/login").with(LoginServlet.class);
-
-		bind(JobPollServlet.class).in(Singleton.class);
-		serve("/protected/jobpoll").with(JobPollServlet.class);
-
-		bind(JobListServlet.class).in(Singleton.class);
-		serve("/protected/jobs").with(JobListServlet.class);
 
 		bind(JobStatsServlet.class).in(Singleton.class);
 		serve("/protected/jobstats").with(JobStatsServlet.class);
