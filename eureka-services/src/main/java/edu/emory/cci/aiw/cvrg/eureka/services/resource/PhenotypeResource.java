@@ -81,7 +81,7 @@ import org.eurekaclinical.standardapis.exception.HttpStatusException;
 @Transactional
 @Path("/protected/phenotypes")
 @RolesAllowed({"researcher"})
-@Produces(MediaType.APPLICATION_JSON)
+@Consumes(MediaType.APPLICATION_JSON)
 public class PhenotypeResource {
     
 	private static final Logger LOGGER
@@ -108,6 +108,7 @@ public class PhenotypeResource {
 	}
 
 	@GET
+	@Produces(MediaType.APPLICATION_JSON)
 	public List<Phenotype> getAll(@Context HttpServletRequest inRequest,
 			@DefaultValue("false") @QueryParam("summarize") boolean inSummarize) {
 		UserEntity user = this.userDao.getByHttpServletRequest(inRequest);
@@ -122,6 +123,7 @@ public class PhenotypeResource {
 	}
 
 	@GET
+	@Produces(MediaType.APPLICATION_JSON)
 	@Path("/{key}")
 	public Phenotype get(@Context HttpServletRequest inRequest,
 			@PathParam("key") String inKey,
@@ -136,7 +138,6 @@ public class PhenotypeResource {
 	}
 
 	@POST
-	@Consumes(MediaType.APPLICATION_JSON)
 	public Response create(@Context HttpServletRequest request, Phenotype inPhenotype) {
 		if (inPhenotype.getId() != null) {
 			throw new HttpStatusException(
@@ -185,7 +186,6 @@ public class PhenotypeResource {
 
 	@PUT
 	@Path("/{id}")
-	@Consumes(MediaType.APPLICATION_JSON)
 	public void update(@Context HttpServletRequest inRequest,
 			@PathParam("id") Long inId,
 			Phenotype inElement) {
