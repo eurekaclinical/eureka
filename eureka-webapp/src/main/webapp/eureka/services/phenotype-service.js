@@ -24,7 +24,9 @@
 			createPhenotype: createPhenotype,
 			getPhenotype: getPhenotype,
 			updatePhenotype: updatePhenotype,
-			removePhenotype: removePhenotype
+			removePhenotype: removePhenotype,
+			getTimeUnits: getTimeUnits,
+			getFrequencyTypes: getFrequencyTypes
 		});
 
 		function getPhenotypeMessages() {
@@ -80,9 +82,16 @@
 		function removePhenotype(id) {
 			return $http['delete'](dataEndpoint + '/phenotypes/' + id)
 					.then(handleSuccess, handleError);
-
 		}
-
+		
+		function getTimeUnits() {
+			return $http.get(dataEndpoint + '/timeunits');
+		}
+		
+		function getFrequencyTypes() {
+			return $http.get(dataEndpoint + '/frequencytypes');
+		}
+		
 		function handleSuccess(response) {
 			return response.data;
 		}
