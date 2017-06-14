@@ -124,7 +124,7 @@
 								name: phenotypeKeys[i],
 								displayName: phenotypeKeys[i]
 							});
-							vm.displayError('Unknown phenotype ' + phenotypeKeys[i]);
+							vm.displayError({message: 'Unknown phenotype ' + phenotypeKeys[i]});
 						});
 					}
 				}, vm.displayError);

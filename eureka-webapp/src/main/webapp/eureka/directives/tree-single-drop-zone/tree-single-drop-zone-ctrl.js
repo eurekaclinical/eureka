@@ -75,7 +75,7 @@
 							name: conceptKey,
 							displayName: conceptKey
 						};
-						vm.displayError('Unknown concept ' + conceptKey);
+						vm.displayError({message: 'Unknown concept ' + conceptKey});
 					});
 				} else if (phenotypeKey !== null) {
 					PhenotypeService.getPhenotype(phenotypeKey).then(function (phenotype) {
@@ -89,7 +89,7 @@
 							name: phenotypeKey,
 							displayName: phenotypeKey
 						};
-						vm.displayError('Unknown phenotype ' + phenotypeKey);
+						vm.displayError({message: 'Unknown phenotype ' + phenotypeKey});
 					});
 				}
 			}
