@@ -32,19 +32,19 @@
 					url: '/phenotypes/sequence/new',
 					templateUrl: 'eureka/phenotypes/views/sequence/edit.html',
 					controller: 'phenotypes.sequence.EditCtrl',
-					controllerAs: 'editPhenotype'
+					controllerAs: 'editSequencePhenotype'
 				})
 				.state('createFREQUENCY', {
 					url: '/phenotypes/frequency/new',
 					templateUrl: 'eureka/phenotypes/views/frequency/edit.html',
 					controller: 'phenotypes.frequency.EditCtrl',
-					controllerAs: 'editPhenotype'
+					controllerAs: 'editFrequencyPhenotype'
 				})
 				.state('createTHRESHOLD', {
 					url: '/phenotypes/threshold/new',
 					templateUrl: 'eureka/phenotypes/views/threshold/edit.html',
 					controller: 'phenotypes.threshold.EditCtrl',
-					controllerAs: 'editPhenotype'
+					controllerAs: 'editThresholdPhenotype'
 				})
 				.state('editCATEGORIZATION', {
 					url: '/phenotypes/categorization/:key',
@@ -56,19 +56,19 @@
 					url: '/phenotypes/sequence/:key',
 					templateUrl: 'eureka/phenotypes/views/sequence/edit.html',
 					controller: 'phenotypes.sequence.EditCtrl',
-					controllerAs: 'editPhenotype'
+					controllerAs: 'editSequencePhenotype'
 				})
 				.state('editFREQUENCY', {
 					url: '/phenotypes/frequency/:key',
 					templateUrl: 'eureka/phenotypes/views/frequency/edit.html',
 					controller: 'phenotypes.frequency.EditCtrl',
-					controllerAs: 'editPhenotype'
+					controllerAs: 'editFrequencyPhenotype'
 				})
 				.state('editTHRESHOLD', {
 					url: '/phenotypes/threshold/:key',
 					templateUrl: 'eureka/phenotypes/views/threshold/edit.html',
 					controller: 'phenotypes.threshold.EditCtrl',
-					controllerAs: 'editPhenotype'
+					controllerAs: 'editThresholdPhenotype'
 				});
 
 	}
