@@ -33,12 +33,12 @@
 											message: message}
 										);
 									}
-								}
+								};
 								prompt.onUploadSuccess = function (file) {
 									if (vm.fileUploadSuccess) {
 										vm.fileUploadSuccess({file: file.name});
 									}
-								}
+								};
 							}
 							vm.prompts.push(prompt);
 							i++;

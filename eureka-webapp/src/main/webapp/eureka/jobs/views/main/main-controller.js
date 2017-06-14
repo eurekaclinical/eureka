@@ -44,11 +44,11 @@
 			if (filesCompleted === totalFiles) {
 				_submitJob();
 			}
-		}
+		};
 
 		vm.fileUploadError = function (file, message) {
 			displayFileUploadError('Failed to upload "' + file + '": ' + message);
-		}
+		};
 
 		vm.submitJob = function () {
 			filesCompleted = 0;
@@ -131,9 +131,9 @@
 					function () {
 					},
 					function (msg) {
-						displayJobSubmitError(msg)
+						displayJobSubmitError(msg);
 					});
-		};
+		}
 
 		function displayFileUploadError(msg) {
 			vm.jobSubmitErrorMsg = msg;
