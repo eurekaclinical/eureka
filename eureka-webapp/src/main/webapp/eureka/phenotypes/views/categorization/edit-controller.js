@@ -35,7 +35,7 @@
 				vm.key = data.key;
 				vm.userId = data.userId;
 				traverseNodes(data.children);
-			}, displayError);
+			}, displayGetPhenotypeError);
 		}
 
 		let onRouteChangeOff = $scope.$on('$stateChangeStart', routeChange);
@@ -75,9 +75,13 @@
 		vm.cancel = function () {
 			$state.transitionTo('phenotypes');
 		};
+		
+		function displayGetPhenotypeError(message) {
+			vm.getPhenotypeErrorMsg = message;
+		}
 
-		function displayTreeMultiDropZoneItemsError(msg) {
-			vm.treeMultiDropZoneItemsErrorMsg = msg;
+		function displayTreeMultiDropZoneItemsError(message) {
+			vm.treeMultiDropZoneItemsErrorMsg = message;
 		}
 
 		function displayError(msg) {
