@@ -41,7 +41,7 @@
 		}, function (newValue, oldValue) {
 			if (newValue && newValue.name) {
 				TreeService.getTreeNode(newValue.name).then(function (response) {
-					vm.conceptOrPhenotypeProperties = response.data.properties;
+					vm.conceptOrPhenotypeProperties = response.properties;
 				}, function () {
 
 				});

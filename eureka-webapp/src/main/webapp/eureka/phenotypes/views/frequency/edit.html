@@ -7,7 +7,7 @@
 <div class="alert alert-danger" role="alert" ng-if="editFrequencyPhenotype.getPhenotypeErrorMsg">
 	<strong>Error loading phenotype!</strong> {{editFrequencyPhenotype.getPhenotypeErrorMsg}}
 </div>
-<div class="alert alert-danger" role="alert" ng-if="editFrequencyPhenotype.errorMsg">
+<div class="alert alert-danger" role="alert" ng-if="editFrequencyPhenotype.saveErrorMsg">
 	<strong>Error saving phenotype!</strong> {{editFrequencyPhenotype.saveErrorMsg}}
 </div>
 <div class="alert alert-danger" role="alert" ng-if="editFrequencyPhenotype.timeUnitsErrorMsg">
@@ -60,7 +60,7 @@
 	<div class="form-group">
 		<label class="sr-only" for="maxDistanceBetween">To</label>
 		<div class="input-group">
-			<input name="maxDistanceBetween" type="number" class="form-control" placeholder="min" ng-model="editFrequencyPhenotype.maxDistanceBetween">
+			<input name="maxDistanceBetween" type="number" class="form-control" placeholder="max" ng-model="editFrequencyPhenotype.maxDistanceBetween">
 			<div class="input-group-addon">
 				<select name="maxDistanceBetweenUnits" ng-model="editFrequencyPhenotype.maxDistanceBetweenUnits" ng-options="o.id as o.description for o in editFrequencyPhenotype.maxDistanceBetweenUnitOptions">
 				</select>

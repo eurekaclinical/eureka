@@ -74,15 +74,23 @@
 				};
 				if (data.phenotype.hasDuration) {
 					vm.minDuration = data.phenotype.minDuration;
-					vm.minDurationUnits = data.phenotype.minDurationUnits;
+					if (data.phenotype.minDurationUnits) {
+						vm.minDurationUnits = data.phenotype.minDurationUnits;
+					}
 					vm.maxDuration = data.phenotype.maxDuration;
-					vm.maxDurationUnits = data.phenotype.maxDurationUnits;
+					if (data.phenotype.maxDurationUnits) {
+						vm.maxDurationUnits = data.phenotype.maxDurationUnits;
+					}
 				}
 				if (data.isWithin) {
 					vm.minDistanceBetween = data.withinAtLeast;
-					vm.minDistanceBetweenUnits = data.withinAtLeastUnits;
+					if (data.withinAtLeastUnits) {
+						vm.minDistanceBetweenUnits = data.withinAtLeastUnits;
+					}
 					vm.maxDistanceBetween = data.withinAtMost;
-					vm.maxDistanceBetweenUnits = data.withinAtMostUnits;
+					if (data.withinAtMostUnits) {
+						vm.maxDistanceBetweenUnits = data.withinAtMostUnits;
+					}
 				}
 				vm.threshold = data.atLeast;
 				vm.isConsecutive = data.isConsecutive;
