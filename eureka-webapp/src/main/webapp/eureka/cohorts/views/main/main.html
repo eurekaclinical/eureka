@@ -14,7 +14,7 @@
 <!-- ng-table -->
 <table ng-table="cohorts.tableParams" class="table" show-filter="true">
 	<tr ng-repeat="cohort in $data">
-		<td>
+		<td style="width: 4em;">
 			<a ui-sref="editCohort({key: cohort.name})" title="Edit">
 				<span class="glyphicon glyphicon-pencil edit-icon" title="Edit"></span>
 			</a>
@@ -27,7 +27,10 @@
 			{{cohort.description}}
 		</td>
 		<td title="'Created'" filter="{ created_at: 'text'}" sortable="'created_at'">
-			{{cohort.created_at | date:'MM/dd/yyyy'}}
+			{{cohort.created_at | date:'medium'}}
+		</td>
+		<td title="'Last modified'" filter="{ updated_at: 'text'}" sortable="'updated_at'">
+			{{cohort.updated_at | date:'medium'}}
 		</td>
 	</tr>
 </table>
