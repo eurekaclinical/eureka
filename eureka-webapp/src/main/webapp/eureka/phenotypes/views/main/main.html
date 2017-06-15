@@ -16,13 +16,13 @@
 		<span class="caret"></span>
 	</button>
 	<ul class="dropdown-menu" uib-dropdown-menu role="menu" aria-labelledby="simple-btn-keyboard-nav">
-		<li role="menuitem" ng-repeat="(key,value) in phenotypes.messages"><a ui-sref="create{{key}}">{{value.displayName}} <p>{{value.description}}</p></a></li>
+		<li role="menuitem" ng-repeat="(key,value) in phenotypes.messages"><a ui-sref="create{{key}}"><strong>{{value.displayName}}</strong><p>{{value.description}}</p></a></li>
 	</ul>
 </div>
 <!-- ng-table -->
 <table ng-table="phenotypes.tableParams" class="table" show-filter="true">
 	<tr ng-repeat="phenotype in $data">
-		<td>
+		<td style="width: 4em;">
 			<a title="Edit" ui-sref="edit{{phenotype.type}}({key: phenotype.key})">
 				<span class="glyphicon glyphicon-pencil edit-icon" title="Edit"></span>
 			</a>
@@ -38,10 +38,10 @@
 			{{phenotype.type}}
 		</td>
 		<td title="'Created'" filter="{ created: 'text'}" sortable="'created'">
-			{{phenotype.created | date:'MM/dd/yyyy'}}
+			{{phenotype.created | date:'medium'}}
 		</td>
-		<td title="'lastModified'" filter="{ lastModified: 'text'}" sortable="'lastModified'">
-			{{phenotype.lastModified | date:'MM/dd/yyyy'}}
+		<td title="'Last modified'" filter="{ lastModified: 'text'}" sortable="'lastModified'">
+			{{phenotype.lastModified | date:'medium'}}
 		</td>
 	</tr>
 </table>
