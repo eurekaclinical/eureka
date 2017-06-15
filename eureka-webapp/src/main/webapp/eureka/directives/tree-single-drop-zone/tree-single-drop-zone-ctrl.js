@@ -70,6 +70,9 @@
 							displayName: concept.displayName,
 							type: concept.type
 						};
+						if (concept.type === 'SYSTEM') {
+							vm.item.systemType = concept.systemType;
+						}
 					}, function (msg) {
 						vm.item = {
 							name: conceptKey,
