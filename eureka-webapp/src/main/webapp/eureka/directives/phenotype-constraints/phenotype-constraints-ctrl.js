@@ -17,10 +17,10 @@
 					angular.forEach(response.data, function (timeunitOption) {
 						if (timeunitOption.default) {
 							if (!vm.minDurationUnits) {
-								vm.minDurationUnits = timeunitOption;
+								vm.minDurationUnits = timeunitOption.id;
 							}
 							if (!vm.maxDurationUnits) {
-								vm.maxDurationUnits = timeunitOption;
+								vm.maxDurationUnits = timeunitOption.id;
 							}
 						}
 					});
