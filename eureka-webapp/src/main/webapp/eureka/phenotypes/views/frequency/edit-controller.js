@@ -31,10 +31,10 @@
 					angular.forEach(response.data, function (timeunitOption) {
 						if (timeunitOption.default) {
 							if (!vm.minDistanceBetweenUnits) {
-								vm.minDistanceBetweenUnits = timeunitOption;
+								vm.minDistanceBetweenUnits = timeunitOption.id;
 							}
 							if (!vm.maxDistanceBetweenUnits) {
-								vm.maxDistanceBetweenUnits = timeunitOption;
+								vm.maxDistanceBetweenUnits = timeunitOption.id;
 							}
 						}
 					});
@@ -50,7 +50,7 @@
 					angular.forEach(response.data, function (frequencyTypeOption) {
 						if (frequencyTypeOption.default) {
 							if (!vm.frequencyType) {
-								vm.frequencyType = frequencyTypeOption;
+								vm.frequencyType = frequencyTypeOption.id;
 							}
 						}
 					});
@@ -67,36 +67,102 @@
 				vm.id = data.id;
 				vm.type = data.type;
 				vm.userId = data.userId;
-				vm.phenotypeOrConcept = {
-					name: data.phenotypeOrConcept.phenotypeKey,
-					displayName: data.phenotypeOrConcept.phenotypeDisplayName,
-					type: data.phenotypeOrConcept.type
+				vm.conceptOrPhenotype = {
+					name: data.phenotype.phenotypeKey,
+					displayName: data.phenotype.phenotypeDisplayName,
+					type: data.phenotype.type
+				};
+				if (data.phenotype.hasDuration) {
+					vm.minDuration = data.phenotype.minDuration;
+					vm.minDurationUnits = data.phenotype.minDurationUnits;
+					vm.maxDuration = data.phenotype.maxDuration;
+					vm.maxDurationUnits = data.phenotype.maxDurationUnits;
 				}
-				vm.minDuration = data.phenotypeOrConcept.minDuration;
-				vm.minDurationUnits = data.phenotypeOrConcept.minDurationUnits;
-				vm.maxDuration = data.phenotypeOrConcept.maxDuration;
-				vm.maxDurationUnits = data.phenotypeOrConcept.maxDurationUnits;
-				vm.minDistanceBetween = data.withinAtLeast;
-				vm.minDistanceBetweenUnits = data.withinAtLeastUnits;
-				vm.maxDistanceBetween = data.withinAtMost;
-				vm.maxDistanceBetweenUnits = data.withinAtMostUnits;
+				if (data.isWithin) {
+					vm.minDistanceBetween = data.withinAtLeast;
+					vm.minDistanceBetweenUnits = data.withinAtLeastUnits;
+					vm.maxDistanceBetween = data.withinAtMost;
+					vm.maxDistanceBetweenUnits = data.withinAtMostUnits;
+				}
 				vm.threshold = data.atLeast;
 				vm.isConsecutive = data.isConsecutive;
 				vm.frequencyType = data.frequencyType;
-				vm.propertyName = data.phenotypeOrConcept.property;
-				vm.propertyValue = data.phenotypeOrConcept.propertyValue;
+				if (data.phenotype.hasPropertyConstraint) {
+					vm.propertyName = data.phenotype.property;
+					vm.propertyValue = data.phenotype.propertyValue;
+				}
 			}, displayGetPhenotypeError);
 		}
 
 		let onRouteChangeOff = $scope.$on('$stateChangeStart', routeChange);
-
+		
 		vm.save = function () {
-
+			var frequency = {
+				displayName: vm.name,
+				description: vm.description,
+				id: vm.id,
+				phenotype: {
+					phenotypeKey: vm.conceptOrPhenotype.name,
+					phenotypeDisplayName: vm.conceptOrPhenotype.displayName,
+					type: vm.conceptOrPhenotype.type
+				},
+				atLeast: vm.threshold,
+				isConsecutive: vm.conceptOrPhenotype === 'VALUE_THRESHOLD' ? vm.isConsecutive : false,
+				frequencyType: vm.frequencyType,
+				type: 'FREQUENCY'
+			};
+			if (vm.userId) {
+				frequency.userId = vm.userId;
+			} else {
+				frequency.userId = $rootScope.user.info.id;
+			}
+			if (vm.minDuration || vm.maxDuration) {
+				frequency.phenotype.hasDuration = true;
+				frequency.phenotype.minDuration = vm.minDuration;
+				frequency.phenotype.minDurationUnits = vm.minDurationUnits;
+				frequency.phenotype.maxDuration = vm.maxDuration;
+				frequency.phenotype.maxDurationUnits = vm.maxDurationUnits;
+			} else {
+				frequency.phenotype.hasDuration = false;
+			}
+			if (vm.minDistanceBetween || vm.maxDistanceBetween) {
+				frequency.isWithin = true;
+				frequency.withinAtLeast = vm.minDistanceBetween;
+				frequency.withinAtLeastUnits = vm.minDistanceBetweenUnits;
+				frequency.withinAtMost = vm.maxDistanceBetween;
+				frequency.withinAtMostUnits = vm.maxDistanceBetweenUnits;
+			} else {
+				frequency.isWithin = false;
+			}
+			if (vm.propertyValue) {
+				frequency.phenotype.hasPropertyConstraint = true;
+				frequency.phenotype.property = vm.propertyName;
+				frequency.phenotype.propertyValue = vm.propertyValue;
+			} else {
+				frequency.phenotype.hasPropertyConstraint = false;
+			}
+			if (vm.nowEditing) {
+				PhenotypeService.updatePhenotype(frequency).then(
+						function(){
+							onRouteChangeOff();
+							returnToPhenotypesPage();
+						}, displaySaveError);
+			} else {
+				PhenotypeService.createPhenotype(frequency).then(
+						function(){
+							onRouteChangeOff();
+							returnToPhenotypesPage();
+						}, displaySaveError);
+			}
 		};
 
 		vm.cancel = function () {
-			$state.transitionTo('phenotypes');
+			returnToPhenotypesPage();
 		};
+		
+		function returnToPhenotypesPage() {
+			$state.transitionTo('phenotypes');
+		}
 
 		function displayConceptOrPhenotypeError(message) {
 			vm.conceptOrPhenotypeErrorMsg = message;

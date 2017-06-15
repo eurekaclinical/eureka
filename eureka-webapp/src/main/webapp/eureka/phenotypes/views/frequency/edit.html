@@ -25,11 +25,16 @@
 	<div class="form-group">
 		<label for="threshold">Threshold</label>
 		<div class="input-group">
-			<span class="input-group-addon">
-				<select name="frequencyType" ng-model="editFrequencyPhenotype.frequencyType" ng-options="o.description for o in editFrequencyPhenotype.frequencyTypeOptions track by o.id">
+			<div class="input-group-addon">
+				<select name="frequencyType" ng-model="editFrequencyPhenotype.frequencyType" ng-options="o.id as o.description for o in editFrequencyPhenotype.frequencyTypeOptions">
 				</select>
-			</span>
-			<input name="threshold" type="number" class="form-control" ng-model="editFrequencyPhenotype.threshold">
+			</div>
+			<input name="threshold" type="number" class="form-control" ng-model="editFrequencyPhenotype.threshold" required required-message="'Threshold is required'">
+			<div class="input-group-addon checkbox" ng-if="editFrequencyPhenotype.conceptOrPhenotype && editFrequencyPhenotype.conceptOrPhenotype.type === 'VALUE_THRESHOLD'">
+				<label><input type="checkbox" name="freqIsConsecutive"
+							  title="For value threshold phenotypes, specifies whether no intervening values are present that do not match the threshold or any duration or property constraints specified below"
+							  ng-model="editFrequencyPhenotype.isConsecutive"> consecutive</label>
+			</div>
 		</div>
 	</div>
 	<phenotype-constraints id="definition" name="definition" 
@@ -45,25 +50,25 @@
 	<div class="form-group">
 		<label for="minDistanceBetween">Distance between</label>
 		<div class="input-group">
-			<input name="minDistanceBetween" type="number" class="form-control" placeholder="min" ng-model="editFrequencyPhenotype.minDistanceBeween">
-			<span class="input-group-addon">
-				<select name="minDistanceBetweenUnits" ng-model="editFrequencyPhenotype.minDistanceBetweenUnits" ng-options="o.description for o in editFrequencyPhenotype.minDistanceBetweenUnitOptions track by o.id">
+			<input name="minDistanceBetween" type="number" class="form-control" placeholder="min" ng-model="editFrequencyPhenotype.minDistanceBetween">
+			<div class="input-group-addon">
+				<select name="minDistanceBetweenUnits" ng-model="editFrequencyPhenotype.minDistanceBetweenUnits" ng-options="o.id as o.description for o in editFrequencyPhenotype.minDistanceBetweenUnitOptions">
 				</select>
-			</span>
+			</div>
 		</div>
 	</div>
 	<div class="form-group">
 		<label class="sr-only" for="maxDistanceBetween">To</label>
 		<div class="input-group">
 			<input name="maxDistanceBetween" type="number" class="form-control" placeholder="min" ng-model="editFrequencyPhenotype.maxDistanceBetween">
-			<span class="input-group-addon">
-				<select name="maxDistanceBetweenUnits" ng-model="editFrequencyPhenotype.maxDistanceBetweenUnits" ng-options="o.description for o in editFrequencyPhenotype.maxDistanceBetweenUnitOptions track by o.id">
+			<div class="input-group-addon">
+				<select name="maxDistanceBetweenUnits" ng-model="editFrequencyPhenotype.maxDistanceBetweenUnits" ng-options="o.id as o.description for o in editFrequencyPhenotype.maxDistanceBetweenUnitOptions">
 				</select>
-			</span>
+			</div>
 		</div>
 	</div>
 	<button id="cancelButton" type="button" class="btn" ng-click="editFrequencyPhenotype.cancel()">Cancel</button>
-	<button id="saveButton " type="button " class="btn btn-primary ">Save</button>
+	<button id="saveButton" type="submit" class="btn btn-primary">Save</button>
 </form>
 <script type="text/ng-template" id="conceptOrPhenotypeDeleteModal.html">
 	<div class="modal-header">
