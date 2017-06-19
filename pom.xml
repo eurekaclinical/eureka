@@ -52,13 +52,13 @@
 		<hibernate-hbm2ddl-auto>validate</hibernate-hbm2ddl-auto>
 
 		<!-- Clients that eureka depends on -->
-		<user-client-version>1.0-Alpha-13</user-client-version>
+		<user-client-version>1.0-Alpha-14</user-client-version>
 		<eureka-client-version>3.0-Alpha-6</eureka-client-version>
 		<eurekaclinical-patient-set-client-version>1.0-Alpha-5</eurekaclinical-patient-set-client-version>
 
-		<cas-server-version>3.0-Alpha-9</cas-server-version>
-		<user-webapp-version>1.0-Alpha-14</user-webapp-version>
-		<user-service-version>1.0-Alpha-11</user-service-version>
+		<cas-server-version>3.0-Alpha-11</cas-server-version>
+		<user-webapp-version>1.0-Alpha-15</user-webapp-version>
+		<user-service-version>1.0-Alpha-12</user-service-version>
 
 		<!-- transitive dependencies that CAS needs certain versions of...-->
 		<commons-codec-version>1.4</commons-codec-version>
