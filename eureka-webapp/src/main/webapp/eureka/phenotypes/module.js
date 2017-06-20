@@ -40,7 +40,7 @@
 					controller: 'phenotypes.frequency.EditCtrl',
 					controllerAs: 'editFrequencyPhenotype'
 				})
-				.state('createTHRESHOLD', {
+				.state('createVALUE_THRESHOLD', {
 					url: '/phenotypes/threshold/new',
 					templateUrl: 'eureka/phenotypes/views/threshold/edit.html',
 					controller: 'phenotypes.threshold.EditCtrl',
@@ -64,7 +64,7 @@
 					controller: 'phenotypes.frequency.EditCtrl',
 					controllerAs: 'editFrequencyPhenotype'
 				})
-				.state('editTHRESHOLD', {
+				.state('editVALUE_THRESHOLD', {
 					url: '/phenotypes/threshold/:key',
 					templateUrl: 'eureka/phenotypes/views/threshold/edit.html',
 					controller: 'phenotypes.threshold.EditCtrl',

@@ -39,9 +39,7 @@
 						}
 					});
 				}, function (msg) {
-					if (vm.getTimeUnitsError) {
-						vm.onTimeUnitsError({message: msg});
-					}
+					vm.timeUnitsErrorMsg = msg;
 				});
 
 		PhenotypeService.getFrequencyTypes()
@@ -55,9 +53,7 @@
 						}
 					});
 				}, function (msg) {
-					if (vm.getTimeUnitsError) {
-						vm.onTimeUnitsError({message: msg});
-					}
+					vm.frequencyTypesErrorMsg = msg;
 				});
 
 		if (vm.nowEditing !== undefined) {
@@ -103,7 +99,7 @@
 		}
 
 		let onRouteChangeOff = $scope.$on('$stateChangeStart', routeChange);
-		
+
 		vm.save = function () {
 			var frequency = {
 				displayName: vm.name,
@@ -151,13 +147,13 @@
 			}
 			if (vm.nowEditing) {
 				PhenotypeService.updatePhenotype(frequency).then(
-						function(){
+						function () {
 							onRouteChangeOff();
 							returnToPhenotypesPage();
 						}, displaySaveError);
 			} else {
 				PhenotypeService.createPhenotype(frequency).then(
-						function(){
+						function () {
 							onRouteChangeOff();
 							returnToPhenotypesPage();
 						}, displaySaveError);
@@ -167,7 +163,7 @@
 		vm.cancel = function () {
 			returnToPhenotypesPage();
 		};
-		
+
 		function returnToPhenotypesPage() {
 			$state.transitionTo('phenotypes');
 		}

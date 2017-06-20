@@ -13,6 +13,9 @@
 <div class="alert alert-danger" role="alert" ng-if="editFrequencyPhenotype.timeUnitsErrorMsg">
 	<strong>Error loading time unit options!</strong> {{editFrequencyPhenotype.timeUnitsErrorMsg}}
 </div>
+<div class="alert alert-danger" role="alert" ng-if="editFrequencyPhenotype.frequencyTypesErrorMsg">
+	<strong>Error loading frequency type options!</strong> {{editFrequencyPhenotype.frequencyTypesErrorMsg}}
+</div>
 <form id="frequencyForm" name="frequencyForm" class="vert-offset" role="form" novalidate angular-validator angular-validator-submit="editFrequencyPhenotype.save()">
     <div class="form-group">
         <label for="defName" class="control-label">Name</label>
@@ -67,8 +70,8 @@
 			</div>
 		</div>
 	</div>
-	<button id="cancelButton" type="button" class="btn" ng-click="editFrequencyPhenotype.cancel()">Cancel</button>
-	<button id="saveButton" type="submit" class="btn btn-primary">Save</button>
+	<button id="cancelButton" name="cancelButton" type="button" class="btn" ng-click="editFrequencyPhenotype.cancel()">Cancel</button>
+	<button id="saveButton" name="saveButton" type="submit" class="btn btn-primary">Save</button>
 </form>
 <script type="text/ng-template" id="conceptOrPhenotypeDeleteModal.html">
 	<div class="modal-header">

@@ -57,7 +57,7 @@
 			if (vm.key) {
 				let phenotypeKey = null;
 				let conceptKey = null;
-				if (vm.keys.startsWith('USER:')) {
+				if (vm.key.startsWith('USER:')) {
 					phenotypeKey = vm.key;
 				} else {
 					conceptKey = vm.key;

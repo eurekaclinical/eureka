@@ -23,8 +23,8 @@
         <label for="definition" class="control-label">Members</label>
         <tree-multi-drop-zone id="definition" name="definition" keys="editPhenotype.treeMultiDropZoneInitialKeys" items="editPhenotype.treeMultiDropZoneItems" display-error="editPhenotype.displayTreeMultiDropZoneItemsError(message)" delete-modal-template-url="treeMultiDropZoneDeleteModal.html"></tree-multi-drop-zone>
     </div>
-	<button id="cancelButton" type="button" class="btn" ng-click="editPhenotype.cancel()">Cancel</button>
-	<button id="saveButton" type="submit" class="btn btn-primary">Save</button>
+	<button id="cancelButton" name="cancelButton" type="button" class="btn" ng-click="editPhenotype.cancel()">Cancel</button>
+	<button id="saveButton" name="saveButton" type="submit" class="btn btn-primary">Save</button>
 </form>
 <script type="text/ng-template" id="treeMultiDropZoneDeleteModal.html">
 	<div class="modal-header">

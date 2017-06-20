@@ -1,124 +1,146 @@
-<form id="thresholdForm" class="vert-offset" role="form">
+<h1 ng-if="editThresholdPhenotype.nowEditing === undefined">New Threshold</h1>
+<h1 ng-if="editThresholdPhenotype.nowEditing !== undefined">Edit Threshold</h1>
+<div class="alert alert-danger" role="alert" ng-if="editThresholdPhenotype.conceptOrPhenotypeErrorMsg">
+	<strong>Error selecting concepts!</strong> {{editThresholdPhenotype.conceptOrPhenotypeErrorMsg}}
+</div>
+<div class="alert alert-danger" role="alert" ng-if="editThresholdPhenotype.getPhenotypeErrorMsg">
+	<strong>Error loading phenotype!</strong> {{editThresholdPhenotype.getPhenotypeErrorMsg}}
+</div>
+<div class="alert alert-danger" role="alert" ng-if="editThresholdPhenotype.saveErrorMsg">
+	<strong>Error saving phenotype!</strong> {{editThresholdPhenotype.saveErrorMsg}}
+</div>
+<div class="alert alert-danger" role="alert" ng-if="editThresholdPhenotype.timeUnitsErrorMsg">
+	<strong>Error loading time unit options!</strong> {{editThresholdPhenotype.timeUnitsErrorMsg}}
+</div>
+<div class="alert alert-danger" role="alert" ng-if="editThresholdPhenotype.valueComparatorsErrorMsg">
+	<strong>Error loading value comparator options!</strong> {{editThresholdPhenotype.valueComparatorsErrorMsg}}
+</div>
+<div class="alert alert-danger" role="alert" ng-if="editThresholdPhenotype.thresholdsOperatorsErrorMsg">
+	<strong>Error loading thresholds operator options!</strong> {{editThresholdPhenotype.thresholdsOperatorsErrorMsg}}
+</div>
+<div class="alert alert-danger" role="alert" ng-if="editThresholdPhenotype.relationOperatorsErrorMsg">
+	<strong>Error loading time distance operator options!</strong> {{editThresholdPhenotype.relationOperatorsErrorMsg}}
+</div>
+<form id="thresholdForm" name="thresholdForm" class="vert-offset" role="form" novalidate angular-validator angular-validator-submit="editThresholdPhenotype.save()">
     <div class="form-group">
-        <label for="patCohortDefName" class="control-label">Name</label>
-        <input type="text" id="patCohortDefName" class="form-control" ng-model="editPhenotype.thresholdObject.displayName" />
+        <label for="defName" class="control-label">Name</label>
+        <input type="text" id="defName" class="form-control" ng-model="editThresholdPhenotype.thresholdObject.displayName" required required-message="'Name is required'" />
     </div>
     <div class="form-group">
-        <label for="patCohortDescription" class="control-label">Description</label>
-        <textarea id="patCohortDescription" class="form-control" ng-model="editPhenotype.thresholdObject.description"></textarea>
+        <label for="defDescription" class="control-label">Description</label>
+        <textarea id="defDescription" class="form-control" ng-model="editThresholdPhenotype.thresholdObject.description"></textarea>
     </div>
     <div class="form-group">
-        <div>
-            <select class="selectpicker" title="Specify whether only the first n intervals will be matched (First) or any n intervals (At least) " style="width:50%; height: 33px;" ng-model="editPhenotype.thresholdObject.thresholdsOperator">
-                <option ng-repeat="tt in editPhenotype.thresholdtypes" value="{{tt.value}}">{{tt.display}}</option>
-            </select>
-        </div>
+		<label for="thresholdType" class="control-label">Value threshold type</label>
+		<select name="thresholdType" class="form-control" title="Specify whether only the first n intervals will be matched (First) or any n intervals (At least) " ng-model="editThresholdPhenotype.thresholdObject.thresholdsOperator" ng-options="o.id as o.description for o in editThresholdPhenotype.thresholdTypeOptions">
+		</select>
     </div>
-    <div class="form-group " ng-repeat="valueThreshold in editPhenotype.thresholdObject.valueThresholds">
-        <div id="propDefinition " class="col-sm-12 panel panel-default ">
-            <div class="row panel-heading ">
-                <h4 class="panel-title ">Value Threshold <span class="count ">{{$index + 1}}</span></h4>
-            </div>
-            <div class="form-group ">
-                <div class="col-sm-12 ">
-                    <label class="sr-only " for="mainPhenotype ">Main phenotype</label>
-                </div>
-            </div>
-            <div class="row" style="padding-top: 10px;">
-                <div class="col-md-12">
-                    <div class="form-group text-center vert-offset ">
-                        <button id="addMainPhenotype " type="button " class="btn btn-primary " ng-click="editPhenotype.addPhenotypeToThreshold($index+1);">Add Members</button>
-                    </div>
-                    <div class="row" style="padding-top: 10px;">
-                        <div class="col-md-12">
-                            <div class="col-md-5" style="background:#f5f5f5">
-                                <form>
-                                    <fieldset>
-                                        <legend>Items Added&nbsp;</legend>
-                                        <p>
-                                            <span>{{valueThreshold.phenotype.phenotypeKey}}</span>
-                                            <p>
-                                    </fieldset>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <fieldset>
-                <legend style="padding-top:20px;">&nbsp;</legend>
-                <div class="form-group ">
-                    <div class="col-md-2">
-                        <input type="number " min="1 " value=" " title="Specify the frequency count " class="form-control " placeholder="min" ng-model="editPhenotype.seqObject.phenotype.minDuration" />
-                    </div>
-                    <div class="col-md-3">
-                        <select class="selectpicker" title="Specify whether only the first n intervals will be matched (First) or any n intervals (At least) " style="height: 33px;" ng-model="editPhenotype.valueThreshold.phenotype.lowerValue">
-                            <option ng-repeat="th in editPhenotype.thresholdCompValues" value="{{th.value}}">{{th.display}}</option>
-                        </select>
-                    </div>
-                    <div class="col-md-2">
-                        <span>to</span>
-                    </div>
-                    <div class="col-md-2">
-                        <input type="number " min="1 " value=" " title="Specify the frequency count " class="form-control " placeholder="max" ng-model="editPhenotype.seqObject.phenotype.maxDuration" />
-                    </div>
-                    <div class="col-md-3">
-                        <select class="selectpicker" title="Specify whether only the first n intervals will be matched (First) or any n intervals (At least) " style="    height: 33px;" ng-model="editPhenotype.valueThreshold.phenotype.upperValue">
-                            <option ng-repeat="th in editPhenotype.thresholdCompValues" value="{{th.value}}">{{th.display}}</option>
-                        </select>
-                    </div>
-                </div>
-                <legend style="padding-top:20px;">Context(s)</legend>
-                <div class="form-group text-center vert-offset ">
-                    <button id="addMainPhenotype " type="button " class="btn btn-primary " ng-click="editPhenotype.addPhenotypeToThreshold($index+1, 'relatedPhenotypes');">Add Members</button>
-                </div>
-                <div class="row" style="padding-top: 10px; padding-bottom: 10px;">
-                    <div class="col-md-12">
-                        <div class="col-md-5" style="background:#f5f5f5">
-                            <form>
-                                <fieldset>
-                                    <legend>Items Added&nbsp;</legend>
-                                    <p>
-                                        <span>{{valueThreshold.phenotype.relatedPhenotypeKey}}</span>
-                                        <p>
-                                </fieldset>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-                <div class="form-group ">
-                    <div class="col-md-2">
-                        <input type="number " min="1 " value=" " title="Specify the frequency count " class="form-control " placeholder="min" ng-model="editPhenotype.valueThreshold.phenotype.withinAtLeast" />
-                    </div>
-                    <div class="col-md-3">
-                        <select class="selectpicker" title="Specify whether only the first n intervals will be matched (First) or any n intervals (At least) " style="height: 33px;" ng-model="editPhenotype.valueThreshold.phenotype.withinAtLeastUnit">
-                            <option ng-repeat="tu in editPhenotype.timeUnits" value="{{tu.value}}">{{tu.name}}</option>
-                        </select>
-                    </div>
-                    <div class="col-md-2">
-                        <span>to</span>
-                    </div>
-                    <div class="col-md-2">
-                        <input type="number " min="1 " value=" " title="Specify the frequency count " class="form-control " placeholder="max" ng-model="editPhenotype.valueThreshold.phenotype.withinAtMost" />
-                    </div>
-                    <div class="col-md-3">
-                        <select class="selectpicker" title="Specify whether only the first n intervals will be matched (First) or any n intervals (At least) " style="    height: 33px;" ng-model="editPhenotype.valueThreshold.phenotype.withinAtMostUnit">
-                            <option ng-repeat="tu in editPhenotype.timeUnits" value="{{tu.value}}">{{tu.name}}</option>
-                        </select>
-                    </div>
-                    <div class="col-md-12" style="padding-top: 10px; padding-bottom: 10px;">
-                        <select class="selectpicker" title="Specify whether only the first n intervals will be matched (First) or any n intervals (At least) " style=" width:50%;   height: 33px;" ng-model="editPhenotype.valueThreshold.phenotype.relationOperator">
-                            <option ng-repeat="tt in editPhenotype.thresholdRelationTypes" value="{{tt.value}}">{{tt.display}}</option>
-                        </select>
-                    </div>
-                </div>
-            </fieldset>
-        </div>
-    </div>
-    <div class="form-group text-center vert-offset ">
-        <button id="addRelatedPhenotype" type="button " class="btn btn-primary " ng-click="editPhenotype.addNewThreshold();">
-            <span class="glyphicon glyphicon-plus "></span> Add Threshold
-        </button>
-        <button id="savePhenotypeButton " type="button " class="btn btn-primary " ng-click="editPhenotype.createThreshold();">Save</button>
-    </div>
+	<div id="propDefinition" class="panel panel-default" ng-repeat="valueThreshold in editThresholdPhenotype.thresholdObject.valueThresholds">
+		<div class="panel-heading ">
+			<h2 class="panel-title "><a title="remove" ng-click="editThresholdPhenotype.removeThreshold($index)"><span class="glyphicon glyphicon-remove" title="" style="color:red;"></span></a>Value Threshold {{$index + 1}}</h2>
+		</div>
+		<div class="panel-body">
+			<div class="form-group">
+				<label class="control-label" for="conceptOrPhenotype_{{$index}}">Concept or phenotype</label>
+				<tree-single-drop-zone name="conceptOrPhenotype_{{$index}}"
+									   key="editThresholdPhenotype.initialConceptOrPhenotypeKeys[$index]"
+									   item="editThresholdPhenotype.conceptOrPhenotypes[$index]" 
+									   display-error="editThresholdPhenotype.displayConceptOrPhenotypeError(message)" 
+									   delete-modal-template-url="conceptOrPhenotypeDeleteModal.html"></tree-single-drop-zone>
+			</div>
+			<div class="form-group">
+				<label for="minValue">Lower and/or upper bound(s)</label>
+				<div class="input-group">
+					<div class="input-group-addon">
+						<select name="lowerComps_{{$index}}" ng-model="valueThreshold.lowerComp" ng-options="o.id as o.name for o in editThresholdPhenotype.lowerCompOptions" ng-init="editThresholdPhenotype.setValueComparatorDefault(valueThreshold)">
+						</select>
+					</div>
+					<input name="lowerValue_{{$index}}" type="text" class="form-control" placeholder="min" ng-model="valueThreshold.lowerValue">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="sr-only" for="upperValue_{{$index}}">To</label>
+				<div class="input-group">
+					<div class="input-group-addon">
+						<select name="upperComps_{{$index}}" ng-model="valueThreshold.upperComp" ng-options="o.id as o.name for o in editThresholdPhenotype.upperCompOptions" ng-init="editThresholdPhenotype.setValueComparatorDefault(valueThreshold)">
+						</select>
+					</div>
+					<input name="upperValue_{{$index}}" type="text" class="form-control" placeholder="max" ng-model="valueThreshold.upperValue">
+				</div>
+			</div>
+			<div class="form-group">
+				<label for="contexts_{{$index}}" class="control-label">Context(s)</label>
+				<tree-multi-drop-zone id="definition" name="contexts_{{$index}}" keys="editThresholdPhenotype.initialContextKeys[$index]" items="editThresholdPhenotype.contextItems[$index]" display-error="editThresholdPhenotype.displayConceptOrPhenotypeError(message)" delete-modal-template-url="conceptOrPhenotypeDeleteModal.html"></tree-multi-drop-zone>
+			</div>
+			<div class="form-group">
+				<label for="minDistanceBetween_{{$index}}">Time distance between context(s) and thresholded values</label>
+				<div class="input-group">
+					<input name="minDistanceBetween_{{$index}}" type="number" class="form-control" placeholder="min" ng-model="valueThreshold.withinAtLeast">
+					<div class="input-group-addon">
+						<select name="minDistanceBetweenUnits_{{$index}}" ng-model="valueThreshold.withinAtLeastUnit" ng-options="o.id as o.description for o in editThresholdPhenotype.distanceBetweenUnitOptions" ng-init="editThresholdPhenotype.setTimeUnitDefault(valueThreshold)">
+						</select>
+					</div>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="sr-only" for="maxDistanceBetween_{{$index}}">To</label>
+				<div class="input-group">
+					<input name="maxDistanceBetween_{{$index}}" type="number" class="form-control" placeholder="max" ng-model="valueThreshold.withinAtMost">
+					<div class="input-group-addon">
+						<select name="maxDistanceBetweenUnits_{{$index}}" ng-model="valueThreshold.withinAtMostUnit" ng-options="o.id as o.description for o in editThresholdPhenotype.distanceBetweenUnitOptions" ng-init="editThresholdPhenotype.setTimeUnitDefault(valueThreshold)">
+						</select>
+					</div>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="sr-only" for="relationOperators_{{$index}}">Time distance operator</label>
+				<select class="form-control" name="relationOperators_{{$index}}" ng-model="valueThreshold.relationOperator" ng-options="o.id as o.description for o in editThresholdPhenotype.relationOperatorOptions" ng-init="editThresholdPhenotype.setRelationOperatorDefault(valueThreshold)">
+				</select>
+			</div>
+		</div>
+	</div>
+	<button id="addThresholdButton" name="addThresholdButton" type="button" class="btn" ng-click="editThresholdPhenotype.addThreshold()">
+		<span class="glyphicon glyphicon-plus"></span>Add Threshold
+	</button>
+	<button id="cancelButton" name="cancelButton" type="button" class="btn" ng-click="editThresholdPhenotype.cancel()">Cancel</button>
+	<button id="saveButton" name="saveButton" type="submit" class="btn btn-primary">Save</button>
 </form>
+<script type="text/ng-template" id="conceptOrPhenotypeDeleteModal.html">
+	<div class="modal-header">
+	<h3 class="modal-title">Remove Concept or Phenotype</h3>
+	</div>
+	<div class="modal-body">
+	<p><strong>Are you sure you want to remove "{{mo.displayName}}"?</strong></p>
+	<p>This operation cannot be undone.</p>
+	</div>
+	<div class="modal-footer">
+	<button type="submit" class="btn" ng-click="mo.cancel()">Cancel</button>
+	<button type="button" class="btn btn-primary" ng-click="mo.ok()">Remove</button>
+	</div>
+</script>
+<script type="text/ng-template" id="cancelEditModal.html">
+	<div class="modal-header">
+	<h3 class="modal-title">Unsaved Changes</h3>
+	</div>
+	<div class="modal-body">
+	<p><strong>Are you sure you want to discard your changes to "{{mo.displayName}}"?</strong></p>
+	<p>This operation cannot be undone.</p>
+	</div>
+	<div class="modal-footer">
+	<button type="submit" class="btn" ng-click="mo.cancel()">Continue</button>
+	<button type="button" class="btn btn-primary" ng-click="mo.ok()">Discard</button>
+	</div>
+</script>
+<script type="text/ng-template" id="cancelCreateModal.html">
+	<div class="modal-header">
+	<h3 class="modal-title">Unsaved Changes</h3>
+	</div>
+	<div class="modal-body">
+	<p><strong>Are you sure you want to discard your new phenotype?</strong></p>
+	<p>This operation cannot be undone.</p>
+	</div>
+	<div class="modal-footer">
+	<button type="submit" class="btn" ng-click="mo.cancel()">Continue</button>
+	<button type="button" class="btn btn-primary" ng-click="mo.ok()">Discard</button>
+	</div>
+</script>

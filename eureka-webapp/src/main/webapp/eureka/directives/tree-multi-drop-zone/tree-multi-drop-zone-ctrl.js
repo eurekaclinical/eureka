@@ -14,7 +14,6 @@
 	function TreeMultiDropZoneCtrl($scope, PhenotypeService, TreeService, $uibModal) {
 		let vm = this;
 
-		vm.keys = [];
 		vm.items = [];
 
 		vm.add = function () {

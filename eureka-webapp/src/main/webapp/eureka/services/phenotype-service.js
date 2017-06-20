@@ -26,7 +26,10 @@
 			updatePhenotype: updatePhenotype,
 			removePhenotype: removePhenotype,
 			getTimeUnits: getTimeUnits,
-			getFrequencyTypes: getFrequencyTypes
+			getFrequencyTypes: getFrequencyTypes,
+			getThresholdsOperators: getThresholdsOperators,
+			getValueComparators: getValueComparators,
+			getRelationOperators: getRelationOperators
 		});
 
 		function getPhenotypeMessages() {
@@ -45,8 +48,8 @@
 					'description': `For defining a disease, finding or patient care process to be reflected by codes,
                     clinical events and/or observations in a specified frequency.`
 				},
-				'THRESHOLD': {
-					'displayName': 'Threshold',
+				'VALUE_THRESHOLD': {
+					'displayName': 'Value threshold',
 					'description': `For defining clinically significant thresholds on the value of an observation.`
 				}
 			};
@@ -90,6 +93,18 @@
 		
 		function getFrequencyTypes() {
 			return $http.get(dataEndpoint + '/frequencytypes');
+		}
+		
+		function getThresholdsOperators() {
+			return $http.get(dataEndpoint + '/thresholdsops')
+		}
+		
+		function getValueComparators() {
+			return $http.get(dataEndpoint + '/valuecomps')
+		}
+		
+		function getRelationOperators() {
+			return $http.get(dataEndpoint + '/relationops')
 		}
 		
 		function handleSuccess(response) {
