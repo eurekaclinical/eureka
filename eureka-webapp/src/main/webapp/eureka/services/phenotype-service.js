@@ -88,23 +88,28 @@
 		}
 		
 		function getTimeUnits() {
-			return $http.get(dataEndpoint + '/timeunits');
+			return $http.get(dataEndpoint + '/timeunits')
+					.then(handleSuccess, handleError);
 		}
 		
 		function getFrequencyTypes() {
-			return $http.get(dataEndpoint + '/frequencytypes');
+			return $http.get(dataEndpoint + '/frequencytypes')
+					.then(handleSuccess, handleError);
 		}
 		
 		function getThresholdsOperators() {
 			return $http.get(dataEndpoint + '/thresholdsops')
+					.then(handleSuccess, handleError);
 		}
 		
 		function getValueComparators() {
 			return $http.get(dataEndpoint + '/valuecomps')
+					.then(handleSuccess, handleError);
 		}
 		
 		function getRelationOperators() {
 			return $http.get(dataEndpoint + '/relationops')
+					.then(handleSuccess, handleError);
 		}
 		
 		function handleSuccess(response) {
