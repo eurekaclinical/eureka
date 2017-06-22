@@ -25,10 +25,10 @@
 		vm.treeMultiDropZoneInitialKeys = [];
 
 		PhenotypeService.getTimeUnits()
-				.then(function (response) {
-					vm.minDistanceBetweenUnitOptions = response.data;
-					vm.maxDistanceBetweenUnitOptions = response.data;
-					angular.forEach(response.data, function (timeunitOption) {
+				.then(function (data) {
+					vm.minDistanceBetweenUnitOptions = data;
+					vm.maxDistanceBetweenUnitOptions = data;
+					angular.forEach(data, function (timeunitOption) {
 						if (timeunitOption.default) {
 							if (!vm.minDistanceBetweenUnits) {
 								vm.minDistanceBetweenUnits = timeunitOption.id;
@@ -43,9 +43,9 @@
 				});
 
 		PhenotypeService.getFrequencyTypes()
-				.then(function (response) {
-					vm.frequencyTypeOptions = response.data;
-					angular.forEach(response.data, function (frequencyTypeOption) {
+				.then(function (data) {
+					vm.frequencyTypeOptions = data;
+					angular.forEach(data, function (frequencyTypeOption) {
 						if (frequencyTypeOption.default) {
 							if (!vm.frequencyType) {
 								vm.frequencyType = frequencyTypeOption.id;

@@ -1,191 +1,135 @@
-<form id="sequenceForm " class="vert-offset " role="form ">
-    <div class="form-group ">
-        <label for="patCohortDefName " class="control-label ">Name</label>
-        <input type="text " id="patCohortDefName " class="form-control " ng-model="editPhenotype.seqObject.displayName" />
+<h1 ng-if="editSequencePhenotype.nowEditing === undefined">New Sequence</h1>
+<h1 ng-if="editSequencePhenotype.nowEditing !== undefined">Edit Sequence</h1>
+<div class="alert alert-danger" role="alert" ng-if="editSequencePhenotype.conceptOrPhenotypeErrorMsg">
+	<strong>Error selecting concepts!</strong> {{editSequencePhenotype.conceptOrPhenotypeErrorMsg}}
+</div>
+<div class="alert alert-danger" role="alert" ng-if="editSequencePhenotype.getPhenotypeErrorMsg">
+	<strong>Error loading phenotype!</strong> {{editSequencePhenotype.getPhenotypeErrorMsg}}
+</div>
+<div class="alert alert-danger" role="alert" ng-if="editSequencePhenotype.saveErrorMsg">
+	<strong>Error saving phenotype!</strong> {{editSequencePhenotype.saveErrorMsg}}
+</div>
+<div class="alert alert-danger" role="alert" ng-if="editSequencePhenotype.timeUnitsErrorMsg">
+	<strong>Error loading time unit options!</strong> {{editSequencePhenotype.timeUnitsErrorMsg}}
+</div>
+<form id="sequenceForm" name="sequenceForm" class="vert-offset" role="form" novalidate angular-validator angular-validator-submit="editSequencePhenotype.save()">
+    <div class="form-group">
+        <label for="defName" class="control-label">Name</label>
+        <input type="text" id="defName" name="defName" class="form-control" ng-model="editSequencePhenotype.sequenceObject.displayName" required required-message="'Name is required'" />
     </div>
-    <div class="form-group ">
-        <label for="patCohortDescription " class="control-label ">Description</label>
-        <textarea id="patCohortDescription " class="form-control " ng-model="editPhenotype.seqObject.description"></textarea>
+    <div class="form-group">
+        <label for="defDescription" class="control-label">Description</label>
+        <textarea id="defDescription" class="form-control" ng-model="editSequencePhenotype.sequenceObject.description"></textarea>
     </div>
-    <div class="form-group ">
-        <div id="propDefinition " class="col-sm-12 panel panel-default ">
-            <div class="row panel-heading ">
-                <h4 class="panel-title ">Main Phenotype</h4>
-            </div>
-            <div class="form-group ">
-                <div class="col-sm-12 ">
-                    <label class="sr-only " for="mainPhenotype ">Main phenotype</label>
-                </div>
-            </div>
-            <div class="form-group text-center vert-offset ">
-                <button id="addMainPhenotype " type="button " class="btn btn-primary " ng-click="editPhenotype.addMainPhenotype();">Add Members</button>
-            </div>
-            <div class="row" style="padding-top: 10px;">
-                <div class="col-md-12">
-                    <div class="col-md-5" style="background:#f5f5f5">
-                        <form>
-                            <fieldset>
-                                <legend>Items Added&nbsp;</legend>
-                                <p>
-                                    <span>{{editPhenotype.seqObject.primaryPhenotype.phenotypeKey}}</span>
-                                    <p>
-                            </fieldset>
-                        </form>
-                    </div>
-                </div>
-            </div>
-            <fieldset>
-                <legend style="padding-top:20px;">
-                    <input type="checkbox" value="" ng-model="editPhenotype.seqObject.primaryPhenotype.hasDuration"></input>&nbsp; Duration</legend>
-                <div class="form-group ">
-                    <div class="col-md-2">
-                        <input type="number " min="1 " value=" " title="Specify the frequency count " class="form-control " placeholder="min" ng-model="editPhenotype.seqObject.primaryPhenotype.minDuration" />
-                    </div>
-                    <div class="col-md-3">
-                        <select class="selectpicker" title="Specify whether only the first n intervals will be matched (First) or any n intervals (At least) " style="height: 33px;" ng-model="editPhenotype.seqObject.primaryPhenotype.minDurationUnits">
-                            <option ng-repeat="tu in editPhenotype.timeUnits" value="{{tu.value}}">{{tu.name}}</option>
-                        </select>
-                    </div>
-                    <div class="col-md-2">
-                        <span>to</span>
-                    </div>
-                    <div class="col-md-2">
-                        <input type="number " min="1 " value=" " title="Specify the frequency count " class="form-control " placeholder="max" ng-model="editPhenotype.seqObject.primaryPhenotype.maxDuration" />
-                    </div>
-                    <div class="col-md-3">
-                        <select class="selectpicker" title="Specify whether only the first n intervals will be matched (First) or any n intervals (At least) " style="    height: 33px;" ng-model="editPhenotype.seqObject.primaryPhenotype.maxDurationUnits">
-                            <option ng-repeat="tu in editPhenotype.timeUnits" value="{{tu.value}}">{{tu.name}}</option>
-                        </select>
-                    </div>
-                </div>
-            </fieldset>
-            <fieldset style="padding-bottom:10px">
-                <legend style="padding-top:20px;">
-                    <input type="checkbox" value="" ng-model="editPhenotype.seqObject.primaryPhenotype.hasPropertyConstraint"></input>&nbsp; Property Value</legend>
-                <div class="form-group ">
-                    <div class="col-md-4">
-                        <select class="selectpicker" ng-model="editPhenotype.seqObject.primaryPhenotype.property" style="    height: 33px; width: 190px;">
-                            <option ng-repeat="pp in editPhenotype.phenotypeProperties" value="{{pp}}">{{pp}}</option>
-                        </select>
-                    </div>
-                    <div class="col-md-4">
-                        <input type="number " min="1 " value=" " title="Specify the frequency count " class="form-control " ng-model="editPhenotype.seqObject.primaryPhenotype.propertyValue" />
-                    </div>
-                </div>
-            </fieldset>
-        </div>
-    </div>
-    <div class="form-group " ng-repeat="relatedPhenotype in editPhenotype.seqObject.relatedPhenotypes">
-        <div id="sequenceRelatedPhenotypes " class="sequence-relations-container ">
-            <div class="sequence-relation drop-parent panel panel-default col-sm-12 ">
-                <div class="row panel-heading ">
-                    <h4 class="panel-title ">Related phenotype <span class="count ">{{$index + 1}}</span></h4>
-                </div>
-                <div class="form-group ">
-                    <div class="col-sm-12 ">
-                        <label class="sr-only " for="relatedPhenotype${status.count} ">Related phenotype </label>
-                    </div>
-                </div>
-                <div class="form-group text-center vert-offset ">
-                    <button id="addMainPhenotype " type="button " class="btn btn-primary " ng-click="editPhenotype.addPhenotypeToRelated($index+1);">Add Members</button>
-                </div>
-                <div class="row" style="padding-top: 10px;">
-                    <div class="col-md-12">
-                        <div class="col-md-5" style="background:#f5f5f5">
-                            <form>
-                                <fieldset>
-                                    <legend>Items Added&nbsp;</legend>
-                                    <p>
-                                        <span>{{relatedPhenotype.phenotypeField.phenotypeKey}}</span>
-                                        <p>
-                                </fieldset>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-                <fieldset>
-                    <legend style="padding-top:20px;">
-                        <input type="checkbox" value="" ng-model="relatedPhenotype.phenotypeField.hasDuration"></input>&nbsp; Duration</legend>
-                    <div class="form-group ">
-                        <div class="col-md-2">
-                            <input type="number " min="1 " value=" " title="Specify the frequency count " class="form-control " placeholder="min" ng-model="relatedPhenotype.phenotypeField.minDuration" />
-                        </div>
-                        <div class="col-md-3">
-                            <select class="selectpicker" title="Specify whether only the first n intervals will be matched (First) or any n intervals (At least) " style="height: 33px;" ng-model="relatedPhenotype.phenotypeField.minDurationUnits">
-                                <option ng-repeat="tu in editPhenotype.timeUnits" value="{{tu.value}}">{{tu.name}}</option>
-                            </select>
-                        </div>
-                        <div class="col-md-2">
-                            <span>to</span>
-                        </div>
-                        <div class="col-md-2">
-                            <input type="number " min="1 " value=" " title="Specify the frequency count " class="form-control " placeholder="max" ng-model="relatedPhenotype.phenotypeField.maxDuration" />
-                        </div>
-                        <div class="col-md-3">
-                            <select class="selectpicker" title="Specify whether only the first n intervals will be matched (First) or any n intervals (At least) " style="    height: 33px;" ng-model="relatedPhenotype.phenotypeField.maxDurationUnits">
-                                <option ng-repeat="tu in editPhenotype.timeUnits" value="{{tu.value}}">{{tu.name}}</option>
-                            </select>
-                        </div>
-                    </div>
-                </fieldset>
-                <fieldset>
-                    <legend style="padding-top:20px;">
-                        <input type="checkbox" value="" ng-model="relatedPhenotype.phenotypeField.hasPropertyConstraint"></input>&nbsp; Property Value</legend>
-                    <div class="form-group ">
-                        <div class="col-md-4">
-                            <select class="selectpicker" ng-model="relatedPhenotype.phenotypeField.property" style="    height: 33px; width: 190px;">
-                                <option ng-repeat="pp in relatedPhenotype.phenotypeField.properties" value="{{pp}}">{{pp}}</option>
-                            </select>
-                        </div>
-                        <div class="col-md-4">
-                            <input type="number " min="1 " value=" " title="Specify the frequency count " class="form-control " ng-model="relatedPhenotype.phenotypeField.propertyValue" />
-                        </div>
-                    </div>
-                </fieldset>
-                <fieldset style="padding-bottom:10px">
-                    <legend style="padding-top:20px;"> Temporal relationship</legend>
-                    <div class="form-group ">
-                        <div class="col-md-6">
-                            <select class="selectpicker" title="Specify whether only the first n intervals will be matched (First) or any n intervals (At least) " style="height: 33px; width:100%" ng-model="relatedPhenotype.relationOperator">
-                                <option ng-repeat="sr in editPhenotype.sequenceRelations" value="{{sr.value}}">{{sr.name}}</option>
-                            </select>
-                        </div>
-                        <div class="col-md-6" style="padding-bottom: 24px;">
-                            <select class="selectpicker" title="Specify whether only the first n intervals will be matched (First) or any n intervals (At least) " style="height: 33px; width:100%" ng-model="relatedPhenotype.sequentialPhenotype">
-                                <option ng-repeat="rtp in editPhenotype.releatedTemporalArray">{{rtp}}</option>
-                            </select>
-                        </div>
-                        <div class="col-md-2">
-                            <span>by</span>
-                        </div>
-                        <div class="col-md-2">
-                            <input type="number " min="1 " value=" " title="Specify the frequency count " class="form-control " placeholder="max" ng-model="relatedPhenotype.relationMinCount" />
-                        </div>
-                        <div class="col-md-2">
-                            <select class="selectpicker" title="Specify whether only the first n intervals will be matched (First) or any n intervals (At least) " style="    height: 33px;" ng-model="relatedPhenotype.relationMinUnits">
-                                <option ng-repeat="tu in editPhenotype.timeUnits" value="{{tu.value}}">{{tu.name}}</option>
-                            </select>
-                        </div>
-                        <div class="col-md-2">
-                            <span>to</span>
-                        </div>
-                        <div class="col-md-2">
-                            <input type="number " min="1 " value=" " title="Specify the frequency count " class="form-control " placeholder="max" ng-model="relatedPhenotype.relationMaxCount" />
-                        </div>
-                        <div class="col-md-2">
-                            <select class="selectpicker" title="Specify whether only the first n intervals will be matched (First) or any n intervals (At least) " style="    height: 33px;" ng-model="relatedPhenotype.relationMaxUnits">
-                                <option ng-repeat="tu in editPhenotype.timeUnits" value="{{tu.value}}">{{tu.name}}</option>
-                            </select>
-                        </div>
-                    </div>
-                </fieldset>
-            </div>
-        </div>
-    </div>
-    <div class="form-group text-center vert-offset ">
-        <button id="addRelatedPhenotype" type="button " class="btn btn-primary " ng-click="editPhenotype.addRelatedPhenotypes();">
-            <span class="glyphicon glyphicon-plus "></span> Add Related Phenotype
-        </button>
-        <button id="savePhenotypeButton " type="button " class="btn btn-primary " ng-click="editPhenotype.createSequence();">Save</button>
-    </div>
+	<div id="propDefinition " class="panel panel-default">
+		<div class="panel-heading ">
+			<h2 class="panel-title">Main phenotype</h2>
+		</div>
+		<div class="panel-body">
+			<phenotype-constraints id="mainDefinition" name="mainDefinition" 
+								   concept-or-phenotype-key="editSequencePhenotype.sequenceObject.primaryPhenotype.phenotypeKey"
+								   concept-or-phenotype="editSequencePhenotype.primaryPhenotype" 
+								   min-duration="editSequencePhenotype.sequenceObject.primaryPhenotype.minDuration" 
+								   min-duration-units="editSequencePhenotype.sequenceObject.primaryPhenotype.minDurationUnits" 
+								   max-duration="editSequencePhenotype.sequenceObject.primaryPhenotype.maxDuration"
+								   max-duration-units="editSequencePhenotype.sequenceObject.primaryPhenotype.maxDurationUnits"
+								   property-name="editSequencePhenotype.sequenceObject.primaryPhenotype.property"
+								   property-value="editSequencePhenotype.sequenceObject.primaryPhenotype.propertyValue"
+								   on-concept-or-phenotype-error="editSequencePhenotype.displayConceptOrPhenotypeError(message)"
+								   on-time-units-error="editSequencePhenotype.displayTimeUnitsError(message)"></phenotype-constraints>
+		</div>
+	</div>
+	<div class="panel panel-default" ng-repeat="relatedPhenotype in editSequencePhenotype.sequenceObject.relatedPhenotypes">
+		<div class="panel-heading">
+			<h2 class="panel-title"><a title="remove" ng-click="editSequencePhenotype.removeRelated($index)"><span class="glyphicon glyphicon-remove" title="" style="color:red;"></span></a> Related phenotype {{$index + 1}}</h2>
+		</div>
+		<div class="panel-body">
+			<phenotype-constraints id="relatedDefinition_{{$index}}" name="relatedDefinition_{{$index}}" 
+								   concept-or-phenotype-key="relatedPhenotype.phenotypeField.phenotypeKey"
+								   concept-or-phenotype="editSequencePhenotype.relatedPhenotypes[$index]" 
+								   min-duration="relatedPhenotype.phenotypeField.minDuration" 
+								   min-duration-units="relatedPhenotype.phenotypeField.minDurationUnits" 
+								   max-duration="relatedPhenotype.phenotypeField.maxDuration"
+								   max-duration-units="relatedPhenotype.phenotypeField.maxDurationUnits"
+								   property-name="relatedPhenotype.phenotypeField.property"
+								   property-value="relatedPhenotype.phenotypeField.propertyValue"
+								   on-concept-or-phenotype-error="editSequencePhenotype.displayConceptOrPhenotypeError(message)"
+								   on-time-units-error="editSequencePhenotype.displayTimeUnitsError(message)"></phenotype-constraints>
+
+			<div class="form-group">
+				<label class="control-label" for="temporalRelation_{{$index}}">Temporal relation</label>
+				<select class="form-control" name="temporalRelation_{{$index}}" ng-model="relatedPhenotype.relationOperator" ng-options="o.id as o.description for o in editSequencePhenotype.sequenceRelationOptions" ng-init="editSequencePhenotype.setRelationOperatorDefault(relatedPhenotype)">
+				</select>
+			</div>
+			<div class="form-group">
+				<label class="control-label" for="rhsPhenotype_{{$index}}">Sequential phenotype</label>
+				<select class="form-control" name="sequentialPhenotype_{{$index}}" ng-model="editSequencePhenotype.sequentialPhenotypes[$index]" ng-options="o as o.displayName for o in editSequencePhenotype.allPhenotypes | filter: {source: ('!' + ($index + 2))}" ng-init="editSequencePhenotype.sequentialPhenotypes[$index] = editSequencePhenotype.allPhenotypes[0]">
+				</select>
+			</div>
+			<div class="form-group">
+				<label for="minDistanceBetween">By</label>
+				<div class="input-group">
+					<input name="minCount_{{$index}}" type="number" class="form-control" placeholder="min" ng-model="relatedPhenotype.relationMinCount">
+					<div class="input-group-addon">
+						<select name="minCountUnits_{{$index}}" ng-model="relatedPhenotype.relationMinUnits" ng-options="o.id as o.description for o in editSequencePhenotype.timeUnitOptions" ng-init="editSequencePhenotype.setTimeUnitDefaultForRelated(relatedPhenotype)">
+						</select>
+					</div>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="sr-only" for="maxDistanceBetween">To</label>
+				<div class="input-group">
+					<input name="maxCount_{{$index}}" type="number" class="form-control" placeholder="max" ng-model="relatedPhenotype.relationMaxCount">
+					<div class="input-group-addon">
+						<select name="maxCountUnits_{{$index}}" ng-model="relatedPhenotype.relationMaxUnits" ng-options="o.id as o.description for o in editSequencePhenotype.timeUnitOptions" ng-init="editSequencePhenotype.setTimeUnitDefaultForRelated(relatedPhenotype)">
+						</select>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<button id="addRelatedPhenotype" type="button" class="btn" ng-click="editSequencePhenotype.addRelated();">
+		<span class="glyphicon glyphicon-plus "></span> Add Related Phenotype
+	</button>
+	<button id="cancelButton" name="cancelButton" type="button" class="btn" ng-click="editSequencePhenotype.cancel()">Cancel</button>
+	<button id="saveButton " name="saveButton" type="submit" class="btn btn-primary">Save</button>
 </form>
+<script type="text/ng-template" id="conceptOrPhenotypeDeleteModal.html">
+	<div class="modal-header">
+	<h3 class="modal-title">Remove Concept or Phenotype</h3>
+	</div>
+	<div class="modal-body">
+	<p><strong>Are you sure you want to remove "{{mo.displayName}}"?</strong></p>
+	<p>This operation cannot be undone.</p>
+	</div>
+	<div class="modal-footer">
+	<button type="submit" class="btn" ng-click="mo.cancel()">Cancel</button>
+	<button type="button" class="btn btn-primary" ng-click="mo.ok()">Remove</button>
+	</div>
+</script>
+<script type="text/ng-template" id="cancelEditModal.html">
+	<div class="modal-header">
+	<h3 class="modal-title">Unsaved Changes</h3>
+	</div>
+	<div class="modal-body">
+	<p><strong>Are you sure you want to discard your changes to "{{mo.displayName}}"?</strong></p>
+	<p>This operation cannot be undone.</p>
+	</div>
+	<div class="modal-footer">
+	<button type="submit" class="btn" ng-click="mo.cancel()">Continue</button>
+	<button type="button" class="btn btn-primary" ng-click="mo.ok()">Discard</button>
+	</div>
+</script>
+<script type="text/ng-template" id="cancelCreateModal.html">
+	<div class="modal-header">
+	<h3 class="modal-title">Unsaved Changes</h3>
+	</div>
+	<div class="modal-body">
+	<p><strong>Are you sure you want to discard your new phenotype?</strong></p>
+	<p>This operation cannot be undone.</p>
+	</div>
+	<div class="modal-footer">
+	<button type="submit" class="btn" ng-click="mo.cancel()">Continue</button>
+	<button type="button" class="btn btn-primary" ng-click="mo.ok()">Discard</button>
+	</div>
+</script>

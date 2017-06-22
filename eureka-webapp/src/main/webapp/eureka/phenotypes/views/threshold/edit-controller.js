@@ -38,8 +38,8 @@
 		};
 
 		PhenotypeService.getTimeUnits()
-				.then(function (response) {
-					vm.distanceBetweenUnitOptions = response.data;
+				.then(function (data) {
+					vm.distanceBetweenUnitOptions = data;
 					if (vm.thresholdObject.valueThresholds) {
 						for (let i = 0; i < vm.thresholdObject.valueThresholds.length; i++) {
 							vm.setTimeUnitDefault(vm.thresholdObject.valueThresholds[i]);
@@ -59,10 +59,10 @@
 		};
 
 		PhenotypeService.getValueComparators()
-				.then(function (response) {
+				.then(function (data) {
 					vm.upperCompOptions = [];
 					vm.lowerCompOptions = [];
-					angular.forEach(response.data, function (compOption) {
+					angular.forEach(data, function (compOption) {
 						if (compOption.threshold !== 'UPPER_ONLY') {
 							vm.lowerCompOptions.push(compOption);
 						}
@@ -80,8 +80,8 @@
 				});
 
 		PhenotypeService.getThresholdsOperators()
-				.then(function (response) {
-					vm.thresholdTypeOptions = response.data;
+				.then(function (data) {
+					vm.thresholdTypeOptions = data;
 					vm.thresholdObject.thresholdsOperator = vm.thresholdTypeOptions[0].id;
 				}, function (msg) {
 					vm.thresholdsOperatorsErrorMsg = msg;
@@ -98,8 +98,8 @@
 		};
 
 		PhenotypeService.getRelationOperators()
-				.then(function (response) {
-					vm.relationOperatorOptions = response.data;
+				.then(function (data) {
+					vm.relationOperatorOptions = data;
 					angular.forEach(vm.thresholdObject.valueThresholds, function (valueThreshold) {
 						vm.setRelationOperatorDefault(valueThreshold);
 					});
@@ -128,7 +128,15 @@
 				let initialContextKeys = [];
 				for (let i = 0; i < vm.thresholdObject.valueThresholds.length; i++) {
 					let valueThreshold = vm.thresholdObject.valueThresholds[i];
-					initialConceptOrPhenotypeKeys.push(valueThreshold.phenotype.phenotypeKey);
+					let phenotype = valueThreshold.phenotype;
+					initialConceptOrPhenotypeKeys.push(phenotype.phenotypeKey);
+					if (!phenotype.hasDuration) {
+						phenotype.minDuration = null;
+						phenotype.maxDuration = null;
+					}
+					if (!phenotype.hasPropertyConstraint) {
+						phenotype.propertyValue = null;
+					}
 					let relatedPhenotypeKeys = [];
 					if (valueThreshold.relatedPhenotypes) {
 						for (let j = 0; j < valueThreshold.relatedPhenotypes.length; j++) {
@@ -151,19 +159,35 @@
 		vm.save = function () {
 			for (let i = 0; i < vm.thresholdObject.valueThresholds.length; i++) {
 				let valueThreshold = vm.thresholdObject.valueThresholds[i];
-				valueThreshold.phenotype = {
-					phenotypeKey: vm.conceptOrPhenotypes[i].name,
-					phenotypeDisplayName: vm.conceptOrPhenotypes[i].displayName,
-					type: vm.conceptOrPhenotypes[i].type
-				};
-				let relatedPhenotypes = vm.contextItems[i];
-				valueThreshold.relatedPhenotypes = [];
-				for (let j = 0; j < relatedPhenotypes.length; j++) {
-					valueThreshold.relatedPhenotypes.push({
-						phenotypeKey: relatedPhenotypes[j].name,
-						phenotypeDisplayName: relatedPhenotypes[j].displayName,
-						type: relatedPhenotypes[j].type
-					});
+				if (!valueThreshold.phenotype) {
+					valueThreshold.phenotype = {};
+				}
+				let phenotype = valueThreshold.phenotype;
+				phenotype.phenotypeKey = vm.conceptOrPhenotypes[i].name;
+				phenotype.phenotypeDisplayName = vm.conceptOrPhenotypes[i].displayName;
+				phenotype.type = vm.conceptOrPhenotypes[i].type;
+				if (phenotype.minDuration || phenotype.maxDuration) {
+					phenotype.hasDuration = true;
+				} else {
+					phenotype.hasDuration = false;
+				}
+				if (phenotype.propertyValue) {
+					phenotype.hasPropertyConstraint = true;
+				} else {
+					phenotype.hasPropertyConstraint = false;
+				}
+				if (vm.contextItems) {
+					let relatedPhenotypes = vm.contextItems[i];
+					if (relatedPhenotypes) {
+						valueThreshold.relatedPhenotypes = [];
+						for (let j = 0; j < relatedPhenotypes.length; j++) {
+							valueThreshold.relatedPhenotypes.push({
+								phenotypeKey: relatedPhenotypes[j].name,
+								phenotypeDisplayName: relatedPhenotypes[j].displayName,
+								type: relatedPhenotypes[j].type
+							});
+						}
+					}
 				}
 			}
 			if (vm.nowEditing) {
@@ -191,7 +215,7 @@
 
 		vm.displayConceptOrPhenotypeError = function (message) {
 			vm.conceptOrPhenotypeErrorMsg = message;
-		}
+		};
 
 		function displayGetPhenotypeError(message) {
 			vm.getPhenotypeErrorMsg = message;
@@ -202,7 +226,7 @@
 		}
 
 		function routeChange(event, toState, toParams, fromState, fromParams) {
-			if (!event.currentScope.frequencyForm || !event.currentScope.frequencyForm.$dirty) {
+			if (!event.currentScope.thresholdForm || !event.currentScope.thresholdForm.$dirty) {
 				return;
 			}
 			event.preventDefault();

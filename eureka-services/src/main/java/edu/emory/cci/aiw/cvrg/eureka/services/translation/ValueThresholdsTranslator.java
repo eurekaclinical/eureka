@@ -89,9 +89,9 @@ public final class ValueThresholdsTranslator implements
 			throw new IllegalArgumentException("element cannot be null");
 		}
 
-		ValueThresholdGroupEntity result =
-				this.translatorSupport.getUserEntityInstance(phenotype,
-				ValueThresholdGroupEntity.class);
+		ValueThresholdGroupEntity result
+				= this.translatorSupport.getUserEntityInstance(phenotype,
+						ValueThresholdGroupEntity.class);
 
 		result.setThresholdsOperator(thresholdsOperatorDao.retrieve(phenotype
 				.getThresholdsOperator()));
@@ -140,8 +140,8 @@ public final class ValueThresholdsTranslator implements
 			}
 			vte.setMaxValueComp(valueCompDao.retrieve(vt.getUpperComp()));
 			// vte.setMaxUnits(vt.getUpperUnits());
-			List<ExtendedPhenotype> extendedPhenotypes =
-					vte.getExtendedPhenotypes();
+			List<ExtendedPhenotype> extendedPhenotypes
+					= vte.getExtendedPhenotypes();
 
 			vte.setRelationOperator(
 					relationOpDao.retrieve(vt.getRelationOperator()));
@@ -157,30 +157,33 @@ public final class ValueThresholdsTranslator implements
 				vte.setExtendedPhenotypes(extendedPhenotypes);
 			}
 			int j = 0;
-			for (PhenotypeField de : vt.getRelatedPhenotypes()) {
-				ExtendedPhenotype ede = null;
-				if (extendedPhenotypes.size() > j) {
-					ede = extendedPhenotypes.get(j);
-					PropositionTranslatorUtil
-							.createOrUpdateExtendedProposition(
-							ede,
-							de, phenotype.getUserId(),
-							timeUnitDao, translatorSupport,
-							valueCompDao);
-				} else {
-					extendedPhenotypes.add(PropositionTranslatorUtil
-							.createOrUpdateExtendedProposition(
-							ede,
-							de, phenotype.getUserId(),
-							timeUnitDao, translatorSupport,
-							valueCompDao));
+			List<PhenotypeField> relatedPhenotypes = vt.getRelatedPhenotypes();
+			if (relatedPhenotypes != null) {
+				for (PhenotypeField de : relatedPhenotypes) {
+					ExtendedPhenotype ede = null;
+					if (extendedPhenotypes.size() > j) {
+						ede = extendedPhenotypes.get(j);
+						PropositionTranslatorUtil
+								.createOrUpdateExtendedProposition(
+										ede,
+										de, phenotype.getUserId(),
+										timeUnitDao, translatorSupport,
+										valueCompDao);
+					} else {
+						extendedPhenotypes.add(PropositionTranslatorUtil
+								.createOrUpdateExtendedProposition(
+										ede,
+										de, phenotype.getUserId(),
+										timeUnitDao, translatorSupport,
+										valueCompDao));
+					}
+					j++;
 				}
-				j++;
 			}
 			for (int k = extendedPhenotypes.size() - 1; k >= j; k--) {
 				extendedPhenotypes.remove(k);
 			}
-			
+
 			i++;
 		}
 		result.setValueThresholds(thresholds);
@@ -220,16 +223,16 @@ public final class ValueThresholdsTranslator implements
 					.getDisplayName());
 			elementField.setPhenotypeKey(phenotypeEntity.getKey());
 			threshold.setPhenotype(elementField);
-			
-			List<PhenotypeField> relatedPhenotypes =
-					new ArrayList<>();
+
+			List<PhenotypeField> relatedPhenotypes
+					= new ArrayList<>();
 			for (ExtendedPhenotype elt : vte.getExtendedPhenotypes()) {
-				PhenotypeField phenotypeField =
-						PropositionTranslatorUtil.createPhenotypeField(elt);
+				PhenotypeField phenotypeField
+						= PropositionTranslatorUtil.createPhenotypeField(elt);
 				relatedPhenotypes.add(phenotypeField);
 			}
 			threshold.setRelatedPhenotypes(relatedPhenotypes);
-			
+
 			threshold.setWithinAtLeast(vte.getWithinAtLeast());
 			threshold.setWithinAtLeastUnit(vte.getWithinAtLeastUnits().getId());
 			threshold.setWithinAtMost(vte.getWithinAtMost());

@@ -16,7 +16,7 @@
 		<span class="caret"></span>
 	</button>
 	<ul class="dropdown-menu" uib-dropdown-menu role="menu" aria-labelledby="simple-btn-keyboard-nav">
-		<li role="menuitem" ng-repeat="(key,value) in phenotypes.messages"><a ui-sref="create{{key}}"><strong>{{value.displayName}}</strong><p>{{value.description}}</p></a></li>
+		<li role="menuitem" ng-repeat="message in phenotypes.messages"><a ui-sref="create{{message.name}}"><strong>{{message.description}}</strong><p>{{message.longDescription}}</p></a></li>
 	</ul>
 </div>
 <!-- ng-table -->
@@ -35,7 +35,7 @@
 			{{phenotype.description}}
 		</td>
 		<td title="'Type'" filter="{ type: 'text'}" sortable="'type'">
-			{{phenotype.type}}
+			{{phenotypes.messagesByName[phenotype.type].description}}
 		</td>
 		<td title="'Created'" filter="{ created: 'text'}" sortable="'created'">
 			{{phenotype.created | date:'medium'}}

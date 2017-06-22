@@ -9,6 +9,7 @@
         return {
             restrict: 'AE',
             scope: {
+				conceptOrPhenotypeKey: '=?',
                 conceptOrPhenotype: '=',
 				minDuration: '=',
 				minDurationUnits: '=',

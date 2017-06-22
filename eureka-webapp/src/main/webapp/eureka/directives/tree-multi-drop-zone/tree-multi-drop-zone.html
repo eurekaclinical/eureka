@@ -1,8 +1,9 @@
 <div class="tree-drop">
 	<ul class="sortable">
-		<li ng-repeat="item in vm.items">{{item.displayName}}<a title="remove" ng-click="vm.remove(item) "><span class="glyphicon glyphicon-remove" title="" style="color:red;"></span></a>
+		<li ng-if="vm.items" ng-repeat="item in vm.items">{{item.displayName}}<a title="remove" ng-click="vm.remove(item) "><span class="glyphicon glyphicon-remove" title="" style="color:red;"></span></a>
+		<li ng-if="!vm.items && vm.keys" ng-repeat="key in vm.keys">{{key}} <i class="fa fa-refresh fa-spin"></i>
 	</ul>
-	<a class="label-info text-center" href="" ng-click="vm.add()" style="display: block">
+	<a ng-if="vm.items || !vm.keys || vm.keys.length === 0" class="label-info text-center" href="" ng-click="vm.add()" style="display: block">
 		Add...
 	</a>
 </div>

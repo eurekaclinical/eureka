@@ -24,7 +24,7 @@
 <form id="thresholdForm" name="thresholdForm" class="vert-offset" role="form" novalidate angular-validator angular-validator-submit="editThresholdPhenotype.save()">
     <div class="form-group">
         <label for="defName" class="control-label">Name</label>
-        <input type="text" id="defName" class="form-control" ng-model="editThresholdPhenotype.thresholdObject.displayName" required required-message="'Name is required'" />
+        <input type="text" id="defName" name="defName" class="form-control" ng-model="editThresholdPhenotype.thresholdObject.displayName" required required-message="'Name is required'" />
     </div>
     <div class="form-group">
         <label for="defDescription" class="control-label">Description</label>
@@ -37,7 +37,7 @@
     </div>
 	<div id="propDefinition" class="panel panel-default" ng-repeat="valueThreshold in editThresholdPhenotype.thresholdObject.valueThresholds">
 		<div class="panel-heading ">
-			<h2 class="panel-title "><a title="remove" ng-click="editThresholdPhenotype.removeThreshold($index)"><span class="glyphicon glyphicon-remove" title="" style="color:red;"></span></a>Value Threshold {{$index + 1}}</h2>
+			<h2 class="panel-title "><a title="remove" ng-click="editThresholdPhenotype.removeThreshold($index)"><span class="glyphicon glyphicon-remove" title="" style="color:red;"></span></a> Value Threshold {{$index + 1}}</h2>
 		</div>
 		<div class="panel-body">
 			<div class="form-group">

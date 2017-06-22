@@ -44,7 +44,6 @@ import edu.emory.cci.aiw.cvrg.eureka.servlet.*;
 import edu.emory.cci.aiw.cvrg.eureka.servlet.filter.UserFilter;
 import edu.emory.cci.aiw.cvrg.eureka.servlet.filter.MessagesFilter;
 import edu.emory.cci.aiw.cvrg.eureka.servlet.filter.RolesFilter;
-import edu.emory.cci.aiw.cvrg.eureka.servlet.proposition.*;
 import java.util.HashMap;
 import java.util.Map;
 import org.eurekaclinical.common.config.AbstractServletModule;
@@ -110,43 +109,6 @@ class ServletModule extends AbstractServletModule {
 
 		bind(JobPatientCountsServlet.class).in(Singleton.class);
 		serve("/protected/jobpatcounts").with(JobPatientCountsServlet.class);
-
-		bind(EditorHomeServlet.class).in(Singleton.class);
-		serve("/protected/editorhome").with(EditorHomeServlet.class);
-
-		bind(SystemPropositionListServlet.class).in(Singleton.class);
-		serve("/protected/systemlist").with(
-				SystemPropositionListServlet.class);
-
-		bind(SavePropositionServlet.class).in(Singleton.class);
-		serve("/protected/saveprop").with(SavePropositionServlet.class);
-
-		bind(DeletePropositionServlet.class).in(Singleton.class);
-		serve("/protected/deleteprop").with(DeletePropositionServlet.class);
-
-		bind(UserPropositionListServlet.class).in(Singleton.class);
-		serve("/protected/userproplist").with(
-				UserPropositionListServlet.class);
-
-		bind(ListUserDefinedPropositionChildrenServlet.class).in(
-				Singleton.class);
-		serve("/protected/userpropchildren").with(
-				ListUserDefinedPropositionChildrenServlet.class);
-
-		bind(EditPropositionServlet.class).in(Singleton.class);
-		serve("/protected/editprop").with(EditPropositionServlet.class);
-
-		bind(DateRangePhenotypeServlet.class).in(Singleton.class);
-		serve("/protected/destinationphenotypes").with(
-				DateRangePhenotypeServlet.class);
-
-		bind(SearchSystemPropositionJSTreeV3Servlet.class).in(Singleton.class);
-		serve("/protected/jstree3_searchsystemlist").with(
-				SearchSystemPropositionJSTreeV3Servlet.class);
-
-		bind(SearchSystemPropositionJSTreeV1Servlet.class).in(Singleton.class);
-		serve("/protected/searchsystemlist").with(
-				SearchSystemPropositionJSTreeV1Servlet.class);
 
 	}
 	

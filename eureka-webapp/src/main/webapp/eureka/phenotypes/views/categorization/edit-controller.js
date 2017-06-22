@@ -21,21 +21,21 @@
 	function EditCtrl(PhenotypeService, $stateParams, $state, $rootScope, $scope, $uibModal) {
 		let vm = this;
 		vm.nowEditing = $stateParams.key;
-		vm.treeMultiDropZoneItems = [];
 		vm.treeMultiDropZoneInitialKeys = [];
 
 		if (vm.nowEditing !== undefined) {
-			PhenotypeService.getPhenotype(vm.nowEditing).then(function (data) {
-				vm.name = data.displayName;
-				vm.description = data.description;
-				vm.id = data.id;
-				vm.type = data.type;
-				vm.categoricalType = data.categoricalType;
-				vm.userId = data.userId;
-				vm.key = data.key;
-				vm.userId = data.userId;
-				traverseNodes(data.children);
-			}, displayGetPhenotypeError);
+			PhenotypeService.getPhenotype(vm.nowEditing).then(
+					function (data) {
+						vm.name = data.displayName;
+						vm.description = data.description;
+						vm.id = data.id;
+						vm.type = data.type;
+						vm.categoricalType = data.categoricalType;
+						vm.userId = data.userId;
+						vm.key = data.key;
+						vm.userId = data.userId;
+						traverseNodes(data.children);
+					}, displayGetPhenotypeError);
 		}
 
 		let onRouteChangeOff = $scope.$on('$stateChangeStart', routeChange);
@@ -45,11 +45,13 @@
 			categorization.displayName = vm.name;
 			categorization.description = vm.description;
 			categorization.children = [];
-			for (let i = 0; i < vm.treeMultiDropZoneItems.length; i++) {
-				let item = vm.treeMultiDropZoneItems[i];
-				categorization.children.push({
-					phenotypeKey: item.name
-				});
+			if (vm.treeMultiDropZoneItems) {
+				for (let i = 0; i < vm.treeMultiDropZoneItems.length; i++) {
+					let item = vm.treeMultiDropZoneItems[i];
+					categorization.children.push({
+						phenotypeKey: item.name
+					});
+				}
 			}
 			categorization.categoricalType = vm.categoricalType;
 			if (vm.nowEditing !== undefined) {
@@ -75,7 +77,7 @@
 		vm.cancel = function () {
 			$state.transitionTo('phenotypes');
 		};
-		
+
 		function displayGetPhenotypeError(message) {
 			vm.getPhenotypeErrorMsg = message;
 		}

@@ -1,6 +1,7 @@
 <div class="form-group">
 	<label class="control-label" for="conceptOrPhenotype">Concept or phenotype</label>
 	<tree-single-drop-zone name="conceptOrPhenotype"
+						   key="vm.conceptOrPhenotypeKey"
 						   item="vm.conceptOrPhenotype" 
 						   display-error="vm.onConceptOrPhenotypeErr(message)" 
 						   delete-modal-template-url="conceptOrPhenotypeDeleteModal.html"></tree-single-drop-zone>
@@ -29,7 +30,7 @@
 	<label for="propertyName">Property value</label>
 	<div class="input-group">
 		<div class="input-group-addon">
-			<select name="propertyName" ng-model="vm.propertyName" ng-options="o.name for o in vm.conceptOrPhenotypeProperties">
+			<select name="propertyName" ng-model="vm.propertyName" ng-options="o.name as o.name for o in vm.conceptOrPhenotypeProperties">
 			</select>
 		</div>
 		<input name="propertyValue" type="text" class="form-control" ng-model="vm.propertyValue"ng-disabled="!vm.propertyName">

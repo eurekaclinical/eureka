@@ -14,9 +14,10 @@
 	function TreeMultiDropZoneCtrl($scope, PhenotypeService, TreeService, $uibModal) {
 		let vm = this;
 
-		vm.items = [];
-
 		vm.add = function () {
+			if (!vm.items) {
+				vm.items = [];
+			}
 			$uibModal.open({
 				templateUrl: 'addItemsModal.html',
 				controller: 'TreeAddModalCtrl',
@@ -80,7 +81,7 @@
 						conceptKeys.push(key);
 					}
 				}
-				vm.items = [];
+				
 				TreeService.getTreeNodes(conceptKeys).then(function (concepts) {
 					let keyToDisplayName = {};
 					for (let i = 0; i < conceptKeys.length; i++) {
@@ -94,6 +95,7 @@
 							}
 						}
 					}
+					vm.items = [];
 					for (var i = 0; i < conceptKeys.length; i++) {
 						let dn = keyToDisplayName[conceptKeys[i]];
 						if (!dn) {

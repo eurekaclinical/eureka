@@ -96,8 +96,10 @@
 
 		PhenotypeService.getPhenotypeRoot().then(success, displayLoadError);
 
-		var messages = PhenotypeService.getPhenotypeMessages();
-		vm.messages = messages;
-
+		vm.messages = PhenotypeService.getPhenotypeMessages();
+		vm.messagesByName = {};
+		angular.forEach(vm.messages, function(message) {
+			vm.messagesByName[message.name] = message;
+		});
 	}
 })();

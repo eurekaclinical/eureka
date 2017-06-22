@@ -33,28 +33,30 @@
 		});
 
 		function getPhenotypeMessages() {
-			return {
-				'CATEGORIZATION': {
-					'displayName': 'Categorization',
-					'description': `For defining a significant category of codes or clinical events or observations.`
+			return [
+				{
+					name: 'CATEGORIZATION',
+					description: 'Categorization',
+					longDescription: 'For defining a significant category of codes or clinical events or observations.'
 				},
-				'SEQUENCE': {
-					'displayName': 'Sequence',
-					'description': `For defining a disease, finding or patient care process to be reflected by codes,
-                    clinical events and/or observations in a specified sequential temporal pattern.`
+				{
+					name: 'SEQUENCE',
+					description: 'Sequence',
+					longDescription: 'For defining a disease, finding or patient care process to be reflected by codes, clinical events and/or observations in a specified sequential temporal pattern.'
 				},
-				'FREQUENCY': {
-					'displayName': 'Frequency',
-					'description': `For defining a disease, finding or patient care process to be reflected by codes,
-                    clinical events and/or observations in a specified frequency.`
+				{
+					name: 'FREQUENCY',
+					description: 'Frequency',
+					longDescription: 'For defining a disease, finding or patient care process to be reflected by codes, clinical events and/or observations in a specified frequency.'
 				},
-				'VALUE_THRESHOLD': {
-					'displayName': 'Value threshold',
-					'description': `For defining clinically significant thresholds on the value of an observation.`
+				{
+					name: 'VALUE_THRESHOLD',
+					description: 'Value threshold',
+					longDescription: 'For defining clinically significant thresholds on the value of an observation.'
 				}
-			};
+			];
 		}
-
+		
 		function getPhenotypeRoot() {
 			return $http.get(dataEndpoint + '/phenotypes?summarize=true')
 					.then(handleSuccess, handleError);
@@ -86,32 +88,32 @@
 			return $http['delete'](dataEndpoint + '/phenotypes/' + id)
 					.then(handleSuccess, handleError);
 		}
-		
+
 		function getTimeUnits() {
 			return $http.get(dataEndpoint + '/timeunits')
 					.then(handleSuccess, handleError);
 		}
-		
+
 		function getFrequencyTypes() {
 			return $http.get(dataEndpoint + '/frequencytypes')
 					.then(handleSuccess, handleError);
 		}
-		
+
 		function getThresholdsOperators() {
 			return $http.get(dataEndpoint + '/thresholdsops')
 					.then(handleSuccess, handleError);
 		}
-		
+
 		function getValueComparators() {
 			return $http.get(dataEndpoint + '/valuecomps')
 					.then(handleSuccess, handleError);
 		}
-		
+
 		function getRelationOperators() {
 			return $http.get(dataEndpoint + '/relationops')
 					.then(handleSuccess, handleError);
 		}
-		
+
 		function handleSuccess(response) {
 			return response.data;
 		}
