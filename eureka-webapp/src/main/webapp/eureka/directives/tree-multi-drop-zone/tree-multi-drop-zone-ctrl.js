@@ -62,6 +62,7 @@
 						let index = vm.items.indexOf(itemToRemove);
 						if (index > -1) {
 							vm.items.splice(index, 1);
+							vm.keys.split(index, 1);
 						}
 					},
 					function (arg) {

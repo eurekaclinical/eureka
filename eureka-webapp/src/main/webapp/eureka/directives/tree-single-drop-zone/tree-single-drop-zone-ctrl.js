@@ -47,6 +47,7 @@
 			}).result.then(
 					function () {
 						vm.item = null;
+						vm.key = null;
 					},
 					function (arg) {
 					}

@@ -104,12 +104,6 @@ class ServletModule extends AbstractServletModule {
 
 		serve("/protected/login").with(LoginServlet.class);
 
-		bind(JobStatsServlet.class).in(Singleton.class);
-		serve("/protected/jobstats").with(JobStatsServlet.class);
-
-		bind(JobPatientCountsServlet.class).in(Singleton.class);
-		serve("/protected/jobpatcounts").with(JobPatientCountsServlet.class);
-
 	}
 	
 	@Override

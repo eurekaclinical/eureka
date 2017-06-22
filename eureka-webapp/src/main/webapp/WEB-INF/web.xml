@@ -52,48 +52,6 @@ see implementation details http://jersey.java.net/nonav/documentation/latest/jax
 		<param-value>Messages</param-value>
 	</context-param>       
 
-	<!-- Version information. -->
-	<context-param>
-		<param-name>eureka-version-major</param-name>
-		<param-value>${parsedVersion.majorVersion}</param-value>
-	</context-param>
-	<context-param>
-		<param-name>eureka-version-minor</param-name>
-		<param-value>${parsedVersion.minorVersion}</param-value>
-	</context-param>
-	<context-param>
-		<param-name>eureka-version-incremental</param-name>
-		<param-value>${parsedVersion.incrementalVersion}</param-value>
-	</context-param>
-	<context-param>
-		<param-name>eureka-version-qualifier</param-name>
-		<param-value>${parsedVersion.qualifier}</param-value>
-	</context-param>
-	<context-param>
-		<param-name>eureka-version-buildNumber</param-name>
-		<param-value>${parsedVersion.buildNumber}</param-value>
-	</context-param>
-	<context-param>
-		<param-name>eureka-version</param-name>
-		<param-value>${project.version}</param-value>
-	</context-param>
-	<context-param>
-		<param-name>eureka-organization-name</param-name>
-		<param-value>${project.organization.name}</param-value>
-	</context-param>
-	<context-param>
-		<param-name>eureka-build-timestamp</param-name>
-		<param-value>${eureka.build.timestamp}</param-value>
-	</context-param>
-	<context-param>
-		<param-name>inception-year</param-name>
-		<param-value>${project.inceptionYear}</param-value>
-	</context-param>
-	<context-param>
-		<param-name>current-year</param-name>
-		<param-value>${currentYear}</param-value>
-	</context-param>
-
 	<listener>
 		<listener-class>edu.emory.cci.aiw.cvrg.eureka.webapp.config.WebappListener</listener-class>
 	</listener>

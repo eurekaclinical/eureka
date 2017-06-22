@@ -260,7 +260,7 @@
 					if (relPhenotype && relPhenotype.sequentialPhenotypeSource) {
 						vm.sequentialPhenotypes[i] = vm.allPhenotypes[relPhenotype.sequentialPhenotypeSource - 1];
 					} else {
-						vm.sequentialPhenotypes[i] = null;
+						vm.sequentialPhenotypes[i] = vm.allPhenotypes[0];
 					}
 				}
 			}
@@ -278,10 +278,10 @@
 					}
 				}
 			} else {
-				if (vm.relatedPhenotypes && vm.relatedPhenotypes.length >= sequentialPhenotypeSource - 1) {
+				if (vm.relatedPhenotypes && sequentialPhenotypeSource <= vm.relatedPhenotypes.length + 1) {
 					return vm.relatedPhenotypes[sequentialPhenotypeSource - 2].displayName + ' (Related ' + (sequentialPhenotypeSource - 1) + ')';
 				} else {
-					if (vm.sequenceObject && vm.sequenceObject.relatedPhenotypes && vm.sequenceObject.relatedPhenotypes.length >= sequentialPhenotypeSource - 1) {
+					if (vm.sequenceObject && vm.sequenceObject.relatedPhenotypes && sequentialPhenotypeSource <= vm.sequenceObject.relatedPhenotypes.length + 1) {
 						return vm.sequenceObject.relatedPhenotypes[sequentialPhenotypeSource - 2].phenotypeKey + ' (Related ' + (sequentialPhenotypeSource - 1) + ')';
 					} else {
 						return '(Related ' + (sequentialPhenotypeSource - 1) + ')';
