@@ -40,7 +40,7 @@ package edu.emory.cci.aiw.cvrg.eureka.webapp.config;
  * #L%
  */
 import com.google.inject.Singleton;
-import edu.emory.cci.aiw.cvrg.eureka.servlet.*;
+import edu.emory.cci.aiw.cvrg.eureka.servlet.SessionPropertiesServlet;
 import edu.emory.cci.aiw.cvrg.eureka.servlet.filter.UserFilter;
 import edu.emory.cci.aiw.cvrg.eureka.servlet.filter.MessagesFilter;
 import edu.emory.cci.aiw.cvrg.eureka.servlet.filter.RolesFilter;
@@ -48,7 +48,7 @@ import java.util.HashMap;
 import java.util.Map;
 import org.eurekaclinical.common.config.AbstractServletModule;
 import org.eurekaclinical.common.servlet.DestroySessionServlet;
-import org.eurekaclinical.common.servlet.LogoutServlet;
+import org.eurekaclinical.common.servlet.PostMessageLoginServlet;
 import org.eurekaclinical.common.servlet.ProxyServlet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -62,7 +62,6 @@ class ServletModule extends AbstractServletModule {
 	private static final Logger LOGGER = LoggerFactory
 			.getLogger(ServletModule.class);
 	private static final String FILTER_PATH = "^/(?!(assets|bower_components)).*"; 
-	private static final String LOGOUT_PATH = "/logout";
 
 	private final WebappProperties properties;
 
@@ -94,15 +93,10 @@ class ServletModule extends AbstractServletModule {
 	protected void setupServlets() {
 
 		serve("/proxy-resource/*").with(ProxyServlet.class);
-		
+		serve("/protected/get-session").with(PostMessageLoginServlet.class);
 		bind(SessionPropertiesServlet.class).in(Singleton.class);
 		serve("/protected/get-session-properties").with(SessionPropertiesServlet.class);
-		
 		serve("/destroy-session").with(DestroySessionServlet.class);  
-
-		serve(LOGOUT_PATH).with(LogoutServlet.class);
-
-		serve("/protected/login").with(LoginServlet.class);
 
 	}
 	

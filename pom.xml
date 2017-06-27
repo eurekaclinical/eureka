@@ -62,7 +62,8 @@
 
 		<!-- transitive dependencies that CAS needs certain versions of...-->
 		<commons-codec-version>1.4</commons-codec-version>
-		
+
+		<!-- embedded tomcat configuration -->
 		<tomcat.httpsPort>8443</tomcat.httpsPort>
 		
 		<eurekaclinical-common-version>2.0-Alpha-14</eurekaclinical-common-version>
