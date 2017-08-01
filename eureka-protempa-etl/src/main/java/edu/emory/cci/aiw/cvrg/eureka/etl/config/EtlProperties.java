@@ -43,10 +43,12 @@ import java.io.File;
 
 import com.google.inject.Singleton;
 
-import edu.emory.cci.aiw.cvrg.eureka.common.props.AbstractProperties;
 import edu.emory.cci.aiw.cvrg.eureka.etl.resource.ToConfigFile;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.util.ArrayList;
+import java.util.List;
+import org.eurekaclinical.standardapis.props.CasJerseyEurekaClinicalProperties;
 
 /**
  * Contains methods to fetch configuration information for the application.
@@ -55,7 +57,21 @@ import java.nio.file.Files;
  *
  */
 @Singleton
-public class EtlProperties extends AbstractProperties {
+public class EtlProperties extends CasJerseyEurekaClinicalProperties {
+	
+	public EtlProperties() {
+		super("/etc/eureka");
+	}
+	
+	/**
+	 * Gets the default list of system propositions for the application.
+	 *
+	 * @return The default list of system propositions.
+	 */
+	public List<String> getDefaultSystemPropositions() {
+		return this.getStringListValue("eureka.services.defaultprops",
+				new ArrayList<>());
+	}
 	
 	/**
 	 * Gets the size of the thread pool created to run Protempa tasks.

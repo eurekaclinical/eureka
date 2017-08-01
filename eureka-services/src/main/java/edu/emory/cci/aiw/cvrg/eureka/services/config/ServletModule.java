@@ -52,11 +52,9 @@ import org.eurekaclinical.common.config.AbstractAuthorizingJerseyServletModuleWi
 class ServletModule extends AbstractAuthorizingJerseyServletModuleWithPersist {
 
 	private static final String PACKAGE_NAMES = "edu.emory.cci.aiw.cvrg.eureka.services.resource;edu.emory.cci.aiw.cvrg.eureka.common.json";
-	private final ServiceProperties properties;
 
 	public ServletModule(ServiceProperties inProperties) {
 		super(inProperties, PACKAGE_NAMES);
-		this.properties = inProperties;
 	}
 	
 	@Override

@@ -44,14 +44,19 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
-import com.google.inject.Singleton;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.AppProperties;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.AppPropertiesLinks;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.AppPropertiesModes;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.AppPropertiesRegistration;
 
-import edu.emory.cci.aiw.cvrg.eureka.common.props.AbstractProperties;
 import edu.emory.cci.aiw.cvrg.eureka.common.props.PublicUrlGenerator;
+import edu.emory.cci.aiw.cvrg.eureka.common.props.SupportUri;
+import java.net.URI;
+import java.net.URISyntaxException;
+import javax.inject.Singleton;
+import org.eurekaclinical.standardapis.props.CasJerseyEurekaClinicalProperties;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Looks up the application properties file (application.properties) and
@@ -61,12 +66,18 @@ import edu.emory.cci.aiw.cvrg.eureka.common.props.PublicUrlGenerator;
  *
  */
 @Singleton
-public class ServiceProperties extends AbstractProperties {
+public class ServiceProperties extends CasJerseyEurekaClinicalProperties {
+	
+	private static final Logger LOGGER = LoggerFactory.getLogger(ServiceProperties.class);
 
 	private AppPropertiesModes appPropertiesModes;
 	private AppPropertiesLinks appPropertiesLinks;
 	private AppPropertiesRegistration appPropertiesRegistration;
 	private AppProperties appProperties;
+	
+	public ServiceProperties() {
+		super("/etc/eureka");
+	}
         
 	/**
 	 * Gets the appPropertiesModes.
@@ -116,6 +127,50 @@ public class ServiceProperties extends AbstractProperties {
 		this.appProperties.setAppPropertiesLinks(this.getAppPropertiesLinks());
 		this.appProperties.setAppPropertiesRegistration(this.getAppPropertiesRegistration());                
 		return this.appProperties;
+	}
+	
+	/**
+     * Get the base URL for the application for external users. Always
+     * ends with a slash ("/").
+     *
+     * @return The base URL.
+     */
+	public String getApplicationUrl() {
+		String result = this.getValue("eureka.webapp.url");
+		if (result.endsWith("/")) {
+			return result;
+		} else {
+			return result + "/";
+		}
+	}
+	
+	/**
+	 * Get the support email address for the application.
+	 *
+	 * @return The support email address.
+	 */
+	public SupportUri getSupportUri() {
+		SupportUri supportUri = null;
+		try {
+			String uriStr = this.getValue("eureka.support.uri");
+			String uriName = this.getValue("eureka.support.uri.name");
+			if (uriStr != null) {
+				supportUri = new SupportUri(new URI(uriStr), uriName);
+			}
+		} catch (URISyntaxException ex) {
+			LOGGER.error("Invalid support URI in application.properties", ex);
+		}
+		return supportUri;
+	}
+	
+	/**
+	 * Gets the default list of system propositions for the application.
+	 *
+	 * @return The default list of system propositions.
+	 */
+	public List<String> getDefaultSystemPropositions() {
+		return this.getStringListValue("eureka.services.defaultprops",
+				new ArrayList<>());
 	}
         
 	public String getGoogleOAuthKey() {
@@ -273,17 +328,6 @@ public class ServiceProperties extends AbstractProperties {
 	 */
 	public String getPasswordResetEmailSubject() {
 		return this.getValue("eureka.services.email.reset.subject");
-	}
-
-	/**
-	 * Gets the default list of system propositions for the application.
-	 *
-	 * @return The default list of system propositions.
-	 */
-	@Override
-	public List<String> getDefaultSystemPropositions() {
-		return this.getStringListValue("eureka.services.defaultprops",
-				new ArrayList<String>());
 	}
 
 	/**

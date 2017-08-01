@@ -1,6 +1,6 @@
 package edu.emory.cci.aiw.cvrg.eureka.webapp.config;
 
-import edu.emory.cci.aiw.cvrg.eureka.common.props.AbstractProperties;
+import org.eurekaclinical.standardapis.props.CasEurekaClinicalProperties;
 
 /*
  * #%L
@@ -46,7 +46,31 @@ import edu.emory.cci.aiw.cvrg.eureka.common.props.AbstractProperties;
  *
  * @author Andrew Post
  */
-public class WebappProperties extends AbstractProperties {
+public class WebappProperties extends CasEurekaClinicalProperties {
+	
+	public WebappProperties() {
+		super("/etc/eureka");
+	}
+	
+	public String getMajorVersion() {
+		return this.getValue("eureka.webapp.version.major");
+	}
+
+	public String getMinorVersion() {
+		return this.getValue("eureka.webapp.version.minor");
+	}
+
+	public String getIncrementalVersion() {
+		return this.getValue("eureka.webapp.version.incremental");
+	}
+
+	public String getQualifier() {
+		return this.getValue("eureka.webapp.version.qualifier");
+	}
+
+	public String getBuildNumber() {
+		return this.getValue("eureka.webapp.version.buildNumber");
+	}
 
 	@Override
 	public String getUrl() {

@@ -46,6 +46,7 @@ import com.google.inject.servlet.SessionScoped;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.EtlClient;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ServicesClient;
+import org.eurekaclinical.common.comm.clients.AuthorizingEurekaClinicalProxyClient;
 import org.eurekaclinical.common.comm.clients.RouterTable;
 import org.eurekaclinical.standardapis.props.CasEurekaClinicalProperties;
 import org.eurekaclinical.user.client.EurekaClinicalUserProxyClient;
@@ -77,6 +78,7 @@ class AppModule extends AbstractModule {
 		bind(ServicesClient.class).toProvider(this.servicesClientProvider).in(SessionScoped.class);
 		bind(EtlClient.class).toProvider(this.etlClientProvider).in(SessionScoped.class);
 		bind(EurekaClinicalUserProxyClient.class).toProvider(this.userClientProvider).in(SessionScoped.class);
+		bind(AuthorizingEurekaClinicalProxyClient.class).toProvider(this.userClientProvider).in(SessionScoped.class);
 	}
 
 }

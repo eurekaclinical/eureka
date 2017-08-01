@@ -62,7 +62,7 @@ public final class SupportUri {
 	private final URI uri;
 	private final String name;
 
-	SupportUri(URI uri, String name) {
+	public SupportUri(URI uri, String name) {
 		assert uri != null : "uri cannot be null";
 		this.uri = uri;
 		this.name = name;
