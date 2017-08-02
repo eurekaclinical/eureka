@@ -43,7 +43,7 @@
 		<jsp-api-version>2.0</jsp-api-version>
 		<jaxb-version>2.2.7</jaxb-version>
 		<protempa-version>4.0-Alpha-18</protempa-version>
-		<aiw-i2b2-etl-version>3.0-Alpha-19</aiw-i2b2-etl-version>
+		<aiw-i2b2-etl-version>3.0-Alpha-20</aiw-i2b2-etl-version>
 		<aiw-neo4j-etl-version>1.0</aiw-neo4j-etl-version>
 		<tomcat-plugin-version>1.1</tomcat-plugin-version>
 
@@ -67,7 +67,7 @@
 		<tomcat.httpsPort>8443</tomcat.httpsPort>
 		
 		<eurekaclinical-common-version>2.0-Alpha-19</eurekaclinical-common-version>
-		<eurekaclinical-ontology-version>2.0-Beta-1</eurekaclinical-ontology-version>
+		<eurekaclinical-ontology-version>2.0-Beta-3</eurekaclinical-ontology-version>
 	</properties>
 
 	<licenses>
