@@ -40,45 +40,25 @@ package edu.emory.cci.aiw.cvrg.eureka.webapp.config;
  * #L%
  */
 
-import com.google.inject.Inject;
-import com.google.inject.Injector;
-import com.google.inject.ProvisionException;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.EtlClient;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ServicesClient;
-import javax.servlet.http.HttpSessionEvent;
-import javax.servlet.http.HttpSessionListener;
-import org.eurekaclinical.user.client.EurekaClinicalUserProxyClient;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.google.inject.Provider;
+import org.eurekaclinical.user.client.EurekaClinicalUserClient;
 
 /**
  *
  * @author Andrew Post
  */
-public class ClientSessionListener implements HttpSessionListener {
-	
-	private Logger LOGGER = LoggerFactory.getLogger(ClientSessionListener.class);
-	
-	@Inject
-    private Injector injector;
+public class EurekaClinicalUserClientProvider implements Provider<EurekaClinicalUserClient> {
 
-	@Override
-	public void sessionCreated(HttpSessionEvent hse) {
-		LOGGER.info("Creating session for " + hse.getSession().getServletContext().getContextPath());
-	}
+	private final String userServiceUrl;
 
-	@Override
-	public void sessionDestroyed(HttpSessionEvent hse) {
-		LOGGER.info("Destroying session for " + hse.getSession().getServletContext().getContextPath());
-		try {
-			this.injector.getInstance(EurekaClinicalUserProxyClient.class).close();
-		} catch (ProvisionException ce) {}
-		try {
-			this.injector.getInstance(ServicesClient.class).close();
-		} catch (ProvisionException ce) {}
-		try {
-			this.injector.getInstance(EtlClient.class).close();
-		} catch (ProvisionException ce) {}
+	public EurekaClinicalUserClientProvider(String inUserServiceUrl) {
+		this.userServiceUrl = inUserServiceUrl;
 	}
 	
+	@Override
+	public EurekaClinicalUserClient get() {
+		System.out.println("creating new user client");
+		return new EurekaClinicalUserClient(this.userServiceUrl);
+	}
+
 }

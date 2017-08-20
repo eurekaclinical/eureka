@@ -46,10 +46,10 @@ import com.google.inject.servlet.SessionScoped;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.EtlClient;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ServicesClient;
-import org.eurekaclinical.common.comm.clients.AuthorizingEurekaClinicalProxyClient;
+import org.eurekaclinical.common.comm.clients.AuthorizingEurekaClinicalClient;
 import org.eurekaclinical.common.comm.clients.RouterTable;
 import org.eurekaclinical.standardapis.props.CasEurekaClinicalProperties;
-import org.eurekaclinical.user.client.EurekaClinicalUserProxyClient;
+import org.eurekaclinical.user.client.EurekaClinicalUserClient;
 
 /**
  *
@@ -58,11 +58,11 @@ import org.eurekaclinical.user.client.EurekaClinicalUserProxyClient;
 class AppModule extends AbstractModule {
 
 	private final WebappProperties webappProperties;
-	private final EurekaClinicalUserProxyClientProvider userClientProvider;
+	private final EurekaClinicalUserClientProvider userClientProvider;
 	private final EtlClientProvider etlClientProvider;
 	private final ServicesClientProvider servicesClientProvider;
 
-	AppModule(WebappProperties webappProperties, ServicesClientProvider inServicesClientProvider, EtlClientProvider inEtlClientProvider, EurekaClinicalUserProxyClientProvider inUserClient) {
+	AppModule(WebappProperties webappProperties, ServicesClientProvider inServicesClientProvider, EtlClientProvider inEtlClientProvider, EurekaClinicalUserClientProvider inUserClient) {
 		assert webappProperties != null : "webappProperties cannot be null";
 		this.webappProperties = webappProperties;
 		this.userClientProvider = inUserClient;
@@ -77,8 +77,8 @@ class AppModule extends AbstractModule {
 		bind(CasEurekaClinicalProperties.class).toInstance(this.webappProperties);
 		bind(ServicesClient.class).toProvider(this.servicesClientProvider).in(SessionScoped.class);
 		bind(EtlClient.class).toProvider(this.etlClientProvider).in(SessionScoped.class);
-		bind(EurekaClinicalUserProxyClient.class).toProvider(this.userClientProvider).in(SessionScoped.class);
-		bind(AuthorizingEurekaClinicalProxyClient.class).toProvider(this.userClientProvider).in(SessionScoped.class);
+		bind(EurekaClinicalUserClient.class).toProvider(this.userClientProvider).in(SessionScoped.class);
+		bind(AuthorizingEurekaClinicalClient.class).toProvider(this.userClientProvider).in(SessionScoped.class);
 	}
 
 }

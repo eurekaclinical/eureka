@@ -45,8 +45,12 @@ import javax.servlet.ServletContextEvent;
 
 import com.google.inject.Module;
 import com.google.inject.servlet.GuiceServletContextListener;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.EtlClient;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ServicesClient;
 import javax.servlet.ServletContext;
+import org.eurekaclinical.common.config.ClientSessionListener;
 import org.eurekaclinical.common.config.InjectorSupport;
+import org.eurekaclinical.user.client.EurekaClinicalUserClient;
 
 /**
  *
@@ -56,7 +60,7 @@ import org.eurekaclinical.common.config.InjectorSupport;
 public class WebappListener extends GuiceServletContextListener {
 
 	private final WebappProperties webappProperties;
-	private final EurekaClinicalUserProxyClientProvider userClientProvider;
+	private final EurekaClinicalUserClientProvider userClientProvider;
 	private final ServicesClientProvider servicesClientProvider;
 	private final EtlClientProvider etlClientProvider;
 	private Injector injector;
@@ -65,14 +69,16 @@ public class WebappListener extends GuiceServletContextListener {
 		this.webappProperties = new WebappProperties();
 		this.servicesClientProvider = new ServicesClientProvider(this.webappProperties.getServiceUrl());
 		this.etlClientProvider = new EtlClientProvider(this.webappProperties.getEtlUrl());
-		this.userClientProvider = new EurekaClinicalUserProxyClientProvider(this.webappProperties.getUserServiceUrl());
+		this.userClientProvider = new EurekaClinicalUserClientProvider(this.webappProperties.getUserServiceUrl());
 	}
 
 	@Override
 	public void contextInitialized(ServletContextEvent servletContextEvent) {
 		super.contextInitialized(servletContextEvent);
 		ServletContext servletContext = servletContextEvent.getServletContext();
-		servletContext.addListener(this.injector.getInstance(ClientSessionListener.class));
+		servletContext.addListener(new ClientSessionListener(EurekaClinicalUserClient.class));
+		servletContext.addListener(new ClientSessionListener(ServicesClient.class));
+		servletContext.addListener(new ClientSessionListener(EtlClient.class));
 		servletContext.setAttribute(
 				"webappProperties", this.webappProperties);
 	}

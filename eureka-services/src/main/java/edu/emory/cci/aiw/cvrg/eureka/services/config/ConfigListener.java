@@ -45,9 +45,11 @@ import javax.servlet.ServletContextEvent;
 import com.google.inject.Module;
 import com.google.inject.persist.jpa.JpaPersistModule;
 import com.google.inject.servlet.GuiceServletContextListener;
+import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.EtlClient;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.EtlClientProvider;
 
 import javax.servlet.ServletContext;
+import org.eurekaclinical.common.config.ClientSessionListener;
 import org.eurekaclinical.common.config.InjectorSupport;
 
 /**
@@ -81,7 +83,7 @@ public class ConfigListener extends GuiceServletContextListener {
 	public void contextInitialized(ServletContextEvent servletContextEvent) {
 		super.contextInitialized(servletContextEvent);
 		ServletContext servletContext = servletContextEvent.getServletContext();
-		servletContext.addListener(this.injector.getInstance(ClientSessionListener.class));
+		servletContext.addListener(new ClientSessionListener(EtlClient.class));
 	}
 
 }

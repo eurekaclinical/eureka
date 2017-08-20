@@ -47,7 +47,7 @@ import javax.inject.Inject;
 import org.eurekaclinical.common.comm.clients.Route;
 import org.eurekaclinical.common.comm.clients.RouterTable;
 import org.eurekaclinical.common.comm.clients.RouterTableLoadException;
-import org.eurekaclinical.user.client.EurekaClinicalUserProxyClient;
+import org.eurekaclinical.user.client.EurekaClinicalUserClient;
 
 /**
  *
@@ -56,12 +56,12 @@ import org.eurekaclinical.user.client.EurekaClinicalUserProxyClient;
 @SessionScoped
 public class WebappRouterTable implements RouterTable {
 	
-	private final EurekaClinicalUserProxyClient userClient;
+	private final EurekaClinicalUserClient userClient;
 	private final ServicesClient servicesClient;
 	private final EtlClient etlClient;
 
     @Inject
-    public WebappRouterTable(ServicesClient inServices, EurekaClinicalUserProxyClient inUserClient, EtlClient inEtlClient) {
+    public WebappRouterTable(ServicesClient inServices, EurekaClinicalUserClient inUserClient, EtlClient inEtlClient) {
         this.servicesClient = inServices;
 		this.userClient = inUserClient;
 		this.etlClient = inEtlClient;
