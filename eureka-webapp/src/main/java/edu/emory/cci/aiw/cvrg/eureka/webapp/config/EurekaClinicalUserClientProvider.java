@@ -57,7 +57,6 @@ public class EurekaClinicalUserClientProvider implements Provider<EurekaClinical
 	
 	@Override
 	public EurekaClinicalUserClient get() {
-		System.out.println("creating new user client");
 		return new EurekaClinicalUserClient(this.userServiceUrl);
 	}
 
