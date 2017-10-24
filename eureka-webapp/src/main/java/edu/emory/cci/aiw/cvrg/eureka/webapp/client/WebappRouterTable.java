@@ -40,41 +40,43 @@ package edu.emory.cci.aiw.cvrg.eureka.webapp.client;
  * #L%
  */
 
-import com.google.inject.servlet.SessionScoped;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.EtlClient;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ServicesClient;
 import javax.inject.Inject;
 import org.eurekaclinical.common.comm.clients.Route;
 import org.eurekaclinical.common.comm.clients.RouterTable;
 import org.eurekaclinical.common.comm.clients.RouterTableLoadException;
+import org.eurekaclinical.registry.client.EurekaClinicalRegistryClient;
 import org.eurekaclinical.user.client.EurekaClinicalUserClient;
 
 /**
  *
  * @author Andrew Post
  */
-@SessionScoped
 public class WebappRouterTable implements RouterTable {
 	
 	private final EurekaClinicalUserClient userClient;
 	private final ServicesClient servicesClient;
 	private final EtlClient etlClient;
+	private final EurekaClinicalRegistryClient registryClient;
 
     @Inject
-    public WebappRouterTable(ServicesClient inServices, EurekaClinicalUserClient inUserClient, EtlClient inEtlClient) {
+    public WebappRouterTable(ServicesClient inServices, EurekaClinicalUserClient inUserClient, EtlClient inEtlClient, EurekaClinicalRegistryClient inRegistryClient) {
         this.servicesClient = inServices;
 		this.userClient = inUserClient;
 		this.etlClient = inEtlClient;
+		this.registryClient = inRegistryClient;
     }
 
 	@Override
 	public Route[] load() throws RouterTableLoadException {
 		return new Route[]{
-			new Route("/users/", "/api/protected/users/", this.userClient),
-			new Route("/roles/", "/api/protected/roles/", this.userClient),
-			new Route("/appproperties/", "/api/appproperties/", this.servicesClient),
-			new Route("/file/", "/api/protected/file/", this.etlClient),
-			new Route("/output/", "/api/protected/output/", this.etlClient),
+			new Route("/users", "/api/protected/users", this.userClient),
+			new Route("/roles", "/api/protected/roles", this.userClient),
+			new Route("/appproperties", "/api/appproperties", this.servicesClient),
+			new Route("/file", "/api/protected/file", this.etlClient),
+			new Route("/output", "/api/protected/output", this.etlClient),
+			new Route("/components", "/api/protected/components", this.registryClient),
 			new Route("/", "/api/protected/", this.servicesClient)
 		};
 	}

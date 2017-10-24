@@ -41,17 +41,16 @@ import org.eurekaclinical.standardapis.props.CasEurekaClinicalProperties;
  * <http://www.gnu.org/licenses/gpl-3.0.html>.
  * #L%
  */
-
 /**
  *
  * @author Andrew Post
  */
 public class WebappProperties extends CasEurekaClinicalProperties {
-	
+
 	public WebappProperties() {
 		super("/etc/eureka");
 	}
-	
+
 	public String getMajorVersion() {
 		return this.getValue("eureka.webapp.version.major");
 	}
@@ -76,16 +75,23 @@ public class WebappProperties extends CasEurekaClinicalProperties {
 	public String getUrl() {
 		return this.getValue("eureka.webapp.url");
 	}
-	
+
 	public String getUserWebappUrl() {
 		return this.getValue("eurekaclinical.userwebapp.url");
 	}
+
 	public String getUserServiceUrl() {
 		return this.getValue("eurekaclinical.userservice.url");
-	}         
+	}
+
+	public String getRegistryServiceUrl() {
+		return getValue("eurekaclinical.registryservice.url");
+	}
+
 	public boolean isEphiProhibited() {
 		return Boolean.parseBoolean(getValue("eureka.webapp.ephiprohibited"));
 	}
+
 	public boolean isDemoMode() {
 		return Boolean.parseBoolean(getValue("eureka.webapp.demomode"));
 	}
@@ -97,7 +103,7 @@ public class WebappProperties extends CasEurekaClinicalProperties {
 	public String getServiceUrl() {
 		return this.getValue("eureka.services.url");
 	}
-	
+
 	/**
 	 * Get the URL for the eureka-protempa-etl application.
 	 *
@@ -106,7 +112,7 @@ public class WebappProperties extends CasEurekaClinicalProperties {
 	public String getEtlUrl() {
 		return this.getValue("eureka.etl.url");
 	}
-	
+
 	public String getCohortsUrl() {
 		return this.getValue("eureka.cohorts.url");
 	}
@@ -115,7 +121,7 @@ public class WebappProperties extends CasEurekaClinicalProperties {
 	public String getProxyCallbackServer() {
 		return this.getValue("eureka.webapp.callbackserver");
 	}
-	
+
 	public String getContactEmail() {
 		return this.getValue("eureka.webapp.contactemail");
 	}
@@ -143,7 +149,7 @@ public class WebappProperties extends CasEurekaClinicalProperties {
 	public boolean isLocalAccountRegistrationEnabled() {
 		return Boolean.parseBoolean(getValue("eureka.webapp.localregistrationenabled"));
 	}
-	
+
 	public boolean isRegistrationEnabled() {
 		return isLocalAccountRegistrationEnabled() || isOAuthRegistrationEnabled();
 	}

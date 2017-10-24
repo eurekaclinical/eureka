@@ -50,6 +50,7 @@ import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ServicesClient;
 import javax.servlet.ServletContext;
 import org.eurekaclinical.common.config.ClientSessionListener;
 import org.eurekaclinical.common.config.InjectorSupport;
+import org.eurekaclinical.registry.client.EurekaClinicalRegistryClient;
 import org.eurekaclinical.user.client.EurekaClinicalUserClient;
 
 /**
@@ -63,6 +64,7 @@ public class WebappListener extends GuiceServletContextListener {
 	private final EurekaClinicalUserClientProvider userClientProvider;
 	private final ServicesClientProvider servicesClientProvider;
 	private final EtlClientProvider etlClientProvider;
+	private final EurekaClinicalRegistryClientProvider registryClientProvider;
 	private Injector injector;
 
 	public WebappListener() {
@@ -70,6 +72,7 @@ public class WebappListener extends GuiceServletContextListener {
 		this.servicesClientProvider = new ServicesClientProvider(this.webappProperties.getServiceUrl());
 		this.etlClientProvider = new EtlClientProvider(this.webappProperties.getEtlUrl());
 		this.userClientProvider = new EurekaClinicalUserClientProvider(this.webappProperties.getUserServiceUrl());
+		this.registryClientProvider = new EurekaClinicalRegistryClientProvider(this.webappProperties.getRegistryServiceUrl());
 	}
 
 	@Override
@@ -79,6 +82,7 @@ public class WebappListener extends GuiceServletContextListener {
 		servletContext.addListener(new ClientSessionListener(EurekaClinicalUserClient.class));
 		servletContext.addListener(new ClientSessionListener(ServicesClient.class));
 		servletContext.addListener(new ClientSessionListener(EtlClient.class));
+		servletContext.addListener(new ClientSessionListener(EurekaClinicalRegistryClient.class));
 		servletContext.setAttribute(
 				"webappProperties", this.webappProperties);
 	}
@@ -94,7 +98,7 @@ public class WebappListener extends GuiceServletContextListener {
 	protected Injector getInjector() {
 		this.injector = new InjectorSupport(
 				new Module[]{
-					new AppModule(this.webappProperties, this.servicesClientProvider, this.etlClientProvider, this.userClientProvider),
+					new AppModule(this.webappProperties, this.servicesClientProvider, this.etlClientProvider, this.userClientProvider, this.registryClientProvider),
 					new ServletModule(this.webappProperties)
 				},
 				this.webappProperties).getInjector();

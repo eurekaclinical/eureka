@@ -66,6 +66,8 @@
 		
 		<eurekaclinical-common-version>2.0-Alpha-28</eurekaclinical-common-version>
 		<eurekaclinical-ontology-version>2.0-Beta-4</eurekaclinical-ontology-version>
+		
+		<ec-registry-client-version>1.0-Alpha-3</ec-registry-client-version>
 	</properties>
 
 	<licenses>
@@ -569,6 +571,11 @@
 				<groupId>org.eurekaclinical</groupId>
 				<artifactId>eurekaclinical-user-client</artifactId>
 				<version>${user-client-version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eurekaclinical</groupId>
+				<artifactId>eurekaclinical-registry-client</artifactId>
+				<version>${ec-registry-client-version}</version>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>

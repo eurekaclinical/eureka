@@ -48,6 +48,7 @@ import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.EtlClient;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ServicesClient;
 import org.eurekaclinical.common.comm.clients.AuthorizingEurekaClinicalClient;
 import org.eurekaclinical.common.comm.clients.RouterTable;
+import org.eurekaclinical.registry.client.EurekaClinicalRegistryClient;
 import org.eurekaclinical.standardapis.props.CasEurekaClinicalProperties;
 import org.eurekaclinical.user.client.EurekaClinicalUserClient;
 
@@ -61,13 +62,15 @@ class AppModule extends AbstractModule {
 	private final EurekaClinicalUserClientProvider userClientProvider;
 	private final EtlClientProvider etlClientProvider;
 	private final ServicesClientProvider servicesClientProvider;
+	private final EurekaClinicalRegistryClientProvider registryClientProvider;
 
-	AppModule(WebappProperties webappProperties, ServicesClientProvider inServicesClientProvider, EtlClientProvider inEtlClientProvider, EurekaClinicalUserClientProvider inUserClient) {
+	AppModule(WebappProperties webappProperties, ServicesClientProvider inServicesClientProvider, EtlClientProvider inEtlClientProvider, EurekaClinicalUserClientProvider inUserClient, EurekaClinicalRegistryClientProvider inRegistryClient) {
 		assert webappProperties != null : "webappProperties cannot be null";
 		this.webappProperties = webappProperties;
 		this.userClientProvider = inUserClient;
 		this.servicesClientProvider = inServicesClientProvider;
 		this.etlClientProvider = inEtlClientProvider;
+		this.registryClientProvider = inRegistryClient;
 	}
 
 	@Override
@@ -79,6 +82,7 @@ class AppModule extends AbstractModule {
 		bind(EtlClient.class).toProvider(this.etlClientProvider).in(SessionScoped.class);
 		bind(EurekaClinicalUserClient.class).toProvider(this.userClientProvider).in(SessionScoped.class);
 		bind(AuthorizingEurekaClinicalClient.class).toProvider(this.userClientProvider).in(SessionScoped.class);
+		bind(EurekaClinicalRegistryClient.class).toProvider(this.registryClientProvider).in(SessionScoped.class);
 	}
 
 }
