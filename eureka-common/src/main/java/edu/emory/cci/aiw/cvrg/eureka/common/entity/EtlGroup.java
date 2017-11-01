@@ -40,6 +40,7 @@ package edu.emory.cci.aiw.cvrg.eureka.common.entity;
  * #L%
  */
 
+import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -110,11 +111,31 @@ public class EtlGroup {
 	}
 
 	public List<DestinationGroupMembership> getDestinations() {
-		return destinations;
+		return new ArrayList<>(this.destinations);
 	}
 
-	public void setDestinations(List<DestinationGroupMembership> destinations) {
-		this.destinations = destinations;
+	public void setDestinations(List<DestinationGroupMembership> inDestinations) {
+		if (inDestinations == null) {
+			this.destinations = new ArrayList<>();
+		} else {
+			this.destinations = new ArrayList<>(inDestinations);
+			for (DestinationGroupMembership destination : this.destinations) {
+				destination.setGroup(this);
+			}
+		}
+	}
+	
+	public void addDestination(DestinationGroupMembership inDestination) {
+		if (!this.destinations.contains(inDestination)) {
+			this.destinations.add(inDestination);
+			inDestination.setGroup(this);
+		}
+	}
+	
+	public void removeDestination(DestinationGroupMembership inDestination) {
+		if (this.destinations.remove(inDestination)) {
+			inDestination.setGroup(null);
+		}
 	}
 	
 	

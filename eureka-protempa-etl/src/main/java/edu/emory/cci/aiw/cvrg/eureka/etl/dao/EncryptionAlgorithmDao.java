@@ -40,19 +40,12 @@ package edu.emory.cci.aiw.cvrg.eureka.etl.dao;
  * #L%
  */
 
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.ConfigEntity;
-import org.eurekaclinical.standardapis.dao.Dao;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.EncryptionAlgorithm;
+import org.eurekaclinical.standardapis.dao.DaoWithUniqueName;
 
 /**
  *
  * @author Andrew Post
  */
-public interface ConfigDao<E extends ConfigEntity> extends Dao<E, Long>{
-	/**
-	 * Gets a configuration by name.
-	 * @param name the configuration, or <code>null</code> if there is not one
-	 * with that name.
-	 * @return 
-	 */
-	E getByName(String name);
+public interface EncryptionAlgorithmDao extends DaoWithUniqueName<EncryptionAlgorithm, Long> {
 }

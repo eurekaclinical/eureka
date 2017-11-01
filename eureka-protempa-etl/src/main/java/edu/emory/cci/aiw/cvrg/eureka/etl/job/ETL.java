@@ -55,7 +55,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.inject.Inject;
-import com.google.inject.Provider;
 import com.google.inject.Singleton;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.EtlDestination;
@@ -67,9 +66,8 @@ import edu.emory.cci.aiw.cvrg.eureka.etl.dao.DestinationDao;
 import edu.emory.cci.aiw.cvrg.eureka.etl.dao.EtlGroupDao;
 import edu.emory.cci.aiw.cvrg.eureka.etl.dest.ProtempaDestinationFactory;
 import edu.emory.cci.aiw.cvrg.eureka.etl.resource.Destinations;
+import edu.emory.cci.aiw.cvrg.eureka.etl.resource.EtlDestinationToDestinationEntityVisitor;
 import java.io.IOException;
-import javax.persistence.EntityManager;
-import javax.persistence.EntityTransaction;
 import org.eurekaclinical.eureka.client.comm.JobStatus;
 import org.protempa.ProtempaEvent;
 import org.protempa.ProtempaEventListener;
@@ -99,13 +97,17 @@ public class ETL {
 	private final DestinationDao destinationDao;
 	private final ProtempaDestinationFactory protempaDestFactory;
 	private final EtlGroupDao groupDao;
+	private final EtlDestinationToDestinationEntityVisitor destToDestEntityVisitor;
 
 	@Inject
-	public ETL(EtlProperties inEtlProperties, DestinationDao inDestinationDao, EtlGroupDao inGroupDao, ProtempaDestinationFactory inProtempaDestFactory) {
+	public ETL(EtlProperties inEtlProperties, DestinationDao inDestinationDao, 
+			EtlGroupDao inGroupDao, EtlDestinationToDestinationEntityVisitor inDestToDestEntityVisitor,
+			ProtempaDestinationFactory inProtempaDestFactory) {
 		this.etlProperties = inEtlProperties;
 		this.destinationDao = inDestinationDao;
 		this.protempaDestFactory = inProtempaDestFactory;
 		this.groupDao = inGroupDao;
+		this.destToDestEntityVisitor = inDestToDestEntityVisitor;
 	}
 
 	void run(JobEntity job, PropositionDefinition[] inPropositionDefinitions,
@@ -122,7 +124,7 @@ public class ETL {
 			org.protempa.dest.Destination protempaDestination;
 			eurekaDestination
 					= new Destinations(this.etlProperties, job.getUser(),
-							this.destinationDao, this.groupDao)
+							this.destinationDao, this.groupDao, this.destToDestEntityVisitor)
 							.getOne(job.getDestination().getName());
 			protempaDestination
 					= this.protempaDestFactory.getInstance(eurekaDestination.getId(), updateData);

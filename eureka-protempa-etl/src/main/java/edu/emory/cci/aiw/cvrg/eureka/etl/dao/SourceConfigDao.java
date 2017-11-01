@@ -41,10 +41,11 @@ package edu.emory.cci.aiw.cvrg.eureka.etl.dao;
  */
 
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.SourceConfigEntity;
+import org.eurekaclinical.standardapis.dao.DaoWithUniqueName;
 
 /**
  *
  * @author Andrew Post
  */
-public interface SourceConfigDao extends ConfigDao<SourceConfigEntity> {
+public interface SourceConfigDao extends DaoWithUniqueName<SourceConfigEntity, Long> {
 }

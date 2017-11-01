@@ -39,6 +39,7 @@ package edu.emory.cci.aiw.cvrg.eureka.common.entity;
  * <http://www.gnu.org/licenses/gpl-3.0.html>.
  * #L%
  */
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import javax.persistence.CascadeType;
@@ -56,6 +57,7 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.ws.rs.core.MediaType;
+import org.eurekaclinical.standardapis.entity.HistoricalEntity;
 
 /**
  *
@@ -64,7 +66,7 @@ import javax.ws.rs.core.MediaType;
 @Entity
 @Table(name = "destinations")
 @Inheritance(strategy = InheritanceType.JOINED)
-public abstract class DestinationEntity implements ConfigEntity {
+public abstract class DestinationEntity implements ConfigEntity, HistoricalEntity<Long> {
 
 	@Id
 	@SequenceGenerator(name = "DEST_SEQ_GENERATOR", sequenceName = "DEST_SEQ",
@@ -114,8 +116,11 @@ public abstract class DestinationEntity implements ConfigEntity {
 
 	public DestinationEntity() {
 		this.outputType = MediaType.APPLICATION_OCTET_STREAM;
+		this.groups = new ArrayList<>();
+		this.offsets = new ArrayList<>();
+		this.links = new ArrayList<>();
 	}
-	
+
 	public Long getId() {
 		return id;
 	}
@@ -153,19 +158,59 @@ public abstract class DestinationEntity implements ConfigEntity {
 	}
 
 	public List<DestinationGroupMembership> getGroups() {
-		return groups;
+		return new ArrayList<>(groups);
 	}
 
-	public void setGroups(List<DestinationGroupMembership> groups) {
-		this.groups = groups;
+	public void setGroups(List<DestinationGroupMembership> inGroups) {
+		if (inGroups == null) {
+			this.groups = new ArrayList<>();
+		} else {
+			this.groups = new ArrayList<>(inGroups);
+			for (DestinationGroupMembership group : inGroups) {
+				group.setDestination(this);
+			}
+		}
+	}
+	
+	public void addGroup(DestinationGroupMembership inGroup) {
+		if (!this.groups.contains(inGroup)) {
+			this.groups.add(inGroup);
+			inGroup.setDestination(this);
+		}
 	}
 
+	public void removeGroup(DestinationGroupMembership inGroup) {
+		if (this.groups.remove(inGroup)) {
+			inGroup.setDestination(null);
+		}
+	}
+	
 	public List<LinkEntity> getLinks() {
-		return links;
+		return new ArrayList<>(links);
 	}
 
-	public void setLinks(List<LinkEntity> links) {
-		this.links = links;
+	public void setLinks(List<LinkEntity> inLinks) {
+		if (inLinks == null) {
+			this.links = new ArrayList<>();
+		} else {
+			this.links = new ArrayList<>(inLinks);
+			for (LinkEntity group : inLinks) {
+				group.setDestination(this);
+			}
+		}
+	}
+	
+	public void addLink(LinkEntity inLink) {
+		if (!this.links.contains(inLink)) {
+			this.links.add(inLink);
+			inLink.setDestination(this);
+		}
+	}
+	
+	public void removeLink(LinkEntity inLink) {
+		if (this.links.remove(inLink)) {
+			inLink.setDestination(null);
+		}
 	}
 
 	public Date getCreatedAt() {
@@ -193,11 +238,31 @@ public abstract class DestinationEntity implements ConfigEntity {
 	}
 
 	public List<DeidPerPatientParams> getOffsets() {
-		return offsets;
+		return new ArrayList<>(offsets);
 	}
 
-	public void setOffsets(List<DeidPerPatientParams> offsets) {
-		this.offsets = offsets;
+	public void setOffsets(List<DeidPerPatientParams> inOffsets) {
+		if (inOffsets == null) {
+			this.offsets = new ArrayList<>();
+		} else {
+			this.offsets = new ArrayList<>(inOffsets);
+			for (DeidPerPatientParams offset : this.offsets) {
+				offset.setDestination(this);
+			}
+		}
+	}
+	
+	public void addOffset(DeidPerPatientParams inOffset) {
+		if (!this.offsets.contains(inOffset)) {
+			this.offsets.add(inOffset);
+			inOffset.setDestination(this);
+		}
+	}
+	
+	public void removeOffset(DeidPerPatientParams inOffset) {
+		if (this.offsets.remove(inOffset)) {
+			inOffset.setDestination(null);
+		}
 	}
 
 	public void setDeidentificationEnabled(boolean enabled) {

@@ -98,10 +98,9 @@ public class BinaryOperatorEntity extends NodeEntity {
 	public Node toNode() {
 		BinaryOperator bo = new BinaryOperator();
 		bo.setOp(this.op);
-		bo.setLeftNode(this.leftNode.toNode());
-		bo.setRightNode(this.rightNode.toNode());
+		bo.setLeftNode(this.leftNode != null ? this.leftNode.toNode() : null);
+		bo.setRightNode(this.rightNode != null ? this.rightNode.toNode() : null);
 		return bo;
 	}
-	
-	
+
 }

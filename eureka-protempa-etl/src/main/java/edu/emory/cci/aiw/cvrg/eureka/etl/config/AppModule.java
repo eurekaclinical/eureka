@@ -59,9 +59,13 @@ import edu.emory.cci.aiw.cvrg.eureka.etl.dao.SourceConfigDao;
 import edu.emory.cci.aiw.cvrg.eureka.etl.job.Task;
 import edu.emory.cci.aiw.cvrg.eureka.etl.job.TaskProvider;
 import edu.emory.cci.aiw.cvrg.eureka.etl.dao.DeidPerPatientParamsDao;
+import edu.emory.cci.aiw.cvrg.eureka.etl.dao.EncryptionAlgorithmDao;
 import edu.emory.cci.aiw.cvrg.eureka.etl.dao.EurekaDeidConfigDao;
+import edu.emory.cci.aiw.cvrg.eureka.etl.dao.JpaEncryptionAlgorithmDao;
 import edu.emory.cci.aiw.cvrg.eureka.etl.dao.JpaEurekaDeidConfigDao;
+import edu.emory.cci.aiw.cvrg.eureka.etl.dao.JpaLinkDao;
 import edu.emory.cci.aiw.cvrg.eureka.etl.dao.JpaRoleDao;
+import edu.emory.cci.aiw.cvrg.eureka.etl.dao.LinkDao;
 import edu.emory.cci.aiw.cvrg.eureka.etl.dao.RoleDao;
 import edu.emory.cci.aiw.cvrg.eureka.etl.dest.EurekaDeidConfigFactory;
 import edu.emory.cci.aiw.cvrg.eureka.etl.dest.JpaEurekaDeidConfigFactory;
@@ -91,5 +95,7 @@ public class AppModule extends AbstractModule {
 		bind(Task.class).toProvider(TaskProvider.class);
 		bind(EurekaDeidConfigFactory.class).to(JpaEurekaDeidConfigFactory.class);
 		bind(EurekaDeidConfigDao.class).to(JpaEurekaDeidConfigDao.class);
+		bind(LinkDao.class).to(JpaLinkDao.class);
+		bind(EncryptionAlgorithmDao.class).to(JpaEncryptionAlgorithmDao.class);
 	}
 }

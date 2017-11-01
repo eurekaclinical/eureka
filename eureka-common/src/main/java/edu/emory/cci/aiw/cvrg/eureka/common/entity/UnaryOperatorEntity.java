@@ -85,7 +85,7 @@ public class UnaryOperatorEntity extends NodeEntity {
 	public Node toNode() {
 		UnaryOperator uo = new UnaryOperator();
 		uo.setOp(this.op);
-		uo.setNode(this.node.toNode());
+		uo.setNode(this.node != null ? this.node.toNode() : null);
 		return uo;
 	}
 	

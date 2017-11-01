@@ -39,7 +39,7 @@ package edu.emory.cci.aiw.cvrg.eureka.common.entity;
  * <http://www.gnu.org/licenses/gpl-3.0.html>.
  * #L%
  */
-
+import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -58,33 +58,39 @@ import javax.persistence.UniqueConstraint;
  * @author Andrew Post
  */
 @Entity
-@Table(name = "i2b2_dest_conceptspecs", uniqueConstraints = {@UniqueConstraint(columnNames = {"proposition", "reference", "property", "i2b2destinations_id"})})
+@Table(name = "i2b2_dest_conceptspecs", uniqueConstraints = {
+	@UniqueConstraint(columnNames = {"proposition", "reference", "property", "i2b2destinations_id"})})
 public class I2B2DestinationConceptSpecEntity {
+
 	@Id
 	@SequenceGenerator(name = "I2B2_CS_SEQ_GENERATOR",
-		sequenceName = "I2B2_CS_SEQ", allocationSize = 1, initialValue = 1)
+			sequenceName = "I2B2_CS_SEQ", allocationSize = 1, initialValue = 1)
 	@GeneratedValue(strategy = GenerationType.SEQUENCE,
-		generator = "I2B2_CS_SEQ_GENERATOR")
+			generator = "I2B2_CS_SEQ_GENERATOR")
 	private Long id;
-	
+
 	private String proposition;
-	
+
 	private String reference;
-	
+
 	private String property;
-	
+
 	private boolean alreadyLoaded;
-	
+
 	@ManyToOne
-	@JoinColumn(name="i2b2destvaluetypecds_id")
+	@JoinColumn(name = "i2b2destvaluetypecds_id")
 	private I2B2DestinationValueTypeCode valueTypeCode;
-	
+
 	@ManyToOne
-	@JoinColumn(name="i2b2destinations_id")
+	@JoinColumn(name = "i2b2destinations_id")
 	private I2B2DestinationEntity destination;
-	
-	@OneToMany(cascade = CascadeType.ALL, targetEntity = I2B2DestinationModifierSpecEntity.class, mappedBy="conceptSpec")
+
+	@OneToMany(cascade = CascadeType.ALL, targetEntity = I2B2DestinationModifierSpecEntity.class, mappedBy = "conceptSpec")
 	private List<I2B2DestinationModifierSpecEntity> modifierSpecs;
+
+	public I2B2DestinationConceptSpecEntity() {
+		this.modifierSpecs = new ArrayList<>();
+	}
 
 	public Long getId() {
 		return id;
@@ -109,7 +115,7 @@ public class I2B2DestinationConceptSpecEntity {
 	public void setProposition(String proposition) {
 		this.proposition = proposition;
 	}
-	
+
 	public String getProperty() {
 		return property;
 	}
@@ -119,11 +125,28 @@ public class I2B2DestinationConceptSpecEntity {
 	}
 
 	public List<I2B2DestinationModifierSpecEntity> getModifierSpecs() {
-		return modifierSpecs;
+		return new ArrayList<>(this.modifierSpecs);
 	}
 
-	public void setModifierSpecs(List<I2B2DestinationModifierSpecEntity> modifierSpecs) {
-		this.modifierSpecs = modifierSpecs;
+	public void setModifierSpecs(List<I2B2DestinationModifierSpecEntity> inModifierSpecs) {
+		if (inModifierSpecs == null) {
+			this.modifierSpecs = new ArrayList<>();
+		} else {
+			this.modifierSpecs = new ArrayList<>(inModifierSpecs);
+		}
+	}
+	
+	public void addModifierSpec(I2B2DestinationModifierSpecEntity inModifierSpec) {
+		if (!this.modifierSpecs.contains(inModifierSpec)) {
+			this.modifierSpecs.add(inModifierSpec);
+			inModifierSpec.setConceptSpec(this);
+		}
+	}
+	
+	public void removeModifierSpec(I2B2DestinationModifierSpecEntity inModifierSpec) {
+		if (this.modifierSpecs.remove(inModifierSpec)) {
+			inModifierSpec.setConceptSpec(null);
+		}
 	}
 
 	public I2B2DestinationEntity getDestination() {
@@ -149,5 +172,5 @@ public class I2B2DestinationConceptSpecEntity {
 	public void setAlreadyLoaded(boolean alreadyLoaded) {
 		this.alreadyLoaded = alreadyLoaded;
 	}
-	
+
 }

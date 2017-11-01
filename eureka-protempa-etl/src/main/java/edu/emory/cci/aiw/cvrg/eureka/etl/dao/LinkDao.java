@@ -1,10 +1,10 @@
-package edu.emory.cci.aiw.cvrg.eureka.common.comm;
+package edu.emory.cci.aiw.cvrg.eureka.etl.dao;
 
-/*
+/*-
  * #%L
- * Eureka Common
+ * Eureka Protempa ETL
  * %%
- * Copyright (C) 2012 - 2016 Emory University
+ * Copyright (C) 2012 - 2017 Emory University
  * %%
  * This program is dual licensed under the Apache 2 and GPLv3 licenses.
  * 
@@ -39,56 +39,14 @@ package edu.emory.cci.aiw.cvrg.eureka.common.comm;
  * <http://www.gnu.org/licenses/gpl-3.0.html>.
  * #L%
  */
-import edu.emory.cci.aiw.cvrg.eureka.common.props.SupportUri;
+
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.LinkEntity;
+import org.eurekaclinical.standardapis.dao.Dao;
 
 /**
  *
- * @author Miao Ai
+ * @author Andrew Post
  */
-public class AppPropertiesLinks {
-
-	private SupportUri supportUri;
-	private String organizationName;
-
-	/**
-	 * Constructor.
-	 */
-	public AppPropertiesLinks() {
-	}
-
-	/**
-	 * Gets the supportUri.
-	 *
-	 * @return supportUri.
-	 */
-	public SupportUri getSupportUri() {
-		return this.supportUri;
-	}
-
-	/**
-	 * Sets the supportUri.
-	 *
-	 * @param inSupportUri
-	 */
-	public void setSupportUri(SupportUri inSupportUri) {
-		this.supportUri = inSupportUri;
-	}
-
-	/**
-	 * Gets the organizationName.
-	 *
-	 * @return organizationName.
-	 */
-	public String getOrganizationName() {
-		return this.organizationName;
-	}
-
-	/**
-	 * Sets the organizationName.
-	 *
-	 * @param inOrganizationName
-	 */
-	public void setOrganizationName(String inOrganizationName) {
-		this.organizationName = inOrganizationName;
-	}
+public interface LinkDao extends Dao<LinkEntity, Long> {
+	
 }

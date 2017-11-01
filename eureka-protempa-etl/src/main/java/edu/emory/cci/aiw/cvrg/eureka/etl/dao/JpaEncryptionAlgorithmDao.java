@@ -1,10 +1,10 @@
-package edu.emory.cci.aiw.cvrg.eureka.common.comm;
+package edu.emory.cci.aiw.cvrg.eureka.etl.dao;
 
 /*
  * #%L
- * Eureka Common
+ * Eureka Protempa ETL
  * %%
- * Copyright (C) 2012 - 2016 Emory University
+ * Copyright (C) 2012 - 2013 Emory University
  * %%
  * This program is dual licensed under the Apache 2 and GPLv3 licenses.
  * 
@@ -39,56 +39,28 @@ package edu.emory.cci.aiw.cvrg.eureka.common.comm;
  * <http://www.gnu.org/licenses/gpl-3.0.html>.
  * #L%
  */
-import edu.emory.cci.aiw.cvrg.eureka.common.props.SupportUri;
+
+import com.google.inject.Inject;
+import com.google.inject.Provider;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.EncryptionAlgorithm;
+import edu.emory.cci.aiw.cvrg.eureka.common.entity.EncryptionAlgorithm_;
+import javax.persistence.EntityManager;
+import org.eurekaclinical.standardapis.dao.GenericDao;
 
 /**
  *
- * @author Miao Ai
+ * @author Andrew Post
  */
-public class AppPropertiesLinks {
+public class JpaEncryptionAlgorithmDao extends GenericDao<EncryptionAlgorithm, Long> implements EncryptionAlgorithmDao {
 
-	private SupportUri supportUri;
-	private String organizationName;
-
-	/**
-	 * Constructor.
-	 */
-	public AppPropertiesLinks() {
+	@Inject
+	public JpaEncryptionAlgorithmDao(Provider<EntityManager> inManagerProvider) {
+		super(EncryptionAlgorithm.class, inManagerProvider);
 	}
 
-	/**
-	 * Gets the supportUri.
-	 *
-	 * @return supportUri.
-	 */
-	public SupportUri getSupportUri() {
-		return this.supportUri;
+	@Override
+	public EncryptionAlgorithm getByName(String name) {
+		return getDatabaseSupport().getUniqueByAttribute(EncryptionAlgorithm.class, EncryptionAlgorithm_.name, name);
 	}
-
-	/**
-	 * Sets the supportUri.
-	 *
-	 * @param inSupportUri
-	 */
-	public void setSupportUri(SupportUri inSupportUri) {
-		this.supportUri = inSupportUri;
-	}
-
-	/**
-	 * Gets the organizationName.
-	 *
-	 * @return organizationName.
-	 */
-	public String getOrganizationName() {
-		return this.organizationName;
-	}
-
-	/**
-	 * Sets the organizationName.
-	 *
-	 * @param inOrganizationName
-	 */
-	public void setOrganizationName(String inOrganizationName) {
-		this.organizationName = inOrganizationName;
-	}
+	
 }

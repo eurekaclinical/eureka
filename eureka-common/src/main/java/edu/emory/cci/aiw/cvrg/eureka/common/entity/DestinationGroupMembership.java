@@ -91,6 +91,7 @@ public class DestinationGroupMembership {
 	}
 
 	public void setGroup(EtlGroup group) {
+		EtlGroup oldGroup = this.group;
 		this.group = group;
 	}
 
@@ -99,6 +100,7 @@ public class DestinationGroupMembership {
 	}
 
 	public void setDestination(DestinationEntity destination) {
+		DestinationEntity oldDest = this.destination;
 		this.destination = destination;
 	}
 	
@@ -129,5 +131,5 @@ public class DestinationGroupMembership {
 	public final String configName() {
 		return this.destination != null ? this.destination.getName() : null;
 	}
-
+	
 }

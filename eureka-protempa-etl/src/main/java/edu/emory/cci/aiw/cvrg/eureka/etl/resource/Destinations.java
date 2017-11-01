@@ -39,23 +39,18 @@ package edu.emory.cci.aiw.cvrg.eureka.etl.resource;
  * <http://www.gnu.org/licenses/gpl-3.0.html>.
  * #L%
  */
-import org.eurekaclinical.eureka.client.comm.Cohort;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.EtlCohortDestination;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.EtlDestination;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.EtlI2B2Destination;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.EtlPatientSetExtractorDestination;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.EtlPatientSetSenderDestination;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.EtlTabularFileDestination;
-import org.eurekaclinical.eureka.client.comm.Node;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.CohortDestinationEntity;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.CohortEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.DestinationEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.DestinationGroupMembership;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.EtlGroup;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.AuthorizedUserEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.I2B2DestinationEntity;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.NodeEntity;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.NodeToNodeEntityVisitor;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.PatientSetExtractorDestinationEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.PatientSetSenderDestinationEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.TabularFileDestinationEntity;
@@ -76,7 +71,7 @@ import org.slf4j.LoggerFactory;
  * @author Andrew Post
  */
 public final class Destinations {
-	
+
 	/**
 	 * The class level logger.
 	 */
@@ -86,71 +81,42 @@ public final class Destinations {
 	private final AuthorizedUserEntity etlUser;
 	private final DestinationDao destinationDao;
 	private final EtlProperties etlProperties;
+	private final EtlDestinationToDestinationEntityVisitor destToDestEntityVisitor;
 
 	public Destinations(EtlProperties inEtlProperties, AuthorizedUserEntity inEtlUser,
-			DestinationDao inDestinationDao, EtlGroupDao inGroupDao) {
+			DestinationDao inDestinationDao, EtlGroupDao inGroupDao,
+			EtlDestinationToDestinationEntityVisitor inDestToDestEntityVisitor) {
 		this.groupDao = inGroupDao;
 		this.etlUser = inEtlUser;
 		this.destinationDao = inDestinationDao;
 		this.etlProperties = inEtlProperties;
+		this.destToDestEntityVisitor = inDestToDestEntityVisitor;
 	}
 
- 	public Long create(EtlDestination etlDestination) {
-		if (etlDestination instanceof EtlCohortDestination) {
-			CohortDestinationEntity cde = new CohortDestinationEntity();
-			cde.setName(etlDestination.getName());
-			cde.setDescription(etlDestination.getDescription());
-			cde.setOwner(this.etlUser);
-			Date now = new Date();
-			cde.setCreatedAt(now);
-			cde.setEffectiveAt(now);
-			Cohort cohort = ((EtlCohortDestination) etlDestination).getCohort();
-			CohortEntity cohortEntity = new CohortEntity();
-			Node node = cohort.getNode();
-			NodeToNodeEntityVisitor v = new NodeToNodeEntityVisitor();
-			node.accept(v);
-			cohortEntity.setNode(v.getNodeEntity());
-			cde.setCohort(cohortEntity);
-			DestinationEntity destinationEntity = this.destinationDao.create(cde);
-                        return destinationEntity.getId();
-		} else {
-			throw new HttpStatusException(Response.Status.BAD_REQUEST, "Can't create i2b2 destinations via web services yet");
+	public Long create(EtlDestination etlDestination) {
+		if (etlDestination.getOwnerUserId() == null) {
+			etlDestination.setOwnerUserId(this.etlUser.getId());
 		}
+		etlDestination.accept(this.destToDestEntityVisitor);
+		DestinationEntity destinationEntity = this.destToDestEntityVisitor.getDestinationEntity();
+		return this.destinationDao.create(destinationEntity).getId();
 	}
 
 	public void update(EtlDestination etlDestination) {
-		if (etlDestination instanceof EtlCohortDestination) {
-			DestinationEntity oldEntity = this.destinationDao.retrieve(etlDestination.getId());
-			if (oldEntity == null || !(oldEntity instanceof CohortDestinationEntity)) {
-				throw new HttpStatusException(Response.Status.NOT_FOUND);
-			}
-			if (!this.etlUser.getId().equals(etlDestination.getOwnerUserId())) {
-				throw new HttpStatusException(Response.Status.NOT_FOUND);
-			}
-			Date now = new Date();
-			oldEntity.setExpiredAt(now);
-			this.destinationDao.update(oldEntity);
-			
-			CohortDestinationEntity cde = new CohortDestinationEntity();
-			cde.setName(etlDestination.getName());
-			cde.setDescription(etlDestination.getDescription());
-			cde.setOwner(this.etlUser);
-			cde.setEffectiveAt(now);
-			cde.setCreatedAt(oldEntity.getCreatedAt());
-			
-			Cohort cohort = ((EtlCohortDestination) etlDestination).getCohort();
-			CohortEntity cohortEntity = new CohortEntity();
-			cde.setCohort(cohortEntity);
-			Node node = cohort.getNode();
-			NodeToNodeEntityVisitor v = new NodeToNodeEntityVisitor();
-			node.accept(v);
-			NodeEntity nodeEntity = v.getNodeEntity();
-			cohortEntity.setNode(nodeEntity);
-			this.destinationDao.create(cde);
-			
-		} else {
-			throw new HttpStatusException(Response.Status.BAD_REQUEST, "Can't update i2b2 destinations via web services yet");
+		DestinationEntity oldEntity = this.destinationDao.retrieve(etlDestination.getId());
+		if (oldEntity == null) {
+			throw new HttpStatusException(Response.Status.NOT_FOUND);
 		}
+		if (!this.etlUser.getId().equals(etlDestination.getOwnerUserId())) {
+			throw new HttpStatusException(Response.Status.NOT_FOUND);
+		}
+		if (etlDestination.getOwnerUserId() == null) {
+			etlDestination.setOwnerUserId(this.etlUser.getId());
+		}
+		
+		etlDestination.accept(this.destToDestEntityVisitor);
+		DestinationEntity cde = this.destToDestEntityVisitor.getDestinationEntity();
+		this.destinationDao.updateCurrent(cde);
 	}
 
 	List<DestinationEntity> configs(AuthorizedUserEntity user) {
@@ -170,7 +136,7 @@ public final class Destinations {
 		I2B2DestinationsDTOExtractor extractor
 				= new I2B2DestinationsDTOExtractor(this.etlProperties, this.etlUser, this.groupDao);
 		for (I2B2DestinationEntity configEntity
-				: this.destinationDao.getAllI2B2Destinations()) {
+				: this.destinationDao.getCurrentI2B2Destinations()) {
 			EtlI2B2Destination dto = extractor.extractDTO(configEntity);
 			if (dto != null) {
 				result.add(dto);
@@ -184,7 +150,7 @@ public final class Destinations {
 		CohortDestinationsDTOExtractor extractor
 				= new CohortDestinationsDTOExtractor(this.etlUser, this.groupDao);
 		for (CohortDestinationEntity configEntity
-				: this.destinationDao.getAllCohortDestinations()) {
+				: this.destinationDao.getCurrentCohortDestinations()) {
 			EtlCohortDestination dto = extractor.extractDTO(configEntity);
 			if (dto != null) {
 				result.add(dto);
@@ -192,13 +158,13 @@ public final class Destinations {
 		}
 		return result;
 	}
-	
+
 	public List<EtlPatientSetExtractorDestination> getAllPatientSetExtractors() {
 		List<EtlPatientSetExtractorDestination> result = new ArrayList<>();
 		PatientSetExtractorDestinationsDTOExtractor extractor
 				= new PatientSetExtractorDestinationsDTOExtractor(this.etlUser, this.groupDao);
 		for (PatientSetExtractorDestinationEntity configEntity
-				: this.destinationDao.getAllPatientSetExtractorDestinations()) {
+				: this.destinationDao.getCurrentPatientSetExtractorDestinations()) {
 			EtlPatientSetExtractorDestination dto = extractor.extractDTO(configEntity);
 			if (dto != null) {
 				result.add(dto);
@@ -206,13 +172,13 @@ public final class Destinations {
 		}
 		return result;
 	}
-	
+
 	public List<EtlPatientSetSenderDestination> getAllPatientSetSenders() {
 		List<EtlPatientSetSenderDestination> result = new ArrayList<>();
 		PatientSetSenderDestinationsDTOExtractor extractor
 				= new PatientSetSenderDestinationsDTOExtractor(this.etlUser, this.groupDao);
 		for (PatientSetSenderDestinationEntity configEntity
-				: this.destinationDao.getAllPatientSetSenderDestinations()) {
+				: this.destinationDao.getCurrentPatientSetSenderDestinations()) {
 			EtlPatientSetSenderDestination dto = extractor.extractDTO(configEntity);
 			if (dto != null) {
 				result.add(dto);
@@ -220,13 +186,13 @@ public final class Destinations {
 		}
 		return result;
 	}
-	
+
 	public List<EtlTabularFileDestination> getAllTabularFiles() {
 		List<EtlTabularFileDestination> result = new ArrayList<>();
 		TabularFileDestinationsDTOExtractor extractor
 				= new TabularFileDestinationsDTOExtractor(this.etlUser, this.groupDao);
 		for (TabularFileDestinationEntity configEntity
-				: this.destinationDao.getAllTabularFileDestinations()) {
+				: this.destinationDao.getCurrentTabularFileDestinations()) {
 			EtlTabularFileDestination dto = extractor.extractDTO(configEntity);
 			if (dto != null) {
 				result.add(dto);
@@ -242,14 +208,14 @@ public final class Destinations {
 	 *
 	 * @return a extractDTO.
 	 */
-	public final EtlDestination getOne(String configId) {
+	public EtlDestination getOne(String configId) {
 		if (configId == null) {
 			throw new IllegalArgumentException("configId cannot be null");
 		}
 		DestinationDTOExtractorVisitor visitor
 				= new DestinationDTOExtractorVisitor(this.etlProperties, this.etlUser, this.groupDao);
-		
-		DestinationEntity byName = this.destinationDao.getByName(configId);
+
+		DestinationEntity byName = this.destinationDao.getCurrentByName(configId);
 		if (byName == null) {
 			throw new HttpStatusException(Response.Status.NOT_FOUND);
 		}
@@ -266,7 +232,7 @@ public final class Destinations {
 		List<EtlDestination> result = new ArrayList<>();
 		DestinationDTOExtractorVisitor visitor
 				= new DestinationDTOExtractorVisitor(this.etlProperties, this.etlUser, this.groupDao);
-		for (DestinationEntity configEntity : this.destinationDao.getAll()) {
+		for (DestinationEntity configEntity : this.destinationDao.getCurrent()) {
 			configEntity.accept(visitor);
 			EtlDestination dto = visitor.getEtlDestination();
 			if (dto != null) {
@@ -276,8 +242,8 @@ public final class Destinations {
 		return result;
 	}
 
-	void delete(String destId) {
-		DestinationEntity dest = this.destinationDao.getByName(destId);
+	public void delete(String destId) {
+		DestinationEntity dest = this.destinationDao.getCurrentByName(destId);
 		if (dest == null || !this.etlUser.equals(dest.getOwner())) {
 			throw new HttpStatusException(Response.Status.NOT_FOUND);
 		}

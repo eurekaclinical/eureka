@@ -39,6 +39,7 @@ package edu.emory.cci.aiw.cvrg.eureka.common.entity;
  * <http://www.gnu.org/licenses/gpl-3.0.html>.
  * #L%
  */
+import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -104,6 +105,11 @@ public class I2B2DestinationEntity extends DestinationEntity {
 
 	@OneToMany(cascade = CascadeType.ALL, targetEntity = I2B2DestinationConceptSpecEntity.class, mappedBy = "destination")
 	private List<I2B2DestinationConceptSpecEntity> conceptSpecs;
+
+	public I2B2DestinationEntity() {
+		this.dataSpecs = new ArrayList<>();
+		this.conceptSpecs = new ArrayList<>();
+	}
 
 	@Override
 	public void accept(DestinationEntityVisitor visitor) {
@@ -303,19 +309,53 @@ public class I2B2DestinationEntity extends DestinationEntity {
 	}
 
 	public List<I2B2DestinationDataSpecEntity> getDataSpecs() {
-		return dataSpecs;
+		return new ArrayList<>(this.dataSpecs);
 	}
 
-	public void setDataSpecs(List<I2B2DestinationDataSpecEntity> dataSpecs) {
-		this.dataSpecs = dataSpecs;
+	public void setDataSpecs(List<I2B2DestinationDataSpecEntity> inDataSpecs) {
+		if (inDataSpecs == null) {
+			this.dataSpecs = new ArrayList<>();
+		} else {
+			this.dataSpecs = new ArrayList<>(inDataSpecs);
+		}
+	}
+
+	public void addDataSpec(I2B2DestinationDataSpecEntity inDataSpec) {
+		if (!this.dataSpecs.contains(inDataSpec)) {
+			this.dataSpecs.add(inDataSpec);
+			inDataSpec.setDestination(this);
+		}
+	}
+
+	public void removeDataSpec(I2B2DestinationDataSpecEntity inDataSpec) {
+		if (this.dataSpecs.remove(inDataSpec)) {
+			inDataSpec.setDestination(null);
+		}
 	}
 
 	public List<I2B2DestinationConceptSpecEntity> getConceptSpecs() {
-		return conceptSpecs;
+		return new ArrayList<>(this.conceptSpecs);
 	}
 
-	public void setConceptSpecs(List<I2B2DestinationConceptSpecEntity> conceptSpecs) {
-		this.conceptSpecs = conceptSpecs;
+	public void setConceptSpecs(List<I2B2DestinationConceptSpecEntity> inConceptSpecs) {
+		if (inConceptSpecs == null) {
+			this.conceptSpecs = new ArrayList<>();
+		} else {
+			this.conceptSpecs = new ArrayList<>(inConceptSpecs);
+		}
+	}
+	
+	public void addConceptSpec(I2B2DestinationConceptSpecEntity inConceptSpec) {
+		if (!this.conceptSpecs.contains(inConceptSpec)) {
+			this.conceptSpecs.add(inConceptSpec);
+			inConceptSpec.setDestination(this);
+		}
+	}
+	
+	public void removeConceptSpec(I2B2DestinationConceptSpecEntity inConceptSpec) {
+		if (this.conceptSpecs.remove(inConceptSpec)) {
+			inConceptSpec.setDestination(null);
+		}
 	}
 
 	public String getMetaConnect() {

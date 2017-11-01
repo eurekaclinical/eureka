@@ -60,9 +60,7 @@ public class JpaSourceConfigDao extends GenericDao<SourceConfigEntity, Long> imp
 
 	@Override
 	public SourceConfigEntity getByName(String name) {
-		return getUniqueByAttribute(SourceConfigEntity_.name, name);
+		return getDatabaseSupport().getUniqueByAttribute(SourceConfigEntity.class, SourceConfigEntity_.name, name);
 	}
-	
-	
 	
 }

@@ -93,7 +93,7 @@ public class OutputResource {
 	@Path("/output/{destinationId}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response doGet(@PathParam("destinationId") String inId) {
-		DestinationEntity dest = this.destinationDao.getByName(inId);
+		DestinationEntity dest = this.destinationDao.getCurrentByName(inId);
 		if (dest == null) {
 			throw new HttpStatusException(Status.PRECONDITION_FAILED);
 		}

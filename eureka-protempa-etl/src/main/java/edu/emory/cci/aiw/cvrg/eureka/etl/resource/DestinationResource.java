@@ -74,36 +74,38 @@ import org.eurekaclinical.standardapis.exception.HttpStatusException;
 @RolesAllowed({"researcher"})
 @Consumes(MediaType.APPLICATION_JSON)
 public class DestinationResource {
-	
+
 	private final EtlProperties etlProperties;
 	private final AuthorizedUserDao userDao;
 	private final DestinationDao destinationDao;
 	private final AuthorizedUserSupport authenticationSupport;
 	private final EtlGroupDao groupDao;
+	private final EtlDestinationToDestinationEntityVisitor destToDestEntityVisitor;
 
 	@Inject
-	public DestinationResource(EtlProperties inEtlProperties, AuthorizedUserDao inEtlUserDao, DestinationDao inDestinationDao, EtlGroupDao inGroupDao) {
+	public DestinationResource(EtlProperties inEtlProperties, AuthorizedUserDao inEtlUserDao, DestinationDao inDestinationDao, EtlGroupDao inGroupDao, EtlDestinationToDestinationEntityVisitor inDestToDestEntityVisitor) {
 		this.etlProperties = inEtlProperties;
 		this.userDao = inEtlUserDao;
 		this.destinationDao = inDestinationDao;
 		this.authenticationSupport = new AuthorizedUserSupport(this.userDao);
 		this.groupDao = inGroupDao;
+		this.destToDestEntityVisitor = inDestToDestEntityVisitor;
 	}
-	
+
 	@POST
 	public Response create(@Context HttpServletRequest request, EtlDestination etlDestination) {
 		AuthorizedUserEntity user = this.authenticationSupport.getUser(request);
-		Destinations destinations = new Destinations(this.etlProperties, user, this.destinationDao, this.groupDao);
-                Long destId = destinations.create(etlDestination);
-                return Response.created(URI.create("/" + destId)).build();
+		Destinations destinations = new Destinations(this.etlProperties, user, this.destinationDao, this.groupDao, this.destToDestEntityVisitor);
+		Long destId = destinations.create(etlDestination);
+		return Response.created(URI.create("/" + destId)).build();
 	}
-	
+
 	@PUT
 	public void update(@Context HttpServletRequest request, EtlDestination etlDestination) {
 		AuthorizedUserEntity user = this.authenticationSupport.getUser(request);
-		new Destinations(this.etlProperties, user, this.destinationDao, this.groupDao).update(etlDestination);
+		new Destinations(this.etlProperties, user, this.destinationDao, this.groupDao, this.destToDestEntityVisitor).update(etlDestination);
 	}
-	
+
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("/{destId}")
@@ -111,8 +113,8 @@ public class DestinationResource {
 			@Context HttpServletRequest request,
 			@PathParam("destId") String destId) {
 		AuthorizedUserEntity user = this.authenticationSupport.getUser(request);
-		EtlDestination result 
-				= new Destinations(this.etlProperties, user, this.destinationDao, this.groupDao).getOne(destId);
+		EtlDestination result
+				= new Destinations(this.etlProperties, user, this.destinationDao, this.groupDao, this.destToDestEntityVisitor).getOne(destId);
 		if (result != null) {
 			return result;
 		} else {
@@ -126,7 +128,7 @@ public class DestinationResource {
 			@Context HttpServletRequest request,
 			@QueryParam("type") DestinationType type) {
 		AuthorizedUserEntity user = this.authenticationSupport.getUser(request);
-		Destinations destinations = new Destinations(this.etlProperties, user, this.destinationDao, this.groupDao);
+		Destinations destinations = new Destinations(this.etlProperties, user, this.destinationDao, this.groupDao, this.destToDestEntityVisitor);
 		if (type == null) {
 			return destinations.getAll();
 		}
@@ -145,13 +147,13 @@ public class DestinationResource {
 				throw new AssertionError("Unexpected destination type " + type);
 		}
 	}
-	
+
 	@DELETE
 	@Path("/{destId}")
 	public void delete(@Context HttpServletRequest request,
 			@PathParam("destId") String destId) {
 		AuthorizedUserEntity user = this.authenticationSupport.getUser(request);
-		new Destinations(this.etlProperties, user, this.destinationDao, this.groupDao).delete(destId);
+		new Destinations(this.etlProperties, user, this.destinationDao, this.groupDao, this.destToDestEntityVisitor).delete(destId);
 	}
 
 }

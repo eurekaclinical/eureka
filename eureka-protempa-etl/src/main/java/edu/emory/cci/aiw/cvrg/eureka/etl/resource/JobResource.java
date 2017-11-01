@@ -169,7 +169,7 @@ public class JobResource {
 			@PathParam("jobId") Long inJobId, @PathParam("propId") String inPropId) {
 		Job job = getJob(request, inJobId);
 		String destinationId = job.getDestinationId();
-		DestinationEntity destEntity = this.destinationDao.getByName(destinationId);
+		DestinationEntity destEntity = this.destinationDao.getCurrentByName(destinationId);
 		if (destEntity != null) {
 			try {
 				Destination dest = this.protempaDestinationFactory.getInstance(destEntity, false);
@@ -299,7 +299,7 @@ public class JobResource {
 		EntityTransaction transaction = this.entityManagerProvider.get().getTransaction();
 		transaction.begin();
 		DestinationEntity destination
-				= this.destinationDao.getByName(destinationId);
+				= this.destinationDao.getCurrentByName(destinationId);
 		if (destination == null) {
 			transaction.rollback();
 			throw new HttpStatusException(Status.BAD_REQUEST, "Invalid destination " + job.getDestinationId());

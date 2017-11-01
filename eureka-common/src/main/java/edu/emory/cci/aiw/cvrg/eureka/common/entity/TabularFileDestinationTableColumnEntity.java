@@ -81,7 +81,7 @@ public class TabularFileDestinationTableColumnEntity {
 	private TabularFileDestinationEntity destination;
 	
 	private String format;
-
+	
 	public Long getId() {
 		return id;
 	}

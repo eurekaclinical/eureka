@@ -98,8 +98,6 @@ public class ServiceProperties extends CasJerseyEurekaClinicalProperties {
 	 */
 	public AppPropertiesLinks getAppPropertiesLinks() {
 		this.appPropertiesLinks = new AppPropertiesLinks();
-		this.appPropertiesLinks.setUserWebappUrl(this.getValue("eurekaclinical.userwebapp.url"));   
-		this.appPropertiesLinks.setUserServiceUrl(this.getValue("eurekaclinical.userservice.url")); 
 		this.appPropertiesLinks.setSupportUri(this.getSupportUri());
 		this.appPropertiesLinks.setOrganizationName(this.getValue("project.organization.name"));
 		return this.appPropertiesLinks;

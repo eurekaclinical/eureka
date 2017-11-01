@@ -47,19 +47,21 @@ import edu.emory.cci.aiw.cvrg.eureka.common.entity.PatientSetExtractorDestinatio
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.PatientSetSenderDestinationEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.TabularFileDestinationEntity;
 import java.util.List;
+import org.eurekaclinical.standardapis.dao.HistoricalDaoWithUniqueName;
 
 /**
  *
  * @author Andrew Post
  */
-public interface DestinationDao extends ConfigDao<DestinationEntity> {
-	List<CohortDestinationEntity> getAllCohortDestinations();
+public interface DestinationDao extends HistoricalDaoWithUniqueName<Long, DestinationEntity> {
+	
+	List<CohortDestinationEntity> getCurrentCohortDestinations();
 
-	List<I2B2DestinationEntity> getAllI2B2Destinations();
+	List<I2B2DestinationEntity> getCurrentI2B2Destinations();
 	
-	List<PatientSetExtractorDestinationEntity> getAllPatientSetExtractorDestinations();
+	List<PatientSetExtractorDestinationEntity> getCurrentPatientSetExtractorDestinations();
 	
-	List<PatientSetSenderDestinationEntity> getAllPatientSetSenderDestinations();
+	List<PatientSetSenderDestinationEntity> getCurrentPatientSetSenderDestinations();
 	
-	List<TabularFileDestinationEntity> getAllTabularFileDestinations();
+	List<TabularFileDestinationEntity> getCurrentTabularFileDestinations();
 }
