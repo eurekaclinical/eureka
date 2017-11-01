@@ -934,4 +934,7 @@
 	<changeSet author="arpost" id="1361552652236-44">
 		<addUniqueConstraint tableName="DESTINATIONS" columnNames="NAME, EXPIRED_AT" constraintName="UNIQ_DEST_NAME_EXP"/>
 	</changeSet>
+	<changeSet author="arpost" id="1361552652236-45">
+		<dropColumn tableName="DESTINATIONS" columnName="UPDATED_AT"/>
+	</changeSet>
 </databaseChangeLog>
