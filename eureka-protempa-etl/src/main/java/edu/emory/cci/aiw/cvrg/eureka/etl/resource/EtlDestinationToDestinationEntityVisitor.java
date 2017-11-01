@@ -83,7 +83,7 @@ public class EtlDestinationToDestinationEntityVisitor implements EtlDestinationV
 	@Override
 	public void visit(EtlCohortDestination etlCohortDestination) {
 		CohortDestinationEntity cde = new CohortDestinationEntity();
-		visitGeneral(etlCohortDestination, cde);
+		visitCommon(etlCohortDestination, cde);
 		Cohort cohort = etlCohortDestination.getCohort();
 		CohortEntity cohortEntity = new CohortEntity();
 		Node node = cohort.getNode();
@@ -94,18 +94,14 @@ public class EtlDestinationToDestinationEntityVisitor implements EtlDestinationV
 		this.destinationEntity = cde;
 	}
 
-	private void visitGeneral(EtlDestination etlDestination, DestinationEntity destinationEntity) {
-		Date now = new Date();
+	private void visitCommon(EtlDestination etlDestination, DestinationEntity destinationEntity) {
 		destinationEntity.setId(etlDestination.getId());
-		destinationEntity.setCreatedAt(now);
 		destinationEntity.setDeidentificationEnabled(false);
 		destinationEntity.setDescription(etlDestination.getDescription());
-		destinationEntity.setEffectiveAt(now);
 		Long encryptionAlgorithm = null;
 		if (encryptionAlgorithm != null) {
 			destinationEntity.setEncryptionAlgorithm(this.encryptionAlgorithmDao.retrieve(encryptionAlgorithm));
 		}
-		destinationEntity.setExpiredAt(null);
 		//Long group = null;
 		//if (group != null) {
 		//	destinationEntity.setGroups(this.groupDao.retrieve(group));

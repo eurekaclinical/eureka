@@ -73,7 +73,7 @@ class CohortDestinationsDTOExtractor extends DestinationsDTOExtractor<EtlCohortD
 		cohortDest.setUpdatedAt(destinationEntity.getEffectiveAt());
 		cohortDest.setGetStatisticsSupported(destinationEntity.isGetStatisticsSupported());
 		cohortDest.setAllowingQueryPropositionIds(destinationEntity.isAllowingQueryPropositionIds());
-		cohortDest.setRequiredPropositionIds(new ArrayList<String>(0));
+		cohortDest.setRequiredPropositionIds(new ArrayList<>(0));
 
 		return cohortDest;
 	}

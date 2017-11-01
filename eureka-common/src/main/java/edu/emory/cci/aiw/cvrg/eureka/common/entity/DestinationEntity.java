@@ -213,26 +213,32 @@ public abstract class DestinationEntity implements ConfigEntity, HistoricalEntit
 		}
 	}
 
+	@Override
 	public Date getCreatedAt() {
 		return createdAt;
 	}
 
+	@Override
 	public void setCreatedAt(Date createdAt) {
 		this.createdAt = createdAt;
 	}
 
+	@Override
 	public Date getEffectiveAt() {
 		return effectiveAt;
 	}
 
+	@Override
 	public void setEffectiveAt(Date effectiveAt) {
 		this.effectiveAt = effectiveAt;
 	}
 
+	@Override
 	public Date getExpiredAt() {
 		return expiredAt;
 	}
 
+	@Override
 	public void setExpiredAt(Date expiredAt) {
 		this.expiredAt = expiredAt;
 	}
