@@ -107,6 +107,12 @@
 			<groupId>org.eurekaclinical</groupId>
 			<artifactId>eurekaclinical-registry-client</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>org.apache.tomcat</groupId>
+			<artifactId>tomcat-catalina</artifactId>
+			<version>7.0.47</version>
+			<scope>provided</scope>
+		</dependency>
 	</dependencies>
 </project>
 

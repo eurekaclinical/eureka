@@ -54,7 +54,7 @@
 		<eureka-client-version>3.0-Alpha-12</eureka-client-version>
 		<eurekaclinical-patient-set-client-version>1.0-Alpha-10</eurekaclinical-patient-set-client-version>
 
-		<cas-server-version>3.0-Alpha-23</cas-server-version>
+		<cas-server-version>3.0-Alpha-24</cas-server-version>
 		<user-webapp-version>1.0-Alpha-38</user-webapp-version>
 		<user-service-version>1.0-Alpha-27</user-service-version>
 
