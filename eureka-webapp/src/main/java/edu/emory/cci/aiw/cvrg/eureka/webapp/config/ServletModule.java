@@ -43,7 +43,6 @@ import com.google.inject.Singleton;
 import edu.emory.cci.aiw.cvrg.eureka.servlet.SessionPropertiesServlet;
 import java.util.HashMap;
 import java.util.Map;
-import org.apache.catalina.filters.CorsFilter;
 import org.eurekaclinical.common.config.AbstractAuthorizingServletModule;
 import org.eurekaclinical.common.servlet.DestroySessionServlet;
 import org.eurekaclinical.common.servlet.PostMessageLoginServlet;
@@ -62,14 +61,6 @@ class ServletModule extends AbstractAuthorizingServletModule {
 		this.properties = inProperties;
 	}
 
-	@Override
-	protected void setupFilters() {
-		Map<String, String> params = new HashMap<>();
-		params.put("cors.allowed.methods", "GET,POST,HEAD,OPTIONS,PUT");
-		filter("/*").through(CorsFilter.class, params);
-		super.setupFilters();
-	}
-	
 	@Override
 	protected void setupServlets() {
 		serve("/proxy-resource/*").with(ProxyServlet.class);

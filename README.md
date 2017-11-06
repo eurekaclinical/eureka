@@ -66,7 +66,8 @@ Typically, you build it by invoking `mvn clean install` at the command line. For
 You can build any of the modules separately by appending `-pl <module-name>` to your maven command, where `<module-name>` is the artifact id of the module.
 
 ## Performing system tests
-You can run this project in an embedded tomcat by executing `mvn tomcat7:run` after you have built it. It will be accessible in your web browser at https://localhost:8443/eureka-webapp/. Your username will be `superuser`.
+You can run this project in an embedded tomcat by executing `mvn tomcat7:run` after you have built it. You also must be running the
+eurekaclinical-analytics-webclient project. The eureka-webapp backend calls will then be accessible in your web browser at https://localhost:8000/eureka-webapp/. Your username will be `superuser`.
 
 ## Installation
 NOTE: we have [Ansible](http://www.ansible.com) provisioning scripts that automate the installation process. Contact use for details. The following provides detail on the steps that those scripts perform. We have omitted general steps such as installation of Tomcat, SSL certificates, and the like.
