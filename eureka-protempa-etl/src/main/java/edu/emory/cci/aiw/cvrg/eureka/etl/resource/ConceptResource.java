@@ -94,19 +94,19 @@ public class ConceptResource {
 			try (PropositionDefinitionFinder propositionFinder
 					= new PropositionDefinitionFinder(
 							inConfigId, this.etlProperties)) {
-						PropositionDefinition definition = propositionFinder
-								.find(inKey);
-						if (definition != null) {
-							return definition;
-						} else {
-							throw new HttpStatusException(
-									Response.Status.NOT_FOUND,
-									"No proposition with id " + inKey);
-						}
-					} catch (PropositionFinderException e) {
-						throw new HttpStatusException(
-								Response.Status.INTERNAL_SERVER_ERROR, e);
-					}
+				PropositionDefinition definition = propositionFinder
+						.find(inKey);
+				if (definition != null) {
+					return definition;
+				} else {
+					throw new HttpStatusException(
+							Response.Status.NOT_FOUND,
+							"No proposition with id " + inKey);
+				}
+			} catch (PropositionFinderException e) {
+				throw new HttpStatusException(
+						Response.Status.INTERNAL_SERVER_ERROR, e);
+			}
 		} else {
 			throw new HttpStatusException(
 					Response.Status.INTERNAL_SERVER_ERROR,
@@ -136,7 +136,7 @@ public class ConceptResource {
 	}
 
 	private List<PropositionDefinition> getPropositionsCommon(String inConfigId, List<String> inKeys, String withChildren) throws HttpStatusException {
-			if (this.etlProperties.getConfigDir() != null) {
+		if (this.etlProperties.getConfigDir() != null) {
 			try (PropositionDefinitionFinder propositionFinder
 					= new PropositionDefinitionFinder(inConfigId,
 							this.etlProperties)) {
@@ -172,16 +172,17 @@ public class ConceptResource {
 			LOGGER.debug("Searching for String " + inSearchKey
 					+ " in the system element tree");
 			if (this.etlProperties.getConfigDir() != null) {
-				PropositionDefinitionFinder propositionFinder = new PropositionDefinitionFinder(
-						inSourceConfigId, this.etlProperties);
-				return propositionFinder.getPropIdsBySearchKey(inSearchKey);
+				try (PropositionDefinitionFinder propositionFinder = new PropositionDefinitionFinder(
+						inSourceConfigId, this.etlProperties)) {
+					return propositionFinder.getPropIdsBySearchKey(inSearchKey);
+				}
 			} else {
 				throw new HttpStatusException(
 						Response.Status.INTERNAL_SERVER_ERROR,
 						"No Protempa configuration directory is "
-								+ "specified in application.properties. "
-								+ "Proposition finding will not work without it. "
-								+ "Please create it and try again.");
+						+ "specified in application.properties. "
+						+ "Proposition finding will not work without it. "
+						+ "Please create it and try again.");
 			}
 
 		} catch (PropositionFinderException e) {
@@ -190,7 +191,6 @@ public class ConceptResource {
 		}
 
 	}
-
 
 	@GET
 	@Path("/propsearch/{sourceConfigId}/{searchKey}")
@@ -202,16 +202,17 @@ public class ConceptResource {
 			LOGGER.debug("Searching for String " + inSearchKey
 					+ " in the system element tree");
 			if (this.etlProperties.getConfigDir() != null) {
-				PropositionDefinitionFinder propositionFinder = new PropositionDefinitionFinder(
-						inSourceConfigId, this.etlProperties);
-				return propositionFinder.getPropositionDefinitionsBySearchKey(inSearchKey);
+				try (PropositionDefinitionFinder propositionFinder = new PropositionDefinitionFinder(
+						inSourceConfigId, this.etlProperties)) {
+					return propositionFinder.getPropositionDefinitionsBySearchKey(inSearchKey);
+				}
 			} else {
 				throw new HttpStatusException(
 						Response.Status.INTERNAL_SERVER_ERROR,
 						"No Protempa configuration directory is "
-								+ "specified in application.properties. "
-								+ "Proposition finding will not work without it. "
-								+ "Please create it and try again.");
+						+ "specified in application.properties. "
+						+ "Proposition finding will not work without it. "
+						+ "Please create it and try again.");
 			}
 
 		} catch (PropositionFinderException e) {

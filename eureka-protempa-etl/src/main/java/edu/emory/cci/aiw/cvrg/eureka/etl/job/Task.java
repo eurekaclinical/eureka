@@ -222,6 +222,12 @@ public final class Task implements Runnable {
 				} catch (Throwable ignore) {
 				}
 			}
+			/*
+			 * We are neither in a unit of work nor in a method with the
+			 * @Transactional annotation, so we need to close the entity
+			 * manager manually.
+			 */
+			entityManager.close();
 		}
 
 	}
