@@ -39,13 +39,11 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.etl.job;
 
-import com.google.inject.Inject;
-import com.google.inject.Provider;
-import com.google.inject.Singleton;
 import edu.emory.cci.aiw.cvrg.eureka.etl.dao.JobDao;
+import javax.inject.Inject;
+import javax.inject.Provider;
 import javax.persistence.EntityManager;
 
-@Singleton
 public class TaskProvider implements Provider<Task> {
 
 	private final JobDao jobDao;
