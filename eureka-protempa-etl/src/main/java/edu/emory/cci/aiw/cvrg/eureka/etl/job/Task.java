@@ -46,9 +46,6 @@ import org.protempa.backend.dsb.filter.Filter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.google.inject.Inject;
-import com.google.inject.Provider;
-
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.JobEntity;
 import edu.emory.cci.aiw.cvrg.eureka.common.entity.JobEventEntity;
 import org.eurekaclinical.eureka.client.comm.JobStatus;
@@ -59,6 +56,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import org.protempa.backend.Configuration;
 import java.util.Date;
+import javax.inject.Inject;
+import javax.inject.Provider;
 import javax.persistence.EntityManager;
 
 public final class Task implements Runnable {
