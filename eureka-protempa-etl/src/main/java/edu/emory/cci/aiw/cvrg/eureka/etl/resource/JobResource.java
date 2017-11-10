@@ -83,6 +83,7 @@ import edu.emory.cci.aiw.cvrg.eureka.etl.config.EtlProperties;
 import edu.emory.cci.aiw.cvrg.eureka.etl.dao.JobDao;
 import edu.emory.cci.aiw.cvrg.eureka.etl.job.TaskManager;
 import edu.emory.cci.aiw.cvrg.eureka.etl.dest.ProtempaDestinationFactory;
+import edu.emory.cci.aiw.cvrg.eureka.etl.job.Task;
 import java.io.IOException;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
@@ -113,13 +114,15 @@ public class JobResource {
 	private final ProtempaDestinationFactory protempaDestinationFactory;
 	private final EtlProperties etlProperties;
 	private final Provider<EntityManager> entityManagerProvider;
+	private final Provider<Task> taskProvider;
 
 	@Inject
 	public JobResource(JobDao inJobDao, TaskManager inTaskManager,
 			AuthorizedUserDao inEtlUserDao, DestinationDao inDestinationDao,
 			EtlProperties inEtlProperties,
 			ProtempaDestinationFactory inProtempaDestinationFactory,
-			Provider<EntityManager> inEntityManagerProvider) {
+			Provider<EntityManager> inEntityManagerProvider,
+			Provider<Task> inTaskProvider) {
 		this.jobDao = inJobDao;
 		this.taskManager = inTaskManager;
 		this.etlUserDao = inEtlUserDao;
@@ -128,6 +131,8 @@ public class JobResource {
 		this.etlProperties = inEtlProperties;
 		this.protempaDestinationFactory = inProtempaDestinationFactory;
 		this.entityManagerProvider = inEntityManagerProvider;
+		this.taskProvider = inTaskProvider;
+		
 	}
 
 	@Transactional
@@ -265,12 +270,14 @@ public class JobResource {
 		} else {
 			dateTimeFilter = null;
 		}
-		this.taskManager.queueTask(jobEntity.getId(),
-				inJobRequest.getUserPropositions(),
-				inJobRequest.getPropositionIdsToShow(),
-				dateTimeFilter,
-				jobSpec.isUpdateData(),
-				prompts);
+		Task task = this.taskProvider.get();
+		task.setJobId(jobEntity.getId());
+		task.setPropositionDefinitions(inJobRequest.getUserPropositions());
+		task.setPropositionIdsToShow(inJobRequest.getPropositionIdsToShow());
+		task.setFilter(dateTimeFilter);
+		task.setUpdateData(jobSpec.isUpdateData());
+		task.setPrompts(prompts);
+		this.taskManager.queueTask(task);
 		return jobEntity.getId();
 	}
 	

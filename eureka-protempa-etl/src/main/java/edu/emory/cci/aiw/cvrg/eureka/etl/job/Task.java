@@ -82,11 +82,11 @@ public final class Task implements Runnable {
 		this.entityManagerProvider = inEntityManagerProvider;
 	}
 
-	Long getJobId() {
+	public Long getJobId() {
 		return jobId;
 	}
 
-	void setJobId(Long inJobId) {
+	public void setJobId(Long inJobId) {
 		jobId = inJobId;
 	}
 
@@ -98,11 +98,11 @@ public final class Task implements Runnable {
 		this.filter = filter;
 	}
 
-	List<String> getPropositionIdsToShow() {
+	public List<String> getPropositionIdsToShow() {
 		return new ArrayList<>(this.propIdsToShow);
 	}
 
-	void setPropositionIdsToShow(List<String> propIdsToShow) {
+	public void setPropositionIdsToShow(List<String> propIdsToShow) {
 		if (propIdsToShow == null) {
 			this.propIdsToShow = Collections.emptyList();
 		} else {
@@ -110,11 +110,11 @@ public final class Task implements Runnable {
 		}
 	}
 
-	List<PropositionDefinition> getPropositionDefinitions() {
+	public List<PropositionDefinition> getPropositionDefinitions() {
 		return propositionDefinitions;
 	}
 
-	void setPropositionDefinitions(List<PropositionDefinition> inPropositionDefinitions) {
+	public void setPropositionDefinitions(List<PropositionDefinition> inPropositionDefinitions) {
 		if (inPropositionDefinitions != null) {
 			this.propositionDefinitions = inPropositionDefinitions;
 		} else {

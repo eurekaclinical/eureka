@@ -39,52 +39,35 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.etl.job;
 
-import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import org.protempa.PropositionDefinition;
-import org.protempa.backend.dsb.filter.Filter;
 
-import com.google.inject.Inject;
-import com.google.inject.Provider;
 import com.google.inject.Singleton;
 
 import edu.emory.cci.aiw.cvrg.eureka.etl.config.EtlProperties;
-import org.protempa.backend.Configuration;
+import javax.inject.Inject;
 
 @Singleton
 public class TaskManager {
+
 	private final ExecutorService executorService;
-	private final Provider<Task> taskProvider;
 
 	@Inject
-	public TaskManager (Provider<Task> inTaskProvider,
-		EtlProperties inEtlProperties) {
+	public TaskManager(EtlProperties inEtlProperties) {
 		final int poolSize = inEtlProperties.getTaskThreadPoolSize();
-		this.taskProvider = inTaskProvider;
 		this.executorService = Executors.newFixedThreadPool(poolSize);
 	}
 
-	public void queueTask (Long inJobId, 
-			List<PropositionDefinition> inPropositionDefinitions, 
-			List<String> propIdsToShow, Filter filter, boolean updateData,
-			Configuration prompts) {
-		Task task = this.taskProvider.get();
-		task.setJobId(inJobId);
-		task.setPropositionDefinitions(inPropositionDefinitions);
-		task.setPropositionIdsToShow(propIdsToShow);
-		task.setFilter(filter);
-		task.setUpdateData(updateData);
-		task.setPrompts(prompts);
-		this.executorService.execute(task);
+	public void queueTask(Task inTask) {
+		this.executorService.execute(inTask);
 	}
 
-	public void shutdown () {
+	public void shutdown() {
 		this.executorService.shutdown();
 	}
 
-	public void shutdownNow () {
+	public void shutdownNow() {
 		this.executorService.shutdownNow();
 	}
 }
