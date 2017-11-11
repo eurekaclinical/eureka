@@ -42,23 +42,20 @@ package edu.emory.cci.aiw.cvrg.eureka.etl.job;
 import edu.emory.cci.aiw.cvrg.eureka.etl.dao.JobDao;
 import javax.inject.Inject;
 import javax.inject.Provider;
-import javax.persistence.EntityManager;
 
 public class TaskProvider implements Provider<Task> {
 
 	private final JobDao jobDao;
 	private final ETL etl;
-	private final Provider<EntityManager> entityManagerProvider;
 
 	@Inject
-	public TaskProvider (JobDao inJobDao, ETL inETL, Provider<EntityManager> inEntityManagerProvider) {
+	public TaskProvider (JobDao inJobDao, ETL inETL) {
 		this.jobDao = inJobDao;
 		this.etl = inETL;
-		this.entityManagerProvider = inEntityManagerProvider;
 	}
 
 	@Override
 	public Task get() {
-		return new Task(this.jobDao, this.etl, this.entityManagerProvider);
+		return new Task(this.jobDao, this.etl);
 	}
 }

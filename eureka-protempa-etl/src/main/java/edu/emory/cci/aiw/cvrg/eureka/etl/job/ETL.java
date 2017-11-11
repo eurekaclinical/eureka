@@ -163,9 +163,6 @@ public class ETL {
 		}
 	}
 
-	void close() {
-	}
-
 	private void logValidationEvents(JobEntity job, DataValidationEvent[] events, DataSourceFailedDataValidationException ex) {
 		for (DataValidationEvent event : events) {
 			AbstractFileInfo fileInfo;
