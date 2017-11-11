@@ -39,6 +39,7 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.etl.job;
 
+import com.google.inject.Injector;
 import com.google.inject.persist.Transactional;
 import java.util.List;
 
@@ -62,7 +63,6 @@ import javax.inject.Inject;
 public class Task implements Runnable {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(Task.class);
-	private final JobDao jobDao;
 	private final ETL etl;
 	private Long jobId;
 	private List<PropositionDefinition> propositionDefinitions;
@@ -70,10 +70,13 @@ public class Task implements Runnable {
 	private Filter filter;
 	private boolean updateData;
 	private Configuration prompts;
+	private JobDao jobDao;
+	
+	@Inject
+	private Injector injector;
 
 	@Inject
-	Task(JobDao inJobDao, ETL inEtl) {
-		this.jobDao = inJobDao;
+	Task(ETL inEtl) {
 		this.etl = inEtl;
 		this.propIdsToShow = Collections.emptyList();
 		this.propositionDefinitions = Collections.emptyList();
@@ -137,6 +140,7 @@ public class Task implements Runnable {
 
 	@Override
 	public void run() {
+		this.jobDao = this.injector.getInstance(JobDao.class);
 		try {
 			storeProcessingStartedEvent();
 			PropositionDefinition[] propDefArray
