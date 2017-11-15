@@ -15,7 +15,7 @@
 	<parent>
 		<groupId>org.eurekaclinical</groupId>
 		<artifactId>eureka</artifactId>
-		<version>3.0-Alpha-35</version>
+		<version>3.0-Alpha-36-SNAPSHOT</version>
 	</parent>
 	
 	<build>
