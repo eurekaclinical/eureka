@@ -586,14 +586,5 @@
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
-	
-	<profiles>
-		<profile>
-			<id>production</id>
-			<properties>
-				<eurekaclinical.stage>PRODUCTION</eurekaclinical.stage>
-			</properties>
-		</profile>
-	</profiles>
 </project>
 
