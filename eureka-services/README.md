@@ -1276,8 +1276,6 @@ This webapp is configured using a properties file located at `/etc/eureka/applic
 * `eureka.support.uri.name`: Display name of the URI link for contacting support.
 * `eureka.services.url`: URL of the server running the services layer; default is https://localhost:8443/eureka-services.
 * `eureka.services.callbackserver`: URL of the server running the services layer; default is https://localhost:8443.
-* `eureka.services.jobpool.size`: the number of threads in the ETL threadpool; default is 5.
-* `eureka.services.registration.timeout`: timeout in hours for registration request verification; default is 72.
 * `eureka.services.defaultprops`: concept subtrees to show in the concept tree: default is Patient PatientDetails Encounter  ICD9:Diagnoses ICD9:Procedures ICD10:Diagnoses ICD10:Procedures LAB:LabTest MED:medications VitalSign
 
 A Tomcat restart is required to detect any changes to the configuration file.
