@@ -75,7 +75,7 @@ class AppModule extends AbstractModule {
 
 	@Override
 	protected void configure() {
-		bind(RouterTable.class).to(WebappRouterTable.class);
+		bind(RouterTable.class).to(WebappRouterTable.class).in(SessionScoped.class);
 		bind(WebappProperties.class).toInstance(this.webappProperties);
 		bind(CasEurekaClinicalProperties.class).toInstance(this.webappProperties);
 		bind(ServicesClient.class).toProvider(this.servicesClientProvider).in(SessionScoped.class);
