@@ -83,7 +83,7 @@ public class ConfigListener extends GuiceServletContextListener {
 	public void contextInitialized(ServletContextEvent servletContextEvent) {
 		super.contextInitialized(servletContextEvent);
 		ServletContext servletContext = servletContextEvent.getServletContext();
-		servletContext.addListener(new ClientSessionListener(EtlClient.class));
+		servletContext.addListener(new ClientSessionListener());
 	}
 
 }

@@ -79,10 +79,7 @@ public class WebappListener extends GuiceServletContextListener {
 	public void contextInitialized(ServletContextEvent servletContextEvent) {
 		super.contextInitialized(servletContextEvent);
 		ServletContext servletContext = servletContextEvent.getServletContext();
-		servletContext.addListener(new ClientSessionListener(EurekaClinicalUserClient.class));
-		servletContext.addListener(new ClientSessionListener(ServicesClient.class));
-		servletContext.addListener(new ClientSessionListener(EtlClient.class));
-		servletContext.addListener(new ClientSessionListener(EurekaClinicalRegistryClient.class));
+		servletContext.addListener(new ClientSessionListener());
 		servletContext.setAttribute(
 				"webappProperties", this.webappProperties);
 	}
