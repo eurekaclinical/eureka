@@ -70,8 +70,5 @@ see implementation details http://jersey.java.net/nonav/documentation/latest/jax
       
 	<session-config>
 		<tracking-mode>COOKIE</tracking-mode>
-		<cookie-config>
-			<http-only>true</http-only>
-		</cookie-config>
 	</session-config>
 </web-app>
