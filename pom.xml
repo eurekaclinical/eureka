@@ -54,9 +54,9 @@
 		<eureka-client-version>3.0-Alpha-13</eureka-client-version>
 		<eurekaclinical-patient-set-client-version>1.0-Alpha-11</eurekaclinical-patient-set-client-version>
 
-		<cas-server-version>3.0-Alpha-25</cas-server-version>
-		<user-webapp-version>1.0-Alpha-39</user-webapp-version>
-		<user-service-version>1.0-Alpha-28</user-service-version>
+		<cas-server-version>3.0-Alpha-26</cas-server-version>
+		<user-webapp-version>1.0-Alpha-40</user-webapp-version>
+		<user-service-version>1.0-Alpha-29</user-service-version>
 
 		<!-- transitive dependencies that CAS needs certain versions of...-->
 		<commons-codec-version>1.4</commons-codec-version>
@@ -65,11 +65,12 @@
 		<tomcat.httpsPort>8443</tomcat.httpsPort>
 		<embedded-webserver-port>8000</embedded-webserver-port>
 		
-		<eurekaclinical-common-version>2.0-Alpha-37</eurekaclinical-common-version>
+		<eurekaclinical-common-version>2.0-Alpha-38</eurekaclinical-common-version>
 		<eurekaclinical-standard-apis-version>2.0-Alpha-18</eurekaclinical-standard-apis-version>
 		<eurekaclinical-ontology-version>2.0-Beta-4</eurekaclinical-ontology-version>
 		
 		<ec-registry-client-version>1.0-Alpha-4</ec-registry-client-version>
+		<ec-registry-service-version>1.0-Alpha-10</ec-registry-service-version>
 	</properties>
 
 	<licenses>
@@ -315,6 +316,27 @@
 							<outputDirectory>${project.build.directory}/eureka-config/eurekaclinical-user-service</outputDirectory>
 						</configuration>
 					</execution>
+					<execution>
+						<id>copy-dbmigration-from-eurekaclinical-registry-service</id>
+						<phase>process-classes</phase>
+						<goals>
+							<goal>unpack</goal>
+						</goals>
+						<configuration>
+							<artifactItems>
+								<artifactItem>
+									<groupId>org.eurekaclinical</groupId>
+									<artifactId>eurekaclinical-registry-service</artifactId>
+									<version>${ec-registry-service-version}</version>
+									<type>war</type>
+								</artifactItem>
+							</artifactItems>
+							<includes>
+								WEB-INF/classes/dbmigration/changelog-master.xml
+							</includes>
+							<outputDirectory>${project.build.directory}/eureka-config/eurekaclinical-registry-service</outputDirectory>
+						</configuration>
+					</execution>
 				</executions>
 			</plugin>
 			<plugin>
@@ -322,7 +344,7 @@
 				<artifactId>liquibase-maven-plugin</artifactId>
 				<executions>
 					<execution>
-						<id>liquibase-populate-services-db</id>
+						<id>liquibase-populate-user-service-db</id>
 						<phase>process-classes</phase>
 						<goals>
 							<goal>update</goal>
@@ -356,6 +378,17 @@
 							</expressionVars>
 							<changeLogFile>${project.build.directory}/eureka-config/eurekaclinical-user-service/WEB-INF/classes/dbmigration/changelog-master.xml</changeLogFile>
 							<url>jdbc:h2:file:${project.build.directory}/eureka-db/eurekaclinical-user-service</url>
+						</configuration>
+					</execution>
+					<execution>
+						<id>liquibase-populate-registry-service-db</id>
+						<phase>process-classes</phase>
+						<goals>
+							<goal>update</goal>
+						</goals>
+						<configuration>
+							<changeLogFile>${project.build.directory}/eureka-config/eurekaclinical-registry-service/WEB-INF/classes/dbmigration/changelog-master.xml</changeLogFile>
+							<url>jdbc:h2:file:${project.build.directory}/eureka-db/eurekaclinical-registry-service</url>
 						</configuration>
 					</execution>
 				</executions>
@@ -439,10 +472,17 @@
 							<version>${user-service-version}</version>
 							<type>war</type>
 							<asWebapp>true</asWebapp>
-						</webapp>                                                                                       
+						</webapp>
+						<webapp>
+							<groupId>org.eurekaclinical</groupId>
+							<artifactId>eurekaclinical-registry-service</artifactId>
+							<version>${ec-registry-service-version}</version>
+							<type>war</type>
+							<asWebapp>true</asWebapp>
+						</webapp>                                                                                  
 					</webapps>
 					<addContextWarDependencies>true</addContextWarDependencies>
-					<addWarDependenciesInClassloader>true</addWarDependenciesInClassloader>
+					<addWarDependenciesInClassloader>false</addWarDependenciesInClassloader>
 				</configuration>
 			</plugin>
 			<plugin>
@@ -583,6 +623,11 @@
 				<groupId>org.eurekaclinical</groupId>
 				<artifactId>eurekaclinical-registry-client</artifactId>
 				<version>${ec-registry-client-version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eurekaclinical</groupId>
+				<artifactId>eurekaclinical-registry-service</artifactId>
+				<version>${ec-registry-service-version}</version>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
