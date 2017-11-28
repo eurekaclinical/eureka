@@ -39,8 +39,6 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.services.finder;
 
-import com.google.inject.Inject;
-import com.google.inject.Injector;
 import com.sun.jersey.api.client.ClientResponse;
 import org.eurekaclinical.eureka.client.comm.SystemPhenotype;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.EtlClient;
@@ -50,6 +48,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
+import javax.inject.Inject;
 import org.apache.commons.lang3.StringUtils;
 import org.eurekaclinical.common.comm.clients.ClientException;
 
@@ -63,20 +62,19 @@ public class SystemPropositionRetriever implements
 
 	private static final Logger LOGGER = LoggerFactory
 			.getLogger(SystemPropositionRetriever.class);
-	private final Injector injector;
+	private final EtlClient etlClient;
 
 	@Inject
-	public SystemPropositionRetriever(Injector inInjector) {
-		this.injector = inInjector;
+	public SystemPropositionRetriever(EtlClient inEtlClient) {
+		this.etlClient = inEtlClient;
 	}
 
 	@Override
 	public PropositionDefinition retrieve(String sourceConfigId, String inKey)
 			throws PropositionFindException {
-		EtlClient etlClient = this.injector.getInstance(EtlClient.class);
 		PropositionDefinition result;
 		try {
-			result = etlClient.getPropositionDefinition(sourceConfigId, inKey);
+			result = this.etlClient.getPropositionDefinition(sourceConfigId, inKey);
 		} catch (ClientException e) {
 			ClientResponse.Status status = e.getResponseStatus();
 			if (status == ClientResponse.Status.NOT_FOUND) {
@@ -103,9 +101,8 @@ public class SystemPropositionRetriever implements
 	public List<PropositionDefinition> retrieveAll(
 			String sourceConfigId, List<String> inKeys, Boolean withChildren) throws PropositionFindException {
 		List<PropositionDefinition> result = new ArrayList<>();
-		EtlClient etlClient = this.injector.getInstance(EtlClient.class);
 		try {
-			result = etlClient.getPropositionDefinitions(sourceConfigId, inKeys, withChildren);
+			result = this.etlClient.getPropositionDefinitions(sourceConfigId, inKeys, withChildren);
 		} catch (ClientException e) {
 			LOGGER.error(e.getMessage(), e);
 			ClientResponse.Status status = e.getResponseStatus();

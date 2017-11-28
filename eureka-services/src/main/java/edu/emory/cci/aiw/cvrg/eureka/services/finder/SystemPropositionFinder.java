@@ -40,15 +40,12 @@
 package edu.emory.cci.aiw.cvrg.eureka.services.finder;
 
 import java.util.List;
+import javax.inject.Inject;
 
 import org.protempa.PropositionDefinition;
 
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
-
 import org.eurekaclinical.eureka.client.comm.SystemPhenotype;
 
-@Singleton
 public class SystemPropositionFinder extends AbstractPropositionFinder<String> {
 	private final SystemPropositionRetriever retriever;
 
