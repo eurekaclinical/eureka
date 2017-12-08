@@ -45,13 +45,10 @@ import javax.servlet.ServletContextEvent;
 
 import com.google.inject.Module;
 import com.google.inject.servlet.GuiceServletContextListener;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.EtlClient;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ServicesClient;
 import javax.servlet.ServletContext;
+import org.eurekaclinical.common.config.ApiGatewayServletModule;
 import org.eurekaclinical.common.config.ClientSessionListener;
 import org.eurekaclinical.common.config.InjectorSupport;
-import org.eurekaclinical.registry.client.EurekaClinicalRegistryClient;
-import org.eurekaclinical.user.client.EurekaClinicalUserClient;
 
 /**
  *
@@ -96,7 +93,7 @@ public class WebappListener extends GuiceServletContextListener {
 		this.injector = new InjectorSupport(
 				new Module[]{
 					new AppModule(this.webappProperties, this.servicesClientProvider, this.etlClientProvider, this.userClientProvider, this.registryClientProvider),
-					new ServletModule(this.webappProperties)
+					new ApiGatewayServletModule(this.webappProperties)
 				},
 				this.webappProperties).getInjector();
 		return this.injector;

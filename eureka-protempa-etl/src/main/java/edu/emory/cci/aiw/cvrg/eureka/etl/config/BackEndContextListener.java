@@ -48,6 +48,7 @@ import com.google.inject.servlet.GuiceServletContextListener;
 
 import edu.emory.cci.aiw.cvrg.eureka.etl.job.TaskManager;
 import org.eurekaclinical.common.config.InjectorSupport;
+import org.eurekaclinical.common.config.ServiceServletModule;
 
 /**
  * Loaded up on application initialization, sets up the application with Guice
@@ -59,6 +60,7 @@ import org.eurekaclinical.common.config.InjectorSupport;
 public class BackEndContextListener extends GuiceServletContextListener {
 
 	private static final String JPA_UNIT = "backend-jpa-unit";
+	private static final String PACKAGE_NAMES = "edu.emory.cci.aiw.cvrg.eureka.etl.resource;edu.emory.cci.aiw.cvrg.eureka.common.json";
 	private final EtlProperties etlProperties = new EtlProperties();
 	private Injector injector;
 
@@ -73,7 +75,7 @@ public class BackEndContextListener extends GuiceServletContextListener {
 		this.injector = new InjectorSupport(
 				new Module[]{
 					new AppModule(),
-					new ETLServletModule(this.etlProperties),
+					new ServiceServletModule(this.etlProperties, PACKAGE_NAMES),
 					new JpaPersistModule(JPA_UNIT)
 				},
 				this.etlProperties).getInjector();

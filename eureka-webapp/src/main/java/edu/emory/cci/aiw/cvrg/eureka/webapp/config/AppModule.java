@@ -81,7 +81,6 @@ class AppModule extends AbstractModule {
 		bind(ServicesClient.class).toProvider(this.servicesClientProvider).in(SessionScoped.class);
 		bind(EtlClient.class).toProvider(this.etlClientProvider).in(SessionScoped.class);
 		bind(EurekaClinicalUserClient.class).toProvider(this.userClientProvider).in(SessionScoped.class);
-		bind(AuthorizingEurekaClinicalClient.class).toProvider(this.userClientProvider).in(SessionScoped.class);
 		bind(EurekaClinicalRegistryClient.class).toProvider(this.registryClientProvider).in(SessionScoped.class);
 	}
 

@@ -1,5 +1,6 @@
 package edu.emory.cci.aiw.cvrg.eureka.webapp.config;
 
+import java.util.List;
 import org.eurekaclinical.standardapis.props.CasEurekaClinicalProperties;
 
 /*
@@ -117,5 +118,12 @@ public class WebappProperties extends CasEurekaClinicalProperties {
 	public String getContactEmail() {
 		return this.getValue("eureka.webapp.contactemail");
 	}
+
+	@Override
+	public List<String> getAllowedWebClientUrls() {
+		return getStringListValue("eureka.webapp.allowedwebclients");
+	}
+	
+	
 
 }
