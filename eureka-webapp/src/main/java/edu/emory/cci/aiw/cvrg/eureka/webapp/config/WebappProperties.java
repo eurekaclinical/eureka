@@ -124,6 +124,4 @@ public class WebappProperties extends CasEurekaClinicalProperties {
 		return getStringListValue("eureka.webapp.allowedwebclients");
 	}
 	
-	
-
 }

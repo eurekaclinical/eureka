@@ -55,8 +55,8 @@
 		<eurekaclinical-patient-set-client-version>1.0-Alpha-11</eurekaclinical-patient-set-client-version>
 
 		<cas-server-version>3.0-Alpha-26</cas-server-version>
-		<user-webapp-version>1.0-Alpha-40</user-webapp-version>
-		<user-service-version>1.0-Alpha-29</user-service-version>
+		<user-webapp-version>1.0-Alpha-47</user-webapp-version>
+		<user-service-version>1.0-Alpha-30</user-service-version>
 
 		<!-- transitive dependencies that CAS needs certain versions of...-->
 		<commons-codec-version>1.4</commons-codec-version>
@@ -65,7 +65,7 @@
 		<tomcat.httpsPort>8443</tomcat.httpsPort>
 		<embedded-webserver-port>8000</embedded-webserver-port>
 		
-		<eurekaclinical-common-version>2.0-Alpha-39</eurekaclinical-common-version>
+		<eurekaclinical-common-version>2.0-Alpha-40</eurekaclinical-common-version>
 		<eurekaclinical-standard-apis-version>2.0-Alpha-19</eurekaclinical-standard-apis-version>
 		<eurekaclinical-ontology-version>2.0-Beta-4</eurekaclinical-ontology-version>
 		
