@@ -11,7 +11,7 @@ cptProcedureCodesRootFullName = EK_CPT
 
 [edu.emory.cci.aiw.i2b2etl.ksb.I2b2KnowledgeSourceBackend]
 databaseAPI = DRIVERMANAGER
-databaseId = jdbc:h2:file:${project.build.directory}/eureka-db/eureka-ontology;DEFAULT_ESCAPE='';INIT=RUNSCRIPT FROM '${project.build.directory}/eureka-config/sql/eureka-i2b2-ksb-2-h2.sql';CACHE_SIZE=262400;LOG=0;UNDO_LOG=0
+databaseId = jdbc:h2:file:${project.build.directory}/eureka-db/eureka-ontology;DEFAULT_ESCAPE='';INIT=RUNSCRIPT FROM 'eureka-config/sql/eureka-i2b2-ksb-2-h2.sql';CACHE_SIZE=262400;LOG=0;UNDO_LOG=0
 targetTable = EUREKAPHENOTYPEONTOLOGY
 
 [org.protempa.backend.asb.java.JavaAlgorithmBackend]

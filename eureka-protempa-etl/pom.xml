@@ -156,6 +156,7 @@
 					<systemPropertyVariables>
 						<eureka.config.dir>${project.build.directory}/test-classes/eureka-config/eureka</eureka.config.dir>
 					</systemPropertyVariables>
+					<workingDirectory>${project.build.directory}</workingDirectory>
 				</configuration>
 			</plugin>
 		</plugins>
