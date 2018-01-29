@@ -143,7 +143,14 @@
 						</goals>
 						<configuration>
 							<driver>org.h2.Driver</driver>
-							<url>jdbc:h2:file:${project.build.directory}/eureka-db/i2b2-data-schema;INIT=RUNSCRIPT FROM '${project.build.directory}/eureka-config/sql/i2b2_data_tables_1_7_h2.sql'\;RUNSCRIPT FROM '${project.build.directory}/eureka-config/sql/mock_stored_procedures_h2.sql'</url>
+							<url>jdbc:h2:file:${project.build.directory}/eureka-db/i2b2-data-schema</url>
+							<fileset>
+							 	<basedir>${project.build.directory}</basedir>
+							 	<includes>
+							 		<include>eureka-config/sql/i2b2_data_tables_1_7_h2.sql</include>
+							 		<include>eureka-config/sql/mock_stored_procedures_h2.sql</include>
+							 	</includes>
+							</fileset>
 							<sqlCommand />
 						</configuration>
 					</execution>
