@@ -41,7 +41,7 @@
 		<poi-version>3.9</poi-version>
 		<jaxb-version>2.2.7</jaxb-version>
 		<protempa-version>4.0-Alpha-21</protempa-version>
-		<aiw-i2b2-etl-version>3.0-Alpha-23</aiw-i2b2-etl-version>
+		<aiw-i2b2-etl-version>3.0-Alpha-24</aiw-i2b2-etl-version>
 		<aiw-neo4j-etl-version>2.1-Alpha-1</aiw-neo4j-etl-version>
 		<tomcat-plugin-version>1.1</tomcat-plugin-version>
 
@@ -67,7 +67,7 @@
 		
 		<eurekaclinical-common-version>2.0-Alpha-40</eurekaclinical-common-version>
 		<eurekaclinical-standard-apis-version>2.0-Alpha-19</eurekaclinical-standard-apis-version>
-		<eurekaclinical-ontology-version>2.0-Beta-4</eurekaclinical-ontology-version>
+		<eurekaclinical-ontology-version>2.0-Beta-9</eurekaclinical-ontology-version>
 		
 		<ec-registry-client-version>1.0-Alpha-4</ec-registry-client-version>
 		<ec-registry-service-version>1.0-Alpha-10</ec-registry-service-version>
