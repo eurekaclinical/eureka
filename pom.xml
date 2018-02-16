@@ -18,7 +18,7 @@
 	<parent>
 		<groupId>org.eurekaclinical</groupId>
 		<artifactId>eurekaclinical-parent-standard-deps</artifactId>
-		<version>2-Beta-6</version>
+		<version>2</version>
 	</parent>
 	
 	<scm>
@@ -40,23 +40,23 @@
 		<currentStableVersion>1.8</currentStableVersion>
 		<poi-version>3.9</poi-version>
 		<jaxb-version>2.2.7</jaxb-version>
-		<protempa-version>4.0-Beta-1</protempa-version>
-		<aiw-i2b2-etl-version>3.0-Beta-2</aiw-i2b2-etl-version>
-		<aiw-neo4j-etl-version>2.1-Alpha-1</aiw-neo4j-etl-version>
+		<protempa-version>4.0</protempa-version>
+		<aiw-i2b2-etl-version>3.0</aiw-i2b2-etl-version>
+		<aiw-neo4j-etl-version>3.0</aiw-neo4j-etl-version>
 		<tomcat-plugin-version>1.1</tomcat-plugin-version>
 
 		<!-- properties for site creation -->
-		<javautil-version>4.0-Alpha-4</javautil-version>
+		<javautil-version>4.0</javautil-version>
 		<hibernate-hbm2ddl-auto>validate</hibernate-hbm2ddl-auto>
 
 		<!-- Clients that eureka depends on -->
-		<user-client-version>1.0-Alpha-26</user-client-version>
-		<eureka-client-version>3.0-Alpha-13</eureka-client-version>
-		<eurekaclinical-patient-set-client-version>1.0-Alpha-11</eurekaclinical-patient-set-client-version>
+		<user-client-version>1.0</user-client-version>
+		<eureka-client-version>3.0</eureka-client-version>
+		<eurekaclinical-patient-set-client-version>1.0</eurekaclinical-patient-set-client-version>
 
-		<cas-server-version>3.0-Alpha-26</cas-server-version>
-		<user-webapp-version>1.0-Alpha-47</user-webapp-version>
-		<user-service-version>1.0-Alpha-30</user-service-version>
+		<cas-server-version>3.0</cas-server-version>
+		<user-webapp-version>1.0</user-webapp-version>
+		<user-service-version>1.0.1</user-service-version>
 
 		<!-- transitive dependencies that CAS needs certain versions of...-->
 		<commons-codec-version>1.4</commons-codec-version>
@@ -65,12 +65,12 @@
 		<tomcat.httpsPort>8443</tomcat.httpsPort>
 		<embedded-webserver-port>8000</embedded-webserver-port>
 		
-		<eurekaclinical-common-version>2.0-Alpha-40</eurekaclinical-common-version>
-		<eurekaclinical-standard-apis-version>2.0-Alpha-19</eurekaclinical-standard-apis-version>
-		<eurekaclinical-ontology-version>2.0-Beta-10</eurekaclinical-ontology-version>
+		<eurekaclinical-common-version>2.0</eurekaclinical-common-version>
+		<eurekaclinical-standard-apis-version>2.0</eurekaclinical-standard-apis-version>
+		<eurekaclinical-ontology-version>2.0</eurekaclinical-ontology-version>
 		
-		<ec-registry-client-version>1.0-Alpha-4</ec-registry-client-version>
-		<ec-registry-service-version>1.0-Alpha-10</ec-registry-service-version>
+		<ec-registry-client-version>1.0</ec-registry-client-version>
+		<ec-registry-service-version>1.0</ec-registry-service-version>
 	</properties>
 
 	<licenses>
