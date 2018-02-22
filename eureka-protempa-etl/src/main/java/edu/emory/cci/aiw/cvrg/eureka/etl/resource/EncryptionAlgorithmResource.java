@@ -41,7 +41,7 @@ package edu.emory.cci.aiw.cvrg.eureka.etl.resource;
 
 import com.google.inject.Inject;
 import com.google.inject.persist.Transactional;
-import edu.emory.cci.aiw.cvrg.eureka.common.authentication.AuthorizedUserSupport;
+import edu.emory.cci.aiw.cvrg.eureka.etl.authentication.AuthorizedUserSupport;
 
 import edu.emory.cci.aiw.cvrg.eureka.etl.config.EtlProperties;
 import edu.emory.cci.aiw.cvrg.eureka.etl.dao.EtlGroupDao;

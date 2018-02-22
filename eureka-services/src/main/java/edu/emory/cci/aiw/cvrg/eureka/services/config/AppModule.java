@@ -47,8 +47,9 @@ import javax.naming.InitialContext;
 import com.google.inject.TypeLiteral;
 import com.google.inject.jndi.JndiIntegration;
 import com.google.inject.servlet.SessionScoped;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.EtlClient;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.EtlClientProvider;
+
+import edu.emory.cci.aiw.cvrg.eureka.services.comm.clients.EtlClient;
+import edu.emory.cci.aiw.cvrg.eureka.services.comm.clients.EtlClientProvider;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.FrequencyTypeDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.JpaFrequencyTypeDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.JpaPhenotypeEntityDao;

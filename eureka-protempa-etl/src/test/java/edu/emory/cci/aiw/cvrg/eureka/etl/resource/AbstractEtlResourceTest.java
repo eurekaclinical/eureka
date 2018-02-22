@@ -45,8 +45,8 @@ import javax.servlet.ServletContextListener;
 import com.google.inject.Module;
 import com.google.inject.servlet.GuiceFilter;
 
-import edu.emory.cci.aiw.cvrg.eureka.common.test.AbstractResourceTest;
-import edu.emory.cci.aiw.cvrg.eureka.common.test.TestDataProvider;
+import edu.emory.cci.aiw.cvrg.eureka.etl.test.AbstractResourceTest;
+import edu.emory.cci.aiw.cvrg.eureka.etl.test.TestDataProvider;
 import edu.emory.cci.aiw.cvrg.eureka.etl.config.AppTestModule;
 import edu.emory.cci.aiw.cvrg.eureka.etl.config.ContextTestListener;
 import edu.emory.cci.aiw.cvrg.eureka.etl.test.Setup;

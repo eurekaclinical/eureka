@@ -39,7 +39,7 @@ package edu.emory.cci.aiw.cvrg.eureka.webapp.config;
  * <http://www.gnu.org/licenses/gpl-3.0.html>.
  * #L%
  */
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.EtlClientProvider;
+import edu.emory.cci.aiw.cvrg.eureka.webapp.comm.clients.EtlClientProvider;
 import com.google.inject.Injector;
 import javax.servlet.ServletContextEvent;
 

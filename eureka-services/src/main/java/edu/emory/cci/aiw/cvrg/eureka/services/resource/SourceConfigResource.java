@@ -51,6 +51,9 @@ import org.arp.javautil.string.StringUtil;
 
 import com.google.inject.Inject;
 import com.sun.jersey.api.client.ClientResponse;
+
+import edu.emory.cci.aiw.cvrg.eureka.services.comm.clients.EtlClient;
+
 import org.eurekaclinical.eureka.client.comm.FileSourceConfigOption;
 import org.eurekaclinical.eureka.client.comm.SourceConfig;
 import org.eurekaclinical.eureka.client.comm.SourceConfigOption;
@@ -58,7 +61,6 @@ import org.eurekaclinical.eureka.client.comm.SourceConfig.Section;
 import org.eurekaclinical.eureka.client.comm.SourceConfigParams;
 import org.eurekaclinical.eureka.client.comm.SourceConfigParams.Upload;
 import org.eurekaclinical.eureka.client.comm.SystemPhenotype;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.EtlClient;
 import org.eurekaclinical.common.comm.clients.ClientException;
 import org.eurekaclinical.standardapis.exception.HttpStatusException;
 

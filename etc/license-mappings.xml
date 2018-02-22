@@ -116,4 +116,10 @@
 		<version>2.4.0</version>
 		<license>Apache License, Version 2.0</license>
 	</artifact>
+	<artifact>
+		<groupId>org.hibernate.javax.persistence</groupId>
+		<artifactId>hibernate-jpa-2.0-api</artifactId>
+		<version>1.0.0.Final</version>
+		<license>Apache License, Version 2.0</license>
+	</artifact>
 </license-lookup>

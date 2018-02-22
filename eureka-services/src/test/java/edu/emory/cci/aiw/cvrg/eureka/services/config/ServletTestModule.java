@@ -39,7 +39,7 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.services.config;
 
-import edu.emory.cci.aiw.cvrg.eureka.common.test.UserRoleAdderFilter;
+import edu.emory.cci.aiw.cvrg.eureka.services.test.UserRoleAdderFilter;
 import org.eurekaclinical.common.config.AbstractTestJerseyServletModuleWithPersist;
 
 /**

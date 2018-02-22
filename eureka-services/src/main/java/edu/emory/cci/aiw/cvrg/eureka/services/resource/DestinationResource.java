@@ -43,8 +43,9 @@ import com.google.inject.Inject;
 import com.sun.jersey.api.client.ClientResponse;
 import org.eurekaclinical.eureka.client.comm.Destination;
 import org.eurekaclinical.eureka.client.comm.DestinationType;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.EtlDestination;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.EtlClient;
+
+import edu.emory.cci.aiw.cvrg.eureka.services.comm.EtlDestination;
+import edu.emory.cci.aiw.cvrg.eureka.services.comm.clients.EtlClient;
 import edu.emory.cci.aiw.cvrg.eureka.services.conversion.ConversionSupport;
 import edu.emory.cci.aiw.cvrg.eureka.services.conversion.DestinationToEtlDestinationVisitor;
 import edu.emory.cci.aiw.cvrg.eureka.services.conversion.EtlDestinationToDestinationVisitor;

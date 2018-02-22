@@ -40,8 +40,8 @@ package edu.emory.cci.aiw.cvrg.eureka.webapp.client;
  * #L%
  */
 
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.EtlClient;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ServicesClient;
+import edu.emory.cci.aiw.cvrg.eureka.webapp.comm.clients.EtlClient;
+import edu.emory.cci.aiw.cvrg.eureka.webapp.comm.clients.ServicesClient;
 import javax.inject.Inject;
 import org.eurekaclinical.common.comm.clients.Route;
 import org.eurekaclinical.common.comm.clients.RouterTable;

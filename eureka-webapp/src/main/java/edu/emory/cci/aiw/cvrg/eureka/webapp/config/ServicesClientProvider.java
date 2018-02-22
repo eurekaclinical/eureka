@@ -41,7 +41,7 @@ package edu.emory.cci.aiw.cvrg.eureka.webapp.config;
  */
 
 import com.google.inject.Provider;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ServicesClient;
+import edu.emory.cci.aiw.cvrg.eureka.webapp.comm.clients.ServicesClient;
 
 /**
  *

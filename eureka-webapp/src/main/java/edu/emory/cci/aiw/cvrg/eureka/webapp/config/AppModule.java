@@ -39,13 +39,13 @@ package edu.emory.cci.aiw.cvrg.eureka.webapp.config;
  * <http://www.gnu.org/licenses/gpl-3.0.html>.
  * #L%
  */
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.EtlClientProvider;
+import edu.emory.cci.aiw.cvrg.eureka.webapp.comm.clients.EtlClientProvider;
 import edu.emory.cci.aiw.cvrg.eureka.webapp.client.WebappRouterTable;
 import com.google.inject.AbstractModule;
 import com.google.inject.servlet.SessionScoped;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.EtlClient;
+import edu.emory.cci.aiw.cvrg.eureka.webapp.comm.clients.EtlClient;
 
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.ServicesClient;
+import edu.emory.cci.aiw.cvrg.eureka.webapp.comm.clients.ServicesClient;
 import org.eurekaclinical.common.comm.clients.AuthorizingEurekaClinicalClient;
 import org.eurekaclinical.common.comm.clients.RouterTable;
 import org.eurekaclinical.registry.client.EurekaClinicalRegistryClient;

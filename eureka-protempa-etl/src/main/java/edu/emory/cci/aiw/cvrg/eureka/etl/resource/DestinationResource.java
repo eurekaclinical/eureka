@@ -43,7 +43,7 @@ import com.google.inject.Inject;
 import com.google.inject.persist.Transactional;
 import edu.emory.cci.aiw.cvrg.eureka.etl.authentication.AuthorizedUserSupport;
 import org.eurekaclinical.eureka.client.comm.DestinationType;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.EtlDestination;
+import edu.emory.cci.aiw.cvrg.eureka.etl.comm.EtlDestination;
 import edu.emory.cci.aiw.cvrg.eureka.etl.entity.AuthorizedUserEntity;
 import edu.emory.cci.aiw.cvrg.eureka.etl.config.EtlProperties;
 import edu.emory.cci.aiw.cvrg.eureka.etl.dao.DestinationDao;
