@@ -50,8 +50,10 @@ import javax.ws.rs.core.MediaType;
 import com.google.inject.Inject;
 import com.google.inject.persist.Transactional;
 
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.TimeUnit;
+//import edu.emory.cci.aiw.cvrg.eureka.common.entity.TimeUnit;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.TimeUnitDao;
+import edu.emory.cci.aiw.cvrg.eureka.services.entity.TimeUnit;
+
 import javax.ws.rs.core.Response;
 import org.eurekaclinical.standardapis.exception.HttpStatusException;
 

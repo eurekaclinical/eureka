@@ -40,7 +40,7 @@ package edu.emory.cci.aiw.cvrg.eureka.etl.dao;
  * #L%
  */
 
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.LinkEntity;
+import edu.emory.cci.aiw.cvrg.eureka.etl.entity.LinkEntity;
 import org.eurekaclinical.standardapis.dao.Dao;
 
 /**

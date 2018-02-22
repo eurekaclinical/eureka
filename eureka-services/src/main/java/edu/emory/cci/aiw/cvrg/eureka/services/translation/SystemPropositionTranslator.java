@@ -48,7 +48,7 @@ import org.protempa.PropositionDefinition;
 import com.google.inject.Inject;
 import org.eurekaclinical.eureka.client.comm.SourceConfigParams;
 import org.eurekaclinical.eureka.client.comm.SystemPhenotype;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.SystemProposition;
+//import edu.emory.cci.aiw.cvrg.eureka.common.entity.SystemProposition;
 import org.eurekaclinical.eureka.client.comm.exception.PhenotypeHandlingException;
 import edu.emory.cci.aiw.cvrg.eureka.services.finder.PropositionFindException;
 import edu.emory.cci.aiw.cvrg.eureka.services.finder.SystemPropositionFinder;
@@ -56,6 +56,8 @@ import edu.emory.cci.aiw.cvrg.eureka.services.resource.SourceConfigResource;
 import edu.emory.cci.aiw.cvrg.eureka.services.util.PropositionUtil;
 import javax.ws.rs.core.Response;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.PhenotypeEntityDao;
+import edu.emory.cci.aiw.cvrg.eureka.services.entity.SystemProposition;
+
 import org.eurekaclinical.standardapis.exception.HttpStatusException;
 
 public class SystemPropositionTranslator implements

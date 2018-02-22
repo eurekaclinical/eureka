@@ -39,10 +39,10 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.services.conversion;
 
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.ExtendedPhenotype;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.FrequencyEntity;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.FrequencyType;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.SystemProposition;
+import edu.emory.cci.aiw.cvrg.eureka.services.entity.ExtendedPhenotype;
+import edu.emory.cci.aiw.cvrg.eureka.services.entity.FrequencyEntity;
+import edu.emory.cci.aiw.cvrg.eureka.services.entity.FrequencyType;
+import edu.emory.cci.aiw.cvrg.eureka.services.entity.SystemProposition;
 import java.util.List;
 
 import org.junit.Before;
@@ -51,7 +51,7 @@ import org.protempa.AbstractionDefinition;
 import org.protempa.PropositionDefinition;
 import org.protempa.SimpleGapFunction;
 
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.TimeUnit;
+import edu.emory.cci.aiw.cvrg.eureka.services.entity.TimeUnit;
 import edu.emory.cci.aiw.cvrg.eureka.services.test.AbstractServiceTest;
 import org.eurekaclinical.eureka.client.comm.SystemType;
 

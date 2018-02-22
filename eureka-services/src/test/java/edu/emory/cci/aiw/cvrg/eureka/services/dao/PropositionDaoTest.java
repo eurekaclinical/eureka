@@ -48,7 +48,7 @@ import java.util.List;
 import org.junit.Assert;
 import org.junit.Test;
 
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.PhenotypeEntity;
+import edu.emory.cci.aiw.cvrg.eureka.services.entity.PhenotypeEntity;
 import edu.emory.cci.aiw.cvrg.eureka.services.test.AbstractServiceDataTest;
 
 /**

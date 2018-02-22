@@ -57,8 +57,10 @@ import org.slf4j.LoggerFactory;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.PhenotypeEntity;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.PhenotypeEntity_;
+//import edu.emory.cci.aiw.cvrg.eureka.common.entity.PhenotypeEntity;
+import edu.emory.cci.aiw.cvrg.eureka.services.entity.PhenotypeEntity_;
+import edu.emory.cci.aiw.cvrg.eureka.services.entity.PhenotypeEntity;
+
 import org.eurekaclinical.standardapis.dao.GenericDao;
 
 /**

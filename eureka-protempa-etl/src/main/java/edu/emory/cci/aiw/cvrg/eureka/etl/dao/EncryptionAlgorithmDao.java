@@ -40,7 +40,7 @@ package edu.emory.cci.aiw.cvrg.eureka.etl.dao;
  * #L%
  */
 
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.EncryptionAlgorithm;
+import edu.emory.cci.aiw.cvrg.eureka.etl.entity.EncryptionAlgorithm;
 import org.eurekaclinical.standardapis.dao.DaoWithUniqueName;
 
 /**

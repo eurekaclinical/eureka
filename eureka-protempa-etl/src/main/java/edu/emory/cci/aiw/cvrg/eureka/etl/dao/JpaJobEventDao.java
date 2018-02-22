@@ -46,7 +46,7 @@ import javax.persistence.EntityManager;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.JobEventEntity;
+import edu.emory.cci.aiw.cvrg.eureka.etl.entity.JobEventEntity;
 import org.eurekaclinical.standardapis.dao.GenericDao;
 
 /**

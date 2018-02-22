@@ -41,8 +41,9 @@ package edu.emory.cci.aiw.cvrg.eureka.services.dao;
 
 import com.google.inject.Inject;
 import com.google.inject.Provider;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.ThresholdsOperator;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.ThresholdsOperator_;
+//import edu.emory.cci.aiw.cvrg.eureka.common.entity.ThresholdsOperator;
+import edu.emory.cci.aiw.cvrg.eureka.services.entity.ThresholdsOperator_;
+import edu.emory.cci.aiw.cvrg.eureka.services.entity.ThresholdsOperator;
 
 import javax.persistence.EntityManager;
 import org.eurekaclinical.standardapis.dao.GenericDao;

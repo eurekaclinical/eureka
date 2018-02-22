@@ -42,9 +42,9 @@ package edu.emory.cci.aiw.cvrg.eureka.etl.resource;
 
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.EtlTableColumn;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.EtlTabularFileDestination;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.AuthorizedUserEntity;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.TabularFileDestinationEntity;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.TabularFileDestinationTableColumnEntity;
+import edu.emory.cci.aiw.cvrg.eureka.etl.entity.AuthorizedUserEntity;
+import edu.emory.cci.aiw.cvrg.eureka.etl.entity.TabularFileDestinationEntity;
+import edu.emory.cci.aiw.cvrg.eureka.etl.entity.TabularFileDestinationTableColumnEntity;
 import edu.emory.cci.aiw.cvrg.eureka.etl.dao.EtlGroupDao;
 import java.util.ArrayList;
 import java.util.Collections;

@@ -41,7 +41,7 @@ package edu.emory.cci.aiw.cvrg.eureka.etl.dao;
 
 import java.util.List;
 
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.JobEntity;
+import edu.emory.cci.aiw.cvrg.eureka.etl.entity.JobEntity;
 import org.eurekaclinical.eureka.client.comm.JobFilter;
 import org.eurekaclinical.standardapis.dao.Dao;
 

@@ -41,8 +41,10 @@ package edu.emory.cci.aiw.cvrg.eureka.services.dao;
 
 import java.util.List;
 
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.PhenotypeEntity;
+//import edu.emory.cci.aiw.cvrg.eureka.common.entity.PhenotypeEntity;
 import org.eurekaclinical.standardapis.dao.Dao;
+
+import edu.emory.cci.aiw.cvrg.eureka.services.entity.PhenotypeEntity;
 
 /**
  * A data access object interface for working with {@link PhenotypeEntity} objects

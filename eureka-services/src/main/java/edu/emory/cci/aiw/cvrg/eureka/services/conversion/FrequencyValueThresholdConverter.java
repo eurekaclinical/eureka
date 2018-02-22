@@ -39,9 +39,9 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.services.conversion;
 
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.PhenotypeEntity;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.ExtendedPhenotype;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.FrequencyEntity;
+import edu.emory.cci.aiw.cvrg.eureka.services.entity.PhenotypeEntity;
+import edu.emory.cci.aiw.cvrg.eureka.services.entity.ExtendedPhenotype;
+import edu.emory.cci.aiw.cvrg.eureka.services.entity.FrequencyEntity;
 
 import org.protempa.HighLevelAbstractionDefinition;
 import org.protempa.MinMaxGapFunction;

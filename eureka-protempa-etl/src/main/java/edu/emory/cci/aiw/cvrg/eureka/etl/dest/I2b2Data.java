@@ -40,8 +40,8 @@ package edu.emory.cci.aiw.cvrg.eureka.etl.dest;
  * #L%
  */
 
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.I2B2DestinationDataSpecEntity;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.I2B2DestinationIntervalSide;
+import edu.emory.cci.aiw.cvrg.eureka.etl.entity.I2B2DestinationDataSpecEntity;
+import edu.emory.cci.aiw.cvrg.eureka.etl.entity.I2B2DestinationIntervalSide;
 import edu.emory.cci.aiw.i2b2etl.dest.config.Data;
 import edu.emory.cci.aiw.i2b2etl.dest.config.DataSpec;
 import java.util.Collection;

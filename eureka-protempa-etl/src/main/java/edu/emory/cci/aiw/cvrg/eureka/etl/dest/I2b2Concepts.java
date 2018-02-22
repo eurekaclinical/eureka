@@ -40,8 +40,8 @@ package edu.emory.cci.aiw.cvrg.eureka.etl.dest;
  * #L%
  */
 
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.I2B2DestinationConceptSpecEntity;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.I2B2DestinationModifierSpecEntity;
+import edu.emory.cci.aiw.cvrg.eureka.etl.entity.I2B2DestinationConceptSpecEntity;
+import edu.emory.cci.aiw.cvrg.eureka.etl.entity.I2B2DestinationModifierSpecEntity;
 import edu.emory.cci.aiw.i2b2etl.dest.config.Concepts;
 import edu.emory.cci.aiw.i2b2etl.dest.config.FolderSpec;
 import edu.emory.cci.aiw.i2b2etl.dest.config.ModifierSpec;

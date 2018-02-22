@@ -47,8 +47,11 @@ import org.protempa.PropertyDefinition;
 import org.protempa.PropositionDefinition;
 
 import org.eurekaclinical.eureka.client.comm.SystemPhenotype;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.PhenotypeEntity;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.SystemProposition;
+
+import edu.emory.cci.aiw.cvrg.eureka.services.entity.SystemProposition;
+import edu.emory.cci.aiw.cvrg.eureka.services.entity.PhenotypeEntity;
+//import edu.emory.cci.aiw.cvrg.eureka.common.entity.PhenotypeEntity;
+//import edu.emory.cci.aiw.cvrg.eureka.common.entity.SystemProposition;
 import edu.emory.cci.aiw.cvrg.eureka.services.finder.PropositionFindException;
 import edu.emory.cci.aiw.cvrg.eureka.services.finder.SystemPropositionFinder;
 

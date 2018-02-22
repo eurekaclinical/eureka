@@ -40,8 +40,8 @@
 package edu.emory.cci.aiw.cvrg.eureka.services.conversion;
 
 
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.*;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.CategoryEntity.CategoryType;
+import edu.emory.cci.aiw.cvrg.eureka.services.entity.*;
+import edu.emory.cci.aiw.cvrg.eureka.services.entity.CategoryEntity.CategoryType;
 import edu.emory.cci.aiw.cvrg.eureka.services.test.AbstractServiceTest;
 import java.util.ArrayList;
 import java.util.List;

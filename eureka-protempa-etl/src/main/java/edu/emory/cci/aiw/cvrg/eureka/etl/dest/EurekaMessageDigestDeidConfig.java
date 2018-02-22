@@ -40,9 +40,9 @@ package edu.emory.cci.aiw.cvrg.eureka.etl.dest;
  * #L%
  */
 
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.DeidPerPatientParams;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.DestinationEntity;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.MessageDigestEncryptionAlgorithm;
+import edu.emory.cci.aiw.cvrg.eureka.etl.entity.DeidPerPatientParams;
+import edu.emory.cci.aiw.cvrg.eureka.etl.entity.DestinationEntity;
+import edu.emory.cci.aiw.cvrg.eureka.etl.entity.MessageDigestEncryptionAlgorithm;
 import edu.emory.cci.aiw.cvrg.eureka.etl.dao.EurekaDeidConfigDao;
 import org.protempa.dest.deid.EncryptionInitException;
 import org.protempa.dest.deid.MessageDigestDeidConfig;

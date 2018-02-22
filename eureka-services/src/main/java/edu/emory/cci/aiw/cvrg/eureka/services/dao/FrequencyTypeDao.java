@@ -39,10 +39,12 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.services.dao;
 
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.FrequencyType;
+//import edu.emory.cci.aiw.cvrg.eureka.common.entity.FrequencyType;
 import java.util.List;
 import org.eurekaclinical.standardapis.dao.Dao;
 import org.protempa.CompoundLowLevelAbstractionDefinition.ValueDefinitionMatchOperator;
+
+import edu.emory.cci.aiw.cvrg.eureka.services.entity.FrequencyType;
 
 /**
  *

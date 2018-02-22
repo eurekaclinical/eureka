@@ -41,14 +41,14 @@ package edu.emory.cci.aiw.cvrg.eureka.etl.resource;
 
 import com.google.inject.Inject;
 import com.google.inject.persist.Transactional;
-import edu.emory.cci.aiw.cvrg.eureka.common.authentication.AuthorizedUserSupport;
+import edu.emory.cci.aiw.cvrg.eureka.etl.authentication.AuthorizedUserSupport;
 import org.eurekaclinical.eureka.client.comm.DestinationType;
 import edu.emory.cci.aiw.cvrg.eureka.common.comm.EtlDestination;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.AuthorizedUserEntity;
+import edu.emory.cci.aiw.cvrg.eureka.etl.entity.AuthorizedUserEntity;
 import edu.emory.cci.aiw.cvrg.eureka.etl.config.EtlProperties;
 import edu.emory.cci.aiw.cvrg.eureka.etl.dao.DestinationDao;
 import edu.emory.cci.aiw.cvrg.eureka.etl.dao.EtlGroupDao;
-import edu.emory.cci.aiw.cvrg.eureka.common.dao.AuthorizedUserDao;
+import edu.emory.cci.aiw.cvrg.eureka.etl.dao.AuthorizedUserDao;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;

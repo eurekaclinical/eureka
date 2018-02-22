@@ -39,7 +39,7 @@ package edu.emory.cci.aiw.cvrg.eureka.services.entity;
  * <http://www.gnu.org/licenses/gpl-3.0.html>.
  * #L%
  */
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.UserEntity;
+//import edu.emory.cci.aiw.cvrg.eureka.common.entity.UserEntity;
 
 /**
  *

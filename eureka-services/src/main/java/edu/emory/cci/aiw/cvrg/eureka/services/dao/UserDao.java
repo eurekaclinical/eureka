@@ -39,8 +39,9 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.services.dao;
 
+import edu.emory.cci.aiw.cvrg.eureka.services.entity.UserEntity;
 
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.UserEntity;
+//import edu.emory.cci.aiw.cvrg.eureka.common.entity.UserEntity;
 
 /**
  * A data access object interface for working with {@link UserEntity} objects in the

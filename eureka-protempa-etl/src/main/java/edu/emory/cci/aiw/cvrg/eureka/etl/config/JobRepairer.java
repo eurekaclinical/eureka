@@ -39,8 +39,8 @@ package edu.emory.cci.aiw.cvrg.eureka.etl.config;
  * <http://www.gnu.org/licenses/gpl-3.0.html>.
  * #L%
  */
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.JobEntity;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.JobEventEntity;
+import edu.emory.cci.aiw.cvrg.eureka.etl.entity.JobEntity;
+import edu.emory.cci.aiw.cvrg.eureka.etl.entity.JobEventEntity;
 import java.util.Date;
 import java.util.List;
 import javax.persistence.EntityManager;

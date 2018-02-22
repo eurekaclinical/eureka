@@ -44,7 +44,7 @@ import javax.persistence.EntityManager;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.UserEntity;
+import edu.emory.cci.aiw.cvrg.eureka.services.entity.UserEntity;
 import org.eurekaclinical.standardapis.dao.AbstractJpaUserDao;
 
 /**

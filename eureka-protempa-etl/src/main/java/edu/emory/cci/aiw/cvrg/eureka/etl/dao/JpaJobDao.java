@@ -54,10 +54,10 @@ import com.google.inject.Inject;
 import com.google.inject.Provider;
 
 import org.eurekaclinical.eureka.client.comm.JobFilter;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.AuthorizedUserEntity_;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.JobEntity;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.JobEntity_;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.JobEventEntity_;
+import edu.emory.cci.aiw.cvrg.eureka.etl.entity.AuthorizedUserEntity_;
+import edu.emory.cci.aiw.cvrg.eureka.etl.entity.JobEntity;
+import edu.emory.cci.aiw.cvrg.eureka.etl.entity.JobEntity_;
+import edu.emory.cci.aiw.cvrg.eureka.etl.entity.JobEventEntity_;
 import org.eurekaclinical.standardapis.dao.GenericDao;
 
 /**

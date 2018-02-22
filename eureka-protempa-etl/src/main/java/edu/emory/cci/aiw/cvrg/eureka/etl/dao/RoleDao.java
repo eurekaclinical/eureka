@@ -39,7 +39,7 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.etl.dao;
 
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.AuthorizedRoleEntity;
+import edu.emory.cci.aiw.cvrg.eureka.etl.entity.AuthorizedRoleEntity;
 
 /**
  * A data access object interface for working with {@link RoleEntity} objects in the

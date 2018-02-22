@@ -49,7 +49,7 @@ import javax.ws.rs.core.MediaType;
 
 import com.google.inject.Inject;
 import com.google.inject.persist.Transactional;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.FrequencyType;
+import edu.emory.cci.aiw.cvrg.eureka.services.entity.FrequencyType;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.FrequencyTypeDao;
 import javax.ws.rs.core.Response;
 import org.eurekaclinical.standardapis.exception.HttpStatusException;

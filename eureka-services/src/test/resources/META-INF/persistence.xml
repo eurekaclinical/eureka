@@ -4,24 +4,24 @@
 	version="2.0">
 	<persistence-unit name="services-jpa-unit"
 		transaction-type="RESOURCE_LOCAL">
-		<class>edu.emory.cci.aiw.cvrg.eureka.common.entity.CategoryEntity</class>
-		<class>edu.emory.cci.aiw.cvrg.eureka.common.entity.PhenotypeEntity</class>
-		<class>edu.emory.cci.aiw.cvrg.eureka.common.entity.ExtendedPhenotype</class>
-		<class>edu.emory.cci.aiw.cvrg.eureka.common.entity.FrequencyEntity</class>
-		<class>edu.emory.cci.aiw.cvrg.eureka.common.entity.FrequencyType</class>
-		<class>edu.emory.cci.aiw.cvrg.eureka.common.entity.PropertyConstraint</class>
-		<class>edu.emory.cci.aiw.cvrg.eureka.common.entity.Relation</class>
-		<class>edu.emory.cci.aiw.cvrg.eureka.common.entity.RelationOperator</class>
-		<class>edu.emory.cci.aiw.cvrg.eureka.common.entity.RoleEntity</class>
-		<class>edu.emory.cci.aiw.cvrg.eureka.common.entity.SequenceEntity</class>
-		<class>edu.emory.cci.aiw.cvrg.eureka.common.entity.SystemProposition</class>
-		<class>edu.emory.cci.aiw.cvrg.eureka.common.entity.ThresholdsOperator</class>
-		<class>edu.emory.cci.aiw.cvrg.eureka.common.entity.TimeUnit</class>
-		<class>edu.emory.cci.aiw.cvrg.eureka.common.entity.UserEntity</class>
-		<class>edu.emory.cci.aiw.cvrg.eureka.common.entity.LocalUserEntity</class>
-		<class>edu.emory.cci.aiw.cvrg.eureka.common.entity.ValueComparator</class>
-		<class>edu.emory.cci.aiw.cvrg.eureka.common.entity.ValueThresholdEntity</class>
-		<class>edu.emory.cci.aiw.cvrg.eureka.common.entity.ValueThresholdGroupEntity</class>
+		<class>edu.emory.cci.aiw.cvrg.eureka.services.entity.CategoryEntity</class>
+		<class>edu.emory.cci.aiw.cvrg.eureka.services.entity.PhenotypeEntity</class>
+		<class>edu.emory.cci.aiw.cvrg.eureka.services.entity.ExtendedPhenotype</class>
+		<class>edu.emory.cci.aiw.cvrg.eureka.services.entity.FrequencyEntity</class>
+		<class>edu.emory.cci.aiw.cvrg.eureka.services.entity.FrequencyType</class>
+		<class>edu.emory.cci.aiw.cvrg.eureka.services.entity.PropertyConstraint</class>
+		<class>edu.emory.cci.aiw.cvrg.eureka.services.entity.Relation</class>
+		<class>edu.emory.cci.aiw.cvrg.eureka.services.entity.RelationOperator</class>
+		<class>edu.emory.cci.aiw.cvrg.eureka.services.entity.RoleEntity</class>
+		<class>edu.emory.cci.aiw.cvrg.eureka.services.entity.SequenceEntity</class>
+		<class>edu.emory.cci.aiw.cvrg.eureka.services.entity.SystemProposition</class>
+		<class>edu.emory.cci.aiw.cvrg.eureka.services.entity.ThresholdsOperator</class>
+		<class>edu.emory.cci.aiw.cvrg.eureka.services.entity.TimeUnit</class>
+		<class>edu.emory.cci.aiw.cvrg.eureka.services.entity.UserEntity</class>
+		<class>edu.emory.cci.aiw.cvrg.eureka.services.entity.LocalUserEntity</class>
+		<class>edu.emory.cci.aiw.cvrg.eureka.services.entity.ValueComparator</class>
+		<class>edu.emory.cci.aiw.cvrg.eureka.services.entity.ValueThresholdEntity</class>
+		<class>edu.emory.cci.aiw.cvrg.eureka.services.entity.ValueThresholdGroupEntity</class>
 		
 		<properties>
 			<!-- Disable the second-level cache -->

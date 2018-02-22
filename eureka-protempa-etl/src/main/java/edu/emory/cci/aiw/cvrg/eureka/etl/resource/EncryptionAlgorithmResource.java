@@ -45,8 +45,8 @@ import edu.emory.cci.aiw.cvrg.eureka.common.authentication.AuthorizedUserSupport
 
 import edu.emory.cci.aiw.cvrg.eureka.etl.config.EtlProperties;
 import edu.emory.cci.aiw.cvrg.eureka.etl.dao.EtlGroupDao;
-import edu.emory.cci.aiw.cvrg.eureka.common.dao.AuthorizedUserDao;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.EncryptionAlgorithm;
+import edu.emory.cci.aiw.cvrg.eureka.etl.dao.AuthorizedUserDao;
+import edu.emory.cci.aiw.cvrg.eureka.etl.entity.EncryptionAlgorithm;
 import edu.emory.cci.aiw.cvrg.eureka.etl.dao.EncryptionAlgorithmDao;
 import java.util.List;
 import javax.annotation.security.RolesAllowed;

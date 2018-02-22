@@ -39,9 +39,11 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.services.dao;
 
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.ValueComparator;
+//import edu.emory.cci.aiw.cvrg.eureka.common.entity.ValueComparator;
 import java.util.List;
 import org.eurekaclinical.standardapis.dao.Dao;
+
+import edu.emory.cci.aiw.cvrg.eureka.services.entity.ValueComparator;
 
 public interface ValueComparatorDao extends Dao<ValueComparator, Long> {
 	/**

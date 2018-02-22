@@ -41,9 +41,9 @@ package edu.emory.cci.aiw.cvrg.eureka.etl.resource;
 
 import javax.ws.rs.Path;
 import com.google.inject.persist.Transactional;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.AuthorizedRoleEntity;
+import edu.emory.cci.aiw.cvrg.eureka.etl.entity.AuthorizedRoleEntity;
 
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.RoleEntity;
+import edu.emory.cci.aiw.cvrg.eureka.etl.entity.RoleEntity;
 import edu.emory.cci.aiw.cvrg.eureka.etl.dao.RoleDao;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;

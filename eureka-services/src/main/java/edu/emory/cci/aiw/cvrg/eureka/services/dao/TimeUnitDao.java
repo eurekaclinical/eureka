@@ -39,9 +39,11 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.services.dao;
 
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.TimeUnit;
+//import edu.emory.cci.aiw.cvrg.eureka.common.entity.TimeUnit;
 import java.util.List;
 import org.eurekaclinical.standardapis.dao.Dao;
+
+import edu.emory.cci.aiw.cvrg.eureka.services.entity.TimeUnit;
 
 /**
  * @author hrathod

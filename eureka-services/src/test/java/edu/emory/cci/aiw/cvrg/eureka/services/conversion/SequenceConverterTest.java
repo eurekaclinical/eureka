@@ -39,12 +39,12 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.services.conversion;
 
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.PhenotypeEntity;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.ExtendedPhenotype;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.Relation;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.SequenceEntity;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.SystemProposition;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.TimeUnit;
+import edu.emory.cci.aiw.cvrg.eureka.services.entity.PhenotypeEntity;
+import edu.emory.cci.aiw.cvrg.eureka.services.entity.ExtendedPhenotype;
+import edu.emory.cci.aiw.cvrg.eureka.services.entity.Relation;
+import edu.emory.cci.aiw.cvrg.eureka.services.entity.SequenceEntity;
+import edu.emory.cci.aiw.cvrg.eureka.services.entity.SystemProposition;
+import edu.emory.cci.aiw.cvrg.eureka.services.entity.TimeUnit;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;

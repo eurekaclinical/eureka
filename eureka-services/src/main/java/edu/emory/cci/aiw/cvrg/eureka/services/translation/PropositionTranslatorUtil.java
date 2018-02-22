@@ -44,15 +44,23 @@ import javax.ws.rs.core.Response;
 
 import org.eurekaclinical.eureka.client.comm.Phenotype;
 import org.eurekaclinical.eureka.client.comm.PhenotypeField;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.PhenotypeEntity;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.ExtendedPhenotype;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.PropertyConstraint;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.PropositionTypeVisitor;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.TimeUnit;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.ValueComparator;
+//import edu.emory.cci.aiw.cvrg.eureka.common.entity.PhenotypeEntity;
+//import edu.emory.cci.aiw.cvrg.eureka.common.entity.ExtendedPhenotype;
+//import edu.emory.cci.aiw.cvrg.eureka.common.entity.PropertyConstraint;
+//import edu.emory.cci.aiw.cvrg.eureka.common.entity.PropositionTypeVisitor;
+//import edu.emory.cci.aiw.cvrg.eureka.common.entity.TimeUnit;
+//import edu.emory.cci.aiw.cvrg.eureka.common.entity.ValueComparator;
 import org.eurekaclinical.eureka.client.comm.exception.PhenotypeHandlingException;
+
+//import edu.emory.cci.aiw.cvrg.eureka.common.entity.ExtendedPhenotype;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.TimeUnitDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.ValueComparatorDao;
+import edu.emory.cci.aiw.cvrg.eureka.services.entity.ExtendedPhenotype;
+import edu.emory.cci.aiw.cvrg.eureka.services.entity.PhenotypeEntity;
+import edu.emory.cci.aiw.cvrg.eureka.services.entity.PropertyConstraint;
+import edu.emory.cci.aiw.cvrg.eureka.services.entity.PropositionTypeVisitor;
+import edu.emory.cci.aiw.cvrg.eureka.services.entity.TimeUnit;
+import edu.emory.cci.aiw.cvrg.eureka.services.entity.ValueComparator;
 
 /**
  * Contains common utility functions for all implementations of

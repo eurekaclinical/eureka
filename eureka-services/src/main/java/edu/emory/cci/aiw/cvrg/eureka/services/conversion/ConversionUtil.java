@@ -39,12 +39,12 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.services.conversion;
 
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.PhenotypeEntity;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.ExtendedPhenotype;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.RelationOperator;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.TimeUnit;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.ValueThresholdEntity;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.ValueThresholdGroupEntity;
+//import edu.emory.cci.aiw.cvrg.eureka.common.entity.PhenotypeEntity;
+//import edu.emory.cci.aiw.cvrg.eureka.common.entity.ExtendedPhenotype;
+//import edu.emory.cci.aiw.cvrg.eureka.common.entity.RelationOperator;
+//import edu.emory.cci.aiw.cvrg.eureka.common.entity.TimeUnit;
+//import edu.emory.cci.aiw.cvrg.eureka.common.entity.ValueThresholdEntity;
+//import edu.emory.cci.aiw.cvrg.eureka.common.entity.ValueThresholdGroupEntity;
 import java.util.List;
 import org.protempa.ContextDefinition;
 import org.protempa.ContextOffset;
@@ -56,6 +56,13 @@ import org.protempa.TemporalExtendedPropositionDefinition;
 import org.protempa.proposition.value.AbsoluteTimeUnit;
 import org.protempa.proposition.value.ValueComparator;
 import org.protempa.proposition.value.ValueType;
+
+import edu.emory.cci.aiw.cvrg.eureka.services.entity.ExtendedPhenotype;
+import edu.emory.cci.aiw.cvrg.eureka.services.entity.PhenotypeEntity;
+import edu.emory.cci.aiw.cvrg.eureka.services.entity.RelationOperator;
+import edu.emory.cci.aiw.cvrg.eureka.services.entity.TimeUnit;
+import edu.emory.cci.aiw.cvrg.eureka.services.entity.ValueThresholdEntity;
+import edu.emory.cci.aiw.cvrg.eureka.services.entity.ValueThresholdGroupEntity;
 
 /**
  *

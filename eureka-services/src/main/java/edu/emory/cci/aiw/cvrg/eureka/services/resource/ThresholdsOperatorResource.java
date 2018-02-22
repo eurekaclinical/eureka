@@ -41,7 +41,7 @@ package edu.emory.cci.aiw.cvrg.eureka.services.resource;
 
 import com.google.inject.Inject;
 import com.google.inject.persist.Transactional;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.ThresholdsOperator;
+import edu.emory.cci.aiw.cvrg.eureka.services.entity.ThresholdsOperator;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.ThresholdsOperatorDao;
 import java.util.List;
 import javax.ws.rs.GET;

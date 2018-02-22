@@ -49,8 +49,8 @@ import javax.persistence.criteria.CriteriaQuery;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.*;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.CategoryEntity.CategoryType;
+import edu.emory.cci.aiw.cvrg.eureka.services.entity.*;
+import edu.emory.cci.aiw.cvrg.eureka.services.entity.CategoryEntity.CategoryType;
 import edu.emory.cci.aiw.cvrg.eureka.common.test.TestDataException;
 import edu.emory.cci.aiw.cvrg.eureka.common.test.TestDataProvider;
 import edu.emory.cci.aiw.cvrg.eureka.services.entity.UserEntityFactory;
