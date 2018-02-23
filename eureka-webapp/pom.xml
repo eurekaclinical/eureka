@@ -95,9 +95,17 @@
 			<artifactId>javax.servlet-api</artifactId>
 			<scope>provided</scope>
 		</dependency>
+<!-- 		<dependency> -->
+<!-- 			<groupId>org.eurekaclinical</groupId> -->
+<!-- 			<artifactId>eureka-common</artifactId> -->
+<!-- 		</dependency> -->
 		<dependency>
 			<groupId>org.eurekaclinical</groupId>
-			<artifactId>eureka-common</artifactId>
+			<artifactId>protempa-framework</artifactId>
+		</dependency>
+				<dependency>
+			<groupId>org.eurekaclinical</groupId>
+			<artifactId>eureka-client</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.eurekaclinical</groupId>
