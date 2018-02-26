@@ -123,16 +123,6 @@
 			<artifactId>jersey-test-framework-grizzly2</artifactId>
 			<scope>test</scope>
 		</dependency>
-<!-- 		<dependency> -->
-<!-- 			<groupId>org.eurekaclinical</groupId> -->
-<!-- 			<artifactId>eureka-common</artifactId> -->
-<!-- 		</dependency> -->
-<!-- 		<dependency> -->
-<!-- 			<groupId>org.eurekaclinical</groupId> -->
-<!-- 			<artifactId>eureka-common</artifactId> -->
-<!-- 			<type>test-jar</type> -->
-<!-- 			<scope>test</scope> -->
-<!-- 		</dependency> -->
 		<dependency>
 			<groupId>org.eurekaclinical</groupId>
 			<artifactId>protempa-framework</artifactId>
@@ -154,11 +144,6 @@
 			<groupId>commons-io</groupId>
 			<artifactId>commons-io</artifactId>
 		</dependency>
-<!-- 		<dependency> -->
-<!--     <groupId>org.hibernate.javax.persistence</groupId> -->
-<!--     <artifactId>hibernate-jpa-2.0-api</artifactId> -->
-<!--     <version>1.0.0.Final</version> -->
-<!-- </dependency> -->
 <dependency>
     <groupId>org.apache.commons</groupId>
     <artifactId>commons-lang3</artifactId>

@@ -87,7 +87,6 @@
 	</licenses>
 
 	<modules>
-		<module>eureka-common</module>
 		<module>eureka-webapp</module>
 		<module>eureka-services</module>
 		<module>eureka-protempa-etl</module>
@@ -524,19 +523,7 @@
 				<groupId>com.sun.xml.bind</groupId>
 				<artifactId>jaxb-impl</artifactId>
 				<version>${jaxb-version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.eurekaclinical</groupId>
-				<artifactId>eureka-common</artifactId>
-				<version>${project.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.eurekaclinical</groupId>
-				<artifactId>eureka-common</artifactId>
-				<version>${project.version}</version>
-				<scope>test</scope>
-				<type>test-jar</type>
-			</dependency>                                
+			</dependency>             
 			<dependency>
 				<groupId>org.eurekaclinical</groupId>
 				<artifactId>protempa-framework</artifactId>
