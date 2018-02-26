@@ -40,8 +40,7 @@ package edu.emory.cci.aiw.cvrg.eureka.services.test;
  * #L%
  */
 
-import com.google.inject.persist.PersistService;
-import edu.emory.cci.aiw.cvrg.eureka.common.test.TestDataProvider;
+import com.google.inject.persist.PersistService; 
 
 /**
  *

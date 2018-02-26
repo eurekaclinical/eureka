@@ -43,10 +43,10 @@ import com.google.inject.Inject;
 import org.eurekaclinical.eureka.client.comm.Category;
 import org.eurekaclinical.eureka.client.comm.Category.CategoricalType;
 import org.eurekaclinical.eureka.client.comm.PhenotypeField;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.CategoryEntity;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.CategoryEntity.CategoryType;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.PhenotypeEntity;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.PropositionTypeVisitor;
+//import edu.emory.cci.aiw.cvrg.eureka.common.entity.CategoryEntity;
+//import edu.emory.cci.aiw.cvrg.eureka.common.entity.CategoryEntity.CategoryType;
+//import edu.emory.cci.aiw.cvrg.eureka.common.entity.PhenotypeEntity;
+//import edu.emory.cci.aiw.cvrg.eureka.common.entity.PropositionTypeVisitor;
 import org.eurekaclinical.eureka.client.comm.exception.PhenotypeHandlingException;
 import edu.emory.cci.aiw.cvrg.eureka.services.finder.SystemPropositionFinder;
 import edu.emory.cci.aiw.cvrg.eureka.services.resource.SourceConfigResource;
@@ -58,6 +58,10 @@ import java.util.Set;
 import javax.ws.rs.core.Response;
 import org.apache.commons.lang3.StringUtils;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.PhenotypeEntityDao;
+import edu.emory.cci.aiw.cvrg.eureka.services.entity.CategoryEntity;
+import edu.emory.cci.aiw.cvrg.eureka.services.entity.CategoryEntity.CategoryType;
+import edu.emory.cci.aiw.cvrg.eureka.services.entity.PhenotypeEntity;
+import edu.emory.cci.aiw.cvrg.eureka.services.entity.PropositionTypeVisitor;
 
 /**
  * Translates categorical phenotypes (UI phenotype) into categorization

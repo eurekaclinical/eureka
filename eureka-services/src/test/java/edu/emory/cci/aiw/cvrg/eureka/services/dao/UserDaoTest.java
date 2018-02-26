@@ -39,7 +39,7 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.services.dao;
 
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.UserEntity;
+import edu.emory.cci.aiw.cvrg.eureka.services.entity.UserEntity;
 import edu.emory.cci.aiw.cvrg.eureka.services.test.AbstractServiceDataTest;
 import org.junit.Test;
 

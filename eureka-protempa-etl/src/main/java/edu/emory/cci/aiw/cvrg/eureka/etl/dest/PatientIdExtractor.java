@@ -40,7 +40,7 @@ package edu.emory.cci.aiw.cvrg.eureka.etl.dest;
  * #L%
  */
 
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.PatientSetExtractionConfig;
+import edu.emory.cci.aiw.cvrg.eureka.etl.entity.PatientSetExtractionConfig;
 import java.util.Collection;
 import org.protempa.dest.QueryResultsHandlerProcessingException;
 import org.protempa.proposition.Proposition;

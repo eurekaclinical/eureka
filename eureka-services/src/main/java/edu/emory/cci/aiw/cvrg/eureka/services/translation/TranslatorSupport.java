@@ -52,13 +52,15 @@ import com.google.inject.Inject;
 
 import org.eurekaclinical.eureka.client.comm.Phenotype;
 import org.eurekaclinical.eureka.client.comm.SourceConfigParams;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.PhenotypeEntity;
+//import edu.emory.cci.aiw.cvrg.eureka.common.entity.PhenotypeEntity;
 import org.eurekaclinical.eureka.client.comm.exception.PhenotypeHandlingException;
 import edu.emory.cci.aiw.cvrg.eureka.services.finder.PropositionFindException;
 import edu.emory.cci.aiw.cvrg.eureka.services.finder.SystemPropositionFinder;
 import edu.emory.cci.aiw.cvrg.eureka.services.resource.SourceConfigResource;
 import edu.emory.cci.aiw.cvrg.eureka.services.util.PropositionUtil;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.PhenotypeEntityDao;
+import edu.emory.cci.aiw.cvrg.eureka.services.entity.PhenotypeEntity;
+
 import org.eurekaclinical.standardapis.exception.HttpStatusException;
 
 /**

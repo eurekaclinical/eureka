@@ -44,7 +44,7 @@ import javax.persistence.EntityManager;
 
 import com.google.inject.Inject;
 import com.google.inject.Provider;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.AuthorizedRoleEntity;
+import edu.emory.cci.aiw.cvrg.eureka.etl.entity.AuthorizedRoleEntity;
 
 import org.eurekaclinical.standardapis.dao.AbstractJpaRoleDao;
 

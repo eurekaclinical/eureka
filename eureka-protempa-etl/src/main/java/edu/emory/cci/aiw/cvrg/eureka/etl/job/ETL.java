@@ -54,9 +54,9 @@ import org.protempa.query.Query;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.EtlDestination;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.JobEntity;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.JobEventEntity;
+import edu.emory.cci.aiw.cvrg.eureka.etl.comm.EtlDestination;
+import edu.emory.cci.aiw.cvrg.eureka.etl.entity.JobEntity;
+import edu.emory.cci.aiw.cvrg.eureka.etl.entity.JobEventEntity;
 import edu.emory.cci.aiw.cvrg.eureka.etl.config.EtlProperties;
 import edu.emory.cci.aiw.cvrg.eureka.etl.config.EurekaProtempaConfigurations;
 import edu.emory.cci.aiw.cvrg.eureka.etl.dao.DestinationDao;

@@ -1,10 +1,10 @@
 package edu.emory.cci.aiw.cvrg.eureka.services.conversion;
 
-/*
+/*-
  * #%L
  * Eureka Services
  * %%
- * Copyright (C) 2012 - 2014 Emory University
+ * Copyright (C) 2012 - 2018 Emory University
  * %%
  * This program is dual licensed under the Apache 2 and GPLv3 licenses.
  * 
@@ -39,19 +39,11 @@ package edu.emory.cci.aiw.cvrg.eureka.services.conversion;
  * <http://www.gnu.org/licenses/gpl-3.0.html>.
  * #L%
  */
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.AbstractEtlDestinationVisitor;
+
 import org.eurekaclinical.eureka.client.comm.Cohort;
 import org.eurekaclinical.eureka.client.comm.CohortDestination;
 import org.eurekaclinical.eureka.client.comm.PhenotypeField;
 import org.eurekaclinical.eureka.client.comm.Destination;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.EtlCohortDestination;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.EtlDestination;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.EtlI2B2Destination;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.EtlNeo4jDestination;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.EtlPatientSetExtractorDestination;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.EtlPatientSetSenderDestination;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.EtlTableColumn;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.EtlTabularFileDestination;
 import org.eurekaclinical.eureka.client.comm.I2B2Destination;
 import org.eurekaclinical.eureka.client.comm.Neo4jDestination;
 import org.eurekaclinical.eureka.client.comm.PatientSetExtractorDestination;
@@ -60,6 +52,16 @@ import java.util.List;
 import org.eurekaclinical.eureka.client.comm.PatientSetSenderDestination;
 import org.eurekaclinical.eureka.client.comm.TableColumn;
 import org.eurekaclinical.eureka.client.comm.TabularFileDestination;
+
+import edu.emory.cci.aiw.cvrg.eureka.services.comm.AbstractEtlDestinationVisitor;
+import edu.emory.cci.aiw.cvrg.eureka.services.comm.EtlCohortDestination;
+import edu.emory.cci.aiw.cvrg.eureka.services.comm.EtlDestination;
+import edu.emory.cci.aiw.cvrg.eureka.services.comm.EtlI2B2Destination;
+import edu.emory.cci.aiw.cvrg.eureka.services.comm.EtlNeo4jDestination;
+import edu.emory.cci.aiw.cvrg.eureka.services.comm.EtlPatientSetExtractorDestination;
+import edu.emory.cci.aiw.cvrg.eureka.services.comm.EtlPatientSetSenderDestination;
+import edu.emory.cci.aiw.cvrg.eureka.services.comm.EtlTableColumn;
+import edu.emory.cci.aiw.cvrg.eureka.services.comm.EtlTabularFileDestination;
 
 /**
  *

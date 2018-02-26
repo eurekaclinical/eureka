@@ -39,11 +39,11 @@ package edu.emory.cci.aiw.cvrg.eureka.etl.resource;
  * <http://www.gnu.org/licenses/gpl-3.0.html>.
  * #L%
  */
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.EtlI2B2Destination;
+import edu.emory.cci.aiw.cvrg.eureka.etl.comm.EtlI2B2Destination;
 import org.eurekaclinical.eureka.client.comm.Link;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.AuthorizedUserEntity;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.I2B2DestinationEntity;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.LinkEntity;
+import edu.emory.cci.aiw.cvrg.eureka.etl.entity.AuthorizedUserEntity;
+import edu.emory.cci.aiw.cvrg.eureka.etl.entity.I2B2DestinationEntity;
+import edu.emory.cci.aiw.cvrg.eureka.etl.entity.LinkEntity;
 import edu.emory.cci.aiw.cvrg.eureka.etl.config.EtlProperties;
 import edu.emory.cci.aiw.cvrg.eureka.etl.dao.EtlGroupDao;
 import java.util.ArrayList;

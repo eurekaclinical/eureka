@@ -41,10 +41,7 @@ package edu.emory.cci.aiw.cvrg.eureka.services.test;
 
 import com.google.inject.Module;
 import com.google.inject.persist.PersistService;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.PhenotypeEntity;
-import edu.emory.cci.aiw.cvrg.eureka.common.test.AbstractTest;
-import edu.emory.cci.aiw.cvrg.eureka.common.test.TestDataException;
-import edu.emory.cci.aiw.cvrg.eureka.common.test.TestDataProvider;
+import edu.emory.cci.aiw.cvrg.eureka.services.entity.PhenotypeEntity;
 import edu.emory.cci.aiw.cvrg.eureka.services.config.AppTestModule;
 import edu.emory.cci.aiw.cvrg.eureka.services.conversion.PhenotypeConversionSupport;
 import org.junit.After;

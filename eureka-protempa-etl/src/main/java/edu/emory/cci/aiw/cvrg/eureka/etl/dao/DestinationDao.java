@@ -40,12 +40,12 @@ package edu.emory.cci.aiw.cvrg.eureka.etl.dao;
  * #L%
  */
 
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.CohortDestinationEntity;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.DestinationEntity;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.I2B2DestinationEntity;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.PatientSetExtractorDestinationEntity;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.PatientSetSenderDestinationEntity;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.TabularFileDestinationEntity;
+import edu.emory.cci.aiw.cvrg.eureka.etl.entity.CohortDestinationEntity;
+import edu.emory.cci.aiw.cvrg.eureka.etl.entity.DestinationEntity;
+import edu.emory.cci.aiw.cvrg.eureka.etl.entity.I2B2DestinationEntity;
+import edu.emory.cci.aiw.cvrg.eureka.etl.entity.PatientSetExtractorDestinationEntity;
+import edu.emory.cci.aiw.cvrg.eureka.etl.entity.PatientSetSenderDestinationEntity;
+import edu.emory.cci.aiw.cvrg.eureka.etl.entity.TabularFileDestinationEntity;
 import java.util.List;
 import org.eurekaclinical.standardapis.dao.HistoricalDaoWithUniqueName;
 

@@ -59,9 +59,9 @@ import com.google.inject.Inject;
 import com.google.inject.persist.Transactional;
 
 import org.eurekaclinical.eureka.client.comm.Phenotype;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.PhenotypeEntity;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.PropositionChildrenVisitor;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.UserEntity;
+import edu.emory.cci.aiw.cvrg.eureka.services.entity.PhenotypeEntity;
+import edu.emory.cci.aiw.cvrg.eureka.services.entity.PropositionChildrenVisitor;
+import edu.emory.cci.aiw.cvrg.eureka.services.entity.UserEntity;
 import org.eurekaclinical.eureka.client.comm.exception.PhenotypeHandlingException;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.UserDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.translation.PhenotypeEntityTranslatorVisitor;

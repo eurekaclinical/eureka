@@ -40,12 +40,15 @@
 package edu.emory.cci.aiw.cvrg.eureka.services.translation;
 
 import com.google.inject.Inject;
+
+import edu.emory.cci.aiw.cvrg.eureka.services.entity.PhenotypeEntity;
+
 import org.eurekaclinical.eureka.client.comm.Category;
 import org.eurekaclinical.eureka.client.comm.Frequency;
 import org.eurekaclinical.eureka.client.comm.Sequence;
 import org.eurekaclinical.eureka.client.comm.SystemPhenotype;
 import org.eurekaclinical.eureka.client.comm.ValueThresholds;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.PhenotypeEntity;
+//import edu.emory.cci.aiw.cvrg.eureka.common.entity.PhenotypeEntity;
 import org.eurekaclinical.eureka.client.comm.exception.PhenotypeHandlingException;
 import org.eurekaclinical.eureka.client.comm.PhenotypeVisitor;
 

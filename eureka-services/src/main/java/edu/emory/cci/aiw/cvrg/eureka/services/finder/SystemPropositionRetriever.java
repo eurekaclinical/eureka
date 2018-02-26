@@ -40,8 +40,10 @@
 package edu.emory.cci.aiw.cvrg.eureka.services.finder;
 
 import com.sun.jersey.api.client.ClientResponse;
+
+import edu.emory.cci.aiw.cvrg.eureka.services.comm.clients.EtlClient;
+
 import org.eurekaclinical.eureka.client.comm.SystemPhenotype;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.EtlClient;
 import org.protempa.PropositionDefinition;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

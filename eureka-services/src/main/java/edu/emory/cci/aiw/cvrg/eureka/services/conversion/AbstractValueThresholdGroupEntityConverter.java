@@ -40,8 +40,8 @@ package edu.emory.cci.aiw.cvrg.eureka.services.conversion;
  * #L%
  */
 
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.ValueThresholdEntity;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.ValueThresholdGroupEntity;
+import edu.emory.cci.aiw.cvrg.eureka.services.entity.ValueThresholdEntity;
+import edu.emory.cci.aiw.cvrg.eureka.services.entity.ValueThresholdGroupEntity;
 import java.util.HashMap;
 import java.util.Map;
 import org.protempa.HighLevelAbstractionDefinition;

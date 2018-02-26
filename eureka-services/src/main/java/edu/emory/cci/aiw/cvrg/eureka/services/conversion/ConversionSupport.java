@@ -39,7 +39,8 @@ package edu.emory.cci.aiw.cvrg.eureka.services.conversion;
  * <http://www.gnu.org/licenses/gpl-3.0.html>.
  * #L%
  */
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.PhenotypeEntity;
+
+import edu.emory.cci.aiw.cvrg.eureka.services.entity.PhenotypeEntity;
 
 /**
  *

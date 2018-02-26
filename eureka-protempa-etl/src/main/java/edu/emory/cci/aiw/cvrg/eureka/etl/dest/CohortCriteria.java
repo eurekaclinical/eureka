@@ -39,7 +39,7 @@ package edu.emory.cci.aiw.cvrg.eureka.etl.dest;
  * <http://www.gnu.org/licenses/gpl-3.0.html>.
  * #L%
  */
-import edu.emory.cci.aiw.cvrg.eureka.common.util.AbstractNodeVisitor;
+import edu.emory.cci.aiw.cvrg.eureka.etl.util.AbstractNodeVisitor;
 import java.util.Date;
 import org.eurekaclinical.eureka.client.comm.BinaryOperator;
 import org.eurekaclinical.eureka.client.comm.Cohort;

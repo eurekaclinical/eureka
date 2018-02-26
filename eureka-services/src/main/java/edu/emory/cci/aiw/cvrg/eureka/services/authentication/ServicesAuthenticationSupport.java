@@ -40,7 +40,7 @@ package edu.emory.cci.aiw.cvrg.eureka.services.authentication;
  * #L%
  */
 
-import edu.emory.cci.aiw.cvrg.eureka.common.authentication.AbstractUserSupport;
+import edu.emory.cci.aiw.cvrg.eureka.services.authentication.AbstractUserSupport;
 
 /**
  *

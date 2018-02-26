@@ -45,12 +45,13 @@ import javax.ws.rs.core.Response;
 import com.google.inject.Inject;
 
 import org.eurekaclinical.eureka.client.comm.Frequency;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.FrequencyEntity;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.TimeUnit;
+
 import org.eurekaclinical.eureka.client.comm.exception.PhenotypeHandlingException;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.FrequencyTypeDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.TimeUnitDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.ValueComparatorDao;
+import edu.emory.cci.aiw.cvrg.eureka.services.entity.FrequencyEntity;
+import edu.emory.cci.aiw.cvrg.eureka.services.entity.TimeUnit;
 import edu.emory.cci.aiw.cvrg.eureka.services.finder.SystemPropositionFinder;
 import edu.emory.cci.aiw.cvrg.eureka.services.resource.SourceConfigResource;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.PhenotypeEntityDao;

@@ -39,8 +39,8 @@ package edu.emory.cci.aiw.cvrg.eureka.etl.dest;
  * <http://www.gnu.org/licenses/gpl-3.0.html>.
  * #L%
  */
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.TabularFileDestinationEntity;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.TabularFileDestinationTableColumnEntity;
+import edu.emory.cci.aiw.cvrg.eureka.etl.entity.TabularFileDestinationEntity;
+import edu.emory.cci.aiw.cvrg.eureka.etl.entity.TabularFileDestinationTableColumnEntity;
 import edu.emory.cci.aiw.cvrg.eureka.etl.config.EtlProperties;
 import java.io.BufferedWriter;
 import java.io.File;

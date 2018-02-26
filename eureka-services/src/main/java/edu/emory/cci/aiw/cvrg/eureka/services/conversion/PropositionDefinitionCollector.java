@@ -39,11 +39,13 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.services.conversion;
 
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.PhenotypeEntity;
+//import edu.emory.cci.aiw.cvrg.eureka.common.entity.PhenotypeEntity;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import org.protempa.PropositionDefinition;
+
+import edu.emory.cci.aiw.cvrg.eureka.services.entity.PhenotypeEntity;
 
 /**
  *

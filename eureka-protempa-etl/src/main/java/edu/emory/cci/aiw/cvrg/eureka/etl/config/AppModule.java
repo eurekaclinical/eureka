@@ -43,7 +43,7 @@ package edu.emory.cci.aiw.cvrg.eureka.etl.config;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.TypeLiteral;
-import edu.emory.cci.aiw.cvrg.eureka.common.dao.AuthorizedUserDao;
+import edu.emory.cci.aiw.cvrg.eureka.etl.dao.AuthorizedUserDao;
 import edu.emory.cci.aiw.cvrg.eureka.etl.dao.DestinationDao;
 import edu.emory.cci.aiw.cvrg.eureka.etl.dao.EtlGroupDao;
 import edu.emory.cci.aiw.cvrg.eureka.etl.dao.JobDao;

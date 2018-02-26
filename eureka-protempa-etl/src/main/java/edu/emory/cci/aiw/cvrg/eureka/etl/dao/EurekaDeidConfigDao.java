@@ -40,8 +40,8 @@ package edu.emory.cci.aiw.cvrg.eureka.etl.dao;
  * #L%
  */
 
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.DeidPerPatientParams;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.DestinationEntity;
+import edu.emory.cci.aiw.cvrg.eureka.etl.entity.DeidPerPatientParams;
+import edu.emory.cci.aiw.cvrg.eureka.etl.entity.DestinationEntity;
 import java.util.Random;
 
 /**

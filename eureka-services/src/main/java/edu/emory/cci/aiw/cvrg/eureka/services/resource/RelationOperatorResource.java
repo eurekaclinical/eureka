@@ -50,7 +50,7 @@ import javax.ws.rs.core.MediaType;
 import com.google.inject.Inject;
 import com.google.inject.persist.Transactional;
 
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.RelationOperator;
+import edu.emory.cci.aiw.cvrg.eureka.services.entity.RelationOperator;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.RelationOperatorDao;
 
 /**

@@ -40,15 +40,15 @@ package edu.emory.cci.aiw.cvrg.eureka.etl.resource;
  * #L%
  */
 
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.EtlDestination;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.CohortDestinationEntity;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.DestinationEntityVisitor;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.AuthorizedUserEntity;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.I2B2DestinationEntity;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.Neo4jDestinationEntity;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.PatientSetExtractorDestinationEntity;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.PatientSetSenderDestinationEntity;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.TabularFileDestinationEntity;
+import edu.emory.cci.aiw.cvrg.eureka.etl.comm.EtlDestination;
+import edu.emory.cci.aiw.cvrg.eureka.etl.entity.CohortDestinationEntity;
+import edu.emory.cci.aiw.cvrg.eureka.etl.entity.DestinationEntityVisitor;
+import edu.emory.cci.aiw.cvrg.eureka.etl.entity.AuthorizedUserEntity;
+import edu.emory.cci.aiw.cvrg.eureka.etl.entity.I2B2DestinationEntity;
+import edu.emory.cci.aiw.cvrg.eureka.etl.entity.Neo4jDestinationEntity;
+import edu.emory.cci.aiw.cvrg.eureka.etl.entity.PatientSetExtractorDestinationEntity;
+import edu.emory.cci.aiw.cvrg.eureka.etl.entity.PatientSetSenderDestinationEntity;
+import edu.emory.cci.aiw.cvrg.eureka.etl.entity.TabularFileDestinationEntity;
 import edu.emory.cci.aiw.cvrg.eureka.etl.config.EtlProperties;
 import edu.emory.cci.aiw.cvrg.eureka.etl.dao.EtlGroupDao;
 

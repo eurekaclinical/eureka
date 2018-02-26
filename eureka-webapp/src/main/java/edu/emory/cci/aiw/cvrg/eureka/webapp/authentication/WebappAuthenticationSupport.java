@@ -40,7 +40,7 @@ package edu.emory.cci.aiw.cvrg.eureka.webapp.authentication;
  * #L%
  */
 
-import edu.emory.cci.aiw.cvrg.eureka.common.authentication.AbstractUserSupport;
+import edu.emory.cci.aiw.cvrg.eureka.webapp.authentication.AbstractUserSupport;
 import org.eurekaclinical.common.comm.clients.ClientException;
 import java.io.IOException;
 import javax.servlet.http.HttpServletRequest;

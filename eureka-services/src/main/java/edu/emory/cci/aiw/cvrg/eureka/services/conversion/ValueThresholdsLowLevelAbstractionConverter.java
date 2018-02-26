@@ -39,9 +39,9 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.services.conversion;
 
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.ExtendedPhenotype;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.ValueThresholdEntity;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.ValueThresholdGroupEntity;
+import edu.emory.cci.aiw.cvrg.eureka.services.entity.ExtendedPhenotype;
+import edu.emory.cci.aiw.cvrg.eureka.services.entity.ValueThresholdEntity;
+import edu.emory.cci.aiw.cvrg.eureka.services.entity.ValueThresholdGroupEntity;
 import org.protempa.LowLevelAbstractionDefinition;
 import org.protempa.PropositionDefinition;
 

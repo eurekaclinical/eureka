@@ -45,13 +45,13 @@ import org.eurekaclinical.eureka.client.comm.Frequency;
 import org.eurekaclinical.eureka.client.comm.Sequence;
 import org.eurekaclinical.eureka.client.comm.SystemPhenotype;
 import org.eurekaclinical.eureka.client.comm.ValueThresholds;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.CategoryEntity;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.PhenotypeEntity;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.FrequencyEntity;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.SequenceEntity;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.SystemProposition;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.ValueThresholdGroupEntity;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.PhenotypeEntityVisitor;
+import edu.emory.cci.aiw.cvrg.eureka.services.entity.CategoryEntity;
+import edu.emory.cci.aiw.cvrg.eureka.services.entity.PhenotypeEntity;
+import edu.emory.cci.aiw.cvrg.eureka.services.entity.FrequencyEntity;
+import edu.emory.cci.aiw.cvrg.eureka.services.entity.SequenceEntity;
+import edu.emory.cci.aiw.cvrg.eureka.services.entity.SystemProposition;
+import edu.emory.cci.aiw.cvrg.eureka.services.entity.ValueThresholdGroupEntity;
+import edu.emory.cci.aiw.cvrg.eureka.services.entity.PhenotypeEntityVisitor;
 
 public final class SummarizingPhenotypeEntityTranslatorVisitor implements
 		PhenotypeEntityVisitor {

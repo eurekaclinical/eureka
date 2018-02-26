@@ -40,10 +40,12 @@ package edu.emory.cci.aiw.cvrg.eureka.services.conversion;
  * #L%
  */
 
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.PhenotypeEntity;
+
 import org.protempa.DefaultSourceId;
 import org.protempa.SourceId;
 import org.protempa.proposition.value.NominalValue;
+
+import edu.emory.cci.aiw.cvrg.eureka.services.entity.PhenotypeEntity;
 
 /**
  *

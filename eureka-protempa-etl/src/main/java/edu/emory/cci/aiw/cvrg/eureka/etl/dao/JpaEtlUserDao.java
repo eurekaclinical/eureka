@@ -40,13 +40,13 @@ package edu.emory.cci.aiw.cvrg.eureka.etl.dao;
  * #L%
  */
 
-import edu.emory.cci.aiw.cvrg.eureka.common.dao.AuthorizedUserDao;
+import edu.emory.cci.aiw.cvrg.eureka.etl.dao.AuthorizedUserDao;
 
 import javax.persistence.EntityManager;
 
 import com.google.inject.Provider;
 
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.AuthorizedUserEntity;
+import edu.emory.cci.aiw.cvrg.eureka.etl.entity.AuthorizedUserEntity;
 import javax.inject.Inject;
 import org.eurekaclinical.standardapis.dao.AbstractJpaUserDao;
 

@@ -103,6 +103,7 @@
 				<filtering>false</filtering>
 				<excludes>
 					<exclude>META-INF/persistence.xml</exclude>
+					<exclude>application.properties</exclude>
 				</excludes>
 			</resource>
 			<resource>
@@ -110,6 +111,7 @@
 				<filtering>true</filtering>
 				<includes>
 					<include>META-INF/persistence.xml</include>
+					<include>application.properties</include>
 				</includes>
 			</resource>
 		</resources>
@@ -121,20 +123,28 @@
 			<artifactId>jersey-test-framework-grizzly2</artifactId>
 			<scope>test</scope>
 		</dependency>
+<!-- 		<dependency> -->
+<!-- 			<groupId>org.eurekaclinical</groupId> -->
+<!-- 			<artifactId>eureka-common</artifactId> -->
+<!-- 		</dependency> -->
+<!-- 		<dependency> -->
+<!-- 			<groupId>org.eurekaclinical</groupId> -->
+<!-- 			<artifactId>eureka-common</artifactId> -->
+<!-- 			<type>test-jar</type> -->
+<!-- 			<scope>test</scope> -->
+<!-- 		</dependency> -->
 		<dependency>
 			<groupId>org.eurekaclinical</groupId>
-			<artifactId>eureka-common</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.eurekaclinical</groupId>
-			<artifactId>eureka-common</artifactId>
-			<type>test-jar</type>
-			<scope>test</scope>
+			<artifactId>protempa-framework</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>com.sun.mail</groupId>
 			<artifactId>javax.mail</artifactId>
 			<scope>provided</scope>
+		</dependency>
+				<dependency>
+			<groupId>org.eurekaclinical</groupId>
+			<artifactId>eureka-client</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.freemarker</groupId>
@@ -143,6 +153,20 @@
 		<dependency>
 			<groupId>commons-io</groupId>
 			<artifactId>commons-io</artifactId>
+		</dependency>
+<!-- 		<dependency> -->
+<!--     <groupId>org.hibernate.javax.persistence</groupId> -->
+<!--     <artifactId>hibernate-jpa-2.0-api</artifactId> -->
+<!--     <version>1.0.0.Final</version> -->
+<!-- </dependency> -->
+<dependency>
+    <groupId>org.apache.commons</groupId>
+    <artifactId>commons-lang3</artifactId>
+    <version>3.4</version>
+</dependency>
+		<dependency>
+			<groupId>org.jasig.cas.client</groupId>
+			<artifactId>cas-client-core</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>com.h2database</groupId>

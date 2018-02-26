@@ -42,8 +42,10 @@ package edu.emory.cci.aiw.cvrg.eureka.services.resource;
 import javax.ws.rs.Path;
 import com.google.inject.persist.Transactional;
 
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.RoleEntity;
+//import edu.emory.cci.aiw.cvrg.eureka.common.entity.RoleEntity;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.RoleDao;
+import edu.emory.cci.aiw.cvrg.eureka.services.entity.RoleEntity;
+
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import org.eurekaclinical.common.comm.Role;

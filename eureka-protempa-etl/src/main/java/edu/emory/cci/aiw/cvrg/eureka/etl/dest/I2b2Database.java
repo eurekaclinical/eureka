@@ -39,7 +39,7 @@ package edu.emory.cci.aiw.cvrg.eureka.etl.dest;
  * <http://www.gnu.org/licenses/gpl-3.0.html>.
  * #L%
  */
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.I2B2DestinationEntity;
+import edu.emory.cci.aiw.cvrg.eureka.etl.entity.I2B2DestinationEntity;
 import edu.emory.cci.aiw.i2b2etl.dest.config.Database;
 import edu.emory.cci.aiw.i2b2etl.dest.config.DatabaseSpec;
 

@@ -41,14 +41,16 @@ package edu.emory.cci.aiw.cvrg.eureka.services.resource;
  */
 
 import com.google.inject.Inject;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.AppProperties;
+
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.AppPropertiesModes;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.AppPropertiesLinks;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.AppPropertiesRegistration;
+
+import edu.emory.cci.aiw.cvrg.eureka.services.comm.AppProperties;
+import edu.emory.cci.aiw.cvrg.eureka.services.comm.AppPropertiesLinks;
+import edu.emory.cci.aiw.cvrg.eureka.services.comm.AppPropertiesModes;
+import edu.emory.cci.aiw.cvrg.eureka.services.comm.AppPropertiesRegistration;
 import edu.emory.cci.aiw.cvrg.eureka.services.config.ServiceProperties;
 /**
  *

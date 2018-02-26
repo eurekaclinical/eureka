@@ -41,8 +41,10 @@ package edu.emory.cci.aiw.cvrg.eureka.services.dao;
 
 import com.google.inject.Inject;
 import com.google.inject.Provider;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.ValueComparator;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.ValueComparator_;
+//import edu.emory.cci.aiw.cvrg.eureka.common.entity.ValueComparator;
+import edu.emory.cci.aiw.cvrg.eureka.services.entity.ValueComparator_;
+import edu.emory.cci.aiw.cvrg.eureka.services.entity.ValueComparator;
+
 import java.util.List;
 
 import javax.persistence.EntityManager;

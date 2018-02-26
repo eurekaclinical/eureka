@@ -1,32 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <persistence version="2.0" xmlns="http://java.sun.com/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd">
   <persistence-unit name="backend-jpa-unit" transaction-type="RESOURCE_LOCAL">
-    <class>edu.emory.cci.aiw.cvrg.eureka.common.entity.JobEntity</class>
-    <class>edu.emory.cci.aiw.cvrg.eureka.common.entity.JobEventEntity</class>
-    <class>edu.emory.cci.aiw.cvrg.eureka.common.entity.AuthorizedUserEntity</class>
-	<class>edu.emory.cci.aiw.cvrg.eureka.common.entity.AuthorizedRoleEntity</class>
-    <class>edu.emory.cci.aiw.cvrg.eureka.common.entity.EtlGroup</class>
-    <class>edu.emory.cci.aiw.cvrg.eureka.common.entity.SourceConfigEntity</class>
-    <class>edu.emory.cci.aiw.cvrg.eureka.common.entity.DestinationEntity</class>
-    <class>edu.emory.cci.aiw.cvrg.eureka.common.entity.SourceConfigGroupMembership</class>
-    <class>edu.emory.cci.aiw.cvrg.eureka.common.entity.DestinationGroupMembership</class>
-    <class>edu.emory.cci.aiw.cvrg.eureka.common.entity.I2B2DestinationEntity</class>
-    <class>edu.emory.cci.aiw.cvrg.eureka.common.entity.I2B2DestinationConceptSpecEntity</class>
-    <class>edu.emory.cci.aiw.cvrg.eureka.common.entity.I2B2DestinationModifierSpecEntity</class>
-    <class>edu.emory.cci.aiw.cvrg.eureka.common.entity.I2B2DestinationDataSpecEntity</class>
-    <class>edu.emory.cci.aiw.cvrg.eureka.common.entity.I2B2DestinationIntervalSide</class>
-    <class>edu.emory.cci.aiw.cvrg.eureka.common.entity.I2B2DestinationRemoveMethod</class>
-    <class>edu.emory.cci.aiw.cvrg.eureka.common.entity.I2B2DestinationValueTypeCode</class>
-    <class>edu.emory.cci.aiw.cvrg.eureka.common.entity.Neo4jDestinationEntity</class>
-    <class>edu.emory.cci.aiw.cvrg.eureka.common.entity.LinkEntity</class>
-    <class>edu.emory.cci.aiw.cvrg.eureka.common.entity.PatientSetExtractorDestinationEntity</class>
-	<class>edu.emory.cci.aiw.cvrg.eureka.common.entity.PatientSetSenderDestinationEntity</class>
-	<class>edu.emory.cci.aiw.cvrg.eureka.common.entity.DeidPerPatientParams</class>
-	<class>edu.emory.cci.aiw.cvrg.eureka.common.entity.CipherEncryptionAlgorithm</class>
-	<class>edu.emory.cci.aiw.cvrg.eureka.common.entity.EncryptionAlgorithm</class>
-	<class>edu.emory.cci.aiw.cvrg.eureka.common.entity.MessageDigestEncryptionAlgorithm</class>
-	<class>edu.emory.cci.aiw.cvrg.eureka.common.entity.TabularFileDestinationEntity</class>
-	<class>edu.emory.cci.aiw.cvrg.eureka.common.entity.TabularFileDestinationTableColumnEntity</class>
+    <class>edu.emory.cci.aiw.cvrg.eureka.etl.entity.JobEntity</class>
+    <class>edu.emory.cci.aiw.cvrg.eureka.etl.entity.JobEventEntity</class>
+    <class>edu.emory.cci.aiw.cvrg.eureka.etl.entity.AuthorizedUserEntity</class>
+	<class>edu.emory.cci.aiw.cvrg.eureka.etl.entity.AuthorizedRoleEntity</class>
+    <class>edu.emory.cci.aiw.cvrg.eureka.etl.entity.EtlGroup</class>
+    <class>edu.emory.cci.aiw.cvrg.eureka.etl.entity.SourceConfigEntity</class>
+    <class>edu.emory.cci.aiw.cvrg.eureka.etl.entity.DestinationEntity</class>
+    <class>edu.emory.cci.aiw.cvrg.eureka.etl.entity.SourceConfigGroupMembership</class>
+    <class>edu.emory.cci.aiw.cvrg.eureka.etl.entity.DestinationGroupMembership</class>
+    <class>edu.emory.cci.aiw.cvrg.eureka.etl.entity.I2B2DestinationEntity</class>
+    <class>edu.emory.cci.aiw.cvrg.eureka.etl.entity.I2B2DestinationConceptSpecEntity</class>
+    <class>edu.emory.cci.aiw.cvrg.eureka.etl.entity.I2B2DestinationModifierSpecEntity</class>
+    <class>edu.emory.cci.aiw.cvrg.eureka.etl.entity.I2B2DestinationDataSpecEntity</class>
+    <class>edu.emory.cci.aiw.cvrg.eureka.etl.entity.I2B2DestinationIntervalSide</class>
+    <class>edu.emory.cci.aiw.cvrg.eureka.etl.entity.I2B2DestinationRemoveMethod</class>
+    <class>edu.emory.cci.aiw.cvrg.eureka.etl.entity.I2B2DestinationValueTypeCode</class>
+    <class>edu.emory.cci.aiw.cvrg.eureka.etl.entity.Neo4jDestinationEntity</class>
+    <class>edu.emory.cci.aiw.cvrg.eureka.etl.entity.LinkEntity</class>
+    <class>edu.emory.cci.aiw.cvrg.eureka.etl.entity.PatientSetExtractorDestinationEntity</class>
+	<class>edu.emory.cci.aiw.cvrg.eureka.etl.entity.PatientSetSenderDestinationEntity</class>
+	<class>edu.emory.cci.aiw.cvrg.eureka.etl.entity.DeidPerPatientParams</class>
+	<class>edu.emory.cci.aiw.cvrg.eureka.etl.entity.CipherEncryptionAlgorithm</class>
+	<class>edu.emory.cci.aiw.cvrg.eureka.etl.entity.EncryptionAlgorithm</class>
+	<class>edu.emory.cci.aiw.cvrg.eureka.etl.entity.MessageDigestEncryptionAlgorithm</class>
+	<class>edu.emory.cci.aiw.cvrg.eureka.etl.entity.TabularFileDestinationEntity</class>
+	<class>edu.emory.cci.aiw.cvrg.eureka.etl.entity.TabularFileDestinationTableColumnEntity</class>
     <properties>
       <!-- Disable the second-level cache -->
       <property name="hibernate.cache.provider_class" value="org.hibernate.cache.NoCacheProvider"/>

@@ -40,10 +40,10 @@
 package edu.emory.cci.aiw.cvrg.eureka.etl.resource;
 
 import com.google.inject.persist.Transactional;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.AuthorizedUserEntity;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.UserEntity;
-import edu.emory.cci.aiw.cvrg.eureka.common.dao.AuthorizedUserDao;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.AuthorizedRoleEntity;
+import edu.emory.cci.aiw.cvrg.eureka.etl.entity.AuthorizedUserEntity;
+import edu.emory.cci.aiw.cvrg.eureka.etl.entity.UserEntity;
+import edu.emory.cci.aiw.cvrg.eureka.etl.dao.AuthorizedUserDao;
+import edu.emory.cci.aiw.cvrg.eureka.etl.entity.AuthorizedRoleEntity;
 import edu.emory.cci.aiw.cvrg.eureka.etl.dao.RoleDao;
 import java.util.ArrayList;
 import java.util.List;

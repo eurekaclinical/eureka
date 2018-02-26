@@ -40,10 +40,10 @@ package edu.emory.cci.aiw.cvrg.eureka.etl.dao;
  * #L%
  */
 
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.DestinationEntity;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.EtlGroup;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.AuthorizedUserEntity;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.SourceConfigEntity;
+import edu.emory.cci.aiw.cvrg.eureka.etl.entity.DestinationEntity;
+import edu.emory.cci.aiw.cvrg.eureka.etl.entity.EtlGroup;
+import edu.emory.cci.aiw.cvrg.eureka.etl.entity.AuthorizedUserEntity;
+import edu.emory.cci.aiw.cvrg.eureka.etl.entity.SourceConfigEntity;
 import org.eurekaclinical.standardapis.dao.Dao;
 
 /**

@@ -40,9 +40,9 @@ package edu.emory.cci.aiw.cvrg.eureka.etl.resource;
  * #L%
  */
 
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.EtlCohortDestination;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.CohortDestinationEntity;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.AuthorizedUserEntity;
+import edu.emory.cci.aiw.cvrg.eureka.etl.comm.EtlCohortDestination;
+import edu.emory.cci.aiw.cvrg.eureka.etl.entity.CohortDestinationEntity;
+import edu.emory.cci.aiw.cvrg.eureka.etl.entity.AuthorizedUserEntity;
 import edu.emory.cci.aiw.cvrg.eureka.etl.dao.EtlGroupDao;
 import java.util.ArrayList;
 import java.util.Collections;

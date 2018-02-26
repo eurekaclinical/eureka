@@ -39,7 +39,7 @@ package edu.emory.cci.aiw.cvrg.eureka.etl.dest;
  * <http://www.gnu.org/licenses/gpl-3.0.html>.
  * #L%
  */
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.Neo4jDestinationEntity;
+import edu.emory.cci.aiw.cvrg.eureka.etl.entity.Neo4jDestinationEntity;
 import edu.emory.cci.aiw.neo4jetl.config.Configuration;
 import edu.emory.cci.aiw.neo4jetl.config.IndexOnProperty;
 

@@ -51,12 +51,17 @@ import com.google.inject.Inject;
 import org.eurekaclinical.eureka.client.comm.PhenotypeField;
 import org.eurekaclinical.eureka.client.comm.ValueThreshold;
 import org.eurekaclinical.eureka.client.comm.ValueThresholds;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.*;
+//import edu.emory.cci.aiw.cvrg.eureka.common.entity.*;
 import org.eurekaclinical.eureka.client.comm.exception.PhenotypeHandlingException;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.RelationOperatorDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.ThresholdsOperatorDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.TimeUnitDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.ValueComparatorDao;
+import edu.emory.cci.aiw.cvrg.eureka.services.entity.ExtendedPhenotype;
+import edu.emory.cci.aiw.cvrg.eureka.services.entity.PhenotypeEntity;
+import edu.emory.cci.aiw.cvrg.eureka.services.entity.PropositionTypeVisitor;
+import edu.emory.cci.aiw.cvrg.eureka.services.entity.ValueThresholdEntity;
+import edu.emory.cci.aiw.cvrg.eureka.services.entity.ValueThresholdGroupEntity;
 
 public final class ValueThresholdsTranslator implements
 		PropositionTranslator<ValueThresholds, ValueThresholdGroupEntity> {

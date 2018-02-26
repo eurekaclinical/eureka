@@ -43,9 +43,9 @@ import javax.persistence.EntityManager;
 
 import com.google.inject.Provider;
 
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.DestinationEntity;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.DeidPerPatientParams;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.DeidPerPatientParams_;
+import edu.emory.cci.aiw.cvrg.eureka.etl.entity.DestinationEntity;
+import edu.emory.cci.aiw.cvrg.eureka.etl.entity.DeidPerPatientParams;
+import edu.emory.cci.aiw.cvrg.eureka.etl.entity.DeidPerPatientParams_;
 import javax.inject.Inject;
 import javax.persistence.NoResultException;
 import javax.persistence.Query;

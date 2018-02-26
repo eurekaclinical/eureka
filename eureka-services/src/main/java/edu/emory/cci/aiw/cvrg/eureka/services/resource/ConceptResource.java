@@ -40,9 +40,11 @@
 package edu.emory.cci.aiw.cvrg.eureka.services.resource;
 
 import com.google.inject.Inject;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.EtlClient;
+
 import org.eurekaclinical.eureka.client.comm.SourceConfigParams;
 import org.eurekaclinical.eureka.client.comm.SystemPhenotype;
+
+import edu.emory.cci.aiw.cvrg.eureka.services.comm.clients.EtlClient;
 import edu.emory.cci.aiw.cvrg.eureka.services.config.ServiceProperties;
 import edu.emory.cci.aiw.cvrg.eureka.services.finder.PropositionFindException;
 import edu.emory.cci.aiw.cvrg.eureka.services.finder.SystemPropositionFinder;

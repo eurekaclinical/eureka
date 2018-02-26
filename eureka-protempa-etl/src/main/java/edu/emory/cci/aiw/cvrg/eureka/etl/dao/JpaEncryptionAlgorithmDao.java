@@ -42,8 +42,8 @@ package edu.emory.cci.aiw.cvrg.eureka.etl.dao;
 
 import com.google.inject.Inject;
 import com.google.inject.Provider;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.EncryptionAlgorithm;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.EncryptionAlgorithm_;
+import edu.emory.cci.aiw.cvrg.eureka.etl.entity.EncryptionAlgorithm;
+import edu.emory.cci.aiw.cvrg.eureka.etl.entity.EncryptionAlgorithm_;
 import javax.persistence.EntityManager;
 import org.eurekaclinical.standardapis.dao.GenericDao;
 

@@ -45,7 +45,8 @@ import javax.servlet.ServletContextEvent;
 import com.google.inject.Module;
 import com.google.inject.persist.jpa.JpaPersistModule;
 import com.google.inject.servlet.GuiceServletContextListener;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.clients.EtlClientProvider;
+
+import edu.emory.cci.aiw.cvrg.eureka.services.comm.clients.EtlClientProvider;
 
 import javax.servlet.ServletContext;
 import org.eurekaclinical.common.config.ClientSessionListener;
@@ -63,7 +64,7 @@ import org.eurekaclinical.common.config.ProxyingServiceServletModule;
 public class ConfigListener extends GuiceServletContextListener {
 
 	private static final String JPA_UNIT = "services-jpa-unit";
-	private static final String PACKAGE_NAMES = "edu.emory.cci.aiw.cvrg.eureka.services.resource;edu.emory.cci.aiw.cvrg.eureka.common.json";
+	private static final String PACKAGE_NAMES = "edu.emory.cci.aiw.cvrg.eureka.services.resource;edu.emory.cci.aiw.cvrg.eureka.services.json";
 	private final ServiceProperties serviceProperties = new ServiceProperties();
 	private Injector injector;
 	private final EtlClientProvider etlClientProvider = new EtlClientProvider(this.serviceProperties.getEtlUrl());

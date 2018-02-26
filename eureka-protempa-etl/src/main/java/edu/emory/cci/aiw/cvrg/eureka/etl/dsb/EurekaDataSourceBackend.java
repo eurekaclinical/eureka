@@ -48,6 +48,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+
+import org.apache.commons.io.FilenameUtils;
 import org.arp.javautil.io.FileUtil;
 import org.arp.javautil.io.IOUtil;
 import org.arp.javautil.sql.InvalidConnectionSpecArguments;
@@ -133,12 +135,15 @@ public final class EurekaDataSourceBackend extends RelationalDbDataSourceBackend
 			throw new DataSourceBackendInitializationException("No database name specified for data source backend '" + nameForErrors() + "'");
 		}
 		File schemaFile;
+		String schemaFilePath;
 		try {
 			schemaFile = IOUtil.resourceToFile("/eureka-dsb-schema.sql", "eureka-dsb-schema", ".sql");
+			/*** windows file system  ****/
+			schemaFilePath = ""+FilenameUtils.separatorsToUnix(schemaFile.getPath());
 		} catch (IOException ex) {
 			throw new DataSourceBackendInitializationException("Unable to create data schema (data source backend '" + nameForErrors() + "')");
 		}
-		super.setDatabaseId("jdbc:h2:mem:" + databaseName + ";INIT=RUNSCRIPT FROM '" + schemaFile + "';DB_CLOSE_DELAY=-1;LOG=0;LOCK_MODE=0;UNDO_LOG=0");
+		super.setDatabaseId("jdbc:h2:mem:" + databaseName + ";INIT=RUNSCRIPT FROM '" + schemaFilePath + "';DB_CLOSE_DELAY=-1;LOG=0;LOCK_MODE=0;UNDO_LOG=0");
 		this.fileDataSourceBackendSupport.setConfigurationsId(getConfigurationsId());
 		File[] dataFiles;
 		try {

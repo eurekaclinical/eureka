@@ -44,13 +44,13 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.AppProperties;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.AppPropertiesLinks;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.AppPropertiesModes;
-import edu.emory.cci.aiw.cvrg.eureka.common.comm.AppPropertiesRegistration;
+import edu.emory.cci.aiw.cvrg.eureka.services.comm.AppProperties;
+import edu.emory.cci.aiw.cvrg.eureka.services.comm.AppPropertiesLinks;
+import edu.emory.cci.aiw.cvrg.eureka.services.comm.AppPropertiesModes;
+import edu.emory.cci.aiw.cvrg.eureka.services.comm.AppPropertiesRegistration;
+import edu.emory.cci.aiw.cvrg.eureka.services.props.PublicUrlGenerator;
+import edu.emory.cci.aiw.cvrg.eureka.services.props.SupportUri;
 
-import edu.emory.cci.aiw.cvrg.eureka.common.props.PublicUrlGenerator;
-import edu.emory.cci.aiw.cvrg.eureka.common.props.SupportUri;
 import java.net.URI;
 import java.net.URISyntaxException;
 import javax.inject.Singleton;

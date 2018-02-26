@@ -4,7 +4,7 @@
  */
 package edu.emory.cci.aiw.cvrg.eureka.etl.resource;
 
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.AuthorizedUserEntity;
+import edu.emory.cci.aiw.cvrg.eureka.etl.entity.AuthorizedUserEntity;
 
 /*
  * #%L

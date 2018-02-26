@@ -45,7 +45,7 @@ import java.util.List;
 import org.protempa.PropositionDefinition;
 
 
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.SystemProposition;
+import edu.emory.cci.aiw.cvrg.eureka.services.entity.SystemProposition;
 
 public final class SystemPropositionConverter implements
 		PropositionDefinitionConverter<SystemProposition, PropositionDefinition> {

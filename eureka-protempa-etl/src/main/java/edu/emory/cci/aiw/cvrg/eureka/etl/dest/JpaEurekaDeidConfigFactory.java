@@ -40,10 +40,10 @@ package edu.emory.cci.aiw.cvrg.eureka.etl.dest;
  * #L%
  */
 
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.CipherEncryptionAlgorithm;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.DestinationEntity;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.EncryptionAlgorithm;
-import edu.emory.cci.aiw.cvrg.eureka.common.entity.MessageDigestEncryptionAlgorithm;
+import edu.emory.cci.aiw.cvrg.eureka.etl.entity.CipherEncryptionAlgorithm;
+import edu.emory.cci.aiw.cvrg.eureka.etl.entity.DestinationEntity;
+import edu.emory.cci.aiw.cvrg.eureka.etl.entity.EncryptionAlgorithm;
+import edu.emory.cci.aiw.cvrg.eureka.etl.entity.MessageDigestEncryptionAlgorithm;
 import edu.emory.cci.aiw.cvrg.eureka.etl.dao.EurekaDeidConfigDao;
 import javax.inject.Inject;
 import javax.inject.Singleton;
