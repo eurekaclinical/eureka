@@ -4,12 +4,13 @@
 ## What does it do?
 It provides tools for electronic health record (EHR) phenotyping, that is, finding patients of interest that match specified patterns in clinical and administrative EHR data. Eureka stores these patterns in computable form, and it computes them rapidly in clinical datasets and databases, including i2b2 clinical data warehouses. It supports building a repository of phenotypes representing best practices in how to find patient populations of interest. See http://www.eurekaclinical.org/docs/analytics/ for more information.
 
-## Version 3.0 development series
-Latest release: [![Latest release](https://maven-badges.herokuapp.com/maven-central/org.eurekaclinical/eureka/badge.svg)](https://maven-badges.herokuapp.com/maven-central/org.eurekaclinical/eureka)
-
-Version 3 will break Eureka up into microservices.
-
 ## Version history
+Latest release:
+[![Latest release](https://maven-badges.herokuapp.com/maven-central/org.eurekaclinical/eureka/badge.svg)](https://maven-badges.herokuapp.com/maven-central/org.eurekaclinical/eureka)
+
+### Version 3.0
+Version 3 broke components of Eureka up into microservices. We rewrote the phenotype editing, cohort editing, and job submission screens. In addition, concept browsing is much faster and works better on tablet form factors. 
+
 ### Version 2.5.2
 As compared with version 1 of Eureka, version 2 primarily differs in much more efficient backend code for processing data from relational databases. The performance of spreadsheet data processing is also much better.
 
