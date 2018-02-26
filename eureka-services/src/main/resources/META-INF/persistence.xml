@@ -60,7 +60,6 @@
     <class>edu.emory.cci.aiw.cvrg.eureka.services.entity.ThresholdsOperator</class>
     <class>edu.emory.cci.aiw.cvrg.eureka.services.entity.TimeUnit</class>
     <class>edu.emory.cci.aiw.cvrg.eureka.services.entity.UserEntity</class>
-    <class>edu.emory.cci.aiw.cvrg.eureka.common.entity.LocalUserEntity</class>
     <class>edu.emory.cci.aiw.cvrg.eureka.services.entity.ValueComparator</class>
     <class>edu.emory.cci.aiw.cvrg.eureka.services.entity.ValueThresholdEntity</class>
     <class>edu.emory.cci.aiw.cvrg.eureka.services.entity.ValueThresholdGroupEntity</class>

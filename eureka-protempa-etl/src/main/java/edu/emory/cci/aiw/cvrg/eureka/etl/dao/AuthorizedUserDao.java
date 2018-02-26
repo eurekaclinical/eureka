@@ -41,7 +41,6 @@ package edu.emory.cci.aiw.cvrg.eureka.etl.dao;
  */
 
 import edu.emory.cci.aiw.cvrg.eureka.etl.entity.AuthorizedUserEntity;
-import edu.emory.cci.aiw.cvrg.eureka.etl.entity.UserEntity;
 import org.eurekaclinical.standardapis.dao.UserDao;
 
 /**

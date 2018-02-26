@@ -72,7 +72,7 @@ public class UserEntity implements org.eurekaclinical.standardapis.entity.UserEn
 	 * The user's unique identifier.
 	 */
 	@Id
-	@SequenceGenerator(name = "USER_SEQ_GENERATOR1", sequenceName = "USER_SEQ",
+	@SequenceGenerator(name = "USER_SEQ_GENERATOR", sequenceName = "USER_SEQ",
 			allocationSize = 1)
 	@GeneratedValue(strategy = GenerationType.SEQUENCE,
 			generator = "USER_SEQ_GENERATOR")
@@ -88,7 +88,7 @@ public class UserEntity implements org.eurekaclinical.standardapis.entity.UserEn
 	 */
 	@ManyToMany(cascade = {CascadeType.REFRESH, CascadeType.MERGE},
 			targetEntity = RoleEntity.class)
-	@JoinTable(name = "user_role",
+	@JoinTable(name = "users_roles",
 			joinColumns = {
 				@JoinColumn(name = "user_id")},
 			inverseJoinColumns = {

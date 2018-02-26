@@ -39,12 +39,15 @@ package edu.emory.cci.aiw.cvrg.eureka.webapp.config;
  * <http://www.gnu.org/licenses/gpl-3.0.html>.
  * #L%
  */
-import edu.emory.cci.aiw.cvrg.eureka.webapp.comm.clients.EtlClientProvider;
+
 import com.google.inject.Injector;
 import javax.servlet.ServletContextEvent;
 
 import com.google.inject.Module;
 import com.google.inject.servlet.GuiceServletContextListener;
+
+import edu.emory.cci.aiw.cvrg.eureka.webapp.comm.clients.EtlClientProvider;
+
 import javax.servlet.ServletContext;
 import org.eurekaclinical.common.config.ApiGatewayServletModule;
 import org.eurekaclinical.common.config.ClientSessionListener;
@@ -80,6 +83,8 @@ public class WebappListener extends GuiceServletContextListener {
 		servletContext.setAttribute(
 				"webappProperties", this.webappProperties);
 	}
+
+
 
 	@Override
 	public void contextDestroyed(ServletContextEvent servletContextEvent) {
